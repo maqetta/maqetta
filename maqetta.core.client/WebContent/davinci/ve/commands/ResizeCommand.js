@@ -1,9 +1,10 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/ve/widget",
-    	"davinci/ve/States",
-    	"davinci/ve/utils/StyleArray"
-], function(declare, Widget, States, StyleArray){
+		"dojo/_base/declare",
+		"dojo/dom-geometry",
+		"davinci/ve/widget",
+		"davinci/ve/States",
+		"davinci/ve/utils/StyleArray"
+], function(declare, Geometry, Widget, States, StyleArray){
 
 
 return declare("davinci.ve.commands.ResizeCommand", null, {
@@ -42,10 +43,32 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 			return;
 		}
 
+/*
 		var box = widget.getMarginBox();
-		this._oldBox = {w:box.w, h:box.h};
+*/
+		var node = widget.domNode;
 		
-		var newStyleArray = [{width:this._newBox.w+'px'},{height:this._newBox.h+'px'}] ;
+		// Adjustments for widgets whose root tag has special CSS treatment
+		// where width/height specify border-box instead of content-box
+		//FIXME: This logic doesn't take into account the possibility that
+		//uses have set borders and padding to different values for different states
+		//Unlikely combination, but nevertheless not dealt with here properly
+		var cs = node.ownerDocument.defaultView.getComputedStyle(node);
+		var oldBox = Geometry.getContentBox(node, cs);
+		this._oldBox = {w:oldBox.w, h:oldBox.h};
+		var w = this._newBox.w;
+		var h = this._newBox.h;
+		if(this._usesBorderBox(node)){
+			var pb = Geometry.getPadBorderExtents(node, cs);
+			if(w >= 0){
+				w += pb.w;
+			}
+			if(h >= 0){
+				h += pb.h;
+			}
+		}
+
+		var newStyleArray = [{width:w+'px'},{height:h+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
 		var stateIndex = this._getCurrentStateIndex();
@@ -119,6 +142,20 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		States.resetState(widget.domNode);
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
+	},
+	
+	/**
+	 * Most a duplicate of private function found in dojo/dom-geometry.js
+	 * Returns true if node uses border-box layout
+	 * TABLE and BUTTON (and INPUT type=button) are always border-box by default.
+	 */
+	_usesBorderBox:function (/*DomNode*/node){
+		var tagName = node.tagName.toLowerCase();
+		var type = node.getAttribute('type');
+		if(type){
+			type = type.toLowerCase(type);
+		}
+		return tagName == "table" || tagName == "button" || (tagName == 'input' && type == 'button'); // boolean
 	},
 
 	_resize: function(widget){

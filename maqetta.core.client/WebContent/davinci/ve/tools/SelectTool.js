@@ -299,7 +299,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var e = dojo._getPadBorderExtents(_node);
 //			newBox.l = Math.round(newBox.x + e.l);
 //			box.t = Math.round(newBox.y + e.t);
-console.log('onExtentChange. e.w='+e.w+',e.h='+e.h);
 			newBox.w -= e.w;
 			newBox.h -= e.h;
 

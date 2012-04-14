@@ -1,29 +1,37 @@
 {
-	"id": "http://www.w3.org/html/body",
-	"name": "html.body",
-	"spec": "1.0",
-	"version": "1.0",
-	"require": [
-		{
-			"type": "css",
-			"src": "app.css",
-			"$library": "maqetta"
-		},
-		{
-			"type": "javascript",
-			"src": "maqetta/maqetta.js",
-			"$library": "maqetta"
-		},
-		{
-			"type": "javascript",
-			"src": "maqetta/States.js",
-			"$library": "maqetta"
-		}
-	],
-	"library": {
-		"maqetta": {
-			"src": ""
-		}
-	},
-	"content": "<body></body>",
+    "id": "http://www.w3.org/html/body",
+    "name": "html.body",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "app.css",
+            "$library": "maqetta"
+        },
+        {
+            "type": "javascript",
+            "src": "dojo/dojo.js",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript",
+            "src": "maqetta/maqetta.js",
+            "$library": "maqetta"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "maqetta/States"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo"
+        },
+        "maqetta": {
+            "src": ""
+        }
+    },
+    "content": ""
 }

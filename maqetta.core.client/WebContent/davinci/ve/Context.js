@@ -1170,6 +1170,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			packages.push({ name: lib.id, location: root });
 		});
 
+		packages.push({name: 'maqetta', location: '../../../maqetta'});
+
 		return packages;
 	},
 

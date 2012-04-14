@@ -657,8 +657,11 @@ davinci.maqetta.States.prototype = {
 
 	_getChildrenOfNode: function(node) {
 		var children = [];
-		for (var i=0; i<node.children.length; i++){
-			children.push(node.children[i]);
+		for (var i=0; i<node.childNodes.length; i++){
+			var n = node.childNodes[i];
+			if(n.nodeType === 1){	// Element
+				children.push(n);
+			}
 		}
 		return children;
 	},

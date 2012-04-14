@@ -240,7 +240,10 @@ SilhouetteIframe.prototype = {
 
 	setOrientation: function(orientation){
 		this.orientation = orientation;
-		this._silhouette_reset_size_position(true);
+		// Turn off animations for time being because Chrome changed between releases 18 and 19
+		// such that it was impossible to create an SVG animation that works across both releases.
+		//this._silhouette_reset_size_position(true);
+		this._silhouette_reset_size_position(false);
 	},
 
 	_silhouette_reset_size_position: function(doAnimations) {
@@ -363,7 +366,14 @@ SilhouetteIframe.prototype = {
 			var setupAnimateTransform = function(elem_id){
 				var at_elem=svg_doc.createElementNS(svg_ns,'animateTransform');
 				at_elem.id=elem_id;
-				at_elem.setAttributeNS(xlink_ns,'href','#'+g1_id);
+				//Comment out the href attribute due to various Chrome bugs,
+				//where even if an animation is never activated,
+				//if there is an animation pointing to an element,
+				//things don't work correctly. Have to comment
+				//out the reference for time being and will need
+				//to come up with entirely different animation implementation
+				//approach, maybe CSS3 animations instead. (See #1051)
+				//at_elem.setAttributeNS(xlink_ns,'href','#'+g1_id);
 				at_elem.setAttribute('attributeName','transform');
 				at_elem.setAttribute('begin','indefinite');
 				at_elem.setAttribute('end','indefinite');
@@ -503,8 +513,8 @@ SilhouetteIframe.prototype = {
 			},10);
 		}
 		if(a1_elem && a2_elem && a1_elem.beginElement){
-			a1_elem.beginElement();
-			a2_elem.beginElement();
+			//a1_elem.beginElement();
+			//a2_elem.beginElement();
 
 			// The `onend` event attribute only seems to work on Firefox. So
 			// default to using a setTimeout for the duration of the animation.

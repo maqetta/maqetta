@@ -30,7 +30,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
 		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
-		this._applyToWhichStates = applyToWhichStates;
+		this._applyToStateIndex = this._getApplyToStateIndex(applyToWhichStates);
 	},
 
 	execute: function(){
@@ -72,16 +72,15 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
 		var currentStateIndex = this._getCurrentStateIndex();
-		var applyToStateIndex = this._getApplyToStateIndex();
 		if(this._oldBox){
-			this._oldStyleValuesAllStates[applyToStateIndex] = 
-					StyleArray.mergeStyleArrays(this._oldStyleValuesAllStates[applyToStateIndex], 
+			this._oldStyleValuesAllStates[this._applyToStateIndex] = 
+					StyleArray.mergeStyleArrays(this._oldStyleValuesAllStates[this._applyToStateIndex], 
 								[{width:this._oldBox.w+'px'}, {height:this._oldBox.h+'px'}]);
 		}
-		if(styleValuesAllStates[applyToStateIndex]){
-			styleValuesAllStates[applyToStateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[applyToStateIndex], newStyleArray);
+		if(styleValuesAllStates[this._applyToStateIndex]){
+			styleValuesAllStates[this._applyToStateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[this._applyToStateIndex], newStyleArray);
 		}else{
-			styleValuesAllStates[applyToStateIndex] = newStyleArray;
+			styleValuesAllStates[this._applyToStateIndex] = newStyleArray;
 		}
 		
 		widget.setStyleValuesAllStates(styleValuesAllStates);
@@ -196,11 +195,11 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 	},
 
 	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getApplyToStateIndex:function(){
+	_getApplyToStateIndex:function(applyToWhichStates){
 		var veStates = require("davinci/ve/States");
 		var currentState = veStates.getState();
 		var state;
-		if(this._applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
+		if(applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
 			state = currentState;
 		}else{
 			state = undefined;

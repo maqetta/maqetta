@@ -19,7 +19,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
 		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
-		this._applyToWhichStates = applyToWhichStates; 
+		this._applyToStateIndex = this._getApplyToStateIndex(applyToWhichStates);
 	},
 
 	add: function(command){
@@ -48,11 +48,10 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
 		var currentStateIndex = this._getCurrentStateIndex();
-		var applyToStateIndex = this._getApplyToStateIndex();
-		if(styleValuesAllStates[applyToStateIndex]){
-			styleValuesAllStates[applyToStateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[applyToStateIndex], this._newValues);
+		if(styleValuesAllStates[this._applyToStateIndex]){
+			styleValuesAllStates[this._applyToStateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[this._applyToStateIndex], this._newValues);
 		}else{
-			styleValuesAllStates[applyToStateIndex] = this._newValues;
+			styleValuesAllStates[this._applyToStateIndex] = this._newValues;
 		}
 		
 		widget.setStyleValuesAllStates(styleValuesAllStates);
@@ -180,11 +179,11 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 	},
 
 	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getApplyToStateIndex:function(){
+	_getApplyToStateIndex:function(applyToWhichStates){
 		var veStates = require("davinci/ve/States");
 		var currentState = veStates.getState();
 		var state;
-		if(this._applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
+		if(applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
 			state = currentState;
 		}else{
 			state = undefined;

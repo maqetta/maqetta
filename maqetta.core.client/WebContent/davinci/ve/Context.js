@@ -1675,14 +1675,26 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 ////		}
 //	},
 	
+	// Temporarily stuff a unique class onto element with each _preserveStates call.
+	// Dojo will sometimes replace the widget's root node with a different root node
+	// and transfer IDs and other properties to subnodes. However, Dojo doesn't mess
+	// with classes.
+	//FIXME: Need a more robust method, but not sure exactly how to make this bullet-proof and future-proof.
+	//Could maybe use XPath somehow to address the root node.
+	maqTempClassCount: 0,
+	maqTempClassPrefix: 'maqTempClass',
+
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
 		var states = davinci.ve.states.retrieve(node);
 		if (node.tagName != "BODY" && states) {
-			cache[node.id] = {};
-			cache[node.id].states = states;
+			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
+			node.className = node.className + ' ' + tempClass;
+			this.maqTempClassCount++;
+			cache[tempClass] = {};
+			cache[tempClass].states = states;
 			if(node.style){
-				cache[node.id].style = node.style.cssText;
+				cache[tempClass].style = node.style.cssText;
 			}else{
 				// Shouldn't be here
 				debugger;
@@ -1709,14 +1721,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				node = this.getContainerNode();
 			}
 			if(!node){
-				// Look for dvWidget with that ID. Note that sometimes Dojo puts IDs on subnodes. This logic finds root node. 
-				var w = Widget.byId(id, this.getDocument());
-				if(w){
-					node = w.domNode;	// Root note for that widget
+				var doc = this.getDocument();
+				node = doc.querySelectorAll('.'+id)[0];
+				if(node){
+					node.className = node.className.replace(' '+id,'');
 				}
 			}
 			if(!node){
-				node = this.getDocument().getElementById(id);	// Else find the node using DOM call
+				console.error('Context.js _restoreStates node not found. id='+id);
+				continue;
 			}
 			var widget = Widget.getWidget(node);
 			var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);

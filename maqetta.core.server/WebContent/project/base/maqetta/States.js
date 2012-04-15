@@ -1274,8 +1274,8 @@ davinci.States.prototype = {
 	 */
 	transferElementStyle: function(node, elemStyle) {
 //console.trace();
-		var states = node.states;
 		if(node){
+			var states = node.states;
 			var valueArray = this._parseStyleValues(elemStyle);
 			if(!states['undefined']){
 				states['undefined'] = {};
@@ -1394,6 +1394,8 @@ davinci.states = new davinci.States();
 				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
 				 */
 				var _preserveStates = function (cache) {
+					var count=0;
+					var prefix = 'maqTempClass';
 //console.trace();
 					var doc = davinci.states.getDocument();
 	
@@ -1408,14 +1410,14 @@ davinci.states = new davinci.States();
 					query("*", doc).forEach(function(node){
 						var states = davinci.states.retrieve(node);
 						if (states) {
-							if (!node.id) {
-								node.id = _getTemporaryId(node);
-							}
 							if (node.tagName != "BODY") {
-								cache[node.id] = {};
-								cache[node.id].states = states;
+								var tempClass = prefix+count;
+								node.className = node.className + ' ' + tempClass;
+								count++;
+								cache[tempClass] = {};
+								cache[tempClass].states = states;
 								if(node.style){
-									cache[node.id].style = node.style.cssText;
+									cache[tempClass].style = node.style.cssText;
 								}else{
 									// Shouldn't be here
 									console.error('States.js _preserveStates. No value for node.style.')
@@ -1435,7 +1437,16 @@ davinci.states = new davinci.States();
 					var doc = davinci.states.getDocument(),
 						currentStateCache = [];
 					for(var id in cache){
-						var node = id == "body" ? doc.body : dojo.byId(id);
+						var node;
+						if(id == 'body'){
+							node = doc.body;
+						}else{
+							node = doc.querySelectorAll('.'+id)[0];
+							if(node){
+								node.className = node.className.replace(' '+id,'');
+							}
+							
+						}
 						if (!node) {
 							console.error("States: Failed to get node by id: ", id);
 						}

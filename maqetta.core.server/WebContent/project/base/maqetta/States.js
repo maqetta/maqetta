@@ -976,8 +976,7 @@ davinci.States.prototype = {
 				var style = styleArray[i];
 				for (var name in style) {	// should be only one prop in style
 					var convertedName = this._convertStyleName(name);
-					//FIXME: Probably doesn't work with arrays
-					davinci.dojo.style(node, convertedName, style[convertedName]);
+					node.style[convertedName] = style[name];
 				}
 			}
 		}

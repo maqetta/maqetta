@@ -907,10 +907,21 @@ davinci.States.prototype = {
 		}
 		return value;			
 	},
-	
-	_resetAndCacheNormalStyle: function(node, styleArray, newState) {
+	_resetAndCacheNormalStyle: function(node, oldState) {
 //console.trace();
+		var oldStateStyleArray = this.getStyle(node, oldState);
 		var normalStyleArray = this.getStyle(node, undefined);
+		
+		// Clear out any styles corresponding to the oldState
+		if(oldStateStyleArray){
+			for(var j=0; j<oldStateStyleArray.length; j++){
+				var oItem = oldStateStyleArray[j];
+				for(var oProp in oItem){	// Should only be one prop
+					var convertedName = this._convertStyleName(oProp);
+					node.style[convertedName] = '';
+				}
+			}
+		}
 		
 		// Reset normal styles
 		if(normalStyleArray){
@@ -922,7 +933,7 @@ davinci.States.prototype = {
 				}
 			}
 		}
-
+/*
 		// Remember style values from the normal state
 		if (!this.isNormalState(newState)) {
 			if(styleArray){
@@ -940,9 +951,10 @@ davinci.States.prototype = {
 				}
 			}
 		}
+*/
 	},
 	
-	_update: function(node, newState) {
+	_update: function(node, oldState, newState) {
 //console.trace();
 		node = this._getWidgetNode(node);
 		if (!node || !node.states){
@@ -951,7 +963,7 @@ davinci.States.prototype = {
 		
 		var styleArray = this.getStyle(node, newState);
 		
-		this._resetAndCacheNormalStyle(node, styleArray, newState);
+		this._resetAndCacheNormalStyle(node, oldState);
 
 		// Apply new style
 		if(styleArray){
@@ -960,7 +972,7 @@ davinci.States.prototype = {
 				for (var name in style) {	// should be only one prop in style
 					var convertedName = this._convertStyleName(name);
 					//FIXME: Probably doesn't work with arrays
-					davinci.dojo.style(node, convertedName, style[name]);
+					davinci.dojo.style(node, convertedName, style[convertedName]);
 				}
 			}
 		}
@@ -1230,6 +1242,47 @@ davinci.States.prototype = {
 		this.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
+	/**
+	 * Parse an element.style string, return a valueArray, which is an array
+	 * of objects, where each object holds a single CSS property value
+	 * (e.g., [{'display':'none'},{'color':'red'}]
+	 * @param text
+	 * @returns {Array}  valueArray: [{propname:propvalue}...]
+	 */
+	_parseStyleValues: function(text) {
+		var values = [];
+		if(text){
+			dojo.forEach(text.split(";"), function(s){
+				var i = s.indexOf(":");
+				if(i > 0){
+					var n = s.substring(0, i).trim();
+					var v = s.substring(i + 1).trim();
+					var o = {};
+					o[n] = v;
+					values.push(o);
+				}
+			});
+		}
+		return values;
+	},
+
+	/**
+	 * Store original element.style values into node.states['undefined'].style
+	 * Called by _preserveStates
+	 * @param node  
+	 * @param {String} elemStyle  element.style string
+	 */
+	transferElementStyle: function(node, elemStyle) {
+//console.trace();
+		var states = node.states;
+		if(node){
+			var valueArray = this._parseStyleValues(elemStyle);
+			if(!states['undefined']){
+				states['undefined'] = {};
+			}
+			states['undefined'].style = valueArray;
+		}
+	},
 	getDocument: function() {
 		return document;
 	},
@@ -1284,7 +1337,7 @@ davinci.States.prototype = {
 					if (!davinci.states.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					davinci.states._update(child, e.newState);
+					davinci.states._update(child, e.oldState, e.newState);
 				}
 			});
 			
@@ -1334,7 +1387,7 @@ davinci.states = new davinci.States();
 				} else {
 					hook.apply(parser);
 				}
-			
+
 				/**
 				 * Preserve states specified on widgets.
 				 * Invoked from code above that wraps the dojo parser such that
@@ -1347,7 +1400,6 @@ davinci.states = new davinci.States();
 					// Preserve the body states directly on the dom node
 					var states = davinci.states.retrieve(doc.body);
 					if (states) {
-						davinci.states._upgrate_p4_p5(states);	// upgrade older files
 						cache.body = states;
 					}
 	
@@ -1360,8 +1412,14 @@ davinci.states = new davinci.States();
 								node.id = _getTemporaryId(node);
 							}
 							if (node.tagName != "BODY") {
-								davinci.states._upgrate_p4_p5(states);	// upgrade older files
-								cache[node.id] = states;
+								cache[node.id] = {};
+								cache[node.id].states = states;
+								if(node.style){
+									cache[node.id].style = node.style.cssText;
+								}else{
+									// Shouldn't be here
+									console.error('States.js _preserveStates. No value for node.style.')
+								}
 							}
 						}
 					});
@@ -1381,9 +1439,13 @@ davinci.states = new davinci.States();
 						if (!node) {
 							console.error("States: Failed to get node by id: ", id);
 						}
-						var states = davinci.states.deserialize(cache[id]);
-						delete states.current; // always start in normal state for runtime
+						// BODY node has app states directly on node.states. All others have it on node.states.style.
+						var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
+						delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 						davinci.states.store(node, states);
+						if(node.tagName != 'BODY'){
+							davinci.states.transferElementStyle(node, cache[id].style);
+						}
 					}
 				};
 					

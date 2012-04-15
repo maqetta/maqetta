@@ -1678,12 +1678,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
 		var states = davinci.ve.states.retrieve(node);
-		if (states) {
-			cache[node.id] = states;
-		//if (node.tagName != "BODY" && states) {
-			//cache[node.id] = {};
-			//cache[node.id].states = states;
-			//cache[node.id].style = node.style.cssText;
+		if (node.tagName != "BODY" && states) {
+			cache[node.id] = {};
+			cache[node.id].states = states;
+			if(node.style){
+				cache[node.id].style = node.style.cssText;
+			}else{
+				// Shouldn't be here
+				debugger;
+			}
 		}
 	},
 
@@ -1716,14 +1719,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				node = this.getDocument().getElementById(id);	// Else find the node using DOM call
 			}
 			var widget = Widget.getWidget(node);
-			var states = cache[id];
-			states = davinci.states.deserialize(states);
-			//states = davinci.states.deserialize(cache[id].states);
+			var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 			davinci.ve.states.store(widget.domNode, states);
-			//if(node.tagName != 'BODY'){
-				//davinci.states.transferElementStyle(node, cache[node.id].style);
-			//}
+			if(node.tagName != 'BODY'){
+				davinci.states.transferElementStyle(node, cache[id].style);
+			}
 			
 			/*
 			var state = davinci.ve.states.getState(widget.domNode);

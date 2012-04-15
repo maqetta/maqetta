@@ -778,7 +778,7 @@ davinci.states = new davinci.maqetta.States();
 				} else {
 					hook.apply(parser);
 				}
-			
+
 				/**
 				 * Preserve states specified on widgets.
 				 * Invoked from code above that wraps the dojo parser such that
@@ -803,10 +803,14 @@ davinci.states = new davinci.maqetta.States();
 								node.id = _getTemporaryId(node);
 							}
 							if (node.tagName != "BODY") {
-								cache[node.id] = states;
-								//cache[node.id] = {};
-								//cache[node.id].states = states;
-								//cache[node.id].style = node.style.cssText;
+								cache[node.id] = {};
+								cache[node.id].states = states;
+								if(node.style){
+									cache[node.id].style = node.style.cssText;
+								}else{
+									// Shouldn't be here
+									console.error('States.js _preserveStates. No value for node.style.')
+								}
 							}
 						}
 					});
@@ -826,13 +830,13 @@ davinci.states = new davinci.maqetta.States();
 						if (!node) {
 							console.error("States: Failed to get node by id: ", id);
 						}
-						var states = davinci.states.deserialize(cache[id]);
-						//var states = davinci.states.deserialize(cache[id].states);
-						delete states.current; // always start in normal state for runtime
+						// BODY node has app states directly on node.states. All others have it on node.states.style.
+						var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
+						delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 						davinci.states.store(node, states);
-						//if(node.tagName != 'BODY'){
-							//davinci.states.transferElementStyle(node, cache[node.id].style);
-						//}
+						if(node.tagName != 'BODY'){
+							davinci.states.transferElementStyle(node, cache[id].style);
+						}
 					}
 				};
 					

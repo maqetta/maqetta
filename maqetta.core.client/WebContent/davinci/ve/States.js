@@ -8,9 +8,9 @@ define([
 
 declare("davinci.ve.States", davinci.maqetta.States, {
 	
-	_update: function(node, newState) {
+	_update: function(node, oldState, newState) {
 //console.trace();
-		this.inherited(arguments);
+		//this.inherited(arguments);
 		
 		node = this._getWidgetNode(node);
 		if (!node || !node._dvWidget || !node.states){

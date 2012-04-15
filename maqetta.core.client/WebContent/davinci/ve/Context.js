@@ -1680,6 +1680,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var states = davinci.ve.states.retrieve(node);
 		if (states) {
 			cache[node.id] = states;
+		//if (node.tagName != "BODY" && states) {
+			//cache[node.id] = {};
+			//cache[node.id].states = states;
+			//cache[node.id].style = node.style.cssText;
 		}
 	},
 
@@ -1714,8 +1718,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var widget = Widget.getWidget(node);
 			var states = cache[id];
 			states = davinci.states.deserialize(states);
+			//states = davinci.states.deserialize(cache[id].states);
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 			davinci.ve.states.store(widget.domNode, states);
+			//if(node.tagName != 'BODY'){
+				//davinci.states.transferElementStyle(node, cache[node.id].style);
+			//}
 			
 			/*
 			var state = davinci.ve.states.getState(widget.domNode);

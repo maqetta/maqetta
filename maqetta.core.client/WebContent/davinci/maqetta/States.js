@@ -151,7 +151,7 @@ davinci.maqetta.States.prototype = {
 	 * Called by:
 	 * 		(this routine): normalizeArrayStates (indirectly from _Widget.js:_styleText)
 	 * 		(this routine): _update (indirectly/inherited from davinci.ve.States:_update)
-	 * 		(this routine): _resetAndCacheNormalStyleStates.js
+	 * 		(this routine): _resetAndCacheNormalStyle States.js
 	 * @param widget
 	 * @param state
 	 * @param name
@@ -306,9 +306,21 @@ davinci.maqetta.States.prototype = {
 		return value;			
 	},
 	
-	_resetAndCacheNormalStyle: function(node, styleArray, newState) {
+	_resetAndCacheNormalStyle: function(node, oldState) {
 //console.trace();
+		var oldStateStyleArray = this.getStyle(node, oldState);
 		var normalStyleArray = this.getStyle(node, undefined);
+		
+		// Clear out any styles corresponding to the oldState
+		if(oldStateStyleArray){
+			for(var j=0; j<oldStateStyleArray.length; j++){
+				var oItem = oldStateStyleArray[j];
+				for(var oProp in oItem){	// Should only be one prop
+					var convertedName = this._convertStyleName(oProp);
+					node.style[convertedName] = '';
+				}
+			}
+		}
 		
 		// Reset normal styles
 		if(normalStyleArray){
@@ -320,7 +332,7 @@ davinci.maqetta.States.prototype = {
 				}
 			}
 		}
-
+/*
 		// Remember style values from the normal state
 		if (!this.isNormalState(newState)) {
 			if(styleArray){
@@ -338,9 +350,10 @@ davinci.maqetta.States.prototype = {
 				}
 			}
 		}
+*/
 	},
 	
-	_update: function(node, newState) {
+	_update: function(node, oldState, newState) {
 //console.trace();
 		node = this._getWidgetNode(node);
 		if (!node || !node.states){
@@ -349,7 +362,7 @@ davinci.maqetta.States.prototype = {
 		
 		var styleArray = this.getStyle(node, newState);
 		
-		this._resetAndCacheNormalStyle(node, styleArray, newState);
+		this._resetAndCacheNormalStyle(node, oldState);
 
 		// Apply new style
 		if(styleArray){
@@ -358,7 +371,7 @@ davinci.maqetta.States.prototype = {
 				for (var name in style) {	// should be only one prop in style
 					var convertedName = this._convertStyleName(name);
 					//FIXME: Probably doesn't work with arrays
-					davinci.dojo.style(node, convertedName, style[name]);
+					davinci.dojo.style(node, convertedName, style[convertedName]);
 				}
 			}
 		}
@@ -542,12 +555,12 @@ davinci.maqetta.States.prototype = {
 					return $1 ? "'" : '"';
 			});
 			states = JSON.parse(states);
-			this._upgrate_p4_p5(states);	// Upgrade old files
+			this._upgrade_p4_p5(states);	// Upgrade old files
 		}
 		return states;
 	},
 	
-	_upgrate_p4_p5: function(states){
+	_upgrade_p4_p5: function(states){
 		// We changed the states structure for Preview5 release. It used to be
 		// a JSON representation of an associative array: {'display':'none', 'color':'red'}
 		// But with Preview5 it is now an array of single property declarations such as:
@@ -628,6 +641,48 @@ davinci.maqetta.States.prototype = {
 		this.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
+	/**
+	 * Parse an element.style string, return a valueArray, which is an array
+	 * of objects, where each object holds a single CSS property value
+	 * (e.g., [{'display':'none'},{'color':'red'}]
+	 * @param text
+	 * @returns {Array}  valueArray: [{propname:propvalue}...]
+	 */
+	_parseStyleValues: function(text) {
+		var values = [];
+		if(text){
+			dojo.forEach(text.split(";"), function(s){
+				var i = s.indexOf(":");
+				if(i > 0){
+					var n = s.substring(0, i).trim();
+					var v = s.substring(i + 1).trim();
+					var o = {};
+					o[n] = v;
+					values.push(o);
+				}
+			});
+		}
+		return values;
+	},
+
+	/**
+	 * Store original element.style values into node.states['undefined'].style
+	 * Called by _preserveStates
+	 * @param node  
+	 * @param {String} elemStyle  element.style string
+	 */
+	transferElementStyle: function(node, elemStyle) {
+//console.trace();
+		var states = node.states;
+		if(node){
+			var valueArray = this._parseStyleValues(elemStyle);
+			if(!states['undefined']){
+				states['undefined'] = {};
+			}
+			states['undefined'].style = valueArray;
+		}
+	},
+	
 	getDocument: function() {
 		return document;
 	},
@@ -682,7 +737,7 @@ davinci.maqetta.States.prototype = {
 					if (!davinci.states.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					davinci.states._update(child, e.newState);
+					davinci.states._update(child, e.oldState, e.newState);
 				}
 			});
 			
@@ -736,7 +791,6 @@ davinci.states = new davinci.maqetta.States();
 					// Preserve the body states directly on the dom node
 					var states = davinci.states.retrieve(doc.body);
 					if (states) {
-						davinci.states._upgrate_p4_p5(states);	// upgrade older files
 						cache.body = states;
 					}
 	
@@ -749,8 +803,10 @@ davinci.states = new davinci.maqetta.States();
 								node.id = _getTemporaryId(node);
 							}
 							if (node.tagName != "BODY") {
-								davinci.states._upgrate_p4_p5(states);	// upgrade older files
 								cache[node.id] = states;
+								//cache[node.id] = {};
+								//cache[node.id].states = states;
+								//cache[node.id].style = node.style.cssText;
 							}
 						}
 					});
@@ -771,8 +827,12 @@ davinci.states = new davinci.maqetta.States();
 							console.error("States: Failed to get node by id: ", id);
 						}
 						var states = davinci.states.deserialize(cache[id]);
+						//var states = davinci.states.deserialize(cache[id].states);
 						delete states.current; // always start in normal state for runtime
 						davinci.states.store(node, states);
+						//if(node.tagName != 'BODY'){
+							//davinci.states.transferElementStyle(node, cache[node.id].style);
+						//}
 					}
 				};
 					

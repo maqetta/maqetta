@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
 	"./commands/ReparentCommand",
+	"./commands/StyleCommand",
 	"./widget",
 	"./States",
 	"dijit/tree/dndSource",
@@ -8,6 +9,7 @@ define([
 ], function(
 	declare,
 	ReparentCommand,
+	StyleCommand,
 	Widget,
 	states,
 	dndSource,
@@ -180,9 +182,11 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		
 		_toggle: function(widget, on, node) {
 			var visible = !on;
-			var state = states.getState();
+			//var state = states.getState();
 			var value = visible ? "" : "none";
-			states.setStyle(widget.domNode, state, [{"display": value}]);
+			var command = new StyleCommand(widget, [{"display": value}], 'current');
+			this._context.getCommandStack().execute(command);
+			//states.setStyle(widget.domNode, state, [{"display": value}]);
 		},
 		
 		isToggleOn: function(item) {

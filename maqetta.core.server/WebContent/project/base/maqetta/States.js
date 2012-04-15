@@ -1409,27 +1409,36 @@ davinci.states = new davinci.States();
 					var doc = davinci.states.getDocument();
 	
 					// Preserve the body states directly on the dom node
-					var states = davinci.states.retrieve(doc.body);
-					if (states) {
-						cache.body = states;
+					if(!doc.body._maqAlreadyPreserved){
+						var states = davinci.states.retrieve(doc.body);
+						if (states) {
+							cache.body = states;
+						}
+						doc.body._maqAlreadyPreserved = true;
 					}
 	
 					// Preserve states of children of body in the cache
 					//FIXME: why can't we just query for nodes that have this.ATTRIBUTE?
 					query("*", doc).forEach(function(node){
-						var states = davinci.states.retrieve(node);
-						if (states) {
-							if (node.tagName != "BODY") {
-								var tempClass = prefix+count;
-								node.className = node.className + ' ' + tempClass;
-								count++;
-								cache[tempClass] = {};
-								cache[tempClass].states = states;
-								if(node.style){
-									cache[tempClass].style = node.style.cssText;
-								}else{
-									// Shouldn't be here
-									console.error('States.js _preserveStates. No value for node.style.')
+						// Because Dojo parser gets called recursively (multiple times), 
+						// but preserveStates/restoreStates go through entire document,
+						// make sure the current node hasn't already been preserved
+						if(!node._maqAlreadyPreserved){
+							node._maqAlreadyPreserved = true;
+							var states = davinci.states.retrieve(node);
+							if (states) {
+								if (node.tagName != "BODY") {
+									var tempClass = prefix+count;
+									node.className = node.className + ' ' + tempClass;
+									count++;
+									cache[tempClass] = {};
+									cache[tempClass].states = states;
+									if(node.style){
+										cache[tempClass].style = node.style.cssText;
+									}else{
+										// Shouldn't be here
+										console.error('States.js _preserveStates. No value for node.style.')
+									}
 								}
 							}
 						}
@@ -1466,6 +1475,7 @@ davinci.states = new davinci.States();
 						if(node.tagName != 'BODY'){
 							davinci.states.transferElementStyle(node, cache[id].style);
 						}
+						delete cache[id];
 					}
 				};
 					

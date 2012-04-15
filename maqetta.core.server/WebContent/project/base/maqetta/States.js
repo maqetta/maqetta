@@ -1477,15 +1477,6 @@ davinci.states = new davinci.States();
 						delete cache[id];
 					}
 				};
-					
-				var _getTemporaryId = function (node) {
-					if (!node || node.nodeType != 1) {	// 1== Element
-						return undefined;
-					}
-					var type = (node.getAttribute("dojoType") || node.nodeName.toLowerCase());
-					type = type ? type.replace(/\./g, "_") : "";
-					return dijit.getUniqueId(type);
-				};
 			});
 		}
 	}

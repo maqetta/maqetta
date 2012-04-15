@@ -114,7 +114,12 @@ davinci.maqetta.States.prototype = {
 			delete node.states.current;
 			newState = undefined;
 		} else {
-			node.states.current = newState;
+			//FIXME: For time being, only the BODY holds states.current.
+			if(node.tagName == 'BODY'){
+				node.states.current = newState;
+			}else{
+				delete node.states.current;
+			}
 		}
 		if (!_silent) {
 			this.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
@@ -758,18 +763,22 @@ davinci.states = new davinci.maqetta.States();
 		if (typeof require != "undefined") {
 			require(["dojo/_base/lang", "dojo/query", "dojo/domReady!"], function(lang, query) {
 				var cache = {}; // could be local to hook function?
+				var alreadyHooked = false;
 
 				// hook main dojo.parser (or dojox.mobile.parser, which also
 				// defines "dojo.parser" object)
 				// Note: Uses global 'dojo' reference, which may not work in the future
 				var hook = function(parser) {
-					var parse = parser.parse;
-					dojo.parser.parse = function() {
-						_preserveStates(cache);
-						var results = parse.apply(this, arguments);
-						_restoreStates(cache);
-						return results;
-					};
+					if(!alreadyHooked){
+						var parse = parser.parse;
+						dojo.parser.parse = function() {
+							_preserveStates(cache);
+							var results = parse.apply(this, arguments);
+							_restoreStates(cache);
+							return results;
+						};
+						alreadyHooked = true;
+					}
 				};
 				// only include the regular parser if the mobile parser isn't available
 				var parser = lang.getObject("dojox.mobile.parser.parse");

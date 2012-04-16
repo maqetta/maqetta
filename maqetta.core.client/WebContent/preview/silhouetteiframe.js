@@ -329,14 +329,14 @@ SilhouetteIframe.prototype = {
 		var unique='_aqzpqtxv';	// use ids that are unlikely to appear in an SVG silhouette doc
 		var g1_id='g1'+unique, g2_id='g2'+unique, a1_id='a1'+unique, a2_id='a2'+unique;     
 		var g1_elem=svg_doc.getElementById(g1_id);
-		var g2_elem, a1_elem, a2_elem;
+		var g2_elem /*, a1_elem, a2_elem*/;
 		if(g1_elem){
 			// if g1_elem is already in doc, then we are updating an SVG file
 			// that was loaded previously and therefore already is set up
 			// with wrapper <g> elements and <animateTransform> elements.
 			g2_elem=svg_doc.getElementById(g2_id);
-			a1_elem=svg_doc.getElementById(a1_id);
-			a2_elem=svg_doc.getElementById(a2_id);
+			//a1_elem=svg_doc.getElementById(a1_id);
+			//a2_elem=svg_doc.getElementById(a2_id);
 			if(!g2_elem /* || !a1_elem || !a2_elem */)	//FF3.6 bug - getElementById fails on anim elements even though they are there!
 				return;
 		}else{
@@ -363,6 +363,7 @@ SilhouetteIframe.prototype = {
 			}
 			svg_elem.appendChild(g1_elem);
 			// inner func for initializing the two <animateTransform> elems
+/*
 			var setupAnimateTransform = function(elem_id){
 				var at_elem=svg_doc.createElementNS(svg_ns,'animateTransform');
 				at_elem.id=elem_id;
@@ -390,8 +391,9 @@ SilhouetteIframe.prototype = {
 			a2_elem = setupAnimateTransform(a2_id);
 			a2_elem.setAttribute('type','rotate');
 			a2_elem.setAttribute('additive','sum');
+*/
 		}
-
+/*
 		// Hide the content iframe, so content doesn't show during animation.
 		// Is made visible at end of rotation animation.
 		var reshowIframe;
@@ -399,6 +401,7 @@ SilhouetteIframe.prototype = {
 			iframe_elem.style.display = 'none';
 			reshowIframe = true;
 		}
+*/
 
 		// Add a lightgray rectangle 1px inside of ScreenRect.
 		// The 1px inset is to deal with browser off-by-one errors when attempting
@@ -445,6 +448,7 @@ SilhouetteIframe.prototype = {
 			ifr_style.height = scaled_screen_height+"px";
 			g1_elem.setAttribute('transform','translate(0 0) rotate(0)');
 			g2_elem.setAttribute('transform','scale('+scale_adjust_x+','+scale_adjust_y+') translate(-'+device_x+' -'+device_y+')');
+/*
 			// Firefox mysteriously crashes if you change animation values
 			// but don't actually run animations, so we will run animations always
 			// but if doAnimations if false, set 'from' value to be same as 'to' value
@@ -459,6 +463,7 @@ SilhouetteIframe.prototype = {
 				a1_elem.setAttribute('to','0,0');
 				a2_elem.setAttribute('to','0');
 			}
+*/
 			obj_style.width = scaled_device_width+"px";
 			obj_style.height = scaled_device_height+"px";
 			div_style.width = scaled_device_width+"px";
@@ -485,6 +490,7 @@ SilhouetteIframe.prototype = {
 			ifr_style.height = scaled_screen_width+"px";
 			g1_elem.setAttribute('transform','translate('+scaled_device_height+' 0) rotate(90)');
 			g2_elem.setAttribute('transform','scale('+scale_adjust_x+','+scale_adjust_y+') translate(-'+device_x+' -'+device_y+')');
+/*
 			// Firefox mysteriously crashes if you change animation values
 			// but don't actually run animations, so we will run animations always
 			// but if doAnimations if false, set 'from' value to be same as 'to' value
@@ -499,6 +505,7 @@ SilhouetteIframe.prototype = {
 				a1_elem.setAttribute('to',scaled_device_height+',0');
 				a2_elem.setAttribute('to','90');
 			}
+*/
 			obj_style.width = scaled_device_height+"px";
 			obj_style.height = scaled_device_width+"px";
 			div_style.width = scaled_device_height+"px";
@@ -512,6 +519,7 @@ SilhouetteIframe.prototype = {
 				obj_style.height = Math.ceil(scaled_device_width+1)+"px";
 			},10);
 		}
+/*
 		if(a1_elem && a2_elem && a1_elem.beginElement){
 			//a1_elem.beginElement();
 			//a2_elem.beginElement();
@@ -524,6 +532,7 @@ SilhouetteIframe.prototype = {
 				}, ANIMATION_DURATION * 1000);
 			}
 		}
+*/
 	}
 };
 

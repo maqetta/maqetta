@@ -758,7 +758,7 @@ davinci.States.prototype = {
 	 * Called by:
 	 * 		(this routine): normalizeArrayStates (indirectly from _Widget.js:_styleText)
 	 * 		(this routine): _update (indirectly/inherited from davinci.ve.States:_update)
-	 * 		(this routine): _resetAndCacheNormalStyleStates.js
+	 * 		(this routine): _resetAndCacheNormalStyle States.js
 	 * @param widget
 	 * @param state
 	 * @param name
@@ -912,6 +912,7 @@ davinci.States.prototype = {
 		}
 		return value;			
 	},
+	
 	_resetAndCacheNormalStyle: function(node, oldState) {
 //console.trace();
 		var oldStateStyleArray = this.getStyle(node, oldState);
@@ -1160,12 +1161,12 @@ davinci.States.prototype = {
 					return $1 ? "'" : '"';
 			});
 			states = JSON.parse(states);
-			this._upgrate_p4_p5(states);	// Upgrade old files
+			this._upgrade_p4_p5(states);	// Upgrade old files
 		}
 		return states;
 	},
 	
-	_upgrate_p4_p5: function(states){
+	_upgrade_p4_p5: function(states){
 		// We changed the states structure for Preview5 release. It used to be
 		// a JSON representation of an associative array: {'display':'none', 'color':'red'}
 		// But with Preview5 it is now an array of single property declarations such as:
@@ -1287,6 +1288,7 @@ davinci.States.prototype = {
 			states['undefined'].style = valueArray;
 		}
 	},
+	
 	getDocument: function() {
 		return document;
 	},
@@ -1443,7 +1445,7 @@ davinci.states = new davinci.States();
 						}
 					});
 				};
-	
+				
 				/**
 				 * Restore widget states from cache
 				 * Invoked from code below that wraps the dojo parser such that

@@ -296,6 +296,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			return;
 		}
 		this._shiftKey = event.shiftKey;
+		this._sKey = false;
 
 		this._nobIndex = dojo.indexOf(this._nobs, event.target);
 		this._frameIndex = dojo.indexOf(this._frames, event.target);
@@ -452,7 +453,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			// Change widget bounds if any dragging has occurred
 			if(this._moverCurrent.l != this._moverStart.l || this._moverCurrent.t != this._moverStart.t ||
 					this._moverCurrent.w != this._moverStart.w || this._moverCurrent.h != this._moverStart.h){
-				this.onExtentChange(this, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
+				// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
+				var applyToWhichStates = this._sKey ? 'current' : undefined;
+				this.onExtentChange(this, this._moverStart, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, applyToWhichStates);
 			} 
 		}
 		this._moverDoneCleanup();
@@ -498,12 +501,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	onKeyDown: function(event){
 		if(event && this._moverDragDiv){
 			dojo.stopEvent(event);
-			if(event.keyCode == 16){
+			if(event.keyCode == dojo.keys.SHIFT){
 				this._shiftKey = true;
 				this._updateFocusChrome(
 						this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
 						false /*offScreenAdjust*/
 				);
+			}else if(event.keyCode == 83){		// 's' key means apply only to current state
+				this._sKey = true;
 			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers
@@ -514,12 +519,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	onKeyUp: function(event){
 		if(event && this._moverDragDiv){
 			dojo.stopEvent(event);
-			if(event.keyCode == 16){
+			if(event.keyCode == dojo.keys.SHIFT){
 				this._shiftKey = false;
 				this._updateFocusChrome(
 						this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
 						false /*offScreenAdjust*/
 				);
+			}else if(event.keyCode == 83){		// 's' key means apply only to current state
+				this._sKey = false;
 			}
 		}else{
 			// If event is undefined, something is wrong - remove the key handlers
@@ -538,7 +545,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 	},
 
-	onExtentChange: function(focus, box){
+	onExtentChange: function(focus, oldBox, newBox, applyToWhichStates){
 	},
 
 	/**

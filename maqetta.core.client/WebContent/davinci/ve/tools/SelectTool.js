@@ -49,6 +49,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		
 		this._shiftKey = event.shiftKey;
 		this._spaceKey = false;
+		this._sKey = false;
 		var createMover = false;
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
@@ -270,10 +271,15 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			left -= (p.x - parentNode.scrollLeft);
 			top -= (p.y - parentNode.scrollTop);
 		}
-		return {left:left, top:top};
+		return {l:left, t:top};
 	},
 
-	onExtentChange: function(index, box, copy){
+	onExtentChange: function(params){
+		var index = params.index;
+		var newBox = params.newBox;
+		var copy = params.copy;
+		var oldBoxes = params.oldBoxes;
+		var applyToWhichStates = params.applyToWhichStates;
 				
 		var context = this._context;
 		var cp = context._chooseParent;
@@ -285,40 +291,44 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var widget = selection[index];
 
 		var compoundCommand = undefined;
-		if("w" in box || "h" in box){
+		if("w" in newBox || "h" in newBox){
 			var resizable = davinci.ve.metadata.queryDescriptor(widget.type, "resizable"),
 				w, h;
 			// Adjust dimensions from border-box to content-box
 			var _node = widget.getStyleNode();
 			var e = dojo._getPadBorderExtents(_node);
-//			box.l = Math.round(box.x + e.l);
-//			box.t = Math.round(box.y + e.t);
-			box.w -= e.w;
-			box.h -= e.h;
+//			newBox.l = Math.round(newBox.x + e.l);
+//			box.t = Math.round(newBox.y + e.t);
+			newBox.w -= e.w;
+			newBox.h -= e.h;
 
 			switch(resizable){
 			case "width":
-				w = box.w;
+				w = newBox.w;
 				break;
 			case "height":
-				h = box.h;
+				h = newBox.h;
 			case "both":
-				w = box.w;
-				h = box.h;
+				w = newBox.w;
+				h = newBox.h;
 				break;
 			}
 
-			var resizeCommand = new davinci.ve.commands.ResizeCommand(widget, w, h);
+			var resizeCommand = new davinci.ve.commands.ResizeCommand(widget, w, h, applyToWhichStates);
 			if(!compoundCommand){
 				compoundCommand = new davinci.commands.CompoundCommand();
 			}
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
-			if("l" in box && "t" in box && position_prop == 'absolute'){
-				var p = this._adjustLTOffsetParent(context, widget, box.l, box.t);
-				var left = p.left;
-				var top = p.top;
-				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top);
+			if("l" in newBox && "t" in newBox && position_prop == 'absolute'){
+				var p = this._adjustLTOffsetParent(context, widget, newBox.l, newBox.t);
+				var left = p.l;
+				var top = p.t;
+/*
+				var left = newBox.l;
+				var top = newBox.t;
+*/
+				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top, null, null, applyToWhichStates);
 				compoundCommand.add(moveCommand);
 			}
 			
@@ -379,31 +389,29 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				context.select(null);
 				
 			}else{
-				var left = box.l,
-					top = box.t;
+				var left = newBox.l,
+					top = newBox.t;
 				var p = this._adjustLTOffsetParent(context, widget, left, top);
-				left = p.left;
-				top = p.top;
-				var position = {x: left, y: top};
-				left = position.x;
-				top = position.y;
+				left = p.l;
+				top = p.t;
 				if(!compoundCommand){
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}
-				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top);
+				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldBoxes[index], applyToWhichStates);
 				var ppw = cp.getProposedParentWidget();
 				var proposedParent = ppw ? ppw.parent : null;
 				compoundCommand.add(first_c);
 				var currentParent = widget.getParent();
 				if(proposedParent && proposedParent != currentParent){
 					compoundCommand.add(new davinci.ve.commands.ReparentCommand(widget, proposedParent, 'last'));
+
 					var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
-					compoundCommand.add(new davinci.ve.commands.MoveCommand(widget, newPos.l, newPos.t));
+					compoundCommand.add(new davinci.ve.commands.MoveCommand(widget, newPos.l, newPos.t, null, null, applyToWhichStates));
 				}
 				var b = widget.getMarginBox(),
 					dx = left - b.l,
 					dy = top - b.t;
-				dojo.forEach(selection, dojo.hitch(this, function(w){
+				dojo.forEach(selection, dojo.hitch(this, function(w, idx){
 					if(w != widget){
 						var mb = w.getMarginBox();
 						var newLeft = mb.l + dx;
@@ -413,14 +421,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 							// way, MoveCommand will store the actual shift amount on the
 							// command object (first_c). MoveCommand will use the shift amount
 							// for first_c for the other move commands.
-							var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c);
+							var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c, oldBoxes[idx], applyToWhichStates);
 							compoundCommand.add(c);
 						}
 						var currentParent = w.getParent();
 						if(proposedParent && proposedParent != currentParent){
 							compoundCommand.add(new davinci.ve.commands.ReparentCommand(w, proposedParent, 'last'));
 							var newPos = this._reparentDelta(newLeft, newTop, w.getParent(), proposedParent);
-							compoundCommand.add(new davinci.ve.commands.MoveCommand(w, newPos.l, newPos.t));
+							compoundCommand.add(new davinci.ve.commands.MoveCommand(w, newPos.l, newPos.t, null, null, applyToWhichStates));
 						}
 					}
 				}));
@@ -481,16 +489,19 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(event && this._moverWidget){
 			dojo.stopEvent(event);
 			switch(event.keyCode){
-			case 16:
+			case dojo.keys.SHIFT:
 				this._shiftKey = true;
 				Snap.clearSnapLines(this._context);
 				break;
-			case 18:
+			case dojo.keys.ALT:
 				this._altKey = true;
 				this._updateMoveCursor();
 				break;
-			case 32:
+			case dojo.keys.SPACE:
 				this._spaceKey = true;
+				break;
+			case 83:	// 's' key means apply only to current state
+				this._sKey = true;
 				break;
 			case dojo.keys.TAB:
 				if(this._moveFocus(event)){
@@ -514,15 +525,18 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(event && this._moverWidget){
 			dojo.stopEvent(event);
 			switch(event.keyCode){
-			case 16:
+			case dojo.keys.SHIFT:
 				this._shiftKey = false;
 				break;
-			case 18:
+			case dojo.keys.ALT:
 				this._altKey = false;
 				this._updateMoveCursor();
 				break;
-			case 32:
+			case dojo.keys.SPACE:
 				this._spaceKey = false;
+				break;
+			case 83:	// 's' key means apply only to current state
+				this._sKey = false;
 				break;
 			}
 		}
@@ -730,18 +744,26 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 
 		var doMove = true;
+		var index, moverBox;
 		if(!this._moverBox || !this._moverWidget){
 			doMove = false;
 		}else{
-			var moverBox = this._adjustLTOffsetParent(context, this._moverWidget, this._moverBox.l, this._moverBox.t);
+			moverBox = {l:this._moverBox.l, t:this._moverBox.t};
 			var selection = context.getSelection();
-			var index = selection.indexOf(this._moverWidget);
+			index = selection.indexOf(this._moverWidget);
 			if(index < 0){
 				doMove = false;
 			}
 		}
 		if(doMove){
-			this.onExtentChange(index, moverBox, this._altKey);
+			// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
+			var applyToWhichStates = this._sKey ? 'current' : undefined;
+			this.onExtentChange({
+				index:index, 
+				newBox:moverBox, 
+				oldBoxes:this._moverStartLocations, 
+				copy:this._altKey,
+				applyToWhichStates:applyToWhichStates});
 		}
 		if(this._moverDragDiv){
 			var parentNode = this._moverDragDiv.parentNode;

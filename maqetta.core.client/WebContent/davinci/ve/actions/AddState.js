@@ -25,7 +25,7 @@ return declare("davinci.ve.actions.AddState", [Action], {
 			title: title,
 			content: content, 
 			execute: function(){ 
-				davinci.ve.states.add(widget, state);
+				davinci.ve.states.add(widget.domNode, state);
 			},
 			isValid: function(){ 
 				state = dojo.byId(inputId).value;
@@ -33,7 +33,7 @@ return declare("davinci.ve.actions.AddState", [Action], {
 				if (!state) {
 					alert(langObj.enterStateName);
 					return false;
-				} else if (davinci.ve.states.hasState(widget, state)) {
+				} else if (davinci.ve.states.hasState(widget.domNode, state)) {
 					alert(dojo.string.substitute(veNls.stateNameExists, { name: state }));
 					return false;
 				}

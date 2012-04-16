@@ -77,7 +77,7 @@ return declare("davinci.ve.themeEditor.commands.StateChangeCommand", [ThemeEdito
 		}
 
 		this._widget.processingUndoRedo = true;
-		//davinci.ve.states.setState(this._widget, this._oldState); 
+		//davinci.ve.states.setState(this._widget.domNode, this._oldState); 
 		this.updatePropertiesView();
 
 		dojo.publish("/davinci/states/state/changed", 

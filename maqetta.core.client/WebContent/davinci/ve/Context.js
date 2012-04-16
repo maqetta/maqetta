@@ -253,7 +253,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
 		this._restoreStates();
-		// The value of widget.states for BODY happens as part of user document onload process,
+		// The initialization of states object for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
 		this._statesLoaded = true;
@@ -1400,7 +1400,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_attachChildren: function (containerNode)
 	{
 		dojo.query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
+		/*
 		var currentStateCache = [];
+		*/
 		var rootWidget = containerNode._dvWidget;
 		rootWidget._srcElement.visit({ visit: function(element){
 			if (element.elementType=="HTMLElement") {
@@ -1418,18 +1420,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					var states = davinci.states.deserialize(stateSrc);
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 					
-					var state = davinci.ve.states.getState(widget);
+					/*
+					var state = davinci.ve.states.getState();
 					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-						currentStateCache.push({ widget: widget, state: state});
+						currentStateCache.push({ node: widget.domNode, state: state});
 					}
+					*/
 				}
 			}
 		}});
+		/*
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
 			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.widget, item.state, true);
+			davinci.ve.states.setState(item.node, item.state, true);
 		}
+		*/
 	},
 	
 	/**
@@ -1672,11 +1678,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 ////		}
 //	},
 	
+	// Temporarily stuff a unique class onto element with each _preserveStates call.
+	// Dojo will sometimes replace the widget's root node with a different root node
+	// and transfer IDs and other properties to subnodes. However, Dojo doesn't mess
+	// with classes.
+	//FIXME: Need a more robust method, but not sure exactly how to make this bullet-proof and future-proof.
+	//Could maybe use XPath somehow to address the root node.
+	maqTempClassCount: 0,
+	maqTempClassPrefix: 'maqTempClass',
+
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
 		var states = davinci.ve.states.retrieve(node);
-		if (states) {
-			cache[node.id] = states;
+		if (node.tagName != "BODY" && states) {
+			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
+			node.className = node.className + ' ' + tempClass;
+			this.maqTempClassCount++;
+			cache[tempClass] = {};
+			cache[tempClass].states = states;
+			if(node.style){
+				cache[tempClass].style = node.style.cssText;
+			}else{
+				// Shouldn't be here
+				debugger;
+			}
 		}
 	},
 
@@ -1687,7 +1712,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			console.error('Context._restoreStates: this._loadFileStatesCache missing');
 			return;
 		}
+		/*
 		var currentStateCache = [];
+		*/
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
@@ -1697,31 +1724,38 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				node = this.getContainerNode();
 			}
 			if(!node){
-				// Look for dvWidget with that ID. Note that sometimes Dojo puts IDs on subnodes. This logic finds root node. 
-				var w = Widget.byId(id, this.getDocument());
-				if(w){
-					node = w.domNode;	// Root note for that widget
+				var doc = this.getDocument();
+				node = doc.querySelectorAll('.'+id)[0];
+				if(node){
+					node.className = node.className.replace(' '+id,'');
 				}
 			}
 			if(!node){
-				node = this.getDocument().getElementById(id);	// Else find the node using DOM call
+				console.error('Context.js _restoreStates node not found. id='+id);
+				continue;
 			}
 			var widget = Widget.getWidget(node);
-			var states = cache[id];
-			states = davinci.states.deserialize(states);
+			var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-			davinci.ve.states.store(widget, states);
-			
-			var state = davinci.ve.states.getState(widget);
-			if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-				currentStateCache.push({ widget: widget, state: state});
+			davinci.ve.states.store(widget.domNode, states);
+			if(node.tagName != 'BODY'){
+				davinci.states.transferElementStyle(node, cache[id].style);
 			}
+			
+			/*
+			var state = davinci.ve.states.getState(widget.domNode);
+			if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
+				currentStateCache.push({ node: widget.domNode, state: state});
+			}
+			*/
 		}
+		/*
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
 			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.widget, item.state, true);
+			davinci.ve.states.setState(item.node, item.state, true);
 		}
+		*/
 	},
 
 	getDocument: function(){
@@ -1845,6 +1879,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			isChild: parent && parent.isLayout && parent.isLayout()
 		}, index, inline);
 			
+	},
+	
+	updateFocusAll: function(){
+		var selection = this._selection;
+		if(selection){
+			for(var i=0; i<selection.length; i++){
+				this.updateFocus(selection[i], i);			
+			}
+		}
 	},
 	
 	select: function(widget, add, inline){
@@ -2172,11 +2215,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 	},
 	
-	onExtentChange: function(focus, box, cursorOnly){
+	onExtentChange: function(focus, oldBox, newBox, applyToWhichStates){
 		if(this._activeTool && this._activeTool.onExtentChange && !this._blockChange){
 			var index = dojo.indexOf(this._focuses, focus);
 			if(index >= 0){
-				this._activeTool.onExtentChange(index, box, cursorOnly);
+				this._activeTool.onExtentChange({ index: index, oldBoxes:[oldBox], newBox:newBox, applyToWhichStates:applyToWhichStates});
 			}
 		}
 		this.blockChange(false);
@@ -2215,6 +2258,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true});
+			
+			/*FIXME: Fix these lines. The store() method should be taking a widget/node,
+				not a "data" object. Just happens to work, sort of by accident. */
 			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
 			davinci.ve.states.store(data, states);
 
@@ -2560,7 +2606,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
-			var stateStyleValuesArray = davinci.ve.states.getStyle(widget);
+			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode);
 			if(stateStyleValuesArray){
 				// Remove entries from vArray that are in stateStyleValuesArray
 				for(var i=0; i<stateStyleValuesArray.length; i++){

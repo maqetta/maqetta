@@ -42,7 +42,7 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		file.setDirty(true);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(this.context.rootWidget);
+		States.resetState(this.context.rootNode);
 		if (this.context._selection) {
 			// force the style palette to update for redo
 			this.context.onSelectionChange(this.context._selection); // force the style palette to update.
@@ -59,7 +59,7 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		file.setDirty(true);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(this.context.rootWidget);
+		States.resetState(this.context.rootNode);
 		if (this.context._selection) {
 			this.context.onSelectionChange(this.context._selection); // force the style palette to update.
 		}

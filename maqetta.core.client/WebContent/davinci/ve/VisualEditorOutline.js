@@ -2,6 +2,7 @@ define([
     "dojo/_base/declare",
     "dojo/_base/connect",
 	"./commands/ReparentCommand",
+	"./commands/StyleCommand",
 	"./widget",
 	"./States",
 	"dijit/tree/dndSource",
@@ -10,6 +11,7 @@ define([
 	declare,
 	connect,
 	ReparentCommand,
+	StyleCommand,
 	Widget,
 	states,
 	dndSource,
@@ -160,10 +162,13 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			return true;
 		},
 		
+		//FIXME: This toggling logic needs to use the CommandStack so that it is
+		//properly undoable.
 		toggle: function(widget, on, node) {
 			var helper = widget.getHelper();
 			var continueProcessing = true;
 			if(helper && helper.onToggleVisibility){
+				//FIXME: Make sure that helper functions deals properly with CommandStack and undo
 				continueProcessing = helper.onToggleVisibility(widget, on);
 			}
 			if(continueProcessing){
@@ -176,13 +181,15 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		
 		_toggle: function(widget, on, node) {
 			var visible = !on;
-			var state = states.getState();
+			//var state = states.getState();
 			var value = visible ? "" : "none";
-			states.setStyle(widget, state, [{"display": value}]);
+			var command = new StyleCommand(widget, [{"display": value}], 'current');
+			this._context.getCommandStack().execute(command);
+			//states.setStyle(widget.domNode, state, [{"display": value}]);
 		},
 		
 		isToggleOn: function(item) {
-			return !states.isVisible(item);
+			return !states.isVisible(item.domNode);
 		},
 		
 		newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -257,16 +264,20 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 				if (!this._tree) {
 					return;
 				}
-				var children = states.getChildren(e.widget);
+				var widget = (e && e.node && e.node._dvWidget);
+				if(!widget){
+					return;
+				}
+				var children = widget.getChildren();
 				while (children.length) {
 					var child = children.shift();
 					if (child) {
 						var node = this._tree.getNode(child);
 						if (node) {
-							var visible = states.isVisible(child, e.newState);
+							var visible = states.isVisible(child.domNode, e.newState);
 							node._setToggleAttr(!visible);
 						}
-						children = children.concat(states.getChildren(child));
+						children = children.concat(child.getChildren());
 					}
 				}
 			}

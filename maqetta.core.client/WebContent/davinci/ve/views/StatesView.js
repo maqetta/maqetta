@@ -143,7 +143,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._hideShowToolBar();
 	},
 	
-	_getWidget: function() {
+	_getRootNode: function() {
 		var currentEditor = this._editor, doc;
 		if (currentEditor && currentEditor.getContext) {
 			var context = currentEditor.getContext();
@@ -246,7 +246,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateList: function() {
-		var latestStates = States.getStates(this._getWidget(), true), 
+		var latestStates = States.getStates(this._getRootNode(), true), 
 			storedScenes = this._getScenes();
 		if(!this._editor || !latestStates || !storedScenes){
 			return;
@@ -334,7 +334,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		
 		// First see if the current Tree is showing the current AppState.
 		// If so, update the Tree to select that AppState
-		var currentState = States.getState(this._getWidget());
+		var currentState = States.getState(this._getRootNode());
 		if(!currentState){
 			currentState = 'Normal';
 		}
@@ -519,7 +519,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		dojo.connect(this._tree, "onClick", this, function(item){
 			var currentEditor = this._editor;
 			var context = currentEditor ? currentEditor.getContext() : null;
-			var bodyWidget = context ? context.rootWidget : null;
+			var bodyNode = context ? context.rootNode : null;
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
 					this.publish("/davinci/states/state/changed", 
@@ -531,15 +531,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
 							newState:item.name[0]}]);
 				} else {
-					if(context && bodyWidget){
+					if(context && bodyNode){
 						var state = item.name[0];
-						States.setState(bodyWidget, state);
+						States.setState(bodyNode, state);
 						context.deselectInvisible();
+						context.updateFocusAll();
 					}
 				}
 			}else{
-				if(bodyWidget){
-					States.setState(bodyWidget, null);
+				if(bodyNode){
+					States.setState(bodyNode, null);
 				}
 				if(item.sceneId){
 					// Loop through plugin scene managers, eg Dojo Mobile Views
@@ -646,7 +647,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(!context || !context._statesLoaded){
 				return;
 			}
-			var latestStates = States.getStates(this._getWidget(), true);
+			var latestStates = States.getStates(this._getRootNode(), true);
 			if(!latestStates){
 				return;
 			}

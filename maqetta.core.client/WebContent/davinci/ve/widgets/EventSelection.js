@@ -95,8 +95,12 @@ define(["dojo/_base/declare",
 		},
 	
 		_updateValues: function(e) {
+			if(!e || !e.node || !e.node._dvWidget){
+				return;
+			}
+			var widget = e.node._dvWidget;
 			this._buildSelectionValues();
-			if (e.widget == this._widget) {
+			if (widget == this._widget) {
 				this._setValues();
 			}
 		},

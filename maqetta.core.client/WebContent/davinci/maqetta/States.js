@@ -743,7 +743,7 @@ States.prototype = {
 	},
 	
 	initialize: function() {	
-		if (!this.subscribed && this._shouldInitialize()) {
+		if (!this.subscribed) {
 			connect.subscribe("/davinci/states/state/changed", function(e) { 
 				if(e.editorClass){
 					// Event targets one of Maqetta's editors, not from runtime events
@@ -770,10 +770,10 @@ var singleton = davinci.states = new States();
 
 (function(){
 
+	singleton.initialize();
+	
 	if (singleton._shouldInitialize()) {
 	
-		singleton.initialize();
-		
 		// Patch the dojo parse method to preserve states data
 		if (typeof require != "undefined") {
 			require(["dojo/_base/lang", "dojo/query", "dojo/domReady!"], function(lang, query) {

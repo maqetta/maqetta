@@ -23,8 +23,8 @@ return declare("davinci.ve.RebuildPage", Context, {
 	},
 	
 	getPageJs: function(){
-		// returns CSS known to be in the page (our libs, sorta hacky)
-		return ["maqetta/States.js","maqetta/maqetta.js" ];
+		// returns JS known to be in the page (our libs, sorta hacky)
+		return ["maqetta/States.js","maqetta/maqetta.js" ]; //FIXME: States.js is a module
 	},
 	
 	

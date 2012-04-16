@@ -1,17 +1,15 @@
 define([
         "dojo/_base/declare",
+        "dojo/_base/connect",
         "davinci/maqetta/States",
         "./commands/EventCommand",
         "./commands/StyleCommand",
     	"davinci/ve/utils/StyleArray"
-], function(declare, maqettaStates, EventCommand, StyleCommand, StyleArray){
+], function(declare, connect, maqettaStates, EventCommand, StyleCommand, StyleArray){
 
-declare("davinci.ve.States", davinci.maqetta.States, {
+var veStates = declare(maqettaStates, {
 	
-	_update: function(node, oldState, newState) {
-//console.trace();
-		//this.inherited(arguments);
-		
+	_update: function(node, oldState, newState) {		
 		node = this._getWidgetNode(node);
 		if (!node || !node._dvWidget || !node.states){
 			return;
@@ -38,16 +36,6 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 		if(!this.isNormalState(currentState)){
 			this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);
 		}		
-
-/*
-		// Recompute styling properties in case we aren't in Normal state
-		this.resetState(node);
-*/
-/*
-		if (this.isNormalState(newState)) {
-			this._styleChange(node, styleArray);
-		}
-*/
 	},
 	
 	_refresh: function(widget){
@@ -63,7 +51,6 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 		
 	_updateEvents: function(node, state, name) {
-//console.trace();
 		if(!node || !node._dvWidget){
 			return;
 		}
@@ -89,24 +76,8 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 			context.getCommandStack().execute(command);
 		}
 	},
-/*
-	_styleChange: function (node, styleArray){
-//console.trace();
-		if(!node || !node._dvWidget){
-			return;
-		}
-		var widget = node._dvWidget;
-		var currentEditor = top.davinci.Runtime.currentEditor; //TODO: use require?
-		var context = currentEditor.getContext();
-
-		var command = new StyleCommand(widget, styleArray);	
-		
-		context.getCommandStack().execute(command);
-	},
-*/
 	
 	normalize: function(type, node, name, value) {
-//console.trace();
         switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
@@ -127,7 +98,6 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	
 	normalizeArray: function(type, node, name, valueArray) {
 		var newValueArray = dojo.clone(valueArray);
-//console.trace();
 		switch(type) {
 		    case "style":
 	            var state = davinci.ve.states.getState();
@@ -173,7 +143,6 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	},
 	_updateSrcState: function (node)
 	{
-//console.trace();
 		var widget = (node && node._dvWidget);
 		if (widget && widget._srcElement) {
 			var str=this.serialize(node);
@@ -198,8 +167,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 	
 		if (!this.subscribed) {
 		
-			this.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
-//console.trace();
+			connect.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
 				var editor = this.getEditor();
 				if (!dojo.isObject(e.node) || !editor || editor.declaredClass != "davinci.ve.PageEditor"){
 					return;
@@ -228,7 +196,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 				}
 			}));
 			
-			this.subscribe("/davinci/states/state/renamed", dojo.hitch(this, function(e) { 
+			connect.subscribe("/davinci/states/state/renamed", dojo.hitch(this, function(e) { 
 				var editor = this.getEditor();
 				if (!editor || editor.declaredClass == "davinci.themeEditor.ThemeEditor") return; // ignore updates in theme editor
 				var widget = (e.node && e.node._dvWidget);
@@ -249,14 +217,14 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 				}
 			}));
 			
-			this.subscribe("/davinci/states/state/style/changed", dojo.hitch(this, function(e) { 
+			connect.subscribe("/davinci/states/state/style/changed", dojo.hitch(this, function(e) { 
 				var containerState = this.getState();
 				if (containerState == e.state) {
 					this._update(e.node, e.state, containerState);		
 				}
 			}));
 			
-			this.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, function(newWidget, oldWidget) { 
+			connect.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, function(newWidget, oldWidget) { 
 				var containerState = this.getState();
 				if (containerState) {
 					this._update(newWidget.domNode, containerState, undefined);		
@@ -269,7 +237,7 @@ declare("davinci.ve.States", davinci.maqetta.States, {
 });
 
 //TODO: change to use singleton pattern for this module?
-davinci.ve.states = new davinci.ve.States();
+davinci.ve.states = new veStates();
 davinci.ve.states.initialize();
 
 return davinci.ve.states;

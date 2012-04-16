@@ -1,0 +1,3 @@
+[submodule "davinci.gridx/WebContent/gridx"]
+	path = davinci.gridx/WebContent/gridx
+	url = http://github.com/evanhw/gridx.git

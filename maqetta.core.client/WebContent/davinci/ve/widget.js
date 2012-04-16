@@ -257,6 +257,10 @@ getLabel: function(widget) {
 		text += "<span class='propertiesTitleWidgetText'>" + widgetText + "</span> ";
 	}
 
+	if (helper && helper.getWidgetDescriptor) {
+		text += " <span class='propertiesTitleWidgetDescriptor'>" + helper.getWidgetDescriptor(widget) + "</span> ";
+	}
+
 	/* add the class */
 	var srcElement = widget._srcElement;
 	var id = widget.getId();
@@ -580,6 +584,15 @@ createWidget: function(widgetData, initialCreationArgs) {
 		if(states_json){
 			widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
 		}
+	}
+	
+	// In same cases we are handling certain attributes within data-dojo-props 
+	// or via child HTML elements, and we do not want to allow those attributes 
+	// to be written out into the final HTMLHere, we give the helper a chance to 
+	// remove those attributes.
+	var helper = widgetObject.getWidgetHelper(type);
+	if(helper && helper.cleanSrcElement){
+		helper.cleanSrcElement(widget._srcElement);
 	}
 
 	return widget;

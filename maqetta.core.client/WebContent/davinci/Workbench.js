@@ -23,6 +23,7 @@ define([
 	"./ve/metadata",
 	"dojo/_base/Deferred",
 	"dojo/_base/declare",
+	"dojo/_base/connect",
 	"davinci/ve/widgets/FontComboBox"
 ], function(
 		Runtime,
@@ -48,7 +49,8 @@ define([
 		webContent,
 		metadata,
 		Deferred,
-		declare
+		declare,
+		connect
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -191,13 +193,11 @@ var initializeWorkbenchState = function(){
 			}
 		}
 	}
+	
 	if (!Workbench._state.hasOwnProperty("editors")) {
-		Workbench._state = {
-			editors: [], 
-			version: davinci.version,
-			project: Runtime._DEFAULT_PROJECT
-		};
+		Workbench._state.editors = [];
 	}
+	
 };
 
 var Workbench = {
@@ -235,7 +235,7 @@ var Workbench = {
 		);
 
 		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
-		davinci.states.subscribe("/davinci/states/state/changed", function(args) {
+		connect.subscribe("/davinci/states/state/changed", function(args) {
 			//FIXME: This is page editor-specific logic within Workbench.
 			var context = (Runtime.currentEditor && Runtime.currentEditor.declaredClass == "davinci.ve.PageEditor" && 
 					Runtime.currentEditor.visualEditor && Runtime.currentEditor.visualEditor.context);

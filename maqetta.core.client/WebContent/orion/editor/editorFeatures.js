@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -12,9 +12,9 @@
 /*global define */
 /*jslint maxerr:150 browser:true devel:true */
 
-define("orion/editor/editorFeatures", ['orion/textview/undoStack', 'orion/textview/keyBinding', 'orion/textview/rulers', 'orion/textview/annotations', 'orion/textview/textDND',
-	'orion/editor/regex'],
-function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
+define("orion/editor/editorFeatures", ['i18n!orion/editor/nls/messages', 'orion/textview/undoStack', 'orion/textview/keyBinding',
+	'orion/textview/rulers', 'orion/textview/annotations', 'orion/textview/textDND', 'orion/editor/regex', 'orion/textview/util'],
+function(messages, mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex, mUtil) {
 
 	function UndoFactory() {
 	}
@@ -90,9 +90,6 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 		this._incrementalFindIgnoreSelection = false;
 		this._incrementalFindPrefix = "";
 		this._searcher =  searcher;
-		if(this._searcher) {
-			this._searcher.getAdaptor().setEditor(this.editor);
-		}
 		this._lastEditLocation = null;
 		this.init();
 	}
@@ -111,17 +108,19 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 					var match = prefix.match(new RegExp("^" + mRegex.escape(txt), "i"));
 					if (match && match.length > 0) {
 						prefix = self._incrementalFindPrefix += e.text;
-						self.editor.reportStatus("Incremental find: " + prefix);
-						var ignoreCase = prefix.toLowerCase() === prefix;
+						self.editor.reportStatus(mUtil.formatMessage(messages.incrementalFind, prefix));
 						var searchStart = editor.getSelection().start;
-						var result = editor.doFind(prefix, searchStart, ignoreCase);
+						var result = editor.getModel().find({
+							string: prefix,
+							start: searchStart,
+							caseInsensitive: prefix.toLowerCase() === prefix}).next();
 						if (result) {
 							self._incrementalFindSuccess = true;
 							self._incrementalFindIgnoreSelection = true;
-							editor.moveSelection(result.index, result.index+result.length);
+							editor.moveSelection(result.start, result.end);
 							self._incrementalFindIgnoreSelection = false;
 						} else {
-							editor.reportStatus("Incremental find: " + prefix + " (not found)", "error");
+							editor.reportStatus(mUtil.formatMessage(messages.incrementalFindNotFound, prefix), "error");
 							self._incrementalFindSuccess = false;
 						}
 						e.text = null;
@@ -146,8 +145,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 			
 			// Find actions
 			// These variables are used among the various find actions:
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("f", true), "Find...");
-			this.textView.setAction("Find...", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("f", true), messages.find);
+			this.textView.setAction(messages.find, function() {
 				if (this._searcher) {
 					var editor = this.editor;
 					var selection = editor.getSelection();
@@ -162,26 +161,36 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return false;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("k", true), "Find Next Occurrence");
-			this.textView.setAction("Find Next Occurrence", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("k", true), messages.findNext);
+			this.textView.setAction(messages.findNext, function() {
 				if (this._searcher){
-					this._searcher.findNext(true);
+					var selection = this.textView.getSelection();
+					if(selection.start < selection.end) {
+						this._searcher.findNext(true, this.textView.getText(selection.start, selection.end));
+					} else {
+						this._searcher.findNext(true);
+					}
 					return true;
 				}
 				return false;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("k", true, true), "Find Previous Occurrence");
-			this.textView.setAction("Find Previous Occurrence", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("k", true, true), messages.findPrevious);
+			this.textView.setAction(messages.findPrevious, function() {
 				if (this._searcher){
-					this._searcher.findNext(false);
+					var selection = this.textView.getSelection();
+					if(selection.start < selection.end) {
+						this._searcher.findNext(false, this.textView.getText(selection.start, selection.end));
+					} else {
+						this._searcher.findNext(false);
+					}
 					return true;
 				}
 				return false;
 			}.bind(this));
 	
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("j", true), "Incremental Find");
-			this.textView.setAction("Incremental Find", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("j", true), messages.incrementalFindKey);
+			this.textView.setAction(messages.incrementalFindKey, function() {
 				if (this._searcher && this._searcher.visible()) {
 					return true;
 				}
@@ -193,24 +202,22 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 					var prefix = this._incrementalFindPrefix;
 					if (prefix.length !== 0) {
 						var result;
-						if (this._searcher) {
-							result = this._searcher.findNext(true, prefix);
-						} else {
-							var searchStart = 0;
-							if (this._incrementalFindSuccess) {
-								searchStart = editor.getSelection().start + 1;
-							}
-							var caseInsensitive = prefix.toLowerCase() === prefix;
-							result = editor.doFind(prefix, searchStart, caseInsensitive);
+						var searchStart = 0;
+						if (this._incrementalFindSuccess) {
+							searchStart = editor.getSelection().start + 1;
 						}
+						result = editor.getModel().find({
+							string: prefix,
+							start: searchStart,
+							caseInsensitive: prefix.toLowerCase() === prefix}).next();
 						if (result) {
 							this._incrementalFindSuccess = true;
 							this._incrementalFindIgnoreSelection = true;
-							editor.moveSelection(result.index, result.index + result.length);
+							editor.moveSelection(result.start, result.end);
 							this._incrementalFindIgnoreSelection = false;
-							editor.reportStatus("Incremental find: " + prefix);
+							editor.reportStatus(mUtil.formatMessage(messages.incrementalFind, prefix));
 						} else {
-							editor.reportStatus("Incremental find: " + prefix + " (not found)", "error");
+							editor.reportStatus(mUtil.formatMessage(messages.incrementalFindNotFound, prefix), "error");
 							this._incrementalFindSuccess = false;
 						}
 					}
@@ -230,17 +237,19 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 						this.toggleIncrementalFind();
 						return true;
 					}
-					editor.reportStatus("Incremental find: " + prefix);
-					var caretOffset = editor.getCaretOffset();
-					var model = editor.getModel();
-					var index = model.getText().lastIndexOf(prefix, caretOffset - prefix.length - 1);
-					if (index !== -1) {
+					editor.reportStatus(mUtil.formatMessage(messages.incrementalFind, prefix));
+					var result = editor.getModel().find({
+						string: prefix,
+						start: editor.getCaretOffset() - prefix.length - 1,
+						reverse: true,
+						caseInsensitive: prefix.toLowerCase() === prefix}).next();
+					if (result) {
 						this._incrementalFindSuccess = true;
 						this._incrementalFindIgnoreSelection = true;
-						editor.moveSelection(index,index+prefix.length);
+						editor.moveSelection(result.start,result.end);
 						this._incrementalFindIgnoreSelection = false;
 					} else {
-						editor.reportStatus("Incremental find: " + prefix + " (not found)", "error");
+						editor.reportStatus(mUtil.formatMessage(messages.incrementalFindNotFound, prefix), "error");
 					}
 					return true;
 				}
@@ -270,8 +279,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return false;
 			}.bind(this));
 	
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(9, false, true), "Unindent Lines");
-			this.textView.setAction("Unindent Lines", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(9, false, true), messages.unindentLines);
+			this.textView.setAction(messages.unindentLines, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -306,8 +315,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return true;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(38, false, false, true), "Move Lines Up");
-			this.textView.setAction("Move Lines Up", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(38, false, false, true), messages.moveLinesUp);
+			this.textView.setAction(messages.moveLinesUp, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -338,8 +347,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return true;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(40, false, false, true), "Move Lines Down");
-			this.textView.setAction("Move Lines Down", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(40, false, false, true), messages.moveLinesDown);
+			this.textView.setAction(messages.moveLinesDown, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -369,8 +378,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return true;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(38, true, false, true), "Copy Lines Up");
-			this.textView.setAction("Copy Lines Up", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(38, true, false, true), messages.copyLinesUp);
+			this.textView.setAction(messages.copyLinesUp, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -390,8 +399,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return true;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(40, true, false, true), "Copy Lines Down");
-			this.textView.setAction("Copy Lines Down", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(40, true, false, true), messages.copyLinesDown);
+			this.textView.setAction(messages.copyLinesDown, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -411,8 +420,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return true;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding('d', true, false, false), "Delete Selected Lines");
-			this.textView.setAction("Delete Selected Lines", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding('d', true, false, false), messages.deleteLines);
+			this.textView.setAction(messages.deleteLines, function() {
 				var editor = this.editor;
 				var selection = editor.getSelection();
 				var model = editor.getModel();
@@ -425,12 +434,12 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 			}.bind(this));
 			
 			// Go To Line action
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("l", true), "Goto Line...");
-			this.textView.setAction("Goto Line...", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("l", true), messages.gotoLine);
+			this.textView.setAction(messages.gotoLine, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var line = model.getLineAtOffset(editor.getCaretOffset());
-				line = prompt("Go to line:", line + 1);
+				line = prompt(messages.gotoLinePrompty, line + 1);
 				if (line) {
 					line = parseInt(line, 10);
 					editor.onGotoLine(line - 1, 0);
@@ -439,8 +448,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 			}.bind(this));
 			
 			var isMac = navigator.platform.indexOf("Mac") !== -1;
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("q", !isMac, false, false, isMac), "Last Edit Location");
-			this.textView.setAction("Last Edit Location", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding("q", !isMac, false, false, isMac), messages.lastEdit);
+			this.textView.setAction(messages.lastEdit, function() {
 				if (typeof this._lastEditLocation === "number")  {
 					this.editor.showSelection(this._lastEditLocation);
 				}
@@ -451,7 +460,7 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 		toggleIncrementalFind: function() {
 			this._incrementalFindActive = !this._incrementalFindActive;
 			if (this._incrementalFindActive) {
-				this.editor.reportStatus("Incremental find: " + this._incrementalFindPrefix);
+				this.editor.reportStatus(mUtil.formatMessage(messages.incrementalFind, this._incrementalFindPrefix));
 				this.textView.addEventListener("Verify", this._incrementalFindListener.onVerify);
 				this.textView.addEventListener("Selection", this._incrementalFindListener.onSelection);
 			} else {
@@ -501,14 +510,19 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				} else {
 					start = model.getCharCount() - 1;
 				}
-				var index = model.getText().lastIndexOf(prefix, start);
-				if (index !== -1) {
+				var result = editor.getModel().find({
+					string: prefix,
+					start: start,
+					reverse: true,
+					caseInsensitive: prefix.toLowerCase() === prefix}).next();
+				if (result) {
 					this._incrementalFindSuccess = true;
 					this._incrementalFindIgnoreSelection = true;
-					editor.moveSelection(index, index + prefix.length);
+					editor.moveSelection(result.start, result.end);
 					this._incrementalFindIgnoreSelection = false;
+					editor.reportStatus(mUtil.formatMessage(messages.incrementalFind, prefix));
 				} else {
-					editor.reportStatus("Incremental find: " + prefix + " (not found)", "error");
+					editor.reportStatus(mUtil.formatMessage(messages.incrementalFindNotFound, prefix), "error");
 					this._incrementalFindSuccess = false;
 				}
 				return true;
@@ -522,20 +536,22 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 					return false;
 				}
 				var editor = this.editor;
-				var model = editor.getModel();
 				var start = 0;
 				if (this._incrementalFindSuccess) {
 					start = editor.getSelection().start + 1;
 				}
-				var index = model.getText().indexOf(prefix, start);
-				if (index !== -1) {
+				var result = editor.getModel().find({
+					string: prefix,
+					start: start,
+					caseInsensitive: prefix.toLowerCase() === prefix}).next();
+				if (result) {
 					this._incrementalFindSuccess = true;
 					this._incrementalFindIgnoreSelection = true;
-					editor.moveSelection(index, index+prefix.length);
+					editor.moveSelection(result.start, result.end);
 					this._incrementalFindIgnoreSelection = false;
-					this.editor.reportStatus("Incremental find: " + prefix);
+					editor.reportStatus(mUtil.formatMessage(messages.incrementalFind, prefix));
 				} else {
-					editor.reportStatus("Incremental find: " + prefix + " (not found)", "error");
+					editor.reportStatus(mUtil.formatMessage(messages.incrementalFindNotFound, prefix), "error");
 					this._incrementalFindSuccess = false;
 				}
 				return true;
@@ -560,9 +576,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 		this.contentAssist = contentAssist;
 		this.linkedMode = linkedMode;
 		if (this.contentAssist) {
-			this.contentAssist.addEventListener("accept", this.contentAssistProposalAccepted.bind(this));
+			this.contentAssist.addEventListener("ProposalApplied", this.contentAssistProposalApplied.bind(this));
 		}
-		
 		this.init();
 	}
 	SourceCodeActions.prototype = {
@@ -580,8 +595,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 		init: function() {
 		
 			// Block comment operations
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(191, true), "Toggle Line Comment");
-			this.textView.setAction("Toggle Line Comment", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(191, true), messages.toggleLineComment);
+			this.textView.setAction(messages.toggleLineComment, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -663,8 +678,9 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return {commentStart: commentStart, commentEnd: commentEnd};
 			}
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(191, true, true), "Add Block Comment");
-			this.textView.setAction("Add Block Comment", function() {
+			var isMac = navigator.platform.indexOf("Mac") !== -1;
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(191, true, !isMac, false, isMac), messages.addBlockComment);
+			this.textView.setAction(messages.addBlockComment, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -687,8 +703,8 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return true;
 			}.bind(this));
 			
-			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(220, true, true), "Remove Block Comment");
-			this.textView.setAction("Remove Block Comment", function() {
+			this.textView.setKeyBinding(new mKeyBinding.KeyBinding(220, true, !isMac, false, isMac), messages.removeBlockComment);
+			this.textView.setAction(messages.removeBlockComment, function() {
 				var editor = this.editor;
 				var model = editor.getModel();
 				var selection = editor.getSelection();
@@ -729,50 +745,45 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 			}.bind(this));
 		},
 		/**
-		 * Called when a content assist proposal has been accepted. Inserts the proposal into the
+		 * Called when a content assist proposal has been applied. Inserts the proposal into the
 		 * document. Activates Linked Mode if applicable for the selected proposal.
+		 * @param {orion.editor.ContentAssist#ProposalAppliedEvent} event
 		 */
-		contentAssistProposalAccepted: function(event) {
+		contentAssistProposalApplied: function(event) {
 			/**
-			 * The event.proposal may be either a simple string or an object with this shape:
+			 * The event.proposal is an object with this shape:
 			 * {   proposal: "[proposal string]", // Actual text of the proposal
+			 *     description: "diplay string", // Optional
 			 *     positions: [{
 			 *         offset: 10, // Offset of start position of parameter i
 			 *         length: 3  // Length of parameter string for parameter i
 			 *     }], // One object for each parameter; can be null
-			 *     escapePosition: 19 // Offset that caret will be placed at after exiting Linked Mode; can be null
+			 *     escapePosition: 19 // Optional; offset that caret will be placed at after exiting Linked Mode.
 			 * }
 			 * Offsets are relative to the text buffer.
 			 */
-			var proposalInfo = event.data.proposal;
-			var proposal;
-			if (typeof proposalInfo === "string") {
-				proposal = proposalInfo;
-			} else if (typeof proposalInfo.proposal === "string") {
-				proposal = proposalInfo.proposal;
-			}
-			this.textView.setText(proposal, event.data.start, event.data.end);
+			var proposal = event.data.proposal;
 			
 			//if the proposal specifies linked positions, build the model and enter linked mode
-			if (proposalInfo.positions && this.linkedMode) {
+			if (proposal.positions && this.linkedMode) {
 				var positionGroups = [];
-				for (var i = 0; i < proposalInfo.positions.length; ++i) {
+				for (var i = 0; i < proposal.positions.length; ++i) {
 					positionGroups[i] = {
 						positions: [{
-							offset: proposalInfo.positions[i].offset,
-							length: proposalInfo.positions[i].length
+							offset: proposal.positions[i].offset,
+							length: proposal.positions[i].length
 						}]
 					};
 				}
 
 				var linkedModeModel = {
 					groups: positionGroups,
-					escapePosition: proposalInfo.escapePosition
+					escapePosition: proposal.escapePosition
 				};
 				this.linkedMode.enterLinkedMode(linkedModeModel);
-			} else if (proposalInfo.escapePosition) {
+			} else if (proposal.escapePosition) {
 				//we don't want linked mode, but there is an escape position, so just set cursor position
-				this.textView.setCaretOffset(proposalInfo.escapePosition);
+				this.textView.setCaretOffset(proposal.escapePosition);
 			}
 			return true;
 		},
@@ -812,6 +823,9 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 					return true;
 				}
 			}
+			return false;
+		},
+		tab: function() {
 			return false;
 		}
 	};
@@ -920,7 +934,7 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 				return true;
 			}.bind(this));
 
-			this.editor.reportStatus("Linked Mode entered");
+			this.editor.reportStatus(messages.linkedModeEntered, null, true);
 		},
 		isActive: function() {
 			return this.linkedModeActive;
@@ -944,7 +958,7 @@ function(mUndoStack, mKeyBinding, mRulers, mAnnotations, mTextDND, mRegex) {
 			
 			this.textView.setCaretOffset(this.linkedModeEscapePosition, false);
 
-			this.editor.reportStatus("Linked Mode exited");
+			this.editor.reportStatus(messages.linkedModeExited, null, true);
 		},
 		/**
 		 * Updates the selection in the textView for given Linked Mode position.

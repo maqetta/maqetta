@@ -1,16 +1,7 @@
-// Duplicate of workspace/maqetta/maqetta.js for use by page editor.
-// Created this cloned version to overcome loader/build conflicts 
-// if page editor and runtime (possibly) using different versions of Dojo
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom"], function(connect, domStyle, dom){
 
-// Code below is looking for dojo at davinci.dojo. Don't ask why.
-
-if ( typeof davinci === "undefined" ) { davinci = {}; }
-require(["dojo/_base/connect"], function(connect){
-davinci.dojo = dojo;
-
-davinci.maqetta = davinci.maqetta || {};
-davinci.maqetta.States = function(){};
-davinci.maqetta.States.prototype = {
+var States = function(){};
+States.prototype = {
 
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
@@ -65,8 +56,7 @@ davinci.maqetta.States.prototype = {
 	 * for a given node.
 	 * @param {Element} node
 	 */
-	_updateSrcState: function (node)
-	{
+	_updateSrcState: function (node){
 	},
 	
 	/**
@@ -137,7 +127,7 @@ davinci.maqetta.States.prototype = {
 			}
 		}
 		if (!_silent) {
-			this.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
+			connect.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
 		}
 		this._updateSrcState (node);
 		
@@ -300,7 +290,7 @@ davinci.maqetta.States.prototype = {
 		}
 			
 		if (!silent) {
-			this.publish("/davinci/states/state/style/changed", [{node:node, state:state, style:styleArray}]);
+			connect.publish("/davinci/states/state/style/changed", [{node:node, state:state, style:styleArray}]);
 		}
 		this._updateSrcState (node);
 	},
@@ -468,7 +458,7 @@ davinci.maqetta.States.prototype = {
 		node.states = node.states || {};
 		node.states[state] = node.states[state] || {};
 		node.states[state].origin = true;
-		this.publish("/davinci/states/state/added", [{node:node, state:state}]);
+		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},
 	
@@ -496,13 +486,13 @@ davinci.maqetta.States.prototype = {
 		if (this._isEmpty(node.states[state])) {
 			delete node.states[state];
 		}
-		this.publish("/davinci/states/state/removed", [{node:node, state:state}]);
+		connect.publish("/davinci/states/state/removed", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},
 	
 	/**
 	 * Renames a state in the list of states declared by the widget.
-	 * Subscribe using davinci.states.subscribe("/davinci/states/renamed", callback).
+	 * Subscribe using connect.subscribe("/davinci/states/renamed", callback).
 	 */
 	rename: function(node, oldName, newName, property){ 
 		if (arguments.length < 3) {
@@ -517,7 +507,7 @@ davinci.maqetta.States.prototype = {
 		node.states[newName] = node.states[oldName];
 		delete node.states[oldName];
 		if (!property) {
-			this.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
+			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
 		}
 		this._updateSrcState (node);
 		return true;
@@ -650,7 +640,7 @@ davinci.maqetta.States.prototype = {
 		this.clear(node);
 		//FIXME: Shouldn't be stuffing a property with such a generic name ("states") onto DOM elements
 		node.states = states = this.deserialize(states);
-		this.publish("/davinci/states/stored", [{node:node, states:states}]);
+		connect.publish("/davinci/states/stored", [{node:node, states:states}]);
 	},
 	
 	/**
@@ -676,7 +666,7 @@ davinci.maqetta.States.prototype = {
 		if (!node || !node.states) return;
 		var states = node.states;
 		delete node.states;
-		this.publish("/davinci/states/cleared", [{node:node, states:states}]);
+		connect.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
 	/**
@@ -734,21 +724,6 @@ davinci.maqetta.States.prototype = {
 		return !isDavinciEditor;
 	},
 
-	publish: function(/*String*/ topic, /*Array*/ args) {
-		try {
-			return connect.publish(topic, args);
-		} catch(e) {
-			console.error(e);
-		}
-	},
-	
-	subscribe: function(/*String*/ topic, /*Object|null*/ context, /*String|Function*/ method){
-		return connect.subscribe(topic, context, method);
-	},
-	
-	unsubscribe: function(handle){
-		return connect.unsubscribe(handle);
-	}, 
 
 	/**
 	 * Returns all child elements for given Element
@@ -769,8 +744,7 @@ davinci.maqetta.States.prototype = {
 	
 	initialize: function() {	
 		if (!this.subscribed && this._shouldInitialize()) {
-		
-			this.subscribe("/davinci/states/state/changed", function(e) { 
+			connect.subscribe("/davinci/states/state/changed", function(e) { 
 				if(e.editorClass){
 					// Event targets one of Maqetta's editors, not from runtime events
 					return;
@@ -790,13 +764,15 @@ davinci.maqetta.States.prototype = {
 	}
 };
 
-davinci.states = new davinci.maqetta.States();
+//FIXME: remove all references to davinci global and davinci.states
+if (typeof davinci === "undefined") { davinci = {}; }
+var singleton = davinci.states = new States();
 
 (function(){
 
-	if (davinci.states._shouldInitialize()) {
+	if (singleton._shouldInitialize()) {
 	
-		davinci.states.initialize();
+		singleton.initialize();
 		
 		// Patch the dojo parse method to preserve states data
 		if (typeof require != "undefined") {
@@ -835,7 +811,7 @@ davinci.states = new davinci.maqetta.States();
 				var _preserveStates = function (cache) {
 					var count=0;
 					var prefix = 'maqTempClass';
-					var doc = davinci.states.getDocument();
+					var doc = singleton.getDocument();
 	
 					// Preserve the body states directly on the dom node
 					if(!doc.body._maqAlreadyPreserved){
@@ -854,7 +830,7 @@ davinci.states = new davinci.maqetta.States();
 						// make sure the current node hasn't already been preserved
 						if(!node._maqAlreadyPreserved){
 							node._maqAlreadyPreserved = true;
-							var states = davinci.states.retrieve(node);
+							var states = singleton.retrieve(node);
 							if (states) {
 								if (node.tagName != "BODY") {
 									var tempClass = prefix+count;
@@ -880,7 +856,7 @@ davinci.states = new davinci.maqetta.States();
 				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
 				 */
 				var _restoreStates = function (cache) {
-					var doc = davinci.states.getDocument(),
+					var doc = singleton.getDocument(),
 						currentStateCache = [];
 					for(var id in cache){
 						var node;
@@ -897,9 +873,9 @@ davinci.states = new davinci.maqetta.States();
 							console.error("States: Failed to get node by id: ", id);
 						}
 						// BODY node has app states directly on node.states. All others have it on node.states.style.
-						var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
+						var states = singleton.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
 						delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-						davinci.states.store(node, states);
+						singleton.store(node, states);
 						if(node.tagName != 'BODY'){
 							davinci.states.transferElementStyle(node, cache[id].style);
 						}
@@ -915,7 +891,7 @@ davinci.states = new davinci.maqetta.States();
 
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
 if (!davinci.Workbench && typeof dijit != "undefined"){
-	davinci.states.subscribe("/davinci/states/state/changed", function(args) {
+	connect.subscribe("/davinci/states/state/changed", function(args) {
 		var w;
 		if (args.newState && !args.newState.indexOf("_show:")) {
 			w = dijit.byId(args.newState.substring(6));
@@ -928,4 +904,5 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 }
 */
 
+return States;
 });

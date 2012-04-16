@@ -1,618 +1,7 @@
-// Runtime version, used by preview-in-browser
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom"], function(connect, domStyle, dom){
 
-// Various functions extracted from dojo for use in non-dojo environments
-(function(){
-
-	if (typeof davinci == "undefined") {
-		davinci = {};
-	}
-	davinci.dojo = {};
-	var d = davinci.dojo;
-	
-	/*=====
-	davinci.dojo.doc = {
-		// summary:
-		//		Alias for the current document. 'davinci.dojo.doc' can be modified
-		//		for temporary context shifting. Also see davinci.dojo.withDoc().
-		// description:
-		//    Refer to davinci.dojo.doc rather
-		//    than referring to 'window.document' to ensure your code runs
-		//    correctly in managed contexts.
-		// example:
-		// 	|	n.appendChild(davinci.dojo.doc.createElement('div'));
-	}
-	=====*/
-	d.doc = window["document"] || null;
-	d.global = window;
-	
-	var n = navigator;
-	var dua = n.userAgent,
-		dav = n.appVersion,
-		tv = parseFloat(dav);
-
-	if(dua.indexOf("Opera") >= 0){ d.isOpera = tv; }
-	d.isWebKit = parseFloat(dua.split("WebKit/")[1]) || undefined;
-
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	if(document.all && !d.isOpera){
-		d.isIE = parseFloat(dav.split("MSIE ")[1]) || undefined;
-		//In cases where the page has an HTTP header or META tag with
-		//X-UA-Compatible, then it is in emulation mode.
-		//Make sure isIE reflects the desired version.
-		//document.documentMode of 5 means quirks mode.
-		//Only switch the value if documentMode's major version
-		//is different from isIE's major version.
-		var mode = document.documentMode;
-		if(mode && mode != 5 && Math.floor(d.isIE) != mode){
-			d.isIE = mode;
-		}
-	}
-	//>>excludeEnd("webkitMobile");
-
-	/*=====
-	davinci.dojo.byId = function(id, doc){
-		//	summary:
-		//		Returns DOM node with matching `id` attribute or `null`
-		//		if not found. If `id` is a DomNode, this function is a no-op.
-		//
-		//	id: String|DOMNode
-		//	 	A string to match an HTML id attribute or a reference to a DOM Node
-		//
-		//	doc: Document?
-		//		Document to work in. Defaults to the current value of
-		//		davinci.dojo.doc.  Can be used to retrieve
-		//		node references from other documents.
-		//
-		//	example:
-		//	Look up a node by ID:
-		//	|	var n = davinci.dojo.byId("foo");
-		//
-		//	example:
-		//	Check if a node exists, and use it.
-		//	|	var n = davinci.dojo.byId("bar");
-		//	|	if(n){ doStuff() ... }
-		//
-		//	example:
-		//	Allow string or DomNode references to be passed to a custom function:
-		//	|	var foo = function(nodeOrId){
-		//	|		nodeOrId = davinci.dojo.byId(nodeOrId);
-		//	|		// ... more stuff
-		//	|	}
-	=====*/
-
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	if(d.isIE || d.isOpera){
-		d.byId = function(id, doc){
-			if(typeof id != "string"){
-				return id;
-			}
-			var _d = doc || d.doc, te = _d.getElementById(id);
-			// attributes.id.value is better than just id in case the 
-			// user has a name=id inside a form
-			if(te && (te.attributes.id.value == id || te.id == id)){
-				return te;
-			}else{
-				var eles = _d.all[id];
-				if(!eles || eles.nodeName){
-					eles = [eles];
-				}
-				// if more than 1, choose first with the correct id
-				var i=0;
-				while((te=eles[i++])){
-					if((te.attributes && te.attributes.id && te.attributes.id.value == id)
-						|| te.id == id){
-						return te;
-					}
-				}
-			}
-		};
-	}else{
-	//>>excludeEnd("webkitMobile");
-		d.byId = function(id, doc){
-			// inline'd type check
-			return (typeof id == "string") ? (doc || d.doc).getElementById(id) : id; // DomNode
-		};
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	}
-	//>>excludeEnd("webkitMobile");
-	
-		// Although we normally eschew argument validation at this
-	// level, here we test argument 'node' for (duck)type,
-	// by testing nodeType, ecause 'document' is the 'parentNode' of 'body'
-	// it is frequently sent to this function even 
-	// though it is not Element.
-	var gcs;
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	if(d.isWebKit){
-	//>>excludeEnd("webkitMobile");
-		gcs = function(/*DomNode*/node){
-			var s;
-			if(node.nodeType == 1){
-				var dv = node.ownerDocument.defaultView;
-				s = dv.getComputedStyle(node, null);
-				if(!s && node.style){
-					node.style.display = "";
-					s = dv.getComputedStyle(node, null);
-				}
-			}
-			return s || {};
-		};
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	}else if(d.isIE){
-		gcs = function(node){
-			// IE (as of 7) doesn't expose Element like sane browsers
-			return node.nodeType == 1 /* ELEMENT_NODE*/ ? node.currentStyle : {};
-		};
-	}else{
-		gcs = function(node){
-			return node.nodeType == 1 ?
-				node.ownerDocument.defaultView.getComputedStyle(node, null) : {};
-		};
-	}
-	//>>excludeEnd("webkitMobile");
-	d.getComputedStyle = gcs;
-
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	if(!d.isIE){
-	//>>excludeEnd("webkitMobile");
-		d._toPixelValue = function(element, value){
-			// style values can be floats, client code may want
-			// to round for integer pixels.
-			return parseFloat(value) || 0;
-		};
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	}else{
-		d._toPixelValue = function(element, avalue){
-			if(!avalue){ return 0; }
-			// on IE7, medium is usually 4 pixels
-			if(avalue == "medium"){ return 4; }
-			// style values can be floats, client code may
-			// want to round this value for integer pixels.
-			if(avalue.slice && avalue.slice(-2) == 'px'){ return parseFloat(avalue); }
-			with(element){
-				var sLeft = style.left;
-				var rsLeft = runtimeStyle.left;
-				runtimeStyle.left = currentStyle.left;
-				try{
-					// 'avalue' may be incompatible with style.left, which can cause IE to throw
-					// this has been observed for border widths using "thin", "medium", "thick" constants
-					// those particular constants could be trapped by a lookup
-					// but perhaps there are more
-					style.left = avalue;
-					avalue = style.pixelLeft;
-				}catch(e){
-					avalue = 0;
-				}
-				style.left = sLeft;
-				runtimeStyle.left = rsLeft;
-			}
-			return avalue;
-		}
-	}
-	//>>excludeEnd("webkitMobile");
-	var px = d._toPixelValue;
-
-	// FIXME: there opacity quirks on FF that we haven't ported over. Hrm.
-	/*=====
-	davinci.dojo._getOpacity = function(node){
-			//	summary:
-			//		Returns the current opacity of the passed node as a
-			//		floating-point value between 0 and 1.
-			//	node: DomNode
-			//		a reference to a DOM node. Does NOT support taking an
-			//		ID string for speed reasons.
-			//	returns: Number between 0 and 1
-			return; // Number
-	}
-	=====*/
-
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	var astr = "DXImageTransform.Microsoft.Alpha";
-	var af = function(n, f){
-		try{
-			return n.filters.item(astr);
-		}catch(e){
-			return f ? {} : null;
-		}
-	};
-
-	//>>excludeEnd("webkitMobile");
-	d._getOpacity =
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-		d.isIE ? function(node){
-			try{
-				return af(node).Opacity / 100; // Number
-			}catch(e){
-				return 1; // Number
-			}
-		} :
-	//>>excludeEnd("webkitMobile");
-		function(node){
-			return gcs(node).opacity;
-		};
-
-	/*=====
-	davinci.dojo._setOpacity = function(node, opacity){
-			//	summary:
-			//		set the opacity of the passed node portably. Returns the
-			//		new opacity of the node.
-			//	node: DOMNode
-			//		a reference to a DOM node. Does NOT support taking an
-			//		ID string for performance reasons.
-			//	opacity: Number
-			//		A Number between 0 and 1. 0 specifies transparent.
-			//	returns: Number between 0 and 1
-			return; // Number
-	}
-	=====*/
-
-	d._setOpacity =
-		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-		d.isIE ? function(/*DomNode*/node, /*Number*/opacity){
-			var ov = opacity * 100, opaque = opacity == 1;
-			node.style.zoom = opaque ? "" : 1;
-
-			if(!af(node)){
-				if(opaque){
-					return opacity;
-				}
-				node.style.filter += " progid:" + astr + "(Opacity=" + ov + ")";
-			}else{
-				af(node, 1).Opacity = ov;
-			}
-
-			// on IE7 Alpha(Filter opacity=100) makes text look fuzzy so disable it altogether (bug #2661),
-			//but still update the opacity value so we can get a correct reading if it is read later.
-			af(node, 1).Enabled = !opaque;
-
-			if(node.nodeName.toLowerCase() == "tr"){
-				d.query("> td", node).forEach(function(i){
-					d._setOpacity(i, opacity);
-				});
-			}
-			return opacity;
-		} :
-		//>>excludeEnd("webkitMobile");
-		function(node, opacity){
-			return node.style.opacity = opacity;
-		};
-
-	var _pixelNamesCache = {
-		left: true, top: true
-	};
-	var _pixelRegExp = /margin|padding|width|height|max|min|offset/;  // |border
-	var _toStyleValue = function(node, type, value){
-		type = type.toLowerCase(); // FIXME: should we really be doing string case conversion here? Should we cache it? Need to profile!
-		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-		if(d.isIE){
-			if(value == "auto"){
-				if(type == "height"){ return node.offsetHeight; }
-				if(type == "width"){ return node.offsetWidth; }
-			}
-			if(type == "fontweight"){
-				switch(value){
-					case 700: return "bold";
-					case 400:
-					default: return "normal";
-				}
-			}
-		}
-		//>>excludeEnd("webkitMobile");
-		if(!(type in _pixelNamesCache)){
-			_pixelNamesCache[type] = _pixelRegExp.test(type);
-		}
-		return _pixelNamesCache[type] ? px(node, value) : value;
-	};
-
-	var _floatStyle = d.isIE ? "styleFloat" : "cssFloat",
-		_floatAliases = { "cssFloat": _floatStyle, "styleFloat": _floatStyle, "float": _floatStyle }
-	;
-
-	// public API
-
-	d.style = function(	/*DomNode|String*/ node,
-							/*String?|Object?*/ style,
-							/*String?*/ value){
-		//	summary:
-		//		Accesses styles on a node. If 2 arguments are
-		//		passed, acts as a getter. If 3 arguments are passed, acts
-		//		as a setter.
-		//	description:
-		//		Getting the style value uses the computed style for the node, so the value
-		//		will be a calculated value, not just the immediate node.style value.
-		//		Also when getting values, use specific style names,
-		//		like "borderBottomWidth" instead of "border" since compound values like
-		//		"border" are not necessarily reflected as expected.
-		//		If you want to get node dimensions, use `davinci.dojo.marginBox()`, 
-		//		`davinci.dojo.contentBox()` or `davinci.dojo.position()`.
-		//	node:
-		//		id or reference to node to get/set style for
-		//	style:
-		//		the style property to set in DOM-accessor format
-		//		("borderWidth", not "border-width") or an object with key/value
-		//		pairs suitable for setting each property.
-		//	value:
-		//		If passed, sets value on the node for style, handling
-		//		cross-browser concerns.  When setting a pixel value,
-		//		be sure to include "px" in the value. For instance, top: "200px".
-		//		Otherwise, in some cases, some browsers will not apply the style.
-		//	example:
-		//		Passing only an ID or node returns the computed style object of
-		//		the node:
-		//	|	davinci.dojo.style("thinger");
-		//	example:
-		//		Passing a node and a style property returns the current
-		//		normalized, computed value for that property:
-		//	|	davinci.dojo.style("thinger", "opacity"); // 1 by default
-		//
-		//	example:
-		//		Passing a node, a style property, and a value changes the
-		//		current display of the node and returns the new computed value
-		//	|	davinci.dojo.style("thinger", "opacity", 0.5); // == 0.5
-		//
-		//	example:
-		//		Passing a node, an object-style style property sets each of the values in turn and returns the computed style object of the node:
-		//	|	davinci.dojo.style("thinger", {
-		//	|		"opacity": 0.5,
-		//	|		"border": "3px solid black",
-		//	|		"height": "300px"
-		//	|	});
-		//
-		// 	example:
-		//		When the CSS style property is hyphenated, the JavaScript property is camelCased.
-		//		font-size becomes fontSize, and so on.
-		//	|	davinci.dojo.style("thinger",{
-		//	|		fontSize:"14pt",
-		//	|		letterSpacing:"1.2em"
-		//	|	});
-		//
-		//	example:
-		//		davinci.dojo.NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
-		//		davinci.dojo.style() on every element of the list. See: `davinci.dojo.query()` and `davinci.dojo.NodeList()`
-		//	|	davinci.dojo.query(".someClassName").style("visibility","hidden");
-		//	|	// or
-		//	|	davinci.dojo.query("#baz > div").style({
-		//	|		opacity:0.75,
-		//	|		fontSize:"13pt"
-		//	|	});
-
-		var n = d.byId(node), args = arguments.length, op = (style == "opacity");
-		style = _floatAliases[style] || style;
-		if(args == 3){
-			return op ? d._setOpacity(n, value) : n.style[style] = value; /*Number*/
-		}
-		if(args == 2 && op){
-			return d._getOpacity(n);
-		}
-		var s = gcs(n);
-		if(args == 2 && typeof style != "string"){ // inline'd type check
-			for(var x in style){
-				d.style(node, x, style[x]);
-			}
-			return s;
-		}
-		return (args == 1) ? s : _toStyleValue(n, style, s[style] || n.style[style]); /* CSS2Properties||String||Number */
-	};
-	
-		d._listener = {
-		// create a dispatcher function
-		getDispatcher: function(){
-			// following comments pulled out-of-line to prevent cloning them 
-			// in the returned function.
-			// - indices (i) that are really in the array of listeners (ls) will 
-			//   not be in Array.prototype. This is the 'sparse array' trick
-			//   that keeps us safe from libs that take liberties with built-in 
-			//   objects
-			// - listener is invoked with current scope (this)
-			return function(){
-				var ap=Array.prototype, c=arguments.callee, ls=c._listeners, t=c.target;
-				// return value comes from original target function
-				var r = t && t.apply(this, arguments);
-				// make local copy of listener array so it is immutable during processing
-				var i, lls;
-				lls = [].concat(ls);
-
-				// invoke listeners after target function
-				for(i in lls){
-					if(!(i in ap)){
-						lls[i].apply(this, arguments);
-					}
-				}
-				// return value comes from original target function
-				return r;
-			};
-		},
-		// add a listener to an object
-		add: function(/*Object*/ source, /*String*/ method, /*Function*/ listener){
-			// Whenever 'method' is invoked, 'listener' will have the same scope.
-			// Trying to supporting a context object for the listener led to 
-			// complexity. 
-			// Non trivial to provide 'once' functionality here
-			// because listener could be the result of a davinci.dojo.hitch call,
-			// in which case two references to the same hitch target would not
-			// be equivalent. 
-			source = source || davinci.dojo.global;
-			// The source method is either null, a dispatcher, or some other function
-			var f = source[method];
-			// Ensure a dispatcher
-			if(!f || !f._listeners){
-				var d = this.getDispatcher();
-				// original target function is special
-				d.target = f;
-				// dispatcher holds a list of listeners
-				d._listeners = []; 
-				// redirect source to dispatcher
-				f = source[method] = d;
-			}
-			// The contract is that a handle is returned that can 
-			// identify this listener for disconnect. 
-			//
-			// The type of the handle is private. Here is it implemented as Integer. 
-			// DOM event code has this same contract but handle is Function 
-			// in non-IE browsers.
-			//
-			// We could have separate lists of before and after listeners.
-			return f._listeners.push(listener); /*Handle*/
-		},
-		// remove a listener from an object
-		remove: function(/*Object*/ source, /*String*/ method, /*Handle*/ handle){
-			var f = (source || davinci.dojo.global)[method];
-			// remember that handle is the index+1 (0 is not a valid handle)
-			if(f && f._listeners && handle--){
-				delete f._listeners[handle];
-			}
-		}
-	};
-	
-	d._topics = {};
-	
-	d.publish = function(/*String*/ topic, /*Array*/ args){
-		//	summary:
-		//	 	Invoke all listener method subscribed to topic.
-		//	topic:
-		//	 	The name of the topic to publish.
-		//	args:
-		//	 	An array of arguments. The arguments will be applied 
-		//	 	to each topic subscriber (as first class parameters, via apply).
-		//	example:
-		//	|	davinci.dojo.subscribe("alerts", null, function(caption, message){ alert(caption + "\n" + message); };
-		//	|	davinci.dojo.publish("alerts", [ "read this", "hello world" ]);	
-
-		// Note that args is an array, which is more efficient vs variable length
-		// argument list.  Ideally, var args would be implemented via Array
-		// throughout the APIs.
-		var f = this._topics[topic];
-		if(f){
-			f.apply(this, args||[]);
-		}
-	};
-	
-	d.subscribe = function(/*String*/ topic, /*Object|null*/ context, /*String|Function*/ method){
-		//	summary:
-		//		Attach a listener to a named topic. The listener function is invoked whenever the
-		//		named topic is published (see: davinci.dojo.publish).
-		//		Returns a handle which is needed to unsubscribe this listener.
-		//	context:
-		//		Scope in which method will be invoked, or null for default scope.
-		//	method:
-		//		The name of a function in context, or a function reference. This is the function that
-		//		is invoked when topic is published.
-		//	example:
-		//	|	davinci.dojo.subscribe("alerts", null, function(caption, message){ alert(caption + "\n" + message); });
-		//	|	davinci.dojo.publish("alerts", [ "read this", "hello world" ]);																	
-
-		// support for 2 argument invocation (omitting context) depends on hitch
-		return [topic, this._listener.add(this._topics, topic, this.hitch(context, method))]; /*Handle*/
-	};
-
-	d.unsubscribe = function(/*Handle*/ handle){
-		//	summary:
-		//	 	Remove a topic listener. 
-		//	handle:
-		//	 	The handle returned from a call to subscribe.
-		//	example:
-		//	|	var alerter = davinci.dojo.subscribe("alerts", null, function(caption, message){ alert(caption + "\n" + message); };
-		//	|	...
-		//	|	davinci.dojo.unsubscribe(alerter);
-		if(handle){
-			this._listener.remove(this._topics, handle[0], handle[1]);
-		}
-	};
-	
-	d._hitchArgs = function(scope, method /*,...*/){
-		var pre = this._toArray(arguments, 2);
-		var named = this.isString(method);
-		return function(){
-			// arrayify arguments
-			var args = this._toArray(arguments);
-			// locate our method
-			var f = named ? (scope||this.global)[method] : method;
-			// invoke with collected args
-			return f && f.apply(scope || this, pre.concat(args)); // mixed
-		} // Function
-	};
-
-	d.hitch = function(/*Object*/scope, /*Function|String*/method /*,...*/){
-		//	summary:
-		//		Returns a function that will only ever execute in the a given scope.
-		//		This allows for easy use of object member functions
-		//		in callbacks and other places in which the "this" keyword may
-		//		otherwise not reference the expected scope.
-		//		Any number of default positional arguments may be passed as parameters 
-		//		beyond "method".
-		//		Each of these values will be used to "placehold" (similar to curry)
-		//		for the hitched function.
-		//	scope:
-		//		The scope to use when method executes. If method is a string,
-		//		scope is also the object containing method.
-		//	method:
-		//		A function to be hitched to scope, or the name of the method in
-		//		scope to be hitched.
-		//	example:
-		//	|	davinci.dojo.hitch(foo, "bar")();
-		//		runs foo.bar() in the scope of foo
-		//	example:
-		//	|	davinci.dojo.hitch(foo, myFunction);
-		//		returns a function that runs myFunction in the scope of foo
-		//	example:
-		//		Expansion on the default positional arguments passed along from
-		//		hitch. Passed args are mixed first, additional args after.
-		//	|	var foo = { bar: function(a, b, c){ console.log(a, b, c); } };
-		//	|	var fn = davinci.dojo.hitch(foo, "bar", 1, 2);
-		//	|	fn(3); // logs "1, 2, 3"
-		//	example:
-		//	|	var foo = { bar: 2 };
-		//	|	davinci.dojo.hitch(foo, function(){ this.bar = 10; })();
-		//		execute an anonymous function in scope of foo
-		
-		if(arguments.length > 2){
-			return this._hitchArgs.apply(d, arguments); // Function
-		}
-		if(!method){
-			method = scope;
-			scope = null;
-		}
-		if(this.isString(method)){
-			scope = scope || this.global;
-			if(!scope[method]){ throw(['davinci.dojo.hitch: scope["', method, '"] is null (scope="', scope, '")'].join('')); }
-			return function(){ return scope[method].apply(scope, arguments || []); }; // Function
-		}
-		return !scope ? method : function(){ return method.apply(scope, arguments || []); }; // Function
-	};
-	
-	var efficient = function(obj, offset, startWith){
-		return (startWith||[]).concat(Array.prototype.slice.call(obj, offset||0));
-	};
-
-	//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-	var slow = function(obj, offset, startWith){
-		var arr = startWith||[];
-		for(var x = offset || 0; x < obj.length; x++){
-			arr.push(obj[x]);
-		}
-		return arr;
-	};
-	//>>excludeEnd("webkitMobile");
-
-	d._toArray =
-		//>>excludeStart("webkitMobile", kwArgs.webkitMobile);
-		this.isIE ?  function(obj){
-			return ((obj.item) ? slow : efficient).apply(this, arguments);
-		} :
-		//>>excludeEnd("webkitMobile");
-		efficient;
-		
-	d.isString = function(/*anything*/ it){
-		//	summary:
-		//		Return true if it is a String
-		return (typeof it == "string" || it instanceof String); // Boolean
-	};
-
-})();
-
-
-davinci.States = function(){};
-davinci.States.prototype = {
+var States = function(){};
+States.prototype = {
 
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
@@ -667,8 +56,7 @@ davinci.States.prototype = {
 	 * for a given node.
 	 * @param {Element} node
 	 */
-	_updateSrcState: function (node)
-	{
+	_updateSrcState: function (node){
 	},
 	
 	/**
@@ -739,7 +127,7 @@ davinci.States.prototype = {
 			}
 		}
 		if (!_silent) {
-			this.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
+			connect.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
 		}
 		this._updateSrcState (node);
 		
@@ -902,7 +290,7 @@ davinci.States.prototype = {
 		}
 			
 		if (!silent) {
-			this.publish("/davinci/states/state/style/changed", [{node:node, state:state, style:styleArray}]);
+			connect.publish("/davinci/states/state/style/changed", [{node:node, state:state, style:styleArray}]);
 		}
 		this._updateSrcState (node);
 	},
@@ -1070,7 +458,7 @@ davinci.States.prototype = {
 		node.states = node.states || {};
 		node.states[state] = node.states[state] || {};
 		node.states[state].origin = true;
-		this.publish("/davinci/states/state/added", [{node:node, state:state}]);
+		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},
 	
@@ -1098,13 +486,13 @@ davinci.States.prototype = {
 		if (this._isEmpty(node.states[state])) {
 			delete node.states[state];
 		}
-		this.publish("/davinci/states/state/removed", [{node:node, state:state}]);
+		connect.publish("/davinci/states/state/removed", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},
 	
 	/**
 	 * Renames a state in the list of states declared by the widget.
-	 * Subscribe using davinci.states.subscribe("/davinci/states/renamed", callback).
+	 * Subscribe using connect.subscribe("/davinci/states/renamed", callback).
 	 */
 	rename: function(node, oldName, newName, property){ 
 		if (arguments.length < 3) {
@@ -1119,7 +507,7 @@ davinci.States.prototype = {
 		node.states[newName] = node.states[oldName];
 		delete node.states[oldName];
 		if (!property) {
-			this.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
+			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
 		}
 		this._updateSrcState (node);
 		return true;
@@ -1252,7 +640,7 @@ davinci.States.prototype = {
 		this.clear(node);
 		//FIXME: Shouldn't be stuffing a property with such a generic name ("states") onto DOM elements
 		node.states = states = this.deserialize(states);
-		this.publish("/davinci/states/stored", [{node:node, states:states}]);
+		connect.publish("/davinci/states/stored", [{node:node, states:states}]);
 	},
 	
 	/**
@@ -1278,7 +666,7 @@ davinci.States.prototype = {
 		if (!node || !node.states) return;
 		var states = node.states;
 		delete node.states;
-		this.publish("/davinci/states/cleared", [{node:node, states:states}]);
+		connect.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
 	/**
@@ -1336,22 +724,13 @@ davinci.States.prototype = {
 		return !isDavinciEditor;
 	},
 
-	publish: function(/*String*/ topic, /*Array*/ args) {
-		try {
-			return davinci.dojo.publish(topic, args);
-		} catch(e) {
-			console.error(e);
-		}
-	},
-	
-	subscribe: function(/*String*/ topic, /*Object|null*/ context, /*String|Function*/ method){
-		return davinci.dojo.subscribe(topic, context, method);
-	},
-	
-	unsubscribe: function(handle){
-		return davinci.dojo.unsubscribe(handle);
-	}, 
 
+	/**
+	 * Returns all child elements for given Element
+	 * Note: can't just use node.children because node.children isn't available for SVG nodes.
+	 * @param {Element} node
+	 * @returns {Array} array of child nodes
+	 */
 	_getChildrenOfNode: function(node) {
 		var children = [];
 		for (var i=0; i<node.childNodes.length; i++){
@@ -1363,11 +742,9 @@ davinci.States.prototype = {
 		return children;
 	},
 	
-	initialize: function() {
-	
+	initialize: function() {	
 		if (!this.subscribed && this._shouldInitialize()) {
-		
-			this.subscribe("/davinci/states/state/changed", function(e) { 
+			connect.subscribe("/davinci/states/state/changed", function(e) { 
 				if(e.editorClass){
 					// Event targets one of Maqetta's editors, not from runtime events
 					return;
@@ -1387,22 +764,15 @@ davinci.States.prototype = {
 	}
 };
 
-
-if (typeof dojo != "undefined") {
-	//	dojo.provide("workspace.maqetta.States");
-	// only include the regular parser if the mobile parser isn't available
-	if (! dojo.getObject("dojox.mobile.parser.parse")) {
-		dojo.require("dojo.parser");
-	}
-//	var zclass = dojo.declare("workspace.maqetta.States", null, davinci.states);	
-}
-davinci.states = new davinci.States();
+//FIXME: remove all references to davinci global and davinci.states
+if (typeof davinci === "undefined") { davinci = {}; }
+var singleton = davinci.states = new States();
 
 (function(){
 
-	if (davinci.states._shouldInitialize()) {
+	if (singleton._shouldInitialize()) {
 	
-		davinci.states.initialize();
+		singleton.initialize();
 		
 		// Patch the dojo parse method to preserve states data
 		if (typeof require != "undefined") {
@@ -1441,7 +811,7 @@ davinci.states = new davinci.States();
 				var _preserveStates = function (cache) {
 					var count=0;
 					var prefix = 'maqTempClass';
-					var doc = davinci.states.getDocument();
+					var doc = singleton.getDocument();
 	
 					// Preserve the body states directly on the dom node
 					if(!doc.body._maqAlreadyPreserved){
@@ -1460,7 +830,7 @@ davinci.states = new davinci.States();
 						// make sure the current node hasn't already been preserved
 						if(!node._maqAlreadyPreserved){
 							node._maqAlreadyPreserved = true;
-							var states = davinci.states.retrieve(node);
+							var states = singleton.retrieve(node);
 							if (states) {
 								if (node.tagName != "BODY") {
 									var tempClass = prefix+count;
@@ -1486,7 +856,7 @@ davinci.states = new davinci.States();
 				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
 				 */
 				var _restoreStates = function (cache) {
-					var doc = davinci.states.getDocument(),
+					var doc = singleton.getDocument(),
 						currentStateCache = [];
 					for(var id in cache){
 						var node;
@@ -1503,9 +873,9 @@ davinci.states = new davinci.States();
 							console.error("States: Failed to get node by id: ", id);
 						}
 						// BODY node has app states directly on node.states. All others have it on node.states.style.
-						var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
+						var states = singleton.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
 						delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-						davinci.states.store(node, states);
+						singleton.store(node, states);
 						if(node.tagName != 'BODY'){
 							davinci.states.transferElementStyle(node, cache[id].style);
 						}
@@ -1521,7 +891,7 @@ davinci.states = new davinci.States();
 
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
 if (!davinci.Workbench && typeof dijit != "undefined"){
-	davinci.states.subscribe("/davinci/states/state/changed", function(args) {
+	connect.subscribe("/davinci/states/state/changed", function(args) {
 		var w;
 		if (args.newState && !args.newState.indexOf("_show:")) {
 			w = dijit.byId(args.newState.substring(6));
@@ -1533,3 +903,6 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 	});
 }
 */
+
+return States;
+});

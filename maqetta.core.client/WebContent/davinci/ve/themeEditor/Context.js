@@ -93,7 +93,9 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 		});
 		containerNode.innerHTML = content;
 		dojo.forEach(dojo.query("*", containerNode), function(n){
-			this.loadRequires(n.getAttribute("dojoType"));
+			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
+			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/);
+			//this.loadRequires(n.getAttribute("dojoType"));
 		}, this);
 		this.getGlobal()["require"]("dojo/ready")(function(){
 			try {
@@ -128,7 +130,7 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 	
 	attach: function(widget){
 		this.inherited(arguments);
-		if(!widget || widget.internal){
+		if(!widget || widget.internal || !widget._srcElement){
 			return;
 		}
 		var isThemeWidget = false;

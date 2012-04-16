@@ -46,6 +46,133 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 
 	TextModel.prototype = /** @lends orion.textview.TextModel.prototype */ {
 		/**
+		 * @class This object describes the options to use while finding occurrences of a string in a text model.
+		 * @name orion.textview.FindOptions
+		 *
+		 * @property {String} string the search string to be found.
+		 * @property {Boolean} [regex=false] whether or not the search string is a regular expression.
+		 * @property {Boolean} [wrap=false] whether or not to wrap search.
+		 * @property {Boolean} [wholeWord=false] whether or not to search only whole words.
+		 * @property {Boolean} [caseInsensitive=false] whether or not search is case insensitive.
+		 * @property {Boolean} [reverse=false] whether or not to search backwards.
+		 * @property {Number} [start=0] The start offset to start searching
+		 * @property {Number} [end=charCount] The end offset of the search. Used to search in a given range.
+		 */
+		/**
+		 * @class This object represents a find occurrences iterator.
+		 * <p>
+		 * <b>See:</b><br/>
+		 * {@link orion.textview.TextModel#find}<br/>
+		 * </p>		 
+		 * @name orion.textview.FindIterator
+		 * 
+		 * @property {Function} hasNext Determines whether there are more occurrences in the iterator.
+		 * @property {Function} next Returns the next matched range {start,end} in the iterator.
+		 */	
+		/**
+		 * Finds occurrences of a string in the text model.
+		 *
+		 * @param {orion.textview.FindOptions} options the search options
+		 * @return {orion.textview.FindIterator} the find occurrences iterator.
+		 */
+		find: function(options) {
+			if (this._text.length > 1) {
+				this._text = [this._text.join("")];
+			}
+			var string = options.string;
+			var regex = options.regex;
+			var pattern = string;
+			if (!regex && string) {
+				pattern = string.replace(/([\\$\^*\/+?\.\(\)|{}\[\]])/g, "\\$&");
+			}
+			var current = null, skip;
+			if (pattern) {
+				var reverse = options.reverse;
+				var wrap = options.wrap;
+				var wholeWord = options.wholeWord;
+				var caseInsensitive = options.caseInsensitive;
+				var start = options.start || 0;
+				var end = options.end;
+				var isRange = options.end !== undefined;
+				var flags = "";
+				if (flags.indexOf("g") === -1) { flags += "g"; }
+				if (caseInsensitive) {
+					if (flags.indexOf("i") === -1) { flags += "i"; }
+				}
+				if (wholeWord) {
+					pattern = "\\b" + pattern + "\\b";
+				}
+				var text = this._text[0], result, lastIndex, offset = 0;
+				if (isRange) {
+					text = text.substring(start, end);
+					offset = start;
+				}
+				var re = new RegExp(pattern, flags);
+				if (reverse) {
+					skip = function() {
+						var match = null;
+						re.lastIndex = 0;
+						while (true) {
+							lastIndex = re.lastIndex;
+							result = re.exec(text);
+							if (lastIndex === re.lastIndex) {
+								return null;
+							}
+							if (result) {
+								if (result.index < start) {
+									match = {start: result.index + offset, end: re.lastIndex + offset};
+								} else {
+									if (!wrap || match) {
+										break;
+									}
+									start = text.length;
+									match = {start: result.index + offset, end: re.lastIndex + offset};
+								}
+							} else {
+								break;
+							}
+						}
+						if (match) { start = match.start; }
+						return match;
+					};
+				} else {
+					if (!isRange) {
+						re.lastIndex = start;
+					}
+					skip = function() {
+						while (true) {
+							lastIndex = re.lastIndex;
+							result = re.exec(text);
+							if (lastIndex === re.lastIndex) {
+								return null;
+							}
+							if (result) {
+								return {start: result.index + offset, end: re.lastIndex + offset};
+							}
+							if (lastIndex !== 0) {
+								if (wrap) {
+									continue;
+								}
+							}
+							break;
+						}
+						return null;
+					};
+				}
+				current = skip();
+			}
+			return {
+				next: function() {
+					var result = current;
+					if (result) { current = skip(); }
+					return result;					
+				},
+				hasNext: function() {
+					return current !== null;
+				}
+			};
+		},
+		/**
 		 * Returns the number of characters in the model.
 		 *
 		 * @returns {Number} the number of characters in the model.
@@ -332,6 +459,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 			if (text === undefined) { text = ""; }
 			if (start === undefined) { start = 0; }
 			if (end === undefined) { end = this.getCharCount(); }
+			if (start === end && text === "") { return; }
 			var startLine = this.getLineAtOffset(start);
 			var endLine = this.getLineAtOffset(end);
 			var eventStart = start;

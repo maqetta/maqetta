@@ -1,8 +1,9 @@
-.view {
+.textview {
 	background-color: white;
+	padding: 1px 2px;
 }
 
-.viewContainer {
+.textviewContainer {
 	background-color: #eeeeee;
 	font-family: monospace;
 	font-size: 10pt;
@@ -11,5 +12,5 @@
 	background-color: #eeeeee;
 }
 
-.viewContent {
+.textviewContent {
 }

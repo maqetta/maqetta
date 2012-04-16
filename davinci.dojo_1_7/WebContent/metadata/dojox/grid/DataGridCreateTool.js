@@ -5,7 +5,8 @@ define([
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/AddCommand",
 	"davinci/ve/commands/MoveCommand",
-	"davinci/ve/commands/ResizeCommand"
+	"davinci/ve/commands/ResizeCommand",
+	"../../dojo/data/DataStoreBasedWidgetInput"
 ], function(
 	declare,
 	CreateTool,
@@ -13,10 +14,12 @@ define([
 	CompoundCommand,
 	AddCommand,
 	MoveCommand,
-	ResizeCommand
+	ResizeCommand,
+	DataStoreBasedWidgetInput
 ) {
 
 return declare(CreateTool, {
+	_useDataDojoProps: false,
 
 	constructor: function(data) {
 		this._resizable = "both";
@@ -89,8 +92,14 @@ return declare(CreateTool, {
 		dojo.withDoc(this._context.getDocument(), function(){
 			store = Widget.createWidget(storeData);
 			dataGridData.properties.store = dj.getObject(storeId);
+			if (this._useDataDojoProps) { 
+				dataGridData.properties["data-dojo-props"] =
+						DataStoreBasedWidgetInput.setPropInDataDojoProps(
+								dataGridData.properties["data-dojo-props"], "store", storeId); 
+			}
+			this._augmentWidgetCreationProperties(dataGridData.properties);
 			dataGrid = Widget.createWidget(dataGridData);
-		});
+		}.bind(this));
 		
 		if(!store || !dataGrid){
 			return;
@@ -115,6 +124,10 @@ return declare(CreateTool, {
 		/*this._context.getCommandStack().execute(command);
 		this._select(dataGrid);*/
 		return command;
+	},
+	
+	_augmentWidgetCreationProperties: function(properties) {
+		//Intended for subclass
 	},
 	
 	addPasteCreateCommand: function(command, args) {

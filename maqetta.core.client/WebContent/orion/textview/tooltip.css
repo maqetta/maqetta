@@ -1,19 +1,11 @@
-.view {
-	color: InfoText;
-	background-color: InfoBackground;
+.tooltip .textview {
+	color: InfoText !important;
+	background-color: InfoBackground !important;
 	padding: 0px;
 }
 
-.viewContainer {
-	font-family: monospace;
-	font-size: 10pt;
-}
-
-.viewContent {
-}
-
 /* Styles for the view tooltips */
-.viewTooltip {
+.textviewTooltip {
 	font-family: monospace;
 	font-size: 10pt;
 	background-color: InfoBackground;
@@ -26,7 +18,7 @@
 	overflow: hidden;
 	white-space: pre;
 }
-.viewTooltip em {
+.textviewTooltip em {
 	font-style: normal;
 	font-weight: bold;
 }

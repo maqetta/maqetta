@@ -20,7 +20,7 @@ public class Copy extends Command {
         boolean recurse = Boolean.parseBoolean(req.getParameter("recurse"));
 
         IVResource source = user.getResource(src);
-        IVResource newResource = user.createResource(des);
+        IVResource newResource = user.createResource(des, source.isDirectory());
 
         if (source.isDirectory()) {
             newResource.mkdir();

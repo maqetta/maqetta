@@ -133,7 +133,7 @@ define([
 				this._pageLayout.push(prop);
 			
 				if(property.option){
-					this._pageLayout[this._pageLayout.length-1].values = dojo.map(property.option, function(option){ return option.value; });
+					this._pageLayout[this._pageLayout.length-1].values = dojo.map(property.option, function(option){ return option;/*.value;*/ });
 					this._pageLayout[this._pageLayout.length-1].type = property.unconstrained ? "comboEdit" : "combo";
 				}
 			}

@@ -42,10 +42,6 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		if(!widget){
 			return;
 		}
-
-/*
-		var box = widget.getMarginBox();
-*/
 		var node = widget.domNode;
 		
 		// Adjustments for widgets whose root tag has special CSS treatment
@@ -88,20 +84,6 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(styleValuesAllStates['undefined']);
 		this._resize(widget);
-
-/*
-		this._state = States.getState();
-		var isNormalState = States.isNormalState(this._state);
-
-		//var cleanValues = { width: this._newBox.w, height: this._newBox.h };
-		var cleanValues = [{ width: this._newBox.w}, {height: this._newBox.h }];
-		States.setStyle(widget.domNode, this._state, cleanValues, isNormalState);
-
-		if (isNormalState) {
-			dojo.contentBox(node, this._newBox);
-			this._resize(widget);
-		}
-*/
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
@@ -126,9 +108,6 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		if(!widget){
 			return;
 		}
-/*
-		widget.setMarginBox(this._oldBox);
-*/
 		var styleValuesAllStates = this._oldStyleValuesAllStates;
 		var currentStateIndex = this._getCurrentStateIndex();
 		widget.setStyleValuesAllStates(styleValuesAllStates);
@@ -145,7 +124,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 	},
 	
 	/**
-	 * Most a duplicate of private function found in dojo/dom-geometry.js
+	 * Mostly a duplicate of private function found in dojo/dom-geometry.js
 	 * Returns true if node uses border-box layout
 	 * TABLE and BUTTON (and INPUT type=button) are always border-box by default.
 	 */

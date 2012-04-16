@@ -41,9 +41,6 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			return;
 		}
 		var veStates = require("davinci/ve/States");
-/*
-		var cleanValues = dojo.clone(this._newValues);
-*/
 		
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
@@ -61,37 +58,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		this._refresh(widget);
 		// Recompute styling properties in case we aren't in Normal state
 		veStates.resetState(widget.domNode);
-		
-/*
-		var isNormalState = veStates.isNormalState(this._state);
-		if (isNormalState) {
-			//FIXME: what about oldValue when not normal state?
-			if(!this._oldValues){
-				this._oldValues = (widget.getStyleValues() || []);
-				if(!this._oldValues){
-					return;
-				}
-			}
-		}
-		// // may need to trickle down duplicate background properties for a state into the state code.
-		//for(var i=0;i<cleanValues.length;i++){
-			//veStates.setStyle(widget, this._state, cleanValues[i], isNormalState);			
-		//}
-		veStates.setStyle(widget.domNode, this._state, cleanValues, isNormalState);			
-
-		if (isNormalState) {
-
-			cleanValues = StyleArray.mergeStyleArrays(this._oldValues, cleanValues);			
-			widget.setStyleValues( cleanValues);
-			this._refresh(widget);
-			
-			// Recompute styling properties in case we aren't in Normal state
-			veStates.resetState(widget.domNode);
-		}else{
-			this._refresh(widget);
-		}
-		*/
-		
+				
 		//FIXME: Various widget changed events (/davinci/ui/widget*Changed) need to be cleaned up.
 		// I defined yet another one here (widgetPropertiesChanged) just before Preview3
 		// rather than re-use or alter one of the existing widget*Changed events just before
@@ -102,11 +69,6 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 	},
 
 	undo: function(){
-/*
-		if(!this._id || !this._oldValues){
-			return;
-		}
-*/
 		if(!this._id || !this._oldStyleValuesAllStates){
 			return;
 		}
@@ -115,10 +77,6 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			return;
 		}
 
-/*
-		widget.setStyleValues( this._oldValues);
-*/
-		
 		var styleValuesAllStates = this._oldStyleValuesAllStates;
 		var currentStateIndex = this._getCurrentStateIndex();
 		widget.setStyleValuesAllStates(styleValuesAllStates);
@@ -143,7 +101,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 	_refresh: function(widget){
 		/* if the widget is a child of a dijiContainer widget 
 		 * we may need to refresh the parent to make it all look correct in page editor
-		 * */ 
+		 */ 
 		var parent = widget.getParent();
 		if (parent.dijitWidget){
 			this._refresh(parent);

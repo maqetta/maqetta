@@ -39,13 +39,6 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		if(!widget){
 			return;
 		}
-/*
-		var node = widget.domNode;
-		var node = widget.getStyleNode();
-		if(!node){
-			return;
-		}
-*/
 		var context = this._context;
 
 		if(!this._oldBox){
@@ -59,10 +52,6 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		if(!offsetParentPageBox){
 			return;
 		}
-/*		
-		this._state = States.getState();
-		var isNormalState = States.isNormalState(this._state);
-*/
 		if(this._commandForXYDeltas){
 			this._newBox.l = this._oldBox.l + this._commandForXYDeltas._deltaX;
 			this._newBox.t = this._oldBox.t + this._commandForXYDeltas._deltaY;
@@ -99,16 +88,6 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		//var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
         var newLeft = this._newBox.l - parentBorderLeft;
         var newTop = this._newBox.t - parentBorderTop;
-/*
-		var cleanValues = [{ left: newLeft}, {top: newTop}];
-		States.setStyle(widget.domNode, this._state, cleanValues, isNormalState);	
-		
-		if (isNormalState) {
-			node.style.position = "absolute";
-			var size = { l: newLeft, t: newTop };
-			widget.setMarginBox( size);
-		}
-*/
 		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
@@ -150,15 +129,6 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		if(!widget){
 			return;
 		}
-/*
-		var node = widget.getStyleNode();
-		if(!node){
-			return;
-		}
-
-		widget.setMarginBox( this._oldBox);
-		node.style.position = this._oldPosition;
-*/
 
 		var styleValuesAllStates = this._oldStyleValuesAllStates;
 		var currentStateIndex = this._getCurrentStateIndex();

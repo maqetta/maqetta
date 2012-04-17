@@ -50,6 +50,19 @@ define(["dojo/_base/declare",
 		
 		getEditor : function(jsonString){
 			
+			function getValueAndTitle(value) {
+				var obj = {};
+				// if it is an object use the value and look for a title
+				if (value.value) {
+					obj.value = value.value;
+					obj.title = value.title ? value.title : value.value; // title is optional
+					
+				} else {
+					obj.value = value;
+					obj.title = value;
+				}
+				return obj;
+			}
 			
 			var metaType = jsonString.type; 
 			var id = this.getId();
@@ -88,18 +101,8 @@ define(["dojo/_base/declare",
 					var values = jsonString['values'];
 					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++) {
-						var value;
-						var title;
-						// if it is an object use the value and look for a title
-						if (values[i].value) {
-							value = values[i].value;
-							title = values[i].title ? values[i].title : values[i].value;
-							
-						} else {
-							value = values[i];
-							title = values[i];
-						}
-						text+="<option value='" + value + "'>" + title + "</option>";
+						var obj = getValueAndTitle(values[i]);
+						text+="<option value='" + obj.value + "'>" + obj.title + "</option>";
 					}
 					text+="</select>";
 					return text;
@@ -108,18 +111,8 @@ define(["dojo/_base/declare",
 					var values = jsonString['values'];
 					var text = "<select style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++) {
-						var value;
-						var title;
-						// if it is an object use the value and look for a title
-						if (values[i].value) {
-							value = values[i].value;
-							title = values[i].title ? values[i].title : values[i].value;
-							
-						} else {
-							value = values[i];
-							title = values[i];
-						}
-						text+="<option value='" + value + "'>" + title + "</option>";
+						var obj = getValueAndTitle(values[i]);
+						text+="<option value='" + obj.value + "'>" + obj.title + "</option>";
 					}
 					text+="</select>";
 					return text;

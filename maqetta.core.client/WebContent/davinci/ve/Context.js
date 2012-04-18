@@ -2712,13 +2712,58 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 	},
 
+	_reRequire: /\brequire\(([\s\S]*?)\)/,
+
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
 		if (!skipDomUpdate) {
 			this.getGlobal().require([mid]); //FIXME: needs to pass in async callback
 		}
+
 		if (doUpdateModel) {
-			//TODO: keep all requires in a single statement?
-			this.addHeaderScriptText('require(["' + mid + '"]);');
+			// find a script element which has a 'require' call
+			// XXX I tried to cache this script element, but there was an issue
+			// 	   where, after opening split view to show both VE and source
+			// 	   editor, setting text on cached script element no longer
+			// 	   updated the source; even though the cached script element
+			// 	   still seemed to be part of `this._srcDocument`.
+			var head = this.getDocumentElement().getChildElement('head'),
+				scriptText,
+				text,
+				m;
+
+			head.children.some(function(child) {
+				if (child.elementType === 'HTMLElement' && child.tag === 'script') {
+					scriptText = child.find({elementType: 'HTMLText'}, true);
+					if (scriptText) {
+						text = scriptText.getText();
+						m = text.match(this._reRequire);
+						if (m) {
+							return true; // break 'some' loop
+						}
+					}
+				}
+			}, this);
+
+			if (!scriptText) {
+				// no such element exists yet; create now
+				this.addHeaderScriptText('require(["' + mid + '"]);');
+				return;
+			}
+
+			// insert new `mid` into array of existing `require`
+			// - need to use `eval`, since JSON.parse() cannot parse content with
+			//   single-quotes (must be double-quotes)
+			var arr = eval(m[1]);
+			if (arr.indexOf(mid) === -1) {
+				arr.push(mid);
+			}
+			text = text.replace(this._reRequire, 'require(' + JSON.stringify(arr) + ')');
+			scriptText.setText(text);
+			// XXX For some reason, <script> text is handled differently in the
+			//   Model than that of other elements.  I think I only need to call
+			//   setScript(), but the correct process should be to just update
+			//   HTMLText. See issue #1350.
+			scriptText.parent.setScript(text);
 		}
 	},
 

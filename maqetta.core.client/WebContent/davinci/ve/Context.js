@@ -511,9 +511,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (! _loadLibrary(r.$library)) {
 					return false; // break 'every' loop
 				}
-			} else if (r.src) {
-				console.warn("metadata resource (" + r.type + ", " + r.src +
-						") does not specify 'library'");
 			}
 
 			switch (r.type) {
@@ -2712,7 +2709,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 	},
 
-	_reRequire: /\brequire\(([\s\S]*?)\)/,
+	_reRequire: /\brequire\s*\(\s*\[\s*([\s\S]*?)\s*\]\s*\)/,
+	_reModuleId: /[a-zA-Z.\/]+/g,
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
 		if (!skipDomUpdate) {
@@ -2726,6 +2724,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// 	   editor, setting text on cached script element no longer
 			// 	   updated the source; even though the cached script element
 			// 	   still seemed to be part of `this._srcDocument`.
+			// 	   --> Should be able to cache, but delete when source is reset.
 			var head = this.getDocumentElement().getChildElement('head'),
 				scriptText,
 				text,
@@ -2751,9 +2750,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 
 			// insert new `mid` into array of existing `require`
-			// - need to use `eval`, since JSON.parse() cannot parse content with
-			//   single-quotes (must be double-quotes)
-			var arr = eval(m[1]);
+			var arr = m[1].match(this._reModuleId);
 			if (arr.indexOf(mid) === -1) {
 				arr.push(mid);
 			}
@@ -2834,7 +2831,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param {string} text inline JS to add
 	 */
 	addHeaderScriptText: function(text) {
-		// XXX cache 'head'
 		var head = this.getDocumentElement().getChildElement('head'),
 			scriptText,
 			children = head.children,

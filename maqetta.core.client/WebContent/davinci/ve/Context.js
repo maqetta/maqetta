@@ -2753,14 +2753,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var arr = m[1].match(this._reModuleId);
 			if (arr.indexOf(mid) === -1) {
 				arr.push(mid);
+				text = text.replace(this._reRequire, 'require(' + JSON.stringify(arr, null, '  ') + ')');
+				scriptText.setText(text);
+				// XXX For some reason, <script> text is handled differently in the
+				//   Model than that of other elements.  I think I only need to call
+				//   setScript(), but the correct process should be to just update
+				//   HTMLText. See issue #1350.
+				scriptText.parent.setScript(text);
 			}
-			text = text.replace(this._reRequire, 'require(' + JSON.stringify(arr, null, '  ') + ')');
-			scriptText.setText(text);
-			// XXX For some reason, <script> text is handled differently in the
-			//   Model than that of other elements.  I think I only need to call
-			//   setScript(), but the correct process should be to just update
-			//   HTMLText. See issue #1350.
-			scriptText.parent.setScript(text);
 		}
 	},
 

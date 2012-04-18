@@ -2754,7 +2754,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if (arr.indexOf(mid) === -1) {
 				arr.push(mid);
 			}
-			text = text.replace(this._reRequire, 'require(' + JSON.stringify(arr) + ')');
+			text = text.replace(this._reRequire, 'require(' + JSON.stringify(arr, null, '  ') + ')');
 			scriptText.setText(text);
 			// XXX For some reason, <script> text is handled differently in the
 			//   Model than that of other elements.  I think I only need to call

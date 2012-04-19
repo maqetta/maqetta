@@ -70,6 +70,8 @@ _ShapeHelper.prototype = {
 		this._origHeight = domNode.style.height;
 		var doc = domNode.ownerDocument;
 		var body = doc.body;
+		
+		//FIXME: Leaking event listeners?
 		doc.addEventListener('mousemove',dojo.hitch(this,this.onMouseMoveOut),false);
 		doc.addEventListener('mouseout',dojo.hitch(this,this.onMouseMoveOut),false);
 		doc.addEventListener('mouseup',dojo.hitch(this,this.onMouseUp),false);
@@ -141,7 +143,6 @@ _ShapeHelper.prototype = {
     	values.top = this._origTop;
     	values.width = this._origWidth;
     	values.height = this._origHeight;
-    	widget.setStyleValues(values);
 
 		// If absolute positioning, update left and top properties to factor
 		// in marginLeft and marginTop updates that happened during dragging
@@ -157,9 +158,7 @@ _ShapeHelper.prototype = {
 			this.onMouseUp_Widget(command);
 		}
 		
-		//FIXME: This has side effect of flushing command stack. Ugly coding. See #1057
-		dojo.publish("/davinci/ui/widgetPropertiesChanges",
-				[{source: context.editor.editor_id, command: command}]);
+		context.getCommandStack().execute(command);
 
 	},
 	

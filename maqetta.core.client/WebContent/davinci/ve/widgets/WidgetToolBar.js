@@ -2,10 +2,12 @@
 define(["dojo/_base/declare",
         "davinci/workbench/ViewLite",
         "davinci/ve/commands/ModifyCommand",
+        "dijit/form/ComboBox",
+        "dojo/store/Memory",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
         "davinci/ve/widget"
-],function(declare, ViewLite, ModifyCommand, veNLS,commonNLS, widgetUtils){
+],function(declare, ViewLite, ModifyCommand, ComboBox, Memory, veNLS, commonNLS, widgetUtils){
 	return declare("davinci.ve.widgets.WidgetToolBar", ViewLite, {
 	
 		widgetDescStart:"",
@@ -71,11 +73,50 @@ define(["dojo/_base/declare",
 					labelSpan.appendChild(classLabelElement);
 					var classAttr = srcElement.getAttribute("class");
 					var className = (classAttr && dojo.trim(classAttr)) || "";
+
 					var classInputElement = dojo.create("input", {type:'text',value:className,className:'propClassInput', size:8});
-					this._classInputElement = classInputElement;
-					this._oldClassName = className;
-					classInputElement.onchange=dojo.hitch(this,this._onChangeClassAttribute);		
 					labelSpan.appendChild(classInputElement);
+
+					// collect all classes
+					var classes = [];
+
+					var docEl = this._widget.getContext().getModel().getDocumentElement();
+					if (docEl) {
+						var visitor = {
+							visit: function(node) {
+								// skip the body/html nodes
+								if (node.elementType == "HTMLElement" && node.tag != "body" && node.tag != "html") {
+									var c = node.getAttribute("class");
+									if (c) {
+										var classes = dojo.trim(c).split(" ");
+										dojo.forEach(classes, dojo.hitch(this, function(className) {
+												// remove dupes
+												if (dojo.indexOf(this.classes, className) == -1) {
+													this.classes.push(className);
+												}
+										}));
+									}
+								}
+							},
+							classes: []
+						}
+
+						docEl.visit(visitor);
+
+						dojo.forEach(visitor.classes, function(className) {
+								classes.push({name: className});
+						});
+					}
+
+					// use a simply memory store
+					var memstore = new Memory({
+							data: classes
+					});
+
+					this._classInputElement = new ComboBox({value: className, searchAttr: "name", store: memstore, style: {width: "100px"}}, classInputElement);
+					dojo.connect(this._classInputElement, "onChange", this, "_onChangeClassAttribute");
+
+
 					labelSpan.className = "propClassInputCell";
 					classDiv.appendChild(labelSpan);
 					/* add the ID element */
@@ -121,10 +162,11 @@ define(["dojo/_base/declare",
 			if(this.context)
 				this.context.blockChange(false);
 			
-			if(inputElement.value != this._oldClassName ){
-				this._oldClassName = inputElement.value;
+			var className = inputElement.attr("value");
+			if(className != this._oldClassName ){
+				this._oldClassName = className;
 				var valuesObject = {};
-				valuesObject['class'] = inputElement.value;
+				valuesObject['class'] = className;
 				var command = new davinci.ve.commands.ModifyCommand(this._widget, valuesObject, null);
 				dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
 			}	

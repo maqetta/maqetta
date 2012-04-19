@@ -654,7 +654,7 @@ return declare("davinci.ve.ChooseParent", null, {
     
 	onKeyDown: function(event, widgetType, absolute, doCursor, beforeAfter, currentParent){
 		dojo.stopEvent(event);
-		if(event.keyCode==32){	// 32=space key
+		if(event.keyCode==dojo.keys.SPACE){
 			this._spaceKeyDown = true;
 		}else{
 			this._processKeyDown(event.keyCode);
@@ -664,7 +664,7 @@ return declare("davinci.ve.ChooseParent", null, {
 
 	onKeyUp: function(event, widgetType, absolute, doCursor, beforeAfter, currentParent){
 		dojo.stopEvent(event);
-		if(event.keyCode==32){	// 32=space key
+		if(event.keyCode==dojo.keys.SPACE){
 			this._spaceKeyDown = false;
 		}
 		this._keyEventDoUpdate(widgetType, absolute, doCursor, beforeAfter, currentParent);

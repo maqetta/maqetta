@@ -1,11 +1,9 @@
 define([
 	"dojo/_base/declare",
-	"../../metadata/dojo/1.7/dojox/grid/DataGridCreateTool",
-	"../../static/lib/gridx/1.0/core/model/cache/Async"
+	"../../metadata/dojo/1.7/dojox/grid/DataGridCreateTool"
 ], function(
 	declare,
-	DataGridCreateTool,
-	Cache
+	DataGridCreateTool
 ) {
 
 return declare(DataGridCreateTool, {
@@ -13,19 +11,13 @@ return declare(DataGridCreateTool, {
 	constructor: function(data) {
 		this._useDataDojoProps = true;
 	},
-	
-	_cleanUpNewWidgetAttributes: function(widget) {
-		//We don't want "cacheClass" to be part of the DOM tree
-		if (widget._srcElement) {
-			widget._srcElement.removeAttribute("cacheClass");
-		}
-		
-		//Call superclass
-		this.inherited(arguments);
-	},
-	
+
 	_augmentWidgetCreationProperties: function(properties) {
-		properties.cacheClass = Cache;
+		var dj = this._context.getDojo();
+		dojo.withDoc(this._context.getDocument(), function(){
+			var cacheClass = dj.getObject("davinci.gridx.GridXCacheClass");
+			properties.cacheClass = cacheClass;
+		});
 		
 		//Call superclass
 		this.inherited(arguments);

@@ -38,6 +38,31 @@ define([
 	/*DropDownSelect*/
 ) {
 
+var ModifyCommandForUrlDataStore = declare(ModifyCommand, {
+	useDataDojoProps: false,
+	
+	execute: function() {
+		// We run as part of a compound command AFTER the data store has been recreated. With GridX, we have an 
+		// issue with GridX having a stale reference to the old data store (it doesn't look it back up by ID). So,
+		// interject ourselves here to update the reference before letting superclass finish the work of the
+		// command execution.
+		var widget = Widget.byId(this._oldId);
+		if (widget) {
+			var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, this.useDataDojoProps);
+			if (storeId) {
+				var dj = widget.getContext().getDojo();
+				var dj = this._context.getDojo();
+				dojo.withDoc(this._context.getDocument(), function(){
+					var storeWidget = dj.getObject(storeId);
+					this._properties.store = storeWidget;
+				}.bind(this));
+			}
+		}
+		
+		this.inherited(arguments);
+	}
+});
+	
 return declare(DataStoreBasedWidgetInput, {
 
 	propertyName: "structure",
@@ -163,14 +188,6 @@ return declare(DataStoreBasedWidgetInput, {
 
 		context.getCommandStack().execute(compoundCommand);	
 		context.select(command.newWidget);
-		
-		// We don't want to write out "structure" (if using table elements to
-		// define columns) or "store" (if using data-dojo-props)
-		var newSrcElement = command.newWidget._srcElement;
-		if (this.useTableElementsForStructure) {
-			newSrcElement.removeAttribute("structure");
-		}
-		this._cleanUpNewWidgetAttributes(command.newWidget); 
 	},
 	
 	_buildTableChildrenForStructure: function(structure, tableWidget) {
@@ -284,17 +301,6 @@ return declare(DataStoreBasedWidgetInput, {
 
 		return data;
 	},
-
-	_cleanUpNewWidgetAttributes: function(widget) {
-		// We don't want to write out "structure" (if using table elements to
-		// define columns) 
-		if (this.useTableElementsForStructure) {
-			widget._srcElement.removeAttribute("structure");
-		}
-		
-		//Call superclass
-		this.inherited(arguments);
-	},
 	
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
 		var structure = [];
@@ -329,12 +335,13 @@ return declare(DataStoreBasedWidgetInput, {
 			props.store = datastore;
 		}
 
-		var command = new ModifyCommand(widget,
+		var command = new ModifyCommandForUrlDataStore(widget,
 			props,
 			widgetChildren, 
 			context,
 			scripts
 		);
+		command.useDataDojoProps = this.useDataDojoProps;
 
 		return command;
 	}

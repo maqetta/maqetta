@@ -1,13 +1,17 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/connect",
 	"./commands/ReparentCommand",
+	"./commands/StyleCommand",
 	"./widget",
 	"./States",
 	"dijit/tree/dndSource",
 	"../html/ui/HTMLOutlineModel"
 ], function(
 	declare,
+	connect,
 	ReparentCommand,
+	StyleCommand,
 	Widget,
 	states,
 	dndSource,
@@ -26,20 +30,19 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		
 		betweenThreshold: 4,
 
-		constructor: function(context)	
-		{
+		constructor: function(context) {
 			this._context=context;
 			this._handles=[];
 			this._connect("onCommandStackExecute", "refresh"); // yikes.  this refreshes the entire tree anytime there's a change.  really bad if we're traversing the tree setting styles.
 			this._connect("activate", "refresh");
 			this._connect("setSource", "refresh");
 
-			dojo.subscribe("/davinci/states/state/changed/start", this,
+			connect.subscribe("/davinci/states/state/changed/start", this,
 				function(e) {
 					this._skipRefresh = true;
 				}
 			);
-			dojo.subscribe("/davinci/states/state/changed/end", this,
+			connect.subscribe("/davinci/states/state/changed/end", this,
 				function(e) {
 					delete this._skipRefresh;
 					this.refresh();
@@ -47,13 +50,12 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			);
 		},
 		
-		_connect: function(contextFunction, thisFunction)
-		{
-			this._handles.push(dojo.connect(this._context,contextFunction,this,thisFunction));
+		_connect: function(contextFunction, thisFunction) {
+			this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
 		},
 
 		destroy: function(){
-			dojo.forEach(this._handles, dojo.disconnect);
+			this._handles.forEach(connect.disconnect);
 		},
 			
 		// =======================================================================
@@ -71,8 +73,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			return this._childList(item).length;
 		},
 		
-		_childList: function(parentItem)
-		{
+		_childList: function(parentItem) {
 			var widgets, children=[];
 
 			if (!this._context.rootWidget || (parentItem.type == "state") || parentItem.type == 'html.stickynote' || parentItem.type == 'html.richtext') {
@@ -106,7 +107,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		},
 		
 		getLabel: function(/*dojo.data.Item*/ item){
-			var type= item.type ;
+			var type= item.type;
 			var label;
 			
 			if(item.id == "myapp"){
@@ -120,8 +121,8 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 				return;
 			}
 			
-			var lt = (this.useRichTextLabel ? "&lt;" : "<");
-			var gt = (this.useRichTextLabel ? "&gt;" : ">");
+			var lt = this.useRichTextLabel ? "&lt;" : "<";
+			var gt = this.useRichTextLabel ? "&gt;" : ">";
 
 			if (type.indexOf("html.") === 0) {
 				label = lt + type.substring("html.".length) + gt;
@@ -161,10 +162,12 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			return true;
 		},
 		
+
 		toggle: function(widget, on, node) {
 			var helper = widget.getHelper();
 			var continueProcessing = true;
 			if(helper && helper.onToggleVisibility){
+				//FIXME: Make sure that helper functions deals properly with CommandStack and undo
 				continueProcessing = helper.onToggleVisibility(widget, on);
 			}
 			if(continueProcessing){
@@ -177,13 +180,13 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		
 		_toggle: function(widget, on, node) {
 			var visible = !on;
-			var state = states.getState();
 			var value = visible ? "" : "none";
-			states.setStyle(widget, state, [{"display": value}]);
+			var command = new StyleCommand(widget, [{"display": value}], 'current');
+			this._context.getCommandStack().execute(command);
 		},
 		
 		isToggleOn: function(item) {
-			return !states.isVisible(item);
+			return !states.isVisible(item.domNode);
 		},
 		
 		newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -222,8 +225,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		onRefresh: function(){
 		},
 		
-		refresh: function()
-		{
+		refresh: function() {
 			if (this._skipRefresh) { return; }
 			var node = this._context.rootNode;
 			if (node){	// shouldn't be necessary, but sometime is null
@@ -238,8 +240,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 
 	_outlineMode: "design", 
 		
-	constructor: function (editor)
-	{
+	constructor: function (editor) {
 		this._editor = editor;
 		this._context=editor.visualEditor.context;
 		this._handles=[];
@@ -249,7 +250,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		this._widgetModel=new OutlineTreeModel(this._context);
 		this._srcModel=new HTMLOutlineModel(editor.model);
-		states.subscribe("/davinci/states/state/changed", this,
+		connect.subscribe("/davinci/states/state/changed", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&
 						davinci.Runtime.currentEditor &&
@@ -260,16 +261,20 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 				if (!this._tree) {
 					return;
 				}
-				var children = states.getChildren(e.widget);
+				var widget = (e && e.node && e.node._dvWidget);
+				if(!widget){
+					return;
+				}
+				var children = widget.getChildren();
 				while (children.length) {
 					var child = children.shift();
 					if (child) {
 						var node = this._tree.getNode(child);
 						if (node) {
-							var visible = states.isVisible(child, e.newState);
+							var visible = states.isVisible(child.domNode, e.newState);
 							node._setToggleAttr(!visible);
 						}
-						children = children.concat(states.getChildren(child));
+						children = children.concat(child.getChildren());
 					}
 				}
 			}
@@ -283,7 +288,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 	},
 
 	_connect: function(contextFunction, thisFunction) {
-		this._handles.push(dojo.connect(this._context,contextFunction,this,thisFunction));
+		this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
 	},
 
 	switchDisplayMode: function (newMode) {

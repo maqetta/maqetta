@@ -50,6 +50,13 @@ define(["dojo/_base/declare",
 		
 		getEditor : function(jsonString){
 			
+			function getValueAndTitle(value) {
+				var obj = {};
+				obj.value = value.value || value;
+				// if it is an object use the value and look for a title
+				obj.title = value.title || obj.value;
+				return obj;
+			}
 			
 			var metaType = jsonString.type; 
 			var id = this.getId();
@@ -87,16 +94,20 @@ define(["dojo/_base/declare",
 				case "comboEdit":
 					var values = jsonString['values'];
 					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
-					for(var i = 0;i<values.length;i++)
-						text+="<option value='" + values[i] + "'>" + values[i] + "</option>"
+					for(var i = 0;i<values.length;i++) {
+						var obj = getValueAndTitle(values[i]);
+						text+="<option value='" + obj.value + "'>" + obj.title + "</option>";
+					}
 					text+="</select>";
 					return text;
 					
 				case "combo":
 					var values = jsonString['values'];
 					var text = "<select style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
-					for(var i = 0;i<values.length;i++)
-						text+="<option value='" + values[i] + "'>" + values[i] + "</option>"
+					for(var i = 0;i<values.length;i++) {
+						var obj = getValueAndTitle(values[i]);
+						text+="<option value='" + obj.value + "'>" + obj.title + "</option>";
+					}
 					text+="</select>";
 					return text;
 				case "font":

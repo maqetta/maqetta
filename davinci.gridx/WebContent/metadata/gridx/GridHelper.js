@@ -21,6 +21,53 @@ GridHelper.prototype = {
 		return data;
 	},
 	
+	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
+		if(!widget || !widget._srcElement){
+			return undefined;
+		}
+		
+		var children = [];
+		dojo.forEach(widget._srcElement.children, function(child) {
+			this._getChildrenDataHelper(child, children);
+		}.bind(this));
+
+		return children;
+	},
+	
+	_getChildrenDataHelper: function(element, children) {
+		var elementData = this._getElementData(element);
+		if (elementData) {
+			children.push(elementData);
+			dojo.forEach(element.children, function(child) {
+				this._getChildrenDataHelper(child, elementData.children);
+			}.bind(this));
+		}
+	},
+	
+	_getElementData: function(element) {
+		var elementData = null;
+		
+		if (element.elementType == "HTMLElement") {
+			//Create a base data structure
+			elementData = {
+					type: "html." + element.tag,
+					properties: {},
+					children: []
+				};
+			
+			//Get the element attributes and add to data structure
+			dojo.forEach(element.attributes, function(attribute) {
+				if (!attribute.noPersist) {
+					elementData.properties[attribute.name] = attribute.value;
+				}
+			});
+		} else if (element.elementType == "HTMLText") {
+			elementData = element.value.trim();
+		}
+		
+		return elementData;
+	},
+	
 	create: function(widget, srcElement){
 		this._dataGridHelper.create(widget, srcElement, this._useDataDojoProps);
 	},
@@ -35,6 +82,20 @@ GridHelper.prototype = {
 	
 	getRemoveCommand: function(widget) {
 		return this._dataGridHelper.getRemoveCommand(widget, this._useDataDojoProps);
+	},
+	
+	/*
+	 * In same cases we are handling certain attributes within data-dojo-props 
+	 * or via child HTML elements, and we do not want to allow those attributes 
+	 * to be written out into the final HTML. So, here, we clean out those
+	 * attributes.
+	*/
+	cleanSrcElement: function(srcElement) {
+		srcElement.removeAttribute("cacheClass");
+		srcElement.removeAttribute("structure");
+		
+		//Defer to data grid helper for "store"
+		this._dataGridHelper.cleanSrcElement(srcElement, this._useDataDojoProps);
 	}
 };
 

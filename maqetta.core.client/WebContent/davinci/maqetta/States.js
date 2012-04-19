@@ -1,27 +1,23 @@
-// Duplicate of workspace/maqetta/maqetta.js for use by page editor.
-// Created this cloned version to overcome loader/build conflicts 
-// if page editor and runtime (possibly) using different versions of Dojo
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom"], function(connect, domStyle, dom){
 
-// Code below is looking for dojo at davinci.dojo. Don't ask why.
-
-if ( typeof davinci === "undefined" ) { davinci = {}; }
-require(["dojo/_base/connect"], function(connect){
-davinci.dojo = dojo;
-
-davinci.maqetta = davinci.maqetta || {};
-davinci.maqetta.States = function(){};
-davinci.maqetta.States.prototype = {
+var States = function(){};
+States.prototype = {
 
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
 
 	/**
-	 * Returns the array of states declared by the widget, plus the implicit normal state. 
+	 * Returns the array of application states declared on the given node.
+	 * At this point, only the BODY node can have application states declared on it.
+	 * In future, maybe application states will include a recursive feature.
+	 * @param {Element} node  BODY node for document
+	 * @param {boolean} associative  if true return associative array, otherwise regular array
+	 * FIXME: get rid of the associative parameter.
 	 */ 
-	getStates: function(widget, associative){ 
-		widget = this._getWidget(widget); 
+	getStates: function(node, associative){
+		node = this._getWidgetNode(node); 
 		var names = associative ? {"Normal": "Normal"} : ["Normal"];
-		var states = widget && widget.states;
+		var states = node && node.states;
 		if (states) {
 			for (var name in states) {
 				if (states[name].origin && name != "Normal") {
@@ -36,79 +32,128 @@ davinci.maqetta.States.prototype = {
 		return names;
 	},
 	
-	_getWidget: function(widget) {
-		if (!widget) {
+	/**
+	 * Internal routine. If node is null or undefined, return BODY node
+	 * else return the node that was passed in.
+	 * @param {null|undefined|Element} node
+	 * @returns {Element}
+	 * FIXME: This is somewhat ugly. We shouldn't have this sort of double-duty
+	 * where some operations can either operate on BODY or on descendant nodes.
+	 * Should instead have different operations for BODY vs the descendant nodes.
+	 */
+	_getWidgetNode: function(node) {
+		if (!node) {
 			var doc = this.getDocument();
-			widget = doc && doc.body;
+			node = doc && doc.body;
 		}
-		return widget;
-	},
-	
-	_updateSrcState: function (widget)
-	{
-		
+		return node;
 	},
 	
 	/**
-	 * Returns true if the widget declares the state, false otherwise.
+	 * Hook for when included in Maqetta page editor.
+	 * The Maqetta page editor provides a subclass that overwrites this empty routine.
+	 * When in the page editor, this function updates the "model" with latest states info
+	 * for a given node.
+	 * @param {Element} node
 	 */
-	hasState: function(widget, state, property){ 
+	_updateSrcState: function (node){
+	},
+	
+	/**
+	 * Returns true if the given application "state" exists.
+	 * @param {Element} node  Right now must be BODY element
+	 * @param {string} state  Name of state that might or not exist already
+	 * return {boolean} 
+	 */
+	hasState: function(node, state){ 
 		if (arguments.length < 2) {
 			state = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		return !!(widget && widget.states && widget.states[state] && (property || widget.states[state].origin));
+		node = this._getWidgetNode(node);
+		return !!(node && node.states && node.states[state] && node.states[state].origin);
 	},
 
 	/**
-	 * Returns the current state of the widget.
+	 * Returns the current state for the current node.
+	 * Right now, node must be either empty (null|undefined) or be the BODY node.
+	 * FIXME: Right now the node parameter is useless since things only
+	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
 	 */
-	getState: function(widget){ 
-		widget = this._getWidget(widget);
-		return widget && widget.states && widget.states.current;
+	getState: function(node){ 
+		node = this._getWidgetNode(node);
+		return node && node.states && node.states.current;
 	},
 	
 	/**
-	 * Sets the current state of the widget.  
+	 * Trigger updates to the given node based on the given "newState".  
+	 * This gets called for every node that is affected by a change in the given state.
+	 * This routine doesn't actually do any updates; instead, updates happen
+	 * by publishing a /davinci/states/state/changed event, which indirectly causes
+	 * the _update() routine to be called for the given node.
+	 * 
+	 * @param {null|undefined|Element} node  If not null|undefined, must by BODY
+	 * @param {null|undefined|string} newState  If null|undefined, switch to "Normal" state, else to "newState"
+	 * @param {boolean} updateWhenCurrent  Force update logic to run even if newState is same as current state
+	 * @param {boolean} _silent  If true, don't broadcast the state change via /davinci/states/state/changed
+	 * 
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/changed", callback).
+	 * FIXME: Right now the node parameter is useless since things only
+	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
+	 * FIXME: updateWhenCurrent is ugly. Higher level code could include that logic
+	 * FIXME: _silent is ugly. Higher level code code broadcast the change.
 	 */
-	setState: function(widget, newState, updateWhenCurrent, _silent){
+	setState: function(node, newState, updateWhenCurrent, _silent){
 		if (arguments.length < 2) {
 			newState = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || !widget.states || (!updateWhenCurrent && widget.states.current == newState)) {
+		node = this._getWidgetNode(node);
+		if (!node || !node.states || (!updateWhenCurrent && node.states.current == newState)) {
 			return;
 		}
-		var oldState = widget.states.current;
+		var oldState = node.states.current;
 		
 		if (this.isNormalState(newState)) {
-			if (!widget.states.current) { return; }
-			delete widget.states.current;
+			if (!node.states.current) { return; }
+			delete node.states.current;
 			newState = undefined;
 		} else {
-			widget.states.current = newState;
+			//FIXME: For time being, only the BODY holds states.current.
+			if(node.tagName == 'BODY'){
+				node.states.current = newState;
+			}else{
+				delete node.states.current;
+			}
 		}
 		if (!_silent) {
-			this.publish("/davinci/states/state/changed", [{widget:widget, newState:newState, oldState:oldState}]);
+			connect.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
 		}
-		this._updateSrcState (widget);
+		this._updateSrcState (node);
 		
 	},
 	
 	/**
-	 * If the current state is not Normal, force a call to setState
-	 * so that styling properties get reset for a subtree.
+	 * Force a call to setState so that styling properties get reset for the given node
+	 * based on the current application state.
 	 */
-	resetState: function(widget){
-		var currentState = this.getState(widget.getContext().rootWidget);
-		if(!this.isNormalState(currentState)){
-			this.setState(widget, currentState, true/*updateWhenCurrent*/, false /*silent*/);
-		}		
+	resetState: function(node){
+		if(!node || !node.ownerDocument || !node.ownerDocument.body){
+			return;
+		}
+		var body = node.ownerDocument.body;
+		var currentState = this.getState(body);
+		this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);	
 	},
 	
+	/**
+	 * Returns true if the given application "state" is the NORMAL state.
+	 * If "state" is not provided, then this routine responds whether the current
+	 * state is the Normal state.
+	 * If "state" is provided but is either null or undefined, then return true (i.e., NORMAL state).
+	 * @param {null|undefined|String} state
+	 * @returns {Boolean}
+	 */
 	isNormalState: function(state) {
 		if (arguments.length == 0) {
 			state = this.getState();
@@ -116,38 +161,57 @@ davinci.maqetta.States.prototype = {
 		return !state || state == this.NORMAL;
 	},
 	
-	getStyle: function(widget, state, name) {
-		var styleArray;
-		widget = this._getWidget(widget);
+	/**
+	 * Returns style values for the given node and the given application "state".
+	 * If "name" is provided, then only those style values for the given property are return.
+	 * If "name" is not provided, then all style values are returns.
+	 * @param {Element} node
+	 * @param {string} state
+	 * @param {string} name
+	 * @returns {Array} An array of objects, where each object has a single propname:propvalue.
+	 *		For example, [{'display':'none'},{'color':'red'}]
+	 */
+	getStyle: function(node, state, name) {
+		var styleArray, newStyleArray;
+		node = this._getWidgetNode(node);
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
 		// return all styles specific to this state
-		styleArray = widget && widget.states && widget.states[state] && widget.states[state].style;
+		styleArray = node && node.states && node.states[state] && node.states[state].style;
+		newStyleArray = dojo.clone(styleArray); // don't want to splice out of original
 		if (arguments.length > 2) {
 			// Remove any properties that don't match 'name'
-			if(styleArray){
-				for(var j=styleArray.length-1; j>=0; j--){
-					var item = styleArray[j];
+			if(newStyleArray){
+				for(var j=newStyleArray.length-1; j>=0; j--){
+					var item = newStyleArray[j];
 					for(var prop in item){		// should be only one prop per item
 						if(prop != name){
-							styleArray.splice(j, 1);
+							newStyleArray.splice(j, 1);
 							break;
 						}
 					}
 				}
 			}
 		}
-		return styleArray;
+		return newStyleArray;
 	},
+	
+	/**
+	 * Returns true if the CSS property "name" is defined on the given node for the given "state".
+	 * style values for the given node and the given application "state".
+	 * @param {Element} node
+	 * @param {string} state
+	 * @param {string} name
+	 * @returns {boolean} 
+	 */
+	hasStyle: function(node, state, name) {
+		node = this._getWidgetNode(node);
 
-	hasStyle: function(widget, state, name) {
-		widget = this._getWidget(widget);
-
-		if (!widget || !name) { return; }
+		if (!node || !name) { return; }
 		
-		if(widget.states && widget.states[state] && widget.states[state].style){
-			var valueArray = widget.states[state].style;
+		if(node.states && node.states[state] && node.states[state].style){
+			var valueArray = node.states[state].style;
 			for(var i=0; i<valueArray[i]; i++){
 				if(valueArray[i].hasProperty(name)){
 					return true;
@@ -158,18 +222,30 @@ davinci.maqetta.States.prototype = {
 		}
 	},
 
-	setStyle: function(widget, state, styleArray, silent) {
-		widget = this._getWidget(widget);
+	
+	/**
+	 * Update the CSS for the given node for the given application "state".
+	 * This routine doesn't actually do any screen updates; instead, updates happen
+	 * by publishing a /davinci/states/state/changed event, which indirectly causes
+	 * the _update() routine to be called for the given node.
+	 * @param {Element} node
+	 * @param {string} state
+	 * @param {Array} styleArray  List of CSS styles to apply to this node for the given "state".
+	 * 		This is an array of objects, where each object specifies a single propname:propvalue.
+	 * 		eg. [{'display':'none'},{'color':'red'}]
+	 * @param {boolean} _silent  If true, don't broadcast the state change via /davinci/states/state/changed
+	 */
+	setStyle: function(node, state, styleArray, silent) {
+		node = this._getWidgetNode(node);
 
-		if (!widget || !styleArray) { return; }
-			
-
-		widget.states = widget.states || {};
-		widget.states[state] = widget.states[state] || {};
-		widget.states[state].style = widget.states[state].style || [];
+		if (!node || !styleArray) { return; }
+		
+		node.states = node.states || {};
+		node.states[state] = node.states[state] || {};
+		node.states[state].style = node.states[state].style || [];
 		
 		// Remove existing entries that match any of entries in styleArray
-		var oldArray = widget.states[state].style;
+		var oldArray = node.states[state].style;
 		if(styleArray){
 			for (var i=0; i<styleArray.length; i++){
 				var newItem = styleArray[i];
@@ -204,21 +280,24 @@ davinci.maqetta.States.prototype = {
 			}
 		}
 		if(oldArray && newArray){
-			widget.states[state].style = oldArray.concat(newArray);
+			node.states[state].style = oldArray.concat(newArray);
 		}else if(oldArray){
-			widget.states[state].style = oldArray;
+			node.states[state].style = oldArray;
 		}else if(newArray){
-			widget.states[state].style = newArray;
+			node.states[state].style = newArray;
 		}else{
-			widget.states[state].style = undefined;
+			node.states[state].style = undefined;
 		}
 			
 		if (!silent) {
-			this.publish("/davinci/states/state/style/changed", [{widget:widget, state:state, style:styleArray}]);
+			connect.publish("/davinci/states/state/style/changed", [{node:node, state:state, style:styleArray}]);
 		}
-		this._updateSrcState (widget);
+		this._updateSrcState (node);
 	},
 	
+	/**
+	 * convert "property-name" to "propertyName"
+	 */
 	_convertStyleName: function(name) {
 		if(name.indexOf("-") >= 0){
 			// convert "property-name" to "propertyName"
@@ -234,6 +313,11 @@ davinci.maqetta.States.prototype = {
 	
 	_DYNAMIC_PROPERTIES: { width:1, height:1, top:1, right:1, bottom:1, left:1 },
 	
+	/**
+	 * Make sure length values have a 'px' at end
+	 * FIXME: What about other properties that take lengths? Seems arbitrary to help out
+	 * with only a few properties.
+	 */
 	_getFormattedValue: function(name, value) {
 		//FIXME: This code needs to be analyzed more carefully
 		// Right now, only checking six properties which might be set via dynamic
@@ -251,8 +335,28 @@ davinci.maqetta.States.prototype = {
 		return value;			
 	},
 	
-	_resetAndCacheNormalStyle: function(widget, node, styleArray, newState) {
-		var normalStyleArray = this.getStyle(widget, undefined);
+	/**
+	 * Utility routine to clean up styling on a given "node"
+	 * to reset CSS properties for "Normal" state.
+	 * First, remove any properties that were defined for "oldState".
+	 * Then, add properties defined for Normal state.
+	 * @param {Element} node
+	 * @param {string} oldState
+	 */
+	_resetAndCacheNormalStyle: function(node, oldState) {
+		var oldStateStyleArray = this.getStyle(node, oldState);
+		var normalStyleArray = this.getStyle(node, undefined);
+		
+		// Clear out any styles corresponding to the oldState
+		if(oldStateStyleArray){
+			for(var j=0; j<oldStateStyleArray.length; j++){
+				var oItem = oldStateStyleArray[j];
+				for(var oProp in oItem){	// Should only be one prop
+					var convertedName = this._convertStyleName(oProp);
+					node.style[convertedName] = '';
+				}
+			}
+		}
 		
 		// Reset normal styles
 		if(normalStyleArray){
@@ -264,35 +368,26 @@ davinci.maqetta.States.prototype = {
 				}
 			}
 		}
-
-		// Remember style values from the normal state
-		if (!this.isNormalState(newState)) {
-			if(styleArray){
-				for(var i=0; i<styleArray.length; i++){
-					var style = styleArray[i];
-					for (var name in style) {	// should only be one prop in each normalStyle
-						if(!this.hasStyle(widget, undefined, name)) {
-							var convertedName = this._convertStyleName(name);
-							var value = this._getFormattedValue(name, davinci.dojo.style(node, convertedName));
-							var o = {};
-							o[name] = value;
-							this.setStyle(widget, undefined, [o], true);
-						}
-					}
-				}
-			}
-		}
 	},
 	
-	_update: function(widget, newState, oldState) {
-		widget = this._getWidget(widget);
-		if (!widget) return;
+	/**
+	 * Updates CSS properties for the given node due to a transition
+	 * from application state "oldState" to "newState".
+	 * Called indirectly when the current state changes (via a setState call)
+	 * from code that listens to event /davinci/states/state/changed
+	 * @param {Element} node
+	 * @param {string} oldState
+	 * @param {string} newState
+	 */
+	_update: function(node, oldState, newState) {
+		node = this._getWidgetNode(node);
+		if (!node || !node.states){
+			return;
+		}
 		
-		var node = widget.domNode || widget;
-
-		var styleArray = this.getStyle(widget, newState);
+		var styleArray = this.getStyle(node, newState);
 		
-		this._resetAndCacheNormalStyle(widget, node, styleArray, newState);
+		this._resetAndCacheNormalStyle(node, oldState);
 
 		// Apply new style
 		if(styleArray){
@@ -300,8 +395,7 @@ davinci.maqetta.States.prototype = {
 				var style = styleArray[i];
 				for (var name in style) {	// should be only one prop in style
 					var convertedName = this._convertStyleName(name);
-					//FIXME: Probably doesn't work with arrays
-					davinci.dojo.style(node, convertedName, style[name]);
+					node.style[convertedName] = style[name];
 				}
 			}
 		}
@@ -320,118 +414,135 @@ davinci.maqetta.States.prototype = {
 			dijitWidget.resize();
 		}
 	},
-		
-	isContainer: function(widget) {
+	
+	/**
+	 * Returns true if the given node is an application state "container".
+	 * Right now, only BODY can be such a container.
+	 * @param {Element} node
+	 * @returns {Boolean}
+	 */
+	isContainer: function(node) {
 		var result = false;
-		if (widget) {
+		if (node) {
 			var doc = this.getDocument();
-			if (widget === (doc && doc.body) || (widget.domNode && widget.domNode.tagName && widget.domNode.tagName == "BODY")) {
+			if (node === (doc && doc.body) || node.tagName == "BODY") {
 				result = true;
 			}
 		}
 		return result;
 	},
 	
+	/**
+	 * Returns BODY node for current document.
+	 * @returns {Element}
+	 */
 	getContainer: function() {
-		return this._getWidget();
+		return this._getWidgetNode();
 	},
 	
 	/**
-	 * Adds a state to the list of states declared by the widget.  
+	 * Adds a state to the list of states declared by the node.
+	 * Right now, node must by the BODY element.
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/added", callback).
 	 */
-	add: function(widget, state){ 
+	add: function(node, state){ 
 		if (arguments.length < 2) {
 			state = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || this.hasState(widget, state)) {
+		node = this._getWidgetNode(node);
+		if (!node || this.hasState(node, state)) {
 			//FIXME: This should probably be an error of some sort
 			return;
 		}
-		widget.states = widget.states || {};
-		widget.states[state] = widget.states[state] || {};
-		widget.states[state].origin = true;
-		this.publish("/davinci/states/state/added", [{widget:widget, state:state}]);
-		this._updateSrcState (widget);
+		node.states = node.states || {};
+		node.states[state] = node.states[state] || {};
+		node.states[state].origin = true;
+		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
+		this._updateSrcState (node);
 	},
 	
 	/** 
-	 * Removes a state from the list of states declared by the widget.  
+	 * Removes a state to the list of states declared by the node.
+	 * Right now, node must by the BODY element.
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/removed", callback).
 	 */
-	remove: function(widget, state){ 
+	remove: function(node, state){ 
 		if (arguments.length < 2) {
 			state = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || !this.hasState(widget, state)) {
+		node = this._getWidgetNode(node);
+		if (!node || !this.hasState(node, state)) {
 			return;
 		}
 		
-		var currentState = this.getState(widget);
+		var currentState = this.getState(node);
 		if (state == currentState) {
-			this.setState(widget, undefined);
+			this.setState(node, undefined);
 		}
 		
-		delete widget.states[state].origin;
-		if (this._isEmpty(widget.states[state])) {
-			delete widget.states[state];
+		delete node.states[state].origin;
+		if (this._isEmpty(node.states[state])) {
+			delete node.states[state];
 		}
-		this.publish("/davinci/states/state/removed", [{widget:widget, state:state}]);
-		this._updateSrcState (widget);
+		connect.publish("/davinci/states/state/removed", [{node:node, state:state}]);
+		this._updateSrcState (node);
 	},
 	
 	/**
 	 * Renames a state in the list of states declared by the widget.
-	 * Subscribe using davinci.states.subscribe("/davinci/states/renamed", callback).
+	 * Subscribe using connect.subscribe("/davinci/states/renamed", callback).
 	 */
-	rename: function(widget, oldName, newName, property){ 
+	rename: function(node, oldName, newName, property){ 
 		if (arguments.length < 3) {
 			newName = arguments[1];
 			oldName = arguments[0];
-			widget = undefined;
+			node = undefined;
 		}
-		widget = this._getWidget(widget);
-		if (!widget || !this.hasState(widget, oldName, property) || this.hasState(widget, newName, property)) {
+		node = this._getWidgetNode(node);
+		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
 			return false;
 		}
-		widget.states[newName] = widget.states[oldName];
-		delete widget.states[oldName];
+		node.states[newName] = node.states[oldName];
+		delete node.states[oldName];
 		if (!property) {
-			this.publish("/davinci/states/state/renamed", [{widget:widget, oldName:oldName, newName:newName}]);
+			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
 		}
-		this._updateSrcState (widget);
+		this._updateSrcState (node);
 		return true;
 	},
 
 	/**
-	 * Returns true if the widget is set to visible within the current state, false otherwise.
+	 * Returns true if the node is set to visible within the current state, false otherwise.
 	 */ 
-	isVisible: function(widget, state){ 
+	isVisible: function(node, state){ 
 		if (arguments.length == 1) {
 			state = this.getState();
 		}
-		widget = this._getWidget(widget);
-		if (!widget) return;
+		node = this._getWidgetNode(node);
+		if (!node){
+			return;
+		}
 		// FIXME: The way the code is now, sometimes there is an "undefined" property
 		// within widget.states. That code seems somewhat accidental and needs
 		// to be studied and cleaned up.
-		var domNode = (widget.domNode || widget);
 		var isNormalState = (typeof state == "undefined" || state == "undefined");
 		if(isNormalState){
-			return domNode.style.display != "none";
+			return node.style.display != "none";
 		}else{
-			if(widget.states && widget.states[state] && widget.states[state].style && typeof widget.states[state].style.display == "string"){
-				return widget.states[state].style.display != "none";
+			if(node.states && node.states[state] && node.states[state].style && typeof node.states[state].style.display == "string"){
+				return node.states[state].style.display != "none";
 			}else{
-				return domNode.style.display != "none";
+				return node.style.display != "none";
 			}
 		}
 	},
 	
+	/**
+	 * Returns true if object does not directly have property 'name'
+	 * (versus inherited it from a prototype).
+	 */
 	_isEmpty: function(object) {
 		for (var name in object) {
 			if (object.hasOwnProperty(name)) {
@@ -441,11 +552,18 @@ davinci.maqetta.States.prototype = {
 		return true;
 	},
 	
-	serialize: function(widget) {
-		if (!widget) return;
+	/**
+	 * Convert the states object on the given node into a JSON-encoded string.
+	 * @param {Element} node
+	 * @returns {string}
+	 */
+	serialize: function(node) {
+		if (!node){
+			return;
+		}
 		var value = "";
-		if (widget.states) {
-			var states = require("dojo/_base/lang").clone(widget.states);
+		if (node.states) {
+			var states = require("dojo/_base/lang").clone(node.states);
 			delete states["undefined"];
 			if (!this._isEmpty(states)) {
 				value = JSON.stringify(states);
@@ -459,7 +577,14 @@ davinci.maqetta.States.prototype = {
 		}
 		return value;
 	},
-	
+
+	/**
+	 * Convert a string representation of widget-specific states information into a JavaScript object
+	 * using JSON.parse.
+	 * The string representation is typically the value of the this.ATTRIBUTE (dvStates)
+	 * @param states  string representation of widget-specific states information
+	 * @return {object}  JavaScript result from JSON.parse
+	 */
 	deserialize: function(states) {
 		if (typeof states == "string") {
 			// Replace unescaped single quotes with double quotes, unescape escaped single quotes
@@ -467,12 +592,18 @@ davinci.maqetta.States.prototype = {
 					return $1 ? "'" : '"';
 			});
 			states = JSON.parse(states);
-			this._upgrate_p4_p5(states);	// Upgrade old files
+			this._upgrade_p4_p5(states);	// Upgrade old files
 		}
 		return states;
 	},
 	
-	_upgrate_p4_p5: function(states){
+	/**
+	 * The format of the states attribute (this.ATTRIBUTE = 'dvStates') changed
+	 * from Preview4 to Preview5. This routine upgrades the states object in place
+	 * from Preview4 or earlier data structure into data structure used by Preview 5.
+	 * @param {object} states  "states" object that might be in Preview4 format
+	 */
+	_upgrade_p4_p5: function(states){
 		// We changed the states structure for Preview5 release. It used to be
 		// a JSON representation of an associative array: {'display':'none', 'color':'red'}
 		// But with Preview5 it is now an array of single property declarations such as:
@@ -493,30 +624,96 @@ davinci.maqetta.States.prototype = {
 			}
 		}
 	},
+
 	
-	store: function(widget, states) {
-		if (!widget || !states) return;
-		
-		this.clear(widget);
-		widget.states = states = this.deserialize(states);
-		this.publish("/davinci/states/stored", [{widget:widget, states:states}]);
+	/**
+	 * Stuffs a JavaScript property (the states object) onto the given node.
+	 * @param {Element} node  
+	 * @param states   the string value of the node-specific states information.
+	 * 				This is the string that is stuffed into the attribute that 
+	 * 				holds widget-specific states information (dvStates)
+	 */
+	store: function(node, states) {
+		if (!node || !states){
+			return;
+		}
+		this.clear(node);
+		//FIXME: Shouldn't be stuffing a property with such a generic name ("states") onto DOM elements
+		node.states = states = this.deserialize(states);
+		connect.publish("/davinci/states/stored", [{node:node, states:states}]);
 	},
+	
+	/**
+	 * Returns the string value of the attribute that holds node-specific states information (dvStates)
+	 * @param {Element} node  
+	 * @returns {string}  String value for the attribute, or unspecified|null if no such widget or attribute
+	 */
+	retrieve: function(node) {
+		if (!node){
+			return;
+		}
 		
-	retrieve: function(widget) {
-		if (!widget) return;
-		
-		var node = widget.domNode || widget;
+		// FIXME: Maybe this check between page editor and runtime should be factored out
 		var states = node.getAttribute(this.ATTRIBUTE);
 		return states;
 	},
 
-	clear: function(widget) {
-		if (!widget || !widget.states) return;
-		var states = widget.states;
-		delete widget.states;
-		this.publish("/davinci/states/cleared", [{widget:widget, states:states}]);
+	/**
+	 * Removes the states property on the given node
+	 * @param {Element} node  
+	 */
+	clear: function(node) {
+		if (!node || !node.states) return;
+		var states = node.states;
+		delete node.states;
+		connect.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
+	/**
+	 * Parse an element.style string, return a valueArray, which is an array
+	 * of objects, where each object holds a single CSS property value
+	 * (e.g., [{'display':'none'},{'color':'red'}]
+	 * @param text
+	 * @returns {Array}  valueArray: [{propname:propvalue}...]
+	 */
+	_parseStyleValues: function(text) {
+		var values = [];
+		if(text){
+			dojo.forEach(text.split(";"), function(s){
+				var i = s.indexOf(":");
+				if(i > 0){
+					var n = s.substring(0, i).trim();
+					var v = s.substring(i + 1).trim();
+					var o = {};
+					o[n] = v;
+					values.push(o);
+				}
+			});
+		}
+		return values;
+	},
+
+	/**
+	 * Store original element.style values into node.states['undefined'].style
+	 * Called by _preserveStates
+	 * @param node  
+	 * @param {String} elemStyle  element.style string
+	 */
+	transferElementStyle: function(node, elemStyle) {
+		if(node){
+			var states = node.states;
+			var valueArray = this._parseStyleValues(elemStyle);
+			if(!states['undefined']){
+				states['undefined'] = {};
+			}
+			states['undefined'].style = valueArray;
+		}
+	},
+	
+	/**
+	 * Returns current document object.
+	 * Make into a function because in Maqetta page editor a subclass overrides this routine.
+	 */
 	getDocument: function() {
 		return document;
 	},
@@ -527,59 +724,38 @@ davinci.maqetta.States.prototype = {
 		return !isDavinciEditor;
 	},
 
-	publish: function(/*String*/ topic, /*Array*/ args) {
-		try {
-			return connect.publish(topic, args);
-		} catch(e) {
-			console.error(e);
-		}
-	},
-	
-	subscribe: function(/*String*/ topic, /*Object|null*/ context, /*String|Function*/ method){
-		return connect.subscribe(topic, context, method);
-	},
-	
-	unsubscribe: function(handle){
-		return connect.unsubscribe(handle);
-	}, 
 
+	/**
+	 * Returns all child elements for given Element
+	 * Note: can't just use node.children because node.children isn't available for SVG nodes.
+	 * @param {Element} node
+	 * @returns {Array} array of child nodes
+	 */
 	_getChildrenOfNode: function(node) {
 		var children = [];
-		var child = node.firstChild;
-		while(child) {
-			if (child.nodeType == 1) {
-				children.push(child);
+		for (var i=0; i<node.childNodes.length; i++){
+			var n = node.childNodes[i];
+			if(n.nodeType === 1){	// Element
+				children.push(n);
 			}
-			child = child.nextSibling;
 		}
 		return children;
 	},
 	
-	_getWidgetByNode: function(node) {
-		var widget = node;
-		if (typeof dijit != "undefined") {
-			widget = node.widgetid ? dijit.byId(node.widgetid) : (dijit.byNode(node) || node);
-		}
-		return widget;
-	},
-	
-	initialize: function() {
-	
-		if (!this.subscribed && this._shouldInitialize()) {
-		
-			this.subscribe("/davinci/states/state/changed", function(e) { 
+	initialize: function() {	
+		if (!this.subscribed) {
+			connect.subscribe("/davinci/states/state/changed", function(e) { 
 				if(e.editorClass){
 					// Event targets one of Maqetta's editors, not from runtime events
 					return;
 				}
-				var children = davinci.states._getChildrenOfNode(e.widget.domNode || e.widget);
+				var children = davinci.states._getChildrenOfNode(e.node);
 				while (children.length) {
 					var child = children.shift();
-					var childWidget = davinci.states._getWidgetByNode(child);
-					if (!davinci.states.isContainer(childWidget)) {
-						children = children.concat(davinci.states._getChildrenOfNode(childWidget.domNode || childWidget));				
+					if (!davinci.states.isContainer(child)) {
+						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					davinci.states._update(childWidget, e.newState, e.oldState);
+					davinci.states._update(child, e.oldState, e.newState);
 				}
 			});
 			
@@ -588,30 +764,36 @@ davinci.maqetta.States.prototype = {
 	}
 };
 
-davinci.states = new davinci.maqetta.States();
+//FIXME: remove all references to davinci global and davinci.states
+if (typeof davinci === "undefined") { davinci = {}; }
+var singleton = davinci.states = new States();
 
 (function(){
 
-	if (davinci.states._shouldInitialize()) {
+	singleton.initialize();
 	
-		davinci.states.initialize();
-		
+	if (singleton._shouldInitialize()) {
+	
 		// Patch the dojo parse method to preserve states data
 		if (typeof require != "undefined") {
 			require(["dojo/_base/lang", "dojo/query", "dojo/domReady!"], function(lang, query) {
 				var cache = {}; // could be local to hook function?
+				var alreadyHooked = false;
 
 				// hook main dojo.parser (or dojox.mobile.parser, which also
 				// defines "dojo.parser" object)
 				// Note: Uses global 'dojo' reference, which may not work in the future
 				var hook = function(parser) {
-					var parse = parser.parse;
-					dojo.parser.parse = function() {
-						_preserveStates(cache);
-						var results = parse.apply(this, arguments);
-						_restoreStates(cache);
-						return results;
-					};
+					if(!alreadyHooked){
+						var parse = parser.parse;
+						dojo.parser.parse = function() {
+							_preserveStates(cache);
+							var results = parse.apply(this, arguments);
+							_restoreStates(cache);
+							return results;
+						};
+						alreadyHooked = true;
+					}
 				};
 				// only include the regular parser if the mobile parser isn't available
 				var parser = lang.getObject("dojox.mobile.parser.parse");
@@ -620,68 +802,96 @@ davinci.states = new davinci.maqetta.States();
 				} else {
 					hook.apply(parser);
 				}
-			
-				// preserve states specified on widgets
+
+				/**
+				 * Preserve states specified on widgets.
+				 * Invoked from code above that wraps the dojo parser such that
+				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
+				 */
 				var _preserveStates = function (cache) {
-					var doc = davinci.states.getDocument();
+					var count=0;
+					var prefix = 'maqTempClass';
+					var doc = singleton.getDocument();
 	
 					// Preserve the body states directly on the dom node
-					var states = davinci.states.retrieve(doc.body);
-					if (states) {
-						davinci.states._upgrate_p4_p5(states);	// upgrade older files
-						cache.body = states;
+					if(!doc.body._maqAlreadyPreserved){
+						var states = davinci.states.retrieve(doc.body);
+						if (states) {
+							cache.body = states;
+						}
+						doc.body._maqAlreadyPreserved = true;
 					}
 	
 					// Preserve states of children of body in the cache
+					//FIXME: why can't we just query for nodes that have this.ATTRIBUTE?
 					query("*", doc).forEach(function(node){
-						var states = davinci.states.retrieve(node);
-						if (states) {
-							if (!node.id) {
-								node.id = _getTemporaryId(node);
-							}
-							if (node.tagName != "BODY") {
-								davinci.states._upgrate_p4_p5(states);	// upgrade older files
-								cache[node.id] = states;
+						// Because Dojo parser gets called recursively (multiple times), 
+						// but preserveStates/restoreStates go through entire document,
+						// make sure the current node hasn't already been preserved
+						if(!node._maqAlreadyPreserved){
+							node._maqAlreadyPreserved = true;
+							var states = singleton.retrieve(node);
+							if (states) {
+								if (node.tagName != "BODY") {
+									var tempClass = prefix+count;
+									node.className = node.className + ' ' + tempClass;
+									count++;
+									cache[tempClass] = {};
+									cache[tempClass].states = states;
+									if(node.style){
+										cache[tempClass].style = node.style.cssText;
+									}else{
+										// Shouldn't be here
+										console.error('States.js _preserveStates. No value for node.style.')
+									}
+								}
 							}
 						}
 					});
 				};
-	
-				// restore widget states from cache
+				
+				/**
+				 * Restore widget states from cache
+				 * Invoked from code below that wraps the dojo parser such that
+				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
+				 */
 				var _restoreStates = function (cache) {
-					var doc = davinci.states.getDocument(),
+					var doc = singleton.getDocument(),
 						currentStateCache = [];
 					for(var id in cache){
-						var widget = id == "body" ? doc.body : dijit.byId(id) || dojo.byId(id);
-						if (!widget) {
-							console.error("States: Failed to get widget by id: ", id);
+						var node;
+						if(id == 'body'){
+							node = doc.body;
+						}else{
+							node = doc.querySelectorAll('.'+id)[0];
+							if(node){
+								node.className = node.className.replace(' '+id,'');
+							}
+							
 						}
-						var states = davinci.states.deserialize(cache[id]);
-						delete states.current; // always start in normal state for runtime
-						davinci.states.store(widget, states);
+						if (!node) {
+							console.error("States: Failed to get node by id: ", id);
+						}
+						// BODY node has app states directly on node.states. All others have it on node.states.style.
+						var states = singleton.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
+						delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
+						singleton.store(node, states);
+						if(node.tagName != 'BODY'){
+							davinci.states.transferElementStyle(node, cache[id].style);
+						}
+						delete cache[id];
 					}
-				};
-					
-				var _getTemporaryId = function (type) {
-					if (!type) {
-						return undefined;
-					}
-					if (type.domNode) { // widget
-						type = type.declaredClass;
-					} else if (type.nodeType === 1) { // Element
-						type = (type.getAttribute("dojoType") || type.nodeName.toLowerCase());
-					}
-					type = type ? type.replace(/\./g, "_") : "";
-					return dijit.getUniqueId(type);
 				};
 			});
 		}
 	}
 })();
 
+/*FIXME: Temporarily comment out overlay widget logic
+
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
 if (!davinci.Workbench && typeof dijit != "undefined"){
-	davinci.states.subscribe("/davinci/states/state/changed", function(args) {
+	connect.subscribe("/davinci/states/state/changed", function(args) {
 		var w;
 		if (args.newState && !args.newState.indexOf("_show:")) {
 			w = dijit.byId(args.newState.substring(6));
@@ -692,4 +902,7 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 		}
 	});
 }
+*/
+
+return States;
 });

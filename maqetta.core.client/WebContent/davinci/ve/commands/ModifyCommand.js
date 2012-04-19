@@ -132,7 +132,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(newWidget);
+		States.resetState(newWidget.domNode);
 		
 		// Some properties (such as HorizontalSliderRule's 'container' property) require that
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
@@ -234,7 +234,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
 		
 		// Recompute styling properties in case we aren't in Normal state
-		States.resetState(newWidget);
+		States.resetState(newWidget.domNode);
 		
 		// Some properties (such as HorizontalSliderRule's 'container' property) require that
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 

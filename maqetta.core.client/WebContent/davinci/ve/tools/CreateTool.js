@@ -393,7 +393,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	onKeyDown: function(event){
 		// Under certain conditions, show list of possible parent widgets
 		var showParentsPref = this._context.getPreference('showPossibleParents');
-		if(event.keyCode==32){	// 32=space key
+		if(event.keyCode==dojo.keys.SPACE){
 			this._spaceKeyDown = true;
 		}else{
 			this._processKeyDown(event.keyCode);
@@ -444,7 +444,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 
 	onKeyUp: function(event){
 		// Under certain conditions, show list of possible parent widgets
-		if(event.keyCode==32){	// 32=space key
+		if(event.keyCode==dojo.keys.SPACE){
 			this._spaceKeyDown = false;
 		}
 		dojo.stopEvent(event);
@@ -609,7 +609,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
 		}
-		if(args.size || w.isLayoutContainer){
+		if(args.size){
 			// For containers, issue a resize regardless of whether an explicit size was set.
 			// In the case where a widget is nested in a layout container,
 			// resize()+layout() will not get called during create. 
@@ -623,6 +623,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 		var w_id = w.id;
 		this._context.getCommandStack().execute(command);
+		if(w.isLayoutContainer){
+			w.resize();
+		}
 		var w = Widget.byId(w_id);
 		this._select(w);
 		this._widget = w;

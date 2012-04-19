@@ -6,6 +6,12 @@
 
 	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
 	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+	<style type="text/css">
+		.inlineExpected {
+		color:darkred;
+		font-style:italic;
+	}
+	</style>
 </head>
 
 <body>
@@ -146,6 +152,44 @@
 		<li>In the normal state, the Calendar whould be 200px wide.</li>
 		<li>In the "aaa" state, the second button should have a greenish color and a font size of 30 and the Calendar whould be 300px wide.</li>
 		<li>In the "ddd" state, the third button should have a bluish color and a font size of 40 and the Calendar whould be 400px wide.</li>
+	</ol>
+
+
+	<h2 class="test_section">Moving/resizing in different states using "s" key</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>NOTE: the "s" key during move and resize operations says "apply to current state only".
+			This is temporary UI just so users have some way to apply move and resize operations to a particular state.</li>
+		<li>Drag SampleBanner.jpg onto canvas.</li>
+		<li>In Normal state, drag to move it to a new location, and drag lower-right corner to make it smaller.</li>
+		<li>Click undo twice and redo twice. 
+			<span class='inlineExpected'>After two undo operations, the image should return to its original location and size.
+			After two redo operations, the image should return to its modified location and size.</span>
+		</li>
+		<li>On the States palette, go into the "aaa" state. </li>
+		<li>Drag/move the image with "s" key held down ('s' must be down at mouseup time).</li>
+		<li>Drag/resize the image with "s" key held down ('s' must be down at mouseup time).</li>
+		<li>Click undo twice and redo twice.
+			<span class='inlineExpected'>After two undo operations, the image should return to its previous location and size.
+			After two redo operations, the image should return to its modified location and size.</span>
+		</li>
+		<li>Change to Normal state and click Undo twice. Change to "aaa" state.
+			<span class='inlineExpected'>After two undo operations, the image should return to its previous location and size,
+			ie the last position and size before the two operations that were done with "s" key held down.</span>
+		</li>
+		<li>Change to Normal state and click Redo once. Change to "aaa" state.
+			<span class='inlineExpected'>After this first redo operation, the image should now be at the location
+			it was after completing the move operation with "s" key down.</span>
+		</li>
+		<li>Change to Normal state and click Redo once. Change to "aaa" state.
+			<span class='inlineExpected'>After this second redo operation, the image should now be at the location
+			and size it was after completing the resize operation with "s" key down.</span>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As described within the text above.</li>
 	</ol>
 
 </body>

@@ -418,17 +418,6 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 
 		context.getCommandStack().execute(compoundCommand); 
 		context.select(command.newWidget);
-		
-		//Do some clean up
-		this._cleanUpNewWidgetAttributes(command.newWidget);
-	},
-	
-	//Subclass can override to do additional clean-up
-	_cleanUpNewWidgetAttributes: function(widget) {
-		// We don't want to write out "store" (if using data-dojo-props)
-		if (this.useDataDojoProps) {
-			widget._srcElement.removeAttribute("store");
-		}	
 	},
 
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {

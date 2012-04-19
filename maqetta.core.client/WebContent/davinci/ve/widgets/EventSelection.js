@@ -1,9 +1,9 @@
 define(["dojo/_base/declare",
-        "davinci/workbench/ViewLite",
-        "davinci/ve/widgets/HTMLStringUtil",
-        
-        "davinci/ve/commands/ModifyCommand"
-],function(declare,  ViewLite, HTMLStringUtil, ModifyCommand){
+        "dojo/_base/connect",
+        "../../workbench/ViewLite",
+        "./HTMLStringUtil",
+        "../commands/ModifyCommand"
+],function(declare, connect, ViewLite, HTMLStringUtil, ModifyCommand){
   return declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 		pageTemplate: [{display:"onclick", target:"onclick",type:"state", hideCascade:true},
 			{display:"ondblclick",target:"ondblclick",type:"state", hideCascade:true},
@@ -25,7 +25,7 @@ define(["dojo/_base/declare",
 		},
 		setReadOnly : function(isReadOnly){
 			for(var i = 0;i<this.pageTemplate.length;i++){
-				var widget = this.pageTemplate[i]['widget'];
+				var widget = this.pageTemplate[i].widget;
 				if(widget)
 					widget.set("readOnly", isReadOnly);
 				else{
@@ -44,29 +44,31 @@ define(["dojo/_base/declare",
 			}
 			
 			for(var i=0;i<this.pageTemplate.length;i++){
-				var box = dijit.byId(this.pageTemplate[i]['id']);
-				this.pageTemplate[i]['widget'] = box;
-				dojo.connect(box, "onChange", this, makeOnChange(i));
+				var box = dijit.byId(this.pageTemplate[i].id);
+				this.pageTemplate[i].widget = box;
+				connect.connect(box, "onChange", this, makeOnChange(i));
 			}
 			this._buildSelectionValues();
-			dojo.subscribe("/davinci/ui/context/loaded", dojo.hitch(this, this._buildSelectionValues));
-			davinci.states.subscribe("/davinci/states/stored", dojo.hitch(this, this._buildSelectionValues));
-			davinci.states.subscribe("/davinci/states/state/added", dojo.hitch(this, this._buildSelectionValues));
-			davinci.states.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._updateValues));
-			davinci.states.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._updateValues));
-			dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
+			//FIXME: unsubscribe? leak?
+			connect.subscribe("/davinci/ui/context/loaded", dojo.hitch(this, this._buildSelectionValues));
+			connect.subscribe("/davinci/states/stored", dojo.hitch(this, this._buildSelectionValues));
+			connect.subscribe("/davinci/states/state/added", dojo.hitch(this, this._buildSelectionValues));
+			connect.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._updateValues));
+			connect.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._updateValues));
+			connect.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 			this.setReadOnly(true);
 		},
+
 		onEditorSelected : function(){
 			if(!this._editor || !this._editor.supports("states")) {
 				delete this._editor;
 			}
 			this._buildSelectionValues();
 		 },	
-		_onChange : function(a){
-			
+
+		 _onChange : function(a){
 			var index = a.target;
-			var widget = dijit.byId(this.pageTemplate[index]['id']);
+			var widget = dijit.byId(this.pageTemplate[index].id);
 			var	value = widget.get('value');
 			
 			value.replace(/'/,"\\'");
@@ -77,7 +79,7 @@ define(["dojo/_base/declare",
 			}
 			var properties = {};
 			
-			properties[this.pageTemplate[index]['target']] = value;
+			properties[this.pageTemplate[index].target] = value;
 			
 			var command = new davinci.ve.commands.EventCommand(this._widget, properties);
 			dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
@@ -93,8 +95,12 @@ define(["dojo/_base/declare",
 		},
 	
 		_updateValues: function(e) {
+			if(!e || !e.node || !e.node._dvWidget){
+				return;
+			}
+			var widget = e.node._dvWidget;
 			this._buildSelectionValues();
-			if (e.widget == this._widget) {
+			if (widget == this._widget) {
 				this._setValues();
 			}
 		},
@@ -111,8 +117,8 @@ define(["dojo/_base/declare",
 		},
 		_clearValues : function(){
 			for(var i = 0;i<this.pageTemplate.length;i++){
-				var box = dijit.byId(this.pageTemplate[i]['id']);
-					box.set("value","", false );
+				var box = dijit.byId(this.pageTemplate[i].id);
+				box.set("value","", false );
 			}
 		},
 		
@@ -126,7 +132,7 @@ define(["dojo/_base/declare",
 			}
 			
 			for(var i=0;i<this.pageTemplate.length;i++){
-				var box = dijit.byId(this.pageTemplate[i]['id']);
+				var box = dijit.byId(this.pageTemplate[i].id);
 				box.store.clearValues();
 				box.store.setValues(items);
 			}
@@ -134,21 +140,21 @@ define(["dojo/_base/declare",
 
 		_setValues: function() {
 			for(var i=0;i<this.pageTemplate.length;i++){
-				var name = this.pageTemplate[i]['target'];
+				var name = this.pageTemplate[i].target;
 				var widget = this._widget;
 				var	value = "";
 		
 				if (widget.properties && widget.properties[name]) {
 					value = widget.properties[name];
 					if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
-						var state = value.substring("davinci.states.setState('".length, value.length - 2);
+						var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
 						value = state + ":State";
 					}
 				}else {
 					/* check the model for the events value */
 					value = widget._srcElement.getAttribute(name);
 				}
-				var box = dijit.byId(this.pageTemplate[i]['id']);
+				var box = dijit.byId(this.pageTemplate[i].id);
 				if(box){
 					box.set('value', value, false);
 				}

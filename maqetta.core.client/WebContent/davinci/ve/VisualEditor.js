@@ -92,7 +92,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
 				resizeBody(bodyElem, newPos);
-				setTimeout(function() { visualEditor.getContext().select(visualEditor.getSelectedWidget()); }, 100); //FIXME: should call updateFocus
+				setTimeout(function() {
+					visualEditor.getContext().updateFocusAll(); 
+				}, 100); 
 				if(!visualEditor._scrollHandler){
 					visualEditor._scrollHandler = connect.connect(iframe.contentDocument, 'onscroll', this, function(e){
 						resizeBody(bodyElem, {
@@ -191,6 +193,19 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		return currentEditor && currentEditor.declaredClass=="davinci.ve.PageEditor" && currentEditor.visualEditor == this;
 	},
 	
+	/**
+	 * Causes property changes on the currently selected widget.
+	 * Right now, only operates on the first widget in the selection.
+	 * Creates and executes an appropriate StyleCommand for the operation.
+	 * @param {object} value
+	 *		value.appliesTo {string|object} - either 'inline' or a CSSRule object
+	 *		applyToWhichStates - controls whether style change is attached to Normal or other states:
+	 *			"current" => apply to currently active state
+	 *			[...array of strings...] => apply to these states (may not yet be implemented)
+	 *			any other value (null/undefined/"Normal"/etc) => apply to Normal state
+	 *		values [object]  Array of property values. Each item in array is an object with one property
+	 *						<propname>:<propvalue>, where <propname> is name of styling property and <propvalue> is value string
+	 */
 	_stylePropertiesChange: function (value){
 		if(!this.isActiveEditor() ){
 			return;

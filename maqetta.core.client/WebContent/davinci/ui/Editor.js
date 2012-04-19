@@ -178,7 +178,7 @@ return declare("davinci.ui.Editor", null, {
 
 		// add the user activity monitoring to the document and save the connects to be 
 		// disconnected latter
-		this._activityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.firstChild.contentDocument);
+		this._activityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.ownerDocument);
 		this.editor.getTextView().focus();
 
 		dojo.style(this.contentDiv, "overflow", "hidden");

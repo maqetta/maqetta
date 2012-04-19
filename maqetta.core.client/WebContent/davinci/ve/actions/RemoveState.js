@@ -9,7 +9,7 @@ return declare("davinci.ve.actions.RemoveState", [Action], {
 	run: function(context){
 		var widget = this.getWidget();
 		var state = this.getState(arguments[1] || arguments[0]);
-		davinci.ve.states.remove(widget, state);
+		davinci.ve.states.remove(widget.domNode, state);
 	},
 
 	isEnabled: function(context){

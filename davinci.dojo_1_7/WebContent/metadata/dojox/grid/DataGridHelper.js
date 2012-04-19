@@ -262,10 +262,10 @@ DataGridHelper.prototype = {
 		    		  context.getDojo().fromJson(s);
 		    		  funcNotDefined = false;
 		    	  }catch(e){
-		    		 if (e.type === 'not_defined'){
+		    		 var args = e.toString().split(' ');
+		    		 if (args.length > 4 && args[0] === 'ReferenceError:' && args[3] === 'not' && args[4] === 'defined'){
 		    			 // format function not defined
-		    			 var str = 'function '+ e.arguments[0]+'(value,row){return \''+dojo.string.substitute(nlsDojox.properyNotSupported, ['formatter'])+'\';}';
-		    			 context.getGlobal()['eval'](str); // replace the undefined function with message
+		    			 context.getGlobal()[args[1]] = function(value, row) { return dojo.string.substitute(nlsDojox.properyNotSupported, ['formatter']);}
 		    			 funcNotDefined = true;
 		    			 num++;
 		    		 } else {

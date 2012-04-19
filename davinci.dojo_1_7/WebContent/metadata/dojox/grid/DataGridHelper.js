@@ -253,7 +253,7 @@ DataGridHelper.prototype = {
 		  var s = node.getAttribute('structure');
 	      if (s){
 	    	  var funcNotDefined = false;
-	    	  var num = 0; // fail safe to prevent endlist loop
+	    	  var num = 0; // fail safe to prevent endless loop
 	    	  do
 	    	  {
 	    		  try {

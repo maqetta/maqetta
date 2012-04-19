@@ -92,7 +92,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
 				resizeBody(bodyElem, newPos);
-				setTimeout(function() { visualEditor.getContext().select(visualEditor.getSelectedWidget()); }, 100); //FIXME: should call updateFocus
+				setTimeout(function() {
+					visualEditor.getContext().updateFocusAll(); 
+				}, 100); 
 				if(!visualEditor._scrollHandler){
 					visualEditor._scrollHandler = connect.connect(iframe.contentDocument, 'onscroll', this, function(e){
 						resizeBody(bodyElem, {

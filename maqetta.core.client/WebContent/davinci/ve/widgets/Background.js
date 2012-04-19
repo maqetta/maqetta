@@ -257,6 +257,18 @@ define(["dojo/_base/declare",
 				}
 				this._onChange(event);
 			}));
+			this.connect(this._comboBox, 'onFocus', dojo.hitch(this, function(event){
+				// If focus goes into any of the background text fields, then
+				// clear out any leftover _valueArrayNew values on cascade objects
+				var xref = davinci.ve._BackgroundWidgets;
+				for(var propName in xref){
+					var o = xref[propName];
+					var cascade = o.propPaletteWidget._cascade;
+					if(cascade){
+						cascade._valueArrayNew = undefined;
+					}
+				}
+			}));
 		},
 		/*
 		 * This is the base location for the file in question.  Used to caluclate relativity for url(...)

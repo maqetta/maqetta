@@ -264,7 +264,14 @@ define([
 				if (row.value != propValue) { // keep '!=', we want type coersion from strings
 					row.value = propValue;
 					var attr = row.type === 'boolean' ? 'checked' : 'value';
-					dojo.attr(propNode, attr, row.value);
+
+					// check if we have a dijit
+					var dijitwidget = dijit.byId(row.id);
+					if (dijitwidget) {
+						dijitwidget.attr(attr, row.value);
+					} else {
+						dojo.attr(propNode, attr, row.value);
+					}
 				}
 			}
 		}

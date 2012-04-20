@@ -68,6 +68,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 /*=====
 	// keeps track of widgets-per-library loaded in context
 	_widgets: null,
+
+	// Cache for the HTMLElement (model) holding the main `require` call.  Used in
+	// addJavaScriptModule(), cleared in _setSource().
+	_requireHtmlElem: null,
 =====*/
 
 	constructor: function(args) {
@@ -841,6 +845,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){
+		// clear cached values
+		this._requireHtmlElem = null;
+
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);
 
@@ -2718,39 +2725,37 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 
 		if (doUpdateModel) {
-			// find a script element which has a 'require' call
-			// XXX I tried to cache this script element, but there was an issue
-			// 	   where, after opening split view to show both VE and source
-			// 	   editor, setting text on cached script element no longer
-			// 	   updated the source; even though the cached script element
-			// 	   still seemed to be part of `this._srcDocument`.
-			// 	   --> Should be able to cache, but delete when source is reset.
-			var head = this.getDocumentElement().getChildElement('head'),
-				scriptText,
-				text,
-				m;
+			if (!this._requireHtmlElem) {
+				// find a script element which has a 'require' call
+				var head = this.getDocumentElement().getChildElement('head'),
+					found;
 
-			head.children.some(function(child) {
-				if (child.elementType === 'HTMLElement' && child.tag === 'script') {
-					scriptText = child.find({elementType: 'HTMLText'}, true);
-					if (scriptText) {
-						text = scriptText.getText();
-						m = text.match(this._reRequire);
-						if (m) {
-							return true; // break 'some' loop
+				found = head.children.some(function(child) {
+					if (child.elementType === 'HTMLElement' && child.tag === 'script') {
+						var script = child.find({elementType: 'HTMLText'}, true);
+						if (script) {
+							if (this._reRequire.test(script.getText())) {
+								// found suitable `require` block
+								this._requireHtmlElem = child;
+								return true; // break 'some' loop
+							}
 						}
 					}
-				}
-			}, this);
+				}, this);
 
-			if (!scriptText) {
-				// no such element exists yet; create now
-				this.addHeaderScriptText('require(["' + mid + '"]);');
-				return;
+				if (!found) {
+					// no such element exists yet; create now
+					this._requireHtmlElem = this.addHeaderScriptText('require(["' + mid + '"]);\n');
+					return;
+				}
 			}
 
 			// insert new `mid` into array of existing `require`
-			var arr = m[1].match(this._reModuleId);
+			var scriptText = this._requireHtmlElem.find({elementType: 'HTMLText'}, true),
+				text = scriptText.getText(),
+				m = text.match(this._reRequire),
+				arr = m[1].match(this._reModuleId);
+			// check for duplicate
 			if (arr.indexOf(mid) === -1) {
 				arr.push(mid);
 				text = text.replace(this._reRequire, 'require(' + JSON.stringify(arr, null, '  ') + ')');
@@ -2829,6 +2834,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * create one.
 	 * 
 	 * @param {string} text inline JS to add
+	 * @return {HTMLElement} the element which contains added script
 	 */
 	addHeaderScriptText: function(text) {
 		var head = this.getDocumentElement().getChildElement('head'),
@@ -2870,6 +2876,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//   HTMLText. See issue #1350.
 			scriptText.parent.setScript(oldText + '\n' + text);
 		}
+
+		return scriptText.parent; // HTMLElement obj
 	},
 	
 	/**

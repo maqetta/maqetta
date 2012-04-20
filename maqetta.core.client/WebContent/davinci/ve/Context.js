@@ -2680,16 +2680,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			});
 		}
 		if (doUpdateModel) {				
-			/* update the script if found */
-			var found = this._srcDocument.find({
-				elementType:'HTMLElement', tag: 'script'
-			}).some(function (element) {
-				var elementUrl = element.getAttribute("src");
-				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
-					element.setAttribute("src", url);
-					return true;
-				}					
-			});
+			// update the script if found
+			var head = this.getDocumentElement().getChildElement('head'),
+				found = head.getChildElements('script').some(function(element) {
+					var elementUrl = element.getAttribute("src");
+					if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
+						element.setAttribute("src", url);
+						return true;
+					}
+				});
 			if (found) {
 				return;
 			}
@@ -2730,15 +2729,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var head = this.getDocumentElement().getChildElement('head'),
 					found;
 
-				found = head.children.some(function(child) {
-					if (child.elementType === 'HTMLElement' && child.tag === 'script') {
-						var script = child.find({elementType: 'HTMLText'}, true);
-						if (script) {
-							if (this._reRequire.test(script.getText())) {
-								// found suitable `require` block
-								this._requireHtmlElem = child;
-								return true; // break 'some' loop
-							}
+				found = head.getChildElements('script').some(function(child) {
+					var script = child.find({elementType: 'HTMLText'}, true);
+					if (script) {
+						if (this._reRequire.test(script.getText())) {
+							// found suitable `require` block
+							this._requireHtmlElem = child;
+							return true; // break 'some' loop
 						}
 					}
 				}, this);
@@ -2807,7 +2804,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 		
-		var head =  this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		var head = this.getDocumentElement().getChildElement('head');
 		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
 		//	"dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
 		//	the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
@@ -2843,6 +2840,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			i,
 			node;
 
+		// reverse search; cannot use getChildElements, et al
 		for (i = children.length - 1; i >= 0; i--) {
 			node = children[i];
 			if (node.elementType === 'HTMLElement' && node.tag === 'script') {
@@ -2895,7 +2893,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Add element to <head> of document.  Modeled on dojo.create().
 	 */
 	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
-		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		var head = this.getDocumentElement().getChildElement('head');
 		
 		if (!allowDup) {
 			// Does <head> already have an element that matches the given
@@ -2904,10 +2902,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// same as the incoming attr.  Same goes for <meta> and its 'name'
 			// attr.
 			var sigAttr = this._significantAttrs[tag] || 'src';
-			var found = head.find({ elementType: 'HTMLElement', tag: tag })
-					.some(function(elem) {
-						return elem.getAttribute(sigAttr) === attrs[sigAttr];
-					});
+			var found = head.getChildElements(tag).some(function(elem) {
+				return elem.getAttribute(sigAttr) === attrs[sigAttr];
+			});
 			if (found) {
 				return;
 			}
@@ -2930,10 +2927,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Remove element from <head> that matches given tag and attributes.
 	 */
 	_removeHeadElement: function(tag, attrs) {
-		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		var head = this.getDocumentElement().getChildElement('head');
 		
 		// remove from Model...
-		head.find({ elementType: 'HTMLElement', tag: tag }).some(function(elem) {
+		head.getChildElements(tag).some(function(elem) {
 			var found = true;
 			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
 				if (elem.getAttribute(name) !== attrs[name]) {

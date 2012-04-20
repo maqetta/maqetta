@@ -5,74 +5,84 @@ define([
  * 
  * this class parses out the resource portion of a URL.  for example:
  * 
- * url('/something/something/1.jpg') will re
+ * url('/something/something/1.jpg')
  */
 
-var _START_REG_EX = /url{1}\s*\(('|")?/i;
-var _REWRITE_REG_EX = /url{1}\s*\(('|")?(.*)('|")?\)/i;
-var _ABSOLUTE_REG_EX = /(http|ftp){1,}/i
+var _REWRITE_REG_EX = /^\s*url\s*\(\s*(\'[^\'\"]*\'|\"[^\'\"]*\"|[^\'\"]*)\s*\)\s*$/;
+var _STRIPQUOTES_REG_EX = /^[\'\"]?([^\'\"]*)[\'\"]?$/;
+var _ABSOLUTE_REG_EX = /^(http|ftp)/;
 
 return {
 	
-	
-	getUrlStartOffset: function(url){
-		if(typeof url != 'string')
-			return -1;
-		var foundAt = url.search(_START_REG_EX);
-		
-		for(var i = foundAt;i<url.length;i++){
-			if(url.charAt(i)=="'" || url.charAt(i)=="\"" || url.charAt(i)=="(")
-				return i+1;
-			
-		}
-		
-		return ;
-	},
-	
 	isAbsolute : function(url){
-		return url.search(_ABSOLUTE_REG_EX) > -1;
-	},
-	
-	getUrlEndOffset: function(url){
-		var start = this.getUrlStartOffset(url);
-		
-		if(start<0) return start;
-		var found = 0;
-		
-		for(var i = start+1;i<url.length;i++){
-			if(url.charAt(i)=="'" || url.charAt(i)=="\"" || url.charAt(i)==")")
-				return i;
-			
+		if(typeof url != 'string'){
+			return false;
+		}
+		var urlInside = this.getUrl(url);
+		if(urlInside){
+			return _ABSOLUTE_REG_EX.test(urlInside);
+		}else{
+			return false;
 		}
 	},
 	
 	containsUrl: function(url){
-		if(typeof url != 'string')
+		if(typeof url != 'string'){
 			return false;
-		
-		return url.search(_START_REG_EX) >-1 ;
-		
+		}
+		return _REWRITE_REG_EX.test(url);
 	},
 	
 	replaceUrl: function(oldUrl, newUrl){
-		if(typeof url != 'string')
-			return false;
-		
-		return oldUrl.replace(_REWRITE_REG_EX, "url('"+ newUrl + "')")  ;
-		
+		if(typeof oldUrl != 'string' || typeof newUrl != 'string'){
+			return null;
+		}
+		var urlInside = this.getUrl(oldUrl);
+		if(urlInside){
+			return 'url(\''+newUrl+'\')';
+		}else{
+			return null;
+		}
 	},
 	
 	getUrl: function(url){
-		
-		if(typeof url != 'string')
+		if(typeof url != 'string'){
 			return null;
-		
-		
-		var start = this.getUrlStartOffset(url);
-		var end = this.getUrlEndOffset(url);
-		
-		return url.substring(start,end);
+		}
+		var matches = url.match(_REWRITE_REG_EX);
+		if(matches && matches.length > 1){
+			var match = matches[1];
+			var urlInside = match.replace(_STRIPQUOTES_REG_EX, '$1');
+			return urlInside;
+		}else{
+			return null;
+		}
 	}
+	
+	/*
+	//Unit tests that can be run by copy/paste logic from this file into
+	//an HTML file which serves as testing scaffold. Tests can be run by:
+	//	var u = new URLRewrite();
+	//	u.runTests();		
+	,runTests: function(){
+		var s = 'url(abc)';
+		console.log('s='+s+',u.containsUrl(s)='+u.containsUrl(s));
+		var s = ' url ( \'abc\' ) ';
+		console.log('s='+s+',u.containsUrl(s)='+u.containsUrl(s));
+		var s = ' url ( \"abc\" ) ';
+		console.log('s='+s+',u.getUrl(s)='+u.getUrl(s));
+		var s = ' url ( \"abc\" ) ';
+		console.log('s='+s+',u.isAbsolute(s)='+u.isAbsolute(s));
+		var s = ' url ( \"http://abc\" ) ';
+		console.log('s='+s+',u.isAbsolute(s)='+u.isAbsolute(s));
+		var s = ' url ( \"www\" ) ';
+		var t = 'def';
+		console.log('s='+s+',t='+t+',u.replaceUrl(s,t)='+u.replaceUrl(s,t));
+		var s = 'url(abc)';
+		var t = 'def';
+		console.log('s='+s+',t='+t+',u.replaceUrl(s,t)='+u.replaceUrl(s,t));
+	}
+	*/
 	
 };
 	

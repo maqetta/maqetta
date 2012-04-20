@@ -1,0 +1,19 @@
+<project name="package.override" default="main" >
+
+	<import file="${buildDirectory}/${assembleScriptName}" as="super" />
+	
+	<target name="main" >
+		<antcall target="super.main" />
+	</target>
+	
+	<!-- bug 335723 -->
+    <target name="cleanup.assembly">
+    	<exec executable="mv" dir="${buildDirectory}" >
+			<arg value="${assemblyTempDir}" />
+    		<arg value="${buildDirectory}/tmp.${os}.${ws}.${arch}" />
+		</exec>
+		<exec executable="rm" dir="${buildDirectory}" >
+			<arg line="-rf ${buildDirectory}/tmp.${os}.${ws}.${arch}" />
+		</exec>
+    </target>	
+</project>

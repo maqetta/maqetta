@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+	<title>Welcome to Orion</title>
+</head>
+
+<body>
+<p>
+Running the <tt>orion</tt> executable will start the http server on port 8080.  Open a browser on 
+	<a href="http://localhost:8080">http://localhost:8080</a>
+to get started.
+</p>
+
+<p>
+When prompted to login you can create a new account from the link in the login dialog.
+</p>
+See the <a href="http://wiki.eclipse.org/Orion/Server_admin_guide">Server Admin guide</a> for details on configuring the server.<br>
+To change the port for the orion server, edit the orion.ini file (orion.app/Contents/MacOS/orion.ini on MacOSX) 
+and change <tt>-Dorg.eclipse.equinox.http.jetty.http.port=8080</tt>.
+<br>
+If you want to link to existing content on the server, create an orion.conf file set the system property
+ "orion.file.allowedPaths" and then use the Link Folder action in the toolbar in the browser UI.
+</p>
+<p>
+To shutdown the server, type "close" in the server console.
+</p>
+</body>
+</html>

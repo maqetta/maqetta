@@ -1,0 +1,20 @@
+<project default="main" basedir=".">
+	
+	<target name="main">
+		<tstamp/>
+		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
+		<property name="cvsuser" value=":ext:aniefer" />		
+		<property name="builder" value="${basedir}/builder" />
+
+		<!-- Add build id to orion.product before invoking product build -->
+		<replace token="@qualifier@" file="${builder}/orion.product" value="${buildLabel}" />
+		
+		<mkdir dir="${base}"/>
+		
+		<property name="allElementsFile" value="${basedir}/builder/allElements.xml" />
+		<ant antfile="${eclipse.pdebuild.scripts}/productBuild/productBuild.xml" >
+			<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
+		</ant>
+	</target>
+	
+</project>

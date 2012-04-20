@@ -1,0 +1,258 @@
+<project name="WebIDE customTargets overrides" >
+
+	<property name="super" value="Build specific targets and properties" />
+	<import file="${eclipse.pdebuild.templates}/headless-build/customTargets.xml"/>
+
+	<!-- Map files are here in the releng project -->
+	<target name="getMapFiles"  unless="skipMaps">
+		<!--<property name="mapsCheckoutTag" value="HEAD" /> -->
+		<mkdir dir="${buildDirectory}/maps" />
+
+		<!--
+		<exec executable="git" dir="${buildDirectory}/maps">
+			<arg line="archive -format=tar -remote=ssh://dev.eclipse.org/gitroot/orion/org.eclipse.orion.server.git master releng/org.eclipse.orion.releng/maps | tar -xf -" />
+		</exec>
+		
+		<cvs cvsRoot="${mapsRepo}" package="${mapsRoot}" dest="${buildDirectory}/maps" tag="${mapsCheckoutTag}" />
+		<antcall target="${super}.getMapFiles" />
+			
+		<antcall target="compareMapFiles"/>
+		<antcall target="tagMapFiles" />
+		-->
+		<copy todir="${buildDirectory}/maps">
+			<fileset dir="${builder}/../maps" />
+		</copy>
+
+		<replace dir="${buildDirectory}/maps/" value="${eclipsePlatformRepo}" token="ECLIPSE_PLATFORM_REPO" />
+		<!--<antcall target="replaceUser" />-->
+	</target>
+
+	<target name="replaceUser" if="gitUser" >
+		<replace dir="${buildDirectory}/maps/" value="repo=${gitUser}@dev.eclipse.org:/gitroot" token="repo=dev.eclipse.org:/gitroot" />
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps" >
+		<echo file="${mapTagFile}">
+lastMapTag=${mapsTagTag}
+		</echo>
+		<antcall target="${super}.tagMapFiles" />
+	</target>
+
+	<target name="compareMapFiles" if="compareMaps">
+		<echo message="${mapTagFile}" />
+		<property file="${mapTagFile}" />
+		<property name="cvsDiff" value="${buildDirectory}/cvsDiff.txt" />
+		<cvs cvsRoot="${mapsRepo}" dest="${builder}/../maps" command="diff -w -r ${lastMapTag}" output="${cvsDiff}" />
+		<modifiedMaps mapDiffFile="${cvsDiff}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="preProcessRepos">
+		<p2.mirror source="${eclipsePlatformRepo}" destination="${repoBaseLocation}/launchers">
+			<slicingOptions includeOptional="false" includeNonGreedy="false" latestVersionOnly="true"/>
+			<iu id="org.eclipse.equinox.executable.feature.group" version=""/>
+		</p2.mirror>
+	</target>
+
+	<target name="postFetch">
+		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
+			<replacefilter token="HEAD" value="${buildLabel}" />
+			<replacefilter token="origin/mls -alaster" value="${buildLabel}" />
+		</replace>
+
+		<available property="jsdocHome" value="${base}/jsdoc-toolkit" file="${base}/jsdoc-toolkit" />
+		<available property="requirejsHome" value="${base}/requirejs" file="${base}/requirejs" />
+		<property name="closureJar" value="/shared/common/closure/compiler.jar" />
+
+		<antcall target="jsdocs" />
+		<antcall target="requirejs" />
+	</target>
+
+	<target name="jsdocs" if="jsdocHome" >
+		<java jar="${jsdocHome}/jsrun.jar" fork="true">
+			<arg line="${jsdocHome}/app/run.js -s -v -a " />
+			<arg value="-r=3" />
+			<arg value="-t=${jsdocHome}/templates/jsdoc" />
+			<arg value="-d=${buildDirectory}/plugins/org.eclipse.orion.doc.isv/jsdoc" />
+			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.core/web/orion/" />
+			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.editor/web/orion/" />
+			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.git/web/orion/" />
+			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.users/web/orion/" />
+		</java>
+	</target>
+
+	<macrodef name="optimize" >
+		<attribute name="name" />
+		<attribute name="pageDir" default = "." />
+		<attribute name="bundle"  />
+		<sequential>
+			<java classname="org.mozilla.javascript.tools.shell.Main" fork="true" 
+				  dir="${buildDirectory}/optimization">
+				<classpath>
+					<pathelement location="${requirejsHome}/lib/rhino/js.jar" />
+					<pathelement location="${requirejsHome}/lib/closure/compiler.jar" />
+				</classpath>
+				<arg value="${requirejsHome}/dist/r.js"/>
+				<arg value="-o" />
+				<arg value="./orion.build.js"/>
+				<arg value="optimize=closure" />
+				<arg value="name=@{pageDir}/@{name}" />
+				<arg value="out=@{pageDir}/built-@{name}.js"/>
+				<arg value="dir=" />
+			</java>
+
+			<antcall target="updateHTML">
+				<param name="minifiedScript" value="${buildDirectory}/optimization/@{pageDir}/built-@{name}.js" />
+				<param name="pageDir" value="@{pageDir}" />
+				<param name="name" value="@{name}" />
+			</antcall>
+
+			<copy todir="${buildDirectory}/plugins/@{bundle}/web/@{pageDir}" >
+				<fileset dir="${buildDirectory}/optimization/@{pageDir}" includes="built-@{name}.js, @{name}.html" >
+					<size when="more" value="0" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<target name="updateHTML" >
+		<condition property="builtResult" value="require([&quot;built-${name}.js&quot;]);" else="require([&quot;${name}.js&quot;]);" >
+			<length file="${minifiedScript}" when="greater" length="0" />
+		</condition>
+		<replace file="${buildDirectory}/optimization/${pageDir}/${name}.html" token="require([&quot;${name}.js&quot;]);" value="${builtResult}" />
+	</target>
+
+	<target name="requirejs" if="requirejsHome" >
+		<delete dir="${buildDirectory}/optimization" />
+		<copy file="${builder}/scripts/orion.build.js" tofile="${buildDirectory}/optimization/orion.build.js" overwrite="true"/>
+
+		<!-- Stage files for optimization -->
+		<pathconvert property="dojoJar" >
+			<last>
+				<sort>
+					<fileset dir="${transformedRepoLocation}/plugins" includes="org.dojotoolkit_*.jar" />
+				</sort>
+			</last>
+		</pathconvert>
+		<property name="dojoFolder" value="${buildDirectory}/optimization/org.dojotoolkit" />
+		<mkdir dir="${dojoFolder}" />
+		<unzip src="${dojoJar}" dest="${dojoFolder}" overwrite="false"/>
+
+		<copy todir="${buildDirectory}/optimization" >
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.core/web" includes="**"/>
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.editor/web" includes="**"/>
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.git/web" includes="**"/>
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.users/web" includes="**"/>
+		</copy>
+		<copy todir="${dojoFolder}" >
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.core/web" includes="dojo/**" />
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.core/web" includes="dijit/**" />
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.core/web" includes="dojox/**" />
+		</copy>
+
+		<!-- invoke requirejs -->
+		<optimize pageDir="." name="index" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="navigate" name="table" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="edit" name="edit" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="compare" name="compare" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="search" name="search" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="settings" name="settings" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="sites" name="site" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="sites" name="sites" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="git" name="git-log" bundle="org.eclipse.orion.client.git" />
+		<optimize pageDir="git" name="git-status" bundle="org.eclipse.orion.client.git" />
+		<optimize pageDir="git" name="git-repository" bundle="org.eclipse.orion.client.git" />
+		<optimize pageDir="git" name="git-commit" bundle="org.eclipse.orion.client.git" />
+		<optimize pageDir="profile" name="user-list" bundle="org.eclipse.orion.client.users" />
+		<optimize pageDir="profile" name="user-profile" bundle="org.eclipse.orion.client.users" />
+
+		<java classname="org.mozilla.javascript.tools.shell.Main">
+			<classpath>
+				<pathelement location="${requirejsHome}/lib/rhino/js.jar" />
+				<pathelement location="${closureJar}" />
+			</classpath>
+			<arg value="${requirejsHome}/dist/r.js"/>
+			<arg value="-o" />
+			<arg value="${builder}/scripts/orion.build.js"/>
+			<arg value="optimize=none" />
+			<arg value="appDir=${buildDirectory}/optimization" />
+			<arg value="dir=${buildDirectory}/optimization" />
+		</java>
+
+		<!-- copy css back -->
+		<copy todir="${buildDirectory}/plugins/org.eclipse.orion.client.core/web" >
+			<fileset dir="${buildDirectory}/optimization" includes="**/*.css" excludes="org.dojotoolkit/,git/,profile/"/>
+		</copy>
+		<copy todir="${buildDirectory}/plugins/org.eclipse.orion.client.git/web" >
+			<fileset dir="${buildDirectory}/optimization" includes="git/**/*.css" />
+		</copy>
+		<copy todir="${buildDirectory}/plugins/org.eclipse.orion.client.users/web" >
+			<fileset dir="${buildDirectory}/optimization" includes="profile/**/*.css" />
+		</copy>
+	</target>
+
+	<target name="preGenerate">
+		<replace file="${buildDirectory}/features/org.eclipse.pde.build.container.feature/feature.xml" token="1.0.0" value="0.5.0.qualifier" />
+	</target>
+
+	<target name="postBuild" >
+		<property name="buildResultLocation" value="${buildDirectory}/${buildLabel}" />
+		<property name="dropLocation" value="${buildResultLocation}/drop" />
+		<mkdir dir="${dropLocation}" />
+
+		<antcall target="gatherLogs" />
+		<antcall target="copyResults" />
+
+		<mkdir dir="${buildDirectory}/formatRepo" />
+		<copy file="${builder}/html/artifacts.xml" todir="${buildDirectory}/formatRepo" />
+		<replace file="${buildDirectory}/formatRepo/artifacts.xml" token="@REPO@" value="0.3-${buildType}-builds/${buildLabel}" />
+
+		<p2.mirror source="file:${p2.metadata.repo}" log="${buildDirectory}/${buildLabel}/mirrorLog.txt" ignoreErrors="true" >
+			<slicingOptions latestVersionOnly="true"/>
+			<destination compressed="true" name="Orion ${buildLabel} metadata" location="file:${updateSite}/${buildLabel}" append="true" format="file:${p2.repo}" kind="metadata" />
+			<destination compressed="true" name="Orion ${buildLabel} artifacts" location="file:${updateSite}/${buildLabel}" append="true" format="file:${buildDirectory}/formatRepo" kind="artifact"/>
+			<comparator comparator="org.eclipse.equinox.p2.repository.tools.jar.comparator" comparatorLog="${dropLocation}/comparatorlog.txt">
+				<repository location="file:${updateSite}" />
+			</comparator>
+		</p2.mirror>
+		<p2.composite.artifact.repository.add location="file:${updateSite}" child="${buildLabel}" />
+		<p2.composite.metadata.repository.add location="file:${updateSite}" child="${buildLabel}" />
+	</target>
+
+	<target name="copyResults"  >
+		<zip destFile="${dropLocation}/compileLogs-${buildLabel}.zip" basedir="${buildResultLocation}/compilelogs" includes="**" />
+		<copy todir="${dropLocation}" >
+			<fileset dir="${buildResultLocation}" includes="${archiveNamePrefix}*" />
+		</copy>
+
+		<!-- generate the build index, guess the component version numbers -->
+		<filter token="repmaindate" value="${TODAY}" />
+		<filter token="repbuildlabel" value="${buildLabel}" />
+		<copy filtering="true" file="${builder}/html/build.index.html" tofile="${dropLocation}/index.html" />
+		<copy file="${builder}/html/build.download.php" tofile="${dropLocation}/download.php" />
+
+		<copy file="${buildResultLocation}/../directory.txt" tofile="${dropLocation}/directory.txt" />
+		<available file="${base}/logs/current.log" property="logExists" />
+		<antcall target="copyLog" />
+	</target>
+
+	<target name="copyLog" if="logExists" >
+		<copy file="${base}/logs/current.log" tofile="${dropLocation}/buildLog-${buildLabel}.txt" />
+	</target>
+
+	<target name="gatherLogs">
+
+		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs" />
+		<antcall target="allElements">
+			<param name="target" value="gatherLogs" />
+		</antcall>
+
+		<copy todir="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true" failonerror="false">
+			<fileset dir="${buildDirectory}/features/" includes="*/feature.temp.folder/plugins/**" />
+			<regexpmapper from="^(.*)/feature.temp.folder/plugins/(.*)" to="\2" />
+		</copy>
+	</target>
+
+</project>

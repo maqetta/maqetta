@@ -190,112 +190,86 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             this._dojoxMobileAddTheme(this._context, themeSet.mobileTheme);
         }
     },
+
+    _reThemeMap: /\brequire\s*\(\s*\[\s*['"]dojox\/mobile['"]\s*\]\s*,\s*function.*\)/,
+
+    _themeMapTemplate: 'require(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap=${1};dojoxMobile.themeFiles = [];})',
     
-    _dojoxMobileRemoveTheme: function(context){
+    _dojoxMobileRemoveTheme: function(context) {
         // remove the dojox.mobile.themeMap
-        var htmlElement = context._srcDocument.getDocumentElement();
-        var head = htmlElement.getChildElement("head");
-        var scriptTags=head.getChildElements("script");
-        dojo.forEach(scriptTags, function (scriptTag){
-            var text=scriptTag.getElementText();
-            var stop = 0;
-            var start;
-            if (text.length) {
-                // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
-                while ((start = text.indexOf(',function(dojoxMobile){dojoxMobile.themeMap=', stop)) > -1 ){ // might be more than one.
-                    var stop = text.indexOf('}', start);
-                    if (stop > start){
-                        text = text.substring(0,start) + text.substring(stop+1);
-                      }
-                }
-                var script = new HTMLElement('script');
-                script.addAttribute('type', 'text/javascript');
-                script.script = "";
-                head.insertBefore(script, scriptTag);
-                var newScriptText = new HTMLText();
-                newScriptText.setText(text); 
-                script.addChild(newScriptText); 
+        var head = context.getDocumentElement().getChildElement("head"),
+            scriptTags = head.getChildElements("script");
+
+        scriptTags.some(function(scriptTag) {
+            var text = scriptTag.getElementText();
+            if (text.length && this._reThemeMap.test(text)) {
                 scriptTag.parent.removeChild(scriptTag);
-             }
+                return true; // break loop
+            }
         }, this);
+
         var dm = context.getDojo().getObject("dojox.mobile", true);
-        if (dm){
+        if (dm) {
             var dj = context.getDojo();
             var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
-            dm.themeMap=[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[url]],["Custom","custom",[]],[".*","iphone",[]]]; // reset themeMap to default
+            // reset themeMap to default
+            dm.themeMap = [
+                ["Android","android",[]],
+                ["BlackBerry","blackberry",[]],
+                ["iPad","iphone",[url]],
+                ["Custom","custom",[]],
+                [".*","iphone",[]]
+            ];
             delete dm.themeFiles;
-        } 
-        
+        }
     },
-    
    
-    _dojoxMobileAddTheme: function(context, theme, newFile){
-        
-        var htmlElement = context._srcDocument.getDocumentElement();
-        var head = htmlElement.getChildElement("head");
-        var scriptTags=head.getChildElements("script");
-        if (Theme.themeSetEquals(theme, Theme.dojoMobileDefault)){
-            var nothingToDo = true;
-            dojo.forEach(scriptTags, function (scriptTag){
-                var text=scriptTag.getElementText();
-                if (text.length) {
-                    if (text.indexOf('dojoxMobile.themeMap=') >-1) {
-                        nothingToDo = false;
-                    }
+    _dojoxMobileAddTheme: function(context, theme, newFile) {
+        var head = context.getDocumentElement().getChildElement("head"),
+            scriptTags = head.getChildElements("script"),
+            equalsDefault = Theme.themeSetEquals(theme, Theme.dojoMobileDefault);
+
+        if (equalsDefault){
+            var todo = scriptTags.some(function (scriptTag) {
+                var text = scriptTag.getElementText();
+                if (text.length && text.indexOf('dojoxMobile.themeMap=') !== -1) {
+                    return true;
                 }
             }, this);
-            if (nothingToDo){
+            if (!todo) {
                 return;
             }
         }
-        // add the theme to the dojox.mobile.themeMap
-        if (newFile){
-            context.loadRequires("dojox.mobile.View", true/*doUpdateModel*/, false, true /* skip UI load */ );
-        } else {
-            context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file. 
-        }
-        head = htmlElement.getChildElement("head");
-        scriptTags=head.getChildElements("script");
 
-        dojo.forEach(scriptTags, function (scriptTag){
-            var text=scriptTag.getElementText();
-            if (text.length) {
-                // Look for a require('dojox.mobile'); in the document, if found set the themeMap 
-                var start = text.indexOf('dojox/mobile');
-                if (start > 0){
-                    var stop = text.indexOf(']', start);
-                    if (stop > start){
-                        var themeMap;
-                        if (theme){
-                            themeMap = theme;
-                            if (Theme.themeSetEquals(themeMap, Theme.dojoMobileDefault)){
-                                themeMap = null;
-                            } else {
-                               themeMap = dojo.toJson(Theme.getDojoxMobileThemeMap(context, theme));
-                               themeMap = text.substring(0,stop+1) + ',function(dojoxMobile){dojoxMobile.themeMap='+themeMap+';dojoxMobile.themeFiles = [];}' + text.substring(stop+1);
-                            }
-                        }
-                        if(themeMap){
-                            // create a new script element
-                            var script = new HTMLElement('script');
-                            script.addAttribute('type', 'text/javascript');
-                            script.script = "";
-                            head.insertBefore(script, scriptTag);
-                            var newScriptText = new HTMLText();
-                            newScriptText.setText(themeMap); 
-                            script.addChild(newScriptText); 
-                            scriptTag.parent.removeChild(scriptTag);
-                        }
-                        
-                    }
-                }
+        // add the theme to the dojox.mobile.themeMap...
+
+        //  use this widget to get the correct requires added to the file.
+        context.loadRequires("dojox.mobile.View", true/*doUpdateModel*/, false,
+                !!newFile /* skip UI load */);
+
+        // XXX should we just return earlier in the function?
+        if (equalsDefault) {
+            return;
+        }
+
+        var themeMap = JSON.stringify(Theme.getDojoxMobileThemeMap(context, theme)),
+            script = this._themeMapTemplate.replace('${1}', themeMap);
+
+        var replaced = scriptTags.some(function (scriptTag) {
+            var text = scriptTag.getElementText();
+            if (text.length && this._reThemeMap.test(text)) {
+                text = text.replace(this._reThemeMap, script);
+                scriptTag.child.setText(text);
+                scriptTag.script = text;
+                return true;
              }
+             return false;
         }, this);
 
+        if (!replaced) {
+            context.addHeaderScriptText(script + ';\n');
+        }
     }
-    
-  
 
 });
 });
-

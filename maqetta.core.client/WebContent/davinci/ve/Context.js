@@ -829,17 +829,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     },
     
 // FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
-    _loadThemeDojoxMobile: function(context){
-      
-        var htmlElement = context._srcDocument.getDocumentElement();
-        var head = htmlElement.getChildElement("head");
-        var scriptTags=head.getChildElements("script");
-        
-        return dojo.some(scriptTags, function(tag) {
-            var text=tag.getElementText();
-                // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-               // var start = text.indexOf('dojox.mobile.themeMap');
-            return text.length && text.indexOf('dojoxMobile.themeMap=') != -1;
+    _loadThemeDojoxMobile: function(context) {
+        var head = context.getDocumentElement().getChildElement('head');
+        head.getChildElements('script').some(function(tag) {
+            var text = tag.getElementText();
+            // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
+            return text.length && text.indexOf('dojoxMobile.themeMap=') !== -1;
         });
     },
 //////////////////////////////////////////////////////////////////////////////////////////////     

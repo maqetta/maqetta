@@ -33,7 +33,7 @@ define([
 		},
 
 		onWidgetSelectionChange: function() {
-			if (!this._widget) {
+			if (!this._widget || !this._editor || this._editor.editorID != "davinci.ve.HTMLPageEditor") {
 				this._disconnectAll();
 				this._destroyProperties();
 				return;
@@ -70,6 +70,7 @@ define([
 		},
 		
 		onEditorSelected: function(editorChange) {
+			this._editor = editorChange;
 			if (editorChange && editorChange.editorID == "davinci.ve.HTMLPageEditor") {
 				// not all editors have a context
 				//FIXME: test for context instead?

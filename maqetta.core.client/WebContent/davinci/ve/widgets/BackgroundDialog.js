@@ -23,7 +23,8 @@ define(["dojo/_base/declare",
 		
 		templateString: templateString,
 		widgetsInTemplate: true,
-		_filePicker : null,
+		_filePicker: null,
+		context: null,
 		
 		stopRowTemplate:"<tr class='bgdGradOptRow bgdStopRow' style='display:none;'>"+
 					"<td class='bgdCol1'></td>"+
@@ -249,7 +250,11 @@ define(["dojo/_base/declare",
 			this.inherited(arguments);
 			/* back ground image box */
 			
-			this._filePicker.set('value', (this.bgddata && this.bgddata.url) ? this.bgddata.url : '');
+			var url = (this.bgddata && this.bgddata.url) ? this.bgddata.url : '';
+			var basePath = new Path(this._baseLocation);
+			url = basePath.getParentPath().append(url).toString();
+			this._filePicker.set('value', url);
+			this.bgddata.url = url;
 			this.connect(this._filePicker, 'onChange', dojo.hitch(this,function(){
 				var fpValue = this._filePicker.get('value');;
 				var oldUrl = new Path(fpValue);
@@ -456,10 +461,21 @@ define(["dojo/_base/declare",
 			for (var i=0; i<a.length; i++){
 			
 				/* skip URLs for the preview. */
-				
-				if(URLRewrite.containsUrl(a[i]) && !URLRewrite.isAbsolute(a[i])){
+				var val = a[i];
+				if(URLRewrite.containsUrl(val) && !URLRewrite.isAbsolute(val) && this.context){
 					continue;
-					/*
+					/* Second attempt
+					var urlInside = URLRewrite.getUrl(val);
+					if(urlInside){
+						var basePath = new Path(this._baseLocation);
+						url = basePath.getParentPath().append(urlInside).toString();
+						var baseResource = this.context.getBaseResource();
+						var parentFolderUrl = baseResource.getParentFolder().getPath();
+						val = parentFolderUrl + '/' + url;
+					}
+					*/
+
+					/* First attempt
 					var oldUrl = new Path(URLRewrite.getUrl(a[i]));
 					
 					var newUrl = oldUrl.relativeTo(this._baseLocation).toString();
@@ -469,7 +485,7 @@ define(["dojo/_base/declare",
 					
 				}
 				
-				styleText += ';background-image:' + a[i];
+				styleText += ';background-image:' + val;
 			}
 			previewSpan.setAttribute('style', styleText);
 			

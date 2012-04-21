@@ -45,6 +45,22 @@ return {
 		}
 	},
 	
+	/**
+	 * Extract string that might be between (optional) matching single or double quotes
+	 * @param {string} s  String that might appear in CSS url() function, might be quoted
+	 * @returns {string}  Original 's', but stripping any quotes
+	 */
+	stripQuotes: function(s){
+		var urlInside = s.replace(_STRIPQUOTES_REG_EX, '$1');
+		return urlInside;
+	},
+	
+	/**
+	 * Extract actual url inside of a CSS url(...) function.
+	 * If url doesn't match regex for url(...) function, return null
+	 * @param {string} url  CSS url function, such as url('SampleBanner.jpg')
+	 * @returns {string|null}  Returns actual url string inside the func (e.g., SampleBanner.jpg)
+	 */
 	getUrl: function(url){
 		if(typeof url != 'string'){
 			return null;
@@ -52,8 +68,7 @@ return {
 		var matches = url.match(_REWRITE_REG_EX);
 		if(matches && matches.length > 1){
 			var match = matches[1];
-			var urlInside = match.replace(_STRIPQUOTES_REG_EX, '$1');
-			return urlInside;
+			return this.stripQuotes(match);
 		}else{
 			return null;
 		}
@@ -75,6 +90,14 @@ return {
 		console.log('s='+s+',u.isAbsolute(s)='+u.isAbsolute(s));
 		var s = ' url ( \"http://abc\" ) ';
 		console.log('s='+s+',u.isAbsolute(s)='+u.isAbsolute(s));
+		var s = 'abc';
+		console.log('s='+s+',u.stripQuotes(s)='+u.stripQuotes(s));
+		var s = '\'abc\'';
+		console.log('s='+s+',u.stripQuotes(s)='+u.stripQuotes(s));
+		var s = '\"abc\"';
+		console.log('s='+s+',u.stripQuotes(s)='+u.stripQuotes(s));
+		var s = '\"abc\'';
+		console.log('s='+s+',u.stripQuotes(s)='+u.stripQuotes(s));
 		var s = ' url ( \"www\" ) ';
 		var t = 'def';
 		console.log('s='+s+',t='+t+',u.replaceUrl(s,t)='+u.replaceUrl(s,t));

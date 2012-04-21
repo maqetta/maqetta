@@ -165,8 +165,9 @@ define(["dojo/_base/declare",
 			if(this._widget && this.target && this.target.length>0){
 				var propName = this.target[0];
 				var context = this._widget.getContext();
+				var cascadeBatch;
 				if(context){
-					var cascadeBatch = context.cascadeBatch;
+					cascadeBatch = context.cascadeBatch;
 				}
 				if(cascadeBatch){
 					var askUserResponse = cascadeBatch.askUserResponse;

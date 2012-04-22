@@ -1,6 +1,7 @@
 define(["dojo/_base/declare",
         "dijit/_Templated",
         "dijit/_Widget",
+        "davinci/Runtime",
         "davinci/ve/widgets/MutableStore",
         "davinci/ve/widgets/ColorStore",
         "dojo/text!./templates/BackgroundDialog.html",
@@ -17,7 +18,7 @@ define(["dojo/_base/declare",
         "davinci/ui/widgets/FileFieldDialog",
         
        
-],function(declare, _Templated, _Widget, MutableStore, ColorStore, templateString, CSSUtils, veNLS,commonNLS, URLRewrite, Path){
+],function(declare, _Templated, _Widget, Runtime, MutableStore, ColorStore, templateString, CSSUtils, veNLS,commonNLS, URLRewrite, Path){
 
 	return declare("davinci.ve.widgets.BackgroundDialog",   [_Widget, _Templated], {
 		
@@ -465,7 +466,7 @@ define(["dojo/_base/declare",
 					var urlInside = URLRewrite.getUrl(val);
 					if(urlInside){
 						var urlPath = new Path(urlInside);
-						var workspaceUrl = this.context.getUserWorkspaceUrl();
+						var workspaceUrl = Runtime.getUserWorkspaceUrl();
 						val = 'url(\'' + workspaceUrl + urlInside + '\')';
 					}
 				}

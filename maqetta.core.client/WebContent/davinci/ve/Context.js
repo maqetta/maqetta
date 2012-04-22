@@ -758,10 +758,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var filename = this.getModel().fileName;
 		return new Path(filename);
 	},
-	
-	getUserWorkspaceUrl: function(){
-		return this.visualEditor.getUserWorkspaceUrl();
-	},
 
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
     loadTheme: function(newHtmlParms){

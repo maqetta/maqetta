@@ -316,16 +316,12 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		this._setContentRaw(filename, content, newHtmlParams);
 	},
 	
-	getUserWorkspaceUrl: function(){
-		return Runtime.getUserWorkspaceUrl();
-	},
-	
 	_setContentRaw: function(filename, content, newHtmlParams){
 		this.fileName = filename;
 		this.basePath = new Path(filename);
 	   
 		if (!this.initialSet){
-		   	var workspaceUrl = this.getUserWorkspaceUrl();
+		   	var workspaceUrl = Runtime.getUserWorkspaceUrl();
 		   	while(filename.charAt(0) == "." || filename.charAt(0) == "/"){
 		   		filename = filename.substring(1,filename.length);
 			}				

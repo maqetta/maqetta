@@ -3,7 +3,6 @@ define(["dojo/_base/declare",
         "davinci/workbench/Preferences",
         "davinci/Workbench",
         "davinci/Runtime",
-        "davinci/ve/utils/URLRewrite",
         "davinci/html/CSSModel",
         "davinci/ui/widgets/DocileDialog",
         "davinci/ve/States",
@@ -13,7 +12,7 @@ define(["dojo/_base/declare",
         
         
        
-],function(declare,WidgetLite,Preferences,Workbench, Runtime, URLRewrite, CSSModel, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
+],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSModel, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
 	var cascade =  declare("davinci.ve.widgets.Cascade",  [WidgetLite], {
 	
 		target : null,
@@ -73,7 +72,6 @@ define(["dojo/_base/declare",
 					this._loc = loc;
 
 					if(widget._setBaseLocationAttr){
-						//if(URLRewrite.containsUrl(value) && !URLRewrite.isAbsolute(value)){
 						widget.set('baseLocation', loc?loc.getPath():null);
 					}
 					widget.set('value', this._value, true);

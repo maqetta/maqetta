@@ -6,14 +6,15 @@ define(["dojo/_base/declare",
         "dijit/form/ComboBox",
         "davinci/ve/widgets/BackgroundDialog",
         "davinci/Workbench",
-      
+        "davinci/ve/utils/URLRewrite",
+        "davinci/model/Path",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
         "davinci/ve/utils/CssUtils",
         "davinci/ve/widgets/ColorPicker"
         
 
-],function(declare, WidgetLite, ColorPickerFlat, ColorStore, MutableStore, ComboBox,BackgroundDialog, Workbench, veNLS, commonNLS, CssUtils, ColorPicker){
+],function(declare, WidgetLite, ColorPickerFlat, ColorStore, MutableStore, ComboBox,BackgroundDialog, Workbench, URLRewrite, Path, veNLS, commonNLS, CssUtils, ColorPicker){
 	var idPrefix = "davinci_ve_widgets_properties_border_generated"
 	var	__id=0;
 	function getId(){
@@ -177,6 +178,20 @@ define(["dojo/_base/declare",
 						var propName = 'background-image';
 						var o = xref[propName];
 						var a = CssUtils.buildBackgroundImage(background.bgddata);
+						for(var i=0; i<a.length; i++){
+							var val = a[i];
+							if(URLRewrite.containsUrl(val) && !URLRewrite.isAbsolute(val)){
+								var urlInside = URLRewrite.getUrl(val);
+								if(urlInside){
+									var urlPath = new Path(urlInside);
+									var basePath = new Path(this._baseLocation);
+									var baseParentPath = basePath.getParentPath();
+									var relativeUrl = urlPath.relativeTo(baseParentPath).toString();
+									val = 'url(\'' + relativeUrl + '\')';
+								}
+								a[i] = val;
+							}
+						}
 						var newValue;
 						if(a.length == 0){
 							newValue = '';

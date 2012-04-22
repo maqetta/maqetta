@@ -316,20 +316,20 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		this._setContentRaw(filename, content, newHtmlParams);
 	},
 	
+	getUserWorkspaceUrl: function(){
+		return Runtime.getUserWorkspaceUrl();
+	},
+	
 	_setContentRaw: function(filename, content, newHtmlParams){
 		this.fileName = filename;
 		this.basePath = new Path(filename);
 	   
 		if (!this.initialSet){
-			var loc = Workbench.location();
-			//FIXME: replace this stuff with a regexp
-			if (loc.charAt(loc.length-1)=='/'){
-				loc=loc.substring(0,loc.length-1);
-			}
+		   	var workspaceUrl = this.getUserWorkspaceUrl();
 		   	while(filename.charAt(0) == "." || filename.charAt(0) == "/"){
 		   		filename = filename.substring(1,filename.length);
 			}				
-			var baseUrl=loc+'/user/'+Runtime.userName+'/ws/workspace/'+filename;
+		   	var baseUrl=workspaceUrl+filename;
 
 			this._handles=[];
 			var containerNode = dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];

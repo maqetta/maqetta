@@ -251,17 +251,15 @@ define(["dojo/_base/declare",
 			/* back ground image box */
 			
 			var url = (this.bgddata && this.bgddata.url) ? this.bgddata.url : '';
-			var basePath = new Path(this._baseLocation);
-			url = basePath.getParentPath().append(url).toString();
+			if(url.length > 0){
+				var basePath = new Path(this._baseLocation);
+				url = basePath.getParentPath().append(url).toString();
+			}
 			this._filePicker.set('value', url);
 			this.bgddata.url = url;
 			this.connect(this._filePicker, 'onChange', dojo.hitch(this,function(){
-				var fpValue = this._filePicker.get('value');;
-				var oldUrl = new Path(fpValue);
-				var base = new Path(this._baseLocation).removeRelative();
-				oldUrl = oldUrl.removeRelative();
-				var newUrl = oldUrl.relativeTo(base.toString(), true).toString();
-				this.bgddata.url = newUrl;
+				var fpValue = this._filePicker.get('value');
+				this.bgddata.url = fpValue;
 				this._onFieldChanged();
 			}));
 			
@@ -445,46 +443,32 @@ define(["dojo/_base/declare",
 		},
 	
 		_updateBackgroundPreview: function(){
-	//FIXME: Only supports gradients so far
-		
-			
 			var previewSpan = dojo.query('.bgdPreview', this.domNode)[0];
-			var a = CSSUtils.buildBackgroundImage(this.bgddata);
-			previewSpan.style.backgroundColor = '';
-			previewSpan.style.backgroundImage = '';
-			var styleText = previewSpan.style.cssText;
-			backgroundColor = this.bgddata.backgroundColor;
-			if(typeof backgroundColor == 'string' && backgroundColor.length>0){
-				styleText += ';background-color:' + backgroundColor;
+			var styleText = '';
+			var bgddata = this.bgddata;
+			function addProp(propName, propNameCamelCase){
+				var propValue = bgddata[propNameCamelCase];
+				if(typeof propValue == 'string' && propValue.length>0){
+					styleText += ';' + propName + ':' + propValue;
+				}
 			}
-			
+			addProp('background-color', 'backgroundColor');
+			addProp('background-repeat', 'backgroundRepeat');
+			addProp('background-position', 'backgroundPosition');
+			addProp('background-size', 'backgroundSize');
+			addProp('background-origin', 'backgroundOrigin');
+			addProp('background-clip', 'backgroundClip');
+			var a = CSSUtils.buildBackgroundImage(this.bgddata);
 			for (var i=0; i<a.length; i++){
-			
-				/* skip URLs for the preview. */
 				var val = a[i];
 				if(URLRewrite.containsUrl(val) && !URLRewrite.isAbsolute(val) && this.context){
-					continue;
-					/* Second attempt
 					var urlInside = URLRewrite.getUrl(val);
 					if(urlInside){
-						var basePath = new Path(this._baseLocation);
-						url = basePath.getParentPath().append(urlInside).toString();
-						var baseResource = this.context.getBaseResource();
-						var parentFolderUrl = baseResource.getParentFolder().getPath();
-						val = parentFolderUrl + '/' + url;
+						var urlPath = new Path(urlInside);
+						var workspaceUrl = this.context.getUserWorkspaceUrl();
+						val = 'url(\'' + workspaceUrl + urlInside + '\')';
 					}
-					*/
-
-					/* First attempt
-					var oldUrl = new Path(URLRewrite.getUrl(a[i]));
-					
-					var newUrl = oldUrl.relativeTo(this._baseLocation).toString();
-					var newValue = URLRewrite.replaceUrl(a[i], newUrl);
-					a[i] = newValue
-					*/
-					
 				}
-				
 				styleText += ';background-image:' + val;
 			}
 			previewSpan.setAttribute('style', styleText);

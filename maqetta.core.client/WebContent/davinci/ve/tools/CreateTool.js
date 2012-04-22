@@ -162,12 +162,13 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				doCursor = false;
 			}
 			var beforeAfter = this._dropCursor && this._dropCursor.beforeAfter;
+			var eventTarget = this._adjustEventTarget(event.target);
 			context.dragMoveUpdate({
 				data:this._data,
 				position:position,
 				absolute:absolute,
 				currentParent:null,
-				eventTarget:event.target, 
+				eventTarget:eventTarget, 
 				rect:box, 
 				doSnapLinesX:doSnapLinesX, 
 				doSnapLinesY:doSnapLinesY, 
@@ -267,7 +268,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			}
 		}else{
 			// Otherwise, find the appropriate parent that is located under the pointer
-			var widgetUnderMouse = this._getTarget() || Widget.getEnclosingWidget(event.target);
+			var eventTarget = this._adjustEventTarget(event.target);
+			var widgetUnderMouse = this._getTarget() || Widget.getEnclosingWidget(eventTarget);
 			var data = this._data;
 		    var allowedParentList = cp.getAllowedTargetWidget(widgetUnderMouse, data, true);
 		    var widgetType = dojo.isArray(data) ? data[0].type : data.type;
@@ -388,6 +390,19 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	            userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 			}
 		}
+	},
+	
+	/**
+	 * If event.target (passed as parameter originalTarget) is pointing to
+	 * a node outside of the user doc's BODY, then return BODY as the target.
+	 * This allows user dragging things outside of the current BODY's bounds.
+	 */
+	_adjustEventTarget: function(originalTarget){
+		var context = this._context;
+		var userDoc = context.getDocument();
+		var eventTarget = (originalTarget.ownerDocument != userDoc || 
+				originalTarget.tagName == 'HTML') ? eventTarget = context.rootNode : originalTarget;
+		return eventTarget;
 	},
 
 	onKeyDown: function(event){

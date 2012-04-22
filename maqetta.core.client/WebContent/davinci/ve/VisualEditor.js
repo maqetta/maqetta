@@ -334,6 +334,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			this.context = new Context({
 				editor: this._pageEditor,
 				visualEditor: this,
+				visualEditorContentPane: this.contentPane,	// outermost DIV for box holding visual editor
 				containerNode: containerNode,
 				model: content,
 				baseURL: baseUrl,

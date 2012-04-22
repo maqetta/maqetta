@@ -85,7 +85,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 
 		this.hostNode = this.containerNode;
-
 		this._commandStack = new CommandStack(this);
 		this._defaultTool = new SelectTool();
 
@@ -261,6 +260,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
+		var visualEditorOuterNode = this.visualEditorContentPane.domNode;
+		var frameNode = this.frameNode;
+		var htmlNode = containerNode.ownerDocument.documentElement;
 		dojo.addClass(containerNode, "editContextContainer");
 		
 		this._connects = [
@@ -274,7 +276,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
 			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
-			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
+			dojo.connect(containerNode, "onmouseout", this, "onMouseOut"),
+			
+			dojo.connect(htmlNode, "ondblclick", this, "onDblClick"),
+			dojo.connect(htmlNode, "onmouseover", this, "onMouseOver"),
+			dojo.connect(htmlNode, "onmousedown", this, "onMouseDown"),
+			dojo.connect(htmlNode, "onmousemove", this, "onMouseMove"),
+			dojo.connect(htmlNode, "onmouseup", this, "onMouseUp"),
+			dojo.connect(htmlNode, "onmouseout", this, "onMouseOut"),
+			
+			dojo.connect(visualEditorOuterNode, "ondblclick", this, "onDblClick"),
+			dojo.connect(visualEditorOuterNode, "onmouseover", this, "onMouseOver"),
+			dojo.connect(visualEditorOuterNode, "onmousedown", this, "onMouseDown"),
+			dojo.connect(visualEditorOuterNode, "onmousemove", this, "onMouseMove"),
+			dojo.connect(visualEditorOuterNode, "onmouseup", this, "onMouseUp"),
+			dojo.connect(visualEditorOuterNode, "onmouseout", this, "onMouseOut"),
+			
+			dojo.connect(frameNode, "ondblclick", this, "onDblClick"),
+			dojo.connect(frameNode, "onmouseover", this, "onMouseOver"),
+			dojo.connect(frameNode, "onmousedown", this, "onMouseDown"),
+			dojo.connect(frameNode, "onmousemove", this, "onMouseMove"),
+			dojo.connect(frameNode, "onmouseup", this, "onMouseUp"),
+			dojo.connect(frameNode, "onmouseout", this, "onMouseOut")
 		];
 		this.setActiveTool();
 	},
@@ -2185,6 +2208,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return false;
 	},
 
+	onMouseOver: function(event){
+//console.log('onMouseOver event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className);
+	},
+
 	onMouseDown: function(event){
 		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange){
 			this._activeTool.onMouseDown(event);
@@ -2201,6 +2228,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 
 	onMouseMove: function(event){
+//console.log('onMouseMove event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className);
 		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange){
 			this._activeTool.onMouseMove(event);
 		}

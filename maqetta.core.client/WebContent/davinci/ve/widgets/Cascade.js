@@ -1,11 +1,8 @@
 define(["dojo/_base/declare",
         "davinci/workbench/WidgetLite",
         "davinci/workbench/Preferences",
-       
         "davinci/Workbench",
-       
         "davinci/Runtime",
-        
         "davinci/html/CSSModel",
         "davinci/ui/widgets/DocileDialog",
         "davinci/ve/States",
@@ -73,9 +70,10 @@ define(["dojo/_base/declare",
 					
 					this._value = value || "";
 					this._loc = loc;
-					
-					if(widget._setBaseLocationAttr)
+
+					if(widget._setBaseLocationAttr){
 						widget.set('baseLocation', loc?loc.getPath():null);
+					}
 					widget.set('value', this._value, true);
 				};
 				dojo.connect(widget, "onChange", this, "_onFieldChange");
@@ -165,8 +163,9 @@ define(["dojo/_base/declare",
 			if(this._widget && this.target && this.target.length>0){
 				var propName = this.target[0];
 				var context = this._widget.getContext();
+				var cascadeBatch;
 				if(context){
-					var cascadeBatch = context.cascadeBatch;
+					cascadeBatch = context.cascadeBatch;
 				}
 				if(cascadeBatch){
 					var askUserResponse = cascadeBatch.askUserResponse;

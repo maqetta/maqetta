@@ -1,6 +1,7 @@
 define([
-	"dojo/_base/Color"
-], function(Color) {
+	"dojo/_base/Color",
+	"davinci/ve/utils/URLRewrite"
+], function(Color, URLRewrite) {
 	
 // Build an array of colors from dojo._base.Color
 var names = [];
@@ -374,7 +375,13 @@ return {
 			a.push('none');
 		}else if(o.type == 'url'){
 			if(typeof o.url == 'string' && o.url.length>0){
-				a.push("url('" + o.url + "')");
+				// If user entered url(...) and/or the value has quotes,
+				// yank out the URL inside of url() function and/or the quotes
+				var strippedUrl = URLRewrite.getUrl(o.url);
+				if(!strippedUrl){
+					strippedUrl = URLRewrite.stripQuotes(o.url);
+				}
+				a.push("url('" + strippedUrl + "')");
 			}
 		}else if(o.type == 'linear' || o.type == 'radial'){
 			// build strings for w3c stop syntax and old-style webkit stop syntax

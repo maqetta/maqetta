@@ -74,6 +74,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		 * work like the mobile silhouettes, which don't have the problem.
 		 */
 		function resizeBody(bodyElem, size){
+			/*
 			if(bodyElem.scrollLeft > 0){
 				bodyElem.style.width= (size.w + bodyElem.scrollLeft) + "px";
 			}else{
@@ -84,6 +85,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			}else{
 				bodyElem.style.height = "100%";
 			}
+			*/
 		}
 		var visualEditor = this;
 		this.contentPane.connect(this.contentPane, 'resize', function(newPos){

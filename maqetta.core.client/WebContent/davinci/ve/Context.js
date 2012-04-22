@@ -945,7 +945,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 // added to the page. That causes scrollbars when page was loaded initially,
 // which went want when first Dojo widget was added.
 // Need to rethink this whole business of width:100%;height:100%;margin:0
+			/*
 			head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\"" +
+					realUrl + "\"/>";
+			*/
+			head += "<html style=\"margin:0;\"><head><base href=\"" +
 					realUrl + "\"/>";
 
 			// XXX Must load dojo.js here;  we cannot wait to add it when first Dojo/Dijit widget
@@ -1016,8 +1020,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					// Kludge to enable full-screen layout widgets, like BorderContainer.
 					// What possible side-effects could there be setting 100%x100% on every document?
 					// See note above about margin:0 temporary hack
+					/*
 					body.style.width = "100%";
 					body.style.height = "100%";
+					*/
 					// Force visibility:visible because CSS stylesheets in dojox.mobile
 					// have BODY { visibility:hidden;} only to set visibility:visible within JS code. 
 					// Maybe done to minimize flickering. Will follow up with dojox.mobile

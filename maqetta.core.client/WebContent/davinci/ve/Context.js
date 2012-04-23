@@ -259,6 +259,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dojo.publish('/davinci/ui/context/statesLoaded', [this]);
 		this._onLoadHelpers();
 
+//FIXME: should have getters for all of these
 		var containerNode = this.getContainerNode();
 		var visualEditorOuterNode = this.visualEditorContentPane.domNode;
 		var frameNode = this.frameNode;

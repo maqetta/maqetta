@@ -46,6 +46,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			this._oldCursor = context.rootNode.style.cursor;
 		}
 		//context.rootNode.style.cursor = "crosshair";
+//FIXME: This isn't sufficient for Firefox.
+//Need to change cursor for iframe node, too?
 var htmlNode = context.rootNode.parentNode;
 htmlNode.style.cursor = "crosshair";
 	},

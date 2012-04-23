@@ -71,6 +71,7 @@
     	<property name="dojo.cache.directory" value="${buildDirectory}/dojo_cache"/>
     	
     	
+    	
         <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
         <condition property="maqettaCodeInternal" value="${maqettaCode}_internal">
             <and>
@@ -94,11 +95,12 @@
     </target>
 	<target name="MaqettaOrion" if="run.external.targets">
 	    <echo message="Running orion build...."/>
+		
 		<tstamp/>
 		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
 		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
 		<property name="cvsuser" value=":ext:aniefer" />		
-		<property name="builder" value="${buildDirectory}/repository/org.eclipse.orion.server/releng/org.eclipse.orion.releng/builder" />
+		<property name="builder" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
 
 				<!-- Add build id to orion.product before invoking product build -->
 		<replace token="@qualifier@" file="${builder}/orion.product" value="${buildLabel}" />

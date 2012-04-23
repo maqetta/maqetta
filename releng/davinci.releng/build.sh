@@ -105,7 +105,7 @@ setProperties () {
 	supportDir=$writableBuildRoot/support
 	mkdir $supportDir
 	builderDir=${MAQETTA_BUILD_DIR}/repository/maqetta/releng/davinci.releng/orion
-	basebuilderBranch=R3_7
+	basebuilderBranch=R3_8
 	publish=""
 	user=childsb
 	resultsEmail=orion-releng@eclipse.org
@@ -314,7 +314,7 @@ currentDirectory=`pwd`
 #
 setProperties
 populateGit
-#updateBaseBuilder
+# updateBaseBuilder
 build
 #
 # save exit code for later

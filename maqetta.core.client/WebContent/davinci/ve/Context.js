@@ -1,12 +1,15 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
+	"dojo/_base/Deferred",
+	"dojo/DeferredList",
+	"dojo/window",
     "../UserActivityMonitor",
     "../Theme",
     "./ThemeModifier",
 	"../commands/CommandStack",
 	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
-	"dojo/window",
 	"../model/Path",
 	"../Workbench",
 	"./widget",
@@ -22,18 +25,19 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
-	"dojo/_base/Deferred",
-	"dojo/DeferredList",
 	"dojox/html/_base"
 ], function(
 	declare,
+	lang,
+	Deferred,
+	DeferredList,
+	windowUtils,
 	UserActivityMonitor,
 	Theme,
 	ThemeModifier,
 	CommandStack,
 	ChangeThemeCommand,
 	SelectTool,
-	windowUtils,
 	Path,
 	Workbench,
 	Widget,
@@ -48,9 +52,7 @@ define([
 	HTMLElement,
 	HTMLText,
 	Preferences,
-	Silhouette,
-	Deferred,
-	DeferredList
+	Silhouette
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -72,6 +74,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	// Cache for the HTMLElement (model) holding the main `require` call.  Used in
 	// addJavaScriptModule(), cleared in _setSource().
 	_requireHtmlElem: null,
+
+	// HTMLElement (model) of the <script> which points to "dojo.js".  Cleared
+	// in _setSource().
+	_dojoScriptElem: null,
 =====*/
 
 	constructor: function(args) {
@@ -82,7 +88,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._id = "_edit_context_" + this._contextCount++;
 		this.widgetHash = {};
 		
-		dojo.mixin(this, args);
+		lang.mixin(this, args);
 
 		if(dojo.isString(this.containerNode)){
 			this.containerNode = dijit.byId(this.containerNode);
@@ -842,6 +848,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_setSource: function(source, callback, scope, newHtmlParams){
 		// clear cached values
 		this._requireHtmlElem = null;
+		this._dojoScriptElem = null;
 
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);
@@ -963,7 +970,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var config = {
 					packages: this._getLoaderPackages() // XXX need to add dynamically
 				};
-				dojo.mixin(config, this._configProps);
+				lang.mixin(config, this._configProps);
 
 				var requires = this._bootstrapModules.split(","),
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
@@ -1044,7 +1051,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					console.error(e.stack || e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
-					dojo.mixin(callbackData, e);
+					lang.mixin(callbackData, e);
 				}
 
 				context._continueLoading(data, callback, callbackData, scope);
@@ -1118,7 +1125,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
-			dojo.mixin(callbackData, e);
+			lang.mixin(callbackData, e);
 			var message = "Uh oh! An error has occurred:<br><b>" + e.message + "</b>";
 			if (e.fileName) {
 				message += "<br>file: " + e.fileName + "<br>line: "+e.lineNumber;
@@ -2093,7 +2100,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getPreferences: function(){
-		return dojo.mixin({}, davinci.ve._preferences);
+		return lang.mixin({}, davinci.ve._preferences);
 	},
 	setPreference: function(name, value){
 		if(!name){
@@ -2696,7 +2703,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					parseOnLoad: true,
 					packages: this._getLoaderPackages()
 				};
-				dojo.mixin(config, this._configProps);
+				lang.mixin(config, this._configProps);
 				this.addHeaderScript(url, {
 					"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
 				});
@@ -2954,6 +2961,31 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			    dojo.destroy(n);
 			}
 		});
+	},
+
+	// XXX move to Dojo library?
+	_updateDojoConfig: function(data) {
+		if (!this._dojoScriptElem) {
+			// find and cache the HTMLElement which points to dojo.js
+			var head = this.getDocumentElement().getChildElement('head'),
+				found = head.getChildElements('script').some(function(child) {
+					if (/\/dojo.js$/.test(child.getAttribute('src'))) {
+						this._dojoScriptElem = child;
+						return true; // break 'some' loop
+					}
+				}, this);
+			if (!found) {
+				// serious problems! dojo.js not found
+				return;
+			}
+		}
+
+		var dojoScript = this._dojoScriptElem,
+			djConfig = dojoScript.getAttribute('data-dojo-config');
+		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
+		lang.mixin(djConfig, data);
+		dojoScript.setAttribute('data-dojo-config',
+				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'"));
 	},
 	
 	/**

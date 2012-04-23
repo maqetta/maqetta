@@ -191,10 +191,6 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
     },
 
-    _reThemeMap: /\brequire\s*\(\s*\[\s*['"]dojox\/mobile['"]\s*\]\s*,\s*function.*\)/,
-
-    _themeMapTemplate: 'require(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap=${1};dojoxMobile.themeFiles = [];})',
-    
     _dojoxMobileRemoveTheme: function(context) {
         // remove the dojox.mobile.themeMap
         var head = context.getDocumentElement().getChildElement("head"),
@@ -247,28 +243,14 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         context.loadRequires("dojox.mobile.View", true/*doUpdateModel*/, false,
                 !!newFile /* skip UI load */);
 
-        // XXX should we just return earlier in the function?
         if (equalsDefault) {
             return;
         }
 
-        var themeMap = JSON.stringify(Theme.getDojoxMobileThemeMap(context, theme)),
-            script = this._themeMapTemplate.replace('${1}', themeMap);
-
-        var replaced = scriptTags.some(function (scriptTag) {
-            var text = scriptTag.getElementText();
-            if (text.length && this._reThemeMap.test(text)) {
-                text = text.replace(this._reThemeMap, script);
-                scriptTag.child.setText(text);
-                scriptTag.script = text;
-                return true;
-             }
-             return false;
-        }, this);
-
-        if (!replaced) {
-            context.addHeaderScriptText(script + ';\n');
-        }
+        // set theme map in Dojo config attribute
+        context._updateDojoConfig({
+            themeMap: Theme.getDojoxMobileThemeMap(context, theme)
+        });
     }
 
 });

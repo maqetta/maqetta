@@ -99,7 +99,7 @@ define("dojox/mobile/deviceTheme", [
 		}, win.doc.getElementsByTagName('head')[0]));
 	};
 
-	dm.themeMap = dm.themeMap || [
+	dm.themeMap = config.themeMap || dm.themeMap || [
 		// summary:
 		//		A map of user-agents to theme files.
 		// description:

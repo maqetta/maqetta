@@ -45,7 +45,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		if(context && context.rootNode){
 			this._oldCursor = context.rootNode.style.cursor;
 		}
-		context.rootNode.style.cursor = "crosshair";
+		//context.rootNode.style.cursor = "crosshair";
+var htmlNode = context.rootNode.parentNode;
+htmlNode.style.cursor = "crosshair";
 	},
 
 	deactivate: function(){

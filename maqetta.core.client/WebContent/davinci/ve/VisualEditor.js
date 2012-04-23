@@ -375,10 +375,14 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 
 		this.savePoint = 0;
 		context.activate();
+		
+		var bodyNode = context.getContainerNode();
+		var htmlNode = bodyNode.parentNode;
 
 		popup = Workbench.createPopup({
 			partID: 'davinci.ve.visualEditor',
-			domNode: context.getContainerNode(), 
+			//domNode: context.getContainerNode(), 
+			domNode: htmlNode, 
 			keysDomNode: context.getDocument(),
 			context: context
 		});

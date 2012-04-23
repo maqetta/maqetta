@@ -198,16 +198,20 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameBottomsideAdjustedTop = rect.h;
 		var frameWidthAdjusted = rect.w + frameSizeWidthAdjust + frameSizeBorderAdjust;
 		var frameHeightAdjusted = rect.h + frameSizeWidthAdjust + frameSizeBorderAdjust;
-		
+
+//offScreenAdjust = false;
 		if(offScreenAdjust){
 			// Determine if parts of selection are off screen
 			// If so, shift selection DIVs to make it visible
 			var farthestLest, farthestTop, farthestRight, farthestBottom;
+var htmlNode = this.domNode.ownerDocument.documentElement;
 			var body = this.domNode.ownerDocument.body;
 			var canvasLeft = body.scrollLeft;
 			var canvasTop = body.scrollTop;
 			var canvasRight = canvasLeft + body.clientWidth;
 			var canvasBottom = canvasTop + body.clientHeight;
+canvasRight = canvasLeft + htmlNode.clientWidth;
+canvasBottom = canvasTop + htmlNode.clientHeight;
 			
 			farthestLeft = rect.l - nobOffScreenAdjust;
 			farthestTop = rect.t - nobOffScreenAdjust;

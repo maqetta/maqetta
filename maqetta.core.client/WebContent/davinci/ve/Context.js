@@ -2209,10 +2209,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onMouseOver: function(event){
-//console.log('onMouseOver event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className);
+//console.log('Context.js onMouseOver. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._mouseOverAlready='+event._mouseOverAlready);
+if(event._mouseOverAlready){
+	return;
+}
+event._mouseOverAlready = true;
 	},
 
 	onMouseDown: function(event){
+console.log('Context.js onMouseDown. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._mouseDownAlready='+event._mouseDownAlready);
+if(event._mouseDownAlready){
+	return;
+}
+event._mouseDownAlready = true;
 		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange){
 			this._activeTool.onMouseDown(event);
 		}
@@ -2220,6 +2229,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	onDblClick: function(event){
+//console.log('Context.js onDblClick. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._DblClickAlready='+event._DblClickAlready);
+if(event._DblClickAlready){
+	return;
+}
+event._DblClickAlready = true;
 		if(this._activeTool && this._activeTool.onDblClick && !this._blockChange){
 			this._activeTool.onDblClick(event);
 		}
@@ -2228,7 +2242,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 
 	onMouseMove: function(event){
-//console.log('onMouseMove event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className);
+//console.log('Context.js onMouseMove. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._mouseMoveAlready='+event._mouseMoveAlready);
+if(event._mouseMoveAlready){
+	return;
+}
+event._mouseMoveAlready = true;
 		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange){
 			this._activeTool.onMouseMove(event);
 		}
@@ -2236,6 +2254,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onMouseUp: function(event){
+console.log('Context.js onMouseUp. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._mouseUpAlready='+event._mouseUpAlready);
+if(event._mouseUpAlready){
+	return;
+}
+event._mouseUpAlready = true;
 		if(this._activeTool && this._activeTool.onMouseUp){
 			this._activeTool.onMouseUp(event);
 		}
@@ -2243,6 +2266,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onMouseOut: function(event){
+//console.log('Context.js onMouseOut. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._mouseOutAlready='+event._mouseOutAlready);
+if(event._mouseOutAlready){
+	return;
+}
+event._mouseOutAlready = true;
 		if(this._activeTool && this._activeTool.onMouseOut){
 			this._activeTool.onMouseOut(event);
 		}

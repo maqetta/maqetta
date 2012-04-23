@@ -39,6 +39,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseDown: function(event){
+console.log('SelectTool.js onMouseDown. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className);
 		var context = this._context;
 		if(context.isFocusNode(event.target)){
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.

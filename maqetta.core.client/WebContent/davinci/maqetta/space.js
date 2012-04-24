@@ -1,7 +1,4 @@
-// Duplicate of workspace/maqetta/maqetta.js for use by page editor.
-// Created this cloned version to overcome loader/build conflicts 
-// if page editor and runtime (possibly) using different versions of Dojo
-(function() {
+define(function() {
 	/**
 	 * Collapses all text nodes that only contain white space characters into empty string.
 	 * Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
@@ -35,4 +32,4 @@
 	} else if (window.attachEvent) {
 		window.attachEvent("onload", handler);
 	}
-})();
+});

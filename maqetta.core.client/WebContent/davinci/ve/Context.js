@@ -2342,6 +2342,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 	},
 
+	ruleSetAllProperties: function(rule, values){
+		rule.removeAllProperties();
+		for(i = 0;i<values.length;i++){
+			for(var name in values[i]){
+				if (values[i][name] && values[i][name] !== '') {
+					rule.addProperty(name, values[i][name]);
+				}
+			}
+		}
+	},
+	
 	modifyRule: function(rule, values){
 		var i,
 			p,

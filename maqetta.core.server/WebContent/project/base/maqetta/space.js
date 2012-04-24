@@ -1,5 +1,4 @@
-// Runtime version, used by preview-in-browser
-(function() {
+define(function() {
 	/**
 	 * Collapses all text nodes that only contain white space characters into empty string.
 	 * Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
@@ -33,4 +32,4 @@
 	} else if (window.attachEvent) {
 		window.attachEvent("onload", handler);
 	}
-})();
+});

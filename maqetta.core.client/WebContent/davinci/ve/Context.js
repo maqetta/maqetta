@@ -1083,8 +1083,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// special handling for 'data-dojo-config' attr
 		djConfig = djConfig ? eval("({ " + djConfig + " })", "data-dojo-config") : {};
-		// give precedence to our 'config' options, over that in file
-		lang.mixin(djConfig, config);
+		// give precedence to our 'config' options, over that in file; make sure
+		// to turn off parseOnLoad
+		lang.mixin(djConfig, config, {parseOnLoad: false});
 		text.push('data-dojo-config="' +
 				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'") + '"')
 

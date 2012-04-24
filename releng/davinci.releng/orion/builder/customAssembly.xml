@@ -53,14 +53,19 @@
 	<!-- In addititon to the properties listed above:						   -->
 	<!--    - rootFolder : the folder containing the root files                -->
 	<!-- ===================================================================== -->
+	
 	<target name="pre.archive">
+	
+	</target>
+	<target name="pre.archiveOld">
 <!-- ===================================================================== -->
 <!-- MAQETTA ADDITION		-->
 <!-- copy maqetta bat and command files into zip                          -->
 <!-- ===================================================================== -->
-		<property name="productDir" value="${buildDirectory}/plugins/davinci.product" />
+		<property name="productDir" value="${builder}/scripts" />
 		<property name="copyTo" value="${eclipse.base}" />
 		<echo message="Copying maqetta build scripts in...."/>
+		<echo message="BUilder: ${builder}"/>
 		<echo message="Root folder: ${copyTo}"/>
 		<echo message="Product Directory: ${productDir}"/>
 			
@@ -76,7 +81,7 @@
 			</copy>
 			<copy file="${productDir}/maqetta.local.mac.command" tofile="${copyTo}/maqetta.local.unix.sh"/>
 			<copy file="${productDir}/maqetta.server.mac.command" tofile="${copyTo}/maqetta.server.unix.sh"/>
-			<chmod perm="a+xw">
+			<chmod perm="ugo+rxw">
 			  <fileset dir="${copyTo}">
 	  			<include name="*.command"/>
 	  			<include name="*.sh"/>

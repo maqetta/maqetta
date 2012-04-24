@@ -307,7 +307,14 @@ ViewHelper.prototype = {
 		var widget = node._dvWidget;
 		if(widget && widget.type == 'dojox.mobile.View'){
 			var context = widget.getContext();
-			if(context && (!widget._lastHeight || node.style.height == widget._lastHeight)){
+// If height is explicitly set in model, then don't update height of View on canvas
+var inlineStyles = widget.getStyleValues();
+var explicitHeight = dojo.some(inlineStyles, function(value){
+	return value.hasOwnProperty('height');
+});
+//FIXME: doesn't yet take into account possibility of rule in css file
+//var ruleStyles = context.getSelectionCssRules(node);
+			if(context && !explicitHeight){
 				var htmlNode = node.ownerDocument.documentElement;
 				var h = htmlNode.clientHeight + 'px';
 				widget._lastHeight = node.style.height = h;

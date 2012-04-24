@@ -794,7 +794,7 @@ define(["dojo/_base/declare",
 				/* skip read only values */
 				//if(this._values[i].readOnly) continue;
 				
-				if((this._values[i].value && !foundValue && !defaultValue) ||
+				if((this._values[i].value && !foundValue /*&& !defaultValue #23*/) || /*#23 if we have more than one rule with the same selectors */
 						(!foundValue && !defaultValue && 
 						 this._values[i].type!="element.style" && 
 						 this._values[i].rule &&

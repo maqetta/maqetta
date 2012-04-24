@@ -146,16 +146,21 @@ return declare("davinci.html.CSSRule", CSSElement, {
 		}
 	},
 
+	/**
+	 * If propertyName is not provided, returns all CSS properties declared in this rule.
+	 * If propertyName is provide, return all CSS property declarations for that property only.
+	 * @param {string} propertyName  CSS propername name (e.g., 'font-size')
+	 * @returns {Array[Object]} where Object has single property, such as [{display:'none'},{'font-size':'12px'}]
+	 */
 	getProperties: function(propertyName) {
 		var values = [];
 		for ( var i = 0; i < this.properties.length; i++ ) {
-			if (propertyName == this.properties[i].name) {
+			if (!propertyName || propertyName == this.properties[i].name) {
 				values.push( this.properties[i]);
 			}
 		}
 		return values;
 	},
-
 
 	setProperty: function(name, value) {
 		var property = this.getProperty(name);
@@ -181,6 +186,12 @@ return declare("davinci.html.CSSRule", CSSElement, {
 				this.properties.splice(i, 1);
 			}
 		}
+		this.setDirty(true);
+		this.onChange();
+	},
+
+	removeAllProperties: function() {
+		this.properties = [];
 		this.setDirty(true);
 		this.onChange();
 	},

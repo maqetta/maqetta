@@ -191,59 +191,19 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
     },
 
+////////////////////////////////////////////////////////////////////////////////
+// XXX move this section to Dojo library
     _dojoxMobileRemoveTheme: function(context) {
-        // remove the dojox.mobile.themeMap
-        var head = context.getDocumentElement().getChildElement("head"),
-            scriptTags = head.getChildElements("script");
-
-        scriptTags.some(function(scriptTag) {
-            var text = scriptTag.getElementText();
-            if (text.length && this._reThemeMap.test(text)) {
-                scriptTag.parent.removeChild(scriptTag);
-                return true; // break loop
-            }
-        }, this);
-
-        var dm = context.getDojo().getObject("dojox.mobile", true);
-        if (dm) {
-            var dj = context.getDojo();
-            var url = dj.moduleUrl('dojox.mobile', 'themes/iphone/ipad.css');
-            // reset themeMap to default
-            dm.themeMap = [
-                ["Android","android",[]],
-                ["BlackBerry","blackberry",[]],
-                ["iPad","iphone",[url]],
-                ["Custom","custom",[]],
-                [".*","iphone",[]]
-            ];
-            delete dm.themeFiles;
-        }
+        // remove theme map from Dojo config attribute
+        context._updateDojoConfig({
+            themeMap: null
+        });
     },
    
     _dojoxMobileAddTheme: function(context, theme, newFile) {
-        var head = context.getDocumentElement().getChildElement("head"),
-            scriptTags = head.getChildElements("script"),
-            equalsDefault = Theme.themeSetEquals(theme, Theme.dojoMobileDefault);
-
-        if (equalsDefault){
-            var todo = scriptTags.some(function (scriptTag) {
-                var text = scriptTag.getElementText();
-                if (text.length && text.indexOf('dojoxMobile.themeMap=') !== -1) {
-                    return true;
-                }
-            }, this);
-            if (!todo) {
-                return;
-            }
-        }
-
-        // add the theme to the dojox.mobile.themeMap...
-
-        //  use this widget to get the correct requires added to the file.
-        context.loadRequires("dojox.mobile.View", true/*doUpdateModel*/, false,
-                !!newFile /* skip UI load */);
-
-        if (equalsDefault) {
+        if (Theme.themeSetEquals(theme, Theme.dojoMobileDefault)) {
+            // if setting default theme, remove theme if one exists
+            this._dojoxMobileRemoveTheme(context);
             return;
         }
 
@@ -252,6 +212,8 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             themeMap: Theme.getDojoxMobileThemeMap(context, theme)
         });
     }
+// XXX end "move this section to Dojo library"
+////////////////////////////////////////////////////////////////////////////////
 
 });
 });

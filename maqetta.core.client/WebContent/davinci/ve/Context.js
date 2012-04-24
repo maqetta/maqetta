@@ -2853,6 +2853,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 ////////////////////////////////////////////////////////////////////////////////
 // XXX move this section to Dojo library?
+	/**
+	 * Update the value of `data-dojo-config` attribute in the model element
+	 * pointing to "dojo.js".  Properties in `data` overwrite existing value;
+	 * null values remove properties from `data-dojo-config`.
+	 *
+	 * @param  {Object} data
+	 */
 	_updateDojoConfig: function(data) {
 		if (!this._dojoScriptElem) {
 			// find and cache the HTMLElement which points to dojo.js
@@ -2872,7 +2879,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var dojoScript = this._dojoScriptElem,
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
-		lang.mixin(djConfig, data);
+
+		// If `prop` has a value, copy it into djConfig, overwriting existing
+		// value.  If `prop` is `null`, then delete from djConfig.
+		for (var prop in data) {
+			if (data[prop] === null) {
+				delete djConfig[prop];
+			} else {
+				djConfig[prop] = data[prop];
+			}
+		}
+
 		dojoScript.setAttribute('data-dojo-config',
 				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'"));
 	},

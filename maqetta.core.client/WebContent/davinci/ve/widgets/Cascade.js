@@ -430,6 +430,16 @@ define(["dojo/_base/declare",
 			/* theme/meta rules */
 			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
 				v = this._editor._getCssRules(this._widget, null, this._editor._currentState);
+				// #23
+				if (v){
+					// cascade excepts the rules in decending order
+					var t = [];
+					for (var x = v.length -1; x > -1; --x){
+						t.push(v[x]);
+					}
+					v = t;
+				}
+				// #23
 			} else if(this._widget){
 				v = this.context.getMetaTargets(this._widget,this.target);
 			}else{

@@ -164,7 +164,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
-			var file = rule.searchUp( "CSSFile");
+			//var file = rule.searchUp( "CSSFile"); #23
 			var rebasedValues; // = dojo.clone(values);
 			if (values.length < 1) {
 			    rebasedValues = [];
@@ -190,7 +190,9 @@ return declare("davinci.ve.ThemeModifier", null, {
 									allPropValues.push(o)
 								//}   
 							}
+							rule = this.getDeltaRule(rule); // create delta if needed #23
 							context.modifyRule(rule, allPropValues);
+							var file = rule.searchUp( "CSSFile"); //#23
 							this._markDirty(file.url);
 							propertiesAlreadyProcessed[a] = true;
 						}
@@ -198,6 +200,21 @@ return declare("davinci.ve.ThemeModifier", null, {
 				}
 			}
 		}
+	},
+	/*
+	 *  Added for theme Delta #23
+	 */
+	getDeltaRule: function(rule){
+		var retRule=null;
+	
+		// if this rule is not from the delat file add a new rule to the delta
+		retRule = this.cssFiles[0].getRule(rule.getSelectorText());
+		if (retRule.parent.url != this.cssFiles[0].url) {
+			 retRule = this.cssFiles[0].addRule(rule.getSelectorText()+" {}");
+		}/*else{
+			retRule = rule;
+		}*/
+		return retRule;
 	},
 
 	_markDirty: function (file,cssModelObject){

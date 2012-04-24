@@ -114,118 +114,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 	},
 
-	_configDojoxMobile: function() {
-        // dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
-        // monitoring of which stylesheets get loaded for a given theme
-
-        var dm = this.getDojo().getObject("dojox.mobile", true);
-        dm.configDeviceTheme = dojo.hitch(this, function() {
-            var loadDeviceTheme = dm.loadDeviceTheme;
-
-            dm.loadDeviceTheme = dojo.hitch(this, function(device) {
-            	
-            	function addCssForDevice(localDevice, themeMap, context){
-            		for (var i = 0; i < themeMap.length; i++) {
-                    	if (themeMap[i][0] === localDevice || themeMap[i][0] === '.*'){
-                    		var cssFiles = themeMap[i][2];
-                    		cssFiles.forEach(function(cssFile){
-                    			context.addDynamicCss(cssFile);	
-                    		});
-                    		break;
-                    	}
-                    }
-            	}
-                var mblUserAgent = this.getDojo().config.mblUserAgent,
-                    ua = device || mblUserAgent || 'none',
-                    htmlElement = this._srcDocument.getDocumentElement(),
-                    head = htmlElement.getChildElement("head"),
-                    scriptTags = head.getChildElements("script"),
-                    themeMap,
-                    start,
-                    stop;
-                this.clearDynamicCss(); 
-                dojo.forEach(scriptTags, function (scriptTag){
-                    var text=scriptTag.getElementText();
-                    if (text.length) {
-                        // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-                        start = text.indexOf('dojoxMobile.themeMap');
-                        if (start != -1) {
-                            start = text.indexOf('=', start);
-                            stop = text.indexOf(';', start);
-                            if (stop > start){
-                                themeMap = dojo.fromJson(text.substring(start+1, stop));
-                                dm.themeMap = themeMap;
-                                addCssForDevice(ua, themeMap, this);
-                            }
-                        } else if (text.indexOf('dojox/mobile') > -1){
-                        	// use the default themes
-                        	themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
-                        	addCssForDevice(ua, themeMap, this);
-                        }
-                        //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
-                        start = text.indexOf('dojoxMobile.themeFiles');
-                        if (start > -1) {
-                            start = text.indexOf('=', start);
-                            stop = text.indexOf(';', start);
-                            if (stop > start){
-                                var themeFiles = dojo.fromJson(text.substring(start+1,stop));
-                                dm.themeFiles = themeFiles;
-                               
-                            }
-                        }
-                     }
-                }, this);
-                if (this._selection) {
-                	this.onSelectionChange(this._selection); // forces style palette to update cascade rules
-                }
-                loadDeviceTheme(device);
-            });
-
-            // This is a call-once function
-            delete dm.configDeviceTheme;
-        });
-
-        // Set mobile device CSS files
-        var mobileDevice = this.getMobileDevice();
-        if (mobileDevice) {
-            this.setMobileDevice(mobileDevice);
-            this.visualEditor.setDevice(mobileDevice, true);
-        }
-
-        // Check mobile orientation
-        var orientation = this.getMobileOrientation();
-        if (orientation) {
-        	this.visualEditor.setOrientation(orientation);
-        }
-    },
-    
-    clearDynamicCss: function(){
-    	delete this.themeCssfiles;
-    	delete this.cssFiles;
-    },
-    
-    addDynamicCss: function(cssFile){
-    
-    	if (!this.themeCssfiles){
-    		this.themeCssfiles = [];
-    	}
-		try{
-			this._themePath=new davinci.model.Path(this.visualEditor.fileName);
-			this.themeCssfiles.push(cssFile);
-		
-			// connect to the css files, so we can update the canvas when the model changes
-			var cssFiles = this._getCssFiles();	
-			for (var i = 0; i < cssFiles.length; i++) {
-                dojo.connect(cssFiles[i], 'onChange', this,
-                        '_themeChange');
-            }
-
-		}catch(e){
-			alert("error loading:" + filename + e);
-		}
-    	
-    },
-
 	isActive: function(){
 		return !!this._activeTool;
 	},
@@ -1000,7 +888,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) {
 				var callbackData = context;
-			try {
+				try {
 					var win = windowUtils.get(doc),
 					 	body = (context.rootNode = doc.body);
 
@@ -2963,7 +2851,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 	},
 
-	// XXX move to Dojo library?
+////////////////////////////////////////////////////////////////////////////////
+// XXX move this section to Dojo library?
 	_updateDojoConfig: function(data) {
 		if (!this._dojoScriptElem) {
 			// find and cache the HTMLElement which points to dojo.js
@@ -2987,6 +2876,81 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dojoScript.setAttribute('data-dojo-config',
 				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'"));
 	},
+
+	_addCssForDevice: function(localDevice, themeMap, context) {
+		for (var i = 0, len = themeMap.length; i < len; i++) {
+			var item = themeMap[i];
+			if (item[0] === localDevice || item[0] === '.*'){
+				if (!this.themeCssfiles) {
+					this.themeCssfiles = [];
+				}
+
+				var cssFiles = item[2];
+				this.themeCssfiles = this.themeCssfiles.concat(cssFiles);
+
+				this._themePath = new davinci.model.Path(this.visualEditor.fileName);
+				// Connect to the css files, so we can update the canvas when
+				// the model changes.
+				this._getCssFiles().forEach(function(file) {
+					dojo.connect(file, 'onChange', this, '_themeChange');
+				}, this);
+
+				break;
+			}
+		}
+	},
+
+	_configDojoxMobile: function() {
+		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
+		// monitoring of which stylesheets get loaded for a given theme
+
+		var dm = this.getDojo().getObject("dojox.mobile", true);
+		dm.configDeviceTheme = function() {
+			var loadDeviceTheme = dm.loadDeviceTheme;
+
+			dm.loadDeviceTheme = function(device) {
+				var djConfig = this.getDojo().config,
+					ua = device || djConfig.mblUserAgent || 'none',
+					themeMap = djConfig.themeMap;
+
+				// clear dynamic CSS
+				delete this.themeCssfiles;
+				delete this.cssFiles;
+
+				// load CSS files specified by `themeMap`
+				if (!themeMap) {
+					// load defaults if not defined in file
+					themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
+				}
+				this._addCssForDevice(ua, themeMap, this);
+
+				if (this._selection) {
+					// forces style palette to update cascade rules
+					this.onSelectionChange(this._selection);
+				}
+
+				loadDeviceTheme(device);
+			}.bind(this);
+
+			// This is a call-once function
+			delete dm.configDeviceTheme;
+		}.bind(this);
+
+		// Set mobile device CSS files
+		var mobileDevice = this.getMobileDevice();
+		if (mobileDevice) {
+			this.setMobileDevice(mobileDevice);
+			this.visualEditor.setDevice(mobileDevice, true);
+		}
+
+		// Check mobile orientation
+		var orientation = this.getMobileOrientation();
+		if (orientation) {
+			this.visualEditor.setOrientation(orientation);
+		}
+	},
+// XXX end "move this section to Dojo library"
+////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Perform any visual updates in response to mousemove event while performing a

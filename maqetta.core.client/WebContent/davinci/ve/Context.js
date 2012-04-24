@@ -866,11 +866,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// to bootstrap references to base dijit methods in container
 				dependencies = dependencies.concat(requires); 
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl +
-						"\" data-dojo-config=\"" +
-						JSON.stringify(config).slice(1, -1).replace(/"/g, "'") +
-						"\"></script>" +
-						"<script type=\"text/javascript\">require(" +
+				head += this._generateDojoScript(dojoUrl, config) +
+						"<script>require(" +
 						JSON.stringify(dependencies) +
 						", top.loading" + this._id + ");</script>";
 			}
@@ -1068,6 +1065,40 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		packages.push({name: 'maqetta', location: '../../../maqetta'});
 
 		return packages;
+	},
+
+	/**
+	 * Generate a string containing the script element for "dojo.js", pulling in
+	 * any attributes from the source file, while also merging in any attributes
+	 * that are passed in.
+	 * 
+	 * @param  {String} dojoUrl
+	 * @param  {Object} config
+	 * @return {String}
+	 */
+	_generateDojoScript: function(dojoUrl, config) {
+		var dojoScript = this._getDojoJsElem(),
+			djConfig = dojoScript.getAttribute('data-dojo-config')
+			text = ['<script src="' + dojoUrl + '"'];
+
+		// special handling for 'data-dojo-config' attr
+		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
+		// give precedence to our 'config' options, over that in file
+		lang.mixin(djConfig, config);
+		text.push('data-dojo-config="' +
+				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'") + '"')
+
+		// handle any remaining attributes
+		dojoScript.attributes.forEach(function(attr) {
+			var name = attr.name,
+				val = attr.value;
+			if (name !== 'src' && name !== 'data-dojo-config') {
+				text.push(name + '="' + val + '"');
+			}
+		});
+
+		text.push('></script>');
+		return text.join(' ');
 	},
 
 	_setSourceData: function(data){
@@ -2851,16 +2882,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 	},
 
-////////////////////////////////////////////////////////////////////////////////
-// XXX move this section to Dojo library?
-	/**
-	 * Update the value of `data-dojo-config` attribute in the model element
-	 * pointing to "dojo.js".  Properties in `data` overwrite existing value;
-	 * null values remove properties from `data-dojo-config`.
-	 *
-	 * @param  {Object} data
-	 */
-	_updateDojoConfig: function(data) {
+	_getDojoJsElem: function() {
 		if (!this._dojoScriptElem) {
 			// find and cache the HTMLElement which points to dojo.js
 			var head = this.getDocumentElement().getChildElement('head'),
@@ -2872,11 +2894,26 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}, this);
 			if (!found) {
 				// serious problems! dojo.js not found
+				console.error('"dojo.js" script element not found!');
 				return;
 			}
 		}
 
-		var dojoScript = this._dojoScriptElem,
+		return this._dojoScriptElem;
+	},
+
+	/**
+	 * Update the value of `data-dojo-config` attribute in the model element
+	 * pointing to "dojo.js".  Properties in `data` overwrite existing value;
+	 * null values remove properties from `data-dojo-config`.
+	 * 
+	 * Note: This only updates the model. In order for the change to take in
+	 * the VE, you will need to refresh the iframe from the updated source.
+	 * 
+	 * @param  {Object} data
+	 */
+	_updateDojoConfig: function(data) {
+		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
 
@@ -2894,6 +2931,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'"));
 	},
 
+////////////////////////////////////////////////////////////////////////////////
+// XXX move this section to Dojo library?
 	_addCssForDevice: function(localDevice, themeMap, context) {
 		for (var i = 0, len = themeMap.length; i < len; i++) {
 			var item = themeMap[i];

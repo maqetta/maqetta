@@ -68,6 +68,18 @@ ViewHelper.prototype = {
 				}, 100);
 			}
 		});
+		var userDoc = node.ownerDocument;
+		var userWin = userDoc && userDoc.defaultView;
+		if(userWin && !userWin._maqViewResize){
+			userWin.addEventListener('resize', function(event){
+				var viewWidgets = userDoc.querySelectorAll('.mblView');
+				for(var i=0; i<viewWidgets.length; i++){
+					this._updateViewWidgetHeight(viewWidgets[i]);
+				}
+				//FIXME: page editor should be doing this on a global basis
+				context.updateFocusAll();
+			}.bind(this), false);
+		}
 	},
 
 	/*
@@ -75,9 +87,10 @@ ViewHelper.prototype = {
 	 * and its siblings. 
 	 */
 	_makeVisible: function(domNode, command){
+		this._updateViewWidgetHeight(domNode);
 		var parentNode = domNode.parentNode;
 		for(var i=0;i<parentNode.children.length;i++){
-			node=parentNode.children[i];
+			var node=parentNode.children[i];
 			if(domClass.contains(node,"mblView")){
 				//NOTE: setting internal property 'disableTouchScroll', not using official APIs
 				//because official API (dijitWidget.disableTouch(true)) would need to be
@@ -280,6 +293,26 @@ ViewHelper.prototype = {
 				context.select(node._dvWidget);
 			}
 		};
+	},
+	
+	/**
+	 * Reset the height of dojox.mobile.View widgets within page editor to window height
+	 * unless the given View widget has been given an explicit height by user.
+	 * (Determined by seeing if computed style height == widget._lastHeight)
+	 * FIXME: This doesn't take into account the possibility that the user might
+	 * set height explicitly in Properties palette
+	 * @param node
+	 */
+	_updateViewWidgetHeight: function(node){
+		var widget = node._dvWidget;
+		if(widget && widget.type == 'dojox.mobile.View'){
+			var context = widget.getContext();
+			if(context && (!widget._lastHeight || node.style.height == widget._lastHeight)){
+				var htmlNode = node.ownerDocument.documentElement;
+				var h = htmlNode.clientHeight + 'px';
+				widget._lastHeight = node.style.height = h;
+			}
+		}
 	}
 
 };

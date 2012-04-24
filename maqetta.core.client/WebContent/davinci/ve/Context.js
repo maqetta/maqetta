@@ -1082,7 +1082,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			text = ['<script src="' + dojoUrl + '"'];
 
 		// special handling for 'data-dojo-config' attr
-		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
+		djConfig = djConfig ? eval("({ " + djConfig + " })", "data-dojo-config") : {};
 		// give precedence to our 'config' options, over that in file
 		lang.mixin(djConfig, config);
 		text.push('data-dojo-config="' +
@@ -2926,7 +2926,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_updateDojoConfig: function(data) {
 		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
-		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
+		djConfig = djConfig ? eval("({ " + djConfig + " })", "data-dojo-config") : {};
 
 		// If `prop` has a value, copy it into djConfig, overwriting existing
 		// value.  If `prop` is `null`, then delete from djConfig.

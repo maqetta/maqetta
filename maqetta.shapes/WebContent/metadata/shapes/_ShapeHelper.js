@@ -7,6 +7,8 @@ define([
 
 var _ShapeHelper = function() {};
 _ShapeHelper.prototype = {
+		
+	_connects: [],
 	
 	/*
 	 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
@@ -39,6 +41,7 @@ _ShapeHelper.prototype = {
 		var points = draggables.points;
 		if(points){
 			this._dragNobs = [];
+			var handle;
 			for (var i=0; i<points.length; i++){
 				l = points[i].x - centeringShift;
 				t = points[i].y - centeringShift;
@@ -47,12 +50,28 @@ _ShapeHelper.prototype = {
 					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px' }	
 				},div);
 				handle._shapeDraggable = {point:i};
-				handle.addEventListener('mousedown',dojo.hitch(this,this.onMouseDown),false);
+				this._connects.push(dojo.connect(handle, 'mousedown', dojo.hitch(this,this.onMouseDown)));
+				//handle.addEventListener('mousedown',dojo.hitch(this,this.onMouseDown),false);
 			}
 		}else{
 			this._dragNobs = null;
 		}
 		return false;
+	},
+
+	/**
+	 * Called by Focus.js right after Maqetta hides selection chrome on a widget.
+	 * @param {object} obj  Data passed into this routine is found on this object
+	 *    obj.widget: A davinci.ve._Widget which has just been selected
+	 *    obj.customDiv: DIV into which widget can inject its own selection chrome
+	 * @return {boolean}  Return false if no problems.
+	 * FIXME: Better if helper had a class inheritance setup
+	 */
+	onHideSelection: function(obj){
+		for(var i=0; i<this._connects.length; i++){
+			dojo.disconnect(this._connects[i]);
+		}
+		this._connects = [];
 	},
 
 	onMouseDown: function(e){
@@ -72,10 +91,14 @@ _ShapeHelper.prototype = {
 		var doc = domNode.ownerDocument;
 		var body = doc.body;
 		
+		this._connects.push(dojo.connect(doc, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connects.push(dojo.connect(doc, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connects.push(dojo.connect(doc, 'mouseup', dojo.hitch(this,this.onMouseUp)));
+
 		//FIXME: Leaking event listeners?
-		doc.addEventListener('mousemove',dojo.hitch(this,this.onMouseMoveOut),false);
-		doc.addEventListener('mouseout',dojo.hitch(this,this.onMouseMoveOut),false);
-		doc.addEventListener('mouseup',dojo.hitch(this,this.onMouseUp),false);
+		//doc.addEventListener('mousemove',dojo.hitch(this,this.onMouseMoveOut),false);
+		//doc.addEventListener('mouseout',dojo.hitch(this,this.onMouseMoveOut),false);
+		//doc.addEventListener('mouseup',dojo.hitch(this,this.onMouseUp),false);
 		if(this.onMouseDown_Widget){
 			this.onMouseDown_Widget({handle:handle, e:e});
 		}

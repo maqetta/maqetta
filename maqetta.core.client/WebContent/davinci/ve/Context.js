@@ -2605,6 +2605,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (!isDojoJS && !skipDomUpdate) {
 			var context = this,
 				absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+			// This xhrGet() used to include `handleAs: "javascript"`, surrounded
+			// by a `dojo.withGlobal`.  However, `dojo.eval` regressed in Dojo 1.7,
+			// such that it no longer evals using `dojo.global` -- instead evaling
+			// into the global context. To work around that, we do our own `eval` call.
 			dojo.xhrGet({
 				url: absoluteUrl,
 				sync: true    // XXX -> async

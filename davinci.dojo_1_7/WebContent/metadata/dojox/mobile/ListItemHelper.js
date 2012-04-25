@@ -1,5 +1,7 @@
-define(function() {
-
+define([
+	"davinci/ve/widget"
+], function(Widget) {
+                         
 var ListItemHelper = function() {};
 ListItemHelper.prototype = {
 
@@ -32,8 +34,43 @@ ListItemHelper.prototype = {
 			}
 		}
 		return text;
-	}
+	},
 
+	getChildren: function(widget, attach) {
+		var children = [];
+
+		// Dijit specific code here.  We only want items inside the box node, and not
+		// the label node (for now).
+		if (widget && widget.dijitWidget && widget.dijitWidget.box) {
+			dojo.forEach(widget.dijitWidget.box.children, function(node) {
+				// the label
+				if(dojo.hasClass(node, "mblListItemLabel")) {
+					return;
+				}
+				if (attach) {
+					children.push(require("davinci/ve/widget").getWidget(node));
+				} else {
+					var widget = node._dvWidget;
+					if (widget) {
+						children.push(widget);
+					}
+				}
+			});
+		}
+
+		return children;
+	},
+
+	getContainerNode: function(widget) {
+		var node;
+
+		// Dijit specific code here.
+		if (widget && widget.dijitWidget && widget.dijitWidget.box) {
+			node = widget.dijitWidget.box;
+		}
+
+		return node;
+	}
 };
 
 return ListItemHelper;

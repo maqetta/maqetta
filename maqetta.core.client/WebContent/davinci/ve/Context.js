@@ -525,7 +525,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// dojox.mobile specific CSS file handling
 
-        var dm = this.getDojo().getObject("dojox.mobile");
+        var dm = lang.getObject("dojox.mobile", false, this.getGlobal());
         if(dm && dm.loadDeviceTheme) {
         	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
@@ -2948,7 +2948,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
 		// monitoring of which stylesheets get loaded for a given theme
 
-		var dm = this.getDojo().getObject("dojox.mobile", true);
+		var dm = lang.getObject("dojox.mobile", true, this.getGlobal());
 		dm.configDeviceTheme = function() {
 			var loadDeviceTheme = dm.loadDeviceTheme;
 

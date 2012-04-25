@@ -2217,15 +2217,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					data.modules.push(module);
 				});
 			}
-			
-			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-			if (/.*(\/)*maqetta\/States.js$/.test(value)) { //remove?
-				this._statesJsScriptTag = scriptTag;
-			}
 		}, this);
-		if (!this._statesJsScriptTag) {   // XXX Bug 7499
-			console.warn("Failed to find States.js script tag.  States and dojox.mobile widgets may not work properly");
-		}
+
 		var styleTags=head.getChildElements("style");
 		dojo.forEach(styleTags, function (styleTag){
 			dojo.forEach(styleTag.children,function(styleRule){
@@ -2742,18 +2735,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		
 		var head = this.getDocumentElement().getChildElement('head');
-		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
-		//	"dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
-		//	the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
-		//	inserts all scripts before States.js.
-		//	First, make sure that we've properly saved the location of States.js.  If, for
-		//	whatever reason, this is not the case, then fall back to the original code of
-		//	appending script to <head>.
-		if (this._statesJsScriptTag) {
-			head.insertBefore(script, this._statesJsScriptTag);
-		} else {
-			head.addChild(script);
-		}
+		head.addChild(script);
 		
 		//this.getHeader().scripts.push(url);
 	},

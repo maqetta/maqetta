@@ -178,7 +178,16 @@ return declare("davinci.ve._Widget", null, {
 			return;
 		}
 
-		var containerNode = this.getContainerNode();
+		var containerNode;
+
+		// let helpers override container node
+		var helper = this.getHelper();
+		if (helper && helper.getContainerNode) {
+			containerNode = helper.getContainerNode(this);
+		} else {
+			containerNode = this.getContainerNode();
+		}
+
 		if(containerNode) {
 			//TODO use dojo.place?
 			if(index === undefined || index === -1) {

@@ -25,6 +25,12 @@ define(["dojo/_base/declare",
 ) {
 
 return declare("davinci.ve.tools.CreateTool", _Tool, {
+	
+	// In nearly all cases, mouseUp completes the create operation.
+	// But for certain widgets such as Shapes.line, we allow multi-segment
+	// lines to be created via multiple [mousedown/]mouseup gestures,
+	// in which case this property will be false.
+	exitCreateToolOnMouseUp:true,
 
 	constructor: function(data) {
 		this._data = data;
@@ -58,6 +64,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 
 	onMouseDown: function(event){
+//console.log('CreateTool.js onMouseDown');
 		// This function gets called if user does a 2-click widget addition:
 		// 1) Click on widget in widget palette to select
 		// 2) Click on canvas to indicate drop location
@@ -67,6 +74,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 
 	onMouseMove: function(event){
+//console.log('CreateTool.js onMouseMove');
 		var context = this._context;
 		var cp = context._chooseParent;
 		
@@ -75,6 +83,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 		this._lastEventTarget = event.target;
 
+//console.log('this._mdPosition='+this._mdPosition+',this._resizable='+this._resizable);
 		if(this._mdPosition){
 			// If here, then user did a 2-click widget addition (see onMouseDown())
 			// and then dragged mouse while mouse is still down
@@ -129,6 +138,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				style.top = t + "px";
 				style.width = w + "px";
 				style.height = h + "px";
+console.log('Drag rect. style.cssText='+style.cssText);
 
 				if(w > 4 || h > 4){
 					var box = {l: l, t: t,
@@ -178,6 +188,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 
 	onMouseUp: function(event){
+console.log('CreateTool.js onMouseUp');
 		var context = this._context;
 		var cp = context._chooseParent; 
 		var absolute = !this.createWithFlowLayout();
@@ -381,7 +392,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			// Make sure that if calls above fail due to invalid target or some
 			// unknown creation error that we properly unset the active tool,
 			// in order to avoid drag/drop issues.
-			context.setActiveTool(null);
+			if(this.exitCreateToolOnMouseUp){
+				context.setActiveTool(null);
+			}
 			context.dragMoveCleanup();
 			if(!context.inlineEditActive()){
 	            var userdoc = this._context.getDocument();	// inner document = user's document
@@ -591,37 +604,47 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 
 		var w;
-		dojo.withDoc(this._context.getDocument(), function(){
-			w = Widget.createWidget(this._data, args);
-		}, this);
+		if(this.createNewWidget()){
+			dojo.withDoc(this._context.getDocument(), function(){
+				w = Widget.createWidget(this._data, args);
+			}, this);
+		}else{
+			w = this._widget;
+		}
 		if(!w){
 			return;
 		}
 
 		var command = new davinci.commands.CompoundCommand();
 
-		command.add(new davinci.ve.commands.AddCommand(w,
-			args.parent || this._context.getContainerNode(),
-			args.index));
-
-		if(args.position){
-			var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
-			command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
-			command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
-		}
-		if(args.size){
-			// For containers, issue a resize regardless of whether an explicit size was set.
-			// In the case where a widget is nested in a layout container,
-			// resize()+layout() will not get called during create. 
-			var width = args.size && args.size.w,
-				height = args.size && args.size.h;
-			command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
-			var helper = Widget.getWidgetHelper(w.type);
-			if(helper && helper.onCreateResize){
-				helper.onCreateResize(command, w, width, height);
+		if(this.createNewWidget()){
+			command.add(new davinci.ve.commands.AddCommand(w,
+				args.parent || this._context.getContainerNode(),
+				args.index));
+			if(args.position){
+				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
+				command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
+				command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
+			}
+			if(args.size){
+				// For containers, issue a resize regardless of whether an explicit size was set.
+				// In the case where a widget is nested in a layout container,
+				// resize()+layout() will not get called during create. 
+				var width = args.size.w,
+					height = args.size.h;
+				command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
+				var helper = Widget.getWidgetHelper(w.type);
+				if(helper && helper.onCreateResize){
+					helper.onCreateResize(command, w, width, height);
+				}
 			}
 		}
 		var w_id = w.id;
+		
+		// Custom CreateTools might define this function
+		if(this.addToCommandStack){
+			this.addToCommandStack(command, {widget:w})
+		}
 		this._context.getCommandStack().execute(command);
 		if(w.isLayoutContainer){
 			w.resize();
@@ -650,7 +673,18 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	 */ 
 	createWithFlowLayout: function(){
 		return this._context.getFlowLayout();
+	},
+	
+	
+	/**
+	 * Returns true if CreateTool.js should create a new widget as part of
+	 * the current create operation, false if just add onto existing widget.
+	 * For default CreateTool, return true. Subclasses can override this function.
+	 */
+	createNewWidget: function(){
+		return true;
 	}
+
 });
 
 });

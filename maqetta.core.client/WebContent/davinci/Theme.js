@@ -234,7 +234,7 @@ define([
 	        // find the themeMap
 	        var djConfig = context._getDojoJsElem().getAttribute('data-dojo-config');
 	        if (djConfig) {
-		        djConfig = eval("({ " + djConfig + " })");
+		        djConfig = require.eval("({ " + djConfig + " })", "data-dojo-config");
 		        if (djConfig.themeMap) {
 			        mobileTheme = Theme.getDojoxMobileThemesFromThemeMap(context, djConfig.themeMap);
 			    }

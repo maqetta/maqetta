@@ -725,8 +725,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     
 	_setSource: function(source, callback, scope, newHtmlParams){
 		// clear cached values
-		this._requireHtmlElem = null;
-		this._dojoScriptElem = null;
+		delete this._requireHtmlElem;
+		delete this._dojoScriptElem;
 
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);

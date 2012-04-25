@@ -200,9 +200,10 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
 ////////////////////////////////////////////////////////////////////////////////
 // XXX move this section to Dojo library
     _dojoxMobileRemoveTheme: function(context) {
-        // remove theme map from Dojo config attribute
+        // remove theme map from Dojo config attribute in model
         context._updateDojoConfig({
-            themeMap: null
+            themeMap: null,
+            mblThemeFiles: null
         });
     },
    
@@ -213,9 +214,10 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             return;
         }
 
-        // set theme map in Dojo config attribute
+        // set theme map in Dojo config attribute in model
         context._updateDojoConfig({
-            themeMap: Theme.getDojoxMobileThemeMap(context, theme)
+            themeMap: Theme.getDojoxMobileThemeMap(context, theme),
+            mblThemeFiles: []
         });
     }
 // XXX end "move this section to Dojo library"

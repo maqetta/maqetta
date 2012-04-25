@@ -223,7 +223,7 @@ define([
 
 	getThemeSet: function(context) {
 	    var dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject()),
-	    	mobileTheme = this.dojoMobileDefault,
+	    	mobileTheme = dojo.clone(this.dojoMobileDefault),
 	    	themeSet;
 	    if (!dojoThemeSets){ 
 	        dojoThemeSets =  this.dojoThemeSets;
@@ -252,9 +252,8 @@ define([
 	        }
 	    }
 
-	    var newThemeSetName = this.none_themeset_name;
 	    themeSet =  {
-            name: newThemeSetName,
+            name: this.none_themeset_name,
             desktopTheme: context ? desktopTheme.name : 'claro',
             mobileTheme: mobileTheme
         };

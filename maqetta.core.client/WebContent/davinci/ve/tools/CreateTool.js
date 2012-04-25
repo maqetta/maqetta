@@ -255,6 +255,7 @@ console.log('CreateTool.js onMouseUp');
 			}
 		}
 
+console.log('CreateTool onMouseUp before getProposedParentWidget');
 		var ppw = cp.getProposedParentWidget();
 		if(ppw){
 			// Use last computed parent from onMouseMove handler
@@ -289,6 +290,7 @@ console.log('CreateTool.js onMouseUp');
 		    }
 		}
 
+console.log('CreateTool onMouseUp before setProposedParentWidget(null)');
 		cp.setProposedParentWidget(null);
 
 		/**
@@ -383,6 +385,7 @@ console.log('CreateTool.js onMouseUp');
             var errorDialog = new ErrorDialog({errorText: content});
             Workbench.showModal(errorDialog, title);
 		} finally {
+console.log('CreateTools onMouseUp finally start');
 			// By default, exitCreateToolOnMouseUp returns true, but for
 			// particular widget-specfic CreateTool subclasses, it might return false
 			if(this.exitCreateToolOnMouseUp()){
@@ -393,6 +396,7 @@ console.log('CreateTool.js onMouseUp');
 	            var userdoc = this._context.getDocument();	// inner document = user's document
 	            userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 			}
+console.log('CreateTools onMouseUp finally end');
 		}
 	},
 
@@ -500,6 +504,7 @@ console.log('CreateTool.js onMouseUp');
 	},
 
 	create: function(args){
+console.log('CreateTool create entered');
 	
 		if(!args || !this._data){
 			return;
@@ -571,9 +576,11 @@ console.log('CreateTool.js onMouseUp');
 		new DeferredList(this._requireHelpers(this._data)).then(function() {
 			this._create({parent: parent, index: index, position: position, size: args.size});			
 		}.bind(this));
+console.log('CreateTool create exit');
 	},
 
 	_create: function(args){
+console.log('CreateTool _create entered');
 		var context = this._context;
 		var loadType = function(data){
 			if(!data || !data.type){
@@ -633,11 +640,12 @@ console.log('CreateTool.js onMouseUp');
 			}
 		}
 		var w_id = w.id;
-		
+console.log('CreateTool _create before addToCommandStack');
 		// Custom CreateTools might define this function
 		if(this.addToCommandStack){
 			this.addToCommandStack(command, {widget:w})
 		}
+console.log('CreateTool _create after addToCommandStack');
 		this._context.getCommandStack().execute(command);
 		if(w.isLayoutContainer){
 			w.resize();
@@ -646,6 +654,7 @@ console.log('CreateTool.js onMouseUp');
 		this._select(w);
 		this._widget = w;
 		return w;
+console.log('CreateTool _create exit');
 	},
 	
 	_select: function(w) {

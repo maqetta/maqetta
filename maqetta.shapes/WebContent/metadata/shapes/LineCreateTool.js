@@ -19,41 +19,58 @@ define([
 
 return declare(CreateTool, {
 	
-	// For cases where mouseUp doesn't complete the create operation,
-	// increment this counter with each mouseUp
-	mouseUpCounter:0,
-
 	constructor: function(data){
-		this._line_md_x = null;
-		this._line_md_y = null;
-		this._line_prev_mu_x = null;
-		this._line_prev_mu_y = null;
+		this._md_x = null;
+		this._md_y = null;
+		this._mouseUpCounter = 0;
+		this._exitCreateTool = false;
+		this._points = [];
+		this._pointsChanged = false;
 //debugger;
 	},
 	
 	onMouseDown: function(event){
-//console.log('LineCreateTool.js onMouseDown');
-		this._line_md_x = event.pageX;
-		this._line_md_y = event.pageY;
+console.log('LineCreateTool.js onMouseDown');
+		this._md_x = event.pageX;
+		this._md_y = event.pageY;
 		this.inherited(arguments);
 	},
 	
 	onMouseMove: function(event){
-//console.log('LineCreateTool.js onMouseMove');
+console.log('LineCreateTool.js onMouseMove');
 		this.inherited(arguments);
 	},
 	
 	onMouseUp: function(event){
-console.log('LineCreateTool.js onMouseUp. this._widget='+this._widget+',this._mdPosition='+this._mdPosition);
-		this._line_mu_x = event.pageX;
-		this._line_mu_y = event.pageY;
+console.log('LineCreateTool.js onMouseUp.');
+		// If this is first mouseUp and there was an associated mouseDown
+		// then line will consist of single segment from mousedown location to mouseup location
+		if(this._mouseUpCounter === 0 && typeof this._md_x == 'number'){
+console.log('a');
+			if(this._sameSpot(this._md_x, this._md_y, event.pageX, event.pageY)){
+				this._points.push({x:event.pageX, y:event.pageY});
+			}else{
+				this._points.push({x:this._md_x, y:this._md_y});
+				this._points.push({x:event.pageX, y:event.pageY});
+				this._exitCreateTool = true;
+			}
+			this._pointsChanged = true;
+			
+		// If mouseUp is within <n> pixels of previous mouseUp, then exist CreateTool.
+		}else if(this._mouseUpSameSpot(event.pageX, event.pageY)){
+console.log('b');
+			this._exitCreateTool = true;
+		
+		// Otherwise, add mouseUp position to list of points
+		}else{
+console.log('c');
+			this._points.push({x:event.pageX, y:event.pageY});
+			this._pointsChanged = true;
+		}
 		this.inherited(arguments);
-//experiment
-//var dijitWidget = this._widget.dijitWidget;
-//dijitWidget._points = [{x:0,y:0},{x:100,y:100},{x:200,y:0}];
-		this.mouseUpCounter++;
-		this._line_prev_mu_x = this._line_mu_x;
-		this._line_prev_mu_y = this._line_mu_y;
+		
+		// Put after this.inherited because this.inherited calls createNewWidget() indirectly
+		this._mouseUpCounter++;
 	},
 
 	/**
@@ -63,7 +80,9 @@ console.log('LineCreateTool.js onMouseUp. this._widget='+this._widget+',this._md
 	 * in which case the widget-specific CreateTool subclass will override this function.
 	 */
 	exitCreateToolOnMouseUp: function(){
-		return this._mouseUpSameSpot();
+console.log('exitCreateToolOnMouseUp this._exitCreateTool='+this._exitCreateTool);
+console.trace();
+		return this._exitCreateTool;
 	},
 
 	/**
@@ -72,61 +91,63 @@ console.log('LineCreateTool.js onMouseUp. this._widget='+this._widget+',this._md
 	 * For this tool (line tool), only create a new widget with first mouseUp.
 	 */
 	createNewWidget: function(){
-		return (this.mouseUpCounter === 0);
+		return (this._mouseUpCounter === 0);
 	},
 	
-	_mouseUpSameSpot: function(){
-console.log('_mouseUpSameSpot. this._line_mu_x='+this._line_mu_x+',this._line_mu_y='+this._line_mu_y+
-			',this._line_prev_mu_x='+this._line_prev_mu_x+',this._line_prev_mu_y='+this._line_prev_mu_y);
+	_sameSpot: function(x1, y1, x2, y2){
 		var tolerance = 7;
-		if(typeof this._line_prev_mu_x != 'number'){
-console.log('!number');
+		return (Math.abs(x2 - x1) <= tolerance && Math.abs(y2 - y1) <= tolerance);
+	},
+	
+	_mouseUpSameSpot: function(x, y){
+		if(this._points.length === 0){
+console.log('_mouseUpSameSpot  false - this._points.length == 0');
 			return false;
-		}else if(Math.abs(this._line_mu_x - this._line_prev_mu_x) <= tolerance &&
-				Math.abs(this._line_mu_y - this._line_prev_mu_y) <= tolerance){
-console.log('true - < tolerance');
-			return true;
 		}else{
+			var lastPoint = this._points[this._points.length-1];
+console.log('_mouseUpSameSpot. x='+x+',y='+y+',lastPoint.x='+lastPoint.x+',lastPoint.y='+lastPoint.y);
+			if(this._sameSpot(x, y, lastPoint.x, lastPoint.y)){
+console.log('true - < tolerance');
+				return true;
+			}else{
 console.log('false - >= tolerance');
-			return false;
+				return false;
+			}
 		}
 	},
 	
 	addToCommandStack: function(command, params){
-		// Modify points value if this is a subsequent mouseUp operation
-		// or if this is first mouseUp and there was a preceding mouseDown
-		if(!this._mouseUpSameSpot() && 
-				(this.mouseUpCounter > 0 || typeof this._line_md_x == 'number')){
-			if(this.mouseUpCounter === 0){
-				if(typeof this._line_md_x == 'number'){
-					this._line_orig_x = this._line_md_x;
-					this._line_orig_y = this._line_md_y;
-				}else{
-					this._line_orig_x = this._line_mu_x;
-					this._line_orig_y = this._line_mu_y;
-				}
+console.log('addToCommandStack entered');
+for(var j=0; j<this._points.length; j++){
+	console.log('this._points['+j+']= x:'+this._points[j].x+', y:'+this._points[j].y);
+}
+		var widget = params.widget;
+		if(this._pointsChanged && widget){
+			var i;
+			var min_x = this._points[0].x;
+			var min_y = this._points[0].y;
+			for(i=1; i<this._points.length; i++){
+				var pt = this._points[i];
+				min_x = pt.x < min_x ? pt.x : min_x;
+				min_y = pt.x < min_y ? pt.y : min_y;
 			}
-			var widget = params.widget;
-			var properties = {};
 			var points;
-			var diff_x = this._line_mu_x - this._line_md_x;
-			var diff_y = this._line_mu_y - this._line_md_y;
-			if(this.mouseUpCounter === 0){
-				if(diff_x !== 0 || diff_y !== 0){
-					points = '0,0,'+diff_x+','+diff_y;
-				}else{
-					points = '0,0,0,0';
-				}
+			// Line widget requires at least 2 points
+			if(this._points.length === 1){
+				points = '0,0,0,0';
 			}else{
 				points = '';
-				this._widget.dijitWidget._points.forEach(function(pt){
-					points += pt.x + ',' + pt.y + ',';
-				});
-				var adj_mu_x = this._line_mu_x - this._line_orig_x;
-				var adj_mu_y = this._line_mu_y - this._line_orig_y;
-				points += adj_mu_x + ',' + adj_mu_y;
+				for(i=0; i<this._points.length; i++){
+					var pt = this._points[i];
+					if(i > 0){
+						points += ',';
+					}
+					//points += (pt.x - min_x) + ',' + (pt.y - min_y);
+					points += pt.x  + ',' + pt.y;
+				}
 			}
-			properties.points = points;
+console.log('points='+points);
+			var properties = { points:points };
 			command.add(new davinci.ve.commands.ModifyCommand(widget, properties));
 		}
 	}

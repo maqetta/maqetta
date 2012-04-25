@@ -19,17 +19,15 @@ define([
 
 return declare(CreateTool, {
 	
-	// In nearly all cases, mouseUp completes the create operation.
-	// But for certain widgets such as Shapes.line, we allow multi-segment
-	// lines to be created via multiple [mousedown/]mouseup gestures,
-	// in which case this property will be false.
-	exitCreateToolOnMouseUp:false,
-	
 	// For cases where mouseUp doesn't complete the create operation,
 	// increment this counter with each mouseUp
 	mouseUpCounter:0,
 
 	constructor: function(data){
+		this._line_md_x = null;
+		this._line_md_y = null;
+		this._line_prev_mu_x = null;
+		this._line_prev_mu_y = null;
 //debugger;
 	},
 	
@@ -54,8 +52,20 @@ console.log('LineCreateTool.js onMouseUp. this._widget='+this._widget+',this._md
 //var dijitWidget = this._widget.dijitWidget;
 //dijitWidget._points = [{x:0,y:0},{x:100,y:100},{x:200,y:0}];
 		this.mouseUpCounter++;
+		this._line_prev_mu_x = this._line_mu_x;
+		this._line_prev_mu_y = this._line_mu_y;
 	},
-	
+
+	/**
+	 * In nearly all cases, mouseUp completes the create operation.
+	 * But for certain widgets such as Shapes.line, we allow multi-segment
+	 * lines to be created via multiple [mousedown/]mouseup gestures,
+	 * in which case the widget-specific CreateTool subclass will override this function.
+	 */
+	exitCreateToolOnMouseUp: function(){
+		return this._mouseUpSameSpot();
+	},
+
 	/**
 	 * Returns true if CreateTool.js should create a new widget as part of
 	 * the current create operation, false if just add onto existing widget.
@@ -65,10 +75,28 @@ console.log('LineCreateTool.js onMouseUp. this._widget='+this._widget+',this._md
 		return (this.mouseUpCounter === 0);
 	},
 	
+	_mouseUpSameSpot: function(){
+console.log('_mouseUpSameSpot. this._line_mu_x='+this._line_mu_x+',this._line_mu_y='+this._line_mu_y+
+			',this._line_prev_mu_x='+this._line_prev_mu_x+',this._line_prev_mu_y='+this._line_prev_mu_y);
+		var tolerance = 7;
+		if(typeof this._line_prev_mu_x != 'number'){
+console.log('!number');
+			return false;
+		}else if(Math.abs(this._line_mu_x - this._line_prev_mu_x) <= tolerance &&
+				Math.abs(this._line_mu_y - this._line_prev_mu_y) <= tolerance){
+console.log('true - < tolerance');
+			return true;
+		}else{
+console.log('false - >= tolerance');
+			return false;
+		}
+	},
+	
 	addToCommandStack: function(command, params){
 		// Modify points value if this is a subsequent mouseUp operation
 		// or if this is first mouseUp and there was a preceding mouseDown
-		if(this.mouseUpCounter > 0 || typeof this._line_md_x == 'number'){
+		if(!this._mouseUpSameSpot() && 
+				(this.mouseUpCounter > 0 || typeof this._line_md_x == 'number')){
 			if(this.mouseUpCounter === 0){
 				if(typeof this._line_md_x == 'number'){
 					this._line_orig_x = this._line_md_x;
@@ -94,15 +122,9 @@ console.log('LineCreateTool.js onMouseUp. this._widget='+this._widget+',this._md
 				this._widget.dijitWidget._points.forEach(function(pt){
 					points += pt.x + ',' + pt.y + ',';
 				});
-				var adj_md_x = this._line_md_x - this._line_orig_x;
-				var adj_md_y = this._line_md_y - this._line_orig_y;
 				var adj_mu_x = this._line_mu_x - this._line_orig_x;
 				var adj_mu_y = this._line_mu_y - this._line_orig_y;
-				if(diff_x !== 0 || diff_y !== 0){
-					points += adj_md_x + ',' + adj_md_y + ',' + adj_mu_x + ',' + adj_mu_y;
-				}else{
-					points += adj_mu_x + ',' + adj_mu_y;
-				}
+				points += adj_mu_x + ',' + adj_mu_y;
 			}
 			properties.points = points;
 			command.add(new davinci.ve.commands.ModifyCommand(widget, properties));

@@ -25,12 +25,6 @@ define(["dojo/_base/declare",
 ) {
 
 return declare("davinci.ve.tools.CreateTool", _Tool, {
-	
-	// In nearly all cases, mouseUp completes the create operation.
-	// But for certain widgets such as Shapes.line, we allow multi-segment
-	// lines to be created via multiple [mousedown/]mouseup gestures,
-	// in which case this property will be false.
-	exitCreateToolOnMouseUp:true,
 
 	constructor: function(data) {
 		this._data = data;
@@ -389,10 +383,9 @@ console.log('CreateTool.js onMouseUp');
             var errorDialog = new ErrorDialog({errorText: content});
             Workbench.showModal(errorDialog, title);
 		} finally {
-			// Make sure that if calls above fail due to invalid target or some
-			// unknown creation error that we properly unset the active tool,
-			// in order to avoid drag/drop issues.
-			if(this.exitCreateToolOnMouseUp){
+			// By default, exitCreateToolOnMouseUp returns true, but for
+			// particular widget-specfic CreateTool subclasses, it might return false
+			if(this.exitCreateToolOnMouseUp()){
 				context.setActiveTool(null);
 			}
 			context.dragMoveCleanup();
@@ -675,13 +668,20 @@ console.log('CreateTool.js onMouseUp');
 		return this._context.getFlowLayout();
 	},
 	
-	
 	/**
 	 * Returns true if CreateTool.js should create a new widget as part of
 	 * the current create operation, false if just add onto existing widget.
 	 * For default CreateTool, return true. Subclasses can override this function.
 	 */
 	createNewWidget: function(){
+		return true;
+	},
+	
+	// In nearly all cases, mouseUp completes the create operation.
+	// But for certain widgets such as Shapes.line, we allow multi-segment
+	// lines to be created via multiple [mousedown/]mouseup gestures,
+	// in which case the widget-specific CreateTool subclass will override this function.
+	exitCreateToolOnMouseUp: function(){
 		return true;
 	}
 

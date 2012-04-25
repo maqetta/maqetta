@@ -39,6 +39,32 @@ console.log('LineCreateTool.js onMouseDown');
 	onMouseMove: function(event){
 console.log('LineCreateTool.js onMouseMove');
 		this.inherited(arguments);
+		
+		// If we've already dropped the first point, or we are dragging out first segment
+		// draw a line to current mouse location
+		if(this._mouseUpCounter > 0 || typeof this._md_x == 'number'){
+			if(!this._dragLine){
+				var body = this._context.getContainerNode();
+				this._dragLine = dojo.create('div',
+						{style:'position:absolute;height:1px;border:none;border-top:1px dashed black;'},
+						body);
+				this._setCSS3Property(this._dragLine, 'transformOrigin','left top');
+			}
+			var style = this._dragLine.style;
+			var o;
+			if(this._mouseUpCounter === 0){
+				style.left = this._md_x + 'px';
+				style.top = this._md_y + 'px';
+				o = this._getDistanceAndAngle(this._md_x, this._md_y, event.pageX, event.pageY);
+			}else{
+				var pt = this._points[this._points.length-1];
+				style.left = pt.x + 'px';
+				style.top = pt.y + 'px';
+				o = this._getDistanceAndAngle(pt.x, pt.y, event.pageX, event.pageY);
+			}
+			style.width = o.distance + 'px';
+			this._setCSS3Property(this._dragLine, 'transform','rotate('+o.degrees+'deg)');
+		}
 	},
 	
 	onMouseUp: function(event){
@@ -71,6 +97,12 @@ console.log('c');
 		
 		// Put after this.inherited because this.inherited calls createNewWidget() indirectly
 		this._mouseUpCounter++;
+		
+		this._md_x = this._md_y = null;
+		if(this._dragLine){
+			this._dragLine.parentNode.removeChild(this._dragLine);
+			this._dragLine = false;
+		}
 	},
 
 	/**
@@ -150,6 +182,26 @@ console.log('points='+points);
 			var properties = { points:points };
 			command.add(new davinci.ve.commands.ModifyCommand(widget, properties));
 		}
+	},
+	
+	_setCSS3Property: function(node, domProperty, value){
+		var style = node.style;
+		var domPropertyUC = domProperty.charAt(0).toUpperCase() + domProperty.slice(1);
+		style['webkit'+domPropertyUC] = value;
+		style['moz'+domPropertyUC] = value;
+		style['ms'+domPropertyUC] = value;
+		style['o'+domPropertyUC] = value;
+		style[domProperty] = value;
+	},
+	
+	_getDistanceAndAngle: function(x1, y1, x2, y2){
+		var o = {};
+		var dx = x2 - x1;
+		var dy = y2 - y1;
+		o.distance = Math.sqrt(dx*dx + dy*dy);
+		var radians =  Math.atan2(dy, dx);
+		o.degrees = radians * 180 / Math.PI;
+		return o;
 	}
 
 });

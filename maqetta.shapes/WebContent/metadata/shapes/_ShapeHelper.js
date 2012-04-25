@@ -1,8 +1,9 @@
 define([
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyCommand",
-	"davinci/ve/commands/StyleCommand"
-], function(CompoundCommand, ModifyCommand, StyleCommand) {
+	"davinci/ve/commands/StyleCommand",
+	"davinci/ve/widget"
+], function(CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
 
 var _ShapeHelper = function() {};
 _ShapeHelper.prototype = {
@@ -158,7 +159,10 @@ _ShapeHelper.prototype = {
 			this.onMouseUp_Widget(command);
 		}
 		
+		var w_id = widget.id;
 		context.getCommandStack().execute(command);
+		var newWidget = widgetUtils.byId(w_id, context.getDocument());
+		context.select(newWidget);
 
 	},
 	

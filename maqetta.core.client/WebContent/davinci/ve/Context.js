@@ -710,8 +710,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return true;
 		}
 
-
-		this._loadThemeDojoxMobile(this);
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
@@ -722,15 +720,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
     },
     
-// FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
-    _loadThemeDojoxMobile: function(context) {
-        var head = context.getDocumentElement().getChildElement('head');
-        head.getChildElements('script').some(function(tag) {
-            var text = tag.getElementText();
-            // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
-            return text.length && text.indexOf('dojoxMobile.themeMap=') !== -1;
-        });
-    },
+
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){

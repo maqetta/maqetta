@@ -25,12 +25,12 @@ define([
 return declare(CreateTool, {
 	
 	constructor: function(data){
-		this._md_x = null;
-		this._md_y = null;
+		this._md_x = this._md_y = null;
 		this._mouseUpCounter = 0;
 		this._exitCreateTool = false;
 		this._points = [];
 		this._pointsChanged = false;
+		this._gesture = 'click';
 	},
 
 	/**
@@ -109,6 +109,7 @@ console.log('LineCreateTool.js onMouseUp.');
 				this._points.push({x:this._md_x, y:this._md_y});
 				this._points.push({x:event.pageX, y:event.pageY});
 				this._exitCreateTool = true;
+				this._gesture = 'drag';
 			}
 			this._pointsChanged = true;
 		
@@ -146,9 +147,23 @@ console.log('LineCreateTool.js onMouseUp.');
 			var newBounds = this._getBounds(this._points);
 			var position = dojo.style(widget.domNode, 'position');
 			var absolute = (position == 'absolute');
+			
+			// Flow layout might have shifted earlier points, so use
+			// oldPoints for all points except the last one(s) added by current gesture
+			var newPoints = (this._gesture == 'drag') ? 2 : 1;
+			
 			if(oldPoints){
 				// Do a bunch of math comparing old points list to new points list
 				var oldBounds = this._getBounds(oldPoints);
+				
+				// Update this._points and newBounds to make sure that this_points
+				// has the actual location of the already-existing points, which
+				// might have shifted due to flow layout
+				for(var i=0; i<this._points.length - newPoints; i++){
+					this._points[i] = oldPoints[i];
+				}
+				newBounds = this._getBounds(this._points);
+				
 				// if width or height is different or topbound is different, resizecommand
 				// if left or top is different, movecommand
 				// normalize newpoints to zero
@@ -163,22 +178,22 @@ console.log('LineCreateTool.js onMouseUp.');
 					command.add(new MoveCommand(widget, newLeft, newTop));	/*apply to Normal state*/
 				}
 			}
-			var points;
+			var s;
 			// Normalize coordinates such that (0,0) is aligned with SPAN's top/left
 			if(this._points.length === 1){
 				// Line widget requires at least 2 points
-				points = '0,0,0,0';
+				s = '0,0,0,0';
 			}else{
-				points = '';
+				s = '';
 				for(var i=0; i<this._points.length; i++){
 					var pt = this._points[i];
 					if(i > 0){
-						points += ',';
+						s += ',';
 					}
-					points += (pt.x - newBounds.x) + ',' + (pt.y - newBounds.y);
+					s += (pt.x - newBounds.x) + ',' + (pt.y - newBounds.y);
 				}
 			}
-			var properties = { points:points };
+			var properties = { points:s };
 			command.add(new ModifyCommand(widget, properties));
 		}
 	},
@@ -248,6 +263,25 @@ console.log('LineCreateTool.js onMouseUp.');
 	},
 	
 	_getPointsInPageUnits: function(widget){
+		if(!widget || !widget.dijitWidget || !widget.dijitWidget._points){
+			return;
+		}
+		var offsets = this._getOffsets(widget);
+		if(!offsets){
+			return;
+		}
+		var offsetLeft = offsets.offsetLeft;
+		var offsetTop = offsets.offsetTop;
+		var points = widget.dijitWidget._points;
+		var pointsPageUnits = [];
+		for(var i=0; i<points.length; i++){
+			var pt = points[i];
+			pointsPageUnits.push({x:pt.x + offsetLeft, y:pt.y + offsetTop});
+		}
+		return pointsPageUnits;
+	},
+	
+	_getOffsets: function(widget){
 		if(!widget || !widget.domNode || !widget.domNode.offsetParent || !widget.dijitWidget || !widget.dijitWidget._points){
 			return;
 		}
@@ -260,13 +294,7 @@ console.log('LineCreateTool.js onMouseUp.');
 			offsetTop += pn.offsetTop;
 			pn = pn.offsetParent;
 		}
-		var points = widget.dijitWidget._points;
-		var pointsPageUnits = [];
-		for(var i=0; i<points.length; i++){
-			var pt = points[i];
-			pointsPageUnits.push({x:pt.x + offsetLeft, y:pt.y + offsetTop});
-		}
-		return pointsPageUnits;
+		return {offsetLeft:offsetLeft, offsetTop:offsetTop};
 	}
 
 });

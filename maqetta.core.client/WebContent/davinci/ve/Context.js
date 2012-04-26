@@ -1075,7 +1075,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
 		// give precedence to our 'config' options, over that in file; make sure
 		// to turn off parseOnLoad
-		lang.mixin(djConfig, config, {parseOnLoad: false});
+		// XXX Also need to set the `async` flag to false.  Otherwise, we try to
+		//     instantiate objects before the modules have loaded.
+		lang.mixin(djConfig, config, {
+			async: false,
+			parseOnLoad: false
+		});
 		text.push('data-dojo-config="' +
 				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'") + '"')
 

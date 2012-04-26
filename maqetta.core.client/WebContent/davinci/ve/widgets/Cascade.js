@@ -201,7 +201,7 @@ define(["dojo/_base/declare",
 				// New logic: prompt user only if theme CSS files are going to change
 				var content = null;		
 				var langObj = veNLS;
-				if(this._values[this._targetValueIndex].readOnly){
+				if(this._values[this._targetValueIndex].readOnly && this._editor.editorID != 'davinci.ve.ThemeEditor'){ // #23 theme editor only writes out deltas
 					//FIXME: the commented out message in next line provides a more informative error message
 		            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
 					var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";

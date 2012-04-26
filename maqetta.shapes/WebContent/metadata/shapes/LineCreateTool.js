@@ -1,7 +1,9 @@
 define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
-	"davinci/ve/commands/ModifyCommand" /*,
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/commands/MoveCommand",
+	"davinci/ve/commands/ResizeCommand" /*,
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/AddCommand",
@@ -9,7 +11,10 @@ define([
 	"davinci/ve/commands/ResizeCommand" */
 ], function(
 	declare,
-	CreateTool /*,
+	CreateTool,
+	ModifyCommand,
+	MoveCommand,
+	ResizeCommand /*,
 	Widget,
 	CompoundCommand,
 	AddCommand,
@@ -155,33 +160,71 @@ for(var j=0; j<this._points.length; j++){
 }
 		var widget = params.widget;
 		if(this._pointsChanged && widget){
-			var i;
-			var min_x = this._points[0].x;
-			var min_y = this._points[0].y;
-			for(i=1; i<this._points.length; i++){
-				var pt = this._points[i];
-				min_x = pt.x < min_x ? pt.x : min_x;
-				min_y = pt.x < min_y ? pt.y : min_y;
+			var oldPoints = this._getPointsInPageUnits(widget);
+			if(oldPoints){
+				// Do a bunch of math comparing old points list to new points list
+				var oldBounds = this._getBounds(oldPoints);
+				var newBounds = this._getBounds(this._points);
+				// if width or height is different or topbound is different, resizecommand
+				// if left or top is different, movecommand
+				// normalize newpoints to zero
+				if(newBounds.w != oldBounds.w || newBounds.h != oldBounds.h){
+					command.add(new ResizeCommand(widget, newBounds.w, newBounds.h, undefined /*apply to Normal state*/));
+				}
+				var position = dojo.style(widget.domNode, 'position');
+				var absolute = (position == 'absolute');
+				if(absolute && (newBounds.x != oldBounds.x || newBounds.y != oldBounds.y)){
+					var oldLeft = parseInt(dojo.style(widget.domNode, 'left'));
+					var oldTop = parseInt(dojo.style(widget.domNode, 'top'));
+					var newLeft = oldLeft + (newBounds.x - oldBounds.x);
+					var newTop = oldTop + (newBounds.y - oldBounds.y);
+					command.add(new MoveCommand(widget, newLeft, newTop));	/*apply to Normal state*/
+				}
 			}
 			var points;
-			// Line widget requires at least 2 points
+			// Normalize coordinates such that (0,0) is aligned with SPAN's top/left
 			if(this._points.length === 1){
+				// Line widget requires at least 2 points
 				points = '0,0,0,0';
 			}else{
 				points = '';
-				for(i=0; i<this._points.length; i++){
+				for(var i=0; i<this._points.length; i++){
 					var pt = this._points[i];
 					if(i > 0){
 						points += ',';
 					}
-					//points += (pt.x - min_x) + ',' + (pt.y - min_y);
-					points += pt.x  + ',' + pt.y;
+					points += (pt.x - newBounds.x) + ',' + (pt.y - newBounds.y);
 				}
 			}
-console.log('points='+points);
 			var properties = { points:points };
-			command.add(new davinci.ve.commands.ModifyCommand(widget, properties));
+			command.add(new ModifyCommand(widget, properties));
 		}
+	},
+	
+	_getBounds: function(points){
+		if(!points && !points.length){
+			return;
+		}
+		var min_x = points[0].x;
+		var min_y = points[0].y;
+		var max_x = min_x;
+		var max_y = min_y;
+		for(var i=1; i<points.length; i++){
+			var pt = points[i];
+			if(pt.x < min_x){
+				min_x = pt.x;
+			}
+			if(pt.y < min_y){
+				min_y = pt.y;
+			}
+			if(pt.x > max_x){
+				max_x = pt.x;
+			}
+			if(pt.y > max_y){
+				max_y = pt.y;
+			}
+		}
+		return {x:min_x, y:min_y, w:max_x - min_x, h:max_y - min_y};
 	},
 	
 	_setCSS3Property: function(node, domProperty, value){
@@ -202,6 +245,28 @@ console.log('points='+points);
 		var radians =  Math.atan2(dy, dx);
 		o.degrees = radians * 180 / Math.PI;
 		return o;
+	},
+	
+	_getPointsInPageUnits: function(widget){
+		if(!widget || !widget.domNode || !widget.domNode.offsetParent || !widget.dijitWidget || !widget.dijitWidget._points){
+			return;
+		}
+		var node = widget.domNode;
+		var offsetLeft = node.offsetLeft;
+		var offsetTop = node.offsetTop;
+		var pn = node.offsetParent;
+		while(pn && pn.tagName != 'BODY'){
+			offsetLeft += pn.offsetLeft;
+			offsetTop += pn.offsetTop;
+			pn = pn.offsetParent;
+		}
+		var points = widget.dijitWidget._points;
+		var pointsPageUnits = [];
+		for(var i=0; i<points.length; i++){
+			var pt = points[i];
+			pointsPageUnits.push({x:pt.x + offsetLeft, y:pt.y + offsetTop});
+		}
+		return pointsPageUnits;
 	}
 
 });

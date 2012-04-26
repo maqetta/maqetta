@@ -1,0 +1,21 @@
+{
+    "id": "http://jquerymobile.com/js/jquery.mobile.form.button",
+    "name": "jquery.mobile.form.button",
+    "spec": "1.0",
+    "version": "1.0.1",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "jquery.mobile/js/jquery.mobile.min",
+            "$library": "jquery.mobile"
+        }
+    ],
+    "library": {
+        "jquery.mobile": {
+            "src": "../../../jquery.mobile/js/jquery.mobile.min.js"
+        }
+    },
+    "property": {},
+    "content": ""
+}

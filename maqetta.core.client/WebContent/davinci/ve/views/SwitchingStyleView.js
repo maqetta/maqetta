@@ -273,8 +273,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				// dojo.hitch to make sure there are different function
 				// instances for each button with correct title/index values
 				dojo.hitch(this, 
-					function(key,index){
-						HTMLStringUtil.transitionRootToSection(key,
+					function(key, title, index){
+						HTMLStringUtil.transitionRootToSection(key,title,
 							// dojo.hitch necessary to provide "this" object
 							dojo.hitch(this,function(){
 								var visibleCascade = this._getVisibleCascade(index);
@@ -284,7 +284,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 							})
 						);
 					},
-					this.pageTemplate[i].key,i)
+					this.pageTemplate[i].key,this.pageTemplate[i].title,i)
 			);
 			dojo.connect(sectionButton,"onmouseover",
 					function(event){
@@ -546,6 +546,14 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 			t.destroy();
 		});
 		this._tooltips = undefined;
+	},
+	
+	sectionTitleFromKey: function(key){
+		for(var i=0;i<this.pageTemplate.length;i++){
+			if(this.pageTemplate[i].key == key){
+				return this.pageTemplate[i].title;
+			}
+		}
 	}
 
 });

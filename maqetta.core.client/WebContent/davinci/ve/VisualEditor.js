@@ -92,7 +92,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
 				resizeBody(bodyElem, newPos);
-				setTimeout(function() { visualEditor.getContext().select(visualEditor.getSelectedWidget()); }, 100); //FIXME: should call updateFocus
+				setTimeout(function() {
+					visualEditor.getContext().updateFocusAll(); 
+				}, 100); 
 				if(!visualEditor._scrollHandler){
 					visualEditor._scrollHandler = connect.connect(iframe.contentDocument, 'onscroll', this, function(e){
 						resizeBody(bodyElem, {
@@ -319,15 +321,11 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		this.basePath = new Path(filename);
 	   
 		if (!this.initialSet){
-			var loc = Workbench.location();
-			//FIXME: replace this stuff with a regexp
-			if (loc.charAt(loc.length-1)=='/'){
-				loc=loc.substring(0,loc.length-1);
-			}
+		   	var workspaceUrl = Runtime.getUserWorkspaceUrl();
 		   	while(filename.charAt(0) == "." || filename.charAt(0) == "/"){
 		   		filename = filename.substring(1,filename.length);
 			}				
-			var baseUrl=loc+'/user/'+Runtime.userName+'/ws/workspace/'+filename;
+		   	var baseUrl=workspaceUrl+filename;
 
 			this._handles=[];
 			var containerNode = dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];

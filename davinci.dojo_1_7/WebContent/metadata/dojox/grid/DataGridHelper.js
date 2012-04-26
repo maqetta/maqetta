@@ -7,7 +7,8 @@ define([
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLText",
-	"../../dojo/data/DataStoreBasedWidgetInput"
+	"../../dojo/data/DataStoreBasedWidgetInput",
+	"dojo/i18n!../nls/dojox",
 ], function(
 	array,
 	form,
@@ -17,7 +18,8 @@ define([
 	RemoveCommand,
 	HTMLElement,
 	HTMLText,
-	DataStoreBasedWidgetInput
+	DataStoreBasedWidgetInput,
+	nlsDojox
 ) {
 
 var DataGridHelper = function() {};
@@ -243,7 +245,40 @@ DataGridHelper.prototype = {
 		if (useDataDojoProps) {
 			srcElement.removeAttribute("store");
 		}
-	}
+	},
+	
+	 preProcess: function(node, context){
+
+		 // User scripts are not loaded in page designer so replace the function in page designer only to keep the widget happy
+		  var s = node.getAttribute('structure');
+	      if (s){
+	    	  var funcNotDefined = false;
+	    	  var num = 0; // fail safe to prevent endless loop
+	    	  do
+	    	  {
+	    		  try {
+	    			  // if the structure has a formatter an exception will be thrown
+	    			  // for undefined function
+		    		  context.getDojo().fromJson(s);
+		    		  funcNotDefined = false;
+		    	  }catch(e){
+		    		 var args = e.toString().split(' ');
+		    		 if (args.length > 4 && args[0] === 'ReferenceError:' && args[3] === 'not' && args[4] === 'defined'){
+		    			 // format function not defined
+		    			 context.getGlobal()[args[1]] = function(value, row) { return dojo.string.substitute(nlsDojox.properyNotSupported, ['formatter']);}
+		    			 funcNotDefined = true;
+		    			 num++;
+		    		 } else {
+		    			 funcNotDefined = false;
+		    		 }
+		    	  }
+	    	  }
+	    	  // lets keep doing this loop until all the format functions are defined.
+	    	  while (funcNotDefined && num < 1000); // no one will have more than 1000 formatters
+
+	      }
+	    
+   }
 };
 
 return DataGridHelper;

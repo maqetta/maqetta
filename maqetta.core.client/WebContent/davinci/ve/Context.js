@@ -525,7 +525,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// dojox.mobile specific CSS file handling
 
-        var dm = this.getDojo().getObject("dojox.mobile");
+        var dm = lang.getObject("dojox.mobile", false, this.getGlobal());
         if(dm && dm.loadDeviceTheme) {
         	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
@@ -710,8 +710,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return true;
 		}
 
-
-		this._loadThemeDojoxMobile(this);
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
@@ -722,21 +720,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
     },
     
-// FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
-    _loadThemeDojoxMobile: function(context) {
-        var head = context.getDocumentElement().getChildElement('head');
-        head.getChildElements('script').some(function(tag) {
-            var text = tag.getElementText();
-            // Look for a dojox.mobile.themeMap in the document, if found set the themeMap
-            return text.length && text.indexOf('dojoxMobile.themeMap=') !== -1;
-        });
-    },
+
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){
 		// clear cached values
-		this._requireHtmlElem = null;
-		this._dojoScriptElem = null;
+		delete this._requireHtmlElem;
+		delete this._dojoScriptElem;
 
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);
@@ -866,11 +856,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// to bootstrap references to base dijit methods in container
 				dependencies = dependencies.concat(requires); 
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl +
-						"\" data-dojo-config=\"" +
-						JSON.stringify(config).slice(1, -1).replace(/"/g, "'") +
-						"\"></script>" +
-						"<script type=\"text/javascript\">require(" +
+				head += this._generateDojoScript(dojoUrl, config) +
+						"<script>require(" +
 						JSON.stringify(dependencies) +
 						", top.loading" + this._id + ");</script>";
 			}
@@ -1068,6 +1055,41 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		packages.push({name: 'maqetta', location: '../../../maqetta'});
 
 		return packages;
+	},
+
+	/**
+	 * Generate a string containing the script element for "dojo.js", pulling in
+	 * any attributes from the source file, while also merging in any attributes
+	 * that are passed in.
+	 * 
+	 * @param  {String} dojoUrl
+	 * @param  {Object} config
+	 * @return {String}
+	 */
+	_generateDojoScript: function(dojoUrl, config) {
+		var dojoScript = this._getDojoJsElem(),
+			djConfig = dojoScript.getAttribute('data-dojo-config')
+			text = ['<script src="' + dojoUrl + '"'];
+
+		// special handling for 'data-dojo-config' attr
+		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
+		// give precedence to our 'config' options, over that in file; make sure
+		// to turn off parseOnLoad
+		lang.mixin(djConfig, config, {parseOnLoad: false});
+		text.push('data-dojo-config="' +
+				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'") + '"')
+
+		// handle any remaining attributes
+		dojoScript.attributes.forEach(function(attr) {
+			var name = attr.name,
+				val = attr.value;
+			if (name !== 'src' && name !== 'data-dojo-config') {
+				text.push(name + '="' + val + '"');
+			}
+		});
+
+		text.push('></script>');
+		return text.join(' ');
 	},
 
 	_setSourceData: function(data){
@@ -2185,15 +2207,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					data.modules.push(module);
 				});
 			}
-			
-			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-			if (/.*(\/)*maqetta\/States.js$/.test(value)) { //remove?
-				this._statesJsScriptTag = scriptTag;
-			}
 		}, this);
-		if (!this._statesJsScriptTag) {   // XXX Bug 7499
-			console.warn("Failed to find States.js script tag.  States and dojox.mobile widgets may not work properly");
-		}
+
 		var styleTags=head.getChildElements("style");
 		dojo.forEach(styleTags, function (styleTag){
 			dojo.forEach(styleTag.children,function(styleRule){
@@ -2311,6 +2326,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 	},
 
+	ruleSetAllProperties: function(rule, values){
+		rule.removeAllProperties();
+		for(i = 0;i<values.length;i++){
+			for(var name in values[i]){
+				if (values[i][name] && values[i][name] !== '') {
+					rule.addProperty(name, values[i][name]);
+				}
+			}
+		}
+	},
+	
 	modifyRule: function(rule, values){
 		var i,
 			p,
@@ -2562,6 +2588,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (!isDojoJS && !skipDomUpdate) {
 			var context = this,
 				absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+			// This xhrGet() used to include `handleAs: "javascript"`, surrounded
+			// by a `dojo.withGlobal`.  However, `dojo.eval` regressed in Dojo 1.7,
+			// such that it no longer evals using `dojo.global` -- instead evaling
+			// into the global context. To work around that, we do our own `eval` call.
 			dojo.xhrGet({
 				url: absoluteUrl,
 				sync: true    // XXX -> async
@@ -2697,18 +2727,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		
 		var head = this.getDocumentElement().getChildElement('head');
-		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
-		//	"dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
-		//	the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
-		//	inserts all scripts before States.js.
-		//	First, make sure that we've properly saved the location of States.js.  If, for
-		//	whatever reason, this is not the case, then fall back to the original code of
-		//	appending script to <head>.
-		if (this._statesJsScriptTag) {
-			head.insertBefore(script, this._statesJsScriptTag);
-		} else {
-			head.addChild(script);
-		}
+		head.addChild(script);
 		
 		//this.getHeader().scripts.push(url);
 	},
@@ -2853,16 +2872,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 	},
 
-////////////////////////////////////////////////////////////////////////////////
-// XXX move this section to Dojo library?
-	/**
-	 * Update the value of `data-dojo-config` attribute in the model element
-	 * pointing to "dojo.js".  Properties in `data` overwrite existing value;
-	 * null values remove properties from `data-dojo-config`.
-	 *
-	 * @param  {Object} data
-	 */
-	_updateDojoConfig: function(data) {
+	_getDojoJsElem: function() {
 		if (!this._dojoScriptElem) {
 			// find and cache the HTMLElement which points to dojo.js
 			var head = this.getDocumentElement().getChildElement('head'),
@@ -2874,11 +2884,26 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}, this);
 			if (!found) {
 				// serious problems! dojo.js not found
+				console.error('"dojo.js" script element not found!');
 				return;
 			}
 		}
 
-		var dojoScript = this._dojoScriptElem,
+		return this._dojoScriptElem;
+	},
+
+	/**
+	 * Update the value of `data-dojo-config` attribute in the model element
+	 * pointing to "dojo.js".  Properties in `data` overwrite existing value;
+	 * null values remove properties from `data-dojo-config`.
+	 * 
+	 * Note: This only updates the model. In order for the change to take in
+	 * the VE, you will need to refresh the iframe from the updated source.
+	 * 
+	 * @param  {Object} data
+	 */
+	_updateDojoConfig: function(data) {
+		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
 
@@ -2896,6 +2921,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'"));
 	},
 
+////////////////////////////////////////////////////////////////////////////////
+// XXX move this section to Dojo library?
 	_addCssForDevice: function(localDevice, themeMap, context) {
 		for (var i = 0, len = themeMap.length; i < len; i++) {
 			var item = themeMap[i];
@@ -2923,14 +2950,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
 		// monitoring of which stylesheets get loaded for a given theme
 
-		var dm = this.getDojo().getObject("dojox.mobile", true);
+		var dm = lang.getObject("dojox.mobile", true, this.getGlobal());
 		dm.configDeviceTheme = function() {
 			var loadDeviceTheme = dm.loadDeviceTheme;
 
 			dm.loadDeviceTheme = function(device) {
 				var djConfig = this.getDojo().config,
+					djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
 					ua = device || djConfig.mblUserAgent || 'none',
-					themeMap = djConfig.themeMap;
+					themeMap,
+					themeFiles;
+
+				djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
+				themeMap = djConfigModel.themeMap;
+				themeFiles = djConfigModel.mblThemeFiles;
 
 				// clear dynamic CSS
 				delete this.themeCssfiles;
@@ -2942,6 +2975,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
 				}
 				this._addCssForDevice(ua, themeMap, this);
+
+				// set/unset themeMap & themeFiles in VE DOM
+				// XXX This won't work for Dojo 1.8, will need to set `themeMap` on
+				//     Dojo config obj and reload VE iframe.
+				dm.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+				if (themeFiles) {
+					djConfig.mblThemeFiles = themeFiles;
+				} else {
+					delete djConfig.mblThemeFiles;
+				}
 
 				if (this._selection) {
 					// forces style palette to update cascade rules

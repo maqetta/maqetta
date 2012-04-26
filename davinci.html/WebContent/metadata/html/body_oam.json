@@ -15,14 +15,14 @@
             "$library": "dojo"
         },
         {
-            "type": "javascript",
-            "src": "maqetta/maqetta.js",
-            "$library": "maqetta"
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "maqetta/space"
         },
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "maqetta/States"
+            "src": "maqetta/AppStates"
         }
     ],
     "library": {

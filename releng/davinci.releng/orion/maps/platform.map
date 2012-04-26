@@ -1,4 +1,4 @@
-feature@org.eclipse.license=v20110208,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.sdk-feature/features/org.eclipse.license
+feature@org.eclipse.license=GIT,tag=v20110208,repo=git://git.eclipse.org/gitroot/platform/eclipse.platform.releng.git,path=features/org.eclipse.license
 
 plugin@org.eclipse.core.contenttype=p2IU,id=org.eclipse.core.contenttype,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.eclipse.core.expressions=p2IU,id=org.eclipse.core.expressions,repository=ECLIPSE_PLATFORM_REPO
@@ -93,27 +93,11 @@ plugin@com.ibm.icu=p2IU,id=com.ibm.icu,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.apache.commons.logging=p2IU,id=org.apache.commons.logging,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.apache.commons.el=p2IU,id=org.apache.commons.el,repository=ECLIPSE_PLATFORM_REPO
 
-#UI bits
-plugin@org.eclipse.ui=p2IU,id=org.eclipse.ui,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.ui.workbench=p2IU,id=org.eclipse.ui.workbench,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.core.databinding=p2IU,id=org.eclipse.core.databinding,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.core.databinding.observable=p2IU,id=org.eclipse.core.databinding.observable,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.core.databinding.property=p2IU,id=org.eclipse.core.databinding.property,repository=ECLIPSE_PLATFORM_REPO
+#UI bits for orion server UI
 plugin@org.eclipse.ui.workbench.texteditor=p2IU,id=org.eclipse.ui.workbench.texteditor,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.eclipse.ui.console=p2IU,id=org.eclipse.ui.console,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.jface=p2IU,id=org.eclipse.jface,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.eclipse.jface.text=p2IU,id=org.eclipse.jface.text,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.swt=p2IU,id=org.eclipse.swt,repository=ECLIPSE_PLATFORM_REPO
-fragment@org.eclipse.swt.gtk.linux.x86_64=p2IU,id=org.eclipse.swt.gtk.linux.x86_64,repository=ECLIPSE_PLATFORM_REPO
-fragment@org.eclipse.swt.gtk.linux.x86=p2IU,id=org.eclipse.swt.gtk.linux.x86,repository=ECLIPSE_PLATFORM_REPO
-fragment@org.eclipse.swt.win32.win32.x86=p2IU,id=org.eclipse.swt.win32.win32.x86,repository=ECLIPSE_PLATFORM_REPO
-fragment@org.eclipse.swt.win32.win32.x86_64=p2IU,id=org.eclipse.swt.win32.win32.x86_64,repository=ECLIPSE_PLATFORM_REPO
-fragment@org.eclipse.swt.cocoa.macosx=p2IU,id=org.eclipse.swt.cocoa.macosx,repository=ECLIPSE_PLATFORM_REPO
-fragment@org.eclipse.swt.cocoa.macosx.x86_64=p2IU,id=org.eclipse.swt.cocoa.macosx.x86_64,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.core.commands=p2IU,id=org.eclipse.core.commands,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.eclipse.core.variable=p2IU,id=org.eclipse.core.variable,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.eclipse.compare.core=p2IU,id=org.eclipse.compare.core,repository=ECLIPSE_PLATFORM_REPO
 plugin@org.eclipse.text=p2IU,id=org.eclipse.text,repository=ECLIPSE_PLATFORM_REPO
-plugin@org.eclipse.jface.databinding=p2IU,id=org.eclipse.jface.databinding,repository=ECLIPSE_PLATFORM_REPO
-
 

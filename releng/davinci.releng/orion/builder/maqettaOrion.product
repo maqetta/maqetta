@@ -38,6 +38,20 @@
       <feature id="maqetta.orion.feature"/>
       <feature id="org.eclipse.orion"/>
    </features>
-
+  <configurations>
+      <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.orion.server.configurator" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.git" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.search" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.servlets" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.user.securestorage" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.orion.server.useradmin.xml" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <property name="eclipse.buildId" value="I20120425-1416" />
+      <property name="org.eclipse.update.reconcile" value="false" />
+   </configurations>
 
 </product>

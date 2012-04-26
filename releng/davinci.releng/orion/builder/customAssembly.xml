@@ -53,41 +53,47 @@
 	<!-- In addititon to the properties listed above:						   -->
 	<!--    - rootFolder : the folder containing the root files                -->
 	<!-- ===================================================================== -->
+	<target name="cleanup.assembly">
+		<echo message="setting +x on maqetta launch scripts"/>
+		<property name="assemblyTempDir" value="${buildDirectory}/tmp"/>
+		<mkdir dir ="${assemblyTempDir}"/>
+		<unzip dest="${assemblyTempDir}" src="${archiveFullPath}" />
+		<zip destfile="maqetta-${archiveFullPath}" filesonly="false" >
+			<zipfileset dir="${assemblyTempDir}/eclipse" includes="**/**" excludes="*.command,*.sh"/>
+				    <zipfileset dir="${assemblyTempDir}/eclipse" includes="*.command" filemode="755" />
+				    <zipfileset dir="${assemblyTempDir}/eclipse" includes="*.sh" filemode="755" />
+		</zip>
+		<delete dir ="${assemblyTempDir}"/>
+		<delete file="${archiveFullPath}" />
+		
+	</target>
 	
 	<target name="pre.archive">
-	
-	</target>
-	<target name="pre.archiveOld">
 <!-- ===================================================================== -->
 <!-- MAQETTA ADDITION		-->
 <!-- copy maqetta bat and command files into zip                          -->
 <!-- ===================================================================== -->
+		
 		<property name="productDir" value="${builder}/scripts" />
 		<property name="copyTo" value="${eclipse.base}" />
 		<echo message="Copying maqetta build scripts in...."/>
-		<echo message="BUilder: ${builder}"/>
-		<echo message="Root folder: ${copyTo}"/>
-		<echo message="Product Directory: ${productDir}"/>
-			
 			<copy toDir="${copyTo}" >
 			  <fileset dir="${productDir}">
-		  		<include name="maqetta.local.win.bat"/>
-	  			<include name="maqetta.server.win.bat"/>
-	  			<include name="maqetta.local.mac.command"/>
+		  		<include name="maqetta.server.win.bat"/>
+			  	<include name="maqetta.server.sh"/>
 	  			<include name="maqetta.server.mac.command"/>
 	  			<include name="README.html"/>
 	  			<include name="LICENSE"/>
 			  </fileset>
 			</copy>
-			<copy file="${productDir}/maqetta.local.mac.command" tofile="${copyTo}/maqetta.local.unix.sh"/>
-			<copy file="${productDir}/maqetta.server.mac.command" tofile="${copyTo}/maqetta.server.unix.sh"/>
-			<chmod perm="ugo+rxw">
+
+			<chmod perm="0755">
 			  <fileset dir="${copyTo}">
 	  			<include name="*.command"/>
 	  			<include name="*.sh"/>
 			  </fileset>
 			</chmod>
-
+	
 	</target>
 	
 	<!-- ===================================================================== -->

@@ -58,7 +58,8 @@ setProperties () {
 	# save off the current directory
 	#
 	# run dojo build by default
-	[ "${MAQETTA_DOJO_BUILD}" ] || MAQETTA_DOJO_BUILD=true
+	#[ "${MAQETTA_DOJO_BUILD}" ] || 
+	export MAQETTA_DOJO_BUILD=false
 	export buildDirectory=${MAQETTA_BUILD_DIR}
 	
 

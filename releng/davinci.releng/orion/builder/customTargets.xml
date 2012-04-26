@@ -56,6 +56,44 @@ lastMapTag=${mapsTagTag}
 		</p2.mirror>
 	</target>
 
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+
+	    <!-- emf needs to be part of the "runnable" target, since Eclipse wants to "require" EMF, 
+	         not "include" it -->
+	            
+		<echo message="Mirror from ${emfRepoURL} to ${localRepoLocation}" />
+		<p2.mirror destination="file:${localRepoLocation}" ignoreerrors="true">
+			<source location="${emfRepoURL}" />
+			<slicingOptions includeOptional="false" includeNonGreedy="false" latestVersionOnly="true" followStrict="true" />
+			<iu id="org.eclipse.emf.ecore.feature.group" version="0.0.0" />
+			<iu id="org.eclipse.emf.common.feature.group" version="0.0.0" />
+			<iu id="org.eclipse.emf.ecore.source.feature.group" version="0.0.0" />
+			<iu id="org.eclipse.emf.common.source.feature.group" version="0.0.0" />
+		</p2.mirror>
+
+		<!-- mirror Eclipse RCP feature and all prerequisites -->
+		<echo message="Mirror from ${eclipsePlatformRepo} to ${localRepoLocation}" />
+		<p2.mirror destination="file:${localRepoLocation}" ignoreerrors="true">
+			<source location="${eclipsePlatformRepo}" />
+			<slicingOptions includeOptional="false" includeNonGreedy="false" latestVersionOnly="true" followStrict="true" />
+			<iu id="org.eclipse.rcp.feature.group" version="0.0.0" />
+		</p2.mirror>
+		
+		<!-- convert to runnable form -->
+        <echo message="creating runnable in preSetup" />
+        <echo message="basedir: ${basedir}" />
+		<echo message="buildDirectory: ${buildDirectory}" />	    
+	    <echo message="transformedRepoLocation: ${transformedRepoLocation}" />
+		<p2.repo2runnable destination="${transformedRepoLocation}">
+			<source location="file:${localRepoLocation}" />
+		</p2.repo2runnable>
+		
+	</target>
+
+	
 	<target name="postFetch">
 		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
 			<replacefilter token="HEAD" value="${buildLabel}" />
@@ -254,26 +292,5 @@ lastMapTag=${mapsTagTag}
 			<regexpmapper from="^(.*)/feature.temp.folder/plugins/(.*)" to="\2" />
 		</copy>
 	</target>
-	<target name="postPackage">
-	<!-- ===================================================================== -->
-	<!-- MAQETTA ADDITION		-->
-	<!-- rebuild zip file to just what is needed for maqetta		-->
-	<!-- ===================================================================== -->
-			<!--
-			<property name="archiveFullPath" value="${buildDirectory}/${buildLabel}/${archiveNamePrefix}-${myOS}.${myWS}.${myArch}.zip"/>
-			<property name="assemblyTempDir" value="${buildDirectory}/tmp"/>
-			<property name="davinciZipPath" value="${buildDirectory}/${buildLabel}/${maqettaArchiveName}"/>
-			<mkdir dir ="${assemblyTempDir}"/>
-			<unzip dest="${assemblyTempDir}" src="${archiveFullPath}" />
-			<zip destfile="${davinciZipPath}" filesonly="false" >
-				<zipfileset dir="${assemblyTempDir}/eclipse" includes="**/**" excludes="*.command,*.sh"/>
-			    <zipfileset dir="${assemblyTempDir}/eclipse" includes="*.command" filemode="755" />
-			    <zipfileset dir="${assemblyTempDir}/eclipse" includes="*.sh" filemode="755" />
-			</zip>
-			<delete dir ="${assemblyTempDir}"/>
-			<delete file="${archiveFullPath}" />
-		-->
-		</target>
-		
-	
+
 </project>

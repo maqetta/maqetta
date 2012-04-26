@@ -2572,6 +2572,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (doUpdateModel) {				
 			// update the script if found
 			var head = this.getDocumentElement().getChildElement('head'),
+				config = {
+					async: true,
+					parseOnLoad: true,
+					packages: this._getLoaderPackages()
+				},
 				found = head.getChildElements('script').some(function(element) {
 					var elementUrl = element.getAttribute("src");
 					if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
@@ -2580,27 +2585,24 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					}
 				});
 			if (found) {
-				return;
-			}
-
-			if (isDojoJS) {
-				// special case for dojo.js to provide config attribute
-				// XXX TODO: Need to generalize in the metadata somehow.
-				var config = {
-					async: true,
-					parseOnLoad: true,
-					packages: this._getLoaderPackages()
-				};
-				lang.mixin(config, this._configProps);
-				this.addHeaderScript(url, {
-					"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
-				});
-
-				// TODO: these two dependencies should be part of widget or library metadata
-				this.addJavaScriptModule("dijit/dijit", true, true);
-				this.addJavaScriptModule("dojo/parser", true, true);
-			}else{
-				this.addHeaderScript(url);
+				if (isDojoJS) {
+					this._updateDojoConfig(config);
+				}
+			} else {
+				if (isDojoJS) {
+					// special case for dojo.js to provide config attribute
+					// XXX TODO: Need to generalize in the metadata somehow.
+					lang.mixin(config, this._configProps);
+					this.addHeaderScript(url, {
+						"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
+					});
+	
+					// TODO: these two dependencies should be part of widget or library metadata
+					this.addJavaScriptModule("dijit/dijit", true, true);
+					this.addJavaScriptModule("dojo/parser", true, true);
+				}else{
+					this.addHeaderScript(url);
+				}
 			}
 		}
 	},

@@ -33,16 +33,33 @@ return declare(CreateTool, {
 		this._pointsChanged = false;
 //debugger;
 	},
+
+	/**
+	 * In nearly all cases, mouseUp completes the create operation.
+	 * But for certain widgets such as Shapes.line, we allow multi-segment
+	 * lines to be created via multiple [mousedown/]mouseup gestures,
+	 * in which case the widget-specific CreateTool subclass will override this function.
+	 */
+	exitCreateToolOnMouseUp: function(){
+		return this._exitCreateTool;
+	},
+
+	/**
+	 * Returns true if CreateTool.js should create a new widget as part of
+	 * the current create operation, false if just add onto existing widget.
+	 * For this tool (line tool), only create a new widget with first mouseUp.
+	 */
+	createNewWidget: function(){
+		return (this._mouseUpCounter === 0);
+	},
 	
 	onMouseDown: function(event){
-console.log('LineCreateTool.js onMouseDown');
 		this._md_x = event.pageX;
 		this._md_y = event.pageY;
 		this.inherited(arguments);
 	},
 	
 	onMouseMove: function(event){
-console.log('LineCreateTool.js onMouseMove');
 		this.inherited(arguments);
 		
 		// If we've already dropped the first point, or we are dragging out first segment
@@ -77,7 +94,6 @@ console.log('LineCreateTool.js onMouseUp.');
 		// If this is first mouseUp and there was an associated mouseDown
 		// then line will consist of single segment from mousedown location to mouseup location
 		if(this._mouseUpCounter === 0 && typeof this._md_x == 'number'){
-console.log('a');
 			if(this._sameSpot(this._md_x, this._md_y, event.pageX, event.pageY)){
 				this._points.push({x:event.pageX, y:event.pageY});
 			}else{
@@ -86,15 +102,19 @@ console.log('a');
 				this._exitCreateTool = true;
 			}
 			this._pointsChanged = true;
+		
+		// If this is first mouseUp and there was not an associated mouseDown,
+		// then user dragged/dropped from widget palette onto canvas,
+		// in which case use the default shape defined by widget metadata
+		}else if(this._mouseUpCounter === 0){
+			this._exitCreateTool = true;
 			
 		// If mouseUp is within <n> pixels of previous mouseUp, then exist CreateTool.
 		}else if(this._mouseUpSameSpot(event.pageX, event.pageY)){
-console.log('b');
 			this._exitCreateTool = true;
 		
 		// Otherwise, add mouseUp position to list of points
 		}else{
-console.log('c');
 			this._points.push({x:event.pageX, y:event.pageY});
 			this._pointsChanged = true;
 		}
@@ -109,62 +129,15 @@ console.log('c');
 			this._dragLine = false;
 		}
 	},
-
-	/**
-	 * In nearly all cases, mouseUp completes the create operation.
-	 * But for certain widgets such as Shapes.line, we allow multi-segment
-	 * lines to be created via multiple [mousedown/]mouseup gestures,
-	 * in which case the widget-specific CreateTool subclass will override this function.
-	 */
-	exitCreateToolOnMouseUp: function(){
-console.log('exitCreateToolOnMouseUp this._exitCreateTool='+this._exitCreateTool);
-console.trace();
-		return this._exitCreateTool;
-	},
-
-	/**
-	 * Returns true if CreateTool.js should create a new widget as part of
-	 * the current create operation, false if just add onto existing widget.
-	 * For this tool (line tool), only create a new widget with first mouseUp.
-	 */
-	createNewWidget: function(){
-		return (this._mouseUpCounter === 0);
-	},
-	
-	_sameSpot: function(x1, y1, x2, y2){
-		var tolerance = 7;
-		return (Math.abs(x2 - x1) <= tolerance && Math.abs(y2 - y1) <= tolerance);
-	},
-	
-	_mouseUpSameSpot: function(x, y){
-		if(this._points.length === 0){
-console.log('_mouseUpSameSpot  false - this._points.length == 0');
-			return false;
-		}else{
-			var lastPoint = this._points[this._points.length-1];
-console.log('_mouseUpSameSpot. x='+x+',y='+y+',lastPoint.x='+lastPoint.x+',lastPoint.y='+lastPoint.y);
-			if(this._sameSpot(x, y, lastPoint.x, lastPoint.y)){
-console.log('true - < tolerance');
-				return true;
-			}else{
-console.log('false - >= tolerance');
-				return false;
-			}
-		}
-	},
 	
 	addToCommandStack: function(command, params){
-console.log('addToCommandStack entered');
-for(var j=0; j<this._points.length; j++){
-	console.log('this._points['+j+']= x:'+this._points[j].x+', y:'+this._points[j].y);
-}
 		var widget = params.widget;
 		if(this._pointsChanged && widget){
 			var oldPoints = this._getPointsInPageUnits(widget);
+			var newBounds = this._getBounds(this._points);
 			if(oldPoints){
 				// Do a bunch of math comparing old points list to new points list
 				var oldBounds = this._getBounds(oldPoints);
-				var newBounds = this._getBounds(this._points);
 				// if width or height is different or topbound is different, resizecommand
 				// if left or top is different, movecommand
 				// normalize newpoints to zero
@@ -198,6 +171,25 @@ for(var j=0; j<this._points.length; j++){
 			}
 			var properties = { points:points };
 			command.add(new ModifyCommand(widget, properties));
+		}
+	},
+	
+	_sameSpot: function(x1, y1, x2, y2){
+		var tolerance = 7;
+		return (Math.abs(x2 - x1) <= tolerance && Math.abs(y2 - y1) <= tolerance);
+	},
+	
+	_mouseUpSameSpot: function(x, y){
+		if(this._points.length === 0){
+console.log('_mouseUpSameSpot  false - this._points.length == 0');
+			return false;
+		}else{
+			var lastPoint = this._points[this._points.length-1];
+			if(this._sameSpot(x, y, lastPoint.x, lastPoint.y)){
+				return true;
+			}else{
+				return false;
+			}
 		}
 	},
 	

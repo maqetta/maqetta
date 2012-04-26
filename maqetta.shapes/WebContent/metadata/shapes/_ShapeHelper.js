@@ -1,9 +1,11 @@
 define([
+	"davinci/Runtime",
+	"davinci/ve/tools/CreateTool",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/widget"
-], function(CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
+], function(Runtime, CreateTool, CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
 
 var _ShapeHelper = function() {};
 _ShapeHelper.prototype = {
@@ -75,6 +77,17 @@ _ShapeHelper.prototype = {
 	},
 
 	onMouseDown: function(e){
+		// Don't process this event if current tool is CreateTool because
+		// that means that mouse operations are adding points.
+		var currentEditor = Runtime.currentEditor;
+		var context = (currentEditor.getContext && currentEditor.getContext());
+		if(context){
+			var tool = (context.getActiveTool && context.getActiveTool());
+			if(!tool || tool.isInstanceOf(davinci.ve.tools.CreateTool)){
+				return;
+			}
+		}
+		
 		e.stopPropagation();
 		var domNode = this._widget.domNode;
 		this._origSpanPos = dojo.position(domNode, true);

@@ -631,7 +631,10 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		if(this.addToCommandStack){
 			this.addToCommandStack(command, {widget:w})
 		}
-		this._context.getCommandStack().execute(command);
+		if(!command.isEmpty()){
+			this._context.getCommandStack().execute(command);
+		}
+		
 		if(w.isLayoutContainer){
 			w.resize();
 		}

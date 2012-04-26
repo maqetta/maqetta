@@ -120,6 +120,7 @@ return declare(CreateTool, {
 			
 		// If mouseUp is within <n> pixels of previous mouseUp, then exit CreateTool.
 		}else if(this._mouseUpSameSpot(event.pageX, event.pageY)){
+			this._pointsChanged = false;
 			this._exitCreateTool = true;
 		
 		// Otherwise, add mouseUp position to list of points

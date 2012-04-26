@@ -88,6 +88,9 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 
 	getParent: function() {
 		var widget;
+		if(!this.dijitWidget || !this.dijitWidget.domNode || !this.dijitWidget.domNode.parentNode){
+			return;
+		}
 		do{
 			widget = require("davinci/ve/widget").getEnclosingWidget(this.dijitWidget.domNode.parentNode);
 		}while(widget && widget.dijitWidget && widget.dijitWidget.declaredClass.split(".").pop().charAt(0) == "_");

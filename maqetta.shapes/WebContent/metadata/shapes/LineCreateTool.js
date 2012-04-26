@@ -31,7 +31,6 @@ return declare(CreateTool, {
 		this._exitCreateTool = false;
 		this._points = [];
 		this._pointsChanged = false;
-//debugger;
 	},
 
 	/**
@@ -62,7 +61,7 @@ return declare(CreateTool, {
 	onMouseMove: function(event){
 		this.inherited(arguments);
 		
-		// If we've already dropped the first point, or we are dragging out first segment
+		// If we've already dropped the first point, or we are dragging out first segment,
 		// draw a line to current mouse location
 		if(this._mouseUpCounter > 0 || typeof this._md_x == 'number'){
 			if(!this._dragLine){
@@ -80,9 +79,19 @@ return declare(CreateTool, {
 				o = this._getDistanceAndAngle(this._md_x, this._md_y, event.pageX, event.pageY);
 			}else{
 				var pt = this._points[this._points.length-1];
-				style.left = pt.x + 'px';
-				style.top = pt.y + 'px';
-				o = this._getDistanceAndAngle(pt.x, pt.y, event.pageX, event.pageY);
+				var start_x = pt.x;
+				var start_y = pt.y;
+				if(this._widget && this._widget.domNode && this._widget.dijitWidget &&  this._widget.dijitWidget._points){
+					var node = this._widget.domNode;
+					var position = dojo.position(node, true);
+					var oldPoints = this._widget.dijitWidget._points;
+					var lastPoint = oldPoints[oldPoints.length-1];
+					start_x = position.x + lastPoint.x;
+					start_y = position.y + lastPoint.y;
+				}
+				style.left = start_x + 'px';
+				style.top = start_y + 'px';
+				o = this._getDistanceAndAngle(start_x, start_y, event.pageX, event.pageY);
 			}
 			style.width = o.distance + 'px';
 			this._setCSS3Property(this._dragLine, 'transform','rotate('+o.degrees+'deg)');
@@ -109,7 +118,7 @@ console.log('LineCreateTool.js onMouseUp.');
 		}else if(this._mouseUpCounter === 0){
 			this._exitCreateTool = true;
 			
-		// If mouseUp is within <n> pixels of previous mouseUp, then exist CreateTool.
+		// If mouseUp is within <n> pixels of previous mouseUp, then exit CreateTool.
 		}else if(this._mouseUpSameSpot(event.pageX, event.pageY)){
 			this._exitCreateTool = true;
 		
@@ -135,6 +144,8 @@ console.log('LineCreateTool.js onMouseUp.');
 		if(this._pointsChanged && widget){
 			var oldPoints = this._getPointsInPageUnits(widget);
 			var newBounds = this._getBounds(this._points);
+			var position = dojo.style(widget.domNode, 'position');
+			var absolute = (position == 'absolute');
 			if(oldPoints){
 				// Do a bunch of math comparing old points list to new points list
 				var oldBounds = this._getBounds(oldPoints);
@@ -144,8 +155,6 @@ console.log('LineCreateTool.js onMouseUp.');
 				if(newBounds.w != oldBounds.w || newBounds.h != oldBounds.h){
 					command.add(new ResizeCommand(widget, newBounds.w, newBounds.h, undefined /*apply to Normal state*/));
 				}
-				var position = dojo.style(widget.domNode, 'position');
-				var absolute = (position == 'absolute');
 				if(absolute && (newBounds.x != oldBounds.x || newBounds.y != oldBounds.y)){
 					var oldLeft = parseInt(dojo.style(widget.domNode, 'left'));
 					var oldTop = parseInt(dojo.style(widget.domNode, 'top'));
@@ -175,13 +184,12 @@ console.log('LineCreateTool.js onMouseUp.');
 	},
 	
 	_sameSpot: function(x1, y1, x2, y2){
-		var tolerance = 7;
+		var tolerance = 10;
 		return (Math.abs(x2 - x1) <= tolerance && Math.abs(y2 - y1) <= tolerance);
 	},
 	
 	_mouseUpSameSpot: function(x, y){
 		if(this._points.length === 0){
-console.log('_mouseUpSameSpot  false - this._points.length == 0');
 			return false;
 		}else{
 			var lastPoint = this._points[this._points.length-1];

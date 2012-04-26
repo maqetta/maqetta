@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Visual page editor basic tests (part 4 - Drawing Tools)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Visual page editor basic tests (part 4 - Drawing Tools)</h1>
+
+	<h2 class="test_section">Shape creation - simple drag/drop from widget palette</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Go to preferences and look at "Snap to nearest widget" setting. 
+            <div class='expectedResults_subsection'>It should be on by default.</div></li>
+		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi sketch". Choose any filename.</li>
+		<li>Drag/drop each of the Drawing Tools widgets from the Widgets palette onto the canvas
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Text should show SmartInput to edit the text context</li>
+            		<li>Line and Arrow should create a horizontal line</li>
+            		<li>Polyline and Polyline Arrow should create a default 2-segment polyline</li>
+            		<li>Rectangle, Rounded Rectangle and Circle should create a default shape sized around 100px</li>
+            		<li>You should see snap lines during dragging</li>
+            	</ul>
+            </div></li>
+		<li>Click on each of the Drawing Tools widgets in the Widgets palette, followed by clicking on the canvas.
+			See bullets below for follow-on clicking for polyline widgets.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Text, Line, Arrow, Rectangles and Circle: same results as previous step</li>
+            		<li>The polylines should act differently. The first click should drop the first point of polyline.
+            			Click on canvas 3 more times. You should now have a 3-segment polyline.
+            			Click once more on top of the last point of polyline. This should
+            			complete the polyline and exit "polyline creation" mode.</li>
+            		<li>You should see snap lines as the mouse moves around canvas before first click 
+            			(i.e., after clicking on a widget in widget palette but before first click on canvas to add widget)</li>
+            	</ul>
+            </div></li>
+		<li>Click on each of the Drawing Tools widgets in the Widgets palette, followed by a drag operation on the canvas.
+			See bullets below for follow-on clicking for polyline widgets.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Text isn't resizable, so should result in same operation as previous steps.</li>
+            		<li>Line, Arrow, Rectangles and Circle: the new widget should be the size of the drag area</li>
+            		<li>The polylines should act differently. The first drag should define the size of the first segment.
+            			After the drag, click on canvas 2 more times. You should now have a 3-segment polyline.
+            			Press the ESC key. This should
+            			complete the polyline and exit "polyline creation" mode.</li>
+            		<li>You should see snap lines as the mouse moves around canvas before first click 
+            			(i.e., after clicking on a widget in widget palette but before first click on canvas to add widget)</li>
+            	</ul>
+            </div></li>
+		<li>Repeat the above test with an extra wrinkle. 
+			Click on each of the Drawing Tools widgets in the Widgets palette, followed by a drag operation on the canvas.
+			While dragging, hold down the shift key to constrain the drag.
+			See bullets below for follow-on clicking for polyline widgets.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Text isn't resizable, so should result in same operation as previous steps.</li>
+            		<li>Line, Arrow, Polyline, Polyline Arrow: dragging should force 
+            			the line segment to be either horizontal or verticle</li>
+            		<li>Rectangles and Circle: dragging should force 
+            			the shape into a square aspect ratio (i.e., w=h).</li>
+            	</ul>
+            </div></li>
+		<li>Repeat some of the above tests using a flow-mode document (i.e., New File - hi-fi page).</li>
+	</ol>
+
+</body>
+</html>

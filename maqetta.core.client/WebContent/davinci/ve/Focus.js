@@ -133,8 +133,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var widget = this._selectedWidget;
 		var helper = widget ? widget.getHelper() : undefined;
 		if(helper && helper.onHideSelection){
-			// Don't know if any widgets actually use this helper
-			// Included for completeness
 			helper.onHideSelection({widget:widget, customDiv:this._custom});
 		}
 		this.domNode.style.display = "none";

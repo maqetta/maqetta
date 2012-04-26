@@ -1,12 +1,17 @@
 define([
+	"davinci/Runtime",
+	"dojo/_base/connect",
+	"davinci/ve/tools/CreateTool",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/widget"
-], function(CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
+], function(Runtime, connect, CreateTool, CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
 
 var _ShapeHelper = function() {};
 _ShapeHelper.prototype = {
+		
+	_connects: [],
 	
 	/*
 	 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
@@ -39,6 +44,7 @@ _ShapeHelper.prototype = {
 		var points = draggables.points;
 		if(points){
 			this._dragNobs = [];
+			var handle;
 			for (var i=0; i<points.length; i++){
 				l = points[i].x - centeringShift;
 				t = points[i].y - centeringShift;
@@ -47,7 +53,7 @@ _ShapeHelper.prototype = {
 					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px' }	
 				},div);
 				handle._shapeDraggable = {point:i};
-				handle.addEventListener('mousedown',dojo.hitch(this,this.onMouseDown),false);
+				this._connects.push(connect.connect(handle, 'mousedown', dojo.hitch(this,this.onMouseDown)));
 			}
 		}else{
 			this._dragNobs = null;
@@ -55,7 +61,33 @@ _ShapeHelper.prototype = {
 		return false;
 	},
 
+	/**
+	 * Called by Focus.js right after Maqetta hides selection chrome on a widget.
+	 * @param {object} obj  Data passed into this routine is found on this object
+	 *    obj.widget: A davinci.ve._Widget which has just been selected
+	 *    obj.customDiv: DIV into which widget can inject its own selection chrome
+	 * @return {boolean}  Return false if no problems.
+	 * FIXME: Better if helper had a class inheritance setup
+	 */
+	onHideSelection: function(obj){
+		for(var i=0; i<this._connects.length; i++){
+			connect.disconnect(this._connects[i]);
+		}
+		this._connects = [];
+	},
+
 	onMouseDown: function(e){
+		// Don't process this event if current tool is CreateTool because
+		// that means that mouse operations are adding points.
+		var currentEditor = Runtime.currentEditor;
+		var context = (currentEditor.getContext && currentEditor.getContext());
+		if(context){
+			var tool = (context.getActiveTool && context.getActiveTool());
+			if(!tool || tool.isInstanceOf(davinci.ve.tools.CreateTool)){
+				return;
+			}
+		}
+		
 		e.stopPropagation();
 		var domNode = this._widget.domNode;
 		this._origSpanPos = dojo.position(domNode, true);
@@ -72,10 +104,9 @@ _ShapeHelper.prototype = {
 		var doc = domNode.ownerDocument;
 		var body = doc.body;
 		
-		//FIXME: Leaking event listeners?
-		doc.addEventListener('mousemove',dojo.hitch(this,this.onMouseMoveOut),false);
-		doc.addEventListener('mouseout',dojo.hitch(this,this.onMouseMoveOut),false);
-		doc.addEventListener('mouseup',dojo.hitch(this,this.onMouseUp),false);
+		this._connects.push(connect.connect(doc, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connects.push(connect.connect(doc, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connects.push(connect.connect(doc, 'mouseup', dojo.hitch(this,this.onMouseUp)));
 		if(this.onMouseDown_Widget){
 			this.onMouseDown_Widget({handle:handle, e:e});
 		}

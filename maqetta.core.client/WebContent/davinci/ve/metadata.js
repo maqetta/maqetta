@@ -695,6 +695,36 @@ define([
         },
         
         /**
+         * queryDescriptorByName queries by widget metadata info using 
+         * the 'name' value, such as "Button". 
+         * The 'type' must be provided too (e.g., 'dijit.form.Button')
+         * to make sure we find the right library for the given widget name.
+         * 
+         * @param {String} name
+         * @param {String} type
+         *            Widget type (i.e. "dijit.form.Button")
+         * @param queryString
+         * @return 'undefined' if there is any error; otherwise, the requested data.
+         */
+        queryDescriptorByName: function(name, type, queryString) {
+            var lib = getLibraryForType(type),
+                item;
+            if (lib) {
+            	var widgets = lib.$wm.widgets;
+            	for(var i=0; i<widgets.length; i++){
+            		if(widgets[i].name == name){
+            			item = widgets[i];
+            			break;
+            		}
+            	}
+            }
+            return this._queryDescriptor(item, queryString);
+        },
+        
+        /**
+         * queryDescriptor queries by widget metadata info by 
+         * the 'type' value, such as dijit.form.Button
+         * 
          * @param {String} type
          *            Widget type (i.e. "dijit.form.Button")
          * @param queryString
@@ -706,6 +736,15 @@ define([
             if (lib) {
                 item = lib.$wm.$providedTypes[type];
             }
+            return this._queryDescriptor(item, queryString);
+        },
+        
+        /**
+         * @param {Object} item		Descriptor object
+         * @param queryString
+         * @return 'undefined' if there is any error; otherwise, the requested data.
+         */
+        _queryDescriptor: function(item, queryString) {
             if (!item || typeof item !== "object") {
                 return;
             }

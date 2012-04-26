@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"davinci/ve/metadata",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/MoveCommand",
@@ -11,6 +12,7 @@ define([
 	"davinci/ve/commands/ResizeCommand" */
 ], function(
 	declare,
+	Metadata,
 	CreateTool,
 	ModifyCommand,
 	MoveCommand,
@@ -99,35 +101,56 @@ return declare(CreateTool, {
 	},
 	
 	onMouseUp: function(event){
-		// If this is first mouseUp and there was an associated mouseDown
-		// then line will consist of single segment from mousedown location to mouseup location
-		if(this._mouseUpCounter === 0 && typeof this._md_x == 'number'){
-			if(this._sameSpot(this._md_x, this._md_y, event.pageX, event.pageY)){
-				this._points.push({x:event.pageX, y:event.pageY});
+		var multiSegment = Metadata.queryDescriptorByName(this._data.name, this._data.type, 'multiSegment');
+		
+		// If multiSegment is true, then user clicks multiple times for multiple points.
+		// To stop, either click on last point a second time or press ESC
+		if(multiSegment){
+			// If this is first mouseUp and there was an associated mouseDown
+			// then line will consist of single segment from mousedown location to mouseup location
+			if(this._mouseUpCounter === 0 && typeof this._md_x == 'number'){
+				if(this._sameSpot(this._md_x, this._md_y, event.pageX, event.pageY)){
+					// If mousedown and mouseup at same point, add one point
+					this._points.push({x:event.pageX, y:event.pageY});
+				}else{
+					this._points.push({x:this._md_x, y:this._md_y});
+					this._points.push({x:event.pageX, y:event.pageY});
+					this._gesture = 'drag';
+				}
+				this._pointsChanged = true;
+			
+			// If this is first mouseUp and there was not an associated mouseDown,
+			// then user dragged/dropped from widget palette onto canvas,
+			// in which case use the default shape defined by widget metadata
+			}else if(this._mouseUpCounter === 0){
+				this._exitCreateTool = true;
+				
+			// If mouseUp is within <n> pixels of previous mouseUp, then exit CreateTool.
+			}else if(this._mouseUpSameSpot(event.pageX, event.pageY)){
+				this._pointsChanged = false;
+				this._exitCreateTool = true;
+			
+			// Otherwise, add mouseUp position to list of points
 			}else{
+				this._points.push({x:event.pageX, y:event.pageY});
+				this._pointsChanged = true;
+			}
+		// If single-segment
+		}else{
+			
+			// If there was an associated mouseDown and mouseUp is at a different location,
+			// then line will consist of single segment from mousedown location to mouseup location
+			if(this._md_x == 'number' && !this._sameSpot(this._md_x, this._md_y, event.pageX, event.pageY)){
 				this._points.push({x:this._md_x, y:this._md_y});
 				this._points.push({x:event.pageX, y:event.pageY});
-				this._exitCreateTool = true;
 				this._gesture = 'drag';
 			}
-			this._pointsChanged = true;
-		
-		// If this is first mouseUp and there was not an associated mouseDown,
-		// then user dragged/dropped from widget palette onto canvas,
-		// in which case use the default shape defined by widget metadata
-		}else if(this._mouseUpCounter === 0){
+			// Otherwise, user dragged from widget palette and dropped, or
+			// mouseDown and mouseUp were at approximately same location,
+			// so use default shape at mouseUp location.
 			this._exitCreateTool = true;
-			
-		// If mouseUp is within <n> pixels of previous mouseUp, then exit CreateTool.
-		}else if(this._mouseUpSameSpot(event.pageX, event.pageY)){
-			this._pointsChanged = false;
-			this._exitCreateTool = true;
-		
-		// Otherwise, add mouseUp position to list of points
-		}else{
-			this._points.push({x:event.pageX, y:event.pageY});
-			this._pointsChanged = true;
 		}
+		
 		this.inherited(arguments);
 		
 		// Put after this.inherited because this.inherited calls createNewWidget() indirectly

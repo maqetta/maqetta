@@ -1,11 +1,12 @@
 define([
 	"davinci/Runtime",
+	"dojo/_base/connect",
 	"davinci/ve/tools/CreateTool",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/widget"
-], function(Runtime, CreateTool, CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
+], function(Runtime, connect, CreateTool, CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
 
 var _ShapeHelper = function() {};
 _ShapeHelper.prototype = {
@@ -52,8 +53,7 @@ _ShapeHelper.prototype = {
 					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px' }	
 				},div);
 				handle._shapeDraggable = {point:i};
-				this._connects.push(dojo.connect(handle, 'mousedown', dojo.hitch(this,this.onMouseDown)));
-				//handle.addEventListener('mousedown',dojo.hitch(this,this.onMouseDown),false);
+				this._connects.push(connect.connect(handle, 'mousedown', dojo.hitch(this,this.onMouseDown)));
 			}
 		}else{
 			this._dragNobs = null;
@@ -71,7 +71,7 @@ _ShapeHelper.prototype = {
 	 */
 	onHideSelection: function(obj){
 		for(var i=0; i<this._connects.length; i++){
-			dojo.disconnect(this._connects[i]);
+			connect.disconnect(this._connects[i]);
 		}
 		this._connects = [];
 	},
@@ -104,14 +104,9 @@ _ShapeHelper.prototype = {
 		var doc = domNode.ownerDocument;
 		var body = doc.body;
 		
-		this._connects.push(dojo.connect(doc, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connects.push(dojo.connect(doc, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connects.push(dojo.connect(doc, 'mouseup', dojo.hitch(this,this.onMouseUp)));
-
-		//FIXME: Leaking event listeners?
-		//doc.addEventListener('mousemove',dojo.hitch(this,this.onMouseMoveOut),false);
-		//doc.addEventListener('mouseout',dojo.hitch(this,this.onMouseMoveOut),false);
-		//doc.addEventListener('mouseup',dojo.hitch(this,this.onMouseUp),false);
+		this._connects.push(connect.connect(doc, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connects.push(connect.connect(doc, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connects.push(connect.connect(doc, 'mouseup', dojo.hitch(this,this.onMouseUp)));
 		if(this.onMouseDown_Widget){
 			this.onMouseDown_Widget({handle:handle, e:e});
 		}

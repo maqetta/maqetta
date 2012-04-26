@@ -58,7 +58,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 
 	onMouseDown: function(event){
-//console.log('CreateTool.js onMouseDown');
 		// This function gets called if user does a 2-click widget addition:
 		// 1) Click on widget in widget palette to select
 		// 2) Click on canvas to indicate drop location
@@ -68,7 +67,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	},
 
 	onMouseMove: function(event){
-//console.log('CreateTool.js onMouseMove');
 		var context = this._context;
 		var cp = context._chooseParent;
 		
@@ -77,7 +75,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 		this._lastEventTarget = event.target;
 
-//console.log('this._mdPosition='+this._mdPosition+',this._resizable='+this._resizable);
 		if(this._mdPosition){
 			// If here, then user did a 2-click widget addition (see onMouseDown())
 			// and then dragged mouse while mouse is still down
@@ -132,7 +129,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				style.top = t + "px";
 				style.width = w + "px";
 				style.height = h + "px";
-console.log('Drag rect. style.cssText='+style.cssText);
 
 				if(w > 4 || h > 4){
 					var box = {l: l, t: t,
@@ -182,7 +178,6 @@ console.log('Drag rect. style.cssText='+style.cssText);
 	},
 
 	onMouseUp: function(event){
-console.log('CreateTool.js onMouseUp');
 		var context = this._context;
 		var cp = context._chooseParent; 
 		var absolute = !this.createWithFlowLayout();
@@ -255,7 +250,6 @@ console.log('CreateTool.js onMouseUp');
 			}
 		}
 
-console.log('CreateTool onMouseUp before getProposedParentWidget');
 		var ppw = cp.getProposedParentWidget();
 		if(ppw){
 			// Use last computed parent from onMouseMove handler
@@ -290,7 +284,6 @@ console.log('CreateTool onMouseUp before getProposedParentWidget');
 		    }
 		}
 
-console.log('CreateTool onMouseUp before setProposedParentWidget(null)');
 		cp.setProposedParentWidget(null);
 
 		/**
@@ -385,7 +378,6 @@ console.log('CreateTool onMouseUp before setProposedParentWidget(null)');
             var errorDialog = new ErrorDialog({errorText: content});
             Workbench.showModal(errorDialog, title);
 		} finally {
-console.log('CreateTools onMouseUp finally start');
 			// By default, exitCreateToolOnMouseUp returns true, but for
 			// particular widget-specfic CreateTool subclasses, it might return false
 			if(this.exitCreateToolOnMouseUp()){
@@ -396,7 +388,6 @@ console.log('CreateTools onMouseUp finally start');
 	            var userdoc = this._context.getDocument();	// inner document = user's document
 	            userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 			}
-console.log('CreateTools onMouseUp finally end');
 		}
 	},
 
@@ -503,9 +494,7 @@ console.log('CreateTools onMouseUp finally end');
 		return promises;
 	},
 
-	create: function(args){
-console.log('CreateTool create entered');
-	
+	create: function(args){	
 		if(!args || !this._data){
 			return;
 		}
@@ -576,11 +565,9 @@ console.log('CreateTool create entered');
 		new DeferredList(this._requireHelpers(this._data)).then(function() {
 			this._create({parent: parent, index: index, position: position, size: args.size});			
 		}.bind(this));
-console.log('CreateTool create exit');
 	},
 
 	_create: function(args){
-console.log('CreateTool _create entered');
 		var context = this._context;
 		var loadType = function(data){
 			if(!data || !data.type){
@@ -640,12 +627,10 @@ console.log('CreateTool _create entered');
 			}
 		}
 		var w_id = w.id;
-console.log('CreateTool _create before addToCommandStack');
 		// Custom CreateTools might define this function
 		if(this.addToCommandStack){
 			this.addToCommandStack(command, {widget:w})
 		}
-console.log('CreateTool _create after addToCommandStack');
 		this._context.getCommandStack().execute(command);
 		if(w.isLayoutContainer){
 			w.resize();
@@ -654,7 +639,6 @@ console.log('CreateTool _create after addToCommandStack');
 		this._select(w);
 		this._widget = w;
 		return w;
-console.log('CreateTool _create exit');
 	},
 	
 	_select: function(w) {

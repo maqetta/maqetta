@@ -99,7 +99,6 @@ return declare(CreateTool, {
 	},
 	
 	onMouseUp: function(event){
-console.log('LineCreateTool.js onMouseUp.');
 		// If this is first mouseUp and there was an associated mouseDown
 		// then line will consist of single segment from mousedown location to mouseup location
 		if(this._mouseUpCounter === 0 && typeof this._md_x == 'number'){

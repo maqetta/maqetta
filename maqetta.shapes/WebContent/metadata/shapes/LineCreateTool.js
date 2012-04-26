@@ -249,7 +249,7 @@ return declare(CreateTool, {
 		if(event.shiftKey){
 			var diff_x = Math.abs(end_x - start_x);
 			var diff_y = Math.abs(end_y - start_y);
-			if(diff_x >= minDistance && diff_y >= minDistance){
+			if(diff_x >= minDistance || diff_y >= minDistance){
 				if(diff_x >= diff_y){
 					retObj.y = start_y;
 				}else{

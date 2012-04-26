@@ -56,6 +56,22 @@
 		          "tool": "./shapes/LineCreateTool"
               },
               {
+                  "name": "Arrow",
+                  "type": "shapes.Line",
+                  "category": "shapes",
+                  "icon": "resources/images/arrow.gif",
+                  "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAL+/v5aWlmNjYzMzMxwcHBYWFv///wAAACH5BAEAAAYALAAAAAAQABAAAAMgaLrc/jBKFsBcg9g7iuaFZwlhaZrD1Ikqq35Xdc10PScAOw==",
+                  "enablePointerEvents": true,
+                  "resizable": "none",
+                  "showStandardSelectionChrome":false,
+                  "properties": {
+                      "points": "0,0,100,0",
+                      "endarrow": "forward"
+                  },
+                  "helper": "./shapes/LineHelper",
+		          "tool": "./shapes/LineCreateTool"
+              },
+              {
                   "name": "Polyline",
                   "type": "shapes.Line",
                   "category": "shapes",
@@ -67,22 +83,6 @@
                   "multiSegment":true,	// tells LineCreateTool to allow user to repeatedly click for more points
                   "properties": {
                       "points": "0,0,40,0,80,40"
-                  },
-                  "helper": "./shapes/LineHelper",
-		          "tool": "./shapes/LineCreateTool"
-              },
-              {
-                  "name": "Arrow",
-                  "type": "shapes.Line",
-                  "category": "shapes",
-                  "icon": "resources/images/arrow.gif",
-                  "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
-                  "enablePointerEvents": true,
-                  "resizable": "none",
-                  "showStandardSelectionChrome":false,
-                  "properties": {
-                      "points": "0,0,100,0",
-                      "endarrow": "forward"
                   },
                   "helper": "./shapes/LineHelper",
 		          "tool": "./shapes/LineCreateTool"

@@ -383,15 +383,27 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			if(this.exitCreateToolOnMouseUp()){
 				context.setActiveTool(null);
 			}
-			context.dragMoveCleanup();
-			if(!context.inlineEditActive()){
-	            var userdoc = this._context.getDocument();	// inner document = user's document
-	            userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
-			}
+			this._cleanupActions();
+		}
+	},
+	
+	_cleanupActions: function(){
+		var context = this._context;
+		context.dragMoveCleanup();
+		if(!context.inlineEditActive()){
+            var userdoc = this._context.getDocument();	// inner document = user's document
+            userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 		}
 	},
 
 	onKeyDown: function(event){
+		dojo.stopEvent(event);
+		var context = this._context;
+		if(event.keyCode==dojo.keys.ESCAPE){
+			context.setActiveTool(null);
+			this._cleanupActions();
+			return;
+		}
 		// Under certain conditions, show list of possible parent widgets
 		var showParentsPref = this._context.getPreference('showPossibleParents');
 		if(event.keyCode==dojo.keys.SPACE){
@@ -399,12 +411,10 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}else{
 			this._processKeyDown(event.keyCode);
 		}
-		dojo.stopEvent(event);
 		var showCandidateParents = (!showParentsPref && this._spaceKeyDown) ||
 				(showParentsPref && !this._spaceKeyDown);
 		var data = this._data;
 		var widgetType = dojo.isArray(data) ? data[0].type : data.type;
-		var context = this._context;
 		var cp = context._chooseParent;
 		var absolute = !this.createWithFlowLayout();
 		var doCursor = !absolute;

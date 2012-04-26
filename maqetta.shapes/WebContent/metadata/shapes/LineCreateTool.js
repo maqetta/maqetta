@@ -140,10 +140,11 @@ return declare(CreateTool, {
 			
 			// If there was an associated mouseDown and mouseUp is at a different location,
 			// then line will consist of single segment from mousedown location to mouseup location
-			if(this._md_x == 'number' && !this._sameSpot(this._md_x, this._md_y, event.pageX, event.pageY)){
+			if(typeof this._md_x == 'number' && !this._sameSpot(this._md_x, this._md_y, event.pageX, event.pageY)){
 				this._points.push({x:this._md_x, y:this._md_y});
 				this._points.push({x:event.pageX, y:event.pageY});
 				this._gesture = 'drag';
+				this._pointsChanged = true;
 			}
 			// Otherwise, user dragged from widget palette and dropped, or
 			// mouseDown and mouseUp were at approximately same location,
@@ -157,10 +158,7 @@ return declare(CreateTool, {
 		this._mouseUpCounter++;
 		
 		this._md_x = this._md_y = null;
-		if(this._dragLine){
-			this._dragLine.parentNode.removeChild(this._dragLine);
-			this._dragLine = false;
-		}
+		this._removeDragLine();
 	},
 	
 	addToCommandStack: function(command, params){
@@ -219,6 +217,15 @@ return declare(CreateTool, {
 			var properties = { points:s };
 			command.add(new ModifyCommand(widget, properties));
 		}
+	},
+	
+	onKeyDown: function(event){
+		if(event.keyCode == 27){	//Esc
+			this._pointsChanged = false;
+			this._exitCreateTool = true;
+			this._removeDragLine();
+		}
+		this.inherited(arguments);
 	},
 	
 	_sameSpot: function(x1, y1, x2, y2){
@@ -318,6 +325,13 @@ return declare(CreateTool, {
 			pn = pn.offsetParent;
 		}
 		return {offsetLeft:offsetLeft, offsetTop:offsetTop};
+	},
+	
+	_removeDragLine: function(){
+		if(this._dragLine){
+			this._dragLine.parentNode.removeChild(this._dragLine);
+			this._dragLine = false;
+		}
 	}
 
 });

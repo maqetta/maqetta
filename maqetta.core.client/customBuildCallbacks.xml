@@ -265,7 +265,7 @@
         <echo message="Inserting git describe information"/>
         <antcall target="update.revisions"/>
         <antcall target="update.repositoryinfo.js"/>
-		<!--
+		
     	<condition property="dojo.build.exists">
     		<available file="${dojo.cache.directory}" type="dir"/>
     	</condition>
@@ -276,7 +276,7 @@
 		<antcall target="copy.dojo">
 			<property name="run.dojo.build" value="${run.dojo.build}"/>
 		</antcall>
-		-->
+		
 		
 	</target>
 

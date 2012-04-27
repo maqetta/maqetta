@@ -2187,10 +2187,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	onDblClick: function(event){
-		if(this._activeTool && this._activeTool.onDblClick && !this._blockChange){
-			this._activeTool.onDblClick(event);
-		}
-		this.blockChange(false);
+
 	},
 	
 

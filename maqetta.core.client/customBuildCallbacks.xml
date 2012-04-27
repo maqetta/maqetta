@@ -265,7 +265,7 @@
         <echo message="Inserting git describe information"/>
         <antcall target="update.revisions"/>
         <antcall target="update.repositoryinfo.js"/>
-		<if name="run.dojo.build" value="true">
+		
 		    <antcall target="doUnitTests"/>
 		  
 	    	<condition property="dojo.build.exists">
@@ -279,7 +279,7 @@
 			<antcall target="copy.dojo">
 			
 			</antcall>
-	    </if>
+	   
 		
 	</target>
 

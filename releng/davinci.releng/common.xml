@@ -3,7 +3,7 @@
 <project name="MaqettaDeps" default="populateBaseMaqetta">
 	
 	<!-- top level call to populate the build directory with any external dependancies. -->
-	<target name="populateBaseMaqetta" depends="populateMaqettaDeps, populateEquinoxBridge, populateOrion"/>
+	<target name="populateBaseMaqetta" depends="populateMaqettaDeps, populateEquinoxBridge"/>
 
 	<!--  global maqetta deps -->
     <target name="populateMaqettaDeps">
@@ -33,40 +33,17 @@
         <populateDir project="maqetta.core.server"/>
     	<populateDir project="maqetta.core.server.standalone"/>
     	<populateDir project="maqetta.core.client"/>
-    	<populateDir project="maqetta.orion.feature" isFeature="true"/>
         <populateDir project="davinci.product" extPath="/releng/" isFeature="true"/>
         <populateDir project="davinci.product" extPath="/releng/" />
         <populateDir project="davinci.dojo_1_7"/>
         <populateDir project="davinci.gridx"/>
-    	<!--
     	<populateDir project="davinci.server.gzip"/>
-        -->
         <populateDir project="davinci.html"/>
         <populateDir project="maqetta.clipart"/>
         <populateDir project="maqetta.shapes"/>
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
     </target>
-	 <!--  orion deps to copy in -->
-	 <target name="populateOrion">
-			    <defaultexcludes remove="**/.git"/>
-		        <defaultexcludes remove="**/.git/**"/>
-		        <defaultexcludes remove="**/.svn"/>
-		        <defaultexcludes remove="**/.svn/**"/>
-		        <copy todir="${buildDirectory}/plugins">
-		            <fileset dir="${orionClientRepo}/bundles/">
-		            	<include name="**/"/>
-		            </fileset>
-
-		        </copy>
-		 		<copy todir="${buildDirectory}/plugins">
-		 			  <fileset dir="${orionServerRepo}/bundles/">
-		 			     	<include name="**/"/>
-		 			   </fileset>
-
-		 	     </copy>
-		        <defaultexcludes default="true"/>
-	</target>	
 
     <!--  equinox deps to copy in -->
  	<target name="populateEquinoxBridge">

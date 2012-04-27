@@ -219,12 +219,45 @@ build(){
 	
 	
 }
+tagRepositories() {
+	#do this for I builds and if -noTag was not specified
+	if [ "$buildType" == "I" -a -z "$noTag" ]; then 
+		pushd $writableBuildRoot/gitClones
+	
+		#pull the server first to get the latest map files before updating with new tags
+		cd $writableBuildRoot/gitClones/org.eclipse.orion.server
+		git pull
+	
+		cd $writableBuildRoot/repository/maqetta
+		git pull
 
+		cd $writableBuildRoot/gitClones
+		/bin/bash $writableBuildRoot/gitClones/git-map.sh \
+			$writableBuildRoot/gitClones \
+			$writableBuildRoot/gitClones/org.eclipse.orion.server/releng/org.eclipse.orion.releng \
+			git://git.eclipse.org/gitroot/orion/org.eclipse.orion.server.git \
+			git://git.eclipse.org/gitroot/orion/org.eclipse.orion.client.git > maps.txt
+			
+		grep -v ^OK maps.txt | grep -v ^Executed >run.txt
+		/bin/bash run.txt
+		
+		mkdir $writableBuildRoot/$buildType$timestamp
+		cp report.txt $writableBuildRoot/$buildType$timestamp
+		
+		cd $writableBuildRoot/gitClones/org.eclipse.orion.server
+		git add releng/org.eclipse.orion.releng/maps/orion.map
+		git commit -m "Releng build tagging for $buildType$timestamp"
+		git tag -f $buildType$timestamp   #tag the map file change
+		
+		git push
+		git push --tags
+	
+		popd
+	fi
+}
 currentDirectory=`pwd`
-#
 setProperties
-
-#updateBaseBuilder
+updateBaseBuilder
 populateGit
 build
 #

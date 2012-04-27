@@ -1,9 +1,10 @@
 define([
         "dojo/_base/declare",
+    	"davinci/Runtime",
         "./widget",
         "./_Widget",
         "./metadata"
-], function(declare, widget, _Widget, metadata) {
+], function(declare, Runtime, widget, _Widget, metadata) {
 
 return declare("davinci.ve.ChooseParent", null, {
 	
@@ -215,8 +216,14 @@ return declare("davinci.ve.ChooseParent", null, {
 				if(!this._cursorSpan){
 					this._cursorSpan = dojo.create('span', {className:'editCursor'});
 					this._timer = context.getGlobal().setInterval(function(node, context){
+						var currentEditor = Runtime.currentEditor;
+						var currentContext = (currentEditor.getContext && currentEditor.getContext());
+						if(currentContext !== context){
+							this.cleanup();
+							return;
+						}
 						dojo.toggleClass(node, 'editCursorBlink');
-					}, 400, this._cursorSpan, context);
+					}.bind(this), 400, this._cursorSpan, context);
 				}
 				var parentNode = this._XYParent[idx].domNode;
 				var refChild = this._XYRefChild[idx];
@@ -320,7 +327,7 @@ return declare("davinci.ve.ChooseParent", null, {
 			this._cursorSpan = null;
 		}
 		if(this._timer){
-			clearInterval(this._timer);
+			this._context.getGlobal().clearInterval(this._timer);
 			this._timer = null;
 		}
 		var context = this._context;

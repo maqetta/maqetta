@@ -114,7 +114,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					name: item.name,
 					paletteId: this.id,
 					type: item.type,
-					data: item.data || {type: item.type, properties: item.properties, children: item.children},
+					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
 					tool: item.tool,
 					category: descriptorObject.name
 				};
@@ -319,7 +319,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				name: item.name,
 				paletteId: this.id,
 				type: item.type,
-				data: item.data || {type: item.type, properties: item.properties, children: item.children},
+				data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
 				category: component.name
 			};
 			this._createItem(opt);

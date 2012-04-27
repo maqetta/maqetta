@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension id="jquerymobileMetaData" point="org.eclipse.equinox.http.registry.resources">
+	        <resource alias="/maqetta/app/metadata/jquery.mobile" base-name="/WebContent/metadata" />
+	        <resource alias="/maqetta/app/static/lib/jquery.mobile" base-name="/WebContent/jquery.mobile"/>
+	</extension>
+	
+      <extension point="maqetta.core.server.ajaxLibrary">
+         <ajaxLibrary name="jquery.mobile" id="jquery.mobile" version="1.0.1">
+            <libraryPath location="WebContent/jquery.mobile" name="/lib/jquery.mobile"></libraryPath>
+            <metadata location="app/metadata/jquery.mobile" />
+   	
+         </ajaxLibrary>
+<!--
+        <ajaxLibrary name="jquery based themes" id="jQueryThemes" version="1.0.1">
+	         <libraryPath location="WebContent/maqetta/themes" name="/themes"></libraryPath>
+	    </ajaxLibrary>
+ -->
+      </extension>
+ </plugin>

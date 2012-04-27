@@ -2176,7 +2176,7 @@
 		            },
 		            "children":"List Item",
 		            "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",
-		            "allowedChild": "dojox.mobile.Switch",
+		            "allowedChild": "ANY",
 		            "metadata": {
 		                "property": {
 		                    "moveTo": {

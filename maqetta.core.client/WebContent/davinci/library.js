@@ -70,11 +70,6 @@ getThemes: function(base, workspaceOnly, flushCache){
 	var projectThemeBase = new Path(base).append(prefs.themeFolder);
 	var allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());
 	_themesCache[base] = allThemes.map(function(theme) {
-		if (!theme){
-			console.error('library.getThemes: theme empty!')
-			return; // FIXME this should not be happening. 
-			
-		}
 		var t = JSON.parse(theme.getText());
 		t.file = theme;
 		return t;

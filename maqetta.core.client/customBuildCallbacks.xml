@@ -266,20 +266,13 @@
         <antcall target="update.revisions"/>
         <antcall target="update.repositoryinfo.js"/>
 		
-		    <antcall target="doUnitTests"/>
-		  
-	    	<condition property="dojo.build.exists">
-	    		<available file="${dojo.cache.directory}" type="dir"/>
-	    	</condition>
-			<property name="run.dojo.build" value="${run.dojo.build}"/>
-			<echo message="Build dojo=${run.dojo.build}"/>
-			<antcall target="dojo.build">
-				  
-			</antcall>
-			<antcall target="copy.dojo">
-			
-			</antcall>
-	   
+    	<condition property="dojo.build.exists">
+    		<available file="${dojo.cache.directory}" type="dir"/>
+    	</condition>
+		<echo message="Build dojo=${run.dojo.build}"/>
+		<antcall target="dojo.build"/>
+		<antcall target="copy.dojo"/>
+
 		
 	</target>
 

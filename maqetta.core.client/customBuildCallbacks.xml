@@ -265,19 +265,21 @@
         <echo message="Inserting git describe information"/>
         <antcall target="update.revisions"/>
         <antcall target="update.repositoryinfo.js"/>
-		
-    	<condition property="dojo.build.exists">
-    		<available file="${dojo.cache.directory}" type="dir"/>
-    	</condition>
-		<property name="run.dojo.build" value="${run.dojo.build}"/>
-		<echo message="Build dojo=${run.dojo.build}"/>
-		<antcall target="dojo.build">
-			  
-		</antcall>
-		<antcall target="copy.dojo">
-		
-		</antcall>
-		
+		<if name="run.dojo.build" value="true">
+		    <antcall target="doUnitTests"/>
+		  
+	    	<condition property="dojo.build.exists">
+	    		<available file="${dojo.cache.directory}" type="dir"/>
+	    	</condition>
+			<property name="run.dojo.build" value="${run.dojo.build}"/>
+			<echo message="Build dojo=${run.dojo.build}"/>
+			<antcall target="dojo.build">
+				  
+			</antcall>
+			<antcall target="copy.dojo">
+			
+			</antcall>
+	    </if>
 		
 	</target>
 

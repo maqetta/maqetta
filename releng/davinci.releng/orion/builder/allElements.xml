@@ -34,6 +34,19 @@
 			<property name="assembleScriptName" value="${assembleScriptName}" />
  			<property name="archiveName" value="${archiveNamePrefix}-${config}.zip"/>
 		</ant>
+		<property name="archiveName" value="${archiveNamePrefix}-${config}.zip"/>
+		<echo message="setting +x on maqetta launch scripts"/>
+		    	<property name="assemblyTempUnzipDir" value="${buildDirectory}/tmp"/>
+		    	<mkdir dir ="${assemblyTempUnzipDir}"/>
+		    	
+		    	<unzip dest="${assemblyTempUnzipDir}" src="${archiveName}" />
+		    	<delete file="${archiveName}" />
+		    	<zip destfile="${archiveName}" filesonly="false" >
+		    		<zipfileset dir="${assemblyTempUnzipDir}/eclipse" includes="**/**" excludes="*.command,*.sh"/>
+		    		<zipfileset dir="${assemblyTempUnzipDir}/eclipse" includes="*.command" filemode="755" />
+		    		<zipfileset dir="${assemblyTempUnzipDir}/eclipse" includes="*.sh" filemode="755" />
+		    	</zip>
+		    	<delete dir ="${assemblyTempUnzipDir}"/>
 	</target>
 	
  	<!-- =====================================================================	-->

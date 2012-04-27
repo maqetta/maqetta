@@ -269,6 +269,7 @@
     	<condition property="dojo.build.exists">
     		<available file="${dojo.cache.directory}" type="dir"/>
     	</condition>
+		<property name="run.dojo.build" value="${run.dojo.build}"/>
 		<echo message="Build dojo=${run.dojo.build}"/>
 		<antcall target="dojo.build">
 			  

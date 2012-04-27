@@ -271,10 +271,10 @@
     	</condition>
 		<echo message="Build dojo=${run.dojo.build}"/>
 		<antcall target="dojo.build">
-			  <property name="run.dojo.build" value="${run.dojo.build}"/>
+			  
 		</antcall>
 		<antcall target="copy.dojo">
-			<property name="run.dojo.build" value="${run.dojo.build}"/>
+		
 		</antcall>
 		
 		

@@ -39,6 +39,10 @@ return declare([_Widget, _Templated], {
 
 	selectedFile: null,
 
+	labelLabel: dojoxNls.iconContainerLabel,
+	iconLabel: dojoxNls.iconContainerIcon,
+	chooseLabel: dojoxNls.iconContainerChooseIcon,
+
 	postCreate: function() {
 		this.labelTextBox.attr("value", this.label)
 

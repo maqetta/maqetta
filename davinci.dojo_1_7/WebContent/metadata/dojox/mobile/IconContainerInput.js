@@ -11,7 +11,8 @@ define([
 	"davinci/ve/widget",
 	"./IconContainerInputRow",
 	"dojo/text!./templates/IconContainerInput.html",
-	"dojo/i18n!dijit/nls/common"
+	"dojo/i18n!dijit/nls/common",
+	"dojo/i18n!../../dojox/nls/dojox"
 ], function(
 	declare,
 	lang,
@@ -25,7 +26,8 @@ define([
 	Widget,
 	IconContainerInputRow,
 	mainTemplateString,
-	dijitLangObj
+	dijitLangObj,
+	dojoxNLS
 ) {
 
 return declare(SmartInput, {
@@ -98,9 +100,9 @@ return declare(SmartInput, {
 		}
 
 		if ((pos+1) < children.length) {
-			this._addRow("Item "+(pos+2), "", children[pos], "after");
+			this._addRow(dojoxNLS.iconContainerNewItem+(pos+2), "", children[pos], "after");
 		} else {
-			this._addRow("Item "+(pos+2), "");
+			this._addRow(dojoxNLS.iconContainerNewItem+(pos+2), "");
 		}
 	},
 

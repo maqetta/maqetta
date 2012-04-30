@@ -31,8 +31,8 @@ public class VOrionProjectStorage extends VOrionStorage {
 	}
 	
 	public VOrionStorage getParentFile() {
-		// orion projects have no storable parent elemnt.
-		return null;
+		
+		return this.parent;
 	}
 	
 	public String getOrionLocation(){

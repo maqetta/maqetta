@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -20,6 +22,7 @@ import maqetta.server.orion.VOrionResource;
 import maqetta.server.orion.VOrionWorkspace;
 import maqetta.server.orion.VOrionWorkspaceStorage;
 import maqetta.server.orion.internal.Activator;
+
 
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.Library;
@@ -272,6 +275,41 @@ public class OrionUser extends User {
 		}
 		return null;
 	}
+	
+	public IVResource[] findFiles(String pathStr, String startFolder,	boolean ignoreCase, boolean workspaceOnly) {
+		boolean isWildcard = pathStr.indexOf('*') >= 0;
+		IPath path = new Path(pathStr);
+		ArrayList results = new ArrayList();
+
+		// Links links = this.getLinks();
+		if (isWildcard) {
+			IVResource start = null;
+			if (startFolder == null || startFolder.equals(".")) {
+		          start = this.workspace;
+		    } else {
+		         start = this.getResource(startFolder);
+		        
+		    }
+			
+			results.addAll(Arrays.asList((start.find(pathStr))));
+			
+			
+			
+			if (!workspaceOnly) {
+				findLibFiles(path, results);
+
+			}
+		} else {
+			IVResource file = this.getResource(pathStr);
+			if (file != null && file.exists()) {
+				results.add(file);
+			}
+
+		}
+		return (IVResource[]) results.toArray(new IVResource[results.size()]);
+
+	}
+	
 	public IVResource[] listFiles(String path) {
 	    IVResource[] found = new IVResource[0];
 	    if (path == null || path.equals(".") ) {

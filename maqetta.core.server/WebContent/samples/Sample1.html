@@ -7,16 +7,18 @@
 @import "app.css";
 @import "lib/dojo/dojo/resources/dojo.css";
 </style>
-<script type="text/javascript" src="maqetta/maqetta.js"></script>
-<script type="text/javascript" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'clipart','location':'../../clipart'},{'name':'shapes','location':'../../shapes'}]" src="lib/dojo/dojo/dojo.js"></script>
-<script type="text/javascript" src="maqetta/States.js"></script>
+<script type="text/javascript" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'clipart','location':'../../clipart'},{'name':'shapes','location':'../../shapes'},{'name':'maqetta','location':'../../../maqetta'}]" src="lib/dojo/dojo/dojo.js"></script>
 <script type="text/javascript">
-require(['dijit/layout/TabContainer']);
-require(['dijit/layout/ContentPane']);
-require(['dijit/form/Button']);
-require(['dijit/form/ComboBox']);
-require(['dijit/form/MultiSelect']);
-require(['dijit/form/TextBox']);
+require([
+  "dijit/layout/TabContainer",
+  "dijit/layout/ContentPane",
+  "dijit/form/Button",
+  "dijit/form/ComboBox",
+  "dijit/form/MultiSelect",
+  "dijit/form/TextBox",
+  "maqetta/space",
+  "maqetta/AppStates"
+]);
 </script>
 </head>
 <body class="claro" data-davinci-ws="collapse" id="myapp" dvFlowLayout="true" dvStates="{'Add Task':{'origin':true},'Task Added':{'origin':true}}">

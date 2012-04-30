@@ -83,6 +83,8 @@
             <equals arg1="${deployment-type}" arg2="external"/>
         </condition>
 
+    	<property name="run.dojo.build" value="false"/>
+    	
     	<condition property="run.dojo.build">
     		<equals arg1="${dojoBuild}" arg2="true"/>
     	</condition>

@@ -1,0 +1,133 @@
+<project name="maqetta" default="nightly">
+	
+	<!--  This line loads either internal.xml or external.xml.  These files copy the deps from the git repos.
+	      The git repos are initialized in the shell script prior to running the build script.
+	      
+	      Internal repo is ${buildDirectory}/repository/maqetta
+	      External repo is ${buildDirectory}/repository/maqetta_internal
+	      Equinox (dep for running war): ${buildDirectory}/repository/rt.equinox.bundles
+	
+	-->
+
+	
+	
+	<target name="nightly" depends="init">
+        <tstamp>
+            <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
+        </tstamp>
+        <antcall target="clean"/>
+		<!-- base maqetta out of common.xml -->
+		
+		
+		<antcall target="MaqettaOrion"/>
+    </target>
+
+    <target name="init">
+        <!--  copy environment vars -->
+        <property environment="env"/>
+        <macrodef name="initEnvVar">
+            <attribute name="varName"/>
+            <attribute name="envName" default="env.@{varName}"/>
+            <sequential>
+                <condition property="@{varName}" value="${@{envName}}">
+                    <and>
+                        <not>
+                            <isset property="@{varName}"/>
+                        </not>
+                        <isset property="@{envName}"/>
+                    </and>
+                </condition>
+            </sequential>
+        </macrodef>
+        <initEnvVar varName="base"/>
+        <initEnvVar varName="baseLocation"/>
+        <initEnvVar varName="buildDirectory"/>
+        <initEnvVar varName="maqettaCode"/>
+        <initEnvVar varName="gitRepository"/>
+        <initEnvVar varName="myOS"/>
+        <initEnvVar varName="myWS"/>
+        <initEnvVar varName="myArch"/>
+        <initEnvVar varName="equinoxRepo"/>
+    	<initEnvVar varName="orionServerRepo"/>
+    	<initEnvVar varName="orionClientRepo"/>
+    	
+        <property file="build.properties"/>
+        
+        <mkdir dir="${buildDirectory}/plugins"/>
+        <mkdir dir="${buildDirectory}/features"/>
+
+    	<property name="repoName" value="maqetta" />
+    	<property name="repoNameInternal" value="${repoName}_internal"/>
+    	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
+        <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
+    	<property name="dojo.cache.directory" value="${buildDirectory}/dojo_cache"/>
+    	
+    	
+    	
+        <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
+        <condition property="maqettaCodeInternal" value="${maqettaCode}_internal">
+            <and>
+                <isset property="maqettaCode"/>
+                <not>
+                    <isset property="maqettaCodeInternal"/>
+                </not>
+            </and>
+        </condition>        
+        <condition property="run.internal.targets">
+            <equals arg1="${deployment-type}" arg2="internal"/>
+        </condition>
+        <condition property="run.external.targets">
+            <equals arg1="${deployment-type}" arg2="external"/>
+        </condition>
+		<!--
+    	<condition property="run.dojo.build">
+    		<equals arg1="${dojoBuild}" arg2="true"/>
+    	</condition>
+    	<echo message="run dojo build:${run.dojo.build}"/>
+    	-->
+    </target>
+	<target name="MaqettaOrion" if="run.external.targets">
+	    <echo message="Running orion build...."/>
+		
+		<tstamp/>
+		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
+		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
+		<property name="cvsuser" value=":ext:aniefer" />		
+		<property name="builder" value="${builderDir}" />
+		<echo message="Builder..${builder}"/>
+				<!-- Add build id to orion.product before invoking product build -->
+		<replace token="@qualifier@" file="${builder}/maqettaOrion.product" value="${buildLabel}" />
+		<echo message="base is ${base}"/>		
+		<mkdir dir="${base}"/>
+		
+		<property name="allElementsFile" value="${builder}/allElements.xml" />
+		 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
+			<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
+		 	<property name="run.dojo.build" value="false"/>
+		 	 <property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
+		 	 <property name="basedir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
+			 <property name="scriptDir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
+		</ant>
+    </target>
+
+
+    <target name="clean">
+        <defaultexcludes remove="**/.gitignore"/>
+        <defaultexcludes remove="**/.git"/>
+        <defaultexcludes remove="**/.git/**"/>
+
+        <delete includeemptydirs="true">
+            <fileset dir="${buildDirectory}" includes="plugins/,${dojo.cache.directory}, features/,result/,*.properties,*.xml"/>
+        </delete>
+    	
+    	<delete includeemptydirs="true" quiet="true" failonerror="false">
+    	    <fileset dir="${dojo.cache.directory}" includes="*"/>
+    	</delete>
+    	    	
+    	<delete dir="${dojo.cache.directory}" quiet="true" failonerror="false"/>
+        <defaultexcludes default="true"/>
+        <mkdir dir="${buildDirectory}/plugins"/>
+        <mkdir dir="${buildDirectory}/features"/>
+    </target>
+
+</project>

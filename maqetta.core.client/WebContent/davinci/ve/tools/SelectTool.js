@@ -123,8 +123,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				position_prop = userDojo.style(moverWidget.domNode, 'position');
 				this._moverAbsolute = (position_prop == 'absolute');
 				var parent = moverWidget.getParent();
-				//FIXME: isLayout check is not working. See #2042
-				if(!parent || !parent.isLayout || !parent.isLayout()){
+				var helper = widget.getHelper();
+				if(!(helper && helper.disableDragging && helper.disableDragging(moverWidget)) &&
+						(!parent || !parent.isLayout || !parent.isLayout())){
 					this._moverWidget = moverWidget;
 					this._moverLastEventTarget = null;
 					var cp = context._chooseParent;
@@ -342,9 +343,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}
 				var lastIdx = null;
+				var IDs = [];
+				var NewWidgets = [];
 				
 				//get the data	
 				dojo.forEach(selection, function(w){
+					IDs.push(w.getId());
 					var newwidget,
 						d = w.getData( {identify:false});
 					d.context=context;
@@ -355,6 +359,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						console.debug("Widget is null!!");
 						return;
 					}
+					NewWidgets.push(newwidget);
 					var ppw = cp.getProposedParentWidget();
 					if(ppw && ppw.refChild){
 						if(lastIdx !== null){
@@ -380,10 +385,15 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					}
 				}, this);
 
-				// remove widget
+				// remove old widget and restore ID on the new version of the given widget(s)
 				if(!copy){
 					dojo.forEach(selection, function(w){
+						var newwidget = NewWidgets.shift();
 						compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
+						var id = IDs.shift();
+						if(id){
+							compoundCommand.add(new davinci.ve.commands.ModifyCommand(newwidget, {id:id}));
+						}
 					}, this);
 				}
 

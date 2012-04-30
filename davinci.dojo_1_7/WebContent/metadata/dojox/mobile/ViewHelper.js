@@ -280,6 +280,28 @@ ViewHelper.prototype = {
 				context.select(node._dvWidget);
 			}
 		};
+	},
+	
+	/**
+	 * Called by SelectTool to see if this widget can be dragged to a different location.
+	 * We disable dragging of view widgets whose parent is the BODY because
+	 * we set default in Maqetta to make view widgets such that exactly one shows
+	 * at a time. Therefore, no place to drag it.
+	 * @param {davinci.ve._Widget} widget  A View widget
+	 */
+	disableDragging: function(widget){
+		if(!widget || !widget.getParent){
+			return false;
+		}
+		var parent = widget.getParent();
+		if(!parent || !parent.domNode){
+			return false;
+		}
+		if(parent.domNode.tagName == 'BODY'){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 };

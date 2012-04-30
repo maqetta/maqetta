@@ -1,12 +1,15 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
+	"dojo/_base/Deferred",
+	"dojo/DeferredList",
+	"dojo/window",
     "../UserActivityMonitor",
     "../Theme",
     "./ThemeModifier",
 	"../commands/CommandStack",
 	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
-	"dojo/window",
 	"../model/Path",
 	"../Workbench",
 	"./widget",
@@ -22,18 +25,19 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
-	"dojo/_base/Deferred",
-	"dojo/DeferredList",
 	"dojox/html/_base"
 ], function(
 	declare,
+	lang,
+	Deferred,
+	DeferredList,
+	windowUtils,
 	UserActivityMonitor,
 	Theme,
 	ThemeModifier,
 	CommandStack,
 	ChangeThemeCommand,
 	SelectTool,
-	windowUtils,
 	Path,
 	Workbench,
 	Widget,
@@ -48,9 +52,7 @@ define([
 	HTMLElement,
 	HTMLText,
 	Preferences,
-	Silhouette,
-	Deferred,
-	DeferredList
+	Silhouette
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -68,6 +70,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 /*=====
 	// keeps track of widgets-per-library loaded in context
 	_widgets: null,
+
+	// Cache for the HTMLElement (model) holding the main `require` call.  Used in
+	// addJavaScriptModule(), cleared in _setSource().
+	_requireHtmlElem: null,
+
+	// HTMLElement (model) of the <script> which points to "dojo.js".  Cleared
+	// in _setSource().
+	_dojoScriptElem: null,
 =====*/
 
 	constructor: function(args) {
@@ -78,7 +88,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._id = "_edit_context_" + this._contextCount++;
 		this.widgetHash = {};
 		
-		dojo.mixin(this, args);
+		lang.mixin(this, args);
 
 		if(dojo.isString(this.containerNode)){
 			this.containerNode = dijit.byId(this.containerNode);
@@ -103,118 +113,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			metadata.invokeCallback(library, 'onDocInit', args);
 		}
 	},
-
-	_configDojoxMobile: function() {
-        // dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
-        // monitoring of which stylesheets get loaded for a given theme
-
-        var dm = this.getDojo().getObject("dojox.mobile", true);
-        dm.configDeviceTheme = dojo.hitch(this, function() {
-            var loadDeviceTheme = dm.loadDeviceTheme;
-
-            dm.loadDeviceTheme = dojo.hitch(this, function(device) {
-            	
-            	function addCssForDevice(localDevice, themeMap, context){
-            		for (var i = 0; i < themeMap.length; i++) {
-                    	if (themeMap[i][0] === localDevice || themeMap[i][0] === '.*'){
-                    		var cssFiles = themeMap[i][2];
-                    		cssFiles.forEach(function(cssFile){
-                    			context.addDynamicCss(cssFile);	
-                    		});
-                    		break;
-                    	}
-                    }
-            	}
-                var mblUserAgent = this.getDojo().config.mblUserAgent,
-                    ua = device || mblUserAgent || 'none',
-                    htmlElement = this._srcDocument.getDocumentElement(),
-                    head = htmlElement.getChildElement("head"),
-                    scriptTags = head.getChildElements("script"),
-                    themeMap,
-                    start,
-                    stop;
-                this.clearDynamicCss(); 
-                dojo.forEach(scriptTags, function (scriptTag){
-                    var text=scriptTag.getElementText();
-                    if (text.length) {
-                        // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-                        start = text.indexOf('dojoxMobile.themeMap');
-                        if (start != -1) {
-                            start = text.indexOf('=', start);
-                            stop = text.indexOf(';', start);
-                            if (stop > start){
-                                themeMap = dojo.fromJson(text.substring(start+1, stop));
-                                dm.themeMap = themeMap;
-                                addCssForDevice(ua, themeMap, this);
-                            }
-                        } else if (text.indexOf('dojox/mobile') > -1){
-                        	// use the default themes
-                        	themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
-                        	addCssForDevice(ua, themeMap, this);
-                        }
-                        //Look for a dojox.mobile.themeFiles in the document, if found set the themeFiles 
-                        start = text.indexOf('dojoxMobile.themeFiles');
-                        if (start > -1) {
-                            start = text.indexOf('=', start);
-                            stop = text.indexOf(';', start);
-                            if (stop > start){
-                                var themeFiles = dojo.fromJson(text.substring(start+1,stop));
-                                dm.themeFiles = themeFiles;
-                               
-                            }
-                        }
-                     }
-                }, this);
-                if (this._selection) {
-                	this.onSelectionChange(this._selection); // forces style palette to update cascade rules
-                }
-                loadDeviceTheme(device);
-            });
-
-            // This is a call-once function
-            delete dm.configDeviceTheme;
-        });
-
-        // Set mobile device CSS files
-        var mobileDevice = this.getMobileDevice();
-        if (mobileDevice) {
-            this.setMobileDevice(mobileDevice);
-            this.visualEditor.setDevice(mobileDevice, true);
-        }
-
-        // Check mobile orientation
-        var orientation = this.getMobileOrientation();
-        if (orientation) {
-        	this.visualEditor.setOrientation(orientation);
-        }
-    },
-    
-    clearDynamicCss: function(){
-    	delete this.themeCssfiles;
-    	delete this.cssFiles;
-    },
-    
-    addDynamicCss: function(cssFile){
-    
-    	if (!this.themeCssfiles){
-    		this.themeCssfiles = [];
-    	}
-		try{
-			this._themePath=new davinci.model.Path(this.visualEditor.fileName);
-			this.themeCssfiles.push(cssFile);
-		
-			// connect to the css files, so we can update the canvas when the model changes
-			var cssFiles = this._getCssFiles();	
-			for (var i = 0; i < cssFiles.length; i++) {
-                dojo.connect(cssFiles[i], 'onChange', this,
-                        '_themeChange');
-            }
-
-		}catch(e){
-			alert("error loading:" + filename + e);
-		}
-    	
-    },
 
 	isActive: function(){
 		return !!this._activeTool;
@@ -511,9 +409,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (! _loadLibrary(r.$library)) {
 					return false; // break 'every' loop
 				}
-			} else if (r.src) {
-				console.warn("metadata resource (" + r.type + ", " + r.src +
-						") does not specify 'library'");
 			}
 
 			switch (r.type) {
@@ -630,7 +525,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// dojox.mobile specific CSS file handling
 
-        var dm = this.getDojo().getObject("dojox.mobile");
+        var dm = lang.getObject("dojox.mobile", false, this.getGlobal());
         if(dm && dm.loadDeviceTheme) {
         	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
@@ -815,8 +710,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return true;
 		}
 
-
-		this._loadThemeDojoxMobile(this);
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
@@ -827,23 +720,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
     },
     
-// FIXME this bit of code should be moved to toolkit specific //////////////////////////////   
-    _loadThemeDojoxMobile: function(context){
-      
-        var htmlElement = context._srcDocument.getDocumentElement();
-        var head = htmlElement.getChildElement("head");
-        var scriptTags=head.getChildElements("script");
-        
-        return dojo.some(scriptTags, function(tag) {
-            var text=tag.getElementText();
-                // Look for a dojox.mobile.themeMap in the document, if found set the themeMap 
-               // var start = text.indexOf('dojox.mobile.themeMap');
-            return text.length && text.indexOf('dojoxMobile.themeMap=') != -1;
-        });
-    },
+
 //////////////////////////////////////////////////////////////////////////////////////////////     
     
 	_setSource: function(source, callback, scope, newHtmlParams){
+		// clear cached values
+		delete this._requireHtmlElem;
+		delete this._dojoScriptElem;
+
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);
 
@@ -964,7 +848,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var config = {
 					packages: this._getLoaderPackages() // XXX need to add dynamically
 				};
-				dojo.mixin(config, this._configProps);
+				lang.mixin(config, this._configProps);
 
 				var requires = this._bootstrapModules.split(","),
 					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
@@ -972,11 +856,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// to bootstrap references to base dijit methods in container
 				dependencies = dependencies.concat(requires); 
 
-				head += "<script type=\"text/javascript\" src=\"" + dojoUrl +
-						"\" data-dojo-config=\"" +
-						JSON.stringify(config).slice(1, -1).replace(/"/g, "'") +
-						"\"></script>" +
-						"<script type=\"text/javascript\">require(" +
+				head += this._generateDojoScript(dojoUrl, config) +
+						"<script>require(" +
 						JSON.stringify(dependencies) +
 						", top.loading" + this._id + ");</script>";
 			}
@@ -994,7 +875,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var context = this;
 			window["loading" + context._id] = function(parser, htmlUtil) {
 				var callbackData = context;
-			try {
+				try {
 					var win = windowUtils.get(doc),
 					 	body = (context.rootNode = doc.body);
 
@@ -1045,7 +926,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					console.error(e.stack || e);
 					// recreate the Error since we crossed frames
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
-					dojo.mixin(callbackData, e);
+					lang.mixin(callbackData, e);
 				}
 
 				context._continueLoading(data, callback, callbackData, scope);
@@ -1119,7 +1000,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		} catch(e) {
 			// recreate the Error since we crossed frames
 			callbackData = new Error(e.message, e.fileName, e.lineNumber);
-			dojo.mixin(callbackData, e);
+			lang.mixin(callbackData, e);
 			var message = "Uh oh! An error has occurred:<br><b>" + e.message + "</b>";
 			if (e.fileName) {
 				message += "<br>file: " + e.fileName + "<br>line: "+e.lineNumber;
@@ -1174,6 +1055,46 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		packages.push({name: 'maqetta', location: '../../../maqetta'});
 
 		return packages;
+	},
+
+	/**
+	 * Generate a string containing the script element for "dojo.js", pulling in
+	 * any attributes from the source file, while also merging in any attributes
+	 * that are passed in.
+	 * 
+	 * @param  {String} dojoUrl
+	 * @param  {Object} config
+	 * @return {String}
+	 */
+	_generateDojoScript: function(dojoUrl, config) {
+		var dojoScript = this._getDojoJsElem(),
+			djConfig = dojoScript.getAttribute('data-dojo-config')
+			text = ['<script src="' + dojoUrl + '"'];
+
+		// special handling for 'data-dojo-config' attr
+		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
+		// give precedence to our 'config' options, over that in file; make sure
+		// to turn off parseOnLoad
+		// XXX Also need to set the `async` flag to false.  Otherwise, we try to
+		//     instantiate objects before the modules have loaded.
+		lang.mixin(djConfig, config, {
+			async: false,
+			parseOnLoad: false
+		});
+		text.push('data-dojo-config="' +
+				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'") + '"')
+
+		// handle any remaining attributes
+		dojoScript.attributes.forEach(function(attr) {
+			var name = attr.name,
+				val = attr.value;
+			if (name !== 'src' && name !== 'data-dojo-config') {
+				text.push(name + '="' + val + '"');
+			}
+		});
+
+		text.push('></script>');
+		return text.join(' ');
 	},
 
 	_setSourceData: function(data){
@@ -2094,7 +2015,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getPreferences: function(){
-		return dojo.mixin({}, davinci.ve._preferences);
+		return lang.mixin({}, davinci.ve._preferences);
 	},
 	setPreference: function(name, value){
 		if(!name){
@@ -2288,15 +2209,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					data.modules.push(module);
 				});
 			}
-			
-			// XXX Bug 7499 - (HACK) See comment in addHeaderScript()
-			if (/.*(\/)*maqetta\/States.js$/.test(value)) { //remove?
-				this._statesJsScriptTag = scriptTag;
-			}
 		}, this);
-		if (!this._statesJsScriptTag) {   // XXX Bug 7499
-			console.warn("Failed to find States.js script tag.  States and dojox.mobile widgets may not work properly");
-		}
+
 		var styleTags=head.getChildElements("style");
 		dojo.forEach(styleTags, function (styleTag){
 			dojo.forEach(styleTag.children,function(styleRule){
@@ -2676,6 +2590,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (!isDojoJS && !skipDomUpdate) {
 			var context = this,
 				absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+			// This xhrGet() used to include `handleAs: "javascript"`, surrounded
+			// by a `dojo.withGlobal`.  However, `dojo.eval` regressed in Dojo 1.7,
+			// such that it no longer evals using `dojo.global` -- instead evaling
+			// into the global context. To work around that, we do our own `eval` call.
 			dojo.xhrGet({
 				url: absoluteUrl,
 				sync: true    // XXX -> async
@@ -2684,49 +2602,91 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			});
 		}
 		if (doUpdateModel) {				
-			/* update the script if found */
-			var found = this._srcDocument.find({
-				elementType:'HTMLElement', tag: 'script'
-			}).some(function (element) {
-				var elementUrl = element.getAttribute("src");
-				if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
-					element.setAttribute("src", url);
-					return true;
-				}					
-			});
-			if (found) {
-				return;
-			}
-
-			if (isDojoJS) {
-				// special case for dojo.js to provide config attribute
-				// XXX TODO: Need to generalize in the metadata somehow.
-				var config = {
+			// update the script if found
+			var head = this.getDocumentElement().getChildElement('head'),
+				config = {
 					async: true,
 					parseOnLoad: true,
 					packages: this._getLoaderPackages()
-				};
-				dojo.mixin(config, this._configProps);
-				this.addHeaderScript(url, {
-					"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
+				},
+				found = head.getChildElements('script').some(function(element) {
+					var elementUrl = element.getAttribute("src");
+					if (elementUrl && elementUrl.indexOf(baseSrcPath) > -1) {
+						element.setAttribute("src", url);
+						return true;
+					}
 				});
-
-				// TODO: these two dependencies should be part of widget or library metadata
-				this.addJavaScriptModule("dijit/dijit", true, true);
-				this.addJavaScriptModule("dojo/parser", true, true);
-			}else{
-				this.addHeaderScript(url);
+			if (found) {
+				if (isDojoJS) {
+					this._updateDojoConfig(config);
+				}
+			} else {
+				if (isDojoJS) {
+					// special case for dojo.js to provide config attribute
+					// XXX TODO: Need to generalize in the metadata somehow.
+					lang.mixin(config, this._configProps);
+					this.addHeaderScript(url, {
+						"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
+					});
+	
+					// TODO: these two dependencies should be part of widget or library metadata
+					this.addJavaScriptModule("dijit/dijit", true, true);
+					this.addJavaScriptModule("dojo/parser", true, true);
+				}else{
+					this.addHeaderScript(url);
+				}
 			}
 		}
 	},
+
+	_reRequire: /\brequire\s*\(\s*\[\s*([\s\S]*?)\s*\]\s*\)/,
+	_reModuleId: /[a-zA-Z.\/]+/g,
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
 		if (!skipDomUpdate) {
 			this.getGlobal().require([mid]); //FIXME: needs to pass in async callback
 		}
+
 		if (doUpdateModel) {
-			//TODO: keep all requires in a single statement?
-			this.addHeaderScriptText('require(["' + mid + '"]);');
+			if (!this._requireHtmlElem) {
+				// find a script element which has a 'require' call
+				var head = this.getDocumentElement().getChildElement('head'),
+					found;
+
+				found = head.getChildElements('script').some(function(child) {
+					var script = child.find({elementType: 'HTMLText'}, true);
+					if (script) {
+						if (this._reRequire.test(script.getText())) {
+							// found suitable `require` block
+							this._requireHtmlElem = child;
+							return true; // break 'some' loop
+						}
+					}
+				}, this);
+
+				if (!found) {
+					// no such element exists yet; create now
+					this._requireHtmlElem = this.addHeaderScriptText('require(["' + mid + '"]);\n');
+					return;
+				}
+			}
+
+			// insert new `mid` into array of existing `require`
+			var scriptText = this._requireHtmlElem.find({elementType: 'HTMLText'}, true),
+				text = scriptText.getText(),
+				m = text.match(this._reRequire),
+				arr = m[1].match(this._reModuleId);
+			// check for duplicate
+			if (arr.indexOf(mid) === -1) {
+				arr.push(mid);
+				text = text.replace(this._reRequire, 'require(' + JSON.stringify(arr, null, '  ') + ')');
+				scriptText.setText(text);
+				// XXX For some reason, <script> text is handled differently in the
+				//   Model than that of other elements.  I think I only need to call
+				//   setScript(), but the correct process should be to just update
+				//   HTMLText. See issue #1350.
+				scriptText.parent.setScript(text);
+			}
 		}
 	},
 
@@ -2768,19 +2728,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 		
-		var head =  this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
-		// XXX Bug 7499 - (HACK) States.js needs to patch Dojo loader in order to make use of
-		//	"dvStates" attributes on DOM nodes.  In order to do so, make sure State.js is one of
-		//	the last scripts in <head>, so it is after dojo.js and other dojo files.  This code
-		//	inserts all scripts before States.js.
-		//	First, make sure that we've properly saved the location of States.js.  If, for
-		//	whatever reason, this is not the case, then fall back to the original code of
-		//	appending script to <head>.
-		if (this._statesJsScriptTag) {
-			head.insertBefore(script, this._statesJsScriptTag);
-		} else {
-			head.addChild(script);
-		}
+		var head = this.getDocumentElement().getChildElement('head');
+		head.addChild(script);
 		
 		//this.getHeader().scripts.push(url);
 	},
@@ -2795,15 +2744,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * create one.
 	 * 
 	 * @param {string} text inline JS to add
+	 * @return {HTMLElement} the element which contains added script
 	 */
 	addHeaderScriptText: function(text) {
-		// XXX cache 'head'
 		var head = this.getDocumentElement().getChildElement('head'),
 			scriptText,
 			children = head.children,
 			i,
 			node;
 
+		// reverse search; cannot use getChildElements, et al
 		for (i = children.length - 1; i >= 0; i--) {
 			node = children[i];
 			if (node.elementType === 'HTMLElement' && node.tag === 'script') {
@@ -2837,6 +2787,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//   HTMLText. See issue #1350.
 			scriptText.parent.setScript(oldText + '\n' + text);
 		}
+
+		return scriptText.parent; // HTMLElement obj
 	},
 	
 	/**
@@ -2854,7 +2806,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Add element to <head> of document.  Modeled on dojo.create().
 	 */
 	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
-		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		var head = this.getDocumentElement().getChildElement('head');
 		
 		if (!allowDup) {
 			// Does <head> already have an element that matches the given
@@ -2863,10 +2815,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// same as the incoming attr.  Same goes for <meta> and its 'name'
 			// attr.
 			var sigAttr = this._significantAttrs[tag] || 'src';
-			var found = head.find({ elementType: 'HTMLElement', tag: tag })
-					.some(function(elem) {
-						return elem.getAttribute(sigAttr) === attrs[sigAttr];
-					});
+			var found = head.getChildElements(tag).some(function(elem) {
+				return elem.getAttribute(sigAttr) === attrs[sigAttr];
+			});
 			if (found) {
 				return;
 			}
@@ -2889,10 +2840,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Remove element from <head> that matches given tag and attributes.
 	 */
 	_removeHeadElement: function(tag, attrs) {
-		var head = this._srcDocument.find({elementType: 'HTMLElement', tag: 'head'}, true);
+		var head = this.getDocumentElement().getChildElement('head');
 		
 		// remove from Model...
-		head.find({ elementType: 'HTMLElement', tag: tag }).some(function(elem) {
+		head.getChildElements(tag).some(function(elem) {
 			var found = true;
 			for (var name in attrs) if (attrs.hasOwnProperty(name)) {
 				if (elem.getAttribute(name) !== attrs[name]) {
@@ -2922,6 +2873,148 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		});
 	},
+
+	_getDojoJsElem: function() {
+		if (!this._dojoScriptElem) {
+			// find and cache the HTMLElement which points to dojo.js
+			var head = this.getDocumentElement().getChildElement('head'),
+				found = head.getChildElements('script').some(function(child) {
+					if (/\/dojo.js$/.test(child.getAttribute('src'))) {
+						this._dojoScriptElem = child;
+						return true; // break 'some' loop
+					}
+				}, this);
+			if (!found) {
+				// serious problems! dojo.js not found
+				console.error('"dojo.js" script element not found!');
+				return;
+			}
+		}
+
+		return this._dojoScriptElem;
+	},
+
+	/**
+	 * Update the value of `data-dojo-config` attribute in the model element
+	 * pointing to "dojo.js".  Properties in `data` overwrite existing value;
+	 * null values remove properties from `data-dojo-config`.
+	 * 
+	 * Note: This only updates the model. In order for the change to take in
+	 * the VE, you will need to refresh the iframe from the updated source.
+	 * 
+	 * @param  {Object} data
+	 */
+	_updateDojoConfig: function(data) {
+		var dojoScript = this._getDojoJsElem(),
+			djConfig = dojoScript.getAttribute('data-dojo-config');
+		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
+
+		// If `prop` has a value, copy it into djConfig, overwriting existing
+		// value.  If `prop` is `null`, then delete from djConfig.
+		for (var prop in data) {
+			if (data[prop] === null) {
+				delete djConfig[prop];
+			} else {
+				djConfig[prop] = data[prop];
+			}
+		}
+
+		dojoScript.setAttribute('data-dojo-config',
+				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'"));
+	},
+
+////////////////////////////////////////////////////////////////////////////////
+// XXX move this section to Dojo library?
+	_addCssForDevice: function(localDevice, themeMap, context) {
+		for (var i = 0, len = themeMap.length; i < len; i++) {
+			var item = themeMap[i];
+			if (item[0] === localDevice || item[0] === '.*'){
+				if (!this.themeCssfiles) {
+					this.themeCssfiles = [];
+				}
+
+				var cssFiles = item[2];
+				this.themeCssfiles = this.themeCssfiles.concat(cssFiles);
+
+				this._themePath = new davinci.model.Path(this.visualEditor.fileName);
+				// Connect to the css files, so we can update the canvas when
+				// the model changes.
+				this._getCssFiles().forEach(function(file) {
+					dojo.connect(file, 'onChange', this, '_themeChange');
+				}, this);
+
+				break;
+			}
+		}
+	},
+
+	_configDojoxMobile: function() {
+		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
+		// monitoring of which stylesheets get loaded for a given theme
+
+		var dm = lang.getObject("dojox.mobile", true, this.getGlobal());
+		dm.configDeviceTheme = function() {
+			var loadDeviceTheme = dm.loadDeviceTheme;
+
+			dm.loadDeviceTheme = function(device) {
+				var djConfig = this.getDojo().config,
+					djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
+					ua = device || djConfig.mblUserAgent || 'none',
+					themeMap,
+					themeFiles;
+
+				djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
+				themeMap = djConfigModel.themeMap;
+				themeFiles = djConfigModel.mblThemeFiles;
+
+				// clear dynamic CSS
+				delete this.themeCssfiles;
+				delete this.cssFiles;
+
+				// load CSS files specified by `themeMap`
+				if (!themeMap) {
+					// load defaults if not defined in file
+					themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
+				}
+				this._addCssForDevice(ua, themeMap, this);
+
+				// set/unset themeMap & themeFiles in VE DOM
+				// XXX This won't work for Dojo 1.8, will need to set `themeMap` on
+				//     Dojo config obj and reload VE iframe.
+				dm.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+				if (themeFiles) {
+					djConfig.mblThemeFiles = themeFiles;
+				} else {
+					delete djConfig.mblThemeFiles;
+				}
+
+				if (this._selection) {
+					// forces style palette to update cascade rules
+					this.onSelectionChange(this._selection);
+				}
+
+				loadDeviceTheme(device);
+			}.bind(this);
+
+			// This is a call-once function
+			delete dm.configDeviceTheme;
+		}.bind(this);
+
+		// Set mobile device CSS files
+		var mobileDevice = this.getMobileDevice();
+		if (mobileDevice) {
+			this.setMobileDevice(mobileDevice);
+			this.visualEditor.setDevice(mobileDevice, true);
+		}
+
+		// Check mobile orientation
+		var orientation = this.getMobileOrientation();
+		if (orientation) {
+			this.visualEditor.setOrientation(orientation);
+		}
+	},
+// XXX end "move this section to Dojo library"
+////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Perform any visual updates in response to mousemove event while performing a

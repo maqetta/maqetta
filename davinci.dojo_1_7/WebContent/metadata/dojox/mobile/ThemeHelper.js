@@ -3,13 +3,15 @@ define([
     "dojo/dom-style",
     "davinci/model/Path",
     "davinci/html/HTMLElement",
-    "davinci/html/HTMLText"
+    "davinci/html/HTMLText",
+    "davinci/Theme"
 ], function(
     array,
     domStyle,
     Path,
     HTMLElement,
-    HTMLText
+    HTMLText,
+    Theme
 ) {
 
 return {
@@ -21,8 +23,15 @@ return {
 	preThemeConfig: function(context) {
         var dm = context.getDojo().getObject("dojox.mobile", true);
         var base = context.visualEditor.theme.base;
+        // #23 adjust for where html is located 
+		var themeBase = Theme.getThemeLocation();
+		var relPath = themeBase.relativeTo(context.getPath(), true);
+		var themeCssfiles = [];
+		context.visualEditor.theme.files.forEach(function(file){
+			themeCssfiles.push(relPath.toString()+'/'+context.visualEditor.theme.name+'/'+file); // #23 css files need to be added to doc before body content
+		}.bind(this));
         dm.themeFiles = [];
-        dm.themeMap=[[".*",base,[context.visualEditor.theme.files[0]]]];
+        dm.themeMap=[[".*",base,themeCssfiles]];
 	},
 	
 	getHeadImports: function(theme){

@@ -189,16 +189,7 @@ define([
         	if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
-            // XXX refactor into function
             item.widgetClass = wm.categories[item.category].widgetClass;
-
-            if (item.data) {
-				item.data.forEach(function(data) {
-	                if (! wm.$providedTypes[data.type]) {
-	                    wm.$providedTypes[data.type] = true;
-	                }
-	            });
-	        }
         });
         
         // mix in descriptor instance functions

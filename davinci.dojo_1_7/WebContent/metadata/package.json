@@ -2425,7 +2425,8 @@
 		                }
 		            ],
 		            "tool": "./dojox/mobile/IconContainerCreateTool",
-		            "allowedChild": "dojox.mobile.IconItem"
+		            "allowedChild": "dojox.mobile.IconItem",
+		            "inlineEdit": "./dojox/mobile/IconContainerInput"
 		        },
 		        {
 		            "name": "IconItem",

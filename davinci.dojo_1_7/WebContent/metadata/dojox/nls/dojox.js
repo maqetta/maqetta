@@ -27,6 +27,11 @@ define({ root: {
 		"mobileComboBoxHelp2":"Indicate the default option to be selected with the \"+\" at the start of the line.",
 		
 		//mobile/SpinWheelSlotInput.js
-		"spinWheelSlotHelp":"Enter comma sperated values or a range of numbers. For example: \"Dogs,Cats,Frogs\" or \"1-99\"."
-		
+		"spinWheelSlotHelp":"Enter comma sperated values or a range of numbers. For example: \"Dogs,Cats,Frogs\" or \"1-99\".",
+
+		//mobile/IconContainer
+		"iconContainerLabel": "Label:",
+		"iconContainerIcon": "Icon:",
+		"iconContainerChooseIcon": "Choose Icon...",
+		"iconContainerNewItem": "Item "
 }});

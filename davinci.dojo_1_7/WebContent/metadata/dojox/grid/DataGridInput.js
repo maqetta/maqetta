@@ -89,18 +89,44 @@ return declare(DataStoreBasedWidgetInput, {
 
 	refreshStoreView: function(){
 		var textArea = dijit.byId("davinciIleb");
-		var structure = this._widget.attr("structure");
 		var value ='';
-		for (var x = 0; x < structure.length; x++){
-			var pre = (x > 0) ? ',' : '';
-			value += pre + structure[x].name.trim();
+		
+		var currentWidgetStructure = this._widget.attr("structure");
+		
+		//structure doesn't have to be a 1-to-1 match with new grid wizard, so build 
+		//structure from data source rather than widget attribute (but we'll use
+		//current widget structure for column labels when available)
+		var attributes = null;
+		var store = this._widget.dijitWidget.store;
+		if (store._arrayOfAllItems.length > 0) {
+			attributes = store.getAttributes(store._arrayOfAllItems[0]);
+			if (attributes[0] === "unique_id") {
+				//Get rid of "unique_id"
+				attributes.splice(0, 1);
+			} 
+			value ='';
+			for (var x = 0; x < attributes.length; x++){
+				var attributeLabel = attributes[x].trim();
+				dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
+					if (attributeLabel === currentWidgetStructureElement.field) {
+						attributeLabel = currentWidgetStructureElement.name.trim();
+						return true;
+					}
+				});
+				
+				var pre = (x > 0) ? ',' : '';
+				value += pre + attributeLabel;
+			}
 		}
+
+		//Loop through data store data to build up the string
 		value += '\n';
-		for (var i = 0; i <	this._widget.dijitWidget.store._arrayOfAllItems.length; i++){
-			var item = this._widget.dijitWidget.store._arrayOfAllItems[i];
-			for (var s = 0; s < structure.length; s++){
+		for (var i = 0; i <	store._arrayOfAllItems.length; i++){
+			var item = store._arrayOfAllItems[i];
+			for (var s = 0; s < attributes.length; s++){
 				var pre = (s > 0) ? ',' : '';
-				value += pre + item[structure[s].field];
+				var itemValue = item[attributes[s]];
+				value += pre + (itemValue ? itemValue[0] : "");
 			}
 			value += '\n';
 		}
@@ -108,7 +134,8 @@ return declare(DataStoreBasedWidgetInput, {
 		textArea.attr('value', String(value));
 	},
 	
-	updateWidget: function() {
+	//called by superclass's updateWidget
+	_getDummyDataUpdateWidgetCommand: function(updateCommandCallback) {
 		var structure = [];
 		
 		var context = this._getContext();
@@ -157,11 +184,13 @@ return declare(DataStoreBasedWidgetInput, {
 		}
 
 		structure = this._structure;
-		var escapeHTML = (this.getFormat() === 'text');
-
+		
 		var props = {
-			structure: structure,
-			escapeHTMLInData: escapeHTML
+			structure: structure
+		};
+		if (this.supportsEscapeHTMLInData) {
+			var escapeHTML = (this.getFormat() === 'text');
+			props.escapeHTMLInData = escapeHTML;
 		};
 		
 		//Deal with table column headers
@@ -185,9 +214,9 @@ return declare(DataStoreBasedWidgetInput, {
 			var mcmd = new ModifyAttributeCommand(widget, {store: newStoreId});
 			compoundCommand.add(mcmd);
 		}
-
-		context.getCommandStack().execute(compoundCommand);	
-		context.select(command.newWidget);
+		
+		//Callback with the new command
+		updateCommandCallback(compoundCommand);
 	},
 	
 	_buildTableChildrenForStructure: function(structure, tableWidget) {
@@ -260,7 +289,6 @@ return declare(DataStoreBasedWidgetInput, {
 			children: colDef.name
 		};
 	},
-	
 		
 	buildStructure: function(structure, value) {
 		var oldStructure = structure, // we are defining the structure by row one of text area
@@ -271,13 +299,29 @@ return declare(DataStoreBasedWidgetInput, {
 				rows = value.split('\n'),
 				cols = rows[0].split(',');
 
+		var currentWidgetStructure = this._widget.attr("structure");
 		for (var c = 0; c < cols.length; c++){
-			structure[c] = {
+			//Create base structure
+			var tmpStructure = {
 				cellType: dojox.grid.cells.Cell,
 				width: 'auto',
 				name: cols[c],
 				field: cols[c].replace(/\s+/g, '_').toLowerCase()
 			};
+			
+			//See if column exists in the current widget structure to get previously
+			//set values like width, etc.
+			dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
+				if (tmpStructure.field === currentWidgetStructureElement.field) {
+					if (currentWidgetStructureElement.width) {
+						tmpStructure.width = currentWidgetStructureElement.width;
+					}
+					
+					return true;
+				}
+			});
+			
+			structure[c] = tmpStructure;
 		}
 
 		this._structure = structure;
@@ -304,15 +348,30 @@ return declare(DataStoreBasedWidgetInput, {
 	
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
 		var structure = [];
+		var currentWidgetStructure = this._widget.attr("structure");
 		var attributes = this._urlDataStore.getAttributes(items[0]);
 		for (var i = 0; i < attributes.length; i++) {
 			var name = attributes[i];
-			structure.push({
+			var tmpStructure = {
 				cellType: dojox.grid.cells.Cell,
 				width: 'auto',
 				name: name,
 				field: name					
+			};
+			
+			//See if column exists in the current widget structure to get previously
+			//set values like width, etc.
+			dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
+				if (tmpStructure.field === currentWidgetStructureElement.field) {
+					if (currentWidgetStructureElement.width) {
+						tmpStructure.width = currentWidgetStructureElement.width;
+					}
+					
+					return true;
+				}
 			});
+			
+			structure.push(tmpStructure);
 		}
 
 		for (var i = 0; i < items.length; i++) {
@@ -321,11 +380,13 @@ return declare(DataStoreBasedWidgetInput, {
 		}
 
 		var scripts;
-		var escapeHTML = (this._format === 'text');
-
+		
 		var props = {
-			structure: structure,
-			escapeHTMLInData: escapeHTML
+			structure: structure
+		};
+		if (this.supportsEscapeHTMLInData) {
+			var escapeHTML = (this._format === 'text');
+			props.escapeHTMLInData = escapeHTML;
 		};
 		
 		//Deal with table column headers

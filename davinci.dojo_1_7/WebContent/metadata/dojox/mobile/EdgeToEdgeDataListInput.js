@@ -89,7 +89,8 @@ return declare(DataStoreBasedWidgetInput, {
 		return data;
 	},
 
-	updateWidget: function() {
+	//called by superclass's updateWidget
+	_getDummyDataUpdateWidgetCommand: function(updateCommandCallback) {
 		var context = this._getContext();
 		var widget = this._widget;
 
@@ -152,8 +153,8 @@ return declare(DataStoreBasedWidgetInput, {
 			compoundCommand.add(mcmd);
 		}
 
-		context.getCommandStack().execute(compoundCommand);	
-		context.select(command.newWidget);
+		//Callback with the new command
+		updateCommandCallback(compoundCommand);
 	}
 });
 

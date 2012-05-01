@@ -4,6 +4,3 @@ Bundle-Name: Davinci.HTML
 Bundle-SymbolicName: davinci.html;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Activator: org.davinci.html.HTMLActivator
-Require-Bundle: org.eclipse.equinox.http.registry;bundle-version="1.0.200",
- org.eclipse.osgi;bundle-version="3.5.0"

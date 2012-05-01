@@ -51,6 +51,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/scene/removed", this._removeScene.bind(this));
 		this.subscribe("/davinci/scene/renamed", this._renameScene.bind(this));
 		this.subscribe("/davinci/scene/selectionChanged", this._sceneSelectionChanged.bind(this));
+		dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 		
 		dojo.style(this.toolbarDiv, "display", "none");
 	},
@@ -108,6 +109,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._updateView();
 	},
 	
+	_widgetPropertiesChanged: function() {
+		this._updateView();
+	},
+
 	_sceneSelectionChanged: function(sceneManager, sceneId) {
 		if(!sceneManager || !sceneManager.category || !sceneId){
 			return;
@@ -439,7 +444,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				return false;	// return false if objects don't match
 			}
 			// Dojo's datastores puts values as first elements of array, hence [0]
-			if(o1[prop] && o1[prop][0] !== o2[prop][0]){
+			if(o1[prop] && o1[prop] !== o2[prop]){
 				return false;	// return false if objects don't match
 			}
 			return true;

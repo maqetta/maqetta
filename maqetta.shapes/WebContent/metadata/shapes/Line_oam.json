@@ -27,7 +27,7 @@
     "property": {
     	"points":{
             "datatype": "string",
-            "defaultValue": "0,0;100,0"
+            "defaultValue": "0,0,100,0"
         },
     	"startarrow":{
             "datatype": "string",

@@ -4,7 +4,7 @@ var dm=_3.getObject("dojox.mobile",true);
 dm.loadCssFile=function(_8){
 dm.loadedCssFiles.push(_6.create("LINK",{href:_8,type:"text/css",rel:"stylesheet"},_4.doc.getElementsByTagName("head")[0]));
 };
-dm.themeMap=dm.themeMap||[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[_7.toUrl("dojox/mobile/themes/iphone/ipad.css")]],["Custom","custom",[]],[".*","iphone",[]]];
+dm.themeMap=_2.themeMap||dm.themeMap||[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[_7.toUrl("dojox/mobile/themes/iphone/ipad.css")]],["Custom","custom",[]],[".*","iphone",[]]];
 dm.loadDeviceTheme=function(_9){
 var t=_2["mblThemeFiles"]||dm.themeFiles||["@theme"];
 if(!_3.isArray(t)){

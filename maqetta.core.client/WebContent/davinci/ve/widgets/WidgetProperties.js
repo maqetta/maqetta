@@ -33,7 +33,7 @@ define([
 		},
 
 		onWidgetSelectionChange: function() {
-			if (!this._widget) {
+			if (!this._widget || !this._editor || this._editor.editorID != "davinci.ve.HTMLPageEditor") {
 				this._disconnectAll();
 				this._destroyProperties();
 				return;
@@ -70,6 +70,7 @@ define([
 		},
 		
 		onEditorSelected: function(editorChange) {
+			this._editor = editorChange;
 			if (editorChange && editorChange.editorID == "davinci.ve.HTMLPageEditor") {
 				// not all editors have a context
 				//FIXME: test for context instead?
@@ -117,9 +118,9 @@ define([
 					var found = false;
 					var w = this._widget;
 
-					while (!found && w.getParent() != this.context.rootWidget) {
+					while (!found && w && w.getParent() != this.context.rootWidget) {
 						w = w.getParent();
-						if (dojo.indexOf(property.mustHaveAncestor, w.type) > -1) {
+						if (w && dojo.indexOf(property.mustHaveAncestor, w.type) > -1) {
 							found = true;
 						}
 					}
@@ -264,7 +265,14 @@ define([
 				if (row.value != propValue) { // keep '!=', we want type coersion from strings
 					row.value = propValue;
 					var attr = row.type === 'boolean' ? 'checked' : 'value';
-					dojo.attr(propNode, attr, row.value);
+
+					// check if we have a dijit
+					var dijitwidget = dijit.byId(row.id);
+					if (dijitwidget) {
+						dijitwidget.attr(attr, row.value);
+					} else {
+						dojo.attr(propNode, attr, row.value);
+					}
 				}
 			}
 		}

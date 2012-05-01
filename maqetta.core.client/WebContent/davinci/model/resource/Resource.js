@@ -45,11 +45,8 @@ return declare("davinci.model.resource.Resource", Model, {
 		while(path.indexOf(".") == 0 || path.indexOf("/") == 0) {
 			path = path.substring(1, path.length);
 		}
-		var loc = davinci.Workbench.location();
-		if (loc.charAt(loc.length-1) == '/') {
-			loc = loc.substring(0,loc.length-1);
-		}
-		return loc + '/user/' + Runtime.userName + '/ws/workspace/' + path;
+		var userWorkspaceUrl = Runtime.getUserWorkspaceUrl();
+		return userWorkspaceUrl + path;
 	},
 
 	rename: function(newName) {

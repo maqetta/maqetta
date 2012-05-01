@@ -95,7 +95,17 @@ var Runtime = {
 	location: function(){
 		return document.location.href.split("?")[0];
 	},
-	
+
+	getUserWorkspaceUrl: function(){
+		var loc = this.location();
+		//FIXME: replace this stuff with a regexp
+		if (loc.charAt(loc.length-1)=='/'){
+			loc=loc.substring(0,loc.length-1);
+		}
+		var workspaceUrl=loc+'/user/'+Runtime.userName+'/ws/workspace/';
+		return workspaceUrl;
+	},
+
 	run: function() {
 		// add class to root HTML element to indicate if mac or windows
 		// this is because of different alignment on mac/chrome vs win/chrome

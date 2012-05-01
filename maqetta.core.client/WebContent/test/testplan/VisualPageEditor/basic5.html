@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Visual page editor basic tests (part 5 - Advanced visual editing)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Visual page editor basic tests (part 5 - Advanced visual editing)</h1>
+
+	<h2 class="test_section">Area select</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi sketch". Choose any filename.</li>
+		<li>For each of the following widgets, click on the widget in the Widgets palette, and subsequently
+				drag out a rectangle on the canvas to define the initial size of the widget, making sure
+				no widgets overlap:
+			<ul>
+				<li>TabContainer</li>
+				<li>HTML DIV</li>
+				<li>HTML BUTTON</li>
+				<li>A couple of clipart widgets (e.g., Home and Map)</li>
+				<li>A couple of shape widgets (e.g., Rectangle and Line)</li>
+			</ul>
+		</li>
+		<li>Drag/drop a Dojo Button and ComboBox into middle of the TabContainer.</li>
+		<li>Drag/drop a Dojo Checkbox and RadioButton into middle of the DIV</li>
+		<li>Move mouse to various positions on the canvas, mouse down, and drag out various selection rectangles,
+			surrounding some of the widgets. Sometimes start the drag/select when over the background,
+			sometimes start the drag/select when over an empty area of the TabContainer,
+			sometimes start the drag/select when over an empty area of the DIV,
+			sometimes start the drag/select when over a primitive widget such as a Button.
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>If you start the drag over a currently selected widget, 
+						the drag operation should move that widget</li>
+					<li>If you start the drag over an unselected widget and that widget
+						is not a container widget, the drag operation should select and then move that widget</li>
+					<li>If you start the drag over the white area of a container (TabContainer or DIV),
+						then the drag operation should show a dashed selection rectangle,
+						and all widgets inside that selection rectangle should be selected.</li>
+					<li>If you start the drag over the white area of the page background,
+						then the drag operation should show a dashed selection rectangle,
+						and all widgets inside that selection rectangle should be selected.</li>
+					<li>Note that if a parent widget is selected, then none of its children should be selected -
+						the visual editor's drag/select logic should prevent simultaneous selection of a widget and
+						any of its descendants.</li>
+				</ul>
+			</div></li>
+		<li>Open Sample1.html</li>
+		<li>With the mouse over the white area to the right of the TabContainer,
+			drag out a few selection rectangles that cover some of the widgets in the file.
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>All widgets within the drag/select's rectangle should be selected.</li>
+					<li>Note that if a parent widget is selected, then none of its children should be selected -
+						the visual editor's drag/select logic should prevent simultaneous selection of a widget and
+						any of its descendants.</li>
+				</ul>
+			</div></li>
+	</ol>
+
+</body>
+</html>

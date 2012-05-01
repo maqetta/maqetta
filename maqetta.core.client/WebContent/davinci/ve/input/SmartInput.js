@@ -630,14 +630,18 @@ return declare("davinci.ve.input.SmartInput", null, {
 		if (this._inline) {
 			var value;
 			while (connection = this._connection.pop()){
-				dojo.disconnect(connection);
+				if (connection) {
+					dojo.disconnect(connection);
+				}
 			}
 			var contentPaneAncestor = this._findContentPaneAncestor(this._widget._edit_context.frameNode);
 			if(!contentPaneAncestor){
 				console.log('ERROR. SmartInput.js _loading(). No ancestor ContentPane');
 				return;
 			}
-			contentPaneAncestor.removeChild(this._loadingDiv);
+			if (this._loadingDiv) {
+				contentPaneAncestor.removeChild(this._loadingDiv);
+			}
 			if(this._inline.style.display != "none" && this._inline.eb){
 				value = this._inline.eb.get('value');
 				this._value = value;

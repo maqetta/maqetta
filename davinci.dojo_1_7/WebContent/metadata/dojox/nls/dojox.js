@@ -11,6 +11,9 @@ define({ root: {
 		"dataFromWorkspace":"Data file from workspace",
 		"dataFromJsonpURL": "Data from URL (JSONP)",
 		"callbackParameter": "Callback ",
+
+		//grid/DataGridHelper.js
+		'properyNotSupported':'Property "${0}" is not supported in desinger, use Preview to view.',
 			
 		//mobile/EdgeToEdgeDataListInput.js
 		"edgeToEdgeFormat":"list label, transition_view_name",
@@ -24,6 +27,11 @@ define({ root: {
 		"mobileComboBoxHelp2":"Indicate the default option to be selected with the \"+\" at the start of the line.",
 		
 		//mobile/SpinWheelSlotInput.js
-		"spinWheelSlotHelp":"Enter comma sperated values or a range of numbers. For example: \"Dogs,Cats,Frogs\" or \"1-99\"."
-		
+		"spinWheelSlotHelp":"Enter comma sperated values or a range of numbers. For example: \"Dogs,Cats,Frogs\" or \"1-99\".",
+
+		//mobile/IconContainer
+		"iconContainerLabel": "Label:",
+		"iconContainerIcon": "Icon:",
+		"iconContainerChooseIcon": "Choose Icon...",
+		"iconContainerNewItem": "Item "
 }});

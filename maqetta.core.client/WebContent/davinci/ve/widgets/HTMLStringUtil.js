@@ -50,6 +50,13 @@ define(["dojo/_base/declare",
 		
 		getEditor : function(jsonString){
 			
+			function getValueAndTitle(value) {
+				var obj = {};
+				obj.value = value.value || value;
+				// if it is an object use the value and look for a title
+				obj.title = value.title || obj.value;
+				return obj;
+			}
 			
 			var metaType = jsonString.type; 
 			var id = this.getId();
@@ -88,18 +95,8 @@ define(["dojo/_base/declare",
 					var values = jsonString['values'];
 					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++) {
-						var value;
-						var title;
-						// if it is an object use the value and look for a title
-						if (values[i].value) {
-							value = values[i].value;
-							title = values[i].title ? values[i].title : values[i].value;
-							
-						} else {
-							value = values[i];
-							title = values[i];
-						}
-						text+="<option value='" + value + "'>" + title + "</option>";
+						var obj = getValueAndTitle(values[i]);
+						text+="<option value='" + obj.value + "'>" + obj.title + "</option>";
 					}
 					text+="</select>";
 					return text;
@@ -108,18 +105,8 @@ define(["dojo/_base/declare",
 					var values = jsonString['values'];
 					var text = "<select style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++) {
-						var value;
-						var title;
-						// if it is an object use the value and look for a title
-						if (values[i].value) {
-							value = values[i].value;
-							title = values[i].title ? values[i].title : values[i].value;
-							
-						} else {
-							value = values[i];
-							title = values[i];
-						}
-						text+="<option value='" + value + "'>" + title + "</option>";
+						var obj = getValueAndTitle(values[i]);
+						text+="<option value='" + obj.value + "'>" + obj.title + "</option>";
 					}
 					text+="</select>";
 					return text;
@@ -336,17 +323,17 @@ define(["dojo/_base/declare",
 			return false;
 		},
 		
-		showSection : function(sectionName){
+		showSection : function(sectionKey, sectionTitle){
 			var Util = this;
-			Util._crumbLevel1(sectionName);
-			Util._initSection(sectionName);
+			Util._crumbLevel1(sectionKey, sectionTitle);
+			Util._initSection(sectionKey);
 			Util._hideRootShowSection();
 			var detailsTD = Util._getDetailsTD();
 			dojo.addClass(detailsTD,"propSectionShowing");
 			return false;
 		},
 		
-		transitionRootToSection : function(sectionName, onEndCallback){
+		transitionRootToSection : function(sectionKey, sectionTitle, onEndCallback){
 		
 			function transEnd(event){
 				dojo.disconnect(webkitConnection);
@@ -378,8 +365,8 @@ define(["dojo/_base/declare",
 			var rootTD = Util._getRootTD();
 			var detailsTD = Util._getDetailsTD();
 		
-			Util._crumbLevel1(sectionName);
-			Util._initSection(sectionName);
+			Util._crumbLevel1(sectionKey, sectionTitle);
+			Util._initSection(sectionKey);
 		
 			if(Runtime.supportsCSS3Transitions){
 				// Get current width of rootTD, then force that width onto both rootTD and detailsTD
@@ -483,9 +470,12 @@ define(["dojo/_base/declare",
 			var thisCascadeRowTR = Util._searchSiblingsByTagClass(thisPropertyRowTR.nextSibling, "TR", "cssCascadeSection");
 			var propertySectionTABLE = Util._searchUpByTagClass(rowParent, "TABLE", Util.animShowDetailsClass);
 			var propertyGroupDIV = Util._searchUpByTagClass(thisPropertyRowTR, "DIV", "propGroup");
-			var propGroupName = dojo.attr(propertyGroupDIV, "propGroup");
+			var sectionKey = dojo.attr(propertyGroupDIV, "propGroup");
 			var propName = dojo.attr(thisPropertyRowTR, "propName");
-			Util._crumbLevel2(propGroupName, propName);
+			//FIXME: There must be a better way to call a class function on a singleton class
+			var SwitchingStyleView = dojo.getObject("davinci.ve.views.SwitchingStyleView");
+			var sectionTitle = SwitchingStyleView.prototype.sectionTitleFromKey(sectionKey);
+			Util._crumbLevel2(sectionKey, sectionTitle, propName);
 			var detailsTD = Util._getDetailsTD();
 			dojo.removeClass(detailsTD,"propSectionShowing");
 			dojo.addClass(detailsTD,"propDetailsShowing");
@@ -534,26 +524,26 @@ define(["dojo/_base/declare",
 			}	
 		},
 		
-		_crumbLevel1 : function(sectionName){
+		_crumbLevel1 : function(sectionKey, sectionTitle){
 			var Util = this;
 			var crumbsDIV = Util._getCrumbsDIV();
 			var s = '';
 			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showRoot()">All</span>';
 			s += '<span class="breadcrumbDescend">&gt;</span>';
 			s += '<span class="breadcrumbText breadcrumbTextCurrent">';
-			s += sectionName;
+			s += sectionTitle;
 			s += '</span>';
 			crumbsDIV.innerHTML = s;
 		},
 			
-		_crumbLevel2 : function(sectionName, propname){
+		_crumbLevel2 : function(sectionKey, sectionTitle, propname){
 			var Util = this;
 			var crumbsDIV = Util._getCrumbsDIV();
 			var s = '';
 			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showRoot()">All</span>';
 			s += '<span class="breadcrumbDescend">&gt;</span>';
-			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showSection(\''+sectionName+'\')">';
-			s += sectionName+'</span>';
+			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showSection(\''+sectionKey+'\',\''+sectionTitle+'\')">';
+			s += sectionTitle+'</span>';
 			s += '<span class="breadcrumbDescend">&gt;</span>';
 			s += '<span class="breadcrumbText breadcrumbTextCurrent">';
 			s += '\''+propname+'\'';
@@ -561,7 +551,7 @@ define(["dojo/_base/declare",
 			crumbsDIV.innerHTML = s;
 		},	
 		
-		_initSection : function(propGroupName){
+		_initSection : function(sectionKey){
 			var Util = this;
 			var allTRAnimClasses = Util.showPropAnimClasses;
 			var detailsTD = Util._getDetailsTD();
@@ -570,7 +560,7 @@ define(["dojo/_base/declare",
 			for(var i=0; i<propGroups.length; i++){
 				var propGroup = propGroups[i];
 				var name = dojo.attr(propGroup, "propGroup");
-				if(name==propGroupName){
+				if(name==sectionKey){
 					dojo.removeClass(propGroup,"dijitHidden");
 					propGroupDIV = propGroup;
 				}else{
@@ -586,7 +576,7 @@ define(["dojo/_base/declare",
 				dojo.addClass(cSects[i],"cascadeRowHidden");
 			}
 			dojo.removeClass(detailsTD,"propDetailsShowing");
-			Util._currentPropSection = propGroupName;
+			Util._currentPropSection = sectionKey;
 		},
 		
 		_hideSectionShowRoot : function(){

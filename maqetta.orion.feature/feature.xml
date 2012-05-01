@@ -2,7 +2,7 @@
 <feature
       id="maqetta.orion.feature"
       label="Feature"
-      version="1.0.0.qualifier">
+      version="1.0.1">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -55,5 +55,33 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="maqetta.clipart"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="maqetta.shapes"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="davinci.jqueryui_1_8"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="davinci.yui_2_6_0"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

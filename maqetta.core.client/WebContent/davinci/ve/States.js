@@ -1,7 +1,7 @@
 define([
         "dojo/_base/declare",
         "dojo/_base/connect",
-        "davinci/maqetta/States",
+        "davinci/maqetta/AppStates",
         "./commands/EventCommand",
         "./commands/StyleCommand",
     	"davinci/ve/utils/StyleArray"

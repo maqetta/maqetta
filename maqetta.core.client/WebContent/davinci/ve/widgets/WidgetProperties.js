@@ -118,9 +118,9 @@ define([
 					var found = false;
 					var w = this._widget;
 
-					while (!found && w.getParent() != this.context.rootWidget) {
+					while (!found && w && w.getParent() != this.context.rootWidget) {
 						w = w.getParent();
-						if (dojo.indexOf(property.mustHaveAncestor, w.type) > -1) {
+						if (w && dojo.indexOf(property.mustHaveAncestor, w.type) > -1) {
 							found = true;
 						}
 					}

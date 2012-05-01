@@ -24,6 +24,12 @@
 	border:4px solid #d3e1ee;
 	pointer-events:none;
 }
+
+.areaSelectDiv {
+	position:absolute;
+	border:1px dashed black;
+}
+
 .editFocusFrame {
 	position:absolute;
 	overflow:hidden;

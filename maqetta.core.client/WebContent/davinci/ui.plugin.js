@@ -342,6 +342,8 @@ return {
                     },
                     menubarPath: "delete"
                 }
+                
+                
             ]
         }
     ],
@@ -417,6 +419,20 @@ return {
                         },
                         radioGroup: "displayMode",
                         label: "Modify Libraries",
+                        toolbarPath: "download"
+                    },
+                    
+                    
+                    
+                    {
+                        id: "davinci.ui.orion",
+                        label: "Open Orion",
+                        iconClass: "orionIcon",
+                        run: function() {
+                        	location.href = "/index.html";
+                        },
+                        radioGroup: "displayMode",
+                        label: "Launch Orion",
                         toolbarPath: "download"
                     }
                 ]

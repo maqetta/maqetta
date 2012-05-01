@@ -8,11 +8,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
 
@@ -218,28 +220,40 @@ public class VFile implements IVResource {
         return this.file.mkdirs();
 
     }
+    protected static boolean wildCardMatch(String text, String pattern){
+        // Create the cards by splitting using a RegEx. If more speed 
+        // is desired, a simpler character based splitting can be done.
+        String [] cards = pattern.split("\\*");
 
-    public IVResource[] find(String path) {
+        // Iterate over the cards.
+        for (String card : cards)
+        {
+            int idx = text.indexOf(card);
+            
+            // Card not detected in the text.
+            if(idx == -1)
+            {
+                return false;
+            }
+            
+            // Move ahead, towards the right of the text.
+            text = text.substring(idx + card.length());
+        }
+        
+        return true;
+    }
+    public IVResource[] find(String pattern) {
         if (!this.isDirectory()) {
-            return null;
+            if(wildCardMatch(this.getName(), pattern))
+            	return new IVResource[]{this};
+            return new IVResource[0];
         }
-
-        IPath a = new Path(this.file.getAbsolutePath()).append(path);
-        IStorage f1 = this.file.newInstance(a.toOSString());
-
-        if (!f1.exists()) {
-            return null;
-        }
-        String[] segments = a.segments();
-        IPath me = new Path(this.file.getAbsolutePath());
-        IVResource parent = this;
-        for (int i = me.matchingFirstSegments(a); i < segments.length; i++) {
-            int segsToEnd = segments.length - i - 1;
-            String s = a.removeLastSegments(segsToEnd).toOSString();
-            IStorage f = file.newInstance(s);
-            parent = new VFile(f, parent, segments[i]);
-        }
-        return new IVResource[] { parent };
+       ArrayList found = new ArrayList();
+       IVResource[] children = this.listFiles();
+       for(int i=0;i<children.length;i++){
+    	   found.addAll(Arrays.asList(children[i].find(pattern)));
+       }
+       return (IVResource[])found.toArray(new IVResource[found.size()]);
 
     }
 
@@ -336,6 +350,6 @@ public class VFile implements IVResource {
 
     public IVResource[] findChildren(String childName) {
         // TODO Auto-generated method stub
-        return null;
+        return this.find(childName);
     }
 }

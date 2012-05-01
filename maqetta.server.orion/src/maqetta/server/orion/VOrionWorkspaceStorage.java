@@ -41,7 +41,10 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 			
 			return parent;
 	}
-	
+	public boolean exists() {
+		return true;
+	}
+
 	public IStorage createProj(String name){
 		IStorage existing = this.get(name);
 		if(existing!=null)

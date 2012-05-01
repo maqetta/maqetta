@@ -51,6 +51,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._spaceKey = false;
 		this._sKey = false;
 		var createMover = false;
+		this._areaSelectClear();
 		if((dojo.isMac && event.ctrlKey) || event.button == 2){
 			// this is a context menu ("right" click)  Don't change the selection.
 			return;
@@ -108,10 +109,16 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						// Simple mousedown over body => deselect all (for now)
 						// FIXME: mousedown over body should initiate an area select operation
 						context.deselect();
+						this._areaSelectInit(event.pageX, event.pageY);
 						return;
 					}
-					context.select(widget, ctrlKey);
-					moverWidget = widget;
+					if (Metadata.getAllowedChild(widget.type)[0] === 'NONE') {
+						context.select(widget, ctrlKey);
+						moverWidget = widget;
+					}else{
+						this._mouseDownInfo = { widget:widget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+						this._areaSelectInit(event.pageX, event.pageY);
+					}
 				}
 			}
 		}
@@ -123,8 +130,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				position_prop = userDojo.style(moverWidget.domNode, 'position');
 				this._moverAbsolute = (position_prop == 'absolute');
 				var parent = moverWidget.getParent();
-				//FIXME: isLayout check is not working. See #2042
-				if(!parent || !parent.isLayout || !parent.isLayout()){
+				var helper = widget.getHelper();
+				if(!(helper && helper.disableDragging && helper.disableDragging(moverWidget)) &&
+						(!parent || !parent.isLayout || !parent.isLayout())){
 					this._moverWidget = moverWidget;
 					this._moverLastEventTarget = null;
 					var cp = context._chooseParent;
@@ -185,6 +193,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
 			return;
 		}
+		var doAreaSelect = true;
 		var clickInteral = 750;	// .75seconds: allow for leisurely click action
 		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 		var clickDistance = 10;	// within 10px: inexact for tablets
@@ -197,6 +206,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					Math.abs(event.pageY - this._mouseDownInfo.pageY) <= clickDistance &&
 					(dateValue - this._mouseDownInfo.dateValue) <= clickInteral){
 				this._context.select(this._mouseDownInfo.widget);
+				doAreaSelect = false;
 			}
 			this._mouseDownInfo = null;
 		}
@@ -212,6 +222,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 		}
 		this._lastMouseUp = { pageX: event.pageX, pageY: event.pageY, dateValue:dateValue };
+		
+		// Process case where user dragged out a selection rectangle
+		// If so, select all widgets inside of that rectangle
+		if(this._areaSelect && doAreaSelect){
+			this._areaSelectSelectWidgets(event.pageX, event.pageY);
+		}
+		this._areaSelectClear();
+
 	},
 
 	onDblClick: function(event){
@@ -254,6 +272,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			return;
 		}
 		this._setTarget(event.target);
+		if(this._areaSelect){
+			this._areaSelectUpdate(event.pageX, event.pageY);
+		}
 	},
 
 	onMouseOut: function(event){
@@ -342,9 +363,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					compoundCommand = new davinci.commands.CompoundCommand();
 				}
 				var lastIdx = null;
+				var IDs = [];
+				var NewWidgets = [];
 				
 				//get the data	
 				dojo.forEach(selection, function(w){
+					IDs.push(w.getId());
 					var newwidget,
 						d = w.getData( {identify:false});
 					d.context=context;
@@ -355,6 +379,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						console.debug("Widget is null!!");
 						return;
 					}
+					NewWidgets.push(newwidget);
 					var ppw = cp.getProposedParentWidget();
 					if(ppw && ppw.refChild){
 						if(lastIdx !== null){
@@ -380,10 +405,15 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					}
 				}, this);
 
-				// remove widget
+				// remove old widget and restore ID on the new version of the given widget(s)
 				if(!copy){
 					dojo.forEach(selection, function(w){
+						var newwidget = NewWidgets.shift();
 						compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
+						var id = IDs.shift();
+						if(id){
+							compoundCommand.add(new davinci.ve.commands.ModifyCommand(newwidget, {id:id}));
+						}
 					}, this);
 				}
 
@@ -813,6 +843,88 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			this._setTarget(null);
 		}
 
+	},
+	
+	_areaSelectInit: function(initPageX, initPageY){
+		this._areaSelect = { x:initPageX, y:initPageY };
+		this._areaSelectDiv = dojo.create('div',
+				{className:'areaSelectDiv'},
+				this._context.rootNode);
+	},
+	
+	_areaSelectUpdate: function(endX, endY){
+		if(!this._areaSelect || !this._areaSelectDiv){
+			return;
+		}
+		var o = this._getBounds(this._areaSelect.x, this._areaSelect.y, endX, endY);
+		var style = this._areaSelectDiv.style;
+		style.left = o.l + 'px';
+		style.top = o.t + 'px';
+		style.width = o.w + 'px';
+		style.height = o.h + 'px';
+	},
+	
+	_areaSelectClear: function(){
+		this._areaSelect = null;
+		if(this._areaSelectDiv){
+			var parentNode = this._areaSelectDiv.parentNode;
+			if(parentNode){
+				 parentNode.removeChild(this._areaSelectDiv);
+			}
+			this._areaSelectDiv = null;
+		}
+
+	},
+	
+	_areaSelectSelectWidgets: function(endX, endY){
+		if(!this._areaSelect){
+			return;
+		}
+		var o = this._getBounds(this._areaSelect.x, this._areaSelect.y, endX, endY);
+		var l = o.l, t=o.t, w=o.w, h=o.h;
+		var context = this._context;
+		context.deselect();
+		var topWidgets = context.getTopWidgets();
+		for(var i=0; i<topWidgets.length; i++){
+			this._areaSelectRecursive(topWidgets[i], l, t, w, h);
+		}
+	},
+	
+	_areaSelectRecursive: function(widget, l, t, w, h){
+		if(!widget || !widget.domNode){
+			return;
+		}
+		var bounds = dojo.position(widget.domNode, true);
+		if(bounds.x >= l && bounds.y >= t && 
+				bounds.x + bounds.w <= l + w &&
+				bounds.y + bounds.h <= t + h){
+			this._context.select(widget, true);
+		}else{
+			var children = widget.getChildren();
+			for(var i=0; i<children.length; i++){
+				this._areaSelectRecursive(children[i], l, t, w, h);
+			}
+		}
+		
+	},
+	
+	_getBounds: function(startX, startY, endX, endY){
+		var o = {};
+		if(startX <= endX){
+			o.l = startX;
+			o.w = endX - startX;
+		}else{
+			o.l = endX;
+			o.w = startX - endX;
+		}
+		if(startY <= endY){
+			o.t = startY;
+			o.h = endY - startY;
+		}else{
+			o.t = endY;
+			o.h = startY - endY;
+		}
+		return o;
 	}
 
 });

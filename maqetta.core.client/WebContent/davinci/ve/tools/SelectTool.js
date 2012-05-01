@@ -44,6 +44,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
 			return;
 		}
+		var eventTarget = context.adjustEventToBody(event.target);
 		//FIXME: Don't allow both parent and child to be selected
 		//FIXME: maybe listen for mouseout on doc, and if so, stop the dragging?
 		
@@ -56,7 +57,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// this is a context menu ("right" click)  Don't change the selection.
 			return;
 		}
-		var widget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
+		var widget = this._getTarget() || widgetUtils.getEnclosingWidget(eventTarget);
 		while(widget){
 			if(widget.getContext()){ // managed widget
 				break;
@@ -188,6 +189,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	onMouseUp: function(event){
+console.log('SelectTool.js onMouseUp enter');
 		var context = this._context;
 		if(context.isFocusNode(event.target)){
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
@@ -210,6 +212,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 			this._mouseDownInfo = null;
 		}
+console.log('SelectTool.js onMouseUp G');
 		// Normal browser onDblClick doesn't work because we are interjecting 
 		// an overlay DIV with a mouseDown operation. As a result,
 		// the browser's rules about what is required to trigger an ondblclick are not satisfied.
@@ -221,14 +224,17 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				this.onDblClick(event);
 			}
 		}
+console.log('SelectTool.js onMouseUp M');
 		this._lastMouseUp = { pageX: event.pageX, pageY: event.pageY, dateValue:dateValue };
 		
 		// Process case where user dragged out a selection rectangle
 		// If so, select all widgets inside of that rectangle
 		if(this._areaSelect && doAreaSelect){
+console.log('SelectTool.js onMouseUp before _areaSelectSelectWidgets');
 			this._areaSelectSelectWidgets(event.pageX, event.pageY);
 		}
 		this._areaSelectClear();
+console.log('SelectTool.js onMouseUp exit');
 
 	},
 
@@ -764,6 +770,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 	//Part of Mover interface
 	onMoveStop: function(mover){
+console.log('SelectTool.js onMoveStop');
 		var context = this._context;
 		var cp = this._context._chooseParent;
 		

@@ -16,9 +16,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
     constructor: function (element) {
 
-    	// NOTE: If default border size on BorderContainer isn't satisfactory
-    	// we can pass style:'padding:ZZpx' to change border size to ZZpx
-        //this._bc = new BorderContainer({className:'visualEditorOuterContainer'}, element);
         this._bc = new BorderContainer({}, element);
 
         this.domNode = this._bc.domNode;

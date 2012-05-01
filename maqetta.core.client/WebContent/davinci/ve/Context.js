@@ -2146,6 +2146,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return false;
 	},
 
+	
+	/**
+	 * If event.target (passed as parameter originalTarget) is pointing to
+	 * a node outside of the user doc's BODY, then return BODY as the target.
+	 * This allows user dragging things outside of the current BODY's bounds.
+	 */
+	adjustEventToBody: function(originalTarget){
+		var containerNode = this.getContainerNode();
+		if(originalTarget.ownerDocument == containerNode.ownerDocument){
+			return originalTarget;
+		}else{
+			return this.rootNode;	// The BODY
+		}
+	},
+
 	onMouseOver: function(event){
 //console.log('Context.js onMouseOver. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._mouseOverAlready='+event._mouseOverAlready);
 		if(!this._processThisMouseEvent(event)){
@@ -2173,7 +2188,9 @@ console.log('event._mouseDownAlready');
 			this._activeTool.onMouseDown(event);
 		}
 		this.blockChange(false);
-dojo.stopEvent(event);
+if(event.currentTarget == this._visualEditorContainer){
+	dojo.stopEvent(event);
+}
 	},
 	
 	onDblClick: function(event){
@@ -2197,24 +2214,30 @@ if(this._dragInProcess && this._lastMouseMoveTarget != event.target){
 			this._activeTool.onMouseMove(event);
 		}
 		
-dojo.stopEvent(event);
+if(event.currentTarget == this._visualEditorContainer){
+	dojo.stopEvent(event);
+}
 	},
 
 	onMouseUp: function(event){
 console.log('Context.js onMouseUp. tagName='+event.target.tagName+',classname='+event.target.className);
 this._dragInProcess = false;
 		if(!this._processThisMouseEvent(event)){
+console.log('Context.js onMouseUp. _processThisMouseEvent is false');
 			return;
 		}
 		if(event._mouseUpAlready){	// We have multiple event listeners for same event. Prevent duplicate processing of same event.
+console.log('Context.js onMouseUp. _mouseUpAlready');
 			return;
 		}
 		event._mouseUpAlready = true;
+console.log('Context.js onMouseUp. this._activeTool='+this._activeTool);
 		if(this._activeTool && this._activeTool.onMouseUp){
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);
 dojo.stopEvent(event);
+console.log('Context.js onMouseUp. exit');
 	},
 
 	onMouseOut: function(event){

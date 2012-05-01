@@ -130,7 +130,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				position_prop = userDojo.style(moverWidget.domNode, 'position');
 				this._moverAbsolute = (position_prop == 'absolute');
 				var parent = moverWidget.getParent();
-				var helper = widget.getHelper();
+				var helper = moverWidget.getHelper();
 				if(!(helper && helper.disableDragging && helper.disableDragging(moverWidget)) &&
 						(!parent || !parent.isLayout || !parent.isLayout())){
 					this._moverWidget = moverWidget;
@@ -846,10 +846,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	_areaSelectInit: function(initPageX, initPageY){
-		this._areaSelect = { x:initPageX, y:initPageY };
+		this._areaSelect = { x:initPageX, y:initPageY, attached:false };
 		this._areaSelectDiv = dojo.create('div',
-				{className:'areaSelectDiv'},
-				this._context.rootNode);
+				{className:'areaSelectDiv', style:'display:none'});
 	},
 	
 	_areaSelectUpdate: function(endX, endY){
@@ -858,10 +857,15 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		var o = this._getBounds(this._areaSelect.x, this._areaSelect.y, endX, endY);
 		var style = this._areaSelectDiv.style;
+		style.display = 'block';
 		style.left = o.l + 'px';
 		style.top = o.t + 'px';
 		style.width = o.w + 'px';
 		style.height = o.h + 'px';
+		if(!this._areaSelect.attached){
+			this._context.rootNode.appendChild(this._areaSelectDiv);
+			this._areaSelect.attached = true;
+		}
 	},
 	
 	_areaSelectClear: function(){

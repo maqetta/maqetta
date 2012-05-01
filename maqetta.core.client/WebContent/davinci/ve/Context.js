@@ -159,6 +159,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
+		this._visualEditorContainer = this.visualEditorContainer.domNode;
+		this._frameNode = this.frameNode;
+		this._htmlNode = containerNode.ownerDocument.documentElement;
+
 		dojo.addClass(containerNode, "editContextContainer");
 		
 		this._connects = [
@@ -172,7 +176,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
 			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
-			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
+			dojo.connect(containerNode, "onmouseout", this, "onMouseOut"),
+			
+//FIXME: Doesn't grab events over silhouette
+			
+			dojo.connect(this._htmlNode, "ondblclick", this, "onDblClick"),
+			dojo.connect(this._htmlNode, "onmouseover", this, "onMouseOver"),
+			dojo.connect(this._htmlNode, "onmousedown", this, "onMouseDown"),
+			dojo.connect(this._htmlNode, "onmousemove", this, "onMouseMove"),
+			dojo.connect(this._htmlNode, "onmouseup", this, "onMouseUp"),
+			dojo.connect(this._htmlNode, "onmouseout", this, "onMouseOut"),
+			
+			dojo.connect(this._visualEditorContainer, "ondblclick", this, "onDblClick"),
+			dojo.connect(this._visualEditorContainer, "onmouseover", this, "onMouseOver"),
+			dojo.connect(this._visualEditorContainer, "onmousedown", this, "onMouseDown"),
+			dojo.connect(this._visualEditorContainer, "onmousemove", this, "onMouseMove"),
+			dojo.connect(this._visualEditorContainer, "onmouseup", this, "onMouseUp"),
+			dojo.connect(this._visualEditorContainer, "onmouseout", this, "onMouseOut"),
+			
+			dojo.connect(this._frameNode, "ondblclick", this, "onDblClick"),
+			dojo.connect(this._frameNode, "onmouseover", this, "onMouseOver"),
+			dojo.connect(this._frameNode, "onmousedown", this, "onMouseDown"),
+			dojo.connect(this._frameNode, "onmousemove", this, "onMouseMove"),
+			dojo.connect(this._frameNode, "onmouseup", this, "onMouseUp"),
+			dojo.connect(this._frameNode, "onmouseout", this, "onMouseOut")
 		];
 		this.setActiveTool();
 	},
@@ -2100,11 +2127,53 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return false;
 	},
 
+	/**
+	 * This routine should grab all mouse events inside the iframe
+	 * and all mouse events where currentTarget is one of the special nodes
+	 * upon which we established event listeners.
+	 * Otherwise, pass through the event to ancestors
+	 */
+	_processThisMouseEvent: function(event){
+		var containerNode = this.getContainerNode();
+		if(event.target.ownerDocument == containerNode.ownerDocument){
+			return true;
+		}
+		if(event.currentTarget == this._visualEditorContainer ||
+				event.currentTarget == this._frameNode ||
+				event.currentTarget == this._htmlNode){
+			return true;
+		}
+		return false;
+	},
+
+	onMouseOver: function(event){
+//console.log('Context.js onMouseOver. event.target.tagName='+event.target.tagName+',event.target.className='+event.target.className+',event._mouseOverAlready='+event._mouseOverAlready);
+		if(!this._processThisMouseEvent(event)){
+			return;
+		}
+		if(event._mouseOverAlready){	// We have multiple event listeners for same event. Prevent duplicate processing of same event.
+			return;
+		}
+		event._mouseOverAlready = true;
+	},
+
 	onMouseDown: function(event){
+this._dragInProcess = true;
+this._lastMouseMoveTarget = event.target;
+console.log('Context.js onMouseDown. tagName='+event.target.tagName+',classname='+event.target.className);
+		if(!this._processThisMouseEvent(event)){
+			return;
+		}
+		if(event._mouseDownAlready){	// We have multiple event listeners for same event. Prevent duplicate processing of same event.
+console.log('event._mouseDownAlready');
+			return;
+		}
+		event._mouseDownAlready = true;
 		if(this._activeTool && this._activeTool.onMouseDown && !this._blockChange){
 			this._activeTool.onMouseDown(event);
 		}
 		this.blockChange(false);
+dojo.stopEvent(event);
 	},
 	
 	onDblClick: function(event){
@@ -2113,20 +2182,49 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 
 	onMouseMove: function(event){
+if(this._dragInProcess && this._lastMouseMoveTarget != event.target){
+	console.log('Context.js onMouseMove. tagName='+event.target.tagName+',classname='+event.target.className);
+	this._lastMouseMoveTarget = event.target;
+}
+		if(!this._processThisMouseEvent(event)){
+			return;
+		}
+		if(event._mouseMoveAlready){	// We have multiple event listeners for same event. Prevent duplicate processing of same event.
+			return;
+		}
+		event._mouseMoveAlready = true;
 		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange){
 			this._activeTool.onMouseMove(event);
 		}
 		
+dojo.stopEvent(event);
 	},
 
 	onMouseUp: function(event){
+console.log('Context.js onMouseUp. tagName='+event.target.tagName+',classname='+event.target.className);
+this._dragInProcess = false;
+		if(!this._processThisMouseEvent(event)){
+			return;
+		}
+		if(event._mouseUpAlready){	// We have multiple event listeners for same event. Prevent duplicate processing of same event.
+			return;
+		}
+		event._mouseUpAlready = true;
 		if(this._activeTool && this._activeTool.onMouseUp){
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);
+dojo.stopEvent(event);
 	},
 
 	onMouseOut: function(event){
+		if(!this._processThisMouseEvent(event)){
+			return;
+		}
+		if(event._mouseOutAlready){	// We have multiple event listeners for same event. Prevent duplicate processing of same event.
+			return;
+		}
+		event._mouseOutAlready = true;
 		if(this._activeTool && this._activeTool.onMouseOut){
 			this._activeTool.onMouseOut(event);
 		}

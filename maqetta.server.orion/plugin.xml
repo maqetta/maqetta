@@ -17,15 +17,11 @@
      <extension point="maqetta.core.server.userManager">
     	<userManager class="maqetta.server.orion.user.OrionUserManager"/>
    	 </extension>
-	 <extension point="org.eclipse.core.runtime.products">
-      <product
-          application="maqetta.orion.product"
-          description="Maqetta Orion Server"
-          name="MaqMuffin">
-      </product>
-   </extension>
       <extension
             point="maqetta.core.server.command">
+            
+         <command path="keepalive" 
+               class="maqetta.core.server.command.KeepAlive" />
          <command path="login" noLogin="true" 
                class="maqetta.core.server.command.Login" />
          <command path="register" noLogin="true" 

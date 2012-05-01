@@ -88,7 +88,7 @@ public class VOrionStorage implements IStorage{
 		// TODO Auto-generated method stub
 		try {
 			IStorage parent = this.getParentFile();
-			if(parent!=null && !parent.exists()){
+			if(parent!=null && !parent.exists()  && !(parent instanceof VOrionWorkspaceStorage)){
 				parent.mkdirs();
 			}
 		//	if(this.store.fetchInfo().isDirectory())
@@ -150,6 +150,8 @@ public class VOrionStorage implements IStorage{
 	public void createNewFile() throws IOException {
 		OutputStream stream;
 		try {
+			
+			
 			stream = this.store.openOutputStream(EFS.NONE, null);
 			stream.flush();
 			stream.close();

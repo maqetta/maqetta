@@ -344,7 +344,7 @@ public class User implements IUser {
 
 	}
 
-	private void findLibFiles(IPath path, ArrayList results) {
+	protected void findLibFiles(IPath path, ArrayList results) {
 	
 		IVResource[] result = this.workspace.find(path.toString());
 

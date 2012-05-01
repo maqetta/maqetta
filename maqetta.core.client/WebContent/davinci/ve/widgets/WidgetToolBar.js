@@ -138,6 +138,9 @@ define(["dojo/_base/declare",
 			}
 		},
 		_onChangeIDAttribute : function(){
+			if(!this._widget){
+				return;
+			}
 			var inputElement = this._IDInputElement;
 			if(!inputElement){
 				return;
@@ -155,6 +158,9 @@ define(["dojo/_base/declare",
 		},
 		
 		_onChangeClassAttribute : function(){
+			if(!this._widget){
+				return;
+			}
 			var inputElement = this._classInputElement;
 			if(!inputElement){
 				return;

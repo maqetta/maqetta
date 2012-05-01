@@ -25,7 +25,7 @@ public class FindResource extends Command {
         IVResource[] foundFiles = null;
         if (inFolder != null) {
         	IPath path = new Path(inFolder).append(pathStr);
-            foundFiles = user.findFiles(path.toString(), inFolder, ignoreCase, workspaceOnly);
+            foundFiles = user.findFiles(pathStr, inFolder, ignoreCase, workspaceOnly);
         } else {
             foundFiles = user.findFiles(pathStr, ignoreCase, workspaceOnly);
         }

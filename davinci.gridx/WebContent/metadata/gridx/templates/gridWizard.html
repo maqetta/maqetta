@@ -1,0 +1,51 @@
+<div class='gridWizard'>
+	<div class='steps'>
+		<div dojoAttachPoint="navPage1" dojoAttachEvent="onclick:select" class="crumbs current sep">
+			<div dojoAttachPoint="navPage1Icon" class="done"></div>
+			1.${dataSourceHeader}
+		</div>
+		<div dojoAttachPoint="navPage2" dojoAttachEvent="onclick:select" class="crumbs sep">
+			<div dojoAttachPoint="navPage2Icon" class="todo"></div>
+			2.${selectColumnsHeader}
+		</div>
+		<div dojoAttachPoint="navPage3" dojoAttachEvent="onclick:select" class="crumbs">
+			<div dojoAttachPoint="navPage3Icon" class="todo"></div>
+			3.${configureColumnsHeader}
+		</div>
+	</div>
+	
+	<div dojoAttachPoint="wizardStackContainer" class='mainSection'>
+	</div>
+	
+	<table dojoAttachPoint="page1Node" class="pageNode">
+		<tr>
+			<td class="dataSourceInputCell">
+				<div dojoType="dijit.layout.ContentPane" dojoAttachPoint="dataSourceInput" class="dataSourceInputContainer"></div>
+			</td>
+		</tr>
+	</table>
+
+	<table dojoAttachPoint="page2Node">
+		<tr>
+			<td>
+				<div dojoAttachPoint="gridSelectColumnsPane"></div>
+			</td>
+		</tr>
+	</table>
+
+	<table dojoAttachPoint="page3Node">
+		<tr>
+			<td>
+				<div dojoAttachPoint="gridPreviewPane"></div>
+			</td>
+		</tr>
+	</table>
+	
+	<div class='space'>
+		<div dojoAttachPoint="reviewMsg" class="reviewMsg"></div>
+		<a class='cancelButton' href="javascript:void(0);" dojoAttachEvent="onclick:onCancel">${buttonCancel}</a>
+		<button class='bottomButton' dojoAttachPoint="finish">${finish}</button>
+		<button class='bottomButton' dojoAttachPoint="next">${next} &gt</button>
+		<button class='bottomButton' dojoAttachPoint="prev">&lt ${back}</button>
+	</div>
+</div>

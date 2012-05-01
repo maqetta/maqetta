@@ -1,0 +1,90 @@
+.gridWizard {
+	width:600px;
+	height:310px;
+}
+
+.gridWizard .steps {
+	height:25px;
+}
+
+.gridWizard .mainSection {
+	height:235px;
+	width:600px;
+}
+
+.gridWizard .sourceList {
+	width:245px;
+	height:170px;
+	border:1px solid #DBDBDB;
+	overflow:auto;
+}
+
+.gridWizard .space {
+	margin:10px 0 0 0;
+}
+
+.gridWizard .cancelButton {
+	float:right;
+	margin:7px 0px 0 5px; 
+	text-decoration:none;
+}
+
+.gridWizard .bottomButton {
+	float:right;
+}
+
+.gridWizard .todo {
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: -85px -866px;
+  width: 20px;
+  height: 20px;
+  float: left;
+}
+
+.gridWizard .done {
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -723px;
+  width: 20px;
+  height: 20px;
+  float: left;
+}
+
+.gridWizard .crumbs {
+	margin-right:8px;
+	width:185px;
+	color:#005CE5;
+	cursor:pointer;
+	float:left;
+	height:20px;
+	line-height:20px;
+	display:inline;
+}
+
+.gridWizard .current {
+	color:black;
+	font-weight: bold;
+}
+
+.gridWizard .sep {
+	border-right: 1px solid silver;
+}
+
+.gridWizard .reviewMsg {
+  background-image: url("img/sprite.png");
+  background-repeat: no-repeat;
+	margin:7px 0 0 0;
+	color:red;
+	float:left;
+	background-position: -85px -800px;
+	width: 16px; 
+	height: 16px; 
+	padding-left:18px;
+	white-space: nowrap;
+}
+
+.gridWizard .pageNode, .dataSourceInputContainer, .dataSourceInputCell {
+	height: 100%;
+	width: 100%;	
+}

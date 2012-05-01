@@ -465,12 +465,12 @@
 		                            "identifier": "id",
 		                            "items": [
 		                                {
-		                                    "label": "Label 1",
-		                                    "id": "1"
+		                                	"id": "1",
+		                                    "label": "Label 1"
 		                                },
 		                                {
-		                                    "label": "Label 2",
-		                                    "id": "2"
+		                                	"id": "2",
+		                                    "label": "Label 2"
 		                                }
 		                            ]
 		                        }

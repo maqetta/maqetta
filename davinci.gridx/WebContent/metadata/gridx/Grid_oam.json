@@ -32,9 +32,10 @@
             "$library": "gridx"
         },
         {
-            "type": "javascript", 
-            "$text": "require(['gridx/core/model/cache/Async'], function(Cache) {dojo.setObject('davinci.gridx.GridXCacheClass', Cache);});",
-            "description": "Because of the way GridX expects to be made aware of the cacheClass through data-dojo-props, we need to inject some JavaScript to store the cache class we want to use. It must be stored in a location that is accessible when data-dojo-props is eval'ed in the global scope."
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "gridx/core/model/cache/Async",
+            "$library": "gridx"
         },
         {
             "type": "javascript-module",

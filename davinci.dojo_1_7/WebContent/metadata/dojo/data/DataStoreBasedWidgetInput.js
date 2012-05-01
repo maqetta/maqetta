@@ -133,7 +133,7 @@ getStoreId = function(srcElement, useDataDojoProps) {
 	
 	return storeId;
 };
-	
+
 var DataStoreBasedWidgetInput = declare(SmartInput, {
 
 	displayOnCreate: "true",
@@ -151,6 +151,10 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	_dataType: null,
 	
 	useDataDojoProps: false,
+	
+	supportsEscapeHTMLInData: true,
+	
+	_embeddingContentPane: null,
 
 	_getContainer: function(widget){
 		while(widget){
@@ -200,24 +204,62 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		// clear data type
 		this._dataType = null;
 
-		if (this._dataStoreType === 'dummyData'){
-			this.updateWidget();
-		} else if (this._dataStoreType === 'file'){
-			this._format = this.getFormat();
-			this.updateWidgetForUrlStore();
-		} else if (this._dataStoreType === 'url'){
-			this._format = this.getFormat();
-			this.updateWidgetForUrlStoreJSONP(); 
-		}
+		//Execute update command on callback
+		this.getUpdateWidgetCommand(this._executeCompoundCommand.bind(this));
 
+		//Hide
 		this.hide(); 
 	},
-	
+
+	/*
+	 * This will cause the compound command necessary to update the widget and
+	 * data store to be generated. The command is NOT executed, but instead passed
+	 * to a callback function (which can execute the command if it desires). 
+	 * 
+	 * This function is asynchronous because the "file" and "url" data store types
+	 * require a fetch on the data store to calculate the required command.
+	 */
+	getUpdateWidgetCommand: function(updateCommandCallback){ 
+		// clear data type
+		this._dataType = null;
+
+		if (this._dataStoreType === 'dummyData'){
+			this._getDummyDataUpdateWidgetCommand(updateCommandCallback);
+		} else if (this._dataStoreType === 'file'){
+			this._format = this.getFormat();
+			compoundCommand = this._getUpdateWidgetForUrlStoreCommand(updateCommandCallback);
+		} else if (this._dataStoreType === 'url'){
+			this._format = this.getFormat();
+			compoundCommand = this._getUpdateWidgetForUrlStoreJSONP(updateCommandCallback); 
+		}
+	},
+
 	hide: function(){
-		this.inherited(arguments, [ true ]); // we already updated the widget so just do a hide like cancel
+		if (this._isEmbedded()) {
+			if (this._inline) {
+				var value;
+				while (connection = this._connection.pop()){
+					dojo.disconnect(connection);
+				}
+				this._inline.destroyRecursive();
+				delete this._inline;  
+			}
+		} else {
+			this.inherited(arguments, [ true ]); // we already updated the widget so just do a hide like cancel
+		}
 	},
 	
 	updateWidget: function() {
+		this._getDummyDataUpdateWidgetCommand(this._executeCompoundCommand.bind(this));
+	},
+	
+	_executeCompoundCommand: function(compoundCommand) {
+		var context = this._getContext();
+		context.getCommandStack().execute(compoundCommand);
+		context.select(this._getNewWidgetFromCompoundCommand(compoundCommand));
+	},
+	
+	_getDummyDataUpdateWidgetCommand: function(updateCommandCallback) {
 		var context = this._getContext();
 		var widget = this._widget;
 
@@ -227,8 +269,13 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		var command = new ModifyCommand(widget, null, null, context);
 		compoundCommand.add(storeCmd);
 		compoundCommand.add(command);
-		context.getCommandStack().execute(compoundCommand);
-		context.select(command.newWidget);
+		
+		updateCommandCallback(compoundCommand);
+	},
+	
+	_getNewWidgetFromCompoundCommand: function(compoundCommand) {
+		var lastCommand = compoundCommand._commands[compoundCommand._commands.length-1];
+		return lastCommand.newWidget;
 	},
 		
 	updateStore: function() {
@@ -251,6 +298,10 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 		
 	updateWidgetForUrlStore: function(){
+		this._getUpdateWidgetForUrlStoreCommand(this._executeCompoundCommand.bind(this));
+	},
+	
+	_getUpdateWidgetForUrlStoreCommand: function(updateCommandCallback) {
 		var textArea = registry.byId("davinciIleb");
 		this._url = textArea.value;
 		var url = this._getFullUrl(this._url);
@@ -258,27 +309,42 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		// clear any callbacks
 		this._callback = '';
 
+		//create onComplete callback function
+		var onComplete = function(items) {
+			this._urlDataStoreLoaded(items, updateCommandCallback);
+		};
+		
+		//create onComplete callback function
+		var onError = function() {
+			this._getCsvStore(url, this.query, updateCommandCallback);
+		};
+
 		// data can be json or csv, so interogate the url
 		var store = new ItemFileReadStore({url: url});
 		this._urlDataStore = store;
 		store.fetch({
 				query: this.query,
 				queryOptions:{deep:true}, 
-				onComplete: lang.hitch(this, this._urlDataStoreLoaded),
-				onError: lang.hitch(this, this._getCsvStore, url, this.query)
+				onComplete: lang.hitch(this, onComplete),
+				onError: lang.hitch(this, onError)
 		});
 	},
 
-	_getCsvStore: function(url, query) {
+	_getCsvStore: function(url, query, updateCommandCallback) {
 		var store = new CsvStore({url: url});
 		this._urlDataStore = store;
 
 		this._dataType = "csv";
+		
+		//create onComplete callback function
+		var onComplete = function(items) {
+			this._urlDataStoreLoaded(items, updateCommandCallback);
+		};
 
 		store.fetch({
 				query: query,
 				queryOptions:{deep:true}, 
-				onComplete: lang.hitch(this, this._urlDataStoreLoaded),
+				onComplete: lang.hitch(this, onComplete),
 				onError: function(e){
 					alert('File ' + e	);
 				}
@@ -286,12 +352,21 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 
 	updateWidgetForUrlStoreJSONP: function() {
+		this._getUpdateWidgetForUrlStoreJSONP(this._executeCompoundCommand.bind(this));
+	},
+	
+	_getUpdateWidgetForUrlStoreJSONP: function(updateCommandCallback) {
 		var textArea = dijit.byId("davinciIleb");
 		var callbackTextBox = dijit.byId("davinci.ve.input.SmartInput_callback_editbox");
 		this._url = textArea.value;
 		var url = this._getFullUrl(this._url);
 
 		this._callback = callbackTextBox.value;
+		
+		//create onComplete callback function
+		var onComplete = function(items) {
+			this._urlDataStoreLoaded(items, updateCommandCallback);
+		};
 
 		var store;
 		// need to use the same toolkit that the page is using, not the one maqetta is using
@@ -308,7 +383,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		store.fetch({
 			query: this.query,
 			queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, this._urlDataStoreLoaded),
+			onComplete: dojo.hitch(this, onComplete),
 			onError: function(e){ alert('File ' + e	);}
 		});
 		this._urlDataStore = store;
@@ -335,13 +410,12 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		return fullUrl;
 	},
 
-	_urlDataStoreLoaded: function(items){
+	_urlDataStoreLoaded: function(items, updateCommandCallback) {
 		if (items.length < 1){
 			console.error('Data store empty');
 			return;
 		}
 
-		var store = this._widget.dijitWidget.store;
 		var storeId = this._getStoreId(this._widget.domNode._dvWidget._srcElement);
 		var storeWidget = Widget.byId(storeId);
 		var properties = {};
@@ -353,7 +427,6 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this.setCallback('"' + this._url + '","' + this._callback + '"');
 		} 
 
-		storeWidget._srcElement.setAttribute('data', ''); 
 		properties.data = ''; // to prevent ModifyCommand mixin from putting it back
 
 		var compoundCommand = new OrderedCompoundCommand();
@@ -416,8 +489,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			compoundCommand.add(command);
 		}
 
-		context.getCommandStack().execute(compoundCommand); 
-		context.select(command.newWidget);
+		//Invoke callback
+		updateCommandCallback(compoundCommand);
 	},
 
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
@@ -428,6 +501,29 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		}
 
 		return new ModifyCommand(widget, props, null, context);
+	},
+	
+	_isEmbedded: function() {
+		if  (this._embeddingContentPane) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+	
+	_loading: function(height, width) {		
+		if (this._isEmbedded()) {
+			var inline = dojo.doc.createElement("div");
+			inline.id = 'ieb';
+			dojo.addClass(inline,'inlineEdit dijitTooltipContainer');
+			this._inline = inline;
+			var myPane = new ContentPane({}, inline);
+			this._embeddingContentPane.set("content", myPane);
+			dojo.style(this._inline, "display", "block"); 
+			this._inline = myPane;
+		} else {
+			this.inherited(arguments);
+		}
 	},
 	
 	show: function(widgetId) {
@@ -443,14 +539,18 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		this._inline.eb = dijit.byId("davinciIleb");
 		this._inline.callBackObj = this;
 
-		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
-		this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
+		if (!this._isEmbedded()) {
+			this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
+			this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
+		}
 		var folder = dojo.byId('davinci.ve.input.DataGridInput_img_folder');
 		this._connection.push(dojo.connect(folder, "onclick", this, "fileSelection"));
 		this._connectHelpDiv();
 		this._connectResizeHandle();
 		this._connectSimDiv();
-		this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
+		if (this._loadingDiv) {
+			this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
+		}
 		var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
 		this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
 
@@ -483,20 +583,39 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		}
 		this.changeDataStoreType(this._dataStoreType);
 		dojo.style('iedResizeDiv', 'background-color', 'white');
-		var html = this._widget.getPropertyValue('escapeHTMLInData');
-		var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-		var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
-
-		if(html){
-			htmlRadio.set("checked", false);
-			textRadio.set("checked", true);
-		}else{
-			htmlRadio.set("checked", true);
-			textRadio.set("checked", false);					
+		if (this.supportsEscapeHTMLInData) {
+			var html = this._widget.getPropertyValue('escapeHTMLInData');
+			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
+			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
+	
+			if(html){
+				htmlRadio.set("checked", false);
+				textRadio.set("checked", true);
+			}else{
+				htmlRadio.set("checked", true);
+				textRadio.set("checked", false);					
+			}
 		}
 
 		this.updateFormats();
 		this._inline.eb.focus();
+		
+		this.resize(null);
+
+		//Hide certain controls
+		if (this._isEmbedded()) {
+			//OK button
+			var okButton = dijit.byId("davinci.ve.input.SmartInput_ok");
+			dojo.style(okButton.domNode, "display", "none");
+			
+			//Cancel button
+			var cancelButton = dijit.byId("davinci.ve.input.SmartInput_cancel");
+			dojo.style(cancelButton.domNode, "display", "none");
+			
+			//Resize dive
+			var resizeHandle = dojo.byId("iedResizeHandle");
+			dojo.style(resizeHandle, "display", "none");
+		}
 	},
 
 	getCallback: function(url) {
@@ -596,24 +715,41 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
 			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
+			if (this.supportsEscapeHTMLInData) {
+				textObj.innerHTML = '<div class="dojoxEllipsis">' + dojoxNls.plainText + '	</div>';
+				htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+dojoxNls.htmlMarkup+'</div>';
+				htmlRadio.setDisabled(false);
+				textRadio.setDisabled(false);
+				dojo.removeClass(textObj,'inlineEditDisabled');
+				dojo.removeClass(htmlObj,'inlineEditDisabled');
+				dojo.style(textRadio.domNode, 'display', '');
+				dojo.style(htmlRadio.domNode, 'display', '');
+				dojo.style(htmlObj, 'display', '');
+				dojo.style(textObj, 'display', '');
+			} else {
+				dojo.style(htmlObj, 'display', 'none');
+				dojo.style(textObj, 'display', 'none');
+				dojo.style(htmlRadio.domNode, 'display', 'none');
+				dojo.style(textRadio.domNode, 'display', 'none');
+			}
 			var table = dojo.byId('davinci.ve.input.SmartInput_table');
-			
-			textObj.innerHTML = '<div class="dojoxEllipsis">' + dojoxNls.plainText + '	</div>';
-			htmlObj.innerHTML = '<div id="davinci.ve.input.SmartInput_radio_html_div" class="dojoxEllipsis">'+dojoxNls.htmlMarkup+'</div>';
-			htmlRadio.setDisabled(false);
-			textRadio.setDisabled(false);
-			dojo.removeClass(textObj,'inlineEditDisabled');
-			dojo.removeClass(htmlObj,'inlineEditDisabled');
-			dojo.style(textRadio.domNode, 'display', '');
-			dojo.style(htmlRadio.domNode, 'display', '');
-			dojo.style(htmlObj, 'display', '');
-			dojo.style(textObj, 'display', '');
 			dojo.style(table, 'display', '');
 			if (this._dataStoreType === 'url'){
 				dojo.style(callbackTr, 'display', '');
 			}
 		} else {
 			this.inherited(arguments);
+			if (!this.supportsEscapeHTMLInData) {
+				var textObj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
+				var htmlObj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
+				var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
+				var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
+				
+				dojo.style(htmlObj, 'display', 'none');
+				dojo.style(textObj, 'display', 'none');
+				dojo.style(htmlRadio.domNode, 'display', 'none');
+				dojo.style(textRadio.domNode, 'display', 'none');
+			}
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 		}
 	},
@@ -621,21 +757,21 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	changeDataStoreType: function (e){
 		this._dataStoreType = e;
 		var textArea = registry.byId("davinciIleb");
-		var tagetObj = dom.byId("iedResizeDiv");
+		var targetObj = dom.byId("iedResizeDiv");
 		var resizeWidth = style.get('iedResizeDiv', 'width');
 		if (e === 'dummyData'){
 			textArea.setValue( this._data);
-			tagetObj.style.height = '85px';
+			targetObj.style.height = '85px';
 			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 			style.set('ieb', 'width', resizeWidth + 15 + 'px' );
 		}else if ( e=== 'file'){
 			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', '');
 			textArea.setValue( this._url);
-			tagetObj.style.height = '40px';
+			targetObj.style.height = '40px';
 		}else if (e === 'url'){
 			style.set('davinci.ve.input.DataGridInput_img_folder', 'display', 'none');
 			textArea.setValue( this._url);
-			tagetObj.style.height = '40px';
+			targetObj.style.height = '40px';
 			style.set('ieb', 'width', resizeWidth + 15 + 'px' );
 		} else {
 			// we should not ever get here.
@@ -647,29 +783,29 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	
 	resize: function(e) {
 		this.inherited(arguments);	
-		var tagetObj = dojo.byId("iedResizeDiv");
+		var targetObj = dojo.byId("iedResizeDiv");
 		var targetEditBoxDijit = dijit.byId("davinciIleb");
-		var boxWidth = tagetObj.clientWidth	- 5;
-		var boxheight = tagetObj.clientHeight -6;
-		boxWidth = tagetObj.clientWidth	/*+2*/ -8;
-		boxheight = tagetObj.clientHeight	-20; // new for text area
-		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
+		var boxWidth = targetObj.clientWidth	- 5;
+		var boxheight = targetObj.clientHeight -6;
+		boxWidth = targetObj.clientWidth	/*+2*/ -8;
+		boxheight = targetObj.clientHeight	-20; // new for text area
+		dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',targetObj.clientWidth + 15 + "px");
 
 		if (targetEditBoxDijit) {
 			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
 		}
-		targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth - 20 + "px"});
+		targetEditBoxDijit._setStyleAttr({width: targetObj.clientWidth - 20 + "px"});
 				
 		if (this._dataStoreType === 'file') {
 			var ieb = dojo.byId("ieb");
-			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 30 + "px");
+			var iebWidth = dojo.style('ieb', 'width', targetObj.clientWidth + 30 + "px");
 			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'display', '');
-			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', tagetObj.clientWidth + 1	+ 'px');
-			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + 15 + "px");
+			dojo.style('davinci.ve.input.DataGridInput_img_folder', 'left', targetObj.clientWidth + 1	+ 'px');
+			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',targetObj.clientWidth + 15 + "px");
 		} else {
 			var ieb = dojo.byId("ieb");
-			var iebWidth = dojo.style('ieb', 'width', tagetObj.clientWidth + 15 + "px");
-			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',tagetObj.clientWidth + "px");
+			var iebWidth = dojo.style('ieb', 'width', targetObj.clientWidth + 15 + "px");
+			dojo.style("davinci.ve.input.DataGridInput.dataStoreType", 'width',targetObj.clientWidth + "px");
 		}
 	},
 
@@ -691,7 +827,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 	
 	_getStoreId: function(srcElement) {
-		return getStoreId(srcElement, this.useDataDojoProps);
+		return getStoreId(srcElement, this.useDataDojoProps); 
 	}
 });
 

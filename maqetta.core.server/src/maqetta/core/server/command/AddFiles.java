@@ -1,7 +1,8 @@
 package maqetta.core.server.command;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,15 +43,16 @@ public class AddFiles extends Command {
 
                 if (!item.isFormField()) {
                     String fileName = item.getName();
-                    File f1 = new File(userDirectory.getURI());
-
-                    File uploadedFile = new File(f1, fileName);
-                    
-                    /* ensure the file is valid and in the users workspace */
-                    if(!user.isValid(uploadedFile.getAbsolutePath())) return;
-                    
+                    IVResource uploaded = userDirectory.create(fileName);
                     fileNames.add(fileName);
-                    item.write(uploadedFile);
+                    InputStream is = item.getInputStream();
+                    OutputStream os = uploaded.getOutputStreem();
+                    byte[] buf = new byte[256];
+                    int numRead;
+                    
+                    while ( (numRead = is.read(buf) ) >= 0) {
+                        os.write(buf, 0, numRead);
+                    }
                 }
             }
 

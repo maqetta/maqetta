@@ -207,13 +207,11 @@ return declare("davinci.ve.ThemeModifier", null, {
 	getDeltaRule: function(rule){
 		var retRule=null;
 	
-		// if this rule is not from the delat file add a new rule to the delta
+		// if this rule is not from the delta file add a new rule to the delta
 		retRule = this.cssFiles[0].getRule(rule.getSelectorText());
 		if (retRule.parent.url != this.cssFiles[0].url) {
 			 retRule = this.cssFiles[0].addRule(rule.getSelectorText()+" {}");
-		}/*else{
-			retRule = rule;
-		}*/
+		}
 		return retRule;
 	},
 

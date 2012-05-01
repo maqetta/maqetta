@@ -67,12 +67,12 @@ define(["dojo/_base/declare",
 					return widget.get('value'); 
 				};
 				this._setFieldValue = function(value, loc){
-					
+					if (!widget.set) {return;} // #23 FIXME why is there no set
 					this._value = value || "";
 					this._loc = loc;
 
 					if(widget._setBaseLocationAttr){
-						widget.set('baseLocation', loc?loc.getPath():null);
+						widget.set('baseLocation', (loc && loc.getPath) ?loc.getPath():null); //#23 FIXME why no getPath
 					}
 					widget.set('value', this._value, true);
 				};
@@ -400,6 +400,8 @@ define(["dojo/_base/declare",
 									matchLevel:v.matchLevels[i], type:ruletype});
 					}
 				}
+				// #23
+				var deltas = this._addDeltaRules(this._widget, values);
 				
 				/* create list of proposals for new rules (using classes defined on this widget) */
 				var allCssClasses = this._getClasses(this._widget);
@@ -879,6 +881,53 @@ define(["dojo/_base/declare",
 			return null;
 		},
 		
+		_addDeltaRules : function(widget, values){
+			var state = "Normal";
+			var lastElementStyle = -1;
+			var deltas = [];
+			var dynamicThemeUrl = this.context.cssFiles ? this.context.cssFiles[0].url : null;
+			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+				state = state || States.getState();
+			}
+			var meta = this.context.getThemeMetaDataByWidget(widget);
+			if(meta &&  meta.states[state] && meta.states[state].selectors ){
+				var md = meta.states[state].selectors;
+				for(var name in md){
+					var found = false;
+					for(var i=0; i < values.length; i++){
+						var r = values[i];
+						if(r.type === 'element.style') {
+							lastElementStyle = i;
+						}
+						if (r.type === 'theme' && r.ruleString === name && 
+							(r.rule.parent.relativeURL == this.context._themeUrl || r.rule.parent.url == dynamicThemeUrl)
+							) {
+							found = true;
+							break;
+						}
+					}
+					if (!found){
+						var matchLevel = this._computeMatchLevelSelector(name);
+						if (dynamicThemeUrl) { // add rule for dynamic file, in most cases mobile
+							deltas.push({rule:null, ruleString:name, 
+								targetFile:dynamicThemeUrl, className: null,
+								value:null, matchLevel:matchLevel, type:'proposal'});
+						}
+						if (this.context._themeUrl) { // add rule for static file, in most cases desktop
+							deltas.push({rule:null, ruleString:name, 
+								targetFile:this.context._themeUrl, className: null,
+								value:null, matchLevel:matchLevel, type:'proposal'});
+						}
+					}
+				}
+			}
+			var n = lastElementStyle +1; // add the proposals after element.style
+			deltas.forEach(function(item){
+				values.splice(n++, 0,item);
+			});
+			return values;
+		},
+		
 		_getRuleTargetValue : function(rule){
 			//if(this._isTarget("background")) debugger;
 			
@@ -918,7 +967,14 @@ define(["dojo/_base/declare",
 			}else if(this._values[event.target].type=="proposal"){
 				var model = this.context.getModel();
 				var cssFile = model.find({elementType:'CSSFile', relativeURL: this._values[event.target].targetFile}, true);
-				loc=cssFile.getResource();
+				//#23
+				if (cssFile) {
+					loc=cssFile.getResource();
+				} else if (this.context.cssFiles[0].url == this._values[event.target].targetFile){ // FIXME should run the array
+					// maybe it's a dynamic theme (mobile)
+					loc = this.context.cssFiles[0];
+				}
+				//#23
 			}else{
 				loc = this._values[event.target].rule.getCSSFile().getResource();
 			}
@@ -960,8 +1016,11 @@ define(["dojo/_base/declare",
 			}
 			var s = "";
 			if(r.type=="proposal"){
-				//s+="[class:" + r.className + " - New rule in " + this.targetFile + "] ";
-				s+=dojo.string.substitute(langObj.newRule, [r.className,this.targetFile]);
+				if (r.className) {
+					s+=dojo.string.substitute(langObj.newRule, [r.className,r.targetFile]);
+				} else {
+					s+=dojo.string.substitute(langObj.newThemeRule, [r.targetFile]);
+				}
 				s+=r.ruleString;
 			}else{
 				var rule = r.rule;

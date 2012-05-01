@@ -49,6 +49,7 @@ define({ root:
 		"applyToWhich":"Apply to which style rule:",
 		"onlyApplyToState":" Only apply to current state (${0})",
 		"newRule":"[class: ${0} - New rule in ${1}] ",
+		"newThemeRule":"[theme: - New rule in ${0}] ",
 		"existingRule":"[class: ${0} - Existing rule in ${1}] ",
 		"line":" line: ${0})",
 		"propUndefined":"undefined",

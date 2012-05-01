@@ -259,9 +259,19 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 
 				//FIXME: Not included in Undo logic
 				var cssFile = this.context.model.find({elementType:'CSSFile', relativeURL: value.appliesTo.targetFile}, true);
-				if(!cssFile){
-					console.log("Cascade._changeValue: can't find targetFile");
-					return;
+				if(!cssFile && context.cssFiles){
+					// #23 look in dynamic files
+					for (var i = 0; context.cssFiles.length; i++){
+						if (context.cssFiles[i].url === value.appliesTo.targetFile) {
+							cssFile = context.cssFiles[i];
+							break;
+						}
+					}
+					// #23 
+					if (!cssFile) {
+						console.log("Cascade._changeValue: can't find targetFile");
+						return;
+					}
 				}
 				var rule = cssFile.addRule(value.appliesTo.ruleString+" {}");
 			}else{

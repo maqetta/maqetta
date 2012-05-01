@@ -60,7 +60,14 @@ BODY{
 }
 .claro #editors_tabcontainer .dijitBorderContainer {
 	background-color:#888;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	padding:5px;	/* 5px might be default */
 }
+
 .claro #editors_tabcontainer .dijitBorderContainer-dijitContentPane {
 	border:1px #444 solid;
 	-moz-border-radius:2px;

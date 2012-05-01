@@ -295,6 +295,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	},
 	
 	destroy: function () {
+		if(!this._handles){
+			return;
+		}
 	    this._handles.forEach(dojo.disconnect);
 	    if(this._scrollHandler){
 	    	dojo.disconnect(this._scrollHandler);

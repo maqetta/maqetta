@@ -1,34 +1,24 @@
 package maqetta.core.server.user;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
-import maqetta.core.server.internal.Links;
+import maqetta.core.server.user.ReviewManager.VersionFile;
 
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.user.IDesignerUser;
-import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.ILink;
-import org.maqetta.server.ILinks;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.VDirectory;
 import org.maqetta.server.VFile;
-import org.maqetta.server.VLibraryResource;
-import org.maqetta.server.VWorkspaceRoot;
 
 public class DesignerUser implements IDesignerUser {
 	private final String name;
@@ -40,24 +30,23 @@ public class DesignerUser implements IDesignerUser {
 	private IStorage userDirectory;
 
 	public IUser rawUser;
-
-	public IUser getRawUser() {
-		return rawUser;
-	}
-
-	public void setRawUser(IUser rawUser) {
-		this.rawUser = rawUser;
-	}
-
-	public DesignerUser(String name) {
-		this.name = name;
-		this.rawUser = ServerManager.getServerManger().getUserManager().getUser(name);
+	
+	public DesignerUser(IUser user) {
+		this.name = user.getUserName();
+		this.rawUser = user;
 		this.getUserDirectory();
 		// userDirectory is set as a side-effect of the getUserDirectory getter method
 		userDirectory.mkdirs(); 
-		rebuildWorkspace();
 	}
-
+	
+	public IUser getRawUser() {
+		return rawUser;
+	}
+	
+	public void setRawUser(IUser user) {
+		rawUser = user;
+	}
+	
 	public void rebuildWorkspace() {
 		rawUser.rebuildWorkspace();
 	}

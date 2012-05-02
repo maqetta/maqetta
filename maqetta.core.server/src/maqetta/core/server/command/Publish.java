@@ -58,7 +58,7 @@ public class Publish extends Command {
 		String[] emails = emailsStr.split(",");
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
 
-		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(user.getUserName());
+		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(user);
 
 		if (!isUpdate) {
 			Date currentTime = new Date();
@@ -137,12 +137,12 @@ public class Publish extends Command {
 			ReviewCacheManager.$.republish(project,vTime, version);
 		}
 		if (savingDraft) {
-			ReviewManager.getReviewManager().saveDraft(user.getUserName(), version);
+			ReviewManager.getReviewManager().saveDraft(du, version);
 			this.responseString = "OK";
 			return;
 		}
 
-		ReviewManager.getReviewManager().publish(user.getUserName(), version);
+		ReviewManager.getReviewManager().publish(du, version);
 
 		String requestUrl = req.getRequestURL().toString();
 		// set is used to filter duplicate email. Only send mail to one email

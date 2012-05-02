@@ -317,7 +317,7 @@ return declare(CreateTool, {
 		var style = node.style;
 		var domPropertyUC = domProperty.charAt(0).toUpperCase() + domProperty.slice(1);
 		style['webkit'+domPropertyUC] = value;
-		style['moz'+domPropertyUC] = value;
+		style['Moz'+domPropertyUC] = value;
 		style['ms'+domPropertyUC] = value;
 		style['o'+domPropertyUC] = value;
 		style[domProperty] = value;

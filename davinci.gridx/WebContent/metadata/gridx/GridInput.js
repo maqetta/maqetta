@@ -10,6 +10,7 @@ return declare(DataGridInput, {
 	constructor : function() {
 		this.useDataDojoProps = true;
 		this.useTableElementsForStructure = true;
+		this.supportsEscapeHTMLInData = false;
 	}
 });
 

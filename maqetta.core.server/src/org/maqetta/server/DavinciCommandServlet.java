@@ -119,11 +119,12 @@ public class DavinciCommandServlet extends HttpServlet {
             pathInfo = pathInfo.substring(1);
         }
 
-        IUser user = (IUser) request.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+      
         CommandDescriptor commandDescriptor = (CommandDescriptor) this.commands.get(pathInfo);
         if (commandDescriptor == null || commandDescriptor.isPut()) {
             throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Post processing"));
         }
+        IUser user = checkLogin(request, resp, commandDescriptor);
         if (user == null) {
             if (!commandDescriptor.isNoLogin()) {
                 resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);

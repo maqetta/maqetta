@@ -50,14 +50,25 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
 	},
 
 	selectionChange: function (selection) {
-       var childModel = this.model.findChildAtPosition(selection);
-       selection.model = childModel;
-       if (childModel != this._selectedModel) {
-           this.publishingSelect = true;
-           dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
-           this.publishingSelect = false;
-       }
-       this._selectedModel = childModel;
+		//Need to map the selection to the offsets in the model
+		var mappedPosition = this.model.mapPositions(this.model);
+		var diff = this.model.endOffset - mappedPosition.endOffset;
+		var mappedSelection = {
+			startOffset: selection.startOffset + diff,
+			//subtract 1 for endOffset so that ">" of ending tag can selected and
+			//still find a match
+			endOffset: selection.endOffset + diff - 1
+		};
+       
+		//Look for a child based on the updated selection offsets
+		var childModel = this.model.findChildAtPosition(mappedSelection);
+		selection.model = childModel;
+		if (childModel != this._selectedModel) {
+			this.publishingSelect = true;
+			dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
+			this.publishingSelect = false;
+		}
+		this._selectedModel = childModel;
 	},
 
 	getSyntaxPositions: function (text,lineNumber) {

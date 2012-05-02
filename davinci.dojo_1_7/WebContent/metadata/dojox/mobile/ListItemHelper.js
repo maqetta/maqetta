@@ -25,15 +25,18 @@ ListItemHelper.prototype = {
 	},
 	
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
-		// Pull child markup from model
-		var text = '';
-		if(widget && widget._srcElement && widget._srcElement.children){
-			var children = widget._srcElement.children;
-			for(var i=0; i<children.length; i++){
-				text += children[i].getText();
-			}
-		}
-		return text;
+		var data = [];
+
+		// hack - always add the text first
+		data.push(dojo.query(".mblListItemLabel", widget.dijitWidget.box)[0].innerHTML);
+
+		// now add any children
+		dojo.forEach(widget.getChildren(), function(w) {
+				data.push(w.getData());
+		});
+		
+
+		return data;
 	},
 
 	getChildren: function(widget, attach) {

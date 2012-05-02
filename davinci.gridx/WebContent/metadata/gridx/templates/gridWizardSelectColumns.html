@@ -1,0 +1,33 @@
+<div>
+	<table>
+		<tr>
+			<td>${availableColumns}:</td>
+			<td></td>
+			<td>${selectedColumns}:</td>
+		</tr>
+		<tr>
+			<td>
+				<div dojoType="dijit.form.MultiSelect" dojoAttachPoint="sourceColumnSelect" class='sourceList'>	
+				</div>
+			</td>
+			<td>
+				<table cellspacing="10">
+					<tr>
+						<td>
+							<a href="javascript:void(0);" dojoAttachEvent="onclick:_moveSourceColumns"><img src="app/metadata/gridx/1.0/gridx/resources/img/forward_nav.gif"/></a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="javascript:void(0);" dojoAttachEvent="onclick:_moveTargetColumns"><img src="app/metadata/gridx/1.0/gridx/resources/img/back_nav.gif"/></a>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<div dojoType="dijit.form.MultiSelect" dojoAttachPoint="targetColumnSelect" class='sourceList'>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>

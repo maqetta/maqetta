@@ -1,6 +1,5 @@
 package org.davinci.server.review.user;
 
-import java.io.File;
 import java.util.List;
 
 import org.davinci.server.review.Version;
@@ -32,5 +31,9 @@ public interface IDesignerUser {
     public abstract IVResource getResource(IPath path);
 
     public abstract IUser getRawUser();
+    
+    public abstract void setRawUser(IUser user);
+    
+    public abstract void rebuildWorkspace();
 
 }

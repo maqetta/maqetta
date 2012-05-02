@@ -1016,7 +1016,7 @@ define(["dojo/_base/declare",
 			if(this._editor && this._editor.getContext){
 				context = this._editor.getContext();
 			}
-			if(context){	
+			if(context && this._editor.supports("style")){	
 				this.context = context;
 				this.targetFile = context.getAppCssRelativeFile();		// path to app.css
 				var v = context.getSelection();

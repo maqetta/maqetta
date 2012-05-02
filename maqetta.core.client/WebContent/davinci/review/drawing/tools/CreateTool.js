@@ -45,10 +45,16 @@ return declare("davinci.review.drawing.tools.CreateTool", _ToolCommon, {
 			return;
 		}
 		this.surface.isDrawing = true;
-		this.surface.style({"cursor": "crosshair"});
+		var docNode = this.surface.docNode = this.surface.domNode;
+		var htmlNode = this.surface.htmlNode = docNode.documentElement;
+		var bodyNode = this.surface.bodyNode = docNode.body;
+		var coverDiv = this.surface.coverDiv = dojo.create('div',
+				// z-index:2million because annotations are at 1million plus change
+				{style:'z-index:2000000;cursor:crosshair;position:absolute; left:0px; top:0px; width:'+htmlNode.offsetWidth+'px; height:'+htmlNode.offsetHeight+'px;'},
+				bodyNode);
 		this._evtConns = [
-			dojo.connect(this.surface.domNode, "mousedown", this, "_mouseDown"),
-			dojo.connect(this.surface.domNode, "keydown", this, "_keyDown")
+			dojo.connect(coverDiv, "mousedown", this, "_mouseDown"),
+			dojo.connect(docNode, "keydown", this, "_keyDown")
 		];
 	},
 
@@ -59,8 +65,8 @@ return declare("davinci.review.drawing.tools.CreateTool", _ToolCommon, {
 			this.scaffold.shape.filterAttributes = this.filterAttributes;
 		}
 		this._evtConns.push(
-			dojo.connect(this.surface.domNode, "mouseup", this, "_mouseUp"),
-			dojo.connect(this.surface.domNode, "mousemove", this, "_mouseMove")
+			dojo.connect(this.surface.coverDiv, "mouseup", this, "_mouseUp"),
+			dojo.connect(this.surface.coverDiv, "mousemove", this, "_mouseMove")
 		);
 	},
 
@@ -89,10 +95,17 @@ return declare("davinci.review.drawing.tools.CreateTool", _ToolCommon, {
 			return;
 		}
 		this.surface.isDrawing = false;
-		this.surface.style({"cursor": ""});
 		this.scaffold.destroy();
 		this.scaffold = null;
 		this.inherited(arguments);
+		var coverDiv = this.surface.coverDiv;
+		if(coverDiv){
+			var parentNode = coverDiv.parentNode;
+			if(parentNode){
+				parentNode.removeChild(coverDiv);
+			}
+			this.surface.coverDiv = null;
+		}
 	}
 
 });

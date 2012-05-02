@@ -12,6 +12,9 @@ define(["dojo/_base/declare",
 	
 		widgetDescStart:"",
 		widgetDescUnselectEnd:"",
+
+		_oldIDName: null,
+		_oldClassName: null,
 		
 		postMixInProperties : function() {
 			this.widgetDescStart =
@@ -57,6 +60,9 @@ define(["dojo/_base/declare",
 				dojo.removeClass(this.domNode, "propertiesSelection");
 				return;
 			}
+
+			this._oldIDName = null;
+			this._oldClassName = null;
 			
 			dojo.addClass(this.domNode, "propertiesSelection");
 			this.domNode.innerHTML= this.widgetDescStart + displayName + "</div>";
@@ -116,7 +122,6 @@ define(["dojo/_base/declare",
 					this._classInputElement = new ComboBox({value: className, searchAttr: "name", store: memstore, style: {width: "100px"}}, classInputElement);
 					dojo.connect(this._classInputElement, "onChange", this, "_onChangeClassAttribute");
 
-
 					labelSpan.className = "propClassInputCell";
 					classDiv.appendChild(labelSpan);
 					/* add the ID element */
@@ -148,7 +153,7 @@ define(["dojo/_base/declare",
 			if(this.context)
 				this.context.blockChange(false);
 			
-			if(inputElement.value != this._oldIDName ){
+			if(inputElement.value !== this._oldIDName ){
 				this._oldIDName = inputElement.value;
 				var valuesObject = {};
 				valuesObject['id'] = inputElement.value;
@@ -169,7 +174,7 @@ define(["dojo/_base/declare",
 				this.context.blockChange(false);
 			
 			var className = inputElement.attr("value");
-			if(className != this._oldClassName ){
+			if(className !== this._oldClassName ){
 				this._oldClassName = className;
 				var valuesObject = {};
 				valuesObject['class'] = className;

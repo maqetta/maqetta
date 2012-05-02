@@ -1,6 +1,7 @@
 define([
-	"davinci/ve/widget"
-], function(Widget) {
+	"davinci/ve/widget",
+	"dojo/dom-construct",
+], function(Widget, DomConstruct) {
                          
 var ListItemHelper = function() {};
 ListItemHelper.prototype = {
@@ -73,6 +74,18 @@ ListItemHelper.prototype = {
 		}
 
 		return node;
+	},
+
+	addChild: function(widget, child, index) {
+		var node = this.getContainerNode(widget);
+
+		// +1 as we have the label
+		var place;
+		if (typeof(index) == "number") {
+			place = index+1
+		}
+		
+		DomConstruct.place(child.domNode, node, place);
 	}
 };
 

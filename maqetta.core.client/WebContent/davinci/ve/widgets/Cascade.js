@@ -18,7 +18,6 @@ define(["dojo/_base/declare",
 		target : null,
 		targetField : null,
 		toggleClasses : null,
-		targetFile : "app.css",
 		// CSS selector regular expressions used in calculating specificity values and comparing rules
 		_regex_combinators : /[\s\~\+\>]+/,
 		_regex_not_pseudoclass : /(.*)\:not\((.*)\)(.*)/,
@@ -1017,8 +1016,9 @@ define(["dojo/_base/declare",
 			if(this._editor && this._editor.getContext){
 				context = this._editor.getContext();
 			}
-			if(context){	
+			if(context && this._editor.supports("style")){	
 				this.context = context;
+				this.targetFile = context.getAppCssRelativeFile();		// path to app.css
 				var v = context.getSelection();
 				if(v.length>0){
 					this._widgetSelectionChanged(v);

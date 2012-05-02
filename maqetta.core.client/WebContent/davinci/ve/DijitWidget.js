@@ -178,7 +178,14 @@ return declare("davinci.ve.DijitWidget", _Widget, {
         var parentWidget = this.dijitWidget,
             _getChildren = parentWidget.getChildren;
         parentWidget.getChildren = dojo.hitch(this, this.getChildren);
-        parentWidget.addChild(widget, index);
+
+        var helper = this.getHelper();
+        if (helper && helper.addChild) {
+        	helper.addChild(this, widget, index);
+        } else {
+        	parentWidget.addChild(widget, index);
+        }
+
         parentWidget.getChildren = _getChildren;
     },
 

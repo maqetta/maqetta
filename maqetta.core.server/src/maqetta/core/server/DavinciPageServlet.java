@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.server.internal.Activator;
+import org.davinci.server.review.Constants;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -114,6 +115,7 @@ public class DavinciPageServlet extends HttpServlet {
 		
 
 		if ( pathInfo == null ) {
+			handleReview(req, resp);
 			resp.sendRedirect("./maqetta/");
 		} else if ( pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam == null ) {
 			if ( !ServerManager.LOCAL_INSTALL ) {
@@ -143,6 +145,30 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 		resp.getOutputStream().close();
+	}
+	
+	/*
+	 * If review-related attributes are in the URL, set cookies so that
+	 * review gets opened on the client.
+	 */
+	private void handleReview(HttpServletRequest req, HttpServletResponse resp) {
+		String revieweeName = req.getParameter(IDavinciServerConstants.REVIEW_DESIGNER_ATTR);
+		String reviewVersion = req.getParameter(IDavinciServerConstants.REVIEW_VERSION_ATTR);
+		if (revieweeName != null && reviewVersion != null) {
+			//Fill in designer cookie
+			Cookie designerCookie = new Cookie(IDavinciServerConstants.REVIEW_COOKIE_DESIGNER, revieweeName);
+			/* have to set the path to delete it later from the client */
+			designerCookie.setPath("/");
+			resp.addCookie(designerCookie);
+
+			//Fill in review version cookie
+			if ( reviewVersion != null ) {
+				Cookie versionCookie = new Cookie(IDavinciServerConstants.REVIEW_COOKIE_VERSION, reviewVersion);
+				/* have to set the path to delete it later from the client */
+				versionCookie.setPath("/");
+				resp.addCookie(versionCookie);
+			}
+		}
 	}
 
 	/*

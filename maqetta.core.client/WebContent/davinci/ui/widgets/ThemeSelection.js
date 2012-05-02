@@ -55,7 +55,7 @@ define(["dojo/_base/declare",
 	    },
 	    
 	    _setValueAttr : function(value){
-	    	debugger; //  not used?
+
 	    	if(!this._hasValue(value)) return;
 	    	
 	        this._selection = value;

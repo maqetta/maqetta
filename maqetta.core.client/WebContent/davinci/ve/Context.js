@@ -3107,6 +3107,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(doSnapLinesX || doSnapLinesY){
 			Snap.updateSnapLinesAfterTraversal(this);
 		}
+		cp.findParentsXYAfterTraversal(params);
 		if(differentXY){
 			cp.dragUpdateCandidateParents({widgetType:widgetType,
 					showCandidateParents:doFindParentsXY, 
@@ -3114,7 +3115,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					beforeAfter:beforeAfter, 
 					absolute:absolute, 
 					currentParent:currentParent});
-			cp.findParentsXYAfterTraversal();
+			cp.findParentsXYCleanup(params);
 		}
 	},
 	

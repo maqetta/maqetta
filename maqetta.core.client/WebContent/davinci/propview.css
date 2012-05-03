@@ -253,7 +253,8 @@ button.showCss::-moz-focus-inner {
 	 white-space: nowrap;
 	 padding-left:0.5em;
 	 padding-top:2px;
-
+	 margin-top: 5px;
+	 margin-bottom: 5px;
 }
 .claro propertiesSection .dijitTitlePaneTitle {
 	background-color:#F3F3F3;
@@ -267,8 +268,15 @@ button.showCss::-moz-focus-inner {
 .propertiesWidgetDescriptionFor {
 	font-style:italic;
 }
-.propClassInputRow {
-	font-size:10px;
+.propClassInputRow,
+.propIdInputRow {
+	margin-top: 10px;
+	visibility: hidden;
+}
+
+.propertiesSelection .propClassInputRow,
+.propertiesSelection .propIdInputRow {
+	visibility: visible;
 }
 
 .cascadeTable {
@@ -373,15 +381,9 @@ button.showCss::-moz-focus-inner {
 }
 
 .propScrollableArea{
-	
 	overflow-y:auto;
 	overflow-x:hidden;
-	position:absolute;
-	width:100%;
-	top:0;
-	bottom:0;
-	margin-top:3.8em; 	/* FIXME: code uses absolute layout. Shouldn't */
-	
+	width:100%;	
 }
 .property_table_stretchable{
 	border-spacing:0 1px;

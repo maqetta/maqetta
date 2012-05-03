@@ -54,6 +54,18 @@ return declare("davinci.model.Model", null, {
 	getID: function() {
 		return null;
 	},
+	
+	/*
+	 * Intended to be overridden by subclasses (e.g., for example in mapping
+	 * editor offets to HTML model offsets). The default implementation just
+	 * returns a struct with an unchanged start/end offset.
+	 */
+	mapPositions: function(element) {
+		return {
+			startOffset : element.startOffset,
+			endOffset : element.endOffset
+		};
+	},
 
 	findChildAtPosition: function (position) {
 		if ( ! position.endOffset ) {

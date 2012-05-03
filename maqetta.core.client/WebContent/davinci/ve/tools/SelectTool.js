@@ -23,12 +23,20 @@ define(["dojo/_base/declare",
 				Mover,
 				XPathUtils,
 				HtmlFileXPathAdapter,
-				Snap
+				Snap,
+				CompoundCommand,
+				AddCommand,
+				RemoveCommand,
+				ReparentCommand,
+				MoveCommand,
+				ResizeCommand
 		){
 
 
 return declare("davinci.ve.tools.SelectTool", tool, {
 
+	CONSTRAIN_MIN_DIST: 3,	// shiftKey constrained dragging only active if user moves object non-trivial amount
+	
 	activate: function(context){
 		this._context = context;
 	},
@@ -314,7 +322,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 		var compoundCommand = undefined;
 		if("w" in newBox || "h" in newBox){
-			var resizable = davinci.ve.metadata.queryDescriptor(widget.type, "resizable"),
+			var resizable = Metadata.queryDescriptor(widget.type, "resizable"),
 				w, h;
 			// Adjust dimensions from border-box to content-box
 			var _node = widget.getStyleNode();
@@ -336,9 +344,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				break;
 			}
 
-			var resizeCommand = new davinci.ve.commands.ResizeCommand(widget, w, h, applyToWhichStates);
+			var resizeCommand = new ResizeCommand(widget, w, h, applyToWhichStates);
 			if(!compoundCommand){
-				compoundCommand = new davinci.commands.CompoundCommand();
+				compoundCommand = new CompoundCommand();
 			}
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
@@ -350,21 +358,27 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var left = newBox.l;
 				var top = newBox.t;
 */
-				var moveCommand = new davinci.ve.commands.MoveCommand(widget, left, top, null, null, applyToWhichStates);
+				var moveCommand = new MoveCommand(widget, left, top, null, null, applyToWhichStates);
 				compoundCommand.add(moveCommand);
 			}
 			
 		}else{
 
+			var IDs = [];
+			var NewWidgets = [];
+			var OldParents = [];
+			var OldIndex = [];
+			dojo.forEach(selection, function(w, idx){
+				OldParents[idx] = selection[idx].getParent();
+				OldIndex[idx] = OldParents[idx].indexOf(w);
+			});
 			var _node = widget.getStyleNode();
 			var absolute = (dojo.style(_node, 'position') == 'absolute');
 			if(!absolute) {
 				if(!compoundCommand){
-					compoundCommand = new davinci.commands.CompoundCommand();
+					compoundCommand = new CompoundCommand();
 				}
 				var lastIdx = null;
-				var IDs = [];
-				var NewWidgets = [];
 				
 				//get the data	
 				dojo.forEach(selection, function(w){
@@ -398,7 +412,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						lastIdx = idx;
 					}
 					if(ppw){
-						compoundCommand.add(new davinci.ve.commands.AddCommand(newwidget, ppw.parent, idx));
+						compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
 						newselection.push(newwidget);
 					}else{
 						console.error('SelectTool: ppw is null');
@@ -409,10 +423,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if(!copy){
 					dojo.forEach(selection, function(w){
 						var newwidget = NewWidgets.shift();
-						compoundCommand.add(new davinci.ve.commands.RemoveCommand(w));
+						compoundCommand.add(new RemoveCommand(w));
 						var id = IDs.shift();
 						if(id){
-							compoundCommand.add(new davinci.ve.commands.ModifyCommand(newwidget, {id:id}));
+							compoundCommand.add(new ModifyCommand(newwidget, {id:id}));
 						}
 					}, this);
 				}
@@ -426,23 +440,67 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				left = p.l;
 				top = p.t;
 				if(!compoundCommand){
-					compoundCommand = new davinci.commands.CompoundCommand();
+					compoundCommand = new CompoundCommand();
 				}
-				var first_c = new davinci.ve.commands.MoveCommand(widget, left, top, null, oldBoxes[index], applyToWhichStates);
 				var ppw = cp.getProposedParentWidget();
 				var proposedParent = ppw ? ppw.parent : null;
-				compoundCommand.add(first_c);
 				var currentParent = widget.getParent();
+				var doReparent = undefined;
+				var doMove = undefined;
 				if(proposedParent && proposedParent != currentParent){
-					compoundCommand.add(new davinci.ve.commands.ReparentCommand(widget, proposedParent, 'last'));
-
+					doReparent = proposedParent;
 					var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
-					compoundCommand.add(new davinci.ve.commands.MoveCommand(widget, newPos.l, newPos.t, null, null, applyToWhichStates));
+					doMove = {l:newPos.l, t:newPos.t};
 				}
 				var b = widget.getMarginBox(),
 					dx = left - b.l,
 					dy = top - b.t;
+				if(copy){
+					//get the data	
+					dojo.forEach(selection, function(w){
+						IDs.push(w.getId());
+						var parentWidget = w.getParent();
+						if (!parentWidget) {
+							console.debug("onExtentChange: parentWidget is null!!");
+							return;
+						}
+						var children = parentWidget.getChildren();
+						for(var widx = 0; widx < children.length; widx++){
+							if(children[widx] == w){
+								break;
+							}
+						}
+						var newwidget,
+							d = w.getData( {identify:false});
+						d.context=context;
+						dojo.withDoc(context.getDocument(), function(){
+							newwidget = widgetUtils.createWidget(d);
+						}, this);		
+						if (!newwidget) {
+							console.debug("Widget is null!!");
+							return;
+						}
+						NewWidgets.push(newwidget);
+						if(proposedParent){
+							compoundCommand.add(new AddCommand(newwidget, proposedParent, -1 /*append*/));
+						}else{
+							compoundCommand.add(new AddCommand(newwidget, parentWidget, widx));
+						}
+						newselection.push(newwidget);
+					}, this);
+					newWidget = newselection[index];
+				}
+				var currWidget = copy ? newWidget : widget;
+				var first_c = new MoveCommand(currWidget, left, top, null, oldBoxes[index], applyToWhichStates);
+				compoundCommand.add(first_c);
+				if(doReparent){
+					compoundCommand.add(new ReparentCommand(currWidget, proposedParent, 'last'));
+				}
+				if(doMove){
+					compoundCommand.add(new MoveCommand(currWidget, doMove.l, doMove.t, null, null, applyToWhichStates));
+				}
 				dojo.forEach(selection, dojo.hitch(this, function(w, idx){
+					currWidget = copy ? newselection[idx] : w;
 					if(w != widget){
 						var mb = w.getMarginBox();
 						var newLeft = mb.l + dx;
@@ -452,17 +510,24 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 							// way, MoveCommand will store the actual shift amount on the
 							// command object (first_c). MoveCommand will use the shift amount
 							// for first_c for the other move commands.
-							var c = new davinci.ve.commands.MoveCommand(w, newLeft, newTop, first_c, oldBoxes[idx], applyToWhichStates);
+							var c = new MoveCommand(currWidget, newLeft, newTop, first_c, oldBoxes[idx], applyToWhichStates);
 							compoundCommand.add(c);
 						}
 						var currentParent = w.getParent();
 						if(proposedParent && proposedParent != currentParent){
-							compoundCommand.add(new davinci.ve.commands.ReparentCommand(w, proposedParent, 'last'));
+							compoundCommand.add(new ReparentCommand(currWidget, proposedParent, 'last'));
 							var newPos = this._reparentDelta(newLeft, newTop, w.getParent(), proposedParent);
-							compoundCommand.add(new davinci.ve.commands.MoveCommand(w, newPos.l, newPos.t, null, null, applyToWhichStates));
+							compoundCommand.add(new MoveCommand(currWidget, newPos.l, newPos.t, null, null, applyToWhichStates));
 						}
 					}
 				}));
+				// If copying widgets, need to restore original widgets to their original parents and locations
+				if(copy){
+					dojo.forEach(selection, dojo.hitch(this, function(w, idx){
+						compoundCommand.add(new ReparentCommand(selection[idx], OldParents[idx], OldIndex[idx]));
+						compoundCommand.add(new MoveCommand(selection[idx], oldBoxes[idx].l, oldBoxes[idx].t, null, null, applyToWhichStates));
+					}));
+				}
 			}
 		}
 
@@ -587,7 +652,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		case dojo.keys.UP_ARROW:	dy = -pitch;break;
 		default:	break;
 		}
-		var command = new davinci.commands.CompoundCommand();
+		var command = new CompoundCommand();
 		dojo.forEach(selection, function(w){
 			var node = w.getStyleNode();
 			if(node.style.position != "absolute"){
@@ -599,7 +664,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var parentBorderTop = parseInt(dojo.style(node.offsetParent, 'borderTopWidth'));
 			var box = dojo.marginBox(node);
 			var position = {x: box.l + parentBorderLeft + dx, y: box.t + parentBorderTop + dy};
-			command.add(new davinci.ve.commands.MoveCommand(w, position.x, position.y));
+			command.add(new MoveCommand(w, position.x, position.y));
 		}, this);
 		if(!command.isEmpty()){
 			this._context.getCommandStack().execute(command);
@@ -674,8 +739,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var dy = newTop - this._moverStartLocations[index].t;
 			var absDx = Math.abs(dx);
 			var absDy = Math.abs(dy);
-			var CONSTRAIN_MIN_DIST = 3;	// constrained dragging only active if user moves object non-trivial amount
-			if(this._shiftKey && (absDx >= CONSTRAIN_MIN_DIST ||  absDy >= CONSTRAIN_MIN_DIST)){
+			if(this._shiftKey && (absDx >=this.CONSTRAIN_MIN_DIST ||  this.absDy >= CONSTRAIN_MIN_DIST)){
 				if(absDx > absDy){
 					dy = 0;
 				}else{
@@ -789,6 +853,27 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(doMove){
 			// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
 			var applyToWhichStates = this._sKey ? 'current' : undefined;
+			var leftAdjust = 0;
+			var topAdjust = 0;
+			var pn = this._moverWidget.domNode.offsetParent;
+			while(pn && pn.tagName != 'BODY'){
+				leftAdjust += pn.offsetLeft;
+				topAdjust += pn.offsetTop;
+				pn = pn.offsetParent;
+			}
+			var newLeft =  (moverBox.l - leftAdjust);
+			var newTop = (moverBox.t - topAdjust);
+			var dx = newLeft - this._moverStartLocations[index].l;
+			var dy = newTop - this._moverStartLocations[index].t;
+			var absDx = Math.abs(dx);
+			var absDy = Math.abs(dy);
+			if(this._shiftKey && (absDx >=this.CONSTRAIN_MIN_DIST ||  this.absDy >= CONSTRAIN_MIN_DIST)){
+				if(absDx > absDy){
+					moverBox.t = this._moverStartLocations[index].t;
+				}else{
+					moverBox.l = this._moverStartLocations[index].l;
+				}
+			}
 			this.onExtentChange({
 				index:index, 
 				newBox:moverBox, 

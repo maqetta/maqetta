@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.server.internal.Activator;
-import org.davinci.server.review.Constants;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -219,9 +218,6 @@ public class DavinciPageServlet extends HttpServlet {
 	 * Used for previewing mobile pages.
 	 */
 	protected void handlePreview(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String preview = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
-		Cookie k = new Cookie("preview", preview);
-		resp.addCookie(k);
 		URL previewPage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_PREVIEW_PAGE,
 				IDavinciServerConstants.EP_TAG_PREVIEW_PAGE);
 		VURL resourceURL = new VURL(previewPage);

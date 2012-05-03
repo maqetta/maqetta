@@ -557,7 +557,7 @@ return {
                 "snap": true,
 				"showPossibleParents": false,
                 "cssOverrideWarn": true,
-                "absoluteWidgetsZindex": 9999
+                "absoluteWidgetsZindex": 900
             }
         }
     ],

@@ -76,8 +76,8 @@ define(["dojo/_base/declare",
 				if ((" "+e.srcElement.className+" ").indexOf(" dojoDndContainerOver ") != -1) {
 					return;
 				}
-				return mouseDown(e);
-			}
+				return mouseDown.call(this.dndController, e);
+			}.bind(this);
 
 			this.inherited(arguments);
 			this.onClick = this.onClickDummy;  

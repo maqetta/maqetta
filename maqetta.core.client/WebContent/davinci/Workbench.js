@@ -180,8 +180,23 @@ var initializeWorkbenchState = function(){
 				resource = sysResource.findResource(state.editors[i]);
 			}
 			
+			// check if activeEditor is part of the current project or not
+			var isActiveEditorInProject = true;
+
+			if (singleProject) {
+				var path = new Path(state.activeEditor);
+				if (!path.startsWith(project)) {
+					isActiveEditorInProject = false;
+				}
+			}
 			
 			var noSelect=state.editors[i] != state.activeEditor;
+
+			if (noSelect && !isActiveEditorInProject) {
+				// if the active editor is not in our project, force selection
+				noSelect = false;
+			}
+
 			if (resource) {
 				Workbench.openEditor({
 					fileName: resource,

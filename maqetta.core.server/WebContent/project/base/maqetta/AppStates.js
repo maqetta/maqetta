@@ -1,4 +1,4 @@
-define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom"], function(connect, domStyle, dom){
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "require"], function(connect, domStyle, dom, require){
 
 var States = function(){};
 States.prototype = {

@@ -3,11 +3,12 @@ define(["dojo/_base/declare",
         "davinci/workbench/ViewLite",
         "davinci/ve/commands/ModifyCommand",
         "dijit/form/ComboBox",
+        "dijit/form/TextBox",
         "dojo/store/Memory",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
         "davinci/ve/widget"
-],function(declare, ViewLite, ModifyCommand, ComboBox, Memory, veNLS, commonNLS, widgetUtils){
+],function(declare, ViewLite, ModifyCommand, ComboBox, TextBox, Memory, veNLS, commonNLS, widgetUtils){
 	return declare("davinci.ve.widgets.WidgetToolBar", ViewLite, {
 	
 		widgetDescStart:"",
@@ -15,6 +16,10 @@ define(["dojo/_base/declare",
 
 		_oldIDName: null,
 		_oldClassName: null,
+
+		idTextBox: null,
+		classComboBox: null,
+		descNode: null,
 		
 		postMixInProperties : function() {
 			this.widgetDescStart =
@@ -29,6 +34,48 @@ define(["dojo/_base/declare",
 			this.domNode.className = 'propertiesTitleBar';
 			dojo.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, this._widgetReplaced));
 			this.inherited(arguments);
+		},
+
+		postCreate: function() {
+			// create description row
+			var descDiv = dojo.doc.createElement("div");
+			descDiv.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
+			this.descNode = this.domNode.appendChild(descDiv);
+
+			// create class row
+			var classDiv = dojo.doc.createElement("div");
+			classDiv.className = "propClassInputRow";
+
+			var classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName', style: "float: left; width:30px; text-align: right; padding-right: 10px"});
+			var langObj = veNLS;
+			classLabelElement.innerHTML = langObj.toolBarClass;
+			classDiv.appendChild(classLabelElement);
+
+			var classInputElement = dojo.create("input", {type:'text',value:"",className:'propClassInput', size:8});
+			classDiv.appendChild(classInputElement);
+
+			this.classComboBox = new ComboBox({value: "", searchAttr: "name", store: null}, classInputElement);
+			dojo.connect(this.classComboBox, "onChange", this, "_onChangeClassAttribute");
+			dojo.connect(this.classComboBox, "onFocus", this, "_onFieldFocus");
+			dojo.connect(this.classComboBox, "onBlur", this, "_onFieldBlur");
+
+			this.domNode.appendChild(classDiv);
+
+			// create the id row
+			var idDiv = dojo.doc.createElement("div");
+			idDiv.className = "propIdInputRow";
+			classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName', style: "float: left; width:30px; text-align: right; padding-right: 10px"});
+			classLabelElement.innerHTML = "ID:";
+			idDiv.appendChild(classLabelElement);
+
+			var idInputElement = dojo.create("input", {type:'text',value:"",className:'propClassInput'});
+			idDiv.appendChild(idInputElement);
+			this.idTextBox = new TextBox({value: ""}, idInputElement);
+			dojo.connect(this.idTextBox, "onChange", this, "_onChangeIDAttribute");
+			dojo.connect(this.idTextBox, "onFocus", this, "_onFieldFocus");
+			dojo.connect(this.idTextBox, "onBlur", this, "_onFieldBlur");
+
+			this.domNode.appendChild(idDiv);
 		},
 		
 		onEditorSelected : function(){
@@ -50,39 +97,32 @@ define(["dojo/_base/declare",
 			this.onWidgetSelectionChange();
 		},
 		
-		onWidgetSelectionChange : function(){		
+		onWidgetSelectionChange : function(){
 			var displayName = "";
 			
 			if(this._widget){
 				displayName = widgetUtils.getLabel(this._widget); 
+				this.context = this._widget.getContext();
 			}else{
-				this.domNode.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
+				this.descNode.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
 				dojo.removeClass(this.domNode, "propertiesSelection");
+				this.context = null;
 				return;
 			}
 
+			this.changing = true;
+
+			// clear out
 			this._oldIDName = null;
 			this._oldClassName = null;
 			
 			dojo.addClass(this.domNode, "propertiesSelection");
-			this.domNode.innerHTML= this.widgetDescStart + displayName + "</div>";
+			this.descNode.innerHTML= this.widgetDescStart + displayName;
+
 			if (this._editor && this._editor.declaredClass === "davinci.ve.PageEditor"){
 				// Provide a type-in box for the 'class' and ID attribute
 				var srcElement = this._widget._srcElement;
 				if(srcElement){
-					var classDiv = dojo.doc.createElement("div");
-					classDiv.className = "propClassInputRow";
-					var labelSpan = dojo.doc.createElement("span");
-					var classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName'});
-					var langObj = veNLS;
-					classLabelElement.innerHTML = langObj.toolBarClass;
-					labelSpan.appendChild(classLabelElement);
-					var classAttr = srcElement.getAttribute("class");
-					var className = (classAttr && dojo.trim(classAttr)) || "";
-
-					var classInputElement = dojo.create("input", {type:'text',value:className,className:'propClassInput', size:8});
-					labelSpan.appendChild(classInputElement);
-
 					// collect all classes
 					var classes = [];
 
@@ -118,55 +158,50 @@ define(["dojo/_base/declare",
 					var memstore = new Memory({
 							data: classes
 					});
+					this.classComboBox.set("store", memstore);
 
-					this._classInputElement = new ComboBox({value: className, searchAttr: "name", store: memstore, style: {width: "100px"}}, classInputElement);
-					dojo.connect(this._classInputElement, "onChange", this, "_onChangeClassAttribute");
+					var classAttr = srcElement.getAttribute("class");
+					var className = (classAttr && dojo.trim(classAttr)) || "";
+					this.classComboBox.set("value", className);
+					this._oldClassName = className;
 
-					labelSpan.className = "propClassInputCell";
-					classDiv.appendChild(labelSpan);
-					/* add the ID element */
-					labelSpan = dojo.doc.createElement("span");
-					classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName'});
-					classLabelElement.innerHTML = "ID";
-					labelSpan.appendChild(classLabelElement);
+					// id
 					var idAttr = this._widget.getId();
 					var idName = (idAttr && dojo.trim(idAttr)) || "";
-					var idInputElement = dojo.create("input", {type:'text',value:idName,className:'propClassInput', size:8});
-					this._IDInputElement = idInputElement;
 					this._oldIDName = idName;
-					idInputElement.onchange=dojo.hitch(this,this._onChangeIDAttribute);		
-					labelSpan.appendChild(idInputElement);
-					labelSpan.className = "propClassInputCell";
-					classDiv.appendChild(labelSpan);
-					this.domNode.appendChild(classDiv);
+					this.idTextBox.attr("value", idName); 
 				}
 			}
+
+			this.changing = false;
 		},
+
 		_onChangeIDAttribute : function(){
-			if(!this._widget){
+			if(!this._widget || this.changing){
 				return;
 			}
-			var inputElement = this._IDInputElement;
+			var inputElement = this.idTextBox;
 			if(!inputElement){
 				return;
 			}
 			if(this.context)
 				this.context.blockChange(false);
 			
-			if(inputElement.value !== this._oldIDName ){
-				this._oldIDName = inputElement.value;
+			var value = inputElement.attr("value");
+			if(value !== this._oldIDName ){
+				this._oldIDName = value;
 				var valuesObject = {};
-				valuesObject['id'] = inputElement.value;
+				valuesObject['id'] = value;
 				var command = new ModifyCommand(this._widget, valuesObject, null);
 				dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
 			}	
 		},
 		
 		_onChangeClassAttribute : function(){
-			if(!this._widget){
+			if(!this._widget || this.changing){
 				return;
 			}
-			var inputElement = this._classInputElement;
+			var inputElement = this.classComboBox;
 			if(!inputElement){
 				return;
 			}
@@ -181,7 +216,18 @@ define(["dojo/_base/declare",
 				var command = new davinci.ve.commands.ModifyCommand(this._widget, valuesObject, null);
 				dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
 			}	
+		},
+
+		_onFieldFocus: function() {
+			if (this.context) {
+				this.context.blockChange(true);
+			}
+		},
+
+		_onFieldBlur: function() {
+			if (this.context) {
+				this.context.blockChange(false);
+			}
 		}
-	
 	});
 });

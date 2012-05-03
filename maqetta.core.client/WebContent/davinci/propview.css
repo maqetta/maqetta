@@ -251,7 +251,6 @@ button.showCss::-moz-focus-inner {
 	 background:#fefefe; 
 	 text-align:left;
 	 white-space: nowrap;
-	 padding-left:0.5em;
 	 padding-top:2px;
 	 margin-top: 5px;
 	 margin-bottom: 5px;
@@ -264,18 +263,19 @@ button.showCss::-moz-focus-inner {
 .propertiesWidgetDescription {
 	line-height:1.8em;
 	font-size: 10px;
+	padding-left:1em;
 }
+
 .propertiesWidgetDescriptionFor {
 	font-style:italic;
 }
-.propClassInputRow,
-.propIdInputRow {
+
+.propertiesTitleBar .property_table_stretchable {
 	margin-top: 10px;
 	visibility: hidden;
 }
 
-.propertiesSelection .propClassInputRow,
-.propertiesSelection .propIdInputRow {
+.propertiesSelection.propertiesTitleBar .property_table_stretchable{
 	visibility: visible;
 }
 

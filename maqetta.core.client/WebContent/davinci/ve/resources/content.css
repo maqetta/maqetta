@@ -28,6 +28,7 @@
 .areaSelectDiv {
 	position:absolute;
 	border:1px dashed black;
+	z-index:1000000;
 }
 
 .editFocusFrame {

@@ -3165,6 +3165,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onCommandStackExecute: function() {
+	},
+	
+	getPageLeftTop: function(node){
+		var leftAdjust = node.offsetLeft;
+		var topAdjust = node.offsetTop;
+		var pn = node.offsetParent;
+		while(pn && pn.tagName != 'BODY'){
+			leftAdjust += pn.offsetLeft;
+			topAdjust += pn.offsetTop;
+			pn = pn.offsetParent;
+		}
+		return {l:leftAdjust, t:topAdjust};
 	}
 });
 

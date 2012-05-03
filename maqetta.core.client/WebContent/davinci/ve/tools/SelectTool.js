@@ -725,16 +725,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._moverDragDiv.style.left = box.l + 'px';
 		this._moverDragDiv.style.top = box.t + 'px';
 		if(this._moverAbsolute){
-			var leftAdjust = 0;
-			var topAdjust = 0;
-			var pn = this._moverWidget.domNode.offsetParent;
-			while(pn && pn.tagName != 'BODY'){
-				leftAdjust += pn.offsetLeft;
-				topAdjust += pn.offsetTop;
-				pn = pn.offsetParent;
-			}
-			var newLeft =  (box.l - leftAdjust);
-			var newTop = (box.t - topAdjust);
+			var offsetParentLeftTop = this._context.getPageLeftTop(this._moverWidget.domNode.offsetParent);
+			var newLeft =  (box.l - offsetParentLeftTop.l);
+			var newTop = (box.t - offsetParentLeftTop.t);
 			var dx = newLeft - this._moverStartLocations[index].l;
 			var dy = newTop - this._moverStartLocations[index].t;
 			var absDx = Math.abs(dx);
@@ -853,16 +846,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(doMove){
 			// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
 			var applyToWhichStates = this._sKey ? 'current' : undefined;
-			var leftAdjust = 0;
-			var topAdjust = 0;
-			var pn = this._moverWidget.domNode.offsetParent;
-			while(pn && pn.tagName != 'BODY'){
-				leftAdjust += pn.offsetLeft;
-				topAdjust += pn.offsetTop;
-				pn = pn.offsetParent;
-			}
-			var newLeft =  (moverBox.l - leftAdjust);
-			var newTop = (moverBox.t - topAdjust);
+			var offsetParentLeftTop = this._context.getPageLeftTop(this._moverWidget.domNode.offsetParent);
+			var newLeft =  (moverBox.l - offsetParentLeftTop.l);
+			var newTop = (moverBox.t - offsetParentLeftTop.t);
 			var dx = newLeft - this._moverStartLocations[index].l;
 			var dy = newTop - this._moverStartLocations[index].t;
 			var absDx = Math.abs(dx);

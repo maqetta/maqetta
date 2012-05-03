@@ -2,7 +2,7 @@
 		<table class='templateTable' cellSpacing=0 cellPadding=0 align='center'>
 		<tr>
 		<td class='templateFiller1'>&nbsp;</td>
-		<td class='templateFiller2'>${fileName}:</td><td> <input type='text' dojoAttachPoint="__fileName" value='workspace1.zip'></input></td>
+		<td class='templateFiller2'>${fileName}:</td><td> <input dojoType='dijit.form.ValidationTextBox' type="text" maxLength='${_fileNameMaxLength}' dojoAttachPoint="__fileName" value='workspace1.zip' data-dojo-props="regExp:'${_fileNameValidationRegExp}', required:true, invalidMessage:'${invalidDownloadFileName}'"></input></td>
 		<td class='templateFiller1'>&nbsp;</td>
 		</tr>
 		</table>
@@ -15,7 +15,7 @@
 			<tr> 
 			<td class="templateFiller3">&nbsp;</td>
 				<td class='templateFiller4'>&nbsp;</td> 
-				<td class="templateButton"><span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}'/></td> 
+				<td class="templateButton"><span dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}'/></td> 
 				<td class='templateFiller4'>&nbsp;</td> 
 				<td class="templateButton"><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></td> 
 				<td class='templateFiller4'>&nbsp;</td> 

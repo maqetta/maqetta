@@ -76,7 +76,8 @@ define({ root:
 		//widgets/WidgetToolBar.js
 		"toolBarFor":"for: ",
 		"noSelection":"(no selection)",
-		"toolBarClass":"class: ",
+		"toolBarClass":"class:",
+		"toolBarId":"ID:",
 		
 		//tools/CreateTool.js
 		"noValidParents":"No valid parents at this position",

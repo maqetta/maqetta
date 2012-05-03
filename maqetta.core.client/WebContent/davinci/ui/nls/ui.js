@@ -22,6 +22,7 @@ define({ root:
 		"include":"Include",
 		"source":"Source",
 		"baseLocation":"Base Location",
+		"invalidDownloadFileName": "File name may only contain letters, numbers, &#8216;_&#8216;, and &#8216;.&#8216;.",
 		
 		//DownloadSelected.js
 		"selectedFiles":"Selected Files",

@@ -11,6 +11,7 @@ define({ root:
 		"downloadFileName":"Download File Name: ",
 		"downloadNow":"Download now",
 		"titleDownload":"Download",
+		"invalidFileName":"File names may only contain letters. numbers, and '_'.",
 		
 		//OpenThemEditor.js
 		"editTheme":"Edit Theme",//It looks like it gets overridden, so we may not need this

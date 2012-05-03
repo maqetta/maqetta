@@ -18,7 +18,7 @@ public class GetLatestVersionId extends Command{
 		public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 				IUser user) throws IOException {
 			ReviewManager cm = ReviewManager.getReviewManager();
-			IDesignerUser reviewUser = cm.getDesignerUser(user.getUserName());
+			IDesignerUser reviewUser = cm.getDesignerUser(user);
 			int latestVersionID = 1;
 			if(reviewUser.getLatestVersion() !=null&&reviewUser.getVersion(reviewUser.getLatestVersion().getTime())!=null){
 				latestVersionID = Integer.parseInt(reviewUser.getLatestVersion().getVersionID())+1;

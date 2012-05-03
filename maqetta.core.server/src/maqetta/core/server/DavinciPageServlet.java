@@ -115,7 +115,7 @@ public class DavinciPageServlet extends HttpServlet {
 		
 
 		if ( pathInfo == null ) {
-			processReviewAttributes(req, resp);
+			handleReview(req, resp);
 			resp.sendRedirect("./maqetta/");
 		} else if ( pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam == null ) {
 			if ( !ServerManager.LOCAL_INSTALL ) {
@@ -149,7 +149,7 @@ public class DavinciPageServlet extends HttpServlet {
 	 * If review-related attributes are in the URL, set cookies so that
 	 * review gets opened on the client.
 	 */
-	private void processReviewAttributes(HttpServletRequest req, HttpServletResponse resp) {
+	private void handleReview(HttpServletRequest req, HttpServletResponse resp) {
 		String revieweeName = req.getParameter(IDavinciServerConstants.REVIEW_DESIGNER_ATTR);
 		String reviewVersion = req.getParameter(IDavinciServerConstants.REVIEW_VERSION_ATTR);
 		if (revieweeName != null && reviewVersion != null) {

@@ -32,6 +32,7 @@ import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IDavinciProject;
+import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -58,7 +59,7 @@ public class ReviewManager implements IReviewManager {
 		return theReviewManager;
 	}
 
-	Map<String, IDesignerUser> users = Collections.synchronizedMap(new HashMap<String, IDesignerUser>());
+	Map<String, IDesignerUser> designerUsers = Collections.synchronizedMap(new HashMap<String, IDesignerUser>());
 	Map<String, Reviewer> reviewers = Collections.synchronizedMap(new HashMap<String, Reviewer>());
 	
 	public ReviewManager() {
@@ -73,8 +74,7 @@ public class ReviewManager implements IReviewManager {
 			System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
 	}
 
-	public void saveDraft(String name,Version version) {
-		IDesignerUser user = getDesignerUser(name);
+	public void saveDraft(IDesignerUser user, Version version) {
 		IStorage commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
@@ -84,8 +84,7 @@ public class ReviewManager implements IReviewManager {
 		saveVersionFile(user);
 	}
 
-	public void publish(String name, Version version) {
-		IDesignerUser user = getDesignerUser(name);
+	public void publish(IDesignerUser user, Version version) {
 		IStorage commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
@@ -98,6 +97,9 @@ public class ReviewManager implements IReviewManager {
 		
 		//Persist review information
 		this.saveReviewerVersionFiles(version);
+		
+		//Rebuild workspace
+		user.rebuildWorkspace();
 	}
 	
 	/****************************************************/
@@ -204,16 +206,26 @@ public class ReviewManager implements IReviewManager {
 		}
 	}
 
-	public IDesignerUser getDesignerUser(String name) {
-		IDesignerUser designer = users.get(name);
+	public IDesignerUser getDesignerUser(IUser user) {
+		String name = user.getUserName();
+		IDesignerUser designer = designerUsers.get(name);
 		if (null == designer) {
-			loadUser(name);
+			designer = loadDesignerUser(user);
+			designerUsers.put(name, designer);
 		}else{
-			// Update the workspace information so that the new created project
-			// will be imported.
-			designer.getRawUser().rebuildWorkspace();
+			//Update the raw user
+			designer.setRawUser(user);
 		}
-		return users.get(name);
+		return designer;
+	}
+	
+	public IDesignerUser getDesignerUser(String name) {
+		IDesignerUser designer = designerUsers.get(name);
+		if (designer == null) {
+			IUser user = ServerManager.getServerManger().getUserManager().getUser(name);
+			designer = getDesignerUser(user);
+		}
+		return designer;
 	}
 	
 	public Reviewer getReviewer(String email) {
@@ -250,28 +262,30 @@ public class ReviewManager implements IReviewManager {
 		return null;
 	}
 
-	private void loadUser(String name) {
+	private IDesignerUser loadDesignerUser(IUser user) {
 		IStorage versionFile;
+		String name = user.getUserName();
 		if (ServerManager.LOCAL_INSTALL || Constants.LOCAL_INSTALL_USER_NAME.equals(name)) {
 			versionFile = this.baseDirectory.newInstance(this.baseDirectory, "/.review/snapshot/versions.xml");
 		} else {
 			versionFile = this.baseDirectory.newInstance(this.baseDirectory, "/" + name
 					+ "/.review/snapshot/versions.xml");
 		}
-		IDesignerUser user = new DesignerUser(name);
+		IDesignerUser designerUser = new DesignerUser(user);
 
 		if (versionFile.exists()) {
 			VersionFile file = new VersionFile();
 			List<Version> versions = file.load(versionFile);
 			for (Version version : versions) {
-				user.addVersion(version);
+				designerUser.addVersion(version);
 				if (file.latestVersionID != null
 						&& version.getVersionID().equals(file.latestVersionID)) {
-					user.setLatestVersion(version);
+					designerUser.setLatestVersion(version);
 				}
 			}
 		}
-		users.put(name, user);
+		
+		return designerUser;
 	}
 	
 	private Reviewer loadReviewer(String name, String email) {

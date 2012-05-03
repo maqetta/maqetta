@@ -22,7 +22,7 @@ public class ManagerVersion extends Command {
 		String type = req.getParameter("type"); // three types: close, open, delete and publish
 		String vTime = req.getParameter("vTime");
 		IDesignerUser du = ReviewManager.getReviewManager()
-				.getDesignerUser(user.getUserName());
+				.getDesignerUser(user);
 		Version version = du.getVersion(vTime);
 		ReviewManager reviewManager = ReviewManager.getReviewManager();
 		if ("close".equalsIgnoreCase(type)) {
@@ -34,7 +34,7 @@ public class ManagerVersion extends Command {
 			reviewManager.saveVersionFile(du);
 		} else if ("publish".equalsIgnoreCase(type)) {
 			version.setDraft(false);
-			reviewManager.publish(du.getName(), version);
+			reviewManager.publish(du, version);
 		} else if ("delete".equalsIgnoreCase(type)) {
 			du.deleteVersion(vTime);
 			reviewManager.saveVersionFile(du);

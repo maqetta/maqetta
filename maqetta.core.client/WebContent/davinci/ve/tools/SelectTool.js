@@ -739,7 +739,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var dy = newTop - this._moverStartLocations[index].t;
 			var absDx = Math.abs(dx);
 			var absDy = Math.abs(dy);
-			if(this._shiftKey && (absDx >=this.CONSTRAIN_MIN_DIST ||  this.absDy >= CONSTRAIN_MIN_DIST)){
+			if(this._shiftKey && (absDx >=this.CONSTRAIN_MIN_DIST ||  absDy >= this.CONSTRAIN_MIN_DIST)){
 				if(absDx > absDy){
 					dy = 0;
 				}else{
@@ -867,7 +867,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var dy = newTop - this._moverStartLocations[index].t;
 			var absDx = Math.abs(dx);
 			var absDy = Math.abs(dy);
-			if(this._shiftKey && (absDx >=this.CONSTRAIN_MIN_DIST ||  this.absDy >= CONSTRAIN_MIN_DIST)){
+			if(this._shiftKey && (absDx >=this.CONSTRAIN_MIN_DIST ||  absDy >= this.CONSTRAIN_MIN_DIST)){
 				if(absDx > absDy){
 					moverBox.t = this._moverStartLocations[index].t;
 				}else{

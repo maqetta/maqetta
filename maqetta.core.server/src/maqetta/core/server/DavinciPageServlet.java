@@ -136,6 +136,8 @@ public class DavinciPageServlet extends HttpServlet {
 		} else if ( pathInfo.equals("/welcome") ) {
 			/* write the welcome page (may come from extension point) */
 			writeWelcomePage(req, resp);
+		} else if ( previewParam != null ) {
+			handlePreview(req, resp);
 		} else if ( pathInfo.startsWith(IDavinciServerConstants.USER_URL) ) {
 			handleWSRequest(req, resp, user);
 		} else {
@@ -210,6 +212,19 @@ public class DavinciPageServlet extends HttpServlet {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE,
 				IDavinciServerConstants.EP_TAG_MAIN_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
+		this.writePage(req, resp, resourceURL, false);
+	}
+
+	/*
+	 * Used for previewing mobile pages.
+	 */
+	protected void handlePreview(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		String preview = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
+		Cookie k = new Cookie("preview", preview);
+		resp.addCookie(k);
+		URL previewPage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_PREVIEW_PAGE,
+				IDavinciServerConstants.EP_TAG_PREVIEW_PAGE);
+		VURL resourceURL = new VURL(previewPage);
 		this.writePage(req, resp, resourceURL, false);
 	}
 

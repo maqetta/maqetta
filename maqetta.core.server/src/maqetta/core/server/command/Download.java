@@ -31,7 +31,13 @@ public class Download extends Command {
 	public static final String DOWNLOAD_FILE_REPLACE_REGEXP = "[^a-zA-z0-9_.]";
 	
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        if (user == null) {
+    	// SECURITY, VALIDATION
+    	//   'fileName': XXX not validated
+    	//   'resources': contents eventually checked by User.getResource()
+    	//   'libs': XXX validated?
+    	//   'root': XXX not validated
+
+    	if (user == null) {
             return;
         }
         

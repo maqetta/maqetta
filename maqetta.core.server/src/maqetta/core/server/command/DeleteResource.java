@@ -13,6 +13,9 @@ public class DeleteResource extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
+    	// SECURITY, VALIDATION
+    	//   'path': checked by User.getResouce()
+
         String path = req.getParameter("path");
         IVResource file = user.getResource(path);
         if (file.isDirectory()) {

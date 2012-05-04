@@ -32,6 +32,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				},
 				src: this.baseURL,
 				onload: dojo.hitch(this,function(event){
+					this._domIsReady = true;
 					var userDoc = event && event.target && event.target.contentDocument;
 					var dj = userDoc && userDoc.defaultView && userDoc.defaultView.dojo;
 					var deviceName = this.frame.contentDocument.body.getAttribute('data-maqetta-device');
@@ -85,6 +86,10 @@ return declare("davinci.review.editor.Context", [Context], {
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
 					connect.publish('/davinci/ui/context/statesLoaded', [this]);
+					var doc = this.getDocument(), surface = (doc && doc.annotationSurface);
+					if(surface){
+						this._refreshSurface(surface);
+					}
 				})
 			}), containerNode);
 			connect.subscribe("/davinci/states/state/changed", function(args) { 
@@ -117,7 +122,7 @@ return declare("davinci.review.editor.Context", [Context], {
 		var doc = this.frame.contentDocument, 
 			surface;
 		if (!doc.annotationSurface) {
-			surface = doc.annotationSurface = new Surface(doc.body, doc);
+			surface = doc.annotationSurface = new Surface(doc.body, doc, this);
 			new CreateTool(surface, ["commentId"]);
 			new SelectTool(surface, ["commentId"]).activate();
 			new ExchangeTool(surface, ["commentId"]);
@@ -211,6 +216,9 @@ return declare("davinci.review.editor.Context", [Context], {
 	},
 
 	_refreshSurface: function(surface) {
+		if(!this._domIsReady){
+			return;
+		}
 		
 		// Return true if shape and surface have different values for state or scene
 		function differentStateScene(Shape, Surface){

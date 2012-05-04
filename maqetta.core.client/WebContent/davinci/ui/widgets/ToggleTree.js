@@ -73,7 +73,7 @@ define(["dojo/_base/declare",
 			// Workaround for #13964: Prevent drag/drop from happening when user mouses down on scrollbar
 			var mouseDown = dijit.tree.dndSource.prototype.onMouseDown;
 			dijit.tree.dndSource.prototype.onMouseDown = function(e){
-				if ((" "+e.srcElement.className+" ").indexOf(" dojoDndContainerOver ") != -1) {
+				if ((" "+(e.srcElement || e.target).className+" ").indexOf(" dojoDndContainerOver ") != -1) {
 					return;
 				}
 				return mouseDown.call(this.dndController, e);

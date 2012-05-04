@@ -1,5 +1,6 @@
-
 define(["dojo/_base/declare",
+        "dijit/_Templated",
+        "dijit/_Widget",
         "davinci/workbench/ViewLite",
         "davinci/ve/commands/ModifyCommand",
         "dijit/form/ComboBox",
@@ -7,78 +8,34 @@ define(["dojo/_base/declare",
         "dojo/store/Memory",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
-        "davinci/ve/widget"
-],function(declare, ViewLite, ModifyCommand, ComboBox, TextBox, Memory, veNLS, commonNLS, widgetUtils){
-	return declare("davinci.ve.widgets.WidgetToolBar", ViewLite, {
+        "davinci/ve/widget",
+        "dojo/text!./templates/WidgetToolBar.html",
+],function(declare, _Templated, _Widget, ViewLite, ModifyCommand, ComboBox, TextBox, Memory, veNLS, commonNLS, widgetUtils, templateString){
+	return declare("davinci.ve.widgets.WidgetToolBar", [ViewLite, _Widget, _Templated], {
 	
+		templateString: templateString,
+		widgetsInTemplate: true,
+
+		// attach points
+		descNode: null,
+		idTextBox: null,
+		classComboBox: null,
+
 		widgetDescStart:"",
 		widgetDescUnselectEnd:"",
 
 		_oldIDName: null,
 		_oldClassName: null,
 
-		idTextBox: null,
-		classComboBox: null,
-		descNode: null,
-		
-		postMixInProperties : function() {
-			this.widgetDescStart =
-				"<div class='propertiesWidgetDescription'><span class='propertiesWidgetDescriptionFor'>" + veNLS.toolBarFor + "</span>";
-			this.widgetDescUnselectEnd =
-				veNLS.noSelection + "</div>";
-			this.inherited(arguments);
-		},
-		
-		buildRendering: function(){
-			this.domNode = dojo.doc.createElement("div");
-			this.domNode.className = 'propertiesTitleBar';
-			dojo.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, this._widgetReplaced));
-			this.inherited(arguments);
-		},
-
+		veNLS: veNLS,
+	
 		postCreate: function() {
-			// create description row
-			var descDiv = dojo.doc.createElement("div");
-			descDiv.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
-			this.descNode = this.domNode.appendChild(descDiv);
-
-			// create class row
-			var classDiv = dojo.doc.createElement("div");
-			classDiv.className = "propClassInputRow";
-
-			var classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName', style: "float: left; width:30px; text-align: right; padding-right: 10px"});
-			var langObj = veNLS;
-			classLabelElement.innerHTML = langObj.toolBarClass;
-			classDiv.appendChild(classLabelElement);
-
-			var classInputElement = dojo.create("input", {type:'text',value:"",className:'propClassInput', size:8});
-			classDiv.appendChild(classInputElement);
-
-			this.classComboBox = new ComboBox({value: "", searchAttr: "name", store: null}, classInputElement);
-			dojo.connect(this.classComboBox, "onChange", this, "_onChangeClassAttribute");
-			dojo.connect(this.classComboBox, "onFocus", this, "_onFieldFocus");
-			dojo.connect(this.classComboBox, "onBlur", this, "_onFieldBlur");
-
-			this.domNode.appendChild(classDiv);
-
-			// create the id row
-			var idDiv = dojo.doc.createElement("div");
-			idDiv.className = "propIdInputRow";
-			classLabelElement = dojo.create("label", {className:'propClassLabel propertyDisplayName', style: "float: left; width:30px; text-align: right; padding-right: 10px"});
-			classLabelElement.innerHTML = "ID:";
-			idDiv.appendChild(classLabelElement);
-
-			var idInputElement = dojo.create("input", {type:'text',value:"",className:'propClassInput'});
-			idDiv.appendChild(idInputElement);
-			this.idTextBox = new TextBox({value: ""}, idInputElement);
-			dojo.connect(this.idTextBox, "onChange", this, "_onChangeIDAttribute");
-			dojo.connect(this.idTextBox, "onFocus", this, "_onFieldFocus");
-			dojo.connect(this.idTextBox, "onBlur", this, "_onFieldBlur");
-
-			this.domNode.appendChild(idDiv);
+			dojo.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, this._widgetReplaced));
 		},
 		
 		onEditorSelected : function(){
+			this.domNode.style.display = "block";
+
 			if(this._editor && this._editor.visualEditor && this._editor.visualEditor.context){
 				var selection = this._editor.visualEditor.context.getSelection();
 				if(selection.length==0){
@@ -104,7 +61,7 @@ define(["dojo/_base/declare",
 				displayName = widgetUtils.getLabel(this._widget); 
 				this.context = this._widget.getContext();
 			}else{
-				this.descNode.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
+				this.descNode.innerHTML = veNLS.noSelection;
 				dojo.removeClass(this.domNode, "propertiesSelection");
 				this.context = null;
 				return;
@@ -117,7 +74,7 @@ define(["dojo/_base/declare",
 			this._oldClassName = null;
 			
 			dojo.addClass(this.domNode, "propertiesSelection");
-			this.descNode.innerHTML= this.widgetDescStart + displayName;
+			this.descNode.innerHTML = displayName;
 
 			if (this._editor && this._editor.declaredClass === "davinci.ve.PageEditor"){
 				// Provide a type-in box for the 'class' and ID attribute

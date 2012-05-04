@@ -14,8 +14,12 @@ public class CreateResource extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
+    	// SECURITY, VALIDATION
+    	//   'path': checked by User.createResource()
+    	//   'isFolder': validated by Boolean.parseBoolean()
+
         String path = req.getParameter("path");
-        boolean isFolder = "true".equalsIgnoreCase(req.getParameter("isFolder"));
+        boolean isFolder = Boolean.parseBoolean(req.getParameter("isFolder"));
         IVResource newFile = user.createResource(path,isFolder);
         if (isFolder) {
             if (newFile.exists()) {

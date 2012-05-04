@@ -623,8 +623,7 @@ return declare("davinci.ve.ChooseParent", null, {
         }, [widgetType, absolute, doCursor, beforeAfter, currentParent]));
  		var body = document.body;	// outer document = Maqetta app
 		var parentListDiv = this._parentListDiv = dojo.create('div', {
-			className:'maqParentListDiv', 
-			style:'position:absolute;z-index:1000000; opacity:.7;pointer-events:none;'}, 
+			className:'maqParentListDiv'}, 
 			body);
 		context.setActiveDragDiv(parentListDiv);
 		// Downstream logic stuffs the list of candidate parents into DIV with class 'maqCandidateParents'

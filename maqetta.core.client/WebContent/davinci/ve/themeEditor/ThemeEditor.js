@@ -7,9 +7,10 @@ define([
 	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
 	"davinci/ve/themeEditor/commands/ThemeEditorCommand",
 	"davinci/ve/themeEditor/commands/SubwidgetChangeCommand",
-	"davinci/ve/themeEditor/commands/StyleChangeCommand",
 	"davinci/ve/themeEditor/commands/StateChangeCommand",
-	"dijit/layout/ContentPane"
+	"dijit/layout/ContentPane",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/themeEditor/ThemeColor"
 	], function(
 			declare,
 			ModelEditor,
@@ -19,9 +20,10 @@ define([
 			CSSThemeProvider,
 			ThemeEditorCommand,
 			SubwidgetChangeCommand,
-			StyleChangeCommand,
 			StateChangeCommand,
-			ContentPane
+			ContentPane,
+			CompoundCommand,
+			ThemeColor
 	){
 
 return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
@@ -384,13 +386,83 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
     _propertiesChange : function (value){
 		
 		if(!this.isActiveEditor()) { return; }
-		
-		var values = value.values;
-		if (this._selectedWidget){
-			this.getContext().getCommandStack().execute(new StyleChangeCommand({_themeEditor: this,
-			/*_rules: rules,*/ _values: values, _firstRun: true
-			}));
+		var command = new CompoundCommand();
+		if (this._selectedWidget.id === 'all'){
+			var colorValues = [];
+			//this._rules = [];
+			this._oldValues = [];
+			for(var i=0; i < value.values.length; i++){
+				var arritem = value.values[i];
+				for (var v in arritem){
+					if (v.indexOf('color')> -1){
+						colorValues[v] = arritem[v];
+					}
+				}
+			}
+			var widgetMetadata = this._theme.getMetadata(this._theme.getWidgetType(this._selectedWidget));
+			for (var c in widgetMetadata.states){
+				if (c != 'Normal'){
+					var setColorValues = dojo.clone(colorValues);
+					for (var prop in setColorValues){
+						var nColor;
+						var hColor;
+						if (widgetMetadata.states.Normal.defaults && widgetMetadata.states.Normal.defaults.cssPropery)
+							nColor = widgetMetadata.states.Normal.defaults.cssPropery[prop];
+						if (widgetMetadata.states[c].defaults && widgetMetadata.states[c].defaults.cssPropery)
+							hColor = widgetMetadata.states[c].defaults.cssPropery[prop];
+						var color = setColorValues[prop];
+						if(nColor && hColor && color){
+							var baseColor = new ThemeColor(color);
+							var calcColor = baseColor.calculateHighlightColor(nColor, hColor);
+							setColorValues[prop] = calcColor.toHex();
+							for(var i=0; i < value.values.length; i++){
+								var values = value.values[i];
+								for (name in values){
+									if (setColorValues[name]){
+										values[name] = setColorValues[name];
+									}
+								}
+							}
+							var rules = this.getRules(this._selectedWidget, this._selectedSubWidget, c);
+							for (var r = 0; r < rules.length; r++){
+								var rule = rules[r];
+								value.appliesTo.rule = this.getDeltaRule(rule); // create delta if needed #23
+								value.values = dojo.clone(value.values); // have to clone them becouse we change them for states above, JS is pass by ref
+								command.add(this.getCommandForStyleChange(value));
+							}
+						} 
+					}
+				} else {
+					//Normal
+					var rules = this.getRules(this._selectedWidget, this._selectedSubWidget, this._currentState);
+					for (var r = 0; r < rules.length; r++){
+						var rule = rules[r];
+						value.appliesTo.rule = this.getDeltaRule(rule); // create delta if needed #23
+						value.values = dojo.clone(value.values); // have to clone them becouse we change them for states above, JS is pass by ref
+						command.add(this.getCommandForStyleChange(value));
+					}
+				}
+			}
+		} else {
+			var rules = this.getRules(this._selectedWidget, this._selectedSubWidget, this._currentState);
+			for (var r = 0; r < rules.length; r++){
+				var rule = rules[r];
+				for(var i=0;i<value.values.length;i++){
+					for(var a in value.values[i]){
+						if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget)){
+								value.appliesTo.rule = this.getDeltaRule(rule); // create delta if needed #23
+								command.add(this.getCommandForStyleChange(value));
+						}
+					}
+				}
+			}
+						
 		}
+
+		if (this._selectedWidget){
+			this.getContext().getCommandStack().execute(command);
+		}
+		this.setDirty(true);
 	},
 	
 
@@ -488,6 +560,12 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		this.lastModifiedTime=new Date().getTime();
 		if (this.editorContainer)
 			this.editorContainer.setDirty(true);
+	},
+	
+	setDirty: function(dirty){
+		this.isDirty = dirty;
+		if (this.editorContainer)
+			this.editorContainer.setDirty(dirty);
 	},
 	
 	getContext : function (){
@@ -630,54 +708,22 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		
 	},
 	save : function (isWorkingCopy){
-		function getVisitor(dirtyResources, urlResolver, isWorkingCopy) {
-			return {
-				lookFor : dirtyResources,
-				urlResolver : urlResolver,
-				isWorkingCopy: isWorkingCopy,
-				visit : function(node){
-					if(node.elementType=="CSSFile"){
-						for(var aa in this.lookFor){
-							if(aa==node.url){
-								var resource=  system.resource.findResource(aa);
-								resource.setContents(node.getText({noComments:false}),this.isWorkingCopy);
-								if (!this.isWorkingCopy) // only delete the dirty resource if we are save real copy not working
-									delete this.lookFor[aa];
-							}
-						}
-					}
-				return (this.lookFor.length<=0);
-				}
-			};
-		}
 
-		var cssFiles = this._getCssFiles();
-		var visitor = getVisitor(this._dirtyResource, this._URLResolver, isWorkingCopy);
-		if (cssFiles){
-			for(var i=0;i<cssFiles.length;i++){
-				cssFiles[i].visit(visitor);
-			}
-		}
+		this.saveDynamicCssFiles(this._getCssFiles(), isWorkingCopy);
 		if(!isWorkingCopy) {
 			this.isDirty=false;
 		}
 		if (this.editorContainer && !isWorkingCopy) {
 			this.editorContainer.setDirty(false);
 		}
-		//this.visualEditor.saved();
+
 	},
 
 	destroy : function ()	{
 		this.inherited(arguments);
 		if(this.visualEditor) { this.visualEditor.destroy(); }
 		this._subscriptions.forEach(function(item) {
-			/*var topic = item[0];  FIXME do we still need this? wdr
-			var isStatesSubscription = topic.indexOf("/davinci/states") == 0;
-			if (isStatesSubscription) {
-				davinci.states.unsubscribe(item);
-			} else {*/
-				dojo.unsubscribe(item);
-			//}
+			dojo.unsubscribe(item);
 		});
 		delete this._tempRules;
 	},
@@ -795,6 +841,35 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			frame.parentNode.removeChild(frame);
 		}
 		this._createFrame(widget, 'enableWidgetFocusFrame_', 'enableWidgetFocusFrame');
+	},
+	
+	getRules: function(widget, subwidget, state){
+
+		var selectors = this._loadCssSelectors(widget, subwidget, state);
+		var rules = [];
+		for (var s = 0; s < selectors.length; s++) {
+			var modified = false;
+			var cssFiles = this._getCssFiles();
+			if (cssFiles){
+				for(var i = 0;i<cssFiles.length;i++){
+					var selectorNodes = cssFiles[i].getRules(selectors[s]);
+					for (var sn = 0; sn < selectorNodes.length; sn++){
+						var selectorNode = selectorNodes[sn];
+						if(selectorNode){
+							var rule = selectorNode.searchUp( "CSSRule");
+							if(rule){
+								rules.push(rule);
+								modified = true;
+							}
+						}
+					}
+				}
+			}
+			if(!modified){
+				console.log("[theme editor style change command] !FATAL! Rule not found in theme: " + selectors[s]);
+			}
+		}
+		return rules;
 	}
 
 });

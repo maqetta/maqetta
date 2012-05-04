@@ -2274,6 +2274,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		function updateSheet(sheet, rule){
 			var fileName = rule.parent.getResource().getURL();
 			var selectorText = rule.getSelectorText();
+			//console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			var rules = sheet.cssRules;
 			var foundSheet = findSheet(sheet, fileName);
@@ -2285,12 +2286,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
 							foundSheet.deleteRule(r);
-							//console.log("------------  Hot Modify " + foundSheet.href + " ----------------:=\n" + text + "\n");
+							//console.log("------------  Hot Modify delete " + foundSheet.href + " ----------------:=\n" + selectorText + "\n");
 							break;
 						}
 					}
 				}
 				var text = rule.getText({noComments:true});
+				//console.log("------------  Hot Modify Insert " + foundSheet.href + " ----------------:=\n" + text + "\n");
 				foundSheet.insertRule(text, r);
 				return true;
 			}
@@ -2331,11 +2333,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	ruleSetAllProperties: function(rule, values){
 		rule.removeAllProperties();
 		for(i = 0;i<values.length;i++){
-			for(var name in values[i]){
-				if (values[i][name] && values[i][name] !== '') {
-					rule.addProperty(name, values[i][name]);
-				}
-			}
+			rule.addProperty(values[i].name, values[i].value); // #23 all we want to put back is the values
 		}
 	},
 	

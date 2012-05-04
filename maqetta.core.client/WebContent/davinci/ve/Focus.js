@@ -453,7 +453,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 					this._moverCurrent.w != this._moverStart.w || this._moverCurrent.h != this._moverStart.h){
 				// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
 				var applyToWhichStates = this._sKey ? 'current' : undefined;
-				this.onExtentChange(this, this._moverStart, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, applyToWhichStates);
+				var newBox = this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent;
+				if(newBox.w == this._moverStart.w){
+					newBox.w = undefined;
+				}
+				if(newBox.h == this._moverStart.h){
+					newBox.h = undefined;
+				}
+				this.onExtentChange(this, this._moverStart, newBox, applyToWhichStates);
 			} 
 		}
 		this._moverDoneCleanup();

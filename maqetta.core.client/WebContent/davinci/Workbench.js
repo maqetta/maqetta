@@ -1563,6 +1563,7 @@ var Workbench = {
 
 	_autoSave: function(){
 		var lastSave = Workbench._lastAutoSave;
+		var anyErrors = false;
 		function saveDirty(editor){
 			if (editor.isReadOnly || !editor.isDirty) {
 				return;
@@ -1574,13 +1575,15 @@ var Workbench = {
 					editor.save(true);
 				}catch(ex){
 					console.error("Error while autosaving file:" + ex);
+					anyErrors = true;
 				}
 			}
 		}
 		
 		dojo.forEach(Workbench.editorTabs.getChildren(),	saveDirty);
-				
-		Workbench._lastAutoSave = Date.now();
+		if(!anyErrors){
+			Workbench._lastAutoSave = Date.now();
+		}		
 	},
 	
 

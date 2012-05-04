@@ -251,10 +251,8 @@ button.showCss::-moz-focus-inner {
 	 background:#fefefe; 
 	 text-align:left;
 	 white-space: nowrap;
-	 padding-left:0.5em;
 	 padding-top:2px;
-	 margin-top: 5px;
-	 margin-bottom: 5px;
+	 padding-bottom:4px;
 }
 .claro propertiesSection .dijitTitlePaneTitle {
 	background-color:#F3F3F3;
@@ -262,20 +260,22 @@ button.showCss::-moz-focus-inner {
 }
 
 .propertiesWidgetDescription {
-	line-height:1.8em;
+	line-height:16px;
 	font-size: 10px;
+	padding-left:5px;
+	background: #FCFCFC;
 }
+
 .propertiesWidgetDescriptionFor {
 	font-style:italic;
 }
-.propClassInputRow,
-.propIdInputRow {
-	margin-top: 10px;
+
+.propertiesTitleBar .property_table_stretchable {
 	visibility: hidden;
+	margin-top:2px;
 }
 
-.propertiesSelection .propClassInputRow,
-.propertiesSelection .propIdInputRow {
+.propertiesSelection.propertiesTitleBar .property_table_stretchable{
 	visibility: visible;
 }
 
@@ -417,7 +417,9 @@ button.showCss::-moz-focus-inner {
 	width:60px;
 	text-align:right;
 	white-space:nowrap;
-	
+}
+.propertiesTitleBar .property_table_stretchable .propertyDisplayName{
+	width:30px;
 }
 .claro .property_table_stretchable .dijitComboBox .dijitInputField,
 .claro .property_table_stretchable input,

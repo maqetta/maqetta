@@ -101,6 +101,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 							w: dojo.style(this.domNode, 'width'),
 							h: dojo.style(this.domNode, 'height')
 						});
+						setTimeout(function() {
+							visualEditor.getContext().updateFocusAll(); 
+						}, 100); 
 					});
 				}
 			}

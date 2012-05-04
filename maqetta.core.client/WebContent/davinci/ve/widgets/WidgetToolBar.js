@@ -34,6 +34,8 @@ define(["dojo/_base/declare",
 		},
 		
 		onEditorSelected : function(){
+			this.domNode.style.display = "block";
+
 			if(this._editor && this._editor.visualEditor && this._editor.visualEditor.context){
 				var selection = this._editor.visualEditor.context.getSelection();
 				if(selection.length==0){
@@ -59,7 +61,7 @@ define(["dojo/_base/declare",
 				displayName = widgetUtils.getLabel(this._widget); 
 				this.context = this._widget.getContext();
 			}else{
-				this.descNode.innerHTML = this.widgetDescStart+this.widgetDescUnselectEnd;
+				this.descNode.innerHTML = veNLS.noSelection;
 				dojo.removeClass(this.domNode, "propertiesSelection");
 				this.context = null;
 				return;
@@ -72,7 +74,7 @@ define(["dojo/_base/declare",
 			this._oldClassName = null;
 			
 			dojo.addClass(this.domNode, "propertiesSelection");
-			this.descNode.innerHTML= this.widgetDescStart + displayName;
+			this.descNode.innerHTML = displayName;
 
 			if (this._editor && this._editor.declaredClass === "davinci.ve.PageEditor"){
 				// Provide a type-in box for the 'class' and ID attribute

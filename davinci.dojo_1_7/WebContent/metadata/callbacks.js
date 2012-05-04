@@ -79,9 +79,20 @@
 						if(view.id){
 							var viewDijit = _dijit.byId(view.id);
 							if(viewDijit){
+								// Listen for View and ScrollableView change (probably from touch gesture)
 								viewDijit.onAfterTransitionIn = function(sm, viewId, moveTo, dir, transition, context, method){
 									dojo.publish("/davinci/scene/selectionChanged", [sm, viewId]);
 								}.bind(this, this, view.id);
+								// Listen for SwapView changes (probably from flick gesture)
+								dj.subscribe('/dojox/mobile/viewChanged', function(newView){
+									// If this routine in in middle of forcing the view change, don't try to update anything
+									if(this._swapViewChangeHandle){
+										return;
+									}
+									if(newView && newView.id){
+										dojo.publish("/davinci/scene/selectionChanged", [this, newView.id]);
+									}
+								}.bind(this));
 							}
 						}
 					}
@@ -91,6 +102,7 @@
 		selectScene: function(params){
 			var sceneId = params.sceneId;
 			var dj = this.context.getDojo();
+			var n;
 			if(!dj){
 				return;
 			}
@@ -120,7 +132,7 @@
 					}else{
 						for(var i=0;i<pnode.children.length;i++){
 							n=pnode.children[i];
-							if(domClass.contains(n,"mblView")){
+							if(dj.hasClass(n,"mblView")){
 								if(n!=node && (n.style.display != "none" || n.getAttribute("selected") == "true")){
 									viewsToUpdate.splice(0, 0, node);
 									break;
@@ -134,9 +146,47 @@
 				for(var v=0;v<viewsToUpdate.length;v++){
 					var viewNode = viewsToUpdate[v];
 					if(viewNode && viewNode.id){
-						var viewDijit = _dijit.byId(viewNode.id);
-						if(viewDijit && viewDijit.show){
-							viewDijit.show();
+						var newView = _dijit.byId(viewNode.id);
+						if(newView){
+							if(newView.declaredClass == 'dojox.mobile.SwapView'){
+								// For SwapView, we have to slide one-by-one from current SwapView
+								// to the newly select SwapView
+								var showingView = newView.getShowingView();
+								var showingViewIndex, newViewIndex;
+								var nodes = showingView.domNode.parentNode.childNodes;
+								for(var j = 0; j < nodes.length; j++){
+									n = nodes[j];
+									if(n.id == showingView.id){
+										showingViewIndex = j;
+									}
+									if(n.id == newView.id){
+										newViewIndex = j;
+									}
+								}
+								if(this._swapViewChangeHandle){
+									// Extra careful to make sure there is only one listener
+									dj.unsubscribe(this._swapViewChangeHandle);
+									this._swapViewChangeHandle = null;
+								}
+								if(typeof showingViewIndex == 'number' && typeof newViewIndex == 'number' && showingViewIndex !== newViewIndex){
+									var dir = (newViewIndex > showingViewIndex) ? 1 : -1;
+									var cv = showingView;	// cv = current view
+									this._swapViewChangeHandle = dj.subscribe("/dojox/mobile/viewChanged",function(v){
+										if(v && v.id && v.id != newView.id && v.id != cv.id){
+											cv = v;
+											cv.goTo(dir);
+										}else{
+											dj.unsubscribe(this._swapViewChangeHandle);
+											this._swapViewChangeHandle = null;
+											dojo.publish("/davinci/scene/selectionChanged", [this, newView.id]);
+										}
+									}.bind(this));
+									cv.goTo(dir);
+								}
+							}else if(newView.show){
+								// for View and ScrollableView, call show()
+								newView.show();
+							}
 						}
 					}
 				}

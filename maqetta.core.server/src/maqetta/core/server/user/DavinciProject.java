@@ -40,7 +40,7 @@ public class DavinciProject implements Serializable, IDavinciProject {
 	}
 
 	public String getCommentFilePath() {
-		IDesignerUser ru = new DesignerUser(ownerId);
+		IDesignerUser ru = ReviewManager.getReviewManager().getDesignerUser(ownerId);
 		return ru.getCommentingDirectory().getAbsolutePath() + File.separator + "snapshot"
 				+ File.separator + "comments.xml";
 	}

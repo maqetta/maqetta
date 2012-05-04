@@ -94,6 +94,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
 				resizeBody(bodyElem, newPos);
+				// Wrapped in setTimeout because sometimes browsers are quirky about
+				// instantly updating the size/position values for elements
+				// and things usually work if you wait for current processing thread
+				// to complete. Also, updateFocusAll() can be safely called within setTimeout.
 				setTimeout(function() {
 					visualEditor.getContext().updateFocusAll(); 
 				}, 100); 
@@ -103,6 +107,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 							w: dojo.style(this.domNode, 'width'),
 							h: dojo.style(this.domNode, 'height')
 						});
+						// (See setTimeout comment a few lines earlier)
+						setTimeout(function() {
+							visualEditor.getContext().updateFocusAll(); 
+						}, 100); 
 					});
 				}
 			}

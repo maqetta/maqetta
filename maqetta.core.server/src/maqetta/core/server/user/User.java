@@ -2,25 +2,15 @@ package maqetta.core.server.user;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-//import maqetta.core.server.internal.Links;
 import maqetta.core.server.util.VResourceUtils;
 
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.NameFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
@@ -34,13 +24,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.project.util.EclipseProjectUtil;
 import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.ILink;
-import org.maqetta.server.ILinks;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 import org.maqetta.server.StorageFileSystem;
-import org.maqetta.server.VDirectory;
 import org.maqetta.server.VFile;
 import org.maqetta.server.VLibraryResource;
 import org.maqetta.server.VStorageDirectory;
@@ -537,74 +524,18 @@ public class User implements IUser {
 
 		// Links links = this.getLinks();
 		if (isWildcard) {
-			IOFileFilter filter;
-			if (path.segment(0).equals("*")) {
-				IOCase ioCase = ignoreCase ? IOCase.INSENSITIVE		: IOCase.SENSITIVE;
-				filter = new NameFileFilter(path.lastSegment(), ioCase);
-			} else {
-				String lastSegment = path.lastSegment();
-				if (lastSegment.startsWith("*")) {
-					filter = new SuffixFileFilter(lastSegment.substring(1));
-				} else {
-					filter = null;
-				}
-			}
-			// big todo here, have to remove the file filter
-			
-			IStorage f1 = null; 
-		    if (startFolder == null || startFolder.equals(".")) {
-		          f1 = this.userDirectory;
-		     } else {
-		         IVResource start = this.getUserFile(startFolder);
-		         if(start!=null)
-    		         try {
-    		            f1 = this.userDirectory.newInstance(start.getURI());
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-		     }
-		    if(f1!=null){
-    			Collection c = this.userDirectory.findFiles(f1, pathStr,ignoreCase);
-    			File[] found = (File[]) c.toArray(new File[c.size()]);
-    			for (int i = 0; i < found.length; i++) {
-    					IStorage workspaceFile = null;
-    					workspaceFile = this.userDirectory;
-    
-    					IPath workspacePath = new Path(workspaceFile.getPath());
-    					IPath foundPath = new Path(found[i].getPath());
-    					IPath elementPath = foundPath.makeRelativeTo(workspacePath);
-    					if(!isValid(foundPath.toString())) return null;
-    					
-    					IVResource[] wsFound = this.findFiles(elementPath.toString(), ignoreCase, true);
-    					results.addAll(Arrays.asList(wsFound));
-    
-    			}
+			IVResource start = null;
+			if (startFolder == null || startFolder.equals(".")) {
+		          start = this.workspace;
+		    } else {
+		         start = this.getResource(startFolder);
+		        
 		    }
-			/*
-			ILink[] allLinks = links.allLinks();
-			for (int i = 0; i < allLinks.length; i++) {
-				File file = new File(allLinks[i].location);
-				Collection c = FileUtils.listFiles(file, filter, TrueFileFilter.INSTANCE);
-				File[] found = (File[]) c.toArray(new File[c.size()]);
-
-				for (int p = 0; p < found.length; p++) {
-					IPath workspacePath = new Path(this.getUserDirectory()
-							.getPath());
-					IPath foundPath = new Path(found[p].getPath());
-					IPath elementPath = foundPath.makeRelativeTo(workspacePath);
-
-					IVResource[] wsFound = this.findFiles(
-							elementPath.toString(), ignoreCase, true);
-					results.addAll(Arrays.asList(wsFound));
-
-				}
-
-			}
-			*/
-			if (!workspaceOnly) {
-				this.findLibFiles(path, results);
-
-			}
+			
+			results.addAll(Arrays.asList((start.find(pathStr))));
+			
+			
+			
 		} else {
 			IVResource file = this.getResource(pathStr);
 			if (file != null && file.exists()) {
@@ -612,6 +543,17 @@ public class User implements IUser {
 			}
 
 		}
+		if (workspaceOnly) {
+			//findLibFiles(path, results);
+			// need to filter out library entries here
+			for(int z=0;z<results.size();z++){
+				if(results.get(z) instanceof VLibraryResource){
+					results.remove(z);
+				}
+			}
+			
+		}
+		
 		return (IVResource[]) results.toArray(new IVResource[results.size()]);
 
 	}

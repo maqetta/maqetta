@@ -56,19 +56,28 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		var h = this._newBox.h;
 		if(this._usesBorderBox(node)){
 			var pb = Geometry.getPadBorderExtents(node, cs);
-			if(w >= 0){
+			if(typeof w == 'number' && w >= 0){
 				w += pb.w;
 			}
-			if(h >= 0){
+			if(typeof h == 'number' && h >= 0){
 				h += pb.h;
 			}
 		}
 
-		var newStyleArray = [{width:w+'px'},{height:h+'px'}] ;
-        var styleValuesAllStates = widget.getStyleValuesAllStates();
+		//var newStyleArray = [{width:w+'px'},{height:h+'px'}] ;
+		var newStyleArray = [{}] ;
+		if(typeof w == 'number'){
+			newStyleArray[0].width = w+'px';
+		}
+		if(typeof h == 'number'){
+			newStyleArray[0].height = h+'px';
+		}
+		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
 		var currentStateIndex = this._getCurrentStateIndex();
 		if(this._oldBox){
+			//FIXME: Undo will force a width/height values onto inline style
+			//that might not have been there before.
 			this._oldStyleValuesAllStates[this._applyToStateIndex] = 
 					StyleArray.mergeStyleArrays(this._oldStyleValuesAllStates[this._applyToStateIndex], 
 								[{width:this._oldBox.w+'px'}, {height:this._oldBox.h+'px'}]);

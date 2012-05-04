@@ -27,8 +27,17 @@ public class Download extends Command {
 	
 	private Vector zipedEntries;
 	
+	//This should stay in sync with validation rules on the client
+	public static final String DOWNLOAD_FILE_REPLACE_REGEXP = "[^a-zA-z0-9_.]";
+	
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        if (user == null) {
+    	// SECURITY, VALIDATION
+    	//   'fileName': XXX not validated
+    	//   'resources': contents eventually checked by User.getResource()
+    	//   'libs': XXX validated?
+    	//   'root': XXX not validated
+
+    	if (user == null) {
             return;
         }
         
@@ -36,6 +45,7 @@ public class Download extends Command {
         zipedEntries = new Vector();
         
         String path = req.getParameter("fileName");
+        path = sanitizeFileName(path);
         String res = req.getParameter("resources");
         String libs = req.getParameter("libs");
         String rootString = req.getParameter("root");
@@ -72,6 +82,14 @@ public class Download extends Command {
             resp.getOutputStream().close();
         }
 
+    }
+    
+    private String sanitizeFileName(String fileName) {
+	    if (fileName == null || fileName.equals("")) {
+	    	fileName = "workspace1.zip";
+	    }
+	    fileName = fileName.replaceAll(DOWNLOAD_FILE_REPLACE_REGEXP, "_");
+	    return fileName;
     }
     
     private boolean addEntry(String path){

@@ -30,7 +30,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			var parent = item;
 			var first = true;
 			
-			while(!parent.hasOwnProperty("Projects")){
+			while(parent!=null && !parent.hasOwnProperty("Projects")){
 				path = parent.Name + (first?"":"/") + path;
 				first = false;
 				parent = parent.parent;

@@ -23,6 +23,10 @@ public class AddFiles extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest request, HttpServletResponse resp, IUser user) throws IOException {
+    	// SECURITY, VALIDATION
+    	//   'path': checked by User.getResource()
+    	//   items: XXX not validated
+
         String path = request.getParameter("path");
         resp.setContentType("application/json");
 

@@ -10,12 +10,16 @@ define(["dojo/_base/declare",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/download.html",
         "davinci/Theme",
-        "dijit/form/Button"
+        "dijit/form/Button",
+        "dijit/form/ValidationTextBox"
 
 ],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare("davinci.ui.Download",   [_Widget, _Templated], {
 		templateString: templateString,
 		widgetsInTemplate: true,
+		
+		_fileNameValidationRegExp: "[a-zA-z0-9_.]+", //Numbers, letters, "_", and "."
+		_fileNameMaxLength: 50, 
 		
 		postMixInProperties: function() {
 			var langObj = uiNLS;
@@ -147,34 +151,40 @@ define(["dojo/_base/declare",
 		},
 		
 		okButton: function(){
-			function makeTimeoutFunction(downloadFiles, fileName, root, libs){
-				return function(){
-					var files = downloadFiles;
-					var fn = fileName;
-				
+			if (this.__fileName.isValid()) {
+				function makeTimeoutFunction(downloadFiles, fileName, root, libs){
+					return function(){
+						var files = downloadFiles;
+						var fn = fileName;
 					
-					Resource.download(files, fn, root, libs);		
-					/*
-					for(var i=0;i<pgs.length;i++){
-						pgs[i].removeWorkingCopy();
+						
+						Resource.download(files, fn, root, libs);		
+						/*
+						for(var i=0;i<pgs.length;i++){
+							pgs[i].removeWorkingCopy();
+						}
+						*/
+						
 					}
-					*/
-					
 				}
+				var fileName = dojo.attr( this.__fileName, "value");
+				if (fileName.indexOf(".zip") != fileName.length-4) {
+					fileName = fileName + ".zip";
+				}
+				this._rewriteUrls();
+			
+				var allFiles = this._getResources();
+				var pages = this._noRewrite ? [] : this._pages;
+				/* have to close the dialog before the download call starts */
+				var actualLibs = allFiles.userLibs.filter(function(lib){
+					return lib.includeSrc;
+				});
+	
+				setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs), 300);
+				this.onClose();
 			}
-			var fileName = dojo.attr( this.__fileName, "value");
-			this._rewriteUrls();
-		
-			var allFiles = this._getResources();
-			var pages = this._noRewrite ? [] : this._pages;
-			/* have to close the dialog before the download call starts */
-			var actualLibs = allFiles.userLibs.filter(function(lib){
-				return lib.includeSrc;
-			});
-
-			setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs), 300);
-			this.onClose();
 		},
+		
 		cancelButton: function(){
 			this.cancel = true;
 			this.onClose();

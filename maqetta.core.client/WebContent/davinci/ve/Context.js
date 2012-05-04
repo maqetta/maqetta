@@ -4,6 +4,7 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/window",
+    'system/resource',
     "../UserActivityMonitor",
     "../Theme",
     "./ThemeModifier",
@@ -32,6 +33,7 @@ define([
 	Deferred,
 	DeferredList,
 	windowUtils,
+	Resource,
 	UserActivityMonitor,
 	Theme,
 	ThemeModifier,
@@ -650,10 +652,31 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	getFullResourcePath: function() {
-		var filename = this.getModel().fileName;
-		return new Path(filename);
+		if(!this._fullResourcePath){
+			var filename = this.getModel().fileName;
+			this._fullResourcePath = new Path(filename);
+		}
+		return this._fullResourcePath;
 	},
-
+	
+	getAppCssRelativeFile: function(){
+		if(!this._appCssRelativeFile){
+			var currentHtmlFilePath = this.getFullResourcePath();
+			var currentHtmlFolderPath = currentHtmlFilePath.getParentPath();
+			var base = new Path(Workbench.getProject());
+			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+			var appCssFolderPath;
+			if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
+				appCssFolderPath = base.append(prefs.webContentFolder);
+			}else{
+				appCssFolderPath = base;
+			}
+			var appCssFilePath = appCssFolderPath.append('app.css');
+			this._appCssRelativeFile = appCssFilePath.relativeTo(currentHtmlFolderPath).toString();
+		}
+		return this._appCssRelativeFile;
+	},
+	
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
     loadTheme: function(newHtmlParms){
     	/* 
@@ -3082,6 +3105,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(doSnapLinesX || doSnapLinesY){
 			Snap.updateSnapLinesAfterTraversal(this);
 		}
+		cp.findParentsXYAfterTraversal(params);
 		if(differentXY){
 			cp.dragUpdateCandidateParents({widgetType:widgetType,
 					showCandidateParents:doFindParentsXY, 
@@ -3089,7 +3113,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					beforeAfter:beforeAfter, 
 					absolute:absolute, 
 					currentParent:currentParent});
-			cp.findParentsXYAfterTraversal();
+			cp.findParentsXYCleanup(params);
 		}
 	},
 	
@@ -3140,6 +3164,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onCommandStackExecute: function() {
+	},
+	
+	getPageLeftTop: function(node){
+		var leftAdjust = node.offsetLeft;
+		var topAdjust = node.offsetTop;
+		var pn = node.offsetParent;
+		while(pn && pn.tagName != 'BODY'){
+			leftAdjust += pn.offsetLeft;
+			topAdjust += pn.offsetTop;
+			pn = pn.offsetParent;
+		}
+		return {l:leftAdjust, t:topAdjust};
 	}
 });
 

@@ -26,6 +26,7 @@ import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
+import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 import org.maqetta.server.mail.SimpleMessage;
 import org.maqetta.server.mail.SmtpPop3Mailer;
@@ -57,7 +58,7 @@ public class Publish extends Command {
 		String[] emails = emailsStr.split(",");
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
 
-		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(user.getUserName());
+		IDesignerUser du = ReviewManager.getReviewManager().getDesignerUser(user);
 
 		if (!isUpdate) {
 			Date currentTime = new Date();
@@ -136,12 +137,12 @@ public class Publish extends Command {
 			ReviewCacheManager.$.republish(project,vTime, version);
 		}
 		if (savingDraft) {
-			ReviewManager.getReviewManager().saveDraft(user.getUserName(), version);
+			ReviewManager.getReviewManager().saveDraft(du, version);
 			this.responseString = "OK";
 			return;
 		}
 
-		ReviewManager.getReviewManager().publish(user.getUserName(), version);
+		ReviewManager.getReviewManager().publish(du, version);
 
 		String requestUrl = req.getRequestURL().toString();
 		// set is used to filter duplicate email. Only send mail to one email
@@ -187,6 +188,9 @@ public class Publish extends Command {
 
 	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
-		return host + "/review/" + user.getUserName() + "?revieweeuser=" + user.getUserName()+ "&version=" + version;
+		return host + "/maqetta?"
+				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
+				+ user.getUserName() + "&"
+				+ IDavinciServerConstants.REVIEW_VERSION_ATTR + "=" + version;
 	}
 }

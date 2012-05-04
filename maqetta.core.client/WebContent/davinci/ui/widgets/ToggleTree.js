@@ -69,13 +69,25 @@ define(["dojo/_base/declare",
 			if(!this.dndController){
 				this.dndController = Tree.prototype.dndController;
 			}
+
+			// Workaround for #13964: Prevent drag/drop from happening when user mouses down on scrollbar
+			var mouseDown = dijit.tree.dndSource.prototype.onMouseDown;
+			dijit.tree.dndSource.prototype.onMouseDown = function(e){
+				if ((" "+(e.srcElement || e.target).className+" ").indexOf(" dojoDndContainerOver ") != -1) {
+					return;
+				}
+				return mouseDown.call(this.dndController, e);
+			}.bind(this);
+
 			this.inherited(arguments);
 			this.onClick = this.onClickDummy;  
 			this.allFocusedNodes = [];  
 			this.lastFocusedNode = null;  
 		},
+
 		onClickDummy: function(item, node) {
 		},
+
 		_onClick: function(item, event){
 			dojo.stopEvent(event);
 			var ctrlKey = dojo.isMac ? event.metaKey: event.ctrlKey;

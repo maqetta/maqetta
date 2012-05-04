@@ -12,7 +12,10 @@ import org.maqetta.server.IVResource;
 public class RemoveWorkingCopy extends Command {
 
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        String path = req.getParameter("path");
+    	// SECURITY, VALIDATION
+    	//   'path': contents eventually checked by User.getResource()
+
+    	String path = req.getParameter("path");
         IVResource file = user.getResource(path);
         if (file != null) {
         	/* have to force garbage collection, or on windows the resource is never deleted */

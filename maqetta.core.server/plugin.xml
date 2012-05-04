@@ -8,6 +8,7 @@
    	<extension-point id="personManager" name="Authentication/User Manager " schema="schema/personManager.exsd"/>
    	<extension-point id="welcomePage" name="Welcome page provider" schema="schema/welcomePage.exsd"/>
    <extension-point id="mainPage" name="Welcome page provider" schema="schema/reviewPage.exsd"/>
+   <extension-point id="previewPage" name="Preview page provider" schema="schema/previewPage.exsd"/>
    <extension-point id="mailConfig" name="Mail Server Configuration" schema="schema/mailConfig.exsd"/>
    <!-- <extension-point id="libraryManager" name="Library Manager" schema="schema/libraryManager.exsd"/>-->
    <extension-point id="userManager" name="User Manager" schema="schema/userManager.exsd"/>

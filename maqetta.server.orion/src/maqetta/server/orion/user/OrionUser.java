@@ -276,39 +276,7 @@ public class OrionUser extends User {
 		return null;
 	}
 	
-	public IVResource[] findFiles(String pathStr, String startFolder,	boolean ignoreCase, boolean workspaceOnly) {
-		boolean isWildcard = pathStr.indexOf('*') >= 0;
-		IPath path = new Path(pathStr);
-		ArrayList results = new ArrayList();
-
-		// Links links = this.getLinks();
-		if (isWildcard) {
-			IVResource start = null;
-			if (startFolder == null || startFolder.equals(".")) {
-		          start = this.workspace;
-		    } else {
-		         start = this.getResource(startFolder);
-		        
-		    }
-			
-			results.addAll(Arrays.asList((start.find(pathStr))));
-			
-			
-			
-			if (!workspaceOnly) {
-				findLibFiles(path, results);
-
-			}
-		} else {
-			IVResource file = this.getResource(pathStr);
-			if (file != null && file.exists()) {
-				results.add(file);
-			}
-
-		}
-		return (IVResource[]) results.toArray(new IVResource[results.size()]);
-
-	}
+	
 	
 	public IVResource[] listFiles(String path) {
 	    IVResource[] found = new IVResource[0];

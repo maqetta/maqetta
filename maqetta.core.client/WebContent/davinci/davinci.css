@@ -1197,8 +1197,16 @@ davinci_top_bar .dijitButtonNode {
 	line-height: 1.5em;
 }
 
+.maqParentListDiv {
+	position:absolute;
+	z-index:1000000;
+	opacity:.8;
+	pointer-events:none;
+	background:white;
+}
 .maqCandidateParents {
-	width:40em;
+	max-width:40em;
+	background:white;
 }
 .maqCandidateParentsHeader {
 	margin-top:1em;

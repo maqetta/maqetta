@@ -4,9 +4,10 @@ define([
 	
 return declare("davinci.review.drawing.Surface", null, {
 
-	constructor: function(canvas, /*Document?*/ doc) {
+	constructor: function(canvas, /*Document?*/ doc, context) {
 		doc = doc || dojo.doc;
 		this.canvas = canvas;
+		this.context = context;
 		this.domNode = canvas === doc.body ? doc : canvas;
 		this._tools = [];
 		this.shapes = [];

@@ -11,6 +11,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -20,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.server.internal.Activator;
-import org.davinci.server.review.Constants;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -113,7 +114,6 @@ public class DavinciPageServlet extends HttpServlet {
 			System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
 		}
 		
-
 		if ( pathInfo == null ) {
 			handleReview(req, resp);
 			resp.sendRedirect("./maqetta/");
@@ -136,6 +136,8 @@ public class DavinciPageServlet extends HttpServlet {
 		} else if ( pathInfo.equals("/welcome") ) {
 			/* write the welcome page (may come from extension point) */
 			writeWelcomePage(req, resp);
+		} else if ( previewParam != null ) {
+			handlePreview(req, resp);
 		} else if ( pathInfo.startsWith(IDavinciServerConstants.USER_URL) ) {
 			handleWSRequest(req, resp, user);
 		} else {
@@ -150,11 +152,11 @@ public class DavinciPageServlet extends HttpServlet {
 	 * review gets opened on the client.
 	 */
 	private void handleReview(HttpServletRequest req, HttpServletResponse resp) {
-		String revieweeName = req.getParameter(IDavinciServerConstants.REVIEW_DESIGNER_ATTR);
+		String designerName = req.getParameter(IDavinciServerConstants.REVIEW_DESIGNER_ATTR);
 		String reviewVersion = req.getParameter(IDavinciServerConstants.REVIEW_VERSION_ATTR);
-		if (revieweeName != null && reviewVersion != null) {
+		if (validateReviewParms(designerName, reviewVersion)) {
 			//Fill in designer cookie
-			Cookie designerCookie = new Cookie(IDavinciServerConstants.REVIEW_COOKIE_DESIGNER, revieweeName);
+			Cookie designerCookie = new Cookie(IDavinciServerConstants.REVIEW_COOKIE_DESIGNER, designerName);
 			/* have to set the path to delete it later from the client */
 			designerCookie.setPath("/");
 			resp.addCookie(designerCookie);
@@ -167,6 +169,35 @@ public class DavinciPageServlet extends HttpServlet {
 				resp.addCookie(versionCookie);
 			}
 		}
+	}
+	
+	/*
+	 * Make sure we have valid parms before putting back out into cookies. Putting 
+	 * unsanitized/unvalidated parms straight into a cookie can open up the door for XSS attacks.
+	 */
+	private boolean validateReviewParms(String designerName, String reviewVersion) {
+		boolean returnVal = (designerName != null && reviewVersion != null);
+		if (returnVal) {
+			boolean validDesigner = ServerManager.getServerManger().getUserManager().isValidUser(designerName);
+			if (validDesigner) {
+				//We're not going to look up the reviewVersion, but we're at least going to make sure it
+				//only contains letters and numbers
+				Pattern p = Pattern.compile("[^a-zA-z0-9]");
+				Matcher m = p.matcher(reviewVersion);
+				returnVal = !m.find();
+				if (!returnVal) {
+					if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
+						System.out.println("validateReviewParms: Poorly formatted reviewVersion = " + reviewVersion);
+					}
+				}
+			} else {
+				if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
+					System.out.println("validateReviewParms: Invalid review designer name = " + designerName);
+				}
+				returnVal = false;
+			}
+		}
+		return returnVal;
 	}
 
 	/*
@@ -210,6 +241,16 @@ public class DavinciPageServlet extends HttpServlet {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE,
 				IDavinciServerConstants.EP_TAG_MAIN_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
+		this.writePage(req, resp, resourceURL, false);
+	}
+
+	/*
+	 * Used for previewing mobile pages.
+	 */
+	protected void handlePreview(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		URL previewPage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_PREVIEW_PAGE,
+				IDavinciServerConstants.EP_TAG_PREVIEW_PAGE);
+		VURL resourceURL = new VURL(previewPage);
 		this.writePage(req, resp, resourceURL, false);
 	}
 

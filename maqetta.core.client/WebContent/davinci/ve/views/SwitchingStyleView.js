@@ -205,7 +205,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		this.domNode = dojo.doc.createElement("div");
 		dojo.addClass(this.domNode,'propertiesSection');	
 		var template="";
-		template+="<div style='height:2em;' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+		template+="<div dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
 		template+="<table class='propRootDetailsContainer'>";
 		template+="<tr>";

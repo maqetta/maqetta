@@ -154,5 +154,107 @@
 			the selected widgets should have become the children of DIVs or SPANs, as appropriate.</li>
 	</ol>
 
+	<h2 class="test_section">Reorder commands (Move to front, Move to back, Move forward, Move backward)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>New HTML File - hi-fi page</li>
+		<li>Bring up context menu in both canvas and Outline palette
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should menu commands Move to front, Move to back, Move forward, Move backward</li>
+					<li>All four commands should be disabled</li>
+				</ul>
+			</div>
+		</li>
+		<li>Add a Button</li>
+		<li>Bring up context menu in both canvas and Outline palette
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should menu commands Move to front, Move to back, Move forward, Move backward</li>
+					<li>All four commands should be disabled</li>
+				</ul>
+			</div>
+		</li>
+		<li>Switch to absolute positioning</li>
+		<li>Add a CheckBox, Calendar, ColorPalette, Rectangle, and a Image widget from clipart section</li>
+		<li>Add a DIV. Inside of the DIV, drop an HTML Button and an HTML Select</li>
+		<li>Open up Outline palette (we will be looking at it repeatedly)</li>
+		<li>Select the CheckBox</li>
+		<li>Bring up context menu in both canvas and Outline palette
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should menu commands Move to front, Move to back, Move forward, Move backward</li>
+					<li>Because the CheckBox is the first absolute child, only Move to front and move forward should be enabled.</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue a move forward command
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>In the Outline palette, the Checkbox should now have moved after the Calendar</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue an Undo command</li>
+		<li>Select the DIV</li>
+		<li>Bring up context menu in both canvas and Outline palette
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should menu commands Move to front, Move to back, Move forward, Move backward</li>
+					<li>Because the DIV is the last absolute child, only Move to back and move backward should be enabled.</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue a move backward command
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>In the Outline palette, the DIV should now have moved before the clipart Image widget</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue an Undo command</li>
+		<li>Multi-select the Calendar and Rectangle.</li>
+		<li>Bring up context menu in both canvas and Outline palette
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should menu commands Move to front, Move to back, Move forward, Move backward</li>
+					<li>Because the Calendar and Rectangle are not adjacent children, only Move to front and move to back should be enabled.</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue a move to back command
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>In the Outline palette, the Calendar and Rectangle should be the first two children of the BODY</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue an Undo command</li>
+		<li>Multi-select the Calendar and ColorPalette.</li>
+		<li>Bring up context menu in both canvas and Outline palette
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should menu commands Move to front, Move to back, Move forward, Move backward</li>
+					<li>Because the Calendar and Rectangle are now adjacent children, all four reorder commands should be enabled.</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue a move forward command
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>In the Outline palette, the  Calendar and ColorPalette should be immediately after the Rectangle</li>
+				</ul>
+			</div>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>In both the Outline palette and in source view, 
+			the selected widgets should have become the children of DIVs or SPANs, as appropriate.</li>
+	</ol>
+
 </body>
 </html>

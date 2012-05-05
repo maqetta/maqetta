@@ -4,9 +4,10 @@ define([
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLAttribute",
 	"davinci/html/HTMLComment",
+	"davinci/html/PHPBlock",
 	"davinci/model/parser/Tokenizer",
 	"davinci/html/CSSParser"
-], function(declare, HTMLText, HTMLElement, HTMLAttribute, HTMLComment, Tokenizer, CSSParser) {
+], function(declare, HTMLText, HTMLElement, HTMLAttribute, HTMLComment, PHPBlock, Tokenizer, CSSParser) {
 
 /* This file defines an XML parser, with a few kludges to make it
  * useable for HTML. autoSelfClosers defines a set of tag names that
@@ -54,9 +55,14 @@ var XMLParser  = (function() {
 					}
 				} else if (source.equals("?")) {
 					source.next();
-					source.nextWhileMatches(/[\w\._\-]/);
-					setState(inBlock("xml-processing", "?>"));
-					return "xml-processing";
+					if(source.lookAhead('php', true/*consume*/, false/*skipSpaces*/, true/*caseInsensitive*/)){
+						setState(inBlock("php-block", "?>"));
+						return null;
+					}else{
+						source.nextWhileMatches(/[\w\._\-]/);
+						setState(inBlock("xml-processing", "?>"));
+						return "xml-processing";
+					}
 				} else {
 					if (source.equals("/")) source.next();
 					setState(inTag);
@@ -188,7 +194,7 @@ var XMLParser  = (function() {
 			return pass(element, base);
 		}
 
-		var harmlessTokens = {"xml-text": true, "xml-entity": true, "xml-comment": true, "xml-processing": true, "xml-doctype": true};
+		var harmlessTokens = {"xml-text": true, "xml-entity": true, "xml-comment": true, "xml-processing": true, "xml-doctype": true, "php-block": true};
 
 		function element(style, content) {
 			if (content == "<") cont(tagname, attributes, endtag(tokenNr == 1));
@@ -261,7 +267,7 @@ var XMLParser  = (function() {
 					token.indentation = computeIndentation(context);
 				}
 
-				if (token.style == "whitespace" || token.type == "xml-comment")
+				if (token.style == "whitespace" || token.type == "xml-comment" || token.type == "php-block")
 					return token;
 
 				while (true) {
@@ -463,6 +469,17 @@ var parse = function(text, parentElement) {
 				comment.value = token.content.substring(4,token.content.length-3);
 				comment.endOffset = token.offset+token.content.length;
 				stack[stack.length-1].addChild(comment, undefined, true);
+
+			}
+			break;
+			case "php-block" : {
+				updateText();
+				var phpBlock = new PHPBlock();
+				phpBlock.wasParsed = true;
+				phpBlock.startOffset = token.offset;
+				phpBlock.value = token.content;
+				phpBlock.endOffset = token.offset+token.content.length;
+				stack[stack.length-1].addChild(phpBlock, undefined, true);
 
 			}
 			break;

@@ -209,6 +209,34 @@ return {
                     label: "Remove row",
                     action: "davinci/ve/actions/RemoveRowAction",
                     menubarPath: "davinci.edit/cut"
+                },
+                {
+                    id: "davinci.ve.MoveToFront",
+                    iconClass: "editActionIcon",
+                    label: "Move to front",
+                    action: "davinci/ve/actions/MoveToFrontAction",
+                    menubarPath: "davinci.edit/cut"
+                },
+                {
+                    id: "davinci.ve.MoveToBack",
+                    iconClass: "editActionIcon",
+                    label: "Move to back",
+                    action: "davinci/ve/actions/MoveToBackAction",
+                    menubarPath: "davinci.edit/cut"
+                },
+                {
+                    id: "davinci.ve.MoveForward",
+                    iconClass: "editActionIcon",
+                    label: "Move forward",
+                    action: "davinci/ve/actions/MoveForwardAction",
+                    menubarPath: "davinci.edit/cut"
+                },
+                {
+                    id: "davinci.ve.MoveBackward",
+                    iconClass: "editActionIcon",
+                    label: "Move backward",
+                    action: "davinci/ve/actions/MoveBackwardAction",
+                    menubarPath: "davinci.edit/cut"
                 }
             ]
         },
@@ -278,6 +306,34 @@ return {
                     iconClass: "editActionIcon",
                     label: "Remove row",
                     action: "davinci/ve/actions/RemoveRowAction",
+                    menubarPath: "state"
+                },
+                {
+                    id: "davinci.ve.MoveToFront",
+                    iconClass: "editActionIcon",
+                    label: "Move to front",
+                    action: "davinci/ve/actions/MoveToFrontAction",
+                    menubarPath: "state"
+                },
+                {
+                    id: "davinci.ve.MoveToBack",
+                    iconClass: "editActionIcon",
+                    label: "Move to back",
+                    action: "davinci/ve/actions/MoveToBackAction",
+                    menubarPath: "state"
+                },
+                {
+                    id: "davinci.ve.MoveForward",
+                    iconClass: "editActionIcon",
+                    label: "Move forward",
+                    action: "davinci/ve/actions/MoveForwardAction",
+                    menubarPath: "state"
+                },
+                {
+                    id: "davinci.ve.MoveBackward",
+                    iconClass: "editActionIcon",
+                    label: "Move backward",
+                    action: "davinci/ve/actions/MoveBackwardAction",
                     menubarPath: "state"
                 },
                 {

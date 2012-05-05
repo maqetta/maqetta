@@ -49,6 +49,12 @@ davinci/davinci = {
 	"./ve/actions/AddRowAction",
 	"./ve/actions/AddRowBeforeAction",
 	"./ve/actions/RemoveRowAction",
+	
+	"./ve/actions/MoveToFrontAction",
+	"./ve/actions/MoveToBackAction",
+	"./ve/actions/MoveForwardAction",
+	"./ve/actions/MoveBackwardAction",
+	
 	"./ve/actions/AddState",
 	"./ve/actions/RemoveState",
 

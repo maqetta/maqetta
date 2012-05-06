@@ -50,6 +50,10 @@ davinci/davinci = {
 	"./ve/actions/AddRowBeforeAction",
 	"./ve/actions/RemoveRowAction",
 	
+	"./ve/actions/SelectParentAction",
+	"./ve/actions/SelectAncestorAction",
+	"./ve/actions/UnselectAllAction",
+	
 	"./ve/actions/MoveToFrontAction",
 	"./ve/actions/MoveToBackAction",
 	"./ve/actions/MoveForwardAction",

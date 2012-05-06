@@ -252,8 +252,72 @@
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>In both the Outline palette and in source view, 
-			the selected widgets should have become the children of DIVs or SPANs, as appropriate.</li>
+		<li>As described above.</li>
+	</ol>
+
+	<h2 class="test_section">Select/unselect commands</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>New HTML File - hi-fi page</li>
+		<li>Bring up context menu in both canvas and Outline palette
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should menu commands Select parent, Select ancestor..., and Unselect all</li>
+					<li>All three commands should be disabled</li>
+				</ul>
+			</div>
+		</li>
+		<li>Add a TabContainer. Add an Accordion inside of TabContainer. Add a Button and Checkbox inside of Accordion</li>
+		<li>Select the Button and bring up context menu on canvas
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>All three commands should be enabled</li>
+				</ul>
+			</div>
+		</li>
+		<li>Issue a Select parent command
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>The ContentPane for Accordion should be selected</li>
+				</ul>
+			</div>
+		</li>
+		<li>Consecutively issue 3 more Select parent commands, and observe what gets selected
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>The Accordion should be selected, then the ContentPane for TabContainer, than TabContainer</li>
+				</ul>
+			</div>
+		</li>
+		<li>Select the Button and bring up context menu on canvas and issue a Select ancestor command
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>The Select ancestor dialog should appear</li>
+					<li>The list of options in the dropdown should show ContentPane, Accordion, ContentPane, TabContainer</li>
+				</ul>
+			</div>
+		</li>
+		<li>From the menu, choose the Accordion
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>The Accordion should now be selected</li>
+				</ul>
+			</div>
+		</li>
+		<li>Select the Button and Checkbox, bring up context menu on canvas and issue an Unselect all command
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>Nothing should be selected</li>
+				</ul>
+			</div>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As described above.</li>
 	</ol>
 
 </body>

@@ -1,9 +1,9 @@
 define([
-    	"dojo/_base/declare",
-    	"clipart/_clipart"
-], function(declare, _clipart){
-	
-	return declare("clipart.iPhone", [_clipart], {
+		"dojo/_base/declare",
+		"clipart/_deviceclipart"
+], function(declare, _deviceclipart){
+
+	return declare("clipart.iPhone", [_deviceclipart], {
 		
 	});
 });

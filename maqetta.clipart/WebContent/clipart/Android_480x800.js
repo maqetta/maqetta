@@ -1,9 +1,9 @@
 define([
     	"dojo/_base/declare",
-    	"clipart/_clipart"
-], function(declare, _clipart){
+    	"clipart/_deviceclipart"
+], function(declare, _deviceclipart){
 	
-	return declare("clipart.Android_480x800", [_clipart], {
+	return declare("clipart.Android_480x800", [_deviceclipart], {
 		
 	});
 });

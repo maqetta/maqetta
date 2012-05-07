@@ -529,7 +529,6 @@ public class User implements IUser {
 		          start = this.workspace;
 		    } else {
 		         start = this.getResource(startFolder);
-		        
 		    }
 			
 			results.addAll(Arrays.asList((start.find(pathStr))));
@@ -544,9 +543,10 @@ public class User implements IUser {
 
 		}
 		/* search the libraries */
+		/*
 		if (!workspaceOnly) 
 			findLibFiles(path, results);
-		
+		*/
 		
 		
 		if (workspaceOnly) {

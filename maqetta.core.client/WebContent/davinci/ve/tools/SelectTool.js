@@ -329,8 +329,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var e = dojo._getPadBorderExtents(_node);
 //			newBox.l = Math.round(newBox.x + e.l);
 //			box.t = Math.round(newBox.y + e.t);
-			newBox.w -= e.w;
-			newBox.h -= e.h;
+			if(typeof newBox.w == 'number'){
+				newBox.w -= e.w;
+			}
+			if(typeof newBox.h == 'number'){
+				newBox.h -= e.h;
+			}
 
 			switch(resizable){
 			case "width":

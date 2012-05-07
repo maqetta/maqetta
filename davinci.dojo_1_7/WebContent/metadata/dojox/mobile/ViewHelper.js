@@ -202,14 +202,15 @@ ViewHelper.prototype = {
 	 * makes it so that by default a new View element will be added as a sibling
 	 * to the candidate view target.
 	 * 
-	 * @param {Array[davinci.ve._Widget]} allowedParentList List of candidate parent widgets
+	 * @param {Array[davinci.ve._Widget]} allowedParentList List of candidate parent widgets,
+	 * 			where typically BODY is item 0
 	 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
 	 */
 	chooseParent: function(allowedParentList){
-		if(allowedParentList.length>1 && domClass.contains(allowedParentList[0].domNode,"mblView")){
-			return allowedParentList[1];
+		if(allowedParentList.length>1 && domClass.contains(allowedParentList[allowedParentList.length-1].domNode,"mblView")){
+			return allowedParentList[allowedParentList.length-2];
 		}else{
-			return allowedParentList[0];
+			return allowedParentList[allowedParentList.length-1];
 		}
 
 	},

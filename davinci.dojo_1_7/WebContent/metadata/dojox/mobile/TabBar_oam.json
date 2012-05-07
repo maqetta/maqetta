@@ -43,7 +43,15 @@
         },
         "barType": {
             "datatype": "string",
-            "defaultValue": "tabBar"
+            "defaultValue": "",
+            "option": [
+                {
+                    "value": "tabBar"
+                },
+                {
+                    "value": "segmentedControl"
+                }
+            ]
         },
         "fixed": {
             "datatype": "string",

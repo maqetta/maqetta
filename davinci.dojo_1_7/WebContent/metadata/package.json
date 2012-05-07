@@ -2339,9 +2339,6 @@
 		            "helper": "./dojox/mobile/TabBarHelper",
 		            "inlineEdit": "./dojox/mobile/TabBarInput",
 		            "allowedChild": "dojox.mobile.TabBarButton",
-		            "properties": {
-		                "barType": "segmentedControl"
-		            },
 		            "children": [
 		                {
 		                    "type": "dojox.mobile.TabBarButton",

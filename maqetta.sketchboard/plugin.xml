@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension id="sketchboardMetaData" point="org.eclipse.equinox.http.registry.resources">
+            <resource alias="/maqetta/app/metadata/sketchboard/1.0" base-name="/WebContent/metadata" />
+             <resource alias="/maqetta/app/static/lib/sketchboard/1.0" base-name="/WebContent/sketchboard"/>
+    </extension>
+    
+      <extension point="maqetta.core.server.ajaxLibrary">
+         <ajaxLibrary name="sketchboard" id="sketchboard" version="1.0">
+            <libraryPath location="WebContent/sketchboard" name="/lib/sketchboard"></libraryPath>
+            <metadata location="app/metadata/sketchboard/1.0" />
+    
+         </ajaxLibrary>
+      </extension>
+      
+</plugin>

@@ -64,6 +64,13 @@
          unpack="false"/>
 
    <plugin
+         id="maqetta.sketchboard"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="maqetta.shapes"
          download-size="0"
          install-size="0"

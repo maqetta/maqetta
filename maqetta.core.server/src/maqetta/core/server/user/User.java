@@ -40,19 +40,7 @@ public class User implements IUser {
 	//protected Links links;
 	protected IPerson person;
 	protected IVResource workspace;
-    static {
-        Constants.LOCAL_INSTALL_USER_OBJ = 
-             new User(new IPerson() {
-                public String getUserName() {
-                    return Constants.LOCAL_INSTALL_USER_NAME;
-                }
-                public String getEmail() {
-                    return "";
-                }
-             }
-            ,ReviewManager.getReviewManager().getBaseDirectory());
-        
-    }	
+  
     public User(IPerson person) {
 		this.person = person;
 	}
@@ -543,10 +531,10 @@ public class User implements IUser {
 
 		}
 		/* search the libraries */
-		/*
+		
 		if (!workspaceOnly) 
 			findLibFiles(path, results);
-		*/
+		
 		
 		
 		if (workspaceOnly) {

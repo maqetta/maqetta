@@ -21,6 +21,10 @@ define({ root:
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",
 		
+		//SelectAncestorAction.js
+		"selectAncestorTitle":"Select ancestor",
+		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
+		
 		//actions/StateActions.js
 		"createNewState":"Create New State",
 		"createLabel":"Create",

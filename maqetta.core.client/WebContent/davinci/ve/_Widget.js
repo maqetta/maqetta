@@ -190,7 +190,7 @@ return declare("davinci.ve._Widget", null, {
 
 		if(containerNode) {
 			//TODO use dojo.place?
-			if(index === undefined || index === -1) {
+			if(index === undefined || index === null || index === -1) {
 				containerNode.appendChild(child.domNode);
 				this._srcElement.addChild(child._srcElement);
 			}else{

@@ -29,7 +29,30 @@
                 "type": "sketchboard.Sketchboard",
                 "category": "sketchboard",
                 "icon": "resources/images/Sketchboard.gif",
-                "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP////v7+/r6+vn5+fj4+Pf39/b29vPz8/Ly8vDw8O/v7+7u7uzs7Ovr6+fn59/f39jY2NfX19DQ0M/Pz83NzcrKysnJycfHx8bGxsXFxcTExMPDw8LCwsHBwb29vby8vLu7u7q6ura2tqWlpaSkpKOjo6CgoJycnJubm5qampmZmZiYmJeXl5WVlZKSkpCQkI6Ojo2NjYyMjISEhIODg4GBgX9/f35+fn19fXx8fHt7e3l5eXFxcXBwcG9vb25ubm1tbWtra2RkZGNjY2BgYF5eXl1dXVhYWEdHR0NDQ0BAQCcnJ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEwALAAAAAAQABAAAAeigEyCg4SFgkqIiYqKhwSOBAMDAgEBAgMESocFLSwqKilAPz4/QQCZTEoGDAkmMx47Ojk3OaaHBgBHSDUODxwrLTK1qAUARUtCKDAmMTYnwkoELyVGPSEdMjQnFs/RJC4wGQAQGRMO3CIbNUNEAAALEBHcIw0fODwSABQ5Rtw5FxoVvik4YATHM2IIOGjAAAMEAAlJDrabSLHdqUUYExnaSCgQADs="
+                "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP////v7+/r6+vn5+fj4+Pf39/b29vPz8/Ly8vDw8O/v7+7u7uzs7Ovr6+fn59/f39jY2NfX19DQ0M/Pz83NzcrKysnJycfHx8bGxsXFxcTExMPDw8LCwsHBwb29vby8vLu7u7q6ura2tqWlpaSkpKOjo6CgoJycnJubm5qampmZmZiYmJeXl5WVlZKSkpCQkI6Ojo2NjYyMjISEhIODg4GBgX9/f35+fn19fXx8fHt7e3l5eXFxcXBwcG9vb25ubm1tbWtra2RkZGNjY2BgYF5eXl1dXVhYWEdHR0NDQ0BAQCcnJ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEwALAAAAAAQABAAAAeigEyCg4SFgkqIiYqKhwSOBAMDAgEBAgMESocFLSwqKilAPz4/QQCZTEoGDAkmMx47Ojk3OaaHBgBHSDUODxwrLTK1qAUARUtCKDAmMTYnwkoELyVGPSEdMjQnFs/RJC4wGQAQGRMO3CIbNUNEAAALEBHcIw0fODwSABQ5Rtw5FxoVvik4YATHM2IIOGjAAAMEAAlJDrabSLHdqUUYExnaSCgQADs=" ,
+                "properties": {
+                    "style": "width: 300px; height: 300px; min-width:1em; min-height:1em;",
+                    "controllerWidget": "dijit.layout.TabController"
+                },
+                "children": [
+                    {
+                        "type": "dijit.layout.ContentPane",
+                        "properties": {
+                            "title": "Tab 1",
+                            "doLayout": false
+                        }
+                    },
+                    {
+                        "type": "dijit.layout.ContentPane",
+                        "properties": {
+                            "title": "Tab 2",
+                            "doLayout": false
+                        }
+                    }
+                ],
+                "allowedChild": "dijit.layout.ContentPane"/*,
+                "inlineEdit": "./dijit/layout/StackContainerInput",
+                "helper": "./dijit/layout/TabContainerHelper"*/
             }
           ]
         }

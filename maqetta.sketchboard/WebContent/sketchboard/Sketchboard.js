@@ -1,9 +1,13 @@
 define([
-    	"dojo/_base/declare",
-    	"sketchboard/_sketchboard"
-], function(declare, _sketchboard){
+		"dojo/_base/declare",
+		"dijit/layout/TabContainer"
+], function(declare, TabContainer, ContentPane){
 	
-	return declare("sketchboard.Sketchboard", [_sketchboard], {
+	return declare("sketchboard.Sketchboard", [TabContainer], {
+		
+		postCreate: function(){
+			debugger;
+		}
 		
 	});
 });

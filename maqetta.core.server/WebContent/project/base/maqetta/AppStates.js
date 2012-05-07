@@ -887,8 +887,6 @@ var singleton = davinci.states = new States();
 	}
 })();
 
-/*FIXME: Temporarily comment out overlay widget logic
-
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
 if (!davinci.Workbench && typeof dijit != "undefined"){
 	connect.subscribe("/davinci/states/state/changed", function(args) {
@@ -902,7 +900,6 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 		}
 	});
 }
-*/
 
 return States;
 });

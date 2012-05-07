@@ -543,9 +543,14 @@ public class User implements IUser {
 			}
 
 		}
+		/* search the libraries */
+		if (!workspaceOnly) 
+			findLibFiles(path, results);
+		
+		
+		
 		if (workspaceOnly) {
-			//findLibFiles(path, results);
-			// need to filter out library entries here
+			// need to filter out library entries here in case some got through (mixed directories)
 			for(int z=0;z<results.size();z++){
 				if(results.get(z) instanceof VLibraryResource){
 					results.remove(z);

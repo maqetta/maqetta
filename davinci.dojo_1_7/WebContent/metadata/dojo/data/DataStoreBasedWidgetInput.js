@@ -475,12 +475,13 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				compoundCommand.add(addCmd);
 			}
 
+			// update the store id attribute
+			var mcmd = new ModifyAttributeCommand(widget, {store: sid});
+			compoundCommand.add(mcmd);
+
 			// allow subclasses to inject their own data
 			command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
 			compoundCommand.add(command);
-
-			var mcmd = new ModifyAttributeCommand(widget, {store: sid});
-			compoundCommand.add(mcmd);
 		} else {
 			var storeCmd = new ModifyCommand(storeWidget, properties);
 			compoundCommand.add(storeCmd);

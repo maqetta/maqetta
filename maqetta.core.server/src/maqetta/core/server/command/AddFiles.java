@@ -57,6 +57,7 @@ public class AddFiles extends Command {
                     while ( (numRead = is.read(buf) ) >= 0) {
                         os.write(buf, 0, numRead);
                     }
+                    uploaded.flushWorkingCopy();
                 }
             }
 

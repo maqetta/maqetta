@@ -16,7 +16,7 @@ return declare("davinci.html.PHPBlock", HTMLItem, {
 	},
 
 	getText: function(context) {
-		return this.value;
+		return context.excludeIgnoredContent ? "" : this.value;
 	}
 
 });

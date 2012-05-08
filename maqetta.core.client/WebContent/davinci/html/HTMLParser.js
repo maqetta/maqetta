@@ -512,7 +512,7 @@ console.log('case xml-text or whitespace');
 			break;
 			case "php-block" : {
 console.log('case php-block');
-				//updateText();
+				updateText();
 				var phpBlock = new PHPBlock();
 				phpBlock.wasParsed = true;
 				phpBlock.startOffset = token.offset;

@@ -127,7 +127,6 @@ console.log('InText ? source.next(). ch2='+ch2);
 					source.next();
 				}
 				if(style == 'php-block'){
-					debugger;
 					if(!terminated && source.endOfLine()){
 						source.next();
 					}else{
@@ -324,7 +323,6 @@ console.log('next: function');
 })();
 
 var parse = function(text, parentElement) {
-	debugger;
 	var txtStream = { next : function () {if (++this.count==1)  return text; else {throw StopIteration;}} , count:0, text:text};
 	var stream = Tokenizer.stringStream(txtStream);
 	var parser = XMLParser.make(stream);
@@ -335,7 +333,7 @@ var parse = function(text, parentElement) {
 	var stack=[];
 	stack.push(parentElement);
 	var htmlText;
-	var inComment;
+	var inComment, inPhpBlock;
 
 	function addText(text, offset) {
 		htmlText = new HTMLText();
@@ -469,6 +467,7 @@ console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 					prevModel.endOffset = token.offset;
 					addTrailingWS(token);
 				}
+				inPhpBlock = null;
 			}
 			break;
 			case "xml-text" :
@@ -476,14 +475,16 @@ console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			case "xml-entity" : {
 				if (inComment) {
 					inComment.value += token.value;
-//				} else if ( inPhpBlock ) {
-//					inPhpBlock.value += token.value;
-				} else
+				} else if ( inPhpBlock ) {
+					inPhpBlock.value += token.value;
+				} else {
 					if (!htmlText) {
 						addText(token.value, token.offset);
-					} else
+					} else {
 						htmlText.value += token.value;
-
+					}
+				}
+				inPhpBlock = null;
 			}
 			break;
 			case "xml-comment" : {
@@ -494,7 +495,7 @@ console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 				comment.value = token.content.substring(4,token.content.length-3);
 				comment.endOffset = token.offset+token.content.length;
 				stack[stack.length-1].addChild(comment, undefined, true);
-
+				inPhpBlock = null;
 			}
 			break;
 			case "php-block" : {
@@ -506,7 +507,7 @@ console.log('case php-block');
 				phpBlock.value = token.content;
 				phpBlock.endOffset = token.offset+token.content.length;
 				stack[stack.length-1].addChild(phpBlock, undefined, true);
-
+				inPhpBlock = phpBlock;
 			}
 			break;
 			case "xml-doctype" : {
@@ -530,6 +531,7 @@ console.log('case php-block');
 					inComment = comment;
 					comment.value += token.content;
 				}
+				inPhpBlock = null;
 			}
 			break;		  
 			}

@@ -588,8 +588,8 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getUserName()
 	 */
-	public String getUserName() {
-		return this.person.getUserName();
+	public String getUserID() {
+		return this.person.getUserID();
 	}
 
 	/* (non-Javadoc)

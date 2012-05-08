@@ -45,7 +45,7 @@ public class OrionUserManager extends UserManagerImpl {
     public IUser newUser(IPerson person, IStorage baseDirectory) {
 
      	IUser user =  new OrionUser(person);
-     	if(init(person.getUserName())){
+     	if(init(person.getUserID())){
      		user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
      	}
      	return user;

@@ -23,7 +23,7 @@ public class GetWorkbenchState extends Command {
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
-		IEclipsePreferences result = (IEclipsePreferences) users.node(user.getUserName());
+		IEclipsePreferences result = (IEclipsePreferences) users.node(user.getUserID());
     	String workbenchSettings = result.get(MaqettaOrionServerConstants.WORKBENCH_PREF, "{}");
         
     	this.responseString = workbenchSettings;

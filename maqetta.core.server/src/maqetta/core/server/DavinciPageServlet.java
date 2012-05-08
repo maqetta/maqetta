@@ -125,13 +125,7 @@ public class DavinciPageServlet extends HttpServlet {
 					writeMainPage(req, resp);
 				}
 			} else {
-				/* local install, set user to single user */
-				user = this.userManager.getSingleUser();
-				req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-				Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user.getUserName() );
-		  		k.setPath("/");
-		  		resp.addCookie(k);
-		  		writeMainPage(req, resp);
+				writeMainPage(req, resp);
 			}
 		} else if ( pathInfo.equals("/welcome") ) {
 			/* write the welcome page (may come from extension point) */
@@ -281,7 +275,7 @@ public class DavinciPageServlet extends HttpServlet {
 			user = ServerManager.getServerManger().getUserManager().getUser(userName);
 		}
 
-		if(user!=null && user.getUserName().compareTo(userName)!=0){
+		if(user!=null && user.getUserID().compareTo(userName)!=0){
 			user =  ServerManager.getServerManger().getUserManager().getUser(userName);
 		}
 		

@@ -41,9 +41,19 @@ public class PersonManagerImpl implements IPersonManager {
             return email;
         }
 
-        public String getUserName() {
+        public String getUserID() {
             return name;
         }
+
+		public String getFirstName() {
+			// TODO Auto-generated method stub
+			return "";
+		}
+
+		public String getLastName() {
+			// TODO Auto-generated method stub
+			return "";
+		}
 
     }
 
@@ -65,20 +75,20 @@ public class PersonManagerImpl implements IPersonManager {
             String email = element.getAttribute(PersonManagerImpl.EMAIL_TAG );
             String password = element.getAttribute(PersonManagerImpl.PASSWORD_TAG);
             PersonImpl user = new PersonImpl(name,  password, email);
-            PersonManagerImpl.this.persons.put(user.getUserName(), user);
+            PersonManagerImpl.this.persons.put(user.getUserID(), user);
             return user;
         }
 
         protected String[] getAttributeValues(Object object) {
             PersonImpl user = (PersonImpl) object;
-            return new String[] { user.getUserName(), user.password, user.getEmail() };
+            return new String[] { user.getUserID(), user.password, user.getEmail() };
         }
 
 		@Override
 		protected String getAttributeValue(String attribute, Object object) {
 			  PersonImpl user = (PersonImpl) object;
 			  if(attribute.equalsIgnoreCase(PersonManagerImpl.NAME_TAG)){
-					return user.getUserName();
+					return user.getUserID();
 			  }
 			  if(attribute.equalsIgnoreCase(PersonManagerImpl.PASSWORD_TAG)){
 					return user.password;

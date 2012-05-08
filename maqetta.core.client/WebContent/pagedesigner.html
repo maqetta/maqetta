@@ -41,16 +41,17 @@
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
 				var run = function() {
 					var userInfo;
+					
 					var result = Runtime.getUser();
-
-					if (result) {
-					   dojo.byId('davinci_user').innerHTML = result;
-					   Runtime.userName = result;
+					
+                    if (result) {
+                        dojo.byId('davinci_user').innerHTML=result.email;
+                        Runtime.userName=result.userId;
 					} else {
 						//FIXME: temporary fix for running via file: URLs
 					   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
 					}
-					if (!result || result=='maqettaUser') {
+					if (!result || result.userId=='maqettaUser') {
 						dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
 						dojo.byId('davinci_logoff').href="";
 						Runtime.isLocalInstall=true;

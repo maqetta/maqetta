@@ -67,7 +67,7 @@ public class OrionUser extends User {
 	
 	public OrionUser(IPerson person) {
 		super(person);
-		this.webuser = WebUser.fromUserName(this.getUserName());
+		this.webuser = WebUser.fromUserName(this.getUserID());
 		try {
 			JSONArray workspaceJson = webuser.getWorkspacesJSON();
 			for(int i=0;i<workspaceJson.length();i++){
@@ -96,7 +96,7 @@ public class OrionUser extends User {
 			e.printStackTrace();
 		}
 		String workspaceId = webWorkspace.getId();
-		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserName());
+		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserID());
 		
 
 		rebuildWorkspace();
@@ -127,13 +127,13 @@ public class OrionUser extends User {
 		try {
 			String locationPath = URI.create(location).getPath();
 			//right to access the location
-			AuthorizationService.addUserRight(this.getUserName(), locationPath);
+			AuthorizationService.addUserRight(this.getUserID(), locationPath);
 			//right to access all children of the location
 			if (locationPath.endsWith("/")) //$NON-NLS-1$
 				locationPath += "*"; //$NON-NLS-1$
 			else
 				locationPath += "/*"; //$NON-NLS-1$
-			AuthorizationService.addUserRight(this.getUserName(), locationPath);
+			AuthorizationService.addUserRight(this.getUserID(), locationPath);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

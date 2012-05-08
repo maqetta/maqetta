@@ -135,15 +135,18 @@ define([
 	
 	getHelper: function(theme){
 		if (!theme) { return; } 
-	    if (theme._helper){
-	        return theme._helper;
+	    if (theme.helper && typeof(theme.helper) != 'string'){
+	        return theme.helper;
 	    }
 	    var helper = theme.helper;
 	    if (helper) {
+	    	var deferred = new dojo.Deferred();
 			require([helper], function(module) {
 				helper = module;
+				deferred.resolve({helper: helper});
 			});
-			return helper;
+			//return helper;
+			return deferred;
 	        }
 	},
 

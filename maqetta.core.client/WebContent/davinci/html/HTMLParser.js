@@ -4,9 +4,10 @@ define([
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLAttribute",
 	"davinci/html/HTMLComment",
+	"davinci/html/PHPBlock",
 	"davinci/model/parser/Tokenizer",
 	"davinci/html/CSSParser"
-], function(declare, HTMLText, HTMLElement, HTMLAttribute, HTMLComment, Tokenizer, CSSParser) {
+], function(declare, HTMLText, HTMLElement, HTMLAttribute, HTMLComment, PHPBlock, Tokenizer, CSSParser) {
 
 /* This file defines an XML parser, with a few kludges to make it
  * useable for HTML. autoSelfClosers defines a set of tag names that
@@ -54,9 +55,14 @@ var XMLParser  = (function() {
 					}
 				} else if (source.equals("?")) {
 					source.next();
-					source.nextWhileMatches(/[\w\._\-]/);
-					setState(inBlock("xml-processing", "?>"));
-					return "xml-processing";
+					if(source.lookAhead('php', true/*consume*/, false/*skipSpaces*/, true/*caseInsensitive*/)){
+						setState(inIgnore("php-block", "?>"));
+						return null;
+					}else{
+						source.nextWhileMatches(/[\w\._\-]/);
+						setState(inBlock("xml-processing", "?>"));
+						return "xml-processing";
+					}
 				} else {
 					if (source.equals("/")) source.next();
 					setState(inTag);
@@ -114,6 +120,30 @@ var XMLParser  = (function() {
 						break;
 					}
 					source.next();
+				}
+				return style;
+			};
+		}
+
+		function inIgnore(style, terminator) {
+			return function(source, setState) {
+				var terminated = false;
+				while (!source.endOfLine()) {
+					if (source.lookAhead(terminator, true)) {
+						terminated = true;
+						setState(inText);
+						break;
+					}
+					source.next();
+				}
+				if(!terminated && source.endOfLine()){
+					source.next();
+				}else{
+					while(source.lookAheadRegex(/^[\ \t]/, true)){
+					}
+					if(source.endOfLine()){
+						source.next();
+					}
 				}
 				return style;
 			};
@@ -188,7 +218,7 @@ var XMLParser  = (function() {
 			return pass(element, base);
 		}
 
-		var harmlessTokens = {"xml-text": true, "xml-entity": true, "xml-comment": true, "xml-processing": true, "xml-doctype": true};
+		var harmlessTokens = {"xml-text": true, "xml-entity": true, "xml-comment": true, "xml-processing": true, "xml-doctype": true, "php-block": true};
 
 		function element(style, content) {
 			if (content == "<") cont(tagname, attributes, endtag(tokenNr == 1));
@@ -261,7 +291,7 @@ var XMLParser  = (function() {
 					token.indentation = computeIndentation(context);
 				}
 
-				if (token.style == "whitespace" || token.type == "xml-comment")
+				if (token.style == "whitespace" || token.type == "xml-comment" || token.type == "php-block")
 					return token;
 
 				while (true) {
@@ -299,7 +329,6 @@ var XMLParser  = (function() {
 })();
 
 var parse = function(text, parentElement) {
-//	debugger;
 	var txtStream = { next : function () {if (++this.count==1)  return text; else {throw StopIteration;}} , count:0, text:text};
 	var stream = Tokenizer.stringStream(txtStream);
 	var parser = XMLParser.make(stream);
@@ -310,7 +339,7 @@ var parse = function(text, parentElement) {
 	var stack=[];
 	stack.push(parentElement);
 	var htmlText;
-	var inComment;
+	var inComment, inPhpBlock;
 
 	function addText(text, offset) {
 		htmlText = new HTMLText();
@@ -373,7 +402,6 @@ var parse = function(text, parentElement) {
 	try {
 		do {
 			token = parser.next();
-//			console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			switch (token.style) {
 			case "xml-punctuation" : {
 				updateText();
@@ -440,6 +468,7 @@ var parse = function(text, parentElement) {
 					prevModel.endOffset = token.offset;
 					addTrailingWS(token);
 				}
+				inPhpBlock = null;
 			}
 			break;
 			case "xml-text" :
@@ -447,12 +476,16 @@ var parse = function(text, parentElement) {
 			case "xml-entity" : {
 				if (inComment) {
 					inComment.value += token.value;
-				} else
+				} else if ( inPhpBlock ) {
+					inPhpBlock.value += token.value;
+				} else {
 					if (!htmlText) {
 						addText(token.value, token.offset);
-					} else
+					} else {
 						htmlText.value += token.value;
-
+					}
+				}
+				inPhpBlock = null;
 			}
 			break;
 			case "xml-comment" : {
@@ -463,7 +496,18 @@ var parse = function(text, parentElement) {
 				comment.value = token.content.substring(4,token.content.length-3);
 				comment.endOffset = token.offset+token.content.length;
 				stack[stack.length-1].addChild(comment, undefined, true);
-
+				inPhpBlock = null;
+			}
+			break;
+			case "php-block" : {
+				updateText();
+				var phpBlock = new PHPBlock();
+				phpBlock.wasParsed = true;
+				phpBlock.startOffset = token.offset;
+				phpBlock.value = token.content;
+				phpBlock.endOffset = token.offset+token.content.length;
+				stack[stack.length-1].addChild(phpBlock, undefined, true);
+				inPhpBlock = phpBlock;
 			}
 			break;
 			case "xml-doctype" : {
@@ -487,6 +531,7 @@ var parse = function(text, parentElement) {
 					inComment = comment;
 					comment.value += token.content;
 				}
+				inPhpBlock = null;
 			}
 			break;		  
 			}

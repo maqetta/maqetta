@@ -66,99 +66,119 @@ ItemFileReadStoreHelper.prototype = {
            }
         }
     },
+
+    _reXspAmd: /\brequire\(\["dojox\/io\/xhrScriptPlugin"\],function\(xhrScriptPlugin\){([\s\S]*?)}\);/,
+    _reXsp: /xhrScriptPlugin\((?:.*?)\);/g,
     
+    /**
+     * Get the parameters passed to the dojox/io/xhrScriptPlugin function.  The
+     * source can look like this:
+     *
+     *     require(['dojox/io/xhrScriptPlugin'], function(xhrScriptPlugin){
+     *         xhrScriptPlugin("url1", "callback1");
+     *         xhrScriptPlugin("url2", "callback2");
+     *         ...
+     *     });
+     *
+     * @param {String} url
+     * @param {davinci.ve.Context} context
+     */
     getXhrScriptPluginParameters: function(url, context) {
-        if (!url){
+        if (!url) {
             return;// must be data
         }
-        var scripts = context.model.children[1].getChildElements('script', true);
-        for (var x=0; x < scripts.length; x++){
-            if (scripts[x].children[0]){
-                var child = scripts[x].children[0];
-                var start = child.value.indexOf('dojox/io/xhrScriptPlugin');
-                if(start > -1) {
-                    // look for function
-                    start  = child.value.indexOf('function', start);
-                    if (start > -1) {
-                        var end = child.value.indexOf('}', start);
-                        // check to see if it matches the store url
-                        if (end > -1){
-                            var pStart = child.value.indexOf('{', start);
-                            var temp = child.value.substring(pStart+1,end);
-                            var urlStart = temp.indexOf(url);
-                            if (urlStart > -1){
-                                var urlStop = temp.indexOf(')', urlStart),
-                                    urlTemp = temp.substring(urlStart, urlStop ),
-                                    parms = urlTemp.split(',');
-                                if (parms.length == 2){
-                                    parms[0] = parms[0].replace(/'/g, "");
-                                    parms[0] = parms[0].replace(/"/g, "");
-                                    parms[1] = parms[1].replace(/'/g, "");
-                                    parms[1] = parms[1].replace(/"/g, "");
-                                    parms[0] = parms[0].trim();
-                                    if (parms[0] == url){ // must be the one we were looking for.
-                                        var xhrParams = [];
-                                        xhrParams.url = parms[0];
-                                        xhrParams.callback = parms[1];
-                                        return xhrParams;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+
+        var head = context.getDocumentElement().getChildElement('head'),
+            xhrParams;
+
+        head.getChildElements('script').some(function(child) {
+            var text = child.getElementText();
+            if (text.length === 0) {
+                return false;
             }
-        }
-        return null;
+
+            var m = text.match(this._reXspAmd),
+                n;
+            if (m) {
+                return m[1].match(this._reXsp).some(function(func) {
+                    if (func.indexOf(url) !== -1) {
+                        n = func.match(/\("(.*)",\s*"(.*)"\)/);
+                        xhrParams = {
+                            url: n[1],
+                            callback: n[2]
+                        };
+                        return true;    // break 'some' loop
+                    }
+                });
+            }
+            return false;
+        }, this);
+
+        return xhrParams;
     },
     
-    setXhrScriptPluginParameters: function(url, context) {
-        var htmlElement = context._srcDocument.getDocumentElement();
-        var head = htmlElement.getChildElement("head");
-        var scriptTags=head.getChildElements("script");
-        array.forEach(scriptTags, function (scriptTag){
-            var text=scriptTag.getElementText();
-            if (text.length) {
-                // Look for a require(['dojox/io/xhrScriptPlugin']); in the document
-                var start = text.indexOf('dojox/io/xhrScriptPlugin');
-                if (start > 0){
-                    var stop = text.indexOf(']', start);
-                    if (stop > start){
-                        var newText;
-                        var end = text.indexOf(';', stop);
-                        // check for ,function(x)
-                        start  = text.indexOf('function', stop, end);
-                        if (start > -1) {
-                            // function is defined 
-                            var endOfFunction = text.indexOf('}', start);
-                            var urlStart = text.indexOf(url, stop, endOfFunction);
-                            if (urlStart < 0) {
-                                // callback not defined, so just add it
-                                var objStart = text.indexOf('(', start);
-                                var objStop = text.indexOf(')', start);
-                                var objName = text.substring(objStart+1,objStop);
-                                objName = objName.trim();
-                                newText = text.substring(0,endOfFunction) + ' ' + objName + '('+url+');'+ text.substring(endOfFunction);
-                            }
-                        } else {
-                            // function is not defined
-                            newText = text.substring(0,stop+1) + ',function(xhrScriptPlugin){xhrScriptPlugin('+url+');}' + text.substring(stop+1);
-                        }
-                        if (newText){
-                            // create a new script element
-                            var script = new HTMLElement('script');
-                            script.addAttribute('type', 'text/javascript');
-                            script.script = "";
-                            head.insertBefore(script, scriptTag);
-                            var newScriptText = new HTMLText();
-                            newScriptText.setText(newText); 
-                            script.addChild(newScriptText); 
-                            scriptTag.parent.removeChild(scriptTag);
-                        }
-                    }
-                }
+    /**
+     * Sets the source needed to call the dojox/io/xhrScriptPlugin function which
+     * allows JSONP calls across domains.  Resulting source will look like this:
+     *
+     *     require(['dojox/io/xhrScriptPlugin'], function(xhrScriptPlugin){
+     *         xhrScriptPlugin("url1", "callback1");
+     *         xhrScriptPlugin("url2", "callback2");
+     *         ...
+     *     });
+     *
+     * @param {String} params
+     *            Parameters that will get passed to xhrScriptPlugin(); in form
+     *            of '"URL","CALLBACK_NAME"'.
+     * @param {davinci.ve.Context} context
+     */
+    setXhrScriptPluginParameters: function(params, context) {
+        var head = context.getDocumentElement().getChildElement('head'),
+            elem,
+            text;
+
+        head.getChildElements('script').some(function(child) {
+            text = child.getElementText();
+            if (text.length === 0) {
+                return false;
             }
-        });
+
+            if (this._reXspAmd.test(text)) {
+                elem = child;
+                return true;    // break 'some' loop
+            }
+        }, this);
+
+        // create a new script element
+        if (!elem) {
+            context.addHeaderScriptText([
+                'require(["dojox/io/xhrScriptPlugin"],function(xhrScriptPlugin){\n',
+                    '\txhrScriptPlugin(',
+                        params,
+                    ');\n',
+                '});\n'
+            ].join(''));
+            return;
+        }
+
+        // add new URL, callback inside of `require` call
+        var m = text.match(this._reXspAmd),
+            funcs = m[1].match(this._reXsp);
+        funcs.push([
+            'xhrScriptPlugin(',
+                params,
+            ');'
+        ].join(''));
+        text = text.replace(this._reXspAmd,
+            ['require(["dojox/io/xhrScriptPlugin"],function(xhrScriptPlugin){\n',
+                '\t',
+                funcs.join('\n\t'),
+                '\n',
+            '});'].join('')
+        );
+
+        elem.find({elementType: 'HTMLText'}, true).setText(text);
+        elem.setScript(text);
     }
 	
 };

@@ -2198,7 +2198,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				*/
 			}
 			data.style = bodyElement.getAttribute("style");
-			data.content = bodyElement.getElementText({includeNoPersist:true});
+			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
 			
 			/*FIXME: Fix these lines. The store() method should be taking a widget/node,
 				not a "data" object. Just happens to work, sort of by accident. */

@@ -33,6 +33,7 @@ var XMLParser  = (function() {
 	var tokenizeXML = (function() {
 		function inText(source, setState) {
 			var ch = source.next();
+console.log('InText top source.next(). ch='+ch);
 			if (ch == "<") {
 				if (source.equals("!")) {
 					source.next();
@@ -54,7 +55,9 @@ var XMLParser  = (function() {
 						return "xml-text";
 					}
 				} else if (source.equals("?")) {
-					source.next();
+					//source.next();
+var ch2 = source.next();
+console.log('InText ? source.next(). ch2='+ch2);
 					if(source.lookAhead('php', true/*consume*/, false/*skipSpaces*/, true/*caseInsensitive*/)){
 						setState(inBlock("php-block", "?>"));
 						return null;
@@ -114,12 +117,26 @@ var XMLParser  = (function() {
 
 		function inBlock(style, terminator) {
 			return function(source, setState) {
+				var terminated = false;
 				while (!source.endOfLine()) {
 					if (source.lookAhead(terminator, true)) {
+						terminated = true;
 						setState(inText);
 						break;
 					}
 					source.next();
+				}
+				if(style == 'php-block'){
+					debugger;
+					if(!terminated && source.endOfLine()){
+						source.next();
+					}else{
+						while(source.lookAheadRegex(/^[\ \t]/, true)){
+						}
+						if(source.endOfLine()){
+							source.next();
+						}
+					}
 				}
 				return style;
 			};
@@ -257,6 +274,8 @@ var XMLParser  = (function() {
 			indentation: function() {return indented;},
 
 			next: function(){
+console.log('next: function');
+//console.trace();
 				token = tokens.next();
 				if (token.style == "whitespace" && tokenNr == 0)
 					indented = token.value.length;
@@ -305,7 +324,7 @@ var XMLParser  = (function() {
 })();
 
 var parse = function(text, parentElement) {
-//	debugger;
+	debugger;
 	var txtStream = { next : function () {if (++this.count==1)  return text; else {throw StopIteration;}} , count:0, text:text};
 	var stream = Tokenizer.stringStream(txtStream);
 	var parser = XMLParser.make(stream);
@@ -369,6 +388,7 @@ var parse = function(text, parentElement) {
 	}
 
 	function nextToken(ignoreWS) {
+console.log('##### nextToken. ignoreWS='+ignoreWS);
 		token = parser.next();
 		while (ignoreWS &&  token.style == "whitespace") {
 			token = parser.next();
@@ -377,9 +397,12 @@ var parse = function(text, parentElement) {
 	}
 
 	try {
+console.log('@@@@@ parse. start of try loop');
 		do {
 			token = parser.next();
-//			console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
+console.log('@@@@@ parser.next(). token=');
+//console.dir(token);
+console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			switch (token.style) {
 			case "xml-punctuation" : {
 				updateText();
@@ -453,6 +476,8 @@ var parse = function(text, parentElement) {
 			case "xml-entity" : {
 				if (inComment) {
 					inComment.value += token.value;
+//				} else if ( inPhpBlock ) {
+//					inPhpBlock.value += token.value;
 				} else
 					if (!htmlText) {
 						addText(token.value, token.offset);
@@ -473,6 +498,7 @@ var parse = function(text, parentElement) {
 			}
 			break;
 			case "php-block" : {
+console.log('case php-block');
 				updateText();
 				var phpBlock = new PHPBlock();
 				phpBlock.wasParsed = true;

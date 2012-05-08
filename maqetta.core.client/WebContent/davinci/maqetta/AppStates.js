@@ -890,7 +890,7 @@ var singleton = davinci.states = new States();
 })();
 
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
-if (!davinci.Workbench && typeof dijit != "undefined"){
+/*if (!davinci.Workbench && typeof dijit != "undefined"){
 	connect.subscribe("/davinci/states/state/changed", function(args) {
 		var w,
 			byId = args.node.ownerDocument.defaultView.require("dijit/registry").byId;
@@ -902,7 +902,7 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 			w && w.hide && w.hide();
 		}
 	});
-}
+}*/
 
 return States;
 });

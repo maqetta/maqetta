@@ -43,7 +43,7 @@
         },
         "barType": {
             "datatype": "string",
-            "defaultValue": "",
+            "defaultValue": "tabBar",
             "option": [
                 {
                     "value": "tabBar"

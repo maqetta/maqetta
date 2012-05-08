@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -76,7 +77,10 @@ public class VDirectory implements IVResource {
 
             parent = parent.get(split[i]);
         }
-        return new IVResource[] { parent };
+        if(parent!=null)
+        	return new IVResource[] { parent };
+        
+        return new IVResource[0];
     }
 
     public void flushWorkingCopy() {
@@ -120,7 +124,14 @@ public class VDirectory implements IVResource {
 
     public IVResource[] getParents() {
         // TODO Auto-generated method stub
-        return null;
+        IVResource parent = this.parent;
+        ArrayList parents = new ArrayList();
+        while (parent != null) {
+            parents.add(0, parent);
+            parent = parent.getParent();
+
+        }
+        return (IVResource[]) parents.toArray(new IVResource[parents.size()]);
     }
 
     public String getPath() {

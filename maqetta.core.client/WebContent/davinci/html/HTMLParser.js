@@ -33,7 +33,6 @@ var XMLParser  = (function() {
 	var tokenizeXML = (function() {
 		function inText(source, setState) {
 			var ch = source.next();
-console.log('InText top source.next(). ch='+ch);
 			if (ch == "<") {
 				if (source.equals("!")) {
 					source.next();
@@ -55,9 +54,7 @@ console.log('InText top source.next(). ch='+ch);
 						return "xml-text";
 					}
 				} else if (source.equals("?")) {
-					//source.next();
-var ch2 = source.next();
-console.log('InText ? source.next(). ch2='+ch2);
+					source.next();
 					if(source.lookAhead('php', true/*consume*/, false/*skipSpaces*/, true/*caseInsensitive*/)){
 						setState(inIgnore("php-block", "?>"));
 						return null;
@@ -284,8 +281,6 @@ console.log('InText ? source.next(). ch2='+ch2);
 			indentation: function() {return indented;},
 
 			next: function(){
-console.log('next: function');
-//console.trace();
 				token = tokens.next();
 				if (token.style == "whitespace" && tokenNr == 0)
 					indented = token.value.length;
@@ -397,7 +392,6 @@ var parse = function(text, parentElement) {
 	}
 
 	function nextToken(ignoreWS) {
-console.log('##### nextToken. ignoreWS='+ignoreWS);
 		token = parser.next();
 		while (ignoreWS &&  token.style == "whitespace") {
 			token = parser.next();
@@ -406,12 +400,8 @@ console.log('##### nextToken. ignoreWS='+ignoreWS);
 	}
 
 	try {
-console.log('@@@@@ parse. start of try loop');
 		do {
 			token = parser.next();
-console.log('@@@@@ parser.next(). token=');
-//console.dir(token);
-console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			switch (token.style) {
 			case "xml-punctuation" : {
 				updateText();
@@ -484,7 +474,6 @@ console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			case "xml-text" :
 			case "whitespace" :
 			case "xml-entity" : {
-console.log('case xml-text or whitespace');
 				if (inComment) {
 					inComment.value += token.value;
 				} else if ( inPhpBlock ) {
@@ -511,7 +500,6 @@ console.log('case xml-text or whitespace');
 			}
 			break;
 			case "php-block" : {
-console.log('case php-block');
 				updateText();
 				var phpBlock = new PHPBlock();
 				phpBlock.wasParsed = true;

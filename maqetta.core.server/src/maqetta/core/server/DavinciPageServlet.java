@@ -108,7 +108,7 @@ public class DavinciPageServlet extends HttpServlet {
 		}
 		String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
 
-		IUser user = (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
+		IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
 		String pathInfo = getPathInfo(req);
 		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
 			System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));

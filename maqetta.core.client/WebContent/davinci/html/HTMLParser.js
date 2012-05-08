@@ -59,7 +59,7 @@ console.log('InText top source.next(). ch='+ch);
 var ch2 = source.next();
 console.log('InText ? source.next(). ch2='+ch2);
 					if(source.lookAhead('php', true/*consume*/, false/*skipSpaces*/, true/*caseInsensitive*/)){
-						setState(inBlock("php-block", "?>"));
+						setState(inIgnore("php-block", "?>"));
 						return null;
 					}else{
 						source.nextWhileMatches(/[\w\._\-]/);
@@ -117,6 +117,19 @@ console.log('InText ? source.next(). ch2='+ch2);
 
 		function inBlock(style, terminator) {
 			return function(source, setState) {
+				while (!source.endOfLine()) {
+					if (source.lookAhead(terminator, true)) {
+						setState(inText);
+						break;
+					}
+					source.next();
+				}
+				return style;
+			};
+		}
+
+		function inIgnore(style, terminator) {
+			return function(source, setState) {
 				var terminated = false;
 				while (!source.endOfLine()) {
 					if (source.lookAhead(terminator, true)) {
@@ -126,15 +139,13 @@ console.log('InText ? source.next(). ch2='+ch2);
 					}
 					source.next();
 				}
-				if(style == 'php-block'){
-					if(!terminated && source.endOfLine()){
+				if(!terminated && source.endOfLine()){
+					source.next();
+				}else{
+					while(source.lookAheadRegex(/^[\ \t]/, true)){
+					}
+					if(source.endOfLine()){
 						source.next();
-					}else{
-						while(source.lookAheadRegex(/^[\ \t]/, true)){
-						}
-						if(source.endOfLine()){
-							source.next();
-						}
 					}
 				}
 				return style;
@@ -473,6 +484,7 @@ console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			case "xml-text" :
 			case "whitespace" :
 			case "xml-entity" : {
+console.log('case xml-text or whitespace');
 				if (inComment) {
 					inComment.value += token.value;
 				} else if ( inPhpBlock ) {
@@ -500,7 +512,7 @@ console.log("style="+token.style + "  type="+token.type + "  ==> "+token.value);
 			break;
 			case "php-block" : {
 console.log('case php-block');
-				updateText();
+				//updateText();
 				var phpBlock = new PHPBlock();
 				phpBlock.wasParsed = true;
 				phpBlock.startOffset = token.offset;

@@ -11,7 +11,7 @@ define([
 		//DeviceRect_portrait:{ w:385.5645, h:747.8577 },
 
 		postCreate: function(){
-			debugger;
+			//debugger;
 			var oldVisibility = this.domNode.style.visibility;
 			this.domNode.style.visibility = 'hidden';
 			var index = this.declaredClass.lastIndexOf('.');

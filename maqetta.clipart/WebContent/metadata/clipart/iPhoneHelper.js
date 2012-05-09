@@ -11,9 +11,9 @@ return declare([], {
 	defaultHeight:747.8577,
 	
 	constructor: function(){
-		debugger;
+		//debugger;
 		connect.subscribe('/davinci/ui/widgetPropertiesChanged', function(widgets){
-			debugger;
+			//debugger;
 			if(!widgets){
 				return;
 			}
@@ -54,7 +54,7 @@ return declare([], {
 	 * 		
 	 */
 	initialSize: function(args){
-		debugger;
+		//debugger;
 		if(!args.size){
 			return { w:this.defaultWidth, h:this.defaultHeight };
 		}
@@ -68,7 +68,7 @@ return declare([], {
 	 *      modifyCommand  the ModifyCommand object that will soon be executed to change properties
 	 */
 	onWidgetPropertyChange: function(args){
-		debugger;
+		//debugger;
 		if(!args){
 			return;
 		}

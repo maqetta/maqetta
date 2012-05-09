@@ -178,7 +178,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		if (!this.isActiveEditor()) {
 			return;
 		}
-		debugger;
+		//debugger;
 		var context = this.getContext();
 		/*
 		var command = event.command;	

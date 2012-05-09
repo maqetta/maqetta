@@ -620,7 +620,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			// (i.e., initialCreationArgs is provided)
 			var helper = w.getHelper();
 			if(helper && helper.initialSize){
-				debugger;
+				//debugger;
 				var size =  helper.initialSize(args);
 				if(size){
 					args.size = size;

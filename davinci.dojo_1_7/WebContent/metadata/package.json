@@ -2493,7 +2493,7 @@
 		        {
 		            "name": "Carousel",
 		            "type": "dojox.mobile.Carousel",
-		            "category": "untested",
+		            "category": "mobile2",
 		            "icon": "resources/images/CarouselSideScrollableList.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKFMUiI5ZjxsuTlckz1jmj1jmVyL0T1kmUNvpERvpERuo0Rvo16W2jx7wEeO4Et7r0x7r26ayUt8r0x8rqrS+lGHuVKHuZXN/1aOv6u7yJypq+38++v6+aiysJ6uqWpNK5RcON6CV+esnbq2tf/X0t26tuxmXtaJhL+Zmf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZswJRwSCwSA8YhUrlMBpbPpjEqfCarUmlRezVivmBMKgweXyIMgUGMOafXKcvog2o4LKnKvH5PTUIgIh0UECkPgIIUEikLGQAnGxoJKQiOkBoKKQUcJSYkHgUpBJyeHgcpA6mqA6irqV2wsUJBADs=",
 		            "data": [
@@ -2502,9 +2502,9 @@
 		                    "properties": {
 		                        "data": {
 		                            "items": [
-		                                {"value":"one", "headerText":"one", "src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRF/7qI+dgK/9q8+7gK/8Wd/3UV/uLD/2YK/8ypwpgN/8ud/5tT/qZd/rxx+sIK/tGc/sd7/eGZ/ooq/e+t/uik/r5m/YwKvIwB/5BF+s0K/614/4s4/3IL/KwK/KEK/sqG/6lo/uK5+eIK/fe918d9/rNT/p9A/pRL/YMK/ZcK/tKr/rRy/noK/tCU/8iX/7+V/r5+/3wi6rwI5sYH6tBh/dqRyKo12MaC9umX/rJn/2sK/tqR/fO1/tGHuIYA////avTyYAAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAEvSURBVHjafNNhU4IwGMDxhzVQHAZSCgkFlopiiCiaUY3v/618hptvvPW72273/G/vNmjbuR3we4E9b1toT7w+f9w71/zUwpz/6vAvsOsnndqGYPSsMwqAj/Q48OPP1bFbR3nqYP3Tw+opycwqPK+YubcJ1qFSWJY1TMSmYP1Wthh2OW4bNcEaLR0hdTaEkE1OSO5IDGscV37ISjJwcDEgecpSxljoVzHWRjBpvw9RFoYhy0LaB9MUU6y9zpTSstdrqttRUHebqqTThpW0jBpK8djIu/GVGZkpFbIpheo6w/qpOIPO1vfVBOtK8gfSTk1WWCfSwlXUZIJ1LS0T1xsvxkmxUJM11jc9rK96WB/0OASPegHY+xedvY3v2dDB94x/4WC83zMO4i/8+48uAgwAX/NoQkVj+C0AAAAASUVORK5CYII%3D"},
-		                                {"value":"two", "headerText":"two", "src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFYMldLLcnb9BqleCPAaICNbkzD64Ka8xqnt6dRsk6ouGfG64XQrxByPW+gNl4mtuZot6hk9iSv+q+xezDds52hdWDpeOgquGoFa4Pd9hsTcFKPc8mUuEzfNpzUsJQye7GdtFzC6UJW8VbH7AcoeObj9iM0vnJJsAYFrMPfNZ2HrkTCqkIX81Wy+/IuOe3Wec4it2Dy/fCVOM0BKUDR9ksxPS6uvGwTt4xL8YeN8wjpeicP9MomeORsO2mAJ0B////+4rTQwAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAEySURBVHjafNPZdoIwFIXhg4ZCm2gEZBAQB2K1gpSWjlrh/d+qB0q80fS7YLH2vyBXgaYR2qq+ttJE00CT09n58dp5RvMGBB293DaiHtDxu8o8BXL8UDkSqM9qNdRHNaw/aljLC2chylLY3mXA+iSJw8EZbxaHxVguWAcSdxzH9fGxlAtWPYSWAUvbtpe+bfvQC7FmWaqx0Com600xSdyiMBJIkpBpaYa1amWm77t6yBhbM2b6Ls3aFSvpTDm3CKnSy2tLflulFp9WicU3esU5N/7G7tzOnR4YZotNTfxxB+udBF00uabJBeuupz/0XLnssO57A0+Syx7rtnc/9MpZPh+KXC5brF9qWL/VsJ7UaiCnNyUCNPpUiVIQQfx6Wxx4eBeCKH6+FkcB3oV/79GvAAMAi8yHb3zvHdwAAAAASUVORK5CYII%3D"},
-		                                {"value":"three", "headerText":"three", "src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFbInUZ6bbqb3mzOL0NnPKH0i7WqXaocvqIk++J1nBgpraqLnlmLbjUYTQxdLuWLTehaXdFzq3m6zgorHij6feMlbBj6LdLWPEXHzPq8TozdvxpbXkQmTGRmrIbJfYWHTMYH3PorfkUm/Kc4zVe5LXSIrRscDoM2/IeZjZqsHnydbwerfhMWnGKU6+vsns0uv2kbLhy+b0GkC5UKXZvNrwxeHyVK3cS5vWOXrLqMjpstHtRZDTnr7mP4XPS5zX////eBIvvQAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAE0SURBVHjafNPRboIwGIbhD6EKyBiCCAIqIqAiOtZNZc7B/d/VEKknrnuSNn/epOnRj7oWd/3qWX8n1jXqgTA4vj07Nr2GKLzzCCKalzwDAcnlk+eSoLzwlZC++CTkV74cTsFomXctiq0+fRQHisH0PC8zNM/zHkWBvGGWWZaN0+ZSWZFBZi5uYqi6rquprqfouASUEDuIXPMwRHPC8eGwCldh6EaBTShoi/i9dDJbRFGEReSnkz1pM0Z3qmWZoxG1mzFux1b3ltqmpdLQtMyAWpYVd/X2b0ue7WP/ZqH6E/veKIjMYNhaBg4rBLLSmfU6Y1YUGYrT2WyZnCUFzrrzok0LY25o2zkrawd5yZdD+uGTUH7zlUjOfAmE6oOnEiCeTzxnsdmF6vT6l1PV7MK/e/QrwAAcdn+B9bLXRAAAAABJRU5ErkJggg%3D%3D"}
+		                                {"value":"one", "headerText":"one", "src":"./sample_data/images/i-icon-1.png"},
+		                                {"value":"two", "headerText":"two", "src":"./sample_data/images/i-icon-2.png"},
+		                                {"value":"three", "headerText":"three", "src":"./sample_data/images/i-icon-3.png"}
 		                            ]
 		                        }
 		                    }
@@ -2519,7 +2519,9 @@
 		                    }
 		                }
 		            ],
-		            "tool": "./dojox/mobile/EdgeToEdgeDataListCreateTool"
+		            "tool": "./dojox/mobile/EdgeToEdgeDataListCreateTool",
+		            "inlineEdit": "./dojox/mobile/CarouselInput",
+		            "helper": "./dojox/mobile/CarouselHelper"
 		        },
 		        {
 		            "name": "FixedSplitter",

@@ -2,9 +2,8 @@ define([
 	"dojo/_base/declare",
 	"davinci/model/resource/Resource",
 	"davinci/review/model/resource/Folder",
-	"davinci/Runtime",
-	"davinci/Workbench"
-], function(declare, Resource, reviewFolder, Runtime, Workbench) {
+	"davinci/Runtime"
+], function(declare, Resource, reviewFolder, Runtime) {
 
 var root = declare(Resource, {
 
@@ -60,9 +59,9 @@ var root = declare(Resource, {
 			}
 			this._loading = [];
 			this._loading.push(onComplete);
-			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+			
 			Runtime.serverJSONRequest({
-				url:  location + "maqetta/cmd/listVersions",
+				url:  "cmd/listVersions",
 				sync:sync,
 				load : dojo.hitch(this, function(responseObject, ioArgs) {
 					this.children=[];

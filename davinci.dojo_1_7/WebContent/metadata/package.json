@@ -1994,7 +1994,8 @@
 		                "displayOnCreate": true,
 		                "supportsHTML": true
 		            },
-		            "allowedParent": "DojoxMobileView, html.body",
+		            //"allowedParent": "DojoxMobileView, html.body",
+		            "allowedParent": "ANY",
 		            "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar"
 		        },
 		        {

@@ -13,7 +13,7 @@ return declare([], {
 	 * 		
 	 */
 	initialSize: function(args){
-		debugger;
+		//debugger;
 		// If widget is being added at an absolute location (i.e., there is a value for args.position),
 		if(args && args.position){
 			// If user dragged out a size, use the width that the user specified,

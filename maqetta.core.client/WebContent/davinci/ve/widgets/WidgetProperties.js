@@ -3,6 +3,7 @@ define([
 	"dojo/_base/connect",
     "davinci/workbench/ViewLite",
     "davinci/ve/metadata",
+    "davinci/commands/CompoundCommand",
     "davinci/ve/commands/ModifyCommand",
     "dojo/i18n!davinci/ve/nls/ve",
     "dojo/i18n!dijit/nls/common",
@@ -12,6 +13,7 @@ define([
 	connect,
 	ViewLite,
 	Metadata,
+	CompoundCommand,
 	ModifyCommand,
 	veNLS,
 	commonNLS,
@@ -216,10 +218,17 @@ define([
 				row.value = value;
 				var valuesObject = {};
 				valuesObject[row.target] = value;
+				var compoundCommand = new CompoundCommand();;
 				var command = new ModifyCommand(this._widget, valuesObject, null);
+				compoundCommand.add(command);
+				var helper = this._widget.getHelper();
+				if(helper && helper.onWidgetPropertyChange){
+					helper.onWidgetPropertyChange({widget:this._widget, compoundCommand:compoundCommand, modifyCommand:command});
+				}
 				dojo.publish("/davinci/ui/widgetPropertiesChanges", [
 					{
 						source: this._editor.editor_id,
+						compoundCommand: compoundCommand,
 						command: command
 					}
 				]);

@@ -336,6 +336,8 @@
                 "name": "iPhone",
                 "type": "clipart.iPhone",
                 "category": "clipart",
+                "allowedChild": "ANY",
+                "helper": "./clipart/iPhoneHelper",
                 "icon": "resources/images/iphone.gif",
                 "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAGZmaNXV1v///0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM6SErT3iu+EF5UL4/LqPfbNQRCaVbcaJ6hRK4CKr6r7MJxu6iwvX8fHUbjSDUAFEBR5AAol0wNZzpNAAA7"
             }

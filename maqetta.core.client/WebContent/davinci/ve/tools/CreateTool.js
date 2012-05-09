@@ -603,7 +603,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var w;
 		if(this.createNewWidget()){
 			dojo.withDoc(this._context.getDocument(), function(){
-				w = Widget.createWidget(this._data, args);
+				w = Widget.createWidget(this._data);
 			}, this);
 		}else{
 			w = this._widget;
@@ -615,6 +615,18 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var command = new davinci.commands.CompoundCommand();
 
 		if(this.createNewWidget()){
+			
+			// Invoke widget initialSize helper if this is widget's initial creation time
+			// (i.e., initialCreationArgs is provided)
+			var helper = w.getHelper();
+			if(helper && helper.initialSize){
+				debugger;
+				var size =  helper.initialSize(args);
+				if(size){
+					args.size = size;
+				}
+			}
+			
 			command.add(new davinci.ve.commands.AddCommand(w,
 				args.parent || this._context.getContainerNode(),
 				args.index));

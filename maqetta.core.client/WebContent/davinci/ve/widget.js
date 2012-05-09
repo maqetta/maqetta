@@ -324,12 +324,8 @@ byNode: function(node) {
 /**
  * Main routine for creating a new widget on the current page canvas
  * @param {object} data  (Needs to be documented!)
- * @param {object} initialCreationArgs  Initial creation info
- *      parent - target parent widget
- *      size - explicit size {w:, h:}
- *      position - explicit position {x:, y:} 
  */
-createWidget: function(widgetData, initialCreationArgs) {
+createWidget: function(widgetData) {
 	if(!widgetData || !widgetData.type){
 		return undefined;
 	}
@@ -526,23 +522,6 @@ createWidget: function(widgetData, initialCreationArgs) {
 	var helper = widgetObject.getWidgetHelper(type);
 	if(helper && helper.preProcessData){
         data =  helper.preProcessData(data);
-	}
-	
-	// Invoke widget initialSize helper if this is widget's initial creation time
-	// (i.e., initialCreationArgs is provided)
-	if(initialCreationArgs && helper && helper.initialSize){
-        size =  helper.initialSize(initialCreationArgs);
-        if(size){
-        	var styleString = data.properties.style;
-        	var tempElem = styleString ? dojo.create('span',{style:styleString}) : dojo.create('span');
-        	if(size.width){
-        		tempElem.style.width = size.width;
-        	}
-        	if(size.height){
-        		tempElem.style.height = size.height;
-        	}
-        	data.properties.style = tempElem.style.cssText;
-        }
 	}
 
 	// Strip out event attributes. We want them in the model

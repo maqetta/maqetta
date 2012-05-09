@@ -4,6 +4,7 @@ define([
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/commands/MoveCommand",
 	"davinci/ve/commands/ResizeCommand",
 	"./ComboBoxHelper"
@@ -13,6 +14,7 @@ define([
 	Widget,
 	CompoundCommand,
 	AddCommand,
+	StyleCommand,
 	MoveCommand,
 	ResizeCommand,
 	ComboBoxHelper
@@ -82,6 +84,8 @@ return declare(CreateTool, {
 		command.add(new AddCommand(comboBoxWidget, args.parent, index));
 		
 		if(args.position){
+			var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+			command.add(new StyleCommand(comboBoxWidget, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(comboBoxWidget, args.position.x, args.position.y));
 		}
 		if(args.size){

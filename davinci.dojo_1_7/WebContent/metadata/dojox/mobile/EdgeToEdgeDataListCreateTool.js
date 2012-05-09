@@ -4,6 +4,7 @@ define([
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/commands/MoveCommand",
 	"davinci/ve/commands/ResizeCommand"
 ], function (
@@ -12,6 +13,7 @@ define([
 	Widget,
 	CompoundCommand,
 	AddCommand,
+	StyleCommand,
 	MoveCommand,
 	ResizeCommand
 ) {
@@ -109,8 +111,22 @@ return declare(CreateTool, {
 		command.add(new AddCommand(edge2Edge, args.parent, index));
 		
 		if(args.position){
+			var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+			command.add(new StyleCommand(edge2Edge, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(edge2Edge, args.position.x, args.position.y));
 		}
+		
+		// Invoke widget initialSize helper if this is widget's initial creation time
+		// (i.e., initialCreationArgs is provided)
+		var helper = edge2Edge.getHelper();
+		if(helper && helper.initialSize){
+			//debugger;
+			var size =  helper.initialSize(args);
+			if(size){
+				args.size = size;
+			}
+		}
+		
 		if(args.size){
 			command.add(new ResizeCommand(edge2Edge, args.size.w, args.size.h));
 		}

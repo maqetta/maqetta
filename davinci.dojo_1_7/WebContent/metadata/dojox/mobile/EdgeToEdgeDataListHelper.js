@@ -89,7 +89,7 @@ EdgeToEdgeDataListHelper.prototype = {
 	},
 	
 	initialSize: function(args){
-		return InitialSizeHelper.initialSize(args);
+		return InitialSizeHelper.prototype.initialSize(args);
 	}
 
 };

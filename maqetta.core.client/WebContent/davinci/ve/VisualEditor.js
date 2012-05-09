@@ -333,8 +333,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 	   
 		if (!this.initialSet){
 		   	var workspaceUrl = Runtime.getUserWorkspaceUrl();
-		   	while(filename.charAt(0) == "." || filename.charAt(0) == "/"){
-		   		filename = filename.substring(1,filename.length);
+		   	if(filename.indexOf( "./")==0 ){
+		   		filename = filename.substring(2,filename.length);
 			}				
 		   	var baseUrl=workspaceUrl+filename;
 

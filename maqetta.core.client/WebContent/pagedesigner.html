@@ -22,7 +22,7 @@
 		ioPublish:true
 	"></script>
 	<script type="text/javascript">
-		require(["dijit/dijit", "davinci/davinci", ], function () {
+		require(["dijit/dijit", "davinci/davinci" ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent, version) {
 				  dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
 				  dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
@@ -33,8 +33,9 @@
 			});
 
 			var Workbench = require("davinci/Workbench"),
-				Runtime = require("davinci/Runtime");
-
+				Runtime = require("davinci/Runtime"),
+				revResource = require("davinci/review/model/resource/root")
+			
 			Runtime.loadPlugins();
 	 		Runtime.initialPerspective="davinci.ve.pageDesign";
 
@@ -78,9 +79,15 @@
 					dojo.cookie("davinci_designer", null, {expires: -1, path:"/"});
 					dojo.cookie("davinci_version", null, {expires: -1, path:"/"});
 					
+					/* This code loads the first file from a given review.  The review comes in as a URL parameter from an invetation.
+					   
+					This could be refactored, but I'm not sure where to put it. If we need this functionality somewhere else, then we can decide where to move it.
+					Leaving here for now.
+					
+					*/
 					var loadReviews = function(){
 						if (reviewVersion && designerName) {
-							var node = davinci.review.model.resource.root.findVersion(designerName, reviewVersion);
+							var node = revResource.findVersion(designerName, reviewVersion);
 							if (node) {
 								/* if we found a node, then the user clicked a review link to get here, 
 								 * TODO: bring the R&C view forward

@@ -100,6 +100,9 @@ public class DojoLibraryFinder implements ILibraryFinder{
 		
 		String version = dojoProps.getProperty("dojo-version-attribute-name");
 		String path = dojoProps.getProperty("dojo-root");
+		IPath fullPath = new Path(path);
+		String simplePath = fullPath.removeFirstSegments(1).toString();
+		
 		for(int i=0;i<simpleVersion.length;i++){
 			if(version.indexOf(simpleVersion[i]) > -1){
 				version = simpleVersion[i];
@@ -107,7 +110,7 @@ public class DojoLibraryFinder implements ILibraryFinder{
 			}
 		}
 		ILibInfo[] result = new ILibInfo[1];
-		result[0]= new LibInfo("dojo","dojo", version, path);
+		result[0]= new LibInfo("dojo","dojo", version, simplePath);
 		return result;
 	}
 	

@@ -29,8 +29,27 @@ define([
 		UpdateStyle: function(){
 			this.domNode.style.backgroundImage = "url('"+this.url+"')";
 			this.domNode.style.backgroundRepeat = "no-repeat";
-			//this._setCSS3Property(this.domNode, 'backgroundSize', '400px 400px');
-		}/*,
+			this.domNode.style.backgroundPosition = "center center";
+			var w, h, bgsize;
+			if(this.defaultWidth && this.defaultHeight && this.preserveAspectRatio){
+				// set largest dimension to 100%, the other dimension to aspect ratio * 100%
+				if(this.defaultWidth > this.defaultHeight){
+					w = 100;
+					h = w * this.defaultHeight / this.defaultWidth;
+				} else {
+					h = 100;
+					w = h * this.defaultWidth / this.defaultHeight;
+				}
+				if(this.orientation == 'landscape'){
+					bgsize = h + '% ' + w + '%';
+				}else{
+					bgsize = w + '% ' + h + '%';
+				}
+			}else{
+				bgsize = '100% 100%';
+			}
+			this._setCSS3Property(this.domNode, 'backgroundSize', bgsize);
+		},
 		
 		_setCSS3Property: function(node, domProperty, value){
 			var style = node.style;
@@ -40,7 +59,7 @@ define([
 			style['ms'+domPropertyUC] = value;
 			style['o'+domPropertyUC] = value;
 			style[domProperty] = value;
-		}*/
+		}
 
 	});
 });

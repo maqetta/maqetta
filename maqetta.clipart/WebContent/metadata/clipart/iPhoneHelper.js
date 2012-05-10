@@ -1,8 +1,9 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
+	"./_DeviceClipartHelper",
 	"davinci/ve/commands/ResizeCommand"
-], function(declare, connect, ResizeCommand) {
+], function(declare, connect, _DeviceClipartHelper, ResizeCommand) {
 
 return declare([], {
 	
@@ -68,7 +69,7 @@ return declare([], {
 	 *      modifyCommand  the ModifyCommand object that will soon be executed to change properties
 	 */
 	onWidgetPropertyChange: function(args){
-		//debugger;
+		debugger;
 		if(!args){
 			return;
 		}

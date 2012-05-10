@@ -24,7 +24,10 @@ define(["dojo/_base/declare",
 		ErrorDialog
 ) {
 
+var defaultInvalidTargetWidgetMessage = 'The selected target is not a valid parent for the given widget.';
+
 return declare("davinci.ve.tools.CreateTool", _Tool, {
+	
 
 	constructor: function(data) {
 		this._data = data;
@@ -38,6 +41,13 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			}
 			this._dropCursor = Metadata.queryDescriptor(data.type, "dropCursor");
 		}
+		// This loads helpers asynchronously in a separate thread and doesn't guarantee that
+		// helpers are available at any particular time. Pulling in helpers upfront provides
+		// some parallelization via background processing while waiting for user to mouseup over canvas.
+		// Also, helps with ChooseParent as it shows
+		// possible parents, but not absolutely critical that that information is fully accurate
+		// because onMouseUp guarantees that helpers are available before calling create().
+		this._requireHelpers(data);
 	},
 
 	activate: function(context){
@@ -269,7 +279,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			// Otherwise, find the appropriate parent that is located under the pointer
 			var widgetUnderMouse = this._getTarget() || Widget.getEnclosingWidget(event.target);
 			var data = this._data;
-		    var allowedParentList = cp.getAllowedTargetWidget(widgetUnderMouse, data, true);
+		    var allowedParentList = cp.getAllowedTargetWidget(widgetUnderMouse, data, true, {absolute:absolute});
 		    var widgetType = dojo.isArray(data) ? data[0].type : data.type;
 			var helper = Widget.getWidgetHelper(widgetType);
 			if(allowedParentList.length>1 && helper && helper.chooseParent){
@@ -292,10 +302,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var InvalidTargetWidgetError = function(message) {
 		    this.prototype = Error.prototype;
 		    this.name = 'InvalidTargetWidgetError';
-		    this.message = 'The selected target is not a valid parent for the given widget.';
-		    if (message) {
-		    	this.message += ' ' + message;
-		    }
+		    this.message = message ? message : defaultInvalidTargetWidgetMessage;
 		};
 
 		try {
@@ -327,10 +334,10 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				        classList: getClassList(elem.type)
 					};
 			    });
-				var errorMsg;
+				var errorMsg = defaultInvalidTargetWidgetMessage;
 				// XXX Need to update this message for multiple widgets
 				if (children.length === 1 && children[0].allowedParent) {
-					errorMsg = ['The widget <span style="font-family: monospace">',
+					errorMsg += ['The widget <span style="font-family: monospace">',
 					             typeList,
 					             '</span> requires ',
 					             children[0].allowedParent.length > 1 ?
@@ -339,6 +346,15 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 					             ' <span style="font-family: monospace">',
 					             children[0].allowedParent.join(', '),
 					             '</span>.'].join(''); // FIXME: i18n
+					var widgetType = data[0].type;
+					var helper = Widget.getWidgetHelper(widgetType);
+					if(helper && helper.isAllowedError){
+						errorMsg = helper.isAllowedError({
+							errorMsg:errorMsg, 
+							type:widgetType, 
+							allowedParent:children[0].allowedParent, 
+							absolute:absolute});
+					}
 				}
 				throw new InvalidTargetWidgetError(errorMsg);
 			}

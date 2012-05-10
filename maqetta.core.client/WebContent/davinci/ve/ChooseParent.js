@@ -24,10 +24,13 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * 			Data for the dropped widget. (This routine only looks for 'type' property)
 	 * @param climb {boolean}
 	 * 			Whether to climb the DOM looking for matches.
+	 * @param params {Object}
+	 *			Various properties representing current state of app. So far, only this:
+	 *				params.absolute {boolean} - widget will be added using position:absolute
 	 * @return an array of widgets which are possible valid parents for the dropped widget
 	 * @type davinci.ve._Widget
 	 */
-	getAllowedTargetWidget: function(target, data, climb) {
+	getAllowedTargetWidget: function(target, data, climb, params) {
 		// get data for widget we are adding to page
 		var getEnclosingWidget = widget.getEnclosingWidget,
 			newTarget = target,
@@ -40,6 +43,7 @@ return declare("davinci.ve.ChooseParent", null, {
 		var _this = this;
 		data.forEach(function(elem) {
 			children.push({
+				type:elem.type,
 				allowedParent: metadata.getAllowedParent(elem.type),
 				classList: _this.getClassList(elem.type)
 			});
@@ -49,7 +53,7 @@ return declare("davinci.ve.ChooseParent", null, {
 			var parentType = newTarget instanceof _Widget ?
 					newTarget.type : newTarget._dvWidget.type;
 			var parentClassList = this.getClassList(parentType);
-			if(this.isAllowed(children, newTarget, parentType, parentClassList)){
+			if(this.isAllowed(children, newTarget, parentType, parentClassList, params)){
 				allowedParentList.push(newTarget);
 			}
 			newTarget = getEnclosingWidget(newTarget);
@@ -60,7 +64,7 @@ return declare("davinci.ve.ChooseParent", null, {
 	
 	// Returns 'true' if the dropped widget(s) is(are) allowed as a child of the
 	// given parent.
-	isAllowed: function(children, parent, parentType, parentClassList) {
+	isAllowed: function(children, parent, parentType, parentClassList, params) {
 		
 		// returns 'true' if any of the elements in 'classes' are in 'arr'
 		function containsClass(arr, classes) {
@@ -84,7 +88,16 @@ return declare("davinci.ve.ChooseParent", null, {
 								  containsClass(allowedChild, child.classList));
 			var isAllowedParent = child.allowedParent[0] === "ANY" ||
 								  containsClass(child.allowedParent, parentClassList);
-			return isAllowedChild && isAllowedParent;
+			var helper = widget.getWidgetHelper(child.type);
+			if(helper && helper.isAllowed){
+				var args = { childType:child.type, childClassList: child.classList,
+							parentType:parentType, parentClassList:parentClassList,
+							absolute:params.absolute,
+							isAllowedChild:isAllowedChild, isAllowedParent:isAllowedParent };
+				return helper.isAllowed(args);
+			}else{
+				return isAllowedChild && isAllowedParent;
+			}
 		});
 	},
 
@@ -463,7 +476,7 @@ return declare("davinci.ve.ChooseParent", null, {
 		var r = l + w;
 		var b = t + h;
 		if(x >= l && x <= r && y >= t && y <= b){
-			var allowedParents = this.getAllowedTargetWidget(wdgt, data, false);
+			var allowedParents = this.getAllowedTargetWidget(wdgt, data, false, {absolute:absolute});
 			if(allowedParents.length === 1){
 				if(absolute == true){
 					// Absolutely positioned widgets get added as last child

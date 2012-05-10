@@ -1068,14 +1068,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		libs.forEach(function(lib) {
 			var id = lib.id;
 			// since to loader, everything is relative to 'dojo', ignore here
-			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
+			if (lib.root === undefined || id === 'dojo' || id === 'DojoThemes') {
 				return;
 			}
 			var root = new Path(lib.root).relativeTo(dojoBase).toString();
 			packages.push({ name: lib.id, location: root });
 		});
-
-		packages.push({name: 'maqetta', location: '../../../maqetta'});
 
 		return packages;
 	},
@@ -2297,6 +2295,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		function updateSheet(sheet, rule){
 			var fileName = rule.parent.getResource().getURL();
 			var selectorText = rule.getSelectorText();
+			//console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			var rules = sheet.cssRules;
 			var foundSheet = findSheet(sheet, fileName);
@@ -2308,12 +2307,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
 							foundSheet.deleteRule(r);
-							//console.log("------------  Hot Modify " + foundSheet.href + " ----------------:=\n" + text + "\n");
+							//console.log("------------  Hot Modify delete " + foundSheet.href + " ----------------:=\n" + selectorText + "\n");
 							break;
 						}
 					}
 				}
 				var text = rule.getText({noComments:true});
+				//console.log("------------  Hot Modify Insert " + foundSheet.href + " ----------------:=\n" + text + "\n");
 				foundSheet.insertRule(text, r);
 				return true;
 			}
@@ -2354,11 +2354,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	ruleSetAllProperties: function(rule, values){
 		rule.removeAllProperties();
 		for(i = 0;i<values.length;i++){
-			for(var name in values[i]){
-				if (values[i][name] && values[i][name] !== '') {
-					rule.addProperty(name, values[i][name]);
-				}
-			}
+			rule.addProperty(values[i].name, values[i].value); // #23 all we want to put back is the values
 		}
 	},
 	
@@ -2371,7 +2367,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Remove any properties within rule that are listed in the "values" parameter 
 		for(i = 0;i<values.length;i++){
 			for(var name in values[i]){
-				removedProp.push(rule.getProperty(name)); //#2166
+				var prop = rule.getProperty(name);
+				if (prop) {
+					removedProp.push(prop); //#2166
+				}
 				rule.removeProperty(name);
 			}
 		}
@@ -2418,18 +2417,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (cleaned[i][name] && cleaned[i][name] !== '') {
 					rule.addProperty(name, cleaned[i][name]);
 					//#2166 find the old prop to grab comments if any
-					for (var i = 0; i < removedProp.length; i++) {
-						if (removedProp[i].name === name) {
+					for (var x = 0; x < removedProp.length; x++) {
+						if (removedProp[x].name === name) {
 							var newProp = rule.getProperty(name, cleaned[i][name]);
-							if (removedProp[i].comment) { 
+							if (removedProp[x].comment) { 
 								// add back the comments before this prop from the old CSS file
-								newProp.comment = removedProp[i].comment; 
+								newProp.comment = removedProp[x].comment; 
 							}
-							if (removedProp[i].postComment) { 
+							if (removedProp[x].postComment) { 
 								// add back the comments after this prop from the old CSS file
-								newProp.postComment = removedProp[i].postComment; 
+								newProp.postComment = removedProp[x].postComment; 
 							}
-							removedProp.splice(i,1); // trim out the prop so we don't process this more than once
+							removedProp.splice(x,1); // trim out the prop so we don't process this more than once
 							break;
 						}
 						

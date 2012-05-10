@@ -157,10 +157,16 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_setDirty: function() {
-		this.isDirty=true;
-		this.lastModifiedTime=Date.now();
+		this.setDirty(true);
+	},
+	
+	setDirty: function(isDirty){
+		this.isDirty=isDirty;
+		if (isDirty){
+			this.lastModifiedTime=Date.now();
+		}
 		if (this.editorContainer){
-			this.editorContainer.setDirty(true);
+			this.editorContainer.setDirty(isDirty);
 		}
 	},
 	

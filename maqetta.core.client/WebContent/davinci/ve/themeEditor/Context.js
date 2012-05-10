@@ -225,7 +225,14 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
              helper = Theme.getHelper(ve.theme);
              if (helper && helper.preThemeConfig){
                  helper.preThemeConfig(this);
-             } 
+             } else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
+            	 helper.then(function(result){
+            		 if (result.helper && result.helper.preThemeConfig){
+            			 result.helper.preThemeConfig(this); 
+            			 this.visualEditor.theme.helper = result.helper;
+        			 }
+            	 }.bind(this));
+              }
          }
 	    
 	 },

@@ -381,10 +381,32 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		return allClasses; // wdr array of selectors
 
 	},
-
+	
+	_addCommandsForValue : function(command, widget, subWidget, state, value, property){
+		if (!command){
+			command = new CompoundCommand();
+		}
+		var deltaRules = [];
+		var rules = this.getRules(widget, subWidget, state);
+		for (var r = 0; r < rules.length; r++){
+			var rule = rules[r];
+			if(!property || this._theme.isPropertyVaildForWidgetRule(rule,property,this._selectedWidget)){
+				var deltaRule = this.getDeltaRule(rule);
+				deltaRules[deltaRule.getSelectorText()] = deltaRule;
+				
+			}
+		}
+		for (var dRule in deltaRules){
+			value.appliesTo.rule = null; // the old rule does not matter, so null to keep clone from throwing stack
+			cValue = dojo.clone(value); // clone becouse the rule will change
+			cValue.appliesTo.rule = deltaRules[dRule]; // create delta if needed #23
+			command.add(this.getCommandForStyleChange(cValue));
+		}
+		return command;
+	},
 	
     _propertiesChange : function (value){
-		
+ 	
 		if(!this.isActiveEditor()) { return; }
 		var command = new CompoundCommand();
 		if (this._selectedWidget.id === 'all'){
@@ -423,37 +445,18 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 									}
 								}
 							}
-							var rules = this.getRules(this._selectedWidget, this._selectedSubWidget, c);
-							for (var r = 0; r < rules.length; r++){
-								var rule = rules[r];
-								value.appliesTo.rule = this.getDeltaRule(rule); // create delta if needed #23
-								value.values = dojo.clone(value.values); // have to clone them becouse we change them for states above, JS is pass by ref
-								command.add(this.getCommandForStyleChange(value));
-							}
+							command = this._addCommandsForValue(command, this._selectedWidget, this._selectedSubWidget, c, value);
 						} 
 					}
 				} else {
 					//Normal
-					var rules = this.getRules(this._selectedWidget, this._selectedSubWidget, this._currentState);
-					for (var r = 0; r < rules.length; r++){
-						var rule = rules[r];
-						value.appliesTo.rule = this.getDeltaRule(rule); // create delta if needed #23
-						value.values = dojo.clone(value.values); // have to clone them becouse we change them for states above, JS is pass by ref
-						command.add(this.getCommandForStyleChange(value));
-					}
+					command = this._addCommandsForValue(command, this._selectedWidget, this._selectedSubWidget, this._currentState, value);
 				}
 			}
 		} else {
-			var rules = this.getRules(this._selectedWidget, this._selectedSubWidget, this._currentState);
-			for (var r = 0; r < rules.length; r++){
-				var rule = rules[r];
-				for(var i=0;i<value.values.length;i++){
-					for(var a in value.values[i]){
-						if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget)){
-								value.appliesTo.rule = this.getDeltaRule(rule); // create delta if needed #23
-								command.add(this.getCommandForStyleChange(value));
-						}
-					}
+			for(var i=0;i<value.values.length;i++){
+				for(var a in value.values[i]){
+					command = this._addCommandsForValue(command, this._selectedWidget, this._selectedSubWidget, this._currentState, value, a);
 				}
 			}
 						

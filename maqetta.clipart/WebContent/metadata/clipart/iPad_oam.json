@@ -37,7 +37,12 @@
             ],
             "defaultValue": "portrait",
             "title": "Orientation"
+        },
+        "preserveAspectRatio": {
+            "datatype": "boolean",
+            "defaultValue": "true",
+            "title": "Preserve aspect ratio"
         }
     },
-    "content": "<img></img>"
+    "content": "<div></div>"
 }

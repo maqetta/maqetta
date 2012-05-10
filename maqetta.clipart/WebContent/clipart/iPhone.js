@@ -7,7 +7,7 @@ define([
 
 		// These two values must match width/height attributes on <svg> element for portrait clipart
 		defaultWidth:385.5645,
-		defaultHeight:747.8577,
+		defaultHeight:747.8577
 
 	});
 });

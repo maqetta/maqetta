@@ -301,6 +301,8 @@
                 "name": "Android_340x480",
                 "type": "clipart.Android_340x480",
                 "category": "clipart",
+                "allowedChild": "ANY",
+                "helper": "./clipart/Android_340x480Helper",
                 "icon": "resources/images/android.gif",
                 "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM/SBrT3kFJ9mqUI4DNN5PEAAhkSQIDKJomqo7smWJw7NKx/ObCraw5X6jGEmY6nQ+mwgRRmBAQIUCtWqXYLCEBADs="
             },
@@ -308,6 +310,8 @@
                 "name": "Android_480x800",
                 "type": "clipart.Android_480x800",
                 "category": "clipart",
+                "allowedChild": "ANY",
+                "helper": "./clipart/Android_480x800Helper",
                 "icon": "resources/images/android.gif",
                 "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM/SBrT3kFJ9mqUI4DNN5PEAAhkSQIDKJomqo7smWJw7NKx/ObCraw5X6jGEmY6nQ+mwgRRmBAQIUCtWqXYLCEBADs="
             },
@@ -315,6 +319,8 @@
                 "name": "AndroidTablet",
                 "type": "clipart.AndroidTablet",
                 "category": "clipart",
+                "allowedChild": "ANY",
+                "helper": "./clipart/AndroidTabletHelper",
                 "icon": "resources/images/android.gif",
                 "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM/SBrT3kFJ9mqUI4DNN5PEAAhkSQIDKJomqo7smWJw7NKx/ObCraw5X6jGEmY6nQ+mwgRRmBAQIUCtWqXYLCEBADs="
             },
@@ -322,6 +328,8 @@
                 "name": "Blackberry",
                 "type": "clipart.Blackberry",
                 "category": "clipart",
+                "allowedChild": "ANY",
+                "helper": "./clipart/BlackberryHelper",
                 "icon": "resources/images/blackberry.gif",
                 "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM8SKox7mFJ0t6Lk9iddQAg2HQDIJwnMJAmKqis+65ZKcN1i+KT7fIS347W+4QAo9rm0alsMJmAdArtWBUJADs="
             },
@@ -329,6 +337,8 @@
                 "name": "iPad",
                 "type": "clipart.iPad",
                 "category": "clipart",
+                "allowedChild": "ANY",
+                "helper": "./clipart/iPadHelper",
                 "icon": "resources/images/ipad.gif",
                 "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1v///0BAQP///yH5BAEAAAMALAAAAAAQABAAAAI0nIWpxgIPo2DDhYsvmA3kvFHWp3GHRwZhl6pmhZLr2c5w/Y5yHvW2AkyIFA8gpRIUHpfMAgA7"
             },

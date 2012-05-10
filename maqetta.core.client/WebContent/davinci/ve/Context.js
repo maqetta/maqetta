@@ -1068,14 +1068,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		libs.forEach(function(lib) {
 			var id = lib.id;
 			// since to loader, everything is relative to 'dojo', ignore here
-			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
+			if (lib.root === undefined || id === 'dojo' || id === 'DojoThemes') {
 				return;
 			}
 			var root = new Path(lib.root).relativeTo(dojoBase).toString();
 			packages.push({ name: lib.id, location: root });
 		});
-
-		packages.push({name: 'maqetta', location: '../../../maqetta'});
 
 		return packages;
 	},
@@ -2367,9 +2365,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			p,
 			prop,
 			existingProps = [];
+		var removedProp = []; //#2166
 		// Remove any properties within rule that are listed in the "values" parameter 
 		for(i = 0;i<values.length;i++){
 			for(var name in values[i]){
+				removedProp.push(rule.getProperty(name)); //#2166
 				rule.removeProperty(name);
 			}
 		}
@@ -2406,6 +2406,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		for(p=rule.properties.length-1; p>=0; p--){
 			prop = rule.properties[p];
 			if(prop){
+				removedProp.push(rule.getProperty(prop.name)); //#2166
 				rule.removeProperty(prop.name);
 			}
 		}
@@ -2414,6 +2415,24 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			for(var name in cleaned[i]){
 				if (cleaned[i][name] && cleaned[i][name] !== '') {
 					rule.addProperty(name, cleaned[i][name]);
+					//#2166 find the old prop to grab comments if any
+					for (var i = 0; i < removedProp.length; i++) {
+						if (removedProp[i].name === name) {
+							var newProp = rule.getProperty(name, cleaned[i][name]);
+							if (removedProp[i].comment) { 
+								// add back the comments before this prop from the old CSS file
+								newProp.comment = removedProp[i].comment; 
+							}
+							if (removedProp[i].postComment) { 
+								// add back the comments after this prop from the old CSS file
+								newProp.postComment = removedProp[i].postComment; 
+							}
+							removedProp.splice(i,1); // trim out the prop so we don't process this more than once
+							break;
+						}
+						
+					}
+					//#2166 find the old prop to grab comments if any
 				}
 			}
 		}

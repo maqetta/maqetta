@@ -40,7 +40,7 @@
 	 </extension>
 	 <extension point="maqetta.core.server.ajaxLibrary">
 		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
-		      <libraryPath location="WebContent/project/base" name="/"></libraryPath>
+		      <libraryPath location="WebContent/project/base/maqetta" name="/maqetta"></libraryPath>
 		      <metadata location="app/metadata/maqetta/core/0.3" />
 		 </ajaxLibrary>
 	 </extension>

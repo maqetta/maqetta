@@ -120,7 +120,6 @@ return declare(CreateTool, {
 		// (i.e., initialCreationArgs is provided)
 		var helper = edge2Edge.getHelper();
 		if(helper && helper.initialSize){
-			//debugger;
 			var size =  helper.initialSize(args);
 			if(size){
 				args.size = size;

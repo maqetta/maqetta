@@ -1995,7 +1995,7 @@
 		                "supportsHTML": true
 		            },
 		            //"allowedParent": "DojoxMobileView, html.body",
-		            "allowedParent": "ANY",
+		            "allowedParent": "ANY",			// This allows Heading to be used in sketch mode
 		            "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar"
 		        },
 		        {

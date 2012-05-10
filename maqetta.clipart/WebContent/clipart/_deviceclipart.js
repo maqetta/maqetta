@@ -8,7 +8,6 @@ define([
 		orientation:'portrait',
 		preserveAspectRatio:true,
 		DeviceClipart:true,
-		//DeviceRect_portrait:{ w:385.5645, h:747.8577 },
 
 		postCreate: function(){
 			//debugger;
@@ -22,7 +21,6 @@ define([
 			this._url = this.declaredClass.substr(index+1) + '_' + this.orientation + '.svg';
 			this.url = dj.moduleUrl("clipart", this._url);
 			this.UpdateStyle();
-			//this.domNode.style.display = "inline-block";
 			this.domNode.style.visibility = oldVisibility;
 		},
 		

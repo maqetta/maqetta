@@ -225,7 +225,7 @@ ViewHelper.prototype = {
 	 * 		{array} allowedParent - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
 	 * 		{boolean} absolute - whether current widget will be added with position:absolute
 	 * @returns {string}	Error message to show
-	 * Note: Maqetta's default processing returns (args.isAllowedChild && args.isAllowedParent)
+	 * Note: Maqetta's default processing returns args.errorMsg
 	 */
 	isAllowedError: function(args){
 		if(args.absolute){
@@ -357,7 +357,6 @@ ViewHelper.prototype = {
 	 * 		
 	 */
 	initialSize: function(args){
-		//debugger;
 		// If widget is being added at an absolute location (i.e., there is a value for args.position),
 		if(args && args.position){
 			// If user did not drag out a size, use set w=h=300px

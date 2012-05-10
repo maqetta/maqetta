@@ -178,13 +178,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		if (!this.isActiveEditor()) {
 			return;
 		}
-		//debugger;
 		var context = this.getContext();
-		/*
-		var command = event.command;	
-		command.setContext(context);
-		context.getCommandStack().execute(command);
-		*/
 		var compoundCommand = event.compoundCommand;
 		var command = event.command;
 		var commandStack = context.getCommandStack();
@@ -203,7 +197,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 				context.select(widget);
 			}
 		}
-		//context.onSelectionChange(context.getSelection());
 		this._srcChanged();
 	},
 

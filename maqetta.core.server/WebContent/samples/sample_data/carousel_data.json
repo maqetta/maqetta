@@ -1,0 +1,13 @@
+{	
+	identifier: 'value',
+	label: 'headerText',
+  "items" : [
+  	{"value":"one", "headerText":"one", "src":"./sample_data/images/i-icon-1.png"},
+		{"value":"two", "headerText":"two", "src":"./sample_data/images/i-icon-2.png"},
+		{"value":"three", "headerText":"three", "src":"./sample_data/images/i-icon-3.png"},
+		{"value":"four", "headerText":"four", "src":"./sample_data/images/i-icon-4.png"},
+		{"value":"five", "headerText":"five", "src":"./sample_data/images/i-icon-5.png"},
+		{"value":"six", "headerText":"six", "src":"./sample_data/images/i-icon-6.png"}
+  ]
+}
+

@@ -1556,14 +1556,22 @@ var Workbench = {
 		}
 	},
 	
-	_updateWorkbenchState: function()
-	{
-		dojo.xhrPut({
-			url: "cmd/setWorkbenchState",
-			putData: dojo.toJson(Workbench._state),
-			handleAs:"text",
-			sync:true
-		});
+	_updateWorkbenchState: function(){
+		
+		if(!this._updateWorkbench){
+			this._updateWorkbench = new Deferred();
+			this._updateWorkbench.resolve();
+		}
+		
+		this._updateWorkbench.then(dojo.hitch(this,function(){
+			this._updateWorkbench = dojo.xhrPut({
+				url: "cmd/setWorkbenchState",
+				putData: dojo.toJson(Workbench._state),
+				handleAs:"text",
+				sync:false
+			});
+		}));
+		
 	},
 
 	_autoSave: function(){

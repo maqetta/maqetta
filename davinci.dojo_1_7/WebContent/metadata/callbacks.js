@@ -309,7 +309,7 @@
 				var statesClass =  userWin && userWin.davinci && userWin.davinci.states;
 				if(dj && statesClass && statesClass.getStates){
 					var views = dj.query('.mblView');
-					var states = davinci.states.getStates();
+					var states = statesClass.getStates();
 					return (views.length > 0 && states.length <= 1);
 				}else{
 					return false;

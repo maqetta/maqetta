@@ -358,7 +358,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			}
 
 //			this._handles.push(dojo.connect(this.context, "activate", this, this.update));
-			this._handles.push(dojo.connect(this.context, "onContentChange", this,this.onContentChange));
+			this._handles.push(dojo.connect(this.context, "onContentChange", this, this.onContentChange));
 //			this._handles.push(dojo.connect(this.context, "onSelectionChange",this, this.onContentChange));
 		
 			this.title = dojo.doc.title;
@@ -368,7 +368,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			var flow = this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
 			this.initialSet=true;
 		}else{
-			this.context.setSource(content);
+			this.context.setSource(content, this.context._restoreStates, this.context);
 		}
 
 		if(!this.skipSave) {

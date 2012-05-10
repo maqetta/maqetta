@@ -1068,14 +1068,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		libs.forEach(function(lib) {
 			var id = lib.id;
 			// since to loader, everything is relative to 'dojo', ignore here
-			if (! lib.root || id === 'dojo' || id === 'DojoThemes') {
+			if (lib.root === undefined || id === 'dojo' || id === 'DojoThemes') {
 				return;
 			}
 			var root = new Path(lib.root).relativeTo(dojoBase).toString();
 			packages.push({ name: lib.id, location: root });
 		});
-
-		packages.push({name: 'maqetta', location: '../../../maqetta'});
 
 		return packages;
 	},

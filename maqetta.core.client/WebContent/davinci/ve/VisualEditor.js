@@ -17,7 +17,8 @@ define([
 	"./widget",
 	"system/resource",
 	"davinci/XPathUtils",
-	"../html/HtmlFileXPathAdapter"
+	"../html/HtmlFileXPathAdapter",
+	"davinci/ve/ThemeModifier",
 ], function(
 	require,
 	declare,
@@ -37,10 +38,11 @@ define([
 	widgetUtils,
 	systemResource,
 	XPathUtils,
-	HtmlFileXPathAdapter
+	HtmlFileXPathAdapter,
+	ThemeModifier
 ){
 
-var VisualEditor = declare("davinci.ve.VisualEditor", null, {
+var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 
 	deviceName: 'none',
 	_orientation: 'portrait',
@@ -218,69 +220,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		if(!this.isActiveEditor() ){
 			return;
 		}
-		
-		var context = this.getContext(),
-			selection = context.getSelection(),
-			widget = selection.length ? selection[selection.length - 1] : undefined;
-
-		if(selection.length > 1){
-			context.select(widget);
-		}
-		var command = null;
-		
-		if(value.appliesTo=="inline"){
-			var allValues = [];
-			/* rewrite any URLs found */
-			
-			var filePath = new Path(this.fileName);
-			
-			for(var i=0;i<value.values.length;i++){
-				for(var name in value.values[i]){
-					if(URLRewrite.containsUrl(value.values[i][name]) && !URLRewrite.isAbsolute(value.values[i][name])){
-						
-						var oldUrl = new Path(URLRewrite.getUrl(value.values[i][name]));
-						if(!oldUrl.isAbsolute){
-							var newUrl = oldUrl.relativeTo(filePath).toString();
-							var newValue = URLRewrite.replaceUrl(value.values[i][name], newUrl);
-							allValues.push(a);
-							
-						}else{
-							var a ={};
-							a[name] = value.values[i][name];
-						
-							allValues.push(a); //FIXME: combine with below
-						}
-					}else{
-						var a ={};
-						a[name] = value.values[i][name];
-						allValues.push(a);
-					}
-				}
-			}
-			command = new davinci.ve.commands.StyleCommand(widget, allValues, value.applyToWhichStates);	
-		}else{
-			var rule=null;
-			
-			// if type=="proposal", the user has chosen a proposed new style rule
-			// that has not yet been added to the given css file (right now, app.css)
-			if(value.appliesTo.type=="proposal"){
-
-				//FIXME: Not included in Undo logic
-				var cssFile = this.context.model.find({elementType:'CSSFile', relativeURL: value.appliesTo.targetFile}, true);
-				if(!cssFile){
-					console.log("Cascade._changeValue: can't find targetFile");
-					return;
-				}
-				var rule = cssFile.addRule(value.appliesTo.ruleString+" {}");
-			}else{
-				rule = value.appliesTo.rule;
-			}
-			
-			/* update the rule */
-			var command = new ModifyRuleCommand(rule, value.values);
-		}
+		var command = this.getCommandForStyleChange(value); //#23
 		if(command){
-			context.getCommandStack().execute(command);
+			 this.getContext().getCommandStack().execute(command);
 			if(command._newId){
 				var widget = widgetUtils.byId(command._newId, context.getDocument());
 				this.context.select(widget);
@@ -450,17 +392,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 			return;
 		}
 		var model = this.context.getModel();
-		var cssFiles = this.context.cssFiles;
-		if (cssFiles) {
-			// if we have dynamic css files we need to save them for saving and removing working copies
-			if (!this._dirtyCssFiles) {
-				this._dirtyCssFiles = [];
-			} 
-			var self = this;
-			cssFiles.forEach(function(file){
-				self._dirtyCssFiles[file.url] = file;
-			});
-		}
 		model.setDirty(true);
 		var visitor = {
 			visit: function(node){
@@ -472,31 +403,15 @@ var VisualEditor = declare("davinci.ve.VisualEditor", null, {
 		};
 		
 		model.visit(visitor);
-		if (this._dirtyCssFiles) {
-			for (var f in this._dirtyCssFiles) {
-				if (this._dirtyCssFiles[f].dirtyResource){
-					this._dirtyCssFiles[f].save(isAutoSave);
-					if (!isAutoSave){
-						systemResource.findResource(this._dirtyCssFiles[f].url).removeWorkingCopy();
-					}
-					this._dirtyCssFiles[f].dirtyResource = isAutoSave;
-				}
-			}
-		}
+		this.saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
 		this.isDirty=isAutoSave;
 	},
 	
+	
+	
 	removeWorkingCopy: function(){ 
 
-		var cssFiles = this._dirtyCssFiles;
 		this._pageEditor.resourceFile.removeWorkingCopy();
-		if (cssFiles) {
-			for (var f in this._dirtyCssFiles) {
-				if (this._dirtyCssFiles[f].dirtyResource) {
-					systemResource.findResource(this._dirtyCssFiles[f].url).removeWorkingCopy();
-				}
-			}
-		}
 		this.isDirty=false;
 	},
 	

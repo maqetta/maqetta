@@ -4,8 +4,9 @@ define([
     	"davinci/ve/themeEditor/Context",
     	"davinci/workbench/Preferences",
     	"davinci/model/Path",
-    	"davinci/model/Factory"
-], function(declare, Workbench, Context, Preferences, Path, Factory) {
+    	"davinci/model/Factory",
+    	"davinci/Theme"
+], function(declare, Workbench, Context, Preferences, Path, Factory, Theme) {
 
 return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
@@ -75,7 +76,14 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			var htmlFile = Factory.newHTML();
 			htmlFile.fileName = fileName;
 			htmlFile.setText(content);
-			htmlFile.themeCssfiles = themeCssfiles; // css files need to be added to doc before body content
+			// #23 adjust for where html is located 
+			var themeBase = Theme.getThemeLocation();
+			var relPath = themeBase.relativeTo(this.basePath, true);
+			htmlFile.themeCssfiles = [];
+			themeCssfiles.forEach(function(file){
+				htmlFile.themeCssfiles.push(relPath.toString()+'/'+this.theme.name+'/'+file); // #23 css files need to be added to doc before body content
+			}.bind(this));
+			//htmlFile.themeCssfiles = themeCssfiles; // css files need to be added to doc before body content
 			this.context.model = htmlFile;
 			this.context._themeName = this.theme.name;
 			if(!this.initialSet){

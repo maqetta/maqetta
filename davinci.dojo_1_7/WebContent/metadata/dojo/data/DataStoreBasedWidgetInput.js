@@ -9,8 +9,6 @@ define([
 	//   then sets the proper CSS on interior elements.
 	"dojo/dom",
 	"dojo/dom-class",
-	"dojo/data/ItemFileReadStore",
-	"dojox/data/CsvStore",
 	"dijit/registry",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
@@ -21,7 +19,7 @@ define([
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
 	"dijit/Dialog",
-	"dijit/layout/ContentPane",	
+	"dijit/layout/ContentPane",
 	"dijit/form/Button",
 	"dijit/Tree",
 	"system/resource",
@@ -37,8 +35,6 @@ define([
 	style,
 	dom,
 	domClass,
-	ItemFileReadStore,
-	CsvStore,
 	registry,
 	SmartInput,
 	Widget,
@@ -319,21 +315,23 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this._getCsvStore(url, this.query, updateCommandCallback);
 		};
 
-		// data can be json or csv, so interogate the url
-		var store = new ItemFileReadStore({url: url});
-		this._urlDataStore = store;
-		store.fetch({
+		// data store must be created in context of page
+		var global = this._widget.getContext().getGlobal();
+		global['require']([
+			'dojo/data/ItemFileReadStore'
+		], function(ItemFileReadStore) {
+			// data can be json or csv, so interogate the url
+			var store = this._urlDataStore = new ItemFileReadStore({url: url});
+			store.fetch({
 				query: this.query,
-				queryOptions:{deep:true}, 
-				onComplete: lang.hitch(this, onComplete),
-				onError: lang.hitch(this, onError)
-		});
+				queryOptions: {deep: true},
+				onComplete: onComplete.bind(this),
+				onError: onError.bind(this)
+			});
+		}.bind(this));
 	},
 
 	_getCsvStore: function(url, query, updateCommandCallback) {
-		var store = new CsvStore({url: url});
-		this._urlDataStore = store;
-
 		this._dataType = "csv";
 		
 		//create onComplete callback function
@@ -341,14 +339,21 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this._urlDataStoreLoaded(items, updateCommandCallback);
 		};
 
-		store.fetch({
+		// data store must be created in context of page
+		var global = this._widget.getContext().getGlobal();
+		global['require']([
+			'dojox/data/CsvStore'
+		], function(CsvStore) {
+			var store = this._urlDataStore = new CsvStore({url: url});
+			store.fetch({
 				query: query,
-				queryOptions:{deep:true}, 
-				onComplete: lang.hitch(this, onComplete),
+				queryOptions: {deep: true},
+				onComplete: onComplete.bind(this),
 				onError: function(e){
 					alert('File ' + e	);
 				}
-		});
+			});
+		}.bind(this));
 	},
 
 	updateWidgetForUrlStoreJSONP: function() {
@@ -368,25 +373,21 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this._urlDataStoreLoaded(items, updateCommandCallback);
 		};
 
-		var store;
-		// need to use the same toolkit that the page is using, not the one maqetta is using
-		var dj = this._widget.getContext().getDojo();
-		try{
-			dj["require"]('dojo.data.ItemFileReadStore');
-			dj["require"]('dojox.io.xhrScriptPlugin');
-		}catch(e){
-			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
-		}
-
-		dj.dojox.io.xhrScriptPlugin(url,"callback");
-		store = new dj.data.ItemFileReadStore({url: url});
-		store.fetch({
-			query: this.query,
-			queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, onComplete),
-			onError: function(e){ alert('File ' + e	);}
-		});
-		this._urlDataStore = store;
+		// data store must be created in context of page
+		var global = this._widget.getContext().getGlobal();
+		global['require']([
+			'dojo/data/ItemFileReadStore',
+			'dojox/io/xhrScriptPlugin'
+		], function(ItemFileReadStore, xhrScriptPlugin) {
+			xhrScriptPlugin(url, "callback");
+			var store = this._urlDataStore = new ItemFileReadStore({url: url});
+			store.fetch({
+				query: this.query,
+				queryOptions: {deep: true},
+				onComplete: onComplete.bind(this),
+				onError: function(e){ alert('File ' + e	);}
+			});
+		}.bind(this));
 	},
 
 	_getFullUrl: function(url) {

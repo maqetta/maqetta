@@ -37,33 +37,28 @@ return declare(DataStoreBasedWidgetInput, {
 	supportsHTML: "false", 
 	
 	helpText: "",
-	
-	constructor : function() {
-		var helpInfo = "<i>" + dojoxNls.edgeToEdgeFormat + "</i>";
-		this.helpText = String.substitute(dojoxNls.edgeToEdgeDataListHelp, [helpInfo]);
+
+	refreshStoreView: function(){
+		var textArea = Registry.byId("davinciIleb"),
+			value ='';
+		this._widget.dijitWidget.store.fetch({
+			query: this.query, // XXX No `query` func on this obj
+			queryOptions:{deep:true}, 
+			onComplete: function(items) {
+				items.forEach(function(item){	                    
+					value += item.value + ", ";
+					value += item.headerText + ", ";
+					value += item.src;
+					value += '\n';
+				});
+				this._data = value;
+				textArea.attr('value', value);
+			}.bind(this)
+		});
 	},
 
 	updateStore: function() {
-		var textArea = dijit.byId("davinciIleb"),
-				value = textArea.attr('value'),
-				nodes = value,
-				rows = value.split('\n'),
-			data = { identifier: 'label', items:[]},
-			items = data.items;
-		for (var r = 0; r < rows.length; r++){ 
-			var cols = rows[r].split(',');
-			var item = {};
-			item.label = cols[0];
-			if (cols[1]){
-				item.moveTo = cols[1];
-			} else {
-				item.moveTo = 'dummy';
-			}
-
-			items.push(item);
-		}
-
-		return this.replaceStoreData(data);
+		return this.replaceStoreData(this.buildData());
 	},
 
 	buildData: function() {
@@ -71,16 +66,17 @@ return declare(DataStoreBasedWidgetInput, {
 				value = textArea.attr('value'),
 				nodes = value,
 				rows = value.split('\n'),
-			data = { identifier: 'label', items:[]},
+			data = { identifier: 'value', items:[]},
 			items = data.items;
 		for (var r = 0; r < rows.length; r++){ 
 			var cols = rows[r].split(',');
 			var item = {};
-			item.label = cols[0];
+			item.value = cols[0];
 			if (cols[1]){
-				item.moveTo = cols[1];
-			} else {
-				item.moveTo = 'dummy';
+				item.headerText = cols[1];
+			}
+			if (cols[2]){
+				item.src = cols[2];
 			}
 
 			items.push(item);

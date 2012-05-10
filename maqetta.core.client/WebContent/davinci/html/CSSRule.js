@@ -22,7 +22,7 @@ return declare("davinci.html.CSSRule", CSSElement, {
 		var s = "";
 		context = context || [];
 		if (this.comment && !context.noComments) {
-			s += "\n  " + this.comment.getText(context);
+			s += /*"\n  " +*/ this.comment.getText(context); //#2166
 		}
 		s += this.getSelectorText(context);
 		s = s + " {";
@@ -30,6 +30,9 @@ return declare("davinci.html.CSSRule", CSSElement, {
 			s = s + "\n    " + this.properties[i].getText(context);
 		}
 		s = s + "\n}\n";
+		if (this.postComment && !context.noComments) {
+			s += /*"\n  " +*/ this.postComment.getText(context); //#2166
+		}
 		return s;
 	},
 

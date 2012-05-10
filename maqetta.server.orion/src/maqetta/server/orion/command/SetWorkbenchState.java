@@ -25,7 +25,7 @@ public class SetWorkbenchState extends Command {
     
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
-		IEclipsePreferences result = (IEclipsePreferences) users.node(user.getUserName());
+		IEclipsePreferences result = (IEclipsePreferences) users.node(user.getUserID());
         	// read it with BufferedReader
     	BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream()));
      

@@ -3,6 +3,7 @@ package maqetta.core.server.user.manager;
 
 import java.util.HashMap;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import maqetta.core.server.user.User;
@@ -185,8 +186,13 @@ public class UserManagerImpl implements IUserManager {
             public String getEmail() {
                 return "";
             }
-
-            public String getUserName() {
+            public String getFirstName() {
+                return "";
+            }
+            public String getLastName() {
+                return "";
+            }
+            public String getUserID() {
                 return IDavinciServerConstants.LOCAL_INSTALL_USER;
             }
         }
@@ -204,10 +210,10 @@ public class UserManagerImpl implements IUserManager {
     }
 
 	public IUser getUser(HttpServletRequest req) {
+		if ( ServerManager.LOCAL_INSTALL ) 
+			return this.getSingleUser();
 		return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 	}
-
-
 
 
 }

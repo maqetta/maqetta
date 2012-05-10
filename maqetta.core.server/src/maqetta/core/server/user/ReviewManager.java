@@ -207,7 +207,7 @@ public class ReviewManager implements IReviewManager {
 	}
 
 	public IDesignerUser getDesignerUser(IUser user) {
-		String name = user.getUserName();
+		String name = user.getUserID();
 		IDesignerUser designer = designerUsers.get(name);
 		if (null == designer) {
 			designer = loadDesignerUser(user);
@@ -264,7 +264,7 @@ public class ReviewManager implements IReviewManager {
 
 	private IDesignerUser loadDesignerUser(IUser user) {
 		IStorage versionFile;
-		String name = user.getUserName();
+		String name = user.getUserID();
 		if (ServerManager.LOCAL_INSTALL || Constants.LOCAL_INSTALL_USER_NAME.equals(name)) {
 			versionFile = this.baseDirectory.newInstance(this.baseDirectory, "/.review/snapshot/versions.xml");
 		} else {
@@ -367,7 +367,7 @@ public class ReviewManager implements IReviewManager {
 					element.setAttribute("hasRestarted", version.isHasRestarted()?"true":"false");
 					for (Reviewer reviewer : version.getReviewers()) {
 						Element reviewerElement = document.createElement("reviewer");
-						reviewerElement.setAttribute("name", reviewer.getUserName());
+						reviewerElement.setAttribute("name", reviewer.getUserID());
 						reviewerElement.setAttribute("email", reviewer.getEmail());
 
 						element.appendChild(reviewerElement);

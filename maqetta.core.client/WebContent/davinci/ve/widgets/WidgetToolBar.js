@@ -185,6 +185,13 @@ define(["dojo/_base/declare",
 			if (this.context) {
 				this.context.blockChange(false);
 			}
+		},
+
+		_onKeyPress: function(e) {
+			// dijit textbox doesn't fire onChange for enter
+			if (e.keyCode == e.DOM_VK_RETURN) {
+				this._onChangeIDAttribute();
+			}
 		}
 	});
 });

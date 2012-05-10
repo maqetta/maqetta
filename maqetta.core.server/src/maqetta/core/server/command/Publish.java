@@ -92,7 +92,7 @@ public class Publish extends Command {
 		}
 		
 		//Deal with reviewers the designer has added to the review
-		ReviewerVersion reviewerVersion = new ReviewerVersion(user.getUserName(), version.getTime());
+		ReviewerVersion reviewerVersion = new ReviewerVersion(user.getUserID(), version.getTime());
 		Reviewer tmpReviewer = null;
 		for (int i = 0; i < emails.length; i++) {
 			String email = emails[i];
@@ -104,7 +104,7 @@ public class Publish extends Command {
 		}
 
 		//Add the designer as a reviewer
-		tmpReviewer = ReviewManager.getReviewManager().getReviewer(user.getUserName(), user.getPerson().getEmail());
+		tmpReviewer = ReviewManager.getReviewManager().getReviewer(user.getUserID(), user.getPerson().getEmail());
 		tmpReviewer.addReviewerVersion(reviewerVersion);
 		reviewers.add(tmpReviewer);
 
@@ -179,7 +179,7 @@ public class Publish extends Command {
 
 	private String getHtmlContent(IUser user, String message, String url) {
 		Map<String, String> props = new HashMap<String, String>();
-		props.put("username", user.getUserName());
+		props.put("username", user.getUserID());
 		props.put("message", message);
 		props.put("url", url);
 		props.put("email", user.getPerson().getEmail());
@@ -190,7 +190,7 @@ public class Publish extends Command {
 		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
 		return host + "/maqetta?"
 				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
-				+ user.getUserName() + "&"
+				+ user.getUserID() + "&"
 				+ IDavinciServerConstants.REVIEW_VERSION_ATTR + "=" + version;
 	}
 }

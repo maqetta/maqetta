@@ -62,7 +62,7 @@ public class GetBluePageInfo extends Command {
 				buf.append("'");
 				buf.append(":");
 				buf.append("'");
-				buf.append(p.getUserName() + " (" + p.getEmail() + ")");
+				buf.append(p.getUserID() + " (" + p.getEmail() + ")");
 				buf.append("'");
 				buf.append(",");
 				buf.append("'");
@@ -70,7 +70,7 @@ public class GetBluePageInfo extends Command {
 				buf.append("'");
 				buf.append(":");
 				buf.append("'");
-				buf.append(p.getUserName());
+				buf.append(p.getUserID());
 				buf.append("'");
 				buf.append("}");
 				buf.append(",");

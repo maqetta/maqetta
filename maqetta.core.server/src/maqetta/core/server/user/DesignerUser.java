@@ -32,7 +32,7 @@ public class DesignerUser implements IDesignerUser {
 	public IUser rawUser;
 	
 	public DesignerUser(IUser user) {
-		this.name = user.getUserName();
+		this.name = user.getUserID();
 		this.rawUser = user;
 		this.getUserDirectory();
 		// userDirectory is set as a side-effect of the getUserDirectory getter method

@@ -57,7 +57,7 @@ public interface IUser {
 
 	public String getLibPath(String id, String version, String base);
 
-	public String getUserName();
+	public String getUserID();
 
 	public IPerson getPerson();
 	

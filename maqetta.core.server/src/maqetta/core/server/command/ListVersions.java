@@ -65,7 +65,7 @@ public class ListVersions extends Command {
 		
 						for(Reviewer reviewer:version.getReviewers()){
 							writer.startObject();
-							writer.addField("name", reviewer.getUserName());
+							writer.addField("name", reviewer.getUserID());
 							writer.addField("email", reviewer.getEmail());
 							writer.endObject();
 						}

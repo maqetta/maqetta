@@ -49,7 +49,7 @@ public class AddComment extends Command {
 			
 			//Set up project based on designer
 			DavinciProject project = new DavinciProject();
-			project.setOwnerId(designer.getUserName());
+			project.setOwnerId(designer.getUserID());
 			comment.setProject(project);
 
 			comment.setEmail(user.getPerson().getEmail());
@@ -73,7 +73,7 @@ public class AddComment extends Command {
 			sdf.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
 			responseString = "{\"id\":\"" + comment.getId() + "\",\"created\":\""
 					+ sdf.format(comment.getCreated()) /*+ ",order:'" + comment.getOrder()
-					+ "'*/ + "\",\"email\":\"" + user.getPerson().getEmail() + "\",\"reviewer\":\"" + user.getUserName()
+					+ "'*/ + "\",\"email\":\"" + user.getPerson().getEmail() + "\",\"reviewer\":\"" + user.getUserID()
 					+ "\"}";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,7 +149,7 @@ public class AddComment extends Command {
 		}
 
 		Map<String, String> props = new HashMap<String, String>();
-		props.put("username", reviewer.getUserName());
+		props.put("username", reviewer.getUserID());
 		props.put("pagename", pageName);
 		props.put("title", commentTitle);
 		props.put("type", comment.getType());

@@ -42,8 +42,8 @@ return declare("davinci.model.resource.Resource", Model, {
 
 	getURL: function() {
 		var path = this.getPath();
-		while(path.indexOf(".") == 0 || path.indexOf("/") == 0) {
-			path = path.substring(1, path.length);
+		if(path.indexOf("./") == 0 ) {
+			path = path.substring(2, path.length);
 		}
 		var userWorkspaceUrl = Runtime.getUserWorkspaceUrl();
 		return userWorkspaceUrl + path;

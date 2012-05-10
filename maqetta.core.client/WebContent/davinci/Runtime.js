@@ -58,7 +58,18 @@ var Runtime = {
 	},
 
 	getUser: function() {
-		return dojo.cookie("MAQETTA.USER");
+		
+		if(this._userInfo) return this._userInfo;
+		
+		this._userInfo = Runtime.serverJSONRequest({
+			url: "cmd/getUserInfo",
+			handleAs: "json",
+			content:{},
+			sync:true
+		});
+		
+		
+		return this._userInfo;
 	},
 	
 	loadPlugins: function() {

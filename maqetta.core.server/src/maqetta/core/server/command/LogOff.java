@@ -18,20 +18,14 @@ public class LogOff extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        if (user.getUserName().startsWith(IDavinciServerConstants.GUEST_USER_PREFIX)) {
+        if (user.getUserID().startsWith(IDavinciServerConstants.GUEST_USER_PREFIX)) {
             try {
-                ServerManager.getServerManger().getUserManager().removeUser(user.getUserName());
+                ServerManager.getServerManger().getUserManager().removeUser(user.getUserID());
             } catch (UserException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        
-        Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER,  null);
-        k.setMaxAge(0);
-		k.setPath("/");
-		resp.addCookie(k);
-		
         req.getSession().invalidate();
         responseString = "OK";
     }

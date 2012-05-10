@@ -63,7 +63,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 		String pathInfo = req.getPathInfo();
 		IUser sessionUser = ServerManager.getServerManger().getUserManager().getUser(req);
 		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-			System.out.println("Review Servlet request: " + pathInfo + ", logged in= " + (sessionUser != null ? sessionUser.getUserName() : "guest"));
+			System.out.println("Review Servlet request: " + pathInfo + ", logged in= " + (sessionUser != null ? sessionUser.getUserID() : "guest"));
 		}
 
 		if ( pathInfo == null || pathInfo.equals("") ) {

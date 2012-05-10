@@ -9,8 +9,6 @@ define([
 	//   then sets the proper CSS on interior elements.
 	"dojo/dom",
 	"dojo/dom-class",
-	"dojo/data/ItemFileReadStore",
-	"dojox/data/CsvStore",
 	"dijit/registry",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
@@ -21,7 +19,7 @@ define([
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
 	"dijit/Dialog",
-	"dijit/layout/ContentPane",	
+	"dijit/layout/ContentPane",
 	"dijit/form/Button",
 	"dijit/Tree",
 	"system/resource",
@@ -37,8 +35,6 @@ define([
 	style,
 	dom,
 	domClass,
-	ItemFileReadStore,
-	CsvStore,
 	registry,
 	SmartInput,
 	Widget,
@@ -272,6 +268,73 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		
 		updateCommandCallback(compoundCommand);
 	},
+
+	_getDummyDataUpdateWidgetCommandReplaceable: function(updateCommandCallback) {
+		var context = this._getContext();
+		var widget = this._widget;
+
+		var storeId = widget.domNode._dvWidget._srcElement.getAttribute("store");
+		var storeWidget = Widget.byId(storeId);
+
+		var compoundCommand = new OrderedCompoundCommand();
+
+		var newStore;
+		var newStoreId = "";
+		
+		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+			// remove the old store (csv)
+			var removeCmd = new RemoveCommand(storeWidget);
+			compoundCommand.add(removeCmd);
+		
+			// id for the new store
+			var newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+
+			// create the item store
+			newStore = new ItemFileReadStore({items: []});
+			// hack: pass id around for now, as we are passing an object but string may be expected
+			newStore.id = newStoreId;
+		
+			var data = {
+				"type": "dojo.data.ItemFileReadStore",
+				"properties": {
+					id: newStoreId,
+					jsId: newStoreId,
+					url: ''
+				},
+				context: context,
+			}
+
+			// add the new store
+			var addCmd = new AddCommand(data, widget.getParent(), 0);
+			compoundCommand.add(addCmd);
+		} else {
+			var storeCmd = this.replaceStoreData(this.buildData());
+			compoundCommand.add(storeCmd);
+		}
+
+		var props = null;
+
+		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+			props = {};
+			props.store = newStore;
+		}
+
+		var command = new ModifyCommand(widget,
+			props,
+			null,
+			context
+		);
+
+		compoundCommand.add(command);
+
+		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+			var mcmd = new ModifyAttributeCommand(widget, {store: newStoreId});
+			compoundCommand.add(mcmd);
+		}
+
+		//Callback with the new command
+		updateCommandCallback(compoundCommand);
+	},
 	
 	_getNewWidgetFromCompoundCommand: function(compoundCommand) {
 		var lastCommand = compoundCommand._commands[compoundCommand._commands.length-1];
@@ -319,21 +382,23 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this._getCsvStore(url, this.query, updateCommandCallback);
 		};
 
-		// data can be json or csv, so interogate the url
-		var store = new ItemFileReadStore({url: url});
-		this._urlDataStore = store;
-		store.fetch({
+		// data store must be created in context of page
+		var global = this._widget.getContext().getGlobal();
+		global['require']([
+			'dojo/data/ItemFileReadStore'
+		], function(ItemFileReadStore) {
+			// data can be json or csv, so interogate the url
+			var store = this._urlDataStore = new ItemFileReadStore({url: url});
+			store.fetch({
 				query: this.query,
-				queryOptions:{deep:true}, 
-				onComplete: lang.hitch(this, onComplete),
-				onError: lang.hitch(this, onError)
-		});
+				queryOptions: {deep: true},
+				onComplete: onComplete.bind(this),
+				onError: onError.bind(this)
+			});
+		}.bind(this));
 	},
 
 	_getCsvStore: function(url, query, updateCommandCallback) {
-		var store = new CsvStore({url: url});
-		this._urlDataStore = store;
-
 		this._dataType = "csv";
 		
 		//create onComplete callback function
@@ -341,14 +406,21 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this._urlDataStoreLoaded(items, updateCommandCallback);
 		};
 
-		store.fetch({
+		// data store must be created in context of page
+		var global = this._widget.getContext().getGlobal();
+		global['require']([
+			'dojox/data/CsvStore'
+		], function(CsvStore) {
+			var store = this._urlDataStore = new CsvStore({url: url});
+			store.fetch({
 				query: query,
-				queryOptions:{deep:true}, 
-				onComplete: lang.hitch(this, onComplete),
+				queryOptions: {deep: true},
+				onComplete: onComplete.bind(this),
 				onError: function(e){
 					alert('File ' + e	);
 				}
-		});
+			});
+		}.bind(this));
 	},
 
 	updateWidgetForUrlStoreJSONP: function() {
@@ -368,25 +440,21 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this._urlDataStoreLoaded(items, updateCommandCallback);
 		};
 
-		var store;
-		// need to use the same toolkit that the page is using, not the one maqetta is using
-		var dj = this._widget.getContext().getDojo();
-		try{
-			dj["require"]('dojo.data.ItemFileReadStore');
-			dj["require"]('dojox.io.xhrScriptPlugin');
-		}catch(e){
-			console.warn("FAILED: failure for module=dojo.data.ItemFileReadStore");
-		}
-
-		dj.dojox.io.xhrScriptPlugin(url,"callback");
-		store = new dj.data.ItemFileReadStore({url: url});
-		store.fetch({
-			query: this.query,
-			queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, onComplete),
-			onError: function(e){ alert('File ' + e	);}
-		});
-		this._urlDataStore = store;
+		// data store must be created in context of page
+		var global = this._widget.getContext().getGlobal();
+		global['require']([
+			'dojo/data/ItemFileReadStore',
+			'dojox/io/xhrScriptPlugin'
+		], function(ItemFileReadStore, xhrScriptPlugin) {
+			xhrScriptPlugin(url, "callback");
+			var store = this._urlDataStore = new ItemFileReadStore({url: url});
+			store.fetch({
+				query: this.query,
+				queryOptions: {deep: true},
+				onComplete: onComplete.bind(this),
+				onError: function(e){ alert('File ' + e	);}
+			});
+		}.bind(this));
 	},
 
 	_getFullUrl: function(url) {
@@ -475,12 +543,13 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				compoundCommand.add(addCmd);
 			}
 
+			// update the store id attribute
+			var mcmd = new ModifyAttributeCommand(widget, {store: sid});
+			compoundCommand.add(mcmd);
+
 			// allow subclasses to inject their own data
 			command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
 			compoundCommand.add(command);
-
-			var mcmd = new ModifyAttributeCommand(widget, {store: sid});
-			compoundCommand.add(mcmd);
 		} else {
 			var storeCmd = new ModifyCommand(storeWidget, properties);
 			compoundCommand.add(storeCmd);

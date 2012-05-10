@@ -181,9 +181,14 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 			return;
 		}
 		var context = this.getContext();
-		var command = event.command;	
-		command.setContext(context);
-		context.getCommandStack().execute(command);
+		var compoundCommand = event.compoundCommand;
+		var command = event.command;
+		var commandStack = context.getCommandStack();
+		if(compoundCommand){
+			commandStack.execute(compoundCommand);
+		}else{
+			commandStack.execute(command);
+		}
 		if(command._newId){
 			var widget = widgetUtils.byId(command._newId, context.getDocument());
 			context.select(widget);
@@ -194,7 +199,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 				context.select(widget);
 			}
 		}
-		//context.onSelectionChange(context.getSelection());
 		this._srcChanged();
 	},
 

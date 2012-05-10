@@ -1994,7 +1994,8 @@
 		                "displayOnCreate": true,
 		                "supportsHTML": true
 		            },
-		            "allowedParent": "DojoxMobileView, html.body",
+		            //"allowedParent": "DojoxMobileView, html.body",
+		            "allowedParent": "ANY",			// This allows Heading to be used in sketch mode
 		            "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar"
 		        },
 		        {
@@ -2025,7 +2026,8 @@
 		            "category": "mobile",
 		            "icon": "resources/images/dx-mbl-roundrect.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAOXj5+Pi5Ofl6vXz+ePi5eHg4/f2+/Hw9e3s8eno7ff2/Ozr8fT0+vDw9ebm6uTk55qcnv///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVHoCSOZGmeJ6SuLERCRSzPhStBQRDtPB8QLgigR9w9goIi0RFMKHuJIOLJWwQb1N0hOMhGGEGFgiq2QQzitFphE7XeqLj8FAIAOw==",
-		            "allowedChild": "ANY"
+		            "allowedChild": "ANY",
+		            "helper":"./dojox/mobile/InitialSizeHelper"
 		        },
 		        {
 		            "name": "RoundRectCategory",
@@ -2037,7 +2039,8 @@
 		                "property": "label",
 		                "displayOnCreate": true,
 		                "supportsHTML": true
-		            }
+		            },
+		            "helper":"./dojox/mobile/InitialSizeHelper"
 		        },
 		        {
 		            "name": "RoundRectList",
@@ -2056,7 +2059,8 @@
 		                    "type": "dojox.mobile.ListItem",
 		                    children:"Item 2"
 		                 }
-		            ]
+		            ],
+		            "helper":"./dojox/mobile/InitialSizeHelper"
 		        },
 		        {
 		            "name": "RoundRectDataList",
@@ -2105,7 +2109,8 @@
 		                "property": "label",
 		                "displayOnCreate": true,
 		                "supportsHTML": true
-		            }
+		            },
+		            "helper":"./dojox/mobile/InitialSizeHelper"
 		        },
 		        {
 		            "name": "EdgeToEdgeList",
@@ -2124,7 +2129,8 @@
 		                    "type": "dojox.mobile.ListItem",
 		                    children:"Item 2"
 		                 }
-		            ]
+		            ],
+		            "helper":"./dojox/mobile/InitialSizeHelper"
 		        },
 		        {
 		            "name": "EdgeToEdgeDataList",
@@ -2391,7 +2397,8 @@
 		            "category": "mobile",
 		            "icon": "resources/images/ContentPane.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP7+/4OZyC5KhTdblDZYkT1jmzNelz1km0FqoDRimzVim0BqoERvpURwpUh1q0d1qkt8sEx8r/b6/vj7/vr8/lWLvVWLvFaOv6DA2PX6/vf7/tro8u73/fT6/vP5/fn8/uv2/fD4/ePz/Or2/ez3/fL5/drw+93x++Dy++X0/Of1/PH5/fj8/tTu+tfv+t/y++Lz++j2/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADMALAAAAAAQABAAAAZ3wJlQEBAIj8ikMcnEXDaCzWVKpWJmF4BMIKN4PyyNpOO5zCyybXrNXlVmkG2RzQZFZg+6XhZzzBoUe2wpDDMIH4JrIgszBROJaSgHMwoakDInCZQZlyaaCh2XLpoDJSEcJCMqKTAvJyYuLQYzGAS2t7i3V0y8QkEAOw==",
-		            "allowedChild": "ANY"
+		            "allowedChild": "ANY",
+		            "helper":"./dojox/mobile/ContentPaneHelper"
 		        },
 		        {
 		            "name": "IconContainer",

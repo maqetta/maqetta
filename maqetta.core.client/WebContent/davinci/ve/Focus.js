@@ -455,10 +455,22 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				var applyToWhichStates = this._sKey ? 'current' : undefined;
 				var newBox = this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent;
 				if(newBox.w == this._moverStart.w){
-					newBox.w = undefined;
+					delete newBox.w;
 				}
 				if(newBox.h == this._moverStart.h){
-					newBox.h = undefined;
+					delete newBox.h;
+				}
+				// MoveCommand requires either both l and t
+				if(typeof newBox.l != 'number'){
+					newBox.l = this._moverStart.l;
+				}
+				if(typeof newBox.t != 'number'){
+					newBox.t = this._moverStart.t;
+				}
+				// Don't cause a move if left and top haven't changed
+				if(newBox.l == this._moverStart.l && newBox.t == this._moverStart.t){
+					delete newBox.l;
+					delete newBox.t;
 				}
 				this.onExtentChange(this, this._moverStart, newBox, applyToWhichStates);
 			} 

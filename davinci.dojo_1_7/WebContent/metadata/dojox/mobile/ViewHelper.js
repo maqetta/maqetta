@@ -194,6 +194,49 @@ ViewHelper.prototype = {
 	},
 
 	/**
+	 * Override helper function to ChooseParent.js:isAllowed() for deciding whether 
+	 * this particular widget type can be a child of a particular parent type.
+	 * @param {object} args  - object with following properties
+	 * 		{string} childType - eg "dijit.form.Button"
+	 * 		{array} childClassList - list of valid children for parent, eg ["ANY"] or ["dojox.mobile.ListItem"]
+	 * 		{string} parentType - eg "html.body"
+	 * 		{array} parentClassList - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+	 * 		{boolean} absolute - whether current widget will be added with position:absolute
+	 * 		{boolean} isAllowedChild - whether Maqetta's default processing would allow this child for this parent
+	 * 		{boolean} isAllowedParent - whether Maqetta's default processing would allow this parent for this child
+	 * @returns {boolean}
+	 * Note: Maqetta's default processing returns (args.isAllowedChild && args.isAllowedParent)
+	 */
+	isAllowed: function(args){
+		if(args.absolute){
+			// Don't allow View widgets to be positioned absolutely
+			// Doesn't work with dojox.mobile because dojox.mobile will always force top:0px
+			return false;
+		}else{
+			return args.isAllowedChild && args.isAllowedParent;
+		}
+	},
+
+	/**
+	 * Override helper function for error message that appears if CreateTool finds no valid parent targets
+	 * @param {object} args  - object with following properties
+	 * 		{string} errorMsg - default error message from application
+	 * 		{string} type - eg "dijit.form.Button"
+	 * 		{array} allowedParent - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+	 * 		{boolean} absolute - whether current widget will be added with position:absolute
+	 * @returns {string}	Error message to show
+	 * Note: Maqetta's default processing returns args.errorMsg
+	 */
+	isAllowedError: function(args){
+		if(args.absolute){
+			// FIXME: i18n
+			return 'dojox.mobile View widgets cannot be added using absolute layout (i.e., position:absolute)';
+		}else{
+			return args.errorMsg;
+		}
+	},
+
+	/**
 	 * By default, when dragging/dropping new widgets onto canvas, Maqetta
 	 * defaults to adding a new widget as a child of the mostly deeply nested
 	 * valid container that is under the mouse points. But for View widgets,
@@ -302,6 +345,24 @@ ViewHelper.prototype = {
 			return true;
 		}else{
 			return false;
+		}
+	},
+	
+	/**
+	 * Helper function called to establish widget size at initial creation time
+	 * @param {object} args  holds following values:
+	 * 		parent - target parent widget for initial creation
+	 * 		size - {w:(number), h:(number)}
+	 *		position - /* if an object, then widget is created with absolute positioning
+	 * 		
+	 */
+	initialSize: function(args){
+		// If widget is being added at an absolute location (i.e., there is a value for args.position),
+		if(args && args.position){
+			// If user did not drag out a size, use set w=h=300px
+			if(!args.size){
+				return { w:300, h:300 };
+			}
 		}
 	}
 

@@ -30,21 +30,29 @@ define([
 			this.domNode.style.backgroundImage = "url('"+this.url+"')";
 			this.domNode.style.backgroundRepeat = "no-repeat";
 			this.domNode.style.backgroundPosition = "center center";
-			var w, h, bgsize;
-			if(this.defaultWidth && this.defaultHeight && this.preserveAspectRatio){
-				// set largest dimension to 100%, the other dimension to aspect ratio * 100%
-				if(this.defaultWidth > this.defaultHeight){
-					w = 100;
-					h = w * this.defaultHeight / this.defaultWidth;
-				} else {
-					h = 100;
-					w = h * this.defaultWidth / this.defaultHeight;
-				}
+			var nodeWidth = this.domNode.offsetWidth;
+			var nodeHeight = this.domNode.offsetHeight;
+			var bgsize;
+			if(nodeWidth && nodeHeight && this.defaultWidth && this.defaultHeight && this.preserveAspectRatio){
+				var w, h, dw, dh;
 				if(this.orientation == 'landscape'){
-					bgsize = h + '% ' + w + '%';
+					dw = this.defaultHeight;
+					dh = this.defaultWidth;
 				}else{
-					bgsize = w + '% ' + h + '%';
+					dw = this.defaultWidth;
+					dh = this.defaultHeight;
 				}
+				var widthRatio = nodeWidth / dw;
+				var heightRatio = nodeHeight / dh;
+				// set largest dimension to 100%, the other dimension to aspect ratio * 100%
+				if(widthRatio < heightRatio){
+					w = 100;
+					h = 100 * (dh / dw) * (nodeWidth/nodeHeight);
+				}else{
+					h = 100;
+					w = 100 * (dw / dh) * (nodeHeight/nodeWidth);
+				}
+				bgsize = w + '% ' + h + '%';
 			}else{
 				bgsize = '100% 100%';
 			}

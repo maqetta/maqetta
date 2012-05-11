@@ -795,7 +795,10 @@ define(["dojo/_base/declare",
 				/* skip read only values */
 				//if(this._values[i].readOnly) continue;
 				
-				if((this._values[i].value && !foundValue /*&& !defaultValue #23*/) || /*#23 if we have more than one rule with the same selectors */
+				var isPageEditor = (this._editor.editorID == 'davinci.ve.HTMLPageEditor');
+				var isThemeEditor = (this._editor.editorID == 'davinci.ve.ThemeEditor');
+				if((this._values[i].value && !foundValue && isThemeEditor) ||	// for theme editor, choose first CSS rule with a value
+						(this._values[i].value && !foundValue && isPageEditor && !this._values[i].readOnly) ||	// for page editor, skip readonly values
 						(!foundValue && !defaultValue && 
 						 this._values[i].type!="element.style" && 
 						 this._values[i].rule &&
@@ -813,7 +816,7 @@ define(["dojo/_base/declare",
 				}
 			
 			}
-			if(!foundValue && !defaultValue && (this._editor.editorID != 'davinci.ve.ThemeEditor')){
+			if(!foundValue && !defaultValue && isPageEditor){
 				this.selectRuleBySelector("element.style");
 			}
 			

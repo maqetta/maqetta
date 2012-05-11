@@ -31,7 +31,7 @@ return {
 			themeCssfiles.push(relPath.toString()+'/'+context.visualEditor.theme.name+'/'+file); // #23 css files need to be added to doc before body content
 		}.bind(this));
         dm.themeFiles = [];
-        dm.themeMap=[[".*",base,themeCssfiles]];
+        dm.themeMap=[[".*",base,[]]]; // themes is not device dependent and is loaded staticly, so ensure deviceTheme does not load a theme also 
 	},
 	
 	getHeadImports: function(theme){

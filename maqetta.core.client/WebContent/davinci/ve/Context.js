@@ -1587,38 +1587,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	_themeChange: function(e){
 		if (e && e.elementType === 'CSSRule'){
-			this.hotModifyCssRule(e);
+			this.hotModifyCssRule(e); 
 		}
 
 	},
 
-// XXX no 'getRealUrl()' exists in this class
-//	resolveUrl: function(node){
-//		if(!node){
-//			return;
-//		}
-//		var type = (node.getAttribute("dvwidget") || node.getAttribute("oawidget") || node.getAttribute("dojoType") || "html." + node.nodeName.toLowerCase());
-//		var metadata = metadata.getMetadata(type);
-//		if(!metadata.resolveUrl){
-//			return;
-//		}
-//		var properties = metadata.properties;
-//		if(!properties){
-//			return;
-//		}
-//
-//// SHOULDN'T be necessary to do this, urls should already be relative (or absolute), no need to remap them		
-////		for(var name in properties){
-////			var property = properties[name];
-////			if(property.type == "url"){
-////				var value = node.getAttribute(name);
-////				if(value){
-////					value = this.getRealUrl(value);
-////					node.setAttribute(name, value);
-////				}
-////			}
-////		}
-//	},
 	
 	// Temporarily stuff a unique class onto element with each _preserveStates call.
 	// Dojo will sometimes replace the widget's root node with a different root node
@@ -2285,9 +2258,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onSelectionChange: function(selection){
-		this._cssCache = {};
+		// this method can be called from at the end of modifyRuleCommand, 
+		// The publish causes the cascade, and properties in the palette to be updated to the selection
+		// In the case od and undo or redo from the command stack. The reason the timeout is here is
+		// in the case of multiple ModifyRulesCommands in a CompondCommand this gets called for each of
+		// the modifies in the compond command, pounding the cascade and properties causing preoframnce issues
+		// we really only need to sent one publish at the end, so we put the publish in a timeout. If we are indeeded 
+		// getting called from a CompondCommand and the next request to publish comes in in less than the timeout
+		// we replace the delay with a new one. efectivlly replacing a bunch of publishes with one at the end.
+		if (this._delayedPublish) {
+			window.clearTimeout(this._delayedPublish);
+		}
+		this._delayedPublish = window.setTimeout(function(){
+			this._cssCache = {};
+			delete this._delayedPublish;
+			dojo.publish("/davinci/ui/widgetSelected",[selection]);
+		}.bind(this),200); 
 		
-		dojo.publish("/davinci/ui/widgetSelected",[selection]);
 	},
 
 	hotModifyCssRule: function(r){
@@ -2297,24 +2284,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var selectorText = rule.getSelectorText();
 			//console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
-			var rules = sheet.cssRules;
+			//var rules = sheet.cssRules;
 			var foundSheet = findSheet(sheet, fileName);
 			if (foundSheet){
-				rules = foundSheet.cssRules;
-				var r;
+				var rules = foundSheet.cssRules;
+				var r = 0;
 				for (r = 0; r < rules.length; r++){
 					if (rules[r] instanceof CSSStyleRule){
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
 							foundSheet.deleteRule(r);
-							//console.log("------------  Hot Modify delete " + foundSheet.href + " ----------------:=\n" + selectorText + "\n");
+	//						console.log("------------  Hot Modify delete " + foundSheet.href + "index " +r+" ----------------:=\n" + selectorText + "\n");
+							
 							break;
 						}
 					}
+					
 				}
-				var text = rule.getText({noComments:true});
-				//console.log("------------  Hot Modify Insert " + foundSheet.href + " ----------------:=\n" + text + "\n");
-				foundSheet.insertRule(text, r);
+				if (rule.properties.length > 0) { // only inser rule if it has properties
+					var text = rule.getText({noComments:true});
+//					console.log("------------  Hot Modify Insert " + foundSheet.href +  "index " +r+" ----------------:=\n" + text + "\n");
+					foundSheet.insertRule(text, r);
+				}
 				return true;
 			}
 			return false;
@@ -2345,8 +2336,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			return foundSheet;
 		}
-		
-		dojo.some(this.getDocument().styleSheets, function(sheet) {
+		var sheets = this.getDocument().styleSheets;
+		dojo.some(sheets, function(sheet) {
 			return updateSheet(sheet, r);
 		});
 	},
@@ -2414,7 +2405,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Add all prop declarations back in, in proper order
 		for(i = 0;i<cleaned.length;i++){
 			for(var name in cleaned[i]){
-				if (cleaned[i][name] && cleaned[i][name] !== '') {
+				if (cleaned[i][name] && cleaned[i][name] !== '') { 
 					rule.addProperty(name, cleaned[i][name]);
 					//#2166 find the old prop to grab comments if any
 					for (var x = 0; x < removedProp.length; x++) {
@@ -2438,7 +2429,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 		
-		this.hotModifyCssRule(rule); 
+		//this.hotModifyCssRule(rule); // #23 this get called by _themeChange
 	},
 	
 	getRelativeMetaTargetSelector: function(target){

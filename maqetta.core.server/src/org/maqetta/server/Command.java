@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +25,26 @@ public abstract class Command {
         return errorString;
     }
 
+    
+    /* return true if the request originated from one of the local IPs */
+    public static boolean isLocalRequest(HttpServletRequest req){
+    	boolean isLocal = false;
+    	String remoteIP = req.getRemoteAddr();
+    	try{
+	    	for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+	    		NetworkInterface intf = en.nextElement();
+	    		for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+	    			InetAddress inetAddress = enumIpAddr.nextElement();
+	    			String address = inetAddress.getHostAddress();
+	    			if(address.equals(remoteIP)) return true;
+	    		}
+	    	}
+		}catch(Exception ex){
+			// network exceptions
+		}
+    	return isLocal;
+    }
+    
     public String getResponse() {
         return responseString;
     }

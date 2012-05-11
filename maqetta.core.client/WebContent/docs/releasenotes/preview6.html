@@ -180,6 +180,21 @@
 			</li>
 		</ul>
 	</li>
+	<li><p><span class='majortopic'>Limited PHP file support</span> - 
+		<p>Preview 6 includes limited support for *.php files.
+		If you double-click on a *.php file in the Files palette, the HTML visual page editor opens. 
+		The visual editor ignores any <code>&lt;?php ... ?&gt;</code> constructs in the *.php file (treating them the same as HTML comments).
+		If you click on preview-in-browser for a *.php file, then the file is downloaded to the browser with mime-type <code>text/html</code>,
+		which results in the browser doing whatever it does if cases when a *.html file happens to contain <code>&lt;? ... ?&gt;</code> constructs
+		(usually ignored).</p>
+		<p>This feature can be useful for web application developers where they need to include small amounts of PHP in their
+		files, but note that Maqetta has no ability to actually run a PHP engine against the PHP constructs; all that Maqetta does is
+		do its best to ignore everything within a <code>&lt;?php ... ?&gt;</code> block. </p>
+		<p>Developers who attempt to use this feature need to be careful that 
+		their *.php file (assuming <code>&lt;?php ... ?&gt;</code> constructs are ignored)
+		can be interpreted by the Maqetta page parser
+		as a well-formed HTML file.</p>
+	</li>
 	<li><p><span class='majortopic'>CSV Data file support</span> - Preview 6 now supports using CSV files for widgets that consume
 	data (such as GridX, DataGrid or EdgeToEdgeDataList) and a sample csv file (sample.csv) is included.  Previously only JSON files could be consumed.
 	</li>

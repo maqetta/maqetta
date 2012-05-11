@@ -550,7 +550,7 @@ CSSParser.parse = function (text, parentElement) {
 			} // END outer switch(token.style)
 		} while (true);
 	} catch (e) {
-		if (pushComment) { //#2166 comments after last CSSRUle this CSSRule in the css file ex block comment 
+		if (pushComment && model) { //#2166 comments after last CSSRUle this CSSRule in the css file ex block comment 
 			model.postComment = pushComment;
 			pushComment = null;
 		}

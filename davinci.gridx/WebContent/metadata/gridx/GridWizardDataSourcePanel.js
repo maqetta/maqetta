@@ -2,54 +2,46 @@ define([
 	"dojo/_base/declare",
 	"dijit/layout/ContentPane",
 	"./GridInput",
+	"./GridWizardPanel",
 	"dojo/i18n!./nls/gridx"
-], function(declare, ContentPane, GridInput, gridxNls) {
+], function(declare, ContentPane, GridInput, GridWizardPanel, gridxNls) {
 
-return declare(null, {
+return declare([ContentPane, GridWizardPanel], {
 
-	populate: function(widgetId, parentContentPane) {
+	populate: function(widgetId) {
 		//Create GridInput (which we'll embed rather than have as standalone dialog)
 		this._gridInput = new GridInput();
-		this._gridInput._embeddingContentPane = parentContentPane;
+		this._gridInput._embeddingContentPane = this;
 		this._gridInput.show(widgetId);
 		
 		//Save input values for later use in determining whether our data is "dirty"
 		this._saveInputValues();
 		
-		//Mark as populated
-		this._isPopulated = true;
-	},
-	
-	isPopulated: function() {
-		return this._isPopulated;
+		//Call super
+		this.inherited(arguments);
 	},
 	
 	getUpdateWidgetCommand: function(callback){ 
-		//Get the command
-		this._gridInput.getUpdateWidgetCommand(callback);
-		
 		//Save input values for later use in determining whether our data is "dirty"
 		this._saveInputValues();
+		
+		//Get the command
+		this._gridInput.getUpdateWidgetCommand(callback);
 	},
 	
 	isValid: function() {
+		var result = true;
 		var inputValues = this._getInputValues();
 		if (!inputValues.mainTextAreaValue) {
 			if (inputValues.dropDownSelectValue === "dummyData") {
-				this._validationMessage = gridxNls.commaSeparatedDataRequired;
+				result = gridxNls.commaSeparatedDataRequired;
 			} else if (inputValues.dropDownSelectValue === "file") {
-				this._validationMessage = gridxNls.dataFileRequired;
+				result  = gridxNls.dataFileRequired;
 			} else if (inputValues.dropDownSelectValue === "url") {
-				this._validationMessage = gridxNls.urlRequired;
+				result  = gridxNls.urlRequired;
 			}
-			return false;
 		}
-		this._validationMessage = null;
-		return true;
-	},
-	
-	getValidationMessage: function() {
-		return this._validationMessage;
+		return result;
 	},
 	
 	isDirty: function() {
@@ -84,8 +76,10 @@ return declare(null, {
 		
 		return values;
 	},
-	
+
 	destroy: function() {
+		this.inherited(arguments);
+		
 		this._gridInput.hide();
 	}
 });

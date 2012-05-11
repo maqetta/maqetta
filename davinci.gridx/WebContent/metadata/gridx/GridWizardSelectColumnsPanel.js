@@ -6,14 +6,25 @@ define([
 	"dijit/layout/ContentPane",
 	"dijit/form/Button",
 	"dijit/form/MultiSelect",
+	"./GridWizardPanel",
 	"dojo/query",
 	"davinci/ve/widget",
 	"dojo/i18n!./nls/gridx",
 	"dojo/text!./templates/gridWizardSelectColumns.html"
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, ContentPane,  
-		Button, MultiSelect, query, Widget, gridxNls, templateString) {
+], function(declare, 
+		_WidgetBase, 
+		_TemplatedMixin, 
+		_WidgetsInTemplateMixin, 
+		ContentPane, 
+		Button, 
+		MultiSelect, 
+		GridWizardPanel,
+		query, 
+		Widget,
+		gridxNls, 
+		templateString) {
 
-return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizardPanel], {
 
 	templateString: templateString,
 
@@ -43,9 +54,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		
 		//Create options in target list
 		dojo.forEach(commandStructure, function(commandStructureElement) {
-			var option = dojo.doc.createElement("option"); 
-			option.value = commandStructureElement.field;
-			option.innerHTML = commandStructureElement.name;
+			var option = this._createOption(commandStructureElement);
 			
 			//See if the structure entry built for the command (built from proposed data store
 			//modifications) matches anything in the currently set widget structure
@@ -79,23 +88,39 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 				//If match between command structure and current widget structure we should indicate column
 				//is selected by putting in target side
 				if (match) {
-					var option = dojo.doc.createElement("option"); 
-					option.value = currentWidgetStructureElement.field;
-					option.innerHTML = currentWidgetStructureElement.name;
+					var option = this._createOption(currentWidgetStructureElement);
 					this.targetColumnSelect.containerNode.appendChild(option);
 				}
 			}.bind(this));
 		}
 		
+		//if nothing added to target side, let's assume brand new data source and select all by default
+		var targetOptions = this._getOptions(this.targetColumnSelect);
+		if (targetOptions.length == 0) {
+			this.sourceColumnSelect.invertSelection(); //Select all
+			this._moveSourceColumns();
+			this.targetColumnSelect.invertSelection(); //De-select all
+		}
+		
 		//Save input values for later use in determining whether our data is "dirty"
 		this._saveSelectedOptions();
 		
-		//Mark populated
-		this._isPopulated = true;
+		//Call super
+		this.inherited(arguments);
 	},
 	
-	isPopulated: function() {
-		return this._isPopulated;
+	_createOption: function(commandStructureElement) {
+		var option = dojo.doc.createElement("option"); 
+		option.value = commandStructureElement.field;
+		
+		var label= commandStructureElement.name;
+		if (commandStructureElement.name != commandStructureElement.field) {
+			//Let's augment the label with the field id
+			label = dojo.replace(gridxNls.columnOptionLabel, [label, commandStructureElement.field]);
+		}
+		option.innerHTML = label;
+		
+		return option;
 	},
 	
 	getSelectedColumnIds: function() {
@@ -116,7 +141,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	isDirty: function() {
 		var newOptions = this._getOptions(this.targetColumnSelect);
 		var dirty = false;
-		if (this._oldSelectedOptions.length == newOptions.length) {
+		if (this._oldSelectedOptions && this._oldSelectedOptions.length == newOptions.length) {
 			count = 0;
 			dojo.some(this._oldSelectedOptions, function(oldOption) {
 				var newOption = newOptions[count];
@@ -161,17 +186,13 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	},
 	
 	isValid: function() {
+		var result = true;
+		
 		var selectedColumnOptions = this._getOptions(this.targetColumnSelect);
 		if (!selectedColumnOptions.length) {
-			this._validationMessage = gridxNls.noColumnsSelected;
-			return false;
+			result = gridxNls.noColumnsSelected;
 		}
-		this._validationMessage = null;
-		return true;
-	},
-	
-	getValidationMessage: function() {
-		return this._validationMessage;
+		return result;
 	}
 });
 });

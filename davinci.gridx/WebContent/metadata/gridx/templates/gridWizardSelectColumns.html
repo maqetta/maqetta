@@ -1,9 +1,9 @@
-<div>
-	<table>
+<div class="selectPanelDiv">
+	<table class="selectPanelSloshBucketTable">
 		<tr>
-			<td>${availableColumns}:</td>
+			<td class="sourceListLabel">${availableColumns}:</td>
 			<td></td>
-			<td>${selectedColumns}:</td>
+			<td class="targetListLabel">${selectedColumns}:</td>
 		</tr>
 		<tr>
 			<td>
@@ -25,7 +25,7 @@
 				</table>
 			</td>
 			<td>
-				<div dojoType="dijit.form.MultiSelect" dojoAttachPoint="targetColumnSelect" class='sourceList'>
+				<div dojoType="dijit.form.MultiSelect" dojoAttachPoint="targetColumnSelect" class='targetList'>
 				</div>
 			</td>
 		</tr>

@@ -1,14 +1,16 @@
 define([
 	"dojo/_base/declare",
 	"dojo/query",
-	"./_FixedElemMixin"
+	"./_FixedElemMixin",
+	"./InitialSizeHelper"
 ], function(
 	declare,
 	query,
-	_FixedElemMixin
+	_FixedElemMixin,
+	InitialSizeHelper
 ) {
 
-return declare(_FixedElemMixin, {
+return declare([_FixedElemMixin, InitialSizeHelper], {
 
 	create: function(widget, srcElement){
 		// Fix for #705.

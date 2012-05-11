@@ -305,18 +305,17 @@ return declare(DataStoreBasedWidgetInput, {
 			var tmpStructure = {
 				cellType: dojox.grid.cells.Cell,
 				width: 'auto',
-				name: cols[c],
-				field: cols[c].replace(/\s+/g, '_').toLowerCase()
+				name: cols[c].trim(),
+				field: cols[c].trim().replace(/\s+/g, '_').toLowerCase()
 			};
 			
 			//See if column exists in the current widget structure to get previously
-			//set values like width, etc.
+			//set values like width, name, etc.
 			dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
 				if (tmpStructure.field === currentWidgetStructureElement.field) {
-					if (currentWidgetStructureElement.width) {
-						tmpStructure.width = currentWidgetStructureElement.width;
-					}
-					
+					tmpStructure.width = currentWidgetStructureElement.width;
+					tmpStructure.name = currentWidgetStructureElement.name;
+
 					return true;
 				}
 			});
@@ -363,10 +362,9 @@ return declare(DataStoreBasedWidgetInput, {
 			//set values like width, etc.
 			dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
 				if (tmpStructure.field === currentWidgetStructureElement.field) {
-					if (currentWidgetStructureElement.width) {
-						tmpStructure.width = currentWidgetStructureElement.width;
-					}
-					
+					tmpStructure.width = currentWidgetStructureElement.width;
+					tmpStructure.name = currentWidgetStructureElement.name;
+
 					return true;
 				}
 			});

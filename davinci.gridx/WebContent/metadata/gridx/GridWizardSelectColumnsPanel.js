@@ -141,7 +141,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 	isDirty: function() {
 		var newOptions = this._getOptions(this.targetColumnSelect);
 		var dirty = false;
-		if (this._oldSelectedOptions.length == newOptions.length) {
+		if (this._oldSelectedOptions && this._oldSelectedOptions.length == newOptions.length) {
 			count = 0;
 			dojo.some(this._oldSelectedOptions, function(oldOption) {
 				var newOption = newOptions[count];

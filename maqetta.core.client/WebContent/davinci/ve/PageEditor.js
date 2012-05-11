@@ -186,7 +186,15 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			if(wasTyping) {
 				this.visualEditor.skipSave = true;
 			}
+			var context = this.visualEditor.context;
+			var statesScenes;
+			if(context){
+				statesScenes = context.getStatesScenes();
+			}
 			this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
+			if(statesScenes){
+				context.setStatesScenes(statesScenes);
+			}
 			delete this.visualEditor.skipSave;
 			this._setDirty();
 		}.bind(this), 1000);

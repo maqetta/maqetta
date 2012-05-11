@@ -17,12 +17,19 @@ return declare(ContainerInput, {
 	show: function(widgetId) {
 		this._widget = davinci.ve.widget.byId(widgetId);
 		if (!this._inline) {
-			var gridWizard = this.gridWizard = new GridWizard({widgetId: widgetId});
+			//Create wizard
+			var gridWizard = this.gridWizard = new GridWizard({
+				widgetId: widgetId
+			}); 
+			dojo.addClass(gridWizard.domNode, "gridWizard");
+			
+			//Create dialog and add wizard to it
 			this._inline = new dijit.Dialog( {
 				title : gridxLangObj.gridDialogTitle,
 				onCancel: dojo.hitch(this, this.close),
 				onHide: dojo.hitch(this, this.hide)
 			});
+			dojo.addClass(this._inline.domNode, "gridWizardDialog");
 			this._inline.set("content", gridWizard);
 			
 			//See up listeners for Finish and Cancel buttons on the wizard
@@ -30,17 +37,16 @@ return declare(ContainerInput, {
 				this.updateWidget();
 				this.onOk();
 			})));
-			this._connection.push(dojo.connect(gridWizard, "onCancel", this, this.hide));
-			
+			this._connection.push(dojo.connect(gridWizard, "onCancel", dojo.hitch(this,function(){
+				this.hide();
+			})));
+					
 			//Listen for dialog being closed via the "X" in title bar
 			this._inline.onCancel = dojo.hitch(this, "onCancel");
 			this._inline.callBackObj = this;
 			
 			//Show the dialog
 			this._inline.show();
-			
-			//Allow wizard to do any final initialization
-			gridWizard.show();	
 		}
 	},
 	
@@ -56,7 +62,6 @@ return declare(ContainerInput, {
 			this._inline.destroyRecursive();
 			delete this._inline;
 		}
-		this.inherited(arguments);
 	},
 	
 	updateWidget: function() {

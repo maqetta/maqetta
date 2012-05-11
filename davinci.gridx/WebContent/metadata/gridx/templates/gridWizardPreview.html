@@ -1,0 +1,33 @@
+<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline', gutters:false, liveSplitters:false" class="gridWizardPreviewPanelBorderContainer">
+    <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'center'" class="previewPanelCenterContentPane">
+    	<span>{preview}</span><span class="previewPanelPreviewNote">{previewNote}</span>
+    	<div class="previewPanelPreviewDiv">
+	    	<div id="previewPanelGridContentPane" data-dojo-type="dijit.layout.ContentPane" class="previewPanelGridContentPane">
+		</div>
+	</div>
+    </div>
+    <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'trailing', splitter:true" class="previewPanelTrailingContentPane">
+    	<span class="previewPanelColumnPropsHeader">{columnProperties}</span>
+    	<div class="previewPanelColumnPropsDiv"> 
+	    	<table cellspacing="5px">
+	    		<tr>
+					<td><label>{fieldLabel}</label></td> 
+					<td><label id="gridWizardPreviewFieldOutput"></label></td>
+				</tr>
+				<tr>
+					<td><label for="gridWizardPreviewLabelInput">{labelLabel}</label></td>
+					<td><input id="gridWizardPreviewLabelInput" data-dojo-type="dijit.form.TextBox" type="text" disabled="disabled" class="previewPanelColumnInputField"></input></td>
+				</tr>
+				<tr>
+					<td><label for="gridWizardPreviewWidthInput">{widthLabel}</label></td>
+					<td>
+					<input id="gridWizardPreviewWidthInput" data-dojo-type="dijit.form.ValidationTextBox" type="text" data-dojo-props="regExp:'{_widthRegExp}', required:true, invalidMessage:'{invalidWidth}'" disabled="disabled" class="previewPanelColumnInputField"></input></td>
+				</tr>
+			</table> 
+		</div>
+		<div class="previewPanelResetButtonContainer">
+			<button id="gridWizardPreviewResetAllButton" data-dojo-type="dijit.form.Button" class="previewPanelResetButton">{resetAllWidths}</button>
+		</div>
+    </div>
+</div>
+

@@ -10,7 +10,8 @@
 			{ id: '2.2', name:'Preview 2', url: 'releasenotes/preview2.html' },
 			{ id: '2.3', name:'Preview 3', url: 'releasenotes/preview3.html' },
 			{ id: '2.4', name:'Preview 4', url: 'releasenotes/preview4.html' },
-			{ id: '2.5', name:'Preview 5', url: 'releasenotes/preview5.html' }
+			{ id: '2.5', name:'Preview 5', url: 'releasenotes/preview5.html' },
+			{ id: '2.6', name:'Preview 6', url: 'releasenotes/preview6.html' }
 		] },
 		{ id: '3', name:'Accessing / Installing Maqetta', url: 'install.html' },
 		{ id: '4', name:'Tutorials', url: 'tutorials/tutorials.html', children:[

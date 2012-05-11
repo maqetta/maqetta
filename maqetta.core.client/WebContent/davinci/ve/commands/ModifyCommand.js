@@ -148,7 +148,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			command.execute();
 		}
 		
-		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[widget]]);
+		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[newWidget]]);
 	},
 
 	/**
@@ -252,7 +252,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			command.execute();
 		}
 		
-		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[widget]]);
+		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[newWidget]]);
 	}
 
 });

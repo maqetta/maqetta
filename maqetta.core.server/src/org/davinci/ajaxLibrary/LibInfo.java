@@ -68,6 +68,9 @@ public class LibInfo implements ILibInfo {
         return name;
     }
 
+    public String toString(){
+    	return "name:" + this.getName() + ", id:" + this.getId() + ", virtualRoot:" + this.getVirtualRoot();
+    }
     private String name;
     private String version;
     private String id;

@@ -24,5 +24,25 @@
             "$library": "clipart"
         }
     ],
-    "content": "<img></img>"
+    "property": {
+         "orientation": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "portrait"
+                },
+                {
+                    "value": "landscape"
+                }
+            ],
+            "defaultValue": "portrait",
+            "title": "Orientation"
+        },
+        "preserveAspectRatio": {
+            "datatype": "boolean",
+            "defaultValue": "true",
+            "title": "Preserve aspect ratio"
+        }
+    },
+    "content": "<div></div>"
 }

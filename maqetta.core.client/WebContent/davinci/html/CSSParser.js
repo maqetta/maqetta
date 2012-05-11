@@ -404,7 +404,10 @@ CSSParser.parse = function (text, parentElement) {
 					wasSelector = true;
 					nextToken();
 				} // END selectorLoop for(;;) loop
-
+				if (pushComment) { //#2166 comments before this CSSRule in the css file ex block comment before
+					model.comment = pushComment;
+					pushComment = null;
+				}
 				selector.endOffset = token.offset - 1;
 				while (nextToken().content != "}") {
 					var nameOffset = token.offset;
@@ -430,6 +433,10 @@ CSSParser.parse = function (text, parentElement) {
 					var property = new CSSProperty();
 					property.startOffset = nameOffset;
 					property.parent = model;
+					if (pushComment) { //#2166
+						property.comment = pushComment;
+						pushComment = null;
+					}
 					// property.setStart(nexttoken.line,nexttoken.from);
 					model.properties.push(property);
 					model.addChild(property, undefined, true);
@@ -542,7 +549,12 @@ CSSParser.parse = function (text, parentElement) {
 
 			} // END outer switch(token.style)
 		} while (true);
-	} catch (e) {}
+	} catch (e) {
+		if (pushComment) { //#2166 comments after last CSSRUle this CSSRule in the css file ex block comment 
+			model.postComment = pushComment;
+			pushComment = null;
+		}
+	}
 	return {errors:errors};
 };
 

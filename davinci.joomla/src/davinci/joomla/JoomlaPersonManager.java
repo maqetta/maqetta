@@ -26,8 +26,18 @@ public class JoomlaPersonManager implements IPersonManager {
 				return name;
 		}
 
-		public String getUserName() {
+		public String getUserID() {
 			return name;
+		}
+
+		public String getFirstName() {
+			// TODO Auto-generated method stub
+			return "";
+		}
+
+		public String getLastName() {
+			// TODO Auto-generated method stub
+			return "";
 		}
 	}
 

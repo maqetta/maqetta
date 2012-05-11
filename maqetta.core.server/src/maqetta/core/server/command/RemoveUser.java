@@ -25,7 +25,7 @@ public class RemoveUser extends Command {
             this.responseString = "OK";
             HttpSession session = req.getSession(false);
             if (session != null) {
-                if (user != null && user.getUserName().equals(name)) {
+                if (user != null && user.getUserID().equals(name)) {
                     /*
                      * we deleted a logged-in user. so, log them out
                      */

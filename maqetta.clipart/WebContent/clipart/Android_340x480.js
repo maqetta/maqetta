@@ -1,9 +1,13 @@
 define([
     	"dojo/_base/declare",
-    	"clipart/_clipart"
-], function(declare, _clipart){
+    	"clipart/_deviceclipart"
+], function(declare, _deviceclipart){
 	
-	return declare("clipart.Android_340x480", [_clipart], {
+	return declare("clipart.Android_340x480", [_deviceclipart], {
+
+		// These two values must match width/height attributes on <svg> element for portrait clipart
+		defaultWidth:380.79996192,
+		defaultHeight:750.40222147182
 		
 	});
 });

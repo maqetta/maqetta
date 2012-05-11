@@ -63,15 +63,11 @@ public class DavinciCommandServlet extends HttpServlet {
 
         IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
         if (user == null) {
-            if (ServerManager.LOCAL_INSTALL) {
-                user = ServerManager.getServerManger().getUserManager().getSingleUser();
-                req.getSession().setAttribute(IDavinciServerConstants.SESSION_USER, user);
-            } else {
-                if (!commandDescriptor.isNoLogin()) {
+            if (!ServerManager.LOCAL_INSTALL &&!commandDescriptor.isNoLogin()) {
                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                     return null;
-                }
             }
+            
 
         }
         return user;

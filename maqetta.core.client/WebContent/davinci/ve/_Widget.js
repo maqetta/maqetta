@@ -190,7 +190,7 @@ return declare("davinci.ve._Widget", null, {
 
 		if(containerNode) {
 			//TODO use dojo.place?
-			if(index === undefined || index === -1) {
+			if(index === undefined || index === null || index === -1) {
 				containerNode.appendChild(child.domNode);
 				this._srcElement.addChild(child._srcElement);
 			}else{
@@ -421,7 +421,8 @@ return declare("davinci.ve._Widget", null, {
 							}
 						}
 					}else{
-						if(property.datatype == "boolean" && value != property.defaultValue) {
+						// handle bool/numeric
+						if((property.datatype == "boolean" || property.datatype == "number") && value != property.defaultValue) {
 							data.properties[name] = value;
 						// HACK: There's probably a better way to do this with the new model, just a stopgap measure until Phil takes a look
 						} else if (property.datatype && (property.datatype.indexOf("dijit") == 0 || property.datatype == "object" && property.isData)) {

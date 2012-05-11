@@ -183,7 +183,7 @@ TH.HtmlWidget {
 /* dojox.mobile widgets */
 
 div.mblView,
-div[dojotype="dojox.mobile.ContentPane"] {
+div.mblContentPane {
     min-width:1em;
     min-height:1em; 
     outline: 1px dotted #AAA;

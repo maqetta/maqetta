@@ -40,19 +40,7 @@ public class User implements IUser {
 	//protected Links links;
 	protected IPerson person;
 	protected IVResource workspace;
-    static {
-        Constants.LOCAL_INSTALL_USER_OBJ = 
-             new User(new IPerson() {
-                public String getUserName() {
-                    return Constants.LOCAL_INSTALL_USER_NAME;
-                }
-                public String getEmail() {
-                    return "";
-                }
-             }
-            ,ReviewManager.getReviewManager().getBaseDirectory());
-        
-    }	
+  
     public User(IPerson person) {
 		this.person = person;
 	}
@@ -109,7 +97,8 @@ public class User implements IUser {
 		Vector<ILibInfo> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
 			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
-			allLibs.addAll(Arrays.asList(finder.getLibInfo()));
+			ILibInfo[] libs = finder.getLibInfo();
+			allLibs.addAll(Arrays.asList(libs));
 		}
 		return (ILibInfo[]) allLibs.toArray(new ILibInfo[allLibs.size()]);
 	}
@@ -529,7 +518,6 @@ public class User implements IUser {
 		          start = this.workspace;
 		    } else {
 		         start = this.getResource(startFolder);
-		        
 		    }
 			
 			results.addAll(Arrays.asList((start.find(pathStr))));
@@ -543,9 +531,15 @@ public class User implements IUser {
 			}
 
 		}
+		/* search the libraries */
+		
+		if (!workspaceOnly) 
+			findLibFiles(path, results);
+		
+		
+		
 		if (workspaceOnly) {
-			//findLibFiles(path, results);
-			// need to filter out library entries here
+			// need to filter out library entries here in case some got through (mixed directories)
 			for(int z=0;z<results.size();z++){
 				if(results.get(z) instanceof VLibraryResource){
 					results.remove(z);
@@ -566,7 +560,22 @@ public class User implements IUser {
 		Vector<ILibInfo> allLibs = new Vector();
 		allLibs.addAll(Arrays.asList(this.getLibSettings(base).allLibs()));
 		
-		allLibs.addAll(Arrays.asList(this.getExtendedSettings(base)));
+		/* need to make sure we're not already mapping librarys with the same ID and Version in the workspace.  If so, remove them and let the 
+		 * library from the finder take precidence. 
+		 */
+		ILibInfo extendLibs[] = this.getExtendedSettings(base);
+		for(int z=0;z<allLibs.size();z++){
+			ILibInfo library = allLibs.get(z);
+			for(int f=0;f<extendLibs.length;f++){
+				if(library.getId().equals(extendLibs[f].getId()) && library.getVersion().equals(extendLibs[f].getVersion()) ){
+					allLibs.remove(z);
+				}
+			}
+		}
+		
+		
+		
+		allLibs.addAll(Arrays.asList(extendLibs));
 		return (ILibInfo[]) allLibs.toArray(new ILibInfo[allLibs.size()]);
 		
 	}
@@ -595,8 +604,8 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getUserName()
 	 */
-	public String getUserName() {
-		return this.person.getUserName();
+	public String getUserID() {
+		return this.person.getUserID();
 	}
 
 	/* (non-Javadoc)

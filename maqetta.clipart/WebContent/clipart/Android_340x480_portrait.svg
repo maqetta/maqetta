@@ -2,7 +2,8 @@
 <!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="592.6489px" height="1167.8705px" viewBox="164.26 210.272 171.36 337.681" preserveAspectRatio="none" xml:space="preserve">
+	 viewBox="164.26 210.272 171.36 337.681" preserveAspectRatio="none" xml:space="preserve">
+<!-- original values: width="380.79996192px" height="750.40222147182px" (no preserveAspectRatio) -->
 <g>
 	<rect x="164.669" y="210.202" fill="#808285" width="481.132" height="500.414"/>
 	<path opacity="0.2" fill="#FFFFFF" d="M311.914,209.565C288.996,320.418,214.85,579.73,165.442,704.484
@@ -31,13 +32,13 @@
 	<path fill="#58595B" d="M291.712,224.579c0,0.685-0.555,1.238-1.238,1.238h-81.805c-0.685,0-1.24-0.554-1.24-1.238l0,0
 		c0-0.685,0.555-1.239,1.24-1.239h81.805C291.158,223.34,291.712,223.895,291.712,224.579L291.712,224.579z"/>
 </g>
+<rect id="ScreenRect" x="177.071" y="257.373" display="inline" fill="#FFFFFF" width="144" height="216"/>
 <rect id="DeviceRect" x="164.26" y="210.272" display="none" fill="none" stroke="#000000" stroke-miterlimit="10" width="171.36" height="337.681"/>
+<rect id="ResolutionRect" x="177.071" y="257.373" display="none" fill="none" width="340" height="480"/>
 <path fill="none" stroke="#BCBEC0" stroke-width="0.7556" stroke-miterlimit="10" d="M181.998,546.851
 	c-9.102,0-16.505-7.384-16.505-16.458V228.19c0-9.075,7.404-16.458,16.505-16.458h135.869c9.102,0,16.506,7.383,16.506,16.458
 	v302.203c0,9.074-7.405,16.458-16.506,16.458H181.998z"/>
 <path fill="none" stroke="#BCBEC0" stroke-width="0.7556" stroke-miterlimit="10" d="M181.998,546.128
 	c-8.702,0-15.779-7.061-15.779-15.735V228.19c0-8.676,7.078-15.734,15.779-15.734h135.869c8.702,0,15.78,7.058,15.78,15.734v302.203
 	c0,8.675-7.079,15.735-15.78,15.735H181.998z"/>
-<rect id="ScreenRect" x="180.546" y="249.625" display="inline" fill="#FFFFFF" width="138.788" height="231.314"/>
-<rect id="ResolutionRect" x="180.546" y="249.625" display="none" fill="none" width="480" height="800"/>
 </svg>

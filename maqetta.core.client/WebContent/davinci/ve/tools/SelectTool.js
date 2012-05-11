@@ -201,7 +201,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
 			return;
 		}
-		var doAreaSelect = true;
+		var doAreaSelect = (event.which === 1);		// Only do area select if LMB was down
 		var clickInteral = 750;	// .75seconds: allow for leisurely click action
 		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 		var clickDistance = 10;	// within 10px: inexact for tablets
@@ -281,7 +281,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		this._setTarget(event.target);
 		if(this._areaSelect){
-			this._areaSelectUpdate(event.pageX, event.pageY);
+			if(event.which === 1){		// 1=LMB
+				this._areaSelectUpdate(event.pageX, event.pageY);
+			}else{
+				// Stop area select if LMB not down
+				// We get here in WebKit if dragging on widget scrollbar
+				this._areaSelectClear();
+			}
 		}
 	},
 
@@ -329,8 +335,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var e = dojo._getPadBorderExtents(_node);
 //			newBox.l = Math.round(newBox.x + e.l);
 //			box.t = Math.round(newBox.y + e.t);
-			newBox.w -= e.w;
-			newBox.h -= e.h;
+			if(typeof newBox.w == 'number'){
+				newBox.w -= e.w;
+			}
+			if(typeof newBox.h == 'number'){
+				newBox.h -= e.h;
+			}
 
 			switch(resizable){
 			case "width":

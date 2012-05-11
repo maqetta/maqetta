@@ -426,13 +426,13 @@ return {
                     
                     {
                         id: "davinci.ui.orion",
-                        label: "Open Orion",
+                        
                         iconClass: "orionIcon",
                         run: function() {
-                        	location.href = "/index.html";
+                        	location.href = "/navigate/table.html#";
                         },
                         radioGroup: "displayMode",
-                        label: "Launch Orion",
+                        label: "Resource Control w/Orion",
                         toolbarPath: "download"
                     }
                 ]

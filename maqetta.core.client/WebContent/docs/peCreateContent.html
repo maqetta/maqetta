@@ -47,13 +47,31 @@ You can either create a new HTML file or open an existing file (see the <a href=
 <h3>Widget Context Menu</h3>
 <p>Each widget has a context menu with the following commands: 
 <ul>
-<li><b>cut</b> - delete the currently selected widget and copy it to your clipboard.</li>
-<li><b>copy</b> - copy the currently selected widget to your clipboard.</li>
-<li><b>paste</b> - paste the widget from your clipboard (click paste, then click your cursor where you want to make the paste).</li>
+<li><b>Cut</b> - delete the currently selected widget and copy it to your clipboard.</li>
+<li><b>Copy</b> - copy the currently selected widget to your clipboard.</li>
+<li><b>Paste</b> - paste the widget from your clipboard (click paste, then click your cursor where you want to make the paste).</li>
 <li><b>delete</b> - delete the currently selected widget.</li>
-<li><b>surround with &lt;A&gt;</b> - select 1 or more widgets and enclose in a &lt;a&gt;.</li>
-<li><b>surround with &lt;DIV&gt;</b> - select 1 or more widgets and enclose in a &lt;div&gt;.</li>
-<li><b>surround with &lt;SPAN&gt;</b> - select 1 or more widgets and enclose in a &lt;span&gt;.</li>
+<li><b>Select parent</b> - select the parent of the currently selected widget.</li>
+<li><b>Select ancestor...</b> - brings up a dialog that shows the list of ancestors of the current selected widget, allowing you to select one of the ancestors.</li>
+<li><b>Unselect all</b> - remove selection on all widgets, with that result that nothing is selected.</li>
+<li><b>Surround with &lt;A&gt;</b> - select 1 or more widgets and enclose in a &lt;a&gt;.</li>
+<li><b>Surround with &lt;DIV&gt;</b> - select 1 or more widgets and enclose in a &lt;div&gt;.</li>
+<li><b>Surround with &lt;SPAN&gt;</b> - select 1 or more widgets and enclose in a &lt;span&gt;.</li>
+<li><b>Move to front</b> - (absolutely positioned widgets only) moves currently selected widget(s) to be front-most among all widgets with same parent (i.e., widgets become last children of parent)</li>
+<li><b>Move to back</b> - (absolutely positioned widgets only) moves currently selected widget(s) to be back-most among all widgets with same parent (i.e., widgets become first children of parent)</li>
+<li><b>Move forward</b> - (absolutely positioned widgets only) moves currently selected widget(s) one position forward among all widgets with same parent</li>
+<li><b>Move backward</b> - (absolutely positioned widgets only) moves currently selected widget(s) one position backward among all widgets with same parent</li>
+</ul>
+</p>
+
+<p>Table cells add the following commands to the context menu:
+<ul>
+<li><b>Insert column after</b></li>
+<li><b>Insert column before</b></li>
+<li><b>Remove column</b></li>
+<li><b>Insert row after</b></li>
+<li><b>Insert row before</b></li>
+<li><b>Remove row</b></li>
 </ul>
 </p>
 

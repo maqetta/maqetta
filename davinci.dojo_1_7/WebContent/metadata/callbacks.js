@@ -287,16 +287,34 @@
 			if(!context){
 				return false;
 			}
+			/*
+			 * hide application states if there are any mobile views and only the default Normal state
+			 */ 
 			if(context.declaredClass == 'davinci.ve.Context'){
-				var ve = context.visualEditor,
-					device = (ve && ve.getDevice) ? ve.getDevice() : "";
-				return (!device || device === '' || device === 'none') ? false : true;
+				var dj = this.context.getDojo();
+				if(!dj){
+					return false;
+				}
+				var views = dj.query('.mblView');
+				if(davinci.states && davinci.states.getStates){
+					var states = davinci.states.getStates();
+					return (views.length > 0 && states.length <= 1);
+				}else{
+					return false;
+				}
 			}else if(context.declaredClass == 'davinci.review.editor.Context'){
 				var body = context.rootNode;
-				if(body){
-					var statesAttr = body.getAttribute('data-maqetta-device');
-					return (statesAttr !== null && statesAttr !== '' && statesAttr !== 'none' && statesAttr !== 'desktop');
+				var userWin = body && body.ownerDocument && body.ownerDocument.defaultView;
+				var dj = userWin && userWin.dojo;
+				var statesClass =  userWin && userWin.davinci && userWin.davinci.states;
+				if(dj && statesClass && statesClass.getStates){
+					var views = dj.query('.mblView');
+					var states = statesClass.getStates();
+					return (views.length > 0 && states.length <= 1);
+				}else{
+					return false;
 				}
+				
 			}
 		}
 	};

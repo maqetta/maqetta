@@ -251,7 +251,15 @@ var resource = {
 					break;
 				}
 //					resource.getChildren(function(){}, true);
-				found=resource=resource.getChild(segments[i]);
+				//#23
+				if (segments[i] == '..') {
+					//parent
+					found=resource=resource.parent;
+				}else if(segments[i] != '.'){ // check for self
+					found=resource=resource.getChild(segments[i]);
+				} // else it was self so we just increment to the next segment
+				// #23
+				//found=resource=resource.getChild(segments[i]);
 				if (!found) {
 				  return;
 				}

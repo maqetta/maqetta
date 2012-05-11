@@ -34,11 +34,7 @@ public class TryIt extends Command {
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
             session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT);
-            Cookie k = new Cookie(IDavinciServerConstants.SESSION_USER, user != null ? user.getUserName() : null);
-    		k.setPath("/");
-    		resp.addCookie(k);
-
-            // redirect to designer
+                    // redirect to designer
             String portSpec = req.getServerPort() == 80 ? "" : ':' + String.valueOf(req.getServerPort());
             String redirectURL = "http://" + req.getServerName() + portSpec + "/maqetta/";
             resp.sendRedirect(redirectURL);

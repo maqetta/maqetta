@@ -3,9 +3,9 @@ define([
 	"davinci/model/resource/Resource",
 	"davinci/review/model/resource/File",
 	"davinci/Runtime",
-	"davinci/Workbench",
+	
 	"dojo/date/stamp"
-], function(declare, Resource, reviewFile, Runtime, Workbench, stamp) {
+], function(declare, Resource, reviewFile, Runtime,  stamp) {
 
 return declare("davinci.review.model.resource.Folder", Resource, {
 
@@ -29,9 +29,8 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 			this._loading=[];
 			this._loading.push(onComplete);
 			var designerName = this.designerId || "";
-			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 			Runtime.serverJSONRequest({
-				url: location + "maqetta/cmd/listReviewFiles",
+				url: "cmd/listReviewFiles",
 				content: {
 					designer: designerName,
 					version: this.timeStamp

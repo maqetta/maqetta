@@ -402,8 +402,11 @@ States.prototype = {
 		
 		//FIXME: This is Dojo-specific. Other libraries are likely to need a similar hook.
 		var dijitWidget, parent;
-		if(node.id && node.ownerDocument && node.ownerDocument.defaultView && node.ownerDocument.defaultView.dijit){
-			dijitWidget = node.ownerDocument.defaultView.dijit.byId(node.id);
+		if(node.id && node.ownerDocument){
+			var byId = node.ownerDocument.defaultView.require("dijit/registry").byId;
+			if(byId){
+				dijitWidget = byId && byId(node.id);				
+			}
 		}
 		if(dijitWidget && dijitWidget.getParent){
 			parent = dijitWidget.getParent();
@@ -836,8 +839,7 @@ var singleton = davinci.states = new States();
 									var tempClass = prefix+count;
 									node.className = node.className + ' ' + tempClass;
 									count++;
-									cache[tempClass] = {};
-									cache[tempClass].states = states;
+									cache[tempClass] = {states: states};
 									if(node.style){
 										cache[tempClass].style = node.style.cssText;
 									}else{
@@ -887,22 +889,23 @@ var singleton = davinci.states = new States();
 	}
 })();
 
-/*FIXME: Temporarily comment out overlay widget logic
-
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
 if (!davinci.Workbench && typeof dijit != "undefined"){
 	connect.subscribe("/davinci/states/state/changed", function(args) {
 		var w;
-		if (args.newState && !args.newState.indexOf("_show:")) {
-			w = dijit.byId(args.newState.substring(6));
-			w && w.show && w.show();
-		} else if (args.oldState && !args.oldState.indexOf("_show:")) {
-			w = dijit.byId(args.oldState.substring(6));
-			w && w.hide && w.hide();
+		var byId = (args && args.node && args.node.ownerDocument && args.node.ownerDocument.defaultView &&
+					args.node.ownerDocument.defaultView.require("dijit/registry").byId);
+		if(byId){
+			if (args.newState && !args.newState.indexOf("_show:")) {
+				w = byId(args.newState.substring(6));
+				w && w.show && w.show();
+			} else if (args.oldState && !args.oldState.indexOf("_show:")) {
+				w = byId(args.oldState.substring(6));
+				w && w.hide && w.hide();
+			}
 		}
 	});
 }
-*/
 
 return States;
 });

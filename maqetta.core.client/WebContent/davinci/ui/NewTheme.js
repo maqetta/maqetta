@@ -105,6 +105,7 @@ define(["dojo/_base/declare",
 			    // first we clone the theme which creates temp css files
 				var deferedList = Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
 				deferedList.then(function(results){
+					
 				    var error = false;
 			        for (var x=0; x < results.length; x++){
 			            if(!results[x][0] ){
@@ -112,42 +113,22 @@ define(["dojo/_base/declare",
 			            }  
 			        }
 			        if (!error){
-			        	var renameDefs = Theme.postClone(deferedList.toRename); // after the clone has completed rename the temp css files to the permanent name
-			        	renameDefs.then(function(results){
-							    function findTheme(basePath, theme){
-						            // flush the theme cache after creating so new themes show up 
-						            var themes = Library.getThemes(basePath, false, true);
-						            var found = null;
-						            for(var i=0;i<themes.length && ! found;i++){
-						                if(themes[i].name==theme)
-						                    found = themes[i];
-						            }
-						            return found;
-						        }
-						        var error = false;
-						        for (var x=0; x < results.length; x++){
-						        	if(!results[x][0] ){
-						                error = true;
-						            }  
-						        }
-						        if(!error){
-					        		var found = findTheme(basePath, base);
-						            if (found){
-						                Workbench.openEditor({
-						                       fileName: found.file,
-						                       content: found.file.getText()});
-						            } else {
-						            	if (this._loading){ // remove the loading div
-							    			this._loading.parentNode.removeChild(this._loading);
-							    			delete this._loading;
-							    		}
-						                // error message
-						                alert(langObj.errorCreatingTheme + base);
-						                
-						            }
-						        }
-
-			        	}.bind(this));
+			        	// #23
+			        	var found = Theme.getTheme(base, true);
+			            if (found){
+			        		found.file.isNew = false; // the file has been saved so don't delete it when closing editor without first save.
+			                Workbench.openEditor({
+			                       fileName: found.file,
+			                       content: found.file.getText()});
+			            } else {
+			            	if (this._loading){ // remove the loading div
+				    			this._loading.parentNode.removeChild(this._loading);
+				    			delete this._loading;
+				    		}
+			                // error message
+			                alert(langObj.errorCreatingTheme + base);
+			                
+			            }
 			        } else {
 			    		if (this._loading){ // remove the loading div
 			    			this._loading.parentNode.removeChild(this._loading);

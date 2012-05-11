@@ -2,12 +2,14 @@ define([
 	"dojo/query",
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
-	"davinci/ve/commands/RemoveCommand"
+	"davinci/ve/commands/RemoveCommand",
+	"./InitialSizeHelper"
 ], function (
 	query,
 	Widget,
 	CompoundCommand,
-	RemoveCommand
+	RemoveCommand,
+	InitialSizeHelper
 ) {
 
 var EdgeToEdgeDataListHelper = function() {};
@@ -84,6 +86,10 @@ EdgeToEdgeDataListHelper.prototype = {
 		command.add(new RemoveCommand(storeWidget));
 		return command;
 		
+	},
+	
+	initialSize: function(args){
+		return InitialSizeHelper.prototype.initialSize(args);
 	}
 
 };

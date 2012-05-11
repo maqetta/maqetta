@@ -69,32 +69,53 @@ define([
 		if (resource.readOnly()) {
 			resource.createResource();
 		}
-		systemResource.copy(fileBase, directory, true);
+		systemResource.createResource(directory, true);
 		var themeRoot = systemResource.findResource(directory);
 		var fileName = originalTheme.file.getName();
-		/* remove the copied theme */
-		var sameName = (name==originalTheme.name);
-		var themeFile = null;
-		if(!sameName){
-			var badTheme = systemResource.findResource(directory + "/" + fileName);
-			badTheme.deleteResource();
-		}
 		var directoryPath = new Path(themeRoot.getPath());
 		var lastSeg = directoryPath.lastSegment();
 		/* create the .theme file */
-		if (!sameName) {
-			themeFile = themeRoot.createResource(lastSeg + ".theme");
-		} else{
-			themeFile = systemResource.findResource(directory + "/" + fileName);
-		}
+		themeFile = themeRoot.createResource(lastSeg + ".theme");
+		themeCssFile = themeRoot.createResource(lastSeg + ".css"); // create the delta css file
+		var themePath = this.getThemeLocation();
+		var orgPath = originalTheme.file.parent.getPath();
+		
+		function adjustPaths(fileNames){
+			// #23 adjust for path to where file in relation to the new theme is located
+			var ret = [];
+			fileNames.forEach(function(fileName){
+				var file = systemResource.findResource(orgPath + "/" + fileName);
+				var filePath = new Path(file);
+				var relFilePath = filePath.relativeTo(themePath, true);
+				var relativePath = '../';
+				var folder = filePath.segments.parent; 
+				for (var i = 0; i < relFilePath.segments.length; i++){
+					if (relFilePath.segments[i] == '..'){
+						relativePath = relativePath + folder.name;
+						folder = folder.parent;
+					}
+				}
+				ret.push(relativePath+'/'+fileName);
+			});
+			return ret;
+		};
+		
+		var themeEditorHtmls = adjustPaths(originalTheme.themeEditorHtmls); // adjust the path of the html files
+		var meta = adjustPaths(originalTheme.meta); // adjust the path of the meta files
+		var importFiles = adjustPaths(originalTheme.files); // adjust the path of the css files
+		var imports = ' ';
+		// now add the css files from the old theme to the delta css file as imports
+		importFiles.forEach(function(fileName){
+			imports = imports + '@import url("' +fileName+'");'; 
+		});
 		var themeJson = {
-			className: selector,
+			className: originalTheme.className, // #23 selector,
 			name: name,
 			version: version || originalTheme.version, 
 			specVersion: originalTheme.specVersion,
-			files: originalTheme.files,
-			meta: originalTheme.meta,
-			themeEditorHtmls: originalTheme.themeEditorHtmls,
+			files: [''+lastSeg+'.css'], // #23 only add the delta css
+			meta: meta,  
+			themeEditorHtmls: themeEditorHtmls, 
 			useBodyFontBackgroundClass: originalTheme.useBodyFontBackgroundClass
 		};
 		if(originalTheme.helper){
@@ -106,118 +127,26 @@ define([
 		if(originalTheme.type){
 	        themeJson.type = originalTheme.type; 
 	    }
-		var oldClass = originalTheme.className;
-		var toSave = {};
-		/* re-write CSS Selectors */
-		for (var i = 0, len = themeJson.files.length; i < len; i++) {
-			var fileUrl = directoryPath.append(themeJson.files[i]);
-			var resource = systemResource.findResource(fileUrl);
-			if(!sameName && renameFiles && resource.getName().indexOf(oldClass) > -1){
-				var newName = resource.getName().replace(oldClass, selector);
-				resource.rename(this.TEMP_CLONE_PRE+newName); // for caching reasons rename to temp file name, will rename later
-				themeJson.files[i] =newName;
-			}
-			var cssModel = Factory.getModel({url:resource.getPath(),
-				includeImports: true,
-				loader:function(url){
-					var r1=  systemResource.findResource(url);
-					return r1.getText();
-				}
-			});
-			toSave[cssModel.url] = cssModel;
-			var elements = cssModel.find({elementType: 'CSSSelector', cls: oldClass});
-			for(var i=0;i<elements.length;i++){
-				elements[i].cls = selector;
-				if(elements[i].parent.parent.url){
-					toSave[elements[i].parent.parent.url] = elements[i].parent.parent;
-				}
-
-			}
-		}
 		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
-		/* re-write metadata */
-		var metaToRename = {};
-		for (var i = 0, len = themeJson.meta.length; i < len; i++) {
-			var fileUrl = directoryPath.append(themeJson.meta[i]);
-			var file = systemResource.findResource(fileUrl.toString());
-			file.rename(this.TEMP_CLONE_PRE+file.name); // for caching reasons rename to temp file name, will rename later
-			metaToRename[file.getURL()] = file;
-			var contents = file.getText();
-			var newContents = contents.replace(new RegExp(oldClass, "g"), selector);
-			deferreds.push(file.setContents(newContents));
-			
-		}
-		/* rewrite theme editor HTML */
-		for (var i = 0, len = themeJson.themeEditorHtmls.length; i < len; i++) {
-			var fileUrl = directoryPath.append(themeJson.themeEditorHtmls[i]);
-			var file = systemResource.findResource(fileUrl.toString());
-			var contents = file.getText();
-			var htmlFile = new HTMLFile(fileUrl);
-			htmlFile.setText(contents,true);
-			var element = htmlFile.find({elementType: 'HTMLElement', tag: 'body'}, true);
-			// #1024 leave other classes on the body only replace the target
-			var modelAttribute = element.getAttribute('class');
-	        if (!modelAttribute){
-	             modelAttribute = selector; 
-	        } else {
-	             modelAttribute = modelAttribute.replace(oldClass, selector);
-	        }
-	        element.setAttribute('class',modelAttribute); //#1024
-	        deferreds.push(htmlFile.save());
-		}
-		for(var name in toSave){
-		    deferreds.push(toSave[name].save());
-		}
-	    var defs = new DeferredList(deferreds);
-		Library.themesChanged();
-		defs.toRename = { cssFiles: toSave, metaFile: metaToRename}; // need to save the cssFiles to rename from temp name after saves are done, in postClone
+		deferreds.push(themeCssFile.setContents(imports));
+		var defs = new DeferredList(deferreds);
 		return defs;
 	},
 	
-	postClone: function(filesToRename){
-		// We have to rename the css files to the correct name, this is to trick the browser cache
-		var deferreds = [];
-		var files = filesToRename.cssFiles;
-		for(var name in files){
-			var r = files[name];
-			var f = r.getResource();
-			var name = f.name.replace(this.TEMP_CLONE_PRE, "");
-			if (f.name != name) {
-				f.rename(name);
-				var cssModel = Factory.getModel({url:f.getPath(),
-					includeImports: true,
-					loader:function(url){
-						var r1=  systemResource.findResource(url);
-						return r1.getText();
-					}
-				});
-				deferreds.push(cssModel.save());
-			}
-		}
-		files = filesToRename.metaFile;
-		for(var name in files){
-			var f = files[name];
-			var name = f.name.replace(this.TEMP_CLONE_PRE, "");
-			if (f.name != name){
-				f.rename(name);
-				var contents = f.getText();
-				deferreds.push(f.setContents(contents));
-			}
-		}
-		return  new DeferredList(deferreds);
-	},
-
 	getHelper: function(theme){
 		if (!theme) { return; } 
-	    if (theme._helper){
-	        return theme._helper;
+	    if (theme.helper && typeof(theme.helper) != 'string'){
+	        return theme.helper;
 	    }
 	    var helper = theme.helper;
 	    if (helper) {
+	    	var deferred = new dojo.Deferred();
 			require([helper], function(module) {
 				helper = module;
+				deferred.resolve({helper: helper});
 			});
-			return helper;
+			//return helper;
+			return deferred;
 	        }
 	},
 
@@ -261,10 +190,30 @@ define([
 	    return themeSet;
 	},
 	
-	getTheme:  function(name){
-	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
+	/*
+	 * @return the project for the target theme.
+	 */
+	getBase : function(){
+		if(Workbench.singleProjectMode()){
+			return Workbench.getProject();
+		}
+	},
+	
+	getThemeLocation : function(){
+		
+		
+		var base = this.getBase();
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		
+		var projectThemeBase = (new Path(base).append(prefs['themeFolder']));
+		
+		return  projectThemeBase;
+	},
+	
+	getTheme:  function(name, flushCache){
+	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, flushCache);
 	    for (var i = 0; i < themeData.length; i++){
-	        if(themeData[i].name === name){
+	        if(themeData[i] && themeData[i].name === name){
 	            return themeData[i];
 	        }
 	    }

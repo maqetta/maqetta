@@ -24,7 +24,9 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/declare",
 	"dojo/_base/connect",
+	"davinci/review/model/resource/root",
 	"davinci/ve/widgets/FontComboBox"
+	
 ], function(
 		Runtime,
 		Path,
@@ -50,7 +52,8 @@ define([
 		metadata,
 		Deferred,
 		declare,
-		connect
+		connect,
+		reviewResource
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -175,10 +178,12 @@ var initializeWorkbenchState = function(){
 			if(isReviewRes){
 				var version = getReviewVersion(state.editors[i]);
 				var resPath = getReviewResource(state.editors[i]).toString();
-				resource = davinci.review.model.resource.root.findFile(version, resPath);
+				resource = reviewResource.findFile(version, resPath);
 			}else{
 				resource = sysResource.findResource(state.editors[i]);
 			}
+			
+			//var resource = sysResource.findResource(state.editors[i]);
 			
 			// check if activeEditor is part of the current project or not
 			var isActiveEditorInProject = true;
@@ -1551,14 +1556,22 @@ var Workbench = {
 		}
 	},
 	
-	_updateWorkbenchState: function()
-	{
-		dojo.xhrPut({
-			url: "cmd/setWorkbenchState",
-			putData: dojo.toJson(Workbench._state),
-			handleAs:"text",
-			sync:true
-		});
+	_updateWorkbenchState: function(){
+		
+		if(!this._updateWorkbench){
+			this._updateWorkbench = new Deferred();
+			this._updateWorkbench.resolve();
+		}
+		
+		this._updateWorkbench.then(dojo.hitch(this,function(){
+			this._updateWorkbench = dojo.xhrPut({
+				url: "cmd/setWorkbenchState",
+				putData: dojo.toJson(Workbench._state),
+				handleAs:"text",
+				sync:false
+			});
+		}));
+		
 	},
 
 	_autoSave: function(){

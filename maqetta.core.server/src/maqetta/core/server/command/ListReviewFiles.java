@@ -21,7 +21,7 @@ public class ListReviewFiles extends Command {
 		ReviewManager commentingManager = ReviewManager.getReviewManager();
 		String designerName = req.getParameter("designer");
 		if(designerName ==null||designerName.equals(""))
-			designerName = user.getUserName();
+			designerName = user.getUserID();
 		IDesignerUser designer = commentingManager.getDesignerUser(designerName);
 		Version version = designer.getVersion(req.getParameter("version"));
 		List<String> resource = version.getResources();

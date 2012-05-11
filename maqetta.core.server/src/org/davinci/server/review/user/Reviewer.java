@@ -24,14 +24,14 @@ public class Reviewer implements IPerson{
 		this.email =email;
 	}
 	
-	public String getUserName() {
+	public String getUserID() {
 		if (name.equals("")) {
 			//Try and look it up... this is necessary because reviewer doesn't necessarily have
 			//a user name at the time they are invited to a review
 			IPersonManager personManager = ServerManager.getServerManger().getPersonManager();
 			IPerson person = personManager.getPersonByEmail(email);
 			if (person != null) {
-				name = person.getUserName();
+				name = person.getUserID();
 			}
 		}
 		return name;
@@ -57,5 +57,13 @@ public class Reviewer implements IPerson{
 
 	public Iterator<ReviewerVersion> getReviewerVersions() {
 		return versions.values().iterator();
+	}
+
+	public String getFirstName() {
+		return "";
+	}
+
+	public String getLastName() {
+		return "";
 	}
 }

@@ -147,21 +147,25 @@ DataGridHelper.prototype = {
 		var storeId = DataStoreBasedWidgetInput.getStoreId(srcElement, useDataDojoProps);
 		if(storeId){
 			// we may have the store as an object
-			var storeWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
-			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
-				this._reparentTheStore(widget, storeWidget);
-				this.updateStore(widget, storeWidget);
-			}
+			dojo.withDoc(widget.getContext().getDocument(), function(){
+				var storeWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
+				if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
+					this._reparentTheStore(widget, storeWidget);
+					this.updateStore(widget, storeWidget);
+				}
+			}.bind(this));
 		}
 	},
 	
 	reparent: function(widget, useDataDojoProps){ 
 		var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, useDataDojoProps);
 		if(storeId){
-			var storeWidget = Widget.byId(storeId);
-			if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
-				this._reparentTheStore(widget, storeWidget);
-			}
+			dojo.withDoc(widget.getContext().getDocument(), function(){
+				var storeWidget = Widget.byId(storeId);
+				if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
+					this._reparentTheStore(widget, storeWidget);
+				}
+			}.bind(this));
 		}
 	},
 	

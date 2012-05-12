@@ -145,6 +145,7 @@ return declare(ContentPane, {
 	
 	_initPage1: function() {
 		dataSourcePanel = this._dataSourcePanel = new GridWizardDataSourcePanel();
+		dojo.addClass(dataSourcePanel.domNode, "wizardPanel");
 		this.page1.set("content", dataSourcePanel);
 		
 		// Populate the page when it's first shown. This is especially important for dataSourcePanel
@@ -216,12 +217,13 @@ return declare(ContentPane, {
 		dojo.addClass(this.finish.domNode, "bottomButton");
 		
 		this.next = new Button({
-			onClick: dojo.hitch(this, function() { this._forward(); }),
+			onClick: dojo.hitch(this, function() { this._forward(); })
 		},this.next);
 		dojo.addClass(this.next.domNode, "bottomButton");
 		
 		this.prev = new Button({
 			onClick: dojo.hitch(this, function() { this._back(); }),
+			disabled: true
 		},this.prev);
 		dojo.addClass(this.prev.domNode, "bottomButton");
 	},

@@ -626,7 +626,6 @@ return declare("davinci.ve.input.SmartInput", null, {
 	},
 	
 	hide: function(cancel){
-		
 		if (this._inline) {
 			var value;
 			while (connection = this._connection.pop()){
@@ -786,30 +785,28 @@ return declare("davinci.ve.input.SmartInput", null, {
 		},
 		
 		resize: function(e){
-			var tagetObj = dojo.byId("iedResizeDiv");
+			var targetObj = dojo.byId("iedResizeDiv");
 			var targetEditBoxDijit = dijit.byId("davinciIleb");
-			var ieb = dojo.byId("ieb");
-			var boxWidth = tagetObj.clientWidth  - 5;
-			var boxheight = tagetObj.clientHeight -6;
-			var smartInputRadioDivWidth = tagetObj.clientWidth -10;
-			boxWidth = tagetObj.clientWidth  /*+2*/ -8;
-			boxheight = tagetObj.clientHeight  -20; // new for text area
-			smartInputRadioDivWidth = tagetObj.clientWidth -9;
+			var boxWidth = targetObj.clientWidth  - 5;
+			var boxheight = targetObj.clientHeight -6;
+			var smartInputRadioDivWidth = targetObj.clientWidth -10;
+			boxWidth = targetObj.clientWidth  /*+2*/ -8;
+			boxheight = targetObj.clientHeight  -20; // new for text area
+			smartInputRadioDivWidth = targetObj.clientWidth -9;
 			var simObj = dojo.byId("smartInputSim");
 			dojo.style(simObj,'width',boxWidth + 10 + "px");
 			this.updateSimStyle();
 		
-			if (targetEditBoxDijit)
+			if (targetEditBoxDijit) {
 				targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
-				targetEditBoxDijit._setStyleAttr({width: tagetObj.clientWidth + "px"});
+				targetEditBoxDijit._setStyleAttr({width: targetObj.clientWidth + "px"});
+			}
 			var obj = dojo.byId("davinci.ve.input.SmartInput_radio_div");
 			dojo.style(obj,'width',smartInputRadioDivWidth+ 2 +"px");
 			obj = dojo.byId("davinci.ve.input.SmartInput_radio_text_width_div");
-			dojo.style(obj,'width',tagetObj.clientWidth -50 + "px");
+			dojo.style(obj,'width',targetObj.clientWidth -50 + "px");
 			obj = dojo.byId("davinci.ve.input.SmartInput_radio_html_width_div");
-			dojo.style(obj,'width',tagetObj.clientWidth -50 + "px");
-		
-			
+			dojo.style(obj,'width',targetObj.clientWidth -50 + "px");
 		},
 		
 		onBlur: function(e){
@@ -832,7 +829,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 			var editBox = ''+
 				'<div id="iedResizeDiv" class="iedResizeDiv" >' + 
 //			       '<input id="davinciIleb" class="davinciIleb smartInputTextBox" type="text"  dojoType="dijit.form.TextBox"  />' +
-				   '<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb" style="width:200px; height:30px;" trim="true" id="davinciIleb" class="smartInputTextArea" ></textarea>'+
+				   '<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb" trim="true" id="davinciIleb" class="smartInputTextArea" ></textarea>'+
 				   '<div id="smartInputSim" class="smartInputSim" ></div>'+
 					'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="200" minHeight="55"  activeResize="true" intermediateChanges="true" ></div>' +
 		//			'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="200" minWidth="200" minHeight="19" resizeAxis="x" activeResize="true" intermediateChanges="true" ></div>' +
@@ -840,7 +837,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 			if (this.multiLine === "true"){
 				editBox = ''+
 				'<div id="iedResizeDiv" class="iedResizeDiv" >' + 
-					'<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb" style="width:200px; height:60px;" trim="true" id="davinciIleb" class="smartInputTextArea" ></textarea>'+
+					'<textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb" trim="true" id="davinciIleb" class="smartInputTextAreaMulti" ></textarea>'+
 					'<div id="smartInputSim" class="smartInputSim" ></div>'+
 //					'<div id="smartInputSim" style="height:10px; border-color: #B5BCC7; border-style: solid; border-width: 0px 3px 3px 3px;  background-color: #F7FCFF;"></div>'+
 					'<div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="200" minHeight="80"  activeResize="true" intermediateChanges="true" ></div>' +
@@ -882,7 +879,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 			        	'</span>   '+
 			        '</div> '+
 			        '<div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv" > '+
-			        	'<div dojoType="dijit.layout.ContentPane" style="text-align: left; padding:0; height:80px;" >'+this.getHelpText()+ '</div> '+
+			        	'<div dojoType="dijit.layout.ContentPane" class="smartInputHelpTextDivContentPane "style="padding:0;" >'+this.getHelpText()+ '</div> '+
 			        	'<div style="text-align: left; padding:0; height:2px;" ></div> '+
 			        '</div> '+
 		        '</div>' + 

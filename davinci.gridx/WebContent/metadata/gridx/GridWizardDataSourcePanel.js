@@ -7,11 +7,16 @@ define([
 ], function(declare, ContentPane, GridInput, GridWizardPanel, gridxNls) {
 
 return declare([ContentPane, GridWizardPanel], {
+	postCreate: function() {
+		var dataSourceInputContainer = this._dataSourceInputContainer = new ContentPane();
+		dojo .addClass(dataSourceInputContainer.domNode, "dataSourcePanelDataSourceInputContainer");
+		this.setContent(dataSourceInputContainer);
+	},
 
 	populate: function(widgetId) {
 		//Create GridInput (which we'll embed rather than have as standalone dialog)
 		this._gridInput = new GridInput();
-		this._gridInput._embeddingContentPane = this;
+		this._gridInput._embeddingContentPane = this._dataSourceInputContainer;
 		this._gridInput.show(widgetId);
 		
 		//Save input values for later use in determining whether our data is "dirty"
@@ -19,6 +24,23 @@ return declare([ContentPane, GridWizardPanel], {
 		
 		//Call super
 		this.inherited(arguments);
+	},
+	
+	resize: function(size) {
+		this.inherited(arguments);
+	
+		if (this._gridInput) {
+			//Set size of main div in GridInput
+			var ieb = dojo.byId("ieb");
+			dojo.style(ieb, "width", size.w - 30 + "px");
+			
+			//Set size of resize div in GridInput
+			var targetObj = dojo.byId("iedResizeDiv");
+			dojo.style(targetObj, "width", size.w - 30 + "px");
+			dojo.style(targetObj, "height", size.h - 92 + "px");
+			
+			this._gridInput.resize();
+		}
 	},
 	
 	getUpdateWidgetCommand: function(callback){ 

@@ -1556,6 +1556,11 @@ var Workbench = {
 		}
 	},
 	
+	clearWorkbenchState : function(){
+		Workbench._state = {};
+		return this._updateWorkbenchState();
+	},
+	
 	_updateWorkbenchState: function(){
 		
 		if(!this._updateWorkbench){
@@ -1572,6 +1577,7 @@ var Workbench = {
 			});
 		}));
 		
+		return this._updateWorkbench;
 	},
 
 	_autoSave: function(){
@@ -1592,8 +1598,9 @@ var Workbench = {
 				}
 			}
 		}
-		
-		dojo.forEach(Workbench.editorTabs.getChildren(),	saveDirty);
+		if(Workbench.editorTabs){
+			dojo.forEach(Workbench.editorTabs.getChildren(),	saveDirty);
+		}
 		if(!anyErrors){
 			Workbench._lastAutoSave = Date.now();
 		}		

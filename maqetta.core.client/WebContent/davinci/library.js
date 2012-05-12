@@ -38,37 +38,34 @@ dojo.subscribe("/davinci/ui/libraryChanged/start", this, function() {
 library = {
 
 themesChanged: function(base){
-	_themesCache[base] = base ? null : {};
+	_themesCache[base] = base ? null : [];
 },
 
 getThemes: function(base, workspaceOnly, flushCache){
 
 	if (flushCache) {
-		_themesCache[base] = null;
+		delete _themesCache[base];
 	}
 	
 	function result(){
 		/* filters out workspace/non workspace values  before returning them.  always caches ALL themes */
 		var rlt = [];
 		if(_themesCache[base]){
-			
-			var cache= _themesCache[base];
-			for(var i=0;i<cache.length;i++){
-				if(!workspaceOnly || !cache[i].file.isVirtual()){
-					rlt.push(cache[i]);
-				}
-			}
+			rlt = workspaceOnly ?
+				_themesCache[base].filter(function(entry) { return !entry.file.isVirtual(); })
+				: _themesCache[base];
 		}
 		return rlt;
 	}
-	
+
 	if(_themesCache[base]) {
 		return result();
 	}
-	
-	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-	var projectThemeBase = new Path(base).append(prefs.themeFolder);
-	var allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());
+
+	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base),
+		projectThemeBase = new Path(base).append(prefs.themeFolder),
+		allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());
+
 	_themesCache[base] = allThemes.map(function(theme) {
 		var t = JSON.parse(theme.getText());
 		t.file = theme;
@@ -81,30 +78,23 @@ getThemes: function(base, workspaceOnly, flushCache){
 getThemeMetadata: function(theme) {
 	/* load/find theme metadata files */
 	
-	if(_themesMetaCache[theme.name])
+	if(_themesMetaCache[theme.name]) {
 		return _themesMetaCache[theme.name];
-	
-	var results = null;
-	var themeCssFiles = [];
-	var parent = new Path(theme.file.getPath());
-	parent = parent.removeLastSegments();
-	for(var i = 0;i<theme.files.length;i++){
-		if(theme.files[i].indexOf(".css")>-1){
-			themeCssFiles.push(parent.append(theme.files[i]));
-		}
 	}
-	var metaResources = [];
-	for (var i = 0; i < theme.meta.length; i++) {
-		var absoluteLocation = parent.append(theme.meta[i]);
-		var resource=  system.resource.findResource(absoluteLocation.toString());
-		metaResources.push(resource);
-	}
-			
-	var metaDataLoader = new Query(metaResources);
-	
+
+	var parent = new Path(theme.file.getPath()).removeLastSegments();
+	var themeCssFiles = theme.files.filter(function(file) {
+		return file.indexOf(".css")>-1;
+	}).map(parent.append, parent);
+
+	var metaResources = theme.meta.map(function(resource){
+		var absoluteLocation = parent.append(resource);
+		return system.resource.findResource(absoluteLocation.toString());
+	});
+
 	var metadata = new CSSThemeProvider(metaResources, theme.className);
 	_themesMetaCache[theme.name] = {
-		loader: metaDataLoader,
+		loader: new Query(metaResources),
 		css: themeCssFiles,
 		metadata: metadata
 	};
@@ -112,17 +102,16 @@ getThemeMetadata: function(theme) {
 },
 
 addCustomWidgets: function(base, customWidgetJson) {
-	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
 	if(!prefs.widgetFolder){
 		prefs.widgetFolder = "./widgets";
-		Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
+		Preferences.savePreferences('davinci.ui.ProjectPrefs', base, prefs);
 	}
 	if(!library._customWidgets[base].hasOwnProperty("name")){
-		library._customWidgets[base]= customWidgetJson;	
+		library._customWidgets[base] = customWidgetJson;	
 
-		library._customWidgets[base].metaPath=prefs.widgetFolder;
+		library._customWidgets[base].metaPath = prefs.widgetFolder;
 	    library._customWidgets[base].localPath = true;
-
 	}
 	/*
 	else{
@@ -198,7 +187,7 @@ getInstalledLibs: function() {
 
 getUserLibs: function(base) {
 	// not sure if we want to only allow the logged in user to view his/her
-	// installed libs, or to include user name in request of targe user.
+	// installed libs, or to include user name in request of target user.
 	
 	if(_userLibsCache.base)
 		return _userLibsCache.base;
@@ -206,7 +195,7 @@ getUserLibs: function(base) {
 	_userLibsCache.base = Runtime.serverJSONRequest({
 		url: "cmd/getUserLibs",
 		handleAs: "json",
-		content: {base: base },
+		content: {base: base},
 		sync:true
 	})[0].userLibs;
 	

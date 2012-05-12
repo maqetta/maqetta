@@ -22,6 +22,19 @@ return declare([], {
 		}.bind(this));
 	},
 	
+	destroy: function(widget){
+		var children = widget.getChildren ? widget.getChildren() : [];
+		children.forEach(function(each) {
+			if(each.destroyWidget){
+				each.destroyWidget(); 
+			}
+		});
+		if(widget.dijitWidget && widget.dijitWidget.destroyRecursive){
+			widget.dijitWidget.destroyRecursive();
+		}
+	},
+	
+	
 	/**
 	 * Helper function called to establish widget size at initial creation time
 	 * @param {object} args  holds following values:

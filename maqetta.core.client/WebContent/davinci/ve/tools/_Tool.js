@@ -8,7 +8,14 @@ return declare("davinci.ve.tools._Tool", null, {
 		return this._target;
 	},
 
-	_setTarget: function(target){
+	/**
+	 * Update the editFeedback box(es) that are superimposed over the canvas to capture
+	 * mouse events over primitive widgets, thereby preventing default mouse event handlers
+	 * on widgets from receiving events during page editing
+	 * @param {object} target  A DOM node which (in almost all cases) has received a mouseover event
+	 * @param {object) event  The event object
+	 */
+	_setTarget: function(target, event){
 		
 		if(!this._targetOverlays){
 			this._targetOverlays = [];
@@ -60,14 +67,8 @@ return declare("davinci.ve.tools._Tool", null, {
 			//target is what we calculated for "w"
 			this._target = w;
 			
-			//Deal with the style node
-			var node = w.getStyleNode();
-			var box = this._context.getDojo().position(node, true);
-			box.l = box.x;
-			box.t = box.y;
-			
 			//Change the dimensions of the overlay region based on the target
-			this._updateTargetOverlays();
+			this._updateTargetOverlays(event);
 
 			//Insert overlay element(s)
 			this._insertTargetOverlays();
@@ -79,7 +80,7 @@ return declare("davinci.ve.tools._Tool", null, {
 	},
 	
 	// Calculate bounds for "target" overlay rectangle(s)
-	_updateTargetOverlays: function(){
+	_updateTargetOverlays: function(event){
 		//Let's clear out overlay regions array
 		this._removeTargetOverlays();
 		if(!this._target){
@@ -113,13 +114,49 @@ return declare("davinci.ve.tools._Tool", null, {
 					return;
 				}
 			} 
+
+			var left = domNode.offsetLeft;
+			var top = domNode.offsetTop;
+			var width = domNode.offsetWidth;
+			var height = domNode.offsetHeight;
+			var mouseX = event.pageX;
+			var mouseY = event.pageY;
+			var pn = domNode.offsetParent;
+			while(pn && pn.tagName != 'BODY'){
+				mouseX -= pn.offsetLeft;
+				mouseY -= pn.offsetTop;
+				pn = pn.offsetParent;
+			}
 			
+			if(event){
+				// This code addresses #2136, where CSS transforms shift the widget and 
+				// therefore offsetLeft/Top/Width/Height are not reliable indicators
+				// of a node's bounds. Unfortunately, there are no getBoundingBox APIs
+				// in browsers today that give the post-transform bounds on a node.
+				// However, at least WebKit is smart enough to have onmouseover event
+				// deal with the post-transform location of a particular node.
+				// So, to deal with this issue, increase the bounding box to include pageX/pageY.
+				
+				if(mouseX < left){
+					left = mouseX;
+					width += (domNode.offsetLeft - left);
+				}
+				if(mouseY < top){
+					top = mouseY;
+					height += (domNode.offsetTop - top);
+				}
+				if(mouseX > left + width){
+					width = mouseX - left;
+				}
+				if(mouseY > top + height){
+					height = mouseY - top;
+				}
+			}
+
 			//No special overlay regions, so let's just do the normal thing and calculate
 			//overlay region dimensions ourselves
 			var overlay =
-					this._getNewTargetOverlay(domNode, domNode.offsetLeft,
-							domNode.offsetTop, domNode.offsetWidth,
-							domNode.offsetHeight, maxZIndex);	
+					this._getNewTargetOverlay(domNode, left, top, width, height, maxZIndex);	
 
 			//Add new overlay div to our overall list
 			this._targetOverlays.push(overlay);

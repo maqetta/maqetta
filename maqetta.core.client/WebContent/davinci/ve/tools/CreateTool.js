@@ -153,7 +153,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			
 			// For certain widgets, put an overlay DIV on top of the widget
 			// to intercept mouse events (to prevent normal widget mouse processing)
-			this._setTarget(event.target);
+			this._setTarget(event.target, event);
 
 			// Under certain conditions, show list of possible parent widgets
 			var showParentsPref = context.getPreference('showPossibleParents');

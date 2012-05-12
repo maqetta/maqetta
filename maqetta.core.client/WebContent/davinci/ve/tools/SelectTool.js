@@ -279,7 +279,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
 			return;
 		}
-		this._setTarget(event.target);
+		this._setTarget(event.target, event);
 		if(this._areaSelect){
 			if(event.which === 1){		// 1=LMB
 				this._areaSelectUpdate(event.pageX, event.pageY);
@@ -294,7 +294,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	onMouseOut: function(event){
 		// FIXME: sometime an exception occurs...
 		try{
-			this._setTarget(event.relatedTarget);
+			this._setTarget(event.relatedTarget, event);
 		}catch(e){
 		}
 	},

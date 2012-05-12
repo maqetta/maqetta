@@ -140,7 +140,28 @@
 	width:245px;
 	height:240px;
 	border:1px solid #DBDBDB;
-	overflow:auto;
+}
+
+.gridWizard .sloshBucketIcon {
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat; 
+}
+
+.gridWizard .sloshBucketMoveToTargetIcon {
+	background-image: url(img/forward_nav.gif);
+}
+
+.gridWizard .sloshBucketMoveToSourceIcon {
+	background-image: url(img/back_nav.gif);
+}
+
+.gridWizard .sloshBucketMoveTargetUpIcon {
+	background-image: url(img/up_nav.gif);
+}
+
+.gridWizard .sloshBucketMoveTargetDownIcon {
+	background-image: url(img/down_nav.gif);
 }
 
 /* Grid preview page (Page 3) */

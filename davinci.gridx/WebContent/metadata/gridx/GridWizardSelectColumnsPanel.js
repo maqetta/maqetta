@@ -67,11 +67,11 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 				
 				if (!match) {
 					//Not selected in current widget structure, so add to source side
-					this.sourceColumnSelect.containerNode.appendChild(option);
+					dojo.place(option, this.sourceColumnSelect.containerNode);
 				}
 			} else {
 				//We're ignoring current widget structure, so put in target side
-				this.targetColumnSelect.containerNode.appendChild(option);
+				dojo.place(option, this.targetColumnSelect.containerNode);
 			}
 		}.bind(this));
 		
@@ -89,7 +89,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 				//is selected by putting in target side
 				if (match) {
 					var option = this._createOption(currentWidgetStructureElement);
-					this.targetColumnSelect.containerNode.appendChild(option);
+					dojo.place(option, this.targetColumnSelect.containerNode);
 				}
 			}.bind(this));
 		}
@@ -103,7 +103,10 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 		}
 		
 		//Save input values for later use in determining whether our data is "dirty"
-		this._saveSelectedOptions();
+		this._saveTargetOptions();
+		
+		//Update button enablement
+		this._updateButtonEnablement();
 		
 		//Call super
 		this.inherited(arguments);
@@ -113,8 +116,8 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 		var option = dojo.doc.createElement("option"); 
 		option.value = commandStructureElement.field;
 		
-		var label= commandStructureElement.name;
-		if (commandStructureElement.name != commandStructureElement.field) {
+		var label = commandStructureElement.name.trim();
+		if (label != commandStructureElement.field) {
 			//Let's augment the label with the field id
 			label = dojo.replace(gridxNls.columnOptionLabel, [label, commandStructureElement.field]);
 		}
@@ -123,7 +126,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 		return option;
 	},
 	
-	getSelectedColumnIds: function() {
+	getTargetColumnIds: function() {
 		//Calculate selected column ids based on options in the target select list
 		var selectedColumnOptions = this._getOptions(this.targetColumnSelect);
 		var selectedColumnIds = dojo.map(
@@ -132,7 +135,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 				});
 		
 		//Save input values for later use in determining whether our data is "dirty"
-		this._saveSelectedOptions();
+		this._saveTargetOptions();
 		
 		//Return column ids
 		return selectedColumnIds;
@@ -158,31 +161,156 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 		return dirty;
 	},
 	
-	_saveSelectedOptions: function() {
+	_saveTargetOptions: function() {
 		this._oldSelectedOptions = this._getOptions(this.targetColumnSelect);
 	},
 	
 	_moveSourceColumns: function() {
+		//deselect everything in target list before moving items into target list
+		this._deselectAllOptions(this.targetColumnSelect);
+		
 		// move all the selected values from left (source) to right (target)
 		this.targetColumnSelect.addSelected(dijit.byId(this.sourceColumnSelect));
+		
+		//Update button enablement
+		this._updateButtonEnablement();
 	},
 	
 	_moveTargetColumns: function() {
+		//deselect everything in source list before moving items into source list
+		this._deselectAllOptions(this.sourceColumnSelect);
+		
 		// move all the selected values from right (target) to left (source)
 		this.sourceColumnSelect.addSelected(dijit.byId(this.targetColumnSelect));
+		
+		//Update button enablement
+		this._updateButtonEnablement();
+	},
+	
+	_moveTargetColumnUp: function() {
+		var selectedIndices = this._getSelectedOptionIndices(this.targetColumnSelect);
+		if (selectedIndices.length == 1) {
+			var index = selectedIndices[0];
+			if (index > 0) {
+				var options = this._getOptions(this.targetColumnSelect);
+				dojo.place(options[index], options[index - 1], "before");
+			}
+		}
+		
+		//Update button enablement
+		this._updateButtonEnablement();
+	},
+	
+	_moveTargetColumnDown: function() {
+		var selectedIndices = this._getSelectedOptionIndices(this.targetColumnSelect);
+		if (selectedIndices.length == 1) {
+			var index = selectedIndices[0];
+			var options = this._getOptions(this.targetColumnSelect);
+			
+			if (index < options.length - 1) {
+				dojo.place(options[index], options[index + 1], "after");
+			}
+		}
+		
+		//Update button enablement
+		this._updateButtonEnablement();
 	},
 	
 	_removeAllOptions: function(multiSelectList) {
-		var optionElements = query("option", multiSelectList.containerNode);
+		var optionElements = this._getOptions(multiSelectList);
 		dojo.forEach(optionElements, function(option) {
-			multiSelectList.containerNode.removeChild(option);
+			dojo.destroy(option);
 		}.bind(this));
+	},
+	
+	_deselectAllOptions: function(multiSelectList) {
+		var optionElements = this._getOptions(multiSelectList);
+		dojo.forEach(optionElements, function(option) {
+			option.selected = false;
+		}.bind(this));
+	},
+	
+	_sourceColumnSelectChange: function() {
+		var selection = this._getSelectedOptions(this.sourceColumnSelect); 
+		if (selection.length > 0) {
+			this.moveToTargetButton.set("disabled", false);
+		} else {
+			this.moveToTargetButton.set("disabled", true);
+		}
+	},
+	
+	_targetColumnSelectChange: function() {
+		var selection = this._getSelectedOptionIndices(this.targetColumnSelect); 
+		if (selection.length == 0) {
+			this.moveToSourceButton.set("disabled", true);
+			this.moveTargetColumnUpButton.set("disabled", true);
+			this.moveTargetColumnDownButton.set("disabled", true);
+		} else if (selection.length == 1) {
+			this.moveToSourceButton.set("disabled", false);
+			
+			var selectedIndex = selection[0];
+			//Enable up button if not first element in list
+			if (selectedIndex > 0) { 
+				this.moveTargetColumnUpButton.set("disabled", false);
+			} else {
+				this.moveTargetColumnUpButton.set("disabled", true);
+			}
+			//Enable down button if not last element in list
+			if (selectedIndex < this._getOptions(this.targetColumnSelect).length - 1) {
+				this.moveTargetColumnDownButton.set("disabled", false);
+			} else {
+				this.moveTargetColumnDownButton.set("disabled", true);
+			}
+		} else { //> 1
+			this.moveToSourceButton.set("disabled", false);
+			this.moveTargetColumnUpButton.set("disabled", true);
+			this.moveTargetColumnDownButton.set("disabled", true);
+		}
+	},
+	
+	_sourceColumnSelectDblClick: function() {
+		this._moveSourceColumns();
+	},
+	
+	_targetColumnSelectDblClick: function() {
+		this._moveTargetColumns();
 	},
 	
 	_getOptions: function(multiSelectList) {
 		var selectedColumnOptions = query("option",
 				multiSelectList.containerNode);
 		return selectedColumnOptions;
+	},
+	
+	_getSelectedOptions: function(multiSelectList) {
+		var options = this._getOptions(multiSelectList);
+		var selectedOptions = dojo.filter(
+				options, function(option) {
+					if (option.selected) {
+						return option;
+					}
+				});
+		
+		//Return option
+		return selectedOptions;
+	},
+	
+	_getSelectedOptionIndices: function(multiSelectList) {
+		var options = this._getOptions(multiSelectList);
+		var selectedIndices = [];
+		dojo.forEach(options, function(option, index) {
+			if (option.selected) {
+				selectedIndices.push(index);
+			}
+		});
+		
+		//Return indices
+		return selectedIndices;
+	},
+	
+	_updateButtonEnablement: function() {
+		this._sourceColumnSelectChange();
+		this._targetColumnSelectChange();
 	},
 	
 	isValid: function() {

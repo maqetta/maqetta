@@ -293,7 +293,7 @@ return declare(ContentPane, {
 		
 		if (!this._gridPreviewPanel.isPopulated() || isDirty) {
 			var callback = function(compoundCommand) {
-				var selectedColumnIds = this._gridSelectColumnsPanel.getSelectedColumnIds();
+				var selectedColumnIds = this._gridSelectColumnsPanel.getTargetColumnIds();
 				this._gridPreviewPanel.populate(this._widget, compoundCommand, selectedColumnIds, this._dataSourcePanel._gridInput);
 			}.bind(this);
 			this._getUpdateCompoundCommand(callback);
@@ -442,7 +442,7 @@ return declare(ContentPane, {
 			//Assuming _gridPreviewPanel can only be populated if _gridSelectColumnsPanel has been populated
 			modifiedHeaderElements = this._gridPreviewPanel.getUpdatedColumnStructure();
 		} else if (this._gridSelectColumnsPanel.isPopulated()) {
-			selectedColumnIds = this._gridSelectColumnsPanel.getSelectedColumnIds();
+			selectedColumnIds = this._gridSelectColumnsPanel.getTargetColumnIds();
 		}
 		
 		//Making assumption the last command is the one for upgrading the grid itself

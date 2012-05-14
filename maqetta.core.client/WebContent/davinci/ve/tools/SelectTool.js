@@ -448,12 +448,11 @@ var h = moverWidgetMarginBoxPageCoords.h;
 							lastIdx = idx;
 						}
 						compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
-						doRemove = true;
 						newselection.push(newwidget);
 					}, this);
 
 					// remove old widget and restore ID on the new version of the given widget(s)
-					if(!copy && doRemove){
+					if(!copy){
 						dojo.forEach(selection, function(w){
 							var newwidget = NewWidgets.shift();
 							compoundCommand.add(new RemoveCommand(w));

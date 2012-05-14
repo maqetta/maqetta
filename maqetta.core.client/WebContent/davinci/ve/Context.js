@@ -26,7 +26,8 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
-	"dojox/html/_base"
+	"dojo/text!./newfile.template.html",
+	"dojox/html/_base"	// for dojox.html.evalInGlobal
 ], function(
 	declare,
 	lang,
@@ -54,7 +55,8 @@ define([
 	HTMLElement,
 	HTMLText,
 	Preferences,
-	Silhouette
+	Silhouette,
+	newFileTemplate
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -439,7 +441,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					if (r.src) {
 						var src = _getResourcePath(r.$library, r.src);
 						if (updateSrc) {
-							this.addModeledStyleSheet(src, r.src, skipDomUpdate);
+							this.addModeledStyleSheet(src, skipDomUpdate);
 						} else {
 							this.loadStyleSheet(src);
 						}
@@ -739,7 +741,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var filePath = defaultTheme.file.getPath();
 		defaultTheme.files.forEach(function(file) {
 			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
-			this.addModeledStyleSheet(url.toString(), null, true);
+			this.addModeledStyleSheet(url.toString(), true);
 		}, this);
     },
     
@@ -756,15 +758,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		this._srcDocument=source;
 		
-		/* determinte if its the theme editor loading */
-		if(!source.themeCssfiles){ // css files need to be added to doc before body content
-			//this.loadTheme(newHtmlParams);
-			this.loadRequires("html.body", true/*doUpdateModel*/, false, true /* skip UI load */ );
+		// determine if it's the theme editor loading
+		if (!source.themeCssfiles) { // css files need to be added to doc before body content
+			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
+			this.loadRequires("html.body", true /*updateSrc*/, false /*doUpdateModelDojoRequires*/,
+					true /*skipDomUpdate*/ );
+			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
+			// make sure this file has a valid/good theme
 			this.loadTheme(newHtmlParams);
 		}
-		/* ensure the top level body deps are met (ie. maqetta.js, states.js and app.css) */
-		/* make sure this file has a valid/good theme */
-		
 		
 		if (this.rootWidget){
 			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
@@ -842,78 +844,59 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				realUrl = this.baseURL;
 			}
 
-// TODO: This needs to be more flexible to allow things like HTML5 DOCTYPE's
-// (should be based on a preference)
 			var doc = frame.contentDocument || frame.contentWindow.document,
 				win = windowUtils.get(doc),
-				head = "<!DOCTYPE html>";
-// TODO: margin:0 is a temporary hack. In previous releases, we always included dojo.css
-// which set margin:0, but we now only include dojo.css with the first Dojo widget
-// added to the page. That causes scrollbars when page was loaded initially,
-// which went want when first Dojo widget was added.
-// Need to rethink this whole business of width:100%;height:100%;margin:0
-			head += "<html style=\"height: 100%; width: 100%; margin:0;\"><head><base href=\"" +
-					realUrl + "\"/>";
+				subs = {
+					baseUrl: realUrl
+				};
 
-			// XXX Must load dojo.js here;  we cannot wait to add it when first Dojo/Dijit widget
-			//   is dropped on page.  The reason is that dojo.js from the SDK (which is what we use
-			//   when developing) cannot be dynamically inserted into a page -- only built versions
-			//   of Dojo can do so.  For that reason, we load it here.  Also, Phil says that Dojo
-			//   may be required for doing some things in the editor iframe, such as the focus
-			//   rectangles.  This means that Dojo will always have to be available in the iframe
-			//   (even if user hasn't selected the Dojo lib) until those dependencies are removed.
-			//   See bug 7585.
 			if (dojoUrl) {
-				// XXX Invoking callback when dojo is loaded.  This should be refactored to not
-				//  depend on dojo any more.  Once issue, though, is that the callback function
-				//  makes use of dojo and thusly must be invoked only after dojo has loaded.  Need
-				//  to remove Dojo dependencies from callback function first.
+				subs.dojoUrl = dojoUrl;
+				subs.id = this._id;
+
 				var config = {
 					packages: this._getLoaderPackages() // XXX need to add dynamically
 				};
 				lang.mixin(config, this._configProps);
+				this._getDojoScriptValues(config, subs);
 
-				var requires = this._bootstrapModules.split(","),
-					dependencies = ['dojo/parser', 'dojox/html/_base', 'dojo/domReady!'];
-
-				// to bootstrap references to base dijit methods in container
-				dependencies = dependencies.concat(requires); 
-
-				head += this._generateDojoScript(dojoUrl, config) +
-						"<script>require(" +
-						JSON.stringify(dependencies) +
-						", top.loading" + this._id + ");</script>";
+				if (this._bootstrapModules) {
+					var mods = '';
+					this._bootstrapModules.split(',').forEach(function(mod) {
+						mods += ',\'' + mod + '\'';
+					})
+					subs.additionalModules = mods;
+				}
 			}
+
 			if (helper && helper.getHeadImports){
-			    head += helper.getHeadImports(this.visualEditor.theme);
+			    subs.themeHeadImports = helper.getHeadImports(this.visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
-				head += '<style type="text/css">' +
+				subs.themeCssFiles = '<style type="text/css">' +
 						source.themeCssfiles.map(function(file) {
 							return '@import "' + file + '";';
 						}).join() +
 						'</style>';
 			}
-			head += "</head><body></body></html>";
 
-			var context = this;
-			window["loading" + context._id] = function(parser, htmlUtil) {
-				var callbackData = context;
+			window["loading" + this._id] = function(parser, htmlUtil) {
+				var callbackData = this;
 				try {
 					var win = windowUtils.get(doc),
-					 	body = (context.rootNode = doc.body);
+					 	body = (this.rootNode = doc.body);
 
 					if (!body) {
 						// Should never get here if domReady! fired?  Try again.
-						context._waiting = context._waiting || 0;
-						if(context._waiting++ < 10) {
-							setTimeout(window["loading" + context._id], 500);
+						this._waiting = this._waiting || 0;
+						if(this._waiting++ < 10) {
+							setTimeout(window["loading" + this._id], 500);
 							console.log("waiting for doc.body");
 							return;
 						}
 						throw "doc.body is null";
 					}
 
-					delete window["loading" + context._id];
+					delete window["loading" + this._id];
 
 					body.id = "myapp";
 
@@ -929,10 +912,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					body.style.visibility = "visible";
 					body.style.margin = "0";
 
-					body._edit_context = context; // TODO: find a better place to stash the root context
-					context._configDojoxMobile();
+					body._edit_context = this; // TODO: find a better place to stash the root context
+					this._configDojoxMobile();
 
-					var requires = context._bootstrapModules.split(",");
+					var requires = this._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
 						// this is needed for FF4 to keep dijit.editor.RichText from throwing at line 32 dojo 1.5
 						win.dojo._postLoad = true;
@@ -952,11 +935,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					lang.mixin(callbackData, e);
 				}
 
-				context._continueLoading(data, callback, callbackData, scope);
-			};
+				this._continueLoading(data, callback, callbackData, scope);
+			}.bind(this);
 
 			doc.open();
-			doc.write(head);
+			var content = lang.replace(
+				newFileTemplate,
+				function(_, key) {
+					return subs.hasOwnProperty(key) ? subs[key] : '';
+				}
+			);
+			doc.write(content);
 			doc.close();
 
 			// intercept BS key - prompt user before navigating backwards
@@ -1079,18 +1068,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	/**
-	 * Generate a string containing the script element for "dojo.js", pulling in
+	 * Generate attribute values for the "dojo.js" script element, pulling in
 	 * any attributes from the source file, while also merging in any attributes
 	 * that are passed in.
 	 * 
-	 * @param  {String} dojoUrl
 	 * @param  {Object} config
-	 * @return {String}
+	 * @param  {Object} subs
 	 */
-	_generateDojoScript: function(dojoUrl, config) {
-		var dojoScript = this._getDojoJsElem(),
-			djConfig = dojoScript.getAttribute('data-dojo-config')
-			text = ['<script src="' + dojoUrl + '"'];
+	_getDojoScriptValues: function(config, subs) {
+		var dojoScript = this._getDojoJsElem();
+		var djConfig = dojoScript.getAttribute('data-dojo-config');
 
 		// special handling for 'data-dojo-config' attr
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
@@ -1102,25 +1089,24 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			async: false,
 			parseOnLoad: false
 		});
-		text.push('data-dojo-config="' +
-				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'") + '"')
+		subs.dojoConfig = JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'");
 
 		// handle any remaining attributes
+		var attrs = [];
 		dojoScript.attributes.forEach(function(attr) {
 			var name = attr.name,
 				val = attr.value;
 			if (name !== 'src' && name !== 'data-dojo-config') {
-				text.push(name + '="' + val + '"');
+				attrs.push(name + '="' + val + '"');
 			}
 		});
-
-		text.push('></script>');
-		return text.join(' ');
+		if (attrs.length) {
+			subs.additionalDojoAttrs = attrs.join(' ');
+		}
 	},
 
-	_setSourceData: function(data){
-		
-		/* cache the theme metadata */	
+	_setSourceData: function(data) {
+		// cache the theme metadata
 		this.themeChanged();
 		var theme = this.getThemeMeta();
 		if(theme && theme.usingSubstituteTheme){
@@ -1558,7 +1544,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         });
     },
 
-	addModeledStyleSheet: function(url, libBasePath, skipDomUpdate) {
+	addModeledStyleSheet: function(url, skipDomUpdate) {
 		if (!skipDomUpdate) {
 			this.loadStyleSheet(url);
 		}

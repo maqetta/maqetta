@@ -5,11 +5,6 @@
     "version": "1.0",
     "require": [
         {
-            "type": "css",
-            "src": "app.css",
-            "$library": "maqetta"
-        },
-        {
             "type": "javascript",
             "src": "dojo/dojo.js",
             "$library": "dojo"

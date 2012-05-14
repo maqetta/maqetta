@@ -27,7 +27,8 @@ define([
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../../dojox/nls/dojox",
 	"dojo/text!./templates/dojoStoreBasedWidgetInput.html",
-	"dojox/form/DropDownSelect"	// used in template
+	"dojox/form/DropDownSelect",	// used in template
+	"davinci/css!./templates/dojoStoreBasedWidgetInput.css",
 ], function(
 	declare,
 	lang,
@@ -584,7 +585,6 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		if (this._isEmbedded()) {
 			var inline = dojo.doc.createElement("div");
 			inline.id = 'ieb';
-			dojo.addClass(inline,'inlineEdit dijitTooltipContainer');
 			this._inline = inline;
 			var myPane = new ContentPane({}, inline);
 			this._embeddingContentPane.set("content", myPane);
@@ -602,7 +602,10 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		var height = 155;
 		this._loading(height, width);
 			
-		dojo.style('ieb', 'background-color', '#F7FDFF');
+		dojo.addClass('ieb', "dojoStoreBasedWidgetInput");
+		if (!this._isEmbedded()) {
+			dojo.style('ieb', 'background-color', '#F7FDFF');
+		}
 		var content = this._getTemplate();
 		this._inline.attr("content", content);
 		this._inline.eb = dijit.byId("davinciIleb");
@@ -651,7 +654,6 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			this._callback = '';
 		}
 		this.changeDataStoreType(this._dataStoreType);
-		dojo.style('iedResizeDiv', 'background-color', 'white');
 		if (this.supportsEscapeHTMLInData) {
 			var html = this._widget.getPropertyValue('escapeHTMLInData');
 			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
@@ -680,10 +682,6 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			//Cancel button
 			var cancelButton = dijit.byId("davinci.ve.input.SmartInput_cancel");
 			dojo.style(cancelButton.domNode, "display", "none");
-			
-			//Resize dive
-			var resizeHandle = dojo.byId("iedResizeHandle");
-			dojo.style(resizeHandle, "display", "none");
 		}
 	},
 

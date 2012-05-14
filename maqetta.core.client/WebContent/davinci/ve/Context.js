@@ -3161,6 +3161,47 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
 		}
 	},
+	
+	getCurrentScenes: function(){
+		var a = [];
+		for(var id in this.sceneManagers){
+			var sm = this.sceneManagers[id];
+			var sceneId = sm.getCurrentScene ? sm.getCurrentScene() : null;
+			if(sceneId){
+				a.push({sm:sm, sceneId:sceneId});
+			}
+		}
+		return a;
+	},
+	
+	/**
+	 * Returns an array holding the set of currently selected application states and (mobile) scenes
+	 * @return {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
+	 *                   where sm is undefined or null for application states
+	 */
+	getStatesScenes: function() {
+		var a = this.getCurrentScenes();
+		var state = davinci.ve.states.getState();
+		a.push({sceneId:state});
+		return a;
+	},
+	
+	/**
+	 * Sets the current scene(s) and/or current application state
+	 * @param {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
+	 *                   where sm is undefined or null for application states
+	 */
+	setStatesScenes: function(arr) {
+		for(var i=0; i<arr.length; i++){
+			var sm = arr[i].sm;
+			var sceneId = arr[i].sceneId;
+			if(sm){
+				sm.selectScene({sceneId:sceneId});
+			}else{
+				davinci.ve.states.setState(sceneId);
+			}
+		}
+	},
 
 	onCommandStackExecute: function() {
 	},

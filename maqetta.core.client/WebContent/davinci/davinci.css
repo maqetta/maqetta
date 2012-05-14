@@ -918,7 +918,6 @@ davinci_top_bar .dijitButtonNode {
 .iedResizeDiv {
 	position: relative; 
 	width: 200px; 
-
 }
 
 .smartInputTextBox {
@@ -928,13 +927,18 @@ davinci_top_bar .dijitButtonNode {
 	outline:none;
 }
 
-.smartInputTextArea {
+.smartInputTextArea, .smartInputTextAreaMulti {
     border-width: 0px;
     overflow: auto;
     resize:none;
     outline:none;
+    width:200px; 
+    height:30px;
 }
 
+.smartInputTextAreaMulti {
+	height:60px;
+}
 
 .smartInputSim {
 	height:18px; 
@@ -1003,6 +1007,11 @@ davinci_top_bar .dijitButtonNode {
 	border-top: 1px solid #86a9c6; 
 	padding-top: .4em; 
 	margin-top: .25em; 
+}
+
+.smartInputHelpTextDivContentPane {
+	text-align: left;  
+	height:80px;	
 }
 
 .EditorContainer {

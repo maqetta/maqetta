@@ -35,7 +35,16 @@
 			var Workbench = require("davinci/Workbench"),
 				Runtime = require("davinci/Runtime"),
 				revResource = require("davinci/review/model/resource/root")
-			
+		
+			var resetWorkbenchState = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).resetWorkbenchState;
+			if(resetWorkbenchState){
+				Workbench.clearWorkbenchState().then(function(){
+					window.location.search="";	
+				});
+				
+			}	
+				
+				
 			Runtime.loadPlugins();
 	 		Runtime.initialPerspective="davinci.ve.pageDesign";
 

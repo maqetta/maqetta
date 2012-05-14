@@ -20,19 +20,6 @@ return {
 	    return '';
 	},
 	
-	preThemeConfig: function(context) {
-        var dm = context.getDojo().getObject("dojox.mobile", true);
-        var base = context.visualEditor.theme.base;
-        // #23 adjust for where html is located 
-		var themeBase = Theme.getThemeLocation();
-		var relPath = themeBase.relativeTo(context.getPath(), true);
-		var themeCssfiles = [];
-		context.visualEditor.theme.files.forEach(function(file){
-			themeCssfiles.push(relPath.toString()+'/'+context.visualEditor.theme.name+'/'+file); // #23 css files need to be added to doc before body content
-		}.bind(this));
-        dm.themeFiles = [];
-        dm.themeMap=[[".*",base,themeCssfiles]];
-	},
 	
 	getHeadImports: function(theme){
 	    return '';

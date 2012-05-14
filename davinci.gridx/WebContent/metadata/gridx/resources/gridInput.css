@@ -101,16 +101,31 @@
 	white-space: nowrap;
 }
 
-/* Data Source Page (Page 1) */
-.gridWizard .dataSourceInputContainer, .dataSourceInputCell {
-	height: 100%;
-	width: 100%;	
+/************ Data Source Page (Page 1) ***********/
+
+.gridWizard .dataSourcePanelDataSourceInputContainer {
+ 	overflow: auto;
+	padding: 0px;
 }
 
-/* Column selection page (Page 2) */
+/* Embedded Smart input formatting */
+
+.gridWizard .dojoStoreBasedWidgetInput {
+	overflow: visible;
+	padding: 0px;
+}
+.gridWizard .smartInputDataGridFolderDiv {
+	background-color: white;
+}
+
+.gridWizard .smartInputRadioDiv {
+	background-color: white;
+}
+
+/************ Column selection page (Page 2) **********/
 .gridWizard .selectPanelDiv {
 	text-align:center;
-	margin-top:20px;
+	overflow:auto;
 }
 
 .gridWizard .selectPanelSloshBucketTable {
@@ -123,9 +138,30 @@
 
 .gridWizard .sourceList, .targetList {
 	width:245px;
-	height:300px;
+	height:240px;
 	border:1px solid #DBDBDB;
-	overflow:auto;
+}
+
+.gridWizard .sloshBucketIcon {
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat; 
+}
+
+.gridWizard .sloshBucketMoveToTargetIcon {
+	background-image: url(img/forward_nav.gif);
+}
+
+.gridWizard .sloshBucketMoveToSourceIcon {
+	background-image: url(img/back_nav.gif);
+}
+
+.gridWizard .sloshBucketMoveTargetUpIcon {
+	background-image: url(img/up_nav.gif);
+}
+
+.gridWizard .sloshBucketMoveTargetDownIcon {
+	background-image: url(img/down_nav.gif);
 }
 
 /* Grid preview page (Page 3) */
@@ -138,21 +174,32 @@
 	overflow:hidden;
 }
 
+.gridWizard .previewPanelSectionLabelContainer {
+	padding:0px;
+	height: 14px;
+	white-space: nowrap;
+}
+
 .gridWizard .previewPanelPreviewNote {
 	font-style: italic;
 	margin-left:10px;
 }
 
-.gridWizard .previewPanelPreviewDiv {
-	padding:16px; 
-	height:87%;
-	margin-top:8px; 
+.gridWizard .previewPanelPreviewPaneCenter {
+	margin-top: 8px;
+	padding:0px; 
 	overflow:auto;
 	border: 1px solid grey;
 }
 
+.gridWizard .previewPanelGridPreviewDiv {
+	margin:0px;
+	overflow:visible;
+}
+
 .gridWizard .previewPanelGridContentPane {
-	padding: 0px;
+	padding: 15px;
+	overflow: visible;
 }
 
 .gridWizard .previewPanelTrailingContentPane {
@@ -160,16 +207,21 @@
 	overflow:hidden;
 }
 
-.gridWizard .previewPanelColumnPropsHeader {
-	white-space: nowrap;
+.gridWizard .previewPanelColumnPropsPaneCenter {
+	margin-top: 8px;
+	padding:0px; 
+	overflow:hidden;
 }
 
 .gridWizard .previewPanelColumnPropsDiv {
 	border: 1px solid grey;
-	height:60%;
-	margin-top:8px;
+	height:40%;
 	overflow:auto;
 	padding: 5px;
+}
+
+.gridWizard .previewPanelColumnPropsTable {
+	width:100%;
 }
 
 .gridWizard .previewPanelColumnInputField {

@@ -83,7 +83,7 @@ return {
         {
             id: "HTMLPageEditor",
             name: "HTML Visual Editor",
-            extensions: "html",
+            extensions: ["html","htm", "php"],
             isDefault: true,
             // TODO implement icon : "",
             editorClass: "davinci/ve/PageEditor",

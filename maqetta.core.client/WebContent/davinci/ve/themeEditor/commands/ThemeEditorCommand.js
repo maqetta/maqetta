@@ -33,28 +33,6 @@ return declare("davinci.ve.themeEditor.commands.ThemeEditorCommand", null, {
 	},
 	updatePropertiesView: function(updateContext){
 		if (!this._themeEditor._selectedWidget) return;
-		var v = this._themeEditor._getSelectionStyleValues();
-		var rules = this._themeEditor._getCssRules();
-		this._themeEditor._rebaseCssRuleImagesForStylePalette(rules, v);
-		var domNode;
-		var widgetType = this._themeEditor._selectedWidget.type;
-		var id = this._themeEditor._selectedWidget.id;
-		if(id.indexOf('all') === 0){ // this is a  mythical widget used for global change of widgets 
-			widgetType = widgetType + '.$' + id; // add this to the end so it will match the key in the metadata
-		}
-		var domNode = this._themeEditor._theme.getDomNode(this._themeEditor._selectedWidget.domNode, widgetType, this._themeEditor._selectedSubWidget);
-		var allStyle = dojo.getComputedStyle(domNode);
-		this._themeEditor._selectedWidget.subwidget= this._themeEditor._selectedSubWidget;
-		if(updateContext){ 
-			try{	
-				var context = this._themeEditor.getContext();
-				context.select(this._themeEditor._selectedWidget);
-			}catch(e){
-				console.log("[theme editor] error selecting canvas widget from undo");
-				
-			}
-		
-		}
 		var e = [this._themeEditor._selectedWidget];
 		dojo.publish("/davinci/ui/widgetSelected",[e]);
 		

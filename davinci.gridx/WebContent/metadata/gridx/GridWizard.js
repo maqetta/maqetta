@@ -145,6 +145,7 @@ return declare(ContentPane, {
 	
 	_initPage1: function() {
 		dataSourcePanel = this._dataSourcePanel = new GridWizardDataSourcePanel();
+		dojo.addClass(dataSourcePanel.domNode, "wizardPanel");
 		this.page1.set("content", dataSourcePanel);
 		
 		// Populate the page when it's first shown. This is especially important for dataSourcePanel
@@ -216,12 +217,13 @@ return declare(ContentPane, {
 		dojo.addClass(this.finish.domNode, "bottomButton");
 		
 		this.next = new Button({
-			onClick: dojo.hitch(this, function() { this._forward(); }),
+			onClick: dojo.hitch(this, function() { this._forward(); })
 		},this.next);
 		dojo.addClass(this.next.domNode, "bottomButton");
 		
 		this.prev = new Button({
 			onClick: dojo.hitch(this, function() { this._back(); }),
+			disabled: true
 		},this.prev);
 		dojo.addClass(this.prev.domNode, "bottomButton");
 	},
@@ -291,7 +293,7 @@ return declare(ContentPane, {
 		
 		if (!this._gridPreviewPanel.isPopulated() || isDirty) {
 			var callback = function(compoundCommand) {
-				var selectedColumnIds = this._gridSelectColumnsPanel.getSelectedColumnIds();
+				var selectedColumnIds = this._gridSelectColumnsPanel.getTargetColumnIds();
 				this._gridPreviewPanel.populate(this._widget, compoundCommand, selectedColumnIds, this._dataSourcePanel._gridInput);
 			}.bind(this);
 			this._getUpdateCompoundCommand(callback);
@@ -440,7 +442,7 @@ return declare(ContentPane, {
 			//Assuming _gridPreviewPanel can only be populated if _gridSelectColumnsPanel has been populated
 			modifiedHeaderElements = this._gridPreviewPanel.getUpdatedColumnStructure();
 		} else if (this._gridSelectColumnsPanel.isPopulated()) {
-			selectedColumnIds = this._gridSelectColumnsPanel.getSelectedColumnIds();
+			selectedColumnIds = this._gridSelectColumnsPanel.getTargetColumnIds();
 		}
 		
 		//Making assumption the last command is the one for upgrading the grid itself

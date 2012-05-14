@@ -116,7 +116,7 @@ return declare([ContentPane, GridWizardPanel], {
 		});
 		
 		//Create preview grid
-		this._grid = new Grid({
+		var grid = this._grid = new Grid({
 			cacheClass: Cache,
 			//cacheSize: 0,
 			store: this._gridStore,
@@ -138,12 +138,12 @@ return declare([ContentPane, GridWizardPanel], {
 		var desiredHeight = dojo.style(this._widget.dijitWidget.domNode, "height") + "px";
 		dojo.style(previewPanelGridContentPane.domNode, "width", desiredWidth);
 		dojo.style(previewPanelGridContentPane.domNode, "height", desiredHeight);
-		previewPanelGridContentPane.set("content", this._grid);
-		
+		previewPanelGridContentPane.set("content", grid);
+
 		// Listen for resize, so we can cause the grid to lay itself out when it has dimensions. Otherwise, 
 		// GridX doesn't layout columns non-pixel width settings (like "auto" and percentage) very well
 		this._connections.push(dojo.connect(
-				this._grid, "resize", dojo.hitch(this, function(size) {
+				grid, "resize", dojo.hitch(this, function(size) {
 					if (!this._gridBeenSized) {
 						this._grid.setColumns(this._grid.structure);
 						this._gridBeenSized = true;
@@ -152,11 +152,11 @@ return declare([ContentPane, GridWizardPanel], {
 		
 		//Listen for column selection changes
 		this._connections.push(dojo.connect(
-				this._grid.select.column, "onSelectionChange", dojo.hitch(this, this._handleColumnSelectionChange)));
+				grid.select.column, "onSelectionChange", dojo.hitch(this, this._handleColumnSelectionChange)));
 		
 		//Listen for column resizes
 		this._connections.push(dojo.connect(
-				this._grid.columnResizer, "onResize", dojo.hitch(this, this._handleColumnResized)));
+				grid.columnResizer, "onResize", dojo.hitch(this, this._handleColumnResized)));
 		
 		//Listen for changes to the input fields in the column props sections
 		var gridWizardPreviewLabelInput = dijit.byId("gridWizardPreviewLabelInput");

@@ -67,6 +67,10 @@ return declare([ContentPane, GridWizardPanel], {
 		this.set("content", templateString);
 	},
 	
+	getStepLabel: function() {
+		return gridxNls.configureColumnsHeader;
+	},
+	
 	populate: function(widget, compoundCommand, selectedStructureFieldNames, gridInput) {  
 		//Reset flags
 		this._columnWidthChangedSinceLastPopulate = false;

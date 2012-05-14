@@ -12,12 +12,16 @@ return declare([ContentPane, GridWizardPanel], {
 		dojo .addClass(dataSourceInputContainer.domNode, "dataSourcePanelDataSourceInputContainer");
 		this.setContent(dataSourceInputContainer);
 	},
+	
+	getStepLabel: function() {
+		return gridxNls.dataSourceHeader;
+	},
 
-	populate: function(widgetId) {
+	populate: function(widget) {
 		//Create GridInput (which we'll embed rather than have as standalone dialog)
 		this._gridInput = new GridInput();
 		this._gridInput._embeddingContentPane = this._dataSourceInputContainer;
-		this._gridInput.show(widgetId);
+		this._gridInput.show(widget.id);
 		
 		//Save input values for later use in determining whether our data is "dirty"
 		this._saveInputValues();
@@ -28,8 +32,8 @@ return declare([ContentPane, GridWizardPanel], {
 	
 	resize: function(size) {
 		this.inherited(arguments);
-	
-		if (this._gridInput) {
+
+		if (this._gridInput && (!this._oldSize || this._oldSize.w != size.w || this._oldSize.h != size.h)) {
 			//Set size of main div in GridInput
 			var ieb = dojo.byId("ieb");
 			dojo.style(ieb, "width", size.w - 30 + "px");
@@ -37,9 +41,11 @@ return declare([ContentPane, GridWizardPanel], {
 			//Set size of resize div in GridInput
 			var targetObj = dojo.byId("iedResizeDiv");
 			dojo.style(targetObj, "width", size.w - 30 + "px");
-			dojo.style(targetObj, "height", size.h - 92 + "px");
+			dojo.style(targetObj, "height", size.h - 100 + "px");
 			
 			this._gridInput.resize();
+			
+			this._oldSize = size;
 		}
 	},
 	

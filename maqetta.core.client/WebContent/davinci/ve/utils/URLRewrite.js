@@ -55,6 +55,13 @@ return {
 		return urlInside;
 	},
 	
+	encodeURI : function(url){
+	
+		var pass1 = encodeURI(url);
+		return pass1.replace(/#/g, "%23");
+		
+	},
+	
 	/**
 	 * Extract actual url inside of a CSS url(...) function.
 	 * If url doesn't match regex for url(...) function, return null

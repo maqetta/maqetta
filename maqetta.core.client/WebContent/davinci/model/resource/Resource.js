@@ -3,8 +3,9 @@ define([
 	"davinci/Runtime",
 	"davinci/model/Model",
 //	"davinci/Workbench",
-	"davinci/model/Path"
-], function(declare, Runtime, Model, /*Workbench,*/ Path) {
+	"davinci/model/Path",
+	"davinci/ve/utils/URLRewrite"
+], function(declare, Runtime, Model, /*Workbench,*/ Path, URLRewrite) {
 
 return declare("davinci.model.resource.Resource", Model, {
 
@@ -41,12 +42,15 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	getURL: function() {
+		
 		var path = this.getPath();
 		if(path.indexOf("./") == 0 ) {
 			path = path.substring(2, path.length);
 		}
 		var userWorkspaceUrl = Runtime.getUserWorkspaceUrl();
-		return userWorkspaceUrl + path;
+		
+		/* need a special flavor or URI Rewrite to encode files with # */
+		return  URLRewrite.encodeURI(userWorkspaceUrl + path);
 	},
 
 	rename: function(newName) {

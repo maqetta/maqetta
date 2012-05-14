@@ -5,6 +5,9 @@ define(
 function(declare) {
 
 return declare(null, {
+	getStepLabel: function() {
+		return null;
+	},
 	populate: function(context) {  
 		//Mark as populated
 		this._isPopulated = true;

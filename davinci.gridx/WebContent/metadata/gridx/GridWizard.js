@@ -31,6 +31,12 @@ return declare(ContentPane, {
 		//Create data structure to keep track of connections
 		this._connections = [];
 		
+		//Create page handlers... NOTE: these would eventually be passed in or provided by subclass
+		this._pages = [];
+		this._pages.push({pageHandler: new GridWizardDataSourcePanel()});
+		this._pages.push({pageHandler: new GridWizardSelectColumnsPanel()});
+		this._pages.push({pageHandler: new GridWizardPreviewPanel()});
+		
 		//Create the elements making up our wizard
 		var wizardContainer = this._createWizard();
 
@@ -73,17 +79,16 @@ return declare(ContentPane, {
 		});
 		dojo.addClass(stepsContentPane.domNode, "steps");
 		
-		var navPage1 = this.navPage1 = this._createStepHeading(0, gridxNls.dataSourceHeader);
-		dojo.place(navPage1, stepsContentPane.domNode); 
-		var navPage2 = this.navPage2 = this._createStepHeading(1, gridxNls.selectColumnsHeader);
-		dojo.place(navPage2, stepsContentPane.domNode); 
-		var navPage3 = this.navPage3 = this._createStepHeading(2, gridxNls.configureColumnsHeader);
-		dojo.place(navPage3, stepsContentPane.domNode); 
+		//Create step for each page
+		dojo.forEach(this._pages, function(page, index) {
+			var stepHeader = this._createStepHeader(page, index);
+			dojo.place(stepHeader, stepsContentPane.domNode);
+		}.bind(this));
 		
 		return stepsContentPane;
 	},
 	
-	_createStepHeading: function(stepIndex, stepTitle) {
+	_createStepHeader: function(page, stepIndex) {
 		var step = dojo.create("div");
 		if (stepIndex == 0) {
 			dojo.addClass(step, "crumbs");
@@ -110,10 +115,14 @@ return declare(ContentPane, {
 		}
 		dojo.place(stepIcon, step);
 		
+		var stepTitle = page.pageHandler.getStepLabel();
 		var stepLabelSpan = dojo.create("span", {
 			innerHTML: dojo.replace(gridxNls.stepHeader, [stepIndex+1, stepTitle])
 		});
 		dojo.place(stepLabelSpan, step);
+		
+		page.stepHeader = step;
+		page.stepHeaderIcon = stepIcon;
 		
 		return step;
 	},
@@ -125,50 +134,31 @@ return declare(ContentPane, {
 		});
 		dojo.addClass(wizardStackContainer.domNode, "wizardStackContainer");
 		
-		//Create individual pages
-		var page1 = this.page1 = new ContentPane();
-		dojo.addClass(page1.domNode, "pageNode");
-		var page2 = this.page2 = new ContentPane();
-		dojo.addClass(page2.domNode, "pageNode");
-		var page3 = this.page3 = new ContentPane();
-		dojo.addClass(page3.domNode, "pageNode");
-		wizardStackContainer.addChild(page1);
-		wizardStackContainer.addChild(page2);
-		wizardStackContainer.addChild(page3);
-
-		this._initPage1();
-		this._initPage2();
-		this._initPage3();
+		//Init individual pages
+		dojo.forEach(this._pages, function(page) {
+			//Create the page container and add to stack container
+			var pageContainer = new ContentPane();
+			dojo.addClass(pageContainer.domNode, "pageNode");
+			wizardStackContainer.addChild(pageContainer);
+			page.pageContainer = pageContainer;
+			
+			//Add the page to the container
+			dojo.addClass(page.pageHandler.domNode, "wizardPanel");
+			pageContainer.set("content", page.pageHandler);
+		}.bind(this));
 		
-		return wizardStackContainer;
-	},
-	
-	_initPage1: function() {
-		dataSourcePanel = this._dataSourcePanel = new GridWizardDataSourcePanel();
-		dojo.addClass(dataSourcePanel.domNode, "wizardPanel");
-		this.page1.set("content", dataSourcePanel);
-		
-		// Populate the page when it's first shown. This is especially important for dataSourcePanel
+		// Populate the first page when it's first shown. This is especially important for dataSourcePanel
 		// because of it's reliance of how it gets the embedded div for data source configuration. The
 		// DataGridInput/DataStoreBasedWidgetInput classes rely on the div being in the dom tree so
 		// they can look up HTML elements in the div by ID.
-		this._connections.push(dojo.connect(this._dataSourcePanel, "onShow", dojo.hitch(this, function() {
-			if (!this._dataSourcePanel.isPopulated()) {
-				this._populatePage1();
+		var firstPageHandler = this._pages[0].pageHandler;
+		this._connections.push(dojo.connect(firstPageHandler, "onShow", dojo.hitch(this, function() {
+			if (!firstPageHandler.isPopulated()) {
+				this._populatePage(firstPageHandler);
 			}
 		})));
-	},
-
-	_initPage2: function() {
-		var gridSelectColumnsPanel = this._gridSelectColumnsPanel = new GridWizardSelectColumnsPanel({});
-		dojo.addClass(gridSelectColumnsPanel.domNode, "wizardPanel");
-		this.page2.set("content", this._gridSelectColumnsPanel);
-	},
-
-	_initPage3: function() {
-		var gridPreviewPanel = this._gridPreviewPanel = new GridWizardPreviewPanel({});
-		dojo.addClass(gridPreviewPanel.domNode, "wizardPanel");
-        this.page3.set("content", this._gridPreviewPanel);
+		
+		return wizardStackContainer;
 	},
 	
 	_createBottomSection: function() {
@@ -229,34 +219,115 @@ return declare(ContentPane, {
 	},
 	
 	_forward: function() {
-		var selectedPage = this.wizardStackContainer.selectedChildWidget;
+		var selectedPageContainer = this.wizardStackContainer.selectedChildWidget;
 		
-		if (selectedPage === this.page1) {
-			if (this._checkValidity(this._dataSourcePanel)) {
-				this._populatePage2();
-			} else {
-				return;
+		var selectedPageIndex = this._getPageIndexByContainer(selectedPageContainer);
+		var selectedPage = this._pages[selectedPageIndex];
+		var nextPage = this._pages[selectedPageIndex + 1];
+		if (this._checkValidity(selectedPage.pageHandler)) {
+			var populatePageCallback = function(pageHandler) {
+				//Didn't run into issues, so let's move wizard forward
+				this._clearErrorMessage();
+				this.wizardStackContainer.forward();
+			}.bind(this);
+			this._populatePage(nextPage.pageHandler, populatePageCallback);
+		} 
+	},
+	
+	_getPageIndexByHandler: function(pageHandler) {
+		var retVal = -1;
+		dojo.some(this._pages, function(page, index) {
+			if (page.pageHandler == pageHandler) {
+				retVal = index;
+				return true;
 			}
-		} else if (selectedPage === this.page2) {
-			if (this._checkValidity(this._gridSelectColumnsPanel)) {
-				this._populatePage3();
-			} else {
-				return;
+		});
+		return retVal;
+	},
+	
+	_getPageIndexByContainer: function(pageContainer) {
+		var retVal = -1;
+		dojo.some(this._pages, function(page, index) {
+			if (page.pageContainer == pageContainer) {
+				retVal = index;
+				return true;
 			}
-		}
-		
-		//Didn't run into issues, so let's move wizard forward
-		this._clearErrorMessage();
-		this.wizardStackContainer.forward();
+		});
+		return retVal;
+	},
+	
+	_getPageIndexByHeader: function(stepHeader) {
+		var retVal = -1;
+		dojo.some(this._pages, function(page, index) {
+			if (page.stepHeader == stepHeader) {
+				retVal = index;
+				return true;
+			}
+		});
+		return retVal;
 	},
 	
 	_back: function() {
+		//Clear error messages
+		this._clearErrorMessage();
+		
+		//Go back
 		this.wizardStackContainer.back();
 	},
 	
-	_checkValidity: function(wizardPane) {
+	select: function (target) {
+		//Clear error messages
+		this._clearErrorMessage();
+		
+		//Figure out current page
+		var stackContainer = this.wizardStackContainer;
+		var currentPage = stackContainer.selectedChildWidget;
+		var currentPageIndex = this._getPageIndexByContainer(currentPage);
+		
+		//Determine the desired page
+		var desiredPageIndex = this._getPageIndexByHeader(target);
+		if (desiredPageIndex < 0) {
+			//try again with the parent element
+			desiredPageIndex = this._getPageIndexByHeader(target.parentElement);
+		}
+		desiredPage = this._pages[desiredPageIndex];
+		
+		//Really only need to worry about validating/populating if going forward
+		if (desiredPageIndex > currentPageIndex) {
+			//check validity of first page
+			if (!this._checkValidity(this._pages[0].pageHandler)) {
+				return;
+			}
+			
+			var mainPopulatePageCallback = function(pageHandler) {
+				//Select container
+				stackContainer.selectChild(desiredPage.pageContainer, true);
+			}.bind(this);
+			
+			if (desiredPageIndex == 1) { //columns panel
+				this._populatePage(desiredPage.pageHandler, mainPopulatePageCallback);
+			} else { //preview panel
+				var columnsPopulatePageCallback = function(pageHandler) {
+					//Make sure columns panel is valid
+					if (!this._checkValidity(this._pages[1].pageHandler)) {
+						return;
+					}
+					
+					//Now populate the desired page (preview panel)
+					this._populatePage(desiredPage.pageHandler, mainPopulatePageCallback);
+				}.bind(this);
+				//Make sure the columns panel is populated
+				this._populatePage(this._pages[1].pageHandler, columnsPopulatePageCallback);
+			}
+		} else {
+			//Select container
+			stackContainer.selectChild(desiredPage.pageContainer, true);
+		}
+	},
+	
+	_checkValidity: function(pageHandler) {
 		var result = true;
-		var paneValidity = wizardPane.isValid();
+		var paneValidity = pageHandler.isValid();
 		switch(typeof paneValidity){
 			case "boolean":
 				valid = paneValidity;
@@ -266,98 +337,21 @@ return declare(ContentPane, {
 				result = false;
 				break;
 		}
+		this._updateStepIcons();
 		return result;
 	},
 	
-	_populatePage1: function() {
-		this._dataSourcePanel.populate(this.widgetId, this.page1);
+	_updateStepIcons: function() {
+		dojo.forEach(this._pages, function(page) {
+			if (page.pageHandler.isPopulated() && !(page.pageHandler.isValid() == true)) {
+				dojo.removeClass(page.stepHeaderIcon, "done");
+				dojo.addClass(page.stepHeaderIcon, "todo");
+			} else {
+				dojo.addClass(page.stepHeaderIcon, "done");
+				dojo.removeClass(page.stepHeaderIcon, "todo");
+			}
+		});
 	},
-	
-	_populatePage2: function() {
-		var isDirty = this._dataSourcePanel.isDirty();
-		
-		if (!this._gridSelectColumnsPanel.isPopulated() || isDirty) {
-			//Create callback to receive update command
-			var updateCommandCallback = function(compoundCommand) {
-				//For now, assuming if anything has changed on data source panel that 
-				//we shouldn't pay any attention to current column set-up. But, that's simplistic
-				//since user may have just added row or changed cell value.
-				this._gridSelectColumnsPanel.populate(this._widget, compoundCommand);
-			}.bind(this);
-			this._getUpdateCompoundCommand(updateCommandCallback);
-		}
-	},
-	
-	_populatePage3: function() {
-		var isDirty = this._gridSelectColumnsPanel.isDirty();
-		
-		if (!this._gridPreviewPanel.isPopulated() || isDirty) {
-			var callback = function(compoundCommand) {
-				var selectedColumnIds = this._gridSelectColumnsPanel.getTargetColumnIds();
-				this._gridPreviewPanel.populate(this._widget, compoundCommand, selectedColumnIds, this._dataSourcePanel._gridInput);
-			}.bind(this);
-			this._getUpdateCompoundCommand(callback);
-		}
-	},
-	
-	_getUpdateCompoundCommand: function(updateCommandCallback) {
-		if (this._dataSourcePanel.isDirty() || !this._compoundCommand) {
-			var callback = function(compoundCommand) {
-				this._compoundCommand = compoundCommand;
-				updateCommandCallback(this._compoundCommand);
-			}.bind(this);
-			this._dataSourcePanel.getUpdateWidgetCommand(callback);
-		} else {
-			updateCommandCallback(this._compoundCommand);
-		}
-	},
-
-	_onPageSelected: function(page) {
-		this.prev.set("disabled", page.isFirstChild);
-		this.next.set("disabled", page.isLastChild);
-		dojo.removeClass(this.navPage1, "current");
-		dojo.removeClass(this.navPage2, "current");
-		dojo.removeClass(this.navPage3, "current");
-
-		if (page == this.page1) {
-			dojo.addClass(this.navPage1 ,"current");
-		}
-		if (page == this.page2) {
-			dojo.addClass(this.navPage2, "current");
-		}
-		if (page == this.page3) {
-			dojo.addClass(this.navPage3, "current");
-		}
-	},
-
-	/* AWE TODO: Deal with properly setting status icons on page headers
-	updateSubmit : function() {
-		var valid = this.versionTitle.isValid() && this.dueDate.isValid();
-		var valid2 = this.reviewFiles && this.reviewFiles.length > 0;
-		var valid3 = this.userData.length > 0;
-		dojo.removeClass(this.navPage1Icon, valid ? "todo" : "done");
-		dojo.addClass(this.navPage1Icon, valid ? "done" : "todo");
-		dojo.removeClass(this.navPage2Icon, valid2 ? "todo" : "done");
-		dojo.addClass(this.navPage2Icon, valid2 ? "done" : "todo");
-		dojo.removeClass(this.navPage3Icon, valid3 ? "todo" : "done");
-		dojo.addClass(this.navPage3Icon, valid3 ? "done" : "todo");
-		this.finish.set("disabled", !(valid && valid2 && valid3));
-		var errMsg="";
-		if (!valid3) {
-			errMsg = gridxNls.noReviewersSelected;
-		}
-		if (!valid2) {
-			errMsg = gridxNls.noFilesSelected;
-		}
-		if (!this.dueDate.isValid()) {
-			errMsg = gridxNls.dueDateIncorrect;
-		}
-		if (!this.versionTitle.isValid()) {
-			errMsg = gridxNls.titleRequired;
-		}
-		this.reviewMsg.innerHTML = errMsg;
-	},
-	*/
 	
 	_showErrorMessage: function(errMsg) {
 		this.reviewMsg.innerHTML = errMsg;
@@ -365,40 +359,105 @@ return declare(ContentPane, {
 	
 	_clearErrorMessage: function() {
 		this._showErrorMessage("");
+		this._updateStepIcons();
+	},
+	
+	_populatePage: function(pageHandler, callback) {
+		var pageIndex = this._getPageIndexByHandler(pageHandler);
+		
+		var isDirty = false;
+		if (pageIndex > 0) {
+			var previousPage = this._pages[pageIndex - 1];
+			isDirty = previousPage.pageHandler.isDirty();
+		}
+		
+		if (!pageHandler.isPopulated() || isDirty) {
+			this._populatePageHelper(pageHandler, pageIndex, callback);
+		} else {
+			if (callback) {
+				callback(pageHandler);
+			}
+			this._updateStepIcons();
+		}
+	},
+	
+	//NOTE: as we move to a more generic wizard framework, this would be a candidate for a subclass
+	_populatePageHelper: function(pageHandler, pageIndex, populateCallback) {
+		if (pageIndex == 0) {
+			pageHandler.populate(this._widget, populateCallback);
+			this._updateStepIcons();
+		} else {
+			//Create callback to receive update command
+			var updateCommandCallback = function(compoundCommand) {
+				if (pageIndex == 1) {
+					//For now, assuming if anything has changed on data source panel that 
+					//we shouldn't pay any attention to current column set-up. But, that's simplistic
+					//since user may have just added row or changed cell value.
+					pageHandler.populate(this._widget, compoundCommand);
+				} else {
+					var selectedColumnIds = this._pages[1].pageHandler.getTargetColumnIds();
+					pageHandler.populate(this._widget, compoundCommand, selectedColumnIds, this._pages[0].pageHandler._gridInput);
+				}
+				
+				if (populateCallback) {
+					populateCallback(pageHandler, true);
+				}
+				this._updateStepIcons();
+			}.bind(this);
+			this._getUpdateCompoundCommand(updateCommandCallback);
+		}
+	},
+	
+	//NOTE: as we move to a more generic wizard framework, this will need some refactoring
+	_getUpdateCompoundCommand: function(updateCommandCallback) {
+		var pageHandler = this._pages[0].pageHandler; //data source panel
+		if (pageHandler.isDirty() || !this._compoundCommand) {
+			//Let's mark last two panels as unvisited
+			for (var i = 1; i < this._pages.length; i++) {
+				this._pages[i].pageHandler.unpopulate();
+			}
+			
+			//Get fresh command
+			var callback = function(compoundCommand) {
+				this._compoundCommand = compoundCommand;
+				updateCommandCallback(this._compoundCommand);
+			}.bind(this);
+			pageHandler.getUpdateWidgetCommand(callback);
+		} else {
+			updateCommandCallback(this._compoundCommand);
+		}
 	},
 
-	//AWE TODO: Deal with going to page directly (rather than with forward and back buttons)
-	select: function (target) {
-		/*
-		var target = evt.target;
-		var stackContainer = this.wizardStackContainer;
-		if (target == this.navPage1 || target == this.navPage1Icon) {
-			stackContainer.selectChild(this.page1, true);
-		} else if (target == this.navPage2 || target == this.navPage2Icon) {
-			stackContainer.selectChild(this.page2, true);
-		} else if (target == this.navPage3 || target == this.navPage3Icon) {
-			stackContainer.selectChild(this.page3, true);
-		}
-		*/
+	_onPageSelected: function(pageContainer) {
+		this.prev.set("disabled", pageContainer.isFirstChild);
+		this.next.set("disabled", pageContainer.isLastChild);
+		dojo.forEach(this._pages, function(page) {
+			dojo.removeClass(page.stepHeader, "current");
+		});
+		
+		var pageIndex = this._getPageIndexByContainer(pageContainer);
+		dojo.addClass(this._pages[pageIndex].stepHeader,"current");
 	},
 	
 	_finish: function(value) {
 		//Clear any current messages
 		this._clearErrorMessage();
 		
-		if (this._dataSourcePanel.isDirty()) {
+		//NOTE: some checks that would eventually move to a subclass
+		if (this._pages[0].pageHandler.isDirty()) {
 			//Basically, marking 2nd and 3rd panels as unvisited because
 			//the data source has changed
-			this._gridSelectColumnsPanel.unpopulate();
-			this._gridPreviewPanel.unpopulate();
-		} else if (this._gridSelectColumnsPanel.isDirty()) {
+			for (var i = 1; i < this._pages.length; i++) {
+				this._pages[i].pageHandler.unpopulate();
+			}
+		} else if (this._pages[1].pageHandler.isDirty()) {
 			//Mark third panel as unvisited because set of selected
 			//columns has changed.
-			this._gridPreviewPanel.unpopulate();
+			this._pages[2].pageHandler.unpopulate();
 		}
 		
 		//Validate panel 1
-		if (!this._checkValidity(this._dataSourcePanel)) {
+		if (!this._checkValidity(this._pages[0].pageHandler)) {
 			return;
 		}
 		
@@ -408,12 +467,12 @@ return declare(ContentPane, {
 		// changed first panel without going forward again.
 		var updateCommandCallback = function(compoundCommand) {
 			//Validate panel 2 (if it's populated)
-			if (this._gridSelectColumnsPanel.isPopulated() && !this._checkValidity(this._gridSelectColumnsPanel)) {
+			if (this._pages[1].pageHandler.isPopulated() && !this._checkValidity(this._pages[1].pageHandler)) {
 				return;
 			}
 			
 			//Validate panel 3 (if it's populated)
-			if (this._gridPreviewPanel.isPopulated() && !this._checkValidity(this._gridPreviewPanel)) {
+			if (this._pages[2].pageHandler.isPopulated() && !this._checkValidity(this._pages[2].pageHandler)) {
 				return;
 			}
 			
@@ -438,11 +497,11 @@ return declare(ContentPane, {
 		// We need to deal with case if Finish was pressed before getting to the 2nd and/or 3rd panels
 		var modifiedHeaderElements = null;
 		var selectedColumnIds = null;
-		if (this._gridPreviewPanel.isPopulated()) {
+		if (this._pages[2].pageHandler.isPopulated()) {
 			//Assuming _gridPreviewPanel can only be populated if _gridSelectColumnsPanel has been populated
-			modifiedHeaderElements = this._gridPreviewPanel.getUpdatedColumnStructure();
-		} else if (this._gridSelectColumnsPanel.isPopulated()) {
-			selectedColumnIds = this._gridSelectColumnsPanel.getTargetColumnIds();
+			modifiedHeaderElements = this._pages[2].pageHandler.getUpdatedColumnStructure();
+		} else if (this._pages[1].pageHandler.isPopulated()) {
+			selectedColumnIds = this._pages[1].pageHandler.getTargetColumnIds();
 		}
 		
 		//Making assumption the last command is the one for upgrading the grid itself

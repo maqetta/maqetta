@@ -36,6 +36,10 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 	postCreate: function() {
 		
 	},
+	
+	getStepLabel: function() {
+		return gridxNls.selectColumnsHeader;
+	},
 
 	populate: function(widget, compoundCommand, ignoreCurrentWidgetStructure) {
 		var currentWidgetStructure = null;

@@ -1,8 +1,4 @@
-define([
-	"dojo/_base/declare"
-], function(declare){
-
-var Color = declare("davinci.review.Color", null, {
+define({
 	colors:[
 	        "firebrick",
 	        "darkblue",
@@ -15,8 +11,4 @@ var Color = declare("davinci.review.Color", null, {
 	        "darkcyan",
 	        "deeppink"
 	        ]
-});
-
-return dojo.setObject("davinci.review.colors", new Color());
-
 });

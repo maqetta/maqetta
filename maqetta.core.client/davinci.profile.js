@@ -50,6 +50,7 @@ dependencies = {
 		{
 			name: "../davinci/ve/themeEditor/ThemeEditor.js",
 			layerDependencies: [
+			    "../dijit/dijit.js",
 				"../davinci/davinci.js"
 			],
 			dependencies: [
@@ -59,6 +60,7 @@ dependencies = {
 		{
 			name: "../davinci/review/view/CommentView.js",
 			layerDependencies: [
+			    "../dijit/dijit.js",
 				"../davinci/davinci.js"
 			],
 			dependencies: [
@@ -68,6 +70,7 @@ dependencies = {
 		{
 			name: "../davinci/review/view/CommentExplorerView.js",
 			layerDependencies: [
+			    "../dijit/dijit.js",
 				"../davinci/davinci.js"
 			],
 			dependencies: [

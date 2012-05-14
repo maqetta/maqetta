@@ -144,6 +144,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if(!(helper && helper.disableDragging && helper.disableDragging(moverWidget)) &&
 						(!parent || !parent.isLayout || !parent.isLayout())){
 					this._moverWidget = moverWidget;
+					this._moverWidgets = [moverWidget];
 					this._moverLastEventTarget = null;
 					var cp = context._chooseParent;
 					cp.setProposedParentWidget(null);
@@ -156,6 +157,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
 						this._moverStartLocations.push({l:l, t:t});
 */
+if(selection[i] != moverWidget){
+	this._moverWidgets.push(selection[i]);
+}
 var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(selection[i].domNode);
 this._moverStartLocations.push(marginBoxPageCoords);
 var l = parseFloat(userDojo.style(selection[i].domNode, 'left'), 10);
@@ -869,7 +873,7 @@ var snapBox = GeomUtils.getMarginBoxPageCoords(this._moverWidget.domNode);
 		// Call the dispatcher routine that updates snap lines and
 		// list of possible parents at current (x,y) location
 		context.dragMoveUpdate({
-				widgets:[this._moverWidget],
+				widgets:this._moverWidgets,
 				data:data,
 				eventTarget:event.target,
 				position:position,

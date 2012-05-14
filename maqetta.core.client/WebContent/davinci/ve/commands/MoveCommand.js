@@ -115,7 +115,7 @@ if(context._snapY.typeRefObj=="top"){
         var newLeft = this._newBox.l - parentBorderLeft;
         var newTop = this._newBox.t - parentBorderTop;
 */
-debugger;
+//debugger;
 // this._newBox holds page-relative coordinates.
 // Subtract off offsetParent's borderbox coordinate (in page-relative coords from dojo.position), and
 // subtract off offsetParent's border, because left: and top: are relative to offsetParent's borderbox

@@ -385,7 +385,7 @@ console.log('moverWidget l='+l+',t='+t+',w='+w+',h='+h);
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in newBox && "t" in newBox && position_prop == 'absolute'){
-debugger;
+//debugger;
 /*
 				var p = this._adjustLTOffsetParent(context, widget, newBox.l, newBox.t);
 				var left = p.l;
@@ -469,7 +469,7 @@ debugger;
 				context.select(null);
 				
 			}else{
-debugger;
+//debugger;
 				var left = newBox.l,
 					top = newBox.t;
 /*
@@ -492,7 +492,7 @@ debugger;
 					doMove = {l:newPos.l, t:newPos.t};
 */
 				}
-debugger;
+//debugger;
 /*
 				var b = widget.getMarginBox(),
 					dx = left - b.l,

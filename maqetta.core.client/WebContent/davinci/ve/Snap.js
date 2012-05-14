@@ -202,9 +202,14 @@ dj_coords.y = dj_coords.t;
 			var box; // Initial values are assigned by internal function snapSetup below leveraging closure
 			function snapSetup(context, widget, widgetDiv, alignDiv){
 				widgetDiv.style.display='block';
-				alignDiv.style.display='block';		
+				alignDiv.style.display='block';
+/*
 				var dj = context.getDojo();
 				box = dj.coords(widget.domNode, true);
+*/
+box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+box.x = box.l;
+box.y = box.t;
 				box.r = box.x + box.w;
 				box.b = box.y + box.h;
 				box.c = box.x + box.w/2;

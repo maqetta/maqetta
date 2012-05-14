@@ -1,16 +1,9 @@
 define([
-	"dojo/_base/declare",
 	"davinci/Runtime",
 	"./Color"
-], function(declare, Runtime, Color) {
+], function(Runtime, Color) {
 
 return {
-
-	publish: function(node) {
-		var publish = new davinci.review.actions.PublishAction();
-		publish.run(node);
-	},
-
 	getColor: function(/*string*/ name) {
 		var index;
 		dojo.some(Runtime.reviewers, function(item, n) {

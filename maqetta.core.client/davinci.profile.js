@@ -55,6 +55,24 @@ dependencies = {
 			dependencies: [
 			    "davinci.ve.themeEditor.ThemeEditor"
 			]
+		},
+		{
+			name: "../davinci/review/view/CommentView.js",
+			layerDependencies: [
+				"../davinci/davinci.js"
+			],
+			dependencies: [
+				"davinci.review.view.CommentView"
+			]
+		},
+		{
+			name: "../davinci/review/view/CommentExplorerView.js",
+			layerDependencies: [
+				"../davinci/davinci.js"
+			],
+			dependencies: [
+				"davinci.review.view.CommentExplorerView"
+			]
 		}
 	],
 

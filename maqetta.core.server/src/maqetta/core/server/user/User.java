@@ -323,9 +323,15 @@ public class User implements IUser {
 	protected void findLibFiles(IPath path, ArrayList results) {
 	
 		IVResource[] result = this.workspace.find(path.toString());
-
+		/* make sure that we dont add library files that already exist in the file system */
 		for (int i = 0; i < result.length; i++) {
-			results.add(result[i]);
+			boolean existing = false;
+			for(int z=0;z<results.size() && !existing;z++){
+				if(((IVResource)results.get(z)).getPath().equals(result[i].getPath()))
+					existing = true;
+			}
+			if(!existing)
+				results.add(result[i]);
 		}
 	}
 
@@ -533,9 +539,10 @@ public class User implements IUser {
 		}
 		/* search the libraries */
 		
-		if (!workspaceOnly) 
-			findLibFiles(path, results);
-		
+		if (!workspaceOnly) {
+			IPath fullPath = new Path(startFolder).append(pathStr);
+			findLibFiles(fullPath, results);
+		}
 		
 		
 		if (workspaceOnly) {

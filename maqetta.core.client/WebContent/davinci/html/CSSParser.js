@@ -442,9 +442,18 @@ CSSParser.parse = function (text, parentElement) {
 					}
 					nextToken();
 					property.value = token.value;
+
+					if (property.value == "url") { 
+						// urls can contain data: urls #2057, so go until )
+						while ((nextToken()).content != ")") {
+							property.value += token.value;
+						}
+					}
+
 					while ((nextToken()).content != ";" && token.content != "}") {
 						property.value += token.value;
 					}
+
 					if (pushComment) {
 						property.postComment = pushComment;
 						pushComment = null;

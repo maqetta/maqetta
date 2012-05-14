@@ -91,16 +91,24 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 				childrenAttrs : [ "children" ]
 			});
 		}
-		this.outlineTree = new ToggleTree({
+
+		var treeArgs = {
 			showRoot: this.outlineModel.showRoot,
-			dndController: this.outlineModel.dndController,
 			betweenThreshold: this.outlineModel.betweenThreshold, 
 			checkItemAcceptance: this.outlineModel.checkItemAcceptance, 
 			model: this.outlineModel,
 			getIconClass: iconFunction || ToggleTree.prototype.getIconClass,
 			isMultiSelect: true,
 			persist: false
-		});
+		}
+
+		// #2256 - dijit tree cannot have a null dndController
+		if (this.outlineModel.dndController) {
+			treeArgs.dndController = this.outlineModel.dndController;
+		}
+
+		this.outlineTree = new ToggleTree(treeArgs);
+
 		
 		this.outlineTree.notifySelect=dojo.hitch(this, function (item, ctrlKeyPressed) {
 			this.publish("/davinci/ui/selectionChanged", [[{model:item, add:ctrlKeyPressed}], this.currentEditor]);

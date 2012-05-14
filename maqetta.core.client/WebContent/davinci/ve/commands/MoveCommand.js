@@ -48,10 +48,10 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		if(!this._oldBox){
 			var box = widget.getMarginBox();
 //NOTE: box is parent-relative, box2 is page-relative
-var box2 = GeomUtils.getMarginBoxPageCoords(widget.domNode);
-console.log('MoveCommand execute box, box2:');
-console.dir(box);
-console.dir(box2);
+//var box2 = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+//console.log('MoveCommand execute box, box2:');
+//console.dir(box);
+//console.dir(box2);
 			this._oldBox = {l: box.l, t: box.t, w:box.w, h:box.h};
 		}
 		if(!widget.domNode.offsetParent){

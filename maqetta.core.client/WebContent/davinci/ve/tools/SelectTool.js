@@ -714,6 +714,7 @@ compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, app
 		}
 		var command = new CompoundCommand();
 		dojo.forEach(selection, function(w){
+/*
 			var node = w.getStyleNode();
 			if(node.style.position != "absolute"){
 				return;
@@ -724,6 +725,9 @@ compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, app
 			var parentBorderTop = parseInt(dojo.style(node.offsetParent, 'borderTopWidth'));
 			var box = dojo.marginBox(node);
 			var position = {x: box.l + parentBorderLeft + dx, y: box.t + parentBorderTop + dy};
+*/
+var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(w.domNode);
+var position = {x: marginBoxPageCoords.l + dx, y: marginBoxPageCoords.t + dy};
 			command.add(new MoveCommand(w, position.x, position.y));
 		}, this);
 		if(!command.isEmpty()){

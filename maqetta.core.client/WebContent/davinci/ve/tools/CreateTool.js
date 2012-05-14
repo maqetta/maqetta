@@ -557,7 +557,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}else if(this._position){
 			// convert container relative position to parent relative position
 			position = this._position;
-debugger;
+//debugger;
 /* Let's try leaving things in absolute coordinates
 			var containerNode = this._context.getContainerNode();
 			if(parentNode && parentNode != containerNode){

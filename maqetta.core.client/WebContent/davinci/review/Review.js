@@ -1,8 +1,7 @@
 define([
-	"dojo/_base/declare",
 	"davinci/Runtime",
 	"./Color"
-], function(declare, Runtime, Color) {
+], function(Runtime, Color) {
 
 return {
 

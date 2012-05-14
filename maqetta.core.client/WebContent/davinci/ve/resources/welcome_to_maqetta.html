@@ -107,7 +107,7 @@
 				</tr>
 				<tr>
 					<td class="welcome_section_cell">
-						<div class="welcome_section welcome_section_active" onclick="require(['davinci/review/Review'], function(Review) { Review.publish(); });">
+						<div class="welcome_section welcome_section_active" onclick="require(['davinci/review/actions/PublishAction'], function(PublishAction) { new PublishAction().run(); });">
 							<div class="welcome_section_header">
 								New Review
 							</div>

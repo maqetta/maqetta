@@ -130,9 +130,11 @@ var newTop = this._newBox.t - offsetParentBorderBoxPageCoords.y - borderExtents.
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
 		var currentStateIndex = this._getCurrentStateIndex();
 		if(this._oldBox){
+			var oldLeft = this._oldBox.l - offsetParentBorderBoxPageCoords.x - borderExtents.l;
+			var oldTop = this._oldBox.t - offsetParentBorderBoxPageCoords.y - borderExtents.t;
 			this._oldStyleValuesAllStates[this._applyToStateIndex] = 
 					StyleArray.mergeStyleArrays(this._oldStyleValuesAllStates[this._applyToStateIndex], 
-								[{left:this._oldBox.l+'px'}, {top:this._oldBox.t+'px'}]);
+								[{left:oldLeft+'px'}, {top:oldTop+'px'}]);
 		}
 		if(styleValuesAllStates[this._applyToStateIndex]){
 			styleValuesAllStates[this._applyToStateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[this._applyToStateIndex], newStyleArray);

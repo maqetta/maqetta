@@ -557,6 +557,8 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}else if(this._position){
 			// convert container relative position to parent relative position
 			position = this._position;
+debugger;
+/* Let's try leaving things in absolute coordinates
 			var containerNode = this._context.getContainerNode();
 			if(parentNode && parentNode != containerNode){
 				var style = parentNode.style.position;
@@ -569,6 +571,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 					position.y -= (p.y - parentNode.scrollTop);
 				}
 			}
+*/
 		}
 
 		//FIXME: data can be an array
@@ -647,6 +650,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				args.parent || this._context.getContainerNode(),
 				args.index));
 			if(args.position){
+console.log('CreateTool args.position.x='+args.position.x+',args.position.y='+args.position.y);
 				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
 				command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 				command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));

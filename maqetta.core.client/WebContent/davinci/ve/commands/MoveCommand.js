@@ -1,9 +1,11 @@
 define([
     	"dojo/_base/declare",
+    	"dojo/dom-geometry",
     	"davinci/ve/widget",
     	"davinci/ve/States",
-    	"davinci/ve/utils/StyleArray"
-], function(declare, Widget, States, StyleArray){
+    	"davinci/ve/utils/StyleArray",
+    	"davinci/ve/utils/GeomUtils"
+], function(declare, domGeom, Widget, States, StyleArray, GeomUtils){
 
 
 return declare("davinci.ve.commands.MoveCommand", null, {
@@ -43,6 +45,11 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 
 		if(!this._oldBox){
 			var box = widget.getMarginBox();
+//NOTE: box is parent-relative, box2 is page-relative
+var box2 = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+console.log('MoveCommand execute box, box2:');
+console.dir(box);
+console.dir(box2);
 			this._oldBox = {l: box.l, t: box.t, w:box.w, h:box.h};
 		}
 		if(!widget.domNode.offsetParent){
@@ -53,11 +60,14 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 			return;
 		}
 		if(this._commandForXYDeltas){
+/*
 			this._newBox.l = this._oldBox.l + this._commandForXYDeltas._deltaX;
 			this._newBox.t = this._oldBox.t + this._commandForXYDeltas._deltaY;
+*/
 		}else{
 			if(context && context._snapX){
 				var w = this._oldBox.w;
+/*
 				var snapX_relative = context._snapX.x - offsetParentPageBox.x;
 				if(context._snapX.typeRefObj=="left"){
 					this._newBox.l = snapX_relative;
@@ -66,9 +76,18 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 				}else if(w && context._snapX.typeRefObj=="center"){
 					this._newBox.l = snapX_relative - w/2;
 				}
+*/
+if(context._snapX.typeRefObj=="left"){
+	this._newBox.l = context._snapX.x;
+}else if(w && context._snapX.typeRefObj=="right"){
+	this._newBox.l = context._snapX.x - w;
+}else if(w && context._snapX.typeRefObj=="center"){
+	this._newBox.l = context._snapX.x - w/2;
+}
 			}
 			if(context && context._snapY){
 				var h = this._oldBox.h;
+/*
 				var snapY_relative = context._snapY.y - offsetParentPageBox.y;
 				if(context._snapY.typeRefObj=="top"){
 					this._newBox.t = snapY_relative;
@@ -77,17 +96,35 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 				}else if(h && context._snapY.typeRefObj=="middle"){
 					this._newBox.t = snapY_relative - h/2;
 				}
+*/
+if(context._snapY.typeRefObj=="top"){
+	this._newBox.t = context._snapY.y;
+}else if(h && context._snapY.typeRefObj=="bottom"){
+	this._newBox.t = context._snapY.y - h;
+}else if(h && context._snapY.typeRefObj=="middle"){
+	this._newBox.t = context._snapY.y - h/2;
+}
 			}
 		}
 		this._deltaX = this._newBox.l - this._oldBox.l;
 		this._deltaY = this._newBox.t - this._oldBox.t;
 
+/*
 		// Adjust for parent border width
         var parentBorderLeft = parseInt(dojo.style(widget.domNode.offsetParent, 'borderLeftWidth'));
         var parentBorderTop = parseInt(dojo.style(widget.domNode.offsetParent, 'borderTopWidth'));
 		//var cleanValues = { left: this._newBox.l - parentBorderLeft, top: this._newBox.t - parentBorderTop};
         var newLeft = this._newBox.l - parentBorderLeft;
         var newTop = this._newBox.t - parentBorderTop;
+*/
+debugger;
+// this._newBox holds page-relative coordinates.
+// Subtract off offsetParent's borderbox coordinate (in page-relative coords from dojo.position), and
+// subtract off offsetParent's border, because left: and top: are relative to offsetParent's borderbox
+var offsetParentBorderBoxPageCoords = domGeom.position(widget.domNode.offsetParent, true);
+var borderExtents = domGeom.getBorderExtents(widget.domNode.offsetParent);
+var newLeft = this._newBox.l - offsetParentBorderBoxPageCoords.x - borderExtents.l;
+var newTop = this._newBox.t - offsetParentBorderBoxPageCoords.y - borderExtents.t;
 		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);

@@ -11,7 +11,7 @@ define([
 return declare("davinci.ve.commands.MoveCommand", null, {
 	name: "move",
 
-	constructor: function(widget, left, top, commandForXYDeltas, oldBox, applyToWhichStates){
+	constructor: function(widget, left, top, commandForXYDeltas, oldBox, applyToWhichStates, disableSnapping){
 		this._id = (widget ? widget.id : undefined);
 		this._context = widget.getContext();
 		
@@ -31,6 +31,8 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
 		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
 		this._applyToStateIndex = this._getApplyToStateIndex(applyToWhichStates);
+		
+		this._disableSnapping = disableSnapping;
 	},
 
 	execute: function(){
@@ -63,7 +65,7 @@ console.dir(box2);
 			this._newBox.l = this._oldBox.l + this._commandForXYDeltas._deltaX;
 			this._newBox.t = this._oldBox.t + this._commandForXYDeltas._deltaY;
 		}else{
-			if(context && context._snapX){
+			if(!this._disableSnapping && context && context._snapX){
 				var w = this._oldBox.w;
 /*
 				var snapX_relative = context._snapX.x - offsetParentPageBox.x;
@@ -83,7 +85,7 @@ if(context._snapX.typeRefObj=="left"){
 	this._newBox.l = context._snapX.x - w/2;
 }
 			}
-			if(context && context._snapY){
+			if(!this._disableSnapping && context && context._snapY){
 				var h = this._oldBox.h;
 /*
 				var snapY_relative = context._snapY.y - offsetParentPageBox.y;

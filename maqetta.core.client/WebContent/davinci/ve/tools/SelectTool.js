@@ -583,7 +583,7 @@ compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, app
 				if(copy){
 					dojo.forEach(selection, dojo.hitch(this, function(w, idx){
 						compoundCommand.add(new ReparentCommand(selection[idx], OldParents[idx], OldIndex[idx]));
-						compoundCommand.add(new MoveCommand(selection[idx], oldBoxes[idx].l, oldBoxes[idx].t, null, null, applyToWhichStates));
+						compoundCommand.add(new MoveCommand(selection[idx], oldBoxes[idx].l, oldBoxes[idx].t, null, oldBoxes[idx], applyToWhichStates, true /* disableSnapping */));
 					}));
 				}
 			}

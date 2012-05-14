@@ -184,7 +184,7 @@ var l = moverWidgetMarginBoxPageCoords.l;
 var t = moverWidgetMarginBoxPageCoords.t;
 var w = moverWidgetMarginBoxPageCoords.w;
 var h = moverWidgetMarginBoxPageCoords.h;
-console.log('moverWidget l='+l+',t='+t+',w='+w+',h='+h);
+//console.log('moverWidget l='+l+',t='+t+',w='+w+',h='+h);
 					if(this._moverAbsolute){
 						this._moverDragDiv = dojo.create('div', 
 								{className:'selectToolDragDiv',
@@ -410,63 +410,64 @@ console.log('moverWidget l='+l+',t='+t+',w='+w+',h='+h);
 			var _node = widget.getStyleNode();
 			var absolute = (dojo.style(_node, 'position') == 'absolute');
 			if(!absolute) {
-				if(!compoundCommand){
-					compoundCommand = new CompoundCommand();
-				}
-				var lastIdx = null;
-				
-				//get the data	
-				dojo.forEach(selection, function(w){
-					IDs.push(w.getId());
-					var newwidget,
-						d = w.getData( {identify:false});
-					d.context=context;
-					dojo.withDoc(context.getDocument(), function(){
-						newwidget = widgetUtils.createWidget(d);
-					}, this);		
-					if (!newwidget) {
-						console.debug("Widget is null!!");
-						return;
+				var ppw = cp.getProposedParentWidget();
+				if(ppw){
+					if(!compoundCommand){
+						compoundCommand = new CompoundCommand();
 					}
-					NewWidgets.push(newwidget);
-					var ppw = cp.getProposedParentWidget();
-					if(ppw && ppw.refChild){
-						if(lastIdx !== null){
-							idx = lastIdx + 1;
-						}else{
-							var ppwChildren = ppw.parent.getChildren();
-							var idx = ppwChildren.indexOf(ppw.refChild);
-							if(idx >= 0){
-								if(ppw.refAfter){
-									idx++;
-								}
-							}else{
-								idx = null;
-							}
-						}
-						lastIdx = idx;
-					}
-					if(ppw){
-						compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
-						newselection.push(newwidget);
-					}else{
-						console.error('SelectTool: ppw is null');
-					}
-				}, this);
-
-				// remove old widget and restore ID on the new version of the given widget(s)
-				if(!copy){
+					var lastIdx = null;
+					
+					//get the data	
 					dojo.forEach(selection, function(w){
-						var newwidget = NewWidgets.shift();
-						compoundCommand.add(new RemoveCommand(w));
-						var id = IDs.shift();
-						if(id){
-							compoundCommand.add(new ModifyCommand(newwidget, {id:id}));
+						IDs.push(w.getId());
+						var newwidget,
+							d = w.getData( {identify:false});
+						d.context=context;
+						dojo.withDoc(context.getDocument(), function(){
+							newwidget = widgetUtils.createWidget(d);
+						}, this);		
+						if (!newwidget) {
+							console.debug("Widget is null!!");
+							return;
 						}
+						NewWidgets.push(newwidget);
+						if(ppw.refChild){
+							if(lastIdx !== null){
+								idx = lastIdx + 1;
+							}else{
+								var ppwChildren = ppw.parent.getChildren();
+								var idx = ppwChildren.indexOf(ppw.refChild);
+								if(idx >= 0){
+									if(ppw.refAfter){
+										idx++;
+									}
+								}else{
+									idx = null;
+								}
+							}
+							lastIdx = idx;
+						}
+						compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
+						doRemove = true;
+						newselection.push(newwidget);
 					}, this);
-				}
 
-				context.select(null);
+					// remove old widget and restore ID on the new version of the given widget(s)
+					if(!copy && doRemove){
+						dojo.forEach(selection, function(w){
+							var newwidget = NewWidgets.shift();
+							compoundCommand.add(new RemoveCommand(w));
+							var id = IDs.shift();
+							if(id){
+								compoundCommand.add(new ModifyCommand(newwidget, {id:id}));
+							}
+						}, this);
+					}
+
+					context.select(null);
+				}else{
+					console.error('SelectTool: ppw is null');
+				}
 				
 			}else{
 //debugger;
@@ -558,7 +559,7 @@ compoundCommand.add(new MoveCommand(currWidget, left, top, null, null, applyToWh
 */
 var newLeft = oldBoxes[idx].l + dx;
 var newTop = oldBoxes[idx].t + dy;
-console.log('idx='+idx+',oldBoxes[idx].l='+oldBoxes[idx].l+',oldBoxes[idx].t='+oldBoxes[idx].t+',dx='+dx+',dy='+dy+',newLeft='+newLeft+',newTop='+newTop);
+//console.log('idx='+idx+',oldBoxes[idx].l='+oldBoxes[idx].l+',oldBoxes[idx].t='+oldBoxes[idx].t+',dx='+dx+',dy='+dy+',newLeft='+newLeft+',newTop='+newTop);
 						if(w.getStyleNode().style.position == "absolute"){
 							// Because snapping will shift the first widget in a hard-to-predict
 							// way, MoveCommand will store the actual shift amount on the
@@ -759,6 +760,7 @@ compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, app
 	 * @param {object} event - the mousemove event
 	 */
 	onMove: function(mover, box, event){
+//console.log('onMove. event.target.outerHTML='+event.target.outerHTML.substr(0,75));
 		//FIXME: For tablets, might want to add a check for minimum initial move
 		//distance to prevent accidental moves due to fat fingers.
 		
@@ -775,7 +777,28 @@ compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, app
 			return;
 		}
 		this._context.selectionHideFocus();
-		if(event.target != this._moverLastEventTarget){
+		
+		// If event.target isn't a subnode of current proposed parent widget, 
+		// then need to recompute proposed parent widget
+		var eventTargetWithinPPW = false;
+		var currentPPW = cp.getProposedParentWidget();
+		if(currentPPW && currentPPW.parent && currentPPW.parent.domNode){
+//console.log('currentPPW');
+//console.dir(currentPPW);
+			var currentPPWNode = currentPPW.parent.domNode;
+			var n = event.target;
+			while(n && n.tagName != 'BODY'){
+//console.log('n.outerHTML='+n.outerHTML.substr(0,50));
+				if(n == currentPPWNode){
+					eventTargetWithinPPW = true;
+					break;	// event.target is a descendant of currentPPW's domNode
+				}
+				n = n.parentNode;
+			}
+		}
+//console.log('currentPPW='+currentPPW+',currentPPWNode='+currentPPWNode+',eventTargetWithinPPW='+eventTargetWithinPPW);
+		
+		if(!eventTargetWithinPPW || event.target != this._moverLastEventTarget){
 			// If mouse has moved over a different widget, then null out the current
 			// proposed parent widget, which will force recalculation of the list of possible parents
 			cp.setProposedParentWidget(null);
@@ -794,7 +817,7 @@ var newLeft = box.l;
 var newTop = box.t;
 			var dx = newLeft - this._moverStartLocations[index].l;
 			var dy = newTop - this._moverStartLocations[index].t;
-console.log('dx='+dx+',dy='+dy);
+//console.log('dx='+dx+',dy='+dy);
 			var absDx = Math.abs(dx);
 			var absDy = Math.abs(dy);
 			if(this._shiftKey && (absDx >=this.CONSTRAIN_MIN_DIST ||  absDy >= this.CONSTRAIN_MIN_DIST)){
@@ -813,10 +836,10 @@ console.log('dx='+dx+',dy='+dy);
 */
 var l = this._moverStartLocationsRel[i].l;
 var t = this._moverStartLocationsRel[i].t;
-console.log('before: w.domNode.style.left='+w.domNode.style.left+',w.domNode.style.top='+w.domNode.style.top);
+//console.log('before: w.domNode.style.left='+w.domNode.style.left+',w.domNode.style.top='+w.domNode.style.top);
 					w.domNode.style.left = (l + dx) + 'px';
 					w.domNode.style.top = (t + dy) + 'px';
-console.log('after: w.domNode.style.left='+w.domNode.style.left+',w.domNode.style.top='+w.domNode.style.top);
+//console.log('after: w.domNode.style.left='+w.domNode.style.left+',w.domNode.style.top='+w.domNode.style.top);
 				//}
 			}
 		}

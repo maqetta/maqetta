@@ -81,11 +81,15 @@ var handleIoError = function (deferred, reason) {
      *	It passes the error and the dojo.Deferred
      *	for the request with the topic.
 	 */
-	if(reason.status == 401 || reason.status == 403){
+	if (reason.status == 401 || reason.status == 403) {
 		sessionTimedOut();
-	}else{
+	// Only handle error if it is as of result of a failed XHR connection, not
+	// (for example) if a callback throws an error. (For dojo.xhr, def.cancel()
+	// is only called if connection fails or if it times out.)
+	} else if (deferred.canceled === true) {
 		Runtime.handleError(reason.message);
-		console.warn('Failed to load url=' + deferred.ioArgs.url + ' message=' + reason.message + ' status=' + reason.status);
+		console.warn('Failed to load url=' + deferred.ioArgs.url + ' message=' + reason.message +
+				' status=' + reason.status);
 	}
 };
 

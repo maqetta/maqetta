@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+	TODO: margin:0 is a temporary hack. In previous releases, we always included dojo.css
+	which set margin:0, but we now only include dojo.css with the first Dojo widget
+	added to the page. That causes scrollbars when page was loaded initially,
+	which went want when first Dojo widget was added.
+	Need to rethink this whole business of width:100%;height:100%;margin:0
+-->
+<html style="height: 100%; width: 100%; margin: 0;">
+	<head>
+		<base href="{baseUrl}"/>
+		<meta charset="utf-8"/>
+		<script src="{dojoUrl}" data-dojo-config="{dojoConfig}" {additionalDojoAttrs}></script>
+		<script>
+			// base dependencies needed for VE
+			require([
+				'dojo/parser',
+				'dojox/html/_base',
+				'dojo/domReady!'
+				{additionalModules}
+			], top.loading{id});
+		</script>
+		{themeHeadImports}
+		{themeCssFiles}
+	</head>
+	<body>
+	</body>
+</html>

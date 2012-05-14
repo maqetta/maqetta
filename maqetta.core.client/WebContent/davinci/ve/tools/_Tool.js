@@ -119,16 +119,8 @@ return declare("davinci.ve.tools._Tool", null, {
 			var top = domNode.offsetTop;
 			var width = domNode.offsetWidth;
 			var height = domNode.offsetHeight;
-			var mouseX = event.pageX;
-			var mouseY = event.pageY;
-			var pn = domNode.offsetParent;
-			while(pn && pn.tagName != 'BODY'){
-				mouseX -= pn.offsetLeft;
-				mouseY -= pn.offsetTop;
-				pn = pn.offsetParent;
-			}
-			
 			if(event){
+				
 				// This code addresses #2136, where CSS transforms shift the widget and 
 				// therefore offsetLeft/Top/Width/Height are not reliable indicators
 				// of a node's bounds. Unfortunately, there are no getBoundingBox APIs
@@ -136,6 +128,14 @@ return declare("davinci.ve.tools._Tool", null, {
 				// However, at least WebKit is smart enough to have onmouseover event
 				// deal with the post-transform location of a particular node.
 				// So, to deal with this issue, increase the bounding box to include pageX/pageY.
+				var mouseX = event.pageX;
+				var mouseY = event.pageY;
+				var pn = domNode.offsetParent;
+				while(pn && pn.tagName != 'BODY'){
+					mouseX -= pn.offsetLeft;
+					mouseY -= pn.offsetTop;
+					pn = pn.offsetParent;
+				}
 				
 				if(mouseX < left){
 					left = mouseX;

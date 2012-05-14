@@ -26,6 +26,7 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
+	"davinci/ve/utils/GeomUtils",
 	"dojox/html/_base"
 ], function(
 	declare,
@@ -54,7 +55,8 @@ define([
 	HTMLElement,
 	HTMLText,
 	Preferences,
-	Silhouette
+	Silhouette,
+	GeomUtils
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -1765,9 +1767,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(helper && helper.getSelectNode){
 				node = helper.getSelectNode(this) || node;
 			}
+/*
 			box = this.getDojo().position(node, true);
 			box.l = box.x;
 			box.t = box.y;
+*/
+var box = GeomUtils.getMarginBoxPageCoords(node);
 
 			parent = widget.getParent();
 			op = {move: !(parent && parent.isLayout && parent.isLayout())};

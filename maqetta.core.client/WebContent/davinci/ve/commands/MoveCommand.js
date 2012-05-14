@@ -60,10 +60,8 @@ console.dir(box2);
 			return;
 		}
 		if(this._commandForXYDeltas){
-/*
 			this._newBox.l = this._oldBox.l + this._commandForXYDeltas._deltaX;
 			this._newBox.t = this._oldBox.t + this._commandForXYDeltas._deltaY;
-*/
 		}else{
 			if(context && context._snapX){
 				var w = this._oldBox.w;

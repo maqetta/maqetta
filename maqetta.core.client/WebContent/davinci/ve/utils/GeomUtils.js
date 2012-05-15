@@ -18,13 +18,12 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 	 */
 	getMarginBoxPageCoords: function(node){
 		var MarginBoxPageCoords;
-		var userWin = node.ownerDocument.defaultView;
 		win.withDoc(node.ownerDocument, function(){
-			var BorderBoxPageCoords = this.position(node);
+			var BorderBoxPageCoords = this.getBorderBoxPageCoordinates(node);
 			var MarginExtents = domGeom.getMarginExtents(node);
 			MarginBoxPageCoords = {
-					l:BorderBoxPageCoords.x - MarginExtents.l,
-					t:BorderBoxPageCoords.y - MarginExtents.t,
+					l:BorderBoxPageCoords.l - MarginExtents.l,
+					t:BorderBoxPageCoords.t - MarginExtents.t,
 					w:BorderBoxPageCoords.w + MarginExtents.l + MarginExtents.r,
 					h:BorderBoxPageCoords.h + MarginExtents.t + MarginExtents.b
 			};
@@ -37,8 +36,21 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 	 * are all based on CSS box model (margins, borders, padding, left/top)
 	 * not the actual screen locations resulting after applying transforms.
 	 */
-	position: function(/*DomNode*/node){
-		return {x: node.offsetLeft, y: node.offsetTop, w: node.offsetWidth, h: node.offsetHeight};
+	getBorderBoxPageCoordinates: function(/*DomNode*/node){
+		var o;
+		win.withDoc(node.ownerDocument, function(){
+			var l = node.offsetLeft;
+			var t = node.offsetTop;
+			var pn = node.offsetParent;
+			while(pn && pn.tagName != 'BODY'){
+				var MarginExtents = domGeom.getMarginExtents(pn);
+				l += pn.offsetLeft + MarginExtents.l;
+				t += pn.offsetTop + MarginExtents.t;
+				pn = pn.offsetParent;
+			}
+			o = {l: l, t: t, w: node.offsetWidth, h: node.offsetHeight};
+		}.bind(this));
+		return o;
 	}
 
 };

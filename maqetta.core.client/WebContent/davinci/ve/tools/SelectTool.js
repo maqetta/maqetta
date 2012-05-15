@@ -13,7 +13,8 @@ define(["dojo/_base/declare",
 		"davinci/ve/commands/RemoveCommand",
 		"davinci/ve/commands/ReparentCommand",
 		"davinci/ve/commands/MoveCommand",
-		"davinci/ve/commands/ResizeCommand"], function(
+		"davinci/ve/commands/ResizeCommand",
+    	"davinci/ve/utils/GeomUtils"], function(
 				declare,
 				Workbench,
 				Preferences,
@@ -29,7 +30,8 @@ define(["dojo/_base/declare",
 				RemoveCommand,
 				ReparentCommand,
 				MoveCommand,
-				ResizeCommand
+				ResizeCommand,
+				GeomUtils
 		){
 
 
@@ -142,27 +144,29 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if(!(helper && helper.disableDragging && helper.disableDragging(moverWidget)) &&
 						(!parent || !parent.isLayout || !parent.isLayout())){
 					this._moverWidget = moverWidget;
+					this._moverWidgets = [moverWidget];
 					this._moverLastEventTarget = null;
 					var cp = context._chooseParent;
 					cp.setProposedParentWidget(null);
 					selection = context.getSelection();	// selection might have changed since start of this function
 					this._moverStartLocations = [];
+					this._moverStartLocationsRel = [];
 					for(var i=0; i<selection.length; i++){
-						var l = parseInt(userDojo.style(selection[i].domNode, 'left'), 10);
-						var t = parseInt(userDojo.style(selection[i].domNode, 'top'), 10);
-						this._moverStartLocations.push({l:l, t:t});
+						if(selection[i] != moverWidget){
+							this._moverWidgets.push(selection[i]);
+						}
+						var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(selection[i].domNode);
+						this._moverStartLocations.push(marginBoxPageCoords);
+						var l = parseFloat(userDojo.style(selection[i].domNode, 'left'), 10);
+						var t = parseFloat(userDojo.style(selection[i].domNode, 'top'), 10);
+						this._moverStartLocationsRel.push({l:l, t:t});
 					}
 					var n = moverWidget.domNode;
-					var w = n.offsetWidth;
-					var h = n.offsetHeight;
-					var l = n.offsetLeft;
-					var t = n.offsetTop;
-					var pn = n.offsetParent;
-					while(pn && pn.tagName != 'BODY'){
-						l += pn.offsetLeft; 
-						t += pn.offsetTop; 
-						pn = pn.offsetParent;
-					}
+					var moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(n);
+					var l = moverWidgetMarginBoxPageCoords.l;
+					var t = moverWidgetMarginBoxPageCoords.t;
+					var w = moverWidgetMarginBoxPageCoords.w;
+					var h = moverWidgetMarginBoxPageCoords.h;
 					if(this._moverAbsolute){
 						this._moverDragDiv = dojo.create('div', 
 								{className:'selectToolDragDiv',
@@ -298,17 +302,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}catch(e){
 		}
 	},
-	
-	_adjustLTOffsetParent: function(context, widget, left, top){
-		//FIXME: Might be better to use offset* instead of scroll*
-		var parentNode = widget.domNode.offsetParent;
-		if(parentNode && parentNode != context.getContainerNode()){
-			var p = context.getContentPosition(context.getDojo().position(parentNode, true));
-			left -= (p.x - parentNode.scrollLeft);
-			top -= (p.y - parentNode.scrollTop);
-		}
-		return {l:left, t:top};
-	},
 
 	onExtentChange: function(params){
 		var index = params.index;
@@ -361,13 +354,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in newBox && "t" in newBox && position_prop == 'absolute'){
+//debugger;
+/*
 				var p = this._adjustLTOffsetParent(context, widget, newBox.l, newBox.t);
 				var left = p.l;
 				var top = p.t;
-/*
+*/
 				var left = newBox.l;
 				var top = newBox.t;
-*/
 				var moveCommand = new MoveCommand(widget, left, top, null, null, applyToWhichStates);
 				compoundCommand.add(moveCommand);
 			}
@@ -385,70 +379,73 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var _node = widget.getStyleNode();
 			var absolute = (dojo.style(_node, 'position') == 'absolute');
 			if(!absolute) {
-				if(!compoundCommand){
-					compoundCommand = new CompoundCommand();
-				}
-				var lastIdx = null;
-				
-				//get the data	
-				dojo.forEach(selection, function(w){
-					IDs.push(w.getId());
-					var newwidget,
-						d = w.getData( {identify:false});
-					d.context=context;
-					dojo.withDoc(context.getDocument(), function(){
-						newwidget = widgetUtils.createWidget(d);
-					}, this);		
-					if (!newwidget) {
-						console.debug("Widget is null!!");
-						return;
+				var ppw = cp.getProposedParentWidget();
+				if(ppw){
+					if(!compoundCommand){
+						compoundCommand = new CompoundCommand();
 					}
-					NewWidgets.push(newwidget);
-					var ppw = cp.getProposedParentWidget();
-					if(ppw && ppw.refChild){
-						if(lastIdx !== null){
-							idx = lastIdx + 1;
-						}else{
-							var ppwChildren = ppw.parent.getChildren();
-							var idx = ppwChildren.indexOf(ppw.refChild);
-							if(idx >= 0){
-								if(ppw.refAfter){
-									idx++;
-								}
-							}else{
-								idx = null;
-							}
+					var lastIdx = null;
+					
+					//get the data	
+					dojo.forEach(selection, function(w){
+						IDs.push(w.getId());
+						var newwidget,
+							d = w.getData( {identify:false});
+						d.context=context;
+						dojo.withDoc(context.getDocument(), function(){
+							newwidget = widgetUtils.createWidget(d);
+						}, this);		
+						if (!newwidget) {
+							console.debug("Widget is null!!");
+							return;
 						}
-						lastIdx = idx;
-					}
-					if(ppw){
+						NewWidgets.push(newwidget);
+						if(ppw.refChild){
+							if(lastIdx !== null){
+								idx = lastIdx + 1;
+							}else{
+								var ppwChildren = ppw.parent.getChildren();
+								var idx = ppwChildren.indexOf(ppw.refChild);
+								if(idx >= 0){
+									if(ppw.refAfter){
+										idx++;
+									}
+								}else{
+									idx = null;
+								}
+							}
+							lastIdx = idx;
+						}
 						compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
 						newselection.push(newwidget);
-					}else{
-						console.error('SelectTool: ppw is null');
-					}
-				}, this);
-
-				// remove old widget and restore ID on the new version of the given widget(s)
-				if(!copy){
-					dojo.forEach(selection, function(w){
-						var newwidget = NewWidgets.shift();
-						compoundCommand.add(new RemoveCommand(w));
-						var id = IDs.shift();
-						if(id){
-							compoundCommand.add(new ModifyCommand(newwidget, {id:id}));
-						}
 					}, this);
-				}
 
-				context.select(null);
+					// remove old widget and restore ID on the new version of the given widget(s)
+					if(!copy){
+						dojo.forEach(selection, function(w){
+							var newwidget = NewWidgets.shift();
+							compoundCommand.add(new RemoveCommand(w));
+							var id = IDs.shift();
+							if(id){
+								compoundCommand.add(new ModifyCommand(newwidget, {id:id}));
+							}
+						}, this);
+					}
+
+					context.select(null);
+				}else{
+					console.error('SelectTool: ppw is null');
+				}
 				
 			}else{
+//debugger;
 				var left = newBox.l,
 					top = newBox.t;
+/*
 				var p = this._adjustLTOffsetParent(context, widget, left, top);
 				left = p.l;
 				top = p.t;
+*/
 				if(!compoundCommand){
 					compoundCommand = new CompoundCommand();
 				}
@@ -459,12 +456,19 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var doMove = undefined;
 				if(proposedParent && proposedParent != currentParent){
 					doReparent = proposedParent;
+/*
 					var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
 					doMove = {l:newPos.l, t:newPos.t};
+*/
 				}
+//debugger;
+/*
 				var b = widget.getMarginBox(),
 					dx = left - b.l,
 					dy = top - b.t;
+*/
+var dx = left - oldBoxes[0].l;
+var dy = top - oldBoxes[0].t;
 				if(copy){
 					//get the data	
 					dojo.forEach(selection, function(w){
@@ -505,29 +509,27 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				compoundCommand.add(first_c);
 				if(doReparent){
 					compoundCommand.add(new ReparentCommand(currWidget, proposedParent, 'last'));
-				}
-				if(doMove){
-					compoundCommand.add(new MoveCommand(currWidget, doMove.l, doMove.t, null, null, applyToWhichStates));
+					// redundant move command at same location because left/top properties need updating due to new parent
+					compoundCommand.add(new MoveCommand(currWidget, left, top, null, null, applyToWhichStates));
 				}
 				dojo.forEach(selection, dojo.hitch(this, function(w, idx){
 					currWidget = copy ? newselection[idx] : w;
 					if(w != widget){
-						var mb = w.getMarginBox();
-						var newLeft = mb.l + dx;
-						var newTop = mb.t + dy;
+						var newLeft = oldBoxes[idx].l + dx;
+						var newTop = oldBoxes[idx].t + dy;
 						if(w.getStyleNode().style.position == "absolute"){
 							// Because snapping will shift the first widget in a hard-to-predict
 							// way, MoveCommand will store the actual shift amount on the
 							// command object (first_c). MoveCommand will use the shift amount
 							// for first_c for the other move commands.
-							var c = new MoveCommand(currWidget, newLeft, newTop, first_c, oldBoxes[idx], applyToWhichStates);
+							var c = new MoveCommand(currWidget, newLeft, newTop, first_c, oldBoxes[idx], applyToWhichStates, true /* disable snapping */);
 							compoundCommand.add(c);
 						}
 						var currentParent = w.getParent();
 						if(proposedParent && proposedParent != currentParent){
 							compoundCommand.add(new ReparentCommand(currWidget, proposedParent, 'last'));
-							var newPos = this._reparentDelta(newLeft, newTop, w.getParent(), proposedParent);
-							compoundCommand.add(new MoveCommand(currWidget, newPos.l, newPos.t, null, null, applyToWhichStates));
+							// redundant move command at same location because left/top properties need updating due to new parent
+							compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, applyToWhichStates, true /* disable snapping */));
 						}
 					}
 				}));
@@ -535,7 +537,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				if(copy){
 					dojo.forEach(selection, dojo.hitch(this, function(w, idx){
 						compoundCommand.add(new ReparentCommand(selection[idx], OldParents[idx], OldIndex[idx]));
-						compoundCommand.add(new MoveCommand(selection[idx], oldBoxes[idx].l, oldBoxes[idx].t, null, null, applyToWhichStates));
+						compoundCommand.add(new MoveCommand(selection[idx], oldBoxes[idx].l, oldBoxes[idx].t, null, oldBoxes[idx], applyToWhichStates, true /* disableSnapping */));
 					}));
 				}
 			}
@@ -549,30 +551,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}else{
 			context.select(widget); // update selection
 		}
-	},
-	
-	/**
-	 * Returns {l:, t:} which holds the amount to move left: and top: properties
-	 * when reparenting from oldParent to newParent such that widget stays at same
-	 * physical location
-	 */
-	_reparentDelta: function(currLeft, currTop, oldParent, newParent){
-		function getPageOFfset(node){
-			var pageX = 0;
-			var pageY = 0;
-			while(node.tagName != 'BODY'){
-				pageX += node.offsetLeft;
-				pageY += node.offsetTop;
-				node = node.offsetParent;
-			}
-			return { l:pageX, t:pageY };
-		}
-		var oldOffset = getPageOFfset(oldParent.domNode);
-		var newOffset = getPageOFfset(newParent.domNode);
-		return {
-			l: currLeft + (oldOffset.l - newOffset.l),
-			t: currTop + (oldOffset.t - newOffset.t)
-		};
 	},
 	
 	_updateMoveCursor: function(){
@@ -664,16 +642,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		var command = new CompoundCommand();
 		dojo.forEach(selection, function(w){
-			var node = w.getStyleNode();
-			if(node.style.position != "absolute"){
-				return;
-			}
-			// MoveCommand treats (x,y) as positions relative to offsetParent's margin box
-			// and therefore does a subtraction adjustment to take into account border width.
-			var parentBorderLeft = parseInt(dojo.style(node.offsetParent, 'borderLeftWidth'));
-			var parentBorderTop = parseInt(dojo.style(node.offsetParent, 'borderTopWidth'));
-			var box = dojo.marginBox(node);
-			var position = {x: box.l + parentBorderLeft + dx, y: box.t + parentBorderTop + dy};
+			var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(w.domNode);
+			var position = {x: marginBoxPageCoords.l + dx, y: marginBoxPageCoords.t + dy};
 			command.add(new MoveCommand(w, position.x, position.y));
 		}, this);
 		if(!command.isEmpty()){
@@ -725,7 +695,28 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			return;
 		}
 		this._context.selectionHideFocus();
-		if(event.target != this._moverLastEventTarget){
+		
+		// If event.target isn't a subnode of current proposed parent widget, 
+		// then need to recompute proposed parent widget
+		var eventTargetWithinPPW = false;
+		var currentPPW = cp.getProposedParentWidget();
+		if(currentPPW && currentPPW.parent && currentPPW.parent.domNode){
+			var currentPPWNode = currentPPW.parent.domNode;
+			if(currentPPW.parent.domNode.tagName == 'BODY'){
+				eventTargetWithinPPW = true;
+			}else{
+				var n = event.target;
+				while(n && n.tagName != 'BODY'){
+					if(n == currentPPWNode){
+						eventTargetWithinPPW = true;
+						break;	// event.target is a descendant of currentPPW's domNode
+					}
+					n = n.parentNode;
+				}
+			}
+		}
+		
+		if(!eventTargetWithinPPW || event.target != this._moverLastEventTarget){
 			// If mouse has moved over a different widget, then null out the current
 			// proposed parent widget, which will force recalculation of the list of possible parents
 			cp.setProposedParentWidget(null);
@@ -735,9 +726,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._moverDragDiv.style.left = box.l + 'px';
 		this._moverDragDiv.style.top = box.t + 'px';
 		if(this._moverAbsolute){
-			var offsetParentLeftTop = this._context.getPageLeftTop(this._moverWidget.domNode.offsetParent);
-			var newLeft =  (box.l - offsetParentLeftTop.l);
-			var newTop = (box.t - offsetParentLeftTop.t);
+			var newLeft = box.l;
+			var newTop = box.t;
 			var dx = newLeft - this._moverStartLocations[index].l;
 			var dy = newTop - this._moverStartLocations[index].t;
 			var absDx = Math.abs(dx);
@@ -750,13 +740,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				}
 			}
 			for(var i=0; i<selection.length; i++){
-				//if(i !== index){
-					var w = selection[i];
-					var l = this._moverStartLocations[i].l;
-					var t = this._moverStartLocations[i].t;
-					w.domNode.style.left = (l + dx) + 'px';
-					w.domNode.style.top = (t + dy) + 'px';
-				//}
+				var w = selection[i];
+				var l = this._moverStartLocationsRel[i].l;
+				var t = this._moverStartLocationsRel[i].t;
+				w.domNode.style.left = (l + dx) + 'px';
+				w.domNode.style.top = (t + dy) + 'px';
 			}
 		}
 		var widgetType = this._moverWidget.type;
@@ -795,20 +783,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
 		var data = {type:widgetType};
 		var position = { x:event.pageX, y:event.pageY};
-		// Ascend widget's ancestors to calculate page-relative coordinates
-		var leftAdjust = 0;
-		var topAdjust = 0;
-		var pn = this._moverWidget.domNode.offsetParent;
-		while(pn && pn.tagName != 'BODY'){
-			leftAdjust += pn.offsetLeft;
-			topAdjust += pn.offsetTop;
-			pn = pn.offsetParent;
-		}
-		var snapBox = {l:this._moverWidget.domNode.offsetLeft+leftAdjust, t:this._moverWidget.domNode.offsetTop+topAdjust, w:this._moverWidget.domNode.offsetWidth, h:this._moverWidget.domNode.offsetHeight};
+		var snapBox = GeomUtils.getMarginBoxPageCoords(this._moverWidget.domNode);
+
 		// Call the dispatcher routine that updates snap lines and
 		// list of possible parents at current (x,y) location
 		context.dragMoveUpdate({
-				widgets:[this._moverWidget],
+				widgets:this._moverWidgets,
 				data:data,
 				eventTarget:event.target,
 				position:position,

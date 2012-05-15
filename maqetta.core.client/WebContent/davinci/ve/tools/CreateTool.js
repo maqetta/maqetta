@@ -10,9 +10,7 @@ define(["dojo/_base/declare",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
 		"../commands/ResizeCommand",
-		"../commands/StyleCommand",
-		"../Snap",
-		"../ChooseParent"
+		"../commands/StyleCommand"
 ], function(
 		declare,
 		_Tool,
@@ -21,7 +19,12 @@ define(["dojo/_base/declare",
 		Metadata,
 		Widget,
 		DeferredList,
-		ErrorDialog
+		ErrorDialog,
+		CompoundCommand,
+		AddCommand,
+		MoveCommand,
+		ResizeCommand,
+		StyleCommand
 ) {
 
 var defaultInvalidTargetWidgetMessage = 'The selected target is not a valid parent for the given widget.';
@@ -536,9 +539,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			child = parent; // insert before this widget for flow layout
 			parent = parent.getParent();
 		}
-//		if(!parent){
-//			parent = child = undefined;
-//		}
 		var index = args.index;
 		var position;
 		var widgetAbsoluteLayout = false;
@@ -557,18 +557,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}else if(this._position){
 			// convert container relative position to parent relative position
 			position = this._position;
-			var containerNode = this._context.getContainerNode();
-			if(parentNode && parentNode != containerNode){
-				var style = parentNode.style.position;
-				if(style && style != "absolute" && style != "relative"){
-					parentNode = parentNode.offsetParent;
-				}
-				if(parentNode && parentNode != containerNode){
-					var p = this._context.getContentPosition(dojo.coords(parentNode));
-					position.x -= (p.x - parentNode.scrollLeft);
-					position.y -= (p.y - parentNode.scrollTop);
-				}
-			}
 		}
 
 		//FIXME: data can be an array
@@ -643,13 +631,13 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				}
 			}
 			
-			command.add(new davinci.ve.commands.AddCommand(w,
+			command.add(new AddCommand(w,
 				args.parent || this._context.getContainerNode(),
 				args.index));
 			if(args.position){
 				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
-				command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
-				command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
+				command.add(new StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
+				command.add(new MoveCommand(w, args.position.x, args.position.y));
 			}
 			if(args.size){
 				// For containers, issue a resize regardless of whether an explicit size was set.
@@ -657,7 +645,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				// resize()+layout() will not get called during create. 
 				var width = args.size.w,
 					height = args.size.h;
-				command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
+				command.add(new ResizeCommand(w, width, height));
 				var helper = Widget.getWidgetHelper(w.type);
 				if(helper && helper.onCreateResize){
 					helper.onCreateResize(command, w, width, height);

@@ -1,7 +1,8 @@
+//FIXME: This routine doesn't ever seem to be used. Remove?
 define([
     	"dojo/_base/declare",
     	"davinci/actions/Action"
- ], function(declare, Action, CompoundCommand, MoveCommand, Widget){
+ ], function(declare, Action){
 
 
 return declare("davinci.ve.actions.PropertyAction", [Action], {

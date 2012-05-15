@@ -1,5 +1,6 @@
 define([
-], function() {
+	"davinci/ve/utils/GeomUtils"
+], function(GeomUtils) {
 	dojo.getObject("davinci.ve.Snap", true); // FIXME: shouldn't need this
 	//dojo.getObject("davinci.ve", true); // FIXME: shouldn't need this
 	return davinci.ve.Snap = /** @scope davinci.ve.Snap */ {
@@ -52,12 +53,17 @@ define([
 			if(node.tagName == 'BODY'){
 				return;
 			}
+/*
 			var dj = context.getDojo();
 			var dj_coords = dj.coords(node, true);
 			
 			// Fix up because dojo.coords() value is shifted by left/top margins
 			dj_coords.x -= computed_style.marginLeft.match(/^\d+/);	// Extract number from something like "2px"
 			dj_coords.y -= computed_style.marginTop.match(/^\d+/);
+*/
+var dj_coords = GeomUtils.getMarginBoxPageCoords(node);
+dj_coords.x = dj_coords.l;
+dj_coords.y = dj_coords.t;
 			
 			//FIXME: Maybe make this a preference.
 			var hitradius=5;
@@ -196,9 +202,14 @@ define([
 			var box; // Initial values are assigned by internal function snapSetup below leveraging closure
 			function snapSetup(context, widget, widgetDiv, alignDiv){
 				widgetDiv.style.display='block';
-				alignDiv.style.display='block';		
+				alignDiv.style.display='block';
+/*
 				var dj = context.getDojo();
 				box = dj.coords(widget.domNode, true);
+*/
+box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+box.x = box.l;
+box.y = box.t;
 				box.r = box.x + box.w;
 				box.b = box.y + box.h;
 				box.c = box.x + box.w/2;

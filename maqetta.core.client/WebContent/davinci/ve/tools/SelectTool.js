@@ -564,7 +564,7 @@ var newTop = oldBoxes[idx].t + dy;
 							// way, MoveCommand will store the actual shift amount on the
 							// command object (first_c). MoveCommand will use the shift amount
 							// for first_c for the other move commands.
-							var c = new MoveCommand(currWidget, newLeft, newTop, first_c, oldBoxes[idx], applyToWhichStates);
+							var c = new MoveCommand(currWidget, newLeft, newTop, first_c, oldBoxes[idx], applyToWhichStates, true /* disable snapping */);
 							compoundCommand.add(c);
 						}
 						var currentParent = w.getParent();
@@ -575,7 +575,7 @@ var newTop = oldBoxes[idx].t + dy;
 							compoundCommand.add(new MoveCommand(currWidget, newPos.l, newPos.t, null, null, applyToWhichStates));
 */
 // redundant move command at same location because left/top properties need updating due to new parent
-compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, applyToWhichStates));
+compoundCommand.add(new MoveCommand(currWidget, newLeft, newTop, null, null, applyToWhichStates, true /* disable snapping */));
 						}
 					}
 				}));

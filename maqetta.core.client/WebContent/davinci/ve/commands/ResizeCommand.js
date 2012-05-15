@@ -14,13 +14,13 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 
 	constructor: function(widget, width, height, applyToWhichStates){
 		this._id = (widget ? widget.id : undefined);
+		var number_regex = /^\s*[-+]?[0-9]*\.?[0-9]+\s*$/;
 	
 		/* make sure these values are numeric */
-		if(dojo.isString(width)){
+		if(number_regex.test(width)){
 			width = parseFloat(width);
 		}
-		
-		if(dojo.isString(height)){
+		if(number_regex.test(height)){
 			height = parseFloat(height);
 		}
 
@@ -68,9 +68,13 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		var newStyleArray = [{}] ;
 		if(typeof w == 'number'){
 			newStyleArray[0].width = w+'px';
+		}else if(typeof w == 'string'){
+			newStyleArray[0].width = w;
 		}
 		if(typeof h == 'number'){
 			newStyleArray[0].height = h+'px';
+		}else if(typeof h == 'string'){
+			newStyleArray[0].height = h;
 		}
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);

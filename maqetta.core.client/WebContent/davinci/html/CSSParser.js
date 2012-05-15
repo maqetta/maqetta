@@ -227,8 +227,8 @@ CSSParser.parse = function (text, parentElement) {
 
 		token = parser.next();
 		var commentStart = false;
-		while (token.style == "css-comment" || token.style == "whitespace" ||
-				(token.content == '/' && stream.peek() == '/')) {
+		while (token.style == "css-comment" || token.style == "whitespace" /*||
+				(token.content == '/' && stream.peek() == '/')*/) {
 			if (token.style == "css-comment" || commentStart) {
 				if (! pushComment) {
 					pushComment = new Comment();
@@ -244,7 +244,7 @@ CSSParser.parse = function (text, parentElement) {
 					commentStart = false;
 				}
 				pushComment.appendComment(s);
-			} else if (token.content == '/') { // double slash comment to EOF
+			} /*else if (token.content == '/') { // double slash comment to EOF
 				start = token.offset;
 				parser.next();// second slash
 				if (! pushComment) {
@@ -255,7 +255,7 @@ CSSParser.parse = function (text, parentElement) {
 				}
 				s = stream.get();
 				pushComment.addComment('line', start, start + s.length, s);
-			} 
+			} */
 			token = parser.next();
 		}
 		return token;

@@ -497,7 +497,8 @@
 		            ],
 		            "tool": "./dojox/grid/DataGridCreateTool",
 		            "helper": "./dojox/grid/DataGridHelper",
-		            "inlineEdit": "./dojox/grid/DataGridInput"
+		            "inlineEdit": "./dojox/grid/DataGridInput",
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "DateTextBox",

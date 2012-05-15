@@ -2,7 +2,7 @@
 	"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<title>Widget palette Dojo DataGrid tests</title>
+	<title>Widget palette Dojo DataGrid tests (Legacy)</title>
 
 	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
 	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
@@ -15,14 +15,62 @@
 		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
 	</div>
 	<hr />
-	<h1 class="test_title">Widget palette Dojo DataGrid tests</h1>
+	<h1 class="test_title">Widget palette Dojo DataGrid tests (Legacy)</h1>
+	
+	<h2 class="test_section">Introduction</h2>
+	<p> With the addition of GridX support, Maqetta support for DataGrid has been deprecated. As part of the 
+	deprecation, DataGrid has been hidden within the widget palette. However, existing files containing
+	DataGrid should continue to function, and DataGrid Smart Input should continue to behave as before. So, this
+	DataGrid test plan stays mostly the same except instead of dragging DataGrid from palette to canvas, DataGrid
+	will need to be added to HTML files via the source editor.
+	
+	<h2 class="test_section">Creating File Containing Data Grid</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps" >
+		<li>Choose New HTML File from the New menu</li>
+		<li>Click "Split Vertically" or "Split Horizontally" in main toolbar to make source pane visible</li>
+		<li>Copy and paste the source below on top of the source in the source pane</li>
+<PRE>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"/&gt;
+&lt;title&gt;Untitled&lt;/title&gt;
+&lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'jquery-ui','location':'../../jquery-ui'},{'name':'yui','location':'../../yui'},{'name':'maqetta','location':'../../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'clipart','location':'../../clipart'},{'name':'gridx','location':'../gridx'}]"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+require([
+  "dijit/dijit",
+  "dojo/parser",
+  "maqetta/space",
+  "maqetta/AppStates",
+  "dojox/io/xhrScriptPlugin",
+  "dojo/data/ItemFileReadStore",
+  "dojox/grid/DataGrid",
+  "dojox/data/CsvStore"
+]);
+&lt;/script&gt;
+&lt;style&gt;@import "themes/claro/claro.css";@import "lib/dojo/dojo/resources/dojo.css";@import "lib/dojo/dojox/grid/resources/Grid.css";@import "lib/dojo/dojox/grid/resources/claroGrid.css";@import "app.css";
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body class="claro" dvFlowLayout="true" data-davinci-ws="collapse" id="myapp"&gt;
+&lt;span dojoType="dojo.data.ItemFileReadStore" id="ItemFileReadStore_1" jsId="ItemFileReadStore_1" data="{'identifier':'unique_id','items':[{'unique_id':1,'id':'1','label':'Label 1'},{'unique_id':2,'id':'2','label':'Label 2'}]}"&gt;&lt;/span&gt;&lt;span data-dojo-type="dojox.grid.DataGrid" structure="[{'width':'auto','name':'ID','field':'id'},{'width':'auto','name':'Label','field':'label'}]" autoWidth="false" autoHeight="false" singleClickEdit="false" columnReordering="false" selectable="false" delayScroll="false" style="width: 300px; height: 300px;" store="ItemFileReadStore_1" escapeHTMLInData="true"&gt;&lt;/span&gt;&lt;/body&gt;
+&lt;/html&gt;
+	</PRE>
+	
+		<li> See DataGrid get rendered and close source pane (e.g., click "Display Design" in main toolbar)</li>
+	</ol>
+	
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The DataGrid should be rendered in the page editor with default data.</li>
+	</ol>
+	
 	
 	<h2 class="test_section">Comma separated data</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps" >
-		<li>Choose New HTML File from the New menu</li>
-		<li>Open the Dojo Controls folder in the Widget palette.</li>
-		<li>Drag DataGrid widget onto the canvas.</li>
+		<li>Continuing with HTML file created in last section.</li>
+		<li>Double-click on the DataGrid to bring up SmartInput.</li>
 		<li>SmartInput is displayed chose <i>Comma separated data</i> from the drop down list</li>
 		<li>Change the data in the text area to: </li>
 		<ul>
@@ -47,8 +95,8 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Choose New HTML File from the New menu</li>
-		<li>Open the Dojo Controls folder in the Widget palette.</li>
-		<li>Drag DataGrid widget onto the canvas.</li>
+		<li>Add DataGrid to file using instructions in <i>Creating File Containing Data Grid</i> section above</li>
+		<li>Double-click on the DataGrid to bring up SmartInput.</li>
 		<li>SmartInput is displayed, mouse down and hold on the icon in the button right corner of the text area. Drag to re-size the the smart input.</li>
 		<li>Click on the <b>?</b> icon to display the help.</li>
 		<li>Click on the <b>?</b> icon to hide the help.</li>
@@ -64,8 +112,8 @@
 	<h3 class="steps_subsection" >Steps</h3>
 	<ol class="steps">
 		<li>Choose New HTML File from the New menu</li>
-		<li>Open the Dojo Controls folder in the Widget palette.</li>
-		<li>Drag DataGrid widget onto the canvas.</li>
+		<li>Add DataGrid to file using instructions in <i>Creating File Containing Data Grid</i> section above</li>
+		<li>Double-click on the DataGrid to bring up SmartInput.</li>
 		<li>SmartInput is displayed chose <i>Comma separated data</i> from the drop down list</li>
 		<li>Change the data in the text area to:</li>
 		<ul>
@@ -90,8 +138,8 @@
 	<h3 class="steps_subsection" >Steps</h3>
 	<ol class="steps">
 		<li>Choose New HTML File from the New menu</li>
-		<li>Open the Dojo Controls folder in the Widget palette.</li>
-		<li>Drag DataGrid widget onto the canvas.</li>
+		<li>Add DataGrid to file using instructions in <i>Creating File Containing Data Grid</i> section above</li>
+		<li>Double-click on the DataGrid to bring up SmartInput.</li>
 		<li>SmartInput is displayed chose <i>Data file from workspace</i> from the drop down list</li>
 		<li>Click on the folder icon.</li>
 		<li>The select a source dialog will be displayed, navigate to the <i>sample_data folder</i>and then select the <i>htmlSample.json<</i> file click ok button</li>

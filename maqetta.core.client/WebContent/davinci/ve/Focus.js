@@ -736,6 +736,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     _updateSubwidgetListForState: function() {
+    	if (this._context.editor != davinci.Runtime.currentEditor){
+            // not for us
+            return;
+        }
         if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget) {
             var editor = davinci.Runtime.currentEditor,
                 themeMetadata = editor._theme;

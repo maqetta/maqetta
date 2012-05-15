@@ -2239,7 +2239,13 @@ var box = GeomUtils.getMarginBoxPageCoords(node);
 			var helper = Theme.getHelper(this.visualEditor.theme);
 			if(helper && helper.onContentChange){
 				helper.onContentChange(this, this.visualEditor.theme);
-			}
+			} else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
+           	 helper.then(function(result){
+        		 if (result.helper && result.helper.onContentChange){
+        			 result.helper.onContentChange(this,  this.visualEditor.theme); 
+    			 }
+        	 }.bind(this));
+          }
 		}
 		setTimeout(function(){
 			// Invoke autoSave, with "this" set to Workbench
@@ -2273,7 +2279,7 @@ var box = GeomUtils.getMarginBoxPageCoords(node);
 		function updateSheet(sheet, rule){
 			var fileName = rule.parent.getResource().getURL();
 			var selectorText = rule.getSelectorText();
-			//console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
+//			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			//var rules = sheet.cssRules;
 			var foundSheet = findSheet(sheet, fileName);
@@ -2285,7 +2291,7 @@ var box = GeomUtils.getMarginBoxPageCoords(node);
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
 							foundSheet.deleteRule(r);
-	//						console.log("------------  Hot Modify delete " + foundSheet.href + "index " +r+" ----------------:=\n" + selectorText + "\n");
+//							console.log("------------  Hot Modify delete " + foundSheet.href + "index " +r+" ----------------:=\n" + selectorText + "\n");
 							
 							break;
 						}
@@ -2304,6 +2310,7 @@ var box = GeomUtils.getMarginBoxPageCoords(node);
 		
 		function findSheet(sheet, sheetName){
 			if (sheet.href == sheetName){
+//				console.log("------------  Hot foundsheet " +  sheetName + "\n");
 				return sheet;
 			}
 			var foundSheet;

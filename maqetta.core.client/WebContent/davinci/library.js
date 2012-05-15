@@ -9,7 +9,7 @@ define([
 	"davinci/workbench/Preferences"
 //	"davinci/ve/metadata" // FIXME: circular ref?
 ],
-function(Runtime, Path, CSSThemeProvider, Query/*, Metadata*/, Preferences) {
+function(Runtime,  Path, CSSThemeProvider, Query/*, Metadata*/, Preferences) {
 
 /*
  * 
@@ -34,15 +34,33 @@ dojo.subscribe("/davinci/ui/libraryChanged/start", this, function() {
     _userLibsCache = {};
 });
 
+/* if resources are deleted, we need to check if they are themes.  if so dummp the theme cache so its resynced */
+dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedResource){
+	
+	if(type=='deleted' || type=='renamed'){
+		var Workbench = require("davinci/Workbench");
+		var base = Workbench.getProject();
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
+		var projectThemeBase = new Path(base).append(prefs.themeFolder);
+		var resourcePath = new Path(changedResource.getPath());
+		if(resourcePath.startsWith(projectThemeBase)){
+			delete _themesCache[base];
+		}
+	}
+	
+	
+	
+});
 /* singleton */
 library = {
 
 themesChanged: function(base){
+	debugger;
 	_themesCache[base] = base ? null : [];
 },
 
 getThemes: function(base, workspaceOnly, flushCache){
-
+	
 	if (flushCache) {
 		delete _themesCache[base];
 	}

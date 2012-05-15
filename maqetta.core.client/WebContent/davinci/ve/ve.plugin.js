@@ -116,7 +116,6 @@ return {
             visible: true,
             actions: [
                 {
-                    id: "davinci.ve.cut",
                     label: "Cut",
                     keySequence: "M1+X",
                     iconClass: "editActionIcon editCutIcon",
@@ -124,7 +123,6 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.copy",
                     label: "Copy",
                     keySequence: "M1+C",
                     iconClass: "editActionIcon editCopyIcon",
@@ -132,7 +130,6 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.paste",
                     keySequence: "M1+V",
                     iconClass: "editActionIcon editPasteIcon",
                     label: "Paste",
@@ -140,7 +137,6 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.delete",
                     keySequence: "DEL",
                     iconClass: "editActionIcon editDeleteIcon",
                     label: "Delete",
@@ -148,112 +144,96 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.select.parent",
                     iconClass: "editActionIcon",
                     label: "Select parent",
                     action: "davinci/ve/actions/SelectParentAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.select.ancestor",
                     iconClass: "editActionIcon",
                     label: "Select ancestor...",
                     action: "davinci/ve/actions/SelectAncestorAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.unselect.all",
                     iconClass: "editActionIcon",
                     label: "Unselect all",
                     action: "davinci/ve/actions/UnselectAllAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.surround.a",
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;A&gt;",
                     action: "davinci/ve/actions/SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.surround.div",
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;DIV&gt;",
                     action: "davinci/ve/actions/SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.surround.span",
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;SPAN&gt;",
                     action: "davinci/ve/actions/SurroundAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.addTableColumn",
                     iconClass: "editActionIcon",
                     label: "Insert column after",
                     action: "davinci/ve/actions/AddColumnAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.addTableColumnBefore",
                     iconClass: "editActionIcon",
                     label: "Insert column before",
                     action: "davinci/ve/actions/AddColumnBeforeAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.removeTableColumn",
                     iconClass: "editActionIcon",
                     label: "Remove column",
                     action: "davinci/ve/actions/RemoveColumnAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.addTableRow",
                     iconClass: "editActionIcon",
                     label: "Insert row after",
                     action: "davinci/ve/actions/AddRowAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.addTableRowBefore",
                     iconClass: "editActionIcon",
                     label: "Insert row before",
                     action: "davinci/ve/actions/AddRowBeforeAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.removeTableRow",
                     iconClass: "editActionIcon",
                     label: "Remove row",
                     action: "davinci/ve/actions/RemoveRowAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.MoveToFront",
                     iconClass: "editActionIcon",
                     label: "Move to front",
                     action: "davinci/ve/actions/MoveToFrontAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.MoveToBack",
                     iconClass: "editActionIcon",
                     label: "Move to back",
                     action: "davinci/ve/actions/MoveToBackAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.MoveForward",
                     iconClass: "editActionIcon",
                     label: "Move forward",
                     action: "davinci/ve/actions/MoveForwardAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    id: "davinci.ve.MoveBackward",
                     iconClass: "editActionIcon",
                     label: "Move backward",
                     action: "davinci/ve/actions/MoveBackwardAction",

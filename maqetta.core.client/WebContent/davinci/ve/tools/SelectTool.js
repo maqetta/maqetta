@@ -326,8 +326,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Adjust dimensions from border-box to content-box
 			var _node = widget.getStyleNode();
 			var e = dojo._getPadBorderExtents(_node);
-//			newBox.l = Math.round(newBox.x + e.l);
-//			box.t = Math.round(newBox.y + e.t);
 			if(typeof newBox.w == 'number'){
 				newBox.w -= e.w;
 			}
@@ -354,12 +352,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			compoundCommand.add(resizeCommand);
 			var position_prop = dojo.style(widget.domNode, 'position');
 			if("l" in newBox && "t" in newBox && position_prop == 'absolute'){
-//debugger;
-/*
-				var p = this._adjustLTOffsetParent(context, widget, newBox.l, newBox.t);
-				var left = p.l;
-				var top = p.t;
-*/
 				var left = newBox.l;
 				var top = newBox.t;
 				var moveCommand = new MoveCommand(widget, left, top, null, null, applyToWhichStates);
@@ -438,14 +430,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				}
 				
 			}else{
-//debugger;
 				var left = newBox.l,
 					top = newBox.t;
-/*
-				var p = this._adjustLTOffsetParent(context, widget, left, top);
-				left = p.l;
-				top = p.t;
-*/
 				if(!compoundCommand){
 					compoundCommand = new CompoundCommand();
 				}
@@ -456,19 +442,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var doMove = undefined;
 				if(proposedParent && proposedParent != currentParent){
 					doReparent = proposedParent;
-/*
-					var newPos = this._reparentDelta(left, top, widget.getParent(), proposedParent);
-					doMove = {l:newPos.l, t:newPos.t};
-*/
 				}
-//debugger;
-/*
-				var b = widget.getMarginBox(),
-					dx = left - b.l,
-					dy = top - b.t;
-*/
-var dx = left - oldBoxes[0].l;
-var dy = top - oldBoxes[0].t;
+				var dx = left - oldBoxes[0].l;
+				var dy = top - oldBoxes[0].t;
 				if(copy){
 					//get the data	
 					dojo.forEach(selection, function(w){

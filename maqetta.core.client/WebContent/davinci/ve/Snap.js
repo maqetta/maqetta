@@ -13,7 +13,6 @@ define([
 		 * @returns {boolean}  false=> no need to traverse, same as last time. true=>yes, do the traversal
 		 */
 		updateSnapLinesBeforeTraversal:function(context, rect){
-//console.log('updateSnapLinesBeforeTraversal');
 			context._snapX = null;
 			context._snapY = null;
 			if(context._lastSnapBox){
@@ -45,7 +44,6 @@ define([
 		 * @param {boolean} doSnapLinesY  whether to show dynamic snap lines (y-axis)
 		 */
 		findSnapOpportunities: function(context, widget, computed_style, doSnapLinesX, doSnapLinesY){
-//console.log('findSnapOpportunities. doSnapLinesX='+doSnapLinesX);
 			var distCheck = 75;	// CLoseness distance in pixels - only snap if snapBox is sufficiently close to widget
 			var snapBox = context._lastSnapBox;
 			
@@ -53,17 +51,9 @@ define([
 			if(node.tagName == 'BODY'){
 				return;
 			}
-/*
-			var dj = context.getDojo();
-			var dj_coords = dj.coords(node, true);
-			
-			// Fix up because dojo.coords() value is shifted by left/top margins
-			dj_coords.x -= computed_style.marginLeft.match(/^\d+/);	// Extract number from something like "2px"
-			dj_coords.y -= computed_style.marginTop.match(/^\d+/);
-*/
-var dj_coords = GeomUtils.getMarginBoxPageCoords(node);
-dj_coords.x = dj_coords.l;
-dj_coords.y = dj_coords.t;
+			var dj_coords = GeomUtils.getMarginBoxPageCoords(node);
+			dj_coords.x = dj_coords.l;
+			dj_coords.y = dj_coords.t;
 			
 			//FIXME: Maybe make this a preference.
 			var hitradius=5;
@@ -203,13 +193,9 @@ dj_coords.y = dj_coords.t;
 			function snapSetup(context, widget, widgetDiv, alignDiv){
 				widgetDiv.style.display='block';
 				alignDiv.style.display='block';
-/*
-				var dj = context.getDojo();
-				box = dj.coords(widget.domNode, true);
-*/
-box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
-box.x = box.l;
-box.y = box.t;
+				box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+				box.x = box.l;
+				box.y = box.t;
 				box.r = box.x + box.w;
 				box.b = box.y + box.h;
 				box.c = box.x + box.w/2;

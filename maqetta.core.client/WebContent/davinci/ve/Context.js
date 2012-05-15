@@ -874,11 +874,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if (helper && helper.getHeadImports){
 			    subs.themeHeadImports = helper.getHeadImports(this.visualEditor.theme);
 			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
-				subs.themeCssFiles = '<style type="text/css">' +
-						source.themeCssfiles.map(function(file) {
-							return '@import "' + file + '";';
-						}).join() +
-						'</style>';
+				subs.themeCssFiles = '' +
+				source.themeCssfiles.map(function(file) {
+					return '<link rel="stylesheet" type="text/css" href="' + file + '">';
+				}).join() +
+				'';
 			}
 
 			window["loading" + this._id] = function(parser, htmlUtil) {

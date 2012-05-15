@@ -603,7 +603,6 @@
                 "Normal": {
                 	"elements":{ 
                      	"$root": [ 
-                     		"color",
 							"font-size",
 							"font-weight" 
                  		]

@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Widget Palette Dojo GridX Tests (Column Editing)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Widget Palette Dojo GridX Tests (Column Editing)</h1>
+	
+	<h2 class="test_section">Data file from workspace</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag GridX widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Data file from workspace</i> from the drop down list on the first panel of the wizard.</li>
+		<li>Click on the folder icon.</li>
+		<li>The select a source dialog will be displayed, navigate to the <i>sample_data folder</i> and then select the <i>sampleManyColumns.json</i> file. Click the OK button</li>
+		<li>The text area should now display the text <i>sample_data/sampleManyColumns.json</i>. Unlike DataGrid, radio buttons to specify plain text or HTML markup should <i>not</i>
+		be displayed.
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated with the data from the <i>sampleManyColumns.json</i> file.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The GridX in page editor and preview should be displaying the data from the file. NOTE: It's expected to be basically unreadable because the dataset contains roughly 19 columns.</li>
+	</ol>
+	<img src="images/gridX_1.png" >
+
+	<h2 class="test_section">Select Columns</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps" >
+		<li>Continuing from the test case above.</li>
+		<li>Double click on the GridX Widget in the design view to display the smart input.</li>
+		<li>SmartInput is displayed. The first panel should still have <i>Data file from workspace</i> selected and <i>sample_data/sampleManyColumns.json</i> in the text field.</li>
+		<li>Click Next to go to the 2nd panel of the wizard for column selection.</li>
+		<li>You should see a "slosh bucket" with a multi-select list on the left for <i>Available columns</i> and another multi-select list on the right for <i>Available columns</i>.
+		    In this case, the <i>Available columns</i> list should be empty and the <i>Available columns</i> list should contain all of the columns (roughly 19 of them). </li>
+		<li>Our goal is to pick some subset of columns (e.g., <i>lastName</i>, <i>state</i>, <i>lastName</i>, <i>ssn</i>, <i>birthDate</i>) for display in the table. Move all of the rest of them to the <i>Available columns</i> side. You should be able to
+		    move columns to the other side either by:
+		    <ul>
+		    	<li>Selecting and then clicking the button with the arrow pointing to the left.</li>
+		    	<li>Double-clicking on them.</li>
+		    </ul>   
+		<li>Move a couple of columns (say <i>favTeam</i> and <i>occupation</i>) from the available side to the selected side either by:
+			<ul>
+		    	<li>Selecting and then clicking the button with the arrow pointing to the right.</li>
+		    	<li>Double-clicking on them.</li>
+		    </ul>  
+		<li>Change the order of the selected columns (say to <i>lastName</i>, <i>ssn</i>, <i>birthDate</i>, <i>state</i>, <i>occupation</i> , <i>lastName</i>, and  <i>favTeam</i>). You can use the button with the up arrow to move columns up the list and the button with the down arrow to move columns down the list.</li>
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated to show your selected columns in the specified order.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults" >
+		<li>The GridX in page editor and preview should be displaying your selected columns in the specified order. </li>
+	</ol>
+	<img src="images/gridX_2.png" >
+	
+	<h2 class="test_section">Labeling and Resizing Columns</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Continuing from the test case above.</li>
+		<li>Double click on the GridX Widget in the design view to display the smart input.</li>
+		<li>SmartInput is displayed. The first panel should still have <i>Data file from workspace</i> selected and <i>sample_data/sampleManyColumns.json</i> in the text field.</li>
+		<li>Click Next to go to the 2nd panel of the wizard for column selection. The list on the right for selected columns should show the columns you previously selected in the order you 
+		    placed them. All of the rest of the columns should be in the available list on the left side. </li>
+		<li>Click Next to go to the 3rd panel. You should see:
+			<ul>
+				<li>a preview table that looks like your table in the page editor (e.g., your previously selected columns in the previously selected order)</li>
+			    <li>a column properties "palette" with all fields disabled (since no columns are selected)
+			</ul>
+		</li>
+		<li>Resize all of the columns so there is no wrapping. You can resize columns by dragging the column header border. As you resize columns note:
+			<ul>
+				<li>after a column is resized, it is selected</li>
+			    <li>after a column is selected, you should see the column properties palette populated</li>
+			    <li>if you resize the column again, the width value in the palette should be updated as well</li>
+			</ul>
+		</li>
+		<li>Change all of the column headers from ids to human readable values (e.g., <i>ssn</i> to <i>Social Security Number</i>, etc.). 
+			<ul>
+				<li>You can change a column header by selecting the column and changing the label value in the column properties palette. When focus leaves the label text 
+				field, the column header in the preview should be updated immediately.</li>
+				<li>As you change column headers, resize the columns so that the headers don't wrap. You can do this by dragging column headers (as you did previously) or by
+					entering values in the Width field for a selected column. Be sure to try both approaches.</li>
+		   
+		    </ul>
+		</li>
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated to show new column labels and widths. </li>
+		<li>Resize the table in the page editor so all of the columns are visible without a horizontal scrollbar.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the service.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults" >
+		<li>The GridX in page editor and preview should be displaying your columns with new sizes and labels. </li>
+	</ol>
+	<img src="images/gridX_3.png" >
+
+</body>
+</html>

@@ -3,8 +3,9 @@ define([
     	"davinci/Runtime",
         "./widget",
         "./_Widget",
-        "./metadata"
-], function(declare, Runtime, widget, _Widget, metadata) {
+        "./metadata",
+    	"davinci/ve/utils/GeomUtils"
+], function(declare, Runtime, widget, _Widget, metadata, GeomUtils) {
 
 return declare("davinci.ve.ChooseParent", null, {
 	
@@ -271,17 +272,8 @@ return declare("davinci.ve.ChooseParent", null, {
 					offsetParent = parentNode.offsetParent;
 					//parentNode.appendChild(this._cursorSpan);
 					var compStyle = dojo.style(parentNode);
-/*
-					if(this._cursorSpan.offsetParent == parentNode){
-						cursorL = parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
-						cursorT = parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
-					}else{
-*/
 						cursorL = parentNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
 						cursorT = parentNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
-/*
-					}
-*/
 					cursorH = '16px';
 				}
 				while(offsetParent && offsetParent.tagName != 'BODY'){
@@ -463,16 +455,12 @@ return declare("davinci.ve.ChooseParent", null, {
 		var domNode = wdgt.domNode;
 		var x = position.x;
 		var y = position.y;
-		var w = domNode.offsetWidth;
-		var h = domNode.offsetHeight;
-		var l = domNode.offsetLeft;
-		var t = domNode.offsetTop;
-		var offsetParent = domNode.offsetParent;
-		while(offsetParent && offsetParent.tagName != 'BODY'){
-			l += offsetParent.offsetLeft;
-			t += offsetParent.offsetTop;
-			offsetParent = offsetParent.offsetParent;
-		}
+		var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(domNode);
+		l = marginBoxPageCoords.l;
+		t = marginBoxPageCoords.t;
+		w = marginBoxPageCoords.w;
+		h = marginBoxPageCoords.h;
+
 		var r = l + w;
 		var b = t + h;
 		if(x >= l && x <= r && y >= t && y <= b){

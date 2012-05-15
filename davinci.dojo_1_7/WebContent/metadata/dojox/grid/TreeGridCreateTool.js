@@ -5,7 +5,8 @@ define([
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/AddCommand",
 	"davinci/ve/commands/MoveCommand",
-	"davinci/ve/commands/ResizeCommand"
+	"davinci/ve/commands/ResizeCommand",
+	"davinci/ve/commands/StyleCommand"
 ], function(
 	declare,
 	CreateTool,
@@ -13,7 +14,8 @@ define([
 	CompoundCommand,
 	AddCommand,
 	MoveCommand,
-	ResizeCommand
+	ResizeCommand,
+	StyleCommand
 ) {
 
 return declare(CreateTool, {
@@ -96,6 +98,8 @@ return declare(CreateTool, {
 		command.add(new AddCommand(dataGrid, args.parent, index));
 		
 		if(args.position){
+			var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+			command.add(new StyleCommand(dataGrid, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(dataGrid, args.position.x, args.position.y));
 		}
 		if(args.size){

@@ -4,14 +4,16 @@ define(["dojo/_base/declare",
     	"davinci/ve/metadata",
     	"davinci/commands/CompoundCommand",
     	"davinci/ve/commands/AddCommand",
-    	"davinci/ve/commands/MoveCommand"], function(
+    	"davinci/ve/commands/MoveCommand",
+    	"davinci/ve/commands/StyleCommand"], function(
     		declare,
 			CreateTool,
 			widget,
 			metadata,
 			CompoundCommand,
 			AddCommand,
-			MoveCommand
+			MoveCommand,
+			StyleCommand
 			){
 
 return declare("davinci.ve.tools.PasteTool", CreateTool, {
@@ -31,6 +33,9 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 			baseline,
 			delta,
 			position;
+		var command = new CompoundCommand();
+		var first_c;
+var newWidgets = [];
 		dojo.forEach(this._data, function(d){
 			var loadRequiresForTree = dojo.hitch(this, function(d){
 				if(d.type){ // structure has plain 'string' nodes which don't have type or children
@@ -70,8 +75,7 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 				metadata.getHelper(d.type, "tool").then(function(ToolCtor) {
 					var w,
 						myTool,
-						selection = [],
-						command = new CompoundCommand();
+						selection = [];
 
 					if (ToolCtor) {
 				    	myTool = new ToolCtor(d);
@@ -97,10 +101,17 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 			        if (index !== undefined && index >= 0) {
 						index++;
 					}
+newWidgets.push(w);
 					if (position) {
-						command.add(new MoveCommand(w, position.x, position.y));
+						var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+						command.add(new StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
+						var moveCommand = new MoveCommand(w, position.x, position.y, first_c, null, null, first_c /* disable snapping*/);
+						if(!first_c){
+							first_c = moveCommand;
+						}
+						command.add(moveCommand);
 					}
-
+/*
 					selection.push(w);
 
 					if(!command.isEmpty()){
@@ -109,9 +120,17 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 							this._context.select(w, i > 0);
 						}, this);
 					}
+*/
 				}.bind(this));
 			}, this);
 		}, this);
+
+		if(!command.isEmpty()){
+			this._context.getCommandStack().execute(command);
+			dojo.forEach(newWidgets, function(w, i){
+				this._context.select(w, i > 0);
+			}, this);
+		}
 	},
 
 	

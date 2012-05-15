@@ -1261,6 +1261,7 @@
 		            },
 		            "resizable": "width"
 		        },
+/* Commenting out - crashes as currently defined because there is no dijit.layout.StackController widget
 		        {
 		            "name": "StackContainer",
 		            "description": "Stack Container",
@@ -1298,6 +1299,7 @@
 		            "tool": "./dijit/layout/StackContainerCreateTool",
 		            "allowedChild": "ANY"
 		        },
+*/
 		        {
 		            "name": "Range",
 		            "description": "Range",

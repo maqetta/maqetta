@@ -142,12 +142,16 @@ return {
 				var props = ['backgroundAttachment', 'backgroundClip', 'backgroundColor', 'backgroundImage', 
 				             'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'backgroundSize',
 				             'color','fontFamily', 'fontSize', 'fontStyle', 'fontWeight', 'fontVariant'];
-				for(var i=0; i<nodes.length; i++){
-					var style = nodes[i].style;
-					props.forEach(function(prop){
-						style[prop] = body_style[prop];
-					});
-				}
+				// Using setTimeout because BODY style may not be fully baked
+				// due to browser quirks with delayed computation of computed style.
+				setTimeout(function(){
+					for(var i=0; i<nodes.length; i++){
+						var style = nodes[i].style;
+						props.forEach(function(prop){
+							style[prop] = body_style[prop];
+						});
+					}
+				},50);
 			}	
 		}
 	}

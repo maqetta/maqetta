@@ -227,10 +227,27 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		
 		refresh: function() {
 			if (this._skipRefresh) { return; }
+
+			// KLUDGE: preserve state
+			var tree = dijit.byId("davinci.ui.outline").outlineTree,
+            	opened = [];
+            for(var node = tree._getRootOrFirstNode(); node; node = tree._getNextNode(node)) {
+            	if(node.isExpanded) {
+                	opened.push(node.item);            		
+            	}
+            }
+
 			var node = this._context.rootNode;
 			if (node){	// shouldn't be necessary, but sometime is null
 				this.onChildrenChange(node, this._childList(node));
 			}
+
+			// KLUDGE: restore tree state
+			opened.forEach(function(item){
+				tree.getNodesByItem(item).forEach(function(node){
+					tree._expandNode(node);
+				});
+			});
 		}
 	});
 

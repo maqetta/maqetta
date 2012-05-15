@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Widget Palette Dojo GridX Tests (Basic)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Widget Palette Dojo GridX Tests (Basic)</h1>
+	
+	<h2 class="test_section">Introduction</h2>
+	<p> With the addition of GridX support, Maqetta support for DataGrid has been deprecated. The test scenarios that follow
+	are a lot like the old DataGrid tests but using GridX instead of DataGrid. In order to keep the individual tests relatively 
+	short, more advanced testing of other GridX Configuration Wizard scenarios will be described elsewhere. 
+	
+	<h2 class="test_section">Comma separated data</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps" >
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag GridX widget onto the canvas.</li>
+		<li>SmartInput is displayed chose <i>Comma separated data</i> from the drop down list on the first panel of the wizard.</li>
+		<li>Change the data in the text area to: </li>
+		<pre>
+one, two, three
+data 1, data 2, data 3
+xxxx, yyy, zzz
+111, 222, 3333
+		</pre>
+		<li>Click Finish.</li>
+		<li>The GridX should be updated with the data you entered.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data entered</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The GridX in page editor and preview should be displaying the data you just enter.</li>
+		<li>You should see 3 columns with the headers one, two and three.</li>
+		<li>You should see 3 rows of data, corresponding to the data you entered.</li>
+	</ol>
+	<h2 class="test_section">Smart Input (GridX Configuration Wizard)</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag GridX widget onto the canvas.</li>
+		<li>SmartInput is displayed. 
+		<li>Verify the SmartInput is a modal dialog containing a wizard.</li>
+		<li>Verify the wizard contains three panels (one for data source set-up, one for column selection, and one for previewing the grid and resizing/reordering columns):</li>
+			<ul>
+				<li>Click the Next button 2 times and then the Back button two times to verify you can go to the end of the wizard and back (seeing the 3 steps along the way).</li>
+				<li>Along the top of the dialog there should be a clickable heading for each step. Click on each heading and verify the corresponding wizard page is selected.</li>
+			</ul>
+		<li>On the first panel:</li>
+			<ul>
+				<li>Mouse down and hold on the icon in the button right corner of the text area. Drag to re-size the the text area.</li>
+				<li>Click on the <b>?</b> icon to display the help.</li>
+				<li>Click on the <b>?</b> icon to hide the help.</li>
+			</ul>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The user should see a modal dialog containing a wizard.</li>
+		<li>The user should be able to navigate through the 3 steps of the wizard with Next/Back buttons or the clickable headings.
+		<li>On the first panel, the user should be able to re-size the text area and display/hide help.</li>
+	</ol>
+	
+	<h2 class="test_section">Canceling the wizard</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag GridX widget onto the canvas.</li>
+		<li>SmartInput is displayed chose <i>Comma separated data</i> from the drop down list</li>
+		<li>Change the data in the text area to:</li>
+<pre>
+one, two, three
+data 1, &lt;b&gt;data 2&lt;/b&gt;, data 3
+xxxx, yyy, zzz
+111, 222, 3333
+</pre>
+		<li>NOTE: The UI should <i>not</i> change despite the presence of HTML tags. Unlike DataGrid, GridX does not support specifying the use of Plan Text vs. HTML Markup.
+		<li>Click the <i>Cancel</i> button.</li>
+		<li>The GridX should be be displayed with the default data, not the data you entered.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the default data.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The GridX in page editor and preview should be displaying the default data.</li>
+	</ol>
+	<img height="138" src="images/image01.jpg" width="309">
+	
+	<h2 class="test_section">Data file from workspace</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag GridX widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Data file from workspace</i> from the drop down list on the first panel of the wizard.</li>
+		<li>Click on the folder icon.</li>
+		<li>The select a source dialog will be displayed, navigate to the <i>sample_data folder</i> and then select the <i>htmlSample.json</i> file. Click the OK button</li>
+		<li>The text area should now display the text <i>sample_data/htmlSample.json</i> Unlike DataGrid, radio buttons to specify plain text or HTML markup should <i>not</i>
+		be displayed.
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated with the data from the htmlSample file. Notice that the data is displayed with HTML markup rendered (e.g., <b>Fruits</b> is made bold).</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The GridX in page editor and preview should be displaying the data from the file.</li>
+	</ol>
+	<img height="149" src="images/image00.jpg" width="301">
+
+	<h2 class="test_section">Data from URL (JSONP)</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps" >
+		<li>Continuing from the test case above, open the HTML File from the <i>Data from workspace<</i> test case.</li>
+		<li>Double click on the GridX Widget in the design view to display the smart input.</li>
+		<li>SmartInput is displayed. Choose <i>Data from URL (JSONP)</i> from the drop down list on the first panel.</li>
+		<li>In the text area enter the following URL: <i>http://maqettaservice.appspot.com/sampleservice</i></li>
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated with the data from the service. Notice that the data is displayed with HTML tags rendered (for example <b>Fruits</b>).</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the service.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults" >
+		<li>The GridX in page editor and preview should be displaying the data from the file. </li>
+	</ol>
+	<img height="149" src="images/image00.jpg" width="301">
+	
+	<h2 class="test_section">Data from URL continued (JSONP)</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Continuing with the file above.</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag a 2nd GridX widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Data from URL (JSONP)</i> from the drop down list on the first panel.</li>
+		<li>In the text area enter the following URL: <i>http://maqetta.org/sampleService</i>
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated with the data from the service. </li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the service.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults" >
+		<li>The two respective grid instances (whether in page editor or preview) should be displaying the data from the two different services. Note in the 2nd grid, no data is marked with HTML (e.g., nothing bolded). </li>
+	</ol>
+	<img height="608" src="images/image02.jpg" width="312">
+
+</body>
+</html>

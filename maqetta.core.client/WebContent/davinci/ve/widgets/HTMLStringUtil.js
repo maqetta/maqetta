@@ -52,7 +52,7 @@ define(["dojo/_base/declare",
 			
 			function getValueAndTitle(value) {
 				var obj = {};
-				obj.value = value.value || value;
+				obj.value = (typeof(value.value) != "undefined" && value.value !== null) ? value.value : value;
 				// if it is an object use the value and look for a title
 				obj.title = value.title || obj.value;
 				return obj;

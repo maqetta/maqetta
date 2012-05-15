@@ -181,6 +181,22 @@ getEnclosingWidgetForRichText: function(node) {
 	}
 },
 
+// used by helpers
+getUniqueObjectId: function(type, node) {
+	if(!type){
+		return undefined;
+	}
+
+	var base = type.substring(type.lastIndexOf(".") + 1);
+	var i = 1;
+	var id = base + "_" + i++;
+	var dj = widgetObject._dojo(node);
+	while(dj.getObject(id)){
+		id = base + "_" + i++;
+	}
+	return id;
+},
+
 getLabel: function(widget) {
 	var text = "<span class='propertiesTitleWidgetName'>";
 	//FIXME: This is a hack so that meaningful names

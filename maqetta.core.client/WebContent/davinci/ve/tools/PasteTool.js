@@ -4,14 +4,16 @@ define(["dojo/_base/declare",
     	"davinci/ve/metadata",
     	"davinci/commands/CompoundCommand",
     	"davinci/ve/commands/AddCommand",
-    	"davinci/ve/commands/MoveCommand"], function(
+    	"davinci/ve/commands/MoveCommand",
+    	"davinci/ve/commands/StyleCommand"], function(
     		declare,
 			CreateTool,
 			widget,
 			metadata,
 			CompoundCommand,
 			AddCommand,
-			MoveCommand
+			MoveCommand,
+			StyleCommand
 			){
 
 return declare("davinci.ve.tools.PasteTool", CreateTool, {
@@ -98,6 +100,8 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 						index++;
 					}
 					if (position) {
+						var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+						command.add(new StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 						command.add(new MoveCommand(w, position.x, position.y));
 					}
 

@@ -1,10 +1,12 @@
+//FIXME: This routine doesn't seem to be used. Remove?
 define([
     	"dojo/_base/declare",
     	"../../actions/Action",
     	"../../commands/CompoundCommand",
     	"../commands/MoveCommand",
+    	"davinci/ve/utils/GeomUtils",
     	"../widget"
-], function(declare, Action, CompoundCommand, MoveCommand, Widget){
+], function(declare, Action, CompoundCommand, MoveCommand, GeomUtils, Widget){
 
 
 return declare("davinci.ve.actions.AlignAction", [Action], {
@@ -23,7 +25,10 @@ return declare("davinci.ve.actions.AlignAction", [Action], {
 			if(node.style.position != "absolute"){
 				return;
 			}
+/*
 			var box = dojo.marginBox(node);
+*/
+var box = GeomUtils.getMarginBoxPageCoords(node);
 			if(parent){
 				if(Widget.getParent(w) != parent){
 					context.deselect(w);

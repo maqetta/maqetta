@@ -10,9 +10,7 @@ define(["dojo/_base/declare",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
 		"../commands/ResizeCommand",
-		"../commands/StyleCommand",
-		"../Snap",
-		"../ChooseParent"
+		"../commands/StyleCommand"
 ], function(
 		declare,
 		_Tool,
@@ -21,7 +19,12 @@ define(["dojo/_base/declare",
 		Metadata,
 		Widget,
 		DeferredList,
-		ErrorDialog
+		ErrorDialog,
+		CompoundCommand,
+		AddCommand,
+		MoveCommand,
+		ResizeCommand,
+		StyleCommand
 ) {
 
 var defaultInvalidTargetWidgetMessage = 'The selected target is not a valid parent for the given widget.';
@@ -646,14 +649,14 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				}
 			}
 			
-			command.add(new davinci.ve.commands.AddCommand(w,
+			command.add(new AddCommand(w,
 				args.parent || this._context.getContainerNode(),
 				args.index));
 			if(args.position){
-console.log('CreateTool args.position.x='+args.position.x+',args.position.y='+args.position.y);
+//console.log('CreateTool args.position.x='+args.position.x+',args.position.y='+args.position.y);
 				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
-				command.add(new davinci.ve.commands.StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
-				command.add(new davinci.ve.commands.MoveCommand(w, args.position.x, args.position.y));
+				command.add(new StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
+				command.add(new MoveCommand(w, args.position.x, args.position.y));
 			}
 			if(args.size){
 				// For containers, issue a resize regardless of whether an explicit size was set.
@@ -661,7 +664,7 @@ console.log('CreateTool args.position.x='+args.position.x+',args.position.y='+ar
 				// resize()+layout() will not get called during create. 
 				var width = args.size.w,
 					height = args.size.h;
-				command.add(new davinci.ve.commands.ResizeCommand(w, width, height));
+				command.add(new ResizeCommand(w, width, height));
 				var helper = Widget.getWidgetHelper(w.type);
 				if(helper && helper.onCreateResize){
 					helper.onCreateResize(command, w, width, height);

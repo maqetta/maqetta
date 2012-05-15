@@ -1,3 +1,4 @@
+//FIXME: This routine doesn't seem to be used by anything. Delete?
 define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",

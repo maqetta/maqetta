@@ -181,6 +181,7 @@ getEnclosingWidgetForRichText: function(node) {
 	}
 },
 
+// used by helpers
 getUniqueObjectId: function(type, node) {
 	if(!type){
 		return undefined;

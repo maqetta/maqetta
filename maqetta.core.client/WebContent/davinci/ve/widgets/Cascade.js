@@ -214,7 +214,7 @@ define(["dojo/_base/declare",
 					}
 					this._setFieldValue(this._value,this._loc);
 					return;
-				}else if(this._values[this._targetValueIndex].type=="theme" &&
+				}else if((this._values[this._targetValueIndex].type=="theme" || this._values[this._targetValueIndex].proposalTarget =='theme')&&
 						   editorPrefs.cssOverrideWarn &&
 							this._editor.supports("MultiPropTarget")){
 					askUser = true;
@@ -884,6 +884,10 @@ define(["dojo/_base/declare",
 		},
 		
 		_addDeltaRules : function(widget, values){
+			if (this.context.theme.file.readOnly()){
+				// if the current theme is ready only we can't add delta's to it #23
+				return;
+			}
 			var state = "Normal";
 			var lastElementStyle = -1;
 			var deltas = [];
@@ -918,7 +922,7 @@ define(["dojo/_base/declare",
 						if (this.context._themeUrl) { // add rule for static file, in most cases desktop
 							deltas.push({rule:null, ruleString:name, 
 								targetFile:this.context._themeUrl, className: null,
-								value:null, matchLevel:matchLevel, type:'proposal'});
+								value:null, matchLevel:matchLevel, type:'proposal', proposalTarget: 'theme'});
 						}
 					}
 				}

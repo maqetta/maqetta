@@ -789,14 +789,18 @@ var position = {x: marginBoxPageCoords.l + dx, y: marginBoxPageCoords.t + dy};
 //console.log('currentPPW');
 //console.dir(currentPPW);
 			var currentPPWNode = currentPPW.parent.domNode;
-			var n = event.target;
-			while(n && n.tagName != 'BODY'){
-//console.log('n.outerHTML='+n.outerHTML.substr(0,50));
-				if(n == currentPPWNode){
-					eventTargetWithinPPW = true;
-					break;	// event.target is a descendant of currentPPW's domNode
+			if(currentPPW.parent.domNode.tagName == 'BODY'){
+				eventTargetWithinPPW = true;
+			}else{
+				var n = event.target;
+				while(n && n.tagName != 'BODY'){
+	//console.log('n.outerHTML='+n.outerHTML.substr(0,50));
+					if(n == currentPPWNode){
+						eventTargetWithinPPW = true;
+						break;	// event.target is a descendant of currentPPW's domNode
+					}
+					n = n.parentNode;
 				}
-				n = n.parentNode;
 			}
 		}
 //console.log('currentPPW='+currentPPW+',currentPPWNode='+currentPPWNode+',eventTargetWithinPPW='+eventTargetWithinPPW);

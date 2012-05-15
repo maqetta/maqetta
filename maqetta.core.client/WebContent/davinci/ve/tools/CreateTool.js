@@ -539,9 +539,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			child = parent; // insert before this widget for flow layout
 			parent = parent.getParent();
 		}
-//		if(!parent){
-//			parent = child = undefined;
-//		}
 		var index = args.index;
 		var position;
 		var widgetAbsoluteLayout = false;
@@ -560,21 +557,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}else if(this._position){
 			// convert container relative position to parent relative position
 			position = this._position;
-//debugger;
-/* Let's try leaving things in absolute coordinates
-			var containerNode = this._context.getContainerNode();
-			if(parentNode && parentNode != containerNode){
-				var style = parentNode.style.position;
-				if(style && style != "absolute" && style != "relative"){
-					parentNode = parentNode.offsetParent;
-				}
-				if(parentNode && parentNode != containerNode){
-					var p = this._context.getContentPosition(dojo.coords(parentNode));
-					position.x -= (p.x - parentNode.scrollLeft);
-					position.y -= (p.y - parentNode.scrollTop);
-				}
-			}
-*/
 		}
 
 		//FIXME: data can be an array
@@ -653,7 +635,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				args.parent || this._context.getContainerNode(),
 				args.index));
 			if(args.position){
-//console.log('CreateTool args.position.x='+args.position.x+',args.position.y='+args.position.y);
 				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
 				command.add(new StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 				command.add(new MoveCommand(w, args.position.x, args.position.y));

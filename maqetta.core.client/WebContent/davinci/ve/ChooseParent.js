@@ -272,17 +272,8 @@ return declare("davinci.ve.ChooseParent", null, {
 					offsetParent = parentNode.offsetParent;
 					//parentNode.appendChild(this._cursorSpan);
 					var compStyle = dojo.style(parentNode);
-/*
-					if(this._cursorSpan.offsetParent == parentNode){
-						cursorL = parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
-						cursorT = parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
-					}else{
-*/
 						cursorL = parentNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
 						cursorT = parentNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
-/*
-					}
-*/
 					cursorH = '16px';
 				}
 				while(offsetParent && offsetParent.tagName != 'BODY'){
@@ -311,14 +302,6 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @param {object} currentParent  if provided, then current parent widget for thing being dragged
 	 */
 	_getDefaultParent: function(widgetType, allowedParentList, absolute, currentParent){
-//console.log('_getDefaultParent entered');
-//console.trace();
-//if(currentParent){
-	//console.log('currentParent.domNode.outerHTML='+currentParent.domNode.outerHTML.substr(0,200));
-//}
-//for(var i=0; i<allowedParentList.length; i++){
-	//console.log('i='+i+',allowedParentList[i].domNode.outerHTML='+allowedParentList[i].domNode.outerHTML.substr(0,200));
-//}
 		var context = this._context;
 		var proposedParentWidget;
 		if(allowedParentList){
@@ -337,9 +320,6 @@ return declare("davinci.ve.ChooseParent", null, {
 				}
 			}
 		}
-//if(proposedParentWidget){
-	//console.log('proposedParentWidget.domNode.outerHTML='+proposedParentWidget.domNode.outerHTML.substr(0,200));
-//}
 		return proposedParentWidget;
 	},
 	
@@ -406,8 +386,6 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @param {object|null} wdgt  Widget that is the new proposed parent widget
 	 */
 	setProposedParentWidget: function(wdgt){
-//console.log('setProposedParentWidget');
-//console.trace();
 		this._proposedParentWidget = wdgt;
 	},
 
@@ -438,8 +416,6 @@ return declare("davinci.ve.ChooseParent", null, {
 	 * @return {boolean} true if current (x,y) is different than last (x,y), false if the same.
 	 */
 	findParentsXYBeforeTraversal: function(params) {
-//console.log('findParentsXYBeforeTraversal');
-//console.trace();
 		var position = params.position;
 		this._XYParent = [];
 		this._XYRefChild = [];
@@ -479,23 +455,11 @@ return declare("davinci.ve.ChooseParent", null, {
 		var domNode = wdgt.domNode;
 		var x = position.x;
 		var y = position.y;
-/*
-		var w = domNode.offsetWidth;
-		var h = domNode.offsetHeight;
-		var l = domNode.offsetLeft;
-		var t = domNode.offsetTop;
-		var offsetParent = domNode.offsetParent;
-		while(offsetParent && offsetParent.tagName != 'BODY'){
-			l += offsetParent.offsetLeft;
-			t += offsetParent.offsetTop;
-			offsetParent = offsetParent.offsetParent;
-		}
-*/
-var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(domNode);
-l = marginBoxPageCoords.l;
-t = marginBoxPageCoords.t;
-w = marginBoxPageCoords.w;
-h = marginBoxPageCoords.h;
+		var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(domNode);
+		l = marginBoxPageCoords.l;
+		t = marginBoxPageCoords.t;
+		w = marginBoxPageCoords.w;
+		h = marginBoxPageCoords.h;
 
 		var r = l + w;
 		var b = t + h;
@@ -607,11 +571,6 @@ h = marginBoxPageCoords.h;
 		for(var i=0; i<this._XYRefAfter.length-1; i++){
 			this._XYRefAfter[i] = true;
 		}
-//console.log('findParentsXYAfterTraversal');
-//console.trace();
-//for(var i=0; i<this._XYParent.length; i++){
-	//console.log('i='+i+',this._XYParent[i].domNode.outerHTML='+this._XYParent[i].domNode.outerHTML.substr(1,100));
-//}
 	},
 	
 	/**

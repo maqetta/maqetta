@@ -1720,12 +1720,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(position.target){ // event
 			position = {x: position.pageX, y: position.pageY};
 		}
-/*
-		var containerNode = this.getContainerNode();
-		var x = position.x + containerNode.scrollLeft;
-		var y = position.y + containerNode.scrollTop;
-		return {x: x, y: y};
-*/
 		return position;
 	},
 
@@ -1753,12 +1747,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(helper && helper.getSelectNode){
 				node = helper.getSelectNode(this) || node;
 			}
-/*
-			box = this.getDojo().position(node, true);
-			box.l = box.x;
-			box.t = box.y;
-*/
-var box = GeomUtils.getMarginBoxPageCoords(node);
+			var box = GeomUtils.getMarginBoxPageCoords(node);
 
 			parent = widget.getParent();
 			op = {move: !(parent && parent.isLayout && parent.isLayout())};

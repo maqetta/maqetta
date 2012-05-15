@@ -137,7 +137,6 @@ return {
 		if(userDoc && useBodyFontBackgroundClass){
 			var nodes = userDoc.querySelectorAll('.'+useBodyFontBackgroundClass);
 			var body = userDoc.body;
-			var body_style = domStyle.get(body);
 			if(nodes.length>0){
 				var props = ['backgroundAttachment', 'backgroundClip', 'backgroundColor', 'backgroundImage', 
 				             'backgroundOrigin', 'backgroundPosition', 'backgroundRepeat', 'backgroundSize',
@@ -145,6 +144,7 @@ return {
 				// Using setTimeout because BODY style may not be fully baked
 				// due to browser quirks with delayed computation of computed style.
 				setTimeout(function(){
+					var body_style = domStyle.get(body);
 					for(var i=0; i<nodes.length; i++){
 						var style = nodes[i].style;
 						props.forEach(function(prop){

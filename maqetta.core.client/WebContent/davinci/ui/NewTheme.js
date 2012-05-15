@@ -172,8 +172,9 @@ define(["dojo/_base/declare",
 			
 			var isOk = true;
 			var oldTheme = this._themeSelection.attr('value');
+			var selector = dojo.attr(this._selector, 'value');
 			
-			if( oldTheme==null || oldTheme =="" ) { isOk = false;}
+			if( oldTheme==null || oldTheme =="" || selector==null || selector =="") { isOk = false;}
 
 			this._okButton.set( 'disabled', !isOk);
 		},

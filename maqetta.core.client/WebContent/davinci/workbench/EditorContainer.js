@@ -200,6 +200,14 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 				return true;
 			}
 		});
+
+		if (editorActions.length == 0) {
+			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
+				editorActions.push(ext.editorContribution);
+				return true;
+			});
+		}
+
 		return editorActions;
 	},
 

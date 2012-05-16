@@ -175,7 +175,8 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 		 * 
 		 */
 		if (!dontLoad) {
-			this._loadedCSS[url] = new CSSFile({
+			// have to use the require or we get a circular dependency 
+			this._loadedCSS[url] = require("davinci/model/Factory").getModel({
 				url : url,
 				includeImports : true,
 				loader : loader

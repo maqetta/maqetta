@@ -8,7 +8,7 @@ define(["dojo/_base/declare",
 				this.setValues(args.values);
 			}
 		},
-
+	
 		setValues: function(values){
 			var items = [];
 			
@@ -20,7 +20,7 @@ define(["dojo/_base/declare",
 				items.push({name: v.name, value: v.name});
 			}));
 			
-			this._jsonData = {identifier: "name", label: "value", items: items};
+			this._jsonData = {identifier: "name", items: items};
 			this._loadFinished = false;
 		},
 		modifyItem : function(oldValue, newValue){

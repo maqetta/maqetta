@@ -2,9 +2,9 @@ define(["dojo/_base/declare",
         "dijit/_WidgetBase",
         "system/resource",
 		"davinci/ui/widgets/ProjectDataStore",
-		"dijit/form/Select",
+		"dijit/form/ComboBox",
 		"davinci/Workbench"
-  ],function(declare, _WidgetBase, Resource, ProjectDataStore, Select, Workbench){
+  ],function(declare, _WidgetBase, Resource, ProjectDataStore, ComboBox, Workbench){
 
 	return declare("davinci.ui.widgets.ProjectSelection", _WidgetBase, {
 
@@ -18,12 +18,10 @@ define(["dojo/_base/declare",
 			}));
 
 			this.domNode.removeAttribute("dojoType");
-			this.combo = new Select({store: this._store, required: false, style: "width:100%"});
+			this.combo = new ComboBox({store: this._store, required: false, style: "width:100%"});
 			this.domNode.appendChild(this.combo.domNode);
 			this.combo.set('value', this.value);
 			dojo.connect(this.combo, "onChange", this, "_onChange");
-			// Select needs startup called when manually building it
-			this.combo.startup();
 		},
 		
 		onChange: function(){

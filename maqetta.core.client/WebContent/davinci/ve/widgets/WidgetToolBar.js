@@ -189,7 +189,7 @@ define(["dojo/_base/declare",
 
 		_onKeyPress: function(e) {
 			// dijit textbox doesn't fire onChange for enter
-			if (e.keyCode == e.DOM_VK_RETURN) {
+			if (e.keyCode == dojo.keys.ENTER) {
 				this._onChangeIDAttribute();
 			}
 		}

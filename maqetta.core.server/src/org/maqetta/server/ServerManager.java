@@ -96,12 +96,14 @@ public class ServerManager implements IServerManager {
 
             // String property
             // =this.servletConfig.getServletContext().getInitParameter(propertyName);
-            System.out.println("servlet parm '" + propertyName + "' is : " + property);
+            if(ServerManager.DEBUG_IO_TO_CONSOLE)
+            	System.out.println("servlet parm '" + propertyName + "' is : " + property);
 
         }
         if (property == null) {
             property = System.getProperty(propertyName);
-            System.out.println("servlet parm '" + propertyName + "' is : " + property);
+            if(ServerManager.DEBUG_IO_TO_CONSOLE)
+            	System.out.println("servlet parm '" + propertyName + "' is : " + property);
         }
         return property;
     }

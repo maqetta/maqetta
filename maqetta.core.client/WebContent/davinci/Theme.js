@@ -85,17 +85,13 @@ define([
 			var ret = [];
 			fileNames.forEach(function(fileName){
 				var file = systemResource.findResource(orgPath + "/" + fileName);
-				var filePath = new Path(file);
-				var relFilePath = filePath.relativeTo(themePath, true);
-				var relativePath = '../';
-				var folder = filePath.segments.parent; 
+				var filePath = new Path(file.getPath());
+				var relFilePath = filePath.relativeTo('./'+themePath, true);
+				var relativePath = '..';
 				for (var i = 0; i < relFilePath.segments.length; i++){
-					if (relFilePath.segments[i] == '..'){
-						relativePath = relativePath + folder.name;
-						folder = folder.parent;
-					}
+					relativePath = relativePath + '/'+relFilePath.segments[i];
 				}
-				ret.push(relativePath+'/'+fileName);
+				ret.push(relativePath);
 			});
 			return ret;
 		};

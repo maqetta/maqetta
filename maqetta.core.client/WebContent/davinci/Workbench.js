@@ -215,6 +215,7 @@ var initializeWorkbenchState = function(){
 			if (noSelect && !isActiveEditorInProject) {
 				// if the active editor is not in our project, force selection
 				noSelect = false;
+				state.activeEditor = state.editors[i]; // this is now the active editor
 			}
 
 			if (resource) {

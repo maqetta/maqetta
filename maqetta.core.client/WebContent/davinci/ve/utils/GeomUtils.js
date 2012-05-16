@@ -43,9 +43,9 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 			var t = node.offsetTop;
 			var pn = node.offsetParent;
 			while(pn && pn.tagName != 'BODY'){
-				var MarginExtents = domGeom.getMarginExtents(pn);
-				l += pn.offsetLeft + MarginExtents.l;
-				t += pn.offsetTop + MarginExtents.t;
+				var BorderExtents = domGeom.getBorderExtents(pn);
+				l += pn.offsetLeft +BorderExtents.l;
+				t += pn.offsetTop + BorderExtents.t;
 				pn = pn.offsetParent;
 			}
 			o = {l: l, t: t, w: node.offsetWidth, h: node.offsetHeight};

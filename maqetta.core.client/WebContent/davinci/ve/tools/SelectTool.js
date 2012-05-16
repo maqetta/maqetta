@@ -1,4 +1,5 @@
-define(["dojo/_base/declare",        
+define(["dojo/_base/declare",
+    	"dojo/dom-geometry",
 		"davinci/Workbench",
 		"davinci/workbench/Preferences",
 		"davinci/ve/tools/_Tool",
@@ -16,6 +17,7 @@ define(["dojo/_base/declare",
 		"davinci/ve/commands/ResizeCommand",
     	"davinci/ve/utils/GeomUtils"], function(
 				declare,
+				domGeom,
 				Workbench,
 				Preferences,
 				tool,
@@ -167,9 +169,18 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						}
 						var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(selection[i].domNode);
 						this._moverStartLocations.push(marginBoxPageCoords);
-						var l = parseFloat(userDojo.style(selection[i].domNode, 'left'), 10);
-						var t = parseFloat(userDojo.style(selection[i].domNode, 'top'), 10);
-						this._moverStartLocationsRel.push({l:l, t:t});
+						var relativeLeft, relativeTop;
+						var offsetParent = selection[i].domNode.offsetParent;
+						if(offsetParent && offsetParent.tagName != 'BODY'){
+							var parentBorderBoxPageCoordinates = GeomUtils.getBorderBoxPageCoords(offsetParent);
+							var parentBorderExtents = domGeom.getBorderExtents(offsetParent);
+							relativeLeft = marginBoxPageCoords.l - (parentBorderBoxPageCoordinates.l + parentBorderExtents.l);
+							relativeTop = marginBoxPageCoords.t - (parentBorderBoxPageCoordinates.t + parentBorderExtents.t);
+						}else{
+							relativeLeft = marginBoxPageCoords.l;
+							relativeTop = marginBoxPageCoords.t;
+						}
+						this._moverStartLocationsRel.push({l:relativeLeft, t:relativeTop});
 					}
 					var n = moverWidget.domNode;
 					var moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(n);

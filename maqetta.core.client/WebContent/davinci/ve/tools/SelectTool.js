@@ -305,6 +305,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 	},
 
+	onMouseOver: function(event){
+		// FIXME: sometime an exception occurs...
+		try{
+			this._setTarget(event.target, event);
+		}catch(e){
+		}
+	},
+
 	onMouseOut: function(event){
 		// FIXME: sometime an exception occurs...
 		try{

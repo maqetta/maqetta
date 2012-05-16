@@ -178,6 +178,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
 			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
 			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
+			dojo.connect(containerNode, "onmouseover", this, "onMouseOver"),
 			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
 		];
 		this.setActiveTool();
@@ -2114,6 +2115,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);
+	},
+
+	onMouseOver: function(event){
+		if(this._activeTool && this._activeTool.onMouseOver){
+			this._activeTool.onMouseOver(event);
+		}
+		
 	},
 
 	onMouseOut: function(event){

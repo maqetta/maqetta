@@ -1,7 +1,9 @@
 define([
 	"dojo/_base/window",
-	"dojo/dom-geometry"
-], function(win, domGeom) {
+	"dojo/dom-geometry",
+	"dojo/has", 
+	"dojo/_base/sniff"
+], function(win, domGeom, has, sniff) {
 	
 return /** @scope davinci.ve.utils.GeomUtils */ {
 
@@ -51,6 +53,36 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 			o = {l: l, t: t, w: node.offsetWidth, h: node.offsetHeight};
 		}.bind(this));
 		return o;
+	},
+	
+	/**
+	 * Get what IE and WebKit implement as body.scrollLeft, but with special
+	 * code for Mozilla, which has wrong value. Instead, use window.pageXOffset
+	 */
+	getScrollLeft: function(/*DomNode*/node){
+		var doc = node && node.ownerDocument;
+		if(has('mozilla')){
+			var win = doc && doc.defaultView;
+			return win ? win.pageXOffset : 0;
+		}else{
+			var body = doc && doc.body;
+			return body ? body.scrollLeft : 0;
+		}
+	},
+	
+	/**
+	 * Get what IE and WebKit implement as body.scrollTop, but with special
+	 * code for Mozilla, which has wrong value. Instead, use window.pageYOffset
+	 */
+	getScrollTop: function(/*DomNode*/node){
+		var doc = node && node.ownerDocument;
+		if(has('mozilla')){
+			var win = doc && doc.defaultView;
+			return win ? win.pageYOffset : 0;
+		}else{
+			var body = doc && doc.body;
+			return body ? body.scrollTop : 0;
+		}
 	}
 
 };

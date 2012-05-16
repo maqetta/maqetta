@@ -3,9 +3,10 @@ define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
-	"./metadata"
+	"./metadata",
+	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Metadata) {
+function(require, declare, _WidgetBase, Mover, Metadata, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -201,13 +202,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameWidthAdjusted = rect.w + frameSizeWidthAdjust + frameSizeBorderAdjust;
 		var frameHeightAdjusted = rect.h + frameSizeWidthAdjust + frameSizeBorderAdjust;
 		
-		if(offScreenAdjust){
+		var doc = this.domNode && this.domNode.ownerDocument;
+		var body = doc && doc.body;
+		if(offScreenAdjust && body){
 			// Determine if parts of selection are off screen
 			// If so, shift selection DIVs to make it visible
 			var farthestLest, farthestTop, farthestRight, farthestBottom;
-			var body = this.domNode.ownerDocument.body;
-			var canvasLeft = body.scrollLeft;
-			var canvasTop = body.scrollTop;
+			var canvasLeft = GeomUtils.getScrollLeft(body);
+			var canvasTop = GeomUtils.getScrollTop(body);;
 			var canvasRight = canvasLeft + body.clientWidth;
 			var canvasBottom = canvasTop + body.clientHeight;
 			

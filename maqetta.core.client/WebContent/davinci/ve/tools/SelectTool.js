@@ -1,5 +1,5 @@
 define(["dojo/_base/declare",
-    	"dojo/dom-geometry",
+		"dojo/dom-geometry",
 		"davinci/Workbench",
 		"davinci/workbench/Preferences",
 		"davinci/ve/tools/_Tool",
@@ -15,26 +15,29 @@ define(["dojo/_base/declare",
 		"davinci/ve/commands/ReparentCommand",
 		"davinci/ve/commands/MoveCommand",
 		"davinci/ve/commands/ResizeCommand",
-    	"davinci/ve/utils/GeomUtils"], function(
-				declare,
-				domGeom,
-				Workbench,
-				Preferences,
-				tool,
-				widgetUtils,
-				Metadata,
-				Mover,
-				XPathUtils,
-				HtmlFileXPathAdapter,
-				Snap,
-				CompoundCommand,
-				AddCommand,
-				RemoveCommand,
-				ReparentCommand,
-				MoveCommand,
-				ResizeCommand,
-				GeomUtils
-		){
+		"davinci/ve/commands/ModifyCommand",
+		"davinci/ve/utils/GeomUtils"
+], function(
+		declare,
+		domGeom,
+		Workbench,
+		Preferences,
+		tool,
+		widgetUtils,
+		Metadata,
+		Mover,
+		XPathUtils,
+		HtmlFileXPathAdapter,
+		Snap,
+		CompoundCommand,
+		AddCommand,
+		RemoveCommand,
+		ReparentCommand,
+		MoveCommand,
+		ResizeCommand,
+		ModifyCommand,
+		GeomUtils
+){
 
 
 return declare("davinci.ve.tools.SelectTool", tool, {

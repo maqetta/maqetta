@@ -524,6 +524,7 @@ return declare("davinci.ve._Widget", null, {
 
 		var values = require("davinci/ve/widget").parseStyleValues(text);
 
+/*FIXME: DELETE THIS. Leaving it in temporarily in case in last-minute Preview 6 testing we discover a need for this logic
 		var o;
 		if(style) {
 			if(style.position == "absolute" || style.position == "relative") {
@@ -553,6 +554,14 @@ return declare("davinci.ve._Widget", null, {
 					values.push({height:style.height});
 				}
 			}
+		}
+*/
+		var parent = this.getParent();
+		//FIXME: This is Dojo-specific logic within a toolkit-independent file
+		if(style && parent && parent.dijitWidget && parent.dijitWidget.addChild && !parent.acceptsHTMLChildren) {
+			removeProperty('position');
+			removeProperty('left');
+			removeProperty('top');
 		}
 		return values;
 	},

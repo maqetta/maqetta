@@ -314,7 +314,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 			var flow = this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
 			this.initialSet=true;
 		}else{
-			delete this.context.rootWidget;
 			this.context.setSource(content, this.context._restoreStates, this.context);
 		}
 

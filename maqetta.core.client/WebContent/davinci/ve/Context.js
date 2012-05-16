@@ -755,6 +755,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// clear cached values
 		delete this._requireHtmlElem;
 		delete this._dojoScriptElem;
+		delete this.rootWidget;
 
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);
@@ -769,11 +770,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
 			// make sure this file has a valid/good theme
 			this.loadTheme(newHtmlParams);
-		}
-		
-		if (this.rootWidget){
-			this.rootWidget._srcElement=this._srcDocument.getDocumentElement().getChildElement("body");
-			this.rootWidget._srcElement.setAttribute("id", "myapp");
 		}
 
 		//FIXME: Need to add logic for initial themes and device size.

@@ -177,27 +177,18 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	_srcChanged: function() {
 		var wasTyping = this.htmlEditor.isTyping;
-		if (this._updateDesignTimer) {
-			clearTimeout(this._updateDesignTimer);
+		if(wasTyping) {
+			this.visualEditor.skipSave = true;
 		}
+		var context = this.visualEditor.context,
+			statesScenes = context ? context.getStatesScenes() : undefined;
 
-		this._updateDesignTimer = setTimeout(function(){
-			delete this._updateDesignTimer;
-			if(wasTyping) {
-				this.visualEditor.skipSave = true;
-			}
-			var context = this.visualEditor.context;
-			var statesScenes;
-			if(context){
-				statesScenes = context.getStatesScenes();
-			}
-			this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
-			if(statesScenes){
-				context.setStatesScenes(statesScenes);
-			}
-			delete this.visualEditor.skipSave;
-			this._setDirty();
-		}.bind(this), 1000);
+		this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
+		if(statesScenes){
+			context.setStatesScenes(statesScenes);
+		}
+		delete this.visualEditor.skipSave;
+		this._setDirty();
 	},
 	
 	getContext: function() {

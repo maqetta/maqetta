@@ -757,6 +757,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		delete this._dojoScriptElem;
 		delete this.rootWidget;
 
+		// clear dijit registry
+		if (this.frameNode) {
+			var doc = this.frameNode.contentDocument || this.frameNode.contentWindow.document,
+				win = windowUtils.get(doc);
+			win.require("dijit/registry")._destroyAll();
+		}
+
 		// Get the helper before creating the IFRAME, or bad things happen in FF
 		var helper = Theme.getHelper(this.visualEditor.theme);
 
@@ -796,7 +803,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 
 		var data = this._parse(source);
-		if(!this.frameNode){
+		if (this.frameNode) {
+			if(!this.getGlobal()){
+				console.warn("Context._setContent called during initialization");
+			}
+
+			// tear down old error message, if any
+			dojo.query(".loading", this.frameNode.parentNode).orphan();
+
+			// frame has already been initialized, changing content (such as changes from the source editor)
+			this._continueLoading(data, callback, this, scope);
+		} else {
 			// initialize frame
 			var dojoUrl;
 			
@@ -971,17 +988,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					return message;
 				}
 			};*/
-
-		}else{
-			if(!this.getGlobal()){
-				console.warn("Context._setContent called during initialization");
-			}
-
-			// tear down old error message, if any
-			dojo.query(".loading", this.frameNode.parentNode).orphan();
-
-			// frame has already been initialized, changing content (such as changes from the source editor)
-			this._continueLoading(data, callback, this, scope);
 		}
 	},
 
@@ -1032,6 +1038,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					callback.call((scope || this), callbackData);
 				}
 			}
+			// pagebuilt event triggered after converting model into dom for visual page editor
+			dojo.publish('/davinci/ui/context/pagebuilt', [this]);
 		}
 	},
 

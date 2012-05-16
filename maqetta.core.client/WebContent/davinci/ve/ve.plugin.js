@@ -165,18 +165,21 @@ return {
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;A&gt;",
                     action: "davinci/ve/actions/SurroundAction",
+                    surroundWithTagName:'a',
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;DIV&gt;",
                     action: "davinci/ve/actions/SurroundAction",
+                    surroundWithTagName:'div',
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;SPAN&gt;",
                     action: "davinci/ve/actions/SurroundAction",
+                    surroundWithTagName:'span',
                     menubarPath: "davinci.edit/cut"
                 },
                 {

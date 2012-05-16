@@ -14,8 +14,11 @@ return declare("davinci.ve.actions.SurroundAction", [ContextAction], {
 
 	run: function(context){
 		context = this.fixupContext(context);
-		var newWidget, tag = this.item.id.split(".");
-		tag = tag[tag.length - 1];
+		var newWidget, tag = this.item.surroundWithTagName;
+		if(!tag){
+			console.error('missing surroundWithTagName');
+			return;
+		}
 		dojo.withDoc(context.getDocument(), function(){
 			newWidget = Widget.createWidget({type: "html." + tag, properties: {}, children: [], context: context});
 		});

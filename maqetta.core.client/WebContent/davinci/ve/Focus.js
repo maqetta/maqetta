@@ -71,6 +71,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 		this._box = box;	// Only used by theme editor's subwidget logic
 	},
+	
+	getBounds: function(){
+		return this._moverCurrent;
+	},
 
 	show: function(widget, inline){
 		if (!widget){

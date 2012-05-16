@@ -1905,6 +1905,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return i == -1 ? null : this._focuses[i];
 	},
 	
+	/**
+	 * Sees if (pageX,pageY) is within bounds of any of the selection rectangles
+	 * If so, return the corresponding selected widget
+	 */
+	checkFocusXY: function(pageX, pageY){
+		var selection = this.getSelection();
+		for(var i=0; i<selection.length; i++){
+			var box = this._focuses[i].getBounds();
+			if(pageX >= box.l && pageX <= box.l + box.w &&
+					pageY >= box.t && pageY <= box.t + box.h){
+				return selection[i];
+			}
+		}
+		return null;
+	},
+	
 	// Hide all focus objects associated with current selection
 	selectionHideFocus: function(){
 		var selection = this.getSelection();

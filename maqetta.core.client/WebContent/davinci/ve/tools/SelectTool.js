@@ -66,7 +66,17 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// this is a context menu ("right" click)  Don't change the selection.
 			return;
 		}
-		var widget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
+		
+		// See if mouse is within selection rectangle for a primitive widget
+		// Sometimes that rectangle is a bit bigger than _getTarget or getEnclosingWidget
+		var widget = context.checkFocusXY(event.pageX, event.pageY);
+		if(widget && Metadata.getAllowedChild(widget.type)[0] !== 'NONE'){
+			widget = null;
+		}
+		
+		if(!widget){
+			widget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
+		}
 		while(widget){
 			if(widget.getContext()){ // managed widget
 				break;

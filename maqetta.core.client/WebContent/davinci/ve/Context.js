@@ -1032,6 +1032,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					callback.call((scope || this), callbackData);
 				}
 			}
+			// pagebuilt event triggered after converting model into dom for visual page editor
+			dojo.publish('/davinci/ui/context/pagebuilt', [this]);
 		}
 	},
 

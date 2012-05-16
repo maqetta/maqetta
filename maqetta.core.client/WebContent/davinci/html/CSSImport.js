@@ -50,7 +50,7 @@ return declare("davinci.html.CSSImport", CSSElement, {
 	},
 	
 	close: function(includeImports) {
-		Factory.closeModel(this.cssFile);
+		require("davinci/model/Factory").closeModel(this.cssFile);
 		if (this.connection) {
 			dojo.disconnect(this.connection);
 		}

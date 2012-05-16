@@ -463,8 +463,12 @@ createWidget: function(widgetData) {
         srcElement = wrapperModel;
     }
 
-    var requiresId = metadata.queryDescriptor(type,"requiresId"),
-    	idRoot = node.tagName.toLowerCase();
+    var requiresId = metadata.queryDescriptor(type,"requiresId");
+    var name = metadata.queryDescriptor(type,"name");
+    var idRoot = node.tagName.toLowerCase();
+    if(name.match(/^[A-Za-z]\w*$/) != null){
+    	idRoot = name;
+    }
     node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement, requiresId, idRoot);
 
 	var children = data.children;

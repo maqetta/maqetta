@@ -40,6 +40,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
 		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
 		this.subscribe("/davinci/ui/context/statesLoaded", this._statesLoaded.bind(this));
+		this.subscribe("/davinci/ui/context/pagebuilt", this._pagebuilt.bind(this));
 		this.subscribe("/davinci/ui/deviceChanged", this._deviceChanged.bind(this));
 		this.subscribe("/davinci/states/state/added", this._addState.bind(this));
 		this.subscribe("/davinci/states/state/removed", this._removeState.bind(this));
@@ -57,6 +58,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_contextLoaded: function() {
+	},
+	
+	_pagebuilt: function() {
+		this._statesLoaded.apply(this, arguments);
 	},
 	
 	_statesLoaded: function() {
@@ -189,7 +194,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return;
 		}
 		var context = this._editor.getContext();
-		var iframe = context.getParentIframe();
 		if(!context || !context._statesLoaded){
 			return;
 		}

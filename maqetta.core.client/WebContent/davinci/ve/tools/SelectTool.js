@@ -355,16 +355,19 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if("w" in newBox || "h" in newBox){
 			var resizable = Metadata.queryDescriptor(widget.type, "resizable"),
 				w, h;
-			// Adjust dimensions from border-box to content-box
-			var _node = widget.getStyleNode();
-			var e = dojo._getPadBorderExtents(_node);
+			// Adjust dimensions from margin box to context box
+			var _node = widget.domNode;
+			var _win = _node.ownerDocument.defaultView;
+			var _cs = _win.getComputedStyle(_node);
+			var me = domGeom.getMarginExtents(_node, _cs);
+			var be = domGeom.getBorderExtents(_node, _cs);
+			var pe = domGeom.getPadExtents(_node, _cs);
 			if(typeof newBox.w == 'number'){
-				newBox.w -= e.w;
+				newBox.w -= (me.w + be.w + pe.w);
 			}
 			if(typeof newBox.h == 'number'){
-				newBox.h -= e.h;
+				newBox.h -= (me.h + be.h + pe.h);
 			}
-
 			switch(resizable){
 			case "width":
 				w = newBox.w;

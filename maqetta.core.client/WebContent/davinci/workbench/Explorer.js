@@ -139,7 +139,8 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		if (node.elementType=="File") {
 			Workbench.openEditor({
 				fileName: node,
-				content: node.getText()
+				content: node.getText(),
+				isDirty:node.isDirty()
 			});
 		}
 	}

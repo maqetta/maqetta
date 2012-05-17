@@ -226,9 +226,15 @@ public class VFile implements IVResource {
         String [] cards = pattern.split("\\*");
 
         // Iterate over the cards.
-        for (String card : cards)
-        {
+        for(String card:cards){
             int idx = text.indexOf(card);
+            /* this checks if the card is in the proper position.  
+             * for searches like *.theme, *.theme.bak would be a false match so
+             * you have to test if there's any more cards left after the match
+             * to gobble up the rest (with a * or some text)
+             * 
+             */
+            if(idx + card.length() < text.length() && card.length()>0) return false;
             
             // Card not detected in the text.
             if(idx == -1)

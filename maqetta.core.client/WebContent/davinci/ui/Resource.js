@@ -130,6 +130,21 @@ var uiResource = {
 			Workbench.showModal(newDialog, uiNLS.createNewCSSFile, '', executor);
 		},
 	
+		/* method to select a given resource in the explorer tree */
+		
+		selectResource : function(resource){
+			
+			var resourceTree = dijit.byId("resourceTree");
+			//var path = new Path(resource.getPath()).removeFirstSegments(1);
+			
+			var path = [];
+			for(var i=resource; i.parent; i = i.parent) {
+				path.unshift(i);
+			} 
+			
+			resourceTree.set('path', path);
+		},
+		
 		newFolder: function(parentFolder, callback){
 			var resource=parentFolder || getSelectedResource();
 			var folder;
@@ -176,12 +191,21 @@ var uiResource = {
 				if(callback) {
 					callback(newFolder);
 				}
+				if(newFolder!=null)
+					uiResource.selectResource(newFolder);
 				return teardown;
 			};
 			
 			Workbench.showModal(newFolderDialog, uiNLS.createNewFolder, '', executor);
 		},
 	
+		/* close an editor editting given resource */
+		closeEditor : function(resource){
+			var oldEditor = Workbench.getOpenEditor(resource);
+			if(oldEditor!=null)
+				oldEditor.editorContainer.forceClose(oldEditor);
+		},
+		
 		saveAs: function(extension){
 			var oldEditor = Workbench.getOpenEditor();
 			var oldFileName = oldEditor.fileName;
@@ -440,7 +464,8 @@ var uiResource = {
 		    }
 	
 		    selection.forEach(function(resource){
-				resource.deleteResource();
+		    	uiResource.closeEditor(resource);
+		    	resource.deleteResource();
 			});
 		},
 

@@ -628,8 +628,17 @@ var Workbench = {
 			}
 		}, this);
 	},
-
-	getOpenEditor: function() {
+	/* returns either the active editor, or the editor with given resource open */
+	getOpenEditor: function(resource) {
+		
+		if(resource!=null){
+			var tab = dijit.byId(filename2id(resource.getPath()));
+			if (tab) {
+				return tab.editor;
+			}
+		}
+		
+		
 		var tabContainer = dijit.byId("editors_tabcontainer");
 		if (tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor) {
 			return tabContainer.selectedChildWidget.editor;

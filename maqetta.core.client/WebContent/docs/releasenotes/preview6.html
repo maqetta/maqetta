@@ -187,6 +187,12 @@
 			<li>moveTo property now lists existing mobile view ids. Also supports hash values.</li>
 			<li>You can now drag and drop widgets into ListItems.</li>
 			<li>IconContainer now has a easier to use editing tool.</li>
+			<li>Leverage  of data-dojo-config attribute for more robust mobile theme switching, as a result cloned a mobile theme will require modification of the dojo-theme-editor.html file of the cloned theme. The html source editor can be used to  
+change the line: <i> &lt;script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true"&gt;&lt;/script&gt; </i>
+to: <i>
+&lt;script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true, 'themeMap':[['.*',null,[]]],'mblThemeFiles':[]"&gt;&lt;/script&gt; </i>
+			</li>
+			
 		</ul>
 	</li>
 	<li><p><span class='majortopic'>Limited PHP file support</span> - 

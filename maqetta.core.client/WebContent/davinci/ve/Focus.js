@@ -310,9 +310,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var l = event.pageX - moverDragDivHalf;
 		var t = event.pageY - moverDragDivHalf;
 		var node = this._selectedWidget.domNode;
+		var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
 		this._moverStart = { moverLeft:l, moverTop:t,
-				l:parseInt(this.domNode.style.left), t:parseInt(this.domNode.style.top),
-				w:node.offsetWidth, h:node.offsetHeight };
+				l:marginBoxPageCoords.l, t:marginBoxPageCoords.t,
+				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
+
 		this._moverCurrent = dojo.mixin({}, this._moverStart);
 		this._moverDragDiv = dojo.create('div', 
 				{className:'focusDragDiv',

@@ -29,35 +29,8 @@
 	<ol class="steps" >
 		<li>Choose New HTML File from the New menu</li>
 		<li>Click "Split Vertically" or "Split Horizontally" in main toolbar to make source pane visible</li>
-		<li>Copy and paste the source below on top of the source in the source pane</li>
-<PRE>
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;meta charset="utf-8"/&gt;
-&lt;title&gt;Untitled&lt;/title&gt;
-&lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'jquery-ui','location':'../../jquery-ui'},{'name':'yui','location':'../../yui'},{'name':'maqetta','location':'../../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'clipart','location':'../../clipart'},{'name':'gridx','location':'../gridx'}]"&gt;&lt;/script&gt;
-&lt;script type="text/javascript"&gt;
-require([
-  "dijit/dijit",
-  "dojo/parser",
-  "maqetta/space",
-  "maqetta/AppStates",
-  "dojox/io/xhrScriptPlugin",
-  "dojo/data/ItemFileReadStore",
-  "dojox/grid/DataGrid",
-  "dojox/data/CsvStore"
-]);
-&lt;/script&gt;
-&lt;style&gt;@import "themes/claro/claro.css";@import "lib/dojo/dojo/resources/dojo.css";@import "lib/dojo/dojox/grid/resources/Grid.css";@import "lib/dojo/dojox/grid/resources/claroGrid.css";@import "app.css";
-&lt;/style&gt;
-&lt;/head&gt;
-&lt;body class="claro" dvFlowLayout="true" data-davinci-ws="collapse" id="myapp"&gt;
-&lt;span dojoType="dojo.data.ItemFileReadStore" id="ItemFileReadStore_1" jsId="ItemFileReadStore_1" data="{'identifier':'unique_id','items':[{'unique_id':1,'id':'1','label':'Label 1'},{'unique_id':2,'id':'2','label':'Label 2'}]}"&gt;&lt;/span&gt;&lt;span data-dojo-type="dojox.grid.DataGrid" structure="[{'width':'auto','name':'ID','field':'id'},{'width':'auto','name':'Label','field':'label'}]" autoWidth="false" autoHeight="false" singleClickEdit="false" columnReordering="false" selectable="false" delayScroll="false" style="width: 300px; height: 300px;" store="ItemFileReadStore_1" escapeHTMLInData="true"&gt;&lt;/span&gt;&lt;/body&gt;
-&lt;/html&gt;
-	</PRE>
-	
-		<li> See DataGrid get rendered and close source pane (e.g., click "Display Design" in main toolbar)</li>
+		<li>Copy and paste the source from <a href="./support_files/dataGridLegacySample.html">dataGridLegacySample.html</a> on top of the source in the source pane</li>
+		<li> See DataGrid get rendered and close source pane (e.g., click "Display Design" in main toolbar).</li>
 	</ol>
 	
 	<h3 class="expectedResults_subsection" >Expected results</h3>

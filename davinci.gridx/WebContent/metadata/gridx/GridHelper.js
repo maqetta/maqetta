@@ -1,5 +1,5 @@
 define([
-	"../../metadata/dojo/1.7/dojox/grid/DataGridHelper"
+	"maq-metadata-dojo/dojox/grid/DataGridHelper"
 ], function(
 	DataGridHelper
 ) {

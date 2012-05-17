@@ -55,7 +55,6 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 library = {
 
 themesChanged: function(base){
-	debugger;
 	_themesCache[base] = base ? null : [];
 },
 

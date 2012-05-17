@@ -7,7 +7,7 @@ define([
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLText",
-	"maq-metadata-dojo/dojo/data/DataStoreBasedWidgetInput",
+	"../../dojo/data/DataStoreBasedWidgetInput",
 	"dojo/i18n!../nls/dojox"
 ], function(
 	array,

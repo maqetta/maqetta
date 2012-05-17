@@ -430,7 +430,7 @@ define(["dojo/_base/declare",
 			}
 			/* theme/meta rules */
 			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
-				v = this._editor._getCssRules(this._widget, null, this._editor._currentState);
+				v = this._editor._getCssRules(this._widget, this._editor._selectedSubWidget, this._editor._currentState);
 				// #23
 				if (v){
 					// cascade excepts the rules in decending order

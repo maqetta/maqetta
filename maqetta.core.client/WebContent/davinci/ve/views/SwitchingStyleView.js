@@ -90,7 +90,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	           {key: "background", 
 	       		  pageTemplate : [
 	      	       		{display:"background-color", type:"background", target:'background-color', colorswatch:true},
-	    	       		{display:"background-image", type:"background", target:'background-image'},
+	    	       		{display:"background-image", type:"background", target:'background-image', values:['', 'none']},
     		       	    {display:"background-repeat", type:"background", values:['', 'repeat', 'repeat-x','repeat-y','no-repeat'],  target:'background-repeat' },
     		       	    {display:"background-position", type:"background", target:'background-position', values:['','0px 0px','0% 0%','left top','center center','right bottom']},
     		       	    {display:"background-size", type:"background", target:'size', target:'background-size', values:['','auto','contain','cover','100%']},

@@ -3,9 +3,10 @@ define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
-	"./metadata"
+	"./metadata",
+	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Metadata) {
+function(require, declare, _WidgetBase, Mover, Metadata, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -201,13 +202,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameWidthAdjusted = rect.w + frameSizeWidthAdjust + frameSizeBorderAdjust;
 		var frameHeightAdjusted = rect.h + frameSizeWidthAdjust + frameSizeBorderAdjust;
 		
-		if(offScreenAdjust){
+		var doc = this.domNode && this.domNode.ownerDocument;
+		var body = doc && doc.body;
+		if(offScreenAdjust && body){
 			// Determine if parts of selection are off screen
 			// If so, shift selection DIVs to make it visible
 			var farthestLest, farthestTop, farthestRight, farthestBottom;
-			var body = this.domNode.ownerDocument.body;
-			var canvasLeft = body.scrollLeft;
-			var canvasTop = body.scrollTop;
+			var canvasLeft = GeomUtils.getScrollLeft(body);
+			var canvasTop = GeomUtils.getScrollTop(body);;
 			var canvasRight = canvasLeft + body.clientWidth;
 			var canvasBottom = canvasTop + body.clientHeight;
 			
@@ -308,9 +310,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var l = event.pageX - moverDragDivHalf;
 		var t = event.pageY - moverDragDivHalf;
 		var node = this._selectedWidget.domNode;
+		var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
 		this._moverStart = { moverLeft:l, moverTop:t,
-				l:parseInt(this.domNode.style.left), t:parseInt(this.domNode.style.top),
-				w:node.offsetWidth, h:node.offsetHeight };
+				l:marginBoxPageCoords.l, t:marginBoxPageCoords.t,
+				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
+
 		this._moverCurrent = dojo.mixin({}, this._moverStart);
 		this._moverDragDiv = dojo.create('div', 
 				{className:'focusDragDiv',

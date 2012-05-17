@@ -165,18 +165,21 @@ return {
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;A&gt;",
                     action: "davinci/ve/actions/SurroundAction",
+                    surroundWithTagName:'a',
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;DIV&gt;",
                     action: "davinci/ve/actions/SurroundAction",
+                    surroundWithTagName:'div',
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     iconClass: "editActionIcon",
                     label: "Surround with &lt;SPAN&gt;",
                     action: "davinci/ve/actions/SurroundAction",
+                    surroundWithTagName:'span',
                     menubarPath: "davinci.edit/cut"
                 },
                 {
@@ -547,7 +550,37 @@ return {
             iconClass: "themeFileIcon",
             type: "text"
         }
-    ]
+    ],
+    "davinci.defaultEditorActions": {
+			editorContribution: {
+				actions: [
+					{
+						id: "save",
+						iconClass: 'saveIcon',
+						run: function() {
+							require('../Workbench').getOpenEditor().save();
+						},
+						isEnabled: function(context) {
+							return true;
+						},
+						label: "Save",
+						toolbarPath: "save"
+					},
+					{
+						id: "saveas",
+						iconClass: 'saveAsIcon',
+						run: function() {
+							require("../ui/Resource").saveAs('*');
+						},
+						isEnabled: function(context) {
+							return require('../Workbench').getOpenEditor();
+						},
+						label: "Save As",
+						toolbarPath: "save"
+					}
+				]
+			}
+		}
 };
 
 });

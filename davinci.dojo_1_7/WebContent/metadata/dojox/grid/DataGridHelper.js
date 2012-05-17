@@ -8,7 +8,7 @@ define([
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLText",
 	"../../dojo/data/DataStoreBasedWidgetInput",
-	"dojo/i18n!../nls/dojox",
+	"dojo/i18n!../nls/dojox"
 ], function(
 	array,
 	form,

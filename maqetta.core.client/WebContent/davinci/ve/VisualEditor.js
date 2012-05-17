@@ -19,6 +19,7 @@ define([
 	"davinci/XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"davinci/ve/ThemeModifier",
+	"davinci/ve/utils/GeomUtils"
 ], function(
 	require,
 	declare,
@@ -39,7 +40,8 @@ define([
 	systemResource,
 	XPathUtils,
 	HtmlFileXPathAdapter,
-	ThemeModifier
+	ThemeModifier,
+	GeomUtils
 ){
 
 var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
@@ -76,13 +78,15 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		 * work like the mobile silhouettes, which don't have the problem.
 		 */
 		function resizeBody(bodyElem, size){
-			if(bodyElem.scrollLeft > 0){
-				bodyElem.style.width= (size.w + bodyElem.scrollLeft) + "px";
+			var scrollLeft = GeomUtils.getScrollLeft(bodyElem);
+			var scrollTop = GeomUtils.getScrollTop(bodyElem);
+			if(scrollLeft > 0){
+				bodyElem.style.width= (size.w + scrollLeft) + "px";
 			}else{
 				bodyElem.style.width = "100%";
 			}
-			if(bodyElem.scrollTop > 0){
-				bodyElem.style.height=(size.h + bodyElem.scrollTop) + "px";
+			if(scrollTop > 0){
+				bodyElem.style.height=(size.h + scrollTop) + "px";
 			}else{
 				bodyElem.style.height = "100%";
 			}

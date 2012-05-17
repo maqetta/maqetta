@@ -202,3 +202,7 @@ body {
 .dijitDialogUnderlayWrapper {
 	display: none !important;
 }
+/* Overcome Firefox outline issue (#2295) */
+.dijitButton .dijitOffScreen {
+	display:none;
+}

@@ -2600,8 +2600,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return vArray;
 	},
-	
-	 getUniqueID: function(node, persist, idRoot) {
+
+	// FIXME: should consider renaming method.  Has side effect of actually setting the id.
+	getUniqueID: function(node, idRoot) {
 		 var id = node.getAttribute("id");
 		 if (!id) {
 			 var userDoc = this.rootWidget ? this.rootWidget.domNode.ownerDocument : null,
@@ -2612,9 +2613,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				 if (!this._uniqueIDs.hasOwnProperty(root)) {
 					 num = this._uniqueIDs[root]=0;
 				 } else {
-					 num=++this._uniqueIDs[root];
+					 num = ++this._uniqueIDs[root];
 				 }
-				 id=root+"_"+num;	
+				 id = root + "_" + num;	
 				 if(userDoc){
 					 // If this is called when user doc is available,
 					 // make sure this ID is unique
@@ -2625,8 +2626,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					 break;
 				 }
 			 }
-			 var noPersist = !persist;
-			 node.addAttribute("id",id,noPersist);	 
+			 var temp = !idRoot;
+			 node.addAttribute("id", id, temp);	 
 		 }
 		 return id;
 	},
@@ -2689,7 +2690,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_reRequire: /\brequire\s*\(\s*\[\s*([\s\S]*?)\s*\]\s*\)/,
-	_reModuleId: /[a-zA-Z.\/]+/g,
+	_reModuleId: /[\w.\/]+/g,
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
 		if (!skipDomUpdate) {

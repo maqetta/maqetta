@@ -463,13 +463,11 @@ createWidget: function(widgetData) {
         srcElement = wrapperModel;
     }
 
-    var requiresId = metadata.queryDescriptor(type,"requiresId");
-    var name = metadata.queryDescriptor(type,"name");
-    var idRoot = node.tagName.toLowerCase();
-    if(name.match(/^[A-Za-z]\w*$/) != null){
-    	idRoot = name;
-    }
-    node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement, requiresId, idRoot);
+    var requiresId = metadata.queryDescriptor(type, "requiresId"),
+    	name = metadata.queryDescriptor(type, "name"),
+    	idRoot = requiresId && name.match(/^[A-Za-z]\w*$/) ? name : undefined;
+
+    node.id = (data.properties && data.properties.id) || data.context.getUniqueID(srcElement, idRoot);
 
 	var children = data.children;
 	if(children){

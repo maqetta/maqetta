@@ -150,6 +150,10 @@ then
     #
     cd ${MAQETTA_BUILD_DIR}/repository/maqetta
     git log -1 | head -1 >${MAQETTA_BUILD_DIR}/build.level
+    
+    echo "Initializing and updating submodules..."
+    git submodule init
+	git submodule update
 else
     if [ ! -e ${MAQETTA_BUILD_DIR}/repository/maqetta ]
     then

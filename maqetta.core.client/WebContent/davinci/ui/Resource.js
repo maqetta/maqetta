@@ -130,6 +130,21 @@ var uiResource = {
 			Workbench.showModal(newDialog, uiNLS.createNewCSSFile, '', executor);
 		},
 	
+		/* method to select a given resource in the explorer tree */
+		
+		selectResource : function(resource){
+			
+			var resourceTree = dijit.byId("resourceTree");
+			//var path = new Path(resource.getPath()).removeFirstSegments(1);
+			
+			var path = [];
+			for(var i=resource; i.parent; i = i.parent) {
+				path.unshift(i);
+			} 
+			
+			resourceTree.set('path', path);
+		},
+		
 		newFolder: function(parentFolder, callback){
 			var resource=parentFolder || getSelectedResource();
 			var folder;
@@ -176,6 +191,8 @@ var uiResource = {
 				if(callback) {
 					callback(newFolder);
 				}
+				if(newFolder!=null)
+					uiResource.selectResource(newFolder);
 				return teardown;
 			};
 			

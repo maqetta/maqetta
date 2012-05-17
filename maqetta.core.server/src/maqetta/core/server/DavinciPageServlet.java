@@ -336,7 +336,10 @@ public class DavinciPageServlet extends HttpServlet {
 			return;
 		}
 		String path = resourceURL.getPath();
-		boolean noCache = resourceURL.getPath().endsWith(".html");
+		boolean noCache = resourceURL.getPath().toLowerCase().endsWith(".html");
+		/* dont cache css files either */
+		noCache = noCache || resourceURL.getPath().toLowerCase().endsWith(".css");
+		
 		URLConnection connection = resourceURL.openConnection();
 		long lastModified = connection.getLastModified();
 		int contentLength = connection.getContentLength();

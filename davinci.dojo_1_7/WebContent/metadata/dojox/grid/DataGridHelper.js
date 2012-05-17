@@ -7,8 +7,8 @@ define([
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLText",
-	"../../dojo/data/DataStoreBasedWidgetInput",
-	"dojo/i18n!../nls/dojox",
+	"maq-metadata-dojo/dojo/data/DataStoreBasedWidgetInput",
+	"dojo/i18n!../nls/dojox"
 ], function(
 	array,
 	form,

@@ -203,7 +203,7 @@ define([
         });
         // Register a module identifier for the metadata path; necessary for
         // loading of helper and creation tool classes.
-        pkg.$moduleId = 'maq-metadata-' + pkg.name + '-' + pkg.version;
+        pkg.$moduleId = 'maq-metadata-' + pkg.name;
 
         require = require({
             packages: [{

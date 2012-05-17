@@ -5,8 +5,9 @@ define([
     	"davinci/workbench/Preferences",
     	"davinci/model/Path",
     	"davinci/model/Factory",
-    	"davinci/Theme"
-], function(declare, Workbench, Context, Preferences, Path, Factory, Theme) {
+    	"davinci/Theme",
+    	"dijit/Dialog"
+], function(declare, Workbench, Context, Preferences, Path, Factory, Theme, Dialog) {
 
 return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
@@ -130,7 +131,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		//FIXME: i18n
 		var message = 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.';
 
-		this._dialog = new dijit.Dialog({
+		this._dialog = new Dialog({
 			id: "maqetta.themeVersionMismatch",
 			title:"Theme Version Warning",
 			onCancel:function(){

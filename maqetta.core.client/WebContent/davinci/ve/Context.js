@@ -2689,7 +2689,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_reRequire: /\brequire\s*\(\s*\[\s*([\s\S]*?)\s*\]\s*\)/,
-	_reModuleId: /[a-zA-Z.\/]+/g,
+	_reModuleId: /[\w.\/]+/g,
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
 		if (!skipDomUpdate) {

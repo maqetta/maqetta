@@ -623,7 +623,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         var themeMetadata = this._context.getThemeMeta().metadata;
         var widgetType = themeMetadata.getWidgetType(widget);
         var widgetMetadata = themeMetadata.getMetadata(widgetType);
-        var subwidgets = widgetMetadata.subwidgets;
+        var subwidgets = widgetMetadata ? widgetMetadata.subwidgets : null;
         
         this._displayedWidget = widget;
         if(subwidgets){

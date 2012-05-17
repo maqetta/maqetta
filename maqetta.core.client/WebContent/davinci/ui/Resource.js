@@ -199,6 +199,13 @@ var uiResource = {
 			Workbench.showModal(newFolderDialog, uiNLS.createNewFolder, '', executor);
 		},
 	
+		/* close an editor editting given resource */
+		closeEditor : function(resource){
+			var oldEditor = Workbench.getOpenEditor(resource);
+			if(oldEditor!=null)
+				oldEditor.editorContainer.forceClose(oldEditor);
+		},
+		
 		saveAs: function(extension){
 			var oldEditor = Workbench.getOpenEditor();
 			var oldFileName = oldEditor.fileName;
@@ -457,7 +464,8 @@ var uiResource = {
 		    }
 	
 		    selection.forEach(function(resource){
-				resource.deleteResource();
+		    	uiResource.closeEditor(resource);
+		    	resource.deleteResource();
 			});
 		},
 

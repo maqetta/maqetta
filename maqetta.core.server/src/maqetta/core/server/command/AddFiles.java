@@ -53,17 +53,15 @@ public class AddFiles extends Command {
                     OutputStream os = uploaded.getOutputStreem();
                    
                     byte[] buffer = new byte[8192];
-            		try{	
-            	    while ( true ) {
-	            		int bytesRead = -1;
-	            		bytesRead = is.read(buffer);
-	            		if ( bytesRead == -1 ) {
-	            			break;
-	            		}
-	            		os.write(buffer, 0, bytesRead);
-	            	}
-            		}catch(Exception ex){
-            			
+            		try{
+						while (true) {
+							int bytesRead = -1;
+							bytesRead = is.read(buffer);
+							if (bytesRead == -1) {
+								break;
+							}
+							os.write(buffer, 0, bytesRead);
+						}
             		}finally{
             			is.close();
             			os.flush();
@@ -87,9 +85,7 @@ public class AddFiles extends Command {
 
         } catch (FileUploadException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
+        	// FIXME: this exception should abort and produce an HTTP error
             e.printStackTrace();
         }
     }

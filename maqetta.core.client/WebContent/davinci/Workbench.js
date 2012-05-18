@@ -176,12 +176,9 @@ var initializeWorkbenchState = function(){
 		for (var i=0;i<state.editors.length;i++) {
 		
 			var isReviewRes = isReview(state.editors[i]);
-			if(isReviewRes){
-				var reviewProject = getReviewProject(state.editors[i]);
-				if(reviewProject!=project) continue;
-				
-			}else if(singleProject){
-				// if running in single user mode, only load editors open for specific projects
+			if(!isReviewRes && singleProject){
+				// open all reviews and if running in single user mode, only load editors 
+				// open for specific projects
 				var path = new Path(state.editors[i]);
 				if (!path.startsWith(project)) {
 					continue;

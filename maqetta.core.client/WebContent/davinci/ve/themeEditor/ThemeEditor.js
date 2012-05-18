@@ -488,53 +488,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		
 	},
 
-//	_modifyTheme : function (rules, values){
-//		debugger;
-//
-//
-//		var oldValues = new Array();
-//		var unset = dojo.clone(values);
-//		for (var r = 0; r < rules.length; r++){
-//			var rule = rules[r];
-//			var file = rule.searchUp( "CSSFile");
-//			var rebasedValues = dojo.clone(values);
-//			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
-//			for(var a in rebasedValues){
-//				var x = rule.getProperty(a);
-//				if (x){
-//					oldValues[a] = x.value; // just want the value not the whole CSSProperty
-//				}else if (!oldValues[a]){ // set by another rule
-//					oldValues[a] = x; //undefined
-//				}
-//				if(!rebasedValues[a]){
-//					rule.removeProperty(a);
-//				}else if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && x){ 
-//					rule.setProperty(a,  rebasedValues[a]);
-//					unset[a] = null;
-//				}
-//			}
-//			this._markDirty(file.url);
-//		}
-//		// now set the new properties.
-//		for (var r = 0; r < rules.length; r++){
-//			var rule = rules[r];
-//			var file = rule.searchUp( "CSSFile");
-//			var rebasedValues = dojo.clone(unset);
-//			var rebasedValues = this._rebaseCssRuleImagesFromStylePalette(rule, rebasedValues);
-//			for(var a in rebasedValues){
-//				if(this._theme.isPropertyVaildForWidgetRule(rule,a,this._selectedWidget) && (rebasedValues[a])){
-//					//debugger;
-//					rule.setProperty(a,  rebasedValues[a]);
-//					//rebasedValues[a] = null;  not sure about this might be valid for more than one rule
-//	
-//				}
-//			}
-//			this._markDirty(file.url);
-//		}
-//		
-//		return oldValues;
-//		
-//	},
 	
 	_markDirty : function (file){
 
@@ -597,10 +550,10 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			this.theme = dojo.isString(content)? dojo.fromJson(content) : content;
 			this.theme.file = system.resource.findResource(filename);
 			//dojo.connect(this.visualEditor, "onSelectionChange", this,"onSelectionChange");
-			this.themeCssfiles = [];
+			this.themeCssFiles = [];
 			for(var i = 0;i<this.theme.files.length;i++){
 				if(this.theme.files[i].indexOf(".css")>-1){
-					this.themeCssfiles.push(this.theme.files[i]);
+					this.themeCssFiles.push(this.theme.files[i]);
 				}
 			}
 			
@@ -615,7 +568,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 				
 			}
 
-			this.visualEditor = new VisualThemeEditor(this, this._cp.domNode,filename, this.themeCssfiles, themeHtmlResources,this.theme);
+			this.visualEditor = new VisualThemeEditor(this, this._cp.domNode,filename, this.themeCssFiles, themeHtmlResources,this.theme);
 			
 			this.fileName = filename;
 			
@@ -869,7 +822,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 				}
 			}
 			if(!modified){
-				console.log("[theme editor style change command] !FATAL! Rule not found in theme: " + selectors[s]);
+				console.warn("[theme editor getRule] Rule not found in theme: " + selectors[s]);
 			}
 		}
 		return rules;

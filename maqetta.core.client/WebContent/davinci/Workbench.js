@@ -1092,60 +1092,66 @@ var Workbench = {
 	},
 
 	openEditor: function (keywordArgs, newHtmlParams) {
-		var fileName=keywordArgs.fileName,
-			content=keywordArgs.content,
-			fileExtension,
-			file;
-		if (typeof fileName=='string') {
-			 fileExtension=fileName.substr(fileName.lastIndexOf('.')+1);
-		} else {
-			file=fileName;
-			fileExtension=fileName.getExtension();
-			fileName=fileName.getPath();
-		}
-
-		var tab = dijit.byId(filename2id(fileName)),
-			tabContainer = dijit.byId("editors_tabcontainer");
-
-		if (tab) {
-			// already open
-			tabContainer.selectChild(tab);
-			var editor=tab.editor;
-			if (keywordArgs.startOffset) {
-				editor.select(keywordArgs);
+		try{
+			var fileName=keywordArgs.fileName,
+				content=keywordArgs.content,
+				fileExtension,
+				file;
+			if (typeof fileName=='string') {
+				 fileExtension=fileName.substr(fileName.lastIndexOf('.')+1);
+			} else {
+				file=fileName;
+				fileExtension=fileName.getExtension();
+				fileName=fileName.getPath();
 			}
-			return;
-		}
-		var editorCreateCallback=keywordArgs.editorCreateCallback;
-		
-		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
-			 if (typeof extension.extensions =="string") {
-				 extension.extensions=extension.extensions.split(',');
-			 }
-			 return dojo.some(extension.extensions, function(e){
-				 return e.toLowerCase() == fileExtension.toLowerCase();
-			 });
-		});
-
-		var editorExtension = editorExtensions[0];
-		if (editorExtensions.length>1){
-			dojo.some(editorExtensions, function(extension){
-				editorExtension = extension;
-				return extension.isDefault;
+	
+			var tab = dijit.byId(filename2id(fileName)),
+				tabContainer = dijit.byId("editors_tabcontainer");
+	
+			if (tab) {
+				// already open
+				tabContainer.selectChild(tab);
+				var editor=tab.editor;
+				if (keywordArgs.startOffset) {
+					editor.select(keywordArgs);
+				}
+				return;
+			}
+			var editorCreateCallback=keywordArgs.editorCreateCallback;
+			
+			var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
+				 if (typeof extension.extensions =="string") {
+					 extension.extensions=extension.extensions.split(',');
+				 }
+				 return dojo.some(extension.extensions, function(e){
+					 return e.toLowerCase() == fileExtension.toLowerCase();
+				 });
 			});
+	
+			var editorExtension = editorExtensions[0];
+			if (editorExtensions.length>1){
+				dojo.some(editorExtensions, function(extension){
+					editorExtension = extension;
+					return extension.isDefault;
+				});
+			}
+	
+			Workbench._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams).then(function(editor) {
+				if(editorCreateCallback){
+					editorCreateCallback.call(window, editor);
+				}
+	
+				if(!keywordArgs.noSelect) {
+					 Runtime.currentEditor = editor;
+				}			
+			}, function(error) {
+				console.error("Error opening editor for filename: " + fileName, error);
+			});
+		} catch (ex) {
+			console.error("Exception opening editor for filename: "+ keywordArgs && keywordArgs.fileName);
+			console.error(ex);
 		}
 
-		Workbench._createEditor(editorExtension, fileName, keywordArgs, newHtmlParams).then(function(editor) {
-			if(editorCreateCallback){
-				editorCreateCallback.call(window, editor);
-			}
-
-			if(!keywordArgs.noSelect) {
-				 Runtime.currentEditor = editor;
-			}			
-		}, function(error) {
-			console.error("Error opening editor for filename: " + fileName, error);
-		});
 	},
 	
 	_createEditor: function(editorExtension, fileName, keywordArgs, newHtmlParams) {

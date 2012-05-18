@@ -178,7 +178,24 @@ TH.HtmlWidget {
 	width: 1em;
 	height: 1em;
 }
-
+AUDIO.HtmlWidget {
+	min-width:1em;
+	min-height:1em; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
+EMBED.HtmlWidget {
+	min-width:1em;
+	min-height:1em; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
+VIDEO.HtmlWidget {
+	min-width:1em;
+	min-height:1em; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
 
 /* dojox.mobile widgets */
 

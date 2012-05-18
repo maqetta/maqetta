@@ -51,12 +51,24 @@ public class AddFiles extends Command {
                     fileNames.add(fileName);
                     InputStream is = item.getInputStream();
                     OutputStream os = uploaded.getOutputStreem();
-                    byte[] buf = new byte[256];
-                    int numRead;
-                    
-                    while ( (numRead = is.read(buf) ) >= 0) {
-                        os.write(buf, 0, numRead);
-                    }
+                   
+                    byte[] buffer = new byte[8192];
+            		try{	
+            	    while ( true ) {
+	            		int bytesRead = -1;
+	            		bytesRead = is.read(buffer);
+	            		if ( bytesRead == -1 ) {
+	            			break;
+	            		}
+	            		os.write(buffer, 0, bytesRead);
+	            	}
+            		}catch(Exception ex){
+            			
+            		}finally{
+            			is.close();
+            			os.flush();
+            			os.close();
+            		}
                     uploaded.flushWorkingCopy();
                 }
             }

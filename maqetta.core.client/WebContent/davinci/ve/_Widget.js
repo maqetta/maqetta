@@ -3,13 +3,15 @@ define("davinci/ve/_Widget", [
 	"./metadata",
 	"../html/CSSModel",
 	"dojox/html/entities",
-	"davinci/ve/utils/StyleArray"
+	"davinci/ve/utils/StyleArray",
+	"davinci/ve/utils/GeomUtils"
 ], function(
 	declare,
 	metadata,
 	CSSModel,
 	htmlEntities,
-	StyleArray
+	StyleArray,
+	GeomUtils
 ) {
 var arrayEquals = function(array1, array2, func){
 	if(array1 == array2){
@@ -266,21 +268,12 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	getMarginBox: function() {
-		var node = this.getStyleNode();
-		if(!node) {
-			return undefined;
-		}
-
-		var box = dojo.position(node),
-			parentNode = node.offsetParent;
-		if(parentNode) {
-			var c = dojo.position(parentNode),
-				e = dojo._getMarginExtents(node);
-			box.l = box.x - c.x + parentNode.scrollLeft - Math.round(e.l);
-			box.t = box.y - c.y + parentNode.scrollTop - Math.round(e.t);
-		}else{
-			box.l = box.t = 0;
-		}
+		var node = this.domNode;
+		var box = GeomUtils.getMarginBoxPageCoords(node);
+		box.l -= GeomUtils.getScrollLeft(node);
+		box.t -= GeomUtils.getScrollTop(node);
+		box.x = box.l;
+		box.y = box.t;
 		return box;
 	},
 

@@ -439,17 +439,18 @@ return declare("davinci.ve.input.SmartInput", null, {
 		var clientHeight = contentPaneAncestor.clientHeight;
 		var clientWidth = contentPaneAncestor.clientWidth;
         // find the correct placement of box  based on client viewable area
-		var top = '30';
+		var yOffset = 26;
+		var top = yOffset;
 		var pointerLocation = 0;
-		if ((box.y + height + 30) < clientHeight){
-			top = box.y /*box.t*/  +  30;
+		if ((box.y + height + yOffset) < clientHeight){
+			top = box.y /*box.t*/  +  yOffset;
 			dojo.addClass(inlinePointer,'inlineEditConnectorBelow');
-		}else if((box.y - height /*- 30*/) > 0){
-			top = box.y - height /*- 30 /*box.t*/ ;
+		}else if((box.y - height /*- yOffset*/) > 0){
+			top = box.y - height /*- yOffset /*box.t*/ ;
 			//dojo.addClass(inlinePointer,'inlineEditConnectorAbove');
 			pointerLocation = height + 12;
 		} else {
-			top = 0 /*box.t*/  + 30 ;
+			top = 0 /*box.t*/  + yOffset ;
 		}
 		var left = '0';
 ;

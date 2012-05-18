@@ -43,12 +43,18 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 		win.withDoc(node.ownerDocument, function(){
 			var l = node.offsetLeft;
 			var t = node.offsetTop;
-			var pn = node.offsetParent;
+			var pn = node.parentNode;
+			var opn = node.offsetParent;
 			while(pn && pn.tagName != 'BODY'){
-				var BorderExtents = domGeom.getBorderExtents(pn);
-				l += pn.offsetLeft + BorderExtents.l - pn.scrollLeft;
-				t += pn.offsetTop + BorderExtents.t - pn.scrollTop;
-				pn = pn.offsetParent;
+				l -= pn.scrollLeft;
+				t -= pn.scrollTop;
+				if(pn == opn){
+					var BorderExtents = domGeom.getBorderExtents(opn);
+					l += opn.offsetLeft + BorderExtents.l;
+					t += opn.offsetTop + BorderExtents.t;
+					opn = opn.offsetParent;
+				}
+				pn = pn.parentNode;
 			}
 			o = {l: l, t: t, w: node.offsetWidth, h: node.offsetHeight};
 		}.bind(this));

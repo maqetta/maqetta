@@ -3026,6 +3026,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (!themeMap) {
 					// load defaults if not defined in file
 					themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
+					themeFiles = [];
 				}
 				this._addCssForDevice(ua, themeMap, this);
 

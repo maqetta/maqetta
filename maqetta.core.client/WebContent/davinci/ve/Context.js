@@ -3248,6 +3248,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			pn = pn.offsetParent;
 		}
 		return {l:leftAdjust, t:topAdjust};
+	},
+	
+	resizeAllWidgets: function () {
+		this.getTopWidgets().forEach(function (widget) {
+			if (widget.resize) {
+				widget.resize();
+			}
+		});
 	}
 });
 

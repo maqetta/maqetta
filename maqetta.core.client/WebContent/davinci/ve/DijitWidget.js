@@ -220,8 +220,13 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	},
 
 	resize: function() {
-		if (this.dijitWidget.resize) {
-			this.dijitWidget.resize();
+		var helper = this.getHelper();
+		if (helper && helper.resize) {
+			helper.resize(this);
+		} else {
+			if (this.dijitWidget.resize) {
+				this.dijitWidget.resize();
+			}
 		}
 	},
 

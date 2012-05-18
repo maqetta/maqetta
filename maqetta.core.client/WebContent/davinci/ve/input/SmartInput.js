@@ -377,7 +377,30 @@ return declare("davinci.ve.input.SmartInput", null, {
 		this._inline._setStyleAttr({display: "block"});
 		this._connectHelpDiv();
 		this._connectResizeHandle();
-		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); //comment out for debug
+		/* 
+		 * dijit/focus._onBlurNode is setting a setTimeout to deal with OnBlur events.
+		 * 
+		   // if the blur event isn't followed by a focus event then mark all widgets as inactive.
+			if(this._clearActiveWidgetsTimer){
+				clearTimeout(this._clearActiveWidgetsTimer);
+			}
+			this._clearActiveWidgetsTimer = setTimeout(lang.hitch(this, function(){
+				delete this._clearActiveWidgetsTimer;
+				this._setStack([]);
+				this.prevNode = null;
+			}), 100);
+          * 
+          *  SmartInput is setting the focus on the smart input widget box so when the dijit.focus
+          *  setTimeout fires the _setStack changes the focus, fire our onBlur closing the edit box.
+          *  This only seems to be an issue for SackContainerInput and mostly for Accordion.
+          *  So I added the timeout below to wait until after the diji.focus has fired.
+          *  FIXME: There must be a better solution than this!
+		 */
+		
+		window.setTimeout(function(){
+			this._inline.eb.textbox.focus();
+			this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); //comment out for debug
+		}.bind(this), 500);
 		
 		this.resize(null);
 

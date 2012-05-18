@@ -759,9 +759,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// clear dijit registry
 		if (this.frameNode) {
-			var doc = this.frameNode.contentDocument || this.frameNode.contentWindow.document,
-				win = windowUtils.get(doc);
-			win.require("dijit/registry")._destroyAll();
+			var doc = this.frameNode.contentDocument || (this.frameNode.contentWindow && this.frameNode.contentWindow.document);
+			if (doc) {
+				windowUtils.get(doc).require("dijit/registry")._destroyAll();				
+			}
 		}
 
 		// Get the helper before creating the IFRAME, or bad things happen in FF

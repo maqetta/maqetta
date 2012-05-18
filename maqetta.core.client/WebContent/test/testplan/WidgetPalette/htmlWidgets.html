@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Widget Palette: HTML Element Tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Widget Palette: HTML Element Tests</h1>
+
+	<h2 class="test_section">Audio, Video, Embed</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the HTML folder in the Widget palette.</li>
+		<li>Drag an &lt;audio&gt; widget onto the canvas.</li>
+		<li>Notice Smart Input dialog to select a source is displayed. Also, note there should <i>not</i> be a field for alt text (like there is in the Smart Input
+			for  &lt;img&gt;'s) because &lt;audio&gt; doesn't support alt text.</li>
+		<li>Enter the file name for a non-existent file (e.g. <i>this_is_a_bad_filename</i>) and click OK. Ensure the &lt;audio&gt; element
+		    still has a size and is available for selection. (In Chrome, there will be partial playback controls. And, in FF, there will just be
+		    an empty box.)</li>
+		<li>Double-click the &lt;audio&gt; element to bring Smart Input back up and specify a source:
+			<ul>
+				<li>If you have an audio file uploaded to your workspace, you may navigate to it and select it.</li>
+				<li>If you do not have your own audio file, you can enter one of the URL's below (or any other URL pointing to an audio file):
+					<ul>
+						<li><a href="http://www.w3schools.com/html5/song.mp3">http://www.w3schools.com/html5/song.mp3</a></li>
+						<li><a href="http://www.w3schools.com/html5/song.ogg">http://www.w3schools.com/html5/song.ogg</a></li>
+					</ul>
+				</li>
+				<b>(NOTE: None of the major browsers support all of the various audio formats 
+					(see <a href="http://www.w3schools.com/html5/html5_audio.asp">Audio Formats and Browser Support</a>). For example, 
+					the <i>mp3</i> file above will work in Chrome but not Firefox. So, if doing Firefox testing you'd probably want to pick the <i>ogg</i> file.)</b>
+			</ul>
+		</li>
+		<li>Click on Preview icon in the toolbar. This should open a new browser window showing your audio element, and you should hear sound when you click play.</li>
+		<li>EXTRA CREDIT: Drop a &lt;video&gt; element onto the page and use one of your own files (uploaded to your workspace) or one of the following URLs:
+			<ul>
+				<li><a href="http://www.w3schools.com/html5/movie.mp4">http://www.w3schools.com/html5/movie.mp4</a></li>
+				<li><a href="http://www.w3schools.com/html5/movie.ogg">http://www.w3schools.com/html5/movie.ogg</a></li>
+			</ul>
+		</li>
+		<li>DOUBLE EXTRA CREDIT: Drop an &lt;embed&gt; element onto the page and use one of your own files (uploaded to your workspace) or the following URL:
+			<ul>
+				<li><a href="http://www.w3schools.com/html5/helloworld.swf">http://www.w3schools.com/html5/helloworld.swf</a></li>
+			</ul>
+		</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Smart Input is displayed when dropping  &lt;audio&gt; onto the canvas. And, the dialog should <i>not</i> have a field for alt text.</li>
+		<li>The &lt;audio&gt; element maintains a size even when entering the name of a missing file.</li>
+		<li>When previewing the final page, you can click play and hear a sound.</li>
+	</ol>
+
+	<h2 class="test_section">More to come...</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>To do...</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>To do...</li>
+	</ol>
+
+</body>
+</html>

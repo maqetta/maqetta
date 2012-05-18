@@ -66,6 +66,11 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         if (dm && dm.loadDeviceTheme) {
         	dm.loadDeviceTheme(device);
         }
+        window.setTimeout(function(){
+        	// after changing the theme we have to let the browser settle a minute and then
+        	// force a redraw of widgets to get the UI looking pretty..
+        	this._context.resizeAllWidgets();
+		}.bind(this), 50);
     },
 
     removeTheme: function(oldTheme){

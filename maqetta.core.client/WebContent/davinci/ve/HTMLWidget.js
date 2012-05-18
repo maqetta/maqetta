@@ -93,9 +93,8 @@ return declare("davinci.ve.HTMLWidget", _Widget, {
 					node.removeAttribute(name);
 				} else {
 				    if (!modelOnly) {
-				        node[name] = properties[name];
+				    	node.setAttribute(name, properties[name]);
 				    }
-		//			dojo.attr(node,name,properties[name]);
 				}
 			}
 		}

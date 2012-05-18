@@ -631,6 +631,12 @@ return declare("davinci.ve.input.SmartInput", null, {
 						value = value.replace(/\n/g, ''); // new lines breaks create widget richtext
 					}
 					values[inlineEditProp]=value;
+					var children = null;
+					if (inlineEditProp == 'textContent'){
+						// set the children to be the same as the textContect so the dom is correct.
+						children = value;
+						
+					}
 					var command;
 
 					if (djprop === 'innerHTML'){
@@ -638,7 +644,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 						delete values[inlineEditProp];
 						command = new ModifyRichTextCommand(this._widget, values, null, context);
 					}else{
-						command = new davinci.ve.commands.ModifyCommand(this._widget, values, null, context);
+						command = new davinci.ve.commands.ModifyCommand(this._widget, values, children, context);
 					}
 					this._widget._edit_context.getCommandStack().execute(command);
 					this._widget=command.newWidget;	

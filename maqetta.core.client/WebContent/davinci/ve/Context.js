@@ -771,7 +771,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._srcDocument=source;
 		
 		// determine if it's the theme editor loading
-		if (!source.themeCssfiles) { // css files need to be added to doc before body content
+		if (!source.themeCssFiles) { // css files need to be added to doc before body content
 			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
 			this.loadRequires("html.body", true /*updateSrc*/, false /*doUpdateModelDojoRequires*/,
 					true /*skipDomUpdate*/ );
@@ -888,9 +888,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 			if (helper && helper.getHeadImports){
 			    subs.themeHeadImports = helper.getHeadImports(this.visualEditor.theme);
-			} else if(source.themeCssfiles) { // css files need to be added to doc before body content
+			} else if(source.themeCssFiles) { // css files need to be added to doc before body content
 				subs.themeCssFiles = '' +
-				source.themeCssfiles.map(function(file) {
+				source.themeCssFiles.map(function(file) {
 					return '<link rel="stylesheet" type="text/css" href="' + file + '">';
 				}).join() +
 				'';
@@ -2980,12 +2980,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		for (var i = 0, len = themeMap.length; i < len; i++) {
 			var item = themeMap[i];
 			if (item[0] === localDevice || item[0] === '.*'){
-				if (!this.themeCssfiles) {
-					this.themeCssfiles = [];
+				if (!this.themeCssFiles) {
+					this.themeCssFiles = [];
 				}
 
 				var cssFiles = item[2];
-				this.themeCssfiles = this.themeCssfiles.concat(cssFiles);
+				this.themeCssFiles = this.themeCssFiles.concat(cssFiles);
 
 				this._themePath = new davinci.model.Path(this.visualEditor.fileName);
 				// Connect to the css files, so we can update the canvas when
@@ -3019,7 +3019,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				themeFiles = djConfigModel.mblThemeFiles;
 
 				// clear dynamic CSS
-				delete this.themeCssfiles;
+				delete this.themeCssFiles;
 				delete this.cssFiles;
 
 				// load CSS files specified by `themeMap`

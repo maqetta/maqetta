@@ -17,7 +17,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
  */
 
 
-	constructor : function (themeEditor, element,filename,themeCssfiles, themeEditorHtmls,theme) {
+	constructor : function (themeEditor, element,filename,themeCssFiles, themeEditorHtmls,theme) {
 		this._themeEditor = themeEditor;
 		this.domNode = element;
 		this.theme = theme;
@@ -52,7 +52,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			}).addCallback(dojo.hitch(this, function(result){
 				this.setContent("DEFAULT_PAGE", 
 								result,
-								themeCssfiles);
+								themeCssFiles);
 			}));
     },
     
@@ -69,7 +69,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 	getContent : function(){
 		return this.context.getSource();
 	},
-	setContent : function(fileName, content, themeCssfiles){
+	setContent : function(fileName, content, themeCssFiles){
 		
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
@@ -80,11 +80,10 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			// #23 adjust for where html is located 
 			var themeBase = Theme.getThemeLocation();
 			var relPath = themeBase.relativeTo(this.basePath, true);
-			htmlFile.themeCssfiles = [];
-			themeCssfiles.forEach(function(file){
-				htmlFile.themeCssfiles.push(relPath.toString()+'/'+this.theme.name+'/'+file); // #23 css files need to be added to doc before body content
+			htmlFile.themeCssFiles = [];
+			themeCssFiles.forEach(function(file){
+				htmlFile.themeCssFiles.push(relPath.toString()+'/'+this.theme.name+'/'+file); // #23 css files need to be added to doc before body content
 			}.bind(this));
-			//htmlFile.themeCssfiles = themeCssfiles; // css files need to be added to doc before body content
 			this.context.model = htmlFile;
 			this.context._themeName = this.theme.name;
 			if(!this.initialSet){
@@ -93,8 +92,8 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 					this.savePoint = 0;
 					this.context.activate();
 //		css files need to be added to doc before body content wdr 4/6/11
-//					for(var i = 0;i < themeCssfiles.length;i++){
-//						this.insertCssFile(themeCssfiles[i]);	
+//					for(var i = 0;i < themeCssFiles.length;i++){
+//						this.insertCssFile(themeCssFiles[i]);	
 //					}
 					// Because widget sizing css rules were not included in the HEAD at page load,
 					// we must resize all of the widgets manually after the browser has had a chance

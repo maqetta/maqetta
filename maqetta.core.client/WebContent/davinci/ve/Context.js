@@ -1745,6 +1745,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocus: function(widget, index, inline){
+		if(!this.editor.isActiveEditor()){
+			return;
+		}
 		var box, op, parent;
 
 		if (!metadata.queryDescriptor(widget.type, "isInvisible")) {

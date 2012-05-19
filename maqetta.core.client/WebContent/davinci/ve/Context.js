@@ -3,6 +3,7 @@ define([
     "dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
+	"dojo/_base/connect",
 	"dojo/window",
     'system/resource',
     "../UserActivityMonitor",
@@ -34,6 +35,7 @@ define([
 	lang,
 	Deferred,
 	DeferredList,
+	connect,
 	windowUtils,
 	Resource,
 	UserActivityMonitor,
@@ -2071,6 +2073,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool = this._defaultTool;
 		}
 		this._activeTool.activate(this);
+		connect.publish("/davinci/ve/activeToolChanged",[this, tool]);
 	},
 	
 	// getter/setter for currently active drag/drop object

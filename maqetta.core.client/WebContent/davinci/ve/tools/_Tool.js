@@ -1,6 +1,7 @@
 define(["dojo/_base/declare",
         "davinci/ve/widget",
-        "davinci/ve/metadata"], function(declare, widget, metadata){
+        "davinci/ve/metadata",
+		"davinci/ve/utils/GeomUtils"], function(declare, widget, metadata, GeomUtils){
 
 return declare("davinci.ve.tools._Tool", null, {
 
@@ -119,6 +120,7 @@ return declare("davinci.ve.tools._Tool", null, {
 			var top = domNode.offsetTop;
 			var width = domNode.offsetWidth;
 			var height = domNode.offsetHeight;
+
 			if(event){
 				
 				// This code addresses #2136, where CSS transforms shift the widget and 
@@ -128,28 +130,25 @@ return declare("davinci.ve.tools._Tool", null, {
 				// However, at least WebKit is smart enough to have onmouseover event
 				// deal with the post-transform location of a particular node.
 				// So, to deal with this issue, increase the bounding box to include pageX/pageY.
-				var mouseX = event.pageX;
-				var mouseY = event.pageY;
-				var pn = domNode.offsetParent;
-				while(pn && pn.tagName != 'BODY'){
-					mouseX -= pn.offsetLeft;
-					mouseY -= pn.offsetTop;
-					pn = pn.offsetParent;
+				var diff;
+				var borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(domNode);
+				if(event.pageX < borderBoxPageCoords.l){
+					diff = borderBoxPageCoords.l - event.pageX;
+					left -= diff;
+					width += diff;
 				}
-				
-				if(mouseX < left){
-					left = mouseX;
-					width += (domNode.offsetLeft - left);
+				if(event.pageY < borderBoxPageCoords.t){
+					diff = borderBoxPageCoords.t - event.pageY;
+					top -= diff;
+					height += diff;
 				}
-				if(mouseY < top){
-					top = mouseY;
-					height += (domNode.offsetTop - top);
+				if(event.pageX > borderBoxPageCoords.l + borderBoxPageCoords.w){
+					diff = event.pageX - (borderBoxPageCoords.l + borderBoxPageCoords.w);
+					width += diff;
 				}
-				if(mouseX > left + width){
-					width = mouseX - left;
-				}
-				if(mouseY > top + height){
-					height = mouseY - top;
+				if(event.pageY > borderBoxPageCoords.t + borderBoxPageCoords.h){
+					diff = event.pageY - (borderBoxPageCoords.t + borderBoxPageCoords.h);
+					height += diff;
 				}
 			}
 

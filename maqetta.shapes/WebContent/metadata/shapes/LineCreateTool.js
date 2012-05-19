@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/connect",
 	"davinci/ve/metadata",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/commands/ModifyCommand",
@@ -12,6 +13,7 @@ define([
 	"davinci/ve/commands/ResizeCommand" */
 ], function(
 	declare,
+	connect,
 	Metadata,
 	CreateTool,
 	ModifyCommand,
@@ -33,6 +35,9 @@ return declare(CreateTool, {
 		this._points = [];
 		this._pointsChanged = false;
 		this._gesture = 'click';
+		connect.subscribe("/davinci/ve/activeToolChanged", function(context, newtool){
+			this._removeDragLine();
+		}.bind(this));
 	},
 
 	/**

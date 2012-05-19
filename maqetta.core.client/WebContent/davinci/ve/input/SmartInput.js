@@ -630,12 +630,13 @@ return declare("davinci.ve.input.SmartInput", null, {
 					if (value && (typeof value == 'string')){
 						value = value.replace(/\n/g, ''); // new lines breaks create widget richtext
 					}
-					values[inlineEditProp]=value;
 					var children = null;
 					if (inlineEditProp == 'textContent'){
 						// set the children to be the same as the textContect so the dom is correct.
 						children = value;
 						
+					}else{
+						values[inlineEditProp]=value;
 					}
 					var command;
 

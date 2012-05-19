@@ -329,7 +329,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 		if (property) {
 			if (node) {
 				value = dojo.attr(node, djprop);
-			} else if (djprop === "innerHTML"){
+			} else if (djprop === "innerHTML" || djprop == "textContent"){
 				value = this._widget._srcElement.getElementText(this._context); // wdr
 				// Collapse all white space before showing content
 				value = value.replace(/\s+/g,' ');

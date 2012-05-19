@@ -243,48 +243,37 @@ return declare("davinci.ve.ChooseParent", null, {
 				var refChild = this._XYRefChild[idx];
 				var refChildNode = refChild ? refChild.domNode : null;
 				var refAfter = this._XYRefAfter[idx];
-				var cursorL, cursorT, cursorH, offsetParent;
+				var borderBoxPageCoords, cursL, cursT, cursH;
 				if(refChildNode){
 					if(refAfter){
 						if(refChildNode.nextSibling && refChildNode.nextSibling._dvWidget){
 							var nextSibling = refChildNode.nextSibling;
-							offsetParent = nextSibling.offsetParent;
-							//parentNode.insertBefore(this._cursorSpan, nextSibling);
-							var compStyle = dojo.style(nextSibling);
-							cursorL = nextSibling.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
-							cursorT = nextSibling.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
+							borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(nextSibling);
+							cursL = borderBoxPageCoords.l;
+							cursT = borderBoxPageCoords.t;
+							cursH = borderBoxPageCoords.h;
 						}else{
-							offsetParent = refChildNode.offsetParent;
-							//parentNode.appendChild(this._cursorSpan);
-							var compStyle = dojo.style(refChildNode);
-							cursorL = refChildNode.offsetLeft + refChildNode.offsetWidth + parseInt(compStyle.marginRight);
-							cursorT = refChildNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
+							borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(refChildNode);
+							cursL = borderBoxPageCoords.l + borderBoxPageCoords.w;
+							cursT = borderBoxPageCoords.t;
+							cursH = borderBoxPageCoords.h;
 						}
 					}else{
-						offsetParent = refChildNode.offsetParent;
-						//parentNode.insertBefore(this._cursorSpan, refChildNode);
-						var compStyle = dojo.style(refChildNode);
-						cursorL = refChildNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
-						cursorT = refChildNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
+						borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(refChildNode);
+						cursL = borderBoxPageCoords.l;
+						cursT = borderBoxPageCoords.t;
+						cursH = borderBoxPageCoords.h;
 					}
-					cursorH = compStyle.height;
 				}else{
-					offsetParent = parentNode.offsetParent;
-					//parentNode.appendChild(this._cursorSpan);
-					var compStyle = dojo.style(parentNode);
-						cursorL = parentNode.offsetLeft + parseInt(compStyle.borderLeftWidth) + parseInt(compStyle.paddingLeft);
-						cursorT = parentNode.offsetTop + parseInt(compStyle.borderTopWidth) + parseInt(compStyle.paddingTop);
-					cursorH = '16px';
-				}
-				while(offsetParent && offsetParent.tagName != 'BODY'){
-					cursorL += offsetParent.offsetLeft;
-					cursorT += offsetParent.offsetTop;
-					offsetParent = offsetParent.offsetParent;
+					borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(parentNode);
+					cursL = borderBoxPageCoords.l;
+					cursT = borderBoxPageCoords.t;
+					cursH = 16;
 				}
 				var style = this._cursorSpan.style;
-				style.height = cursorH;
-				style.left = cursorL+'px';
-				style.top = cursorT+'px';
+				style.height = cursH+'px';
+				style.left = cursL+'px';
+				style.top = cursT+'px';
 				var body = parentNode.ownerDocument.body;
 				body.appendChild(this._cursorSpan);
 			}
@@ -456,17 +445,18 @@ return declare("davinci.ve.ChooseParent", null, {
 		var x = position.x;
 		var y = position.y;
 		var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(domNode);
-		l = marginBoxPageCoords.l;
-		t = marginBoxPageCoords.t;
-		w = marginBoxPageCoords.w;
-		h = marginBoxPageCoords.h;
+		var l = marginBoxPageCoords.l;
+		var t = marginBoxPageCoords.t;
+		var w = marginBoxPageCoords.w;
+		var h = marginBoxPageCoords.h;
 
 		var r = l + w;
 		var b = t + h;
+		var i, child;
 		if(x >= l && x <= r && y >= t && y <= b){
 			var allowedParents = this.getAllowedTargetWidget(wdgt, data, false, {absolute:absolute});
 			if(allowedParents.length === 1){
-				if(absolute == true){
+				if(absolute === true){
 					// Absolutely positioned widgets get added as last child
 					this._XYParent.push(wdgt);
 					this._XYRefChild.push(null);
@@ -474,32 +464,23 @@ return declare("davinci.ve.ChooseParent", null, {
 				}else{
 					var children = wdgt.getChildren();
 					var childData = [];
-					for(var i=0; i<children.length; i++){
-						var child = children[i];
+					for(i=0; i<children.length; i++){
+						child = children[i];
 						var node = child.domNode;
-						if(xOffset === undefined){
-							var xOffset = 0,
-								yOffset = 0;
-							var offsetParent = node.offsetParent;
-							while(offsetParent && offsetParent.tagName != 'BODY'){
-								xOffset += offsetParent.offsetLeft;
-								yOffset += offsetParent.offsetTop;
-								offsetParent = offsetParent.offsetParent;
-							}
-						}
-						var w = node.offsetWidth;
-						var h = node.offsetHeight;
-						var l = node.offsetLeft + xOffset;
-						var t = node.offsetTop + yOffset;
-						var r = l + w;
-						var b = t + h;
+						var childBorderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(node);
+						w = node.offsetWidth;
+						h = node.offsetHeight;
+						l = childBorderBoxPageCoords.l;
+						t = childBorderBoxPageCoords.t;
+						r = l + w;
+						b = t + h;
 						var c = l + w/2;
 						childData.push({l:l, t:t, r:r, b:b, c:c});
 					}
 					var refChild, refAfter, biggestY;
-					for(var i=0; i<childData.length; i++){
+					for(i=0; i<childData.length; i++){
 						var cd = childData[i];
-						var child = children[i];
+						child = children[i];
 						if(x >= cd.l && x <= cd.r && y >= cd.t && y <= cd.b){
 							// If mouse is over one of the children, then
 							// insert either before or after that child (and jump out of loop)

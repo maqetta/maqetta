@@ -63,13 +63,16 @@
 		  	In many systems (particularly http://maqetta.org) after completely the new user or login processes,
 		  	you should be taken to the review UI rather than the page editor UI.</div>
 		</li>
-		<li>Once reviewer UI appears, in the left-side Reviews palette, click on "+" to open up the latest review.
-		  <div class='expectedResults_subsection'>The latest review should be at the top.
-		  After clicking on the "+", you should see Sample1.html.rev listed as the only child of the review element.</div>
-		</li>
-		<li>Double-click on Sample1.html.
-		  <div class='expectedResults_subsection'>The canvas should show Sample1.html. The States palette on the right should
-		  	show the 3 states: Normal, Add Task and Task Added.</div>
+		<li>Once Maqetta UI appears, you should be taken directly to the review.
+		  	<div class='expectedResults_subsection'>You should see:
+			  	<ul>
+			  		<li><i>Sample1.html.rev</i> in an open editor. </li>
+			  		<li>Reviews palette brought to the front.</li>
+			  		<li>Within the Reviews palette, the node for the review should be opened, and <i>Sample1.html.rev</i> 
+			  			should be selected.</li>
+			  		<li>Comments palette brought to the front.</li>
+			  	</ul>
+		  	</div>
 		</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
@@ -136,18 +139,39 @@
 		<li>See notes above.</li>
 	</ol>
 
-
 	<h2 class="test_section">Author checking review comments</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>As user A, go to the Maqetta page editor.
-			Go to Reviews palette, open up the latest review session by clicking on "+", and then
+		<li>As user A, open Maqetta. Go to Reviews palette, open up the latest review session by clicking on "+", and then
 			double-click on Sample1.html.rev. 
-		  <div class='expectedResults_subsection'>The review UI should open in a separate browser tab.</div></li>
+		  <div class='expectedResults_subsection'>The review should open in a new editor tab.</div></li>
 		<li>Verify that the review comments from users B and C are visible, properly color-coded,
 			and that different annotations appear/disappear as you change states in the States palette.
 		</li>
+		<li>Reload the browser page (using either browser refresh or logout/login) and verify that any reviews that were
+			in editor tabs before the reload are reopened.
+		</li>
 	</ol>
 
+	<h2 class="test_section">Working with reviews created both by you and by others</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Repeat all of the tests above, but have user B create the review and invite user A and user C.
+			<div class='expectedResults_subsection'>
+		  		<ul>
+		  			<li>All of the expected results in the other sections.</li>
+		  			<li>Within the Reviews palette:</li>
+		  			<ul>
+			  			<li>All users should see both of the reviews created during this testing.</li>
+			  			<li>user A should see the review he created bolded, and the review user B created italicized.</li>
+			  			<li>user B should see the review he created bolded, and the review user A created italicized.</li>
+			  			<li>user C should see the reviews created by user A and user B italicized.</li>
+			  		</ul>
+		  		</ul>
+		  	</div>
+		 </li>
+		<li>EXTRA CREDIT: Repeat all of the tests above, but now have user C create the review and invite user A and user B.
+		</li>
+	</ol>
 </body>
 </html>

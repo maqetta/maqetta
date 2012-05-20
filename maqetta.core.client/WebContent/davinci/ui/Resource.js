@@ -221,7 +221,13 @@ var uiResource = {
 					var check = checkFileName(resourcePath);
 					if (check) {
 						var oldResource = Resource.findResource(oldFileName);
-				        var oldContent = oldEditor.editorID == "davinci.html.CSSEditor" ? oldEditor.getText() : oldEditor.model.getText();
+						var oldContent = "";
+						if (oldEditor.editorID == "davinci.html.CSSEditor") {
+							// this does some css formatting
+							oldContent = oldEditor.getText();
+						} else {
+							oldContent = (oldEditor.model && oldEditor.model.getText) ? oldEditor.model.getText() : oldEditor.getText();
+						}
 						var existing=Resource.findResource(resourcePath);
 						oldEditor.editorContainer.forceClose(oldEditor);
 						if(existing){

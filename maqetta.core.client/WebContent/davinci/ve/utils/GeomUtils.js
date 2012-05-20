@@ -46,8 +46,10 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 			var pn = node.parentNode;
 			var opn = node.offsetParent;
 			while(pn && pn.tagName != 'BODY'){
-				l -= pn.scrollLeft;
-				t -= pn.scrollTop;
+				if(typeof pn.scrollLeft == 'number' && typeof pn.scrollTop == 'number' ){
+					l -= pn.scrollLeft;
+					t -= pn.scrollTop;
+				}
 				if(pn == opn){
 					var BorderExtents = domGeom.getBorderExtents(opn);
 					l += opn.offsetLeft + BorderExtents.l;

@@ -87,17 +87,17 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		// this._newBox holds page-relative coordinates.
 		// Subtract off offsetParent's borderbox coordinate (in page-relative coords from dojo.position), and
 		// subtract off offsetParent's border, because left: and top: are relative to offsetParent's borderbox
-		var offsetParentBorderBoxPageCoords = domGeom.position(widget.domNode.offsetParent, true);
+		var offsetParentBorderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(widget.domNode.offsetParent);
 		var borderExtents = domGeom.getBorderExtents(widget.domNode.offsetParent);
-		var newLeft = this._newBox.l - offsetParentBorderBoxPageCoords.x - borderExtents.l;
-		var newTop = this._newBox.t - offsetParentBorderBoxPageCoords.y - borderExtents.t;
+		var newLeft = this._newBox.l - offsetParentBorderBoxPageCoords.l - borderExtents.l;
+		var newTop = this._newBox.t - offsetParentBorderBoxPageCoords.t - borderExtents.t;
 		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
 		var currentStateIndex = this._getCurrentStateIndex();
 		if(this._oldBox){
-			var oldLeft = this._oldBox.l - offsetParentBorderBoxPageCoords.x - borderExtents.l;
-			var oldTop = this._oldBox.t - offsetParentBorderBoxPageCoords.y - borderExtents.t;
+			var oldLeft = this._oldBox.l - offsetParentBorderBoxPageCoords.l - borderExtents.l;
+			var oldTop = this._oldBox.t - offsetParentBorderBoxPageCoords.t - borderExtents.t;
 			this._oldStyleValuesAllStates[this._applyToStateIndex] = 
 					StyleArray.mergeStyleArrays(this._oldStyleValuesAllStates[this._applyToStateIndex], 
 								[{left:oldLeft+'px'}, {top:oldTop+'px'}]);

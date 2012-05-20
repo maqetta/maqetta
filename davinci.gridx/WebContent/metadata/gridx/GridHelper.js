@@ -96,6 +96,16 @@ GridHelper.prototype = {
 		
 		//Defer to data grid helper for "store"
 		this._dataGridHelper.cleanSrcElement(srcElement, this._useDataDojoProps);
+	},
+	
+	/*
+	 * GridX needs a little help after resize so that it properly renders columns
+	 * with "auto" width. We give it that help by re-setting the columns.
+	 */
+	resize: function(widget) {
+		var dijitWidget = widget.dijitWidget;
+		dijitWidget.resize();
+		dijitWidget.setColumns(dijitWidget.structure);
 	}
 };
 

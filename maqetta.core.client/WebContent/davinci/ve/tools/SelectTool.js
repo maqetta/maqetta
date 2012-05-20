@@ -359,7 +359,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			var _node = widget.domNode;
 			var _win = _node.ownerDocument.defaultView;
 			var _cs = _win.getComputedStyle(_node);
-			var me = domGeom.getMarginExtents(_node, _cs);
+			var me = GeomUtils.getMarginExtents(_node, _cs);
 			var be = domGeom.getBorderExtents(_node, _cs);
 			var pe = domGeom.getPadExtents(_node, _cs);
 			if(typeof newBox.w == 'number'){

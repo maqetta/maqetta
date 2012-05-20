@@ -1,9 +1,10 @@
 define([
 	"dojo/_base/window",
 	"dojo/dom-geometry",
+	"dojo/dom-style",
 	"dojo/has", 
 	"dojo/_base/sniff"
-], function(win, domGeom, has, sniff) {
+], function(win, domGeom, domStyle, has, sniff) {
 	
 return /** @scope davinci.ve.utils.GeomUtils */ {
 
@@ -22,7 +23,7 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 		var MarginBoxPageCoords;
 		win.withDoc(node.ownerDocument, function(){
 			var BorderBoxPageCoords = this.getBorderBoxPageCoords(node);
-			var MarginExtents = domGeom.getMarginExtents(node);
+			var MarginExtents = this.getMarginExtents(node);
 			MarginBoxPageCoords = {
 					l:BorderBoxPageCoords.l - MarginExtents.l,
 					t:BorderBoxPageCoords.t - MarginExtents.t,
@@ -91,7 +92,30 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 			var body = doc && doc.body;
 			return body ? body.scrollTop : 0;
 		}
+	},
+	
+	/**
+	 * Maqetta-specific version of getMarginExtents because dojo's version
+	 * always equates marginRight = marginLeft due to old Safari quirk.
+	 * (Same signature as dom-geometry.js's getMarginExtents
+	 */
+	getMarginExtents: function getMarginExtents(/*DomNode*/node, computedStyle){
+		var s = computedStyle || domStyle.getComputedStyle(node);
+		var l, t, r, b;
+		function px(value){
+			return parseFloat(value) || 0;
+		}
+		if(s){
+			l = px(s.marginLeft);
+			t = px(s.marginTop);
+			r = px(s.marginRight);
+			b = px(s.marginBottom);
+		}else{
+			l = t = r = b = 0;
+		}
+		return {l: l, t: t, r: r, b: b, w: l + r, h: t + b};
 	}
+
 
 };
 });

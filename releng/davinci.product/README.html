@@ -11,9 +11,9 @@
 
 <h1>Installing and Launching Maqetta on Localhost</h1>
 
-<h2 id="supported_browsers">Supported browsers: Google Chrome (current release), Mozilla Firefox 4 and Mac Safari 5.1</h2>
+<h2 id="supported_browsers">Supported browsers: Google Chrome (current release), Mozilla Firefox (current release) and Mac Safari 5.1</h2>
 <p>
-The current builds of Maqetta only run on Google Chrome, Firefox 4 and Safari 5.1 on the Mac. 
+The current builds of Maqetta only run on Google Chrome (current release), Firefox (current release) and Safari 5.1+ on the Mac. 
 </p>
 
 <h2 id="prep_steps">Preparatory steps: restart browser and clear caches</h2>
@@ -117,24 +117,26 @@ and change 50000 to something else (any number in the 50000's is OK).
 	<li><strong>Quit and restart your browser before launching a new version of Maqetta for the first time.</strong>
 		For most users, this is probably unnecessary, but
 		recommended nonetheless. 
-		We have found occasional issues with Google Chrome when switching from an old version
+		We have found occasional issues when switching from an old version
 		of Maqetta to a newer version. </li>
-	<li><strong>Clear both the browser's cache and its "appcache" (offline storage):</strong>
+	<li><strong>Clear both the browser's cache, cookes and "appcache" (offline storage):</strong>
 		<ul>
-			<li>Chrome
+			<li>Chrome (version 19)
 				<ul>
-				 	<li>(Windows only): Click on the tools icon (looks like a wrench) and choose "Options".
-				 		This will open a new browser tab.</li>
+				 	<li>(Windows only): Click on the tools icon (looks like a wrench) and choose "Settings".
+				 		This will open a new browser tab titled "Settings".</li>
 				 	<li>(Mac only) Under the "Chrome" menu, choose "Preferences".
-				 		This will open a new browser tab.</li>
-				 	<li>Click on the "Under the Hood" hyperlink.</li>
-					<li>Clear cache: While in the "Under the Hood" tab, click on "Clear browsing data".
+				 		This will open a new browser tab titled "Settings".</li>
+				 	<li>Make sure that advanced settings such as "Content settings" and "Clear browser cache" are visible on the page.
+				 		In some cases, you might have to toggle the "Show advanced settings / Hide advanced settings" control
+				 		(found at the bottom of the page content for the Settings page).</li>
+					<li>To clear the browser cache, click on the "Clear browsing data" button.
 						In the dialog that follows, make sure "Empty the cache" is checked.
 						You might want to uncheck the other items so that other things are not also cleared.
-						Now, click on the "Clear browsing data" button.</li>
-					<li>Clear appcache (offline storage) and cookies: 
+						Once the check boxes are set correctly, click on the "Clear browsing data" button.</li>
+					<li>To clear the appcache (offline storage) and Maqetta's cookies: 
 						<ul>
-							<li>While in the "Under the Hood" tab, click on "Content settings...." to bring up the Content Settings dialog.</li>
+							<li>Click on "Content settings...." to bring up the Content Settings dialog.</li>
 							<li>In the "Cookies" section towards the top, click on the "All Cookies and Site Data..." button to bring up the Cookies and Other Data panel.</li>
 							<li>In the top right search box, type in part of the URL for the web server where you are running Maqetta.
 								For example:
@@ -158,7 +160,7 @@ and change 50000 to something else (any number in the 50000's is OK).
 				 	<li>(Mac only) Under the "Firefox" menu, choose "Preferences".
 						Click on the "Advanced" button
 						and then click on the "Network" tab.</li>
-					<li>Clear cache: Under "Offline Storage", click on "Clear Now".</li>
+					<li>Clear cache: Under "Cached Web Content", click on "Clear Now".</li>
 					<li>Clear appcache: Under "Offline Storage", at the bottom is a
 						box labelled as follows: "The following websites have stored data for offline use:".
 						See if the server which hosts Maqetta is listed. 

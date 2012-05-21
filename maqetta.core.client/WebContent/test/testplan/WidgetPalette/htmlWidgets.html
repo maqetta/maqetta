@@ -17,14 +17,13 @@
 	<hr />
 	<h1 class="test_title">Widget Palette: HTML Element Tests</h1>
 
-	<h2 class="test_section">Audio, Video, Embed</h2>
+	<h2 class="test_section">Media (&lt;audio&gt;, &lt;img&gt;, &lt;video&gt;, and &lt;embed&gt;)</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Choose New HTML File from the New menu</li>
 		<li>Open the HTML folder in the Widget palette.</li>
 		<li>Drag an &lt;audio&gt; widget onto the canvas.</li>
-		<li>Notice Smart Input dialog to select a source is displayed. Also, note there should <i>not</i> be a field for alt text (like there is in the Smart Input
-			for  &lt;img&gt;'s) because &lt;audio&gt; doesn't support alt text.</li>
+		<li>Notice a Smart Input dialog to select a source is displayed. Also, note there should <i>not</i> be a field for alt text because &lt;audio&gt; doesn't support alt text.</li>
 		<li>Enter the file name for a non-existent file (e.g. <i>this_is_a_bad_filename</i>) and click OK. Ensure the &lt;audio&gt; element
 		    still has a size and is available for selection. (In Chrome, there will be partial playback controls. And, in FF, there will just be
 		    an empty box.)</li>
@@ -42,7 +41,11 @@
 					the <i>mp3</i> file above will work in Chrome but not Firefox. So, if doing Firefox testing you'd probably want to pick the <i>ogg</i> file.)</b>
 			</ul>
 		</li>
-		<li>Click on Preview icon in the toolbar. This should open a new browser window showing your audio element, and you should hear sound when you click play.</li>
+		<li>Drag an &lt;img&gt; widget onto the canvas.</li>
+		<li>Notice a Smart Input dialog to select a source is displayed. Also, note that unlike the dialog for &lt;audio&gt; there <i>should</i> be a field for alt text.</li>
+		<li>Using the file chooser navigate to an image file (like <i>sample_data/images/i-icon-1.png</i>) and enter some alt text (like "my alt text"). Click OK.</li>
+		<li>Click on Preview icon in the toolbar. This should open a new browser window showing your audio element, and you should hear sound when you click play. In addition, you 
+		    should see your image.</li>
 		<li>EXTRA CREDIT: Drop a &lt;video&gt; element onto the page and use one of your own files (uploaded to your workspace) or one of the following URLs:
 			<ul>
 				<li><a href="http://www.w3schools.com/html5/movie.mp4">http://www.w3schools.com/html5/movie.mp4</a></li>
@@ -58,20 +61,72 @@
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>Smart Input is displayed when dropping  &lt;audio&gt; onto the canvas. And, the dialog should <i>not</i> have a field for alt text.</li>
+		<li>Smart Input is displayed when dropping  any of the media-related tags (e.g., &lt;audio&gt;, &lt;img&gt;, &lt;video&gt;, and &lt;embed&gt;) onto 
+		    the canvas. The dialog for &lt;img&gt; should have a field for alt text, but the dialog for &lt;audio&gt;/&lt;video&gt;/&lt;embed&gt; 
+		    should <i>not</i> have a field for alt text.</li>
 		<li>The &lt;audio&gt; element maintains a size even when entering the name of a missing file.</li>
-		<li>When previewing the final page, you can click play and hear a sound.</li>
+		<li>When previewing the final page, you can click play and hear a sound. In addition, you can see your image.</li>
 	</ol>
 
-	<h2 class="test_section">More to come...</h2>
+	<h2 class="test_section">&lt;select&gt;</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>To do...</li>
+		<li>Create new HTML file.</li>
+		<li>Drag a &lt;select&gt; onto the canvas.</li>
+		<li>Smart Input should be displayed with 3 items. Click OK, and a drop down button should appear on the canvas.</li>
+		<li>Go to widget specific properties and check the <i>multiple</i> attribute. The drop down should become a select list.</li>
+		<li>Still within widget specific properties, enter 15 into the <i>size</i> field. This will cause the select field to increase in vertical size
+			to accommodate 15 rows of data without scrolling.</li>
+		<li>Double-click the select list to bring up Smart Input. Copy and paste the text below into the text box and click OK.
+			<PRE>
+Group 1
+>Item 1
+>+Item 2
+Group 2
+>Item 3
+>Item 4
+Group 3
+>Item 5
+>Item 6	
+Item 7
+Item 8
+Item 9
+Item 10		
+			</PRE>
+		</li>
+		<li>As shown in the screen shot below, there should be three option groups (each containing 2 items), the last 4 items should be top-level items
+			(not option groups), and Item 2 should be selected.</li>
+			<img src="images/multiSelectHTML.png">
+		<li>Click on the "X" close button to close the html file (without saving).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>To do...</li>
+		<li>See above.</li>
 	</ol>
 
+	<h2 class="test_section">&lt;fieldset&gt; and &lt;input&gt;</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the HTML folder in the Widget palette.</li>
+		<li>Drag a &lt;fieldset&gt; widget onto the canvas.</li>
+		<li>Notice a Smart Input dialog to enter legend text is displayed. Change the value from "Legend" to one of your choosing (say "My Fieldset Legend")
+		    and click OK.</li>
+		<li>Resize the &lt;fieldset&gt; so it has a width of roughly 400px and a height of roughly 200px.</li>
+		<li>Drag an &lt;input&gt; onto the canvas inside of the &lt;fieldset&gt;. You should see a text field rendered inside of the &lt;fieldset&gt;.</li>
+		<li>Under widget-specific properties, put a check next to <i>disabled</i> and change the <i>value</i> field to something like "my disabled input". You should see your 
+		    text in a disabled text field.</li>
+		<li>Drag another &lt;input&gt; onto the canvas inside of the &lt;fieldset&gt;. You should see another text field next to the first one. </li>
+		<li>With the 2nd &lt;input&gt; selected, choose "file" from the <i>type</i> pull-down list under widget specific properties. The &lt;input&gt; that was a text field should turn into a
+			file chooser.</li>
+		<li>Click on Preview icon in the toolbar. This should open a new browser window showing your fieldset (with your caption) containing two inputs. The first
+			input should be a disabled text field. The second input should be a file chooser (click the "Choose File"" button to confirm it brings up a file dialog). </li>
+		<img src="images/fieldsetHTML.png">
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See above.</li>
+	</ol>
 </body>
 </html>

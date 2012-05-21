@@ -430,7 +430,9 @@ var uiResource = {
 		  			var cancel = renameDialog.attr("cancel");
 		  			var newName = renameDialog.attr("value");
 		  			if(!cancel){
-			  			resource.rename(newName);
+		  				uiResource.closeEditor(resource);
+		  				resource.rename(newName);
+			  			uiResource.openResource(resource);
 					}
 		  			return true;
 		  		});	

@@ -61,6 +61,15 @@
 		            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
 		        },
 		        {
+		            "name": "<b>",
+		            "description": "<b>",
+		            "type": "html.b",
+		            "category": "html",
+		            "children": "b",
+		            "resizable": "none",
+		            "hidden": "true"
+		        },
+		        {
 		            "name": "<body>",
 		            "type": "html.body",
 		            "category": "html",
@@ -100,6 +109,15 @@
 		                "property": "textContent",
 		                "displayOnCreate": false
 		            }
+		        },
+		        {
+		            "name": "<em>",
+		            "description": "<em>",
+		            "type": "html.em",
+		            "category": "html",
+		            "children": "em",
+		            "resizable": "none",
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "<embed>",
@@ -201,6 +219,15 @@
 		            "inlineEdit": "./html/HtmlSrcAttributeInput"
 		        },
 		        {
+		            "name": "<i>",
+		            "description": "<i>",
+		            "type": "html.i",
+		            "category": "html",
+		            "children": "i",
+		            "resizable": "none",
+		            "hidden": "true"
+		        },
+		        {
 		            "name": "<img>",
 		            "description": "Image",
 		            "type": "html.img",
@@ -225,8 +252,10 @@
 		            "icon": "resources/images/html-label.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASpJREFUeNrsUr0uRFEQnjkUSuduQ7G6rWUVPAHxCKgkorD1xjMIEqrthDegEuEJVoIHuN1GUNhzEzn7YwufmbF3rUR3C41Jzvlmvpn57pxzLgOgIuaooP29wKRufvdqRFTnZuih9aIIQf6tKdtf/TlBJUnoaG3eiBgHEnvzc06xUvKyEqtVm9i4+BZIQ6DGTQuSRG2ljDRkJtS4Fq6U6DMhbWdUWy6DGFjcu8VJfUlFwPqM09uXJBlyninhKQT02Qu2Q5edd6R+NuQU8yOc3T/DJjjeqYJJpLIPvIaeJUPoUuwMzBehIfZGZ5dm2lyYZRPYOmiqCLN3HDvv9PbY15h0TLsXEVIuxq+c9Rw2bQL9Lp3ePcGtn9tSX7k8HufG6/Ia/v+Viwt8CjAA9P2xtTNP8TwAAAAASUVORK5CYII=",
 		            "children": "Label",
+		            "allowedChild": "ANY",
 		            "resizable": "none",
 		            "inlineEdit": {
+		                /*"property": "textContent",*/
 		                "property": "textContent",
 		                "displayOnCreate": true
 		            }
@@ -291,6 +320,15 @@
 		            }
 		        },
 		        {
+		            "name": "<s>",
+		            "description": "<s>",
+		            "type": "html.s",
+		            "category": "html",
+		            "children": "s",
+		            "resizable": "none",
+		            "hidden": "true"
+		        },
+		        {
 		            "name": "<script>",
 		            "description": "Embedded Script",
 		            "type": "html.script",
@@ -346,6 +384,15 @@
 		                "property": "textContent",
 		                "displayOnCreate": false
 		            }
+		        },
+		        {
+		            "name": "<strong>",
+		            "description": "<strong>",
+		            "type": "html.strong",
+		            "category": "html",
+		            "children": "strong",
+		            "resizable": "none",
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "<table>",
@@ -508,6 +555,15 @@
 		                "controls": "controls"
 		            },
 		            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
+		        },
+		        {
+		            "name": "<u>",
+		            "description": "<u>",
+		            "type": "html.u",
+		            "category": "html",
+		            "children": "u",
+		            "resizable": "none",
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "Rich Text",

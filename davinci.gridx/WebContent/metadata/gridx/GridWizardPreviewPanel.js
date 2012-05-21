@@ -57,7 +57,7 @@ return declare([ContentPane, GridWizardPanel], {
 			preview: gridxNls.preview,
 			previewNote: gridxNls.previewNote,
 			columnProperties: gridxNls.columnProperties,
-			_widthRegExp: "^(auto)$|^([0-9]|([0-9]+\.?([0-9]+)))(px|em|%|ex|in|cm|mm|pt|pc)$",
+			_widthRegExp: "^(auto)$|^([0-9]|([0-9]+[\\.]?([0-9]+)))(px|em|%|ex|in|cm|mm|pt|pc)$",
 			invalidWidth: gridxNls.invalidWidth,
 			fieldLabel: gridxNls.fieldLabel,
 			labelLabel: gridxNls.labelLabel,

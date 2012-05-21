@@ -234,11 +234,9 @@
 
   <h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li >Click on the <b>Display source</b> icon from the designer toolbar, examine the source you should see the following in the javascript where the requires are:
+		<li >Click on the <b>Display source</b> icon from the designer toolbar, examine the source you should see the following in the <i>data-dojo-config</i> parameter of the dojo.js script link:
 			<ol type="a">
-				<li ><i>require(["dojox/mobile"],function(dojoxMobile){dojoxMobile.themeMap=[["Android","",["themes/android/android.css"]],["BlackBerry",null,["themes/custom2/custom2.css"]],["iPad","",["themes/ipad/ipad.css"]],["iPhone","",["themes/iphone/iphone.css"]],[".*","",["themes/iphone/iphone.css"]]];dojoxMobile.themeFiles
-    = [];});</i></li>
-    			<li ><i>require(["dojox/mobile/deviceTheme"]);</i></li>
+				<li ><i>'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/custom/custom.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[]</i></li>
    			</ol>
    		</li>
    		</ol>
@@ -275,11 +273,7 @@
 	
   	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li >Click on the Display source icon from the designer toolbar, examine the source you should see the following in the javascript where the requires are:
-			<ol type="a">
-				<li ><i>require(["dojox/mobile"]);</i></li>
-				<li><i>require(["dojox/mobile/deviceTheme"]);</i></li>
-			</ol>
+		<li >Click on the <b>Display source</b> icon from the designer toolbar, examine the source you should see that the <i>themeMap</i> and <i>mblThemeFiles</i> objects of the <i>data-dojo-config</i> parameter added from the test cases above have been removed from  the dojo.js script link:
 		</li>
 	</ol>
   </body>

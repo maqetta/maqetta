@@ -222,7 +222,8 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	select: function (selectionInfo) {
-		
+		// This is disabled due to various selection issues for now
+		return;
 //		var start=this._textModel.getLineStart(selectionInfo.startLine)+selectionInfo.startCol;
 //		var end=this._textModel.getLineStart(selectionInfo.endLine)+selectionInfo.endCol;
 		this._selecting=true;

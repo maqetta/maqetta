@@ -274,8 +274,8 @@ define(["dijit/Dialog",
 	        var name = e.target[e.target.selectedIndex].value;
 	        for (var i = 0; i < this._dojoThemeSets.themeSets.length; i++){
 	            if (this._dojoThemeSets.themeSets[i].name == name) {
+	            	this._selectedThemeSet = this._dojoThemeSets.themeSets[i];
 	                this.addThemes(this._dojoThemeSets.themeSets[i]);
-	                this._selectedThemeSet = this._dojoThemeSets.themeSets[i];
 	                dijit.byId('theme_select_themeset_theme_select_textbox').attr('value',this._selectedThemeSet.name);
 	                var renameButton = dijit.byId('theme_select_rename_button');
 	    	        var desktopSelect = dijit.byId('theme_select_desktop_theme_select');
@@ -304,38 +304,41 @@ define(["dijit/Dialog",
 	        var iphoneSelect = dijit.byId('theme_select_iphone_select');
 	        var otherSelect = dijit.byId('theme_select_other_select');
 	        
+	        function setDeviceSelect(device, value, disabled){
+	        	 switch (device) {
+	                case 'android':
+	                    androidSelect.attr( 'value', value);
+	                    androidSelect.set('disabled', disabled);
+	                    break;
+	                case 'blackberry':
+	                    blackberrySelect.attr( 'value', value);
+	                    blackberrySelect.set('disabled', disabled);
+	                    break;
+	                case 'ipad':
+	                    ipadSelect.attr( 'value', value);
+	                    ipadSelect.set('disabled', disabled);
+	                    break;
+	                case 'iphone':
+	                    iphoneSelect.attr( 'value', value);
+	                    iphoneSelect.set('disabled', disabled);
+	                    break;
+	                case 'other':
+	                    otherSelect.attr( 'value', value);
+	                    otherSelect.set('disabled', disabled);
+	                    break;
+	                }
+	        }
+	        
 	        if ((e === '(device-specific)') ) {
-	            androidSelect.set('disabled', false);
-	            blackberrySelect.set('disabled', false);
-	            ipadSelect.set('disabled', false);
-	            iphoneSelect.set('disabled', false);
-	            otherSelect.set('disabled', false);
+	            for (var d = 0; d < this._selectedThemeSet.mobileTheme.length; d++){
+	                var device = this._selectedThemeSet.mobileTheme[d].device.toLowerCase(); 
+	                setDeviceSelect(device, this._selectedThemeSet.mobileTheme[d].theme, false);
+	            }
 	        } else {
 	            for (var d = 0; d < this._selectedThemeSet.mobileTheme.length; d++){
 	                var device = this._selectedThemeSet.mobileTheme[d].device.toLowerCase(); 
 	                this._selectedThemeSet.mobileTheme[d].theme = e;
-	                switch (device) {
-	                case 'android':
-	                    androidSelect.attr( 'value', e);
-	                    androidSelect.set('disabled', true);
-	                    break;
-	                case 'blackberry':
-	                    blackberrySelect.attr( 'value', e);
-	                    blackberrySelect.set('disabled', true);
-	                    break;
-	                case 'ipad':
-	                    ipadSelect.attr( 'value', e);
-	                    ipadSelect.set('disabled', true);
-	                    break;
-	                case 'iphone':
-	                    iphoneSelect.attr( 'value', e);
-	                    iphoneSelect.set('disabled', true);
-	                    break;
-	                case 'other':
-	                    otherSelect.attr( 'value', e);
-	                    otherSelect.set('disabled', true);
-	                    break;
-	                }
+	                setDeviceSelect(device, this._selectedThemeSet.mobileTheme[d].theme, true);
 	            }
 	        }
 	   

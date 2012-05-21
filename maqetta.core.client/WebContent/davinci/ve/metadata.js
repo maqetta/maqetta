@@ -201,15 +201,23 @@ define([
              */
             _maqGetString: getDescriptorString
         });
-        // Register a module identifier for the metadata path; necessary for
-        // loading of helper and creation tool classes.
-        pkg.$moduleId = 'maq-metadata-' + pkg.name;
+        // Register a module identifier for the metadata and library code paths;
+        // used by helper and creation tool classes.
+        pkg.__metadataModuleId = 'maq-metadata-' + pkg.name + '-' + pkg.version;
+        pkg.__libraryModuleId = 'maq-lib-' + pkg.name + '-' + pkg.version;
+        var libPath = 'app/static/lib/' + pkg.name + '/' + pkg.version;
 
         require = require({
-            packages: [{
-                name: pkg.$moduleId,
-                location: new Path(location.href).append(path).toString()
-            }]
+            packages: [
+                {
+                    name: pkg.__metadataModuleId,
+                    location: new Path(location.href).append(path).toString()
+                },
+                {
+                    name: pkg.__libraryModuleId,
+                    location: new Path(location.href).append(libPath).toString()
+                }
+            ]
         });
     }
     
@@ -395,7 +403,7 @@ define([
         if (typeof value === 'string' && value.substr(0, 2) === './') {
         	// if path is relative...
             lib = getLibraryForType(type);
-            moduleId = new Path(lib.$moduleId).append(value).toString();
+            moduleId = new Path(lib.__metadataModuleId).append(value).toString();
         } else {
         	moduleId = value;
         }

@@ -1,16 +1,17 @@
 define([
 	"dojo/_base/declare",
-	"../../metadata/dojo/1.7/dijit/layout/ContainerInput",
+	"maq-metadata-dojo-1.7/dijit/layout/ContainerInput",
 	"dijit/Dialog",
 	"./GridWizard",
 	"dojo/i18n!./nls/gridx",
-	"davinci/css!./resources/gridInput.css",
-],
-function(declare, 
-		ContainerInput, 
-		Dialog,
-		GridWizard,
-		gridxLangObj) {
+	"davinci/css!./resources/gridInput.css"
+], function(
+	declare,
+	ContainerInput,
+	Dialog,
+	GridWizard,
+	gridxLangObj
+) {
 
 return declare(ContainerInput, {
 	
@@ -20,7 +21,7 @@ return declare(ContainerInput, {
 			//Create wizard
 			var gridWizard = this.gridWizard = new GridWizard({
 				widgetId: widgetId
-			}); 
+			});
 			dojo.addClass(gridWizard.domNode, "gridWizard");
 			
 			//Create dialog and add wizard to it
@@ -54,7 +55,7 @@ return declare(ContainerInput, {
 		if (this._inline) {
 			//Clean up connections
 			var connection;
-			while (connection = this._connection.pop()){ 
+			while (connection = this._connection.pop()){
 				dojo.disconnect(connection);
 			}
 			

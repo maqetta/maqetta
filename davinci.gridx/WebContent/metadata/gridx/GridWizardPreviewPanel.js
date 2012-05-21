@@ -1,5 +1,4 @@
-define(
-[
+define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
@@ -11,38 +10,39 @@ define(
 	"dijit/form/Button",
 	"dojo/data/ItemFileReadStore",
 	"./GridWizardPanel",
-	"../../static/lib/gridx/1.0/Grid",
-	"../../static/lib/gridx/1.0/core/model/cache/Async",  
-    "../../static/lib/gridx/1.0/modules/extendedSelect/Column",
-    "../../static/lib/gridx/1.0/modules/move/Column",
-    "../../static/lib/gridx/1.0/modules/dnd/Column",
-    "../../static/lib/gridx/1.0/modules/ColumnResizer",
-	"davinci/css!../../static/lib/gridx/1.0/resources/claro/Gridx.css",
-	"davinci/css!../../static/lib/gridx/1.0/resources/claro/Gridx_rtl.css",
+	"maq-lib-gridx-1.0/Grid",
+	"maq-lib-gridx-1.0/core/model/cache/Async",
+    "maq-lib-gridx-1.0/modules/extendedSelect/Column",
+    "maq-lib-gridx-1.0/modules/move/Column",
+    "maq-lib-gridx-1.0/modules/dnd/Column",
+    "maq-lib-gridx-1.0/modules/ColumnResizer",
+	"davinci/css!maq-lib-gridx-1.0/resources/claro/Gridx.css",
+	"davinci/css!maq-lib-gridx-1.0/resources/claro/Gridx_rtl.css",
 	"dojo/i18n!./nls/gridx",
 	"dojo/text!./templates/gridWizardPreview.html"
-],
-function(declare,
-		_WidgetBase, 
-		_TemplatedMixin, 
-		_WidgetsInTemplateMixin, 
-		ContentPane, 
-		BorderContainer,
-		TextBox,
-		ValidationTextBox,
-		Button,
-		ItemFileReadStore,
-		GridWizardPanel,
-		Grid, 
-		Cache,
-		SelectColumn,
-	    MoveColumn,
-	    DndColumn, 
-	    ColumnResizer,
-		GridXCSS,
-		GridXRTL,
-		gridxNls,
-		templateString) {
+], function(
+	declare,
+	_WidgetBase,
+	_TemplatedMixin,
+	_WidgetsInTemplateMixin,
+	ContentPane,
+	BorderContainer,
+	TextBox,
+	ValidationTextBox,
+	Button,
+	ItemFileReadStore,
+	GridWizardPanel,
+	Grid,
+	Cache,
+	SelectColumn,
+	MoveColumn,
+	DndColumn,
+	ColumnResizer,
+	GridXCSS,
+	GridXRTL,
+	gridxNls,
+	templateString
+) {
 
 return declare([ContentPane, GridWizardPanel], {
 	postMixInProperties: function() {
@@ -71,7 +71,7 @@ return declare([ContentPane, GridWizardPanel], {
 		return gridxNls.configureColumnsHeader;
 	},
 	
-	populate: function(widget, compoundCommand, selectedStructureFieldNames, gridInput) {  
+	populate: function(widget, compoundCommand, selectedStructureFieldNames, gridInput) {
 		//Reset flags
 		this._columnWidthChangedSinceLastPopulate = false;
 		this._gridBeenSized = false;
@@ -95,7 +95,7 @@ return declare([ContentPane, GridWizardPanel], {
 		if (dataStoreProps.url) {
 			this._gridStore = gridInput._urlDataStore;
 		} else {
-			//Create data store... 
+			//Create data store...
 			this._gridStore = new ItemFileReadStore(dataStoreProps);
 		}
 		
@@ -105,13 +105,13 @@ return declare([ContentPane, GridWizardPanel], {
 		var tableStructure = tableProps.structure;
 		
 		//Build table structure for the grid from the selected column ids
-		var baseStructure = tableStructure; 
+		var baseStructure = tableStructure;
 		var previewStructure = [];
 		dojo.forEach(selectedStructureFieldNames, function(selectedFieldName) {
 			dojo.some(baseStructure, function(baseColumn) {
 				if (baseColumn.field === selectedFieldName) {
 					var previewColumn = dojo.mixin({}, baseColumn);
-					delete previewColumn.id; 
+					delete previewColumn.id;
 					previewColumn.name = previewColumn.name.trim();
 					previewStructure.push(previewColumn);
 					return true;
@@ -144,7 +144,7 @@ return declare([ContentPane, GridWizardPanel], {
 		dojo.style(previewPanelGridContentPane.domNode, "height", desiredHeight);
 		previewPanelGridContentPane.set("content", grid);
 
-		// Listen for resize, so we can cause the grid to lay itself out when it has dimensions. Otherwise, 
+		// Listen for resize, so we can cause the grid to lay itself out when it has dimensions. Otherwise,
 		// GridX doesn't layout columns non-pixel width settings (like "auto" and percentage) very well
 		this._connections.push(dojo.connect(
 				grid, "resize", dojo.hitch(this, function(size) {
@@ -219,13 +219,13 @@ return declare([ContentPane, GridWizardPanel], {
 		return newStructure;
 	},
 	
-	// See if all of the widths in the structure are relative (e.g., 
+	// See if all of the widths in the structure are relative (e.g.,
 	// either "auto" or expressed as a percentage.
 	_allWidthsRelative: function(structure) {
 		var allRelative = true;
 		dojo.some(structure, function(structureElement) {
 			var width = structureElement.width;
-			if (!(width == "auto" || width.indexOf("%") > 0)) { 
+			if (!(width == "auto" || width.indexOf("%") > 0)) {
 				allRelative = false;
 				return true;
 			}
@@ -235,10 +235,10 @@ return declare([ContentPane, GridWizardPanel], {
 	
 	_getGridColumn: function(gridColumnId) {
 		// NOTE: Don't like using non-public API here. The public function
-		// (e.g., "this._grid.column(gridColumnId, true);") returns 
+		// (e.g., "this._grid.column(gridColumnId, true);") returns
 		// an object containing ONLY the grid col id and width. It does this
-		// despite first using  _columnsById (the one I'm using below) in its 
-		// implementation 
+		// despite first using  _columnsById (the one I'm using below) in its
+		// implementation
 		var column = this._grid._columnsById[gridColumnId];
 		return column;
 	},
@@ -251,9 +251,9 @@ return declare([ContentPane, GridWizardPanel], {
 		
 		// NOTE: Don't like using non-public API here to get list of grid
 		// columns. The public function(e.g., "this._grid.columns();")
-		// returns an array of objects. But, each of these objects contain ONLY the grid col id 
-		// and width. 
-		var columns = this._grid._columns; 
+		// returns an array of objects. But, each of these objects contain ONLY the grid col id
+		// and width.
+		var columns = this._grid._columns;
 		
 		//Loop through to find match
 		dojo.some(columns, function(column) {
@@ -305,7 +305,7 @@ return declare([ContentPane, GridWizardPanel], {
 		var orderedStructure = this._getStructureOrderedBasedOnGrid(newStructure);
 		
 		//Set the ordered structure
-		this._grid.setColumns(orderedStructure); 
+		this._grid.setColumns(orderedStructure);
 		
 		// selected id may be different within grid (particular if column order has changed in the
 		// structure), so let's find the new one
@@ -339,7 +339,7 @@ return declare([ContentPane, GridWizardPanel], {
 		
 		if (selectedColumn.length == 1) {
 			//Keep track of what column was selected
-			var selectedGridColumnId = this._selectedGridColumnId = selectedColumn[0]; 
+			var selectedGridColumnId = this._selectedGridColumnId = selectedColumn[0];
 			
 			//Get info for column in question
 			var previewStructureElement = this._getPreviewStructureElement(selectedGridColumnId);
@@ -366,10 +366,10 @@ return declare([ContentPane, GridWizardPanel], {
 		//Clear and disable property fields
 		gridWizardPreviewFieldOutput.innerHTML = "";
 		
-		gridWizardPreviewLabelInput.set("value", ""); 
+		gridWizardPreviewLabelInput.set("value", "");
 		gridWizardPreviewLabelInput.set("disabled", true);
 		
-		gridWizardPreviewWidthInput.set("value", ""); 
+		gridWizardPreviewWidthInput.set("value", "");
 		gridWizardPreviewWidthInput.set("disabled", true);
 	},
 	
@@ -382,7 +382,7 @@ return declare([ContentPane, GridWizardPanel], {
 		//Fill and enable property fields
 		gridWizardPreviewFieldOutput.innerHTML = structureElement.field;
 		
-		gridWizardPreviewLabelInput.set("value", structureElement.name); 
+		gridWizardPreviewLabelInput.set("value", structureElement.name);
 		gridWizardPreviewLabelInput.set("disabled", false);
 		
 		gridWizardPreviewWidthInput.set("value", structureElement.width);
@@ -396,8 +396,8 @@ return declare([ContentPane, GridWizardPanel], {
 		}
 		
 		if (colId != this._selectedGridColumnId) {
-			// We don't want to allow manual column resizes on other columns if 
-			// they've entered bad data for currently selected column, so re-size 
+			// We don't want to allow manual column resizes on other columns if
+			// they've entered bad data for currently selected column, so re-size
 			// the new column and abort
 			if (this._selectedGridColumnId && !this._checkValidity()) {
 				setTimeout(function() {
@@ -425,10 +425,10 @@ return declare([ContentPane, GridWizardPanel], {
 		this._columnWidthChangedSinceLastPopulate = true;
 	},
 	
-	_handleLabelInputChanged: function(inputValue) { 
+	_handleLabelInputChanged: function(inputValue) {
 		//Get the value from the field
 		var gridWizardPreviewLabelInput = dijit.byId("gridWizardPreviewLabelInput");
-		var inputValue = gridWizardPreviewLabelInput.get("value");
+		inputValue = gridWizardPreviewLabelInput.get("value");
 		
 		//Update the table structure and tell the grid to rebuild the columns
 		var currentPreviewStructure = this._grid.structure;
@@ -438,18 +438,18 @@ return declare([ContentPane, GridWizardPanel], {
 		//structure.
 		if (inputValue != currentPreviewStructureElement.name) {
 			currentPreviewStructureElement.name = inputValue;
-			this._setGridStructure(currentPreviewStructure); 
+			this._setGridStructure(currentPreviewStructure);
 		}
 	},
 	
-	_handleWidthInputChanged: function() { 
+	_handleWidthInputChanged: function() {
 		//Get the value from the field
 		var gridWizardPreviewWidthInput = dijit.byId("gridWizardPreviewWidthInput");
 		var inputValue = gridWizardPreviewWidthInput.get("value");
 		
 		// We don't want to put bad width into the data model. You wouldn't normally want to
 		// do this anyway, but gridx columns go to size 0 when bad width specified. So, it's doubly
-		// bad in that you wouldn't be able to re-select the column in the preview to fix 
+		// bad in that you wouldn't be able to re-select the column in the preview to fix
 		// the issue.
 		if (!this._checkValidity()) {
 			return;
@@ -459,7 +459,7 @@ return declare([ContentPane, GridWizardPanel], {
 		var currentPreviewStructure = this._grid.structure;
 		var currentPreviewStructureElement = this._getPreviewStructureElement(this._selectedGridColumnId);
 		
-		// If input value is different than structure value, then let's 
+		// If input value is different than structure value, then let's
 		// update the structure.
 		if (inputValue != currentPreviewStructureElement.width) {
 			currentPreviewStructureElement.width = inputValue;
@@ -489,7 +489,7 @@ return declare([ContentPane, GridWizardPanel], {
 	},
 	
 	_selectGridColumn: function(gridColumnId) {
-		//Clear current selection 
+		//Clear current selection
 		this._grid.select.column.clear();
 		
 		//Select the column

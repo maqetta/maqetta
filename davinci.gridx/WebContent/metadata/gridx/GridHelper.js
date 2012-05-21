@@ -1,5 +1,5 @@
 define([
-	"maq-metadata-dojo/dojox/grid/DataGridHelper"
+	"maq-metadata-dojo-1.7/dojox/grid/DataGridHelper"
 ], function(
 	DataGridHelper
 ) {
@@ -16,7 +16,7 @@ GridHelper.prototype = {
 		//Need to worry about cacheClass for GridX. The data store is handled in DataGridHelper
 		if (widget.dijitWidget.cacheClass){
 			// add the cache class if it has one.
-			data.properties.cacheClass = widget.dijitWidget.cacheClass; 
+			data.properties.cacheClass = widget.dijitWidget.cacheClass;
 		}
 		return data;
 	},
@@ -76,7 +76,7 @@ GridHelper.prototype = {
 		this._dataGridHelper.reparent(widget, this._useDataDojoProps);
 	},
 	
-	updateStore: function(widget, storeWidget, w) { 
+	updateStore: function(widget, storeWidget, w) {
 		this._dataGridHelper.updateStore(widget, storeWidget, w, this._useDataDojoProps);
 	},
 	

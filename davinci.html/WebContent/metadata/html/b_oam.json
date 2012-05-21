@@ -1,0 +1,12 @@
+{
+	"id": "http://www.w3.org/html/b",
+	"name": "html.b",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"for": {
+			"datatype": "string"
+		}
+	},
+	"content": "<b></b>"
+}

@@ -62,13 +62,15 @@
 		                {
 		                    "type": "html.source",
 		                    "properties": {
-		                        "src": "http://maqetta.org/samples/media/maqettaSound.mp3"
+		                        "src": "http://maqetta.org/samples/media/maqettaSound.mp3",
+		                        "type": "audio/mpeg"
 		                    }
 		                },
 		                {
 		                    "type": "html.source",
 		                    "properties": {
-		                        "src": "http://maqetta.org/samples/media/maqettaSound.ogg"
+		                        "src": "http://maqetta.org/samples/media/maqettaSound.ogg",
+		                        "type": "audio/ogg"
 		                    }
 		                },
 		            ],
@@ -589,13 +591,15 @@
 		                {
 		                    "type": "html.source",
 		                    "properties": {
-		                        "src": "http://maqetta.org/samples/media/maqettaVideo.mp4"
+		                        "src": "http://maqetta.org/samples/media/maqettaVideo.mp4",
+		                        "type": "video/mp4"
 		                    }
 		                },
 		                {
 		                    "type": "html.source",
 		                    "properties": {
-		                        "src": "http://maqetta.org/samples/media/maqettaVideo.ogg"
+		                        "src": "http://maqetta.org/samples/media/maqettaVideo.ogg",
+		                        "type": "video/ogg"
 		                    }
 		                },
 		            ],

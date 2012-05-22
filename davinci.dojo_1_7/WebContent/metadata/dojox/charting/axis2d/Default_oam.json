@@ -5,11 +5,6 @@
     "version": "1.0",
     "require": [
         {
-            "type": "css",
-            "src": "dojo/resources/dojo.css",
-            "$library": "dojo"
-        },
-        {
             "type": "javascript-module",
             "format": "amd",
             "src": "dojox/charting/axis2d/Default",

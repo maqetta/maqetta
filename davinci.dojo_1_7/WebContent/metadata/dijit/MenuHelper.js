@@ -21,7 +21,7 @@ MenuHelper.prototype = {
 		widget._helperHandle = connect.subscribe("/davinci/ui/widgetSelected", null, function(selected) {
 			var menu = context.getDijit().registry.byId(id);
 //			if (!menu) { this.destroy(widget); }
-			if (!menu) { /*console.log("MenuHelper: menu is null");*/ return; }
+			if (!menu) { console.log("MenuHelper: menu is null"); return; }
 			if (!menu.properties || !menu.properties.contextMenuForWindow) { return; }
 			var w = selected[0];
 			while (w && w.id != id) {

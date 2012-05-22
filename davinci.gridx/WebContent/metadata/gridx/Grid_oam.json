@@ -2,7 +2,7 @@
     "id": "http://dojotoolkit.org/gridx/Grid",
     "name": "gridx.Grid",
     "spec": "1.0",
-    "version": "1.0",
+    "version": "1.0prebeta2",
     "require": [    
         {
             "type": "css",

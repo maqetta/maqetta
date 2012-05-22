@@ -17,68 +17,87 @@
 	<hr />
 	<h1 class="test_title">Widget Palette: HTML Element Tests</h1>
 
-	<h2 class="test_section">Media (&lt;audio&gt;, &lt;img&gt;, &lt;video&gt;, and &lt;embed&gt;)</h2>
+	<h2 class="test_section">Media (&lt;audio&gt;, &lt;video&gt;, and &lt;embed&gt;)</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Choose New HTML File from the New menu</li>
 		<li>Open the HTML folder in the Widget palette.</li>
 		<li>Drag an &lt;audio&gt; widget onto the canvas.</li>
-		<li>Notice a Smart Input dialog to select a source is displayed. Also, note there should <i>not</i> be a field for alt text because &lt;audio&gt; doesn't support alt text.</li>
+		<li>Notice a Smart Input dialog is displayed with a text field. By default, it will contain the following:
+			<PRE>
+http://maqetta.org/samples/media/maqettaSound.mp3
+http://maqetta.org/samples/media/maqettaSound.ogg
+			</PRE>
+		</li>
+		<li>Click OK.</li>
+		<li>Click on the Preview icon in the toolbar. This should open a new browser window showing your &lt;audio&gt; element. You should hear sound when you click play.</li>
+		<li>Double-click the &lt;audio&gt; element to bring Smart Input back up.</li>
 		<li>Enter the file name for a non-existent file (e.g. <i>this_is_a_bad_filename</i>) and click OK. Ensure the &lt;audio&gt; element
 		    still has a size and is available for selection. (In Chrome, there will be partial playback controls. And, in FF, there will just be
 		    an empty box.)</li>
-		<li>Double-click the &lt;audio&gt; element to bring Smart Input back up and specify a source:
-			<ul>
-				<li>One of the samples in your workspace (e.g., you may navigate to the <i>sample_data/media/</i> folder and select either <i>maqettaSound.mp3</i> or <i>maqettaSound.ogg</i>).</li>
-				<li>Alternatively, you can enter one of the URL's below (or any other URL pointing to an audio file):
-					<ul>
-						<li><a href="http://www.w3schools.com/html5/song.mp3">http://www.w3schools.com/html5/song.mp3</a></li>
-						<li><a href="http://www.w3schools.com/html5/song.ogg">http://www.w3schools.com/html5/song.ogg</a></li>
-					</ul>
-				</li>
+		<li>Double-click the &lt;audio&gt; element to bring Smart Input back up and specify a new source by copying and pasting the following into the text box:
+			<PRE>
+http://www.w3schools.com/html5/song.mp3
+http://www.w3schools.com/html5/song.ogg
+			</PRE>
 				<b>NOTE: None of the commonly used audio formats are supported by all of the major browsers 
-					(see <a href="http://www.w3schools.com/html5/html5_audio.asp">Audio Formats and Browser Support</a>). For example, the
-					<i>mp3</i> files above will work in Chrome but not Firefox. So, if doing Firefox testing you'd probably want to pick 
-					the <i>ogg</i> file.</b>
+					(see <a href="http://www.w3schools.com/html5/html5_audio.asp">Audio Formats and Browser Support</a>). It is expected that specifying both 
+					<i>mp3</i> and <i>ogg</i> files (like we do above) should work across browsers. But, if you try some of your own audio files, please note possible 
+					incompatibilities with your browser.</b>
 			</ul>
 		</li>
-		<li>Drag an &lt;img&gt; widget onto the canvas.</li>
-		<li>Notice a Smart Input dialog to select a source is displayed. Also, note that unlike the dialog for &lt;audio&gt; there <i>should</i> be a field for alt text.</li>
-		<li>Using the file chooser navigate to an image file (like <i>sample_data/images/i-icon-1.png</i>) and enter some alt text (like "my alt text"). Click OK.</li>
-		<li>Click on Preview icon in the toolbar. This should open a new browser window showing your audio element, and you should hear sound when you click play. In addition, you 
-		    should see your image.</li>
+		<li>Click on Preview icon in the toolbar. This should open a new browser window showing your audio element. You should hear sound when you click play.</li>
 		<li>EXTRA CREDIT: 
-		
-			<li>Drop a &lt;video&gt; element onto the page.</li>
-			<li>Using the Smart Input dialog specify a source: 
-				<ul>
-					<li>One of the samples in your workspace (e.g., you may navigate to the <i>sample_data/media/</i> folder and select either <i>maqettaVideo.mp4</i> or <i>maqettaVideo.ogg</i>).</li>
-					<li>Alternatively, you can enter one of the URL's below (or any other URL pointing to an video file):
-					<ul>
-						<li><a href="http://www.w3schools.com/html5/movie.mp4">http://www.w3schools.com/html5/movie.mp4</a></li>
-						<li><a href="http://www.w3schools.com/html5/movie.ogg">http://www.w3schools.com/html5/movie.ogg</a></li>
-					</ul>
+			<ol>
+				<li>Drop a &lt;video&gt; element onto the page.</li>
+				<li>Notice a Smart Input dialog is displayed with a text field. By default, it will contain the following:
+					<PRE>
+http://maqetta.org/samples/media/maqettaVideo.mp4
+http://maqetta.org/samples/media/maqettaVideo.ogg
+					</PRE>
+				</li>
+				<li>Click OK.</li>
+				<li>Click on the Preview icon in the toolbar. This should open a new browser window showing your &lt;video&gt; element. You should see a video and 
+					hear sound when you click play.</li>
+				<li>Double-click the &lt;video&gt; element to bring Smart Input back up and specify a new source by copying and pasting the following into the text box:
+					<PRE>
+http://www.w3schools.com/html5/movie.mp4
+http://www.w3schools.com/html5/movie.ogg
+					</PRE>
 					<b>NOTE: None of the commonly used video formats are supported by all of the major browsers 
-						(see <a href="http://www.w3schools.com/html5/html5_video.asp">Video Formats and Browser Support</a>). For example,
-						the <i>mp4</i> files above will work in Chrome but not Firefox. So, if doing Firefox testing you'd probably want 
-						to pick the <i>ogg</i> file.</b>
-				</ul>
-			</li>
+						(see <a href="http://www.w3schools.com/html5/html5_video.asp">Video Formats and Browser Support</a>). It is expected that 
+						specifying both <i>mp4</i> and <i>ogg</i> files (like we do above) should work across browsers. But, if you try some of 
+						your own video files, please note possible incompatibilities with your browser.</b>
+				</li>
+				<li>Click OK.</li>
+				<li>Click on the Preview icon in the toolbar. This should open a new browser window showing your &lt;video&gt; element. You should see a video and 
+					hear sound when you click play.</li>
+			</ol>
 		</li>
-		<li>DOUBLE EXTRA CREDIT: Drop an &lt;embed&gt; element onto the page and use one of your own files (uploaded to your workspace) or the following URL:
-			<ul>
-				<li><a href="http://www.w3schools.com/html5/helloworld.swf">http://www.w3schools.com/html5/helloworld.swf</a></li>
-			</ul>
+		<li>DOUBLE EXTRA CREDIT: 
+			<ol>
+				<li>Drop an &lt;embed&gt; element onto the page.</li>
+				<li>Notice a Smart Input dialog is displayed with a text field. By default, it will contain the following:
+					<PRE>
+http://maqetta.org/samples/media/embed.html
+					</PRE>
+				</li>
+				<li>Click OK.</li>
+				<li>Double-click the &lt;embed&gt; element to bring Smart Input back up and specify a new source by copying and pasting the following into the text box:
+					<PRE>
+http://www.w3schools.com/html5/helloworld.swf
+					</PRE>
+				</li>
+				<li>Click OK.</li>
+				<li>Click on the Preview icon in the toolbar. This should open a new browser window showing your &lt;embed&gt; element. Assuming you have Flash
+					installed for your browser, you will see a small Flash animation that says "Hello, World."</li>
+			</ol>
 		</li>
 		<li>Click on the "X" close button to close the html file (without saving).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li>Smart Input is displayed when dropping  any of the media-related tags (e.g., &lt;audio&gt;, &lt;img&gt;, &lt;video&gt;, and &lt;embed&gt;) onto 
-		    the canvas. The dialog for &lt;img&gt; should have a field for alt text, but the dialog for &lt;audio&gt;/&lt;video&gt;/&lt;embed&gt; 
-		    should <i>not</i> have a field for alt text.</li>
-		<li>The &lt;audio&gt; element maintains a size even when entering the name of a missing file.</li>
-		<li>When previewing the final page, you can click play and hear a sound. In addition, you can see your image.</li>
+		<li>See above.</li>
 	</ol>
 
 	<h2 class="test_section">&lt;select&gt;</h2>

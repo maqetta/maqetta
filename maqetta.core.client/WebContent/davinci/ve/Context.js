@@ -995,50 +995,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
-		var loading, promise;
+		var promise, failureInfo = {};
 		try {
-			loading = dojo.create("div", {
-					innerHTML: dojo.replace(
-							'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
-							["Loading..."]) // FIXME: i18n
-				},
-				this.frameNode.parentNode,
-				"first");
-			dojo.addClass(loading, 'loading');
-
 			if (callbackData instanceof Error) {
 				throw callbackData;
 			}
 
 			promise = this._setSourceData(data).then(function() {
-				// need to remove loading for silhouette to display
-				loading.parentNode.removeChild(loading);
 			}, function(error) {
-				loading.innerHTML = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
+				failureInfo.errorMessage = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
 				console.error(error.stack || error.message);
 			});
 		} catch(e) {
 			// recreate the Error since we crossed frames
-			callbackData = new Error(e.message, e.fileName, e.lineNumber);
-			lang.mixin(callbackData, e);
-			var message = "Uh oh! An error has occurred:<br><b>" + e.message + "</b>";
-			if (e.fileName) {
-				message += "<br>file: " + e.fileName + "<br>line: "+e.lineNumber;
-			}
-			if (e.stack) {
-				message += "<br>" + e.stack;
-			}
-			loading.innerHTML = message;
-			dojo.addClass(loading, 'error');
+			failureInfo = new Error(e.message, e.fileName, e.lineNumber);
+			lang.mixin(failureInfo, e);
 		} finally {
 			if (callback) {
 				if (promise) {
 					promise.then(function(){
-						callback.call((scope || this), callbackData);
+						callback.call((scope || this), failureInfo);
 					}.bind(this));
 				} else {
 					// FIXME: caller doesn't handle error data?
-					callback.call((scope || this), callbackData);
+					callback.call((scope || this), failureInfo);
 				}
 			}
 			// pagebuilt event triggered after converting model into dom for visual page editor

@@ -4,14 +4,16 @@ define([
     "davinci/model/Path",
     "davinci/html/HTMLElement",
     "davinci/html/HTMLText",
-    "davinci/Theme"
+    "davinci/Theme",
+    "dojo/_base/sniff"
 ], function(
     array,
     domStyle,
     Path,
     HTMLElement,
     HTMLText,
-    Theme
+    Theme,
+    has
 ) {
 
 return {
@@ -20,12 +22,36 @@ return {
 	    return '';
 	},
 	
+	preThemeConfig: function(context) {
+		if(!has("webkit")){
+			/*
+			 * Only add the compat CSS files if no webkit
+			 */
+			var themeRoot = Theme.getThemeLocation();
+			var relFilePath = themeRoot.relativeTo('./'+themeRoot+'/'+context.theme.name+'/'+context.theme.themeEditorHtmls[0], true);
+			var relativePath = '';
+			for (var i = 0; i < relFilePath.segments.length; i++){
+				relativePath = relativePath +relFilePath.segments[i]+'/';
+			}
+			for(var i = 0; i < context.theme.compatFiles.length; i++){
+				var compatCss = relativePath+context.theme.name+'/'+context.theme.compatFiles[i]
+				var link = context.getDocument().createElement("link");
+				link.href = compatCss;
+				link.type = "text/css";
+				link.rel = "stylesheet";
+				var head = context.getDocument().getElementsByTagName('head')[0];
+				head.appendChild(link);
+			}
+		}
+    },
 	
 	getHeadImports: function(theme){
 	    return '';
 	},
 	
-	addTheme: function(context, theme){
+	/* FIXME do we still need this?
+	 * 
+	 * addTheme: function(context, theme){
 	    // add the theme to the dojox.mobile.themeMap
         context.loadRequires("dojox.mobile.View", true); //  use this widget to get the correct requires added to the file.
 	    var htmlElement = context._srcDocument.getDocumentElement();
@@ -124,7 +150,7 @@ return {
             [".*","iphone",[]]
         ];
         dm.loadDeviceTheme(device);
-	},
+	},*/
 	
 	onContentChange: function(context, theme){
 		var userDoc, useBodyFontBackgroundClass;

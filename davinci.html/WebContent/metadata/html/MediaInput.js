@@ -98,29 +98,45 @@ return declare(SmartInput, {
 	},
 	
 	update: function(widget, values) {
-		var children = [];
-		var properties = {};
+		var data = widget.getData();
+		var oldChildren = data.children;
+		
+		var newChildren = [];
+		var newProperties = {};
 		
 		if (widget.type === "html.embed") {
 			if (values.length > 0) {
 				var src = values[0].text;
-				properties.src = src;
+				newProperties.src = src;
 			}
 		} else { //AUDIO/VIDEO
 			//Create new children
 			dojo.forEach(values, function(value) {
 				var src = value.text;
 				
+				// Try to re-use properties from an existing child if the
+				// src attributes match
+				var matchedChild = null;
+				dojo.some(oldChildren, function(oldChild) {
+					if (src == oldChild.properties.src) {
+						matchedChild = oldChild;
+						return true;
+					}
+				});
+				
 				//Create new child (SOURCE element
 				var newChild = this._createSource(src);
+				if (matchedChild) {
+					dojo.mixin(newChild, matchedChild);
+				}
 				
 				//Add the new child
-				children.push(newChild);
+				newChildren.push(newChild);
 			}.bind(this));
 		}
 		
 		//Execute command
-		var command = new ModifyCommand(widget, properties, children);
+		var command = new ModifyCommand(widget, newProperties, newChildren);
 		this._getContext().getCommandStack().execute(command);
 		return command.newWidget;
 	},

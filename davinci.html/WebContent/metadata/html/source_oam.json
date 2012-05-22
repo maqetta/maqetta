@@ -10,7 +10,7 @@
 			"hidden": "true"
 		},
 		"src": {
-			"datatype": "string",
+			"datatype": "url",
 			"description": "Specifies the URL of the media file"
 		},
 		"type": {

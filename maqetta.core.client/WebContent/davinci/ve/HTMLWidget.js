@@ -36,7 +36,7 @@ return declare("davinci.ve.HTMLWidget", _Widget, {
     _getChildrenData: function(options) {
         function getTextContent(node) {
             var d = node.nodeValue.trim();
-            if (d && options.serialize) {
+            if (d /*&& options.serialize*/) { // #2349
                 d = davinci.html.escapeXml(d);
             }
             return d;

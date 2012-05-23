@@ -10,7 +10,7 @@ define([
 ], function(declare, CommandStack, Widget, SelectTool, Context, Library, Metadata, Theme){
 
 
-return declare("davinci.ve.themeEditor.Context", [Context], {
+return declare([Context], {
 	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
@@ -215,52 +215,55 @@ return declare("davinci.ve.themeEditor.Context", [Context], {
 	_restoreStates: function(){
 	    
 	},
-	 _configDojoxMobile: function() {
+
+	_configDojoxMobile: function() {
 	     // override base
 	     // FIXME Add helper here
 	
 	     var helper,
 	         ve = this.visualEditor;
-         if (ve.theme && ve.theme.helper){
-             helper = Theme.getHelper(ve.theme);
-             if (helper && helper.preThemeConfig){
-                 helper.preThemeConfig(this);
-             } else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
-            	 helper.then(function(result){
-            		 if (result.helper && result.helper.preThemeConfig){
-            			 result.helper.preThemeConfig(this); 
-            			 this.visualEditor.theme.helper = result.helper;
-        			 }
-            	 }.bind(this));
-              }
-         }
-	    
-	 },
+	     if (ve.theme && ve.theme.helper){
+	         helper = Theme.getHelper(ve.theme);
+	         if (helper && helper.preThemeConfig){
+	             helper.preThemeConfig(this);
+	         } else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
+	        	 helper.then(function(result){
+	        		 if (result.helper && result.helper.preThemeConfig){
+	        			 result.helper.preThemeConfig(this); 
+	        			 this.visualEditor.theme.helper = result.helper;
+	    			 }
+	        	 }.bind(this));
+	          }
+	     }
+	},
 	 
-	 /*
-     * @returns the path to the file being edited
-     */
-	 getPath: function(){
-        
-        /*
-         * FIXME:
-         * We dont set the path along with the content in the context class, so
-         * have to pull the resource path from the model.  
-         * 
-         * I would rather see the path passed in, rather than assume the model has the proper URL,
-         * but using the model for now.
-         * 
-         */
+	/*
+	* @returns the path to the file being edited
+	*/
+	getPath: function(){
+	    
+	    /*
+	     * FIXME:
+	     * We dont set the path along with the content in the context class, so
+	     * have to pull the resource path from the model.  
+	     * 
+	     * I would rather see the path passed in, rather than assume the model has the proper URL,
+	     * but using the model for now.
+	     * 
+	     */
 	    /*theme editor sets the file name to DEFAULT_PAGE
 	     * so use the path theme file to find the html
 	     *
-         */  
-        var path = this.theme.file.getPath();
-        path = path.substring(0, path.lastIndexOf('/'));
-        path = path + '/' + this.theme.themeEditorHtmls[0];
-        return path;
-	 }
-	 
+	     */  
+	    var path = this.theme.file.getPath();
+	    path = path.substring(0, path.lastIndexOf('/'));
+	    path = path + '/' + this.theme.themeEditorHtmls[0];
+	    return path;
+	},
+
+	getFullResourcePath: function() {
+		return this.visualEditor.basePath;
+	}
 });
 });
 

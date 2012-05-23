@@ -274,7 +274,6 @@
 		            "icon": "resources/images/html-label.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASpJREFUeNrsUr0uRFEQnjkUSuduQ7G6rWUVPAHxCKgkorD1xjMIEqrthDegEuEJVoIHuN1GUNhzEzn7YwufmbF3rUR3C41Jzvlmvpn57pxzLgOgIuaooP29wKRufvdqRFTnZuih9aIIQf6tKdtf/TlBJUnoaG3eiBgHEnvzc06xUvKyEqtVm9i4+BZIQ6DGTQuSRG2ljDRkJtS4Fq6U6DMhbWdUWy6DGFjcu8VJfUlFwPqM09uXJBlyninhKQT02Qu2Q5edd6R+NuQU8yOc3T/DJjjeqYJJpLIPvIaeJUPoUuwMzBehIfZGZ5dm2lyYZRPYOmiqCLN3HDvv9PbY15h0TLsXEVIuxq+c9Rw2bQL9Lp3ePcGtn9tSX7k8HufG6/Ia/v+Viwt8CjAA9P2xtTNP8TwAAAAASUVORK5CYII=",
 		            "children": "Label",
-		            "allowedChild": "ANY",
 		            "resizable": "none",
 		            "inlineEdit": {
 		                /*"property": "textContent",*/

@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/lang",
+	"dojo/query",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/_base/connect",
@@ -23,6 +24,7 @@ define([
 	"./HTMLWidget",
 	"../html/CSSModel", // shorthands
 	"../html/CSSRule",
+	"../html/CSSImport",
 	"../html/HTMLElement",
 	"../html/HTMLText",
 	"../workbench/Preferences",
@@ -33,6 +35,7 @@ define([
 ], function(
 	declare,
 	lang,
+	domquery,
 	Deferred,
 	DeferredList,
 	connect,
@@ -55,6 +58,7 @@ define([
 	HTMLWidget,
 	CSSModel,
 	CSSRule,
+	CSSImport,
 	HTMLElement,
 	HTMLText,
 	Preferences,
@@ -995,54 +999,32 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_continueLoading: function(data, callback, callbackData, scope) {
-		var loading, promise;
+		var promise, failureInfo = {};
 		try {
-			loading = dojo.create("div", {
-					innerHTML: dojo.replace(
-							'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
-							["Loading..."]) // FIXME: i18n
-				},
-				this.frameNode.parentNode,
-				"first");
-			dojo.addClass(loading, 'loading');
-
 			if (callbackData instanceof Error) {
 				throw callbackData;
 			}
 
 			promise = this._setSourceData(data).then(function() {
-				// need to remove loading for silhouette to display
-				loading.parentNode.removeChild(loading);
 			}, function(error) {
-				loading.innerHTML = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
+				failureInfo.errorMessage = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
 				console.error(error.stack || error.message);
 			});
 		} catch(e) {
 			// recreate the Error since we crossed frames
-			callbackData = new Error(e.message, e.fileName, e.lineNumber);
-			lang.mixin(callbackData, e);
-			var message = "Uh oh! An error has occurred:<br><b>" + e.message + "</b>";
-			if (e.fileName) {
-				message += "<br>file: " + e.fileName + "<br>line: "+e.lineNumber;
-			}
-			if (e.stack) {
-				message += "<br>" + e.stack;
-			}
-			loading.innerHTML = message;
-			dojo.addClass(loading, 'error');
+			failureInfo = new Error(e.message, e.fileName, e.lineNumber);
+			lang.mixin(failureInfo, e);
 		} finally {
 			if (callback) {
 				if (promise) {
 					promise.then(function(){
-						callback.call((scope || this), callbackData);
+						callback.call((scope || this), failureInfo);
 					}.bind(this));
 				} else {
 					// FIXME: caller doesn't handle error data?
-					callback.call((scope || this), callbackData);
+					callback.call((scope || this), failureInfo);
 				}
 			}
-			// pagebuilt event triggered after converting model into dom for visual page editor
-			dojo.publish('/davinci/ui/context/pagebuilt', [this]);
 		}
 	},
 
@@ -3242,6 +3224,103 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onCommandStackExecute: function() {
+	},
+	
+	/**
+	 * Called by any commands that can causes widgets to be added or deleted.
+	 * Looks at current document and decide if we need to update the document
+	 * to include or exclude document.css
+	 */
+	widgetAddedOrDeleted: function(resetEverything){		
+		// Hack for M6 release to include/exclude document.css.
+		// Include only if at least one dijit widget and no dojox.mobile widgets.
+		function checkWidgetTypePrefix(widget, prefix){
+			if(widget.type.indexOf(prefix)===0){
+				return true;
+			}
+			var children = widget.getChildren();
+			for(var j=0; j<children.length; j++){
+				var retval = checkWidgetTypePrefix(children[j], prefix);
+				if(retval){
+					return retval;
+				}
+			}
+			return false;
+		}
+		var anyDojoxMobileWidgets = false;
+		var topWidgets = this.getTopWidgets();
+		for(var i=0; i<topWidgets.length; i++){
+			anyDojoxMobileWidgets = checkWidgetTypePrefix(topWidgets[i], 'dojox.mobile.');
+			if(anyDojoxMobileWidgets){
+				break;
+			}
+		}
+		// If the current document has changed from having zero dojox.mobile widgets to at least one
+		// or vice versa, then either remove or add document.css.
+		if(resetEverything || this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
+			var documentCssHeader, documentCssImport, themeCssHeader, themeCssImport;
+			var header = dojo.clone( this.getHeader());
+			for(var ss=0; ss<header.styleSheets.length; ss++){
+				if(header.styleSheets[ss].indexOf('document.css') >= 0){
+					documentCssHeader = header.styleSheets[ss];
+				}
+				if(header.styleSheets[ss].indexOf('themes/') >= 0){
+					themeCssHeader = header.styleSheets[ss];
+				}
+			}
+			var imports = this.model.find({elementType:'CSSImport'});
+			for(var imp=0; imp<imports.length; imp++){
+				if(imports[imp].url.indexOf('document.css') >= 0){
+					documentCssImport = imports[imp];
+				}
+				if(imports[imp].url.indexOf('themes/') >= 0){
+					themeCssImport = imports[imp];
+				}
+			}
+			// If resetEverything flag is set, then delete all current occurrences
+			// of document.css. If there are no dojoxmobile widgets, the next block
+			// will add it back in.
+			if(resetEverything || anyDojoxMobileWidgets){
+				if(documentCssHeader){
+					var idx = header.styleSheets.indexOf(documentCssHeader);
+					if(idx >= 0){
+						header.styleSheets.splice(idx, 1);
+						this.setHeader(header);
+					}
+				}
+				if(documentCssImport){
+					var parent = documentCssImport.parent;
+					parent.removeChild(documentCssImport);
+				}
+				documentCssHeader = documentCssImport = null;
+			}
+			if(!anyDojoxMobileWidgets){
+				if(!documentCssHeader && themeCssHeader){
+					var themeCssRootArr = themeCssHeader.split('/');
+					themeCssRootArr.pop();
+					var documentCssFileName = themeCssRootArr.join('/') + '/document.css';
+					header = dojo.clone(header);
+					header.styleSheets.splice(0, 0, documentCssFileName);
+					this.setHeader(header);
+				}
+				if(!documentCssImport && themeCssImport){
+					var themeCssRootArr = themeCssImport.url.split('/');
+					themeCssRootArr.pop();
+					var documentCssFileName = themeCssRootArr.join('/') + '/document.css';
+					var basePath = this.getFullResourcePath().getParentPath();
+					var documentCssPath = basePath.append(documentCssFileName).toString();
+					var documentCssFile = system.resource.findResource(documentCssPath);
+					var parent = themeCssImport.parent;
+					if(parent && documentCssFile){
+						var css = new CSSImport();
+						css.url = documentCssFileName;
+						css.cssFile = documentCssFile;
+						parent.addChild(css,0);
+					}
+				}
+			}
+			this.anyDojoxMobileWidgets = anyDojoxMobileWidgets;
+		}
 	},
 	
 	getPageLeftTop: function(node){

@@ -516,10 +516,10 @@ define("dojox/mobile/_compat", [
 				}, 0);
 			}
 			dm._loadedCss = undefined;
-			var paths = dm.getCssPaths();
-			for(var i = 0; i < paths.length; i++){
-				var href = paths[i];
-				if((href.match(dm.loadCompatPattern) || location.href.indexOf("mobile/tests/") !== -1) && href.indexOf("-compat.css") === -1){
+			// look for compats for the loadedCss files
+			for(var i = 0; i < dm.loadedCssFiles.length; i++){
+				var href = dm.loadedCssFiles[i].href;
+				if(href.indexOf("-compat.css") === -1){
 					var compatCss = href.substring(0, href.length-4)+"-compat.css";
 					dm.loadCss(compatCss);
 				}

@@ -58,7 +58,25 @@
 		            "properties": {
 		                "controls": "controls"
 		            },
-		            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
+		            "children": [
+		                {
+		                    "type": "html.source",
+		                    "properties": {
+		                        "src": "http://maqetta.org/samples/media/maqettaSound.mp3",
+		                        "type": "audio/mpeg"
+		                    }
+		                },
+		                {
+		                    "type": "html.source",
+		                    "properties": {
+		                        "src": "http://maqetta.org/samples/media/maqettaSound.ogg",
+		                        "type": "audio/ogg"
+		                    }
+		                },
+		            ],
+		            "isControl": true,
+		            "allowedChild": "html.source",
+		            "inlineEdit": "./html/MediaInput"
 		        },
 		        {
 		            "name": "<b>",
@@ -126,7 +144,11 @@
 		            "category": "html",
 		            "icon": "resources/images/embed.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPLw+/L1+/n6/HiOtnqQuH2SuoWav+Ts+e3y+tzn99/p+OHq+Orw+ebu+fD1+3+fv/X4+/f5+6jF4KrH4azI4a7J4q/K4rLM4rTN4kiIuLbP4xhooDB4rHWdudro8mR1a4CDY3t0UH51TntzUId6TIN3TZF/SIx9Sp2FRZeCRrCPPqyMQKeKQqeLQqKIQ+DIj7SQPdSyaNSyadq9fNWyaf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADYALAAAAAAQABAAAAZ/QJtwKIQZj0biECYTOJ8wpQ1Gm0WuWJVyFZu9IODwStkCAALodIClBGne8LfDZetk7vh8B4NA2TgegYKDHBcMKX8eNYuMix4cFg0miTUDBAUGBo4cFQcnlI2MjxQLJKCWmJqPEwoloKE1jxIJIomDtxwfISM2Dxu/wMEdUsRSQQA7",
-		            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
+		            "properties": {
+		             	"src": "http://maqetta.org/samples/embed.html"
+		            },
+		            "isControl": true,
+		            "inlineEdit": "./html/MediaInput"
 		        },
 		        {
 		            "name": "<fieldset>",
@@ -252,7 +274,6 @@
 		            "icon": "resources/images/html-label.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASpJREFUeNrsUr0uRFEQnjkUSuduQ7G6rWUVPAHxCKgkorD1xjMIEqrthDegEuEJVoIHuN1GUNhzEzn7YwufmbF3rUR3C41Jzvlmvpn57pxzLgOgIuaooP29wKRufvdqRFTnZuih9aIIQf6tKdtf/TlBJUnoaG3eiBgHEnvzc06xUvKyEqtVm9i4+BZIQ6DGTQuSRG2ljDRkJtS4Fq6U6DMhbWdUWy6DGFjcu8VJfUlFwPqM09uXJBlyninhKQT02Qu2Q5edd6R+NuQU8yOc3T/DJjjeqYJJpLIPvIaeJUPoUuwMzBehIfZGZ5dm2lyYZRPYOmiqCLN3HDvv9PbY15h0TLsXEVIuxq+c9Rw2bQL9Lp3ePcGtn9tSX7k8HufG6/Ia/v+Viwt8CjAA9P2xtTNP8TwAAAAASUVORK5CYII=",
 		            "children": "Label",
-		            "allowedChild": "ANY",
 		            "resizable": "none",
 		            "inlineEdit": {
 		                /*"property": "textContent",*/
@@ -370,6 +391,17 @@
 		            "allowedChild": "html.optgroup, html.option",
 		            "isControl": true,
 		            "inlineEdit": "./html/SelectInput"
+		        },
+		        {
+		            "name": "<source>",
+		            "description": "<source>",
+		            "type": "html.source",
+		            "category": "html",
+		            "icon": "resources/images/element.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKEDABBVisLT4sHo/wAAACH+FUNyZWF0ZWQgd2l0aCBUaGUgR0lNUAAh+QQBCgADACwAAAAAEAAQAAACI5yPqcvtD1UACQQJRBIWTa1wl5E13PEtolciazJVY0TX9lIAADs=",
+		            "resizable": "none",
+		            "allowedParent": "html.audio, html.video",
+		            "hidden": "true"
 		        },
 		        {
 		            "name": "<span>",
@@ -554,7 +586,25 @@
 		            "properties": {
 		                "controls": "controls"
 		            },
-		            "inlineEdit": "./html/HtmlSrcAttributeInputEmbed"
+		            "children": [
+		                {
+		                    "type": "html.source",
+		                    "properties": {
+		                        "src": "http://maqetta.org/samples/media/maqettaVideo.mp4",
+		                        "type": "video/mp4"
+		                    }
+		                },
+		                {
+		                    "type": "html.source",
+		                    "properties": {
+		                        "src": "http://maqetta.org/samples/media/maqettaVideo.ogg",
+		                        "type": "video/ogg"
+		                    }
+		                },
+		            ],
+		            "isControl": true,
+		            "allowedChild": "html.source",
+		            "inlineEdit": "./html/MediaInput"
 		        },
 		        {
 		            "name": "<u>",

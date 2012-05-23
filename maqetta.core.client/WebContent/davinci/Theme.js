@@ -104,6 +104,7 @@ define([
 		importFiles.forEach(function(fileName){
 			imports = imports + '@import url("' +fileName+'");'; 
 		});
+	
 		var themeJson = {
 			className: originalTheme.className, // #23 selector,
 			name: name,
@@ -123,6 +124,17 @@ define([
 		if(originalTheme.type){
 	        themeJson.type = originalTheme.type; 
 	    }
+		if (originalTheme.compatFiles){
+			var compatFileName = lastSeg + "-compat.css";
+			themeJson.compatFiles = [compatFileName], 
+			themeCompatCssFile = themeRoot.createResource(compatFileName); // create the delta css file
+			var importCompatFiles = adjustPaths(originalTheme.compatFiles); // adjust the path of the css files
+			var compatImports = ' ';
+			importCompatFiles.forEach(function(fileName){
+				compatImports = compatImports + '@import url("' +fileName+'");'; 
+			});
+			deferreds.push(themeCompatCssFile.setContents(compatImports));
+		}
 		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
 		deferreds.push(themeCssFile.setContents(imports));
 		var defs = new DeferredList(deferreds);

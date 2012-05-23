@@ -46,6 +46,9 @@ return declare("davinci.ve.commands.RemoveCommand", null, {
 		}
 		parent.removeChild( widget);
 		widget.destroyWidget();
+		if(context){
+			context.widgetAddedOrDeleted();
+		}
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
@@ -74,6 +77,7 @@ return declare("davinci.ve.commands.RemoveCommand", null, {
 			context.attach(widget);
 			widget.startup();
 			widget.renderWidget();
+			context.widgetAddedOrDeleted();
 			
 			// Recompute styling properties in case we aren't in Normal state
 			States.resetState(widget.domNode);

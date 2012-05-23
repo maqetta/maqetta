@@ -308,13 +308,12 @@ dm.loadCompatCssFiles(true);
 },0);
 }
 dm._loadedCss=undefined;
-var _3c=dm.getCssPaths();
-for(var i=0;i<_3c.length;i++){
-var _3d=_3c[i];
-if((_3d.match(dm.loadCompatPattern)||location.href.indexOf("mobile/tests/")!==-1)&&_3d.indexOf("-compat.css")===-1){
-var _3e=_3d.substring(0,_3d.length-4)+"-compat.css";
-dm.loadCss(_3e);
-}
+for(var i = 0; i < dm.loadedCssFiles.length; i++){
+	var href = dm.loadedCssFiles[i].href;
+	if(href.indexOf("-compat.css") === -1){
+		var compatCss = href.substring(0, href.length-4)+"-compat.css";
+		dm.loadCss(compatCss);
+	}
 }
 };
 dm.hideAddressBar=function(evt,_3f){

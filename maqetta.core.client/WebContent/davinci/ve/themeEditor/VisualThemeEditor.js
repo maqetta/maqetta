@@ -157,7 +157,9 @@ return declare([], {
 						this.loadingDiv.innerHTML = message;
 						dojo.addClass(loading, 'error');
 					} else {
-						this.loadingDiv.parentNode.removeChild(this.loadingDiv);
+						if (this.loadingDiv.parentNode) {
+							this.loadingDiv.parentNode.removeChild(this.loadingDiv);							
+						}
 						delete this.loadingDiv;
 					}
 				}, this);
@@ -202,8 +204,5 @@ return declare([], {
 	getOutline: function (){
 		return null; // Theme editor does no support an outline.
 	}
-	
-	
-
 });
 });

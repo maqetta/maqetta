@@ -884,10 +884,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_addDeltaRules : function(widget, values){
-			if (this.context.theme.file.readOnly()){
-				// if the current theme is ready only we can't add delta's to it #23
-				return;
-			}
+
 			var state = "Normal";
 			var lastElementStyle = -1;
 			var deltas = [];

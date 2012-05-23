@@ -69,12 +69,12 @@
         },
         "label": {
             "datatype": "string",
-            "defaultValue": "TabBarButton"
+            "defaultValue": "TabButton"
         },
         "selected": {
             "datatype": "boolean",
             "defaultValue": false
         }
     },
-    "content": "<li label='TabBarButton'></li>"
+    "content": "<li label='TabButton'></li>"
 }

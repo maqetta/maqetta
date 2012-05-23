@@ -114,7 +114,7 @@ public class DavinciReviewServlet extends DavinciPageServlet {
 				String designerOfReviewInQuestionId = prefix;
 				Cookie designerCookie = new Cookie(Constants.REVIEW_COOKIE_DESIGNER, designerOfReviewInQuestionId);
 				/* have to set the path to delete it later from the client */
-				designerCookie.setPath("/");
+				//designerCookie.setPath("/");
 				resp.addCookie(designerCookie);
 
 				//Fill in review version cookie

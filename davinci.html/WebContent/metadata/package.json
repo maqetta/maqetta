@@ -145,7 +145,7 @@
 		            "icon": "resources/images/embed.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPLw+/L1+/n6/HiOtnqQuH2SuoWav+Ts+e3y+tzn99/p+OHq+Orw+ebu+fD1+3+fv/X4+/f5+6jF4KrH4azI4a7J4q/K4rLM4rTN4kiIuLbP4xhooDB4rHWdudro8mR1a4CDY3t0UH51TntzUId6TIN3TZF/SIx9Sp2FRZeCRrCPPqyMQKeKQqeLQqKIQ+DIj7SQPdSyaNSyadq9fNWyaf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADYALAAAAAAQABAAAAZ/QJtwKIQZj0biECYTOJ8wpQ1Gm0WuWJVyFZu9IODwStkCAALodIClBGne8LfDZetk7vh8B4NA2TgegYKDHBcMKX8eNYuMix4cFg0miTUDBAUGBo4cFQcnlI2MjxQLJKCWmJqPEwoloKE1jxIJIomDtxwfISM2Dxu/wMEdUsRSQQA7",
 		            "properties": {
-		             	"src": "http://maqetta.org/samples/media/embed.html"
+		             	"src": "http://maqetta.org/samples/embed.html"
 		            },
 		            "isControl": true,
 		            "inlineEdit": "./html/MediaInput"

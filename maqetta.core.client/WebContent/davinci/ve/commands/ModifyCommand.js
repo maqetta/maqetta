@@ -127,6 +127,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			context.attach(newWidget);
 			newWidget.startup();
 			newWidget.renderWidget();
+			context.widgetAddedOrDeleted();
 		}
 		this.newWidget=newWidget;
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
@@ -232,6 +233,7 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			context.attach(newWidget);
 			newWidget.startup();
 			newWidget.renderWidget();
+			context.widgetAddedOrDeleted();
 		}
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
 		

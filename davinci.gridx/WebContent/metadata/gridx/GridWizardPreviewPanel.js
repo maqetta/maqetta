@@ -10,14 +10,14 @@ define([
 	"dijit/form/Button",
 	"dojo/data/ItemFileReadStore",
 	"./GridWizardPanel",
-	"maq-lib-gridx-1.0/Grid",
-	"maq-lib-gridx-1.0/core/model/cache/Async",
-    "maq-lib-gridx-1.0/modules/extendedSelect/Column",
-    "maq-lib-gridx-1.0/modules/move/Column",
-    "maq-lib-gridx-1.0/modules/dnd/Column",
-    "maq-lib-gridx-1.0/modules/ColumnResizer",
-	"davinci/css!maq-lib-gridx-1.0/resources/claro/Gridx.css",
-	"davinci/css!maq-lib-gridx-1.0/resources/claro/Gridx_rtl.css",
+	"maq-lib-gridx-1.0prebeta2/Grid",
+	"maq-lib-gridx-1.0prebeta2/core/model/cache/Async",
+    "maq-lib-gridx-1.0prebeta2/modules/extendedSelect/Column",
+    "maq-lib-gridx-1.0prebeta2/modules/move/Column",
+    "maq-lib-gridx-1.0prebeta2/modules/dnd/Column",
+    "maq-lib-gridx-1.0prebeta2/modules/ColumnResizer",
+	"davinci/css!maq-lib-gridx-1.0prebeta2/resources/claro/Gridx.css",
+	"davinci/css!maq-lib-gridx-1.0prebeta2/resources/claro/Gridx_rtl.css",
 	"dojo/i18n!./nls/gridx",
 	"dojo/text!./templates/gridWizardPreview.html"
 ], function(
@@ -234,13 +234,15 @@ return declare([ContentPane, GridWizardPanel], {
 	},
 	
 	_getGridColumn: function(gridColumnId) {
-		// NOTE: Don't like using non-public API here. The public function
-		// (e.g., "this._grid.column(gridColumnId, true);") returns
-		// an object containing ONLY the grid col id and width. It does this
-		// despite first using  _columnsById (the one I'm using below) in its
-		// implementation
-		var column = this._grid._columnsById[gridColumnId];
-		return column;
+		var returnColumn = null;
+		var columns = this._grid.columns();
+		dojo.some(columns, function(column) {
+			if (column.id == gridColumnId) {
+				returnColumn = column;
+				return true;
+			}
+		});
+		return returnColumn;
 	},
 	
 	//When we communicated with GridX we do so with the internal
@@ -249,26 +251,21 @@ return declare([ContentPane, GridWizardPanel], {
 	_getGridIdFromFieldName: function(selectedFieldName) {
 		var gridId = null;
 		
-		// NOTE: Don't like using non-public API here to get list of grid
-		// columns. The public function(e.g., "this._grid.columns();")
-		// returns an array of objects. But, each of these objects contain ONLY the grid col id
-		// and width.
-		var columns = this._grid._columns;
-		
 		//Loop through to find match
+		var columns = this._grid.columns();
 		dojo.some(columns, function(column) {
-			if (column.field == selectedFieldName) {
+			if (column.field() == selectedFieldName) {
 				gridId = column.id;
 				return true;
 			}
 		});
-		
+
 		return gridId;
 	},
 	
 	_getPreviewStructureElement: function(gridColumnId) {
 		var gridColumn = this._getGridColumn(gridColumnId);
-		var structureFieldName = gridColumn.field;
+		var structureFieldName = gridColumn.field();
 		var foundStructureElement = null;
 		dojo.some(this._grid.structure, function(structureElement) {
 			if (structureElement.field == structureFieldName) {

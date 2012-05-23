@@ -1,0 +1,22 @@
+{
+	"id": "http://www.w3.org/html/source",
+	"name": "html.source",
+	"spec": "1.0",
+	"version": "1.0",
+	"property": {
+		"media": {
+			"datatype": "string",
+			"description": "Specifies the type of media resource",
+			"hidden": "true"
+		},
+		"src": {
+			"datatype": "url",
+			"description": "Specifies the URL of the media file"
+		},
+		"type": {
+			"type": "string",
+			"description": "Specifies the MIME type of the media resource"
+		}
+	},
+	"content": "<source></source>"
+}

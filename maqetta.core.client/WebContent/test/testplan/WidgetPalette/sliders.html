@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Widget Palette: Dojo Sliders</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Widget Palette: Dojo Sliders</h1>
+
+	<h2 class="test_section">Horizontal Slider</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag a HorizontalSlider widget onto the canvas.</li>
+		<li>Notice a Smart Input dialog is displayed. It should look something like the following:</li>
+			<img src="images/horizontalSliderSmartInput.png">
+		</li>
+		<li>Click OK.</li>
+		<li>A HorizontalSlider should be displayed in the page editor:</li>
+			<img src="images/horizontalSliderSelected.png">
+		<li>The HorizontalSlider is a composite widget which can contain multiple HorizontalRule and HorizontalRuleLabel subwidgets. Mouse over the rule labels and you should notice
+			they get highlighted with a gray box indicating they can be selected independently of the slider as a whole:</li>
+			<img src="images/horizontalSliderLabelsHighlighted.png">
+		<li>Move the mouse over the rules and notice they get highlighted with a gray box indicating they can be selected independently of the slider as a whole:</li>
+			<img src="images/horizontalSliderRulesHighlighted.png">
+		<li>Move the mouse over other parts of the slider and note the body of the slider is highlighted (clicking in this region selects the slider as a whole):</li>
+			<img src="images/horizontalSliderBodyHighlighted.png">
+		<li>Select the labels and under widget-specific properties, change <i>Count</i> to 5 and <i>Container</i> to "topDecoration". This should immediately 
+			cause the labels to move above the slider bar and to contain 5 values.</li>
+		<li>Select the rules and under widget-specific properties, change <i>Count</i> to 7 and <i>Container</i> to "topDecoration". This should immediately 
+			cause the rules to move above the slider bar (and below the labels) and to contain 7 hashmarks.</li>
+			<img src="images/horizontalSliderRulesAndLabelsOnTop.png">
+		<li>Double-click on the slider to bring up the Smart Input Dialog. Ensure it reflects the new state of the slider:</li>
+			<img src="images/horizontalSliderSmartInputRulesAndLabelsOnTop.png">
+		<li>Click the + button at the end of the 2nd row to add a new row. Change the type of that row to "rules". Note the preview slider is updated as you 
+			make these changes.</li>
+		<li>Click the + button at the end of the 3nd row to add a new row. Leave the type of that row set to "labels". At this point, your dialog should
+		    look like the following:</li>
+			<img src="images/horizontalSlideSmartInputMoreChildrenAdded.png">
+		<li>Click OK and the slider should be rendered in the page editor as follows:</li>
+			<img src="images/horizontalSliderRuleAndLabelsOnTopAndBottom.png">
+		<li>Click on the Preview icon in the toolbar. This should open a new browser window showing your slider.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See above.</li>
+	</ol>
+
+<h2 class="test_section">Vertical Slider</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag a VerticalSlider widget onto the canvas.</li>
+		<li>Notice a Smart Input dialog is displayed. It should look something like the following:</li>
+			<img src="images/verticalSliderSmartInput.png">
+		</li>
+		<li>Click OK.</li>
+		<li>A VerticalSlider should be displayed in the page editor:</li>
+			<img src="images/verticalSliderSelected.png">
+		<li>The VerticalSlider is a composite widget which can contain multiple VerticalRule and VerticalRuleLabel subwidgets. Mouse over the rule labels and you should notice
+			they get highlighted with a gray box indicating they can be selected independently of the  slider as a whole:</li>
+			<img src="images/verticalSliderLabelsHighlighted.png">
+		<li>Move the mouse over the rules and notice they get highlighted with a gray box indicating they can be selected independently of the slider as a whole:</li>
+			<img src="images/verticalSliderRulesHighlighted.png">
+		<li>Move the mouse over other parts of the slider and note the body of the slider is highlighted (clicking in this region selects the slider as a whole):</li>
+			<img src="images/verticalSliderBodyHighlighted.png">
+		<li>Select the labels and under widget-specific properties, change <i>Count</i> to 5 and <i>Container</i> to "leftDecoration". This should immediately 
+			cause the labels to move to the left of the slider bar and to contain 5 values.</li>
+		<li>Select the rules and under widget-specific properties, change <i>Count</i> to 7 and <i>Container</i> to "leftDecoration". This should immediately 
+			cause the rules to move to the left of the slider bar (and to the right of the labels) and to contain 7 hashmarks.</li>
+			<img src="images/verticalSliderRulesAndLabelsOnLeft.png">
+		<li>Double-click on the slider to bring up the Smart Input Dialog. Ensure it reflects the new state of the slider:</li>
+			<img src="images/verticalSliderSmartInputRulesAndLabelsOnLeft.png">
+		<li>Click the + button at the end of the 2nd row to add a new row. Change the type of that row to "rules". Note the preview slider is updated as you 
+			make these changes.</li>
+		<li>Click the + button at the end of the 3nd row to add a new row. Leave the type of that row set to "labels". At this point, your dialog should
+		    look like the following:</li>
+			<img src="images/verticalSlideSmartInputMoreChildrenAdded.png">
+		<li>Click OK and the slider should be rendered in the page editor as follows:</li>
+			<img src="images/verticalSliderRuleAndLabelsOnLeftAndRight.png">
+		<li>Click on the Preview icon in the toolbar. This should open a new browser window showing your slider.</li>
+		<li>Click on the "X" close button to close the html file (without saving).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See above.</li>
+	</ol>
+</body>
+</html>

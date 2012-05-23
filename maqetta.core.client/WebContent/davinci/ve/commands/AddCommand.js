@@ -73,6 +73,7 @@ return declare("davinci.ve.commands.AddCommand", null, {
 			context.attach(widget);
 			widget.startup();
 			widget.renderWidget();
+			context.widgetAddedOrDeleted();
 		}
 
 
@@ -102,6 +103,10 @@ return declare("davinci.ve.commands.AddCommand", null, {
 		}
 		parent.removeChild(widget);
 		widget.destroyWidget();  
+		if(context){
+			context.widgetAddedOrDeleted();
+		}
+
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);

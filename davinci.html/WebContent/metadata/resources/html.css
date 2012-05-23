@@ -1,0 +1,9 @@
+.davinciMediaInput .iedResizeDiv {
+	width: 350px; 
+	height: 40px; 
+}
+
+.davinciMediaInputMulti .iedResizeDiv {
+	width: 350px; 
+	height: 75px; 
+}

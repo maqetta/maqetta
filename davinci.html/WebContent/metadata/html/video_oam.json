@@ -49,7 +49,8 @@
 		"src": {
 			"datatype": "string",
 			"format": "url",
-			"description": "Specifies the URL of the video file"
+			"description": "Specifies the URL of the video file",
+			"hidden": "true"
 		},
 		"width": {
 			"datatype": "string",

@@ -52,15 +52,22 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 	constructor: function(element, pageEditor)	{
 		this._pageEditor = pageEditor;
 		this.contentPane = dijit.getEnclosingWidget(element);
+
+		this.loadingDiv = dojo.create("div", {
+			className: "loading",
+			innerHTML: dojo.replace(
+					'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
+					["Loading..."]) // FIXME: i18n
+			},
+			this.contentPane.domNode.parentNode,
+			"first");
+
 		dojo.addClass(this.contentPane.domNode, "fullPane");
-		var content = '<div class="silhouette_div_container">'+
-			'<span class="silhouetteiframe_object_container"></span>'+
-			'</div>';
-		this.contentPane.set('content', content);
-		var silhouette_div_container=dojo.query('.silhouette_div_container',this.contentPane.domNode)[0];
+		var silhouette_div_container = dojo.create("div", {className: "silhouette_div_container"}, this.contentPane.domNode);
+		dojo.create("span", {className: "silhouetteiframe_object_container"}, silhouette_div_container);
 		this.silhouetteiframe = new SilhouetteIframe({
-			rootNode:silhouette_div_container,
-			margin:20
+			rootNode: silhouette_div_container,
+			margin: 20
 		});
 		
 		/* The following code provides a fix for #864: Drag/drop from widget palette
@@ -327,7 +334,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		}
 	},
 
-	_connectCallback: function() {
+	_connectCallback: function(failureInfo) {
 		var context = this.context,
 			popup;
 
@@ -361,6 +368,31 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 				widget.resize();
 			}
 		});
+		
+		// At doc load time, call the routine that makes document adjustments each time
+		// new widgets are added or widgets are deleted.
+		context.anyDojoxMobileWidgets = undefined;
+		context.widgetAddedOrDeleted(true);
+		
+		// pagebuilt event triggered after converting model into dom for visual page editor
+		dojo.publish('/davinci/ui/context/pagebuilt', [context]);
+
+		if (failureInfo.errorMessage) {
+			this.loadingDiv.innerHTML = failureInfo.errorMessage;
+		} else if (failureInfo instanceof Error) {
+			var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
+			if (failureInfo.fileName) {
+				message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
+			}
+			if (failureInfo.stack) {
+				message += "<br>" + failureInfo.stack;
+			}
+			this.loadingDiv.innerHTML = message;
+			dojo.addClass(loading, 'error');
+		} else {
+			this.loadingDiv.parentNode.removeChild(this.loadingDiv);
+			delete this.loadingDiv;
+		}
 	},
 
 	//FIXME: pointless. unused? remove?

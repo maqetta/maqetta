@@ -202,9 +202,18 @@
 			widget a sibling to an existing View widget when the new View
 			is dropped onto the existing View.
 			<div class="note">If you actually want the new View widget to be
-			a child widget of the existing View widget, then you can rearrange the
-			widget hierarchy in the Outline palette by dragging/dropping 
-			the new View widget onto the existing View widget.
+			a child widget of the existing View widget, here are two options:
+			<ul>
+			<li>You can drop the View widget onto canvas, allow Maqetta to make the new
+				View a sibling of the previous View, and then you can subsequently rearrange the
+				widget hierarchy in the Outline palette by dragging/dropping 
+				the new View widget onto the existing View widget.</li>
+			<li>Before adding the second View (that you want to be a child of another View),
+				you can turn on the Preference "When dragging, show candidate parents" found
+				at Settings->Preferences->HTML->Visual Editor. This allows you to use the
+				arrow keys during drag/drop widget creation to choose which existing widget should
+				be the parent of the new View widget.</li>
+			</ul>
 			</div>
 		</li>
 		<li>The second View becomes selected and visible (just like what happens whenever a new
@@ -277,7 +286,7 @@ News</pre>
 	You should see the heading with the word "Alerts" on the page canvas.
 	</li>
 <li>In the Widgets palette, go to the HTML section. Drag/drop a <code>&lt;div&gt;</code> widget 
-	into the middle of the View. You will see a gray selection outline surrounding the empty DIV.
+	into the middle of the View. You will see a blue selection outline surrounding the empty DIV.
 	Double-click on the empty DIV. 
 	An edit box will appear that allows you to enter the text content for the Heading.
 	Enter "Today's alerts" and click the OK button or hit Return to commit the text content.
@@ -289,7 +298,7 @@ News</pre>
 		and not the more specific "margin-top", "margin-right", "margin-bottom" or "margin_left".</div>
 	</li>
 <li>In the Widgets palette, go to the HTML section. Drag/drop another <code>&lt;div&gt;</code> widget 
-	into the middle of the View. You will see a gray selection outline surrounding the empty DIV.
+	into the middle of the View. You will see a blue selection outline surrounding the empty DIV.
 	Double-click on the empty DIV. 
 	An edit box will appear that allows you to enter the text content for the Heading.
 	Enter "10:30am 85% capacity" and click the OK button or hit Return to commit the text content.

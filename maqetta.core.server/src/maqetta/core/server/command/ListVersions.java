@@ -37,6 +37,8 @@ public class ListVersions extends Command {
 			String reviewTime = reviewerVersion.getTimeVersion();
 			if (designerIDParm == null || designerIDParm.equals("") || designerIDParm.equals(reviewDesignerID)) {
 				IDesignerUser designerUser = commentingManager.getDesignerUser(reviewDesignerID);
+				/* designer user removed from the system (or never existed) */
+				if(designerUser==null) continue;
 				Version version = designerUser.getVersion(reviewTime);
 
 				if (version != null) {

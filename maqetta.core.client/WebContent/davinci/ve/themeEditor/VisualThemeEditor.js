@@ -1,5 +1,6 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/Runtime",
     	"davinci/Workbench",
     	"davinci/ve/themeEditor/Context",
     	"davinci/workbench/Preferences",
@@ -7,7 +8,7 @@ define([
     	"davinci/model/Factory",
     	"davinci/Theme",
     	"dijit/Dialog"
-], function(declare, Workbench, Context, Preferences, Path, Factory, Theme, Dialog) {
+], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, Theme, Dialog) {
 
 return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
@@ -90,6 +91,17 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 				this.context.deactivate();
 				this.context._setSource(htmlFile, function() {
 					this.savePoint = 0;
+					
+					//FIXME: include a LINK element for document.css for all themes.
+					//Just so happens that desktop Dojo themes have document.css
+					//and mobile themes don't.
+					//We need to drive this from theme metadata somehow.
+					//See issue #2381
+					var workspaceUrl = Runtime.getUserWorkspaceUrl();
+					var documentCssPathRel = this.basePath.getParentPath().append('document.css').toString();
+					var documentCssPathAbs = workspaceUrl + documentCssPathRel;
+					this.context.loadStyleSheet(documentCssPathAbs);
+
 					this.context.activate();
 //		css files need to be added to doc before body content wdr 4/6/11
 //					for(var i = 0;i < themeCssFiles.length;i++){

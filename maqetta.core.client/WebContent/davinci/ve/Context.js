@@ -1025,13 +1025,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					callback.call((scope || this), failureInfo);
 				}
 			}
-			// At doc load time, call the routine that makes document adjustments each time
-			// new widgets are added or widgets are deleted.
-			this.anyDojoxMobileWidgets = undefined;
-			this.widgetAddedOrDeleted();
-			
-			// pagebuilt event triggered after converting model into dom for visual page editor
-			dojo.publish('/davinci/ui/context/pagebuilt', [this]);
 		}
 	},
 
@@ -3238,7 +3231,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Looks at current document and decide if we need to update the document
 	 * to include or exclude document.css
 	 */
-	widgetAddedOrDeleted: function(){		
+	widgetAddedOrDeleted: function(resetEverything){		
 		// Hack for M6 release to include/exclude document.css.
 		// Include only if at least one dijit widget and no dojox.mobile widgets.
 		function checkWidgetTypePrefix(widget, prefix){
@@ -3264,7 +3257,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		// If the current document has changed from having zero dojox.mobile widgets to at least one
 		// or vice versa, then either remove or add document.css.
-		if(this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
+		if(resetEverything || this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
 			var documentCssHeader, documentCssImport, themeCssHeader, themeCssImport;
 			var header = dojo.clone( this.getHeader());
 			for(var ss=0; ss<header.styleSheets.length; ss++){
@@ -3284,11 +3277,29 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					themeCssImport = imports[imp];
 				}
 			}
+			// If resetEverything flag is set, then delete all current occurrences
+			// of document.css. If there are no dojoxmobile widgets, the next block
+			// will add it back in.
+			if(resetEverything || anyDojoxMobileWidgets){
+				if(documentCssHeader){
+					var idx = header.styleSheets.indexOf(documentCssHeader);
+					if(idx >= 0){
+						header.styleSheets.splice(idx, 1);
+						this.setHeader(header);
+					}
+				}
+				if(documentCssImport){
+					var parent = documentCssImport.parent;
+					parent.removeChild(documentCssImport);
+				}
+				documentCssHeader = documentCssImport = null;
+			}
 			if(!anyDojoxMobileWidgets){
 				if(!documentCssHeader && themeCssHeader){
 					var themeCssRootArr = themeCssHeader.split('/');
 					themeCssRootArr.pop();
 					var documentCssFileName = themeCssRootArr.join('/') + '/document.css';
+					header = dojo.clone(header);
 					header.styleSheets.splice(0, 0, documentCssFileName);
 					this.setHeader(header);
 				}
@@ -3306,18 +3317,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						css.cssFile = documentCssFile;
 						parent.addChild(css,0);
 					}
-				}
-			}else{
-				if(documentCssHeader){
-					var idx = header.styleSheets.indexOf(documentCssHeader);
-					if(idx >= 0){
-						header.styleSheets.splice(idx, 1);
-						this.setHeader(header);
-					}
-				}
-				if(documentCssImport){
-					var parent = documentCssImport.parent;
-					parent.removeChild(documentCssImport);
 				}
 			}
 			this.anyDojoxMobileWidgets = anyDojoxMobileWidgets;

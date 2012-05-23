@@ -211,31 +211,46 @@ the HTML files that Maqetta creates:
 [03] &lt;head>
 [04] &lt;meta charset="utf-8"/>
 [05] &lt;title>Untitled&lt;/title>
-[06] &lt;style type="text/css">
-[07] @import "themes/claro/claro.css";
-[08] @import "app.css";
-[09] @import "./lib/dojo/dojo/resources/dojo.css";
-[10] &lt;/style>
-[11] &lt;script src="maqetta/maqetta.js">&lt;/script>
-[12] &lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'jquery-ui','location':'../../jquery-ui'},{'name':'yui','location':'../../yui'},{'name':'clipart','location':'../../clipart'},{'name':'shapes','location':'../../shapes'}]">&lt;/script>
-[13] &lt;script src="maqetta/States.js">&lt;/script>
-[14] &lt;script type="text/javascript">
-[15] require(["dijit/dijit"]);
-[16] require(["dojo/parser"]);
-[17] require(["dijit/form/Button"]);&lt;/script>
+[06] &lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'shapes','location':'../../shapes'},{'name':'yui','location':'../../yui'},{'name':'clipart','location':'../../clipart'},{'name':'gridx','location':'../gridx'},{'name':'jquery-ui','location':'../../jquery-ui'},{'name':'maqetta','location':'../../maqetta'}]">&lt;/script>
+[07] &lt;script type="text/javascript">
+[08] require([
+[09]   "dijit/dijit",
+[10]   "dojo/parser",
+[11]   "maqetta/space",
+[12]   "maqetta/AppStates",
+[13]   "dijit/form/Button"
+[14] ]);
+[15] &lt;/script>
+[16] &lt;style>@import "themes/claro/claro.css";@import "app.css";
+[17] &lt;/style>
 [18] &lt;/head>
-[19] &lt;body class="claro" dvFlowLayout="true" data-davinci-ws="collapse" id="myapp">
+[19] &lt;body class="claro" data-maqetta-device="none" data-davinci-ws="collapse" dvFlowLayout="true">
 [20]  &lt;input type="button" data-dojo-type="dijit.form.Button" intermediateChanges="false" label="Button" iconClass="dijitNoIcon">&lt;/input>
 [21] &lt;/body>
 [22] &lt;/html>
-	</pre></blockquote>
+</pre></blockquote>
 <li>Some notes about the above HTML file listing:
 	<ul>
-		<li>Lines <code>[06]-[09]</code> - These lines load the CSS files used by this HTML file:
+		<li>Line <code>[06]</code> - This line loads Dojo's JavaScript files. 
+			In general, everyone on this line is essential for pages to work either in the Maqetta page editor 
+			and/or when running in the browser outside of Maqetta.
+			The 'packages' section of this line (many characters) provides information that allows Maqetta to load widgets properly.
+			<div class="note">
+				Note that Maqetta application will update the URL references to <code>dojo.js</code> and the packages
+				in various scenarios. For example, if you save an HTML file into a nested folder, 
+				Maqetta will insert any necessary <code>../</code> references so that the HTML files
+				will properly load Dojo's JavaScript files.
+			</div>
+		</li>
+		<li>Lines <code>[07]-[15]</code> - These lines are Dojo-specific JavaScript.
+			Dojo requires calls to <code>require()</code> for each Dojo module used
+			by an HTML page. Maqetta automatically adds all necessary <code>require()</code>
+			statements to the HTML page.
+		</li>
+		<li>Lines <code>[16]-[17]</code> - These lines load the CSS files used by this HTML file:
 			<ul>
 				<li><code>themes/claro/claro.css</code> - Reference to the CSS theme used by this page. (Default for Dojo/Dijit is the "claro" theme.)</li>
 				<li><code>app.css</code> - Application-specific CSS style rules. (See discussion earlier in this tutorial about <code>app.css</code>.)</li>
-				<li><code>dojo.css</code> - Some commonly used CSS rules provided by the Dojo toolkit.</li>
 			</ul>
 			<div class="note">
 				Note that Maqetta application will update the URL references to the above files automatically
@@ -243,27 +258,6 @@ the HTML files that Maqetta creates:
 				Maqetta will insert any necessary <code>../</code> references so that the HTML files
 				will properly load the CSS files.
 			</div>
-		</li>
-		<li>Lines <code>[11] and [13]</code> - These lines include Maqetta-specific runtime JavaScript files.
-			These JavaScript files are necessary to make the application states feature work
-			when your HTML page runs outside of the Maqetta authoring environment.
-			<div class="note">
-				In most cases, your development team will strip out these two <code>&lt;script&gt;</code>
-				elements in the process of transforming the Maqetta mockup into a production application.
-			</div>
-		</li>
-		<li>Line <code>[12]</code> - This line loads Dojo's JavaScript files.
-			<div class="note">
-				Note that Maqetta application will update the URL references to <code>dojo.js</code>
-				in various scenarios. For example, if you save an HTML file into a nested folder, 
-				Maqetta will insert any necessary <code>../</code> references so that the HTML files
-				will properly load Dojo's JavaScript files.
-			</div>
-		</li>
-		<li>Lines <code>[14]-[17]</code> - These lines are Dojo-specific JavaScript.
-			Dojo requires calls to <code>require()</code> for each Dojo module used
-			by an HTML page. Maqetta automatically adds all necessary <code>require()</code>
-			statements to the HTML page.
 		</li>
 		<li>Line <code>[19]</code> - The <code>&lt;body&gt;</code> element often includes some Maqetta-specific
 			attributes that provide essential authoring information to the Maqetta page editor

@@ -390,7 +390,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 			this.loadingDiv.innerHTML = message;
 			dojo.addClass(loading, 'error');
 		} else {
-			this.loadingDiv.parentNode.removeChild(this.loadingDiv);
+			if (this.loadingDiv.parentNode) {
+				this.loadingDiv.parentNode.removeChild(this.loadingDiv);				
+			}
 			delete this.loadingDiv;
 		}
 	},

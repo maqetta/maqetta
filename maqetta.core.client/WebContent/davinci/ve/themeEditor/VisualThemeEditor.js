@@ -10,7 +10,7 @@ define([
     	"dijit/Dialog"
 ], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, Theme, Dialog) {
 
-return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
+return declare([], {
 
 /*
  * 
@@ -18,7 +18,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
  */
 
 
-	constructor : function (themeEditor, element,filename,themeCssFiles, themeEditorHtmls,theme) {
+	constructor: function (themeEditor, element,filename,themeCssFiles, themeEditorHtmls,theme) {
 		this._themeEditor = themeEditor;
 		this.domNode = element;
 		this.theme = theme;
@@ -26,7 +26,14 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 
 		this.basePath=new Path(resource.getPath());
 
-		
+		this.loadingDiv = dojo.create("div", {
+			className: "loading",
+			innerHTML: dojo.replace(
+					'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
+					["Loading..."]) // FIXME: i18n
+			},
+			this.domNode.parentNode,
+			"first");
 
 		this._handles=[];
 		this.context = new Context({
@@ -48,7 +55,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		dojo.xhrGet({
 				url: resource.getURL(),
 				handleAs: "text",
-				sync: true,
+				sync: false,
 				content:{} 
 			}).addCallback(dojo.hitch(this, function(result){
 				this.setContent("DEFAULT_PAGE", 
@@ -57,20 +64,21 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			}));
     },
     
-    onSelectionChange : function (){
-    	
+    onSelectionChange: function (){
     },
-    destroy : function(){
-    	
-    	
+
+    destroy: function(){
     },
-	getDefaultContent : function (){
+
+    getDefaultContent: function (){
 		return "";
 	},
-	getContent : function(){
+
+	getContent: function(){
 		return this.context.getSource();
 	},
-	setContent : function(fileName, content, themeCssFiles){
+
+	setContent: function(fileName, content, themeCssFiles){
 		
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
@@ -89,7 +97,7 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 			this.context._themeName = this.theme.name;
 			if(!this.initialSet){
 				this.context.deactivate();
-				this.context._setSource(htmlFile, function() {
+				this.context._setSource(htmlFile, function(failureInfo) {
 					this.savePoint = 0;
 					
 					//FIXME: include a LINK element for document.css for all themes.
@@ -113,13 +121,16 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 					// to the head of the document prior to page load, or resize() should be called
 					// directly to conform with the way Dijit works.
 					setTimeout(dojo.hitch(this, function(){
-						// FIXME: could just resize getTopWidgets
-						this.context.getDijit().registry.forEach(function(widget){
-							if(widget.resize){ widget.resize({}); }
+						this.context.getTopWidgets().forEach(function(widget){
+							if (widget.resize){
+								widget.resize({});
+							}
 						});
-						dojo.publish("/davinci/states/state/changed", 
-								[{editorClass:'davinci.themeEditor.ThemeEditor', widget:'$all', 
-								newState:"Normal", context: this.context}]); // send state message to get Theme and StatesView in same init state
+						dojo.publish("/davinci/states/state/changed", [{
+							editorClass: 'davinci.themeEditor.ThemeEditor',
+							widget: '$all', 
+							newState: "Normal",
+							context: this.context}]); // send state message to get Theme and StatesView in same init state
 					}), 1500);
 					this.initialSet=true;
 
@@ -132,8 +143,24 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 							this.themeVersionWarn();
 						}
 					}
+
+					if (failureInfo.errorMessage) {
+						this.loadingDiv.innerHTML = failureInfo.errorMessage;
+					} else if (failureInfo instanceof Error) {
+						var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
+						if (failureInfo.fileName) {
+							message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
+						}
+						if (failureInfo.stack) {
+							message += "<br>" + failureInfo.stack;
+						}
+						this.loadingDiv.innerHTML = message;
+						dojo.addClass(loading, 'error');
+					} else {
+						this.loadingDiv.parentNode.removeChild(this.loadingDiv);
+						delete this.loadingDiv;
+					}
 				}, this);
-				
 			}
 		}
 	},
@@ -162,7 +189,6 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 	},
 	
 	themeVersionWarnOk: function(){
-
 		if (this._dialog){
 			this._dialog.hide();
 			this._dialog.destroyRecursive(false);
@@ -170,14 +196,11 @@ return declare("davinci.ve.themeEditor.VisualThemeEditor", null, {
 		}
 	},
 
-	hotModifyCssRule : function(){
-		
-		
-		
+	hotModifyCssRule: function(){
 	},
-	getOutline : function (){
-		return null; // Theme editor does no support an outline.
 
+	getOutline: function (){
+		return null; // Theme editor does no support an outline.
 	}
 	
 	

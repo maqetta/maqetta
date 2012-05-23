@@ -8,7 +8,9 @@
 <body>
 <table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
 <tr><td><b>Test Suite</b></td></tr>
-<tr><td><a href="widgetHTML.html">widgetHTML</a></td></tr>
+<tr><td><a href="widgetHtmlLabel.html">widgetHtmlLabel</a></td></tr>
+<tr><td><a href="widgetDojoButtonControl.html">widgetDojoButtonControl</a></td></tr>
+<tr><td><a href="widgetDojoTabContainer.html">widgetDojoTabContainer</a></td></tr>
 </tbody></table>
 </body>
 </html>

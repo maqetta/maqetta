@@ -836,12 +836,13 @@ var Workbench = {
 	
 	
 	loadProject: function(projectName) {
-		
-		Workbench.setActiveProject(projectName);
+		Workbench.setActiveProject(projectName).then(function(){
+			location.reload(true);	
+		});
 		
 		// if the project was set via URL parameter, clear it off.  
 		
-		location.reload(true);
+	
 	},
 	
 	location: function() {
@@ -1554,7 +1555,7 @@ var Workbench = {
 			Workbench._state = {};
 		}
 		Workbench._state.project = project;
-		Workbench._updateWorkbenchState();
+		return Workbench._updateWorkbenchState();
 	},
 	
 	/**

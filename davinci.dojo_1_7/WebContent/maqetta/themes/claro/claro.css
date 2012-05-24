@@ -1896,7 +1896,19 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTextBox {
   background-color: #ffffff;
 }
-.claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitButtonNode {
+.claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitInputInner, .claro .dijitTextBoxHover .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxDisabled, .claro .dijitTextBoxDisabled .dijitInputInner, .claro .dijitTextBoxDisabled .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxReadOnly, .claro .dijitTextBoxReadOnly .dijitInputInner, .claro .dijitTextBoxReadOnly .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxFocused, .claro .dijitTextBoxFocused .dijitInputInner, .claro .dijitTextBoxFocused .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitButtonNode{
   border-color: #759dc0;
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
@@ -1907,6 +1919,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   background-image: url(form/images/textBox_back.png);
   background-repeat: repeat-x;
 }
+
 .claro .dijitTextBoxError, .claro .dijitTextBoxError .dijitButtonNode {
   border-color: #d46464;
 }

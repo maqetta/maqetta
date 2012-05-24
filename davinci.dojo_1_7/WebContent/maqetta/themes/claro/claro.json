@@ -1516,6 +1516,15 @@
                 },
                 "Selected": {
                     "selectors": {
+                    	".claro .dijitTextBoxFocused .dijitInputInner, .claro .dijitTextBoxFocused .dijitValidationContainer": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom",
+							"color"
+						],
 						".claro .dijitTextBoxFocused": [
 							"$std_10" 
 						],
@@ -1528,9 +1537,65 @@
 					"simulate": "dijitTextBoxFocused"
                 },
                 "Hover": {
+                	 "selectors": {
+						".claro .dijitTextBoxHover .dijitInputInner, .claro .dijitTextBoxHover .dijitValidationContainer": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom",
+							"color"
+						],
+						".claro .dijitTextBoxHover": [
+							"$std_10" 
+						]
+
+					}
                 },
-                "Disabled":{},
-                "ReadOnly":{}
+                "Disabled":{
+                	"selectors": {
+						".claro .dijitTextBoxDisabled .dijitInputInner, .claro .dijitTextBoxDisabled .dijitValidationContainer": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom",
+							"color"
+						],
+						".dj_webkit .claro .dijitTextBoxDisabled input": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom",
+							"color"
+						],
+						".claro .dijitTextBoxDisabled": [
+							"$std_10" 
+						]
+
+					}
+                },
+                "ReadOnly":{
+                	"selectors": {
+						".claro .dijitTextBoxReadOnly .dijitInputInner, .claro .dijitTextBoxReadOnly .dijitValidationContainer": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom",
+							"color"
+						],
+						".claro .dijitTextBoxReadOnly": [
+							"$std_10" 
+						]
+
+					}
+                }
                 
             } 
         },

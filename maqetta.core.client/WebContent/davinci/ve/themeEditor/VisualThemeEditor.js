@@ -19,6 +19,7 @@ return declare([], {
 
 
 	constructor: function (themeEditor, element,filename,themeCssFiles, themeEditorHtmls,theme) {
+		this.THEME_EDITOR_SPEC = 0.81;
 		this._themeEditor = themeEditor;
 		this.domNode = element;
 		this.theme = theme;
@@ -143,6 +144,9 @@ return declare([], {
 							this.themeVersionWarn();
 						}
 					}
+					if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
+						this.themeVersionError();
+					}
 
 					if (failureInfo.errorMessage) {
 						this.loadingDiv.innerHTML = failureInfo.errorMessage;
@@ -189,13 +193,49 @@ return declare([], {
 		ok.domNode.onclick = dojo.hitch(this, 'themeVersionWarnOk');
 		this._dialog.show();
 	},
-	
+
 	themeVersionWarnOk: function(){
 		if (this._dialog){
 			this._dialog.hide();
 			this._dialog.destroyRecursive(false);
 			delete this._dialog;
 		}
+	},
+	
+	themeVersionError: function(){
+		//FIXME: i18n
+		var message = 'Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta.';
+		this._dialog = new Dialog({
+			id: "maqetta.themeVersionMismatch",
+			title:"Theme Version Error",
+			editorContainer: this._themeEditor.editorContainer,
+			onCancel:function(){
+				this.destroyRecursive(false);
+				this.editorContainer.save(false); // force a save
+				this.editorContainer.forceClose(this, true);
+			},
+			style: 'width:250px;'
+		});
+		var formHTML = '<table>' + 
+							'<tr><td></td><td>'+message+'</td><td></td></tr>'+
+							'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="themeErrorOk" >Ok</button></td><td></td></tr>'+
+						'</table>';
+		
+		this._dialog.setContent(formHTML);
+		var ok = dijit.byId('themeErrorOk');
+		ok.domNode.onclick = dojo.hitch(this, 'themeVersionErrorOk');
+		this._dialog.show();
+	},
+	
+	themeVersionErrorOk: function(){
+		if (this._dialog){
+			this._dialog.editorContainer.save(false); // force a save
+			this._dialog.editorContainer.forceClose(this, true);
+			this._dialog.hide();
+			this._dialog.destroyRecursive(false);
+			delete this._dialog;
+		}
+
 	},
 
 	hotModifyCssRule: function(){

@@ -208,7 +208,6 @@ return declare([], {
 		this._dialog = new Dialog({
 			id: "maqetta.themeVersionMismatch",
 			title:"Theme Version Error",
-			editorContainer: this._themeEditor.editorContainer,
 			onCancel:function(){
 				this.destroyRecursive(false);
 				this.editorContainer.save(false); // force a save
@@ -216,6 +215,7 @@ return declare([], {
 			},
 			style: 'width:250px;'
 		});
+		this._dialog.editorContainer = this._themeEditor.editorContainer;
 		var formHTML = '<table>' + 
 							'<tr><td></td><td>'+message+'</td><td></td></tr>'+
 							'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="themeErrorOk" >Ok</button></td><td></td></tr>'+

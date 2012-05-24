@@ -9,10 +9,12 @@ define(["dojo/_base/declare",
         "davinci/ui/ErrorDialog",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
+        "system/resource"
         
         
        
-],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSModel, DocileDialog, States, ErrorDialog, veNLS,commonNLS){
+],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSModel, DocileDialog, States, 
+		ErrorDialog, veNLS,commonNLS, systemResource){
 	var cascade =  declare("davinci.ve.widgets.Cascade",  [WidgetLite], {
 	
 		target : null,
@@ -888,7 +890,12 @@ define(["dojo/_base/declare",
 			var state = "Normal";
 			var lastElementStyle = -1;
 			var deltas = [];
-			var dynamicThemeUrl = this.context.cssFiles ? this.context.cssFiles[0].url : null;
+			var dynamicThemeUrl = this.context.cssFiles ? this.context.cssFiles[0].url: null;
+			var dynamicThemeReadOnly = false;
+			if (dynamicThemeUrl){
+				var file = systemResource.findResource(dynamicThemeUrl);
+				dynamicThemeReadOnly = file._readOnly;
+			}
 			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
 				state = state || States.getState();
 			}
@@ -911,12 +918,12 @@ define(["dojo/_base/declare",
 					}
 					if (!found){
 						var matchLevel = this._computeMatchLevelSelector(name);
-						if (dynamicThemeUrl) { // add rule for dynamic file, in most cases mobile
+						if (dynamicThemeUrl && !dynamicThemeReadOnly) { // add rule for dynamic file, in most cases mobile 
 							deltas.push({rule:null, ruleString:name, 
 								targetFile:dynamicThemeUrl, className: null,
 								value:null, matchLevel:matchLevel, type:'proposal'});
 						}
-						if (this.context._themeUrl) { // add rule for static file, in most cases desktop
+						if (this.context._themeUrl && !this.context.theme.file.readOnly()) { // add rule for static file, in most cases desktop
 							deltas.push({rule:null, ruleString:name, 
 								targetFile:this.context._themeUrl, className: null,
 								value:null, matchLevel:matchLevel, type:'proposal', proposalTarget: 'theme'});

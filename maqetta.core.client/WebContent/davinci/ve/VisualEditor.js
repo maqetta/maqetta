@@ -183,6 +183,13 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 			this.getContext().setMobileOrientation(this._orientation);
 			this.silhouetteiframe.setOrientation(this._orientation);
 			davinci.Workbench.getOpenEditor()._visualChanged();
+			// Wrapped in setTimeout because sometimes browsers are quirky about
+			// instantly updating the size/position values for elements
+			// and things usually work if you wait for current processing thread
+			// to complete. Also, updateFocusAll() can be safely called within setTimeout.
+			setTimeout(function() {
+				this.getContext().updateFocusAll(); 
+			}.bind(this), 100); 
 		}
 	},
 
@@ -390,7 +397,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 			this.loadingDiv.innerHTML = message;
 			dojo.addClass(loading, 'error');
 		} else {
-			this.loadingDiv.parentNode.removeChild(this.loadingDiv);
+			if (this.loadingDiv.parentNode) {
+				this.loadingDiv.parentNode.removeChild(this.loadingDiv);				
+			}
 			delete this.loadingDiv;
 		}
 	},

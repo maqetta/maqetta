@@ -1499,12 +1499,18 @@
             "states": {
                 "Normal": {
                     "selectors": {
+						".claro .dijitTextBox .dijitInputInner, .claro .dijitTextBox .dijitValidationContainer": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom"
+						],
 						".claro .dijitTextBox": [
 							"$std_10" 
-						],
-						".claro .dijitTextBox .dijitInputInner": [
-							"text-align"
 						]
+
 					},
                     "query": "$auto" 
                 },
@@ -1535,11 +1541,16 @@
             "states": {
                 "Normal": {
                     "selectors": {
+                    	".claro .dijitTextBox .dijitInputInner, .claro .dijitTextBox .dijitValidationContainer": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom"
+						],
 						".claro .dijitTextBox": [
 							"$std_10" 
-						],
-						".claro .dijitTextBox .dijitInputInner": [
-							"text-align"
 						]
 					},
                     "query": "$auto" 
@@ -1571,11 +1582,16 @@
             "states": {
                 "Normal": {
                     "selectors": {
+                    	".claro .dijitTextBox .dijitInputInner, .claro .dijitTextBox .dijitValidationContainer": [
+							"text-align",
+							"padding",
+							"padding-right",
+							"padding-top",
+							"padding-left",
+							"padding-bottom"
+						],
 						".claro .dijitTextBox": [
 							"$std_10" 
-						],
-						".claro .dijitTextBox .dijitInputInner": [
-							"text-align"
 						]
 					},
                     "query": "$auto" 

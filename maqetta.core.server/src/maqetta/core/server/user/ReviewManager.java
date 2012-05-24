@@ -223,6 +223,8 @@ public class ReviewManager implements IReviewManager {
 		IDesignerUser designer = designerUsers.get(name);
 		if (designer == null) {
 			IUser user = ServerManager.getServerManger().getUserManager().getUser(name);
+			
+			if(user==null) return null;
 			designer = getDesignerUser(user);
 		}
 		return designer;

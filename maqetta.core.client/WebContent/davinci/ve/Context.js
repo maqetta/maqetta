@@ -2450,9 +2450,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		
 		var widget = this.getSelection();
-		if(widget.length) {
-			widget = widget[0];
+		if(!widget.length){
+			return [];
 		}
+		widget = widget[0];
 		
 		var widgetType = theme.loader.getType(widget);
 	

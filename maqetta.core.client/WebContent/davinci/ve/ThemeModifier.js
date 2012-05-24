@@ -19,15 +19,17 @@ return declare("davinci.ve.ThemeModifier", null, {
 		
 		this.cssFiles = [];
 		
-		for(var i = 0;i<this.themeCssFiles.length;i++){
-			var cssURL = this._themePath.getParentPath().append(this.themeCssFiles[i]).toString();
-			this.cssFiles.push(Factory.getModel({
-				url: cssURL,
-			    includeImports: true,
-			    loader: function(url){
-					return system.resource.findResource(url).getText();
-				}
-			}));
+		if(this.themeCssFiles){
+			for(var i = 0;i<this.themeCssFiles.length;i++){
+				var cssURL = this._themePath.getParentPath().append(this.themeCssFiles[i]).toString();
+				this.cssFiles.push(Factory.getModel({
+					url: cssURL,
+				    includeImports: true,
+				    loader: function(url){
+						return system.resource.findResource(url).getText();
+					}
+				}));
+			}
 		}
 		return this.cssFiles;
 	},

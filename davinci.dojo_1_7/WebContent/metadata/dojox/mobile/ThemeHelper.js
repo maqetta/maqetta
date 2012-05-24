@@ -23,7 +23,8 @@ return {
 	},
 	
 	preThemeConfig: function(context) {
-		if(!has("webkit")){
+		
+		if(!has("webkit")) {
 			/*
 			 * Only add the compat CSS files if no webkit
 			 */
@@ -33,17 +34,19 @@ return {
 			for (var i = 0; i < relFilePath.segments.length; i++){
 				relativePath = relativePath +relFilePath.segments[i]+'/';
 			}
-			for(var i = 0; i < context.theme.compatFiles.length; i++){
-				var compatCss = relativePath+context.theme.name+'/'+context.theme.compatFiles[i]
-				var link = context.getDocument().createElement("link");
-				link.href = compatCss;
-				link.type = "text/css";
-				link.rel = "stylesheet";
-				var head = context.getDocument().getElementsByTagName('head')[0];
-				head.appendChild(link);
+			if (context.theme.compatFiles) {
+				for(var i = 0; i < context.theme.compatFiles.length; i++){
+					var compatCss = relativePath+context.theme.name+'/'+context.theme.compatFiles[i]
+					var link = context.getDocument().createElement("link");
+					link.href = compatCss;
+					link.type = "text/css";
+					link.rel = "stylesheet";
+					var head = context.getDocument().getElementsByTagName('head')[0];
+					head.appendChild(link);
+				}
 			}
 		}
-    },
+	},
 	
 	getHeadImports: function(theme){
 	    return '';

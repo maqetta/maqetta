@@ -37,7 +37,8 @@ features to visually compose an actual running mobile application, all within a 
 (e.g., silhouette of an iPhone). This tutorial shows how to use an alternate technique for mocking up a mobile user 
 interface using Maqetta's quick UI sketching features. With these techniques, you will create a WYSIWYG drawing of
 a proposed user interface, using actual mobile widgets, but the result will be a static image of the proposed user
-interface rather than an actual working application. Here are some advantages/disadvantages between mobile visual
+interface rather than an actual working application.</p>
+<p>Here are some advantages/disadvantages between mobile visual
 composition and mobile sketching:</p>
 <ul>
 <li>Mobile visual composition:
@@ -86,7 +87,7 @@ various clip art entries for mobile devices (e.g., Android_340x480, Android_480x
 </p>
 <p><a href="img/iphone_clipart_added.png" target="_blank"><img alt="image" src="img/iphone_clipart_added.png" style="margin: 1em 1em 0pt 0pt;" height="500" /></a></p>	
 
-<a name="adding_dojox_mobile_widgets"><h2>Adding dojox.mobile widgets</h2></a>
+<a name="adding_heading"><h2>Adding a Heading widget</h2></a>
 
 <p>In the widget palette, open up the "Dojox Mobile" section of the Widgets palette:
 </p>
@@ -94,7 +95,7 @@ various clip art entries for mobile devices (e.g., Android_340x480, Android_480x
 
 <p>Drag/drop a Heading widget into the picture of the iPhone. Attempt to drop the widget
 	at the top/left corner of the inner rectangle of the iPhone clip art widget. 
-	When the prompt appears for the Heading widget's text, enter ""Mobile UI sketch".</p>
+	When the prompt appears for the Heading widget's text, enter ""Mobile UI Sketch".</p>
 
 <p><a href="img/mobile_sketching_heading_added.png" target="_blank"><img alt="image" src="img/mobile_sketching_heading_added.png" style="margin: 1em 1em 0pt 0pt;" height="250" /></a></p>	
 
@@ -115,6 +116,13 @@ various clip art entries for mobile devices (e.g., Android_340x480, Android_480x
 <p>Your canvas should now look like this:
 </p>
 <p><a href="img/mobile_sketching_heading_adjusted.png" target="_blank"><img alt="image" src="img/mobile_sketching_heading_adjusted.png" style="margin: 1em 1em 0pt 0pt;" height="250" /></a></p>	
+
+<p class='note'>If you check the Outline palette, you will see that the Heading is a child of the device clip art widget, and
+therefore positioned "absolutely, but relative to its parent". In other words, the Heading is at a fixed (x,y) location
+relative to the top/left of its parent widget (i.e., the device clip art widget). What this means is that if you move
+the device clip art widget, the Heading will move along with it.</p>
+
+<a name="adding_heading"><h2>Adding a RoundRectList widget and a TabBar widget</h2></a>
 
 <p>Drag/drop a RoundRectList widget into the picture of the iPhone below the Heading widget. 
 	When the prompt appears, type in 4 lines of text:

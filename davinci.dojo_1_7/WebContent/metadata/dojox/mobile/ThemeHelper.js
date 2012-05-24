@@ -54,6 +54,9 @@ return {
 	
 	
 	onContentChange: function(context, theme){
+		if(!context || !context.editor || !context.editor.isActiveEditor()){
+			return;
+		}
 		var userDoc, useBodyFontBackgroundClass;
 		if(context && context.rootNode){
 			userDoc = context.rootNode.ownerDocument;

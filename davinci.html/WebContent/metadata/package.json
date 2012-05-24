@@ -158,6 +158,9 @@
 		            "icon": "resources/images/fieldset.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAHF+mnaBlunv+tDV3naClvP2+9jk9tjk9eHq9/L2/Njl9uDq99fl9urx+vL2++nx+n6HkPL3/PP3+/L3+8Lo+omNiImMiNvc1ZOUgZOTgZ2aeqegdJ+aeqefda6jcf///yH5BAEAAB8ALAAAAAAQABAAAAVi4CeOZGme6OetbOuVGyXPc1dyCsMYinIcFE3pskAgisYFJaNyuQQPSuUTo9E6iQkF8sHpeD6gxuGgED4YJPK4HADeH0tjTodKSxBJYh+JZLclARNkBWRkZiVviotwKY6PJSEAOw==",
 		            "allowedChild": "ANY",
+		            "properties": {
+		             	"style": "border:2px groove threedface;margin:2px;padding:0.75em;"
+		            },
 		            "children": [
 		                {
 		                    "type": "html.legend",

@@ -1,6 +1,6 @@
 {
 	"name" : "Sketch",
-	"specVersion": "0.7",
+	"specVersion": "0.81",
 	"version" : "1.7",
 	"files" : ["sketch.css"],
 	"meta" : ["sketch.json"],

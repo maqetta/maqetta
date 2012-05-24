@@ -1683,7 +1683,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitFolderOpened,
 .dijitIconFolderOpen,
 .dijitIconError {
-	background-image: url(../../icons/images/commonIconsObjActEnabled.png); 
+	background-image: url(icons/images/commonIconsObjActEnabled.png); 
 	width: 16px;
 	height: 16px;
 }
@@ -1722,7 +1722,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dj_ie6 .dijitFolderOpened,
 .dj_ie6 .dijitIconFolderOpen,
 .dj_ie6 .dijitIconError {
-	background-image: url(../../icons/images/commonIconsObjActEnabled8bit.png);
+	background-image: url(icons/images/commonIconsObjActEnabled8bit.png);
 }
 .dijitDisabled .dijitIconSave,
 .dijitDisabled .dijitIconPrint,
@@ -1759,7 +1759,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitDisabled .dijitFolderOpened,
 .dijitDisabled .dijitIconFolderOpen,
 .dijitDisabled .dijitIconError {
-	background-image: url(../../icons/images/commonIconsObjActDisabled.png); 
+	background-image: url(icons/images/commonIconsObjActDisabled.png); 
 }
 .dijitIconSave { background-position: 0; }
 .dijitIconPrint { background-position: -16px; }
@@ -1794,7 +1794,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitIconFolderClosed, .dijitFolderClosed { background-position: -464px; }
 .dijitIconFolderOpen, .dijitFolderOpened { background-position: -480px; }
 .dijitIconLoading {
-	background:url(../../icons/images/loadingAnimation_rtl.gif) no-repeat;
+	background:url(icons/images/loadingAnimation_rtl.gif) no-repeat;
 	height: 20px;
 	width: 20px;
 }
@@ -1896,7 +1896,19 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTextBox {
   background-color: #ffffff;
 }
-.claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitButtonNode {
+.claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitInputInner, .claro .dijitTextBoxHover .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxDisabled, .claro .dijitTextBoxDisabled .dijitInputInner, .claro .dijitTextBoxDisabled .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxReadOnly, .claro .dijitTextBoxReadOnly .dijitInputInner, .claro .dijitTextBoxReadOnly .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxFocused, .claro .dijitTextBoxFocused .dijitInputInner, .claro .dijitTextBoxFocused .dijitValidationContainer{
+	/*maqetta - missing rule to enable font change*/
+}
+.claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitButtonNode{
   border-color: #759dc0;
   -webkit-transition-duration: 0.25s;
   -moz-transition-duration: 0.25s;
@@ -1907,6 +1919,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   background-image: url(form/images/textBox_back.png);
   background-repeat: repeat-x;
 }
+
 .claro .dijitTextBoxError, .claro .dijitTextBoxError .dijitButtonNode {
   border-color: #d46464;
 }
@@ -4022,7 +4035,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitToolbarSeparator {
   
-  background: url(../../icons/images/editorIconsEnabled.png);
+  background: url(icons/images/editorIconsEnabled.png);
 }
 .claro .dijitDisabled .dijitToolbar {
   background: none;
@@ -4065,14 +4078,14 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   background-image: none;
 }
 .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsEnabled.png); 
+	background-image: url(icons/images/editorIconsEnabled.png); 
 	background-repeat: no-repeat;
 	width: 18px;
 	height: 18px;
 	text-align: center;
 }
 .dijitDisabled .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsDisabled.png); 
+	background-image: url(icons/images/editorIconsDisabled.png); 
 }
 .dijitEditorIconSep { background-position: 0; }
 .dijitEditorIconSave { background-position: -18px; }
@@ -4477,13 +4490,13 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding: 3px 10px 1px 3px;
 }
 .dijitEditorRtl .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsEnabled_rtl.png); 
+	background-image: url(icons/images/editorIconsEnabled_rtl.png); 
 }
 .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsDisabled_rtl.png); 
+	background-image: url(icons/images/editorIconsDisabled_rtl.png); 
 }
 .dijitToolbarRtl .dijitToolbarSeparator {
-	background-image: url(../../icons/images/editorIconsEnabled_rtl.png);
+	background-image: url(icons/images/editorIconsEnabled_rtl.png);
 }
 .dijitRtl .dijitIconSave,
 .dijitRtl .dijitIconPrint,
@@ -4520,7 +4533,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitRtl .dijitFolderOpened,
 .dijitRtl .dijitIconFolderOpen,
 .dijitRtl .dijitIconError { 
-	background-image: url(../../icons/images/commonIconsObjActEnabled_rtl.png); 
+	background-image: url(icons/images/commonIconsObjActEnabled_rtl.png); 
 	width: 16px;
 	height: 16px;
 }
@@ -4559,7 +4572,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dj_ie6 .dijitRtl .dijitFolderOpened,
 .dj_ie6 .dijitRtl .dijitIconFolderOpen,
 .dj_ie6 .dijitRtl .dijitIconError {
-	background-image: url(../../icons/images/commonIconsObjActEnabled8bit_rtl.png);
+	background-image: url(icons/images/commonIconsObjActEnabled8bit_rtl.png);
 }
 .dijitRtl .dijitDisabled .dijitIconSave,
 .dijitRtl .dijitDisabled .dijitIconPrint,
@@ -4596,7 +4609,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitRtl .dijitDisabled .dijitFolderOpened,
 .dijitRtl .dijitDisabled .dijitIconFolderOpen,
 .dijitRtl .dijitDisabled .dijitIconError {
-	background-image: url(../../icons/images/commonIconsObjActDisabled_rtl.png); 
+	background-image: url(icons/images/commonIconsObjActDisabled_rtl.png); 
 }
 .claro .dijitTitlePaneRtl .dijitClosed .dijitArrowNode {
   background-position: -7px 0;

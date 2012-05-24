@@ -1767,7 +1767,7 @@ outline : 1px dotted #666666;
 }
   
  .sketch .dijitContentPaneError {
-    background : url(../../icons/images/commonIconsObjActEnabled.png) no-repeat left center;
+    background : url(icons/images/commonIconsObjActEnabled.png) no-repeat left center;
     background-position : -496px;
     padding-left : 25px;
 }
@@ -3994,7 +3994,7 @@ border : 1px #c0ccdf solid;
  .sketch .dijitToolbarSeparator {
     
   
-background : url(../../icons/images/editorIconsEnabled.png);
+background : url(icons/images/editorIconsEnabled.png);
 }
   
  .sketch .dijitDisabled .dijitToolbar {

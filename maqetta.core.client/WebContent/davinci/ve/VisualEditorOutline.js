@@ -211,7 +211,7 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 				return true;
 			default:  // if not dropping before or after an item, make sure the target item has a container node
 				var item = dijit.getEnclosingWidget(target).item;
-				var hasContainerNode = !!item.getContainerNode() || item.id == "myapp";
+				var hasContainerNode = (item.getContainerNode && item.getContainerNode()) || item.id == "myapp";
 				return hasContainerNode;
 			}
 		},

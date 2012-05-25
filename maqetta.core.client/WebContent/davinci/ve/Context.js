@@ -3299,7 +3299,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(!documentCssHeader && themeCssHeader){
 					var themeCssRootArr = themeCssHeader.split('/');
 					themeCssRootArr.pop();
-					var documentCssFileName = themeCssRootArr.join('/') + '/document.css';
+					themeCssRootArr.pop();
+					var documentCssFileName = themeCssRootArr.join('/') + '/' + this.theme.className + '/document.css';
 					header = dojo.clone(header);
 					header.styleSheets.splice(0, 0, documentCssFileName);
 					this.setHeader(header);
@@ -3307,7 +3308,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(!documentCssImport && themeCssImport){
 					var themeCssRootArr = themeCssImport.url.split('/');
 					themeCssRootArr.pop();
-					var documentCssFileName = themeCssRootArr.join('/') + '/document.css';
+					themeCssRootArr.pop();
+					var documentCssFileName = themeCssRootArr.join('/') + '/' + this.theme.className + '/document.css';
 					var basePath = this.getFullResourcePath().getParentPath();
 					var documentCssPath = basePath.append(documentCssFileName).toString();
 					var documentCssFile = system.resource.findResource(documentCssPath);

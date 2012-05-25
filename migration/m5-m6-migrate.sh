@@ -25,7 +25,7 @@ function migrate_project {
 	echo "4/5. Update $libSettings"
 	sed '
 s|\(library id="maqetta" name="maqetta" version="0.3" virtualRoot="'"$eclipseDir"'\)"|\1lib/maqetta"|
-s|\(</libraries>\)|<library id="gridx" name="gridx" version="1.0" virtualRoot="'"$eclipseDir"'lib/dojo/gridx"/>\
+s|\(</libraries>\)|<library id="gridx" name="gridx" version="1.0prebeta2" virtualRoot="'"$eclipseDir"'lib/dojo/gridx"/>\
 \1|' <"$libSettings" >"$libSettings.new"
 	mv "$libSettings.new" "$libSettings"
 }

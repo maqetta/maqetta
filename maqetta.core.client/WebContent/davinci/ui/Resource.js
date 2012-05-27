@@ -109,11 +109,9 @@ var uiResource = {
 		},
 		
 		newHTMLFromTemplate: function(){
-			debugger;
 			var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFromTemplateOptions";
 			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "html", dialogSpecificClass);
 			var executor = function(){
-				debugger;
 				var teardown = true;
 				if(!newDialog.cancel){
 					var optionsWidget = newDialog.dialogSpecificWidget;
@@ -126,17 +124,11 @@ var uiResource = {
 					var templateResource = Resource.findResource(templatePath.toString());
 					var templateText = templateResource && templateResource.getText();
 					if(check && templateText){
-/*
-						var resource = Resource.createResource(resourcePath);
-						resource.setText(templateText);
-						uiResource.openResource(resource);
-*/
 						// Create a new editor for the new filename
 						var file = Resource.createResource(resourcePath);
 						file.isNew = true;
 						var pageBuilder =new RebuildPage();
 						var newText = pageBuilder.rebuildSource(templateText, file);
-						//file.setContents(newText);
 						Workbench.openEditor({fileName: file, content: newText, openAsNew:true });
 
 					} else {
@@ -146,30 +138,6 @@ var uiResource = {
 				return teardown;
 			};
 			Workbench.showModal(newDialog, uiNLS.createNewHTMLFile, '', executor);
-/*
-			var folder, resource = getSelectedResource()
-			if(resource){
-				if(resource.elementType=="Folder"){
-					folder = resource;
-				}else{
-					folder = resource.parent;
-				}
-					
-			}else{
-				folder = Resource.findResource(Workbench.getProject());
-			}
-			
-			var dialogOptions = {finishButtonLabel: uiNLS.open};
-			var openDialog = new OpenFile(dialogOptions);
-			
-			var executor = function(){
-				if(!openDialog.cancel){
-					uiResource.openResource(openDialog.get('value'));
-				}
-				return true;
-			};
-			Workbench.showModal(openDialog, uiNLS.openFile, '', executor);
-*/
 		},
 		
 		newCSS: function(){

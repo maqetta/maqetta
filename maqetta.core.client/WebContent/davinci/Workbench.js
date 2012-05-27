@@ -1209,7 +1209,7 @@ var Workbench = {
 		if (!keywordArgs.noSelect) {
 			tabContainer.selectChild(tab);
 		}
-		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams).then(function(editor) {
+		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams, keywordArgs.openAsNew).then(function(editor) {
 			if (keywordArgs.startLine) {
 				tab.editor.select(keywordArgs);
 			}

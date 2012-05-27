@@ -154,6 +154,17 @@ return {
                     menubarPath: "davinci.new/new"
                 },
                 {
+                    id: "newHTMLFromTemplate",
+                    run: function() {
+                    	require(['./ui/Resource'], function(r) {
+                    		r.newHTMLFromTemplate();
+                    	});
+                    },
+                    label: "HTML File from Template...",
+                    toolbarPath: "davinci.toolbar.main/edit",
+                    menubarPath: "davinci.new/new"
+                },
+                {
                     id: "newCSS",
                     run: function() {
                     	require(['./ui/Resource'], function(r) {

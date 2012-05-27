@@ -8,6 +8,7 @@ define(['dojo/_base/declare',
        '../ve/RebuildPage',
        './Rename',
        './widgets/NewHTMLFileOptions',
+       './widgets/NewHTMLFromTemplateOptions',
        './widgets/OpenFile',
        './widgets/NewFolder',
        './widgets/NewFile', 
@@ -20,7 +21,7 @@ define(['dojo/_base/declare',
        'dijit/form/Button',
        'dojox/form/uploader/plugins/HTML5'
        
-],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){
+],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, NewHTMLFromTemplateOptions, OpenFile, NewFolder, NewFile, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){
 
 var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName, existingResource) {
 	var resource=existingResource || getSelectedResource();
@@ -106,7 +107,71 @@ var uiResource = {
 				};
 				Workbench.showModal(newDialog, uiNLS.createNewHTMLFile, '', executor);
 		},
-	
+		
+		newHTMLFromTemplate: function(){
+			debugger;
+			var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFromTemplateOptions";
+			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "html", dialogSpecificClass);
+			var executor = function(){
+				debugger;
+				var teardown = true;
+				if(!newDialog.cancel){
+					var optionsWidget = newDialog.dialogSpecificWidget;
+					var options = optionsWidget.getOptions();
+					var resourcePath = newDialog.get('value');
+					var check = checkFileName(resourcePath);
+					var projectFolder = Resource.findResource(Workbench.getProject());
+					var projectPath = new Path(projectFolder.getPath()).append('templates');
+					var templatePath = options.template && projectPath.append(options.template);
+					var templateResource = Resource.findResource(templatePath.toString());
+					var templateText = templateResource && templateResource.getText();
+					if(check && templateText){
+/*
+						var resource = Resource.createResource(resourcePath);
+						resource.setText(templateText);
+						uiResource.openResource(resource);
+*/
+						// Create a new editor for the new filename
+						var file = Resource.createResource(resourcePath);
+						file.isNew = true;
+						var pageBuilder =new RebuildPage();
+						var newText = pageBuilder.rebuildSource(templateText, file);
+						//file.setContents(newText);
+						Workbench.openEditor({fileName: file, content: newText, openAsNew:true });
+
+					} else {
+						teardown = false;
+					}
+				}
+				return teardown;
+			};
+			Workbench.showModal(newDialog, uiNLS.createNewHTMLFile, '', executor);
+/*
+			var folder, resource = getSelectedResource()
+			if(resource){
+				if(resource.elementType=="Folder"){
+					folder = resource;
+				}else{
+					folder = resource.parent;
+				}
+					
+			}else{
+				folder = Resource.findResource(Workbench.getProject());
+			}
+			
+			var dialogOptions = {finishButtonLabel: uiNLS.open};
+			var openDialog = new OpenFile(dialogOptions);
+			
+			var executor = function(){
+				if(!openDialog.cancel){
+					uiResource.openResource(openDialog.get('value'));
+				}
+				return true;
+			};
+			Workbench.showModal(openDialog, uiNLS.openFile, '', executor);
+*/
+		},
+		
 		newCSS: function(){
 			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "css");
 			var executor = function(){
@@ -300,7 +365,6 @@ var uiResource = {
 			};
 			Workbench.showModal(openDialog, uiNLS.openFile, '', executor);
 		},
-	
 	
 		addFiles: function(){
 			var formHtml = dojo.replace(

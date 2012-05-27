@@ -142,6 +142,9 @@ define({ root:
 		
 		//NewHTMLFileOptions.html - Theme strings
 		"nhfoThemeButtonLabel":"Theme...",
-		"nhfoThemeButtonTitle":"Select themes or theme set for new HTML file"
+		"nhfoThemeButtonTitle":"Select themes or theme set for new HTML file",
+		
+		//NewHTMLFromTemplateOptions.html
+		"nhftTemplateLabel":"Template:"
 }
 });

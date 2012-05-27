@@ -52,7 +52,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
       	*/
 	},
 	
-	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
+	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams, openAsNew){
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
 		require([editorExtension.editorClass], function(EditorCtor) {
@@ -69,8 +69,14 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					editor.editorID=editorExtension.id;
 					editor.isDirty= !editor.isReadOnly && this.isDirty;
 					this._createToolbar();
+/*
 					if (!content) {
 						content=editor.getDefaultContent();
+*/
+					if(openAsNew || !content){
+						if (!content) {
+							content=editor.getDefaultContent();
+						}
 						editor.isDirty=!editor.isReadOnly;
 						editor.lastModifiedTime=Date.now();
 					}

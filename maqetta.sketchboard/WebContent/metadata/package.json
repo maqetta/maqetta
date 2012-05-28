@@ -17,6 +17,7 @@
       "scripts": {
         "widget_metadata":
         {
+          "callbacks": "callbacks.js",
           "categories": {
               "sketchboard": {
                 "name": "Sketchboard",

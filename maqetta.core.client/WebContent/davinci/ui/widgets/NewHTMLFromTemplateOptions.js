@@ -27,16 +27,25 @@ define(["dojo/_base/declare",
 	return declare("davinci.ui.widgets.NewHTMLFromTemplateOptions",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
+/*
 		templates:['Sample1.html','Sample2.html'],
-				
+*/				
 		postCreate : function(){
 			this.inherited(arguments);
 			var langObj = this.langObj = uiNLS;
 			this.templateLabel.innerHTML = langObj.nhftTemplateLabel;
-
+			var base = Workbench.getProject();
+			/*FIXME: Need to make templates folder configurable
+			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
+			var projectTemplatesBase = new Path(base).append(prefs.templatesFolder);
+			*/
+			var projectTemplatesBase = new Path(base).append('templates');
+			var allTemplates = system.resource.findResource("*.html", true, projectTemplatesBase.toString());
 			var optsTemplate = [];
-			for(var i=0; i<this.templates.length; i++){
-				var template = this.templates[i];
+			this.templates = [];
+			for(var i=0; i<allTemplates.length; i++){
+				var template = allTemplates[i].getPath().toString();
+				this.templates.push(template);
 				optsTemplate.push({value:template, label:template});
 			}
 			this.templateSelect.addOption(optsTemplate);

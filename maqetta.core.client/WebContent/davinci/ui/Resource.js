@@ -118,10 +118,7 @@ var uiResource = {
 					var options = optionsWidget.getOptions();
 					var resourcePath = newDialog.get('value');
 					var check = checkFileName(resourcePath);
-					var projectFolder = Resource.findResource(Workbench.getProject());
-					var projectPath = new Path(projectFolder.getPath()).append('templates');
-					var templatePath = options.template && projectPath.append(options.template);
-					var templateResource = Resource.findResource(templatePath.toString());
+					var templateResource = Resource.findResource(options.template);
 					var templateText = templateResource && templateResource.getText();
 					if(check && templateText){
 						// Create a new editor for the new filename

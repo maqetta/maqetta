@@ -73,7 +73,8 @@ return {
             defaultValues: {
                 "webContentFolder": "",
                 "themeFolder": "themes",
-                "widgetFolder": "lib/widgets"
+                "widgetFolder": "lib/widgets",
+                "templatesFolder": "templates"
             }
         }
     ],

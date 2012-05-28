@@ -32,12 +32,9 @@ define(["dojo/_base/declare",
 			var langObj = this.langObj = uiNLS;
 			this.templateLabel.innerHTML = langObj.nhftTemplateLabel;
 			var base = Workbench.getProject();
-			/*FIXME: Need to make templates folder configurable
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
 			var projectTemplatesBase = new Path(base).append(prefs.templatesFolder);
-			*/
-			var projectTemplatesBase = new Path(base).append('templates');
-			var allTemplates = system.resource.findResource("*.html", true, projectTemplatesBase.toString());
+			var allTemplates = system.resource.findResource("*.html", true, projectTemplatesBase.toString(), true);
 			var optsTemplate = [];
 			this.templates = [];
 			for(var i=0; i<allTemplates.length; i++){

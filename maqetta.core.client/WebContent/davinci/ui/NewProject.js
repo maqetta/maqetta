@@ -59,7 +59,7 @@ define(["dojo/_base/declare",
 			Resource.createProject(newProjectName, true, isEclipse);
 			
 			if(isEclipse){
-				var prefValue = {webContentFolder:"./WebContent", themeFolder: "./WebContent/themes", widgetFolder: "./WebContent/widgets"};
+				var prefValue = {webContentFolder:"./WebContent", themeFolder: "./WebContent/themes", widgetFolder: "./WebContent/widgets", templatesFolder: "./WebContent/templates"};
 				Preferences.savePreferences('davinci.ui.ProjectPrefs',newProjectName, prefValue);
 			}
 			

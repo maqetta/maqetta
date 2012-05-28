@@ -571,3 +571,17 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	margin-left: .5em;
 */
 }
+.nhft_template {
+	white-space:nowrap;
+}
+.nhft_template label {
+	vertical-align:middle;
+	margin-right:.45em;
+}
+.nhft_template .dijitSelectLabel {
+	padding-left:.05em;
+	padding-right:.25em;
+}
+.nhft_template .dijitSelect .dijitButtonContents {
+	width:12.5em;
+}

@@ -33,16 +33,25 @@ define(["dojo/_base/declare",
 			this.templateLabel.innerHTML = langObj.nhftTemplateLabel;
 			var base = Workbench.getProject();
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
-			var projectTemplatesBase = new Path(base).append(prefs.templatesFolder);
-			var allTemplates = system.resource.findResource("*.html", true, projectTemplatesBase.toString(), true);
-			var optsTemplate = [];
+			var templatesFolderPath = new Path(base).append(prefs.templatesFolder);
+			templatesFolderPath._canonicalize();
+			var templatesFolderString = templatesFolderPath.toString();
+			var templates = system.resource.findResource("*.html", true, templatesFolderString, true);
+			var opts = [];
 			this.templates = [];
-			for(var i=0; i<allTemplates.length; i++){
-				var template = allTemplates[i].getPath().toString();
-				this.templates.push(template);
-				optsTemplate.push({value:template, label:template});
+			for(var i=0; i<templates.length; i++){
+				var templatePath = new Path(templates[i].getPath());
+				templatePath._canonicalize();
+				var templateString = templatePath.toString();
+				var stripped = templateString;
+				var idx = templateString.indexOf(templatesFolderString);
+				if(idx === 0){
+					stripped = templateString.substr(templatesFolderString.length+1);
+				}
+				this.templates.push(templateString);
+				opts.push({value:templateString, label:stripped});
 			}
-			this.templateSelect.addOption(optsTemplate);
+			this.templateSelect.addOption(opts);
 			this.connect(this.templateSelect, 'onChange', dojo.hitch(this,function(){
 				this._update_template();
 			}));

@@ -117,6 +117,8 @@ var Path = declare("davinci.model.Path", null, {
 		return result.join("");
 	},
 
+	//FIXME: This doesn't seem to ever get called and
+	//its logic looks wrong - shouldn't it be looking for segs[0]?
 	removeRelative : function(){
 		var segs = this.getSegments();
 		if(segs.length > 0 && segs[1]==".")

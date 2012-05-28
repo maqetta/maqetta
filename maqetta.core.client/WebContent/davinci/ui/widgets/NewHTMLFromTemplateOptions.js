@@ -27,9 +27,6 @@ define(["dojo/_base/declare",
 	return declare("davinci.ui.widgets.NewHTMLFromTemplateOptions",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
-/*
-		templates:['Sample1.html','Sample2.html'],
-*/				
 		postCreate : function(){
 			this.inherited(arguments);
 			var langObj = this.langObj = uiNLS;

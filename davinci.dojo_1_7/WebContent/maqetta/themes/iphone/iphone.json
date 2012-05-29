@@ -1378,7 +1378,18 @@
 							"-webkit-text-size-adjust",
 							"background-color",
 							"font-family",
-							"font-size"
+							"font-size",
+							"font-weight",
+							"font-style",
+							"color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip"
 						]
 					},
 					"query": ""

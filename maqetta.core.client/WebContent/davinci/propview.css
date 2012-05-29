@@ -58,7 +58,7 @@
 	width:8px;
 }
 .dijitTitlePane.cssBreadcrumbContainer .dijitTitlePaneTitle {
-	cursor:auto;	// Override pointer cursor that is default for claro
+	cursor:auto;	/* Override pointer cursor that is default for claro */
 }
 .breadcrumbText {
 	display:inline-block;
@@ -129,7 +129,7 @@
 .rulePreview pre{
 	font-size : 85%;
 	padding: 0.2em 1em;
-	border: 1px solid #CCCCCC;
+	border: 1px solid #CCC;
 	font-family:Verdana,Arial,Helvetica,sans-serif;
 	
 }

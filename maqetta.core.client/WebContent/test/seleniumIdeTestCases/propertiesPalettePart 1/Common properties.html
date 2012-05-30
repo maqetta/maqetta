@@ -12,6 +12,11 @@
 <tr><td rowspan="1" colspan="3">New Test</td></tr>
 </thead><tbody>
 <tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAt</td>
 	<td>//span[@id='davinci_main_menu']/span/span/span</td>
 	<td></td>
@@ -90,17 +95,38 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>//div[@id='davinci.ve.style']/div/div/span/label[.='ID']/following-sibling::input</td>
+	<td>//div[@id='davinci.ve.style']/div/table/tbody/tr[2]/td[3]/div/div/input</td>
 	<td>button_test_1</td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>//div[@id='davinci.ve.style']/div/div/span/label[.='class: ']/following-sibling::div/div[3]/input</td>
+	<td>clickAt</td>
+	<td>//div[@id='davinci.ve.style']/div/table/tbody/tr[1]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<!--the folllowing line will force the combo box to listen hope the id does not change-->
+<tr>
+	<td>keyPress</td>
+	<td>id=dijit_form_ComboBox_0</td>
+	<td>c</td>
+</tr>
+<tr>
+	<td>typeKeys</td>
+	<td>//div[@id='davinci.ve.style']/div/table/tbody/tr[1]/td[3]/div/div[3]</td>
 	<td>buttonClassTest</td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>//div[@id='davinci.ve.style']/div/table/tbody/tr[1]/td[3]/div/div[3]/input</td>
+	<td>buttonClassTest</td>
+</tr>
+<tr>
+	<td>mouseUp</td>
+	<td>//div[@id='davinci.ve.style']/div/table/tbody/tr[1]/td[3]/div/div[3]/input</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>//div[@id='davinci.ve.style']/div/div/span/label[.='ID']/following-sibling::input</td>
+	<td>//div[@id='davinci.ve.style']/div/table/tbody/tr[2]/td[3]/div/div/input</td>
 	<td></td>
 </tr>
 <tr>
@@ -130,7 +156,7 @@
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//span[@class='dijit dijitReset dijitInline buttonClassTest dijitButton']/span/span/span[3]</td>
+	<td>//span[contains(@class,'buttonClassTest') and contains(@class,'dijitButton')]/span/span/span[3]</td>
 	<td>Button test</td>
 </tr>
 <!-- Save file and reopen -->

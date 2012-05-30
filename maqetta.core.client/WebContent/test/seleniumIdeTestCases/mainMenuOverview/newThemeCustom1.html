@@ -9,7 +9,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Main menu test 1</td></tr>
+<tr><td rowspan="1" colspan="3">Clone claro to claro1</td></tr>
 </thead><tbody>
 <!--New menu: New theme -->
 <tr>
@@ -30,17 +30,17 @@
 <tr>
 	<td>select</td>
 	<td>//td[.='Theme to clone:']/following-sibling::td/div/select</td>
-	<td>claro</td>
+	<td>custom</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>//td[.='New Name:']/following-sibling::td/div/div[2]/input</td>
-	<td>claro1</td>
+	<td>custom1</td>
 </tr>
 <tr>
 	<td>select</td>
 	<td>//td[.='Theme to clone:']/following-sibling::td/div/select</td>
-	<td>claro</td>
+	<td>custom</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -49,17 +49,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_themes_claro1_claro1.theme']/span[2]</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_themes_custom1_custom1.theme']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//span[@class='dijitTreeContent']/span[. ='claro1.theme']</td>
+	<td>waitForElementPresent</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='custom1.theme']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_themes_claro1_claro1.theme']/span[2]</td>
+	<td>//div[@id='editors_tabcontainer_tablist_editor-._project1_themes_custom1_custom1.theme']/span[2]</td>
 	<td></td>
 </tr>
 </tbody></table>

@@ -51,7 +51,8 @@ BorderContainerHelper.prototype = {
 	},
 	
 	initialSize: function(args) {
-		return LayoutContainerHelper.prototype.initialSize(args);
+		//Pass in true so BorderContainer fills BODY if we're the only child
+		return LayoutContainerHelper.prototype.initialSize(args, true);
 	}
 };
 

@@ -95,8 +95,8 @@
 					                }
 					            ],
 			                    "properties": {
-			                        "style": "width: 300px; height: 300px;",
-			                        "data-dojo-props": "cacheClass: 'gridx/core/model/cache/Async'"
+			                        "data-dojo-props": "cacheClass: 'gridx/core/model/cache/Async'",
+			                        "style": "min-width:1em; min-height:1em;"
 			                    }
 			                }
 			            ],
@@ -104,7 +104,8 @@
 		            	"helper": "./gridx/GridHelper",
 		            	"inlineEdit": "./gridx/GridWizardInput",
 		            	"allowedChild": "html.tbody, html.thead, html.tfoot, html.tr",
-		            	"isControl": true
+		            	"isControl": true,
+	                    "initialSize": "auto"
 			        }
         	    ]
 			}

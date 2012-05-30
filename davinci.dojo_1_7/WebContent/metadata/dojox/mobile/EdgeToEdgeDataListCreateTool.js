@@ -116,16 +116,9 @@ return declare(CreateTool, {
 			command.add(new MoveCommand(edge2Edge, args.position.x, args.position.y));
 		}
 		
-		// Invoke widget initialSize helper if this is widget's initial creation time
+		// Call superclass to potentially invoke widget initialSize helper if this is widget's initial creation time
 		// (i.e., initialCreationArgs is provided)
-		var helper = edge2Edge.getHelper();
-		if(helper && helper.initialSize){
-			var size =  helper.initialSize(args);
-			if(size){
-				args.size = size;
-			}
-		}
-		
+		args.size = this._getInititalSize(edge2Edge, args);
 		if(args.size){
 			command.add(new ResizeCommand(edge2Edge, args.size.w, args.size.h));
 		}

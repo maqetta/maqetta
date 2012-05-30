@@ -119,6 +119,7 @@ return declare(CreateTool, {
 			command.add(new StyleCommand(tree, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(tree, args.position.x, args.position.y));
 		}
+		args.size = this._getInititalSize(tree, args);
 		if(args.size){
 			command.add(new ResizeCommand(tree, args.size.w, args.size.h));
 		}

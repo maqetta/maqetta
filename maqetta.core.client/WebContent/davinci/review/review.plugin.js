@@ -80,9 +80,7 @@ return {
 			actions: [
 				{
 					id: "newReview",
-					run: function(){
-						require("davinci/Runtime").publish();
-					},
+					action: "davinci/review/actions/PublishAction",
 					label: "Review...",
 					menubarPath: "davinci.new/additions"
 				}

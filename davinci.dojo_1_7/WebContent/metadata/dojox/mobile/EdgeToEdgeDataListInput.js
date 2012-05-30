@@ -78,7 +78,7 @@ return declare(DataStoreBasedWidgetInput, {
 			var item = {};
 			item.label = cols[0];
 			if (cols[1]){
-				item.moveTo = cols[1];
+				item.moveTo = cols[1].trim();
 			} else {
 				item.moveTo = 'dummy';
 			}

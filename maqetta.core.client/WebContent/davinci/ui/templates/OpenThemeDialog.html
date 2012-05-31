@@ -1,15 +1,8 @@
 <div>	 
 	${selectTheme}: <div dojoType="davinci.ui.widgets.ThemeSelection" dojoAttachPoint="_themeChooser" value='claro' dojoAttachEvent='onChange:_checkValid' searchWorkspace='true'></div>
 		
-		<table class='templateTable'> 
-			<tr> 
-			<td class='templateFiller3'>&nbsp;</td>
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateFiller3'>&nbsp;</td>
-			</tr> 
-		</table> 
+	<div class="dialogButtonContainer">
+		<span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'></span>
+		<span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${open}'></span>
+	</div>
 </div>

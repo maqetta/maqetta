@@ -4,6 +4,7 @@ define([
 	"./workbench/ViewPart",
 	"./workbench/EditorContainer",
 	"dijit/Dialog",
+	"davinci/ui/Dialog",
 	"dijit/Toolbar",
 	"dijit/ToolbarSeparator",
 	"dijit/Menu",
@@ -33,6 +34,7 @@ define([
 		ViewPart,
 		EditorContainer,
 		Dialog,
+		ResizeableDialog,
 		Toolbar,
 		ToolbarSeparator,
 		Menu,
@@ -647,11 +649,42 @@ var Workbench = {
 	},
 	
 	
-	showModal: function(content, title, style, callback) {
+	showModalOld: function(content, title, style, callback) {
 		var myDialog = new Dialog({
 			title: title,
 			content: content,
 			style: style
+		});
+		var handle = dojo.connect(content, "onClose", content, function() {
+			var teardown = true;
+			if (callback) {
+				teardown = callback();
+				if (!teardown) {
+					// prevent the dialog from being torn down by temporarily overriding _onSubmit() with a call-once, no-op function
+					var oldHandler = myDialog._onSubmit;
+					myDialog._onSubmit = function() {
+						myDialog._onSubmit = oldHandler;
+					};
+					return;
+				}
+			}
+			if (teardown) {
+				dojo.disconnect(handle);
+			}
+			if (this.cancel) {
+				myDialog.hide();
+			}
+			myDialog.destroy();
+		});
+		myDialog.show();
+	},
+
+	showModal: function(content, title, style, callback) {
+		console.log(content)
+		var myDialog = new ResizeableDialog({
+			title: title,
+			content: content,
+			contentStyle: style
 		});
 		var handle = dojo.connect(content, "onClose", content, function() {
 			var teardown = true;

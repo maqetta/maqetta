@@ -349,21 +349,17 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	_initButtons: function() {
 		this.invite = new Button({
 			disabled: true,
-			onClick: dojo.hitch(this, function() { this.publish(); }),
-			style: "float:right;"
+			onClick: dojo.hitch(this, function() { this.publish(); })
 		},this.invite);
 		this.next = new Button({
-			onClick: dojo.hitch(this, function() { this.reviewerStackContainer.forward(); }),
-			style: "float:right;"
+			onClick: dojo.hitch(this, function() { this.reviewerStackContainer.forward(); })
 		},this.next);
 		this.prev = new Button({
-			onClick: dojo.hitch(this, function() { this.reviewerStackContainer.back(); }),
-			style: "float:right;"
+			onClick: dojo.hitch(this, function() { this.reviewerStackContainer.back(); })
 		},this.prev);
 
 		this.saveDt = new Button({
-			onClick: dojo.hitch(this,function(){this.publish(true);}),
-			style: "float:right;"
+			onClick: dojo.hitch(this,function(){this.publish(true);})
 		},this.saveDt);
 	},
 

@@ -1,4 +1,4 @@
-<div class="fileDialog" style="position:relative" dojoAttachPoint="_fileDialog">
+<div class="fileDialog" dojoAttachPoint="_fileDialog">
 	
 	<table class="fileFolderTable">
 		<tr class='fileNameRow'>
@@ -37,8 +37,8 @@
 	
 	<div dojoAttachPoint="dialogSpecificOptionsDiv"></div>
 	
-	<div class="buttonRow">
-		<span dojoAttachPoint="dialogSpecificButtonsSpan"></span>
+	<div class="buttonRow dialogButtonContainer">
+		<span dojoAttachPoint="dialogSpecificButtonsSpan" class="dialogLeftButtons"></span>
 		<span class="fileDialogStdButtons">
 			<span class="buttonWrapperSpan">
 				<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>

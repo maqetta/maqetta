@@ -27,6 +27,7 @@ define({ root:
 		//DownloadSelected.js
 		"selectedFiles":"Selected Files",
 		"noFilesSelected":"No files selected!",
+		"downloadButtonLabel": "Download",
 		
 		//NewTheme.js
 		"themeAlreadyExists":"Theme already Exists!",
@@ -52,7 +53,9 @@ define({ root:
 		"other":"Other:",
 		"selectTheme":"Select theme",
 		"themeSet":"Theme set:",
-	    "themeVersionMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"themeVersionMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"addThemeSet": "Add theme set",
+		"deleteThemeSet":"Delete theme set",
 
 		
 		//SaveAsWidgetForm.js
@@ -70,6 +73,7 @@ define({ root:
 		"create":"Create",
 		"open":"Open",
 		"save":"Save",
+		"select": "Select",
 		
 		//fileDialog
 		"fileName":"File name",//used in templates/download.html
@@ -77,6 +81,7 @@ define({ root:
 		"parentFolder":"Parent folder: ",//used in add files as well
 		"newFolderLabel":"New folder",
 		"cancelButtonLabel":"Cancel",
+		"newFolderName": "Name:",
 		
 		//dialog titles
 		"createNewFile":"Create New File",
@@ -142,6 +147,14 @@ define({ root:
 		
 		//NewHTMLFileOptions.html - Theme strings
 		"nhfoThemeButtonLabel":"Theme...",
-		"nhfoThemeButtonTitle":"Select themes or theme set for new HTML file"
+		"nhfoThemeButtonTitle":"Select themes or theme set for new HTML file",
+
+		//Rename
+		"renameNewLabel": "Name:",
+		"renameButtonLabel": "Rename",
+
+		//NewProject
+		"newProjectName": "Name:",
+		"newProjectEclipseSupport": "Eclipse support"
 }
 });

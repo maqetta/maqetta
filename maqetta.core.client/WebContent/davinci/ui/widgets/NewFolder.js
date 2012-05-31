@@ -28,6 +28,7 @@ define(["dojo/_base/declare",
 		fileDialogParentFolder: null,
 	
 		okButton : null,
+		uiNLS: uiNLS,
 		
 		postMixInProperties : function() {
 			this.cancel =true;

@@ -127,8 +127,10 @@ define(["dojo/_base/declare",
 			this._update_comp_type();
 	
 			//FIXME: Add logic for 'for' attributes point to correct id
-			
-			this.themeButton = new Button({label:this.langObj.nhfoThemeButtonLabel, title:this.langObj.nhfoThemeButtonTitle}, this.dialogSpecificButtonsSpan);
+
+			var input = document.createElement("input");
+			this.dialogSpecificButtonsSpan.appendChild(input);
+			this.themeButton = new Button({label:this.langObj.nhfoThemeButtonLabel, title:this.langObj.nhfoThemeButtonTitle}, input);
 			this.connect(this.themeButton, 'onClick', dojo.hitch(this,function(e){
 				this._themeSelectionDialog = new ThemeSelection({newFile: true});
 				this._themeSelectionDialog.buildRendering();

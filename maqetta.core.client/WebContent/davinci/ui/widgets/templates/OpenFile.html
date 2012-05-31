@@ -5,7 +5,8 @@
 		</div>
 	</div>
 	
-	<div class="buttonRow">
+	<div class="buttonRow dialogButtonContainer">
+		<button dojoType="dijit.form.Button" dojoAttachEvent="onClick:_cancelButton">${cancelButtonLabel}</button>
 		<button dojoType="dijit.form.Button" type="submit" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
 	</div>
 </div>

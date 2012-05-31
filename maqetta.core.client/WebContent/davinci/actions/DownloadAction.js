@@ -13,7 +13,7 @@ define([
 return declare("davinci.actions.DownloadAction", Action, {
 
 	run: function() {
-		Workbench.showModal(new DownloadSelected(), "Download", "width: 400px");
+		Workbench.showModal(new DownloadSelected(), "Download", {width: "400px"});
 	},
 	
 	isEnabled: function(selection){

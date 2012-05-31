@@ -1,1 +1,123 @@
-define([	"dojo/_base/declare",	"dijit/_Widget",	"dijit/_Templated",	"dijit/Dialog",	"dojo/text!./templates/Dialog.html",  "dojo/i18n!davinci/ve/nls/ve",  "dojox/layout/ResizeHandle"], function(declare, _Widget, _Templated, Dialog, dialogTemplateString, veNLS) {	/* base class to draw the dialog contents*/	var _DialogUI = declare("davinci.ve.widgets._DialogUI", [_Widget, _Templated], {		templateString: dialogTemplateString,		widgetsInTemplate: true,		// attach points		resizeHandle: null,		contentArea: null,		actionArea: null,		// props		buttons: null,		width: null,		height: null,		resizeTarget: null,		postCreate: function() {			this.inherited(arguments);			this.resize({w: this.width, h: this.height});			this.resizeHandle.attr("targetId", this.resizeTarget);		},		resize: function(coords) {			if (coords && coords.w && coords.h) {				console.log("coords", coords)				dojo.style(this.contentArea, "width", coords.w+"px");				dojo.style(this.contentArea, "height", this._calculateContentHeight(coords.h)+"px");			} else {				console.log("coords2", this.width, this._calculateContentHeight(this.height))				dojo.style(this.contentArea, "width", this.width+"px");				dojo.style(this.contentArea, "height", this._calculateContentHeight(this.height)+"px");			}		},		_calculateContentHeight: function(totalHeight) {			var h = totalHeight;			// 20 is the padding in the content area			h -= dojo.marginBox(this.actionArea).h+20;			return h;		}	});return declare("davinci.ve.widgets.Dialog", Dialog, {	// props	buttons: null,	height: 200,	width: 200,		postCreate: function() {		this.inherited(arguments);		// append to containerNode		var div = dojo.doc.createElement("div");		this.containerNode.appendChild(div);		// titlebar is hidden and has no height right now, so for now hack abnd store it off		var titleBarHeight = 16;		this.dialogUI = new _DialogUI({buttons: this.buttons, height: this.height-titleBarHeight, width: this.width-16, resizeTarget: this.id}, div);	},	resize: function(coords) {		var titleBarHeight = dojo.marginBox(this.titleBar).h;		// 16 is the padding in the containerNode, should calculate this		if (coords) {			var c = {w: coords.w-16, h: coords.h}			c.h -= dojo.marginBox(this.titleBar).h;			this.dialogUI.resize(c);		} else {			this.dialogUI.resize({w: this.width-16, h: this.height-titleBarHeight});							}	}});});
+define([
+	"dojo/_base/declare",
+	"dijit/_Widget",
+	"dijit/_Templated",
+	"dijit/_Container",
+	"dijit/Dialog",
+	"dojo/dom-geometry",
+	"dojo/dom-style",
+	"dojo/text!./templates/Dialog.html",
+	"dojo/i18n!davinci/ve/nls/ve",
+	"dojox/layout/ResizeHandle"
+], function(declare, _Widget, _Templated, _Container, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
+
+	/* base class to draw the dialog contents */
+	var _DialogUI = declare("davinci.ui._DialogUI", [_Container, _Widget, _Templated], {
+		templateString: dialogTemplateString,
+		widgetsInTemplate: true,
+
+		// attach points
+		resizeHandle: null,
+		contentArea: null,
+		actionArea: null,
+
+		// props
+		resizeTarget: null,
+
+		postCreate: function() {
+			this.inherited(arguments);
+			this.resizeHandle.attr("targetId", this.resizeTarget);
+		},
+
+		resize: function(coords) {
+			if (coords) {
+				if (coords.w) {
+					dojo.style(this.contentArea, "width", coords.w+"px");
+				}
+
+				if (coords.h) {
+					dojo.style(this.contentArea, "height", this._calculateContentHeight(coords.h)+"px");
+				}
+			}
+
+			// resize children
+			dojo.forEach(this.getChildren(), function(child) {
+					if (child.resize) {
+						child.resize(coords);
+					}
+			});
+		},
+
+		_calculateContentHeight: function(totalHeight) {
+			var h = totalHeight;
+
+			h -= dojo.marginBox(this.actionArea).h;
+			return h;
+		}
+	});
+
+return declare("davinci.ui.Dialog", Dialog, {
+	contentStyle: null,
+
+	buildRendering: function() {
+		this.inherited(arguments);
+
+		// append to containerNode
+		var div = dojo.doc.createElement("div");
+		this.containerNode.appendChild(div);
+
+		this.dialogUI = new _DialogUI({buttons: this.buttons, resizeTarget: this.id}, div);
+		this._oldContainerNode = this.containerNode;
+		this.containerNode = this.dialogUI.contentArea;
+	},
+
+	_setContent: function(cont, isFakeContent) {
+		// remove buttons and place them in the correct place
+		if(!dojo.isString(cont)) {
+			var n = dojo.query(".dialogButtonContainer", cont.domNode ? cont.domNode : cont)[0];
+			if (n) {
+				var n2 = n.parentNode.removeChild(n);
+				this.dialogUI.actionArea.appendChild(n2);
+			}
+		}
+
+		this.inherited(arguments);
+	},
+
+	resize: function(coords) {
+		var titleBarHeight = dojo.marginBox(this.titleBar).h;
+
+		if (coords) {
+			// compute paddings
+			var computedStyle = style.getComputedStyle(this._oldContainerNode);
+			var output = domGeometry.getPadExtents(this._oldContainerNode, computedStyle);
+
+			var c = {w: coords.w-output.w, h: coords.h-output.h}
+			c.h -= dojo.marginBox(this.titleBar).h;
+			this.dialogUI.resize(c);
+		}
+	},
+
+	show: function() {
+		var result = this.inherited(arguments);
+
+		// show will do initial sizing, lets now check if we have overrides
+		if (this.contentStyle) {
+			if (typeof(this.contentStyle) == "object") {
+				var r = {}
+				if (this.contentStyle.width) {
+					r.w = parseInt(this.contentStyle.width);
+				}
+
+				if (this.contentStyle.height) {
+					r.h = parseInt(this.contentStyle.height);
+				}
+				this.dialogUI.resize(r);
+			}
+			this.layout();
+		}
+
+		return result;
+	}
+});
+});

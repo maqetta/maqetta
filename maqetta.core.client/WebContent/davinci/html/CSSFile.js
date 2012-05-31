@@ -54,6 +54,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 				}
 			}
 		});
+		require("davinci/model/Factory").closeModel(this);
 		require(["dojo/_base/connect"], function(connect) {
 			connect.publish("davinci/model/closeModel", [this]);
 		});

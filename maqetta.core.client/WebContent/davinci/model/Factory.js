@@ -2,8 +2,9 @@ define([
 	"dojo/_base/declare",
 	"davinci/html/CSSFile",
 	"davinci/js/JSFile",
-	"davinci/html/HTMLFile"
-], function(declare, CSSFile, JSFile, HTMLFile) {
+	"davinci/html/HTMLFile",
+	"system/resource"
+], function(declare, CSSFile, JSFile, HTMLFile, systemResource) {
 
 var _instances = [];
 var _resources = [];
@@ -19,6 +20,11 @@ var Factory = {
 		for (var i = 0; i<_resources.length; i++) {
 			if (_resources[i].url == url) {
 				_instances[i]++;
+				console.log('=============Factory.getModel============');
+				for(var i = 0; i<_resources.length; i++) {
+					console.log(_resources[i].url+' : '+ _instances[i]); 
+				}
+				console.log('===========================================');
 				return _resources[i];
 			}
 		}
@@ -31,6 +37,7 @@ var Factory = {
 		if(url.indexOf("js") > 0) {
 			return Factory.newJS(args);
 		}
+		
 	},
 
 	closeModel: function(model) {
@@ -44,19 +51,33 @@ var Factory = {
 				if (_instances[i] === 0) {
 					_resources.splice(i,1);
 					_instances.splice(i,1);
+					// delete the working copy, we are done with it, and their should only 
+					// be a working copy if the last instance did not save it when they closed the
+					// editor.
+					systemResource.findResource(url).removeWorkingCopy(); 
 				}
 			}
 		}
+		console.log('=============Factory.closeModel============');
+		for(var i = 0; i<_resources.length; i++) {
+			console.log(_resources[i].url+' : '+ _instances[i]); 
+		}
+		console.log('===========================================');
 	},
 
 	newHTML: function(args) {
-		if (args && args.url) {
+		/*if (args && args.url) {
 			return Factory.getModel(args);
-		}
-		var model = new HTMLFile(args);
+		}*/
+		var model = new HTMLFile(args.url);
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
+		console.log('=============Factory.getModel============');
+		for(var i = 0; i<_resources.length; i++) {
+			console.log(_resources[i].url+' : '+ _instances[i]); 
+		}
+		console.log('===========================================');
 		return model;
 	},
 
@@ -65,6 +86,11 @@ var Factory = {
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
+		console.log('=============Factory.getModel============');
+		for(var i = 0; i<_resources.length; i++) {
+			console.log(_resources[i].url+' : '+ _instances[i]); 
+		}
+		console.log('===========================================');
 		return model;
 	},
 

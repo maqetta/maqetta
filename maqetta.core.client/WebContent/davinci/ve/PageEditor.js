@@ -14,7 +14,7 @@ define([
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
-    constructor: function (element) {
+    constructor: function (element, fileName) {
 
         this._bc = new BorderContainer({}, element);
 
@@ -41,7 +41,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
             oldResize.apply(this, arguments);
         };
 
-        this.htmlEditor = new HTMLEditor(this._srcCP.domNode,true);
+        this.htmlEditor = new HTMLEditor(this._srcCP.domNode,fileName);
         this.htmlEditor.setVisible(false);
         this.model=this.htmlEditor.model;
 
@@ -208,6 +208,13 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	
 	setContent: function (filename, content, newHtmlParams) {
+		
+		/*// clear the singletons in the Factory
+		this.htmlEditor.htmlFile.visit({visit:function(node) {
+			if (node.elementType == "CSSImport") {
+				node.close();
+			}
+		}});*/
 	    this.fileName = filename;
 	    this.htmlEditor.setContent(filename,content);
 		this.visualEditor.setContent(filename, this.htmlEditor.model, newHtmlParams);
@@ -256,7 +263,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	removeWorkingCopy: function(){ //wdr
-		this.visualEditor.removeWorkingCopy();
+		//this.visualEditor.removeWorkingCopy();
 	},
 
 	previewInBrowser: function () {

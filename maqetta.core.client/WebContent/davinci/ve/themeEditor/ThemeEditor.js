@@ -674,6 +674,12 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		}
 
 	},
+	removeWorkingCopy: function(){
+		/*this.removeWorkingCopyDynamicCssFiles(this._getCssFiles());
+		this.resourceFile.removeWorkingCopy();
+		this.isDirty=false;*/
+		
+	},
 
 	destroy : function ()	{
 		this.inherited(arguments);

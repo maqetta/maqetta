@@ -270,6 +270,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		if(!this._handles){
 			return;
 		}
+		this.context.destroy();
 	    this._handles.forEach(dojo.disconnect);
 	    if(this._scrollHandler){
 	    	dojo.disconnect(this._scrollHandler);
@@ -459,9 +460,21 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 	
 	
 	removeWorkingCopy: function(){ 
-
-		this._pageEditor.resourceFile.removeWorkingCopy();
-		this.isDirty=false;
+		/*this.removeWorkingCopyDynamicCssFiles(this._getCssFiles());
+		var visitor = {
+				visit: function(node){
+					if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){
+						var url = node.url || node.fileName;
+						systemResource.findResource(url).removeWorkingCopy();
+						// node.dirtyResource = false; someone else may be editing the resource
+					}
+					return false;
+				}
+			};
+		var model = this.context.getModel();	
+		model.visit(visitor);*/
+		//this._pageEditor.resourceFile.removeWorkingCopy();
+		//this.isDirty=false;
 	},
 	
 	getDefaultContent: function (){
@@ -513,3 +526,4 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 return VisualEditor;
 
 });
+

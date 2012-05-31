@@ -182,6 +182,44 @@ return declare("davinci.ve.ThemeModifier", null, {
 				file.visit(visitor);
 			}.bind(this));
 		}
+	},
+	
+/*	removeWorkingCopyDynamicCssFiles: function(cssFiles){
+		var visitor = {
+				visit: function(node){
+					if( node.elementType=="CSSFile" && node.isDirty()){
+						systemResource.findResource(node.url).removeWorkingCopy();
+						//node.dirtyResource = false; don't remove the dirty flag someone else be editing the resource
+						
+					}
+					return false;
+				}
+			};
+			
+		if (cssFiles) {
+			cssFiles.forEach(function(file){
+				file.visit(visitor);
+			}.bind(this));
+		}
+	},*/
+	
+	destroy : function ()	{
+		debugger;
+		var visitor = {
+				visit: function(node){
+					if( node.elementType=="CSSFile"){
+						node.close();
+					}
+					return false;
+				}
+			};
+		var cssFiles = this._getCssFiles();
+		if (cssFiles) {
+			cssFiles.forEach(function(file){
+				//file.visit(visitor);
+				file.close();
+			}.bind(this));
+		}
 	}
 	
 });

@@ -31,7 +31,8 @@ define([
 	"preview/silhouetteiframe",
 	"davinci/ve/utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"dojox/html/_base"	// for dojox.html.evalInGlobal
+	"davinci/model/Factory", // FIXME: needed for document.css M6 hack
+	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	declare,
 	lang,
@@ -64,7 +65,8 @@ define([
 	Preferences,
 	Silhouette,
 	GeomUtils,
-	newFileTemplate
+	newFileTemplate,
+	Factory
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -3292,6 +3294,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(documentCssImport){
 					var parent = documentCssImport.parent;
 					parent.removeChild(documentCssImport);
+					documentCssImport.close(); // removes the instance from the Factory
 				}
 				documentCssHeader = documentCssImport = null;
 			}
@@ -3317,7 +3320,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					if(parent && documentCssFile){
 						var css = new CSSImport();
 						css.url = documentCssFileName;
-						css.cssFile = documentCssFile;
+						var args = {url:documentCssPath}
+						var cssFile = Factory.getModel(args); //newHTML();
+						css.cssFile = cssFile; //documentCssFile;
 						parent.addChild(css,0);
 					}
 				}

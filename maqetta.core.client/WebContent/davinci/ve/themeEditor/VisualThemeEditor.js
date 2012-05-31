@@ -69,6 +69,7 @@ return declare([], {
     },
 
     destroy: function(){
+    	this.context.getModel().close();
     },
 
     getDefaultContent: function (){
@@ -84,11 +85,12 @@ return declare([], {
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
-			var htmlFile = Factory.newHTML();
+			var themeBase = Theme.getThemeLocation(); 
+			var args = {url:this.basePath+'/'+this.theme.name+'/'+fileName+'.html'}; // this is a made up url to ensure each theme editor get's it's own copy of the html file
+			var htmlFile = Factory.getModel(args); //newHTML();
 			htmlFile.fileName = fileName;
 			htmlFile.setText(content);
 			// #23 adjust for where html is located 
-			var themeBase = Theme.getThemeLocation();
 			var relPath = themeBase.relativeTo(this.basePath, true);
 			htmlFile.themeCssFiles = [];
 			themeCssFiles.forEach(function(file){

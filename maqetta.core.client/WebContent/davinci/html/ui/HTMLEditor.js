@@ -1,14 +1,16 @@
 define([
 	"dojo/_base/declare",
 	"davinci/ui/ModelEditor",
-	"davinci/html/HTMLFile",
+	/*"davinci/html/HTMLFile",*/
+	"davinci/model/Factory",
 	"davinci/html/ui/HTMLOutline"
-], function(declare, ModelEditor, HTMLFile, HTMLOutline){
+], function(declare, ModelEditor, /*HTMLFile,*/ Factory, HTMLOutline){
  
 return declare("davinci.html.ui.HTMLEditor", ModelEditor, {
 
-	constructor : function(element) {
-		this.htmlFile = new HTMLFile();
+	constructor : function(element, fileName) {
+		var args = {url:fileName};
+		this.htmlFile = Factory.getModel(args); // new HTMLFile();
 		this.model = this.htmlFile;
 	},
 

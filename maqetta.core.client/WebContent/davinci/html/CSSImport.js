@@ -50,7 +50,8 @@ return declare("davinci.html.CSSImport", CSSElement, {
 	},
 	
 	close: function(includeImports) {
-		require("davinci/model/Factory").closeModel(this.cssFile);
+		//require("davinci/model/Factory").closeModel(this.cssFile); can I move this to CSSFile??
+		this.cssFile.close();
 		if (this.connection) {
 			dojo.disconnect(this.connection);
 		}

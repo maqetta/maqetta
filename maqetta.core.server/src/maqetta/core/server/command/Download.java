@@ -1,5 +1,6 @@
 package maqetta.core.server.command;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,6 +13,15 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.ByteArrayPartSource;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONReader;
@@ -25,7 +35,7 @@ import org.maqetta.server.VLibraryResource;
 public class Download extends Command {
 
 	
-	private Vector zipedEntries;
+	private Vector zippedEntries;
 	
 	//This should stay in sync with validation rules on the client
 	public static final String DOWNLOAD_FILE_REPLACE_REGEXP = "[^a-zA-z0-9_.]";
@@ -42,24 +52,27 @@ public class Download extends Command {
         }
         
         /* keep track of things we've added */
-        zipedEntries = new Vector();
+        zippedEntries = new Vector();
         
         String path = req.getParameter("fileName");
         path = sanitizeFileName(path);
         String res = req.getParameter("resources");
         String libs = req.getParameter("libs");
-        String rootString = req.getParameter("root");
-        IPath root = new Path(rootString);
-        
-        
+        String root = req.getParameter("root");
+        String build = req.getParameter("build");
+
+//        if(build!=null){
+        	analyzeWorkspace(user);
+//        }
+
         ArrayList o = (ArrayList) JSONReader.read(res);
         List lib = null;
         boolean includeLibs = true;
-       if(libs!=null){
-    	   lib = (List) JSONReader.read(libs);
-    	   includeLibs= false;
-       }
-       String[] resources = (String[]) o.toArray(new String[o.size()]);
+        if(libs!=null){
+    	    lib = (List) JSONReader.read(libs);
+    	    includeLibs= false;
+        }
+        String[] resources = (String[]) o.toArray(new String[o.size()]);
 
         IVResource[] files = new IVResource[resources.length];
         for (int i = 0; i < files.length; i++) {
@@ -71,8 +84,9 @@ public class Download extends Command {
             resp.setHeader("Content-Disposition", "attachment; filename=" + path);
 
             ZipOutputStream zos = new ZipOutputStream(resp.getOutputStream());
-            zipFiles(files, root, zos, includeLibs);
-            if(lib!=null) zipLibs(lib, root, zos);
+            IPath rootPath = new Path(root);
+            zipFiles(files, rootPath, zos, includeLibs);
+            if(lib!=null) zipLibs(lib, rootPath, zos);
             zos.close();
             // responseString="OK";
 
@@ -81,7 +95,45 @@ public class Download extends Command {
         } finally {
             resp.getOutputStream().close();
         }
+    }
 
+    private Object analyzeWorkspace(IUser user) throws IOException {
+    	IVResource[] files = user.findFiles("*.html", false, true);
+        byte[] readBuffer = new byte[2156];
+        int bytesIn = 0;
+        InputStream fis = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        HttpClient client = new HttpClient();
+        PostMethod method = new PostMethod("http://build.dojotoolkit.org/api/dependencies"); // TODO: location based on config
+        
+        for (int i = 0; i < files.length; i++) {
+    		try {
+        		fis = files[i].getInputStreem();
+	            while ((bytesIn = fis.read(readBuffer)) != -1) {
+	            	baos.write(readBuffer, 0, bytesIn);
+		        }
+	            String filename = files[i].getName();
+	            Part[] parts = {
+	            	new FilePart("value", new ByteArrayPartSource(filename, baos.toByteArray())),
+	            	new StringPart("type", "WEB_PAGE")
+	            };
+	            method.setRequestEntity(new MultipartRequestEntity(parts, method.getParams()));
+	            
+	            ByteArrayPartSource baps;
+	            int statusCode = client.executeMethod(method);
+	            if (statusCode != HttpStatus.SC_OK) {
+	                System.err.println("Method failed: " + method.getStatusLine());
+	            }
+	            byte[] body = method.getResponseBody();
+	            //TODO...
+    		} finally {
+    			method.releaseConnection();
+    			baos.reset();
+    			if (fis != null) fis.close();
+    		}
+    	}
+        return null; //FIXME
     }
     
     private String sanitizeFileName(String fileName) {
@@ -94,12 +146,12 @@ public class Download extends Command {
     
     private boolean addEntry(String path){
     	
-    	for(int i=0;i<this.zipedEntries.size();i++){
-    		String entry = (String)zipedEntries.get(i);
+    	for(int i=0;i<this.zippedEntries.size();i++){
+    		String entry = (String)zippedEntries.get(i);
     		if(entry.compareTo(path)==0) return false;
     		
     	}
-    	zipedEntries.add(path);
+    	zippedEntries.add(path);
     	return true;
     }
     
@@ -138,32 +190,33 @@ public class Download extends Command {
             if(!includeLibs && files[i] instanceof VLibraryResource)
             	continue;
             
-            InputStream fis = files[i].getInputStreem();
-            
-            
-            IPath filePath = new Path(files[i].getPath());
-            String pathString = filePath.removeFirstSegments(filePath.matchingFirstSegments(root)).toString();
-            
-            
-            if(pathString==null) return;
-            
-            /* remove leading characters that confuse and anger windows built in archive util */
-           if(pathString.length() > 1 && pathString.indexOf("./")==0)
-        	   pathString = pathString.substring(2);
-
-            if(!addEntry(pathString)) continue;
-            
-            
-            ZipEntry anEntry = new ZipEntry(pathString);
-                // place the zip entry in the ZipOutputStream object
-            zos.putNextEntry(anEntry);
-                // now write the content of the file to the ZipOutputStream
-            while ((bytesIn = fis.read(readBuffer)) != -1) {
-              zos.write(readBuffer, 0, bytesIn);
-            }
+            InputStream fis = null;
+            try {
+	            fis = files[i].getInputStreem();            
+	            
+	            IPath filePath = new Path(files[i].getPath());
+	            String pathString = filePath.removeFirstSegments(filePath.matchingFirstSegments(root)).toString();
+	            
+	            if(pathString==null) return;
+	            
+	            /* remove leading characters that confuse and anger windows built in archive util */
+	            if(pathString.length() > 1 && pathString.indexOf("./")==0)
+	        	   pathString = pathString.substring(2);
+	
+	            if(!addEntry(pathString)) continue;
+	            
+	            ZipEntry anEntry = new ZipEntry(pathString);
+	                // place the zip entry in the ZipOutputStream object
+	            zos.putNextEntry(anEntry);
+	                // now write the content of the file to the ZipOutputStream
+	            while ((bytesIn = fis.read(readBuffer)) != -1) {
+	              zos.write(readBuffer, 0, bytesIn);
+	            }
+            } finally {
                 // close the Stream
-            fis.close();
-            files[i].removeWorkingCopy();
+            	if (fis != null) fis.close();
+            	files[i].removeWorkingCopy();
+            }
        }
     }
 

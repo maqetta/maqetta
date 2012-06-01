@@ -165,8 +165,13 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
             var css = new CSSImport();
             css.url = newFileName;
-            var args = {url:css.url};
-			var cssFile = Factory.getModel(args); 
+			var cssFile = Factory.getModel({
+				url: Theme.getBase()+'/'+css.url,
+			    includeImports: true,
+			    loader: function(url){
+					return system.resource.findResource(url).getText();
+				}
+			});
 			css.cssFile = cssFile; 
             style.addChild(css,0);
             this._context.theme = newThemeInfo;
@@ -187,6 +192,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
         // remove the mobile theme
         if (themeSet.mobileTheme && (!Theme.themeSetEquals(themeSet.mobileTheme,Theme.dojoMobileDefault))){
+        	this._context.close(); //// return any singletons for CSSFiles
             this._dojoxMobileRemoveTheme(this._context);
         }
         

@@ -203,23 +203,18 @@ return declare("davinci.ve.ThemeModifier", null, {
 		}
 	},*/
 	
-	destroy : function ()	{
-		debugger;
-		var visitor = {
-				visit: function(node){
-					if( node.elementType=="CSSFile"){
-						node.close();
-					}
-					return false;
-				}
-			};
-		var cssFiles = this._getCssFiles();
-		if (cssFiles) {
-			cssFiles.forEach(function(file){
-				//file.visit(visitor);
+	close: function(){
+		
+		if (this.cssFiles) {
+			this.cssFiles.forEach(function(file){
 				file.close();
 			}.bind(this));
 		}
+		delete this.cssFiles;
+	},
+	
+	destroy : function ()	{
+		this.close();
 	}
 	
 });

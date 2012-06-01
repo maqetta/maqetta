@@ -2947,6 +2947,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param  {Object} data
 	 */
 	_updateDojoConfig: function(data) {
+		this.close(); // return any singletons for CSSFiles
 		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};

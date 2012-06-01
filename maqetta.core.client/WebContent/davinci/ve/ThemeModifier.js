@@ -207,6 +207,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		if (this.cssFiles) {
 			this.cssFiles.forEach(function(file){
 				file.close();
+				require("davinci/model/Factory").closeModel(file);  // return the model to the factory
 			}.bind(this));
 		}
 		delete this.cssFiles;

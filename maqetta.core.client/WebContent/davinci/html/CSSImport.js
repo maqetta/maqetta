@@ -50,8 +50,9 @@ return declare("davinci.html.CSSImport", CSSElement, {
 	},
 	
 	close: function(includeImports) {
-		//require("davinci/model/Factory").closeModel(this.cssFile); can I move this to CSSFile??
-		this.cssFile.close();
+		// the return of the CSSFile model needs to happen in the import instead of the CSSFile
+		// if we return it in the CSSFile close we end up returning it twice due of the visit logic
+		require("davinci/model/Factory").closeModel(this.cssFile); 
 		if (this.connection) {
 			dojo.disconnect(this.connection);
 		}

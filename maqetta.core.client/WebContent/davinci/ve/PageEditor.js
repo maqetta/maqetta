@@ -225,8 +225,9 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_themeChange: function(e) {
-		//debugger;
+
 		if (e && e.elementType === 'CSSRule') {
+			this.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.visualEditor.context.hotModifyCssRule(e);
 		}
 	},

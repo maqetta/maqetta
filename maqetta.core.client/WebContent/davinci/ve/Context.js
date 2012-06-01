@@ -1568,6 +1568,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	_themeChange: function(e){
 		if (e && e.elementType === 'CSSRule'){
+			this.editor.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.hotModifyCssRule(e); 
 		}
 

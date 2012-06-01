@@ -20,6 +20,7 @@ var Factory = {
 		for (var i = 0; i<_resources.length; i++) {
 			if (_resources[i].url == url) {
 				_instances[i]++;
+				this.incrementImports(_resources[i]); 
 				this.log();
 				return _resources[i];
 			}
@@ -58,9 +59,7 @@ var Factory = {
 	},
 
 	newHTML: function(args) {
-		/*if (args && args.url) {
-			return Factory.getModel(args);
-		}*/
+
 		var model = new HTMLFile(args.url);
 		_resources.push(model);
 		var count = _resources.length - 1;
@@ -104,6 +103,28 @@ var Factory = {
 		default: 
 			return Factory.newHTML(); // default to HTML
 		} // end switch
+	},
+	
+	incrementImports: function(resource){
+		var visitor = {
+				visit: function(node){
+					if( node.elementType=="CSSImport"){
+						var url = node.cssFile.url;
+						for (var i = 0; i<_resources.length; i++) {
+							if (_resources[i].url == url) {
+								_instances[i]++;
+							}
+						}
+						
+					}
+					return false;
+				}
+			};
+			
+		if (resource) {
+			resource.visit(visitor);
+		}
+		
 	},
 	
 	log: function(){

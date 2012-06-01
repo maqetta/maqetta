@@ -6,9 +6,10 @@ define([
     	"davinci/workbench/Preferences",
     	"davinci/model/Path",
     	"davinci/model/Factory",
+    	"davinci/html/HTMLFile",
     	"davinci/Theme",
     	"dijit/Dialog"
-], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, Theme, Dialog) {
+], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, Dialog) {
 
 return declare([], {
 
@@ -69,7 +70,6 @@ return declare([], {
     },
 
     destroy: function(){
-    	this.context.getModel().close();
     },
 
     getDefaultContent: function (){
@@ -86,10 +86,9 @@ return declare([], {
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
 			var themeBase = Theme.getThemeLocation(); 
-			var args = {url:this.basePath+'/'+this.theme.name+'/'+fileName+'.html'}; // this is a made up url to ensure each theme editor get's it's own copy of the html file
-			var htmlFile = Factory.getModel(args); //newHTML();
+			htmlFile = new HTMLFile();; // each theme editor HTML needs to be it's own instance NO singleton from the model
 			htmlFile.fileName = fileName;
-			htmlFile.setText(content);
+			htmlFile.setText(content, true); // no import
 			// #23 adjust for where html is located 
 			var relPath = themeBase.relativeTo(this.basePath, true);
 			htmlFile.themeCssFiles = [];

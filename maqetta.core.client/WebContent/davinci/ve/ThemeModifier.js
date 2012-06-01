@@ -4,9 +4,10 @@ define([
     "../model/Factory",
 	"./utils/URLRewrite",
 	"./commands/ModifyRuleCommand",
+	"./commands/StyleCommand",
 	"dojo/i18n!davinci/ve/nls/common",
 	"system/resource"	
-], function(declare, Path, Factory, URLRewrite, ModifyRuleCommand,commonNls,systemResource) {
+], function(declare, Path, Factory, URLRewrite, ModifyRuleCommand, StyleCommand, commonNls, systemResource) {
 
 return declare("davinci.ve.ThemeModifier", null, {
 
@@ -20,27 +21,25 @@ return declare("davinci.ve.ThemeModifier", null, {
 		this.cssFiles = [];
 		
 		if(this.themeCssFiles){
-			for(var i = 0;i<this.themeCssFiles.length;i++){
-				var cssURL = this._themePath.getParentPath().append(this.themeCssFiles[i]).toString();
-				this.cssFiles.push(Factory.getModel({
-					url: cssURL,
+			var parentPath = this._themePath.getParentPath();
+			this.cssFiles = this.themeCssFiles.map(function(themeCssFile) {
+				return Factory.getModel({
+					url: parentPath.append(themeCssFile).toString(),
 				    includeImports: true,
 				    loader: function(url){
 						return system.resource.findResource(url).getText();
 					}
-				}));
-			}
+				});
+			});
 		}
 		return this.cssFiles;
 	},
-	
 
 	_getThemeResource: function (fileName) {
 		var absoluteLocation = this._themePath.getParentPath().append(fileName).toString();
-		var resource=  system.resource.findResource(absoluteLocation);
-		return resource;
+		return system.resource.findResource(absoluteLocation);
 	},
-	
+
 	/*
 	 *  Added for theme Delta #23
 	 */
@@ -121,7 +120,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 					}
 				}
 			}
-			command = new davinci.ve.commands.StyleCommand(widget, allValues, value.applyToWhichStates);	
+			command = new StyleCommand(widget, allValues, value.applyToWhichStates);	
 		}else{
 			var rule=null;
 			

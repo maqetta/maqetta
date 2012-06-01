@@ -1,11 +1,14 @@
 define([
+	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/connect",
 	"./LayoutContainerHelper"
-], function(array, connect, LayoutContainerHelper) {
+], function(declare, array, connect, LayoutContainerHelper) {
 
-var BorderContainerHelper = function() {};
-BorderContainerHelper.prototype = {
+return declare(LayoutContainerHelper, {
+	constructor : function() {
+		this._fillBodyAsOnlyChild = true;
+	},
 
 	create: function(/*Widget*/ widget, /*Object*/srcElement) {
 		// wire panel size changes to the shadow dom so splitters become effective
@@ -51,10 +54,9 @@ BorderContainerHelper.prototype = {
 	},
 	
 	initialSize: function(args) {
-		return LayoutContainerHelper.prototype.initialSize(args);
+		//Pass in true so BorderContainer fills BODY if we're the only child
+		return this.inherited(arguments);
 	}
-};
-
-return BorderContainerHelper;
+});
 
 });

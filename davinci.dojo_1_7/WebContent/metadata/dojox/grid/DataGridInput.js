@@ -334,10 +334,9 @@ return declare(DataStoreBasedWidgetInput, {
 			var item = {unique_id: r};
 			for (var s = 0; s < structure.length; s++){
 				var fieldName = structure[s].field;
-				if (cols[s]){
+				if (cols[s] != null) {
 					item[fieldName] = cols[s];
 				}
-				
 			}
 			items.push(item);
 		}

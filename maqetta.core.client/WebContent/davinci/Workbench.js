@@ -1446,15 +1446,6 @@ var Workbench = {
 		Workbench._updateTitle(newEditor);
 	
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
-	
-		if(newEditor) {
-			if (newEditor.focus) { 
-				newEditor.focus(); 
-			}
-
-			//Bring palettes specified for the editor to the top
-			this._bringPalettesToTop(newEditor);
-		}
 		
 		setTimeout(function(){
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
@@ -1463,7 +1454,20 @@ var Workbench = {
 			if (newEditor && newEditor.visualEditor && newEditor.visualEditor.context && newEditor.visualEditor.context.isActive()) {
 				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
 			}
-		}, 1000);
+			
+			// Code below was previously outside of the existing setTimeout kludge. But, needs to be inside because on loading of Maqetta, all 
+			// of the palettes might not be created in time (for example, _bringPalettesToTop might not bring Comments tab to front 
+			// because it's not created yet). So, we need to take advantage of the delay. It certainly would be better is there were a 
+			// Workbench loaded event or something to leverage.
+			if(newEditor) {
+				if (newEditor.focus) { 
+					newEditor.focus(); 
+				}
+
+				//Bring palettes specified for the editor to the top
+				this._bringPalettesToTop(newEditor);
+			}
+		}.bind(this), 1000);
 
 		if(!startup) {
 			Workbench._updateWorkbenchState();

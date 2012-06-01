@@ -1,19 +1,20 @@
 define([
+	"dojo/_base/declare",
 	"./LayoutContainerHelper"
-], function(LayoutContainerHelper) {
+], function(
+	declare,
+	LayoutContainerHelper
+) {
 
-var AccordionContainerHelper = function() {};
-AccordionContainerHelper.prototype = {
+return declare(LayoutContainerHelper, {
 	/**
 	 * Helper function called to establish widget size at initial creation time
 	 * @param {object} args  holds following values:
 	 * 		parent - target parent widget for initial creation
 	 */
 	initialSize: function(args) {
-		return LayoutContainerHelper.prototype.initialSize(args);
+		return this.inherited(arguments);
 	}
-};
-
-return AccordionContainerHelper;
+});
 
 });

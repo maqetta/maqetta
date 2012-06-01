@@ -38,14 +38,10 @@
 	<div dojoAttachPoint="dialogSpecificOptionsDiv"></div>
 	
 	<div class="buttonRow dialogButtonContainer">
-		<span dojoAttachPoint="dialogSpecificButtonsSpan" class="dialogLeftButtons"></span>
+		<span dojoAttachPoint="dialogSpecificButtonsSpan" class="dialogSecondaryButtons"></span>
 		<span class="fileDialogStdButtons">
-			<span class="buttonWrapperSpan">
-				<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>
-			</span>
-			<span class="buttonWrapperSpan">
-				<button dojoType="dijit.form.Button" type="submit" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
-			</span>
+			<button dojoType="dijit.form.Button" type="submit" dojoAttachPoint="__okButton" dojoAttachEvent="onClick:_okButton">${finishButtonLabel}</button>
+			<button dojoType="dijit.form.Button" dojoAttachPoint="__cancelButton" dojoAttachEvent="onClick:cancelButton">${cancelButtonLabel}</button>
 		</span>
 	</div>
 	

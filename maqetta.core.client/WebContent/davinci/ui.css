@@ -573,6 +573,16 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 }
 
 /* resizabled dialog*/
-.resizableDialog .dialogLeftButtons {
-	float: left;
+.resizableDialog .dialogSecondaryButtons {
+	float: right;
 }
+
+.resizableDialog .dialogButtonContainer {
+	clear: both;
+	text-align: left;
+}
+/*override*/
+.resizableDialog .dialogButtonContainer.dialogButtonContainerOverride {
+	text-align: right;
+}
+

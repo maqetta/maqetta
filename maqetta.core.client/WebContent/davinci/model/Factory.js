@@ -20,11 +20,7 @@ var Factory = {
 		for (var i = 0; i<_resources.length; i++) {
 			if (_resources[i].url == url) {
 				_instances[i]++;
-				console.log('=============Factory.getModel============');
-				for(var i = 0; i<_resources.length; i++) {
-					console.log(_resources[i].url+' : '+ _instances[i]); 
-				}
-				console.log('===========================================');
+				this.log();
 				return _resources[i];
 			}
 		}
@@ -58,11 +54,7 @@ var Factory = {
 				}
 			}
 		}
-		console.log('=============Factory.closeModel============');
-		for(var i = 0; i<_resources.length; i++) {
-			console.log(_resources[i].url+' : '+ _instances[i]); 
-		}
-		console.log('===========================================');
+		this.log();
 	},
 
 	newHTML: function(args) {
@@ -73,11 +65,7 @@ var Factory = {
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
-		console.log('=============Factory.getModel============');
-		for(var i = 0; i<_resources.length; i++) {
-			console.log(_resources[i].url+' : '+ _instances[i]); 
-		}
-		console.log('===========================================');
+		this.log();
 		return model;
 	},
 
@@ -86,11 +74,7 @@ var Factory = {
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
-		console.log('=============Factory.getModel============');
-		for(var i = 0; i<_resources.length; i++) {
-			console.log(_resources[i].url+' : '+ _instances[i]); 
-		}
-		console.log('===========================================');
+		this.log();
 		return model;
 	},
 
@@ -120,6 +104,14 @@ var Factory = {
 		default: 
 			return Factory.newHTML(); // default to HTML
 		} // end switch
+	},
+	
+	log: function(){
+		console.log('=============Factory.log============');
+		for(var i = 0; i<_resources.length; i++) {
+			console.log(_resources[i].url+' : '+ _instances[i]); 
+		}
+		console.log('===========================================');
 	}
 };
 

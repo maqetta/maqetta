@@ -531,11 +531,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      *              'device' is the same as the current device
      */
 	setMobileTheme: function(device) {
+		
         var oldDevice = this.getMobileDevice() || 'none';
         if (oldDevice === device) {
             return;
         }
-
+        this.close(); //// return any singletons for CSSFiles
         this.setMobileDevice(device);
 
 		// dojox.mobile specific CSS file handling

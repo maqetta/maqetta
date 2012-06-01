@@ -13,7 +13,20 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 	
 	run: function(selection){
 		if (!this.isEnabled(null)){ return; }
-		this.showDevices(); 
+		var e = davinci.Workbench.getOpenEditor();
+		var okToSwitch = true;
+		if (e && e.isDirty){
+			//Give editor a chance to give us a more specific message
+			var message = e.getOnUnloadWarningMessage();
+			if (!message) {
+				//No editor-specific message, so use our canned one
+				message = dojo.string.substitute(veNls.filesHasUnsavedChanges, [e.fileName]);
+			}
+		    okToSwitch=confirm(message);
+		}
+		if (okToSwitch){
+			this.showDevices(); 
+		}
 	},
 
 	isEnabled: function(selection){

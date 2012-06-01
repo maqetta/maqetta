@@ -24,6 +24,7 @@ define({ root:
 		"newWidgetsShouldUse":"New widgets should use: ",
 		
 		//SelectThemeAction.js
-		"selectTheme":"Select a theme"
+		"selectTheme":"Select a theme",
+		"filesHasUnsavedChanges":"The file '${0}' has unsaved changes. Are you sure you want to switch themes WITHOUT saving, your changes may be lost?"
 }
 });

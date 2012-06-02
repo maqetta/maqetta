@@ -88,6 +88,10 @@ define(["dojo/_base/declare",
 			this.cancel = true;
 			this.onClose();
 		},
+
+		resize: function(coords) {
+			this.contentpane.resize(coords);
+		},
 		
 		onClose: function(){}
 	});

@@ -42,11 +42,11 @@ define([
 			}
 
 			// resize children
-			dojo.forEach(this.getChildren(), function(child) {
+			dojo.forEach(this.getChildren(), dojo.hitch(this, function(child) {
 					if (child.resize) {
-						child.resize(coords);
+						child.resize({w: coords.w, h: this._calculateContentHeight(coords.h)});
 					}
-			});
+			}));
 		},
 
 		_calculateContentHeight: function(totalHeight) {

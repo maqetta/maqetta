@@ -1,12 +1,39 @@
 define([
     	"dojo/_base/declare",
     	"davinci/actions/Action",
+      "dijit/_WidgetBase",
+      "dijit/_TemplatedMixin",
+      "dijit/_WidgetsInTemplateMixin",
     	"davinci/commands/CompoundCommand",
     	"davinci/ve/commands/RemoveCommand",
+    	"../../Workbench",
+    	"dojo/store/Memory",
+    	"dojo/text!../../ui/templates/ChooseDevice.html",
     	"dojo/i18n!davinci/ve/nls/ve",
+    	"dojo/i18n!../../actions/nls/actions",
     	"dojo/i18n!dijit/nls/common"
-], function(declare, Action, CompoundCommand, RemoveCommand, veNls, commonNls){
+], function(declare, Action, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, CompoundCommand, RemoveCommand, Workbench, Memory, templateString, veNls, actionNLS, commonNls){
 
+
+declare("davinci.ve.actions.ChooseDeviceActionContent", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+  templateString: templateString,
+	widgetsInTemplate: true,
+
+	combobox: null,
+
+	device: null,
+	deviceList: null,
+
+	postCreate: function() {
+    var store = new Memory({data:this.deviceList});
+    this.combobox.set("store", store);
+		this.combobox.set("value", this.device);
+	},
+
+	getValue: function() {
+		return this.combobox.get("value")
+	}
+});	
 
 return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 
@@ -23,31 +50,21 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 
 	showDevices: function(){
 
-		var e = davinci.Workbench.getOpenEditor(),
-			c = e.getContext(),
-			device = c.visualEditor.deviceName,
-			deviceList = ["none", "iphone", "ipad", "android_340x480", "android_480x800", "androidtablet", "blackberry"],
-			formHtml = '<select dojoType="dijit.form.ComboBox" id="devices" name="devices">';
-		e._visualChanged();
-		formHtml += deviceList.map(function(name){
-			return '<option' + (name == device ? ' selected' : '') + '>' + name+ '</option>';			
-		}).join("")
-			+ '</select><br/>';
-		var	dialog = new dijit.Dialog({id: "selectDevices", title:veNls.chooseDeviceSilhouette,
-			onCancel:function(){this.destroyRecursive(false);}});	
-		dojo.connect(dialog, 'onLoad', function(){
-			var cb = dijit.byId('devices');
-			dojo.connect(cb, "onChange", function(newDevice){
-				dialog.destroyRecursive(false);
-				var e = davinci.Workbench.getOpenEditor();
-				var context = e.getContext();
-				context.visualEditor.setDevice(newDevice);
-				e._visualChanged();
-			});
-		}, this);
+		var e = davinci.Workbench.getOpenEditor();
+		var c = e.getContext();
+		var device = c.visualEditor.deviceName;
+		var deviceList = [{name: "none"}, {name: "iphone"}, {name: "ipad"}, {name: "android_340x480"}, {name: "android_480x800"}, {name: "androidtablet"}, {name: "blackberry"}];
 
-		dialog.setContent(formHtml);
-		dialog.show();
+		var ui = new davinci.ve.actions.ChooseDeviceActionContent({device: device, deviceList: deviceList});
+
+		function _callback() {
+			var e = davinci.Workbench.getOpenEditor();
+			var context = e.getContext();
+			context.visualEditor.setDevice(ui.getValue());
+			e._visualChanged();
+		}
+
+		Workbench.showDialog(veNls.chooseDeviceSilhouette, ui, null, dojo.hitch(this, _callback), actionNLS.select);
 	}
 });
 

@@ -88,6 +88,12 @@ define({ root:
 		"noValidParents":"No valid parents at this position",
 		"willBeChildOf":"Will become a child of:",
 		"candidateParents":"Candidate parents:",
-		"toChangePress":"To change, press numbers"
+		"toChangePress":"To change, press numbers",
+
+		//VisualThemeEditor.js
+		"vteWarningTitle": "Theme Version Warning",
+		"vteWarningMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"vteErrorTitle": "Theme Version Error",
+		"vteErrorMessage": "Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta."
 }
 });

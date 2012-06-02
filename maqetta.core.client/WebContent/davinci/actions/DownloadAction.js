@@ -5,15 +5,15 @@ define([
     	"../ui/DownloadSelected",
     	"system/resource",
     	"davinci/ui/Resource",
-    	"dijit/Dialog",
+    	"dojo/i18n!davinci/ui/nls/ui",
     	"dojo/i18n!./nls/actions",
     	"dijit/form/ValidationTextBox"
-], function(declare, Action, Workbench, DownloadSelected, resource, uiResource, Dialog, langObj){
+], function(declare, Action, Workbench, DownloadSelected, resource, uiResource, langObj){
 
 return declare("davinci.actions.DownloadAction", Action, {
 
 	run: function() {
-		Workbench.showModal(new DownloadSelected(), "Download", {width: "400px"});
+		Workbench.showModal(new DownloadSelected(), langObj.downloadFile, {width: "400px"});
 	},
 	
 	isEnabled: function(selection){

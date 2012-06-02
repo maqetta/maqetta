@@ -1,7 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"dijit/_Widget",
-	"dijit/_Templated",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
 	"dijit/_Container",
 	"dijit/Dialog",
 	"dojo/dom-geometry",
@@ -9,10 +10,10 @@ define([
 	"dojo/text!./templates/Dialog.html",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojox/layout/ResizeHandle"
-], function(declare, _Widget, _Templated, _Container, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
 
 	/* base class to draw the dialog contents */
-	var _DialogUI = declare("davinci.ui._DialogUI", [_Container, _Widget, _Templated], {
+	var _DialogUI = declare("davinci.ui._DialogUI", [_Container, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: dialogTemplateString,
 		widgetsInTemplate: true,
 

@@ -1,5 +1,7 @@
 define({ root:
 {
+		"select": "Select",
+
 		//AddLinkAction.js
 		"selectDirectory":"Select Directory to link to",
 		"parentFolder":"Parent Folder:",
@@ -24,6 +26,8 @@ define({ root:
 		"newWidgetsShouldUse":"New widgets should use: ",
 		
 		//SelectThemeAction.js
-		"selectTheme":"Select a theme"
+		"selectTheme":"Select a theme",
+		"abs": "Absolute positioning",
+		"flow": "Flow positioning"	
 }
 });

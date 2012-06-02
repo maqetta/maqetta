@@ -3,7 +3,6 @@ define([
 	"./model/Path",
 	"./workbench/ViewPart",
 	"./workbench/EditorContainer",
-	"dijit/Dialog",
 	"davinci/ui/Dialog",
 	"dijit/Toolbar",
 	"dijit/ToolbarSeparator",
@@ -26,6 +25,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"davinci/review/model/resource/root",
+	"davinci/ui/widgets/DialogContent",
 	"davinci/ve/widgets/FontComboBox"
 	
 ], function(
@@ -33,7 +33,6 @@ define([
 		Path,
 		ViewPart,
 		EditorContainer,
-		Dialog,
 		ResizeableDialog,
 		Toolbar,
 		ToolbarSeparator,
@@ -55,7 +54,8 @@ define([
 		Deferred,
 		declare,
 		connect,
-		reviewResource
+		reviewResource,
+		DialogContent
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -647,45 +647,14 @@ var Workbench = {
 
 	getAllOpenEditorIds: function() {
 	},
-	
-	
-	showModalOld: function(content, title, style, callback) {
-		var myDialog = new Dialog({
-			title: title,
-			content: content,
-			style: style
-		});
-		var handle = dojo.connect(content, "onClose", content, function() {
-			var teardown = true;
-			if (callback) {
-				teardown = callback();
-				if (!teardown) {
-					// prevent the dialog from being torn down by temporarily overriding _onSubmit() with a call-once, no-op function
-					var oldHandler = myDialog._onSubmit;
-					myDialog._onSubmit = function() {
-						myDialog._onSubmit = oldHandler;
-					};
-					return;
-				}
-			}
-			if (teardown) {
-				dojo.disconnect(handle);
-			}
-			if (this.cancel) {
-				myDialog.hide();
-			}
-			myDialog.destroy();
-		});
-		myDialog.show();
-	},
 
 	showModal: function(content, title, style, callback) {
-		console.log(content)
 		var myDialog = new ResizeableDialog({
 			title: title,
 			content: content,
 			contentStyle: style
 		});
+
 		var handle = dojo.connect(content, "onClose", content, function() {
 			var teardown = true;
 			if (callback) {
@@ -708,8 +677,49 @@ var Workbench = {
 			myDialog.destroy();
 		});
 		myDialog.show();
+
+		return myDialog;
 	},
-	
+
+	// simple dialog with an automatic OK button that closes it.
+	showMessage: function(title, message, style, callback) {
+		return this.showModal(new DialogContent({content: message, hideCancel: true}), title, style, callback);
+	},
+
+	// OK/Cancel dialog with a settable okLabel
+	showDialog: function(title, contents, style, callback, okLabel) {
+		// dialog content is a ContentPane we use that has pre-defined buttons
+		var content = new DialogContent({okLabel: okLabel, content: contents});
+
+		var myDialog = new ResizeableDialog({
+			title: title,
+			content: content,
+			contentStyle: style
+		});
+		var handle, handle2;
+
+		handle = dojo.connect(content, "onClose", content, function() {
+				if (callback) {
+					callback();
+				}
+				dojo.disconnect(handle);
+				dojo.disconnect(handle2);
+				myDialog.hide();
+				myDialog.destroy();
+		});
+
+		handle2 = dojo.connect(content, "onCancel", content, function() {
+				dojo.disconnect(handle);
+				dojo.disconnect(handle2);
+				myDialog.hide();
+				myDialog.destroy();
+		});
+
+		myDialog.show();
+
+		return myDialog;
+	},
+
 	_createMenuTree: function(actionSets, pathsOptional) {
 		if (!actionSets) {  // only get action sets not associated with part
 			actionSets =  Runtime.getExtensions("davinci.actionSets", function (actionSet) {

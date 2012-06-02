@@ -1,6 +1,7 @@
 define(["dojo/_base/declare",
-        "dijit/_Templated",
-        "dijit/_Widget",
+				"dijit/_WidgetBase",
+				"dijit/_TemplatedMixin",
+				"dijit/_WidgetsInTemplateMixin",
         "davinci/library",
         "system/resource",
         "davinci/workbench/Preferences",
@@ -16,11 +17,11 @@ define(["dojo/_base/declare",
         "dojo/text!./templates/ThemeSetSelection.html",
 
     	
-],function(declare, _Templated, _Widget,  Library, Resource,  Preferences, Runtime, Workbench,
+],function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,  Library, Resource,  Preferences, Runtime, Workbench,
 			ChangeThemeCommand, Dialog, uiNLS, commonNLS,
 			Button, Select, Theme, templateString){
 
-	declare("davinci.ui.widgets.ThemeSetSelectionWidget", [_Widget, _Templated], {
+	declare("davinci.ui.widgets.ThemeSetSelectionWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
 		widgetsInTemplate: true,
 

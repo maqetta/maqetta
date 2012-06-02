@@ -91,6 +91,7 @@ define({ root:
 		//"openFile":"Open File",
 		"createNewFolder":"Create New Folder",
 		"saveFileAs":"Save File As",
+		"downloadFile":"Download",
 		
 		//addFiles
 		"selectFiles":"Select Files...",

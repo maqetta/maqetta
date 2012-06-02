@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
 	"dijit/layout/StackContainer",
 	"dijit/layout/ContentPane",
 	"dijit/form/SimpleTextarea",
@@ -19,7 +20,6 @@ define([
 	"dojo/string",
 	"dojo/fx",
 	"dojo/date/stamp",
-	"dijit/Dialog",
 	"dijit/Tree",
 	"davinci/Runtime",
 	"davinci/Workbench",
@@ -32,8 +32,8 @@ define([
 	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
-], function(declare, _WidgetBase, _TemplatedMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Dialog, Tree, 
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Tree, 
 		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 
@@ -732,26 +732,15 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				var key = value ? "draftSaved" : "inviteSuccessful";
 				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create", this.node]);
 			} else {
+
 				var dialogContent = dojostring.substitute(warningString, {
 						htmlContent: result, 
 						inviteNotSent: widgetsNls.inviteNotSent, 
-						mailFailureMsg: widgetsNls.mailFailureMsg, 
-						buttonOk: dijitNls.buttonOk
-					});
+						mailFailureMsg: widgetsNls.mailFailureMsg,
+				});
 				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
-				if (!this.invitationDialog) {
-					this.invitationDialog = new Dialog({
-						title: widgetsNls.warning,
-						content: dialogContent
-					});
-					this.invitationDialog.connect(dijit.byId("_mailFailureDialogButton"), "onClick", function() {
-						this.invitationDialog.hide();
-						this.invitationDialog.destroyRecursive();
-					}.bind(this));
-				} else {
-					this.invitationDialog.content = dialogContent;
-				}
-				this.invitationDialog.show();
+
+				Workbench.showMessage(widgetsNls.warning, dialogContent);
 			}
 		}.bind(this));
 		this.onClose();

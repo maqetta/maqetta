@@ -205,6 +205,8 @@ var uiResource = {
 			var oldEditor = Workbench.getOpenEditor(resource);
 			if(oldEditor!=null)
 				oldEditor.editorContainer.forceClose(oldEditor);
+			/* return true if we closed an open editor */
+			return (oldEditor !=null);
 		},
 		
 		saveAs: function(extension){
@@ -355,9 +357,9 @@ var uiResource = {
 		  			var cancel = renameDialog.attr("cancel");
 		  			var newName = renameDialog.attr("value");
 		  			if(!cancel){
-		  				uiResource.closeEditor(resource);
+		  				var opened = uiResource.closeEditor(resource);
 		  				resource.rename(newName);
-			  			uiResource.openResource(resource);
+			  			if(opened) uiResource.openResource(resource);
 					}
 		  			return true;
 		  		});	

@@ -151,7 +151,7 @@ public class Publish extends Command {
 		for (Reviewer reviewer : reviewers) {
 			String mail = reviewer.getEmail();
 			if (mail != null && !mail.equals("") && set.add(mail)) {
-				String url = getUrl(user, version.getTime(), requestUrl, mail);
+				String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl);
 				String htmlContent = getHtmlContent(user, message, url);
 				notifyRelatedPersons(Utils.getCommonNotificationId(), mail,
 						Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
@@ -184,13 +184,5 @@ public class Publish extends Command {
 		props.put("url", url);
 		props.put("email", user.getPerson().getEmail());
 		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
-	}
-
-	private String getUrl(IUser user, String version, String requestUrl, String reviewer) {
-		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
-		return host + "/maqetta?"
-				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
-				+ user.getUserID() + "&"
-				+ IDavinciServerConstants.REVIEW_VERSION_ATTR + "=" + version;
 	}
 }

@@ -327,7 +327,7 @@ BODY{
 	padding-top: 1px;
 }
 .dj_gecko .maq_banner_name_box {
-	padding-top: 2px;	// Different rounding rules between WebKit and Gecko
+	padding-top: 2px;	/* Different rounding rules between WebKit and Gecko */
 }
 .maq_banner_name {
     font: normal normal 10pt Arial, sans-serif;

@@ -619,17 +619,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		var command = new davinci.commands.CompoundCommand();
 
 		if(this.createNewWidget()){
-			
-			// Invoke widget initialSize helper if this is widget's initial creation time
-			// (i.e., initialCreationArgs is provided)
-			var helper = w.getHelper();
-			if(helper && helper.initialSize){
-				//debugger;
-				var size =  helper.initialSize(args);
-				if(size){
-					args.size = size;
-				}
-			}
+			args.size = this._getInititalSize(w, args);
 			
 			command.add(new AddCommand(w,
 				args.parent || this._context.getContainerNode(),
@@ -668,6 +658,182 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		this._select(w);
 		this._widget = w;
 		return w;
+	},
+	
+	/* 
+	 * Generally, the desired default sizing for widgets that are typically expected to expand to fill the available 
+	 * space is as follows:
+	 * 		- user specfied height/width (e.g., if they drag out region for size)
+	 * 		- helper calculated value
+	 * 		- else if flow layout
+	 * 			- else if added to html.body:
+	 * 				- if only child:
+	 * 					- width: 100%
+	 * 					- height: auto
+	 * 						- Exceptions: height 100% for large layout container widgets (like 
+	 * 									BorderContainer, Tab Container, etc.)
+	 * 				- else if more than one child
+	 * 					- width: 100%
+	 * 					- height: auto
+	 * 			- else if added to container like ContentPane, div, etc.
+	 * 				-if only child:
+	 * 					- width: 100%
+	 * 					- height 100%
+	 * 				-else if more than one child:
+	 * 					- width: 100%
+	 * 					- height: auto
+	 * 		- else if ABSOLUTE layout
+	 * 				- width: 300px
+	 * 				- height: 300px	
+	 * 
+	 * If a widget wants this behavior, it should specify the following in its metadata:
+	 * 
+	 * 		"initialSize": "auto"
+	 * 
+	 * If the widget desires the same custom size in both the "flow" and "absolute" cases, this can be specified as
+	 * follows:
+	 * 
+	 * 		"initialSize": {
+	 * 			"width": "250px",
+	 * 			"height": "200px 
+	 * 		}
+	 * 
+	 * If the widget wants to specify different sizes in the "flow" and/or "absolute" cases, this can be specifed
+	 * as follows:
+	 * 
+	 * 		"initialSize": {
+	 * 			"flow": {
+	 * 				"width": "50%",
+	 * 				"height": "50%"
+	 * 			},
+	 * 			"absolute: {
+	 * 				"width": "100px",
+	 * 				"height": "100px"
+	 * 			}
+	 * 		}
+	 * 
+	 * For any finer grain control, the initialSize helper function should be implemented.
+	 */
+	_getInititalSize: function(w, args) {
+		var returnSize = args.size;
+		
+		// No user-specified size, so invoke widget's initialSize helper (if it exists)
+		var helper = w.getHelper();
+		if(helper && helper.initialSize){
+			//debugger;
+			var size =  helper.initialSize(args);
+			if(size){
+				returnSize = size;
+			}
+		} 
+		
+		//No size returned from the helper and no dragged out side, so determine initial size based metadata
+		if (!returnSize) {
+			var initialSizeMetadata = Metadata.queryDescriptor(w.type, "initialSize");
+			if (initialSizeMetadata) {
+				// If widget is not being added at an absolute location (i.e., no value for args.position), then we
+				// consider ourseleves in FLOW mode
+				if(args && !args.position) {
+					var parentWidget = args.parent;
+					//Check to see if being added to the BODY
+					if (parentWidget.type == "html.body") {
+						//Check to see if we should do the default initial size
+						if (initialSizeMetadata == "auto" || initialSizeMetadata.flow == "auto") {
+							returnSize = {
+								w: '100%',
+								h: 'auto'
+							};
+						} else { 
+							// No "auto" specified, so look for explicit sizes in metadata
+							returnSize = this._getExplicitFlowSizeFromMetadata(initialSizeMetadata);
+						}
+					//Check to see if being added to other non-BODY containers
+					} else if (this._isTypeContainer(parentWidget.type)) {
+						//Check to see if we should do the default initial size
+						if (initialSizeMetadata == "auto" || initialSizeMetadata.flow == "auto") {
+							var parentChildren = parentWidget.getData().children;
+							returnSize = {
+								w: '100%',
+								//Make height "auto" if more than one child, else 100% if widget is first child
+								h: (parentChildren && parentChildren.length) ? 'auto' : '100%'
+							};
+						} else { 
+							// No "auto" handling specified, so look for explicit sizes in metadata
+							returnSize = this._getExplicitFlowSizeFromMetadata(initialSizeMetadata);
+						}
+					} else {
+						// Widget is not being added to anything we are specifically checking for, so look for explicit sizes 
+						// in metadata
+						returnSize = this._getExplicitFlowSizeFromMetadata(initialSizeMetadata);
+					}
+				} else {
+					// There was a position specified, so we consider ourselves in ABSOLUTE mode
+					if (initialSizeMetadata == "auto" || initialSizeMetadata.absolute == "auto") {
+						//Metadata is telling us to use default value for  ABSOLUTE mode (e.g., 300px by 300px)
+						returnSize = {
+							w:'300px',
+							h:'300px'
+						};
+					}
+					else {
+						// No "auto" handling specified, so look for explicit sizes in metadata
+						returnSize = this._getExplicitAbsoluteSizeFromMetadata(initialSizeMetadata);
+					}
+				}
+			}
+		}
+	
+		return returnSize;
+	},
+	
+	_getExplicitFlowSizeFromMetadata: function(initialSizeMetadata) {
+		var returnSize = null;
+		
+		//First see if explicit flow values set
+		if (initialSizeMetadata.flow) {
+			returnSize = {
+				w: initialSizeMetadata.flow.width ? initialSizeMetadata.flow.width : "100%",
+				h: initialSizeMetadata.flow.height ? initialSizeMetadata.flow.height : "auto"
+			};
+		} else { 
+			// No width/height specified for "flow" layout, so use top-level
+			// width/height values
+			returnSize = {
+				w: initialSizeMetadata.width ? initialSizeMetadata.width : "100%",
+				h: initialSizeMetadata.height ? initialSizeMetadata.height : "auto"
+			};
+		}
+		
+		return returnSize;
+	},
+	
+	_getExplicitAbsoluteSizeFromMetadata: function(initialSizeMetadata) {
+		var returnSize = null;
+		
+		//First see if explicit flow values set
+		if (initialSizeMetadata.absolute) {
+			returnSize = {
+				w: initialSizeMetadata.absolute.width ? initialSizeMetadata.absolute.width : "300px",
+				h: initialSizeMetadata.absolute.height ? initialSizeMetadata.absolute.height : "300px",
+			};
+		} else { 
+			// No width/height specified for "flow" layout, so use top-level
+			// width/height values
+			returnSize = {
+				w: initialSizeMetadata.width ? initialSizeMetadata.width : "300px",
+				h: initialSizeMetadata.height ? initialSizeMetadata.height : "300px"
+			};
+		}
+		
+		return returnSize;
+	},
+	
+	_isTypeContainer: function(type) {
+		return  type && 
+			(type == 'dijit.layout.ContentPane' ||
+			type == 'html.div' ||
+			type == 'html.form' ||
+			type == 'html.fieldset');
 	},
 	
 	_select: function(w) {

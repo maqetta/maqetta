@@ -90,10 +90,7 @@ var Runtime = {
 			}
 		});
 	},
-	publish: function(node) {
-		var publish = new davinci.review.actions.PublishAction();
-		publish.run(node);
-	},
+
 	singleUserMode : function() {
 		return Runtime.isLocalInstall;
 	},

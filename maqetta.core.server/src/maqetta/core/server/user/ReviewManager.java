@@ -318,6 +318,14 @@ public class ReviewManager implements IReviewManager {
 		return false;
 	}
 	
+	public String getReviewUrl(String designerId, String version, String requestUrl) {
+		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
+		return host + "/maqetta?"
+				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
+				+ designerId+ "&"
+				+ IDavinciServerConstants.REVIEW_VERSION_ATTR + "=" + version;
+	}
+	
 	class VersionFile {
 		public String latestVersionID;
 

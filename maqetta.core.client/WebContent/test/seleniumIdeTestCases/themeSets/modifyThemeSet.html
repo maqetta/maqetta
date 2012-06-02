@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://macwayne2.austin.ibm.com:55556/" />
+<title>modifyThemeSet</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">modifyThemeSet</td></tr>
+</thead><tbody>
+<tr>
+	<td>select</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=my_theme_set</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=option[value=&quot;my_theme_set&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=div.dijitReset.dijitArrowButtonInner</td>
+	<td></td>
+</tr>
+<!--Force the menu to populate-->
+<tr>
+	<td>clickAt</td>
+	<td>//table[@id='theme_select_desktop_theme_select']/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_desktop_theme_select_menu']/table/tbody/tr/td[text()='claro1']</td>
+	<td></td>
+</tr>
+<!--Force the menu to populate-->
+<tr>
+	<td>clickAt</td>
+	<td>//table[@id='theme_select_mobile_theme_select']/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_mobile_theme_select_menu']/table/tbody/tr/td[text()='custom1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_android_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_blackberry_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_ipad_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_iphone_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_other_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=custom_default</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@id='theme_select_themeset_add']/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=custom_default_1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=option[value=&quot;custom_default_1&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_desktop_theme_select_menu']/table/tbody/tr/td[text()='claro']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_mobile_theme_select_menu']/table/tbody/tr/td[text()='(device-specific)']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_android_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_blackberry_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_ipad_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_iphone_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_other_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<!--Force the menu to populate-->
+<tr>
+	<td>clickAt</td>
+	<td>//table[@id='theme_select_android_select']/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_android_select_menu']/table/tbody/tr/td[text()='android']</td>
+	<td></td>
+</tr>
+<!--Force the menu to populate-->
+<tr>
+	<td>clickAt</td>
+	<td>//table[@id='theme_select_blackberry_select']/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_blackberry_select_menu']/table/tbody/tr/td[text()='blackberry']</td>
+	<td></td>
+</tr>
+<!--Force the menu to populate-->
+<tr>
+	<td>clickAt</td>
+	<td>//table[@id='theme_select_ipad_select']/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_ipad_select_menu']/table/tbody/tr/td[text()='ipad']</td>
+	<td></td>
+</tr>
+<!--Force the menu to populate-->
+<tr>
+	<td>clickAt</td>
+	<td>//table[@id='theme_select_iphone_select']/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_iphone_select_menu']/table/tbody/tr/td[text()='iphone']</td>
+	<td></td>
+</tr>
+<!--Force the menu to populate-->
+<tr>
+	<td>clickAt</td>
+	<td>//table[@id='theme_select_other_select']/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='theme_select_other_select_menu']/table/tbody/tr/td[text()='iphone']</td>
+	<td></td>
+</tr>
+<!--rename theme set-->
+<tr>
+	<td>click</td>
+	<td>id=theme_select_rename_button_label</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//input[@value=''])[105]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=theme_select_themeset_rename_textbox</td>
+	<td>dojo_theme_set</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=theme_set_rename_ok_button_label</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

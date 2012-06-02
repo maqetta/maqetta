@@ -525,15 +525,19 @@ createWidget: function(widgetData) {
 
 	// Strip out event attributes. We want them in the model
 	// but not in the DOM within page canvas.
-	var props = {};
+	var canvasAndModelProps = {};
+	var modelOnlyProps = {};
 	for (var p in data.properties) {
 		var propval = data.properties[p];
-		if (propval != null /*"!=" checks for null/undefined*/ &&
-				p.substr(0,2).toLowerCase()!="on") {
-			props[p] = propval;
+		if (propval){
+			if(p.substr(0,2).toLowerCase()!="on") {
+				canvasAndModelProps[p] = propval;
+			}else{
+				modelOnlyProps[p] = propval;
+			}
 		}
 	}
-	var widget = new c(props, node, type, md, srcElement);
+	var widget = new c(canvasAndModelProps, node, type, md, srcElement);
 	widget._srcElement=srcElement;
 
 	if(widget.chart && (data.properties && data.properties.theme)){
@@ -552,8 +556,9 @@ createWidget: function(widgetData) {
 		widget._edit_context = data.context;
 	}
 
-	if(data.properties){
-		widget.setProperties(data.properties);
+	if(data.properties){	
+		widget.setProperties(canvasAndModelProps);
+		widget.setProperties(modelOnlyProps, true);
 	}
 
 	if(data.states){

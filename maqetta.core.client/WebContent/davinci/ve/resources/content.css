@@ -148,6 +148,12 @@ DIV.HtmlWidget {
 	outline: 1px dotted #AAA;
 	outline-color:rgba(128,128,128,0.5);
 }
+FORM.HtmlWidget {
+	min-width:1em;
+	min-height:1em; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
 SPAN.HtmlWidget {
 	min-width:1em; 
 	min-height:1em; 
@@ -191,6 +197,12 @@ EMBED.HtmlWidget {
 	outline-color:rgba(128,128,128,0.5);
 }
 VIDEO.HtmlWidget {
+	min-width:1em;
+	min-height:1em; 
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.5);
+}
+IMG.HtmlWidget {
 	min-width:1em;
 	min-height:1em; 
 	outline: 1px dotted #AAA;

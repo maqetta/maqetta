@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>verifyModifyThemeSet</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">verifyModifyThemeSet</td></tr>
+</thead><tbody>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=custom_default</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=my_theme_set</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=dojo_themeset</td>
+</tr>
+<!--verify custom_default-->
+<tr>
+	<td>select</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=custom_default</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=theme_select_themeset_theme_select_textbox</td>
+	<td>custom_default</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[@id='theme_select_desktop_theme_select']/tbody/tr/td/span/span</td>
+	<td>claro</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[@id='theme_select_mobile_theme_select']/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_android_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_blackberry_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_ipad_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_iphone_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_other_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom</td>
+</tr>
+<!--verify my_theme_set-->
+<tr>
+	<td>select</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=my_theme_set</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=theme_select_themeset_theme_select_textbox</td>
+	<td>my_theme_set</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[@id='theme_select_desktop_theme_select']/tbody/tr/td/span/span</td>
+	<td>claro1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[@id='theme_select_mobile_theme_select']/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_android_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_blackberry_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_ipad_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_iphone_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_other_select') and (contains(@class, 'dijitDisabled'))]/tbody/tr/td/span/span</td>
+	<td>custom1</td>
+</tr>
+<!--verify my_theme_set-->
+<tr>
+	<td>select</td>
+	<td>id=theme_select_themeset_theme_select</td>
+	<td>label=dojo_theme_set</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=theme_select_themeset_theme_select_textbox</td>
+	<td>dojo_theme_set</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[@id='theme_select_desktop_theme_select']/tbody/tr/td/span/span</td>
+	<td>claro</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[@id='theme_select_mobile_theme_select']/tbody/tr/td/span/span</td>
+	<td>(device-specific)</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_android_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>android</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_blackberry_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>blackberry</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_ipad_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>ipad</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_iphone_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>iphone</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//table[(@id='theme_select_other_select') and (not(contains(@class, 'dijitDisabled')))]/tbody/tr/td/span/span</td>
+	<td>iphone</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

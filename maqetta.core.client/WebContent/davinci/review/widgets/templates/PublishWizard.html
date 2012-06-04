@@ -72,12 +72,12 @@
 			</tr>
 		</table>
 		
-		<div class='space'>
-		<div dojoAttachPoint="reviewMsg" class="reviewMsg"></div>
-		<a class='cancelButton' href="javascript:void(0);" dojoAttachEvent="onclick:onClose">${buttonCancel}</a>
-		<button class='bottomButton' dojoAttachPoint="invite">${publishReview}</button>
-		<button class='bottomButton' dojoAttachPoint="next">${next} &gt</button>
-		<button class='bottomButton' dojoAttachPoint="prev">&lt ${back}</button>
-		<button class='bottomButton' dojoAttachPoint="saveDt">${saveAsDraft}</button>
+		<div class='space dialogButtonContainer dialogButtonContainerOverride'>
+			<div dojoAttachPoint="reviewMsg" class="reviewMsg"></div>
+			<a class='cancelButton' href="javascript:void(0);" dojoAttachEvent="onclick:onClose">${buttonCancel}</a>
+			<button class='bottomButton' dojoAttachPoint="saveDt">${saveAsDraft}</button>
+			<button class='bottomButton' dojoAttachPoint="prev">&lt ${back}</button>
+			<button class='bottomButton' dojoAttachPoint="next">${next} &gt</button>
+			<button class='bottomButton' dojoAttachPoint="invite">${publishReview}</button>
 		</div>
 </div>

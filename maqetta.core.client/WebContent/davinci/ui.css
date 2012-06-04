@@ -385,10 +385,6 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	background-position:-20px -846px;
 }
 .fileDialog .folderContainer {
-	margin-left:1px;
-	margin-top:.3em;
-	margin-bottom:1em;
-	padding:1px;
 }
 .fileDialog .folderContainer .dijitContentPane {
 	border:1px solid #888;
@@ -571,3 +567,18 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	margin-left: .5em;
 */
 }
+
+/* resizabled dialog*/
+.resizableDialog .dialogSecondaryButtons {
+	float: right;
+}
+
+.resizableDialog .dialogButtonContainer {
+	clear: both;
+	text-align: left;
+}
+/*override*/
+.resizableDialog .dialogButtonContainer.dialogButtonContainerOverride {
+	text-align: right;
+}
+

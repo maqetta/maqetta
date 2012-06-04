@@ -2,26 +2,18 @@
 	<table>
 	
 	<tr>
-		<td class="NewProjectDialogLabel">Parent Folder:</td><td><div class='templateInput'  dojoAttachPoint="fileDialogParentFolder"  ></input></td>
+		<td class="NewProjectDialogLabel">${uiNLS.parentFolder}</td><td><div class='templateInput'  dojoAttachPoint="fileDialogParentFolder"  ></input></td>
 	</tr>
 	
 	
 	<tr>
-	<td class="NewProjectDialogLabel">Name:</td><td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="folderName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+	<td class="NewProjectDialogLabel">${uiNLS.newFolderName}</td><td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="folderName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
 	</tr>
 	
 	</table>
 
-	<table class='templateTable'> 
-			<tr> 
-			<td class='templateFiller3'>&nbsp;</td>
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="okButton" dojoAttachEvent='onClick:_okButton' label='OK'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:_cancelButton' label='Cancel'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateFiller3'>&nbsp;</td>
-			</tr> 
-		</table> 
-		
+	<div class="dialogButtonContainer">
+		<button dojoType='dijit.form.Button' type='submit' dojoAttachPoint="okButton" dojoAttachEvent='onClick:_okButton'>${uiNLS.create}</button>
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:_cancelButton'>${uiNLS.cancelButtonLabel}</button>		
+	</div>		
 </div>

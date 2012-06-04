@@ -4,8 +4,9 @@ define([
 	"davinci/review/widgets/PublishWizard",
 	"davinci/Runtime",
 	"dojox/widget/Toaster",
+	"davinci/ui/Dialog",
 	"dojo/i18n!./nls/actions"
-], function(declare, Action, PublishWizard, Runtime, Toaster, actionsNls) {
+], function(declare, Action, PublishWizard, Runtime, Toaster, Dialog, actionsNls) {
 
 var PublishAction = declare("davinci.review.actions.PublishAction", [Action], {
 
@@ -19,7 +20,7 @@ var PublishAction = declare("davinci.review.actions.PublishAction", [Action], {
 
 	run : function() {
 		var publishWizard = this.publishWizard = new PublishWizard();
-		this.dialog = new dijit.Dialog( {
+		this.dialog = new Dialog({
 			title : actionsNls.newReview,
 			onCancel: dojo.hitch(this, this.close),
 			onHide: dojo.hitch(this, this.hide)

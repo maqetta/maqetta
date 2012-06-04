@@ -2,7 +2,7 @@ define([
         "dojo/_base/declare",
     	"./Action",
     	"../Workbench",
-    	"dijit/Dialog",
+    	"davinci/ui/Dialog",
     	"../ui/SaveAsWidgetForm",
     	"dojo/i18n!../ui/nls/common"
 ], function(declare, Action, Workbench, Dialog, SaveAsWidgetForm, langObj){

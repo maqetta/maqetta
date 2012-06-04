@@ -86,22 +86,23 @@ var Factory = {
 	},
 
 	getNewFromResource: function(resource) {
+		// temp models, no need to singlton them....
 		var extension = resource.extension;
-		if (!extension) { return Factory.newHTML(); } // default to HTML
+		if (!extension) { return new HTMLFile(); } // default to HTML
 
 		switch(extension) {
 		case "html": 
-			return Factory.newHTML();
+			return new HTMLFile(); //Factory.newHTML();
 			break;
 		case "css": 
-			return Factory.newCSS();
+			return new CSSFile(); //Factory.newCSS();
 			break;
 		case "js":
 		case "json": 
-			return Factory.newJS();
+			return new JSFile(); //Factory.newJS();
 			break;
 		default: 
-			return Factory.newHTML(); // default to HTML
+			return new HTMLFile(); // default to HTML
 		} // end switch
 	},
 	

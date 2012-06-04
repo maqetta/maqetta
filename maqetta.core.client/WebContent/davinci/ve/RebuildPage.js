@@ -32,7 +32,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 	rebuildSource: function(source, resource){
 		if ( !( resource && resource.extension && resource.extension == "html")) return source;
 		
-		this.model = this._srcDocument = Factory.getModel({url: resource.getPath()}); // 2453 getNewFromResource(resource);
+		this.model = this._srcDocument = Factory.getNewFromResource(resource); //getModel({url: resource.getPath()}); // 2453 getNewFromResource(resource);
 		
 		this._resourcePath = null;
 		if(resource)
@@ -81,16 +81,17 @@ return declare("davinci.ve.RebuildPage", Context, {
                     jsChanges[i]);
         }
 		*/
-        this._pageRebuilt = new Deferred();
+        
+       /* this._pageRebuilt = new Deferred();
         var deferred = this.model.save();
         deferred.then(function(){
         	this._pageRebuilt.newText = this._srcDocument.getText();
-        	Factory.closeModel(this.model); // return the model
         	this._pageRebuilt.resolve();
         }.bind(this));
 
-		return this._pageRebuilt; //retText; // #2453 this._srcDocument.getText();
+		return this._pageRebuilt; //retText; // #2453 
 		
+*/		return this._srcDocument.getText();
 	},
 
 

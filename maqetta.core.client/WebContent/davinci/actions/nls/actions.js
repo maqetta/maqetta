@@ -27,8 +27,8 @@ define({ root:
 		
 		//SelectThemeAction.js
 		"selectTheme":"Select a theme",
-		"filesHasUnsavedChanges":"The file '${0}' has unsaved changes. Are you sure you want to switch themes WITHOUT saving, your changes may be lost?"
-	        "abs": "Absolute positioning",
+		"filesHasUnsavedChanges":"The file '${0}' has unsaved changes. Are you sure you want to switch themes WITHOUT saving, your changes may be lost?",
+	     "abs": "Absolute positioning",
 		"flow": "Flow positioning"	
 }
 });

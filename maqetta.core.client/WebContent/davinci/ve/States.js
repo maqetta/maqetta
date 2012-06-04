@@ -184,8 +184,7 @@ var veStates = declare(maqettaStates, {
 		}
 	},
 	
-	// Application "state" has been removed from the document
-	// Recursively remove all references to that state from given node and descendants
+	// Remove all references to given "state" from given node
 	_removeStateFromNode: function(node, state){
 		if(node && node.states && node.states[state]){
 			delete node.states[state];
@@ -212,8 +211,7 @@ var veStates = declare(maqettaStates, {
 		}
 	},
 	
-	// Application "state" has been removed from the document
-	// Recursively remove all references to that state from given node and descendants
+	// Remove all references to unused states from given node
 	_removeUnusedStates: function(node, activeStates){
 		if(node && node.states){
 			for(var state in node.states){

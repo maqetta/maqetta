@@ -144,8 +144,14 @@ define(["dojo/_base/declare",
 					if(Theme.isThemeHTML(allResources[k])) {
 						continue;
 					}
-					var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
-					allResources[k].setContents(newSource, true);
+
+					// 2453
+					var deferred = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
+					var resource = allResources[k];
+					deferred.then(function(){
+						resource.setContents(deferred.newText, true);
+					}.bind(this));
+					// 2453
 				}
 			}
 		},

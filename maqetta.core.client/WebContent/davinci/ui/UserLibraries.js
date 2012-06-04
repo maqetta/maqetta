@@ -164,8 +164,13 @@ define(["dojo/_base/declare",
 							continue;
 						}
 						
-						var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
-						pages[i].setContents(newSource, false);
+						// 2453
+						var deferred = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
+						var resource = pages[i];
+						deferred.then(function(){
+							resource.setContents(deferred.newText, false);
+						}.bind(this));
+						// 2453
 					}
 					this.onClose();
 				});

@@ -238,14 +238,16 @@ var uiResource = {
 							existing.deleteResource();
 						}
 						// Do various cleanups around currently open file
-						oldResource.removeWorkingCopy();
+						// oldResource.removeWorkingCopy(); 2453 let the factory clean up
 						oldEditor.isDirty = false;
 						// Create a new editor for the new filename
 						var file = Resource.createResource(resourcePath);
 						var pageBuilder =new RebuildPage();
-						var newText = pageBuilder.rebuildSource(oldContent, file);
-						file.setContents(newText);
-						Workbench.openEditor({fileName: file, content: newText});
+						var deferred = pageBuilder.rebuildSource(oldContent, file);
+						deferred.then(function(){
+							file.setContents(deferred.newText);
+							Workbench.openEditor({fileName: file, content: deferred.newText});
+						}.bind(this));
 					} else {
 						teardown = false;
 					}

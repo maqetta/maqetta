@@ -8,7 +8,8 @@ define([
 	"davinci/html/CSSImport",
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLText",
-	"preview/silhouetteiframe"
+	"preview/silhouetteiframe",
+	"davinci/model/Factory", 
 ], function(
     declare,
     lang,
@@ -19,7 +20,8 @@ define([
     CSSImport,
     HTMLElement,
     HTMLText,
-    silhouetteiframe
+    silhouetteiframe,
+    Factory
 ) {
 
 return declare("davinci.ve.commands.ChangeThemeCommand", null, {
@@ -116,6 +118,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                     doc = this._context.getDocument();
                                 importElements[i].url = 'x';
                                 importElements[i].parent.removeChild(importElements[i]);
+                                importElements[i].close(); // removes the instance from the Factory
                                 query('link[href="' + url + '"]', doc).orphan();
                                 this._context.theme = null;
                                 break;
@@ -162,6 +165,11 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
             var css = new CSSImport();
             css.url = newFileName;
+			var cssFile = Factory.getModel({
+				url: Theme.getBase()+'/'+css.url,
+			    includeImports: true,
+			});
+			css.cssFile = cssFile; 
             style.addChild(css,0);
             this._context.theme = newThemeInfo;
         }
@@ -181,6 +189,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
         // remove the mobile theme
         if (themeSet.mobileTheme && (!Theme.themeSetEquals(themeSet.mobileTheme,Theme.dojoMobileDefault))){
+        	this._context.close(); //// return any singletons for CSSFiles
             this._dojoxMobileRemoveTheme(this._context);
         }
         

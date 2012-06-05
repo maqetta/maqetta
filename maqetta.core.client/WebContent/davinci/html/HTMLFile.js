@@ -18,6 +18,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 
 	constructor: function(fileName) {
 		this.fileName = fileName;
+		this.url = fileName;
 		this.elementType = "HTMLFile";
 		this._loadedCSS = {};
 		this._styleElem = null;
@@ -123,6 +124,12 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 	},
 
 	setText: function (text, noImport) {
+		// clear the singletons in the Factory
+		this.visit({visit:function(node) {
+			if (node.elementType == "CSSImport") {
+				node.close();
+			}
+		}});
 		// clear cached values
 		this.children = [];
 		this._styleElem = null;
@@ -225,6 +232,7 @@ return declare("davinci.html.HTMLFile", HTMLItem, {
 				node.close();
 			}
 		}});
+		require("davinci/model/Factory").closeModel(this);
 	},
 
 	getLabel: function() {

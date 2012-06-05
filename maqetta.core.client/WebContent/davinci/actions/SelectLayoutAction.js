@@ -1,10 +1,32 @@
 define([
-        "dojo/_base/declare",
+      "dojo/_base/declare",
+      "dijit/_WidgetBase",
+      "dijit/_TemplatedMixin",
+      "dijit/_WidgetsInTemplateMixin",
     	"./Action",
     	"../Workbench",
-    	"dijit/Dialog",
-    	"dojo/i18n!./nls/actions"
-], function(declare, Action, Workbench, Dialog, langObj){
+    	"dojo/i18n!./nls/actions",
+    	"dojo/text!../ui/templates/SwitchLayout.html",
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Action, Workbench, langObj, templateString){
+
+declare("davinci.actions.SelectLayoutActionContent", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+  templateString: templateString,
+	widgetsInTemplate: true,
+
+	langObj: langObj,
+
+	combobox: null,
+
+	flowLayout: null,
+
+	postCreate: function() {
+		this.combobox.set("value", this.flowLayout ? langObj.flow : langObj.abs);
+	},
+
+	getValue: function() {
+		return this.combobox.get("value") == langObj.flow ? "Flow positioning" : "Absolute positioning";
+	}
+});
 
 return declare("davinci.actions.SelectLayoutAction", Action, {
 	
@@ -42,34 +64,14 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 		var c = e.getContext();
 		var flowLayout = c.getFlowLayout();
 		e._visualChanged();
-		var formHtml = 
-        '<select dojoType="dijit.form.ComboBox" id="layout" name="layout" >';
-		if (flowLayout){
-			formHtml += '<option>Absolute positioning</option>';
-			formHtml += '<option selected>Flow positioning</option>';
-		} else {
-			formHtml += '<option selected>Absolute positioning</option>';
-			formHtml += '<option>Flow positioning</option>';
+
+		var ui = new davinci.actions.SelectLayoutActionContent({flowLayout: flowLayout});
+
+		function _callback() {
+			this._changeLayoutCommand(ui.getValue());
 		}
-			
-		formHtml += '</select><br/>';
-		var	dialog = new Dialog({id: "selectLayout", title:langObj.newWidgetsShouldUse,
-			onCancel:function(){this.destroyRecursive(false);}});	
-		dialog._selectLayout = this;
-		dojo.connect(dialog, 'onLoad', function(){
-			
-			var cb = dijit.byId('layout');
-			cb._selectLayout = this._selectLayout;
-			
-				
-			dojo.connect(cb, "onChange", function(layout){
-				this._selectLayout._changeLayoutCommand(layout);
-			});
-			
-		});
-		dialog.setContent(formHtml);
-		
-		dialog.show();
+
+		Workbench.showDialog(langObj.newWidgetsShouldUse, ui, null, dojo.hitch(this, _callback), langObj.select);
 	}
 });
 });

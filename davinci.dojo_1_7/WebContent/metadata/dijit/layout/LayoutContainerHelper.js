@@ -1,13 +1,18 @@
-define(function() {
+define([
+	"dojo/_base/declare"
+], function(
+	declare
+) {
 
-var LayoutContainerHelper = function() {};
-LayoutContainerHelper.prototype = {
+return declare(null, {
+	_fillBodyAsOnlyChild: false,
+
 	/**
 	 * Helper function called to establish widget size at initial creation time
 	 * @param {object} args  holds following values:
 	 * 		parent - target parent widget for initial creation
 	 */
-	initialSize: function(args, fillBodyAsOnlyChild){
+	initialSize: function(args){
 		var returnVal = null;
 		
 		// If widget is not being added at an absolute location (i.e., no value for args.position)
@@ -27,10 +32,10 @@ LayoutContainerHelper.prototype = {
 				if (parentWidgetType == 'html.body') {
 					//Being added to BODY
 					if (!parentChildren.length){
-						//Widget is first child, so fill body if fillBodyAsOnlyChild flag tells us too
+						//Widget is first child, so fill body if fillBodyAsOnlyChild flag tells us to
 						returnVal = {
 							w: '100%',
-							h: fillBodyAsOnlyChild ? '100%' : "300px"
+							h: this._fillBodyAsOnlyChild ? '100%' : "300px"
 						};
 					}
 				} else if (parentWidgetType == 'dijit.layout.ContentPane' ||
@@ -50,8 +55,5 @@ LayoutContainerHelper.prototype = {
 		}
 		return returnVal;
 	}
-};
-
-return LayoutContainerHelper;
-
+});
 });

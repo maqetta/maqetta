@@ -1,22 +1,15 @@
 <div>
 	<table>
 	<tr>
-	<td class="NewProjectDialogLabel">Name:</td><td><input class='templateInput' type='text' dojoAttachPoint="_projectName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+	<td class="NewProjectDialogLabel">${newProjectName}</td><td><input class='templateInput' type='text' dojoAttachPoint="_projectName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
 	</tr>
 	
-	<td class="NewProjectDialogLabel">Eclipse support</td><td><input class='templateInput' type='checkbox' dojoAttachPoint="_eclipseSupport"></input></td><td><div dojoAttachPoint='_error5'></div></td>
+	<td class="NewProjectDialogLabel">${newProjectEclipseSupport}</td><td><input class='templateInput' type='checkbox' dojoAttachPoint="_eclipseSupport"></input></td><td><div dojoAttachPoint='_error5'></div></td>
 	</table>
 
-	<table class='templateTable'> 
-			<tr> 
-			<td class='templateFiller3'>&nbsp;</td>
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}' disabled /></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateFiller3'>&nbsp;</td>
-			</tr> 
-		</table> 
+	<div class="dialogButtonContainer">
+		<span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${create}' disabled></span>
+		<span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'></span>
+	</div>
 		
 </div>

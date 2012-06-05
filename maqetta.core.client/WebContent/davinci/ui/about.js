@@ -1,6 +1,6 @@
 define([
         "dojo/_base/declare",
-        "dijit/Dialog",
+        "../Workbench",
         "davinci/version",
         "davinci/repositoryinfo",
         "dojo/date/locale",
@@ -8,17 +8,11 @@ define([
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dijit/form/Button"
-   ],function(declare,  Dialog, DavinciVersion, Repositoryinfo, Locale, Stamp, uiNLS, commonNLS){
+   ],function(declare, Workbench, DavinciVersion, Repositoryinfo, Locale, Stamp, uiNLS, commonNLS){
 		var about = declare("davinci.ui.about", null, {});
 		about.show = function(){
 				var langObj = uiNLS;
-				var dialog = new Dialog({
-					id : "aboutMaqetta",
-					title : langObj.aboutMaqetta,
-					onCancel : function() {
-						this.destroyRecursive(false);
-					}
-				});
+
 				var formHTML = "<div class='about_container'>"
 						+ "<div class='about_version'>"
 						+ dojo.string.substitute(langObj.productVersion,
@@ -50,8 +44,8 @@ define([
 									[ revisionLink ]) + "</div>";
 				}
 				formHTML += "</div>";
-				dialog.setContent(formHTML);
-				dialog.show();
+
+				Workbench.showMessage(langObj.aboutMaqetta, formHTML);
 			}
 		return about;
 });

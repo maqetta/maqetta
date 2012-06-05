@@ -1654,6 +1654,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			davinci.ve.states.setState(item.node, item.state, true);
 		}
 		*/
+		// Remove any application states information that are defined on particular widgets
+		// for all states that aren't in the master list of application states.
+		// (This is to clean up after bugs found in older releases)
+		var body = this.getContainerNode();
+		var activeStates = davinci.ve.states.getStates(body);
+		davinci.ve.states.removeUnusedStatesRecursive(body, activeStates);
 	},
 
 	getDocument: function(){
@@ -2172,14 +2178,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
-			
-			/*FIXME: Fix these lines. The store() method should be taking a widget/node,
-				not a "data" object. Just happens to work, sort of by accident. */
-			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
-			davinci.ve.states.store(data, states);
-
-			/*this.setPreference("flowLayout", 
-					bodyElement.getAttribute(PREF_LAYOUT_ATTR) !== 'false');*/
 		}
 		
 		var titleElement=head.getChildElement("title");

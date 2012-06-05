@@ -144,12 +144,20 @@ var veStates = declare(maqettaStates, {
 	_updateSrcState: function (node)
 	{
 		var widget = (node && node._dvWidget);
+		var existingStatesAttr = widget._srcElement.getAttribute(davinci.states.ATTRIBUTE);
 		if (widget && widget._srcElement) {
 			var str=this.serialize(node);
 			if (str.trim()) {
 				widget._srcElement.addAttribute(davinci.states.ATTRIBUTE,str);
 			} else {
 				widget._srcElement.removeAttribute(davinci.states.ATTRIBUTE);
+			}
+			var newStatesAttr = widget._srcElement.getAttribute(davinci.states.ATTRIBUTE);
+			if(existingStatesAttr !== newStatesAttr){
+				var editor = this.getEditor();
+				if(editor){
+					editor._visualChanged();	// Tell app that source view needs updating
+				}			
 			}
 		}
 	},
@@ -162,6 +170,58 @@ var veStates = declare(maqettaStates, {
 		return node;
 	},
 	
+	// Application "state" has been removed from the document
+	// Recursively remove all references to that state from given node and descendants
+	_removeStateFromNodeRecursive: function(node, state){
+		var widget = node._dvWidget;
+		if(!node || !widget || !state){
+			return;
+		}
+		this._removeStateFromNode(node, state);
+		var children = widget.getChildren();
+		for(var i=0; i<children.length; i++){
+			this._removeStateFromNodeRecursive(children[i].domNode, state);
+		}
+	},
+	
+	// Remove all references to given "state" from given node
+	_removeStateFromNode: function(node, state){
+		if(node && node.states && node.states[state]){
+			delete node.states[state];
+			this._updateSrcState(node);
+		}
+	},
+	
+	// Remove any application states information that are defined on particular widgets
+	// for all states that aren't in the master list of application states.
+	// (This is to clean up after bugs found in older releases)
+	removeUnusedStatesRecursive: function(node, activeStates){
+		var widget = node._dvWidget;
+		if(!node || !widget){
+			return;
+		}
+		// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
+		// Assume that is being done by higher-level software.
+		if(node.tagName !== 'BODY'){
+			this._removeUnusedStates(node, activeStates);
+		}
+		var children = widget.getChildren();
+		for(var i=0; i<children.length; i++){
+			this.removeUnusedStatesRecursive(children[i].domNode, activeStates);
+		}
+	},
+	
+	// Remove all references to unused states from given node
+	_removeUnusedStates: function(node, activeStates){
+		if(node && node.states){
+			for(var state in node.states){
+				if(state !== 'undefined' && activeStates.indexOf(state) < 0){
+					delete node.states[state];
+					this._updateSrcState(node);
+				}
+			}
+		}
+	},
 
 	initialize: function() {
 	
@@ -229,6 +289,15 @@ var veStates = declare(maqettaStates, {
 				if (containerState) {
 					this._update(newWidget.domNode, containerState, undefined);		
 				}
+			}));
+			
+			connect.subscribe("/davinci/states/state/removed", dojo.hitch(this, function(params) {
+				// Application "state" has been removed from the document
+				// Recursively remove all references to that state from given node and descendants
+				if(!params){
+					return;
+				}
+				this._removeStateFromNodeRecursive(params.node, params.state);
 			}));
 			
 			this.subscribed = true;

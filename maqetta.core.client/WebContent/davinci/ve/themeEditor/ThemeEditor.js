@@ -684,6 +684,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	destroy : function ()	{
 		this.inherited(arguments);
 		if(this.visualEditor) { this.visualEditor.destroy(); }
+		this.getContext().destroy();
 		this._subscriptions.forEach(function(item) {
 			dojo.unsubscribe(item);
 		});

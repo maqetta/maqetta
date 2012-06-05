@@ -51,7 +51,9 @@ var Factory = {
 					// delete the working copy, we are done with it, and their should only 
 					// be a working copy if the last instance did not save it when they closed the
 					// editor.
-					systemResource.findResource(url).removeWorkingCopy(); 
+					var resource = systemResource.findResource(url);
+					resource.removeWorkingCopy(); 
+					resource.dirtyResource = false;
 				}
 			}
 		}

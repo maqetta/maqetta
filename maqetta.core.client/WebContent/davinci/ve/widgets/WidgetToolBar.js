@@ -34,7 +34,13 @@ define(["dojo/_base/declare",
 		},
 		
 		onEditorSelected : function(){
-			this.domNode.style.display = "block";
+
+			// only show during HTML editing
+			if (this._editor && this._editor.editorID == "davinci.ve.HTMLPageEditor") {		
+				this.domNode.style.display = "block";
+			} else {
+				this.domNode.style.display = "none";
+			}
 
 			if(this._editor && this._editor.visualEditor && this._editor.visualEditor.context){
 				var selection = this._editor.visualEditor.context.getSelection();

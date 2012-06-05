@@ -529,8 +529,8 @@ createWidget: function(widgetData) {
 	var modelOnlyProps = {};
 	for (var p in data.properties) {
 		var propval = data.properties[p];
-		if (propval){
-			if(p.substr(0,2).toLowerCase()!="on") {
+		if (propval != null){ /*"!=" checks for null/undefined some properties may be false like Tree showRoot */  
+			if(p.substr(0,2).toLowerCase()!="on") { 
 				canvasAndModelProps[p] = propval;
 			}else{
 				modelOnlyProps[p] = propval;

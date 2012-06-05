@@ -26,9 +26,6 @@ return declare("davinci.ve.ThemeModifier", null, {
 				return Factory.getModel({
 					url: parentPath.append(themeCssFile).toString(),
 				    includeImports: true,
-				    loader: function(url){
-						return system.resource.findResource(url).getText();
-					}
 				});
 			});
 		}
@@ -82,7 +79,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 			return;
 		}*/
 		
-		var context = this.getContext(),
+		var context = this,
 			selection = context.getSelection(),
 			widget = selection.length ? selection[selection.length - 1] : undefined;
 
@@ -183,24 +180,29 @@ return declare("davinci.ve.ThemeModifier", null, {
 		}
 	},
 	
-/*	removeWorkingCopyDynamicCssFiles: function(cssFiles){
+	dirtyDynamicCssFiles: function(cssFiles){
+		
+		var dirty = false;
 		var visitor = {
 				visit: function(node){
 					if( node.elementType=="CSSFile" && node.isDirty()){
-						systemResource.findResource(node.url).removeWorkingCopy();
-						//node.dirtyResource = false; don't remove the dirty flag someone else be editing the resource
+						dirty = true;
 						
 					}
-					return false;
+					return dirty;
 				}
 			};
 			
 		if (cssFiles) {
 			cssFiles.forEach(function(file){
+				if(dirty){
+					return dirty;
+				}
 				file.visit(visitor);
 			}.bind(this));
 		}
-	},*/
+		return dirty;
+	},
 	
 	close: function(){
 		

@@ -168,9 +168,6 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
 			var cssFile = Factory.getModel({
 				url: Theme.getBase()+'/'+css.url,
 			    includeImports: true,
-			    loader: function(url){
-					return system.resource.findResource(url).getText();
-				}
 			});
 			css.cssFile = cssFile; 
             style.addChild(css,0);

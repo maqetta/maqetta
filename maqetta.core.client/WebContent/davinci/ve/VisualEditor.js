@@ -18,7 +18,6 @@ define([
 	"system/resource",
 	"davinci/XPathUtils",
 	"../html/HtmlFileXPathAdapter",
-	"davinci/ve/ThemeModifier",
 	"davinci/ve/utils/GeomUtils"
 ], function(
 	require,
@@ -40,11 +39,10 @@ define([
 	systemResource,
 	XPathUtils,
 	HtmlFileXPathAdapter,
-	ThemeModifier,
 	GeomUtils
 ){
 
-var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
+var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 	deviceName: 'none',
 	_orientation: 'portrait',
@@ -242,7 +240,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		if(!this.isActiveEditor() ){
 			return;
 		}
-		var command = this.getCommandForStyleChange(value); //#23
+		var command = this.getContext().getCommandForStyleChange(value); //#23
 		if(command){
 			 this.getContext().getCommandStack().execute(command);
 			if(command._newId){
@@ -453,14 +451,14 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		};
 		
 		model.visit(visitor);
-		this.saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
+		this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
 		this.isDirty=isAutoSave;
 	},
 	
 	
 	
 	removeWorkingCopy: function(){ 
-		/*this.removeWorkingCopyDynamicCssFiles(this._getCssFiles());
+		/*this.removeWorkingCopyDynamicCssFiles(this.getContext()._getCssFiles());
 		var visitor = {
 				visit: function(node){
 					if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){

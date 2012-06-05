@@ -28,8 +28,10 @@ return declare("davinci.html.CSSFile", CSSElement, {
 			txt = this.loader(this.url);
 		} else if (this.url) {
 			var file = this.getResource();
-			if (file)
+			if (file){
 				txt = file.getText();
+				this.setDirty(file.isDirty());
+			}
 		}
 		if (txt) {
 			this.setText(txt);

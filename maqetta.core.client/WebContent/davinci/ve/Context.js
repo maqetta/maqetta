@@ -1225,6 +1225,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onload: function() {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
+		this.editor.setDirty(this.hasDirtyResources());
 		var newCons = [];
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
@@ -3352,6 +3353,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				widget.resize();
 			}
 		});
+	},
+	
+	hasDirtyResources: function(){
+		var dirty = false;
+		var visitor = {
+			visit: function(node){
+				if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){
+					dirty = true;
+				}
+				return dirty;
+			}
+		};
+		
+		this.getModel().visit(visitor);
+		if (dirty){
+			return dirty;
+		}
+		
+		dirty = this.dirtyDynamicCssFiles(this.cssFiles);
+		return dirty;
+
 	}
 });
 

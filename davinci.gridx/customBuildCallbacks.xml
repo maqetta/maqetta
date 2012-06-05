@@ -1,0 +1,229 @@
+<!-- ===================================================================== -->
+<!-- Custom targets called from a project's generated build.xml            -->
+<!-- Set customBuildCallbacks=<path/to/this/file> in your build.properties.-->
+<!-- ===================================================================== -->
+<project name="Build specific targets and properties" default="noDefault">
+
+	<property environment="env"/>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target build.jars                              -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="pre.build.jars">
+
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target build.jars                               -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="post.build.jars">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target build.sources                           -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="pre.build.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target build.sources                            -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder to contain the build results           -->
+	<!-- ===================================================================== -->
+	<target name="post.build.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the compilation target <name>                      -->
+	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
+	<!-- Available parameters :                                                -->
+	<!--   source.foldern : n = 1 ... N, the source folders                    -->
+	<!--   target.folder  : where the results of the compilation go            -->
+	<!--   <name>.classpath : name = name of the compilation target. A         -->
+	<!--                      reference to the classpath structure.            -->
+	<!-- ===================================================================== -->
+	<target name="pre.name">
+	</target>
+
+	<target name="pre.@dot">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do during the compilation target <name>, after the compile   -->
+	<!-- but before jaring.  Substitute "name" with the name of the compilation-->
+	<!-- target, eg @dot                                                       -->
+	<!-- Available parameters :                                                -->
+	<!--   source.foldern : n = 1 ... N, the source folders                    -->
+	<!--   target.folder  : where the results of the compilation go            -->
+	<!--   <name>.classpath : name = name of the compilation target. A         -->
+	<!--                      reference to the classpath structure.            -->
+	<!-- ===================================================================== -->
+	<target name="post.compile.name">
+	</target>
+
+	<target name="post.compile.@dot">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the compilation target <name>                       -->
+	<!-- Substitute "name" with the name of the compilation target, eg @dot    -->
+	<!-- Available parameters :                                                -->
+	<!--   jar.location - the location of the compilation results              -->
+	<!--   <name>.classpath : name = name of the compilation target. A         -->
+	<!--                      reference to the classpath structure.            -->
+	<!-- ===================================================================== -->
+	<target name="post.name">
+	</target>
+
+	<target name="post.@dot">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target gather.bin.parts                         -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder containing the build results           -->
+	<!--   target.folder - destination folder                                  -->
+	<!-- ===================================================================== -->
+	<target name="pre.gather.bin.parts">
+	</target>
+	
+	
+	<target name="gridx.build" if="run.dojo.build" unless="gridx.build.exists">
+		<echo message="Doing gridx build" />
+		<property name="logExtension" value=".log"/>
+		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
+
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying base dojo">
+				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/dojo/"/>
+				</fileset>
+		</copy>
+		
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dijit">
+				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/dijit/"/>
+				</fileset>
+		</copy>
+		
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying Dojo tools">
+				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/util/"/>
+				</fileset>
+		</copy>
+
+		<java fork="true" resultproperty="returnCode" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
+			    maxmemory="1024m"
+				classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
+				classname="org.mozilla.javascript.tools.shell.Main"
+				description="Run Dojo build script"
+				>
+				<arg value="${target.folder}/WebContent/dojo/dojo.js"/>
+				<arg value="baseUrl=${target.folder}/WebContent/dojo"/>
+				<arg value="load=build"/>
+				<arg value="profileFile=${target.folder}/gridxLib.profile.js"/>
+				<arg value="action=release"/>
+				<arg value="cssOptimize=comments.keepLines"/>
+				<arg value="layerOptimize=shrinksafe.keepLines"/>
+		</java>
+
+		<mkdir dir="${gridx.cache.directory}"/>
+
+		<echo message="caching gridx build.."/>
+		
+		<copy todir="${gridx.cache.directory}" failonerror="true" overwrite="true" description="move gridx build">
+					<fileset dir="${target.folder}/WebContent/release/dojo">
+						<include name="gridx/"/>
+					</fileset>
+		</copy>
+	</target>
+	
+	<target name="copy.gridx" if="run.dojo.build">
+		<delete dir="${target.folder}/WebContent/util"/>
+		<delete dir="${target.folder}/WebContent/dojo"/>
+		<delete dir="${target.folder}/WebContent/dijit"/>
+		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached gridx build">
+					<fileset dir="${gridx.cache.directory}">
+						<include name="gridx/"/>
+					</fileset>
+		</copy>
+	</target>
+	
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target gather.bin.parts                         -->
+	<!-- Available parameters :                                                -->
+	<!--   build.result.folder - folder containing the build results           -->
+	<!--   target.folder - destination folder                                  -->
+	<!-- ===================================================================== -->
+	<target name="post.gather.bin.parts">
+		<property name="gridx.cache.directory" value="${basedir}/../../gridx_cache"/>
+    	<condition property="gridx.build.exists">
+    		<available file="${gridx.cache.directory}" type="dir"/>
+    	</condition>
+		<echo message="Build gridx=${run.dojo.build}"/>
+		<antcall target="gridx.build"/>
+
+		<antcall target="copy.gridx"/>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target gather.sources                          -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="pre.gather.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target gather.sources                           -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="post.gather.sources">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target gather.logs                             -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="pre.gather.logs">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target gather.logs                              -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="post.gather.logs">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before the target clean                                   -->
+	<!-- Available parameters :                                                -->
+	<!--   destination.temp.folder - destination folder                        -->
+	<!-- ===================================================================== -->
+	<target name="pre.clean">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the target clean                                    -->
+	<!-- Available parameters :                                                -->
+	<!--   plugin.destination - final destination of the build                 -->
+	<!--   build.result.folder - results of the compilation                    -->
+	<!--   temp.folder - temporary folder                                      -->
+	<!-- ===================================================================== -->
+	<target name="post.clean">
+	</target>
+</project>

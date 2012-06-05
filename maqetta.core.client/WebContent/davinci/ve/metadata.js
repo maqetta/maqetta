@@ -201,23 +201,27 @@ define([
              */
             _maqGetString: getDescriptorString
         });
+        
         // Register a module identifier for the metadata and library code paths;
         // used by helper and creation tool classes.
         pkg.__metadataModuleId = 'maq-metadata-' + pkg.name + '-' + pkg.version;
-        pkg.__libraryModuleId = 'maq-lib-' + pkg.name + '-' + pkg.version;
-        var libPath = 'app/static/lib/' + pkg.name + '/' + pkg.version;
-
+		var packages = [ {
+			name : pkg.__metadataModuleId,
+			location : new Path(location.href).append(path).toString()
+		} ];
+        if (pkg.name != "dojo") {
+        	//Don't register another "dojo" lib to compete with core.client
+        	pkg.__libraryModuleId = pkg.name;
+        	var libPath = 'app/static/lib/' + pkg.name + '/' + pkg.version;
+        	
+        	packages.push({
+                name: pkg.__libraryModuleId,
+                location: new Path(location.href).append(libPath).toString()
+            });
+        }
+        
         require = require({
-            packages: [
-                {
-                    name: pkg.__metadataModuleId,
-                    location: new Path(location.href).append(path).toString()
-                },
-                {
-                    name: pkg.__libraryModuleId,
-                    location: new Path(location.href).append(libPath).toString()
-                }
-            ]
+            packages: packages
         });
     }
     

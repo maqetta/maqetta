@@ -50,6 +50,12 @@ public class VStorageDirectory extends VDirectory {
 		IVResource root = this;
 		/* add the real files first */
 		for(int j=0;j<userFiles.length;j++){
+			if(!isConfig(userFiles[j].getName()) && !userFiles[j].isDirectory()){
+				VFile element = new VFile(userFiles[j], root, userFiles[j].getName());
+				root.add(element);
+				continue;
+			}
+			
 			if(isConfig(userFiles[j].getName()) || !userFiles[j].isDirectory()) continue;
 			VStorageDirectory element = new VStorageDirectory(userFiles[j], root, userFiles[j].getName(),true);
 			root.add(element);

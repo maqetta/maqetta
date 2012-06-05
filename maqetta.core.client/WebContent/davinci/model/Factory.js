@@ -21,7 +21,7 @@ var Factory = {
 			if (_resources[i].url == url) {
 				_instances[i]++;
 				this.incrementImports(_resources[i]); 
-				this.log();
+				//this.log();
 				return _resources[i];
 			}
 		}
@@ -57,7 +57,7 @@ var Factory = {
 				}
 			}
 		}
-		this.log();
+		//this.log();
 	},
 
 	newHTML: function(args) {
@@ -66,7 +66,7 @@ var Factory = {
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
-		this.log();
+		//this.log();
 		return model;
 	},
 
@@ -75,7 +75,7 @@ var Factory = {
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
-		this.log();
+		//this.log();
 		return model;
 	},
 

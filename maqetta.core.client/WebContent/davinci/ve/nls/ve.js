@@ -20,6 +20,7 @@ define({ root:
 		
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",
+		"filesHasUnsavedChanges":"The file '${0}' has unsaved changes. Are you sure you want to switch device silhouette WITHOUT saving, your changes may be lost?",
 		
 		//SelectAncestorAction.js
 		"selectAncestorTitle":"Select ancestor",
@@ -72,6 +73,25 @@ define({ root:
 		"bgdStop":"Stop",
 		"bgdAddStop":"Add a new gradient stop after this stop",
 		"bgdRemoveStop":"Remove this gradient stop",
+		"bgdBackgroundColor": "background-color:",
+		"bgdBackgroundImageType": "background-image type:",
+		"bgdImageUrl": "Image URL:",
+		"bgdUrl": "URL:",
+		"bgdColorStops": "Color stops:",
+		"bgdColor": "color",
+		"bgdPosition": "position",
+		"bgdOptions": "Options:",
+		"bgdAngle": "Angle:",
+		"bgdPosition2": "Position:",
+		"bgdShape": "Shape:",
+		"bgdExtent": "Extent:",
+		"bgdBackgroundRepeat": "background-repeat:",
+		"bgdBackgroundPosition": "background-position:",
+		"bgdBackgroundSize": "background-size:",
+		"bgdBackgroundOrigin": "background-origin:",
+		"bgdBackgroundClip": "background-clip:",
+		"bgdBackgroundImageValue": "'background-image' value:",
+		"bgdTemplate": "Template:",
 		
 		//widgets/ColorPicker.js
 		"colorPicker":"Color picker...",

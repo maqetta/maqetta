@@ -49,7 +49,7 @@ public class JSONWriter {
         if (wasOne[stackPtr]) {
             sb.append(", ");
         }
-        sb.append(name).append(" : ");
+        sb.append('"').append(name).append('"').append(" : ");
         wasOne[stackPtr] = true;
         return this;
     }

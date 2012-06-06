@@ -34,7 +34,13 @@ define(["dojo/_base/declare",
 		},
 		
 		onEditorSelected : function(){
-			this.domNode.style.display = "block";
+
+			// only show during HTML editing
+			if (this._editor && this._editor.editorID == "davinci.ve.HTMLPageEditor") {		
+				this.domNode.style.display = "block";
+			} else {
+				this.domNode.style.display = "none";
+			}
 
 			if(this._editor && this._editor.visualEditor && this._editor.visualEditor.context){
 				var selection = this._editor.visualEditor.context.getSelection();
@@ -49,9 +55,16 @@ define(["dojo/_base/declare",
 			this.onWidgetSelectionChange();
 		},
 		
-		_widgetReplaced : function(newWidget){
-			this._widget = newWidget;
-			this.onWidgetSelectionChange();
+		_widgetReplaced : function(newWidget, oldWidget){
+			/* Check to see that this is for the same widget
+			 * Some widget like Tree update the DataStore but not the widget it's self from smart input
+			 * 
+			 */
+			
+			if (this._widget === oldWidget){
+				this._widget = newWidget;
+				this.onWidgetSelectionChange();
+			}
 		},
 		
 		onWidgetSelectionChange : function(){

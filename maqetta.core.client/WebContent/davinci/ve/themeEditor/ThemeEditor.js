@@ -26,7 +26,7 @@ define([
 			ThemeColor
 	){
 
-return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier], {
+return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifier*/], {
 	
 	children : [], //FIXME: shared array
 	visualEditor : null, 
@@ -272,7 +272,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		}
 		var allProps = {};
 		for(var s = 0; s < selectors.length; s++){
-			var cssFiles = this._getCssFiles();
+			var cssFiles = this.getContext()._getCssFiles();
 			if (cssFiles){
 				for(var i = 0;i<cssFiles.length;i++){
 					var selectorNodes = cssFiles[i].getRules(selectors[s]);
@@ -391,7 +391,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
 			if(!property || this._theme.isPropertyVaildForWidgetRule(rule,property,this._selectedWidget)){
-				var deltaRule = this.getDeltaRule(rule);
+				var deltaRule = this.getContext().getDeltaRule(rule);
 				deltaRules[deltaRule.getSelectorText()] = deltaRule;
 				
 			}
@@ -400,7 +400,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			value.appliesTo.rule = null; // the old rule does not matter, so null to keep clone from throwing stack
 			cValue = dojo.clone(value); // clone becouse the rule will change
 			cValue.appliesTo.rule = deltaRules[dRule]; // create delta if needed #23
-			command.add(this.getCommandForStyleChange(cValue));
+			command.add(this.getContext().getCommandForStyleChange(cValue));
 		}
 		return command;
 	},
@@ -563,8 +563,8 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			var themeHtmlResources = [];
 			
 			for(var y = 0;y<this.theme.themeEditorHtmls.length;y++){
-				var resource=  this._getThemeResource(this.theme.themeEditorHtmls[y]);
-				themeHtmlResources.push(resource);
+				var absoluteLocation = this._themePath.getParentPath().append(this.theme.themeEditorHtmls[y]).toString();
+				themeHtmlResources.push(system.resource.findResource(absoluteLocation));
 				
 			}
 
@@ -576,18 +576,18 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			 * resolve metadata in the user workspace.
 			 */
 			var metaResources = [];
-			
+			var context = this.getContext();
+			context._themePath = this._themePath;
+			context.themeCssFiles = this.themeCssFiles;
 			for(var i = 0;i<this.theme.meta.length;i++){
-				var resource = this._getThemeResource(this.theme.meta[i]);
-				metaResources.push(resource);
+				metaResources.push(context._getThemeResource(this.theme.meta[i]));
 				
 			}
 			
 			this.metaDataLoader = new query(metaResources);
 			this._theme = new CSSThemeProvider(metaResources, this.theme);
 			// connect to the css files, so we can update the canvas when the model changes
-			var cssFiles = this._getCssFiles();	
-			var context = this.getContext();
+			var cssFiles = context._getCssFiles();	
 			for (var i = 0; i < cssFiles.length; i++) {
                 dojo.connect(cssFiles[i], 'onChange', context,
                         '_themeChange');
@@ -649,7 +649,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 			
 		};
 		var results = [];
-		var cssFiles = this._getCssFiles();
+		var cssFiles = this.getContext()._getCssFiles();
 		var visitor = getVisitor(this._dirtyResource, this._URLResolver, results);
 		if (cssFiles){
 			for(var i=0;i<cssFiles.length;i++){
@@ -665,7 +665,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 	},
 	save : function (isWorkingCopy){
 
-		this.saveDynamicCssFiles(this._getCssFiles(), isWorkingCopy);
+		this.getContext().saveDynamicCssFiles(this.getContext()._getCssFiles(), isWorkingCopy);
 		if(!isWorkingCopy) {
 			this.isDirty=false;
 		}
@@ -674,10 +674,17 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		}
 
 	},
+	removeWorkingCopy: function(){
+		/*this.removeWorkingCopyDynamicCssFiles(this.getContext()._getCssFiles());
+		this.resourceFile.removeWorkingCopy();
+		this.isDirty=false;*/
+		
+	},
 
 	destroy : function ()	{
 		this.inherited(arguments);
 		if(this.visualEditor) { this.visualEditor.destroy(); }
+		this.getContext().destroy();
 		this._subscriptions.forEach(function(item) {
 			dojo.unsubscribe(item);
 		});
@@ -805,7 +812,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor, ThemeModifier
 		var rules = [];
 		for (var s = 0; s < selectors.length; s++) {
 			var modified = false;
-			var cssFiles = this._getCssFiles();
+			var cssFiles = this.getContext()._getCssFiles();
 			if (cssFiles){
 				for(var i = 0;i<cssFiles.length;i++){
 					var selectorNodes = cssFiles[i].getRules(selectors[s]);

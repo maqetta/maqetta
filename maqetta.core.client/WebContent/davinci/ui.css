@@ -581,4 +581,7 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .resizableDialog .dialogButtonContainer.dialogButtonContainerOverride {
 	text-align: right;
 }
+.resizableDialog .dialogContent {
+	padding: 0;
+}
 

@@ -448,6 +448,7 @@ CSSParser.parse = function (text, parentElement) {
 						while ((nextToken()).content != ")") {
 							property.value += token.value;
 						}
+						property.value += token.value; // add the ')' that stoped the loop
 					}
 
 					while ((nextToken()).content != ";" && token.content != "}") {

@@ -14,7 +14,7 @@ define([
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
-    constructor: function (element) {
+    constructor: function (element, fileName) {
 
         this._bc = new BorderContainer({}, element);
 
@@ -41,7 +41,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
             oldResize.apply(this, arguments);
         };
 
-        this.htmlEditor = new HTMLEditor(this._srcCP.domNode,true);
+        this.htmlEditor = new HTMLEditor(this._srcCP.domNode,fileName);
         this.htmlEditor.setVisible(false);
         this.model=this.htmlEditor.model;
 
@@ -81,35 +81,47 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			this._bc.removeChild(this._srcCP);
 			this.htmlEditor.setVisible(false);
 		}
-		this._bc.getParent().resize();
-		var box=dojo.marginBox(this._bc.domNode);
-		var dim;
-		switch (newMode)
-		{
-		case "design":
-			dim = 1;
-			break;
-		case "source":
-			this._srcCP.region="right";
-			dim = box.w-5;
-			break;
-		case "splitVertical":
-			this._srcCP.region="right";
-			this._bc.design="sidebar";
-			dim = box.w/2;
-			break;
-		case "splitHorizontal":
-			this._srcCP.region="bottom";
-			this._bc.design="headline";
-			dim = box.h/2;
+
+		// reset any settings we have used
+		this._designCP.set("region", "center");
+		delete this._designCP.domNode.style.width;
+		delete this._srcCP.domNode.style.width;
+
+		switch (newMode) {
+			case "design":
+				break;
+			case "source":
+				// we want to hide the design mode.  So we set the region to left
+				// and manually set the width to 0.
+				this._designCP.set("region", "left");
+				this._designCP.domNode.style.width = 0;
+				this._srcCP.set("region", "center");
+				break;
+			case "splitVertical":
+				this._designCP.domNode.style.width = "50%";
+				this._srcCP.set("region", "right");
+				this._srcCP.domNode.style.width = "50%";
+				this._bc.set("design", "sidebar");
+				break;
+			case "splitHorizontal":
+				this._designCP.domNode.style.height = "50%";
+	
+				this._srcCP.set("region", "bottom");
+				this._srcCP.domNode.style.height = "50%";
+	
+				this._bc.set("design", "headline");
 		}
+
 		if (newMode!="design") {
 			this._bc.addChild(this._srcCP);
 			this.htmlEditor.setVisible(true);
 		}
+
 		this._displayMode=newMode;
-		this._bc._layoutChildren(this._srcCP.id, dim-1); // kludge: have to resize twice to get src to draw on some browsers
-		this._bc._layoutChildren(this._srcCP.id, dim);
+
+		// now lets relayout the bordercontainer
+		this._bc.layout();
+
 		if (newMode!="design") {
 			this.htmlEditor.editor.getTextView().resize();
 		}
@@ -208,6 +220,13 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	
 	setContent: function (filename, content, newHtmlParams) {
+		
+		/*// clear the singletons in the Factory
+		this.htmlEditor.htmlFile.visit({visit:function(node) {
+			if (node.elementType == "CSSImport") {
+				node.close();
+			}
+		}});*/
 	    this.fileName = filename;
 	    this.htmlEditor.setContent(filename,content);
 		this.visualEditor.setContent(filename, this.htmlEditor.model, newHtmlParams);
@@ -218,8 +237,9 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_themeChange: function(e) {
-		//debugger;
+
 		if (e && e.elementType === 'CSSRule') {
+			this.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.visualEditor.context.hotModifyCssRule(e);
 		}
 	},
@@ -256,7 +276,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	removeWorkingCopy: function(){ //wdr
-		this.visualEditor.removeWorkingCopy();
+		//this.visualEditor.removeWorkingCopy();
 	},
 
 	previewInBrowser: function () {

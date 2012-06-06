@@ -133,7 +133,7 @@
 	<div class='bgdTopDiv'>
 		<table class='bgdTopTable'>
 			<tr>
-				<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>background-color:</label></td>
+				<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>${veNLS.bgdBackgroundColor}</label></td>
 				<td class='bgdTopField'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdColorCB'>
 						<!--  values added dynamically -->
@@ -143,7 +143,7 @@
 				<td class='bgdTopExpando'>&nbsp;</td>
 			</tr>
 			<tr>
-				<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>background-image type:</label></td>
+				<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>${veNLS.bgdBackgroundImageType}</label></td>
 				<td class='bgdTopField'>
 					<select dojoType='dijit.form.Select' value='linear' dojoAttachPoint='bgdTypeSelect'>
 						<!--  values added dynamically -->
@@ -156,11 +156,11 @@
 	</div>
 	
 	<div class="bgdUrlContainerOuter bgdImageOptRow">
-		<div class="bgdSection bgdOptionsLabel">Image URL:</div>
+		<div class="bgdSection bgdOptionsLabel">${veNLS.bgdImageUrl}</div>
 		<div class="bgdUrlContainerInner">
 			<div class='fileNameRow'>
 				<td class="fileDialogLabelCell">
-				<label>URL:</label>
+				<label>${veNLS.bgdUrl}</label>
 				</td>
 				<div dojoType='davinci.ui.widgets.FileFieldDialog' dojoAttachPoint="_filePicker"></div>
 				</td>
@@ -171,21 +171,21 @@
 		<table>
 			<tr class="bgdGradOptRow bgdBeforeStopsLabel"></tr>
 			<tr class="bgdGradOptRow bgdSection bgdStopsLabel">
-				<td colspan="5">Color stops:</td>
+				<td colspan="5">${veNLS.bgdColorStops}</td>
 			</tr>
 			<tr class="bgdGradOptRow bgdAfterStopsLabel"></tr>
 			<tr class='bgdGradOptRow bgdStopRow'>
-				<th></th><th></th><th>color</th><th>position</th><th></th>
+				<th></th><th></th><th>${veNLS.bgdColor}</th><th>${veNLS.bgdPosition}</th><th></th>
 			</tr>
 			<!--  gradient stop rows added dynamically -->
 			<tr class="bgdBeforeOptionsLabel bgdOptionsLabelRow"></tr>
 			<tr class="bgdSection bgdOptionsLabel bgdOptionsLabelRow">
-				<td colspan="5">Options:</td>
+				<td colspan="5">${veNLS.bgdOptions}</td>
 			</tr>
 			<tr class="bgdAfterOptionsLabel bgdOptionsLabelRow"></tr>
 			<tr class="bgdGradOptRow bgdLinearOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>Angle:</label></td>
+				<td class='bgdOptsLabel'><label>${veNLS.bgdAngle}</label></td>
 				<td colspan='3'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdLinearAngleCB'>
 						<!--  values added dynamically -->
@@ -194,7 +194,7 @@
 			</tr>
 			<tr class="bgdGradOptRow bgdRadialOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'>Position:</td>
+				<td class='bgdOptsLabel'>${veNLS.bgdPosition2}</td>
 				<td colspan='3'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialPosCB'>
 						<!--  values added dynamically -->
@@ -203,7 +203,7 @@
 			</tr>
 			<tr dojoAttachPoint="bgdShapeRow" class="bgdGradOptRow bgdRadialOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>Shape:</label></td>
+				<td class='bgdOptsLabel'><label>${veNLS.bgdShape}</label></td>
 				<td colspan='3'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialShapeCB'>
 						<!--  values added dynamically -->
@@ -212,7 +212,7 @@
 			</tr>
 			<tr dojoAttachPoint="bgdExtentRow" class="bgdGradOptRow bgdRadialOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>Extent:</label></td>
+				<td class='bgdOptsLabel'><label>${veNLS.bgdExtent}</label></td>
 				<td colspan='3'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialExtentCB'>
 						<!--  values added dynamically -->
@@ -221,7 +221,7 @@
 			</tr>
 			<tr dojoAttachPoint="bgdRepeatRow" class="bgdImageOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>background-repeat:</label></td>
+				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundRepeat}</label></td>
 				<td colspan='3'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRepeatCB'>
 						<!--  values added dynamically -->
@@ -230,7 +230,7 @@
 			</tr>
 			<tr dojoAttachPoint="bgdPositionRow" class="bgdImageOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'>background-position:</td>
+				<td class='bgdOptsLabel'>${veNLS.bgdBackgroundPosition}</td>
 				<td colspan='3'>
 <!-- FIXME: regExp, invalidMessage -->
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdPositionCB'>
@@ -240,7 +240,7 @@
 			</tr>
 			<tr dojoAttachPoint="bgdSizeRow" class="bgdImageOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'>background-size:</td>
+				<td class='bgdOptsLabel'>${veNLS.bgdBackgroundSize}</td>
 				<td colspan='3'>
 <!-- FIXME: regExp, invalidMessage -->
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdSizeCB'>
@@ -250,7 +250,7 @@
 			</tr>
 			<tr dojoAttachPoint="bgdOriginRow" class="bgdImageOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>background-origin:</label></td>
+				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundOrigin}</label></td>
 				<td colspan='3'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdOriginCB'>
 						<!--  values added dynamically -->
@@ -259,7 +259,7 @@
 			</tr>
 			<tr dojoAttachPoint="bgdClipRow" class="bgdImageOptRow">	
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>background-clip:</label></td>
+				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundClip}</label></td>
 				<td colspan='3'>
 					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdClipCB'>
 						<!--  values added dynamically -->
@@ -269,7 +269,7 @@
 			<tr dojoAttachPoint="bgdOtherTypeInRow" class="bgdOtherRow">	
 
 				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>'background-image' value:</label></td>
+				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundImageValue}</label></td>
 				<td colspan='3'>
 					<textarea dojoType="dijit.form.Textarea" dojoAttachPoint='bgdOtherTA'></textarea>
 				</td>
@@ -278,17 +278,9 @@
 
 		</table>
 	</div>
-		<table class='templateTable'> 
-			<tr> 
-			<td class='templateFiller3'>&nbsp;</td>
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}' /></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateFiller3'>&nbsp;</td>
-			</tr> 
-		</table> 
-		
-		
+
+	<div class="dialogButtonContainer">
+		<span dojoType='dijit.form.Button' type='submit' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}'></span> 
+		<span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></span> 
+	</div>		
 </div>

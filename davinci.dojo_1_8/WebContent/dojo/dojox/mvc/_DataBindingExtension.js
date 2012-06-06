@@ -1,0 +1,2 @@
+//>>built
+define("dojox/mvc/_DataBindingExtension",["dojo/_base/array","dojo/_base/lang","dijit/_WidgetBase","./_DataBindingMixin"],function(_1,_2,wb,_3){_2.extend(wb,new _3());var _4=wb.prototype.startup;wb.prototype.startup=function(){this._dbstartup();_4.apply(this);};var _5=wb.prototype.destroy;wb.prototype.destroy=function(_6){if(this._modelWatchHandles){_1.forEach(this._modelWatchHandles,function(h){h.unwatch();});}if(this._viewWatchHandles){_1.forEach(this._viewWatchHandles,function(h){h.unwatch();});}_5.apply(this,[_6]);};});

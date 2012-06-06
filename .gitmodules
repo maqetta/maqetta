@@ -1,3 +1,9 @@
 [submodule "davinci.gridx/WebContent/gridx"]
 	path = davinci.gridx/WebContent/gridx
 	url = http://github.com/evanhw/gridx.git
+[submodule "davinci.dojo_1_8/WebContent/dojo/dojo"]
+	path = davinci.dojo_1_8/WebContent/dojo/dojo
+	url = git://github.com/dojo/dojo
+[submodule "davinci.dojo_1_8/WebContent/dojo/dijit"]
+	path = davinci.dojo_1_8/WebContent/dojo/dijit
+	url = git://github.com/dojo/dijit

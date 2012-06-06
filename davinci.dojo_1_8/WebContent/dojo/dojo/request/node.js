@@ -1,0 +1,8 @@
+/*
+	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
+	Available via Academic Free License >= 2.1 OR the modified BSD license.
+	see: http://dojotoolkit.org/license for details
+*/
+
+//>>built
+define("dojo/request/node",["require","./util","./handlers"],function(_1,_2,_3){var _4=_1.nodeRequire("http"),_5=_1.nodeRequire("https"),_6=_1.nodeRequire("url"),_7;var _8={method:"GET",query:null,data:_7,headers:{}};function _9(_a,_b){var _c=_2.parseArgs(_a,_2.deepCreate(_8,_b));_a=_c.url;_b=_c.options;var _d=_2.deferred(_c,function(_e,_f){_f.clientRequest.abort();var err=_f.error;if(!err){err=new Error("request canceled");err.dojoType="cancel";}return err;});_a=_6.parse(_a);var _10=_c.requestOptions={host:_a.hostname,method:_b.method,port:_a.port==null?80:_a.port,headers:_b.headers};if(_a.path){_10.path=_a.path;}if(_b.user||_b.password){_10.auth=(_b.user||"")+":"+(_b.password||"");}var req=_c.clientRequest=(_a.protocol=="https:"?_5:_4).request(_10);req.on("response",function(_11){_c.clientResponse=_11;_c.status=_11.statusCode;var _12=[];_11.on("data",function(_13){_d.progress(_13.toString());_12.push(_13);});_11.on("end",function(){if(_14){clearTimeout(_14);}_c.text=_12.join("");_3(_c);_d.resolve(_c);});});req.on("error",function(e){_d.reject(e);});if(_b.data!=null){req.write(_b.data);}req.end();if(_b.timeout!=null){var _14=setTimeout(function(){_c.error=new Error("timeout exceeded");_c.error.dojoType="timeout";_d.cancel();},_b.timeout);}return _d.promise;};_2.addCommonMethods(_9);return _9;});

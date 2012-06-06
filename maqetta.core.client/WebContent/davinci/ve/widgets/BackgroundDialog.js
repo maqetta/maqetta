@@ -11,13 +11,10 @@ define(["dojo/_base/declare",
         "davinci/ve/utils/URLRewrite",
         "davinci/model/Path",
         "dijit/form/Button",
-        
         "davinci/ve/widgets/ColorPicker",
         "davinci/ve/widgets/ColorPickerFlat",
         "dijit/form/Textarea",
         "davinci/ui/widgets/FileFieldDialog",
-        
-       
 ],function(declare, _Templated, _Widget, Runtime, MutableStore, ColorStore, templateString, CSSUtils, veNLS,commonNLS, URLRewrite, Path){
 
 	return declare("davinci.ve.widgets.BackgroundDialog",   [_Widget, _Templated], {
@@ -26,10 +23,12 @@ define(["dojo/_base/declare",
 		widgetsInTemplate: true,
 		_filePicker: null,
 		context: null,
+
+		veNLS: veNLS,
 		
 		stopRowTemplate:"<tr class='bgdGradOptRow bgdStopRow' style='display:none;'>"+
 					"<td class='bgdCol1'></td>"+
-					"<td class='bgdOptsLabel bdgStopLabel'>Template:</td>"+
+					"<td class='bgdOptsLabel bdgStopLabel'>"+veNLS.bgdTemplate+"</td>"+
 					"<td class='bgdStopColorTD'>"+
 					"<select class='bgdColor' dojoType='dijit.form.ComboBox'>"+
 					"</select>"+

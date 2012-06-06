@@ -2,8 +2,9 @@ define([
 	"dojo/_base/declare",
 	"davinci/html/CSSFile",
 	"davinci/js/JSFile",
-	"davinci/html/HTMLFile"
-], function(declare, CSSFile, JSFile, HTMLFile) {
+	"davinci/html/HTMLFile",
+	"system/resource"
+], function(declare, CSSFile, JSFile, HTMLFile, systemResource) {
 
 var _instances = [];
 var _resources = [];
@@ -19,6 +20,8 @@ var Factory = {
 		for (var i = 0; i<_resources.length; i++) {
 			if (_resources[i].url == url) {
 				_instances[i]++;
+				this.incrementImports(_resources[i]); 
+				//this.log();
 				return _resources[i];
 			}
 		}
@@ -31,6 +34,7 @@ var Factory = {
 		if(url.indexOf("js") > 0) {
 			return Factory.newJS(args);
 		}
+		
 	},
 
 	closeModel: function(model) {
@@ -44,19 +48,25 @@ var Factory = {
 				if (_instances[i] === 0) {
 					_resources.splice(i,1);
 					_instances.splice(i,1);
+					// delete the working copy, we are done with it, and their should only 
+					// be a working copy if the last instance did not save it when they closed the
+					// editor.
+					var resource = systemResource.findResource(url);
+					resource.removeWorkingCopy(); 
+					resource.dirtyResource = false;
 				}
 			}
 		}
+		//this.log();
 	},
 
 	newHTML: function(args) {
-		if (args && args.url) {
-			return Factory.getModel(args);
-		}
-		var model = new HTMLFile(args);
+
+		var model = new HTMLFile(args.url);
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
+		//this.log();
 		return model;
 	},
 
@@ -65,6 +75,7 @@ var Factory = {
 		_resources.push(model);
 		var count = _resources.length - 1;
 		_instances[count] = 1;
+		//this.log();
 		return model;
 	},
 
@@ -77,23 +88,54 @@ var Factory = {
 	},
 
 	getNewFromResource: function(resource) {
+		// temp models, no need to singlton them....
 		var extension = resource.extension;
-		if (!extension) { return Factory.newHTML(); } // default to HTML
+		if (!extension) { return new HTMLFile(); } // default to HTML
 
 		switch(extension) {
 		case "html": 
-			return Factory.newHTML();
+			return new HTMLFile(); //Factory.newHTML();
 			break;
 		case "css": 
-			return Factory.newCSS();
+			return new CSSFile(); //Factory.newCSS();
 			break;
 		case "js":
 		case "json": 
-			return Factory.newJS();
+			return new JSFile(); //Factory.newJS();
 			break;
 		default: 
-			return Factory.newHTML(); // default to HTML
+			return new HTMLFile(); // default to HTML
 		} // end switch
+	},
+	
+	incrementImports: function(resource){
+		var visitor = {
+				visit: function(node){
+					if( node.elementType=="CSSImport"){
+						var url = node.cssFile.url;
+						for (var i = 0; i<_resources.length; i++) {
+							if (_resources[i].url == url) {
+								_instances[i]++;
+							}
+						}
+						
+					}
+					return false;
+				}
+			};
+			
+		if (resource) {
+			resource.visit(visitor);
+		}
+		
+	},
+	
+	log: function(){
+		console.log('=============Factory.log============');
+		for(var i = 0; i<_resources.length; i++) {
+			console.log(_resources[i].url+' : '+ _instances[i]); 
+		}
+		console.log('===========================================');
 	}
 };
 

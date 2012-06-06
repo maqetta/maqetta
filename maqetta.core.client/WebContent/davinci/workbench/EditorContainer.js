@@ -57,7 +57,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		this.editorExtension = editorExtension;
 		require([editorExtension.editorClass], function(EditorCtor) {
 			try {
-				var editor = this.editor = new EditorCtor(this.containerNode);
+				var editor = this.editor = new EditorCtor(this.containerNode, fileName);
 				var setupEditor = function(){
 					if(editor.setRootElement){
 						editor.setRootElement(rootElement);

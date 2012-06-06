@@ -31,7 +31,8 @@ define([
 	"preview/silhouetteiframe",
 	"davinci/ve/utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"dojox/html/_base"	// for dojox.html.evalInGlobal
+	"davinci/model/Factory", // FIXME: needed for document.css M6 hack
+	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	declare,
 	lang,
@@ -64,7 +65,8 @@ define([
 	Preferences,
 	Silhouette,
 	GeomUtils,
-	newFileTemplate
+	newFileTemplate,
+	Factory
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -529,11 +531,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      *              'device' is the same as the current device
      */
 	setMobileTheme: function(device) {
+		
         var oldDevice = this.getMobileDevice() || 'none';
         if (oldDevice === device) {
             return;
         }
-
+        this.close(); //// return any singletons for CSSFiles
         this.setMobileDevice(device);
 
 		// dojox.mobile specific CSS file handling
@@ -1222,6 +1225,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onload: function() {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
+		this.editor.setDirty(this.hasDirtyResources());
 		var newCons = [];
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
@@ -1565,6 +1569,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	_themeChange: function(e){
 		if (e && e.elementType === 'CSSRule'){
+			this.editor.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.hotModifyCssRule(e); 
 		}
 
@@ -2943,6 +2948,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param  {Object} data
 	 */
 	_updateDojoConfig: function(data) {
+		this.close(); // return any singletons for CSSFiles
 		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
@@ -3290,6 +3296,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(documentCssImport){
 					var parent = documentCssImport.parent;
 					parent.removeChild(documentCssImport);
+					documentCssImport.close(); // removes the instance from the Factory
 				}
 				documentCssHeader = documentCssImport = null;
 			}
@@ -3315,7 +3322,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					if(parent && documentCssFile){
 						var css = new CSSImport();
 						css.url = documentCssFileName;
-						css.cssFile = documentCssFile;
+						var args = {url:documentCssPath}
+						var cssFile = Factory.getModel(args); //newHTML();
+						css.cssFile = cssFile; //documentCssFile;
 						parent.addChild(css,0);
 					}
 				}
@@ -3342,6 +3351,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				widget.resize();
 			}
 		});
+	},
+	
+	hasDirtyResources: function(){
+		var dirty = false;
+		var visitor = {
+			visit: function(node){
+				if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){
+					dirty = true;
+				}
+				return dirty;
+			}
+		};
+		
+		this.getModel().visit(visitor);
+		if (dirty){
+			return dirty;
+		}
+		
+		dirty = this.dirtyDynamicCssFiles(this.cssFiles);
+		return dirty;
+
 	}
 });
 

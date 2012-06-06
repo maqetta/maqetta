@@ -6,8 +6,10 @@ define([
     	"davinci/workbench/Preferences",
     	"davinci/model/Path",
     	"davinci/model/Factory",
+    	"davinci/html/HTMLFile",
     	"davinci/Theme"
-], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, Theme) {
+
+], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme) {
 
 return declare([], {
 
@@ -83,11 +85,11 @@ return declare([], {
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
-			var htmlFile = Factory.newHTML();
+			var themeBase = Theme.getThemeLocation(); 
+			htmlFile = new HTMLFile();; // each theme editor HTML needs to be it's own instance NO singleton from the model
 			htmlFile.fileName = fileName;
-			htmlFile.setText(content);
+			htmlFile.setText(content, true); // no import
 			// #23 adjust for where html is located 
-			var themeBase = Theme.getThemeLocation();
 			var relPath = themeBase.relativeTo(this.basePath, true);
 			htmlFile.themeCssFiles = [];
 			themeCssFiles.forEach(function(file){

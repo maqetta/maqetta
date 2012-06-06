@@ -1,9 +1,6 @@
 define(
-//begin v1.x content
 ({
 	"setButtonText": "Задать",
-	"cancelButtonText": "Отменить"
+	"cancelButtonText": "Отмена"
 })
-
-//end v1.x content
 );

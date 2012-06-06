@@ -1,6 +1,24 @@
-define(["dojo/_base/kernel", "dojo/_base/array","dojo/dom-style","dojo/DeferredList","./transition"],
-	function(dojo, darray, domStyle, DeferredList,transition){
+define(["dojo/_base/array","dojo/dom-style","dojo/DeferredList","./transition"],
+	function(darray, domStyle, DeferredList,transition){
+	// module: 
+	//		dojox/css3/transit
+	// summary:
+	//		This module defines the transit method which is used
+	//		to transit the specific region of an application from 
+	//		one view/page to another view/page. This module relies 
+	//		on utility provided	by dojox/css3/transition for the 
+	//		transition effects.
 	var transit =  function(from, to, options){
+		// summary:
+		//		The method to transit from node out of display and 
+		//		transit to node into display.
+		// options:
+		//		The argument to specify the transit effect and direction.
+		//		The effect can be specified in options.transition. The
+		//		valid values are 'slide', 'flip', 'fade', 'none'.
+		//		The direction can be specified in options.reverse. If it
+		//		is true, the transit effects will be conducted in the
+		//		reverse direction to the default direction.
 		var rev = (options && options.reverse) ? -1 : 1;
 		if(!options || !options.transition || !transition[options.transition]){
 			domStyle.set(from,"display","none");
@@ -11,7 +29,7 @@ define(["dojo/_base/kernel", "dojo/_base/array","dojo/dom-style","dojo/DeferredL
 				}
 				if(options.transitionDefs[to.id]){
 								options.transitionDefs[to.id].resolve(to);
-							}
+				}
 			}
 		}else{
 			var defs=[];
@@ -45,7 +63,7 @@ define(["dojo/_base/kernel", "dojo/_base/array","dojo/dom-style","dojo/DeferredL
 			defs.push(toTransit.deferred);//every transition object should have a deferred.
 			transit.push(toTransit);
 			
-			//TODO If it is flip use the chainedPlay
+			//If it is flip use the chainedPlay, otherwise
 			//play fromTransit and toTransit together
 			if(options.transition === "flip"){
 				transition.chainedPlay(transit);

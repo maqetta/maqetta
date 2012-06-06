@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+<!-- Remove in 2.0, replaced by dijit/tests/focus.html -->
+
 <html>
 <head>
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -105,13 +108,13 @@
 	</p>
 
 	<label>a form ContentPane widget:</label><br>
-	<form id="form" data-dojo-type="dijit.layout.ContentPane" >
+	<form id="form" data-dojo-type="dijit/layout/ContentPane" >
 		<label for="first">simple input: </label><input id="first"/><br>
 
 		<label>a fieldset ContentPane widget:</label><br>
-		<fieldset id=fieldset1 data-dojo-type="dijit.layout.ContentPane">
+		<fieldset id=fieldset1 data-dojo-type="dijit/layout/ContentPane">
 			<label for="select">a ComboBox widget:</label>
-			<select id=select data-dojo-type="dijit.form.ComboBox">
+			<select id=select data-dojo-type="dijit/form/ComboBox">
 				<option>this</option>
 				<option>is</option>
 				<option>a</option>
@@ -120,32 +123,32 @@
 			<label for="plain">a plain input:</label>
 			<input id=plain value=plain/>
 		</fieldset>
-		<div id=editor data-dojo-type="dijit.Editor" >
+		<div id=editor data-dojo-type="dijit/Editor" >
 			Hello world, this is an <i>editor</i>
 		</div>
 		<br>
 		<label>another fieldset ContentPane:</label><br>
-		<fieldset id=fieldset2 data-dojo-type="dijit.layout.ContentPane">
+		<fieldset id=fieldset2 data-dojo-type="dijit/layout/ContentPane">
 			<label for="date">a DateTextBox widget:</label>
-			<input id=date data-dojo-type="dijit.form.DateTextBox"/><br>
+			<input id=date data-dojo-type="dijit/form/DateTextBox"/><br>
 
 			<label for="textarea">a plain textarea:</label><br>
 			<textarea id=textarea>hello there!</textarea><br>
 
 			<label for="spinner">a Spinner widget:</label>
-			<input id=spinner data-dojo-type="dijit.form.NumberSpinner" data-dojo-props='value:100'/><br>
+			<input id=spinner data-dojo-type="dijit/form/NumberSpinner" data-dojo-props='value:100'/><br>
 
 			<label>a Combobutton widget:</label>
-			<div id=button data-dojo-type="dijit.form.ComboButton" data-dojo-props='tabIndex:"0"'>
+			<div id=button data-dojo-type="dijit/form/ComboButton" data-dojo-props='tabIndex:"0"'>
 				<span>push me</span>
-				<div id=menu data-dojo-type="dijit.Menu">
-					<div id=mi1 data-dojo-type="dijit.MenuItem">menu item 1</div>
-					<div id=mi2 data-dojo-type="dijit.MenuItem">menu item 2</div>
-					<div id=popupMenuItem data-dojo-type="dijit.PopupMenuItem">
+				<div id=menu data-dojo-type="dijit/Menu">
+					<div id=mi1 data-dojo-type="dijit/MenuItem">menu item 1</div>
+					<div id=mi2 data-dojo-type="dijit/MenuItem">menu item 2</div>
+					<div id=popupMenuItem data-dojo-type="dijit/PopupMenuItem">
 						<span>submenu</span>
-						<div id=submenu data-dojo-type="dijit.Menu">
-							<div id=smi1 data-dojo-type="dijit.MenuItem">submenu item 1</div>
-							<div id=smi2 data-dojo-type="dijit.MenuItem">submenu item 2</div>
+						<div id=submenu data-dojo-type="dijit/Menu">
+							<div id=smi1 data-dojo-type="dijit/MenuItem">submenu item 1</div>
+							<div id=smi2 data-dojo-type="dijit/MenuItem">submenu item 2</div>
 						</div>
 					</div>
 				</div>

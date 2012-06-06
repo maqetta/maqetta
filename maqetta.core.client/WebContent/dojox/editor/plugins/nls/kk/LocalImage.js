@@ -1,8 +1,7 @@
 define(
-//begin v1.x content
 ({
-	insertImageTitle: "Сурет кірістіру",
-	url: "Кескін",
+	insertImageTitle: "Суретті кірістіру",
+	url: "Сурет",
 	browse: "Шолу...",
 	text: "Сипаттама",
 	set: "Кірістіру",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "Кескіннің URL мекен-жайын енгізіңіз",
 	prePopuTextBrowse: " немесе жергілікті файлға өтіңіз."
 })
-
-//end v1.x content
 );

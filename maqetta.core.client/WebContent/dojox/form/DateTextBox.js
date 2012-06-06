@@ -10,17 +10,16 @@ define([
 ], function(kernel, lang, domStyle, Calendar, CalendarViews, _DateTimeTextBox, TextBox, declare){
 kernel.experimental("dojox.form.DateTextBox");
 
-	/*=====
-		_DateTimeTextBox = dijit.form._DateTimeTextBox;
-	=====*/
+
 var DateTextBox = declare( "dojox.form.DateTextBox", _DateTimeTextBox,
 	{
 		// summary:
 		//		A validating, serializable, range-bound date text box with a popup calendar
 
 		// popupClass: String
-		//  The popup widget to use. In this case, a calendar with Day, Month and Year views.
+		//  	The popup widget to use. In this case, a calendar with Day, Month and Year views.
 		popupClass: "dojox.widget.Calendar",
+
 		_selector: "date",
 
 		openDropDown: function(){
@@ -37,7 +36,7 @@ declare( "dojox.form.DayTextBox", DateTextBox,
 		//		A validating, serializable, range-bound date text box with a popup calendar that contains just months.
 
 		// popupClass: String
-		//  The popup widget to use. In this case, a calendar with just a Month view.
+		//		The popup widget to use. In this case, a calendar with just a Month view.
 		popupClass: "dojox.widget.DailyCalendar",
 
 		parse: function(displayVal){
@@ -81,7 +80,7 @@ declare( "dojox.form.MonthTextBox", DateTextBox,
 		//		A validating, serializable, range-bound date text box with a popup calendar that contains only years
 
 		// popupClass: String
-		//  The popup widget to use. In this case, a calendar with just a Year view.
+		//		The popup widget to use. In this case, a calendar with just a Year view.
 		popupClass: "dojox.widget.MonthlyCalendar",
 
 		selector: "date",
@@ -179,7 +178,7 @@ declare( "dojox.form.YearTextBox", DateTextBox,
 			});
 		},
 
-		parse: function(/*String*/value, /*dojo.date.locale.__FormatOptions*/constraints){
+		parse: function(/*String*/ value, /*dojo.date.locale.__FormatOptions*/ constraints){
 			return value || (this._isEmpty(value) ? null : undefined); // Date
 		},
 

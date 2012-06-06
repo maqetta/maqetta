@@ -3,20 +3,13 @@ define([
 	"../_Widget",
 	"../_Container",
 	"../_Contained",
+	"../Viewport",
 	"dojo/_base/declare", // declare
 	"dojo/dom-class", // domClass.add domClass.remove
 	"dojo/dom-geometry", // domGeometry.marginBox
-	"dojo/dom-style", // domStyle.getComputedStyle
-	"dojo/_base/sniff", // has("ie")
-	"dojo/_base/window" // win.global
-], function(lang, _Widget, _Container, _Contained,
-	declare, domClass, domGeometry, domStyle, has, win){
-
-/*=====
-	var _Widget = dijit._Widget;
-	var _Container = dijit._Container;
-	var _Contained = dijit._Contained;
-=====*/
+	"dojo/dom-style" // domStyle.getComputedStyle
+], function(lang, _Widget, _Container, _Contained, Viewport,
+	declare, domClass, domGeometry, domStyle){
 
 	// module:
 	//		dijit/layout/_LayoutWidget
@@ -74,10 +67,7 @@ define([
 				// Since my parent isn't a layout container, and my style *may be* width=height=100%
 				// or something similar (either set directly or via a CSS class),
 				// monitor when viewport size changes so that I can re-layout.
-				this.connect(win.global, 'onresize', function(){
-					// Using function(){} closure to ensure no arguments passed to resize().
-					this.resize();
-				});
+				this.own(Viewport.on("resize", lang.hitch(this, "resize")));
 			}
 		},
 
@@ -87,7 +77,7 @@ define([
 			// description:
 			//		Change size mode:
 			//			When changeSize is specified, changes the marginBox of this widget
-			//			and forces it to relayout its contents accordingly.
+			//			and forces it to re-layout its contents accordingly.
 			//			changeSize may specify height, width, or both.
 			//
 			//			If resultSize is specified it indicates the size the widget will
@@ -96,7 +86,7 @@ define([
 			//		Notification mode:
 			//			When changeSize is null, indicates that the caller has already changed
 			//			the size of the widget, or perhaps it changed because the browser
-			//			window was resized.  Tells widget to relayout its contents accordingly.
+			//			window was resized.  Tells widget to re-layout its contents accordingly.
 			//
 			//			If resultSize is also specified it indicates the size the widget has
 			//			become.

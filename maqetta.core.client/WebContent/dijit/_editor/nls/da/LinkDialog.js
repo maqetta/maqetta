@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Linkegenskaber",
 	insertImageTitle: "Billedegenskaber",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Øverste vindue",
 	newWindow: "Nyt vindue"
 })
-
-//end v1.x content
 );

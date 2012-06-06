@@ -139,7 +139,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color",
 			//		program ;)
 			var array = a.slice(0);
 			if(tension == "x") {
-				array[array.length] = arr[0];   // add a last element equal to the first, closing the loop
+				array[array.length] = array[0];   // add a last element equal to the first, closing the loop
 			}
 			var p=arr.map(array, function(item, i){
 				if(i==0){ return "M" + item.x + "," + item.y; }

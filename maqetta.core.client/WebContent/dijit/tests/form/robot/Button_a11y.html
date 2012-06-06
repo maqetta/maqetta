@@ -11,10 +11,10 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
+			dojo.require("dojo.on");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_Button.html');
@@ -92,6 +92,10 @@
 				]);
 
 				doh.register("dijit.form.DropDownButton", [
+					function initialState(){
+						doh.f(dojo.hasClass(dijit.byId("edit").domNode, "dijitDropDownButtonOpened"),
+								"no dijitDropDownButtonOpened class");
+					},
 					{
 						name: "down arrow opens menu",
 						timeout: 4000,
@@ -102,6 +106,8 @@
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
 
 							doh.robot.sequence(d.getTestCallback(function(){
+								doh.t(dojo.hasClass(dijit.byId("edit").domNode, "dijitDropDownButtonOpened"),
+										"dijitDropDownButtonOpened class");
 								doh.t(isVisible("editMenu"), "edit menu is visible: " + dijit.byId("editMenu").domNode.style.cssText);
 								doh.is("cut", dojo.global.dijit.focus.curNode.id, "focus is on menu");
 							}), 500);
@@ -120,6 +126,8 @@
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isHidden("editMenu"), "edit menu is hidden: " + dijit.byId("editMenu").domNode.style.cssText);
 								doh.is("edit", dojo.global.dijit.focus.curNode.id, "focus is back on button");
+								doh.f(dojo.hasClass(dijit.byId("edit").domNode, "dijitDropDownButtonOpened"),
+										"no dijitDropDownButtonOpened class");
 							}), 1000);
 							return d;
 						}
@@ -236,7 +244,8 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is(leftPart, dojo.global.dijit.focus.curNode, "focused on left part");
-								console.log("cur focus: ",  dojo.global.dijit.focus.curNode);
+								doh.f(dojo.hasClass(dijit.byId("save").domNode, "dijitComboButtonOpened"),
+										"no dijitComboButtonOpened class");
 							}), 1000);
 							return d;
 						}
@@ -255,6 +264,8 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(clicked, "button was clicked");
+								doh.f(dojo.hasClass(dijit.byId("save").domNode, "dijitComboButtonOpened"),
+										"no dijitComboButtonOpened class");
 							}), 1000);
 							return d;
 						}
@@ -273,6 +284,8 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is(rightPart, dojo.global.dijit.focus.curNode, "focused on right part of combo");
+								doh.f(dojo.hasClass(dijit.byId("save").domNode, "dijitComboButtonOpened"),
+										"no dijitComboButtonOpened class");
 							}), 1000);
 							return d;
 						}
@@ -291,6 +304,8 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.t(isVisible("saveMenu"), "save menu is visible: " + dijit.byId("saveMenu").domNode.style.cssText);
+								doh.t(dojo.hasClass(dijit.byId("save").domNode, "dijitComboButtonOpened"),
+										"dijitComboButtonOpened class");
 							}), 1000);
 							return d;
 						}
@@ -495,6 +510,38 @@
 						return d;
 					}
 				});
+
+				doh.register("bubbling", [
+					{
+						name: "bubbling",
+						timeout: 5000,
+						runTest: function(){
+
+							var d = new doh.Deferred(),
+								wrapper = dojo.byId("bubbleContainer"),
+								buttonNode = dojo.byId("bubble2");
+
+							// Listen for click events on the outer DOMNode.
+							var clicks = 0;
+							dojo.on(wrapper, "click", function(){
+								clicks++;
+							});
+
+							// Keyboard-click the widget button
+							doh.robot.sequence(function(){
+								buttonNode.focus();
+							}, 500);
+							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+
+							// Check that one click event bubbled
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is(1, clicks, "one click event bubbled");
+							}), 500);
+
+							return d;
+						}
+					}
+				]);
 
 				doh.run();
 			});

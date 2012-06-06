@@ -5,30 +5,37 @@
 
 	<title>Test Dijit Internal Event: "ondijitclick"</title>
 
-	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, async: true"></script>
 	<script type="text/javascript">
-		dojo.require("dijit.robotx");
+		require([
+			"doh/runner", "dojo/robotx",
+			"dojo/_base/array", "dojo/aspect", "dojo/dom", "dojo/keys", "dojo/on", "dojo/domReady!"
+		], function(doh, robot, array, aspect, dom, keys, on){
 
-		dojo.ready(function(){
-			doh.robot.initRobot('../_Widget-ondijitclick.html');
+			robot.initRobot('../_Widget-ondijitclick.html');
 
 			// Event monitoring
 			var widgetClicks = 0, buttonClicks = 0, button2Clicks = 0, thirdClicks = 0;
 			var w;
 
+			doh.register(function setup(){
+				// get pointer to registry in the iframe
+				registry = robot.window.require("dijit/registry");
+			});
+
 			doh.register("setup", function(){
-				doh.robot.sequence(function(){
-					w = dijit.byId("first");
-					dojo.connect(w, "_onClick", function(){
+				robot.sequence(function(){
+					w = registry.byId("first");
+					aspect.after(w, "_onClick", function(){
 						widgetClicks++;
-					});
-					dojo.connect(dojo.byId("plainbutton"), "onclick", function(){
+					}, true);
+					on(dom.byId("plainbutton", robot.doc), "click", function(){
 						buttonClicks++;
 					});
-					dojo.connect(dojo.byId("plainbutton2"), "onclick", function(){
+					on(dom.byId("plainbutton2", robot.doc), "click", function(){
 						button2Clicks++;
 					});
-					dojo.connect(dojo.byId("third"), "onclick", function(){
+					on(dom.byId("third", robot.doc), "click", function(){
 						thirdClicks++;
 					});
 				});
@@ -36,7 +43,7 @@
 
 			// Test ondijitclick on a <div> which refocuses onto a native <button> node.
 			// Make sure that the <button> doesn't get a spurious click event.
-			dojo.forEach(["SPACE", "ENTER"], function(key){
+			array.forEach(["SPACE", "ENTER"], function(key){
 
 				doh.register("ondijitclick by " + key, [
 					{
@@ -47,15 +54,15 @@
 							var d = new doh.Deferred();
 
 							// Keyboard-click the widget
-							doh.robot.sequence(function(){
+							robot.sequence(function(){
 								w.domNode.focus();
 							}, 500);
-							doh.robot.keyDown(dojo.keys[key], 250, {});
-							doh.robot.keyUp(dojo.keys[key], 250, {});
+							robot.keyDown(keys[key], 250, {});
+							robot.keyUp(keys[key], 250, {});
 
 							// Check that ondijitclick fired but no spurious event
 							// on the widget that got focused in the ondijitclick handler
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is(1, widgetClicks, "ondijitclick handler fired");
 								doh.is(0, buttonClicks, "spurious button click event");
 							}), 500);
@@ -70,17 +77,17 @@
 							widgetClicks = buttonClicks = 0;
 							var d = new doh.Deferred();
 
-							doh.robot.sequence(function(){
+							robot.sequence(function(){
 								w.domNode.focus();
 							}, 500);
 				
 							// Try shift-space/shift-enter just to make sure it doesn't do anything.
 							// Don't try ctrl-space or meta-space since those keystrokes have special functions
 							// (like context menu) in various browsers
-							doh.robot.keyPress(dojo.keys[key], 100, {shift: true});
+							robot.keyPress(keys[key], 100, {shift: true});
 
 							// Check that ondijitclick didn't fire
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is(0, widgetClicks, "ondijitclick handler wasn't fired");
 								doh.is(0, buttonClicks, "button click handler wasn't fired");
 							}), 500);
@@ -93,7 +100,7 @@
 
 			// Test ondijitclick on a <div> which refocuses onto a native <textarea> node.
 			// Tests that the keyboard event gets supressed so it doesn't modify the focused node.
-			dojo.forEach(["SPACE","ENTER"], function(key){
+			array.forEach(["SPACE","ENTER"], function(key){
 
 				doh.register("focus to textarea by " + key, [
 					{
@@ -101,17 +108,17 @@
 						timeout: 5000,
 						runTest: function(){
 							var d = new doh.Deferred(),
-								w = dijit.byId("second");
+								w = registry.byId("second");
 
 							// Keyboard-click the widget
-							doh.robot.sequence(function(){
+							robot.sequence(function(){
 								w.domNode.focus();
 							}, 500);
-							doh.robot.keyPress(dojo.keys[key], 500, {});
+							robot.keyPress(keys[key], 500, {});
 
 							// Check that ondijitclick fired but that focused textarea didn't get the key
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("hello world", dojo.byId("textarea").value);
+							robot.sequence(d.getTestCallback(function(){
+								doh.is("hello world", dom.byId("textarea", robot.doc).value);
 							}), 500);
 
 							return d;
@@ -122,7 +129,7 @@
 
 			// Test onclick on a <button> which refocuses onto a <div> w/an ondijitclick handler.
 			// Make sure that the <div> doesn't get a spurious click event.
-			dojo.forEach(["SPACE", "ENTER" ], function(key){
+			array.forEach(["SPACE", "ENTER"], function(key){
 
 				doh.register("focus to ondijitclick-div by " + key, [
 					{
@@ -132,16 +139,16 @@
 							button2Clicks = thirdClicks = 0;
 
 							var d = new doh.Deferred(),
-								button = dojo.byId("plainbutton2");
+								button = dom.byId("plainbutton2", robot.doc);
 
 							// Keyboard-click the native button
-							doh.robot.sequence(function(){
+							robot.sequence(function(){
 								button.focus();
 							}, 500);
-							doh.robot.keyPress(dojo.keys[key], 500, {});
+							robot.keyPress(keys[key], 500, {});
 
 							// Check that ondijitclick didn't fire
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is(1, button2Clicks, "button2 was clicked (and focus moved to ondijitclick-div)");
 								doh.is(0, thirdClicks, "ondijitclick-div didn't get a spurious click event");
 							}), 500);
@@ -154,7 +161,7 @@
 
 			// Test clicking on a <button> with an ondijitclick handler.
 			// The main danger is getting two click events because the browser natively handles space-->click
-			dojo.forEach(["SPACE", "ENTER" ], function(key){
+			array.forEach(["SPACE", "ENTER"], function(key){
 
 				doh.register("click ondijitclick button by " + key, [
 					{
@@ -163,19 +170,19 @@
 						runTest: function(){
 
 							var d = new doh.Deferred(),
-								buttonWidget = dijit.byId("widgetbutton"),
-								buttonNode = dojo.byId("widgetbutton");
+								buttonWidget = registry.byId("widgetbutton"),
+								buttonNode = dom.byId("widgetbutton", robot.doc);
 
 							buttonWidget.clickCount = 0;
 
 							// Keyboard-click the widget button
-							doh.robot.sequence(function(){
+							robot.sequence(function(){
 								buttonNode.focus();
 							}, 500);
-							doh.robot.keyPress(dojo.keys[key], 500, {});
+							robot.keyPress(keys[key], 500, {});
 
 							// Check that ondijitclick fired exactly once
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is(1, buttonWidget.clickCount, "one click event");
 							}), 500);
 
@@ -184,6 +191,40 @@
 					}
 				]);
 			});
+
+			doh.register("bubbling", [
+				{
+					name: "bubbling",
+					timeout: 5000,
+					runTest: function(){
+
+						var d = new doh.Deferred(),
+							outerDiv = dom.byId("outer", robot.doc),
+							buttonNode = dom.byId("bubbleTestWidget", robot.doc),
+							buttonWidget = registry.byId("bubbleTestWidget");
+
+						// Listen for click events on the outer DOMNode.
+						var clicks = 0;
+						on(outerDiv, "click", function(){
+							clicks++;
+						});
+
+						// Keyboard-click the widget button
+						robot.sequence(function(){
+							buttonNode.focus();
+						}, 500);
+						robot.keyPress(keys.ENTER, 500, {});
+
+						// Check that one click event bubbled
+						robot.sequence(d.getTestCallback(function(){
+							doh.is(1, buttonWidget.clickCount, "one click event");
+							doh.is(1, clicks, "one click event bubbled");
+						}), 500);
+
+						return d;
+					}
+				}
+			]);
 
 			doh.run();
 		});

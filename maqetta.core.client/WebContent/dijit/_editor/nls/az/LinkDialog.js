@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"text" : "Yazı:",
 	"insertImageTitle" : "Şəkil başlığı əlavə et",
@@ -12,5 +11,4 @@ define(
 	"currentWindow" : "Hazırki pəncərə",
 	"url" : "URL:"
 })
-//end v1.x content
 );

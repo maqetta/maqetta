@@ -15,6 +15,8 @@
 	<!-- required: dojo.js Update analyticsUrl: to point to your test server-->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
 		djConfig="parseOnLoad: true, isDebug: true, usePlainJson: true, sendMethod: 'script', sendInterval: 5000, 
+				// the line below can be used to override the sampleDelay for mouseOver and targetProps and textContentMaxChars
+				//sampleDelay : 2000, targetProps : ['id','className'], textContentMaxChars : 12, 
 				analyticsUrl: 'http://dojotoolkit.org/~dmachi/dojo-1.0/dojox/analytics/logger/dojoxAnalytics.php'"></script>
 
 	<!-- do not use: only for testing alternate themes -->
@@ -24,7 +26,7 @@
 		// include the analytics system
 		dojo.require("dojox.analytics");
 
-		// this plugin returns the informatin dojo collects when it launches 
+		// this plugin returns the information dojo collects when it launches
 		dojo.require("dojox.analytics.plugins.dojo");
 
 		// this plugin return the information the window has when it launches

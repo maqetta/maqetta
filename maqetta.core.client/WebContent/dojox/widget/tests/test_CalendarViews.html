@@ -23,15 +23,25 @@
 		<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
 		<script type="text/javascript">
-			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
-			dojo.require("dijit.dijit");
-			dojo.require("dojox.fx");
-			dojo.require("dojox.widget.Calendar");
-			dojo.require("dojox.widget.CalendarViews");
-
-			function log(str){
+		require([
+			"dojo/parser",
+			"dojox/fx/_base",
+			"dojox/widget/Calendar",
+			"dojox/widget/CalendarViews",
+			"dojox/widget/DailyCalendar",
+			"dojox/widget/MonthAndYearlyCalendar",
+			"dojox/widget/MonthlyCalendar",
+			"dojo/dom",
+			//"dojox/widget/FisheyeList",
+			//"dojox/widget/CalendarFx",
+			"dojo/domReady!"
+		], function(parser, fx, Calendar, CalendarViews, DailyCalendar, MonthAndYearlyCalendar, MonthlyCalendar, dom){
+			
+/*			function log(str){
 				dojo.byId("report").innerHTML = str;
 			}
+*/
+		});
 		</script>
 	</head>
 	<body class="soria">

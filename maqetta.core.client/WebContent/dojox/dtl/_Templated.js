@@ -6,9 +6,8 @@ define([
 	"dojo/cache",
 	"dojo/_base/array",
 	"dojo/string",
-	"dojo/parser",
-	"dijit/_base/manager"
-], function(declare,dd,TemplatedMixin, domConstruct,Cache,Array,dString,Parser,dijitMgr){
+	"dojo/parser"
+], function(declare,dd,TemplatedMixin, domConstruct,Cache,Array,dString,Parser){
 	/*=====
 		Cache = dojo.cache;
 		dString = dojo.string;
@@ -37,7 +36,7 @@ define([
 				if(t instanceof dd.Template) {
 					this._template = t;
 				}else{
-					node = t;
+					node = t.cloneNode(true);
 				}
 			}
 			if(!node){
@@ -88,8 +87,6 @@ define([
 					parser._query = qry;
 					parser._attrName = attr;
 				}
-
-				this._supportingWidgets = dijitMgr.findWidgets(node);
 
 				this._attachTemplateNodes(cw, function(n,p){
 					return n[p];

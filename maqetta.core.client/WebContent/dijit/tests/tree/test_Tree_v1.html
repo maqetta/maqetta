@@ -25,9 +25,6 @@
 		dojo.require("dojo.data.ItemFileReadStore");
 		dojo.require("dijit.Tree");
 		dojo.require("dijit.ColorPalette");
-		dojo.require("dijit.Menu");
-		dojo.require("dijit.MenuItem");
-		dojo.require("dijit.PopupMenuItem");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 	</script>
 </head>
@@ -54,60 +51,9 @@
 
 	<button onclick="dijit.byId('mytree').destroyRecursive();">destroy</button>
 
-	<h2>A rootless tree (no "continents" node) with context menus, and custom icons</h2>
-
-	<ul dojoType="dijit.Menu" id="tree_menu" style="display: none;">
-		<li dojoType="dijit.MenuItem" onClick="alert('Hello world');">Enabled Item</li>
-		<li dojoType="dijit.MenuItem" disabled="true">Disabled Item</li>
-		<li dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconCut"
-			onClick="alert('not actually cutting anything, just a test!')">Cut</li>
-		<li dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconCopy"
-			onClick="alert('not actually copying anything, just a test!')">Copy</li>
-		<li dojoType="dijit.MenuItem" iconClass="dijitEditorIcon dijitEditorIconPaste"
-			onClick="alert('not actually pasting anything, just a test!')">Paste</li>
-		<li id="popupSubMenu" dojoType="dijit.PopupMenuItem">
-			<span>Enabled Submenu</span>
-			<ul dojoType="dijit.Menu" id="submenu2">
-				<li dojoType="dijit.MenuItem" onClick="alert('Submenu 1!')">Submenu Item One</li>
-				<li dojoType="dijit.MenuItem" onClick="alert('Submenu 2!')">Submenu Item Two</li>
-				<li id="deeperSubmenu" dojoType="dijit.PopupMenuItem">
-					<span>Deeper Submenu</span>
-					<ul dojoType="dijit.Menu" id="submenu4">
-						<li dojoType="dijit.MenuItem" onClick="alert('Sub-submenu 1!')">Sub-sub-menu Item One</li>
-						<li dojoType="dijit.MenuItem" onClick="alert('Sub-submenu 2!')">Sub-sub-menu Item Two</li>
-					</ul>
-				</li>
-			</ul>
-		</li>
-		<li dojoType="dijit.PopupMenuItem" disabled="true">
-			<span>Disabled Submenu</span>
-			<ul dojoType="dijit.Menu" id="submenu3" style="display: none;">
-				<li dojoType="dijit.MenuItem" onClick="alert('Submenu 1!')">Submenu Item One</li>
-				<li dojoType="dijit.MenuItem" onClick="alert('Submenu 2!')">Submenu Item Two</li>
-			</ul>
-		</li>
-	</ul>
+	<h2>A rootless tree (no "continents" node) with custom icons</h2>
 
 	<div dojoType="dijit.Tree" id="tree2" store="continentStore" query="{type:'continent'}" persist="false">
-		<script type="dojo/connect">
-			var menu = dijit.byId("tree_menu");
-			// when we right-click anywhere on the tree, make sure we open the menu
-			menu.bindDomNode(this.domNode);
-
-			dojo.connect(menu, "_openMyself", this, function(e){
-				// get a hold of, and log out, the tree node that was the source of this open event
-				var tn = dijit.getEnclosingWidget(e.target);
-				console.debug(tn);
-
-				// now inspect the data store item that backs the tree node:
-				console.debug(tn.item);
-
-				// contrived condition: if this tree node doesn't have any children, disable all of the menu items
-				dojo.forEach(menu.getChildren(), function(i){ i.set('disabled', !tn.item.children); });
-
-				// IMPLEMENT CUSTOM MENU BEHAVIOR HERE
-			});
-		</script>
 		<script type="dojo/method" event="getIconClass" args="item, opened">
            return (!item || continentStore.getValue(item, "type") == "continent") ?
                    (opened ? "customFolderOpenedIcon" : "customFolderClosedIcon") :

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Вставить таблицу",
 	modifyTableTitle: "Изменить таблицу",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "Ширина таблицы:",
 	backgroundColor: "Цвет фона:",
 	borderColor: "Цвет рамки:",
-	borderThickness: "Толщина рамки",
+	borderThickness: "Толщина рамки:",
 	percent: "процентов",
 	pixels: "пикселов",
 	"default": "по умолчанию",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Задать", // translated elsewhere?
 	buttonInsert: "Вставить",
 	buttonCancel: "Отмена",
-
 	selectTableLabel: "Выбрать таблицу",
 	insertTableRowBeforeLabel: "Добавить строку перед",
 	insertTableRowAfterLabel: "Добавить строку после",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "Удалить строку",
 	deleteTableColumnLabel: "Удалить столбец"
 })
-//end v1.x content
 );

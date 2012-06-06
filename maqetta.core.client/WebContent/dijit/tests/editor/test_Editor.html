@@ -60,7 +60,7 @@
 </head>
 
 <body class="claro">
-	<div data-dojo-type="dijit.Editor" data-dojo-props="plugins:[], focusOnLoad:true, height:'1.5em', style:'border:0px;'" id="automated"
+	<div data-dojo-type="dijit/Editor" data-dojo-props="plugins:[], focusOnLoad:true, height:'1.5em', style:'border:0px;'" id="automated"
 	>Automated Test - all check boxes should be checked<script type='dojo/method' data-dojo-event='onFocus'>
 			if(!document.getElementById('onFocusFired').checked){
 				document.getElementById('onFocusFired').checked=true;
@@ -99,11 +99,11 @@
 	<h1 class="testTitle">Editor + Plugins Test</h1>
 
 	<h2>No plugins, initially empty</h2>
-	<div data-dojo-type="dijit.Editor" data-dojo-props="plugins:[], height:'100'" id="editor0"></div>
+	<div data-dojo-type="dijit/Editor" data-dojo-props="plugins:[], height:'100'" id="editor0"></div>
 
 	<h2>Created from div</h2>
 	<input id="focusBefore" value="input before editor1"/>
-	<div data-dojo-type="dijit.Editor" data-dojo-props="onChange:function(v){console.log('editor1 onChange handler: ' + v)}, disableSpellCheck:true" id="editor1"
+	<div data-dojo-type="dijit/Editor" data-dojo-props="onChange:function(v){console.log('editor1 onChange handler: ' + v)}, disableSpellCheck:true" id="editor1"
 	><p>This instance is created from a div directly with default toolbar and plugins</p>
 	The following HTML should appear as source: &lt;INPUT TYPE="IMAGE" SRC="javascript:alert('no scripting attacks')"&gt;
 	</div>
@@ -111,14 +111,12 @@
 	<button onClick="dijit.byId('editor1').destroy()">destroy</button>
 	<button onClick="dijit.byId('editor1').set('disableSpellCheck', !dijit.byId('editor1').get('disableSpellCheck'))">toggle spell check</button>
 	<button onclick="console.log(dijit.byId('editor1').get('value'))">getValue</button>
-	<button id="addStyleSheet" onclick="dijit.byId('editor1').addStyleSheet('test_editor.css')">add stylesheet</button>
-	<button id="removeStyleSheet" onclick="dijit.byId('editor1').removeStyleSheet('test_editor.css')">remove stylesheet</button>
 	<hr/>
 
 	<h2>Created from div, auto-expanding</h2>
 	<h3><label>label for editor:</label></h3>
-	<div data-dojo-type="dijit.Editor" 
-		data-dojo-props="onChange:function(v){console.log('thud onChange handler: ' + v)}, extraPlugins:['dijit._editor.plugins.AlwaysShowToolbar'], styleSheets:'../../themes/claro/document.css', minHeight:'75px', height:''"
+	<div data-dojo-type="dijit/Editor"
+		data-dojo-props="onChange:function(v){console.log('thud onChange handler: ' + v)}, extraPlugins:['dijit/_editor/plugins/AlwaysShowToolbar'], styleSheets:'../../themes/claro/document.css', minHeight:'75px', height:''"
 		id="thud">
 		Extra text
 		<p>
@@ -139,8 +137,8 @@
 
 	<h2>Optional toolbar buttons</h2>
 	<h3><label>blah entry</label></h3>
-	<div data-dojo-type="dijit.Editor"
-		data-dojo-props="plugins:['bold','italic','|','createLink','foreColor','hiliteColor',{name:'dijit._editor.plugins.FontChoice', command:'fontName', generic:true},'fontSize','formatBlock','insertImage','insertHorizontalRule'], styleSheets:'../../themes/claro/document.css'"
+	<div data-dojo-type="dijit/Editor"
+		data-dojo-props="plugins:['bold','italic','|','createLink','foreColor','hiliteColor',{name:'dijit/_editor/plugins/FontChoice', command:'fontName', generic:true},'fontSize','formatBlock','insertImage','insertHorizontalRule'], styleSheets:'../../themes/claro/document.css'"
 		id="blah">
 		This instance includes optional toolbar buttons which pull in additional ui (dijit) code.
 		Note the dojo.require() statements required to pull in the associated editor plugins to make
@@ -163,8 +161,8 @@
 
 	<h2>Plugins specified</h2>
 	<h3><label>Another blah entry</label></h3>
-	<div data-dojo-type="dijit.Editor"
-		data-dojo-props="plugins:['bold','italic','|',{name:'dijit._editor.plugins.FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond','Apple Chancery','Hiragino Mincho Pro']}, {name:'dijit._editor.plugins.FontChoice', command:'fontSize', custom:[3,4,5]}, {name:'dijit._editor.plugins.EnterKeyHandling', blockNodeForEnter:'DIV'}], styleSheets:'../../themes/claro/document.css'"
+	<div data-dojo-type="dijit/Editor"
+		data-dojo-props="plugins:['bold','italic','|',{name:'dijit/_editor/plugins/FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond','Apple Chancery','Hiragino Mincho Pro']}, {name:'dijit/_editor/plugins/FontChoice', command:'fontSize', custom:[3,4,5]}, {name:'dijit/_editor/plugins/EnterKeyHandling', blockNodeForEnter:'DIV'}], styleSheets:'../../themes/claro/document.css'"
 		id="blah2">
 		This instance demos how to:
 		<ol>
@@ -176,17 +174,17 @@
 	<hr/>
 
 	<h2>Font sizing via style</h2> 
-	<div data-dojo-type="dijit.Editor" data-dojo-props="style:'text-align:left; font-size:30pt'" id="fontSizedEditor"> 
+	<div data-dojo-type="dijit/Editor" data-dojo-props="style:'text-align:left; font-size:30pt'" id="fontSizedEditor">
 		Hello World! 
 	</div> 
 
 	<h2>Checking pre-filter application</h2> 
-	<div data-dojo-type="dijit.Editor" data-dojo-props="extraPlugins:[{name: 'dijit.tests.editor.TestFilter'}]" id="filteredEditor"> 
+	<div data-dojo-type="dijit/Editor" data-dojo-props="extraPlugins:[{name: 'dijit.tests.editor.TestFilter'}]" id="filteredEditor">
 		notdojo 
 	</div> 
 
 	<h2>Checking editor starting with br</h2> 
-	<div data-dojo-type="dijit.Editor" id="brEditor"> 
+	<div data-dojo-type="dijit/Editor" id="brEditor">
 		<br>
 		some stuff
 		<br>
@@ -203,7 +201,7 @@
 	<div id="programmatic2">This div will become an auto-expanding editor.</div>
 	<button
 		id="create2"
-		onclick="new dijit.Editor({height: '', extraPlugins: ['dijit._editor.plugins.AlwaysShowToolbar']}, dojo.byId('programmatic2')); dojo.query('#create2').orphan();">
+		onclick="new dijit.Editor({height: '', extraPlugins: ['dijit/_editor/plugins/AlwaysShowToolbar']}, dojo.byId('programmatic2')); dojo.query('#create2').orphan();">
 	create expanding editor
 	</button>
 

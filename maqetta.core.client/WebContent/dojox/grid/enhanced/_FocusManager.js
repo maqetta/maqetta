@@ -461,15 +461,16 @@ return declare("dojox.grid.enhanced._FocusManager", _FocusManager, {
 	_delayedHeaderFocus: function(){
 		// summary:
 		//		Overwritten
-		if(this.isNavHeader()){
+		if(this.isNavHeader() && !has('ie')){
 			this.focusHeader();
 		}
 	},
 	_delayedCellFocus: function(){
 		// summary:
 		//		Overwritten
-		this.currentArea("header", true);
-		this.focusArea(this._currentAreaIdx);
+		
+		//If focus header here, the page will scroll to grid when the grid is created.
+		//this.focusArea("header");
 	},
 	_changeMenuBindNode: function(oldBindNode, newBindNode){
 		var hm = this.grid.headerMenu;

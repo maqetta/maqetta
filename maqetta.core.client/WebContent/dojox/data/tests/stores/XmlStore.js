@@ -32,9 +32,9 @@ dojox.data.tests.stores.XmlStore.getGeographyStore = function(){
 doh.register("dojox.data.tests.stores.XmlStore",
 	[
 		function testReadAPI_fetch_all(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching all xml items through an XML element called isbn
-			//	description:
+			// description:
 			//		Simple test of fetching all xml items through an XML element called isbn
 			var store = dojox.data.tests.stores.XmlStore.getBooksStore();
 
@@ -50,9 +50,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -71,9 +71,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			name: "testReadAPI_fetch_paging",
 			timeout: 10000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of fetching one xml items through an XML element called isbn
-				//	description:
+				// description:
 				//		Simple test of fetching one xml items through an XML element called isbn
 				var store = dojox.data.tests.stores.XmlStore.getBooksStore();
 				var d = new doh.Deferred();
@@ -141,9 +141,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			}
 		},
 		function testReadAPI_fetch_pattern0(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -159,9 +159,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 		
 		function testReadAPI_fetch_pattern1(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -176,10 +176,10 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern1_preventCacheOff(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			//		with preventCache off to test that it doesn't pass it when told not to.
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			//		with preventCache off to test that it doesn't pass it when told not to.
 			var store = dojox.data.tests.stores.XmlStore.getBooks2StorePC();
@@ -195,9 +195,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern2(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with * pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with * pattern match
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -212,9 +212,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern_multi(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items with a pattern of multiple attrs.
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items with a pattern of multiple attrs.
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -229,9 +229,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern_multiValuedValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items with a pattern of multiple attrs.
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items with a pattern of multiple attrs.
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -246,9 +246,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern_caseInsensitive(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match and in case insensitive mode.
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match and in case insensitive mode.
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -263,9 +263,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern_caseSensitive(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match and in case sensitive mode.
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match and in case sensitive mode.
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -280,9 +280,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_regexp(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var d = new doh.Deferred();
@@ -297,9 +297,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_rootItem(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching all xml items through an XML element called isbn
-			//	description:
+			// description:
 			//		Simple test of fetching all xml items through an XML element called isbn
 			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books3.xml").toString(),
 				rootItem:"book"});
@@ -348,9 +348,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_withAttrMap_pattern0(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr2.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
@@ -366,9 +366,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_withAttrMap_pattern1(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr2.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
@@ -384,9 +384,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_withAttrMap_pattern2(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one xml items through an XML element called isbn with ? pattern match
 			var store = new dojox.data.XmlStore({url: require.toUrl("dojox/data/tests/stores/books_isbnAttr2.xml").toString(),
 				attributeMap: {"book.isbn": "@isbn"}});
@@ -403,9 +403,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testReadAPI_getLabel(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
@@ -425,9 +425,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d;
 		},
 		function testReadAPI_getLabelAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
@@ -448,9 +448,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testReadAPI_getValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue API
-			//	description:
+			// description:
 			//		Simple test of the getValue API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -469,9 +469,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_getValue_cdata(t) {
-			//	summary:
+			// summary:
 			//		Simple test of the getValue text() special attribute.
-			//	description:
+			// description:
 			//      Simple test of the getValue text() special attribute.
 			var store = dojox.data.tests.stores.XmlStore.getCDataTestStore();
 
@@ -499,9 +499,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testReadAPI_getValues_cdata(t) {
-			//	summary:
+			// summary:
 			//		Simple test of the getValues text() special attribute.
-			//	description:
+			// description:
 			//      Simple test of the getValues text() special attribute.
 			var store = dojox.data.tests.stores.XmlStore.getCDataTestStore();
 
@@ -528,9 +528,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_getValue_cdata_toString(t) {
-			//	summary:
+			// summary:
 			//		Simple test of the getValue and toString of the resulting 'XmlItem' API
-			//	description:
+			// description:
 			//      Simple test of the getValue and toString of the resulting 'XmlItem' API
 			var store = dojox.data.tests.stores.XmlStore.getCDataTestStore();
 
@@ -558,9 +558,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testReadAPI_getValues(t){
-			 //	summary:
+			 // summary:
 			 //		Simple test of the getValues API
-			 //	description:
+			 // description:
 			 //		Simple test of the getValues API
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -581,9 +581,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			 return d; //Object
 		},
 		function testReadAPI_isItem(t){
-			 //	summary:
+			 // summary:
 			 //		Simple test of the isItem API
-			 //	description:
+			 // description:
 			 //		Simple test of the isItem API
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -604,9 +604,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			 return d; //Object
 		},
 		function testReadAPI_isItem_multistore(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isItem API across multiple store instances.
-			//	description:
+			// description:
 			//		Simple test of the isItem API across multiple store instances.
 			var store1 = dojox.data.tests.stores.XmlStore.getBooks2Store();
 			var store2 = dojox.data.tests.stores.XmlStore.getBooks2Store();
@@ -635,9 +635,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_hasAttribute(t){
-			//	summary:
+			// summary:
 			//		Simple test of the hasAttribute API
-			//	description:
+			// description:
 			//		Simple test of the hasAttribute API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -659,9 +659,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_containsValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the containsValue API
-			//	description:
+			// description:
 			//		Simple test of the containsValue API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -680,9 +680,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_sortDescending(t){
-			//	summary:
+			// summary:
 			//		Simple test of the sorting API in descending order.
-			//	description:
+			// description:
 			//		Simple test of the sorting API in descending order.
 			var store = dojox.data.tests.stores.XmlStore.getBooksStore();
 
@@ -709,9 +709,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_sortAscending(t){
-			//	summary:
+			// summary:
 			//		Simple test of the sorting API in ascending order.
-			//	description:
+			// description:
 			//		Simple test of the sorting API in ascending order.
 			var store = dojox.data.tests.stores.XmlStore.getBooksStore();
 
@@ -737,9 +737,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_sortDescendingNumeric(t){
-			//	summary:
+			// summary:
 			//		Simple test of the sorting API in descending order using a numeric comparator.
-			//	description:
+			// description:
 			//		Simple test of the sorting API in descending order using a numeric comparator.
 			var store = dojox.data.tests.stores.XmlStore.getBooksStore();
 
@@ -774,9 +774,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_sortAscendingNumeric(t){
-			//	summary:
+			// summary:
 			//		Simple test of the sorting API in ascending order using a numeric comparator.
-			//	description:
+			// description:
 			//		Simple test of the sorting API in ascending order using a numeric comparator.
 			var store = dojox.data.tests.stores.XmlStore.getBooksStore();
 
@@ -811,9 +811,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_isItemLoaded(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isItemLoaded API
-			//	description:
+			// description:
 			//		Simple test of the isItemLoaded API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -831,9 +831,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
@@ -847,9 +847,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			t.assertEqual(3, count);
 		},
 		function testReadAPI_getAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getAttributes API
-			//	description:
+			// description:
 			//		Simple test of the getAttributes API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -880,9 +880,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testWriteAPI_setValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the setValue API
-			//	description:
+			// description:
 			//		Simple test of the setValue API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -902,9 +902,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testWriteAPI_setValues(t){
-			//	summary:
+			// summary:
 			//		Simple test of the setValues API
-			//	description:
+			// description:
 			//		Simple test of the setValues API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -928,9 +928,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testWriteAPI_unsetAttribute(t){
-			//	summary:
+			// summary:
 			//		Simple test of the unsetAttribute API
-			//	description:
+			// description:
 			//		Simple test of the unsetAttribute API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -951,9 +951,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testWriteAPI_isDirty(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isDirty API
-			//	description:
+			// description:
 			//		Simple test of the isDirty API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -974,9 +974,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			return d; //Object
 		},
 		function testWriteAPI_revert(t){
-			//	summary:
+			// summary:
 			//		Simple test of the write revert API
-			//	description:
+			// description:
 			//		Simple test of the write revert API
 			var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1008,9 +1008,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_getIdentity(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1034,9 +1034,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_getIdentityAttributes(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentityAttributes API where it defaults to internal xpath (no keyAttribute)
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentityAttributes API where it defaults to internal xpath (no keyAttribute)
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1060,9 +1060,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_getIdentityAttributes_usingKeyAttributeIdentity(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentityAttributes API where identity is specified by the keyAttribute param
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentityAttributes API where identity is specified by the keyAttribute param
 			 var store = dojox.data.tests.stores.XmlStore.getBooks3Store();
 
@@ -1087,9 +1087,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where the store defaults the identity to a xpathlike lookup.
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where the store defaults the identity to a xpathlike lookup.
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1112,9 +1112,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity2(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where the store defaults the identity to a xpathlike lookup.
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where the store defaults the identity to a xpathlike lookup.
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1137,9 +1137,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity3(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where the store defaults the identity to a xpathlike lookup.
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where the store defaults the identity to a xpathlike lookup.
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1162,9 +1162,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_usingKeyAttributeIdentity(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
 			 var store = dojox.data.tests.stores.XmlStore.getBooks3Store();
 
@@ -1186,9 +1186,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_usingKeyAttributeIdentity2(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
 			 var store = dojox.data.tests.stores.XmlStore.getBooks3Store();
 
@@ -1210,9 +1210,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_usingKeyAttributeIdentity3(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
 			 var store = dojox.data.tests.stores.XmlStore.getBooks3Store();
 
@@ -1234,9 +1234,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_usingKeyAttributeIdentity4(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
 			 var store = dojox.data.tests.stores.XmlStore.getGeographyStore();
 
@@ -1259,9 +1259,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 
 
 		function testIdentityAPI_fetchItemByIdentity_fails(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1279,9 +1279,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_fails2(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1299,9 +1299,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_fails3(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API
 			 var store = dojox.data.tests.stores.XmlStore.getBooks2Store();
 
@@ -1319,9 +1319,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_usingKeyAttributeIdentity_fails(t) {
-			 //	summary:
+			 // summary:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
-			 //	description:
+			 // description:
 			 //		Simple test of the Identity getIdentity API where identity is specified by the keyAttribute param
 			 var store = dojox.data.tests.stores.XmlStore.getBooks3Store();
 
@@ -1342,9 +1342,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 		},
 
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = dojox.data.tests.stores.XmlStore.getBooksStore();
@@ -1366,9 +1366,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			t.assertTrue(passed);
 		},
 		function testWriteAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = dojox.data.tests.stores.XmlStore.getBooksStore();
@@ -1389,9 +1389,9 @@ doh.register("dojox.data.tests.stores.XmlStore",
 			t.assertTrue(passed);
 		},
 		function testIdentityAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = dojox.data.tests.stores.XmlStore.getBooksStore();

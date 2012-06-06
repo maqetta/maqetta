@@ -1,5 +1,7 @@
+define(
 ({
-name: "Ad",
-path: "Yol",
-size: "Boyut (bayt cinsinden)"
+	name: "Ad",
+	path: "Yol",
+	size: "Boyut (bayt cinsinden)"
 })
+);

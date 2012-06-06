@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Kalın',
 	'copy': 'Kopyala',
@@ -45,8 +44,8 @@ define(
 	"print": "Yazdır",
 	"newPage": "Yeni Sayfa",
 	/* Error messages */
-	'systemShortcut': '"${0}" işlemi yalnızca tarayıcınızda bir klavye kısayoluyla birlikte kullanılabilir. Şunu kullanın: ${1}.'
+	'systemShortcut': '"${0}" işlemi yalnızca tarayıcınızda bir klavye kısayoluyla birlikte kullanılabilir. Şunu kullanın: ${1}.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-
-//end v1.x content
 );

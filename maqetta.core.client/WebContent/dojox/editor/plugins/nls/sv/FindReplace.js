@@ -1,27 +1,23 @@
 define(
-//begin v1.x content
 ({
-	"findLabel": "Sök:",
-	"findTooltip": "Ange den text du vill söka efter",
+	"findLabel": "Sök: ",
+	"findTooltip": "Skriv söktexten",
 	"replaceLabel": "Ersätt med:",
-	"replaceTooltip": "Ange den text du vill ersätta med",
+	"replaceTooltip": "Skriv ersättningstexten",
 	"findReplace": "Sök och ersätt",
-	"matchCase": "Matcha skiftläge",
-	"matchCaseTooltip": "Matcha skiftläge",
+	"matchCase": "Matcha gemener/versaler",
+	"matchCaseTooltip": "Matcha gemener/versaler",
 	"backwards": "Bakåt",
 	"backwardsTooltip": "Sök bakåt efter text",
-	"replaceAll": "Alla förekomster",
 	"replaceAllButton": "Ersätt alla",
 	"replaceAllButtonTooltip": "Ersätt all text",
 	"findButton": "Sök",
 	"findButtonTooltip": "Sök efter texten",
-	"replaceButton": "Ersätt",
+	"replaceButton": "Erätt",
 	"replaceButtonTooltip": "Ersätt texten",
-	"replaceDialogText": "${0} förekomster ersattes.",
-	"eofDialogText": "Senaste förekomst${0}",
+	"replaceDialogText": "${0} förekomster har ersatts.",
+	"eofDialogText": "Sista förekomsten ${0}",
 	"eofDialogTextFind": "hittades",
 	"eofDialogTextReplace": "ersattes"
 })
-
-//end v1.x content
 );

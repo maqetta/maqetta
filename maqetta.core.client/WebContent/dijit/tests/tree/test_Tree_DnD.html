@@ -9,11 +9,6 @@
 		@import "../css/dijitTests.css";
 		@import "../../../dojo/resources/dnd.css";
 		@import "../../../dojo/tests/dnd/dndDefault.css";
-		
-		.dojoDndItemSelected,
-		.dojoDndItemAnchor{
-			background-color: #D8EDFF !important;
-		}
 	</style>
 
 	<!-- required: the default dijit theme: -->
@@ -21,73 +16,72 @@
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		data-dojo-config="isDebug: true, parseOnLoad: true"></script>
+		data-dojo-config="isDebug: true, parseOnLoad: true, async: true"></script>
 
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
 	<script type="text/javascript">
-		dojo.require("dijit.dijit"); // optimize: load dijit layer
-		dojo.require("dojo.data.ItemFileWriteStore");
-		dojo.require("dijit.Tree");
-		dojo.require("dijit.tree.TreeStoreModel");
-		
-		var testController = dojo._getVar("testController", "")=="selector"?"dijit.tree._dndSelector":"dijit.tree.dndSource";
+		var testController = /testController=selector/.test(window.location.href.test) ?
+				"dijit.tree._dndSelector" : "dijit.tree.dndSource";
+		require([
+			"dojo/ready",
+			"dojo/dnd/Source",
+			"dojo/data/ItemFileWriteStore",
+			"dijit/dijit", // optimize: load dijit layer
+			"dijit/Tree",
+			"dijit/tree/TreeStoreModel",
+			testController.replace(/\./g, "/"),
+			"dijit/Menu",
+			"dijit/form/Button"
+		], function(ready){
+			dijit.Tree.prototype.dndController = testController;		
 
-		dijit.Tree.prototype.dndController = testController;
-		
-		dojo.require(testController);
-		dojo.require("dijit.Menu");
-		dojo.require("dijit.form.Button");
+			selected=[];
+	
+			globalId=1000;
+			lastSelected=null;
+	
+			ready(function(){
 
-		dojo.require("dojo.dnd.common");
-		dojo.require("dojo.dnd.Source");
+				//record the selection from tree 1
+				dojo.subscribe("myTree", null, function(message){
+					if(message.event=="execute"){
+						console.log("Tree1 Select: ",dijit.byId("myTree").store.getLabel(message.item));
+						lastSelected=selected["myTree"]=message.item;
+					}
+				});
 
-		selected=[];
+				//record the selection from tree 2
+				dojo.subscribe("myTree2", null, function(message){
+					if(message.event=="execute"){
+						console.log("Tree2 Select: ",dijit.byId("myTree2").store.getLabel(message.item));
+						lastSelected=selected["myTree2"]=message.item;
+					}
+				});
 
-		globalId=1000;
-		lastSelected=null;
+				//connect to the add button and have it add a new container to the store as necessary
+				dojo.connect(dijit.byId("addButton"), "onClick", function(){
+					var pInfo = {
+						parent: lastSelected,
+						attribute: "children"
+					};
 
-		dojo.ready(function(){
+					//store.newItem({name: dojo.byId('newCat').value, id:globalId++, numberOfItems:dojo.byId('numItems').value}, pInfo);
+					myStore.newItem({name: dojo.byId('newCat').value, numberOfItems:0,id:globalId++}, pInfo);
+				});
 
-			//record the selection from tree 1
-			dojo.subscribe("myTree", null, function(message){
-				if(message.event=="execute"){
-					console.log("Tree1 Select: ",dijit.byId("myTree").store.getLabel(message.item));
-					lastSelected=selected["myTree"]=message.item;
-				}
-			});
+				//since we don't have a server, we're going to connect to the store and do a few things the server/store combination would normal be taking care of for us
+				dojo.connect(myStore, "onNew", function(item, pInfo){
+					var p = pInfo && pInfo.item;
+					if(p){
+						var currentTotal = myStore.getValues(p, "numberOfItems")[0];
+						myStore.setValue(p, "numberOfItems", ++currentTotal);
+					}
 
-			//record the selection from tree 2
-			dojo.subscribe("myTree2", null, function(message){
-				if(message.event=="execute"){
-					console.log("Tree2 Select: ",dijit.byId("myTree2").store.getLabel(message.item));
-					lastSelected=selected["myTree2"]=message.item;
-				}
-			});
-
-			//connect to the add button and have it add a new container to the store as necessary
-			dojo.connect(dijit.byId("addButton"), "onClick", function(){
-				var pInfo = {
-					parent: lastSelected,
-					attribute: "children"
-				};
-
-				//store.newItem({name: dojo.byId('newCat').value, id:globalId++, numberOfItems:dojo.byId('numItems').value}, pInfo);
-				myStore.newItem({name: dojo.byId('newCat').value, numberOfItems:0,id:globalId++}, pInfo);
-			});
-
-			//since we don't have a server, we're going to connect to the store and do a few things the server/store combination would normal be taking care of for us
-			dojo.connect(myStore, "onNew", function(item, pInfo){
-				var p = pInfo && pInfo.item;
-				if(p){
-					var currentTotal = myStore.getValues(p, "numberOfItems")[0];
-					myStore.setValue(p, "numberOfItems", ++currentTotal);
-				}
-
+				});
 			});
 		});
-
 
 		//create a custom label for tree one consisting of the label property pluss the value of the numberOfItems Column
 		function catTreeCustomLabel(item){
@@ -145,7 +139,7 @@
 <body class="claro">
 	<h1 class="testTitle">Dijit Tree Test - Drag And Drop Support</h1>
 
-	<div data-dojo-id="myStore" data-dojo-type="dojo.data.ItemFileWriteStore" data-dojo-props='url:"../_data/categories.json"'></div>
+	<div data-dojo-id="myStore" data-dojo-type="dojo/data/ItemFileWriteStore" data-dojo-props='url:"../_data/categories.json"'></div>
 
 	<table style="margin:5px; width:100%;" >
 
@@ -154,7 +148,7 @@
 			<h2>Custom</h2>
 			<p>Should add this category to the store.  The second parameter is the value for numberOfItems.</p>
 			<div class="container">
-				<input id="newCat" type="text" value="Pottedmeat" /><input id="numItems" type="text" value="0" size="3"/><div id="addButton" data-dojo-type="dijit.form.Button">Add Category</div>
+				<input id="newCat" type="text" value="Pottedmeat" /><input id="numItems" type="text" value="0" size="3"/><div id="addButton" data-dojo-type="dijit/form/Button">Add Category</div>
 			</div>
 		</td>
 		<td>
@@ -186,8 +180,8 @@
 				You can't drop items onto this tree, but you can reorder categories. The between threshold
 				is set to 5, so if you are near the top or bottom of a node the drop will be above or below it.
 			</p>
-			<div data-dojo-id="catModel" data-dojo-type="dijit.tree.TreeStoreModel" data-dojo-props='store:myStore, query:{id: "0"}'></div>
-			<div id="collectionsTree" data-dojo-type="dijit.Tree" data-dojo-props='"class":"container", model:catModel,
+			<div data-dojo-id="catModel" data-dojo-type="dijit/tree/TreeStoreModel" data-dojo-props='store:myStore, query:{id: "0"}'></div>
+			<div id="collectionsTree" data-dojo-type="dijit/Tree" data-dojo-props='"class":"container", model:catModel,
 				getLabel:catTreeCustomLabel, betweenThreshold:5,
 				checkAcceptance:dndAccept, checkItemAcceptance:collectionTreeCheckItemAcceptance, getIconClass:getIcon,
 				persist:false'></div>
@@ -199,8 +193,8 @@
 				Can also move items within this tree. The drag threshold is set to 8, between threshold is set to 5, so you have a few pixels
 				of buffer before drag operations start.
 			</p>
-			<div data-dojo-id="itemModel" data-dojo-type="dijit.tree.TreeStoreModel" data-dojo-props='store:myStore, query:{id: "0"}, childrenAttrs:["items", "children"]'></div>
-			<div id="itemTree" data-dojo-type="dijit.Tree" data-dojo-props='"class":"container", model:itemModel,
+			<div data-dojo-id="itemModel" data-dojo-type="dijit/tree/TreeStoreModel" data-dojo-props='store:myStore, query:{id: "0"}, childrenAttrs:["items", "children"]'></div>
+			<div id="itemTree" data-dojo-type="dijit/Tree" data-dojo-props='"class":"container", model:itemModel,
 				checkAcceptance:dndAccept, checkItemAcceptance:itemTreeCheckItemAcceptance,
 				dragThreshold:8,
 				betweenThreshold:5,

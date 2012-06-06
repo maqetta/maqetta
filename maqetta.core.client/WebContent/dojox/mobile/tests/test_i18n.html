@@ -1,82 +1,98 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<title>Settings</title>
-		<link href="../themes/iphone/base.css" rel="stylesheet">
-		<link href="../themes/iphone/TabBar.css" rel="stylesheet">
-		<link href="../themes/iphone/IconContainer.css" rel="stylesheet">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>Settings</title>
 
-		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script type="text/javascript" src="../deviceTheme.js" data-dojo-config="mblThemeFiles: ['base','TabBar','IconContainer']"></script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true"></script>
 
-		<script language="JavaScript" type="text/javascript">
+	<script type="text/javascript">
+		require([
+			"dojo/_base/kernel"
+		], function(dojo){
 			var lang = location.search.match(/lang=(\w*)/) ? RegExp.$1 : null;
-
-			dojo.require("dojox.mobile");			// This is a mobile app.
-			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
-			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
-			dojo.require("dojox.mobile.i18n");
-			dojo.require("dojox.mobile.TabBar");
-			dojo.require("dojox.mobile.IconContainer");
-			var bundle = dojox.mobile.i18n.load("dojox.mobile.tests", "sample", lang);
-			function changeLocale(){
-				document.forms[0].submit();
-			}
-			dojo.ready(function(){
-				document.getElementById("sel").value = lang;
-				dijit.byId("item1").set("label", bundle["MINUTES"].replace("%1", "30"));
+			if(lang){ dojo.locale = lang; }
+			require([
+				"dojo/_base/window",
+				"dojo/dom",
+				"dojo/ready",
+				"dijit/registry",
+				"dojo/i18n!dojox/mobile/tests/nls/sample",
+				"dojox/mobile/i18n",
+				"dojox/mobile/parser",
+				"dojox/mobile",
+				"dojox/mobile/compat",
+				"dojox/mobile/TabBar",
+				"dojox/mobile/IconContainer"
+			], function(win, dom, ready, registry, sample, i18n){
+				var bundle = i18n.registerBundle(sample);
+				changeLocale = function(){
+					win.doc.forms[0].submit();
+				}
+				ready(function(){
+					dom.byId("sel").value = lang;
+					registry.byId("item1").set("label", bundle["MINUTES"].replace("%1", "30"));
+				});
 			});
-		</script>
-	</head>
-	<body style="visibility:hidden;">
-		<div id="settings" dojoType="dojox.mobile.View" selected="true">
-			<h1 dojoType="dojox.mobile.Heading" label="Day of the Week" back="Sunday" moveTo="#">
-				<div dojoType="dojox.mobile.ToolBarButton" style="float:right;" label="Monday"></div>
-			</h1>
-			<ul dojoType="dojox.mobile.TabBar" barType="segmentedControl">
-				<li dojoType="dojox.mobile.TabBarButton" moveTo="#" selected="true">Sunday</li>
-				<li dojoType="dojox.mobile.TabBarButton" moveTo="#" label="Monday"></li>
-			</ul>
-			<h2 dojoType="dojox.mobile.RoundRectCategory">Day of the Week</h2>
-			<ul dojoType="dojox.mobile.RoundRectList">
-				<li id="item1" dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png" rightText="Second">
-					Sunday
-				</li>
-				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png" label="Monday">
-					<div class="mblItemSwitch" dojoType="dojox.mobile.Switch"></div>
-				</li>
-			</ul>
+		});
 
-			<h2 dojoType="dojox.mobile.EdgeToEdgeCategory">Day of the Week</h2>
-			<ul dojoType="dojox.mobile.EdgeToEdgeList">
-				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png">
-					Sunday
-					<div class="mblItemSwitch" dojoType="dojox.mobile.Switch" leftLabel="ON"></div>
-				</li>
-				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-2.png" rightText="Second" moveTo="#" label="Monday">
-				</li>
-			</ul>
-
-			<ul dojoType="dojox.mobile.IconContainer" label="Day of the Week" back="Second" transition="slide">
-				<li dojoType="dojox.mobile.IconItem" label="Sunday" icon="images/icon-1.png" lazy="true"><div class="box"></div></li>
-				<li dojoType="dojox.mobile.IconItem" label="Monday" icon="images/icon-1.png" lazy="true"><div class="box"></div></li>
-			</ul>
-
-			<ul dojoType="dojox.mobile.TabBar">
-				<li dojoType="dojox.mobile.TabBarButton" icon1="images/tab-icon-16.png" icon2="images/tab-icon-16h.png" moveTo="#" selected="true">Sunday</li>
-				<li dojoType="dojox.mobile.TabBarButton" icon1="images/tab-icon-15.png" icon2="images/tab-icon-15h.png" moveTo="#" label="Monday"></li>
-			</ul>
-
-			<form style="margin: 10px;">
-				Locale: 
-				<select id="sel" name="lang" onchange="changeLocale()">
-					<option value=""></option>
-					<option value="en">en</option>
-					<option value="it">it</option>
-					<option value="ja">ja</option>
-				</select>
-			</form>
+	</script>
+	<style>
+	#item2 .mblListItemLabel, #item3 .mblListItemLabel {
+		margin-right: 100px;
+	}
+	</style>
+</head>
+<body style="visibility:hidden;">
+	<div id="settings" data-dojo-type="dojox.mobile.View" data-dojo-props='selected:true'>
+		<div data-dojo-type="dojox.mobile.Heading" data-dojo-props='label:"Today", back:"Sunday", moveTo:"#"'>
+			<span data-dojo-type="dojox.mobile.ToolBarButton" style="float:right;" data-dojo-props='label:"Monday"'></span>
 		</div>
-	</body>
+		<ul data-dojo-type="dojox.mobile.TabBar" data-dojo-props='barType:"segmentedControl"'>
+			<li data-dojo-type="dojox.mobile.TabBarButton" data-dojo-props='moveTo:"#", selected:true'>Sunday</li>
+			<li data-dojo-type="dojox.mobile.TabBarButton" data-dojo-props='moveTo:"#", label:"Monday"'></li>
+		</ul>
+		<h2 data-dojo-type="dojox.mobile.RoundRectCategory">Today</h2>
+		<ul data-dojo-type="dojox.mobile.RoundRectList">
+			<li id="item1" data-dojo-type="dojox.mobile.ListItem" data-dojo-props='icon:"images/i-icon-1.png", rightText:"Second"'>
+				Sunday
+			</li>
+			<li id="item2" data-dojo-type="dojox.mobile.ListItem" data-dojo-props='icon:"images/i-icon-1.png", label:"Monday"'>
+				<div data-dojo-type="dojox.mobile.Switch"></div>
+			</li>
+		</ul>
+
+		<h2 data-dojo-type="dojox.mobile.EdgeToEdgeCategory">Today</h2>
+		<ul data-dojo-type="dojox.mobile.EdgeToEdgeList">
+			<li id="item3" data-dojo-type="dojox.mobile.ListItem" data-dojo-props='icon:"images/i-icon-1.png", label:"Sunday"'>
+				<div data-dojo-type="dojox.mobile.Switch" data-dojo-props='leftLabel:"ON"'></div>
+			</li>
+			<li data-dojo-type="dojox.mobile.ListItem" data-dojo-props='icon:"images/i-icon-2.png", rightText:"Second", moveTo:"#", label:"Monday"'>
+			</li>
+		</ul>
+
+		<ul data-dojo-type="dojox.mobile.IconContainer" data-dojo-props='label:"Today", back:"Second", transition:"slide"'>
+			<li data-dojo-type="dojox.mobile.IconItem" data-dojo-props='label:"Sunday", icon:"images/icon-1.png", lazy:true'><div class="box"></div></li>
+			<li data-dojo-type="dojox.mobile.IconItem" data-dojo-props='label:"Monday", icon:"images/icon-1.png", lazy:true'><div class="box"></div></li>
+		</ul>
+
+		<ul data-dojo-type="dojox.mobile.TabBar">
+			<li data-dojo-type="dojox.mobile.TabBarButton" data-dojo-props='icon1:"images/tab-icon-16.png", icon2:"images/tab-icon-16h.png", moveTo:"#", selected:true'>Sunday</li>
+			<li data-dojo-type="dojox.mobile.TabBarButton" data-dojo-props='icon1:"images/tab-icon-15.png", icon2:"images/tab-icon-15h.png", moveTo:"#", label:"Monday"'></li>
+		</ul>
+
+		<form style="margin: 10px;">
+			Locale: 
+			<select id="sel" name="lang" onchange="changeLocale()">
+				<option value=""></option>
+				<option value="en">en</option>
+				<option value="it">it</option>
+				<option value="ja">ja</option>
+			</select>
+		</form>
+	</div>
+</body>
 </html>

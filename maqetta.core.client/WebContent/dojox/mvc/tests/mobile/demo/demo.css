@@ -46,7 +46,7 @@ div#view {
 	margin: 3px;
 	padding: 3px;
 	width: 100%;
-	background-color: #F7F7F7;
+	background-color: #F7F7F7; 
 	color: #333;
 }
 
@@ -174,7 +174,7 @@ form#testForm div.fieldset, form#repeatTestForm div.fieldset {
 	display: table;
 	border: 1px solid #ddd;
 	border-radius: 10px;
-	background-color: white;
+/*	background-color: white; */
 	margin: 3px;
 	padding: 3px;
 	width: 100%;

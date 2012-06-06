@@ -1,22 +1,15 @@
 define([
 	"dojo/_base/declare", // declare
 	"dojo/dom-class", // domClass.add domClass.remove
-	"dojo/dom-construct", // domConstruct.create
 	"dojo/dom-style", // domStyle.get
 	"dojo/keys", // keys.DOWN_ARROW keys.PAGE_DOWN keys.PAGE_UP keys.UP_ARROW
 	"../_WidgetBase",
 	"../_TemplatedMixin",
 	"./_ComboBoxMenuMixin",
 	"./_ListMouseMixin"
-], function(declare, domClass, domConstruct, domStyle, keys,
+], function(declare, domClass, domStyle, keys,
 			_WidgetBase, _TemplatedMixin, _ComboBoxMenuMixin, _ListMouseMixin){
 
-/*=====
-	var _WidgetBase = dijit._WidgetBase;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-	var _ComboBoxMenuMixin = dijit.form._ComboBoxMenuMixin;
-	var _ListMouseMixin = dijit.form._ListMouseMixin;
-=====*/
 
 	// module:
 	//		dijit/form/_ComboBoxMenu
@@ -39,11 +32,20 @@ define([
 
 		baseClass: "dijitComboBoxMenu",
 
+		postCreate: function(){
+			this.inherited(arguments);
+			if(!this.isLeftToRight()){
+				domClass.add(this.previousButton, "dijitMenuItemRtl");
+				domClass.add(this.nextButton, "dijitMenuItemRtl");
+			}
+		},
+
 		_createMenuItem: function(){
-			return domConstruct.create("div", {
-				"class": "dijitReset dijitMenuItem" +(this.isLeftToRight() ? "" : " dijitMenuItemRtl"),
-				role: "option"
-			});
+			// note: not using domConstruct.create() because need to specify document
+			var item = this.ownerDocument.createElement("div");
+			item.className = "dijitReset dijitMenuItem" +(this.isLeftToRight() ? "" : " dijitMenuItemRtl");
+			item.setAttribute("role", "option");
+			return item;
 		},
 
 		onHover: function(/*DomNode*/ node){
@@ -82,25 +84,26 @@ define([
 				this.selectNextNode();
 			}
 			while(scrollamount<height){
+				var highlighted_option = this.getHighlightedOption();
 				if(up){
 					// stop at option 1
-					if(!this.getHighlightedOption().previousSibling ||
-						this._highlighted_option.previousSibling.style.display == "none"){
+					if(!highlighted_option.previousSibling ||
+						highlighted_option.previousSibling.style.display == "none"){
 						break;
 					}
 					this.selectPreviousNode();
 				}else{
 					// stop at last option
-					if(!this.getHighlightedOption().nextSibling ||
-						this._highlighted_option.nextSibling.style.display == "none"){
+					if(!highlighted_option.nextSibling ||
+						highlighted_option.nextSibling.style.display == "none"){
 						break;
 					}
 					this.selectNextNode();
 				}
 				// going backwards
-				var newscroll=this.domNode.scrollTop;
-				scrollamount+=(newscroll-oldscroll)*(up ? -1:1);
-				oldscroll=newscroll;
+				var newscroll = this.domNode.scrollTop;
+				scrollamount += (newscroll-oldscroll)*(up ? -1:1);
+				oldscroll = newscroll;
 			}
 		},
 

@@ -4,7 +4,7 @@
 	<head>
 <![endif]-->
 <!--[if IE 8]>
-<!DOCTYPE>
+<!DOCTYPE HTML>
 <html lang="en">
     <head>
            <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
@@ -42,7 +42,10 @@
 	#candle, #columns, #ohlc {
 		top: 440px;
 	}
-
+	#candle svg,
+	#ohlc svg {
+		shape-rendering: crispEdges;
+	}
 </style>
 <script src="../../../dojo/dojo.js" data-dojo-config="isDebug: false, async: true, gfxRenderer: 'svg,silverlight,vml,canvas'"></script>
 <script>

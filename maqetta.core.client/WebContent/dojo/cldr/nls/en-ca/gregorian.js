@@ -1,20 +1,22 @@
 define(
 //begin v1.x content
 {
-	"dateFormatItem-yMMMEd": "EEE, d MMM, y",
-	"dateFormatItem-yyMMM": "MMM-yy",
-	"dateFormatItem-Md": "M-d",
-	"dateFormatItem-yMEd": "EEE, y-M-d",
-	"dateFormatItem-MEd": "E, M-d",
-	"dateFormatItem-MMMMEd": "E, d MMMM",
-	"dateFormat-medium": "yyyy-MM-dd",
-	"dateFormatItem-MMMd": "d MMM",
-	"dateFormatItem-MMdd": "MM-dd",
 	"dateFormat-full": "EEEE, d MMMM, y",
-	"dateFormat-short": "yy-MM-dd",
-	"dateFormatItem-MMMMd": "d MMMM",
 	"dateFormat-long": "d MMMM, y",
-	"dateFormatItem-MMMEd": "E, d MMM"
+	"dateFormat-medium": "yyyy-MM-dd",
+	"dateFormat-short": "yy-MM-dd",
+	"dateFormatItem-Md": "M-d",
+	"dateFormatItem-MEd": "E, M-d",
+	"dateFormatItem-MMdd": "MM-dd",
+	"dateFormatItem-MMMd": "d MMM",
+	"dateFormatItem-MMMEd": "E, d MMM",
+	"dateFormatItem-MMMMd": "d MMMM",
+	"dateFormatItem-MMMMEd": "E, d MMMM",
+	"dateFormatItem-yMd": "y-M-d",
+	"dateFormatItem-yMEd": "E, y-M-d",
+	"dateFormatItem-yMMMd": "d MMM, y",
+	"dateFormatItem-yMMMEd": "E, d MMM, y",
+	"dateFormatItem-yyMMM": "MMM-yy"
 }
 //end v1.x content
 );

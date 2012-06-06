@@ -1,4 +1,5 @@
 define({ root:
+//begin v1.x content
 ({
 	widgetLabel: "Batch Spell Check",
 	unfound: "Not found",
@@ -15,8 +16,8 @@ define({ root:
 	iSkipAll: "Skip all like this",
 	iMsg: "No spelling suggestions"
 })
-,
 //end v1.x content
+,
 "zh": true,
 "zh-tw": true,
 "tr": true,
@@ -36,6 +37,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -47,4 +49,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

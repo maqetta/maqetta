@@ -45,7 +45,7 @@ tests.register("dojox.date.tests.timezoneFormatting",
 				// New York (in en-us)
 				doh.is("Thursday, August 10, 2006 8:55:12 PM EDT", dojo.date.locale.format(date, {formatLength:'full',locale:'en-us',timezone:'America/New_York'}));
 				// Tokyo (in ja-jp)
-				doh.is("2006\u5e748\u670811\u65e5\u91d1\u66dc\u65e59\u664255\u520612\u79d2 JST", dojo.date.locale.format(date, {formatLength:'full',locale:'ja-jp',timezone:'Asia/Tokyo'}));
+				doh.is("2006\u5e748\u670811\u65e5\u91d1\u66dc\u65e5 9\u664255\u520612\u79d2 JST", dojo.date.locale.format(date, {formatLength:'full',locale:'ja-jp',timezone:'Asia/Tokyo'}));
 				// Shanghai (in zh-cn)
 				doh.is("2006\u5e748\u670811\u65e5\u661f\u671f\u4e94CST\u4e0a\u53488\u65f655\u520612\u79d2", dojo.date.locale.format(date, {formatLength:'full',locale:'zh-cn',timezone:'Asia/Shanghai'}));
 				// Paris (in fr-fr)
@@ -53,7 +53,7 @@ tests.register("dojox.date.tests.timezoneFormatting",
 				// Vienna (in de-at)
 				doh.is("Freitag, 11. August 2006 02:55:12 CEST", dojo.date.locale.format(date, {formatLength:'full',locale:'de-at',timezone:'Europe/Vienna'}));
 				// Madrid (in es)
-				doh.is("viernes 11 de agosto de 2006 02:55:12 CEST", dojo.date.locale.format(date, {formatLength:'full',locale:'es',timezone:'Europe/Madrid'}));
+				doh.is("viernes, 11 de agosto de 2006 02:55:12 CEST", dojo.date.locale.format(date, {formatLength:'full',locale:'es',timezone:'Europe/Madrid'}));
 				
 				//////////////////////
 				//  Tricky Dates:

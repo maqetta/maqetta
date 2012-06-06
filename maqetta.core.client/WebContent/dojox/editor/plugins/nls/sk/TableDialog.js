@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Vložiť tabuľku",
 	modifyTableTitle: "Upraviť tabuľku",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Nastaviť", // translated elsewhere?
 	buttonInsert: "Vložiť",
 	buttonCancel: "Zrušiť",
-
 	selectTableLabel: "Vybrať tabuľku",
 	insertTableRowBeforeLabel: "Pridať riadok pred",
 	insertTableRowAfterLabel: "Pridať riadok za",
@@ -30,7 +28,4 @@ define(
 	deleteTableRowLabel: "Vymazať riadok",
 	deleteTableColumnLabel: "Vymazať stĺpec"
 })
-	
-
-//end v1.x content
 );

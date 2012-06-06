@@ -34,7 +34,7 @@ return declare( "dijit.form._ListBase", null, {
 
 	selectFirstNode: function(){
 		// summary:
-		// 		Select the first displayed item in the list.
+		//		Select the first displayed item in the list.
 		var first = this.containerNode.firstChild;
 		while(first && first.style.display == "none"){
 			first = first.nextSibling;
@@ -44,7 +44,7 @@ return declare( "dijit.form._ListBase", null, {
 
 	selectLastNode: function(){
 		// summary:
-		// 		Select the last displayed item in the list
+		//		Select the last displayed item in the list
 		var last = this.containerNode.lastChild;
 		while(last && last.style.display == "none"){
 			last = last.previousSibling;
@@ -54,8 +54,8 @@ return declare( "dijit.form._ListBase", null, {
 
 	selectNextNode: function(){
 		// summary:
-		// 		Select the item just below the current selection.
-		// 		If nothing selected, select first node.
+		//		Select the item just below the current selection.
+		//		If nothing selected, select first node.
 		var selectedNode = this._getSelectedAttr();
 		if(!selectedNode){
 			this.selectFirstNode();
@@ -74,9 +74,9 @@ return declare( "dijit.form._ListBase", null, {
 
 	selectPreviousNode: function(){
 		// summary:
-		// 		Select the item just above the current selection.
-		// 		If nothing selected, select last node (if
-		// 		you select Previous and try to keep scrolling up the list).
+		//		Select the item just above the current selection.
+		//		If nothing selected, select last node (if
+		//		you select Previous and try to keep scrolling up the list).
 		var selectedNode = this._getSelectedAttr();
 		if(!selectedNode){
 			this.selectLastNode();

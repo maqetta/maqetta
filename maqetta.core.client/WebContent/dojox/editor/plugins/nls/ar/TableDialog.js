@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "‏ادراج جدول‏",
 	modifyTableTitle: "تعديل جدول",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "تحديد", // translated elsewhere?
 	buttonInsert: "‏ادراج‏",
 	buttonCancel: "الغاء",
-
 	selectTableLabel: "تحديد جدول",
 	insertTableRowBeforeLabel: "اضافة صف قبل",
 	insertTableRowAfterLabel: "اضافة صف بعد",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "حذف صف",
 	deleteTableColumnLabel: "حذف عمود"
 })
-//end v1.x content
 );

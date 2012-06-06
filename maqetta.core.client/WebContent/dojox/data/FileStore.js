@@ -1,11 +1,11 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/window", "dojo/_base/json", "dojo/_base/xhr"], 
-  function(declare, lang, winUtil, jsonUtil, xhr) {
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/kernel", "dojo/_base/json", "dojo/_base/xhr"],
+  function(declare, lang, kernel, jsonUtil, xhr) {
 
 return declare("dojox.data.FileStore", null, {
 	constructor: function(/*Object*/args){
-		//	summary:
+		// summary:
 		//		A simple store that provides a datastore interface to a filesystem.
-		//	description:
+		// description:
 		//		A simple store that provides a datastore interface to a filesystem.  It takes a few parameters
 		//		for initialization:
 		//			url:	The URL of the service which provides the file store serverside implementation.
@@ -69,7 +69,7 @@ return declare("dojox.data.FileStore", null, {
 
 	// _attributes: [private] string
 	//		Internal variable of attributes all file items should have.
-	_attributes: ["children", "directory", "name", "path", "modified", "size", "parentDir"], //
+	_attributes: ["children", "directory", "name", "path", "modified", "size", "parentDir"],
 	
 	// pathSeparator: [public] string
 	//		The path separator to use when chaining requests for children
@@ -91,7 +91,7 @@ return declare("dojox.data.FileStore", null, {
 
 	_assertIsItem: function(/* item */ item){
 		// summary:
-		//      This function tests whether the item passed in is indeed an item in the store.
+		//		This function tests whether the item passed in is indeed an item in the store.
 		// item:
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){
@@ -113,7 +113,7 @@ return declare("dojox.data.FileStore", null, {
 
 	getFeatures: function(){
 		// summary:
-		//      See dojo.data.api.Read.getFeatures()
+		//		See dojo.data.api.Read.getFeatures()
 		return {
 			'dojo.data.api.Read': true, 'dojo.data.api.Identity':true
 		};
@@ -121,7 +121,7 @@ return declare("dojox.data.FileStore", null, {
 
 	getValue: function(item, attribute, defaultValue){
 		// summary:
-		//      See dojo.data.api.Read.getValue()
+		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
 			return values[0];
@@ -131,13 +131,13 @@ return declare("dojox.data.FileStore", null, {
 
 	getAttributes: function(item){
 		// summary:
-		//      See dojo.data.api.Read.getAttributes()
+		//		See dojo.data.api.Read.getAttributes()
 		return this._attributes;
 	},
 
 	hasAttribute: function(item, attribute){
 		// summary:
-		//      See dojo.data.api.Read.hasAttribute()
+		//		See dojo.data.api.Read.hasAttribute()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		return (attribute in item);
@@ -151,27 +151,27 @@ return declare("dojox.data.FileStore", null, {
 	
 	getIdentityAttributes: function(item){
 		// summary:
-		//      See dojo.data.api.Read.getLabelAttributes()
+		//		See dojo.data.api.Read.getLabelAttributes()
 		return [this._identifier];
 	},
 
 
 	isItemLoaded: function(item){
-		 //	summary:
-		 //      See dojo.data.api.Read.isItemLoaded()
-		 var loaded = this.isItem(item);
-		 if(loaded && typeof item._loaded == "boolean" && !item._loaded){
-		 	loaded = false;
-		 }
-		 return loaded;
+		// summary:
+		//		See dojo.data.api.Read.isItemLoaded()
+		var loaded = this.isItem(item);
+		if(loaded && typeof item._loaded == "boolean" && !item._loaded){
+			loaded = false;
+		}
+		return loaded;
 	},
 
 	loadItem: function(keywordArgs){
 		// summary:
-		//      See dojo.data.api.Read.loadItem()
+		//		See dojo.data.api.Read.loadItem()
 		var item = keywordArgs.item;
 		var self = this;
-		var scope = keywordArgs.scope || winUtil.global;
+		var scope = keywordArgs.scope || kernel.global;
 
 		var content = {};
 
@@ -210,19 +210,19 @@ return declare("dojox.data.FileStore", null, {
 
 	getLabel: function(item){
 		// summary:
-		//      See dojo.data.api.Read.getLabel()
+		//		See dojo.data.api.Read.getLabel()
 		return this.getValue(item,this.label);
 	},
 	
 	getLabelAttributes: function(item){
 		// summary:
-		//      See dojo.data.api.Read.getLabelAttributes()
+		//		See dojo.data.api.Read.getLabelAttributes()
 		return [this.label];
 	},
 	
 	containsValue: function(item, attribute, value){
 		// summary:
-		//      See dojo.data.api.Read.containsValue()
+		//		See dojo.data.api.Read.containsValue()
 		var values = this.getValues(item,attribute);
 		for(var i = 0; i < values.length; i++){
 			if(values[i] == value){
@@ -234,7 +234,7 @@ return declare("dojox.data.FileStore", null, {
 
 	getValues: function(item, attribute){
 		// summary:
-		//      See dojo.data.api.Read.getValue()
+		//		See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		
@@ -249,7 +249,7 @@ return declare("dojox.data.FileStore", null, {
 
 	isItem: function(item){
 		// summary:
-		//      See dojo.data.api.Read.isItem()
+		//		See dojo.data.api.Read.isItem()
 		if(item && item[this._storeRef] === this){
 			return true;
 		}
@@ -258,7 +258,7 @@ return declare("dojox.data.FileStore", null, {
 	
 	close: function(request){
 		// summary:
-		//      See dojo.data.api.Read.close()
+		//		See dojo.data.api.Read.close()
 	},
 
 	fetch: function(request){
@@ -272,7 +272,7 @@ return declare("dojox.data.FileStore", null, {
 			request.store = this;
 		}
 		var self = this;
-		var scope = request.scope || winUtil.global;
+		var scope = request.scope || kernel.global;
 
 		//Generate what will be sent over.
 		var reqParams = {};
@@ -320,10 +320,10 @@ return declare("dojox.data.FileStore", null, {
 
 	fetchItemByIdentity: function(keywordArgs){
 		// summary:
-		//      See dojo.data.api.Read.loadItem()
+		//		See dojo.data.api.Read.loadItem()
 		var path = keywordArgs.identity;
 		var self = this;
-		var scope = keywordArgs.scope || winUtil.global;
+		var scope = keywordArgs.scope || kernel.global;
 
 		var content = {};
 
@@ -358,50 +358,50 @@ return declare("dojox.data.FileStore", null, {
 	},
 
 	_processResult: function(data, request){
-		 var scope = request.scope || winUtil.global;
-		 try{
-			 //If the data contains a path separator, set ours
-			 if(data.pathSeparator){
-				 this.pathSeparator = data.pathSeparator;
-			 }
-			 //Invoke the onBegin handler, if any, to return the
-			 //size of the dataset as indicated by the service.
-			 if(request.onBegin){
-				 request.onBegin.call(scope, data.total, request);
-			 }
-			 //Now process all the returned items thro
-			 var items = this._processItemArray(data.items);
-			 if(request.onItem){
+		var scope = request.scope || kernel.global;
+		try{
+			//If the data contains a path separator, set ours
+			if(data.pathSeparator){
+				this.pathSeparator = data.pathSeparator;
+			}
+			//Invoke the onBegin handler, if any, to return the
+			//size of the dataset as indicated by the service.
+			if(request.onBegin){
+				request.onBegin.call(scope, data.total, request);
+			}
+			//Now process all the returned items thro
+			var items = this._processItemArray(data.items);
+			if(request.onItem){
 				var i;
 				for(i = 0; i < items.length; i++){
 					request.onItem.call(scope, items[i], request);
 				}
 				items = null;
-			 }
-			 if(request.onComplete){
-				 request.onComplete.call(scope, items, request);
-			 }
-		 }catch (e){
-			 if(request.onError){
-				 request.onError.call(scope, e, request);
-			 }else{
-				 console.log(e);
-			 }
-		 }
+			}
+			if(request.onComplete){
+				request.onComplete.call(scope, items, request);
+			}
+		}catch (e){
+			if(request.onError){
+				request.onError.call(scope, e, request);
+			}else{
+				console.log(e);
+			}
+		}
 	},
 	
 	_processItemArray: function(itemArray){
-		 //	summary:
-		 //		Internal function for processing an array of items for return.
-		 var i;
-		 for(i = 0; i < itemArray.length; i++){
-		 	this._processItem(itemArray[i]);
-		 }
-		 return itemArray;
+		// summary:
+		//		Internal function for processing an array of items for return.
+		var i;
+		for(i = 0; i < itemArray.length; i++){
+			this._processItem(itemArray[i]);
+		}
+		return itemArray;
 	},
 	
 	_processItem: function(item){
-		//	summary:
+		// summary:
 		//		Internal function for processing an item returned from the store.
 		//		It sets up the store ref as well as sets up the attributes necessary
 		//		to invoke a lazy load on a child, if there are any.

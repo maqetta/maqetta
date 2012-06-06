@@ -11,11 +11,10 @@
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-	<script type="text/javascript" src="../../helpers.js"></script>
-
 	<script type="text/javascript">
 		dojo.require("dijit.robotx");
 		dojo.require("dojo.window");
+		dojo.require("dijit.tests.helpers");	// functions to help test
 
 		// TODO: provide URL toggle for FilteringSelect
 		var testWidget = "dijit.form.ComboBox";
@@ -464,76 +463,6 @@
 				}
 			]);
 			
-			doh.register("placeHolder", [
-				{
-					timeout: 6000,
-					name: "focus/blur",
-					combo: "placeholdertest",
-					setUp: function(){
-						combo = dijit.byId(this.combo);
-					},
-					runTest: function(){
-						var d = new doh.Deferred();
-						doh.is("", combo.get("value"), "value");
-						doh.is("", combo.get('displayedValue'), "displayedValue");
-						doh.is("Select a New England State", combo._phspan.innerHTML, "_phspan.innerHTML");
-						doh.isNot("none", combo._phspan.style.display, "_phspan.style.display 1");
-
-						doh.robot.mouseMoveAt(combo.focusNode, 0, 0);
-						doh.robot.mouseClick({left:true}, 500);
-
-						doh.robot.sequence(d.getTestErrback(function(){
-							doh.is("none", combo._phspan.style.display, "_phspan.style.display 2");
-						
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("", combo.get("value"), "value");
-								doh.is("", combo.get('displayedValue'), "displayedValue");
-								doh.isNot("none", combo._phspan.style.display, "_phspan.style.display 3");
-							}), 1000, 500);
-						}), 1500, 500);
-						return d;
-					},
-					tearDown: function(){
-						combo.closeDropDown();
-					}
-				},
-				{
-					timeout: 6000,
-					name: "select a value",
-					combo: "placeholdertest",
-					setUp: function(){
-						combo = dijit.byId(this.combo);
-					},
-					runTest: function(){
-						var d = new doh.Deferred(), value = isComboBox?'Connecticut':'ct';
-						combo.set("value", value);
-						doh.is(value, combo.get("value"), "selected Connecticut from drop down");
-
-						doh.robot.mouseMoveAt(combo.focusNode, 500, 0);
-						doh.robot.mouseClick({left:true}, 500);
-
-						doh.robot.sequence(d.getTestErrback(function(){
-							doh.is("none", combo._phspan.style.display, "_phspan.style.display 1");
-						
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(value, combo.get("value"), "value");
-								doh.is("none", combo._phspan.style.display, "_phspan.style.display 2");
-								doh.is('Connecticut', combo.textbox.value, "textbox.value 2");
-							}), 1000, 500);
-						}), 1000, 500);
-						return d;
-					},
-					tearDown: function(){
-						combo.closeDropDown();
-					}
-				}
-			]);
-
-
 			doh.run();
 		});
 	</script>

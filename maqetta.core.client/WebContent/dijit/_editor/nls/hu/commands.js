@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Félkövér',
 	'copy': 'Másolás',
@@ -45,7 +44,8 @@ define(
 	"print": "Nyomtatás",
 	"newPage": "Új oldal",
 	/* Error messages */
-	'systemShortcut': 'A(z) "${0}" művelet a böngészőben csak billentyűparancs használatával érhető el. Használja a következőt: ${1}.'
+	'systemShortcut': 'A(z) "${0}" művelet a böngészőben csak billentyűparancs használatával érhető el. Használja a következőt: ${1}.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-//end v1.x content
 );

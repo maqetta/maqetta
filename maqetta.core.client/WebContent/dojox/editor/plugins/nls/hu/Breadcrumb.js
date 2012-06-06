@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"nodeActions": "${nodeName} műveletek",
 	"selectContents": "Tartalom kiválasztása",
@@ -9,6 +8,4 @@ define(
 	"moveStart": "Kurzor mozgatása az elejére",
 	"moveEnd": "Kurzor mozgatása a végére"
 })
-
-//end v1.x content
 );

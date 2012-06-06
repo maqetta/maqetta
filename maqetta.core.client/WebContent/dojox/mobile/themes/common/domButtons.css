@@ -1,5 +1,14 @@
 /* DOM Buttons */
+
+/* This file includes all the DOM buttons regardless of whether they
+   are actually used or not.
+   For performance reason, use of this file is not recommended except
+   during development.
+   You should include only the files your application needs.
+   Note also that IE has a limitation on the number of CSS files. */
+
 @import url("domButtons/DomButtonWhitePlus.css");
+@import url("domButtons/DomButtonWhiteMinus.css");
 @import url("domButtons/DomButtonWhiteUpArrow.css");
 @import url("domButtons/DomButtonWhiteDownArrow.css");
 @import url("domButtons/DomButtonWhiteSearch.css");
@@ -40,3 +49,12 @@
 
 @import url("domButtons/DomButtonYellowStar.css");
 @import url("domButtons/DomButtonGrayStar.css");
+
+@import url("domButtons/DomButtonGrayCross.css");
+@import url("domButtons/DomButtonRedCross.css");
+@import url("domButtons/DomButtonWhiteCross.css");
+
+@import url("domButtons/DomButtonGrayKnob.css");
+
+@import url("domButtons/DomButtonGrayPlus.css");
+@import url("domButtons/DomButtonGrayMinus.css");

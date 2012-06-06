@@ -1,24 +1,21 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} z ${1} ${0}",
 	"firstTip": "První stránka",
 	"lastTip": "Poslední stránka",
 	"nextTip": "Další stránka",
 	"prevTip": "Předchozí stránka",
-	"itemTitle": "položky",
+	"itemTitle": "položek",
 	"singularItemTitle": "položka",
 	"pageStepLabelTemplate": "Stránka ${0}",
-	"pageSizeLabelTemplate": "${0} položek na stránku",
+	"pageSizeLabelTemplate": "${0} položek na stránce",
 	"allItemsLabelTemplate": "Všechny položky",
-	"gotoButtonTitle": "Přejít na specifickou stránku",
+	"gotoButtonTitle": "Přejít na určitou stránku",
 	"dialogTitle": "Přejít na stránku",
-	"dialogIndication": "Uvést číslo stránky",
-	"pageCountIndication": " (${0} stránky)",
+	"dialogIndication": "Zadat číslo stránky",
+	"pageCountIndication": " (Počet stránek: ${0})",
 	"dialogConfirm": "Přejít",
 	"dialogCancel": "Storno",
-	"all": "vše"
+	"all": "Vše"
 })
-//end v1.x content
 );
-

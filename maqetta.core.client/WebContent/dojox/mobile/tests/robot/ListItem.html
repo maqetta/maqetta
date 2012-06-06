@@ -17,6 +17,7 @@
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.registry");
 
 			dojo.addOnLoad(function(){
 				doh.robot.initRobot("../test_ajax-html.html");
@@ -28,12 +29,12 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemTextBox", dijit.byId("dojox_mobile_ListItem_0").domNode)[0], 2000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_0").domNode, 2000);
 							doh.robot.mouseClick({left: true}, 500);
 
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("view1.html", dijit.byId("dojox_mobile_Heading_1").get("label"));
+								doh.is("view1.html", dijit.registry.byId("dojox_mobile_Heading_1").get("label"));
 							}), 500);
 							return d;
 						}

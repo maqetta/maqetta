@@ -1,13 +1,19 @@
-define(["dojo/_base/kernel", 
-		"dojo/_base/lang",
-		"dojo/_base/declare",
+define(["dojo/_base/lang",
 		"dojo/_base/array",
 		"dojo/_base/Deferred",
 		"dojo/DeferredList",
 		"dojo/on",
 		"dojo/_base/sniff"], 
-		function(dojo, lang, declare, array, deferred, deferredList, on, has){
-	//TODO create cross platform animation/transition effects
+		function(lang, array, Deferred, DeferredList, on, has){
+	// module: 
+	//		dojox/css3/transition
+	// summary:
+	//		This module defines the transition utilities which can be used
+	//		to conduct transition effect based on CSS Transition standard
+	
+	//create cross platform animation/transition effects
+	//TODO enable opera mobile when it is hardware accelerated
+	//TODO enable IE when CSS3 transition is supported in IE 10
 	var transitionEndEventName = "transitionend";
 	var transitionPrefix = "t"; //by default use "t" prefix and "ransition" to make word "transition"
 	var translateMethodStart = "translate3d(";//Android 2.x does not support translateX in CSS Transition, we need to use translate3d in webkit browsers
@@ -22,13 +28,16 @@ define(["dojo/_base/kernel",
 	}
 	
 	//TODO find a way to lock the animation and prevent animation conflict
-	declare("dojox.css3.transition", null, {
+	//Use the simple object inheritance
+	var transition = function(args){
+		// summary:
+		//		The constructor of the transition object
+		// args:
+		//		The arguments which will be mixed into this transition object
 		
-
-		constructor: function(args){
-			//default config should be in animation object itself instead of its prototype
-			//otherwise, it might be easy for making mistake of modifying prototype
-			var defaultConfig = {
+		//default config should be in animation object itself instead of its prototype
+		//otherwise, it might be easy for making mistake of modifying prototype
+		var defaultConfig = {
 				startState: {},
 				endState: {},
 				node: null,
@@ -36,22 +45,25 @@ define(["dojo/_base/kernel",
 				"in": true,
 				direction: 1,
 				autoClear: true
-			};
-			
-			lang.mixin(this, defaultConfig);
-			lang.mixin(this, args);
-			
-			//create the deferred object which will resolve after the animation is finished.
-			//We can rely on "onAfterEnd" function to notify the end of a single animation,
-			//but using a deferred object is easier to wait for multiple animations end.
-			if(!this.deferred){
-				this.deferred = new deferred();
-			}
-		},
+		};
+
+		lang.mixin(this, defaultConfig);
+		lang.mixin(this, args);
+
+		//create the deferred object which will resolve after the animation is finished.
+		//We can rely on "onAfterEnd" function to notify the end of a single animation,
+		//but using a deferred object is easier to wait for multiple animations end.
+		if(!this.deferred){
+			this.deferred = new Deferred();
+		}
+	};
+	
+	lang.extend(transition, {
 		
 		play: function(){
-			//play the animation using CSS3 Transition
-			dojox.css3.transition.groupedPlay([this]);
+			// summary:
+			//		play the transition effect defined by this transition object.
+			transition.groupedPlay([this]);
 		},
 		
 		//method to apply the state of the transition
@@ -64,8 +76,10 @@ define(["dojo/_base/kernel",
 			}
 		},
 		
-		//method to initialize state for transition
+		
 		initState: function(){
+			// summary:
+			//		method to initialize state for transition
 			
 			//apply the immediate style change for initial state.
 			this.node.style[transitionPrefix + "ransitionProperty"] = "none";
@@ -92,26 +106,36 @@ define(["dojo/_base/kernel",
 		
 		_onAfterEnd: function(){
 			this.deferred.resolve(this.node);
-			if(this.node.id && dojox.css3.transition.playing[this.node.id]===this.deferred){
-				delete dojox.css3.transition.playing[this.node.id];
+			if(this.node.id && transition.playing[this.node.id]===this.deferred){
+				delete transition.playing[this.node.id];
 			}
 			this.onAfterEnd();
 		},
 		
 		beforeStart: function(){
-			
+			// summary:
+			//		The callback which will be called right before the start
+			//		of the transition effect.
 		},
 		
 		beforeClear: function(){
-			
+			// summary:
+			//		The callback which will be called right after the end
+			//		of the transition effect and before the final state is
+			//		cleared.
 		},
 		
 		onAfterEnd: function(){
+			// summary:
+			//		The callback which will be called right after the end
+			//		of the transition effect and after the final state is
+			//		cleared.
 			
 		},
 		
-		//method to start the transition
 		start: function(){
+			// summary:
+			//		method to start the transition
 			this._beforeStart();
 			
 			var self = this;
@@ -129,11 +153,12 @@ define(["dojo/_base/kernel",
 			this._applyState(this.endState);
 		},
 		
-		//method to clear state after transition
 		clear: function(){
+			// summary:
+			//		method to clear state after transition
 			this._beforeClear();
 			this._removeState(this.endState);
-			console.log(this.node.id + " clear.");
+			// console.log(this.node.id + " clear.");
 			this._onAfterEnd();
 		},
 		
@@ -151,11 +176,17 @@ define(["dojo/_base/kernel",
 	
 	//TODO add the lock mechanism for all of the transition effects
 	//	   consider using only one object for one type of transition.
-	//TODO create the first animation, slide.
-	dojox.css3.transition.slide = function(node, config){
+	
+	transition.slide = function(node, config){
+		// summary:
+		//		method which is used to create the transition object of slide effect.
+		// node:
+		//		The node that the slide transition effect will be applied on.
+		// config:
+		//		The cofig arguments which will be mixed into this transition object.
 
-		//TODO create the return and set the startState, endState of the return
-		var ret = new dojox.css3.transition(config);
+		//create the return object and set the startState, endState of the return
+		var ret = new transition(config);
 		ret.node = node;
 		
 		var startX = "0";
@@ -183,11 +214,14 @@ define(["dojo/_base/kernel",
 		return ret;
 	};
 		
-	
-	//fade in/out animation effects
-	dojox.css3.transition.fade = function(node, config){
-		
-		var ret = new dojox.css3.transition(config);
+	transition.fade = function(node, config){
+		// summary:
+		//		method which is used to create the transition object of fade effect.
+		// node:
+		//		The node that the fade transition effect will be applied on.
+		// config:
+		//		The cofig arguments which will be mixed into this transition object.
+		var ret = new transition(config);
 		ret.node = node;
 		
 		var startOpacity = "0";
@@ -211,10 +245,15 @@ define(["dojo/_base/kernel",
 		return ret;
 	};
 	
-  //fade in/out animation effects
-	dojox.css3.transition.flip = function(node, config){
+	transition.flip = function(node, config){
+		// summary:
+		//		method which is used to create the transition object of flip effect.
+		// node:
+		//		The node that the flip transition effect will be applied on.
+		// config:
+		//		The cofig arguments which will be mixed into this transition object.
 		
-		var ret = new dojox.css3.transition(config);
+		var ret = new transition(config);
 		ret.node = node;
 	   
 		if(ret["in"]){
@@ -250,22 +289,23 @@ define(["dojo/_base/kernel",
 		var defs = [];
 		array.forEach(nodes, function(node){
 			//check whether the node is under other animation
-			if(node.id && dojox.css3.transition.playing[node.id]){
-				//TODO hook on deferred object in dojox.css3.transition.playing
-				defs.push(dojox.css3.transition.playing[node.id]);
+			if(node.id && transition.playing[node.id]){
+				//hook on deferred object in transition.playing
+				defs.push(transition.playing[node.id]);
 			}
 			
 		});
-		return new deferredList(defs);
+		return new DeferredList(defs);
 	};
 	
-	dojox.css3.transition.getWaitingList = getWaitingList;
+	transition.getWaitingList = getWaitingList;
 	
-	//TODO groupedPlay should ensure the UI update happens when
-	//all animations end.
-	//the group player to start multiple animations together
-	dojox.css3.transition.groupedPlay = function(/*Array*/args){
-		//args should be array of dojox.css3.transition
+	transition.groupedPlay = function(/*Array*/args){
+		// summary:
+		//		The method which groups multiple transitions and plays 
+		//		them together.
+		// args: 
+		//		The array of transition objects which will be played together.
 		
 		var animNodes = array.filter(args, function(item){
 			return item.node;
@@ -276,12 +316,12 @@ define(["dojo/_base/kernel",
 		//update registry with deferred objects in animations of args.
 		array.forEach(args, function(item){
 			if(item.node.id){
-				dojox.css3.transition.playing[item.node.id] = item.deferred;
+				transition.playing[item.node.id] = item.deferred;
 			}
 		});
 		
-		//TODO wait for all deferred object in deferred list to resolve
-		dojo.when(waitingList, function(){
+		//wait for all deferred object in deferred list to resolve
+		Deferred.when(waitingList, function(){
 			array.forEach(args, function(item){
 				//set the start state
 				item.initState();
@@ -298,9 +338,11 @@ define(["dojo/_base/kernel",
 		});		   
 	};
 	
-	//the chain player to start multiple animations one by one
-	dojox.css3.transition.chainedPlay = function(/*Array*/args){
-		//args should be array of dojox.css3.transition
+	transition.chainedPlay = function(/*Array*/args){
+		// summary:
+		//		The method which plays multiple transitions one by one.
+		// args: 
+		//		The array of transition objects which will be played in a chain.
 		
 		var animNodes = array.filter(args, function(item){
 			return item.node;
@@ -311,11 +353,11 @@ define(["dojo/_base/kernel",
 		//update registry with deferred objects in animations of args.
 		array.forEach(args, function(item){
 			if(item.node.id){
-				dojox.css3.transition.playing[item.node.id] = item.deferred;
+				transition.playing[item.node.id] = item.deferred;
 			}
 		});
 		
-		dojo.when(waitingList, function(){
+		Deferred.when(waitingList, function(){
 			array.forEach(args, function(item){
 				//set the start state
 				item.initState();
@@ -338,7 +380,7 @@ define(["dojo/_base/kernel",
 	};
 	
 	//TODO complete the registry mechanism for animation handling and prevent animation conflicts
-	dojox.css3.transition.playing = {};
+	transition.playing = {};
 	
-	return dojox.css3.transition;
+	return transition;
 });

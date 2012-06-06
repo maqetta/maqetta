@@ -23,7 +23,7 @@
 	        dojo.require("doh.runner");
 
 			dojo.addOnLoad(function(){
-				doh.robot.initRobot("../test_iPhone-ScrollableView-v.html");
+				doh.robot.initRobot("../test_ScrollableView-v.html");
 
 				doh.register("dojox.mobile.ScrollableView mouse tests", [
 					{
@@ -32,14 +32,14 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt(dijit.byId("foo").domNode, 1000,100,100,300);
+							doh.robot.mouseMoveAt(dijit.registry.byId("view1").domNode, 1000,100,100,300);
 							doh.robot.mousePress({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dijit.byId("foo").domNode, 1000,100,100,50);
+							doh.robot.mouseMoveAt(dijit.registry.byId("view1").domNode, 1000,100,100,50);
 							doh.robot.mouseRelease({left: true}, 0,5000);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								var pos = dijit.byId("foo").getPos();
+								var pos = dijit.registry.byId("view1").getPos();
 								doh.assertTrue(pos.y<0);
 							}), 500);
 							return d;

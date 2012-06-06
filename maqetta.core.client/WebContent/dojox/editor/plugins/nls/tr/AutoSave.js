@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Kaydet",
 	"saveSettingLabelOn": "Otomatik Kaydetme Aralığını Ayarla...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "${0} konumuna kaydedildi",
 	"saveMessageFail": "${0} konumuna kaydedilemedi"
 })
-
-//end v1.x content
 );

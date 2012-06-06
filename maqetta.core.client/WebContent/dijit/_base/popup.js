@@ -1,8 +1,9 @@
 define([
 	"dojo/dom-class", // domClass.contains
+	"dojo/_base/window",
 	"../popup",
 	"../BackgroundIframe"	// just loading for back-compat, in case client code is referencing it
-], function(domClass, popup){
+], function(domClass, win, popup){
 
 // module:
 //		dijit/_base/popup
@@ -19,7 +20,9 @@ popup._createWrapper = function(widget){
 			_popupWrapper: (widget.parentNode && domClass.contains(widget.parentNode, "dijitPopup")) ?
 				widget.parentNode : null,
 			domNode: widget,
-			destroy: function(){}
+			destroy: function(){},
+			ownerDocument: widget.ownerDocument,
+			ownerDocumentBody: win.body(widget.ownerDocument)
 		};
 	}
 	return origCreateWrapper.call(this, widget);
@@ -27,7 +30,7 @@ popup._createWrapper = function(widget){
 
 // Support old format of orient parameter
 var origOpen = popup.open;
-popup.open = function(/*dijit.popup.__OpenArgs*/ args){
+popup.open = function(/*__OpenArgs*/ args){
 	// Convert old hash structure (ex: {"BL": "TL", ...}) of orient to format compatible w/new popup.open() API.
 	// Don't do conversion for:
 	//		- null parameter (that means to use the default positioning)

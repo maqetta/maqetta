@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"nodeActions": "${nodeName} - Toiminnot",
 	"selectContents": "Valitse sisältö",
@@ -9,6 +8,4 @@ define(
 	"moveStart": "Siirrä kohdistin alkuun",
 	"moveEnd": "Siirrä kohdistin loppuun"
 })
-
-//end v1.x content
 );

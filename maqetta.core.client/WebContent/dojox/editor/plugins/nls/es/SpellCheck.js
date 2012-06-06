@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Corrector ortográfico por lotes",
 	unfound: "No encontrado",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Saltar todos los casos como este",
 	iMsg: "No hay sugerencias de ortografía"
 })
-
-//end v1.x content
 );

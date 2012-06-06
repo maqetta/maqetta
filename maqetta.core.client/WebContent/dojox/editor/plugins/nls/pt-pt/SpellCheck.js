@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Verificação ortográfica por grupo",
 	unfound: "Não localizado",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Ignorar semelhantes",
 	iMsg: "Sem sugestões de ortografia"
 })
-
-//end v1.x content
 );

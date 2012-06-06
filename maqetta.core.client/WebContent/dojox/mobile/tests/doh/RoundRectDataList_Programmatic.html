@@ -56,7 +56,9 @@
 			dojo.addOnLoad(function(){
 				var view = dijit.byId("foo");
 				var demoWidget = new dojox.mobile.RoundRectDataList({id:"list", store:store, query:{label: '*'}});
-				view.addChild(demoWidget);
+//				view.addChild(demoWidget);
+				demoWidget.placeAt(view.containerNode);
+				demoWidget.startup();
 			});
 		</script>
 

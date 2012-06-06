@@ -9,7 +9,9 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 	//			the inner input will be targeted
 	//		| dojox.html.createStyle(".myStyle", "color:#FF0000");
 	//			Now the class myStyle can be assigned to a node's className
-	var dh = lang.getObject("dojox.html",true);
+
+	var dh = lang.getObject("dojox.html", true);
+	/*===== dojo.mixin(dojox.html, {}); dh = dojox.html; ======*/ 
 	var dynamicStyleMap = {};
 	var pageStyleSheets = {};
 	var titledSheets = [];
@@ -17,24 +19,24 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 	dh.insertCssRule = function(/*String*/selector, /*String*/declaration, /*String*/styleSheetName){
 		// summary:
 		//	Creates a style and attaches it to a dynamically created stylesheet
-		//	arguments:
-		//		selector:
-		//					A fully qualified class name, as it would appear in
-		//					a CSS dojo.doc. Start classes with periods, target
-		//					nodes with '#'. Large selectors can also be created
-		//					like:
-		//					| "#myDiv.myClass span input"
-		//		declaration:
-		//					A single string that would make up a style block, not
-		//					including the curly braces. Include semi-colons between
-		//					statements. Do not use JavaScript style declarations
-		//					in camel case, use as you would in a CSS dojo.doc:
-		//					| "color:#ffoooo;font-size:12px;margin-left:5px;"
-		//		styleSheetName: ( optional )
-		//					Name of the dynamic style sheet this rule should be
-		//					inserted into. If is not found by that name, it is
-		//					created. If no name is passed, the name "default" is
-		//					used.
+		//
+		//	selector:
+		//				A fully qualified class name, as it would appear in
+		//				a CSS dojo.doc. Start classes with periods, target
+		//				nodes with '#'. Large selectors can also be created
+		//				like:
+		//				| "#myDiv.myClass span input"
+		//	declaration:
+		//				A single string that would make up a style block, not
+		//				including the curly braces. Include semi-colons between
+		//				statements. Do not use JavaScript style declarations
+		//				in camel case, use as you would in a CSS dojo.doc:
+		//				| "color:#ffoooo;font-size:12px;margin-left:5px;"
+		//	styleSheetName: ( optional )
+		//				Name of the dynamic style sheet this rule should be
+		//				inserted into. If is not found by that name, it is
+		//				created. If no name is passed, the name "default" is
+		//				used.
 		//
 		var ss = dh.getDynamicStyleSheet(styleSheetName);
 		var styleText = selector + " {" + declaration + "}";
@@ -93,10 +95,10 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 	};
 
 	dh.modifyCssRule = function(selector, declaration, styleSheetName){
-		//Not implemented - it seems to have some merit for changing some complex
-		//selectors. It's not much use for changing simple ones like "span".
-		//For now, simply write a new rule which will cascade over the first.
-		// summary
+		// summary: Not implemented - it seems to have some merit for changing some complex
+		//  selectors. It's not much use for changing simple ones like "span".
+		//  For now, simply write a new rule which will cascade over the first.
+		//  - 
 		//	Modfies an existing cssRule
 	};
 
@@ -112,6 +114,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		//		reference. Href can be the name of the file.
 		//		If no argument, the assumed created dynamic style
 		//		sheet is used.
+
 		// try dynamic sheets first
 		if(dynamicStyleMap[styleSheetName || "default"]){
 			return dynamicStyleMap[styleSheetName || "default"];
@@ -130,7 +133,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		//qualified name does not have to be passed)
 		var nm;
 		for ( nm in allSheets){
-			if(	allSheets[nm].href && allSheets[nm].href.indexOf(styleSheetName)>-1){
+			if( allSheets[nm].href && allSheets[nm].href.indexOf(styleSheetName)>-1){
 				return allSheets[nm];
 			}
 		}
@@ -182,7 +185,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		}
 	};
 
-	dh.disableStyleSheet = function(styleSheetName){
+	dh.disableStyleSheet = function(/* String */styleSheetName){
 		// summary:
 		//		Disables the dynamic style sheet with the name passed in the
 		//		argument. If no arg is passed, defaults to the default style sheet.
@@ -197,7 +200,7 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		}
 	};
 
-	dh.activeStyleSheet = function(/*?String*/title){
+	dh.activeStyleSheet = function(/*String?*/title){
 		// summary:
 		//		Getter/Setter
 		// description:
@@ -224,12 +227,17 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 	};
 
 	dh.getPreferredStyleSheet = function(){
-		// summary
-		//	Returns the style sheet that was initially enabled
-		//	on document launch.
-		//TODO
+		// summary:
+		//		Returns the style sheet that was initially enabled
+		//		on document launch.
+		//		TODO, does not work.
 	};
 
+	//	TODO: Sets of style sheets could be grouped according to
+	//			an ID and used in sets, much like different
+	//			groups of radio buttons. It would not however be
+	//			according to W3C spec
+	//
 	dh.getToggledStyleSheets = function(){
 		// summary:
 		//		Searches HTML for style sheets that are "toggle-able" -
@@ -237,11 +245,6 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		//		with the title attribute, as well as the REL attribute.
 		//	returns:
 		//		An array of all toggle-able style sheets
-		//	TODO: Sets of style sheets could be grouped according to
-		//			an ID and used in sets, much like different
-		//			groups of radio buttons. It would not however be
-		//			according to W3C spec
-		//
 		var nm;
 		if(!titledSheets.length){
 			var sObjects = dh.getStyleSheets();
@@ -254,6 +257,8 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		return titledSheets; //Array
 	};
 
+	//TODO: Does not recursively search for @imports, so it will
+	//		only go one level deep.
 	dh.getStyleSheets = function(){
 		// summary:
 		//		Collects all the style sheets referenced in the HTML page,
@@ -261,10 +266,6 @@ define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "dojo/_base/
 		//
 		//	returns:
 		//		An hash map of all the style sheets.
-		//
-		//TODO: Does not recursively search for @imports, so it will
-		//		only go one level deep.
-		//
 		if(pageStyleSheets.collected) {return pageStyleSheets;}
 		var sheets = Window.doc.styleSheets;
 		ArrayUtil.forEach(sheets, function(n){

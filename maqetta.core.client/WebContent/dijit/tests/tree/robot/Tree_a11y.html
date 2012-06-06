@@ -2,7 +2,7 @@
 		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<title>doh.robot Tree Test</title>
+	<title>doh.robot Tree A11y Test</title>
 
 	<style>
 		@import "../../../../util/doh/robot/robot.css";
@@ -13,8 +13,10 @@
 
 	<script type="text/javascript">
 		dojo.require("dijit.robotx");
+		dojo.require("dijit.tests.helpers");		// for waitForLoad()
 
-		var treeIds = ["mytree", "tree2"];
+		var treeIds = ["mytree", "tree2"],
+			registry;
 
 		function treeTests(){
 			var that = {};
@@ -58,7 +60,9 @@
 						doh.is("true", nowExpanded, inItem.label + "[" + inTree.id + "]: aria state expanded=true");
 						doh.is("false", nowCollapsed, inItem.label + "[" + inTree.id + "]: aria state expanded=false");
 					}else{
-						doh.is(null, inItem.labelNode.getAttribute("aria-expanded"), inItem.label + "[" + inTree.id + "]: aria state expanded=false");
+						// On IE9 getAttribute("aria-expanded") returns "", on other browsers null
+						var attr = inItem.labelNode.getAttribute("aria-expanded");
+						doh.t(attr === null || attr === "", inItem.label + "[" + inTree.id + "]: aria state expanded=false");
 					}
 				}
 			};
@@ -117,7 +121,7 @@
 			};
 
 			that.tabFocusSetup = function(inTreeId, /*boolean*/ leaf){
-				var tree = dijit.byId(inTreeId);
+				var tree = registry.byId(inTreeId);
 				that.collapseAllButRoot(tree);
 				addTabNavFoci(tree);
 				// set up focus listener machinery
@@ -137,7 +141,7 @@
 
 			that.tabFocusA11yTest = function(inTreeId){
 				var d = new doh.Deferred();
-				var tree = dijit.byId(inTreeId);
+				var tree = registry.byId(inTreeId);
 				// shift+tab away, tab back, tab away, shift+tab back
 				doh.robot.keyPress(dojo.keys.TAB, 1000, {shift:true});
 				doh.robot.keyPress(dojo.keys.TAB, 300);
@@ -186,7 +190,7 @@
 			var closedLabels = [];
 
 			that.a11yNavExpandCollapseSetup = function(inTreeId){
-				var tree = dijit.byId(inTreeId);
+				var tree = registry.byId(inTreeId);
 				that.collapseAllButRoot(tree);
 				var startingNode = tree.showRoot ? tree.rootNode : tree.rootNode.getChildren()[0];
 				tree.focusNode(startingNode);
@@ -243,7 +247,7 @@
 			var arrowRightCount;
 
 			that.a11yNavToLeafSetup = function(inTreeId){
-				var tree = dijit.byId(inTreeId);
+				var tree = registry.byId(inTreeId);
 				// randomly choose a top-level node to traverse.
 				arrowDownCount = Math.floor(Math.random() * tree.rootNode.getChildren().length);
 				var path = [];
@@ -264,7 +268,7 @@
 
 			that.a11yNavToLeaf = function(inTreeId){
 				var d = new doh.Deferred();
-				var tree = dijit.byId(inTreeId);
+				var tree = registry.byId(inTreeId);
 				// assume (1) collapseAllButRoot(), and (2) focus is on a top level tree node.
 				for(var i = 0; i < arrowDownCount; i++){
 					doh.robot.keyPress(dojo.keys.DOWN_ARROW, 300);
@@ -291,7 +295,7 @@
 
 			that.a11yHomeEndKeySetup = function(inTreeId, inKey){
 				// put focus on an random leaf.
-				var tree = dijit.byId(inTreeId);
+				var tree = registry.byId(inTreeId);
 				that.collapseAllButRoot(tree);
 				var topLvl = Math.floor(Math.random() * tree.rootNode.getChildren().length);
 				var leaf = walkTreeToLeaf(tree, tree.rootNode.getChildren()[topLvl]);
@@ -309,7 +313,7 @@
 
 			that.a11yHomeEndKeyTest = function(inTreeId, inKey){
 				var d = new doh.Deferred();
-				var tree = dijit.byId(inTreeId);
+				var tree = registry.byId(inTreeId);
 				doh.robot.keyPress(inKey, 300);
 				var checkAtHomeEnd = function(){
 					tree.disconnect(focusConnect);
@@ -326,31 +330,30 @@
 			doh.robot.initRobot('../test_Tree.html');
 			var treeTest = treeTests();
 
-			doh.register("_setup",{
-				timeout:20000,
-				runTest:function(){
-					var d = new doh.Deferred();
-					var store = dijit.byId('mytree3').get('store');
-					store.fetch({query:{id:'*'}, onComplete:function(){
-						d.callback(true);
-					}});
-					return d;
+			doh.register("_setup", [
+				{
+					name: "wait for widgets to load",
+					timeout: 10000,
+					runTest: waitForLoad
+				},
+				function setVars(){
+					registry = dojo.global.require("dijit/registry");
 				}
-			});
+			]);
 
 			// aria role and properties tests.
 			doh.register("a11yAria",
 			[
 				function ariaTreeRole(){
 					for(i=0; i<treeIds.length; i++){
-						var tree = dijit.byId(treeIds[i]), expectedrole = tree.showRoot?'tree':'presentation';
+						var tree = registry.byId(treeIds[i]), expectedrole = tree.showRoot?'tree':'presentation';
 						doh.is(expectedrole, tree.domNode.getAttribute("role"), tree.id + ": aria role (" + expectedrole + ")");
 					}
 				},
 
 				function ariaTreeStateExpanded(){
 					for(i=0; i<treeIds.length; i++){
-						var tree = dijit.byId(treeIds[i]);
+						var tree = registry.byId(treeIds[i]);
 						var wasExpanded = tree.rootNode.isExpanded;
 						tree.rootNode.expand();
 						var nowExpanded = tree.domNode.getAttribute("aria-expanded");
@@ -366,14 +369,14 @@
 
 				function ariaTreeItemRole(){
 					for(i=0; i<treeIds.length; i++){
-						var tree = dijit.byId(treeIds[i]);
+						var tree = registry.byId(treeIds[i]);
 						treeTest.testTreeItemRole(tree.rootNode, tree);
 					}
 				},
 
 				function ariaTreeItemStateExpanded(){
 					for(i=0; i<treeIds.length; i++){
-						var tree = dijit.byId(treeIds[i]);
+						var tree = registry.byId(treeIds[i]);
 						treeTest.testTreeItemExpandedState(tree.rootNode, tree);
 					}
 				}
@@ -536,7 +539,7 @@
 					runTest:function(){
 						var d = new doh.Deferred();
 
-						var tree = dijit.byId("mytree");
+						var tree = registry.byId("mytree");
 
 						// Close all tree nodes except for Asia and Oceania
 						dojo.forEach(tree.rootNode.getChildren(), function(child, idx){
@@ -566,7 +569,7 @@
 					runTest:function(){
 						var d = new doh.Deferred();
 
-						var tree = dijit.byId("mytree");
+						var tree = registry.byId("mytree");
 						tree.focusNode(tree.rootNode);
 
 						doh.robot.sequence(d.getTestCallback(function(){
@@ -586,7 +589,7 @@
 						// From Continents node, press "A".   Should go to Africa.
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
+							var focus = registry.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Africa", focus.label);
 						}), 500);
@@ -603,7 +606,7 @@
 						// From Africa node, press "A" again.   Should go to Asia.
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
+							var focus = registry.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Asia", focus.label);
 						}), 500);
@@ -617,13 +620,13 @@
 					runTest:function(){
 						var d = new doh.Deferred();
 
-						var oceania = dijit.byId("mytree").rootNode.getChildren()[2];
+						var oceania = registry.byId("mytree").rootNode.getChildren()[2];
 						doh.t(oceania, "found Oceania node");
 						doh.t(oceania.isExpanded, "Oceania node is expanded");
 
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
+							var focus = registry.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Australia", focus.label);
 						}), 500);
@@ -639,7 +642,7 @@
 
 						doh.robot.keyPress("a", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
+							var focus = registry.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Africa", focus.label);
 						}), 500);
@@ -656,7 +659,7 @@
 						// Skip over China and go to Continents
 						doh.robot.typeKeys("co", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
+							var focus = registry.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Continents", focus.label);
 						}), 500);
@@ -673,7 +676,7 @@
 						// By typing AS should skip over Africa and go to Asia
 						doh.robot.typeKeys("as", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
+							var focus = registry.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("Asia", focus.label);
 						}), 500);
@@ -691,7 +694,7 @@
 						// start a new search
 						doh.robot.typeKeys("n", 100);
 						doh.robot.sequence(d.getTestCallback(function(){
-							var focus = dijit.getEnclosingWidget(dojo.global.dijit.focus.curNode);
+							var focus = registry.getEnclosingWidget(dojo.global.dijit.focus.curNode);
 							doh.t(focus, "there is a focused widget");
 							doh.is("North America", focus.label);
 						}), 500);
@@ -709,7 +712,7 @@
 					runTest:function(){
 						var d = new doh.Deferred();
 
-						var tree = dijit.byId("mytree");
+						var tree = registry.byId("mytree");
 
 						doh.robot.keyPress(dojo.keys.HOME, 300);			// go to Continents
 						doh.robot.keyPress(dojo.keys.LEFT_ARROW, 300);		// collapse tree, if it's open
@@ -735,7 +738,7 @@
 					runTest:function(){
 						var d = new doh.Deferred();
 
-						var tree = dijit.byId("mytree");
+						var tree = registry.byId("mytree");
 
 						if(tree.lastFocused.isExpanded){
 							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 300);		// collapse tree, if it's open
@@ -760,7 +763,7 @@
 					runTest:function(){
 						var d = new doh.Deferred();
 
-						var tree = dijit.byId("mytree");
+						var tree = registry.byId("mytree");
 
 						doh.robot.keyPress(dojo.keys.ENTER, 300);			// select it
 						

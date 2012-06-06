@@ -12,7 +12,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/string",
-	"dojo/i18n!dojox/editor/plugins/nls/PasteFromWord"
+	"dojo/i18n!dojox/editor/plugins/nls/PasteFromWord",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/i18n!dijit/_editor/nls/commands"
 ], function(dojo, dijit, dojox) {
 
 dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
@@ -45,7 +47,7 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 							"<td align='center'>",
 								"<button type='button' dojoType='dijit.form.Button' id='${uId}_paste'>${paste}</button>",
 								"&nbsp;",
-								"<button type='button' dojoType='dijit.form.Button' id='${uId}_cancel'>${cancel}</button>",
+								"<button type='button' dojoType='dijit.form.Button' id='${uId}_cancel'>${buttonCancel}</button>",
 							"</td>",
 						"</tr>",
 					"</tbody>",
@@ -70,7 +72,9 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 		// Strip out styles containing mso defs and margins, as likely added in IE and are not good to have as it mangles presentation.
 		{regexp: /(style="[^"]*mso-[^;][^"]*")|(style="margin:\s*[^;"]*;")/gi, handler: ""},
 		// Scripts (if any)
-		{regexp: /(<\s*script[^>]*>((.|\s)*?)<\\?\/\s*script\s*>)|(<\s*script\b([^<>]|\s)*>?)|(<[^>]*=(\s|)*[("|')]javascript:[^$1][(\s|.)]*[$1][^>]*>)/ig, handler: ""}
+		{regexp: /(<\s*script[^>]*>((.|\s)*?)<\\?\/\s*script\s*>)|(<\s*script\b([^<>]|\s)*>?)|(<[^>]*=(\s|)*[("|')]javascript:[^$1][(\s|.)]*[$1][^>]*>)/ig, handler: ""},
+		// Word 10 odd o:p tags.
+		{regexp: /<(\/?)o\:p[^>]*>/gi, handler: ""}
 	],
 
 	_initButton: function(){
@@ -79,6 +83,8 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 		// summary:
 		//		Over-ride for creation of the save button.
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "PasteFromWord");
+		dojo.mixin(strings, dojo.i18n.getLocalization("dijit", "common"));
+		dojo.mixin(strings, dojo.i18n.getLocalization("dijit._editor", "commands"));
 		this.button = new dijit.form.Button({
 			label: strings["pasteFromWord"],
 			showLabel: false,

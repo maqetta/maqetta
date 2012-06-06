@@ -69,7 +69,7 @@ define(["dojo", "dijit/registry", "dijit/_Widget", "dijit/TitlePane"], function(
 		
 		selectChild: function(widget){
 			// summary: close all found titlePanes within this group, excluding
-			// the one the we pass to select
+			//		the one the we pass to select
 			widget && dojo.query("> .dijitTitlePane", this.domNode).forEach(function(n){
 				var tp = registry.byNode(n);
 				tp && tp !== widget && tp.open && tp.toggle(); // could race if open is set onEnd of slide

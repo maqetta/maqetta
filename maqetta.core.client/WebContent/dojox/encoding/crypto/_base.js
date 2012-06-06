@@ -1,9 +1,6 @@
 define(["dojo/_base/lang"], function(lang) {
 	
 	var c = lang.getObject("dojox.encoding.crypto", true);
-	/*=====
-		c = dojox.encoding.crypto;
-	=====*/
 
 	c.cipherModes = {
 		// summary:

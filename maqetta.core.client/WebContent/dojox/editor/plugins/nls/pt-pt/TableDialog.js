@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Inserir tabela",
 	modifyTableTitle: "Modificar tabela",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Definir", // translated elsewhere?
 	buttonInsert: "Inserir",
 	buttonCancel: "Cancelar",
-
 	selectTableLabel: "Seleccionar tabela",
 	insertTableRowBeforeLabel: "Adicionar linha antes",
 	insertTableRowAfterLabel: "Adicionar linha depois",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "Eliminar linha",
 	deleteTableColumnLabel: "Eliminar coluna"
 })
-//end v1.x content
 );

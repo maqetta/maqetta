@@ -1,4 +1,4 @@
-define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
+define(["dojo/main", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 	doh.isBrowser= true;
 	var topdog;
 	try{
@@ -66,8 +66,8 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 		var _logBacklog = [], _loggedMsgLen = 0;
 		var sendToLogPane = function(args, skip){
 			var msg = "";
-			for(var x=0; x<args.length; x++){
-				msg += " "+args[x];
+			for(var x = 0; x < args.length; x++){
+				msg += " " + args[x];
 			}
 
 			msg = escapeXml(msg);
@@ -81,27 +81,27 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				return;
 			}else if(_logBacklog.length && !skip){
 				var tm;
-				while((tm=_logBacklog.shift())){
+				while((tm = _logBacklog.shift())){
 					sendToLogPane(tm, true);
 				}
 			}
-			var logBody=byId("logBody");
+			var logBody = byId("logBody");
 			var tn = document.createElement("div");
 			tn.innerHTML = msg;
 			//tn.id="logmsg_"+logBody.childNodes.length;
 			logBody.appendChild(tn);
 			_loggedMsgLen++;
-		}
+		};
 
 		var findTarget = function(n){
 			while(n && !n.getAttribute('_target')){
-				n=n.parentNode;
+				n = n.parentNode;
 				if(!n.getAttribute){
-					n=null;
+					n = null;
 				}
 			}
 			return n;
-		}
+		};
 
 		doh._jumpToLog = function(e){
 			//console.log(e);
@@ -215,13 +215,58 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 
 			//This location can do the final performance rendering for the results
 			//of any performance tests.
-			var plotResults = null;
-			var standby;
+
 			if(doh.perfTestResults){
-				require(["dojox/math/stats", "dojox/charting/Chart2D", "dojox/charting/DataChart", "dojox/charting/plot2d/Scatter", "dojox/charting/plot2d/Lines", "dojo/data/ItemFileReadStore"], function(stats) {
+				require(["dojox/math/stats", "dojox/charting/DataChart", "dojox/charting/plot2d/Scatter", "dojox/charting/plot2d/Lines", "dojo/data/ItemFileReadStore"], function(stats) {
 					dojo.mixin(doh, stats);
 
-					plotResults = doh._dojoPlotPerfResults;
+					var plotResults = function(div, name, dataArray) {
+						// Performance report generating functions!
+						var median = doh.median(dataArray);
+						var medarray = [];
+
+						var i;
+						for(i = 0; i < dataArray.length; i++){
+							medarray.push(median);
+						}
+
+						var data = {
+							label: "name",
+							items: [
+								{name: name, trials: dataArray},
+								{name: "Median", trials: medarray}
+							]
+						};
+						var ifs = new dojo.data.ItemFileReadStore({data: data});
+
+						var min = Math.floor(doh.min(dataArray));
+						var max = Math.ceil(doh.max(dataArray));
+						var step = (max - min)/10;
+
+						//Lets try to pad out the bottom and top a bit
+						//Then recalc the step.
+						if(min > 0){
+							min = min - step;
+							if(min < 0){
+								min = 0;
+							}
+							min = Math.floor(min);
+						}
+						if(max > 0){
+							max = max + step;
+							max = Math.ceil(max);
+						}
+						step = (max - min)/10;
+
+						var chart = new dojox.charting.DataChart(div, {
+							type: dojox.charting.plot2d.Lines,
+							displayRange:dataArray.length,
+							xaxis: {min: 1, max: dataArray.length, majorTickStep: Math.ceil((dataArray.length - 1)/10), htmlLabels: false},
+							yaxis: {min: min, max: max, majorTickStep: step, vertical: true, htmlLabels: false}
+						});
+						chart.setStore(ifs, {name:"*"}, "trials");
+					};
+
 					try{
 						var g;
 						var pBody = byId("perfTestsBody");
@@ -397,7 +442,9 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 		};
 
 		var addGroupToList = function(group){
-			if(!byId("testList")){ return; }
+			if(!byId("testList")){
+				return;
+			}
 			var tb = byId("testList").tBodies[0];
 			var tg = groupTemplate.cloneNode(true);
 			var tds = tg.getElementsByTagName("td");
@@ -405,27 +452,31 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 			toggle.onclick = _getGroupToggler(group, toggle);
 			var cb = tds[1].getElementsByTagName("input")[0];
 			cb.group = group;
-			cb.onclick = function(evt){
+			cb.onclick = function(){
 				doh._groups[group].skip = (!this.checked);
-			}
-			tds[2].innerHTML = "<div class='testGroupName'>"+group+"</div><div style='width:0;'>&nbsp;</div>";
+			};
+			tds[2].innerHTML = "<div class='testGroupName'>" + group + "</div><div style='width:0;'>&nbsp;</div>";
 			tds[3].innerHTML = "";
 
 			tb.appendChild(tg);
 			return tg;
-		}
+		};
 
 		var addFixtureToList = function(group, fixture){
-			if(!testTemplate){ return; }
+			if(!testTemplate){
+				return;
+			}
 			var cgn = groupNodes[group];
-			if(!cgn["__items"]){ cgn.__items = []; }
+			if(!cgn["__items"]){
+				cgn.__items = [];
+			}
 			var tn = testTemplate.cloneNode(true);
 			var tds = tn.getElementsByTagName("td");
 
 			tds[2].innerHTML = fixture.name;
 			tds[3].innerHTML = "";
 
-			var nn = (cgn.__lastFixture||cgn.__groupNode).nextSibling;
+			var nn = (cgn.__lastFixture || cgn.__groupNode).nextSibling;
 			if(nn){
 				nn.parentNode.insertBefore(tn, nn);
 			}else{
@@ -435,21 +486,21 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 			tn.style.display = "none";
 			cgn.__items.push(tn);
 			return (cgn.__lastFixture = tn);
-		}
+		};
 
 		var getFixtureNode = function(group, fixture){
 			if(groupNodes[group]){
 				return groupNodes[group][fixture.name];
 			}
 			return null;
-		}
+		};
 
 		var getGroupNode = function(group){
 			if(groupNodes[group]){
 				return groupNodes[group].__groupNode;
 			}
 			return null;
-		}
+		};
 
 		var updateBacklog = [];
 		doh._updateTestList = function(group, fixture, unwindingBacklog){
@@ -460,7 +511,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				return;
 			}else if(updateBacklog.length && !unwindingBacklog){
 				var tr;
-				while((tr=updateBacklog.shift())){
+				while((tr = updateBacklog.shift())){
 					doh._updateTestList(tr[0], tr[1], true);
 				}
 			}
@@ -474,7 +525,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 					groupNodes[group][fixture.name] = addFixtureToList(group, fixture)
 				}
 			}
-		}
+		};
 
 		doh._testRegistered = doh._updateTestList;
 
@@ -495,7 +546,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 			if(gn){
 				gn.className = "inProgress";
 			}
-		}
+		};
 
 		doh._groupFinished = function(group, success){
 			// console.debug("_groupFinished", group);
@@ -506,16 +557,16 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				gn.getElementsByTagName("td")[2].lastChild.className = "";
 				doh._inGroup = null;
 				//doh._runedSuite++;
-				var failure = doh._updateGlobalProgressBar(this._runedSuite/this._groupCount,success,group);
+				var failure = doh._updateGlobalProgressBar(this._runedSuite / this._groupCount, success, group);
 				gn.className = failure ? "failure" : "success";
 				//doh._runedSuite--;
-				doh._currentGlobalProgressBarWidth = parseInt(this._runedSuite/this._groupCount*10000)/100;
+				doh._currentGlobalProgressBarWidth = parseInt(this._runedSuite / this._groupCount * 10000) / 100;
 				//byId("progressOuter").style.width = parseInt(this._runedSuite/this._suiteCount*100)+"%";
 			}
 			if(doh._inGroup == group){
-				this.debug("Total time for GROUP \"",group,"\" is ",formatTime(doh._groupTotalTime));
+				this.debug("Total time for GROUP \"", group, "\" is ", formatTime(doh._groupTotalTime));
 			}
-		}
+		};
 
 		doh._testStarted = function(group, fixture){
 			// console.debug("_testStarted", group, fixture.name);
@@ -523,7 +574,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 			if(fn){
 				fn.className = "inProgress";
 			}
-		}
+		};
 
 		var _nameTimes = {};
 		var _playSound = function(name){
@@ -531,46 +582,47 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				// console.debug("playing:", name);
 				var nt = _nameTimes[name];
 				// only play sounds once every second or so
-				if((!nt)||(((new Date)-nt) > 700)){
+				if((!nt) || (((new Date) - nt) > 700)){
 					_nameTimes[name] = new Date();
 					var tc = document.createElement("span");
 					byId("hiddenAudio").appendChild(tc);
-					tc.innerHTML = '<embed src="_sounds/'+name+'.wav" autostart="true" loop="false" hidden="true" width="1" height="1"></embed>';
+					tc.innerHTML = '<embed src="_sounds/' + name + '.wav" autostart="true" loop="false" hidden="true" width="1" height="1"></embed>';
 				}
 			}
-		}
+		};
 
-		doh._updateGlobalProgressBar = function(p,success,group){
-			var outerContainer=byId("progressOuter");
+		doh._updateGlobalProgressBar = function(p, success, group){
+			var outerContainer = byId("progressOuter");
 
-			var gdiv=outerContainer.childNodes[doh._runedSuite-1];
+			var gdiv = outerContainer.childNodes[doh._runedSuite - 1];
 			if(!gdiv){
-				gdiv=document.createElement('div');
+				gdiv = document.createElement('div');
 				outerContainer.appendChild(gdiv);
-				gdiv.className='success';
-				gdiv.setAttribute('_target',group);
+				gdiv.className = 'success';
+				gdiv.setAttribute('_target', group);
 			}
 			if(!success && !gdiv._failure){
-				gdiv._failure=true;
-				gdiv.className='failure';
+				gdiv._failure = true;
+				gdiv.className = 'failure';
 				if(group){
-					gdiv.setAttribute('title','failed group '+group);
+					gdiv.setAttribute('title', 'failed group ' + group);
 				}
 			}
-			var tp=parseInt(p*10000)/100;
-			gdiv.style.width = (tp-doh._currentGlobalProgressBarWidth)+"%";
+			var tp = parseInt(p * 10000) / 100;
+			gdiv.style.width = (tp - doh._currentGlobalProgressBarWidth) + "%";
 			return gdiv._failure;
-		}
+		};
 		doh._testFinished = function(group, fixture, success){
 			var fn = getFixtureNode(group, fixture);
 			var elapsed = fixture.endTime-fixture.startTime;
+			var gn;
 			if(fn){
 				fn.getElementsByTagName("td")[3].innerHTML = formatTime(elapsed);
 				fn.className = (success) ? "success" : "failure";
 				fn.getElementsByTagName("td")[2].setAttribute('_target', _loggedMsgLen);
 				if(!success){
 					_playSound("doh");
-					var gn = getGroupNode(group);
+					gn = getGroupNode(group);
 					if(gn){
 						gn.className = "failure";
 						_getGroupToggler(group)(null, true);
@@ -578,7 +630,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				}
 			}
 			if(doh._inGroup == group){
-				var gn = getGroupNode(group);
+				gn = getGroupNode(group);
 				doh._runed++;
 				if(gn && doh._curTestCount){
 					var p = doh._runed/doh._curTestCount;
@@ -637,43 +689,44 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 			for(i = 0; i < toHide.length; i++){
 				var node = byId(toHide[i]);
 				if(node){
-					node.style.display="none";
+					node.style.display = "none";
 				}
 			}
 			toShow = byId(toShow);
 			if(toShow){
-				with(toShow.style){
-					display = "";
-					zIndex = ++tabzidx;
-				}
+				toShow.style.display = "";
+				toShow.style.zIndex = ++tabzidx;
 			}
-		}
+		};
 
 		doh.showTestPage = function(){
 			_showTab("testBody", ["logBody", "perfTestsBody"]);
-		}
+		};
 
 		doh.showLogPage = function(){
 			_showTab("logBody", ["testBody", "perfTestsBody"]);
-		}
+		};
 
 		doh.showPerfTestsPage = function(){
 			_showTab("perfTestsBody", ["testBody", "logBody"]);
-		}
+		};
 
 		var runAll = true;
 		doh.toggleRunAll = function(){
 			// would be easier w/ query...sigh
 			runAll = !runAll;
-			if(!byId("testList")){ return; }
+			if(!byId("testList")){
+				return;
+			}
 			var tb = byId("testList").tBodies[0];
 			var inputs = tb.getElementsByTagName("input");
-			var x=0; var tn;
-			while((tn=inputs[x++])){
+			var x = 0;
+			var tn;
+			while((tn = inputs[x++])){
 				tn.checked = runAll;
 				doh._groups[tn.group].skip = (!runAll);
 			}
-		}
+		};
 
 		var listHeightTimer = null;
 		var setListHeight = function(){
@@ -681,13 +734,15 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				clearTimeout(listHeightTimer);
 			}
 			var tl = byId("testList");
-			if(!tl){ return; }
+			if(!tl){
+				return;
+			}
 			listHeightTimer = setTimeout(function(){
 				tl.style.display = "none";
 				tl.style.display = "";
 
 			}, 10);
-		}
+		};
 
 		_addOnEvt("resize", setListHeight);
 		_addOnEvt("load", setListHeight);
@@ -696,7 +751,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 			loaded = true;
 			groupTemplate = byId("groupTemplate");
 			if(!groupTemplate){
-				// make sure we've got an ammenable DOM structure
+				// make sure we've got an amenable DOM structure
 				return;
 			}
 			groupTemplate.parentNode.removeChild(groupTemplate);
@@ -722,7 +777,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 					if(byId("play")){
 						toggleRunning();
 					}
-				}
+				};
 				if(!byId("play")){
 					// make sure we've got an amenable DOM structure
 					return;
@@ -739,7 +794,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 						byId("playingMsg").style.display = byId("pause").style.display = "";
 						isRunning = true;
 					}
-				}
+				};
 				doh.run = (function(oldRun){
 					return function(){
 						if(!doh._currentGroup){
@@ -753,60 +808,12 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				while((node=btns[idx++])){
 					node.onclick = toggleRunning;
 				}
-
-				//Performance report generating functions!
-				doh._dojoPlotPerfResults = function(div, name, dataArray) {
-					var median = doh.median(dataArray);
-					var medarray = [];
-
-					var i;
-					for(i = 0; i < dataArray.length; i++){
-						medarray.push(median);
-					}
-
-					var data = {
-						label: "name",
-						items: [
-							{name: name, trials: dataArray},
-							{name: "Median", trials: medarray}
-						]
-					};
-					var ifs = new dojo.data.ItemFileReadStore({data: data});
-
-					var min = Math.floor(doh.min(dataArray));
-					var max = Math.ceil(doh.max(dataArray));
-					var step = (max - min)/10;
-
-					//Lets try to pad out the bottom and top a bit
-					//Then recalc the step.
-					if(min > 0){
-						min = min - step;
-						if(min < 0){
-							min = 0;
-						}
-						min = Math.floor(min);
-					}
-					if(max > 0){
-						max = max + step;
-						max = Math.ceil(max);
-					}
-					step = (max - min)/10;
-
-					var chart = new dojox.charting.DataChart(div, {
-						type: dojox.charting.plot2d.Lines,
-						displayRange:dataArray.length,
-						xaxis: {min: 1, max: dataArray.length, majorTickStep: Math.ceil((dataArray.length - 1)/10), htmlLabels: false},
-						yaxis: {min: min, max: max, majorTickStep: step, vertical: true, htmlLabels: false}
-					});
-					chart.setStore(ifs, {name:"*"}, "trials");
-				};
-
 			}
 		);
 	}else{
 		// we're in an iframe environment. Time to mix it up a bit.
 
-		_doh = window.parent.doh;
+		var _doh = window.parent.doh;
 		var _thisGroup = _doh.currentGroupName;
 		var _thisUrl = _doh.currentUrl;
 		if(_thisGroup){
@@ -835,7 +842,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 				//to the parent, so do that here.
 				if(doh.perfTestResults){
 					try{
-						gName = g.toString();
+						var gName = g.toString();
 						var localFName = f.name;
 						while(localFName.indexOf("::") >= 0){
 							localFName = localFName.substring(localFName.indexOf("::") + 2, localFName.length);
@@ -852,7 +859,7 @@ define(["dojo", "doh/runner", "dojo/_firebug/firebug"], function(dojo, doh) {
 					}
 				}
 			};
-			doh._groupStarted = function(g){
+			doh._groupStarted = function(){
 				if(!this._setParent){
 					_doh._curTestCount = this._testCount;
 					_doh._curGroupCount = this._groupCount;

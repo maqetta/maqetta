@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertImageTitle: "Resim Ekle",
 	url: "Resim",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "Bir resim URL'si girin",
 	prePopuTextBrowse: " ya da yerel bir dosyaya göz atın."
 })
-
-//end v1.x content
 );

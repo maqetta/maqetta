@@ -1,16 +1,11 @@
 define([
 	"dojo/data/util/filter", // filter.patternToRegExp
 	"dojo/_base/declare", // declare
-	"dojo/_base/Deferred", // Deferred.when
 	"dojo/_base/lang", // lang.mixin
+	"dojo/when",
 	"./MappedTextBox",
 	"./ComboBoxMixin"
-], function(filter, declare, Deferred, lang, MappedTextBox, ComboBoxMixin){
-
-/*=====
-	var MappedTextBox = dijit.form.MappedTextBox;
-	var ComboBoxMixin = dijit.form.ComboBoxMixin;
-=====*/
+], function(filter, declare, lang, when, MappedTextBox, ComboBoxMixin){
 
 	// module:
 	//		dijit/form/FilteringSelect
@@ -57,7 +52,7 @@ define([
 
 		isValid: function(){
 			// Overrides ValidationTextBox.isValid()
-			return this.item || (!this.required && this.get('displayedValue') == ""); // #5974
+			return !!this.item || (!this.required && this.get('displayedValue') == ""); // #5974
 		},
 
 		_refreshState: function(){
@@ -141,7 +136,7 @@ define([
 
 				var self = this;
 				this._lastQuery = value;
-				Deferred.when(this.store.get(value), function(item){
+				when(this.store.get(value), function(item){
 					self._callbackSetLabel(item? [item] : [], undefined, undefined, priorityChange);
 				});
 			}else{
@@ -221,7 +216,7 @@ define([
 				};
 				lang.mixin(options, this.fetchProperties);
 				this._fetchHandle = this.store.query(query, options);
-				Deferred.when(this._fetchHandle, function(result){
+				when(this._fetchHandle, function(result){
 					_this._fetchHandle = null;
 					_this._callbackSetLabel(result || [], query, options, priorityChange);
 				}, function(err){

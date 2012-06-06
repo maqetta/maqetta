@@ -11,13 +11,11 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			function normalize(str){
 				// try to do some normalization to make all browsers look
@@ -44,11 +42,7 @@
 					{
 						name: "wait for editors to load",
 						timeout: 5000,
-						runTest: function(){
-						    return new dojo.DeferredList(
-						        dijit.registry.filter(function(w){ return w.onLoadDeferred; }).map(function(w){ return w.onLoadDeferred; })
-						    );
-						}
+						runTest: waitForLoad
 					},
 					function setUp(){
 						editor0 = dijit.byId("editor0");
@@ -248,7 +242,7 @@
 								// probably happen as pre and post filters on the editor
 								var val = normalize(editor1.get('value'));
 								doh.is("hello <b>world</b>", val);
-							}), 500);
+							}), 1500);
 
 							return d;
 						}

@@ -5,11 +5,6 @@ define([
 	"./_ToggleButtonMixin"
 ], function(declare, kernel, Button, _ToggleButtonMixin){
 
-/*=====
-	var Button = dijit.form.Button;
-	var _ToggleButtonMixin = dijit.form._ToggleButtonMixin;
-=====*/
-
 	// module:
 	//		dijit/form/ToggleButton
 	// summary:

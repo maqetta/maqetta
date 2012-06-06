@@ -48,6 +48,7 @@ define([], function(){
 		[1, 223, "possibleLegacyModuleId", "Name in internStringsSkipList looks like a legacy module identifier."],
 		[1, 224, "missingPluginResolver", "A plugin dependency was encountered but there was not build-time plugin resolver."],
 		[1, 225, "missingDirDuringDiscovery", "A directory that was scheduled to be read during discovery did not exist."],
+		[1, 226, "missingProfile", "A package without a profile could throw errors or warnings."],
 
 		// error 300-399
 		[1, 300, "dojoHasMissingPlugin", "Missing dojo/has module."],
@@ -104,8 +105,8 @@ define([], function(){
 		[1, 351, "cannotDeduceModuleIdFrom16LayerDependency", "Cannot deduce module identifier from layer dependency"],
 		[1, 352, "optimizerReportedErrors", "Optimizer reported errors; consult build report for details."],
 		[1, 352, "failedToReadLayerCopyrightFile", "Failed to read copyright file given with layer."],
-
-
+		[1, 353, "i18nUnevaluableBundle", "I18n bundle was not evaluable in the build environment; therefore it will not be included in the flattening computations."],
+		[1, 354, "missingL10n", "Root bundle indicates localized bundles that don't exist."],
 
 		// reports 400-499
 		[1, 400, "hasReport", "Has Features Detected"],

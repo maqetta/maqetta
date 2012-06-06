@@ -12,12 +12,12 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
 		<script type="text/javascript" src="Tree_dnd.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_Tree_DnD.html');
@@ -272,7 +272,7 @@
 							var
 								d = new doh.Deferred(),
 								vegetablesTreeNode = findTreeNode("collectionsTree", "Vegetables (0)"),
-								foodsTreeNode = dijit.byId("itemTree").rootNode;
+								foodsTreeNode = registry.byId("itemTree").rootNode;
 
 							doh.robot.mouseMoveAt(vegetablesTreeNode.labelNode, 0, 1);
 							doh.robot.mousePress({left: true}, 500);
@@ -568,7 +568,7 @@
 								d = new doh.Deferred(),
 								fruitsTreeNode = findTreeNode("itemTree", "Fruits"),
 								cerealsTreeNode = findTreeNode("itemTree", "Cereals"),
-								tree = dijit.byId("itemTree");
+								tree = registry.byId("itemTree");
 
 							// click fruit item
 							doh.robot.mouseMoveAt(fruitsTreeNode.rowNode, 0, 1);
@@ -596,7 +596,7 @@
 								citrusParent = citrusTreeNode.getParent(),
 								orangeTreeNode = findTreeNode("itemTree", "Orange"),
 								appleTreeNode = findTreeNode("itemTree", "Apple"),
-								tree = dijit.byId("itemTree");
+								tree = registry.byId("itemTree");
 
 							doh.is(citrusTreeNode, orangeTreeNode.getParent(), 'orange is child of citrus');
 
@@ -632,7 +632,7 @@
 								citrusTreeNode = findTreeNode("itemTree", "Citrus"),
 								orangeTreeNode = findTreeNode("itemTree", "Orange"),
 								cerealsTreeNode = findTreeNode("itemTree", "Cereals"),
-								tree = dijit.byId("itemTree");
+								tree = registry.byId("itemTree");
 
 							doh.is(citrusTreeNode, orangeTreeNode.getParent(), 'orange is child of citrus');
 
@@ -668,7 +668,7 @@
 								vegetablesTreeNode = findTreeNode("itemTree", "Vegetables"),
 								cerealsTreeNode = findTreeNode("itemTree", "Cereals"),
 								foodsTreeNode = findTreeNode("itemTree", "Foods"),
-								tree = dijit.byId("itemTree");
+								tree = registry.byId("itemTree");
 
 							// click Vegetables item
 							doh.robot.mouseMoveAt(vegetablesTreeNode.rowNode, 0, 1);

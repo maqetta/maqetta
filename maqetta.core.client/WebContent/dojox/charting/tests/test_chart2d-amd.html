@@ -78,8 +78,8 @@
 			{
 				description: "Bubble chart, green theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
-						setTheme(dojox.charting.themes.SageToLime).
+					(new Chart(node)).
+						setTheme(SageToLime).
 						addPlot("default", { type: "Bubble", shadow:  {dx: 1, dy: 1, width: 2, color: [0, 0, 0, 0.3]} }).
 						addAxis("x", {
 							min: 0,
@@ -111,7 +111,7 @@
 			{
 				description: "Lines, calculated labels",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
+					(new Chart(node)).
 						addAxis("x", {
 							majorLabels: true, 
 							minorLabels: true, 
@@ -146,7 +146,7 @@
 			{
 				description: "Lines, pre-computed labels",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
+					(new Chart(node)).
 						addAxis("x", {
 							majorLabels: true, 
 							minorLabels: true, 
@@ -185,7 +185,7 @@
 			{
 				description: "Defaults: lines, no axes.",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
+					(new Chart(node)).
 						addSeries("Series A", [ 1, 2, 1, 2, 1, 2, 1 ]).
 						addSeries("Series B", [ 2, 1, 2, 1, 2, 1, 2 ]).
 						render();
@@ -194,7 +194,7 @@
 			{
 				description: "Defaults: lines, no axes, and custom strokes.",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
+					(new Chart(node)).
 						addSeries("Series A", [ 1, 2, 1, 2, 1, 2, 1 ], {stroke: "red"}).
 						addSeries("Series B", [ 2, 1, 2, 1, 2, 1, 2 ], {stroke: "blue"}).
 						render();
@@ -203,7 +203,7 @@
 			{
 				description: "Areas, Happy theme, no axes.",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
+					(new Chart(node)).
 						addPlot("default", {type: "Areas", tension:"X"}).
 						setTheme(Shrooms).
 						addSeries("Series A", [1, 2, 0.5, 1.5, 1, 2.8, 0.4]).
@@ -215,7 +215,7 @@
 			{
 				description: "Areas, no axes, custom strokes and fills.",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
+					(new Chart(node)).
 						addPlot("default", {type: "Areas"}).
 						addSeries("Series A",
 							[1, 2, 1, 2, 1, 2, 1],
@@ -237,7 +237,7 @@
 			{
 				description: "Lines, axes, blue theme.",
 				makeChart: function(node){
-					(new dojox.charting.Chart(node)).
+					(new Chart(node)).
 						setTheme(blue).
 						addAxis("x").
 						addAxis("y", {vertical: true}).
@@ -320,7 +320,7 @@
 				makeChart: function(node){
 					(new Chart(node)).
 						addPlot("default", {
-							type: "Markers", shadow:  {dx: 1, dy: 1, width: 2, color: [0, 0, 0, 0.3]}
+							type: "Markers", shadow:  {dx: 1, dy: 1, width: 5, color: [100, 0, 0, 1]}
 						}).
 						addSeries("Series A",
 							[ 1, 2, 1, 2, 1, 2, 1 ],
@@ -538,7 +538,7 @@
 			{
 				description: "Stacked bars, no axes, custom strokes and fills.",
 				makeChart: function(node){
-					(new Chart(node)).
+					(new Chart(node)).setTheme(blue).
 						addPlot("default", {type: "StackedBars"}).
 						addSeries("Series A", [ 1, 2, 3, 4, 5 ], { stroke: { color: "red" }, fill: "lightpink" }).
 						addSeries("Series B", [ 2, 1, 2, 1, 2 ], { stroke: { color: "blue" }, fill: "lightblue" }).
@@ -724,14 +724,16 @@
 							min: 0,
 							max: 6,
 							majorTick: { stroke: "black", length: 3 },
-							minorTick: { stroke: "gray", length: 3 }
+							minorTick: { stroke: "gray", length: 3 },
+							minorLabels: false
 						}).
 						addAxis("y", {
 							vertical: true,
 							min: 0,
 							max: 10,
 							majorTick: { stroke: "black", length: 3 },
-							minorTick: { stroke: "gray", length: 3 }
+							minorTick: { stroke: "gray", length: 3 },
+							minorLabels: false
 						}).
 						addSeries("Series A", [
 							{ x: 0.5, y: 5 },
@@ -751,20 +753,22 @@
 				description: "Scatter chart, custom axis, purple theme.",
 				makeChart: function(node){
 					(new Chart(node)).
-						setTheme(dojox.charting.themes.Ireland).
+						setTheme(Ireland).
 						addPlot("default", {type: "Scatter"}).
 						addAxis("x", {
 							min: 0,
 							max: 6,
 							majorTick: { stroke: "black", length: 3 },
-							minorTick: { stroke: "gray", length: 3 }
+							minorTick: { stroke: "gray", length: 3 },
+							minorLabels: false
 						}).
 						addAxis("y", {
 							vertical: true,
 							min: 0,
 							max: 10,
 							majorTick: { stroke: "black", length: 3 },
-							minorTick: { stroke: "gray", length: 3 }
+							minorTick: { stroke: "gray", length: 3 },
+							minorLabels: false
 						}).
 						addSeries("Series A", [
 							{ x: 0.5, y: 5 },
@@ -784,7 +788,7 @@
 				description: "Markers, lines, 2D data, custom axis, blue theme.",
 				makeChart: function(node){
 					(new Chart(node)).
-						setTheme(dojox.charting.themes.PlotKit.blue).
+						setTheme(blue).
 						addPlot("default", {
 							type: "Default",
 							lines: true,
@@ -795,14 +799,16 @@
 							min: 0,
 							max: 6,
 							majorTick: { stroke: "black", length: 3 },
-							minorTick: { stroke: "gray", length: 3 }
+							minorTick: { stroke: "gray", length: 3 },
+							minorLabels: false
 						}).
 						addAxis("y", {
 							vertical: true,
 							min: 0,
 							max: 10,
 							majorTick: { stroke: "black", length: 3 },
-							minorTick: { stroke: "gray", length: 3 }
+							minorTick: { stroke: "gray", length: 3 },
+							minorLabels: false
 						}).
 						addSeries("Series A", [
 							{ x: 0.5, y: 5 },

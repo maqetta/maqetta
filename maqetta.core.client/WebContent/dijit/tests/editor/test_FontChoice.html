@@ -30,7 +30,7 @@
 	<br>
 	<br>
 	<p>Editor with default drop down lists:</p>
-	<div id="editor0" data-dojo-type="dijit.Editor"
+	<div id="editor0" data-dojo-type="dijit/Editor"
 		data-dojo-props='extraPlugins:["fontName", "fontSize", "formatBlock", "viewSource"], height: "400px", style:"background-color: white; width: 100%;"'>
 		<h1>Font Choice Plugin details</h1>
 		<ol>
@@ -101,7 +101,7 @@
 	<br>
 	<br>
 	<p>Editor w/ plain text dropdown values:</p>
-	<div id="editor1" data-dojo-type="dijit.Editor"
+	<div id="editor1" data-dojo-type="dijit/Editor"
 		data-dojo-props='extraPlugins:[{name: "fontName", plainText: true}, {name: "fontSize", plainText: true}, {name: "formatBlock", plainText: true}, "viewSource"], style:"background-color: white; width: 100%;", height: "400px"'>
 		<h1>Font Choice Plugin details</h1>
 		<ol>
@@ -119,8 +119,8 @@
 	<br>
 	<br>
 	<p>Editor w/ generic (web font names) font selector, traditional font name selector, font size selector, and format block selector:</p>
-	<div id="generic" data-dojo-type="dijit.Editor" data-dojo-props='height:"10em",
-		plugins:["bold", "italic", "underline", {name: "dijit._editor.plugins.FontChoice", command: "fontName", generic: true}, "fontName", "fontSize", "formatBlock"]'>hello world</div>
+	<div id="generic" data-dojo-type="dijit/Editor" data-dojo-props='height:"10em",
+		plugins:["bold", "italic", "underline", {name: "dijit/_editor/plugins/FontChoice", command: "fontName", generic: true}, "fontName", "fontSize", "formatBlock"]'>hello world</div>
 	<br>
 	<br>
 	<div>Content after the editor.</div>
@@ -130,8 +130,8 @@
 	<br>
 	<br>
 	<p>Editor w/ custom font drop down list:</p>
-	<div id="custom" data-dojo-type="dijit.Editor" data-dojo-props='height:"10em",
-		plugins:["bold", "italic", "underline", {name: "dijit._editor.plugins.FontChoice", command: "fontName", custom:["Verdana","Myriad","Garamond"]}]'>
+	<div id="custom" data-dojo-type="dijit/Editor" data-dojo-props='height:"10em",
+		plugins:["bold", "italic", "underline", {name: "dijit/_editor/plugins/FontChoice", command: "fontName", custom:["Verdana","Myriad","Garamond"]}]'>
 			This editor should let you set the fonts to
 			<span style="font-family:Verdana;">Verdana</span>, <span style="font-family:Myriad;">Myriad</span>, and <span style="font-family:Garamond;">Garamond</span>.
 	</div>

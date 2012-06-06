@@ -12,11 +12,10 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 			dojo.require("dojo.date.stamp");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_TimeTextBox.html');
@@ -50,7 +49,7 @@
 							
 							doh.robot.sequence(d.getTestErrback(function(){
 								var popup = dijit.byId('q1_popup');
-								doh.t(!popup || isHidden(popup), "popup hidden");
+								doh.t(!popup || isHidden(popup), "popup hidden again");
 
 								var val = dojo.date.stamp.toISOString(w.get('value'), {selector: "time"});	
 								doh.is(val, "T18:00:00", "6PM was selected");
@@ -94,7 +93,7 @@
 							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
 							doh.robot.sequence(d.getTestErrback(function(){
 								var popup = dijit.byId('q1_popup');
-								doh.t(!popup || isHidden(popup), "popup hidden");
+								doh.t(!popup || isHidden(popup), "popup hidden again");
 
 								var val = dojo.date.stamp.toISOString(w.get('value'), {selector: "time"});	
 								doh.is(val, "T18:00:00", "6PM was selected (again)");
@@ -129,6 +128,7 @@
 
 							// open drop down
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000, {});
+							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 100, {}); // needed to prevent FF8 bug: reset on ESC
 							doh.robot.sequence(d.getTestErrback(function(){
 								var popup = dijit.byId('q1_popup');
 								doh.t(popup && isVisible(popup), "popup visible");
@@ -139,7 +139,7 @@
 							
 							doh.robot.sequence(d.getTestCallback(function(){
 								var popup = dijit.byId('q1_popup');
-								doh.t(!popup || isHidden(popup), "popup hidden");
+								doh.t(!popup || isHidden(popup), "popup hidden again");
 
 								var val = dojo.date.stamp.toISOString(w.get('value'), {selector: "time"});	
 								doh.is(val, "T18:00:00", "same value as before");
@@ -165,7 +165,7 @@
 								var popup = dijit.byId('q2_popup');
 								doh.t(!popup || isHidden(popup), "popup hidden");
 							}), 1000);
-		
+
 							// do partial input
 							doh.robot.typeKeys('12', 500, 400);
 
@@ -194,14 +194,18 @@
 								doh.is("12:45 PM", innerText(children[7]));
 							}), 1000);
 
+							// Setup handler to fire when TAB keypress below fires
+							doh.robot.sequence(function(){
+								onFocus(d.getTestCallback(function(){
+									var popup = dijit.byId('q2_popup');
+									doh.t(!popup || isHidden(popup), "popup hidden again");
+
+									doh.is("q3", dojo.global.dijit.focus.curNode.id, "tab moved to next input widget");
+								}));
+							}, 0);
+
 							// tab away to close drop down
 							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.sequence(d.getTestCallback(function(){
-								var popup = dijit.byId('q2_popup');
-								doh.t(!popup || isHidden(popup), "popup hidden");
-								
-								doh.is("q3", dojo.global.dijit.focus.curNode.id, "tab moved to next input widget");
-							}), 1000);
 
 							return d;
 						}
@@ -218,8 +222,8 @@
 								w = dijit.byId('q1'),
 								toClick;
 	
-							// click field, thus opening drop down
-							doh.robot.mouseMoveAt(w.domNode, 500, 1);
+							// click down arrow, opening drop down
+							doh.robot.mouseMoveAt(w._buttonNode, 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 	
 							doh.robot.sequence(d.getTestErrback(function(){
@@ -248,14 +252,14 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							q5 = dijit.byId('q5');
-							handler = q5.connect(q5.focusNode, 'onmouseup', d.getTestCallback(function(){
+							handler = q5.connect(q5._buttonNode, 'onmouseup', d.getTestCallback(function(){
 								// drop down list should be filtered to 1 hour and 15 minute increments
 								var popup = dijit.byId("q5_popup"),
 									children = dojo.query(".dijitTimePickerItem", popup.domNode);
 								doh.is(4, children.length, "# of items in drop down");
 							}));
-							// click field, thus opening drop down
-							doh.robot.mouseMoveAt(q5.focusNode, 500, 1);
+							// click down arrow, opening drop down
+							doh.robot.mouseMoveAt(q5._buttonNode, 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							return d;
 						},
@@ -276,8 +280,8 @@
 							q20 = dijit.byId('q20');
 	
 							q20.set('disabled',true);
-							// click field, thus opening drop down
-							doh.robot.mouseMoveAt(q20.domNode, 500, 1);
+							// click down arrow, but disabled so won't open drop down
+							doh.robot.mouseMoveAt(q20._buttonNode, 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.typeKeys('1', 500, 200);
 	
@@ -302,8 +306,8 @@
 							q20 = dijit.byId('q20');
 	
 							q20.set('readOnly',true);
-							// click field, thus opening drop down
-							doh.robot.mouseMoveAt(q20.domNode, 500, 1);
+							// click down arrow, but readonly so won't open drop down
+							doh.robot.mouseMoveAt(q20._buttonNode, 500, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.typeKeys('1', 500, 200);
 	

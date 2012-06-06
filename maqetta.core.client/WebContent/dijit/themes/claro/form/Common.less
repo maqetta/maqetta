@@ -67,8 +67,7 @@
 }
 .claro .dijitTextBoxHover {
 	background-color: @textbox-hovered-background-color;
-	background-image: url("../@{image-form-textbox-background}");
-	background-repeat: repeat-x;
+	.textbox-background-image;
 }
 
 /* error state */
@@ -89,8 +88,7 @@
 }
 .claro .dijitTextBoxFocused {
 	background-color: @textbox-focused-background-color;
-	background-image: url("../@{image-form-textbox-background}");
-	background-repeat: repeat-x;
+	.textbox-background-image;
 }
 .claro .dijitTextBoxFocused .dijitInputContainer {
 	background: @textbox-focused-background-color;
@@ -154,8 +152,7 @@
 
 .claro .dijitComboBox .dijitButtonNode {
 	background-color: @arrowbutton-background-color;
-	background-image: url("../@{image-form-highlight}");
-	background-repeat:repeat-x;
+	.standard-gradient("../");
 }
 
 /* Arrow "hover" effect:
@@ -175,7 +172,7 @@
 /* Arrow Button change when drop down is open */
 .claro .dijitComboBox .dijitHasDropDownOpen {	// .dijitHasDropDown is on dijitArrowButton node
 	background-color: @pressed-background-color;
-	background-position:0 -177px;
+	.active-gradient("../");
 	padding: 1px;		// Since no border on arrow button (see rule below)
 }	
 .claro .dijitComboBox .dijitHasDropDownOpen .dijitArrowButtonInner {
@@ -199,11 +196,6 @@
 	width: 0;
 }
 
-/* ie6 doesn't support transparent background img */
-.dj_ie6 .claro .dijitTextBox,
-.dj_ie6 .claro .dijitComboBox .dijitButtonNode {
-	background-image: none;
-}
 .dj_borderbox .claro .dijitComboBox .dijitHasDropDownOpen .dijitArrowButtonInner {
 	width:18px;				// quirks mode means border-box sizing, so 18px with the border (same as 16px without border)
 }

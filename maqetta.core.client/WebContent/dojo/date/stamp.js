@@ -1,14 +1,15 @@
-define(["../_base/kernel", "../_base/lang", "../_base/array"], function(dojo, lang, array) {
+define(["../_base/lang", "../_base/array"], function(lang, array) {
 	// module:
 	//		dojo/date/stamp
 	// summary:
 	//		TODOC
 
-lang.getObject("date.stamp", true, dojo);
+var stamp = {};
+lang.setObject("dojo.date.stamp", stamp);
 
 // Methods to convert dates to or from a wire (string) format using well-known conventions
 
-dojo.date.stamp.fromISOString = function(/*String*/formattedString, /*Number?*/defaultTime){
+stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTime){
 	//	summary:
 	//		Returns a Date object given a string formatted according to a subset of the ISO-8601 standard.
 	//
@@ -41,13 +42,13 @@ dojo.date.stamp.fromISOString = function(/*String*/formattedString, /*Number?*/d
 	//		Used for defaults for fields omitted in the formattedString.
 	//		Uses 1970-01-01T00:00:00.0Z by default.
 
-	if(!dojo.date.stamp._isoRegExp){
-		dojo.date.stamp._isoRegExp =
+	if(!stamp._isoRegExp){
+		stamp._isoRegExp =
 //TODO: could be more restrictive and check for 00-59, etc.
 			/^(?:(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(.\d+)?)?((?:[+-](\d{2}):(\d{2}))|Z)?)?$/;
 	}
 
-	var match = dojo.date.stamp._isoRegExp.exec(formattedString),
+	var match = stamp._isoRegExp.exec(formattedString),
 		result = null;
 
 	if(match){
@@ -87,7 +88,7 @@ dojo.date.stamp.fromISOString = function(/*String*/formattedString, /*Number?*/d
 };
 
 /*=====
-	dojo.date.stamp.__Options = function(){
+	var __Options = function(){
 		//	selector: String
 		//		"date" or "time" for partial formatting of the Date object.
 		//		Both date and time will be formatted by default.
@@ -98,10 +99,10 @@ dojo.date.stamp.fromISOString = function(/*String*/formattedString, /*Number?*/d
 		this.selector = selector;
 		this.zulu = zulu;
 		this.milliseconds = milliseconds;
-	}
+	};
 =====*/
 
-dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*dojo.date.stamp.__Options?*/options){
+stamp.toISOString = function(/*Date*/ dateObject, /*__Options?*/ options){
 	//	summary:
 	//		Format a Date object as a string according a subset of the ISO-8601 standard
 	//
@@ -142,5 +143,5 @@ dojo.date.stamp.toISOString = function(/*Date*/dateObject, /*dojo.date.stamp.__O
 	return formattedDate.join('T'); // String
 };
 
-return dojo.date.stamp;
+return stamp;
 });

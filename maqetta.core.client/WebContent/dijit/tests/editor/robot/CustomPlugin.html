@@ -11,11 +11,10 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_CustomPlugin.html');

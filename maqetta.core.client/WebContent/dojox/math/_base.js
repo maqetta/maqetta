@@ -80,7 +80,7 @@ define(["dojo", "dojox"], function(dojo, dojox) {
 
 		permutations: function(/* Number */n, /* Number */k){
 			//	summary:
-			//	TODO
+			//		TODO
 			if(n==0 || k==0){
 				return 1; 	// Number
 			}
@@ -89,7 +89,7 @@ define(["dojo", "dojox"], function(dojo, dojox) {
 
 		combinations: function(/* Number */n, /* Number */r){
 			//	summary:
-			//	TODO
+			//		TODO
 			if(n==0 || r==0){
 				return 1; 	//	Number
 			}
@@ -98,7 +98,7 @@ define(["dojo", "dojox"], function(dojo, dojox) {
 
 		bernstein: function(/* Number */t, /* Number */n, /* Number */ i){
 			//	summary:
-			//	TODO
+			//		TODO
 			return this.combinations(n, i) * Math.pow(t, i) * Math.pow(1-t, n-i);	//	Number
 		},
 

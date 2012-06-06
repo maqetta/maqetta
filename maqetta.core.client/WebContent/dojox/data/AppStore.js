@@ -32,7 +32,6 @@ dojo.declare("dojox.data.AppStore",
 		// description:
 		//		The APP Store is instantiated either in markup or programmatically by supplying a
 		//		url of the Collection to be used.
-		//
 		// args:
 		//		An anonymous object to initialize properties.  It expects the following values:
 		//		url:		The url of the Collection to load.
@@ -57,7 +56,6 @@ dojo.declare("dojox.data.AppStore",
 		//		a property to the entries to track that they belong to this store. It
 		//		also parses stored requests (since we were waiting on a callback) and
 		//		executes those as well.
-		//
 		// feed: dojox.atom.io.model.Feed object
 		//		The Feed to use for this data store.
 		// data: unused
@@ -89,7 +87,6 @@ dojo.declare("dojox.data.AppStore",
 		//		Function to return all entries in the Feed as an array of items.
 		// description:
 		//		Function to return all entries in the Feed as an array of items.
-		//
 		// returns:
 		//		Array of all entries in the feed.
 		var items = [];
@@ -105,7 +102,6 @@ dojo.declare("dojox.data.AppStore",
 		// description:
 		//		This function tests whether the item passed in is indeed an item
 		//		in the store.
-		//
 		// item:
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){
@@ -124,7 +120,6 @@ dojo.declare("dojox.data.AppStore",
 		//		'attribute' like type for the store.
 		// attribute:
 		//		The attribute to test for being contained by the store.
-		//
 		// returns:
 		//		Returns a boolean indicating whether this is a valid attribute.
 		if(typeof attribute !== "string"){
@@ -145,7 +140,6 @@ dojo.declare("dojox.data.AppStore",
 		//		Internal function to add an updated entry to our updates array
 		// description:
 		//		Internal function to add an updated entry to our updates array
-		//
 		// update: dojox.atom.io.model.Entry object
 		//		The updated Entry we've changed.
 		if(!this._updates){
@@ -163,7 +157,7 @@ dojo.declare("dojox.data.AppStore",
 						/* attribute-name-string */ attribute,
 						/* value? */ defaultValue){
 		// summary:
-		//      See dojo.data.api.Read.getValue()
+		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		return (values.length > 0)?values[0]:defaultValue; //Object || int || Boolean
 	},
@@ -237,7 +231,6 @@ dojo.declare("dojox.data.AppStore",
 		//		Internal function for looking at the values contained by the item.  This
 		//		function allows for denoting if the comparison should be case sensitive for
 		//		strings or not (for handling filtering cases where string case should not matter)
-		//
 		// item:
 		//		The data item to examine for attribute values.
 		// attribute:
@@ -318,7 +311,6 @@ dojo.declare("dojox.data.AppStore",
 		// description:
 		//		Internal function for finishing a fetch request.  Needed since the feed
 		//		might not have been loaded, so we finish the fetch in a callback.
-		//
 		// request:
 		//		A request object
 		// fetchHandler:
@@ -383,6 +375,7 @@ dojo.declare("dojox.data.AppStore",
 	close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
 		// summary:
 		//		See dojo.data.api.Read.close()
+		
 		// nothing to do here!
 		this._feed = null;
 	},
@@ -414,9 +407,9 @@ dojo.declare("dojox.data.AppStore",
 	},
 
 	getIdentityAttributes: function(/* item */ item){
-		 //	summary:
-		 //		See dojo.data.api.Identity.getIdentityAttributes()
-		 return ["id"];
+		// summary:
+		//		See dojo.data.api.Identity.getIdentityAttributes()
+		return ["id"];
 	},
 
 	fetchItemByIdentity: function(keywordArgs){

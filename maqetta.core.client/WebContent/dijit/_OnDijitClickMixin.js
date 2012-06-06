@@ -3,7 +3,7 @@ define([
 	"dojo/_base/array", // array.forEach
 	"dojo/keys", // keys.ENTER keys.SPACE
 	"dojo/_base/declare", // declare
-	"dojo/_base/sniff", // has("ie")
+	"dojo/has", // has("dom-addeventlistener")
 	"dojo/_base/unload", // unload.addOnWindowUnload
 	"dojo/_base/window" // win.doc.addEventListener win.doc.attachEvent win.doc.detachEvent
 ], function(on, array, keys, declare, has, unload, win){
@@ -12,7 +12,13 @@ define([
 	//		dijit/_OnDijitClickMixin
 	// summary:
 	//		Mixin so you can pass "ondijitclick" to this.connect() method,
-	//		as a way to handle clicks by mouse, or by keyboard (SPACE/ENTER key)
+	//		as a way to handle clicks by mouse, or by keyboard (SPACE/ENTER key).
+	// description:
+	//		Setting an ondijitclick handler on a node has two effects:
+	//			1. converts keyboard "click" events into actual click events, so
+	//			   that a "click" event bubbles up from the widget to any listeners on ancestor nodes.
+	//			2. sets up a click listener on the node, which catches native click events plus
+	//			   the events generated from the previous step.
 
 
 	// Keep track of where the last keydown event was, to help avoid generating
@@ -22,7 +28,12 @@ define([
 	// 3. onclick handler fires and shifts focus to another node, with an ondijitclick handler
 	// 4. onkeyup event fires, causing the ondijitclick handler to fire
 	var lastKeyDownNode = null;
-	if(has("ie")){
+	if(has("dom-addeventlistener")){
+		win.doc.addEventListener('keydown', function(evt){
+			lastKeyDownNode = evt.target;
+		}, true);
+	}else{
+		// Fallback path for IE6-8
 		(function(){
 			var keydownCallback = function(evt){
 				lastKeyDownNode = evt.srcElement;
@@ -32,10 +43,11 @@ define([
 				win.doc.detachEvent('onkeydown', keydownCallback);
 			});
 		})();
-	}else{
-		win.doc.addEventListener('keydown', function(evt){
-			lastKeyDownNode = evt.target;
-		}, true);
+	}
+
+	function clickKey(/*Event*/ e){
+		return (e.keyCode === keys.ENTER || e.keyCode === keys.SPACE) &&
+				!e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
 	}
 
 	// Custom a11yclick (a.k.a. ondijitclick) event
@@ -49,10 +61,6 @@ define([
 			// either causing this node to process a stray keyup event, or causing another node
 			// to get a stray keyup event.
 
-			function clickKey(/*Event*/ e){
-				return (e.keyCode == keys.ENTER || e.keyCode == keys.SPACE) &&
-						!e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
-			}
 			var handles = [
 				on(node, "keypress", function(e){
 					//console.log(this.id + ": onkeydown, e.target = ", e.target, ", lastKeyDownNode was ", lastKeyDownNode, ", equality is ", (e.target === lastKeyDownNode));
@@ -73,15 +81,32 @@ define([
 					if(clickKey(e) && e.target == lastKeyDownNode){	// === breaks greasemonkey
 						//need reset here or have problems in FF when focus returns to trigger element after closing popup/alert
 						lastKeyDownNode = null;
-						listener.call(this, e);
+						on.emit(e.target, "click", {
+							cancelable: true,
+							bubbles: true
+						});
 					}
 				}),
 
 				on(node, "click", function(e){
-					// and connect for mouse clicks too (or touch-clicks on mobile)
+					// catch mouse clicks, plus the on.emit() calls from above and below
 					listener.call(this, e);
 				})
 			];
+
+			if(has("touch")){
+				handles.push(
+					on(node, "touchend", function(e){
+						// touchstart-->touchend will automatically generate a click event, but there are problems
+						// on iOS after focus has been programatically shifted (#14604, #14918), so do it manually.
+						e.preventDefault();
+						on.emit(e.target, "click", {
+							cancelable: true,
+							bubbles: true
+						});
+					})
+				);
+			}
 
 			return {
 				remove: function(){
@@ -91,7 +116,7 @@ define([
 		}
 	};
 
-	return declare("dijit._OnDijitClickMixin", null, {
+	var ret = declare("dijit._OnDijitClickMixin", null, {
 		connect: function(
 				/*Object|null*/ obj,
 				/*String|Function*/ event,
@@ -122,4 +147,8 @@ define([
 			return this.inherited(arguments, [obj, event == "ondijitclick" ? a11yclick : event, method]);
 		}
 	});
+
+	ret.a11yclick = a11yclick;
+
+	return ret;
 });

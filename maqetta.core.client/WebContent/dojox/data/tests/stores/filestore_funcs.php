@@ -65,7 +65,7 @@
 	 * @param $showHiddenFiles boolean to indicate to return hidden files as part of the list.
 	 */
 	function getAllfiles($dir, $rootDir, $recurse, $dirsOnly, $expand, $showHiddenFiles) { 
-		//  summary:
+		// summary:
 		//      A function to obtain all the files in a particular directory (file or dir)
 		$files = array();
 		$dirHandle = opendir($rootDir."/".$dir);
@@ -118,7 +118,7 @@
 	 *  $file["children"] - Children files of a directory.  Empty if a standard file.
 	 */
 	function generateFileObj($file, $dir, $rootDir, $expand, $showHiddenFiles) {
-		//  summary:
+		// summary:
 		//      Function to generate an object representation of a disk file.
 		$path = $file;
 		if ($dir != "." && $dir != "./") {

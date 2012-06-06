@@ -2,6 +2,8 @@ dojo.provide("dijit.tests._BidiSupport.form.module");
 
 try{
 
+	doh.registerUrl("dijit.tests._BidiSupport.form.multiSelect", dojo.moduleUrl("dijit", "tests/_BidiSupport/form/multiSelect.html"));
+
 	doh.registerUrl("dijit.tests._BidiSupport.form.noTextDirTextWidgets", dojo.moduleUrl("dijit", "tests/_BidiSupport/form/noTextDirTextWidgets.html"));
 
 	var userArgs = window.location.search.replace(/[\?&](dojoUrl|testUrl|testModule)=[^&]*/g,"").replace(/^&/,"?");

@@ -3,6 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/_base/connect",
+	"dojo/_base/declare",
 	"dojo/dom-class",
 	"dijit/_Widget",
 	"dijit/_Templated",
@@ -11,14 +12,11 @@ define([
 	"dojo/text!./templates/FeedViewer.html",
 	"dojo/text!./templates/FeedViewerEntry.html",
 	"dojo/text!./templates/FeedViewerGrouping.html",
-	"dojo/i18n!./nls/FeedViewerEntry",
-	"dojo/_base/declare"
-], function (dojo, lang, arrayUtil, connect, domClass, _Widget, _Templated, _Container, Connection, template, entryTemplate, groupingTemplate, i18nViewer) {
+	"dojo/i18n!./nls/FeedViewerEntry"
+], function (dojo, lang, arrayUtil, connect, declare, domClass, _Widget, _Templated, _Container, Connection, template, entryTemplate, groupingTemplate, i18nViewer) {
 dojo.experimental("dojox.atom.widget.FeedViewer");
 
-var widget = dojo.getObject("dojox.atom.widget", true);
-
-widget.FeedViewer = dojo.declare(/*===== "dojox.atom.widget.FeedViewer", =====*/ [_Widget, _Templated, _Container],{
+var FeedViewer = declare("dojox.atom.widget.FeedViewer", [_Widget, _Templated, _Container],{
 	//	summary:
 	//		An ATOM feed viewer that allows for viewing a feed, deleting entries, and editing entries.
 	//	description:
@@ -65,7 +63,7 @@ widget.FeedViewer = dojo.declare(/*===== "dojox.atom.widget.FeedViewer", =====*/
 		for(var i in children){
 			var child = children[i];
 			if(child && child.isFilter){
-				this._includeFilters.push(new widget.FeedViewer.CategoryIncludeFilter(child.scheme, child.term, child.label));
+				this._includeFilters.push(new FeedViewer.CategoryIncludeFilter(child.scheme, child.term, child.label));
 				child.destroy();
 			}
 		}
@@ -197,7 +195,7 @@ widget.FeedViewer = dojo.declare(/*===== "dojox.atom.widget.FeedViewer", =====*/
 		//
 		//	returns:
 		//		Nothing.
-		var entryWidget = new widget.FeedViewerGrouping({});
+		var entryWidget = new FeedViewerGrouping({});
 		entryWidget.setText(titleText);
 		this.addChild(entryWidget);
 		this.childWidgets.push(entryWidget);
@@ -214,7 +212,7 @@ widget.FeedViewer = dojo.declare(/*===== "dojox.atom.widget.FeedViewer", =====*/
 		//
 		//	returns:
 		//		Nothing.
-		var entryWidget = new widget.FeedViewerEntry({"xmethod": this.xmethod});
+		var entryWidget = new FeedViewerEntry({"xmethod": this.xmethod});
 		entryWidget.setTitle(entry.title.value);
 		entryWidget.setTime(this._displayDateForEntry(entry).toLocaleTimeString());
 		entryWidget.entrySelectionTopic = this.entrySelectionTopic;
@@ -614,8 +612,8 @@ widget.FeedViewer = dojo.declare(/*===== "dojox.atom.widget.FeedViewer", =====*/
 	}
 });
 
-widget.FeedViewerEntry = dojo.declare(/*===== "dojox.atom.widget.FeedViewerEntry", =====*/ [_Widget, _Templated],{
-	//	summary:
+var FeedViewerEntry = FeedViewer.FeedViewerEntry = declare("dojox.atom.widget.FeedViewerEntry", [_Widget, _Templated],{
+	// summary:
 	//		Widget for handling the display of an entry and specific events associated with it.
 	//		description: Widget for handling the display of an entry and specific events associated with it.
 
@@ -717,10 +715,10 @@ widget.FeedViewerEntry = dojo.declare(/*===== "dojox.atom.widget.FeedViewerEntry
 	}
 });
 
-widget.FeedViewerGrouping = dojo.declare(/*===== "dojox.atom.widget.FeedViewerGrouping", =====*/ [_Widget, _Templated],{
-	//	summary:
+var FeedViewerGrouping = FeedViewer.FeedViewerGrouping = declare("dojox.atom.widget.FeedViewerGrouping", [_Widget, _Templated],{
+	// summary:
 	//		Grouping of feed entries.
-	//	description:
+	// description:
 	//		Grouping of feed entries.
 	templateString: groupingTemplate,
 	
@@ -741,7 +739,7 @@ widget.FeedViewerGrouping = dojo.declare(/*===== "dojox.atom.widget.FeedViewerGr
 	}
 });
 
-widget.AtomEntryCategoryFilter = dojo.declare(/*===== "dojox.atom.widget.AtomEntryCategoryFilter", =====*/ [_Widget, _Templated],{
+FeedViewer.AtomEntryCategoryFilter = declare("dojox.atom.widget.AtomEntryCategoryFilter",  null,{
 	//	summary:
 	//		A filter to be applied to the list of entries.
 	//	description:
@@ -752,7 +750,7 @@ widget.AtomEntryCategoryFilter = dojo.declare(/*===== "dojox.atom.widget.AtomEnt
 	isFilter: true
 });
 
-widget.FeedViewer.CategoryIncludeFilter = dojo.declare(/*===== "dojox.atom.widget.FeedViewer.CategoryIncludeFilter", =====*/ null,{
+FeedViewer.CategoryIncludeFilter = declare("dojox.atom.widget.FeedViewer.CategoryIncludeFilter", null,{
 	constructor: function(scheme, term, label){
 		//	summary:
 		//		The initializer function.
@@ -803,5 +801,6 @@ widget.FeedViewer.CategoryIncludeFilter = dojo.declare(/*===== "dojox.atom.widge
 		return matched;
 	}
 });
-return widget.FeedViewer;
+
+return FeedViewer;
 });

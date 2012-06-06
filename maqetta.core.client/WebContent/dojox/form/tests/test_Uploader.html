@@ -89,48 +89,48 @@
 	</style>
 	<script>
 		djConfig = {
-			parseOnLoad:true,
+			async:1,
 			isDebug:true
 		}
 	</script>
 	<script src="../../../dojo/dojo.js"></script>
 	<script>
-		dojo.require("dojo.parser");
-		dojo.require("dojox.form.Uploader");
-		dojo.require("dojox.form.uploader.FileList");
-		dojo.require("dijit.form.Button");
-		dojo.require("dojox.form.uploader.plugins.Flash");
+		require(['dojo', 'dojo/domReady!', 'dojo/parser', 'dijit/form/Button', 'dojox/form/Uploader', 'dojox/form/uploader/FileList', 'dojox/form/uploader/plugins/Flash'],
+				function(dojo, dr, parser, Button, Uploader, FileList, uFlash){
 
-		var handleUpload = function(upl, node){
-			dojo.connect(upl, "onComplete", function(dataArray){
-				dojo.forEach(dojo.isArray(dataArray)?dataArray:[dataArray], function(file){
-					console.log("display:", file)
+					parser.parse();
 
-					var div = dojo.create('div', {className:'thumb'});
-					var span = dojo.create('span', {className:'thumbbk'}, div);
-					var img = dojo.create('img', {src:file.file}, span);
-					node.appendChild(div);
+					var handleUpload = function(upl, node){
+						dojo.connect(upl, "onComplete", function(dataArray){
+							dojo.forEach(dojo.isArray(dataArray)?dataArray:[dataArray], function(file){
+								console.log("display:", file)
+
+								var div = dojo.create('div', {className:'thumb'});
+								var span = dojo.create('span', {className:'thumbbk'}, div);
+								var img = dojo.create('img', {src:file.file}, span);
+								node.appendChild(div);
+							});
+						});
+					},
+					handleDnD = function(domnode, uploader){
+						if(uploader.addDropTarget && uploader.uploadType=='html5'){
+							dojo.create('div',{innerHTML:'Drag and Drop files to this fieldset'}, domnode,'last');
+							uploader.addDropTarget(domnode);
+						}
+					}
+
+					var uploader=dijit.byId("uploader"), uploader2=dijit.byId("uploader2");
+					dojo.connect(dijit.byId("remBtn"), "onClick", uploader, "reset");
+					dojo.connect(dijit.byId("remBtn2"), "onClick", uploader2, "reset");
+					handleUpload(uploader, dojo.byId('colImages'));
+					handleUpload(uploader2, dojo.byId('colImages'));
+					if(require.has('file-multiple')){
+						handleDnD(uploader.domNode.parentNode, uploader);
+						handleDnD(uploader2.domNode.parentNode, uploader2);
+					}
 				});
-			});
-		},
-		handleDnD = function(domnode, uploader){
-			if(uploader.addDropTarget && uploader.uploadType=='html5'){
-				dojo.create('div',{innerHTML:'Drag and Drop files to this fieldset'}, domnode,'last');
-				uploader.addDropTarget(domnode);
-			}
-		}
 
-		dojo.addOnLoad(function(){
-			var uploader=dijit.byId("uploader"), uploader2=dijit.byId("uploader2");
-			dojo.connect(dijit.byId("remBtn"), "onClick", uploader, "reset");
-			dojo.connect(dijit.byId("remBtn2"), "onClick", uploader2, "reset");
-			handleUpload(uploader, dojo.byId('colImages'));
-			handleUpload(uploader2, dojo.byId('colImages'));
-			if(require.has('file-multiple')){
-				handleDnD(uploader.domNode.parentNode, uploader);
-				handleDnD(uploader2.domNode.parentNode, uploader2);
-			}
-		});
+
 	</script>
 </head>
 <body class="claro">
@@ -155,12 +155,12 @@
 				<form method="post" action="UploadFile.php" id="myForm" enctype="multipart/form-data" >
 					<fieldset>
 						<legend>Block Browse Button Form Post Test</legend>
-						<input class="browseButton" name="uploadedfile" multiple="true" type="file" dojoType="dojox.form.Uploader" label="Select Some Files" isDebug="true" id="uploader" />
+						<input class="browseButton" name="uploadedfile" multiple="true" force="" type="file" dojoType="dojox.form.Uploader" label="Select Some Files" isDebug="true" id="uploader"/>
 						<input type="text" name="album" value="Summer Vacation" />
 						<input type="text" name="year" value="2011" />
 						<input type="button" id="remBtn" label="Clear" dojoType="dijit.form.Button" />
 						<input type="submit" label="Submit" dojoType="dijit.form.Button" />
-						<div id="files" dojoType="dojox.form.uploader.FileList" uploaderId="uploader"></div>
+						<div id="files" dojoType="dojox.form.uploader.FileList" uploaderId="uploader" ></div>
 					</fieldset>
 				</form>
 				<form method="post" action="UploadFile.php" id="myForm2" enctype="multipart/form-data" >

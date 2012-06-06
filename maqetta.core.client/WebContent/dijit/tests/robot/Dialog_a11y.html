@@ -2,7 +2,7 @@
 		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>doh.robot Dialog A11Y Test</title>
+		<title>robot Dialog A11Y Test</title>
 
 		<style>
 			@import "../../../util/doh/robot/robot.css";
@@ -12,16 +12,23 @@
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../helpers.js"></script>
-
 		<script type="text/javascript">
-			dojo.require("dijit.robotx");
+			require([
+				"doh/runner", "dojo/robotx",
+				"dojo/aspect", "dojo/dom", "dojo/dom-class", "dojo/dom-style", "dojo/keys",
+				"dijit/tests/helpers", "dojo/domReady!"
+			], function(doh, robot, aspect, dom, domClass, domStyle, keys, helpers){
 
-			dojo.ready(function(){
-				doh.robot.initRobot('../test_Dialog.html');
+				robot.initRobot('../test_Dialog.html');
 
-				doh.register("keyboard tests (cancel)",[
+				doh.register(function setup(){
+					// get pointer to registry in the iframe
+					registry = robot.window.require("dijit/registry");
+					dfocus = robot.window.require("dijit/focus");
+					DialogUnderlay = robot.window.require("dijit/DialogUnderlay");
+				});
+
+				doh.register("keyboard tests (cancel)", [
 					{
 						name: "open dialog",
 						timeout: 10000,
@@ -31,13 +38,13 @@
 							// Click the button.  We do this manually rather than calling Dialog.show()
 							// so we can later test that focus is restored (to the previous position)
 							// when the dialog is closed
-							dojo.byId("dialog1button").focus();
-							doh.robot.keyPress(dojo.keys.SPACE, 1000, {});
-							doh.robot.typeKeys("Bill", 1000, 800);
+							dom.byId("dialog1button").focus();
+							robot.keyPress(keys.SPACE, 1000, {});
+							robot.typeKeys("Bill", 1000, 800);
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isVisible("dialog1"), "dialog 1 has been made visible");
-								doh.is("name", dojo.global.dijit.focus.curNode.id, "focus is on the first field");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isVisible("dialog1"), "dialog 1 has been made visible");
+								doh.is("name", dfocus.curNode.id, "focus is on the first field");
 							}), 500);
 
 							return d;
@@ -50,12 +57,12 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.typeKeys("Japan", 1000, 1000);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
+							robot.typeKeys("Japan", 1000, 1000);
+							robot.keyPress(keys.TAB, 500, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("date", dojo.global.dijit.focus.curNode.id, "focus is on the date field");
+							robot.sequence(d.getTestCallback(function(){
+								doh.is("date", dfocus.curNode.id, "focus is on the date field");
 							}), 1000);
 
 							return d;
@@ -68,12 +75,12 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500, {});
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+							robot.keyPress(keys.DOWN_ARROW, 500, {});
+							robot.keyPress(keys.ESCAPE, 500, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("date", dojo.global.dijit.focus.curNode.id, "focus is still on the date field");
-								doh.t(isVisible("dialog1"), "dialog 1 wasn't closed");
+							robot.sequence(d.getTestCallback(function(){
+								doh.is("date", dfocus.curNode.id, "focus is still on the date field");
+								doh.t(helpers.isVisible("dialog1"), "dialog 1 wasn't closed");
 							}), 1000);
 
 							return d;
@@ -86,13 +93,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("name", dojo.global.dijit.focus.curNode.id, "focus looped back to name field");
+							robot.sequence(d.getTestCallback(function(){
+								doh.is("name", dfocus.curNode.id, "focus looped back to name field");
 							}), 1000);
 
 							return d;
@@ -105,10 +112,10 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.TAB, 500, {shift: true});
+							robot.keyPress(keys.TAB, 500, {shift: true});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("ok", dojo.global.dijit.focus.curNode.id, "focus looped back to submit button");
+							robot.sequence(d.getTestCallback(function(){
+								doh.is("ok", dfocus.curNode.id, "focus looped back to submit button");
 							}), 1000);
 
 							return d;
@@ -121,11 +128,11 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+							robot.keyPress(keys.ESCAPE, 500, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isHidden("dialog1"), "dialog 1 was closed");
-								doh.is("dialog1button", dojo.global.dijit.focus.curNode.id, "focus returned to button");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isHidden("dialog1"), "dialog 1 was closed");
+								doh.is("dialog1button", dfocus.curNode.id, "focus returned to button");
 							}), 1000);
 
 							return d;
@@ -133,40 +140,40 @@
 					}
 				]);
 
-				doh.register("keyboard tests (submit)",[
+				doh.register("keyboard tests (submit)", [
 					{
 						name: "submit some data",
 						timeout: 15000,
 						setUp: function(){
-							dijit.byId("dialog1").reset();
+							registry.byId("dialog1").reset();
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
 
 							// Setup handler to catch submitted data
 							var data;
-							dojo.connect(dijit.byId("dialog1"), "execute", function(vals){
+							aspect.after(registry.byId("dialog1"), "execute", function(vals){
 								data = vals;
-							});
+							}, true);
 
 							// Open the dialog
-							dojo.byId("dialog1button").focus();
-							doh.robot.keyPress(dojo.keys.SPACE, 1000, {});
+							dom.byId("dialog1button").focus();
+							robot.keyPress(keys.SPACE, 1000, {});
 
 							// Enter some info
-							doh.robot.typeKeys("Ted", 2000, 600);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.typeKeys("America", 1000, 1400);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.keyPress(dojo.keys.TAB, 1000, {});
-							doh.robot.keyPress(dojo.keys.TAB, 1000, {});
-							doh.robot.keyPress(dojo.keys.TAB, 1000, {});
+							robot.typeKeys("Ted", 2000, 600);
+							robot.keyPress(keys.TAB, 500, {});
+							robot.typeKeys("America", 1000, 1400);
+							robot.keyPress(keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 1000, {});
+							robot.keyPress(keys.TAB, 1000, {});
+							robot.keyPress(keys.TAB, 1000, {});
 
 							// Submit
-							doh.robot.keyPress(dojo.keys.SPACE, 1000, {});
+							robot.keyPress(keys.SPACE, 1000, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isHidden("dialog1"), "dialog 1 was closed on submit");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isHidden("dialog1"), "dialog 1 was closed on submit");
 								doh.t(data, "got submit data");
 								doh.is("Ted", data.name, "Name");
 								doh.is("America", data.loc, "Location");
@@ -177,7 +184,7 @@
 					}
 				]);
 
-				doh.register("keyboard tests (cancel via Cancel button)",[
+				doh.register("keyboard tests (cancel via Cancel button)", [
 					{
 						name: "close Dialog via Cancel button",
 						timeout: 15000,
@@ -186,27 +193,27 @@
 
 							// Test which callbacks are called on cancel
 							var executed = false, canceled = false;
-							dojo.connect(dijit.byId("ABDlg1"), "execute", function(vals){
+							aspect.after(registry.byId("ABDlg1"), "execute", function(vals){
 								executed = true;
-							});
-							dojo.connect(dijit.byId("ABDlg1"), "onCancel", function(){
+							}, true);
+							registry.byId("ABDlg1").on("cancel", function(){
 								canceled = true;
 							});
 
 							// Open the dialog
-							dojo.byId("ABDlg1Btn").focus();
-							doh.robot.keyPress(dojo.keys.SPACE, 1000, {});
+							dom.byId("ABDlg1Btn").focus();
+							robot.keyPress(keys.SPACE, 1000, {});
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(isVisible("ABDlg1"), "dialog opened");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(helpers.isVisible("ABDlg1"), "dialog opened");
 							}), 1000);
 
 							// Cancel
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
+							robot.keyPress(keys.SPACE, 500, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isHidden("ABDlg1"), "dialog closed on cancel");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isHidden("ABDlg1"), "dialog closed on cancel");
 								doh.t(canceled, "cancel callback was called");
 								doh.f(executed, "execute callback wasn't called");
 							}), 1000);
@@ -218,11 +225,11 @@
 
 				// Test aria roles, etc.
 				doh.register("aria", function(){
-					var dlog = dijit.byId("dialog1");
+					var dlog = registry.byId("dialog1");
 					doh.is("dialog", dlog.domNode.getAttribute("role"), "role");
 					doh.is("dialog1_title", dlog.domNode.getAttribute("aria-labelledby"), "aria-labelledby");
-					doh.isNot(undefined, dojo.byId("dialog1_title"), "label node exists");
-					doh.isNot("", innerText(dojo.byId("dialog1_title")), "label node has text");
+					doh.isNot(undefined, dom.byId("dialog1_title"), "label node exists");
+					doh.isNot("", helpers.innerText(dom.byId("dialog1_title")), "label node has text");
 					// dijit.Dialog does not implement aria-expanded as of this writing -- should it?
 				});
 
@@ -237,44 +244,44 @@
 							// Click the button.  We do this manually rather than calling Dialog.show()
 							// so we can later test that focus is restored (to the previous position)
 							// when the dialog is closed
-							dojo.byId("unmovablebutton").focus();
-							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+							dom.byId("unmovablebutton").focus();
+							robot.keyPress(keys.SPACE, 500, {});
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #1");
-								doh.t(dojo.hasClass(dojo.global.dijit.focus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #1");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #1");
+								doh.t(domClass.contains(dfocus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #1");
 							}), 1000);
 
 							// Tab key shouldn't change the focus
-							doh.robot.keyPress(dojo.keys.TAB, 500);
+							robot.keyPress(keys.TAB, 500);
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #2");
-								doh.t(dojo.hasClass(dojo.global.dijit.focus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #2");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #2");
+								doh.t(domClass.contains(dfocus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #2");
 							}), 500);
 
 							// Space key should close the dialog
-							doh.robot.keyPress(dojo.keys.SPACE, 500);
+							robot.keyPress(keys.SPACE, 500);
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #3");
-								doh.is("unmovablebutton", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog #1");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #3");
+								doh.is("unmovablebutton", dfocus.curNode.id, "focus is back on the button that opened the dialog #1");
 							}), 500);
 
 							// Open the dialog again
-							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+							robot.keyPress(keys.SPACE, 500, {});
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #4");
-								doh.t(dojo.hasClass(dojo.global.dijit.focus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #4");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #4");
+								doh.t(domClass.contains(dfocus.curNode, "dijitDialogCloseIcon"), "focus is on the close button #4");
 							}), 500);
 
 							// Esc key should also close the dialog
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500);
+							robot.keyPress(keys.ESCAPE, 500);
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #5");
-								doh.is("unmovablebutton", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog #2");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #5");
+								doh.is("unmovablebutton", dfocus.curNode.id, "focus is back on the button that opened the dialog #2");
 							}), 500);
 
 							return d;
@@ -290,20 +297,20 @@
 							// Click the button.  We do this manually rather than calling Dialog.show()
 							// so we can later test that focus is restored (to the previous position)
 							// when the dialog is closed
-							dojo.byId("filebutton").focus();
-							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+							dom.byId("filebutton").focus();
+							robot.keyPress(keys.SPACE, 500, {});
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #1");
-								doh.is("afile", dojo.global.dijit.focus.curNode.id, "focus is on the input type=file");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #1");
+								doh.is("afile", dfocus.curNode.id, "focus is on the input type=file");
 							}), 1000);
 
 							// Esc key should close the dialog
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500);
+							robot.keyPress(keys.ESCAPE, 500);
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #2");
-								doh.is("filebutton", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #2");
+								doh.is("filebutton", dfocus.curNode.id, "focus is back on the button that opened the dialog");
 							}), 500);
 
 							return d;
@@ -319,28 +326,28 @@
 							// Click the button.  We do this manually rather than calling Dialog.show()
 							// so we can later test that focus is restored (to the previous position)
 							// when the dialog is closed
-							dojo.byId("RadioButtonDlgBtn").focus();
-							doh.robot.keyPress(dojo.keys.SPACE, 500, {});
+							dom.byId("RadioButtonDlgBtn").focus();
+							robot.keyPress(keys.SPACE, 500, {});
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #1");
-								doh.is("textarea-radio-test", dojo.global.dijit.focus.curNode.id, "focus is on the textarea");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #1");
+								doh.is("textarea-radio-test", dfocus.curNode.id, "focus is on the textarea");
 							}), 1000);
 
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 500, {});
 
-							doh.robot.sequence(d.getTestErrback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #2");
-								doh.is("textarea-radio-test", dojo.global.dijit.focus.curNode.id, "focus wraps around back to the textarea");
+							robot.sequence(d.getTestErrback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #2");
+								doh.is("textarea-radio-test", dfocus.curNode.id, "focus wraps around back to the textarea");
 							}), 500);
 
 							// Esc key should close the dialog
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500);
+							robot.keyPress(keys.ESCAPE, 500);
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(dojo.global.dijit.focus.curNode, "focus is somewhere #3");
-								doh.is("RadioButtonDlgBtn", dojo.global.dijit.focus.curNode.id, "focus is back on the button that opened the dialog");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(dfocus.curNode, "focus is somewhere #3");
+								doh.is("RadioButtonDlgBtn", dfocus.curNode.id, "focus is back on the button that opened the dialog");
 							}), 500);
 
 							return d;
@@ -348,12 +355,12 @@
 					}
 				]);
 
-				doh.register("keyboard tests (multiple dialogs)",[
+				doh.register("keyboard tests (multiple dialogs)", [
 					{
 						name: "open first dialog",
 						timeout: 10000,
 						setUp: function(){
-							dijit.byId("dialog1").reset();
+							registry.byId("dialog1").reset();
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -361,23 +368,23 @@
 							// Click the button.  We do this manually rather than calling Dialog.show()
 							// so we can later test that focus is restored (to the previous position)
 							// when the dialog is closed
-							dojo.byId("dialog1button").focus();
-							doh.robot.keyPress(dojo.keys.SPACE, 1000, {});
-							doh.robot.typeKeys("lower", 1000, 1000);
+							dom.byId("dialog1button").focus();
+							robot.keyPress(keys.SPACE, 1000, {});
+							robot.typeKeys("lower", 1000, 1000);
 
 							// Move focus to second field
-							doh.robot.keyPress(dojo.keys.TAB, 1000);
+							robot.keyPress(keys.TAB, 1000);
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isVisible("dialog1"), "dialog 1 is visible");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isVisible("dialog1"), "dialog 1 is visible");
 
-								var dialog1Z = dojo.style(dijit.byId("dialog1").domNode, "zIndex"),
-									underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
+								var dialog1Z = domStyle.get(registry.byId("dialog1").domNode, "zIndex"),
+									underlayZ = domStyle.get(DialogUnderlay._singleton.domNode, "zIndex");
 
 								doh.t(dialog1Z > underlayZ, "dialog1 (zIndex=" + dialog1Z +
 									") above underlay (zIndex=" + underlayZ + ")");
 
-								doh.is("loc", dojo.global.dijit.focus.curNode.id, "focus is on the second field");
+								doh.is("loc", dfocus.curNode.id, "focus is on the second field");
 							}), 1000);
 
 							return d;
@@ -390,15 +397,15 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							dijit.byId("tabDialog").show();
+							registry.byId("tabDialog").show();
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isVisible("tabDialog"), "tab dialog has been made visible");
-								doh.t(isVisible("dialog1"), "dialog 1 is still visible");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isVisible("tabDialog"), "tab dialog has been made visible");
+								doh.t(helpers.isVisible("dialog1"), "dialog 1 is still visible");
 
-								var tabDialogZ = dojo.style(dijit.byId("tabDialog").domNode, "zIndex"),
-									dialog1Z = dojo.style(dijit.byId("dialog1").domNode, "zIndex"),
-									underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
+								var tabDialogZ = domStyle.get(registry.byId("tabDialog").domNode, "zIndex"),
+									dialog1Z = domStyle.get(registry.byId("dialog1").domNode, "zIndex"),
+									underlayZ = domStyle.get(DialogUnderlay._singleton.domNode, "zIndex");
 
 								doh.t(tabDialogZ > underlayZ, "tabDialog (zIndex=" + tabDialogZ +
 									") above underlay (zIndex=" + underlayZ + ")");
@@ -416,19 +423,19 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+							robot.keyPress(keys.ESCAPE, 500, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isHidden("tabDialog"), "tab dialog has been hidden");
-								doh.t(isVisible("dialog1"), "dialog 1 is still visible");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isHidden("tabDialog"), "tab dialog has been hidden");
+								doh.t(helpers.isVisible("dialog1"), "dialog 1 is still visible");
 
-								var dialog1Z = dojo.style(dijit.byId("dialog1").domNode, "zIndex"),
-									underlayZ = dojo.style(dojo.global.dijit._underlay.domNode, "zIndex");
+								var dialog1Z = domStyle.get(registry.byId("dialog1").domNode, "zIndex"),
+									underlayZ = domStyle.get(DialogUnderlay._singleton.domNode, "zIndex");
 
 								doh.t(dialog1Z > underlayZ, "dialog1 (zIndex=" + dialog1Z +
 									") above underlay (zIndex=" + underlayZ + ")");
 
-								doh.is("loc", dojo.global.dijit.focus.curNode.id, "focus is on the second field");
+								doh.is("loc", dfocus.curNode.id, "focus is on the second field");
 							}), 2000);
 
 							return d;
@@ -441,11 +448,11 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
+							robot.keyPress(keys.ESCAPE, 500, {});
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isHidden("dialog1"), "dialog 1 was closed");
-								doh.is("dialog1button", dojo.global.dijit.focus.curNode.id, "focus returned to button");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(helpers.isHidden("dialog1"), "dialog 1 was closed");
+								doh.is("dialog1button", dfocus.curNode.id, "focus returned to button");
 							}), 2000);
 
 							return d;

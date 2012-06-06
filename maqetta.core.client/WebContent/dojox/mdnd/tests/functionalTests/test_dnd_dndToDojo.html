@@ -35,6 +35,7 @@
 				// --------------------------------------------------------------
 				// Rewrite isAccepted method (only for registered dom);
 				adapter.isAccepted = function(draggedNode, target){
+					console.log("isAccepted", target);
 					if(target.type == "domTarget"){
 						var dndType = dojo.attr(draggedNode, "dndType");
 						return (dndType == "type2") ? true : false;

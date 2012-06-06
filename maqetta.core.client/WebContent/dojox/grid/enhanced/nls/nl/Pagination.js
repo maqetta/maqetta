@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} van ${1} ${0}",
 	"firstTip": "Eerste pagina",
@@ -11,14 +10,12 @@ define(
 	"pageStepLabelTemplate": "Pagina ${0}",
 	"pageSizeLabelTemplate": "${0} items per pagina",
 	"allItemsLabelTemplate": "Alle items",
-	"gotoButtonTitle": "Ga naar bepaalde pagina",
-	"dialogTitle": "Ga naar pagina",
-	"dialogIndication": "Geef het paginanummer op",
+	"gotoButtonTitle": "Naar een specifieke pagina gaan",
+	"dialogTitle": "Naar pagina gaan",
+	"dialogIndication": "Geef het paginanummer op:",
 	"pageCountIndication": " (${0} pagina's)",
 	"dialogConfirm": "Go",
 	"dialogCancel": "Annuleren",
-	"all": "alle"
+	"all": "Alles"
 })
-//end v1.x content
 );
-

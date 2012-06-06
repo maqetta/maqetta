@@ -1,9 +1,6 @@
 define(
-//begin v1.x content
 ({
-        nomatchMessage: "Parolele nu se potrivesc. ",
-		badPasswordMessage: "Parola nu este validă. "
+        nomatchMessage: "Parolele nu se potrivesc.",
+	badPasswordMessage: "Parolă invalidă."
 })
-
-//end v1.x content
 );

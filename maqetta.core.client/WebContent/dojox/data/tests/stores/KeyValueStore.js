@@ -4,9 +4,9 @@ dojo.require("dojo.data.api.Read");
 dojo.require("dojo.data.api.Identity");
 
 dojox.data.tests.stores.KeyValueStore.getDatasource = function(type){
-	//  summary:
+	// summary:
 	//		A simple helper function for getting the sample data used in each of the tests.
-	//  description:
+	// description:
 	//		A simple helper function for getting the sample data used in each of the tests.
 
 	var dataSource = {};
@@ -29,10 +29,10 @@ dojox.data.tests.stores.KeyValueStore.getDatasource = function(type){
 		dataSource.data = keyData;
 	}
 	return dataSource; //Object
-}
+};
 
 dojox.data.tests.stores.KeyValueStore.verifyItems = function(keyStore, items, attribute, compareArray){
-	//  summary:
+	// summary:
 	//		A helper function for validating that the items array is ordered
 	//		the same as the compareArray
 	if(items.length != compareArray.length){ return false; }
@@ -42,23 +42,23 @@ dojox.data.tests.stores.KeyValueStore.verifyItems = function(keyStore, items, at
 		}
 	}
 	return true; //Boolean
-}
+};
 
 dojox.data.tests.stores.KeyValueStore.error = function(t, d, errData){
-	//  summary:
+	// summary:
 	//		The error callback function to be used for all of the tests.
 	for (i in errData) {
 		console.log(errData[i]);
 	}
 	d.errback(errData);
-}
+};
 
 doh.register("dojox.data.tests.stores.KeyValueStore",
 	[
 		function testReadAPI_fetch_all(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on KeyValueStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on KeyValueStore.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/properties.js");
@@ -75,9 +75,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_withEmptyStringField(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on KeyValueStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on KeyValueStore.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -94,9 +94,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -114,9 +114,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_Multiple(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -163,9 +163,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_MultipleMixed(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on KeyValueStore of a single item.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -202,9 +202,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_streaming(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on KeyValueStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on KeyValueStore.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -235,9 +235,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_paging(t){
-			 //	summary:
+			 // summary:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
-			 //	description:
+			 // description:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -302,9 +302,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		},
 		
 		function testReadAPI_getLabel(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -325,9 +325,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testReadAPI_getLabelAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 			 var args = dojox.data.tests.stores.KeyValueStore.getDatasource();
@@ -348,9 +348,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testReadAPI_getValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValue function of the store.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -368,9 +368,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testReadAPI_getValue_2(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValue function of the store.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -388,9 +388,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testReadAPI_getValue_3(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValue function of the store.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -408,9 +408,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testReadAPI_getValue_4(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValue function of the store.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -428,9 +428,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testReadAPI_getValues(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValues function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValues function of the store.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -449,9 +449,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -467,9 +467,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_bad1(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -484,9 +484,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad2(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -500,9 +500,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad3(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -516,9 +516,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d;
 		},
 		function testIdentityAPI_getIdentity(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -542,9 +542,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testIdentityAPI_getIdentityAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getIdentityAttributes
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -560,9 +560,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		   	return d;
 		},
 		function testReadAPI_isItem(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isItem function of the store
-			//	description:
+			// description:
 			//		Simple test of the isItem function of the store
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -581,9 +581,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		   	return d;
 		},
 		function testReadAPI_hasAttribute(t){
-			//	summary:
+			// summary:
 			//		Simple test of the hasAttribute function of the store
-			//	description:
+			// description:
 			//		Simple test of the hasAttribute function of the store
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -613,9 +613,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		   	return d;
 		},
 		function testReadAPI_containsValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the containsValue function of the store
-			//	description:
+			// description:
 			//		Simple test of the containsValue function of the store
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -645,9 +645,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		   	return d;
 		},
 		function testReadAPI_getAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getAttributes function of the store
-			//	description:
+			// description:
 			//		Simple test of the getAttributes function of the store
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -670,9 +670,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		},
 
 		function testReadAPI_getAttributes_onlyTwo(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getAttributes function of the store
-			//	description:
+			// description:
 			//		Simple test of the getAttributes function of the store
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -696,9 +696,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 		},
 
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -713,9 +713,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			t.assertTrue(count === 2);
 		},
 		function testReadAPI_fetch_patternMatch0(t){
-			//	summary:
+			// summary:
 			//		Function to test pattern matching of everything starting with lowercase e
-			//	description:
+			// description:
 			//		Function to test pattern matching of everything starting with lowercase e
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -733,9 +733,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch1(t){
-			//	summary:
+			// summary:
 			//		Function to test pattern matching of everything with $ in it.
-			//	description:
+			// description:
 			//		Function to test pattern matching of everything with $ in it.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/patterns.csv");
@@ -753,9 +753,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch2(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match
-			//	description:
+			// description:
 			//		Function to test exact pattern match
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/patterns.csv");
@@ -775,9 +775,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseInsensitive(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match with case insensitivity set.
-			//	description:
+			// description:
 			//		Function to test exact pattern match with case insensitivity set.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/patterns.csv");
@@ -794,9 +794,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseSensitive(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match with case insensitivity set.
-			//	description:
+			// description:
 			//		Function to test exact pattern match with case insensitivity set.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/patterns.csv");
@@ -812,9 +812,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabetic(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting alphabetic ordering.
-			//	description:
+			// description:
 			//		Function to test sorting alphabetic ordering.
 		
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/patterns.csv");
@@ -834,9 +834,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabeticDescending(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting alphabetic ordering in descending mode.
-			//	description:
+			// description:
 			//		Function to test sorting alphabetic ordering in descending mode.
 		
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/patterns.csv");
@@ -856,9 +856,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortMultiple(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting on multiple attributes.
-			//	description:
+			// description:
 			//		Function to test sorting on multiple attributes.
 			
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/patterns.csv");
@@ -890,9 +890,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortMultipleSpecialComparator(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting on multiple attributes with a custom comparator.
-			//	description:
+			// description:
 			//		Function to test sorting on multiple attributes with a custom comparator.
 
 			var args = dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv");
@@ -939,9 +939,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			return d; //Object
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = new dojox.data.KeyValueStore(dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv"));
@@ -967,9 +967,9 @@ doh.register("dojox.data.tests.stores.KeyValueStore",
 			t.assertTrue(passed);
 		},
 		function testIdentityAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = new dojox.data.KeyValueStore(dojox.data.tests.stores.KeyValueStore.getDatasource("stores/movies.csv"));

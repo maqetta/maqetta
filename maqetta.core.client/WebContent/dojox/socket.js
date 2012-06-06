@@ -1,4 +1,4 @@
-define("dojox/socket", ["dojo", "dojo/Evented", "dojo/cookie", "dojo/_base/url"], function(dojo, Evented) {
+define("dojox/socket", ["dojo", "dojo/on", "dojo/Evented", "dojo/cookie", "dojo/_base/url"], function(dojo, on, Evented) {
 
 var WebSocket = window.WebSocket;
 
@@ -18,7 +18,7 @@ function Socket(/*dojo.__XhrArgs*/ argsOrUrl){
 	// 		An object that implements the WebSocket API
 	// example:
 	//		| dojo.require("dojox.socket");
-	//		| var socket = dojox.socket({"//comet-server/comet");
+	//		| var socket = dojox.socket({"url://comet-server/comet");
 	//		| // we could also add auto-reconnect support
 	//		| // now we can connect to standard HTML5 WebSocket-style events
 	//		| dojo.connect(socket, "onmessage", function(event){
@@ -75,9 +75,7 @@ Socket.replace = function(socket, newSocket, listenForOpen){
 	dojo.forEach(["message", "close", "error"], proxyEvent);
 	function proxyEvent(type){
 		(newSocket.addEventListener || newSocket.on).call(newSocket, type, function(event){
-			var newEvent = document.createEvent("MessageEvent");
-			newEvent.initMessageEvent(event.type, false, false, event.data, event.origin, event.lastEventId, event.source);
-			socket.dispatchEvent(newEvent);
+			on.emit(socket, event.type, event);
 		}, true);
 	}
 };
@@ -168,9 +166,6 @@ var cancelled = false,
 		OPEN: 1,
 		CLOSING: 2,
 		CLOSED: 3,
-		dispatchEvent: function(event){
-			fire(event.type, event);
-		},
 		on: Evented.prototype.on,
 		firstRequest: function(args){
 			// summary:
@@ -205,11 +200,9 @@ var cancelled = false,
 	}
 	function fire(type, object, deferred){
 		if(socket["on" + type]){
-			var event = document.createEvent("HTMLEvents");
-			event.initEvent(type, false, false);
-			dojo.mixin(event, object);
-			event.ioArgs = deferred && deferred.ioArgs;
-			socket["on" + type](event);
+			object.ioArgs = deferred && deferred.ioArgs;
+			object.type = type;
+			on.emit(socket, type, object);
 		}
 	}
 	// provide an alias for Dojo's connect method

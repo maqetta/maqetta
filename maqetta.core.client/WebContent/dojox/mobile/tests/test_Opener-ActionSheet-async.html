@@ -51,8 +51,8 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true, async:true"></script>
 	<script language="JavaScript" type="text/javascript">
 		require([
-			"dojo/_base/html",			// dojo.byId
-			"dijit/_base/manager",		// dijit.byId
+			"dojo/_base/html", // dojo.byId
+			"dijit/_base/manager",  // dijit.byId
 			"dojox/mobile",				// This is a mobile app.
 			"dojox/mobile/compat",		// This mobile app supports running on desktop browsers
 			"dojox/mobile/parser",		// This mobile app uses declarative programming with fast mobile parser
@@ -75,7 +75,7 @@
 <body style="visibility:hidden;">
 	<center>
 	<button dojoType="dojox.mobile.Button" class="mblBlueButton" style="margin-top:20px;width:200px;"
-			onclick="dijit.byId('actionSheet').show(this, ['above-centered','below-centered','after','before'])">Open Action Sheet</button>
+			onclick="dijit.byId('actionSheet').show(this.domNode, ['above-centered','below-centered','after','before'])">Open Action Sheet</button>
 	<div id="msgArea" style="margin-top:5px;"></div>
 	</center>
 

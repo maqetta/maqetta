@@ -9,7 +9,7 @@ return declare("dojox.gauges.AnalogArrowIndicator", [AnalogIndicatorBase],{
 
 	// summary:
 	//		An indicator for the AnalogGauge that draws an arrow. The arrow is drawn on the angle that corresponds
-	// to the value of the indicator.
+	//		to the value of the indicator.
 	
 	_getShapes: function(group){
 		// summary:

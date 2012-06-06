@@ -6,11 +6,6 @@ define([
 	"dijit/form/_TextBoxMixin"
 ], function(declare, domConstruct, WidgetBase, FormValueMixin, TextBoxMixin){
 
-	/*=====
-		WidgetBase = dijit._WidgetBase;
-		FormValueMixin = dijit.form._FormValueMixin;
-		TextBoxMixin = dijit.form._TextBoxMixin;
-	=====*/
 	return declare("dojox.mobile.TextBox",[WidgetBase, FormValueMixin, TextBoxMixin],{
 		// summary:
 		//		A non-templated base class for textbox form inputs
@@ -22,7 +17,10 @@ define([
 		_setTypeAttr: null,
 
 		// Map widget attributes to DOMNode attributes.
-		_setPlaceHolderAttr: "textbox",
+		_setPlaceHolderAttr: function(/*String*/value){
+			value = this._cv ? this._cv(value) : value;
+			this.textbox.setAttribute("placeholder", value);
+		},
 
 		buildRendering: function(){
 			if(!this.srcNodeRef){
@@ -34,7 +32,12 @@ define([
 
 		postCreate: function(){
 			this.inherited(arguments);
-			this.connect(this.textbox, "onfocus", "_onFocus");
+			this.connect(this.textbox, "onmouseup", function(){ this._mouseIsDown = false; });
+			this.connect(this.textbox, "onmousedown", function(){ this._mouseIsDown = true; });
+			this.connect(this.textbox, "onfocus", function(e){
+				this._onFocus(this._mouseIsDown ? "mouse" : e);
+				this._mouseIsDown = false;
+			});
 			this.connect(this.textbox, "onblur", "_onBlur");
 		}
 	});

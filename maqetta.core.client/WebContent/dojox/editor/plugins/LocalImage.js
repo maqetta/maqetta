@@ -87,7 +87,7 @@ var LocalImage = dojo.declare("dojox.editor.plugins.LocalImage", LinkDialog.ImgL
 	linkDialogTemplate: [
 		"<div style='border-bottom: 1px solid black; padding-bottom: 2pt; margin-bottom: 4pt;'></div>", // <hr/> breaks the dialog in IE6
 		"<div class='dijitEditorEilDialogDescription'>${prePopuTextUrl}${prePopuTextBrowse}</div>",
-		"<table><tr><td colspan='2'>",
+		"<table role='presentation'><tr><td colspan='2'>",
 		"<label for='${id}_urlInput' title='${prePopuTextUrl}${prePopuTextBrowse}'>${url}</label>",
 		"</td></tr><tr><td class='dijitEditorEilDialogField'>",
 		"<input dojoType='dijit.form.ValidationTextBox' class='dijitEditorEilDialogField'" +
@@ -334,8 +334,7 @@ var LocalImage = dojo.declare("dojox.editor.plugins.LocalImage", LinkDialog.ImgL
 	}
 });
 
-// Register this plugin.
-_Plugin.registry["LocalImage"] = function(args){
+var plugin = function(args){
 	return new LocalImage({
 		command: "insertImage",
 		uploadable: ("uploadable" in args) ? args.uploadable : false,
@@ -345,6 +344,11 @@ _Plugin.registry["LocalImage"] = function(args){
 		fileMask: ("fileMask" in args) ? args.fileMask : "*.jpg;*.jpeg;*.gif;*.png;*.bmp"
 	});
 };
+
+// Register the plugin and some name varients.
+_Plugin.registry["LocalImage"] = plugin;
+_Plugin.registry["localImage"] = plugin;
+_Plugin.registry["localimage"] = plugin;
 
 return LocalImage;
 

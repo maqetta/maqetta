@@ -33,9 +33,9 @@
 			var chart;
 			makeObjects = function(){
 				chart = new dojox.charting.Chart("chart", { margins : {l :20, t:10, b:10, r: 50}});
-				chart.addAxis("x", {type : "Default", fixLower: "minor", natural: true, stroke: "grey",
+				chart.addAxis("x", {type : "Default", fixLower: "minor", natural: true, stroke: "gray",
 					majorTick: {color: "red", length: 4}, minorTick: {color: "blue", length: 2}});
-				chart.addAxis("y", {vertical: true, min: 0, max: 100, majorTickStep: 10, minorTickStep: 5, stroke: "grey",
+				chart.addAxis("y", {vertical: true, min: 0, max: 100, majorTickStep: 10, minorTickStep: 5, stroke: "gray",
 					majorTick: {stroke: "black", length: 4}, minorTick: {stroke: "gray", length: 2}});
 				chart.addPlot("default", {type: "Default",markers: false});
 				chart.addSeries("Series A", [

@@ -2,16 +2,69 @@
 .dj_tablet .mblHeading {
 	background-image: url(compat/ipad-heading-bg.png);
 }
+.dj_gecko.dj_tablet .mblHeading {
+	background-image: -moz-linear-gradient(top, #f3f4f6 0%, #a7abb8 100%);
+}
 
-/* Heading Arrow Button */
-.dj_tablet .mblArrowButtonHead {
+/* dojox.mobile.ToolBarButton */
+.dj_ie.dj_tablet .mblToolBarButtonHasLeftArrow .mblToolBarButtonLeftArrow {
 	background-image: url(compat/ipad-arrow-button-head.png);
 }
-.dj_tablet .mblArrowButtonBody {
+.dj_ie.dj_tablet .mblToolBarButtonHasRightArrow .mblToolBarButtonRightArrow {
+	background-image: url(compat/ipad-arrow-button-right-head.png);
+}
+.dj_ie.dj_tablet .mblToolBarButton .mblToolBarButtonCell .mblToolBarButtonBody {
 	background-image: url(compat/ipad-arrow-button-bg.png);
 }
+.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonCell .mblToolBarButtonLeftArrow {
+	background-image: url(compat/ipad-arrow-button-head-sel.png);
+}
+.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonCell .mblToolBarButtonRightArrow {
+	background-image: url(compat/ipad-arrow-button-right-head-sel.png);
+}
+.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonCell .mblToolBarButtonBody {
+	background-image: url(compat/ipad-arrow-button-sel-bg.png);
+}
 
-/* mbl.widget.TabBar */
-.dj_tablet .mblTabPanelHeader {
+/* dojox.mobile.TabBar */
+.dj_tablet .mblTabBarSegmentedControl,
+.dj_tablet .mblTabBarStandardTab,
+.dj_tablet .mblTabBarSegmentedControl .mblTabBarButton {
 	background-image: url(compat/ipad-heading-bg.png);
+}
+.dj_tablet .mblTabBarSegmentedControl .mblTabBarButtonSelected {
+	background-image: url(compat/ipad-arrow-button-bg.png);
+}
+.dj_tablet .mblTabBarStandardTab .mblTabBarButtonSelected {
+	background-color: #f3f4f6;
+	background-image: none;
+}
+.dj_gecko.dj_tablet .mblTabBarSegmentedControl,
+.dj_gecko.dj_tablet .mblTabBarStandardTab,
+.dj_gecko.dj_tablet .mblTabBarSegmentedControl .mblTabBarButton {
+	background-image: -moz-linear-gradient(top, #f3f4f6 0%, #a7abb8 100%);
+}
+.dj_gecko.dj_tablet .mblTabBarSegmentedControl .mblTabBarButtonSelected {
+	background-image: -moz-linear-gradient(top, #b1b5bb 0%, #6a727d 100%);
+}
+.dj_gecko.dj_tablet .mblTabBarStandardTab .mblTabBarButton {
+	background-image: -moz-linear-gradient(top, #f0f0f2 0%, #959da0 100%);
+}
+.dj_gecko.dj_tablet .mblTabBarStandardTab .mblTabBarButtonSelected {
+	background-image: -moz-linear-gradient(top, #f3f4f6 0%, #f2f3f7 100%);
+}
+
+
+/* Default Button Colors */
+.dj_tablet .mblColorDefault {
+	background-color: #8b919a;
+}
+.dj_gecko.dj_tablet .mblColorDefault {
+	background-image: -moz-linear-gradient(top, #b1b5bb 0%, #6a727d 100%);
+}
+.dj_tablet .mblColorDefaultSel {
+	background-color: #515761;
+}
+.dj_gecko.dj_tablet .mblColorDefaultSel {
+	background-image: -moz-linear-gradient(top, #7a7e85 0%, #303845 100%);
 }

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"removeFormat" : "Formatı Sil",
 	"copy" :"Köçür",
@@ -48,5 +47,4 @@ define(
 	"appleKey" : "⌘${0}",
 	"ctrlKey" : "ctrl+${0}"
 })
-//end v1.x content
 );

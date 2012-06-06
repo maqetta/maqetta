@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} od ${1} ${0}",
 	"firstTip": "Prva stran",
@@ -13,12 +12,10 @@ define(
 	"allItemsLabelTemplate": "Vse postavke",
 	"gotoButtonTitle": "Pojdi na specifično stran",
 	"dialogTitle": "Pojdi na stran",
-	"dialogIndication": "Podajte številko strani",
+	"dialogIndication": "Podaj številko strani",
 	"pageCountIndication": " (${0} strani)",
 	"dialogConfirm": "Pojdi",
 	"dialogCancel": "Prekliči",
-	"all": "vse"
+	"all": "Vse"
 })
-//end v1.x content
 );
-

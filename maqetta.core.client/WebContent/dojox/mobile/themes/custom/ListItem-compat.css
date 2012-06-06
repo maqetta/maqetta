@@ -1,16 +1,13 @@
 @import url("../common/domButtons/DomButtonGrayArrow-compat.css");
-@import url("../common/domButtons/DomButtonDarkBlueCheck-compat.css");
 
-/* mbl.widget.ListItem */
-*html li.mblListItem.mblVariableHeight { /* IE6 hack */
-	height: 0;
+@import url("../common/domButtons/DomButtonDarkBlueCheck-compat.css");
+/* dojox.mobile.ListItem */
+.mblListItemSelected {
+  background-color: #666666;
 }
-.mblItemSelected {
-	background-image: url(compat/ui-widget-bg.png);
+.dj_gecko .mblListItemSelected {
+  background-image: -moz-linear-gradient(top, #bbbbbb 0%, #666666 100%);
 }
-*html .mblListItemTextBox { /* IE6 hack */
-	height: 100%;
-}
-*html li.mblListItem.mblVariableHeight .mblListItemTextBox { /* IE6 hack */
-	height: auto;
+.dj_ie6 .mblListItem {
+  vertical-align: bottom;
 }

@@ -1,4 +1,6 @@
+@import url("common-compat.css");
 @import url("Heading-compat.css");
+@import url("ToolBarButton-compat.css");
 @import url("RoundRect-compat.css");
 @import url("RoundRectList-compat.css");
 @import url("EdgeToEdgeCategory-compat.css");

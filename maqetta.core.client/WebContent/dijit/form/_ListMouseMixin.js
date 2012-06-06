@@ -5,10 +5,6 @@ define([
 	"./_ListBase"
 ], function(declare, event, touch, _ListBase){
 
-/*=====
-var _ListBase = dijit.form._ListBase;
-=====*/
-
 // module:
 //		dijit/form/_ListMouseMixin
 // summary:
@@ -54,7 +50,7 @@ return declare( "dijit.form._ListMouseMixin", _ListBase, {
 		}
 	},
 
-	_onMouseOut: function(/*Event*/ /*===== evt ====*/){
+	_onMouseOut: function(/*Event*/ /*===== evt =====*/){
 		if(this._hoveredNode){
 			this.onUnhover(this._hoveredNode);
 			if(this._getSelectedAttr() == this._hoveredNode){

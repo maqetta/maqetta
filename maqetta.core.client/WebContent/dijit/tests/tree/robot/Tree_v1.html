@@ -11,26 +11,23 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_Tree_v1.html');
 
-				doh.register("setup",{
-					name: "setup",
-					timeout:20000,
-					runTest:function(){
-						var d = new doh.Deferred();
-						var store = dojo.global.dijit.byId('mytree').get('store');
-						store.fetch({query:{id:'*'}, onComplete:function(){
-							d.callback(true);
-						}});
-						return d;
+				doh.register("_setup", [
+					{
+						name: "wait for widgets to load",
+						timeout: 10000,
+						runTest: waitForLoad
+					},
+					function setVars(){
+						registry = dojo.global.require("dijit/registry");
 					}
-				});
+				]);
 							
 				doh.register("Test tree 1", [
 					{
@@ -39,7 +36,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 														
-							var myTree = dijit.byId("mytree");
+							var myTree = registry.byId("mytree");
 							var children = myTree.rootNode.getChildren();
 								
 							doh.robot.mouseMoveAt(children[0].contentNode, 500, 1);
@@ -60,7 +57,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							
-							var myTree = dijit.byId("mytree");
+							var myTree = registry.byId("mytree");
 							var rootChildren = myTree.rootNode.getChildren();
 							var africaChildren = rootChildren[0].getChildren();
 							var naChildren = rootChildren[4].getChildren();
@@ -82,7 +79,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							
-							var myTree = dijit.byId("mytree");
+							var myTree = registry.byId("mytree");
 							var rootChildren = myTree.rootNode.getChildren();
 							var naChildren = rootChildren[4].getChildren();
 							var mexicoChildren = naChildren[0].getChildren();
@@ -102,7 +99,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							
-							var myTree = dijit.byId("mytree");
+							var myTree = registry.byId("mytree");
 							var rootChildren = myTree.rootNode.getChildren();
 							var naChildren = rootChildren[4].getChildren();
 							
@@ -127,9 +124,9 @@
 						name: "Destroy tree",
 						timeout: 4000,
 						runTest: function(){
-							dijit.byId("mytree").destroy();
+							registry.byId("mytree").destroy();
 
-							doh.is(undefined, dijit.byId("mytree"), "tree was not destroyed");
+							doh.is(undefined, registry.byId("mytree"), "tree was not destroyed");
 							doh.is(undefined, dojo.byId("mytree"), 'widget was removed');
 						}
 					}
@@ -142,7 +139,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							
-							var myTree = dijit.byId("tree2");
+							var myTree = registry.byId("tree2");
 							var children = myTree.rootNode.getChildren();
 							
 							var ex = children[0].expandoNode;
@@ -165,7 +162,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							
-							var myTree = dijit.byId("tree2");
+							var myTree = registry.byId("tree2");
 							var rootChildren = myTree.rootNode.getChildren();
 														
 							doh.robot.mouseMoveAt(rootChildren[0].contentNode, 500, 1);
@@ -176,90 +173,7 @@
 							}), 1000);
 							return d;
 						}
-					},
-					{
-						name: "open context menu",
-						timeout: 4000,
-						runTest: function(){
-							var d = new doh.Deferred();
-							
-							var myTree = dijit.byId("tree2");
-							var children = myTree.rootNode.getChildren();
-							
-							doh.robot.mouseMoveAt(children[1].expandoNode, 500, 1);
-							doh.robot.mouseClick({right: true}, 500);
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								var menu = dijit.byId("tree_menu");
-								doh.t(isVisible(menu.domNode), "Menu is not visible");
-								
-								menu = dijit.byId("submenu2");
-								doh.t(isHidden(menu.domNode), "Sub menu is not visible");
-							}), 1000);
-							return d;
-						}
-					},
-					{
-						name: "open sub menu 1",
-						timeout: 3000,
-						runTest: function(){
-							var d = new doh.Deferred();
-							
-							doh.robot.mouseMoveAt("popupSubMenu", 500, 1);
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								var menu = dijit.byId("tree_menu");
-								doh.t(isVisible(menu.domNode), "Menu is not visible");
-								menu = dijit.byId("submenu2");
-								doh.t(isVisible(menu.domNode), "Sub menu is not visible");
-							}), 1000);
-							return d;
-						}
-					},
-					{
-						name: "open deeper sub menu",
-						timeout: 3000,
-						runTest: function(){
-							var d = new doh.Deferred();
-							
-							doh.robot.mouseMoveAt("deeperSubmenu", 500, 1);
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								var menu = dijit.byId("tree_menu");
-								doh.t(isVisible(menu.domNode), "Menu is not visible");
-								menu = dijit.byId("submenu2");
-								doh.t(isVisible(menu.domNode), "Sub menu is not visible");
-								menu = dijit.byId("submenu4");
-								doh.t(isVisible(menu.domNode), "Deeper menu is not visible");
-							}), 1000);
-							return d;
-						}
-					},
-					{
-						name: "close tree nodes",
-						timeout: 9000,
-						runTest: function(){
-							var d = new doh.Deferred();
-							
-							var myTree = dijit.byId("tree2");
-							var children = myTree.rootNode.getChildren();
-
-							// close deeper submenu, then submenu, then context menu
-							doh.robot.keyPress(dojo.keys.ESCAPE, 1000, {}, true);
-							doh.robot.keyPress(dojo.keys.ESCAPE, 1000, {}, true);
-							doh.robot.keyPress(dojo.keys.ESCAPE, 1000, {}, true);
-
-							// close africa node.   (2 mouse moves to work around robot bugs)
-							doh.robot.mouseMoveAt(children[0].expandoNode, 1000, 100);
-							doh.robot.mouseMoveAt(children[0].expandoNode, 1000, 1);
-							doh.robot.mouseClick({left: true}, 1000);
-
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.f(children[0].isExpanded, "failed to close first node");
-							}), 1000);
-							return d;
-						}
-					}					
+					}
 				]);
 				
 				doh.run();

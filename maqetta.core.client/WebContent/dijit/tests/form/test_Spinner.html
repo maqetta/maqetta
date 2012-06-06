@@ -43,7 +43,7 @@
 			<br>
 			initial value=900, no delta specified, no min specified, max=1550, onChange captured, big font<br>
 			<label for="integerspinner1">Spinbox #1: </label><br>
-			<input id="integerspinner1" data-dojo-type="dijit.form.NumberSpinner"
+			<input id="integerspinner1" data-dojo-type="dijit/form/NumberSpinner"
 				data-dojo-props='onChange:function(val){ dojo.byId("oc1").value = val; },
 				value:900,
 				"class":"bigFont",
@@ -59,7 +59,7 @@
 			<br>
 			initial value=1000, delta=10, min=9 max=1550<br>
 			<label for="integerspinner2">Spinbox with custom styling (width=50%, 200% Courier font): </label>
-			<input id="integerspinner2" data-dojo-type="dijit.form.NumberSpinner"
+			<input id="integerspinner2" data-dojo-type="dijit/form/NumberSpinner"
 				data-dojo-props='style:{fontSize:"200%", fontFamily:"Courier", border:"1px solid blue", width:"50%"},
 				value:1000,
 				smallDelta:10,
@@ -71,7 +71,7 @@
 			<br>
 			<label for="integertextbox3">Spinner line break test: </label>initial value not specified, delta not specified, min not specified, max not specified, signed not specified, separator not specified<br>
 			[verify no line break just after this text]
-			<input id="integertextbox3" data-dojo-type="dijit.form.NumberSpinner" data-dojo-props='name:"integertextbox3" '/>
+			<input id="integertextbox3" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props='name:"integertextbox3" '/>
 			[verify no line break just before this text]
 			<br>
 			<br>
@@ -79,7 +79,7 @@
 			<br>
 			initial value=+1.0, smalldelta=0.1, largedelta=1.0, min=-10.9, max=155, places=1, maxLength=20, exponent=false<br>
 			<label for="realspinner1">Real Number Spinbox #1: </label><br>
-			<input id="realspinner1" data-dojo-type="dijit.form.NumberSpinner"
+			<input id="realspinner1" data-dojo-type="dijit/form/NumberSpinner"
 				data-dojo-props='value:1.0,
 				smallDelta:0.1,
 				largeDelta:1.0,
@@ -91,7 +91,7 @@
 
 			<p>
 			<label for="spinnerMinOnly">Spinner with no maximum, 1 decimal place: </label><br>
-			<input id="spinnerMinOnly" data-dojo-type="dijit.form.NumberSpinner"
+			<input id="spinnerMinOnly" data-dojo-type="dijit/form/NumberSpinner"
 				data-dojo-props='value:1.0,
 				smallDelta:0.1,
 				largeDelta:1.0,

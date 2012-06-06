@@ -1,7 +1,5 @@
 define(["dojo/_base/kernel", "dojo/_base/array", "./_base"], function(dojo, darray, dxc){
-/*=====
-var dxc = dojox.collections;
-=====*/
+
 	dxc.BinaryTree=function(data){
 		function node(data, rnode, lnode){
 			this.value=data||null;

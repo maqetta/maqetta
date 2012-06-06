@@ -10,11 +10,6 @@ define([
 	"dojo/text!./templates/DropDownBox.html"
 ], function(declare, Deferred, kernel, lang, QueryResults, _AutoCompleterMixin, _ComboBoxMenu, _HasDropDown, template){
 
-/*=====
-	var _AutoCompleterMixin = dijit.form._AutoCompleterMixin;
-	var _ComboBoxMenu = dijit.form._ComboBoxMenu;
-	var _HasDropDown = dijit._HasDropDown;
-=====*/
 
 	// module:
 	//		dijit/form/ComboBoxMixin

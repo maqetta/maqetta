@@ -2,8 +2,8 @@ define([
 	"dojo/_base/array", // array.every
 	"dojo/_base/declare", // declare
 	"dojo/_base/lang", // lang.isArray
-	"dojo/_base/window", // win.global
-	".."	// for exporting symbols to dijit, TODO: remove in 2.0
+	"dojo/_base/window", // win.doc   TODO: remove in 2.0
+	"../main"	// for exporting symbols to dijit, TODO: remove in 2.0
 ], function(array, declare, lang, win, dijit){
 
 // module:
@@ -195,20 +195,20 @@ dijit.range.adjacentNoneTextNode = function(startnode, next){
 	return [node,len];
 };
 
-dijit.range._w3c = Boolean(window['getSelection']);
-dijit.range.create = function(/*Window?*/window){
-	if(dijit.range._w3c){
-		return (window || win.global).document.createRange();
+dijit.range.create = function(/*Window?*/ win){	// TODO: for 2.0, replace optional window param w/mandatory window or document param
+	win = win || window;
+	if(window.getSelection){
+		return ((window && window.document) || win.doc).createRange();
 	}else{//IE
-		return new dijit.range.W3CRange;
+		return new dijit.range.W3CRange();
 	}
 };
 
-dijit.range.getSelection = function(/*Window*/win, /*Boolean?*/ignoreUpdate){
-	if(dijit.range._w3c){
-		return win.getSelection();
+dijit.range.getSelection = function(/*Window*/ window, /*Boolean?*/ ignoreUpdate){
+	if(window.getSelection){
+		return window.getSelection();
 	}else{//IE
-		var s = new dijit.range.ie.selection(win);
+		var s = new dijit.range.ie.selection(window);
 		if(!ignoreUpdate){
 			s._getCurrentSelection();
 		}
@@ -216,12 +216,13 @@ dijit.range.getSelection = function(/*Window*/win, /*Boolean?*/ignoreUpdate){
 	}
 };
 
-if(!dijit.range._w3c){
+// TODO: convert to has() test?   But remember IE9 issues with quirks vs. standards in main frame vs. iframe.
+if(!window.getSelection){
 	dijit.range.ie = {
 		cachedSelection: {},
-		selection: function(win){
+		selection: function(window){
 			this._ranges = [];
-			this.addRange = function(r, /*boolean*/internal){
+			this.addRange = function(r, /*boolean*/ internal){
 				this._ranges.push(r);
 				if(!internal){
 					r._select();
@@ -237,8 +238,8 @@ if(!dijit.range._w3c){
 				this.rangeCount = 0;
 			};
 			var _initCurrentRange = function(){
-				var r = win.document.selection.createRange();
-				var type = win.document.selection.type.toUpperCase();
+				var r = window.document.selection.createRange();
+				var type = window.document.selection.type.toUpperCase();
 				if(type == "CONTROL"){
 					//TODO: multiple range selection(?)
 					return new dijit.range.W3CRange(dijit.range.ie.decomposeControlRange(r));
@@ -546,7 +547,7 @@ declare("dijit.range.W3CRange",null, {
 		this.collapsed = true;
 }
 });
-} //if(!dijit.range._w3c)
+} //if(!window.getSelection)
 
 
 return dijit.range;

@@ -2,15 +2,16 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/dom",
-	"dijit/_WidgetBase"
-], function(declare, lang, dom, _WidgetBase){
+	"dijit/_WidgetBase",
+	"dojo/regexp"
+], function(declare, lang, dom, _WidgetBase, regexp){
 	/*=====
 		declare = dojo.declare;
 		dom = dojo.dom;
 		_WidgetBase = dijit._WidgetBase;
 	=====*/
 
-	return declare("dojox.mvc.Output", [_WidgetBase], {
+	return declare("dojox.mvc.Output", _WidgetBase, {
 		// summary:
 		//		A simple widget that displays templated output, parts of which may
 		//		be data-bound.
@@ -25,6 +26,10 @@ define([
 		//		The output widget being data-bound, if the balance changes in the
 		//		dojox.mvc.StatefulModel, the content within the <span> will be
 		//		updated accordingly.
+
+		// exprchar:  Character
+		//		Character to use for a substitution expression, for a substitution string like ${this.index}
+		exprchar: '$',
 	
 		// templateString: [private] String
 		//		The template or data-bound output content.
@@ -79,10 +84,13 @@ define([
 				if(!value){return "";}
 				var exp = value.substr(2);
 				exp = exp.substr(0, exp.length - 1);
-				with(pThis){return eval(exp) || "";}
+				with(pThis){
+					var val = eval(exp);
+					return (val || val == 0 ? val : "");
+				}
 			};
 			transform = lang.hitch(this, transform);
-			return tmpl.replace(/\$\{.*?\}/g,
+			return tmpl.replace(new RegExp(regexp.escapeString(this.exprchar)+"(\{.*?\})","g"),
 				function(match, key, format){
 					return transform(match, key).toString();
 				});

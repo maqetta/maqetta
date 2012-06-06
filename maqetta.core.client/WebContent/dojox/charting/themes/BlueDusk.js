@@ -1,6 +1,5 @@
-define(["../Theme", "./common"], function(Theme, themes){
-
-	themes.BlueDusk=new Theme({
+define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
+	themes.BlueDusk = new SimpleTheme({
 		colors: [
 			"#292e76",
 			"#3e56a6",

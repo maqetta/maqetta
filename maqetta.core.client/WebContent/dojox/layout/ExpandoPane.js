@@ -1,8 +1,20 @@
-define(["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/array", 
-	"dojo/_base/connect","dojo/_base/event","dojo/_base/fx","dojo/dom-style",
-	"dojo/dom-class","dojo/dom-geometry","dojo/text!./resources/ExpandoPane.html",
-	"dijit/layout/ContentPane","dijit/_TemplatedMixin","dijit/_Contained","dijit/_Container"], 
-  function(kernel,lang,declare,arrayUtil,connectUtil,eventUtil,baseFx,domStyle,domClass,domGeom,
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array", 
+	"dojo/_base/connect",
+	"dojo/_base/event",
+	"dojo/_base/fx",
+	"dojo/dom-style",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
+	"dojo/text!./resources/ExpandoPane.html",
+	"dijit/layout/ContentPane",
+	"dijit/_TemplatedMixin",
+	"dijit/_Contained",
+	"dijit/_Container"
+], function(kernel,lang,declare,arrayUtil,connectUtil,eventUtil,baseFx,domStyle,domClass,domGeom,
 		template,ContentPane,TemplatedMixin,Contained,Container) {
 /*=====
 var ContentPane = dijit.layout.ContentPane;
@@ -76,6 +88,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 				case "trailing" :
 				case "right" :
 					thisClass = rtl ? "Left" : "Right";
+					this._needsPosition = "left";
 					break;
 				case "leading" :
 				case "left" :
@@ -85,6 +98,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 					thisClass = "Top";
 					break;
 				case "bottom" :
+					this._needsPosition = "top";
 					thisClass = "Bottom";
 					break;
 			}
@@ -140,7 +154,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	_afterResize: function(e){
 		var tmp = this._currentSize;						// the old size
 		this._currentSize = domGeom.getMarginBox(this.domNode);	// the new size
-		var n = this._currentSize[(this._isHorizontal ? "h" : "w")]
+		var n = this._currentSize[(this._isHorizontal ? "h" : "w")];
 		if(n > this._titleHeight){
 			if(!this._showing){
 				this._showing = !this._showing;
@@ -167,16 +181,34 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			},
 			isHorizontal = this._isHorizontal,
 			showProps = {},
+			showSize = this._showSize,
+			hideSize = this._closedSize,
 			hideProps = {},
-			dimension = isHorizontal ? "height" : "width"
+			dimension = isHorizontal ? "height" : "width",
+			also = this._needsPosition
 		;
 
 		showProps[dimension] = {
-			end: this._showSize
+			end: showSize
 		};
 		hideProps[dimension] = {
-			end: this._closedSize
+			end: hideSize
 		};
+		
+		if(also){
+			showProps[also] = {
+				end: function(n){
+					var c = parseInt(n.style[also], 10);
+					return c - showSize + hideSize; 
+				}
+			}
+			hideProps[also] = {
+				end: function(n){
+					var c = parseInt(n.style[also], 10);
+					return c + showSize - hideSize;
+				}
+			}
+		}
 		
 		this._showAnim = baseFx.animateProperty(lang.mixin(_common,{
 			easing:this.easeIn,
@@ -278,6 +310,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		}
 
 		this._layoutChildren();
+		this._setupAnims();
 	},
 	
 	_trap: function(e){

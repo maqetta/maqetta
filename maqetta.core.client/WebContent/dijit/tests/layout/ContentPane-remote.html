@@ -19,11 +19,9 @@
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
-	<!-- functions to help test -->
-	<script type="text/javascript" src="../helpers.js"></script>
-
 	<script type="text/javascript">
 		dojo.require("doh.runner");
+		dojo.require("dijit.tests.helpers");	// functions to help test
 
 		dojo.require("dojo.parser");
 
@@ -566,12 +564,8 @@
 					runTest: function(t){
 						var dlg = dijit.byId("preloadTooltipDlg");
 						if(!dlg.isLoaded){
-							var d = new doh.Deferred();
-							dlg.onLoadDeferred.then(
-								function(){ d.callback(true); },
-								function(e){ d.errback(e); }
-							);
-							return d;
+							doh.t(dlg.onLoadDeferred, "onLoadDeferred exists");
+							return dlg.onLoadDeferred;
 						}
 					}
 				},
@@ -590,12 +584,7 @@
 						var btn = dijit.byId("noPreloadTooltipDlgBtn");
 						btn.openDropDown();
 						doh.t(dlg.onLoadDeferred, "onLoadDeferred exists");
-						var d = new doh.Deferred();
-						dlg.onLoadDeferred.then(
-							function(){ d.callback(true); },
-							function(e){ d.errback(e); }
-						);
-						return d;
+						return dlg.onLoadDeferred;
 					}
 				}
 			]);
@@ -620,12 +609,12 @@
 	</p>
 
 	<div id="createTab" data-dojo-type='dijit.form.Button' data-dojo-props='onClick:function(){ createTab() }'>Create a Tab</div>
-	<div id="ttabs" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='tabPosition:"top", style:"width: 100%; height: 20em;"'>
-		<a id="ttab1" data-dojo-type="dijit.layout.LinkPane"
+	<div id="ttabs" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='tabPosition:"top", style:"width: 100%; height: 20em;"'>
+		<a id="ttab1" data-dojo-type="dijit/layout/LinkPane"
 			data-dojo-props='href:"getResponse.php?messId=3&amp;delay=1000",
 			closable:true
 		'><img src='../images/copy.gif'/> Tab1</a>
-		<a id="ttab2" data-dojo-type="dijit.layout.LinkPane"
+		<a id="ttab2" data-dojo-type="dijit/layout/LinkPane"
 			data-dojo-props='href:"getResponse.php?messId=4&amp;delay=1000",
 			refreshOnShow:true, title:"Tab 2 ",
 			selected:true,
@@ -633,7 +622,7 @@
 		'><i>refreshOnShow</i>
 			<img src='../images/cut.gif'/>
 		</a>
-		<a id="ttab3" data-dojo-type="dijit.layout.LinkPane"
+		<a id="ttab3" data-dojo-type="dijit/layout/LinkPane"
 			data-dojo-props='href:"getResponse.php?messId=5&amp;delay=1000",
 			onClose:testClose,
 			closable:true
@@ -644,24 +633,24 @@
 	</div>
 
 	<h2>AccordionContainer</h2>
-	<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props='id:"ac", style:"height:300px; width:400px;"'>
-		<div id="ac_pane1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"one", refreshOnShow:false, href:"getResponse.php?messId=4&amp;delay=1000"'></div>
-		<div id="ac_pane2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"two", refreshOnShow:true, href:"getResponse.php?messId=4&amp;delay=4000"'></div>
-		<div id="ac_pane3" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"three", refreshOnShow:false, href:"getResponse.php?messId=4&amp;delay=4100"'></div>
+	<div data-dojo-type="dijit/layout/AccordionContainer" data-dojo-props='id:"ac", style:"height:300px; width:400px;"'>
+		<div id="ac_pane1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"one", refreshOnShow:false, href:"getResponse.php?messId=4&amp;delay=1000"'></div>
+		<div id="ac_pane2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"two", refreshOnShow:true, href:"getResponse.php?messId=4&amp;delay=4000"'></div>
+		<div id="ac_pane3" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"three", refreshOnShow:false, href:"getResponse.php?messId=4&amp;delay=4100"'></div>
 	</div>
 
 	<h2>TooltipDialog</h2>
-	<div data-dojo-type="dijit.layout.ContentPane">
-		<div id="preloadTooltipDlgBtn" data-dojo-type="dijit.form.DropDownButton">
+	<div data-dojo-type="dijit/layout/ContentPane">
+		<div id="preloadTooltipDlgBtn" data-dojo-type="dijit/form/DropDownButton">
 			<span>Show Preload TooltipDialog</span>
-			<div id="preloadTooltipDlg" data-dojo-type="dijit.TooltipDialog" data-dojo-props='title:"Enter Login information", preload: true, href: "doc1.html"'>
+			<div id="preloadTooltipDlg" data-dojo-type="dijit/TooltipDialog" data-dojo-props='title:"Enter Login information", preload: true, href: "doc1.html"'>
 			</div>
 		</div>
 	</div>
 
-	<div id="noPreloadTooltipDlgBtn" data-dojo-type="dijit.form.DropDownButton">
+	<div id="noPreloadTooltipDlgBtn" data-dojo-type="dijit/form/DropDownButton">
 		<span>Show No-Preload TooltipDialog</span>
-		<div id="noPreloadTooltipDlg" data-dojo-type="dijit.TooltipDialog" data-dojo-props='title:"Enter Login information", preload: false, href: "doc1.html"'>
+		<div id="noPreloadTooltipDlg" data-dojo-type="dijit/TooltipDialog" data-dojo-props='title:"Enter Login information", preload: false, href: "doc1.html"'>
 		</div>
 	</div>
 

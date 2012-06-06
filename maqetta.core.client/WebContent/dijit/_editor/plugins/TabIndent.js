@@ -5,10 +5,6 @@ define([
 	"../../form/ToggleButton"
 ], function(declare, kernel, _Plugin, ToggleButton){
 
-/*=====
-	var _Plugin = dijit._editor._Plugin;
-=====*/
-
 	// module:
 	//		dijit/_editor/plugins/TabIndent
 	// summary:

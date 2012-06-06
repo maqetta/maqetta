@@ -1,101 +1,11 @@
 define(
 //begin v1.x content
 {
-	"dateFormatItem-yM": "M/yyyy",
-	"dateFormatItem-yyyyMMMEd": "EEE d MMM y G",
-	"dateFormatItem-yQ": "'T'Q y",
-	"eraNames": [
-		"AH"
-	],
-	"dateFormatItem-MMMEd": "E d MMM",
-	"dateFormatItem-yQQQ": "QQQ y",
-	"dateFormatItem-MMdd": "dd/MM",
-	"dateFormatItem-MMM": "LLL",
-	"months-standAlone-narrow": [
-		"1",
-		"2",
-		"3",
-		"4",
-		"5",
-		"6",
-		"7",
-		"8",
-		"9",
-		"10",
-		"11",
-		"12"
-	],
-	"dateFormatItem-yyMMMEEEd": "EEE d MMM y G",
-	"dateFormatItem-MMMdd": "dd MMM",
-	"dateFormatItem-yyyy": "y G",
-	"months-standAlone-abbr": [
-		"Mouh.",
-		"Saf.",
-		"Rabi ª-oul-A.",
-		"Rabi ª-out-T.",
-		"Djoum.-l-O.",
-		"Djoum.-t-T.",
-		"Radj.",
-		"Cha.",
-		"Ram.",
-		"Chaou.",
-		"Dou-l-Q.",
-		"Dou-l-H."
-	],
-	"dateFormatItem-Ed": "E d",
-	"dateFormatItem-yMMM": "MMM y",
-	"days-standAlone-narrow": [
-		"D",
-		"L",
-		"M",
-		"M",
-		"J",
-		"V",
-		"S"
-	],
-	"eraAbbr": [
-		"AH"
-	],
-	"dateFormatItem-yyyyMMMM": "MMMM y G",
-	"dateFormat-long": "d MMMM y G",
-	"dateFormatItem-Hm": "HH:mm",
-	"dateFormatItem-MMd": "d/MM",
-	"dateFormatItem-yyMM": "MM/y G",
-	"dateFormat-medium": "d MMM, y G",
-	"dateFormatItem-Hms": "HH:mm:ss",
-	"dateFormatItem-yyMMM": "MMM y G",
-	"dateFormatItem-yyQQQQ": "QQQQ y G",
-	"dateFormatItem-ms": "mm:ss",
-	"dateFormatItem-yyMMMd": "d MMM y G",
-	"months-standAlone-wide": [
-		"Mouharram",
-		null,
-		"Rabi ª-oul-Aououal",
-		"Rabi ª-out-Tani",
-		"Djoumada-l-Oula",
-		"Djoumada-t-Tania",
-		"Radjab",
-		"Cha ªban",
-		null,
-		"Chaououal",
-		"Dou-l-Qa ªda",
-		"Dou-l-Hidjja"
-	],
-	"dateFormatItem-MMMMEd": "EEE d MMMM",
-	"dateFormatItem-yyyyMEd": "EEE d/M/y G",
-	"dateFormatItem-MMMd": "d MMM",
-	"quarters-format-narrow": [
-		"T1",
-		"T2",
-		"T3",
-		"T4"
-	],
-	"dateFormatItem-yyQ": "'T'Q y G",
 	"months-format-abbr": [
 		"Mouh.",
 		"Saf.",
-		"Rabi ª-oul-A.",
-		"Rabi ª-out-T.",
+		"Rabiʻ-oul-A.",
+		"Rabiʻ-out-T.",
 		"Djoum.-l-O.",
 		"Djoum.-t-T.",
 		"Radj.",
@@ -105,45 +15,6 @@ define(
 		"Dou-l-Q.",
 		"Dou-l-H."
 	],
-	"quarters-format-abbr": [
-		"T1",
-		"T2",
-		"T3",
-		"T4"
-	],
-	"days-format-abbr": [
-		"dim.",
-		"lun.",
-		"mar.",
-		"mer.",
-		"jeu.",
-		"ven.",
-		"sam."
-	],
-	"dateFormatItem-M": "L",
-	"dateFormatItem-MEd": "EEE d/M",
-	"dateFormatItem-yyyyQQQ": "QQQ y G",
-	"months-format-narrow": [
-		"1",
-		"2",
-		"3",
-		"4",
-		"5",
-		"6",
-		"7",
-		"8",
-		"9",
-		"10",
-		"11",
-		"12"
-	],
-	"dateFormat-short": "d/M/y G",
-	"dateFormatItem-yyyyM": "M/y G",
-	"dateFormatItem-yMMMEd": "EEE d MMM y",
-	"dateFormat-full": "EEEE d MMMM y G",
-	"dateFormatItem-Md": "d/M",
-	"dateFormatItem-yyyyQ": "'T'Q y G",
-	"dateFormatItem-yMEd": "EEE d/M/yyyy",
 	"months-format-wide": [
 		"Mouharram",
 		null,
@@ -158,16 +29,94 @@ define(
 		"Dou-l-Qaʻda",
 		"Dou-l-Hidjja"
 	],
-	"dateFormatItem-yyyyMMM": "MMM y G",
-	"dateFormatItem-d": "d",
-	"quarters-format-wide": [
-		"1er trimestre",
-		"2e trimestre",
-		"3e trimestre",
-		"4e trimestre"
+	"months-standAlone-narrow": [
+		"1",
+		"2",
+		"3",
+		"4",
+		"5",
+		"6",
+		"7",
+		"8",
+		"9",
+		"10",
+		"11",
+		"12"
 	],
-	"eraNarrow": [
+	"eraAbbr": [
 		"AH"
+	],
+	"dateFormat-full": "EEEE d MMMM y G",
+	"dateFormat-long": "d MMMM y G",
+	"dateFormat-medium": "d MMM, y G",
+	"dateFormat-short": "d/M/y G",
+	"dateFormatItem-d": "d",
+	"dateFormatItem-Ed": "E d",
+	"dateFormatItem-Hm": "HH:mm",
+	"dateFormatItem-Hms": "HH:mm:ss",
+	"dateFormatItem-M": "L",
+	"dateFormatItem-Md": "d/M",
+	"dateFormatItem-MEd": "E d/M",
+	"dateFormatItem-MMd": "d/MM",
+	"dateFormatItem-MMdd": "dd/MM",
+	"dateFormatItem-MMM": "LLL",
+	"dateFormatItem-MMMd": "d MMM",
+	"dateFormatItem-MMMdd": "dd MMM",
+	"dateFormatItem-MMMEd": "E d MMM",
+	"dateFormatItem-MMMMEd": "E d MMMM",
+	"dateFormatItem-ms": "mm:ss",
+	"dateFormatItem-yyMM": "MM/y G",
+	"dateFormatItem-yyMMM": "MMM y G",
+	"dateFormatItem-yyMMMd": "d MMM y G",
+	"dateFormatItem-yyMMMEd": "E d MMM y G",
+	"dateFormatItem-yyQ": "'T'Q y G",
+	"dateFormatItem-yyQQQQ": "QQQQ y G",
+	"dateFormatItem-yyyy": "y G",
+	"dateFormatItem-yyyyM": "M/y G",
+	"dateFormatItem-yyyyMd": "d/M/y G",
+	"dateFormatItem-yyyyMEd": "E d/M/y G",
+	"dateFormatItem-yyyyMMM": "MMM y G",
+	"dateFormatItem-yyyyMMMd": "d MMM y G",
+	"dateFormatItem-yyyyMMMEd": "E d MMM y G",
+	"dateFormatItem-yyyyMMMM": "MMMM y G",
+	"dateFormatItem-yyyyQ": "'T'Q y G",
+	"dateFormatItem-yyyyQQQ": "QQQ y G",
+	"months-standAlone-abbr": [
+		"Mouh.",
+		"Saf.",
+		"Rabiʻ-oul-A.",
+		"Rabiʻ-out-T.",
+		"Djoum.-l-O.",
+		"Djoum.-t-T.",
+		"Radj.",
+		"Cha.",
+		"Ram.",
+		"Chaou.",
+		"Dou-l-Q.",
+		"Dou-l-H."
+	],
+	"months-standAlone-wide": [
+		"Mouharram",
+		null,
+		"Rabiʻ-oul-Aououal",
+		"Rabiʻ-out-Tani",
+		"Djoumada-l-Oula",
+		"Djoumada-t-Tania",
+		"Radjab",
+		"Chaʻban",
+		null,
+		"Chaououal",
+		"Dou-l-Qaʻda",
+		"Dou-l-Hidjja"
+	],
+	"days-format-abbr": [
+		"dim.",
+		"lun.",
+		"mar.",
+		"mer.",
+		"jeu.",
+		"ven.",
+		"sam."
 	],
 	"days-format-wide": [
 		"dimanche",
@@ -177,7 +126,52 @@ define(
 		"jeudi",
 		"vendredi",
 		"samedi"
-	]
+	],
+	"days-standAlone-abbr": [
+		"dim.",
+		"lun.",
+		"mar.",
+		"mer.",
+		"jeu.",
+		"ven.",
+		"sam."
+	],
+	"days-standAlone-narrow": [
+		"D",
+		"L",
+		"M",
+		"M",
+		"J",
+		"V",
+		"S"
+	],
+	"quarters-format-abbr": [
+		"T1",
+		"T2",
+		"T3",
+		"T4"
+	],
+	"quarters-format-narrow": [
+		"T1",
+		"T2",
+		"T3",
+		"T4"
+	],
+	"quarters-format-wide": [
+		"1er trimestre",
+		"2e trimestre",
+		"3e trimestre",
+		"4e trimestre"
+	],
+	"dayPeriods-format-narrow-pm": "p",
+	"dateFormatItem-yM": "M/yyyy",
+	"dateFormatItem-yMd": "d/M/yyyy",
+	"dateFormatItem-yMEd": "E d/M/yyyy",
+	"dateFormatItem-yMMM": "MMM y",
+	"dateFormatItem-yMMMd": "d MMM y",
+	"dateFormatItem-yMMMEd": "E d MMM y",
+	"dateFormatItem-yQ": "'T'Q y",
+	"dateFormatItem-yQQQ": "QQQ y"
 }
 //end v1.x content
 );

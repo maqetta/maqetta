@@ -1,6 +1,12 @@
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/connect",
-	"dojo/_base/window"],function(dojo){
-	var as = dojo.declare(
+define(["dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/connect",
+	"dojo/_base/sniff",
+	"dojo/ready",
+	"dojo/_base/window"
+],function(dojo, declare, lang, connect, sniff, ready){
+	var as = declare(
 		"dojox.mdnd.AutoScroll",
 		null,
 	{
@@ -20,15 +26,15 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/c
 	
 		constructor: function(){
 			//console.log("dojox.mdnd.AutoScroll ::: constructor ");
-			this.resizeHandler = dojo.connect(dojo.global,"onresize", this, function(){
+			this.resizeHandler = connect.connect(dojo.global,"onresize", this, function(){
 				this.getViewport();
 			});
-			dojo.ready(dojo.hitch(this, "init"));
+			ready(lang.hitch(this, "init"));
 		},
 	
 		init: function(){
 			//console.log("dojox.mdnd.AutoScroll ::: init ");
-			this._html = (dojo.isWebKit) ? dojo.body() : dojo.body().parentNode;
+			this._html = (sniff("webkit"))? dojo.body() : dojo.body().parentNode;
 			this.getViewport();
 		},
 	
@@ -114,7 +120,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/c
 				this._html.scrollTop += this.interval;
 				this._node.style.top = (parseInt(this._node.style.top) + this.interval) + "px";
 				this._y += this.interval;
-				this._timer = setTimeout(dojo.hitch(this, "_autoScrollDown"), this.recursiveTimer);
+				this._timer = setTimeout(lang.hitch(this, "_autoScrollDown"), this.recursiveTimer);
 			}
 		},
 	
@@ -132,7 +138,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/c
 				this._html.scrollTop -= this.interval;
 				this._node.style.top = (parseInt(this._node.style.top) - this.interval) + "px";
 				this._y -= this.interval;
-				this._timer = setTimeout(dojo.hitch(this, "_autoScrollUp"),this.recursiveTimer);
+				this._timer = setTimeout(lang.hitch(this, "_autoScrollUp"),this.recursiveTimer);
 			}
 		},
 	
@@ -150,7 +156,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/c
 				this._html.scrollLeft += this.interval;
 				this._node.style.left = (parseInt(this._node.style.left) + this.interval) + "px";
 				this._x += this.interval;
-				this._timer = setTimeout(dojo.hitch(this, "_autoScrollRight"), this.recursiveTimer);
+				this._timer = setTimeout(lang.hitch(this, "_autoScrollRight"), this.recursiveTimer);
 			}
 		},
 	
@@ -168,7 +174,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/c
 				this._html.scrollLeft -= this.interval;
 				this._node.style.left = (parseInt(this._node.style.left) - this.interval) + "px";
 				this._x -= this.interval;
-				this._timer = setTimeout(dojo.hitch(this, "_autoScrollLeft"),this.recursiveTimer);
+				this._timer = setTimeout(lang.hitch(this, "_autoScrollLeft"),this.recursiveTimer);
 			}
 		},
 	
@@ -185,7 +191,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/c
 	
 		destroy: function(){
 			//console.log("dojox.mdnd.AutoScroll ::: destroy ");
-			dojo.disconnect(this.resizeHandler);
+			connect.disconnect(this.resizeHandler);
 		}
 	});
 	

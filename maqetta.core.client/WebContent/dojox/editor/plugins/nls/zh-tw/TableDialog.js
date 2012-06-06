@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "插入表格",
 	modifyTableTitle: "修改表格",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "表格寬度：",
 	backgroundColor: "背景顏色：",
 	borderColor: "邊框顏色：",
-	borderThickness: "邊框寬度",
+	borderThickness: "邊框寬度：",
 	percent: "百分比",
 	pixels: "像素",
 	"default": "預設值",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "設定", // translated elsewhere?
 	buttonInsert: "插入",
 	buttonCancel: "取消",
-
 	selectTableLabel: "選取表格",
 	insertTableRowBeforeLabel: "在前面新增一個列",
 	insertTableRowAfterLabel: "在後面新增一個列",
@@ -30,6 +28,4 @@ define(
 	deleteTableRowLabel: "刪除列",
 	deleteTableColumnLabel: "刪除欄"
 })
-
-//end v1.x content
 );

@@ -4,7 +4,7 @@ dojo.require("dojo.data.api.Read");
 
 
 dojox.data.tests.stores.PicasaStore.error = function(t, d, errData){
-	//  summary:
+	// summary:
 	//		The error callback function to be used for all of the tests.
 	d.errback(errData);
 };
@@ -15,9 +15,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  Fetch_One",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on PicasaStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on PicasaStore of a single item.
 
 				var flickrStore = new dojox.data.PicasaStore();
@@ -39,9 +39,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  Fetch_20_Streaming",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on PicasaStore.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on PicasaStore.
 				var flickrStore = new dojox.data.PicasaStore();
 
@@ -75,9 +75,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  Fetch_Paging",
 			timeout:	30000, //30 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
-				//	description:
+				// description:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
 
 				var flickrStore = new dojox.data.PicasaStore();
@@ -144,9 +144,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  getLabel",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getLabel function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabel function against a store set that has a label defined.
 
 				var flickrStore = new dojox.data.PicasaStore();
@@ -170,9 +170,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  getLabelAttributes",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 				var flickrStore = new dojox.data.PicasaStore();
@@ -197,9 +197,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  getValue",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var flickrStore = new dojox.data.PicasaStore();
 
@@ -222,9 +222,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  getValues",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var flickrStore = new dojox.data.PicasaStore();
 
@@ -247,9 +247,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  isItem",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the isItem function of the store
-				//	description:
+				// description:
 				//		Simple test of the isItem function of the store
 				var flickrStore = new dojox.data.PicasaStore();
 
@@ -271,9 +271,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  hasAttribute",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute function of the store
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute function of the store
 
 				var flickrStore = new dojox.data.PicasaStore();
@@ -311,9 +311,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  containsValue",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue function of the store
-				//	description:
+				// description:
 				//		Simple test of the containsValue function of the store
 
 				var flickrStore = new dojox.data.PicasaStore();
@@ -337,9 +337,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			name: "ReadAPI:  getAttributes",
 			timeout:	10000, //10 seconds.  Picasa can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes function of the store
-				//	description:
+				// description:
 				//		Simple test of the getAttributes function of the store
 
 				var flickrStore = new dojox.data.PicasaStore();
@@ -360,9 +360,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			}
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var flickrStore = new dojox.data.PicasaStore();
@@ -377,9 +377,9 @@ doh.register("dojox.data.tests.stores.PicasaStore",
 			t.assertTrue(count === 1);
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = new dojox.data.PicasaStore();

@@ -59,13 +59,13 @@ return declare("dojox.geo.charting.Feature", null, {
 		//	value:
 		//		a number
 		this.value = value;
-		if (value == null) {
+		if(value == null){
 			this.unsetValue();
-		} else {
-			if (this.parent.series.length != 0) {
-				for (var i = 0; i < this.parent.series.length; i++) {
+		}else{
+			if(this.parent.series.length != 0){
+				for(var i = 0; i < this.parent.series.length; i++){
 					var range = this.parent.series[i];
-					if ((value >= range.min) && (value < range.max)) {
+					if((value >= range.min) && (value < range.max)){
 						this._setFillWith(range.color);
 						this._defaultFill = range.color;
 						var col = new color.Color(range.color).toHsv();
@@ -114,7 +114,7 @@ return declare("dojox.geo.charting.Feature", null, {
 	_onmouseoverHandler: function(evt){
 		this.parent.onFeatureOver(this);
 		this._setFillWith(this._highlightFill);
-		this.mapObj.marker.show(this.id,evt);
+		this.mapObj.marker.show(this.id, evt);
 	},
 	_onmouseoutHandler: function(){
 		this._setFillWith(this._defaultFill);
@@ -123,10 +123,10 @@ return declare("dojox.geo.charting.Feature", null, {
 	},
 	_onmousemoveHandler: function(evt){
 		if(this.mapObj.marker._needTooltipRefresh){
-			this.mapObj.marker.show(this.id,evt);
+			this.mapObj.marker.show(this.id, evt);
 		}
-		if(this.isSelected){
-			if (this.parent.enableFeatureZoom) {
+		if(this.isSelected && evt){
+			if(this.parent.enableFeatureZoom){
 				evt = event.fix(evt || window.event);
 				html.style("mapZoomCursor", "left", evt.pageX + 12 + "px");
 				html.style("mapZoomCursor", "top", evt.pageY + "px");

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Groepsgewijze spellingcontrole",
 	unfound: "Niet gevonden",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Al deze overslaan",
 	iMsg: "Geen spellingsuggesties"
 })
-
-//end v1.x content
 );

@@ -3,10 +3,6 @@ define([
 	"dojox/date/php",
 	"../_base"
 ], function(lang,ddp,dd){
-	/*=====
-		ddp = dojox.data.php;
-		dd = dojox.dtl;
-	=====*/
 	lang.getObject("dojox.dtl.utils.date", true);
 
 	dd.utils.date.DateFormat = ddp.DateFormat;

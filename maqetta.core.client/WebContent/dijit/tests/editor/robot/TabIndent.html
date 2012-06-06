@@ -11,11 +11,10 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_TabIndent.html');
@@ -33,7 +32,7 @@
 						}
 					},
 					{
-						name: "toggleDir_toggleOn",
+						name: "toggleOn",
 						timeout: 6000,
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -58,7 +57,7 @@
 						}
 					},
 					{
-						name: "toggleDir_shiftTab",
+						name: "shiftTab",
 						timeout: 2000,
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -76,7 +75,7 @@
 						}
 					},
 					{
-						name: "toggleDir_toggleOff",
+						name: "toggleOff",
 						timeout: 6000,
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -98,7 +97,7 @@
 						}
 					},
 					{
-						name: "toggleDir_toggleOn_ctrlM",
+						name: "toggleOn_ctrlM",
 						timeout: 6000,
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -120,7 +119,7 @@
 						}
 					},
 					{
-						name: "toggleDir_toggleOff_ctrlM",
+						name: "toggleOff_ctrlM",
 						timeout: 6000,
 						runTest: function(){
 							var d = new doh.Deferred();

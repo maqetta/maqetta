@@ -2,7 +2,7 @@
 		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<title>doh.robot deferred connect tests</title>
+	<title>robot deferred connect tests</title>
 
 	<style>
 		@import "../../../util/doh/robot/robot.css";
@@ -10,30 +10,25 @@
 
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
-		djConfig="isDebug: true"></script>
-
-	<!-- functions to help test -->
-	<script type="text/javascript" src="../helpers.js"></script>
+		djConfig="isDebug: true, async: true"></script>
 
 	<script type="text/javascript">
-		dojo.require("dijit.robotx");
-
-		dojo.ready(function(){
-
-			doh.robot.initRobot('../_Widget-deferredConnect.html');
+		require([
+			"doh/runner", "dojo/robotx", "dojo/domReady!"
+		], function(doh, robot){
+			robot.initRobot('../_Widget-deferredConnect.html');
 
 			// Test that deferred connections get set up correctly when they need to be
 			// (_Widget only does the dojo.connect() for onmousemove if it needs to)
-			doh.register("deferredConnect",
-			[
+			doh.register("deferredConnect", [
 				{
 					name: "mouse move on widget where onmousemove overridden",
 					timeout: 5000,
 					runTest: function(){
 						var d = new doh.Deferred();
-						doh.robot.mouseMoveAt("overrode", 500);
-						doh.robot.sequence(d.getTestCallback(function(){
-							doh.t(dojo.global.overrodeMouseMoved, "overrode button event handler fired");
+						robot.mouseMoveAt("overrode", 500);
+						robot.sequence(d.getTestCallback(function(){
+							doh.t(robot.window.overrodeMouseMoved, "overrode button event handler fired");
 						}), 500);
 						return d;
 					}
@@ -43,10 +38,10 @@
 					timeout: 5000,
 					runTest: function(){
 						var d = new doh.Deferred();
-						doh.robot.mouseMoveAt("connect", 500);
+						robot.mouseMoveAt("connect", 500);
 
-						doh.robot.sequence(d.getTestCallback(function(){
-							doh.t(dojo.global.connectedMouseMoved, "connected button event handler fired");
+						robot.sequence(d.getTestCallback(function(){
+							doh.t(robot.window.connectedMouseMoved, "connected button event handler fired");
 						}), 500);
 						return d;
 					}
@@ -56,11 +51,11 @@
 					timeout: 5000,
 					runTest: function(){
 						var d = new doh.Deferred();
-						doh.robot.mouseMoveAt("both", 500);
+						robot.mouseMoveAt("both", 500);
 
-						doh.robot.sequence(d.getTestCallback(function(){
-							doh.t(dojo.global.bothOverrodeMouseMoved, "dojo/method handler fired");
-							doh.t(dojo.global.bothConnectedMouseMoved, "dojo/connect handler fired");
+						robot.sequence(d.getTestCallback(function(){
+							doh.t(robot.window.bothOverrodeMouseMoved, "dojo/method handler fired");
+							doh.t(robot.window.bothConnectedMouseMoved, "dojo/connect handler fired");
 						}), 500);
 						return d;
 					}

@@ -7,10 +7,10 @@ dojox.data.tests.stores.SnapLogicStore.pipelineSize = 14;
 dojox.data.tests.stores.SnapLogicStore.attributes = ["empno", "ename", "job", "hiredate", "sal", "comm", "deptno"];
 
 dojox.data.tests.stores.SnapLogicStore.error = function(t, d, errData){
-	//  summary:
+	// summary:
 	//		The error callback function to be used for all of the tests.
 	d.errback(errData);
-}
+};
 
 doh.register("dojox.data.tests.stores.SnapLogicStore",
 	[
@@ -18,9 +18,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  Fetch One",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch from a SnapLogic pipeline
-				//	description:
+				// description:
 				//		Simple test of a basic fetch from a SnapLogic pipeline
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -41,9 +41,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  Fetch_10_Streaming",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on SnapLogic pipeline.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on SnapLogic pipeline.
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -78,9 +78,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  Fetch Zero",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Try fetching 0 records. A count of the items in the pipeline should be returned.
-				//	description:
+				// description:
 				//		Try fetching 0 records. A count of the items in the pipeline should be returned.
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -101,9 +101,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  Fetch_Paging",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
-				//	description:
+				// description:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -163,9 +163,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  getLabel",
 			timeout:	3000, //3 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Test that the label function returns undefined since it's not supported.
-				//	description:
+				// description:
 				//		Test that the label function returns undefined since it's not supported.
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -188,9 +188,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  getLabelAttributes",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getLabelAttributes returns null since it's not supported.
-				//	description:
+				// description:
 				//		Simple test of the getLabelAttributes returns null since it's not supported.
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -213,9 +213,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  getValue",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
 
@@ -242,9 +242,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  getValues",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
 
@@ -269,9 +269,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  isItem",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the isItem function of the store
-				//	description:
+				// description:
 				//		Simple test of the isItem function of the store
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
 
@@ -295,9 +295,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  hasAttribute",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute function of the store
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute function of the store
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -335,9 +335,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  containsValue",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue function of the store
-				//	description:
+				// description:
 				//		Simple test of the containsValue function of the store
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -362,9 +362,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			name: "ReadAPI:  getAttributes",
 			timeout:	3000, //3 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes function of the store
-				//	description:
+				// description:
 				//		Simple test of the getAttributes function of the store
 
 				var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -389,9 +389,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			}
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var store = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});
@@ -406,9 +406,9 @@ doh.register("dojox.data.tests.stores.SnapLogicStore",
 			t.assertEqual(count, 1);
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = new dojox.data.SnapLogicStore({url: dojox.data.tests.stores.SnapLogicStore.pipelineUrl});

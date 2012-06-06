@@ -1,15 +1,17 @@
 #!/bin/bash
 
-#version should be something like 0.9.0beta or 0.9.0
+# version should be something like 0.9.0beta or 0.9.0
 version=$1
-#svnUserName is the name you use to connect to Dojo's subversion.
+
+# svnUserName is the name you use to connect to Dojo's subversion.
 svnUserName=$2
-#The svn revision number to use for tag. Should be a number, like 11203
+
+# The svn revision number to use for tag. Should be a number, like 11203
 svnRevision=$3
 
-#If no svnRevision number, get the latest one from the repo.
+# If no svnRevision number, get the latest one from he repo.
 if [ "$svnRevision" = "" ]; then
-	svnRevision=`svn info http://svn.dojotoolkit.org/src/branches/1.7/util/buildscripts/build_release.sh | grep Revision | sed 's/Revision: //'`
+	svnRevision=`svn info http://svn.dojotoolkit.org/src/util/trunk/buildscripts/build_release.sh | grep Revision | sed 's/Revision: //'`
 fi
 
 tagName=release-$version
@@ -18,25 +20,25 @@ buildName=dojo-$tagName
 echo "This is a RELEASE build for Dojo, you probably meant to run build.sh"
 read -p "If you mean to create a tag for Dojo $version from r$svnRevision ... press a key to continue."
 
-#Make the SVN tag.
+# Make the SVN tag.
 svn mkdir -m "Using r$svnRevision to create a tag for the $version release." https://svn.dojotoolkit.org/src/tags/$tagName
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/dojo  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/dijit https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/dojox https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/util  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
-svn copy -r $svnRevision https://svn.dojotoolkit.org/src/branches/1.7/demos https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojo/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/dojo -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dijit/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dijit -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/dojox/trunk https://svn.dojotoolkit.org/src/tags/$tagName/dojox -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/util/trunk  https://svn.dojotoolkit.org/src/tags/$tagName/util -m "Using r$svnRevision to create a tag for the $version release."
+svn copy -r $svnRevision https://svn.dojotoolkit.org/src/demos/trunk https://svn.dojotoolkit.org/src/tags/$tagName/demos -m "Using r$svnRevision to create a tag for the $version release."
 
-#Check out the tag
+# Check out the tag
 mkdir ../../build
 cd ../../build
 svn co https://svn.dojotoolkit.org/src/tags/$tagName $buildName
 cd $buildName/util/buildscripts
 
-#Update the dojo version in the tag
-java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojo/_base/kernel.js
-java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojo/package.json
-java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dijit/package.json
-java -jar ../shrinksafe/js.jar changeVersion.js $version ../../dojox/package.json
+# Update the dojo version in the tag
+java -jar ../shrinksafe/js.jar changeVersion.js $version $svnRevision ../../dojo/_base/kernel.js
+java -jar ../shrinksafe/js.jar changeVersion.js $version $svnRevision ../../dojo/package.json
+java -jar ../shrinksafe/js.jar changeVersion.js $version $svnRevision ../../dijit/package.json
+java -jar ../shrinksafe/js.jar changeVersion.js $version $svnRevision ../../dojox/package.json
 cd ../../dojo
 svn commit -m "Updating dojo version for the tag. \!strict" package.json _base/kernel.js
 cd ../dijit
@@ -44,7 +46,7 @@ svn commit -m "Updating dijit version for the tag. \!strict" package.json
 cd ../dojox
 svn commit -m "Updating dojox version for the tag. \!strict" package.json
 
-#Erase the SVN dir and replace with an exported SVN contents.
+# Erase the SVN dir and replace with an exported SVN contents.
 cd ../..
 rm -rf ./$buildName/
 svn export http://svn.dojotoolkit.org/src/tags/$tagName $buildName
@@ -53,7 +55,7 @@ svn export http://svn.dojotoolkit.org/src/tags/$tagName $buildName
 rm -rf ./$buildName/dijit/themes/noir
 rm -rf ./$buildName/dijit/bench
 
-#Make a shrinksafe bundle
+# Make a shrinksafe bundle
 shrinksafeName=$buildName-shrinksafe
 cp -r $buildName/util/shrinksafe $buildName/util/$shrinksafeName
 cd $buildName/util
@@ -64,7 +66,7 @@ mv $shrinksafeName.tar.gz ../../
 cd ../..
 rm -rf $buildName/util/$shrinksafeName
 
-#Make a -demos bundle (note, this is before build. Build profile=demos-all if you want to release them)
+# Make a -demos bundle (note, this is before build. Build profile=demos-all if you want to release them)
 # the -demos archives are meant to be extracted from the same folder -src or release archives, and have
 # a matching prefixed folder in the archive
 demoName=$buildName-demos
@@ -73,14 +75,14 @@ tar -zcf $demoName.tar.gz $buildName/demos/
 # prevent demos/ from appearing in the -src build
 rm -rf $buildName/demos
 
-#Make a src bundle
+# Make a src bundle
 srcName=$buildName-src
 mv $buildName $srcName
 zip -rq $srcName.zip $srcName/
 tar -zcf $srcName.tar.gz $srcName/
 mv $srcName $buildName
 
-#Run the build.
+# Run the build.
 cd $buildName/util/buildscripts/
 chmod +x ./build.sh
 ./build.sh profile=standard version=$1 releaseName=$buildName cssOptimize=comments.keepLines optimize=shrinksafe.keepLines action=release insertAbsMids=1
@@ -89,18 +91,18 @@ chmod +x ./clean_release.sh
 ./clean_release.sh ../../release $buildName
 cd ../../release/
 
-#Pause to allow manual process of packing Dojo.
+# Pause to allow manual process of packing Dojo.
 currDir=`pwd`
 echo "You can find dojo in $currDir/$buildName/dojo/dojo.js"
 read -p "Build Done. If you want to pack Dojo manually, do it now, then press Enter to continue build packaging..."
 
-#Continuing with packaging up the release.
+# Continuing with packaging up the release.
 zip -rq $buildName.zip $buildName/
 tar -zcf $buildName.tar.gz $buildName/
 mv $buildName.zip ../../
 mv $buildName.tar.gz ../../
 
-#copy compressed and uncompressed Dojo to the root
+# copy compressed and uncompressed Dojo to the root
 cp $buildName/dojo/dojo.js* ../../
 
 # remove the testless release build, and unpack a -src archive to rebuild from
@@ -149,10 +151,9 @@ fi
 cd ..
 tar -czvf dj-$1-dtk.tar.gz release-$1
 
-#Finished.
+# Finished.
 outDirName=`pwd`
 echo "Build complete. Files are in: $outDirName"
 echo "A copy/paste command to push files to download.dojotoolkit.org with permission:"
 echo "scp dj-$1-dtk.tar.gz download.dojotoolkit.org:/srv/www/vhosts.d/download.dojotoolkit.org"
 echo "... then extract in place and rm dj-$1-dtk.tar.gz"
-cd ../util/buildscripts

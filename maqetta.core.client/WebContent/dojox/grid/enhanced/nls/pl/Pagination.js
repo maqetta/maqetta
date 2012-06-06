@@ -1,24 +1,21 @@
 define(
-//begin v1.x content
 ({
-	"descTemplate": "${2} - ${3} z ${1} ${0}",
+	"descTemplate": "Od ${2} do ${3} z ${1} ${0}",
 	"firstTip": "Pierwsza strona",
 	"lastTip": "Ostatnia strona",
 	"nextTip": "Następna strona",
 	"prevTip": "Poprzednia strona",
-	"itemTitle": "poz.",
-	"singularItemTitle": "pozycja",
+	"itemTitle": "elementy",
+	"singularItemTitle": "item",
 	"pageStepLabelTemplate": "Strona ${0}",
-	"pageSizeLabelTemplate": "${0} poz. na stronę",
-	"allItemsLabelTemplate": "Wszystkie pozycje",
-	"gotoButtonTitle": "Idź do konkretnej strony",
-	"dialogTitle": "Idź do strony",
-	"dialogIndication": "Podaj numer strony",
-	"pageCountIndication": " (${0} str.)",
-	"dialogConfirm": "Wykonaj",
+	"pageSizeLabelTemplate": "Liczba elementów na stronę: ${0}",
+	"allItemsLabelTemplate": "Wszystkie elementy",
+	"gotoButtonTitle": "Przejdź do konkretnej strony",
+	"dialogTitle": "Przechodzenie do strony",
+	"dialogIndication": "Określ numer strony",
+	"pageCountIndication": " (liczba stron: ${0})",
+	"dialogConfirm": "Przejdź",
 	"dialogCancel": "Anuluj",
-	"all": "wszystkie"
+	"all": "Wszystko"
 })
-//end v1.x content
 );
-

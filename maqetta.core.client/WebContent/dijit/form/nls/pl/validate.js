@@ -1,9 +1,7 @@
 define(
-//begin v1.x content
 ({
-	invalidMessage: "Wprowadzona wartość jest niepoprawna.",
+	invalidMessage: "Wprowadzona wartość jest nieprawidłowa.",
 	missingMessage: "Ta wartość jest wymagana.",
 	rangeMessage: "Ta wartość jest spoza zakresu."
 })
-//end v1.x content
 );

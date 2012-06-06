@@ -1,87 +1,137 @@
 define(
 //begin v1.x content
 {
-	"dateFormatItem-yM": "yyyy-M",
-	"dateFormatItem-yQ": "yÂπ¥QQQ",
-	"dayPeriods-format-wide-pm": "‰∏ãÂçà",
-	"dateFormatItem-MMMEd": "MMMd日E",
-	"dateTimeFormat-full": "{1}{0}",
+	"eraAbbr": [
+		"回历"
+	],
+	"dateFormat-full": "Gy年M月d日EEEE",
+	"dateFormat-long": "Gy年M月d日",
+	"dateFormat-medium": "Gy年M月d日",
+	"dateFormat-short": "Gyy-MM-dd",
+	"dateFormatItem-d": "d日",
+	"dateFormatItem-Ed": "d日E",
+	"dateFormatItem-h": "ah时",
+	"dateFormatItem-H": "H时",
+	"dateFormatItem-hm": "ah:mm",
+	"dateFormatItem-Hm": "H:mm",
 	"dateFormatItem-hms": "ah:mm:ss",
-	"dateFormatItem-yQQQ": "yÂπ¥QQQ",
+	"dateFormatItem-Hms": "H:mm:ss",
+	"dateFormatItem-M": "M月",
+	"dateFormatItem-Md": "M-d",
+	"dateFormatItem-MEd": "M-dE",
 	"dateFormatItem-MMdd": "MM-dd",
 	"dateFormatItem-MMM": "LLL",
-	"dayPeriods-format-wide-am": "‰∏äÂçà",
-	"dateFormatItem-y": "yÂπ¥",
-	"timeFormat-full": "zzzzahÊó∂mmÂàÜssÁßí",
-	"dateFormatItem-yyyy": "GGGyy年",
-	"dateFormatItem-Ed": "d日E",
-	"dateFormatItem-yMMM": "yÂπ¥MMM",
-	"days-standAlone-narrow": [
-		"Êó•",
-		"‰∏Ä",
-		"‰∫å",
-		"‰∏â",
-		"Âõõ",
-		"‰∫î",
-		"ÂÖ≠"
-	],
-	"dateFormat-long": "Gy年M月d日",
-	"timeFormat-medium": "ah:mm:ss",
-	"dateFormatItem-Hm": "H:mm",
-	"dateFormat-medium": "Gyy-MM-dd",
-	"dateFormatItem-Hms": "H:mm:ss",
+	"dateFormatItem-MMMd": "M月d日",
+	"dateFormatItem-MMMEd": "M月d日E",
+	"dateFormatItem-MMMMdd": "M月dd日",
 	"dateFormatItem-ms": "mm:ss",
-	"dateTimeFormat-long": "{1}{0}",
+	"dateFormatItem-y": "y年",
+	"dateFormatItem-yM": "y年M月",
+	"dateFormatItem-yMEd": "y/M/dE",
+	"dateFormatItem-yMMM": "y年M月",
+	"dateFormatItem-yMMMEd": "y年M月d日E",
+	"dateFormatItem-yQ": "y年第Q季度",
+	"dateFormatItem-yQQQ": "y年第Q季度",
+	"dateFormatItem-yyyy": "GGGyy年",
+	"dateFormatItem-yyyyM": "GGGGGyy-MM",
 	"dateFormatItem-yyyyMd": "GGGGGyy-MM-dd",
-	"dateFormatItem-yyyyMMMd": "GGGGGyy年MMMd日",
-	"dateFormatItem-MMMd": "MMMd日",
-	"timeFormat-long": "zahÊó∂mmÂàÜssÁßí",
-	"timeFormat-short": "ah:mm",
-	"dateFormatItem-H": "H时",
-	"quarters-format-abbr": [
-		"1Â≠£",
-		"2Â≠£",
-		"3Â≠£",
-		"4Â≠£"
+	"dateFormatItem-yyyyMMM": "GGGGGyy年M月",
+	"dateFormatItem-yyyyMMMd": "GGGGGyy年M月d日",
+	"dateFormatItem-yyyyQ": "Gy年QQQ",
+	"eraNames": [
+		"回历"
+	],
+	"eraNarrow": [
+		"回历"
 	],
 	"days-format-abbr": [
-		"Âë®Êó•",
-		"Âë®‰∏Ä",
-		"Âë®‰∫å",
-		"Âë®‰∏â",
-		"Âë®Âõõ",
-		"Âë®‰∫î",
-		"Âë®ÂÖ≠"
+		"周日",
+		"周一",
+		"周二",
+		"周三",
+		"周四",
+		"周五",
+		"周六"
 	],
-	"dateFormatItem-MMMMdd": "MMMMdd日",
-	"dateFormatItem-M": "M月",
-	"dateFormatItem-MEd": "M-dE",
-	"dateFormatItem-hm": "ah:mm",
-	"dateFormat-short": "Gyy-MM-dd",
-	"dateFormatItem-yyyyM": "GGGGGyy-MM",
-	"dateFormatItem-yMMMEd": "yÂπ¥MMMdÊó•EEE",
-	"dateFormat-full": "Gy年M月d日EEEE",
-	"dateFormatItem-Md": "M-d",
-	"dateFormatItem-yyyyQ": "Gy年QQQ",
-	"dateFormatItem-yMEd": "yÂπ¥MÊúàdÊó•ÔºåE",
-	"dateFormatItem-yyyyMMM": "GGGGGyy年MMM",
-	"dateFormatItem-d": "d日",
-	"quarters-format-wide": [
-		"Á¨¨1Â≠£Â∫¶",
-		"Á¨¨2Â≠£Â∫¶",
-		"Á¨¨3Â≠£Â∫¶",
-		"Á¨¨4Â≠£Â∫¶"
+	"days-format-narrow": [
+		"日",
+		"一",
+		"二",
+		"三",
+		"四",
+		"五",
+		"六"
 	],
 	"days-format-wide": [
-		"ÊòüÊúüÊó•",
-		"ÊòüÊúü‰∏Ä",
-		"ÊòüÊúü‰∫å",
-		"ÊòüÊúü‰∏â",
-		"ÊòüÊúüÂõõ",
-		"ÊòüÊúü‰∫î",
-		"ÊòüÊúüÂÖ≠"
+		"星期日",
+		"星期一",
+		"星期二",
+		"星期三",
+		"星期四",
+		"星期五",
+		"星期六"
 	],
-	"dateFormatItem-h": "ah时"
+	"days-standAlone-abbr": [
+		"周日",
+		"周一",
+		"周二",
+		"周三",
+		"周四",
+		"周五",
+		"周六"
+	],
+	"days-standAlone-narrow": [
+		"日",
+		"一",
+		"二",
+		"三",
+		"四",
+		"五",
+		"六"
+	],
+	"days-standAlone-wide": [
+		"星期日",
+		"星期一",
+		"星期二",
+		"星期三",
+		"星期四",
+		"星期五",
+		"星期六"
+	],
+	"quarters-format-abbr": [
+		"1季",
+		"2季",
+		"3季",
+		"4季"
+	],
+	"quarters-format-wide": [
+		"第1季度",
+		"第2季度",
+		"第3季度",
+		"第4季度"
+	],
+	"quarters-standAlone-abbr": [
+		"一季度",
+		"二季度",
+		"三季度",
+		"四季度"
+	],
+	"quarters-standAlone-wide": [
+		"第一季度",
+		"第二季度",
+		"第三季度",
+		"第四季度"
+	],
+	"dayPeriods-format-wide-am": "上午",
+	"dayPeriods-format-wide-pm": "下午",
+	"dateFormatItem-yMd": "y年M月d日",
+	"dateFormatItem-yMMMd": "y年M月d日",
+	"timeFormat-full": "zzzzah时mm分ss秒",
+	"timeFormat-long": "zah时mm分ss秒",
+	"timeFormat-medium": "ah:mm:ss",
+	"timeFormat-short": "ah:mm",
+	"dateTimeFormat-full": "{1}{0}",
+	"dateTimeFormat-long": "{1}{0}"
 }
 //end v1.x content
 );

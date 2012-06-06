@@ -4,28 +4,25 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/window",
+	"dojo/dom",
 	"dojo/dom-class",
 	"dojo/dom-construct",
 	"dojo/dom-style",
-	"dijit/registry",	// registry.byId
+	"dijit/registry",
 	"dijit/_Contained",
 	"dijit/_Container",
 	"dijit/_WidgetBase",
+	"./ProgressIndicator",
+	"./ToolBarButton",
 	"./View"
-], function(array, connect, declare, lang, win, domClass, domConstruct, domStyle, registry, Contained, Container, WidgetBase, View){
-
-	var dm = lang.getObject("dojox.mobile", true);
-
-/*=====
-	var Contained = dijit._Contained;
-	var Container = dijit._Container;
-	var WidgetBase = dijit._WidgetBase;
-=====*/
+], function(array, connect, declare, lang, win, dom, domClass, domConstruct, domStyle, registry, Contained, Container, WidgetBase, ProgressIndicator, ToolBarButton, View){
 
 	// module:
 	//		dojox/mobile/Heading
 	// summary:
 	//		A widget that represents a navigation bar.
+
+	var dm = lang.getObject("dojox.mobile", true);
 
 	return declare("dojox.mobile.Heading", [WidgetBase, Container, Contained],{
 		// summary:
@@ -42,8 +39,7 @@ define([
 		//		have one or more ToolBarButton widgets as its children.
 
 		// back: String
-		//		A label for the navigational control to return to the previous
-		//		View.
+		//		A label for the navigational control to return to the previous View.
 		back: "",
 
 		// href: String
@@ -51,12 +47,10 @@ define([
 		href: "",
 
 		// moveTo: String
-		//		The id of the transition destination view which resides in the
-		//		current page.
-		//
+		//		The id of the transition destination of the navigation control.
 		//		If the value has a hash sign ('#') before the id (e.g. #view1)
-		//		and the dojo.hash module is loaded by the user application, the
-		//		view transition updates the hash in the browser URL so that the
+		//		and the dojox.mobile.bookmarkable module is loaded by the user application,
+		//		the view transition updates the hash in the browser URL so that the
 		//		user can bookmark the destination view. In this case, the user
 		//		can also use the browser's back/forward button to navigate
 		//		through the views in the browser history.
@@ -70,8 +64,8 @@ define([
 		//		standard transition types, "slide", "fade", "flip", or from the
 		//		extended transition types, "cover", "coverv", "dissolve",
 		//		"reveal", "revealv", "scaleIn", "scaleOut", "slidev",
-		//		"swirl", "zoomIn", "zoomOut". If "none" is specified, transition
-		//		occurs immediately without animation.
+		//		"swirl", "zoomIn", "zoomOut", "cube", and "swap". If "none" is
+		//		specified, transition occurs immediately without animation.
 		transition: "slide",
 
 		// label: String
@@ -83,36 +77,45 @@ define([
 		//		The default icon path for child items.
 		iconBase: "",
 
-		// backProp: Object
-		//		Properties for the back button.
-		backProp: {className: "mblArrowButton"},
-
 		// tag: String
 		//		A name of html tag to create as domNode.
-		tag: "H1",
+		tag: "h1",
+
+		// busy: Boolean
+		//		If true, a progress indicator spins on this widget.
+		busy: false,
+
+		// progStyle: String
+		//		A css class name to add to the progress indicator.
+		progStyle: "mblProgWhite",
+
+		/* internal properties */	
+		baseClass: "mblHeading",
 
 		buildRendering: function(){
 			this.domNode = this.containerNode = this.srcNodeRef || win.doc.createElement(this.tag);
-			this.domNode.className = "mblHeading";
+			this.inherited(arguments);
 			if(!this.label){
 				array.forEach(this.domNode.childNodes, function(n){
 					if(n.nodeType == 3){
 						var v = lang.trim(n.nodeValue);
 						if(v){
 							this.label = v;
-							this.labelNode = domConstruct.create("SPAN", {innerHTML:v}, n, "replace");
+							this.labelNode = domConstruct.create("span", {innerHTML:v}, n, "replace");
 						}
 					}
 				}, this);
 			}
 			if(!this.labelNode){
-				this.labelNode = domConstruct.create("SPAN", null, this.domNode);
+				this.labelNode = domConstruct.create("span", null, this.domNode);
 			}
 			this.labelNode.className = "mblHeadingSpanTitle";
-			this.labelDivNode = domConstruct.create("DIV", {
+			this.labelDivNode = domConstruct.create("div", {
 				className: "mblHeadingDivTitle",
 				innerHTML: this.labelNode.innerHTML
 			}, this.domNode);
+
+			dom.setSelectable(this.domNode, false);
 		},
 
 		startup: function(){
@@ -126,11 +129,8 @@ define([
 			}
 			this.inherited(arguments);
 		},
-	
+
 		resize: function(){
-			if(this._btn){
-				this._btn.style.width = this._body.offsetWidth + this._head.offsetWidth + "px";
-			}
 			if(this.labelNode){
 				// find the rightmost left button (B), and leftmost right button (C)
 				// +-----------------------------+
@@ -140,11 +140,11 @@ define([
 				var children = this.containerNode.childNodes;
 				for(var i = children.length - 1; i >= 0; i--){
 					var c = children[i];
-					if(c.nodeType === 1){
-						if(!rightBtn && domClass.contains(c, "mblToolBarButton") && domStyle.get(c, "float") === "right"){
+					if(c.nodeType === 1 && domStyle.get(c, "display") !== "none"){
+						if(!rightBtn && domStyle.get(c, "float") === "right"){
 							rightBtn = c;
 						}
-						if(!leftBtn && (domClass.contains(c, "mblToolBarButton") && domStyle.get(c, "float") === "left" || c === this._btn)){
+						if(!leftBtn && domStyle.get(c, "float") === "left"){
 							leftBtn = c;
 						}
 					}
@@ -168,99 +168,42 @@ define([
 		},
 
 		_setBackAttr: function(/*String*/back){
-			if (!back){
-				domConstruct.destroy(this._btn);
-				this._btn = null;
-				this.back = "";
+			this._set("back", back);
+			if(!this.backButton){
+				this.backButton = new ToolBarButton({
+					arrow: "left",
+					label: back,
+					moveTo: this.moveTo,
+					back: !this.moveTo,
+					href: this.href,
+					transition: this.transition,
+					transitionDir: -1
+				});
+				this.backButton.placeAt(this.domNode, "first");
 			}else{
-				if(!this._btn){
-					var btn = domConstruct.create("DIV", this.backProp, this.domNode, "first");
-					var head = domConstruct.create("DIV", {className:"mblArrowButtonHead"}, btn);
-					var body = domConstruct.create("DIV", {className:"mblArrowButtonBody mblArrowButtonText"}, btn);
-
-					this._body = body;
-					this._head = head;
-					this._btn = btn;
-					this.backBtnNode = btn;
-					this.connect(body, "onclick", "onClick");
-				}
-				this.back = back;
-				this._body.innerHTML = this._cv ? this._cv(this.back) : this.back;
+				this.backButton.set("label", back);
 			}
 			this.resize();
 		},
-	
+
 		_setLabelAttr: function(/*String*/label){
-			this.label = label;
+			this._set("label", label);
 			this.labelNode.innerHTML = this.labelDivNode.innerHTML = this._cv ? this._cv(label) : label;
 		},
-	
-		findCurrentView: function(){
-			// summary:
-			//		Search for the view widget that contains this widget.
-			var w = this;
-			while(true){
-				w = w.getParent();
-				if(!w){ return null; }
-				if(w instanceof View){ break; }
-			}
-			return w;
-		},
 
-		onClick: function(e){
-			var h1 = this.domNode;
-			domClass.add(h1, "mblArrowButtonSelected");
-			setTimeout(function(){
-				domClass.remove(h1, "mblArrowButtonSelected");
-			}, 1000);
-
-			if(this.back && !this.moveTo && !this.href && history){
-				history.back();	
-				return;
-			}	
-	
-			// keep the clicked position for transition animations
-			var view = this.findCurrentView();
-			if(view){
-				view.clickedPosX = e.clientX;
-				view.clickedPosY = e.clientY;
-			}
-			this.goTo(this.moveTo, this.href);
-		},
-	
-		goTo: function(moveTo, href){
-			// summary:
-			//		Given the destination, makes a view transition.
-			var view = this.findCurrentView();
-			if(!view){ return; }
-			if(href){
-				view.performTransition(null, -1, this.transition, this, function(){location.href = href;});
-			}else{
-				if(dm.app && dm.app.STAGE_CONTROLLER_ACTIVE){
-					// If in a full mobile app, then use its mechanisms to move back a scene
-					connect.publish("/dojox/mobile/app/goback");
-				}else{
-					// Basically transition should be performed between two
-					// siblings that share the same parent.
-					// However, when views are nested and transition occurs from
-					// an inner view, search for an ancestor view that is a sibling
-					// of the target view, and use it as a source view.
-					var node = registry.byId(view.convertToId(moveTo));
-					if(node){
-						var parent = node.getParent();
-						while(view){
-							var myParent = view.getParent();
-							if(parent === myParent){
-								break;
-							}
-							view = myParent;
-						}
-					}
-					if(view){
-						view.performTransition(moveTo, -1, this.transition);
-					}
+		_setBusyAttr: function(/*Boolean*/busy){
+			var prog = this._prog;
+			if(busy){
+				if(!prog){
+					prog = this._prog = new ProgressIndicator({size:30, center:false});
+					domClass.add(prog.domNode, this.progStyle);
 				}
+				domConstruct.place(prog.domNode, this.domNode, "first");
+				prog.start();
+			}else{
+				prog.stop();
 			}
-		}
+			this._set("busy", busy);
+		}	
 	});
 });

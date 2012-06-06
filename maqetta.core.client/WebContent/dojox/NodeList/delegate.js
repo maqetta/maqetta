@@ -4,11 +4,6 @@ define(["dojo/_base/lang", "dojo/query", "dojo/_base/NodeList", "dojo/NodeList-t
 	// summary:
 	//		TODOC
 
-/*=====
-// doc alias helpers:
-NodeList = dojo.NodeList;
-=====*/
-
 lang.extend(NodeList, {
 	delegate: function(/*String*/ selector, /*String*/ eventName, /*Function*/ fn){
 		// summary:

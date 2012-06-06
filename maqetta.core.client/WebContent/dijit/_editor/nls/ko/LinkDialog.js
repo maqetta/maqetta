@@ -1,8 +1,7 @@
 define(
-//begin v1.x content
 ({
-	createLinkTitle: "링크 등록 정보",
-	insertImageTitle: "이미지 등록 정보",
+	createLinkTitle: "링크 특성",
+	insertImageTitle: "이미지 특성",
 	url: "URL:",
 	text: "설명:",
 	target: "대상",
@@ -12,6 +11,4 @@ define(
 	topWindow: "최상위 창",
 	newWindow: "새 창"
 })
-
-//end v1.x content
 );

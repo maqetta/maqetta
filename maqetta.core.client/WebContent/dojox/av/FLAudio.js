@@ -95,14 +95,13 @@ dojo.declare("dojox.av.FLAudio", null, {
 
 	init: function(){
 		// summary:
-		// Initialize the media.
-		//
-		//
+		//		Initialize the media.
+
 		this._subs = [];
 		this.initialVolume = this._normalizeVolume(this.initialVolume);
 
 		var args = {
-			path:this._swfPath.uri,
+			path:this._swfPath,
 			width:"1px",
 			height:"1px",
 			minimumVersion:9, // this may need to be 10, not sure
@@ -339,7 +338,7 @@ dojo.declare("dojox.av.FLAudio", null, {
 
 	_sub: function(topic, method){
 		// summary:
-		// helper for subscribing to topics
+		//		helper for subscribing to topics
 		dojo.subscribe(this.id+"/"+topic, this, method);
 	},
 

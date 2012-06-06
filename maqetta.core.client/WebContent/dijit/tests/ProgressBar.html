@@ -229,6 +229,18 @@
 						var visualProgress = dojo.query("div.dijitProgressBarFull", progressBar.domNode)[0];
 						doh.is("0%", visualProgress.style.width);
 					}
+				},
+				{
+					name: "programmatic instantiation without params",
+					runTest: function(doh){
+						var pb, success;
+						try{
+							pb = new dijit.ProgressBar();
+							pb.destroyRecursive();
+							success = true;
+						}catch(e){}
+						doh.t(success, "Instantiation w/o params should not throw");
+					}
 				}
 			]);
 			
@@ -259,7 +271,7 @@
 		function remoteProgress(bar){
 			var _timer = setInterval(function(){
 				var report = getProgressReport();
-				report.addCallback(function(response){
+				report.then(function(response){
 					bar.set({value: response});
 					if(response == "100%"){
 						clearInterval(_timer);
@@ -291,7 +303,7 @@
 	<br>
 	<input type="button" name="set" id="set" value="set!" />
 	<br>
-	<div id="setTestBar" data-dojo-type="dijit.ProgressBar" data-dojo-props='style:"width:400px",
+	<div id="setTestBar" data-dojo-type="dijit/ProgressBar" data-dojo-props='style:"width:400px",
 		maximum:200, value:"20" '></div>
 
 	<h3>Test 2</h3>
@@ -302,23 +314,23 @@
 	<br />
 	Small, without text and background image:
 	<br />
-	<div id="smallTestBar" data-dojo-type="dijit.ProgressBar" data-dojo-props='style:"width:400px; height:10px", "class":"smallred", maximum:256'></div>
+	<div id="smallTestBar" data-dojo-type="dijit/ProgressBar" data-dojo-props='style:"width:400px; height:10px", "class":"smallred", maximum:256'></div>
 	<br />
 	Show decimal place:
-	<div id="testBarInt" data-dojo-type="dijit.ProgressBar" data-dojo-props='places:1, style:"width:400px",
+	<div id="testBarInt" data-dojo-type="dijit/ProgressBar" data-dojo-props='places:1, style:"width:400px",
 		maximum:256'></div>
 
 	<h3>Test 3</h3>
 	No explicit maximum (both 50%)
-	<div id="implied1" data-dojo-type="dijit.ProgressBar" data-dojo-props='style:"width:400px",
+	<div id="implied1" data-dojo-type="dijit/ProgressBar" data-dojo-props='style:"width:400px",
 		value:"50" '></div>
 	<br />
-	<div id="implied2" data-dojo-type="dijit.ProgressBar" data-dojo-props='style:"width:400px",
+	<div id="implied2" data-dojo-type="dijit/ProgressBar" data-dojo-props='style:"width:400px",
 		value:"50%" '></div>
 
 	<h3>Test 4</h3>
 	<input type="button" name="startTimer" id="startTimer" value="Start Timer" />
-	<div id="timerBar" data-dojo-type="dijit.ProgressBar" data-dojo-props='style:"width:400px", maximum:100, value:"0" '></div>
+	<div id="timerBar" data-dojo-type="dijit/ProgressBar" data-dojo-props='style:"width:400px", maximum:100, value:"0" '></div>
 
 	<h3>Test 5 - indeterminate progess</h3>
 	<input id="indeterminateButton1" type="button" value="Make Indeterminate (default blank label)"
@@ -330,7 +342,7 @@
 	<input  id="labelButton2" type="button" value="Make Determinate With Label"
 		onclick="dijit.byId('indeterminateBar').set({indeterminate: false, label: 'Loading...'});" />
 	
-	<div id="indeterminateBar" data-dojo-type="dijit.ProgressBar" data-dojo-props='style:"width:400px", value:"50" '></div>
+	<div id="indeterminateBar" data-dojo-type="dijit/ProgressBar" data-dojo-props='style:"width:400px", value:"50" '></div>
 
 	<h3>Test 6 - programatic indeterminate</h3>
 	<div id="pi"></div>

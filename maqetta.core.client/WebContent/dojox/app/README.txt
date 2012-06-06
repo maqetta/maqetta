@@ -125,7 +125,7 @@ Property descriptions
 Some additional properties, such as models, stores, id, name, and description are reserved for future use, but their exact use is still under development.  
 
 The Application Class:
-	The application class itself doesn't currently exist as an exported class!  The base Application class is a very simple extension of the Scene Class (see below) defined in dojox/app/main.js.  This module file exports a generatation function, which when provided a configuration file will declare the application class that will actually be used on a page and then start it up at a specific node:
+	The application class itself doesn't currently exist as an exported class!  The base Application class is a very simple extension of the Scene Class (see below) defined in dojox/app/main.js.  This module file exports a generation function, which when provided a configuration file will declare the application class that will actually be used on a page and then start it up at a specific node:
 
 <code>
 	require(["dojo/_base/html","dojox/app/main", "dojo/text!app/config.json"],function(dojo,Application,config){

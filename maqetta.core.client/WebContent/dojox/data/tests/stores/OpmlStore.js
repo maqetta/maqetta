@@ -4,9 +4,9 @@ dojo.require("dojo.data.api.Read");
 dojo.require("dojo.data.api.Identity");
 
 dojox.data.tests.stores.OpmlStore.getDatasource = function(filepath){
-	//  summary:
+	// summary:
 	//		A simple helper function for getting the sample data used in each of the tests.
-	//  description:
+	// description:
 	//		A simple helper function for getting the sample data used in each of the tests.
 	
 	var dataSource = {};
@@ -128,10 +128,10 @@ dojox.data.tests.stores.OpmlStore.getDatasource = function(filepath){
 		dataSource.data = opmlData;
 	}
 	return dataSource; //Object
-}
+};
 
 dojox.data.tests.stores.OpmlStore.verifyItems = function(opmlStore, items, attribute, compareArray){
-	//  summary:
+	// summary:
 	//		A helper function for validating that the items array is ordered
 	//		the same as the compareArray
 	if(items.length != compareArray.length){ return false; }
@@ -141,20 +141,20 @@ dojox.data.tests.stores.OpmlStore.verifyItems = function(opmlStore, items, attri
 		}
 	}
 	return true; //Boolean
-}
+};
 
 dojox.data.tests.stores.OpmlStore.error = function(t, d, errData){
-	//  summary:
+	// summary:
 	//		The error callback function to be used for all of the tests.
 	d.errback(errData);
-}
+};
 
 doh.register("dojox.data.tests.stores.OpmlStore",
 	[
 		function testReadAPI_fetch_all(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on OpmlStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on OpmlStore.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -171,9 +171,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on OpmlStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on OpmlStore of a single item.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -192,9 +192,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testReadAPI_fetch_one_Multiple(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on OpmlStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on OpmlStore of a single item.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -231,9 +231,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testReadAPI_fetch_one_MultipleMixed(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on OpmlStore of a single item mixing two fetch types.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on Cpmltore of a single item mixing two fetch types.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -274,9 +274,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testReadAPI_fetch_one_deep(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on OpmlStore of a single item that's nested down as a child item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on OpmlStore of a single item that's nested down as a child item.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -296,9 +296,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testReadAPI_fetch_one_deep_off(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on OpmlStore of a single item that's nested down as a child item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on OpmlStore of a single item that's nested down as a child item.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -318,9 +318,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testReadAPI_fetch_all_streaming(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on OpmlStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on OpmlStore.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -351,9 +351,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_paging(t){
-			 //	summary:
+			 // summary:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
-			 //	description:
+			 // description:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -418,9 +418,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 
 		},
 		function testReadAPI_getLabel(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -441,9 +441,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d;
 		},
 		function testReadAPI_getLabelAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -465,9 +465,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testReadAPI_getLabel_nondefault(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography_withspeciallabel.xml");
@@ -489,9 +489,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d;
 		},
 		function testReadAPI_getLabelAttributes_nondefault(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography_withspeciallabel.xml");
@@ -514,9 +514,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testReadAPI_getValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValue function of the store.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -558,9 +558,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_getValues(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValues function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValues function of the store.
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -602,9 +602,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_isItem(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isItem function of the store
-			//	description:
+			// description:
 			//		Simple test of the isItem function of the store
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -629,9 +629,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_hasAttribute(t){
-			//	summary:
+			// summary:
 			//		Simple test of the hasAttribute function of the store
-			//	description:
+			// description:
 			//		Simple test of the hasAttribute function of the store
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -667,9 +667,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_containsValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the containsValue function of the store
-			//	description:
+			// description:
 			//		Simple test of the containsValue function of the store
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -710,9 +710,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_getAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getAttributes function of the store
-			//	description:
+			// description:
 			//		Simple test of the getAttributes function of the store
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -737,9 +737,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -754,9 +754,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			t.assertTrue(count === 2);
 		},
 		function testReadAPI_fetch_patternMatch0(t){
-			//	summary:
+			// summary:
 			//		Function to test pattern matching of everything starting with Capital A
-			//	description:
+			// description:
 			//		Function to test pattern matching of everything starting with Capital A
 
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -774,9 +774,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch1(t){
-			//	summary:
+			// summary:
 			//		Function to test pattern matching of everything with America in it.
-			//	description:
+			// description:
 			//		Function to test pattern matching of everything with America in it.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -794,9 +794,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch2(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match
-			//	description:
+			// description:
 			//		Function to test exact pattern match
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -813,9 +813,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseInsensitive(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match with case insensitivity set.
-			//	description:
+			// description:
 			//		Function to test exact pattern match with case insensitivity set.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -832,9 +832,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseSensitive(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match with case sensitivity set.
-			//	description:
+			// description:
 			//		Function to test exact pattern match with case sensitivity set.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -850,9 +850,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabetic(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting alphabetic ordering.
-			//	description:
+			// description:
 			//		Function to test sorting alphabetic ordering.
 		
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -872,9 +872,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabeticDescending(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting alphabetic ordering in descending mode.
-			//	description:
+			// description:
 			//		Function to test sorting alphabetic ordering in descending mode.
 		
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -895,9 +895,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabeticWithCount(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting numerically in descending order, returning only a specified number of them.
-			//	description:
+			// description:
 			//		Function to test sorting numerically in descending order, returning only a specified number of them.
 		
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -921,9 +921,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = new dojox.data.OpmlStore(dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml"));
@@ -947,9 +947,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			t.assertTrue(passed);
 		},
 		function testIdentityAPI_fetchItemByIdentity(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -965,9 +965,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 		},
 
 		function testIdentityAPI_fetchItemByIdentity_bad1(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -982,9 +982,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad2(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -998,9 +998,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d;
 		},
 		function testIdentityAPI_fetchItemByIdentity_bad3(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -1014,9 +1014,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d;
 		},
 		function testIdentityAPI_getIdentity(t){
-			//	summary:
+			// summary:
 			//		Simple test of the fetchItemByIdentity function of the store.
-			//	description:
+			// description:
 			//		Simple test of the fetchItemByIdentity function of the store.
 			
 			var args = dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml");
@@ -1041,9 +1041,9 @@ doh.register("dojox.data.tests.stores.OpmlStore",
 			return d; //Object
 		},
 		function testIdentityAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = new dojox.data.OpmlStore(dojox.data.tests.stores.OpmlStore.getDatasource("stores/geography.xml"));

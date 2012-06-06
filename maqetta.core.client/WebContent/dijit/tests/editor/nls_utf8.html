@@ -66,7 +66,7 @@ Plain text: 日本語
 <p>
 Same text should show up in the Editor:
 </p>
-<div id="editor" data-dojo-type="dijit.Editor" data-dojo-props='name:"field"'>日本語</div>
+<div id="editor" data-dojo-type="dijit/Editor" data-dojo-props='name:"field"'>日本語</div>
 <input type="submit" value="Save" />
 <button type=button onclick="console.log(dijit.byId('editor').get('value'))">getValue</button>
 <button type=button onclick="dijit.byId('editor').set('value', 'こんにちは')">set value to こんにちは</button>

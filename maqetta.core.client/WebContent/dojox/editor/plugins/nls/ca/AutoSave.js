@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Desa",
 	"saveSettingLabelOn": "Estableix l'interval per desar automàticament...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "Desat a les ${0}",
 	"saveMessageFail": "No s'ha pogut desar a les ${0}"
 })
-
-//end v1.x content
 );

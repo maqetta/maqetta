@@ -29,9 +29,8 @@
 		    dojo.require("dojox.charting.themes.PlotKit.orange");
 		</script>
 	</head>
-	<body>
-		<div dojoType="dijit.layout.BorderContainer" design="sidebar" gutters="false"
-			style="width: 100%; height: 100%;">
+	<body style="width:90%;height:480px">
+		<div dojoType="dijit.layout.BorderContainer" gutters="true" id="borderContainer" style="width:100%;height:100%">
      		<div dojoType="dojox.charting.widget.Chart" id="lineChart"
 	    		theme="dojox.charting.themes.PlotKit.orange" region="center">
 				<div class="axis" name="x" font="italic normal bold 10pt Tahoma"></div>
@@ -39,7 +38,7 @@
 				<div class="plot" name="default" type="dojox.charting.plot2d.Lines"></div>
 				<div class="series" name="Series A" data="1, 2, 0.5, 1.5, 1, 2.8, 0.4, 7, 3, 4, 2, 1, 4, 4, 5"></div>
 				<div class="series" name="Series B" data="2, 1, 0.5, 1, 3, 8, 4, 1.7, 1.3, 4.1, 1, 5, 1, 2, 3"></div>
-			</div> 
+            </div>
 		</div>
 	</body>
 </html>

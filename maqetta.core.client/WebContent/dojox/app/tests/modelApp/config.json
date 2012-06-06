@@ -12,22 +12,23 @@
 		"dojox/mobile/Button",
 		"dojox/mobile/RoundRect",
 		"dojox/mobile/Heading",
-		"dojox/mvc/StatefulModel", //TODO remove the explicit dependency for stores.
-		"dojo/store/Memory", //TODO remove the explicit dependency for stores.
+		"dojo/store/Memory",
 		"dojox/mvc/Group",
         "dojox/mvc/Repeat",
-        "dojox/mvc"
+        "dojox/mvc/Output",
+		"dojox/mobile/deviceTheme"
 	],
 	// Modules for the application.  The are basically used as the second
 	// array of mixins in a dojo.declare().  Modify the top level behavior
 	// of the application, how it processes the config or any other life cycle
 	// by creating and including one or more of these
 	"modules": [
-		"dojox/app/module/env",
-		"dojox/app/module/history",
-		"dojox/app/module/lifecycle"
-		//"dojox/app/module/phonegap",
-		//"dojox/app/module/somePlugin"
+		//"dojox/app/module/env",
+		//"dojox/app/module/lifecycle"
+	],
+	
+	"controllers": [
+		"dojox/app/controllers/History"
 	],
 
 	//stores we are using 
@@ -50,9 +51,11 @@
 	//one to overide the class that will be used for the model.  By default it is dojox/mvc/model
 	"models": {
 	   "names": {
-	       "params":{
-		      "store": {"$ref":"#stores.namesStore"}
-		   }	       
+					"modelLoader": "dojox/app/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
+					"params":{
+		     		 	"store": {"$ref":"#stores.namesStore"}
+		  		 	}	       
 	   }
 	}, 
 
@@ -64,34 +67,34 @@
 	"views": {
 
 		"home": { 
-			"type": "dojox.app.view",
+			"definition" : "none",
 			"dependencies":["dojox/mobile/ListItem","dojox/mobile/RoundRectList","dojox/mobile/RoundRectCategory","dojox/mobile/Heading"],
-			"template": "views/main.html"
+			"template": "./templates/main.html"
 		},
 
 		"simple":{
-			"type": "dojox.app.view",
-			"template": "views/simple.html",			
-			"dependencies":["dojox/mobile/TextBox"],
+			"definition" : "./views/simple.js",
+			"template": "./templates/simple.html",
+			"dependencies":["dojox/mobile/TextBox"]
 		},
 
 		"repeat": {
-            "type": "dojox.app.view",
             "models": {
                 "repeatmodels": {
-                    "params":{
-                        "store": {"$ref":"#stores.repeatStore"}
-                    }           
+    				"modelLoader": "dojox/app/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
+             		"params":{
+             			"store": {"$ref":"#stores.repeatStore"}
+             		}           
                 }
             },
-            "template": "views/repeat.html",
-            "dependencies":["dojox/mobile/TextBox"],
+            "template": "./templates/repeat.html",
+            "dependencies":["dojox/mobile/TextBox"]
 		},
 
 		"generate": {
-            "type": "dojox.app.view",
-            "template": "views/generate.html",
-            "dependencies":["dojox/mobile/TextBox", "dojox/mobile/TextArea", "dojox/mvc/Generate"],
+            "template": "./templates/generate.html",
+            "dependencies":["dojox/mobile/TextBox", "dojox/mobile/TextArea", "dojox/mvc/Generate"]
 		}
 	}	
 }

@@ -1,73 +1,23 @@
 define(
 //begin v1.x content
 {
-	"quarters-format-abbr": [
-		"N1",
-		"N2",
-		"N3",
-		"N4"
+	"months-format-narrow": [
+		"1",
+		"2",
+		"3",
+		"4",
+		"5",
+		"6",
+		"7",
+		"8",
+		"9",
+		"10",
+		"11",
+		"12"
 	],
-	"dateFormat-medium": "yyyy.MM.dd.",
-	"dateFormatItem-MMMEd": "MMM d., E",
-	"dateFormatItem-MEd": "M. d., E",
-	"dateFormatItem-yMEd": "yyyy.MM.dd., E",
-	"dateFormatItem-Hm": "H:mm",
-	"dateFormatItem-H": "H",
-	"eraNarrow": [
-		"MF"
-	],
-	"timeFormat-full": "H:mm:ss zzzz",
-	"dateFormatItem-Md": "M. d.",
-	"months-standAlone-wide": [
-		"Moharrem",
-		null,
-		"R√©bi el avvel",
-		"R√©bi el accher",
-		"Dsem√°di el avvel",
-		"Dsem√°di el accher",
-		"Redseb",
-		"Sab√°n",
-		"Ramad√°n",
-		"Sevv√°l",
-		"Ds√ºl kade",
-		"Ds√ºl hedse"
-	],
-	"eraNames": [
-		"MF"
-	],
-	"days-standAlone-narrow": [
-		"V",
-		"H",
-		"K",
-		"Sz",
-		"Cs",
-		"P",
-		"Sz"
-	],
-	"dayPeriods-format-wide-pm": "du.",
-	"months-standAlone-abbr": [
-		"Moharrem",
-		null,
-		"R√©bi el avvel",
-		"R√©bi el accher",
-		"Dsem√°di el avvel",
-		"Dsem√°di el accher",
-		"Redseb",
-		"Sab√°n",
-		"Ramad√°n",
-		"Sevv√°l",
-		"Ds√ºl kade",
-		"Ds√ºl hedse"
-	],
-	"dayPeriods-format-wide-am": "de.",
-	"timeFormat-medium": "H:mm:ss",
-	"dateFormat-long": "y. MMMM d.",
-	"dateFormatItem-Hms": "H:mm:ss",
-	"dateFormat-short": "yyyy.MM.dd.",
-	"dateFormatItem-yMMMEd": "y. MMM d., E",
 	"months-format-wide": [
 		"Moharrem",
-		null,
+		"Safar",
 		"Rébi el avvel",
 		"Rébi el accher",
 		"Dsemádi el avvel",
@@ -79,42 +29,83 @@ define(
 		"Dsül kade",
 		"Dsül hedse"
 	],
-	"timeFormat-short": "H:mm",
-	"months-format-abbr": [
+	"months-standAlone-abbr": [
+		"Muh.",
+		"Saf.",
+		"Rab. I",
+		"Rab. II",
+		"Jum. I",
+		"Jum. II",
+		"Raj.",
+		"Sha.",
+		"Ram.",
+		"Shaw.",
+		"Dsül-Q.",
+		"Dsül-H."
+	],
+	"months-standAlone-wide": [
 		"Moharrem",
-		null,
-		"R√©bi el avvel",
-		"R√©bi el accher",
-		"Dsem√°di el avvel",
-		"Dsem√°di el accher",
+		"Safar",
+		"Rébi I",
+		"Rébi II",
+		"Dsemádi I",
+		"Dsemádi II",
 		"Redseb",
-		"Sab√°n",
-		"Ramad√°n",
-		"Sevv√°l",
-		"Ds√ºl kade",
-		"Ds√ºl hedse"
+		"Sabán",
+		"Ramadán",
+		"Sevvál",
+		"Dsül kade",
+		"Dsül hedse"
 	],
 	"eraAbbr": [
 		"MF"
 	],
-	"timeFormat-long": "H:mm:ss z",
-	"days-format-wide": [
-		"vas√°rnap",
-		"h√©tf≈ë",
-		"kedd",
-		"szerda",
-		"cs√ºt√∂rt√∂k",
-		"p√©ntek",
-		"szombat"
-	],
-	"quarters-format-wide": [
-		"I. negyed√©v",
-		"II. negyed√©v",
-		"III. negyed√©v",
-		"IV. negyed√©v"
-	],
 	"dateFormat-full": "y. MMMM d., EEEE",
+	"dateFormat-long": "y. MMMM d.",
+	"dateFormat-medium": "yyyy.MM.dd.",
+	"dateFormat-short": "yyyy.MM.dd.",
+	"dateFormatItem-d": "d",
+	"dateFormatItem-Ed": "d E",
+	"dateFormatItem-h": "a h",
+	"dateFormatItem-H": "HH",
+	"dateFormatItem-hm": "a h:mm",
+	"dateFormatItem-Hm": "H:mm",
+	"dateFormatItem-hms": "a h:mm:ss",
+	"dateFormatItem-Hms": "H:mm:ss",
+	"dateFormatItem-M": "L",
+	"dateFormatItem-Md": "M. d.",
+	"dateFormatItem-MEd": "M. d., E",
 	"dateFormatItem-MMMd": "MMM d.",
+	"dateFormatItem-MMMEd": "MMM. d., E",
+	"dateFormatItem-MMMMd": "MMMM d.",
+	"dateFormatItem-ms": "mm:ss",
+	"dateFormatItem-y": "y",
+	"dateFormatItem-yM": "y-M",
+	"dateFormatItem-yMEd": "yyyy.MM.dd., E",
+	"dateFormatItem-yMMM": "y MMM",
+	"dateFormatItem-yMMMEd": "y. MMM d., E",
+	"dateFormatItem-yQ": "y Q",
+	"dateFormatItem-yQQQ": "y QQQ",
+	"months-format-abbr": [
+		"Moharrem",
+		"Safar",
+		"Rébi el avvel",
+		"Rébi el accher",
+		"Dsemádi el avvel",
+		"Dsemádi el accher",
+		"Redseb",
+		"Sabán",
+		"Ramadán",
+		"Sevvál",
+		"Dsül kade",
+		"Dsül hedse"
+	],
+	"eraNames": [
+		"MF"
+	],
+	"eraNarrow": [
+		"MF"
+	],
 	"days-format-abbr": [
 		"V",
 		"H",
@@ -123,7 +114,86 @@ define(
 		"Cs",
 		"P",
 		"Szo"
-	]
+	],
+	"days-format-narrow": [
+		"V",
+		"H",
+		"K",
+		"Sz",
+		"Cs",
+		"P",
+		"Sz"
+	],
+	"days-format-wide": [
+		"vasárnap",
+		"hétfő",
+		"kedd",
+		"szerda",
+		"csütörtök",
+		"péntek",
+		"szombat"
+	],
+	"days-standAlone-abbr": [
+		"V",
+		"H",
+		"K",
+		"Sze",
+		"Cs",
+		"P",
+		"Szo"
+	],
+	"days-standAlone-narrow": [
+		"V",
+		"H",
+		"K",
+		"Sz",
+		"Cs",
+		"P",
+		"Sz"
+	],
+	"days-standAlone-wide": [
+		"vasárnap",
+		"hétfő",
+		"kedd",
+		"szerda",
+		"csütörtök",
+		"péntek",
+		"szombat"
+	],
+	"quarters-format-abbr": [
+		"N1",
+		"N2",
+		"N3",
+		"N4"
+	],
+	"quarters-format-wide": [
+		"I. negyedév",
+		"II. negyedév",
+		"III. negyedév",
+		"IV. negyedév"
+	],
+	"quarters-standAlone-abbr": [
+		"N1",
+		"N2",
+		"N3",
+		"N4"
+	],
+	"quarters-standAlone-wide": [
+		"1. negyedév",
+		"2. negyedév",
+		"3. negyedév",
+		"4. negyedév"
+	],
+	"dayPeriods-format-narrow-am": "de.",
+	"dayPeriods-format-narrow-pm": "du.",
+	"dayPeriods-format-wide-am": "de.",
+	"dayPeriods-format-wide-pm": "du.",
+	"dateFormatItem-yMd": "yyyy.MM.dd.",
+	"dateFormatItem-yMMMd": "y. MMM d.",
+	"timeFormat-full": "H:mm:ss zzzz",
+	"timeFormat-long": "H:mm:ss z",
+	"timeFormat-medium": "H:mm:ss",
+	"timeFormat-short": "H:mm"
 }
 //end v1.x content
 );

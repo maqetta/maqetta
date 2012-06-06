@@ -4,8 +4,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Icon</title>
-		<link href="../../themes/iphone/base.css" rel="stylesheet">
-		<link href="../../themes/iphone/IconContainer.css" rel="stylesheet">
+		<link href="../../themes/iphone/base.css" rel="stylesheet"/>
+		<link href="../../themes/iphone/IconContainer.css" rel="stylesheet"/>
 
 		<style>
 			.box {
@@ -19,15 +19,17 @@
 		</style>
 		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
+		<script type="text/javascript" src="TestUtil.js"></script>
 		<script language="JavaScript" type="text/javascript">
 			//dojo.require("dojo.parser"); // Use the lightweight parser.
 			dojo.require("dojox.mobile.parser");
 			dojo.require("dojox.mobile");
+			dojo.require("dojox.mobile.View");
 			dojo.require("dojox.mobile.IconContainer");
 			dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
-		</script>
-		<script type="text/javascript" src="TestUtil.js"></script>
-		<script language="JavaScript" type="text/javascript">
+
+	        dojo.require("doh.runner");
+
 			dojo.addOnLoad(function(){
 				doh.register("dojox.mobile.test.doh.IconContainer", [
 					{
@@ -49,14 +51,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 							var demoWidget = dijit.byId("dojox_mobile_IconItem_0");
-							var e;
-							doh.assertEqual('none', demoWidget.contentNode.style.display);
-							fireOnClick(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0]);
+							fireOnMouseDown(demoWidget.domNode);
+							fireOnMouseUp(demoWidget.domNode);
 
 							demoWidget = dijit.byId("dojox_mobile_IconItem_1");
-							doh.assertEqual('none', demoWidget.contentNode.style.display);
-							fireOnClick(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0]);
-
+							doh.assertEqual('none', demoWidget.paneWidget.domNode.style.display);
+							fireOnMouseDown(demoWidget.domNode);
+							fireOnMouseUp(demoWidget.domNode);
 							var t = 1000;
 							if(dojo.isIE || dojo.isAndroid || dojo.isIPhone || dojo.isBB) {
 								t=2500;
@@ -64,25 +65,9 @@
 
 							setTimeout(d.getTestCallback(function(){
 								var demoWidget = dijit.byId("dojox_mobile_IconItem_0");
-								if(!dojo.isIE) {
-									doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/i-icon-all.png/i) != -1);
-								}
-								verifyRect(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0], "0px", "58px", "58px", "0px");
-								doh.assertEqual('app1', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
-								doh.assertEqual('none', demoWidget.contentNode.style.display);
-								doh.assertEqual('mblIconContentHeading', demoWidget.contentNode.childNodes[0].className);
-								doh.assertEqual('mblDomButtonBlueMinus mblDomButton', demoWidget.contentNode.childNodes[0].childNodes[0].className);
-								doh.assertEqual('app1', demoWidget.contentNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
-
-								demoWidget = dijit.byId("dojox_mobile_IconItem_1");
-								if(!dojo.isIE && !dojo.isFF) {
-									doh.assertTrue(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].src.search(/i-icon-all.png/i) != -1);
-								}
-								doh.assertEqual('app2', demoWidget.domNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
-								doh.assertEqual('', demoWidget.contentNode.style.display);
-								doh.assertEqual('mblIconContentHeading', demoWidget.contentNode.childNodes[0].className);
-								doh.assertEqual('mblDomButtonBlueMinus mblDomButton', demoWidget.contentNode.childNodes[0].childNodes[0].className);
-								doh.assertEqual('app2', demoWidget.contentNode.childNodes[0].childNodes[1].childNodes[0].nodeValue);
+								verifyRect(demoWidget.domNode.childNodes[0].childNodes[0].childNodes[0].childNodes[0], "0px", "64px", "64px", "0px");
+								verifyIconItem("dojox_mobile_IconItem_0", 'app1', 'none', /icon-all.png/i, true);
+								verifyIconItem("dojox_mobile_IconItem_1", 'app2', '', /icon-all.png/i, true);
 								
 							}),t);
 							return d;
@@ -96,13 +81,13 @@
 	<body>
 		<div id="foo" dojoType="dojox.mobile.View" selected="true">
 			<h1 dojoType="dojox.mobile.Heading">Icon Container</h1>
-			<ul dojoType="dojox.mobile.IconContainer" transition="slide" single="true" pressedIconOpacity="0.8" iconBase="../images/i-icon-all.png" iconPos="0,0,58,58" back="Test" label="test">
+			<ul dojoType="dojox.mobile.IconContainer" transition="slide" single="true" pressedIconOpacity="0.8" iconBase="../images/icon-all.png" iconPos="0,0,64,64" back="Test" label="test">
 				<li dojoType="dojox.mobile.IconItem" label="app1" lazy="true"><div class="box"></div></li>
-				<li dojoType="dojox.mobile.IconItem" label="app2" iconPos="0,29,58,58" lazy="true"><div class="box"></div></li>
-				<li dojoType="dojox.mobile.IconItem" label="app3" iconPos="0,29,58,58" lazy="true"><div class="box"></div></li>
-				<li dojoType="dojox.mobile.IconItem" label="moveTo" iconPos="0,29,58,58" moveTo="about" transition="slide"></li>
-				<li dojoType="dojox.mobile.IconItem" label="href" iconPos="0,29,58,58" href="../test_iPhone-RoundRectList.html" transition="slide"></li>
-				<li dojoType="dojox.mobile.IconItem" label="url" iconPos="0,29,58,58" url="../view-sample.html" transition="slide"></li>
+				<li dojoType="dojox.mobile.IconItem" label="app2" iconPos="0,64,64,64" lazy="true"><div class="box"></div></li>
+				<li dojoType="dojox.mobile.IconItem" label="app3" iconPos="0,64,64,64" lazy="true"><div class="box"></div></li>
+				<li dojoType="dojox.mobile.IconItem" label="moveTo" iconPos="0,64,64,64" moveTo="about" transition="slide"></li>
+				<li dojoType="dojox.mobile.IconItem" label="href" iconPos="0,64,64,64" href="../test_iPhone-RoundRectList.html" transition="slide"></li>
+				<li dojoType="dojox.mobile.IconItem" label="url" iconPos="0,64,64,64" url="../view-sample.html" transition="slide"></li>
 			</ul>
 		</div>
 

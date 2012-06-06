@@ -15,19 +15,25 @@
 			}
 		</style>
 
-		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="async:true, parseOnLoad: true"></script>
 
 		<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
 		<script type="text/javascript">
-			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
-			dojo.require("dijit.dijit");
-			dojo.require("dojox.fx._base");
-			dojo.require("dojox.widget.Calendar");
-			dojo.require("dojox.widget.FisheyeLite");
-			dojo.require("dojox.widget.CalendarFx");
+			require([
+				"dojo/parser",
+				"dojox/fx/_base",
+				"dojox/widget/Calendar",
+				"dojox/widget/DailyCalendar",
+				"dojox/widget/MonthAndYearlyCalendar",
+				"dojox/widget/MonthlyCalendar",
+				"dojo/dom",
+				//"dojox/widget/FisheyeList",
+				//"dojox/widget/CalendarFx",
+				"dojo/domReady!"
+			], function(parser, fx, Calendar, DailyCalendar, MonthAndYearlyCalendar, MonthlyCalendar, dom){
 
-			dojo.declare(
+/*			dojo.declare(
 				"test.CalendarCustomFx",
 			 	[dojox.widget.Calendar], {
 
@@ -40,7 +46,7 @@
 			function log(str){
 					dojo.byId("report").innerHTML = str;
 				}
-
+*/			}
 		</script>
 	</head>
 	<body>

@@ -1,6 +1,4 @@
-dojo.provide("dojox.drawing.library.icons");
-
-dojox.drawing.library.icons = {
+define({
 	// summary:
 	//		A collection of icon Stencils for use with the buttons in the ui/Toolbar.
 	// description:
@@ -158,4 +156,4 @@ dojox.drawing.library.icons = {
 {	x:32,		y:68	}
 ]
 	}
-};
+});

@@ -36,6 +36,7 @@
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dijit.form.Button");
 		dojo.require("dijit.form.MultiSelect");
+		dojo.require("dijit.form.Select");
 		dojo.require("dijit.form.Textarea");
 		dojo.require("dijit.form.SimpleTextarea");
 		dojo.require("dijit.Editor");
@@ -75,6 +76,7 @@
 							cb: ["2", "3"],
 							r: "2",
 							ms1: ["VA", "WA"],
+							s1: "VA",
 							h1: "hidden",
 							t1: "line 1\nline 2",
 							st1: "simple line 1\nsimple line 2",
@@ -93,6 +95,7 @@
 							cb: ["4"],
 							r: "1",
 							ms1: ["FL", "CA"],
+							s1: "FL",
 							h1: "still hidden",
 							t1: "new line 1\nnew line 2",
 							st1: "new simple line 1\nnew simple line 2",
@@ -169,6 +172,7 @@
 					doh.is(testValues.cb, formValues.cb);
 					doh.is(testValues.r, formValues.r);
 					doh.is(testValues.ms1, formValues.ms1);
+					doh.is(testValues.s1, formValues.s1);
 					doh.is(testValues.h1, formValues.h1);
 					doh.is(testValues.t1, formValues.t1);
 					doh.is(testValues.st1, formValues.st1);
@@ -629,7 +633,7 @@
 	<!--    to test form submission, you'll need to create an action handler similar to
 			http://www.utexas.edu/teamweb/cgi-bin/generic.cgi
 		http://www.tipjar.com/cgi-bin/test -->
-	<form id="myForm" data-dojo-type="dijit.form.Form" data-dojo-props='encType:"multipart/form-data", action:"../formAction.html", method:"", target:"formSubmitIframe"'>
+	<form id="myForm" data-dojo-type="dijit/form/Form" data-dojo-props='encType:"multipart/form-data", action:"../formAction.html", method:"", target:"formSubmitIframe"'>
 		<script type="dojo/method" data-dojo-event="onReset">
 			return ("_onResetReturn" in this)? this._onResetReturn : confirm('Press OK to reset widget values');
 		</script>
@@ -675,8 +679,8 @@
 					<td>DateTextBox inside contentpane</td>
 					<td>foo.bar.baz.quux</td>
 					<td>
-						<div data-dojo-type="dijit.layout.ContentPane">
-						<input data-dojo-type="dijit.form.DateTextBox" data-dojo-props='id:"dtb1", name:"foo.bar.baz.quux", value:"2007-12-30" '/>
+						<div data-dojo-type="dijit/layout/ContentPane">
+						<input data-dojo-type="dijit/form/DateTextBox" data-dojo-props='id:"dtb1", name:"foo.bar.baz.quux", value:"2007-12-30" '/>
 						</div>
 					</td>
 				</tr>
@@ -684,21 +688,21 @@
 					<td>DateTextBox 2</td>
 					<td>available.from</td>
 					<td>
-						<input data-dojo-type="dijit.form.DateTextBox" data-dojo-props='id:"dtb2", name:"available.from", value:"2005-01-02" '/>
+						<input data-dojo-type="dijit/form/DateTextBox" data-dojo-props='id:"dtb2", name:"available.from", value:"2005-01-02" '/>
 					</td>
 				</tr>
 				<tr>
 					<td>DateTextBox 3</td>
 					<td>available.to</td>
 					<td>
-						<input data-dojo-type="dijit.form.DateTextBox" data-dojo-props='id:"dtb3", name:"available.to", value:"2006-01-02" '/>
+						<input data-dojo-type="dijit/form/DateTextBox" data-dojo-props='id:"dtb3", name:"available.to", value:"2006-01-02" '/>
 					</td>
 				</tr>
 				<tr>
 					<td>ComboBox</td>
 					<td>plop.combo</td>
 					<td>
-						<select data-dojo-type="dijit.form.ComboBox" data-dojo-props='name:"plop.combo" '>
+						<select data-dojo-type="dijit/form/ComboBox" data-dojo-props='name:"plop.combo" '>
 							<option value="one">one</option>
 							<option value="two">two</option>
 							<option value="three">three</option>
@@ -735,10 +739,10 @@
 					<td>CheckBox widget</td>
 					<td>cb</td>
 					<td>
-						<input data-dojo-type="dijit.form.CheckBox" data-dojo-props='id: "cb_1", name:"cb", value:"1" '/> 1
-						<input data-dojo-type="dijit.form.CheckBox" data-dojo-props='id: "cb_2", name:"cb", value:"2", checked:true '/> 2
-						<input data-dojo-type="dijit.form.CheckBox" data-dojo-props='id: "cb_3", name:"cb", value:"3", checked:true '/> 3
-						<input data-dojo-type="dijit.form.CheckBox" data-dojo-props='id: "cb_4", name:"cb", value:"4" '/> 4
+						<input data-dojo-type="dijit/form/CheckBox" data-dojo-props='id: "cb_1", name:"cb", value:"1" '/> 1
+						<input data-dojo-type="dijit/form/CheckBox" data-dojo-props='id: "cb_2", name:"cb", value:"2", checked:true '/> 2
+						<input data-dojo-type="dijit/form/CheckBox" data-dojo-props='id: "cb_3", name:"cb", value:"3", checked:true '/> 3
+						<input data-dojo-type="dijit/form/CheckBox" data-dojo-props='id: "cb_4", name:"cb", value:"4" '/> 4
 					</td>
 				</tr>
 
@@ -758,10 +762,10 @@
 				<tr>
 				<td>Radio widget</td><td>r</td>
 				<td id="radio-cells">
-				<input data-dojo-type="dijit.form.RadioButton" data-dojo-props='id:"r_1", name:"r", value:"1" '/> 1
-				<input data-dojo-type="dijit.form.RadioButton" data-dojo-props='id:"r_2", name:"r", value:"2", checked:true '/> 2
-				<input data-dojo-type="dijit.form.RadioButton" data-dojo-props='id:"r_3", name:"r", value:"3"'/> 3
-				<input data-dojo-type="dijit.form.RadioButton" data-dojo-props='id:"r_4", name:"r", value:"4" '/> 4
+				<input data-dojo-type="dijit/form/RadioButton" data-dojo-props='id:"r_1", name:"r", value:"1" '/> 1
+				<input data-dojo-type="dijit/form/RadioButton" data-dojo-props='id:"r_2", name:"r", value:"2", checked:true '/> 2
+				<input data-dojo-type="dijit/form/RadioButton" data-dojo-props='id:"r_3", name:"r", value:"3"'/> 3
+				<input data-dojo-type="dijit/form/RadioButton" data-dojo-props='id:"r_4", name:"r", value:"4" '/> 4
 				<input type="button" onclick="dojo.query('INPUT[type=radio]','radio-cells').forEach(function(n){dijit.getEnclosingWidget(n).set('checked',false);});return true;" value="Unset all radio buttons"/>
 				</td>
 				</tr>
@@ -769,7 +773,7 @@
 				<tr>
 					<td>Multi-select</td><td>ms1</td>
 					<td>
-						<select id="ms1" multiple data-dojo-type="dijit.form.MultiSelect"
+						<select id="ms1" multiple data-dojo-type="dijit/form/MultiSelect"
 							data-dojo-props='name:"ms1",
 							style:{height:"100px", width:"175px", border:"5px solid #ededed"}'>
 
@@ -784,10 +788,25 @@
 				</tr>
 
 				<tr>
+					<td>Select</td><td>s1</td>
+					<td>
+						<select id="s1" data-dojo-type="dijit/form/Select"
+							data-dojo-props='name:"s1", style:{width:"175px"}'>
+							<option value="TN">Tennessee</option>
+							<option value="VA" selected="selected">Virginia</option>
+							<option value="WA">Washington</option>
+							<option value="FL">Florida</option>
+							<option value="CA">California</option>
+
+						</select>
+					</td>
+				</tr>
+
+				<tr>
 					<td>Hidden input</td>
 					<td>h1</td>
 					<td>
-						<input id="h1" data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"h1", type:"hidden", value:"hidden"'/>
+						<input id="h1" data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"h1", type:"hidden", value:"hidden"'/>
 					</td>
 				</tr>
 
@@ -795,7 +814,7 @@
 					<td>Auto-sizing textarea</td>
 					<td>t1</td>
 					<td>
-						<textarea id="t1" data-dojo-type="dijit.form.Textarea" data-dojo-props='name:"t1"
+						<textarea id="t1" data-dojo-type="dijit/form/Textarea" data-dojo-props='name:"t1"
 	'>line 1
 line 2</textarea>
 					</td>
@@ -805,7 +824,7 @@ line 2</textarea>
 					<td>Fixed size textarea</td>
 					<td>st1</td>
 					<td>
-						<textarea id="st1" data-dojo-type="dijit.form.SimpleTextarea" data-dojo-props='name:"st1", rows:"5", cols:"50"'>
+						<textarea id="st1" data-dojo-type="dijit/form/SimpleTextarea" data-dojo-props='name:"st1", rows:"5", cols:"50"'>
 simple line 1
 simple line 2</textarea>
 					</td>
@@ -815,7 +834,7 @@ simple line 2</textarea>
 					<td>Editor widget</td>
 					<td>richtext</td>
 					<td>
-						<textarea id="editor" name="richtext" data-dojo-type="dijit.Editor" data-dojo-props='plugins:["bold", "italic"]'><h1>original</h1><p>This is the default content</p></textarea>
+						<textarea id="editor" name="richtext" data-dojo-type="dijit/Editor" data-dojo-props='plugins:["bold", "italic"]'><h1>original</h1><p>This is the default content</p></textarea>
 					</td>
 				</tr>
 
@@ -823,73 +842,73 @@ simple line 2</textarea>
 					<td>File upload</td>
 					<td>filename</td>
 					<td>
-						<input data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"filename", type:"file"'/>
+						<input data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"filename", type:"file"'/>
 					</td>
 				</tr>
 				<tr>
 					<td>Required Widget</td>
 					<td>requiredWidget</td>
 					<td>
-						<input data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props='id: "rw", name:"requiredWidget", required:true, value:""'/>
+						<input data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='id: "rw", name:"requiredWidget", required:true, value:""'/>
 					</td>
 				</tr>
 				<tr>
 					<td>Disabled Widget</td>
 					<td>disabledWidget</td>
 					<td>
-						<input data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"disabledWidget", disabled:true, value:"Should not be returned"'/>
+						<input data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"disabledWidget", disabled:true, value:"Should not be returned"'/>
 					</td>
 				</tr>
 				<tr>
 					<td>Disabled Required Widget</td>
 					<td>disabledRequiredWidget</td>
 					<td>
-						<input data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props='id: "drw", name:"disabledRequiredWidget", disabled:true, required:true, value:""'/>
+						<input data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='id: "drw", name:"disabledRequiredWidget", disabled:true, required:true, value:""'/>
 					</td>
 				</tr>
 				<tr>
 					<td>Read-only Widget</td>
 					<td>readOnlyWidget</td>
 					<td>
-						<input data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"readOnlyWidget", readOnly:true, value:"Should be returned"'/>
+						<input data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"readOnlyWidget", readOnly:true, value:"Should be returned"'/>
 					</td>
 				</tr>
 				<tr>
 					<td>Duplicate named TextBox 1</td>
 					<td>duplicate</td>
 					<td>
-						<input data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"duplicate", value:"first"'/>
+						<input data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"duplicate", value:"first"'/>
 					</td>
 				</tr>
 				<tr>
 					<td>Duplicate named TextBox 2</td>
 					<td>duplicate</td>
 					<td>
-						<input data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"duplicate", value:"second"'/>
+						<input data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"duplicate", value:"second"'/>
 					</td>
 				</tr>
 				<tr>
 					<td>Duplicate named TextBox 3</td>
 					<td>duplicate</td>
 					<td>
-						<input data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"duplicate", value:"third"'/>
+						<input data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"duplicate", value:"third"'/>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ getValues(); }'>Get Values from form!</button>
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ setValues(); }'>Set Values to form!</button>
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ validate(); }'>Validate form!</button>
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"submit", value:"Submit"'>Submit</button>
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"reset"'>HTML Reset</button>
-		<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ dijit.byId("myForm").reset() }'>reset()</button>
+		<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ getValues(); }'>Get Values from form!</button>
+		<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ setValues(); }'>Set Values to form!</button>
+		<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ validate(); }'>Validate form!</button>
+		<button data-dojo-type="dijit/form/Button" data-dojo-props='type:"submit", value:"Submit"'>Submit</button>
+		<button data-dojo-type="dijit/form/Button" data-dojo-props='type:"reset"'>HTML Reset</button>
+		<button data-dojo-type="dijit/form/Button" data-dojo-props='type:"button", onClick:function(){ dijit.byId("myForm").reset() }'>reset()</button>
 	</form>
-<button data-dojo-type="dijit.form.Button" data-dojo-props='type:"button",
+<button data-dojo-type="dijit/form/Button" data-dojo-props='type:"button",
 onClick:function(){ dijit.byId("myForm").submit() }'>Submit programmatically</button>
 
 <iframe name="formSubmitIframe" src="about:blank" onload="if(this.values)submittedValues(this.values)" style="display:none;"></iframe>
 
-	<form id="noValidateForm" data-dojo-type="dijit.form.Form" novalidate></form>
+	<form id="noValidateForm" data-dojo-type="dijit/form/Form" novalidate></form>
 </body>
 </html>

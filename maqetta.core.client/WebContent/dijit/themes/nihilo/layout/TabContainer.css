@@ -1,9 +1,5 @@
 /**
  * dijit.layout.TabContainer
- *
- * To style TabContainer with rounded corners
- * you can use these classes: .dijitTab (left), .dijitTabContent (center), dijitTabInnerDiv (right)
- * For tabs aligned to top you can style a stripe div right underneath the tabs using .dijitTabStripe
  */
 @import url("../Menu.css");
 
@@ -28,54 +24,25 @@
 	padding: 0;
 }
 
-.nihilo .dijitTabInnerDiv {
-	padding:0 3px 0 0;
-	margin: 0 0 0 4px;
-	background: url("../images/tabContainerSprite.gif") no-repeat;
-	background-position: right -400px;
-}
-
 .nihilo .dijitTab {
+    padding:3px 6px 3px 4px;
+    background: url("../images/tabContainerSprite.gif") repeat-x 0 -350px;
+    position: relative;
 	line-height:normal;
-	margin:0 2px 0 0;	/* space between one tab and the next in top/bottom mode */
-	padding:0;
-	background: url("../images/tabContainerSprite.gif") no-repeat 0 -300px;
+	margin: 0 1px;	/* space between one tab and the next in top/bottom mode */
 	color: #6d6d6d;
+    border: 1px #dedede solid;
 	border-bottom: 1px #ccc solid;
-}
-
-.nihilo .dijitTabInnerDiv .dijitTabContent {
-	padding:3px 3px 3px 4px;
-	background: url("../images/tabContainerSprite.gif") repeat-x 0 -350px;
-	position: relative;
 }
 
 /* hovered tab */
 .nihilo .dijitTabHover {
 	color: #243C5F;
-	background: url("../images/tabContainerSprite.gif") no-repeat 0 -150px;
-}
-
-.nihilo .dijitTabHover .dijitTabInnerDiv {
-	background: url("../images/tabContainerSprite.gif") no-repeat right -250px;
-}
-
-.nihilo .dijitTabHover .dijitTabInnerDiv .dijitTabContent {
 	background: url("../images/tabContainerSprite.gif") repeat-x 0 -200px;
 }
 
-/* checked tab*/
-.nihilo .dijitTabChecked
-{
-	/* the selected tab (with or without hover) */
-	background: url("../images/tabContainerSprite.gif") no-repeat 0 -0;
-}
-
-.nihilo .dijitTabChecked .dijitTabInnerDiv {
-	background: url("../images/tabContainerSprite.gif") no-repeat right -100px;
-}
-
-.nihilo .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
+/* selected tab */
+.nihilo .dijitTabChecked {
 	background: url("../images/tabContainerSprite.gif") repeat-x 0 -50px;
 	color: #243C5F !important;
 }
@@ -95,11 +62,7 @@
 	border: none;
 	top: 0;	/* override top:1px setting of top-level tabs */
 }
-.nihilo .dijitTabContainerTabListNested .dijitTab .dijitTabInnerDiv,
-.nihilo .dijitTabContainerTabListNested .dijitTab .dijitTabContent {
-	background: none;
-}
-.nihilo .dijitTabContainerTabListNested .dijitTabHover .dijitTabContent .tabLabel {
+.nihilo .dijitTabContainerTabListNested .dijitTabHover .tabLabel {
 	text-decoration: underline;
 }
 .nihilo .dijitTabContainerTabListNested .dijitTabChecked .tabLabel {
@@ -142,6 +105,10 @@
 	background-position: bottom;
 	padding-left: 3px;
 }
+.nihilo .dijitTabContainerTop-tabs .dijitTab {
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+}
 
 .dj_ie6 .nihilo .dijitTabListContainer-top,
 .dj_ie7 .nihilo .dijitTabListContainer-top {
@@ -163,7 +130,7 @@
 	border-top: none;
 }
 
-/* checked tabs */
+/* selected tab */
 .nihilo .dijitTabContainerTop-tabs .dijitTabChecked {
 	border-bottom-color: #f8f8f8;
 }
@@ -187,6 +154,28 @@
 	background-position: top;
 	padding-left: 3px;
 }
+.nihilo .dijitTabContainerBottom-tabs .dijitTab {
+    border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    border-bottom: none;
+    border-top: 1px solid #ccc;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background: url("../images/tabBottomEnabledC.gif") repeat-x bottom left;
+}
+
+
+.nihilo .dijitTabContainerBottom-tabs .dijitTabHover {
+	color: #243C5F;
+	background: url("../images/tabBottomHoverC.gif") repeat-x bottom left;
+}
+
+.nihilo .dijitTabContainerBottom-tabs .dijitTabChecked {
+	/* the selected tab (with or without hover) */
+    border-top-color: #f8f8f8;
+	background: url("../images/tabBottomActiveC.gif") repeat-x bottom left;
+}
+
 
 .dj_ie6 .nihilo .dijitTabListContainer-bottom,
 .dj_ie7 .nihilo .dijitTabListContainer-bottom {
@@ -204,53 +193,6 @@
 	border-bottom: none;
 }
 
-.nihilo .dijitTabContainerBottom-tabs .dijitTab {
-	border-bottom: none;
-	border-top: 1px solid #ccc;
-	background: url("../images/tabBottomEnabledSpriteLR.gif") no-repeat bottom left;
-}
-
-/* checked tabs */
-.nihilo .dijitTabContainerBottom-tabs .dijitTabChecked {
-	border-top-color: #f8f8f8;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabInnerDiv .dijitTabContent {
-	padding-top: 3px;
-	padding-bottom: 3px;
-	background: url("../images/tabBottomEnabledC.gif") repeat-x bottom left;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabInnerDiv {
-	background: url("../images/tabBottomEnabledSpriteLR.gif") no-repeat bottom right;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabHover {
-	color: #243C5F;
-	background: url("../images/tabBottomHoverSpriteLR.gif") no-repeat bottom left;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabHover .dijitTabInnerDiv {
-	background: url("../images/tabBottomHoverSpriteLR.gif") no-repeat bottom right;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabHover .dijitTabInnerDiv .dijitTabContent {
-	background: url("../images/tabBottomHoverC.gif") repeat-x bottom left;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabChecked {
-	/* the selected tab (with or without hover) */
-	background: url("../images/tabBottomActiveSpriteLR.gif") no-repeat bottom left;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabChecked .dijitTabInnerDiv {
-	background: url("../images/tabBottomActiveSpriteLR.gif") no-repeat bottom right;
-}
-
-.nihilo .dijitTabContainerBottom-tabs .dijitTabChecked .dijitTabInnerDiv .dijitTabContent {
-	background: url("../images/tabBottomActiveC.gif") repeat-x bottom left;
-}
-
 /* strip */
 .nihilo .dijitTabContainer .dijitTabContainerBottomStrip {
 	border: 1px solid #ccc;
@@ -264,14 +206,15 @@
 .nihilo .dijitTabContainerTop-spacer {
 	height: 2px;
 	border: 1px solid #ccc;
-	background: #f8f8f8;
 }
 
 .nihilo  .dijitTabContainerTop-spacer {
 	margin-top: -1px;
+    background: #f3f3f3;
 }
 .nihilo .dijitTabContainerBottom-spacer {
 	margin-bottom: -1px;
+    background: #f8f8f8;
 }
 
 
@@ -281,47 +224,40 @@
 	border-color: #ccc;
 	padding-top: 3px;
 }
+.nihilo .dijitTabContainerRight-tabs .dijitTab {
+    border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #dedede !important;
+}
+
 .nihilo .dijitTabContainerRight .dijitTabListWrapper {
 	padding-right: 3px;
 }
+.nihilo .dijitTabContainerRight-tabs .dijitTabChecked {
+	border-left: 1px solid #f8f8f8;
+}
+
 
 /* right container */
 .nihilo .dijitTabContainerRight-container {
 	border-right: none;
 }
 
-.nihilo .dijitTabContainerRight-tabs .dijitTab {
-	border-bottom: none;
-	border-left: 1px solid #ccc;
-	border-bottom: 1px solid #dedede !important;
-}
-
-
-/* some odd ie bug when borders dissapear when setting a bottom margin, this sortof helps */
-.dj_ie .nihilo .dijitTabContainerRight-tabs .dijitTabInnerDiv {
+/* some odd ie bug when borders disappear when setting a bottom margin, this sort of helps */
+.dj_ie .nihilo .dijitTabContainerRight-tabs .dijitTab {
 	border-bottom: solid #fff 1px;
 }
 
-/* checked tabs */
+/* selected tab */
 .nihilo .dijitTabContainerRight-tabs .dijitTabChecked {
 	border-left-color: #f8f8f8;
 }
 
-.nihilo .dijitTabContainerRight-tabs .dijitTabChecked {
-	background: url("../images/tabRightChecked.gif") no-repeat left top !important;
-}
-
-/* some odd ie bug when borders dissapear when setting a bottom margin, this sortof helps */
-.dj_ie .nihilo .dijitTabContainerRight-tabs .dijitTabChecked .dijitTabInnerDiv,
-.dj_ie .nihilo .dijitTabContainerRight-tabs .dijitTabCheckedHover .dijitTabInnerDiv {
+/* some odd ie bug when borders disappear when setting a bottom margin, this sort of helps */
+.dj_ie .nihilo .dijitTabContainerRight-tabs .dijitTabChecked,
+.dj_ie .nihilo .dijitTabContainerRight-tabs .dijitTabCheckedHover {
 	border-bottom: solid #efefef 1px;
-}
-
-.nihilo .dijitTabContainerRight-tabs .dijitTab {
-	background: url("../images/tabContainerSprite.gif") no-repeat left -350px;
-}
-.nihilo .dijitTabContainerRight-tabs .dijitTabHover .dijitTab {
-	background: url("../images/tabContainerSprite.gif") no-repeat left -200px;
 }
 
 /* strip */
@@ -338,35 +274,26 @@
 	border-color: #ccc;
 	padding-top: 3px;
 }
-
-/* left conatiner */
-.nihilo .dijitTabContainerLeft-container {
-	border-left: none;
-}
-
 .nihilo .dijitTabContainerLeft-tabs .dijitTab {
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #dedede;
+    border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #dedede;
 }
 
-/* checked tabs */
+/* selected tab */
 .nihilo .dijitTabContainerLeft-tabs .dijitTabChecked {
 	border-right: 1px solid #f8f8f8;
 }
 
-.nihilo .dijitTabContainerLeft-tabs .dijitTabInnerDiv {
-	background: url("../images/tabContainerSprite.gif") no-repeat right -350px;
-}
-.nihilo .dijitTabContainerLeft-tabs .dijitTabHover .dijitTabInnerDiv {
-	background: url("../images/tabContainerSprite.gif") no-repeat right -200px;
-}
-.nihilo .dijitTabContainerLeft-tabs .dijitTabChecked .dijitTabInnerDiv,
-.nihilo .dijitTabContainerLeft-tabs .dijitTabCheckedHover .dijitTabInnerDiv {
-	background: url("../images/tabLeftChecked.gif") no-repeat right top;
+/* left container */
+.nihilo .dijitTabContainerLeft-container {
+	border-left: none;
 }
 
-.dj_ie .nihilo .dijitTabContainerLeft-tabs .dijitTabChecked .dijitTabInnerDiv,
-.dj_ie .nihilo .dijitTabContainerLeft-tabs .dijitTabCheckedHover .dijitTabInnerDiv {
+
+.dj_ie .nihilo .dijitTabContainerLeft-tabs .dijitTabChecked,
+.dj_ie .nihilo .dijitTabContainerLeft-tabs .dijitTabCheckedHover {
 	border-bottom: solid #efefef 1px;
 }
 
@@ -389,8 +316,7 @@
 /* left/right tabs */
 .nihilo .dijitTabContainerLeft-tabs .dijitTab,
 .nihilo .dijitTabContainerRight-tabs .dijitTab {
-	margin-right:auto;
-	margin-bottom:2px;	/* space between one tab and the next in left/right mode */
+	margin: 1px 0;	/* space between one tab and the next in left/right mode */
 }
 
 /* left/right tabstrip */
@@ -419,7 +345,7 @@
 
 /* ================================ */
 
-/* this resets the tabcontainer stripe when within a contentpane */
+/* this resets the tabcontainer strip when within a contentpane */
 .nihilo .dijitTabContainerTop-dijitContentPane .dijitTabContainerTop-tabs {
 	border-left: 0 solid #ccc;
 	border-top: 0 solid #ccc;
@@ -433,20 +359,13 @@
 /* Menu and slider control styles */
 .nihilo .dijitTabContainer .tabStripButton {
 	margin-right: 0;
-}
-
-.nihilo .tabStripButton .dijitTabInnerDiv .dijitTabContent {
-	padding: 5px 0 6px;
+	padding: 5px 3px 6px 0px;
 }
 
 .dj_ie6 .nihilo .tabStripButton .dijitTabInnerDiv .dijitTabContent,
 .dj_ie7 .nihilo .tabStripButton .dijitTabInnerDiv .dijitTabContent,
 .dj_opera .nihilo .tabStripButton .dijitTabInnerDiv .dijitTabContent {
 	padding-bottom: 7px;
-}
-
-.nihilo .tabStrip-disabled .tabStripButton .dijitTabInnerDiv .dijitTabContent {
-	padding: 3px 0 5px;
 }
 
 .dj_ie6 .nihilo .tabStrip-disabled .tabStripButton .dijitTabInnerDiv .dijitTabContent,
@@ -482,15 +401,6 @@
 }
 
 .nihilo .dijitTabContainer .tabStripButton-bottom {
-	background: transparent url(../images/tabBottomEnabledSpriteLR.gif) no-repeat scroll left bottom;
 	border-bottom: medium none;
 	border-top: 1px solid #CCCCCC;
-}
-
-.nihilo .dijitTabContainer .tabStripButton-bottom .dijitTabInnerDiv {
-	background: transparent url(../images/tabBottomEnabledSpriteLR.gif) no-repeat scroll right bottom;
-}
-
-.nihilo .dijitTabContainer .tabStripButton-bottom .dijitTabContent {
-	background: transparent;
 }

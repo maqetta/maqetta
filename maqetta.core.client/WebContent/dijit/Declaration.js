@@ -11,12 +11,6 @@ define([
 	"dojo/NodeList-dom"
 ], function(array, connect, declare, lang, parser, query, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin){
 
-/*=====
-	var _Widget = dijit._Widget;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-	var _WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
-=====*/
-
 	// module:
 	//		dijit/Declaration
 	// summary:
@@ -75,9 +69,11 @@ define([
 			// map array of strings like [ "dijit.form.Button" ] to array of mixin objects
 			// (note that array.map(this.mixins, lang.getObject) doesn't work because it passes
 			// a bogus third argument to getObject(), confusing it)
-			this.mixins = this.mixins.length ?
-				array.map(this.mixins, function(name){ return lang.getObject(name); } ) :
-				[ _Widget, _TemplatedMixin, _WidgetsInTemplateMixin ];
+			if(this.mixins.length){
+				this.mixins = array.map(this.mixins, function(name){ return lang.getObject(name); } );
+			}else{
+				this.mixins = [ _Widget, _TemplatedMixin, _WidgetsInTemplateMixin ];
+			}
 
 			propList._skipNodeCache = true;
 			propList.templateString =

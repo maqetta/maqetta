@@ -1,18 +1,20 @@
-dojo.provide("dojox.drawing.tools.Arrow");
+define(["dojo/_base/lang", "../util/oo", "../manager/_registry", "./Line", 
+"../annotations/Arrow", "../util/positioning"],
+function(lang, oo, registry, Line, AnnotationArrow, positioning){
 
-dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
+var Arrow = oo.declare(
 	// summary:
 	//		Extends stencil.Line and adds an arrow head
 	//		to the end and or start.
-	//
-	dojox.drawing.tools.Line,
+
+	Line,
 	function(options){
 		// summary: constructor
 		if(this.arrowStart){
-			this.begArrow = new dojox.drawing.annotations.Arrow({stencil:this, idx1:0, idx2:1});
+			this.begArrow = new AnnotationArrow({stencil:this, idx1:0, idx2:1});
 		}
 		if(this.arrowEnd){
-			this.endArrow = new dojox.drawing.annotations.Arrow({stencil:this, idx1:1, idx2:0});
+			this.endArrow = new AnnotationArrow({stencil:this, idx1:1, idx2:0});
 		}
 		if(this.points.length){
 			// This is protecting against cases when there are no points
@@ -30,7 +32,7 @@ dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
 		// arrowStart: Boolean
 		//		Whether or not to place an arrow on start.
 		arrowStart:false,
-		//
+
 		// arrowEnd: Boolean
 		//		Whether or not to place an arrow on end.
 		arrowEnd:true,
@@ -38,9 +40,9 @@ dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
 		labelPosition: function(){
 			// summary:
 			//		The custom position used for the label
-			//
+
 			var d = this.data;
-			var pt = dojox.drawing.util.positioning.label({x:d.x1,y:d.y1},{x:d.x2,y:d.y2});
+			var pt = positioning.label({x:d.x1,y:d.y1},{x:d.x2,y:d.y2});
 			return {
 				x:pt.x,
 				y:pt.y
@@ -48,8 +50,6 @@ dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
 		},
 		
 		onUp: function(/*EventObject*/obj){
-			// summary: See stencil._Base.onUp
-			//
 			if(this.created || !this.shape){ return; }
 			
 			// if too small, need to reset
@@ -72,12 +72,14 @@ dojox.drawing.tools.Arrow = dojox.drawing.util.oo.declare(
 	}
 );
 
-dojox.drawing.tools.Arrow.setup = {
-	// summary: See stencil._Base ToolsSetup
-	//
+lang.setObject("dojox.drawing.tools.Arrow", Arrow);
+Arrow.setup = {
 	name:"dojox.drawing.tools.Arrow",
 	tooltip:"Arrow Tool",
 	iconClass:"iconArrow"
 };
 
-dojox.drawing.register(dojox.drawing.tools.Arrow.setup, "tool");
+registry.register(Arrow.setup, "tool");
+
+return Arrow;
+});

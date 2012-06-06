@@ -4,26 +4,20 @@ define([
 	"dojo/dom-style", // domStyle.getComputedStyle
 	"dojo/_base/kernel", // kernel.deprecated
 	"dojo/_base/lang", // lang.hitch
-	"dojo/_base/sniff", // has("ie") has("mozilla")
-	"dojo/_base/window", // win.doc.selection.createRange
+	"dojo/sniff", // has("ie") has("mozilla")
 	"./_FormValueWidget",
 	"./_TextBoxMixin",
 	"dojo/text!./templates/TextBox.html",
-	".."	// to export dijit._setSelectionRange, remove in 2.0
-], function(declare, domConstruct, domStyle, kernel, lang, has, win,
+	"../main"	// to export dijit._setSelectionRange, remove in 2.0
+], function(declare, domConstruct, domStyle, kernel, lang, has,
 			_FormValueWidget, _TextBoxMixin, template, dijit){
-
-/*=====
-	var _FormValueWidget = dijit.form._FormValueWidget;
-	var _TextBoxMixin = dijit.form._TextBoxMixin;
-=====*/
 
 	// module:
 	//		dijit/form/TextBox
 	// summary:
 	//		A base class for textbox form inputs
 
-	var TextBox = declare(/*====="dijit.form.TextBox", =====*/ [_FormValueWidget, _TextBoxMixin], {
+	var TextBox = declare("dijit.form.TextBox", [_FormValueWidget, _TextBoxMixin], {
 		// summary:
 		//		A base class for textbox form inputs
 
@@ -42,12 +36,37 @@ define([
 			this.inherited(arguments);
 		},
 
+		postCreate: function(){
+			this.inherited(arguments);
+
+			if(has("ie")){
+				// IE INPUT tag fontFamily has to be set directly using STYLE
+				// the defer gives IE a chance to render the TextBox and to deal with font inheritance
+				this.defer(function(){
+					try{
+						var s = domStyle.getComputedStyle(this.domNode); // can throw an exception if widget is immediately destroyed
+						if(s){
+							var ff = s.fontFamily;
+							if(ff){
+								var inputs = this.domNode.getElementsByTagName("INPUT");
+								if(inputs){
+									for(var i=0; i < inputs.length; i++){
+										inputs[i].style.fontFamily = ff;
+									}
+								}
+							}
+						}
+					}catch(e){/*when used in a Dialog, and this is called before the dialog is
+					 shown, s.fontFamily would trigger "Invalid Argument" error.*/}
+				});
+			}
+		},
+
 		_onInput: function(e){
 			this.inherited(arguments);
 			if(this.intermediateChanges){ // _TextBoxMixin uses onInput
-				var _this = this;
-				// the setTimeout allows the key to post to the widget input box
-				setTimeout(function(){ _this._handleOnChange(_this.get('value'), false); }, 0);
+				// allow the key to post to the widget input box
+				this.defer(function(){ this._handleOnChange(this.get('value'), false); });
 			}
 		},
 
@@ -98,6 +117,13 @@ define([
 			if(this.disabled){ return; }
 			this.inherited(arguments);
 			this._updatePlaceHolder();
+
+			if(has("mozilla")){
+				if(this.selectOnClick){
+					// clear selection so that the next mouse click doesn't reselect
+					this.textbox.selectionStart = this.textbox.selectionEnd = undefined;
+				}
+			}
 		},
 
 		_onFocus: function(/*String*/ by){
@@ -108,38 +134,11 @@ define([
 	});
 
 	if(has("ie")){
-		TextBox = declare(/*===== "dijit.form.TextBox.IEMixin", =====*/ TextBox, {
-			declaredClass: "dijit.form.TextBox",	// for user code referencing declaredClass
-
-			_isTextSelected: function(){
-				var range = win.doc.selection.createRange();
-				var parent = range.parentElement();
-				return parent == this.textbox && range.text.length == 0;
-			},
-
-			postCreate: function(){
-				this.inherited(arguments);
-				// IE INPUT tag fontFamily has to be set directly using STYLE
-				// the setTimeout gives IE a chance to render the TextBox and to deal with font inheritance
-				setTimeout(lang.hitch(this, function(){
-					try{
-						var s = domStyle.getComputedStyle(this.domNode); // can throw an exception if widget is immediately destroyed
-						if(s){
-							var ff = s.fontFamily;
-							if(ff){
-								var inputs = this.domNode.getElementsByTagName("INPUT");
-								if(inputs){
-									for(var i=0; i < inputs.length; i++){
-										inputs[i].style.fontFamily = ff;
-									}
-								}
-							}
-						}
-					}catch(e){/*when used in a Dialog, and this is called before the dialog is
-						shown, s.fontFamily would trigger "Invalid Argument" error.*/}
-				}), 0);
-			}
-		});
+		TextBox.prototype._isTextSelected = function(){
+			var range = this.ownerDocument.selection.createRange();
+			var parent = range.parentElement();
+			return parent == this.textbox && range.text.length > 0;
+		};
 
 		// Overrides definition of _setSelectionRange from _TextBoxMixin (TODO: move to _TextBoxMixin.js?)
 		dijit._setSelectionRange = _TextBoxMixin._setSelectionRange = function(/*DomNode*/ element, /*Number?*/ start, /*Number?*/ stop){
@@ -152,22 +151,7 @@ define([
 				r.select();
 			}
 		}
-	}else if(has("mozilla")){
-		TextBox = declare(/*===== "dijit.form.TextBox.MozMixin", =====*/TextBox, {
-			declaredClass: "dijit.form.TextBox",	// for user code referencing declaredClass
-
-			_onBlur: function(e){
-				this.inherited(arguments);
-				if(this.selectOnClick){
-						// clear selection so that the next mouse click doesn't reselect
-					this.textbox.selectionStart = this.textbox.selectionEnd = undefined;
-				}
-			}
-		});
-	}else{
-		TextBox.prototype.declaredClass = "dijit.form.TextBox";
 	}
-	lang.setObject("dijit.form.TextBox", TextBox);	// don't do direct assignment, it confuses API doc parser
 
 	return TextBox;
 });

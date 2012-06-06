@@ -147,7 +147,7 @@
 					name: "dijit",
 					timeout: 2000,
 					runTest: function(){
-						new dijit.form.ComboBox({id:"dijit_programmatic", list:"states"}).placeAt("dijit_programmatic_container", "first");
+						new dijit.form.ComboBox({id:"dijit_programmatic", list:"states", value:"Alabama"}).placeAt("dijit_programmatic_container", "first");
 						var dijit_programmatic = dijit.byId('dijit_programmatic');
 						var focushandle = dijit_programmatic.connect(dijit_programmatic, '_onFocus',
 							function(){
@@ -169,7 +169,7 @@
 					name: "mobile",
 					timeout: 2000,
 					runTest: function(){
-						new dojox.mobile.ComboBox({id:"mobile_programmatic", list:"states"}).placeAt("mobile_programmatic_container", "first");
+						new dojox.mobile.ComboBox({id:"mobile_programmatic", list:"states", value:"Alabama"}).placeAt("mobile_programmatic_container", "first");
 						var mobile_programmatic = dijit.byId('mobile_programmatic');
 						var focushandle = mobile_programmatic.connect(mobile_programmatic.textbox, 'onfocus',
 							function(){
@@ -196,7 +196,7 @@
 <body class="claro">
 	<h1 class="testTitle">_AutoCompleterMixin (dijit and mobile) non-robot tests</h1>
 	<datalist id="states">
-	<select data-dojo-type="dijit.form.DataList" data-dojo-props='id:"states"' >
+	<select data-dojo-type="dijit/form/DataList" data-dojo-props='id:"states"' >
 		<option value="AL">Alabama</option>
 		<option value="AK">Alaska</option>
 		<option value="AS">American Samoa</option>
@@ -268,12 +268,12 @@
 		</tr>
 		<tr>
 			<td class="layout">attributes</td>
-			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit.form.ComboBox" data-dojo-props='value:"", list:"states"'/></td>
+			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit/form/ComboBox" data-dojo-props='value:"", list:"states"'/></td>
 			<td class="layout"><input id="mobile_attributes" data-dojo-type="dojox.mobile.ComboBox" data-dojo-props='value:"", list:"states"'></td>
 		</tr>
 		<tr>
 			<td class="layout">Events</td>
-			<td class="layout"><input id="dijit_events" data-dojo-type="dijit.form.ComboBox" data-dojo-props='value:"", list:"states", onFocus:function(){ return false; }, onBlur:function(){ return false; }, onChange:function(){ return false; }'/></td>
+			<td class="layout"><input id="dijit_events" data-dojo-type="dijit/form/ComboBox" data-dojo-props='value:"", list:"states", onFocus:function(){ return false; }, onBlur:function(){ return false; }, onChange:function(){ return false; }'/></td>
 			<td class="layout"><input id="mobile_events" data-dojo-type="dojox.mobile.ComboBox" data-dojo-props='value:"", list:"states", onChange:function(){ return false; }'></td>
 		</tr>
 		<tr>

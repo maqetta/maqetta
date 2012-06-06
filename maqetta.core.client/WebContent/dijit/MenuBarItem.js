@@ -4,10 +4,6 @@ define([
 	"dojo/text!./templates/MenuBarItem.html"
 ], function(declare, MenuItem, template){
 
-/*=====
-	var MenuItem = dijit.MenuItem;
-=====*/
-
 	// module:
 	//		dijit/MenuBarItem
 	// summary:

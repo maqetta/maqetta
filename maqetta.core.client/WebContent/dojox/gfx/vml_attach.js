@@ -166,6 +166,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "./_base", "./matrix", "./path",
 	var attachGroup = function(object){
 		// summary: reconstructs all group shape parameters from a node (VML).
 		// object: dojox.gfx.Shape: an VML shape
+		
 		// attach the background
 		object.bgNode = object.rawNode.firstChild;	// TODO: check it first
 	};
@@ -173,6 +174,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "./_base", "./matrix", "./path",
 	var attachRect = function(object){
 		// summary: builds a rectangle shape from a node.
 		// object: dojox.gfx.Shape: an VML shape
+		
 		// a workaround for the VML's arcsize bug: cannot read arcsize of an instantiated node
 		var r = object.rawNode, arcsize = r.outerHTML.match(/arcsize = \"(\d*\.?\d+[%f]?)\"/)[1],
 			style = r.style, width = parseFloat(style.width), height = parseFloat(style.height);

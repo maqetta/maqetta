@@ -11,13 +11,11 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_FullScreen.html');
@@ -33,7 +31,7 @@
 							return p;				
 						}
 					}
-					doh.t(false, "didn't find plugin");
+					throw new Error("didn't find plugin");
 				}
 
 				doh.register("load", [
@@ -242,8 +240,8 @@
 
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;
@@ -293,8 +291,8 @@
 
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;
@@ -353,8 +351,8 @@
 
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;
@@ -404,8 +402,8 @@
 
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;
@@ -464,8 +462,8 @@
 
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;
@@ -515,8 +513,8 @@
 
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;
@@ -575,8 +573,8 @@
 
 								doh.t(origEditorSize.w > curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h > curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;
@@ -626,8 +624,8 @@
 
 								doh.t(origEditorSize.w < curEditorSize.w, "Validating new width is less that the original size");
 								doh.t(origEditorSize.h < curEditorSize.h, "Validating new height is less that the original size");
-								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rouch check that the editor width resized roughly to the Container difference");
-								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rouch check that the editor height resized roughly to the Container difference");
+								doh.t((eWdiff < (containerWdiff + 5)) && (eWdiff > (containerWdiff - 5)), "Doing a rough check that the editor width resized roughly to the Container difference, eWdiff = " + eWdiff + ", containerWdiff = " + containerWdiff);
+								doh.t((eHdiff < (containerHdiff + 5)) && (eHdiff > (containerHdiff - 5)), "Doing a rough check that the editor height resized roughly to the Container difference, eHdiff = " + eHdiff + ", containerHdiff = " + containerHdiff);
 							}), 1000);
 
 							return d;

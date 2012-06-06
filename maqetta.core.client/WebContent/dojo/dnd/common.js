@@ -1,27 +1,30 @@
-define(["../main"], function(dojo) {
-	// module:
-	//		dojo/dnd/common
-	// summary:
-	//		TODOC
+define(["../_base/connect", "../_base/kernel", "../_base/lang", "../dom"],
+	function(connect, kernel, lang, dom){
 
-dojo.getObject("dnd", true, dojo);
+// module:
+//		dojo/dnd/common
+// summary:
+//		TODOC
 
-dojo.dnd.getCopyKeyState = dojo.isCopyKey;
+var exports = {};
+lang.setObject("dojo.dnd.common", exports);
 
-dojo.dnd._uniqueId = 0;
-dojo.dnd.getUniqueId = function(){
+exports.getCopyKeyState = connect.isCopyKey;
+
+exports._uniqueId = 0;
+exports.getUniqueId = function(){
 	// summary:
 	//		returns a unique string for use with any DOM element
 	var id;
 	do{
-		id = dojo._scopeName + "Unique" + (++dojo.dnd._uniqueId);
-	}while(dojo.byId(id));
+		id = kernel._scopeName + "Unique" + (++exports._uniqueId);
+	}while(dom.byId(id));
 	return id;
 };
 
-dojo.dnd._empty = {};
+exports._empty = {};
 
-dojo.dnd.isFormElement = function(/*Event*/ e){
+exports.isFormElement = function(/*Event*/ e){
 	// summary:
 	//		returns true if user clicked on a form element
 	var t = e.target;
@@ -31,5 +34,5 @@ dojo.dnd.isFormElement = function(/*Event*/ e){
 	return " button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
 };
 
-return dojo.dnd;
+return exports;
 });

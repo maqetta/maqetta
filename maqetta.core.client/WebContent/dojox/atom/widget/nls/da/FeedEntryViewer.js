@@ -1,7 +1,6 @@
 define(
-//begin v1.x content
 ({
-	displayOptions: "[fremvisningsvalg]",
+	displayOptions: "[visningsindstillinger]",
 	title: "Titel",
 	authors: "Forfattere",
 	contributors: "Bidragydere",
@@ -11,5 +10,4 @@ define(
 	summary: "Resumé",
 	content: "Indhold"
 })
-//end v1.x content
 );

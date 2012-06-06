@@ -362,7 +362,7 @@ dojox.flash.Embed.prototype = {
 	// height: int
 	//	The height of this Flash applet. The default is the minimal height
 	//	necessary to show the Flash settings dialog. Current value is
-	// 138 pixels.
+	//  138 pixels.
 	height: 138,
 	
 	// id: String

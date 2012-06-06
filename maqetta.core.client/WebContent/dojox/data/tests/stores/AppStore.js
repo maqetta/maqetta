@@ -12,9 +12,9 @@ dojox.data.tests.stores.AppStore.getStore = function(preventCache){
 doh.register("dojox.data.tests.stores.AppStore",
 	[
 		function testReadAPI_fetch_all(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching all items
-			//	description:
+			// description:
 			//		Simple test of fetching all items
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -30,9 +30,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_preventCache(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching all items
-			//	description:
+			// description:
 			//		Simple test of fetching all items
 			var store = dojox.data.tests.stores.AppStore.getStore(true);
 
@@ -48,9 +48,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one item
-			//	description:
+			// description:
 			//		Simple test of fetching one item
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -66,9 +66,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_paging(t){
-			//	summary:
+			// summary:
 			//		Simple test of paging
-			//	description:
+			// description:
 			//		Simple test of paging
 			var store = dojox.data.tests.stores.AppStore.getStore();
 			
@@ -127,9 +127,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern0(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one item with ? pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one item with ? pattern match
 			var store = dojox.data.tests.stores.AppStore.getStore();
 			var d = new doh.Deferred();
@@ -144,9 +144,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern1(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one item with * pattern match
-			//	description:
+			// description:
 			//		Simple test of fetching one item with * pattern match
 			var store = dojox.data.tests.stores.AppStore.getStore();
 			var d = new doh.Deferred();
@@ -161,9 +161,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_pattern_caseInsensitive(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one item with * pattern match case insensitive
-			//	description:
+			// description:
 			//		Simple test of fetching one item with * pattern match case insensitive
 			var store = dojox.data.tests.stores.AppStore.getStore();
 			var d = new doh.Deferred();
@@ -179,9 +179,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 		},
 
 		function testReadAPI_getLabel(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 
 			var store = dojox.data.tests.stores.AppStore.getStore();
@@ -201,9 +201,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d;
 		},
 		function testReadAPI_getLabelAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 			var store = dojox.data.tests.stores.AppStore.getStore();
@@ -224,9 +224,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 		},
 
 		function testReadAPI_getValue(t){
-			 //	summary:
+			 // summary:
 			 //		Simple test of the getValue API
-			 //	description:
+			 // description:
 			 //		Simple test of the getValue API
 			 var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -245,9 +245,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			 return d; //Object
 		},
 		function testReadAPI_getValues(t){
-			 //	summary:
+			 // summary:
 			 //		Simple test of the getValues API
-			 //	description:
+			 // description:
 			 //		Simple test of the getValues API
 			 var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -268,9 +268,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			 return d; //Object
 		},
 		function testReadAPI_isItem(t){
-			 //	summary:
+			 // summary:
 			 //		Simple test of the isItem API
-			 //	description:
+			 // description:
 			 //		Simple test of the isItem API
 			 var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -291,9 +291,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			 return d; //Object
 		},
 		function testReadAPI_isItem_multistore(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isItem API across multiple store instances.
-			//	description:
+			// description:
 			//		Simple test of the isItem API across multiple store instances.
 			var store1 = dojox.data.tests.stores.AppStore.getStore();
 			var store2 = dojox.data.tests.stores.AppStore.getStore();
@@ -323,9 +323,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_hasAttribute(t){
-			//	summary:
+			// summary:
 			//		Simple test of the hasAttribute API
-			//	description:
+			// description:
 			//		Simple test of the hasAttribute API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -347,9 +347,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_containsValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the containsValue API
-			//	description:
+			// description:
 			//		Simple test of the containsValue API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -368,9 +368,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_sortDescending(t){
-			//	summary:
+			// summary:
 			//		Simple test of the sorting API in descending order.
-			//	description:
+			// description:
 			//		Simple test of the sorting API in descending order.
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -403,9 +403,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_sortAscending(t){
-			//	summary:
+			// summary:
 			//		Simple test of the sorting API in ascending order.
-			//	description:
+			// description:
 			//		Simple test of the sorting API in ascending order.
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -438,9 +438,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_isItemLoaded(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isItemLoaded API
-			//	description:
+			// description:
 			//		Simple test of the isItemLoaded API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -458,9 +458,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var store = dojox.data.tests.stores.AppStore.getStore();
@@ -473,9 +473,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			t.assertEqual(3, count);
 		},
 		function testReadAPI_getAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getAttributes API
-			//	description:
+			// description:
 			//		Simple test of the getAttributes API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -494,9 +494,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_newItem(t){
-			//	summary:
+			// summary:
 			//		Simple test of the newItem API
-			//	description:
+			// description:
 			//		Simple test of the newItem API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -517,9 +517,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_newItemInCallback(t){
-			//	summary:
+			// summary:
 			//		Simple test of the newItem API
-			//	description:
+			// description:
 			//		Simple test of the newItem API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -552,9 +552,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_deleteItem(t){
-			//	summary:
+			// summary:
 			//		Simple test of the deleteItem API
-			//	description:
+			// description:
 			//		Simple test of the deleteItem API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -580,9 +580,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_setValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the setValue API
-			//	description:
+			// description:
 			//		Simple test of the setValue API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -602,9 +602,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_setValues(t){
-			//	summary:
+			// summary:
 			//		Simple test of the setValues API
-			//	description:
+			// description:
 			//		Simple test of the setValues API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -628,9 +628,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_unsetAttribute(t){
-			//	summary:
+			// summary:
 			//		Simple test of the unsetAttribute API
-			//	description:
+			// description:
 			//		Simple test of the unsetAttribute API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -651,9 +651,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_isDirty(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isDirty API
-			//	description:
+			// description:
 			//		Simple test of the isDirty API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -674,9 +674,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_revert(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isDirty API
-			//	description:
+			// description:
 			//		Simple test of the isDirty API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -707,9 +707,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			return d; //Object
 		},
 		function testWriteAPI_revert2(t){
-			//	summary:
+			// summary:
 			//		Simple test of the revert API
-			//	description:
+			// description:
 			//		Simple test of the revert API
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -746,9 +746,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 		},
 
 		function testReadAPI_getIdentity(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching the identity of an item.
-			//	description:
+			// description:
 			//		Simple test of fetching the identity of an item.
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -767,9 +767,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 		},
 
 		function testReadAPI_getIdentityAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching the identity attributes off an item,
-			//	description:
+			// description:
 			//		Simple test of fetching the identity attributes off an item,
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -789,9 +789,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 		},
 
 		function testReadAPI_fetchItemByIdentity(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one atom item through its identity
-			//	description:
+			// description:
 			//		Simple test of fetching one atom item through its identity
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -809,9 +809,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 		},
 
 		function testReadAPI_fetchItemByIdentity_fails(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching one atom item through its identity fails correctly on no id match
-			//	description:
+			// description:
 			//		Simple test of fetching one atom item through its identity fails correctly on no id match
 			var store = dojox.data.tests.stores.AppStore.getStore();
 
@@ -828,9 +828,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 		},
 
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 			var testStore = dojox.data.tests.stores.AppStore.getStore();
 			var readApi = new dojo.data.api.Read();
@@ -851,9 +851,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			t.assertTrue(passed);
 		},
 		function testWriteAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
 			var testStore = dojox.data.tests.stores.AppStore.getStore();
 			var writeApi = new dojo.data.api.Write();
@@ -873,9 +873,9 @@ doh.register("dojox.data.tests.stores.AppStore",
 			t.assertTrue(passed);
 		},
 		function testIdentityAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
 			var testStore = dojox.data.tests.stores.AppStore.getStore();
 			var identityApi = new dojo.data.api.Identity();

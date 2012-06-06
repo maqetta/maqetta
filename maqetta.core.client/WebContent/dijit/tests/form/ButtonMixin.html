@@ -80,9 +80,15 @@
 							calledOnClick = true;
 							return true;
 						}
-						doh.f(dijit_events._onClick({ preventDefault: nop }), "_onClick");
+						doh.f(dijit_events._onClick({
+							preventDefault: nop,
+							stopPropagation: nop
+						}), "_onClick");
 						dijit_events.set('onClick', onClick);
-						dijit_events._onClick({ preventDefault: nop });
+						dijit_events._onClick({
+							preventDefault: nop,
+							stopPropagation: nop
+						});
 						doh.t(calledOnClick, "calledOnClick");
 					}
 	 			},
@@ -100,9 +106,17 @@
 							d.callback(true);
 							return true;
 						}
-						doh.f(mobile_events._onClick({ preventDefault: nop }), "_onClick");
+						doh.f(mobile_events._onClick({
+							preventDefault: nop,
+							stopPropagation: nop
+						}), "_onClick");
 						mobile_events.set("onClick", onClick);
-						setTimeout(function(){ mobile_events.focusNode.click({ preventDefault: nop }); }, 0);
+						setTimeout(function(){
+							mobile_events.focusNode.click({
+								preventDefault: nop,
+								stopPropagation: nop
+							});
+						}, 0);
 
 						return d;
 					}
@@ -149,13 +163,13 @@
 		</tr>
 		<tr>
 			<td class="layout">attributes</td>
-			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", label:"original", "class":"mblRedButton"'/></td>
+			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit/form/Button" data-dojo-props='type:"button", label:"original", "class":"mblRedButton"'/></td>
 			<td class="layout"><button type="button" class="mblRedButton" id="mobile_attributes" dojoType="dojox.mobile.Button" label="original"/></td>
 		</tr>
 		<tr>
 		<tr>
 			<td class="layout">Events</td>
-			<td class="layout"><button id="dijit_events" data-dojo-type="dijit.form.Button" data-dojo-props='type:"button", onClick:function(){ return false; }'>innerHTML</button></td>
+			<td class="layout"><button id="dijit_events" data-dojo-type="dijit/form/Button" data-dojo-props='type:"button", onClick:function(){ return false; }'>innerHTML</button></td>
 			<td class="layout"><button type="button" id="mobile_events" data-dojo-type="dojox.mobile.Button" data-dojo-props='type:"button", onClick:function(){ return false; }'>innerHTML</button></td>
 		</tr>
 		<tr>

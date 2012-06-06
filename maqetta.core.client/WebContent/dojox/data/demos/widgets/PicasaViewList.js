@@ -26,8 +26,8 @@ dojo.declare("dojox.data.demos.widgets.PicasaViewList", [dijit._Widget, dijit._T
 	},
 
 	addView: function(viewData){
-		 var newView  = new dojox.data.demos.widgets.PicasaView(viewData);
-		 this.fViewWidgets.push(newView);
-		 this.list.appendChild(newView.domNode);
+		var newView  = new dojox.data.demos.widgets.PicasaView(viewData);
+		this.fViewWidgets.push(newView);
+		this.list.appendChild(newView.domNode);
 	}
 });

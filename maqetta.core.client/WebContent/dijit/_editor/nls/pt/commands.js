@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Negrito',
 	'copy': 'Copiar',
@@ -18,7 +17,7 @@ define(
 	'paste': 'Colar',
 	'redo': 'Refazer',
 	'removeFormat': 'Remover Formato',
-	'selectAll': 'Selecionar Todos',
+	'selectAll': 'Selecionar Tudo',
 	'strikethrough': 'Tachado',
 	'subscript': 'Subscrito',
 	'superscript': 'Sobrescrito',
@@ -27,7 +26,7 @@ define(
 	'unlink': 'Remover Link',
 	'createLink': 'Criar Link',
 	'toggleDir': 'Comutar Direção',
-	'insertImage': 'Inserir Imagem',
+	'insertImage': 'Inserir imagem',
 	'insertTable': 'Inserir/Editar Tabela',
 	'toggleTableBorder': 'Alternar Moldura da Tabela',
 	'deleteTable': 'Excluir Tabela',
@@ -45,7 +44,8 @@ define(
 	"print": "Imprimir",
 	"newPage": "Nova Página",
 	/* Error messages */
-	'systemShortcut': 'A ação "${0}" está disponível em seu navegador apenas usando um atalho de teclado. Use ${1}.'
+	'systemShortcut': 'A ação "${0}" está disponível em seu navegador apenas usando um atalho de teclado. Use ${1}.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-//end v1.x content
 );

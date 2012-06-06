@@ -123,15 +123,12 @@
 }
 
 .dojoxDropDownSelect {
-	background:#FFFFFF url(images/dropBk.png) repeat-x scroll left top;
+	background:#FFFFFF;
 	border: 1px solid;
 	border-top-color:#cccccc;
 	border-right-color:#cccccc;
 	border-left-color:#999999;
 	border-bottom-color:#ffffff;
-}
-.dojoxDropDownSelect.dojoxDropDownSelectHover{
-	background-image:url(images/dropBkOver.png);
 }
 .dojoxDropDownSelect button{
 	line-height:16px;

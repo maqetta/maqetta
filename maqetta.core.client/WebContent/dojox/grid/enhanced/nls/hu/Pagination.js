@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} / ${1} ${0}",
 	"firstTip": "Első oldal",
@@ -7,7 +6,7 @@ define(
 	"nextTip": "Következő oldal",
 	"prevTip": "Előző oldal",
 	"itemTitle": "elemek",
-	"singularItemTitle": "elem",
+	"singularItemTitle": "tétel",
 	"pageStepLabelTemplate": "${0}. oldal",
 	"pageSizeLabelTemplate": "${0} elem oldalanként",
 	"allItemsLabelTemplate": "Összes elem",
@@ -17,8 +16,6 @@ define(
 	"pageCountIndication": " (${0} oldal)",
 	"dialogConfirm": "Mehet",
 	"dialogCancel": "Mégse",
-	"all": "mind"
+	"all": "Mind"
 })
-//end v1.x content
 );
-

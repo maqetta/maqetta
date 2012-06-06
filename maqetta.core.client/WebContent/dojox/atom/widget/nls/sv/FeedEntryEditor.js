@@ -1,10 +1,8 @@
 define(
-//begin v1.x content
 ({
-	doNew: "[Nytt]",
-	edit: "[Redigera]",
-	save: "[Spara]",
-	cancel: "[Avbryt]"
+	doNew: "[nytt]",
+	edit: "[redigera]",
+	save: "[spara]",
+	cancel: "[avbryt]"
 })
-//end v1.x content
 );

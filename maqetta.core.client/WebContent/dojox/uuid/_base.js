@@ -81,7 +81,7 @@ dojox.uuid.getVariant = function(/*String*/ uuidString){
 	//		var variant = dojox.uuid.getVariant("3b12f1df-5232-4804-897e-917bf397618a");
 	//		dojox.uuid.assert(variant == dojox.uuid.variant.DCE);
 	// example:
-	// "3b12f1df-5232-4804-897e-917bf397618a"
+	//		"3b12f1df-5232-4804-897e-917bf397618a"
 	//                     ^
 	//                     |
 	//         (variant "10__" == DCE)

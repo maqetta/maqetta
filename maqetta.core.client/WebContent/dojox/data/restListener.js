@@ -2,12 +2,12 @@ dojo.provide("dojox.data.restListener");
 
 dojox.data.restListener = function(message){
 	// summary:
-	// 		this function can be used to receive REST notifications, from Comet or from another frame
+	//		this function can be used to receive REST notifications, from Comet or from another frame
 	// description:
 	//		Example:
 	// |	dojo.connect(window,"onMessage",null,function(event) {
 	//	|		var data = dojo.fromJson(event.data);
-	// 	|		dojox.restListener(data);
+	//	|		dojox.restListener(data);
 	//	|	});
 	var channel = message.channel;
 	var jr = dojox.rpc.JsonRest;
@@ -37,12 +37,12 @@ dojox.data.restListener = function(message){
 				store.onNew(result); // call onNew for the store;
 				break;
 			case 'ondelete':
-		 		store.onDelete(target);
-		 		break;
-				 	// put is handled by JsonReferencing
-				 	//TODO: we may want to bring the JsonReferencing capability into here...
-				 	// that is really tricky though because JsonReferencing handles sub object,
-				 	// it would be expensive to do full object graph searches from here
+				store.onDelete(target);
+				break;
+					// put is handled by JsonReferencing
+					//TODO: we may want to bring the JsonReferencing capability into here...
+					// that is really tricky though because JsonReferencing handles sub object,
+					// it would be expensive to do full object graph searches from here
 		}
 	}
 };

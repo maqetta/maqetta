@@ -112,6 +112,9 @@
 				doh.is(2, dijit.byId("slider3").get("value"), "horizontal2");
 				doh.is(10, dijit.byId("sliderH2").get("value"), "sliderH2");
 				doh.is(1400, dijit.byId("programaticSlider").get("value"), "programaticSlider");
+				doh.t(dijit.byId("programmaticSliderNoSrc"),
+					"programmaticSliderNoSrc (containing RuleLabels w/o srcNodeRef) was initialized (see #13815)");
+				doh.is(1400, dijit.byId("programmaticSliderNoSrc").get("value"), "programmaticSliderNoSrc");
 			});
 
 			doh.register("set('value', ...)", [

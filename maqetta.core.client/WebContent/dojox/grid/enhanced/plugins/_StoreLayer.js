@@ -145,7 +145,7 @@ define([
 		//		The store to be wrapped.
 		// layer: _StoreLayer
 		//		The layer to be used
-		// returns
+		// returns:
 		//		The wrapped store, for nested use only.
 		if(!store._layers){
 			store._layers = [];

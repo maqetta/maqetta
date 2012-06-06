@@ -1,8 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 		"http://www.w3.org/TR/html4/strict.dtd">
+
+<!--
+    Test case for dijit/_base/place.
+    Remove in 2.0 in favor of dijit/tests/place.html
+-->
+
 <html>
 <head>
-	<title>Dijit.place unit test</title>
+	<title>dijit/_base/place unit test</title>
 	<style type="text/css">
 		@import "../../themes/claro/document.css";
 		@import "../css/dijitTests.css";
@@ -52,7 +58,7 @@
 			// The popup (aka dropdown)
 			var popup = dojo.byId("popup");
 
-			doh.register("dijit._base.place",
+			doh.register("dijit/_base/place",
 				[
 					function placeOnScreenTL(t){
 						// Place popup at (10,7)... dijit.placeOnScreen() should choose the top-left corner, because
@@ -82,7 +88,7 @@
 						var ret = dijit.placeOnScreenAroundNode(popup, aroundTop, {
 							"TL": "BL",	// aroundTop's top-left corner with the popup's bottom-left corner (fails)
 							"BL": "TL",	// aroundTop's bottom-left corner with the popup's top-left corner (works)
-							"BR": "TR"	// aroundTop's bottom-left corner with the popup's top-left corner (works)
+							"BR": "TR"	// aroundTop's bottom-right corner with the popup's top-right corner (works)
 						});
 
 						doh.is("BL", ret.aroundCorner, "around corner");
@@ -101,7 +107,7 @@
 						var ret = dijit.placeOnScreenAroundNode(popup, aroundTop, {
 							"TL": "BL",	// aroundTop's top-left corner with the popup's bottom-left corner (fails)
 							"BL": "TL",	// aroundTop's bottom-left corner with the popup's top-left corner (works)
-							"BR": "TR"	// aroundTop's bottom-left corner with the popup's top-left corner (works)
+							"BR": "TR"	// aroundTop's bottom-right corner with the popup's top-right corner (works)
 						}, layoutNode);
 
 						doh.is("BR", ret.aroundCorner, "around corner");
@@ -117,7 +123,7 @@
 						var ret = dijit.placeOnScreenAroundNode(popup, aroundBottom, {
 							"BL": "TL",	// aroundBottom's bottom-left corner with the popup's top-left corner (fails)
 							"TL": "BL",	// aroundBottom's top-left corner with the popup's bottom-left corner (works)
-							"BR": "TR"	// aroundBottom's bottom-left corner with the popup's top-left corner (fails)
+							"BR": "TR"	// aroundBottom's bottom-right corner with the popup's top-right corner (fails)
 						});
 
 						doh.is("TL", ret.aroundCorner, "around corner");
@@ -196,7 +202,7 @@
 						// bottom middle popup from "aroundLeft" node
 						var ret = dijit.placeOnScreenAroundNode(popup, aroundLeft, {
 							"BR": "TR",	// aroundLeft's bottom-right corner with the popup's top-right corner (fails)
-							"BM": "TM",	// aroundLeft's bottom-middle with the popup's top-middle (works)
+							"BM": "TM",	// aroundLeft's bottom-middle with the popup's top-middle (works, sort of)
 							"TR": "BR"	// aroundLeft's top-right corner with the popup's bottom-right corner (fails)
 						});
 
@@ -260,9 +266,9 @@
 	</script>
 </head>
 <body>
-	<h1>Dijit Place Unit Test</h1>
-	<div id="aroundTop" class="aroundNode" style="top: 0; left: 200px;">T</div>
-	<div id="aroundLeft" class="aroundNode" style="top: 350px; left: 0;">L</div>
+	<h1>Dijit/_base/place Unit Test</h1>
+	<div id="aroundTop" class="aroundNode" style="top: 0; left: 50%;">T</div>
+	<div id="aroundLeft" class="aroundNode" style="bottom: 30%; left: 0;">L</div>
 	<div id="aroundRight" class="aroundNode" style="bottom: 30%; right: 1px;">R</div>
 	<div id="aroundBottom" class="aroundNode" style="bottom: 5px; left: 50%;">B</div>
 

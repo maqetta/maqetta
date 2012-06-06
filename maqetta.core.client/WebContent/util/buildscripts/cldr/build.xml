@@ -98,7 +98,7 @@
 		<scriptdef name="removeEmptyOutput" language="javascript">
 			<attribute name="dir"/>
 			<![CDATA[
-		function isEmpty(o){
+		var isEmpty = function(o){
 			for(x in o){
 				return false;
 			}
@@ -106,7 +106,7 @@
 		}
 
 		var delTask = project.createTask("delete");
-		function deleteResource(f){
+		var deleteResource = function(f){
 			f.isDirectory() ? delTask.setDir(f) : delTask.setFile(f);
 			delTask.perform();
 		}
@@ -120,6 +120,7 @@
 
 	var load = project.createTask("loadfile");
 	load.setEncoding("UTF8");
+
 	for (var i=0; i<jsFiles.length; i++) {
 		var srcFile = java.io.File(dir, jsFiles[i]);
 		load.setSrcFile(srcFile);
@@ -131,12 +132,16 @@
 		var contents = String(project.getProperty(uniqueId));
 		if(contents.charCodeAt(0) == 0xfeff){ contents = contents.substring(1); } // JDK bug workaround
 
+		var value;
+
 		try{
-			var value = eval(contents);
+			value = eval(contents);
 		}catch(e){
 			java.lang.System.out.print("Syntax error in "+srcFile.getCanonicalPath());
+java.lang.System.out.print(contents);
 			throw e;
 		}
+
 		if(isEmpty(value)){
 			deleteResource(srcFile);
 		}

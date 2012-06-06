@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Lastnosti povezave",
 	insertImageTitle: "Lastnosti slike",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Okno na vrhu",
 	newWindow: "Novo okno"
 })
-//end v1.x content
 );
-

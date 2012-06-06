@@ -1,7 +1,7 @@
 (function(){
-var gridIndex = startGridIndex || 0;
-var totalCount = repeatCount || 1000;
-var timeInterval = repeatInterval || 500;
+var gridIndex = 0;
+var totalCount = 1000;
+var timeInterval = 500;
 function createGrid(step){
 	try{
 		var g = dijit.byId("grid");
@@ -53,9 +53,6 @@ function destroy(){
 }
 dojo.addOnLoad(function(){
 	var btns = dojo.byId("ctrlBtns");
-	if(hideCtrlPanel){
-		dojo.style(btns, "display", "none");
-	}
 	btns.appendChild(dojo.create("button",{
 		"innerHTML": "Play",
 		"onclick": start
@@ -85,6 +82,6 @@ dojo.addOnLoad(function(){
 		"innerHTML": "Destroy",
 		"onclick": destroy
 	}));
-	initialShowGrid && gotoGrid();
+	//gotoGrid();
 });
 })();

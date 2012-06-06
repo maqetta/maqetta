@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "בדיקת איות באצווה ",
 	unfound: "לא נמצא ",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "דילוג על כל הערכים הדומים לערך זה ",
 	iMsg: "אין הצעות איות "
 })
-
-//end v1.x content
 );

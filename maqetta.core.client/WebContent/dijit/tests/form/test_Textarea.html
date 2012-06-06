@@ -41,11 +41,11 @@
 
 			<h2>Various dijit.form.Textarea widgets</h2>
 			<label for="blank">dijit.form.Textarea, initially blank:</label>
-			<textarea id="blank" data-dojo-type="dijit.form.Textarea" ></textarea>
+			<textarea id="blank" data-dojo-type="dijit/form/Textarea" ></textarea>
 			<br>
 
 			<label for="simple">dijit.form.Textarea, inline with maxLength=50:</label>
-			<textarea id="simple" data-dojo-type="dijit.form.Textarea" data-dojo-props='name:"simpleTextArea", maxLength:"50", style:{width:"33%"},
+			<textarea id="simple" data-dojo-type="dijit/form/Textarea" data-dojo-props='name:"simpleTextArea", maxLength:"50", style:{width:"33%"},
 	         		onChange:function(val){ dojo.byId("ocSimple").value = val; },
 	         		onFocus:function(){ console.log("user focus handler"); },
 	         		onBlur:function(){ console.log("user blur handler"); }
@@ -59,12 +59,12 @@
 			</textarea>
 			<br>
 
-			<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props='persist:true, tabStrip:true, style:{width:"100%", height:"20em"}'>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 1"'>
+			<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='persist:true, tabStrip:true, style:{width:"100%", height:"20em"}'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 1"'>
 					<label for="programmatic">dijit.form.Textarea in TabContainer, programmatically created with custom styling:</label><br>
 					<textarea id="programmatic"></textarea>
 				</div>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 2"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 2"'>
 					<input type="button" onclick="programmaticTextarea.set('value', 'new value for programmatic textarea\nmore text for testing\nmore\neven more\nvery last line');" value="change value"/>
 				</div>
 			</div>
@@ -86,7 +86,7 @@
 			<label for="largeTextArea">dijit.form.Textarea, initially full:</label>
 <!--	&#8234; and &#8236; are inserted solely for testing purposes to mark the beginning and end of left-to-right text so that 
 	cogniscent browsers don't render garbled punctuation nor exhibit strange home/end key behavior while in right-to-left mode -->
-		<textarea id="largeTextArea" data-dojo-type="dijit.form.Textarea" data-dojo-props='name:"largeTextArea" '>
+		<textarea id="largeTextArea" data-dojo-type="dijit/form/Textarea" data-dojo-props='name:"largeTextArea" '>
 &#8234;This is a textarea with a LOT of content.&#8236;
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla &#8234;facilisi.&#8236;

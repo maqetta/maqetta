@@ -9,48 +9,43 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 
-		<!-- functions to help test -->
-		<!-- script type="text/javascript" src="../helpers.js"></script -->
-
-		<script type="text/javascript">
-			dojo.require("dojo.parser");
+		<script language="JavaScript" type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.registry");
+			dojo.require("dijit.ready");
+			dojo.require("doh.runner");
 			dojo.require("dojox.mobile");
-			dojo.require("dojox.mobile.IconContainer");
-	        dojo.require("doh.runner");
+				dojo.ready(function(){
+					doh.robot.initRobot("../test_SwapView.html");
 
-			dojo.addOnLoad(function(){
-				doh.robot.initRobot("../test_iPhone-SwapView.html");
+					doh.register("dojox.mobile.SwapView mouse tests", [
+						{
+							name: "SwapView mouse tests",
+							timeout: 40000,
+							runTest: function(){
+								var d = new doh.Deferred();
+								var dim = dojox.mobile.getScreenSize();
 
-				doh.register("dojox.mobile.FlippableView mouse tests", [
-					{
-						name: "FlippableView mouse tests",
-						timeout: 40000,
-						runTest: function(){
-							var d = new doh.Deferred();
-							var dim = dojox.mobile.getScreenSize();
+								doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_SwapView_0").domNode, 1000,100, (dim.w -30),100);
+								doh.robot.mousePress({left: true}, 1000);
 
-							doh.robot.mouseMoveAt(dijit.byId("foo").domNode, 1000,100, (dim.w -30),100);
-							doh.robot.mousePress({left: true}, 1000);
+								doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_SwapView_0").domNode, 1000,100,(dim.w -30)/2,0);
 
-							doh.robot.mouseMoveAt(dijit.byId("foo").domNode, 1000,100,(dim.w -30)/2,0);
-
-							doh.robot.mouseMoveAt(dijit.byId("foo").domNode, 1000,100,0,100);
-							doh.robot.mouseRelease({left: true}, 50);
-							
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.assertEqual("",  dijit.byId("bar").domNode.style.display);
-							}), 500);
-							return d;
+								doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_SwapView_0").domNode, 1000,100,10,100);
+								doh.robot.mouseRelease({left: true}, 50);
+								
+								doh.robot.sequence(d.getTestCallback(function(){
+									doh.assertEqual("none",  dijit.registry.byId("dojox_mobile_SwapView_0").domNode.style.display);
+									doh.assertEqual("",  dijit.registry.byId("dojox_mobile_SwapView_1").domNode.style.display);
+								}), 1000);
+								return d;
+							}
 						}
-					}
-				]);
-
-				doh.run();
-			});
+					]);
+					doh.run();
+				});
 		</script>
 	</head>
 </html>

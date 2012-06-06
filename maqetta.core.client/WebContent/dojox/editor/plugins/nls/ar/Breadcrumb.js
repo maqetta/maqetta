@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"nodeActions": "${nodeName} تصرفات",
 	"selectContents": "تحديد المحتويات",
@@ -9,6 +8,4 @@ define(
 	"moveStart": "نقل المؤشر للبداية",
 	"moveEnd": "نقل المؤشر للنهاية"
 })
-
-//end v1.x content
 );

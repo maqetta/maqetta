@@ -200,8 +200,8 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 		//		The value to set in the property.
 		// description:
 		//		Sets named properties on a plugin which may potentially be handled by a
-		// 		setter in the plugin.
-		// 		For example, if the plugin has a properties "foo"
+		//		setter in the plugin.
+		//		For example, if the plugin has a properties "foo"
 		//		and "bar" and a method named "_setFooAttr", calling:
 		//	|	plugin.set("foo", "Howdy!");
 		//		would be equivalent to writing:
@@ -241,8 +241,8 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 		// description:
 		//		Get a named property from a plugin. The property may
 		//		potentially be retrieved via a getter method. If no getter is defined, this
-		// 		just retrieves the object's property.
-		// 		For example, if the plugin has a properties "foo"
+		//		just retrieves the object's property.
+		//		For example, if the plugin has a properties "foo"
 		//		and "bar" and a method named "_getFooAttr", calling:
 		//	|	plugin.get("foo");
 		//		would be equivalent to writing:

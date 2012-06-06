@@ -12,15 +12,11 @@ define([
 	"dojo/_base/declare"
 ], function(array, lang, domAttr, i18n, query, keys, FormValueWidget, ValidationTextBox, template, formNlsPasswordValidator, declare){
 
-	/*=====
-		FormValueWidget = dijit.form._FormValueWidget;
-		ValidationTextBox = dijit.form.ValidationTextBox;
-	=====*/
 var _ChildTextBox = declare("dojox.form._ChildTextBox", ValidationTextBox, {
 	// summary:
 	//		A class that is shared between all our children - extends
 	//		ValidationTextBox and provides some shared functionality
-	//
+
 	// containerWidget: widget
 	//		Our parent (the PasswordValidator)
 	containerWidget: null,
@@ -69,7 +65,7 @@ var _OldPWBox = declare("dojox.form._OldPWBox", _ChildTextBox, {
 	//		Whether or not the password is valid
 	_isPWValid: false,
 
-	_setValueAttr: function(/* anything */ newVal, /* boolean? */ priority){
+	_setValueAttr: function(/*anything*/ newVal, /*Boolean?*/ priority){
 		// summary:
 		//		Updates _isPWValid if this isn't our initial update by calling
 		//		our PasswordValidator's pwCheck function
@@ -77,8 +73,8 @@ var _OldPWBox = declare("dojox.form._OldPWBox", _ChildTextBox, {
 			newVal = _OldPWBox.superclass.attr.call(this, "value");
 		}
 		if(priority !== null){
-			//  Priority is passed in as null, explicitly when this is an
-			//	update (not initially set).  We want to check our password now.
+			// Priority is passed in as null, explicitly when this is an
+			// update (not initially set).  We want to check our password now.
 			this._isPWValid = this.containerWidget.pwCheck(newVal);
 		}
 		this.inherited(arguments);
@@ -86,12 +82,12 @@ var _OldPWBox = declare("dojox.form._OldPWBox", _ChildTextBox, {
 		this.containerWidget._childValueAttr(this.containerWidget._inputWidgets[1].get("value"));
 	},
 
-	isValid: function(/* boolean */ isFocused){
+	isValid: function(/*Boolean*/ isFocused){
 		// Take into account the isPWValid setting
 		return this.inherited("isValid", arguments) && this._isPWValid;
 	},
 
-	_update: function(/* event */ e){
+	_update: function(/*Event*/ e){
 		// Only call validate() if we've been blurred or else we get popups
 		// too early.
 		if(this._hasBeenBlurred){ this.validate(true); }
@@ -168,16 +164,18 @@ return declare("dojox.form.PasswordValidator", FormValueWidget, {
 
 	_hasBeenBlurred: false,
 
-	isValid: function(/* boolean */ isFocused){
-		// summary: we are valid if ALL our children are valid
+	isValid: function(/*Boolean*/ isFocused){
+		// summary:
+		//		we are valid if ALL our children are valid
 		return array.every(this._inputWidgets, function(i){
 			if(i && i._setStateClass){ i._setStateClass(); }
 			return (!i || i.isValid());
 		});
 	},
 
-	validate: function(/* boolean */ isFocused){
-		// summary: Validating this widget validates all our children
+	validate: function(/*Boolean*/ isFocused){
+		// summary:
+		//		Validating this widget validates all our children
 		return array.every(array.map(this._inputWidgets, function(i){
 			if(i && i.validate){
 				i._hasBeenBlurred = (i._hasBeenBlurred || this._hasBeenBlurred);
@@ -220,7 +218,7 @@ return declare("dojox.form.PasswordValidator", FormValueWidget, {
 		}, this);
 	},
 
-	pwCheck: function(/* string */ password){
+	pwCheck: function(/*String*/ password){
 		// summary:
 		//		Overridable function for validation of the old password box.
 		//
@@ -247,7 +245,7 @@ return declare("dojox.form.PasswordValidator", FormValueWidget, {
 	},
 
 	postCreate: function(){
-		//	summary:
+		// summary:
 		//		Sets up the correct widgets.  You *MUST* specify one child
 		//		text box (a simple HTML <input> element) with pwType="new"
 		//		*and* one child text box with pwType="verify".  You *MAY*

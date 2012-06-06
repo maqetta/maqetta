@@ -27,25 +27,6 @@ function startTest(t){
 	startTestValidate(t);
 }
 
-function escapeEx(s){
-	var result = "";
-	for(var i = 0; i < s.length; i++){
-		var c = s.charAt(i);
-		switch (c){
-			case '"':
-				result += '\\"';
-				break;
-			case "'":
-				result += "\\'";
-				break;
-			default:
-				result += escape(c);
-				break;
-		}
-	}
-	return result;
-}
-
 function getAllTestCases(){
 	var allTestCases = [];
 	for(var i = 0; i < formatWidgetCount; i++){
@@ -69,14 +50,11 @@ function startTestFormat(i, t){
 	var res_node = dojo.doc.getElementById("test_display_result_" + i);
 	res_node.innerHTML = test_node.value;
 	res_node.style.backgroundColor = (test_node.value == exp) ? "#AFA" : "#FAA";
-	res_node.innerHTML += " <a style='font-size:0.8em' href='javascript:alert(\"Expected: " + escapeEx(exp) + "\\n Result: " + escapeEx(test_node.value) + "\")'>Compare (Escaped)</a>";
+	res_node.innerHTML += " <a style='font-size:0.8em' href='javascript:alert(\"Expected: " + encodeURIComponent(exp) + "\\n Result: " + encodeURIComponent(test_node.value) + "\")'>Compare (Escaped)</a>";
 	t.is(exp, test_node.value);
 }
 
 function startTestValidate(i, t){
-	/*
-	 * The dijit.byNode has an issue: cannot handle same id.
-	 */
 	var test_node = dojo.doc.getElementById("test_validate_" + i);
 	var inp_node = dojo.doc.getElementById("test_validate_input_" + i);
 	var exp = dojo.doc.getElementById("test_validate_expected_" + i).innerHTML;
@@ -84,17 +62,8 @@ function startTestValidate(i, t){
 	var val_node = dojo.doc.getElementById("test_display_value_" + i);
 
 	test_node.value = inp_node.value;
-	/*
-	 * The dijit.byNode has an issue.
-	 */
-	var widget = null;
-	var node = test_node;
-	while ((widget = dijit.byNode(node)) == null){
-		node = node.parentNode;
-		if(!node){
-			break;
-		}
-	}
+
+	var widget = widget = dijit.getEnclosingWidget(test_node);
 
 	if(widget){
 		widget.focus();

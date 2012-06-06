@@ -11,13 +11,11 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_NewPage.html');
@@ -33,7 +31,7 @@
 							return p;				
 						}
 					}
-					doh.t(false, "didn't find plugin");
+					throw new Error("didn't find plugin");
 				}
 
 				doh.register("NewPage_tests", [

@@ -8,6 +8,8 @@ define([
 	"./RoundRectList",
 	"./EdgeToEdgeList",
 	"./ListItem",
+	"./Container",
+	"./Pane",
 	"./Switch",
 	"./ToolBarButton",
 	"./ProgressIndicator"

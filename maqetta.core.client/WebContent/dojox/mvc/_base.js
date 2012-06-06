@@ -1,11 +1,12 @@
 define([
 	"dojo/_base/kernel",
 	"dojo/_base/lang",
+	"./getStateful",
 	"./StatefulModel",
 	"./Bind",
 	"./_DataBindingMixin",
 	"./_patches"
-], function(kernel, lang, StatefulModel){
+], function(kernel, lang, getStateful, StatefulModel){
 	// module:
 	//		dojox/mvc/_base
 	// summary:
@@ -41,19 +42,20 @@ define([
 		//			- if store returns immediate: this function returns immediate
 		//			- if store returns a Promise: this function returns a model
 		//			  Promise
+
 		if(args.data){
-			return new StatefulModel({ data : args.data });
+			return getStateful(args.data, StatefulModel.getStatefulOptions);
 		}else if(args.store && lang.isFunction(args.store.query)){
 			var model;
 			var result = args.store.query(args.query);
 			if(result.then){
 				return (result.then(function(data){
-					model = new StatefulModel({ data : data });
+					model = getStateful(data, StatefulModel.getStatefulOptions);
 					model.store = args.store;
 					return model;
 				}));
 			}else{
-				model = new StatefulModel({ data : result });
+				model = getStateful(result, StatefulModel.getStatefulOptions);
 				model.store = args.store;
 				return model;
 			}

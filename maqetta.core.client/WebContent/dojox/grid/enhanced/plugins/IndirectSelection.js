@@ -54,7 +54,7 @@ var RowSelector = declare("dojox.grid.cells.RowSelector", gridCells._Widget, {
 	unCheckedText: 'O',
 
 	constructor: function(){
-		this.map = {}; this.disabledMap = {}, this.disabledCount= 0;
+		this.map = {}; this.disabledMap = {}; this.disabledCount= 0;
 		this._connects = []; this._subscribes = [];
 		this.inA11YMode = html.hasClass(win.body(), "dijit_a11y");
 		
@@ -76,7 +76,7 @@ var RowSelector = declare("dojox.grid.cells.RowSelector", gridCells._Widget, {
 		//		Overwritten, see dojox.grid.cells._Widget
 		var _this = scope;
 		var clazz = _this.baseClass;
-		var checked = _this.getValue(rowIndex);
+		var checked = !!_this.getValue(rowIndex);
 		var disabled = !!_this.disabledMap[rowIndex];//normalize 'undefined'
 		
 		if(checked){
@@ -88,7 +88,7 @@ var RowSelector = declare("dojox.grid.cells.RowSelector", gridCells._Widget, {
 		return ["<div tabindex = -1 ",
 				"id = '" + _this.grid.id + "_rowSelector_" + rowIndex + "' ",
 				"name = '" + _this.grid.id + "_rowSelector' class = '" + clazz + "' ",
-				"role = 'presentation' aria-pressed = '" + checked + "' aria-disabled = '" + disabled +
+				"role = " + _this.inputType + " aria-checked = '" + checked + "' aria-disabled = '" + disabled +
 				"' aria-label = '" + string.substitute(_this.grid._nls["indirectSelection" + _this.inputType], [rowIndex + 1]) + "'>",
 				"<span class = '" + _this.statusTextClass + "'>" + (checked ? _this.checkedText : _this.unCheckedText) + "</span>",
 				"</div>"].join("");
@@ -191,7 +191,7 @@ var RowSelector = declare("dojox.grid.cells.RowSelector", gridCells._Widget, {
 			if(this.disabledMap[index]){
 				html.toggleClass(selector, this.checkedDisabledClass, value);
 			}
-			selector.setAttribute("aria-pressed", value);
+			selector.setAttribute("aria-checked", value);
 			if(this.inA11YMode){
 				selector.firstChild.innerHTML = (value ? this.checkedText : this.unCheckedText);
 			}
@@ -296,11 +296,7 @@ var MultipleRowSelector = declare("dojox.grid.cells.MultipleRowSelector", RowSel
 	//lastClickRowIdx: Integer
 	//		Row index for last click, used for range selection via Shift + click
 	lastClickRowIdx: -1,
-	
-	//toggleAllTrigerred: Boolean
-	//		Whether toggle all has been triggered or not
-	toggleAllTrigerred: false,
-	
+		
 	unCheckedText: '&#9633;',
 
 	constructor: function(){
@@ -330,7 +326,6 @@ var MultipleRowSelector = declare("dojox.grid.cells.MultipleRowSelector", RowSel
 		}else{
 			selection.deselectAll();
 		}
-		this.toggleAllTrigerred = true;
 	},
 	_onMouseDown: function(e){
 		if(e.cell == this){
@@ -498,7 +493,7 @@ var MultipleRowSelector = declare("dojox.grid.cells.MultipleRowSelector", RowSel
 		var g = this.grid;
 		var selector = headerCellNode.appendChild(html.create("div", {
 			'aria-label': g._nls["selectAll"],
-			"tabindex": -1, "id": g.id + "_rowSelector_-1", "class": this.baseClass, "role": "presentation",
+			"tabindex": -1, "id": g.id + "_rowSelector_-1", "class": this.baseClass, "role": "Checkbox",
 			"innerHTML": "<span class = '" + this.statusTextClass +
 				"'></span><span style='height: 0; width: 0; overflow: hidden; display: block;'>" +
 				g._nls["selectAll"] + "</span>"

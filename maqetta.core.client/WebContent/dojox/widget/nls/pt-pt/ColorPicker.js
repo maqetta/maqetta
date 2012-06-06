@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 redLabel: "e",
 greenLabel: "v",

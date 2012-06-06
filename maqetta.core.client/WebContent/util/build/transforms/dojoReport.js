@@ -1,4 +1,8 @@
-define(["../buildControl", "../version", "../fileUtils"], function(bc, version, fileUtils) {
+define([
+	"../buildControl",
+	"../version",
+	"../fileUtils"
+], function(bc, version, fileUtils) {
 	var dir = bc.buildReportDir || ".",
 		filename = bc.buildReportFilename || "build-report.txt";
 

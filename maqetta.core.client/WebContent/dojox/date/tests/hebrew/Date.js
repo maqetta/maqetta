@@ -114,8 +114,10 @@ tests.register("dojox.date.tests.hebrew.Date",
 				//test for invalid date, toGregorian and fromGregorian should return invalid date
 				var invDate = new Date("");
 				var hDate = new dojox.date.hebrew.Date(invDate);
+				var hebrInvDate = new dojox.date.hebrew.Date("");
 				t.is(true, isNaN(hDate));
 				t.is(true, isNaN(hDate.toGregorian()));
+				t.is(true, isNaN(hebrInvDate));
 				
 			}
 		},

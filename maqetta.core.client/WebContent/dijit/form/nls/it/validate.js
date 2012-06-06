@@ -1,9 +1,7 @@
 define(
-//begin v1.x content
 ({
 	invalidMessage: "Il valore immesso non è valido.",
 	missingMessage: "Questo valore è obbligatorio.",
-	rangeMessage: "Questo valore non è compreso nell'intervallo."
+	rangeMessage: "Questo valore è fuori dall'intervallo consentito."
 })
-//end v1.x content
 );

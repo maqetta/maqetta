@@ -9,7 +9,7 @@ dojox.data.tests.stores.WikipediaStore.getStore = function(){
 };
 
 dojox.data.tests.stores.WikipediaStore.error = function(t, d, errData){
-	//	summary:
+	// summary:
 	//		Our shared error callback
 	d.errback(errData);
 };
@@ -19,7 +19,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: containsValue",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the containsValue method functions correctly.
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -41,7 +41,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: fetch (one)",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Test a single page fetch from Wikipedia
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -61,7 +61,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: fetch (query 30)",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Test a full text search from Wikipedia
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -82,7 +82,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: fetch (paged)",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Test multiple fetches on a single full text search.
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -113,7 +113,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: getAttributes",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the getAttributes method functions correctly
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -135,7 +135,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: getLabel",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Test that the store correctly sets a label.
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -157,7 +157,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: getLabelAttributes",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Test that the store correctly enumerates the label attributes.
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -181,7 +181,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: getValue",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify that getValue does what it should.
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -206,7 +206,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: getValues",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify that getValues does what it should
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -231,7 +231,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: hasAttribute",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the hasAttribute method
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -258,7 +258,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: isItem",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the isItem method
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -282,7 +282,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: isItemLoaded",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the isItemLoaded method
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -310,7 +310,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "IdentityAPI: getIdentity",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the getIdentity method returns the correct value
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -332,7 +332,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "ReadAPI: loadItem",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the loadItem method
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -362,7 +362,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "IdentityAPI: getIdentityAttributes",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the getIdentityAttributes method functions correctly
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -384,7 +384,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 		name: "IdentityAPI: fetchItemByIdentity",
 		timeout: 30000,
 		runTest: function(t) {
-			//	summary:
+			// summary:
 			//		Verify the fetchItemByIdentity method works
 			var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 			var d = new doh.Deferred();
@@ -412,7 +412,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 	
 
 	function testIdentityAPI_getFeatures(t){
-		//	summary:
+		// summary:
 		//		Test that the store correctly advertises its capabilities
 		var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 
@@ -426,7 +426,7 @@ doh.register("dojox.data.tests.stores.WikipediaStore",[
 	},
 
 	function testIdentityAPI_functionConformance(t){
-		//	summary:
+		// summary:
 		//		Tests for Identity API conformance by checking to see that all declared functions are actual functions on the instances.
 		var ws = dojox.data.tests.stores.WikipediaStore.getStore();
 		var identityApi = new dojo.data.api.Identity();

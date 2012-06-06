@@ -33,7 +33,9 @@ define([
 			}
 
 			if(this.domNode !== frag){
-				this.domNode.parentNode.replaceChild(frag, this.domNode);
+				if(this.domNode.parentNode){
+					this.domNode.parentNode.replaceChild(frag, this.domNode);
+				}
 				this.domNode = frag;
 			}
 		}

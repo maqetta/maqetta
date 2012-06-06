@@ -1,8 +1,5 @@
 define(
-//begin v1.x content
 ({
-	"save": "Sauvegarder"
+	"save": "Enregistrer"
 })
-
-//end v1.x content
 );

@@ -7,11 +7,6 @@ define([
 	"./_MenuBase"
 ], function(declare, event, keys, template, _OnDijitClickMixin, _MenuBase){
 
-/*=====
-	var _MenuBase = dijit._MenuBase;
-	var _OnDijitClickMixin = dijit._OnDijitClickMixin;
-=====*/
-
 	// module:
 	//		dijit/DropDownMenu
 	// summary:
@@ -26,6 +21,7 @@ define([
 		baseClass: "dijitMenu",
 
 		postCreate: function(){
+			this.inherited(arguments);
 			var l = this.isLeftToRight();
 			this._openSubMenuKey = l ? keys.RIGHT_ARROW : keys.LEFT_ARROW;
 			this._closeSubMenuKey = l ? keys.LEFT_ARROW : keys.RIGHT_ARROW;

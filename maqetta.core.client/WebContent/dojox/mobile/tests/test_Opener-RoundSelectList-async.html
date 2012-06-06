@@ -69,10 +69,10 @@
 	<!-- override user's custom z-index --> 
 	<div id="listPicker" style="z-index:10000;" data-dojo-type="dojox.mobile.Opener" data-dojo-props="onHide:getSelectedRingtone, onShow:setSelectedRingtone, onBlur:function(){ return true; }">
 		<h1 id="header1" dojoType="dojox.mobile.Heading" label="Ringtone">
-			<div dojoType="dojox.mobile.ToolBarButton" label="Done" class="mblColorBlue" style="position:absolute;width:45px;right:0;"
-				onclick="listPicker.hide(true)"></div>
-			<div dojoType="dojox.mobile.ToolBarButton" label="Cancel" class="mblColorBlue" style="position:absolute;width:45px;left:0;"
-				onclick="listPicker.hide(false)"></div>
+			<span dojoType="dojox.mobile.ToolBarButton" label="Done" class="mblColorBlue" style="position:absolute;width:45px;right:0;"
+				onclick="listPicker.hide(true)"></span>
+			<span dojoType="dojox.mobile.ToolBarButton" label="Cancel" class="mblColorBlue" style="position:absolute;width:45px;left:0;"
+				onclick="listPicker.hide(false)"></span>
 		</h1>
 		<div dojoType="dojox.mobile.ScrollableView" selected="true" height="auto">
 			<ul id="list1" dojoType="dojox.mobile.RoundRectList" select="single" data-dojo-props="onCheckStateChanged:onCheck">

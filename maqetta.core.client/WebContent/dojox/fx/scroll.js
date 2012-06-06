@@ -5,7 +5,7 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/fx", "dojox/fx/_base"
 	fxExt.smoothScroll = function(/* Object */args){
 		// summary: Returns an animation that will smooth-scroll to a node
 		// description: This implementation support either horizontal or vertical scroll, as well as
-		// both. In addition, element in iframe can be scrolled to correctly.
+		//  both. In addition, element in iframe can be scrolled to correctly.
 		// offset: {x: int, y: int} this will be added to the target position
 		// duration: Duration of the animation in milliseconds.
 		// win: a node or window object to scroll

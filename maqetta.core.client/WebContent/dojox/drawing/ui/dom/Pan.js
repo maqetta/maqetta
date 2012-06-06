@@ -1,13 +1,13 @@
-dojo.provide("dojox.drawing.ui.dom.Pan");
-dojo.require("dojox.drawing.plugins._Plugin");
+define(["dojo", "../../util/oo", "../../plugins/_Plugin", "../../manager/_registry"], 
+function(dojo, oo, Plugin, registry){
 dojo.deprecated("dojox.drawing.ui.dom.Pan", "It may not even make it to the 1.4 release.", 1.4);
 
-dojox.drawing.ui.dom.Pan = dojox.drawing.util.oo.declare(
+var Pan = oo.declare(
 	// NOTE:
 	//			dojox.drawing.ui.dom.Pan is DEPRECATED.
 	//			This was a temporary DOM solution. Use the non-dom
 	//			tools for Toobar and Plugins.
-	//
+
 	// summary:
 	//		A plugin that allows for a scrolling canvas. An action
 	//		tool is added to the toolbar that allows for panning. Holding
@@ -19,8 +19,8 @@ dojox.drawing.ui.dom.Pan = dojox.drawing.util.oo.declare(
 	//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
 	//		|		<div plugin="dojox.drawing.ui.dom.Pan" options="{}">Pan</div>
 	//		|	</div>
-	//
-	dojox.drawing.plugins._Plugin,
+
+	Plugin,
 	function(options){
 		
 		this.domNode = options.node;
@@ -200,10 +200,14 @@ dojox.drawing.ui.dom.Pan = dojox.drawing.util.oo.declare(
 	}
 );
 
-dojox.drawing.ui.dom.Pan.setup = {
+dojo.setObject("dojox.drawing.ui.dom.Pan", Pan);
+Pan.setup = {
 	name:"dojox.drawing.ui.dom.Pan",
 	tooltip:"Pan Tool",
 	iconClass:"iconPan"
 };
 
-dojox.drawing.register(dojox.drawing.ui.dom.Pan.setup, "plugin");
+registry.register(Pan.setup, "plugin");
+
+return Pan;
+});

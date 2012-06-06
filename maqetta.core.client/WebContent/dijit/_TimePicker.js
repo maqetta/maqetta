@@ -10,21 +10,16 @@ define([
 	"dojo/_base/kernel", // deprecated
 	"dojo/keys", // keys
 	"dojo/_base/lang", // lang.mixin
-	"dojo/_base/sniff", // has("ie")
+	"dojo/sniff", // has(...)
 	"dojo/query", // query
-	"dijit/typematic",
+	"dojo/mouse", // mouse.wheel
+	"./typematic",
 	"./_Widget",
 	"./_TemplatedMixin",
 	"./form/_FormValueWidget",
 	"dojo/text!./templates/TimePicker.html"
-], function(array, ddate, locale, stamp, declare, domClass, domConstruct, event, kernel, keys, lang, has, query,
+], function(array, ddate, locale, stamp, declare, domClass, domConstruct, event, kernel, keys, lang, has, query, mouse,
 			typematic, _Widget, _TemplatedMixin, _FormValueWidget, template){
-
-/*=====
-	var _Widget = dijit._Widget;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-	var _FormValueWidget = dijit.form._FormValueWidget;
-=====*/
 
 	// module:
 	//		dijit/_TimePicker
@@ -32,27 +27,7 @@ define([
 	//		A graphical time picker.
 
 
-	/*=====
-	declare(
-		"dijit._TimePicker.__Constraints",
-		locale.__FormatOptions,
-		{
-			// clickableIncrement: String
-			//		See `dijit._TimePicker.clickableIncrement`
-			clickableIncrement: "T00:15:00",
-
-			// visibleIncrement: String
-			//		See `dijit._TimePicker.visibleIncrement`
-			visibleIncrement: "T01:00:00",
-
-			// visibleRange: String
-			//		See `dijit._TimePicker.visibleRange`
-			visibleRange: "T05:00:00"
-		}
-	);
-	=====*/
-
-	return declare("dijit._TimePicker", [_Widget, _TemplatedMixin], {
+	var TimePicker = declare("dijit._TimePicker", [_Widget, _TemplatedMixin], {
 		// summary:
 		//		A graphical time picker.
 		//		This widget is used internally by other widgets and is not available
@@ -105,7 +80,7 @@ define([
 		_clickableIncrement:1,
 		_totalIncrements:10,
 
-		// constraints: dijit._TimePicker.__Constraints
+		// constraints: TimePicker.__Constraints
 		//		Specifies valid range of times (start time, end time)
 		constraints:{},
 
@@ -184,7 +159,7 @@ define([
 				dec = before ? 1 : 0,
 				inc = 1 - dec;
 			do{
-				i = i - dec;
+				i -= dec;
 				n = this._createOption(i);
 				if(n){
 					if((before && n.date > lastValue) || (!before && n.date < lastValue)){
@@ -193,7 +168,7 @@ define([
 					nodes[before ? "unshift" : "push"](n);
 					lastValue = n.date;
 				}
-				i = i + inc;
+				i += inc;
 			}while(nodes.length < maxNum && (i*chk) < max);
 			return nodes;
 		},
@@ -211,16 +186,15 @@ define([
 			// get the value of the increments and the range in seconds (since 00:00:00) to find out how many divs to create
 			var
 				sinceMidnight = function(/*Date*/ date){
-				return date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
+					return date.getHours() * 60 * 60 + date.getMinutes() * 60 + date.getSeconds();
 				},
 				clickableIncrementSeconds = sinceMidnight(this._clickableIncrementDate),
 				visibleIncrementSeconds = sinceMidnight(this._visibleIncrementDate),
 				visibleRangeSeconds = sinceMidnight(this._visibleRangeDate),
-
-			// round reference date to previous visible increment
+				// round reference date to previous visible increment
 				time = (this.value || this.currentFocus).getTime();
 
-			this._refDate = new Date(time - time % (visibleIncrementSeconds*1000));
+			this._refDate = new Date(time - time % (clickableIncrementSeconds*1000));
 			this._refDate.setFullYear(1970,0,1); // match parse defaults
 
 			// assume clickable increment is the smallest unit
@@ -238,9 +212,15 @@ define([
 			var
 				// Find the nodes we should display based on our filter.
 				// Limit to 10 nodes displayed as a half-hearted attempt to stop drop down from overlapping <input>.
-				after = this._getFilteredNodes(0, Math.min(this._totalIncrements >> 1, 10) - 1),
-				before = this._getFilteredNodes(0, Math.min(this._totalIncrements, 10) - after.length, true, after[0]);
-			array.forEach(before.concat(after), function(n){this.timeMenu.appendChild(n);}, this);
+				count = Math.min(this._totalIncrements, 10),
+				after = this._getFilteredNodes(0, (count >> 1) + 1, false),
+				moreAfter = [],
+				estBeforeLength = count - after.length,
+				before = this._getFilteredNodes(0, estBeforeLength, true, after[0]);
+				if(before.length < estBeforeLength && after.length > 0){
+					moreAfter = this._getFilteredNodes(after.length, estBeforeLength - before.length, false, after[after.length-1]);
+				}
+			array.forEach(before.concat(after, moreAfter), function(n){ this.timeMenu.appendChild(n); }, this);
 		},
 
 		constructor: function(){
@@ -248,7 +228,7 @@ define([
 		},
 
 		postMixInProperties: function(){
-		        this.inherited(arguments);
+			this.inherited(arguments);
 			this._setConstraintsAttr(this.constraints); // this needs to happen now (and later) due to codependency on _set*Attr calls
 		},
 
@@ -264,9 +244,11 @@ define([
 
 		postCreate: function(){
 			// assign typematic mouse listeners to the arrow buttons
-			this.connect(this.timeMenu, has("ie") ? "onmousewheel" : 'DOMMouseScroll', "_mouseWheeled");
-			this._connects.push(typematic.addMouseListener(this.upArrow, this, "_onArrowUp", 33, 250));
-			this._connects.push(typematic.addMouseListener(this.downArrow, this, "_onArrowDown", 33, 250));
+			this.connect(this.timeMenu, mouse.wheel, "_mouseWheeled");
+			this.own(
+				typematic.addMouseListener(this.upArrow, this, "_onArrowUp", 33, 250),
+				typematic.addMouseListener(this.downArrow, this, "_onArrowDown", 33, 250)
+			);
 
 			this.inherited(arguments);
 		},
@@ -290,9 +272,10 @@ define([
 			//		private
 			var date = new Date(this._refDate);
 			var incrementDate = this._clickableIncrementDate;
-			date.setHours(date.getHours() + incrementDate.getHours() * index,
-				date.getMinutes() + incrementDate.getMinutes() * index,
-				date.getSeconds() + incrementDate.getSeconds() * index);
+			date.setTime(date.getTime()
+				+ incrementDate.getHours() * index * 3600000
+				+ incrementDate.getMinutes() * index * 60000
+				+ incrementDate.getSeconds() * index * 1000);
 			if(this.constraints.selector == "time"){
 				date.setFullYear(1970,0,1); // make sure each time is for the same date
 			}
@@ -302,9 +285,10 @@ define([
 				return null;
 			}
 
-			var div = domConstruct.create("div", {"class": this.baseClass+"Item"});
+			var div = this.ownerDocument.createElement("div");
+			div.className = this.baseClass+"Item";
 			div.date = date;
-			div.index = index;
+			div.idx = index;
 			domConstruct.create('div',{
 				"class": this.baseClass + "ItemInner",
 				innerHTML: dateString
@@ -409,8 +393,7 @@ define([
 			this._keyboardSelected = null;
 			event.stop(e);
 			// we're not _measuring_ the scroll amount, just direction
-			var scrollAmount = (has("ie") ? e.wheelDelta : -e.detail);
-			this[(scrollAmount>0 ? "_onArrowUp" : "_onArrowDown")](); // yes, we're making a new dom node every time you mousewheel, or click
+			this[(e.wheelDelta>0 ? "_onArrowUp" : "_onArrowDown")](); // yes, we're making a new dom node every time you mousewheel, or click
 		},
 
 		_onArrowUp: function(count){
@@ -420,9 +403,15 @@ define([
 			//		Removes the bottom time and add one to the top
 			// tags:
 			//		private
-			if(typeof count == "number" && count == -1){ return; } // typematic end
+			if(count === -1){
+				domClass.remove(this.upArrow, "dijitUpArrowActive");
+				return;
+			}else if(count === 0){
+				domClass.add(this.upArrow, "dijitUpArrowActive");
+
+			} // typematic end
 			if(!this.timeMenu.childNodes.length){ return; }
-			var index = this.timeMenu.childNodes[0].index;
+			var index = this.timeMenu.childNodes[0].idx;
 			var divs = this._getFilteredNodes(index, 1, true, this.timeMenu.childNodes[0]);
 			if(divs.length){
 				this.timeMenu.removeChild(this.timeMenu.childNodes[this.timeMenu.childNodes.length - 1]);
@@ -437,9 +426,14 @@ define([
 			//		Remove the top time and add one to the bottom
 			// tags:
 			//		private
-			if(typeof count == "number" && count == -1){ return; } // typematic end
+			if(count === -1){
+				domClass.remove(this.downArrow, "dijitDownArrowActive");
+				return;
+			}else if(count === 0){
+				domClass.add(this.downArrow, "dijitDownArrowActive");
+			} // typematic end
 			if(!this.timeMenu.childNodes.length){ return; }
-			var index = this.timeMenu.childNodes[this.timeMenu.childNodes.length - 1].index + 1;
+			var index = this.timeMenu.childNodes[this.timeMenu.childNodes.length - 1].idx + 1;
 			var divs = this._getFilteredNodes(index, 1, false, this.timeMenu.childNodes[this.timeMenu.childNodes.length - 1]);
 			if(divs.length){
 				this.timeMenu.removeChild(this.timeMenu.childNodes[0]);
@@ -486,13 +480,32 @@ define([
 
 				// Accept the currently-highlighted option as the value
 				if(this._highlighted_option){
-				this._onOptionSelected({target: this._highlighted_option});
-			}
+					this._onOptionSelected({target: this._highlighted_option});
+				}
 
 				// Call stopEvent() for ENTER key so that form doesn't submit,
 				// but not for TAB, so that TAB does switch focus
 				return e.charOrCode === keys.TAB;
 			}
+			return undefined;
 		}
 	});
+
+	/*=====
+	 TimePicker.__Constraints = declare(locale.__FormatOptions, {
+		 // clickableIncrement: String
+		 //		See `dijit._TimePicker.clickableIncrement`
+		 clickableIncrement: "T00:15:00",
+
+		 // visibleIncrement: String
+		 //		See `dijit._TimePicker.visibleIncrement`
+		 visibleIncrement: "T01:00:00",
+
+		 // visibleRange: String
+		 //		See `dijit._TimePicker.visibleRange`
+		 visibleRange: "T05:00:00"
+	 });
+	 =====*/
+
+	return TimePicker;
 });

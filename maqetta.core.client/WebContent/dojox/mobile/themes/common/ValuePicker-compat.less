@@ -1,0 +1,23 @@
+/* dojox.mobile.ValuePicker */
+
+.mblValuePickerSlotButton {
+	background-color: #d6d3d6;
+}
+.mblValuePickerSlotButtonSelected {
+	@default-button-selected-background-color
+}
+.mblValuePickerSlotInputArea {
+	background-color: #f7f7f7;
+}
+
+.dj_gecko {
+	.mblValuePickerSlotButton {
+		background-image: -moz-linear-gradient(top, #f7f7f7 0%, #d6d3d6 50%, #bdbebd 90%, #D6D7D6 100%);
+	}
+	.mblValuePickerSlotButtonSelected {
+		background-image: @default-button-selected-background-image-gecko;
+	}
+	.mblValuePickerSlotInputArea {
+		background-image: -moz-linear-gradient(top, #adaead 0%, #D6D7D6 10%, #f7f7f7 50%, #f7f3f7 90%, #e7e3e7 100%);
+	}
+}

@@ -13,11 +13,11 @@
 			djConfig="isDebug: true"></script>
 
 		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
 		<script type="text/javascript" src="./borderContainerTestFunctions.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_BorderContainer_full.html');
@@ -26,7 +26,7 @@
 					function initialConditions(){
 						var bc = dijit.byId("main");
 						checkBCpanes(bc);
-						doh.t(bc.getChildren().length==5);
+						doh.t(5, bc.getChildren().length, "# of children");
 					},
 					
 					function testFullScreen(){
@@ -49,7 +49,7 @@
 								oRight = dojo.position(dojo.byId("main-trailing")),
 								oBottom = dojo.position(dojo.byId("main-bottom"));
 
-							// Drag slider to expand pane 
+							// Drag slider to expand pane
 							var size = dojo.position("main-trailing_splitter");
 							doh.robot.mouseMoveAt("main-trailing_splitter", 500);
 							doh.robot.mousePress({left: true}, 500);
@@ -61,7 +61,7 @@
 									nCenter = dojo.position(dojo.byId("main-center")),
 									nRight = dojo.position(dojo.byId("main-trailing")),
 									nBottom = dojo.position(dojo.byId("main-bottom"));
-					
+
 								doh.t(within(oRight.w + 100, nRight.w, 10), "right width went from " + oRight.w + " to " + nRight.w);
 								doh.t(within(oTop.w - 100, nTop.w, 10), "top width went from " + oTop.w + " to " + nTop.w);
 								doh.t(within(oCenter.w - 100, nCenter.w, 10), "center width went from " + oCenter.w + " to " + nCenter.w);
@@ -82,7 +82,7 @@
 								oRight = dojo.position(dojo.byId("main-trailing")),
 								oBottom = dojo.position(dojo.byId("main-bottom"));
 
-							// Drag slider to shrink pane 
+							// Drag slider to shrink pane
 							var size = dojo.position("main-bottom_splitter");
 							doh.robot.mouseMoveAt("main-bottom_splitter", 500);
 							doh.robot.mousePress({left: true}, 500);
@@ -93,7 +93,7 @@
 									nCenter = dojo.position(dojo.byId("main-center")),
 									nRight = dojo.position(dojo.byId("main-trailing")),
 									nBottom = dojo.position(dojo.byId("main-bottom"));
-					
+
 								doh.t(within(oBottom.h - 10, nBottom.h, 10), "bottom height went from " + oBottom.h + " to " + nBottom.h);
 								doh.t(within(oCenter.h + 10, nCenter.h, 10), "center height went from " + oCenter.h + " to " + nCenter.h);
 							}), 500);

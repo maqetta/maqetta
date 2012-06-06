@@ -1,7 +1,7 @@
-dojo.provide("dojox.drawing.plugins.tools.Pan");
-dojo.require("dojox.drawing.plugins._Plugin");
+define(["dojo/_base/lang", "../../util/oo", "../_Plugin", "../../manager/_registry"],
+function(lang, oo, Plugin, registry){
 
-dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
+var Pan = oo.declare(
 	// summary:
 	//		A plugin that allows for a scrolling canvas. An action
 	//		tool is added to the toolbar that allows for panning. Holding
@@ -13,8 +13,8 @@ dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
 	//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
 	//		|		<div plugin="dojox.drawing.plugins.tools.Pan" options="{}">Pan</div>
 	//		|	</div>
-	//
-	dojox.drawing.plugins._Plugin,
+
+	Plugin,
 	function(options){
 		this.domNode = options.node;
 		var _scrollTimeout;
@@ -35,7 +35,7 @@ dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
 				return;
 			}
 			_scrollTimeout && clearTimeout(_scrollTimeout);
-			_scrollTimeout = setTimeout(dojo.hitch(this, "checkBounds"), 200);
+			_scrollTimeout = setTimeout(lang.hitch(this, "checkBounds"), 200);
 		});
 		this._mouseHandle = this.mouse.register(this);
 		// This HAS to be called after setting initial objects or things get screwy.
@@ -73,7 +73,7 @@ dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
 		
 		onArrow: function(evt){
 			if(this._timer){ clearInterval(this._timer); }
-			this._timer = setInterval(dojo.hitch(this,function(evt){
+			this._timer = setInterval(lang.hitch(this,function(evt){
 				this.canvas.domNode.parentNode.scrollLeft += evt.x*10;
 				this.canvas.domNode.parentNode.scrollTop += evt.y*10;
 			},evt), this.interval);
@@ -232,11 +232,15 @@ dojox.drawing.plugins.tools.Pan = dojox.drawing.util.oo.declare(
 	}
 );
 
-dojox.drawing.plugins.tools.Pan.setup = {
+Pan.setup = {
 	name:"dojox.drawing.plugins.tools.Pan",
 	tooltip:"Pan Tool",
 	iconClass:"iconPan",
 	button:false
 };
 
-dojox.drawing.register(dojox.drawing.plugins.tools.Pan.setup, "plugin");
+lang.setObject("dojox.drawing.plugins.tools.Pan", Pan);
+registry.register(Pan.setup, "plugin");
+return Pan;
+
+});

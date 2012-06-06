@@ -3,6 +3,13 @@ dojo.provide("dojox.dtl.tests.text.tag");
 dojo.require("dojox.dtl");
 dojo.require("dojox.dtl.Context");
 
+if(!("_getTemplateString" in dojox.dtl.text)){
+	dojox.dtl.text._getTemplateString = dojox.dtl.text.getTemplateString;
+	dojox.dtl.text.getTemplateString = function(file){
+		return dojox.dtl.text._getTemplateString(file).replace(/(\r?\n)$/, ''); // remove optional trailing newline from template HTML file to make testing consistent
+	};
+}
+
 doh.register("dojox.dtl.text.tag",
 	[
 		function test_tag_block_and_extends(t){

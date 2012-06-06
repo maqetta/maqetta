@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Lihavointi',
 	'copy': 'Kopioi',
@@ -20,8 +19,8 @@ define(
 	'removeFormat': 'Poista muotoilu',
 	'selectAll': 'Valitse kaikki',
 	'strikethrough': 'Yliviivaus',
-	'subscript': 'Alaindeksi',
-	'superscript': 'Yläindeksi',
+	'subscript': 'Alennettu',
+	'superscript': 'Korotettu',
 	'underline': 'Alleviivaus',
 	'undo': 'Kumoa',
 	'unlink': 'Poista linkki',
@@ -37,7 +36,7 @@ define(
 	'hiliteColor': 'Taustaväri',
 	'plainFormatBlock': 'Kappaletyyli',
 	'formatBlock': 'Kappaletyyli',
-	'fontSize': 'Fontin koko',
+	'fontSize': 'Fonttikoko',
 	'fontName': 'Fontin nimi',
 	'tabIndent': 'Sarkainsisennys',
 	"fullScreen": "Vaihda koko näyttö",
@@ -45,8 +44,8 @@ define(
 	"print": "Tulosta",
 	"newPage": "Uusi sivu",
 	/* Error messages */
-	'systemShortcut': 'Toiminto "${0}" on käytettävissä selaimessa vain näppäimistön pikatoiminnolla. Käytä seuraavaa: ${1}.'
+	'systemShortcut': 'Toiminto "${0}" on käytettävissä selaimessa vain näppäimistön pikatoiminnolla. Käytä seuraavaa: ${1}.',
+	'ctrlKey':'Ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-
-//end v1.x content
 );

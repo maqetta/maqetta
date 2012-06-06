@@ -172,13 +172,13 @@
 		</div>
 
 		<div id="container" data-dojo-id="layout" data-dojo-type="my.BorderContainer" data-dojo-props='style:"width:600px; height:300px; border:3px solid #333;"'>
-			<div id="pane0" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center" '>
+			<div id="pane0" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center" '>
 				pane0
 			</div>
 		</div>
 
-		<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
+		<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
+			<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center"'>
 				Sinlge pane - l1
 			</div>
 		</div>
@@ -187,13 +187,13 @@
 			<h3>two panes, vertical split:</h3>
 
 
-			<div id="animBC" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
-				<div id="sizing1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='style:"background-color:red", region:"left", splitter:true'>
+			<div id="animBC" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
+				<div id="sizing1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='style:"background-color:red", region:"left", splitter:true'>
 					Sinlge pane - left
 				</div>
-				<div data-dojo-type="dijit.layout.ContentPane"  data-dojo-props='region:"center"'>
+				<div data-dojo-type="dijit/layout/ContentPane"  data-dojo-props='region:"center"'>
 					Sinlge pane - center
-					<button data-dojo-type="dijit.form.Button">
+					<button data-dojo-type="dijit/form/Button">
 					Size Me
 					<script type="dojo/method" data-dojo-event="onClick">
 						var n = dijit.byId("sizing1").domNode;
@@ -211,51 +211,51 @@
 				</div>
 			</div>
 
-			<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center", splitter:true'>
+			<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center", splitter:true'>
 					Single pane - center (splitter) (this is unsupported, and does not work)
 				</div>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"right"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"right"'>
 					Single pane - right (no splitter)
 				</div>
 			</div>
 
-			<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
+			<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='"class":"bc", style:"height:200px"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center"'>
 					Single pane - center (no splitter)
 				</div>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"right", splitter:true'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"right", splitter:true'>
 					Single pane - right (splitter)
 				</div>
 			</div>
 		</div>
 
-		<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='"class":"bc", style:"width:200px; height:400px;"'>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"top", splitter:true'>
+		<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='"class":"bc", style:"width:200px; height:400px;"'>
+			<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"top", splitter:true'>
 				Single pane - top (splitter)
 
 			</div>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
+			<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center"'>
 				Single pane - center
 			</div>
 		</div>
 
-		<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='"class":"bc", style:"width:200px; height:400px;"'>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
+		<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='"class":"bc", style:"width:200px; height:400px;"'>
+			<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center"'>
 				Single pane - center
 			</div>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"bottom", splitter:true'>
+			<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"bottom", splitter:true'>
 				Single Pane Bottom (splitter)
 			</div>
-			<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"top", splitter:true'>
+			<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"top", splitter:true'>
 				Single Pane Top (splitter)
 			</div>
 		</div>
 
 		<div id="holder" style="visibility:hidden">
-			<div id="pane1" data-dojo-type="dijit.layout.ContentPane" >pane 1</div>
-			<div id="pane2" data-dojo-type="dijit.layout.ContentPane" >pane 2</div>
-			<div id="pane3" data-dojo-type="dijit.layout.ContentPane" >pane 3</div>
+			<div id="pane1" data-dojo-type="dijit/layout/ContentPane" >pane 1</div>
+			<div id="pane2" data-dojo-type="dijit/layout/ContentPane" >pane 2</div>
+			<div id="pane3" data-dojo-type="dijit/layout/ContentPane" >pane 3</div>
 		</div>
 
     </body>

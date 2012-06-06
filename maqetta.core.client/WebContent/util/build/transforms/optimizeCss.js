@@ -4,12 +4,12 @@ define(["../buildControl", "../fileUtils"], function(bc, fileUtils) {
 
 	var
 		//Make sure we have a delimited ignore list to make matching faster
-		cssImportIgnore= bc.cssImportIgnore? bc.cssImportIgnore + "," : 0,
+		cssImportIgnore = bc.cssImportIgnore? bc.cssImportIgnore + "," : 0,
 
 		cssImportRegExp = /\@import\s+(url\()?\s*([^);]+)\s*(\))?([\w, ]*)(;)?/g,
 		cssUrlRegExp = /\url\(\s*([^\)]+)\s*\)?/g,
 
-		checkSlashes= function(name){
+		checkSlashes = function(name){
 			return name.replace(/\\/g, "/");
 		},
 
@@ -43,7 +43,7 @@ define(["../buildControl", "../fileUtils"], function(bc, fileUtils) {
 		flattenCss = function(/*String*/fileName, /*String*/text, cssImportIgnore){
 			//summary: inlines nested stylesheets that have @import calls in them.
 
-			text= removeComments(text, fileName);
+			text = removeComments(text, fileName);
 
 			// get the path of the reference resource
 			var referencePath = fileUtils.getFilepath(checkSlashes(fileName));
@@ -65,8 +65,8 @@ define(["../buildControl", "../fileUtils"], function(bc, fileUtils) {
 				importFileName = checkSlashes(importFileName);
 				var
 					fullImportFileName = importFileName.charAt(0) == "/" ? importFileName : fileUtils.compactPath(fileUtils.catPath(referencePath, importFileName)),
-					importPath= fileUtils.getFilepath(importFileName),
-					importModule= bc.resources[fullImportFileName],
+					importPath = fileUtils.getFilepath(importFileName),
+					importModule = bc.resources[fullImportFileName],
 					importContents = importModule && (importModule.rawText || importModule.text);
 				if(!importContents){
 					skipped.push([importFileName, fileName]);
@@ -85,7 +85,7 @@ define(["../buildControl", "../fileUtils"], function(bc, fileUtils) {
 					var colonIndex = fixedUrlMatch.indexOf(":");
 					if(fixedUrlMatch.charAt(0) != "/" && (colonIndex == -1 || colonIndex > fixedUrlMatch.indexOf("/"))){
 						//It is a relative URL, tack on the path prefix
-						urlMatch =  fileUtils.compactPath(fileUtils.catPath(importPath, fixedUrlMatch));
+						urlMatch =	fileUtils.compactPath(fileUtils.catPath(importPath, fixedUrlMatch));
 					}else{
 						nonrelative.push([urlMatch, importFileName]);
 					}
@@ -113,7 +113,7 @@ define(["../buildControl", "../fileUtils"], function(bc, fileUtils) {
 			if(/keepLines/i.test(bc.cssOptimize)){
 				//Remove multiple empty lines.
 				text = text.replace(/(\r\n)+/g, "\r\n");
-				text = text.replace(/(\n)+/g, "\n");
+				text = text.replace(/\n+/g, "\n");
 			}else{
 				text = text.replace(/[\r\n]/g, "");
 				text = text.replace(/\s+/g, " ");
@@ -121,7 +121,7 @@ define(["../buildControl", "../fileUtils"], function(bc, fileUtils) {
 				text = text.replace(/\s\}/g, "}");
 			}
 			resource.rawText = resource.text;
-			resource.text= text;
+			resource.text = text;
 			var messageArgs = ["file", resource.src];
 			skipped.length && messageArgs.push("skipped", skipped);
 			nonrelative.length && messageArgs.push("non-relative URLs skipped", nonrelative);

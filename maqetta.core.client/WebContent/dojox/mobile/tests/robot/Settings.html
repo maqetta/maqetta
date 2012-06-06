@@ -23,90 +23,72 @@
 	        dojo.require("doh.runner");
 
 			dojo.addOnLoad(function(){
-				doh.robot.initRobot("../test_iPad-Settings.html");
+				doh.robot.initRobot("../test_tablet-settings.html");
 
 				doh.register("dojox.mobile.Settings mouse tests", [
 					{
 						name: "Settings mouse tests",
-						timeout: 40000,
+						timeout: 50000,
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_20").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_0").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
-							
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_19").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_1").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_2").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_21").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_3").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_4").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_22").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_5").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_6").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_23").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_7").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_8").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_24").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_9").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_10").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_25").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_11").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_12").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_26").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_13").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_14").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_27").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_15").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_16").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_28").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
-
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
-
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_29").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
-
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
-
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_30").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
-
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_2").domNode)[0], 1000);
+							doh.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_17").domNode, 1000);
 							doh.robot.mouseClick({left: true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.assertEqual("General",  dijit.byId("dojox_mobile_Heading_1").get("label"));
-							}), 500);
+								doh.assertEqual("",  dijit.registry.byId("general").domNode.style.display);
+							}), 1500);
 							return d;
 						}
 					}

@@ -3,7 +3,6 @@ define([
 	"dojo/_base/declare", // declare
 	"dojo/dom-attr", // domAttr.set
 	"dojo/dom-class", // domClass.add domClass.remove domClass.toggle
-	"dojo/dom-construct", // domConstruct.create
 	"dojo/dom-geometry", // domGeometry.setMarginBox
 	"dojo/_base/event", // event.stop
 	"dojo/i18n", // i18n.getLocalization
@@ -16,18 +15,8 @@ define([
 	"../Tooltip",
 	"dojo/text!./templates/Select.html",
 	"dojo/i18n!./nls/validate"
-], function(array, declare, domAttr, domClass, domConstruct, domGeometry, event, i18n, lang,
+], function(array, declare, domAttr, domClass, domGeometry, event, i18n, lang,
 			_FormSelectWidget, _HasDropDown, Menu, MenuItem, MenuSeparator, Tooltip, template){
-
-/*=====
-	var _FormSelectWidget = dijit.form._FormSelectWidget;
-	var _HasDropDown = dijit._HasDropDown;
-	var _FormSelectWidget = dijit._FormSelectWidget;
-	var Menu = dijit.Menu;
-	var MenuItem = dijit.MenuItem;
-	var MenuSeparator = dijit.MenuSeparator;
-	var Tooltip = dijit.Tooltip;
-=====*/
 
 // module:
 //		dijit/form/Select
@@ -39,13 +28,18 @@ define([
 var _SelectMenu = declare("dijit.form._SelectMenu", Menu, {
 	// summary:
 	//		An internally-used menu for dropdown that allows us a vertical scrollbar
+
+	// Override Menu.autoFocus setting so that opening a Select highlights the current value.
+	autoFocus: true,
+
 	buildRendering: function(){
 		// summary:
 		//		Stub in our own changes, so that our domNode is not a table
 		//		otherwise, we won't respond correctly to heights/overflows
 		this.inherited(arguments);
 		var o = (this.menuTableNode = this.domNode);
-		var n = (this.domNode = domConstruct.create("div", {style: {overflowX: "hidden", overflowY: "scroll"}}));
+		var n = (this.domNode = this.ownerDocument.createElement("div"));
+		n.style.cssText = "overflow-x: hidden; overflow-y: scroll";
 		if(o.parentNode){
 			o.parentNode.replaceChild(n, o);
 		}
@@ -63,7 +57,29 @@ var _SelectMenu = declare("dijit.form._SelectMenu", Menu, {
 
 		this.inherited(arguments);
 
-		this.connect(this.domNode, "onmousemove", event.stop);
+		this.connect(this.domNode, "onselectstart", event.stop);
+	},
+
+
+	focus: function(){
+		// summary:
+		//		Overridden so that the previously selected value will be focused instead of only the first item
+		var	found = false,
+			val = this.parentWidget.value;
+		if(lang.isArray(val)){
+			val = val[val.length-1];
+		}
+		if(val){ // if focus selected
+			array.forEach(this.parentWidget._getChildren(), function(child){
+				if(child.option && (val === child.option.value)){ // find menu item widget with this value
+					found = true;
+					this.focusChild(child, false); // focus previous selection
+				}
+			}, this);
+		}
+		if(!found){
+			this.inherited(arguments); // focus first item by default
+		}
 	},
 
 	resize: function(/*Object*/ mb){
@@ -134,7 +150,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 			this.value = this.options[si >= 0 ? si : 0].value;
 		}
 		// Create the dropDown widget
-		this.dropDown = new _SelectMenu({id: this.id + "_menu"});
+		this.dropDown = new _SelectMenu({ id: this.id + "_menu", parentWidget: this });
 		domClass.add(this.dropDown.domNode, this.baseClass + "Menu");
 	},
 
@@ -152,6 +168,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 				option: option,
 				label: option.label || this.emptyLabel,
 				onClick: click,
+				dir: this.dir,
 				disabled: option.disabled || false
 			});
 			item.focusNode.setAttribute("role", "listitem");
@@ -197,7 +214,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 				// Drop down menu is blank but add one blank entry just so something appears on the screen
 				// to let users know that they are no choices (mimicing native select behavior)
 				array.forEach(this._getChildren(), function(child){ child.destroyRecursive(); });
-				var item = new MenuItem({label: "&#160;"});
+				var item = new MenuItem({ label: this.emptyLabel });
 				this.dropDown.addChild(item);
 			}
 		}else{
@@ -209,7 +226,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 
 		if(!this._loadingStore){
 			// Don't call this if we are loading - since we will handle it later
-			this._setValueAttr(this.value);
+			this._setValueAttr(this.value, false);
 		}
 	},
 
@@ -228,6 +245,11 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		this._set("required", value);
 		this.focusNode.setAttribute("aria-required", value);
 		this.validate(this.focused);	// to update this.state
+	},
+
+	_setOptionsAttr: function(/*Array*/ options){
+		this._isLoaded = false;
+		this._set('options', options);
 	},
 
 	_setDisplay: function(/*String*/ newDisplay){
@@ -278,8 +300,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		// summary:
 		//		set the missing message
 		this.inherited(arguments);
-		this._missingMsg = i18n.getLocalization("dijit.form", "validate",
-									this.lang).missingMessage;
+		this._missingMsg = i18n.getLocalization("dijit.form", "validate", this.lang).missingMessage;
 	},
 
 	postCreate: function(){
@@ -288,7 +309,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 
 		this.inherited(arguments);
 
-		this.connect(this.domNode, "onmousemove", event.stop);
+		this.connect(this.domNode, "onselectstart", event.stop);
 	},
 
 	_setStyleAttr: function(/*String||Object*/ value){
@@ -320,7 +341,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		}
 	},
 
-	uninitialize: function(preserveDom){
+	destroy: function(preserveDom){
 		if(this.dropDown && !this.dropDown._destroyed){
 			this.dropDown.destroyRecursive(preserveDom);
 			delete this.dropDown;

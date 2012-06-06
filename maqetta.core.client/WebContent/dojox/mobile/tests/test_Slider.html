@@ -3,33 +3,14 @@
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 	<title>Mobile Slider unit tests</title>
-	<style>
-		@import "../themes/iphone/Slider.css";
-		/* test overrides */
-		.mblSlider {
-			zoom: 1.1; /* for testing, to make it easier to touch the handle */
-		}
-		.mblSliderV {
-			width: 1px;
-			border: 0px none;
-		}
-		.mblSliderH .mblSliderProgressBar {
-			background:transparent url(progressBarAnim.gif) repeat;
-		}
-		.mblSliderV .mblSliderHandle {
-			background:transparent url(sliderVthumb.png) no-repeat;
-			border-width:0px;
-			border-radius:0;
-		}
-	</style>
 
+	<script type="text/javascript" src="../deviceTheme.js" data-dojo-config="mblThemeFiles: ['base','Slider']"></script>
 	<script src="../../../dojo/dojo.js" djConfig="parseOnLoad:true, isDebug: true"></script>
 	<script type="text/javascript">
 		dojo.require("doh.runner");
 		dojo.require("dojox.mobile");		// This is a mobile app.
 		dojo.require("dojox.mobile.parser");	// This mobile app uses declarative programming with fast mobile parser
 		dojo.require("dojox.mobile.compat");	// This mobile app supports running on desktop browsers
-		dojo.require("dojox.mobile.deviceTheme");
 		dojo.require("dojox.mobile.Slider");
 		dojo.addOnLoad(function(){
 			var hasTouch = !!dojox.mobile.hasTouch;
@@ -457,6 +438,25 @@
 			doh.run();
 		});
 	</script>
+
+	<style>
+		/* test overrides */
+		.mblSlider {
+			zoom: 1.1; /* for testing, to make it easier to touch the handle */
+		}
+		.mblSliderV {
+			width: 1px;
+			border: 0px none;
+		}
+		.mblSliderH .mblSliderProgressBar {
+			background:transparent url(images/progressBarAnim.gif) repeat;
+		}
+		.mblSliderV .mblSliderHandle {
+			background:transparent url(images/sliderVthumb.png) no-repeat;
+			border-width:0px;
+			border-radius:0;
+		}
+	</style>
 </head>
 <body style="visibility:hidden;zoom:1.2;">
 	<form>

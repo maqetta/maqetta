@@ -1,13 +1,14 @@
-define(["./_base/kernel", "./_base/lang", "./_base/sniff"],
-	function(dojo, lang, has) {
-	// module:
-	//		dojo/gears
-	// summary:
-	//		TODOC
+define(["./_base/lang", "./sniff"], function(lang, has) {
 
-lang.getObject("gears", true, dojo);
+// module:
+//		dojo/gears
+// summary:
+//		TODOC
 
-dojo.gears._gearsObject = function(){
+var gears = {};
+lang.setObject("dojo.gears", gears);
+
+gears._gearsObject = function(){
 	// summary:
 	//		factory method to get a Google Gears plugin instance to
 	//		expose in the browser runtime environment, if present
@@ -48,14 +49,14 @@ dojo.gears._gearsObject = function(){
 };
 
 /*=====
-dojo.gears.available = {
+gears.available = {
 	// summary: True if client is using Google Gears
 };
 =====*/
 // see if we have Google Gears installed, and if
 // so, make it available in the runtime environment
 // and in the Google standard 'google.gears' global object
-dojo.gears.available = (!!dojo.gears._gearsObject())||0;
+gears.available = (!!gears._gearsObject())||0;
 
-return dojo.gears;
+return gears;
 });

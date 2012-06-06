@@ -1,5 +1,5 @@
-define(["../fileHandleThrottle", "../messages"], function(fht, messages) {
-	var spawn= require.nodeRequire("child_process").spawn;
+define(["../fileHandleThrottle", "../messages"], function(fht, messages){
+	var spawn = require.nodeRequire("child_process").spawn;
 	return {
 		cwd:process.cwd,
 		exit:function(code){
@@ -10,22 +10,21 @@ define(["../fileHandleThrottle", "../messages"], function(fht, messages) {
 			process.stdout.on('close', function(){
 				process.exit(code);
 			});
-			process.stdout.end();
 		},
 
 		exec:function() {
 			// signature is (command, arg1, ..., argn, errorMessage, bc, callback)
-			for(var command= arguments[0], args= [], i= 1; i<arguments.length-3; i++){
+			for(var command = arguments[0], args = [], i = 1; i<arguments.length-3; i++){
 				args.push(arguments[i]);
 			}
 			var
-				errorMessage= arguments[i++],
-				bc= arguments[i++],
-				callback= arguments[i];
+				errorMessage = arguments[i++],
+				bc = arguments[i++],
+				callback = arguments[i];
 			fht.enqueue(function(){
 				var
-					text= "",
-					process= spawn(command, args);
+					text = "",
+					process = spawn(command, args);
 				process.on("exit", function(code){
 					fht.release();
 					if(code){

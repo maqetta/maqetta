@@ -1,5 +1,10 @@
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./AreaManager"],function(dojo){
-	var di = dojo.declare(
+define(["dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"./AreaManager"
+], function(dojo, declare, domClass, domConstruct){
+	var di = declare(
 		"dojox.mdnd.DropIndicator",
 		null,
 	{
@@ -15,7 +20,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./AreaManage
 			var dropIndicator = document.createElement("div");
 			var subDropIndicator = document.createElement("div");
 			dropIndicator.appendChild(subDropIndicator);
-			dojo.addClass(dropIndicator, "dropIndicator");
+			domClass.add(dropIndicator, "dropIndicator");
 			this.node = dropIndicator;
 		},
 		
@@ -72,7 +77,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","./AreaManage
 				if(this.node.parentNode){
 					this.node.parentNode.removeChild(this.node);
 				}
-				dojo._destroyElement(this.node);
+				domConstruct.destroy(this.node);
 				delete this.node;
 			}
 		}

@@ -208,14 +208,14 @@
 		</tr>
 		<tr>
 			<td class="layout">attributes</td>
-			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit.form.CheckBox" data-dojo-props='checked: true, "class":"mblRedButton", value:"something"'/></td>
-			<td class="layout"><input type="checkbox" value="something" class="mblRedButton" checked id="mobile_attributes" dojoType="dojox.mobile.CheckBox"/></td>
+			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit/form/CheckBox" data-dojo-props='checked: true, "class":"mblRedButton", value:"something"'/></td>
+			<td class="layout"><input type="checkbox" value="something" class="mblRedButton" checked id="mobile_attributes" dojoType="dojox/mobile/CheckBox"/></td>
 		</tr>
 		<tr>
 		<tr>
 			<td class="layout">Events</td>
-			<td class="layout"><input id="dijit_events" data-dojo-type="dijit.form.CheckBox" data-dojo-props='onClick:function(){ return true; }' /></td>
-			<td class="layout"><input type="checkbox" id="mobile_events" data-dojo-type="dojox.mobile.CheckBox" data-dojo-props='onClick:function(){ return true; }' /></td>
+			<td class="layout"><input id="dijit_events" data-dojo-type="dijit/form/CheckBox" data-dojo-props='onClick:function(){ return true; }' /></td>
+			<td class="layout"><input type="checkbox" id="mobile_events" data-dojo-type="dojox/mobile/CheckBox" data-dojo-props='onClick:function(){ return true; }' /></td>
 		</tr>
 		<tr>
 			<td class="layout">Programmatic</td>
@@ -225,71 +225,71 @@
 	</table>
 	<div id="onClickTests" style="font-family:monospace;">
 		before click: checked=true,&nbsp; onclick handler: return false, after click:
-			<input id="t1" type="checkbox" checked onclick="return false">
-			<input dojoType="dijit.form.CheckBox" id="w1" type="checkbox" checked onclick="return false"><br>
+			<input id="t1" type="checkbox" checked onclick="return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w1" type="checkbox" checked onclick="return false;"><br>
 		before click: checked=true,&nbsp; onclick handler: return true,&nbsp;  after click:
-			<input id="t2" type="checkbox" checked onclick="return true">
-			<input dojoType="dijit.form.CheckBox" id="w2" type="checkbox" checked onclick="return true"><br>
+			<input id="t2" type="checkbox" checked onclick="return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w2" type="checkbox" checked onclick="return true;"><br>
 		before click: checked=true,&nbsp; onclick handler: return false, after click:
-			<input id="t3" type="checkbox" checked onclick="return false">
-			<input dojoType="dijit.form.CheckBox" id="w3" type="checkbox" checked onclick="return false"><br>
+			<input id="t3" type="checkbox" checked onclick="return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w3" type="checkbox" checked onclick="return false;"><br>
 		before click: checked=true,&nbsp; onclick handler: return true,&nbsp;  after click:
-			<input id="t4" type="checkbox" checked onclick="return true">
-			<input dojoType="dijit.form.CheckBox" id="w4" type="checkbox" checked onclick="return true"><br>
+			<input id="t4" type="checkbox" checked onclick="return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w4" type="checkbox" checked onclick="return true;"><br>
 		before click: checked=false, onclick handler: return false, after click:
-			<input id="t5" type="checkbox" onclick="return false">
-			<input dojoType="dijit.form.CheckBox" id="w5" type="checkbox" onclick="return false"><br>
+			<input id="t5" type="checkbox" onclick="return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w5" type="checkbox" onclick="return false;"><br>
 		before click: checked=false, onclick handler: return true,&nbsp;  after click:
-			<input id="t6" type="checkbox" onclick="return true">
-			<input dojoType="dijit.form.CheckBox" id="w6" type="checkbox" onclick="return true"><br>
+			<input id="t6" type="checkbox" onclick="return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w6" type="checkbox" onclick="return true;"><br>
 		before click: checked=false, onclick handler: return false, after click:
-			<input id="t7" type="checkbox" onclick="return false">
-			<input dojoType="dijit.form.CheckBox" id="w7" type="checkbox" onclick="return false"><br>
+			<input id="t7" type="checkbox" onclick="return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w7" type="checkbox" onclick="return false;"><br>
 		before click: checked=false, onclick handler: return true,&nbsp;  after click:
-			<input id="t8" type="checkbox" onclick="return true">
-			<input dojoType="dijit.form.CheckBox" id="w8" type="checkbox" onclick="return true"><br>
+			<input id="t8" type="checkbox" onclick="return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w8" type="checkbox" onclick="return true;"><br>
 		before click: checked=true,&nbsp; onclick handler: no return, after click:
-			<input id="t11" type="checkbox" checked onclick="return">
-			<input dojoType="dijit.form.CheckBox" id="w11" type="checkbox" checked onclick="return"><br>
+			<input id="t11" type="checkbox" checked onclick="return;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w11" type="checkbox" checked onclick="return;"><br>
 		before click: checked=false, onclick handler: no return, after click:
-			<input id="t15" type="checkbox" onclick="return">
-			<input dojoType="dijit.form.CheckBox" id="w15" type="checkbox" onclick="return"><br>
+			<input id="t15" type="checkbox" onclick="return;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w15" type="checkbox" onclick="return;"><br>
 		before click: checked=true,&nbsp; onclick handler: checked=false and return false, after click:
-			<input id="t101" type="checkbox" checked onclick="this.checked=false;return false">
-			<input dojoType="dijit.form.CheckBox" id="w101" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',false);return false"><br>
+			<input id="t101" type="checkbox" checked onclick="this.checked=false;return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w101" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',false);return false;"><br>
 		before click: checked=true,&nbsp; onclick handler: checked=false and return true,&nbsp;  after click:
-			<input id="t102" type="checkbox" checked onclick="this.checked=false;return true">
-			<input dojoType="dijit.form.CheckBox" id="w102" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',false);return true"><br>
+			<input id="t102" type="checkbox" checked onclick="this.checked=false;return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w102" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',false);return true;"><br>
 		before click: checked=true,&nbsp; onclick handler: checked=true&nbsp;  and return false, after click:
-			<input id="t103" type="checkbox" checked onclick="this.checked=true;return false">
-			<input dojoType="dijit.form.CheckBox" id="w103" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',true);return false"><br>
+			<input id="t103" type="checkbox" checked onclick="this.checked=true;return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w103" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',true);return false;"><br>
 		before click: checked=true,&nbsp; onclick handler: checked=true&nbsp;  and return true,&nbsp;  after click:
-			<input id="t104" type="checkbox" checked onclick="this.checked=true;return true">
-			<input dojoType="dijit.form.CheckBox" id="w104" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',true);return true"><br>
+			<input id="t104" type="checkbox" checked onclick="this.checked=true;return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w104" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',true);return true;"><br>
 		before click: checked=false, onclick handler: checked=false and return false, after click:
-			<input id="t105" type="checkbox" onclick="this.checked=false;return false">
-			<input dojoType="dijit.form.CheckBox" id="w105" type="checkbox" onclick="dijit.byId(this.id).set('checked',false);return false"><br>
+			<input id="t105" type="checkbox" onclick="this.checked=false;return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w105" type="checkbox" onclick="dijit.byId(this.id).set('checked',false);return false;"><br>
 		before click: checked=false, onclick handler: checked=false and return true,&nbsp;  after click:
-			<input id="t106" type="checkbox" onclick="this.checked=false;return true">
-			<input dojoType="dijit.form.CheckBox" id="w106" type="checkbox" onclick="dijit.byId(this.id).set('checked',false);return true"><br>
+			<input id="t106" type="checkbox" onclick="this.checked=false;return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w106" type="checkbox" onclick="dijit.byId(this.id).set('checked',false);return true;"><br>
 		before click: checked=false, onclick handler: checked=true&nbsp;  and return false, after click:
-			<input id="t107" type="checkbox" onclick="this.checked=true;return false">
-			<input dojoType="dijit.form.CheckBox" id="w107" type="checkbox" onclick="dijit.byId(this.id).set('checked',true);return false"><br>
+			<input id="t107" type="checkbox" onclick="this.checked=true;return false;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w107" type="checkbox" onclick="dijit.byId(this.id).set('checked',true);return false;"><br>
 		before click: checked=false, onclick handler: checked=true&nbsp;  and return true,&nbsp;  after click:
-			<input id="t108" type="checkbox" onclick="this.checked=true;return true">
-			<input dojoType="dijit.form.CheckBox" id="w108" type="checkbox" onclick="dijit.byId(this.id).set('checked',true);return true"><br>
+			<input id="t108" type="checkbox" onclick="this.checked=true;return true;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w108" type="checkbox" onclick="dijit.byId(this.id).set('checked',true);return true;"><br>
 		before click: checked=true,&nbsp; onclick handler: checked=false and no return, after click:
-			<input id="t111" type="checkbox" checked onclick="this.checked=false;return">
-			<input dojoType="dijit.form.CheckBox" id="w111" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',false);return"><br>
+			<input id="t111" type="checkbox" checked onclick="this.checked=false;return;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w111" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',false);return;"><br>
 		before click: checked=true,&nbsp; onclick handler: checked=true&nbsp;  and no return, after click:
-			<input id="t113" type="checkbox" checked onclick="this.checked=true;return">
-			<input dojoType="dijit.form.CheckBox" id="w113" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',true);return"><br>
+			<input id="t113" type="checkbox" checked onclick="this.checked=true;return;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w113" type="checkbox" checked onclick="dijit.byId(this.id).set('checked',true);return;"><br>
 		before click: checked=false, onclick handler: checked=false and no return, after click:
-			<input id="t115" type="checkbox" onclick="this.checked=false;return">
-			<input dojoType="dijit.form.CheckBox" id="w115" type="checkbox" onclick="dijit.byId(this.id).set('checked',false);return"><br>
+			<input id="t115" type="checkbox" onclick="this.checked=false;return;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w115" type="checkbox" onclick="dijit.byId(this.id).set('checked',false);return;"><br>
 		before click: checked=false, onclick handler: checked=true&nbsp;  and no return, after click:
-			<input id="t117" type="checkbox" onclick="this.checked=true;return">
-			<input dojoType="dijit.form.CheckBox" id="w117" type="checkbox" onclick="dijit.byId(this.id).set('checked',true);return"><br>
+			<input id="t117" type="checkbox" onclick="this.checked=true;return;">
+			<input data-dojo-type="dijit/form/CheckBox" id="w117" type="checkbox" onclick="dijit.byId(this.id).set('checked',true);return;"><br>
 	</div>
 </body>
 </html>

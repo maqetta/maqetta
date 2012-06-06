@@ -31,9 +31,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_fetch_all_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of fetching all atom entries
-				//	description:
+				// description:
 				//		Simple test of fetching all atom entries
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -53,9 +53,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_fetch_all_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of fetching all atom entries
-				//	description:
+				// description:
 				//		Simple test of fetching all atom entries
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -75,9 +75,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_fetch_all_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of fetching all atom entries
-				//	description:
+				// description:
 				//		Simple test of fetching all atom entries
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -97,9 +97,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_fetch_paging_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of fetching one xml items through an XML element called isbn
-				//	description:
+				// description:
 				//		Simple test of fetching one xml items through an XML element called isbn
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 
@@ -162,9 +162,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_fetch_paging_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of fetching one xml items through an XML element called isbn
-				//	description:
+				// description:
 				//		Simple test of fetching one xml items through an XML element called isbn
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 
@@ -227,9 +227,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_fetch_paging_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of fetching one xml items through an XML element called isbn
-				//	description:
+				// description:
 				//		Simple test of fetching one xml items through an XML element called isbn
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 
@@ -292,9 +292,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getLabel',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getLabel function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabel function against a store set that has a label defined.
 				//		This test will be the same for all three types, so not bothering.
 	
@@ -317,9 +317,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getLabelAttributes',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 				//		This test will be the same for all three types, so not bothering.
 	
@@ -343,9 +343,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getValue_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValue API
-				//	description:
+				// description:
 				//		Simple test of the getValue API
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -372,9 +372,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getValue_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValue API
-				//	description:
+				// description:
 				//		Simple test of the getValue API
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -401,9 +401,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getValue_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValue API
-				//	description:
+				// description:
 				//		Simple test of the getValue API
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -432,9 +432,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getValues_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValues API
-				//	description:
+				// description:
 				//		Simple test of the getValues API
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -460,9 +460,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getValues_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValues API
-				//	description:
+				// description:
 				//		Simple test of the getValues API
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -488,9 +488,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getValues_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValues API
-				//	description:
+				// description:
 				//		Simple test of the getValues API
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -516,9 +516,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_isItem_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItem API
-				//	description:
+				// description:
 				//		Simple test of the isItem API
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -543,9 +543,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_isItem_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItem API
-				//	description:
+				// description:
 				//		Simple test of the isItem API
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -570,9 +570,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_isItem_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItem API
-				//	description:
+				// description:
 				//		Simple test of the isItem API
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -597,9 +597,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_isItem_multistore',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItem API across multiple store instances.
-				//	description:
+				// description:
 				//		Simple test of the isItem API across multiple store instances.
 				var store1 = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 				var store2 = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
@@ -631,9 +631,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_hasAttribute_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute API
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute API
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -657,9 +657,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_hasAttribute_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute API
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute API
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -683,9 +683,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_hasAttribute_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute API
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute API
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -709,9 +709,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_containsValue_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue API
-				//	description:
+				// description:
 				//		Simple test of the containsValue API
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -734,9 +734,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_containsValue_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue API
-				//	description:
+				// description:
 				//		Simple test of the containsValue API
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -759,9 +759,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_containsValue_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue API
-				//	description:
+				// description:
 				//		Simple test of the containsValue API
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -787,9 +787,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_sortDescending_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in descending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in descending order.
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -841,9 +841,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_sortDescending_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in descending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in descending order.
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -895,9 +895,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_sortDescending_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in descending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in descending order.
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -948,9 +948,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_sortAscending_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in descending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in descending order.
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -1001,9 +1001,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_sortAscending_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in descending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in descending order.
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -1054,9 +1054,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_sortAscending_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in descending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in descending order.
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -1107,9 +1107,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_isItemLoaded_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItemLoaded API
-				//	description:
+				// description:
 				//		Simple test of the isItemLoaded API
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 	
@@ -1131,9 +1131,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_isItemLoaded_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItemLoaded API
-				//	description:
+				// description:
 				//		Simple test of the isItemLoaded API
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 	
@@ -1155,9 +1155,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_isItemLoaded_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItemLoaded API
-				//	description:
+				// description:
 				//		Simple test of the isItemLoaded API
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 	
@@ -1179,9 +1179,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getFeatures',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getFeatures function of the store
-				//	description:
+				// description:
 				//		Simple test of the getFeatures function of the store
 	
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
@@ -1197,9 +1197,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getAttributes_atom',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes API
-				//	description:
+				// description:
 				//		Simple test of the getAttributes API
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();
 
@@ -1224,9 +1224,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getAttributes_rss',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes API
-				//	description:
+				// description:
 				//		Simple test of the getAttributes API
 				var store = dojox.data.tests.stores.OpenSearchStore.getRSSStore();
 
@@ -1251,9 +1251,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_getAttributes_html',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes API
-				//	description:
+				// description:
 				//		Simple test of the getAttributes API
 				var store = dojox.data.tests.stores.OpenSearchStore.getHTMLStore();
 
@@ -1278,9 +1278,9 @@ doh.register("dojox.data.tests.stores.OpenSearchStore",
 			name: 'testReadAPI_functionConformance',
 			timeout: 20000,
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-				//	description:
+				// description:
 				//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 	
 				var store = dojox.data.tests.stores.OpenSearchStore.getAtomStore();

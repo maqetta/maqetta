@@ -8,9 +8,9 @@
 }
 
 .alertDialogBody {
-	border: 1px solid #ADAAAD;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
+	border: 1px solid #adaaad;
+	border-radius: 10px;
+	/* 1.8  removed */
 	background-color: white;
 	margin-left: 2px;
 	margin-right: 4px;
@@ -20,10 +20,10 @@
 	height: 42px;
 	margin: 0px;
 	padding: 0px;
-	background-color: #889BB3;
-	background: -webkit-gradient(linear, left top, left bottom, from(#B0BCCD), to(#6D84A2), color-stop(0.5, #889BB3), color-stop(0.5, #8195AF));
-	border-top: 1px solid #CDD5DF;
-	border-bottom: 1px solid #2D3642;
+	background-color: #889bb3;
+	background: -webkit-gradient(linear, left top, left bottom, from(#b0bccd), to(#6d84a2), color-stop(0.5, #889bb3), color-stop(0.5, #8195af));
+	border-top: 1px solid #cdd5df;
+	border-bottom: 1px solid #2d3642;
 	font-family: Helvetica;
 	font-size: 20px;
 	color: white;
@@ -154,7 +154,7 @@
 
 .listSelector {
 	position: absolute;
-	-webkit-border-radius: 10px;
+	border-radius: 10px;
 	-moz-border-radius: 10px;
 	border: 1px solid #666;
 	background-color: #ccc;
@@ -257,7 +257,7 @@ input {
 	overflow: hidden;
 	position: absolute;
 	-webkit-background-size: 100% 100%;
-	-webkit-border-radius: 5px;
+	border-radius: 5px;
 	width: 90px;
 	height: 90px;
 	z-index: 5;
@@ -341,9 +341,9 @@ input {
 }
 
 /* Back Button */
-.mblNativeBack .mblArrowButtonHead,
-.mblNativeBack .mblArrowButtonBody,
-.mblNativeBack .mblArrowButtonNeck {
+.mblNativeBack .mblBackButtonHead, /* 1.8 */
+.mblNativeBack .mblBackButtonBody, /* 1.8 */
+.mblNativeBack .mblBackButtonNeck { /* 1.8 */
 	display: none;
 }
 

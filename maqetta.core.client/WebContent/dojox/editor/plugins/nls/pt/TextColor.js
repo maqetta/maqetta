@@ -1,8 +1,6 @@
 define(
-//begin v1.x content
 ({
-	"setButtonText": "Definir",
+	"setButtonText": "Configurar",
 	"cancelButtonText": "Cancelar"
 })
-//end v1.x content
 );

@@ -220,7 +220,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: fetchItemByIdentity()",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the fetchItemByIdentity function of the store.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -244,9 +244,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: fetchItemByIdentity() notFound",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the fetchItemByIdentity function of the store.
-				//	description:
+				// description:
 				//		Simple test of the fetchItemByIdentity function of the store.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -266,9 +266,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: getIdentityAttributes()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getIdentityAttributes function.
-				//	description:
+				// description:
 				//		Simple test of the getIdentityAttributes function.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -292,9 +292,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: fetchItemByIdentity() commentFilteredJson",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the fetchItemByIdentity function of the store.
-				//	description:
+				// description:
 				//		Simple test of the fetchItemByIdentity function of the store.
 				//		This tests loading a comment-filtered json file so that people using secure
 				//		data with this store can bypass the JavaSceipt hijack noted in Fortify's
@@ -322,9 +322,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: fetchItemByIdentity() nullValue",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the fetchItemByIdentity function of the store, checling a null value.
-				//	description:
+				// description:
 				//		Simple test of the fetchItemByIdentity function of the store, checking a null value.
 				//		This tests handling attributes in json that were defined as null properly.
 				//		Introduced because of tracker: #3153
@@ -348,9 +348,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: fetchItemByIdentity() booleanValue",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the fetchItemByIdentity function of the store, checking a boolean value.
-				//	description:
+				// description:
 				//		Simple test of the fetchItemByIdentity function of the store, checking a boolean value.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries_withBoolean"));
 	
@@ -374,9 +374,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: fetchItemByIdentity() withoutSpecifiedIdInData",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of bug #4691, looking up something by assigned id, not one specified in the JSON data.
-				//	description:
+				// description:
 				//		Simple test of bug #4691, looking up something by assigned id, not one specified in the JSON data.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries_withoutid"));
 	
@@ -398,9 +398,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: getIdentity()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getIdentity function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getIdentity function of the store.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -421,9 +421,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: getIdentity() withoutSpecifiedId",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the #4691 bug
-				//	description:
+				// description:
 				//		Simple test of the #4691 bug
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries_withoutid"));
 	
@@ -444,9 +444,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: getIdentity() withoutSpecifiedId, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the #4691 bug
-				//	description:
+				// description:
 				//		Simple test of the #4691 bug
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries_withoutid"));
 	
@@ -467,9 +467,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() all",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -491,9 +491,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() abort",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch abort on AndOrWriteStore.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch abort on AndOrWriteStore.
 				if(dojo.isBrowser){
 					var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
@@ -528,9 +528,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() one",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -553,9 +553,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() one, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -578,9 +578,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() shallow",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of only toplevel items
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of only toplevel items.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("geography_hierarchy_small"));
 				
@@ -604,9 +604,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() shallow, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of only toplevel items
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of only toplevel items.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("geography_hierarchy_small"));
 				
@@ -630,9 +630,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() Multiple",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
-				//	description:
+				// description:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("geography_hierarchy_small"));
 				
@@ -674,9 +674,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() Multiple, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
-				//	description:
+				// description:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("geography_hierarchy_small"));
 				
@@ -718,9 +718,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() MultipleMixedFetch",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
-				//	description:
+				// description:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
 				//		Tests an item fetch and an identity fetch.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
@@ -763,9 +763,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() MultipleMixedFetch, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
-				//	description:
+				// description:
 				//		Tests that multiple fetches at the same time queue up properly and do not clobber each other on initial load.
 				//		Tests an item fetch and an identity fetch.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
@@ -808,9 +808,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() deep",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items (including children (nested))
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items (including children (nested))
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("geography_hierarchy_small"));
 				
@@ -835,9 +835,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() deep, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items (including children (nested))
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items (including children (nested))
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("geography_hierarchy_small"));
 				
@@ -862,11 +862,11 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() hierarchy off",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items with hierarchy disabled
 				//		This should turn off processing child objects as data store items.  It will still process
 				//		references and type maps.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items with hierarchy disabled
 				//		This should turn off processing child objects as data store items.  It will still process
 				//		references and type maps.
@@ -919,11 +919,11 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() hierarchy off refs still parse",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items with hierarchy disabled
 				//		This should turn off processing child objects as data store items.  It will still process
 				//		references and type maps.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of all items with hierarchy disabled
 				//		This should turn off processing child objects as data store items.  It will still process
 				//		references and type maps.
@@ -977,9 +977,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() one_commentFilteredJson",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				//		This tests loading a comment-filtered json file so that people using secure
 				//		data with this store can bypass the JavaSceipt hijack noted in Fortify's
@@ -1007,9 +1007,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() one_commentFilteredJson, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				//		This tests loading a comment-filtered json file so that people using secure
 				//		data with this store can bypass the JavaSceipt hijack noted in Fortify's
@@ -1037,9 +1037,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() withNull",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item where some attributes are null.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item where some attributes are null.
 				//		Introduced because of tracker: #3153
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries_withNull"));
@@ -1063,9 +1063,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() withNull, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item where some attributes are null.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item where some attributes are null.
 				//		Introduced because of tracker: #3153
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries_withNull"));
@@ -1089,9 +1089,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() all_streaming",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1127,9 +1127,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() paging",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
-				//	description:
+				// description:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -1199,9 +1199,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() with MultiType Match",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
-				//	description:
+				// description:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
 				//		Introduced because of tracker: #4931
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("data_multitype"));
@@ -1225,9 +1225,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() with MultiType Match, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
-				//	description:
+				// description:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
 				//		Introduced because of tracker: #4931
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("data_multitype"));
@@ -1251,9 +1251,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() with MultiType, MultiValue Match",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
-				//	description:
+				// description:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
 				//		Introduced because of tracker: #4931
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("data_multitype"));
@@ -1277,9 +1277,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() with MultiType, MultiValue Match, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
-				//	description:
+				// description:
 				//		Simple test of a basic fetch againct an attribute that has different types for the value across items
 				//		Introduced because of tracker: #4931
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("data_multitype"));
@@ -1303,9 +1303,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getLabel()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getLabel function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabel function against a store set that has a label defined.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -1331,9 +1331,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getLabel(), complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getLabel function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabel function against a store set that has a label defined.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -1359,9 +1359,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getLabelAttributes()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -1387,9 +1387,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getLabelAttributes(), complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -1415,9 +1415,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getValue()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1439,9 +1439,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getValues()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getValues function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValues function of the store.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1465,9 +1465,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: isItem()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItem function of the store
-				//	description:
+				// description:
 				//		Simple test of the isItem function of the store
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1489,11 +1489,11 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: isItem() multistore",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isItem function of the store
 				//		to verify two different store instances do not accept
 				//		items from each other.
-				//	description:
+				// description:
 				//		Simple test of the isItem function of the store
 				//		to verify two different store instances do not accept
 				//		items from each other.
@@ -1532,9 +1532,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: hasAttribute()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute function of the store
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute function of the store
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1565,9 +1565,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: containsValue()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue function of the store
-				//	description:
+				// description:
 				//		Simple test of the containsValue function of the store
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1599,9 +1599,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getAttributes()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes function of the store
-				//	description:
+				// description:
 				//		Simple test of the getAttributes function of the store
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1628,9 +1628,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: getFeatures()",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getFeatures function of the store
-				//	description:
+				// description:
 				//		Simple test of the getFeatures function of the store
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1642,9 +1642,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch0",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of everything starting with lowercase e
-				//	description:
+				// description:
 				//		Function to test pattern matching of everything starting with lowercase e
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1677,9 +1677,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch0, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of everything starting with lowercase e
-				//	description:
+				// description:
 				//		Function to test pattern matching of everything starting with lowercase e
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -1712,9 +1712,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch1",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of everything with $ in it.
-				//	description:
+				// description:
 				//		Function to test pattern matching of everything with $ in it.
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -1760,9 +1760,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch1, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of everything with $ in it.
-				//	description:
+				// description:
 				//		Function to test pattern matching of everything with $ in it.
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -1808,9 +1808,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch2",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test exact pattern match
-				//	description:
+				// description:
 				//		Function to test exact pattern match
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -1856,9 +1856,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch2, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test exact pattern match
-				//	description:
+				// description:
 				//		Function to test exact pattern match
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -1904,9 +1904,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch_caseSensitive",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of a pattern case-sensitively
-				//	description:
+				// description:
 				//		Function to test pattern matching of a pattern case-sensitively
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -1947,9 +1947,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch_caseSensitive, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of a pattern case-sensitively
-				//	description:
+				// description:
 				//		Function to test pattern matching of a pattern case-sensitively
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -1990,9 +1990,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch_caseInsensitive",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of a pattern case-insensitively
-				//	description:
+				// description:
 				//		Function to test pattern matching of a pattern case-insensitively
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2033,9 +2033,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() patternMatch_caseInsensitive, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test pattern matching of a pattern case-insensitively
-				//	description:
+				// description:
 				//		Function to test pattern matching of a pattern case-insensitively
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2076,9 +2076,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortNumeric",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting numerically.
-				//	description:
+				// description:
 				//		Function to test sorting numerically.
 				
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2129,9 +2129,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortNumericDescending",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting numerically.
-				//	description:
+				// description:
 				//		Function to test sorting numerically.
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2181,9 +2181,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortNumericWithCount",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting numerically in descending order, returning only a specified number of them.
-				//	description:
+				// description:
 				//		Function to test sorting numerically in descending order, returning only a specified number of them.
 			
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2236,9 +2236,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortAlphabetic",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting alphabetic ordering.
-				//	description:
+				// description:
 				//		Function to test sorting alphabetic ordering.
 			
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2303,9 +2303,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortAlphabeticDescending",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting alphabetic ordering in descending mode.
-				//	description:
+				// description:
 				//		Function to test sorting alphabetic ordering in descending mode.
 			
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2371,9 +2371,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortDate",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting date.
-				//	description:
+				// description:
 				//		Function to test sorting date.
 			
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2426,9 +2426,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortDateDescending",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting date in descending order.
-				//	description:
+				// description:
 				//		Function to test sorting date in descending order.
 			
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2482,9 +2482,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortMultiple",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting on multiple attributes.
-				//	description:
+				// description:
 				//		Function to test sorting on multiple attributes.
 				
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2551,9 +2551,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortMultipleSpecialComparator",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting on multiple attributes with a custom comparator.
-				//	description:
+				// description:
 				//		Function to test sorting on multiple attributes with a custom comparator.
 	
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2621,9 +2621,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() sortAlphabeticWithUndefined",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test sorting alphabetic ordering.
-				//	description:
+				// description:
 				//		Function to test sorting alphabetic ordering.
 			
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
@@ -2676,10 +2676,10 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: errorCondition_idCollision_inMemory",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the errors thrown when there is an id collision in the data.
 				//		Added because of tracker: #2546
-				//	description:
+				// description:
 				//		Simple test of the errors thrown when there is an id collision in the data.
 				//		Added because of tracker: #2546
 	
@@ -2710,10 +2710,10 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: errorCondition_idCollision_xhr",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the errors thrown when there is an id collision in the data.
 				//		Added because of tracker: #2546
-				//	description:
+				// description:
 				//		Simple test of the errors thrown when there is an id collision in the data.
 				//		Added because of tracker: #2546
 	
@@ -2763,7 +2763,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: custom_datatype_Color_SimpleMapping",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test using literal values with custom datatypes
 				var dataset = {
 					identifier:'name',
@@ -2795,7 +2795,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: custom_datatype_Color_GeneralMapping",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test using literal values with custom datatypes
 				var dataset = {
 					identifier:'name',
@@ -2942,9 +2942,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: functionConformance",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-				//	description:
+				// description:
 				//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 				var testStore = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				var readApi = new dojo.data.api.Read();
@@ -2970,9 +2970,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Identity API: functionConformance",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
-				//	description:
+				// description:
 				//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
 				var testStore = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				var identityApi = new dojo.data.api.Identity();
@@ -3001,9 +3001,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() multiple, OR, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -3026,9 +3026,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() multiple, AND(OR, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -3051,9 +3051,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() multiple, AND/OR, as json object, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -3076,9 +3076,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() multiple, AND/OR, as json object, complex, with extra attrs",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -3101,9 +3101,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() multiple, AND/OR, as json object, complex, with extra attrs and spaces",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -3130,9 +3130,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch() multiple, AND/OR, as quoted json object, complex",
 	 		runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on AndOrWriteStore of a single item.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				
@@ -3155,7 +3155,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: close (clearOnClose: true, reset url.)",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test the close api properly clears the store for reload when clearOnClose is set.
 				if (dojo.isBrowser) {
 					var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
@@ -3211,7 +3211,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: fetch, close (clearOnClose: true, reset url.)",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test the close api properly clears the store for reload when clearOnClose is set.
 				if (dojo.isBrowser) {
 					var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
@@ -3269,7 +3269,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: close (clearOnClose: true, reset _jsonFileUrl.)",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test the close api properly clears the store for reload when clearOnClose is set.
 				if (dojo.isBrowser) {
 					var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
@@ -3325,9 +3325,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Read API: close (clearOnClose: true, reset data.)",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Function to test that clear on close and reset of data works.
-				//	description:
+				// description:
 				//		Function to test that clear on close and reset of data works.
 				var store = new dojox.data.AndOrWriteStore({data: { identifier: "uniqueId",
 						items: [ {uniqueId: 1, value:"foo*bar"},
@@ -3393,9 +3393,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API:  getFeatures",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the getFeatures function of the store
-				//	description:
+				// description:
 				//		Simple test of the getFeatures function of the store
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3423,9 +3423,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API:  setValue",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the setValue API
-				//	description:
+				// description:
 				//		Simple test of the setValue API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3466,9 +3466,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: setValues",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the setValues API
-				//	description:
+				// description:
 				//		Simple test of the setValues API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3497,9 +3497,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: unsetAttribute",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the unsetAttribute API
-				//	description:
+				// description:
 				//		Simple test of the unsetAttribute API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3526,9 +3526,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: newItem",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the newItem API
-				//	description:
+				// description:
 				//		Simple test of the newItem API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3565,9 +3565,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: newItem with a parent assignment",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the newItem API with a parent assignment
-				//	description:
+				// description:
 				//		Simple test of the newItem API with a parent assignment
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3624,9 +3624,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: newItem with a parent assignment multiple times",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the newItem API with a parent assignment multiple times.
-				//	description:
+				// description:
 				//		Simple test of the newItem API with a parent assignment multiple times.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3691,9 +3691,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: deleteItem",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the deleteItem API
-				//	description:
+				// description:
 				//		Simple test of the deleteItem API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3725,9 +3725,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: isDirty",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the isDirty API
-				//	description:
+				// description:
 				//		Simple test of the isDirty API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3751,9 +3751,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: revert",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the revert API
-				//	description:
+				// description:
 				//		Simple test of the revert API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3791,9 +3791,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: save",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the save API
-				//	description:
+				// description:
 				//		Simple test of the save API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3815,9 +3815,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: save, verify state",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the save API
-				//	description:
+				// description:
 				//		Simple test of the save API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -3842,9 +3842,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: saveEverything",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the save API
-				//	description:
+				// description:
 				//		Simple test of the save API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				var egypt;
@@ -3887,9 +3887,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: saveEverything with Date type",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the save API	with a non-atomic type (Date) that has a type mapping.
-				//	description:
+				// description:
 				//		Simple test of the save API	with a non-atomic type (Date) that has a type mapping.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 
@@ -3931,9 +3931,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: saveEverything, with custom color simple type",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the save API	with a non-atomic type (dojo.Color) that has a type mapping.
-				//	description:
+				// description:
 				//		Simple test of the save API	with a non-atomic type (dojo.Color) that has a type mapping.
 	
 				//Set up the store basics:  What data it has, and what to do when save is called for saveEverything
@@ -3989,9 +3989,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: saveEverything, with custom color type general",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the save API	with a non-atomic type (dojo.Color) that has a type mapping.
-				//	description:
+				// description:
 				//		Simple test of the save API	with a non-atomic type (dojo.Color) that has a type mapping.
 	
 				//Set up the store basics:  What data it has, and what to do when save is called for saveEverything
@@ -4055,7 +4055,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: newItem, revert",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Test for bug #5357.  Ensure that the revert properly nulls the identity position
 				//      for a new item after revert.
 				var args = {data: {
@@ -4084,9 +4084,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: newItem, modify revert",
 			runTest: function(){
-				//	summary:
+				// summary:
 				//		Test of a new item, modify it, then revert, to ensure the state remains consistent.  Added due to #9022.
-				//	description:
+				// description:
 				//		Test of a new item, modify it, then revert, to ensure the state remains consistent.  Added due to #9022.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 
@@ -4121,9 +4121,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: newItem, modify, delete, revert",
 			runTest: function(){
-				//	summary:
+				// summary:
 				//		Test of a new item, modify it, delete it, then revert, to ensure the state remains consistent.  Added due to #9022.
-				//	description:
+				// description:
 				//		Test of a new item, modify it, delete it, then revert, to ensure the state remains consistent.  Added due to #9022.
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				var i;
@@ -4195,9 +4195,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: onSet notification",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the onSet API
-				//	description:
+				// description:
 				//		Simple test of the onSet API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -4226,9 +4226,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: onNew notification",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the onNew API
-				//	description:
+				// description:
 				//		Simple test of the onNew API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -4247,9 +4247,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: onDelete notification",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test of the onDelete API
-				//	description:
+				// description:
 				//		Simple test of the onDelete API
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 	
@@ -4275,9 +4275,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: Read API conformance",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-				//	description:
+				// description:
 				//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 				var testStore = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				var readApi = new dojo.data.api.Read();
@@ -4300,9 +4300,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: Write API conformance",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
-				//	description:
+				// description:
 				//		Simple test write API conformance.  Checks to see all declared functions are actual functions on the instances.
 				var testStore = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				var writeApi = new dojo.data.api.Write();
@@ -4325,9 +4325,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: Notification API conformance",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test Notification API conformance.  Checks to see all declared functions are actual functions on the instances.
-				//	description:
+				// description:
 				//		Simple test Notification API conformance.  Checks to see all declared functions are actual functions on the instances.
 				var testStore = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries"));
 				var api = new dojo.data.api.Notification();
@@ -4350,7 +4350,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: Identity, auto-creation when missing",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Test for bug #3873. Given a datafile that does not specify an
 				//		identifier, make sure AndOrWriteStore auto-creates identities
 				//		that are unique even after calls to deleteItem() and newItem()
@@ -4406,7 +4406,7 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: Identity, auto-creation when missing, revert",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Test for bug #4691  Given a datafile that does not specify an
 				//		identifier, make sure AndOrWriteStore auto-creates identities
 				//		that are unique even after calls to deleteItem() and newItem()
@@ -4469,9 +4469,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, check references",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify the references were properly resolved.
-				//	description:
+				// description:
 				//		Simple test to verify the references were properly resolved.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4541,9 +4541,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, delete referenced item",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify the references were properly deleted.
-				//	description:
+				// description:
 				//		Simple test to verify the references were properly deleted.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4599,9 +4599,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, delete referenced item, then revert",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify the references were properly deleted.
-				//	description:
+				// description:
 				//		Simple test to verify the references were properly deleted.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4642,10 +4642,10 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, delete multiple items with references and revert",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify that a flow of deleting items with references and reverting does not damage the internal structure.
 				//		Created for tracker bug: #5743
-				//	description:
+				// description:
 				//		Simple test to verify that a flow of deleting items with references and reverting does not damage the internal structure.
 				//		Created for tracker bug: #5743
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("countries_references"));
@@ -4688,9 +4688,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, remove reference from attribute",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify the reference removal updates the internal map.
-				//	description:
+				// description:
 				//		Simple test to verify the reference removal updates the internal map.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4735,9 +4735,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, delete referenced item non-parent",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify the references to a non-parent item was properly deleted.
-				//	description:
+				// description:
 				//		Simple test to verify the references to a non-parent item was properly deleted.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4792,9 +4792,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, add reference to attribute",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify the reference additions can happen.
-				//	description:
+				// description:
 				//		Simple test to verify the reference additions can happen.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4837,9 +4837,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, new item with parent reference",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify that newItems with a parent properly record the parent's reference in the map.
-				//	description:
+				// description:
 				//		Simple test to verify that newItems with a parent properly record the parent's reference in the map.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4881,9 +4881,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, new item with reference to existing item",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify that a new item with references to existing items properly record the references in the map.
-				//	description:
+				// description:
 				//		Simple test to verify that a new item with references to existing items properly record the references in the map.
 			
 				var store = new dojox.data.AndOrWriteStore(dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity"));
@@ -4929,9 +4929,9 @@ dojox.data.tests.stores.AndOrWriteStore.getTests = function(){
 		{
 			name: "Write API: reference integrity, disable reference integrity",
 			runTest: function(t){
-				//	summary:
+				// summary:
 				//		Simple test to verify reference integrity can be disabled.
-				//	description:
+				// description:
 				//		Simple test to verify reference integrity can be disabled.
 			
 				var params = dojox.data.tests.stores.AndOrWriteStore.getTestData("reference_integrity");

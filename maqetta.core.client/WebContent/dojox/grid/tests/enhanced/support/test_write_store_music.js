@@ -1,4 +1,3 @@
-dojo.require("dojo.data.ItemFileWriteStore");
 (function(){
 	// some sample data
 	var data = {

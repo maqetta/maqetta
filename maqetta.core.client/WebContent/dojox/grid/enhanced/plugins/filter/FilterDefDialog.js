@@ -467,13 +467,14 @@ var CriteriaBox = declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[_Wid
 		if(obj.column){
 			this._colSelect.set("value", obj.column);
 		}
-		if(obj.condition){
-			this._condSelect.set("value", obj.condition);
-		}
 		if(obj.type){
+			this._setConditionsByType(obj.type);
 			this._setValueBoxByType(obj.type);
 		}else{
 			obj.type = this.dlg.getColumnType(this._colSelect.get("value"));
+		}
+		if(obj.condition){
+			this._condSelect.set("value", obj.condition);
 		}
 		var value = obj.value || "";
 		if(value || (obj.type != "date" && obj.type != "time")){

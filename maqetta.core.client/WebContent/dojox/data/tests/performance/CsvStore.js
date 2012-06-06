@@ -4,10 +4,10 @@ dojo.require("dojo.data.util.sorter");
 
 
 dojox.data.tests.performance.CsvStore.getData = function(size){
-	//	summary:
+	// summary:
 	//		This function generates a psuedorandom dataset collected
 	//		from some templated entries.
-	//	returns:
+	// returns:
 	//		A 2000 'row' CSV dataset.
 
 	var header = "Title, Year, Producer\n";

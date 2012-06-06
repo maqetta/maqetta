@@ -17,6 +17,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/string",
+	"dojo/NodeList-dom",
 	"dojox/editor/plugins/ToolbarLineBreak",
 	"dojo/i18n!dojox/editor/plugins/nls/InsertAnchor",
 	"dojo/i18n!dijit/nls/common"
@@ -42,7 +43,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 	// linkDialogTemplate: [private] String
 	//		Template for contents of TooltipDialog to pick URL
 	_template: [
-		"<table><tr><td>",
+		"<table role='presentation'><tr><td>",
 		"<label for='${id}_anchorInput'>${anchor}</label>",
 		"</td><td>",
 		"<input dojoType='dijit.form.ValidationTextBox' required='true' " +
@@ -284,8 +285,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 			if(a && (a.nodeName && a.nodeName.toLowerCase() !== "a")){
 				// Stll nothing, one last thing to try on IE, as it might be 'img'
 				// and thus considered a control.
-				a = dojo.withGlobal(this.editor.window,
-					"getSelectedElement", dijit._editor.selection, ["a"]);
+				a = this.editor._sCall("getSelectedElement", ["a"]);
 			}
 			if(a && (a.nodeName && a.nodeName.toLowerCase() === "a")){
 				// Okay, we do have a match.  IE, for some reason, sometimes pastes before
@@ -295,8 +295,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 				if(this.editor.queryCommandEnabled("unlink")){
 					// Select all the link childent, then unlink.  The following insert will
 					// then replace the selected text.
-					dojo.withGlobal(this.editor.window,
-						"selectElementChildren", dijit._editor.selection, [a]);
+					this.editor._sCall("selectElementChildren", [a]);
 					this.editor.execCommand("unlink");
 				}
 			}
@@ -324,9 +323,9 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 		if(a && a.tagName.toLowerCase() === "a" && dojo.attr(a, "name")){
 			anchor = dojo.attr(a, "name");
 			text = a.textContent || a.innerText;
-			dojo.withGlobal(this.editor.window, "selectElement", dijit._editor.selection, [a, true]);
+			this.editor._sCall("selectElement", [a, true]);
 		}else{
-			text = dojo.withGlobal(this.editor.window, dijit._editor.selection.getSelectedText);
+			text = this.editor._sCall("getSelectedText");
 		}
 		return {anchorInput: anchor || '', textInput: text || ''}; //Object;
 	},
@@ -351,12 +350,10 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 			if(a && (a.nodeName && a.nodeName.toLowerCase() !== "a")){
 				// Stll nothing, one last thing to try on IE, as it might be 'img'
 				// and thus considered a control.
-				a = dojo.withGlobal(this.editor.window,
-					"getSelectedElement", dijit._editor.selection, ["a"]);
+				a = this.editor._sCall("getSelectedElement", ["a"]);
 			}
 		}else{
-			a = dojo.withGlobal(this.editor.window,
-				"getAncestorElement", dijit._editor.selection, ["a"]);
+			a = this.editor._sCall("getAncestorElement", ["a"]);
 		}
 		this.dropDown.reset();
 		this._setButton.set("disabled", true);
@@ -377,9 +374,7 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 			var tg = t.tagName? t.tagName.toLowerCase() : "";
 			if(tg === "a" && dojo.attr(t, "name")){
 				this.editor.onDisplayChanged();
-				dojo.withGlobal(this.editor.window,
-					 "selectElement",
-					 dijit._editor.selection, [t]);
+				this.editor._sCall("selectElement", [t]);
 				setTimeout(dojo.hitch(this, function(){
 					// Focus shift outside the event handler.
 					// IE doesn't like focus changes in event handles.
@@ -401,16 +396,8 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 		//		The node to search from.
 		// tags:
 		//		private
-		var ed = this.editor;
-		dojo.withGlobal(ed.window, function(){
-			dojo.query("a", ed.editNode).forEach(function(a){
-				if(dojo.attr(a, "name") && !dojo.attr(a, "href")){
-					if(!dojo.hasClass(a,"dijitEditorPluginInsertAnchorStyle")){
-						dojo.addClass(a, "dijitEditorPluginInsertAnchorStyle");
-					}
-				}
-			});
-		});
+
+		dojo.query("a[name]:not([href])", this.editor.editNode).addClass("dijitEditorPluginInsertAnchorStyle");
 	},
 
 	_postDomFilter: function(node){
@@ -422,16 +409,9 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", dijit._editor._Plugin, {
 		//		The node to search from.
 		// tags:
 		//		private
-		var ed = this.editor;
-		dojo.withGlobal(ed.window, function(){
-			dojo.query("a", node).forEach(function(a){
-				if(dojo.attr(a, "name") && !dojo.attr(a, "href")){
-					if(dojo.hasClass(a,"dijitEditorPluginInsertAnchorStyle")){
-						dojo.removeClass(a, "dijitEditorPluginInsertAnchorStyle");
-					}
-				}
-			});
-		});
+		if(node){	// avoid error when Editor.get("value") called before editor's iframe initialized
+			dojo.query("a[name]:not([href])", node).removeClass("dijitEditorPluginInsertAnchorStyle");
+		}
 		return node;
 	}
 });

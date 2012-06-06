@@ -80,7 +80,7 @@
 			var fontSize = "12pt";
 			var fontFamily = "monospace";
 
-			dijit.byId("theme").isRealA11y = dojo.hasClass(dojo.body(), "dijit_a11y");
+			dijit.byId("theme").isRealA11y = dojo.hasClass(dojo.body(), "dj_a11y");
 
 			var str = window.location.href.substr(window.location.href.indexOf("?")+1).split(/#/);
 			var ary  = str[0].split(/&/);
@@ -408,29 +408,29 @@
 		</tr>
 		<tr>
 			<td class="layout">TextBox</td>
-			<td class="layout"><input id="textbox" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"text", value:"text"'/></td>
+			<td class="layout"><input id="textbox" data-dojo-type="dijit/form/TextBox" data-dojo-props='type:"text", value:"text"'/></td>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
 			<td class="layout">NumberTextBox</td>
-			<td class="layout"><input id="validation" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props='type:"text", value:54, required:true'/></td>
+			<td class="layout"><input id="validation" data-dojo-type="dijit/form/NumberTextBox" data-dojo-props='type:"text", value:54, required:true'/></td>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
 			<td class="layout">FilteringSelect</td>
-			<td class="layout"><select id="combobox" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='required:true'>
+			<td class="layout"><select id="combobox" data-dojo-type="dijit/form/FilteringSelect" data-dojo-props='required:true'>
 				<option value="KY">Kentucky</option>
 			</select></td>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
 			<td class="layout">NumberSpinner</td>
-			<td class="layout"><div id="spinner" data-dojo-type="dijit.form.NumberSpinner" data-dojo-props='type:"text", value:45, required:true'></div></td>
+			<td class="layout"><div id="spinner" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props='type:"text", value:45, required:true'></div></td>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
 			<td class="layout">INPUT type=file</td>
-			<td class="layout"><input id="file" data-dojo-type="dijit.form.TextBox" data-dojo-props='type:"file" '/></td>
+			<td class="layout"><input id="file" data-dojo-type="dijit/form/TextBox" data-dojo-props='type:"file" '/></td>
 			<td style="font-size:1px;overflow:hidden;">&nbsp;</td>
 		</tr>
 		<tr>
@@ -475,14 +475,14 @@
 
 		function themeOnChange(theme){
 			if(theme == "a11y"){
-				theme="dijit_a11y";
+				theme="dj_a11y";
 			}
-			dojo.body().className = theme + ((this.isRealA11y && theme != "dijit_a11y") ? " dijit_a11y" : "");
+			dojo.body().className = theme + ((this.isRealA11y && theme != "dj_a11y") ? " dj_a11y" : "");
 		}
 	</script>
 	<table style="display:block;">
 	<tr><td class="layout" style="text-align:right;">Font family:
-	<select id="fontFamily" data-dojo-type="dijit.form.ComboBox" data-dojo-props='style:{fontSize:"14pt"}, value:"", onChange:fontFamilyOnChange'>
+	<select id="fontFamily" data-dojo-type="dijit/form/ComboBox" data-dojo-props='style:{fontSize:"14pt"}, value:"", onChange:fontFamilyOnChange'>
 		<option>monospace</option>
 		<option selected>Courier</option>
 		<option>Helvetica</option>
@@ -490,7 +490,7 @@
 		<option>system,fixed</option>
 	</select></td></tr>
 	<tr><td class="layout" style="text-align:right;">Font size:
-	<select id="fontSize" data-dojo-type="dijit.form.ComboBox" data-dojo-props='style:{fontSize:"14pt"}, value:"", onChange:function(val){ testtable.style.fontSize = val; }'>
+	<select id="fontSize" data-dojo-type="dijit/form/ComboBox" data-dojo-props='style:{fontSize:"14pt"}, value:"", onChange:function(val){ testtable.style.fontSize = val; }'>
 		<option>small</option>
 		<option>medium</option>
 		<option>xx-large</option>
@@ -501,18 +501,18 @@
 		<option>200%</option>
 	</select></td></tr>
 	<tr><td class="layout" style="text-align:right;">Padding:
-	<select id="padding" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:function(val){ testtable.className = val; }'>
+	<select id="padding" data-dojo-type="dijit/form/FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:function(val){ testtable.className = val; }'>
 		<option value="default">default</option>
 		<option value="padded">padded</option>
 		<option value="unPadded">unPadded</option>
 	</select></td></tr>
 	<tr><td class="layout" style="text-align:right;">Direction:
-	<select id="direction" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:directionOnChange'>
+	<select id="direction" data-dojo-type="dijit/form/FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:directionOnChange'>
 		<option value="ltr">left-to-right</option>
 		<option value="rtl">right-to-left</option>
 	</select></td></tr>
 	<tr><td class="layout" style="text-align:right;">Theme:
-	<select id="theme" data-dojo-type="dijit.form.FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:themeOnChange'>
+	<select id="theme" data-dojo-type="dijit/form/FilteringSelect" data-dojo-props='style:{fontSize:"14pt"}, required:false, value:"", onChange:themeOnChange'>
 		<option value="tundra">tundra</option>
 		<option value="soria">soria</option>
 		<option value="nihilo">nihilo</option>
@@ -520,6 +520,6 @@
 		<option value="a11y">a11y</option>
 	</select></td></tr>
 	</table>
-	<button data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ doh.run(); }'>Run tests</button>
+	<button data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ doh.run(); }'>Run tests</button>
 </body>
 </html>

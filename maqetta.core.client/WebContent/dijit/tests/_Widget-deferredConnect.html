@@ -60,7 +60,7 @@
 	<!--
 		"overrode" button specifies an onmousemove handler on initialization.
 	-->
-	<button id="overrode" data-dojo-type="dijit.form.Button"
+	<button id="overrode" data-dojo-type="dijit/form/Button"
 		data-dojo-props='onMouseMove:function(){ if(!overrodeMouseMoved){ console.log("\"overrode\" button: mouse moved"); } overrodeMouseMoved = true; }'>
 		overrode
 	</button>
@@ -70,11 +70,11 @@
 		This should trigger an additional dojo.connect() call from Button.focusNode.onmousemove
 		to the Button.onMouseMove empty function.
 	-->
-	<button id="connect" data-dojo-type="dijit.form.Button">
+	<button id="connect" data-dojo-type="dijit/form/Button">
 		connected
 	</button>
 
-	<button id="both" data-dojo-type="dijit.form.Button" data-dojo-props='onMouseMove:bothHandler'>
+	<button id="both" data-dojo-type="dijit/form/Button" data-dojo-props='onMouseMove:bothHandler'>
 		both
 	</button>
 </body>

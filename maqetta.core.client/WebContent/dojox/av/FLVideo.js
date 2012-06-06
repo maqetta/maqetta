@@ -38,9 +38,8 @@ dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 
 	postCreate: function(){
 		// summary:
-		// Initialize the media.
-		//
-		//
+		//		Initialize the media.
+
 		this._subs = [];
 		this._cons = [];
 		this.mediaUrl = this._normalizeUrl(this.mediaUrl);
@@ -130,8 +129,8 @@ dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 	volume: function(/* Float */ vol){
 		// summary:
 		//		Sets the volume of the video to the time in the
-		// argument - between 0 - 1.
-		//
+		// vol:
+		//		between 0 - 1.
 		if(vol){
 			if(!this.flashMedia) {
 				this.initialVolume = vol;
@@ -216,7 +215,8 @@ dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 
 	onStop: function(){
 		// summary:
-		// Fire when the Stop button is clicked
+		//		Fire when the Stop button is clicked
+		
 		// TODO: 	This is not hooked up yet and shouldn't
 		//			fire.
 	},

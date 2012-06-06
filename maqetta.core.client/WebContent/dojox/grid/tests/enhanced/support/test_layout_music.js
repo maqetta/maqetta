@@ -1,4 +1,3 @@
-dojo.require("dijit.form.DateTextBox");
 var formatDate = function(inDatum){
 	var dtb = new dijit.form.DateTextBox({});
 	var res = dojo.date.locale.parse(inDatum,{
@@ -8,7 +7,7 @@ var formatDate = function(inDatum){
 	dtb.set("value",res);
 	return dtb;
 };
-var layout = [
+this.layout = [
 	[{//--------------------------------------------------------------------------0
 		defaultCell: {editable: true, autoComplete:true, type: dojox.grid.cells._Widget},
 		cells:

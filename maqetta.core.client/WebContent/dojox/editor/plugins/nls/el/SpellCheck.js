@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Συνολικός ορθογραφικός έλεγχος",
 	unfound: "Δεν εντοπίστηκε",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Παράλειψη όλων των όμοιων",
 	iMsg: "Δεν υπάρχουν προτάσεις ορθογραφίας"
 })
-
-//end v1.x content
 );

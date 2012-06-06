@@ -9,12 +9,6 @@ define([
 	"dojo/dom-style" // domStyle.style
 ], function(template, StackContainer, layoutUtils, _TemplatedMixin, declare, domClass, domGeometry, domStyle){
 
-
-/*=====
-	var StackContainer = dijit.layout.StackContainer;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-=====*/
-
 // module:
 //		dijit/layout/_TabContainerBase
 // summary:

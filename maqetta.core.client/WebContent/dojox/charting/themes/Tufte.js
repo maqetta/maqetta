@@ -1,9 +1,9 @@
-define(["../Theme", "dojo/_base/Color", "./common"], function(Theme, Color, themes){
+define(["../SimpleTheme", "dojo/_base/Color", "./common"], function(SimpleTheme, Color, themes){
 	/*
 		A charting theme based on the principles championed by
 		Edward Tufte.  By Alex Russell, Dojo Project Lead.
 	*/
-	themes.Tufte = new Theme({
+	themes.Tufte = new SimpleTheme({
 		chart: {
 			stroke: null,
 			fill: "inherit"

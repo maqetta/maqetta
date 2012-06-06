@@ -4,27 +4,13 @@ define([
 	"./MappedTextBox"
 ], function(declare, i18n, MappedTextBox){
 
-/*=====
-	var MappedTextBox = dijit.form.MappedTextBox;
-=====*/
-
 	// module:
 	//		dijit/form/RangeBoundTextBox
 	// summary:
 	//		Base class for textbox form widgets which defines a range of valid values.
 
-	/*=====
-		dijit.form.RangeBoundTextBox.__Constraints = function(){
-			// min: Number
-			//		Minimum signed value.  Default is -Infinity
-			// max: Number
-			//		Maximum signed value.  Default is +Infinity
-			this.min = min;
-			this.max = max;
-		}
-	=====*/
 
-	return declare("dijit.form.RangeBoundTextBox", MappedTextBox, {
+	var RangeBoundTextBox = declare("dijit.form.RangeBoundTextBox", MappedTextBox, {
 		// summary:
 		//		Base class for textbox form widgets which defines a range of valid values.
 
@@ -33,7 +19,7 @@ define([
 		rangeMessage: "",
 
 		/*=====
-		// constraints: dijit.form.RangeBoundTextBox.__Constraints
+		// constraints: RangeBoundTextBox.__Constraints
 		constraints: {},
 		======*/
 
@@ -59,19 +45,17 @@ define([
 			//		Returns true if the value is out of range and will remain
 			//		out of range even if the user types more characters
 			var val = this.get('value');
-			var isTooLittle = false;
-			var isTooMuch = false;
+			if(val == null){ return false; } // not yet valid enough to compare to
+			var outOfRange = false;
 			if("min" in this.constraints){
 				var min = this.constraints.min;
-				min = this.compare(val, ((typeof min == "number") && min >= 0 && val !=0) ? 0 : min);
-				isTooLittle = (typeof min == "number") && min < 0;
+				outOfRange = this.compare(val, ((typeof min == "number") && min >= 0 && val != 0) ? 0 : min) < 0;
 			}
-			if("max" in this.constraints){
+			if(!outOfRange && ("max" in this.constraints)){
 				var max = this.constraints.max;
-				max = this.compare(val, ((typeof max != "number") || max > 0) ? max : 0);
-				isTooMuch = (typeof max == "number") && max > 0;
+				outOfRange = this.compare(val, ((typeof max != "number") || max > 0) ? max : 0) > 0;
 			}
-			return isTooLittle || isTooMuch;
+			return outOfRange;
 		},
 
 		_isValidSubset: function(){
@@ -91,7 +75,7 @@ define([
 		getErrorMessage: function(/*Boolean*/ isFocused){
 			// Overrides dijit.form.ValidationTextBox.getErrorMessage to print "out of range" message if appropriate
 			var v = this.get('value');
-			if(v !== null && v !== '' && v !== undefined && (typeof v != "number" || !isNaN(v)) && !this.isInRange(isFocused)){ // don't check isInRange w/o a real value
+			if(v != null /* and !undefined */ && v !== '' && (typeof v != "number" || !isNaN(v)) && !this.isInRange(isFocused)){ // don't check isInRange w/o a real value
 				return this.rangeMessage; // String
 			}
 			return this.inherited(arguments);
@@ -140,4 +124,15 @@ define([
 			//		protected.
 		}
 	});
+	/*=====
+	RangeBoundTextBox.__Constraints = function(){
+		// min: Number
+		//		Minimum signed value.  Default is -Infinity
+		// max: Number
+		//		Maximum signed value.  Default is +Infinity
+		this.min = min;
+		this.max = max;
+	};
+	=====*/
+	return RangeBoundTextBox;
 });

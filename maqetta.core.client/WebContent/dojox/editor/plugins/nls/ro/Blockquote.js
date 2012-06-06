@@ -1,8 +1,5 @@
 define(
-//begin v1.x content
 ({
-	"blockquote": "Blockquote"
+	"blockquote": "Bloc citat"
 })
-
-//end v1.x content
 );

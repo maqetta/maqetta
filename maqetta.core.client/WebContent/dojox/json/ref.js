@@ -1,6 +1,14 @@
-define(["dojo/_base/kernel", "dojox", "dojo/date/stamp", "dojo/_base/array", "dojo/_base/json"], function(dojo, dojox){
+define([
+	"dojo/_base/array",
+	"dojo/_base/json",
+	"dojo/_base/kernel", 
+	"dojo/_base/lang",
+	"dojo/date/stamp",
+	"dojox"
+],
+function(array, djson, dojo, lang, stamp, dojox){
 
-dojo.getObject("json", true, dojox);
+lang.getObject("json", true, dojox);
 
 return dojox.json.ref = {
 	// summary:
@@ -12,7 +20,7 @@ return dojox.json.ref = {
 	// 		_loadObject to denote a lazy loading (not loaded yet) object.
 
 
-	resolveJson: function(/*Object*/ root,/*Object?*/ args){
+	resolveJson: function(/*Object*/ root, /*Object?*/ args){
 		// summary:
 		// 		Indexes and resolves references in the JSON object.
 		// description:
@@ -23,26 +31,25 @@ return dojox.json.ref = {
 		// args:
 		//		Object with additional arguments:
 		//
-		// The *index* parameter.
-		//		This is the index object (map) to use to store an index of all the objects.
-		// 		If you are using inter-message referencing, you must provide the same object for each call.
-		// The *defaultId* parameter.
-		//		This is the default id to use for the root object (if it doesn't define it's own id)
-		//	The *idPrefix* parameter.
-		//		This the prefix to use for the ids as they enter the index. This allows multiple tables
-		// 		to use ids (that might otherwise collide) that enter the same global index.
-		// 		idPrefix should be in the form "/Service/".  For example,
-		//		if the idPrefix is "/Table/", and object is encountered {id:"4",...}, this would go in the
-		//		index as "/Table/4".
-		//	The *idAttribute* parameter.
-		//		This indicates what property is the identity property. This defaults to "id"
-		//	The *assignAbsoluteIds* parameter.
-		//		This indicates that the resolveJson should assign absolute ids (__id) as the objects are being parsed.
-		//
-		// The *schemas* parameter
-		//		This provides a map of schemas, from which prototypes can be retrieved
-		// The *loader* parameter
-		//		This is a function that is called added to the reference objects that can't be resolved (lazy objects)
+		//		The *index* parameter.
+		//			This is the index object (map) to use to store an index of all the objects.
+		// 			If you are using inter-message referencing, you must provide the same object for each call.
+		//		The *defaultId* parameter.
+		//			This is the default id to use for the root object (if it doesn't define it's own id)
+		//		The *idPrefix* parameter.
+		//			This the prefix to use for the ids as they enter the index. This allows multiple tables
+		// 			to use ids (that might otherwise collide) that enter the same global index.
+		// 			idPrefix should be in the form "/Service/".  For example,
+		//			if the idPrefix is "/Table/", and object is encountered {id:"4",...}, this would go in the
+		//			index as "/Table/4".
+		//		The *idAttribute* parameter.
+		//			This indicates what property is the identity property. This defaults to "id"
+		//		The *assignAbsoluteIds* parameter.
+		//			This indicates that the resolveJson should assign absolute ids (__id) as the objects are being parsed.
+		//		The *schemas* parameter
+		//			This provides a map of schemas, from which prototypes can be retrieved
+		//		The *loader* parameter
+		//			This is a function that is called added to the reference objects that can't be resolved (lazy objects)
 		// return:
 		//		An object, the result of the processing
 		args = args || {};
@@ -98,7 +105,7 @@ return dojox.json.ref = {
 					for(i in it){
 						var propertyDefinition = properties[i];
 						if(propertyDefinition && propertyDefinition.format == 'date-time' && typeof it[i] == 'string'){
-							it[i] = dojo.date.stamp.fromISOString(it[i]);
+							it[i] = stamp.fromISOString(it[i]);
 						}
 					}
 				}
@@ -266,7 +273,7 @@ return dojox.json.ref = {
 			if(typeof it == 'object' && it){
 				var value;
 				if(it instanceof Date){ // properly serialize dates
-					return '"' + dojo.date.stamp.toISOString(it,{zulu:true}) + '"';
+					return '"' + stamp.toISOString(it,{zulu:true}) + '"';
 				}
 				var id = it.__id;
 				if(id){ // we found an identifiable object, we will just serialize a reference to it... unless it is the root
@@ -294,12 +301,12 @@ return dojox.json.ref = {
 				}
 				paths[path] = it;// save it here so they can be deleted at the end
 				_indentStr = _indentStr || "";
-				var nextIndent = prettyPrint ? _indentStr + dojo.toJsonIndentStr : "";
+				var nextIndent = prettyPrint ? _indentStr + djson.toJsonIndentStr : "";
 				var newLine = prettyPrint ? "\n" : "";
 				var sep = prettyPrint ? " " : "";
 	
 				if(it instanceof Array){
-					var res = dojo.map(it, function(obj,i){
+					var res = array.map(it, function(obj,i){
 						var val = serialize(obj, addProp(path, i), nextIndent);
 						if(typeof val != "string"){
 							val = "undefined";
@@ -317,7 +324,7 @@ return dojox.json.ref = {
 							keyStr = '"' + i + '"';
 						}else if(typeof i == "string" && (i.charAt(0) != '_' || i.charAt(1) != '_')){
 							// we don't serialize our internal properties __id and __clientId
-							keyStr = dojo._escapeString(i);
+							keyStr = djson._escapeString(i);
 						}else{
 							// skip non-string or number keys
 							continue;
@@ -335,7 +342,7 @@ return dojox.json.ref = {
 				return it.toString();
 			}
 	
-			return dojo.toJson(it); // use the default serializer for primitives
+			return djson.toJson(it); // use the default serializer for primitives
 		}
 		var json = serialize(it,'#','');
 		if(!indexSubObjects){

@@ -8,25 +8,24 @@
 		@import "../../../dijit/tests/css/dijitTests.css";
 		@import "../Pager/Pager.css";
 	</style>
-	
+
 	<script type="text/javascript" src="../../../dojo/dojo.js" djconfig="parseOnLoad:true, isDebug: true"></script>
 	<script type="text/javascript" src="../../../dijit/tests/_testCommon.js"></script>
 
-	<script type="text/javascript" src="../Pager.js"></script>
 	<script type="text/javascript">
 		dojo.require("dojo.data.ItemFileReadStore");
 		dojo.require("dojox.widget.Pager");
 	</script>
-	
+
 	<style type="text/css">
 		body {
 			font-family: Arial;
 		}
-		
+
 		ol li, ul li {
 			font-size:1em;
 			line-height:1.5em;
-			margin:0pt;
+			margin:0;
 		}
 		#result {
 			font-size: 12px;
@@ -35,7 +34,7 @@
 	</style>
 </head>
 <body class="tundra">
-	
+
 	<h1 class="testTitle">dojox.widget.Pager</h1>
 
 	<div style="clear: both" id="result">Click on one of the menu items</div>
@@ -61,9 +60,9 @@
 		<div dojoType="dojox.widget.Pager" id="dojoxMenu2s" itemsPage="4" pagerPos="none" 
 			store="pagerStore" statusPos="trailing" style="width: 410px; height: 150px"></div>
 	</div>
-	
+
 	<h2>Vertical</h2>
-	
+
 	<div style="padding:8px; float:left;">
 		<div dojoType="dojox.widget.Pager" id="dojoxMenu3" itemsPage="2" orientation="vertical" 
 			store="pagerStore" style="width: 150px; height: 400px"></div>

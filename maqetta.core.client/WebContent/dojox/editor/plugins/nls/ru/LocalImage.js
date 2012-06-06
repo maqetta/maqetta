@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertImageTitle: "Вставить изображение",
 	url: "Изображение",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "Введите URL изображения",
 	prePopuTextBrowse: " или выберите локальный файл."
 })
-
-//end v1.x content
 );

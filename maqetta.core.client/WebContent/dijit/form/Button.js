@@ -2,18 +2,14 @@ define([
 	"require",
 	"dojo/_base/declare", // declare
 	"dojo/dom-class", // domClass.toggle
+	"dojo/has",			// has("dijit-legacy-requires")
 	"dojo/_base/kernel", // kernel.deprecated
 	"dojo/_base/lang", // lang.trim
 	"dojo/ready",
 	"./_FormWidget",
 	"./_ButtonMixin",
 	"dojo/text!./templates/Button.html"
-], function(require, declare, domClass, kernel, lang, ready, _FormWidget, _ButtonMixin, template){
-
-/*=====
-	var _FormWidget = dijit.form._FormWidget;
-	var _ButtonMixin = dijit.form._ButtonMixin;
-=====*/
+], function(require, declare, domClass, has, kernel, lang, ready, _FormWidget, _ButtonMixin, template){
 
 // module:
 //		dijit/form/Button
@@ -21,7 +17,7 @@ define([
 //		Button widget
 
 // Back compat w/1.6, remove for 2.0
-if(!kernel.isAsync){
+if(has("dijit-legacy-requires")){
 	ready(0, function(){
 		var requires = ["dijit/form/DropDownButton", "dijit/form/ComboButton", "dijit/form/ToggleButton"];
 		require(requires);	// use indirection so modules not rolled into a build
@@ -36,7 +32,7 @@ return declare("dijit.form.Button", [_FormWidget, _ButtonMixin], {
 	//		A label should always be specified (through innerHTML) or the label
 	//		attribute.  It can be hidden via showLabel=false.
 	// example:
-	// |	<button data-dojo-type="dijit.form.Button" onClick="...">Hello world</button>
+	// |	<button data-dojo-type="dijit/form/Button" onClick="...">Hello world</button>
 	//
 	// example:
 	// |	var button1 = new dijit.form.Button({label: "hello world", onClick: foo});
@@ -72,6 +68,7 @@ return declare("dijit.form.Button", [_FormWidget, _ButtonMixin], {
 			if(this.valueNode){
 				this.valueNode.click();
 				e.preventDefault(); // cancel BUTTON click and continue with hidden INPUT click
+                e.stopPropagation();    // avoid two events bubbling from Button widget
 				// leave ok = true so that subclasses can do what they need to do
 			}
 		}

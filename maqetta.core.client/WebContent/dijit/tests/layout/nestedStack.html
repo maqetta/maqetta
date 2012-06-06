@@ -35,7 +35,7 @@
 		}
 	
 		dojo.ready(function(){
-			dojo.declare("dijit.TestLayoutContained",
+			dojo.declare("TestLayoutContained",
 				dijit.layout._LayoutWidget, {
 					startup: function(){
 						this.inherited(arguments);
@@ -153,42 +153,42 @@
 <body class="claro">
 	<h1>Integration: TabContainer in StackContainer</h1>
 	<br>
-	<button id="previousPR" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").back() }'>&lt;</button>
-	<span data-dojo-type="dijit.layout.StackController" data-dojo-props='containerId:"myStackContainerPR"'></span>
-	<button id="nextPR" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").forward() }'>&gt;</button>
-	<div id="myStackContainerPR" data-dojo-type="dijit.layout.StackContainer"
+	<button id="previousPR" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").back() }'>&lt;</button>
+	<span data-dojo-type="dijit/layout/StackController" data-dojo-props='containerId:"myStackContainerPR"'></span>
+	<button id="nextPR" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").forward() }'>&gt;</button>
+	<div id="myStackContainerPR" data-dojo-type="dijit/layout/StackContainer"
 		data-dojo-props='style:"height:150px; width: 400px;"'>
-			<div id="tab1" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='title:"tab container 1"'>
+			<div id="tab1" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='title:"tab container 1"'>
 				<script type="dojo/connect" data-dojo-event="resize">
 					onResize(this);
 				</script>
-				<div id="tab1cp1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"TC1/tab1", href:"tab1.html"'>
+				<div id="tab1cp1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"TC1/tab1", href:"tab1.html"'>
 					<script type="dojo/connect" data-dojo-event="resize">
 						onResize(this);
 					</script>
 				</div>
-				<div id="tab1cp2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"TC1/tab2", href:"tab2.html"'>
+				<div id="tab1cp2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"TC1/tab2", href:"tab2.html"'>
 					<script type="dojo/connect" data-dojo-event="resize">
 						onResize(this);
 					</script>
 				</div>
 			</div>
-			<div id="tab2" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='title:"tab container 2"'>
+			<div id="tab2" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='title:"tab container 2"'>
 				<script type="dojo/connect" data-dojo-event="resize">
 					onResize(this);
 				</script>
-				<div id="tab2cp1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"TC2/tab 1", href:"tab1.html"'>
+				<div id="tab2cp1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"TC2/tab 1", href:"tab1.html"'>
 					<script type="dojo/connect" data-dojo-event="resize">
 						onResize(this);
 					</script>
 				</div>
-				<div id="tab2cp2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"TC2/tab 2"'>
+				<div id="tab2cp2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"TC2/tab 2"'>
 					<script type="dojo/connect" data-dojo-event="resize">
 						onResize(this);
 					</script>
 					<div><div>
-						<div data-dojo-id="deferredZero" data-dojo-type="dijit.TestLayoutContained">test nested layout widget</div>
-						<div data-dojo-id="deferredOne" data-dojo-type="dijit.TestLayoutContained">another test nested layout widget</div>
+						<div data-dojo-id="deferredZero" data-dojo-type="TestLayoutContained">test nested layout widget</div>
+						<div data-dojo-id="deferredOne" data-dojo-type="TestLayoutContained">another test nested layout widget</div>
 					</div></div>
 				</div>
 			</div>

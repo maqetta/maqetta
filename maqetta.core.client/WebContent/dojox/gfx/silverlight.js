@@ -2,15 +2,14 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 		"dojo/_base/array", "dojo/dom-geometry", "dojo/dom", "dojo/_base/sniff", 
 		"./_base", "./shape", "./path"], 
   function(kernel,lang,declare,color,arr,domGeom,dom,has,g,gs,pathLib){
-/*===== 
-	dojox.gfx.silverlight = {
-	// module:
-	//		dojox/gfx/silverlight
-	// summary:
-	//		This the graphics rendering bridge for the Microsoft Silverlight plugin.
-	//		Silverlight is a faster implementation on IE6-8 than the default 2d graphics, VML
+	var sl = g.silverlight = {
+		// summary:
+		//		This the graphics rendering bridge for the Microsoft Silverlight plugin.
+		//		Silverlight is a faster implementation on IE6-8 than the default 2d graphics, VML
 	};
-	g = dojox.gfx;
+	kernel.experimental("dojox.gfx.silverlight");
+
+	/*=====
 	pathLib.Path = dojox.gfx.path.Path;
 	pathLib.TextPath = dojox.gfx.path.TextPath;
 	sl.Shape = dojox.gfx.canvas.Shape;
@@ -23,10 +22,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 	gs.Image = dojox.gfx.shape.Image;
 	gs.Text = dojox.gfx.shape.Text;
 	gs.Surface = dojox.gfx.shape.Surface;
-  =====*/
-
-	var sl = g.silverlight = {};
-	kernel.experimental("dojox.gfx.silverlight");
+	=====*/
 
 	var dasharray = {
 			solid:				"none",
@@ -66,6 +62,11 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 
 	declare("dojox.gfx.silverlight.Shape", gs.Shape, {
 		// summary: Silverlight-specific implementation of dojox.gfx.Shape methods
+
+		destroy: function(){
+			this.rawNode = null;
+			gs.Shape.prototype.destroy.apply(this, arguments);
+		},
 
 		setFill: function(fill){
 			// summary: sets a fill object (Silverlight)
@@ -255,6 +256,60 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 		_getAdjustedMatrix: function(){
 			// summary: returns the adjusted ("real") transformation matrix
 			return this.matrix;	// dojox.gfx.Matrix2D
+		},
+		
+		setClip: function(clip){
+			// summary: sets the clipping area of this shape.
+			// description: This method overrides the dojox.gfx.shape.Shape.setClip() method.
+			// clip: Object
+			//		an object that defines the clipping geometry, or null to remove clip.
+			this.inherited(arguments);
+			var r = this.rawNode;
+			if(clip){
+				var clipType = clip ? "width" in clip ? "rect" : 
+								"cx" in clip ? "ellipse" : 
+								"points" in clip ? "polyline" : "d" in clip ? "path" : null : null;
+				if(clip && !clipType){
+					return this;
+				}
+				var bbox = this.getBoundingBox() || {x:0, y:0, width:0, height:0};
+				var clipT = "1,0,0,1,"+(-bbox.x)+","+(-bbox.y);
+				switch(clipType){
+					case "rect":
+						r.clip = r.getHost().content.createFromXaml("<RectangleGeometry/>");
+						r.clip.rect = clip.x+","+clip.y+","+clip.width+","+clip.height;
+						r.clip.transform = clipT;
+						break;
+					case "ellipse":
+						r.clip = r.getHost().content.createFromXaml("<EllipseGeometry/>");
+						r.clip.center = clip.cx+","+clip.cy;
+						r.clip.radiusX = clip.rx;
+						r.clip.radiusY = clip.ry;
+						r.clip.transform = "1,0,0,1,"+(-bbox.x)+","+(-bbox.y);
+						break;
+					case "polyline":
+						if(clip.points.length>2){
+							var line, plinegroup = r.getHost().content.createFromXaml("<PathGeometry/>"),
+								pfigure = r.getHost().content.createFromXaml("<PathFigure/>");
+							pfigure.StartPoint = clip.points[0]+","+clip.points[1];
+							for (var i=2; i<=clip.points.length-2;i=i+2){
+								line = r.getHost().content.createFromXaml("<LineSegment/>");
+								line.Point = clip.points[i]+","+clip.points[i+1];
+								pfigure.segments.add(line);
+							}
+							plinegroup.figures.add(pfigure);
+							plinegroup.transform = "1,0,0,1,"+(-bbox.x)+","+(-bbox.y);
+							r.clip = plinegroup;
+						}
+						break;
+					case "path":
+						// missing JS api
+						break;
+				}
+			}else{
+				r.clip = null;
+			}
+			return this;
 		}
 	});
 
@@ -270,6 +325,14 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			this.rawNode = rawNode;
 			this.rawNode.tag = this.getUID();						
 			
+		},
+		destroy: function(){
+			// summary:
+			//		Releases all internal resources owned by this shape. Once this method has been called,
+			//		the instance is considered disposed and should not be used anymore.
+			this.clear(true);
+			// avoid this.inherited
+			sl.Shape.prototype.destroy.apply(this, arguments);
 		}
 	});
 	sl.Group.nodeType = "Canvas";
@@ -412,7 +475,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			this.shape = g.makeParameters(this.shape, newShape);
 			this.bbox = null;
 			var r = this.rawNode, s = this.shape;
-			r.text = s.text;
+			r.text = "" + s.text; // #14522
 			r.textDecorations = s.decoration === "underline" ? "Underline" : "None";
 			r["Canvas.Left"] = -10000;
 			r["Canvas.Top"]  = -10000;
@@ -706,6 +769,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_bas
 			this.rawNode.children.clear();
 			return C.clear.apply(this, arguments);
 		},
+		getBoundingBox: C.getBoundingBox,
 		_moveChildToFront: C._moveChildToFront,
 		_moveChildToBack:  C._moveChildToBack
 	};

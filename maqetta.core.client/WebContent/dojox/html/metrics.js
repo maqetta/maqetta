@@ -6,8 +6,8 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 
 	//	derived from Morris John's emResized measurer
 	dhm.getFontMeasurements = function(){
-		//	summary
-		//	Returns an object that has pixel equivilents of standard font size values.
+		// summary:
+		//		Returns an object that has pixel equivilents of standard font size values.
 		var heights = {
 			'1em':0, '1ex':0, '100%':0, '12pt':0, '16px':0, 'xx-small':0, 'x-small':0,
 			'small':0, 'medium':0, 'large':0, 'x-large':0, 'xx-large':0
@@ -121,6 +121,7 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 		fs.width = "5em";
 		fs.height = "10em";
 		fs.top = "-10000px";
+		fs.display = "none";
 		if(has("ie")){
 			f.onreadystatechange = function(){
 				if(f.contentWindow.document.readyState == "complete"){
@@ -141,7 +142,7 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready",
 	dhm.onFontResize = function(){};
 	dhm._fontresize = function(){
 		dhm.onFontResize();
-	}
+	};
 
 	UnloadUtil.addOnUnload(function(){
 		// destroy our font resize iframe if we have one

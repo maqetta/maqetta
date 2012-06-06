@@ -14,12 +14,7 @@ define([
 	"dojo/keys" // keys
 ], function(lang, array, event, windowUtils, focus, registry, _TextBoxMixin, ValidationTextBox, _HasDropDown, FilePicker, template, declare, keys){
 
-	/*=====
-		ValidationTextBox = dijit.form.ValidationTextBox;
-		_HasDropDown = dijit._HasDropDown;
-	=====*/
-return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown],
-	{
+	return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown], {
 		// summary:
 		//		A validating text box tied to a file picker popup
 
@@ -37,8 +32,8 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 		valueItem: null,
 
 		// numPanes: number
-		//	The number of panes to display in our box (if we don't have any
-		//	minPaneWidth specified by our constraints)
+		//		The number of panes to display in our box (if we don't have any
+		//		minPaneWidth specified by our constraints)
 		numPanes: 2.25,
 
 		postMixInProperties: function(){
@@ -57,8 +52,9 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 			});
 		},
 
-		_setValueAttr: function(/*string*/value, priorityChange, fromWidget){
-			// summary: sets the value of this widget
+		_setValueAttr: function(/*String*/ value, priorityChange, fromWidget){
+			// summary:
+			//		sets the value of this widget
 			if(!this._searchInProgress){
 				this.inherited(arguments);
 				value = value || "";
@@ -72,8 +68,9 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 			}
 		},
 
-		_onWidgetChange: function(/*item*/item){
-			// summary: called when the path gets changed in the dropdown
+		_onWidgetChange: function(/*item*/ item){
+			// summary:
+			//		called when the path gets changed in the dropdown
 			if(!item && this.focusNode.value){
 				this._hasValidPath = false;
 				this.focusNode.value = "";
@@ -116,7 +113,8 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 		},
 
 		_focusBlur: function(/*Event*/ e){
-			// summary: called when the focus node gets blurred
+			// summary:
+			//		called when the focus node gets blurred
 			if(e.explicitOriginalTarget == this.focusNode && !this._allowBlur){
 				window.setTimeout(lang.hitch(this, function(){
 					if(!this._allowBlur){
@@ -130,7 +128,8 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 		},
 
 		_focusFocus: function(/*Event*/ e){
-			// summary: called when the focus node gets focus
+			// summary:
+			//		called when the focus node gets focus
 			if(this._menuFocus){
 				this.dropDown._updateClass(this._menuFocus, "Item", {"Hover": false});
 			}
@@ -149,14 +148,16 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 		},
 
 		_onBlur: function(){
-			// summary: called when focus is shifted away from this widget
+			// summary:
+			//		called when focus is shifted away from this widget
 			this._allowBlur = true;
 			delete this.dropDown._savedFocus;
 			this.inherited(arguments);
 		},
 
 		_setBlurValue: function(){
-			// summary: sets the value of the widget once focus has left
+			// summary:
+			//		sets the value of the widget once focus has left
 			if(this.dropDown && !this._settingBlurValue){
 				this._settingBlurValue = true;
 				this.set("value", this.focusNode.value);
@@ -166,8 +167,8 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 			}
 		},
 
-		parse: function(/* String */ value, /* Object */ constraints){
-			//	summary:
+		parse: function(/*String*/ value, /*Object*/ constraints){
+			// summary:
 			//		Function to convert a formatted string to a value - we use
 			//		it to verify that it *really* is a valid value
 			if(this._hasValidPath || this._hasSelection){
@@ -193,7 +194,8 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 		},
 
 		_startSearchFromInput: function(){
-			// summary: kicks off a search based off the current text value of the widget
+			// summary:
+			//		kicks off a search based off the current text value of the widget
 			var dd = this.dropDown, fn = this.focusNode;
 			var val = fn.value, oVal = val, topDir = dd.topDir;
 			if(this._hasSelection){
@@ -286,7 +288,8 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 		},
 
 		_onKey: function(/*Event*/ e){
-			// summary: callback when the user presses a key on menu popup node
+			// summary:
+			//		callback when the user presses a key on menu popup node
 			if(this.disabled || this.readOnly){ return; }
 			var c = e.charOrCode;
 			if(c==keys.DOWN_ARROW){
@@ -323,6 +326,5 @@ return declare( "dojox.form.FilePickerTextBox", [ValidationTextBox, _HasDropDown
 				this._searchTimer = window.setTimeout(lang.hitch(this, "_startSearchFromInput"), this.searchDelay + 1);
 			}
 		}
-	}
-);
+	});
 });

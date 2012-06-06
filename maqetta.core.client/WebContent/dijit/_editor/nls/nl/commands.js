@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Vet',
 	'copy': 'Kopiëren',
@@ -45,7 +44,8 @@ define(
 	"print": "Afdrukken",
 	"newPage": "Nieuwe pagina",
 	/* Error messages */
-	'systemShortcut': 'De actie "${0}" is alleen beschikbaar in uw browser via een sneltoetscombinatie. Gebruik ${1}.'
+	'systemShortcut': 'De actie "${0}" is alleen beschikbaar in uw browser via een sneltoetscombinatie. Gebruik ${1}.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-//end v1.x content
 );

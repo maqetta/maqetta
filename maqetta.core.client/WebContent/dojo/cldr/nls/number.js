@@ -2,29 +2,27 @@ define({ root:
 
 //begin v1.x content
 {
-	"scientificFormat": "#E0",
-	"currencySpacing-afterCurrency-currencyMatch": "[:letter:]",
-	"infinity": "∞",
+	"decimal": ".",
+	"group": ",",
 	"list": ";",
 	"percentSign": "%",
-	"minusSign": "-",
-	"currencySpacing-beforeCurrency-surroundingMatch": "[:digit:]",
-	"decimalFormat-short": "000T",
-	"currencySpacing-afterCurrency-insertBetween": " ",
-	"nan": "NaN",
-	"nativeZeroDigit": "0",
 	"plusSign": "+",
-	"currencySpacing-afterCurrency-surroundingMatch": "[:digit:]",
-	"currencySpacing-beforeCurrency-currencyMatch": "[:letter:]",
-	"currencyFormat": "¤ #,##0.00",
+	"minusSign": "-",
+	"exponential": "E",
 	"perMille": "‰",
-	"group": ",",
-	"percentFormat": "#,##0%",
+	"infinity": "∞",
+	"nan": "NaN",
 	"decimalFormat": "#,##0.###",
-	"decimal": ".",
-	"patternDigit": "#",
+	"decimalFormat-short": "000T",
+	"scientificFormat": "#E0",
+	"percentFormat": "#,##0%",
+	"currencySpacing-beforeCurrency-currencyMatch": "[:letter:]",
+	"currencySpacing-beforeCurrency-surroundingMatch": "[:digit:]",
 	"currencySpacing-beforeCurrency-insertBetween": " ",
-	"exponential": "E"
+	"currencySpacing-afterCurrency-currencyMatch": "[:letter:]",
+	"currencySpacing-afterCurrency-surroundingMatch": "[:digit:]",
+	"currencySpacing-afterCurrency-insertBetween": " ",
+	"currencyFormat": "¤ #,##0.00"
 }
 //end v1.x content
 ,
@@ -35,7 +33,6 @@ define({ root:
 	"de": true,
 	"el": true,
 	"en": true,
-	"en-au": true,
 	"en-gb": true,
 	"es": true,
 	"fi": true,
@@ -60,5 +57,6 @@ define({ root:
 	"tr": true,
 	"zh": true,
 	"zh-hant": true,
-	"zh-hk": true
+	"zh-hk": true,
+	"zh-tw": true
 });

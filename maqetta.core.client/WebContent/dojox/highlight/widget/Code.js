@@ -1,6 +1,6 @@
 define(["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dojox/highlight"], function(dojo, dijit){
 
-	dojo.declare("dojox.highlight.widget.Code",[dijit._Widget, dijit._Templated],{
+	return dojo.declare("dojox.highlight.widget.Code",[dijit._Widget, dijit._Templated],{
 		// summary:
 		//		A simple source code formatting widget that adds line numbering, alternating line colors
 		//		and line range support on top of dojox.highlight module.
@@ -12,7 +12,7 @@ define(["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dojox/highlight"]
 		lang:"",
 
 		// Note: If more control over formatting is required, the order list items can be replaced
-		// with a table implementation instead... Excercise is left for those that need it...
+		// with a table implementation instead... exercise is left for those that need it...
 		templateString:
 			'<div class="formatted" style="${style}">'+
 				'<div class="titleBar"></div>'+

@@ -18,7 +18,7 @@
 			var externalString = "";
 			var internalSubscribe = null;
 	
-			dojo.declare("dijit.MyWidget", dijit._Widget, {
+			dojo.declare("MyWidget", dijit._Widget, {
 				_subscribeHandlerInternal: function(){ numCallsInternal++; }
 			});
 
@@ -68,12 +68,12 @@
 						runTest: function(t){
 							var w = dijit.byId("widget1");
 							dojo.publish("/custom/event", []);
-							doh.is(2, numCallsInternal);
-							doh.is(2, numCallsExternal);
+							doh.is(2, numCallsInternal, "numCallsInternal");
+							doh.is(2, numCallsExternal, "numCallsExternal");
 							w.unsubscribe(internalSubscribe);
 							dojo.publish("/custom/event", []);
-							doh.is(2, numCallsInternal);
-							doh.is(3, numCallsExternal);
+							doh.is(2, numCallsInternal, "numCallsInternal again");
+							doh.is(3, numCallsExternal, "numCallsExternal again");
 						}
 					},
 					{
@@ -82,10 +82,10 @@
 							var w = dijit.byId("widget1");
 							w.destroy();
 							dojo.publish("/custom/event", []);
-							doh.is(2, numCallsInternal);
-							doh.is(3, numCallsExternal);
+							doh.is(2, numCallsInternal, "numCallsInternal");
+							doh.is(3, numCallsExternal, "numCallsExternal");
 							dojo.publish("/custom/setString", ["myString"]);
-							doh.is("anotherString", externalString);
+							doh.is("anotherString", externalString, "externalString");
 						}
 					}
 				]
@@ -97,6 +97,6 @@
 	</script>
 </head>
 <body class="claro">
-	<div id="widget1" data-dojo-type="dijit.MyWidget"></div>
+	<div id="widget1" data-dojo-type="MyWidget"></div>
 </body>
 </html>

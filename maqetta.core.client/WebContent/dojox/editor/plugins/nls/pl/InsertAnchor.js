@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "Wstaw zakotwiczenie",
 	title: "Właściwości zakotwiczenia",
@@ -8,6 +7,4 @@ define(
 	set: "Ustaw",
 	cancel: "Anuluj"
 })
-
-//end v1.x content
 );

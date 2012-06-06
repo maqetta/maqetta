@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Сақтау",
 	"saveSettingLabelOn": "Автосақтау аралығын орнату...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "${0} сақталды",
 	"saveMessageFail": "${0} сақталмады"
 })
-
-//end v1.x content
 );

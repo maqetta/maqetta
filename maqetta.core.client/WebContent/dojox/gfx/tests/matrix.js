@@ -219,6 +219,43 @@ dojo.require("dojox.gfx.matrix");
 			var b = m.multiplyPoint(m.project(1, 1), 0, 1);
 			eq(t, b.x, 0.5);
 			eq(t, b.y, 0.5);
+		},
+		function IsIdentityTest(t){
+			var a = new m.Matrix2D();
+			tests.assertTrue(m.isIdentity(a));
+			a.xy=1;
+			tests.assertFalse(m.isIdentity(a));
+		},
+		function MultiplyRectangle(t){
+			var a = new m.Matrix2D(), 
+				r = {x:0,y:0,width:3,height:2},
+				res;
+			// multiply by identity -> same rect
+			res = m.multiplyRectangle(a, r);
+			tests.assertTrue(res.x == r.x && res.y == r.y && res.width == r.width && res.height == r.height);			
+			res = m.multiplyRectangle(m.scale(2,2), r);
+			eq(t, res.x, 0);
+			eq(t, res.y, 0);
+			eq(t, res.width, 6);
+			eq(t, res.height, 4);
+			a = m.rotategAt(-45, 0, 0);
+			var tl = m.multiplyPoint(a, 0, 0), // top left
+				tr = m.multiplyPoint(a, 3, 0), // top right
+				br = m.multiplyPoint(a, 3, 2), // bottom right
+				bl = m.multiplyPoint(a, 0, 2), // bottom left
+				exp = {x : tl.x, y:tr.y, width: br.x, height: bl.y - tr.y}; // expected
+			res = m.multiplyRectangle(a, r);
+			eq(t, res.x, exp.x);
+			eq(t, res.y, exp.y);
+			eq(t, res.width, exp.width);
+			eq(t, res.height, exp.height);
+			// matrices array
+			res = m.multiplyRectangle([m.translate(10,10), m.scale(2,2)], r);
+			eq(t, res.x, 10);
+			eq(t, res.y, 10);
+			eq(t, res.width, 6);
+			eq(t, res.height, 4);
 		}
+		
 	]);
 })();

@@ -40,11 +40,11 @@ define([
 			//
 			//	 * the util/buildscripts/ directory is assumed to be the cwd upon build program startup
 			//	 * the dojo directory as specified in profile dependencies.prefixes (if relative) is
-			//     assumed to be relative to util/buildscripts/; usually, it is not explicitly specified
-			//     and is automatically set by the v1.6 build application to ../../dojo.
+			//	   assumed to be relative to util/buildscripts/; usually, it is not explicitly specified
+			//	   and is automatically set by the v1.6 build application to ../../dojo.
 			//	 * similarly the releaseDir directory (if relative) is assumed to be relative to util/buildscripts/
 			//	 * all other relative paths are relative to the dojo directory (in spite of what some docs say)
-			//   * all input module hierarchies are "flattened" so they are siblings of the dojo directory
+			//	 * all input module hierarchies are "flattened" so they are siblings of the dojo directory
 			//
 			// This has the net effect of forcing the assumption that build program is be executed from util/buildscripts.
 			// when relative paths are used; this may be inconvenient. The behavior is probably consequent to rhino's design
@@ -60,7 +60,7 @@ define([
 				result[p] = defaultBuildProps[p];
 			}
 			for(p in profile){
-				if(/^(loader|xdDojoPath|scopeDjConfig|xdScopeArgs|xdDojoScopeName|expandProvide|buildLayers|query|removeDefaultNameSpaces|addGuards|localeList)$/.test(p)){
+				if(/^(loader|xdDojoPath|scopeDjConfig|xdScopeArgs|xdDojoScopeName|expandProvide|buildLayers|query|removeDefaultNameSpaces|addGuards)$/.test(p)){
 					bc.log("inputDeprecated", ["switch", p]);
 				}else if(p=="staticHasFeatures"){
 					mix(result.staticHasFeatures, profile.staticHasFeatures);
@@ -331,10 +331,6 @@ define([
 				prefixes: prefixPaths,
 				basePath:basePath
 			};
-
-			if(bc.writeProfile){
-				fs.writeFileSync(bc.writeProfile, "dependencies = " + dojo.toJson(profileProperties, true), "utf8");
-			}
 			return processProfile(profileProperties, dojoPath, utilBuildscriptsPath);
 		};
 

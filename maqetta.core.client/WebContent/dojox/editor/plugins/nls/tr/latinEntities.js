@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -102,7 +101,6 @@ define(
 	yacute:"Vurgu imiyle Latince küçük harf y",
 	thorn:"Latince küçük harf thorn",
 	yuml:"Umlaut imiyle Latince küçük harf y",
-
 // Greek Characters and Symbols
 	fnof:"Kanca imiyle Latince küçük f\nfonksiyon\nflorin",
 	Alpha:"Yunanca büyük harf alpha",
@@ -256,6 +254,4 @@ define(
 	rsaquo:"sağ açılı tek tırnak işareti",
 	euro:"euro işareti"
 })
-
-//end v1.x content
 );

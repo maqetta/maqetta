@@ -1,24 +1,23 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Pogrubienie',
 	'copy': 'Kopiuj',
 	'cut': 'Wytnij',
 	'delete': 'Usuń',
 	'indent': 'Wcięcie',
-	'insertHorizontalRule': 'Linia pozioma',
+	'insertHorizontalRule': 'Linijka pozioma',
 	'insertOrderedList': 'Lista numerowana',
 	'insertUnorderedList': 'Lista wypunktowana',
 	'italic': 'Kursywa',
-	'justifyCenter': 'Wyrównaj do środka',
+	'justifyCenter': 'Wyśrodkowanie',
 	'justifyFull': 'Wyrównaj do lewej i prawej',
-	'justifyLeft': 'Wyrównaj do lewej',
-	'justifyRight': 'Wyrównaj do prawej',
-	'outdent': 'Usuń wcięcie',
+	'justifyLeft': 'Wyrównanie do lewej',
+	'justifyRight': 'Wyrównanie do prawej',
+	'outdent': 'Usuwanie wcięcia',
 	'paste': 'Wklej',
 	'redo': 'Ponów',
 	'removeFormat': 'Usuń formatowanie',
-	'selectAll': 'Wybierz wszystko',
+	'selectAll': 'Zaznacz wszystko',
 	'strikethrough': 'Przekreślenie',
 	'subscript': 'Indeks dolny',
 	'superscript': 'Indeks górny',
@@ -32,12 +31,12 @@ define(
 	'toggleTableBorder': 'Przełącz ramkę tabeli',
 	'deleteTable': 'Usuń tabelę',
 	'tableProp': 'Właściwość tabeli',
-	'htmlToggle': 'Kod źródłowy HTML',
+	'htmlToggle': 'Źródło HTML',
 	'foreColor': 'Kolor pierwszego planu',
 	'hiliteColor': 'Kolor tła',
 	'plainFormatBlock': 'Styl akapitu',
 	'formatBlock': 'Styl akapitu',
-	'fontSize': 'Wielkość czcionki',
+	'fontSize': 'Rozmiar czcionki',
 	'fontName': 'Nazwa czcionki',
 	'tabIndent': 'Wcięcie o tabulator',
 	"fullScreen": "Przełącz pełny ekran",
@@ -46,8 +45,7 @@ define(
 	"newPage": "Nowa strona",
 	/* Error messages */
 	'systemShortcut': 'Działanie ${0} jest dostępne w tej przeglądarce wyłącznie przy użyciu skrótu klawiaturowego. Należy użyć klawiszy ${1}.',
-	'ctrlKey':'Ctrl+${0}'
+	'ctrlKey':'Ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-
-//end v1.x content
 );

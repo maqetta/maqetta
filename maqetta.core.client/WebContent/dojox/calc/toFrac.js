@@ -112,7 +112,8 @@ define([
 		},
 		pow: function(base, exponent){// pow benefits from toFrac because it can overcome many of the limitations set before the standard Math.pow
 			// summary:
-			//	Computes base ^ exponent
+			//		Computes base ^ exponent
+
 			//	Wrapper to Math.pow(base, exponent) to handle (-27) ^ (1/3)
 			function isInt(n){
 				return Math.floor(n) == n;

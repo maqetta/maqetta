@@ -1,10 +1,10 @@
-define(["../_base/kernel", "../_base/lang", "../_base/declare", "../_base/array", "../_base/xhr", 
-	"../Evented", "../_base/window", "./util/filter", "./util/simpleFetch", "../date/stamp"
-], function(kernel, lang, declare, array, xhr, Evented, window, filterUtil, simpleFetch, dateStamp) {
-	// module:
-	//		dojo/data/ItemFileReadStore
-	// summary:
-	//		TODOC
+define(["../_base/kernel", "../_base/lang", "../_base/declare", "../_base/array", "../_base/xhr",
+	"../Evented", "./util/filter", "./util/simpleFetch", "../date/stamp"
+], function(kernel, lang, declare, array, xhr, Evented, filterUtil, simpleFetch, dateStamp) {
+// module:
+//		dojo/data/ItemFileReadStore
+// summary:
+//		TODOC
 
 
 var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
@@ -53,11 +53,11 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 			//We use the dojo.date.stamp here because the ISO format is the 'dojo way'
 			//of generically representing dates.
 			this._datatypeMap['Date'] = {
-											type: Date,
-											deserialize: function(value){
-												return dateStamp.fromISOString(value);
-											}
-										};
+				type: Date,
+				deserialize: function(value){
+					return dateStamp.fromISOString(value);
+				}
+			};
 		}
 		this._features = {'dojo.data.api.Read':true, 'dojo.data.api.Identity':true};
 		this._itemsByIdentity = null;
@@ -118,7 +118,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 		//	item:
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){
-			throw new Error("dojo.data.ItemFileReadStore: Invalid item argument.");
+			throw new Error(this.declaredClass + ": Invalid item argument.");
 		}
 	},
 
@@ -128,13 +128,13 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 		//	attribute:
 		//		The attribute to test for being contained by the store.
 		if(typeof attribute !== "string"){
-			throw new Error("dojo.data.ItemFileReadStore: Invalid attribute argument.");
+			throw new Error(this.declaredClass + ": Invalid attribute argument.");
 		}
 	},
 
 	getValue: function(	/* item */ item,
-						/* attribute-name-string */ attribute,
-						/* value? */ defaultValue){
+						   /* attribute-name-string */ attribute,
+						   /* value? */ defaultValue){
 		//	summary:
 		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
@@ -167,7 +167,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 	},
 
 	hasAttribute: function(	/* item */ item,
-							/* attribute-name-string */ attribute){
+							   /* attribute-name-string */ attribute){
 		//	summary:
 		//		See dojo.data.api.Read.hasAttribute()
 		this._assertIsItem(item);
@@ -188,9 +188,9 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 	},
 
 	_containsValue: function(	/* item */ item,
-								/* attribute-name-string */ attribute,
-								/* anything */ value,
-								/* RegExp?*/ regexp){
+								 /* attribute-name-string */ attribute,
+								 /* anything */ value,
+								 /* RegExp?*/ regexp){
 		//	summary:
 		//		Internal function for looking at the values contained by the item.
 		//	description:
@@ -265,66 +265,70 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 		return null; //null
 	},
 
-	_fetchItems: function(	/* Object */ keywordArgs,
-							/* Function */ findCallback,
-							/* Function */ errorCallback){
-		//	summary:
-		//		See dojo.data.util.simpleFetch.fetch()
-		var self = this,
-		    filter = function(requestArgs, arrayOfItems){
-			var items = [],
-			    i, key;
-			if(requestArgs.query){
-				var value,
-				    ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : false;
+	filter: function(/* Object */ requestArgs, /* item[] */ arrayOfItems, /* Function */ findCallback){
+		//  summary:
+		//      This method handles the basic filtering needs for ItemFile* based stores.
+		var items = [],
+			i, key;
 
-				//See if there are any string values that can be regexp parsed first to avoid multiple regexp gens on the
-				//same value for each item examined.  Much more efficient.
-				var regexpList = {};
-				for(key in requestArgs.query){
-					value = requestArgs.query[key];
-					if(typeof value === "string"){
-						regexpList[key] = filterUtil.patternToRegExp(value, ignoreCase);
-					}else if(value instanceof RegExp){
-						regexpList[key] = value;
-					}
+		if(requestArgs.query){
+			var value,
+				ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : false;
+
+			//See if there are any string values that can be regexp parsed first to avoid multiple regexp gens on the
+			//same value for each item examined.  Much more efficient.
+			var regexpList = {};
+			for(key in requestArgs.query){
+				value = requestArgs.query[key];
+				if(typeof value === "string"){
+					regexpList[key] = filterUtil.patternToRegExp(value, ignoreCase);
+				}else if(value instanceof RegExp){
+					regexpList[key] = value;
 				}
-				for(i = 0; i < arrayOfItems.length; ++i){
-					var match = true;
-					var candidateItem = arrayOfItems[i];
-					if(candidateItem === null){
-						match = false;
-					}else{
-						for(key in requestArgs.query){
-							value = requestArgs.query[key];
-							if(!self._containsValue(candidateItem, key, value, regexpList[key])){
-								match = false;
-							}
+			}
+			for(i = 0; i < arrayOfItems.length; ++i){
+				var match = true;
+				var candidateItem = arrayOfItems[i];
+				if(candidateItem === null){
+					match = false;
+				}else{
+					for(key in requestArgs.query){
+						value = requestArgs.query[key];
+						if(!this._containsValue(candidateItem, key, value, regexpList[key])){
+							match = false;
 						}
 					}
-					if(match){
-						items.push(candidateItem);
-					}
 				}
-				findCallback(items, requestArgs);
-			}else{
-				// We want a copy to pass back in case the parent wishes to sort the array.
-				// We shouldn't allow resort of the internal list, so that multiple callers
-				// can get lists and sort without affecting each other.  We also need to
-				// filter out any null values that have been left as a result of deleteItem()
-				// calls in ItemFileWriteStore.
-				for(i = 0; i < arrayOfItems.length; ++i){
-					var item = arrayOfItems[i];
-					if(item !== null){
-						items.push(item);
-					}
+				if(match){
+					items.push(candidateItem);
 				}
-				findCallback(items, requestArgs);
 			}
-		};
+			findCallback(items, requestArgs);
+		}else{
+			// We want a copy to pass back in case the parent wishes to sort the array.
+			// We shouldn't allow resort of the internal list, so that multiple callers
+			// can get lists and sort without affecting each other.  We also need to
+			// filter out any null values that have been left as a result of deleteItem()
+			// calls in ItemFileWriteStore.
+			for(i = 0; i < arrayOfItems.length; ++i){
+				var item = arrayOfItems[i];
+				if(item !== null){
+					items.push(item);
+				}
+			}
+			findCallback(items, requestArgs);
+		}
+	},
+
+	_fetchItems: function(	/* Object */ keywordArgs,
+							  /* Function */ findCallback,
+							  /* Function */ errorCallback){
+		//	summary:
+		//		See dojo.data.util.simpleFetch.fetch()
+		var self = this;
 
 		if(this._loadFinished){
-			filter(keywordArgs, this._getItemsArray(keywordArgs.queryOptions));
+			this.filter(keywordArgs, this._getItemsArray(keywordArgs.queryOptions), findCallback);
 		}else{
 			//Do a check on the JsonFileUrl and crosscheck it.
 			//If it doesn't match the cross-check, it needs to be updated
@@ -333,9 +337,9 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 			//compatibility.  People use _jsonFileUrl (even though officially
 			//private.
 			if(this._jsonFileUrl !== this._ccUrl){
-				kernel.deprecated("dojo.data.ItemFileReadStore: ",
+				kernel.deprecated(this.declaredClass + ": ",
 					"To change the url, set the url property of the store," +
-					" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
+						" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 				this._ccUrl = this._jsonFileUrl;
 				this.url = this._jsonFileUrl;
 			}else if(this.url !== this._ccUrl){
@@ -354,15 +358,15 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 				//a load is in progress, we have to defer the fetching to be
 				//invoked in the callback.
 				if(this._loadInProgress){
-					this._queuedFetches.push({args: keywordArgs, filter: filter});
+					this._queuedFetches.push({args: keywordArgs, filter: lang.hitch(self, "filter"), findCallback: lang.hitch(self, findCallback)});
 				}else{
 					this._loadInProgress = true;
 					var getArgs = {
-							url: self._jsonFileUrl,
-							handleAs: "json-comment-optional",
-							preventCache: this.urlPreventCache,
-							failOk: this.failOk
-						};
+						url: self._jsonFileUrl,
+						handleAs: "json-comment-optional",
+						preventCache: this.urlPreventCache,
+						failOk: this.failOk
+					};
 					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
 						try{
@@ -370,7 +374,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 							self._loadFinished = true;
 							self._loadInProgress = false;
 
-							filter(keywordArgs, self._getItemsArray(keywordArgs.queryOptions));
+							self.filter(keywordArgs, self._getItemsArray(keywordArgs.queryOptions), findCallback);
 							self._handleQueuedFetches();
 						}catch(e){
 							self._loadFinished = true;
@@ -407,12 +411,12 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 					this._loadFinished = true;
 					this._getItemsFromLoadedData(this._jsonData);
 					this._jsonData = null;
-					filter(keywordArgs, this._getItemsArray(keywordArgs.queryOptions));
+					self.filter(keywordArgs, this._getItemsArray(keywordArgs.queryOptions), findCallback);
 				}catch(e){
 					errorCallback(e, keywordArgs);
 				}
 			}else{
-				errorCallback(new Error("dojo.data.ItemFileReadStore: No JSON source data was provided as either URL or a nested Javascript object."), keywordArgs);
+				errorCallback(new Error(this.declaredClass + ": No JSON source data was provided as either URL or a nested Javascript object."), keywordArgs);
 			}
 		}
 	},
@@ -420,14 +424,16 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 	_handleQueuedFetches: function(){
 		//	summary:
 		//		Internal function to execute delayed request in the store.
+		
 		//Execute any deferred fetches now.
 		if(this._queuedFetches.length > 0){
 			for(var i = 0; i < this._queuedFetches.length; i++){
 				var fData = this._queuedFetches[i],
-				    delayedQuery = fData.args,
-				    delayedFilter = fData.filter;
+					delayedQuery = fData.args,
+					delayedFilter = fData.filter,
+					delayedFindCallback = fData.findCallback;
 				if(delayedFilter){
-					delayedFilter(delayedQuery, this._getItemsArray(delayedQuery.queryOptions));
+					delayedFilter(delayedQuery, this._getItemsArray(delayedQuery.queryOptions), delayedFindCallback);
 				}else{
 					this.fetchItemByIdentity(delayedQuery);
 				}
@@ -447,31 +453,31 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 	},
 
 	close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
-		 //	summary:
-		 //		See dojo.data.api.Read.close()
-		 if(this.clearOnClose &&
+		//	summary:
+		//		See dojo.data.api.Read.close()
+		if(this.clearOnClose &&
 			this._loadFinished &&
 			!this._loadInProgress){
-			 //Reset all internalsback to default state.  This will force a reload
-			 //on next fetch.  This also checks that the data or url param was set
-			 //so that the store knows it can get data.  Without one of those being set,
-			 //the next fetch will trigger an error.
+			//Reset all internalsback to default state.  This will force a reload
+			//on next fetch.  This also checks that the data or url param was set
+			//so that the store knows it can get data.  Without one of those being set,
+			//the next fetch will trigger an error.
 
-			 if(((this._jsonFileUrl == "" || this._jsonFileUrl == null) &&
-				 (this.url == "" || this.url == null)
+			if(((this._jsonFileUrl == "" || this._jsonFileUrl == null) &&
+				(this.url == "" || this.url == null)
 				) && this.data == null){
-				 console.debug("dojo.data.ItemFileReadStore: WARNING!  Data reload " +
+				console.debug(this.declaredClass + ": WARNING!  Data reload " +
 					" information has not been provided." +
 					"  Please set 'url' or 'data' to the appropriate value before" +
 					" the next fetch");
-			 }
-			 this._arrayOfAllItems = [];
-			 this._arrayOfTopLevelItems = [];
-			 this._loadFinished = false;
-			 this._itemsByIdentity = null;
-			 this._loadInProgress = false;
-			 this._queuedFetches = [];
-		 }
+			}
+			this._arrayOfAllItems = [];
+			this._arrayOfTopLevelItems = [];
+			this._loadFinished = false;
+			this._itemsByIdentity = null;
+			this._loadInProgress = false;
+			this._queuedFetches = [];
+		}
 	},
 
 	_getItemsFromLoadedData: function(/* Object */ dataObject){
@@ -488,7 +494,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 
 		// First, we define a couple little utility functions...
 		var addingArrays = false,
-		    self = this;
+			self = this;
 
 		function valueIsAnItem(/* anything */ aValue){
 			// summary:
@@ -545,7 +551,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 
 		// Step 1: Walk through the object hierarchy and build a list of all items
 		var i,
-		    item;
+			item;
 		this._arrayOfAllItems = [];
 		this._arrayOfTopLevelItems = dataObject.items;
 
@@ -567,7 +573,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 		// We also store the attribute names so we can validate our store
 		// reference and item id special properties for the O(1) isItem
 		var allAttributeNames = {},
-		    key;
+			key;
 
 		for(i = 0; i < this._arrayOfAllItems.length; ++i){
 			item = this._arrayOfAllItems[i];
@@ -616,9 +622,9 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 					this._itemsByIdentity[identity] = item;
 				}else{
 					if(this._jsonFileUrl){
-						throw new Error("dojo.data.ItemFileReadStore:  The json data as specified by: [" + this._jsonFileUrl + "] is malformed.  Items within the list have identifier: [" + identifier + "].  Value collided: [" + identity + "]");
+						throw new Error(this.declaredClass + ":  The json data as specified by: [" + this._jsonFileUrl + "] is malformed.  Items within the list have identifier: [" + identifier + "].  Value collided: [" + identity + "]");
 					}else if(this._jsonData){
-						throw new Error("dojo.data.ItemFileReadStore:  The json data provided by the creation arguments is malformed.  Items within the list have identifier: [" + identifier + "].  Value collided: [" + identity + "]");
+						throw new Error(this.declaredClass + ":  The json data provided by the creation arguments is malformed.  Items within the list have identifier: [" + identifier + "].  Value collided: [" + identity + "]");
 					}
 				}
 			}
@@ -680,7 +686,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 								// from an item like: { name:['Kermit'], friends:[{_reference:{name:'Miss Piggy'}}] }
 								for(var k = 0; k < this._arrayOfAllItems.length; ++k){
 									var candidateItem = this._arrayOfAllItems[k],
-									    found = true;
+										found = true;
 									for(var refKey in referenceDescription){
 										if(candidateItem[refKey] != referenceDescription[refKey]){
 											found = false;
@@ -712,18 +718,18 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 	},
 
 	_addReferenceToMap: function(/*item*/ refItem, /*item*/ parentItem, /*string*/ attribute){
-		 //	summary:
-		 //		Method to add an reference map entry for an item and attribute.
-		 //	description:
-		 //		Method to add an reference map entry for an item and attribute. 		 //
-		 //	refItem:
-		 //		The item that is referenced.
-		 //	parentItem:
-		 //		The item that holds the new reference to refItem.
-		 //	attribute:
-		 //		The attribute on parentItem that contains the new reference.
+		//	summary:
+		//		Method to add an reference map entry for an item and attribute.
+		//	description:
+		//		Method to add an reference map entry for an item and attribute. 		 //
+		//	refItem:
+		//		The item that is referenced.
+		//	parentItem:
+		//		The item that holds the new reference to refItem.
+		//	attribute:
+		//		The attribute on parentItem that contains the new reference.
 
-		 //Stub function, does nothing.  Real processing is in ItemFileWriteStore.
+		//Stub function, does nothing.  Real processing is in ItemFileWriteStore.
 	},
 
 	getIdentity: function(/* item */ item){
@@ -747,7 +753,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 
 		// Hasn't loaded yet, we have to trigger the load.
 		var item,
-		    scope;
+			scope;
 		if(!this._loadFinished){
 			var self = this;
 			//Do a check on the JsonFileUrl and crosscheck it.
@@ -757,9 +763,9 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 			//compatibility.  People use _jsonFileUrl (even though officially
 			//private.
 			if(this._jsonFileUrl !== this._ccUrl){
-				kernel.deprecated("dojo.data.ItemFileReadStore: ",
+				kernel.deprecated(this.declaredClass + ": ",
 					"To change the url, set the url property of the store," +
-					" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
+						" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 				this._ccUrl = this._jsonFileUrl;
 				this.url = this._jsonFileUrl;
 			}else if(this.url !== this._ccUrl){
@@ -780,14 +786,14 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 				}else{
 					this._loadInProgress = true;
 					var getArgs = {
-							url: self._jsonFileUrl,
-							handleAs: "json-comment-optional",
-							preventCache: this.urlPreventCache,
-							failOk: this.failOk
+						url: self._jsonFileUrl,
+						handleAs: "json-comment-optional",
+						preventCache: this.urlPreventCache,
+						failOk: this.failOk
 					};
 					var getHandler = xhr.get(getArgs);
 					getHandler.addCallback(function(data){
-						var scope = keywordArgs.scope?keywordArgs.scope:window.global;
+						var scope = keywordArgs.scope?keywordArgs.scope:kernel.global;
 						try{
 							self._getItemsFromLoadedData(data);
 							self._loadFinished = true;
@@ -807,7 +813,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 					getHandler.addErrback(function(error){
 						self._loadInProgress = false;
 						if(keywordArgs.onError){
-							var scope = keywordArgs.scope?keywordArgs.scope:window.global;
+							var scope = keywordArgs.scope?keywordArgs.scope:kernel.global;
 							keywordArgs.onError.call(scope, error);
 						}
 					});
@@ -820,7 +826,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 				self._loadFinished = true;
 				item = self._getItemByIdentity(keywordArgs.identity);
 				if(keywordArgs.onItem){
-					scope = keywordArgs.scope?keywordArgs.scope:window.global;
+					scope = keywordArgs.scope?keywordArgs.scope:kernel.global;
 					keywordArgs.onItem.call(scope, item);
 				}
 			}
@@ -828,7 +834,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 			// Already loaded.  We can just look it up and call back.
 			item = this._getItemByIdentity(keywordArgs.identity);
 			if(keywordArgs.onItem){
-				scope = keywordArgs.scope?keywordArgs.scope:window.global;
+				scope = keywordArgs.scope?keywordArgs.scope:kernel.global;
 				keywordArgs.onItem.call(scope, item);
 			}
 		}
@@ -881,9 +887,9 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 		//compatibility.  People use _jsonFileUrl (even though officially
 		//private.
 		if(this._jsonFileUrl !== this._ccUrl){
-			kernel.deprecated("dojo.data.ItemFileReadStore: ",
+			kernel.deprecated(this.declaredClass + ": ",
 				"To change the url, set the url property of the store," +
-				" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
+					" not _jsonFileUrl.  _jsonFileUrl support will be removed in 2.0");
 			this._ccUrl = this._jsonFileUrl;
 			this.url = this._jsonFileUrl;
 		}else if(this.url !== this._ccUrl){
@@ -898,13 +904,13 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 		}
 
 		if(this._jsonFileUrl){
-				var getArgs = {
-					url: this._jsonFileUrl,
-					handleAs: "json-comment-optional",
-					preventCache: this.urlPreventCache,
-					failOk: this.failOk,
-					sync: true
-				};
+			var getArgs = {
+				url: this._jsonFileUrl,
+				handleAs: "json-comment-optional",
+				preventCache: this.urlPreventCache,
+				failOk: this.failOk,
+				sync: true
+			};
 			var getHandler = xhr.get(getArgs);
 			getHandler.addCallback(function(data){
 				try{
@@ -921,7 +927,7 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 						//Okay, we hit an error state we can't recover from.  A forced load occurred
 						//while an async load was occurring.  Since we cannot block at this point, the best
 						//that can be managed is to throw an error.
-						throw new Error("dojo.data.ItemFileReadStore:  Unable to perform a synchronous load, an async load is in progress.");
+						throw new Error(this.declaredClass + ":  Unable to perform a synchronous load, an async load is in progress.");
 					}
 				}catch(e){
 					console.log(e);
@@ -942,4 +948,5 @@ var ItemFileReadStore = declare("dojo.data.ItemFileReadStore", [Evented],{
 lang.extend(ItemFileReadStore,simpleFetch);
 
 return ItemFileReadStore;
+
 });

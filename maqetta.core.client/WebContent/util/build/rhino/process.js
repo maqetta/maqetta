@@ -14,14 +14,14 @@ define([], function() {
 
 		exec:function() {
 			// signature is (command, arg1, ..., argn, errorMessage, bc, callback)
-			for(var args= [], i= 0; i<arguments.length-3; i++){
+			for(var args = [], i = 0; i<arguments.length-3; i++){
 				args.push(arguments[i]);
 			}
 			var
-				errorMessage= arguments[i++],
-				bc= arguments[i++],
-				callback= arguments[i],
-				options= {output:""};
+				errorMessage = arguments[i++],
+				bc = arguments[i++],
+				callback = arguments[i],
+				options = {output:""};
 			args.push(options);
 			try{
 				runCommand.apply(this, args);

@@ -166,76 +166,76 @@
 	
 		<h1 class="testTitle">AccordionContainer Tests textDir="rtl" - defined in body tag.</h1>
 		<h2>Accordion from markup:</h2>
-							<input id="beforeMarkupAccordion" data-dojo-type="dijit.form.TextBox" data-dojo-props='name:"ltrMSimpleTexarea",
+							<input id="beforeMarkupAccordion" data-dojo-type="dijit/form/TextBox" data-dojo-props='name:"ltrMSimpleTexarea",
 							value:"Markup Testing.", rows:"1", cols:"20"'/>
 
-		<div id="markupAccordion" data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props='style:"width:500px; height:600px; overflow:hidden"' >
-			<div id="pane1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:"true",	title:"A Simple Pane"'>
-				<select id= "selectInPane" data-dojo-type="dijit.form.FilteringSelect">
+		<div id="markupAccordion" data-dojo-type="dijit/layout/AccordionContainer" data-dojo-props='style:"width:500px; height:600px; overflow:hidden"' >
+			<div id="pane1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='selected:"true",	title:"A Simple Pane"'>
+				<select id= "selectInPane" data-dojo-type="dijit/form/FilteringSelect">
 					<option value="1">foo.</option>
 					<option value="2">&#1489;&#1512;.</option>
 					<option value="3">baz.</option>
 				</select>
 				<p>
-					<input id="simpleTextbox" data-dojo-type="dijit.form.TextBox" data-dojo-props='value:"&#1513;&#1500;&#1493;&#1501;!"'/>
+					<input id="simpleTextbox" data-dojo-type="dijit/form/TextBox" data-dojo-props='value:"&#1513;&#1500;&#1493;&#1501;!"'/>
 				</p>
 			</div>
 			
 			<div data-dojo-textdir="auto">
-				<div id="borderContainerPane" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='title:"BorderContainer Pane"'>
-					<div id="contentPane1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"left", style:"width:50%", splitter:"true", textDir:"ltr"'>
+				<div id="borderContainerPane" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='title:"BorderContainer Pane"'>
+					<div id="contentPane1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"left", style:"width:50%", splitter:"true", textDir:"ltr"'>
 						<p>
 							This Pane ovverrides the body defined textDir="rtl" to textDir="ltr".
 							See some examples:
 						</p>
-						<select id="selectL" data-dojo-type="dijit.form.FilteringSelect">
+						<select id="selectL" data-dojo-type="dijit/form/FilteringSelect">
 							<option value="1">foo.</option>
 							<option value="2">&#1489;&#1512;.</option>
 							<option value="3">baz.</option>
 						</select>
 						<p>
-							<input id="inputLHeb" data-dojo-type="dijit.form.TextBox" data-dojo-props='value:"&#1513;&#1500;&#1493;&#1501;!"'/> 
+							<input id="inputLHeb" data-dojo-type="dijit/form/TextBox" data-dojo-props='value:"&#1513;&#1500;&#1493;&#1501;!"'/>
 						</p>
 						<p>
-							<input id="inputLEn" data-dojo-type="dijit.form.TextBox" data-dojo-props='value:"Hello!"'/>
+							<input id="inputLEn" data-dojo-type="dijit/form/TextBox" data-dojo-props='value:"Hello!"'/>
 						</p>
 					</div>
-					<div id="contentPane2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
+					<div id="contentPane2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center"'>
 						<p>
 							This Pane inherits its textDir from the dijit.layout.BorderContainer, and now textDir="auto".
 							See some examples:
 						</p>
-						<select id="selectA" data-dojo-type="dijit.form.FilteringSelect">
+						<select id="selectA" data-dojo-type="dijit/form/FilteringSelect">
 							<option value="1">foo.</option>
 							<option value="2">&#1489;&#1512;.</option>
 							<option value="3">baz.</option>
 						</select>
 						<p>
-							<input id="inputAHeb" data-dojo-type="dijit.form.TextBox" data-dojo-props='value:"&#1513;&#1500;&#1493;&#1501;!"'/> 
+							<input id="inputAHeb" data-dojo-type="dijit/form/TextBox" data-dojo-props='value:"&#1513;&#1500;&#1493;&#1501;!"'/>
 						</p>
 						<p>
-							<input id="inputAEn" data-dojo-type="dijit.form.TextBox" data-dojo-props='value:"Hello!"'/>
+							<input id="inputAEn" data-dojo-type="dijit/form/TextBox" data-dojo-props='value:"Hello!"'/>
 						</p>
 					</div>
 				</div>
 			</div>
 
-			<div id="embeddedLayoutPane" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tags & panes with TextBoxesAreas",
+			<div id="embeddedLayoutPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tags & panes with TextBoxesAreas",
 				textDir:"auto"'>
 				<p>
 					Here's a BorderContainer: textDir= contextual
 				</p>
 				<div data-dojo-textdir="ltr">
 					<div id="bContainer" data-dojo-type ="dijit.layout.BorderContainer" data-dojo-props='style:"height:200px; width:300px" '>
-						<div id="contentPane3" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"left", style:"width:125px", splitter:"true"'>
+						<div id="contentPane3" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"left", style:"width:125px", splitter:"true"'>
 							Left Pane:
-							<textarea id="ltrSimpleTexarea" data-dojo-type="dijit.form.SimpleTextarea" data-dojo-props='name:"ltrSimpleTexarea",
+							<textarea id="ltrSimpleTexarea" data-dojo-type="dijit/form/SimpleTextarea" data-dojo-props='name:"ltrSimpleTexarea",
 								rows:"8", cols:"13"'> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.
 							</textarea>
 						</div>
-						<div id="contentPane4" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center",textDir:"auto"'>
+						<div id="contentPane4" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center",textDir:"auto"'>
 							Right Pane:
-							<textarea id="autoSimpleTexarea" data-dojo-type="dijit.form.SimpleTextarea" data-dojo-props='name:"autoSimpleTexarea", rows:"8", cols:"13"
+							<textarea id="autoSimpleTexarea" data-dojo-type="dijit/form/SimpleTextarea" data-dojo-props='name:"autoSimpleTexarea", rows:"8", cols:"13"
 								'> &#1500;&#1493;&#1512;&#1501; &#1488;&#1497;&#1508;&#1505;&#1493;&#1501; &#1491;&#1493;&#1500;&#1493;&#1512; &#1505;&#1497;&#1496; &#1488;&#1502;&#1496;, &#1511;&#1493;&#1504;&#1505;&#1511;&#1496;&#1493;&#1512;&#1512; &#1488;&#1491;&#1497;&#1508;&#1497;&#1505;&#1497;&#1504;&#1490; &#1488;&#1500;&#1497;&#1514; &#1502;&#1493;&#1505;&#1503; &#1502;&#1504;&#1514;.
 							</textarea>
 						</div>
@@ -244,15 +244,15 @@
 				<p>
 					And a TabContainer:
 				</p>
-				<div id="tContainer" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='style:"height:170px; width:450px"' >
-					<div id="contentPane5" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 1 textDir=rtl", textDir:"rtl"'>
-						<textarea id="rtlSimpleTexarea" data-dojo-type="dijit.form.SimpleTextarea" data-dojo-props='name:"rtlSimpleTexarea", 
+				<div id="tContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='style:"height:170px; width:450px"' >
+					<div id="contentPane5" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 1 textDir=rtl", textDir:"rtl"'>
+						<textarea id="rtlSimpleTexarea" data-dojo-type="dijit/form/SimpleTextarea" data-dojo-props='name:"rtlSimpleTexarea",
 							rows:"4", cols:"15" '>jhkjkh.</textarea>
 					</div>
-					<div id="contentPane6" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 2 textDir=inherited from ContentPane"' >
-						<textarea id="texarea1" data-dojo-type="dijit.form.Textarea" data-dojo-props='name:"texarea1", rows:"4", cols:"14"
+					<div id="contentPane6" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 2 textDir=inherited from ContentPane"' >
+						<textarea id="texarea1" data-dojo-type="dijit/form/Textarea" data-dojo-props='name:"texarea1", rows:"4", cols:"14"
 							'>&#1502;&#1489;&#1495;&#1503;.</textarea>
-						<textarea id="texarea2" data-dojo-type="dijit.form.Textarea" data-dojo-props='name:"texarea2", rows:"4", cols:"14"
+						<textarea id="texarea2" data-dojo-type="dijit/form/Textarea" data-dojo-props='name:"texarea2", rows:"4", cols:"14"
 							'>Test.</textarea>
 					</div>
 				</div>

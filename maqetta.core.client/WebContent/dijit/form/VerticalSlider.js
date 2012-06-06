@@ -4,10 +4,6 @@ define([
 	"dojo/text!./templates/VerticalSlider.html"
 ], function(declare, HorizontalSlider, template){
 
-/*=====
-	var HorizontalSlider = dijit.form.HorizontalSlider;
-=====*/
-
 	// module:
 	//		dijit/form/VerticalSlider
 	// summary:

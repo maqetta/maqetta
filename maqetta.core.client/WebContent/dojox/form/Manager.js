@@ -11,16 +11,6 @@ define([
 	"dojo/_base/declare"
 ], function(_Widget, _TemplatedMixin, _Mixin, _NodeMixin, _FormMixin, _ValueMixin, _EnableMixin, _DisplayMixin, _ClassMixin, declare){
 
-	/*=====
-		_Widget = dijit._Widget;
-		_Mixin = dojox.form.manager._Mixin;
-		_NodeMixin = dojox.form.manager._NodeMixin;
-		_FormMixin = dojox.form.manager._FormMixin;
-		_ValueMixin = dojox.form.manager._ValueMixin;
-		_EnableMixin = dojox.form.manager._EnableMixin;
-		_DisplayMixin = dojox.form.manager._DisplayMixin;
-		_ClassMixin = dojox.form.manager._ClassMixin;
-	=====*/
 return declare("dojox.form.Manager", [ _Widget, _Mixin, _NodeMixin, _FormMixin, _ValueMixin, _EnableMixin, _DisplayMixin, _ClassMixin ], {
 	// summary:
 	//		The widget to orchestrate dynamic forms.
@@ -32,7 +22,7 @@ return declare("dojox.form.Manager", [ _Widget, _Mixin, _NodeMixin, _FormMixin, 
 		var node = (this.domNode = this.srcNodeRef);
 		if(!this.containerNode){
 			// all widgets with descendants must set containerNode
-				this.containerNode = node;
+			this.containerNode = node;
 		}
 		this.inherited(arguments);
 		this._attachPoints = [];

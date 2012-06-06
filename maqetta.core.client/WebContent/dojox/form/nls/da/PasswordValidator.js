@@ -1,8 +1,6 @@
 define(
-//begin v1.x content
 ({
-        nomatchMessage: "Adgangskoderne stemmer ikke overens.",
-		badPasswordMessage: "Ugyldig adgangskode."
+        nomatchMessage: "Kodeordene stemmer ikke overens.",
+	badPasswordMessage: "Ugyldigt kodeord."
 })
-//end v1.x content
 );

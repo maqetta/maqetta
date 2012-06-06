@@ -52,13 +52,13 @@ define([
 					this.rawNode.fill.colors = {};
 			};
 			
-			if (sniff.isIE <= 8) {
+			if (sniff.isIE <= 8 && gfx.renderer === "vml") {
 				
-				dojox.geo.openlayers.Patch.patchMethod(gfx.Line, "setShape", vmlFixRawNodePath, null);
-				dojox.geo.openlayers.Patch.patchMethod(gfx.Polyline, "setShape", vmlFixRawNodePath, null);
-				dojox.geo.openlayers.Patch.patchMethod(gfx.Path, "setShape", vmlFixRawNodePath, null);
+				this.patchMethod(gfx.Line, "setShape", vmlFixRawNodePath, null);
+				this.patchMethod(gfx.Polyline, "setShape", vmlFixRawNodePath, null);
+				this.patchMethod(gfx.Path, "setShape", vmlFixRawNodePath, null);
 				
-				dojox.geo.openlayers.Patch.patchMethod(shape.Shape, "setFill", vmlFixFillColors, null);
+				this.patchMethod(shape.Shape, "setFill", vmlFixFillColors, null);
 			}
 		}
 	};

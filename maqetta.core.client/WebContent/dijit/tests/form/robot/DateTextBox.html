@@ -11,11 +11,11 @@
 
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
-		<script type="text/javascript" src="../../helpers.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 			dojo.require("dojo.date");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_DateTextBox.html');
@@ -138,6 +138,7 @@
 
 							german.set('value', new Date(2006, 9, 15));	// 10/15/2006
 
+							// since there's no down arrow we just click on the <input> to open the drop down
 							doh.robot.mouseMoveAt(german.domNode, 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
@@ -164,6 +165,11 @@
 							}), 1000);
 
 							return d;
+						},
+						tearDown: function(){
+							// Close the drop down so it doesn't interfere with the next test by covering up the
+							// <input> that we want to focus.
+							german.closeDropDown();
 						}
 					}
 				]);
@@ -178,15 +184,62 @@
 						american.set('value', null, false);
 					},
 					runTest: function(){
-						var d = new doh.Deferred();
+						var	d = new doh.Deferred(),
+							r1 = true,
+							r2 = true,
+							r3 = true,
+							r4 = true,
+							r5 = true,
+							r6 = false,
+							r7 = false,
+							r8 = true;
 
 						doh.is(1, watches.length, 'one watch(value) event from the set("value")');
 
 						american.focus();
 
-						doh.robot.typeKeys('1/3/2005', 1000, 1600);
+						doh.robot.typeKeys('1', 1000, 200);
+						doh.robot.sequence(function(){
+							r1 = american._isDefinitelyOutOfRange();
+						}, 100);
+						doh.robot.typeKeys('/', 100, 200);
+						doh.robot.sequence(function(){
+							r2 = american._isDefinitelyOutOfRange();
+						}, 100);
+						doh.robot.typeKeys('3', 100, 200);
+						doh.robot.sequence(function(){
+							r3 = american._isDefinitelyOutOfRange();
+						}, 100);
+						doh.robot.typeKeys('/', 100, 200);
+						doh.robot.sequence(function(){
+							r4 = american._isDefinitelyOutOfRange();
+						}, 100);
+						doh.robot.typeKeys('2', 100, 200);
+						doh.robot.sequence(function(){
+							r5 = american._isDefinitelyOutOfRange();
+						}, 100);
+						doh.robot.typeKeys('0', 100, 200);
+						doh.robot.sequence(function(){
+							r6 = american._isDefinitelyOutOfRange();
+						}, 100);
+						doh.robot.typeKeys('0', 100, 200);
+						doh.robot.sequence(function(){
+							r7 = american._isDefinitelyOutOfRange();
+						}, 100);
+						doh.robot.typeKeys('5', 100, 200);
+						doh.robot.sequence(function(){
+							r8 = american._isDefinitelyOutOfRange();
+						}, 100);
 						doh.robot.keyPress(dojo.keys.TAB, 500, {});
 						doh.robot.sequence(d.getTestCallback(function(){
+							doh.f(r1, "1 out of range");
+							doh.f(r2, "1/ out of range");
+							doh.f(r3, "1/3 out of range");
+							doh.f(r4, "1/3/ out of range");
+							doh.f(r5, "1/3/2 out of range");
+							doh.t(r6, "1/3/20 in range");
+							doh.t(r7, "1/3/200 in range");
+							doh.f(r8, "1/3/2005 out of range");
 							var value = american.get('value');
 							doh.is(0, dojo.date.compare(new Date(2005, 0, 3), value), 'actual value is ' + value);
 							doh.is(1, changes.length, 'one onchange event');	// #9018
@@ -611,7 +664,7 @@
 								doh.is(0, watches.length, "no watch(value) events yet #1");
 							}), 500);
 
-							doh.robot.mouseMoveAt(american.focusNode, 0, 1);
+							doh.robot.mouseMoveAt(american._buttonNode, 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -984,7 +1037,7 @@
 						setUp: function(){
 							german.closeDropDown(true);
 							german.set("dropDownDefaultValue", new Date(2000,11,21));
-							german.set('value', new Date(1900,10,25));
+							german.set('value', new Date(2004,10,25));
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -993,7 +1046,7 @@
 
 							doh.robot.sequence(d.getTestCallback(function(){
 								var selectedYearButtons = dojo.query(".dijitCalendarSelectedYear", german.dropDown.domNode);
-								doh.is("1900", innerText(selectedYearButtons[0]), "textbox year is selected");
+								doh.is("2004", innerText(selectedYearButtons[0]), "textbox year is selected");
 	
 								var selectedDates = dojo.query(".dijitCalendarSelectedDate", german.dropDown.domNode);
 								doh.is(1, selectedDates.length, "one selected date");
@@ -1021,7 +1074,7 @@
 							doh.f(pattern.get("value"), "initially blank");
 
 							// open the drop down
-							doh.robot.mouseMoveAt("pattern", 0, 1);
+							doh.robot.mouseMoveAt(dijit.byId("pattern")._buttonNode, 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestErrback(function(){
 								var calendar = dijit.byId("pattern_popup");
@@ -1054,7 +1107,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt(american.focusNode, 0, 1);
+							doh.robot.mouseMoveAt(american._buttonNode, 0, 1);
 							doh.robot.mouseClick({left:true}, 500);
 
 							doh.robot.sequence(d.getTestCallback(function(){
@@ -1168,7 +1221,7 @@
 					}
 				]);
 
-				doh.register("openOnClick=false", [
+				doh.register("clicking input", [
 					{
 						name: "click on input",
 						timeout: 6000,

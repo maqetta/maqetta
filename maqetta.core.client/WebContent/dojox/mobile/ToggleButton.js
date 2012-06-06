@@ -5,10 +5,6 @@ define([
 	"./Button"
 ], function(declare, domClass, ToggleButtonMixin, Button){
 
-	/*=====
-		Button = dojox.mobile.Button;
-		ToggleButtonMixin = dijit.form._ToggleButtonMixin;
-	=====*/
 	return declare("dojox.mobile.ToggleButton", [Button, ToggleButtonMixin], {
 		// summary:
 		//		A non-templated button widget that can be in two states (checked or not).

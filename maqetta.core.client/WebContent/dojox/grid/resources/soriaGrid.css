@@ -243,3 +243,7 @@
 .soria .dojoxGridRowOdd .dojoxGridSubRowAlt {
 	background-color: #EDEFF3;
 }
+
+.soria .dojoxGridRowTable .dojoDndHorizontal th.dojoDndItem {
+	padding: 3px;
+}

@@ -1,7 +1,7 @@
 define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Deferred", "dojo/data/util/filter"], 
   function(declare, lang, array, Deferred, filter) {
 
-// This is an abstract data store module for adding updateable result set functionality to an existing data store class
+// This is an abstract data store module for adding updatable result set functionality to an existing data store class
 
 	var addUpdate = function(store,create,remove){
 		// create a handler that adds to the list of notifications
@@ -20,8 +20,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base
 				//		This is an abstract class that data stores can extend to add updateable result set functionality
 				//		as well as client side querying capabilities. This enables
 				//		widgets to be aware of how active results change in response to the modifications/notifications.
-				//
-				//	description:
+				// description:
 				//		To a update a result set after a notification (onNew, onSet, and onDelete),
 				//		widgets can call the updateResultSet method. Widgets can use the updated
 				//		result sets to determine how to react to notifications, and how to update their displayed results
@@ -44,7 +43,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base
 				//
 				// example:
 				//		to make a updated-result-set data store from an existing data store:
-				//	|	dojo.declare("dojox.data.MyLiveDataStore",
+				//	|	declare("dojox.data.MyLiveDataStore",
 				//	|		dojox.data.MyDataStore,dojox.data.ClientFilter], // subclass LiveResultSets if available
 				//	|		{}
 				//	|	);
@@ -55,21 +54,21 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base
 				this._fetchCache = [];
 			},
 			clearCache: function(){
-				//	summary:
+				// summary:
 				//		Clears the cache of client side queries
 				this._fetchCache = [];
 			},
 			updateResultSet: function(/*Array*/ resultSet, /*Object*/ request){
-				//	summary:
+				// summary:
 				//		Attempts to update the given result set based on previous notifications
-				//	resultSet:
+				// resultSet:
 				//		The result set array that should be updated
-				//	request:
+				// request:
 				//		This object follows the same meaning as the keywordArgs passed to a dojo.data.api.Read.fetch.
-				//	description:
-				// 		This will attempt to update the provide result based on previous notification, adding new items
-				// 		from onNew calls, removing deleted items, and updating modified items, and properly removing
-				//  	and adding items as required by the query and sort parameters. This function will return:
+				// description:
+				//		This will attempt to update the provide result based on previous notification, adding new items
+				//		from onNew calls, removing deleted items, and updating modified items, and properly removing
+				//		and adding items as required by the query and sort parameters. This function will return:
 				//		0: Indicates it could not successfully update the result set
 				//		1: Indicates it could successfully handle all the notifications, but no changes were made to the result set
 				//		2: Indicates it successfully handled all the notifications and result set has been updated.
@@ -109,7 +108,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base
 				return 0;
 			},
 			querySuperSet: function(argsSuper, argsSub){
-				//	summary:
+				// summary:
 				//		Determines whether the provided arguments are super/sub sets of each other
 				// argsSuper:
 				//		Dojo Data Fetch arguments
@@ -178,7 +177,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base
 						fetchCache.push(args);
 					}
 					defResult= args._loading = this._doQuery(args);
-					 
+
 					defResult.addErrback(function(){
 						fetchCache.splice(array.indexOf(fetchCache, args), 1);
 					});
@@ -201,21 +200,19 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base
 				return defResult;
 			},
 			isUpdateable: function(/*Object*/ request){
-				//	summary:
+				// summary:
 				//		Returns whether the provide fetch arguments can be used to update an existing list
-				//	request:
+				// request:
 				//		See dojo.data.api.Read.fetch request
 				
-				return typeof request.query == "object";
+				return !request.query && typeof request.query == "object";
 			},
 			clientSideFetch: function(/*Object*/ request,/*Array*/ baseResults){
 				// summary:
 				//		Performs a query on the client side and returns the results as an array
-				//
-				//	request:
+				// request:
 				//		See dojo.data.api.Read.fetch request
-				//
-				//	baseResults:
+				// baseResults:
 				//		This provides the result set to start with for client side querying
 				if(request.queryOptions && request.queryOptions.results){
 					baseResults = request.queryOptions.results;
@@ -260,9 +257,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base
 				return true;
 			},
 			makeComparator: function(sort){
-				//	summary:
+				// summary:
 				//		returns a comparator function for the given sort order array
-				//	sort:
+				// sort:
 				//		See dojox.data.api.Read.fetch
 				var current = sort.shift();
 				if(!current){

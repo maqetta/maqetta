@@ -58,9 +58,13 @@ makeShapes = function(){
 	t5 = makeText(surface, {x: 250, y: 250, text: "Define Shuffle Tiff", align: "middle", kerning: false}, 
 		{family: "serif", size: "36pt"}, "black")
 		.setTransform(m.rotategAt(0, 250, 250));
+	// test #14522
+	t6 = makeText(surface, {x: 250, y: 290, text: 18, align: "start"}, 
+		{family: "sans serif", size: "18pt", weight: "bold"}, "black");
 };
 
 getSizes = function(){
+	if (!surface.children.length){return;}
 	var t = [];
 	dojo.forEach(["t1", "t2", "t3", "t4", "t5"], function(name){
 		var node = eval("(" + name + ")");

@@ -2,7 +2,7 @@
 		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>doh.robot Tooltip Mouse Quirks Test</title>
+		<title>robot Tooltip Mouse Quirks Test</title>
 
 		<style>
 			@import "../../../util/doh/robot/robot.css";
@@ -12,14 +12,19 @@
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../helpers.js"></script>
-
 		<script type="text/javascript">
-			dojo.require("dijit.robotx");
+			require([
+				"doh/runner", "dojo/robotx",
+				"dojo/query",
+				"dojo/domReady!"
+			], function(doh, robot, query){
 
-			dojo.ready(function(){
-				doh.robot.initRobot("../quirks.html?file=test_Tooltip.html");
+				robot.initRobot("../quirks.html?file=test_Tooltip.html");
+
+				doh.register(function setup(){
+					// get pointer to registry in the iframe
+					registry = robot.window.require("dijit/registry");
+				});
 
 				doh.register("dijit.Tooltip mouse quirks tests", [
 					// Test that BackgroundIFrame has right proportions; this used to fail in quirks mode
@@ -30,17 +35,17 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							doh.robot.mouseMoveAt(dojo.query(".dijitArrowButton", dijit.byId("dtb").domNode)[0], 500);
-							doh.robot.mouseClick({left: true}, 500);
+							robot.mouseMoveAt(query(".dijitArrowButton", registry.byId("dtb").domNode)[0], 500);
+							robot.mouseClick({left: true}, 500);
 
 							// Click Dec 4, 2010
-							doh.robot.mouseMoveAt(function(){
-								return dojo.query(".dijitCalendarDateLabel", dijit.byId("dtb_popup").domNode)[6];
+							robot.mouseMoveAt(function(){
+								return query(".dijitCalendarDateLabel", registry.byId("dtb_popup").domNode)[6];
 							} , 1000);
-							doh.robot.mouseClick({left: true}, 500);
+							robot.mouseClick({left: true}, 500);
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("12/4/2010", dijit.byId("dtb").get("displayedValue"));
+							robot.sequence(d.getTestCallback(function(){
+								doh.is("12/4/2010", registry.byId("dtb").get("displayedValue"));
 							}), 500);
 
 							return d;

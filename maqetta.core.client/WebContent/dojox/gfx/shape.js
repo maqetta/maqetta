@@ -1,34 +1,32 @@
-define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window", "dojo/_base/sniff",
-	"dojo/_base/connect", "dojo/_base/array", "dojo/dom-construct", "dojo/_base/Color", "./matrix"], 
-  function(g, lang, declare, win, has, events, arr, domConstruct, Color, matrixLib){
+define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/kernel", "dojo/_base/sniff",
+	"dojo/_base/connect", "dojo/_base/array", "dojo/dom-construct", "dojo/_base/Color", "./matrix" /*===== , "./path" =====*/ ], 
+  function(g, lang, declare, kernel, has, events, arr, domConstruct, Color, matrixLib){
 
-/*===== 
-	dojox.gfx.shape = {
+	var shape = g.shape = {
 		// summary:
 		//		This module contains the core graphics Shape API.
-		//		Different graphics renderer implementation modules (svg, canvas, vml, silverlight, etc.) extend this 
+		//		Different graphics renderer implementation modules (svg, canvas, vml, silverlight, etc.) extend this
 		//		basic api to provide renderer-specific implementations for each shape.
 	};
-  =====*/
-
-	var shape = g.shape = {};
+	
 	// a set of ids (keys=type)
 	var _ids = {};
 	// a simple set impl to map shape<->id
 	var registry = {};
 	
-	shape.register = function(/*dojox.gfx.shape.Shape*/shape){
+	shape.register = function(/*dojox.gfx.shape.Shape*/s){
 		// summary: 
 		//		Register the specified shape into the graphics registry.
-		// shape: dojox.gfx.shape.Shape
+		// s: dojox.gfx.shape.Shape
 		//		The shape to register.
 		// returns:
 		//		The unique id associated with this shape.
+		
 		// the id pattern : type+number (ex: Rect0,Rect1,etc)
-		var t = shape.declaredClass.split('.').pop();
+		var t = s.declaredClass.split('.').pop();
 		var i = t in _ids ? ++_ids[t] : ((_ids[t] = 0));
 		var uid = t+i;
-		registry[uid] = shape;
+		registry[uid] = s;
 		return uid;
 	};
 	
@@ -40,30 +38,30 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 		return registry[id]; //dojox.gfx.shape.Shape
 	};
 	
-	shape.dispose = function(/*dojox.gfx.shape.Shape*/shape){
+	shape.dispose = function(/*dojox.gfx.shape.Shape*/s){
 		// summary: 
 		//		Removes the specified shape from the registry.
-		// shape: dojox.gfx.shape.Shape
+		// s: dojox.gfx.shape.Shape
 		//		The shape to unregister.
-		delete registry[shape.getUID()];
+		delete registry[s.getUID()];
 	};
 	
 	declare("dojox.gfx.shape.Shape", null, {
 		// summary: a Shape object, which knows how to apply
-		// graphical attributes and transformations
+		//     graphical attributes and transformations
 	
 		constructor: function(){
 			//	rawNode: Node
 			//		underlying graphics-renderer-specific implementation object (if applicable)
 			this.rawNode = null;
 			//	shape: Object: an abstract shape object
-			//	(see dojox.gfx.defaultPath,
-			//	dojox.gfx.defaultPolyline,
-			//	dojox.gfx.defaultRect,
-			//	dojox.gfx.defaultEllipse,
-			//	dojox.gfx.defaultCircle,
-			//	dojox.gfx.defaultLine,
-			//	or dojox.gfx.defaultImage)
+			//		(see dojox.gfx.defaultPath,
+			//		dojox.gfx.defaultPolyline,
+			//		dojox.gfx.defaultRect,
+			//		dojox.gfx.defaultEllipse,
+			//		dojox.gfx.defaultCircle,
+			//		dojox.gfx.defaultLine,
+			//		or dojox.gfx.defaultImage)
 			this.shape = null;
 	
 			//	matrix: dojox.gfx.Matrix2D
@@ -105,7 +103,14 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			this.getUID = function(){
 				return uid;
 			}
-		},	
+		},
+		
+		destroy: function(){
+			// summary:
+			//		Releases all internal resources owned by this shape. Once this method has been called,
+			//		the instance is considered destroyed and should not be used anymore. 
+			shape.dispose(this);
+		},
 	
 		// trivial getters
 	
@@ -153,11 +158,13 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			return this.parent;	// Object
 		},
 		getBoundingBox: function(){
-			// summary: Returns the bounding box Rectanagle for this shape or null if a BoundingBox cannot be
+			// summary: Returns the bounding box Rectangle for this shape or null if a BoundingBox cannot be
 			//	calculated for the shape on the current renderer or for shapes with no geometric area (points).
 			//	A bounding box is a rectangular geometric region
 			//	defining the X and Y extent of the shape.
 			//	(see dojox.gfx.defaultRect)
+			//	Note that this method returns a direct reference to the attribute of this instance. Therefore you should
+			//	not modify its value directly but clone it instead.
 			return this.bbox;	// dojox.gfx.Rectangle
 		},
 		getTransformedBoundingBox: function(){
@@ -179,11 +186,47 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 		getEventSource: function(){
 			// summary: returns a Node, which is used as
 			//	a source of events for this shape
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 			return this.rawNode;	// Node
 		},
 	
 		// empty settings
+		
+		setClip: function(clip){
+			// summary: sets the clipping area of this shape.
+			// description:
+			//	The clipping area defines the shape area that will be effectively visible. Everything that
+			//	would be drawn outside of the clipping area will not be rendered.
+			//	The possible clipping area types are rectangle, ellipse, polyline and path, but all are not 
+			//	supported by all the renderers. vml only supports rectangle clipping, while the gfx silverlight renderer does not
+			//	support path clipping.
+			//	The clip parameter defines the clipping area geometry, and should be an object with the following properties:
+			//		* {x:Number, y:Number, width:Number, height:Number} for rectangular clip
+			//		* {cx:Number, cy:Number, rx:Number, ry:Number} for ellipse clip
+			//		* {points:Array} for polyline clip
+			//		* {d:String} for a path clip.
+			//	The clip geometry coordinates are expressed in the coordinate system used to draw the shape. In other
+			//	words, the clipping area is defined in the shape parent coordinate system and the shape transform is automatically applied.
+			//	example:
+			//	The following example shows how to clip a gfx image with all the possible clip geometry: a rectangle, 
+			//	an ellipse, a circle (using the ellipse geometry), a polyline and a path :
+			//	|	surface.createImage({src:img, width:200,height:200}).setClip({x:10,y:10,width:50,height:50});
+			//	|	surface.createImage({src:img, x:100,y:50,width:200,height:200}).setClip({cx:200,cy:100,rx:20,ry:30});
+			//	|	surface.createImage({src:img, x:0,y:350,width:200,height:200}).setClip({cx:100,cy:425,rx:60,ry:60});
+			//	|	surface.createImage({src:img, x:300,y:0,width:200,height:200}).setClip({points:[350,0,450,50,380,130,300,110]});
+			//	|	surface.createImage({src:img, x:300,y:350,width:200,height:200}).setClip({d:"M 350,350 C314,414 317,557 373,450.0000 z"});
+			//
+			// clip: Object
+			//		an object that defines the clipping geometry, or null to remove clip.
+			
+			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
+			this.clip = clip;
+		},
+		
+		getClip: function(){
+			return this.clip;
+		},
 	
 		setShape: function(shape){
 			// summary: sets a shape object
@@ -197,6 +240,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			//	dojox.gfx.defaultCircle,
 			//	dojox.gfx.defaultLine,
 			//	or dojox.gfx.defaultImage)
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 			this.shape = g.makeParameters(this.shape, shape);
 			this.bbox = null;
@@ -211,6 +255,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			//	dojox.gfx.defaultRadialGradient,
 			//	dojox.gfx.defaultPattern,
 			//	or dojo.Color)
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 			if(!fill){
 				// don't fill
@@ -244,6 +289,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			// stroke: Object
 			//	a stroke object
 			//	(see dojox.gfx.defaultStroke)
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 			if(!stroke){
 				// don't stroke
@@ -264,6 +310,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			//	a matrix or a matrix-like object
 			//	(see an argument of dojox.gfx.Matrix2D
 			//	constructor for a list of acceptable arguments)
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 			this.matrix = matrixLib.clone(matrix ? matrixLib.normalize(matrix) : matrixLib.identity);
 			return this._applyTransform();	// self
@@ -271,6 +318,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 	
 		_applyTransform: function(){
 			// summary: physically sets a matrix
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 			return this;	// self
 		},
@@ -297,10 +345,12 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 		},
 		_moveToFront: function(){
 			// summary: renderer-specific hook, see dojox.gfx.shape.Shape.moveToFront()
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 		},
 		_moveToBack: function(){
 			// summary: renderer-specific hook, see dojox.gfx.shape.Shape.moveToFront()
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 		},
 	
@@ -381,6 +431,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 	shape._eventsProcessing = {
 		connect: function(name, object, method){
 			// summary: connects a handler to an event on this shape
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 			// redirect to fixCallback to normalize events and add the gfxTarget to the event. The latter
 			// is done by dojox.gfx.fixTarget which is defined by each renderer
@@ -389,6 +440,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 		},
 		disconnect: function(token){
 			// summary: connects a handler by token from an event on this shape
+			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
 	
 			events.disconnect(token);
@@ -418,7 +470,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			scope = null;
 		}
 		if(lang.isString(method)){
-			scope = scope || win.global;
+			scope = scope || kernel.global;
 			if(!scope[method]){ throw(['dojox.gfx.shape.fixCallback: scope["', method, '"] is null (scope="', scope, '")'].join('')); }
 			return function(e){  
 				return fixFunction(e,gfxElement) ? scope[method].apply(scope, arguments || []) : undefined; }; // Function
@@ -481,20 +533,61 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			}
 			return this;	// self
 		},
-		clear: function(){
-			// summary: removes all shapes from a group/surface
+		clear: function(/*Boolean?*/ destroy){
+			// summary: removes all shapes from a group/surface.
+			// destroy: Boolean
+			//		Indicates whether the children should be destroyed. Optional.
 			var shape;
 			for(var i = 0; i < this.children.length;++i){
 				shape = this.children[i];
 				shape.parent = null;
 				shape.parentMatrix = null;
+				if(destroy){
+					shape.destroy();
+				}
 			}
 			this.children = [];
 			return this;	// self
 		},
-	
+		getBoundingBox: function(){
+			// summary: Returns the bounding box Rectangle for this shape.
+			if(this.children){
+				// if this is a composite shape, then sum up all the children
+				var result = null;
+				arr.forEach(this.children, function(shape){
+					var bb = shape.getBoundingBox();
+					if(bb){
+						var ct = shape.getTransform();
+						if(ct){
+							bb = matrixLib.multiplyRectangle(ct, bb);
+						}
+						if(result){
+							// merge two bbox 
+							result.x = Math.min(result.x, bb.x);
+							result.y = Math.min(result.y, bb.y);
+							result.endX = Math.max(result.endX, bb.x + bb.width);
+							result.endY = Math.max(result.endY, bb.y + bb.height);
+						}else{
+							// first bbox 
+							result = {
+								x: bb.x,
+								y: bb.y,
+								endX: bb.x + bb.width,
+								endY: bb.y + bb.height
+							};
+						}
+					}
+				});
+				if(result){
+					result.width = result.endX - result.x;
+					result.height = result.endY - result.y;
+				}
+				return result; // dojox.gfx.Rectangle
+			}
+			// unknown/empty bounding box, subclass shall override this impl 
+			return null;
+		},
 		// moving child nodes
-	
 		_moveChildToFront: function(shape){
 			// summary: moves a shape to front of the list of shapes
 			//	shape: dojox.gfx.shape.Shape
@@ -522,7 +615,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 			return this;	// self
 		}
 	};
-	
+
 	declare("dojox.gfx.shape.Surface", null, {
 		// summary: a surface object to be used for drawings
 		constructor: function(){
@@ -563,8 +656,8 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 		isLoaded: true,
 		onLoad: function(/*dojox.gfx.Surface*/ surface){
 			// summary: local event, fired once when the surface is created
-			// asynchronously, used only when isLoaded is false, required
-			// only for Silverlight.
+			//     asynchronously, used only when isLoaded is false, required
+			//     only for Silverlight.
 		},
 		whenLoaded: function(/*Object|Null*/ context, /*Function|String*/ method){
 			var f = lang.hitch(context, method);
@@ -860,16 +953,32 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window",
 		},
 		createObject: function(shapeType, rawShape){
 			// summary: creates an instance of the passed shapeType class
-			// SHOULD BE RE-IMPLEMENTED BY THE RENDERER!
 			// shapeType: Function
 			//		a class constructor to create an instance of
 			// rawShape: Object 
 			//		properties to be passed in to the classes 'setShape' method
 	
+			// SHOULD BE RE-IMPLEMENTED BY THE RENDERER!
 			return null;	// dojox.gfx.Shape
 		}
 	};
 	
+	/*=====
+		g.Group = declare(g.shape.Shape, {
+			// summary: a group shape, which can be used
+			//	to logically group shapes (e.g, to propagate matricies)
+		});
+		g.Rect = g.shape.Rect;
+		g.Ellipse = g.shape.Ellipse;
+		g.Circle = g.shape.Circle;
+		g.Line = g.shape.Line;
+		g.Polyline = g.shape.Polyline;
+		g.Image = g.shape.Image;
+		g.Text = g.shape.Text;
+		g.Path = g.shape.Path;
+		g.TextPath = declare([ g.shape.Shape, g.path.TextPath ]);
+		g.Surface = g.shape.Surface;
+	=====*/
+
 	return shape;
 });
-

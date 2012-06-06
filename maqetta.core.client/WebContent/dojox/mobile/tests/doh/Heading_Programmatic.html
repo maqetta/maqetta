@@ -4,8 +4,8 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Heading</title>
-		<link href="../../themes/android/base.css" rel="stylesheet">
-		<link href="../../themes/common/domButtons.css" rel="stylesheet">
+		<link href="../../themes/android/base.css" rel="stylesheet"/>
+		<link href="../../themes/common/domButtons.css" rel="stylesheet"/>
 
 		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
@@ -20,23 +20,33 @@
 			dojo.addOnLoad(function(){
 				var view = dijit.byId("general");
 				var demoWidget = new dojox.mobile.Heading({back:"Settings", moveTo:"settings", label:"General"});
-				view.addChild(demoWidget);
+//				view.addChild(demoWidget);
+				demoWidget.placeAt(view.containerNode);
+				demoWidget.startup();
 
 				demoWidget = new dojox.mobile.Heading({back:"Long Button", moveTo:"settings"});
 				demoWidget.set({label:"Very Very Long Title May Not Be Displayed in the Narrow Space"});
-				view.addChild(demoWidget);
+//				view.addChild(demoWidget);
+				demoWidget.placeAt(view.containerNode);
+				demoWidget.startup();
 
 				demoWidget = new dojox.mobile.Heading({label:"World Clock"});
-				dojo.doc.body.appendChild(demoWidget.domNode);
+				dojo.doc.body.appendChild(demoWidget.containerNode);
+				demoWidget.startup();
 
 				demoWidget = new dojox.mobile.Heading();
-				dojo.doc.body.appendChild(demoWidget.domNode);
-				var childWidget = new dojox.mobile.ToolBarButton({lable:"Edit"});
+				dojo.doc.body.appendChild(demoWidget.containerNode);
+				demoWidget.startup();
+				var childWidget = new dojox.mobile.ToolBarButton({label:"Edit"});
 				childWidget.domNode.style.padding = "0px 14px";
-				demoWidget.addChild(childWidget);
-				childWidget = new dojox.mobile.ToolBarButton({className:"mblDomButtonWhitePlus"});
+//				demoWidget.addChild(childWidget);
+				childWidget.placeAt(demoWidget.containerNode);
+				childWidget.startup();
+				childWidget = new dojox.mobile.ToolBarButton({icon:"mblDomButtonWhitePlus"});
 				childWidget.domNode.style.float = "right";
-				demoWidget.addChild(childWidget);
+//				demoWidget.addChild(childWidget);
+				childWidget.placeAt(demoWidget.containerNode);
+				childWidget.startup();
 				demoWidget.domNode.appendChild(dojo.doc.createTextNode("Alarm Clock"));
 
 

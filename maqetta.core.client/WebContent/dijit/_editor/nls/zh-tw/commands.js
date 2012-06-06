@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': '粗體',
 	'copy': '複製',
@@ -45,7 +44,8 @@ define(
 	"print": "列印",
 	"newPage": "新頁面",
 	/* Error messages */
-	'systemShortcut': '"${0}" 動作在您的瀏覽器中，只能使用鍵盤快速鍵。請使用 ${1}。'
+	'systemShortcut': '"${0}" 動作在您的瀏覽器中，只能使用鍵盤快速鍵。請使用 ${1}。',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-//end v1.x content
 );

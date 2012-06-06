@@ -7,8 +7,8 @@
         var str = window.location.search.substr(1).replace(/[%]0D/g, "").replace(/[+]/g, " ").split(/&/);
         for(var i=0; i<str.length; i++){
                 var split = str[i].split(/=/),
-                        key = unescape(split[0] || ''),
-                        value = unescape(split[1] || '');
+                        key = decodeURIComponent(split[0] || ''),
+                        value = decodeURIComponent(split[1] || '');
 		if(values[key] === undefined){
 			values[key] = value;
 		}else if(values[key] instanceof Array || typeof values[key] == "array"){

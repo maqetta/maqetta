@@ -2,10 +2,10 @@ define([
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/html",
+	"dojo/dom-geometry",
 	"dojox/mdnd/AreaManager"
-],function(dojo){
-	var ddm = dojo.declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
+],function(dojo, declare, array, geom){
+	var ddm = declare("dojox.mdnd.dropMode.DefaultDropMode", null, {
 		// summary:
 		//		Enabled a type of calcul for Dnd.
 		//		Default class to find the nearest target.
@@ -34,7 +34,7 @@ define([
 	
 			//console.log("dojox.mdnd.dropMode.DefaultDropMode ::: addArea");
 			var length =  areas.length;
-			var position = dojo.position(object.node, true);
+			var position = geom.position(object.node, true);
 			object.coords = {'x':position.x, 'y':position.y};
 			if (length == 0) {
 				areas.push(object);
@@ -105,7 +105,7 @@ define([
 			//		protected
 	
 			//console.log("dojox.mdnd.dropMode.DefaultDropMode  ::: _updateArea");
-			var position = dojo.position(area.node, true);
+			var position = geom.position(area.node, true);
 			area.coords.x = position.x;
 			area.coords.y = position.y;
 		},
@@ -117,10 +117,10 @@ define([
 			//		the DnD area
 	
 			//console.log("dojox.mdnd.dropMode.DefaultDropMode ::: initItems");
-			dojo.forEach(area.items, function(obj){
+			array.forEach(area.items, function(obj){
 				//get the vertical middle of the item
 				var node = obj.item.node;
-				var position = dojo.position(node, true);
+				var position = geom.position(node, true);
 				var y = position.y + position.h/2;
 				obj.y = y;
 			});

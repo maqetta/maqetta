@@ -1,13 +1,14 @@
-dojo.provide("dojox.drawing.plugins.tools.Iconize");
-dojo.require("dojox.drawing.plugins._Plugin");
+define(["dojo", "../../util/oo", "../_Plugin", "../../manager/_registry"],
+function(dojo, oo, Plugin, registry){
 
-dojox.drawing.plugins.tools.Iconize = dojox.drawing.util.oo.declare(
+//dojox.drawing.plugins.tools.Iconize = 
+var Iconize = oo.declare(
 	// summary:
 	//		Somewhat of internal use...
 	//		Outputs a path to be used as an icon. Will end up being a
 	//		sub-icon under Export options
 	
-	dojox.drawing.plugins._Plugin,
+	Plugin,
 	function(options){
 	
 	},
@@ -91,10 +92,13 @@ dojox.drawing.plugins.tools.Iconize = dojox.drawing.util.oo.declare(
 	}
 );
 
-dojox.drawing.plugins.tools.Iconize.setup = {
+Iconize.setup = {
 	name:"dojox.drawing.plugins.tools.Iconize",
 	tooltip:"Iconize Tool",
 	iconClass:"iconPan"
 };
+dojo.setObject('dojox.drawing.plugins.tools.Iconize', Iconize);
+registry.register(Iconize.setup, "plugin");
 
-dojox.drawing.register(dojox.drawing.plugins.tools.Iconize.setup, "plugin");
+return Iconize;
+});

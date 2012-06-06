@@ -1,11 +1,6 @@
-dojo.provide("dojox.charting.tests.Theme");
-dojo.require("dojox.charting.Theme");
-dojo.require("dojox.charting.themes.PlotKit.blue");
-
-(function(){
-	var dxc=dojox.charting, Theme = dxc.Theme;
-	var blue=dxc.themes.PlotKit.blue;
-	tests.register("dojox.charting.tests.Theme", [
+define(["doh", "dojox/charting/Theme", "dojox/charting/themes/PlotKit/blue"], 
+	function(doh, Theme, blue){
+	doh.register("dojox.charting.tests.Theme", [
 		function testDefineColor(t){
 			var args={ num:16, cache:false };
 			Theme.defineColors(args);
@@ -64,4 +59,4 @@ dojo.require("dojox.charting.themes.PlotKit.blue");
 			doh.debug(s);
 		}
 	]);
-})();
+});

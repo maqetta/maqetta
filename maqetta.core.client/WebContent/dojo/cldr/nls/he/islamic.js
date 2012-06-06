@@ -1,75 +1,7 @@
 define(
 //begin v1.x content
 {
-	"dateFormat-medium": "d בMMM yyyy",
-	"dateFormatItem-MMMEd": "E, d בMMM",
-	"dateFormatItem-yMEd": "EEE, d.M.yyyy",
-	"eraNarrow": [
-		"שנת היג׳רה"
-	],
-	"dateFormatItem-Md": "d/M",
-	"months-standAlone-wide": [
-		"מוחרם",
-		"ספר",
-		"רביע אל-אוואל",
-		"רביע אל-תני",
-		"ג׳ומדה אל-אוואל",
-		"ג׳ומדה אל-תני",
-		"רג׳אב",
-		"שעבאן",
-		"ראמדן",
-		"שוואל",
-		"זו אל-QI'DAH",
-		"זו אל-חיג׳ה"
-	],
-	"dateFormatItem-EEEd": "EEE ה-d",
-	"eraNames": [
-		"שנת היג׳רה"
-	],
-	"days-standAlone-narrow": [
-		"א",
-		"ב",
-		"ג",
-		"ד",
-		"ה",
-		"ו",
-		"ש"
-	],
-	"dayPeriods-format-wide-pm": "אחה״צ",
-	"months-standAlone-abbr": [
-		"מוחרם",
-		"ספר",
-		"רביע אל-אוואל",
-		"רביע אל-תני",
-		"ג׳ומדה אל-אוואל",
-		"ג׳ומדה אל-תני",
-		"רג׳אב",
-		"שעבאן",
-		"ראמדן",
-		"שוואל",
-		"זו אל-QI'DAH",
-		"זו אל-חיג׳ה"
-	],
-	"dayPeriods-format-wide-am": "לפנה״צ",
-	"dateFormat-long": "d בMMMM y",
-	"dateFormat-short": "dd/MM/yy",
-	"dateFormatItem-yMMMEd": "EEE, d בMMM y",
 	"months-format-wide": [
-		"מוחרם",
-		"ספר",
-		"רביע אל-אוואל",
-		"רביע אל-תני",
-		"ג׳ומדה אל-אוואל",
-		"ג׳ומדה אל-תני",
-		"רג׳אב",
-		"שעבאן",
-		"ראמדן",
-		"שוואל",
-		"זו אל-QI'DAH",
-		"זו אל-חיג׳ה"
-	],
-	"dateFormatItem-yM": "M.yyyy",
-	"months-format-abbr": [
 		"מוחרם",
 		"ספר",
 		"רביע אל-אוואל",
@@ -86,6 +18,82 @@ define(
 	"eraAbbr": [
 		"שנת היג׳רה"
 	],
+	"dateFormat-medium": "d בMMM yyyy",
+	"dateFormatItem-h": "h a",
+	"dateFormatItem-Hm": "HH:mm",
+	"dateFormatItem-Hms": "HH:mm:ss",
+	"dateFormatItem-Md": "d/M",
+	"dateFormatItem-MEd": "E, d/M",
+	"dateFormatItem-yM": "M/yyyy",
+	"dateFormatItem-yMEd": "E, d.M.yyyy",
+	"dateFormatItem-yQ": "Q yyyy",
+	"dateFormatItem-yQQQ": "QQQ y",
+	"months-format-abbr": [
+		"מוחרם",
+		"ספר",
+		"רביע אל-אוואל",
+		"רביע אל-תני",
+		"ג׳ומדה אל-אוואל",
+		"ג׳ומדה אל-תני",
+		"רג׳אב",
+		"שעבאן",
+		"ראמדן",
+		"שוואל",
+		"זו אל-QI'DAH",
+		"זו אל-חיג׳ה"
+	],
+	"months-standAlone-abbr": [
+		"מוחרם",
+		"ספר",
+		"רביע אל-אוואל",
+		"רביע אל-תני",
+		"ג׳ומדה אל-אוואל",
+		"ג׳ומדה אל-תני",
+		"רג׳אב",
+		"שעבאן",
+		"ראמדן",
+		"שוואל",
+		"זו אל-QI'DAH",
+		"זו אל-חיג׳ה"
+	],
+	"months-standAlone-wide": [
+		"מוחרם",
+		"ספר",
+		"רביע אל-אוואל",
+		"רביע אל-תני",
+		"ג׳ומדה אל-אוואל",
+		"ג׳ומדה אל-תני",
+		"רג׳אב",
+		"שעבאן",
+		"ראמדן",
+		"שוואל",
+		"זו אל-QI'DAH",
+		"זו אל-חיג׳ה"
+	],
+	"eraNames": [
+		"שנת היג׳רה"
+	],
+	"eraNarrow": [
+		"שנת היג׳רה"
+	],
+	"days-format-abbr": [
+		"יום א׳",
+		"יום ב׳",
+		"יום ג׳",
+		"יום ד׳",
+		"יום ה׳",
+		"יום ו׳",
+		"שבת"
+	],
+	"days-format-narrow": [
+		"א",
+		"ב",
+		"ג",
+		"ד",
+		"ה",
+		"ו",
+		"ש"
+	],
 	"days-format-wide": [
 		"יום ראשון",
 		"יום שני",
@@ -95,25 +103,33 @@ define(
 		"יום שישי",
 		"יום שבת"
 	],
-	"dateFormatItem-yQ": "yyyy Q",
-	"dateFormatItem-yMMM": "MMM y",
+	"days-standAlone-narrow": [
+		"א",
+		"ב",
+		"ג",
+		"ד",
+		"ה",
+		"ו",
+		"ש"
+	],
 	"quarters-format-wide": [
 		"רבעון 1",
 		"רבעון 2",
 		"רבעון 3",
 		"רבעון 4"
 	],
+	"dayPeriods-format-wide-am": "לפנה״צ",
+	"dayPeriods-format-wide-pm": "אחה״צ",
 	"dateFormat-full": "EEEE, d בMMMM y",
+	"dateFormat-long": "d בMMMM y",
+	"dateFormat-short": "dd/MM/yy",
+	"dateFormatItem-Ed": "E ה-d",
 	"dateFormatItem-MMMd": "d בMMM",
-	"days-format-abbr": [
-		"יום א׳",
-		"יום ב׳",
-		"יום ג׳",
-		"יום ד׳",
-		"יום ה׳",
-		"יום ו׳",
-		"שבת"
-	]
+	"dateFormatItem-MMMEd": "E, d בMMM",
+	"dateFormatItem-yMd": "d.M.yyyy",
+	"dateFormatItem-yMMM": "MMM y",
+	"dateFormatItem-yMMMd": "d בMMM y",
+	"dateFormatItem-yMMMEd": "E, d בMMM y"
 }
 //end v1.x content
 );

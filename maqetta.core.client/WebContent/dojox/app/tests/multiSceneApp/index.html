@@ -57,13 +57,14 @@
 					"loader-execModule-out":0,
 					"loader-defineModule":0
 				},
-				async:1
+				async:1,
+				app: {debugApp: 1}  // set debugApp to log app transtions and view activate/deactivate 
 			}
-			console.log("pre dojo");
+			//console.log("pre dojo");
 		</script>
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 		<script>
-			console.log("post dojo");
+			//console.log("post dojo");
             // the actual  launcher
             require(["./multiSceneApp.js"], function(){});
 		</script>

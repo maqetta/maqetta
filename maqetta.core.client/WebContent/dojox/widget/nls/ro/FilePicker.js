@@ -1,6 +1,7 @@
+define(
 ({
-name: "Nume",
-path: "Cale ",
-size: "Dimensiune (în octeţi)"
+	name: "Nume",
+	path: "Cale",
+	size: "Mărime (în octeţi)"
 })
-
+);

@@ -1,5 +1,7 @@
+define(
 ({
-name: "Nazwa",
-path: "Ścieżka",
-size: "Wielkość (w bajtach)"
+	name: "Nazwa",
+	path: "Ścieżka",
+	size: "Wielkość (w bajtach)"
 })
+);

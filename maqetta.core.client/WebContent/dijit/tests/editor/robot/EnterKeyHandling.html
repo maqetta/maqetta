@@ -11,12 +11,10 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			function dom2string(root){
 				// summary:
@@ -59,6 +57,18 @@
 
 				var metaKey = dojo.isMac? {meta: true} : {ctrl: true};
 				
+				doh.register("init", [
+					{
+						name: "wait for editors to load",
+						timeout: 5000,
+						runTest: function(){
+							return new dojo.DeferredList(
+								dijit.registry.filter(function(w){ return w.onLoadDeferred; }).map(function(w){ return w.onLoadDeferred; })
+							);
+						}
+					}
+				]);
+
 				// Tests for BR mode
 				doh.register("blockNodeForEnter=BR", [
 					{
@@ -132,6 +142,13 @@
 								var value = br.get('value');
 								value = value.replace(/ /g, "");
 								value = value.replace(/\xA0/g, "");
+								if(dojo.isWebKit && !dojo.isMac){
+									// Work around webkit bug: 
+									// http://code.google.com/p/chromium/issues/detail?id=106551
+									// Should hopefully be fixed in Chrome 19.
+									value = value.replace(/\n/g, "");
+									value = value.replace(/\r\f/g, "");
+								}
 								
 								// Safari may end with a trailing/extra br, so we need to remove it.
 								if(/<br\/><br\/>$/.test(value)){
@@ -174,6 +191,14 @@
 								// paragraphs.
 								var value = br.get('value');
 								value = value.replace(/ /g, "");
+								if(dojo.isWebKit && !dojo.isMac){
+									// Work around webkit bug: 
+									// http://code.google.com/p/chromium/issues/detail?id=106551
+									// Should hopefully be fixed in Chrome 19.
+									value = value.replace(/\n/g, "");
+									value = value.replace(/\r\f/g, "");
+								}
+								
 
 								// Safari may end with a trailing/extra br, so we need to remove it.
 								if(/aste<br\/>$/.test(value)){
@@ -198,10 +223,8 @@
 							// we want to focus on the bold and enter there, splitting it.
 							var editor = dijit.byId("div2");
 							dojo.window.scrollIntoView(editor.iframe);
-							var node = dojo.withGlobal(editor.window, function(){
-								return dojo.byId("boldLine0");
-							});
-							
+							var node = dojo.byId("boldLine0", editor.document);
+
 							doh.robot.mouseMoveAt(editor.iframe, 500);
 							doh.robot.mouseClick({left:true}, 500);
 
@@ -235,9 +258,7 @@
 							// we want to focus on the bold and enter there, splitting it.
 							var editor = dijit.byId("div3");
 							dojo.window.scrollIntoView(editor.iframe);
-							var node = dojo.withGlobal(editor.window, function(){
-								return dojo.byId("boldLine1");
-							});
+							var node = dojo.byId("boldLine1", editor.document);
 							
 							doh.robot.mouseMoveAt(editor.iframe, 500);
 							doh.robot.mouseClick({left:true}, 500);
@@ -272,9 +293,7 @@
 							// we want to focus on the font and enter there, splitting it.
 							var editor = dijit.byId("div4");
 							dojo.window.scrollIntoView(editor.iframe);
-							var node = dojo.withGlobal(editor.window, function(){
-								return dojo.byId("fontLine1");
-							});
+							var node = dojo.byId("fontLine1", editor.document);
 							
 							doh.robot.mouseMoveAt(editor.iframe, 500);
 							doh.robot.mouseClick({left:true}, 500);
@@ -325,6 +344,13 @@
 							doh.robot.sequence(d.getTestCallback(function(){
 								var value = editor.get('value');
 								value = value.replace(/\xA0/g, "");
+								if(dojo.isWebKit && !dojo.isMac){
+									// Work around webkit bug: 
+									// http://code.google.com/p/chromium/issues/detail?id=106551
+									// Should hopefully be fixed in Chrome 19.
+									value = value.replace(/\n/g, "");
+									value = value.replace(/\r\f/g, "");
+								}
 								doh.is('<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste</div><div></div>',
 										value,
 										"get('value')");
@@ -363,6 +389,14 @@
 								// paragraphs.
 								var value = editor.get('value');
 								value = value.replace(/\xA0/g, "");
+								if(dojo.isWebKit && !dojo.isMac){
+									// Work around webkit bug: 
+									// http://code.google.com/p/chromium/issues/detail?id=106551
+									// Should hopefully be fixed in Chrome 19.
+									value = value.replace(/\n/g, "");
+									value = value.replace(/\r\f/g, "");
+								}
+								
 
 								doh.is('<div>testingCopyAndPastetestingCopyAndPastetestingCopyAndP</div><div>aste</div>',
 									value,
@@ -380,9 +414,7 @@
 							// we want to focus on the bold and enter there, splitting it.
 							var editor = dijit.byId("p2");
 							dojo.window.scrollIntoView(editor.iframe);
-							var node = dojo.withGlobal(editor.window, function(){
-								return dojo.byId("boldLine2");
-							});
+							var node = dojo.byId("boldLine2", editor.document);
 							
 							doh.robot.mouseMoveAt(editor.iframe, 500);
 							doh.robot.mouseClick({left:true}, 500);
@@ -414,14 +446,12 @@
 							var d = new doh.Deferred();
 							var editor = dijit.byId("p2");
 							editor.set('value','<p>ab</p>');
-							dojo.withGlobal(editor.window, function(){
-								var selection=dijit.range.getSelection(dojo.global);
-								selection.removeAllRanges();
-								var range=dijit.range.create(dojo.global);
-								range.setStart(editor.editNode.firstChild, 0);
-								range.setEnd(editor.editNode.firstChild, 1);
-								selection.addRange(range);
-							});
+							var selection=dijit.range.getSelection(editor.window);
+							selection.removeAllRanges();
+							var range=dijit.range.create(editor.window);
+							range.setStart(editor.editNode.firstChild, 0);
+							range.setEnd(editor.editNode.firstChild, 1);
+							selection.addRange(range);
 							doh.robot.keyPress(dojo.keys.ENTER, 500, {shift: true});
 							doh.robot.sequence(d.getTestCallback(function(){
 								var val = editor.get("value");
@@ -455,6 +485,14 @@
 							doh.robot.sequence(d.getTestCallback(function(){
 								var value = editor.get('value');
 								value = value.replace(/\xA0/g, "");
+								if(dojo.isWebKit && !dojo.isMac){
+									// Work around webkit bug: 
+									// http://code.google.com/p/chromium/issues/detail?id=106551
+									// Should hopefully be fixed in Chrome 19.
+									value = value.replace(/\n/g, "");
+									value = value.replace(/\r\f/g, "");
+								}
+								
 								doh.is('<p>testingCopyAndPastetestingCopyAndPastetestingCopyAndPaste</p><p></p>',
 									value,
 									"get('value')");
@@ -493,6 +531,14 @@
 								// paragraphs.
 								var value = editor.get('value');
 								value = value.replace(/\xA0/g, "");
+								if(dojo.isWebKit && !dojo.isMac){
+									// Work around webkit bug: 
+									// http://code.google.com/p/chromium/issues/detail?id=106551
+									// Should hopefully be fixed in Chrome 19.
+									value = value.replace(/\n/g, "");
+									value = value.replace(/\r\f/g, "");
+								}
+								
 								doh.is('<p>testingCopyAndPastetestingCopyAndPastetestingCopyAndP</p><p>aste</p>',
 										value,
 										"get('value')");

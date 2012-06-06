@@ -2,7 +2,7 @@
  * Takes plain JSON structures and wraps them as to requireJS i18n bundles
  */
 
-djConfig={baseUrl: "../../../dojo/"};
+djConfig={baseUrl: "../../../dojo/", paths: {"dojo/_base/xhr": "../util/buildscripts/cldr/xhr"}};
 
 load("../../../dojo/dojo.js");
 load("../jslib/logger.js");

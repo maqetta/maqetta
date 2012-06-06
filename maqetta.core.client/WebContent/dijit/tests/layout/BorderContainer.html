@@ -21,7 +21,6 @@
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
 	<script type="text/javascript" src="robot/borderContainerTestFunctions.js"></script>
-	<script type="text/javascript" src="../helpers.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
@@ -35,6 +34,7 @@
 		dojo.require("dijit.MenuItem");
 
 		dojo.require("doh.runner");
+		dojo.require("dijit.tests.helpers");	// functions to help test
 
 		var bc, cp1, cp2, cp3;
         dojo.ready(function(){
@@ -221,7 +221,7 @@
 						bc.addChild(cp3);
 						bc.startup();
 					}catch(e){
-						doh.t(/No region setting for cp3/.test(e.toString()), "check exception: " + e);
+						doh.t(/No region setting for cp3/.test(e.message), "check exception: " + e);
 						exception = true;
 					}
 					doh.t(exception, "exception was fired");
@@ -235,56 +235,56 @@
 </head>
 <body class="claro">
 	<p>Headline layout (default), left is constrained - min:150, max:250</p>
-	<div id="border1" data-dojo-type="dijit.layout.BorderContainer"
+	<div id="border1" data-dojo-type="dijit/layout/BorderContainer"
 		data-dojo-props='style:"width: 1000px; height: 300px; border: 2px solid blue;"'>
-		<div role="banner" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border1-top", region:"top", style:"background-color: #b39b86; border: 15px black solid; height: 50px;", splitter:true'>
+		<div role="banner" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border1-top", region:"top", style:"background-color: #b39b86; border: 15px black solid; height: 50px;", splitter:true'>
 			top bar (resizable)
 		</div>
-		<div role="navigation" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border1-left", region:"left", style:"background-color: #acb386; border: 10px green solid; width: 100px;",
+		<div role="navigation" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border1-left", region:"left", style:"background-color: #acb386; border: 10px green solid; width: 100px;",
 		splitter:true, minSize:150, maxSize:250'>
 			left (resizable b/w 150 &rarr; 250)
 		</div>
-		<div role="main" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border1-center", region:"center", style:"background-color: #f5ffbf; padding: 30px;"'>
+		<div role="main" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border1-center", region:"center", style:"background-color: #f5ffbf; padding: 30px;"'>
 			main panel with <a href="http://www.dojotoolkit.org/">a link</a>.<br />
 			(to check we're copying children around properly).<br />
-			<select data-dojo-type="dijit.form.FilteringSelect">
+			<select data-dojo-type="dijit/form/FilteringSelect">
 				<option value="1">foo</option>
 				<option value="2">bar</option>
 				<option value="3">baz</option>
 			</select>
 			Here's some text that comes AFTER the combo box.
 		</div>
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border1-right", region:"right", style:"background-color: #acb386; width: 100px;"'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border1-right", region:"right", style:"background-color: #acb386; width: 100px;"'>
 			right (fixed size)
 		</div>
-		<div role="contentinfo" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border1-bottom", region:"bottom", style:"background-color: #b39b86; height: 50px;", splitter:true'>
+		<div role="contentinfo" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border1-bottom", region:"bottom", style:"background-color: #b39b86; height: 50px;", splitter:true'>
 			bottom bar (resizable)
 		</div>
 	</div>
 
 	<p>Sidebar layout, BiDi sensitive, liveSplitters: false</p>
-	<div id="border2" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='design:"sidebar", liveSplitters:false,
+	<div id="border2" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='design:"sidebar", liveSplitters:false,
 		style:"border: 20px solid black; width: 1000px; height: 300px;"'>
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border2-leading", region:"leading", style:"background-color: #acb386; width: 100px;"'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border2-leading", region:"leading", style:"background-color: #acb386; width: 100px;"'>
 			leading (fixed size)
 		</div>
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border2-top", region:"top", style:"background-color: #b39b86; height: 80px;"'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border2-top", region:"top", style:"background-color: #b39b86; height: 80px;"'>
 			top bar (fixed size)
 		</div>
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border2-center", region:"center", style:"background-color: #f5ffbf; padding: 10px;"'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border2-center", region:"center", style:"background-color: #f5ffbf; padding: 10px;"'>
 			main panel with <a href="http://www.dojotoolkit.org/">a link</a>.<br />
 			(to check we're copying children around properly).<br />
-			<select data-dojo-type="dijit.form.FilteringSelect">
+			<select data-dojo-type="dijit/form/FilteringSelect">
 				<option value="1">foo</option>
 				<option value="2">bar</option>
 				<option value="3">baz</option>
 			</select>
 			Here's some text that comes AFTER the combo box.
 		</div>
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border2-bottom", region:"bottom", style:"background-color: #b39b86; height: 80px;", splitter:true'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border2-bottom", region:"bottom", style:"background-color: #b39b86; height: 80px;", splitter:true'>
 			bottom bar (resizable)
 		</div>
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id:"border2-trailing", region:"trailing", style:"background-color: #acb386; width: 100px;", splitter:true'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id:"border2-trailing", region:"trailing", style:"background-color: #acb386; width: 100px;", splitter:true'>
 			trailing (resizable)
 		</div>
 	</div>
@@ -293,29 +293,29 @@
 	<div id='main'></div>
 
 	<p>BorderContainer with MenuBar</p>
-	<div id="menuBorder" data-dojo-type="dijit.layout.BorderContainer"
+	<div id="menuBorder" data-dojo-type="dijit/layout/BorderContainer"
 		data-dojo-props='style:"width: 1000px; height: 300px; border: 2px solid blue;"'>
-		<div id="menu" data-dojo-type="dijit.MenuBar" data-dojo-props='region:"top", splitter:true'>
-			<div id="file" data-dojo-type="dijit.PopupMenuBarItem" >
+		<div id="menu" data-dojo-type="dijit/MenuBar" data-dojo-props='region:"top", splitter:true'>
+			<div id="file" data-dojo-type="dijit/PopupMenuBarItem" >
 				<span>File</span>
-				<div id="fileMenu" data-dojo-type="dijit.Menu" >
-					<div id="new" data-dojo-type="dijit.MenuItem" >New</div>
-					<div id="open" data-dojo-type="dijit.MenuItem" >Open</div>
+				<div id="fileMenu" data-dojo-type="dijit/Menu" >
+					<div id="new" data-dojo-type="dijit/MenuItem" >New</div>
+					<div id="open" data-dojo-type="dijit/MenuItem" >Open</div>
 				</div>
 			</div>
-			<div id="edit" data-dojo-type="dijit.PopupMenuBarItem" >
+			<div id="edit" data-dojo-type="dijit/PopupMenuBarItem" >
 				<span>Edit</span>
-				<div id="editMenu" data-dojo-type="dijit.Menu" >
-					<div id="cut" data-dojo-type="dijit.MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCut",
+				<div id="editMenu" data-dojo-type="dijit/Menu" >
+					<div id="cut" data-dojo-type="dijit/MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCut",
 						onClick:function(){ console.log("not actually cutting anything, just a test!"); }, accelKey:"Ctrl+X"'>Cut</div>
-					<div id="copy" data-dojo-type="dijit.MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCopy",
+					<div id="copy" data-dojo-type="dijit/MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCopy",
 						onClick:function(){ console.log("not actually copying anything, just a test!") }, accelKey:"Ctrl+C"'>Copy</div>
-					<div id="paste" data-dojo-type="dijit.MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconPaste",
+					<div id="paste" data-dojo-type="dijit/MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconPaste",
 						onClick:function(){ console.log("not actually pasting anything, just a test!") }, accelKey:"Ctrl+V"'>Paste</div>
 				</div>
 			</div>
 		</div>
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region: "center", splitter:true'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region: "center", splitter:true'>
 			content pane under menu
 		</div>
 	</div>

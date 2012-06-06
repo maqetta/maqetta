@@ -1,10 +1,8 @@
-dojo.provide("dijit.tests._data.SlowStore");
+define(["dojo/data/ItemFileReadStore"], function(ItemFileReadStore){
 
-dojo.require("dojo.data.ItemFileReadStore");
-
-dojo.declare("dijit.tests._data.SlowStore", dojo.data.ItemFileReadStore, {
+return dojo.declare("dijit.tests._data.SlowStore", ItemFileReadStore, {
 	// summary:
-	//		This wrapper decorates an ItemFileReadStorere by delaying queries issued according to the
+	//		This wrapper decorates an ItemFileReadStore by delaying queries issued according to the
 	//		length of the query:
 	//
 	//			empty query: 2000ms,
@@ -67,7 +65,7 @@ dojo.declare("dijit.tests._data.SlowStore", dojo.data.ItemFileReadStore, {
 				delay: delay
 			});
 			console.log("END query on " + (first || "{}") + " (" + count + " chars), delay = " + delay);
-			dojo.data.ItemFileReadStore.prototype.fetch.apply(that, thatArgs);
+			ItemFileReadStore.prototype.fetch.apply(that, thatArgs);
 		}, delay);
 
 		// This abort() method cancels a request before it has even been sent to ItemFileReadStore.
@@ -87,4 +85,6 @@ dojo.declare("dijit.tests._data.SlowStore", dojo.data.ItemFileReadStore, {
 
 		return keywordArgs;
 	}
+});
+
 });

@@ -298,7 +298,7 @@ dojo.declare("dojox.storage.Provider", null, {
 
 	showSettingsUI: function(){
 		// summary: If this provider has a settings UI, determined
-		// by calling hasSettingsUI(), it is shown.
+		//     by calling hasSettingsUI(), it is shown.
 		console.warn("dojox.storage.showSettingsUI not implemented");
 	},
 

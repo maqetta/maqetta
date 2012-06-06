@@ -19,7 +19,7 @@ return declare("dojox.gauges.GlossyCircularGaugeNeedle", [AnalogIndicatorBase], 
 	interactionMode: "gauge",
 	
 	// color: String
-	// The color of the indicator.
+	//		The color of the indicator.
 	color: '#c4c4c4',
 	
 	_getShapes: function(group){

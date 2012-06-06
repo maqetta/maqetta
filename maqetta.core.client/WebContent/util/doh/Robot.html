@@ -20,15 +20,18 @@
 		var domain=unescape(/[\\?&]domain=([^&#]*)/.exec(window.location.href)[1]);
 		document.domain=domain;
 	}
-	// find doh
+
+	// Setup global "doh" and "robot" variables to point to doh and doh/robot modules that have already
+	// been loaded in parent frame (ie, the main document)
 	var doc = window.frameElement.ownerDocument;
 	var w = doc.parentWindow || doc.defaultView || top;
-	doh = w.doh;
+	doh  = w.require("doh/_browserRunner");
+	robot = w.require("doh/robot");
 
 	function init(){
 		var applet = document.getElementsByTagName('applet')[0];
 
-		doh.robot._killApplet = function(){
+		robot._killApplet = function(){
 			document.body.removeChild(applet);
 			applet = null;
 		};
@@ -47,7 +50,7 @@
 
 	function _onfocus(robotField){
 		_robotField = robotField;
-		doh.robot._initWheel();
+		robot._initWheel();
 	}
 
 	function _onblur(e){
@@ -61,16 +64,16 @@
 		if(e.screenX == 0||e.clientX == 0){ return; }
 		var docScreenX = e.screenX-e.clientX;
 		var docScreenY = e.screenY-e.clientY;
-		doh.robot._setDocumentBounds(docScreenX, docScreenY);
+		robot._setDocumentBounds(docScreenX, docScreenY);
 	}
 
 	function _onmousewheel(e){
 		e = e||window.event;
-		doh.robot.mouseWheelSize = e.detail ? (e.detail * -1) : (e.wheelDelta / 120);
+		robot.mouseWheelSize = e.detail ? (e.detail * -1) : (e.wheelDelta / 120);
 		if(e.preventDefault){ e.preventDefault(); }
 		else { e.returnValue = false; }
-		doh.robot._primePump = true;
-		doh.robot._initKeyboard();
+		robot._primePump = true;
+		robot._initKeyboard();
 		return false;
 	}
 
@@ -78,7 +81,7 @@
 	var keystring = "";
 	var expectedlength = 0;
 
-	doh.robot._nextKeyGroup = function(size){
+	robot._nextKeyGroup = function(size){
 		// called from Robot
 		// moves to the next group of keys to press; shift, alt-graph etc.
 		expectedlength = size;
@@ -90,22 +93,22 @@
 		var c = e.charCode ? e.charCode :
                    (e.keyCode ? e.keyCode :
                    (e.which ? e.which : 0)); // opera
-		if(doh.robot._primePump){
+		if(robot._primePump){
 			// event pump was primed with spaces and JS finally received one
 			// tell robot to stop sending spaces now
 			if(c == 32){
-				doh.robot._spaceReceived = true;
+				robot._spaceReceived = true;
 			}
 			else if(c == 13){
 				// enter: start accepting keys
-				doh.robot._primePump = false;
+				robot._primePump = false;
 			}
 		}
 		else if(c == 32){
 			keystring += String.fromCharCode(charCode);
 			charCode = 32;
 			if(keystring.length >= expectedlength){
-				doh.robot._notified(keystring);
+				robot._notified(keystring);
 			}
 		}
 		else if(c > 32){ // printable
@@ -119,18 +122,19 @@
 	}
 
 	var rf=null;
-	doh.robot._onKeyboard = function(){
+	robot._onKeyboard = function(){
 	 	// called from Robot
 		// Robot calls _onKeyboard after it finishes discovering the keyboard
 		// need to untie from Java thread with setTimeout
 		setTimeout(function(){
 			rf.style.visibility = "hidden";
-			doh.robot._run(window.frameElement);
+			robot._run(window.frameElement);
  		}, 0);
 	};
 </script>
 </head>
-<body style="margin:0px; padding:0px; border:0px none;background-color:transparent;" onload="init()">
+<body id="robotBody"
+	  style="margin:0px; padding:0px; border:0px none;background-color:transparent;" onload="init()">
 <input type="text" tabIndex="-1" style="border:0px none;margin:0px;padding:0px;width:200px;height:42px;background-color:white;z-index:9998;opacity:0;filter:alpha(opacity=0);cursor:default;"
 	onmousewheel="_onmousewheel(arguments[0])"
 	onmousedown="_onmousedown(arguments[0])"
@@ -160,7 +164,7 @@
 			// applet loads synchronously in IE6
 			document.applets[0].isActive();
 		}catch(e){
-			doh.robot._appletDead=true;
+			robot._appletDead=true;
 			// IE skips the dojo.robot XHR test below in the else
 			// since the no java behavior is the same as no applet behavior in IE
 			doh.run();
@@ -168,7 +172,7 @@
 	}else if(!navigator.javaEnabled()){
 		// FF, Safari, Opera etc.
 		// unreliable in IE6
-		doh.robot._appletDead=true;
+		robot._appletDead=true;
 		doh.run();
 	}else{
 		// Opera etc. have Java enabled, but load the applet asychronously so it might still be missing from server at this point
@@ -179,7 +183,7 @@
 			if(dohRobotCheck.readyState == 4 && dohRobotCheck.status == 404){
 				// oops! no applet
 				// move the tests along
-				doh.robot._appletDead=true;
+				robot._appletDead=true;
 				doh.run();
 			}
 		};

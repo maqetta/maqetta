@@ -1,14 +1,17 @@
 define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/xhr",
-	"dojo/_base/window",
-	"dojo/_base/sniff",
-	"dojo/_base/url",
+	"dojo/_base/declare",
+	"dojo/Deferred",
 	"dojo/dom-construct",
 	"dojo/html",
-	"dojo/_base/declare"
-], function (dojo, lang, xhrUtil, windowUtil, has, _Url, domConstruct, htmlUtil) {
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/ready",
+	"dojo/_base/sniff",
+	"dojo/_base/url",
+	"dojo/_base/xhr",
+	"dojo/_base/window"
+], function (declare, Deferred, domConstruct, htmlUtil, kernel, lang, ready, has, _Url, xhrUtil, windowUtil) {
+
 /*
 	Status: dont know where this will all live exactly
 	Need to pull in the implementation of the various helper methods
@@ -18,7 +21,7 @@ define([
 
 
 */
-	var html = dojo.getObject("dojox.html", true);
+	var html = kernel.getObject("dojox.html", true);
 
 	if(has("ie")){
 		var alphaImageLoader = /(AlphaImageLoader\([^)]*?src=(['"]))(?![a-z]+:|\/)([^\r\n;}]+?)(\2[^)]*\)\s*[;}]?)/g;
@@ -41,10 +44,10 @@ define([
 	var cssPaths = /(?:(?:@import\s*(['"])(?![a-z]+:|\/)([^\r\n;{]+?)\1)|url\(\s*(['"]?)(?![a-z]+:|\/)([^\r\n;]+?)\3\s*\))([a-z, \s]*[;}]?)/g;
 
 	var adjustCssPaths = html._adjustCssPaths = function(cssUrl, cssText){
-		//	summary:
+		// summary:
 		//		adjusts relative paths in cssText to be relative to cssUrl
 		//		a path is considered relative if it doesn't start with '/' and not contains ':'
-		//	description:
+		// description:
 		//		Say we fetch a HTML page from level1/page.html
 		//		It has some inline CSS:
 		//			@import "css/page.css" tv, screen;
@@ -138,11 +141,11 @@ define([
 	};
 
 	var snarfScripts = html._snarfScripts = function(cont, byRef){
-		// summary
+		// summary:
 		//		strips out script tags from cont
-		// invoke with
-		//	byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
-		//	byRef will have {code: 'jscode'} when this scope leaves
+		// byRef:
+		//		byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
+		//		byRef will have {code: 'jscode'} when this scope leaves
 		byRef.code = "";
 
 		//Update script tags nested in comments so that the script tag collector doesn't pick
@@ -202,7 +205,7 @@ define([
 		n.text = code; // DOM 1 says this should work
 	};
 
-	html._ContentSetter = dojo.declare(/*===== "dojox.html._ContentSetter", =====*/ htmlUtil._ContentSetter, {
+	html._ContentSetter = declare(/*===== "dojox.html._ContentSetter", =====*/ htmlUtil._ContentSetter, {
 		// adjustPaths: Boolean
 		//		Adjust relative paths in html string content to point to this page
 		//		Only useful if you grab content from a another folder than the current one
@@ -248,7 +251,7 @@ define([
 		},
 
 		onBegin: function() {
-			// summary
+			// summary:
 			//		Called after instantiation, but before set();
 			//		It allows modification of any of the object properties - including the node and content
 			//		provided - before the set operation actually takes place
@@ -288,7 +291,7 @@ define([
 		},
 
 		onEnd: function() {
-			// summary
+			// summary:
 			//		Called after set(), when the new content has been pushed into the node
 			//		It provides an opportunity for post-processing before handing back the node to the caller
 			//		This implementation extends that of dojo.html._ContentSetter
@@ -328,7 +331,14 @@ define([
 					this._onError('Exec', 'Error eval script in '+this.id+', '+e.message, e);
 				}
 			}
-			this.inherited("onEnd", arguments);
+
+			// Call onEnd() in the superclass, for parsing, but only after any require() calls from above executeScripts
+			// code block have executed.  If there were no require() calls the superclass call will execute immediately.
+			var superClassOnEndMethod = this.getInherited(arguments),
+				args = arguments;
+			ready(lang.hitch(this, function(){
+				superClassOnEndMethod.apply(this, args);
+			}));
 		},
 		tearDown: function() {
 			this.inherited(arguments);
@@ -345,7 +355,7 @@ define([
 			// XXX: not sure if this is the correct intended behaviour, it was originally
 			// dojo.getObject(this.declaredClass).prototype which will not work with anonymous
 			// modules
-			dojo.mixin(this, html._ContentSetter.prototype);
+			lang.mixin(this, html._ContentSetter.prototype);
 		}
 
 	});
@@ -354,14 +364,14 @@ define([
 		// TODO: add all the other options
 			// summary:
 			//		inserts (replaces) the given content into the given node
-			//	node:
+			// node:
 			//		the parent element that will receive the content
-			//	cont:
+			// cont:
 			//		the content to be set on the parent element.
 			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
-			//	params:
+			// params:
 			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
-			//	example:
+			// example:
 			//		A safe string/node/nodelist content replacement/injection with hooks for extension
 			//		Example Usage:
 			//		dojo.html.set(node, "some string");
@@ -373,7 +383,7 @@ define([
 			return htmlUtil._setNodeContent(node, cont, true);
 		}else{
 			// more options but slower
-			var op = new html._ContentSetter(dojo.mixin(
+			var op = new html._ContentSetter(lang.mixin(
 					params,
 					{ content: cont, node: node }
 			));

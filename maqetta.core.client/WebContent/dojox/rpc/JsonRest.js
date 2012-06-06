@@ -112,7 +112,9 @@ define("dojox/rpc/JsonRest", ["dojo", "dojox", "dojox/json/ref", "dojox/rpc/Rest
 					dirtyObjects = postCommitDirtyObjects;
 				}
 				else{
-					dirtyObjects = dirtyObject.concat(savingObjects);
+					dojo.forEach(savingObjects, function(obj) {
+						jr.changing(obj.object, !obj.object);
+				    });
 				}
 			});
 			jr.sendToServer(actions, kwArgs);
@@ -437,7 +439,7 @@ define("dojox/rpc/JsonRest", ["dojo", "dojox", "dojox/json/ref", "dojox/rpc/Rest
 			});
 		},
 		isDirty: function(item, store){
-			// summary
+			// summary:
 			//		returns true if the item is marked as dirty or true if there are any dirty items
 			if(!item){
 				if(store){

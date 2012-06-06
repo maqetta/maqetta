@@ -5,7 +5,7 @@
 //		for easy switching between the many many points of the test-matrix.
 //
 //		in your test browser, provides a way to switch between available themes,
-//		and optionally enable RTL (right to left) mode, and/or dijit_a11y (high-
+//		and optionally enable RTL (right to left) mode, and/or dj_a11y (high-
 //		contrast/image off emulation) ... probably not a genuine test for a11y.
 //
 //		usage: on any dijit test_* page, press ctrl-f9 to popup links.
@@ -60,7 +60,7 @@ require([
 					theme = value;
 					break;
 				case "a11y":
-					if(value){ testMode = "dijit_a11y"; }
+					if(value){ testMode = "dj_a11y"; }
 					break;
 				case "themeModule":
 					// moduleName | null

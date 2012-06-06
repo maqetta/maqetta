@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Kötegelt helyesírás-ellenőrzés",
 	unfound: "Nem található",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Összes hasonlót kihagyja",
 	iMsg: "Nincsenek helyesírási javaslatok"
 })
-
-//end v1.x content
 );

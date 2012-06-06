@@ -1,7 +1,6 @@
 define(["./_base","dojo/_base/lang"], 
   function(g, lang){
 	var m = g.matrix = {};
-	/*===== g = dojox.gfx; m = dojox.gfx.matrix =====*/
 
 	// candidates for dojox.math:
 	var _degToRadCache = {};
@@ -195,6 +194,12 @@ define(["./_base","dojo/_base/lang"],
 
 		// common operations
 
+		isIdentity: function(matrix){
+			// summary: returns whether the specified matrix is the identity.
+			// matrix: dojox.gfx.matrix.Matrix2D
+			//		a 2D matrix object to be tested
+			return matrix.xx == 1 && matrix.xy == 0 && matrix.yx == 0 && matrix.yy == 1 && matrix.dx == 0 && matrix.dy == 0; // Boolean
+		},
 		clone: function(matrix){
 			// summary: creates a copy of a 2D matrix
 			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix-like object to be cloned
@@ -238,6 +243,33 @@ define(["./_base","dojo/_base/lang"],
 			// a: dojox.gfx.Point: a point
 			// b: null
 			return m._multiplyPoint(M, a.x, a.y); // dojox.gfx.Point
+		},
+		multiplyRectangle: function(matrix, /*Rectangle*/ rect){
+			// summary: Applies a matrix to a rectangle.
+			// description:
+			//		The method applies the transformation on all corners of the
+			//		rectangle and returns the smallest rectangle enclosing the 4 transformed
+			//		points.
+			// matrix: dojox.gfx.matrix.Matrix2D: a 2D matrix object to be applied.
+			// rect: Rectangle: the rectangle to transform.
+			var M = m.normalize(matrix);
+			rect = rect || {x:0, y:0, width:0, height:0}; 
+			if(m.isIdentity(M))
+				return {x: rect.x, y: rect.y, width: rect.width, height: rect.height}; // Rectangle
+			var p0 = m.multiplyPoint(M, rect.x, rect.y),
+				p1 = m.multiplyPoint(M, rect.x, rect.y + rect.height),
+				p2 = m.multiplyPoint(M, rect.x + rect.width, rect.y),
+				p3 = m.multiplyPoint(M, rect.x + rect.width, rect.y + rect.height),
+				minx = Math.min(p0.x, p1.x, p2.x, p3.x),
+				miny = Math.min(p0.y, p1.y, p2.y, p3.y),
+				maxx = Math.max(p0.x, p1.x, p2.x, p3.x),
+				maxy = Math.max(p0.y, p1.y, p2.y, p3.y);
+			return{
+				x: minx,
+				y: miny,
+				width: maxx - minx,
+				height: maxy - miny
+			}; // Rectangle
 		},
 		multiply: function(matrix){
 			// summary: combines matrices by multiplying them sequentially in the given order

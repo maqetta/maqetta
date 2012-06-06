@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Batchrechtschreibprüfung",
 	unfound: "Nicht gefunden",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Alle entsprechenden Funde überspringen",
 	iMsg: "Keine Rechtschreibvorschläge"
 })
-
-//end v1.x content
 );

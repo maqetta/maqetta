@@ -21,6 +21,7 @@
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
 	<script type="text/javascript">
+		var isUnitTest = false;
 		var testWidget = "dijit.form.ComboBox";
 		var qstr = window.location.search.substr(1);
 		if(qstr.length){
@@ -30,14 +31,20 @@
 		                if(tp[0] == "testWidget"){
 		                        testWidget = tp[1];
 					document.title = testWidget + " Unit Test";
-		                }
+		                }else if(tp[0] == "mode"){
+					isUnitTest = tp[1] == "test";
+				}
 		        }
 		}
+		var isComboBox = testWidget == "dijit.form.ComboBox";
+		dojo.require("dojo.store.Memory");
+		dojo.require("dojo._base.Deferred");
 		dojo.require("dojo.data.ItemFileReadStore");
 		dojo.require("dijit.tests._data.SlowStore");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require(testWidget);
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+		dojo.require("doh.runner");
 
 		function setVal2(val){
 			dojo.byId('value2').value=val;
@@ -62,6 +69,8 @@
 		}
 
 		function init(){
+			var combo;
+
 			var testClass = dojo.getObject(testWidget);
 			// substitute testWidget for each data-dojo-type=$testWidget
 			dojo.query('[data-dojo-type="$testWidget"]').forEach(function(node){
@@ -93,6 +102,150 @@
 				searchAttr:"name",
 				fetchProperties: {sort:[{attribute: 'name', descending: true}]}
 			}, dojo.byId("progCombo3"));
+
+			// change Memory store to have an asynchronous total
+			var oldMemoryQuery = dojo.store.Memory.prototype.query;
+			dojo.store.Memory.extend({
+				query: function(){
+					var results = oldMemoryQuery.apply(this, arguments);
+					var total = results.total;
+					results.total = new dojo.Deferred();
+					setTimeout(function(){
+						results.total.resolve(total);
+					}, 100);
+					return results;
+				}
+			});
+
+			if(!isUnitTest){ return; }
+
+			doh.register("label", [
+				{
+					name: "user-specified id",
+					runTest: function(){
+						combo = dijit.byId("setvaluetest");
+						var labelId = combo.domNode.getAttribute('aria-labelledby');
+						doh.is("setvaluetest_mylabel", labelId, "labelledby");
+						doh.is(labelId, dojo.byId(labelId).id, "label id");
+					}
+				},
+				{
+					name: "generated id",
+					runTest: function(){
+						combo = dijit.byId("datatest");
+						var labelId = combo.domNode.getAttribute('aria-labelledby');
+						doh.is("datatest_label", labelId, "labelledby");
+						doh.is(labelId, dojo.byId(labelId).id, "label id");
+					}
+				}
+			]);
+
+			doh.register("placeHolder", [
+				{
+					timeout: 2000,
+					name: "focus enpty",
+					combo: "placeholdertest",
+					setUp: function(){
+						dojo.byId('native').focus(); // blur combo so onfocus fires
+						combo = dijit.byId(this.combo);
+					},
+					runTest: function(){
+						var d = new doh.Deferred();
+						doh.is("", combo.get("value"), "value");
+						doh.is("", combo.get('displayedValue'), "displayedValue");
+						doh.is("Select a New England State", combo._phspan.innerHTML, "_phspan.innerHTML");
+						doh.isNot("none", combo._phspan.style.display, "_phspan.style.display 1");
+
+						var handler = dojo.connect(combo.textbox, "onfocus", function(){
+							dojo.disconnect(handler);
+							setTimeout(d.getTestCallback(function(){
+								doh.is("none", combo._phspan.style.display, "_phspan.style.display 2");
+							}), 0);
+						});
+						combo.focus();
+						return d;
+					}
+				},
+				{
+					timeout: 2000,
+					name: "blur empty",
+					runTest: function(){
+						var d = new doh.Deferred();
+						var handler = dojo.connect(dojo.byId('native'), "onfocus", function(){
+							dojo.disconnect(handler);
+							setTimeout(d.getTestCallback(function(){
+								doh.is("", combo.get("value"), "value");
+								doh.is("", combo.get('displayedValue'), "displayedValue");
+								doh.isNot("none", combo._phspan.style.display, "_phspan.style.display");
+							}), 0);
+						});
+						dojo.byId('native').focus(); // blur combo
+						return d;
+					}
+				},
+				{
+					timeout: 2000,
+					name: "focus non enpty",
+					combo: "placeholdertest",
+					setUp: function(){
+						dojo.byId('native').focus(); // blur combo so onfocus fires
+						combo = dijit.byId(this.combo);
+					},
+					runTest: function(){
+						var d = new doh.Deferred();
+						var value = isComboBox? 'Connecticut' : 'ct';
+						combo.set("value", value);
+						doh.is(value, combo.get("value"), "value");
+						doh.is("none", combo._phspan.style.display, "_phspan.style.display 1");
+
+						var handler = dojo.connect(combo.textbox, "onfocus", function(){
+							dojo.disconnect(handler);
+							setTimeout(d.getTestCallback(function(){
+								doh.is("none", combo._phspan.style.display, "_phspan.style.display 2");
+							}), 0);
+						});
+						combo.focus();
+						return d;
+					}
+				},
+				{
+					timeout: 2000,
+					name: "blur non empty",
+					runTest: function(){
+						var d = new doh.Deferred();
+						var value = isComboBox? 'Connecticut' : 'ct';
+						var handler = dojo.connect(dojo.byId('native'), "onfocus", function(){
+							dojo.disconnect(handler);
+							setTimeout(d.getTestCallback(function(){
+								doh.is(value, combo.get("value"), "value");
+								doh.is("none", combo._phspan.style.display, "_phspan.style.display");
+								doh.is('Connecticut', combo.textbox.value, "textbox.value");
+							}), 0);
+						});
+						dojo.byId('native').focus(); // blur combo
+						return d;
+					}
+				},
+				{
+					timeout: 2000,
+					name: "re-empty",
+					runTest: function(){
+						var d = new doh.Deferred();
+						var handler = dojo.connect(combo, "onChange", function(){
+							dojo.disconnect(handler);
+							setTimeout(d.getTestCallback(function(){
+								doh.is("", combo.get("value"), "value");
+								doh.is("", combo.get("displayedValue"), "displayedValue");
+								doh.isNot("none", combo._phspan.style.display, "_phspan.style.display");
+							}), 0);
+						});
+						combo.set("value", '');
+						return d;
+					}
+				}
+			]);
+
+			doh.run();
 		}
 		dojo.ready(init);
 
@@ -142,7 +295,7 @@
 		<hr>
 
 		<p>Option tags, autoComplete=false, selectOnClick=true, default value of California, pageSize=30, custom labelFunc method</p>
-		<label for="setvaluetest">US State test 1 (200% Courier font):</label>
+		<label id="setvaluetest_mylabel" for="setvaluetest">US State test 1 (200% Courier font):</label>
 		<script type="text/javascript">
 			function setValueTestOnChange(newValue){
 				if(this.lastlabelFuncMsg){
@@ -261,10 +414,10 @@
 
 		<hr>
 
-		<div data-dojo-id="stateStore" data-dojo-type="dojo.data.ItemFileReadStore" data-dojo-props='url:"../_data/states.json"'></div>
-		<div data-dojo-id="slowStateStore" data-dojo-type="dijit.tests._data.SlowStore" data-dojo-props='url:"../_data/states.json"'></div>
+		<div data-dojo-id="stateStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props='url:"../_data/states.json"'></div>
+		<div data-dojo-id="slowStateStore" data-dojo-type="dijit/tests/_data/SlowStore" data-dojo-props='url:"../_data/states.json"'></div>
 
-		<div data-dojo-id="dijitStore" data-dojo-type="dojo.data.ItemFileReadStore" data-dojo-props='url:"../_data/dijits.json"'></div>
+		<div data-dojo-id="dijitStore" data-dojo-type="dojo/data/ItemFileReadStore" data-dojo-props='url:"../_data/dijits.json"'></div>
 
 		<p>Data store, autoComplete=true:</p>
 		<label for="datatest">US State test 2 (8pt font):</label>
@@ -446,7 +599,7 @@
 		<p>The drop down list should be:</p>
 		<ul>
 		   <li>sticks &amp; stones</li>
-		   <li>rags --&gt; riches</li>
+		   <li>rags --&gt; riches to</li>
 		   <li>more\less</li>
 		   <li>3 * 5</li>
 		</ul>
@@ -455,13 +608,15 @@
 			data-dojo-props='name:"specialchars"
 			'>
 			<option value="sticks" selected>sticks &amp; stones</option>
-			<option value="rags">rags --&gt; riches</option>
+			<option value="rags">rags --&gt; riches to</option>
 			<option value="more">more\less</option>
 			<option value="times">3 * 5</option>
 		</select>
 		<hr>
 		<p>Japanese</p>
-		<p>Try typing &#x6771;&#x533A; (East), &#x897F;&#x533A; (West), &#x5317;&#x533A; (North), &#x5357;&#x533A; (South) and a few choices will pop up.</p>
+		<p>Try typing &#x6771;&#x533A; (East), &#x897F;&#x533A; (West), &#x5317;&#x533A; (North), &#x5357;&#x533A; (South) and a few choices will pop up.<br>
+		Using the Microsoft IME for Japanese (Hiragana), &#x6771; can be inputed by typing higashi followed by SPACE.
+		</p>
 		<label for="japanese">Japanese list:</label>
 		<select id="japanese" data-dojo-type="$testWidget" data-dojo-props='name:"japanese", style:{width:"300px"}, autoComplete:true, required:true, value:""'>
 			<option value="nanboku">&#x5357;&#x5317; (Nanboku)</option>

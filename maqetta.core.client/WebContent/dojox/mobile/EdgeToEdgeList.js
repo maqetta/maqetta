@@ -3,10 +3,6 @@ define([
 	"./RoundRectList"
 ], function(declare, RoundRectList){
 
-/*=====
-	var RoundRectList = dojox.mobile.RoundRectList;
-=====*/
-
 	// module:
 	//		dojox/mobile/EdgeToEdgeCategory
 	// summary:

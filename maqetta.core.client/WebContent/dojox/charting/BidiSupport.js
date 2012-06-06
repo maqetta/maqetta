@@ -1,7 +1,7 @@
-define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/array", "dojo/_base/sniff",
+define(["dojo/_base/lang", "dojo/dom-style", "dojo/_base/array", "dojo/_base/sniff",
 	"dojo/dom","dojo/dom-construct",
 	"dojox/gfx", "dojox/gfx/_gfxBidiSupport", "./Chart", "./axis2d/common", "dojox/string/BidiEngine", "dojox/lang/functional"], 
-	function(lang, html, arr, has, dom, domConstruct, g, gBidi, Chart, da, BidiEngine, df){
+	function(lang, domStyle, arr, has, dom, domConstruct, g, gBidi, Chart, da, BidiEngine, df){
 
 	var bidiEngine = new BidiEngine();
 	
@@ -34,12 +34,12 @@ define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/array", "dojo/_base/sn
 			// text:
 			//		Used in case textDir is "auto", this case the direction is according to the first
 			//		strong (directionally - which direction is strong defined) letter.
-			//	tags:
+			// tags:
 			//		protected.
 			var textDir = this.textDir == "auto" ? bidiEngine.checkContextual(text) : this.textDir;
 			// providing default value
 			if(!textDir){
-				textDir = html.style(this.node,"direction");
+				textDir = domStyle.get(this.node, "direction");
 			}
 			return textDir;
 		},
@@ -55,7 +55,7 @@ define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/array", "dojo/_base/sn
 			// validate textDir
 			var textDir = args ? (args["textDir"] ? validateTextDir(args["textDir"]) : "") : "";
 			// if textDir wasn't defined or was defined wrong, apply default value
-			textDir = textDir ? textDir : html.style(this.node,"direction");
+			textDir = textDir ? textDir : domStyle.get(this.node, "direction");
 			this.textDir = textDir;
 
 			this.surface.textDir = textDir;
@@ -229,7 +229,7 @@ define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/array", "dojo/_base/sn
 		// aditional preprocessing of the labels, needed for rtl base text direction in LTR 
 		// GUI, or for ltr base text direction for RTL GUI.
 
-		var isChartDirectionRtl = (html.style(chart.node,"direction") == "rtl");
+		var isChartDirectionRtl = (domStyle.get(chart.node,"direction") == "rtl");
 		var isBaseTextDirRtl = (chart.getTextDir(label) == "rtl");
 
 		if(isBaseTextDirRtl && !isChartDirectionRtl){

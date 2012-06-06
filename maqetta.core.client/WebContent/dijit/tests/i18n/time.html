@@ -34,8 +34,6 @@
 
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true, extraLocale: ['zh-cn','fr-fr','ja-jp','ar-eg','ru-ru','hi-in','en-us']"></script>
-		<script type="text/javascript" src="../../../dojo/currency.js"></script>
-		<script type="text/javascript" src="../../../dojo/number.js"></script>
 		<script type="text/javascript" src="test_i18n.js"></script>
 		<script type="text/javascript">
 			dojo.require("dijit.form.ValidationTextBox");
@@ -43,21 +41,11 @@
 			dojo.require("dojo.date.stamp");
 			dojo.require("dojo.date");
 			dojo.require("dojo.string");
+			dojo.require("dojo.number");
 			dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 			dojo.require("doh.runner");
 
 			dojo.ready(function(){
-				dojo.declare(
-					"dijit.form.TimeTextBox",
-					dijit.form.ValidationTextBox,
-					{
-						regExpGen: dojo.date.locale.regexp,
-						format: dojo.date.locale.format,
-						parse: dojo.date.locale.parse,
-						value: new Date()
-					}
-				);
-	
 				var tz_s = dojo.date.getTimezoneName(new Date());
 				if(!tz_s){
 					var offset = new Date().getTimezoneOffset();
@@ -158,7 +146,9 @@
 					"१५:२५", "", "१५:२५:३५", "", "१५:२५:३५ UTC", " ", "१५:२५:३५ UTC", " ");
 				genValidateTestCases("Time Validate", "dijit.form.TimeTextBox", testCases);
 
-				dojo.parser.parse();
+				doh.register("parse", function(){
+					dojo.parser.parse();
+				});
 
 				doh.register("t", getAllTestCases());
 

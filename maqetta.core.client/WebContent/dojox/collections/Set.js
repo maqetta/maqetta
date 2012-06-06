@@ -1,7 +1,5 @@
 define(["./_base", "./ArrayList"], function(dxc, ArrayList){
-/*=====
-var dxc = dojox.collections;
-=====*/
+
 	dxc.Set=new (function(){
 		function conv(arr){
 			if(arr.constructor==Array){
@@ -9,9 +7,9 @@ var dxc = dojox.collections;
 			}
 			return arr;		//	dojox.collections.ArrayList
 		}
-		this.union = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Return the union of the two passed sets.
+		this.union = function(/*array*/ setA, /*array*/ setB){
+			// summary:
+			//		Return the union of the two passed sets.
 			setA=conv(setA);
 			setB=conv(setB);
 			var result = new ArrayList(setA.toArray());
@@ -24,9 +22,9 @@ var dxc = dojox.collections;
 			}
 			return result;	//	dojox.collections.ArrayList
 		};
-		this.intersection = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Return the intersection of the two passed sets.
+		this.intersection = function(/*array*/ setA, /*array*/ setB){
+			// summary:
+			//		Return the intersection of the two passed sets.
 			setA=conv(setA);
 			setB=conv(setB);
 			var result = new ArrayList();
@@ -39,9 +37,9 @@ var dxc = dojox.collections;
 			}
 			return result;	//	dojox.collections.ArrayList
 		};
-		this.difference = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Returns everything in setA that is not in setB.
+		this.difference = function(/*array*/ setA, /*array*/ setB){
+			// summary:
+			//		Returns everything in setA that is not in setB.
 			setA=conv(setA);
 			setB=conv(setB);
 			var result = new ArrayList();
@@ -54,9 +52,9 @@ var dxc = dojox.collections;
 			}
 			return result;	//	dojox.collections.ArrayList
 		};
-		this.isSubSet = function(/* array */setA, /* array */setB) {
-			//	summary
-			//	Returns if set B is a subset of set A.
+		this.isSubSet = function(/*array*/ setA, /*array*/ setB) {
+			// summary:
+			//		Returns if set B is a subset of set A.
 			setA=conv(setA);
 			setB=conv(setB);
 			var e = setA.getIterator();
@@ -67,9 +65,9 @@ var dxc = dojox.collections;
 			}
 			return true;	//	boolean
 		};
-		this.isSuperSet = function(/* array */setA, /* array */setB){
-			//	summary
-			//	Returns if set B is a superset of set A.
+		this.isSuperSet = function(/*array*/ setA, /*array*/ setB){
+			// summary:
+			//		Returns if set B is a superset of set A.
 			setA=conv(setA);
 			setB=conv(setB);
 			var e = setB.getIterator();

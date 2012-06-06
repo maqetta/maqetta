@@ -1,26 +1,24 @@
 define(
-//begin v1.x content
 ({
 	smiley: "顔文字の挿入",
-	emoticonSmile: "微笑",
-	emoticonLaughing: "笑い",
+	emoticonSmile: "笑顔",
+	emoticonLaughing: "大笑い",
 	emoticonWink: "ウィンク",
-	emoticonGrin: "笑顔",
-	emoticonCool: "無愛想",
+	emoticonGrin: "にやり",
+	emoticonCool: "クール",
 	emoticonAngry: "怒り",
-	emoticonHalf: "半分",
-	emoticonEyebrow: "眉毛",
-	emoticonFrown: "眉をひそめる",
-	emoticonShy: "はにかんだ",
-	emoticonGoofy: "おろかな",
-	emoticonOops: "おっと",
+	emoticonHalf: "やや不満",
+	emoticonEyebrow: "驚き",
+	emoticonFrown: "しかめ面",
+	emoticonShy: "戸惑い",
+	emoticonGoofy: "おやおや",
+	emoticonOops: "しまった",
 	emoticonTongue: "舌を出す",
-	emoticonIdea: "アイデア",
+	emoticonIdea: "ひらめき",
 	emoticonYes: "はい",
 	emoticonNo: "いいえ",
-	emoticonAngel: "エンジェル",
-	emoticonCrying: "泣く"
+	emoticonAngel: "天使",
+	emoticonCrying: "泣き顔",
+	emoticonHappy: "幸せ"
 })
-
-//end v1.x content
 );

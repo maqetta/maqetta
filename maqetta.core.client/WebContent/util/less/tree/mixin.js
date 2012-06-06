@@ -27,7 +27,8 @@ tree.mixin.Call.prototype = {
                 if (match) {
                     return rules;
                 } else {
-                    throw { message: 'No matching definition was found for `' +
+                    throw { type:    'Runtime',
+                            message: 'No matching definition was found for `' +
                                       this.selector.toCSS().trim() + '('      +
                                       this.arguments.map(function (a) {
                                           return a.toCSS();
@@ -36,15 +37,17 @@ tree.mixin.Call.prototype = {
                 }
             }
         }
-        throw { message: this.selector.toCSS().trim() + " is undefined",
+        throw { type: 'Name',
+                message: this.selector.toCSS().trim() + " is undefined",
                 index: this.index };
     }
 };
 
-tree.mixin.Definition = function (name, params, rules) {
+tree.mixin.Definition = function (name, params, rules, condition) {
     this.name = name;
     this.selectors = [new(tree.Selector)([new(tree.Element)(null, name)])];
     this.params = params;
+    this.condition = condition;
     this.arity = params.length;
     this.rules = rules;
     this._lookups = {};
@@ -62,19 +65,24 @@ tree.mixin.Definition.prototype = {
     find:      function ()     { return this.parent.find.apply(this, arguments) },
     rulesets:  function ()     { return this.parent.rulesets.apply(this) },
 
-    eval: function (env, args) {
-        var frame = new(tree.Ruleset)(null, []), context, _arguments = [];
+    evalParams: function (env, args) {
+        var frame = new(tree.Ruleset)(null, []);
 
         for (var i = 0, val; i < this.params.length; i++) {
             if (this.params[i].name) {
                 if (val = (args && args[i]) || this.params[i].value) {
                     frame.rules.unshift(new(tree.Rule)(this.params[i].name, val.eval(env)));
                 } else {
-                    throw { message: "wrong number of arguments for " + this.name +
+                    throw { type: 'Runtime', message: "wrong number of arguments for " + this.name +
                             ' (' + args.length + ' for ' + this.arity + ')' };
                 }
             }
         }
+        return frame;
+    },
+    eval: function (env, args) {
+        var frame = this.evalParams(env, args), context, _arguments = [];
+
         for (var i = 0; i < Math.max(this.params.length, args && args.length); i++) {
             _arguments.push(args[i] || this.params[i].value);
         }
@@ -85,10 +93,13 @@ tree.mixin.Definition.prototype = {
         });
     },
     match: function (args, env) {
-        var argsLength = (args && args.length) || 0, len;
+        var argsLength = (args && args.length) || 0, len, frame;
 
         if (argsLength < this.required)                               { return false }
         if ((this.required > 0) && (argsLength > this.params.length)) { return false }
+        if (this.condition && !this.condition.eval({
+            frames: [this.evalParams(env, args)].concat(env.frames)
+        }))                                                           { return false }
 
         len = Math.min(argsLength, this.arity);
 
@@ -103,4 +114,4 @@ tree.mixin.Definition.prototype = {
     }
 };
 
-})(require('less/tree'));
+})(require('../tree'));

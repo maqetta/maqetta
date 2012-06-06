@@ -1,6 +1,9 @@
-dojo.provide("dojox.drawing.ui.Button");
+define(["dojo", "../util/oo", "../stencil/Rect", "../stencil/Ellipse",
+"../stencil/Text", "../manager/_registry"],
+  function(dojo, oo, Rect, Ellipse, Text, registry){
 
-dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
+//dojox.drawing.ui.Button = 
+var Button = oo.declare(
 	// summary:
 	//		Creates a clickable button in "UI" mode of the drawing.
 	// description:
@@ -13,7 +16,7 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 		this.width = options.data.width || options.data.rx*2;
 		this.height = options.data.height || options.data.ry*2;
 		this.y = options.data.y || options.data.cy - options.data.ry;
-		//
+
 		this.id = this.id || this.util.uid(this.type);
 		this.util.attr(this.container, "id", this.id);
 		if(this.callback){
@@ -26,9 +29,9 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 		options.drawingType="ui";
 		// Choose between rectangle and ellipse based on options
 		if(options.data.width && options.data.height){
-			this.shape = new dojox.drawing.stencil.Rect(options);
+			this.shape = new Rect(options);
 		}else{
-			this.shape = new dojox.drawing.stencil.Ellipse(options);
+			this.shape = new Ellipse(options);
 		}
 		
 		var setGrad = function(s, p, v){
@@ -59,7 +62,7 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 			o = this.makeOptions(options.text || options.icon.text);
 			o.data.color = this.style.button.icon.norm.color; //= o.data.fill;
 			this.style.button.icon.selected.color = this.style.button.icon.selected.fill;
-			this.icon = new dojox.drawing.stencil.Text(o);
+			this.icon = new Text(o);
 			this.icon.attr({
 				height:	this.icon._lineHeight,
 				y:((this.height-this.icon._lineHeight)/2)+this.y
@@ -221,6 +224,11 @@ dojox.drawing.ui.Button =  dojox.drawing.util.oo.declare(
 	
 );
 
-dojox.drawing.register({
+dojo.setObject("dojox.drawing.ui.Button", Button);
+
+registry.register({
 	name:"dojox.drawing.ui.Button"
 }, "stencil");
+
+return Button;
+});

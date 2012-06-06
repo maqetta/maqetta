@@ -3,21 +3,20 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction",
 	function(hub, declare, PlotAction, df, dfe, m, gf){
 
 	/*=====
-	dojo.declare("dojox.charting.action2d.__ShakeCtorArgs", dojox.charting.action2d.__PlotActionCtorArgstorArgs, {
-		//	summary:
+	declare("dojox.charting.action2d.__ShakeCtorArgs", dojox.charting.action2d.__PlotActionCtorArgstorArgs, {
+		// summary:
 		//		Additional arguments for highlighting actions.
 	
-		//	shift: Number?
+		// shift: Number?
 		//		The amount in pixels to shift the pie slice.  Default is 3.
 		shift: 3
 	});
-	var PlotAction = dojox.charting.action2d.PlotAction;
 	=====*/
 
 	var DEFAULT_SHIFT = 3;
 
 	return declare("dojox.charting.action2d.Shake", PlotAction, {
-		//	summary:
+		// summary:
 		//		Create a shaking action for use on an element in a chart.
 
 		// the data description block for the widget parser
@@ -30,13 +29,13 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction",
 		optionalParams: {},	// no optional parameters
 
 		constructor: function(chart, plot, kwArgs){
-			//	summary:
+			// summary:
 			//		Create the shaking action and connect it to the plot.
-			//	chart: dojox.charting.Chart
+			// chart: dojox.charting.Chart
 			//		The chart this action belongs to.
-			//	plot: String?
+			// plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
-			//	kwArgs: dojox.charting.action2d.__ShakeCtorArgs?
+			// kwArgs: dojox.charting.action2d.__ShakeCtorArgs?
 			//		Optional keyword arguments object for setting parameters.
 			if(!kwArgs){ kwArgs = {}; }
 			this.shiftX = typeof kwArgs.shiftX == "number" ? kwArgs.shiftX : DEFAULT_SHIFT;
@@ -46,9 +45,9 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction",
 		},
 
 		process: function(o){
-			//	summary:
+			// summary:
 			//		Process the action on the given object.
-			//	o: dojox.gfx.Shape
+			// o: dojox.gfx.Shape
 			//		The object on which to process the slice moving action.
 			if(!o.shape || !(o.type in this.overOutEvents)){ return; }
 

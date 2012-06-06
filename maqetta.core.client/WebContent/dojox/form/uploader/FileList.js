@@ -9,45 +9,41 @@ define([
 	"dojox/form/uploader/Base"
 ],function(fx, domStyle, domClass, declare, lang, array, manager, formUploaderBase){
 
-	/*=====
-		formUploaderBase = dojox.form.uploader.Base;
-	=====*/
 return declare("dojox.form.uploader.FileList", [formUploaderBase], {
-	//
+
 	// Version: 1.6
-	//
+
 	// summary:
 	//		A simple widget that provides a list of the files currently selected by
 	//		dojox.form.Uploader
-	//
-	//	description:
+	// description:
 	//		There is a required CSS file: resources/UploaderFileList.css.
 	//		This is a very simple widget, and not beautifully styled. It is here mainly for test
 	//		cases, but could very easily be used, extended, modified, or copied.
-	//
-	//	uploaderId: String
+
+	// uploaderId: String
 	//		The id of the dojox.form.Uploader to connect to.
 	uploaderId:"",
-	//	uploader: dojox.form.Uploader
+
+	// uploader: dojox.form.Uploader
 	//		The dojox.form.Uploader to connect to. Use either this property of unploaderId. This
 	//		property is populated if uploaderId is used.
-	//
 	uploader:null,
-	//	headerIndex: String
+
+	// headerIndex: String
 	// 		The label for the index column.
-	//
 	headerIndex:"#",
-	//	headerType: String
+
+	// headerType: String
 	// 		The label for the file type column.
-	//
 	headerType:"Type",
-	//	headerFilename: String
+
+	// headerFilename: String
 	// 		The label for the file name column.
-	//
 	headerFilename:"File Name",
-	//	headerFilesize: String
+
+	// headerFilesize: String
 	// 		The label for the file size column.
-	//
 	headerFilesize:"Size",
 
 	_upCheckCnt:0,
@@ -72,7 +68,7 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 		// summary:
 		//		Clears all rows of items. Happens automatically if Uploader is reset, but you
 		//		could call this directly.
-		//
+
 		for(var i=0;i<this.rowAmt;i++){
 			this.listNode.deleteRow(0);
 		}
@@ -82,7 +78,7 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 	setUploader: function(){
 		// summary:
 		//		Connects to the Uploader based on the uploader or the uploaderId properties.
-		//
+
 		if(!this.uploaderId && !this.uploader){
 			console.warn("uploaderId not passed to UploaderFileList");
 		}else if(this.uploaderId && !this.uploader){
@@ -114,7 +110,7 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 		}
 	},
 
-	hideProgress: function(/* Boolean */animate){
+	hideProgress: function(/*Boolean*/ animate){
 		var o = animate ? {
 			ani:true,
 			endDisp:"none",
@@ -127,7 +123,7 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 		this._hideShowProgress(o);
 	},
 
-	showProgress: function(/* Boolean */animate){
+	showProgress: function(/*Boolean*/ animate){
 		var o = animate ? {
 			ani:true,
 			endDisp:"block",
@@ -140,7 +136,7 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 		this._hideShowProgress(o);
 	},
 
-	_progress: function(/* Object */ customEvent){
+	_progress: function(/*Object*/ customEvent){
 		this.percentTextNode.innerHTML = customEvent.percent;
 		domStyle.set(this.percentBarNode, "width", customEvent.percent);
 	},

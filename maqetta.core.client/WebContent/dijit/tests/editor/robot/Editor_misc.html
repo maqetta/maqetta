@@ -11,13 +11,11 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_Editor.html');
@@ -25,7 +23,7 @@
 				var height;
 				var value;
 				var editor1;
-				var editor1OrigionalBackgroundColor;
+				var editor1OriginalBackgroundColor;
 				doh.register("Miscellaneous_tests", [
 					{
 						name: "wait for editors to load",
@@ -43,7 +41,7 @@
 							editor1 = dijit.byId("editor1");
 							editor1.setValue("<h1>header one</h1>");
 							var editorTextNode = editor1.editNode.firstChild;
-							editor1OrigionalBackgroundColor = dojo.getComputedStyle(editorTextNode).backgroundColor;
+							editor1OriginalBackgroundColor = dojo.getComputedStyle(editorTextNode).backgroundColor;
 						},
 						runTest: function(){
 							var d = new doh.Deferred();
@@ -76,14 +74,14 @@
 								var editorNodeText = editor1.editNode.firstChild;
 								var backgroundColor = dojo.getComputedStyle(editorNodeText).backgroundColor;
 								doh.is("header one", editorNodeText.innerHTML);
-								doh.is(editor1OrigionalBackgroundColor, backgroundColor, "backgroundColor");
+								doh.is(editor1OriginalBackgroundColor, backgroundColor, "backgroundColor");
 							}), 1000);
 
 							return d;
 						}
 					},
 					{
-						name: "Test AutoExpanding Edtor",
+						name: "auto expand",
 						timeout: 20000,
 						setUp: function(){
 							editor0 = dijit.byId("thud");
@@ -93,7 +91,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							//Focus on the editor window
+							// Focus on the editor window
 							dojo.window.scrollIntoView(editor0.domNode);
 							doh.robot.mouseMoveAt(editor0.iframe, 500, null, 10, 10);
 							doh.robot.mouseClick({left:true}, 500);
@@ -106,7 +104,7 @@
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 							doh.robot.keyPress(dojo.keys.ENTER, 500);
 							doh.robot.sequence(d.getTestCallback(function(){
-								//Now check the state!
+								// Now check the state!
 								var newHeight = dojo.style(editor0.domNode, "height");
 								doh.t(height < newHeight, "height decreased from " + height + " to " + newHeight);
 							}), 1000);
@@ -118,7 +116,7 @@
 						}
 					},
 					{
-						name: "Test font-size style migrated to editor body",
+						name: "font-size style migrated to editor body",
 						runTest: function(){
 							editor0 = dijit.byId("fontSizedEditor");
 							var bStyle = editor0.document.body.style["fontSize"];
@@ -127,7 +125,7 @@
 						}
 					},
 					{
-						name: "Test prefilters do process initial content",
+						name: "prefilters do process initial content",
 						timeout: 20000,
 						setUp: function(){
 							editor0 = dijit.byId("filteredEditor");
@@ -135,13 +133,13 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							//Focus on the editor window
+							// Focus on the editor window
 							dojo.window.scrollIntoView(editor0.domNode);
 							doh.robot.mouseMoveAt(editor0.iframe, 500, null, 10, 10);
 							doh.robot.mouseClick({left:true}, 500);
 
-								doh.robot.sequence(d.getTestCallback(function(){
-								//Now check the state!
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Now check the state!
 								var val = editor0.get("value");
 								doh.t(val.indexOf("DOJO") >= 0, "dojo in val " + val);
 								doh.t(val.indexOf("notdojo") < 0, "notdojo not in val " + val);
@@ -151,7 +149,7 @@
 						}
 					},
 					{
-						name: "Test placeCurorAtStart (br tag) moves input before br, not inside.",
+						name: "placeCursorAtStart (br tag) moves input before br, not inside",
 						timeout: 20000,
 						setUp: function(){
 							editor0 = dijit.byId("brEditor");
@@ -160,16 +158,16 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							//Focus on the editor window
+							// Focus on the editor window
 							dojo.window.scrollIntoView(editor0.domNode);
 							doh.robot.mouseMoveAt(editor0.iframe, 500, null, 10, 10);
 							doh.robot.mouseClick({left:true}, 500);
-								doh.robot.sequence(d.getTestErrback(function(){
+							doh.robot.sequence(d.getTestErrback(function(){
 								editor0.placeCursorAtStart();
 							}), 500);
 							doh.robot.typeKeys("abc", 500);
-								doh.robot.sequence(d.getTestCallback(function(){
-								//Now check the state!
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Now check the state!
 								var content = editor0.get("value").replace(/[\s]/g, "");
 								doh.t(content.indexOf("abc<br") >= 0, "looked for 'abc<br', found: " + content);
 							}), 1000);
@@ -181,7 +179,7 @@
 						}
 					},
 					{
-						name: "Test custom editor content (programmatic creation).",
+						name: "custom editor content (programmatic creation)",
 						timeout: 20000,
 						setUp: function(){
 							editor0 = dijit.byId("programmatic3");
@@ -190,12 +188,12 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							//Focus on the editor window
+							// Focus on the editor window
 							dojo.window.scrollIntoView(editor0.domNode);
 							doh.robot.mouseMoveAt(editor0.iframe, 500, null, 10, 10);
 							doh.robot.mouseClick({left:true}, 500);
-								doh.robot.sequence(d.getTestCallback(function(){
-								//Now check the state!
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Now check the state!
 								var content = editor0.get("value");
 								doh.t(content.indexOf("Custom Initial Content.") >= 0);
 							}), 1000);
@@ -207,7 +205,7 @@
 						}
 					},
 					{
-						name: "Verify custom filters passed in constructor are not lost",
+						name: "custom filters passed in constructor are not lost",
 						timeout: 20000,
 						setUp: function(){
 							editor0 = dijit.byId("programmatic4");
@@ -216,12 +214,12 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							//Focus on the editor window
+							// Focus on the editor window
 							dojo.window.scrollIntoView(editor0.domNode);
 							doh.robot.mouseMoveAt(editor0.iframe, 500, null, 10, 10);
 							doh.robot.mouseClick({left:true}, 500);
 							doh.robot.sequence(d.getTestCallback(function(){
-								//Now check the state!
+								// Now check the state!
 								doh.t(editor0.contentPreFilters.length > 1);
 							}), 1000);
 
@@ -232,7 +230,7 @@
 						}
 					},
 					{
-						name: "Test replaceValue.",
+						name: "replaceValue",
 						timeout: 20000,
 						setUp: function(){
 							editor0 = dijit.byId("programmatic4");
@@ -241,21 +239,21 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							//Focus on the editor window
+							// Focus on the editor window
 							dojo.window.scrollIntoView(editor0.domNode);
 							dojo.style(editor0.domNode, "display", "none");
 							editor0.replaceValue("New Value");
 							dojo.style(editor0.domNode, "display", "none");
 							doh.robot.sequence(d.getTestCallback(function(){
-								//Now check the state!
+								// Now check the state!
 								dojo.style(editor0.domNode, "display", "");
 								dojo.window.scrollIntoView(editor0.domNode);
 								var newValue = editor0.get("value");
 								editor0.undo();
 								var curValue = editor0.get("value");
-								doh.t(newValue.indexOf(value) < 0, "Verifying content changed with no trace of old content.");
-								doh.t(curValue != newValue, "Verify that undo undid the change.");
-								doh.t(curValue == value, "Verify original value was restored.");
+								doh.t(newValue.indexOf(value) < 0, "content changed with no trace of old content");
+								doh.t(curValue != newValue, "undo undid the change");
+								doh.t(curValue == value, "original value was restored");
 							}), 1000);
 
 							return d;
@@ -265,7 +263,7 @@
 						}
 					},
 					{
-						name: "Test page up/down.",
+						name: "page up/down",
 						timeout: 4000,
 						setUp: function(){
 							editor0 = dijit.byId("editor0");
@@ -274,7 +272,7 @@
 						runTest: function(){
 							var d = new doh.Deferred();
 
-							//Focus on the editor window
+							// Focus on the editor window
 							dojo.window.scrollIntoView(editor0.domNode);
 							doh.robot.sequence(d.getTestErrback(function(){
 								editor0.focus();
@@ -291,6 +289,32 @@
 									doh.t(value.indexOf("abcdef") == 0, "editor value = " + value);
 								}
 							}), 500);
+
+							return d;
+						},
+						tearDown: function(){
+							if(editor0){editor0.set("value", value);}
+						}
+					},
+					{
+						name: "emptyAltTag",
+						timeout: 20000,
+						setUp: function(){
+							editor0 = dijit.byId("programmatic4");
+							value = editor0.get("value");
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+							// Focus on the editor window
+							dojo.window.scrollIntoView(editor0.domNode);
+							editor0.set("value", "<img alt=\"''\" src=\"http://blogsearch.google.com/blogsearch/intl/en_ALL/images/blogs_logo.gif\">");
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Now check the state!
+								dojo.window.scrollIntoView(editor0.domNode);
+								var newValue = editor0.get("value");
+								var test = "alt=\"''\"";
+								doh.t(newValue.indexOf(test) > 0, "content includes emptry string alt");
+							}), 1000);
 
 							return d;
 						},

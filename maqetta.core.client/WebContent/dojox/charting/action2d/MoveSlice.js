@@ -3,26 +3,25 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction", "dojo/fx/eas
 	function(hub, declare, PlotAction, dfe, m, gf, df, dfs, dff){
 
 	/*=====
-	dojo.declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
-		//	summary:
+	declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
+		// summary:
 		//		Additional arguments for highlighting actions.
 	
-		//	scale: Number?
+		// scale: Number?
 		//		The amount to scale the pie slice.  Default is 1.05.
 		scale: 1.05,
 	
-		//	shift: Number?
+		// shift: Number?
 		//		The amount in pixels to shift the pie slice.  Default is 7.
 		shift: 7
 	});
-	var PlotAction = dojox.charting.action2d.PlotAction;
 	=====*/
 	
 	var DEFAULT_SCALE = 1.05,
 		DEFAULT_SHIFT = 7;	// px
 
 	return declare("dojox.charting.action2d.MoveSlice", PlotAction, {
-		//	summary:
+		// summary:
 		//		Create an action for a pie chart that moves and scales a pie slice.
 
 		// the data description block for the widget parser
@@ -35,13 +34,13 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction", "dojo/fx/eas
 		optionalParams: {},	// no optional parameters
 
 		constructor: function(chart, plot, kwArgs){
-			//	summary:
+			// summary:
 			//		Create the slice moving action and connect it to the plot.
-			//	chart: dojox.charting.Chart
+			// chart: dojox.charting.Chart
 			//		The chart this action belongs to.
-			//	plot: String?
+			// plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
-			//	kwArgs: dojox.charting.action2d.__MoveSliceCtorArgs?
+			// kwArgs: dojox.charting.action2d.__MoveSliceCtorArgs?
 			//		Optional keyword arguments object for setting parameters.
 			if(!kwArgs){ kwArgs = {}; }
 			this.scale = typeof kwArgs.scale == "number" ? kwArgs.scale : DEFAULT_SCALE;
@@ -51,9 +50,9 @@ define(["dojo/_base/connect", "dojo/_base/declare", "./PlotAction", "dojo/fx/eas
 		},
 
 		process: function(o){
-			//	summary:
+			// summary:
 			//		Process the action on the given object.
-			//	o: dojox.gfx.Shape
+			// o: dojox.gfx.Shape
 			//		The object on which to process the slice moving action.
 			if(!o.shape || o.element != "slice" || !(o.type in this.overOutEvents)){ return; }
 

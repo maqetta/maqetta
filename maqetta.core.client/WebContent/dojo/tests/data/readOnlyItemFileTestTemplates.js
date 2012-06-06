@@ -1,5 +1,5 @@
 // FIXME: this test assumes the existence of the global object "tests"
-define(["dojo", "doh", "require", "dojo/data/api/Read", "dojo/data/api/Identity", "dojo/date", "dojo/date/stamp"], function(dojo, doh, require) {
+define(["dojo/main", "doh/main", "require", "dojo/data/api/Read", "dojo/data/api/Identity", "dojo/date", "dojo/date/stamp"], function(dojo, doh, require) {
 
 dojo.getObject("data.readOnlyItemFileTestTemplates", true, tests);
 
@@ -3060,7 +3060,7 @@ tests.data.readOnlyItemFileTestTemplates.testTemplates = [
 					}catch(e){
 						d.errback(e);
 					}
-				}
+				};
 				store.fetch({query: {value: "bar\*foo"}, onComplete: secondComplete, onError: error});
 			};
 			function error(error, request){

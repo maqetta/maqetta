@@ -1,19 +1,28 @@
 define(
 //begin v1.x content
 {
-	"quarters-format-abbr": [
-		"T1",
-		"T2",
-		"T3",
-		"T4"
+	"dateFormat-short": "d/M/y G",
+	"dateFormatItem-yQ": "QQQ 'de' y G",
+	"dateFormatItem-yQQQ": "QQQ 'de' y G",
+	"dateFormatItem-yyQ": "QQQ 'de' yy G",
+	"days-format-abbr": [
+		"dom",
+		"seg",
+		"ter",
+		"qua",
+		"qui",
+		"sex",
+		"sáb"
 	],
-	"dateFormat-medium": "d 'de' MMM 'de' y G",
-	"dateFormatItem-yMEd": "EEE, dd/MM/yyyy",
-	"dateFormatItem-yyyyMMM": "MMM 'de' y",
-	"dateFormatItem-Hm": "HH:mm",
-	"dateFormatItem-yyMMM": "MMM 'de' yy",
-	"timeFormat-full": "HH'h'mm'min'ss's' zzzz",
-	"dateFormatItem-HHmmss": "HH:mm:ss",
+	"days-format-wide": [
+		"Domingo",
+		"Segunda-feira",
+		"Terça-feira",
+		"Quarta-feira",
+		"Quinta-feira",
+		"Sexta-feira",
+		"Sábado"
+	],
 	"days-standAlone-narrow": [
 		"D",
 		"S",
@@ -23,50 +32,51 @@ define(
 		"S",
 		"S"
 	],
-	"dayPeriods-format-wide-pm": "Depois do meio-dia",
-	"dateFormatItem-yQQQ": "QQQ 'de' y G",
-	"dayPeriods-format-wide-am": "Antes do meio-dia",
-	"dateFormatItem-yyyyMM": "MM/yyyy",
-	"dateFormatItem-yyMM": "MM/yy",
-	"dateFormat-long": "d 'de' MMMM 'de' y G",
-	"dayPeriods-format-abbr-pm": "p.m.",
-	"dateFormatItem-yyQ": "QQQ 'de' yy G",
-	"dateFormatItem-yyMMMEEEd": "EEE, d 'de' MMM 'de' yy",
-	"dateFormatItem-ms": "mm:ss",
-	"dateFormat-short": "d/M/y G",
-	"dateFormatItem-yMMMEd": "EEE, d 'de' MMM 'de' y",
-	"dayPeriods-format-abbr-am": "a.m.",
-	"dateFormatItem-HHmm": "HH:mm",
-	"dateFormatItem-yM": "MM/yyyy",
-	"dateFormatItem-yyMMMd": "d 'de' MMM 'de' yy",
-	"timeFormat-long": "HH'h'mm'min'ss's' z",
-	"days-format-wide": [
-		"Domingo",
-		"Segunda-feira",
-		"Ter√ßa-feira",
-		"Quarta-feira",
-		"Quinta-feira",
-		"Sexta-feira",
-		"S√°bado"
+	"quarters-format-abbr": [
+		"T1",
+		"T2",
+		"T3",
+		"T4"
 	],
-	"dateFormatItem-yQ": "QQQ 'de' y G",
-	"dateFormatItem-yMMM": "MMM 'de' y",
 	"quarters-format-wide": [
-		"1.¬∫ trimestre",
-		"2.¬∫ trimestre",
-		"3.¬∫ trimestre",
-		"4.¬∫ trimestre"
+		"1.º trimestre",
+		"2.º trimestre",
+		"3.º trimestre",
+		"4.º trimestre"
 	],
-	"dateFormat-full": "EEEE, d 'de' MMMM 'de' y G",
-	"days-format-abbr": [
-		"dom",
-		"seg",
-		"ter",
-		"qua",
-		"qui",
-		"sex",
-		"s√°b"
-	]
+	"quarters-standAlone-wide": [
+		"1º trimestre",
+		"2º trimestre",
+		"3º trimestre",
+		"4º trimestre"
+	],
+	"dayPeriods-format-abbr-am": "a.m.",
+	"dayPeriods-format-abbr-pm": "p.m.",
+	"dayPeriods-format-narrow-am": "a.m.",
+	"dayPeriods-format-narrow-pm": "p.m.",
+	"dayPeriods-format-wide-am": "a.m.",
+	"dayPeriods-format-wide-pm": "p.m.",
+	"dateFormat-full": "EEEE, d 'de' MMMM 'de' y",
+	"dateFormat-long": "d 'de' MMMM 'de' y",
+	"dateFormat-medium": "dd/MM/yyyy",
+	"dateFormatItem-Hm": "HH:mm",
+	"dateFormatItem-MMMd": "d/MM",
+	"dateFormatItem-MMMEd": "E, d/MM",
+	"dateFormatItem-ms": "mm:ss",
+	"dateFormatItem-yMd": "dd/MM/yyyy",
+	"dateFormatItem-yMMM": "MM/y",
+	"dateFormatItem-yMMMd": "d/MM/y",
+	"dateFormatItem-yMMMEd": "E, d/MM/y",
+	"dateFormatItem-HHmm": "HH:mm",
+	"dateFormatItem-HHmmss": "HH:mm:ss",
+	"dateFormatItem-yyMM": "MM/yy",
+	"dateFormatItem-yyMMM": "MM/yy",
+	"dateFormatItem-yyMMMd": "d/MM/yy",
+	"dateFormatItem-yyMMMEd": "E, d/MM/yy",
+	"dateFormatItem-yyyyMM": "MM/yyyy",
+	"dateFormatItem-yyyyMMM": "MMM 'de' y",
+	"timeFormat-full": "H:mm:ss zzzz",
+	"timeFormat-long": "H:mm:ss z"
 }
 //end v1.x content
 );

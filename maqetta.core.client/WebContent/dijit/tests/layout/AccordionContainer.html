@@ -20,9 +20,6 @@
 	<!-- only needed for alternate theme testing: -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
-	<!-- helper methods -->
-	<script type="text/javascript" src="../helpers.js"></script>
-
 	<script type="text/javascript">
 		dojo.require("doh.runner");
 		dojo.require("dojo.parser");
@@ -30,6 +27,27 @@
 		dojo.require("dijit.form.Button");
 		dojo.require("dijit.layout.AccordionContainer");
 		dojo.require("dijit.layout.ContentPane");
+		dojo.require("dijit.tests.helpers");	// functions to help test
+
+		dojo.require("dijit.Tree");
+		dojo.require("dojo.data.ItemFileReadStore");
+		dojo.require("dijit.tree.ForestStoreModel");
+
+		// Data used by Tree in markup test
+		var data = {
+			identifier: 'id',
+			label: 'name',
+			items: [
+				{ id: 'AF', name:'Africa', type:'continent', population:'900 million', area: '30,221,532 sq km',
+						timezone: '-1 UTC to +4 UTC'},
+				{ id: 'AS', name:'Asia', type:'continent' },
+				{ id: 'OC', name:'Oceania', type:'continent', population:'21 million'},
+				{ id: 'AU', name:'Australia', type:'country', population:'21 million'},
+				{ id: 'EU', name:'Europe', type:'continent' },
+				{ id: 'NA', name:'North America', type:'continent' },
+				{ id: 'SA', name:'South America', type:'continent' }
+			]
+		};
 
 		var accordion;
 
@@ -387,10 +405,10 @@
 						}
 					});
 					accPane.placeAt(dojo.body());
-					html='<div data-dojo-type="dijit.layout.AccordionContainer" id="Accordion" style="height: 300px;">' +
-						 	'<div data-dojo-type="dijit.layout.ContentPane" title="first" id="first">' +
+					html='<div data-dojo-type="dijit/layout/AccordionContainer" id="Accordion" style="height: 300px;">' +
+						 	'<div data-dojo-type="dijit/layout/ContentPane" title="first" id="first">' +
 								'<div data-dojo-type=dijit.form.Button id=myButton>hello world</div></div>' +
-						 	'<div data-dojo-type="dijit.layout.ContentPane" title="second" id="second">second</div>' +
+						 	'<div data-dojo-type="dijit/layout/ContentPane" title="second" id="second">second</div>' +
 							'</div>';
 				},
 
@@ -458,48 +476,26 @@
 	<h1 class="testTitle">AccordionContainer Automated Tests</h1>
 
 	<h2 class="testTitle">Markup Accordion</h2>
-	<div id="markupAccordion" data-dojo-type="dijit.layout.AccordionContainer"
+
+	<div dojoType="dojo.data.ItemFileReadStore" jsId="continentStore" data="data"></div>
+	<div dojoType="dijit.tree.ForestStoreModel" jsId="continentModel"
+		store="continentStore" query="{type:'continent'}"
+		rootId="continentRoot" rootLabel="Continents" childrenAttrs="children">
+	</div>
+
+
+	<div id="markupAccordion" data-dojo-type="dijit/layout/AccordionContainer"
 		 data-dojo-props='style:"width: 400px; height: 300px; overflow: hidden"'>
-		<div id="pane1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='selected:true,
-			title:"A Simple Pane", iconClass:"dijitEditorIcon dijitEditorIconSave", tooltip:"tooltip for simple pane" '>
-				<select>
-					<option>red</option>
-					<option>blue</option>
-					<option>green</option>
-				</select>
-				<p>
-				Nunc consequat nisi vitae quam. Suspendisse sed nunc. Proin
-				suscipit porta magna. Duis accumsan nunc in velit. Nam et nibh.
-				Nulla facilisi. Cras venenatis urna et magna. Aenean magna mauris,
-				bibendum sit amet, semper quis, aliquet nec, sapien.  Aliquam
-				aliquam odio quis erat. Etiam est nisi, condimentum non, lacinia
-				ac, vehicula laoreet, elit. Sed interdum augue sit amet quam
-				dapibus semper. Nulla facilisi. Pellentesque lobortis erat nec
-				quam.
-				</p>
-				<p>
-				Sed arcu magna, molestie at, <input value="fringilla in, sodales"/> fringilla in, sodales eu, elit.
-				Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
-				vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
-				augue. Integer fermentum odio lobortis odio. Nullam mollis nisl non
-				metus. Maecenas nec nunc eget pede ultrices blandit. Ut non purus
-				ut elit convallis eleifend. Fusce tincidunt, justo quis tempus
-				euismod, magna nulla viverra libero, sit amet lacinia odio diam id
-				risus. Ut varius viverra turpis. Morbi urna elit, imperdiet eu,
-				porta ac, pharetra sed, nisi. Etiam ante libero, ultrices ac,
-				faucibus ac, cursus sodales, nisl. Praesent nisl sem, fermentum eu,
-				consequat quis, varius interdum, nulla. Donec neque tortor,
-				sollicitudin sed, consequat nec, facilisis sit amet, orci. Aenean
-				ut eros sit amet ante pharetra interdum.
-				</p>
+		<div id="pane1" data-dojo-type="dijit/Tree" model="continentModel" data-dojo-props='selected:true,
+			title:"Tree Pane", iconClass:"dijitEditorIcon dijitEditorIconSave", tooltip:"tooltip for simple pane"'>
 		</div>
 
 		<!-- test lazy loading.   margin style for testing size calculations. -->
-		<div id="lazyLoadPane1" data-dojo-type="dijit.layout.ContentPane"
+		<div id="lazyLoadPane1" data-dojo-type="dijit/layout/ContentPane"
 			 data-dojo-props='title:"Lazy Load Pane", href:"doc1.html"'></div>
 
 		<!-- test lazy loading.   margin style for testing size calculations. -->
-		<div id="lazyLoadPane2" data-dojo-type="dijit.layout.ContentPane"
+		<div id="lazyLoadPane2" data-dojo-type="dijit/layout/ContentPane"
 			 data-dojo-props='title:"Other Lazy Load Pane", href:"doc1.html"'></div>
 
 	</div>

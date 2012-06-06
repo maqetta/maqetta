@@ -556,7 +556,6 @@ return declare("dojox.gauges.GlossyHorizontalGauge", [BarGauge], {
 		//		Sets the font of the gauge
 		// font: String
 		//		An string representing the font such as 'normal normal normal 10pt Helvetica,Arial,sans-serif'	
-		// 
 		
 		this.font = font;
 		this._font = gfx.splitFontString(font);

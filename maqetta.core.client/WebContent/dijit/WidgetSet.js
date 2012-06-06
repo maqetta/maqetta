@@ -1,9 +1,9 @@
 define([
 	"dojo/_base/array", // array.forEach array.map
 	"dojo/_base/declare", // declare
-	"dojo/_base/window", // win.global
+	"dojo/_base/kernel", // kernel.global
 	"./registry"	// to add functions to dijit.registry
-], function(array, declare, win, registry){
+], function(array, declare, kernel, registry){
 
 	// module:
 	//		dijit/WidgetSet
@@ -20,7 +20,7 @@ define([
 		//		Create a small list of widgets:
 		//		|	var ws = new dijit.WidgetSet();
 		//		|	ws.add(dijit.byId("one"));
-		//		| 	ws.add(dijit.byId("two"));
+		//		|	ws.add(dijit.byId("two"));
 		//		|	// destroy both:
 		//		|	ws.forEach(function(w){ w.destroy(); });
 		//
@@ -76,7 +76,7 @@ define([
 			// returns:
 			//		Returns self, in order to allow for further chaining.
 
-			thisObj = thisObj || win.global;
+			thisObj = thisObj || kernel.global;
 			var i = 0, id;
 			for(id in this._hash){
 				func.call(thisObj, this._hash[id], i++, this._hash);
@@ -102,7 +102,7 @@ define([
 			//		|		return i % 2 == 0;
 			//		|	}).forEach(function(w){ /* odd ones */ });
 
-			thisObj = thisObj || win.global;
+			thisObj = thisObj || kernel.global;
 			var res = new WidgetSet(), i = 0, id;
 			for(id in this._hash){
 				var w = this._hash[id];
@@ -175,7 +175,7 @@ define([
 
 		every: function(func, thisObj){
 			// summary:
-			// 		A synthetic clone of `array.every` acting explicitly on this WidgetSet
+			//		A synthetic clone of `array.every` acting explicitly on this WidgetSet
 			//
 			// func: Function
 			//		A callback function run for every widget in this list. Exits loop
@@ -184,7 +184,7 @@ define([
 			// thisObj: Object?
 			//		Optional scope parameter to use for the callback
 
-			thisObj = thisObj || win.global;
+			thisObj = thisObj || kernel.global;
 			var x = 0, i;
 			for(i in this._hash){
 				if(!func.call(thisObj, this._hash[i], x++, this._hash)){
@@ -196,7 +196,7 @@ define([
 
 		some: function(func, thisObj){
 			// summary:
-			// 		A synthetic clone of `array.some` acting explicitly on this WidgetSet
+			//		A synthetic clone of `array.some` acting explicitly on this WidgetSet
 			//
 			// func: Function
 			//		A callback function run for every widget in this list. Exits loop
@@ -205,7 +205,7 @@ define([
 			// thisObj: Object?
 			//		Optional scope parameter to use for the callback
 
-			thisObj = thisObj || win.global;
+			thisObj = thisObj || kernel.global;
 			var x = 0, i;
 			for(i in this._hash){
 				if(func.call(thisObj, this._hash[i], x++, this._hash)){

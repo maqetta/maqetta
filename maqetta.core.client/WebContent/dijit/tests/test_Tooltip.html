@@ -8,7 +8,7 @@
 		@import "../themes/claro/document.css";
 		@import "css/dijitTests.css";
 
-		td { padding: 20px; }
+		#instructionTable.td { padding: 20px; }
 	</style>
 
 	<!-- required: a default dijit theme: -->
@@ -62,6 +62,10 @@
 			updateDynamicIds();
 		}
 
+		function setDefaultAlign(array){
+			dijit.Tooltip.defaultPosition = array;
+			dojo.byId('current').innerHTML = "Current: " + array;
+		}
 	</script>
 </head>
 <body class="claro">
@@ -69,7 +73,7 @@
 	<h1 class="testTitle">Tooltip test</h1>
 
 	<p>Mouse-over or focus the items below to test tooltips.</p>
-	<table>
+	<table id="instructionTable">
 		<tr>
 			<td>
 				Change tooltip positioning search list:
@@ -83,36 +87,40 @@
 		</tr>
 		<tr>
 			<td>
-				<button onclick="dijit.Tooltip.defaultPosition=['above-centered', 'below-centered']; dojo.byId('current').innerHTML='Current: ' + dijit.Tooltip.defaultPosition;">above, below</button>
-				<button onclick="dijit.Tooltip.defaultPosition=['after', 'before']; dojo.byId('current').innerHTML='Current: ' + dijit.Tooltip.defaultPosition;">after, before (default)</button>
+				<button onclick="setDefaultAlign(['above-centered', 'below-centered']);">above-centered, below-centered</button>
+				<button onclick="setDefaultAlign(['after-centered', 'before-centered']);">after-centered, before-centered</button>
+				<button onclick="setDefaultAlign(['above', 'below']);">above, below</button>
+				<!-- unsupported (and currently broken)
+				<button onclick="setDefaultAlign(['after', 'before']);">after, before</button>
+				-->
 				<div id=current>
 					Current: default (unchanged)
 				</div>
 			</td>
 			<td>
-				<div data-dojo-type="dijit.ColorPalette" data-dojo-props='onChange:function(val){ dojo.query("body").style("background", val); }'></div>
+				<div data-dojo-type="dijit/ColorPalette" data-dojo-props='onChange:function(val){ dojo.query("body").style("background", val); }'></div>
 			</td>
 			<td>
-				<input data-dojo-type="dijit.form.DateTextBox" data-dojo-props='id: "dtb", value: "2010-12-15", promptMessage: "Please Enter a date in dd/MM/yyyy format", style:"width: 8em;"'>				
+				<input data-dojo-type="dijit/form/DateTextBox" data-dojo-props='id: "dtb", value: "2010-12-15", promptMessage: "Please Enter a date in dd/MM/yyyy format", style:"width: 8em;"'>
 			</td>
 		</tr>
 	</table>
 
 	<label for="ddb">Drop down menu items have tooltips:</label>
-	<button id="ddb" data-dojo-type="dijit.form.DropDownButton">
+	<button id="ddb" data-dojo-type="dijit/form/DropDownButton">
 		<span>DropDown</span>
-		<span id="ddm" data-dojo-type="dijit.DropDownMenu">
-			<span id="cut" data-dojo-type="dijit.MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCut",
+		<span id="ddm" data-dojo-type="dijit/DropDownMenu">
+			<span id="cut" data-dojo-type="dijit/MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCut",
 				onClick:function(){ console.log("not actually cutting anything, just a test!"); }'>Cut</span>
-			<span id="copy" data-dojo-type="dijit.MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCopy",
+			<span id="copy" data-dojo-type="dijit/MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconCopy",
 				onClick:function(){ console.log("not actually copying anything, just a test!"); }'>Copy</span>
-			<span id="paste" data-dojo-type="dijit.MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconPaste",
+			<span id="paste" data-dojo-type="dijit/MenuItem" data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconPaste",
 				onClick:function(){ console.log("not actually pasting anything, just a test!"); }'>Paste</span>
 		</span>
 	</button>
-	<span id="cut_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["cut"]'>tooltip for cut</span>
-	<span id="copy_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["copy"]'>tooltip for copy</span>
-	<span id="paste_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["paste"]'>tooltip for paste</span>
+	<span id="cut_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["cut"]'>tooltip for cut</span>
+	<span id="copy_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["copy"]'>tooltip for copy</span>
+	<span id="paste_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["paste"]'>tooltip for paste</span>
 
 	<div id="tp2" dojoType="dijit.TitlePane" title="Tooltip on span in TitlePane" style="width: 300px;">
 		<span id="tpTooltipTarget">hover me for tooltip</span>
@@ -122,7 +130,7 @@
 	<input value="input, no tooltip"/>
 	<div>
 		<span id="one" class="tt" tabindex="0"> focusable text </span>
-		<span id="one_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["one"]'>
+		<span id="one_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["one"]'>
 			<b>
 				<span style="color: blue;">rich formatting</span>
 				<span style="color: red; font-size: x-large;"><i>!</i></span>
@@ -130,18 +138,18 @@
 		</span>
 	</div>
 	<span id="oneA" class="tt"> plain text (not focusable) </span>
-	<span id="oneA_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["oneA"]'>
+	<span id="oneA_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["oneA"]'>
 		<span> keyboard users can not access this tooltip</span>
 	</span>
     <a id="three" href="#bogus">anchor</a>
-	<span id="three_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["three"]'>tooltip on a link </span>
+	<span id="three_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["three"]'>tooltip on a link </span>
 	<p></p>
 
 	<span id="programmaticTest">this text has a programmatically created tooltip</span>
 	<br>
 
 	<button id="four">button w/tooltip</button>
-	<span id="btnTt" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["four"]'>tooltip on a button</span>
+	<span id="btnTt" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["four"]'>tooltip on a button</span>
 	<button id="removeButton" onclick="dijit.byId('btnTt').destroy()">Remove</button> tooltip from "button w/tooltip".
 
 	<span style="float: right">
@@ -153,7 +161,7 @@
 			<option value="delta">Delta</option>
 		</select>
 
-		<span id="seven_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["seven"]'>
+		<span id="seven_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["seven"]'>
 			tooltip on a select<br>
 			two line tooltip.
 		</span>
@@ -179,27 +187,27 @@
 		<span id="s5">s5 text</span><br><br><br>
 	</div>
 
-	<span id="id1_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["id1"]'>
+	<span id="id1_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["id1"]'>
 
 	tooltip for #1<br>
 	long&nbsp;long&nbsp;long&nbsp;long&nbsp;long&nbsp;long&nbsp;long&nbsp;long&nbsp;long&nbsp;long&nbsp;long&nbsp;text<br>
 	make sure that this works properly with a really narrow window
 	</span>
 
-	<span id="id2_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["id2"]'>tooltip for #2</span>
-	<span id="id3_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["id3"]'>tooltip for #3</span>
-	<span id="id4_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["id4"]'>tooltip for #4</span>
-	<span id="id5_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["id5"]'>tooltip for #5</span>
-	<span id="id6_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["id6"]'>tooltip for #6</span>
+	<span id="id2_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["id2"]'>tooltip for #2</span>
+	<span id="id3_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["id3"]'>tooltip for #3</span>
+	<span id="id4_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["id4"]'>tooltip for #4</span>
+	<span id="id5_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["id5"]'>tooltip for #5</span>
+	<span id="id6_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["id6"]'>tooltip for #6</span>
 
-	<span id="s1_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["s1"]'>s1 tooltip</span>
-	<span id="s2_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["s2"]'>s2 tooltip</span>
-	<span id="s3_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["s3"]'>s3 tooltip</span>
-	<span id="s4_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["s4"]'>s4 tooltip</span>
-	<span id="s5_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["s5"]'>s5 tooltip</span>
+	<span id="s1_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["s1"]'>s1 tooltip</span>
+	<span id="s2_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["s2"]'>s2 tooltip</span>
+	<span id="s3_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["s3"]'>s3 tooltip</span>
+	<span id="s4_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["s4"]'>s4 tooltip</span>
+	<span id="s5_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["s5"]'>s5 tooltip</span>
 
 	<h3>One Tooltip for multiple connect nodes</h3>
-	<span data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["multi1","multi2"], id:"multi1,multi2_tooltip", style:"display:none;"'>multi tooltip</span>
+	<span data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["multi1","multi2"], id:"multi1,multi2_tooltip", style:"display:none;"'>multi tooltip</span>
 	<a id="multi1" href="#bogus">multi1</a><br><a id="multi2" href="#bogus">multi2</a>
 
 	<h3>One Tooltip for multiple connect nodes w/ dojoType</h3>
@@ -228,6 +236,42 @@
 	<span id="t_connected_id"></span><br>
 	<span id="t_shown">Tooltip hidden (initial)</span>
 
-	<span id="t_tooltip" data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["t1","t3"]'>Dynamic target tooltip</span>
+	<span id="t_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["t1","t3"]'>Dynamic target tooltip</span>
+
+	<h3>Nested div test:</h3>
+	<div dir="ltr" style="margin: 0px 100px;">
+		<input id="inputBeforeNested" value="before">
+		<div id="nested" style="width: 300px;background-color: yellow">
+			Mouse over the inner blue div should show the tooltip on this outer yellow div.
+			<div style="width: 100px; height: 100px; background-color: blue; color: white;">
+				inner blue div
+			</div>
+			Likewise, focusing the input should put the tooltip on the outer yellow div
+			<br>
+			<input id="nestedInput" value="focus me">
+		</div>
+		<span id="nested_tooltip" data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:"nested"'>
+			Tooltip on yellow outer div
+		</span>
+	</div>
+
+	<h3>Delegation test:</h3>
+	<p>Tooltip should appear for first three rows of the table, customized per row.</p>
+	<span id="delegation_tooltip" data-dojo-type="dijit/Tooltip"
+		  data-dojo-props='connectId:"myTable", selector: "tr"'>
+		<script type="dojo/method" data-dojo-event="getContent" data-dojo-args="node">
+			var row = node.getAttribute("row");
+			return row <= 3 ? ("Tooltip for row " + row) : null;
+		</script>
+		This text will never appear; instead getContent() will run.
+	</span>
+	<table id="myTable">
+		<tr id="myTable-row1" row=1><td>row</td><td>1</td></tr>
+		<tr id="myTable-row2" row=2><td>row</td><td>2</td></tr>
+		<tr id="myTable-row3" row=3><td>row</td><td>3</td></tr>
+		<tr id="myTable-row4" row=4><td>row</td><td>4</td></tr>
+		<tr id="myTable-row5" row=5><td>row</td><td>5</td></tr>
+	</table>
+
 </body>
 </html>

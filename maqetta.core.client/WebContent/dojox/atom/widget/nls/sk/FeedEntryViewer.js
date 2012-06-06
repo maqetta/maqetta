@@ -1,15 +1,13 @@
 define(
-//begin v1.x content
 ({
-	displayOptions: "[zobraziť voľby]",
+	displayOptions: "[voľby zobrazenia]",
 	title: "Nadpis",
 	authors: "Autori",
 	contributors: "Prispievatelia",
 	id: "ID",
 	close: "[zatvoriť]",
-	updated: "Aktualizovaný",
-	summary: "Súhrn",
+	updated: "Aktualizované",
+	summary: "Zhrnutie",
 	content: "Obsah"
 })
-//end v1.x content
 );

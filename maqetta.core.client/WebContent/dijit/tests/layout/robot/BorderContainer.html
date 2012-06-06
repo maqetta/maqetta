@@ -13,11 +13,11 @@
 			djConfig="isDebug: true"></script>
 
 		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
 		<script type="text/javascript" src="./borderContainerTestFunctions.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_BorderContainer.html');

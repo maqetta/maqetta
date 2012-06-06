@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Bağlantı Özellikleri",
 	insertImageTitle: "Resim Özellikleri",
@@ -12,6 +11,4 @@ define(
 	topWindow: "En Üst Pencere",
 	newWindow: "Yeni Pencere"
 })
-
-//end v1.x content
 );

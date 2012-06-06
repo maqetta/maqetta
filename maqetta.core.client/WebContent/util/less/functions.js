@@ -86,6 +86,13 @@ tree.functions = {
         hsl.a = clamp(hsl.a);
         return hsla(hsl);
     },
+    fade: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.a = amount.value / 100;
+        hsl.a = clamp(hsl.a);
+        return hsla(hsl);
+    },
     spin: function (color, amount) {
         var hsl = color.toHSL();
         var hue = (hsl.h + amount.value) % 360;
@@ -137,15 +144,35 @@ tree.functions = {
         return new(tree.Quoted)('"' + str + '"', str);
     },
     round: function (n) {
+        return this._math('round', n);
+    },
+    ceil: function (n) {
+        return this._math('ceil', n);
+    },
+    floor: function (n) {
+        return this._math('floor', n);
+    },
+    _math: function (fn, n) {
         if (n instanceof tree.Dimension) {
-            return new(tree.Dimension)(Math.round(number(n)), n.unit);
+            return new(tree.Dimension)(Math[fn](number(n)), n.unit);
         } else if (typeof(n) === 'number') {
-            return Math.round(n);
+            return Math[fn](n);
         } else {
-	    throw {
-                error: "RuntimeError",
-                message: "math functions take numbers as parameters"
-            };
+            throw { type: "Argument", message: "argument must be a number" };
+        }
+    },
+    argb: function (color) {
+        return new(tree.Anonymous)(color.toARGB());
+
+    },
+    percentage: function (n) {
+        return new(tree.Dimension)(n.value * 100, '%');
+    },
+    color: function (n) {
+        if (n instanceof tree.Quoted) {
+            return new(tree.Color)(n.value.slice(1));
+        } else {
+            throw { type: "Argument", message: "argument must be a string" };
         }
     }
 };
@@ -171,4 +198,4 @@ function clamp(val) {
     return Math.min(1, Math.max(0, val));
 }
 
-})(require('less/tree'));
+})(require('./tree'));

@@ -7,10 +7,6 @@ define([
 	"../../form/ToggleButton"
 ], function(declare, domStyle, kernel, lang, _Plugin, ToggleButton){
 
-/*=====
-	var _Plugin = dijit._editor._Plugin;
-=====*/
-
 	// module:
 	//		dijit/_editor/plugins/ToggleDir
 	// summary:
@@ -37,7 +33,7 @@ define([
 		_initButton: function(){
 			// Override _Plugin._initButton() to setup handler for button click events.
 			this.inherited(arguments);
-			this.editor.onLoadDeferred.addCallback(lang.hitch(this, function(){
+			this.editor.onLoadDeferred.then(lang.hitch(this, function(){
 				var editDoc = this.editor.editorObject.contentWindow.document.documentElement;
 				//IE direction has to toggle on the body, not document itself.
 				//If you toggle just the document, things get very strange in the

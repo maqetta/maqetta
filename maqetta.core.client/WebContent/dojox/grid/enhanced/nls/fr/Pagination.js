@@ -1,7 +1,6 @@
 define(
-//begin v1.x content
 ({
-	"descTemplate": "${2} - ${3} sur ${1} ${0}",
+	"descTemplate": "${2} à ${3} sur ${1} ${0}",
 	"firstTip": "Première page",
 	"lastTip": "Dernière page",
 	"nextTip": "Page suivante",
@@ -11,14 +10,12 @@ define(
 	"pageStepLabelTemplate": "Page ${0}",
 	"pageSizeLabelTemplate": "${0} éléments par page",
 	"allItemsLabelTemplate": "Tous les éléments",
-	"gotoButtonTitle": "Accéder à une page spécifique",
-	"dialogTitle": "Accéder à la page",
+	"gotoButtonTitle": "Aller à une page donnée",
+	"dialogTitle": "Aller à la page",
 	"dialogIndication": "Indiquer le numéro de page",
 	"pageCountIndication": " (${0} pages)",
-	"dialogConfirm": "Accès",
+	"dialogConfirm": "Aller",
 	"dialogCancel": "Annuler",
-	"all": "tout"
+	"all": "Tout"
 })
-//end v1.x content
 );
-

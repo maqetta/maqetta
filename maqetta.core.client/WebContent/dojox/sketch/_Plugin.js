@@ -6,9 +6,8 @@ define([
 	"dojo/_base/connect",
 	"dijit/form/ToggleButton"
 ], function(dojo){
-	dojo.getObject("sketch", true, dojox);
-	dojo.declare("dojox.sketch._Plugin", null, {
-		// summary
+	return dojo.declare("dojox.sketch._Plugin", null, {
+		// summary:
 		//		This represents a "plugin" to the dojox.sketch.Figure, which is basically
 		//		a single button on the Toolbar and some associated code
 		constructor: function(/*Object?*/args){
@@ -77,5 +76,4 @@ define([
 			}
 		}
 	});
-	return dojox.sketch._Plugin;
 });

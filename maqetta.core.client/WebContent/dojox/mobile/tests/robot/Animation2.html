@@ -9,53 +9,104 @@
 		</style>
 
 		<!-- required: dojo.js -->
-		<script type="text/javascript" src="../../../../dojo/dojo.js"
-			djConfig="isDebug: true"></script>
+		<script type="text/javascript" src="../../../../dojo/dojo.js" data-dojo-config="isDebug: true, parseOnLoad: true"></script>
 
-		<!-- functions to help test -->
-		<!-- script type="text/javascript" src="../helpers.js"></script -->
+		<script language="JavaScript" type="text/javascript">
+			require([
+				"dojo/ready", // dojo.ready
+				"doh/runner",	//doh functions
+				"dijit/registry",  // dijit.registry.byId
+				"dijit/robotx"
+			], function(ready, runner, registry){
+				ready(function(){
 
-		<script type="text/javascript">
-			dojo.require("dojo.parser");
-			dojo.require("dijit.robotx");
-			dojo.require("dojox.mobile");
-			dojo.require("dojox.mobile.IconContainer");
-	        dojo.require("doh.runner");
+					runner.robot.initRobot("../test_transition-pubsub.html");
 
-			dojo.addOnLoad(function(){
-				doh.robot.initRobot("../test_iPhone-Animation.html");
+					runner.register("dojox.mobile.Animation mouse tests", [
+						{
+							name: "Animation mouse tests",
+							timeout: 50000,
+							runTest: function(){
+								var d = new runner.Deferred();
 
-				doh.register("dojox.mobile.Animation mouse tests", [
-					{
-						name: "Animation mouse tests",
-						timeout: 40000,
-						runTest: function(){
-							var d = new doh.Deferred();
+								runner.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_0").domNode, 1000);
+								runner.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_0").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
+								runner.robot.sequence(d.getTestCallback(function(){
+									runner.assertEqual("none",  dijit.registry.byId("view1").domNode.style.display);
+									runner.assertEqual("",  dijit.registry.byId("view2").domNode.style.display);
+								}), 1500);
+								return d;
+							}
+						},
+						{
+							name: "Animation mouse tests",
+							timeout: 50000,
+							runTest: function(){
+								var d = new runner.Deferred();
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_1").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
-							
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_1").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
+								runner.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ToolBarButton_0").domNode, 1000);
+								runner.robot.mouseClick({left: true}, 500);
+								
+								runner.robot.sequence(d.getTestCallback(function(){
+									runner.assertEqual("",  dijit.registry.byId("view1").domNode.style.display);
+									runner.assertEqual("none",  dijit.registry.byId("view2").domNode.style.display);
+								}), 100);
+								return d;
+							}
+						},
+						{
+							name: "Animation mouse tests",
+							timeout: 50000,
+							runTest: function(){
+								var d = new runner.Deferred();
 
-							doh.robot.mouseMoveAt(dojo.query(".mblArrowButtonBody", dijit.byId("dojox_mobile_Heading_1").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
+								runner.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_1").domNode, 1000);
+								runner.robot.mouseClick({left: true}, 500);
 
-							doh.robot.mouseMoveAt(dojo.query(".mblListItemAnchor", dijit.byId("dojox_mobile_ListItem_2").domNode)[0], 1000);
-							doh.robot.mouseClick({left: true}, 500);
+								runner.robot.sequence(d.getTestCallback(function(){
+									runner.assertEqual("none",  dijit.registry.byId("view1").domNode.style.display);
+									runner.assertEqual("",  dijit.registry.byId("view2").domNode.style.display);
+								}), 1500);
+								return d;
+							}
+						},
+						{
+							name: "Animation mouse tests",
+							timeout: 50000,
+							runTest: function(){
+								var d = new runner.Deferred();
 
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.assertEqual("Search Result",  dijit.byId("dojox_mobile_Heading_1").get("label"));
-							}), 500);
-							return d;
+								runner.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ToolBarButton_0").domNode, 1000);
+								runner.robot.mouseClick({left: true}, 500);
+
+								runner.robot.sequence(d.getTestCallback(function(){
+									runner.assertEqual("",  dijit.registry.byId("view1").domNode.style.display);
+									runner.assertEqual("none",  dijit.registry.byId("view2").domNode.style.display);
+								}), 1500);
+								return d;
+							}
+						},
+						{
+							name: "Animation mouse tests",
+							timeout: 50000,
+							runTest: function(){
+								var d = new runner.Deferred();
+
+								runner.robot.mouseMoveAt(dijit.registry.byId("dojox_mobile_ListItem_2").domNode, 1000);
+								runner.robot.mouseClick({left: true}, 500);
+
+								runner.robot.sequence(d.getTestCallback(function(){
+									runner.assertEqual("none",  dijit.registry.byId("view1").domNode.style.display);
+									runner.assertEqual("",  dijit.registry.byId("view2").domNode.style.display);
+								}), 2000);
+								return d;
+							}
 						}
-					}
-				]);
+					]);
 
-				doh.run();
+					runner.run();
+				});
 			});
 		</script>
 	</head>

@@ -1,4 +1,5 @@
 define({ root:
+//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -254,8 +255,9 @@ define({ root:
 	lsaquo:"single left-pointing angle quotation mark",
 	rsaquo:"single right-pointing angle quotation mark",
 	euro:"euro sign"
-}),
+})
 //end v1.x content
+,
 "zh": true,
 "zh-tw": true,
 "tr": true,
@@ -275,6 +277,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -286,4 +289,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

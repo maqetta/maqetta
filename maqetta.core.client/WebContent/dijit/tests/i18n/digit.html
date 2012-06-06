@@ -7,8 +7,6 @@
 
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true, extraLocale: ['ar-eg','hi-in']"></script>
-		<script type="text/javascript" src="../../../dojo/currency.js"></script>
-		<script type="text/javascript" src="../../../dojo/number.js"></script>
 		<script type="text/javascript">
 			dojo.require("dijit.dijit"); // optimize: load dijit layer
 			dojo.require("dijit.form.NumberTextBox");
@@ -23,39 +21,42 @@
 		<script src="test_i18n.js"></script>
 		<script type="text/javascript">
 			dojo.ready(function(){
+				doh.register("parse", function(){
+					dojo.parser.parse();
+				});
 				doh.register("t", getAllTestCases());
 				doh.run();
 			});
 		</script>
 
 		<script>
-			function gen4DateFormat(testCases, language, locale, date, short, shortCmt, medium, mediumCmt, long, longCmt, full, fullCmt){
+			function gen4DateFormat(testCases, language, locale, date, shortVal, shortCmt, mediumVal, mediumCmt, longVal, longCmt, fullVal, fullCmt){
 				testCases.push({
 				  attrs: {constraints: language.indexOf("hi") == 0 ? "{formatLength:'short', localeDigit: true}" : "{formatLength:'short'}", lang: language},
 				  desc: "Locale: <b>" + locale + "</b> Format: <b>Short</b>",
 				  value: date,
-				  expValue: short,
+				  expValue: shortVal,
 				  comment: shortCmt
 				});
 				testCases.push({
 				  attrs: {constraints: language.indexOf("hi") == 0 ? "{formatLength:'medium', localeDigit: true}" : "{formatLength:'medium'}", lang: language},
 				  desc: "Locale: <b>" + locale + "</b> Format: <b>Medium</b>",
 				  value: date,
-				  expValue: medium,
+				  expValue: mediumVal,
 				  comment: mediumCmt
 				});
 				testCases.push({
 				  attrs: {constraints: language.indexOf("hi") == 0 ? "{formatLength:'long', localeDigit: true}" : "{formatLength:'long'}", lang: language},
 				  desc: "Locale: <b>" + locale + "</b> Format: <b>Long</b>",
 				  value: date,
-				  expValue: long,
+				  expValue: longVal,
 				  comment: longCmt
 				});
 				testCases.push({
 				  attrs: {constraints: language.indexOf("hi") == 0 ? "{formatLength:'full', localeDigit: true}" : "{formatLength:'full'}", lang: language},
 				  desc: "Locale: <b>" + locale + "</b> Format: <b>Full</b>",
 				  value: date,
-				  expValue: full,
+				  expValue: fullVal,
 				  comment: fullCmt
 				});
 			}
@@ -254,8 +255,6 @@
 			gen4DateFormat(testCases, "hi-in", "hi_IN", new Date(2005, 6, 31),
 				"२००५-०७-३१", "<a href='currency.html#cmt_3'>See #3 (currency.html).</a>", "२००५ जुलाई ३१", "<a href='currency.html#cmt_3'>See #3 (currency.html).</a>", "२००५ जुलाई ३१", "<a href='currency.html#cmt_3'>See #3 (currency.html).</a>", "रविवार, २००५ जुलाई ३१", "<a href='currency.html#cmt_3'>See #3 (currency.html).</a>");
 			genValidateTestCases("Date Validate", "dijit.form.DateTextBox", testCases);
-
-			dojo.parser.parse();
 
 		})();
 

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Satsvis stavekontroll",
 	unfound: "Ikke funnet",
@@ -16,5 +15,4 @@ define(
 	iSkipAll: "Hopp over alle slike",
 	iMsg: "Ingen staveforslag"
 })
-//end v1.x content
 );

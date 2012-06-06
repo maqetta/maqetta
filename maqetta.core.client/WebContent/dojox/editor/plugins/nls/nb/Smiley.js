@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	smiley: "Sett inn uttrykksikon",
 	emoticonSmile: "smil",
@@ -10,7 +9,7 @@ define(
 	emoticonAngry: "sint",
 	emoticonHalf: "halv",
 	emoticonEyebrow: "øyebryn",
-	emoticonFrown: "streng",
+	emoticonFrown: "trist",
 	emoticonShy: "sjenert",
 	emoticonGoofy: "tåpelig",
 	emoticonOops: "ops",
@@ -19,7 +18,7 @@ define(
 	emoticonYes: "ja",
 	emoticonNo: "nei",
 	emoticonAngel: "engel",
-	emoticonCrying: "gråt"
+	emoticonCrying: "gråt",
+	emoticonHappy: "glad"
 })
-//end v1.x content
 );

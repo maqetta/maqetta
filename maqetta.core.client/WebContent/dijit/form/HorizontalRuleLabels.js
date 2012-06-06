@@ -5,10 +5,6 @@ define([
 	"./HorizontalRule"
 ], function(declare, number, query, HorizontalRule){
 
-/*=====
-	var HorizontalRule = dijit.form.HorizontalRule;
-=====*/
-
 // module:
 //		dijit/form/HorizontalRuleLabels
 // summary:
@@ -70,13 +66,12 @@ return declare("dijit.form.HorizontalRuleLabels", HorizontalRule, {
 
 		// if the labels array was not specified directly, then see if <li> children were
 		var labels = this.labels;
-		if(!labels.length){
+		if(!labels.length && this.srcNodeRef){
 			// for markup creation, labels are specified as child elements
 			labels = query("> li", this.srcNodeRef).map(function(node){
 				return String(node.innerHTML);
 			});
 		}
-		this.srcNodeRef.innerHTML = '';
 		// if the labels were not specified directly and not as <li> children, then calculate numeric labels
 		if(!labels.length && this.count > 1){
 			var start = this.minimum;

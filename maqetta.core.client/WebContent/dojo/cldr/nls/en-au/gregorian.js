@@ -1,17 +1,24 @@
 define(
 //begin v1.x content
 {
-	"dateFormatItem-yMEd": "EEE, d/M/y",
-	"dateFormatItem-yyyyMMMM": "MMMM y",
-	"dateFormatItem-MEd": "E, d/M",
-	"dateFormat-medium": "dd/MM/yyyy",
-	"dateFormatItem-MMdd": "dd/MM",
-	"dateFormatItem-yyyyMM": "MM/yyyy",
 	"dateFormat-full": "EEEE, d MMMM y",
-	"dateFormatItem-MMMMd": "d MMMM",
-	"dateFormat-short": "d/MM/yy",
 	"dateFormat-long": "d MMMM y",
-	"dateFormatItem-MMMEd": "E, d MMM"
+	"dateFormat-medium": "dd/MM/yyyy",
+	"dateFormat-short": "d/MM/yy",
+	"timeFormat-full": "h:mm:ss a zzzz",
+	"timeFormat-long": "h:mm:ss a z",
+	"timeFormat-medium": "h:mm:ss a",
+	"timeFormat-short": "h:mm a",
+	"dateFormatItem-MEd": "E, d/M",
+	"dateFormatItem-MMdd": "dd/MM",
+	"dateFormatItem-MMMd": "d MMM",
+	"dateFormatItem-MMMEd": "E, d MMM",
+	"dateFormatItem-MMMMd": "d MMMM",
+	"dateFormatItem-yMd": "d/M/y",
+	"dateFormatItem-yMEd": "E, d/M/y",
+	"dateFormatItem-yMMMd": "d MMM y",
+	"dateFormatItem-yyyyMM": "MM/yyyy",
+	"dateFormatItem-yyyyMMMM": "MMMM y"
 }
 //end v1.x content
 );

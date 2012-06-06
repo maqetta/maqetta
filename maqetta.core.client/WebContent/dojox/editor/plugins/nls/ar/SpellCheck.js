@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "فحص هجاء دفعي",
 	unfound: "غير موجودة",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "تخطي كل المماثل لهذا",
 	iMsg: "لا توجد اقتراحات للهجاء"
 })
-
-//end v1.x content
 );

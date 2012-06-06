@@ -10,12 +10,6 @@ define([
 	"dojo/text!./templates/DropDownButton.html"
 ], function(declare, lang, query, registry, popup, Button, _Container, _HasDropDown, template){
 
-/*=====
-	Button = dijit.form.Button;
-	_Container = dijit._Container;
-	_HasDropDown = dijit._HasDropDown;
-=====*/
-
 // module:
 //		dijit/form/DropDownButton
 // summary:
@@ -27,9 +21,9 @@ return declare("dijit.form.DropDownButton", [Button, _Container, _HasDropDown], 
 	//		A button with a drop down
 	//
 	// example:
-	// |	<button data-dojo-type="dijit.form.DropDownButton">
+	// |	<button data-dojo-type="dijit/form/DropDownButton">
 	// |		Hello world
-	// |		<div data-dojo-type="dijit.Menu">...</div>
+	// |		<div data-dojo-type="dijit/Menu">...</div>
 	// |	</button>
 	//
 	// example:

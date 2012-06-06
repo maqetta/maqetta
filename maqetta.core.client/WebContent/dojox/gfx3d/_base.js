@@ -1,7 +1,8 @@
 define(["dojo/_base/lang"],function(lang) {
 	var gfx3d = lang.getObject("dojox.gfx3d",true);
 	lang.mixin( gfx3d, {
-		// summary: defines constants, prototypes, and utility functions
+		// summary:
+		//		defines constants, prototypes, and utility functions
 		
 		// default objects, which are used to fill in missing parameters
 		defaultEdges:	  {type: "edges",     style: null, points: []},

@@ -12,11 +12,9 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js"
 			djConfig="isDebug: true"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_TabContainer.html');
@@ -268,17 +266,136 @@
 					}
 				]);
 
+				doh.register("disabled tabs",[
+					{
+						name: "setup",
+						runTest: function(){
+
+							// disable first, last, and middle tab
+							dijit.byId("tab1").set("disabled", true);
+							dijit.byId("tab3").set("disabled", true);
+							dijit.byId("embedded").set("disabled", true);
+
+							// set second tab as selected
+							dijit.byId("mainTabContainer").selectChild(dijit.byId("tab2"));
+						}
+					},
+
+					{
+						name: "focus on button before TabContainer",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							onFocus(d.getTestCallback(function(node){
+							}));
+
+							dojo.query("button")[0].focus();
+
+							return d;
+						}
+					},
+					{
+						name: "tab into main TabContainer",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							onFocus(d.getTestCallback(function(node){
+								doh.is("mainTabContainer_tablist_tab2", node.id, "focus");
+							}));
+
+							doh.robot.keyPress(dojo.keys.TAB, 500, {});
+
+							return d;
+						}
+					},
+					{
+						name: "skip over tab 3 with RIGHT arrow",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							onFocus(d.getTestCallback(function(node){
+								var tc = dijit.byId("mainTabContainer");
+								doh.is('mainTabContainer_tablist_inlined', node.id, "currently chosen tab");
+								doh.is("inlined", tc.selectedChildWidget.id, "currently displayed pane");
+							}));
+
+							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
+
+							return d;
+						}
+					},
+					{
+						name: "skip over tab 3 with LEFT arrow",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							var tc = dijit.byId("mainTabContainer");
+							onFocus(d.getTestCallback(function(node){
+								doh.is('mainTabContainer_tablist_tab2', node.id, "currently chosen tab");
+								doh.is("tab2", tc.selectedChildWidget.id, "currently chosen pane");
+							}));
+
+							doh.robot.keyPress(dojo.keys.LEFT_ARROW, 500, {});
+
+							return d;
+						}
+					},
+					{
+						name: "end key should skip disabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							onFocus(d.getTestCallback(function(node){
+								doh.is('mainTabContainer_tablist_tab4href', node.id);
+							}));
+
+							doh.robot.keyPress(dojo.keys.END, 500, {});
+
+							return d;
+						}
+					},
+					{
+						name: "home key should skip disabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							onFocus(d.getTestCallback(function(node){
+								doh.is('mainTabContainer_tablist_tab2', node.id);
+							}));
+
+							doh.robot.keyPress(dojo.keys.HOME, 500, {});
+
+							return d;
+						}
+					},
+
+					{
+						name: "teardown",
+						runTest: function(){
+							// disable first, last, and middle tab
+							dijit.byId("tab1").set("disabled", false);
+							dijit.byId("tab3").set("disabled", false);
+							dijit.byId("embedded").set("disabled", false);
+						}
+					}
+				]);
+
 				doh.register("closing tabs", [
 					{
 						name: "close tab with DELETE button",
 						timeout: 10000,
 						runTest: function(t){
 							var d = new doh.Deferred();
-							
-							doh.robot.sequence(function(){
-								dojo.byId("mainTabContainer_tablist_inlined").focus();
-							}, 500, 500);
-							
+
+							dijit.byId("mainTabContainer").selectChild("tab4href");
+
+							// Go to "Sub TabContainer from href" tab, and close it
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 							doh.robot.keyPress(dojo.keys.DELETE, 750, {});
 
@@ -298,8 +415,10 @@
 							
 							doh.robot.sequence(function(){
 								dojo.byId("mainTabContainer_tablist_tab1").focus();
-							}, 500, 500);
-							
+							}, 500);
+
+							// Go to "Tab 3", and close it.
+							// This puts the focus back on "Tab 1".
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 750, {});
 							if(dojo.isChrome){
@@ -308,7 +427,7 @@
 							}else{
 								doh.robot.keyPress("w", 750, {ctrl:true});
 							}
-							
+
 							var tc = dijit.byId("mainTabContainer");
 							doh.robot.sequence(d.getTestCallback(function(){
 								doh.is(5, tc.getChildren().length);
@@ -328,12 +447,13 @@
 						timeout: 10000,
 						runTest: function(t){
 							var d = new doh.Deferred();
-							
+
+							// Go to "SplitContainer from href" tab
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 750, {});
 							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 750, {});
 							
-							// open via keyboard
+							// Open context menu via keyboard
 							if(dojo.isMac){
 								doh.robot.keyPress(dojo.keys.SPACE, 500, {
 									ctrl: true
@@ -343,7 +463,8 @@
 									shift: true
 								});
 							}
-							
+
+							// Close tab
 							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
 							
 							var tc = dijit.byId("mainTabContainer");

@@ -1,4 +1,5 @@
 define({ root:
+//begin v1.x content
 ({
 	"saveLabel": "Save",
 	"saveSettingLabelOn": "Set Auto-Save Interval...",
@@ -12,8 +13,8 @@ define({ root:
 	"saveMessageSuccess": "Saved at ${0}",
 	"saveMessageFail": "Failed to save at ${0}"
 })
-,
 //end v1.x content
+,
 "zh": true,
 "zh-tw": true,
 "tr": true,
@@ -33,6 +34,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -44,4 +46,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

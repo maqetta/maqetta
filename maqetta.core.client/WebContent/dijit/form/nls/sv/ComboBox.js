@@ -1,8 +1,6 @@
 define(
-//begin v1.x content
 ({
-		previousMessage: "Föregående alternativ",
-		nextMessage: "Fler alternativ"
+		previousMessage: "Tidigare val",
+		nextMessage: "Fler val"
 })
-//end v1.x content
 );

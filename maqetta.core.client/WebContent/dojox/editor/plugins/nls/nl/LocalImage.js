@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertImageTitle: "Afbeelding invoegen",
 	url: "Afbeelding",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "Geef een afbeeldings-URL op",
 	prePopuTextBrowse: " of navigeer naar een lokaal bestand."
 })
-
-//end v1.x content
 );

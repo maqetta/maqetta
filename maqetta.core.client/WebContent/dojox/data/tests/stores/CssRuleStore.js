@@ -4,9 +4,9 @@ dojo.require("dojo.data.api.Read");
 dojo.require("dojo.data.api.Identity");
 
 dojox.data.tests.stores.CssRuleStore.createStore = function(context){
-	//  summary:
+	// summary:
 	//		A simple helper function for getting the sample data used in each of the tests.
-	//  description:
+	// description:
 	//		A simple helper function for getting the sample data used in each of the tests.
 	var store = null;
 	if(dojo.isBrowser){
@@ -50,7 +50,7 @@ dojox.data.tests.stores.CssRuleStore.createStore = function(context){
 } ;
 
 dojox.data.tests.stores.CssRuleStore.verifyItems = function(cssRuleStore, items, attribute, compareArray){
-	//  summary:
+	// summary:
 	//		A helper function for validating that the items array is ordered
 	//		the same as the compareArray
 	if(items.length != compareArray.length){ return false; }
@@ -63,7 +63,7 @@ dojox.data.tests.stores.CssRuleStore.verifyItems = function(cssRuleStore, items,
 };
 
 dojox.data.tests.stores.CssRuleStore.error = function(t, d, errData){
-	//  summary:
+	// summary:
 	//		The error callback function to be used for all of the tests.
 	for (var i in errData) {
 		console.log(errData[i]);
@@ -77,9 +77,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			name: "testReadAPI_fetch",
 			timeout:	10000, //10 seconds.  Flickr can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on CssRuleStorem longer timeout because initial load can sometimes take a bit..
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on CssRuleStorem longer timeout because initial load can sometimes take a bit.
 				var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -99,9 +99,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			}
 		},
 		function testReadAPI_fetch_all(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CssRuleStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CssClassStore.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore(['dojox/data/tests/stores/test1.css', 'dojox/data/tests/stores/test2.css']);
 			
@@ -119,9 +119,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_withinContext(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CssRuleStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CssRuleStore.
 			//dojox.data.tests.stores.CssRuleStore.loadStylesheets();
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore(['dojox/data/tests/stores/test1.css']);
@@ -141,9 +141,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_withinMultipleSheetContext(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CssRuleStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CssRuleStore.
 			//dojox.data.tests.stores.CssRuleStore.loadStylesheets();
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore(['dojox/data/tests/stores/test1.css', 'dojox/data/tests/stores/test2.css']);
@@ -163,9 +163,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_switchContext(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CssRuleStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CssRuleStore.
 			//dojox.data.tests.stores.CssRuleStore.loadStylesheets();
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore(['dojox/data/tests/stores/test1.css', 'dojox/data/tests/stores/test2.css']);
@@ -196,9 +196,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			
@@ -215,9 +215,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_one_longer(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			
@@ -234,9 +234,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_Multiple(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			
@@ -279,9 +279,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_MultipleMixed(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CsvStore of a single item.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CsvStore of a single item.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			
@@ -320,9 +320,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_all_streaming(t){
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on CsvStore.
-			//	description:
+			// description:
 			//		Simple test of a basic fetch on CsvStore.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -353,9 +353,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_paging(t){
-			 //	summary:
+			 // summary:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
-			 //	description:
+			 // description:
 			 //		Test of multiple fetches on a single result.  Paging, if you will.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			
@@ -394,9 +394,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 		},
 		
 		function testReadAPI_getLabel(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabel function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabel function against a store set that has a label defined.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			
@@ -416,9 +416,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_getLabelAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-			//	description:
+			// description:
 			//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			
@@ -438,9 +438,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_getValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValue function of the store.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -459,9 +459,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_getValue_2(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValue function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValue function of the store.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -480,9 +480,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_getValues(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getValues function of the store.
-			//	description:
+			// description:
 			//		Simple test of the getValues function of the store.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -503,9 +503,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_isItem(t){
-			//	summary:
+			// summary:
 			//		Simple test of the isItem function of the store
-			//	description:
+			// description:
 			//		Simple test of the isItem function of the store
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -526,9 +526,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_hasAttribute(t){
-			//	summary:
+			// summary:
 			//		Simple test of the hasAttribute function of the store
-			//	description:
+			// description:
 			//		Simple test of the hasAttribute function of the store
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -559,9 +559,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_containsValue(t){
-			//	summary:
+			// summary:
 			//		Simple test of the containsValue function of the store
-			//	description:
+			// description:
 			//		Simple test of the containsValue function of the store
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
  			
@@ -592,9 +592,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_getAttributes(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getAttributes function of the store
-			//	description:
+			// description:
 			//		Simple test of the getAttributes function of the store
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -622,9 +622,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d;
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 
@@ -637,9 +637,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			t.assertTrue(count === 1);
 		},
 		function testReadAPI_fetch_patternMatch(t){
-			//	summary:
+			// summary:
 			//		Function to test pattern matching of everything swith Cla in it
-			//	description:
+			// description:
 			//		Function to test pattern matching of everything with Cla in it
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			var d = new doh.Deferred();
@@ -658,9 +658,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseInsensitive(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match with case insensitivity set.
-			//	description:
+			// description:
 			//		Function to test exact pattern match with case insensitivity set.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			var d = new doh.Deferred();
@@ -679,9 +679,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_patternMatch_caseSensitive(t){
-			//	summary:
+			// summary:
 			//		Function to test exact pattern match with case insensitivity set.
-			//	description:
+			// description:
 			//		Function to test exact pattern match with case insensitivity set.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			var d = new doh.Deferred();
@@ -699,9 +699,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabetic(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting alphabetic ordering.
-			//	description:
+			// description:
 			//		Function to test sorting alphabetic ordering.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			var d = new doh.Deferred();
@@ -726,9 +726,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_fetch_sortAlphabeticDescending(t){
-			//	summary:
+			// summary:
 			//		Function to test sorting alphabetic ordering in descending mode.
-			//	description:
+			// description:
 			//		Function to test sorting alphabetic ordering in descending mode.
 			var cssRuleStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			var d = new doh.Deferred();
@@ -756,9 +756,9 @@ doh.register("dojox.data.tests.stores.CssRuleStore",
 			return d; //Object
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 			var testStore = dojox.data.tests.stores.CssRuleStore.createStore();
 			var readApi = new dojo.data.api.Read();

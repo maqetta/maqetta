@@ -172,8 +172,8 @@
 	
 				dojo.declare("Missing", [dijit._WidgetBase, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 					templateString: '<div>' +
-										'<div data-dojo-type="dijit.layout.ContentPane">' +
-											'<div data-dojo-type="dijit.form.Button" data-dojo-props="id: \'missingButtonId\'" ' +
+										'<div data-dojo-type="dijit/layout/ContentPane">' +
+											'<div data-dojo-type="dijit/form/Button" data-dojo-props="id: \'missingButtonId\'" ' +
 											'data-dojo-attach-point="missingButton">Missing...</div>' +
 										'</div>' +
 									'</div>'
@@ -408,10 +408,10 @@
 		<textarea id="Test1Template" style="display:none;">
 			<div>
 				<div data-dojo-attach-point="normalNode">normal node</div>
-				<button data-dojo-attach-point="buttonWidget" data-dojo-attach-event="onClick:onClick" data-dojo-type="dijit.form.Button">button #1</button>
-				<div data-dojo-attach-point="checkboxWidget" data-dojo-attach-event="onClick:onClick" data-dojo-type="dijit.form.CheckBox"></div> checkbox #1
+				<button data-dojo-attach-point="buttonWidget" data-dojo-attach-event="onClick:onClick" data-dojo-type="dijit/form/Button">button #1</button>
+				<div data-dojo-attach-point="checkboxWidget" data-dojo-attach-event="onClick:onClick" data-dojo-type="dijit/form/CheckBox"></div> checkbox #1
 				<div data-dojo-attach-point="progressBarWidget" data-dojo-attach-event="onChange:onClick"
-					data-dojo-type="dijit.ProgressBar" data-dojo-props='value: 20, maximum: 200, style: "width:400px;"'></div>
+					data-dojo-type="dijit/ProgressBar" data-dojo-props='value: 20, maximum: 200, style: "width:400px;"'></div>
 			</div>
 		</textarea>
 
@@ -420,7 +420,7 @@
 	
 		<textarea id="Test3Template" style="display:none;">
 			<div>
-				<div data-dojo-attach-point="checkboxWidget" data-dojo-type="dijit.form.CheckBox"></div> checkbox #3
+				<div data-dojo-attach-point="checkboxWidget" data-dojo-type="dijit/form/CheckBox"></div> checkbox #3
 				<div data-dojo-attach-point="containerNode"></div>
 			</div>
 		</textarea>
@@ -428,28 +428,28 @@
 		<div data-dojo-type="Test3Widget" data-dojo-props="id: 'test3Widget'">
 			<span>hello world</span>
 			<b style="border: 1px solid blue;">this is my
-				<button data-dojo-type="dijit.form.Button" data-dojo-props="id: '3.1'">first button</button>
+				<button data-dojo-type="dijit/form/Button" data-dojo-props="id: '3.1'">first button</button>
 			</b>
-			<button data-dojo-type="dijit.form.Button" data-dojo-props="id: '3.2'">another button</button>
+			<button data-dojo-type="dijit/form/Button" data-dojo-props="id: '3.2'">another button</button>
 			<i>and some more</i>
 			<div style="border: 1px solid red;">
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="style: {border: '1px solid gray'}, id: '3.3'">
-					<button data-dojo-type="dijit.form.Button" data-dojo-props="id: '3.nested'">a nested button</button>
-					<button data-dojo-type="dijit.form.Button" data-dojo-props="id: '3.nested2'">another nested button</button>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="style: {border: '1px solid gray'}, id: '3.3'">
+					<button data-dojo-type="dijit/form/Button" data-dojo-props="id: '3.nested'">a nested button</button>
+					<button data-dojo-type="dijit/form/Button" data-dojo-props="id: '3.nested2'">another nested button</button>
 				</div>
-				<button data-dojo-type="dijit.form.Button" data-dojo-props="id: '3.4'">yet another button</button>
-				<button data-dojo-type="dijit.form.Button" data-dojo-props="id: '3.5'">yet yet another button</button>
+				<button data-dojo-type="dijit/form/Button" data-dojo-props="id: '3.4'">yet another button</button>
+				<button data-dojo-type="dijit/form/Button" data-dojo-props="id: '3.5'">yet yet another button</button>
 			</div>
 		</div>
 
 		<!-- Test templated widget containing layout widgets in template -->
 		<textarea id="Test4Template" style="display:none;">
 			<div>
-				<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style: {height: '5em', width: '100em'}" data-dojo-attach-point="tabCont">
-					<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title: 'Tab 1'" data-dojo-attach-point="tab1">
+				<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props="style: {height: '5em', width: '100em'}" data-dojo-attach-point="tabCont">
+					<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="title: 'Tab 1'" data-dojo-attach-point="tab1">
 						pane 1
 					</div>
-					<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title: 'Tab 2'" data-dojo-attach-point="tab2">
+					<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="title: 'Tab 2'" data-dojo-attach-point="tab2">
 						pane 2
 					</div>
 				</div>

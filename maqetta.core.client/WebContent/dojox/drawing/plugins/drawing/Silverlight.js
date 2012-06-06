@@ -2,30 +2,28 @@ dojo.provide("dojox.drawing.plugins.drawing.Silverlight");
 
 dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 	// summary:
-	// 	"Plugin" to allow the Silverlight plugin to work
-	//	with DojoX Drawing.
-	//
+	//		"Plugin" to allow the Silverlight plugin to work
+	//		with DojoX Drawing.
+
 	//	WARNING: This is not completely implemented. For the most
 	//	part, DojoX Drawing does not support Silverlight. This class
 	//	was created in an attempt for support, but there were too many
 	//	obstacles and not enough time. The basic functionality is here
 	//	and there's a good head start if anyone elase wishes to pick up
 	//	where I left off.
-	//
+
 	function(options){
 		// summary:
-		//	The constructor is the only method in this class.
-		//	What is happening here is other methods in other
-		//	classes are being overridden to adapt to Silverlight.
-		//
- 		
+		//		The constructor is the only method in this class.
+		//		What is happening here is other methods in other
+		//		classes are being overridden to adapt to Silverlight.
+
 		if(dojox.gfx.renderer != "silverlight"){ return; }
 		this.mouse = options.mouse;
 		this.stencils = options.stencils;
 		this.anchors = options.anchors;
 		this.canvas = options.canvas;
 		this.util = options.util;
-	
 		
 		dojo.connect(this.stencils, "register", this, function(item){
 			var c1, c2, c3, c4, c5, self = this;
@@ -38,7 +36,7 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 					evt.superTarget = item;
 					self.mouse.down(evt);
 				});
-			}
+			};
 			conMouse();
 			
 			c2 = dojo.connect(item, "setTransform", this, function(){
@@ -106,7 +104,7 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 			
 			// throws errors in IE silverlight. Oddness.
 			//dojo.stopEvent(evt);
-		}
+		};
 		
 		this.mouse.down = function(evt){
 			clearTimeout(this.__downInv);
@@ -117,9 +115,7 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 				return;
 			}
 			this._down(evt);
-			
-			
-		}
+		};
 		
 		this.mouse._getXY =  function(evt){
 			
@@ -140,11 +136,11 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 			}else{
 				return {x:evt.pageX, y:evt.pageY};
 			}
-		}
+		};
 		
 		this.mouse._getId = function(evt){
 			return this.util.attr(evt, "id");
-		}
+		};
 		
 		this.util.attr = function(/* Object */ elem, /* property */ prop, /* ? value */ value, squelchErrors){
 			if(!elem){ return false; }

@@ -10,6 +10,5 @@
 @import url("../../../../../dijit/themes/claro/claro_rtl.css");
 
 /* mobile styling variants of dijit and dojox desktop widgets */
-@import url("Calendar.css");
 @import url("ColorPalette.css");
 @import url("ColorPicker.css");

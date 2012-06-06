@@ -1,13 +1,5 @@
 define(["./_base", "dojo/_base/lang", "./matrix"], 
   function(g, lang, m){
-/*===== 
-	g = dojox.gfx;
-	dojox.gfx.arc = {
-		// summary:
-		//		This module contains the core graphics Arc functions.
-	};
-  =====*/
-
 	var twoPI = 2 * Math.PI, pi4 = Math.PI / 4, pi8 = Math.PI / 8,
 		pi48 = pi4 + pi8, curvePI4 = unitArcAsBezier(pi8);
 
@@ -27,6 +19,9 @@ define(["./_base", "dojo/_base/lang", "./matrix"],
 	}
 
 	var arc = g.arc = {
+		// summary:
+		//		This module contains the core graphics Arc functions.
+		
 		unitArcAsBezier: unitArcAsBezier,
 		/*===== 
 			unitArcAsBezier: function(alpha) {

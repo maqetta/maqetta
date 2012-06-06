@@ -13,23 +13,23 @@
 			djConfig="isDebug: true"></script>
 
 		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
 		<script type="text/javascript" src="./borderContainerTestFunctions.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_Gui.html');
 
 				doh.register("API", [
 					function initialConditions(){
-						checkBCpanes(dijit.byId("main")); // This test will fail in opera because it thinks that the center content is taller than the border container.  However, it displays fine.
-						checkBCpanes(dijit.byId("mainSplit"));
-						checkBCpanes(dijit.byId("embeddedBC"));
-						checkBCpanes(dijit.byId("bottomSplit"));
-						checkInside(dijit.byId("topTabs1"), dijit.byId("centerSplit"));
-						doh.t(isVisible(dijit.byId("basdicFormTab").domNode));
+						checkBCpanes(dijit.byId("main"), "main checkBCpanes"); // This test will fail in opera because it thinks that the center content is taller than the border container.  However, it displays fine.
+						checkBCpanes(dijit.byId("mainSplit"), "mainSplit checkBCpanes");
+						checkBCpanes(dijit.byId("embeddedBC"), "embeddedBC checkBCpanes");
+						checkBCpanes(dijit.byId("bottomSplit"), "bottomSplit checkBCpanes");
+						checkInside(dijit.byId("topTabs1"), dijit.byId("centerSplit"), "topTabs1 inside centerSplit");
+						doh.t(isVisible(dijit.byId("basicFormTab").domNode), "basicFormTab visible");
 					}
 				]);
 				
@@ -111,7 +111,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 														
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(undefined, dijit.byId("accTabs_tablist_bbtab3"));
+								doh.is(undefined, dijit.byId("accTabs_tablist_bbtab3"), "accTabs_tablist_bbtab3 undefined");
 							}), 1000);
 
 							return d;
@@ -181,7 +181,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(undefined, dijit.byId("topTabs1_tablist_tabContainerInTabCP"));
+								doh.is(undefined, dijit.byId("topTabs1_tablist_tabContainerInTabCP"), "topTabs1_tablist_tabContainerInTabCP undefined");
 							}), 1000);
 
 							return d;
@@ -206,8 +206,8 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								checkInside(dijit.byId("bottomTabs1"), dijit.byId("embeddedBC"));
-								checkInside(dijit.byId("bottomTabs2"), dijit.byId("embeddedBC"));
+								checkInside(dijit.byId("bottomTabs1"), dijit.byId("embeddedBC"), "bottomTabs1 inside embeddedBC");
+								checkInside(dijit.byId("bottomTabs2"), dijit.byId("embeddedBC"), "bottomTabs2 inside embeddedBC");
 								doh.t(isVisible(dijit.byId("btabB").domNode), "Tab 2 is not visible");
 								doh.t(isHidden(dijit.byId("btabA").domNode), "Tab 1 is not hidden");
 							}), 1000);
@@ -225,7 +225,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(undefined, dijit.byId("bottomTabs1_tablist_btabC"));
+								doh.is(undefined, dijit.byId("bottomTabs1_tablist_btabC"), "bottomTabs1_tablist_btabC undefined");
 							}), 1000);
 
 							return d;
@@ -247,11 +247,11 @@
 							doh.robot.mouseRelease({left: true}, 500);
 														
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_9").domNode));
-								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_9_splitter").domNode));
-								doh.t(isVisible(dijit.byId("btabAA").domNode));
-								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_10").domNode));
-								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_10_splitter").domNode));
+								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_9").domNode), "dijit_layout_ContentPane_9 visible");
+								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_9_splitter").domNode), "dijit_layout_ContentPane_9_splitter visible");
+								doh.t(isVisible(dijit.byId("btabAA").domNode), "btabAA visible");
+								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_10").domNode), "dijit_layout_ContentPane_10 visible");
+								doh.t(isVisible(dijit.byId("dijit_layout_ContentPane_10_splitter").domNode), "dijit_layout_ContentPane_10_splitter visible");
 							}), 1000);
 
 							return d;
@@ -267,12 +267,12 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.t(isVisible(dijit.byId("btab2").domNode));
-								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_9").domNode));
-								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_9_splitter").domNode));
-								doh.t(isHidden(dijit.byId("btabAA").domNode));
-								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_10").domNode));
-								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_10_splitter").domNode));
+								doh.t(isVisible(dijit.byId("btab2").domNode), "btab2 visible");
+								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_9").domNode), "dijit_layout_ContentPane_9 visible");
+								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_9_splitter").domNode), "dijit_layout_ContentPane_9_splitter visible");
+								doh.t(isHidden(dijit.byId("btabAA").domNode), "btabAA visible");
+								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_10").domNode), "dijit_layout_ContentPane_10 visible");
+								doh.t(isHidden(dijit.byId("dijit_layout_ContentPane_10_splitter").domNode), "dijit_layout_ContentPane_10_splitter visible");
 							}), 1000);
 
 							return d;
@@ -288,7 +288,7 @@
 							doh.robot.mouseClick({left:true}, 500);
 							
 							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is(undefined, dijit.byId("bottomTabs_tablist_btab3"));
+								doh.is(undefined, dijit.byId("bottomTabs_tablist_btab3"), "bottomTabs_tablist_btab3 undefined");
 							}), 1000);
 
 							return d;

@@ -77,51 +77,51 @@
 
 	<h1 class="testTitle">Dijit layout.TabContainer nested TitlePane tests</h1>
 
-	<div id="mainTabContainer" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='style:"width: 100%; height: 150px;"'>
+	<div id="mainTabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='style:"width: 100%; height: 150px;"'>
 
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id: "tab1", title:"Tab 1"'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id: "tab1", title:"Tab 1"'>
 			<h1>I am tab 1</h1>
-			<div data-dojo-type="dijit.TitlePane" data-dojo-props='id: "tp1", title:"Title pane 1", style:{width:"300px"}'>
+			<div data-dojo-type="dijit/TitlePane" data-dojo-props='id: "tp1", title:"Title pane 1", style:{width:"300px"}'>
 				<p>This is a title pane, containing another tab container ...</p>
 				<p>
 					Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Quisque iaculis, nulla id semper faucibus, pede tellus nonummy magna, vitae adipiscing orci arcu ut augue. Nunc condimentum, magna a vestibulum convallis, libero purus pulvinar orci, sed vestibulum urna sem ut pede. More Ipsum...
 				</p>
-				<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props='id: "subtabs1", style:"width: 100%; height: 150px;"'>
-					<div id="tab1_1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
-					<div id="tab1_2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
+				<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='id: "subtabs1", style:"width: 100%; height: 150px;"'>
+					<div id="tab1_1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
+					<div id="tab1_2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
 				</div>
 			</div>
 		</div>
 
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id: "tab2", title:"Tab 2"'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id: "tab2", title:"Tab 2"'>
 			<h1>I am tab 2</h1>
-			<div data-dojo-type="dijit.TitlePane" data-dojo-props='id: "tp2", title:"Title pane 2", style:{width:"300px"}'>
+			<div data-dojo-type="dijit/TitlePane" data-dojo-props='id: "tp2", title:"Title pane 2", style:{width:"300px"}'>
 				<p>This is a title pane, containing another tab container ...</p>
 				<p>
 					Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Quisque iaculis, nulla id semper faucibus, pede tellus nonummy magna, vitae adipiscing orci arcu ut augue. Nunc condimentum, magna a vestibulum convallis, libero purus pulvinar orci, sed vestibulum urna sem ut pede. More Ipsum...
 				</p>
-				<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props='id: "subtabs2", style:"width: 100%; height: 150px;"'>
-					<div id="tab2_1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
-					<div id="tab2_2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
+				<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='id: "subtabs2", style:"width: 100%; height: 150px;"'>
+					<div id="tab2_1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
+					<div id="tab2_2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
 				</div>
 			</div>
 		</div>
 
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id: "tab3", title:"Tab 3"'>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id: "tab3", title:"Tab 3"'>
 			<h1>I am tab 3</h1>
-			<div data-dojo-type="dijit.TitlePane" data-dojo-props='id: "tp3", title:"Title pane 3", style:{width:"300px"}, open: false'>
+			<div data-dojo-type="dijit/TitlePane" data-dojo-props='id: "tp3", title:"Title pane 3", style:{width:"300px"}, open: false'>
 				<p>This is a title pane, containing another tab container ...</p>
 				<p>
 					Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Quisque iaculis, nulla id semper faucibus, pede tellus nonummy magna, vitae adipiscing orci arcu ut augue. Nunc condimentum, magna a vestibulum convallis, libero purus pulvinar orci, sed vestibulum urna sem ut pede. More Ipsum...
 				</p>
-				<div data-dojo-type="dijit.layout.TabContainer" data-dojo-props='id: "subtabs3", style:"width: 100%; height: 150px;"'>
-					<div id="tab3_1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
-					<div id="tab3_2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
+				<div data-dojo-type="dijit/layout/TabContainer" data-dojo-props='id: "subtabs3", style:"width: 100%; height: 150px;"'>
+					<div id="tab3_1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
+					<div id="tab3_2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
 				</div>
 			</div>
 		</div>
 
-		<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='id: "hrefTab", href:"tab2.html", title:"Href Tab"'></div>
+		<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='id: "hrefTab", href:"tab2.html", title:"Href Tab"'></div>
 	</div>
 
 	<h3>Rendering time</h3>

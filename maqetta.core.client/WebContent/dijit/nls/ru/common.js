@@ -1,10 +1,8 @@
 define(
-//begin v1.x content
 ({
-	buttonOk: "ОК",
-	buttonCancel: "Отмена",
+	buttonOk: "OK",
+	buttonCancel: "Отменить",
 	buttonSave: "Сохранить",
 	itemClose: "Закрыть"
 })
-//end v1.x content
 );

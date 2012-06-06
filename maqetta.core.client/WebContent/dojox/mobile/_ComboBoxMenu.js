@@ -5,16 +5,11 @@ define([
 	"dojo/dom-construct",
 	"dijit/form/_ComboBoxMenuMixin",
 	"dijit/_WidgetBase",
-	"dojox/mobile/_ListTouchMixin",
+	"./_ListTouchMixin",
 	"./scrollable"
 ],
 	function(dojo, declare, domClass, domConstruct, ComboBoxMenuMixin, WidgetBase, ListTouchMixin, Scrollable){
 
-	/*=====
-		ComboBoxMenuMixin = dijit.form._ComboBoxMenuMixin;
-		WidgetBase = dijit._WidgetBase;
-		ListTouchMixin = dojox.mobile._ListTouchMixin;
-	=====*/
 	return declare("dojox.mobile._ComboBoxMenu", [WidgetBase, ListTouchMixin, ComboBoxMenuMixin], {
 		// summary:
 		//		Focus-less menu for internal use in `dijit.form.ComboBox`
@@ -73,9 +68,8 @@ define([
 
 		postCreate: function(){
 			this.inherited(arguments);
-			this.scrollable = new Scrollable(dojo, dojox);
+			this.scrollable = new Scrollable();
 			this.scrollable.resize = function(){}; // resize changes the height rudely
-			this.scrollable.androidWorkaroud = false; // disable Android workaround
 		}
 	});
 });

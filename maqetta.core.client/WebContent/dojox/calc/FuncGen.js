@@ -15,29 +15,24 @@ define([
 	"dijit/form/TextBox" // template
 ], function(declare, lang, domStyle, WidgetBase, WidgetsInTemplateMixin, TemplatedMixin, math, registry, template, calc){
 
-	/*=====
-		WidgetBase = dijit._WidgetBase;
-		WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
-		TemplatedMixin = dijit._TemplatedMixin;
-	=====*/
 	var FuncGen = declare(
 		"dojox.calc.FuncGen",
 		[WidgetBase, TemplatedMixin, WidgetsInTemplateMixin],
 	{
 		// summary:
 		//		The dialog layout for making functions
-		//
+
 		templateString: template,
 
 		onSelect: function(){
-			// summary
-			//	if they select something in the name combobox, then change the body and arguments to correspond to the function they selected
+			// summary:
+			//		if they select something in the name combobox, then change the body and arguments to correspond to the function they selected
 			this.reset();
 		},
 		onClear: function(){
-			// summary
-			//	the clear button in the template calls this
-			//	clear the name, arguments, and body if the user says yes
+			// summary:
+			//		The clear button in the template calls this.
+			//		Clear the name, arguments, and body if the user says yes.
 			var answer = confirm("Do you want to clear the name, argument, and body text?");
 			if(answer){
 				this.clear();
@@ -51,23 +46,24 @@ define([
 			//console.log("Save was pressed");
 		},
 		clear: function(){
-			// summary
-			//	clear the name, arguments, and body
+			// summary:
+			//		clear the name, arguments, and body
 			this.textarea.set("value", "");
 			this.args.set("value", "");
 			this.combo.set("value", "");
 		},
 		reset: function(){
-			// summary
-			//	set the arguments and body to match a function selected if it exists in the function list
+			// summary:
+			//		set the arguments and body to match a function selected if it exists in the function list
 			if(this.combo.get("value") in this.functions){
 				this.textarea.set("value", this.functions[this.combo.get("value")].body);
 				this.args.set("value", this.functions[this.combo.get("value")].args);
 			}
 		},
 		onReset: function(){
-			// summary
-			//	(Reset button on click event) reset the arguments and body to their previously saved state if the user says yes
+			// summary:
+			//		(Reset button on click event) reset the arguments and body to their previously saved state if the user says yes
+
 			//console.log("Reset was pressed");
 			if(this.combo.get("value") in this.functions){
 				var answer = confirm("Do you want to reset this function?");
@@ -78,8 +74,8 @@ define([
 			}
 		},
 		deleteThing: function(item){
-			// summary
-			//	delete an item in the writestore
+			// summary:
+			//		delete an item in the writestore
 			if(this.writeStore.isItem(item)){
 				// delete it
 				//console.log("Found item "+item);
@@ -93,8 +89,8 @@ define([
 			// override me
 		},
 		onDelete: function(){
-			// summary
-			//	(Delete button on click event) delete a function if the user clicks yes
+			// summary:
+			//		(Delete button on click event) delete a function if the user clicks yes
 
 			//console.log("Delete was pressed");
 
@@ -118,8 +114,8 @@ define([
 			}
 		},
 		readyStatus: function(){
-			// summary
-			//	set the status in the template to ready
+			// summary:
+			//		set the status in the template to ready
 			this.status.set("value", "Ready");
 		},
 		writeStore:null, //the user can save functions to the writestore
@@ -134,9 +130,9 @@ define([
 		},*/
 
 		startup: function(){
-			// summary
-			//	make sure the parent has a close button if it needs to be able to close
-			//	link the write store too
+			// summary:
+			//		make sure the parent has a close button if it needs to be able to close
+			//		link the write store too
 			this.combo.set("store", this.writeStore);
 
 			this.inherited(arguments);// this is super class startup

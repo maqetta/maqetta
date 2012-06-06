@@ -3,11 +3,13 @@ dojo.provide("dijit.tests.editor.module");
 try{
 	var userArgs = window.location.search.replace(/[\?&](dojoUrl|testUrl|testModule)=[^&]*/g,"").replace(/^&/,"?");
 
-	//inline doh tests
+	// inline doh tests
 	doh.registerUrl("dijit.tests.editor.nls_8859-2", dojo.moduleUrl("dijit","tests/editor/nls_8859-2.html"+userArgs), 999999);
 	doh.registerUrl("dijit.tests.editor.nls_sjis", dojo.moduleUrl("dijit","tests/editor/nls_sjis.html"+userArgs), 999999);
 	doh.registerUrl("dijit.tests.editor.nls_utf8", dojo.moduleUrl("dijit","tests/editor/nls_utf8.html"+userArgs), 999999);
-	
+	doh.registerUrl("dijit.tests.editor.Editor_stylesheet", dojo.moduleUrl("dijit","tests/editor/Editor_stylesheet.html"+userArgs), 999999);
+	doh.registerUrl("dijit.tests.editor.html", dojo.moduleUrl("dijit","tests/editor/html.html"+userArgs), 999999);
+
 	// Base editor functionality
 	doh.registerUrl("dijit.tests.editor.robot.Editor_mouse", dojo.moduleUrl("dijit","tests/editor/robot/Editor_mouse.html"+userArgs), 999999);
 	doh.registerUrl("dijit.tests.editor.robot.Editor_a11y", dojo.moduleUrl("dijit","tests/editor/robot/Editor_a11y.html"+userArgs), 999999);
@@ -31,6 +33,11 @@ try{
 		doh.registerUrl("dijit.tests.editor.robot.BackForwardState", dojo.moduleUrl("dijit","tests/editor/robot/BackForwardState.html"+userArgs), 999999);
 	}
 
+	// Special test for IE9 in IE8 compat mode (#14900)
+	if(dojo.isIE == 9){
+		doh.registerUrl("dijit.tests.editor.robot.Editor_IE8Compat", dojo.moduleUrl("dijit","tests/editor/robot/Editor_IE8Compat.html"+userArgs), 999999);
+
+	}
 }catch(e){
 	doh.debug(e);
 }

@@ -6,31 +6,29 @@
 			@import "../../../dojo/resources/dojo.css";
 			@import "../../../dijit/tests/css/dijitTests.css";
 		</style>
-		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true"></script>
+		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, async: true"></script>
 		<script type="text/javascript">
-			dojo.require("dojox.embed.Quicktime");
-
 			//	what a pain.  We hate having to deal with async loading issues.
-			dojo.addOnLoad(function(){
-				console.log("Getting the Quicktime version...");
-				var r=dojo.byId("results"),
+		require(["dojo/dom", "dojo/_base/connect", "dojox/embed/Quicktime", "dojo/domReady!"], 
+			function(dom, listen, QT){
+				var r=dom.byId("results"),
 					fn=function(){
-						var v=dojox.embed.Quicktime.version || { major: 0, minor: 0, rev: 0 };
+						var v=QT.version || { major: 0, minor: 0, rev: 0 };
 						r.innerHTML = v.major
 							+ '.' + v.minor
 							+ '.' + v.rev;
 					};
-				if(!dojox.embed.Quicktime.available){
+				if(!QT.available){
 					r.innerHTML = "QuickTime plugin not installed";
-				}else if(!dojox.embed.Quicktime.supported){
+				}else if(!QT.supported){
 					r.innerHTML = "QuickTime not supported";
-				}else if(dojox.embed.Quicktime.initialized){
+				}else if(QT.initialized){
 					fn();
 				}else{
 					console.log("dojox.embed.Quicktime not initialized yet... waiting");
-					var h=dojo.connect(dojox.embed.Quicktime, "onInitialize", function(){
+					var h=listen.connect(QT, "onInitialize", function(){
 						fn();
-						dojo.disconnect(h);
+						listen.disconnect(h);
 					});
 				}
 			});

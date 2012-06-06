@@ -1,6 +1,5 @@
-dojo.provide("dojox.drawing.manager.keys");
-
-(function(){
+define(["dojo", "../util/common"], 
+function(dojo, utilCommon){
 	
 	// Ref: isEdit allows events to happen in Drawing, like TextBlocks
 	var isEdit = false;
@@ -10,39 +9,40 @@ dojo.provide("dojox.drawing.manager.keys");
 	
 	var alphabet = "abcdefghijklmnopqrstuvwxyz";
 	
-	dojox.drawing.manager.keys = {
+	//dojox.drawing.manager.keys = 
+	var keys = {
 		// summary:
 		//		A singleton, master object that detects
 		//		keyboard keys and events
 		// 		Connect to it like:
 		//		dojo.connect(this.keys, "onEnter", ....);
-		//
-		// arrowIncrement:Number
+
+		// arrowIncrement: Number
 		//		The amount, in pixels, a selected Stencil will
 		//		move on an arrow key event
 		arrowIncrement:1,
-		//
-		//	arrowShiftIncrement: Number
+
+		// arrowShiftIncrement: Number
 		//		The amount, in pixels, a selected Stencil will
 		//		move on an arrow key + SHIFT event
 		arrowShiftIncrement:10,
-		//
+
 		// shift: [readonly] Boolean
 		//		Indicates whether the Shift key is currently pressed
 		shift:false,
-		//
+
 		// ctrl: [readonly] Boolean
 		//		Indicates whether the Control key is currently pressed
 		ctrl:false,
-		//
+
 		// alt: [readonly] Boolean
 		//		Indicates whether the Alt or Option key is currently pressed
 		alt:false,
-		//
+
 		// cmmd: [readonly] Boolean
 		//		Indicates whether the Apple Command key is currently pressed
 		cmmd:false, // apple key
-		//
+
 		// meta: [readonly] Boolean
 		//		Indicates whether any 'meta' key is currently pressed:
 		//			shift || ctrl || cmmd || alt
@@ -82,8 +82,8 @@ dojo.provide("dojox.drawing.manager.keys");
 			//		of events.
 			//		NOTE: Not really used in code, but should work.
 			//		See manager.mouse for similar usage
-			//
-			var _handle = dojox.drawing.util.common.uid("listener");
+
+			var _handle = utilCommon.uid("listener");
 			this.listeners.push({
 				handle:_handle,
 				scope: options.scope || window,
@@ -106,6 +106,7 @@ dojo.provide("dojox.drawing.manager.keys");
 			evt.shift = this.shift;
 			evt.alt = this.alt;
 			evt.cmmd = this.cmmd;
+			evt.ctrl = this.ctrl;
 			evt.letter = this._getLetter(evt);
 			return evt;
 		},
@@ -133,7 +134,7 @@ dojo.provide("dojox.drawing.manager.keys");
 			//		Scans the document for inputs
 			//		and calls this automatically. However you may need
 			//		to call this if you create inputs after the fact.
-			//
+
 			if(this._fieldCons){
 				dojo.forEach(this._fieldCons, dojo.disconnect, dojo);
 			}
@@ -154,7 +155,7 @@ dojo.provide("dojox.drawing.manager.keys");
 		init: function(){
 			// summary:
 			//		Initialize the keys object
-			//
+
 			// a little extra time is needed in some browsers
 			setTimeout(dojo.hitch(this, "scanForFields"), 500);
 			
@@ -260,5 +261,6 @@ dojo.provide("dojox.drawing.manager.keys");
 			});
 		}
 	};
-	dojo.addOnLoad(dojox.drawing.manager.keys, "init");
-})();
+	dojo.addOnLoad(keys, "init");
+	return keys;
+});

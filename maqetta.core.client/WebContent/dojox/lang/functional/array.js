@@ -1,5 +1,5 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/window", "./lambda"], 
-	function(dojo, lang, arr, win, df){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "./lambda"],
+	function(kernel, lang, arr, df){
 
 // This module adds high-level functions and related constructs:
 //	- array-processing functions similar to standard JS functions
@@ -26,7 +26,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 			// summary: creates a new array with all elements that pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || win.global; f = df.lambda(f);
+			o = o || kernel.global; f = df.lambda(f);
 			var t = [], v, i, n;
 			if(lang.isArray(a)){
 				// array
@@ -54,7 +54,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 		forEach: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
 			// summary: executes a provided function once per array element.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || win.global; f = df.lambda(f);
+			o = o || kernel.global; f = df.lambda(f);
 			var i, n;
 			if(lang.isArray(a)){
 				// array
@@ -76,7 +76,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 			// summary: creates a new array with the results of calling
 			//	a provided function on every element in this array.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || win.global; f = df.lambda(f);
+			o = o || kernel.global; f = df.lambda(f);
 			var t, n, i;
 			if(lang.isArray(a)){
 				// array
@@ -101,7 +101,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 			// summary: tests whether all elements in the array pass the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || win.global; f = df.lambda(f);
+			o = o || kernel.global; f = df.lambda(f);
 			var i, n;
 			if(lang.isArray(a)){
 				// array
@@ -133,7 +133,7 @@ define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/
 			// summary: tests whether some element in the array passes the test
 			//	implemented by the provided function.
 			if(typeof a == "string"){ a = a.split(""); }
-			o = o || win.global; f = df.lambda(f);
+			o = o || kernel.global; f = df.lambda(f);
 			var i, n;
 			if(lang.isArray(a)){
 				// array

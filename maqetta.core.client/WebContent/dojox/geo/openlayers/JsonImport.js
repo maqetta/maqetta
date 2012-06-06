@@ -1,13 +1,12 @@
-define(["dojo/_base/kernel",
-				"dojo/_base/declare",
-				"dojo/_base/xhr",
-				"dojo/_base/lang",
-				"dojo/_base/array",
-				"dojox/geo/openlayers/LineString",
-				"dojox/geo/openlayers/Collection",
-				"dojo/data/ItemFileReadStore",
-				"dojox/geo/openlayers/GeometryFeature"], function(dojo, declare, xhr, lang, array, LineString, Collection,
-																													ItemFileReadStore, GeometryFeature){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/xhr",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojox/geo/openlayers/LineString",
+	"dojox/geo/openlayers/Collection",
+	"dojox/geo/openlayers/GeometryFeature"], 
+	function(declare, xhr, lang, array, LineString, Collection, GeometryFeature){
 
 	return declare("dojox.geo.openlayers.JsonImport", null, {
 		//	summary:
@@ -23,12 +22,12 @@ define(["dojo/_base/kernel",
 			//	description:
 			//		Construct a new JSON importer with the specified parameters. These parameters are
 			//		passed through an Object and include:
-			//	<ul>
-			//		<li> url : <em>url</em> </li> The url pointing to the JSON file to load.
-			//		<li> nextFeature : <em>function</em> </li> The function called each time a feature is read.
-			//		The function is called with a GeometryFeature as argument.
-			//		<li> error : <em>function</em> </li> Error function called if something goes wrong.
-			//	</ul>
+			//		<ul>
+			//			<li> url : <em>url</em> </li> The url pointing to the JSON file to load.
+			//			<li> nextFeature : <em>function</em> </li> The function called each time a feature is read.
+			//			The function is called with a GeometryFeature as argument.
+			//			<li> error : <em>function</em> </li> Error function called if something goes wrong.
+			//		</ul>
 			this._params = params;
 		},
 

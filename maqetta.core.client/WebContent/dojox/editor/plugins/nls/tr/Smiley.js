@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	smiley: "İfade Ekle",
 	emoticonSmile: "gülümseme",
@@ -19,8 +18,7 @@ define(
 	emoticonYes: "evet",
 	emoticonNo: "hayır",
 	emoticonAngel: "melek",
-	emoticonCrying: "ağlayan ifade"
+	emoticonCrying: "ağlayan ifade",
+	emoticonHappy: "mutlu ifade"
 })
-
-//end v1.x content
 );

@@ -4,10 +4,6 @@ define([
 	"dijit/_WidgetBase"
 ], function(lang, di18n, WidgetBase){
 
-/*=====
-	var WidgetBase = dijit._WidgetBase;
-=====*/
-
 	// module:
 	//		dojox/mobile/i18n
 	// summary:
@@ -15,9 +11,6 @@ define([
 	//		applications.
 
 	var i18n = lang.getObject("dojox.mobile.i18n", true);
-/*=====
-	var i18n = dojox.mobile.i18n;
-=====*/
 
 	i18n.load = function(/*String*/packageName, /*String*/bundleName, /*String?*/locale){
 		// summary:

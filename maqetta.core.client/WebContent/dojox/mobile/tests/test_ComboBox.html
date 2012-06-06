@@ -88,7 +88,7 @@
 					name: "mobile",
 					timeout: 4000,
 					runTest: function(){
-						widget = new dojox.mobile.ComboBox({id:"mobile_programmatic", list:"states"});
+						widget = new dojox.mobile.ComboBox({id:"mobile_programmatic", list:"states", value:"Alabama" });
 						widget.placeAt("mobile_programmatic_container", "first");
 						focusHandle = widget.connect(widget, 'openDropDown',
 							function(){

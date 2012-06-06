@@ -173,8 +173,8 @@ dojo.declare("dojox.data.StoreExplorer", dijit.layout.BorderContainer, {
 			var retValue = defaultOnComplete.apply(this, arguments);
 
 		}
- 		grid.setStore(store);
- 		this.queryOptions = {cache:true};
+		grid.setStore(store);
+		this.queryOptions = {cache:true};
 		this.tree.setStore(store);
 	},
 	createNew: function(){

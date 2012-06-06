@@ -11,13 +11,11 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_ViewSource.html');
@@ -773,6 +771,57 @@
 								doh.is(vsPlugin.sourceArea.nextSibling, editor0.iframe, "Verifying source view node's next sibling is the hidden iframe node.");
 								vsPlugin.sourceArea.value = "FOO";
 								doh.is("FOO", editor0.get("value"), "Verifying the source area returns foo when getValue is called.");
+							}), 3000);
+
+							return d;
+						},
+						tearDown: function(){
+							if(vsPlugin){vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+							editor0.set("value", value); 
+							fsPlugin = null;
+							vsPlugin = null;
+						}
+					},
+					{
+						name: "ViewSource:  SetValue",
+						timeout: 20000,
+						setUp: function(){
+							editor0 = dijit.byId("editor0");
+							value = editor0.get("value");
+							var edPlugins = editor0._plugins, i;
+							for(i = 0; i < edPlugins.length; i++){
+								var p = edPlugins[i];
+								if(p.declaredClass === "dijit._editor.plugins.ViewSource"){
+									vsPlugin = p;
+								}
+								if(vsPlugin){
+									break;
+								}
+							}
+							doh.t(vsPlugin != null, "Checking for VS plugin.");
+							if(vsPlugin){ vsPlugin.button.focus(); vsPlugin.button.set("checked", false);}
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							//Timing gets wonky here, so we need to do this on a timeout
+							//so the browser has time  to shift focus.
+							doh.robot.sequence(d.getTestErrback(function(){
+								//Focus on the editor window
+								dojo.window.scrollIntoView(editor0.domNode);
+								editor0.focus();
+							}), 500);
+
+							doh.robot.keyPress(dojo.keys.F12, 1000, {ctrl:true,shift:true});
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								//Now check the state!
+								doh.t(vsPlugin._sourceShown, "Verifying the plugin believes the source is shown.");
+								doh.is("none", dojo.style(editor0.iframe, "display"), "Verifying iframe is invisible");
+								doh.is("block", dojo.style(vsPlugin.sourceArea, "display"), "Verifying source view node is visible");
+								doh.is(vsPlugin.sourceArea.nextSibling, editor0.iframe, "Verifying source view node's next sibling is the hidden iframe node.");
+								editor0.set("value", "FOO");
+								doh.is("FOO", editor0.get("value"), "Verifying the source area returns FOO when getValue is called.");
 							}), 3000);
 
 							return d;

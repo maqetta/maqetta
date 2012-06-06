@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"nodeActions": "${nodeName} - Accions",
 	"selectContents": "Selecciona contingut",
@@ -9,6 +8,4 @@ define(
 	"moveStart": "Mou el cursor a l'inici",
 	"moveEnd": "Mou el cursor al final"
 })
-
-//end v1.x content
 );

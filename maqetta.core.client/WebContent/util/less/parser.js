@@ -1,12 +1,22 @@
 var less, tree;
 
-if (typeof(window) === 'undefined') {
+if (typeof environment === "object" && ({}).toString.call(environment) === "[object Environment]") {
+    // Rhino
+    // Details on how to detect Rhino: https://github.com/ringo/ringojs/issues/88
+    less = {};
+    tree = less.tree = {};
+    less.mode = 'rhino';
+} else if (typeof(window) === 'undefined') {
+    // Node.js
     less = exports,
-    tree = require('less/tree');
+    tree = require('./tree');
+    less.mode = 'node';
 } else {
+    // Browser
     if (typeof(window.less) === 'undefined') { window.less = {} }
     less = window.less,
     tree = window.less.tree = {};
+    less.mode = 'browser';
 }
 //
 // less.js - parser
@@ -327,7 +337,9 @@ less.Parser = function Parser(env) {
                             ]
                         };
                     }
-                    if (options.compress) {
+                    if (options.yuicompress && less.mode === 'node') {
+                        return require('./cssmin').compressor.cssmin(css);
+                    } else if (options.compress) {
                         return css.replace(/(\s)+/g, "$1");
                     } else {
                         return css;
@@ -355,7 +367,7 @@ less.Parser = function Parser(env) {
                 for (var n = i, column = -1; n >= 0 && input.charAt(n) !== '\n'; n--) { column++ }
 
                 error = {
-                    name: "ParseError",
+                    type: "Parse",
                     message: "Syntax Error on line " + line,
                     index: i,
                     filename: env.filename,
@@ -476,7 +488,15 @@ less.Parser = function Parser(env) {
                 //
                 keyword: function () {
                     var k;
-                    if (k = $(/^[A-Za-z-]+/)) { return new(tree.Keyword)(k) }
+
+                    if (k = $(/^[_A-Za-z-][_A-Za-z0-9-]*/)) { 
+                        if (tree.colors.hasOwnProperty(k)) {
+                            // detect named color
+                            return new(tree.Color)(tree.colors[k].slice(1));
+                        } else {
+                            return new(tree.Keyword)(k) 
+                        }
+                    }
                 },
 
                 //
@@ -492,7 +512,7 @@ less.Parser = function Parser(env) {
                 call: function () {
                     var name, args, index = i;
 
-                    if (! (name = /^([\w-]+|%)\(/.exec(chunks[j]))) return;
+                    if (! (name = /^([\w-]+|%|progid:[\w\.]+)\(/.exec(chunks[j]))) return;
 
                     name = name[1].toLowerCase();
 
@@ -512,7 +532,7 @@ less.Parser = function Parser(env) {
                 arguments: function () {
                     var args = [], arg;
 
-                    while (arg = $(this.expression)) {
+                    while (arg = $(this.entities.assignment) || $(this.expression)) {
                         args.push(arg);
                         if (! $(',')) { break }
                     }
@@ -522,6 +542,19 @@ less.Parser = function Parser(env) {
                     return $(this.entities.dimension) ||
                            $(this.entities.color) ||
                            $(this.entities.quoted);
+                },
+
+                // Assignments are argument entities for calls.
+                // They are present in ie filter properties as shown below.
+                //
+                //     filter: progid:DXImageTransform.Microsoft.Alpha( *opacity=50* )
+                //
+
+                assignment: function () {
+                    var key, value;
+                    if ((key = $(/^\w+(?=\s?=)/i)) && $('=') && (value = $(this.entity))) {
+                        return new(tree.Assignment)(key, value);
+                    }
                 },
 
                 //
@@ -597,7 +630,7 @@ less.Parser = function Parser(env) {
                     var value, c = input.charCodeAt(i);
                     if ((c > 57 || c < 45) || c === 47) return;
 
-                    if (value = $(/^(-?\d*\.?\d+)(px|%|em|pc|ex|in|deg|s|ms|pt|cm|mm|rad|grad|turn)?/)) {
+                    if (value = $(/^(-?\d*\.?\d+)(px|%|em|rem|pc|ex|in|deg|s|ms|pt|cm|mm|rad|grad|turn)?/)) {
                         return new(tree.Dimension)(value[1], value[2]);
                     }
                 },
@@ -670,7 +703,7 @@ less.Parser = function Parser(env) {
                     if (s !== '.' && s !== '#') { return }
 
                     while (e = $(/^[#.](?:[\w-]|\\(?:[a-fA-F0-9]{1,6} ?|[^a-fA-F0-9]))+/)) {
-                        elements.push(new(tree.Element)(c, e));
+                        elements.push(new(tree.Element)(c, e, i));
                         c = $('>');
                     }
                     $('(') && (args = $(this.entities.arguments)) && $(')');
@@ -700,7 +733,7 @@ less.Parser = function Parser(env) {
                 // the `{...}` block.
                 //
                 definition: function () {
-                    var name, params = [], match, ruleset, param, value;
+                    var name, params = [], match, ruleset, param, value, cond, memo;
 
                     if ((input.charAt(i) !== '.' && input.charAt(i) !== '#') ||
                         peek(/^[^{]*(;|})/)) return;
@@ -728,10 +761,17 @@ less.Parser = function Parser(env) {
                         }
                         if (! $(')')) throw new(Error)("Expected )");
 
+                        memo = i;
+
+                        if ($('?')) { // Guard
+                            cond = $(this.condition);
+                            if (! cond) { i = memo }
+                        }
+
                         ruleset = $(this.block);
 
                         if (ruleset) {
-                            return new(tree.mixin.Definition)(name, params, ruleset);
+                            return new(tree.mixin.Definition)(name, params, ruleset, cond);
                         }
                     }
                 }
@@ -784,15 +824,20 @@ less.Parser = function Parser(env) {
             // and an element name, such as a tag a class, or `*`.
             //
             element: function () {
-                var e, t, c;
+                var e, t, c, v;
 
                 c = $(this.combinator);
-                e = $(/^(?:[.#]?|:*)(?:[\w-]|\\(?:[a-fA-F0-9]{1,6} ?|[^a-fA-F0-9]))+/) || $('*') || $(this.attribute) || $(/^\([^)@]+\)/) || $(/^(?:\d*\.)?\d+%/);
+                e = $(/^(?:\d+\.\d+|\d+)%/) || $(/^(?:[.#]?|:*)(?:[\w-]|\\(?:[a-fA-F0-9]{1,6} ?|[^a-fA-F0-9]))+/) ||
+                    $('*') || $(this.attribute) || $(/^\([^)@]+\)/);
 
-                if (e) { return new(tree.Element)(c, e) }
+                if (! e) {
+                    $('(') && (v = $(this.entities.variable)) && $(')') && (e = new(tree.Paren)(v));
+                }
 
-                if (c.value && c.value[0] === '&') {
-                  return new(tree.Element)(c, null);
+                if (e) { return new(tree.Element)(c, e, i) }
+
+                if (c.value && c.value.charAt(0) === '&') {
+                    return new(tree.Element)(c, null, i);
                 }
             },
 
@@ -889,16 +934,11 @@ less.Parser = function Parser(env) {
                 var selectors = [], s, rules, match;
                 save();
 
-                if (match = /^([.#:% \w-]+)[\s\n]*\{/.exec(chunks[j])) {
-                    i += match[0].length - 1;
-                    selectors = [new(tree.Selector)([new(tree.Element)(null, match[1])])];
-                } else {
-                    while (s = $(this.selector)) {
-                        selectors.push(s);
-                        $(this.comment);
-                        if (! $(',')) { break }
-                        $(this.comment);
-                    }
+                while (s = $(this.selector)) {
+                    selectors.push(s);
+                    $(this.comment);
+                    if (! $(',')) { break }
+                    $(this.comment);
                 }
 
                 if (selectors.length > 0 && (rules = $(this.block))) {
@@ -946,11 +986,60 @@ less.Parser = function Parser(env) {
             // stored in `import`, which we pass to the Import constructor.
             //
             "import": function () {
-                var path;
+                var path, features;
                 if ($(/^@import\s+/) &&
-                    (path = $(this.entities.quoted) || $(this.entities.url)) &&
-                    $(';')) {
-                    return new(tree.Import)(path, imports);
+                    (path = $(this.entities.quoted) || $(this.entities.url))) {
+                    features = $(this.mediaFeatures);
+                    if ($(';')) {
+                        return new(tree.Import)(path, imports, features);
+                    }
+                }
+            },
+
+            mediaFeature: function () {
+                var nodes = [];
+
+                do {
+                    if (e = $(this.entities.keyword)) {
+                        nodes.push(e);
+                    } else if ($('(')) {
+                        p = $(this.property);
+                        e = $(this.entity);
+                        if ($(')')) {
+                            if (p && e) {
+                                nodes.push(new(tree.Paren)(new(tree.Rule)(p, e, null, i, true)));
+                            } else if (e) {
+                                nodes.push(new(tree.Paren)(e));
+                            } else {
+                                return null;
+                            }
+                        } else { return null }
+                    }
+                } while (e);
+
+                if (nodes.length > 0) {
+                    return new(tree.Expression)(nodes);
+                }
+            },
+
+            mediaFeatures: function () {
+                var f, features = [];
+                while (f = $(this.mediaFeature)) {
+                    features.push(f);
+                    if (! $(',')) { break }
+                }
+                return features.length > 0 ? features : null;
+            },
+
+            media: function () {
+                var features;
+
+                if ($(/^@media/)) {
+                    features = $(this.mediaFeatures);
+
+                    if (rules = $(this.block)) {
+                        return new(tree.Directive)('@media', rules, features);
+                    }
                 }
             },
 
@@ -960,13 +1049,13 @@ less.Parser = function Parser(env) {
             //     @charset "utf-8";
             //
             directive: function () {
-                var name, value, rules, types;
+                var name, value, rules, types, e, nodes;
 
                 if (input.charAt(i) !== '@') return;
 
-                if (value = $(this['import'])) {
+                if (value = $(this['import']) || $(this.media)) {
                     return value;
-                } else if (name = $(/^@media|@page/) || $(/^@(?:-webkit-)?keyframes/)) {
+                } else if (name = $(/^@page|@keyframes/) || $(/^@(?:-webkit-|-moz-|-o-|-ms-)[a-z0-9-]+/)) {
                     types = ($(/^[^{]+/) || '').trim();
                     if (rules = $(this.block)) {
                         return new(tree.Directive)(name + " " + types, rules);
@@ -1033,7 +1122,7 @@ less.Parser = function Parser(env) {
             multiplication: function () {
                 var m, a, op, operation;
                 if (m = $(this.operand)) {
-                    while ((op = ($('/') || $('*'))) && (a = $(this.operand))) {
+                    while (!peek(/^\/\*/) && (op = ($('/') || $('*'))) && (a = $(this.operand))) {
                         operation = new(tree.Operation)(op, [operation || m, a]);
                     }
                     return operation || m;
@@ -1047,6 +1136,16 @@ less.Parser = function Parser(env) {
                         operation = new(tree.Operation)(op, [operation || m, a]);
                     }
                     return operation || m;
+                }
+            },
+            condition: function () {
+                var a, b, op, index = i;
+                if (a = $(this.addition) || $(this.entities.keyword) || $(this.entities.quoted)) {
+                    if (op = $(/^[<=>]/)) {
+                        if (b = $(this.addition) || $(this.entities.keyword) || $(this.entities.quoted)) {
+                            return new(tree.Condition)(op, a, b, index);
+                        }
+                    }
                 }
             },
 
@@ -1093,7 +1192,7 @@ less.Parser = function Parser(env) {
     };
 };
 
-if (typeof(window) !== 'undefined') {
+if (less.mode === 'browser' || less.mode === 'rhino') {
     //
     // Used by `@import` directives
     //

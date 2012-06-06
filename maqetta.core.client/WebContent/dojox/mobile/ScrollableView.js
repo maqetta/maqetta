@@ -8,11 +8,6 @@ define([
 	"./_ScrollableMixin"
 ], function(array, declare, domClass, domConstruct, registry, View, ScrollableMixin){
 
-	/*=====
-		var View = dojox.mobile.View;
-		var ScrollableMixin = dojox.mobile._ScrollableMixin;
-	=====*/
-
 	// module:
 	//		dojox/mobile/ScrollableView
 	// summary:
@@ -25,10 +20,10 @@ define([
 		//		ScrollableView is a subclass of View (=dojox.mobile.View).
 		//		Unlike the base View class, ScrollableView's domNode always stays
 		//		at the top of the screen and its height is "100%" of the screen.
-		//		In this fixed domNode, containerNode scrolls. Browser's default
-		//		scrolling behavior is disabled, and the scrolling machinery is
-		//		re-implemented with JavaScript. Thus the user does not need to use the
-		//		two-finger operation to scroll an inner DIV (containerNode).
+		//		Inside this fixed domNode, the containerNode scrolls. The browser's
+		//		default scrolling behavior is disabled, and the scrolling mechanism is
+		//		re-implemented in JavaScript. Thus the user does not need to use the
+		//		two-finger operation to scroll the inner DIV (containerNode).
 		//		The main purpose of this widget is to realize fixed-positioned header
 		//		and/or footer bars.
 
@@ -49,15 +44,19 @@ define([
 			domClass.add(this.domNode, "mblScrollableView");
 			this.domNode.style.overflow = "hidden";
 			this.domNode.style.top = "0px";
-			this.containerNode = domConstruct.create("DIV",
+			this.containerNode = domConstruct.create("div",
 				{className:"mblScrollableViewContainer"}, this.domNode);
 			this.containerNode.style.position = "absolute";
 			this.containerNode.style.top = "0px"; // view bar is relative
 			if(this.scrollDir === "v"){
 				this.containerNode.style.width = "100%";
 			}
+		},
+
+		startup: function(){
+			if(this._started){ return; }
 			this.reparent();
-			this.findAppBars();
+			this.inherited(arguments);
 		},
 
 		resize: function(){
@@ -77,29 +76,28 @@ define([
 			return (!parent || !parent.resize); // top level widget
 		},
 
-		addChild: function(widget, /*Number?*/insertIndex){
+		addFixedBar: function(/*Widget*/widget){
+			// summary:
+			//		Adds a vew local fixed bar to this widget.
+			// description:
+			//		This method can be used to programmatically add a view local
+			//		fixed bar to ScrollableView. The bar is appended to this
+			//		widget's domNode. The addChild API cannot be used for this
+			//		purpose, because it adds the given widget to containerNode.
 			var c = widget.domNode;
 			var fixed = this.checkFixedBar(c, true);
-			if(fixed){
-				// Addition of a fixed bar is an exceptional case.
-				// It has to be added to domNode, not containerNode.
-				// In this case, insertIndex is ignored.
-				this.domNode.appendChild(c);
-				if(fixed === "top"){
-					this.fixedHeaderHeight = c.offsetHeight;
-					this.isLocalHeader = true;
-				}else if(fixed === "bottom"){
-					this.fixedFooterHeight = c.offsetHeight;
-					this.isLocalFooter = true;
-					c.style.bottom = "0px";
-				}
-				this.resize();
-				if(this._started && !widget._started){
-					widget.startup();
-				}
-			}else{
-				this.inherited(arguments);
+			if(!fixed){ return; }
+			// Fixed bar has to be added to domNode, not containerNode.
+			this.domNode.appendChild(c);
+			if(fixed === "top"){
+				this.fixedHeaderHeight = c.offsetHeight;
+				this.isLocalHeader = true;
+			}else if(fixed === "bottom"){
+				this.fixedFooterHeight = c.offsetHeight;
+				this.isLocalFooter = true;
+				c.style.bottom = "0px";
 			}
+			this.resize();
 		},
 
 		reparent: function(){
@@ -119,9 +117,12 @@ define([
 		},
 
 		onAfterTransitionIn: function(moveTo, dir, transition, context, method){
+			// summary:
+			//		Overrides View#onAfterTransitionIn to flash the scroll bar
+			//		after performing a view transition.
 			this.flashScrollBar();
 		},
-	
+
 		getChildren: function(){
 			// summary:
 			//		Overrides _WidgetBase#getChildren to add local fixed bars,

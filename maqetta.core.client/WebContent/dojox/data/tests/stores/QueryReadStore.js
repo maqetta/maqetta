@@ -15,8 +15,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 	[
 		/*
 		function testDocTests(t) {
-			//	summary:
-			// 		Run all the doc comments.
+			// summary:
+			//		Run all the doc comments.
 			var doctest = new dojox.testing.DocTest();
 			doctest.run("dojox.data.QueryReadStore");
 			t.assertTrue(doctest.errors.length==0);
@@ -24,8 +24,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		*/
 		
 		function testReadApi_getValue(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
 			var d = new doh.Deferred();
@@ -52,8 +52,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_getValues(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
 			var d = new doh.Deferred();
@@ -84,8 +84,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 		
 		function testReadApi_getAttributes(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
 			var d = new doh.Deferred();
@@ -115,8 +115,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_hasAttribute(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
 			var d = new doh.Deferred();
@@ -142,8 +142,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_containsValue(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 
 			var d = new doh.Deferred();
@@ -157,8 +157,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_isItem(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
 			var d = new doh.Deferred();
@@ -176,8 +176,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_isItemLoaded(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
 			var d = new doh.Deferred();
@@ -193,15 +193,15 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		//function testReadApi_loadItem(t){
-		//	//	summary:
-		//	//	description:
+		//	// summary:
+		//	// description:
 		//	t.assertTrue(false);
 		//},
 
 		function testReadApi_fetch_all(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching all items.
-			//	description:
+			// description:
 			//		Simple test of fetching all items.
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 
@@ -218,9 +218,9 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 		
 		function testReadApi_fetch_onBegin(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
-			//	description:
+			// description:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 
@@ -246,9 +246,9 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_fetch_onBegin_ServersidePaging(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
-			//	description:
+			// description:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 
@@ -274,9 +274,9 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_fetch_onBegin_ClientsidePaging(t){
-			//	summary:
+			// summary:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
-			//	description:
+			// description:
 			//		Simple test of fetching items, checking that onBegin size is all items matched, and page is just the items asked for.
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			store.doClientPaging = true;
@@ -303,8 +303,8 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_fetch_one(t){
-			//	summary:
-			//	description:
+			// summary:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			
 			var d = new doh.Deferred();
@@ -320,10 +320,10 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 		},
 
 		function testReadApi_fetch_client_paging(t){
-			//	summary:
+			// summary:
 			//		Lets test that paging on the same request does not trigger
 			//		server requests.
-			//	description:
+			// description:
 			var store = dojox.data.tests.stores.QueryReadStore.getStore();
 			store.doClientPaging = true;
 
@@ -411,9 +411,9 @@ tests.register("dojox.data.tests.stores.QueryReadStore",
 			t.assertEqual(2, count);
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = dojox.data.tests.stores.QueryReadStore.getStore();

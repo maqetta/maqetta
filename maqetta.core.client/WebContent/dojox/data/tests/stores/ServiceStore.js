@@ -5,10 +5,10 @@ dojo.require("dojox.rpc.Rest");
 dojo.require("dojox.data.ServiceStore");
 dojo.require("dojo.data.api.Read");
 dojox.data.tests.stores.ServiceStore.error = function(t, d, errData){
-	//  summary:
+	// summary:
 	//		The error callback function to be used for all of the tests.
 	d.errback(errData);
-}
+};
 var testServices = new dojox.rpc.Service(require.toUrl("dojox/rpc/tests/resources/test.smd"));
 var jsonStore = new dojox.data.ServiceStore({service:testServices.jsonRestStore});
 
@@ -18,7 +18,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			name: "Fetch some items",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on ServiceStore of a simple query.
 				var d = new doh.Deferred();
 				jsonStore.fetch({query:"query",
@@ -35,7 +35,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			name: "fetchItemByIdentity, getValue, getValues, hasAttribute,containsValue, getAttributes, getIdentity",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on ServiceStore of a single item.
 				var d = new doh.Deferred();
 				jsonStore.fetchItemByIdentity({identity:1,
@@ -62,7 +62,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			name: "createLazyItem",
 			timeout:	10000, //10 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on ServiceStore of a single item.
 				var d = new doh.Deferred();
 				var lazyItem = {
@@ -105,7 +105,7 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			name: "ReadAPI:  Fetch_20_Streaming",
 			timeout:	10000, //10 seconds.  Json can sometimes be slow.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		fetching with paging
 
 				var d = new doh.Deferred();
@@ -133,9 +133,9 @@ doh.register("dojox.data.tests.stores.ServiceStore",
 			}
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var readApi = new dojo.data.api.Read();

@@ -4,10 +4,6 @@ define([
 	"./ContentPane"
 ], function(declare, kernel, ContentPane){
 
-/*=====
-	var ContentPane = dijit.layout.ContentPane;
-=====*/
-
 	// module:
 	//		dijit/layout/AccordionPane
 	// summary:

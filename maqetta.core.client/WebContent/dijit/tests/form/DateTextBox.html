@@ -15,7 +15,6 @@
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../dojo/dojo.js"
 		data-dojo-config="isDebug: true"></script>
-	<script type="text/javascript" src="../helpers.js"></script>
 
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
@@ -26,6 +25,7 @@
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
 		dojo.require("dijit.form.DateTextBox");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+		dojo.require("dijit.tests.helpers");	// functions to help test
 
 		dojo.ready(function(){
 
@@ -52,7 +52,7 @@
 	<h1 class="testTitle">dijit.form.DateTextBox automated tests (non-robot)</h1>
 	
 	<label for="noyear">Pick a day in 3Q 2011</label>
-	<input data-dojo-type="dijit.form.DateTextBox" id="noyear", data-dojo-props='
+	<input data-dojo-type="dijit/form/DateTextBox" id="noyear" data-dojo-props='
 		required:"true",
 		constraints:{datePattern:"MMMM dd",
 			min:new Date(2011,9,1),

@@ -7,8 +7,9 @@ dojox.data.tests.stores.GoogleSearchStore.getStore = function(){
 };
 
 dojox.data.tests.stores.GoogleSearchStore.error = function(t, d, errData){
-	//  summary:
+	// summary:
 	//		The error callback function to be used for all of the tests.
+
 	//console.trace();
 	d.errback(errData);
 };
@@ -19,9 +20,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  Fetch_One",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on GoogleSearchStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on GoogleSearchStore of a single item.
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -46,9 +47,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  test_Invalid_Query",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on GoogleSearchStore of a single item.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on GoogleSearchStore of a single item.
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -92,9 +93,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  Fetch_25_Streaming",
 			timeout:	30000, //20 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of a basic fetch on GoogleSearchStore.
-				//	description:
+				// description:
 				//		Simple test of a basic fetch on GoogleSearchStore.
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
 
@@ -129,9 +130,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  Fetch_Paging",
 			timeout:	30000, // 30 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
-				//	description:
+				// description:
 				//		Test of multiple fetches on a single result.  Paging, if you will.
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -201,9 +202,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  getLabel",
 			timeout:	30000, // 30 seconds.
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getLabel function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabel function against a store set that has a label defined.
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -230,9 +231,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  getLabelAttributes",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -260,9 +261,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  getValue",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
 
@@ -294,9 +295,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  getValue_Failure",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
 				var passed = false;
@@ -312,9 +313,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  getValues",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
 
@@ -362,9 +363,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  getValues_Failure",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue function of the store.
-				//	description:
+				// description:
 				//		Simple test of the getValue function of the store.
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
 				var passed = false;
@@ -380,9 +381,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  isItem",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the isItem function of the store
-				//	description:
+				// description:
 				//		Simple test of the isItem function of the store
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
 
@@ -411,9 +412,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  hasAttribute",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute function of the store
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute function of the store
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -458,9 +459,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  containsValue",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue function of the store
-				//	description:
+				// description:
 				//		Simple test of the containsValue function of the store
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -492,9 +493,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "ReadAPI:  getAttributes",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes function of the store
-				//	description:
+				// description:
 				//		Simple test of the getAttributes function of the store
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -526,9 +527,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			name: "GoogleSearchStore:  DOM Cleanup",
 			timeout:	30000, // 30 seconds
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes function of the store
-				//	description:
+				// description:
 				//		Simple test of the getAttributes function of the store
 
 				var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -556,9 +557,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			}
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var googleStore = dojox.data.tests.stores.GoogleSearchStore.getStore();
@@ -573,9 +574,9 @@ doh.register("dojox.data.tests.stores.GoogleSearchStore",
 			t.assertTrue(count === 1);
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = dojox.data.tests.stores.GoogleSearchStore.getStore();

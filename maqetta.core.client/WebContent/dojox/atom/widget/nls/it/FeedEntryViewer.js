@@ -1,15 +1,13 @@
 define(
-//begin v1.x content
 ({
 	displayOptions: "[visualizza opzioni]",
 	title: "Titolo",
 	authors: "Autori",
-	contributors: "Collaboratori",
+	contributors: "Contributor",
 	id: "ID",
 	close: "[chiudi]",
 	updated: "Aggiornato",
 	summary: "Riepilogo",
-	content: "Indice"
+	content: "Contenuto"
 })
-//end v1.x content
 );

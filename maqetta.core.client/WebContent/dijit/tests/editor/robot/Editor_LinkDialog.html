@@ -11,13 +11,11 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dojo.DeferredList");
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_LinkDialog.html');
@@ -186,7 +184,7 @@
 						}
 					},
 					{
-						name: "Anchor Tag: Test insertion 'relative' urls.",
+						name: "Anchor Tag: Test insertion 'relative' urls (./)",
 						timeout: 20000,
 						setUp: function(){
 							value = editor.get("value");
@@ -218,7 +216,51 @@
 								var newVal = editor.get("value");
 								doh.isNot(value, newVal, "Verify the contents have changed.");
 								doh.f(new RegExp("<li><a").test(newVal), "Verifying insert did not occur in the top li (IE test for selection restore.)");
-								doh.t(new RegExp("href=(\"|\')./myDirectory/myfile.html(\"|\')").test(newVal), "Verifying URL has been inserted.");
+								doh.t(new RegExp("href=(\"|\')\./myDirectory/myfile.html(\"|\')").test(newVal), "Verifying URL has been inserted.");
+								doh.t(new RegExp("target=(\"|\')_blank(\"|\')").test(newVal), "Verifying target has been inserted.");
+								doh.t(new RegExp(">This is my example relative link.<").test(newVal), "Verifying description has been inserted.");
+							}), 2000);
+
+							return d;
+						},
+						tearDown: function(){
+							if(editor){editor.set("value", value);}
+						}
+					},
+					{
+						name: "Anchor Tag: Test insertion 'relative' url (../)",
+						timeout: 20000,
+						setUp: function(){
+							value = editor.get("value");
+						},
+						runTest: function(){
+							var d = new doh.Deferred();
+
+							// Focus on the editor window
+							editor.focus();
+							doh.robot.mouseMoveAt(editor.iframe, 1000, 1);
+							doh.robot.mouseClick({left:true}, 500);
+
+							doh.robot.mouseMoveAt(ldPlugin.button.domNode, 500, 1);
+							doh.robot.mouseClick({left:true}, 500);
+
+							var url, desc, target;
+							doh.robot.sequence(d.getTestErrback(function(){
+								url = dijit.byId(ldPlugin._uniqueId + "_urlInput");
+								desc = dijit.byId(ldPlugin._uniqueId + "_textInput");
+								target = dijit.byId(ldPlugin._uniqueId + "_targetSelect");
+								url.set("value", "../myDirectory/myfile.html");
+								desc.set("value", "This is my example relative link.");
+								target.set("value", "_blank");
+							}),2000);
+							doh.robot.mouseMoveAt(function(){return dijit.byId(ldPlugin._uniqueId + "_setButton").domNode;}, 500, 1);
+							doh.robot.mouseClick({left:true}, 500);
+							doh.robot.sequence(d.getTestCallback(function(){
+								// Now check the state!
+								var newVal = editor.get("value");
+								doh.isNot(value, newVal, "Verify the contents have changed.");
+								doh.f(new RegExp("<li><a").test(newVal), "Verifying insert did not occur in the top li (IE test for selection restore.)");
+								doh.t(new RegExp("href=(\"|\')\.\./myDirectory/myfile.html(\"|\')").test(newVal), "Verifying URL has been inserted.");
 								doh.t(new RegExp("target=(\"|\')_blank(\"|\')").test(newVal), "Verifying target has been inserted.");
 								doh.t(new RegExp(">This is my example relative link.<").test(newVal), "Verifying description has been inserted.");
 							}), 2000);
@@ -233,9 +275,7 @@
 						name: "Anchor Tag: Update existing anchor tag",
 						timeout: 20000,
 						setUp: function(){
-							dojo.withGlobal(editor.window, function(){
-								node = dojo.byId("exampleLink");
-							});
+							node = dojo.byId("exampleLink", editor.document);
 							value = editor.get("value");
 						},
 						runTest: function(){
@@ -292,9 +332,7 @@
 						name: "Anchor Tag: Blank description invalid.",
 						timeout: 20000,
 						setUp: function(){
-							dojo.withGlobal(editor.window, function(){
-								node = dojo.byId("exampleLink");
-							});
+							node = dojo.byId("exampleLink", editor.document);
 							value = editor.get("value");
 						},
 						runTest: function(){
@@ -330,7 +368,7 @@
 							doh.robot.sequence(d.getTestCallback(function(){
 								// Now check the state!
 								var newVal = editor.get("value");
-								doh.t(newVal === value, "Verify the contents have not changed.");
+								doh.is(value, newVal, "Verify the contents have not changed.");
 							}), 2000);
 
 							return d;
@@ -531,9 +569,7 @@
 						name: "Anchor Tag: Double-Click opens TooltipDialog.",
 						timeout: 20000,
 						setUp: function(){
-							dojo.withGlobal(editor.window, function(){
-								node = dojo.byId("exampleLink");
-							});
+							node = dojo.byId("exampleLink", editor.document);
 							value = editor.get("value");
 						},
 						runTest: function(){
@@ -683,9 +719,7 @@
 						name: "Image Tag: Update existing image tag",
 						timeout: 20000,
 						setUp: function(){
-							dojo.withGlobal(editor.window, function(){
-								node = dojo.byId("exampleImage");
-							});
+							node = dojo.byId("exampleImage", editor.document);
 							value = editor.get("value");
 						},
 						runTest: function(){
@@ -732,9 +766,7 @@
 						name: "Image Tag: Blank description valid.",
 						timeout: 20000,
 						setUp: function(){
-							dojo.withGlobal(editor.window, function(){
-								node = dojo.byId("exampleImage");
-							});
+							node = dojo.byId("exampleImage", editor.document);
 							value = editor.get("value");
 						},
 						runTest: function(){
@@ -784,9 +816,7 @@
 						name: "Image Tag: Single click selects image.",
 						timeout: 20000,
 						setUp: function(){
-							dojo.withGlobal(editor.window, function(){
-								node = dojo.byId("exampleImage");
-							});
+							node = dojo.byId("exampleImage", editor.document);
 							value = editor.get("value");
 						},
 						runTest: function(){
@@ -803,8 +833,8 @@
 								var selectedElement = editor._sCall("getSelectedElement", [null]);
 								doh.t(selectedElement != null);
 								var tag = selectedElement.tagName? selectedElement.tagName.toLowerCase() : "";
-								doh.t(tag === "img");
-								doh.t(selectedElement.getAttribute("id") === "exampleImage");
+								doh.is("img", tag);
+								doh.is("exampleImage", selectedElement.getAttribute("id"));
 							}), 2000);
 
 							return d;
@@ -817,9 +847,7 @@
 						name: "Image Tag: Double-Click opens TooltipDialog.",
 						timeout: 20000,
 						setUp: function(){
-							dojo.withGlobal(editor.window, function(){
-								node = dojo.byId("exampleImage");
-							});
+							node = dojo.byId("exampleImage", editor.document);
 							value = editor.get("value");
 						},
 						runTest: function(){

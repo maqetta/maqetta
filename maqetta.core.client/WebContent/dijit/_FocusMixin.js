@@ -5,10 +5,6 @@ define([
 	"dojo/_base/lang" // lang.extend
 ], function(focus, _WidgetBase, declare, lang){
 
-/*=====
-	var _WidgetBase = dijit._WidgetBase;
-=====*/
-
 	// module:
 	//		dijit/_FocusMixin
 	// summary:

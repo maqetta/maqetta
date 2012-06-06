@@ -7,11 +7,25 @@ tree.Selector = function (elements) {
     }
 };
 tree.Selector.prototype.match = function (other) {
-    if (this.elements[0].value === other.elements[0].value) {
-        return true;
-    } else {
+    var len  = this.elements.length,
+        olen = other.elements.length,
+        max  = Math.min(len, olen);
+
+    if (len < olen) {
         return false;
+    } else {
+        for (var i = 0; i < max; i++) {
+            if (this.elements[i].value !== other.elements[i].value) {
+                return false;
+            }
+        }
     }
+    return true;
+};
+tree.Selector.prototype.eval = function (env) {
+    return new(tree.Selector)(this.elements.map(function (e) {
+        return e.eval(env);
+    }));
 };
 tree.Selector.prototype.toCSS = function (env) {
     if (this._css) { return this._css }
@@ -25,4 +39,4 @@ tree.Selector.prototype.toCSS = function (env) {
     }).join('');
 };
 
-})(require('less/tree'));
+})(require('../tree'));

@@ -1,7 +1,7 @@
 
 define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare","dojo/_base/html","dojo/dom-geometry",
 		"dijit/_Widget","dojox/geo/charting/Map"],
-							function(dojo, lang, declare, html,domGeom, Widget, Map) {
+							function(dojo, lang, declare, html,domGeom, Widget, Map){
 
 return declare("dojox.geo.charting.widget.Map", Widget, {
 	// summary:
@@ -15,12 +15,12 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 	// 
 	//	The parameters are :
 	//	
-	// * `shapeData`: The json object containing map data or the name of the file containing map data.
-	// * `dataStore`: the dataStore to fetch the charting data from
-	// * `dataBindingAttribute`: property name of the dataStore items to use as value for charting
-	// * `markerData`: tooltips to display for map features, handled as json style.
-	// * `adjustMapCenterOnResize`: if true, the center of the map remains the same when resizing the widget   
-	// * `adjustMapScaleOnResize`: if true, the map scale is adjusted to leave the visible portion of the map identical as much as possible 
+	//	* `shapeData`: The json object containing map data or the name of the file containing map data.
+	//	* `dataStore`: the dataStore to fetch the charting data from
+	//	* `dataBindingAttribute`: property name of the dataStore items to use as value for charting
+	//	* `markerData`: tooltips to display for map features, handled as json style.
+	//	* `adjustMapCenterOnResize`: if true, the center of the map remains the same when resizing the widget   
+	//	* `adjustMapScaleOnResize`: if true, the map scale is adjusted to leave the visible portion of the map identical as much as possible 
 	//
 	//	example:
 	//
@@ -61,7 +61,7 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 
 	startup : function(){
 		this.inherited(arguments);
-		if (this.map) {
+		if(this.map){
 			this.map.fitToMapContents();
 		}
 		
@@ -75,7 +75,7 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 		this.inherited(arguments);
 	},
 	
-	getInnerMap: function() {
+	getInnerMap: function(){
 		return this.map;
 	},
 	
@@ -86,31 +86,31 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 		//	tags:
 		//		protected
 		this.inherited(arguments);
-		if (this.shapeData) {
+		if(this.shapeData){
 			this.map = new Map(this.domNode, this.shapeData);
-			if (this.markerData && (this.markerData.length > 0))
+			if(this.markerData && (this.markerData.length > 0)){
 				this.map.setMarkerData(this.markerData);
+			}
 			
-			if (this.dataStore) {
-				if (this.dataBindingValueFunction) {
+			if(this.dataStore){
+				if(this.dataBindingValueFunction){
 					this.map.setDataBindingValueFunction(this.dataBindingValueFunction);
 				}
 				this.map.setDataStore(this.dataStore,this.dataBindingAttribute);
 			}
 			
-			if (this.series && (this.series.length > 0)) {
+			if(this.series && (this.series.length > 0)){
 				this.map.addSeries(this.series);
 			}
 			
-			if (this.onFeatureClick) {
+			if(this.onFeatureClick){
 				this.map.onFeatureClick = this.onFeatureClick;
 			}
-			if (this.onFeatureOver) {
+			if(this.onFeatureOver){
 				this.map.onFeatureOver = this.onFeatureOver;
 			}
-			if (this.enableMouseSupport) {
-				
-				if (!dojox.geo.charting.MouseInteractionSupport) {
+			if(this.enableMouseSupport){
+				if(!dojox.geo.charting.MouseInteractionSupport){
 					throw Error("Can't find dojox.geo.charting.MouseInteractionSupport. Didn't you forget to dojo" + ".require() it?");
 				}
 				var options = {};
@@ -121,15 +121,15 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 				this._mouseInteractionSupport.connect();
 			}
 			
-			if (this.enableTouchSupport) {
-				if (!dojox.geo.charting.TouchInteractionSupport) {
+			if(this.enableTouchSupport){
+				if(!dojox.geo.charting.TouchInteractionSupport){
 					throw Error("Can't find dojox.geo.charting.TouchInteractionSupport. Didn't you forget to dojo" + ".require() it?");
 				}
 				this._touchInteractionSupport = new dojox.geo.charting.TouchInteractionSupport(this.map,{});
 				this._touchInteractionSupport.connect(); 
 			}
-			if (this.enableKeyboardSupport) {
-				if (!dojox.geo.charting.KeyboardInteractionSupport) {
+			if(this.enableKeyboardSupport){
+				if(!dojox.geo.charting.KeyboardInteractionSupport){
 					throw Error("Can't find dojox.geo.charting.KeyboardInteractionSupport. Didn't you forget to dojo" + ".require() it?");
 				}
 				this._keyboardInteractionSupport = new dojox.geo.charting.KeyboardInteractionSupport(this.map,{});
@@ -138,8 +138,6 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 			this.map.showTooltips = this.showTooltips;
 			this.map.enableFeatureZoom = this.enableFeatureZoom;
 			this.map.colorAnimationDuration = this.colorAnimationDuration;
-			
-			
 		}
 	},
 	
@@ -154,7 +152,7 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 		//		If passed, denotes the new size of the widget.
 
 		var box;
-		switch (arguments.length) {
+		switch(arguments.length){
 			case 0:
 				// case 0, do not resize the div, just the surface
 				break;
@@ -173,7 +171,7 @@ return declare("dojox.geo.charting.widget.Map", Widget, {
 				break;
 		}
 		
-		if (this.map) {
+		if(this.map){
 			this.map.resize(this.adjustMapCenterOnResize,this.adjustMapScaleOnResize,this.animateOnResize);
 		}
 	}

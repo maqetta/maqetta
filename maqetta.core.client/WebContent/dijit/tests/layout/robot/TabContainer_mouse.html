@@ -12,15 +12,13 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js"
 			djConfig="isDebug: true"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			dojo.ready(function(){
 				doh.robot.initRobot('../test_TabContainer.html');
-				doh.register("mouse tests",[
+				doh.register("general", [
 					
 					{
 						name: "tab hover state",
@@ -36,7 +34,7 @@
 							doh.robot.sequence(d.getTestCallback(function(){
 								var tabHover = dojo.query(".dijitTabHover #mainTabContainer_tablist_tab3");
 								doh.is(1, tabHover.length);
-							}), 500);
+							}), 1000);
 							
 							return d;
 						}
@@ -108,12 +106,12 @@
 						runTest: function(t){
 							var d = new doh.Deferred();
 							doh.robot.mouseClick({left: true}, 500);
-							doh.robot.mouseMoveAt(dojo.query('#mainTabContainer_tablist_tab3 span.dijitTabCloseButton')[0], 500);
+							doh.robot.mouseMoveAt(dojo.query('.dijitTabCloseButton', dijit.byId("mainTabContainer_tablist_tab3").domNode)[0], 500);
 							
 							// verify the close button is in its hover state
 							doh.robot.sequence(d.getTestCallback(function(){
-								var closeHover = dojo.query("#mainTabContainer_tablist_tab3 .dijitTabCloseButtonHover");
-								doh.is(1, closeHover.length);
+								var closeHover = dojo.query(".dijitTabCloseButtonHover", dijit.byId("mainTabContainer_tablist_tab3").domNode);
+								doh.is(1, closeHover.length, "close button hover CSS");
 							}), 500);
 							
 							return d;
@@ -125,7 +123,7 @@
 						runTest: function(t){
 							var d = new doh.Deferred();
 							
-							doh.robot.mouseMoveAt(dojo.query('#mainTabContainer_tablist_tab3 span.dijitTabCloseButton')[0], 500);
+							doh.robot.mouseMoveAt(dojo.query('.dijitTabCloseButton', dijit.byId("mainTabContainer_tablist_tab3").domNode)[0], 500);
 							doh.robot.mouseClick({left: true}, 500);
 							
 							var tc = dijit.byId("mainTabContainer");
@@ -169,7 +167,7 @@
 								doh.t(isTabVisible, "verify tab is in display area");
 								
 								// And verify that pane is shown
-								doh.is("tab4href", tc.selectedChildWidget.id, "verify that the appropiate contentpane is displayed");
+								doh.is("tab4href", tc.selectedChildWidget.id, "verify that the appropriate contentpane is displayed");
 								doh.t(isVisible(dijit.byId("tab4href")), "tab4 shown");
 								doh.t(isHidden(dijit.byId("tab1")), "tab1 hidden");
 							}), 1000);
@@ -178,8 +176,152 @@
 						}
 					}
 				]);
-				
-				
+
+				doh.register("disabled tabs", [
+					{
+						name: "setup",
+						runTest: function(){
+							tc = dijit.byId("mainTabContainer");
+							tc.selectChild(dijit.byId("tab1"));
+							dijit.byId("tab2").set("closable", true);
+							dijit.byId("tab2").set("disabled", true);
+						}
+					},
+					{
+						name: "click disabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							doh.robot.mouseMoveAt('mainTabContainer_tablist_tab2', 500);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("tab1", tc.selectedChildWidget.id, "selected pane not changed");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "close disabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							var nChildren = tc.getChildren().length;
+							doh.robot.mouseMoveAt(dojo.query('.dijitTabCloseButton', dijit.byId("mainTabContainer_tablist_tab2").domNode)[0], 500);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is(nChildren, tc.getChildren().length, "num children didn't change");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "choose disabled tab from TabContainer's menu",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							doh.robot.mouseMoveAt("mainTabContainer_tablist_menuBtn", 500);
+							doh.robot.mouseClick({left: true}, 500);
+							doh.robot.mouseMoveAt("tab2_stcMi", 500);
+							doh.robot.mouseClick({left: true}, 1000);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("tab1", tc.selectedChildWidget.id, "selected pane not changed");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "re-enable tab",
+						runTest: function(){
+							dijit.byId("tab2").set("disabled", false);
+						}
+					},
+					{
+						name: "click enabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							doh.robot.mouseMoveAt('mainTabContainer_tablist_tab2', 500);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("tab2", tc.selectedChildWidget.id, "selected pane changed");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "close enabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							var nChildren = tc.getChildren().length;
+							doh.robot.mouseMoveAt(dojo.query('.dijitTabCloseButton', dijit.byId("mainTabContainer_tablist_tab2").domNode)[0], 500);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is(nChildren-1, tc.getChildren().length, "num children decreased");
+							}), 500);
+
+							return d;
+						}
+					}
+				]);
+
+				doh.register("initially disabled tab", [
+					{
+						name: "setup",
+						runTest: function(){
+							tc = dijit.byId("nomenu");
+							tc.selectChild(dijit.byId("nomenu_tab2"));
+						}
+					},
+					{
+						name: "click disabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							doh.robot.mouseMoveAt("nomenu_tablist_nomenu_tab3", 500);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is("nomenu_tab2", tc.selectedChildWidget.id, "selected pane not changed");
+							}), 500);
+
+							return d;
+						}
+					},
+					{
+						name: "close disabled tab",
+						timeout: 10000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+
+							var nChildren = tc.getChildren().length;
+							doh.robot.mouseMoveAt(dojo.query('.dijitTabCloseButton', dijit.byId("nomenu_tablist_nomenu_tab3").domNode)[0], 500);
+							doh.robot.mouseClick({left: true}, 500);
+
+							doh.robot.sequence(d.getTestCallback(function(){
+								doh.is(nChildren, tc.getChildren().length, "num children didn't change");
+							}), 500);
+
+							return d;
+						}
+					}
+				]);
+
 				doh.run();
 			});
 		</script>

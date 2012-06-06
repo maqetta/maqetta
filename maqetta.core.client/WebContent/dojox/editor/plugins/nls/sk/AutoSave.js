@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Uložiť",
 	"saveSettingLabelOn": "Nastaviť interval automatického ukladania...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "Uložené o ${0}",
 	"saveMessageFail": "Zlyhalo ukladanie o ${0}"
 })
-
-//end v1.x content
 );

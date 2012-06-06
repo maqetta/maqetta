@@ -24,6 +24,11 @@
 			.dojoTitlePaneLabel label {
 				font-weight:bold;
 			}
+
+			.dijitDownArrowActive,
+			.dijitUpArrowActive {
+				opacity:0.5 !important; /* just to test effect of clicking the up or down arrows */
+			}
 		</style>
 
 		<!-- required: the default dijit theme: -->
@@ -84,7 +89,7 @@
 					Attributes: {formatLength:'medium'}</span>
 			</div>
 			<div class="testExample">
-				<input id="q1" data-dojo-type="dijit.form.TimeTextBox"
+				<input id="q1" data-dojo-type="dijit/form/TimeTextBox"
 					data-dojo-props='type:"text", name:"time1", value:"T17:45:00",
 					constraints:{formatLength:"medium"},
 					required:true,
@@ -99,7 +104,7 @@
 					Attributes: {formatLength:'short'}</span>
 			</div>
 			<div class="testExample">
-				<input id="q2" data-dojo-type="dijit.form.TimeTextBox"
+				<input id="q2" data-dojo-type="dijit/form/TimeTextBox"
 					data-dojo-props='type:"text", name:"time1a", value:"T17:45:00",
 					constraints:{formatLength:"short"},
 					required:true,
@@ -112,7 +117,7 @@
 					Attributes: {timePattern:'h:mm:ss a'}</span>
 			</div>
 			<div class="testExample">
-				<input id="q3" data-dojo-type="dijit.form.TimeTextBox"
+				<input id="q3" data-dojo-type="dijit/form/TimeTextBox"
 					data-dojo-props='type:"text", name:"time1b", value:"T17:45:00",
 					constraints:{timePattern:"h:mm:ss a"},
 					required:true,
@@ -125,7 +130,7 @@
 					Attributes: {timePattern:'HH:mm:ss'}</span>
 			</div>
 			<div class="testExample">
-				<input id="q4" data-dojo-type="dijit.form.TimeTextBox"
+				<input id="q4" data-dojo-type="dijit/form/TimeTextBox"
 					data-dojo-props='type:"text", name:"time2", value:"T17:45:00",
 					constraints:{timePattern:"HH:mm:ss"},
 					required:true,
@@ -138,7 +143,7 @@
 					Attributes: {timePattern:'HH:mm:ss', clickableIncrement:'T00:15:00', visibleIncrement:'T00:15:00', visibleRange:'T01:00:00'}</span>
 			</div>
 			<div class="testExample">
-				<input id="q5" data-dojo-type="dijit.form.TimeTextBox"
+				<input id="q5" data-dojo-type="dijit/form/TimeTextBox"
 					data-dojo-props='type:"text", name:"time2", value:"T17:45:00",
 					constraints:{timePattern:"HH:mm:ss", clickableIncrement:"T00:15:00", visibleIncrement:"T00:15:00", visibleRange:"T01:00:00"},
 					required:true,
@@ -151,7 +156,7 @@
 					Attributes: {formatLength:'medium',min:'T00:00:00',max:'T12:00:00'}</span>
 			</div>
 			<div class="testExample">
-				<input id="q6" data-dojo-type="dijit.form.TimeTextBox"
+				<input id="q6" data-dojo-type="dijit/form/TimeTextBox"
 					data-dojo-props='type:"text", name:"time6",
 					constraints:{formatLength:"medium",min:"T00:00:00",max:"T12:00:00"},
 					required:true,
@@ -165,7 +170,7 @@
 					Attributes: {formatLength:'short'} Time using local conventions without seconds, required, no invalid message tooltip</span>
 			</div>
 			<div class="testExample">
-				<input id="q20" data-dojo-type="dijit.form.TimeTextBox"
+				<input id="q20" data-dojo-type="dijit/form/TimeTextBox"
 					data-dojo-props='type:"text", name:"q20", value:"T17:45:00",
 					title:"title: Time using local conventions",
 					constraints:{formatLength:"short"},

@@ -1,6 +1,8 @@
-dojo.provide("dojox.drawing.manager.Mouse");
+define(["dojo", "../util/oo", "../defaults"], 
+function(dojo, oo, defaults){
 
-dojox.drawing.manager.Mouse = dojox.drawing.util.oo.declare(
+//dojox.drawing.manager.Mouse = 
+return oo.declare(
 	// summary:
 	//		Master object (instance) that tracks mouse
 	//		events. A new instance is created for each
@@ -16,7 +18,7 @@ dojox.drawing.manager.Mouse = dojox.drawing.util.oo.declare(
 	//		a certain object is clicked upon (or dragged, etc),
 	//		that object's drawingType will create the custom event,
 	//		such as onAnchorDown, or onStencilDown.
-	//
+
 	function(/* Object */options){
 		this.util = options.util;
 		this.keys = options.keys;
@@ -38,86 +40,83 @@ dojox.drawing.manager.Mouse = dojox.drawing.util.oo.declare(
 		__reg:0,
 		_downOnCanvas:false,
 		
-/*=====
-CustomEventMethod: function(){
-	// summary:
-	//		The custom event method that an Object that has
-	//		registered with manager.Mouse can receive.
-	//		Can contain any or all of the following methods
-	//		and they will be called as mouse events. All events
-	//		will be sent a EventObject event object.
-	//	NOTE:
-	//		Events happen anywhere in the document unless
-	//		otherwise noted.
-	//
-	//	onMove
-	//		Fires on mousemove when mouse is up
-	//	onDown
-	//		Fires on mousedown *on the canvas*
-	//	onDrag
-	//		Fires on mousemove when mouse is down
-	//	onUp
-	//		Fires on mouseup, anywhere in the document
-	//	onStencilDown
-	//		Fired on mousedown on a Stencil
-	//	onStencilDrag
-	//		Fired when mouse moves and mose is down on a Stencil
-	//	onStencilUp
-	//		Fired on mouseup off of a Stencil
-	//	on[Custom]Up|Down|Move
-	//		Custom events can bet set and fired by setting a
-	//		different drawingType on a Stencil, or by calling
-	//		setEventMode(customEventName)
-},
-EventObject: function(){
-	// summary:
-	//		The custom event object that is sent to registered objects
-	//		and their respective methods.
-	//	NOTE: Most event objects are the same with the exception
-	//		of the onDown events, which have fewer.
-	//
-	// All event properties included onDown:
-	//
-	//	id: String
-	//		Id of the focused object
-	//	pageX: Number
-	//		The X coordinate of the mouse from the left side of
-	//		the document.
-	//	pageY: Number
-	//		The Y coordinate of the mouse from the top of
-	//		the document.
-	//	x:	Number
-	//		The X coordinate of the mouse from the left side
-	//		of the canvas
-	//	y:	Number
-	//		The Y coordinate of the mouse from the top
-	//		of the canvas
-	//
-	// These event properties are *not* in onDown:
-	//
-	//	last:	Object
-	//		The x and y coordinates of the last mousemove
-	//		relative to the canvas
-	//	move: Object
-	//		The x and y amounts the mouse moved since the last event
-	//	orgX:	Number
-	//		The left side of the canvas from the side of the document
-	//	orgY:	Number
-	//		The top of the canvas from the top of the document
-	//	scroll: Object
-	//		The 'top' and 'left' scroll amounts of the canvas.
-	//	start:	Object
-	//		The x and y coordinates of the mousedown event
-	//	withinCanvas: Boolean
-	//		Whether the event happened within the Canvas or not
-	
-},
-=====*/
+		/*=====
+		CustomEventMethod: {
+			// summary:
+			//		The custom event methods that an Object that has
+			//		registered with manager.Mouse can receive.
+			//		Can contain any or all of the following methods
+			//		and they will be called on mouse events. All events
+			//		will be sent a EventObject event object.
+			//
+			//		NOTE:
+			//			Events happen anywhere in the document unless
+			//			otherwise noted.
+
+			// onMove: Function
+			//		Fires on mousemove when mouse is up
+			// onDown: Function
+			//		Fires on mousedown *on the canvas*
+			// onDrag: Function
+			//		Fires on mousemove when mouse is down
+			// onUp: Function
+			//		Fires on mouseup, anywhere in the document
+			// onStencilDown: Function
+			//		Fired on mousedown on a Stencil
+			// onStencilDrag: Function
+			//		Fired when mouse moves and mose is down on a Stencil
+			// onStencilUp: Function
+			//		Fired on mouseup off of a Stencil
+			// on[Custom]Up|Down|Move: Function
+			//		Custom events can bet set and fired by setting a
+			//		different drawingType on a Stencil, or by calling
+			//		setEventMode(customEventName)
+		},
+		EventObject: function(){
+			// summary:
+			//		The custom event object that is sent to registered objects
+			//		and their respective methods.
+			//		NOTE: Most event objects are the same with the exception
+			//			of the onDown events, which have fewer.
+
+			// id: String
+			//		Id of the focused object (included in onDown)
+			// pageX: Number
+			//		The X coordinate of the mouse from the left side of
+			//		the document. (included in onDown)
+			// pageY: Number
+			//		The Y coordinate of the mouse from the top of
+			//		the document. (included in onDown)
+			// x: Number
+			//		The X coordinate of the mouse from the left side
+			//		of the canvas (included in onDown)
+			// y: Number
+			//		The Y coordinate of the mouse from the top
+			//		of the canvas (included in onDown)
+
+			// last:	Object
+			//		The x and y coordinates of the last mousemove
+			//		relative to the canvas (not included in onDown)
+			// move: Object
+			//		The x and y amounts the mouse moved since the last event
+			//		(not included in onDown)
+			// orgX:	Number
+			//		The left side of the canvas from the side of the document (not included in onDown)
+			// orgY:	Number
+			//		The top of the canvas from the top of the document (not included in onDown)
+			// scroll: Object
+			//		The 'top' and 'left' scroll amounts of the canvas. (not included in onDown)
+			// start:	Object
+			//		The x and y coordinates of the mousedown event (not included in onDown)
+			// withinCanvas: Boolean
+			//		Whether the event happened within the Canvas or not (not included in onDown)
+		},
+		=====*/
 			
 		init: function(/* HTMLNode*/node){
 			//	summary:
 			//		Internal. Initializes mouse.
-			//
+
 			this.container = node;
 			this.setCanvas();
 			var c;
@@ -177,17 +176,17 @@ EventObject: function(){
 			}
 		},
 
-		register: function(/* Object*/scope){
+		register: function(/* CustomEventMethod*/scope){
 			// summary:
 			//		All objects (Stencils) should register here if they
 			//		use mouse events. When registering, the object will
 			//		be called if it has that method.
-			//	argument:
+			//		See: CustomEventMethod and EventObject
+			// scope:
 			//		The object to be called
-			//	Returns: handle
+			// returns: handle
 			//		Keep the handle to be used for disconnection.
-			// See: CustomEventMethod and EventObject
-			//
+
 			var handle = scope.id || "reg_"+(this.__reg++);
 			if(!this.registered[handle]){ this.registered[handle] = scope; }
 			return handle; // String
@@ -203,7 +202,7 @@ EventObject: function(){
 		_broadcastEvent:function(strEvt, obj){
 			// summary:
 			//		Fire events to all registered objects.
-			//
+
 			//console.log("mouse.broadcast:", strEvt, obj)
 			for(var nm in this.registered){
 				if(this.registered[nm][strEvt]) this.registered[nm][strEvt](obj);
@@ -214,6 +213,7 @@ EventObject: function(){
 			// summary:
 			// 		Create on[xx]Down event and send to broadcaster.
 			//		Could be connected to.
+			
 			//console.info("onDown:", this.eventName("down"))
 			this._broadcastEvent(this.eventName("down"), obj);
 		},
@@ -222,7 +222,7 @@ EventObject: function(){
 			// summary:
 			// 		Create on[xx]Drag event and send to broadcaster.
 			//		Could be connected to.
-			//
+
 			var nm = this.eventName("drag");
 			if(this._selected && nm == "onDrag"){
 				nm = "onStencilDrag"
@@ -236,14 +236,14 @@ EventObject: function(){
 			//		Could be connected to.
 			//		Note: onMove never uses a custom event
 			//		Note: onMove is currently not enabled in the app.
-			//
+
 			this._broadcastEvent("onMove", obj);
 		},
 		
 		overName: function(obj,evt){
 			var nm = obj.id.split(".");
 			evt = evt.charAt(0).toUpperCase() + evt.substring(1);
-			if(nm[0] == "dojox" && (dojox.drawing.defaults.clickable || !dojox.drawing.defaults.clickMode)){
+			if(nm[0] == "dojox" && (defaults.clickable || !defaults.clickMode)){
 				return "onStencil"+evt;
 			}else{
 				return "on"+evt;
@@ -252,8 +252,6 @@ EventObject: function(){
 		},
 		
 		onOver: function(obj){
-			// summary:
-			//
 			this._broadcastEvent(this.overName(obj,"over"), obj);
 		},
 		
@@ -267,7 +265,7 @@ EventObject: function(){
 			// summary:
 			// 		Create on[xx]Up event and send to broadcaster.
 			//		Could be connected to.
-			//
+			
 			// 	blocking first click-off (deselect), largely for TextBlock
 			// 	TODO: should have param to make this optional?
 			var nm = this.eventName("up");
@@ -317,14 +315,14 @@ EventObject: function(){
 			// 		|	mouse.setEventMode("DISABLED")
 			//		(unless any object subscribes to this event,
 			//		it is effectively disabled)
-			//
+
 			this.mode = mode ? "on" + mode.charAt(0).toUpperCase() + mode.substring(1) :  "";
 		},
 		
 		eventName: function(name){
 			// summary:
 			//		Internal. Determine the event name
-			//
+
 			name = name.charAt(0).toUpperCase() + name.substring(1);
 			if(this.mode){
 				if(this.mode == "onPathEdit"){
@@ -336,7 +334,7 @@ EventObject: function(){
 				return this.mode + name;
 			}else{
 				//Allow a mode where stencils aren't clickable
-				if(!dojox.drawing.defaults.clickable && dojox.drawing.defaults.clickMode){return "on"+name;}
+				if(!defaults.clickable && defaults.clickMode){return "on"+name;}
 				var dt = !this.drawingType || this.drawingType=="surface" || this.drawingType=="canvas" ? "" : this.drawingType;
 				var t = !dt ? "" : dt.charAt(0).toUpperCase() + dt.substring(1);
 				return "on"+t+name;
@@ -346,14 +344,14 @@ EventObject: function(){
 		up: function(evt){
 			// summary:
 			//		Internal. Create onUp event
-			//
+
 			this.onUp(this.create(evt));
 		},
 		
 		down: function(evt){
 			// summary:
 			//		Internal. Create onDown event
-			//
+
 			this._downOnCanvas = true;
 			var sc = this.scrollOffset();
 			var dim = this._getXY(evt);
@@ -397,19 +395,19 @@ EventObject: function(){
 		over: function(obj){
 			// summary:
 			//		Internal.
-			//
+
 			this.onOver(obj);
 		},
 		out: function(obj){
 			// summary:
 			//		Internal.
-			//
+
 			this.onOut(obj);
 		},
 		move: function(evt){
 			// summary:
 			//		Internal.
-			//
+
 			var obj = this.create(evt);
 			if(this.id=="MUI"){
 				//console.log("obj.id:", obj.id, "was:", this.currentNodeId)
@@ -436,7 +434,7 @@ EventObject: function(){
 		create: function(evt, squelchErrors){
 			// summary:
 			//		Internal. Create EventObject
-			//
+
 			var sc = this.scrollOffset();
 			var dim = this._getXY(evt);
 			
@@ -512,3 +510,4 @@ EventObject: function(){
 		}
 	}
 );
+});

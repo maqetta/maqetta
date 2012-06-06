@@ -10,16 +10,9 @@ define([
 	"./form/_FormMixin",
 	"./_TemplatedMixin",
 	"dojo/text!./templates/TooltipDialog.html",
-	"."		// exports methods to dijit global
+	"./main"		// exports methods to dijit global
 ], function(declare, domClass, event, keys, lang,
 			focus, ContentPane, _DialogMixin, _FormMixin, _TemplatedMixin, template, dijit){
-
-/*=====
-	var ContentPane = dijit.layout.ContentPane;
-	var _DialogMixin = dijit._DialogMixin;
-	var _FormMixin = dijit.form._FormMixin;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-=====*/
 
 	// module:
 	//		dijit/TooltipDialog
@@ -33,7 +26,7 @@ define([
 		//		Pops up a dialog that appears like a Tooltip
 
 		// title: String
-		// 		Description of tooltip dialog (required for a11y)
+		//		Description of tooltip dialog (required for a11y)
 		title: "",
 
 		// doLayout: [protected] Boolean
@@ -44,8 +37,8 @@ define([
 		doLayout: false,
 
 		// autofocus: Boolean
-		// 		A Toggle to modify the default focus behavior of a Dialog, which
-		// 		is to focus on the first dialog element after opening the dialog.
+		//		A Toggle to modify the default focus behavior of a Dialog, which
+		//		is to focus on the first dialog element after opening the dialog.
 		//		False will disable autofocusing. Default: true
 		autofocus: true,
 
@@ -67,7 +60,7 @@ define([
 
 		_setTitleAttr: function(/*String*/ title){
 			this.containerNode.title = title;
-			this._set("title", title)
+			this._set("title", title);
 		},
 
 		postCreate: function(){
@@ -75,19 +68,35 @@ define([
 			this.connect(this.containerNode, "onkeypress", "_onKey");
 		},
 
-		orient: function(/*DomNode*/ node, /*String*/ aroundCorner, /*String*/ corner){
+		orient: function(/*DomNode*/ node, /*String*/ aroundCorner, /*String*/ tooltipCorner){
 			// summary:
 			//		Configure widget to be displayed in given position relative to the button.
 			//		This is called from the dijit.popup code, and should not be called
 			//		directly.
 			// tags:
 			//		protected
-			var newC = "dijitTooltipAB" + (corner.charAt(1) == 'L' ? "Left" : "Right")
-					+ " dijitTooltip"
-					+ (corner.charAt(0) == 'T' ? "Below" : "Above");
+
+			// Note: intentionally not using dijitTooltip class since that sets position:absolute, which
+			// confuses dijit/popup trying to get the size of the tooltip.
+			var newC = {
+				"MR-ML": "dijitTooltipRight",
+				"ML-MR": "dijitTooltipLeft",
+				"TM-BM": "dijitTooltipAbove",
+				"BM-TM": "dijitTooltipBelow",
+				"BL-TL": "dijitTooltipBelow dijitTooltipABLeft",
+				"TL-BL": "dijitTooltipAbove dijitTooltipABLeft",
+				"BR-TR": "dijitTooltipBelow dijitTooltipABRight",
+				"TR-BR": "dijitTooltipAbove dijitTooltipABRight",
+				"BR-BL": "dijitTooltipRight",
+				"BL-BR": "dijitTooltipLeft"
+			}[aroundCorner + "-" + tooltipCorner];
 
 			domClass.replace(this.domNode, newC, this._currentOrientClass || "");
 			this._currentOrientClass = newC;
+
+			// Tooltip.orient() has code to reposition connector for when Tooltip is before/after anchor.
+			// Not putting here to avoid code bloat, and since TooltipDialogs are generally above/below.
+			// Should combine code from Tooltip and TooltipDialog.
 		},
 
 		focus: function(){
@@ -105,7 +114,18 @@ define([
 			//		protected
 
 			this.orient(this.domNode,pos.aroundCorner, pos.corner);
-			this._onShow(); // lazy load trigger
+
+			// Position the tooltip connector for middle alignment.
+			// This could not have been done in orient() since the tooltip wasn't positioned at that time.
+			var aroundNodeCoords = pos.aroundNodePos;
+			if(pos.corner.charAt(0) == 'M' && pos.aroundCorner.charAt(0) == 'M'){
+				this.connectorNode.style.top = aroundNodeCoords.y + ((aroundNodeCoords.h - this.connectorNode.offsetHeight) >> 1) - pos.y + "px";
+				this.connectorNode.style.left = "";
+			}else if(pos.corner.charAt(1) == 'M' && pos.aroundCorner.charAt(1) == 'M'){
+				this.connectorNode.style.left = aroundNodeCoords.x + ((aroundNodeCoords.w - this.connectorNode.offsetWidth) >> 1) - pos.x + "px";
+			}
+
+			this._onShow(); // lazy load trigger  (TODO: shouldn't we load before positioning?)
 		},
 
 		onClose: function(){
@@ -131,8 +151,8 @@ define([
 			}
 			var singleFocusItem = (this._firstFocusItem == this._lastFocusItem);
 			if(evt.charOrCode == keys.ESCAPE){
-				// Use setTimeout to avoid crash on IE, see #10396.
-				setTimeout(lang.hitch(this, "onCancel"), 0);
+				// Use defer to avoid crash on IE, see #10396.
+				this.defer("onCancel");
 				event.stop(evt);
 			}else if(node == this._firstFocusItem && evt.shiftKey && evt.charOrCode === keys.TAB){
 				if(!singleFocusItem){

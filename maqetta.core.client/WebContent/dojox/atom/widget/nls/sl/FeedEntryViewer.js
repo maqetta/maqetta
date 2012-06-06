@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	displayOptions: "[možnosti prikaza]",
 	title: "Naslov",
@@ -8,8 +7,7 @@ define(
 	id: "ID",
 	close: "[zapri]",
 	updated: "Posodobljeno",
-	summary: "Povzetek",
+	summary: "Seštevek",
 	content: "Vsebina"
 })
-//end v1.x content
 );

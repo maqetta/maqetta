@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Кесте кірістіру",
 	modifyTableTitle: "Кестені өзгерту",
@@ -11,9 +10,9 @@ define(
 	tableWidth: "Кесте ені:",
 	backgroundColor: "Өң түсі:",
 	borderColor: "Жиек түсі:",
-	borderThickness: "Жиек қалыңдығы",
+	borderThickness: "Жиек қалыңдығы:",
 	percent: "пайыз",
-	pixels: "нүктелер",
+	pixels: "нүкте",
 	"default": "әдепкі",
 	left: "сол жақ",
 	center: "ортасы",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Орнату", // translated elsewhere?
 	buttonInsert: "Кірістіру",
 	buttonCancel: "Болдырмау",
-
 	selectTableLabel: "Кестені таңдау",
 	insertTableRowBeforeLabel: "Жолды алдына қосу",
 	insertTableRowAfterLabel: "Жолды артына қосу",
@@ -30,7 +28,4 @@ define(
 	deleteTableRowLabel: "Жолды жою",
 	deleteTableColumnLabel: "Бағанды жою"
 })
-	
-
-//end v1.x content
 );

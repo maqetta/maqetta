@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html style="height:100%;">
 	<head>
-		<title>The Dojo Unit Test Harness, $Rev: 25896 $</title>
+		<title>The Dojo Unit Test Harness, $Rev: 27644 $</title>
 
 		<script type="text/javascript">
 			// workaround for bug in Safari 3.	See #7189
@@ -91,15 +91,16 @@
 			}
 
 			#progressOuter {
-				background:#e9e9e9 url("http://o.aolcdn.com/dojo/1.3/dijit/themes/tundra/images/dojoTundraGradientBg.png") repeat-x 0 0;
+				background-color: #e9e9e9;
+				background-image: -webkit-linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+				background-image: -moz-linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+				background-image: -ms-linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+				background-image: -o-linear-gradient(rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+
 				height: 1em;
 				/*the following trick is necessary to prevent IE from wrapping the last piece of progress bar into a new line*/
 				_margin:1px;
 				_padding: -1px;
-				
-				/*
-				border-color: #e8e8e8;
-				*/
 			}
 
 			#progressOuter .success, #progressOuter .failure{

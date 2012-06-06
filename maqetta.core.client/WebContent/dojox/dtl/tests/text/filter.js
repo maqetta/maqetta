@@ -165,7 +165,7 @@ doh.register("dojox.dtl.text.filter",
 
 			tpl = new dd.Template('{{ now|date:"z" }}');
 			t.is("0", tpl.render(context));
-		
+
 			tpl = new dd.Template('{{ now|date:"W" }}');
 			t.is("1", tpl.render(context));
 		},
@@ -544,6 +544,8 @@ doh.register("dojox.dtl.text.filter",
 
 			tpl = new dd.Template('{{ now|time }}');
 			t.is(dojox.dtl.utils.date.format(context.now, "P"), tpl.render(context));
+			tpl = new dd.Template('{{ now|time:"g" }}');
+			t.is('12', tpl.render(context));
 		},
 		function test_filter_timesince(t){
 			var dd = dojox.dtl;
@@ -637,6 +639,10 @@ doh.register("dojox.dtl.text.filter",
 
 			var tpl = new dd.Template('{{ "http://homepage.com/~user"|urlencode }}');
 			t.is("http%3A//homepage.com/%7Euser", tpl.render());
+
+			// see http://bugs.dojotoolkit.org/ticket/12932
+			tpl = new dd.Template('{{ "\t"|urlencode }}');
+			t.is("\t", decodeURIComponent(tpl.render()));
 		},
 		function test_filter_urlize(t){
 			var dd = dojox.dtl;

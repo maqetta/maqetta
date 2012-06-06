@@ -11,9 +11,6 @@
 			background-color: white;
 			background-image: none;
 		}
-		.dijit_a11y .dijitStackController .dijitToggleButtonChecked button {
-			border-style: dashed !important;
-		}
 		div.dijitStackContainer {
 			border: solid 1px black !important;	/* override .dijitStackContainer-child rule for no border */
 			padding: 3px;
@@ -29,7 +26,6 @@
 
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
-	<script type="text/javascript" src="../helpers.js"></script>
 
 	<script type="text/javascript">
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
@@ -41,6 +37,7 @@
 		dojo.require("dijit.form.Button");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
 		dojo.require('doh.runner');
+		dojo.require("dijit.tests.helpers");	// functions to help test
 
 		// Hash listing which objects have gotten a resize event
 		resizes = {};
@@ -53,7 +50,10 @@
 
 			function click(/*String*/ id){
 				// Click dijit widget w/specified id
-				dijit.byId(id)._onClick({preventDefault: function(){}});
+				dijit.byId(id)._onClick({
+					preventDefault: function(){},
+					stopPropagation: function(){}
+				});
 			}
 
 			doh.register("setup", [
@@ -237,43 +237,43 @@
 <body class="claro">
 	<h1 class="testTitle">A Tale Of Two Cities</h1>
 
-	<button id="previous" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").back() }'>&lt;</button>
-	<span data-dojo-type="dijit.layout.StackController" data-dojo-props='containerId:"myStackContainer"'></span>
-	<button id="next" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").forward() }'>&gt;</button>
+	<button id="previous" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").back() }'>&lt;</button>
+	<span data-dojo-type="dijit/layout/StackController" data-dojo-props='containerId:"myStackContainer"'></span>
+	<button id="next" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").forward() }'>&gt;</button>
 
-	<div id="myStackContainer" data-dojo-type="dijit.layout.StackContainer"
+	<div id="myStackContainer" data-dojo-type="dijit/layout/StackContainer"
 		data-dojo-props='style:"width: 90%; border: 1px solid #9b9b9b; height: 20em; margin: 0.5em 0 0.5em 0; padding: 0.5em;"'>
-		<p id="page1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"page 1"'>IT WAS the best of times, it <input value="was the worst" /> of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way -- in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only</p>
-		<p id="page2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"page 2"'>There were a king with a large jaw and a queen with a plain face, on the throne of England; there were a king with a large jaw and a queen with a fair face, on the throne of <a href="http://www.france.com">France</a>. In both countries it was clearer than crystal to the lords of the State preserves of loaves and fishes, that things in general were settled for ever.</p>
-		<p id="page3" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"page 3"'>It was the year of Our Lord one thousand seven hundred and seventy- five. Spiritual revelations were conceded to England at that favoured period, as at this. Mrs. Southcott had recently attained her five-and- twentieth blessed birthday, of whom a prophetic private in the Life Guards had heralded the sublime appearance by announcing that arrangements were made for the swallowing up of London and Westminster. Even the Cock-lane ghost had been laid only a round dozen of years, after rapping out its messages, as the spirits of this very year last past (supernaturally deficient in originality) rapped out theirs. Mere messages in the earthly order of events had lately come to the English Crown and People, from a congress of British subjects in America:</p>
+		<p id="page1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"page 1"'>IT WAS the best of times, it <input value="was the worst" /> of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way -- in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only</p>
+		<p id="page2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"page 2"'>There were a king with a large jaw and a queen with a plain face, on the throne of England; there were a king with a large jaw and a queen with a fair face, on the throne of <a href="http://www.france.com">France</a>. In both countries it was clearer than crystal to the lords of the State preserves of loaves and fishes, that things in general were settled for ever.</p>
+		<p id="page3" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"page 3"'>It was the year of Our Lord one thousand seven hundred and seventy- five. Spiritual revelations were conceded to England at that favoured period, as at this. Mrs. Southcott had recently attained her five-and- twentieth blessed birthday, of whom a prophetic private in the Life Guards had heralded the sublime appearance by announcing that arrangements were made for the swallowing up of London and Westminster. Even the Cock-lane ghost had been laid only a round dozen of years, after rapping out its messages, as the spirits of this very year last past (supernaturally deficient in originality) rapped out theirs. Mere messages in the earthly order of events had lately come to the English Crown and People, from a congress of British subjects in America:</p>
 	</div>
 
-	<button id="previous2" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").back() }'>&lt;</button>
-	<span data-dojo-type="dijit.layout.StackController" data-dojo-props='containerId:"myStackContainer"'></span>
-	<button id="next2" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").forward() }'>&gt;</button>
+	<button id="previous2" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").back() }'>&lt;</button>
+	<span data-dojo-type="dijit/layout/StackController" data-dojo-props='containerId:"myStackContainer"'></span>
+	<button id="next2" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainer").forward() }'>&gt;</button>
 
 
 	<h1 class="testTitle" style="margin-top: 3em;">Embedded layout widgets</h1>
 	<p>This tests having layout widgets embedded in the StackContainer, making sure they render on the hidden pane.</p>
 
-	<button id="previousPR" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").back() }'>&lt;</button>
-	<span data-dojo-type="dijit.layout.StackController" data-dojo-props='containerId:"myStackContainerPR"'></span>
-	<button id="nextPR" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").forward() }'>&gt;</button>
+	<button id="previousPR" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").back() }'>&lt;</button>
+	<span data-dojo-type="dijit/layout/StackController" data-dojo-props='containerId:"myStackContainerPR"'></span>
+	<button id="nextPR" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").forward() }'>&gt;</button>
 
-	<div id="myStackContainerPR" data-dojo-type="dijit.layout.StackContainer"
+	<div id="myStackContainerPR" data-dojo-type="dijit/layout/StackContainer"
 		data-dojo-props='style:"width: 90%; border: 1px solid #9b9b9b; height: 20em; margin: 0.5em 0 0.5em 0; padding: 0.5em;"'>
-		<div id="page1PR" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"page 1"'>
+		<div id="page1PR" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"page 1"'>
 			<p>
 				The next pane should have some text, plus two embedded layout widgets, which should
 				appear correctly even though the pane is initially hidden
 			</p>
 		</div>
-		<div id="page2PR" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"page 2", style:"padding: 1em;"'>
+		<div id="page2PR" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"page 2", style:"padding: 1em;"'>
 			<p>
 				Here's a BorderContainer:
 			</p>
-			<div id="bc" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props='style:"height:200px; width:300px"'>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"left", style:"width:100px", splitter:true'>
+			<div id="bc" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props='style:"height:200px; width:300px"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"left", style:"width:100px", splitter:true'>
 					1Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 					Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 					vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -288,7 +288,7 @@
 					sollicitudin sed, consequat nec, facilisis sit amet, orci. Aenean
 					ut eros sit amet ante pharetra interdum.
 				</div>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='region:"center"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='region:"center"'>
 					2Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 					Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 					vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -307,8 +307,8 @@
 			<p>
 				And a TabContainer:
 			</p>
-			<div id="tc" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='style:"height:200px; width:300px"'>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 1"'>
+			<div id="tc" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='style:"height:200px; width:300px"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 1"'>
 					1Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 					Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 					vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -323,7 +323,7 @@
 					sollicitudin sed, consequat nec, facilisis sit amet, orci. Aenean
 					ut eros sit amet ante pharetra interdum.
 				</div>
-				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 2"'>
+				<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 2"'>
 					2Sed arcu magna, molestie at, fringilla in, sodales eu, elit.
 					Curabitur mattis lorem et est. Quisque et tortor. Integer bibendum
 					vulputate odio. Nam nec ipsum. Vestibulum mollis eros feugiat
@@ -344,9 +344,9 @@
 			</p>
 		</div>
 	</div>
-	<button id="previous2PR" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").back() }'>&lt;</button>
-	<span data-dojo-type="dijit.layout.StackController" data-dojo-props='containerId:"myStackContainerPR"'></span>
-	<button id="next2PR" data-dojo-type="dijit.form.Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").forward() }'>&gt;</button>
+	<button id="previous2PR" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").back() }'>&lt;</button>
+	<span data-dojo-type="dijit/layout/StackController" data-dojo-props='containerId:"myStackContainerPR"'></span>
+	<button id="next2PR" data-dojo-type="dijit/form/Button" data-dojo-props='onClick:function(){ dijit.byId("myStackContainerPR").forward() }'>&gt;</button>
 
 	<h1>Nested StackContainers w/doLayout=false</h1>
 	<p>"hello world" inner text should be visible</p>

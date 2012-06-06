@@ -235,3 +235,8 @@
 .nihilo .dojoxGridRowOdd .dojoxGridSubRowAlt {
 	background-color: #EDEFF3;
 }
+
+.nihilo .dojoxGridRowTable .dojoDndHorizontal th.dojoDndItem {
+	padding: 3px;
+}
+

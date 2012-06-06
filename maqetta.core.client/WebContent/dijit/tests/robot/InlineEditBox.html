@@ -2,7 +2,7 @@
 		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>doh.robot InlineEditBox Test</title>
+		<title>robot InlineEditBox Test</title>
 
 		<style>
 			@import "../../../util/doh/robot/robot.css";
@@ -12,20 +12,23 @@
 		<script type="text/javascript" src="../../../dojo/dojo.js"
 			djConfig="isDebug: true"></script>
 
-		<!-- functions to help test -->
-		<script type="text/javascript" src="../helpers.js"></script>
-
 		<script type="text/javascript">
-			dojo.require("dojo.date.locale");
-			dojo.require("dijit.robotx");
-
-			dojo.ready(function(){
-				doh.robot.initRobot('../test_InlineEditBox.html');
+			require([
+				"doh/runner", "dojo/robotx",
+				"dojo/_base/array", "dojo/date/locale", "dojo/keys", "dojo/_base/lang", "dojo/query",
+				"dijit/tests/helpers", "dojo/domReady!"
+			], function(doh, robot, array, datelocale, keys, lang, query, helpers){
+				robot.initRobot('../test_InlineEditBox.html');
 
 				function moveAndClick(node){
-					doh.robot.mouseMoveAt(node, 500, 1);
-					doh.robot.mouseClick({left: true}, 500);
+					robot.mouseMoveAt(node, 500, 1);
+					robot.mouseClick({left: true}, 500);
 				}
+
+				doh.register(function setup(){
+					// get pointer to registry in the iframe
+					registry = robot.window.require("dijit/registry");
+				});
 
 				doh.register("dijit.InlineEditBox autosave tests", [
 					{
@@ -33,11 +36,11 @@
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("dollar_as");
+							var inlineBox = registry.byId("dollar_as");
 							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("dollar", 1000, 1200); // invalid
+							robot.typeKeys("dollar", 1000, 1200); // invalid
 							moveAndClick("predefined");
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								var currencyTextBox = inlineBox.wrapperWidget.editWidget;
 								doh.is('dollar', currencyTextBox.get("displayedValue"), "displayedValue");
 								doh.f(currencyTextBox.isValid(), "!isValid");
@@ -52,18 +55,18 @@
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("dollar_as");
+							var inlineBox = registry.byId("dollar_as");
 							var displayedValue, isValid;
 							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("dollar", 1000, 1200); // invalid
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
-							doh.robot.sequence(function(){
+							robot.typeKeys("dollar", 1000, 1200); // invalid
+							robot.keyPress(keys.ENTER, 500, {});
+							robot.sequence(function(){
 								var currencyTextBox = inlineBox.wrapperWidget.editWidget;
 								displayedValue = currencyTextBox.get("displayedValue");
 								isValid = currencyTextBox.isValid();
 							}, 1000);
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.keyPress(keys.ESCAPE, 500, {});
+							robot.sequence(d.getTestCallback(function(){
 								doh.is('dollar', displayedValue, "displayedValue");
 								doh.f(isValid, "!isValid");
 								doh.is('', inlineBox.get("value"), "value");
@@ -76,11 +79,11 @@
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("dollar_as");
+							var inlineBox = registry.byId("dollar_as");
 							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("123", 1000, 600);
+							robot.typeKeys("123", 1000, 600);
 							moveAndClick("predefined");
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is("$123.00", inlineBox.get("value"), "value");
 							}), 1000);
 							return d;
@@ -91,11 +94,11 @@
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("dollar_as");
+							var inlineBox = registry.byId("dollar_as");
 							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("234", 1000, 600);
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.typeKeys("234", 1000, 600);
+							robot.keyPress(keys.ENTER, 500, {});
+							robot.sequence(d.getTestCallback(function(){
 								doh.is('$234.00', inlineBox.get("value"), "value");
 							}), 1000);
 							return d;
@@ -106,11 +109,11 @@
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("dollar_as");
+							var inlineBox = registry.byId("dollar_as");
 							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("345", 1000, 600);
-							doh.robot.keyPress(dojo.keys.ESCAPE, 500, {});
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.typeKeys("345", 1000, 600);
+							robot.keyPress(keys.ESCAPE, 500, {});
+							robot.sequence(d.getTestCallback(function(){
 								doh.is("$234.00", inlineBox.get("value"), "value");
 							}), 1000);
 							return d;
@@ -121,11 +124,11 @@
 						timeout: 10000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("dollar_as");
+							var inlineBox = registry.byId("dollar_as");
 							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("456", 1000, 600);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.typeKeys("456", 1000, 600);
+							robot.keyPress(keys.TAB, 500, {});
+							robot.sequence(d.getTestCallback(function(){
 								doh.is('$456.00', inlineBox.get("value"), "value");
 							}), 1000);
 							return d;
@@ -136,25 +139,25 @@
 						timeout: 15000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("editable");
+							var inlineBox = registry.byId("editable");
 							var initialOnChange = inlineBox._onChangeValue;
 							inlineBox.set("value", "");
-							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("editable", 1000, 1600);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.keyPress(dojo.keys.TAB, 1500, {}); // wait more than 1 second to TAB
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
-							doh.robot.typeKeys("567", 500, 600);
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
-							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true}); // do this fast
-							doh.robot.keyPress(dojo.keys.TAB, 500, {shift:true}); // do this fast
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {}); // quickly back to editable
-							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 500, {});
-							doh.robot.typeKeys(" again", 1000, 1200);
-							doh.robot.keyPress(dojo.keys.TAB, 500, {});
-							doh.robot.sequence(d.getTestCallback(function(){
+							inlineBox.edit();
+							robot.typeKeys("editable", 1000, 1600);
+							robot.keyPress(keys.TAB, 500, {});
+							robot.keyPress(keys.TAB, 1500, {}); // wait more than 1 second to TAB
+							robot.keyPress(keys.ENTER, 500, {});
+							robot.typeKeys("567", 500, 600);
+							robot.keyPress(keys.ENTER, 500, {});
+							robot.keyPress(keys.TAB, 500, {shift:true}); // do this fast
+							robot.keyPress(keys.TAB, 500, {shift:true}); // do this fast
+							robot.keyPress(keys.ENTER, 500, {}); // quickly back to editable
+							robot.keyPress(keys.RIGHT_ARROW, 500, {});
+							robot.typeKeys(" again", 1000, 1200);
+							robot.keyPress(keys.TAB, 500, {});
+							robot.sequence(d.getTestCallback(function(){
 								doh.is(undefined, initialOnChange, "no onChange value");
-								doh.is('$567.00', dijit.byId("dollar_as").get("value"), "value");
+								doh.is('$567.00', registry.byId("dollar_as").get("value"), "value");
 								doh.is('editable again', inlineBox.get("value"), "value");
 								doh.is('editable again', inlineBox._onChangeValue, "onChange value");
 							}), 1000);
@@ -166,9 +169,9 @@
 						timeout: 2000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("editable");
+							var inlineBox = registry.byId("editable");
 							inlineBox.set("value", "programmatic value");
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is("programmatic value", inlineBox._onChangeValue, "programmatic set causes onChange");
 							}), 500);
 							return d;
@@ -179,11 +182,11 @@
 						timeout: 2000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("programmatic");
+							var inlineBox = registry.byId("programmatic");
 							inlineBox.edit();
 							inlineBox.wrapperWidget.editWidget.set('value', 'changed');
 							inlineBox.save();
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is("changed", inlineBox._onChangeValue, "editing causes onChange");
 							}), 500);
 							return d;
@@ -194,13 +197,13 @@
 						timeout: 15000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("textarea");
+							var inlineBox = registry.byId("textarea");
 							moveAndClick(inlineBox.domNode);
-							doh.robot.typeKeys("line 1", 1000, 1200);
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
-							doh.robot.typeKeys("line 2", 500, 1200);
+							robot.typeKeys("line 1", 1000, 1200);
+							robot.keyPress(keys.ENTER, 500, {});
+							robot.typeKeys("line 2", 500, 1200);
 							moveAndClick("predefined");
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is('line 1\\nline 2', inlineBox.get("value").replace(/\n/g, "\\n"), "textarea programmatic value was " + inlineBox.get("value").replace(/\n/g, "\\n"));
 								doh.is('line 1<br>line 2', inlineBox.domNode.innerHTML.toLowerCase(), "textarea rendered value was " + inlineBox.domNode.innerHTML);
 							}), 1000);
@@ -213,41 +216,54 @@
 				// For example, in this markup:
 				//		<span dojoType="dijit.InlineEditBox" ...>01/05/2007</span>
 				// When the editor is clicked the calendar should open to that date.
-				dojo.forEach([
+				array.forEach([
 					{ widget: "CurrencyTextBox", id: "dollar", textValue: "$2,000", widgetValue: 2000 },
 					{ widget: "NumberTextBox", id: "quantity", textValue: "3", widgetValue: 3 },
 					{ widget: "ComboBox", id: "item", textValue: "refrigerators", widgetValue: "refrigerators" },
-					{ widget: "DateTextBox", id: "purchase", textValue: "01/05/2007", widgetValue: dojo.date.locale.parse("01/05/2007", {datePattern: 'MM/dd/yyyy', selector:'date'}) },
-					{ widget: "FilteringSelect", id: "state", textValue: "Pennsylvania", widgetValue: "PA" }
+					{ widget: "DateTextBox", id: "purchase", textValue: "01/05/2007", widgetValue: datelocale.parse("01/05/2007", {datePattern: 'MM/dd/yyyy', selector:'date'}) },
+					{ widget: "FilteringSelect", id: "state", textValue: "Pennsylvania", widgetValue: "PA" },
+					{ widget: "Select", id: "country", textValue: "US", widgetValue: "US" }
 				], function(test){
 					doh.register("preDefinedValue " + test.widget, {
-						timeout: 5000,
- 						name: dojo.toJson(test.id),
+						timeout: 8000,
+ 						name: test.id,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId(test.id);
+							var inlineBox = registry.byId(test.id);
 							var handler = inlineBox.connect(inlineBox, 'edit', function(){
 								inlineBox.disconnect(handler);
 								var editWidget = inlineBox.wrapperWidget.editWidget;
 								handler = editWidget.connect(editWidget, '_onFocus', function(){
 									editWidget.disconnect(handler);
-									setTimeout(d.getTestErrback(function(){
-										doh.is(test.textValue, inlineBox.get("value"), "inline text value");
-										doh.t(isVisible(editWidget), "editor widget should visible");
-										var expected = test.widgetValue,
-											actual = editWidget.get("value");
-										doh.is(typeof expected, typeof actual, "editor value typeof");
-										doh.is(expected.toString(), actual.toString(), "editor widget value");
-										handler = inlineBox.connect(inlineBox, 'onCancel',
-											function(){
-												inlineBox.disconnect(handler);
-												setTimeout(d.getTestCallback(function(){
-													doh.t(isHidden(inlineBox.wrapperWidget), "editor widget should hidden");
-												}), 500);
-											});
-										var buttons = dojo.query(".cancelButton", inlineBox.domNode.parentNode);
+									robot.sequence(function(){
+										var
+										textValue = test.textValue,
+										value = inlineBox.get("value"),
+										visible = helpers.isVisible(editWidget),
+										expected = test.widgetValue,
+										actual = editWidget.get("value"),
+										showHandler = inlineBox.connect(inlineBox, 'save',
+											d.getTestCallback(function(){
+												inlineBox.disconnect(cancelHandler);
+												inlineBox.disconnect(showHandler);
+												doh.t(false, "Save was clicked");
+											})
+										),
+										cancelHandler = inlineBox.connect(inlineBox, 'onCancel', function(){
+											inlineBox.disconnect(cancelHandler);
+											inlineBox.disconnect(showHandler);
+											robot.sequence(d.getTestCallback(function(){
+												doh.is(textValue, value, "inline text value");
+												doh.t(visible, "editor widget should be visible");
+												doh.is(typeof expected, typeof actual, "editor value typeof");
+												doh.is(expected.toString(), actual.toString(), "editor widget value");
+												doh.t(helpers.isHidden(inlineBox.wrapperWidget), "editor widget should be hidden");
+											}), 500);
+										}),
+										buttons = query(".dijitButton", inlineBox.domNode.parentNode);
+										moveAndClick(buttons[buttons.length-2]); // Save should be disabled so nothing happens
 										moveAndClick(buttons[buttons.length-1]);
-									}), 1500);
+									}, 1500);
 								});
 							});
 							moveAndClick(inlineBox.domNode);
@@ -266,27 +282,27 @@
 							var d = new doh.Deferred();
 
 							// confirm initial displayed value
-							var inlineBox = dijit.byId("renderAsHtml_false");
-							doh.is("&lt;B&gt;not bold&lt;/B&gt;&amp;lt;input&amp;gt;", dojo.trim(inlineBox.domNode.innerHTML),
+							var inlineBox = registry.byId("renderAsHtml_false");
+							doh.is("&lt;B&gt;not bold&lt;/B&gt;&amp;lt;input&amp;gt;", lang.trim(inlineBox.domNode.innerHTML),
 								"confirm initial value (with special chars) wasn't modified");
 							doh.is("<B>not bold</B>&lt;input&gt;", inlineBox.get("value"),
 								"confirm initial get('value')");
 
 							// launch editor, and make sure that special characters aren't mangled
 							moveAndClick(inlineBox.domNode);
-							doh.robot.sequence(d.getTestErrback(function(){
+							robot.sequence(d.getTestErrback(function(){
 								var editor = inlineBox.wrapperWidget.editWidget;
 								doh.is("<B>not bold</B>&lt;input&gt;", editor.get("value"), "initial editor value");
 							}), 1000);
 
 							// edit value and save		
-							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
-							doh.robot.typeKeys("end", 2000, 1000);
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							robot.keyPress(keys.RIGHT_ARROW, 1000, {});
+							robot.typeKeys("end", 2000, 1000);
+							robot.keyPress(keys.ENTER, 500, {});
 
 							// check that display value didn't mangle special characters
-							doh.robot.sequence(d.getTestCallback(function(){
-								doh.is("&lt;B&gt;not bold&lt;/B&gt;&amp;lt;input&amp;gt;end", dojo.trim(inlineBox.domNode.innerHTML),
+							robot.sequence(d.getTestCallback(function(){
+								doh.is("&lt;B&gt;not bold&lt;/B&gt;&amp;lt;input&amp;gt;end", lang.trim(inlineBox.domNode.innerHTML),
 									"displayed value after edit");
 								doh.is("<B>not bold</B>&lt;input&gt;end", inlineBox.get("value"),
 									"get('value') after edit");
@@ -304,9 +320,9 @@
 							var d = new doh.Deferred();
 
 							// confirm initial displayed value
-							var inlineBox = dijit.byId("renderAsHtml_true");
+							var inlineBox = registry.byId("renderAsHtml_true");
 							doh.is("&lt;b&gt;not bold&lt;/b&gt;<b>bold</b>&amp;lt;input&amp;gt;",
-								dojo.trim(inlineBox.domNode.innerHTML).toLowerCase(),
+								lang.trim(inlineBox.domNode.innerHTML).toLowerCase(),
 								"confirm initial value (with special chars) wasn't modified");
 							doh.is("&lt;b&gt;not bold&lt;/b&gt;<b>bold</b>&amp;lt;input&amp;gt;",
 								inlineBox.get("value").toLowerCase(),
@@ -314,7 +330,7 @@
 
 							// launch editor, and make sure that value was passed to editor as HTML
 							moveAndClick(inlineBox.domNode);
-							doh.robot.sequence(d.getTestErrback(function(){
+							robot.sequence(d.getTestErrback(function(){
 								var editor = inlineBox.wrapperWidget.editWidget;
 								doh.is("&lt;b&gt;not bold&lt;/b&gt;<b>bold</b>&amp;lt;input&amp;gt;",
 									editor.get("value").toLowerCase(),
@@ -322,14 +338,14 @@
 							}), 1000);
 
 							// edit value and save		
-							doh.robot.keyPress(dojo.keys.RIGHT_ARROW, 1000, {});
-							doh.robot.typeKeys("end", 2000, 1000);
-							doh.robot.keyPress(dojo.keys.ENTER, 500, {});
+							robot.keyPress(keys.RIGHT_ARROW, 1000, {});
+							robot.typeKeys("end", 2000, 1000);
+							robot.keyPress(keys.ENTER, 500, {});
 
 							// check that display value didn't mangle special characters
-							doh.robot.sequence(d.getTestCallback(function(){
+							robot.sequence(d.getTestCallback(function(){
 								doh.is("&lt;b&gt;not bold&lt;/b&gt;<b>bold</b>&amp;lt;input&amp;gt;end",
-									dojo.trim(inlineBox.domNode.innerHTML).toLowerCase(),
+									lang.trim(inlineBox.domNode.innerHTML).toLowerCase(),
 									"displayed value after edit");
 								doh.is("&lt;b&gt;not bold&lt;/b&gt;<b>bold</b>&amp;lt;input&amp;gt;end",
 									inlineBox.get("value").toLowerCase(),
@@ -347,25 +363,44 @@
 						timeout: 7000,
 						runTest: function(){
 							var d = new doh.Deferred();
-							var inlineBox = dijit.byId("inlineRTE");
+							var inlineBox = registry.byId("inlineRTE");
 							var handler = inlineBox.connect(inlineBox, 'edit',
-								function(){
+								d.getTestErrback(function(){
 									inlineBox.disconnect(handler);
 									setTimeout(function(){
 										handler = inlineBox.connect(inlineBox, 'save',
-											function(){
+											d.getTestErrback(function(){
 												inlineBox.disconnect(handler);
 												setTimeout(d.getTestCallback(function(){
-													doh.t(isHidden(inlineBox.wrapperWidget), "editor widget should visible");
+													doh.t(helpers.isHidden(inlineBox.wrapperWidget), "editor widget should be visible");
 													doh.t(inlineBox.get("value").indexOf('!start!') >= 0, "value changed");
 												}), 1000);
-											});
-										doh.robot.typeKeys("!start!", 1, 1400);
-										var buttons = dojo.query(".saveButton", inlineBox.domNode.parentNode);
+											}));
+										robot.typeKeys("!start!", 1, 1400);
+										var buttons = query(".saveButton", inlineBox.domNode.parentNode);
 										moveAndClick(buttons[buttons.length-1]);
 									}, 1000);
-								});
+								}));
 							moveAndClick(inlineBox.domNode);
+							return d;
+						}
+					}
+				]);
+
+				doh.register("positioning", [
+					{
+						name: "offscreen",
+						timeout: 4000,
+						runTest: function(){
+							var d = new doh.Deferred();
+							var inlineBox = registry.byId("areaEditable");
+							inlineBox.edit();
+							moveAndClick("disableAreaEditable");
+							robot.sequence(d.getTestCallback(function(){
+								doh.t(inlineBox.get("disabled"), "disabled");
+								inlineBox.set('disabled', false);
+								inlineBox.cancel();
+							}), 1000);
 							return d;
 						}
 					}

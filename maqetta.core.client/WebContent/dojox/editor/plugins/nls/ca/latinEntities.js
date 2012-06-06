@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -102,7 +101,6 @@ define(
 	yacute:"lletra llatina y minúscula amb accent agut",
 	thorn:"lletra llatina thorn minúscula",
 	yuml:"lletra llatina y minúscula amb dièresi",
-
 // Greek Characters and Symbols
 	fnof:"lletra llatina f minúscula amb ganxet\nfunció\nflorí",
 	Alpha:"lletra grega alfa majúscula",
@@ -256,6 +254,4 @@ define(
 	rsaquo:"marca de citació en angle senzilla dreta",
 	euro:"signe de l'euro"
 })
-
-//end v1.x content
 );

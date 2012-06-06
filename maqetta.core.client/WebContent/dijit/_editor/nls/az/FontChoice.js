@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"1" : "xx-kiçik",
 	"2" : "x-kiçik",
@@ -23,5 +22,4 @@ define(
 	"cursive" : "Əl yazısı",
 	"noFormat" : "Heç biri"
 })
-//end v1.x content
 );

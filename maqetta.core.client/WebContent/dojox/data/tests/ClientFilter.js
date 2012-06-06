@@ -32,7 +32,7 @@ doh.register("dojox.data.tests.ClientFilter",
 			return d;
 		},
 		function makeChanges(t) {
-			//	summary:
+			// summary:
 			//		Simple test of a basic fetch on JsonRestStore of a simple query.
 			var d = new doh.Deferred();
 			jsonStore.fetch({queryOptions:{cache:true},query:{lastName:"Smith",firstName:"*"},sort:[{attribute:"firstName",descending:true}],

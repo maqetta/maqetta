@@ -29,7 +29,6 @@ dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWo
 		this._filters = this._filters.slice(0); 
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "SafePaste");
 		dojo.mixin(strings, dojo.i18n.getLocalization("dijit", "common"));
-		strings.cancel = strings.buttonCancel;
 		dojo.mixin(strings, dojo.i18n.getLocalization("dijit._editor", "commands"));
 
 		this._uId = dijit.getUniqueId(this.editor.id);
@@ -73,6 +72,7 @@ dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWo
 		//		Overrides _Plugin.updateState(). 
 		// tags:
 		//		protected
+		
 		// Do nothing.
 	},
 	

@@ -1,32 +1,37 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<title>SpinWheel with Icons</title>
-		<link href="../themes/common/SpinWheel.css" rel="stylesheet">
-		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-		<style>
-		#spin1 {
-			width: 312px;
-			margin: 10px auto;
-		}
-		</style>
-		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojox.mobile");			// This is a mobile app.
-			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
-			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
-			dojo.require("dojox.mobile.deviceTheme");
-			dojo.require("dojox.mobile.SpinWheel");
-		</script>
-	</head>
-	<body style="visibility:hidden;">
-		<div dojotype="dojox.mobile.View" selected="true">
-			<h1 dojoType="dojox.mobile.Heading">SpinWheel with Icons</h1>
-			<div id="spin1" dojoType="dojox.mobile.SpinWheel">
-				<div dojoType="dojox.mobile.SpinWheelSlot"
-				labels="[
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>SpinWheel with Icons</title>
+
+	<script type="text/javascript" src="../deviceTheme.js" data-dojo-config="mblThemeFiles: ['base','SpinWheel']"></script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async: true, parseOnLoad: true"></script>
+
+	<script type="text/javascript">
+		require([
+			"dijit/registry",
+			"dojox/mobile/parser",
+			"dojox/mobile",
+			"dojox/mobile/compat",
+			"dojox/mobile/SpinWheel"
+		]);
+	</script>
+
+	<style>
+	#spin1 {
+		width: 312px;
+		margin: 10px auto;
+	}
+	</style>
+</head>
+<body style="visibility:hidden;">
+	<div data-dojo-type="dojox.mobile.View">
+		<h1 data-dojo-type="dojox.mobile.Heading">SpinWheel with Icons</h1>
+		<div id="spin1" data-dojo-type="dojox.mobile.SpinWheel">
+			<div data-dojo-type="dojox.mobile.SpinWheelSlot"
+				data-dojo-props="labels:[
 					'<img src=images/i-icon-1.png>',
 					'<img src=images/i-icon-2.png>',
 					'<img src=images/i-icon-3.png>',
@@ -39,9 +44,9 @@
 					'<img src=images/i-icon-10.png>'
 				]"
 				style="text-align: center;">
-				</div>
-				<div dojoType="dojox.mobile.SpinWheelSlot"
-				labels="[
+			</div>
+			<div data-dojo-type="dojox.mobile.SpinWheelSlot"
+				data-dojo-props="labels:[
 					'<img src=images/i-icon-1.png>',
 					'<img src=images/i-icon-2.png>',
 					'<img src=images/i-icon-3.png>',
@@ -54,9 +59,9 @@
 					'<img src=images/i-icon-10.png>'
 				]"
 				style="text-align: center;">
-				</div>
-				<div dojoType="dojox.mobile.SpinWheelSlot"
-				labels="[
+			</div>
+			<div data-dojo-type="dojox.mobile.SpinWheelSlot"
+				data-dojo-props="labels:[
 					'<img src=images/i-icon-1.png>',
 					'<img src=images/i-icon-2.png>',
 					'<img src=images/i-icon-3.png>',
@@ -69,8 +74,8 @@
 					'<img src=images/i-icon-10.png>'
 				]"
 				style="text-align: center;">
-				</div>
 			</div>
 		</div>
-	</body>
+	</div>
+</body>
 </html>

@@ -44,27 +44,27 @@
 	</head>
 	<body class="claro">
 		<h1>Buttons</h1>
-		<button data-dojo-type="dijit.form.Button" id="T1465" data-dojo-props='onClick:function(){ console.log("clicked simple"); }, iconClass:"plusIcon", value:"Create"'>
+		<button data-dojo-type="dijit/form/Button" id="T1465" data-dojo-props='onClick:function(){ console.log("clicked simple"); }, iconClass:"plusIcon", value:"Create"'>
 			Button
 		</button>
-		<button id="SubmitDropDown" data-dojo-type="dijit.form.DropDownButton" name="DropDown" type="submit" value="DropDown Submit"
+		<button id="SubmitDropDown" data-dojo-type="dijit/form/DropDownButton" name="DropDown" type="submit" value="DropDown Submit"
 				data-dojo-props="label: 'DropDown Submit'">
 			DropDownButton
-			<span data-dojo-type="dijit.DropDownMenu">
-				<span id="SubmitDropDownMenuItem" data-dojo-type="dijit.MenuItem">DropDown MenuItem</span>
+			<span data-dojo-type="dijit/DropDownMenu">
+				<span id="SubmitDropDownMenuItem" data-dojo-type="dijit/MenuItem">DropDown MenuItem</span>
 			</span>
 		</button>
-		<button id="comboCreate" title="creative title" data-dojo-type="dijit.form.ComboButton" data-dojo-props='optionsTitle:"save options", onClick:function(){ console.log("clicked combo save") },
+		<button id="comboCreate" title="creative title" data-dojo-type="dijit/form/ComboButton" data-dojo-props='optionsTitle:"save options", onClick:function(){ console.log("clicked combo save") },
 				iconClass:"plusIcon"'>
 			<span>ComboButton</span>
-			<span id="createMenu" data-dojo-type="dijit.DropDownMenu">
-				<span data-dojo-type="dijit.MenuItem"  data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconSave",
+			<span id="createMenu" data-dojo-type="dijit/DropDownMenu">
+				<span data-dojo-type="dijit/MenuItem"  data-dojo-props='iconClass:"dijitEditorIcon dijitEditorIconSave",
 					onClick:function(){ console.log("not actually saving anything, just a test!"); }'>Create blank</span>
-				<span data-dojo-type="dijit.MenuItem"
+				<span data-dojo-type="dijit/MenuItem"
 					data-dojo-props='onClick:function(){ console.log("not actually saving anything, just a test!"); }'>Create from template</span>
 			</span>
 		</button>
-		<button id="toggle2" data-dojo-type="dijit.form.ToggleButton"
+		<button id="toggle2" data-dojo-type="dijit/form/ToggleButton"
 			data-dojo-props='onChange:function(val){ console.log("toggled button checked="+val); }, iconClass:"dijitRadioIcon"'>
 			Toggle me
 		</button>
@@ -73,21 +73,21 @@
 		<fieldset>
 			<legend>check boxes</legend>
 			<label for="cb1">cb1</label>
-			<input id="cb1" data-dojo-id="cb1" data-dojo-type="dijit.form.CheckBox" data-dojo-props='name:"cb1", value:"foo", onClick:function(){ console.log("clicked cb1") }'/>
+			<input id="cb1" data-dojo-id="cb1" data-dojo-type="dijit/form/CheckBox" data-dojo-props='name:"cb1", value:"foo", onClick:function(){ console.log("clicked cb1") }'/>
 			<label for="cb2">cb2</label>
-			<input id="cb2" data-dojo-id="cb2" data-dojo-type="dijit.form.CheckBox" data-dojo-props='name:"cb2", value:"foo", onClick:function(){ console.log("clicked cb2") }'/>
+			<input id="cb2" data-dojo-id="cb2" data-dojo-type="dijit/form/CheckBox" data-dojo-props='name:"cb2", value:"foo", onClick:function(){ console.log("clicked cb2") }'/>
 		</fieldset>
 		<fieldset>
 			<legend>radio buttons</legend>
 			<label for="rb1">rb1</label>
-			<input id="rb1" data-dojo-id="rb1" data-dojo-type="dijit.form.RadioButton" data-dojo-props='name:"rb1", value:"foo", onClick:function(){ console.log("clicked rb1") }'/>
+			<input id="rb1" data-dojo-id="rb1" data-dojo-type="dijit/form/RadioButton" data-dojo-props='name:"rb1", value:"foo", onClick:function(){ console.log("clicked rb1") }'/>
 			<label for="rb2">rb2</label>
-			<input id="rb2" data-dojo-id="rb2" data-dojo-type="dijit.form.RadioButton" data-dojo-props='name:"rb2", value:"foo", onClick:function(){ console.log("clicked rb2") }'/>
+			<input id="rb2" data-dojo-id="rb2" data-dojo-type="dijit/form/RadioButton" data-dojo-props='name:"rb2", value:"foo", onClick:function(){ console.log("clicked rb2") }'/>
 		</fieldset>
 
 		<h1>TextBoxes</h1>
 		<label for="q03">NumberSpinner:</label>
-		<input id="q03" data-dojo-type="dijit.form.NumberSpinner"
+		<input id="q03" data-dojo-type="dijit/form/NumberSpinner"
 			name="age" tabIndex="1" class="small"
 			data-dojo-props='
 			promptMessage:"(optional) Enter an age between 0 and 120",
@@ -97,23 +97,23 @@
 			tooltipPosition:["above", "below"]
 		'/>
 		<label for="locald">Date:</label>
-		<input id="local" data-dojo-type="dijit.form.DateTextBox"
+		<input id="local" data-dojo-type="dijit/form/DateTextBox"
 			name="date" value="2008-12-31" onChange="console.log(arguments[0]);"
 		/>
 		<label for="localt">Time:</label>
-		<input id="localt" data-dojo-type="dijit.form.TimeTextBox"
+		<input id="localt" data-dojo-type="dijit/form/TimeTextBox"
 			   name="time" value="T17:45:00" onChange="console.log(arguments[0]);"
 		/>
 
 		<h1>Selects</h1>
-		<select id="s" data-dojo-type="dijit.form.Select">
+		<select id="s" data-dojo-type="dijit/form/Select">
 			<option value="TN">Tennessee</option>
 			<option value="VA" selected="selected">Virginia</option>
 			<option value="WA">Washington</option>
 			<option value="FL">Florida</option>
 			<option value="CA">California</option>
 		</select>
-		<select id="fs" data-dojo-type="dijit.form.FilteringSelect">
+		<select id="fs" data-dojo-type="dijit/form/FilteringSelect">
 			<option value="AL">Alabama</option>
 			<option value="AK">Alaska</option>
 			<option value="AS">American Samoa</option>
@@ -178,7 +178,7 @@
 		</select>
 
 		<h1>HorizontalSlider</h1>
-		<div id="slider1" data-dojo-type="dijit.form.HorizontalSlider" data-dojo-props='name:"horizontal1",
+		<div id="slider1" data-dojo-type="dijit/form/HorizontalSlider" data-dojo-props='name:"horizontal1",
 			value:10,
 			maximum:100,
 			minimum:0,
@@ -188,10 +188,10 @@
 			slideDuration:500,
 			style:{width:"100%", height:"20px"}
 			'>
-				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"topDecoration", style:{height:"1.2em",fontSize:"75%"}, count:6, numericMargin:1'></ol>
-				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"topDecoration", count:6, style:{height:"5px"}'></div>
-				<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='container:"bottomDecoration", count:5, style:{height:"5px"}'></div>
-				<ol data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:{height:"1em",fontSize:"75%"}'>
+				<ol data-dojo-type="dijit/form/HorizontalRuleLabels" data-dojo-props='container:"topDecoration", style:{height:"1.2em",fontSize:"75%"}, count:6, numericMargin:1'></ol>
+				<div data-dojo-type="dijit/form/HorizontalRule" data-dojo-props='container:"topDecoration", count:6, style:{height:"5px"}'></div>
+				<div data-dojo-type="dijit/form/HorizontalRule" data-dojo-props='container:"bottomDecoration", count:5, style:{height:"5px"}'></div>
+				<ol data-dojo-type="dijit/form/HorizontalRuleLabels" data-dojo-props='container:"bottomDecoration", style:{height:"1em",fontSize:"75%"}'>
 					<li>lowest</li>
 					<li>normal</li>
 					<li>highest</li>

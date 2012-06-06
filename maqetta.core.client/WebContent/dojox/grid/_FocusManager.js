@@ -128,7 +128,7 @@ return declare("dojox.grid._FocusManager", null, {
 	_delayedHeaderFocus: function(){
 		if(this.isNavHeader()){
 			this.focusHeader();
-			this.grid.domNode.focus();
+			//this.grid.domNode.focus();
 		}
 	},
 	_initColumnHeaders: function(){
@@ -378,9 +378,9 @@ return declare("dojox.grid._FocusManager", null, {
 		// summary:
 		//	focus grid cell or  simulate focus to column header based on position relative to current focus
 		// inRowDelta: int
-		// vertical distance from current focus
+		//	vertical distance from current focus
 		// inColDelta: int
-		// horizontal distance from current focus
+		//	horizontal distance from current focus
 
 		var colDir = inColDelta < 0 ? -1 : 1;
 		// Handle column headers.

@@ -1,10 +1,11 @@
 define(["../_base/lang"], function(lang) {
+
 // module:
 //		dojo/fx/easing
 // summary:
 //		This module defines standard easing functions that are useful for animations.
 
-var easingFuncs = /*===== dojo.fx.easing= =====*/ {
+var easingFuncs = {
 	// summary:
 	//		Collection of easing functions to use beyond the default
 	//		`dojo._defaultEasing` function.
@@ -13,7 +14,7 @@ var easingFuncs = /*===== dojo.fx.easing= =====*/ {
 	//
 	//		Easing functions are used to manipulate the iteration through
 	//		an `dojo.Animation`s _Line. _Line being the properties of an Animation,
-	//		and the easing function progresses through that Line determing
+	//		and the easing function progresses through that Line determining
 	//		how quickly (or slowly) it should go. Or more accurately: modify
 	//		the value of the _Line based on the percentage of animation completed.
 	//

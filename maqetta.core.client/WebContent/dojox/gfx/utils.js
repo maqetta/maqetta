@@ -2,7 +2,6 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 	"dojo/_base/Deferred", "dojo/_base/sniff", "require","dojo/_base/config"], 
   function(kernel, lang, g, html, arr, win, jsonLib, Deferred, has, require, config){
 	var gu = g.utils = {};
-	/*===== g= dojox.gfx; gu = dojox.gfx.utils; =====*/
 
 	lang.mixin(gu, {
 		forEach: function(
@@ -13,10 +12,10 @@ define(["dojo/_base/kernel","dojo/_base/lang","./_base", "dojo/_base/html","dojo
 			//		Takes a shape or a surface and applies a function "f" to in the context of "o" 
 			//		(or global, if missing). If "shape" was a surface or a group, it applies the same 
 			//		function to all children recursively effectively visiting all shapes of the underlying scene graph.
-			// object : The gfx container to iterate.
-			// f : The function to apply.
-			// o : The scope.
-			o = o || win.global;
+			// object: The gfx container to iterate.
+			// f: The function to apply.
+			// o: The scope.
+			o = o || kernel.global;
 			f.call(o, object);
 			if(object instanceof g.Surface || object instanceof g.Group){
 				arr.forEach(object.children, function(shape){

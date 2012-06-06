@@ -84,7 +84,10 @@
 							d.callback(true);
 						}
 						dijit_events.set('onChange', onChange);
-						dijit_events._onClick({ preventDefault: nop });
+						dijit_events._onClick({
+							preventDefault: nop,
+							stopPropagation: nop
+						});
 
 						return d;
 					}
@@ -103,7 +106,12 @@
 							d.callback(true);
 						}
 						mobile_events.set("onChange", onChange);
-						setTimeout(function(){ mobile_events.focusNode.click({ preventDefault: nop }); }, 0);
+						setTimeout(function(){
+							mobile_events.focusNode.click({
+								preventDefault: nop,
+								stopPropagation: nop
+							});
+						}, 0);
 
 						return d;
 					}
@@ -150,13 +158,13 @@
 		</tr>
 		<tr>
 			<td class="layout">attributes</td>
-			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit.form.ToggleButton" data-dojo-props='type:"button", checked: true, label:"original", "class":"mblRedButton"'/></td>
+			<td class="layout"><input id="dijit_attributes" data-dojo-type="dijit/form/ToggleButton" data-dojo-props='type:"button", checked: true, label:"original", "class":"mblRedButton"'/></td>
 			<td class="layout"><button type="button" class="mblRedButton" checked id="mobile_attributes" dojoType="dojox.mobile.ToggleButton" label="original"/></td>
 		</tr>
 		<tr>
 		<tr>
 			<td class="layout">Events</td>
-			<td class="layout"><button id="dijit_events" data-dojo-type="dijit.form.ToggleButton" data-dojo-props='type:"button", onClick:function(){ return true; }'>innerHTML</button></td>
+			<td class="layout"><button id="dijit_events" data-dojo-type="dijit/form/ToggleButton" data-dojo-props='type:"button", onClick:function(){ return true; }'>innerHTML</button></td>
 			<td class="layout"><button type="button" id="mobile_events" data-dojo-type="dojox.mobile.ToggleButton" data-dojo-props='type:"button", onClick:function(){ return true; }'>innerHTML</button></td>
 		</tr>
 		<tr>

@@ -18,8 +18,6 @@
 	<!-- only needed for alternate theme testing: do NOT use in your code! -->
 	<script type="text/javascript" src="../_testCommon.js"></script>
 
-	<script type="text/javascript" src="../helpers.js"></script>
-
 	<script type="text/javascript">
 		dojo.require("doh.runner");
 		dojo.require("dijit.dijit"); // optimize: load dijit layer
@@ -27,7 +25,8 @@
 		dojo.require("dijit.layout.ContentPane");
 		dojo.require("dijit.form.FilteringSelect");
 		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
-		
+		dojo.require("dijit.tests.helpers");	// functions to help test
+
 		function checkInside(/*Widget*/ child, /*Widget*/ parent){
 			// summary:
 			//		Test that child is fully inside of parent

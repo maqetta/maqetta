@@ -6,15 +6,8 @@ define([
 	"dojo/dom-geometry",
 	"dijit/_Contained",
 	"dijit/_Container",
-	"dijit/_WidgetBase",
-	"./FixedSplitterPane"
-], function(array, declare, win, domClass, domGeometry, Contained, Container, WidgetBase, FixedSplitterPane){
-
-/*=====
-	var Contained = dijit._Contained;
-	var Container = dijit._Container;
-	var WidgetBase = dijit._WidgetBase;
-=====*/
+	"dijit/_WidgetBase"
+], function(array, declare, win, domClass, domGeometry, Contained, Container, WidgetBase){
 
 	// module:
 	//		dojox/mobile/FixedSplitter
@@ -33,15 +26,26 @@ define([
 		//		children, and there is no function to resize the child panes
 		//		with drag-and-drop. If you need a visual splitter, you can
 		//		specify a border of a child dom node with CSS.
-		//		A child of the widget should be FixedSplitterPane.
+		//
+		//		FixedSplitter has no knowledge of its child widgets.
+		//		dojox.mobile.Container (=formerly known as FixedSplitterPane),
+		//		dojox.mobile.Pane, or dojox.mobile.ContentPane can be used as a
+		//		child widget of FixedSplitter.
+		//
+		//		- Use dojox.mobile.Container if your content consists of ONLY
+		//		  dojo widgets.
+		//		- Use dojox.mobile.Pane if your content is an inline html
+		//		  fragment (may or may not include dojo widgets).
+		//		- Use dojox.mobile.ContentPane if your content is an external
+		//		  html fragment (may or may not include dojo widgets).
 		//
 		// example:
 		// |	<div dojoType="dojox.mobile.FixedSplitter" orientation="H">
-		// |		<div dojoType="dojox.mobile.FixedSplitterPane"
+		// |		<div dojoType="dojox.mobile.Pane"
 		// |			style="width:200px;border-right:1px solid black;">
 		// |			pane #1 (width=200px)
 		// |		</div>
-		// |		<div dojoType="dojox.mobile.FixedSplitterPane">
+		// |		<div dojoType="dojox.mobile.Pane">
 		// |			pane #2
 		// |		</div>
 		// |	</div>
@@ -51,45 +55,63 @@ define([
 		//		horizontally. If "V" is specified, panes are split vertically.
 		orientation: "H",
 
+		// variablePane: Number
+		//		The index of a pane that fills the remainig space.
+		//		If -1, the last child pane fills the remaining space.
+		variablePane: -1,
 
-		buildRendering: function(){
-			this.domNode = this.containerNode = this.srcNodeRef ? this.srcNodeRef : win.doc.createElement("DIV");
-			domClass.add(this.domNode, "mblFixedSpliter");
-		},
+		// screenSizeAware: Boolean
+		//		If true, dynamically load a screen-size-aware module.
+		screenSizeAware: false,
+
+		// screenSizeAwareClass: String
+		//		A screen-size-aware module to load.
+		screenSizeAwareClass: "dojox/mobile/ScreenSizeAware",
+
+		/* internal properties */	
+		baseClass: "mblFixedSplitter",
 
 		startup: function(){
 			if(this._started){ return; }
-			var children = array.filter(this.domNode.childNodes, function(node){ return node.nodeType == 1; });
-			array.forEach(children, function(node){
-				domClass.add(node, "mblFixedSplitterPane"+this.orientation);
-			}, this);
+			domClass.add(this.domNode, this.baseClass + this.orientation);
+
+			var parent = this.getParent(), f;
+			if(!parent || !parent.resize){ // top level widget
+				var _this = this;
+				f = function(){
+					setTimeout(function(){
+						_this.resize();
+					}, 0);
+				};
+			}
+
+			if(this.screenSizeAware){
+				require([this.screenSizeAwareClass], function(module){
+					module.getInstance();
+					f && f();
+				});
+			}else{
+				f && f();
+			}
+
 			this.inherited(arguments);
-	
-			var _this = this;
-			setTimeout(function(){
-				var parent = _this.getParent && _this.getParent();
-				if(!parent || !parent.resize){ // top level widget
-					_this.resize();
-				}
-			}, 0);
-		},
-	
-		resize: function(){
-			this.layout();
 		},
 
-		layout: function(){
-			var sz = this.orientation == "H" ? "w" : "h";
-			var children = array.filter(this.domNode.childNodes, function(node){ return node.nodeType == 1; });
-			var offset = 0;
-			for(var i = 0; i < children.length; i++){
-				domGeometry.setMarginBox(children[i], this.orientation == "H" ? {l:offset} : {t:offset});
-				if(i < children.length - 1){
-					offset += domGeometry.getMarginBox(children[i])[sz];
+		resize: function(){
+			var wh = this.orientation === "H" ? "w" : "h", // width/height
+				tl = this.orientation === "H" ? "l" : "t", // top/left
+				props1 = {}, props2 = {},
+				i, c, h,
+				a = [], offset = 0, total = 0,
+				children = array.filter(this.domNode.childNodes, function(node){ return node.nodeType == 1; }),
+				idx = this.variablePane == -1 ? children.length - 1 : this.variablePane;
+			for(i = 0; i < children.length; i++){
+				if(i != idx){
+					a[i] = domGeometry.getMarginBox(children[i])[wh];
+					total += a[i];
 				}
 			}
-	
-			var h;
+
 			if(this.orientation == "V"){
 				if(this.domNode.parentNode.tagName == "BODY"){
 					if(array.filter(win.body().childNodes, function(node){ return node.nodeType == 1; }).length == 1){
@@ -97,19 +119,38 @@ define([
 					}
 				}
 			}
-			var l = (h || domGeometry.getMarginBox(this.domNode)[sz]) - offset;
-			var props = {};
-			props[sz] = l;
-			domGeometry.setMarginBox(children[children.length - 1], props);
-	
+			var l = (h || domGeometry.getMarginBox(this.domNode)[wh]) - total;
+			props2[wh] = a[idx] = l;
+			c = children[idx];
+			domGeometry.setMarginBox(c, props2);
+			c.style[this.orientation === "H" ? "height" : "width"] = "";
+
+			for(i = 0; i < children.length; i++){
+				c = children[i];
+				props1[tl] = offset;
+				domGeometry.setMarginBox(c, props1);
+				c.style[this.orientation === "H" ? "top" : "left"] = "";
+				offset += a[i];
+			}
+
 			array.forEach(this.getChildren(), function(child){
 				if(child.resize){ child.resize(); }
 			});
 		},
 
-		addChild: function(widget, /*Number?*/insertIndex){
-			domClass.add(widget.domNode, "mblFixedSplitterPane"+this.orientation);
-			this.inherited(arguments);
+		_setOrientationAttr: function(/*String*/orientation){
+			// summary:
+			//		Sets the direction of split.
+			// description:
+			//		The value must be either "H" or "V".
+			//		If "H" is specified, panes are split horizontally.
+			//		If "V" is specified, panes are split vertically.
+			var s = this.baseClass;
+			domClass.replace(this.domNode, s + orientation, s + this.orientation);
+			this.orientation = orientation;
+			if(this._started){
+				this.resize();
+			}
 		}
 	});
 });

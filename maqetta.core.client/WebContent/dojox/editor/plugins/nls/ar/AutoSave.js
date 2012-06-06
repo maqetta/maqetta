@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "حفظ",
 	"saveSettingLabelOn": "تحديد الفترة الزمنية للحفظ الآلي...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "تم الحفظ في ${0}",
 	"saveMessageFail": "فشل في الحفظ في ${0}"
 })
-
-//end v1.x content
 );

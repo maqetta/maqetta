@@ -45,8 +45,8 @@
 	</style>
 	<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad: true"></script>
 	<script type="text/javascript" src="../../../../dijit/tests/_testCommon.js"></script>
-	<script type="text/javascript" src="support/test_write_store_music.js"></script>
 	<script type="text/javascript">
+		dojo.require("dojo.data.ItemFileWriteStore");
 		dojo.require("dojox.grid.EnhancedGrid");
 		dojo.require("dojox.grid.enhanced.plugins.Search");
 		dojo.require("dojo.parser");
@@ -105,6 +105,7 @@
 			dijit.byId("grid").searchRow(getInput(input), dojo.partial(onSearched, "result1"));
 		};
 	</script>
+	<script type="text/javascript" src="support/test_write_store_music.js"></script>
 </head>
 <body class="claro">
 	<h1 class="title" tabindex="0"

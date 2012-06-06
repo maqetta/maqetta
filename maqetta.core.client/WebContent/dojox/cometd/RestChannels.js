@@ -39,19 +39,19 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 			//		Initiates the REST Channels protocol
 			//	options:
 			//		Keyword arguments:
-			//	The *autoSubscribeRoot* parameter:
-			//		When this is set, all REST service requests that have this
-			// 		prefix will be auto-subscribed. The default is '/' (all REST requests).
-			//  The *url* parameter:
-			//		This is the url to connect to for server-sent messages. The default
-			//		is "/channels".
-			//	The *autoReconnectTime* parameter:
-			// 		This is amount time to wait to reconnect with a connection is broken
-			// The *reloadDataOnReconnect* parameter:
-			// 		This indicates whether RestChannels should re-download data when a connection
-			// 		is restored (value of true), or if it should re-subscribe with retroactive subscriptions
-			// 		(Subscribe-Since header) using HEAD requests (value of false). The
-			// 		default is true.
+			//		The *autoSubscribeRoot* parameter:
+			//			When this is set, all REST service requests that have this
+			//			prefix will be auto-subscribed. The default is '/' (all REST requests).
+			//		The *url* parameter:
+			//			This is the url to connect to for server-sent messages. The default
+			//			is "/channels".
+			//		The *autoReconnectTime* parameter:
+			//			This is amount time to wait to reconnect with a connection is broken
+			//		The *reloadDataOnReconnect* parameter:
+			//			This indicates whether RestChannels should re-download data when a connection
+			//			is restored (value of true), or if it should re-subscribe with retroactive subscriptions
+			//			(Subscribe-Since header) using HEAD requests (value of false). The
+			//			default is true.
 			dojo.mixin(this,options);
 			// If we have a Rest service available and we are auto subscribing, we will augment the Rest service
 			if(dojox.rpc.Rest && this.autoSubscribeRoot){
@@ -88,11 +88,9 @@ dojo.requireIf(dojox.data && !!dojox.data.JsonRestStore,"dojox.data.restListener
 		open: function(){
 			// summary:
 			// 		Startup the transport (connect to the "channels" resource to receive updates from the server).
-			//
 			// description:
 			//		Note that if there is no connection open, this is automatically called when you do a subscription,
 			// 		it is often not necessary to call this
-			//
 			this.started = true;
 			if(!this.connected){
 				this.connectionId = dojox.rpc.Client.clientId;

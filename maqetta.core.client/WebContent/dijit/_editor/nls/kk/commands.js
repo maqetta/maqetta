@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Қалың',
 	'copy': 'Көшіру',
@@ -14,7 +13,7 @@ define(
 	'justifyFull': 'Туралау',
 	'justifyLeft': 'Сол жақ бойынша туралау',
 	'justifyRight': 'Оң жақ бойынша туралау',
-	'outdent': 'Шығыңқы',
+	'outdent': 'Солға ығысу',
 	'paste': 'Қою',
 	'redo': 'Қайтару',
 	'removeFormat': 'Пішімді алып тастау',
@@ -23,11 +22,11 @@ define(
 	'subscript': 'Жоласты',
 	'superscript': 'Жолүсті',
 	'underline': 'Асты сызылған',
-	'undo': 'Болдырмау ',
-	'unlink': 'Сілтемені жою',
+	'undo': 'Болдырмау',
+	'unlink': 'Сілтемені алып тастау',
 	'createLink': 'Сілтеме жасау',
 	'toggleDir': 'Бағытты қосу',
-	'insertImage': 'Сурет кірістіру',
+	'insertImage': 'Суретті кірістіру',
 	'insertTable': 'Кестені кірістіру/өңдеу',
 	'toggleTableBorder': 'Кесте жиегін қосу',
 	'deleteTable': 'Кестені жою',
@@ -45,7 +44,8 @@ define(
 	"print": "Басып шығару",
 	"newPage": "Жаңа бет",
 	/* Error messages */
-	'systemShortcut': '"${0}" әрекеті шолғышта тек пернелер тіркесімі арқылы қол жетімді. ${1} пайдаланыңыз.'
+	'systemShortcut': '"${0}" әрекеті шолғышта тек пернелер тіркесімі арқылы қол жетімді. ${1} пайдаланыңыз.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-//end v1.x content
 );

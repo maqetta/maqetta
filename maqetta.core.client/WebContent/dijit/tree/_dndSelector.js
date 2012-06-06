@@ -2,13 +2,15 @@ define([
 	"dojo/_base/array", // array.filter array.forEach array.map
 	"dojo/_base/connect", // connect.isCopyKey
 	"dojo/_base/declare", // declare
+	"dojo/_base/Deferred", // Deferred
+	"dojo/_base/kernel",	// global
 	"dojo/_base/lang", // lang.hitch
+	"dojo/cookie", // cookie
 	"dojo/mouse", // mouse.isLeft
 	"dojo/on",
 	"dojo/touch",
-	"dojo/_base/window", // win.global
 	"./_dndContainer"
-], function(array, connect, declare, lang, mouse, on, touch, win, _dndContainer){
+], function(array, connect, declare, Deferred, kernel, lang, cookie, mouse, on, touch, _dndContainer){
 
 	// module:
 	//		dijit/tree/_dndSelector
@@ -40,7 +42,11 @@ define([
 			this.selection={};
 			this.anchor = null;
 
-			this.tree.domNode.setAttribute("aria-multiselect", !this.singular);
+			this.tree.domNode.setAttribute("aria-multiselectable", !this.singular);
+
+			if(!this.cookieName && this.tree.id){
+				this.cookieName = this.tree.id + "SaveSelectedCookie";
+			}
 
 			this.events.push(
 				on(this.tree.domNode, touch.press, lang.hitch(this,"onMouseDown")),
@@ -154,11 +160,16 @@ define([
 			//		path[s], selectedItem[s], selectedNode[s]
 
 			var selected = this.getSelectedTreeNodes();
-			var paths = [], nodes = [];
+			var paths = [], nodes = [], selects = [];
 			array.forEach(selected, function(node){
+				var ary = node.getTreePath(), model = this.tree.model;
 				nodes.push(node);
-				paths.push(node.getTreePath());
-			});
+				paths.push(ary);
+				ary = array.map(ary, function(item){
+					return model.getIdentity(item);
+				}, this);
+				selects.push(ary.join("/"))
+			}, this);
 			var items = array.map(nodes,function(node){ return node.item; });
 			this.tree._set("paths", paths);
 			this.tree._set("path", paths[0] || []);
@@ -166,6 +177,25 @@ define([
 			this.tree._set("selectedNode", nodes[0] || null);
 			this.tree._set("selectedItems", items);
 			this.tree._set("selectedItem", items[0] || null);
+            if (this.tree.persist && selects.length > 0) {
+                cookie(this.cookieName, selects.join(","), {expires:365});
+            }
+		},
+		_getSavedPaths: function(){
+			// summary:
+			//		Returns paths of nodes that were selected previously and saved in the cookie.
+
+			var tree = this.tree;
+			if(tree.persist && tree.dndController.cookieName){
+				var oreo, paths = [];
+				oreo = cookie(tree.dndController.cookieName);
+				if(oreo){
+					paths = array.map(oreo.split(","), function(path){
+					   return path.split("/");
+					})
+				}
+				return paths;
+			}
 		},
 		// mouse events
 		onMouseDown: function(e){
@@ -179,7 +209,8 @@ define([
 			// ignore click on expando node
 			if(!this.current || this.tree.isExpandoNode(e.target, this.current)){ return; }
 
-			if(!mouse.isLeft(e)){ return; } // ignore right-click
+			// ignore right-click
+			if(e.type != "touchstart" && !mouse.isLeft(e)){ return; }
 
 			e.preventDefault();
 
@@ -316,7 +347,7 @@ define([
 			// summary:
 			//		Iterates over selected items;
 			//		see `dojo.dnd.Container.forInItems()` for details
-			o = o || win.global;
+			o = o || kernel.global;
 			for(var id in this.selection){
 				// console.log("selected item id: " + id);
 				f.call(o, this.getItem(id), id, this);

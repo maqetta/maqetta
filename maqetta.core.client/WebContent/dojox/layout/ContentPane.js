@@ -44,7 +44,7 @@ return declare("dojox.layout.ContentPane", ContentPane, {
 
 	// scriptHasHooks: Boolean
 	//		replace keyword '_container_' in scripts with 'dijit.byId(this.id)'
-	// NOTE this name might change in the near future
+	//		NOTE this name might change in the near future
 	scriptHasHooks: false,
 
 	constructor: function(){

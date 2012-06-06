@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Round Rect</title>
-		<link href="../../themes/iphone/iphone.css" rel="stylesheet">
+		<link href="../../themes/iphone/iphone.css" rel="stylesheet"/>
 
 		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
@@ -19,11 +19,15 @@
 				var view = dijit.byId("foo");
 				var demoWidget = new dojox.mobile.RoundRect({shadow:"true"});
 				demoWidget.domNode.appendChild(dojo.doc.createTextNode("This module provides some widgets that can be used to build web-based applications for mobile devices such as iPhone or Android."));
-				view.addChild(demoWidget);
+//				view.addChild(demoWidget);
+				demoWidget.placeAt(view.containerNode);
+				demoWidget.startup();
 
 				demoWidget = new dojox.mobile.RoundRect();
 				demoWidget.domNode.appendChild(dojo.doc.createTextNode("This module provides some widgets that can be used to build web-based applications for mobile devices such as iPhone or Android."));
-				view.addChild(demoWidget);
+//				view.addChild(demoWidget);
+				demoWidget.placeAt(view.containerNode);
+				demoWidget.startup();
 
 				doh.register("dojox.mobile.test.doh.RoundRect", [
 					{

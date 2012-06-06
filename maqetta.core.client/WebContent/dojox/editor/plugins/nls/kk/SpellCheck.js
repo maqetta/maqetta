@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Бума емлесін тексеру",
 	unfound: "Табылмады",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Осы сияқты барлығын өткізіп жіберу",
 	iMsg: "Емле ұсыныстары жоқ"
 })
-
-//end v1.x content
 );

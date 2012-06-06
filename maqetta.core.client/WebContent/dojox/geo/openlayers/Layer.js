@@ -1,5 +1,9 @@
-define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/sniff"],
-	function(dojo, declare, lang, array, sniff){
+define([
+	"dojo/_base/declare", 
+	"dojo/_base/lang", 
+	"dojo/_base/array", 
+	"dojo/_base/sniff"],
+	function(declare, lang, array, sniff){
 
 		return declare("dojox.geo.openlayers.Layer", null, {
 			//	summary: 
@@ -28,7 +32,7 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/lang", "dojo/_bas
 			renderFeature : function(/* Feature */f){
 				//	summary:
 				//		Called when rendering a feature is necessary.
-				//	f : Feature
+				//	f: Feature
 				//		The feature to draw.
 				f.render();
 			},
@@ -40,7 +44,7 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/lang", "dojo/_bas
 			addFeature : function(/* Feature | Array */f){
 				//	summary:
 				//		Add a feature or an array of features to the layer.
-				//	f : Feature or Array
+				//	f: Feature or Array
 				//		The Feature or array of features to add.
 				if (lang.isArray(f)) {
 					array.forEach(f, function(item){
@@ -55,9 +59,9 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/lang", "dojo/_bas
 			},
 
 			removeFeature : function(/* Feature | Array */f){
-				//	summary :
+				//	summary:
 				//		Removes a feature or an array of features from the layer.
-				//	f : Feature or Array
+				//	f: Feature or Array
 				//		The Feature or array of features to remove.
 				var ft = this._features;
 				if (ft == null)
@@ -103,9 +107,9 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/lang", "dojo/_bas
 			getFeatureAt : function(i){
 				//	summary:
 				//		Returns the i-th feature of this layer.
-				//	i : int
+				//	i: int
 				//		The index of the feature to return.
-				//	returns : ibm_maps.maps.Layer
+				//	returns: ibm_maps.maps.Layer
 				//		The i-th feature of this layer.
 				if (this._features == null)
 					return undefined;

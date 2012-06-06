@@ -73,6 +73,7 @@ doh.register("dojox.validate.tests.creditcard",
 		name:"isValidCreditCardNumber",
 		runTest: function(tests) {
 			//misc checks
+			tests.f(validate.isValidCreditCardNumber('a4111111111111', 'vi')); //fails, alphas are not allowed
 			tests.t(validate.isValidCreditCardNumber('5105105105105100','mc')); //test string input
 			tests.t(validate.isValidCreditCardNumber('5105-1051 0510-5100','mc')); //test string input with dashes and spaces (commonly used when entering card #'s)
 			tests.t(validate.isValidCreditCardNumber(5105105105105100,'mc')); //test numerical input as well

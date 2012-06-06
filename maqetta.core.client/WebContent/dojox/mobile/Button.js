@@ -9,11 +9,6 @@ define([
 ],
 	function(array, declare, domClass, domConstruct, WidgetBase, ButtonMixin, FormWidgetMixin){
 
-	/*=====
-		WidgetBase = dijit._WidgetBase;
-		FormWidgetMixin = dijit.form._FormWidgetMixin;
-		ButtonMixin = dijit.form._ButtonMixin;
-	=====*/
 	return declare("dojox.mobile.Button", [WidgetBase, FormWidgetMixin, ButtonMixin], {
 		// summary:
 		//	Non-templated BUTTON widget with a thin API wrapper for click events and setting the label

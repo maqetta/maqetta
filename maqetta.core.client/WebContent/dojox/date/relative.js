@@ -4,16 +4,16 @@ dojo.getObject("date.relative", true, dojox);
 
 /*=====
 dojox.date.relative.__FormatOptions = function(){
-//	locale: String
-//		override the locale used to determine formatting rules
-//	relativeDate: Date
-//		Date to calculate relation to (defaults to new Date())
-//	weekCheck: boolean
-//		Whether or not to display the day of week (defaults true)
+	// locale: String
+	//		override the locale used to determine formatting rules
+	// relativeDate: Date
+	//		Date to calculate relation to (defaults to new Date())
+	// weekCheck: boolean
+	//		Whether or not to display the day of week (defaults true)
 	this.locale = locale;
 	this.relativeDate = relativeDate;
 	this.weekCheck = weekCheck;
-}
+};
 =====*/
 
 var DAY = 1000*60*60*24,

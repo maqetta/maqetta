@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} de ${1} ${0}",
 	"firstTip": "Primeira Página",
@@ -7,6 +6,7 @@ define(
 	"nextTip": "Próxima página",
 	"prevTip": "Página anterior",
 	"itemTitle": "itens",
+	"singularItemTitle": "item",
 	"pageStepLabelTemplate": "Página ${0}",
 	"pageSizeLabelTemplate": "${0} itens por página",
 	"allItemsLabelTemplate": "Todos os itens",
@@ -16,7 +16,6 @@ define(
 	"pageCountIndication": " (${0} páginas)",
 	"dialogConfirm": "Ir",
 	"dialogCancel": "Cancelar",
-	"all": "todos"
+	"all": "Todos"
 })
-//end v1.x content
 );

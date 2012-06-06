@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
+		"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 	<title>FisheyeList Widget Dojo Tests</title>
@@ -11,28 +11,33 @@
 		@import "../FisheyeList/FisheyeList.css";
 	</style>
 
-	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad: true"></script>
-	<script type="text/javascript" src="../FisheyeList.js"></script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="isDebug:true, parseOnLoad: true"></script>
 	<script type="text/javascript">
-		//dojo.require("dojox.widget.FisheyeList");
-		dojo.require("dojo.parser");	// scan page for widgets and instantiate them
+	require([
+		 "dojox/widget/FisheyeList",
+		 "dojox/widget/FisheyeListItem",
+		 "dijit/registry",
+		 "dojo/parser",
+		 "dojo/ready"
+	], function(FisheyeList, FisheyeListItem, registry, parser, ready){
 
-		dojo.addOnLoad(function(){
-			fish1 = dijit.byId("fisheye1");
-			fish2 = dijit.byId("fisheye2");
+		ready(function(){
+			fish1 = registry.byId("fisheye1");
+			fish2 = registry.byId("fisheye2");
 		});
 		var counter = 1;
-		function addToFirstList(){
-			var item = new dojox.widget.FisheyeListItem();
-			item.label = "Dynamically Added "+counter;
-			item.iconSrc = "images/fisheye_"+counter+".png"
-			item.postCreate();
+		addToFirstList = function(){
+			var item = new FisheyeListItem({
+				label:"Dynamically Added "+counter,
+				iconSrc: "images/fisheye_"+counter+".png"
+			});
 			counter++;
 			if(counter>4){counter=1;}
 			fish1.addChild(item);
 			fish1.startup();
 			item.startup();
 		}
+	});
 	</script>
 </head>
 <body class="tundra">
@@ -55,7 +60,7 @@
 
 	<div dojoType="dojox.widget.FisheyeListItem"
 		id="item1"
-		onclick="alert('click on ' + this.label + '(from widget id ' + this.widgetId + ')!');"
+		onClick="alert('click on ' + this.label + '(from widget id ' + this.id + ')!');"
 		label="Item 1"
 		iconSrc="images/fisheye_1.png">
 	</div>
@@ -106,7 +111,7 @@
 
 	<div dojoType="dojox.widget.FisheyeListItem"
 		id="item1b"
-		onclick="alert('click on ' + this.label + '(from widget id ' + this.widgetId + ')!');"
+		onClick="alert('click on ' + this.label + '(from widget id ' + this.id + ')!');"
 		label="Item 1"
 		iconSrc="images/fisheye_1.png">
 	</div>

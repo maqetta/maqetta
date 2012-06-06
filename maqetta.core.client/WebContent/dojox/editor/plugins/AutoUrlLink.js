@@ -77,6 +77,7 @@ dojo.declare("dojox.editor.plugins.AutoUrlLink", [dijit._editor._Plugin], {
 			isEnter = args ? args.enter : false,
 			ed = this.editor,
 			selection = ed.window.getSelection();
+		console.log("_recognize: isEnter = ", isEnter, ", selection is ", selection,  selection.anchorNode, this._findLastEditingNode(selection.anchorNode))
 			if(selection){
 				var node = isEnter ? this._findLastEditingNode(selection.anchorNode) :
 								(this._saved || selection.anchorNode),
@@ -114,7 +115,7 @@ dojo.declare("dojox.editor.plugins.AutoUrlLink", [dijit._editor._Plugin], {
 					range.setEnd(bm, bmOff);
 					selection.removeAllRanges();
 					selection.addRange(range);
-					dojo.withGlobal(ed.window, "collapse", dijit._editor.selection, []);
+					ed._sCall("collapse", []);
 				}catch(e){}
 			}
 		}

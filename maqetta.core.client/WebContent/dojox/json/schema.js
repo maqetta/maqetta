@@ -46,7 +46,7 @@ dojox.json.schema.mustBeValid = function(result){
 	if(!result.valid){
 		throw new TypeError(dojo.map(result.errors,function(error){return "for property " + error.property + ': ' + error.message;}).join(", "));
 	}
-}
+};
 dojox.json.schema._validate = function(/*Any*/instance,/*Object*/schema,/*Boolean*/ _changing){
 	
 	var errors = [];

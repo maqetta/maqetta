@@ -199,6 +199,9 @@
 
 /* Drag and Drop */
 
+.tundra .dojoxGridRowTable .dojoDndHorizontal th.dojoDndItem {
+	padding: 3px;
+}
 .tundra .dojoxGrid .dojoDndItemBefore {
 	border-left-color: #3559ac;
 }

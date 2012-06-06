@@ -1,5 +1,5 @@
 define([
-	".",
+	"./main",
 	"dojo/robot"
 ], function(dijit){
 	// module:

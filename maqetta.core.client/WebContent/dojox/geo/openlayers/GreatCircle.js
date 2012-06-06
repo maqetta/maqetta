@@ -1,19 +1,18 @@
-define(["dojo/_base/lang",
-				"dojox/geo/openlayers/GeometryFeature",
-				"dojox/geo/openlayers/Point",
-				"dojox/geo/openlayers/LineString"], function(lang, GeometryFeature, Point, lineString){
+define([
+	"dojo/_base/lang",
+	"dojox/geo/openlayers/_base",
+	"dojox/geo/openlayers/GeometryFeature"], 
+	function(lang, openlayers, GeometryFeature){
 
-	lang.getObject("geo.openlayers", true, dojox);
-
-	dojox.geo.openlayers.GreatCircle = {
+	var gc = openlayers.GreatCircle = {
 
 		toPointArray : function(p1, p2, increment){
 			//	summary:
 			//		Create a geodetic line as an array of OpenLayers.Point.
 			//	descritpion:
 			//		Create a geodetic line as an array of OpenLayers.Point between the point p1
-			//	and the point p2. Result is a polyline approximation for which a new point is 
-			//	calculated every <em>increment</em> degrees.
+			//		and the point p2. Result is a polyline approximation for which a new point is 
+			//		calculated every <em>increment</em> degrees.
 			//	p1: Point
 			//		The first point of the geodetic line. x and y fields are longitude and
 			//		latitude in decimal degrees.
@@ -77,7 +76,7 @@ define(["dojo/_base/lang",
 			// 		calculated every <em>increment</em> degrees.
 			//	p1: Point
 			//		The first point of the geodetic line. x and y fields are longitude and
-			//	latitude in decimal degrees.
+			//		latitude in decimal degrees.
 			//	p2: Point
 			//		The second point of the geodetic line. x and y fields are longitude and
 			//		latitude in decimal degrees.
@@ -116,6 +115,6 @@ define(["dojo/_base/lang",
 
 		TOLERANCE : 0.00001
 	};
-
-	return dojox.geo.openlayers.GreatCircle;
+	
+	return gc;
 });

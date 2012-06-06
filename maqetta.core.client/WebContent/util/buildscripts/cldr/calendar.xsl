@@ -663,6 +663,8 @@
     </saxon:while>   
 </xsl:template>
     
+<xsl:template name="ignore" match="cyclicNameSets | monthPatterns"></xsl:template>
+
   <!-- too bad that can only use standard xsl:call-template(name can not be variable) 
          error occurs if use <saxon:call-templates($templateToCall)  /> -->
  <xsl:template name="invoke_template_by_name">

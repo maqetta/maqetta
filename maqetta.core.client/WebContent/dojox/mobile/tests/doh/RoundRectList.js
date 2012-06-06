@@ -32,7 +32,9 @@ dojo.addOnLoad(function(){
 				demoWidget.set({transition :"fade"});
 				doh.assertEqual("fade", demoWidget.get("transition"));
 
-				fireOnClick("item3");
+//				fireOnClick("item3");
+				fireOnMouseDown("item3");
+				fireOnMouseUp("item3");
 				var view = dijit.byId("foo");
 				dojo.connect(view, "onAfterTransitionOut", this, d.getTestCallback(function(){
 					var demoWidget = dijit.byId("dojox_mobile_RoundRectCategory_0");

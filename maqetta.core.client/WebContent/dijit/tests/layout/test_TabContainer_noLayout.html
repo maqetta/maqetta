@@ -67,20 +67,20 @@
 	<button id="addTab" onclick="addTab();">add tab</button>
 	<button id="destroyTabContainer" onclick="dijit.byId('plainTabContainer').destroyRecursive();">destroy tab container</button>
 
-	<div id="plainTabContainer" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='doLayout:false, style:"width: 700px;"'>
+	<div id="plainTabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false, style:"width: 700px;"'>
 
-		<div id="tab1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
+		<div id="tab1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
 
-		<div id="tab2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
+		<div id="tab2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
 
-		<div id="tab3" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 3"'>
+		<div id="tab3" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 3"'>
 			<h1 id="h3">I am tab 3</h1>
 			<p id="p3">And I was already part of the page! That's cool, no?</p>
 			<span id="foo">tooltip on this span</span>
-			<div data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["foo"]'>I'm a tooltip!</div>
-			<button id="b3" data-dojo-type="dijit.form.Button">I'm a button </button>
+			<div data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["foo"]'>I'm a tooltip!</div>
+			<button id="b3" data-dojo-type="dijit/form/Button">I'm a button </button>
 			<br>
-			<button id="b4" data-dojo-type="dijit.form.Button">So am I!</button>
+			<button id="b4" data-dojo-type="dijit/form/Button">So am I!</button>
 			<p id="p4">
 			Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
 			semper sagittis velit. Cras in mi. Duis porta mauris ut ligula. Proin
@@ -104,12 +104,12 @@
 			</p>
 		</div>
 
-		<div id="tab4" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='title:"Tab 4", doLayout:false, nested:true'>
-			<a data-dojo-type="dijit.layout.LinkPane" data-dojo-props='href:"tab1.html"'>SubTab 1</a>
-			<a data-dojo-type="dijit.layout.LinkPane" data-dojo-props='href:"tab2.html", selected:true'>SubTab 2</a>
+		<div id="tab4" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='title:"Tab 4", doLayout:false, nested:true'>
+			<a data-dojo-type="dijit/layout/LinkPane" data-dojo-props='href:"tab1.html"'>SubTab 1</a>
+			<a data-dojo-type="dijit/layout/LinkPane" data-dojo-props='href:"tab2.html", selected:true'>SubTab 2</a>
 		</div>
 
-		<a id="tab5" data-dojo-type="dijit.layout.LinkPane" data-dojo-props='href:"tab3_noLayout.html", doLayout:false'>Tab 5</a>
+		<a id="tab5" data-dojo-type="dijit/layout/LinkPane" data-dojo-props='href:"tab3_noLayout.html", doLayout:false'>Tab 5</a>
 	</div>
 
 	<p id="textAfterTabContainer1">
@@ -121,20 +121,20 @@
 	<table>
 		<tr>
 			<td style="width:400px; max-width:400px; border:1px solid red">
-				<div id="tableTabContainer" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='doLayout:false'>
+				<div id="tableTabContainer" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='doLayout:false'>
 			
-					<div id="atab1" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
+					<div id="atab1" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab1.html", title:"Tab 1"'></div>
 			
-					<div id="atab2" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
+					<div id="atab2" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='href:"tab2.html", refreshOnShow:true, title:"Tab 2", selected:true'></div>
 			
-					<div id="atab3" data-dojo-type="dijit.layout.ContentPane" data-dojo-props='title:"Tab 3"'>
+					<div id="atab3" data-dojo-type="dijit/layout/ContentPane" data-dojo-props='title:"Tab 3"'>
 						<h1 id="h4">I am tab 3</h1>
 						<p id="p6">And I was already part of the page! That's cool, no?</p>
 						<span id="foo2">tooltip on this span</span>
-						<div data-dojo-type="dijit.Tooltip" data-dojo-props='connectId:["foo2"]'>I'm a tooltip!</div>
-						<button id="b5" data-dojo-type="dijit.form.Button">I'm a button </button>
+						<div data-dojo-type="dijit/Tooltip" data-dojo-props='connectId:["foo2"]'>I'm a tooltip!</div>
+						<button id="b5" data-dojo-type="dijit/form/Button">I'm a button </button>
 						<br>
-						<button id="b6" data-dojo-type="dijit.form.Button">So am I!</button>
+						<button id="b6" data-dojo-type="dijit/form/Button">So am I!</button>
 						<p id="p7">
 						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
 						semper sagittis velit. Cras in mi. Duis porta mauris ut ligula. Proin
@@ -158,12 +158,12 @@
 						</p>
 					</div>
 			
-					<div id="atab4" data-dojo-type="dijit.layout.TabContainer" data-dojo-props='title:"Tab 4", nested:true, doLayout:false'>
-						<a data-dojo-type="dijit.layout.LinkPane" data-dojo-props='href:"tab1.html"'>SubTab 1</a>
-						<a data-dojo-type="dijit.layout.LinkPane" data-dojo-props='href:"tab2.html", selected:true'>SubTab 2</a>
+					<div id="atab4" data-dojo-type="dijit/layout/TabContainer" data-dojo-props='title:"Tab 4", nested:true, doLayout:false'>
+						<a data-dojo-type="dijit/layout/LinkPane" data-dojo-props='href:"tab1.html"'>SubTab 1</a>
+						<a data-dojo-type="dijit/layout/LinkPane" data-dojo-props='href:"tab2.html", selected:true'>SubTab 2</a>
 					</div>
 			
-					<a id="atab5" data-dojo-type="dijit.layout.LinkPane" data-dojo-props='href:"tab3_noLayout.html", doLayout:false'>Tab 5</a>
+					<a id="atab5" data-dojo-type="dijit/layout/LinkPane" data-dojo-props='href:"tab3_noLayout.html", doLayout:false'>Tab 5</a>
 				</div>
 			</td>
 			</tr>

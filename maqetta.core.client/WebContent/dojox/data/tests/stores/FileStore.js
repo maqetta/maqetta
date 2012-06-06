@@ -18,9 +18,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_fetch_all",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of fetching all xml items through an XML element called isbn
-				//	description:
+				// description:
 				//		Simple test of fetching all xml items through an XML element called isbn
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -40,9 +40,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_fetch_one",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of fetching one xml items through an XML element called isbn
-				//	description:
+				// description:
 				//		Simple test of fetching one xml items through an XML element called isbn
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -62,9 +62,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_fetch_paging",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of fetching a series of pages
-				//	description:
+				// description:
 				//		Simple test of fetching a series of pages
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -135,9 +135,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_fetch_pattern0",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of fetching a few files based on wildcarded name
-				//	description:
+				// description:
 				//		Simple test of fetching a few files based on wildcarded name
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 				var d = new doh.Deferred();
@@ -156,9 +156,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_fetch_pattern1",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of fetching a one files based on wildcarded name
-				//	description:
+				// description:
 				//		Simple test of fetching a one file based on wildcarded name
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 				var d = new doh.Deferred();
@@ -177,9 +177,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_fetch_pattern_caseInsensitive",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of fetching one file item case insensitively
-				//	description:
+				// description:
 				//		Simple test of fetching one file item case insensitively
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 				var d = new doh.Deferred();
@@ -198,9 +198,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_fetch_pattern_caseSensitive",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of fetching one file item case sensitively
-				//	description:
+				// description:
 				//		Simple test of fetching one file item case sensitively
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 				var d = new doh.Deferred();
@@ -219,9 +219,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_getLabel",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getLabel function against a store
-				//	description:
+				// description:
 				//		Simple test of the getLabel function against a store
 
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
@@ -245,9 +245,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_getLabelAttributes",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
-				//	description:
+				// description:
 				//		Simple test of the getLabelAttributes function against a store set that has a label defined.
 
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
@@ -271,9 +271,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_getValue",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValue API
-				//	description:
+				// description:
 				//		Simple test of the getValue API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -296,9 +296,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_getValues",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getValues API
-				//	description:
+				// description:
 				//		Simple test of the getValues API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -323,9 +323,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_isItem",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the isItem API
-				//	description:
+				// description:
 				//		Simple test of the isItem API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -350,9 +350,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_isItem_multistore",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the isItem API across multiple store instances.
-				//	description:
+				// description:
 				//		Simple test of the isItem API across multiple store instances.
 				var store1 = dojox.data.tests.stores.FileStore.getGeoStore();
 				var store2 = dojox.data.tests.stores.FileStore.getGeoStore();
@@ -386,9 +386,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_hasAttribute",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the hasAttribute API
-				//	description:
+				// description:
 				//		Simple test of the hasAttribute API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -411,9 +411,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_containsValue",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the containsValue API
-				//	description:
+				// description:
 				//		Simple test of the containsValue API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -436,9 +436,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_sortDescending",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in descending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in descending order.
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -467,9 +467,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_sortAscending",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the sorting API in ascending order.
-				//	description:
+				// description:
 				//		Simple test of the sorting API in ascending order.
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -499,9 +499,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_isItemLoaded",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the isItemLoaded API
-				//	description:
+				// description:
 				//		Simple test of the isItemLoaded API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -520,9 +520,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			}
 		},
 		function testReadAPI_getFeatures(t){
-			//	summary:
+			// summary:
 			//		Simple test of the getFeatures function of the store
-			//	description:
+			// description:
 			//		Simple test of the getFeatures function of the store
 
 			var store = dojox.data.tests.stores.FileStore.getGeoStore();
@@ -539,9 +539,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testReadAPI_getAttributes",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes API
-				//	description:
+				// description:
 				//		Simple test of the getAttributes API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -564,9 +564,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			}
 		},
 		function testReadAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test read API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = dojox.data.tests.stores.FileStore.getGeoStore();
@@ -596,9 +596,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testIdentityAPI_getIdentity",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes API
-				//	description:
+				// description:
 				//		Simple test of the getAttributes API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -620,9 +620,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testIdentityAPI_getIdentityAttributes",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the getAttributes API
-				//	description:
+				// description:
 				//		Simple test of the getAttributes API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -647,9 +647,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			name: "testIdentityAPI_fetchItemByIdentity",
 			timeout:	10000, //10 seconds.  Lots of server calls, expect network delay
 			runTest: function(t) {
-				//	summary:
+				// summary:
 				//		Simple test of the fetchItemByIdentity API
-				//	description:
+				// description:
 				//		Simple test of the fetchItemByIdentity API
 				var store = dojox.data.tests.stores.FileStore.getGeoStore();
 
@@ -668,9 +668,9 @@ doh.register("dojox.data.tests.stores.FileStore",
 			}
 		},
 		function testIdentityAPI_functionConformance(t){
-			//	summary:
+			// summary:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
-			//	description:
+			// description:
 			//		Simple test identity API conformance.  Checks to see all declared functions are actual functions on the instances.
 
 			var testStore = dojox.data.tests.stores.FileStore.getGeoStore();

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -102,7 +101,6 @@ define(
 	yacute:"Πεζό λατινικό γράμμα y με οξεία",
 	thorn:"Πεζό λατινικό γράμμα thorn",
 	yuml:"Πεζό λατινικό γράμμα y με διαλυτικά",
-
 // Greek Characters and Symbols
 	fnof:"Πεζό λατινικό γράμμα f με άγκιστρο\nΣύμβολο συνάρτησης",
 	Alpha:"Κεφαλαίο ελληνικό γράμμα Α",
@@ -256,6 +254,4 @@ define(
 	rsaquo:"Δεξιό μονό ελληνικό εισαγωγικό",
 	euro:"Σύμβολο ευρώ"
 })
-
-//end v1.x content
 );

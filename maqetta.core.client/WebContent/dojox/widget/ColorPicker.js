@@ -539,7 +539,7 @@ define([
 		},
 		
 		_handleKey: function(/* Event */e){
-			// FIXME: not implemented YET
+			// TODO: not implemented YET
 			// var keys = d.keys;
 		},
 

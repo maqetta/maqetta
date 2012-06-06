@@ -1,15 +1,16 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/when",
 	"dijit/_WidgetBase",
 	"dojo/regexp"
-], function(declare, lang, _WidgetBase, regexp){
+], function(declare, lang, when, _WidgetBase, regexp){
 	/*=====
 		declare = dojo.declare;
 		_WidgetBase = dijit._WidgetBase;
 	=====*/
 
-	return declare("dojox.mvc._Container", [_WidgetBase], {
+	return declare("dojox.mvc._Container", _WidgetBase, {
 	
 		// stopParser: [private] Boolean
 		//		Flag to parser to not try and parse widgets declared inside the container.
@@ -26,6 +27,10 @@ define([
 		//		attributes are not supported in the template.
 		templateString : "",
 	
+		// inlineTemplateString: [private] String
+		//		Same as templateString. Used when this widget is mixed with a regular templated widget.
+		inlineTemplateString : "",
+
 		// _containedWidgets: [protected] dijit._Widget[]
 		//		The array of contained widgets at any given point in time within this container.
 		_containedWidgets : [],
@@ -58,12 +63,17 @@ define([
 					}
 				}
 			}
+
+			var _self = this;
+
 			if(this._parser){
-				this._containedWidgets = this._parser.parse(this.srcNodeRef,{
+				return when(this._parser.parse(this.srcNodeRef,{
 					template: true,
 					inherited: {dir: this.dir, lang: this.lang},
 					propsThis: this,
 					scope: "dojo"
+				}), function(widgets){
+					_self._containedWidgets = widgets;
 				});
 			}
 		},

@@ -34,102 +34,89 @@
 		}
 	</style>
 
+	<script src="../../../dojo/dojo.js" data-dojo-config="async:1"></script>
 	<script>
-		djConfig = {
-			isDebug:false,
-			parseOnLoad:true
-		};
-	</script>
-	<script src="../../../dojo/dojo.js"></script>
-	<script>
-		dojo.require("dojo.parser");
-		dojo.require("dojox.drawing");
+		require(["dojo/parser", "dojox/drawing", 
+			// custom Tools and Plugins need to be required
+			"dojox/drawing/tools/TextBlock",
+			"dojox/drawing/tools/Rect",
+			"dojox/drawing/tools/Ellipse",
+			"dojox/drawing/tools/Line",
+			"dojox/drawing/tools/Path",
+			"dojox/drawing/tools/Pencil",
+			"dojox/drawing/tools/custom/Vector",
+			"dojox/drawing/tools/custom/Axes",
+			"dojox/drawing/tools/Arrow",
+			"dojox/drawing/plugins/tools/Pan",
+			"dojox/drawing/plugins/tools/Zoom",
+			"dojox/drawing/plugins/tools/Iconize",
+			"dojox/drawing/plugins/drawing/GreekPalette",
+			"dojox/drawing/plugins/drawing/Grid",
+			"dojox/drawing/ui/Toolbar",
+			"dojox/drawing/ui/Button",
+			"dojo/domReady!"], function(parser){
+				parser.parse();
+				var doExport = function(){
+					var o = myDrawing.exporter();
+					console.log("EXPORT:")
+					console.dir(o)
+					console.log(dojo.toJson(o));
+					dojo.byId("data").value = dojo.toJson(o, true);
+				}
 
+				var doImport = function(){
+					myDrawing.importer(dojo.fromJson(dojo.byId("data").value));
+				}
 
-		// custom Tools and Plugins need to be required
-		dojo.require("dojox.drawing.tools.TextBlock");
-		dojo.require("dojox.drawing.tools.Rect");
-		dojo.require("dojox.drawing.tools.Ellipse");
-		dojo.require("dojox.drawing.tools.Line");
-		dojo.require("dojox.drawing.tools.Path");
-		dojo.require("dojox.drawing.tools.Pencil");
+				var doClear = function(){
+					myDrawing.removeAll();
+				}
 
-		dojo.require("dojox.drawing.tools.custom.Vector");
-		dojo.require("dojox.drawing.tools.custom.Axes");
-		dojo.require("dojox.drawing.tools.Arrow");
+				dojo.connect(myDrawing, "onSurfaceReady", function(){
+					new dojox.drawing.ui.Toolbar({
+						drawing:myDrawing,
+						tools:"all",
+						plugs:"all",
+						selected:"",
+						size:30,
+						radius:2,
+						margin:5
+					});
 
-		dojo.require("dojox.drawing.plugins.tools.Pan");
-		dojo.require("dojox.drawing.plugins.tools.Zoom");
-		dojo.require("dojox.drawing.plugins.tools.Iconize");
-
-		dojo.require("dojox.drawing.plugins.drawing.GreekPalette");
-		dojo.require("dojox.drawing.plugins.drawing.Grid");
-		
-		dojo.require("dojox.drawing.ui.Toolbar");
-		dojo.require("dojox.drawing.ui.Button");
-		//dojo.require("dojox.drawing.ui.Tooltip");
-
-		var doExport = function(){
-			var o = myDrawing.exporter();
-			console.log("EXPORT:")
-			console.dir(o)
-			console.log(dojo.toJson(o));
-			dojo.byId("data").value = dojo.toJson(o, true);
-		}
-
-		var doImport = function(){
-			myDrawing.importer(dojo.fromJson(dojo.byId("data").value));
-		}
-
-		var doClear = function(){
-			myDrawing.removeAll();
-		}
-
-		dojo.addOnLoad(function(){
-			dojo.connect(myDrawing, "onSurfaceReady", function(){
-				new dojox.drawing.ui.Toolbar({
-					drawing:myDrawing,
-					tools:"all",
-					plugs:"all",
-					selected:"",
-					size:30,
-					radius:2,
-					margin:5
 				});
 
+				dojo.connect(dojo.byId("import"), "click", doImport);
+				dojo.connect(dojo.byId("export"), "click", doExport);
+				dojo.connect(dojo.byId("clear"), "click", doClear);
+				dojo.connect(dojo.byId("selectall"), "click", function(){
+					myDrawing.selectAll();
+				});
+
+				dojo.connect(dojo.byId("red"), "click", function(){
+					myDrawing.changeDefaults({
+						norm:{
+							fill:"#ff0000",
+							width:5,
+							color:"#ff00ff"
+						}
+					});
+				});
+				dojo.connect(dojo.byId("blue"), "click", function(){
+					myDrawing.changeDefaults({
+						norm:{
+							fill:"#0000ff",
+							width:5,
+							color:"#ffff00"
+						}
+					});
+				});
+				dojo.connect(dojo.byId("yellow"), "click", function(){
+					myDrawing.toSelected("attr", {
+						fill:"#ffff00"
+					});
+				});
 			});
 
-			dojo.connect(dojo.byId("import"), "click", doImport);
-			dojo.connect(dojo.byId("export"), "click", doExport);
-			dojo.connect(dojo.byId("clear"), "click", doClear);
-			dojo.connect(dojo.byId("selectall"), "click", function(){
-				myDrawing.selectAll();
-			});
-
-			dojo.connect(dojo.byId("red"), "click", function(){
-				myDrawing.changeDefaults({
-					norm:{
-						fill:"#ff0000",
-						width:5,
-						color:"#ff00ff"
-					}
-				});
-			});
-			dojo.connect(dojo.byId("blue"), "click", function(){
-				myDrawing.changeDefaults({
-					norm:{
-						fill:"#0000ff",
-						width:5,
-						color:"#ffff00"
-					}
-				});
-			});
-			dojo.connect(dojo.byId("yellow"), "click", function(){
-				myDrawing.toSelected("attr", {
-					fill:"#ffff00"
-				});
-			});
-		})
 	</script>
 
 </head>

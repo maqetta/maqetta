@@ -12,12 +12,12 @@
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
 		<!-- functions to help test -->
-		<script type="text/javascript" src="../../helpers.js"></script>
 		<script type="text/javascript" src="Tree_dnd.js"></script>
 
 		<script type="text/javascript">
 			dojo.require("dojo.window");
 			dojo.require("dijit.robotx");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			function clickItem(modifiers){
 				var i;
@@ -51,14 +51,15 @@
 				doh.robot.sequence(k);
 			}
 			function keyboardSelect(tree, item, modifiers, k){
-				var focused = dojo.query("#itemTree .dijitTreeLabelFocused");
-				if(!(focused.length > 0)){
+				var curFocus = dojo.global.dijit._curFocus,
+					focused = dojo.isDescendant(curFocus, "itemTree");
+				if(!focused){
 					doh.robot.keyPress(dojo.keys.TAB, 250);
 					doh.robot.sequence(function(){ keyboardSelect(tree, item, modifiers, k); }, 250);
 					return;
 				}
 				
-				focused_node = focused[0].parentNode.parentNode.parentNode;
+				focused_node = curFocus.parentNode.parentNode.parentNode;
 				var diff = dojo.position(item.domNode).y - dojo.position(focused_node).y;
 				if(diff != 0){
 					if(diff > 0){
@@ -87,7 +88,7 @@
 				
 				// Find the fruitsTreeNode category
 				var fruitsTreeNode = findTreeNode("itemTree", "Fruits");
-				var tree = dijit.byId("itemTree");
+				var tree = registry.byId("itemTree");
 				
 				// select fruit item
 				selector(tree, fruitsTreeNode, [], function(){
@@ -114,7 +115,7 @@
 				
 				// Find the fruitsTreeNode category
 				var fruitsTreeNode = findTreeNode("itemTree", "Fruits");
-				var tree = dijit.byId("itemTree");
+				var tree = registry.byId("itemTree");
 				
 				// select fruit item
 				selector(tree, fruitsTreeNode, [], function(){
@@ -145,7 +146,7 @@
 					var fruitsTreeNode = findTreeNode("itemTree", "Fruits");
 					var cerealsTreeNode = findTreeNode("itemTree", "Cereals");
 					var vegetablesTreeNode = findTreeNode("itemTree", "Vegetables");
-					var tree = dijit.byId("itemTree");
+					var tree = registry.byId("itemTree");
 					
 					// select fruit item (no modifiers)
 					selector(tree, fruitsTreeNode, [], atFruits);
@@ -215,7 +216,7 @@
 							name: "select/deselect a single item",
 							timeout: 15000,
 							runTest: function(){ return testSingleItem(selector, clicker); }
-						}, 
+						},
 						{
 							name: "ctrl select",
 							timeout: 15000,

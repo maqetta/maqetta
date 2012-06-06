@@ -1,11 +1,9 @@
-///
-// \module build/plugins/domReady
-//
-define(["../buildControl"], function(bc) {
+define(function() {
 	return {
 		start:function(
 			mid,
-			referenceModule
+			referenceModule,
+			bc
 		){
 			return bc.amdResources[bc.getSrcModuleInfo("dojo/domReady", referenceModule).mid];
 		}

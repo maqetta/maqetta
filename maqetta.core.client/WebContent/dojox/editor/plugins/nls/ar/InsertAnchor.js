@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "ادراج نقطة التثبيت",
 	title: "خصائص نقطة التثبيت",
@@ -8,6 +7,4 @@ define(
 	set: "تحديد",
 	cancel: "الغاء"
 })
-
-//end v1.x content
 );

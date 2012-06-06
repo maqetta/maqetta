@@ -1,9 +1,7 @@
 define(
-//begin v1.x content
 ({
 next: "Nästa",
 previous: "Föregående",
-done: "Stäng"
+done: "Klart"
 })
-//end v1.x content
 );

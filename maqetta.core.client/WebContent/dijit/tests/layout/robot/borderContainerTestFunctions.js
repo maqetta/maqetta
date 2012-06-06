@@ -43,7 +43,7 @@
 				);
 			}
 
-			function checkBCpanes(/*BorderContainer*/ bc){
+			function checkBCpanes(/*BorderContainer*/ bc, /*String*/ comment){
 				// summary:
 				//		Check that all the panes in this BorderContainer are in sane
 				//		positions relative to each other.   Assumes at most one pane
@@ -52,8 +52,8 @@
 					regions = {};
 
 				// Check all panes inside BorderContainer
-				dojo.forEach(children, function(child){
-					checkInside(child, bc);
+				dojo.forEach(children, function(child, comment){
+					checkInside(child, bc, comment);
 					regions[child.region] = child;
 				});
 
@@ -63,28 +63,28 @@
 						case "top":
 							dojo.forEach(bc.design == "sidebar" ? ["center", "bottom"] : ["left", "center", "right", "bottom"], function(region){
 								if(regions[region]){
-									checkAbove(bc.id, child, regions[region]);
+									checkAbove(bc.id, child, regions[region], comment);
 								}
 							});
 							break;
 						case "bottom":
 							dojo.forEach(bc.design == "sidebar" ? ["center", "top"] : ["left", "center", "right", "top"], function(region){
 								if(regions[region]){
-									checkAbove(bc.id, regions[region], child);
+									checkAbove(bc.id, regions[region], child, comment);
 								}
 							});
 							break;
 						case "left":
 							dojo.forEach(bc.design == "sidebar" ? ["top", "center", "bottom", "right"] : ["right"], function(region){
 								if(regions[region]){
-									checkLeft(bc.id, child, regions[region]);
+									checkLeft(bc.id, child, regions[region], comment);
 								}
 							});
 							break;
 						case "right":
 							dojo.forEach(bc.design == "sidebar" ? ["top", "center", "bottom", "left"] : ["left"], function(region){
 								if(regions[region]){
-									checkLeft(bc.id, regions[region], child);
+									checkLeft(bc.id, regions[region], child, comment);
 								}
 							});
 							break;

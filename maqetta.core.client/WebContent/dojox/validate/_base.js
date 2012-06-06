@@ -78,10 +78,10 @@ validate.isNumberFormat = function(/* String */value, /* Object? */flags){
 	//		social security numbers, zip-codes, etc. The value can be validated
 	//		against one format or one of multiple formats.
 	//
-	// Format Definition
-	// |   #        Stands for a digit, 0-9.
-	// |   ?        Stands for an optional digit, 0-9 or nothing.
-	//    All other characters must appear literally in the expression.
+	//		Format Definition
+	//		|   #        Stands for a digit, 0-9.
+	//		|   ?        Stands for an optional digit, 0-9 or nothing.
+	//		All other characters must appear literally in the expression.
 	//
 	// example:
 	// |  "(###) ###-####"       ->   (510) 542-9742

@@ -149,7 +149,7 @@ dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
 		//		private
 		var ed = this.editor;
 		var doc = ed.document;
-		var node = ed._sCall("getSelectedElement", null) || ed._sCall("getParentElement", null);
+		var node = ed._sCall("getSelectedElement", []) || ed._sCall("getParentElement", []);
 		while(node && node !== doc.body && node !== doc.html){
 			if(ed._sCall("isTag", [node, this._unbreakableNodes])){
 				return false;

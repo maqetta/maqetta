@@ -70,7 +70,7 @@ dojo.declare("dojox.editor.plugins.UploadImage",
 		onComplete: function(data,ioArgs,widgetRef){
 			data = data[0];
 			// Image is ready to insert
-			var tmpImgNode = dojo.withGlobal(this.editor.window, "byId", dojo, [this.currentImageId]);
+			var tmpImgNode = dojo.byId(this.currentImageId, this.editor.document);
 			var file;
 			// download path is mainly used so we can access a PHP script
 			// not relative to this file. The server *should* return a qualified path.

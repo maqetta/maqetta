@@ -11,11 +11,11 @@
 	<!-- required: dojo.js -->
 	<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-	<script type="text/javascript" src="../../helpers.js"></script>
-
 	<script type="text/javascript">
 		dojo.require("dijit.robotx");
 		dojo.require("dojo.aspect");
+		dojo.require("dijit.tests.helpers");	// functions to help test
+		dojo.require("dijit.form._TextBoxMixin");	// selectInputText
 
 		// TODO: provide URL toggle for FilteringSelect
 		var testWidget = "dijit.form.ComboBox";
@@ -401,7 +401,7 @@
 				}
 			]);
 
-			// Test that enter key submits the form, but only when the drop down is closed
+			// Test that enter key submits the form, but only when nothing is selected in the drop down
 			doh.register("enter key", {
 				timeout:60000,
 				name:"submit",
@@ -425,6 +425,7 @@
 					}), 500);
 
 					// Enter key should select value and close drop down but not submit form
+					doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500); // highlight value
 					doh.robot.keyPress(dojo.keys.ENTER, 500);
 					doh.robot.sequence(d.getTestErrback(function(){
 						var popup = dijit.byId('setvaluetest_popup');
@@ -683,7 +684,7 @@
 						doh.robot.typeKeys("o", 300, 100); // 300ms > searchDelay, so C* query has been sent (but not yet returned results) when the o is typed
 
 						doh.robot.sequence(d.getTestCallback(function(){
-							// The query "C*" should be canceled when "Co*" is started
+							// The query "c*" should be canceled when "co*" is started
 							var log = dojo.global.slowStateStore.log;
 							doh.is(4, log.length, "4 events on data store");
 							doh.is("start c*", log[0].type + " " + log[0].query.name);
@@ -719,11 +720,11 @@
 						var combo = dijit.byId("slow");
 
 						dojo.global.formSubmitted = false;
-						combo.focusNode.focus();
-						doh.robot.sequence(function(){ combo.set("value", null); }, 1000, 100); // wait for focus
+						dijit.form._TextBoxMixin.selectInputText(combo.focusNode);
 
 						// Start to filter drop down list to entries starting with "Co"
-						doh.robot.typeKeys("Co", 500, 100);
+						doh.robot.typeKeys("C", 500, 0);
+						doh.robot.typeKeys("o", 300, 0); // 300ms > searchDelay, so C* query has been sent (but not yet returned results) when the o is typed
 
 						// But then hit ENTER after we've started the query to the data store, but
 						// before the data store returns query results... that should cancel the query.
@@ -732,20 +733,14 @@
 						doh.robot.sequence(d.getTestCallback(function(){
 							var log = dojo.global.slowStateStore.log;
 							var len = log.length;
-							if(!isComboBox){
-								doh.is(6, len, "query was issued for 'Co' but canceled");
-								doh.is("cancel ", log[1].type + " " + log[1].query.name);
-								doh.is("cancel Co*", log[3].type + " " + log[3].query.name);
-								doh.is("start Co", log[4].type + " " + log[4].query.name);	// trying to lookup ID for item named "co"
-								doh.is("end Co", log[5].type + " " + log[5].query.name);
+							doh.t(len >= 4, "log length " + len);
+							doh.is("start C*", log[0].type + " " + log[0].query.name);
+							doh.is("cancel C*", log[1].type + " " + log[1].query.name);
+							doh.is("start Co*", log[2].type + " " + log[2].query.name);
+							doh.is("cancel Co*", log[3].type + " " + log[3].query.name);
 
-								// also, form should not have submitted because the FilteringSelect
-								// is still trying to fill in it's item value
-								doh.f(dojo.global.formSubmitted, "form not submitted");
-							}else{ // this will look more like the IF block above once #6022 is committed
-								doh.is(2, len, "query was issued for 'Co' but canceled");
-								doh.is("cancel Co*", log[1].type + " " + log[1].query.name);
-							}
+							// also, form SHOULD have submitted because no popup was visible
+							doh.t(dojo.global.formSubmitted, "form submitted");
 
 							var list = dojo.byId("slow_popup");
 							doh.t(!list || isHidden(list), "drop down is *not* visible");
@@ -828,6 +823,26 @@
 					runTest:function(){
 						return robot_a11ySelectValue(dijit.byId(this.combo), "more\\less", isComboBox? undefined : "more");
 					}
+				},
+
+				{
+					timeout:60000,
+					name:"specialchars_highlight",
+					combo:"specialchars",
+					runTest:function(){
+						var combo = dijit.byId(this.combo);
+						combo.queryExpr='*${0}*';
+						combo.focusNode.focus();
+						doh.robot.sequence(function(){ combo.set("value", null); }, 500);
+						var d = new doh.Deferred();
+						doh.robot.typeKeys("t", 1, 100);
+						doh.robot.sequence(d.getTestCallback(function(){
+							var item=findMenuItem(combo, 'riches to');
+							doh.t(item, 'item "rags --> riches to" should be visible');
+							doh.is('rags --&gt; riches <>t<>o',item.innerHTML.replace(/<[^>]*>/g,'<>'), '"t" in "to" should be highlighted');
+						}), 1000, 500);
+						return d;
+					}
 				}
 			]);
 
@@ -845,15 +860,46 @@
 				},
 
 				{
-					timeout:60000,
+					timeout:20000,
 					name:"japanese_type",
 					runTest:function(){
-						var d = new doh.Deferred(),
+						var	d = new doh.Deferred(),
+							s0 = null,
+							s1 = null,
+							s2 = null,
+							s3 = null,
+							s4 = null,
+							s5 = null,
 							combo = dijit.byId("japanese");
 
 						combo.focusNode.focus();
 
 						doh.robot.keyPress(dojo.keys.END, 1000);
+
+						doh.robot.typeKeys("x", 500, 200);
+						doh.robot.sequence(function(){
+							s0 = combo.state;
+						}, 500);
+						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
+						doh.robot.sequence(function(){
+							s1 = combo.state;
+						}, 500);
+						doh.robot.typeKeys("xx", 500, 400);
+						doh.robot.sequence(function(){
+							s2 = combo.state;
+						}, 500);
+						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
+						doh.robot.sequence(function(){
+							s3 = combo.state;
+						}, 500);
+						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
+						doh.robot.sequence(function(){
+							s4 = combo.state;
+						}, 500);
+						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
+						doh.robot.sequence(function(){
+							s5 = combo.state;
+						}, 500);
 						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
 						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
 						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
@@ -861,17 +907,48 @@
 						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
 						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
 						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
-						doh.robot.keyPress(dojo.keys.BACKSPACE, 500);
-						doh.robot.keyPress('x', 500, {ctrl:true});
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500);
 						doh.robot.keyPress(dojo.keys.ENTER, 500);
 						doh.robot.sequence(dojo.hitch(this, function(){
+							if(!isComboBox){
+								doh.is("Error", s0, "s0");
+								doh.is("Incomplete", s1, "s1");
+								doh.is("Error", s2, "s2");
+								doh.is("Error", s3, "s3");
+								doh.is("Incomplete", s4, "s4");
+								doh.is("Incomplete", s5, "s5");
+							}
 							if(combo.get("value") == (isComboBox?"\u6771\u897F (Touzai)":"touzai") && combo.focusNode.value=="\u6771\u897F (Touzai)"){
 								d.callback(true);
 							}else{
 								d.errback(combo.id+" was supposed to have a value of "+(isComboBox?"\u6771\u897F (Touzai)":"touzai")+". Text is "+combo.focusNode.value+", value is "+combo.get("value"));
 							}
-						}), 900);
+						}), 1000);
 						return d;
+					}
+				}
+			]);
+
+			doh.register("readOnly", [
+				{
+					timeout:5000,
+					name:"cannot type",
+					combo: "labelFunc",
+					runTest:function(){
+						var	d = new doh.Deferred(),
+							combo = dijit.byId(this.combo),
+							initVal = combo.get('value');
+						combo.set('readOnly', true);
+						combo.focus();
+						doh.robot.typeKeys("xz", 1000, 500);
+						doh.robot.sequence(d.getTestCallback(function(){
+							doh.t(combo.isValid(), 'isValid');
+							doh.is(initVal, combo.get('value'), 'changed from ' + initVal + ' to ' + combo.get('value'));
+						}), 500, 500);
+						return d;
+					},
+					tearDown:function(){
+						dijit.byId(this.combo).set("readOnly", false);
 					}
 				}
 			]);
@@ -1040,8 +1117,9 @@
 						combo.focusNode.focus();
 
 						// Show list, should be in reverse order
-						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000);
-						for(var i=0; i < 14; i++){
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000); // wait for focus
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500); // wait for dropdown to open
+						for(var i=1; i < 14; i++){
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 250); // down arrow and wrap twice
 						}
 						for(i=0; i < 4; i++){
@@ -1066,8 +1144,9 @@
 						combo.focusNode.focus();
 
 						// Show list, should be in reverse order
-						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000);
-						for(var i=0; i < 14; i++){
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000); // wait for focus
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500); // wait for dropdown to open
+						for(var i=1; i < 14; i++){
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 250); // down arrow and wrap twice
 						}
 						for(i=0; i < 5; i++){
@@ -1094,8 +1173,9 @@
 						combo.focusNode.focus();
 
 						// Show list, should be in reverse order
-						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000);
-						for(var i=0; i < 5; i++){
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 1000); // wait for focus
+						doh.robot.keyPress(dojo.keys.DOWN_ARROW, 500); // wait for dropdown to open
+						for(var i=1; i < 5; i++){
 							doh.robot.keyPress(dojo.keys.DOWN_ARROW, 250); // down arrow to More choices
 						}
 						doh.robot.keyPress(dojo.keys.ENTER, 500); // select More choices

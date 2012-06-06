@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<title>Round Rect List</title>
-		<link href="../../themes/iphone/iphone.css" rel="stylesheet">
+		<link href="../../themes/iphone/iphone.css" rel="stylesheet"/>
 
 		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 
@@ -18,21 +18,26 @@
 			dojo.addOnLoad(function(){
 				var view = dijit.byId("foo");
 				var demoWidget = new dojox.mobile.RoundRectList();
-				view.addChild(demoWidget);
+//				view.addChild(demoWidget);
+				demoWidget.placeAt(view.containerNode);
+				demoWidget.startup();
 
 				var childWidget = new dojox.mobile.ListItem({id:"item1", icon:"../images/i-icon-1.png", rightText:"Off", moveTo:"bar", label:"u1space"});
 				demoWidget.addChild(childWidget);
 				childWidget = new dojox.mobile.ListItem({id:"item2", icon:"../images/i-icon-2.png", rightText:"On", moveTo:"bar",label:"u2space"});
 				demoWidget.addChild(childWidget);
-				childWidget = new dojox.mobile.ListItem({id:"item3"});
+//				childWidget = new dojox.mobile.ListItem({id:"item3"});
+				childWidget = new dojox.mobile.ListItem({id:"item3", rightText:"Off", moveTo:"bar", label:"Wi-Fi"});
 				demoWidget.addChild(childWidget);
-				childWidget.set({rightText:"Off", moveTo:"bar", label :"Wi-Fi"});
+//				childWidget.set({rightText:"Off", moveTo:"bar", label :"Wi-Fi"});
 
 				view = dijit.byId("bar");
 				demoWidget = new dojox.mobile.RoundRectList();
-				view.addChild(demoWidget);
+//				view.addChild(demoWidget);
+				demoWidget.placeAt(view.containerNode);
+				demoWidget.startup();
 
-				childWidget = new dojox.mobile.ListItem({rightText:"Off", label:"Video"});
+				childWidget = new dojox.mobile.ListItem({rightText:"Off", label:"Video", moveTo:"foo"});
 				demoWidget.addChild(childWidget);
 				childWidget = new dojox.mobile.ListItem({icon:"../images/i-icon-1.png", rightText:"VPN", label:"Maps"});
 				demoWidget.addChild(childWidget);

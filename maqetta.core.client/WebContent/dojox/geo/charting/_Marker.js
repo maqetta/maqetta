@@ -14,9 +14,9 @@ return declare("dojox.geo.charting._Marker", null, {
 		_needTooltipRefresh = false;
 	},
 
-	show: function(featureId,evt){
+	show: function(featureId, evt){
 		this.currentFeature = this.features[featureId];
-		if (this._map.showTooltips && this.currentFeature) {
+		if(this._map.showTooltips && this.currentFeature){
 			this.markerText = this.currentFeature.markerText || this.markerData[featureId] || featureId;
 			dojox.geo.charting.showTooltip(this.markerText, this.currentFeature.shape, ["before"]);
 		}
@@ -24,8 +24,9 @@ return declare("dojox.geo.charting._Marker", null, {
 	},
 
 	hide: function(){
-		if (this._map.showTooltips && this.currentFeature)
+		if(this._map.showTooltips && this.currentFeature){
 			dojox.geo.charting.hideTooltip(this.currentFeature.shape);
+		}
 		this._needTooltipRefresh = false;
 	},
 
@@ -44,15 +45,13 @@ return declare("dojox.geo.charting._Marker", null, {
 	_toWindowCoords: function(arround, coords, containerSize){
 		var toLeft = (arround.x - this.topLeft[0]) * this.scale;
 		var toTop = (arround.y - this.topLeft[1]) * this.scale
-		if (has("ff") == 3.5) {
+		if(has("ff") == 3.5){
 			arround.x = coords.x;
 			arround.y = coords.y;
-		}
-		else if (has("chrome")) {
+		}else if(has("chrome")) {
 			arround.x = containerSize.x + toLeft;
 			arround.y = containerSize.y + toTop;
-		}
-		else {
+		}else{
 			arround.x = coords.x + toLeft;
 			arround.y = coords.y + toTop;
 		}

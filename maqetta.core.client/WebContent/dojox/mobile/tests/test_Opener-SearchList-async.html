@@ -5,8 +5,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>Opener-SearchList</title>
 	<style>
-		.mblTooltip.mblOpener DIV[label='Done'],
-		.mblTooltip.mblOpener DIV[label='Cancel'] {
+		.mblTooltip.mblOpener .mblToolBarButton {
 			display: none;
 		}
 		#search1 {
@@ -68,10 +67,10 @@
 
 	<div id="listPicker" data-dojo-type="dojox.mobile.Opener" data-dojo-props="onHide:getSelectedContact, onShow:setSearch">
 		<h1 dojoType="dojox.mobile.Heading" label="">
-			<div dojoType="dojox.mobile.ToolBarButton" label="Done" class="mblColorBlue" style="position:absolute;width:45px;right:0;"
-				onclick="dijit.byId('listPicker').hide(true)"></div>
-			<div dojoType="dojox.mobile.ToolBarButton" label="Cancel" class="mblColorBlue" style="position:absolute;width:45px;left:0;"
-				onclick="dijit.byId('listPicker').hide(false)"></div>
+			<span dojoType="dojox.mobile.ToolBarButton" label="Done" class="mblColorBlue" style="position:absolute;width:45px;right:0;"
+				onclick="dijit.byId('listPicker').hide(true)"></span>
+			<span dojoType="dojox.mobile.ToolBarButton" label="Cancel" class="mblColorBlue" style="position:absolute;width:45px;left:0;"
+				onclick="dijit.byId('listPicker').hide(false)"></span>
 			<input id="search1" type="search" results="5" autosave="myrecentcontactsearches" name="searchContacts" placeholder="Search" />
 		</h1>
 		<div dojoType="dojox.mobile.ScrollableView" selected="true" height="auto">

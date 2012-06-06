@@ -1,5 +1,6 @@
 /* DOM Buttons */
 @import url("domButtons/DomButtonWhitePlus-compat.css");
+@import url("domButtons/DomButtonWhiteMinus-compat.css");
 @import url("domButtons/DomButtonWhiteUpArrow-compat.css");
 @import url("domButtons/DomButtonWhiteDownArrow-compat.css");
 @import url("domButtons/DomButtonWhiteSearch-compat.css");
@@ -36,3 +37,12 @@
 
 @import url("domButtons/DomButtonYellowStar-compat.css");
 @import url("domButtons/DomButtonGrayStar-compat.css");
+
+@import url("domButtons/DomButtonGrayCross-compat.css");
+@import url("domButtons/DomButtonRedCross-compat.css");
+@import url("domButtons/DomButtonWhiteCross-compat.css");
+
+@import url("domButtons/DomButtonGrayKnob-compat.css");
+
+@import url("domButtons/DomButtonGrayPlus-compat.css");
+@import url("domButtons/DomButtonGrayMinus-compat.css");

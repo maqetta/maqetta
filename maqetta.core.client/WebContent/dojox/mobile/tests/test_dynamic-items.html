@@ -1,31 +1,38 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<title>Dynamic Items</title>
-		<link href="../themes/iphone/base.css" rel="stylesheet">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>Dynamic Items</title>
 
-		<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script type="text/javascript" src="../deviceTheme.js" data-dojo-config="mblThemeFiles: ['base','Button','IconContainer']"></script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async: false, parseOnLoad: true"></script>
 
-		<script language="JavaScript" type="text/javascript">
-			//dojo.require("dojo.parser"); // Use the lightweight parser.
-			dojo.require("dojo.hash");
-			dojo.require("dojox.mobile");			// This is a mobile app.
-			dojo.require("dojox.mobile.parser");	// This mobile app supports running on desktop browsers
-			dojo.require("dojox.mobile.compat");	// This mobile app uses declarative programming with fast mobile parser
-			dojo.require("dojox.mobile.Button");
-
+	<script type="text/javascript">
+		require([
+			"dojo/_base/connect",
+			"dojo/_base/declare",
+			"dojo/ready",
+			"dijit/registry",
+			"dojox/mobile/ListItem",
+			"dojox/mobile/ProgressIndicator",
+			"dojox/mobile/View",
+			"dojox/mobile/parser",
+			"dojox/mobile/Button",
+			"dojox/mobile",
+			"dojox/mobile/compat"
+		], function(connect, declare, ready, registry, ListItem, ProgressIndicator, View, parser){
 			var counter = 4;
-			dojo.ready(function(){
-				var btnWidget = dijit.byId("btn1");
-				dojo.connect(btnWidget.domNode, "onclick", onBtnClicked);
+			ready(function(){
+				var btnWidget = registry.byId("btn1");
+				connect.connect(btnWidget.domNode, "onclick", onBtnClicked);
 				function onBtnClicked(e){
-					var listWidget = dijit.byId("list1");
+					var listWidget = registry.byId("list1");
 					for(var i = 1; i <= 3; i++){
-						var itemWidget = new dojox.mobile.ListItem({
+						var itemWidget = new ListItem({
 							icon: "images/i-icon-"+i+".png",
-							moveTo: "#bar&myParam=000"+counter,
+							moveTo: "#view2&myParam=000"+counter,
 							label: "Document 000"+counter
 						});
 						listWidget.addChild(itemWidget);
@@ -33,7 +40,6 @@
 					}
 				}
 			});
-
 			function loadPage(moveTo){
 				if(!(moveTo.match(/#(\w+)/))){ return; }
 				moveTo.match(/#(\w+)(.*)/);
@@ -42,16 +48,19 @@
 				if(!param){ return; }
 				var container = dojo.byId(id);
 				container.innerHTML = "";
-				var prog = dojox.mobile.ProgressIndicator.getInstance();
+				var prog = ProgressIndicator.getInstance();
 				container.appendChild(prog.domNode);
 				prog.start();
 				setTimeout(function(){ // network latency simulation
 					prog.stop();
-					container.innerHTML = '<h1 dojoType="dojox.mobile.Heading" back="Home" moveTo="#home">'+param+'</h1>\n'+param;
-					dojox.mobile.parser.parse(container);
+					container.innerHTML = '<h1 data-dojo-type="dojox.mobile.Heading" data-dojo-props=\'back:"Home", moveTo:"#home"\'>'+param+'</h1>\n'+param;
+					parser.parse(container);
 				}, 5000);
 			}
-			dojo.declare("dojox.mobile.ViewEx",dojox.mobile.View,{
+			dojox.mobile.ViewEx = declare(
+				"dojox.mobile.ViewEx",
+				View,
+			{
 				onStartView: function(){
 					loadPage(location.hash);
 				},
@@ -59,26 +68,27 @@
 					loadPage("#"+moveTo);
 				}
 			});
-		</script>
-	</head>
-	<body style="visibility:hidden;">
-		<div id="home" dojoType="dojox.mobile.View" selected="true">
-			<h1 dojoType="dojox.mobile.Heading">Dynamic Items</h1>
-			<h2 dojoType="dojox.mobile.RoundRectCategory">External Documents</h2>
-			<ul id="list1" dojoType="dojox.mobile.RoundRectList">
-				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-1.png" moveTo="#bar&myParam=0001">
-					Document 0001
-				</li>
-				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-2.png" moveTo="#bar&myParam=0002">
-					Document 0002
-				</li>
-				<li dojoType="dojox.mobile.ListItem" icon="images/i-icon-3.png" moveTo="#bar&myParam=0003">
-					Document 0003
-				</li>
-			</ul>
-			<button id="btn1" dojoType="dojox.mobile.Button" class="mblBlueButton" style="width:80px;margin-left:10px">More...</button>
-		</div>
+		});
+	</script>
+</head>
+<body style="visibility:hidden;">
+	<div id="home" data-dojo-type="dojox.mobile.View">
+		<h1 data-dojo-type="dojox.mobile.Heading">Dynamic Items</h1>
+		<h2 data-dojo-type="dojox.mobile.RoundRectCategory">External Documents</h2>
+		<ul id="list1" data-dojo-type="dojox.mobile.RoundRectList">
+			<li data-dojo-type="dojox.mobile.ListItem" data-dojo-props='icon:"images/i-icon-1.png", moveTo:"#view2&amp;myParam=0001"'>
+				Document 0001
+			</li>
+			<li data-dojo-type="dojox.mobile.ListItem" data-dojo-props='icon:"images/i-icon-2.png", moveTo:"#view2&amp;myParam=0002"'>
+				Document 0002
+			</li>
+			<li data-dojo-type="dojox.mobile.ListItem" data-dojo-props='icon:"images/i-icon-3.png", moveTo:"#view2&amp;myParam=0003"'>
+				Document 0003
+			</li>
+		</ul>
+		<button id="btn1" data-dojo-type="dojox.mobile.Button" class="mblBlueButton" style="width:80px;margin-left:10px">More...</button>
+	</div>
 
-		<div id="bar" dojoType="dojox.mobile.ViewEx"></div>
-	</body>
+	<div id="view2" data-dojo-type="dojox.mobile.ViewEx"></div>
+</body>
 </html>

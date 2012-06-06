@@ -11,11 +11,10 @@
 		<!-- required: dojo.js -->
 		<script type="text/javascript" src="../../../../dojo/dojo.js"></script>
 
-		<script type="text/javascript" src="../../helpers.js"></script>
-
 		<script type="text/javascript">
 			dojo.require("dijit.robotx");
 			dojo.require("dijit.form.CheckBox");
+			dojo.require("dijit.tests.helpers");	// functions to help test
 
 			// These are the values assigned to the widgets in the page's HTML
 			var originalGet = {
@@ -25,7 +24,7 @@
 				cb5: [],
 				cb6: ["on"],
 				cb7: [],
-				'g[1]': "talk",
+				'g[1]': "on",
 				g2: null
 			};
 
@@ -33,7 +32,7 @@
 				cb2: "on",
 				cb4: "on",
 				cb6: "on",
-				'g[1]': "talk"
+				'g[1]': "on"
 			};
 
 			// attempt to change these values
@@ -44,7 +43,7 @@
 				cb4: [],
 				cb5: ["on"],
 				cb6: ["foo"],
-				'g[1]': "weather",
+				'g[1]': "", // weather
 				g2: "country"
 			};
 

@@ -4,7 +4,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>View</title>
-	<link href="../../themes/iphone/iphone.css" rel="stylesheet">
+	<link href="../../themes/iphone/iphone.css" rel="stylesheet"/>
 	<style>
 	html,body{
 		height: 100%;
@@ -76,7 +76,7 @@
 		//dojo.require("dojo.parser"); // Use the lightweight parser.
 		dojo.require("dojox.mobile.parser");
 		dojo.require("dojox.mobile");
-		dojo.require("dojox.mobile.FlippableView");
+		dojo.require("dojox.mobile.SwapView");
 		dojo.require("dojox.mobile.IconContainer");
 		dojo.requireIf(!dojo.isWebKit, "dojox.mobile.compat");
 		dojo.requireIf(!dojo.isWebKit, "dojo.fx");
@@ -85,31 +85,36 @@
         dojo.require("doh.runner");
 		dojo.addOnLoad(function(){
 
-			var view = new dojox.mobile.FlippableView({id:"foo", selected:"true"});
+			var view = new dojox.mobile.SwapView({id:"foo", selected:"true"});
 			dojo.doc.body.appendChild(view.domNode);
 			var demoWidget = new dojox.mobile.RoundRectCategory({label:"Page flipping demo"});
-			view.addChild(demoWidget);
+//			view.addChild(demoWidget);
+			demoWidget.placeAt(view.containerNode);
 
 			demoWidget = new dojox.mobile.RoundRect({innerHTML:"Swipe the screen left or right to flip between the views. There are 4 views in this demo. Vertical scrolling and page indicator are not supported."});
-			view.addChild(demoWidget);
+//			view.addChild(demoWidget);
+			demoWidget.placeAt(view.containerNode);
 			view.startup();
 
 			view = new dojox.mobile.SwapView({id:"bar"});
 			dojo.doc.body.appendChild(view.domNode);
+			view.startup();
 			var list = new dojox.mobile.RoundRectList();
 			demoWidget = new dojox.mobile.ListItem({className:"mblVariableHeight"});
 //			demoWidget.domNode.style = {font-size:"10px"};
-			view.addChild(list);
+//			view.addChild(list);
+			list.placeAt(view.containerNode);
 			demoWidget.domNode.innerHTML ='1. <a href="#" class="lnk">Dojo: Traditional Karate-do Spirit</a><br> Sarah Connor Hardcover<br> Eligible for FREE Super Saver Shipping<br> <font color="red">$14.50 (50%)</font> In Stock<br> # (531)';
 			list.addChild(demoWidget);
-			view.startup();
+//			view.startup();
 
 
 			
-			view = new dojox.mobile.FlippableView({id:"icon1"});
+			view = new dojox.mobile.SwapView({id:"icon1"});
 			demoWidget = new dojox.mobile.Heading({label:"Icon Container 1"});
 			dojo.doc.body.appendChild(view.domNode);
-			view.addChild(demoWidget);
+//			view.addChild(demoWidget);
+			demoWidget.placeAt(view.containerNode);
 //			container = new dojox.mobile.IconContainer();
 
 

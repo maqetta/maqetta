@@ -267,10 +267,11 @@
         <antcall target="update.repositoryinfo.js"/>
 		
     	<condition property="dojo.build.exists">
-    		<available file="${dojo.cache.directory}" type="dir"/>
+    		<available file="${dojo.cache.directory}/dojo" type="dir"/>
     	</condition>
 		<echo message="Build dojo=${run.dojo.build}"/>
 		<antcall target="dojo.build"/>
+
 		<antcall target="copy.dojo"/>
 
 		

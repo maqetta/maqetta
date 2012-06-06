@@ -668,14 +668,12 @@ var Workbench = {
 					return;
 				}
 			}
-			if (teardown) {
-				dojo.disconnect(handle);
-			}
-			if (this.cancel) {
-				myDialog.hide();
-			}
+
+			dojo.disconnect(handle);
+			myDialog.hide();
 			myDialog.destroy();
 		});
+
 		myDialog.show();
 
 		return myDialog;
@@ -705,14 +703,14 @@ var Workbench = {
 				dojo.disconnect(handle);
 				dojo.disconnect(handle2);
 				myDialog.hide();
-				myDialog.destroy();
+				myDialog.destroyRecursive();
 		});
 
 		handle2 = dojo.connect(content, "onCancel", content, function() {
 				dojo.disconnect(handle);
 				dojo.disconnect(handle2);
 				myDialog.hide();
-				myDialog.destroy();
+				myDialog.destroyRecursive();
 		});
 
 		myDialog.show();

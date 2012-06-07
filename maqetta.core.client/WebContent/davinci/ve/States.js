@@ -195,29 +195,23 @@ var veStates = declare(maqettaStates, {
 	// Remove any application states information that are defined on particular widgets
 	// for all states that aren't in the master list of application states.
 	// (This is to clean up after bugs found in older releases)
-	removeUnusedStatesRecursive: function(node, activeStates){
-		var widget = node._dvWidget;
-		if(!node || !widget){
+	removeUnusedStates: function(context, activeStates){
+		if(!context || !activeStates){
 			return;
 		}
-		// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
-		// Assume that is being done by higher-level software.
-		if(node.tagName !== 'BODY'){
-			this._removeUnusedStates(node, activeStates);
-		}
-		var children = widget.getChildren();
-		for(var i=0; i<children.length; i++){
-			this.removeUnusedStatesRecursive(children[i].domNode, activeStates);
-		}
-	},
-	
-	// Remove all references to unused states from given node
-	_removeUnusedStates: function(node, activeStates){
-		if(node && node.states){
-			for(var state in node.states){
-				if(state !== 'undefined' && activeStates.indexOf(state) < 0){
-					delete node.states[state];
-					this._updateSrcState(node);
+		var allWidgets = context.getAllWidgets();
+		for(var i=0; i<allWidgets.length; i++){
+			var node = allWidgets[i].domNode;
+			// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
+			// Assume that is being done by higher-level software.
+			if(node.tagName !== 'BODY'){
+				if(node && node.states){
+					for(var state in node.states){
+						if(state !== 'undefined' && activeStates.indexOf(state) < 0){
+							delete node.states[state];
+							this._updateSrcState(node);
+						}
+					}
 				}
 			}
 		}

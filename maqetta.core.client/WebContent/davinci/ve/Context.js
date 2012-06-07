@@ -1659,7 +1659,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// (This is to clean up after bugs found in older releases)
 		var body = this.getContainerNode();
 		var activeStates = davinci.ve.states.getStates(body);
-		davinci.ve.states.removeUnusedStatesRecursive(body, activeStates);
+		davinci.ve.states.removeUnusedStates(this, activeStates);
 	},
 
 	getDocument: function(){
@@ -3375,6 +3375,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dirty = this.dirtyDynamicCssFiles(this.cssFiles);
 		return dirty;
 
+	},
+	
+	/**
+	 * Returns an array of all widgets in the current document. 
+	 * In the returned result, parents are listed before their children.
+	 */
+	getAllWidgets: function(){
+		var result=[];
+		function find(widget)
+		{
+			result.push(widget);
+			widget.getChildren().forEach(function(child) {
+				find(child);
+			});
+		}
+		find(this.rootWidget);
+		return result;
 	}
 });
 

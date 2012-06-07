@@ -101,23 +101,6 @@ _dijit: function(node) {
 	return win.dijit || dijit;
 },
 
-allWidgets: function(containerNode) {
-	var result=[];
-	function find(element)
-	{
-		if (element._dvWidget) {
-			result.push(element._dvWidget);
-		}
-		dojo.forEach(element.childNodes, function(node) {
-			if (node.nodeType == 1) {
-				find(node);
-			}
-		});
-	}
-	find(containerNode);
-	return result;
-},
-
 parseStyleValues: function(text) {
 	var values = [];
 	if(text){

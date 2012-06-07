@@ -132,8 +132,11 @@ define([
 		// parsePackage().
 		if (!pkg) {
 			libraries[libName] = {
-				$wm: descriptor
+				$wm: descriptor,
+				name:descriptor.name,
+				version:descriptor.version
 			};
+			pkg = libraries[libName];
 		} else if (pkg.$widgets) {
 			descriptor.widgets.forEach(function(item) {
 				pkg.$wm.widgets.push(item);
@@ -143,7 +146,22 @@ define([
 					pkg.$wm.categories[name] = descriptor.categories[name];
 				}
 			}
-		} else {
+		}else if(pkg.$wm){
+			/* metadata already exists, mix the new widgets with old */
+			for(var z=0;z<descriptor.widgets.length;z++){
+				var found = false;
+				for(var ll=0;!found && ll<pkg.$wm.widgets.length;ll++){
+					if(pkg.$wm.widgets[ll].type==descriptor.widgets[z].type)
+						found = true;
+				}
+				
+				if(!found){
+					pkg.$wm.widgets.push(descriptor.widgets[z]);
+				}
+			}
+			
+		
+		} else if(!pkg.$wm) {
 			// XXX For now, put data from widgets.json as sub-property of package.json
 			//   data.  Later, this should be split up into separate APIs.
 			//   
@@ -227,6 +245,7 @@ define([
         require = require({
             packages: packages
         });
+        return pkg;
     }
     
     // XXX Changed to return package, rather than widgets.json object
@@ -451,18 +470,18 @@ define([
 				}
 			});
 
-/* Unused code
+
 			// add the users custom widgets to the library metadata
-			var base = davinci.Workbench.getProject();
-			var descriptor = Library.getCustomWidgets(base);
-			//if(descriptor.custom) parseLibraryDescriptor(descriptor.custom, descriptor.custom.metaPath);
-*/
+			
+			//if(descriptor.custom.length > 0 ) parseLibraryDescriptor(descriptor.custom.name, descriptor.custom, descriptor.custom.metaPath);
+
 			return new DeferredList(deferreds);
 		},
         
 		// used to update a library descriptor after the fact
 		parseMetaData: function(name, descriptor, path){
-			parseLibraryDescriptor(name, descriptor, path);
+		
+			return parseLibraryDescriptor(name, descriptor, path);
 		},
 		
         /**

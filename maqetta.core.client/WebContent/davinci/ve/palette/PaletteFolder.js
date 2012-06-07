@@ -40,7 +40,23 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		dijit.focus(this.domNode);
 	},
 
+	addChild: function(node){
+		var children = this.palette.getChildren();
+		for(var i = 0, len = children.length; i < len; i++){
+			var child = children[i];
+			if(child != this){
+				continue;
+			}
+			this.palette.addChild(node,i+1);
+			
+			return true;
+		}
+		return false;
+	
+	},
+	
 	folderClickHandler: function(evt){
+		
 		var children = this.palette.getChildren();
 		for(var i = 0, len = children.length; i < len; i++){
 			var child = children[i];

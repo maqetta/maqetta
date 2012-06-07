@@ -49,6 +49,9 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	
 	addCustomWidget: function(lib){
 		
+		/* make sure the pallette has loaded. if it hasnt, the init will take care of customs */
+		if(!this._loaded) return;
+		
 		var libraries = {};
 		
 		dojo.mixin(libraries, {custom:lib});
@@ -92,11 +95,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				icon: componentIcon,
 				displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
 			};
-			this._createFolder(opt);
+			var folder = this._createFolder(opt);
 			dojo.forEach(component.items, function(item){
 		        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
 		        //  add this item to palette (see bug 5626).
-		        if (item.hidden) {
+				
+		        if (item.hidden || this._hasItem(item.type)) {
 		            return;
 		        }
 	
@@ -116,9 +120,9 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					type: item.type,
 					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
 					tool: item.tool,
-					category: descriptorObject.name
+					category: name
 				};
-				this._createItem(opt);
+				this._createItem(opt,folder);
 			}, this);
 		}
 	},
@@ -147,8 +151,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	_loadPalette: function(){
 		if (this._loaded) { return; }
-		//debugger;
-		this._loaded = true; // call this only once
+		
+		
 		var allLibraries = Metadata.getLibrary();
 		var userLibs = Library.getUserLibs(Workbench.getProject());
 		var libraries = {};
@@ -173,8 +177,9 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				dojo.mixin(libraries, library);
 			}
 		});
-		
+	
 		var customWidgets = Library.getCustomWidgets(Workbench.getProject());
+		
 		if (customWidgets) {
 			dojo.mixin(libraries, customWidgets);
 		}
@@ -226,6 +231,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				this._folders[component.name] = true;
 			}
 		}, this);
+		this._loaded = true; // call this only once
 	},
 	
 	// possible to add descriptor and palette items dynamically
@@ -422,9 +428,26 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
         this.getChildren().forEach(action);
 	},
 	
-	_createItem: function(opt){
+	_hasItem : function(type){
+		var children = this.getChildren();
+		for(var i=0;i<children.length;i++){
+			
+			if(children[i].type==type){
+				return true; // already exists.
+			}
+		}
+		return false;
+	},
+	
+	_createItem: function(opt,folder){
+		
+		
 		var node = new PaletteItem(opt);
-		this.addChild(node);
+		if(!folder){
+			this.addChild(node);
+		}else{
+			folder.addChild(node);
+		}
 		var ds = new DragSource(node.domNode, "component", node);
 		ds.targetShouldShowCaret = true;
 		ds.returnCloneOnFailure = false;

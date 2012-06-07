@@ -1,6 +1,6 @@
 define([
-	"maq-metadata-dojo-1.7/dojox/grid/DataGridHelper",
-	"maq-metadata-dojo-1.7/dijit/layout/LayoutContainerHelper",
+	"maq-metadata-dojo-1_7/dojox/grid/DataGridHelper",
+	"maq-metadata-dojo-1_7/dijit/layout/LayoutContainerHelper",
 ], function(
 	DataGridHelper,
 	LayoutContainerHelper

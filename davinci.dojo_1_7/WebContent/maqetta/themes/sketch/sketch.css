@@ -95,7 +95,7 @@
 }
 .claro .dijitTitlePaneTitleActive {
     border-color : black;
-    background-color : #d3dbdb;
+    background-color : white;
 }
 .claro .dijitToolbar .dijitButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode {
     border-width : 3px;
@@ -182,7 +182,8 @@
     border-color : #150709;
     background-color : #ffffff;
 }
-.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate.dijitCalendarDateLabel:hover {
+
+.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
     border-color : black;
     background-color : white;
 }

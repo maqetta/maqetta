@@ -4,88 +4,12 @@
 <!-- ===================================================================== -->
 <project name="Build specific targets and properties" default="noDefault">
 
+	<property environment="env"/>
+
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
 	<!-- ===================================================================== -->
 	<target name="noDefault">
-	</target>
-
-	<!-- ===================================================================== -->
-	<!-- Following logic invokes logic equivalent to UNIX command              -->
-	<!--    svn info . > WebContent/davinci/repositoryinfo.js                  -->
-	<!-- This is so that we can show the last svn checkin number in the        -->
-	<!-- "About daVinci" dialog.                                               -->
-	<!-- ===================================================================== -->
-	<property environment="env"/>
-	<property name="rep.info.file" value="${target.folder}/WebContent/davinci/repositoryinfo.js"/>
-
-    <!-- +++++++++++ Verify that "git" or "git.exe" is on the PATH +++++++++++ -->
-    <target name="verify.command.line.git">
-        <!--
-        <echo message="filepath=${env.PATH}"/>
-        <echo message="filepath=${env.Path}"/>
-        -->
-        <condition property="command.line.git.ok">
-            <or>
-                <available file="git" filepath="${env.PATH}"/>
-                <available file="git" filepath="${env.Path}"/>
-                <available file="git.exe" filepath="${env.PATH}"/>
-                <available file="git.exe" filepath="${env.Path}"/>
-            </or>
-        </condition>
-    </target>
-
-    <!-- ++++++++++ Crash and burn if can't find command-line git ++++++++++++ -->
-    <target name="check.command.line.git" depends="verify.command.line.git" unless="command.line.git.ok">
-        <fail message="ERROR - YOU NEED TO INSTALL A GIT COMMAND LINE UTILITY AND PUT ON YOUR PATH."/>
-    </target>
-
-	<!--    Write git revision SHA1 to WebContent/pagedesigner.html, welcome.html...   -->
-	<target name="update.revisions" depends="check.command.line.git">
-		<exec executable="git" output="${env.MAQETTA_BUILD_DIR}/git-log.out" dir="${env.MAQETTA_BUILD_DIR}/repository/maqetta">
-			<arg value="log"/>
-            <arg value="-1"/>
-		</exec>
-        <loadfile srcfile="${env.MAQETTA_BUILD_DIR}/git-log.out" property="git.log">
-            <filterchain>
-                <headfilter lines="1"/>
-                <tokenfilter>
-                    <replaceregex pattern="commit " replace=""/>
-                </tokenfilter>
-                <striplinebreaks/>
-            </filterchain>
-        </loadfile>
-		<filter token="revision" value="${git.log}"/>
-		<copy file="${target.folder}/WebContent/pagedesigner.html" tofile="${target.folder}/WebContent/pagedesigner.html.tmp" filtering="true"/>
-		<copy file="${target.folder}/WebContent/welcome.html" tofile="${target.folder}/WebContent/welcome.html.tmp" filtering="true"/>
-		<delete file="${target.folder}/WebContent/pagedesigner.html"/>
-		<delete file="${target.folder}/WebContent/welcome.html"/>
-		<move file="${target.folder}/WebContent/pagedesigner.html.tmp" tofile="${target.folder}/WebContent/pagedesigner.html"/>
-		<move file="${target.folder}/WebContent/welcome.html.tmp" tofile="${target.folder}/WebContent/welcome.html"/>
-	</target>
-
-	<!--    Write git revision SHA1 to WebContent/davinci/repositoryinfo.js   -->
-	<target name="update.repositoryinfo.js" depends="check.command.line.git">
-        <exec executable="git" output="${env.MAQETTA_BUILD_DIR}/git-log.out" dir="${env.MAQETTA_BUILD_DIR}/repository/maqetta">
-            <arg value="log"/>
-            <arg value="-1"/>
-        </exec>
-        <loadfile srcfile="${env.MAQETTA_BUILD_DIR}/git-log.out" property="git.log">
-            <filterchain>
-                <headfilter lines="1"/>
-                <tokenfilter>
-                    <replaceregex pattern="commit " replace=""/>
-                </tokenfilter>
-                <striplinebreaks/>
-            </filterchain>
-        </loadfile>
-		<filter token="revision" value="${git.log}"/>
-        <copy file="${rep.info.file}" tofile="${rep.info.file}.tmp" filtering="true"/>
-        <tstamp>
-            <format property="maqBuildTime" timezone="GMT" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'"/>
-        </tstamp>
-        <filter token="buildtime" value="${maqBuildTime}"/>
-        <move file="${rep.info.file}.tmp" tofile="${rep.info.file}" filtering="true"/>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -94,6 +18,7 @@
 	<!--   build.result.folder - folder to contain the build results           -->
 	<!-- ===================================================================== -->
 	<target name="pre.build.jars">
+
 	</target>
 
 	<!-- ===================================================================== -->
@@ -175,17 +100,39 @@
 	</target>
 	
 	
-	<target name="dojo.build" if="run.dojo.build" unless="dojo.build.exists">
-		<echo message="Doing dojo build" />
+	<target name="davinciPlugin.build" if="run.dojo.build" unless="davinciPlugin.build.exists">
+		<echo message="Doing ${davinciPlugin.id} build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
 
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying base dojo">
+				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/dojo/"/>
+				</fileset>
+		</copy>
+		
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dijit">
+				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/dijit/"/>
+				</fileset>
+		</copy>
+		
 		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying Dojo tools">
-				<fileset dir="${basedir}">
+				<fileset dir="${basedir}/../maqetta.core.client">
 					<include name="WebContent/util/"/>
 				</fileset>
 		</copy>
+		
+		<copy todir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}" failonerror="true" overwrite="true" description="copying metadata files">
+				<fileset dir="${target.folder}/WebContent/metadata">
+					<include name="${davinciPlugin.id}/"/>
+				</fileset>
+		</copy>
 
+		<!-- Replace "metadata" in dojo profile for the plugin with the module id Maqetta 
+			 will use for the plugin's metadata at runtime -->
+		<replace file="${target.folder}/${davinciPlugin.dojo.profile}" token="metadata" value="${davinciPlugin.metadata.moduleId}"/>
+		
 		<java fork="true" resultproperty="returnCode" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
 			    maxmemory="1024m"
 				classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
@@ -195,62 +142,41 @@
 				<arg value="${target.folder}/WebContent/dojo/dojo.js"/>
 				<arg value="baseUrl=${target.folder}/WebContent/dojo"/>
 				<arg value="load=build"/>
-				<arg value="profileFile=${target.folder}/davinci.profile.js"/>
+				<arg value="profileFile=${target.folder}/${davinciPlugin.dojo.profile}"/>
 				<arg value="action=release"/>
 				<arg value="cssOptimize=comments.keepLines"/>
 				<arg value="layerOptimize=shrinksafe.keepLines"/>
 		</java>
+
+		<mkdir dir="${davinciPlugin.dojo.cache.directory}"/>
+
+		<echo message="caching ${davinciPlugin.id} build.."/>
 		
-		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
-		<!--
-		<copy toFile="${target.folder}/WebContent/release/dojo/project/base/app.css" file="${target.folder}/WebContent/project/base/app.css" overwrite="true" />
-		-->
-		<!-- Copy over original workspace/maqetta folder -->
-		<!--
-		<copy todir="${target.folder}/WebContent/release/dojo/project/base/maqetta">
-			<fileset dir="${target.folder}/WebContent/project/base/maqetta"/>
-		</copy>
-		-->
-		<mkdir dir="${dojo.cache.directory}"/>
-		<!--
-		<copy todir="${dojo.cache.directory}">
-				<fileset dir="${target.folder}/WebContent/project/base/maqetta"/>
-		</copy>
-		-->
-		<echo message="caching dojo build.."/>
-		
-		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
+		<copy todir="${davinciPlugin.dojo.cache.directory}" failonerror="true" overwrite="true" description="move ${davinciPlugin.id} build">
 					<fileset dir="${target.folder}/WebContent/release/dojo">
-						<include name="davinci/"/>
-						<include name="system/"/>
-						<include name="dojo/"/>
-						<include name="dijit/"/>
-						<include name="dojox/"/>
-						<include name="eclipse/"/>
-			            <include name="preview/"/>
+						<include name="${davinciPlugin.id}/"/>
 					</fileset>
 		</copy>
+		
+		<copy todir="${davinciPlugin.dojo.cache.directory}/metadata" failonerror="true" overwrite="true" description="move ${davinciPlugin.id} metadata build">
+			<fileset dir="${target.folder}/WebContent/release/dojo/${davinciPlugin.metadata.moduleId}">
+				<include name="${davinciPlugin.id}/"/>
+			</fileset>
+		</copy>
+		
+		<delete dir="${target.folder}/WebContent/release" />
 	</target>
 	
-	<target name="copy.dojo" if="run.dojo.build">
+	<target name="copy.davinciPlugin" if="run.dojo.build">
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>
-		<delete dir="${target.folder}/WebContent/system"/>
-		<delete dir="${target.folder}/WebContent/dojox"/>
-		<delete dir="${target.folder}/WebContent/davinci"/>
-		<delete dir="${target.folder}/WebContent/eclipse"/>
-	    <delete dir="${target.folder}/WebContent/preview"/>
-		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached Dojo build">
-					<fileset dir="${dojo.cache.directory}">
-						<include name="davinci/"/>
-						<include name="system/"/>
-						<include name="dojo/"/>
-						<include name="dijit/"/>
-						<include name="dojox/"/>
-						<include name="eclipse/"/>
-			            <include name="preview/"/>
-					</fileset>
+		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
+		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached ${davinciPlugin.id} build">
+			<fileset dir="${davinciPlugin.dojo.cache.directory}">
+				<include name="${davinciPlugin.id}/"/>
+				<include name="metadata/"/>
+			</fileset>
 		</copy>
 	</target>
 	
@@ -261,20 +187,33 @@
 	<!--   target.folder - destination folder                                  -->
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
+		<!-- Examine plugin.xml to get the plugin's id and version. -->
+		<xmlproperty file="${target.folder}/plugin.xml" collapseAttributes="true"/>
 		
-        <echo message="Inserting git describe information"/>
-        <antcall target="update.revisions"/>
-        <antcall target="update.repositoryinfo.js"/>
-		
-    	<condition property="dojo.build.exists">
-    		<available file="${dojo.cache.directory}/dojo" type="dir"/>
+		<property name="davinciPlugin.id" value="${plugin.extension.ajaxLibrary.id}"/>
+		<echo>Post gather for &quot;${davinciPlugin.id}&quot;, version=&quot;${plugin.extension.ajaxLibrary.version}&quot; ...</echo>
+
+        <!-- Roundabout way to replace periods in the version with underscores -->
+    	<echo message="${plugin.extension.ajaxLibrary.version}" file="davinciPlugin.tmp.file" />
+    	<loadfile property="davinciPlugin.normalizedVersion" srcFile="davinciPlugin.tmp.file">
+        	<filterchain>
+            	<tokenfilter>
+                	<replaceregex pattern="\." replace="_" flags="g"/>
+            	</tokenfilter>
+        	</filterchain>
+    	</loadfile>
+    	<delete file="davinciPlugin.tmp.file" />
+
+		<property name="davinciPlugin.dojo.cache.directory" value="${dojo.cache.directory}/${davinciPlugin.id}-${davinciPlugin.normalizedVersion}"/>
+		<property name="davinciPlugin.metadata.moduleId" value="maq-metadata-${davinciPlugin.id}-${davinciPlugin.normalizedVersion}"/>
+		<property name="davinciPlugin.dojo.profile" value="${davinciPlugin.id}.profile.js"/>
+    	<condition property="davinciPlugin.build.exists">
+    		<available file="${davinciPlugin.dojo.cache.directory}" type="dir"/>
     	</condition>
-		<echo message="Build dojo=${run.dojo.build}"/>
-		<antcall target="dojo.build"/>
+		<echo message="Build ${davinciPlugin.id}=${run.dojo.build}"/>
+		<antcall target="davinciPlugin.build"/>
 
-		<antcall target="copy.dojo"/>
-
-		
+		<antcall target="copy.davinciPlugin"/>
 	</target>
 
 	<!-- ===================================================================== -->

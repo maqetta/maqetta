@@ -371,13 +371,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	},
 	
 	_widgetPropertiesChanged: function(widgets){
-		/* Check to see that this is for the same widget
-		 * Some widget like Tree update the DataStore but not the widget it's self from smar input
-		 * Cant check the id, it may change.
-		 */
-		if ((!this._widget) || (this._widget.type === widgets[0].type)){
-			this._updatePaletteValues(widgets);
-		}
+		this._updatePaletteValues(widgets);
 	},
 	
 	_titlePaneOpen : function(index){

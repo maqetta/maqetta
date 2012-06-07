@@ -418,33 +418,23 @@ return {
                     label: "Save As",
                     toolbarPath: "save"
                 },
-                // commenting out the 'save as widget' feature.
-                //{
-                //   id: "saveasdijit",
-                //    iconClass: 'saveAsWidgetIcon',
-                //    run: function(){
-                //        davinci.de.resource.createDijiFromNewDialog();
-                //    }
-                //    isEnabled: function(context) {
-                //        var isEnabled = davinci.Workbench.getOpenEditor();
-                //        return isEnabled;
+               
+               {
+                  id: "saveasdijit",
+                    iconClass: 'saveAsDijitIcon',
+                    run: function(){
+                    	return require(['davinci/de/resource'], function(r){
+                    		r.createDijiFromNewDialog();
+                    	})
+                    },
+                    isEnabled: function(context) {
+                        return require('../Workbench').getOpenEditor();
+               
 
-                //},
-                //    label: "Save As Widget",
-                //    toolbarPath: "save"
-                //},
-                // {
-                // id: "saveaswidget",
-                // iconClass: 'saveAsIcon', // XXX
-                // action: "davinci/actions/SaveAsWidget",
-                // isEnabled : function(context){
-                // var isEnabled = davinci.Workbench.getOpenEditor();
-                // return isEnabled;
-                //                    
-                // },
-                // label: "Save As Widget",
-                // toolbarPath: "save"
-                // },
+                    },
+                    label: "Save As Widget",
+                    toolbarPath: "save"
+                 },
                 {
                     id: "theme",
                     iconClass: 'selectThemeIcon',

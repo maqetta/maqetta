@@ -21,7 +21,7 @@ function(Runtime,  Path, CSSThemeProvider, Query/*, Metadata*/, Preferences) {
  * 
  */
 
-var library,
+var library={_customWidgets:{}},
 	_themesCache = {},
 	_themesMetaCache = {},
 	_userLibsCache = {},
@@ -119,40 +119,28 @@ getThemeMetadata: function(theme) {
 },
 
 addCustomWidgets: function(base, customWidgetJson) {
+	
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
 	if(!prefs.widgetFolder){
 		prefs.widgetFolder = "./widgets";
 		Preferences.savePreferences('davinci.ui.ProjectPrefs', base, prefs);
 	}
+	
+	var newJson = require("davinci/ve/metadata").parseMetaData(customWidgetJson.name, customWidgetJson, new Path(prefs.widgetFolder), true);
+	
 	if(!library._customWidgets[base].hasOwnProperty("name")){
-		library._customWidgets[base] = customWidgetJson;	
-
+		
+		library._customWidgets[base].name = 'custom';
 		library._customWidgets[base].metaPath = prefs.widgetFolder;
 	    library._customWidgets[base].localPath = true;
 	}
-	/*
-	else{
-		for(var name in customWidgetJson.categories){
-			if(!(library._customWidgets[base].categories.hasOwnProperty(name))){
-				library._customWidgets[base].categories[name] = customWidgetJson.categories[name];
-			}
-		}	
-		for(var i=0;i<customWidgetJson.widgets.length;i++){
-			library._customWidgets[base].widgets.push(customWidgetJson.widgets[i]);
-		}
-		
-	}
-	*/
-	
-	require("davinci/ve/metadata").parseMetaData(customWidgetJson.name, customWidgetJson, prefs.widgetFolder, true);
-	dojo.publish("/davinci/ui/addedCustomWidget", [customWidgetJson]);
+	library._customWidgets[base] = newJson;	
+	dojo.publish("/davinci/ui/addedCustomWidget", [newJson]);
+	return newJson;
 },
 
 getCustomWidgets: function(base) {
-	/* loads custom widgets from the users workspace.  removing this feature for M4 */
-	return;
-
-/*	
+	
 	if (! library._customWidgets || ! library._customWidgets[base]){
 		// load the custom widgets from the users workspace
 		
@@ -179,7 +167,7 @@ getCustomWidgets: function(base) {
 			}
 		}
 		
-		var customWidgets = system.resource.findResource("*_widgets.json", parent);
+		var customWidgets = system.resource.findResource("*_widgets.json", true, parent);
 		
 		for (var i = 0; i < customWidgets.length; i++) {
 			library.addCustomWidgets(base, dojo.fromJson(customWidgets[i].getText()));
@@ -187,7 +175,7 @@ getCustomWidgets: function(base) {
 	}
 	
 	return {custom: library._customWidgets[base]};
-*/
+
 },
 
 getInstalledLibs: function() {
@@ -303,6 +291,7 @@ getLibraryName: function(lib) {
 }
 
 };
+
 
 return library;
 

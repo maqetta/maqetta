@@ -42,13 +42,6 @@ davinci/davinci = {
 	"./ve/actions/ChooseDeviceAction",
 	"./ve/actions/RotateDeviceAction",
 	"./ve/actions/SurroundAction",
-
-	"./ve/actions/AddColumnAction",
-	"./ve/actions/AddColumnBeforeAction",
-	"./ve/actions/RemoveColumnAction",
-	"./ve/actions/AddRowAction",
-	"./ve/actions/AddRowBeforeAction",
-	"./ve/actions/RemoveRowAction",
 	
 	"./ve/actions/SelectParentAction",
 	"./ve/actions/SelectAncestorAction",

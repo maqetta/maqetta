@@ -4,7 +4,7 @@ define([
 ], function(declare, ContextAction){
 
 
-return declare("davinci.ve.actions._TableAction", [ContextAction], {
+return declare(ContextAction, {
 
 	isEnabled: function(context){
 		context = this.fixupContext(context);

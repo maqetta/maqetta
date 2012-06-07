@@ -1,3 +1,5 @@
+// AWE TODO: Moved from core.client, but currently appears to be unused. Leaving for time being as it's unclear if we'll 
+// need it by time HTML table editing is finished.
 define([
     	"dojo/_base/declare",
     	"./_TableAction",
@@ -6,14 +8,14 @@ define([
     	"davinci/ve/commands/ModifyCommand",
     	"davinci/ve/commands/RemoveCommand",
     	"davinci/ve/widget",
-    	"davinci/ve/actions/TableMatrix"
+    	"./TableMatrix"
 ], function(declare, _TableAction, CompoundCommand, ReparentCommand, ModifyCommand, RemoveCommand, Widget, TableMatrix){
 
 
-return declare("davinci.ve.actions.JoinRowAction", [_TableAction], {
+return declare(_TableAction, {
 
-	name: "joinRow",
-	iconClass: "editActionIcon editJoinRowIcon",
+	name: "joinColumn",
+	iconClass: "editActionIcon editJoinColumnIcon",
 
 	run: function(context){
 		context = this.fixupContext(context);
@@ -29,49 +31,47 @@ return declare("davinci.ve.actions.JoinRowAction", [_TableAction], {
 		var rows = matrix.rows;
 		var cells = matrix.cells;
 		var pos = matrix.getPos(sel);
-		var rs = matrix.getRowSpan(sel);
-		var nr = pos.r + rs; // the next row
-		if(nr >= rows.length){ // the last row
+		var cs = matrix.getColSpan(sel);
+		var nc = pos.c + cs; // the next column
+		if(nc >= cells[pos.r].length){ // the last column
 			return;
 		}
-		var nc = pos.c + matrix.getColSpan(sel); // the next column
+		var nr = pos.r + matrix.getRowSpan(sel); // the next row
+		if(nr > rows.length){
+			nr = rows.length; // limit to the last row
+		}
 
 		var command = new CompoundCommand();
 		var widget = undefined;
+		var parent = Widget.byNode(sel);
 		var properties = undefined;
-		for(var c = pos.c; c < nc; c++){
-			var cell = cells[nr][c];
+		for(var r = pos.r; r < nr; r++){
+			var cell = cells[r][nc];
 			if(!cell){
 				continue;
 			}
-			if(c > 0 && cells[nr][c - 1] == cell){ // spanning from the previous column
-				return;
-			}
-			var colspan = matrix.getColSpan(cell);
-			if(c + colspan > nc){ // spanning to the next column
+			if(r > 0 && cells[r - 1][nc] == cell){ // spanning from the previous row
 				return;
 			}
 			var rowspan = matrix.getRowSpan(cell);
-			widget = davinci.ve.widget.byNode(cell);
-			if(rowspan > 1 && nr + 1 < rows.length){
-				properties = {rowspan: rowspan - 1};
+			if(r + rowspan > nr){ // spanning to the next row
+				return;
+			}
+			var colspan = matrix.getColSpan(cell);
+			widget = Widget.byNode(cell);
+			if(colspan > 1){
+				properties = {colspan: colspan - 1};
 				command.add(new ModifyCommand(widget, properties));
-				// move to the next row
-				var parent = Widget.byNode(rows[nr + 1]);
-				var nextCell = matrix.getNextCell(nr + 1, c + colspan);
-				var next = (nextCell ? Widget.byNode(nextCell) : undefined);
-				command.add(new ReparentCommand(widget, parent, next));
 			}else{
-				var parent = Widget.byNode(sel);
 				dojo.forEach(Widget.getChildren(widget), function(w){
 					command.add(new ReparentCommand(w, parent));
 				});
 				command.add(new RemoveCommand(widget));
 			}
-			c += (colspan - 1); // skip columns covered by this cell
+			r += (rowspan - 1); // skip rows covered by this cell
 		}
-		widget = Widget.byNode(sel);
-		properties = {rowspan: rs + 1};
+		widget = parent;
+		properties = {colspan: cs + 1};
 		command.add(new ModifyCommand(widget, properties));
 		context.getCommandStack().execute(command);
 	}

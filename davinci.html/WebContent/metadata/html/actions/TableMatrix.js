@@ -2,7 +2,7 @@ define([
     	"dojo/_base/declare"
 ], function(declare){
 
-return declare("davinci.ve.actions.TableMatrix", null, {
+return declare(null, {
 
 	rows: null, // array of rows (<tr>)
 	cells: null, // 2D array of cells (<td>|<th>)

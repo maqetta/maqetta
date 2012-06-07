@@ -47,17 +47,17 @@ define(["dojo/_base/declare",
 	    	
 	    	var html =  this._srcDocument.find({'elementType' : "HTMLElement", 'tag':'body'}, true);
 	    	var bodyChildren = html.children;
-	    	this.value.html = "\t\t<span>";
+	    	this.value.html = "\t\t<div>";
 	    	for(var i=0;i<bodyChildren.length;i++){
 	    		this.value.html += bodyChildren[i].getText();
 	    	}
-	    	this.value.html +="</span>";
+	    	this.value.html +="</div>";
 	    	
 	    	
 	    	var systemModCount = 3;
 	    	
 	    	/* cleanup the metadata */	
-	    	this.metadata.content = "<span></span>";
+	    	this.metadata.content = "<div></div>";
 
 			/* build out the javascript file */
 			this.value.js = "define([";

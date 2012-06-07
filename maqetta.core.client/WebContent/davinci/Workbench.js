@@ -671,7 +671,7 @@ var Workbench = {
 
 			dojo.disconnect(handle);
 			myDialog.hide();
-			myDialog.destroy();
+			myDialog.destroyRecursive();
 		});
 
 		myDialog.show();

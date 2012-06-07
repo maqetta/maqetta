@@ -7,9 +7,10 @@ define([
     	"davinci/model/Path",
     	"davinci/model/Factory",
     	"davinci/html/HTMLFile",
-    	"davinci/Theme"
+    	"davinci/Theme",
+    	"dojo/i18n!davinci/ve/nls/ve"
 
-], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme) {
+], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, veNls) {
 
 return declare([], {
 
@@ -146,7 +147,8 @@ return declare([], {
 						}
 					}
 					if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
-						this.themeVersionError();
+						this.themeVersionWarn(); //just warn for now
+						//this.themeVersionError(); 
 					}
 
 					if (failureInfo.errorMessage) {
@@ -173,16 +175,16 @@ return declare([], {
 	},
 	
 	themeVersionWarn: function(){
-		Workbench.showMessage(veNLS.vteWarningTitle, veNLS.vteWarningMessage, {width: 250});
+		Workbench.showMessage(veNls.vteWarningTitle, veNls.vteWarningMessage, {width: 250});
 	},
 	
 	themeVersionError: function(){
-		Workbench.showMessage(veNLS.vteErrorTitle, veNLS.vteErrorMessage, {width: 250}, dojo.hitch(this, "themeVersionErrorOk"));
+		Workbench.showMessage(veNls.vteErrorTitle, veNls.vteErrorMessage, {width: 250}, dojo.hitch(this, "themeVersionErrorOk"));
 	},
 	
 	themeVersionErrorOk: function(){
-		this.editorContainer.save(false); // force a save
-		this.editorContainer.forceClose(this, true);
+		this.context.editor.editorContainer.save(false); // force a save
+		this.context.editor.editorContainer.forceClose(this, true);
 
 		// destroy dialog by returning true
 		return true;

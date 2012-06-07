@@ -2178,6 +2178,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
+
+			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
+			data.states = states;
 		}
 		
 		var titleElement=head.getChildElement("title");

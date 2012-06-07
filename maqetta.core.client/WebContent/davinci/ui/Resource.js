@@ -171,9 +171,9 @@ var uiResource = {
 			var proposedFileName = uiResource.getNewFileName('folder',folder);
 			var dialogOptions = {newFileName:proposedFileName,
 								fileFieldLabel:uiNLS.folderName, 
-								folderFieldLabel:"Parent Folder:", // FIXME: i18n
+								folderFieldLabel:uiNLS.parentFolder,
 								root:folder,
-								finishButtonLabel:"Create Folder" }; // FIXME: i18n
+								finishButtonLabel:uiNLS.createFolder};
 			
 			var newFolderDialog =  new NewFolder(dialogOptions);
 			var finished = false;
@@ -353,7 +353,7 @@ var uiResource = {
 			    });
 	
 		    	var renameDialog = new Rename({value:resource.name, invalid:invalid});
-		  		Workbench.showModal(renameDialog, 'Rename To....', '', function(){ //FIXME: i18n
+		  		Workbench.showModal(renameDialog, uiNLS.renameDialogTitle, '', function(){
 		  			var cancel = renameDialog.attr("cancel");
 		  			var newName = renameDialog.attr("value");
 		  			if(!cancel){

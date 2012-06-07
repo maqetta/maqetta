@@ -24,7 +24,9 @@ define(["dojo/_base/declare",
 	return declare("davinci.ui.UserLibraries", [_Widget, _Templated], {
 		
 		widgetsInTemplate: true,
-		
+
+		uiNLS: uiNLS,
+
 		postMixInProperties: function() {
 			dojo.mixin(this, commonNLS);
 			this.inherited(arguments);

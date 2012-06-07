@@ -248,31 +248,6 @@ public class Download extends Command {
         */
     }
 
-    /*
-    private void transferBuildStream(URL resultURL, OutputStream os) throws IOException {
-		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(resultURL.openStream()));
-		try {
-    		ZipEntry entry;
-    		while ((entry = zis.getNextEntry()) != null) {
-    			if (entry.getName().equals("dojo.js")) {
-                    int size;
-                    byte[] buffer = new byte[2048];
-     
-                    BufferedOutputStream bos =
-                            new BufferedOutputStream(os, buffer.length);
-     
-                    while ((size = zis.read(buffer, 0, buffer.length)) != -1) {
-                        bos.write(buffer, 0, size);
-                    }
-                    os.flush();
-       			}
-    		}
-		} finally {
-			zis.close();
-		}
-    }
-    */
-
     private InputStream getBuildStream(URL resultURL, String name) throws IOException {
 		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(resultURL.openStream()));
 		ZipEntry entry;

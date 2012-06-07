@@ -136,7 +136,7 @@ return declare([], {
 					this.initialSet=true;
 
 					var ldojoVersion = this.context.getDojo().version.major +'.'+ this.context.getDojo().version.minor;
-					if (ldojoVersion !== this.theme.version){
+					if ((ldojoVersion !== this.theme.version) || (this.theme.specVersion < this.THEME_EDITOR_SPEC)){
 						var cookieName = 'maqetta_'+this.theme.name+'_'+this.theme.version;
 						var warnCookie = dojo.cookie(cookieName);
 						if (!warnCookie){
@@ -144,9 +144,9 @@ return declare([], {
 							this.themeVersionWarn();
 						}
 					}
-					if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
+					/*if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
 						this.themeVersionError();
-					}
+					}*/
 
 					if (failureInfo.errorMessage) {
 						this.loadingDiv.innerHTML = failureInfo.errorMessage;

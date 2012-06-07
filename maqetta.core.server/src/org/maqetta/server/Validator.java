@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class Validator {
 
 	// pattern matches that used in "Register for Maqetta" dialog
-	private static Pattern userNamePattern = Pattern.compile("^\\w(\\w|[.@]){4,20}$");
+	private static Pattern userNamePattern = Pattern.compile("^\\w+$");
 	
 	public static boolean isEmail(String email) {
 		try {
@@ -19,6 +19,13 @@ public class Validator {
 	}
 	
 	public static boolean isUserName(String name) {
-		return userNamePattern.matcher(name).matches();
+		// For Joomla builds, username is an email.
+		// That is not the case for the 'standalone' build, so need to handle
+		// that here.
+		// NOTE: This code matches (more or less) that for the "Register for
+		//       Maqetta" dialog in maqetta.core.client/WebContent/welcome.html
+		//       (dialog is seen in the standalone build).  Keep the two in sync.
+		return userNamePattern.matcher(name).matches() ||
+				Validator.isEmail(name);
 	}
 }

@@ -49,9 +49,16 @@ define(["dojo/_base/declare",
 			this.onWidgetSelectionChange();
 		},
 		
-		_widgetReplaced : function(newWidget){
-			this._widget = newWidget;
-			this.onWidgetSelectionChange();
+		_widgetReplaced : function(newWidget, oldWidget){
+			/* Check to see that this is for the same widget
+			 * Some widget like Tree update the DataStore but not the widget it's self from smart input
+			 * 
+			 */
+			
+			if (this._widget === oldWidget){
+				this._widget = newWidget;
+				this.onWidgetSelectionChange();
+			}
 		},
 		
 		onWidgetSelectionChange : function(){

@@ -179,6 +179,9 @@ return declare(SmartInput, {
 			this.command.add(command);
 		} else {
 			this._getContext().getCommandStack().execute(this.command || command);
+			// force the outline tree to update
+			this._widget._edit_context.deselect();
+			this._widget._edit_context.select(this._widget, null, false); // we don't replace the tree, just the store
 		}	
 	},
 	

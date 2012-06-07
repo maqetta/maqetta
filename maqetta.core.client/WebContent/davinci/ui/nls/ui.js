@@ -82,6 +82,7 @@ define({ root:
 		"newFolderLabel":"New folder",
 		"cancelButtonLabel":"Cancel",
 		"newFolderName": "Name:",
+		"createFolder": "Create Folder",
 		
 		//dialog titles
 		"createNewFile":"Create New File",
@@ -128,6 +129,7 @@ define({ root:
 		"renameProjectDialogTitle": "Rename Project To...",
 		"deleteProjectButtonTitle": "Delete Project",
 		"renameProjectButtonTitle": "Rename Project...",
+		"deleteOnlyProjectError": "You can't delete the only project in your workspace!",
 		
 		//NewFile.html
 		"newFileShowFiles":"Show file picker",
@@ -153,9 +155,13 @@ define({ root:
 		//Rename
 		"renameNewLabel": "Name:",
 		"renameButtonLabel": "Rename",
+		"renameDialogTitle": "Rename To...",
 
 		//NewProject
 		"newProjectName": "Name:",
-		"newProjectEclipseSupport": "Eclipse support"
+		"newProjectEclipseSupport": "Eclipse support",
+
+		//UserLibraries
+		"modify": "Modify"
 }
 });

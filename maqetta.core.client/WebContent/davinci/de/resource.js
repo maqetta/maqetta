@@ -21,12 +21,13 @@ define(["davinci/de/widgets/NewDijit",
 			var oldEditor = Workbench.getOpenEditor();
 			var oldFileName = oldEditor.fileName;
 			var oldResource = Resource.findResource(oldFileName);
-	        var model = oldEditor.model;
+			var model = oldEditor.model;
 	     
-			Workbench.showModal(projectDialog, "Dijit Widget...", 'height:160px;width: 250px', function(){
-				
-				var widgetName = projectDialog.attr('value');
-				dt.createDijit(widgetName, model, oldResource);	
+	    Workbench.showModal(projectDialog, "Dijit Widget...", {height:160, width: 250}, function(){
+	    	if (!projectDialog.cancel) {
+	    		var widgetName = projectDialog.attr('value');
+	    		dt.createDijit(widgetName, model, oldResource);
+	    	}
 				return true;
 			});
 			

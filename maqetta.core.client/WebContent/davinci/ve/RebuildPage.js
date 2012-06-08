@@ -25,7 +25,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 	
 	getPageJs: function(){
 		// returns JS known to be in the page (our libs, sorta hacky)
-		return ["maqetta/States.js","maqetta/maqetta.js" ]; //FIXME: States.js is a module
+		return ["app.js" ];
 	},
 	
 	
@@ -67,20 +67,22 @@ return declare("davinci.ve.RebuildPage", Context, {
 		
         /*
         var cssChanges = this.getPageCss();
+        */
         var jsChanges = this.getPageJs();
 
+        /*
         for ( var i = 0; i < cssChanges.length; i++ ) {
         	var filename = new Path(cssChanges[i]).relativeTo(this._resourcePath);
             //var filename = basePath.append(cssChanges[i]);
             this.addModeledStyleSheet(filename.toString(), cssChanges[i]);
         }
+        */
 
         for ( var i = 0; i < jsChanges.length; i++ ) {
         	var filename = new Path(jsChanges[i]).relativeTo(this._resourcePath);
             this.addJavaScript(filename.toString(), null, null, null,
                     jsChanges[i]);
         }
-		*/
         
        /* this._pageRebuilt = new Deferred();
         var deferred = this.model.save();
@@ -129,7 +131,7 @@ return declare("davinci.ve.RebuildPage", Context, {
     	return null;
     	
     },
-    /*
+
     addJavaScript: function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
 		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
 		
@@ -153,7 +155,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         	this._scriptAdditions = this.addHeaderScriptSrc(text, this._findScriptAdditions(),this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
         }
     },
-	*/
+
     changeThemeBase: function(theme, resourcePath){
     	
     	// find the old theme file name

@@ -201,10 +201,12 @@ var uiResource = {
 		},
 	
 		/* close an editor editting given resource */
-		closeEditor : function(resource){
+		closeEditor : function(resource,flush){
 			var oldEditor = Workbench.getOpenEditor(resource);
-			if(oldEditor!=null)
+			if(oldEditor!=null){
+				if(flush) oldEditor.save();
 				oldEditor.editorContainer.forceClose(oldEditor);
+			}
 			/* return true if we closed an open editor */
 			return (oldEditor !=null);
 		},
@@ -357,7 +359,7 @@ var uiResource = {
 		  			var cancel = renameDialog.attr("cancel");
 		  			var newName = renameDialog.attr("value");
 		  			if(!cancel){
-		  				var opened = uiResource.closeEditor(resource);
+		  				var opened = uiResource.closeEditor(resource,true);
 		  				resource.rename(newName);
 			  			if(opened) uiResource.openResource(resource);
 					}

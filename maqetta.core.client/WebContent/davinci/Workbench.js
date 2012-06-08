@@ -1293,13 +1293,34 @@ var Workbench = {
 				   }
 			   }
 			});
+		
 		if (actionSetIDs.length) {
 		   var actionSets=Runtime.getExtensions("davinci.actionSets",
 				function (extension) {
 			   		return actionSetIDs.some(function(setID) { return setID == extension.id; });
 				});
 		   if (actionSets.length) {
-			   var menuTree=Workbench._createMenuTree(actionSets,true);
+			   // Determine if any widget libraries have indicated they want to augment the actions in
+			   // the action set
+			   var clonedActionSets = [];
+			   dojo.forEach(actionSets, function(actionSet) {
+				   var libraryActions = metadata.getLibraryActions(actionSet.id);
+				   if (libraryActions.length) {
+					   // We want to augment the action list, so let's clone the
+					   // action set before pushing new items onto the end of the
+					   // array
+					   clonedActionSet = dojo.clone(actionSet);
+					   dojo.forEach(libraryActions, function(libraryAction) {
+						   clonedActionSet.actions.push(libraryAction);
+					   });
+					   clonedActionSets.push(clonedActionSet);
+				   } else {
+					   // No modifications to the actionSet, so just push as is
+					   clonedActionSets.push(actionSet);
+				   }
+			   });
+			   
+			   var menuTree=Workbench._createMenuTree(clonedActionSets,true);
 			   Workbench._initActionsKeys(actionSets, args);
 			   var popup=Workbench._createMenu(menuTree,context);
 			   if (popup && domNode) {

@@ -5,11 +5,11 @@ define([
     	"davinci/ve/commands/AddCommand",
     	"davinci/ve/commands/ModifyCommand",
     	"davinci/ve/widget",
-    	"davinci/ve/actions/TableMatrix"
+    	"./TableMatrix"
 ], function(declare, _TableAction, CompoundCommand, AddCommand, ModifyCommand, Widget, TableMatrix){
 
 
-return declare("davinci.ve.actions.AddRowAction", [_TableAction], {
+return declare(_TableAction, {
 
 	name: "addRow",
 	iconClass: "editActionIcon editAddRowIcon",

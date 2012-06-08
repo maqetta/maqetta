@@ -11,6 +11,50 @@
       }
     },
     "maqetta": {
+    	"davinci.actionSets": [
+			{
+				"id": "davinci.ve.cutCopyPaste",
+		      	"visible": true,
+	           	"actions": [
+	           		{
+	                    iconClass: "editActionIcon",
+	                    label: "Insert column after",
+	                    action: "./html/actions/AddColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Insert column before",
+	                    action: "./html/actions/AddColumnBeforeAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Remove column",
+	                    action: "./html/actions/RemoveColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Insert row after",
+	                    action: "./html/actions/AddRowAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Insert row before",
+	                    action: "./html/actions/AddRowBeforeAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Remove row",
+	                    action: "./html/actions/RemoveRowAction",
+	                    menubarPath: "davinci.edit/cut"
+	                }
+	       		]
+			}
+		],
       "scripts": {
         "widget_metadata": {
 		    "categories": {

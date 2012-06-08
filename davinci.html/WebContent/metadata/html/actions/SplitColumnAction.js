@@ -1,3 +1,5 @@
+// AWE TODO: Moved from core.client, but currently appears to be unused. Leaving for time being as it's unclear if we'll 
+// need it by time HTML table editing is finished.
 define([
     	"dojo/_base/declare",
     	"./_TableAction",
@@ -5,11 +7,11 @@ define([
     	"davinci/ve/commands/ModifyCommand",
     	"davinci/ve/commands/AddCommand",
     	"davinci/ve/widget",
-    	"davinci/ve/actions/TableMatrix"
+    	"./TableMatrix"
 ], function(declare, _TableAction, CompoundCommand, ModifyCommand, AddCommand, Widget, TableMatrix){
 
 
-return declare("davinci.ve.actions.SplitColumnAction", [_TableAction], {
+return declare(_TableAction, {
 	
 	name: "splitColumn",
 	iconClass: "editActionIcon editSplitColumnIcon",

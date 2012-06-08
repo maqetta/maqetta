@@ -425,14 +425,20 @@ define([
             return null;
         }
 
-        var lib,
-        	moduleId;
-        if (typeof value === 'string' && value.substr(0, 2) === './') {
+        var lib = getLibraryForType(type);
+        return getModuleId(lib, value);
+    }
+    
+    function getModuleId(lib, module) {
+    	if (!lib || !module) {
+    		return null;
+    	}
+        var moduleId;
+        if (typeof module === 'string' && module.substr(0, 2) === './') {
         	// if path is relative...
-            lib = getLibraryForType(type);
-            moduleId = new Path(lib.__metadataModuleId).append(value).toString();
+            moduleId = new Path(lib.__metadataModuleId).append(module).toString();
         } else {
-        	moduleId = value;
+        	moduleId = module;
         }
         return moduleId;
     }
@@ -488,6 +494,31 @@ define([
 // XXX Note: this return package info now.
         getLibrary: function(name) {
         	return name ? libraries[name] : libraries;
+        },
+        
+        getLibraryActions: function(actionSetId) {
+        	var actions = [];
+ 		   	for (var name in libraries) {
+ 		   		if ( libraries.hasOwnProperty(name)) {
+ 		   			var lib = libraries[name];
+ 					var libActionSets = lib["davinci.actionSets"];
+ 					if (libActionSets) {
+ 						dojo.forEach(libActionSets, function(libActionSet) {
+ 							if (libActionSet.id == actionSetId) {
+								var clonedActions = dojo.clone(libActionSet.actions);
+								dojo.forEach(clonedActions, function(action) {
+									// May need to transform the action class string to 
+									// account for the library's name space
+									var newActionModuleId = getModuleId(lib, action.action);
+									action.action = newActionModuleId;
+									actions.push(action);
+								});
+ 							}
+ 						});
+ 					}
+ 			   	};
+ 		   	}
+ 		   	return actions;
         },
         
     	loadThemeMeta: function(model) {

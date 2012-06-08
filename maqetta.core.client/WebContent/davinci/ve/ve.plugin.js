@@ -184,42 +184,6 @@ return {
                 },
                 {
                     iconClass: "editActionIcon",
-                    label: "Insert column after",
-                    action: "davinci/ve/actions/AddColumnAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Insert column before",
-                    action: "davinci/ve/actions/AddColumnBeforeAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Remove column",
-                    action: "davinci/ve/actions/RemoveColumnAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Insert row after",
-                    action: "davinci/ve/actions/AddRowAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Insert row before",
-                    action: "davinci/ve/actions/AddRowBeforeAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Remove row",
-                    action: "davinci/ve/actions/RemoveRowAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
                     label: "Move to front",
                     action: "davinci/ve/actions/MoveToFrontAction",
                     menubarPath: "davinci.edit/cut"

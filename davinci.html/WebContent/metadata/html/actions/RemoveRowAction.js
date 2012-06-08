@@ -6,11 +6,11 @@ define([
     	"davinci/ve/commands/ModifyCommand",
     	"davinci/ve/commands/ReparentCommand",
     	"davinci/ve/widget",
-    	"davinci/ve/actions/TableMatrix"
+    	"./TableMatrix"
 ], function(declare, _TableAction, CompoundCommand, RemoveCommand, ModifyCommand, ReparentCommand, Widget, TableMatrix){
 
 
-return declare("davinci.ve.actions.RemoveRowAction", [_TableAction], {
+return declare(_TableAction, {
 
 	name: "removeRow",
 	iconClass: "editActionIcon editRemoveRowIcon",

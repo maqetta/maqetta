@@ -146,8 +146,9 @@
 	width: 16px;
 	height: 16px;
 }
-.saveAsWidgetIcon {
-	background-image: url(./img/sprite.png)
+
+.saveAsDijitIcon {
+	background-image: url(./img/sprite.png);
 	background-position: -82px -927px;
 	width: 16px;
 	height: 16px;

@@ -5,11 +5,11 @@ define([
     	"davinci/ve/commands/RemoveCommand",
     	"davinci/ve/commands/ModifyCommand",
     	"davinci/ve/widget",
-    	"davinci/ve/actions/TableMatrix"
+    	"./TableMatrix"
 ], function(declare, _TableAction, CompoundCommand, RemoveCommand, ModifyCommand, Widget, TableMatrix){
 
 
-return declare("davinci.ve.actions.RemoveColumnAction", [_TableAction], {
+return declare(_TableAction, {
 
 	name: "removeColumn",
 	iconClass: "editActionIcon editRemoveColumnIcon",

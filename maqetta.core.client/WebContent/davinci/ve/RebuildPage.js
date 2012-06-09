@@ -1,10 +1,12 @@
 define([
 	"dojo/_base/declare",
+	"../Workbench",
+	"../workbench/Preferences",
 	"./Context",
 	"../model/Path",
 	"davinci/model/Factory",
 	"dojo/_base/Deferred"
-], function(declare, Context, Path, Factory, Deferred) {
+], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -79,9 +81,11 @@ return declare("davinci.ve.RebuildPage", Context, {
         */
 
         for ( var i = 0; i < jsChanges.length; i++ ) {
-        	var filename = new Path(jsChanges[i]).relativeTo(this._resourcePath);
-            this.addJavaScript(filename.toString(), null, null, null,
-                    jsChanges[i]);
+            var basePath = this.getCurrentBasePath();
+            var jsFilePath = basePath.append(jsChanges[i]);
+            var resourceParentPath = this._resourcePath.getParentPath();
+            var jsFileString = jsFilePath.relativeTo(resourceParentPath).toString();
+            this.addJavaScript(jsFileString, null, null, null, jsChanges[i]);
         }
         
        /* this._pageRebuilt = new Deferred();
@@ -170,7 +174,19 @@ return declare("davinci.ve.RebuildPage", Context, {
 			this.addModeledStyleSheet(relativePath.toString(), new Path(theme.files[x]), true);
 
 		}
-	}
+	},
+	
+	getCurrentBasePath: function(){
+		var base = new Path(Workbench.getProject());
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
+			basePath = base.append(prefs.webContentFolder);
+		}else{
+			basePath = base;
+		}
+		return basePath;
+	},
+
     
 
 });

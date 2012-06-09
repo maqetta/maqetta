@@ -57,7 +57,7 @@ return declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 				srcElement.removeAttribute(attrName);
 			}
 		}
-		this._refresh(widget);
+		widget.refresh();
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
@@ -84,23 +84,10 @@ return declare("davinci.ve.commands.ModifyAttributeCommand", null, {
 				srcElement.removeAttribute(attrName);
 			}
 		}
-		this._refresh(widget);
+		widget.refresh();
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
-	},
-	
-	_refresh: function(widget){
-		/* if the widget is a child of a dijiContainer widget 
-		 * we may need to refresh the parent to make it all look correct in page editor
-		 * */ 
-		var parent = widget.getParent();
-		if (parent.dijitWidget){
-			this._refresh(/*widget.*/parent);
-		} else if (widget.dijitWidget && widget.dijitWidget.resize){
-			widget.dijitWidget.resize();
-		}
-		
 	}
 
 });

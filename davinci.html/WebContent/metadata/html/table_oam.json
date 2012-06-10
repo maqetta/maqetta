@@ -3,5 +3,93 @@
 	"name": "html.table",
 	"spec": "1.0",
 	"version": "1.0",
+	"property": {	
+		"border": {
+			"datatype": "number",
+			"description": "Specifies whether the table cells should have borders or not",
+			"hidden": "true"
+		},
+		"cellpadding": {
+			"datatype": "number",
+			"description": "Not supported in HTML5.",
+			"hidden": "true"
+		},
+		"cellspacing": {
+			"datatype": "number",
+			"description": "Not supported in HTML5.",
+			"hidden": "true"
+		},
+		"frame": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "void"
+				},
+				{
+					"value": "above"
+				},
+				{
+					"value": "hsides"
+				},
+				{
+					"value": "lhs"
+				},
+				{
+					"value": "rhs"
+				},
+				{
+					"value": "vsides"
+				},
+				{
+					"value": "box"
+				},
+				{
+					"value": "border"
+				}
+			],
+			"defaultValue": "void",
+			"description": "Not supported in HTML5.",
+			"hidden": "true"
+		},
+		"rules": {
+			"datatype": "string",
+			"option": [
+				{
+					"value": ""
+				},
+				{
+					"value": "none"
+				},
+				{
+					"value": "groups"
+				},
+				{
+					"value": "rows"
+				},
+				{
+					"value": "cols"
+				},
+				{
+					"value": "all"
+				}
+			],
+			"defaultValue": "none",
+			"description": "Not supported in HTML5.",
+			"hidden": true
+		},
+		"summary": {
+			"datatype": "string",
+			"description": "Not supported in HTML5.",
+			"hidden": true
+		},
+		"width": {
+			"datatype": "string",
+			"description": "Not supported in HTML5.",
+			"hidden": true
+		}
+	},
 	"content": "<table></table>"
 }

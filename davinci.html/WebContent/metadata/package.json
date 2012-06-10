@@ -18,6 +18,18 @@
 	           	"actions": [
 	           		{
 	                    iconClass: "editActionIcon",
+	                    label: "Select row",
+	                    action: "./html/actions/SelectRowAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Select column",
+	                    action: "./html/actions/SelectColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	           		{
+	                    iconClass: "editActionIcon",
 	                    label: "Insert column after",
 	                    action: "./html/actions/AddColumnAction",
 	                    menubarPath: "davinci.edit/cut"
@@ -473,7 +485,7 @@
 		        },
 		        {
 		            "name": "<table>",
-		            "description": "Table",
+		            "description": "Defines an HTML table",
 		            "type": "html.table",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
@@ -508,11 +520,11 @@
 		                }
 		            ],
 		            "initialSize": "auto",
-		            "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr"
+		            "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr, html.caption"
 		        },
 		        {
 		            "name": "<tbody>",
-		            "description": "Table Body",
+		            "description": "Groups the body content in an HTML table",
 		            "type": "html.tbody",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
@@ -548,7 +560,7 @@
 		        },
 		        {
 		            "name": "<td>",
-		            "description": "Table Data",
+		            "description": "Defines a standard cell in an HTML table",
 		            "type": "html.td",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
@@ -562,20 +574,8 @@
 		            }
 		        },
 		        {
-		            "name": "<textarea>",
-		            "description": "<textarea>",
-		            "type": "html.textarea",
-		            "category": "html",
-		            "icon": "resources/images/textarea.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
-		            "inlineEdit": {
-		                "property": "textContent",
-		                "displayOnCreate": false
-		            }
-		        },
-		        {
 		            "name": "<tfoot>",
-		            "description": "Table Footer",
+		            "description": "Groups footer content in an HTML table",
 		            "type": "html.tfoot",
 		            "category": "html",
 		            "hidden": true,
@@ -585,7 +585,7 @@
 		        },
 		        {
 		            "name": "<th>",
-		            "description": "Table Header Cell",
+		            "description": "Defines a header cell in an HTML table",
 		            "type": "html.th",
 		            "category": "html",
 		            "hidden": true,
@@ -594,7 +594,7 @@
 		        },
 		        {
 		            "name": "<thead>",
-		            "description": "Table Header",
+		            "description": "Groups header content in an HTML table",
 		            "type": "html.thead",
 		            "category": "html",
 		            "hidden": true,
@@ -604,7 +604,7 @@
 		        },
 		        {
 		            "name": "<tr>",
-		            "description": "Table Row",
+		            "description": "Defines a row in an HTML table",
 		            "type": "html.tr",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
@@ -621,6 +621,46 @@
 		            "resizable": "none",
 		            "allowedParent": "html.tbody, html.table, html.thead, html.tfoot",
 		            "allowedChild": "html.td, html.th"
+		        },
+		        {
+		            "name": "<caption>",
+		            "description": "Defines a caption for a table",
+		            "type": "html.caption",
+		            "category": "html",
+		            "hidden": true,
+		            "resizable": "none",
+		            "allowedParent": "html.table"
+		        },
+		        {
+		            "name": "<col>",
+		            "description": "Specifies column properties for each column within a <colgroup> element",
+		            "type": "html.col",
+		            "category": "html",
+		            "hidden": true,
+		            "resizable": "none",
+		            "allowedParent": "html.colgroup"
+		        },
+		        {
+		            "name": "<colgroup>",
+		            "description": "Specifies a group of one or more columns in a table for formatting",
+		            "type": "html.colgroup",
+		            "category": "html",
+		            "hidden": true,
+		            "resizable": "none",
+		            "allowedParent": "html.table",
+		            "allowedChild": "html.col"
+		        },
+		        {
+		            "name": "<textarea>",
+		            "description": "<textarea>",
+		            "type": "html.textarea",
+		            "category": "html",
+		            "icon": "resources/images/textarea.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+		            "inlineEdit": {
+		                "property": "textContent",
+		                "displayOnCreate": false
+		            }
 		        },
 		        {
 		            "name": "<video>",

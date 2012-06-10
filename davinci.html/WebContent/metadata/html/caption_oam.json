@@ -1,0 +1,7 @@
+{
+	"id": "http://www.w3.org/html/caption",
+	"name": "html.caption",
+	"spec": "1.0",
+	"version": "1.0",
+	"content": "<caption></caption>"
+}

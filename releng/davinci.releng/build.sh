@@ -65,7 +65,10 @@ else
 fi
 
 # run dojo build by default
-[ "${MAQETTA_DOJO_BUILD}" ] || MAQETTA_DOJO_BUILD=true
+if [ -z "${MAQETTA_DOJO_BUILD}" ] 
+then
+	export MAQETTA_DOJO_BUILD=true
+fi
 
 #
 # GitHub read-only URL for Maqetta repository. This should not change.

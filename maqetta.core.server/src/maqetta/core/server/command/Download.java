@@ -154,8 +154,8 @@ public class Download extends Command {
         String userID = user.getUserID();
 
         //FIXME: temporary for testing behind firewall, use Adam's public account.  Will only work if files match what's there (e.g. clean workspace)
-		requestURL = "http://maqetta.org:55556/";
-		userID = "apeller@us.ibm.com";
+//		requestURL = "http://maqetta.org:55556/";
+//		userID = "apeller@us.ibm.com";
 
 		for (int i = 0; i < files.length; i++) {
         	if (files[i].isVirtual()) continue;

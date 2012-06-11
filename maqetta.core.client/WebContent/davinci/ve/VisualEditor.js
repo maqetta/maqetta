@@ -334,10 +334,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			this.context.setSource(content, this.context._restoreStates, this.context);
 		}
 
-		if(!this.skipSave) {
-			// auto save file
-			this.save(true);			
-		}
 	},
 
 	_connectCallback: function(failureInfo) {

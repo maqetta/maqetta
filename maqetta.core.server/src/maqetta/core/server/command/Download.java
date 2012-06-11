@@ -1,14 +1,11 @@
 package maqetta.core.server.command;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -40,7 +37,7 @@ import org.maqetta.server.VLibraryResource;
 public class Download extends Command {
 
 	
-	private Vector zippedEntries;
+	private Vector<String> zippedEntries;
 	private URL buildURL = null;
 	
 	//This should stay in sync with validation rules on the client
@@ -59,7 +56,7 @@ public class Download extends Command {
         }
         
         /* keep track of things we've added */
-        zippedEntries = new Vector();
+        zippedEntries = new Vector<String>();
         
         String path = req.getParameter("fileName");
         path = sanitizeFileName(path);
@@ -133,6 +130,7 @@ public class Download extends Command {
         			} finally {
         				is.close();
         			}
+        			Thread.sleep(1000);
         		}
 
         		System.out.println("build result: " + result);
@@ -141,20 +139,22 @@ public class Download extends Command {
         } catch (IOException ioe) {
         	ioe.printStackTrace();
         	// continue download without a build
+        } catch (InterruptedException ie) {
+        	// continue download without a build
         }
         return buildURL;
 	}
 
-	private Map analyzeWorkspace(IUser user, String requestURL) throws IOException {
+	private Map<String,Object> analyzeWorkspace(IUser user, String requestURL) throws IOException {
     	IVResource[] files = user.findFiles("*.html", false, true);
         HttpClient client = new HttpClient();
         PostMethod method;
-        Object result = null;
+        Map<String,Object> result = null;
         String userID = user.getUserID();
 
         //FIXME: temporary for testing behind firewall, use Adam's public account.  Will only work if files match what's there (e.g. clean workspace)
-		requestURL = "http://maqetta.org:55556/";
-		userID = "apeller@us.ibm.com";
+//		requestURL = "http://maqetta.org:55556/";
+//		userID = "apeller@us.ibm.com";
 
 		for (int i = 0; i < files.length; i++) {
         	if (files[i].isVirtual()) continue;
@@ -183,20 +183,29 @@ public class Download extends Command {
 
 	            String content = body.substring(start + 10, end);
 	            System.out.println("build.dojotoolkit.org: Analyse result="+ content);
-	            Object dependencies = JSONReader.read(content);
+	            Map<String,Object> dependencies = (Map)JSONReader.read(content);
 	            if (result == null) {
 		            result = dependencies;           	
 	            } else {
-	            	//TODO mixin results
+	            	List<String> requiredDojoModules = (List)result.get("requiredDojoModules");
+	            	List<String> additionalModules = (List)dependencies.get("requiredDojoModules");
+	            	// TODO: Does Java provide a better way to merge lists?  Sets?  Use an Iterator here?
+	                for(int j = 0; j < additionalModules.size(); j++) {
+	                	String additionalModule = additionalModules.get(j);
+	                	if (!requiredDojoModules.contains(additionalModule)) {
+	                		requiredDojoModules.add(additionalModule);
+	                		System.out.println("add "+additionalModule);
+	                	}
+	                }
 	            }
     		} finally {
     			method.releaseConnection();
     		}
     	}
-        return (Map)result;
+        return result;
     }
 
-    private String requestBuild(Map dependencies) throws IOException {
+    private String requestBuild(Map<String,Object> dependencies) throws IOException {
         JSONWriter jsonWriter = new JSONWriter(false);
         jsonWriter/*.startObject()*/
         	.addField("optimise", "shrinksafe")
@@ -215,7 +224,7 @@ public class Download extends Command {
         jsonWriter.addField("name", "dojo.js");
         jsonWriter.addFieldName("modules");
         jsonWriter.startArray();
-    	List requiredDojoModules = (List)dependencies.get("requiredDojoModules");
+    	List<String> requiredDojoModules = (List)dependencies.get("requiredDojoModules");
         for(int i = 0; i < requiredDojoModules.size(); i++) {
             jsonWriter.startObject();
         	jsonWriter.addField("name", (String)requiredDojoModules.get(i));
@@ -242,10 +251,6 @@ public class Download extends Command {
         } finally {
 			method.releaseConnection();
 		}
-        /*
-               	"packages":[{"name":"dojo","version":"1.7.2"},{"name":"dwb","version":"1.0.0"},{"name":"dojo_web_builder8869570927650621065.tmp","version":"1.0.0"}],
-               	"layers":[{"name":"dojo.js","modules":[{"name":"dijit.form.Button","package":"dojo"},{"name":"dijit.form.ComboBox","package":"dojo"},{"name":"dijit.form.MultiSelect","package":"dojo"},{"name":"dijit.form.TextBox","package":"dojo"},{"name":"dijit.layout.ContentPane","package":"dojo"},{"name":"dijit.layout.TabContainer","package":"dojo"},{"name":"dojo.dom","package":"dojo"},{"name":"dojo.dom-style","package":"dojo"},{"name":"dojo.parser","package":"dojo"},{"name":"dojo.query","package":"dojo"},{"name":"dojo._base.connect","package":"dojo"},{"name":"dojo._base.lang","package":"dojo"},{"name":"dojo.domReady!","package":"dojo"},{"name":"maqetta.AppStates","package":"dojo_web_builder8869570927650621065.tmp"},{"name":"maqetta.space","package":"dojo_web_builder8869570927650621065.tmp"}]}]}
-        */
     }
 
     private InputStream getBuildStream(URL resultURL, String name) throws IOException {
@@ -280,7 +285,7 @@ public class Download extends Command {
     
     private  void zipLibs(List libs, IPath root, ZipOutputStream zos) throws IOException{
         for (int i = 0; i < libs.size(); i++) {
-            HashMap libEntry = (HashMap) libs.get(i);
+            Map libEntry = (Map) libs.get(i);
             String id = (String) libEntry.get("id");
             String version = (String) libEntry.get("version");
             String path = (String) libEntry.get("root");

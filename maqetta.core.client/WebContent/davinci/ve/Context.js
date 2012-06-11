@@ -3357,8 +3357,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	hasDirtyResources: function(){
+		var dirty = false;
+		var baseRes = this.getBaseResource(); // theme editors don't have a base resouce. 
+		if (baseRes){
+			dirty = baseRes.isDirty();
+		}
 		
-		var dirty = this.getBaseResource().isDirty();
 		if(dirty)
 			return dirty;
 		var visitor = {

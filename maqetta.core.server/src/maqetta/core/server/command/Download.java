@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -38,7 +37,7 @@ import org.maqetta.server.VLibraryResource;
 public class Download extends Command {
 
 	
-	private Vector zippedEntries;
+	private Vector<String> zippedEntries;
 	private URL buildURL = null;
 	
 	//This should stay in sync with validation rules on the client
@@ -57,7 +56,7 @@ public class Download extends Command {
         }
         
         /* keep track of things we've added */
-        zippedEntries = new Vector();
+        zippedEntries = new Vector<String>();
         
         String path = req.getParameter("fileName");
         path = sanitizeFileName(path);
@@ -286,7 +285,7 @@ public class Download extends Command {
     
     private  void zipLibs(List libs, IPath root, ZipOutputStream zos) throws IOException{
         for (int i = 0; i < libs.size(); i++) {
-            HashMap libEntry = (HashMap) libs.get(i);
+            Map libEntry = (Map) libs.get(i);
             String id = (String) libEntry.get("id");
             String version = (String) libEntry.get("version");
             String path = (String) libEntry.get("root");

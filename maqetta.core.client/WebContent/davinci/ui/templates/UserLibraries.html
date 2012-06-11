@@ -1,15 +1,9 @@
 <div class='userLibDialog'>
 	<div dojoAttachPoint="_tableDiv"></div>
 	<br><br>
-	<table class='templateTable'> 
-			<tr> 
-			<td class='templateFiller3'>&nbsp;</td>
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' type='submit' dojoAttachEvent='onClick:okButton' label='${buttonOk}'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateButton'><span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></td> 
-				<td class='templateFiller4'>&nbsp;</td> 
-				<td class='templateFiller3'>&nbsp;</td>
-			</tr> 
-	</table> 
+
+	<div class="buttonRow dialogButtonContainer">
+		<span dojoType='dijit.form.Button' type='submit' dojoAttachEvent='onClick:okButton' label='${uiNLS.modify}'></span> 
+		<span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'></span> 
+	</div> 
 </div>

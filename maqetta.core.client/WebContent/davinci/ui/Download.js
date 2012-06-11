@@ -1,6 +1,7 @@
 define(["dojo/_base/declare",
-        "dijit/_Templated",
-        "dijit/_Widget",
+        "dijit/_TemplatedMixin",
+        "dijit/_WidgetBase",
+        "dijit/_WidgetsInTemplateMixin",
         "davinci/library",
         "system/resource",
         "davinci/Runtime",
@@ -13,19 +14,16 @@ define(["dojo/_base/declare",
         "dijit/form/Button",
         "dijit/form/ValidationTextBox"
 
-],function(declare, _Templated, _Widget,  Library, Resource,  Runtime, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
-	return declare("davinci.ui.Download",   [_Widget, _Templated], {
+],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Library, Resource, Runtime, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
-		widgetsInTemplate: true,
 		
 		_fileNameValidationRegExp: "[a-zA-z0-9_.]+", //Numbers, letters, "_", and "."
 		_fileNameMaxLength: 50, 
 		
 		postMixInProperties: function() {
-			var langObj = uiNLS;
-			var dijitLangObj = commonNLS;
-			dojo.mixin(this, langObj);
-			dojo.mixin(this, dijitLangObj);
+			dojo.mixin(this, uiNLS);
+			dojo.mixin(this, commonNLS);
 			this.inherited(arguments);
 		},
 		/* templated attach points, custom input section */
@@ -34,19 +32,19 @@ define(["dojo/_base/declare",
 		__rewriteDojo : null,
 		__rewriteDojoURL : null,
 		__fileName : null,
+		__optimize: null, //TODO: make sticky
 		_selectionDiv : null,
 		_okButton : null,
 		_tableDiv : null,
 	
-		buildRendering : function(){
-			var langObj = uiNLS;
+		buildRendering: function(){
 			this.inherited(arguments);
 			
 			this._handles = [];
 			this._userLibs = Library.getUserLibs(this.getRoot());
 			var uiArray = [];
 			
-			uiArray.push("<table cellspacing='0' cellpadding='0' width='100%' class='dwnloadLibTable'><tr><td class='header'>"+langObj.library+"</td><td class='header'>"+langObj.version+"</td><td class='header'>"+langObj.include+"<br>"+langObj.source+"</td><td class='header'>"+langObj.baseLocation+"</td></tr>");
+			uiArray.push("<table cellspacing='0' cellpadding='0' width='100%' class='dwnloadLibTable'><tr><td class='header'>"+uiNLS.library+"</td><td class='header'>"+uiNLS.version+"</td><td class='header'>"+uiNLS.include+"<br>"+uiNLS.source+"</td><td class='header'>"+uiNLS.baseLocation+"</td></tr>");
 			uiArray.push("<tr><td colspan='4'><hr></hr></td></tr>");
 			this.libraries = {};
 			/* build UI table */
@@ -55,16 +53,15 @@ define(["dojo/_base/declare",
 				this._userLibs[i].initRoot = this._getLibRoot(this._userLibs[i].id,this._userLibs[i].version);
 				var name = this._userLibs[i].id; // may want to use a better name here eventually
 				
-				if(this._userLibs[i].initRoot==null) continue;
-				
-				
+				if(this._userLibs[i].initRoot==null) {
+					continue;
+				}
+
 				uiArray.push("<tr>");
 				uiArray.push("<td class='columna'>" + name + "</td>");
 				uiArray.push("<td class='columnb'>" + this._userLibs[i].version + "</td>");
 				uiArray.push("<td class='columnc'><input type='checkbox' libItemCheck='"+ i +"' checked></input></td>");
-				
-				
-				
+
 				uiArray.push("<td class='columnd'><input type='text' value='" + this._userLibs[i].initRoot + "' libItemPath='"+i+ "'></input></td>");
 				
 				uiArray.push("</tr>");
@@ -73,7 +70,6 @@ define(["dojo/_base/declare",
 			uiArray.push("</table>");
 			var html =  uiArray.join("");
 			dojo.place(html, this._tableDiv);
-		
 		},
 	
 		_getLibRoot: function(id,version){
@@ -109,24 +105,13 @@ define(["dojo/_base/declare",
 		},
 		
 		_getResources: function(){
-		
-			var project=Workbench.getProject();
-			var folder = Resource.findResource(project);
-			
-			/* get all sub files */
-		
-			var list = [];
-			for(var i = 0;i<folder.children.length;i++){
-				list.push(folder.children[i].getPath());
-			}
-			return {userFiles: [project], userLibs: this._getLibs()};
+			return {userFiles: [Workbench.getProject()], userLibs: this._getLibs()};
 		},
 		
 		_rewriteUrls: function(){
 		
 			var resources = this._getResources();
-	
-			
+
 			//this._pages = Resource.findResource("*.html", true, null, true);
 			
 			var pageBuilder = new RebaseDownload(resources.userLibs);
@@ -152,13 +137,12 @@ define(["dojo/_base/declare",
 		
 		okButton: function(){
 			if (this.__fileName.isValid()) {
-				function makeTimeoutFunction(downloadFiles, fileName, root, libs){
+				function makeTimeoutFunction(downloadFiles, fileName, root, libs, options){
 					return function(){
 						var files = downloadFiles;
 						var fn = fileName;
-					
-						
-						Resource.download(files, fn, root, libs);		
+
+						Resource.download(files, fn, root, libs, options);		
 						/*
 						for(var i=0;i<pgs.length;i++){
 							pgs[i].removeWorkingCopy();
@@ -180,7 +164,11 @@ define(["dojo/_base/declare",
 					return lib.includeSrc;
 				});
 	
-				setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs), 300);
+				var options = {};
+				if (this.__optimize.getValue()) {
+					options.build = "1";
+				}
+				setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs, options), 300);
 				this.onClose();
 			}
 		},

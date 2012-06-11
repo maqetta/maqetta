@@ -19,7 +19,8 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
 		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
-		this._applyToStateIndex = this._getApplyToStateIndex(applyToWhichStates);
+		var veStates = require("davinci/ve/States");
+		this._applyToStateIndex = veStates.getApplyToStateIndex(applyToWhichStates);
 	},
 
 	add: function(command){
@@ -40,11 +41,11 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		if(!widget){
 			return;
 		}
-		var veStates = require("davinci/ve/States");
 		
+		var veStates = require("davinci/ve/States");
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
-		var currentStateIndex = this._getCurrentStateIndex();
+		var currentStateIndex = veStates.getCurrentStateIndex();
 		if(styleValuesAllStates[this._applyToStateIndex]){
 			styleValuesAllStates[this._applyToStateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[this._applyToStateIndex], this._newValues);
 		}else{
@@ -55,7 +56,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(styleValuesAllStates['undefined']);
-		this._refresh(widget);
+		widget.refresh();
 		// Recompute styling properties in case we aren't in Normal state
 		veStates.resetState(widget.domNode);
 				
@@ -77,14 +78,15 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			return;
 		}
 
+		var veStates = require("davinci/ve/States");
 		var styleValuesAllStates = this._oldStyleValuesAllStates;
-		var currentStateIndex = this._getCurrentStateIndex();
+		var currentStateIndex = veStates.getCurrentStateIndex();
 		widget.setStyleValuesAllStates(styleValuesAllStates);
 		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(this._oldStyleValuesAllStates['undefined']);
 		
-		this._refresh(widget);
+		widget.refresh();
 		// Recompute styling properties in case we aren't in Normal state
 		require("davinci/ve/States").resetState(widget.domNode);
 		
@@ -95,59 +97,6 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		// For time being, I made payload compatible with /davinci/ui/widgetSelectionChanged. 
 		// Double array is necessary because dojo.publish strips out the outer array.
 		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[widget]]);
-	},
-	
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_refresh: function(widget){
-		/* if the widget is a child of a dijiContainer widget 
-		 * we may need to refresh the parent to make it all look correct in page editor
-		 */ 
-		var parent = widget.getParent();
-		if (parent.dijitWidget){
-			this._refresh(parent);
-		} else if (widget && widget.resize){
-			widget.resize();
-		}
-		
-	},
-
-	/**
-	 * Returns array index into states object for given state
-	 * Mostly used so that a null or undefined or 'Normal' state will get converted to string 'undefined'
-	 * to compensate for screwy way that States.js is currently implemented
-	 * @param {string|null|undefined} state  Current state
-	 * @returns {string}  Returns either original state string or 'undefined'
-	 */
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getStateIndex:function(state){
-		var stateIndex;
-		if(!state || state == 'Normal' || state == 'undefined'){
-			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
-			stateIndex = 'undefined';
-		}else{
-			stateIndex = state;
-		}
-		return stateIndex;
-	},
-
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getCurrentStateIndex:function(){
-		var veStates = require("davinci/ve/States");
-		return this._getStateIndex(veStates.getState());
-	},
-
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getApplyToStateIndex:function(applyToWhichStates){
-		var veStates = require("davinci/ve/States");
-		var currentState = veStates.getState();
-		var state;
-		if(applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
-			state = currentState;
-		}else{
-			state = undefined;
-		}
-		return this._getStateIndex(state);
 	}
-
 });
 });

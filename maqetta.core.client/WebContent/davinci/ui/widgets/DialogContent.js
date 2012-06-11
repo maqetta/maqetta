@@ -28,6 +28,8 @@ return declare("davinci.ui.widgets.DialogContent", [ContentPane, _WidgetBase, _T
 		if (this.hideCancel) {
 			this.cancelButton.domNode.style.display = "none";
 		}
+
+		dojo.addClass(this.domNode, "dialogContent");
 	},
 
 	onClose: function() {

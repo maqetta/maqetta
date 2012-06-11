@@ -47,7 +47,7 @@
 						".claro .dijitAccordionInnerContainer": [
 							"border-color"
 						],
-						".claro .dijitAccordionContainer .dijitAccordionContainer-child": [
+						".claro .dijitAccordionContainer .dijitAccordionChildWrapper": [
 							"border-color" 
 						], 
 						".dijitTitlePane": [
@@ -279,7 +279,7 @@
 				},
 				"CalendarPreviousMonth": {
 					"selectors": {
-						".claro .dijitCalendarPreviousMonth" : [
+						".claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel" : [
 							"background-color",
 							"border-color"
 						]  
@@ -383,6 +383,13 @@
                         	"selectors": {
                         		".claro .dijitAccordionContainer .dijitAccordionContainer-child": [
                             		"background-color",
+									"padding",
+									"padding-top",
+									"padding-right",
+									"padding-bottom",
+									"padding-left" 
+                            	],
+                            	".claro .dijitAccordionContainer .dijitAccordionChildWrapper": [
 									"border-color",
 									"border-style",
 									"border-width",
@@ -390,12 +397,7 @@
 									"margin-right",
 									"margin-bottom",
 									"margin-left",
-									"margin",
-									"padding",
-									"padding-top",
-									"padding-right",
-									"padding-bottom",
-									"padding-left" 
+									"margin"
                             	] 
 							},
                             "query": ".dijitAccordionContainer-child"
@@ -404,12 +406,14 @@
                             "selectors": {
                             	".claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionContainer-child":[
                             		"background-color",
+									"-webkit-box-shadow:",
+									"-moz-box-shadow" 
+                            	],
+                            	".claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper": [
 									"border-color",
 									"border-style",
 									"border-width",
-									"-webkit-box-shadow:",
-									"-moz-box-shadow" 
-                            	] 
+                            	]  
 							},
                             "query": ".dijitAccordionInnerContainer",
 							"simulate": "dijitSelectedActive dijitAccordionInnerContainerSelectedActive"
@@ -418,12 +422,14 @@
                             "selectors": {
                             	".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionContainer-child":[
                             		"background-color",
+									"-webkit-box-shadow:",
+									"-moz-box-shadow" 
+                            	],
+                            	".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper": [
 									"border-color",
 									"border-style",
 									"border-width",
-									"-webkit-box-shadow:",
-									"-moz-box-shadow" 
-                            	] 
+                            	]   
 							},
                             "query": ".dijitAccordionInnerContainer",
 							"simulate": "dijitSelectedHover dijitAccordionInnerContainerSelectedHover"
@@ -504,7 +510,10 @@
                             "selectors": {
                             	".claro .dijitAccordionInnerContainerSelected":[
                             		"background-color",
-									"border-color" 
+									"border-color",
+									"border-color",
+									"border-style",
+									"border-width" 
                             	],
 								".claro .dijitAccordionInnerContainerSelected .dijitAccordionTitle": [
                             		"color",
@@ -812,7 +821,7 @@
 				}
             },
             "subwidgets": {
-                "CalendarMonthContainer": {
+                "CalendarMonthLabel": {
                     "displayName": "$auto" ,
                     "states": {
                         "Normal": {
@@ -822,6 +831,19 @@
                                 ] 
                             },
                             "query": "" 
+                        } 
+                    } 
+                },
+                "CalendarMonthDropDownButton": {
+                    "displayName": "$auto" ,
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".claro .dijitCalendar .dijitDropDownButton .dijitButtonNode" : [
+                                    "$std_10" 
+                                ] 
+                            },
+                            "query": ".dijitCalendarMonthContainer .dijitDropDownButton" 
                         } 
                     } 
                 },
@@ -980,7 +1002,7 @@
                     "states": {
                         "Normal": {
                             "selectors": {
-                                ".claro .dijitCalendarPreviousMonth" : [
+                                ".claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel" : [
                                     "$std_10" 
                                 ] 
                             },
@@ -1364,11 +1386,17 @@
 									"border-width",
 									"border-color"
 								],
+								".claro .dijitTabContainerTop-tabs": [
+									"border-width",
+									"border-style",
+                                    "border-color"
+								],
 								".claro .dijitTabPaneWrapper": [
 									"border-width",
 									"border-style",
                                     "border-color"
 								]
+								
                             },
                             "query": "div.dijitTabContainerTop-tabs > div",
 							"simulate": " "

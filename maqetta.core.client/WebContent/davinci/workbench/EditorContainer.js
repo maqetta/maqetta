@@ -120,7 +120,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	setDirty: function (isDirty) {
-		title = this._getTitle();
+		var title = this._getTitle();
 		if (isDirty){
 			title="*"+title;
 		}

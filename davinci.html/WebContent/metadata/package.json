@@ -11,6 +11,50 @@
       }
     },
     "maqetta": {
+    	"davinci.actionSets": [
+			{
+				"id": "davinci.ve.cutCopyPaste",
+		      	"visible": true,
+	           	"actions": [
+	           		{
+	                    iconClass: "editActionIcon",
+	                    label: "Insert column after",
+	                    action: "./html/actions/AddColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Insert column before",
+	                    action: "./html/actions/AddColumnBeforeAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Remove column",
+	                    action: "./html/actions/RemoveColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Insert row after",
+	                    action: "./html/actions/AddRowAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Insert row before",
+	                    action: "./html/actions/AddRowBeforeAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Remove row",
+	                    action: "./html/actions/RemoveRowAction",
+	                    menubarPath: "davinci.edit/cut"
+	                }
+	       		]
+			}
+		],
       "scripts": {
         "widget_metadata": {
 		    "categories": {
@@ -126,8 +170,7 @@
 		            "inlineEdit": {
 		                "property": "textContent",
 		                "displayOnCreate": false
-		            },
-		            "initialSize": "auto"
+		            }
 		        },
 		        {
 		            "name": "<em>",
@@ -162,7 +205,6 @@
 		            "properties": {
 		             	"style": "border:2px groove threedface;margin:2px;padding:0.75em;"
 		            },
-		            "initialSize": "auto",
 		            "children": [
 		                {
 		                    "type": "html.legend",
@@ -178,7 +220,6 @@
 		            "category": "html",
 		            "icon": "resources/images/form.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPj4+fX19uTk5eDg4TteljxgmD5km0Bon0BonkFon0NsokFonkVxp0NtokZxpkl2q0h2q0h2qkt7r0l2qk5/s06As05/slGEtvr7/FCFt1CEtlSLvFOIulWLvVaOv/T19dzd3dTV1f7+/vz8/Pv7+/r6+vn5+fj4+PX19fT09PHx8fDw8P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAaEQBbLQywai8KhiMRsOj3JjuhoJG2SHNEEw+1iJiROUiMimM9n0yVpEZne8DglKZkS43BJ8iGqpCoBHhcPCwQBEEkMIwqMKo6PKg5JDSUClpeYCkkIAEUDn6ADB0kGJxUrFSAeGREJBCAGSQUojAoht7ghBUkEH76/wB8EvGjFZ0nIyclBADs=",
-		            "initialSize": "auto",
 		            "allowedChild": "ANY"
 		        },
 		        {

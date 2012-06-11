@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"maq-metadata-dojo-1.7/dijit/layout/ContainerInput",
+	"maq-metadata-dojo-1_7/dijit/layout/ContainerInput",
 	"dijit/Dialog",
 	"./GridWizard",
 	"dojo/i18n!./nls/gridx",

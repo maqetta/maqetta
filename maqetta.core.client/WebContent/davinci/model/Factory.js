@@ -52,8 +52,10 @@ var Factory = {
 					// be a working copy if the last instance did not save it when they closed the
 					// editor.
 					var resource = systemResource.findResource(url);
-					resource.removeWorkingCopy(); 
-					resource.dirtyResource = false;
+					if (resource){ // models can be created without a real resource.
+						resource.removeWorkingCopy(); 
+						resource.dirtyResource = false;
+					}
 				}
 			}
 		}

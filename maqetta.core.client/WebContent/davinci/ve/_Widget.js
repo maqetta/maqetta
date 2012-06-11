@@ -689,6 +689,19 @@ return declare("davinci.ve._Widget", null, {
 
 	resize: function() {
 	},
+	
+	/* if the widget is a child of a dijit Container widget 
+	 * we may need to refresh the parent to make it all look correct in page editor
+	 * FIXME: need to factor out dijit-specific code from this base class
+	 */ 
+	refresh: function(){
+		var parent = this.getParent();
+		if (parent.dijitWidget){
+			parent.refresh();
+		} else if (this.resize){
+			this.resize();
+		}
+	},
 
 	removeChild: function( /*Widget*/child) {
 		if(!child) {

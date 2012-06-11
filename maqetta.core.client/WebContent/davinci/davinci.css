@@ -352,6 +352,7 @@ davinci_top_bar .dijitButtonNode {
 	display: inline-block;
 	float: right;
 	padding-right: .5em;
+	white-space: nowrap;
 }
 
 #davinci_user {
@@ -1001,6 +1002,7 @@ davinci_top_bar .dijitButtonNode {
 	float: right; 
 	display: inline-block;
 	 line-height: 2em;
+	 white-space: nowrap;
 }
 
 .smartInputHelpTextDiv {

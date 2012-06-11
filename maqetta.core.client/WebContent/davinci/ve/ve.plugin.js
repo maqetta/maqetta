@@ -184,42 +184,6 @@ return {
                 },
                 {
                     iconClass: "editActionIcon",
-                    label: "Insert column after",
-                    action: "davinci/ve/actions/AddColumnAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Insert column before",
-                    action: "davinci/ve/actions/AddColumnBeforeAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Remove column",
-                    action: "davinci/ve/actions/RemoveColumnAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Insert row after",
-                    action: "davinci/ve/actions/AddRowAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Insert row before",
-                    action: "davinci/ve/actions/AddRowBeforeAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
-                    label: "Remove row",
-                    action: "davinci/ve/actions/RemoveRowAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
                     label: "Move to front",
                     action: "davinci/ve/actions/MoveToFrontAction",
                     menubarPath: "davinci.edit/cut"
@@ -418,33 +382,23 @@ return {
                     label: "Save As",
                     toolbarPath: "save"
                 },
-                // commenting out the 'save as widget' feature.
-                //{
-                //   id: "saveasdijit",
-                //    iconClass: 'saveAsWidgetIcon',
-                //    run: function(){
-                //        davinci.de.resource.createDijiFromNewDialog();
-                //    }
-                //    isEnabled: function(context) {
-                //        var isEnabled = davinci.Workbench.getOpenEditor();
-                //        return isEnabled;
+               
+               {
+                  id: "saveasdijit",
+                    iconClass: 'saveAsDijitIcon',
+                    run: function(){
+                    	return require(['davinci/de/resource'], function(r){
+                    		r.createDijiFromNewDialog();
+                    	})
+                    },
+                    isEnabled: function(context) {
+                        return require('../Workbench').getOpenEditor();
+               
 
-                //},
-                //    label: "Save As Widget",
-                //    toolbarPath: "save"
-                //},
-                // {
-                // id: "saveaswidget",
-                // iconClass: 'saveAsIcon', // XXX
-                // action: "davinci/actions/SaveAsWidget",
-                // isEnabled : function(context){
-                // var isEnabled = davinci.Workbench.getOpenEditor();
-                // return isEnabled;
-                //                    
-                // },
-                // label: "Save As Widget",
-                // toolbarPath: "save"
-                // },
+                    },
+                    label: "Save As Widget",
+                    toolbarPath: "save"
+                 },
                 {
                     id: "theme",
                     iconClass: 'selectThemeIcon',

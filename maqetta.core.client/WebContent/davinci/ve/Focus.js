@@ -158,7 +158,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._resizeWidth = op.resizeWidth;
 		this._resizeHeight = op.resizeHeight;
 		var horizontal = (op.resizeWidth && !op.resizeHeight) ? "block" : "none";
-		var vertical = (op.resizeHeigh && !op.resizeWidth) ? "block" : "none";
+		var vertical = (op.resizeHeight && !op.resizeWidth) ? "block" : "none";
 		var corner = (op.resizeWidth && op.resizeHeight) ? "block" : "none";
 		this._nobs[LEFT].style.display = horizontal;
 		this._nobs[RIGHT].style.display = horizontal;

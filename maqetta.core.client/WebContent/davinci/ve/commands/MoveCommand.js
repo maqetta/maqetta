@@ -30,7 +30,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		//   "current" => apply to currently active state
 		//   [...array of strings...] => apply to these states (may not yet be implemented)
 		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
-		this._applyToStateIndex = this._getApplyToStateIndex(applyToWhichStates);
+		this._applyToStateIndex = States.getApplyToStateIndex(applyToWhichStates);
 		
 		this._disableSnapping = disableSnapping;
 	},
@@ -94,7 +94,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
-		var currentStateIndex = this._getCurrentStateIndex();
+		var currentStateIndex = States.getCurrentStateIndex();
 		if(this._oldBox){
 			var oldLeft = this._oldBox.l - offsetParentBorderBoxPageCoords.l - borderExtents.l;
 			var oldTop = this._oldBox.t - offsetParentBorderBoxPageCoords.t - borderExtents.t;
@@ -112,7 +112,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(styleValuesAllStates['undefined']);
-		this._refresh(widget);
+		widget.refresh();
 
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
@@ -136,71 +136,18 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		}
 
 		var styleValuesAllStates = this._oldStyleValuesAllStates;
-		var currentStateIndex = this._getCurrentStateIndex();
+		var currentStateIndex = States.getCurrentStateIndex();
 		widget.setStyleValuesAllStates(styleValuesAllStates);
 		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(this._oldStyleValuesAllStates['undefined']);
 		
-		this._refresh(widget);
+		widget.refresh();
 		
 		// Recompute styling properties in case we aren't in Normal state
 		davinci.ve.states.resetState(widget.domNode);
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged",[[widget]]);
-	},
-	
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_refresh: function(widget){
-		/* if the widget is a child of a dijiContainer widget 
-		 * we may need to refresh the parent to make it all look correct in page editor
-		 * */ 
-		var parent = widget.getParent();
-		if (parent.dijitWidget){
-			this._refresh(parent);
-		} else if (widget && widget.resize){
-			widget.resize();
-		}
-		
-	},
-
-	/**
-	 * Returns array index into states object for given state
-	 * Mostly used so that a null or undefined or 'Normal' state will get converted to string 'undefined'
-	 * to compensate for screwy way that States.js is currently implemented
-	 * @param {string|null|undefined} state  Current state
-	 * @returns {string}  Returns either original state string or 'undefined'
-	 */
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getStateIndex:function(state){
-		var stateIndex;
-		if(!state || state == 'Normal' || state == 'undefined'){
-			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
-			stateIndex = 'undefined';
-		}else{
-			stateIndex = state;
-		}
-		return stateIndex;
-	},
-
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getCurrentStateIndex:function(){
-		var veStates = require("davinci/ve/States");
-		return this._getStateIndex(veStates.getState());
-	},
-
-	//FIXME: Right now we duplicate versions of this function in multiple commands
-	_getApplyToStateIndex:function(applyToWhichStates){
-		var veStates = require("davinci/ve/States");
-		var currentState = veStates.getState();
-		var state;
-		if(applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
-			state = currentState;
-		}else{
-			state = undefined;
-		}
-		return this._getStateIndex(state);
 	}
-
 });
 });

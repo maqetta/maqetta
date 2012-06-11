@@ -3357,7 +3357,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	hasDirtyResources: function(){
-		var dirty = false;
+		
+		var dirty = this.getBaseResource().isDirty();
+		if(dirty)
+			return dirty;
 		var visitor = {
 			visit: function(node){
 				if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){

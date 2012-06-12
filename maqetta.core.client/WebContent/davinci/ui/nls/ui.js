@@ -116,6 +116,7 @@ define({ root:
 		
 		/*Templates*/
 		//download.html -- see above for file name
+		"optimizeOption": "Use Dojo Web Builder (experimental)",
 		
 		//newtheme.html
 		"themeToClone":"Theme to clone",

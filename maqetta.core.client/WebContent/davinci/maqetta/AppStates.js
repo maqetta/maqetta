@@ -1,4 +1,5 @@
-define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "require"], function(connect, domStyle, dom, require){
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "require"], 
+function(connect, domStyle, dom, dhtml, dwindow, require){
 
 var States = function(){};
 States.prototype = {
@@ -789,10 +790,27 @@ var singleton = davinci.states = new States();
 				var hook = function(parser) {
 					if(!alreadyHooked){
 						var parse = parser.parse;
-						dojo.parser.parse = function() {
+						// Note that Dojo parser can be called multiple times at document load time
+						// where it parses different components of the document -- not all of the
+						// document is parsed with that first call to the parser. As a result,
+						// we might end up calling _restoreStates() multiple time for the same 
+						// particular document fragments, and reassigning the "states" property
+						// multiple times, but otherwise Dojo might wipe out the previously installed
+						// "states" property.
+						dojo.parser.parse = function(rootNode, args) {
+							// logic below to compute "root" was copied from dojo's parser.js
+							var root;
+							if(!args && rootNode && rootNode.rootNode){
+								args = rootNode;
+								root = args.rootNode;
+							}else{
+								root = rootNode;
+							}
+							root = root ? dhtml.byId(root) : dwindow.body();
+							
 							_preserveStates(cache);
 							var results = parse.apply(this, arguments);
-							_restoreStates(cache);
+							_restoreStates(cache, root);
 							return results;
 						};
 						alreadyHooked = true;
@@ -857,7 +875,7 @@ var singleton = davinci.states = new States();
 				 * Invoked from code below that wraps the dojo parser such that
 				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
 				 */
-				var _restoreStates = function (cache) {
+				var _restoreStates = function (cache, rootNode) {
 					var doc = singleton.getDocument(),
 						currentStateCache = [];
 					for(var id in cache){
@@ -866,22 +884,17 @@ var singleton = davinci.states = new States();
 							node = doc.body;
 						}else{
 							node = doc.querySelectorAll('.'+id)[0];
-							if(node){
-								node.className = node.className.replace(' '+id,'');
-							}
 							
 						}
-						if (!node) {
-							console.error("States: Failed to get node by id: ", id);
+						if(node){
+							// BODY node has app states directly on node.states. All others have it on node.states.style.
+							var states = singleton.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
+							delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
+							singleton.store(node, states);
+							if(node.tagName != 'BODY'){
+								davinci.states.transferElementStyle(node, cache[id].style);
+							}
 						}
-						// BODY node has app states directly on node.states. All others have it on node.states.style.
-						var states = singleton.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
-						delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-						singleton.store(node, states);
-						if(node.tagName != 'BODY'){
-							davinci.states.transferElementStyle(node, cache[id].style);
-						}
-						delete cache[id];
 					}
 				};
 			});

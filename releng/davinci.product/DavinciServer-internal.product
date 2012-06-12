@@ -38,8 +38,11 @@
       <plugin id="maqetta.core.server"/>
       <plugin id="maqetta.core.server.standalone"/>
       <plugin id="maqetta.shapes"/>
+      <plugin id="org.apache.commons.codec"/>
       <plugin id="org.apache.commons.fileupload"/>
+      <plugin id="org.apache.commons.httpclient"/>
       <plugin id="org.apache.commons.io"/>
+      <plugin id="org.apache.commons.logging"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.runtime"/>

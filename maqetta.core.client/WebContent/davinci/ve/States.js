@@ -217,6 +217,40 @@ var veStates = declare(maqettaStates, {
 		}
 	},
 
+	/**
+	 * Returns array index into states object for given state
+	 * Mostly used so that a null or undefined or 'Normal' state will get converted to string 'undefined'
+	 * to compensate for screwy way that States.js is currently implemented
+	 * @param {string|null|undefined} state  Current state
+	 * @returns {string}  Returns either original state string or 'undefined'
+	 */
+	_getStateIndex:function(state){
+		var stateIndex;
+		if(!state || state == 'Normal' || state == 'undefined'){
+			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
+			stateIndex = 'undefined';
+		}else{
+			stateIndex = state;
+		}
+		return stateIndex;
+	},
+
+	getCurrentStateIndex:function(){
+		return this._getStateIndex(this.getState());
+	},
+
+	getApplyToStateIndex:function(applyToWhichStates){
+		var currentState = this.getState();
+		var state;
+		if(applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
+			state = currentState;
+		}else{
+			state = undefined;
+		}
+		return this._getStateIndex(state);
+	}
+	,
+
 	initialize: function() {
 	
 		if (!this.subscribed) {

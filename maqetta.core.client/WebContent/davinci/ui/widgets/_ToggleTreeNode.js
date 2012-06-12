@@ -1,7 +1,7 @@
 define(["dojo/_base/declare",
-        "dijit/Tree"
-],function(declare,Tree){
-		
+        "dijit/Tree",
+        "dojo/text!./templates/TreeNode.html"
+],function(declare, Tree, treeNodeTemplate){
 
 	return declare("davinci.ui.widgets._ToggleTreeNode", dijit._TreeNode, {
 		postCreate: function(){
@@ -120,7 +120,7 @@ define(["dojo/_base/declare",
 	/// Add-on to support row 'checkbox', see http://bugs.dojotoolkit.org/ticket/7513
 		toggle: false, // Boolean
 	
-		templateString: dojo.cache("davinci.ui.widgets", "TreeNode.html"),
+		templateString: treeNodeTemplate,
 	
 		_onToggleClick: function(/*Event*/e){
 			var result = this.tree.model.toggle(this.item, !this.toggle, this);

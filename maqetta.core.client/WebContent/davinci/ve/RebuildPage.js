@@ -19,7 +19,8 @@ return declare("davinci.ve.RebuildPage", Context, {
 		dojo.mixin(this, args);
 	},
 	
-	
+	//FIXME: We should be traversing the page looking for CSS and JS files
+	//not hardcoding app.css and app.js
 	getPageCss: function(){
 		// returns CSS known to be in the page (our libs, sorta hacky)
 		return ["app.css"];
@@ -67,9 +68,7 @@ return declare("davinci.ve.RebuildPage", Context, {
             this.changeThemeBase(themeMetaobject.theme, this._resourcePath);
         }
 		
-        /*
         var cssChanges = this.getPageCss();
-        */
         var jsChanges = this.getPageJs();
 
         /*
@@ -80,10 +79,16 @@ return declare("davinci.ve.RebuildPage", Context, {
         }
         */
 
+        var basePath = this.getCurrentBasePath();
+        var resourceParentPath = this._resourcePath.getParentPath();
+        for ( var i = 0; i < cssChanges.length; i++ ) {
+            var cssFilePath = basePath.append(cssChanges[i]);
+            var cssFileString = cssFilePath.relativeTo(resourceParentPath).toString();
+            this.addModeledStyleSheet(cssFileString, cssChanges[i]);
+        }
+
         for ( var i = 0; i < jsChanges.length; i++ ) {
-            var basePath = this.getCurrentBasePath();
             var jsFilePath = basePath.append(jsChanges[i]);
-            var resourceParentPath = this._resourcePath.getParentPath();
             var jsFileString = jsFilePath.relativeTo(resourceParentPath).toString();
             this.addJavaScript(jsFileString, null, null, null, jsChanges[i]);
         }
@@ -99,8 +104,6 @@ return declare("davinci.ve.RebuildPage", Context, {
 		
 */		return this._srcDocument.getText();
 	},
-
-
 	
 	addModeledStyleSheet: function(url, baseSrcPath) {
 		// "baseSrcPath" is the tail of the style sheet path
@@ -117,8 +120,9 @@ return declare("davinci.ve.RebuildPage", Context, {
 				return;
 			}
 		}
-		
+/*FIXME: This is needed for LINK elements	
        this._srcDocument.addStyleSheet(url, null, true);
+*/
     },
  
     _findScriptAdditions: function(){

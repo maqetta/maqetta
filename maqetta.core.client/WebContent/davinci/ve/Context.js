@@ -805,7 +805,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
 			this.loadRequires("html.body", true /*updateSrc*/, false /*doUpdateModelDojoRequires*/,
 					true /*skipDomUpdate*/ );
-			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
 			// make sure this file has a valid/good theme
 			this.loadTheme(newHtmlParams);
 		}
@@ -819,7 +818,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
 			}
-			// Automatically include app.js so users have a place to put their own JavaScript logic
+			// Automatically include app.css and app.js so users 
+			// have a place to put their custom CSS rules and JavaScript logic
+			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
 			var appJsUrl = this.getAppJsRelativeFile();
 			this.addHeaderScript(appJsUrl);
 		}

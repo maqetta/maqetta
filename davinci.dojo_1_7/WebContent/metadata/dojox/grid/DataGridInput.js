@@ -48,7 +48,7 @@ var ModifyCommandForUrlDataStore = declare(ModifyCommand, {
 		// command execution.
 		var widget = Widget.byId(this._oldId);
 		if (widget) {
-			var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, this.useDataDojoProps);
+			var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, false);
 			if (storeId) {
 				var dj = widget.getContext().getDojo();
 				var dj = this._context.getDojo();
@@ -387,6 +387,25 @@ return declare(DataStoreBasedWidgetInput, {
 
 		if (datastore) {
 			props.store = datastore;
+
+			// need to update data-dojo-props here for the new store id
+			var dataDojoProps = widget._srcElement.getAttribute("data-dojo-props");
+
+			if (dataDojoProps) {
+				var pairs = [];
+
+				var keyValuePairs = dataDojoProps.split(",");
+				dojo.map(keyValuePairs, function(pair) {
+					var pairSplit = pair.split(":")
+					if (pairSplit[0].trim() === "store") {
+						pairs.push("store:" + datastore.id);
+					} else {
+						pairs.push(pair);
+					}
+				});
+	
+				props["data-dojo-props"] = pairs.join(",");
+			}
 		}
 
 		var command = new ModifyCommandForUrlDataStore(widget,

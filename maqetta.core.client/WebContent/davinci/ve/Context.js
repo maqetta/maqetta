@@ -673,22 +673,43 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._fullResourcePath;
 	},
 	
+	getCurrentHtmlFolderPath: function(){
+		var currentHtmlFilePath = this.getFullResourcePath();
+		var currentHtmlFolderPath = currentHtmlFilePath.getParentPath();
+		return currentHtmlFolderPath;
+	},
+
+	getCurrentBasePath: function(){
+		var base = new Path(Workbench.getProject());
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
+			basePath = base.append(prefs.webContentFolder);
+		}else{
+			basePath = base;
+		}
+		return basePath;
+	},
+	
+	getRelativeFileString: function(filename){
+		var currentHtmlFolderPath = this.getCurrentHtmlFolderPath();
+		var folderPath = this.getCurrentBasePath();
+		var filePath = folderPath.append(filename);
+		var relativeFile = filePath.relativeTo(currentHtmlFolderPath).toString();
+		return relativeFile;
+	},
+	
 	getAppCssRelativeFile: function(){
 		if(!this._appCssRelativeFile){
-			var currentHtmlFilePath = this.getFullResourcePath();
-			var currentHtmlFolderPath = currentHtmlFilePath.getParentPath();
-			var base = new Path(Workbench.getProject());
-			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-			var appCssFolderPath;
-			if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
-				appCssFolderPath = base.append(prefs.webContentFolder);
-			}else{
-				appCssFolderPath = base;
-			}
-			var appCssFilePath = appCssFolderPath.append('app.css');
-			this._appCssRelativeFile = appCssFilePath.relativeTo(currentHtmlFolderPath).toString();
+			this._appCssRelativeFile = this.getRelativeFileString('app.css');
 		}
 		return this._appCssRelativeFile;
+	},
+	
+	getAppJsRelativeFile: function(){
+		if(!this._appJsRelativeFile){
+			this._appJsRelativeFile = this.getRelativeFileString('app.js');
+		}
+		return this._appJsRelativeFile;
 	},
 	
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
@@ -784,7 +805,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
 			this.loadRequires("html.body", true /*updateSrc*/, false /*doUpdateModelDojoRequires*/,
 					true /*skipDomUpdate*/ );
-			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
 			// make sure this file has a valid/good theme
 			this.loadTheme(newHtmlParams);
 		}
@@ -798,6 +818,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
 			}
+			// Automatically include app.css and app.js so users 
+			// have a place to put their custom CSS rules and JavaScript logic
+			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
+			var appJsUrl = this.getAppJsRelativeFile();
+			this.addHeaderScript(appJsUrl);
 		}
 		
 		// Remove any SCRIPT elements from model that include dojo.require() syntax
@@ -811,7 +836,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 		});
-
+		
 		var data = this._parse(source);
 		if (this.frameNode) {
 			if(!this.getGlobal()){

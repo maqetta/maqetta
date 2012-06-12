@@ -66,6 +66,17 @@ return declare(null, {
 				}
 			}
 		}
+		
+		//AWE TODO:
+		// find colGroup
+		var colGroup = undefined;
+		while(node){
+			if(node.nodeType === 1 && node.nodeName.toLowerCase() == "table"){
+				table = node;
+				break;
+			}
+			node = node.parentNode;
+		}
 	},
 
 	getCell: function(r, c){

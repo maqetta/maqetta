@@ -19,49 +19,49 @@
 	           		{
 	                    iconClass: "editActionIcon",
 	                    label: "Select row",
-	                    action: "./html/actions/SelectRowAction",
+	                    action: "./html/table/SelectRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Select column",
-	                    action: "./html/actions/SelectColumnAction",
+	                    action: "./html/table/SelectColumnAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	           		{
 	                    iconClass: "editActionIcon",
 	                    label: "Insert column after",
-	                    action: "./html/actions/AddColumnAction",
+	                    action: "./html/table/AddColumnAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Insert column before",
-	                    action: "./html/actions/AddColumnBeforeAction",
+	                    action: "./html/table/AddColumnBeforeAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Remove column",
-	                    action: "./html/actions/RemoveColumnAction",
+	                    action: "./html/table/RemoveColumnAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Insert row after",
-	                    action: "./html/actions/AddRowAction",
+	                    action: "./html/table/AddRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Insert row before",
-	                    action: "./html/actions/AddRowBeforeAction",
+	                    action: "./html/table/AddRowBeforeAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Remove row",
-	                    action: "./html/actions/RemoveRowAction",
+	                    action: "./html/table/RemoveRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                }
 	       		]
@@ -491,6 +491,17 @@
 		            "icon": "resources/images/html-table.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXhJREFUeNrEUz1LA0EQnTvzO/wPYsBOrQW109ImpLPIL9DWKqQQRESEFGKjYmGwEyQggUTBRn+BIhFFTXK53Z1xZi53ulcpKdxjmXnD7Lv39iMgIhhnhDDmKKTJavXyz1KOKvNBRkCIsFWe09wxFbI1iTEy5ppB0shB69v1K18BOdTYvHvUZm1k0oi7rUwhIIkAs8VJQESfwMQxVGoXv5Le7jxAwF/yZ2aVubRxRjKYmWJrqXZyQ/3I0HtvSG8fA8Xd1z49v/ToqftJi5va/30KJhqOyGQ/WL6xCcZkCkakrMcOopyFKGKvCGLNslFrDMTGqX8hECz7AKN7YwZDnwC5uXp47XndPW17uN64zXK0zidwzsH6yozKNKxg57gFpeUi11EtHZx3YG1hKiNoNO9zx8iMcjRigWQFYuJfVAMp/jmcRf8qG90sUAWoEWUZpG8FcwRICQ7ShunSniYToiIMIb3XguXELdcKnEtM6639chD8+2v8EmAA9/wqJKl9P7kAAAAASUVORK5CYII=",
 		            "children": [
+		            	{
+		            		"type": "html.colgroup",
+		                    "children": [
+		                        {
+		                            "type": "html.col"
+		                        },
+		                        {
+		                            "type": "html.col"
+		                        }
+		                    ]
+		            	},
 		                {
 		                    "type": "html.tbody",
 		                    "children": [
@@ -618,7 +629,7 @@
 		                    "type": "html.td"
 		                }
 		            ],
-		            "resizable": "none",
+		            "resizable": "height",
 		            "allowedParent": "html.tbody, html.table, html.thead, html.tfoot",
 		            "allowedChild": "html.td, html.th"
 		        },
@@ -638,7 +649,8 @@
 		            "category": "html",
 		            "hidden": true,
 		            "resizable": "none",
-		            "allowedParent": "html.colgroup"
+		            "allowedParent": "html.colgroup",
+		            "helper": "./html/table/ColHelper"
 		        },
 		        {
 		            "name": "<colgroup>",

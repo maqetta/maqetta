@@ -20,6 +20,7 @@ define({ root:
 		
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",
+		"filesHasUnsavedChanges":"The file '${0}' has unsaved changes. Are you sure you want to switch device silhouette WITHOUT saving, your changes may be lost?",
 		
 		//SelectAncestorAction.js
 		"selectAncestorTitle":"Select ancestor",
@@ -72,6 +73,25 @@ define({ root:
 		"bgdStop":"Stop",
 		"bgdAddStop":"Add a new gradient stop after this stop",
 		"bgdRemoveStop":"Remove this gradient stop",
+		"bgdBackgroundColor": "background-color:",
+		"bgdBackgroundImageType": "background-image type:",
+		"bgdImageUrl": "Image URL:",
+		"bgdUrl": "URL:",
+		"bgdColorStops": "Color stops:",
+		"bgdColor": "color",
+		"bgdPosition": "position",
+		"bgdOptions": "Options:",
+		"bgdAngle": "Angle:",
+		"bgdPosition2": "Position:",
+		"bgdShape": "Shape:",
+		"bgdExtent": "Extent:",
+		"bgdBackgroundRepeat": "background-repeat:",
+		"bgdBackgroundPosition": "background-position:",
+		"bgdBackgroundSize": "background-size:",
+		"bgdBackgroundOrigin": "background-origin:",
+		"bgdBackgroundClip": "background-clip:",
+		"bgdBackgroundImageValue": "'background-image' value:",
+		"bgdTemplate": "Template:",
 		
 		//widgets/ColorPicker.js
 		"colorPicker":"Color picker...",
@@ -88,6 +108,12 @@ define({ root:
 		"noValidParents":"No valid parents at this position",
 		"willBeChildOf":"Will become a child of:",
 		"candidateParents":"Candidate parents:",
-		"toChangePress":"To change, press numbers"
+		"toChangePress":"To change, press numbers",
+
+		//VisualThemeEditor.js
+		"vteWarningTitle": "Theme Version Warning",
+		"vteWarningMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"vteErrorTitle": "Theme Version Error",
+		"vteErrorMessage": "Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta."
 }
 });

@@ -61,8 +61,9 @@
 		            "icon": "resources/images/accordion.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
 		            "properties": {
-		                "style": "width: 300px; height: 300px; min-width:1em; min-height:1em;"
+		                "style": "min-width:1em; min-height:1em;"
 		            },
+		            "initialSize": "auto",
 		            "children": [
 		                {
 		                    "type": "dijit.layout.ContentPane",
@@ -92,8 +93,9 @@
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAARJJREFUeNqkUzFuhEAMNFHqHAUEiU9Q0PKS3BNo6O9aJMQDqHkM4iG05CJdGgpgfXhvvVqyECHdSNaO7PWMsRYHEaGua+z7Hgi+7wPzLZh14kACZVniPM8yTM4xTZMOqpv8nZSEENqB+e/9DmIRJ6A6Xddd3aW8FFhcrFE/TifdaEHllymeAkQYQRBAURS7OwjDEFh2U6DrOrheLrDjDXmea64FxnHU4w7DIJt/bt+AAtVenqf36cs6/DcBc2piAUSxriszMn6DF2FNcAR45BM8z9tc5N+7lkAURZBl2a57HMe2gHxIajFt20JVVasHY06Spimcv87AfS8v0eG/sWkamUiSBJhvwawTd3bf+0E8BBgAL2nsdz3dOk4AAAAASUVORK5CYII=",
 		            "properties": {
 		                "design": "sidebar",
-		                "style": "width: 300px; height: 300px; min-width:1em; min-height:1em; z-index:0;"
+		                "style": "min-width:1em; min-height:1px; z-index:0;"
 		            },
+		            "initialSize": "auto",
 		            "children": [
 		                {
 		                    "type": "dijit.layout.ContentPane",
@@ -152,9 +154,9 @@
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII=",
 		            "properties": {
 		                "title": "Pane",
-		                "doLayout": false,
-		                "style": "width: 250px; height: 250px;"
+		                "doLayout": false
 		            },
+		            "initialSize": "auto",
 		            "allowedChild": "ANY",
 		            "helper": "./dijit/layout/ContentPaneHelper"
 		        },
@@ -166,9 +168,12 @@
 		            "icon": "resources/images/form.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPj4+fX19uTk5eDg4TteljxgmD5km0Bon0BonkFon0NsokFonkVxp0NtokZxpkl2q0h2q0h2qkt7r0l2qk5/s06As05/slGEtvr7/FCFt1CEtlSLvFOIulWLvVaOv/T19dzd3dTV1f7+/vz8/Pv7+/r6+vn5+fj4+PX19fT09PHx8fDw8P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACwALAAAAAAQABAAAAaEQBbLQywai8KhiMRsOj3JjuhoJG2SHNEEw+1iJiROUiMimM9n0yVpEZne8DglKZkS43BJ8iGqpCoBHhcPCwQBEEkMIwqMKo6PKg5JDSUClpeYCkkIAEUDn6ADB0kGJxUrFSAeGREJBCAGSQUojAoht7ghBUkEH76/wB8EvGjFZ0nIyclBADs=",
 		            "properties": {
-		                "style": "width: 250px; height: 250px;",
 		                "encType": "multipart/form-data"
 		            },
+		            "properties": {
+		                "style": "min-width:1em; min-height:1em;"
+		            },
+		            "initialSize": "auto",
 		            "allowedChild": "ANY"
 		        },
 		        {
@@ -243,7 +248,7 @@
 		            "icon": "resources/images/tab-container.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASlJREFUeNpi/P//PwMlgAVEBHbuxGnKgbf/GS1+f8SQP8HKzwg3gOEHA8P6enesBngWrvxflOyGId43d9d/kCEsEP0/GFYevInTmUDFWMUduBn/w13gbaaMVREucRAI7doK88IPMLXt8ksGRqjk//9AFuN/ND6YBeZ76YqD9UG8ADXg1x+ksAJqZkAOOiAfFGGMDAjhHx+gBoD9ACL//gPrg1n7H2oO3BnIYlB9YAO+/mQCc3/++QexjAHNcphGNHGQPrAB/37/hngB6IL/MGVAPzOCnI3BRwCQPrABP3/8RHEBNPwQzmaEBQkkIGFyIH0syNHy8+9/JCcjHAzjMzJAXYhkOtgAli+/wJxiJ0WS8gHTt68M8JRoGtRKVmZipDQ3MjFQCAACDAAZhYTuU0wrQQAAAABJRU5ErkJggg==",
 		            "properties": {
-		                "style": "width: 300px; height: 300px; min-width:1em; min-height:1em;",
+		                "style": "min-width:1em; min-height:1em;",
 		                "controllerWidget": "dijit.layout.TabController"
 		            },
 		            "children": [
@@ -262,6 +267,7 @@
 		                    }
 		                }
 		            ],
+		            "initialSize": "auto",
 		            "allowedChild": "dijit.layout.ContentPane",
 		            "inlineEdit": "./dijit/layout/StackContainerInput",
 		            "helper": "./dijit/layout/TabContainerHelper"
@@ -275,8 +281,18 @@
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAVxJREFUeNqkUz1LA0EQfRvzKVYW9voHYinYyAkWaptGRCsrIVGLpBBFEINJIYhNTJdCm4hgpSik9td4MWp27/Y2697saRPUJM4xt7dvZ9683dljWms4R08aI1o8fEnOcVFaHjo5X7m3BF6nQ8CSU+gLemyd/4iLt1dL0HVdcD/A3cMZ1jerFKDNc9UoEn57c9pHwH2F7ouLGE3aLj54gHchUavtYHJmGvXLPZqHzuPMuIkbYxD0zQzug5vCpEC0O+Ay+GY/3F2lyn+ZMFtnYRemZrdH6wKLupBdmMfJwdrQ+fvH15Yg8H0CtjbKtrepBBKZDNIT40gaD8dEJo16fpHWU0zD0wzK5FkCT9JCq1ka/AKZTUsvIhCqR6CTq/yq4MsaBQdJo4IrbQlUYE/8uVkcqLqKxhgXloB1BQFzuerACmxhaQl6ajgFiJrek8reg+xKeeS/kQj+Y58CDAA9vJ+nCFLrswAAAABJRU5ErkJggg==",
 		            "properties": {
 		                "title": "Pane",
-		                "style": "width: 300px; min-width:1em;"
+		                "style": "min-width:1em;"
 		            },
+		            "initialSize" : {
+	            		"flow": {
+	            			"width": "100%",
+	            			"height": "auto"
+	            		},
+	            		"absolute": {
+	            			"width": "300px",
+	            			"height": "auto"
+	            		}
+	            	},
 		            "resizable": "width",
 		            "allowedChild": "ANY",
 		            "inlineEdit": {
@@ -284,8 +300,7 @@
 		                "displayOnCreate": true,
 		                "supportsHTML": true,
 		                "multiLine": false
-		            },
-		            "helper": "./dijit/layout/TitlePaneHelper"
+		            }
 		        },
 		        {
 		            "name": "Toolbar",
@@ -490,11 +505,11 @@
 		                                "name": "Label",
 		                                "width": "auto"
 		                            }
-		                        ],
-		                        "style": "width: 300px; height: 300px;"
+		                        ]
 		                    }
 		                }
 		            ],
+		            "initialSize": "auto",
 		            "tool": "./dojox/grid/DataGridCreateTool",
 		            "helper": "./dojox/grid/DataGridHelper",
 		            "inlineEdit": "./dojox/grid/DataGridInput",
@@ -638,9 +653,10 @@
 					"category": "controls",
 					"icon": "resources/images/horizontalslider.gif",
 					"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAM7W5DdYkDteljpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+EZzp9Xk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZZwJNwSCwaj8ikcjkMOZ/J0KJBbSxCyMtnwulMPpdiKcSIUDZoiSfCCJWEERIB8RhpMppHglCBCA0mJgoHFiIYDgYKgQVCAAGPAQIgIAOQAQBIj0ybnJ2eJ0EAOw==",
-					"properties": {
-						"style": "width: 200px;"
-					},
+					"initialSize" : {
+	            		"width": "200px",
+	            		"height": "auto"
+	            	},
 					"children": [
 						{
 							"type": "dijit.form.HorizontalRule",
@@ -735,9 +751,10 @@
 		            "category": "controls",
 		            "icon": "resources/images/multi-select.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYVJREFUeNpi/P//P8PMfQ//T9z0hIFUkO8nw8ACYkzc+IjhaJsFhoLf/xgYWJlwG2BddZwBLM34/y+G5Kr91xnCSpfgdQHj/38QF/z/95fhH9Arf/8zgiXWH7jGMHf9KYbkQDOwK+q612Nobi0LBOsDG8Dw/zdYs0/KVIaUaAeGuUsPMqTE2DMEOGiBpZtKAzEM+Au0kPHfb6gBf/+AKZDmGfN2MWQkuTKEOmkzVHaux+n8uuIAoAv+QAwAmQQCAY7aIOcAaR2Gz7/+M1QVBuA04A+KC4CML7/+MfCwMYE1g0KelY0Rp/9BoLTAH6wPasAfoOL/DO9/QmJDkJ2ZYf3B6wzLt5xlmNkSid0Ff/+D9UHD4DfDbyBfjIMZIxZAhmFzRU6OH9ALsDD4/4dBjJMZayw8+/qXISPLD9MF//6jeoHUWEjO8EXyApBx8/1vlFi48vY3Q3SKD04DfqKEATApgxLGtXe/wJpBNEEA1P8fqI8Rlhsnz1pPcm7MTQuEGEAJAAgwAABlzVJl2jXWAAAAAElFTkSuQmCC",
-		            "properties": {
-		                "style": "width: 200px;"
-		            },
+		            "initialSize" : {
+	            		"width": "200px",
+	            		"height": "auto"
+	            	},
 		            "children": [
 		                {
 		                    "type": "html.option",
@@ -804,9 +821,12 @@
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkJusyPP2+zpeljpflvL2/OTt+Obu+E1+sfn7/VKHulOIuVaOv6vH38/t++f2/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVEICSOZGmeaGoCDKCS7sswDdDMeC4qzgM8jqAwuBAhHAVAwcBsHg4I0cCRACQE2KygQBABAAHwd0wuxV4Q1hnNbrvfkBAAOw==",
 		            "properties": {
 		                "rows": "10",
-		                "cols": "10",
-		                "style": "width: 200px;"
+		                "cols": "10"
 		            },
+		            "initialSize": {
+	            		"width": "200px",
+	            		"height": "auto"
+	            	},
 		            "resizable": "width",
 		            "inlineEdit": {
 		                "property": "value",
@@ -822,9 +842,10 @@
 		            "category": "controls",
 		            "icon": "resources/images/textarea.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
-		            "properties": {
-		                "style": "width: 200px;"
-		            },
+		            "initialSize" : {
+	            		"width": "200px",
+	            		"height": "auto"
+	            	},
 		            "resizable": "width",
 		            "inlineEdit": {
 		                "property": "value",
@@ -964,12 +985,13 @@
 		                {
 		                    "type": "dijit.Tree",
 		                    "properties": {
-		                        "style": "width: 250px; height: 250px; overflow:auto;",
+		                        "style": "overflow:auto;",
 		                        "showRoot": false,
 		                        "autoExpand": true
 		                    }
 		                }
 		            ],
+		            "initialSize" : "auto",
 		            "tool": "./dijit/TreeCreateTool",
 		            "helper": "./dijit/TreeHelper",
 		            "inlineEdit": "./dijit/TreeInput"
@@ -1046,12 +1068,11 @@
 											}
 										]]
 									}					
-								],
-		                        
-		                        "style": "width: 300px; height: 300px;"
+								]
 		                    }
 		                }
 		            ],
+		            "initialSize": "auto",
 		            "tool": "./dojox/grid/TreeGridCreateTool",
 		            "helper": "./dojox/grid/TreeGridHelper"
 		            /*"inlineEdit": "./dojox/grid/TreeGridInput" */
@@ -1081,9 +1102,10 @@
 					"category": "controls",
 					"icon": "resources/images/verticalslider.gif",
 					"iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAJurxzdYkDtelpusyDpfloOcwUBonkBonUFonkdzqEdzp3CUv+Tt+NXk9Njm9dvo9kx+sU1+sZ/E6K3M68re8tDh89fm9VKHuYO14pC95ZG95Z/F6KzM663N68ne8tDi89Xl9FaOv4O24pG+5aDJ6qvH36nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAZWwJNwSCwaTyWIYXAshiqmQJMYKiyk01PoElFgmyHGx/M4AKahxkSicRDQjc4mgwF9nQ3ORiOyg9UbIxYCaGIUDwhnaFwJd2BWjkchJFFZQiURB0yWWUEAOw==",
-					"properties": {
-						"style": "height: 200px;"
-					},
+					"initialSize" : {
+	            		"width": "auto",
+	            		"height": "200px"
+	            	},
 					"children": [
 						{
 							"type": "dijit.form.VerticalRule",
@@ -1256,9 +1278,10 @@
 		            "category": "untested",
 		            "icon": "resources/images/progressbar.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlckzthmDxhl0BonkBonUVwpUp6rU+BtU+CtFOJu1OKu1aOv/b8//n9/8/t++/6//L7/+v5/+76//X8//j9/+v6/+77/+/7//L8//b9//X9//n+//j+///ovfvcsvTKofTJofbKo/TJo/TKo+20kOegfeeffuegfuWfff///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZfwJRwSCwaj8ikUrloOp/QVIJErZIc2Kwiheh4v9dKpEI+pAyetPp6eVgsEkOq8AGNRKAQyoGB9DEFKQRWVHsTGgwaGQMpAiclJiYoJ3sNDRwbFAEpAJ2en6BLoqOkpEEAOw==",
-		            "properties": {
-		                "style": "width: 200px;"
-		            },
+		            "initialSize": {
+	            		"width": "200px",
+	            		"height": "auto"
+	            	},
 		            "resizable": "width"
 		        },
 /* Commenting out - crashes as currently defined because there is no dijit.layout.StackController widget
@@ -1275,9 +1298,6 @@
 		                },
 		                {
 		                    "type": "dijit.layout.StackContainer",
-		                    "properties": {
-		                        "style": "width: 250px; height: 250px;"
-		                    },
 		                    "children": [
 		                        {
 		                            "type": "dijit.layout.ContentPane",
@@ -1296,6 +1316,7 @@
 		                    ]
 		                }
 		            ],
+		            "initialSize": "auto",
 		            "tool": "./dijit/layout/StackContainerCreateTool",
 		            "allowedChild": "ANY"
 		        },
@@ -1526,9 +1547,7 @@
 		            "category": "untested",
 		            "icon": "resources/images/chart.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEFmkERqk2WezYm43Iu43Iu53LbU6tDj8tDj8d3r9om53Im42q7R6b3Z7b3Z7NDk8rzZ7L3a7b3a7NDk8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABQALAAAAAAQABAAAAVXICWOZGkGgakGSZKiKsW2bguTwaEfyPT8j9QoEGlIAo6IxAFhCmUMRsAQiFqlQ5Rhi+reZNuwmDscKAqFQYEwWCgGz4BgTq8L4t58N8YXAf6AgYB9hIUhADs=",
-		            "properties": {
-		                "style": "width: 300px; height: 300px;"
-		            },
+		            "initialSize" : "auto",
 		            "children": [
 		                {
 		                    "type": "html.div",
@@ -1605,9 +1624,10 @@
 		            "category": "untested",
 		            "icon": "resources/images/checkedmultiSelect.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADFPiWd9qTVWkDVWjzVhmj9nnilvxCluwiluwSlrvCptvylqtypptylnsyplripjqSphpSpeoCtfoStdnCtbmCtZlCpYkStYkStXj5mxz5mxzpiz0Ziy0Jmyz+zz+u70+pi94Ony+uHu+eXw+ezz+d3s+Ony+c/n99jq97/g9MLh9cPi9crl9s/n9tPp99jr99zt+OHv+P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADIALAAAAAAQABAAAAaVQBnIQCwaiyDZ4cNkhppQhEwB3RSgTYUsQQqFOAROKEAmexKyRWiQEXS8cK+JIWuEMgDNp8wfNWQOXhohIoWGhTEOMg8lXk58ZDAPMhAoLy8hVpebLygQMhEuXmBikC4SMhNrbW8nrq8tEzIUd3l7kAEsFDIVKiGDKsHCwSsVMhcpKSHJzM0pFkIY0tPU00ky2Nna20EAOw==",
-		            "properties": {
-		                "style": "width: 200px;"
-		            },
+		            "initialSize" : {
+	            		"width": "200px",
+	            		"height": "auto"
+	            	},
 		            "children": [
 		                {
 		                    "type": "html.option",
@@ -1677,9 +1697,9 @@
 		            "icon": "resources/images/sortlist.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAPn6/jVPijZQijFPiTFOiOzx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DdakjZYkDhbkzdYkDlbk97o+ODp+N/o9/X4/TlelTpelj5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm0Bon0Bpn0FqoPX4/ENupENuo0Ruo0d0qefv+fL2+0l3rEl4rEh2qkd0qEl2qkV3rE6BtE1+sk1/sk1+sU1/sU+BtFCFt1KHulKIulCEtlOIu1KIuVOJulOIuXCcxsbY6VaOv8fa6u/5/s/t+1tbW1paWllZWf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEoALAAAAAAQABAAAAezgEhIREhHREOIiYlKSoJIFxuRkTlGlTyMQkmQkpExRgQLL4w9RQEPJTJBBRshRh0sIKNGK5yREgkQEAqyAxkjKjQ+Gz8NDBU/srWRxMbISjNGAxgkMDdAHDMWFhQ4jC6zK+HiLdoULt7RGSQqNTsr5NvnSidGBfb3BSknJygojB9GBPiCYUOHAxGVjGhgFMGIiYcQTUz4tGACIwRGAGjcCACjBwMHGBEYSbJkSUYoU6pEGQgAOw==",
 		            "properties": {
-		                "title": "Sorted List",
-		                "style": "width: 300px; height: 300px"
+		                "title": "Sorted List"
 		            },
+		            "initialSize": "auto",
 		            "children": [
 		                {
 		                    "type": "html.li",
@@ -1708,9 +1728,15 @@
 		                "opacity": "0.7",
 		                "allowAutoScroll": true,
 		                "hasResizableColumns": true,
-		                "withHandles": true,
-		                "style": "width: 500px; height: 300px;"
+		                "withHandles": true
 		            },
+		            "initialSize" : {
+	            		"flow": "auto",
+	            		"absolute": {
+	            			"width": "500px",
+	            			"height": "300px"
+	            		},
+	            	},
 		            "allowedChild": "ANY"
 		        },
 		        {
@@ -1721,8 +1747,11 @@
 		            "icon": "resources/images/floatingpane.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAMDAyDhQkLjAyOjw+JjA4ODw+LjAwPD4+P///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARMMMlJqyQ4650I+mAIEh0SnGj6kV4gggGAsOb7xXMZHHzP46xDYEAsEgOCQzDFDBiUHaJhSqUSWcaskVXoer9eLnhcEJO/rI06Y2lPIgA7",
 		            "properties": {
-		                "title": "Floating Pane",
-		                "style": "width: 300px; height: 300px;"
+		                "title": "Floating Pane"
+		            },
+		            "initialSize": {
+		            	"width": "300px",
+		            	"height": "300px"
 		            },
 		            "allowedChild": "ANY",
 		            "helper": "./dijit/layout/ContentPaneHelper"
@@ -1734,9 +1763,7 @@
 		            "category": "untested",
 		            "icon": "resources/images/scrollpane.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPn6/jFOiDFOh+zx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DZYkDhbkzdYkDlbk97o+ODp+N/o9z5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm/X4/ENupENuo0Ruo+fv+fL2+0l3rEl4rEh2qkl2qk6BtE+BtFCFt1CEtlOIu1OJulaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaTwFdrSCwaXymXUlVpNpPLl8kVSJSczWm19Nq4LiINtuIFa16PQ6OBWLvTa8Rr5Ro7WQuFhDWv2yt4enwnLhaGh4YnExMRKC8kLiGSk5IjixEkj5GUk5aMmR4uA6OkoyAeHh8fLxkuDK+wrxxKLhQvDi4duru6EFQJEC8GLgDFxsXDGAQFLwHOAs7R0s4v1dbX2C9BADs=",
-		            "properties": {
-		                "style": "width: 300px; height: 300px"
-		            },
+		            "initialSize": "auto",
 		            "allowedChild": "ANY"
 		        },
 		        {
@@ -1747,8 +1774,7 @@
 		            "icon": "resources/images/radiogroup.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP7+/0JbjEZejDFMfjJNfkJci0RdjEpijzteljxZikhnmEpomFV0pj1jmzxgmDxglz5jmlZ2pmB/r36XvEBnnkJrokBnnUNsoUZxp0ZxpvD1++/0+kh2q0t7r0l2qkx7r1CEuE6As0+AtFGEt+z0/Pj7/vr8/lOIu1WMvlOJulWMvePv+laOv+fy++z0++/2/OLv+eTw+enz+/T5/ff7/uPw+eXx+efy+unz+ubw9/H4/fj7/fH4/PP4+/z+//v9/v3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEIALAAAAAAQABAAAAexgEIsg4SFhoJBiYqLiixCKgA5B5M5QJaXQChCKT4HE0ETBz+jpD8nQiMmAooCJhIRCgkEJiBCIjsFnxMFNL2+NCFCHzMbAcYbM8nKMx1CHDo80dLT0R5CGS8akwc9L97fLxhCFSSeoAcu6eouF0IWMqsGQQI4EgwLCQM4FEINN7mgCrQYSLAFBCEObJQwFqBEjIcQYzwQgmAFjIsYL67YWAMBRQQgQ4oUKaSkyZMohQQCADs=",
 		            "properties": {
-		            	"hasButtons": true,
-		                "style": "width: 300px; height: 300px"
+		            	"hasButtons": true
 		            },
 		            "children": [
 		                {
@@ -1766,6 +1792,7 @@
 		                    }
 		                }
 		            ],
+		            "initialSize": "auto",
 		            "allowedChild": "dijit.layout.ContentPane",
 		            "inlineEdit": "./dijit/layout/StackContainerInput"
 		        },
@@ -1777,8 +1804,7 @@
 		            "icon": "resources/images/radiogroup.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP7+/0JbjEZejDFMfjJNfkJci0RdjEpijzteljxZikhnmEpomFV0pj1jmzxgmDxglz5jmlZ2pmB/r36XvEBnnkJrokBnnUNsoUZxp0ZxpvD1++/0+kh2q0t7r0l2qkx7r1CEuE6As0+AtFGEt+z0/Pj7/vr8/lOIu1WMvlOJulWMvePv+laOv+fy++z0++/2/OLv+eTw+enz+/T5/ff7/uPw+eXx+efy+unz+ubw9/H4/fj7/fH4/PP4+/z+//v9/v3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEIALAAAAAAQABAAAAexgEIsg4SFhoJBiYqLiixCKgA5B5M5QJaXQChCKT4HE0ETBz+jpD8nQiMmAooCJhIRCgkEJiBCIjsFnxMFNL2+NCFCHzMbAcYbM8nKMx1CHDo80dLT0R5CGS8akwc9L97fLxhCFSSeoAcu6eouF0IWMqsGQQI4EgwLCQM4FEINN7mgCrQYSLAFBCEObJQwFqBEjIcQYzwQgmAFjIsYL67YWAMBRQQgQ4oUKaSkyZMohQQCADs=",
 		            "properties": {
-		            	"hasButtons": true,
-		                "style": "width: 300px; height: 300px"
+		            	"hasButtons": true
 		            },
 		            "children": [
 		                {
@@ -1796,6 +1822,7 @@
 		                    }
 		                }
 		            ],
+		            "initialSize": "auto",
 		            "allowedChild": "dijit.layout.ContentPane",
 		            "inlineEdit": "./dijit/layout/StackContainerInput"
 		        },
@@ -1807,8 +1834,7 @@
 		            "icon": "resources/images/radiogroup.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP7+/0JbjEZejDFMfjJNfkJci0RdjEpijzteljxZikhnmEpomFV0pj1jmzxgmDxglz5jmlZ2pmB/r36XvEBnnkJrokBnnUNsoUZxp0ZxpvD1++/0+kh2q0t7r0l2qkx7r1CEuE6As0+AtFGEt+z0/Pj7/vr8/lOIu1WMvlOJulWMvePv+laOv+fy++z0++/2/OLv+eTw+enz+/T5/ff7/uPw+eXx+efy+unz+ubw9/H4/fj7/fH4/PP4+/z+//v9/v3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEIALAAAAAAQABAAAAexgEIsg4SFhoJBiYqLiixCKgA5B5M5QJaXQChCKT4HE0ETBz+jpD8nQiMmAooCJhIRCgkEJiBCIjsFnxMFNL2+NCFCHzMbAcYbM8nKMx1CHDo80dLT0R5CGS8akwc9L97fLxhCFSSeoAcu6eouF0IWMqsGQQI4EgwLCQM4FEINN7mgCrQYSLAFBCEObJQwFqBEjIcQYzwQgmAFjIsYL67YWAMBRQQgQ4oUKaSkyZMohQQCADs=",
 		            "properties": {
-		            	"hasButtons": true,
-		                "style": "width: 300px; height: 300px"
+		            	"hasButtons": true
 		            },
 		            "children": [
 		                {
@@ -1826,6 +1852,7 @@
 		                    }
 		                }
 		            ],
+		            "initialSize": "auto",
 		            "allowedChild": "dijit.layout.ContentPane",
 		            "inlineEdit": "./dijit/layout/StackContainerInput"
 		        },

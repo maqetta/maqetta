@@ -1,0 +1,14 @@
+<div style='width:100%; height: 100%'>
+	<div dojoType='dijit.layout.BorderContainer' dojoAttachPoint="borderContainer" style='width:100%; height: 100%' gutters='false' liveSplitters='true' id='preferencesContainer'>
+		<div dojoType='dijit.layout.ContentPane' id='pref.TreePane' splitter='true' region='leading' style='width: 200px;' minSize='100' maxSize='300'></div>
+		<div dojoType='dijit.layout.ContentPane' region='center' id='pref.RightPane'></div>
+	</div>
+	<div class="dialogButtonContainer">
+		<!-- FIXME: we don't have logic to yet implement restoreDefaults() yet. See #627
+		<button dojoType=dijit.form.Button type="button" onclick="davinci.workbench.Preferences.restoreDefaults();"></button>-->
+		<button dojoType="dijit.form.Button" type="button" onclick="davinci.workbench.Preferences.save();">${commonStrings.buttonSave}</button>
+		<button dojoType="dijit.form.Button" type="button" onclick="davinci.workbench.Preferences.finish();">${commonStrings.buttonCancel}</button>
+	</div>
+</div>
+
+

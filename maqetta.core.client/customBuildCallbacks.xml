@@ -201,9 +201,10 @@
 				<arg value="layerOptimize=shrinksafe.keepLines"/>
 		</java>
 		
-		<!-- Copy over original app.css with comments.  There is no build option to preserve CSS comments AND inline. -->
+		<!-- Copy over original app.css and app.js with comments.  There is no build option to preserve CSS comments AND inline. -->
 		<!--
 		<copy toFile="${target.folder}/WebContent/release/dojo/project/base/app.css" file="${target.folder}/WebContent/project/base/app.css" overwrite="true" />
+		<copy toFile="${target.folder}/WebContent/release/dojo/project/base/app.js" file="${target.folder}/WebContent/project/base/app.js" overwrite="true" />
 		-->
 		<!-- Copy over original workspace/maqetta folder -->
 		<!--
@@ -267,10 +268,11 @@
         <antcall target="update.repositoryinfo.js"/>
 		
     	<condition property="dojo.build.exists">
-    		<available file="${dojo.cache.directory}" type="dir"/>
+    		<available file="${dojo.cache.directory}/dojo" type="dir"/>
     	</condition>
 		<echo message="Build dojo=${run.dojo.build}"/>
 		<antcall target="dojo.build"/>
+
 		<antcall target="copy.dojo"/>
 
 		

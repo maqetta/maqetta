@@ -1,12 +1,15 @@
 define([
-	"maq-metadata-dojo-1.7/dojox/grid/DataGridHelper"
+	"maq-metadata-dojo-1_7/dojox/grid/DataGridHelper",
+	"maq-metadata-dojo-1_7/dijit/layout/LayoutContainerHelper",
 ], function(
-	DataGridHelper
+	DataGridHelper,
+	LayoutContainerHelper
 ) {
 
 var GridHelper = function() {};
 GridHelper.prototype = {
 	 _dataGridHelper: new DataGridHelper(),
+	 _layoutContainerHelper: new LayoutContainerHelper(),
 	 
 	 _useDataDojoProps: true,
 
@@ -106,6 +109,10 @@ GridHelper.prototype = {
 		var dijitWidget = widget.dijitWidget;
 		dijitWidget.resize();
 		dijitWidget.setColumns(dijitWidget.structure);
+	},
+	
+	initialSize: function(args) {
+		return this._layoutContainerHelper.initialSize(args);
 	}
 };
 

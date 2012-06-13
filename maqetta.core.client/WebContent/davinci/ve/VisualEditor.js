@@ -18,7 +18,6 @@ define([
 	"system/resource",
 	"davinci/XPathUtils",
 	"../html/HtmlFileXPathAdapter",
-	"davinci/ve/ThemeModifier",
 	"davinci/ve/utils/GeomUtils"
 ], function(
 	require,
@@ -40,11 +39,10 @@ define([
 	systemResource,
 	XPathUtils,
 	HtmlFileXPathAdapter,
-	ThemeModifier,
 	GeomUtils
 ){
 
-var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
+var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 	deviceName: 'none',
 	_orientation: 'portrait',
@@ -242,7 +240,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		if(!this.isActiveEditor() ){
 			return;
 		}
-		var command = this.getCommandForStyleChange(value); //#23
+		var command = this.getContext().getCommandForStyleChange(value); //#23
 		if(command){
 			 this.getContext().getCommandStack().execute(command);
 			if(command._newId){
@@ -270,6 +268,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		if(!this._handles){
 			return;
 		}
+		this.context.destroy();
 	    this._handles.forEach(dojo.disconnect);
 	    if(this._scrollHandler){
 	    	dojo.disconnect(this._scrollHandler);
@@ -335,10 +334,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 			this.context.setSource(content, this.context._restoreStates, this.context);
 		}
 
-		if(!this.skipSave) {
-			// auto save file
-			this.save(true);			
-		}
 	},
 
 	_connectCallback: function(failureInfo) {
@@ -452,16 +447,28 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 		};
 		
 		model.visit(visitor);
-		this.saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
+		this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
 		this.isDirty=isAutoSave;
 	},
 	
 	
 	
 	removeWorkingCopy: function(){ 
-
-		this._pageEditor.resourceFile.removeWorkingCopy();
-		this.isDirty=false;
+		/*this.removeWorkingCopyDynamicCssFiles(this.getContext()._getCssFiles());
+		var visitor = {
+				visit: function(node){
+					if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){
+						var url = node.url || node.fileName;
+						systemResource.findResource(url).removeWorkingCopy();
+						// node.dirtyResource = false; someone else may be editing the resource
+					}
+					return false;
+				}
+			};
+		var model = this.context.getModel();	
+		model.visit(visitor);*/
+		//this._pageEditor.resourceFile.removeWorkingCopy();
+		//this.isDirty=false;
 	},
 	
 	getDefaultContent: function (){
@@ -513,3 +520,4 @@ var VisualEditor = declare("davinci.ve.VisualEditor", ThemeModifier, {
 return VisualEditor;
 
 });
+

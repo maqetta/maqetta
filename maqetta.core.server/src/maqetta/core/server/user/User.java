@@ -545,14 +545,16 @@ public class User implements IUser {
 		}
 		
 		
+		ArrayList filtered = new ArrayList();
+		
 		if (workspaceOnly) {
 			// need to filter out library entries here in case some got through (mixed directories)
 			for(int z=0;z<results.size();z++){
-				if(results.get(z) instanceof VLibraryResource){
-					results.remove(z);
+				if(!(results.get(z) instanceof VLibraryResource)){
+					filtered.add(results.get(z));
 				}
 			}
-			
+			results = filtered;
 		}
 		
 		return (IVResource[]) results.toArray(new IVResource[results.size()]);

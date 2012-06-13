@@ -1,9 +1,9 @@
 define([
     	"dojo/_base/declare",
     	"davinci/ve/actions/_SelectAncestorAction",
-    	"dijit/Dialog",
+    	"davinci/Workbench",
     	"dojo/i18n!davinci/ve/nls/ve"
-], function(declare, _SelectAncestorAction, Dialog, langObj){
+], function(declare, _SelectAncestorAction, Workbench, langObj){
 
 return declare("davinci.ve.actions.SelectAncestorAction", [_SelectAncestorAction], {
 
@@ -26,18 +26,14 @@ return declare("davinci.ve.actions.SelectAncestorAction", [_SelectAncestorAction
 				formHtml += '<option value="'+i+'">'+label+'</option>';
 			}
 			formHtml += '</select><br/>';
-			var dialog = new Dialog({id: "SelectAncestorDialog", title:langObj.selectAncestorTitle,
-					onCancel:function(){this.destroyRecursive(false);}});	
-			dialog._selectAncestor = this;
-			dojo.connect(dialog, 'onLoad', function(){
-				var selWidget = dijit.byId('SelectAncestor');
-				selWidget._selectAncestor = this._selectAncestor;
-				dojo.connect(selWidget, "onChange", function(ancestor){
-					context.select(ancestors[ancestor]);
-				});	
-			});
-			dialog.setContent(formHtml);
-			dialog.show();
+
+			var dialog = Workbench.showMessage(langObj.selectAncestorTitle, formHtml);
+
+			var selWidget = dijit.byId('SelectAncestor');
+			selWidget._selectAncestor = this._selectAncestor;
+			dojo.connect(selWidget, "onChange", function(ancestor){
+				context.select(ancestors[ancestor]);
+			});	
 		}
 	},
 

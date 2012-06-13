@@ -1,9 +1,12 @@
 define([
 	"dojo/_base/declare",
+	"../Workbench",
+	"../workbench/Preferences",
 	"./Context",
 	"../model/Path",
-	"davinci/model/Factory"
-], function(declare, Context, Path, Factory) {
+	"davinci/model/Factory",
+	"dojo/_base/Deferred"
+], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -16,7 +19,8 @@ return declare("davinci.ve.RebuildPage", Context, {
 		dojo.mixin(this, args);
 	},
 	
-	
+	//FIXME: We should be traversing the page looking for CSS and JS files
+	//not hardcoding app.css and app.js
 	getPageCss: function(){
 		// returns CSS known to be in the page (our libs, sorta hacky)
 		return ["app.css"];
@@ -24,14 +28,14 @@ return declare("davinci.ve.RebuildPage", Context, {
 	
 	getPageJs: function(){
 		// returns JS known to be in the page (our libs, sorta hacky)
-		return ["maqetta/States.js","maqetta/maqetta.js" ]; //FIXME: States.js is a module
+		return ["app.js" ];
 	},
 	
 	
 	rebuildSource: function(source, resource){
 		if ( !( resource && resource.extension && resource.extension == "html")) return source;
 		
-		this.model = this._srcDocument = Factory.getNewFromResource(resource);
+		this.model = this._srcDocument = Factory.getNewFromResource(resource); //getModel({url: resource.getPath()}); // 2453 getNewFromResource(resource);
 		
 		this._resourcePath = null;
 		if(resource)
@@ -64,27 +68,34 @@ return declare("davinci.ve.RebuildPage", Context, {
             this.changeThemeBase(themeMetaobject.theme, this._resourcePath);
         }
 		
-        /*
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();
 
+        var basePath = this.getCurrentBasePath();
+        var resourceParentPath = this._resourcePath.getParentPath();
         for ( var i = 0; i < cssChanges.length; i++ ) {
-        	var filename = new Path(cssChanges[i]).relativeTo(this._resourcePath);
-            //var filename = basePath.append(cssChanges[i]);
-            this.addModeledStyleSheet(filename.toString(), cssChanges[i]);
+            var cssFilePath = basePath.append(cssChanges[i]);
+            var cssFileString = cssFilePath.relativeTo(resourceParentPath).toString();
+            this.addModeledStyleSheet(cssFileString, cssChanges[i]);
         }
 
         for ( var i = 0; i < jsChanges.length; i++ ) {
-        	var filename = new Path(jsChanges[i]).relativeTo(this._resourcePath);
-            this.addJavaScript(filename.toString(), null, null, null,
-                    jsChanges[i]);
+            var jsFilePath = basePath.append(jsChanges[i]);
+            var jsFileString = jsFilePath.relativeTo(resourceParentPath).toString();
+            this.addJavaScript(jsFileString, null, null, null, jsChanges[i]);
         }
-		*/
-		return this._srcDocument.getText();
+        
+       /* this._pageRebuilt = new Deferred();
+        var deferred = this.model.save();
+        deferred.then(function(){
+        	this._pageRebuilt.newText = this._srcDocument.getText();
+        	this._pageRebuilt.resolve();
+        }.bind(this));
+
+		return this._pageRebuilt; //retText; // #2453 
 		
+*/		return this._srcDocument.getText();
 	},
-
-
 	
 	addModeledStyleSheet: function(url, baseSrcPath) {
 		// "baseSrcPath" is the tail of the style sheet path
@@ -101,8 +112,9 @@ return declare("davinci.ve.RebuildPage", Context, {
 				return;
 			}
 		}
-		
+/*FIXME: This is needed for LINK elements	
        this._srcDocument.addStyleSheet(url, null, true);
+*/
     },
  
     _findScriptAdditions: function(){
@@ -119,7 +131,7 @@ return declare("davinci.ve.RebuildPage", Context, {
     	return null;
     	
     },
-    /*
+
     addJavaScript: function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
 		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
 		
@@ -143,7 +155,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         	this._scriptAdditions = this.addHeaderScriptSrc(text, this._findScriptAdditions(),this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
         }
     },
-	*/
+
     changeThemeBase: function(theme, resourcePath){
     	
     	// find the old theme file name
@@ -158,7 +170,19 @@ return declare("davinci.ve.RebuildPage", Context, {
 			this.addModeledStyleSheet(relativePath.toString(), new Path(theme.files[x]), true);
 
 		}
-	}
+	},
+	
+	getCurrentBasePath: function(){
+		var base = new Path(Workbench.getProject());
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
+			basePath = base.append(prefs.webContentFolder);
+		}else{
+			basePath = base;
+		}
+		return basePath;
+	},
+
     
 
 });

@@ -66,7 +66,7 @@ public class AddComment extends Command {
 			ReviewCacheManager.$.updateComments(commentList, false);
 
 			if (version != null && version.isReceiveEmail()) // Send the notification only the designer want receive it.
-				notifyRelatedPersons(user, designer, comment);
+				notifyRelatedPersons(user, designer, comment, req.getRequestURL().toString());
 
 			//FIXME: use JSONWriter?
 			SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
@@ -82,10 +82,10 @@ public class AddComment extends Command {
 		}
 	}
 
-	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment) {
+	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment, String requestUrl) {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
-			String htmlContent = getHtmlContent(reviewer, comment);
+			String htmlContent = getHtmlContent(reviewer, comment, requestUrl);
 			SimpleMessage email = new SimpleMessage(Utils.getCommonNotificationId(),
 					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
@@ -139,7 +139,7 @@ public class AddComment extends Command {
 //		return str;
 //	}
 
-	private String getHtmlContent(IUser reviewer, Comment comment) {
+	private String getHtmlContent(IUser reviewer, Comment comment, String requestUrl) {
 		String commentTitle = comment.getSubject();;
 		String pageName = comment.getPageName();
 		
@@ -151,6 +151,7 @@ public class AddComment extends Command {
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("username", reviewer.getUserID());
 		props.put("pagename", pageName);
+		props.put("url", ReviewManager.getReviewManager().getReviewUrl(comment.getDesignerId(), comment.getPageVersion(),  requestUrl)); 
 		props.put("title", commentTitle);
 		props.put("type", comment.getType());
 		props.put("severity", comment.getSeverity());

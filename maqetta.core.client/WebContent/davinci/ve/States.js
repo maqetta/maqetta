@@ -144,12 +144,20 @@ var veStates = declare(maqettaStates, {
 	_updateSrcState: function (node)
 	{
 		var widget = (node && node._dvWidget);
+		var existingStatesAttr = widget._srcElement.getAttribute(davinci.states.ATTRIBUTE);
 		if (widget && widget._srcElement) {
 			var str=this.serialize(node);
 			if (str.trim()) {
 				widget._srcElement.addAttribute(davinci.states.ATTRIBUTE,str);
 			} else {
 				widget._srcElement.removeAttribute(davinci.states.ATTRIBUTE);
+			}
+			var newStatesAttr = widget._srcElement.getAttribute(davinci.states.ATTRIBUTE);
+			if(existingStatesAttr !== newStatesAttr){
+				var editor = this.getEditor();
+				if(editor){
+					editor._visualChanged();	// Tell app that source view needs updating
+				}			
 			}
 		}
 	},
@@ -162,6 +170,86 @@ var veStates = declare(maqettaStates, {
 		return node;
 	},
 	
+	// Application "state" has been removed from the document
+	// Recursively remove all references to that state from given node and descendants
+	_removeStateFromNodeRecursive: function(node, state){
+		var widget = node._dvWidget;
+		if(!node || !widget || !state){
+			return;
+		}
+		this._removeStateFromNode(node, state);
+		var children = widget.getChildren();
+		for(var i=0; i<children.length; i++){
+			this._removeStateFromNodeRecursive(children[i].domNode, state);
+		}
+	},
+	
+	// Remove all references to given "state" from given node
+	_removeStateFromNode: function(node, state){
+		if(node && node.states && node.states[state]){
+			delete node.states[state];
+			this._updateSrcState(node);
+		}
+	},
+	
+	// Remove any application states information that are defined on particular widgets
+	// for all states that aren't in the master list of application states.
+	// (This is to clean up after bugs found in older releases)
+	removeUnusedStates: function(context, activeStates){
+		if(!context || !activeStates){
+			return;
+		}
+		var allWidgets = context.getAllWidgets();
+		for(var i=0; i<allWidgets.length; i++){
+			var node = allWidgets[i].domNode;
+			// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
+			// Assume that is being done by higher-level software.
+			if(node.tagName !== 'BODY'){
+				if(node && node.states){
+					for(var state in node.states){
+						if(state !== 'undefined' && activeStates.indexOf(state) < 0){
+							delete node.states[state];
+							this._updateSrcState(node);
+						}
+					}
+				}
+			}
+		}
+	},
+
+	/**
+	 * Returns array index into states object for given state
+	 * Mostly used so that a null or undefined or 'Normal' state will get converted to string 'undefined'
+	 * to compensate for screwy way that States.js is currently implemented
+	 * @param {string|null|undefined} state  Current state
+	 * @returns {string}  Returns either original state string or 'undefined'
+	 */
+	_getStateIndex:function(state){
+		var stateIndex;
+		if(!state || state == 'Normal' || state == 'undefined'){
+			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
+			stateIndex = 'undefined';
+		}else{
+			stateIndex = state;
+		}
+		return stateIndex;
+	},
+
+	getCurrentStateIndex:function(){
+		return this._getStateIndex(this.getState());
+	},
+
+	getApplyToStateIndex:function(applyToWhichStates){
+		var currentState = this.getState();
+		var state;
+		if(applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
+			state = currentState;
+		}else{
+			state = undefined;
+		}
+		return this._getStateIndex(state);
+	}
+	,
 
 	initialize: function() {
 	
@@ -229,6 +317,15 @@ var veStates = declare(maqettaStates, {
 				if (containerState) {
 					this._update(newWidget.domNode, containerState, undefined);		
 				}
+			}));
+			
+			connect.subscribe("/davinci/states/state/removed", dojo.hitch(this, function(params) {
+				// Application "state" has been removed from the document
+				// Recursively remove all references to that state from given node and descendants
+				if(!params){
+					return;
+				}
+				this._removeStateFromNodeRecursive(params.node, params.state);
 			}));
 			
 			this.subscribed = true;

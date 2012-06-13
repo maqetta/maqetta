@@ -84,9 +84,13 @@ define(["dojo/_base/declare",
 			return this.value;
 		},
 		
-		cancelButton: function(){
+		_cancelButton: function(){
 			this.cancel = true;
 			this.onClose();
+		},
+
+		resize: function(coords) {
+			this.contentpane.resize(coords);
 		},
 		
 		onClose: function(){}

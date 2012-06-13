@@ -148,7 +148,7 @@ return declare(SmartInput, {
 	replaceTreeStoreData: function(tree, data) {
 		var model = tree.model;
 		var store = model.store;
-
+		var jsonString = JSON.stringify(data);
 		this.replaceStoreData(store, data);
 		
 		// Kludge to force model update
@@ -159,8 +159,12 @@ return declare(SmartInput, {
 		var modelWidget = Widget.byId(modelId);
 		var storeId = modelWidget._srcElement.getAttribute("store");
 		var storeWidget = Widget.byId(storeId);
-		this._attr(storeWidget, "data", data);
-		store.data = data;
+		//store.data = data;
+		var props= {data:JSON.parse(jsonString)};
+		var command = new ModifyCommand(storeWidget, props);
+		this._addOrExecCommand(command);
+		//this._attr(storeWidget, "data", data);
+		//store.data = data;
 		// FIXME: How do we set this such that the model recognizes the update?
 		// Berkland: How do we get the corresponding dv widget handle from something like a dojo data store object? Doesn't seem to be any handle attached.
 		var dvWidget = Widget.getWidget(store.domNode);
@@ -179,6 +183,9 @@ return declare(SmartInput, {
 			this.command.add(command);
 		} else {
 			this._getContext().getCommandStack().execute(this.command || command);
+			// force the outline tree to update
+			this._widget._edit_context.deselect();
+			this._widget._edit_context.select(this._widget, null, false); // we don't replace the tree, just the store
 		}	
 	},
 	

@@ -28,8 +28,10 @@ return declare("davinci.html.CSSFile", CSSElement, {
 			txt = this.loader(this.url);
 		} else if (this.url) {
 			var file = this.getResource();
-			if (file)
+			if (file){
 				txt = file.getText();
+				this.setDirty(file.isDirty());
+			}
 		}
 		if (txt) {
 			this.setText(txt);
@@ -54,6 +56,8 @@ return declare("davinci.html.CSSFile", CSSElement, {
 				}
 			}
 		});
+		// the return of the CSSFile model needs to happen in the CSSImport instead of the CSSFile
+		// if we return it in the CSSFile close we end up returning it twice due of the visit logic
 		require(["dojo/_base/connect"], function(connect) {
 			connect.publish("davinci/model/closeModel", [this]);
 		});

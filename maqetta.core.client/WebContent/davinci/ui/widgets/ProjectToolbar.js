@@ -40,7 +40,7 @@ define(["dojo/_base/declare",
 		_delete : function(){
 			var allProjects = this._projectSelection.get("projects");
 			if(allProjects.length < 2){
-				alert("You can't delete the only project in your workspace!");
+				alert(uiNLS.deleteOnlyProjectError);
 				return;
 			}
 			var changeToProject = null;
@@ -65,7 +65,7 @@ define(["dojo/_base/declare",
 			var oldProject = Workbench.getProject();
 			var renameDialog = new Rename({value:oldProject, invalid: this._projectSelection.get("projects")});
 			
-			Workbench.showModal(renameDialog, uiNLS.renameProjectDialogTitle, 'height:110px;width: 200px',function(){
+			Workbench.showModal(renameDialog, uiNLS.renameProjectDialogTitle, {height:110, width: 200},function(){
 				
 				var cancel = renameDialog.get("cancel");
 				if(!cancel){
@@ -78,6 +78,8 @@ define(["dojo/_base/declare",
 					resource.rename(newName);
 					Workbench.loadProject(newName);
 				}
+
+				return true;
 			});
 			
 			

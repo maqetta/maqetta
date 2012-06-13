@@ -240,7 +240,7 @@ public class VDirectory implements IVResource {
             IVResource r1 = (IVResource) children.get(i);
             File f1 = new File(r1.getName());
             if (filter.accept(f1)) {
-                results.add(f1);
+                results.add(r1);
             }
 
             if (r1.isDirectory()) {

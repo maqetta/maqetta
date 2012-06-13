@@ -1,0 +1,8 @@
+<!-- ===================================================================== -->
+<!-- Custom targets called from a project's generated build.xml            -->
+<!-- Set customBuildCallbacks=<path/to/this/file> in your build.properties.-->
+<!-- ===================================================================== -->	
+<project name="Build widget plugin" default="noDefault">
+	<property environment="env"/>
+	<import file="${env.relEngDir}/widgetPlugin/widgetPluginDojoBuild.xml"/>
+</project>

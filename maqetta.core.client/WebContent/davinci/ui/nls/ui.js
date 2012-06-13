@@ -27,6 +27,7 @@ define({ root:
 		//DownloadSelected.js
 		"selectedFiles":"Selected Files",
 		"noFilesSelected":"No files selected!",
+		"downloadButtonLabel": "Download",
 		
 		//NewTheme.js
 		"themeAlreadyExists":"Theme already Exists!",
@@ -52,7 +53,9 @@ define({ root:
 		"other":"Other:",
 		"selectTheme":"Select theme",
 		"themeSet":"Theme set:",
-	    "themeVersionMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"themeVersionMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"addThemeSet": "Add theme set",
+		"deleteThemeSet":"Delete theme set",
 
 		
 		//SaveAsWidgetForm.js
@@ -70,6 +73,7 @@ define({ root:
 		"create":"Create",
 		"open":"Open",
 		"save":"Save",
+		"select": "Select",
 		
 		//fileDialog
 		"fileName":"File name",//used in templates/download.html
@@ -77,6 +81,8 @@ define({ root:
 		"parentFolder":"Parent folder: ",//used in add files as well
 		"newFolderLabel":"New folder",
 		"cancelButtonLabel":"Cancel",
+		"newFolderName": "Name:",
+		"createFolder": "Create Folder",
 		
 		//dialog titles
 		"createNewFile":"Create New File",
@@ -86,6 +92,7 @@ define({ root:
 		//"openFile":"Open File",
 		"createNewFolder":"Create New Folder",
 		"saveFileAs":"Save File As",
+		"downloadFile":"Download",
 		
 		//addFiles
 		"selectFiles":"Select Files...",
@@ -109,6 +116,7 @@ define({ root:
 		
 		/*Templates*/
 		//download.html -- see above for file name
+		"optimizeOption": "Use Dojo Web Builder (experimental)",
 		
 		//newtheme.html
 		"themeToClone":"Theme to clone",
@@ -122,6 +130,7 @@ define({ root:
 		"renameProjectDialogTitle": "Rename Project To...",
 		"deleteProjectButtonTitle": "Delete Project",
 		"renameProjectButtonTitle": "Rename Project...",
+		"deleteOnlyProjectError": "You can't delete the only project in your workspace!",
 		
 		//NewFile.html
 		"newFileShowFiles":"Show file picker",
@@ -145,6 +154,18 @@ define({ root:
 		"nhfoThemeButtonTitle":"Select themes or theme set for new HTML file",
 		
 		//NewHTMLFromTemplateOptions.html
-		"nhftTemplateLabel":"Template:"
+		"nhftTemplateLabel":"Template:",
+
+		//Rename
+		"renameNewLabel": "Name:",
+		"renameButtonLabel": "Rename",
+		"renameDialogTitle": "Rename To...",
+
+		//NewProject
+		"newProjectName": "Name:",
+		"newProjectEclipseSupport": "Eclipse support",
+
+		//UserLibraries
+		"modify": "Modify"
 }
 });

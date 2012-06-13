@@ -4,9 +4,10 @@ define([
     "../model/Factory",
 	"./utils/URLRewrite",
 	"./commands/ModifyRuleCommand",
+	"./commands/StyleCommand",
 	"dojo/i18n!davinci/ve/nls/common",
 	"system/resource"	
-], function(declare, Path, Factory, URLRewrite, ModifyRuleCommand,commonNls,systemResource) {
+], function(declare, Path, Factory, URLRewrite, ModifyRuleCommand, StyleCommand, commonNls, systemResource) {
 
 return declare("davinci.ve.ThemeModifier", null, {
 
@@ -20,27 +21,22 @@ return declare("davinci.ve.ThemeModifier", null, {
 		this.cssFiles = [];
 		
 		if(this.themeCssFiles){
-			for(var i = 0;i<this.themeCssFiles.length;i++){
-				var cssURL = this._themePath.getParentPath().append(this.themeCssFiles[i]).toString();
-				this.cssFiles.push(Factory.getModel({
-					url: cssURL,
+			var parentPath = this._themePath.getParentPath();
+			this.cssFiles = this.themeCssFiles.map(function(themeCssFile) {
+				return Factory.getModel({
+					url: parentPath.append(themeCssFile).toString(),
 				    includeImports: true,
-				    loader: function(url){
-						return system.resource.findResource(url).getText();
-					}
-				}));
-			}
+				});
+			});
 		}
 		return this.cssFiles;
 	},
-	
 
 	_getThemeResource: function (fileName) {
 		var absoluteLocation = this._themePath.getParentPath().append(fileName).toString();
-		var resource=  system.resource.findResource(absoluteLocation);
-		return resource;
+		return system.resource.findResource(absoluteLocation);
 	},
-	
+
 	/*
 	 *  Added for theme Delta #23
 	 */
@@ -83,7 +79,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 			return;
 		}*/
 		
-		var context = this.getContext(),
+		var context = this,
 			selection = context.getSelection(),
 			widget = selection.length ? selection[selection.length - 1] : undefined;
 
@@ -121,7 +117,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 					}
 				}
 			}
-			command = new davinci.ve.commands.StyleCommand(widget, allValues, value.applyToWhichStates);	
+			command = new StyleCommand(widget, allValues, value.applyToWhichStates);	
 		}else{
 			var rule=null;
 			
@@ -182,6 +178,45 @@ return declare("davinci.ve.ThemeModifier", null, {
 				file.visit(visitor);
 			}.bind(this));
 		}
+	},
+	
+	dirtyDynamicCssFiles: function(cssFiles){
+		
+		var dirty = false;
+		var visitor = {
+				visit: function(node){
+					if( node.elementType=="CSSFile" && node.isDirty()){
+						dirty = true;
+						
+					}
+					return dirty;
+				}
+			};
+			
+		if (cssFiles) {
+			cssFiles.forEach(function(file){
+				if(dirty){
+					return dirty;
+				}
+				file.visit(visitor);
+			}.bind(this));
+		}
+		return dirty;
+	},
+	
+	close: function(){
+		
+		if (this.cssFiles) {
+			this.cssFiles.forEach(function(file){
+				file.close();
+				require("davinci/model/Factory").closeModel(file);  // return the model to the factory
+			}.bind(this));
+		}
+		delete this.cssFiles;
+	},
+	
+	destroy : function ()	{
+		this.close();
 	}
 	
 });

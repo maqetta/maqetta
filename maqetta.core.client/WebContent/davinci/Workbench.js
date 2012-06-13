@@ -3,7 +3,7 @@ define([
 	"./model/Path",
 	"./workbench/ViewPart",
 	"./workbench/EditorContainer",
-	"dijit/Dialog",
+	"davinci/ui/Dialog",
 	"dijit/Toolbar",
 	"dijit/ToolbarSeparator",
 	"dijit/Menu",
@@ -25,6 +25,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"davinci/review/model/resource/root",
+	"davinci/ui/widgets/DialogContent",
 	"davinci/ve/widgets/FontComboBox"
 	
 ], function(
@@ -32,7 +33,7 @@ define([
 		Path,
 		ViewPart,
 		EditorContainer,
-		Dialog,
+		ResizeableDialog,
 		Toolbar,
 		ToolbarSeparator,
 		Menu,
@@ -53,7 +54,8 @@ define([
 		Deferred,
 		declare,
 		connect,
-		reviewResource
+		reviewResource,
+		DialogContent
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -645,14 +647,14 @@ var Workbench = {
 
 	getAllOpenEditorIds: function() {
 	},
-	
-	
+
 	showModal: function(content, title, style, callback) {
-		var myDialog = new Dialog({
+		var myDialog = new ResizeableDialog({
 			title: title,
 			content: content,
-			style: style
+			contentStyle: style
 		});
+
 		var handle = dojo.connect(content, "onClose", content, function() {
 			var teardown = true;
 			if (callback) {
@@ -666,17 +668,56 @@ var Workbench = {
 					return;
 				}
 			}
-			if (teardown) {
-				dojo.disconnect(handle);
-			}
-			if (this.cancel) {
-				myDialog.hide();
-			}
-			myDialog.destroy();
+
+			dojo.disconnect(handle);
+			myDialog.hide();
+			myDialog.destroyRecursive();
 		});
+
 		myDialog.show();
+
+		return myDialog;
 	},
-	
+
+	// simple dialog with an automatic OK button that closes it.
+	showMessage: function(title, message, style, callback) {
+		return this.showModal(new DialogContent({content: message, hideCancel: true}), title, style, callback);
+	},
+
+	// OK/Cancel dialog with a settable okLabel
+	showDialog: function(title, contents, style, callback, okLabel) {
+		// dialog content is a ContentPane we use that has pre-defined buttons
+		var content = new DialogContent({okLabel: okLabel, content: contents});
+
+		var myDialog = new ResizeableDialog({
+			title: title,
+			content: content,
+			contentStyle: style
+		});
+		var handle, handle2;
+
+		handle = dojo.connect(content, "onClose", content, function() {
+				if (callback) {
+					callback();
+				}
+				dojo.disconnect(handle);
+				dojo.disconnect(handle2);
+				myDialog.hide();
+				myDialog.destroyRecursive();
+		});
+
+		handle2 = dojo.connect(content, "onCancel", content, function() {
+				dojo.disconnect(handle);
+				dojo.disconnect(handle2);
+				myDialog.hide();
+				myDialog.destroyRecursive();
+		});
+
+		myDialog.show();
+
+		return myDialog;
+	},
+
 	_createMenuTree: function(actionSets, pathsOptional) {
 		if (!actionSets) {  // only get action sets not associated with part
 			actionSets =  Runtime.getExtensions("davinci.actionSets", function (actionSet) {
@@ -1252,13 +1293,34 @@ var Workbench = {
 				   }
 			   }
 			});
+		
 		if (actionSetIDs.length) {
 		   var actionSets=Runtime.getExtensions("davinci.actionSets",
 				function (extension) {
 			   		return actionSetIDs.some(function(setID) { return setID == extension.id; });
 				});
 		   if (actionSets.length) {
-			   var menuTree=Workbench._createMenuTree(actionSets,true);
+			   // Determine if any widget libraries have indicated they want to augment the actions in
+			   // the action set
+			   var clonedActionSets = [];
+			   dojo.forEach(actionSets, function(actionSet) {
+				   var libraryActions = metadata.getLibraryActions(actionSet.id);
+				   if (libraryActions.length) {
+					   // We want to augment the action list, so let's clone the
+					   // action set before pushing new items onto the end of the
+					   // array
+					   clonedActionSet = dojo.clone(actionSet);
+					   dojo.forEach(libraryActions, function(libraryAction) {
+						   clonedActionSet.actions.push(libraryAction);
+					   });
+					   clonedActionSets.push(clonedActionSet);
+				   } else {
+					   // No modifications to the actionSet, so just push as is
+					   clonedActionSets.push(actionSet);
+				   }
+			   });
+			   
+			   var menuTree=Workbench._createMenuTree(clonedActionSets,true);
 			   Workbench._initActionsKeys(actionSets, args);
 			   var popup=Workbench._createMenu(menuTree,context);
 			   if (popup && domNode) {
@@ -1446,15 +1508,6 @@ var Workbench = {
 		Workbench._updateTitle(newEditor);
 	
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
-	
-		if(newEditor) {
-			if (newEditor.focus) { 
-				newEditor.focus(); 
-			}
-
-			//Bring palettes specified for the editor to the top
-			this._bringPalettesToTop(newEditor);
-		}
 		
 		setTimeout(function(){
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
@@ -1463,7 +1516,20 @@ var Workbench = {
 			if (newEditor && newEditor.visualEditor && newEditor.visualEditor.context && newEditor.visualEditor.context.isActive()) {
 				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
 			}
-		}, 1000);
+			
+			// Code below was previously outside of the existing setTimeout kludge. But, needs to be inside because on loading of Maqetta, all 
+			// of the palettes might not be created in time (for example, _bringPalettesToTop might not bring Comments tab to front 
+			// because it's not created yet). So, we need to take advantage of the delay. It certainly would be better is there were a 
+			// Workbench loaded event or something to leverage.
+			if(newEditor) {
+				if (newEditor.focus) { 
+					newEditor.focus(); 
+				}
+
+				//Bring palettes specified for the editor to the top
+				this._bringPalettesToTop(newEditor);
+			}
+		}.bind(this), 1000);
 
 		if(!startup) {
 			Workbench._updateWorkbenchState();

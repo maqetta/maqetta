@@ -139,11 +139,21 @@
 		<li>See notes above.</li>
 	</ol>
 
-	<h2 class="test_section">Author checking review comments</h2>
+	<h2 class="test_section">Receiving comment notifications and checking comments</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>As user A, open Maqetta. Go to Reviews palette, open up the latest review session by clicking on "+", and then
-			double-click on Sample1.html.rev. 
+		<li>As user A, login to your mail client and look for notifications that comments have been added to your review.
+		  <div class='expectedResults_subsection'>For each new comment, you should see an email that includes details about the 
+		  	comment. In addition, there should be a link to your review (the same link that was 
+		  	in the review invitation). It should look something like the screenshot below:</div>
+		  	<img src="images/commentNotificationEmail.png" >
+		</li>
+		<li>As user A, open Maqetta either by:
+			<ul>
+				<li> clicking on the link in the notification e-mail</li>
+				<li> going to Reviews palette, opening up the latest review session by clicking on "+", and then
+					double-clicking on Sample1.html.rev. </li>
+			</ul>
 		  <div class='expectedResults_subsection'>The review should open in a new editor tab.</div></li>
 		<li>Verify that the review comments from users B and C are visible, properly color-coded,
 			and that different annotations appear/disappear as you change states in the States palette.
@@ -151,6 +161,10 @@
 		<li>Reload the browser page (using either browser refresh or logout/login) and verify that any reviews that were
 			in editor tabs before the reload are reopened.
 		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See notes above.</li>
 	</ol>
 
 	<h2 class="test_section">Working with reviews created both by you and by others</h2>

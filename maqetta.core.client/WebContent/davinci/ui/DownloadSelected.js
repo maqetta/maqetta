@@ -1,18 +1,17 @@
 define(["dojo/_base/declare",
         "./Download",
         "./Resource",
-        "dojo/i18n!./nls/ui",
-        "dojo/i18n!dijit/nls/common"
-   ],function(declare,  Download, ResourceUI, uiNLS, commonNLS){
-return declare("davinci.ui.DownloadSelected", [Download], {
+        "dojo/i18n!./nls/ui"
+],function(declare, Download, ResourceUI, uiNLS){
+
+	return declare([Download], {
 		buildRendering: function(){
-			var langObj = uiNLS;
 			this.inherited(arguments);
 			this._files = ResourceUI.getSelectedResources();
-			var uiArray = ["<div class='downloadSelectedHeader'>"+langObj.selectedFiles+"</div>",
+			var uiArray = ["<div class='downloadSelectedHeader'>" + uiNLS.selectedFiles + "</div>",
 			               "<div class='downloadSelectedList'>"];
 			if(!this._files){
-				uiArray.push("<b>"+langObj.noFilesSelected+"</b>");
+				uiArray.push("<b>" + uiNLS.noFilesSelected + "</b>");
 				this._files = [];
 				dojo.attr(this._okButton, "disabled", "true");
 			}
@@ -24,12 +23,12 @@ return declare("davinci.ui.DownloadSelected", [Download], {
 			var html = uiArray.join("");
 			dojo.place(html, this._selectionDiv);
 		},
+
 		_getResources: function(){
-			var list = [];
-			for(var i=0;i<this._files.length;i++){
-				list.push(this._files[i].getPath());
-			}
-			return {userFiles: list, userLibs: this._getLibs()};
+			return {
+				userFiles: this._files.map(function(item){ return item.getPath();}),
+				userLibs: this._getLibs()
+			};
 		}
 	});
 });

@@ -11,17 +11,18 @@ define(['dojo/_base/declare',
        './widgets/NewHTMLFromTemplateOptions',
        './widgets/OpenFile',
        './widgets/NewFolder',
-       './widgets/NewFile', 
+       './widgets/NewFile',
+       './widgets/AddFiles',
        './NewProject',
        'dojox/form/uploader/FileList', 
        'dojox/form/Uploader',
-       'dijit/Dialog',
+       'davinci/ui/Dialog',
        'dojo/i18n!./nls/ui',
        'dojo/i18n!dijit/nls/common',
        'dijit/form/Button',
        'dojox/form/uploader/plugins/HTML5'
        
-],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, NewHTMLFromTemplateOptions, OpenFile, NewFolder, NewFile, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){
+],function(declare, Resource, Path, Runtime, Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, NewHTMLFromTemplateOptions, OpenFile, NewFolder, NewFile, AddFiles, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){
 
 var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName, existingResource) {
 	var resource=existingResource || getSelectedResource();
@@ -200,9 +201,9 @@ var uiResource = {
 			var proposedFileName = uiResource.getNewFileName('folder',folder);
 			var dialogOptions = {newFileName:proposedFileName,
 								fileFieldLabel:uiNLS.folderName, 
-								folderFieldLabel:"Parent Folder:", // FIXME: i18n
+								folderFieldLabel:uiNLS.parentFolder,
 								root:folder,
-								finishButtonLabel:"Create Folder" }; // FIXME: i18n
+								finishButtonLabel:uiNLS.createFolder};
 			
 			var newFolderDialog =  new NewFolder(dialogOptions);
 			var finished = false;
@@ -230,10 +231,14 @@ var uiResource = {
 		},
 	
 		/* close an editor editting given resource */
-		closeEditor : function(resource){
+		closeEditor : function(resource,flush){
 			var oldEditor = Workbench.getOpenEditor(resource);
-			if(oldEditor!=null)
+			if(oldEditor!=null){
+				if(flush) oldEditor.save();
 				oldEditor.editorContainer.forceClose(oldEditor);
+			}
+			/* return true if we closed an open editor */
+			return (oldEditor !=null);
 		},
 		
 		saveAs: function(extension){
@@ -265,7 +270,7 @@ var uiResource = {
 							existing.deleteResource();
 						}
 						// Do various cleanups around currently open file
-						oldResource.removeWorkingCopy();
+						//oldResource.removeWorkingCopy(); // 2453 Factory will clean this up..
 						oldEditor.isDirty = false;
 						// Create a new editor for the new filename
 						var file = Resource.createResource(resourcePath);
@@ -332,87 +337,11 @@ var uiResource = {
 		},
 	
 		addFiles: function(){
-			var formHtml = dojo.replace(
-			'<label for=\"fileDialogParentFolder\">{parentFolder} </label><div id="fileDialogParentFolder" ></div>'+
-	        '<div id="btn0"></div><br/>'+
-	        '<div id="filelist"></div>'+
-	        '<div id="uploadBtn" class="uploadBtn" dojoType="dijit.form.Button">{upload}</div><br/>',
-	        uiNLS);
-	
-			var	dialog = new Dialog({
-				id: "addFiles",
-				title: uiNLS.addFiles,
-				onCancel: function() { /*dialog.reset();*/ this.destroyRecursive(false); }
-			});	
-			
-			dialog.connect(dialog, 'onLoad', function(){
-				var folder=Resource.getRoot();
-				var resource=getSelectedResource();
-				if (resource) {
-					folder = resource.elementType == 'Folder' ? resource : resource.parent;
-				}
-	//			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
-				dojo.byId('fileDialogParentFolder').innerText=folder.getPath();
+			var addFiles = new AddFiles({selectedResource: getSelectedResource()});
 
-				// Uploader plugin code is not AMD compliant.  Use global reference.  See http://bugs.dojotoolkit.org/ticket/14811
-				var f0 = new dojox.form.Uploader({
-					label: "Select Files...", // shouldn't need to localize this after Dojo 1.6
-					url: 'cmd/addFiles?path=' + folder.getPath(), 
-					multiple: true
-				});
-	
-				dojo.byId("btn0").appendChild(f0.domNode); // tried passing this into the constructor, but there's a bug that sizes the button wrong
-	
-				var list = new FileList({uploader:f0}, "filelist");
-	
-				var uploadHandler, uploadBtn = dijit.byId("uploadBtn");
-				uploadBtn.set("disabled", true);
-				dojo.connect(f0, 'onChange', function (files) {
-					if (uploadHandler) {
-						dojo.disconnect(uploadHandler);
-					}
-					uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){
-						f0.set("disabled", true);
-						f0.upload();
-					});
-					if (uploadBtn.oldText) {
-						uploadBtn.containerNode.innerText = uploadBtn.oldText;
-					}
-					uploadBtn.set("disabled", !files.length);
-				});
-	
-				var setDone = function(){
-					f0.set("disabled", false);
-					dojo.disconnect(uploadHandler);
-					uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){ dialog.destroyRecursive(false); });
-					uploadBtn.oldText = uploadBtn.containerNode.innerText;
-					uploadBtn.containerNode.innerText = uiNLS.done;
-				};
-	
-				dojo.connect(f0, "onComplete", function(dataArray){
-					dojo.forEach(dataArray, function(data){
-						
-						/* 
-						 * need to add to the client side without a server call, mimic the results of a server call
-						 * private API call since this is all part of the resource package.
-						 * 
-						 *  */
-						folder._appendFiles([{isDir:false, isLib:false, isNew:false,name:data.file}]);
-						var changed = new Path(folder.getPath()).append(data.file);
-						Resource.resourceChanged('updated', changed.toString());
-					});
-					setDone();
-				});
-				dojo.connect(f0, "onError", function(args){
-					//FIXME: post error message
-					console.error("Upload error: ", args);
-					dialog.set("disabled", false);
-					setDone();
-				});
-			});
-			dialog.set("content", formHtml);
-			dialog.show();
+			Workbench.showModal(addFiles, uiNLS.addFiles, '', null);
 		},
+
 		getNewFileName:function (fileOrFolder, fileDialogParentFolder, extension){
 			
 			var existing, proposedName;
@@ -455,13 +384,13 @@ var uiResource = {
 			    });
 	
 		    	var renameDialog = new Rename({value:resource.name, invalid:invalid});
-		  		Workbench.showModal(renameDialog, 'Rename To....', '', function(){ //FIXME: i18n
+		  		Workbench.showModal(renameDialog, uiNLS.renameDialogTitle, '', function(){
 		  			var cancel = renameDialog.attr("cancel");
 		  			var newName = renameDialog.attr("value");
 		  			if(!cancel){
-		  				uiResource.closeEditor(resource);
+		  				var opened = uiResource.closeEditor(resource,true);
 		  				resource.rename(newName);
-			  			uiResource.openResource(resource);
+			  			if(opened) uiResource.openResource(resource);
 					}
 		  			return true;
 		  		});	

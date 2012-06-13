@@ -1,7 +1,12 @@
-define(["dijit/Dialog",
+define(["dojo/_base/declare",
+				"davinci/ui/Dialog",
+    		"dijit/_Widget",
+    		"dijit/_Templated",
         "davinci/workbench/Preferences",
         "davinci/Workbench",
         "davinci/library",
+        "dojo/text!./templates/ThemeSetsDialog.html",
+        "dojo/text!./templates/ThemeSetsRenameDialog.html",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "davinci/Theme",
@@ -9,8 +14,23 @@ define(["dijit/Dialog",
         "dijit/form/Button",
         "dijit/Toolbar"
         
-],function(Dialog, Preferences,Workbench, Library, uiNLS, commonNLS, Theme){
-	
+],function(declare, Dialog, _Widget, _Templated, Preferences, Workbench, Library, templateString, renameTemplateString, uiNLS, commonNLS, Theme){
+	declare("davinci.ui.ThemeSetsDialogWidget", [_Widget, _Templated], {
+		templateString: templateString,
+		widgetsInTemplate: true,
+
+		uiNLS: uiNLS,
+		commonNLS: commonNLS
+	});
+
+	declare("davinci.ui.ThemeSetsDialogRenameWidget", [_Widget, _Templated], {
+		templateString: renameTemplateString,
+		widgetsInTemplate: true,
+
+		uiNLS: uiNLS,
+		commonNLS: commonNLS
+	});
+
 	return dojo.declare("davinci.ui.ThemeSetsDialog",   null, {
 	    
 	    constructor : function(){
@@ -18,8 +38,7 @@ define(["dijit/Dialog",
 	        this._dialog = new Dialog({
 	            id: "manageThemeSets",
 	            title: uiNLS.themeSetsDialog,
-	            style:"width:580px; ",
-	            
+	            contentStyle: {width: 580}
 	        });
 	        dojo.connect(this._dialog, "onCancel", this, "onClose");
 	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
@@ -34,7 +53,7 @@ define(["dijit/Dialog",
 	        }
 	        this._dojoThemeSets = dojo.clone(this._dojoThemeSets); // make a copy so we won't effect the real object
 	        
-	        this._dialog.attr("content", this._getTemplate());
+	        this._dialog.attr("content", new davinci.ui.ThemeSetsDialogWidget({}));
 	        this._connections.push(dojo.connect(dojo.byId('theme_select_themeset_theme_select'), "onchange", this, "onChange"));
 	        this._connections.push(dojo.connect(dijit.byId('theme_select_themeset_add'), "onClick", this, "addThemeSet"));
 	        this._connections.push(dojo.connect(dijit.byId('theme_select_themeset_delete'), "onClick", this, "deleteThemeSet"));
@@ -209,17 +228,9 @@ define(["dijit/Dialog",
 	        this._renameDialog = new Dialog({
 	            id: "rename",
 	            title: langObj.renameThemeSet,
-	            style:"width:300px; ",
-	            
+	            contentStyle: {width: 300},
+	            content: new davinci.ui.ThemeSetsDialogRenameWidget({})
 	        });
-	        var content = ''+
-	        '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
-	            '<tr><td style="width: 18%;">'+langObj.themeSetName+'</td><td style="text-align: center;"><input data-dojo-type="dijit.form.ValidationTextBox" data-dojo-props="regExp:\'[a-zA-z0-9_]+\', required:true, invalidMessage:\'Invalid Text.\'" id="theme_select_themeset_rename_textbox" style="width: 175px;" ></td></tr>'+
-	        '</table>' +
-	        '<table style="width:100%; margin-top: 10px;">'+
-	            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_ok_button" label="'+loc.buttonOk+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_set_rename_cancel_button" label="'+loc.buttonCancel+'"></input></td></tr>'+
-	        '</table>';
-	        this._renameDialog.attr("content", content);
 	        this._renameDialog._themesetConnections = [];
 	        this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_ok_button'), "onClick", this, "onOkRename"));
 	        this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_cancel_button'), "onClick", this, "onCloseRename"));
@@ -414,63 +425,7 @@ define(["dijit/Dialog",
 	           
 	        }
 	        
-	    },
-	    
-	    _getTemplate: function(){
-	        
-	        var langObj = uiNLS;
-	        var loc = commonNLS;
-	        var size = 10;
-
-	        var template = ''+
-	            '<table style="width:550px; " >' +
-	                '<tr>' +
-	                    '<td style="width:40%; vertical-align: top;">' +
-	                        '<table>' + 
-	                            '<tr>' +
-	                                '<td style=" vertical-align: top;" >' +
-	                                    '<label>'+langObj.themeSets+'</label><select  id="theme_select_themeset_theme_select" name="theme_select_themeset_theme_select" size="'+size+'" style="margin-bottom: 5px; width: 190px;" ></select>'+
-	                                    '<div id="toolbar1" data-dojo-type="dijit.Toolbar" class="toolbaredContainer_toolbarDiv davinciToolbar">'+
-	                                    	'<div data-dojo-type="dijit.form.Button" id="theme_select_themeset_add" data-dojo-props="iconClass:\'viewActionIcon addThemeSetIcon\', showLabel:false ">Add theme set</div>' +
-	                                    	'<span data-dojo-type="dijit.ToolbarSeparator"></span>' +
-	                                    	'<div data-dojo-type="dijit.form.Button" id="theme_select_themeset_delete" data-dojo-props="iconClass:\'viewActionIcon removeThemeSetIcon\', showLabel:false ">Delete theme set</div>' +
-	                                     '</div>' +
-	                                    '</td>' +
-	                                '<td><div style="border-right: 1px solid #ccc; width: 1px; height: 250px; margin-left: 10px; margin-top: 10px;"></div></td>' +
-	                            '</tr>' +
-	                            '<tr>' +
-	                                '<td></td><td></td>' +
-	                            '</tr>' +
-	                        '</table>' +
-	                    '</td>' +
-	                    '<td>' +
-	                        '<table style="width: 100%; margin-left:10px; margin-right:10px;">'+
-	                            '<tr><td colspan="2">'+langObj.currentlySelectedThemeSet+'</td><tr>' +
-	                            '<tr><td style="width: 18%;">'+langObj.themeSetName+'</td><td style="text-align: center;"><input dojoType="dijit.form.TextBox" id="theme_select_themeset_theme_select_textbox" readonly= "true" style="width: 175px;" ></input><input type="button" dojoType="dijit.form.Button" id="theme_select_rename_button" label="Rename" style="margin-left: 5px;"></td></tr>'+
-	                        '</table>' +
-	                        '<div style="border-top: 1px solid; top: 231px; border-top-color: #ccc; left: 429px; width: 300px; height: 11px; margin-top: 6px; margin-left:10px;"></div>'+
-	                        '<table style="margin-left: 15px; width: 100%;">'+
-	                            '<tr><td>'+langObj.desktopTheme+'</td><td><select dojoType="dijit.form.Select" id="theme_select_desktop_theme_select"type="text"  style="width: 175px;"  ></select></td></tr>'+
-	                            '<tr><td>'+langObj.mobileTheme+'</td><td><select dojoType="dijit.form.Select" id="theme_select_mobile_theme_select"type="text"  style="width: 175px;" ></select></td></tr>'+
-	                        '</table>' +
-	                        '<table id="theme_select_devices_table" style="margin-left:30px; border-collapse: separate; border-spacing: 0 0; width: 100%">' +
-	                        '<tr><td style="width: 129px;">'+langObj.android+'</td><td><select dojoType="dijit.form.Select" id="theme_select_android_select" type="text"  style="width: 150px;"></select></td></tr>' +
-	                        '<tr><td>'+langObj.blackberry+'</td><td><select dojoType="dijit.form.Select" id="theme_select_blackberry_select" type="text"  style="width: 150px;"></select></td></tr>' +
-	                        '<tr><td>'+langObj.ipad+'</td><td><select dojoType="dijit.form.Select" id="theme_select_ipad_select" type="text"  style="width: 150px;"></select></td></tr>' +
-	                        '<tr><td>'+langObj.iphone+'</td><td><select dojoType="dijit.form.Select" id="theme_select_iphone_select" type="text"  style="width: 150px;"></select></td></tr>' +
-	                        '<tr><td>'+langObj.other+'</td><td><select dojoType="dijit.form.Select" id="theme_select_other_select" type="text"  style="width: 150px;"></select></td></tr>' +
-	                        '</table>' +
-	                        '<table style="width:100%; margin-top: 10px;">'+
-	                            '<tr><td style="text-align:right; width:80%;"><input type="button" dojoType="dijit.form.Button" id="theme_select_ok_button" label="'+loc.buttonOk+'"></input></td><td><input type="button" dojoType="dijit.form.Button" id="theme_select_cancel_button" label="'+loc.buttonCancel+'"></input></td></tr>'+
-	                         '</table>' +
-	                     '</td>'+
-	                 '</tr>' +
-	             '</table>' +
-	             '';
-
-	           return template; 
 	    }
-
 	});
 	
 });

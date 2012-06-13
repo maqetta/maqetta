@@ -187,7 +187,8 @@ var resource = {
 		system.resource.resourceChanged("reload", destFile);
 	},
 
-	download: function(files,archiveName, root, userLibs){
+	//TODO: use options hash arg in place of root, libs
+	download: function(files, archiveName, root, userLibs, options){
 		
 		/* using a servlet to create the file on the fly from the request, 
 		   this will eliminate delay from download click to actual start
@@ -195,11 +196,19 @@ var resource = {
 		var libString = "";
 		var rootString = "";
 		
-		if(userLibs)
+		if(userLibs) {
 			libString = "&libs="+escape(dojo.toJson(userLibs));
+		}
 		
-		if(root)
+		if(root) {
 			rootString = "&root="+ escape(root);
+		}
+
+		if (options) {
+			for (var name in options) {
+				rootString += "&" + escape(name) + "=" + escape(options[name]);
+			}
+		}
 		
 		window.location.href= "cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString ;
 	},

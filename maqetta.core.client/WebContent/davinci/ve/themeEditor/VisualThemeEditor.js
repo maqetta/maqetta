@@ -6,9 +6,11 @@ define([
     	"davinci/workbench/Preferences",
     	"davinci/model/Path",
     	"davinci/model/Factory",
+    	"davinci/html/HTMLFile",
     	"davinci/Theme",
-    	"dijit/Dialog"
-], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, Theme, Dialog) {
+    	"dojo/i18n!davinci/ve/nls/ve"
+
+], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, veNls) {
 
 return declare([], {
 
@@ -84,11 +86,11 @@ return declare([], {
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
-			var htmlFile = Factory.newHTML();
+			var themeBase = Theme.getThemeLocation(); 
+			htmlFile = new HTMLFile();; // each theme editor HTML needs to be it's own instance NO singleton from the model
 			htmlFile.fileName = fileName;
-			htmlFile.setText(content);
+			htmlFile.setText(content, true); // no import
 			// #23 adjust for where html is located 
-			var themeBase = Theme.getThemeLocation();
 			var relPath = themeBase.relativeTo(this.basePath, true);
 			htmlFile.themeCssFiles = [];
 			themeCssFiles.forEach(function(file){
@@ -145,7 +147,8 @@ return declare([], {
 						}
 					}
 					if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
-						this.themeVersionError();
+						this.themeVersionWarn(); //just warn for now
+						//this.themeVersionError(); 
 					}
 
 					if (failureInfo.errorMessage) {
@@ -172,70 +175,19 @@ return declare([], {
 	},
 	
 	themeVersionWarn: function(){
-		//FIXME: i18n
-		var message = 'Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.';
-
-		this._dialog = new Dialog({
-			id: "maqetta.themeVersionMismatch",
-			title:"Theme Version Warning",
-			onCancel:function(){
-				this.destroyRecursive(false);
-			},
-			style: 'width:250px;'
-		});
-		var formHTML = '<table>' + 
-							'<tr><td></td><td>'+message+'</td><td></td></tr>'+
-							'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="themeWarnOk" >Ok</button></td><td></td></tr>'+
-						'</table>';
-		
-		this._dialog.setContent(formHTML);
-		var ok = dijit.byId('themeWarnOk');
-		ok.domNode.onclick = dojo.hitch(this, 'themeVersionWarnOk');
-		this._dialog.show();
-	},
-
-	themeVersionWarnOk: function(){
-		if (this._dialog){
-			this._dialog.hide();
-			this._dialog.destroyRecursive(false);
-			delete this._dialog;
-		}
+		Workbench.showMessage(veNls.vteWarningTitle, veNls.vteWarningMessage, {width: 250});
 	},
 	
 	themeVersionError: function(){
-		//FIXME: i18n
-		var message = 'Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta.';
-		this._dialog = new Dialog({
-			id: "maqetta.themeVersionMismatch",
-			title:"Theme Version Error",
-			onCancel:function(){
-				this.destroyRecursive(false);
-				this.editorContainer.save(false); // force a save
-				this.editorContainer.forceClose(this, true);
-			},
-			style: 'width:250px;'
-		});
-		this._dialog.editorContainer = this._themeEditor.editorContainer;
-		var formHTML = '<table>' + 
-							'<tr><td></td><td>'+message+'</td><td></td></tr>'+
-							'<tr><td></td><td align="center"><button data-dojo-type="dijit.form.Button" type="button" id="themeErrorOk" >Ok</button></td><td></td></tr>'+
-						'</table>';
-		
-		this._dialog.setContent(formHTML);
-		var ok = dijit.byId('themeErrorOk');
-		ok.domNode.onclick = dojo.hitch(this, 'themeVersionErrorOk');
-		this._dialog.show();
+		Workbench.showMessage(veNls.vteErrorTitle, veNls.vteErrorMessage, {width: 250}, dojo.hitch(this, "themeVersionErrorOk"));
 	},
 	
 	themeVersionErrorOk: function(){
-		if (this._dialog){
-			this._dialog.editorContainer.save(false); // force a save
-			this._dialog.editorContainer.forceClose(this, true);
-			this._dialog.hide();
-			this._dialog.destroyRecursive(false);
-			delete this._dialog;
-		}
+		this.context.editor.editorContainer.save(false); // force a save
+		this.context.editor.editorContainer.forceClose(this, true);
 
+		// destroy dialog by returning true
+		return true;
 	},
 
 	hotModifyCssRule: function(){

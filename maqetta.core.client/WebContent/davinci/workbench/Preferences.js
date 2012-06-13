@@ -1,12 +1,30 @@
 define([
 //    "../Workbench",
+		"dojo/_base/declare",
     "../Runtime",
-    "dijit/Dialog",
+    "dijit/_Widget",
+    "dijit/_Templated",
+    "davinci/ui/Dialog",
     "dijit/Tree",
     "dojo/i18n!./nls/workbench",
-    "dojo/i18n!dijit/nls/common"
-], function(/*Workbench,*/ Runtime, Dialog, Tree, workbenchStrings, commonStrings) {
+    "dojo/i18n!dijit/nls/common",
+    "dojo/text!./templates/Preferences.html",
+    "dijit/form/Button"
+], function(/*Workbench,*/ declare, Runtime, _Widget, _Templated, Dialog, Tree, workbenchStrings, commonStrings, templateString) {
 
+
+declare("davinci.workbench.PreferencesWidget", [_Widget, _Templated], {
+
+	templateString: templateString,
+	widgetsInTemplate: true,
+
+	commonStrings: commonStrings,
+
+	resize: function() {
+		this.borderContainer.resize();
+	}
+});
+	
 var Preferences = {
 	_allPrefs: {},
 
@@ -40,24 +58,11 @@ var Preferences = {
  	    	return;
  	    	
  	    }
- 	    //FIXME: move template to html file and reference with dojo/text! dependency
-    	var html_template = "<div dojoType='dijit.layout.BorderContainer' style='width: 700px; height: 500px;' gutters='false' liveSplitters='true' id='preferencesContainer'>"+
-		    "<div dojoType='dijit.layout.ContentPane' id='pref.TreePane' splitter='true' region='leading' style='width: 200px;' minSize='100' maxSize='300'></div>"+
-		    "<div dojoType='dijit.layout.ContentPane' region='bottom' style='height: 25px'>"+
-			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.save();\">"+dijitLangObj.buttonSave+"</button></td>"+
-			/*
-			 * FIXME: we don't have logic to yet implement restoreDefaults() yet. See #627
-			 "<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.restoreDefaults();\">"+langObj.restoreDefaults+"</button></td>"+
-			*/
-			"<button dojoType=dijit.form.Button type=\"button\" onclick=\"davinci.workbench.Preferences.finish();\">"+dijitLangObj.buttonCancel+"</button></td>"+
-			"</div>"+
-		    "<div dojoType='dijit.layout.ContentPane' region='center' id='pref.RightPane'></div>"+
-		 "</div>";
 
-		var	dialog = new Dialog({
-			id: "preference.main.dialog",
+		this.dialog = new Dialog({
 			title: langObj.preferences,
-			content: html_template,
+			content: new davinci.workbench.PreferencesWidget({}),
+			contentStyle: {width: 700, height: 500},
 			onCancel:function(){
 				this.destroyRecursive(false);
 			}
@@ -82,7 +87,8 @@ var Preferences = {
 		dojoTree.onClick = function(node) { Preferences.setPaneContent(node); };
 		dojo.byId("pref.TreePane").appendChild(dojoTree.domNode);
 		dojoTree.startup();
-		dialog.show();
+
+		this.dialog.show();
 	},
 	getPrefJson: function(){
 		//build the proper json structure before returning it.  this is to save a lot of time over riding model methods for the tree.
@@ -193,7 +199,8 @@ var Preferences = {
 	finish: function (){
 		Preferences._extensions=null;
 		Preferences._currentPane=null;
-		dijit.byId('preference.main.dialog').destroyRecursive(false);
+		this.dialog.destroyRecursive(false);
+		this.dialog = null;
 	},
 	
 	getPreferences: function (id, base){

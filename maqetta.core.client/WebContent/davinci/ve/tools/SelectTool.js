@@ -71,16 +71,15 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// this is a context menu ("right" click)  Don't change the selection.
 			return;
 		}
-		
 		// See if mouse is within selection rectangle for a primitive widget
 		// Sometimes that rectangle is a bit bigger than _getTarget or getEnclosingWidget
 		var widget = context.checkFocusXY(event.pageX, event.pageY);
 		if(widget && Metadata.getAllowedChild(widget.type)[0] !== 'NONE'){
 			widget = null;
 		}
-		
+		var eventTargetWidget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
 		if(!widget){
-			widget = this._getTarget() || widgetUtils.getEnclosingWidget(event.target);
+			widget = eventTargetWidget;
 		}
 		while(widget){
 			if(widget.getContext()){ // managed widget
@@ -117,6 +116,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				context.deselect(widget);
 			}else{
 				moverWidget = widget;
+				this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
 			}
 		}else{
 			if(ctrlKey){
@@ -128,7 +128,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}else{
 				if(selectedAncestor){
 					moverWidget = selectedAncestor;
-					this._mouseDownInfo = { widget:widget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+					this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
 				}else{
 					if(widget == context.rootWidget){
 						// Simple mousedown over body => deselect all (for now)
@@ -141,7 +141,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						context.select(widget, ctrlKey);
 						moverWidget = widget;
 					}else{
-						this._mouseDownInfo = { widget:widget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+						this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
 						this._areaSelectInit(event.pageX, event.pageY);
 					}
 				}
@@ -241,7 +241,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			if(Math.abs(event.pageX - this._mouseDownInfo.pageX) <= clickDistance &&
 					Math.abs(event.pageY - this._mouseDownInfo.pageY) <= clickDistance &&
 					(dateValue - this._mouseDownInfo.dateValue) <= clickInteral){
-				this._context.select(this._mouseDownInfo.widget);
+				var widgetToSelect = this._mouseDownInfo.eventTargetWidget ? this._mouseDownInfo.eventTargetWidget : this._mouseDownInfo.widget;
+				this._context.select(widgetToSelect);
 				doAreaSelect = false;
 			}
 			this._mouseDownInfo = null;

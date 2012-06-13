@@ -3,16 +3,17 @@ define([
 	"davinci/workbench/ViewPart",
 	"davinci/Workbench",
 	"davinci/ui/widgets/ToggleTree",
+	"davinci/ui/widgets/OutlineTree",
 	"dijit/layout/ContentPane",
 	"dojo/i18n!davinci/workbench/nls/workbench"
-], function(declare, ViewPart, Workbench, ToggleTree, ContentPane, workbenchStrings){
+], function(declare, ViewPart, Workbench, ToggleTree, OutlineTree, ContentPane, workbenchStrings){
 
 return declare("davinci.workbench.OutlineView", ViewPart, {
 
 	constructor: function(params, srcNodeRef){
 		this.subscribe("/davinci/ui/editorSelected", this.editorChanged);
-		this.subscribe("/davinci/ui/selectionChanged", this.selectionChanged);
-		this.subscribe("/davinci/ui/modelChanged", this.modelChanged);
+		//this.subscribe("/davinci/ui/selectionChanged", this.selectionChanged);
+		//this.subscribe("/davinci/ui/modelChanged", this.modelChanged);
 	},
 	
 	editorChanged: function(changeEvent){
@@ -55,6 +56,32 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 	},
 
 	createTree: function() {
+		if (this.outlineTree) {
+			this.removeContent();
+		}
+
+		// create tree
+		this.outlineTree = new OutlineTree({context: this.currentEditor.getContext()});
+
+		// BEGIN TEMPORARY HACK for bug 5277: Surround tree with content pane and subcontainer div overflow: auto set to workaround spurious dnd events.
+		// Workaround should be removed after the following dojo bug is fixed: http://bugs.dojotoolkit.org/ticket/10585
+		this.container = new ContentPane({style:"padding:0"});
+		this.subcontainer = dojo.doc.createElement('div');
+		this.subcontainer.id = "dvOutlineSubcontainer";
+		this.subcontainer.appendChild(this.outlineTree.domNode);
+		this.container.domNode.appendChild(this.subcontainer);
+		this.setContent(this.container);
+		// END HACK: Original code commented out below:
+
+		this.outlineTree.startup();
+
+		if (this.outlineProvider) {
+			this.outlineProvider._tree = this.outlineTree;
+		}
+
+	},
+
+	createTree2: function() {
 		if (this.outlineTree) 
 			this.removeContent();
 

@@ -84,7 +84,9 @@
                
            <command path="keepalive" 
                class="maqetta.core.server.command.KeepAlive" />
-                
+           <command path="getUserInfo" 
+               class="maqetta.core.server.command.GetUserInfo" /> 
+                   
           <!-- Review and Commenting Commands -->        
           <command path="listVersions"
                class="maqetta.core.server.command.ListVersions" />

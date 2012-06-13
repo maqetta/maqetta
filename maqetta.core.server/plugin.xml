@@ -41,7 +41,7 @@
 	 <!-- maqetta samples library -->
 	 <extension point="maqetta.core.server.ajaxLibrary">
 		 <ajaxLibrary name="samples" id="maqettaSamples" version="1.0">
-		      <libraryPath location="WebContent/samples" name="/"></libraryPath>
+		      <libraryPath location="WebContent/project/samples" name="/samples"></libraryPath>
 		      <metadata location="app/metadata/maqetta/core/0.3" />
 		 </ajaxLibrary>
 	 </extension>
@@ -50,15 +50,13 @@
 	 
 	 <extension point="maqetta.core.server.ajaxLibrary">
 		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
-		      <libraryPath location="WebContent/project/base/maqetta" name="/lib/maqetta"></libraryPath>
+		      <libraryPath location="WebContent/project/maqetta" name="/lib/maqetta"></libraryPath>
 		      <metadata location="app/metadata/maqetta/core/0.3" />
 		 </ajaxLibrary>
 	 </extension>
-	 <!--
+	 
 	 <extension point="maqetta.core.server.initialUserFiles">
-
-             <initalUserFile path="WebContent/samples/"/>
-              
+             <initalUserFile path="WebContent/project/InitialContentReadWrite"/>
       </extension>
-	 -->
+	 
 </plugin>

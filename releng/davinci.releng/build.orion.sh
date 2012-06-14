@@ -3,15 +3,16 @@
 # Orion/Maqetta build script. 
 #
 
-
-
-
 #################### ORION BUILD START #############################
 
-
 setProperties () {
+	if  [ ! -z ${gitHttp} ]
+	then
+	    GIT_PROTOCOL="http"
+	else
+	    GIT_PROTOCOL="git"
+	fi
 
-	
 	#
 	# GitHub read-only URL for Maqetta repository. This should not change.
 	#
@@ -31,12 +32,6 @@ setProperties () {
 	  echo "Using external tag: ${externalTag}"
 	fi
 	
-	if  [ ! -z ${gitHttp} ] 
-	then
-	    GIT_PROTOCOL="http"
-	else
-	    GIT_PROTOCOL="git"
-	fi
 	#
 	# If 'maqettaCode' is set, copy files from your local working copy instead of GitHub repository
 	#
@@ -67,9 +62,9 @@ setProperties () {
 	#default values, overridden by command line
 	writableBuildRoot=${MAQETTA_BUILD_DIR}
 	supportDir=$writableBuildRoot/support
-	mkdir $supportDir
-	builderDir="`pwd`/orion/builder"
-	relEngDir="`pwd`/orion"
+	mkdir -p $supportDir
+	builderDir="${relEngDir}/orion/builder"
+	relEngDir="${relEngDir}/orion"
 	
 	basebuilderBranch=R3_7
 	publish=""
@@ -114,8 +109,6 @@ updateBaseBuilder () {
     ln -s ${supportDir}/org.eclipse.releng.basebuilder_${basebuilderBranch} org.eclipse.releng.basebuilder
     echo "....... linking base builder: ${supportDir}/org.eclipse.releng.basebuilder_${basebuilderBranch} org.eclipse.releng.basebuilder"
     echo "[`date +%H\:%M\:%S`] Done setting org.eclipse.releng.basebuilder"
-	
-	
 }
 
 populateGit(){
@@ -174,16 +167,9 @@ populateGit(){
 	    cd ${maqettaCode}
 	    git log -1 | head -1 >${MAQETTA_BUILD_DIR}/build.level
 	fi
-
-	
-	
-    
-
-
 }
 
-build(){
-
+build() {
 	#
 	# Change directory to the build directory.
 	#
@@ -212,13 +198,9 @@ build(){
 				-DJ2SE-1.4=$j2se142 \
 				-DJ2SE-1.5=$j2se150 \
 				-DJavaSE-1.6=$javase160"
-				
-	
 	$cmd
-	
-	
-	
 }
+
 tagRepositories() {
 	#do this for I builds and if -noTag was not specified
 	if [ "$buildType" == "I" -a -z "$noTag" ]; then 
@@ -255,6 +237,7 @@ tagRepositories() {
 		popd
 	fi
 }
+
 currentDirectory=`pwd`
 setProperties
 updateBaseBuilder
@@ -268,10 +251,3 @@ exitCode=$?
 cd ${currentDirectory}
 
 exit ${exitCode}
-
-
-
-
-
-
-

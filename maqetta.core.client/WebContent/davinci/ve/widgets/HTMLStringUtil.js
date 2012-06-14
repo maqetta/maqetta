@@ -1,54 +1,46 @@
-
-define(["dojo/_base/declare", 
-        "davinci/Runtime",
-        "davinci/ve/widgets/FontDataStore",
-        "davinci/ve/widgets/Trblbox",
-        "davinci/ve/widgets/MultiInputDropDown",
+define(["davinci/Runtime",
+        "./FontDataStore",
+    	"./FontComboBox",
+    	"./Trblbox",
+        "./MultiInputDropDown",
         "dijit/form/ComboBox",
-        "davinci/ve/widgets/FontDataStore",
-        "dijit/form/ComboBox",
-        "davinci/ve/widgets/MetaDataStore",
-        
-    	"davinci/ve/widgets/ColorPicker",
+        "./MetaDataStore",
+    	"./ColorPicker",
+		"./Background"
 
-		"davinci/ve/widgets/Background"
-       
-        
-],function(declare, Runtime, FontDataStore){
+],function(Runtime, FontDataStore){
 	
-	var HTMLStringUtil = declare("davinci.ve.widgets.HTMLStringUtil",null);
+	var HTMLStringUtil = dojo.getObject("davinci.ve.widgets.HTMLStringUtil", true);
 
 	dojo.mixin(HTMLStringUtil, {
-			__id : 0,
-			idPrefix : "davinci_ve_widgets_properties_generated",
-			_currentPropSection : null,
+			__id: 0,
+			idPrefix: "davinci_ve_widgets_properties_generated",
+			_currentPropSection: null,
 			
 			animSS:null,	// Cache of style sheet that contains animation effects
 			animRuleIndex:{}, 	// Cache of style rules that contains animation effects, indexed by selector
 			
-			getCurrentPropSection : function(){
+			getCurrentPropSection: function(){
 				return this._currentPropSection;
 			},
 		
-			getId : function(){
-				
-				return  (this.idPrefix + (this.__id++));
-				
+			getId: function(){
+				return this.idPrefix + (this.__id++);
 			},
 		
-		injectId : function(htmlText,id){
+		injectId: function(htmlText,id){
 			/* attempts to inject an ID in the top HTML element */
 			
 			var firstEndTag = htmlText.indexOf(">");
 			
-			if(!firstEndTag)
+			if(!firstEndTag) {
 				return "<span id='" + id + "'>" + htmlText + "</span";
-			
+			}
+
 			return htmlText.substring(0,firstEndTag) + " id='" + id + "'" + htmlText.substring(firstEndTag, htmlText.length);
-			
 		},
 		
-		getEditor : function(jsonString){
+		getEditor: function(jsonString){
 			
 			function getValueAndTitle(value) {
 				var obj = {};
@@ -62,9 +54,9 @@ define(["dojo/_base/declare",
 			var id = this.getId();
 			var extraAttribs = "";
 			
-			jsonString['id'] = id;
+			jsonString.id = id;
 
-			var disabled = (jsonString.disabled ? " disabled='true' " : "");			
+			var disabled = jsonString.disabled ? " disabled='true' " : "";			
 			
 			/*
 			 * 
@@ -74,7 +66,7 @@ define(["dojo/_base/declare",
 
 			switch (metaType){
 				case "trblbox":
-					var text="<div dojoType='davinci.ve.widgets.Trblbox' shorthand='\"" + jsonString['shorthand'] + "\"'></div>";
+					var text="<div dojoType='davinci.ve.widgets.Trblbox' shorthand='\"" + jsonString.shorthand + "\"'></div>";
 					
 					return text;
 				case "multi":
@@ -92,7 +84,7 @@ define(["dojo/_base/declare",
 			        return text;
 			        
 				case "comboEdit":
-					var values = jsonString['values'];
+					var values = jsonString.values;
 					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++) {
 						var obj = getValueAndTitle(values[i]);
@@ -102,7 +94,7 @@ define(["dojo/_base/declare",
 					return text;
 					
 				case "combo":
-					var values = jsonString['values'];
+					var values = jsonString.values;
 					var text = "<select style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++) {
 						var obj = getValueAndTitle(values[i]);
@@ -119,7 +111,6 @@ define(["dojo/_base/declare",
 					text+="<div dojoType='dijit.form.ComboBox' id='"+ id +"'store='davinci.properties.event"+ (id) + ('_Store') + "' class='propertyPaneEditablevalue' style='display:inline-block; width:100%;' autoComplete='false'></div>";
 					return text;
 				case "color":
-				
 					var text = "<div class='propertyPaneEditablevalue' dojoType='davinci.ve.widgets.ColorPicker' id='"+ id + "' ></div>";
 					return text;
 					/*todo - write color chooser widget */
@@ -143,16 +134,15 @@ define(["dojo/_base/declare",
 			}
 		},
 		
-		loadTemplate : function(templatePath, nameSpaceBase){
+		loadTemplate: function(templatePath, nameSpaceBase){
 			var url = templatePath;
 			if(nameSpaceBase){
 				url = (nameSpaceBase.split('.')).join("/") + "/" + templatePath;
-				
 			}
 			var text = Runtime.serverJSONRequest({url:url, handleAs:"text", sync:true  });
 			return text;
 		},
-		generateMainSection : function(jsonTemplate){
+		generateMainSection: function(jsonTemplate){
 			jsonTemplate.id =  this.getId();
 			var title = jsonTemplate.title;
 			
@@ -164,9 +154,8 @@ define(["dojo/_base/declare",
 			 htmlText+="</table>";
 		     htmlText+="</div>";
 		     return htmlText;
-			
 		},
-		generateTable : function(page,rowsOnly){
+		generateTable: function(page,rowsOnly){
 			var htmlText = "";
 			if(page.html){
 				page.id=this.getId();
@@ -190,11 +179,11 @@ define(["dojo/_base/declare",
 					if(page[i].widgetHtml){
 						
 						page[i].id=this.getId();
-						page[i]['rowId'] = this.getId();
-						htmlText+= "<tr id='" + page[i]['rowId'] +"'";
+						page[i].rowId = this.getId();
+						htmlText+= "<tr id='" + page[i].rowId +"'";
 						
-						if( page[i]['rowClass']){
-							htmlText+=" class='" + page[i]['rowClass'] + "'";
+						if( page[i].rowClass){
+							htmlText+=" class='" + page[i].rowClass + "'";
 						}
 						htmlText+=">";
 						htmlText+= "<td colspan='5' width='100%'>";
@@ -204,12 +193,12 @@ define(["dojo/_base/declare",
 					}else if(page[i].html){
 					
 						page[i].id=this.getId();
-						page[i]['rowId'] = this.getId();
-						htmlText+= "<tr id='" + page[i]['rowId'] +"'";
+						page[i].rowId = this.getId();
+						htmlText+= "<tr id='" + page[i].rowId +"'";
 						htmlText+= " class='cssPropertySection";
 						
-						if( page[i]['rowClass']){
-							htmlText+=" " + page[i]['rowClass'];
+						if( page[i].rowClass){
+							htmlText+=" " + page[i].rowClass;
 						}
 						htmlText+="'>";
 						htmlText+= "<td colspan='5' width='100%'>";
@@ -223,36 +212,29 @@ define(["dojo/_base/declare",
 						var onclick = "";
 						var moreTable = this.generateTable(page[i].pageTemplate, true);
 						for(var j=0;j<page[i].pageTemplate.length;j++){
-							if(page[i].pageTemplate[j]['rowId']){
-								onclick+= "dojo.toggleClass('" + page[i].pageTemplate[j]['rowId'] + "','propertiesSectionHidden');";
+							if(page[i].pageTemplate[j].rowId){
+								onclick+= "dojo.toggleClass('" + page[i].pageTemplate[j].rowId + "','propertiesSectionHidden');";
 							}
-							if(page[i].pageTemplate[j]['cascadeSectionRowId']){
-								onclick+= "if(this.checked){dojo.removeClass('" + page[i].pageTemplate[j]['cascadeSectionRowId'] + "','propertiesSectionHidden');}else{{dojo.addClass('" + page[i].pageTemplate[j]['cascadeSectionRowId'] + "','propertiesSectionHidden');}}";
+							if(page[i].pageTemplate[j].cascadeSectionRowId){
+								onclick+= "if(this.checked){dojo.removeClass('" + page[i].pageTemplate[j].cascadeSectionRowId + "','propertiesSectionHidden');}else{{dojo.addClass('" + page[i].pageTemplate[j].cascadeSectionRowId + "','propertiesSectionHidden');}}";
 							}
 						}
-						
-						
+
 						htmlText+="<input type='checkbox' onclick=\"" + onclick + "\"></input>";
 						htmlText+= page[i].display;
-						htmlText+="</td></tr>";			
-					
-						
-						
-						
+						htmlText+="</td></tr>";
 						htmlText+=moreTable;
-					
-					
 					}else if(page[i].display){
-						page[i]['toggleCascade'] = this.getId();
-					//	page[i]['showHelp'] = this.getId();
-						page[i]['cascadeSection'] = this.getId();
-						page[i]['rowId'] = this.getId();
-						page[i]['cascadeSectionRowId'] = this.getId();
+						page[i].toggleCascade = this.getId();
+					//	page[i].showHelp = this.getId();
+						page[i].cascadeSection = this.getId();
+						page[i].rowId = this.getId();
+						page[i].cascadeSectionRowId = this.getId();
 						
-						htmlText+= "<tr id='" + page[i]['rowId'] +"'";
+						htmlText+= "<tr id='" + page[i].rowId +"'";
 						htmlText+=" class='cssPropertySection";
-						if( page[i]['rowClass']){
-							htmlText+=" " + page[i]['rowClass'];
+						if( page[i].rowClass){
+							htmlText+=" " + page[i].rowClass;
 						}
 						htmlText+="'";
 						htmlText+=" propName='"+page[i].display+"'";
@@ -264,18 +246,18 @@ define(["dojo/_base/declare",
 						htmlText+="<td class='propertyExtra' nowrap='true'>";
 						if(page[i].target && !page[i].hideCascade){
 			
-							htmlText+= "<div width='100%'><button class='showCss propertyButton' id='" + page[i]['toggleCascade'] + "'";
+							htmlText+= "<div width='100%'><button class='showCss propertyButton' id='" + page[i].toggleCascade + "'";
 							htmlText+= " onClick=\"davinci.ve.widgets.HTMLStringUtil.showProperty(";
-							htmlText+= "'"+page[i]['rowId']+"'";
+							htmlText+= "'"+page[i].rowId+"'";
 							htmlText+= ")\">&gt;</button>";
 							htmlText+="</div>";
 						}
 						htmlText+="<td/>";
 						htmlText+= "</tr>";
 						if(page[i].target && !page[i].hideCascade){
-							var toggleClasses = "{'cascadeSectionRowId':\"" + page[i]['cascadeSectionRowId'] + "\",'toggleCascade':\"" + page[i]['toggleCascade'] +'\"}';
-							htmlText+= "<tr id='" + page[i]['cascadeSectionRowId'] +"' class='cssCascadeSection cascadeRowHidden'>";
-							htmlText+="<td colspan='5' width='100%' class='showCascadeDiv'><div dojoType='davinci.ve.widgets.Cascade' toggleClasses=" + toggleClasses + " target='" + dojo.toJson(page[i]['target'])+"' targetField='\"" + page[i]['id']+"\"' id='" + page[i]['cascadeSection'] + "'></div></td></tr>";
+							var toggleClasses = "{'cascadeSectionRowId':\"" + page[i].cascadeSectionRowId + "\",'toggleCascade':\"" + page[i].toggleCascade +'\"}';
+							htmlText+= "<tr id='" + page[i].cascadeSectionRowId +"' class='cssCascadeSection cascadeRowHidden'>";
+							htmlText+="<td colspan='5' width='100%' class='showCascadeDiv'><div dojoType='davinci.ve.widgets.Cascade' toggleClasses=" + toggleClasses + " target='" + dojo.toJson(page[i].target)+"' targetField='\"" + page[i].id + "\"' id='" + page[i].cascadeSection + "'></div></td></tr>";
 						}
 					}else{
 						htmlText+="</table>";
@@ -288,42 +270,42 @@ define(["dojo/_base/declare",
 			return htmlText;
 			
 		},
-		generateTemplate : function(jsonString){
+		generateTemplate: function(jsonString){
 			var htmlText = "";
 			
-			if(jsonString['pageTemplate']){
+			if(jsonString.pageTemplate){
 				if( jsonString.key){
-					jsonString['id'] = this.getId();
-					htmlText = "<div class='propGroup' id='" + jsonString['id'] +"' propGroup='"+jsonString.key+"'>";
+					jsonString.id = this.getId();
+					htmlText = "<div class='propGroup' id='" + jsonString.id +"' propGroup='"+jsonString.key+"'>";
 				}	
 					
-				htmlText+=this.generateTable(jsonString['pageTemplate']);
+				htmlText+=this.generateTable(jsonString.pageTemplate);
 				htmlText+="</div>";
-			}else if(jsonString['html']){
-				htmlText+=jsonString['html'];
-			}else if(jsonString['widgetHtml']){
+			}else if(jsonString.html){
+				htmlText+=jsonString.html;
+			}else if(jsonString.widgetHtml){
 			
-				jsonString['id'] = this.getId();
-				htmlText+= this.injectId(jsonString['widgetHtml'],jsonString['id']);
+				jsonString.id = this.getId();
+				htmlText+= this.injectId(jsonString.widgetHtml,jsonString.id);
 			}
 			return htmlText;
 		},
-		stylesheetHref : "propview.css",
+		stylesheetHref: "propview.css",
 		
 		animShowSectionClass: "propRootDetailsContainer",
-		animShowSectionClassSelector : ".propRootDetailsContainer",
-		animShowDetailsClass : "property_table_stretchable",
-		animShowDetailsClassSelector : ".property_table_stretchable",
-		showPropAnimClasses : ["propRowFadeIn","propRowFadeOut","propRowTransparent","propRowOpaque","propRowHidden"],
+		animShowSectionClassSelector: ".propRootDetailsContainer",
+		animShowDetailsClass: "property_table_stretchable",
+		animShowDetailsClassSelector: ".property_table_stretchable",
+		showPropAnimClasses: ["propRowFadeIn","propRowFadeOut","propRowTransparent","propRowOpaque","propRowHidden"],
 		
-		showRoot : function(){
+		showRoot: function(){
 			var Util = this;
 			Util._hideSectionShowRoot();
 			Util._currentPropSection = null;
 			return false;
 		},
 		
-		showSection : function(sectionKey, sectionTitle){
+		showSection: function(sectionKey, sectionTitle){
 			var Util = this;
 			Util._crumbLevel1(sectionKey, sectionTitle);
 			Util._initSection(sectionKey);
@@ -333,7 +315,7 @@ define(["dojo/_base/declare",
 			return false;
 		},
 		
-		transitionRootToSection : function(sectionKey, sectionTitle, onEndCallback){
+		transitionRootToSection: function(sectionKey, sectionTitle, onEndCallback){
 		
 			function transEnd(event){
 				dojo.disconnect(webkitConnection);
@@ -411,7 +393,7 @@ define(["dojo/_base/declare",
 			return false;
 		},
 		
-		showProperty : function(propertyRowId){
+		showProperty: function(propertyRowId){
 			
 			var hideAllButThisRow = function (){
 				for(var i=0; i<rowParent.children.length; i++){
@@ -524,7 +506,7 @@ define(["dojo/_base/declare",
 			}	
 		},
 		
-		_crumbLevel1 : function(sectionKey, sectionTitle){
+		_crumbLevel1: function(sectionKey, sectionTitle){
 			var Util = this;
 			var crumbsDIV = Util._getCrumbsDIV();
 			var s = '';
@@ -536,7 +518,7 @@ define(["dojo/_base/declare",
 			crumbsDIV.innerHTML = s;
 		},
 			
-		_crumbLevel2 : function(sectionKey, sectionTitle, propname){
+		_crumbLevel2: function(sectionKey, sectionTitle, propname){
 			var Util = this;
 			var crumbsDIV = Util._getCrumbsDIV();
 			var s = '';
@@ -551,7 +533,7 @@ define(["dojo/_base/declare",
 			crumbsDIV.innerHTML = s;
 		},	
 		
-		_initSection : function(sectionKey){
+		_initSection: function(sectionKey){
 			var Util = this;
 			var allTRAnimClasses = Util.showPropAnimClasses;
 			var detailsTD = Util._getDetailsTD();
@@ -579,7 +561,7 @@ define(["dojo/_base/declare",
 			Util._currentPropSection = sectionKey;
 		},
 		
-		_hideSectionShowRoot : function(){
+		_hideSectionShowRoot: function(){
 			var Util = this;
 			var rootTD = Util._getRootTD();
 			var detailsTD = Util._getDetailsTD();
@@ -587,7 +569,7 @@ define(["dojo/_base/declare",
 			dojo.addClass(detailsTD,"dijitHidden");
 		},
 		
-		_hideRootShowSection : function(){
+		_hideRootShowSection: function(){
 			var Util = this;
 			var rootTD = Util._getRootTD();
 			var detailsTD = Util._getDetailsTD();
@@ -597,7 +579,7 @@ define(["dojo/_base/declare",
 		
 		// Search animSS (property palette's animation stylesheet) to find the style rule
 		// with given the selectorText. Returns index for the rule.
-		_findRule : function(selectorText){
+		_findRule: function(selectorText){
 			if(this.animSS && typeof this.animRuleIndex[selectorText] == 'number'){
 				var idx = this.animRuleIndex[selectorText];
 				if(this.animSS.cssRules[idx].selectorText == selectorText){
@@ -633,7 +615,7 @@ define(["dojo/_base/declare",
 		
 		// Adds all classes in the classesToAdd array and removes any
 		// classes from allClasses that aren't in classesToAdd
-		_addRemoveClasses : function(elem, allClasses, classesToAdd){
+		_addRemoveClasses: function(elem, allClasses, classesToAdd){
 			var classesToRemove=[];
 			for(var i=0; i<allClasses.length; i++){
 				var found=false;
@@ -656,7 +638,7 @@ define(["dojo/_base/declare",
 		},
 		
 		// Look at refElem and ancestors for a particular tag and optionally a particular class
-		_searchUpByTagClass : function(refElem, tagName, className){
+		_searchUpByTagClass: function(refElem, tagName, className){
 			while(refElem != null && refElem.nodeName != "BODY"){
 				if(refElem.nodeName == tagName && (!className || dojo.hasClass(refElem, className))){
 					return refElem;
@@ -667,7 +649,7 @@ define(["dojo/_base/declare",
 		},
 		
 		// Look at refElem and nextSiblings for a particular tag and optionally a particular class
-		_searchSiblingsByTagClass : function(refElem, tagName, className){
+		_searchSiblingsByTagClass: function(refElem, tagName, className){
 			while(refElem != null){
 				if(refElem.nodeName == tagName && (!className || dojo.hasClass(refElem, className))){
 					return refElem;
@@ -677,7 +659,7 @@ define(["dojo/_base/declare",
 			return null;
 		},
 		
-		_getRootDetailsContainer : function(){
+		_getRootDetailsContainer: function(){
 			var Util = this;
 			if(!Util._rootDetailsContainer){
 				Util._rootDetailsContainer=dojo.query(Util.animShowSectionClassSelector)[0];
@@ -685,7 +667,7 @@ define(["dojo/_base/declare",
 			return Util._rootDetailsContainer;
 		},
 		
-		_getRootTD : function(){
+		_getRootTD: function(){
 			var Util = this;
 			var rootDetailsContainer = Util._getRootDetailsContainer();
 			if(!Util._rootTD){
@@ -696,7 +678,7 @@ define(["dojo/_base/declare",
 		},
 		
 		
-		_getDetailsTD : function(){
+		_getDetailsTD: function(){
 			var Util = this;
 			var rootDetailsContainer = Util._getRootDetailsContainer();
 			if(!Util._detailsTD){
@@ -706,7 +688,7 @@ define(["dojo/_base/declare",
 			return Util._detailsTD;
 		},
 		
-		_getCrumbsDIV : function(){
+		_getCrumbsDIV: function(){
 			var Util = this;
 			var detailsTD = Util._getDetailsTD();
 			if(!Util._crumbsDIV){

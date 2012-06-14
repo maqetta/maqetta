@@ -3,7 +3,7 @@ define([
 	"./model/Path",
 	"./workbench/ViewPart",
 	"./workbench/EditorContainer",
-	"davinci/ui/Dialog",
+	"./ui/Dialog",
 	"dijit/Toolbar",
 	"dijit/ToolbarSeparator",
 	"dijit/Menu",
@@ -25,8 +25,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"davinci/review/model/resource/root",
-	"davinci/ui/widgets/DialogContent",
-	"davinci/ve/widgets/FontComboBox"
+	"./ui/widgets/DialogContent"
 	
 ], function(
 		Runtime,
@@ -112,7 +111,7 @@ var sessionTimedOut = function(){
 		loginHref = '/maqetta/';
 	}
 	
-	var dialog = new Dialog({
+	var dialog = new ResizeableDialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"
     });

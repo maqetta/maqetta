@@ -24,4 +24,4 @@ echo Using directory : %usersdir%
 
 echo start your browser at http://localhost:%port%/maqetta
 FOR /R plugins %%R IN (org.eclipse.equinox.launcher*.jar) DO SET EQUINOX=%%R
-java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  "-Dmaqetta.baseDirectory=%usersdir%" -DloginUrl="/maqetta/welcome" -jar "%EQUINOX%" -console -noExit
+java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  -jar "%EQUINOX%" -console -noExit

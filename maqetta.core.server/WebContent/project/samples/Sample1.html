@@ -3,8 +3,8 @@
 <head>
 <title>Sample1.html</title>
 <style type="text/css">
-@import "themes/claro/claro.css";
-@import "app.css";
+@import "../themes/claro/claro.css";
+@import "../app.css";
 </style>
 <script type="text/javascript" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'clipart','location':'../../clipart'},{'name':'shapes','location':'../../shapes'},{'name':'maqetta','location':'../../maqetta'}]" src="lib/dojo/dojo/dojo.js"></script>
 <script type="text/javascript">
@@ -19,6 +19,7 @@ require([
   "maqetta/AppStates"
 ]);
 </script>
+<script type="text/javascript"  src="../app.js"></script>
 </head>
 <body class="claro" data-davinci-ws="collapse" id="myapp" dvFlowLayout="true" dvStates="{'Add Task':{'origin':true},'Task Added':{'origin':true}}">
 <span dojoType="dijit.layout.TabContainer" style="width: 300px; height: 250px; min-width: 1em; min-height: 1em;" controllerWidget="dijit.layout.TabController">

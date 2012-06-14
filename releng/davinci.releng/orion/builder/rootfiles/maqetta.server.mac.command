@@ -82,4 +82,4 @@ echo Using directory: "$absusersdir"
 
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
-java -Dorg.eclipse.equinox.http.jetty.http.port=$port -Dmaqetta.localInstall=false "-Dmaqetta.baseDirectory=$absusersdir" -DloginUrl="/maqetta/welcome" -Dsmtp.mailServer=$smtpServer -jar "$jarFilePath" $consolePort -noExit
+java -Dorg.eclipse.equinox.http.jetty.http.port=$port -Dsmtp.mailServer=$smtpServer -jar "$jarFilePath" $consolePort -noExit

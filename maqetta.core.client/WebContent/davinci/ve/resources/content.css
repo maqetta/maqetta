@@ -92,9 +92,9 @@
 }
 
 .editSubwidgetFocusFrame{
-	outline-style: dotted;
-	outline-color: red;
-	outline-width: 3px;
+	border-style: dotted;
+	border-color: red;
+	border-width: 3px;
 	z-index: 1000002;
 	
 }

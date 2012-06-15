@@ -2,7 +2,7 @@ define(["dojo/_base/declare", "davinci/ui/TextEditor"], function(declare, TextEd
 
 return declare("davinci.ui.ModelEditor", TextEditor, {
 
-    constructor: function (element) {
+    constructor: function (element, fileName) {
 
 		this.subscribe("/davinci/ui/selectionChanged", this.selectModel);
 	},

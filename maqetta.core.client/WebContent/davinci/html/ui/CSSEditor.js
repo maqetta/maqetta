@@ -4,13 +4,18 @@ define([
 	"davinci/html/CSSEditorContext",
 	"davinci/html/CSSModel",
 	"davinci/html/ui/CSSOutline",
-	"davinci/model/Factory"
-], function(declare, ModelEditor, CSSEditorContext, CSSModel, CSSOutline, Factory){
+	"davinci/model/Factory",
+	"davinci/html/CSSFile",
+], function(declare, ModelEditor, CSSEditorContext, CSSModel, CSSOutline, Factory, CSSFile){
 
 return declare("davinci.html.ui.CSSEditor", ModelEditor, {
 
-	constructor : function(element) {
-		this.cssFile = Factory.newCSS();
+	constructor : function(element, fileName) {
+		debugger;
+		//this.cssFile = Factory.getModel({url:fileName});
+		//this.cssFile = Factory.newCSS(a);
+		//this.cssFile = new CSSFile(args);
+		this.cssFile = new CSSFile();
 		this.model = this.cssFile;
 	},
 

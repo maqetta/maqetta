@@ -441,10 +441,16 @@ return declare("davinci.ve.ChooseParent", null, {
 			position = params.position,
 			doCursor = params.doCursor,
 			beforeAfter = params.beforeAfter;
-		var domNode = wdgt.domNode;
+		
 		var x = position.x;
 		var y = position.y;
-		var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(domNode);
+		var helper = wdgt.getHelper();
+		if(helper && helper.getMarginBoxPageCoords){
+			marginBoxPageCoords = helper.getMarginBoxPageCoords(wdgt);
+		} else {
+			var domNode = wdgt.domNode;
+			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(domNode);
+		}
 		var l = marginBoxPageCoords.l;
 		var t = marginBoxPageCoords.t;
 		var w = marginBoxPageCoords.w;

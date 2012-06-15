@@ -16,12 +16,6 @@
 				"id": "davinci.ve.cutCopyPaste",
 		      	"visible": true,
 	           	"actions": [
-	           		{
-	                    iconClass: "editActionIcon",
-	                    label: "Select row",
-	                    action: "./html/table/SelectRowAction",
-	                    menubarPath: "davinci.edit/cut"
-	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Select column",
@@ -44,6 +38,12 @@
 	                    iconClass: "editActionIcon",
 	                    label: "Remove column",
 	                    action: "./html/table/RemoveColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Select row",
+	                    action: "./html/table/SelectRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
@@ -645,7 +645,7 @@
 		            "type": "html.col",
 		            "category": "html",
 		            "hidden": true,
-		            "resizable": "none",
+		            "resizable": "width",
 		            "allowedParent": "html.colgroup",
 		            "helper": "./html/table/ColHelper"
 		        },
@@ -657,7 +657,8 @@
 		            "hidden": true,
 		            "resizable": "none",
 		            "allowedParent": "html.table",
-		            "allowedChild": "html.col"
+		            "allowedChild": "html.col",
+		            "helper": "./html/table/ColGroupHelper"
 		        },
 		        {
 		            "name": "<textarea>",

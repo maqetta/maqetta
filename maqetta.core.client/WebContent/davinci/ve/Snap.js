@@ -51,7 +51,13 @@ define([
 			if(node.tagName == 'BODY'){
 				return;
 			}
-			var dj_coords = GeomUtils.getMarginBoxPageCoords(node);
+			var dj_coords = null;
+			var helper = widget.getHelper();
+			if(helper && helper.getMarginBoxPageCoords){
+				dj_coords = helper.getMarginBoxPageCoords(widget);
+			} else {
+				dj_coords = GeomUtils.getMarginBoxPageCoords(node);
+			}
 			dj_coords.x = dj_coords.l;
 			dj_coords.y = dj_coords.t;
 			
@@ -71,7 +77,6 @@ define([
 					b:dj_coords.y + dj_coords.h
 				}
 			};
-			var helper = widget.getHelper();
 			if(helper && helper.getSnapInfo){
 				// If widget has a getSnapInfo helper function, call it
 				// passing the default widgetSnapInfo in case it wants to accept
@@ -193,7 +198,12 @@ define([
 			function snapSetup(context, widget, widgetDiv, alignDiv){
 				widgetDiv.style.display='block';
 				alignDiv.style.display='block';
-				box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+				var helper = widget.getHelper();
+				if(helper && helper.getMarginBoxPageCoords){
+					box = helper.getMarginBoxPageCoords(widget);
+				} else {
+					box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+				}
 				box.x = box.l;
 				box.y = box.t;
 				box.r = box.x + box.w;

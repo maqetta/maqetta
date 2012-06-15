@@ -13,6 +13,16 @@ return declare(_TableAction, {
 
 	name: "addRow",
 	iconClass: "editActionIcon editAddRowIcon",
+	
+	_insertAfter: true,
+	
+	//Don't want enabled if dealing with columns
+	_isEnabled: function(cell) {
+		var nodeName = cell.nodeName.toLowerCase();
+		return nodeName == "td" ||
+			   nodeName == "th" ||
+			   nodeName == "tr";
+ 	},
 
 	run: function(context){
 		context = this.fixupContext(context);
@@ -24,22 +34,43 @@ return declare(_TableAction, {
 			return;
 		}
 
+		//Build table matrix helper based on selection
 		var matrix = new TableMatrix(sel);
 		var rows = matrix.rows;
 		var cells = matrix.cells;
+		
+		//If we have a row element, let's use the first cell in the row
+		if (sel.nodeName.toLowerCase() == "tr") {
+			var selRowIndex = rows.indexOf(sel);
+			sel = cells[selRowIndex][0];
+		}
+		
 		var pos = matrix.getPos(sel);
-		var r = pos.r + matrix.getRowSpan(sel) - 1; // the bottom-most row
-		if(r >= rows.length){
-			r = rows.length - 1; // limit to the last row
+		var r = pos.r;
+		if (this._insertAfter) {
+			// the bottom-most row
+			r += matrix.getRowSpan(sel) - 1; 
+			if(r >= rows.length){
+				// limit to the last row
+				r = rows.length - 1; 
+			}
 		}
 		var cols = cells[r];
-		var nextCols = cells[r + 1];
+		var neighborCols = null;
+		if (this._insertAfter) {
+			//next row
+			neighborCols = cells[r + 1];
+		} else {
+			//prev row
+			neighborCols = cells[r - 1];
+		}
 
 		var command = new CompoundCommand();
 		var data = {type: "html.tr", children: [], context: context};
 		for(var c = 0; c < cols.length; c++){
 			var cell = cols[c];
-			if(nextCols && nextCols[c] == cell){ // spanning to the next row
+			// check is spanning to the neighbor row (e.g., next/prev row)
+			if(neighborCols && neighborCols[c] == cell){ 
 				var widget = Widget.byNode(cell);
 				var properties = {rowspan: matrix.getRowSpan(cell) + 1}; 
 				command.add(new ModifyCommand(widget, properties));
@@ -49,10 +80,13 @@ return declare(_TableAction, {
 			}
 		}
 		var parent = Widget.byNode(rows[r].parentNode);
-		var next = (r + 1 < rows.length ? Widget.byNode(rows[r + 1]) : undefined);
-		command.add(new AddCommand(data, parent, next));
+		var insertIndex = r;
+		if (this._insertAfter) {
+			insertIndex = r + 1;
+		}
+		command.add(new AddCommand(data, parent, insertIndex));
 		context.getCommandStack().execute(command);
 	}
-
+	
 });
 });

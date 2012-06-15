@@ -5,10 +5,24 @@ define([
 
 
 return declare(ContextAction, {
-
+	constructor: function() {
+		this._tableRelatedTags = ["td", "th", "tr", "col"];
+	},
+	
 	isEnabled: function(context){
 		context = this.fixupContext(context);
-		return !!(context && this._getCell(context));
+		if (context) {
+			var cell = this._getCell(context);
+			if (cell) {
+				return this._isEnabled(cell);
+			}
+		}
+		return false;;
+	},
+	
+	//subclass can override
+	_isEnabled: function(cell) {
+		return true;
 	},
 	
 	shouldShow: function(context){
@@ -26,14 +40,25 @@ return declare(ContextAction, {
 		if(!widget.isHtmlWidget){
 			return undefined;
 		}
-		var tagName = widget.getTagName();
-		if(tagName == "td" || tagName == "th"){
+		if (this._isTableRelatedElement(widget)) {
 			if(selection.length > 1){
 				context.select(widget);
 			}
 			return widget.domNode;
 		}
 		return undefined;
+	},
+	
+	_isTableRelatedElement: function(widget) {
+		var isTableRelated = false;
+		var widgetTagName = widget.getTagName();
+		dojo.some(this._tableRelatedTags, function(tag) {
+			if (tag == widgetTagName) {
+				isTableRelated = true;
+				return true;
+			}
+		});
+		return isTableRelated;
 	}
 });
 });

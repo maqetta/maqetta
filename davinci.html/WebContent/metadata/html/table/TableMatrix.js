@@ -1,9 +1,12 @@
 define([
-    	"dojo/_base/declare"
-], function(declare){
+    	"dojo/_base/declare",
+    	"davinci/ve/utils/GeomUtils"
+], function(declare, GeomUtils){
 
 return declare(null, {
 
+	colgroup: null, // the <colgroup>
+	cols: null, // array of cols (<col>)
 	rows: null, // array of rows (<tr>)
 	cells: null, // 2D array of cells (<td>|<th>)
 
@@ -23,7 +26,9 @@ return declare(null, {
 		while(node){
 			if(node.nodeType === 1){
 				var name = node.nodeName.toLowerCase();
-				if(name == "tbody"){
+				if (name == "colgroup") {
+					this.colgroup = node;
+				} else if(name == "tbody"){
 					node = node.firstChild;
 					continue;
 				}else if(name == "tr"){
@@ -66,16 +71,17 @@ return declare(null, {
 				}
 			}
 		}
-		
-		//AWE TODO:
-		// find colGroup
-		var colGroup = undefined;
-		while(node){
-			if(node.nodeType === 1 && node.nodeName.toLowerCase() == "table"){
-				table = node;
-				break;
+		//find columns (if we found a colgroup earlier)
+		if (this.colgroup) {
+			this.cols = [];
+			node = this.colgroup.firstChild;
+			while(node){
+				var name = node.nodeName.toLowerCase();
+				if (name == "col") {
+					this.cols.push(node);
+				}
+				node = node.nextSibling;
 			}
-			node = node.parentNode;
 		}
 	},
 
@@ -116,8 +122,72 @@ return declare(null, {
 	},
 
 	getRowSpan: function(cell){
-		var rowspan = cell.getAttribute("rowspan")
+		var rowspan = cell.getAttribute("rowspan");
 		return (rowspan ? parseInt(rowspan) : 1);
+	},
+	
+	//<col> and <colgroup> elements use "span" rather than "colspan"
+	getSpan: function(col){
+		var span = col.getAttribute("span");
+		return (span ? parseInt(span) : 1);
+	},
+	
+	getColElement: function(cellColPosition) {
+		var returnCol = null;
+		if (cellColPosition >= 0) {
+			if (this.colgroup) {
+				var adjustedColCount = 0;
+				dojo.some(this.cols, function(col) {
+					adjustedColCount += this.getSpan(col);
+					if (cellColPosition <= adjustedColCount - 1) {
+						returnCol = col;
+						return true;
+					} 
+				}.bind(this));
+			}
+		}
+		return returnCol;
+	},
+	
+	getAdjustedColIndex: function(colToFind) {
+		var returnVal = -1;
+		if (this.colgroup) {
+			var adjustedColIndex = 0;
+			dojo.some(this.cols, function(col) {
+				if (col == colToFind) {
+					returnVal = adjustedColIndex;
+					return true;
+				}
+				adjustedColIndex += this.getSpan(col);
+			}.bind(this));
+		}
+		return returnVal;
+	},
+	
+	getMarginBoxPageCoordsForCells: function(colIndex, span) {
+		var rows = this.rows;
+		var cells = this.cells;
+		
+		var returnBox = null;
+		for (var spanCount = 0; spanCount < span; spanCount++) {
+			var startingWidth = returnBox ? returnBox.w : 0;
+			var colHeight = 0;
+			for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+				var cell = cells[rowIndex][colIndex + spanCount];
+				var cellBox = GeomUtils.getMarginBoxPageCoords(cell);
+				if (returnBox) {
+					returnBox.w = Math.max(returnBox.w, startingWidth + cellBox.w);
+					colHeight = colHeight + cellBox.h;
+				} else {
+					//Initialize
+					returnBox = cellBox;
+					colHeight = cellBox.h;
+				}
+			}
+			returnBox.h = Math.max(returnBox.h, colHeight);
+		}
+
+		return returnBox;
 	}
 
 });

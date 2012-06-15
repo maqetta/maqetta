@@ -170,7 +170,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						if(selection[i] != moverWidget){
 							this._moverWidgets.push(selection[i]);
 						}
-						var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(selection[i].domNode);
+						var marginBoxPageCoords = null;
+						var selectionHelper = selection[i].getHelper();
+						if(selectionHelper && selectionHelper.getMarginBoxPageCoords){
+							marginBoxPageCoords = selectionHelper.getMarginBoxPageCoords(selection[i]);
+						} else {
+							marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(selection[i].domNode);
+						}
 						this._moverStartLocations.push(marginBoxPageCoords);
 						var relativeLeft, relativeTop;
 						var offsetParent = selection[i].domNode.offsetParent;
@@ -186,7 +192,16 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						this._moverStartLocationsRel.push({l:relativeLeft, t:relativeTop});
 					}
 					var n = moverWidget.domNode;
-					var moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(n);
+					var offsetWidth = n.offsetWidth;
+					var offsetHeight = n.offsetHeight;
+					var moverWidgetMarginBoxPageCoords = null;
+					if(helper && helper.getMarginBoxPageCoords){
+						moverWidgetMarginBoxPageCoords = helper.getMarginBoxPageCoords(moverWidget);
+						offsetWidth = moverWidgetMarginBoxPageCoords.w;
+						offsetHeight = moverWidgetMarginBoxPageCoords.h;
+					} else {
+						moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(n);
+					}
 					var l = moverWidgetMarginBoxPageCoords.l;
 					var t = moverWidgetMarginBoxPageCoords.t;
 					var w = moverWidgetMarginBoxPageCoords.w;
@@ -203,8 +218,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						var adjust2 = 8;
 						l -= adjust1/2;
 						t -= adjust1/2;
-						var w1 = n.offsetWidth + adjust1;
-						var h1 = n.offsetHeight + adjust1;
+						var w1 = offsetWidth + adjust1;
+						var h1 = offsetHeight + adjust1;
 						var w2 = w1 - adjust2;
 						var h2 = h1 - adjust2;
 						this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
@@ -654,7 +669,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		var command = new CompoundCommand();
 		dojo.forEach(selection, function(w){
-			var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(w.domNode);
+			var marginBoxPageCoords = null;
+			var helper = w.getHelper();
+			if(helper && helper.getMarginBoxPageCoords){
+				marginBoxPageCoords = helper.getMarginBoxPageCoords(w);
+			} else {
+				marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(w.domNode);
+			}
 			var position = {x: marginBoxPageCoords.l + dx, y: marginBoxPageCoords.t + dy};
 			command.add(new MoveCommand(w, position.x, position.y));
 		}, this);
@@ -795,7 +816,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var showCandidateParents = (!showParentsPref && spaceKeyDown) || (showParentsPref && !spaceKeyDown);
 		var data = {type:widgetType};
 		var position = { x:event.pageX, y:event.pageY};
-		var snapBox = GeomUtils.getMarginBoxPageCoords(this._moverWidget.domNode);
+		var snapBox = null;
+		var helper = this._moverWidget.getHelper();
+		if(helper && helper.getMarginBoxPageCoords){
+			snapBox = helper.getMarginBoxPageCoords(this._moverWidget);
+		} else {
+			snapBox = GeomUtils.getMarginBoxPageCoords(this._moverWidget.domNode);
+		}
 
 		// Call the dispatcher routine that updates snap lines and
 		// list of possible parents at current (x,y) location

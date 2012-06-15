@@ -1740,44 +1740,51 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocus: function(widget, index, inline){
-		if(!this.editor.isActiveEditor()){
-			return;
-		}
-		var box, op, parent;
-
-		if (!metadata.queryDescriptor(widget.type, "isInvisible")) {
-			var node = widget.getStyleNode(),
-				helper = widget.getHelper();
-			if(helper && helper.getSelectNode){
-				node = helper.getSelectNode(this) || node;
+		Widget.requireWidgetHelper(widget.type).then(function(helper) { 
+			if(!this.editor.isActiveEditor()){
+				return;
 			}
-			var box = GeomUtils.getMarginBoxPageCoords(node);
-
-			parent = widget.getParent();
-			op = {move: !(parent && parent.isLayout && parent.isLayout())};
-
-			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-			var resizable = (parent && parent.isLayout && parent.isLayout() ) ?
-					"none" : metadata.queryDescriptor(widget.type, "resizable");
-			switch(resizable){
-			case "width":
-				op.resizeWidth = true;
-				break;
-			case "height":
-				op.resizeHeight = true;
-				break;
-			case "both":
-				op.resizeWidth = true;
-				op.resizeHeight = true;
+			var box, op, parent;
+	
+			if (!metadata.queryDescriptor(widget.type, "isInvisible")) {
+				//Get the margin box (deferring to helper when available)
+				var box = null;
+				var helper = widget.getHelper();
+				if(helper && helper.getMarginBoxPageCoords){
+					box = helper.getMarginBoxPageCoords(widget);
+				} else {
+					var node = widget.getStyleNode();
+					if(helper && helper.getSelectNode){
+						node = helper.getSelectNode(this) || node;
+					}
+					box = GeomUtils.getMarginBoxPageCoords(node);
+				}
+	
+				parent = widget.getParent();
+				op = {move: !(parent && parent.isLayout && parent.isLayout())};
+	
+				//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
+				var resizable = (parent && parent.isLayout && parent.isLayout() ) ?
+						"none" : metadata.queryDescriptor(widget.type, "resizable");
+				switch(resizable){
+				case "width":
+					op.resizeWidth = true;
+					break;
+				case "height":
+					op.resizeHeight = true;
+					break;
+				case "both":
+					op.resizeWidth = true;
+					op.resizeHeight = true;
+				}
 			}
-		}
-		this.focus({
-			box: box,
-			op: op,
-			hasLayout: (widget.isLayout && widget.isLayout()),
-			isChild: parent && parent.isLayout && parent.isLayout()
-		}, index, inline);
-			
+			this.focus({
+				box: box,
+				op: op,
+				hasLayout: (widget.isLayout && widget.isLayout()),
+				isChild: parent && parent.isLayout && parent.isLayout()
+			}, index, inline);
+		}.bind(this));	
 	},
 	
 	updateFocusAll: function(){

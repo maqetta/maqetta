@@ -29,14 +29,14 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
-	"davinci/ve/utils/GeomUtils",
+	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"davinci/model/Factory", // FIXME: needed for document.css M6 hack
+	"../model/Factory", // FIXME: needed for document.css M6 hack
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	declare,
 	lang,
-	domquery,
+	query,
 	Deferred,
 	DeferredList,
 	connect,
@@ -70,9 +70,9 @@ define([
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
-var MOBILE_DEV_ATTR = 'data-maqetta-device',
-	PREF_LAYOUT_ATTR = 'dvFlowLayout',
-	MOBILE_ORIENT_ATTR = 'data-maqetta-deviceorientation';
+var MOBILE_DEV_ATTR = 'data-maq-device',
+	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
+	MOBILE_ORIENT_ATTR = 'data-maq-device-orientation';
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -844,7 +844,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 
 			// tear down old error message, if any
-			dojo.query(".loading", this.frameNode.parentNode).orphan();
+			query(".loading", this.frameNode.parentNode).orphan();
 
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
@@ -1215,7 +1215,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 
 		removeEventAttributes(containerNode);
-		dojo.query("*",containerNode).forEach(removeEventAttributes);
+		query("*",containerNode).forEach(removeEventAttributes);
 
 		// Convert all text nodes that only contain white space to empty strings
 		containerNode.setAttribute('data-davinci-ws','collapse');
@@ -1262,7 +1262,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		var prereqs = [];
-		dojo.forEach(dojo.query("*", containerNode), function(n){
+		dojo.forEach(query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
@@ -1348,7 +1348,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	_attachChildren: function (containerNode)
 	{
-		dojo.query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
+		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
 		/*
 		var currentStateCache = [];
 		*/
@@ -1396,7 +1396,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_onLoadHelpers: function(){
 		var onLoadHelpersSoFar={};
-		dojo.query("> *", this.rootNode).map(Widget.getWidget).forEach(function(widget){
+		query("> *", this.rootNode).map(Widget.getWidget).forEach(function(widget){
 			var helper = widget.getHelper();
 			if(helper && helper.onLoad){
 				var already = onLoadHelpersSoFar[widget.type];
@@ -2903,7 +2903,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// add to DOM...
 		dojo.withGlobal(this.getGlobal(), function() {
-			dojo.create(tag, attrs, dojo.query('head')[0]);
+			dojo.create(tag, attrs, query('head')[0]);
 		});
 	},
 	
@@ -2937,8 +2937,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					queryStr += '[' + name + '="' + attrs[name] + '"]';
 				}
 			}
-			//dojo.destroy(dojo.query(queryStr)[0]);
-			var n = dojo.query(queryStr)[0];
+			//dojo.destroy(query(queryStr)[0]);
+			var n = query(queryStr)[0];
 			if (n){ // throws exception if n is null
 			    dojo.destroy(n);
 			}

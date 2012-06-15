@@ -2,7 +2,7 @@ define(["dojo/_base/declare", "davinci/ui/Editor"], function(declare, Editor) {
 
 return declare("davinci.ui.TextEditor", Editor, {
 	
-	constructor: function (element) {
+	constructor: function (element, fileName) {
 		this.subscriptions=[];
 		this._handles=[];
 	},

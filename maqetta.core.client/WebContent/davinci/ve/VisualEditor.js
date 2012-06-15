@@ -387,21 +387,16 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 				message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
 			}
 			if (failureInfo.stack) {
-				message += "<br>" + failureInfo.stack;
+				message += "<br><pre>" + failureInfo.stack + "</pre>";
 			}
 			this.loadingDiv.innerHTML = message;
-			dojo.addClass(loading, 'error');
+			dojo.addClass(this.loadingDiv, 'error');
 		} else {
 			if (this.loadingDiv.parentNode) {
 				this.loadingDiv.parentNode.removeChild(this.loadingDiv);				
 			}
 			delete this.loadingDiv;
 		}
-	},
-
-	//FIXME: pointless. unused? remove?
-	getIsDirty: function(){
-		var dirty = (this.context.getCurrentPoint() != this.savePoint);
 	},
 
 	getSelectedWidget: function(){

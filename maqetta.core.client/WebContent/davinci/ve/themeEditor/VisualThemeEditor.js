@@ -102,7 +102,16 @@ return declare([], {
 				this.context.deactivate();
 				this.context._setSource(htmlFile, function(failureInfo) {
 					this.savePoint = 0;
-					
+					// Make sure the theme css file is the last one in the head
+					var doc = this.context.getDocument();
+					for (var x = 0; x < doc.head.children.length; x++){
+						var node = doc.head.children[x];
+						if (node.tagName == 'LINK' && (node.getAttribute('href').indexOf(this.theme.files[0]) > -1) ) {
+							doc.head.removeChild(node);
+							doc.head.appendChild(node);
+							break;
+						}
+					}
 					//FIXME: include a LINK element for document.css for all themes.
 					//Just so happens that desktop Dojo themes have document.css
 					//and mobile themes don't.
@@ -111,6 +120,7 @@ return declare([], {
 					var workspaceUrl = Runtime.getUserWorkspaceUrl();
 					var documentCssPathRel = this.basePath.getParentPath().append('document.css').toString();
 					var documentCssPathAbs = workspaceUrl + documentCssPathRel;
+					
 					this.context.loadStyleSheet(documentCssPathAbs);
 
 					this.context.activate();
@@ -124,6 +134,7 @@ return declare([], {
 					// to the head of the document prior to page load, or resize() should be called
 					// directly to conform with the way Dijit works.
 					setTimeout(dojo.hitch(this, function(){
+						
 						this.context.getTopWidgets().forEach(function(widget){
 							if (widget.resize){
 								widget.resize({});
@@ -136,6 +147,7 @@ return declare([], {
 							context: this.context}]); // send state message to get Theme and StatesView in same init state
 					}), 1500);
 					this.initialSet=true;
+					
 
 					var ldojoVersion = this.context.getDojo().version.major +'.'+ this.context.getDojo().version.minor;
 					if (ldojoVersion !== this.theme.version){

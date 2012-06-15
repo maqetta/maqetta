@@ -29,14 +29,14 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
-	"davinci/ve/utils/GeomUtils",
+	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"davinci/model/Factory", // FIXME: needed for document.css M6 hack
+	"../model/Factory", // FIXME: needed for document.css M6 hack
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	declare,
 	lang,
-	domquery,
+	query,
 	Deferred,
 	DeferredList,
 	connect,
@@ -70,9 +70,9 @@ define([
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
-var MOBILE_DEV_ATTR = 'data-maqetta-device',
-	PREF_LAYOUT_ATTR = 'dvFlowLayout',
-	MOBILE_ORIENT_ATTR = 'data-maqetta-deviceorientation';
+var MOBILE_DEV_ATTR = 'data-maq-device',
+	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
+	MOBILE_ORIENT_ATTR = 'data-maq-device-orientation';
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -673,22 +673,43 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._fullResourcePath;
 	},
 	
+	getCurrentHtmlFolderPath: function(){
+		var currentHtmlFilePath = this.getFullResourcePath();
+		var currentHtmlFolderPath = currentHtmlFilePath.getParentPath();
+		return currentHtmlFolderPath;
+	},
+
+	getCurrentBasePath: function(){
+		var base = new Path(Workbench.getProject());
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+		if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
+			basePath = base.append(prefs.webContentFolder);
+		}else{
+			basePath = base;
+		}
+		return basePath;
+	},
+	
+	getRelativeFileString: function(filename){
+		var currentHtmlFolderPath = this.getCurrentHtmlFolderPath();
+		var folderPath = this.getCurrentBasePath();
+		var filePath = folderPath.append(filename);
+		var relativeFile = filePath.relativeTo(currentHtmlFolderPath).toString();
+		return relativeFile;
+	},
+	
 	getAppCssRelativeFile: function(){
 		if(!this._appCssRelativeFile){
-			var currentHtmlFilePath = this.getFullResourcePath();
-			var currentHtmlFolderPath = currentHtmlFilePath.getParentPath();
-			var base = new Path(Workbench.getProject());
-			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-			var appCssFolderPath;
-			if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
-				appCssFolderPath = base.append(prefs.webContentFolder);
-			}else{
-				appCssFolderPath = base;
-			}
-			var appCssFilePath = appCssFolderPath.append('app.css');
-			this._appCssRelativeFile = appCssFilePath.relativeTo(currentHtmlFolderPath).toString();
+			this._appCssRelativeFile = this.getRelativeFileString('app.css');
 		}
 		return this._appCssRelativeFile;
+	},
+	
+	getAppJsRelativeFile: function(){
+		if(!this._appJsRelativeFile){
+			this._appJsRelativeFile = this.getRelativeFileString('app.js');
+		}
+		return this._appJsRelativeFile;
 	},
 	
     /* ensures the file has a valid theme.  Adds the users default if its not there alread */
@@ -784,7 +805,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
 			this.loadRequires("html.body", true /*updateSrc*/, false /*doUpdateModelDojoRequires*/,
 					true /*skipDomUpdate*/ );
-			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
 			// make sure this file has a valid/good theme
 			this.loadTheme(newHtmlParams);
 		}
@@ -798,6 +818,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
 			}
+			// Automatically include app.css and app.js so users 
+			// have a place to put their custom CSS rules and JavaScript logic
+			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
+			var appJsUrl = this.getAppJsRelativeFile();
+			this.addHeaderScript(appJsUrl);
 		}
 		
 		// Remove any SCRIPT elements from model that include dojo.require() syntax
@@ -811,7 +836,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 		});
-
+		
 		var data = this._parse(source);
 		if (this.frameNode) {
 			if(!this.getGlobal()){
@@ -819,7 +844,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 
 			// tear down old error message, if any
-			dojo.query(".loading", this.frameNode.parentNode).orphan();
+			query(".loading", this.frameNode.parentNode).orphan();
 
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
@@ -1190,12 +1215,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 
 		removeEventAttributes(containerNode);
-		dojo.query("*",containerNode).forEach(removeEventAttributes);
+		query("*",containerNode).forEach(removeEventAttributes);
 
 		// Convert all text nodes that only contain white space to empty strings
-		containerNode.setAttribute('data-davinci-ws','collapse');
+		containerNode.setAttribute('data-maq-ws','collapse');
 		var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
-		model_bodyElement.addAttribute('data-davinci-ws','collapse');
+		model_bodyElement.addAttribute('data-maq-ws','collapse');
 
 		// Collapses all text nodes that only contain white space characters into empty string.
 		// Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
@@ -1237,7 +1262,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		var prereqs = [];
-		dojo.forEach(dojo.query("*", containerNode), function(n){
+		dojo.forEach(query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
@@ -1323,7 +1348,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	_attachChildren: function (containerNode)
 	{
-		dojo.query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
+		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
 		/*
 		var currentStateCache = [];
 		*/
@@ -1371,7 +1396,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_onLoadHelpers: function(){
 		var onLoadHelpersSoFar={};
-		dojo.query("> *", this.rootNode).map(Widget.getWidget).forEach(function(widget){
+		query("> *", this.rootNode).map(Widget.getWidget).forEach(function(widget){
 			var helper = widget.getHelper();
 			if(helper && helper.onLoad){
 				var already = onLoadHelpersSoFar[widget.type];
@@ -2885,7 +2910,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// add to DOM...
 		dojo.withGlobal(this.getGlobal(), function() {
-			dojo.create(tag, attrs, dojo.query('head')[0]);
+			dojo.create(tag, attrs, query('head')[0]);
 		});
 	},
 	
@@ -2919,8 +2944,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					queryStr += '[' + name + '="' + attrs[name] + '"]';
 				}
 			}
-			//dojo.destroy(dojo.query(queryStr)[0]);
-			var n = dojo.query(queryStr)[0];
+			//dojo.destroy(query(queryStr)[0]);
+			var n = query(queryStr)[0];
 			if (n){ // throws exception if n is null
 			    dojo.destroy(n);
 			}

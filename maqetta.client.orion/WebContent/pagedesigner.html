@@ -13,13 +13,11 @@
 			height: 100%;
 		}
 	</style>
-	
 	<!--  orion specific css -->
 	<style type="text/css">
 		@import url("app/orionplugin/orionMaqetta.css?@revision@");
 		
 	</style>
-	
 	
 	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="
 		async: true,
@@ -30,7 +28,7 @@
 		ioPublish:true
 	"></script>
 	<script type="text/javascript">
-		require(["dijit/dijit", "davinci/davinci", ], function () {
+		require(["dijit/dijit", "davinci/davinci" ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent, version) {
 				  dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
 				  dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
@@ -39,80 +37,119 @@
 				  dojo.byId("maqetta_version").innerHTML = version;
 				  dojo.byId("title_id").text = webContent.pageDesignerTitle;
 			});
-			//dojo.setObject("davinci.dojo",dojo);
+
 			var Workbench = require("davinci/Workbench"),
-				Runtime = require("davinci/Runtime");
-			
-			/* before the project loads, we want to get a project query paramater, sync it, then reload */
-			var urlProject = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).project;
-			if(urlProject){
-				Workbench.setActiveProject(urlProject);
-				window.location.search="";
-			}
-			
-			
-			
+				Runtime = require("davinci/Runtime"),
+				revResource = require("davinci/review/model/resource/root")
+		
+			var resetWorkbenchState = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).resetWorkbenchState;
+			if(resetWorkbenchState){
+				Workbench.clearWorkbenchState().then(function(){
+					location.href=".";	
+				});
+				
+			}	
+				
+				
 			Runtime.loadPlugins();
 	 		Runtime.initialPerspective="davinci.ve.pageDesign";
 
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
 				var run = function() {
-                    var userInfo;
-                    
-                    var result=Runtime.getUser();
-
+					var userInfo;
+					
+					var result = Runtime.getUser();
+					
                     if (result) {
-                       dojo.byId('davinci_user').innerHTML=result.email;
-                       Runtime.userName=result.userId;
-                    } else {
-	    				//FIXME: temporary fix for running via file: URLs
-                       dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
-                    }
-                    if (!result) {
-                        dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
-                        dojo.byId('davinci_logoff').href="";
-                        Runtime.isLocalInstall=true;
-                    }
-                    if (Runtime.plugins.joomlaplugin) {
-	                    dojo.byId('davinci_logoff').href="http://" + window.location.hostname + "/index.php?option=com_user&task=logout&return=Lw";
-	    		 	}
-	    		 	// Hide logoff if single-user mode
-	    			var singleUser = Runtime.singleUserMode();
-	    			if(singleUser){
-	    				var logoff = dojo.byId('davinci_logoff');
-	    				var main_menu = dojo.byId('davinci_main_menu');
-	    				if(logoff && main_menu){
-	    					logoff.style.display = 'none';
-	    					main_menu.style.marginRight = '3em';
-	    				}
-	    			}
-	    			Workbench.run();
-				}
+                        dojo.byId('davinci_user').innerHTML=result.email;
+                        Runtime.userName=result.userId;
+					} else {
+						//FIXME: temporary fix for running via file: URLs
+					   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
+					}
+					if (!result || result.userId=='maqettaUser') {
+						dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
+						dojo.byId('davinci_logoff').href="";
+						Runtime.isLocalInstall=true;
+					}
+					var isRunningJoomla  = dojo.cookie("DAVINCI.JOOMLA");
+					if (isRunningJoomla) {
+						dojo.byId('davinci_logoff').href = "http://" + window.location.hostname + 
+							"/index.php?option=com_user&task=logout&return=Lw";
+				 	}
+				 	// Hide logoff if single-user mode
+					var singleUser = Runtime.singleUserMode();
+					if(singleUser){
+						var logoff = dojo.byId('davinci_logoff');
+						var main_menu = dojo.byId('davinci_main_menu');
+						if (logoff && main_menu) {
+							logoff.style.display = 'none';
+							main_menu.style.marginRight = '3em';
+						}
+					}
+					
+					// set up for review and commenting...
+					var designerName  = dojo.cookie("davinci_designer");
+					var reviewVersion = dojo.cookie("davinci_version");
+					dojo.cookie("davinci_designer", null, {expires: -1});
+					dojo.cookie("davinci_version", null, {expires: -1});
+					
+					/* This code loads the first file from a given review.  The review comes in as a URL parameter from an invetation.
+					   
+					This could be refactored, but I'm not sure where to put it. If we need this functionality somewhere else, then we can decide where to move it.
+					Leaving here for now.
+					
+					*/
+					var loadReviews = function(){
+						if (reviewVersion && designerName) {
+							var node = revResource.findVersion(designerName, reviewVersion);
+							if (node) {
+								/* if we found a node, then the user clicked a review link to get here, 
+								 * TODO: bring the R&C view forward
+								 */
+								node.getChildren(function(childs){
+									if(childs.length > 1) {
+										return;
+									}
+									dojo.forEach(childs, function(child){
+										davinci.Workbench.openEditor({
+											fileName: child,
+											content: node.getText()
+										});
+									})
+									
+								}, false);
+							}
+						}
+					}
+					
+					Workbench.run().then(loadReviews);
+				};
 
 				// Display a warning dialog for unsupported browsers
 				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
-	                var unsupportedDialog = new require("dijit/Dialog")({
-	                    id: "unsupportedBrowserDialog",
-	                    title: webContent.unsupportedBrowser,
-	                    content: ["<p>"+ webContent.unsupportedNote +"</p>",
-	                              "<div class='maqButtonArea'>",
-	                              "   <button dojoType='dijit.form.Button' type='submit'>",
-	                              webContent.buttonContinue,
-	                              "   </button>",
-	                              "</div>"
-	                             ].join(" "),
-	                    execute: function() { run(); }
-	                });
-				    unsupportedDialog.show();
+					var unsupportedDialog = new require("dijit/Dialog")({
+						id: "unsupportedBrowserDialog",
+						title: webContent.unsupportedBrowser,
+						content: ["<p>"+ webContent.unsupportedNote +"</p>",
+								"<div class='maqButtonArea'>",
+								"   <button dojoType='dijit.form.Button' type='submit'>",
+								webContent.buttonContinue,
+								"   </button>",
+								"</div>"
+								].join(" "),
+						execute: function() { run(); }
+					});
+					unsupportedDialog.show();
 				} else {
-				    run();
+					run();
 				}
 			});
 
 			dojo.addOnUnload(Workbench.unload);
 		});
 	</script>
-  </head>
+	</head>
 
 	<body class="claro">
 		<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</td></tr></table></div>
@@ -125,22 +162,10 @@
 						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
 					</div>
 					<span class="maq_banner_name_box">
-						<span>
-							<!-- 
-							<a href='/index.html'>
-								<img title="Launch Orion" src="/images/orion-small-lightondark.gif">
-							</a>
-							
-							<span class='OrionTitlePad'></span>
-							-->
-							<span class="maq_banner_name">Maqetta</span>
-							<span id="maqetta_designer" class="maq_banner_component"></span>
-							<span id="maqetta_version" class="maq_banner_version"></span>
-						</span>
+						<span class="maq_banner_name">Maqetta</span>
+						<span id="maqetta_designer" class="maq_banner_component"></span>
+						<span id="maqetta_version" class="maq_banner_version"></span>
 					</span>
-					
-					
-					
 <!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions
 					<div id="toolbar_container">
 						<span id="davinci_toolbar_main"></span>
@@ -149,5 +174,6 @@
 			</div>
 			<div id="mainBody"></div>
 		</div>
+		<div id="contentassist" class="contentassist"></div>
 	</body>
 </html>

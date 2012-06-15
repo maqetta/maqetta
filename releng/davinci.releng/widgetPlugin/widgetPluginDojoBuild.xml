@@ -164,6 +164,18 @@
 		
 		<!-- Delete directory used by dojo build tooling -->
 		<delete dir="${target.folder}/WebContent/release" />
+		
+		<!-- Do additional clean-up -->
+		<delete dir="${target.folder}/WebContent/util"/>
+		<delete dir="${target.folder}/WebContent/dojo"/>
+		<delete dir="${target.folder}/WebContent/dijit"/>
+		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
+		
+		<!-- Restore dojo dir if we backed it up earlier -->
+		<condition property="davinciPlugin.dojoBackupDir.exists">
+    		<available file="${target.folder}/WebContent/dojo_BACKUP" type="dir"/>
+    	</condition>
+		<antcall target="restore.davinciPlugin.dojoDir"/>
 	</target>
 	
 	<!-- if we had a "dojo" directory when we started (representing the plugin's library), we 
@@ -187,18 +199,8 @@
 	
 	<!-- copy from the build cache back into the plug-ins working directory-->
 	<target name="copy.davinciPlugin" if="run.dojo.build">
-		<delete dir="${target.folder}/WebContent/util"/>
-		<delete dir="${target.folder}/WebContent/dojo"/>
-		<delete dir="${target.folder}/WebContent/dijit"/>
-		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
-		
 		<antcall target="copy.davinciPlugin.library"/>
 		<antcall target="copy.davinciPlugin.metadata"/>
-		
-		<condition property="davinciPlugin.dojoBackupDir.exists">
-    		<available file="${target.folder}/WebContent/dojo_BACKUP" type="dir"/>
-    	</condition>
-		<antcall target="restore.davinciPlugin.dojoDir"/>
 	</target>
 	
 	<!-- only copy library from cache back into working dir if the library wasn't "dojo"

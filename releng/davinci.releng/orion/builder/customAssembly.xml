@@ -69,6 +69,7 @@
 		  		<include name="maqetta.server.win.bat"/>
 			  	<include name="maqetta.server.sh"/>
 	  			<include name="maqetta.server.mac.command"/>
+			  	<include name="maqetta.conf"/>
 	  			<include name="README.html"/>
 	  			<include name="LICENSE"/>
 			  </fileset>

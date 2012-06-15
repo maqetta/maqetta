@@ -9,7 +9,7 @@ define([
 
 return declare("davinci.js.ui.JavaScriptEditor", ModelEditor, {
 
-	constructor : function(element) {
+	constructor : function(element, fileName) {
 		this.jsFile = Factory.newJS();
 		this.model = this.jsFile;
 	},

@@ -374,11 +374,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			var props = widgetMetaData.selectors[selector];
 			//if (containsSelector(rule, selector)){
 			if (selectorText == selector){ // match the complete selector
-				console.log('found the selector ' + selectorText);
+				//console.log('found the selector ' + selectorText);
 				for (var i=0; i < props.length; i++){
 					var prop = props[i];
 					if (prop == '$std_10' || prop == property){
-						console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
+						//console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
 						return true;
 					}
 				}
@@ -396,11 +396,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				var props = state.selectors[selector];
 				//if (containsSelector(rule, selector)){
 				if (selectorText == selector){ // match the complete selector
-					console.log('found the selector ' + selectorText);
+					//console.log('found the selector ' + selectorText);
 					for (var i=0; i < props.length; i++){
 						var prop = props[i];
 						if (prop == '$std_10' || prop == property){
-							console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
+							//console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
 							return true;
 						}
 					}
@@ -415,11 +415,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 					var props = state.selectors[selector];
 					//if (containsSelector(rule, selector)){
 					if (selectorText == selector){ // match the complete selector
-						console.log('found the selector ' + selectorText); 
+						//console.log('found the selector ' + selectorText); 
 						for (var i=0; i < props.length; i++){
 							var prop = props[i];
 							if (prop == '$std_10' || prop == property){
-								console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
+								//console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
 								return true;
 							}
 						}

@@ -79,6 +79,9 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		var oldChildren = this.children;
 		this.children = [];
 		var result = require("davinci/html/CSSParser").parse(text, this);
+		if (result.errors.length > 0){
+			console.log("ERROR: " + this.url);
+		}
 		this.errors = result.errors;
 
 		if (this.errors.length > 0 && this.errors[this.errors.length - 1].isException)  {

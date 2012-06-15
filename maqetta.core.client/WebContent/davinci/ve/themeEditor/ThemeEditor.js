@@ -122,9 +122,9 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		frame.className = "editSubwidgetFocusFrame";
 		frame.id = "editSubwidgetFocusFrame";
 		frame.style.position = "absolute";
-		frame.style.width = domNode.offsetWidth + "px";
-		frame.style.height = domNode.offsetHeight + "px";
 		var padding = 2; // put some space between the subwidget and box
+		frame.style.width = domNode.offsetWidth + (padding * 2) + "px";
+		frame.style.height = domNode.offsetHeight + (padding * 2) + "px";
 		realtop = realtop - padding;
 		realleft = realleft - padding;
 		frame.style.top = realtop + "px";
@@ -390,7 +390,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		var rules = this.getRules(widget, subWidget, state);
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
-			if(!property || this._theme.isPropertyVaildForWidgetRule(rule,property,this._selectedWidget)){
+			if(!property || this._theme.isPropertyVaildForWidgetRule(rule,property,this._selectedWidget, subWidget, state)){
 				var deltaRule = this.getContext().getDeltaRule(rule);
 				deltaRules[deltaRule.getSelectorText()] = deltaRule;
 				

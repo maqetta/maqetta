@@ -1218,9 +1218,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		query("*",containerNode).forEach(removeEventAttributes);
 
 		// Convert all text nodes that only contain white space to empty strings
-		containerNode.setAttribute('data-davinci-ws','collapse');
+		containerNode.setAttribute('data-maq-ws','collapse');
 		var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
-		model_bodyElement.addAttribute('data-davinci-ws','collapse');
+		model_bodyElement.addAttribute('data-maq-ws','collapse');
 
 		// Collapses all text nodes that only contain white space characters into empty string.
 		// Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.

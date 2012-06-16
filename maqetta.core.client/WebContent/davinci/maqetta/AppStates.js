@@ -7,6 +7,33 @@ States.prototype = {
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
 
+
+	/**
+	 * Returns the array of application states that are currently active on the given node.
+	 * If app states are only defined on BODY, then the return array will only have 1 item.
+	 * If nested app state containers, then the returned array will have multiple items,
+	 * with the furthest ancestor state container at position 0 and nearest at position length-1.
+	 * @param {Element} node  An element node in the document
+	 * @returns {[string|undefined]}  An array of strings, where each entry is either undefined
+	 *           (indicating Normal state) or a state name.
+	 */ 
+	getStatesListCurrent: function(node){
+		var statesList = [];
+		if(node){
+			var pn = node.parentNode;
+			while(pn){
+				if(pn.states && pn.states.states){
+					statesList.splice(0, 0, pn.states.current);
+				}
+				if(pn.tagName == 'BODY'){
+					break;
+				}
+				pn = pn.parentNode;
+			}
+		}
+		return statesList;
+	},
+
 	/**
 	 * Returns the array of application states declared on the given node.
 	 * At this point, only the BODY node can have application states declared on it.
@@ -163,16 +190,55 @@ States.prototype = {
 	},
 	
 	/**
-	 * Returns style values for the given node and the given application "state".
-	 * If "name" is provided, then only those style values for the given property are return.
-	 * If "name" is not provided, then all style values are returns.
+//FIXME OLD	 * Returns style values for the given node and the given application "state".
+//FIXME OLD	 * If "name" is provided, then only those style values for the given property are return.
+//FIXME OLD	 * If "name" is not provided, then all style values are returns.
+	 * Returns style values for the given node when a particular set of application states are active.
+	 * The list of application states is passed in as an array.
 	 * @param {Element} node
-	 * @param {string} state
-	 * @param {string} name
+//FIXME OLD * @param {string} state
+	 * @param {[string]} statesList  
+	 *    Array of appstate names. If all appstates are defined on BODY, then
+	 *    the array will only have one item. If there are nested app state containers,
+	 *    then the list will have multiple items, with the applicable state on furthest
+	 *    ancestor at position 0 and nearest at position length-1.
+	 * @param {string} name  Optional property name. If present, then returned value only contains that one property.
+	 *    If not provided, then return all properties.
 	 * @returns {Array} An array of objects, where each object has a single propname:propvalue.
 	 *		For example, [{'display':'none'},{'color':'red'}]
 	 */
-	getStyle: function(node, state, name) {
+	getStyle: function(node, statesList /*FIXME state */, name) {
+		var styleArray, newStyleArray = {};
+//FIXME: Make sure node and statesList are always sent to getStyle
+/*
+		node = this._getWidgetNode(node);
+		if (arguments.length == 1) {
+			state = this.getState();
+		}
+*/
+		for(var i=0; i<statesList.length; i++){
+			var state = statesList[i];
+			// return all styles specific to this state
+			styleArray = node && node.states && node.states[state] && node.states[state].style;
+			// states defines on deeper containers override states on ancestor containers
+			dojo.mixin(newStyleArray, styleArray); 
+			if (arguments.length > 2) {
+				// Remove any properties that don't match 'name'
+				if(newStyleArray){
+					for(var j=newStyleArray.length-1; j>=0; j--){
+						var item = newStyleArray[j];
+						for(var prop in item){		// should be only one prop per item
+							if(prop != name){
+								newStyleArray.splice(j, 1);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		return newStyleArray;
+/*FIXME OLD LOGIC
 		var styleArray, newStyleArray;
 		node = this._getWidgetNode(node);
 		if (arguments.length == 1) {
@@ -196,6 +262,7 @@ States.prototype = {
 			}
 		}
 		return newStyleArray;
+*/
 	},
 	
 	/**
@@ -337,14 +404,103 @@ States.prototype = {
 	},
 	
 	/**
+	 * Takes the current statesArray and returns a simple array
+	 * of the same number of item, where each item in returned array
+	 * indicates the Normal state (indicated by undefined for the present).
+	 * @param {[object]} statesArray  
+	 *    Array of "state containers" that apply to this node,
+	 *    with furthest ancestor at position 0 and nearest at position length-1.
+	 *    Each item in array is an object with these properties
+	 *      statesArray[i].node - a state container node
+	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
+	 *      statesArray[i].newState - the new appstate for this state container node
+	 */
+	_getStatesListNormal: function(statesArray){
+		var statesList = [];
+		if(statesArray){
+			for(var i=0; i<statesArray.length; i++){
+				statesList.push(undefined);
+			}
+		}
+		return statesList;
+	},
+	
+	/**
+	 * Takes the current statesArray array and returns a simple array
+	 * of the same number of items where each item indicates the state name
+	 * corresponding to the given propName (which in practice can only be
+	 * 'oldState' or 'newState').
+	 * @param {[object]} statesArray  
+	 *    Array of "state containers" that apply to this node,
+	 *    with furthest ancestor at position 0 and nearest at position length-1.
+	 *    Each item in array is an object with these properties
+	 *      statesArray[i].node - a state container node
+	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
+	 *      statesArray[i].newState - the new appstate for this state container node
+	 * @param {string} propName  property name to use as index into items in array
+	 *                           (in practice, can only be 'oldState' or 'newState')
+	 */
+	_getStatesListUsingPropName: function(statesArray, propName){
+		var statesList = [];
+		if(statesArray){
+			for(var i=0; i<statesArray.length; i++){
+				statesList.push(statesArray[propName]);
+			}
+		}
+		return statesList;
+	},
+	
+	/**
 	 * Utility routine to clean up styling on a given "node"
 	 * to reset CSS properties for "Normal" state.
 	 * First, remove any properties that were defined for "oldState".
 	 * Then, add properties defined for Normal state.
 	 * @param {Element} node
-	 * @param {string} oldState
+	 * @param {[object]} statesArray  
+	 *    Array of "state containers" that apply to this node,
+	 *    with furthest ancestor at position 0 and nearest at position length-1.
+	 *    Each item in array is an object with these properties
+	 *      statesArray[i].node - a state container node
+	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
+	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
-	_resetAndCacheNormalStyle: function(node, oldState) {
+	_resetAndCacheNormalStyle: function(node, statesArray /*FIXME oldState*/) {
+
+		if(!node || !statesArray){
+			return;
+		}
+		for(var i=0; i < statesArray.length; i++){
+			var oldState = statesArray[i].oldState;
+			
+			var oldStatesList = this._getStatesListUsingPropName(statesArray, 'oldState');
+			var oldStateStyleArray = this.getStyle(node, oldStatesList);
+			var normalStatesList = this._getStatesListUsingPropName(statesArray);
+			var normalStyleArray = this.getStyle(node, normalStatesList);
+			
+			// Clear out any styles corresponding to the oldState
+			if(oldStateStyleArray){
+				for(var j=0; j<oldStateStyleArray.length; j++){
+					var oItem = oldStateStyleArray[j];
+					for(var oProp in oItem){	// Should only be one prop
+						var convertedName = this._convertStyleName(oProp);
+						node.style[convertedName] = '';
+					}
+				}
+			}
+			
+			// Reset normal styles
+			if(normalStyleArray){
+				for(var i=0; i<normalStyleArray.length; i++){
+					var nItem = normalStyleArray[i];
+					for(var nProp in nItem){	// Should only be one prop
+						var convertedName = this._convertStyleName(nProp);
+						node.style[convertedName] = this._getFormattedValue(nProp, nItem[nProp]);
+					}
+				}
+			}
+		}
+
+		/*FIXME OLD LOGIC
 		var oldStateStyleArray = this.getStyle(node, oldState);
 		var normalStyleArray = this.getStyle(node, undefined);
 		
@@ -369,18 +525,64 @@ States.prototype = {
 				}
 			}
 		}
+*/
 	},
 	
 	/**
 	 * Updates CSS properties for the given node due to a transition
-	 * from application state "oldState" to "newState".
+	 * from application state (from an old state to a new state).
 	 * Called indirectly when the current state changes (via a setState call)
 	 * from code that listens to event /davinci/states/state/changed
 	 * @param {Element} node
-	 * @param {string} oldState
-	 * @param {string} newState
+//FIXME: OLD LOGIC	 * @param {string} oldState
+//FIXME: OLD LOGIC	 * @param {string} newState
+	 * @param {[object]} statesArray  
+	 *    Array of "state containers" that apply to this node,
+	 *    with furthest ancestor at position 0 and nearest at position length-1.
+	 *    Each item in array is an object with these properties
+	 *      statesArray[i].node - a state container node
+	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
+	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
-	_update: function(node, oldState, newState) {
+	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {
+		node = this._getWidgetNode(node);
+		if (!node || !node.states){
+			return;
+		}
+
+		var newStatesList = this._getStatesListUsingPropName(statesArray, 'newState');
+		var styleArray = this.getStyle(node, newStatesList);
+		
+		this._resetAndCacheNormalStyle(node, statesArray);
+
+		// Apply new style
+		if(styleArray){
+			for(var i=0; i<styleArray.length; i++){
+				var style = styleArray[i];
+				for (var name in style) {	// should be only one prop in style
+					var convertedName = this._convertStyleName(name);
+					node.style[convertedName] = style[name];
+				}
+			}
+		}
+		
+		//FIXME: This is Dojo-specific. Other libraries are likely to need a similar hook.
+		var dijitWidget, parent;
+		if(node.id && node.ownerDocument){
+			var byId = node.ownerDocument.defaultView.require("dijit/registry").byId;
+			if(byId){
+				dijitWidget = byId && byId(node.id);				
+			}
+		}
+		if(dijitWidget && dijitWidget.getParent){
+			parent = dijitWidget.getParent();
+		}
+		if(parent && parent.resize){
+			parent.resize();
+		}else if(dijitWidget && dijitWidget.resize){
+			dijitWidget.resize();
+		}
+/*FIXME OLD LOGIC
 		node = this._getWidgetNode(node);
 		if (!node || !node.states){
 			return;
@@ -417,6 +619,7 @@ States.prototype = {
 		}else if(dijitWidget && dijitWidget.resize){
 			dijitWidget.resize();
 		}
+*/
 	},
 	
 	/**

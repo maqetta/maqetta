@@ -9,13 +9,34 @@ define([
 
 var veStates = declare(maqettaStates, {
 	
-	_update: function(node, oldState, newState) {		
+	/**
+	 * Updates CSS properties for the given node due to a transition
+	 * from application state (from an old state to a new state).
+	 * Called indirectly when the current state changes (via a setState call)
+	 * from code that listens to event /davinci/states/state/changed
+	 * @param {Element} node
+//FIXME: OLD LOGIC	 * @param {string} oldState
+//FIXME: OLD LOGIC	 * @param {string} newState
+	 * @param {[object]} statesArray  
+	 *    Array of "state containers" that apply to this node,
+	 *    with furthest ancestor at position 0 and nearest at position length-1.
+	 *    Each item in array is an object with these properties
+	 *      statesArray[i].node - a state container node
+	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
+	 *      statesArray[i].newState - the new appstate for this state container node
+	 */
+	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {		
 		node = this._getWidgetNode(node);
 		if (!node || !node._dvWidget || !node.states){
 			return;
 		}
 		var widget = node._dvWidget;
+		var newStatesList = this._getStatesListUsingPropName(statesArray, 'newState');
+		var styleArray = this.getStyle(node, newStatesList);
+/*FIXME: OLD LOGIC
 		var styleArray = this.getStyle(node, newState);
+*/
+
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		var stateIndex;
 		if(!newState || newState === 'Normal'){

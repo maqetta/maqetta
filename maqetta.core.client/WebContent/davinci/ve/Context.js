@@ -2618,7 +2618,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 //FIXME: isNormalState needs node?
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
-			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode);
+			var currentStatesList = davinci.ve.states.getStatesListCurrent(widget.domNode);
+			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode, currentStatesList);
 			if(stateStyleValuesArray){
 				// Remove entries from vArray that are in stateStyleValuesArray
 				for(var i=0; i<stateStyleValuesArray.length; i++){

@@ -256,6 +256,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateList: function() {
+		var allStateContainers = States.getAllStateContainers(this._getRootNode());
 		var latestStates = States.getStates(this._getRootNode(), true), 
 			storedScenes = this._getScenes();
 		if(!this._editor || !latestStates || !storedScenes){

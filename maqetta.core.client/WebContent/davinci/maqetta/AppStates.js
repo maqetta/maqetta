@@ -8,6 +8,43 @@ States.prototype = {
 	ATTRIBUTE: "dvStates",
 
 	/**
+	 * Traverses all document nodes starting with rootnode, looking for
+	 * all nodes that are state containers (due to having a states.states property),
+	 * and returning a data structure that lists all state containers. See below
+	 * for details about the returned data structure..
+	 * @param rootnode
+	 * @returns {Array} allStateContainers
+	 *    List of all application state containers in the document that reflects
+	 *    nesting in case some state containers are descendants of other state containers.
+	 *    For example, if BODY defines 2 states "aa" and "bb", and then a inner DIV
+	 *    defines two states "cc" and "dd", and then there is a SPAN that is a descendant of that DIV
+	 *    that defines two states "ee" and "ff", the returned structure will look like this:
+	 *        [{stateContainerNode:BODY,children:
+	 *            [{stateContainerNode:DIV,children:
+	 *                [{stateContainerNode:SPAN,children:[]}]
+	 *            }]
+	 *        }]
+	 */
+	getAllStateContainers: function(rootnode){
+		var allStateContainers = [];
+		function findStateContainers(currentNode, stateContainersArray){
+			var childrenStateContainersArray = stateContainersArray;
+//FIXME: This is what we want ultimately
+//			if(currentNode.states && currentNode.states.states){
+			if(currentNode.tagName == 'BODY'){
+				var o = {stateContainerNode:currentNode, children:[]};
+				stateContainersArray.push(o);
+				childrenStateContainersArray = o.children;
+			}
+			for(var i=0; i<currentNode.children.length; i++){
+				findStateContainers(currentNode.children[i], childrenStateContainersArray);
+			}
+		}
+		findStateContainers(rootnode, allStateContainers);
+		return allStateContainers;
+	},
+	
+	/**
 	 * Returns a statesArray data structure for the given node
 	 * @param {Element} node  An element node in the document
 	 * @param {string|undefined} oldState  The state which used to be active

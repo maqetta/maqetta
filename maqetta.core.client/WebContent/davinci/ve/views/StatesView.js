@@ -46,6 +46,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/states/state/removed", this._removeState.bind(this));
 		this.subscribe("/davinci/states/state/renamed", this._renameState.bind(this));
 		this.subscribe("/davinci/states/state/changed", this._changeState.bind(this));
+		this.subscribe("/maqetta/appstates/state/changed", this._changeState.bind(this));
 		this.subscribe("/davinci/ui/context/registerSceneManager", this._registerSceneManager.bind(this));
 		this.subscribe("/davinci/scene/scenesLoaded", this._scenesLoaded.bind(this));
 		this.subscribe("/davinci/scene/added", this._addScene.bind(this));
@@ -531,12 +532,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var bodyNode = context ? context.rootNode : null;
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
-					this.publish("/davinci/states/state/changed", 
+					this.publish("/maqetta/appstates/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:'$all', 
 							newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
 					this._themeState = item.name[0];
 				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
-					this.publish("/davinci/states/state/changed", 
+					this.publish("/maqetta/appstates/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
 							newState:item.name[0]}]);
 				} else {

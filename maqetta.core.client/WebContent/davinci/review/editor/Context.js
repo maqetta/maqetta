@@ -58,7 +58,7 @@ return declare("davinci.review.editor.Context", [Context], {
 
 					var userWindow = userDoc && userDoc.defaultView && userDoc.defaultView.window;
 					if (userWindow.require) {
-						userWindow.require("dojo/_base/connect").subscribe("/davinci/states/state/changed", function(args) {
+						userWindow.require("dojo/_base/connect").subscribe("/maqetta/appstates/state/changed", function(args) {
 							if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
 								return; 
 							}
@@ -69,7 +69,7 @@ return declare("davinci.review.editor.Context", [Context], {
 								// Re-publish at the application level
 								var newArgs = dojo.clone(args);
 								newArgs.editorClass = "davinci.review.editor.ReviewEditor";
-								connect.publish("/davinci/states/state/changed", [newArgs]);
+								connect.publish("/maqetta/appstates/state/changed", [newArgs]);
 							}
 						});
 					}
@@ -92,7 +92,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					}
 				})
 			}), containerNode);
-			connect.subscribe("/davinci/states/state/changed", function(args) { 
+			connect.subscribe("/maqetta/appstates/state/changed", function(args) { 
 				if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor" ||
 						!this.containerEditor || this.containerEditor != Runtime.currentEditor) { 
 					return; 

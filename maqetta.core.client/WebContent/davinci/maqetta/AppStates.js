@@ -7,6 +7,41 @@ States.prototype = {
 	NORMAL: "Normal",
 	ATTRIBUTE: "dvStates",
 
+	/**
+	 * Returns a statesArray data structure for the given node
+	 * @param {Element} node  An element node in the document
+	 * @param {string|undefined} oldState  The state which used to be active
+	 * @param {string|undefined} newState  The state which has now become active
+	 * @param {Element} statesContainerNode  The (state container) element on which oldState and newState are defined
+	 * @returns {[object]} statesArray  
+	 *    Array of "state containers" that apply to this node,
+	 *    with furthest ancestor at position 0 and nearest at position length-1.
+	 *    Each item in array is an object with these properties
+	 *      statesArray[i].node - a state container node
+	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
+	 *      statesArray[i].newState - the new appstate for this state container node
+	 */ 
+	getStatesArray: function(node, oldState, newState, statesContainerNode){
+		var statesArray = [];
+		if(node){
+			var pn = node.parentNode;
+			while(pn){
+				if(pn.states && pn.states.states){
+					if(pn == statesContainerNode){
+						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
+					}else{
+						var current = pn.states.states.current;
+						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
+					}
+				}
+				if(pn.tagName == 'BODY'){
+					break;
+				}
+				pn = pn.parentNode;
+			}
+		}
+		return statesArray;
+	},
 
 	/**
 	 * Returns the array of application states that are currently active on the given node.
@@ -117,7 +152,7 @@ States.prototype = {
 	 * Trigger updates to the given node based on the given "newState".  
 	 * This gets called for every node that is affected by a change in the given state.
 	 * This routine doesn't actually do any updates; instead, updates happen
-	 * by publishing a /davinci/states/state/changed event, which indirectly causes
+	 * by publishing a /maqetta/appstates/state/changed event, which indirectly causes
 	 * the _update() routine to be called for the given node.
 	 * 
 	 * @param {null|undefined|Element} node  If not null|undefined, must by BODY
@@ -125,7 +160,7 @@ States.prototype = {
 	 * @param {boolean} updateWhenCurrent  Force update logic to run even if newState is same as current state
 	 * @param {boolean} _silent  If true, don't broadcast the state change via /davinci/states/state/changed
 	 * 
-	 * Subscribe using davinci.states.subscribe("/davinci/states/state/changed", callback).
+	 * Subscribe using davinci.states.subscribe("/maqetta/appstates/state/changed", callback).
 	 * FIXME: Right now the node parameter is useless since things only
 	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
 	 * FIXME: updateWhenCurrent is ugly. Higher level code could include that logic
@@ -155,7 +190,8 @@ States.prototype = {
 			}
 		}
 		if (!_silent) {
-			connect.publish("/davinci/states/state/changed", [{node:node, newState:newState, oldState:oldState}]);
+			connect.publish("/maqetta/appstates/state/changed", 
+					[{node:node, newState:newState, oldState:oldState}]);
 		}
 		this._updateSrcState (node);
 		
@@ -294,14 +330,14 @@ States.prototype = {
 	/**
 	 * Update the CSS for the given node for the given application "state".
 	 * This routine doesn't actually do any screen updates; instead, updates happen
-	 * by publishing a /davinci/states/state/changed event, which indirectly causes
+	 * by publishing a /maqetta/appstates/state/changed event, which indirectly causes
 	 * the _update() routine to be called for the given node.
 	 * @param {Element} node
 	 * @param {string} state
 	 * @param {Array} styleArray  List of CSS styles to apply to this node for the given "state".
 	 * 		This is an array of objects, where each object specifies a single propname:propvalue.
 	 * 		eg. [{'display':'none'},{'color':'red'}]
-	 * @param {boolean} _silent  If true, don't broadcast the state change via /davinci/states/state/changed
+	 * @param {boolean} _silent  If true, don't broadcast the state change via /maqetta/appstates/state/changed
 	 */
 	setStyle: function(node, state, styleArray, silent) {
 		node = this._getWidgetNode(node);
@@ -532,7 +568,7 @@ States.prototype = {
 	 * Updates CSS properties for the given node due to a transition
 	 * from application state (from an old state to a new state).
 	 * Called indirectly when the current state changes (via a setState call)
-	 * from code that listens to event /davinci/states/state/changed
+	 * from code that listens to event /maqetta/appstates/state/changed
 	 * @param {Element} node
 //FIXME: OLD LOGIC	 * @param {string} oldState
 //FIXME: OLD LOGIC	 * @param {string} newState
@@ -951,7 +987,7 @@ States.prototype = {
 	
 	initialize: function() {	
 		if (!this.subscribed) {
-			connect.subscribe("/davinci/states/state/changed", function(e) { 
+			connect.subscribe("/maqetta/appstates/state/changed", function(e) { 
 				if(e.editorClass){
 					// Event targets one of Maqetta's editors, not from runtime events
 					return;
@@ -962,7 +998,8 @@ States.prototype = {
 					if (!davinci.states.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					davinci.states._update(child, e.oldState, e.newState);
+					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.statesContainerNode);
+					davinci.states._update(child, statesArray);
 				}
 			});
 			
@@ -1107,7 +1144,7 @@ var singleton = davinci.states = new States();
 
 // Bind to watch for overlay widgets at runtime.  Dijit-specific, at this time
 if (!davinci.Workbench && typeof dijit != "undefined"){
-	connect.subscribe("/davinci/states/state/changed", function(args) {
+	connect.subscribe("/maqetta/appstates/state/changed", function(args) {
 		var w;
 		var byId = (args && args.node && args.node.ownerDocument && args.node.ownerDocument.defaultView &&
 					args.node.ownerDocument.defaultView.require("dijit/registry").byId);

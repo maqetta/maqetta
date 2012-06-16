@@ -37,12 +37,12 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 			this._connect("activate", "refresh");
 			this._connect("setSource", "refresh");
 
-			connect.subscribe("/davinci/states/state/changed/start", this,
+			connect.subscribe("/maqetta/appstates/state/changed/start", this,
 				function(e) {
 					this._skipRefresh = true;
 				}
 			);
-			connect.subscribe("/davinci/states/state/changed/end", this,
+			connect.subscribe("/maqetta/appstates/state/changed/end", this,
 				function(e) {
 					delete this._skipRefresh;
 					this.refresh();
@@ -267,7 +267,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		this._widgetModel=new OutlineTreeModel(this._context);
 		this._srcModel=new HTMLOutlineModel(editor.model);
-		connect.subscribe("/davinci/states/state/changed", this,
+		connect.subscribe("/maqetta/appstates/state/changed", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&
 						davinci.Runtime.currentEditor &&

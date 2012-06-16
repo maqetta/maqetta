@@ -13,7 +13,7 @@ var veStates = declare(maqettaStates, {
 	 * Updates CSS properties for the given node due to a transition
 	 * from application state (from an old state to a new state).
 	 * Called indirectly when the current state changes (via a setState call)
-	 * from code that listens to event /davinci/states/state/changed
+	 * from code that listens to event /maqetta/appstates/state/changed
 	 * @param {Element} node
 //FIXME: OLD LOGIC	 * @param {string} oldState
 //FIXME: OLD LOGIC	 * @param {string} newState
@@ -283,13 +283,13 @@ var veStates = declare(maqettaStates, {
 	
 		if (!this.subscribed) {
 		
-			connect.subscribe("/davinci/states/state/changed", dojo.hitch(this, function(e) { 
+			connect.subscribe("/maqetta/appstates/state/changed", dojo.hitch(this, function(e) { 
 				var editor = this.getEditor();
 				if (!dojo.isObject(e.node) || !editor || editor.declaredClass != "davinci.ve.PageEditor"){
 					return;
 				} // ignore if node is not an object (eg '$all') and ignore updates in theme editor
 
-				dojo.publish("/davinci/states/state/changed/start");
+				dojo.publish("/maqetta/appstates/state/changed/start");
 				// If rootWidget, then loop through children, else loop starting with this widget.
 				var widget = (e.node && e.node._dvWidget);
 				var widget = (widget == this.getContext().rootWidget) ? widget : widget.getParent();
@@ -301,9 +301,13 @@ var veStates = declare(maqettaStates, {
 					if (!this.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
+					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.statesContainerNode);
+					this._update(child, statesArray);
+/*FIXME: OLD LOGIC
 					this._update(child, e.newState);
+*/
 				}
-				dojo.publish("/davinci/states/state/changed/end");
+				dojo.publish("/maqetta/appstates/state/changed/end");
 
 				// Trigger update of the selection box in case the selected widget changed size or moved
 				var context = this.getContext();

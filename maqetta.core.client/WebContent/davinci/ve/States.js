@@ -31,11 +31,8 @@ var veStates = declare(maqettaStates, {
 			return;
 		}
 		var widget = node._dvWidget;
-		var newStatesList = this._getStatesListUsingPropName(statesArray, 'newState');
-		var styleArray = this.getStyle(node, newStatesList);
 /*FIXME: OLD LOGIC
 		var styleArray = this.getStyle(node, newState);
-*/
 
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		var stateIndex;
@@ -51,6 +48,7 @@ var veStates = declare(maqettaStates, {
 			styleValuesAllStates[stateIndex] = styleArray;
 		}
 		widget.setStyleValuesAllStates(styleValuesAllStates);
+*/
 		this._refresh(widget);
 //FIXME: Generalize beyond BODY?
 		var body = node.ownerDocument.body;

@@ -1169,7 +1169,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		var states = {},
 		    containerNode = this.getContainerNode();
-	
+
+//FIXME: Do we need to put states onto all state containers?
+//Is this code ever activated?
 		if (data.states) {
 			states.body = data.states;
 		}
@@ -1239,6 +1241,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 
+//FIXME: is states every anything except any empty object?
 		this._loadFileStatesCache = states;
 		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
@@ -1613,6 +1616,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
 		var states = davinci.ve.states.retrieve(node);
+//FIXME: Need to generalize this to any states container
 		if (node.tagName != "BODY" && states) {
 			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
 			node.className = node.className + ' ' + tempClass;
@@ -1658,9 +1662,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				continue;
 			}
 			var widget = Widget.getWidget(node);
+//FIXME: Need to generalize beyond just BODY
 			var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 			davinci.ve.states.store(widget.domNode, states);
+//FIXME: Need to generalize beyond just BODY
 			if(node.tagName != 'BODY'){
 				davinci.states.transferElementStyle(node, cache[id].style);
 			}
@@ -1682,6 +1688,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Remove any application states information that are defined on particular widgets
 		// for all states that aren't in the master list of application states.
 		// (This is to clean up after bugs found in older releases)
+//FIXME: Need to generalize beyond just BODY
 		var body = this.getContainerNode();
 		var activeStates = davinci.ve.states.getStates(body);
 		davinci.ve.states.removeUnusedStates(this, activeStates);
@@ -2211,6 +2218,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
 
+//FIXME: Need to generalize beyond just BODY
 			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
 			data.states = states;
 		}
@@ -2480,7 +2488,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(!theme) {
 			return [];
 		}
-		
+
+//FIXME: Ramifications if nested states?
+//FIXME: getState(node)?
 		var state = davinci.ve.states.getState();
 		
 		if(!state) {
@@ -2512,6 +2522,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// For page editor, always use "Normal"
 		var state = "Normal";
 		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
+//FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
+//getState(node)
 			state = davinci.ve.states.getState();
 		}
 		
@@ -2602,7 +2614,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
 		var vArray = widget ? widget.getStyleValues() : [];
-		
+
+//FIXME: isNormalState needs node?
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
 			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode);
@@ -3233,7 +3246,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return a;
 	},
-	
+
+//FIXME: Yikes. May need to make AppStates into a scene manager
 	/**
 	 * Returns an array holding the set of currently selected application states and (mobile) scenes
 	 * @return {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
@@ -3241,6 +3255,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getStatesScenes: function() {
 		var a = this.getCurrentScenes();
+//FIXME: Yikes. getState(node)?
 		var state = davinci.ve.states.getState();
 		a.push({sceneId:state});
 		return a;
@@ -3258,6 +3273,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(sm){
 				sm.selectScene({sceneId:sceneId});
 			}else{
+//FIXME: Yikes. setState(node)?
 				davinci.ve.states.setState(sceneId);
 			}
 		}

@@ -31,6 +31,7 @@ var veStates = declare(maqettaStates, {
 		}
 		widget.setStyleValuesAllStates(styleValuesAllStates);
 		this._refresh(widget);
+//FIXME: Generalize beyond BODY?
 		var body = node.ownerDocument.body;
 		var currentState = this.getState(body);
 		if(!this.isNormalState(currentState)){
@@ -55,6 +56,7 @@ var veStates = declare(maqettaStates, {
 			return;
 		}
 		var widget = node._dvWidget;
+//FIXME: What's this doing? Why this particular set of events?
 		var events = ["onclick", "onmouseover", "onmouseout", "onfocus", "onblur"];
 		var properties;
 		for(var i in events){
@@ -80,6 +82,7 @@ var veStates = declare(maqettaStates, {
 	normalize: function(type, node, name, value) {
         switch(type) {
 		    case "style":
+//FIXME: getState(node)
 	            var state = davinci.ve.states.getState();
 	            if (state) {
 	                var normalValueArray = this.getStyle(node, undefined, name);
@@ -100,6 +103,8 @@ var veStates = declare(maqettaStates, {
 		var newValueArray = dojo.clone(valueArray);
 		switch(type) {
 		    case "style":
+
+//FIXME: getState(node)
 	            var state = davinci.ve.states.getState();
 	            if (state) {
 	                var normalValueArray = this.getStyle(node, undefined, name);
@@ -162,6 +167,7 @@ var veStates = declare(maqettaStates, {
 		}
 	},
 
+//FIXME: Why not use the one from AppStates.js?
 	_getWidgetNode: function(node) {
 		if (!node) {
 			var doc = this.getDocument();
@@ -170,6 +176,7 @@ var veStates = declare(maqettaStates, {
 		return node;
 	},
 	
+//FIXME: Need to deal with recursive state containers
 	// Application "state" has been removed from the document
 	// Recursively remove all references to that state from given node and descendants
 	_removeStateFromNodeRecursive: function(node, state){
@@ -191,7 +198,8 @@ var veStates = declare(maqettaStates, {
 			this._updateSrcState(node);
 		}
 	},
-	
+
+//FIXME: Need to deal with recursive state containers	
 	// Remove any application states information that are defined on particular widgets
 	// for all states that aren't in the master list of application states.
 	// (This is to clean up after bugs found in older releases)
@@ -236,6 +244,7 @@ var veStates = declare(maqettaStates, {
 	},
 
 	getCurrentStateIndex:function(){
+//FIXME: getState(node)
 		return this._getStateIndex(this.getState());
 	},
 
@@ -299,6 +308,7 @@ var veStates = declare(maqettaStates, {
 					this._updateEvents(child, e.oldName, e.newName);
 				}
 
+//FIXME: getState(node)
 				var state = this.getState();
 				if (state === e.oldName) {
 					this.setState(e.node, e.newName, false, true);
@@ -306,6 +316,7 @@ var veStates = declare(maqettaStates, {
 			}));
 			
 			connect.subscribe("/davinci/states/state/style/changed", dojo.hitch(this, function(e) { 
+//FIXME: getState(node)
 				var containerState = this.getState();
 				if (containerState == e.state) {
 					this._update(e.node, e.state, containerState);		
@@ -313,6 +324,7 @@ var veStates = declare(maqettaStates, {
 			}));
 			
 			connect.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, function(newWidget, oldWidget) { 
+//FIXME: getState(node)
 				var containerState = this.getState();
 				if (containerState) {
 					this._update(newWidget.domNode, containerState, undefined);		

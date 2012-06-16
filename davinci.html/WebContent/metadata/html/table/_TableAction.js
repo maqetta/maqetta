@@ -59,6 +59,15 @@ return declare(ContextAction, {
 			}
 		});
 		return isTableRelated;
+	},
+	
+	_createTableCellData: function(context) {
+		var data = {
+			type: "html.td", 
+			context: context,
+			children: "&#8288;"
+		};
+		return data;
 	}
 });
 });

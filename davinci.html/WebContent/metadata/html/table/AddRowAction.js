@@ -76,7 +76,7 @@ return declare(_TableAction, {
 				command.add(new ModifyCommand(widget, properties));
 				c += (matrix.getColSpan(cell) - 1); // skip columns covered by this cell
 			}else{
-				data.children.push({type: "html.td", context: context});
+				data.children.push(this._createTableCellData(context));
 			}
 		}
 		var parent = Widget.byNode(rows[r].parentNode);

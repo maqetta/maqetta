@@ -54,7 +54,7 @@ return declare(_TableAction, {
 				r += (matrix.getRowSpan(cell) - 1); // skip rows covered by this cell
 			}
 		}
-		var data = {type: "html.td"};
+		var data = this._createTableCellData();
 		if(rs > 1){
 			data.properties = {rowspan: rs};
 		}

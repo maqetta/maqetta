@@ -6,18 +6,15 @@
 	"property": {	
 		"border": {
 			"datatype": "number",
-			"description": "Specifies whether the table cells should have borders or not",
-			"hidden": "true"
+			"description": "Specifies whether the table cells should have borders or not"
 		},
 		"cellpadding": {
 			"datatype": "number",
-			"description": "Not supported in HTML5.",
-			"hidden": "true"
+			"description": "Not supported in HTML5."
 		},
 		"cellspacing": {
 			"datatype": "number",
-			"description": "Not supported in HTML5.",
-			"hidden": "true"
+			"description": "Not supported in HTML5."
 		},
 		"frame": {
 			"datatype": "string",

@@ -506,10 +506,12 @@
 		                            "type": "html.tr",
 		                            "children": [
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                },
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                }
 		                            ]
 		                        },
@@ -517,10 +519,12 @@
 		                            "type": "html.tr",
 		                            "children": [
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                },
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                }
 		                            ]
 		                        }
@@ -576,10 +580,7 @@
 		            "hidden": true,
 		            "allowedParent": "html.tr",
 		            "allowedChild": "ANY",
-		            "inlineEdit": {
-		                "property": "textContent",
-		                "displayOnCreate": false
-		            }
+		            "inlineEdit": "./html/table/TableCellInput"
 		        },
 		        {
 		            "name": "<tfoot>",
@@ -598,7 +599,8 @@
 		            "category": "html",
 		            "hidden": true,
 		            "allowedParent": "html.tr",
-		            "allowedChild": "ANY"
+		            "allowedChild": "ANY",
+		            "inlineEdit": "./html/table/TableCellInput"
 		        },
 		        {
 		            "name": "<thead>",

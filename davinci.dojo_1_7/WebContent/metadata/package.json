@@ -1983,6 +1983,20 @@
 		            }
 		        },
 		        {
+		            "name": "TemplatedView",
+		            "type": "dojox.mobile.TemplatedView",
+		            "category": "mobile",
+		            "class": "DojoxMobileView",
+		            "icon": "resources/images/dx-mbl--flippable-iew.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADlck77J2+nt87/M3r7L3EVyp8DO4MPS40x9sU+CtU1+sWKf28bX6MTU5ejx+lKHuWKf2WKh2VWLvVaOv7nW78jg84C/64DB6ZfX9v///7q6urOzs7KysqmpqaioqHBwcG5ubmxsbGpqamdnZ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAaFQNJkOCQZj0gSZrmcGD/Q6IeUyVwsFslTw+2SIpEFZPEwgjaZDWezISne74Qx5PF0OnVSZb9vGEUjgYJUVVUARgqFhSQFCg8MAIckBxkIioQZkZoAilUkFBQODpFGBqCnFJiGJAADnRmMjgwZBKycDZeKm5GdtgABAgG2AQGbSUeSx8rLQQA7",
+		            "helper": "./dojox/mobile/ViewHelper",
+		            "requiresId":true,
+		            "dropCursor":{
+		            	"show":false,
+		            	"beforeAfter":"after"
+		            }
+		        },
+		        {
 		            "name": "View",
 		            "type": "dojox.mobile.View",
 		            "category": "mobile",

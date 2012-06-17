@@ -104,7 +104,14 @@ var veStates = declare(maqettaStates, {
 //FIXME: getState(node)
 	            var state = davinci.ve.states.getState();
 	            if (state) {
+					var currentStatesList = this.getStatesListCurrent(node);
+					for(var i=0; i<currentStatesList.length; i++){
+						currentStatesList[i] = 'Normal';
+					}
+					var normalValueArray = this.getStyle(node, currentStatesList, name);
+/*FIXME: Old logic
 	                var normalValueArray = this.getStyle(node, undefined, name);
+*/
 	                if (normalValueArray) {
 		                for(var i=0; i<normalValueArray.length; i++){
 		                	if(normalValueArray[i][name]){
@@ -126,7 +133,14 @@ var veStates = declare(maqettaStates, {
 //FIXME: getState(node)
 	            var state = davinci.ve.states.getState();
 	            if (state) {
+					var currentStatesList = this.getStatesListCurrent(node);
+					for(var i=0; i<currentStatesList.length; i++){
+						currentStatesList[i] = 'Normal';
+					}
+					var normalValueArray = this.getStyle(node, currentStatesList, name);
+/*FIXME: Old logic
 	                var normalValueArray = this.getStyle(node, undefined, name);
+*/
 	                if (normalValueArray) {
 	                	// Remove all entries from valueArray that are in normalValueArray
 		                for(var i=0; i<normalValueArray.length; i++){
@@ -165,28 +179,27 @@ var veStates = declare(maqettaStates, {
 		var context = this.getContext();
 		return context && context.getDocument && context.getDocument();
 	},
-	_updateSrcState: function (node)
-	{
+	_updateSrcState: function (node){
 		var widget = (node && node._dvWidget);
-		var existingStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
-//FIXME: Temporary hack to only stuff in deltas attribute on subnodes, not BODY
-		if(node.tagName != 'BODY'){
-			if (widget && widget._srcElement) {
-				var str=this.serialize(node);
-				if (str.trim()) {
-					widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE,str);
-				} else {
-					widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
-				}
-				var newStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
-				if(existingStatesAttr !== newStatesAttr){
-					var editor = this.getEditor();
-					if(editor){
-						editor._visualChanged();	// Tell app that source view needs updating
-					}			
-				}
+//FIXME: Temporary hack to only stuff in deltas attribute on subnodes, and only stuff defs onto BODY
+		var statesAttrName = (node.tagName == 'BODY') ? davinci.states.DEFS_ATTRIBUTE : davinci.states.DELTAS_ATTRIBUTE;
+		var existingStatesAttr = widget._srcElement.getAttribute(statesAttrName);
+		if (widget && widget._srcElement) {
+			var str=this.serialize(node);
+			if (str.trim()) {
+				widget._srcElement.addAttribute(statesAttrName,str);
+			} else {
+				widget._srcElement.removeAttribute(statesAttrName);
+			}
+			var newStatesAttr = widget._srcElement.getAttribute(statesAttrName);
+			if(existingStatesAttr !== newStatesAttr){
+				var editor = this.getEditor();
+				if(editor){
+					editor._visualChanged();	// Tell app that source view needs updating
+				}			
 			}
 		}
+
 	},
 
 //FIXME: Why not use the one from AppStates.js?

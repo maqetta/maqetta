@@ -1360,6 +1360,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if (element.elementType=="HTMLElement") {
 				var stateSrc=element.getAttribute(davinci.ve.states.ATTRIBUTE);
 				if (stateSrc && stateSrc.length) {
+/*FIXME: Commenting this block out - doesn't seem to do anything
 					var id=element.getAttribute("id");
 					var widget;
 					if (id){
@@ -1368,9 +1369,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						if (element==rootWidget._srcElement){
 							widget=rootWidget;
 						}
-					}	
+					}
+*/
+/* This doesn't seem to do anything
 					var states = davinci.states.deserialize(stateSrc);
+*/
+/*
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
+*/
 					
 					/*
 					var state = davinci.ve.states.getState();
@@ -1663,7 +1669,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			var widget = Widget.getWidget(node);
 //FIXME: Need to generalize beyond just BODY
-			var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
+			var isBody = (node.tagName == 'BODY');
+			var states = davinci.states.deserialize(isBody ? cache[id] : cache[id].states, {isBody:isBody});
+//FIXME: Probably don't want to delete this here
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 			davinci.ve.states.store(widget.domNode, states);
 //FIXME: Need to generalize beyond just BODY

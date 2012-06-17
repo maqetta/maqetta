@@ -63,11 +63,22 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
+/*FIXME: This is what we want long-term
 				if(pn.states && pn.states.states){
+					
 					if(pn == statesContainerNode){
 						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
 					}else{
 						var current = pn.states.states.current;
+						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
+					}
+				}
+*/
+				if(pn.states){
+					if(pn == statesContainerNode){
+						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
+					}else{
+						var current = pn.states.current;
 						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
 					}
 				}
@@ -227,8 +238,9 @@ States.prototype = {
 			}
 		}
 		if (!_silent) {
+//FIXME: Reconcile node and statesContainerNode
 			connect.publish("/maqetta/appstates/state/changed", 
-					[{node:node, newState:newState, oldState:oldState}]);
+					[{node:node, newState:newState, oldState:oldState, statesContainerNode:node}]);
 		}
 		this._updateSrcState (node);
 		
@@ -261,6 +273,34 @@ States.prototype = {
 		}
 		return !state || state == this.NORMAL;
 	},
+
+	/**
+	 * Merges styleArray2's values into styleArray1. styleArray2 thus overrides styleArray1
+	 * @param {Array} styleArray1  List of CSS styles to apply to this node for the given "state".
+	 * 		This is an array of objects, where each object specifies a single propname:propvalue.
+	 * 		eg. [{'display':'none'},{'color':'red'}]
+	 * @param {Array} styleArray2
+	 */
+	_styleArrayMixin: function(styleArray1, styleArray2){
+		// Remove all entries in styleArray1 that matching entry in styleArray2
+		if(styleArray2){
+			for(var j=0; j<styleArray2.length; j++){
+				var item2 = styleArray2[j];
+				for(var prop2 in item2){
+					for(var i=styleArray1.length-1; i>=0; i--){
+						var item1 = styleArray1[i];
+						if(item1.hasOwnProperty(prop2)){
+							styleArray1.splice(i, 1);
+						}
+					}
+				}
+			}
+			// Add all entries from styleArray2 onto styleArray1
+			for(var k=0; k<styleArray2.length; k++){
+				styleArray1.push(styleArray2[k]);
+			}
+		}
+	},
 	
 	/**
 //FIXME OLD	 * Returns style values for the given node and the given application "state".
@@ -281,7 +321,7 @@ States.prototype = {
 	 *		For example, [{'display':'none'},{'color':'red'}]
 	 */
 	getStyle: function(node, statesList /*FIXME state */, name) {
-		var styleArray, newStyleArray = {};
+		var styleArray, newStyleArray = [];
 //FIXME: Make sure node and statesList are always sent to getStyle
 /*
 		node = this._getWidgetNode(node);
@@ -294,7 +334,7 @@ States.prototype = {
 			// return all styles specific to this state
 			styleArray = node && node.states && node.states[state] && node.states[state].style;
 			// states defines on deeper containers override states on ancestor containers
-			dojo.mixin(newStyleArray, styleArray); 
+			this._styleArrayMixin(newStyleArray, styleArray);
 			if (arguments.length > 2) {
 				// Remove any properties that don't match 'name'
 				if(newStyleArray){
@@ -361,8 +401,7 @@ States.prototype = {
 		}else{
 			return false;
 		}
-	},
-
+	},	
 	
 	/**
 	 * Update the CSS for the given node for the given application "state".
@@ -517,7 +556,7 @@ States.prototype = {
 		var statesList = [];
 		if(statesArray){
 			for(var i=0; i<statesArray.length; i++){
-				statesList.push(statesArray[propName]);
+				statesList.push(statesArray[i][propName]);
 			}
 		}
 		return statesList;
@@ -1038,7 +1077,7 @@ States.prototype = {
 					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.statesContainerNode);
 					davinci.states._update(child, statesArray);
 				}
-			});
+			}.bind(this));
 			
 			this.subscribed = true;
 		}

@@ -169,19 +169,22 @@ var veStates = declare(maqettaStates, {
 	{
 		var widget = (node && node._dvWidget);
 		var existingStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
-		if (widget && widget._srcElement) {
-			var str=this.serialize(node);
-			if (str.trim()) {
-				widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE,str);
-			} else {
-				widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
-			}
-			var newStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
-			if(existingStatesAttr !== newStatesAttr){
-				var editor = this.getEditor();
-				if(editor){
-					editor._visualChanged();	// Tell app that source view needs updating
-				}			
+//FIXME: Temporary hack to only stuff in deltas attribute on subnodes, not BODY
+		if(node.tagName != 'BODY'){
+			if (widget && widget._srcElement) {
+				var str=this.serialize(node);
+				if (str.trim()) {
+					widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE,str);
+				} else {
+					widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
+				}
+				var newStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
+				if(existingStatesAttr !== newStatesAttr){
+					var editor = this.getEditor();
+					if(editor){
+						editor._visualChanged();	// Tell app that source view needs updating
+					}			
+				}
 			}
 		}
 	},

@@ -1351,18 +1351,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	{
 		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
 		
-//FIXME: doesn't seem like states logic below does anything.
-return;
-		
-		/*
+/*FIXME: doesn't seem like states logic below does anything.
 		var currentStateCache = [];
-		*/
 		var rootWidget = containerNode._dvWidget;
 		rootWidget._srcElement.visit({ visit: function(element){
 			if (element.elementType=="HTMLElement") {
 				var stateSrc=element.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
 				if (stateSrc && stateSrc.length) {
-/*FIXME: Commenting this block out - doesn't seem to do anything
 					var id=element.getAttribute("id");
 					var widget;
 					if (id){
@@ -1372,24 +1367,18 @@ return;
 							widget=rootWidget;
 						}
 					}
-*/
-/* This doesn't seem to do anything
 					var states = davinci.states.deserialize(stateSrc);
-*/
 
-/*
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-*/
 					
-					/*
 					var state = davinci.ve.states.getState();
 					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
 						currentStateCache.push({ node: widget.domNode, state: state});
 					}
-					*/
 				}
 			}
 		}});
+*/
 		/*
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
@@ -1682,15 +1671,47 @@ return;
 //FIXME: Need to generalize beyond just BODY
 			var isBody = (node.tagName == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
+			var srcElement = widget._srcElement;
 			var states;
 			if(isBody){
 				states = davinci.states.deserialize(cache[id], {isBody:isBody});
+//FIXME: If files get migrated, should set dirty bit
+//FIXME: Logic doesn't completely deal with nesting yet.
+				// Migrate states attribute names in the model
+				var oldValue = srcElement.getAttribute(davinci.ve.states.DEFS_ATTRIBUTE);
+				if(oldValue != cache[id]){
+					srcElement.setAttribute(davinci.ve.states.DEFS_ATTRIBUTE, cache[id]);
+//FIXME set dirty bit here
+				}
+				// Remove any lingering old dvStates attribute from model
+				for(var i=0; i<davinci.ve.states.DEFS_ATTRIBUTE_OLD.length; i++){
+					if(srcElement.hasAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i])){
+						srcElement.removeAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i]);
+//FIXME set dirty bit here
+					}
+				}
 			}else{
 				states = davinci.states.deserialize(cache[id].deltas, {isBody:isBody});
+//FIXME: If files get migrated, should set dirty bit
+//FIXME: Logic doesn't completely deal with nesting yet.
+				// Migrate states attribute names in the model
+				var oldValue = srcElement.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
+				if(oldValue != cache[id].deltas){
+					srcElement.setAttribute(davinci.ve.states.DELTAS_ATTRIBUTE, cache[id].deltas);
+//FIXME set dirty bit here
+				}
+				// Remove any lingering old dvStates attribute from model
+				for(var i=0; i<davinci.ve.states.DELTAS_ATTRIBUTE_OLD.length; i++){
+					if(srcElement.hasAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_OLD[i])){
+						srcElement.removeAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_OLD[i]);
+//FIXME set dirty bit here
+					}
+				}
 			}
 //FIXME: Probably don't want to delete this here
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 			davinci.ve.states.store(widget.domNode, states);
+			
 //FIXME: Need to generalize beyond just BODY
 			if(node.tagName != 'BODY'){
 				davinci.states.transferElementStyle(node, cache[id].style);
@@ -2244,7 +2265,21 @@ return;
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
 
 //FIXME: Need to generalize beyond just BODY
-			var states = bodyElement.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
+			var states = bodyElement.getAttribute(davinci.ve.states.DEFS_ATTRIBUTE);
+			if(!states && davinci.ve.states.DEFS_ATTRIBUTE_OLD){
+				// Previous versions used different attribute name (ie, 'dvStates')
+				for(var i=0; i<davinci.ve.states.DEFS_ATTRIBUTE_OLD.length; i++){
+					states = bodyElement.getAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i]);
+					if(states){
+						bodyElement.setAttribute(davinci.ve.states.DEFS_ATTRIBUTE, states);
+						break;
+					}
+				}
+			}
+			for(var i=0; i<davinci.ve.states.DEFS_ATTRIBUTE_OLD.length; i++){
+				// Remove any lingering old dvStates attribute from model
+				bodyElement.removeAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i]);
+			}
 			data.states = states;
 		}
 		

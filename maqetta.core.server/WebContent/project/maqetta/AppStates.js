@@ -5,8 +5,10 @@ var States = function(){};
 States.prototype = {
 
 	NORMAL: "Normal",
-	DELTAS_ATTRIBUTE: "dvStates",
-	DEFS_ATTRIBUTE: "dvStates",
+	DELTAS_ATTRIBUTE: "data-maq-deltas",
+	DELTAS_ATTRIBUTE_OLD: ["dvStates"],	// Attribute names used in previous versions
+	DEFS_ATTRIBUTE: "data-maq-appstates",
+	DEFS_ATTRIBUTE_OLD: ["dvStates"],	// Attribute names used in previous versions
 
 	/**
 	 * Traverses all document nodes starting with rootnode, looking for
@@ -1042,8 +1044,26 @@ States.prototype = {
 		var states = node.getAttribute(this.DELTAS_ATTRIBUTE);
 		return states;
 */
-		var deltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE);
 		var defs_attribute = node.getAttribute(this.DEFS_ATTRIBUTE);
+		if(!defs_attribute){
+			// Previous versions used different attribute name (ie, 'dvStates')
+			for(var i=0; i<this.DEFS_ATTRIBUTE_OLD.length; i++){
+				defs_attribute = node.getAttribute(this.DEFS_ATTRIBUTE_OLD[i]);
+				if(defs_attribute){
+					break;
+				}
+			}
+		}
+		var deltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE);
+		if(!deltas_attribute){
+			// Previous versions used different attribute name (ie, 'dvStates')
+			for(var i=0; i<this.DELTAS_ATTRIBUTE_OLD.length; i++){
+				deltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE_OLD[i]);
+				if(deltas_attribute){
+					break;
+				}
+			}
+		}
 		return {defs:defs_attribute, deltas:deltas_attribute};
 	},
 

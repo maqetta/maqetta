@@ -206,7 +206,10 @@ States.prototype = {
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
+/*FIXME: old logic
 		return !!(node && node.states && node.states[state] && node.states[state].origin);
+*/
+		return !!(node && node.states && node.states.states && node.states.states.indexOf(state)>=0);
 	},
 
 	/**
@@ -799,8 +802,12 @@ States.prototype = {
 			return;
 		}
 		node.states = node.states || {};
+/*FIXME: old logic
 		node.states[state] = node.states[state] || {};
 		node.states[state].origin = true;
+*/
+		node.states.states = node.states.states || [];
+		node.states.states.push(state);
 		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},
@@ -816,18 +823,26 @@ States.prototype = {
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
-		if (!node || !this.hasState(node, state)) {
+		if (!node || !node.states || !node.states.states || !this.hasState(node, state)) {
 			return;
 		}
-		
+		var idx = node.states.states.indexOf(state);
+		if(idx < 0){
+			return;
+		}
 		var currentState = this.getState(node);
 		if (state == currentState) {
 			this.setState(node, undefined);
 		}
-		
+/*FIXME: old logic
 		delete node.states[state].origin;
 		if (this._isEmpty(node.states[state])) {
 			delete node.states[state];
+		}
+*/
+		node.states.states.splice(idx, 1);
+		if(node.states.states.length==0){
+			delete node.states;
 		}
 		connect.publish("/davinci/states/state/removed", [{node:node, state:state}]);
 		this._updateSrcState (node);

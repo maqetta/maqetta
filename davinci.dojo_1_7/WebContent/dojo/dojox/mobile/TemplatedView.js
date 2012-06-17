@@ -19,6 +19,10 @@ define([
 	template
 ){
 
+	// Can't inherit from one of the *View widgets in dojox.mobile and from
+	// _TemplateMixin -- they both assume full control of this.domNode and it
+	// just doesn't work.
+	// Instead, roll our own templating code.
 	return declare("dojox.mobile.TemplatedView", [SwapView], {
 
 		templateString: template,

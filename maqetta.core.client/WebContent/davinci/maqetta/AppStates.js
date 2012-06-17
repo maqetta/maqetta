@@ -1217,8 +1217,7 @@ var singleton = davinci.states = new States();
 					if(!doc.body._maqAlreadyPreserved){
 						var states = davinci.states.retrieve(doc.body);
 						if (states) {
-							debugger;
-							states = this._migrate_m6_m7(states, true /* isBody */);
+							states = singleton._migrate_m6_m7(states, true /* isBody */);
 							if(states){
 								cache.body = states;
 							}

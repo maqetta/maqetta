@@ -5,7 +5,8 @@ var States = function(){};
 States.prototype = {
 
 	NORMAL: "Normal",
-	ATTRIBUTE: "dvStates",
+	DELTA_ATTRIBUTE: "dvStates",
+	CONTAINER_ATTRIBUTE: "dvStates",
 
 	/**
 	 * Traverses all document nodes starting with rootnode, looking for
@@ -921,7 +922,7 @@ States.prototype = {
 	/**
 	 * Convert a string representation of widget-specific states information into a JavaScript object
 	 * using JSON.parse.
-	 * The string representation is typically the value of the this.ATTRIBUTE (dvStates)
+	 * The string representation is typically the value of the this.DELTA_ATTRIBUTE (dvStates)
 	 * @param states  string representation of widget-specific states information
 	 * @param {object} options  
 	 *    options.isBody {boolean}  whether we are deserializing BODY element
@@ -941,7 +942,7 @@ States.prototype = {
 	},
 	
 	/**
-	 * The format of the states attribute (this.ATTRIBUTE = 'dvStates') changed
+	 * The format of the states attribute (this.DELTA_ATTRIBUTE = 'dvStates') changed
 	 * from Preview4 to Preview5. This routine upgrades the states object in place
 	 * from Preview4 or earlier data structure into data structure used by Preview 5.
 	 * @param {object} states  "states" object that might be in Preview4 format
@@ -969,7 +970,7 @@ States.prototype = {
 	},
 	
 	/**
-	 * The format of the states attribute (this.ATTRIBUTE = 'dvStates') on the BODY changed
+	 * The format of the states attribute (this.DELTA_ATTRIBUTE = 'dvStates') on the BODY changed
 	 * from M6 to M7. This routine returns an M7-compatible states structure created
 	 * from an M6-compatible states structure.
 	 * @param {object} m6bodystates  "states" object that might be in M6 format
@@ -1036,7 +1037,7 @@ States.prototype = {
 		}
 		
 		// FIXME: Maybe this check between page editor and runtime should be factored out
-		var states = node.getAttribute(this.ATTRIBUTE);
+		var states = node.getAttribute(this.DELTA_ATTRIBUTE);
 		return states;
 	},
 
@@ -1226,7 +1227,7 @@ var singleton = davinci.states = new States();
 					}
 	
 					// Preserve states of children of body in the cache
-					//FIXME: why can't we just query for nodes that have this.ATTRIBUTE?
+					//FIXME: why can't we just query for nodes that have this.DELTA_ATTRIBUTE?
 					query("*", doc).forEach(function(node){
 						// Because Dojo parser gets called recursively (multiple times), 
 						// but preserveStates/restoreStates go through entire document,

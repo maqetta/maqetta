@@ -544,11 +544,14 @@ createWidget: function(widgetData) {
 		widget.setProperties(modelOnlyProps, true);
 	}
 
+//FIXME: Does data.states ever have a value? 
+//Maybe for copy/paste of widgets that have states data - need to try to exercise this code
 	if(data.states){
+		debugger;
 		widget.domNode.states = dojo.clone(data.states);
 		var states_json = davinci.states.serialize(widget.domNode);
 		if(states_json){
-			widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
+			widget._srcElement.addAttribute(davinci.states.DELTA_ATTRIBUTE, states_json);
 		}
 	}
 	

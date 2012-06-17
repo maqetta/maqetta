@@ -1358,7 +1358,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var rootWidget = containerNode._dvWidget;
 		rootWidget._srcElement.visit({ visit: function(element){
 			if (element.elementType=="HTMLElement") {
-				var stateSrc=element.getAttribute(davinci.ve.states.ATTRIBUTE);
+				var stateSrc=element.getAttribute(davinci.ve.states.DELTA_ATTRIBUTE);
 				if (stateSrc && stateSrc.length) {
 /*FIXME: Commenting this block out - doesn't seem to do anything
 					var id=element.getAttribute("id");
@@ -2227,7 +2227,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
 
 //FIXME: Need to generalize beyond just BODY
-			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
+			var states = bodyElement.getAttribute(davinci.ve.states.DELTA_ATTRIBUTE);
 			data.states = states;
 		}
 		

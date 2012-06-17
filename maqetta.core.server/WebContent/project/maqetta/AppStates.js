@@ -66,12 +66,12 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn.states && pn.states.states){
+				if(pn._maqstates && pn._maqstates.states){
 					
 					if(pn == statesContainerNode){
 						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
 					}else{
-						var current = pn.states.states.current;
+						var current = pn._maqstates.states.current;
 						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
 					}
 				}
@@ -95,6 +95,27 @@ States.prototype = {
 	},
 
 	/**
+	 * Returns the nearest ancestor node that defines the given state.
+	 * @param {Element} node  An element node in the document
+	 * @param {string} state  The name of a state
+	 * @returns {Element|undefined}  state container node (or undefined if not found)
+	 */ 
+	findStateContainer: function(node, state){
+		if(node){
+			var pn = node.parentNode;
+			while(pn){
+				if(pn._maqstates && pn._maqstates.states && (!state || state == this.NORMAL || pn._maqstates.states.indexOf(state)>=0)){
+					return pn;
+				}
+				if(pn.tagName == 'BODY'){
+					break;
+				}
+				pn = pn.parentNode;
+			}
+		}
+	},
+
+	/**
 	 * Returns the array of application states that are currently active on the given node.
 	 * If app states are only defined on BODY, then the return array will only have 1 item.
 	 * If nested app state containers, then the returned array will have multiple items,
@@ -108,8 +129,8 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn.states && pn.states.states){
-					statesList.splice(0, 0, pn.states.current);
+				if(pn._maqstates && pn._maqstates.states){
+					statesList.splice(0, 0, pn._maqstates.current);
 				}
 				if(pn.tagName == 'BODY'){
 					break;
@@ -130,7 +151,7 @@ States.prototype = {
 	 */ 
 	getStates: function(node, associative){
 		node = this._getWidgetNode(node); 
-		var states = node && node.states;
+		var states = node && node._maqstates;
 		if(states && states.states){
 			var names = associative ? {"Normal": "Normal"} : ["Normal"];
 			var statesList = states.states;
@@ -209,7 +230,7 @@ States.prototype = {
 /*FIXME: old logic
 		return !!(node && node.states && node.states[state] && node.states[state].origin);
 */
-		return !!(node && node.states && node.states.states && node.states.states.indexOf(state)>=0);
+		return !!(node && node._maqstates && node._maqstates.states && node._maqstates.states.indexOf(state)>=0);
 	},
 
 	/**
@@ -220,7 +241,7 @@ States.prototype = {
 	 */
 	getState: function(node){ 
 		node = this._getWidgetNode(node);
-		return node && node.states && node.states.current;
+		return node && node._maqstates && node._maqstates.current;
 	},
 	
 	/**
@@ -247,21 +268,21 @@ States.prototype = {
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
-		if (!node || !node.states || (!updateWhenCurrent && node.states.current == newState)) {
+		if (!node || !node._maqstates || (!updateWhenCurrent && node._maqstates.current == newState)) {
 			return;
 		}
-		var oldState = node.states.current;
+		var oldState = node._maqstates.current;
 		
 		if (this.isNormalState(newState)) {
-			if (!node.states.current) { return; }
-			delete node.states.current;
+			if (!node._maqstates.current) { return; }
+			delete node._maqstates.current;
 			newState = undefined;
 		} else {
 			//FIXME: For time being, only the BODY holds states.current.
 			if(node.tagName == 'BODY'){
-				node.states.current = newState;
+				node._maqstates.current = newState;
 			}else{
-				delete node.states.current;
+				delete node._maqstates.current;
 			}
 		}
 		if (!_silent) {
@@ -359,7 +380,7 @@ States.prototype = {
 		for(var i=0; i<statesList.length; i++){
 			var state = statesList[i];
 			// return all styles specific to this state
-			styleArray = node && node.states && node.states[state] && node.states[state].style;
+			styleArray = node && node._maqstates && node._maqstates[state] && node._maqstates[state].style;
 			// states defines on deeper containers override states on ancestor containers
 			this._styleArrayMixin(newStyleArray, styleArray);
 			if (arguments.length > 2) {
@@ -418,8 +439,8 @@ States.prototype = {
 
 		if (!node || !name) { return; }
 		
-		if(node.states && node.states[state] && node.states[state].style){
-			var valueArray = node.states[state].style;
+		if(node._maqstates && node._maqstates[state] && node._maqstates[state].style){
+			var valueArray = node._maqstates[state].style;
 			for(var i=0; i<valueArray[i]; i++){
 				if(valueArray[i].hasProperty(name)){
 					return true;
@@ -447,12 +468,12 @@ States.prototype = {
 
 		if (!node || !styleArray) { return; }
 		
-		node.states = node.states || {};
-		node.states[state] = node.states[state] || {};
-		node.states[state].style = node.states[state].style || [];
+		node._maqstates = node._maqstates || {};
+		node._maqstates[state] = node._maqstates[state] || {};
+		node._maqstates[state].style = node._maqstates[state].style || [];
 		
 		// Remove existing entries that match any of entries in styleArray
-		var oldArray = node.states[state].style;
+		var oldArray = node._maqstates[state].style;
 		if(styleArray){
 			for (var i=0; i<styleArray.length; i++){
 				var newItem = styleArray[i];
@@ -487,13 +508,13 @@ States.prototype = {
 			}
 		}
 		if(oldArray && newArray){
-			node.states[state].style = oldArray.concat(newArray);
+			node._maqstates[state].style = oldArray.concat(newArray);
 		}else if(oldArray){
-			node.states[state].style = oldArray;
+			node._maqstates[state].style = oldArray;
 		}else if(newArray){
-			node.states[state].style = newArray;
+			node._maqstates[state].style = newArray;
 		}else{
-			node.states[state].style = undefined;
+			node._maqstates[state].style = undefined;
 		}
 			
 		if (!silent) {
@@ -685,7 +706,7 @@ States.prototype = {
 	 */
 	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {
 		node = this._getWidgetNode(node);
-		if (!node || !node.states){
+		if (!node || !node._maqstates){
 			return;
 		}
 
@@ -801,13 +822,13 @@ States.prototype = {
 			//FIXME: This should probably be an error of some sort
 			return;
 		}
-		node.states = node.states || {};
+		node._maqstates = node._maqstates || {};
 /*FIXME: old logic
 		node.states[state] = node.states[state] || {};
 		node.states[state].origin = true;
 */
-		node.states.states = node.states.states || [];
-		node.states.states.push(state);
+		node._maqstates.states = node._maqstates.states || [];
+		node._maqstates.states.push(state);
 		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},
@@ -823,10 +844,10 @@ States.prototype = {
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
-		if (!node || !node.states || !node.states.states || !this.hasState(node, state)) {
+		if (!node || !node._maqstates || !node._maqstates.states || !this.hasState(node, state)) {
 			return;
 		}
-		var idx = node.states.states.indexOf(state);
+		var idx = node._maqstates.states.indexOf(state);
 		if(idx < 0){
 			return;
 		}
@@ -840,9 +861,9 @@ States.prototype = {
 			delete node.states[state];
 		}
 */
-		node.states.states.splice(idx, 1);
-		if(node.states.states.length==0){
-			delete node.states;
+		node._maqstates.states.splice(idx, 1);
+		if(node._maqstates.states.length==0){
+			delete node._maqstates;
 		}
 		connect.publish("/davinci/states/state/removed", [{node:node, state:state}]);
 		this._updateSrcState (node);
@@ -862,8 +883,8 @@ States.prototype = {
 		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
 			return false;
 		}
-		node.states[newName] = node.states[oldName];
-		delete node.states[oldName];
+		node._maqstates[newName] = node._maqstates[oldName];
+		delete node._maqstates[oldName];
 		if (!property) {
 			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
 		}
@@ -889,8 +910,8 @@ States.prototype = {
 		if(isNormalState){
 			return node.style.display != "none";
 		}else{
-			if(node.states && node.states[state] && node.states[state].style && typeof node.states[state].style.display == "string"){
-				return node.states[state].style.display != "none";
+			if(node._maqstates && node._maqstates[state] && node._maqstates[state].style && typeof node._maqstates[state].style.display == "string"){
+				return node._maqstates[state].style.display != "none";
 			}else{
 				return node.style.display != "none";
 			}
@@ -920,8 +941,8 @@ States.prototype = {
 			return;
 		}
 		var value = "";
-		if (node.states) {
-			var states = require("dojo/_base/lang").clone(node.states);
+		if (node._maqstates) {
+			var states = require("dojo/_base/lang").clone(node._maqstates);
 			delete states["undefined"];
 			if (!this._isEmpty(states)) {
 				value = JSON.stringify(states);
@@ -1039,7 +1060,7 @@ States.prototype = {
 		this.clear(node);
 		//FIXME: Shouldn't be stuffing a property with such a generic name ("states") onto DOM elements
 		var isBody = (node.tagName == 'BODY');
-		node.states = states = this.deserialize(states, {isBody:isBody});
+		node._maqstates = states = this.deserialize(states, {isBody:isBody});
 		connect.publish("/davinci/states/stored", [{node:node, states:states}]);
 	},
 	
@@ -1087,9 +1108,9 @@ States.prototype = {
 	 * @param {Element} node  
 	 */
 	clear: function(node) {
-		if (!node || !node.states) return;
-		var states = node.states;
-		delete node.states;
+		if (!node || !node._maqstates) return;
+		var states = node._maqstates;
+		delete node._maqstates;
 		connect.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
@@ -1118,14 +1139,14 @@ States.prototype = {
 	},
 
 	/**
-	 * Store original element.style values into node.states['undefined'].style
+	 * Store original element.style values into node._maqstates['undefined'].style
 	 * Called by _preserveStates
 	 * @param node  
 	 * @param {String} elemStyle  element.style string
 	 */
 	transferElementStyle: function(node, elemStyle) {
 		if(node){
-			var states = node.states;
+			var states = node._maqstates;
 			var valueArray = this._parseStyleValues(elemStyle);
 			if(!states['undefined']){
 				states['undefined'] = {};

@@ -27,7 +27,7 @@ var veStates = declare(maqettaStates, {
 	 */
 	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {		
 		node = this._getWidgetNode(node);
-		if (!node || !node._dvWidget || !node.states){
+		if (!node || !node._dvWidget || !node._maqstates){
 			return;
 		}
 		var widget = node._dvWidget;
@@ -228,8 +228,8 @@ var veStates = declare(maqettaStates, {
 	
 	// Remove all references to given "state" from given node
 	_removeStateFromNode: function(node, state){
-		if(node && node.states && node.states[state]){
-			delete node.states[state];
+		if(node && node._maqstates && node._maqstates[state]){
+			delete node._maqstates[state];
 			this._updateSrcState(node);
 		}
 	},
@@ -248,10 +248,10 @@ var veStates = declare(maqettaStates, {
 			// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
 			// Assume that is being done by higher-level software.
 			if(node.tagName !== 'BODY'){
-				if(node && node.states){
-					for(var state in node.states){
+				if(node && node._maqstates){
+					for(var state in node._maqstates){
 						if(state !== 'undefined' && activeStates.indexOf(state) < 0){
-							delete node.states[state];
+							delete node._maqstates[state];
 							this._updateSrcState(node);
 						}
 					}

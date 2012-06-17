@@ -548,7 +548,7 @@ createWidget: function(widgetData) {
 //Maybe for copy/paste of widgets that have states data - need to try to exercise this code
 	if(data.states){
 		debugger;
-		widget.domNode.states = dojo.clone(data.states);
+		widget.domNode._maqstates = dojo.clone(data.states);
 		var states_json = davinci.states.serialize(widget.domNode);
 		if(states_json){
 			widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, states_json);

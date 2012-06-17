@@ -356,9 +356,15 @@ var veStates = declare(maqettaStates, {
 			
 			connect.subscribe("/davinci/states/state/style/changed", dojo.hitch(this, function(e) { 
 //FIXME: getState(node)
+//FIXME: what's the difference between e.state and containerState?
 				var containerState = this.getState();
 				if (containerState == e.state) {
-					this._update(e.node, e.state, containerState);		
+					var stateContainerNode = this.findStateContainer(e.node, e.state);
+					var statesArray = this.getStatesArray(e.node, e.state, e.state, stateContainerNode);
+					this._update(e.node, statesArray);
+/*FIXME: old logic
+					this._update(e.node, e.state, containerState);
+*/
 				}
 			}));
 			
@@ -366,7 +372,12 @@ var veStates = declare(maqettaStates, {
 //FIXME: getState(node)
 				var containerState = this.getState();
 				if (containerState) {
+					var stateContainerNode = this.findStateContainer(newWidget.domNode, containerState);
+					var statesArray = this.getStatesArray(e.node, containerState, containerState, stateContainerNode);
+					this._update(newWidget.domNode, statesArray);
+/*FIXME: old logic
 					this._update(newWidget.domNode, containerState, undefined);		
+*/
 				}
 			}));
 			

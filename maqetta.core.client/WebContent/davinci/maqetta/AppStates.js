@@ -95,6 +95,27 @@ States.prototype = {
 	},
 
 	/**
+	 * Returns the nearest ancestor node that defines the given state.
+	 * @param {Element} node  An element node in the document
+	 * @param {string} state  The name of a state
+	 * @returns {Element|undefined}  state container node (or undefined if not found)
+	 */ 
+	findStateContainer: function(node, state){
+		if(node){
+			var pn = node.parentNode;
+			while(pn){
+				if(pn.states && pn.states.states && (!state || state == this.NORMAL || pn.states.states.indexOf(state)>=0)){
+					return pn;
+				}
+				if(pn.tagName == 'BODY'){
+					break;
+				}
+				pn = pn.parentNode;
+			}
+		}
+	},
+
+	/**
 	 * Returns the array of application states that are currently active on the given node.
 	 * If app states are only defined on BODY, then the return array will only have 1 item.
 	 * If nested app state containers, then the returned array will have multiple items,

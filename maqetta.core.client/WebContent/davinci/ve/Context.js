@@ -1240,8 +1240,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			});
 		};
 		collapse(containerNode);
-
-//FIXME: is states every anything except any empty object?
 		this._loadFileStatesCache = states;
 		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
@@ -1352,13 +1350,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_attachChildren: function (containerNode)
 	{
 		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
+		
+//FIXME: doesn't seem like states logic below does anything.
+return;
+		
 		/*
 		var currentStateCache = [];
 		*/
 		var rootWidget = containerNode._dvWidget;
 		rootWidget._srcElement.visit({ visit: function(element){
 			if (element.elementType=="HTMLElement") {
-				var stateSrc=element.getAttribute(davinci.ve.states.DELTA_ATTRIBUTE);
+				var stateSrc=element.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
 				if (stateSrc && stateSrc.length) {
 /*FIXME: Commenting this block out - doesn't seem to do anything
 					var id=element.getAttribute("id");
@@ -1374,6 +1376,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 /* This doesn't seem to do anything
 					var states = davinci.states.deserialize(stateSrc);
 */
+
 /*
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 */
@@ -1621,14 +1624,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
-		var states = davinci.ve.states.retrieve(node);
+		var statesAttributes = davinci.ve.states.retrieve(node);
 //FIXME: Need to generalize this to any states container
-		if (node.tagName != "BODY" && states) {
+		if (node.tagName != "BODY" && (statesAttributes.defs || statesAttributes.deltas)) {
 			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
 			node.className = node.className + ' ' + tempClass;
 			this.maqTempClassCount++;
 			cache[tempClass] = {};
+			if(statesAttributes.defs){
+				cache[tempClass].defs = statesAttributes.defs;
+			}
+			if(statesAttributes.deltas){
+				cache[tempClass].deltas = statesAttributes.deltas;
+			}
+/*FIXME: OLD LOGIC
 			cache[tempClass].states = states;
+*/
 			if(node.style){
 				cache[tempClass].style = node.style.cssText;
 			}else{
@@ -1670,7 +1681,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var widget = Widget.getWidget(node);
 //FIXME: Need to generalize beyond just BODY
 			var isBody = (node.tagName == 'BODY');
-			var states = davinci.states.deserialize(isBody ? cache[id] : cache[id].states, {isBody:isBody});
+//FIXME: Temporary - doesn't yet take into account nested state containers
+			var states;
+			if(isBody){
+				states = davinci.states.deserialize(cache[id], {isBody:isBody});
+			}else{
+				states = davinci.states.deserialize(cache[id].deltas, {isBody:isBody});
+			}
 //FIXME: Probably don't want to delete this here
 			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 			davinci.ve.states.store(widget.domNode, states);
@@ -2227,7 +2244,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
 
 //FIXME: Need to generalize beyond just BODY
-			var states = bodyElement.getAttribute(davinci.ve.states.DELTA_ATTRIBUTE);
+			var states = bodyElement.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
 			data.states = states;
 		}
 		

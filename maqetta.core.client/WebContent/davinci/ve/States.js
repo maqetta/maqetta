@@ -168,15 +168,15 @@ var veStates = declare(maqettaStates, {
 	_updateSrcState: function (node)
 	{
 		var widget = (node && node._dvWidget);
-		var existingStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTA_ATTRIBUTE);
+		var existingStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 		if (widget && widget._srcElement) {
 			var str=this.serialize(node);
 			if (str.trim()) {
-				widget._srcElement.addAttribute(davinci.states.DELTA_ATTRIBUTE,str);
+				widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE,str);
 			} else {
-				widget._srcElement.removeAttribute(davinci.states.DELTA_ATTRIBUTE);
+				widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
 			}
-			var newStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTA_ATTRIBUTE);
+			var newStatesAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 			if(existingStatesAttr !== newStatesAttr){
 				var editor = this.getEditor();
 				if(editor){

@@ -551,7 +551,7 @@ createWidget: function(widgetData) {
 		widget.domNode.states = dojo.clone(data.states);
 		var states_json = davinci.states.serialize(widget.domNode);
 		if(states_json){
-			widget._srcElement.addAttribute(davinci.states.DELTA_ATTRIBUTE, states_json);
+			widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, states_json);
 		}
 	}
 	

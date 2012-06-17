@@ -5,8 +5,8 @@ var States = function(){};
 States.prototype = {
 
 	NORMAL: "Normal",
-	DELTA_ATTRIBUTE: "dvStates",
-	CONTAINER_ATTRIBUTE: "dvStates",
+	DELTAS_ATTRIBUTE: "dvStates",
+	DEFS_ATTRIBUTE: "dvStates",
 
 	/**
 	 * Traverses all document nodes starting with rootnode, looking for
@@ -922,7 +922,7 @@ States.prototype = {
 	/**
 	 * Convert a string representation of widget-specific states information into a JavaScript object
 	 * using JSON.parse.
-	 * The string representation is typically the value of the this.DELTA_ATTRIBUTE (dvStates)
+	 * The string representation is typically the value of this.DELTAS_ATTRIBUTE (dvStates)
 	 * @param states  string representation of widget-specific states information
 	 * @param {object} options  
 	 *    options.isBody {boolean}  whether we are deserializing BODY element
@@ -942,7 +942,7 @@ States.prototype = {
 	},
 	
 	/**
-	 * The format of the states attribute (this.DELTA_ATTRIBUTE = 'dvStates') changed
+	 * The format of the states attribute (this.DELTAS_ATTRIBUTE = 'dvStates') changed
 	 * from Preview4 to Preview5. This routine upgrades the states object in place
 	 * from Preview4 or earlier data structure into data structure used by Preview 5.
 	 * @param {object} states  "states" object that might be in Preview4 format
@@ -970,7 +970,7 @@ States.prototype = {
 	},
 	
 	/**
-	 * The format of the states attribute (this.DELTA_ATTRIBUTE = 'dvStates') on the BODY changed
+	 * The format of the states attribute (this.DELTAS_ATTRIBUTE = 'dvStates') on the BODY changed
 	 * from M6 to M7. This routine returns an M7-compatible states structure created
 	 * from an M6-compatible states structure.
 	 * @param {object} m6bodystates  "states" object that might be in M6 format
@@ -1029,16 +1029,22 @@ States.prototype = {
 	/**
 	 * Returns the string value of the attribute that holds node-specific states information (dvStates)
 	 * @param {Element} node  
-	 * @returns {string}  String value for the attribute, or unspecified|null if no such widget or attribute
+//FIXME: OLD	 * @returns {string}  String value for the attribute, or unspecified|null if no such widget or attribute
+	 * @returns {object}  Object with two props, defs:{string|null} and deltas:{string|null},
+	 *                    which hold DELTAS and DEFS attribute values, respectively
 	 */
 	retrieve: function(node) {
 		if (!node){
 			return;
 		}
-		
+/*FIXME: OLD LOGIC
 		// FIXME: Maybe this check between page editor and runtime should be factored out
-		var states = node.getAttribute(this.DELTA_ATTRIBUTE);
+		var states = node.getAttribute(this.DELTAS_ATTRIBUTE);
 		return states;
+*/
+		var deltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE);
+		var defs_attribute = node.getAttribute(this.DEFS_ATTRIBUTE);
+		return {defs:defs_attribute, deltas:deltas_attribute};
 	},
 
 	/**
@@ -1216,37 +1222,32 @@ var singleton = davinci.states = new States();
 	
 					// Preserve the body states directly on the dom node
 					if(!doc.body._maqAlreadyPreserved){
-						var states = davinci.states.retrieve(doc.body);
-						if (states) {
-							states = singleton._migrate_m6_m7(states, true /* isBody */);
-							if(states){
-								cache.body = states;
-							}
+						var statesAttributes = davinci.states.retrieve(doc.body);
+						if (statesAttributes && statesAttributes.defs) {
+							cache.body = statesAttributes.defs;
 						}
 						doc.body._maqAlreadyPreserved = true;
 					}
 	
 					// Preserve states of children of body in the cache
-					//FIXME: why can't we just query for nodes that have this.DELTA_ATTRIBUTE?
+					//FIXME: why can't we just query for nodes that have this.DELTAS_ATTRIBUTE?
 					query("*", doc).forEach(function(node){
 						// Because Dojo parser gets called recursively (multiple times), 
 						// but preserveStates/restoreStates go through entire document,
 						// make sure the current node hasn't already been preserved
 						if(!node._maqAlreadyPreserved){
 							node._maqAlreadyPreserved = true;
-							var states = singleton.retrieve(node);
-							if (states) {
-								if (node.tagName != "BODY") {
-									var tempClass = prefix+count;
-									node.className = node.className + ' ' + tempClass;
-									count++;
-									cache[tempClass] = {states: states};
-									if(node.style){
-										cache[tempClass].style = node.style.cssText;
-									}else{
-										// Shouldn't be here
-										console.error('States.js _preserveStates. No value for node.style.')
-									}
+							var statesAttributes = singleton.retrieve(node);
+							if (node.tagName != "BODY" && statesAttributes && statesAttributes.deltas) {
+								var tempClass = prefix+count;
+								node.className = node.className + ' ' + tempClass;
+								count++;
+								cache[tempClass] = {deltas: statesAttributes.deltas};
+								if(node.style){
+									cache[tempClass].style = node.style.cssText;
+								}else{
+									// Shouldn't be here
+									console.error('States.js _preserveStates. No value for node.style.')
 								}
 							}
 						}
@@ -1270,10 +1271,15 @@ var singleton = davinci.states = new States();
 							
 						}
 						if(node){
-							// BODY node has app states directly on node.states. All others have it on node.states.style.
-//FIXME: This is changing
 							var isBody = (node.tagName == 'BODY');
-							var states = singleton.deserialize(isBody ? cache[id] : cache[id].states, {isBody:isBody});
+//FIXME: Temporary - doesn't yet take into account nested state containers
+							var states;
+							if(isBody){
+								states = singleton.deserialize(cache[id], {isBody:isBody});
+							}else{
+								states = singleton.deserialize(cache[id].deltas, {isBody:isBody});
+							}
+							
 							delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 							singleton.store(node, states);
 							if(node.tagName != 'BODY'){

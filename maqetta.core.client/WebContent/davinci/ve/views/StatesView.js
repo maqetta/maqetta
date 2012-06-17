@@ -567,7 +567,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var bodyNode = context ? context.rootNode : null;
 			if (item && item.type && item.type[0] == 'AppState') {
 				if (this.isThemeEditor()){
-					this.publish("/maqetta/appstates/state/changed", 
+					this.publish("/davinci/states/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:'$all', 
 							newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
 					this._themeState = item.name[0];

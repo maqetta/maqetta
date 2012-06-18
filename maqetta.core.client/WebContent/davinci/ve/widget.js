@@ -546,12 +546,20 @@ createWidget: function(widgetData) {
 
 //FIXME: Does data.states ever have a value? 
 //Maybe for copy/paste of widgets that have states data - need to try to exercise this code
-	if(data.states){
+	if(data.maqstates || data.maqdeltas){
 		debugger;
-		widget.domNode._maqstates = dojo.clone(data.states);
-		var states_json = davinci.states.serialize(widget.domNode);
-		if(states_json){
-			widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, states_json);
+		if(data.maqstates){
+			widget.domNode._maqstates = dojo.clone(data.maqstates);
+		}
+		if(data.maqdeltas){
+			widget.domNode._maqdeltas = dojo.clone(data.maqdeltas);
+		}
+		var obj = davinci.states.serialize(widget.domNode);
+		if(obj.defs){	// if node has a _maqstates property
+			widget._srcElement.addAttribute(davinci.states.DEFS_ATTRIBUTE, obj.defs);
+		}
+		if(obj.deltas){	// if node has a _maqdeltas property
+			widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.deltas);
 		}
 	}
 	

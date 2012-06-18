@@ -452,7 +452,8 @@ return declare("davinci.ve._Widget", null, {
 			data = this._getData( options);
 		}
 
-		data.states=dojo.clone(this.domNode._maqstates);
+		data.maqstates=dojo.clone(this.domNode._maqstates);
+		data.maqdeltas=dojo.clone(this.domNode._maqdeltas);
 		if(!data.properties)
 			data.properties = {};
 
@@ -578,7 +579,7 @@ return declare("davinci.ve._Widget", null, {
 		//FIXME: Normal states shouldn't accidentally become 'undefined'
 		var normalStyleArray = this.getStyleValues();
 		var styleValuesAllStates = {'undefined':normalStyleArray};
-		var states = this.domNode._maqstates;
+		var states = this.domNode._maqdeltas;
 		if(states){
 			for(var state in states){
 				if(states[state].style){
@@ -676,7 +677,7 @@ return declare("davinci.ve._Widget", null, {
 	 * {'undefined':[{'color':'red},{'font-size':'12px'}],'State1':[{'font-size':'20px'}]}
 	 */
 	setStyleValuesAllStates: function(styleValuesAllStates){
-		this.domNode._maqstates = undefined;
+		this.domNode._maqdeltas = undefined;
 		if(styleValuesAllStates){
 			for(var state in styleValuesAllStates){
 				var styleArray = styleValuesAllStates[state];

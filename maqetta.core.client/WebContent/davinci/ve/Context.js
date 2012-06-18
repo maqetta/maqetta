@@ -1156,7 +1156,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//className: data.className,
 			
 			bodyClasses: data.bodyClasses,
-			states: data.states,
+//FIXME: Research setHeader - doesn't seem to use states info
+/*
+			maqstates: data.maqstates,
+			maqdeltas: data.maqdeltas,
+*/
 			style: data.style
 		});
 
@@ -1171,9 +1175,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		    containerNode = this.getContainerNode();
 
 //FIXME: Do we need to put states onto all state containers?
-//Is this code ever activated?
-		if (data.states) {
-			states.body = data.states;
+		if (data.maqstates) {
+			states.body = data.maqstates;
 		}
 		dojo.forEach(this.getTopWidgets(), function(w){
 			if(w.getContext()){
@@ -1648,6 +1651,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		/*
 		var currentStateCache = [];
 		*/
+		var maqstates, maqdeltas;
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
@@ -1672,9 +1676,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var isBody = (node.tagName == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
 			var srcElement = widget._srcElement;
-			var states;
+			maqstates = maqdeltas = null;
 			if(isBody){
-				states = davinci.states.deserialize(cache[id], {isBody:isBody});
+				maqstates = davinci.states.deserialize(cache[id], {isBody:isBody});
 //FIXME: If files get migrated, should set dirty bit
 //FIXME: Logic doesn't completely deal with nesting yet.
 				// Migrate states attribute names in the model
@@ -1684,14 +1688,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 //FIXME set dirty bit here
 				}
 				// Remove any lingering old dvStates attribute from model
-				for(var i=0; i<davinci.ve.states.DEFS_ATTRIBUTE_OLD.length; i++){
-					if(srcElement.hasAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i])){
-						srcElement.removeAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i]);
+				if(srcElement.hasAttribute(davinci.ve.states.DEFS_ATTRIBUTE_P6)){
+					srcElement.removeAttribute(davinci.ve.states.DEFS_ATTRIBUTE_P6);
 //FIXME set dirty bit here
-					}
 				}
 			}else{
-				states = davinci.states.deserialize(cache[id].deltas, {isBody:isBody});
+				maqdeltas = davinci.states.deserialize(cache[id].deltas, {isBody:isBody});
 //FIXME: If files get migrated, should set dirty bit
 //FIXME: Logic doesn't completely deal with nesting yet.
 				// Migrate states attribute names in the model
@@ -1701,16 +1703,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 //FIXME set dirty bit here
 				}
 				// Remove any lingering old dvStates attribute from model
-				for(var i=0; i<davinci.ve.states.DELTAS_ATTRIBUTE_OLD.length; i++){
-					if(srcElement.hasAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_OLD[i])){
-						srcElement.removeAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_OLD[i]);
+				if(srcElement.hasAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6)){
+					srcElement.removeAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6);
 //FIXME set dirty bit here
-					}
 				}
 			}
 //FIXME: Probably don't want to delete this here
-			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-			davinci.ve.states.store(widget.domNode, states);
+			if(maqstates){
+				delete maqstates.current; // FIXME: Always start in normal state for now, fix in 0.7
+			}
+			davinci.ve.states.store(widget.domNode, maqstates, maqdeltas);
 			
 //FIXME: Need to generalize beyond just BODY
 			if(node.tagName != 'BODY'){
@@ -2266,21 +2268,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 //FIXME: Need to generalize beyond just BODY
 			var states = bodyElement.getAttribute(davinci.ve.states.DEFS_ATTRIBUTE);
-			if(!states && davinci.ve.states.DEFS_ATTRIBUTE_OLD){
+			if(!states){
 				// Previous versions used different attribute name (ie, 'dvStates')
-				for(var i=0; i<davinci.ve.states.DEFS_ATTRIBUTE_OLD.length; i++){
-					states = bodyElement.getAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i]);
-					if(states){
-						bodyElement.setAttribute(davinci.ve.states.DEFS_ATTRIBUTE, states);
-						break;
-					}
+				states = bodyElement.getAttribute(davinci.ve.states.DEFS_ATTRIBUTE_P6);
+				if(states){
+					bodyElement.setAttribute(davinci.ve.states.DEFS_ATTRIBUTE, states);
 				}
 			}
-			for(var i=0; i<davinci.ve.states.DEFS_ATTRIBUTE_OLD.length; i++){
-				// Remove any lingering old dvStates attribute from model
-				bodyElement.removeAttribute(davinci.ve.states.DEFS_ATTRIBUTE_OLD[i]);
-			}
-			data.states = states;
+			// Remove any lingering old dvStates attribute from model
+			bodyElement.removeAttribute(davinci.ve.states.DEFS_ATTRIBUTE_P6);
+			data.maqstates = states;
 		}
 		
 		var titleElement=head.getChildElement("title");

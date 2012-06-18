@@ -27,7 +27,7 @@ var veStates = declare(maqettaStates, {
 	 */
 	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {		
 		node = this._getWidgetNode(node);
-		if (!node || !node._dvWidget || !node._maqstates){
+		if (!node || !node._dvWidget || (!node._maqstates && node._maqdeltas)){
 			return;
 		}
 		var widget = node._dvWidget;
@@ -54,6 +54,7 @@ var veStates = declare(maqettaStates, {
 		var body = node.ownerDocument.body;
 		var currentState = this.getState(body);
 		if(!this.isNormalState(currentState)){
+//FIXME: Is this really necessary? Shouldn't we be calling setState only on state containers?
 			this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);
 		}		
 	},
@@ -181,18 +182,29 @@ var veStates = declare(maqettaStates, {
 	},
 	_updateSrcState: function (node){
 		var widget = (node && node._dvWidget);
-//FIXME: Temporary hack to only stuff in deltas attribute on subnodes, and only stuff defs onto BODY
-		var statesAttrName = (node.tagName == 'BODY') ? davinci.states.DEFS_ATTRIBUTE : davinci.states.DELTAS_ATTRIBUTE;
-		var existingStatesAttr = widget._srcElement.getAttribute(statesAttrName);
+		var existingDefsAttr = widget._srcElement.getAttribute(davinci.states.DEFS_ATTRIBUTE);
+		var existingDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 		if (widget && widget._srcElement) {
-			var str=this.serialize(node);
-			if (str.trim()) {
-				widget._srcElement.addAttribute(statesAttrName,str);
-			} else {
-				widget._srcElement.removeAttribute(statesAttrName);
+			var obj=this.serialize(node);
+			if(obj.defs){	// _maqstates properties was present
+				obj.defs.trim();
+				if(obj.defs){
+					widget._srcElement.addAttribute(davinci.states.DEFS_ATTRIBUTE, obj.defs);
+				}else{
+					widget._srcElement.removeAttribute(davinci.states.DEFS_ATTRIBUTE);
+				}
 			}
-			var newStatesAttr = widget._srcElement.getAttribute(statesAttrName);
-			if(existingStatesAttr !== newStatesAttr){
+			if(obj.deltas){	// _maqdeltas properties was present
+				obj.deltas.trim();
+				if(obj.deltas){
+					widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.deltas);
+				}else{
+					widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
+				}
+			}
+			var newDefsAttr = widget._srcElement.getAttribute(davinci.states.DEFS_ATTRIBUTE);
+			var newDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
+			if(existingDefsAttr !== newDefsAttr || existingDeltasAttr !== newDeltasAttr){
 				var editor = this.getEditor();
 				if(editor){
 					editor._visualChanged();	// Tell app that source view needs updating
@@ -228,8 +240,8 @@ var veStates = declare(maqettaStates, {
 	
 	// Remove all references to given "state" from given node
 	_removeStateFromNode: function(node, state){
-		if(node && node._maqstates && node._maqstates[state]){
-			delete node._maqstates[state];
+		if(node && node._maqdeltas && node._maqdeltas[state]){
+			delete node._maqdeltas[state];
 			this._updateSrcState(node);
 		}
 	},
@@ -248,10 +260,10 @@ var veStates = declare(maqettaStates, {
 			// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
 			// Assume that is being done by higher-level software.
 			if(node.tagName !== 'BODY'){
-				if(node && node._maqstates){
-					for(var state in node._maqstates){
+				if(node && node._maqdeltas){
+					for(var state in node._maqdeltas){
 						if(state !== 'undefined' && activeStates.indexOf(state) < 0){
-							delete node._maqstates[state];
+							delete node._maqdeltas[state];
 							this._updateSrcState(node);
 						}
 					}

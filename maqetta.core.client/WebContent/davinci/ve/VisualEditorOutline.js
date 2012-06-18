@@ -251,6 +251,198 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		}
 	});
 
+var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null, {
+	useRichTextLabel: true,
+	toggleMode: true,
+	betweenThreshold: 4,
+	
+	_context: null,
+
+	constructor: function(context) {
+		this._context = context;
+		this._handles = [];
+
+		this._connect("activate", "_rebuild");
+		this._connect("setSource", "_rebuild");
+		this._connect("widgetChanged", "_widgetChanged");
+	},
+
+	getRoot: function(onItem, onError) {
+		onItem(this._context.rootWidget || {id: "myapp", label:"application"});
+	},
+
+	getLabel: function(item) {
+		if (item.id == "myapp") {
+			return this._context.model.fileName;
+		}
+
+		if (item.isWidget) {
+			label = Widget.getLabel(item);
+			return label;
+		}
+
+		var type = item.type;
+
+		if (!type) {
+			return;
+		}
+		
+		var lt = this.useRichTextLabel ? "&lt;" : "<";
+		var gt = this.useRichTextLabel ? "&gt;" : ">";
+
+		if (type.indexOf("html.") === 0) {
+			label = lt + type.substring("html.".length) + gt;
+		} else if (type.indexOf("OpenAjax.") === 0) {
+			label = lt + type.substring("OpenAjax.".length) + gt;
+		} else if (type.indexOf(".") > 0 ) {
+			label = type.substring(type.lastIndexOf(".")+1);
+		} else {
+			label = item.label || type;
+		}
+		
+		var widget = Widget.byId(item.id, this._context.getDocument());
+		if (widget) {
+			var id = widget.getId();
+			if (id ) {
+				label += " id=" + id;
+			}
+		}
+		return label;
+	},
+
+	_getChildren: function(item) {
+		var widgets, children=[];
+
+		if (!this._context.rootWidget || item.type == "state" || item.type == 'html.stickynote' || item.type == 'html.richtext') {
+			return [];
+		}
+
+		if (item.id == "myapp") {
+			widgets = this._context.getTopWidgets();
+		} else if (item === this._context.rootNode) {
+			widgets = this._context.getTopWidgets();
+		} else {
+			widgets = item.getChildren();
+		}
+
+		dojo.forEach(widgets, function(widget) {
+			if (widget.getContext && widget.getContext() && !widget.internal) {
+				// managed widget only
+				children.push(widget);
+			}
+		});
+
+		return children;
+	},
+	
+	mayHaveChildren: function(item) {
+		if (item && item.type && item.type.indexOf("OpenAjax.") === 0) {
+			return false;
+		}
+
+		return this._getChildren(item).length > 0;
+	},
+
+	getIdentity: function(item){
+		return item.id;
+	},
+
+	getChildren: function(item, onComplete, onError) {
+		onComplete(this._getChildren(item));
+	},
+
+	put: function(item, options) {
+		var parent = item.getParent();
+
+		this.onChildrenChange(parent, this._getChildren(parent));
+
+		return this.getIdentity(item);
+	},
+
+	add: function(item, options) {
+		(options = options || {}).overwrite = false;
+		return this.put(item, options);
+	},
+
+	remove: function(item) {
+		this.onDelete(item);
+	},
+
+	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
+	},
+
+	_rebuild: function() {
+		if (this._skipRefresh) { return; }
+
+		var node = this._context.rootNode;
+
+		if (node) {	// shouldn't be necessary, but sometime is null
+			this.onChildrenChange(node, this._getChildren(node));
+		}
+	},
+
+	_widgetChanged: function(type, widget) {
+		if (type === this._context.WIDGET_ADDED) {
+			this.add(widget);
+		} else if (type === this._context.WIDGET_REMOVED) {
+			this.remove(widget);
+		} else if (type === this._context.WIDGET_MODIFIED) {
+			this.onChange(widget);
+		}
+	},
+
+	// toggle code
+	toggle: function(widget, on, node) {
+		var helper = widget.getHelper();
+		var continueProcessing = true;
+		if(helper && helper.onToggleVisibility){
+			//FIXME: Make sure that helper functions deals properly with CommandStack and undo
+			continueProcessing = helper.onToggleVisibility(widget, on);
+		}
+		if(continueProcessing){
+			this._toggle(widget, on, node);
+			return true;
+		}else{
+			return false;
+		}
+	},
+	
+	_toggle: function(widget, on, node) {
+		var visible = !on;
+		var value = visible ? "" : "none";
+		var command = new StyleCommand(widget, [{"display": value}], 'current');
+		this._context.getCommandStack().execute(command);
+	},
+
+	shouldShowElement: function(elementId, item) {
+		if (elementId == "toggleNode") {
+			return (item.type != "states" && item.id != "myapp");
+		}
+		return true;
+	},
+
+	_getToggledItemsAttr: function(){
+		var items = [];
+		for(var i in this.toggledItems){
+			items.push(i);
+		}
+		return items; // dojo.data.Item[]
+	},
+
+	isToggleOn: function(item) {
+		return !states.isVisible(item.domNode);
+	},
+	// end toggle code
+
+	_connect: function(contextFunction, thisFunction) {
+		this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
+	},
+
+	destroy: function(){
+		this._handles.forEach(connect.disconnect);
+	}
+});
+
 return declare("davinci.ve.VisualEditorOutline", null, {
 
 	toolbarID: "davinci.ve.outline",
@@ -264,9 +456,9 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		this._connect("onSelectionChange", "onSelectionChange");
 		this._connect("deselect", "deselect"); 
 		
-		
-		this._widgetModel=new OutlineTreeModel(this._context);
+		this._widgetModel=new DesignOutlineTreeModel(this._context);
 		this._srcModel=new HTMLOutlineModel(editor.model);
+
 		connect.subscribe("/davinci/states/state/changed", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&

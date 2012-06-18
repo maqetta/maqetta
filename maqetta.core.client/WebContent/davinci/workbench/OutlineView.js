@@ -59,9 +59,15 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 		if (this.outlineTree) {
 			this.removeContent();
 		}
+                       
+		if (this.outlineProvider && this.outlineProvider.getModel) {
+			this.outlineModel = this.outlineProvider.getModel(this.currentEditor);
+		}
+
+		var iconFunction = this.outlineProvider.getIconClass && dojo.hitch(this.outlineProvider,this.outlineProvider.getIconClass);
 
 		// create tree
-		this.outlineTree = new OutlineTree({context: this.currentEditor.getContext()});
+		this.outlineTree = new OutlineTree({context: this.currentEditor.getContext(), model: this.outlineModel, getIconClass: iconFunction});
 
 		// BEGIN TEMPORARY HACK for bug 5277: Surround tree with content pane and subcontainer div overflow: auto set to workaround spurious dnd events.
 		// Workaround should be removed after the following dojo bug is fixed: http://bugs.dojotoolkit.org/ticket/10585

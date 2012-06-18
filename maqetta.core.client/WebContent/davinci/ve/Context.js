@@ -71,8 +71,11 @@ define([
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
 var MOBILE_DEV_ATTR = 'data-maq-device',
+	MOBILE_DEV_ATTR_P6 = 'data-maqetta-device',
+	MOBILE_ORIENT_ATTR = 'data-maq-orientation',
+	MOBILE_ORIENT_ATTR_P6 = 'data-maqetta-device-orientation',
 	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
-	MOBILE_ORIENT_ATTR = 'data-maq-device-orientation';
+	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout';
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -504,7 +507,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
-        return bodyElement.getAttribute(MOBILE_DEV_ATTR);
+        var attvalue = bodyElement.getAttribute(MOBILE_DEV_ATTR);
+        var attvalueP6 = bodyElement.getAttribute(MOBILE_DEV_ATTR_P6);
+		if(!attvalue && attvalueP6){
+			// Migrate from old attribute name (data-maqetta-device) to new attribute name (data-maq-device)
+			bodyElement.removeAttribute(MOBILE_DEV_ATTR_P6);
+			bodyElement.setAttribute(MOBILE_DEV_ATTR, attvalueP6);
+			attvalue = attvalueP6;
+			this.editor._visualChanged();
+		}
+        return attvalue;
     },
 
     /**
@@ -553,7 +565,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
   	*/
 	getMobileOrientation: function() {
 		var bodyElement = this.getDocumentElement().getChildElement("body");
-		return bodyElement.getAttribute(MOBILE_ORIENT_ATTR);
+		var attvalue = bodyElement.getAttribute(MOBILE_ORIENT_ATTR);
+        var attvalueP6 = bodyElement.getAttribute(MOBILE_ORIENT_ATTR_P6);
+		if(!attvalue && attvalueP6){
+			// Migrate from old attribute name (data-maqetta-orientation) to new attribute name (data-maq-orientation)
+			bodyElement.removeAttribute(MOBILE_ORIENT_ATTR_P6);
+			bodyElement.setAttribute(MOBILE_ORIENT_ATTR, attvalueP6);
+			attvalue = attvalueP6;
+			this.editor._visualChanged();
+		}
+        return attvalue;
 	},
 
 	/**
@@ -2066,7 +2087,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getFlowLayout: function() {
 		var htmlElement = this.getDocumentElement(),
 			bodyElement = htmlElement.getChildElement("body"),
-			flowLayout = bodyElement.getAttribute(PREF_LAYOUT_ATTR);
+			flowLayout = bodyElement.getAttribute(PREF_LAYOUT_ATTR),
+			flowLayoutP6 = bodyElement.getAttribute(PREF_LAYOUT_ATTR_P6);
+		if(!flowLayout && flowLayoutP6){
+			// Migrate from old attribute name (data-maqetta-flow-layout) to new attribute name (data-maq-flow-layout)
+			bodyElement.removeAttribute(PREF_LAYOUT_ATTR_P6);
+			bodyElement.setAttribute(PREF_LAYOUT_ATTR, flowLayoutP6);
+			flowLayout = flowLayoutP6;
+			this.editor._visualChanged();
+		}
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
 			//var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 			//flowLayout = editorPrefs.flowLayout;

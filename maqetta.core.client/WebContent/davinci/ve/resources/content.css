@@ -175,14 +175,10 @@ TABLE.HtmlWidget {
 TD.HtmlWidget {
 	outline: 1px dotted #AAA;
 	outline-color:rgba(128,128,128,0.4);
-	width: 1em;
-	height: 1em;
 }
 TH.HtmlWidget {
 	outline: 1px dotted #AAA;
 	outline-color:rgba(128,128,128,0.4);
-	width: 1em;
-	height: 1em;
 }
 AUDIO.HtmlWidget {
 	min-width:1em;

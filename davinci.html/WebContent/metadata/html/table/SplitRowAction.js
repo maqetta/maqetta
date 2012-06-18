@@ -34,7 +34,7 @@ return declare(_TableAction, {
 		var rs = matrix.getRowSpan(sel);
 
 		var command = new CompoundCommand();
-		var data = {type: "html.td"};
+		var data = this._createTableCellData();
 		if(cs > 1){
 			data.properties = {colspan: cs};
 		}

@@ -70,7 +70,7 @@ return declare(_TableAction, {
 				// skip rows covered by this cell
 				r += (matrix.getRowSpan(cell) - 1); 
 			}else{
-				var data = {type: "html.td", context: context};
+				var data = this._createTableCellData(context);
 				var parent = Widget.byNode(rows[r]);
 				var colIndex = c;
 				if (this._insertAfter) {

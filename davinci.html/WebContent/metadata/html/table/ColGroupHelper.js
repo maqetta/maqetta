@@ -16,7 +16,7 @@ return declare(null, {
 					span = span + matrix.getSpan(col);
 				}.bind(this));
 			}
-			return matrix.getMarginBoxPageCoordsForCells(0, span);
+			return matrix.getMarginBoxPageCoordsForColumns(0, span);
 		} else {
 			console.error("ColGroupHelper called with invalid widget type = " + widget.type);
 			return null;

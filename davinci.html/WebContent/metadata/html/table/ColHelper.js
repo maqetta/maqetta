@@ -10,7 +10,7 @@ return declare(null, {
 			var matrix = new TableMatrix(node);		
 			var colIndex = matrix.getAdjustedColIndex(node);
 			var span = matrix.getSpan(node);
-			return matrix.getMarginBoxPageCoordsForCells(colIndex, span);
+			return matrix.getMarginBoxPageCoordsForColumns(colIndex, span);
 		} else {
 			console.error("ColHelper called with invalid widget type = " + widget.type);
 			return null;

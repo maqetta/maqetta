@@ -52,7 +52,8 @@
 		},
 		"colspan": {
 			"datatype": "number",
-			"description": "Specifies the number of columns a cell should span."
+			"description": "Specifies the number of columns a cell should span.",
+			"hidden": true
 		},
 		"headers": {
 			"datatype": "string",
@@ -80,7 +81,8 @@
 		},
 		"rowspan": {
 			"datatype": "number",
-			"description": "Specifies the number of rows a cell should span."
+			"description": "Specifies the number of rows a cell should span.",
+			"hidden": true
 		},
 		"scope": {
 			"datatype": "string",

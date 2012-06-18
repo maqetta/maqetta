@@ -5,6 +5,7 @@ define([
 
 return declare(null, {
 
+	tbody: null, //the <tbody>
 	colgroup: null, // the <colgroup>
 	cols: null, // array of cols (<col>)
 	rows: null, // array of rows (<tr>)
@@ -29,6 +30,7 @@ return declare(null, {
 				if (name == "colgroup") {
 					this.colgroup = node;
 				} else if(name == "tbody"){
+					this.tbody = node;
 					node = node.firstChild;
 					continue;
 				}else if(name == "tr"){
@@ -164,27 +166,27 @@ return declare(null, {
 		return returnVal;
 	},
 	
-	getMarginBoxPageCoordsForCells: function(colIndex, span) {
+	getMarginBoxPageCoordsForColumns: function(colIndex, span) {
 		var rows = this.rows;
 		var cells = this.cells;
 		
 		var returnBox = null;
 		for (var spanCount = 0; spanCount < span; spanCount++) {
 			var startingWidth = returnBox ? returnBox.w : 0;
-			var colHeight = 0;
 			for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
 				var cell = cells[rowIndex][colIndex + spanCount];
 				var cellBox = GeomUtils.getMarginBoxPageCoords(cell);
 				if (returnBox) {
 					returnBox.w = Math.max(returnBox.w, startingWidth + cellBox.w);
-					colHeight = colHeight + cellBox.h;
 				} else {
 					//Initialize
 					returnBox = cellBox;
-					colHeight = cellBox.h;
 				}
 			}
-			returnBox.h = Math.max(returnBox.h, colHeight);
+			//Use tbody as for the height of the column
+			var tbodyBox = GeomUtils.getMarginBoxPageCoords(this.tbody);
+			returnBox.h = tbodyBox.h;
+			returnBox.t = tbodyBox.t;
 		}
 
 		return returnBox;

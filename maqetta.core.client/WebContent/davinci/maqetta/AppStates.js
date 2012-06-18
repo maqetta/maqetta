@@ -936,8 +936,9 @@ States.prototype = {
 	/**
 	 * Convert the _maqAppStates and _maqDeltas properties on the given node into JSON-encoded strings.
 	 * @param {Element} node
-	 * @returns {object}  Object of form {defs:<string>,deltas:<string>} where both defs and deltas
-	 *                    are included in object only if respective property is on the node
+	 * @returns {object}  Object of form {maqAppStates:<string>,maqDeltas:<string>} 
+	 *                    where both maqAppStates and maqDeltas are included in object 
+	 *                    only if respective property is on the node
 	 */
 	serialize: function(node) {
 		var that = this;
@@ -962,13 +963,13 @@ States.prototype = {
 		if (!node){
 			return obj;
 		}
-		var defs = munge('_maqAppStates');
-		var deltas = munge('_maqDeltas');
-		if(defs){
-			obj.defs = defs;
+		var maqAppStates = munge('_maqAppStates');
+		if(maqAppStates){
+			obj.maqAppStates = maqAppStates;
 		}
-		if(deltas){
-			obj.deltas = deltas;
+		var maqDeltas = munge('_maqDeltas');
+		if(maqDeltas){
+			obj.maqDeltas = maqDeltas;
 		}
 		return obj;
 	},

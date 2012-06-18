@@ -555,11 +555,11 @@ createWidget: function(widgetData) {
 			widget.domNode._maqDeltas = dojo.clone(data.maqDeltas);
 		}
 		var obj = davinci.states.serialize(widget.domNode);
-		if(obj.defs){	// if node has a _maqAppStates property
-			widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.defs);
+		if(obj.maqAppStates){	// if node has a _maqAppStates property
+			widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.maqAppStates);
 		}
-		if(obj.deltas){	// if node has a _maqDeltas property
-			widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.deltas);
+		if(obj.maqDeltas){	// if node has a _maqDeltas property
+			widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.maqDeltas);
 		}
 	}
 	

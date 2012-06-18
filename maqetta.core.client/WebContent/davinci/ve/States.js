@@ -186,18 +186,18 @@ var veStates = declare(maqettaStates, {
 		var existingDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 		if (widget && widget._srcElement) {
 			var obj=this.serialize(node);
-			if(obj.defs){	// _maqAppStates properties was present
-				obj.defs.trim();
-				if(obj.defs){
-					widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.defs);
+			if(obj.maqAppStates){	// _maqAppStates properties was present
+				obj.maqAppStates.trim();
+				if(obj.maqAppStates){
+					widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.maqAppStates);
 				}else{
 					widget._srcElement.removeAttribute(davinci.states.APPSTATES_ATTRIBUTE);
 				}
 			}
-			if(obj.deltas){	// _maqDeltas properties was present
-				obj.deltas.trim();
-				if(obj.deltas){
-					widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.deltas);
+			if(obj.maqDeltas){	// _maqDeltas properties was present
+				obj.maqDeltas.trim();
+				if(obj.maqDeltas){
+					widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.maqDeltas);
 				}else{
 					widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
 				}

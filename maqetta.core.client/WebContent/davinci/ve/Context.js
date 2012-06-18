@@ -1698,6 +1698,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 //FIXME: Temporary - doesn't yet take into account nested state containers
 			var srcElement = widget._srcElement;
 			maqAppStates = maqDeltas = null;
+			var visualChanged = false;
 			if(isBody){
 				maqAppStates = davinci.states.deserialize(cache[id], {isBody:isBody});
 //FIXME: If files get migrated, should set dirty bit
@@ -1706,12 +1707,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var oldValue = srcElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE);
 				if(oldValue != cache[id]){
 					srcElement.setAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE, cache[id]);
-//FIXME set dirty bit here
+					visualChanged = true;
 				}
 				// Remove any lingering old dvStates attribute from model
 				if(srcElement.hasAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6)){
 					srcElement.removeAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
-//FIXME set dirty bit here
+					visualChanged = true;
 				}
 			}else{
 				maqDeltas = davinci.states.deserialize(cache[id].deltas, {isBody:isBody});
@@ -1721,13 +1722,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var oldValue = srcElement.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
 				if(oldValue != cache[id].deltas){
 					srcElement.setAttribute(davinci.ve.states.DELTAS_ATTRIBUTE, cache[id].deltas);
-//FIXME set dirty bit here
+					visualChanged = true;
 				}
 				// Remove any lingering old dvStates attribute from model
 				if(srcElement.hasAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6)){
 					srcElement.removeAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6);
-//FIXME set dirty bit here
+					visualChanged = true;
 				}
+			}
+			if(visualChanged){
+				this.editor._visualChanged();
 			}
 //FIXME: Probably don't want to delete this here
 			if(maqAppStates){

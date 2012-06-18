@@ -51,12 +51,12 @@ var veStates = declare(maqettaStates, {
 */
 		this._refresh(widget);
 //FIXME: Generalize beyond BODY?
-		var body = node.ownerDocument.body;
-		var currentState = this.getState(body);
-		if(!this.isNormalState(currentState)){
+		//var body = node.ownerDocument.body;
+		//var currentState = this.getState(body);
+		//if(!this.isNormalState(currentState)){
 //FIXME: Is this really necessary? Shouldn't we be calling setState only on state containers?
-			this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);
-		}		
+			//this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);
+		//}		
 	},
 	
 	_refresh: function(widget){

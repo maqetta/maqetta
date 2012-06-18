@@ -1761,10 +1761,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Remove any application states information that are defined on particular widgets
 		// for all states that aren't in the master list of application states.
 		// (This is to clean up after bugs found in older releases)
-//FIXME: Need to generalize beyond just BODY
-		var body = this.getContainerNode();
-		var activeStates = davinci.ve.states.getStates(body);
-		davinci.ve.states.removeUnusedStates(this, activeStates);
+		davinci.ve.states.removeUnusedStates(this);
 	},
 
 	getDocument: function(){

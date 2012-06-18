@@ -25,8 +25,10 @@ var veStates = declare(maqettaStates, {
 	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
-	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {		
+	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {
+/*FIXME: delete this	
 		node = this._getWidgetNode(node);
+*/
 		if (!node || !node._dvWidget || (!node._maqAppStates && node._maqDeltas)){
 			return;
 		}
@@ -214,6 +216,7 @@ var veStates = declare(maqettaStates, {
 
 	},
 
+/*FIXME: Delete this code
 //FIXME: Why not use the one from AppStates.js?
 	_getWidgetNode: function(node) {
 		if (!node) {
@@ -222,6 +225,7 @@ var veStates = declare(maqettaStates, {
 		}
 		return node;
 	},
+*/
 	
 //FIXME: Need to deal with recursive state containers
 	// Application "state" has been removed from the document
@@ -246,23 +250,21 @@ var veStates = declare(maqettaStates, {
 		}
 	},
 
-//FIXME: Need to deal with recursive state containers	
 	// Remove any application states information that are defined on particular widgets
 	// for all states that aren't in the master list of application states.
 	// (This is to clean up after bugs found in older releases)
-	removeUnusedStates: function(context, activeStates){
-		if(!context || !activeStates){
+	removeUnusedStates: function(context){
+		if(!context){
 			return;
 		}
 		var allWidgets = context.getAllWidgets();
 		for(var i=0; i<allWidgets.length; i++){
 			var node = allWidgets[i].domNode;
-			// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
-			// Assume that is being done by higher-level software.
 			if(node.tagName !== 'BODY'){
 				if(node && node._maqDeltas){
+					var allStatesForNode = this.getAllStatesForNode(node);
 					for(var state in node._maqDeltas){
-						if(state !== 'undefined' && activeStates.indexOf(state) < 0){
+						if(state !== 'undefined' && allStatesForNode.indexOf(state) < 0){
 							delete node._maqDeltas[state];
 							this._updateSrcState(node);
 						}

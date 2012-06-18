@@ -116,6 +116,34 @@ States.prototype = {
 	},
 
 	/**
+	 * Returns a flat list of all states that apply to the given node.
+	 * @param {Element} node  An element node in the document
+	 * @returns {[string]}  An array of strings, one item for each state that 
+	 *       that is defined by a parent state container.
+	 *       Note that there might be duplicate names.
+	 *       "Normal" is only added once even if there are multiple
+	 *       state containers.
+	 */ 
+	getAllStatesForNode: function(node){
+		var statesList = [this.NORMAL];
+		if(node){
+			var pn = node.parentNode;
+			while(pn){
+				if(pn._maqAppStates && pn._maqAppStates.states){
+					for(var i=0; i<pn._maqAppStates.states.length; i++){
+						statesList.push(pn._maqAppStates.states[i]);
+					}
+				}
+				if(pn.tagName == 'BODY'){
+					break;
+				}
+				pn = pn.parentNode;
+			}
+		}
+		return statesList;
+	},
+
+	/**
 	 * Returns the array of application states that are currently active on the given node.
 	 * If app states are only defined on BODY, then the return array will only have 1 item.
 	 * If nested app state containers, then the returned array will have multiple items,

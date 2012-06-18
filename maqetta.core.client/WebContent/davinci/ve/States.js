@@ -27,7 +27,7 @@ var veStates = declare(maqettaStates, {
 	 */
 	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {		
 		node = this._getWidgetNode(node);
-		if (!node || !node._dvWidget || (!node._maqstates && node._maqdeltas)){
+		if (!node || !node._dvWidget || (!node._maqAppStates && node._maqDeltas)){
 			return;
 		}
 		var widget = node._dvWidget;
@@ -182,19 +182,19 @@ var veStates = declare(maqettaStates, {
 	},
 	_updateSrcState: function (node){
 		var widget = (node && node._dvWidget);
-		var existingDefsAttr = widget._srcElement.getAttribute(davinci.states.DEFS_ATTRIBUTE);
+		var existingDefsAttr = widget._srcElement.getAttribute(davinci.states.APPSTATES_ATTRIBUTE);
 		var existingDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 		if (widget && widget._srcElement) {
 			var obj=this.serialize(node);
-			if(obj.defs){	// _maqstates properties was present
+			if(obj.defs){	// _maqAppStates properties was present
 				obj.defs.trim();
 				if(obj.defs){
-					widget._srcElement.addAttribute(davinci.states.DEFS_ATTRIBUTE, obj.defs);
+					widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.defs);
 				}else{
-					widget._srcElement.removeAttribute(davinci.states.DEFS_ATTRIBUTE);
+					widget._srcElement.removeAttribute(davinci.states.APPSTATES_ATTRIBUTE);
 				}
 			}
-			if(obj.deltas){	// _maqdeltas properties was present
+			if(obj.deltas){	// _maqDeltas properties was present
 				obj.deltas.trim();
 				if(obj.deltas){
 					widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.deltas);
@@ -202,7 +202,7 @@ var veStates = declare(maqettaStates, {
 					widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
 				}
 			}
-			var newDefsAttr = widget._srcElement.getAttribute(davinci.states.DEFS_ATTRIBUTE);
+			var newDefsAttr = widget._srcElement.getAttribute(davinci.states.APPSTATES_ATTRIBUTE);
 			var newDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 			if(existingDefsAttr !== newDefsAttr || existingDeltasAttr !== newDeltasAttr){
 				var editor = this.getEditor();
@@ -240,8 +240,8 @@ var veStates = declare(maqettaStates, {
 	
 	// Remove all references to given "state" from given node
 	_removeStateFromNode: function(node, state){
-		if(node && node._maqdeltas && node._maqdeltas[state]){
-			delete node._maqdeltas[state];
+		if(node && node._maqDeltas && node._maqDeltas[state]){
+			delete node._maqDeltas[state];
 			this._updateSrcState(node);
 		}
 	},
@@ -260,10 +260,10 @@ var veStates = declare(maqettaStates, {
 			// Special-case BODY - it holds the master list of states. Don't try to clean up its list.
 			// Assume that is being done by higher-level software.
 			if(node.tagName !== 'BODY'){
-				if(node && node._maqdeltas){
-					for(var state in node._maqdeltas){
+				if(node && node._maqDeltas){
+					for(var state in node._maqDeltas){
 						if(state !== 'undefined' && activeStates.indexOf(state) < 0){
-							delete node._maqdeltas[state];
+							delete node._maqDeltas[state];
 							this._updateSrcState(node);
 						}
 					}

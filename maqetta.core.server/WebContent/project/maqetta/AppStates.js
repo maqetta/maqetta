@@ -7,8 +7,8 @@ States.prototype = {
 	NORMAL: "Normal",
 	DELTAS_ATTRIBUTE: "data-maq-deltas",
 	DELTAS_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
-	DEFS_ATTRIBUTE: "data-maq-appstates",
-	DEFS_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
+	APPSTATES_ATTRIBUTE: "data-maq-appstates",
+	APPSTATES_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
 
 	/**
 	 * Traverses all document nodes starting with rootnode, looking for
@@ -66,12 +66,12 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn._maqstates && pn._maqstates.states){
+				if(pn._maqAppStates && pn._maqAppStates.states){
 					
 					if(pn == statesContainerNode){
 						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
 					}else{
-						var current = pn._maqstates.states.current;
+						var current = pn._maqAppStates.states.current;
 						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
 					}
 				}
@@ -104,7 +104,7 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn._maqstates && pn._maqstates.states && (!state || state == this.NORMAL || pn._maqstates.states.indexOf(state)>=0)){
+				if(pn._maqAppStates && pn._maqAppStates.states && (!state || state == this.NORMAL || pn._maqAppStates.states.indexOf(state)>=0)){
 					return pn;
 				}
 				if(pn.tagName == 'BODY'){
@@ -129,8 +129,8 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn._maqstates && pn._maqstates.states){
-					statesList.splice(0, 0, pn._maqstates.current);
+				if(pn._maqAppStates && pn._maqAppStates.states){
+					statesList.splice(0, 0, pn._maqAppStates.current);
 				}
 				if(pn.tagName == 'BODY'){
 					break;
@@ -151,7 +151,7 @@ States.prototype = {
 	 */ 
 	getStates: function(node, associative){
 		node = this._getWidgetNode(node); 
-		var states = node && node._maqstates;
+		var states = node && node._maqAppStates;
 		if(states && states.states){
 			var names = associative ? {"Normal": "Normal"} : ["Normal"];
 			var statesList = states.states;
@@ -230,7 +230,7 @@ States.prototype = {
 /*FIXME: old logic
 		return !!(node && node.states && node.states[state] && node.states[state].origin);
 */
-		return !!(node && node._maqstates && node._maqstates.states && node._maqstates.states.indexOf(state)>=0);
+		return !!(node && node._maqAppStates && node._maqAppStates.states && node._maqAppStates.states.indexOf(state)>=0);
 	},
 
 	/**
@@ -241,7 +241,7 @@ States.prototype = {
 	 */
 	getState: function(node){ 
 		node = this._getWidgetNode(node);
-		return node && node._maqstates && node._maqstates.current;
+		return node && node._maqAppStates && node._maqAppStates.current;
 	},
 	
 	/**
@@ -268,22 +268,22 @@ States.prototype = {
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
-		if (!node || !node._maqstates || (!updateWhenCurrent && node._maqstates.current == newState)) {
+		if (!node || !node._maqAppStates || (!updateWhenCurrent && node._maqAppStates.current == newState)) {
 			return;
 		}
-		var oldState = node._maqstates.current;
+		var oldState = node._maqAppStates.current;
 		
 		if (this.isNormalState(newState)) {
-			if (!node._maqstates.current) { return; }
-			delete node._maqstates.current;
+			if (!node._maqAppStates.current) { return; }
+			delete node._maqAppStates.current;
 			newState = undefined;
 		} else {
 //FIXME: For time being, only the BODY holds states.current.
 			if(node.tagName == 'BODY'){
-				node._maqstates.current = newState;
+				node._maqAppStates.current = newState;
 			}else{
-				if(node._maqstates){
-					delete node._maqstates.current;
+				if(node._maqAppStates){
+					delete node._maqAppStates.current;
 				}
 			}
 		}
@@ -382,7 +382,7 @@ States.prototype = {
 		for(var i=0; i<statesList.length; i++){
 			var state = statesList[i];
 			// return all styles specific to this state
-			styleArray = node && node._maqdeltas && node._maqdeltas[state] && node._maqdeltas[state].style;
+			styleArray = node && node._maqDeltas && node._maqDeltas[state] && node._maqDeltas[state].style;
 			// states defines on deeper containers override states on ancestor containers
 			this._styleArrayMixin(newStyleArray, styleArray);
 			if (arguments.length > 2) {
@@ -441,8 +441,8 @@ States.prototype = {
 
 		if (!node || !name) { return; }
 		
-		if(node._maqdeltas && node._maqdeltas[state] && node._maqdeltas[state].style){
-			var valueArray = node._maqdeltas[state].style;
+		if(node._maqDeltas && node._maqDeltas[state] && node._maqDeltas[state].style){
+			var valueArray = node._maqDeltas[state].style;
 			for(var i=0; i<valueArray[i]; i++){
 				if(valueArray[i].hasProperty(name)){
 					return true;
@@ -470,12 +470,12 @@ States.prototype = {
 
 		if (!node || !styleArray) { return; }
 		
-		node._maqdeltas = node._maqdeltas || {};
-		node._maqdeltas[state] = node._maqdeltas[state] || {};
-		node._maqdeltas[state].style = node._maqdeltas[state].style || [];
+		node._maqDeltas = node._maqDeltas || {};
+		node._maqDeltas[state] = node._maqDeltas[state] || {};
+		node._maqDeltas[state].style = node._maqDeltas[state].style || [];
 		
 		// Remove existing entries that match any of entries in styleArray
-		var oldArray = node._maqdeltas[state].style;
+		var oldArray = node._maqDeltas[state].style;
 		if(styleArray){
 			for (var i=0; i<styleArray.length; i++){
 				var newItem = styleArray[i];
@@ -510,13 +510,13 @@ States.prototype = {
 			}
 		}
 		if(oldArray && newArray){
-			node._maqdeltas[state].style = oldArray.concat(newArray);
+			node._maqDeltas[state].style = oldArray.concat(newArray);
 		}else if(oldArray){
-			node._maqdeltas[state].style = oldArray;
+			node._maqDeltas[state].style = oldArray;
 		}else if(newArray){
-			node._maqdeltas[state].style = newArray;
+			node._maqDeltas[state].style = newArray;
 		}else{
-			node._maqdeltas[state].style = undefined;
+			node._maqDeltas[state].style = undefined;
 		}
 			
 		if (!silent) {
@@ -708,7 +708,7 @@ States.prototype = {
 	 */
 	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {
 		node = this._getWidgetNode(node);
-		if (!node || !node._maqdeltas){
+		if (!node || !node._maqDeltas){
 			return;
 		}
 
@@ -824,13 +824,13 @@ States.prototype = {
 			//FIXME: This should probably be an error of some sort
 			return;
 		}
-		node._maqstates = node._maqstates || {};
+		node._maqAppStates = node._maqAppStates || {};
 /*FIXME: old logic
 		node.states[state] = node.states[state] || {};
 		node.states[state].origin = true;
 */
-		node._maqstates.states = node._maqstates.states || [];
-		node._maqstates.states.push(state);
+		node._maqAppStates.states = node._maqAppStates.states || [];
+		node._maqAppStates.states.push(state);
 		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},
@@ -846,10 +846,10 @@ States.prototype = {
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
-		if (!node || !node._maqstates || !node._maqstates.states || !this.hasState(node, state)) {
+		if (!node || !node._maqAppStates || !node._maqAppStates.states || !this.hasState(node, state)) {
 			return;
 		}
-		var idx = node._maqstates.states.indexOf(state);
+		var idx = node._maqAppStates.states.indexOf(state);
 		if(idx < 0){
 			return;
 		}
@@ -863,9 +863,9 @@ States.prototype = {
 			delete node.states[state];
 		}
 */
-		node._maqstates.states.splice(idx, 1);
-		if(node._maqstates.states.length==0){
-			delete node._maqstates;
+		node._maqAppStates.states.splice(idx, 1);
+		if(node._maqAppStates.states.length==0){
+			delete node._maqAppStates;
 		}
 		connect.publish("/davinci/states/state/removed", [{node:node, state:state}]);
 		this._updateSrcState (node);
@@ -885,8 +885,8 @@ States.prototype = {
 		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
 			return false;
 		}
-		node._maqstates[newName] = node._maqstates[oldName];
-		delete node._maqstates[oldName];
+		node._maqAppStates[newName] = node._maqAppStates[oldName];
+		delete node._maqAppStates[oldName];
 		if (!property) {
 			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
 		}
@@ -912,8 +912,8 @@ States.prototype = {
 		if(isNormalState){
 			return node.style.display != "none";
 		}else{
-			if(node._maqdeltas && node._maqdeltas[state] && node._maqdeltas[state].style && typeof node._maqdeltas[state].style.display == "string"){
-				return node._maqdeltas[state].style.display != "none";
+			if(node._maqDeltas && node._maqDeltas[state] && node._maqDeltas[state].style && typeof node._maqDeltas[state].style.display == "string"){
+				return node._maqDeltas[state].style.display != "none";
 			}else{
 				return node.style.display != "none";
 			}
@@ -934,7 +934,7 @@ States.prototype = {
 	},
 	
 	/**
-	 * Convert the _maqstates and _maqdeltas properties on the given node into JSON-encoded strings.
+	 * Convert the _maqAppStates and _maqDeltas properties on the given node into JSON-encoded strings.
 	 * @param {Element} node
 	 * @returns {object}  Object of form {defs:<string>,deltas:<string>} where both defs and deltas
 	 *                    are included in object only if respective property is on the node
@@ -962,8 +962,8 @@ States.prototype = {
 		if (!node){
 			return obj;
 		}
-		var defs = munge('_maqstates');
-		var deltas = munge('_maqdeltas');
+		var defs = munge('_maqAppStates');
+		var deltas = munge('_maqDeltas');
 		if(defs){
 			obj.defs = defs;
 		}
@@ -1065,21 +1065,21 @@ States.prototype = {
 	/**
 	 * Stuffs a JavaScript property (the states object) onto the given node.
 	 * @param {Element} node  
-	 * @param maqstates   the string value of the list of states attribute
-	 * @param maqdeltas   the string value of the property deltas for various states
+	 * @param maqAppStates   the string value of the list of states attribute
+	 * @param maqDeltas   the string value of the property deltas for various states
 	 */
-	store: function(node, maqstates, maqdeltas) {
+	store: function(node, maqAppStates, maqDeltas) {
 		if (!node){
 			return;
 		}
 		this.clear(node);
 //FIXME: Generalize for nested state containers?
 		var isBody = (node.tagName == 'BODY');
-		if(maqstates){
-			node._maqstates = this.deserialize(maqstates, {isBody:isBody});
+		if(maqAppStates){
+			node._maqAppStates = this.deserialize(maqAppStates, {isBody:isBody});
 		}
-		if(maqdeltas){
-			node._maqdeltas = this.deserialize(maqdeltas, {isBody:isBody});
+		if(maqDeltas){
+			node._maqDeltas = this.deserialize(maqDeltas, {isBody:isBody});
 		}
 		connect.publish("/davinci/states/stored", []);
 	},
@@ -1100,10 +1100,10 @@ States.prototype = {
 		var states = node.getAttribute(this.DELTAS_ATTRIBUTE);
 		return states;
 */
-		var defs_attribute = node.getAttribute(this.DEFS_ATTRIBUTE);
+		var defs_attribute = node.getAttribute(this.APPSTATES_ATTRIBUTE);
 		if(!defs_attribute && node.tagName === 'BODY'){
 			// Previous versions used different attribute name (ie, 'dvStates')
-			defs_attribute = node.getAttribute(this.DEFS_ATTRIBUTE_P6);
+			defs_attribute = node.getAttribute(this.APPSTATES_ATTRIBUTE_P6);
 		}
 		var deltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE);
 		if(!deltas_attribute && node.tagName !== 'BODY'){
@@ -1118,9 +1118,9 @@ States.prototype = {
 	 * @param {Element} node  
 	 */
 	clear: function(node) {
-		if (!node || !node._maqstates) return;
-		var states = node._maqstates;
-		delete node._maqstates;
+		if (!node || !node._maqAppStates) return;
+		var states = node._maqAppStates;
+		delete node._maqAppStates;
 		connect.publish("/davinci/states/cleared", [{node:node, states:states}]);
 	},
 	
@@ -1149,14 +1149,14 @@ States.prototype = {
 	},
 
 	/**
-	 * Store original element.style values into node._maqstates['undefined'].style
+	 * Store original element.style values into node._maqAppStates['undefined'].style
 	 * Called by _preserveStates
 	 * @param node  
 	 * @param {String} elemStyle  element.style string
 	 */
 	transferElementStyle: function(node, elemStyle) {
 		if(node){
-			var states = node._maqdeltas;
+			var states = node._maqDeltas;
 			var valueArray = this._parseStyleValues(elemStyle);
 			if(!states['undefined']){
 				states['undefined'] = {};
@@ -1339,17 +1339,17 @@ var singleton = davinci.states = new States();
 						if(node){
 							var isBody = (node.tagName == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
-							var maqstates, maqdeltas;
+							var maqAppStates, maqDeltas;
 							if(isBody){
-								maqstates = singleton.deserialize(cache[id], {isBody:isBody});
+								maqAppStates = singleton.deserialize(cache[id], {isBody:isBody});
 							}else{
-								maqdeltas = singleton.deserialize(cache[id].deltas, {isBody:isBody});
+								maqDeltas = singleton.deserialize(cache[id].deltas, {isBody:isBody});
 							}
 							
-							if(maqstates){
-								delete maqstates.current; // FIXME: Always start in normal state for now, fix in 0.7
+							if(maqAppStates){
+								delete maqAppStates.current; // FIXME: Always start in normal state for now, fix in 0.7
 							}
-							singleton.store(node, maqstates, maqdeltas);
+							singleton.store(node, maqAppStates, maqDeltas);
 							if(node.tagName != 'BODY'){
 								//FIXME: maybe not be general enough
 								davinci.states.transferElementStyle(node, cache[id].style);

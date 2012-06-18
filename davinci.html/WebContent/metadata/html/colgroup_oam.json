@@ -42,7 +42,8 @@
 		},
 		"span": {
 			"datatype": "number",
-			"description": "Specifies the number of columns a <col> element should span"
+			"description": "Specifies the number of columns a <col> element should span",
+			"hidden": true
 		},
 		"valign": {
 			"datatype": "string",

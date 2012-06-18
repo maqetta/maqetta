@@ -3335,6 +3335,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.anyDojoxMobileWidgets = anyDojoxMobileWidgets;
 		}
 	},
+
+	WIDGET_MODIFIED: 0,
+	WIDGET_ADDED: 1,
+	WIDGET_REMOVED: 2,
+	/**
+	 * Called by any command that can causes widgets to be added/deleted/moved/changed
+	 *
+	 * @param {number} type  0 - modified, 1 - added, 2 - removed
+	*/
+	widgetChanged: function(type, widget) {
+	},
 	
 	getPageLeftTop: function(node){
 		var leftAdjust = node.offsetLeft;

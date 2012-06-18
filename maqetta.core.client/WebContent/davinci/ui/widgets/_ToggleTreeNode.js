@@ -4,6 +4,8 @@ define(["dojo/_base/declare",
 		
 
 	return declare("davinci.ui.widgets._ToggleTreeNode", dijit._TreeNode, {
+		_setLabelAttr: {node: "labelNode", type: "innerHTML"},
+
 		postCreate: function(){
 			this.inherited(arguments);
 			

@@ -19,9 +19,9 @@ declare("davinci.ui.widget.OutlineTreeModel", null, {
 		this._context = context;
 		this._handles = [];
 
-		this._connect("onCommandStackExecute", "_refresh"); // yikes.  this refreshes the entire tree anytime there's a change.  really bad if we're traversing the tree setting styles.
 		this._connect("activate", "_rebuild");
 		this._connect("setSource", "_rebuild");
+		this._connect("widgetChanged", "_widgetChanged");
 	},
 
 	getRoot: function(onItem, onError) {
@@ -108,11 +108,27 @@ declare("davinci.ui.widget.OutlineTreeModel", null, {
 		onComplete(this._getChildren(item));
 	},
 
+	put: function(item, options) {
+		var parent = item.getParent();
+
+		this.onChildrenChange(parent, this._getChildren(parent));
+
+		return this.getIdentity(item);
+	},
+
+	add: function(item, options) {
+		(options = options || {}).overwrite = false;
+		return this.put(item, options);
+	},
+
+	remove: function(item) {
+		this.onDelete(item);
+	},
+
 	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
 	},
 
 	_rebuild: function() {
-		console.log("_rebuild");
 		if (this._skipRefresh) { return; }
 
 		var node = this._context.rootNode;
@@ -122,8 +138,14 @@ declare("davinci.ui.widget.OutlineTreeModel", null, {
 		}
 	},
 
-	_refresh: function() {
-		console.log("refresh", this._context.getTopWidgets())
+	_widgetChanged: function(type, widget) {
+		if (type === this._context.WIDGET_ADDED) {
+			this.add(widget);
+		} else if (type === this._context.WIDGET_REMOVED) {
+			this.remove(widget);
+		} else if (type === this._context.WIDGET_MODIFIED) {
+			this.onChange(widget);
+		}
 	},
 
 	// toggle code
@@ -167,6 +189,7 @@ declare("davinci.ui.widget.OutlineTreeModel", null, {
 	isToggleOn: function(item) {
 		return !States.isVisible(item.domNode);
 	},
+	// end toggle code
 
 	_connect: function(contextFunction, thisFunction) {
 		this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
@@ -197,6 +220,24 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 	/* override to allow us to control the nodes*/
 	_createTreeNode: function(/*Object*/ args) {
 		return new ToggleTreeNode(args);
+	},
+
+	/* override to fix dijit tree bug */
+	_onItemDelete: function(/*Item*/ item) {
+		/*
+			So here is the issue - if you delete the last child of an expanded
+			tree node, the tree hides the expando icon, but does NOT remove the reference
+			to _expandNodeDeferred, which when set assumes it has been or is being expanded.
+			Since we removed all children, this is no longer true - any new children
+			will have to be recreated, hence we need to delete _expandNodeDeferred.
+		*/
+		var parent = this._itemNodesMap[item.id][0].getParent();
+		var children = parent.item._getChildren();
+		if (children.length == 0) {
+			delete parent._expandNodeDeferred;
+		}
+		
+		this.inherited(arguments);
 	},
 
 	/* sets selection to the passed nodes*/
@@ -251,7 +292,6 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 			path.splice(0, 0, n.id);
 			if (!n.getParent()) {
 				console.log("no parent?!?!?!")
-				debugger
 			}
 			n = n.getParent();
 		}

@@ -3369,7 +3369,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	onCommandStackExecute: function() {
 	},
-	
+
+//FIXME: this routine probably will be made obsolete by br's changes to incorporate
+//document.css as part of themes
 	/**
 	 * Called by any commands that can causes widgets to be added or deleted.
 	 * Looks at current document and decide if we need to update the document

@@ -317,7 +317,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 //FIXME: Is this right?
 		// Pass allStateContainers[0] because there should a root state container
 		// corresponding to BODY
-		traverseStateContainers(allStateContainers[0], CurrentFileObj, AppStatesObj);
+		if(allStateContainers.length > 0){
+			traverseStateContainers(allStateContainers[0], CurrentFileObj, AppStatesObj);
+		}
 		
 		var sceneManagers = context.sceneManagers;
 		// Loop through plugin scene managers, eg Dojo Mobile Views
@@ -698,6 +700,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!this._editor){
 			return;
 		}
+		var showAppStates = (this._editor.declaredClass === "davinci.ve.PageEditor");
+/*FIXME: OLD LOGIC
 		var showAppStates;	
 		if (this._editor.declaredClass !== "davinci.ve.PageEditor"){
 			showAppStates = false;
@@ -729,6 +733,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			}
 		}
+*/
 
 		// This code prevents +/- icons from appearing when authoring Dojo Mobile UIs
 		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");

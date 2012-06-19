@@ -32,9 +32,7 @@ States.prototype = {
 		var allStateContainers = [];
 		function findStateContainers(currentNode, stateContainersArray){
 			var childrenStateContainersArray = stateContainersArray;
-//FIXME: This is what we want ultimately
-//			if(currentNode.states && currentNode.states.states){
-			if(currentNode.tagName == 'BODY'){
+			if(currentNode._maqAppStates && currentNode._maqAppStates.states){
 				var o = {stateContainerNode:currentNode, children:[]};
 				stateContainersArray.push(o);
 				childrenStateContainersArray = o.children;

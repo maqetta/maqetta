@@ -257,9 +257,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
 	_updateList: function() {
 		var allStateContainers = States.getAllStateContainers(this._getRootNode());
+		var storedScenes = this._getScenes();
+/*FIXME: old logic
 		var latestStates = States.getStates(this._getRootNode(), true), 
 			storedScenes = this._getScenes();
 		if(!this._editor || !latestStates || !storedScenes){
+*/
+		if(!this._editor || !allStateContainers || !storedScenes){
 			return;
 		}
 		var context = this._editor.getContext();

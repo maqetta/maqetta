@@ -297,7 +297,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				var appstates = States.getStates(stateContainerNode);
 				for(var st=0; st<appstates.length; st++){
 					var state = appstates[st];
-					AppStatesParentObj.children.push({ name:state, sceneId:state, type:'AppState' });
+					AppStatesParentObj.children.push({ name:state, sceneId:state, type:'AppState', stateContainerNode:stateContainerNode });
 //FIXME: appStates needs to be on node basis?
 					appStatesCount++;
 				}
@@ -566,6 +566,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
 			if (item && item.type && item.type[0] == 'AppState') {
+				var stateContainerNode = item.stateContainerNode ? item.stateContainerNode[0] : null;
 				if (this.isThemeEditor()){
 					this.publish("/davinci/states/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:'$all', 
@@ -573,20 +574,22 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					this._themeState = item.name[0];
 				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
 					this.publish("/maqetta/appstates/state/changed", 
-							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
-							newState:item.name[0]}]);
+							[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
+							newState:item.name[0], stateContainerNode:stateContainerNode}]);
 				} else {
-					if(context && bodyNode){
+					if(context && stateContainerNode){
 						var state = item.name[0];
-						States.setState(bodyNode, state);
+						States.setState(stateContainerNode, state);
 						context.deselectInvisible();
 						context.updateFocusAll();
 					}
 				}
 			}else{
+/*FIXME: Need to figure out what to do about initial states when using mobile views
 				if(bodyNode){
 					States.setState(bodyNode, null);
 				}
+*/
 				if(item.sceneId){
 					// Loop through plugin scene managers, eg Dojo Mobile Views
 					for(var smIndex in sceneManagers){

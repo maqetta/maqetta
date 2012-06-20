@@ -41,7 +41,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
             oldResize.apply(this, arguments);
         };
 
-        this.htmlEditor = new HTMLEditor(this._srcCP.domNode,fileName);
+        this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
         this.htmlEditor.setVisible(false);
         this.model=this.htmlEditor.model;
 

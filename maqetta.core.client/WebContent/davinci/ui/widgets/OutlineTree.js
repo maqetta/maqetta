@@ -21,6 +21,17 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		// dndController is setup during Tree::postCreate.  We need to listen to
 		// userSelect so we can list to selection changes
 		this._handles.push(connect.connect(this.dndController, "userSelect", this, "_userSelect"));
+
+		// Workaround for #13964: Prevent drag/drop from happening when user mouses down on scrollbar
+		var mouseDown = this.dndController.onMouseDown;
+		this.dndController.onMouseDown = function(e){
+			if ((" "+(e.srcElement || e.target).className+" ").indexOf(" dojoDndContainerOver ") != -1) {
+				return;
+			}
+			return mouseDown.call(this.dndController, e);
+		}.bind(this);
+
+		this._connect("widgetChanged", "_widgetChanged");
 	},
 
 	/* override to allow us to control the nodes*/
@@ -38,8 +49,14 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 			will have to be recreated, hence we need to delete _expandNodeDeferred.
 		*/
 		var parent = this._itemNodesMap[item.id][0].getParent();
-		var children = parent.item._getChildren();
-		if (children.length == 0) {
+
+		if (parent.item._getChildren) {
+			// could be root, which is a dummy object
+			var children = parent.item._getChildren();
+			if (children.length == 0) {
+				delete parent._expandNodeDeferred;
+			}
+		} else {
 			delete parent._expandNodeDeferred;
 		}
 		
@@ -60,16 +77,29 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 
 	deselectAll: function() {
 		dojo.forEach(this.selectedItems, dojo.hitch(this, function(item) {
-				var treeNodes = this.getNodesByItem(item);
-				if (treeNodes.length > 0) {
-					treeNodes[0].setSelected(false);
-				}
+			var treeNodes = this.getNodesByItem(item);
+			if (treeNodes.length > 0) {
+				treeNodes[0].setSelected(false);
+			}
 		}));
 	},
 
+	getMenuOpenCallback: function() {
+		return dojo.hitch(this, this._menuOpenCallback);
+	},
+
+	_menuOpenCallback: function(event) {
+		var w = dijit.getEnclosingWidget(event.target);
+		if (w && w.item) {
+			// select the item the context menu was opened on
+			this.selectNode([w.item]);
+			this._userSelect();
+		}
+	}, 
+
 	_userSelect: function() {
 		// user has made manual selection changes
-		var newSelection = this.selectedItems
+		var newSelection = this.selectedItems;
 		var oldSelection = this.context.getSelection();
 
 		// deselect any olds not in new
@@ -90,16 +120,25 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		}));
 	},
 
+	_widgetChanged: function(type, widget) {
+		if (type === this.context.WIDGET_REPARENTED) {
+			// reparenting means we need to reselect it
+			this.selectNode(this.context.getSelection());
+		}
+	},
+
 	_createPath: function(item) {
 		var path = [];
 		var n = item;
 
 		while (n && n.id != "myapp") {
 			path.splice(0, 0, n.id);
-			if (!n.getParent()) {
-				console.log("no parent?!?!?!")
-			}
-			n = n.getParent();
+
+			if (n.getParent) {
+				n = n.getParent();
+			} else {
+				n = null;
+			} 
 		}
 
 		path.splice(0, 0, "myapp");
@@ -108,7 +147,7 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 	},
 
 	_connect: function(contextFunction, thisFunction) {
-		this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
+		this._handles.push(connect.connect(this.context, contextFunction, this, thisFunction));
 	},
 
 	destroy: function(){

@@ -48,7 +48,9 @@ return declare("davinci.ve.commands.RemoveCommand", null, {
 		parent.removeChild( widget);
 
 		// make sure we call right after it was removed but before being destroyed
-		context.widgetChanged(context.WIDGET_REMOVED, widget);
+		if(context){
+			context.widgetChanged(context.WIDGET_REMOVED, widget);
+		}
 
 		widget.destroyWidget();
 		if(context){

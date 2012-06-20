@@ -35,12 +35,19 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 			}
 		}
 
-		oldParent.removeChild(  widget);
+		oldParent.removeChild(widget);
+
+		var context = newParent.getContext();
+
+		if (context) {
+			context.widgetChanged(context.WIDGET_REMOVED, widget);
+		}
+
 		// If moving a widget within same parent, adjust newIndex in case the widget is being moved
 		// to a latter point in list of children. If so, the removeChild operation has altered the child list
 		var newIndex = (newParent == oldParent && this._oldIndex < this._newIndex) ? this._newIndex -1 : this._newIndex;
 		newParent.addChild(widget, newIndex);
-		var context = newParent.getContext();
+
 		if(context){
 		    var helper = widget.getHelper();
 		    if (helper && helper.reparent){
@@ -48,6 +55,9 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 		    }
 			widget.startup();
 			widget.renderWidget();
+
+			context.widgetChanged(context.WIDGET_ADDED, widget);
+			context.widgetChanged(context.WIDGET_REPARENTED, widget);
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state
@@ -71,9 +81,15 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 			return;
 		}
 
-		newParent.removeChild( widget);
-		oldParent.addChild( widget, this._oldIndex);
 		var context = oldParent.getContext();
+
+		newParent.removeChild( widget);
+
+		if (context) {
+			context.widgetChanged(context.WIDGET_REMOVED, widget);
+		}
+
+		oldParent.addChild( widget, this._oldIndex);
 		if(context){
 		    var helper = widget.getHelper();
             if (helper && helper.reparent){
@@ -81,6 +97,9 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
             }
 			widget.startup();
 			widget.renderWidget();
+
+			context.widgetChanged(context.WIDGET_ADDED, widget);
+			context.widgetChanged(context.WIDGET_REPARENTED, widget);
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state

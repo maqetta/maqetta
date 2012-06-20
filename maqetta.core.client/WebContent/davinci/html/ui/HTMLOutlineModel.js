@@ -1,39 +1,51 @@
 define([
-	"dojo/_base/declare",
-	"davinci/ui/widgets/DavinciModelTreeModel"
-], function(declare, DavinciModelTreeModel) {
-	
-return declare("davinci.html.ui.HTMLOutlineModel", DavinciModelTreeModel, {
+	"dojo/_base/declare"
+], function(declare) {
 
-	_childList: function(item) {
-		var children=[];
+return declare("davinci.html.ui.HTMLOutlineModel", null, {
+	constructor: function(root) {
+		this.root = root;
+		this.subscription = dojo.subscribe("/davinci/ui/modelChanged", this, this._modelChanged);
+	},
 
-		switch (item.elementType) {
-		case "HTMLFile":
-			for (var i=0;i<item.children.length;i++)
-			{
-				switch (item.children[i].elementType)
-				{
-				case  "HTMLElement":
-					children.push(item.children[i]);
+	getRoot: function(onItem, onError) {
+		onItem(this.root);
+	},
+
+	getIdentity: function(item) {
+		return item.getID();
+	},
+
+	getLabel: function(item) {
+		return item.getLabel().replace("<", "&lt");
+	},
+
+	_getChildren: function(item) {
+		var children = [];
+		if (item.elementType == "HTMLFile" || item.elementType == "HTMLElement") {
+			dojo.forEach(item.children, function(child) {
+				if (child.elementType == "HTMLElement") {
+					children.push(child);
 				}
-			}
-			break;
-		case "HTMLElement":
-			for (var i=0;i<item.children.length;i++)
-			{
-				switch (item.children[i].elementType)
-				{
-				case  "HTMLElement":
-					children.push(item.children[i]);
-				}
-			}
-			break;
-		default:
+			});
 		}
+		return children; 
+	},
 
-		return children;
+	mayHaveChildren: function(item) {
+		return (item.children.length > 0);
+	},
+
+	getChildren: function(item, onComplete, onError) {
+		onComplete(this._getChildren(item));
+	},
+
+	_modelChanged: function() {
+		this.onChildrenChange(this.root, this._getChildren(this.root));
+	},
+
+	destroy: function() {
+		dojo.unsubscribe(this.subscription);
 	}
-
-});
+})
 });

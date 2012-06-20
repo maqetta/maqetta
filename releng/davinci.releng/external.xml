@@ -25,9 +25,7 @@
         <!-- LIST OF MAQETTA PROJECTS GOES HERE -->
         <!-- -->
 		
-        <populateDir project="davinci.jqueryui_1_8"/>
         <populateDir project="davinci.product" extPath="/releng"/>
-        <populateDir project="davinci.yui_2_6_0"/>
         <populateDir project="davinci.joomla"/>
         <populateDir project="davinci.war" isFeature="true" extPath="/releng"/>
 

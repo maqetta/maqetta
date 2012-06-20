@@ -13,8 +13,8 @@ define([
 
 return declare(_TableAction, {
 	
-	name: "splitColumn",
-	iconClass: "editActionIcon editSplitColumnIcon",
+	name: "splitRow",
+	iconClass: "editActionIcon editSplitRowIcon",
 
 	run: function(context){
 		context = this.fixupContext(context);
@@ -34,34 +34,40 @@ return declare(_TableAction, {
 		var rs = matrix.getRowSpan(sel);
 
 		var command = new CompoundCommand();
-		var properties = undefined;
+		var data = this._createTableCellData();
 		if(cs > 1){
+			data.properties = {colspan: cs};
+		}
+		if(rs > 1 && pos.r + rs <= rows.length){
 			var widget = Widget.byNode(sel);
-			properties = {colspan: cs - 1};
+			var properties = {rowspan: rs - 1};
 			command.add(new ModifyCommand(widget, properties));
+			var r = pos.r + rs - 1; // the bottom-most row
+			var parent = Widget.byNode(rows[r]);
+			var nextCell = matrix.getNextCell(r, pos.c + cs);
+			var next = (nextCell ? Widget.byNode(nextCell) : undefined);
+			command.add(new AddCommand(data, parent, next));
 		}else{
-			// span other cells in the column
-			for(var r = 0; r < rows.length; r++){
-				if(r == pos.r){
+			// add a new row
+			data = {type: "html.tr", children: [data]};
+			var parent = Widget.byNode(rows[pos.r].parentNode);
+			var next = (pos.r + rs < rows.length ? Widget.byNode(rows[pos.r + rs]) : undefined);
+			command.add(new AddCommand(data, parent, next));
+			// span other cells in the row
+			var cols = cells[pos.r];
+			for(var c = 0; c < cols.length; c++){
+				if(c == pos.c){
 					// skip the cell to split
-					r += (rs - 1);
+					c += (cs - 1);
 					continue;
 				}
-				var cell = cells[r][pos.c];
+				var cell = cols[c];
 				var widget = Widget.byNode(cell);
-				properties = {colspan: matrix.getColSpan(cell) + 1};
+				var properties = {rowspan: matrix.getRowSpan(cell) + 1};
 				command.add(new ModifyCommand(widget, properties));
-				r += (matrix.getRowSpan(cell) - 1); // skip rows covered by this cell
+				c += (matrix.getColSpan(cell) - 1); // skip columns covered by this cell
 			}
 		}
-		var data = {type: "html.td"};
-		if(rs > 1){
-			data.properties = {rowspan: rs};
-		}
-		var parent = Widget.byNode(rows[pos.r]);
-		var nextCell = matrix.getNextCell(pos.r, pos.c + cs);
-		var next = (nextCell ? Widget.byNode(nextCell) : undefined);
-		command.add(new AddCommand(data, parent, next));
 		context.getCommandStack().execute(command);
 	}
 

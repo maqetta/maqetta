@@ -3,7 +3,7 @@
 	"name": "html.tbody",
 	"spec": "1.0",
 	"version": "1.0",
-	"property": {
+	"property": {	
 		"align": {
 			"datatype": "string",
 			"option": [
@@ -14,13 +14,31 @@
 					"value": "left"
 				},
 				{
+					"value": "right"
+				},
+				{
 					"value": "center"
 				},
 				{
-					"value": "right"
+					"value": "justify"
+				},
+				{
+					"value": "char"
 				}
 			],
-			"defaultValue": "left",
+			"defaultValue": "center",
+			"description": "Not supported in HTML5.",
+			"hidden": "true"
+		},
+		"char": {
+			"datatype": "character",
+			"description": "Not supported in HTML5.",
+			"hidden": true
+		},
+		"charoff": {
+			"datatype": "number",
+			"description": "Not supported in HTML5.",
+			"hidden": true
 		},
 		"valign": {
 			"datatype": "string",
@@ -42,6 +60,8 @@
 				}
 			],
 			"defaultValue": "middle",
+			"description": "Not supported in HTML5.",
+			"hidden": true
 		}
 	},
 	"content": "<tbody></tbody>"

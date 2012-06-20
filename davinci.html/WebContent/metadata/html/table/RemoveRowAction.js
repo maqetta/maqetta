@@ -15,6 +15,14 @@ return declare(_TableAction, {
 	name: "removeRow",
 	iconClass: "editActionIcon editRemoveRowIcon",
 
+	//Don't want enabled if dealing with columns
+	_isEnabled: function(cell) {
+		var nodeName = cell.nodeName.toLowerCase();
+		return nodeName == "td" ||
+			   nodeName == "th" ||
+			   nodeName == "tr";
+ 	},
+ 	
 	run: function(context){
 		context = this.fixupContext(context);
 		if(!context){
@@ -28,6 +36,13 @@ return declare(_TableAction, {
 		var matrix = new TableMatrix(sel);
 		var rows = matrix.rows;
 		var cells = matrix.cells;
+		
+		//If we have a row element, let's use the first cell in the row
+		if (sel.nodeName.toLowerCase() == "tr") {
+			var selRowIndex = rows.indexOf(sel);
+			sel = cells[selRowIndex][0];
+		}
+		
 		var pos = matrix.getPos(sel);
 		var r = pos.r;
 		var cols = cells[r];

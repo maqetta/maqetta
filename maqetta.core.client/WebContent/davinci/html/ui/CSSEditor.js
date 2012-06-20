@@ -2,35 +2,34 @@ define([
 	"dojo/_base/declare",
 	"davinci/ui/ModelEditor",
 	"davinci/html/CSSEditorContext",
-	"davinci/html/CSSModel",
 	"davinci/html/ui/CSSOutline",
-	"davinci/model/Factory"
-], function(declare, ModelEditor, CSSEditorContext, CSSModel, CSSOutline, Factory){
+	"davinci/html/CSSFile",
+], function(declare, ModelEditor, CSSEditorContext, CSSOutline, CSSFile){
 
-return declare("davinci.html.ui.CSSEditor", ModelEditor, {
+return declare(ModelEditor, {
 
-	constructor : function(element) {
-		this.cssFile = Factory.newCSS();
+	constructor: function(element) {
+		this.cssFile = new CSSFile();
 		this.model = this.cssFile;
 	},
 
-	destroy : function() {
+	destroy: function() {
 		this.cssFile.close();
 		this.inherited(arguments);
 	},
 
-	getOutline : function() {
+	getOutline: function() {
 		if (!this.outline) { 
 			this.outline = new CSSOutline(this.model);
 		}
 		return this.outline;
 	},
 
-	getDefaultContent : function() {
+	getDefaultContent: function() {
 		return	"";
 	},
 
-	getContext : function() {
+	getContext: function() {
 		if (!this.context) {
 			this.context = new CSSEditorContext(this);
 		}

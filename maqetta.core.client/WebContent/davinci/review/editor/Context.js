@@ -35,7 +35,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					this._domIsReady = true;
 					var userDoc = event && event.target && event.target.contentDocument;
 					var dj = userDoc && userDoc.defaultView && userDoc.defaultView.dojo;
-					var deviceName = this.frame.contentDocument.body.getAttribute('data-maqetta-device');
+					var deviceName = this.frame.contentDocument.body.getAttribute('data-maq-device');
 					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
 							? null : "app/preview/images/" + deviceName + ".svg";
 					if (svgfilename) {

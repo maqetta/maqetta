@@ -309,8 +309,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var moverDragDivHalf = 50;
 		var l = event.pageX - moverDragDivHalf;
 		var t = event.pageY - moverDragDivHalf;
-		var node = this._selectedWidget.domNode;
-		var marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
+		var marginBoxPageCoords = null;
+		var helper = this._selectedWidget.getHelper();
+		if(helper && helper.getMarginBoxPageCoords){
+			marginBoxPageCoords = helper.getMarginBoxPageCoords(this._selectedWidget);
+		} else {
+			var node = this._selectedWidget.domNode;
+			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
+		}
 		this._moverStart = { moverLeft:l, moverTop:t,
 				l:marginBoxPageCoords.l, t:marginBoxPageCoords.t,
 				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };

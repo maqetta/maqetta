@@ -269,7 +269,13 @@ return declare("davinci.ve._Widget", null, {
 
 	getMarginBox: function() {
 		var node = this.domNode;
-		var box = GeomUtils.getMarginBoxPageCoords(node);
+		var box = null;
+		var helper = this.getHelper();
+		if(helper && helper.getMarginBoxPageCoords){
+			box = helper.getMarginBoxPageCoords(this);
+		} else {
+			box = GeomUtils.getMarginBoxPageCoords(node);
+		}
 		box.l -= GeomUtils.getScrollLeft(node);
 		box.t -= GeomUtils.getScrollTop(node);
 		box.x = box.l;

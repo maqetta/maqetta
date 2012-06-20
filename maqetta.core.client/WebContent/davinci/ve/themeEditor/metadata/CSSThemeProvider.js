@@ -358,10 +358,34 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	},
 	
 	
-	isPropertyVaildForWidgetRule : function(rule, property, widget){
+	isPropertyVaildForWidgetRule : function(rule, property, widget, subWidget, state){
 		var widgetType = this.getWidgetType(widget);
 		var widgetMetaData = this.getMetadata(widgetType);
-		return this.isPropertyRuleValid(rule, property, widgetMetaData);
+		if (subWidget) {
+			widgetMetaData = widgetMetaData.subwidgets[subWidget];
+		}
+		if (state) {
+			widgetMetaData = widgetMetaData.states[state];
+		} else {
+			widgetMetaData = widgetMetaData.states['Normal'];
+		}
+		var selectorText = rule.getSelectorText();
+		for (var selector in widgetMetaData.selectors){
+			var props = widgetMetaData.selectors[selector];
+			//if (containsSelector(rule, selector)){
+			if (selectorText == selector){ // match the complete selector
+				//console.log('found the selector ' + selectorText);
+				for (var i=0; i < props.length; i++){
+					var prop = props[i];
+					if (prop == '$std_10' || prop == property){
+						//console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
+						return true;
+					}
+				}
+			}
+		}
+		//return this.isPropertyRuleValid(rule, property, widgetMetaData);
+		return false;
 	},
 	
 	isPropertyRuleValid: function(rule, property, widgetMetaData){
@@ -370,7 +394,8 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			var state = widgetMetaData.states[c];
 			for (var selector in state.selectors){
 				var props = state.selectors[selector];
-				if (containsSelector(rule, selector)){
+				//if (containsSelector(rule, selector)){
+				if (selectorText == selector){ // match the complete selector
 					//console.log('found the selector ' + selectorText);
 					for (var i=0; i < props.length; i++){
 						var prop = props[i];
@@ -388,8 +413,9 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				var state = subwidget.states[c];
 				for (var selector in state.selectors){
 					var props = state.selectors[selector];
-					if (containsSelector(rule, selector)){
-						//console.log('found the selector ' + selectorText);
+					//if (containsSelector(rule, selector)){
+					if (selectorText == selector){ // match the complete selector
+						//console.log('found the selector ' + selectorText); 
 						for (var i=0; i < props.length; i++){
 							var prop = props[i];
 							if (prop == '$std_10' || prop == property){
@@ -415,63 +441,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		
 	},
 	
-	isPropertyVaildForWidgetRule : function(rule, property, widget){
-		var widgetType = this.getWidgetType(widget);
-		var widgetMetaData = this.getMetadata(widgetType);
-		return this.isPropertyRuleValid(rule, property, widgetMetaData);
-	},
-	
-	isPropertyRuleValid: function(rule, property, widgetMetaData){
-		var selectorText = rule.getSelectorText();
-		for (var c in widgetMetaData.states){
-			var state = widgetMetaData.states[c];
-			for (var selector in state.selectors){
-				var props = state.selectors[selector];
-				if (containsSelector(rule, selector)){
-					//console.log('found the selector ' + selectorText);
-					for (var i=0; i < props.length; i++){
-						var prop = props[i];
-						if (prop == '$std_10' || prop == property){
-							//console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
-							return true;
-						}
-					}
-				}
-			}
-		}
-		for (var sw in widgetMetaData.subwidgets){
-			var subwidget = widgetMetaData.subwidgets[sw];
-			for (var c in subwidget.states){
-				var state = subwidget.states[c];
-				for (var selector in state.selectors){
-					var props = state.selectors[selector];
-					if (containsSelector(rule, selector)){
-						//console.log('found the selector ' + selectorText);
-						for (var i=0; i < props.length; i++){
-							var prop = props[i];
-							if (prop == '$std_10' || prop == property){
-								//console.log('Valid: ' + property + ' for CSSRule ' + selectorText);
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-        return false;
 		
-		function containsSelector(rule, selectorText){
-			for (var i=0;i<rule.selectors.length; i++)
-			{
-				var selectorName = rule.selectors[i].getText();
-				if (selectorName == selectorText)
-					return true;
-			}
-			return false;
-		}
-		
-	},
-	
 	isPropertyValidForRule: function(rule, property){
 		var ret = false;
 		var selectorText = rule.getSelectorText();

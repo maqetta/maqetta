@@ -79,7 +79,7 @@ define([
 
 return declare("davinci.ui.Editor", null, {
 	
-	constructor: function (element, existWhenVisible) {
+	constructor: function (element, fileName, existWhenVisible) {
 		this.contentDiv = element;
 		this.commandStack = new CommandStack(); //TODO: integrate with orion.editor.UndoFactory
 		this._existWhenVisible = existWhenVisible;

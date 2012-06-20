@@ -16,40 +16,52 @@
 				"id": "davinci.ve.cutCopyPaste",
 		      	"visible": true,
 	           	"actions": [
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Select column",
+	                    action: "./html/table/SelectColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
 	           		{
 	                    iconClass: "editActionIcon",
 	                    label: "Insert column after",
-	                    action: "./html/actions/AddColumnAction",
+	                    action: "./html/table/AddColumnAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Insert column before",
-	                    action: "./html/actions/AddColumnBeforeAction",
+	                    action: "./html/table/AddColumnBeforeAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Remove column",
-	                    action: "./html/actions/RemoveColumnAction",
+	                    action: "./html/table/RemoveColumnAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	                {
+	                    iconClass: "editActionIcon",
+	                    label: "Select row",
+	                    action: "./html/table/SelectRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Insert row after",
-	                    action: "./html/actions/AddRowAction",
+	                    action: "./html/table/AddRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Insert row before",
-	                    action: "./html/actions/AddRowBeforeAction",
+	                    action: "./html/table/AddRowBeforeAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Remove row",
-	                    action: "./html/actions/RemoveRowAction",
+	                    action: "./html/table/RemoveRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                }
 	       		]
@@ -470,12 +482,23 @@
 		        },
 		        {
 		            "name": "<table>",
-		            "description": "Table",
+		            "description": "Defines an HTML table",
 		            "type": "html.table",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXhJREFUeNrEUz1LA0EQnTvzO/wPYsBOrQW109ImpLPIL9DWKqQQRESEFGKjYmGwEyQggUTBRn+BIhFFTXK53Z1xZi53ulcpKdxjmXnD7Lv39iMgIhhnhDDmKKTJavXyz1KOKvNBRkCIsFWe09wxFbI1iTEy5ppB0shB69v1K18BOdTYvHvUZm1k0oi7rUwhIIkAs8VJQESfwMQxVGoXv5Le7jxAwF/yZ2aVubRxRjKYmWJrqXZyQ/3I0HtvSG8fA8Xd1z49v/ToqftJi5va/30KJhqOyGQ/WL6xCcZkCkakrMcOopyFKGKvCGLNslFrDMTGqX8hECz7AKN7YwZDnwC5uXp47XndPW17uN64zXK0zidwzsH6yozKNKxg57gFpeUi11EtHZx3YG1hKiNoNO9zx8iMcjRigWQFYuJfVAMp/jmcRf8qG90sUAWoEWUZpG8FcwRICQ7ShunSniYToiIMIb3XguXELdcKnEtM6639chD8+2v8EmAA9/wqJKl9P7kAAAAASUVORK5CYII=",
 		            "children": [
+		            	{
+		            		"type": "html.colgroup",
+		                    "children": [
+		                        {
+		                            "type": "html.col"
+		                        },
+		                        {
+		                            "type": "html.col"
+		                        }
+		                    ]
+		            	},
 		                {
 		                    "type": "html.tbody",
 		                    "children": [
@@ -483,10 +506,12 @@
 		                            "type": "html.tr",
 		                            "children": [
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                },
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                }
 		                            ]
 		                        },
@@ -494,10 +519,12 @@
 		                            "type": "html.tr",
 		                            "children": [
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                },
 		                                {
-		                                    "type": "html.td"
+		                                    "type": "html.td",
+		                                    "children": "&#8288;"
 		                                }
 		                            ]
 		                        }
@@ -505,11 +532,11 @@
 		                }
 		            ],
 		            "initialSize": "auto",
-		            "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr"
+		            "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr, html.caption"
 		        },
 		        {
 		            "name": "<tbody>",
-		            "description": "Table Body",
+		            "description": "Groups the body content in an HTML table",
 		            "type": "html.tbody",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
@@ -545,7 +572,7 @@
 		        },
 		        {
 		            "name": "<td>",
-		            "description": "Table Data",
+		            "description": "Defines a standard cell in an HTML table",
 		            "type": "html.td",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
@@ -553,26 +580,11 @@
 		            "hidden": true,
 		            "allowedParent": "html.tr",
 		            "allowedChild": "ANY",
-		            "inlineEdit": {
-		                "property": "textContent",
-		                "displayOnCreate": false
-		            }
-		        },
-		        {
-		            "name": "<textarea>",
-		            "description": "<textarea>",
-		            "type": "html.textarea",
-		            "category": "html",
-		            "icon": "resources/images/textarea.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
-		            "inlineEdit": {
-		                "property": "textContent",
-		                "displayOnCreate": false
-		            }
+		            "inlineEdit": "./html/table/TableCellInput"
 		        },
 		        {
 		            "name": "<tfoot>",
-		            "description": "Table Footer",
+		            "description": "Groups footer content in an HTML table",
 		            "type": "html.tfoot",
 		            "category": "html",
 		            "hidden": true,
@@ -582,16 +594,17 @@
 		        },
 		        {
 		            "name": "<th>",
-		            "description": "Table Header Cell",
+		            "description": "Defines a header cell in an HTML table",
 		            "type": "html.th",
 		            "category": "html",
 		            "hidden": true,
 		            "allowedParent": "html.tr",
-		            "allowedChild": "ANY"
+		            "allowedChild": "ANY",
+		            "inlineEdit": "./html/table/TableCellInput"
 		        },
 		        {
 		            "name": "<thead>",
-		            "description": "Table Header",
+		            "description": "Groups header content in an HTML table",
 		            "type": "html.thead",
 		            "category": "html",
 		            "hidden": true,
@@ -601,7 +614,7 @@
 		        },
 		        {
 		            "name": "<tr>",
-		            "description": "Table Row",
+		            "description": "Defines a row in an HTML table",
 		            "type": "html.tr",
 		            "category": "html",
 		            "icon": "resources/images/html-table.png",
@@ -615,9 +628,51 @@
 		                    "type": "html.td"
 		                }
 		            ],
-		            "resizable": "none",
+		            "resizable": "height",
 		            "allowedParent": "html.tbody, html.table, html.thead, html.tfoot",
 		            "allowedChild": "html.td, html.th"
+		        },
+		        {
+		            "name": "<caption>",
+		            "description": "Defines a caption for a table",
+		            "type": "html.caption",
+		            "category": "html",
+		            "hidden": true,
+		            "resizable": "none",
+		            "allowedParent": "html.table"
+		        },
+		        {
+		            "name": "<col>",
+		            "description": "Specifies column properties for each column within a <colgroup> element",
+		            "type": "html.col",
+		            "category": "html",
+		            "hidden": true,
+		            "resizable": "width",
+		            "allowedParent": "html.colgroup",
+		            "helper": "./html/table/ColHelper"
+		        },
+		        {
+		            "name": "<colgroup>",
+		            "description": "Specifies a group of one or more columns in a table for formatting",
+		            "type": "html.colgroup",
+		            "category": "html",
+		            "hidden": true,
+		            "resizable": "none",
+		            "allowedParent": "html.table",
+		            "allowedChild": "html.col",
+		            "helper": "./html/table/ColGroupHelper"
+		        },
+		        {
+		            "name": "<textarea>",
+		            "description": "<textarea>",
+		            "type": "html.textarea",
+		            "category": "html",
+		            "icon": "resources/images/textarea.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
+		            "inlineEdit": {
+		                "property": "textContent",
+		                "displayOnCreate": false
+		            }
 		        },
 		        {
 		            "name": "<video>",

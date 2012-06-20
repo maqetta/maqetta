@@ -1,15 +1,13 @@
 define([
 	"dojo/_base/declare",
-	"davinci/Runtime",
 	"davinci/js/ui/JavaScriptOutline",
 	"davinci/model/Factory",
-	"davinci/ui/ModelEditor",
-	"davinci/workbench/Preferences"
-], function(declare, Runtime, JavaScriptOutline, Factory, ModelEditor, Preferences) {
+	"davinci/ui/ModelEditor"
+], function(declare, JavaScriptOutline, Factory, ModelEditor) {
 
-return declare("davinci.js.ui.JavaScriptEditor", ModelEditor, {
+return declare(ModelEditor, {
 
-	constructor : function(element) {
+	constructor: function(element) {
 		this.jsFile = Factory.newJS();
 		this.model = this.jsFile;
 	},

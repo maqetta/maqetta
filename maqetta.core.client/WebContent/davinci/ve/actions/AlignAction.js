@@ -28,7 +28,13 @@ return declare("davinci.ve.actions.AlignAction", [Action], {
 /*
 			var box = dojo.marginBox(node);
 */
-var box = GeomUtils.getMarginBoxPageCoords(node);
+			var box = null;
+			var helper = w.getHelper();
+			if(helper && helper.getMarginBoxPageCoords){
+				box = helper.getMarginBoxPageCoords(w);
+			} else {
+				box = GeomUtils.getMarginBoxPageCoords(node);
+			}
 			if(parent){
 				if(Widget.getParent(w) != parent){
 					context.deselect(w);

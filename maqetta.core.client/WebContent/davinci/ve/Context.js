@@ -29,14 +29,14 @@ define([
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
-	"davinci/ve/utils/GeomUtils",
+	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"davinci/model/Factory", // FIXME: needed for document.css M6 hack
+	"../model/Factory", // FIXME: needed for document.css M6 hack
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	declare,
 	lang,
-	domquery,
+	query,
 	Deferred,
 	DeferredList,
 	connect,
@@ -70,9 +70,12 @@ define([
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
-var MOBILE_DEV_ATTR = 'data-maqetta-device',
-	PREF_LAYOUT_ATTR = 'dvFlowLayout',
-	MOBILE_ORIENT_ATTR = 'data-maqetta-deviceorientation';
+var MOBILE_DEV_ATTR = 'data-maq-device',
+	MOBILE_DEV_ATTR_P6 = 'data-maqetta-device',
+	MOBILE_ORIENT_ATTR = 'data-maq-orientation',
+	MOBILE_ORIENT_ATTR_P6 = 'data-maqetta-device-orientation',
+	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
+	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout';
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -504,7 +507,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
-        return bodyElement.getAttribute(MOBILE_DEV_ATTR);
+        var attvalue = bodyElement.getAttribute(MOBILE_DEV_ATTR);
+        var attvalueP6 = bodyElement.getAttribute(MOBILE_DEV_ATTR_P6);
+		if(!attvalue && attvalueP6){
+			// Migrate from old attribute name (data-maqetta-device) to new attribute name (data-maq-device)
+			bodyElement.removeAttribute(MOBILE_DEV_ATTR_P6);
+			bodyElement.setAttribute(MOBILE_DEV_ATTR, attvalueP6);
+			attvalue = attvalueP6;
+			this.editor._visualChanged();
+		}
+        return attvalue;
     },
 
     /**
@@ -553,7 +565,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
   	*/
 	getMobileOrientation: function() {
 		var bodyElement = this.getDocumentElement().getChildElement("body");
-		return bodyElement.getAttribute(MOBILE_ORIENT_ATTR);
+		var attvalue = bodyElement.getAttribute(MOBILE_ORIENT_ATTR);
+        var attvalueP6 = bodyElement.getAttribute(MOBILE_ORIENT_ATTR_P6);
+		if(!attvalue && attvalueP6){
+			// Migrate from old attribute name (data-maqetta-orientation) to new attribute name (data-maq-orientation)
+			bodyElement.removeAttribute(MOBILE_ORIENT_ATTR_P6);
+			bodyElement.setAttribute(MOBILE_ORIENT_ATTR, attvalueP6);
+			attvalue = attvalueP6;
+			this.editor._visualChanged();
+		}
+        return attvalue;
 	},
 
 	/**
@@ -844,7 +865,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 
 			// tear down old error message, if any
-			dojo.query(".loading", this.frameNode.parentNode).orphan();
+			query(".loading", this.frameNode.parentNode).orphan();
 
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
@@ -1215,12 +1236,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 
 		removeEventAttributes(containerNode);
-		dojo.query("*",containerNode).forEach(removeEventAttributes);
+		query("*",containerNode).forEach(removeEventAttributes);
 
 		// Convert all text nodes that only contain white space to empty strings
-		containerNode.setAttribute('data-davinci-ws','collapse');
+		containerNode.setAttribute('data-maq-ws','collapse');
 		var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
-		model_bodyElement.addAttribute('data-davinci-ws','collapse');
+		model_bodyElement.addAttribute('data-maq-ws','collapse');
 
 		// Collapses all text nodes that only contain white space characters into empty string.
 		// Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
@@ -1262,7 +1283,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		var prereqs = [];
-		dojo.forEach(dojo.query("*", containerNode), function(n){
+		dojo.forEach(query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
@@ -1348,7 +1369,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	_attachChildren: function (containerNode)
 	{
-		dojo.query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
+		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
 		/*
 		var currentStateCache = [];
 		*/
@@ -1396,7 +1417,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_onLoadHelpers: function(){
 		var onLoadHelpersSoFar={};
-		dojo.query("> *", this.rootNode).map(Widget.getWidget).forEach(function(widget){
+		query("> *", this.rootNode).map(Widget.getWidget).forEach(function(widget){
 			var helper = widget.getHelper();
 			if(helper && helper.onLoad){
 				var already = onLoadHelpersSoFar[widget.type];
@@ -1765,44 +1786,51 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocus: function(widget, index, inline){
-		if(!this.editor.isActiveEditor()){
-			return;
-		}
-		var box, op, parent;
-
-		if (!metadata.queryDescriptor(widget.type, "isInvisible")) {
-			var node = widget.getStyleNode(),
-				helper = widget.getHelper();
-			if(helper && helper.getSelectNode){
-				node = helper.getSelectNode(this) || node;
+		Widget.requireWidgetHelper(widget.type).then(function(helper) { 
+			if(!this.editor.isActiveEditor()){
+				return;
 			}
-			var box = GeomUtils.getMarginBoxPageCoords(node);
-
-			parent = widget.getParent();
-			op = {move: !(parent && parent.isLayout && parent.isLayout())};
-
-			//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
-			var resizable = (parent && parent.isLayout && parent.isLayout() ) ?
-					"none" : metadata.queryDescriptor(widget.type, "resizable");
-			switch(resizable){
-			case "width":
-				op.resizeWidth = true;
-				break;
-			case "height":
-				op.resizeHeight = true;
-				break;
-			case "both":
-				op.resizeWidth = true;
-				op.resizeHeight = true;
+			var box, op, parent;
+	
+			if (!metadata.queryDescriptor(widget.type, "isInvisible")) {
+				//Get the margin box (deferring to helper when available)
+				var box = null;
+				var helper = widget.getHelper();
+				if(helper && helper.getMarginBoxPageCoords){
+					box = helper.getMarginBoxPageCoords(widget);
+				} else {
+					var node = widget.getStyleNode();
+					if(helper && helper.getSelectNode){
+						node = helper.getSelectNode(this) || node;
+					}
+					box = GeomUtils.getMarginBoxPageCoords(node);
+				}
+	
+				parent = widget.getParent();
+				op = {move: !(parent && parent.isLayout && parent.isLayout())};
+	
+				//FIXME: need to consult metadata to see if layoutcontainer children are resizable, and if so on which axis
+				var resizable = (parent && parent.isLayout && parent.isLayout() ) ?
+						"none" : metadata.queryDescriptor(widget.type, "resizable");
+				switch(resizable){
+				case "width":
+					op.resizeWidth = true;
+					break;
+				case "height":
+					op.resizeHeight = true;
+					break;
+				case "both":
+					op.resizeWidth = true;
+					op.resizeHeight = true;
+				}
 			}
-		}
-		this.focus({
-			box: box,
-			op: op,
-			hasLayout: (widget.isLayout && widget.isLayout()),
-			isChild: parent && parent.isLayout && parent.isLayout()
-		}, index, inline);
-			
+			this.focus({
+				box: box,
+				op: op,
+				hasLayout: (widget.isLayout && widget.isLayout()),
+				isChild: parent && parent.isLayout && parent.isLayout()
+			}, index, inline);
+		}.bind(this));	
 	},
 	
 	updateFocusAll: function(){
@@ -2059,7 +2087,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getFlowLayout: function() {
 		var htmlElement = this.getDocumentElement(),
 			bodyElement = htmlElement.getChildElement("body"),
-			flowLayout = bodyElement.getAttribute(PREF_LAYOUT_ATTR);
+			flowLayout = bodyElement.getAttribute(PREF_LAYOUT_ATTR),
+			flowLayoutP6 = bodyElement.getAttribute(PREF_LAYOUT_ATTR_P6);
+		if(!flowLayout && flowLayoutP6){
+			// Migrate from old attribute name (data-maqetta-flow-layout) to new attribute name (data-maq-flow-layout)
+			bodyElement.removeAttribute(PREF_LAYOUT_ATTR_P6);
+			bodyElement.setAttribute(PREF_LAYOUT_ATTR, flowLayoutP6);
+			flowLayout = flowLayoutP6;
+			this.editor._visualChanged();
+		}
 		if (!flowLayout){ // if flowLayout has not been set in the context check the edit prefs
 			//var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 			//flowLayout = editorPrefs.flowLayout;
@@ -2903,7 +2939,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// add to DOM...
 		dojo.withGlobal(this.getGlobal(), function() {
-			dojo.create(tag, attrs, dojo.query('head')[0]);
+			dojo.create(tag, attrs, query('head')[0]);
 		});
 	},
 	
@@ -2937,8 +2973,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					queryStr += '[' + name + '="' + attrs[name] + '"]';
 				}
 			}
-			//dojo.destroy(dojo.query(queryStr)[0]);
-			var n = dojo.query(queryStr)[0];
+			//dojo.destroy(query(queryStr)[0]);
+			var n = query(queryStr)[0];
 			if (n){ // throws exception if n is null
 			    dojo.destroy(n);
 			}

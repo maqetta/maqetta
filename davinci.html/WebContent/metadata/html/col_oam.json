@@ -1,9 +1,9 @@
 {
-	"id": "http://www.w3.org/html/tr",
-	"name": "html.tr",
+	"id": "http://www.w3.org/html/col",
+	"name": "html.col",
 	"spec": "1.0",
 	"version": "1.0",
-	"property": {
+	"property": {	
 		"align": {
 			"datatype": "string",
 			"option": [
@@ -40,6 +40,11 @@
 			"description": "Not supported in HTML5.",
 			"hidden": true
 		},
+		"span": {
+			"datatype": "number",
+			"description": "Specifies the number of columns a <col> element should span",
+			"hidden": true
+		},
 		"valign": {
 			"datatype": "string",
 			"option": [
@@ -62,7 +67,12 @@
 			"defaultValue": "middle",
 			"description": "Not supported in HTML5.",
 			"hidden": true
+		},
+		"width": {
+			"datatype": "string",
+			"description": "Not supported in HTML5.",
+			"hidden": true
 		}
 	},
-	"content": "<tr></tr>"
+	"content": "<col></col>"
 }

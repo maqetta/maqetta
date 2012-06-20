@@ -20,7 +20,7 @@ define(function() {
 	};
 
 	var handler = function() {
-		if (document.body.getAttribute('data-davinci-ws') == 'collapse') {
+		if (document.body.getAttribute('data-maq-ws') == 'collapse') {
 			collapse(document.body);
 		}
 	};

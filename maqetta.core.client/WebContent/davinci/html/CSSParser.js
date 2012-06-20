@@ -418,7 +418,7 @@ CSSParser.parse = function (text, parentElement) {
 						if (token.content != "*") { // is probably bad syntax,
 							// but dojo.css has "
 							// *font-size "
-							error("expecting identifier");
+							error("expecting identifier around " +selector.getText()+ "{ "+property.name + ": "+ propery.value);
 						} else {
 							nextToken();
 							propertyName += token.content;
@@ -437,7 +437,7 @@ CSSParser.parse = function (text, parentElement) {
 					property.name = propertyName;
 					if (!skipNext) {
 						if (nextToken().content != ":")  {
-							error("expecting ':'");
+							error("expecting ':' " +selector.getText()+ "{ "+property.name + ": "+ propery.value);
 						}
 					}
 					nextToken();

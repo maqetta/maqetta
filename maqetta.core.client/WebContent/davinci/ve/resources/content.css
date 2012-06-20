@@ -92,9 +92,9 @@
 }
 
 .editSubwidgetFocusFrame{
-	outline-style: dotted;
-	outline-color: red;
-	outline-width: 3px;
+	border-style: dotted;
+	border-color: red;
+	border-width: 3px;
 	z-index: 1000002;
 	
 }
@@ -175,14 +175,10 @@ TABLE.HtmlWidget {
 TD.HtmlWidget {
 	outline: 1px dotted #AAA;
 	outline-color:rgba(128,128,128,0.4);
-	width: 1em;
-	height: 1em;
 }
 TH.HtmlWidget {
 	outline: 1px dotted #AAA;
 	outline-color:rgba(128,128,128,0.4);
-	width: 1em;
-	height: 1em;
 }
 AUDIO.HtmlWidget {
 	min-width:1em;

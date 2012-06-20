@@ -654,6 +654,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 						context.rootNode.ownerDocument.defaultView.davinci &&
 						context.rootNode.ownerDocument.defaultView.davinci.states);
 				if(states){
+//FIXME: This isn't working yet with nested state containers.
 					states.setState(widget.pageState);
 				}
 			}

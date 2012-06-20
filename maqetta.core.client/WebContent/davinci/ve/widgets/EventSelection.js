@@ -169,6 +169,7 @@ define(["dojo/_base/declare",
 				if (widget.properties && widget.properties[name]) {
 					value = widget.properties[name];
 					if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
+//FIXME: This is broken now, and was hugely fragile to begin with
 						var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
 						value = state + ":State";
 					}

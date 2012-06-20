@@ -32,9 +32,7 @@ States.prototype = {
 		var allStateContainers = [];
 		function findStateContainers(currentNode, stateContainersArray){
 			var childrenStateContainersArray = stateContainersArray;
-//FIXME: This is what we want ultimately
-//			if(currentNode.states && currentNode.states.states){
-			if(currentNode.tagName == 'BODY'){
+			if(currentNode._maqAppStates && currentNode._maqAppStates.states){
 				var o = {stateContainerNode:currentNode, children:[]};
 				stateContainersArray.push(o);
 				childrenStateContainersArray = o.children;
@@ -113,6 +111,34 @@ States.prototype = {
 				pn = pn.parentNode;
 			}
 		}
+	},
+
+	/**
+	 * Returns a flat list of all states that apply to the given node.
+	 * @param {Element} node  An element node in the document
+	 * @returns {[string]}  An array of strings, one item for each state that 
+	 *       that is defined by a parent state container.
+	 *       Note that there might be duplicate names.
+	 *       "Normal" is only added once even if there are multiple
+	 *       state containers.
+	 */ 
+	getAllStatesForNode: function(node){
+		var statesList = [this.NORMAL];
+		if(node){
+			var pn = node.parentNode;
+			while(pn){
+				if(pn._maqAppStates && pn._maqAppStates.states){
+					for(var i=0; i<pn._maqAppStates.states.length; i++){
+						statesList.push(pn._maqAppStates.states[i]);
+					}
+				}
+				if(pn.tagName == 'BODY'){
+					break;
+				}
+				pn = pn.parentNode;
+			}
+		}
+		return statesList;
 	},
 
 	/**
@@ -244,6 +270,7 @@ States.prototype = {
 		return node && node._maqAppStates && node._maqAppStates.current;
 	},
 	
+//FIXME: Need to update comments
 	/**
 	 * Trigger updates to the given node based on the given "newState".  
 	 * This gets called for every node that is affected by a change in the given state.
@@ -262,12 +289,28 @@ States.prototype = {
 	 * FIXME: updateWhenCurrent is ugly. Higher level code could include that logic
 	 * FIXME: _silent is ugly. Higher level code code broadcast the change.
 	 */
+/*FIXME: Old logic
 	setState: function(node, newState, updateWhenCurrent, _silent){
 		if (arguments.length < 2) {
 			newState = arguments[0];
 			node = undefined;
 		}
-		node = this._getWidgetNode(node);
+*/
+	setState: function(newState, ElemOrEvent, updateWhenCurrent, _silent){
+		var node;
+		// Determine if second param is an Element or Event object
+		if(ElemOrEvent && ElemOrEvent.tagName && ElemOrEvent.nodeName){
+			// ElemOrEvent is an Element
+			node = ElemOrEvent._maqAppStates ? ElemOrEvent : this.findStateContainer(ElemOrEvent, newState);
+		}else if(ElemOrEvent && ElemOrEvent.target && ElemOrEvent.currentTarget){
+			// ElemOrEvent is an Event
+			node = ElemOrEvent.currentTarget;
+			if(!node._maqAppStates){
+				node = this.findStateContainer(node, newState);
+			}
+		}else{
+			node = this._getWidgetNode();;
+		}
 		if (!node || !node._maqAppStates || (!updateWhenCurrent && node._maqAppStates.current == newState)) {
 			return;
 		}
@@ -295,7 +338,8 @@ States.prototype = {
 		this._updateSrcState (node);
 		
 	},
-	
+
+//FIXME: Probably want to get rid of resetState()
 	/**
 	 * Force a call to setState so that styling properties get reset for the given node
 	 * based on the current application state.
@@ -306,7 +350,7 @@ States.prototype = {
 		}
 		var body = node.ownerDocument.body;
 		var currentState = this.getState(body);
-		this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);	
+		this.setState(currentState, node, true/*updateWhenCurrent*/, true /*silent*/);	
 	},
 	
 	/**
@@ -855,7 +899,7 @@ States.prototype = {
 		}
 		var currentState = this.getState(node);
 		if (state == currentState) {
-			this.setState(node, undefined);
+			this.setState(undefined, node);
 		}
 /*FIXME: old logic
 		delete node.states[state].origin;
@@ -888,7 +932,7 @@ States.prototype = {
 		node._maqAppStates[newName] = node._maqAppStates[oldName];
 		delete node._maqAppStates[oldName];
 		if (!property) {
-			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName}]);
+			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName, stateContainerNode:node, }]);
 		}
 		this._updateSrcState (node);
 		return true;

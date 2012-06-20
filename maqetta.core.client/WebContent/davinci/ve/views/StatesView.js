@@ -585,7 +585,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				} else {
 					if(context && stateContainerNode){
 						var state = item.name[0];
-						States.setState(stateContainerNode, state);
+						States.setState(state, stateContainerNode);
 						context.deselectInvisible();
 						context.updateFocusAll();
 					}
@@ -593,7 +593,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			}else{
 /*FIXME: Need to figure out what to do about initial states when using mobile views
 				if(bodyNode){
-					States.setState(bodyNode, null);
+					States.setState(null, bodyNode);
 				}
 */
 				if(item.sceneId){

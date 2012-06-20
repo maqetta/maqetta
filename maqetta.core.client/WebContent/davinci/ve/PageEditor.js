@@ -192,6 +192,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if(wasTyping) {
 			this.visualEditor.skipSave = true;
 		}
+//FIXME: NEED TO UPDATE THIS LOGIC FOR NESTED STATES
 		var context = this.visualEditor.context,
 			statesScenes = context ? context.getStatesScenes() : undefined;
 

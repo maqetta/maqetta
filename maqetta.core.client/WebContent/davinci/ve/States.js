@@ -57,7 +57,7 @@ var veStates = declare(maqettaStates, {
 		//var currentState = this.getState(body);
 		//if(!this.isNormalState(currentState)){
 //FIXME: Is this really necessary? Shouldn't we be calling setState only on state containers?
-			//this.setState(node, currentState, true/*updateWhenCurrent*/, true /*silent*/);
+			//this.setState(currentState, node, true/*updateWhenCurrent*/, true /*silent*/);
 		//}		
 	},
 	
@@ -360,11 +360,9 @@ var veStates = declare(maqettaStates, {
 					this.rename(child, e.oldName, e.newName, true);
 					this._updateEvents(child, e.oldName, e.newName);
 				}
-
-//FIXME: getState(node)
-				var state = this.getState();
+				var state = this.getState(e.stateContainerNode);
 				if (state === e.oldName) {
-					this.setState(e.node, e.newName, false, true);
+					this.setState(e.newName, e.stateContainerNode, false, true);
 				}
 			}));
 			

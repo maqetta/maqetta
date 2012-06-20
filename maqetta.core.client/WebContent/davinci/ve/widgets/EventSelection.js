@@ -86,7 +86,8 @@ define(["dojo/_base/declare",
 			value.replace(/"/,'\\"');
 			
 			if (value && value.match(/.*:State$/)) {
-				value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
+				value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "',event)";
+				widget.set('value', value);
 			}
 			var properties = {};
 			
@@ -105,18 +106,18 @@ define(["dojo/_base/declare",
 			return root;
 		},
 
-/*FIXME: old logic
 		_updateValues: function(e) {
 			if(!e || !e.node || !e.node._dvWidget){
 				return;
 			}
 			var widget = e.node._dvWidget;
+/*FIXME: old logic
 			this._buildSelectionValues(e.node);
+*/
 			if (widget == this._widget) {
 				this._setValues();
 			}
 		},
-*/
 
 		onWidgetSelectionChange : function(){
 			if(!this._widget){

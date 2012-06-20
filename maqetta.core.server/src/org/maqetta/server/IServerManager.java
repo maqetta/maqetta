@@ -21,5 +21,7 @@ public interface IServerManager {
 	public IExtension[] getExtensions(String extensionPoint);
 
 	public ILibraryManager getLibraryManager();
+	
+	public boolean sendEmail(String to, String from, String subect, String conetent);
 
 }

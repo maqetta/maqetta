@@ -22,9 +22,7 @@ define([
 
 	var _ViewContent = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		
-		templateString: template,
-
-		widgetsInTemplate: true
+		templateString: template
 
 	});
 

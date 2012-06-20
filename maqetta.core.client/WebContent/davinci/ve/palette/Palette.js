@@ -284,8 +284,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			"Drawing Tools":"drawing-tools-widgets.png",
 			"Clip Art":"clipart-widgets.png",
 			"Untested Dojo & HTML":"untested.gif",
-			"jQuery UI":"jquery-wdgts.gif",
-			"YUI":"yui-widgets.gif",
+//			"jQuery UI":"jquery-wdgts.gif",
+//			"YUI":"yui-widgets.gif",
 			"Lotus One UI":"lts-widgets.gif",
 			"Dojox Mobile":"dojox.mobile.cat.gif"
 		};

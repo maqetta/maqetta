@@ -15,15 +15,6 @@ define([
 
 var helperCache = {};
 
-var getUniqueId = function() {
-    var dj = dojo.window.get(dojo.doc).dojo,
-        id;
-    do {
-        id = "widget_" + Math.floor(0x7FF * Math.random());
-    } while(dj.byId(id));
-    return id;
-};
-
 //Add temporary IDs to nested children
 //Assumes iframe's DOM and the model are in sync regarding the order of child nodes
 var childrenAddIds = function(context, node, srcElement) {
@@ -366,8 +357,7 @@ createWidget: function(widgetData) {
 
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
-    var uniqueId = getUniqueId();
-    var content = md.content.trim().replace(/\s+/g, ' ').replace(/__WID__/g, uniqueId);
+    var content = md.content.trim().replace(/\s+/g, ' ');
 	var node = dojo.window.get(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(md.tagName || "div", md.attributes);
@@ -403,47 +393,6 @@ createWidget: function(widgetData) {
     }
     if (node.innerHTML) {
         srcElement.addText(node.innerHTML);
-    }
-
-    if (md.javascript) {
-        var js = {};
-        js.location = md.javascript.location || "afterContent";
-        if (md.javascript.src) {
-            js.src = md.javascript.src;
-        } else {
-            js.$text = (md.javascript.$text || md.javascript).replace(/__WID__/g, uniqueId);
-        }
-
-        if (js.location == "atEnd") {
-            console.error("ERROR: <javascript> metadata element -- 'location' of 'atEnd' not supported");
-            js.location = "afterContent";
-        }
-
-        var script = dojo.doc.createElement("script");
-        var scriptModel = new HTMLElement("script");
-        if (js.src) {
-            script.setAttribute("src", js.src);
-            scriptModel.addAttribute("src", js.src);
-        } else {
-            script.text = js.$text;
-            scriptModel.script = "";
-            scriptModel.setScript(js.$text);
-        }
-
-        var wrapper = dojo.doc.createElement("div");
-        var wrapperModel = new HTMLElement("div");
-        if (js.location == "beforeContent") {
-            wrapper.appendChild(script);
-            wrapperModel.addChild(scriptModel);
-        }
-        wrapper.appendChild(node);
-        wrapperModel.addChild(srcElement);
-        if (js.location == "afterContent") {
-            wrapper.appendChild(script);
-            wrapperModel.addChild(scriptModel);
-        }
-        node = wrapper;
-        srcElement = wrapperModel;
     }
 
     var requiresId = metadata.queryDescriptor(type, "requiresId"),

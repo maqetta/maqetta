@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,13 +25,10 @@ import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
-import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class Publish extends Command {
-	SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
+	
 
     @Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
@@ -163,18 +159,13 @@ public class Publish extends Command {
 
 	private void notifyRelatedPersons(String from, String to, String subject,
 			String htmlContent) {
-		SimpleMessage email = new SimpleMessage(from, to, null, null, subject, htmlContent);
-		try {
-			if(mailer != null){
-				mailer.sendMessage(email);
-			}else{
-				this.responseString = htmlContent;
-				System.out.println("Mail server is not configured. Mail notificatioin is cancelled.");
-			}
-		} catch (MessagingException e) {
-			this.responseString = htmlContent;
-			e.printStackTrace();
+		
+		if( ServerManager.getServerManger().sendEmail(from, to, subject, htmlContent) ){
+			this.responseString = "OK";
+		}else{
+			this.responseString = "Email send failure";
 		}
+	
 	}
 
 	private String getHtmlContent(IUser user, String message, String url) {

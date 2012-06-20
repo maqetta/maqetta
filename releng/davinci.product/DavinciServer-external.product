@@ -29,9 +29,7 @@
       <plugin id="davinci.dojo_1_7"/>
       <plugin id="davinci.gridx"/>
       <plugin id="davinci.html"/>
-      <plugin id="davinci.jqueryui_1_8"/>
       <plugin id="davinci.server.gzip"/>
-      <plugin id="davinci.yui_2_6_0"/>
       <plugin id="javax.servlet"/>
       <plugin id="maqetta.clipart"/>
       <plugin id="maqetta.core.client"/>

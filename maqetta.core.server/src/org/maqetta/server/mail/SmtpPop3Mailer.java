@@ -43,12 +43,18 @@ public class SmtpPop3Mailer {
 		String defaultMailServer = null;
 		String adminName = null;
 		String password = null;
-		
+		String port = null;
 		// Read it from the system properties
 		defaultMailServer = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
 		adminName = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);
 		password = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_PASSWORD);
 		
+		String[] mailSplit = defaultMailServer.split(":");
+		
+		if(mailSplit.length == 2){
+			defaultMailServer = mailSplit[0];
+			port = mailSplit[1];
+		}
 		if(defaultMailServer == null || "".equals(defaultMailServer)){
 			// Read it from the contributor bundle
 			IConfigurationElement mailConfig = ServerManager.getServerManger().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
@@ -60,9 +66,9 @@ public class SmtpPop3Mailer {
 		}
 		if (defaultMailServer != null && !"".equals(defaultMailServer) && dft == null){
 			if(adminName == null || "".equals(adminName)){
-				dft = new SmtpPop3Mailer(defaultMailServer);
+				dft = new SmtpPop3Mailer(defaultMailServer, port);
 			}else{
-				dft = new SmtpPop3Mailer(defaultMailServer, null, adminName, password);
+				dft = new SmtpPop3Mailer(defaultMailServer, null, port, adminName, password);
 			}
 			
 		}
@@ -85,15 +91,15 @@ public class SmtpPop3Mailer {
 		this.mailSession = mailSession;
 	}
 
-	public SmtpPop3Mailer(String smtpHost) {
-		this(smtpHost, null, null, null, false);
+	public SmtpPop3Mailer(String smtpHost, String port) {
+		this(smtpHost, null, port, null,null, false);
 	}
 
-	public SmtpPop3Mailer(String smtpHost, String pop3Host, String emailAccount, String password) {
-		this(smtpHost, pop3Host, emailAccount, password, true);
+	public SmtpPop3Mailer(String smtpHost, String pop3Host, String port, String emailAccount, String password) {
+		this(smtpHost, pop3Host, port, emailAccount, password, true);
 	}
 
-	public SmtpPop3Mailer(String smtpHost, String pop3Host, String emailAccount, String password,
+	public SmtpPop3Mailer(String smtpHost, String pop3Host, String port, String emailAccount, String password,
 			boolean smtpNeedsAuthen) {
 
 		this.emailAccount = emailAccount;
@@ -115,10 +121,14 @@ public class SmtpPop3Mailer {
 		mailSession = Session.getInstance(props);
 
 		if (smtpHost != null) {
-			smtpAccountUrl = new URLName("smtp", smtpHost, 25, null, emailAccount, password);
+			if(port==null)
+				port = "25";
+			smtpAccountUrl = new URLName("smtp", smtpHost, Integer.parseInt(port), null, emailAccount, password);
 		}
 		if (pop3Host != null) {
-			pop3AccountUrl = new URLName("pop3", pop3Host, 110, null, emailAccount, password);
+			if(port==null)
+				port = "110";
+			pop3AccountUrl = new URLName("pop3", pop3Host, Integer.parseInt(port), null, emailAccount, password);
 		}
 	}
 

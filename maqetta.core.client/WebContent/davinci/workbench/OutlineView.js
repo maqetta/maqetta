@@ -2,11 +2,10 @@ define([
 	"dojo/_base/declare",
 	"davinci/workbench/ViewPart",
 	"davinci/Workbench",
-	"davinci/ui/widgets/ToggleTree",
 	"davinci/ui/widgets/OutlineTree",
 	"dijit/layout/ContentPane",
 	"dojo/i18n!davinci/workbench/nls/workbench"
-], function(declare, ViewPart, Workbench, ToggleTree, OutlineTree, ContentPane, workbenchStrings){
+], function(declare, ViewPart, Workbench, OutlineTree, ContentPane, workbenchStrings){
 
 return declare("davinci.workbench.OutlineView", ViewPart, {
 

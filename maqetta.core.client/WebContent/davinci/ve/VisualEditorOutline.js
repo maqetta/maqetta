@@ -5,8 +5,7 @@ define([
 	"./commands/StyleCommand",
 	"./widget",
 	"./States",
-	"dijit/tree/dndSource",
-	"../html/ui/HTMLOutlineModel"
+	"dijit/tree/dndSource"
 ], function(
 	declare,
 	connect,
@@ -14,242 +13,228 @@ define([
 	StyleCommand,
 	Widget,
 	states,
-	dndSource,
-	HTMLOutlineModel
+	dndSource
 ){
 
-var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
+var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null, {
+	toggleMode: true,
+	betweenThreshold: 4,
+	showRoot: true,
+	
+	dndController: "dijit.tree.dndSource",
 
-		useRichTextLabel: true,
+	_context: null,
 
-		showRoot: true,
-		
-		toggleMode: true,
-		
-		dndController: "dijit.tree.dndSource",
-		
-		betweenThreshold: 4,
+	constructor: function(context) {
+		this._context = context;
+		this._handles = [];
 
-		constructor: function(context) {
-			this._context=context;
-			this._handles=[];
-			this._connect("onCommandStackExecute", "refresh"); // yikes.  this refreshes the entire tree anytime there's a change.  really bad if we're traversing the tree setting styles.
-			this._connect("activate", "refresh");
-			this._connect("setSource", "refresh");
+		this._connect("activate", "_rebuild");
+		this._connect("widgetChanged", "_widgetChanged");
+	},
 
-			connect.subscribe("/davinci/states/state/changed/start", this,
-				function(e) {
-					this._skipRefresh = true;
-				}
-			);
-			connect.subscribe("/davinci/states/state/changed/end", this,
-				function(e) {
-					delete this._skipRefresh;
-					this.refresh();
-				}
-			);
-		},
-		
-		_connect: function(contextFunction, thisFunction) {
-			this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
-		},
+	getRoot: function(onItem, onError) {
+		onItem(this._context.rootWidget || {id: "myapp", label:"application"});
+	},
 
-		destroy: function(){
-			this._handles.forEach(connect.disconnect);
-		},
-			
-		// =======================================================================
-		// Methods for traversing hierarchy
-		
-		getRoot: function(onItem){ 
-			onItem(this._context.rootWidget || { id: "myapp", label:"application" });
-		}, 
-		
-		mayHaveChildren: function(/*dojo.data.Item*/ item){
-			if (item && item.type && item.type.indexOf("OpenAjax.") === 0) {
-				return false;
-			}
+	getLabel: function(item) {
+		if (item.id == "myapp") {
+			return this._context.model.fileName;
+		}
 
-			return this._childList(item).length;
-		},
-		
-		_childList: function(parentItem) {
-			var widgets, children=[];
-
-			if (!this._context.rootWidget || (parentItem.type == "state") || parentItem.type == 'html.stickynote' || parentItem.type == 'html.richtext') {
-				return [];
-			}
-
-			if (parentItem === this._context.rootNode) {
-				widgets = this._context.getTopWidgets();
-			} else {
-				widgets = parentItem.getChildren();
-			}
-
-			dojo.forEach(widgets, function(widget) {
-				if ( widget.getContext && widget.getContext() && ! widget.internal ) {
-					// managed widget only
-					children.push(widget);
-				}
-			});
-			return children;
-		},
-		
-		getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
-			onComplete(this._childList(parentItem));
-		},
-		
-		// =======================================================================
-		// Inspecting items
-		
-		getIdentity: function(/* item */ item){
-			return item.id;
-		},
-		
-		getLabel: function(/*dojo.data.Item*/ item){
-			var type= item.type;
-			var label;
-			
-			if(item.id == "myapp"){
-				return this._context.model.fileName;//"Application";
-			}
-			if (item.isWidget) {
-				label = Widget.getLabel(item);
-				return label;
-			}
-			if (!type) {
-				return;
-			}
-			
-			var lt = this.useRichTextLabel ? "&lt;" : "<";
-			var gt = this.useRichTextLabel ? "&gt;" : ">";
-
-			if (type.indexOf("html.") === 0) {
-				label = lt + type.substring("html.".length) + gt;
-			} else if (type.indexOf("OpenAjax.") === 0) {
-				label = lt + type.substring("OpenAjax.".length) + gt;
-			} else if (type.indexOf(".") > 0 ) {
-				label = type.substring(type.lastIndexOf(".")+1);
-			} else {
-				label = item.label || type;
-			}
-			
-			var widget = Widget.byId(item.id, this._context.getDocument());
-			if (widget) {
-				var id = widget.getId();
-				if (id ) {
-					label += " id=" + id;
-				}
-			}
+		if (item.isWidget) {
+			label = Widget.getLabel(item);
 			return label;
-		},
-		
-		postCreate: function(node) {
-			var widget = node.item;
-			var type = widget.type;
-			/*FIXME: To add visibility icon for subwidgets, I think the following
-				commented code is *part* of the solution.
-			if (type == "subwidget") {
-				dojo.addClass(node.domNode,"dvSubwidgetNode");
-			}
-			*/
-		},
-		
-		shouldShowElement: function(elementId, item) {
-			if (elementId == "toggleNode") {
-				return (item.type != "states" && item.id != "myapp");
-			}
-			return true;
-		},
-		
+		}
 
-		toggle: function(widget, on, node) {
-			var helper = widget.getHelper();
-			var continueProcessing = true;
-			if(helper && helper.onToggleVisibility){
-				//FIXME: Make sure that helper functions deals properly with CommandStack and undo
-				continueProcessing = helper.onToggleVisibility(widget, on);
-			}
-			if(continueProcessing){
-				this._toggle(widget, on, node);
-				return true;
-			}else{
-				return false;
-			}
-		},
-		
-		_toggle: function(widget, on, node) {
-			var visible = !on;
-			var value = visible ? "" : "none";
-			var command = new StyleCommand(widget, [{"display": value}], 'current');
-			this._context.getCommandStack().execute(command);
-		},
-		
-		isToggleOn: function(item) {
-			return !states.isVisible(item.domNode);
-		},
-		
-		newItem: function(/* Object? */ args, /*Item?*/ parent){
-		},
-		
-		pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem, /*Boolean*/ copy, newIndex){
-			if (!childItem || !newParentItem || !oldParentItem) {
-				return;
-			}
-			if (newParentItem.id == "myapp") {
-				newParentItem = this._context.rootNode;
-			}
-			var command = new ReparentCommand(childItem, newParentItem, newIndex);
-			this._context.getCommandStack().execute(command);
-		},
-		
+		var type = item.type;
 
-		checkItemAcceptance: function(target, source, position) {
-			switch(position) {
+		if (!type) {
+			return;
+		}
+		
+		var lt = this.useRichTextLabel ? "&lt;" : "<";
+		var gt = this.useRichTextLabel ? "&gt;" : ">";
+
+		if (type.indexOf("html.") === 0) {
+			label = lt + type.substring("html.".length) + gt;
+		} else if (type.indexOf("OpenAjax.") === 0) {
+			label = lt + type.substring("OpenAjax.".length) + gt;
+		} else if (type.indexOf(".") > 0 ) {
+			label = type.substring(type.lastIndexOf(".")+1);
+		} else {
+			label = item.label || type;
+		}
+		
+		var widget = Widget.byId(item.id, this._context.getDocument());
+		if (widget) {
+			var id = widget.getId();
+			if (id ) {
+				label += " id=" + id;
+			}
+		}
+		return label;
+	},
+
+	_getChildren: function(item) {
+		var widgets, children=[];
+
+		if (!this._context.rootWidget || item.type == "state" || item.type == 'html.stickynote' || item.type == 'html.richtext') {
+			return [];
+		}
+
+		if (item.id == "myapp") {
+			widgets = this._context.getTopWidgets();
+		} else if (item === this._context.rootNode) {
+			widgets = this._context.getTopWidgets();
+		} else {
+			widgets = item.getChildren();
+		}
+
+		dojo.forEach(widgets, function(widget) {
+			if (widget.getContext && widget.getContext() && !widget.internal) {
+				// managed widget only
+				children.push(widget);
+			}
+		});
+
+		return children;
+	},
+	
+	mayHaveChildren: function(item) {
+		if (item && item.type && item.type.indexOf("OpenAjax.") === 0) {
+			return false;
+		}
+
+		return this._getChildren(item).length > 0;
+	},
+
+	getIdentity: function(item){
+		return item.id;
+	},
+
+	getChildren: function(item, onComplete, onError) {
+		onComplete(this._getChildren(item));
+	},
+
+	put: function(item, options) {
+		var parent = item.getParent();
+
+		this.onChildrenChange(parent, this._getChildren(parent));
+
+		return this.getIdentity(item);
+	},
+
+	add: function(item, options) {
+		(options = options || {}).overwrite = false;
+		return this.put(item, options);
+	},
+
+	remove: function(item) {
+		this.onDelete(item);
+	},
+
+	newItem: function(/* Object? */ args, /*Item?*/ parent) {
+	},
+
+	pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem, /*Boolean*/ copy, newIndex) {
+		if (!childItem || !newParentItem || !oldParentItem) {
+			return;
+		}
+		if (newParentItem.id == "myapp") {
+			newParentItem = this._context.rootNode;
+		}
+
+		var command = new ReparentCommand(childItem, newParentItem, newIndex);
+		this._context.getCommandStack().execute(command);
+	},
+
+	checkItemAcceptance: function(target, source, position) {
+		switch(position) {
 			case "before":
 			case "after":
 				return true;
-			default:  // if not dropping before or after an item, make sure the target item has a container node
+			default: // if not dropping before or after an item, make sure the target item has a container node
 				var item = dijit.getEnclosingWidget(target).item;
 				var hasContainerNode = (item.getContainerNode && item.getContainerNode()) || item.id == "myapp";
 				return hasContainerNode;
-			}
-		},
-		
-		onChange: function(/*dojo.data.Item*/ item){
-		},
-		
-		onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
-		},
-		
-		onRefresh: function(){
-		},
-		
-		refresh: function() {
-			if (this._skipRefresh) { return; }
-
-			// KLUDGE: preserve state
-			var tree = dijit.byId("davinci.ui.outline").outlineTree,
-            	opened = [];
-            for(var node = tree._getRootOrFirstNode(); node; node = tree._getNextNode(node)) {
-            	if(node.isExpanded) {
-                	opened.push(node.item);            		
-            	}
-            }
-
-			var node = this._context.rootNode;
-			if (node){	// shouldn't be necessary, but sometime is null
-				this.onChildrenChange(node, this._childList(node));
-			}
-
-			// KLUDGE: restore tree state
-			opened.forEach(function(item){
-				tree.getNodesByItem(item).forEach(function(node){
-					tree._expandNode(node);
-				});
-			});
 		}
-	});
+	}, 
+
+	onChildrenChange: function(/*dojo.data.Item*/ parent, /*dojo.data.Item[]*/ newChildrenList){
+	},
+
+	_rebuild: function() {
+		if (this._skipRefresh) { return; }
+
+		var node = this._context.rootNode;
+
+		if (node) {	// shouldn't be necessary, but sometime is null
+			this.onChildrenChange(node, this._getChildren(node));
+		}
+	},
+
+	_widgetChanged: function(type, widget) {
+		if (type === this._context.WIDGET_ADDED) {
+			this.add(widget);
+		} else if (type === this._context.WIDGET_REMOVED) {
+			this.remove(widget);
+		} else if (type === this._context.WIDGET_MODIFIED) {
+			this.onChange(widget);
+		}
+	},
+
+	// toggle code
+	toggle: function(widget, on, node) {
+		var helper = widget.getHelper();
+		var continueProcessing = true;
+		if(helper && helper.onToggleVisibility){
+			//FIXME: Make sure that helper functions deals properly with CommandStack and undo
+			continueProcessing = helper.onToggleVisibility(widget, on);
+		}
+		if(continueProcessing){
+			this._toggle(widget, on, node);
+			return true;
+		}else{
+			return false;
+		}
+	},
+	
+	_toggle: function(widget, on, node) {
+		var visible = !on;
+		var value = visible ? "" : "none";
+		var command = new StyleCommand(widget, [{"display": value}], 'current');
+		this._context.getCommandStack().execute(command);
+	},
+
+	shouldShowElement: function(elementId, item) {
+		if (elementId == "toggleNode") {
+			return (item.type != "states" && item.id != "myapp");
+		}
+		return true;
+	},
+
+	_getToggledItemsAttr: function(){
+		var items = [];
+		for(var i in this.toggledItems){
+			items.push(i);
+		}
+		return items; // dojo.data.Item[]
+	},
+
+	isToggleOn: function(item) {
+		return !states.isVisible(item.domNode);
+	},
+	// end toggle code
+
+	_connect: function(contextFunction, thisFunction) {
+		this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));
+	},
+
+	destroy: function(){
+		this._handles.forEach(connect.disconnect);
+	}
+});
 
 return declare("davinci.ve.VisualEditorOutline", null, {
 
@@ -264,9 +249,9 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		this._connect("onSelectionChange", "onSelectionChange");
 		this._connect("deselect", "deselect"); 
 		
-		
-		this._widgetModel=new OutlineTreeModel(this._context);
-		this._srcModel=new HTMLOutlineModel(editor.model);
+		this._widgetModel=new DesignOutlineTreeModel(this._context);
+		//this._srcModel=new HTMLOutlineModel(editor.model);
+
 		connect.subscribe("/davinci/states/state/changed", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&
@@ -286,11 +271,8 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 				while (children.length) {
 					var child = children.shift();
 					if (child) {
-						var node = this._tree.getNode(child);
-						if (node) {
-							var visible = states.isVisible(child.domNode, e.newState);
-							node._setToggleAttr(!visible);
-						}
+						var visible = states.isVisible(child.domNode, e.newState);
+						this._tree.toggleNode(child, !visible);
 						children = children.concat(child.getChildren());
 					}
 				}

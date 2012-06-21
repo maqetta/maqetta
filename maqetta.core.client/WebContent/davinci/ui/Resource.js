@@ -310,7 +310,7 @@ var uiResource = {
 		addFiles: function(){
 			var addFiles = new AddFiles({selectedResource: getSelectedResource()});
 
-			Workbench.showModal(addFiles, uiNLS.addFiles, '', null);
+			Workbench.showModal(addFiles, uiNLS.addFiles, {width: 350}, null);
 		},
 
 		getNewFileName:function (fileOrFolder, fileDialogParentFolder, extension){

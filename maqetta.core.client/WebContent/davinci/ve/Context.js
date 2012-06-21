@@ -2575,7 +2575,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(!theme) {
 			return [];
 		}
-
+/*FIXME: OLD LOGIC
 //FIXME: Ramifications if nested states?
 //FIXME: getState(node)?
 		var state = davinci.ve.states.getState();
@@ -2583,7 +2583,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(!state) {
 			state = "Normal";
 		}
-		
+*/
+		var state = "Normal";
 		var widget = this.getSelection();
 		if(!widget.length){
 			return [];
@@ -2608,11 +2609,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// For theme editor, we need to use whatever state is selected in States palette
 		// For page editor, always use "Normal"
 		var state = "Normal";
+/*FIXME: OLD LOGIC
 		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
 //FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
 //getState(node)
 			state = davinci.ve.states.getState();
 		}
+*/
 		
 		var widgetType = theme.loader.getType(widget),
 			selectors = theme.metadata.getStyleSelectors(widgetType,state);
@@ -3344,7 +3347,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getStatesScenes: function() {
 		var a = this.getCurrentScenes();
 //FIXME: Yikes. getState(node)?
-		var state = davinci.ve.states.getState();
+//FIXME: This needs to take into account nested state containers
+		var state = davinci.ve.states.getState(this.rootNode);
 		a.push({sceneId:state});
 		return a;
 	},

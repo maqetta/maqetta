@@ -11,7 +11,7 @@ define([
 return declare("davinci.ve.commands.MoveCommand", null, {
 	name: "move",
 
-	constructor: function(widget, left, top, commandForXYDeltas, oldBox, applyToWhichStates, disableSnapping){
+	constructor: function(widget, left, top, commandForXYDeltas, oldBox, applyToWhichState, disableSnapping){
 		this._id = (widget ? widget.id : undefined);
 		this._context = widget.getContext();
 		
@@ -26,11 +26,11 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		
 		this._oldBox = oldBox;
 		
-		// applyToWhichStates controls whether style change is attached to Normal or other states
-		//   "current" => apply to currently active state
-		//   [...array of strings...] => apply to these states (may not yet be implemented)
-		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
-		this._applyToStateIndex = States.getApplyToStateIndex(applyToWhichStates);
+		// applyToWhichState controls whether style change is attached to Normal or other states
+		//   (null|undefined|"undefined"|"Normal") => apply to Normal state
+		//   other string => apply to that particular state
+		this._applyToStateIndex = (!applyToWhichState || applyToWhichState=='Normal' || applyToWhichState=='undefined')
+									? 'undefined' : applyToWhichState;
 		
 		this._disableSnapping = disableSnapping;
 	},
@@ -40,7 +40,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 			return;
 		}
 		var widget = Widget.byId(this._id);
-		if(!widget){
+		if(!widget || !widget.domNode){
 			return;
 		}
 		var context = this._context;
@@ -94,7 +94,6 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		var newStyleArray = [{left:newLeft+'px'},{top:newTop+'px'}] ;
         var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
-		var currentStateIndex = States.getCurrentStateIndex();
 		if(this._oldBox){
 			var oldLeft = this._oldBox.l - offsetParentBorderBoxPageCoords.l - borderExtents.l;
 			var oldTop = this._oldBox.t - offsetParentBorderBoxPageCoords.t - borderExtents.t;
@@ -107,9 +106,14 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		}else{
 			styleValuesAllStates[this._applyToStateIndex] = newStyleArray;
 		}
-		
 		widget.setStyleValuesAllStates(styleValuesAllStates);
-		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
+		var currentStatesList = States.getStatesListCurrent(widget.domNode);
+		var styleValuesCanvas = StyleArray.mergeStyleArrays([], styleValuesAllStates['undefined']);
+		for(var i=0; i<currentStatesList.length; i++){
+			if(styleValuesAllStates[currentStatesList[i]]){
+				styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesCanvas, styleValuesAllStates[currentStatesList[i]]);
+			}
+		}
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(styleValuesAllStates['undefined']);
 		widget.refresh();

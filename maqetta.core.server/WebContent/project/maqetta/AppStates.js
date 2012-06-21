@@ -176,7 +176,9 @@ States.prototype = {
 	 * FIXME: get rid of the associative parameter.
 	 */ 
 	getStates: function(node, associative){
+/*FIXME: Old logic
 		node = this._getWidgetNode(node); 
+*/
 		var states = node && node._maqAppStates;
 		if(states && states.states){
 			var names = associative ? {"Normal": "Normal"} : ["Normal"];
@@ -248,11 +250,13 @@ States.prototype = {
 	 * return {boolean} 
 	 */
 	hasState: function(node, state){ 
+/*FIXME: old logic
 		if (arguments.length < 2) {
 			state = arguments[0];
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
+*/
 /*FIXME: old logic
 		return !!(node && node.states && node.states[state] && node.states[state].origin);
 */
@@ -265,8 +269,10 @@ States.prototype = {
 	 * FIXME: Right now the node parameter is useless since things only
 	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
 	 */
-	getState: function(node){ 
+	getState: function(node){
+/*FIXME: OLD LOGIC
 		node = this._getWidgetNode(node);
+*/
 		return node && node._maqAppStates && node._maqAppStates.current;
 	},
 	
@@ -353,6 +359,7 @@ States.prototype = {
 		this.setState(currentState, node, true/*updateWhenCurrent*/, true /*silent*/);	
 	},
 	
+//FIXME: Need to pass node into this routine
 	/**
 	 * Returns true if the given application "state" is the NORMAL state.
 	 * If "state" is not provided, then this routine responds whether the current
@@ -621,6 +628,7 @@ States.prototype = {
 	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
+/*FIXME: Doesn't seem to ever get called
 	_getStatesListNormal: function(statesArray){
 		var statesList = [];
 		if(statesArray){
@@ -630,6 +638,7 @@ States.prototype = {
 		}
 		return statesList;
 	},
+*/
 	
 	/**
 	 * Takes the current statesArray array and returns a simple array
@@ -859,11 +868,13 @@ States.prototype = {
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/added", callback).
 	 */
 	add: function(node, state){ 
+/*FIXME: OLD LOGIC
 		if (arguments.length < 2) {
 			state = arguments[0];
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
+*/
 		if (!node || this.hasState(node, state)) {
 			//FIXME: This should probably be an error of some sort
 			return;
@@ -884,12 +895,14 @@ States.prototype = {
 	 * Right now, node must by the BODY element.
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/removed", callback).
 	 */
-	remove: function(node, state){ 
+	remove: function(node, state){
+/*FIXME: OLD LOGIC
 		if (arguments.length < 2) {
 			state = arguments[0];
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
+*/
 		if (!node || !node._maqAppStates || !node._maqAppStates.states || !this.hasState(node, state)) {
 			return;
 		}
@@ -920,12 +933,14 @@ States.prototype = {
 	 * Subscribe using connect.subscribe("/davinci/states/renamed", callback).
 	 */
 	rename: function(node, oldName, newName, property){ 
+/*FIXME: OLD LOGIC
 		if (arguments.length < 3) {
 			newName = arguments[1];
 			oldName = arguments[0];
 			node = undefined;
 		}
 		node = this._getWidgetNode(node);
+*/
 		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
 			return false;
 		}
@@ -941,6 +956,7 @@ States.prototype = {
 	/**
 	 * Returns true if the node is set to visible within the current state, false otherwise.
 	 */ 
+/*FIXME: NOT CALLED ANYMORE
 	isVisible: function(node, state){ 
 		if (arguments.length == 1) {
 			state = this.getState();
@@ -963,6 +979,7 @@ States.prototype = {
 			}
 		}
 	},
+*/
 	
 	/**
 	 * Returns true if object does not directly have property 'name'
@@ -1372,7 +1389,8 @@ var singleton = davinci.states = new States();
 				 */
 				var _restoreStates = function (cache, rootNode) {
 					var doc = singleton.getDocument(),
-						currentStateCache = [];
+						currentStateCache = [],
+						maqAppStates, maqDeltas;
 					for(var id in cache){
 						var node;
 						if(id == 'body'){
@@ -1384,7 +1402,7 @@ var singleton = davinci.states = new States();
 						if(node){
 							var isBody = (node.tagName == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
-							var maqAppStates, maqDeltas;
+							maqAppStates = maqDeltas = null;
 							if(isBody){
 								maqAppStates = singleton.deserialize(cache[id], {isBody:isBody});
 							}else{

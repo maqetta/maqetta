@@ -104,9 +104,11 @@ var veStates = declare(maqettaStates, {
 	normalize: function(type, node, name, value) {
         switch(type) {
 		    case "style":
+/*FIXME: OLD LOGIC
 //FIXME: getState(node)
 	            var state = davinci.ve.states.getState();
 	            if (state) {
+*/
 					var currentStatesList = this.getStatesListCurrent(node);
 					for(var i=0; i<currentStatesList.length; i++){
 						currentStatesList[i] = 'Normal';
@@ -122,7 +124,9 @@ var veStates = declare(maqettaStates, {
 		                	}
 		                }
 	                }
+/*
 	            }
+*/
 	            break;
         }
         return value;
@@ -133,9 +137,11 @@ var veStates = declare(maqettaStates, {
 		switch(type) {
 		    case "style":
 
+/*FIXME: OLD LOGIC
 //FIXME: getState(node)
 	            var state = davinci.ve.states.getState();
 	            if (state) {
+*/
 					var currentStatesList = this.getStatesListCurrent(node);
 					for(var i=0; i<currentStatesList.length; i++){
 						currentStatesList[i] = 'Normal';
@@ -163,7 +169,9 @@ var veStates = declare(maqettaStates, {
 		                // Append values from normalValueArray
 		                newValueArray = newValueArray.concat(normalValueArray);
 	                }
+/*
 	            }
+*/
 	            break;
         }
         return newValueArray;
@@ -319,7 +327,7 @@ var veStates = declare(maqettaStates, {
 					return;
 				} // ignore if node is not an object (eg '$all') and ignore updates in theme editor
 
-				dojo.publish("/maqetta/appstates/state/changed/start");
+				dojo.publish("/maqetta/appstates/state/changed/start", [e]);
 				// If rootWidget, then loop through children, else loop starting with this widget.
 				var widget = (e.node && e.node._dvWidget);
 				var widget = (widget == this.getContext().rootWidget) ? widget : widget.getParent();
@@ -337,7 +345,7 @@ var veStates = declare(maqettaStates, {
 					this._update(child, e.newState);
 */
 				}
-				dojo.publish("/maqetta/appstates/state/changed/end");
+				dojo.publish("/maqetta/appstates/state/changed/end", [e]);
 
 				// Trigger update of the selection box in case the selected widget changed size or moved
 				var context = this.getContext();
@@ -385,7 +393,7 @@ var veStates = declare(maqettaStates, {
 				var containerState = this.getState();
 				if (containerState) {
 					var stateContainerNode = this.findStateContainer(newWidget.domNode, containerState);
-					var statesArray = this.getStatesArray(e.node, containerState, containerState, stateContainerNode);
+					var statesArray = this.getStatesArray(newWidget.domNode, containerState, containerState, stateContainerNode);
 					this._update(newWidget.domNode, statesArray);
 /*FIXME: old logic
 					this._update(newWidget.domNode, containerState, undefined);		

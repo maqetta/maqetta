@@ -160,26 +160,30 @@ define(["dojo/_base/declare",
 		},
 
 		_setValues: function() {
-			var widget = this._widget;
-			this._buildSelectionValues();
-			for(var i=0;i<this.pageTemplate.length;i++){
-				var name = this.pageTemplate[i].target;
-				var	value = "";
-		
-				if (widget.properties && widget.properties[name]) {
-					value = widget.properties[name];
-					if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
-//FIXME: This is broken now, and was hugely fragile to begin with
-						var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
-						value = state + ":State";
+			if(!this._widget){
+				this._clearValues();
+			}else{
+				var widget = this._widget;
+				this._buildSelectionValues();
+				for(var i=0;i<this.pageTemplate.length;i++){
+					var name = this.pageTemplate[i].target;
+					var	value = "";
+			
+					if (widget.properties && widget.properties[name]) {
+						value = widget.properties[name];
+						if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
+	//FIXME: This is broken now, and was hugely fragile to begin with
+							var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
+							value = state + ":State";
+						}
+					}else {
+						/* check the model for the events value */
+						value = widget._srcElement.getAttribute(name);
 					}
-				}else {
-					/* check the model for the events value */
-					value = widget._srcElement.getAttribute(name);
-				}
-				var box = dijit.byId(this.pageTemplate[i].id);
-				if(box){
-					box.set('value', value, false);
+					var box = dijit.byId(this.pageTemplate[i].id);
+					if(box){
+						box.set('value', value, false);
+					}
 				}
 			}
 		},

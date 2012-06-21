@@ -13,7 +13,7 @@ define([
 	ReparentCommand,
 	StyleCommand,
 	Widget,
-	states,
+	States,
 	dndSource,
 	HTMLOutlineModel
 ){
@@ -181,12 +181,22 @@ var OutlineTreeModel = declare("davinci.ve.OutlineTreeModel", null, {
 		_toggle: function(widget, on, node) {
 			var visible = !on;
 			var value = visible ? "" : "none";
-			var command = new StyleCommand(widget, [{"display": value}], 'current');
+			var currentStatesList = States.getStatesListCurrent(widget.domNode);
+			for(var i=0; i<currentStatesList.length; i++){
+				if(currentStatesList[i]){
+					var state = currentStatesList[i];
+					break;
+				}
+			}
+			var command = new StyleCommand(widget, [{"display": value}], state);
 			this._context.getCommandStack().execute(command);
 		},
 		
 		isToggleOn: function(item) {
+			return (item.domNode.style.display === 'none');
+/*FIXME: old logic
 			return !states.isVisible(item.domNode);
+*/
 		},
 		
 		newItem: function(/* Object? */ args, /*Item?*/ parent){
@@ -267,7 +277,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		this._widgetModel=new OutlineTreeModel(this._context);
 		this._srcModel=new HTMLOutlineModel(editor.model);
-		connect.subscribe("/maqetta/appstates/state/changed", this,
+		connect.subscribe("/maqetta/appstates/state/changed/end", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&
 						davinci.Runtime.currentEditor &&
@@ -288,7 +298,10 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 					if (child) {
 						var node = this._tree.getNode(child);
 						if (node) {
-							var visible = states.isVisible(child.domNode, e.newState);
+							var visible = (child.domNode.style.display !== 'none');
+/*FIXME: OLD LOGIC
+							var visible = States.isVisible(child.domNode, e.newState);
+*/
 							node._setToggleAttr(!visible);
 						}
 						children = children.concat(child.getChildren());

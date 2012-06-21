@@ -90,7 +90,7 @@
 		
 		<tstamp/>
 		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
-		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
+		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-standalone" />
 		<property name="cvsuser" value=":ext:aniefer" />		
 		<property name="builder" value="${builderDir}" />
 		<echo message="Builder..${builder}"/>
@@ -116,7 +116,7 @@
 			
 			<tstamp/>
 			<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
-			<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
+			<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-hosted" />
 			<property name="cvsuser" value=":ext:aniefer" />		
 			<property name="builder" value="${builderDir}" />
 			<echo message="Builder..${builder}"/>

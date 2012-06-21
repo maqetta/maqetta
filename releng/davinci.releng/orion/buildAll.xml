@@ -90,7 +90,7 @@
     </target>
 	<target name="MaqettaOrion" if="run.external.targets">
 	    <echo message="Running orion build...."/>
-		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-standalone" />
+		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
 		<property name="cvsuser" value=":ext:aniefer" />		
 		<property name="builder" value="${builderDir}" />
 		<echo message="Builder..${builder}"/>
@@ -113,7 +113,7 @@
 	
 	<target name="MaqettaOrionHosted" if="run.external.targets">
 		    <echo message="Running orion/maqetta hosted build...."/>
-			<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-hosted" />
+		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
 			<property name="cvsuser" value=":ext:aniefer" />		
 			<property name="builder" value="${builderDir}" />
 			<echo message="Builder..${builder}"/>

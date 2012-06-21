@@ -1,7 +1,6 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
-	"dojo/dom-style",
 	"./commands/ReparentCommand",
 	"./commands/StyleCommand",
 	"./widget",
@@ -10,7 +9,6 @@ define([
 ], function(
 	declare,
 	connect,
-	domStyle,
 	ReparentCommand,
 	StyleCommand,
 	Widget,
@@ -224,7 +222,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	isToggleOn: function(item) {
-		return (domStyle.get(item.domNode, 'display') === 'none');
+		return (item.domNode.style.display === 'none');
 	},
 	// end toggle code
 
@@ -271,7 +269,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 				while (children.length) {
 					var child = children.shift();
 					if (child) {
-						var visible = (domStyle.get(child.domNode, 'display') !== 'none');
+						var visible = (child.domNode.style.display !== 'none');
 						this._tree.toggleNode(child, !visible);
 						children = children.concat(child.getChildren());
 					}

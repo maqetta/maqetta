@@ -5,12 +5,13 @@ define([
 		"dijit/layout/BorderContainer",
 		"dijit/layout/ContentPane",
 		"davinci/ve/States",
+		"davinci/ve/widget",
 		"dojo/data/ItemFileWriteStore",
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
 		"dojo/_base/window"
 ], function(declare, veNls, ViewPart, BorderContainer, ContentPane, 
-	States, ItemFileWriteStore, ForestStoreModel, Tree, win
+	States, WidgetUtils, ItemFileWriteStore, ForestStoreModel, Tree, win
 ){
 
 var PlainTextTreeNode = declare(Tree._TreeNode, {}),
@@ -235,17 +236,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}else{
 			fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
 		}
-		var CurrentFileObj = {name:fileName, type:'file', category:'file', children:[]};
+		var BodyNode = {name:fileName, type:'file', category:'file', children:[]};
 		var AppStatesObj = {name:'Widget States', type:'SceneManagerRoot', category:'AppStates', children:[]};
-		var latestData = [CurrentFileObj];
+		var latestData = [BodyNode];
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
 		}
 		//Commented out line below is what we would do if we decided that sometimes
 		//we needed to show an extra nesting level in the Tree which showed
 		//the SceneManager containers.
-		//	CurrentFileObj.children.push(AppStatesObj);
-		CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
+		//	BodyNode.children.push(AppStatesObj);
+		BodyNode.children = BodyNode.children.concat(AppStatesObj.children);
 
 		// If data in Tree widget is same as latest data, then just return
 		if(!this._compareStructures(latestData, storedScenes)){
@@ -274,46 +275,57 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
 		// and then compare the two to see if there are any changes
+/*
 		var fileName;
 		if(this._editor && this._editor.getFileNameToDisplay){
 			fileName = this._editor.getFileNameToDisplay();
 		}else{
 			fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
 		}
+*/
 //FIXME: Root should be BODY, not file
-		var CurrentFileObj = {name:fileName, type:'file', category:'file', children:[]};
+		var label = WidgetUtils.getLabel(context.rootWidget);
+		var BodyNode = {name:label, type:'file', category:'file', children:[]};
 		var appStatesCount = 0;
 /*FIXME: OLD LOGIC
 		for(var s in latestStates){
 			appStatesCount++;
 		}
 */
+/*FIXME: OLD LOGIC
 		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
-		var latestData = [CurrentFileObj];
+*/
+		var latestData = [BodyNode];
 /*FIXME: OLD LOGIC
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
 		}
 */
-		function traverseStateContainers(stateContainer, StateContainerParentObj, AppStatesParentObj){
+		function traverseStateContainers(stateContainer, StateContainerParentObj){
 			var stateContainerNode = stateContainer.stateContainerNode;
 			if(stateContainerNode){
 				var appstates = States.getStates(stateContainerNode);
-				for(var st=0; st<appstates.length; st++){
-					var state = appstates[st];
-					AppStatesParentObj.children.push({ name:state, sceneId:state, type:'AppState', stateContainerNode:stateContainerNode });
-//FIXME: appStates needs to be on node basis?
-					appStatesCount++;
+				if(appstates.length > 0){
+					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
+					for(var st=0; st<appstates.length; st++){
+						var state = appstates[st];
+						AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState', stateContainerNode:stateContainerNode });
+	//FIXME: appStates needs to be on node basis?
+						appStatesCount++;
+					}
+					StateContainerParentObj.children.push(AppStatesObj);
 				}
 				if(stateContainer.children){
 					for(var ch=0; ch<stateContainer.children.length; ch++){
-//FIXME: should do a getLabel on widget instead of filename
-						var o = {name:fileName, type:'file', category:'file', children:[]};
-						StateContainerParentObj.children.push(o);
-						var childAppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
-						o.children.push(AppStatesObj);
+//FIXME: should do a on widget instead of filename
 						var childStateContainer = stateContainer.children[ch];
-						traverseStateContainers(childStateContainer, o, childAppStatesObj);
+						var childStateContainerNode = childStateContainer.stateContainerNode;
+						var label = (childStateContainerNode && childStateContainerNode._dvWidget) 
+							? WidgetUtils.getLabel(childStateContainerNode._dvWidget) 
+							: '<' + childStateContainerNode.tagName.toLowerCase() + '>';
+						var o = {name:label, type:'file', category:'file', children:[]};
+						StateContainerParentObj.children.push(o);
+						traverseStateContainers(childStateContainer, o);
 					}
 				}
 			}
@@ -322,17 +334,20 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// Pass allStateContainers[0] because there should a root state container
 		// corresponding to BODY
 		if(allStateContainers.length > 0){
-			traverseStateContainers(allStateContainers[0], CurrentFileObj, AppStatesObj);
+			traverseStateContainers(allStateContainers[0], BodyNode);
 		}
 		
 		var sceneManagers = context.sceneManagers;
 		// Loop through plugin scene managers, eg Dojo Mobile Views
+/*FIXME: OLD LOGIC
 		var AppStatesAddedAlready = false;
 		var hideAppStates = false;
+*/
 		for(var smIndex in sceneManagers){
 			var sm = sceneManagers[smIndex];
 			if(sm.getAllScenes && sm.name && sm.category){
 				var scenes = sm.getAllScenes();
+/*FIXME: OLD LOGIC
 				var hide = sm.hideAppStates ? sm.hideAppStates() : false;
 				// Don't show application states if SceneManager has hide flag set to true
 				// and if there is only one application state (i.e., Normal)
@@ -344,27 +359,30 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						//Commented out line below is what we would do if we decided that sometimes
 						//we needed to show an extra nesting level in the Tree which showed
 						//the SceneManager containers.
-						CurrentFileObj.children.push(AppStatesObj);
-//FIXME OLD CODE CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
+						BodyNode.children.push(AppStatesObj);
+//FIXME OLD CODE BodyNode.children = BodyNode.children.concat(AppStatesObj.children);
 						AppStatesAddedAlready = true;
 					}
 				}
+*/
 				//Commented out line below is what we would do if we decided that sometimes
 				//we needed to show an extra nesting level in the Tree which showed
 				//the SceneManager containers.
-				//	CurrentFileObj.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
-				CurrentFileObj.children = CurrentFileObj.children.concat(scenes);
+				//	BodyNode.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
+				BodyNode.children = BodyNode.children.concat(scenes);
 			}
 		}
+/*FIXME: OLD LOGIC
 		// If AppStates hasn't been added to store yet and wasn't rejected
 		// by one of the SceneManagers, then add in the AppStates list
 		if(!AppStatesAddedAlready && !hideAppStates){
 			//Commented out line below is what we would do if we decided that sometimes
 			//we needed to show an extra nesting level in the Tree which showed
 			//the SceneManager containers.
-			//	CurrentFileObj.children.push(AppStatesObj);
-			CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
+			//	BodyNode.children.push(AppStatesObj);
+			BodyNode.children = BodyNode.children.concat(AppStatesObj.children);
 		}
+*/
 		
 		this._hideShowToolBar();
 
@@ -553,6 +571,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			className: 'StatesViewTree',
 			style: 'height:150px', 
 			_createTreeNode: function(args) {
+/*FIXME: OLD LOGIC
 				var item = args.item;
 				if(item.type && item.category && item.category[0] === 'AppStates'){
 					// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
@@ -561,6 +580,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
 					return new PlainTextTreeNode(args);
 				}
+*/
+				return new RichHTMLTreeNode(args);
 			},
 			getIconClass: function(/*dojo.data.Item*/ item, /*Boolean*/ opened){
 				return "dijitLeaf";

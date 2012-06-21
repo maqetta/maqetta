@@ -1162,17 +1162,17 @@ States.prototype = {
 		var states = node.getAttribute(this.DELTAS_ATTRIBUTE);
 		return states;
 */
-		var defs_attribute = node.getAttribute(this.APPSTATES_ATTRIBUTE);
-		if(!defs_attribute && node.tagName === 'BODY'){
+		var maqAppStates_attribute = node.getAttribute(this.APPSTATES_ATTRIBUTE);
+		if(!maqAppStates_attribute && node.tagName === 'BODY'){
 			// Previous versions used different attribute name (ie, 'dvStates')
-			defs_attribute = node.getAttribute(this.APPSTATES_ATTRIBUTE_P6);
+			maqAppStates_attribute = node.getAttribute(this.APPSTATES_ATTRIBUTE_P6);
 		}
-		var deltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE);
-		if(!deltas_attribute && node.tagName !== 'BODY'){
+		var maqDeltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE);
+		if(!maqDeltas_attribute && node.tagName !== 'BODY'){
 			// Previous versions used different attribute name (ie, 'dvStates')
-			deltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE_P6);
+			maqDeltas_attribute = node.getAttribute(this.DELTAS_ATTRIBUTE_P6);
 		}
-		return {defs:defs_attribute, deltas:deltas_attribute};
+		return {maqAppStates:maqAppStates_attribute, maqDeltas:maqDeltas_attribute};
 	},
 
 	/**
@@ -1180,10 +1180,12 @@ States.prototype = {
 	 * @param {Element} node  
 	 */
 	clear: function(node) {
-		if (!node || !node._maqAppStates) return;
-		var states = node._maqAppStates;
+		if (!node) return;
 		delete node._maqAppStates;
-		connect.publish("/davinci/states/cleared", [{node:node, states:states}]);
+		delete node._maqDeltas;
+/*FIXME: Get rid of /davinci/states/cleared ?
+		connect.publish("/davinci/states/cleared", [{node:node}]);
+*/
 	},
 	
 	/**
@@ -1296,6 +1298,7 @@ var singleton = davinci.states = new States();
 		if (typeof require != "undefined") {
 			require(["dojo/_base/lang", "dojo/query", "dojo/domReady!"], function(lang, query) {
 				var cache = {}; // could be local to hook function?
+				var count = 0;
 				var alreadyHooked = false;
 
 				// hook main dojo.parser (or dojox.mobile.parser, which also
@@ -1321,7 +1324,6 @@ var singleton = davinci.states = new States();
 								root = rootNode;
 							}
 							root = root ? dhtml.byId(root) : dwindow.body();
-							
 							_preserveStates(cache);
 							var results = parse.apply(this, arguments);
 							_restoreStates(cache, root);
@@ -1344,15 +1346,14 @@ var singleton = davinci.states = new States();
 				 * dojo parsing is sandwiched between calls to _preserveStates and _restoreStates.
 				 */
 				var _preserveStates = function (cache) {
-					var count=0;
 					var prefix = 'maqTempClass';
 					var doc = singleton.getDocument();
 	
 					// Preserve the body states directly on the dom node
 					if(!doc.body._maqAlreadyPreserved){
 						var statesAttributes = davinci.states.retrieve(doc.body);
-						if (statesAttributes && statesAttributes.defs) {
-							cache.body = statesAttributes.defs;
+						if (statesAttributes && statesAttributes.maqAppStates) {
+							cache.body = statesAttributes.maqAppStates;
 						}
 						doc.body._maqAlreadyPreserved = true;
 					}
@@ -1362,15 +1363,23 @@ var singleton = davinci.states = new States();
 					query("*", doc).forEach(function(node){
 						// Because Dojo parser gets called recursively (multiple times), 
 						// but preserveStates/restoreStates go through entire document,
-						// make sure the current node hasn't already been preserved
-						if(!node._maqAlreadyPreserved){
+						// The second part of the check, className.indexOf(), is there because 
+						// an earlier pass of the parser might have replaced the node, 
+						// and therefore the _maqAlreadyPreserved flag would be lost.
+						if(!node._maqAlreadyPreserved && node.className.indexOf(prefix)<0){
 							node._maqAlreadyPreserved = true;
 							var statesAttributes = singleton.retrieve(node);
-							if (node.tagName != "BODY" && statesAttributes && statesAttributes.deltas) {
+							if (node.tagName != "BODY" && statesAttributes && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
 								var tempClass = prefix+count;
 								node.className = node.className + ' ' + tempClass;
 								count++;
-								cache[tempClass] = {deltas: statesAttributes.deltas};
+								cache[tempClass] = {};
+								if(statesAttributes.maqAppStates){
+									cache[tempClass].maqAppStates = statesAttributes.maqAppStates;
+								}
+								if(statesAttributes.maqDeltas){
+									cache[tempClass].maqDeltas = statesAttributes.maqDeltas;
+								}
 								if(node.style){
 									cache[tempClass].style = node.style.cssText;
 								}else{
@@ -1390,30 +1399,36 @@ var singleton = davinci.states = new States();
 				var _restoreStates = function (cache, rootNode) {
 					var doc = singleton.getDocument(),
 						currentStateCache = [],
-						maqAppStates, maqDeltas;
+						maqAppStatesString, maqDeltasString, maqAppStates, maqDeltas;
 					for(var id in cache){
 						var node;
 						if(id == 'body'){
 							node = doc.body;
 						}else{
 							node = doc.querySelectorAll('.'+id)[0];
-							
 						}
 						if(node){
 							var isBody = (node.tagName == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
-							maqAppStates = maqDeltas = null;
+							maqAppStatesString = maqDeltasString = maqAppStates = maqDeltas = null;
 							if(isBody){
-								maqAppStates = singleton.deserialize(cache[id], {isBody:isBody});
+								maqAppStatesString = cache[id];
 							}else{
-								maqDeltas = singleton.deserialize(cache[id].deltas, {isBody:isBody});
+								maqAppStatesString = cache[id].maqAppStates;
+								maqDeltasString = cache[id].maqDeltas;
 							}
-							
+							if(maqAppStatesString){
+								maqAppStates = singleton.deserialize(maqAppStatesString, {isBody:isBody});
+							}
+							if(maqDeltasString){
+								maqDeltas = singleton.deserialize(maqDeltasString, {isBody:isBody});
+							}
+//FIXME: May not want to do this anymore
 							if(maqAppStates){
 								delete maqAppStates.current; // FIXME: Always start in normal state for now, fix in 0.7
 							}
 							singleton.store(node, maqAppStates, maqDeltas);
-							if(node.tagName != 'BODY'){
+							if(maqDeltasString){
 								//FIXME: maybe not be general enough
 								davinci.states.transferElementStyle(node, cache[id].style);
 							}

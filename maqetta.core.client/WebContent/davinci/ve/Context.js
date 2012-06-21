@@ -1639,16 +1639,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_preserveStates: function(node, cache){
 		var statesAttributes = davinci.ve.states.retrieve(node);
 //FIXME: Need to generalize this to any states container
-		if (node.tagName != "BODY" && (statesAttributes.defs || statesAttributes.deltas)) {
+		if (node.tagName != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
 			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
 			node.className = node.className + ' ' + tempClass;
 			this.maqTempClassCount++;
 			cache[tempClass] = {};
-			if(statesAttributes.defs){
-				cache[tempClass].defs = statesAttributes.defs;
+			if(statesAttributes.maqAppStates){
+				cache[tempClass].maqAppStates = statesAttributes.maqAppStates;
 			}
-			if(statesAttributes.deltas){
-				cache[tempClass].deltas = statesAttributes.deltas;
+			if(statesAttributes.maqDeltas){
+				cache[tempClass].maqDeltas = statesAttributes.maqDeltas;
 			}
 /*FIXME: OLD LOGIC
 			cache[tempClass].states = states;
@@ -1672,7 +1672,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		/*
 		var currentStateCache = [];
 		*/
-		var maqAppStates, maqDeltas;
+		var maqAppStatesString, maqDeltasString, maqAppStates, maqDeltas;
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
@@ -1697,16 +1697,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var isBody = (node.tagName == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
 			var srcElement = widget._srcElement;
-			maqAppStates = maqDeltas = null;
-			var visualChanged = false;
+			maqAppStatesString = maqDeltasString = maqAppStates = maqDeltas = null;
 			if(isBody){
-				maqAppStates = davinci.states.deserialize(cache[id], {isBody:isBody});
+				maqAppStatesString = cache[id];
+			}else{
+				maqAppStatesString = cache[id].maqAppStates;
+				maqDeltasString = cache[id].maqDeltas;
+			}
+			var maqAppStates = maqDeltas = null;
+			var visualChanged = false;
+			if(maqAppStatesString){
+				maqAppStates = davinci.states.deserialize(maqAppStatesString, {isBody:isBody});
 //FIXME: If files get migrated, should set dirty bit
 //FIXME: Logic doesn't completely deal with nesting yet.
 				// Migrate states attribute names in the model
 				var oldValue = srcElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE);
-				if(oldValue != cache[id]){
-					srcElement.setAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE, cache[id]);
+				if(oldValue != maqAppStatesString){
+					srcElement.setAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE, maqAppStatesString);
 					visualChanged = true;
 				}
 				// Remove any lingering old dvStates attribute from model
@@ -1714,14 +1721,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					srcElement.removeAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
 					visualChanged = true;
 				}
-			}else{
-				maqDeltas = davinci.states.deserialize(cache[id].deltas, {isBody:isBody});
+			}
+			if(maqDeltasString){
+				maqDeltas = davinci.states.deserialize(maqDeltasString, {isBody:isBody});
 //FIXME: If files get migrated, should set dirty bit
 //FIXME: Logic doesn't completely deal with nesting yet.
 				// Migrate states attribute names in the model
 				var oldValue = srcElement.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
-				if(oldValue != cache[id].deltas){
-					srcElement.setAttribute(davinci.ve.states.DELTAS_ATTRIBUTE, cache[id].deltas);
+				if(oldValue != maqDeltasString){
+					srcElement.setAttribute(davinci.ve.states.DELTAS_ATTRIBUTE, maqDeltasString);
 					visualChanged = true;
 				}
 				// Remove any lingering old dvStates attribute from model
@@ -1740,7 +1748,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			davinci.ve.states.store(widget.domNode, maqAppStates, maqDeltas);
 			
 //FIXME: Need to generalize beyond just BODY
+/*FIXME: OLD LOGIC
 			if(node.tagName != 'BODY'){
+*/
+			if(maqDeltas){
 				davinci.states.transferElementStyle(node, cache[id].style);
 			}
 			

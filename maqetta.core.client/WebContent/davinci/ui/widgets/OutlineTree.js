@@ -84,6 +84,13 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		}));
 	},
 
+	toggleNode: function(item, visible) {
+		var nodes = this.getNodesByItem(item);
+		if (nodes && nodes.length > 0 && nodes[0]) {
+			nodes[0]._setToggleAttr(visible);
+		}
+	},
+
 	getMenuOpenCallback: function() {
 		return dojo.hitch(this, this._menuOpenCallback);
 	},

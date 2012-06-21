@@ -1,9 +1,10 @@
 define(["dojo/_base/declare",
         "dojo/_base/connect",
         "../../workbench/ViewLite",
+        "davinci/ve/States",
         "./HTMLStringUtil",
         "../commands/ModifyCommand"
-],function(declare, connect, ViewLite, HTMLStringUtil, ModifyCommand){
+],function(declare, connect, ViewLite, States, HTMLStringUtil, ModifyCommand){
   return declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 		pageTemplate: [{display:"onclick", target:"onclick",type:"state", hideCascade:true},
 			{display:"ondblclick",target:"ondblclick",type:"state", hideCascade:true},
@@ -48,13 +49,21 @@ define(["dojo/_base/declare",
 				this.pageTemplate[i].widget = box;
 				connect.connect(box, "onChange", this, makeOnChange(i));
 			}
+/*FIXME: old logic
 			this._buildSelectionValues();
+*/
 			//FIXME: unsubscribe? leak?
+/*FIXME: old logic
 			connect.subscribe("/davinci/ui/context/loaded", dojo.hitch(this, this._buildSelectionValues));
 			connect.subscribe("/davinci/states/stored", dojo.hitch(this, this._buildSelectionValues));
 			connect.subscribe("/davinci/states/state/added", dojo.hitch(this, this._buildSelectionValues));
+			connect.subscribe("/davinci/states/state/added", dojo.hitch(this, this._updateValues));
 			connect.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._updateValues));
 			connect.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._updateValues));
+*/
+			connect.subscribe("/davinci/states/state/added", dojo.hitch(this, this._setValues));
+			connect.subscribe("/davinci/states/state/removed", dojo.hitch(this, this._setValues));
+			connect.subscribe("/davinci/states/state/renamed", dojo.hitch(this, this._setValues));
 			connect.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 			this.setReadOnly(true);
 		},
@@ -63,7 +72,9 @@ define(["dojo/_base/declare",
 			if(!this._editor || !this._editor.supports("states")) {
 				delete this._editor;
 			}
+/*FIXME: old logic
 			this._buildSelectionValues();
+*/
 		 },	
 
 		 _onChange : function(a){
@@ -75,7 +86,8 @@ define(["dojo/_base/declare",
 			value.replace(/"/,'\\"');
 			
 			if (value && value.match(/.*:State$/)) {
-				value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
+				value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "',event)";
+				widget.set('value', value);
 			}
 			var properties = {};
 			
@@ -93,13 +105,15 @@ define(["dojo/_base/declare",
 			}
 			return root;
 		},
-	
+
 		_updateValues: function(e) {
 			if(!e || !e.node || !e.node._dvWidget){
 				return;
 			}
 			var widget = e.node._dvWidget;
-			this._buildSelectionValues();
+/*FIXME: old logic
+			this._buildSelectionValues(e.node);
+*/
 			if (widget == this._widget) {
 				this._setValues();
 			}
@@ -123,8 +137,15 @@ define(["dojo/_base/declare",
 		},
 		
 		_buildSelectionValues : function(){
+/*FIXME: old logic
 			var root = this._getRoot();
 			var states = root && davinci.ve.states.getStates(root);
+*/
+			var node = (this._widget && this._widget.domNode);
+			if(!node){
+				return;
+			}
+			var states = States.getAllStatesForNode(node);
 			var items = [""];
 		
 			for(var i in states){
@@ -139,24 +160,30 @@ define(["dojo/_base/declare",
 		},
 
 		_setValues: function() {
-			for(var i=0;i<this.pageTemplate.length;i++){
-				var name = this.pageTemplate[i].target;
+			if(!this._widget){
+				this._clearValues();
+			}else{
 				var widget = this._widget;
-				var	value = "";
-		
-				if (widget.properties && widget.properties[name]) {
-					value = widget.properties[name];
-					if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
-						var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
-						value = state + ":State";
+				this._buildSelectionValues();
+				for(var i=0;i<this.pageTemplate.length;i++){
+					var name = this.pageTemplate[i].target;
+					var	value = "";
+			
+					if (widget.properties && widget.properties[name]) {
+						value = widget.properties[name];
+						if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
+	//FIXME: This is broken now, and was hugely fragile to begin with
+							var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
+							value = state + ":State";
+						}
+					}else {
+						/* check the model for the events value */
+						value = widget._srcElement.getAttribute(name);
 					}
-				}else {
-					/* check the model for the events value */
-					value = widget._srcElement.getAttribute(name);
-				}
-				var box = dijit.byId(this.pageTemplate[i].id);
-				if(box){
-					box.set('value', value, false);
+					var box = dijit.byId(this.pageTemplate[i].id);
+					if(box){
+						box.set('value', value, false);
+					}
 				}
 			}
 		},

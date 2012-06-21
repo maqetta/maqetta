@@ -1177,7 +1177,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//className: data.className,
 			
 			bodyClasses: data.bodyClasses,
-			states: data.states,
+//FIXME: Research setHeader - doesn't seem to use states info
+/*
+			maqAppStates: data.maqAppStates,
+			maqDeltas: data.maqDeltas,
+*/
 			style: data.style
 		});
 
@@ -1190,9 +1194,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		var states = {},
 		    containerNode = this.getContainerNode();
-	
-		if (data.states) {
-			states.body = data.states;
+
+//FIXME: Do we need to put states onto all state containers?
+		if (data.maqAppStates) {
+			states.body = data.maqAppStates;
 		}
 		dojo.forEach(this.getTopWidgets(), function(w){
 			if(w.getContext()){
@@ -1259,7 +1264,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			});
 		};
 		collapse(containerNode);
-
 		this._loadFileStatesCache = states;
 		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
@@ -1370,13 +1374,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_attachChildren: function (containerNode)
 	{
 		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
-		/*
+		
+/*FIXME: doesn't seem like states logic below does anything.
 		var currentStateCache = [];
-		*/
 		var rootWidget = containerNode._dvWidget;
 		rootWidget._srcElement.visit({ visit: function(element){
 			if (element.elementType=="HTMLElement") {
-				var stateSrc=element.getAttribute(davinci.ve.states.ATTRIBUTE);
+				var stateSrc=element.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
 				if (stateSrc && stateSrc.length) {
 					var id=element.getAttribute("id");
 					var widget;
@@ -1386,19 +1390,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						if (element==rootWidget._srcElement){
 							widget=rootWidget;
 						}
-					}	
+					}
 					var states = davinci.states.deserialize(stateSrc);
+
 					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
 					
-					/*
 					var state = davinci.ve.states.getState();
 					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
 						currentStateCache.push({ node: widget.domNode, state: state});
 					}
-					*/
 				}
 			}
 		}});
+*/
 		/*
 		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
 		for (var i in currentStateCache) {
@@ -1633,13 +1637,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
-		var states = davinci.ve.states.retrieve(node);
-		if (node.tagName != "BODY" && states) {
+		var statesAttributes = davinci.ve.states.retrieve(node);
+//FIXME: Need to generalize this to any states container
+		if (node.tagName != "BODY" && (statesAttributes.defs || statesAttributes.deltas)) {
 			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
 			node.className = node.className + ' ' + tempClass;
 			this.maqTempClassCount++;
 			cache[tempClass] = {};
+			if(statesAttributes.defs){
+				cache[tempClass].defs = statesAttributes.defs;
+			}
+			if(statesAttributes.deltas){
+				cache[tempClass].deltas = statesAttributes.deltas;
+			}
+/*FIXME: OLD LOGIC
 			cache[tempClass].states = states;
+*/
 			if(node.style){
 				cache[tempClass].style = node.style.cssText;
 			}else{
@@ -1659,6 +1672,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		/*
 		var currentStateCache = [];
 		*/
+		var maqAppStates, maqDeltas;
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
@@ -1679,9 +1693,53 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				continue;
 			}
 			var widget = Widget.getWidget(node);
-			var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
-			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-			davinci.ve.states.store(widget.domNode, states);
+//FIXME: Need to generalize beyond just BODY
+			var isBody = (node.tagName == 'BODY');
+//FIXME: Temporary - doesn't yet take into account nested state containers
+			var srcElement = widget._srcElement;
+			maqAppStates = maqDeltas = null;
+			var visualChanged = false;
+			if(isBody){
+				maqAppStates = davinci.states.deserialize(cache[id], {isBody:isBody});
+//FIXME: If files get migrated, should set dirty bit
+//FIXME: Logic doesn't completely deal with nesting yet.
+				// Migrate states attribute names in the model
+				var oldValue = srcElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE);
+				if(oldValue != cache[id]){
+					srcElement.setAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE, cache[id]);
+					visualChanged = true;
+				}
+				// Remove any lingering old dvStates attribute from model
+				if(srcElement.hasAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6)){
+					srcElement.removeAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
+					visualChanged = true;
+				}
+			}else{
+				maqDeltas = davinci.states.deserialize(cache[id].deltas, {isBody:isBody});
+//FIXME: If files get migrated, should set dirty bit
+//FIXME: Logic doesn't completely deal with nesting yet.
+				// Migrate states attribute names in the model
+				var oldValue = srcElement.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
+				if(oldValue != cache[id].deltas){
+					srcElement.setAttribute(davinci.ve.states.DELTAS_ATTRIBUTE, cache[id].deltas);
+					visualChanged = true;
+				}
+				// Remove any lingering old dvStates attribute from model
+				if(srcElement.hasAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6)){
+					srcElement.removeAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6);
+					visualChanged = true;
+				}
+			}
+			if(visualChanged){
+				this.editor._visualChanged();
+			}
+//FIXME: Probably don't want to delete this here
+			if(maqAppStates){
+				delete maqAppStates.current; // FIXME: Always start in normal state for now, fix in 0.7
+			}
+			davinci.ve.states.store(widget.domNode, maqAppStates, maqDeltas);
+			
+//FIXME: Need to generalize beyond just BODY
 			if(node.tagName != 'BODY'){
 				davinci.states.transferElementStyle(node, cache[id].style);
 			}
@@ -1703,9 +1761,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Remove any application states information that are defined on particular widgets
 		// for all states that aren't in the master list of application states.
 		// (This is to clean up after bugs found in older releases)
-		var body = this.getContainerNode();
-		var activeStates = davinci.ve.states.getStates(body);
-		davinci.ve.states.removeUnusedStates(this, activeStates);
+		davinci.ve.states.removeUnusedStates(this);
 	},
 
 	getDocument: function(){
@@ -2240,8 +2296,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
 
-			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
-			data.states = states;
+//FIXME: Need to generalize beyond just BODY
+			var states = bodyElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE);
+			if(!states){
+				// Previous versions used different attribute name (ie, 'dvStates')
+				states = bodyElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
+				if(states){
+					bodyElement.setAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE, states);
+				}
+			}
+			// Remove any lingering old dvStates attribute from model
+			bodyElement.removeAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
+			data.maqAppStates = states;
 		}
 		
 		var titleElement=head.getChildElement("title");
@@ -2509,13 +2575,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(!theme) {
 			return [];
 		}
-		
+/*FIXME: OLD LOGIC
+//FIXME: Ramifications if nested states?
+//FIXME: getState(node)?
 		var state = davinci.ve.states.getState();
 		
 		if(!state) {
 			state = "Normal";
 		}
-		
+*/
+		var state = "Normal";
 		var widget = this.getSelection();
 		if(!widget.length){
 			return [];
@@ -2540,9 +2609,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// For theme editor, we need to use whatever state is selected in States palette
 		// For page editor, always use "Normal"
 		var state = "Normal";
+/*FIXME: OLD LOGIC
 		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
+//FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
+//getState(node)
 			state = davinci.ve.states.getState();
 		}
+*/
 		
 		var widgetType = theme.loader.getType(widget),
 			selectors = theme.metadata.getStyleSelectors(widgetType,state);
@@ -2631,10 +2704,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
 		var vArray = widget ? widget.getStyleValues() : [];
-		
+
+//FIXME: isNormalState needs node?
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
-			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode);
+			var currentStatesList = davinci.ve.states.getStatesListCurrent(widget.domNode);
+			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode, currentStatesList);
 			if(stateStyleValuesArray){
 				// Remove entries from vArray that are in stateStyleValuesArray
 				for(var i=0; i<stateStyleValuesArray.length; i++){
@@ -3262,7 +3337,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return a;
 	},
-	
+
+//FIXME: Yikes. May need to make AppStates into a scene manager
 	/**
 	 * Returns an array holding the set of currently selected application states and (mobile) scenes
 	 * @return {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
@@ -3270,7 +3346,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getStatesScenes: function() {
 		var a = this.getCurrentScenes();
-		var state = davinci.ve.states.getState();
+//FIXME: Yikes. getState(node)?
+//FIXME: This needs to take into account nested state containers
+		var state = davinci.ve.states.getState(this.rootNode);
 		a.push({sceneId:state});
 		return a;
 	},
@@ -3287,6 +3365,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(sm){
 				sm.selectScene({sceneId:sceneId});
 			}else{
+//FIXME: Yikes. setState(node)?
 				davinci.ve.states.setState(sceneId);
 			}
 		}
@@ -3294,7 +3373,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	onCommandStackExecute: function() {
 	},
-	
+
+//FIXME: this routine probably will be made obsolete by br's changes to incorporate
+//document.css as part of themes
 	/**
 	 * Called by any commands that can causes widgets to be added or deleted.
 	 * Looks at current document and decide if we need to update the document

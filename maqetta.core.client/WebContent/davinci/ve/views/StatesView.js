@@ -46,6 +46,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/states/state/removed", this._removeState.bind(this));
 		this.subscribe("/davinci/states/state/renamed", this._renameState.bind(this));
 		this.subscribe("/davinci/states/state/changed", this._changeState.bind(this));
+		this.subscribe("/maqetta/appstates/state/changed", this._changeState.bind(this));
 		this.subscribe("/davinci/ui/context/registerSceneManager", this._registerSceneManager.bind(this));
 		this.subscribe("/davinci/scene/scenesLoaded", this._scenesLoaded.bind(this));
 		this.subscribe("/davinci/scene/added", this._addScene.bind(this));
@@ -255,9 +256,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateList: function() {
+		var allStateContainers = States.getAllStateContainers(this._getRootNode());
+		var storedScenes = this._getScenes();
+/*FIXME: old logic
 		var latestStates = States.getStates(this._getRootNode(), true), 
 			storedScenes = this._getScenes();
 		if(!this._editor || !latestStates || !storedScenes){
+*/
+		if(!this._editor || !allStateContainers || !storedScenes){
 			return;
 		}
 		var context = this._editor.getContext();
@@ -274,16 +280,51 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}else{
 			fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
 		}
+//FIXME: Root should be BODY, not file
 		var CurrentFileObj = {name:fileName, type:'file', category:'file', children:[]};
 		var appStatesCount = 0;
+/*FIXME: OLD LOGIC
 		for(var s in latestStates){
 			appStatesCount++;
 		}
+*/
 		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
 		var latestData = [CurrentFileObj];
+/*FIXME: OLD LOGIC
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
 		}
+*/
+		function traverseStateContainers(stateContainer, StateContainerParentObj, AppStatesParentObj){
+			var stateContainerNode = stateContainer.stateContainerNode;
+			if(stateContainerNode){
+				var appstates = States.getStates(stateContainerNode);
+				for(var st=0; st<appstates.length; st++){
+					var state = appstates[st];
+					AppStatesParentObj.children.push({ name:state, sceneId:state, type:'AppState', stateContainerNode:stateContainerNode });
+//FIXME: appStates needs to be on node basis?
+					appStatesCount++;
+				}
+				if(stateContainer.children){
+					for(var ch=0; ch<stateContainer.children.length; ch++){
+//FIXME: should do a getLabel on widget instead of filename
+						var o = {name:fileName, type:'file', category:'file', children:[]};
+						StateContainerParentObj.children.push(o);
+						var childAppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
+						o.children.push(AppStatesObj);
+						var childStateContainer = stateContainer.children[ch];
+						traverseStateContainers(childStateContainer, o, childAppStatesObj);
+					}
+				}
+			}
+		}
+//FIXME: Is this right?
+		// Pass allStateContainers[0] because there should a root state container
+		// corresponding to BODY
+		if(allStateContainers.length > 0){
+			traverseStateContainers(allStateContainers[0], CurrentFileObj, AppStatesObj);
+		}
+		
 		var sceneManagers = context.sceneManagers;
 		// Loop through plugin scene managers, eg Dojo Mobile Views
 		var AppStatesAddedAlready = false;
@@ -299,11 +340,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					if(appStatesCount <= 1 && hide){
 						hideAppStates = true;
 					}else{
+//FIXME: remove comments
 						//Commented out line below is what we would do if we decided that sometimes
 						//we needed to show an extra nesting level in the Tree which showed
 						//the SceneManager containers.
-						//	CurrentFileObj.children.push(AppStatesObj);
-						CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
+						CurrentFileObj.children.push(AppStatesObj);
+//FIXME OLD CODE CurrentFileObj.children = CurrentFileObj.children.concat(AppStatesObj.children);
 						AppStatesAddedAlready = true;
 					}
 				}
@@ -530,27 +572,30 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
 			if (item && item.type && item.type[0] == 'AppState') {
+				var stateContainerNode = item.stateContainerNode ? item.stateContainerNode[0] : null;
 				if (this.isThemeEditor()){
 					this.publish("/davinci/states/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:'$all', 
 							newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
 					this._themeState = item.name[0];
 				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
-					this.publish("/davinci/states/state/changed", 
-							[{editorClass:currentEditor.declaredClass, widget:context ? context.rootWidget : null, 
-							newState:item.name[0]}]);
+					this.publish("/maqetta/appstates/state/changed", 
+							[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
+							newState:item.name[0], stateContainerNode:stateContainerNode}]);
 				} else {
-					if(context && bodyNode){
+					if(context && stateContainerNode){
 						var state = item.name[0];
-						States.setState(bodyNode, state);
+						States.setState(state, stateContainerNode);
 						context.deselectInvisible();
 						context.updateFocusAll();
 					}
 				}
 			}else{
+/*FIXME: Need to figure out what to do about initial states when using mobile views
 				if(bodyNode){
-					States.setState(bodyNode, null);
+					States.setState(null, bodyNode);
 				}
+*/
 				if(item.sceneId){
 					// Loop through plugin scene managers, eg Dojo Mobile Views
 					for(var smIndex in sceneManagers){
@@ -570,6 +615,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var id = this.nextId+'';
 			this.nextId++;
 			o.id = id;		// ensure unique ID
+			o.parentItem = parentItem;
 			delete o.children;	// remove children property before calling newItem
 			var thisItem;
 			if(parentItem){
@@ -589,7 +635,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		this._sceneStore.save();
 	},
-	
+
+//FIXME: sceneId for states might not be unique the way things are written now
 	_updateSelectedScene: function(type, sceneId){
 		// This routine might be called before data structures are set up for first time
 		if(!this._sceneStore){
@@ -607,10 +654,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						var item = items[0];
 						path.splice(0, 0, item.id[0]);
 						currentSceneId = item.parentSceneId ? item.parentSceneId[0] : null;
+						var parentItem = item.parentItem && item.parentItem[0];
+						while(parentItem){
+							path.splice(0, 0, parentItem.id[0]);
+							parentItem = parentItem.parentItem && parentItem.parentItem[0];;
+						}
 					}
 				})
 			});
 		}
+
 /*
 		//This block of logic is necessary if we include an extra nesting level in the tree
 		//where that extra nesting level shows a container node for each different SceneManager.
@@ -627,6 +680,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			})
 		});
 */
+
+/* Due to parentItem logic, don't seem to need this anymore
 		this._sceneStore.fetch({query: {type:'file'}, queryOptions:{}, 
 			onComplete: dojo.hitch(this, function(items, request){
 				if(items.length !== 1){
@@ -638,6 +693,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			})
 		});
+*/
 		path.splice(0, 0, 'StoryRoot');
 		this._tree.set('paths', [path]);
 	},
@@ -648,6 +704,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!this._editor){
 			return;
 		}
+		var showAppStates = (this._editor.declaredClass === "davinci.ve.PageEditor");
+/*FIXME: OLD LOGIC
 		var showAppStates;	
 		if (this._editor.declaredClass !== "davinci.ve.PageEditor"){
 			showAppStates = false;
@@ -679,6 +737,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			}
 		}
+*/
 
 		// This code prevents +/- icons from appearing when authoring Dojo Mobile UIs
 		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");

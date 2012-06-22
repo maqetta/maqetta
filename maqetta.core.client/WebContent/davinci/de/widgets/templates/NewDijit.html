@@ -1,14 +1,16 @@
 <div>
-	<table>
-	<tr>
-	<td class="NewProjectDialogLabel">Widget Name:</td><td><input class='templateInput' type='text' dojoAttachPoint="_dijitName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
-	
-	</tr>
-	
-	</table>
+	<div class="dijitDialogPaneContentArea">
+		<table>
+		<tr>
+		<td class="NewProjectDialogLabel">Widget Name:</td><td><input class='templateInput' type='text' dojoAttachPoint="_dijitName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+		
+		</tr>
+		
+		</table>
+	</div>
 
-	<div class="dialogButtonContainer">
-		<span dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='OK' disabled></span> 
-		<span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='Cancel'></span>
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='OK' type="submit" disabled></button> 
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='Cancel'></button>
 	</div>		
 </div>

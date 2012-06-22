@@ -1,19 +1,16 @@
 <div>
-	<table>
-	
-	<tr>
-		<td class="NewProjectDialogLabel">${uiNLS.parentFolder}</td><td><div class='templateInput'  dojoAttachPoint="fileDialogParentFolder"  ></input></td>
-	</tr>
-	
-	
-	<tr>
-	<td class="NewProjectDialogLabel">${uiNLS.newFolderName}</td><td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="folderName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
-	</tr>
-	
-	</table>
-
-	<div class="dialogButtonContainer">
-		<button dojoType='dijit.form.Button' dojoAttachPoint="okButton" dojoAttachEvent='onClick:_okButton'>${uiNLS.create}</button>
+	<div class="dijitDialogPaneContentArea">
+		<table>
+		<tr>
+			<td class="NewProjectDialogLabel">${uiNLS.parentFolder}</td><td><div class='templateInput'  dojoAttachPoint="fileDialogParentFolder"  ></input></td>
+		</tr>
+		<tr>
+		<td class="NewProjectDialogLabel">${uiNLS.newFolderName}</td><td><input dojoType="dijit.form.TextBox" type="text" dojoAttachPoint="folderName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+		</tr>
+		</table>
+	</div>
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="okButton" dojoAttachEvent='onClick:_okButton' type="submit">${uiNLS.create}</button>
 		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:_cancelButton'>${uiNLS.cancelButtonLabel}</button>		
 	</div>		
 </div>

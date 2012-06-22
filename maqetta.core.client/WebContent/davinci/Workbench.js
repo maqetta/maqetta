@@ -25,8 +25,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"davinci/review/model/resource/root",
-	"./ui/widgets/DialogContent"
-	
+	"dojo/i18n!davinci/ve/nls/common"	
 ], function(
 		Runtime,
 		Path,
@@ -54,7 +53,7 @@ define([
 		declare,
 		connect,
 		reviewResource,
-		DialogContent
+		veNLS
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -654,22 +653,26 @@ var Workbench = {
 			contentStyle: style
 		});
 
-		var handle = dojo.connect(content, "onClose", content, function() {
-			var teardown = true;
+		var handle = dojo.connect(myDialog, "onExecute", content, function() {
+			var cancel = false;
 			if (callback) {
-				teardown = callback();
-				if (!teardown) {
-					// prevent the dialog from being torn down by temporarily overriding _onSubmit() with a call-once, no-op function
-					var oldHandler = myDialog._onSubmit;
-					myDialog._onSubmit = function() {
-						myDialog._onSubmit = oldHandler;
-					};
-					return;
-				}
+				cancel = callback();
+			}
+
+			if (cancel) {
+				return;
 			}
 
 			dojo.disconnect(handle);
-			myDialog.hide();
+			dojo.disconnect(handle2);
+
+			myDialog.destroyRecursive();
+		});
+
+		var handle2 = dojo.connect(content, "onClose", content, function() {
+			dojo.disconnect(handle);
+			dojo.disconnect(handle2);
+
 			myDialog.destroyRecursive();
 		});
 
@@ -680,36 +683,54 @@ var Workbench = {
 
 	// simple dialog with an automatic OK button that closes it.
 	showMessage: function(title, message, style, callback) {
-		return this.showModal(new DialogContent({content: message, hideCancel: true}), title, style, callback);
+		return this.showDialog(title, message, style, callback, null, true);
 	},
 
 	// OK/Cancel dialog with a settable okLabel
-	showDialog: function(title, contents, style, callback, okLabel) {
-		// dialog content is a ContentPane we use that has pre-defined buttons
-		var content = new DialogContent({okLabel: okLabel, content: contents});
+	showDialog: function(title, content, style, callback, okLabel, hideCancel) {
+		var myDialog, handle;
 
-		var myDialog = new ResizeableDialog({
+		function _onCancel() {
+			dojo.disconnect(handle);
+
+			myDialog.destroyRecursive();
+		}
+
+		// construct the new contents
+		var newContent = document.createElement("div");
+
+		var dialogContents = document.createElement("div");
+		dojo.addClass(dialogContents, "dijitDialogPaneContentArea");
+		if (dojo.isString(content)) {
+			dialogContents.innerHTML = content;
+		} else {
+			dialogContents.appendChild(content.domNode);
+		}
+		newContent.appendChild(dialogContents);
+	
+		var dialogActions = document.createElement("div");
+		dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
+		dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit"}).domNode);
+
+		if (!hideCancel) {
+			dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel}).domNode);
+		}
+
+		newContent.appendChild(dialogActions);
+
+		myDialog = new ResizeableDialog({
 			title: title,
-			content: content,
+			content: newContent,
 			contentStyle: style
 		});
-		var handle, handle2;
+		var handle;
 
-		handle = dojo.connect(content, "onClose", content, function() {
-				if (callback) {
-					callback();
-				}
-				dojo.disconnect(handle);
-				dojo.disconnect(handle2);
-				myDialog.hide();
-				myDialog.destroyRecursive();
-		});
+		var handle = dojo.connect(myDialog, "onExecute", function() {
+			if (callback) {
+				callback();
+			}
 
-		handle2 = dojo.connect(content, "onCancel", content, function() {
-				dojo.disconnect(handle);
-				dojo.disconnect(handle2);
-				myDialog.hide();
-				myDialog.destroyRecursive();
+			_onCancel();
 		});
 
 		myDialog.show();

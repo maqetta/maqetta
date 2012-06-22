@@ -130,156 +130,158 @@
 		
 	</style>
 
-	<div class='bgdTopDiv'>
-		<table class='bgdTopTable'>
-			<tr>
-				<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>${veNLS.bgdBackgroundColor}</label></td>
-				<td class='bgdTopField'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdColorCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-				<td rowspan='2' class='bgdTopPreview' style='border-collapse:collapse'><span class='bgdPreview'></span></td>
-				<td class='bgdTopExpando'>&nbsp;</td>
-			</tr>
-			<tr>
-				<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>${veNLS.bgdBackgroundImageType}</label></td>
-				<td class='bgdTopField'>
-					<select dojoType='dijit.form.Select' value='linear' dojoAttachPoint='bgdTypeSelect'>
-						<!--  values added dynamically -->
-<!-- FIXME: Add plain text type-in box if unrecognized syntax -->
-					</select>
-				</td>
-				<td class='bgdTopExpando'>&nbsp;</td>
-			</tr>
-		</table>
-	</div>
-	
-	<div class="bgdUrlContainerOuter bgdImageOptRow">
-		<div class="bgdSection bgdOptionsLabel">${veNLS.bgdImageUrl}</div>
-		<div class="bgdUrlContainerInner">
-			<div class='fileNameRow'>
-				<td class="fileDialogLabelCell">
-				<label>${veNLS.bgdUrl}</label>
-				</td>
-				<div dojoType='davinci.ui.widgets.FileFieldDialog' dojoAttachPoint="_filePicker"></div>
-				</td>
+	<div class="dijitDialogPaneContentArea">
+		<div class='bgdTopDiv'>
+			<table class='bgdTopTable'>
+				<tr>
+					<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>${veNLS.bgdBackgroundColor}</label></td>
+					<td class='bgdTopField'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdColorCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+					<td rowspan='2' class='bgdTopPreview' style='border-collapse:collapse'><span class='bgdPreview'></span></td>
+					<td class='bgdTopExpando'>&nbsp;</td>
+				</tr>
+				<tr>
+					<td class='bgdTopLabel'><label class='bgdTypeDivTypeLabel'>${veNLS.bgdBackgroundImageType}</label></td>
+					<td class='bgdTopField'>
+						<select dojoType='dijit.form.Select' value='linear' dojoAttachPoint='bgdTypeSelect'>
+							<!--  values added dynamically -->
+	<!-- FIXME: Add plain text type-in box if unrecognized syntax -->
+						</select>
+					</td>
+					<td class='bgdTopExpando'>&nbsp;</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div class="bgdUrlContainerOuter bgdImageOptRow">
+			<div class="bgdSection bgdOptionsLabel">${veNLS.bgdImageUrl}</div>
+			<div class="bgdUrlContainerInner">
+				<div class='fileNameRow'>
+					<td class="fileDialogLabelCell">
+					<label>${veNLS.bgdUrl}</label>
+					</td>
+					<div dojoType='davinci.ui.widgets.FileFieldDialog' dojoAttachPoint="_filePicker"></div>
+					</td>
+				</div>
 			</div>
 		</div>
+		<div class="bgdOptionsDiv">
+			<table>
+				<tr class="bgdGradOptRow bgdBeforeStopsLabel"></tr>
+				<tr class="bgdGradOptRow bgdSection bgdStopsLabel">
+					<td colspan="5">${veNLS.bgdColorStops}</td>
+				</tr>
+				<tr class="bgdGradOptRow bgdAfterStopsLabel"></tr>
+				<tr class='bgdGradOptRow bgdStopRow'>
+					<th></th><th></th><th>${veNLS.bgdColor}</th><th>${veNLS.bgdPosition}</th><th></th>
+				</tr>
+				<!--  gradient stop rows added dynamically -->
+				<tr class="bgdBeforeOptionsLabel bgdOptionsLabelRow"></tr>
+				<tr class="bgdSection bgdOptionsLabel bgdOptionsLabelRow">
+					<td colspan="5">${veNLS.bgdOptions}</td>
+				</tr>
+				<tr class="bgdAfterOptionsLabel bgdOptionsLabelRow"></tr>
+				<tr class="bgdGradOptRow bgdLinearOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'><label>${veNLS.bgdAngle}</label></td>
+					<td colspan='3'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdLinearAngleCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr class="bgdGradOptRow bgdRadialOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'>${veNLS.bgdPosition2}</td>
+					<td colspan='3'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialPosCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdShapeRow" class="bgdGradOptRow bgdRadialOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'><label>${veNLS.bgdShape}</label></td>
+					<td colspan='3'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialShapeCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdExtentRow" class="bgdGradOptRow bgdRadialOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'><label>${veNLS.bgdExtent}</label></td>
+					<td colspan='3'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialExtentCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdRepeatRow" class="bgdImageOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundRepeat}</label></td>
+					<td colspan='3'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRepeatCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdPositionRow" class="bgdImageOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'>${veNLS.bgdBackgroundPosition}</td>
+					<td colspan='3'>
+	<!-- FIXME: regExp, invalidMessage -->
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdPositionCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdSizeRow" class="bgdImageOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'>${veNLS.bgdBackgroundSize}</td>
+					<td colspan='3'>
+	<!-- FIXME: regExp, invalidMessage -->
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdSizeCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdOriginRow" class="bgdImageOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundOrigin}</label></td>
+					<td colspan='3'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdOriginCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdClipRow" class="bgdImageOptRow">	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundClip}</label></td>
+					<td colspan='3'>
+						<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdClipCB'>
+							<!--  values added dynamically -->
+						</select>
+					</td>
+				</tr>
+				<tr dojoAttachPoint="bgdOtherTypeInRow" class="bgdOtherRow">	
+	
+					<td class='bgdCol1'></td>
+					<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundImageValue}</label></td>
+					<td colspan='3'>
+						<textarea dojoType="dijit.form.Textarea" dojoAttachPoint='bgdOtherTA'></textarea>
+					</td>
+	
+				</tr>
+	
+			</table>
+		</div>
 	</div>
-	<div class="bgdOptionsDiv">
-		<table>
-			<tr class="bgdGradOptRow bgdBeforeStopsLabel"></tr>
-			<tr class="bgdGradOptRow bgdSection bgdStopsLabel">
-				<td colspan="5">${veNLS.bgdColorStops}</td>
-			</tr>
-			<tr class="bgdGradOptRow bgdAfterStopsLabel"></tr>
-			<tr class='bgdGradOptRow bgdStopRow'>
-				<th></th><th></th><th>${veNLS.bgdColor}</th><th>${veNLS.bgdPosition}</th><th></th>
-			</tr>
-			<!--  gradient stop rows added dynamically -->
-			<tr class="bgdBeforeOptionsLabel bgdOptionsLabelRow"></tr>
-			<tr class="bgdSection bgdOptionsLabel bgdOptionsLabelRow">
-				<td colspan="5">${veNLS.bgdOptions}</td>
-			</tr>
-			<tr class="bgdAfterOptionsLabel bgdOptionsLabelRow"></tr>
-			<tr class="bgdGradOptRow bgdLinearOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>${veNLS.bgdAngle}</label></td>
-				<td colspan='3'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdLinearAngleCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr class="bgdGradOptRow bgdRadialOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'>${veNLS.bgdPosition2}</td>
-				<td colspan='3'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialPosCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdShapeRow" class="bgdGradOptRow bgdRadialOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>${veNLS.bgdShape}</label></td>
-				<td colspan='3'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialShapeCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdExtentRow" class="bgdGradOptRow bgdRadialOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>${veNLS.bgdExtent}</label></td>
-				<td colspan='3'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRadialExtentCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdRepeatRow" class="bgdImageOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundRepeat}</label></td>
-				<td colspan='3'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdRepeatCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdPositionRow" class="bgdImageOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'>${veNLS.bgdBackgroundPosition}</td>
-				<td colspan='3'>
-<!-- FIXME: regExp, invalidMessage -->
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdPositionCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdSizeRow" class="bgdImageOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'>${veNLS.bgdBackgroundSize}</td>
-				<td colspan='3'>
-<!-- FIXME: regExp, invalidMessage -->
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdSizeCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdOriginRow" class="bgdImageOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundOrigin}</label></td>
-				<td colspan='3'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdOriginCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdClipRow" class="bgdImageOptRow">	
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundClip}</label></td>
-				<td colspan='3'>
-					<select dojoType="dijit.form.ComboBox" dojoAttachPoint='bgdClipCB'>
-						<!--  values added dynamically -->
-					</select>
-				</td>
-			</tr>
-			<tr dojoAttachPoint="bgdOtherTypeInRow" class="bgdOtherRow">	
 
-				<td class='bgdCol1'></td>
-				<td class='bgdOptsLabel'><label>${veNLS.bgdBackgroundImageValue}</label></td>
-				<td colspan='3'>
-					<textarea dojoType="dijit.form.Textarea" dojoAttachPoint='bgdOtherTA'></textarea>
-				</td>
-
-			</tr>
-
-		</table>
-	</div>
-
-	<div class="dialogButtonContainer">
+	<div class="dijitDialogPaneActionBar">
 		<span dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${buttonOk}'></span> 
 		<span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'/></span> 
 	</div>		

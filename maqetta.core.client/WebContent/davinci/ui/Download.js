@@ -169,7 +169,6 @@ define(["dojo/_base/declare",
 					options.build = "1";
 				}
 				setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs, options), 300);
-				this.onClose();
 			}
 		},
 		

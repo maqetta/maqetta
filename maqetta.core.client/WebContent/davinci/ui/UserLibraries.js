@@ -230,10 +230,8 @@ define(["dojo/_base/declare",
 
 		okButton: function(){
 			this._processChanges();
-			this.onClose();
 		},
 		cancelButton: function(){
-			this.cancel = true;		
 			this.onClose();
 		},
 		_rewriteDojo: function(){

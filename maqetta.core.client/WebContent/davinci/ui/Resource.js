@@ -179,14 +179,14 @@ var uiResource = {
 			var finished = false;
 			var newFolder;
 			var executor = function(){
-				var teardown = true;
+				var cancel = false;
 				if(!newFolderDialog.cancel){
 					var resourcePath = newFolderDialog.get('value');
 					var check = checkFileName(resourcePath);
 					if (check) {
 						newFolder= Resource.createResource(resourcePath,true);
 					} else {
-						teardown = false;
+						cancel = true;
 					}
 				}
 				if(callback) {
@@ -194,7 +194,7 @@ var uiResource = {
 				}
 				if(newFolder!=null)
 					uiResource.selectResource(newFolder);
-				return teardown;
+				return cancel;
 			};
 			
 			Workbench.showModal(newFolderDialog, uiNLS.createNewFolder, '', executor);
@@ -298,12 +298,9 @@ var uiResource = {
 			var openDialog = new OpenFile(dialogOptions);
 			
 			var executor = function(){
-				if(!openDialog.cancel){
-					uiResource.openResource(openDialog.get('value'));
-				}
-				return true;
+				uiResource.openResource(openDialog.get('value'));
 			};
-			Workbench.showModal(openDialog, uiNLS.openFile, '', executor);
+			Workbench.showModal(openDialog, uiNLS.openFile, {width: 350, height: 250}, executor);
 		},
 	
 	

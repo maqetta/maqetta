@@ -392,8 +392,7 @@ define(["dojo/_base/declare",
 	        while (connection = this._connections.pop()){
 	            dojo.disconnect(connection);
 	        }
-	        this._dialog.destroyDescendants();
-	        this._dialog.destroy();
+	        this._dialog.destroyRecursive();
 	        delete this._dialog;
 	    },
 	    

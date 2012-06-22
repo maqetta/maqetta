@@ -181,7 +181,6 @@ define(["dojo/_base/declare",
 		
 		okButton : function(){
 			this._createTheme();
-			this.onClose();
 		},
 		
 		cancelButton: function(){

@@ -395,7 +395,26 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		
 	},
 	
+	/**
+	 * Returns a path array that corresponds to the given item within the ItemFileWriteStore
+	 */
+	_getTreeSelectionPath: function(item){
+		var path = [];
+		path.splice(0, 0, item.id[0]);
+		var parentItem = item.parentItem && item.parentItem[0];
+		while(parentItem){
+			path.splice(0, 0, parentItem.id[0]);
+			parentItem = parentItem.parentItem && parentItem.parentItem[0];;
+		}
+		path.splice(0, 0, 'StoryRoot');
+		return path;
+	},
+	
 	_updateSelection: function() {
+		var context = this._editor.getContext();
+		if(!context || !context._statesLoaded){
+			return;
+		}
 		var rootNode = this._getRootNode();
 		var allStateContainers_tree = States.getAllStateContainers(rootNode);
 		var allStateContainers_array = [];
@@ -423,15 +442,38 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				currentState = States.NORMAL;
 			}
 			if(currentState === appStateItem.name[0]){
-				var path = [];
-				path.splice(0, 0, appStateItem.id[0]);
-				var parentItem = appStateItem.parentItem && appStateItem.parentItem[0];
-				while(parentItem){
-					path.splice(0, 0, parentItem.id[0]);
-					parentItem = parentItem.parentItem && parentItem.parentItem[0];;
+				var path = this._getTreeSelectionPath(appStateItem);
+				if(path.length>0){
+					paths.push(path);
 				}
-				path.splice(0, 0, 'StoryRoot');
-				paths.push(path);
+			}
+		}
+		// Search through SceneManagers to find currently active scenes. 
+//FIXME: Only finds one View per scene manager, so not dealing with nested Views
+//Probably need to add a notion of SceneManagerNodes.
+		// Loop through plugin scene managers, eg Dojo Mobile Views
+		var sceneManagers = context.sceneManagers;
+		for(var smIndex in sceneManagers){
+			var sm = sceneManagers[smIndex];
+			if(sm.getCurrentScene){
+				var sceneId;
+				var candidateSceneId = sm.getCurrentScene();
+				if(candidateSceneId){
+					var sceneItem;
+					this._sceneStore.fetch({query: {type:sm.category, sceneId:candidateSceneId}, queryOptions:{deep:true}, 
+						onComplete: dojo.hitch(this, function(items, request){
+							if(items.length === 1){
+								sceneItem = items[0];
+							}
+						})
+					});
+					if(sceneItem){
+						var path = this._getTreeSelectionPath(sceneItem);
+						if(path.length>0){
+							paths.push(path);
+						}
+					}
+				}
 			}
 		}
 		this._tree.set('paths', paths);
@@ -708,6 +750,7 @@ return;
 	},
 
 //FIXME: sceneId for states might not be unique the way things are written now
+//FIXME: Need to refactor this
 	_updateSelectedScene: function(type, sceneId){
 		// This routine might be called before data structures are set up for first time
 		if(!this._sceneStore){

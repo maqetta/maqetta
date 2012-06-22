@@ -321,13 +321,20 @@ States.prototype = {
 			return;
 		}
 		var oldState = node._maqAppStates.current;
-		
+		if (this.isNormalState(newState)) {
+			if(node._maqAppStates.hasOwnProperty('current')){
+				delete node._maqAppStates.current;
+			}
+			newState = undefined;
+		} else {
+			node._maqAppStates.current = newState;
+		}
+/*FIXME: OLD LOGIC
 		if (this.isNormalState(newState)) {
 			if (!node._maqAppStates.current) { return; }
 			delete node._maqAppStates.current;
 			newState = undefined;
 		} else {
-//FIXME: For time being, only the BODY holds states.current.
 			if(node.tagName == 'BODY'){
 				node._maqAppStates.current = newState;
 			}else{
@@ -336,6 +343,7 @@ States.prototype = {
 				}
 			}
 		}
+*/
 		if (!_silent) {
 //FIXME: Reconcile node and statesContainerNode
 			connect.publish("/maqetta/appstates/state/changed", 

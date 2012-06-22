@@ -119,10 +119,10 @@
 		<property name="buildId" value="${buildType}${timestamp}"/>
 		<property name="buildLabel" value="${buildId}"/>
 		<property name="featureDir" value="${base}/${buildId}/feature"/>
-		<echo message="scrubbing:${featureDir} " />
-		<!--
+		<echo message="=================================================== Scrubbing:${featureDir} " />
+		
 	    <delete dir="${buildDirectory}/features/org.eclipse.pde.build.container.feature"/>
-	    -->
+	    
 	</target>
 	
 	<target name="MaqettaOrionHosted" if="run.external.targets">

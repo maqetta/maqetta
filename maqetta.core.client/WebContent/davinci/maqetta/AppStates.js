@@ -11,6 +11,17 @@ States.prototype = {
 	APPSTATES_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
 
 	/**
+	 * Returns true if the given node has application states (i.e., node._maqAppStates.states has values)
+	 */
+	isStateContainer: function(node){
+		if(node && node._maqAppStates && node._maqAppStates.states && node._maqAppStates.states.length >0){
+			return true;
+		}else{
+			return false;
+		}
+	},
+	
+	/**
 	 * Traverses all document nodes starting with rootnode, looking for
 	 * all nodes that are state containers (due to having a states.states property),
 	 * and returning a data structure that lists all state containers. See below

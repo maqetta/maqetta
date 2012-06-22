@@ -257,14 +257,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateList: function() {
+/*FIXME: OLD LOGIC
 		var allStateContainers = States.getAllStateContainers(this._getRootNode());
+*/
 		var storedScenes = this._getScenes();
 /*FIXME: old logic
 		var latestStates = States.getStates(this._getRootNode(), true), 
 			storedScenes = this._getScenes();
 		if(!this._editor || !latestStates || !storedScenes){
-*/
 		if(!this._editor || !allStateContainers || !storedScenes){
+*/
+		if(!this._editor || !storedScenes){
 			return;
 		}
 		var context = this._editor.getContext();
@@ -284,10 +287,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 */
 //FIXME: Root should be BODY, not file
+/*FIXME: OLD LOGIC
 		var label = WidgetUtils.getLabel(context.rootWidget);
 		var BodyNode = {name:label, type:'file', category:'file', children:[]};
-		var appStatesCount = 0;
+*/
 /*FIXME: OLD LOGIC
+		var appStatesCount = 0;
 		for(var s in latestStates){
 			appStatesCount++;
 		}
@@ -295,7 +300,76 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 /*FIXME: OLD LOGIC
 		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
 */
-		var latestData = [BodyNode];
+		var sceneManagers = context.sceneManagers;
+		function recurseWidget(widget, currentParentItem){
+			var node = widget.domNode;
+			var isStateContainer = States.isStateContainer(node);
+			var isSceneContainer = false;
+			for(var smIndex in sceneManagers){
+				var sm = sceneManagers[smIndex];
+				if(sm.getSceneChildren && sm.name && sm.category){
+					isSceneContainer = sm.isSceneContainer(node);
+					if(isSceneContainer){
+						break;
+					}
+				}
+			}
+			if(node.tagName == 'BODY' || isStateContainer || isSceneContainer){
+				var label = WidgetUtils.getLabel(widget);
+				var o = {name:label, type:'file', category:'file', children:[]};
+				currentParentItem.children.push(o);
+				currentParentItem = o;
+				if(isStateContainer){
+					var appstates = States.getStates(node);
+					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', 
+							parentItem:currentParentItem, children:[]};
+					for(var st=0; st<appstates.length; st++){
+						var state = appstates[st];
+						AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState', 
+								stateContainerNode:node, parentItem:AppStatesObj });
+					}
+					currentParentItem.children.push(AppStatesObj);
+				}
+				if(isSceneContainer){
+					for(var smIndex in sceneManagers){
+						var sm = sceneManagers[smIndex];
+						if(sm.getSceneChildren && sm.name && sm.category){
+							var sceneChildren = sm.getSceneChildren(node);
+							if(sceneChildren.length > 0){
+								var SceneManagerObj = { name:sm.name, type:'SceneManagerRoot', category:sm.category, 
+										parentItem:currentParentItem, children:[]};
+								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
+									var childScene = sceneChildren[childSceneIndex];
+									SceneManagerObj.children.push({ sceneId:childScene.id, name:childScene.id, type:sm.category, 
+										sceneContainerNode:node, parentItem:SceneManagerObj });
+								}
+								currentParentItem.children.push(SceneManagerObj);
+							}
+						}
+					}
+				}
+			}
+			var children = widget.getChildren();
+			for(var j=0; j<children.length; j++){
+				recurseWidget(children[j], currentParentItem);
+			}
+		}
+		// Temporary root object onto which we will attach a BODY item
+		// All other items in the structure will descend from the BODY item
+		var temporaryRootObj = {children:[]};
+		recurseWidget(context.rootWidget, temporaryRootObj);
+		var latestData = [temporaryRootObj.children[0]];
+		
+		this._hideShowToolBar();
+
+		// If data in Tree widget is same as latest data, then just return
+		if(!this._compareStructures(latestData, storedScenes)){
+			// Destroy the old Tree widget and create a new Tree widget
+			this._destroyTree();
+			this._createTree(latestData);
+		}
+return;		
+		
 /*FIXME: OLD LOGIC
 		for(var state in latestStates){
 			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });

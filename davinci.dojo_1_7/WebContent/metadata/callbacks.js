@@ -22,6 +22,17 @@
 	 *		If there is a currently active scene, return its sceneId, else return null.
 	 *		@returns {string} Unique ID for the selected active scene. (Unique ID created by this SceneManager)
 	 * 
+	 * isSceneContainer(node)
+	 *		Returns true if the given node is a scene container (i.e., it has children that represent a scene)
+	 *		@param {Element} node  A DOM node in document
+	 *		@returns {boolean} 
+	 * 
+	 * getSceneChildren(node)
+	 *      Returns an array that lists the node's child nodes that represent "scenes"
+	 *		@param {Element} node  A DOM node in document. (Presumably, a scene container node)
+	 *		@returns {array} 	Returns an array of Elements, empty array if no scene children.
+	 *
+//FIXME: REMOVE THIS
 	 * getAllScenes()
 	 *		Returns a potentially nested array of all current scenes managed by this SceneManager.
 	 *		@returns {[object]} retArray  Array of top-level scenes, where each scene is described
@@ -32,12 +43,14 @@
 	 *			parentSceneId {string}- if this scene is not top-level, then this must be the sceneId of its parent scene
 	 *			children {[object]} - array of children scenes
 	 * 
+//FIXME: Remove this
 	 * hideAppStates()
 	 *		Returns true if the app should not show "application states". 
 	 *		Usually, library returns true only if it offers an alternate notion of scenes.
 	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
 	 *		@returns {boolean} 
 	 *
+//FIXME
 	 * This class must provide the following properties on the SceneManager instance object:
 	 * 
 	 * id {string} - A unique ID for this SceneManager. Used as the index into Maqetta's list of SceneManagers
@@ -230,6 +243,40 @@
 			}
 			return currentScene;
 		},
+		isSceneContainer: function(node){
+			if(!this.context || !node){
+				return false;
+			}
+			var dj = this.context.getDojo();
+			if(!dj){
+				return false;
+			}
+			for(var i=0; i<node.children.length; i++){
+				var child = node.children[i];
+				if(dj.hasClass(child, 'mblView')){
+					return true;
+				}
+			}
+			return false;
+		},
+		getSceneChildren: function(node){
+			if(!this.context || !node){
+				return [];
+			}
+			var dj = this.context.getDojo();
+			if(!dj){
+				return [];
+			}
+			var scenes = [];
+			for(var i=0; i<node.children.length; i++){
+				var child = node.children[i];
+				if(dj.hasClass(child, 'mblView')){
+					scenes.push(child);
+				}
+			}
+			return scenes;
+		}
+/*FIXME: REMOVE THIS
 		getAllScenes: function(){
 			if(!this.context){
 				return [];
@@ -281,15 +328,17 @@
 				}
 			}
 			return scenes;
-		},
+		}
+*/
+/*FIXME: REMOVE THIS
+ * 		,
+ * 
 		hideAppStates: function(){
 			var context = this.context;
 			if(!context){
 				return false;
 			}
-			/*
-			 * hide application states if there are any mobile views and only the default Normal state
-			 */ 
+			//hide application states if there are any mobile views and only the default Normal state
 			if(context.declaredClass == 'davinci.ve.Context'){
 				var dj = this.context.getDojo();
 				if(!dj){
@@ -317,6 +366,7 @@
 				
 			}
 		}
+*/
 	};
 
     return {

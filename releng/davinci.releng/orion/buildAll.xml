@@ -62,7 +62,7 @@
     	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
         <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
     	<property name="dojo.cache.directory" value="${buildDirectory}/dojo_cache"/>
-    	
+    	<property name="buildType" value="I"/>
     	
     	
         <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
@@ -105,6 +105,7 @@
 		 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 			<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
 		 	<property name="run.dojo.build" value="false"/>
+		 	<property name="buildId" value="${buildType}${timestamp}"/>
 		 	<property name="product" value="${builder}/maqettaOrion.product"/>
 		 	 <property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
 		 	 <property name="basedir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
@@ -114,7 +115,7 @@
     </target>
 	
 	<target name="MaqettaOrionHosted" if="run.external.targets">
-		    <echo message="Running orion/maqetta hosted build...."/>
+		 <echo message="Running orion/maqetta hosted build...."/>
 		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
 			<property name="cvsuser" value=":ext:aniefer" />		
 			<property name="builder" value="${builderDir}" />
@@ -127,6 +128,7 @@
 			<property name="allElementsFile" value="${builder}/allElements.xml" />
 			 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 				<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
+			 	<property name="buildId" value="${buildType}${timestamp}-hosted"/>
 			 	<property name="run.dojo.build" value="false"/>
 			 	<property name="product" value="${builder}/maqettaOrionHosted.product"/>
 			 	<property name="archiveNamePrefix" value="maqetta-orion-hosted-${buildLabel}"/>

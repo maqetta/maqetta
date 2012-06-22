@@ -613,7 +613,7 @@ return;
 			showRoot: false,
 			autoExpand: true,
 			className: 'StatesViewTree',
-			style: 'height:150px', 
+			style: 'height:150px; overflow:auto;', 
 			_createTreeNode: function(args) {
 /*FIXME: OLD LOGIC
 				var item = args.item;

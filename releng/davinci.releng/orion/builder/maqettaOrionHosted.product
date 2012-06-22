@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product uid="maqetta.orion" application="org.eclipse.orion.application" useFeatures="true" includeLaunchers="true">
+<product uid="maqetta.orion.hosted" application="org.eclipse.orion.application" useFeatures="true" includeLaunchers="true">
 
 
    <configIni use="default">

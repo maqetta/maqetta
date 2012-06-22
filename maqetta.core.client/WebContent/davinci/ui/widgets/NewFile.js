@@ -226,7 +226,7 @@ define(["dojo/_base/declare",
 				valid = valid && !parent.readOnly();
 			}
 			
-			resource = parent.getChild(name);
+			resource = parent.getChildSync(name);
 			if (resource) {
 				valid = valid && !resource.readOnly();
 			}

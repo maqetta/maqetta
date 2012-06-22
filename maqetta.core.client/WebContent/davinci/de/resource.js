@@ -40,7 +40,7 @@ define(["davinci/de/widgets/NewDijit",
 			
 			if(namesplit.length>1){
 				for(var i=0;i<namesplit.length-1;i++){
-					var folder = parent.getChild(namesplit[i]);
+					var folder = parent.getChildSync(namesplit[i]);
 					if(folder!=null){
 						parent = folder;
 					}else{
@@ -62,7 +62,7 @@ define(["davinci/de/widgets/NewDijit",
 					
 					if(namesplit[i]==".") continue;
 					
-					var folder = parent.getChild(namesplit[i]);
+					var folder = parent.getChildSync(namesplit[i]);
 					if(folder!=null){
 						parent = folder;
 					}else{
@@ -96,7 +96,7 @@ define(["davinci/de/widgets/NewDijit",
 				widgetSingleName = namesplit[namesplit.length-1];
 			}
 			
-			var customWidgets = parent.getChild(name + "_widgets.json");
+			var customWidgets = parent.getChildSync(name + "_widgets.json");
 			if(customWidgets==null){
 				customWidgets = parent.createResource(name +"_widgets.json");
 				

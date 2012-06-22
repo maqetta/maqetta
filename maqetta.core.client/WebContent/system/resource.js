@@ -1,23 +1,23 @@
 define(["require",
         "dojo/_base/declare",
         "davinci/model/Path",
-        "davinci/Runtime",
+        "davinci/Runtime", // TODO: remove this
 //        "davinci/Workbench",
         "davinci/model/resource/Folder"
 ],function(require, declare, Path, Runtime, Folder){
-var resource = {
-	root:null,
-	
-	__CASE_SENSITIVE:false,
-	
-	
+var Resource = {
+
+	root: null,
+
+	__CASE_SENSITIVE: false,
+
 	resourceChanged: function(type,changedResource){
 		
 		if(changedResource == system.resource.getRoot()){
 			changedResource.reload();
 			system.resource.getRoot().getChildren(dojo.hitch(system.resource,function(children){
 				system.resource.onChildrenChange(system.resource.getRoot(),children);
-			}));
+			})); //TODO: need error handler
 			return system.resource.getRoot();
 		}else if (type == 'created' || type == 'deleted' || type == 'renamed' || type == 'updated' || type=='reload'){
 			var parent, resourcePath;
@@ -28,7 +28,7 @@ var resource = {
 				resourcePath = changedResource.getPath();
 			}else{
 				/* find the resource parent */
-					var p1 = (new Path(changedResource)).removeLastSegments();
+				var p1 = new Path(changedResource).removeLastSegments();
 				parent = system.resource.findResource(p1.toString()) || system.resource.getRoot();
 				resourcePath = changedResource;
 			}
@@ -46,7 +46,7 @@ var resource = {
 			}
 			
 			/* force the resource parent to update its children */
-			parent.getChildren(function(children){system.resource.onChildrenChange(parent,children);}, true);	
+			parent.getChildren(function(children){system.resource.onChildrenChange(parent, children);}, function(e){console.error(e);}); // TODO: error handler	
 		}
 		
 		if(type=='deleted'){
@@ -54,7 +54,6 @@ var resource = {
 			var resourceTree = dijit.byId('resourceTree');
 			resourceTree.attr('selectedItem', null);
 		}
-		
 	},
 
 	/*
@@ -64,21 +63,23 @@ var resource = {
 	 * @param options Object {'theme':'claro'}
 	 * 
 	 */
-	createText : function(type, options){
+	createText: function(type, options){
 //		switch(type){
 //		default:
 			return "";
 //		}
 	},
 	
-	createResource : function(fullPath,  isFolder, parent){
+	createResource: function(fullPath,  isFolder, parent){
 		var namesplit = fullPath.split("/");
 		parent = parent || system.resource.getWorkspace();
 		var length = !isFolder? namesplit.length-1 : namesplit.length;
 			for(var i=0;i<length;i++){
-				if(namesplit[i]=="." || namesplit[i]=="") continue;
+				if(namesplit[i]=="." || namesplit[i]=="") {
+					continue;
+				}
 				
-				var folder = parent.getChild(namesplit[i]);
+				var folder = parent.getChildSync(namesplit[i]);
 				if(folder!=null){
 					parent = folder;
 				}else{
@@ -91,21 +92,23 @@ var resource = {
 		return parent;
 	},
 	
-	listProjects : function(callBack){
+	listProjects: function(onComplete, onError){
 		
 		/*
 		 *  projects are the first folder children of the workspace.
 		 *  may turn this into its own command.   
 		 */
 		
-		if(callBack)
-			system.resource.getWorkspace().getChildren(callBack, false);
-		else
-			return system.resource.getWorkspace().getChildren();
+		system.resource.getWorkspace().getChildren(onComplete, onError);
 	},
 	
-	createProject : function(projectName, initContent, eclipseSupport){
-			 Runtime.serverJSONRequest({url:"cmd/createProject", handleAs:"text", content:{"name": projectName, "initContent": initContent, 'eclipseSupport': eclipseSupport},sync:true  });
+	createProject: function(projectName, initContent, eclipseSupport){
+		Runtime.serverJSONRequest({
+			url: "cmd/createProject",
+			handleAs: "text",
+			content: {name: projectName, initContent: initContent, eclipseSupport: eclipseSupport},
+			sync: true
+		});
 	},
 	
 	/* Resource tree model methods */
@@ -143,14 +146,14 @@ var resource = {
 	mayHaveChildren: function(/*dojo.data.Item*/ item){
 	    return item.elementType=="Folder";
 	},
-	getRoot: function(onComplete){
-		//debugger;
+
+	getRoot: function(onComplete, onError){
 		if (!system.resource.root){
 			var workspace = system.resource.getWorkspace(),
 				Workbench = require("davinci/Workbench");
 			if(Workbench.singleProjectMode()){
 				var project = Workbench.getProject();
-				system.resource.root = system.resource.findResource(project,false, workspace);
+				system.resource.root = system.resource.findResource(project, false, workspace);
 			}else{
 				system.resource.root = workspace;
 			}
@@ -170,19 +173,20 @@ var resource = {
 		}
 		return this.workspace;
 	},
-	
-	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete){
-		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async (ALP: what does this mean?)
+
+	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete, /*function*/ onError){
+		parentItem.getChildren(onComplete, onError);
 	},
-	
+
 	copy: function(sourceFile, destFile, recurse){
 		var path = sourceFile.getPath? sourceFile.getPath() : sourceFile;
 		var destPath = destFile.getPath? destFile.getPath() : destFile;
-			var response = Runtime.serverJSONRequest({
+		var response = Runtime.serverJSONRequest({
 			url:"cmd/copy", 
 			handleAs:"text", 
 			sync:true,
-			content:{source:path, dest: destPath, recurse: String(recurse)}  });
+			content:{source:path, dest: destPath, recurse: String(recurse)}
+		});
 		/* force a reload since we dont really know if this is a file or directory being copied */
 		system.resource.resourceChanged("reload", destFile);
 	},
@@ -210,7 +214,7 @@ var resource = {
 			}
 		}
 		
-		window.location.href= "cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString ;
+		window.location.href= "cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString;
 	},
 	
 	
@@ -221,32 +225,28 @@ var resource = {
 	 * @returns  Resource
 	 */
 	findResource: function(name, ignoreCase, inFolder, workspaceOnly){
-		ignoreCase=ignoreCase || !system.resource.__CASE_SENSITIVE;
-		var seg1=0,segments;
-		var resource=system.resource.getWorkspace();
+		ignoreCase = ignoreCase || !system.resource.__CASE_SENSITIVE;
+		var seg1 = 0,segments;
+		var resource = system.resource.getWorkspace();
 		if (inFolder) {
 		    if (typeof inFolder == 'string') {
 		        inFolder = system.resource.findResource(inFolder, ignoreCase);
 		    }
 		    resource = inFolder;
 		}
-		var foundResources=[];
-		if (typeof name=='string') {
-			segments=name.split('/');
-			if (segments[0]=='.'){
-				seg1=1;
+		if (typeof name == 'string') {
+			segments = name.split('/');
+			if (segments[0] == '.'){
+				seg1 = 1;
 			}
 		} else if (name.getSegments) {
-			segments=name.getSegments();
-			name=name.toString();
+			segments = name.getSegments();
+			name = name.toString();
 		}
-		var isWildcard;
-		for (var i=0;i<segments.length;i++) { //FIXME: use filter()
-			if (segments[i].indexOf("*") >= 0) {
-				isWildcard=true;
-				break;
-			}
-		}
+
+		var isWildcard = segments.some(function(segment){
+			return segment.indexOf("*") != -1;
+		});
 		
 		var serverFind;
 		function doFind()
@@ -254,21 +254,23 @@ var resource = {
 			for (var i=seg1;i<segments.length;i++)
 			{
 				var found=null;
+//				resource.getChildrenSync(function(){}, true);
+/*
 				if (!resource._isLoaded )
 				{
 					serverFind=true;
 					break;
 				}
-//					resource.getChildren(function(){}, true);
+*/
 				//#23
 				if (segments[i] == '..') {
 					//parent
-					found=resource=resource.parent;
+					found = resource = resource.parent;
 				}else if(segments[i] != '.'){ // check for self
-					found=resource=resource.getChild(segments[i]);
+					found = resource = resource.getChildSync(segments[i]);
 				} // else it was self so we just increment to the next segment
 				// #23
-				//found=resource=resource.getChild(segments[i]);
+				//found=resource=resource.getChildSync(segments[i]);
 				if (!found) {
 				  return;
 				}
@@ -280,49 +282,51 @@ var resource = {
 		if (!isWildcard){
 			found=doFind();
 		}
+
+		var foundResources = [];
 		if (!found && (serverFind || isWildcard))
 		{			
-				var response = Runtime.serverJSONRequest({
-				  url:"cmd/findResource", 
-			          content:{path: name, ignoreCase: ignoreCase, workspaceOnly: workspaceOnly, inFolder: inFolder!=null?inFolder.getPath():null}, sync:true  });
+			var response = Runtime.serverJSONRequest({
+				url: "cmd/findResource", 
+				content:{
+					path: name,
+					ignoreCase: ignoreCase,
+					workspaceOnly: workspaceOnly,
+					inFolder: inFolder ? inFolder.getPath() : null
+				},
+				sync:true
+			});
 			
-			if (response && response.length>0)
+			if (response && response.length)
 			{
-				for (var i=0;i<response.length;i++)
-				{
-					var foundFile=response[i];
-					var loadResource=system.resource.getWorkspace();
-
-					for (var j=0;j<foundFile.parents.length;j++)
-					{
-						if (!loadResource._isLoaded)
-						{
-							loadResource._addFiles(foundFile.parents[j].members);
+				foundResources = response.map(function(foundFile) {
+					var loadResource = system.resource.getWorkspace();
+					for (var j=0;j<foundFile.parents.length;j++) {
+						if (!loadResource._isLoaded) {
+							loadResource.setChildrenSync(foundFile.parents[j].members);
 						}
-						if (j+1<foundFile.parents.length)
-						{
-							var name=foundFile.parents[j+1].name;
-							var newResource=loadResource.getChild(name);
+						if (j + 1 < foundFile.parents.length) {
+							var name = foundFile.parents[j+1].name;
+							var newResource = loadResource.getChildSync(name);
 							if (!newResource) {
-								newResource= new Folder(name,loadResource);
+								newResource = new Folder(name,loadResource);
 							}
 							loadResource=newResource;
 						}
-						
 					}
-					var resource=system.resource.getWorkspace();
-					seg1=0;
-					segments=foundFile.file.split('/');
-					if (segments[0]=='.') {
-						seg1=1;
+					resource = system.resource.getWorkspace();
+					seg1 = 0;
+					segments = foundFile.file.split('/');
+					if (segments[0] == '.') {
+						seg1 = 1;
 					}
 
-					foundResources[i]=doFind();
-				}
+					return doFind();
+				});
 			}
-		}
-		else {
-			foundResources[0]=found;
+			//TODO: what if !response?
+		} else {
+			foundResources = [found];
 		}
 		return isWildcard ? foundResources : foundResources[0];
 	},
@@ -335,6 +339,6 @@ var resource = {
 	}
 };
 
-	var subscriptions = [dojo.subscribe("/davinci/resource/resourceChanged",resource, function(){return resource.resourceChanged;}())];
-	return dojo.setObject("system.resource", resource);
+	var subscriptions = [dojo.subscribe("/davinci/resource/resourceChanged", Resource, function(){return Resource.resourceChanged;}())];
+	return dojo.setObject("system.resource", Resource);
 });

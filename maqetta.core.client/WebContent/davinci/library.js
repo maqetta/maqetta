@@ -47,10 +47,8 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 			delete _themesCache[base];
 		}
 	}
-	
-	
-	
 });
+
 /* singleton */
 library = {
 
@@ -81,7 +79,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base),
 		projectThemeBase = new Path(base).append(prefs.themeFolder),
-		allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());
+		allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
 
 	_themesCache[base] = allThemes.map(function(theme) {
 		var t = JSON.parse(theme.getText());
@@ -159,7 +157,7 @@ getCustomWidgets: function(base) {
 		var fullPath = widgetFolderSetting.getSegments();
 		parent = system.resource.findResource(fullPath[0]);
 		for(var i=1;i<fullPath.length;i++){
-			var folder = parent.getChild(fullPath[i]);
+			var folder = parent.getChildSync(fullPath[i]);
 			if (folder) {
 				parent = folder;
 			} else {
@@ -167,7 +165,7 @@ getCustomWidgets: function(base) {
 			}
 		}
 		
-		var customWidgets = system.resource.findResource("*_widgets.json", true, parent);
+		var customWidgets = system.resource.findResource("*_widgets.json", false, parent);
 		
 		for (var i = 0; i < customWidgets.length; i++) {
 			library.addCustomWidgets(base, dojo.fromJson(customWidgets[i].getText()));

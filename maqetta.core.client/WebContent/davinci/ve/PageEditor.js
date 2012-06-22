@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"davinci/ui/ModelEditor",
+	"../ui/ModelEditor",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"../commands/CommandStack",
@@ -27,14 +27,14 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this._bc.addChild(this._designCP);
 
 
-        this.visualEditor=new VisualEditor(this._designCP.domNode, this);
-        this.currentEditor=this.visualEditor;
-        this.currentEditor._commandStack=this._commandStack;
+        this.visualEditor = new VisualEditor(this._designCP.domNode, this);
+        this.currentEditor = this.visualEditor;
+        this.currentEditor._commandStack = this._commandStack;
 
-        this._srcCP = new dijit.layout.ContentPane({region:'bottom',splitter:true,style: "height:50%"});
+        this._srcCP = new dijit.layout.ContentPane({region: 'bottom', splitter: true, style: "height:50%"});
 
         // hack to get the source content page to resize itself
-        var oldResize=this._srcCP.resize;
+        var oldResize = this._srcCP.resize;
         this._srcCP.resize = function(changeSize, resultSize)
         {
             dojo.marginBox(this.domNode, resultSize);
@@ -43,11 +43,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
         this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
         this.htmlEditor.setVisible(false);
-        this.model=this.htmlEditor.model;
+        this.model = this.htmlEditor.model;
 
-        this._displayMode="design";
+        this._displayMode = "design";
 
-        this.model=this.htmlEditor.model;
+        this.model = this.htmlEditor.model;
 
         this._bc.startup();
         this._bc.resize(); // kludge: forces primary tab to display	
@@ -67,8 +67,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	supports: function (something){
 		// Note: the propsect_* values need to match the keys in SwitchingStyleView.js
-		var regex =  /^palette|properties|style|states|inline-style|MultiPropTarget|propsect_common|propsect_widgetSpecific|propsect_events|propsect_layout|propsect_paddingMargins|propsect_background|propsect_border|propsect_fontsAndText|propsect_shapesSVG$/;
-		return something.match(regex) ? true : false;
+		var regex = /^palette|properties|style|states|inline-style|MultiPropTarget|propsect_common|propsect_widgetSpecific|propsect_events|propsect_layout|propsect_paddingMargins|propsect_background|propsect_border|propsect_fontsAndText|propsect_shapesSVG$/;
+		return something.match(regex);
 	},
 
 	focus: function() {

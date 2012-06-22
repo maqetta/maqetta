@@ -299,23 +299,20 @@ var Resource = {
 			
 			if (response && response.length)
 			{
-				var loadResource = system.resource.getWorkspace();
 				foundResources = response.map(function(foundFile) {
-					for (var j=0;j<foundFile.parents.length;j++)
-					{
+					var loadResource = system.resource.getWorkspace();
+					for (var j=0;j<foundFile.parents.length;j++) {
 						if (!loadResource._isLoaded) {
 							loadResource.setChildrenSync(foundFile.parents[j].members);
 						}
-						if (j+1<foundFile.parents.length)
-						{
-							var name=foundFile.parents[j+1].name;
-							var newResource=loadResource.getChildSync(name);
+						if (j + 1 < foundFile.parents.length) {
+							var name = foundFile.parents[j+1].name;
+							var newResource = loadResource.getChildSync(name);
 							if (!newResource) {
-								newResource= new Folder(name,loadResource);
+								newResource = new Folder(name,loadResource);
 							}
 							loadResource=newResource;
 						}
-						
 					}
 					resource = system.resource.getWorkspace();
 					seg1 = 0;

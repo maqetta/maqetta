@@ -63,20 +63,20 @@ return declare("davinci.model.resource.File", Resource, {
 		}
 		var workingCopyExtension = isWorkingCopy ? ".workingcopy" : "";
 		var path = encodeURI(this.getPath() + workingCopyExtension);
-		var defered = dojo.xhrPut({
+		var deferred = dojo.xhrPut({
 			url: path,
 			putData: content,
 			handleAs:"text",
 			contentType:"text/html"
 		});	
-		defered.then(function(res){
-			dojo.publish("/davinci/resource/resourceChanged",["modified",this]);
+		deferred.then(function(res){
+			dojo.publish("/davinci/resource/resourceChanged", ["modified", this]);
 		}, function(err){
 			// This shouldn't occur, but it's defined just in case
 			// more meaningful error message should be reported to user higher up the food chain...
 			console.error("An error occurred: davinci.model.resource.File.prototype.setContents " + err + " : " + path);
 		});
-		return defered;
+		return deferred;
 	},
 
 	getText: function(){
@@ -87,8 +87,10 @@ return declare("davinci.model.resource.File", Resource, {
 
 	removeWorkingCopy: function() {
 		Runtime.serverJSONRequest({
-			url:"cmd/removeWorkingCopy", handleAs:"text",
-			content:{'path':this.getPath()}, sync:true
+			url:"cmd/removeWorkingCopy",
+			handleAs:"text",
+			content:{path: this.getPath()},
+			sync:true
 		});
 		if (this.isNew) {
 			this.deleteResource(true);

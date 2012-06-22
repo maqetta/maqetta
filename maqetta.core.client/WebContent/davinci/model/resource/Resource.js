@@ -57,13 +57,13 @@ return declare("davinci.model.resource.Resource", Model, {
 		var path = new Path(this.getPath()).removeLastSegments();
 		var newPath = path.append(newName);
 		var response = Runtime.serverJSONRequest({
-			url:"./cmd/rename", 
+			url:"cmd/rename", 
 			handleAs:"text", 
 			sync:true,
-			content:{'oldName':this.getPath(), 'newName' : newPath.toString()} 
+			content:{oldName:this.getPath(), newName: newPath.toString()} 
 		});
 		this.name = newName;
-		dojo.publish("/davinci/resource/resourceChanged", ["renamed",this]);
+		dojo.publish("/davinci/resource/resourceChanged", ["renamed", this]);
 	},
 
 	getParentFolder: function() {

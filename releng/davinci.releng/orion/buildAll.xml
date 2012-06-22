@@ -18,7 +18,9 @@
         <antcall target="clean"/>
 		<!-- base maqetta out of common.xml -->
 		<antcall target="MaqettaOrion"/>
+		
 		<antcall target="MaqettaOrionHosted"/>
+		
     </target>
 
     <target name="init">

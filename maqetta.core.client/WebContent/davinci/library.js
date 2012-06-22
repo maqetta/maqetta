@@ -79,7 +79,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base),
 		projectThemeBase = new Path(base).append(prefs.themeFolder),
-		allThemes = system.resource.findResource("*.theme", true, projectThemeBase.toString());  // FIXME: why ignore case?
+		allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
 
 	_themesCache[base] = allThemes.map(function(theme) {
 		var t = JSON.parse(theme.getText());
@@ -165,7 +165,7 @@ getCustomWidgets: function(base) {
 			}
 		}
 		
-		var customWidgets = system.resource.findResource("*_widgets.json", true, parent); // FIXME: why ignore case?
+		var customWidgets = system.resource.findResource("*_widgets.json", false, parent);
 		
 		for (var i = 0; i < customWidgets.length; i++) {
 			library.addCustomWidgets(base, dojo.fromJson(customWidgets[i].getText()));

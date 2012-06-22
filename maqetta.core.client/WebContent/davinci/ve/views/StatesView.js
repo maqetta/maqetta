@@ -306,7 +306,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(stateContainerNode){
 				var appstates = States.getStates(stateContainerNode);
 				if(appstates.length > 0){
-					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
+					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', stateContainerNode:stateContainerNode, children:[]};
 					for(var st=0; st<appstates.length; st++){
 						var state = appstates[st];
 						AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState', stateContainerNode:stateContainerNode });
@@ -396,13 +396,57 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateSelection: function() {
-		if(!this._sceneStore){
+		var rootNode = this._getRootNode();
+		var allStateContainers_tree = States.getAllStateContainers(rootNode);
+		var allStateContainers_array = [];
+		function recurseStateContainers(stateContainer){
+			allStateContainers_array.push(stateContainer);
+			for(var i=0; i< stateContainer.children.length; i++){
+				recurseStateContainers(stateContainer.children[i]);
+			}
+		}
+		var allAppStateItems = [];
+		if(allStateContainers_tree && allStateContainers_tree.length>0){
+			recurseStateContainers(allStateContainers_tree[0]);
+			this._sceneStore.fetch({query: {type:'AppState'}, queryOptions:{deep:true}, 
+				onComplete: dojo.hitch(this, function(items, request){
+					allAppStateItems = items;
+				})
+			});
+		}
+		var paths = [];
+		for(var k=0; k<allAppStateItems.length; k++){
+			var appStateItem = allAppStateItems[k];
+			var stateContainerNode = appStateItem.stateContainerNode[0];
+			var currentState = States.getState(stateContainerNode);
+			if(!currentState){
+				currentState = States.NORMAL;
+			}
+			if(currentState === appStateItem.name[0]){
+				var path = [];
+				path.splice(0, 0, appStateItem.id[0]);
+				var parentItem = appStateItem.parentItem && appStateItem.parentItem[0];
+				while(parentItem){
+					path.splice(0, 0, parentItem.id[0]);
+					parentItem = parentItem.parentItem && parentItem.parentItem[0];;
+				}
+				path.splice(0, 0, 'StoryRoot');
+				paths.push(path);
+			}
+		}
+		this._tree.set('paths', paths);
+//FIXME: Still need to deal with mobile views
+return;
+
+//FIXME: remove this._onClickHanderInProcess
+		if(!this._sceneStore /*|| this._onClickHanderInProcess*/){
 			return;
 		}
 		var sceneId;
 		
 		// First see if the current Tree is showing the current AppState.
 		// If so, update the Tree to select that AppState
+//FIXME: This needs to be updated for nested themes.
 		var currentState = States.getState(this._getRootNode());
 		if(!currentState){
 			currentState = 'Normal';
@@ -589,6 +633,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		});
 		this.centerPane.domNode.appendChild(this._tree.domNode);	
 		dojo.connect(this._tree, "onClick", this, function(item){
+/*FIXME: remove this
+			this._onClickHanderInProcess = true;
+*/
 			var currentEditor = this._editor;
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
@@ -629,6 +676,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					}
 				}
 			}
+/*FIXME: remove this
+			this._onClickHanderInProcess = false;
+*/
 		});
 
 		var newItemRecursive = function(obj, parentItem){

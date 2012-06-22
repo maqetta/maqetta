@@ -30,7 +30,6 @@ define(["dojo/_base/declare",
 		postMixInProperties: function() {
 			dojo.mixin(this, uiNLS);
 			dojo.mixin(this, commonNLS);
-			this.cancel = true;
 			this.inherited(arguments);
 		},
 		postCreate: function(){
@@ -77,7 +76,6 @@ define(["dojo/_base/declare",
 			var resources = this.fileTree.get('selectedItems');
 			this.value = resources[0];
 			this.cancel = false;
-			this.onClose();
 		},
 		
 		_getValueAttr: function(){
@@ -85,7 +83,6 @@ define(["dojo/_base/declare",
 		},
 		
 		_cancelButton: function(){
-			this.cancel = true;
 			this.onClose();
 		},
 

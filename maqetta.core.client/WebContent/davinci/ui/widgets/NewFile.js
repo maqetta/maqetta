@@ -241,7 +241,8 @@ define(["dojo/_base/declare",
 			
 			this.value =  fullPath.toString();
 			this.cancel = false;
-			this.onClose();
+
+			return true
 		},
 			
 		_newFolder : function(){

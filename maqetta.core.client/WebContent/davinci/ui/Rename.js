@@ -56,8 +56,6 @@ define(["dojo/_base/declare",
 		
 		okButton : function(){
 			this.value = dojo.attr(this._newName, "value");
-				
-			this.onClose();
 		},
 		
 		_getValueAttr : function(){

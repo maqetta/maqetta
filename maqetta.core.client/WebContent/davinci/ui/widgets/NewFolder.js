@@ -31,7 +31,6 @@ define(["dojo/_base/declare",
 		uiNLS: uiNLS,
 		
 		postMixInProperties : function() {
-			this.cancel =true;
 			this.inherited(arguments);
 		},
 		postCreate : function(){
@@ -92,10 +91,7 @@ define(["dojo/_base/declare",
 			this._okButton.set( 'disabled', !valid);
 		},
 		_okButton : function(){
-			this.value = this.fileDialogParentFolder.innerHTML + "/" + this.folderName.get( 'value');
-			this.cancel = false;
-			this.onClose();
-			
+			this.value = this.fileDialogParentFolder.innerHTML + "/" + this.folderName.get( 'value');			
 		},
 		
 		_getValueAttr : function(){
@@ -104,7 +100,6 @@ define(["dojo/_base/declare",
 		},
 		
 		_cancelButton: function(){
-			this.cancel = true;
 			this.onClose();
 		},
 		

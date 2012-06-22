@@ -34,10 +34,7 @@ define(["dojo/_base/declare",
 		
 		okButton : function(){
 			this.value = dojo.attr(this._dijitName, "value");
-			this.onClose();
-		},
-		
-	
+		},	
 		
 		_getValueAttr : function(){
 			return this.value;

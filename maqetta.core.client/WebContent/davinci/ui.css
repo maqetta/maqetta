@@ -570,16 +570,23 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 }
 
 /* resizabled dialog*/
+.resizableDialog .dijitDialogPaneContentArea {
+	overflow: auto;
+}
+
 .resizableDialog .dialogSecondaryButtons {
 	float: right;
 }
 
-.resizableDialog .dialogButtonContainer {
+.resizableDialog .dijitDialogPaneActionBar {
 	clear: both;
 	text-align: left;
+
+	/* for the resize handle */
+	padding-right: 14px;
 }
 /*override*/
-.resizableDialog .dialogButtonContainer.dialogButtonContainerOverride {
+.resizableDialog .dijitDialogPaneActionBar.dialogButtonContainerOverride {
 	text-align: right;
 }
 .resizableDialog .dialogContent {

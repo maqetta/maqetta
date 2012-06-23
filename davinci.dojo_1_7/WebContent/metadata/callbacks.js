@@ -11,10 +11,12 @@
  	 *		This 'name' string appears in the Scenes palette.
 	 *		@param {davinci.ve.Context} context  Maqetta context object corresponding to davinci.ve.VisualEditor
 	 * 
+//FIXME: Inconsistent APIs: sometimes we pass node, other times ID
 	 * selectScene(params)
 	 *		A particular scene has been selected in the Scenes palette.
 	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
 	 *		@param {object} params  Has following properties
+	 *			params.sceneContainerNode - Node which contains the node with the given sceneId
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
 	 *		@returns {boolean}	Return true is a scene was selected
 	 * 

@@ -22,8 +22,12 @@ States.prototype = {
 	},
 	
 	/**
+	 * Returns an array of all nodes that are state containers (due to having a _maqAppStates.states property)
+	 * @param rootnode
+	 * @returns {Array[Element]}  an array of Elements for all state containers in document
+//FIXME: OLD LOGIC
 	 * Traverses all document nodes starting with rootnode, looking for
-	 * all nodes that are state containers (due to having a states.states property),
+	 * all nodes that are state containers (due to having a _maqAppStates.states property),
 	 * and returning a data structure that lists all state containers. See below
 	 * for details about the returned data structure..
 	 * @param rootnode
@@ -38,7 +42,9 @@ States.prototype = {
 	 *                [{stateContainerNode:SPAN,children:[]}]
 	 *            }]
 	 *        }]
+//FIXME: END
 	 */
+/*FIXME: OLD LOGIC
 	getAllStateContainers: function(rootnode){
 		var allStateContainers = [];
 		function findStateContainers(currentNode, stateContainersArray){
@@ -53,6 +59,20 @@ States.prototype = {
 			}
 		}
 		findStateContainers(rootnode, allStateContainers);
+		return allStateContainers;
+	},
+*/
+	getAllStateContainers: function(rootnode){
+		var allStateContainers = [];
+		function findStateContainers(currentNode){
+			if(currentNode._maqAppStates && currentNode._maqAppStates.states){
+				allStateContainers.push(currentNode);
+			}
+			for(var i=0; i<currentNode.children.length; i++){
+				findStateContainers(currentNode.children[i]);
+			}
+		}
+		findStateContainers(rootnode);
 		return allStateContainers;
 	},
 	
@@ -369,12 +389,21 @@ States.prototype = {
 	 * Force a call to setState so that styling properties get reset for the given node
 	 * based on the current application state.
 	 */
+/*FIXME: OLD LOGIC
 	resetState: function(node){
 		if(!node || !node.ownerDocument || !node.ownerDocument.body){
 			return;
 		}
 		var body = node.ownerDocument.body;
 		var currentState = this.getState(body);
+		this.setState(currentState, node, true, true);	
+	},
+*/
+	resetState: function(node){
+		if(!node ){
+			return;
+		}
+		var currentState = this.getState(node);
 		this.setState(currentState, node, true/*updateWhenCurrent*/, true /*silent*/);	
 	},
 	
@@ -1479,3 +1508,4 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 
 return States;
 });
+

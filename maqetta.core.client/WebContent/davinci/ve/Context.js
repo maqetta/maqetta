@@ -21,6 +21,9 @@ define([
 	"./metadata",
 	"./ChooseParent",
 	"./Snap",
+	"./States",
+	"davinci/XPathUtils",
+	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
 	"../html/CSSModel", // shorthands
 	"../html/CSSRule",
@@ -56,6 +59,9 @@ define([
 	metadata,
 	ChooseParent,
 	Snap,
+	States,
+	XPathUtils,
+	HtmlFileXPathAdapter,
 	HTMLWidget,
 	CSSModel,
 	CSSRule,
@@ -3355,6 +3361,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @return {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
 	 *                   where sm is undefined or null for application states
 	 */
+/*FIXME: OLD LOGIC
 	getStatesScenes: function() {
 		var a = this.getCurrentScenes();
 //FIXME: Yikes. getState(node)?
@@ -3363,12 +3370,45 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		a.push({sceneId:state});
 		return a;
 	},
+*/
+	getStatesScenes: function() {
+		var allStateContainers = States.getAllStateContainers(this.rootNode);
+		var statesInfo = [];
+		for(var i=0; i<allStateContainers.length; i++){
+			var stateContainer = allStateContainers[i];
+			var currentState = States.getState(stateContainer);
+			var xpath = XPathUtils.getXPath(stateContainer._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+			statesInfo.push({ currentStateXPath:xpath, state:currentState });
+		}
+		scenesInfo = {};
+		var sceneManagers = this.sceneManagers;
+		for(var smIndex in sceneManagers){
+			var sm = sceneManagers[smIndex];
+			scenesInfo[smIndex] = { sm:sm, sceneContainers:[] };
+			var allSceneContainers = sm.getAllSceneContainers();
+			for(var i=0; i<allSceneContainers.length; i++){
+				var o = {};
+				var sceneContainer = allSceneContainers[i];
+				var currentScene = sm.getCurrentScene(sceneContainer);
+				var xpath = XPathUtils.getXPath(sceneContainer._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+				o.sceneContainerXPath = xpath;
+				var xpath = XPathUtils.getXPath(currentScene._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+				o.currentSceneXPath = xpath;
+				scenesInfo[smIndex].sceneContainers.push(o);
+			}
+		}
+		return { statesInfo:statesInfo, scenesInfo:scenesInfo };
+	},
 	
 	/**
 	 * Sets the current scene(s) and/or current application state
 	 * @param {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
 	 *                   where sm is undefined or null for application states
 	 */
+/*FIXME: OLD LOGIC
 	setStatesScenes: function(arr) {
 		for(var i=0; i<arr.length; i++){
 			var sm = arr[i].sm;
@@ -3378,6 +3418,35 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}else{
 //FIXME: Yikes. setState(node)?
 				davinci.ve.states.setState(sceneId);
+			}
+		}
+	},
+*/
+	setStatesScenes: function(statesScenes) {
+		var statesInfo = statesScenes.statesInfo;
+		if(statesInfo){
+			for(var i=0; i<statesInfo.length; i++){
+				var xpath = statesInfo[i].currentStateXPath;
+				var id = this.model.evaluate(xpath).getAttribute('id'),
+					widget = Widget.byId(id, this.getDocument()),
+					node = widget.domNode;
+				States.setState(statesInfo[i].state, node);
+			}
+		}
+		var scenesInfo = statesScenes.scenesInfo;
+		var sceneManagers = this.sceneManagers;
+		for(var smIndex in scenesInfo){
+			var sm = scenesInfo[smIndex].sm;
+			var allSceneContainers = scenesInfo[smIndex].sceneContainers;
+			for(var i=0; i<allSceneContainers.length; i++){
+				var sceneContainer = allSceneContainers[i];
+				var xpath = sceneContainer.sceneContainerXPath;
+				var id = this.model.evaluate(xpath).getAttribute('id'),
+					widget = Widget.byId(id, this.getDocument()),
+					sceneContainerNode = widget.domNode;
+				xpath = sceneContainer.currentSceneXPath;
+				id = this.model.evaluate(xpath).getAttribute('id');
+				sm.selectScene({ sceneContainerNode:sceneContainerNode, sceneId:id });
 			}
 		}
 	},

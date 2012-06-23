@@ -42,6 +42,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
 		this.subscribe("/davinci/ui/context/statesLoaded", this._statesLoaded.bind(this));
 		this.subscribe("/davinci/ui/context/pagebuilt", this._pagebuilt.bind(this));
+		this.subscribe("/davinci/ui/context/pagerebuilt", this._pagerebuilt.bind(this));
 		this.subscribe("/davinci/ui/deviceChanged", this._deviceChanged.bind(this));
 		this.subscribe("/davinci/states/state/added", this._addState.bind(this));
 		this.subscribe("/davinci/states/state/removed", this._removeState.bind(this));
@@ -63,6 +64,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_pagebuilt: function() {
+		this._statesLoaded.apply(this, arguments);
+	},
+	
+	_pagerebuilt: function() {
+		this._destroyTree();
 		this._statesLoaded.apply(this, arguments);
 	},
 	
@@ -544,6 +550,7 @@ return;
 		if(!context || !context._statesLoaded){
 			return;
 		}
+/*FIXME: OLD LOGIC
 		var rootNode = this._getRootNode();
 		var allStateContainers_tree = States.getAllStateContainers(rootNode);
 		var allStateContainers_array = [];
@@ -562,6 +569,14 @@ return;
 				})
 			});
 		}
+*/
+		var allAppStateItems = [];
+		this._sceneStore.fetch({query: {type:'AppState'}, queryOptions:{deep:true}, 
+			onComplete: dojo.hitch(this, function(items, request){
+				allAppStateItems = items;
+			})
+		});
+		
 /*FIXME: OLD LOGIC
 		var paths = [];
 */

@@ -36,6 +36,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 				var designerName = this.designerId || "";
 				this._loading = xhr.get({
 					url: "cmd/listReviewFiles",
+					handleAs: "json",
 					content: {
 						designer: designerName,
 						version: this.timeStamp

@@ -1301,3 +1301,8 @@ davinci_top_bar .dijitButtonNode {
 .contentassist .selected {
         background-color: #ddd;
 }
+
+.ScenesPaletteCheckBox {
+	float:right;
+	margin-right:5px;
+}

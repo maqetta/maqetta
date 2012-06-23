@@ -302,6 +302,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 */
 		var sceneManagers = context.sceneManagers;
 		var existingItems = [];	// Used inside recurseWidget to look up into existing list of items
+		var that = this;
 		function recurseWidget(widget, currentParentItem){
 			var node = widget.domNode;
 			var isStateContainer = States.isStateContainer(node);
@@ -370,7 +371,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 							parentItem:currentParentItem, children:[]};
 					for(var st=0; st<appstates.length; st++){
 						var state = appstates[st];
-						var o = { name:state, sceneId:state, type:'AppState', 
+						var span = that._treeNodeContent(state);
+						var o = { name:span, sceneId:state, type:'AppState', 
 								sceneContainerNode:node, parentItem:AppStatesObj };
 						AppStatesObj.children.push(o);
 						existingItems.push(o);
@@ -388,7 +390,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 										parentItem:currentParentItem, children:[]};
 								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
 									var childSceneNode = sceneChildren[childSceneIndex];
-									var o = { sceneId:childSceneNode.id, name:childSceneNode.id, type:sm.category, 
+									var label = WidgetUtils.getLabel(childSceneNode._dvWidget);
+									var span = that._treeNodeContent(label);
+									var o = { name:span, sceneId:childSceneNode.id, type:sm.category, 
 											sceneContainerNode:node, parentItem:SceneManagerObj, node:childSceneNode, children:[] };
 									SceneManagerObj.children.push(o);
 									existingItems.push(o);
@@ -566,7 +570,7 @@ return;
 			if(!currentState){
 				currentState = States.NORMAL;
 			}
-			if(currentState === appStateItem.name[0]){
+			if(currentState === appStateItem.sceneId[0]){
 				var path = this._getTreeSelectionPath(appStateItem);
 				if(path.length>0){
 					paths.push(path);
@@ -822,15 +826,15 @@ return;
 				if (this.isThemeEditor()){
 					this.publish("/davinci/states/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:'$all', 
-							newState:item.name[0], oldState:this._themeState, context: this._editor.context}]);
-					this._themeState = item.name[0];
+							newState:item.sceneId[0], oldState:this._themeState, context: this._editor.context}]);
+					this._themeState = item.sceneId[0];
 				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
 					this.publish("/maqetta/appstates/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:sceneContainerNode, 
-							newState:item.name[0], sceneContainerNode:sceneContainerNode}]);
+							newState:item.sceneId[0], sceneContainerNode:sceneContainerNode}]);
 				} else {
 					if(context && sceneContainerNode){
-						var state = item.name[0];
+						var state = item.sceneId[0];
 						States.setState(state, sceneContainerNode);
 						context.deselectInvisible();
 						context.updateFocusAll();
@@ -993,6 +997,15 @@ return;
 		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");
 		var d = dijit.byId(this.toolbarDiv.parentNode.id);
 		d.resize();
+	},
+	
+	/**
+	 * Take a labelSnippet that is to appear in the Tree and puts a standard set
+	 * of wrapper SPAN elements around it, mostly to include a checkbox SPAN
+	 * so we can control visibility of the checkbox to indicate currently active scenes
+	 */
+	_treeNodeContent: function(labelSnippet){
+		return '<span><span>'+labelSnippet+'</span><span class="ScenesPaletteCheckBox">&#x2713;</span></span>';
 	}
 });
 });

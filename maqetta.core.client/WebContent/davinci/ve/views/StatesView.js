@@ -301,6 +301,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
 */
 		var sceneManagers = context.sceneManagers;
+		var existingItems = [];	// Used inside recurseWidget to look up into existing list of items
 		function recurseWidget(widget, currentParentItem){
 			var node = widget.domNode;
 			var isStateContainer = States.isStateContainer(node);
@@ -315,20 +316,39 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			}
 			if(node.tagName == 'BODY' || isStateContainer || isSceneContainer){
-				var label = WidgetUtils.getLabel(widget);
-				var o = {name:label, type:'file', category:'file', children:[]};
-				currentParentItem.children.push(o);
-				currentParentItem = o;
+				// If the current parent node (i.e., node) matches one of the nodes already
+				// in the tree, then use its corresponding tree data item as
+				// the currentParentNode. This prevents adding an extra entry in the
+				// tree for the same node.
+				var currentParentItemAlreadyThere = null;
+				for(var e=0; e<existingItems.length; e++){
+					var existingItem = existingItems[e];
+					if(existingItem.node == node){
+						currentParentItemAlreadyThere = existingItem;
+					}
+				}
+				if(currentParentItemAlreadyThere){
+					currentParentItem = currentParentItemAlreadyThere;
+				}else{
+					var label = WidgetUtils.getLabel(widget);
+					var o = {name:label, type:'file', category:'file', children:[]};
+					currentParentItem.children.push(o);
+					existingItems.push(o);
+					currentParentItem = o;
+				}
 				if(isStateContainer){
 					var appstates = States.getStates(node);
 					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', 
 							parentItem:currentParentItem, children:[]};
 					for(var st=0; st<appstates.length; st++){
 						var state = appstates[st];
-						AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState', 
-								stateContainerNode:node, parentItem:AppStatesObj });
+						var o = { name:state, sceneId:state, type:'AppState', 
+								sceneContainerNode:node, parentItem:AppStatesObj };
+						AppStatesObj.children.push(o);
+						existingItems.push(o);
 					}
 					currentParentItem.children.push(AppStatesObj);
+					existingItems.push(AppStatesObj);
 				}
 				if(isSceneContainer){
 					for(var smIndex in sceneManagers){
@@ -339,11 +359,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 								var SceneManagerObj = { name:sm.name, type:'SceneManagerRoot', category:sm.category, 
 										parentItem:currentParentItem, children:[]};
 								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
-									var childScene = sceneChildren[childSceneIndex];
-									SceneManagerObj.children.push({ sceneId:childScene.id, name:childScene.id, type:sm.category, 
-										sceneContainerNode:node, parentItem:SceneManagerObj });
+									var childSceneNode = sceneChildren[childSceneIndex];
+									var o = { sceneId:childSceneNode.id, name:childSceneNode.id, type:sm.category, 
+											sceneContainerNode:node, parentItem:SceneManagerObj, node:childSceneNode, children:[] };
+									SceneManagerObj.children.push(o);
+									existingItems.push(o);
 								}
 								currentParentItem.children.push(SceneManagerObj);
+								existingItems.push(o);
 							}
 						}
 					}
@@ -510,8 +533,8 @@ return;
 		var paths = [];
 		for(var k=0; k<allAppStateItems.length; k++){
 			var appStateItem = allAppStateItems[k];
-			var stateContainerNode = appStateItem.stateContainerNode[0];
-			var currentState = States.getState(stateContainerNode);
+			var sceneContainerNode = appStateItem.sceneContainerNode[0];
+			var currentState = States.getState(sceneContainerNode);
 			if(!currentState){
 				currentState = States.NORMAL;
 			}
@@ -756,7 +779,7 @@ return;
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
 			if (item && item.type && item.type[0] == 'AppState') {
-				var stateContainerNode = item.stateContainerNode ? item.stateContainerNode[0] : null;
+				var sceneContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
 				if (this.isThemeEditor()){
 					this.publish("/davinci/states/state/changed", 
 							[{editorClass:currentEditor.declaredClass, widget:'$all', 
@@ -764,12 +787,12 @@ return;
 					this._themeState = item.name[0];
 				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
 					this.publish("/maqetta/appstates/state/changed", 
-							[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
-							newState:item.name[0], stateContainerNode:stateContainerNode}]);
+							[{editorClass:currentEditor.declaredClass, widget:sceneContainerNode, 
+							newState:item.name[0], sceneContainerNode:sceneContainerNode}]);
 				} else {
-					if(context && stateContainerNode){
+					if(context && sceneContainerNode){
 						var state = item.name[0];
-						States.setState(state, stateContainerNode);
+						States.setState(state, sceneContainerNode);
 						context.deselectInvisible();
 						context.updateFocusAll();
 					}

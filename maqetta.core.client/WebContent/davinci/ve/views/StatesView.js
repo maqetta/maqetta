@@ -660,6 +660,15 @@ return;
 					if(storeItem.category){
 						o.category = storeItem.category[0];
 					}
+					if(storeItem.node){
+						o.node = storeItem.node[0];
+					}
+					if(storeItem.parentItem){
+						o.parentItem = storeItem.parentItem[0];
+					}
+					if(storeItem.sceneContainerNode){
+						o.sceneContainerNode = storeItem.sceneContainerNode[0];
+					}
 					retArray.push(o);
 					if(storeItem.children && storeItem.children.length > 0){
 						o.children = [];
@@ -704,10 +713,12 @@ return;
 					return false;
 				}
 			}
-			if((o1.children && !o2.children) || (!o1.children && o2.children)){
+			var o1AnyChildren = o1.children && o1.children.length;
+			var o2AnyChildren = o2.children && o2.children.length;
+			if((o1AnyChildren && !o2AnyChildren) || (!o1AnyChildren && o2AnyChildren)){
 				return false;	// return false if objects don't match
 			}
-			if(o1.children){
+			if(o1AnyChildren){
 				if(!compareArray(o1.children, o2.children)){
 					return false;	// return false if objects don't match
 				}

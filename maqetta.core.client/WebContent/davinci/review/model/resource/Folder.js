@@ -43,8 +43,8 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 					}
 				}).then(function(responseObject, ioArgs) {
 					this.children = responseObject.map(function(file){
-						return new reviewFile(responseObject[i].path, this);
-					});
+						return new reviewFile(file.path, this);
+					}, this);
 					this._isLoaded=true;
 					onComplete.call(null, this.children);
 					delete this._loading;

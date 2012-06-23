@@ -21,7 +21,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 
 	//deprecated
 	getChildrenSync: function(onComplete, sync) {
-		getChildren(onComplete);
+		this.getChildren(onComplete);
 	},
 
 	getChildren: function(onComplete, onError) {

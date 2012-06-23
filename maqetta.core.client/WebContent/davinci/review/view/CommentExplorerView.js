@@ -229,7 +229,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		this.commentingFilter.filterString=text;
 		dojo.forEach(this.model.root.children,dojo.hitch(this, function(item) {
 			var newChildren;
-			item.getChildren(function(children) { newChildren=children; }, true);
+			item.getChildrenSync(function(children) { newChildren=children; }, true);
 			this.model.onChildrenChange(item, newChildren);
 		}));
 	},
@@ -314,7 +314,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			template.detail_creator = item.designerId
 				+ (item.designerEmail ? "&nbsp;&lt" + item.designerEmail + "&gt": "");
 			template.detail_files = "";
-			item.getChildren(function(children) { c = children; }, true);
+			item.getChildrenSync(function(children) { c = children; }, true);
 			dojo.forEach(c, function(i) {
 				var label = i.getLabel();
 				template.detail_files += "<div><span>"

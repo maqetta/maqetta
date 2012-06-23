@@ -201,12 +201,14 @@ var initializeWorkbenchState = function(){
 				}
 	
 				if (resource) {
-					Workbench.openEditor({
-						fileName: resource,
-						content: resource.getText(),
-						noSelect: noSelect,
-						isDirty: resource.isDirty(),
-						startup: false
+					resource.getContent().then(function(content){						
+						Workbench.openEditor({
+							fileName: resource,
+							content: content,
+							noSelect: noSelect,
+							isDirty: resource.isDirty(),
+							startup: false
+						});
 					});
 				}
 			});

@@ -82,7 +82,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 		allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
 
 	_themesCache[base] = allThemes.map(function(theme) {
-		var t = JSON.parse(theme.getText());
+		var t = JSON.parse(theme.getContentSync());
 		t.file = theme;
 		return t;
 	});
@@ -168,7 +168,7 @@ getCustomWidgets: function(base) {
 		var customWidgets = system.resource.findResource("*_widgets.json", false, parent);
 		
 		for (var i = 0; i < customWidgets.length; i++) {
-			library.addCustomWidgets(base, dojo.fromJson(customWidgets[i].getText()));
+			library.addCustomWidgets(base, dojo.fromJson(customWidgets[i].getContentSync()));
 		}
 	}
 	

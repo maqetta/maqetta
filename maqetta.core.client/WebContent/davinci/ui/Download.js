@@ -129,7 +129,7 @@ define(["dojo/_base/declare",
 					if(Theme.isThemeHTML(allResources[k])) {
 						continue;
 					}
-					var newSource = pageBuilder.rebuildSource(allResources[k].getText(), allResources[k]);
+					var newSource = pageBuilder.rebuildSource(allResources[k].getContentSync(), allResources[k]);
 					allResources[k].setContents(newSource, true);
 				}
 			}

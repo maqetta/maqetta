@@ -435,7 +435,7 @@ var uiResource = {
 			if(resource.elementType=="File"){
 				Workbench.openEditor({
 					fileName: resource,
-					content: resource.getText()
+					content: resource.getContentSync()
 				}, newHtmlParams);
 			}
 		}

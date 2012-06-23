@@ -5,10 +5,11 @@
    */
  define([
 	"dojo/_base/declare",
+	"dojo/_base/xhr",
 	"davinci/Runtime",
 	"davinci/model/resource/Resource",
 	"davinci/model/resource/Marker"
-], function(declare, Runtime, Resource, Marker) {
+], function(declare, xhr, Runtime, Resource, Marker) {
 
 return declare("davinci.model.resource.File", Resource, {
 
@@ -25,12 +26,11 @@ return declare("davinci.model.resource.File", Resource, {
 	},
 
 	clearMarkers: function() {
-		this.markers=[];
+		this.markers = [];
 	},
 
 	addMarker: function(type,line,text) {
-		var marker = new Marker(this, type, line, text);
-		this.markers.push(marker);
+		this.markers.push(new Marker(this, type, line, text));
 	},
 
 	getMarkers: function(markerTypes) {
@@ -63,25 +63,32 @@ return declare("davinci.model.resource.File", Resource, {
 		}
 		var workingCopyExtension = isWorkingCopy ? ".workingcopy" : "";
 		var path = encodeURI(this.getPath() + workingCopyExtension);
-		var deferred = dojo.xhrPut({
+		return xhr.put({
 			url: path,
 			putData: content,
-			handleAs:"text",
-			contentType:"text/html"
-		});	
-		deferred.then(function(res){
+			handleAs: "text",
+			contentType: "text/html"
+		}).then(function(res){
 			dojo.publish("/davinci/resource/resourceChanged", ["modified", this]);
 		}, function(err){
 			// This shouldn't occur, but it's defined just in case
 			// more meaningful error message should be reported to user higher up the food chain...
 			console.error("An error occurred: davinci.model.resource.File.prototype.setContents " + err + " : " + path);
 		});
-		return deferred;
 	},
 
-	getText: function(){
+	getContentSync: function(){
 		return Runtime.serverJSONRequest({
-			url: this.getURL(), handleAs:"text", sync:true
+			url: this.getURL(),
+			handleAs: "text",
+			sync: true
+		});
+	},
+
+	getContent: function() {
+		return xhr.get({
+			url: this.getURL(),
+			handleAs: "text"
 		});
 	},
 

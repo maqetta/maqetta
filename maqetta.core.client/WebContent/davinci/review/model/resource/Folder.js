@@ -2,10 +2,9 @@ define([
 	"dojo/_base/declare",
 	"davinci/model/resource/Resource",
 	"davinci/review/model/resource/File",
-	"davinci/Runtime",
-	
+	"dojo/_base/xhr",
 	"dojo/date/stamp"
-], function(declare, Resource, reviewFile, Runtime,  stamp) {
+], function(declare, Resource, reviewFile, xhr, stamp) {
 
 return declare("davinci.review.model.resource.Folder", Resource, {
 
@@ -20,38 +19,38 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 		this.dueDate = this.dueDate == "infinite" ? this.dueDate : stamp.fromISOString(this.dueDate);
 	},
 
-	getChildren: function(onComplete, sync) {
-		if (!this._isLoaded) {
+	//deprecated
+	getChildrenSync: function(onComplete, sync) {
+		getChildren(onComplete);
+	},
+
+	getChildren: function(onComplete, onError) {
+		if (this._isLoaded) {
+			onComplete.call(null, this.children);
+		} else {
 			if (this._loading) {
-				this._loading.push(onComplete);
-				return;
-			}
-			this._loading=[];
-			this._loading.push(onComplete);
-			var designerName = this.designerId || "";
-			Runtime.serverJSONRequest({
-				url: "cmd/listReviewFiles",
-				content: {
-					designer: designerName,
-					version: this.timeStamp
-				},
-				sync: sync,
-				load: dojo.hitch(this, function(responseObject, ioArgs) {
-					this.children=[];
-					for (var i=0; i<responseObject.length; i++) { //FIXME: map
-						var child = new reviewFile(responseObject[i].path, this);
-						this.children.push(child);
+				this._loading.then(
+					function(){ onComplete.call(null, this.children); }.bind(this),
+					onError);
+			} else {
+				var designerName = this.designerId || "";
+				this._loading = xhr.get({
+					url: "cmd/listReviewFiles",
+					content: {
+						designer: designerName,
+						version: this.timeStamp
 					}
+				}).then(function(responseObject, ioArgs) {
+					this.children = responseObject.map(function(file){
+						return new reviewFile(responseObject[i].path, this);
+					});
 					this._isLoaded=true;
-					dojo.forEach(this._loading,function(item) {
-						(item)(this.children);
-					}, this);
+					onComplete.call(null, this.children);
 					delete this._loading;
-				})
-			});
-			return;
+				}.bind(this),
+				onError);
+			}
 		}
-		onComplete(this.children);
 	},
 
 	getPath: function() {
@@ -60,7 +59,6 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 		}
 		return this.timeStamp;
 	}
-
 });
 });
 

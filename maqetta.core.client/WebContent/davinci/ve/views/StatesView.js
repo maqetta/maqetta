@@ -562,7 +562,9 @@ return;
 				})
 			});
 		}
+/*FIXME: OLD LOGIC
 		var paths = [];
+*/
 		for(var k=0; k<allAppStateItems.length; k++){
 			var appStateItem = allAppStateItems[k];
 			var sceneContainerNode = appStateItem.sceneContainerNode[0];
@@ -572,10 +574,12 @@ return;
 			}
 			var checkBoxSpan = this._findCheckBoxSpan(appStateItem);
 			if(currentState === appStateItem.sceneId[0]){
+/*FIXME OLD LOGIC
 				var path = this._getTreeSelectionPath(appStateItem);
 				if(path.length>0){
 					paths.push(path);
 				}
+*/
 				if(checkBoxSpan){
 					checkBoxSpan.style.display = '';
 				}
@@ -606,10 +610,12 @@ return;
 					var currentScene = sm.getCurrentScene(sceneContainerNode);
 					var checkBoxSpan = this._findCheckBoxSpan(sceneItem);
 					if(currentScene == sceneItem.node[0]){
+/*FIXME OLD LOGIC
 						var path = this._getTreeSelectionPath(sceneItem);
 						if(path.length>0){
 							paths.push(path);
 						}
+*/
 						if(checkBoxSpan){
 							checkBoxSpan.style.display = '';
 						}
@@ -646,7 +652,9 @@ return;
 			}
 		}
 */
+/*FIXME: OLD LOGIC
 		this._tree.set('paths', paths);
+*/
 //FIXME: Still need to deal with mobile views
 return;
 

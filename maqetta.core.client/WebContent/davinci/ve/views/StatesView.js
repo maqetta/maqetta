@@ -570,10 +570,18 @@ return;
 			if(!currentState){
 				currentState = States.NORMAL;
 			}
+			var checkBoxSpan = this._findCheckBoxSpan(appStateItem);
 			if(currentState === appStateItem.sceneId[0]){
 				var path = this._getTreeSelectionPath(appStateItem);
 				if(path.length>0){
 					paths.push(path);
+				}
+				if(checkBoxSpan){
+					checkBoxSpan.style.display = '';
+				}
+			}else{
+				if(checkBoxSpan){
+					checkBoxSpan.style.display = 'none';
 				}
 			}
 		}
@@ -584,11 +592,43 @@ return;
 		var sceneManagers = context.sceneManagers;
 		for(var smIndex in sceneManagers){
 			var sm = sceneManagers[smIndex];
+			if(sm.getAllSceneContainers && sm.getSceneChildren && sm.getCurrentScene){
+				var allSceneContainers = sm.getAllSceneContainers();
+				var allSceneItems;
+				this._sceneStore.fetch({query: {type:sm.category}, queryOptions:{deep:true}, 
+					onComplete: dojo.hitch(this, function(items, request){
+						allSceneItems = items;
+					})
+				});
+				for(var k=0; k<allSceneItems.length; k++){
+					var sceneItem = allSceneItems[k];
+					var sceneContainerNode = sceneItem.sceneContainerNode[0];
+					var currentScene = sm.getCurrentScene(sceneContainerNode);
+					var checkBoxSpan = this._findCheckBoxSpan(sceneItem);
+					if(currentScene == sceneItem.node[0]){
+						var path = this._getTreeSelectionPath(sceneItem);
+						if(path.length>0){
+							paths.push(path);
+						}
+						if(checkBoxSpan){
+							checkBoxSpan.style.display = '';
+						}
+					}else{
+						if(checkBoxSpan){
+							checkBoxSpan.style.display = 'none';
+						}
+					}
+				}
+			}
+		}
+/*FIXME: OLD LOGIC
+		for(var smIndex in sceneManagers){
+			var sm = sceneManagers[smIndex];
 			if(sm.getCurrentScene){
 				var sceneId;
 				var candidateSceneId = sm.getCurrentScene();
+				var sceneItem = null;
 				if(candidateSceneId){
-					var sceneItem;
 					this._sceneStore.fetch({query: {type:sm.category, sceneId:candidateSceneId}, queryOptions:{deep:true}, 
 						onComplete: dojo.hitch(this, function(items, request){
 							if(items.length === 1){
@@ -605,6 +645,7 @@ return;
 				}
 			}
 		}
+*/
 		this._tree.set('paths', paths);
 //FIXME: Still need to deal with mobile views
 return;
@@ -1006,6 +1047,18 @@ return;
 	 */
 	_treeNodeContent: function(labelSnippet){
 		return '<span><span>'+labelSnippet+'</span><span class="ScenesPaletteCheckBox">&#x2713;</span></span>';
+	},
+	
+	/**
+	 * Returns the SPAN inside of the TreeNode that corresponds to the given item in the tree
+	 */
+	_findCheckBoxSpan: function(item){
+		var treeNodes = this._tree.getNodesByItem(item);
+		var treeNode = (treeNodes && treeNodes.length > 0) ? treeNodes[0] : null;
+		var node = treeNode ? treeNode.domNode : null;
+		var checkBoxSpans = treeNode ? dojo.query('.ScenesPaletteCheckBox', node) : [];
+		var checkBoxSpan = (checkBoxSpans && checkBoxSpans.length > 0) ? checkBoxSpans[0] : null;
+		return checkBoxSpan;
 	}
 });
 });

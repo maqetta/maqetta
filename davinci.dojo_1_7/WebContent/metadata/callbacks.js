@@ -18,9 +18,14 @@
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
 	 *		@returns {boolean}	Return true is a scene was selected
 	 * 
-	 * getCurrentScene()
+	 * getCurrentScene(sceneContainerNode)
+	 * 		@param {Element} sceneContainerNode  Scene container node into which we are looking for current scene
 	 *		If there is a currently active scene, return its sceneId, else return null.
 	 *		@returns {string} Unique ID for the selected active scene. (Unique ID created by this SceneManager)
+	 * 
+	 * getAllSceneContainers()
+	 *		Returns all Elements in document that are direct parents of any scene nodes.
+	 *		@returns {[Element]} Returns an array of elements
 	 * 
 	 * isSceneContainer(node)
 	 *		Returns true if the given node is a scene container (i.e., it has children that represent a scene)
@@ -31,6 +36,11 @@
 	 *      Returns an array that lists the node's child nodes that represent "scenes"
 	 *		@param {Element} node  A DOM node in document. (Presumably, a scene container node)
 	 *		@returns {array} 	Returns an array of Elements, empty array if no scene children.
+	 * 
+	 * getSceneContainerForNode(node)
+	 *      Returns the scene container parent node for the given node.
+	 *		@param {Element} node  A DOM node in document. (Presumably, a scene node)
+	 *		@returns {Element|node} 	Returns the scene container Element, or null if there is no scene container parent.
 	 *
 //FIXME: REMOVE THIS
 	 * getAllScenes()
@@ -210,20 +220,28 @@
 			}
 			return sceneSelected;
 		},
-		getCurrentScene: function(){
+		getCurrentScene: function(sceneContainerNode){
 			var currentScene, viewDijit;
 			var userDoc = this.context.getDocument();
 			var _dijit = (userDoc && userDoc.defaultView && userDoc.defaultView.dijit);
+/*FIXME: OLD LOGIC
 			var refNode = userDoc;
 			var searchForNested = true;
 			while(searchForNested){
 				var elems = refNode.querySelectorAll('.mblView');
+*/
+				var elems = sceneContainerNode.querySelectorAll('.mblView');
+/*FIXME: OLD LOGIC
 				if(elems.length === 0){
 					break;
 				}
 				searchForNested = false;
+*/
 				for(var i=0; i<elems.length; i++){
 					var elem = elems[i];
+if(elem.parentNode != sceneContainerNode){
+	continue;
+}
 					viewDijit = null;
 					if(this.context.declaredClass == 'davinci.ve.Context'){
 						viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
@@ -233,15 +251,40 @@
 					if(viewDijit && viewDijit.getShowingView){
 						var showingView = viewDijit.getShowingView();
 						if(showingView && showingView.domNode && showingView.domNode.id){
+							currentScene = showingView.domNode;
+/*
 							currentScene = showingView.domNode.id;
 							refNode = showingView.domNode;
 							searchForNested = true;
+*/
 							break;
 						}
 					}
 				}
+/*FIXME: OLD LOGIC
 			}
+*/
 			return currentScene;
+		},
+		getAllSceneContainers: function(){
+			var allSceneContainers = [];
+			if(!this.context || !this.context.rootNode){
+				return allSceneContainers;
+			}
+			var dj = this.context.getDojo();
+			if(!dj){
+				return allSceneContainers;
+			}
+			var rootNode = this.context.rootNode;
+			var allViews = dj.query('.mblView', rootNode);
+			for(var i=0; i<allViews.length; i++){
+				var view = allViews[i];
+				var pn = view.parentNode;
+				if(pn && allSceneContainers.indexOf(pn) < 0){
+					allSceneContainers.push(pn);
+				}
+			}
+			return allSceneContainers;
 		},
 		isSceneContainer: function(node){
 			if(!this.context || !node){
@@ -275,8 +318,15 @@
 				}
 			}
 			return scenes;
+		},
+		getSceneContainerForNode: function(node){
+			if(!this.context || !node){
+				return false;
+			}
+			return (node.tagName == 'BODY') ? null : node.parentNode;
 		}
 /*FIXME: REMOVE THIS
+		,
 		getAllScenes: function(){
 			if(!this.context){
 				return [];

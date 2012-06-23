@@ -325,14 +325,42 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					var existingItem = existingItems[e];
 					if(existingItem.node == node){
 						currentParentItemAlreadyThere = existingItem;
+						break;
+					}
+				}
+				// Otherwise, if current node is not already in tree, see if
+				// any of the current node's ancestors are in the tree
+				var ancestorParentItem = null;
+				if(!currentParentItemAlreadyThere){
+					pn = node.parentNode;
+					ancestorParentItemLoop:
+					while(pn){
+						for(var e=0; e<existingItems.length; e++){
+							var existingItem = existingItems[e];
+							if(existingItem.node == pn){
+								ancestorParentItem = existingItem;
+								break ancestorParentItemLoop;
+							}
+						}
+						if(pn.tagName == 'BODY'){
+							break;
+						}
+						pn = pn.parentNode;
 					}
 				}
 				if(currentParentItemAlreadyThere){
 					currentParentItem = currentParentItemAlreadyThere;
 				}else{
 					var label = WidgetUtils.getLabel(widget);
-					var o = {name:label, type:'file', category:'file', children:[]};
-					currentParentItem.children.push(o);
+					var o = {name:label, type:'file', category:'file', node:node, children:[]};
+					if(ancestorParentItem){
+						// Make sure that any new nodes are nested within the node corresponding
+						// to their nearest ancestor node
+						ancestorParentItem.children.push(o);
+					}else{
+						// This should only happen for BODY
+						currentParentItem.children.push(o);
+					}
 					existingItems.push(o);
 					currentParentItem = o;
 				}

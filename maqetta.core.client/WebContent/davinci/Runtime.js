@@ -59,7 +59,9 @@ var Runtime = {
 
 	getUser: function() {
 		
-		if(this._userInfo) return this._userInfo;
+		if(this._userInfo) {
+			return this._userInfo;
+		}
 		
 		this._userInfo = Runtime.serverJSONRequest({
 			url: "cmd/getUserInfo",
@@ -67,8 +69,7 @@ var Runtime = {
 			content:{},
 			sync:true
 		});
-		
-		
+
 		return this._userInfo;
 	},
 	
@@ -91,7 +92,7 @@ var Runtime = {
 		});
 	},
 
-	singleUserMode : function() {
+	singleUserMode: function() {
 		return Runtime.isLocalInstall;
 	},
 
@@ -305,20 +306,17 @@ var Runtime = {
 		} while (retry);
 	},
 	
+	// deprecated.  will fail for async.  use dojo/_base/xhr directly
 	serverJSONRequest: function (ioArgs) {
 		var resultObj;
-		var args={handleAs:"json" };
+		var args = {handleAs: "json"};
 		dojo.mixin(args, ioArgs);
-		var userOnError=ioArgs.error;
-		var retry = false;
-		
-		do {
-			dojo.xhrGet(args).then(function(result) {
-				if (result) {
-					resultObj=result;
-				}
-			});
-		} while (retry);	
+
+		dojo.xhrGet(args).then(function(result) {
+			if (result) {
+				resultObj=result;
+			}
+		});
 
 		return resultObj;
 	},

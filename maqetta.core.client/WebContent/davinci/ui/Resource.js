@@ -433,10 +433,12 @@ var uiResource = {
 		openResource: function(resource, newHtmlParams){
 	
 			if(resource.elementType=="File"){
-				Workbench.openEditor({
-					fileName: resource,
-					content: resource.getContentSync()
-				}, newHtmlParams);
+				resource.getContent().then(function(content) {
+					Workbench.openEditor({
+						fileName: resource,
+						content: resource.getContent()
+					}, newHtmlParams);
+				});
 			}
 		}
 

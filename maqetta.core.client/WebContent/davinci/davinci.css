@@ -1306,3 +1306,16 @@ davinci_top_bar .dijitButtonNode {
 	float:right;
 	margin-right:5px;
 }
+.ScenesPaletteCheckBox.ScenesPaletteCheckBoxHidden {
+	display:none;
+}
+.ScenesPaletteCheckBox.ScenesPaletteCheckBoxFocus {
+	font-weight:bold;
+	color:blue;
+	border: 1px solid blue;
+	border-radius: 20px;
+	width: 1.1em;
+	height: 1.1em;
+	line-height: 1.25em;
+	text-align: center;
+}}

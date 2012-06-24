@@ -271,6 +271,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!context || !context._statesLoaded){
 			return;
 		}
+		var currentStatesFocus = States.getFocus(context.rootNode);
+		if(!currentStatesFocus){
+			// If no current focus, default to the default app state on the BODY
+			States.setFocus(context.rootNode, undefined);
+		}
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
@@ -421,6 +426,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!context || !context._statesLoaded){
 			return;
 		}
+		var appStateFocus = States.getFocus(context.rootNode);
+		if(appStateFocus && !appStateFocus.state){
+			appStateFocus.state = States.NORMAL;
+		}
 		var allAppStateItems = [];
 		this._sceneStore.fetch({query: {type:'AppState'}, queryOptions:{deep:true}, 
 			onComplete: dojo.hitch(this, function(items, request){
@@ -438,11 +447,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var checkBoxSpan = this._findCheckBoxSpan(appStateItem);
 			if(currentState === appStateItem.sceneId[0]){
 				if(checkBoxSpan){
-					checkBoxSpan.style.display = '';
+					dojo.removeClass(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
+					if(appStateFocus && appStateFocus.stateContainerNode == sceneContainerNode && appStateFocus.state == currentState){
+						dojo.addClass(checkBoxSpan, 'ScenesPaletteCheckBoxFocus');
+					}else{
+						dojo.removeClass(checkBoxSpan, 'ScenesPaletteCheckBoxFocus');
+					}
 				}
 			}else{
 				if(checkBoxSpan){
-					checkBoxSpan.style.display = 'none';
+					dojo.addClass(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
+					dojo.removeClass(checkBoxSpan, 'ScenesPaletteCheckBoxFocus');
 				}
 			}
 		}
@@ -652,8 +667,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				} else {
 					if(context && sceneContainerNode){
 						var state = item.sceneId[0];
-						States.setState(state, sceneContainerNode);
+//FIXME: Fragile right now. Have to call setFocus before setState because setState
+//triggers updateSelection bug setFocus doesn't.
 						States.setFocus(state, sceneContainerNode);
+						States.setState(state, sceneContainerNode);
 						context.deselectInvisible();
 						context.updateFocusAll();
 					}

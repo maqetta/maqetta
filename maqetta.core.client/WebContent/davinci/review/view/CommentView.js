@@ -117,6 +117,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
 			this._destroyCommentWidgets();
 			this._render();
+//FIXME: THIS IS ALL BROKEN WITH NEW STATES/SCENES REGIME
+//FIXME: getCurrentScene now takes a container node as a required param
+//FIXME: Each saved state/scene needs to be a pair: containerNode + scene/state
+//FIXME: Not sure how we are going to identify containers if they don't have IDs. XPath?
 			var state = this._cached[this._currentPage].pageState,
 				scene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);

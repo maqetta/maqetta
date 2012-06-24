@@ -3342,7 +3342,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
 		}
 	},
-	
+/*FIXME: OLD LOGIC
 	getCurrentScenes: function(){
 		var a = [];
 		for(var id in this.sceneManagers){
@@ -3354,6 +3354,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return a;
 	},
+*/
 
 //FIXME: Yikes. May need to make AppStates into a scene manager
 	/**

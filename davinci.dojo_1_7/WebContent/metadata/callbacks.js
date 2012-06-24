@@ -223,6 +223,9 @@
 			return sceneSelected;
 		},
 		getCurrentScene: function(sceneContainerNode){
+			if(!sceneContainerNode){
+				return;
+			}
 			var currentScene, viewDijit;
 			var userDoc = this.context.getDocument();
 			var _dijit = (userDoc && userDoc.defaultView && userDoc.defaultView.dijit);

@@ -10,10 +10,6 @@ define([
 	"dojo/_base/lang" // lang.hitch
 ], function(kernel, _Container, _FocusMixin, array, keys, declare, event, domAttr, lang){
 
-/*=====
-	var _FocusMixin = dijit._FocusMixin;
-	var _Container = dijit._Container;
-=====*/
 
 	// module:
 	//		dijit/_KeyNavContainer

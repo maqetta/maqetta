@@ -1,12 +1,15 @@
-dojo.provide("dojox.drawing.tools.Path");
+define(["dojo/_base/lang", "../util/oo", "../manager/_registry", "../stencil/Path"],
+function(lang, oo, registry, StencilPath){
 
-dojox.drawing.tools.Path = dojox.drawing.util.oo.declare(
+//dojox.drawing.tools.Path
+var Path = oo.declare(
 	// summary:
 	//		Class for a drawable Path
-	//
-	dojox.drawing.stencil.Path,
+
+	StencilPath,
 	function(){
-		// summary: constructor
+		// summary:
+		//		constructor
 		
 		this.pathMode = "";
 		this.currentPathMode = "";
@@ -192,12 +195,14 @@ dojox.drawing.tools.Path = dojox.drawing.util.oo.declare(
 	}
 );
 
-dojox.drawing.tools.Path.setup = {
-	// summary: See Base ToolsSetup
-	//
+lang.setObject("dojox.drawing.tools.Path", Path);
+Path.setup = {
 	name:"dojox.drawing.tools.Path",
 	tooltip:"Path Tool",
 	iconClass:"iconLine"
 };
 
-dojox.drawing.register(dojox.drawing.tools.Path.setup, "tool");
+registry.register(Path.setup, "tool");
+
+return Path;
+});

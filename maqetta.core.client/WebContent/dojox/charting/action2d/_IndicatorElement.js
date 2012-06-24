@@ -1,6 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common", 
+define(["dojo/_base/lang", "dojo/_base/declare", "../plot2d/Base", "../plot2d/common",
     "../axis2d/common", "dojox/gfx"], 
-	function(lang, declare, Element, dcpc, dcac, gfx){ 
+	function(lang, declare, Base, dcpc, dcac, gfx){
 
 	// all the code below should be removed when http://trac.dojotoolkit.org/ticket/11299 will be available
 	var getBoundingBox = function(shape){
@@ -8,6 +8,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 	};
 	var getTextBBox = function(s, t){
 		var c = s.declaredClass;
+		var w, h;
 		if (c.indexOf("svg")!=-1){
 			// try/catch the FF native getBBox error. cheaper than walking up in the DOM
 			// hierarchy to check the conditions (bench show /10 )
@@ -19,8 +20,8 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 		}else if(c.indexOf("vml")!=-1){
 			var rawNode = s.rawNode, _display = rawNode.style.display;
 			rawNode.style.display = "inline";
-			var w = gfx.pt2px(parseFloat(rawNode.currentStyle.width));
-			var h = gfx.pt2px(parseFloat(rawNode.currentStyle.height));
+			w = gfx.pt2px(parseFloat(rawNode.currentStyle.width));
+			h = gfx.pt2px(parseFloat(rawNode.currentStyle.height));
 			var sz = {x: 0, y: 0, width: w, height: h};
 			// in VML, the width/height we get are in view coordinates
 			// in our case we don't zoom the view so that is ok
@@ -35,14 +36,15 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 			return computeLocation(s, bb, 0.75);
 		}else if(s.getTextWidth){
 			// canvas
-			var w = s.getTextWidth();
+			w = s.getTextWidth();
 			var font = s.getFont();
 			var fz = font ? font.size : gfx.defaultFont.size;
-			var h = gfx.normalizedLength(fz);
+			h = gfx.normalizedLength(fz);
 			sz = {width: w, height: h};
 			computeLocation(s, sz, 0.75);
 			return sz;
 		}
+		return null;
 	};
 	var computeLocation =  function(s, sz, coef){
 		var width = sz.width, height = sz.height, sh = s.getShape(), align = sh.align;
@@ -63,10 +65,10 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 		return sz;
 	};
 
-	return declare("dojox.charting.action2d._IndicatorElement",[Element], {
-		//	summary:
+	return declare("dojox.charting.action2d._IndicatorElement", Base, {
+		// summary:
 		//		Internal element used by indicator actions.
-		//	tags:
+		// tags:
 		//		private
 		constructor: function(chart, kwArgs){
 			if(!kwArgs){ kwArgs = {}; }
@@ -85,7 +87,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 		},
 		_trackMove: function(){
 			// let's update the selector
-			this._updateIndicator(this.pageCoord);            
+			this._updateIndicator(this.pageCoord);
 			// if we reached that point once, then we don't stop until mouse up
 			if(this._initTrackPhase){
 				this._initTrackPhase = false;
@@ -177,8 +179,13 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 				cd1 = plot.toData(cp1);
 			}	
 			
-			var c1 = this._getData(cd1, attr, v), c2; 
-			
+			var c1 = this._getData(cd1, attr, v), c2;
+
+			if(c1.y == null){
+				// we have no data for that point let's just return
+				return;
+			}
+
 			if(cp2){
 				if(cd2[n] < bounds.from){
 					cp2[attr] = min[attr];
@@ -188,6 +195,10 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 					cd2 = plot.toData(cp2);	
 				}
 				c2 = this._getData(cd2, attr, v);
+				if(c2.y == null){
+					// we have no data for that point let's pretend we have a single touch point
+					cp2 = null;
+				}
 			}
 			
 			var t1 = this._renderIndicator(c1, cp2?1:0, hn, vn, min, max);
@@ -197,7 +208,7 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 				var text = inter.opt.labelFunc?inter.opt.labelFunc(c1, c2, inter.opt.fixed, inter.opt.precision):
 					(dcpc.getLabel(delta, inter.opt.fixed, inter.opt.precision)+" ("+dcpc.getLabel(100*delta/(v?c1.y:c1.x), true, 2)+"%)");
 				this._renderText(text, inter, this.chart.theme, v?(t1.x+t2.x)/2:t1.x, v?t1.y:(t1.y+t2.y)/2, c1, c2);
-			};
+			}
 			
 		},
 		_renderIndicator: function(coord, index, hn, vn, min, max){
@@ -246,10 +257,8 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 				var text = inter.opt.labelFunc?inter.opt.labelFunc(coord, null, inter.opt.fixed, inter.opt.precision):
 					dcpc.getLabel(v?coord.y:coord.x, inter.opt.fixed, inter.opt.precision);
 				this._renderText(text, inter, t, v?x1:x2+5, v?y2+5:y1, coord);
-			}else{
-				return v?{x: x1, y: y2+5}:{x: x2+5, y: y1};
 			}
-			
+			return v?{x: x1, y: y2+5}:{x: x2+5, y: y1};
 		},
 		_renderText: function(text, inter, t, x, y, c1, c2){
 			var label = dcac.createText.gfx(
@@ -283,7 +292,9 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 			var i, r, l = data.length;
 			for (i = 0; i < l; ++i){
 				r = data[i];
-				if(typeof r == "number"){
+				if(r == null){
+					// move to next item
+				}else if(typeof r == "number"){
 					if(i + 1 > cd[attr]){
 						break;
 					}
@@ -317,41 +328,28 @@ define(["dojo/_base/lang", "dojo/_base/declare", "../Element", "../plot2d/common
 			return {x: x, y: y};
 		},
 		cleanGroup: function(creator){
-			//	summary:
+			// summary:
 			//		Clean any elements (HTML or GFX-based) out of our group, and create a new one.
-			//	creator: dojox.gfx.Surface?
+			// creator: dojox.gfx.Surface?
 			//		An optional surface to work with.
-			//	returns: dojox.charting.Element
+			// returns: dojox.charting.Element
 			//		A reference to this object for functional chaining.
 			this.inherited(arguments);
 			// we always want to be above regular plots and not clipped
 			this.group.moveToFront();
 			return this;	//	dojox.charting.Element
 		},
-		clear: function(){
-			//	summary:
-			//		Clear out any parameters set on this plot.
-			//	returns: dojox.charting.action2d._IndicatorElement
-			//		The reference to this plot for functional chaining.
-			this.dirty = true;
-			return this;	//	dojox.charting.plot2d._IndicatorElement
-		},
 		getSeriesStats: function(){
-			//	summary:
+			// summary:
 			//		Returns default stats (irrelevant for this type of plot).
-			//	returns: Object
+			// returns: Object
 			//		{hmin, hmax, vmin, vmax} min/max in both directions.
 			return lang.delegate(dcpc.defaultStats);
 		},
-		initializeScalers: function(){
-			//	summary:
-			//		Does nothing (irrelevant for this type of plot).
-			return this;
-		},
 		isDirty: function(){
-			//	summary:
+			// summary:
 			//		Return whether or not this plot needs to be redrawn.
-			//	returns: Boolean
+			// returns: Boolean
 			//		If this plot needs to be rendered, this will return true.
 			return !this._noDirty && (this.dirty || this.inter.plot.isDirty());
 		}

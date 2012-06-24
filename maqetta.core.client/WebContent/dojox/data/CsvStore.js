@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/xhr", "dojo/_base/window","dojo/data/util/filter", "dojo/data/util/simpleFetch"], 
-  function(lang, declare, xhr, winUtil, filterUtil, simpleFetch) {
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/xhr", "dojo/_base/kernel","dojo/data/util/filter", "dojo/data/util/simpleFetch"],
+  function(lang, declare, xhr, kernel, filterUtil, simpleFetch) {
 
 var CsvStore = declare("dojox.data.CsvStore", null, {
 	// summary:
@@ -31,8 +31,8 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 		
 		this._attributes = [];			// e.g. ["Title", "Year", "Producer"]
 		this._attributeIndexes = {};	// e.g. {Title: 0, Year: 1, Producer: 2}
- 		this._dataArray = [];			// e.g. [[<Item0>],[<Item1>],[<Item2>]]
- 		this._arrayOfAllItems = [];		// e.g. [{_csvId:0,_csvStore:store},...]
+		this._dataArray = [];			// e.g. [[<Item0>],[<Item1>],[<Item2>]]
+		this._arrayOfAllItems = [];		// e.g. [{_csvId:0,_csvStore:store},...]
 		this._loadFinished = false;
 		if(keywordParameters.url){
 			this.url = keywordParameters.url;
@@ -44,7 +44,7 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 			this.label = undefined;
 		}
 		this._storeProp = "_csvStore";	// Property name for the store reference on every item.
-		this._idProp = "_csvId"; 		// Property name for the Item Id on every item.
+		this._idProp = "_csvId";		// Property name for the Item Id on every item.
 		this._features = {
 			'dojo.data.api.Read': true,
 			'dojo.data.api.Identity': true
@@ -91,7 +91,7 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 
 	_assertIsItem: function(/* item */ item){
 		// summary:
-		//      This function tests whether the item passed in is indeed an item in the store.
+		//		This function tests whether the item passed in is indeed an item in the store.
 		// item:
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){
@@ -118,9 +118,9 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 						/* attribute || attribute-name-string */ attribute,
 						/* value? */ defaultValue){
 		// summary:
-		//      See dojo.data.api.Read.getValue()
+		//		See dojo.data.api.Read.getValue()
 		//		Note that for the CsvStore, an empty string value is the same as no value,
-		// 		so the defaultValue would be returned instead of an empty string.
+		//		so the defaultValue would be returned instead of an empty string.
 		this._assertIsItem(item);
 		var itemValue = defaultValue;
 		if(typeof attribute === "string"){
@@ -139,8 +139,8 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 						/* attribute || attribute-name-string */ attribute){
 		// summary:
 		//		See dojo.data.api.Read.getValues()
-		// 		CSV syntax does not support multi-valued attributes, so this is just a
-		// 		wrapper function for getValue().
+		//		CSV syntax does not support multi-valued attributes, so this is just a
+		//		wrapper function for getValue().
 		var value = this.getValue(item, attribute);
 		return (value ? [value] : []); //Array
 	},
@@ -164,9 +164,9 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 							/* attribute-name-string */ attribute){
 		// summary:
 		//		See dojo.data.api.Read.hasAttribute()
-		// 		The hasAttribute test is true if attribute has an index number within the item's array length
-		// 		AND if the item has a value for that attribute. Note that for the CsvStore, an
-		// 		empty string value is the same as no value.
+		//		The hasAttribute test is true if attribute has an index number within the item's array length
+		//		AND if the item has a value for that attribute. Note that for the CsvStore, an
+		//		empty string value is the same as no value.
 		this._assertIsItem(item);
 		if(typeof attribute === "string"){
 			var attributeIndex = this._attributeIndexes[attribute];
@@ -199,7 +199,6 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 		//		Internal function for looking at the values contained by the item.  This
 		//		function allows for denoting if the comparison should be case sensitive for
 		//		strings or not (for handling filtering cases where string case should not matter)
-		//
 		// item:
 		//		The data item to examine for attribute values.
 		// attribute:
@@ -413,8 +412,8 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 	},
 	
 	close: function(/*dojo.data.api.Request || keywordArgs || null */ request){
-		 //	summary:
-		 //		See dojo.data.api.Read.close()
+		// summary:
+		//		See dojo.data.api.Read.close()
 	},
 	
 	
@@ -468,7 +467,7 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 							listOfFields[j] = ""; //Special case empty string field.
 						}else if((firstChar == '"') &&
 								((lastChar != '"') ||
-								 ((lastChar == '"') && (secondToLastChar == '"') && (thirdToLastChar != '"')))){
+								((lastChar == '"') && (secondToLastChar == '"') && (thirdToLastChar != '"')))){
 							if(j+1 === listOfFields.length){
 								// alert("The last field in record " + i + " is corrupted:\n" + field);
 								return; //null
@@ -612,7 +611,7 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 		// tags:
 		//		public
 		var item;
-		var scope = keywordArgs.scope?keywordArgs.scope:winUtil.global;
+		var scope = keywordArgs.scope?keywordArgs.scope:kernel.global;
 		//Hasn't loaded yet, we have to trigger the load.
 		if(!this._loadFinished){
 			var self = this;
@@ -687,9 +686,9 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 		//		See dojo.data.api.Identity.getIdentifierAttributes()
 		// tags:
 		//		public
-		 
-		//Identity isn't a public attribute in the item, it's the row position index.
-		//So, return null.
+
+		// Identity isn't a public attribute in the item, it's the row position index.
+		// So, return null.
 		if(this.identifier){
 			return [this.identifier];
 		}else{
@@ -703,7 +702,7 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 		// tags:
 		//		private
 
-		//Execute any deferred fetches now.
+		// Execute any deferred fetches now.
 		if(this._queuedFetches.length > 0){
 			for(var i = 0; i < this._queuedFetches.length; i++){
 				var fData = this._queuedFetches[i];

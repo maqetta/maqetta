@@ -2,9 +2,6 @@ define([
 	"dojo/_base/lang"	// dojo.extend
 ], function(lang) {
 	var bits = lang.getObject("dojox.encoding.bits", true);
-	/*=====
-		bits = dojox.encoding.bits;
-	=====*/
 
 	bits.OutputStream = function(){
 		this.reset();

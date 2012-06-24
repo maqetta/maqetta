@@ -3,11 +3,6 @@ define([
 	"dojo/_base/NodeList",
 	"../_base"
 ], function(lang,Nodelist,dd){
-	/*=====
-		Nodelist = dojo.Nodelist;
-		dd = dojox.dtl;
-	=====*/
-	
 	var nl = lang.getObject("dojox.dtl.ext-dojo.NodeList", true);
 
 	lang.extend(Nodelist, {

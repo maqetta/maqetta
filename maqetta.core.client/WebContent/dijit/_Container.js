@@ -8,27 +8,17 @@ define([
 	// module:
 	//		dijit/_Container
 	// summary:
-	//		Mixin for widgets that contain a set of widget children.
+	//		Mixin for widgets that can contain other widgets.
 
 	return declare("dijit._Container", null, {
 		// summary:
-		//		Mixin for widgets that contain a set of widget children.
-		// description:
-		//		Use this mixin for widgets that needs to know about and
-		//		keep track of their widget children. Suitable for widgets like BorderContainer
-		//		and TabContainer which contain (only) a set of child widgets.
-		//
-		//		It's not suitable for widgets like ContentPane
-		//		which contains mixed HTML (plain DOM nodes in addition to widgets),
-		//		and where contained widgets are not necessarily directly below
-		//		this.containerNode.   In that case calls like addChild(node, position)
-		//		wouldn't make sense.
+		//		Mixin for widgets that contain HTML and/or a set of widget children.
 
 		buildRendering: function(){
 			this.inherited(arguments);
 			if(!this.containerNode){
 				// all widgets with descendants must set containerNode
-	 			this.containerNode = this.domNode;
+				this.containerNode = this.domNode;
 			}
 		},
 
@@ -38,6 +28,9 @@ define([
 			// description:
 			//		Inserts specified child widget's dom node as a child of this widget's
 			//		container node, and possibly does other processing (such as layout).
+			//
+			//		Functionality is undefined if this widget contains anything besides
+			//		a list of child widgets (ie, if it contains arbitrary non-widget HTML).
 
 			var refNode = this.containerNode;
 			if(insertIndex && typeof insertIndex == "number"){
@@ -62,7 +55,7 @@ define([
 			// summary:
 			//		Removes the passed widget instance from this widget but does
 			//		not destroy it.  You can also pass in an integer indicating
-			//		the index within the container to remove
+			//		the index within the container to remove (ie, removeChild(5) removes the sixth widget).
 
 			if(typeof widget == "number"){
 				widget = this.getChildren()[widget];
@@ -78,7 +71,7 @@ define([
 
 		hasChildren: function(){
 			// summary:
-			//		Returns true if widget has children, i.e. if this.containerNode contains something.
+			//		Returns true if widget has child widgets, i.e. if this.containerNode contains widgets.
 			return this.getChildren().length > 0;	// Boolean
 		},
 
@@ -90,12 +83,9 @@ define([
 			//		if -1, get the previous sibling
 			// tags:
 			//      private
-			var node = child.domNode,
-				which = (dir>0 ? "nextSibling" : "previousSibling");
-			do{
-				node = node[which];
-			}while(node && (node.nodeType != 1 || !registry.byNode(node)));
-			return node && registry.byNode(node);	// dijit._Widget
+			var children = this.getChildren(),
+				idx = array.indexOf(this.getChildren(), child);	// int
+			return children[idx + dir];
 		},
 
 		getIndexOfChild: function(/*dijit._Widget*/ child){

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -102,7 +101,6 @@ define(
 	yacute:"pieni y ja akuutti\ngemena y ja akuutti\npieni y ja akuuttiaksentti",
 	thorn:"pieni thorn\ngemena thorn",
 	yuml:"pieni y ja treema\ngemena y ja treema",
-
 // Greek Characters and Symbols
 	fnof:"pieni f, jossa koukku\ngemena f, jossa koukku\nfunktio\nguldeni",
 	Alpha:"iso alfa\nversaali alfa",
@@ -256,6 +254,4 @@ define(
 	rsaquo:"oikealle osoittava kulmapuolilainausmerkki",
 	euro:"euron merkki"
 })
-
-//end v1.x content
 );

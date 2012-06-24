@@ -25,9 +25,6 @@
   background-color: #ffffff;
   border-collapse: separate;
 }
-.dj_ie6 .claro .dijitSelect, .dj_ie6 .claro .dijitSelect .dijitButtonNode {
-  background-image: none;
-}
 .claro .dijitSelect .dijitButtonContents {
   border: 0 solid #b5bcc7;
   border-right-width: 1px;
@@ -37,8 +34,13 @@
   border: 1px solid #ffffff;
   border-top: none;
   background-color: #efefef;
-  background-image: url("../form/images/formHighlight.png");
+  background-image: url("../images/standardGradient.png");
   background-repeat: repeat-x;
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -ms-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  _background-image: none;
 }
 .claro .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
   background-image: url("../form/images/commonFormArrows.png");
@@ -51,7 +53,10 @@
 .claro .dijitSelectHover {
   border: 1px solid #759dc0;
   background-color: #e5f2fe;
-  background-image: url("../form/images/textBox_back.png");
+  background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -ms-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-repeat: repeat-x;
 }
 .claro .dijitSelectHover .dijitButtonContents {
@@ -72,7 +77,13 @@
 }
 .claro .dijitSelectFocused .dijitArrowButton {
   background-color: #7dbefa;
-  background-position: 0 -177px;
+  background-image: url("../images/activeGradient.png");
+  background-repeat: repeat-x;
+  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -ms-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  _background-image: none;
   border: none;
   padding: 0 1px;
 }

@@ -9,11 +9,6 @@ define([
 	"dojo/text!./templates/ProgressBar.html"
 ], function(require, declare, domClass, lang, number, _Widget, _TemplatedMixin, template){
 
-/*=====
-	var _Widget = dijit._Widget;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-=====*/
-
 // module:
 //		dijit/ProgressBar
 // summary:
@@ -34,13 +29,13 @@ return declare("dijit.ProgressBar", [_Widget, _TemplatedMixin], {
 
 	// progress: [const] String (Percentage or Number)
 	//		Number or percentage indicating amount of task completed.
-	// 		Deprecated.   Use "value" instead.
+	//		Deprecated.   Use "value" instead.
 	progress: "0",
 
 	// value: String (Percentage or Number)
 	//		Number or percentage indicating amount of task completed.
-	// 		With "%": percentage value, 0% <= progress <= 100%, or
-	// 		without "%": absolute value, 0 <= progress <= maximum.
+	//		With "%": percentage value, 0% <= progress <= 100%, or
+	//		without "%": absolute value, 0 <= progress <= maximum.
 	//		Infinity means that the progress bar is indeterminate.
 	value: "",
 
@@ -53,9 +48,9 @@ return declare("dijit.ProgressBar", [_Widget, _TemplatedMixin], {
 	places: 0,
 
 	// indeterminate: [const] Boolean
-	// 		If false: show progress value (number or percentage).
-	// 		If true: show that a process is underway but that the amount completed is unknown.
-	// 		Deprecated.   Use "value" instead.
+	//		If false: show progress value (number or percentage).
+	//		If true: show that a process is underway but that the amount completed is unknown.
+	//		Deprecated.   Use "value" instead.
 	indeterminate: false,
 
 	// label: String?
@@ -77,7 +72,9 @@ return declare("dijit.ProgressBar", [_Widget, _TemplatedMixin], {
 
 	postMixInProperties: function(){
 		this.inherited(arguments);
-		if(!("value" in this.params)){
+
+		// Back-compat for when constructor specifies indeterminate or progress, rather than value.   Remove for 2.0.
+		if(!(this.params && "value" in this.params)){
 			this.value = this.indeterminate ? Infinity : this.progress;
 		}
 	},

@@ -1,10 +1,11 @@
-define(["dojo/_base/kernel",
-				"dojo/_base/declare",
-				"dojo/_base/connect",
-				"dojo/_base/html",
-				"dojo/_base/lang",
-				"dojo/_base/event",
-				"dojo/_base/window"], function(dojo, declare, connect, html, lang, event, window){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/connect",
+	"dojo/_base/html",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/_base/window"], 
+	function(declare, connect, html, lang, event, win){
 
 	return declare("dojox.geo.openlayers.TouchInteractionSupport", null, {
 		//	summary: 
@@ -174,9 +175,9 @@ define(["dojo/_base/kernel",
 
 			// install touch move and up listeners (if not done by other fingers before)
 			if (!this._touchMoveListener)
-				this._touchMoveListener = connect.connect(window.global, "touchmove", this, this._touchMoveHandler);
+				this._touchMoveListener = connect.connect(win.global, "touchmove", this, this._touchMoveHandler);
 			if (!this._touchEndListener)
-				this._touchEndListener = connect.connect(window.global, "touchend", this, this._touchEndHandler);
+				this._touchEndListener = connect.connect(win.global, "touchend", this, this._touchEndHandler);
 
 		},
 

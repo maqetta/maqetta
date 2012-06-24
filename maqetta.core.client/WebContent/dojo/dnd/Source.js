@@ -1,12 +1,14 @@
-define(["../main", "./Selector", "./Manager"], function(dojo, Selector, Manager) {
-	// module:
-	//		dojo/dnd/Source
-	// summary:
-	//		TODOC
+define([
+	"../_base/array", "../_base/connect", "../_base/declare", "../_base/kernel", "../_base/lang",
+	"../dom-class", "../dom-geometry", "../mouse", "../ready", "../topic",
+	"./common", "./Selector", "./Manager"
+], function(array, connect, declare, kernel, lang, domClass, domGeom, mouse, ready, topic,
+			dnd, Selector, Manager){
 
-/*=====
-Selector = dojo.dnd.Selector;
-=====*/
+// module:
+//		dojo/dnd/Source
+// summary:
+//		TODOC
 
 /*
 	Container property:
@@ -25,7 +27,7 @@ Selector = dojo.dnd.Selector;
 */
 
 /*=====
-dojo.dnd.__SourceArgs = function(){
+var __SourceArgs = function(){
 	//	summary:
 	//		a dict of parameters for DnD Source configuration. Note that any
 	//		property on Source elements may be configured, but this is the
@@ -64,18 +66,18 @@ dojo.dnd.__SourceArgs = function(){
 	this.selfAccept = selfAccept;
 	this.withHandles = withHandles;
 	this.generateText = true;
-}
+};
 =====*/
 
 // For back-compat, remove in 2.0.
-if(!dojo.isAsync){
-	dojo.ready(0, function(){
+if(!kernel.isAsync){
+	ready(0, function(){
 		var requires = ["dojo/dnd/AutoSource", "dojo/dnd/Target"];
 		require(requires);	// use indirection so modules not rolled into a build
-	})
+	});
 }
 
-return dojo.declare("dojo.dnd.Source", Selector, {
+var Source = declare("dojo.dnd.Source", Selector, {
 	// summary:
 	//		a Source object, which can be used as a DnD source, or a DnD target
 
@@ -92,7 +94,7 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 	accept: ["text"],
 	generateText: true,
 
-	constructor: function(/*DOMNode|String*/node, /*dojo.dnd.__SourceArgs?*/params){
+	constructor: function(/*DOMNode|String*/ node, /*__SourceArgs?*/ params){
 		// summary:
 		//		a constructor of the Source
 		// node:
@@ -100,7 +102,7 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 		// params:
 		//		any property of this class may be configured via the params
 		//		object which is mixed-in to the `dojo.dnd.Source` instance
-		dojo.mixin(this, dojo.mixin({}, params));
+		lang.mixin(this, lang.mixin({}, params));
 		var type = this.accept;
 		if(type.length){
 			this.accept = {};
@@ -119,21 +121,21 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 		// states
 		this.sourceState  = "";
 		if(this.isSource){
-			dojo.addClass(this.node, "dojoDndSource");
+			domClass.add(this.node, "dojoDndSource");
 		}
 		this.targetState  = "";
 		if(this.accept){
-			dojo.addClass(this.node, "dojoDndTarget");
+			domClass.add(this.node, "dojoDndTarget");
 		}
 		if(this.horizontal){
-			dojo.addClass(this.node, "dojoDndHorizontal");
+			domClass.add(this.node, "dojoDndHorizontal");
 		}
 		// set up events
 		this.topics = [
-			dojo.subscribe("/dnd/source/over", this, "onDndSourceOver"),
-			dojo.subscribe("/dnd/start",  this, "onDndStart"),
-			dojo.subscribe("/dnd/drop",   this, "onDndDrop"),
-			dojo.subscribe("/dnd/cancel", this, "onDndCancel")
+			topic.subscribe("/dnd/source/over", lang.hitch(this, "onDndSourceOver")),
+			topic.subscribe("/dnd/start",  lang.hitch(this, "onDndStart")),
+			topic.subscribe("/dnd/drop",   lang.hitch(this, "onDndDrop")),
+			topic.subscribe("/dnd/cancel", lang.hitch(this, "onDndCancel"))
 		];
 	},
 
@@ -189,8 +191,8 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 	destroy: function(){
 		// summary:
 		//		prepares the object to be garbage-collected
-		dojo.dnd.Source.superclass.destroy.call(this);
-		dojo.forEach(this.topics, dojo.unsubscribe);
+		Source.superclass.destroy.call(this);
+		array.forEach(this.topics, function(t){t.remove();});
 		this.targetAnchor = null;
 	},
 
@@ -201,14 +203,14 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 		// e: Event
 		//		mouse event
 		if(this.isDragging && this.targetState == "Disabled"){ return; }
-		dojo.dnd.Source.superclass.onMouseMove.call(this, e);
+		Source.superclass.onMouseMove.call(this, e);
 		var m = Manager.manager();
 		if(!this.isDragging){
 			if(this.mouseDown && this.isSource &&
 					(Math.abs(e.pageX - this._lastX) > this.delay || Math.abs(e.pageY - this._lastY) > this.delay)){
 				var nodes = this.getSelectedNodes();
 				if(nodes.length){
-					m.startDrag(this, nodes, this.copyState(dojo.isCopyKey(e), true));
+					m.startDrag(this, nodes, this.copyState(dnd.getCopyKeyState(e), true));
 				}
 			}
 		}
@@ -217,10 +219,11 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 			var before = false;
 			if(this.current){
 				if(!this.targetBox || this.targetAnchor != this.current){
-					this.targetBox = dojo.position(this.current, true);
+					this.targetBox = domGeom.position(this.current, true);
 				}
 				if(this.horizontal){
-					before = (e.pageX - this.targetBox.x) < (this.targetBox.w / 2);
+					// In LTR mode, the left part of the object means "before", but in RTL mode it means "after".
+					before = (e.pageX - this.targetBox.x < this.targetBox.w / 2) == domGeom.isBodyLtr(this.current.ownerDocument);
 				}else{
 					before = (e.pageY - this.targetBox.y) < (this.targetBox.h / 2);
 				}
@@ -236,11 +239,11 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 		//		event processor for onmousedown
 		// e: Event
 		//		mouse event
-		if(!this.mouseDown && this._legalMouseDown(e) && (!this.skipForm || !dojo.dnd.isFormElement(e))){
+		if(!this.mouseDown && this._legalMouseDown(e) && (!this.skipForm || !dnd.isFormElement(e))){
 			this.mouseDown = true;
 			this._lastX = e.pageX;
 			this._lastY = e.pageY;
-			dojo.dnd.Source.superclass.onMouseDown.call(this, e);
+			Source.superclass.onMouseDown.call(this, e);
 		}
 	},
 	onMouseUp: function(e){
@@ -250,7 +253,7 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 		//		mouse event
 		if(this.mouseDown){
 			this.mouseDown = false;
-			dojo.dnd.Source.superclass.onMouseUp.call(this, e);
+			Source.superclass.onMouseUp.call(this, e);
 		}
 	},
 
@@ -260,7 +263,7 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 		//		topic event processor for /dnd/source/over, called when detected a current source
 		// source: Object
 		//		the source which has the mouse over it
-		if(this != source){
+		if(this !== source){
 			this.mouseDown = false;
 			if(this.targetAnchor){
 				this._unmarkTargetAnchor();
@@ -360,15 +363,15 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 			// we have no creator defined => move/clone nodes
 			if(copy){
 				// clone nodes
-				this._normalizedCreator = function(node, hint){
+				this._normalizedCreator = function(node /*=====, hint =====*/){
 					var t = source.getItem(node.id);
 					var n = node.cloneNode(true);
-					n.id = dojo.dnd.getUniqueId();
+					n.id = dnd.getUniqueId();
 					return {node: n, data: t.data, type: t.type};
 				};
 			}else{
 				// move nodes
-				this._normalizedCreator = function(node, hint){
+				this._normalizedCreator = function(node /*=====, hint =====*/){
 					var t = source.getItem(node.id);
 					source.delItem(node.id);
 					return {node: node, data: t.data, type: t.type};
@@ -408,10 +411,10 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 				};
 			}else{
 				// clone nodes
-				this._normalizedCreator = function(node, hint){
+				this._normalizedCreator = function(node/*=====, hint =====*/){
 					var t = this.getItem(node.id);
 					var n = node.cloneNode(true);
-					n.id = dojo.dnd.getUniqueId();
+					n.id = dnd.getUniqueId();
 					return {node: n, data: t.data, type: t.type};
 				};
 			}
@@ -421,7 +424,7 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 				// do nothing
 				return;
 			}
-			this._normalizedCreator = function(node, hint){
+			this._normalizedCreator = function(node /*=====, hint =====*/){
 				var t = this.getItem(node.id);
 				return {node: node, data: t.data, type: t.type};
 			};
@@ -445,7 +448,7 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 	onOverEvent: function(){
 		// summary:
 		//		this function is called once, when mouse is over our container
-		dojo.dnd.Source.superclass.onOverEvent.call(this);
+		Source.superclass.onOverEvent.call(this);
 		Manager.manager().overSource(this);
 		if(this.isDragging && this.targetState != "Disabled"){
 			this.onDraggingOver();
@@ -454,7 +457,7 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 	onOutEvent: function(){
 		// summary:
 		//		this function is called once, when mouse is out of our container
-		dojo.dnd.Source.superclass.onOutEvent.call(this);
+		Source.superclass.onOutEvent.call(this);
 		Manager.manager().outSource(this);
 		if(this.isDragging && this.targetState != "Disabled"){
 			this.onDraggingOut();
@@ -496,18 +499,20 @@ return dojo.declare("dojo.dnd.Source", Selector, {
 		// e: Event
 		//		mouse event
 
-		// accept only the left mouse button
-		if(!dojo.mouseButtons.isLeft(e)){ return false; }
+		// accept only the left mouse button, or the left finger
+		if(e.type != "touchstart" && !mouse.isLeft(e)){ return false; }
 
 		if(!this.withHandles){ return true; }
 
 		// check for handles
 		for(var node = e.target; node && node !== this.node; node = node.parentNode){
-			if(dojo.hasClass(node, "dojoDndHandle")){ return true; }
-			if(dojo.hasClass(node, "dojoDndItem") || dojo.hasClass(node, "dojoDndIgnore")){ break; }
+			if(domClass.contains(node, "dojoDndHandle")){ return true; }
+			if(domClass.contains(node, "dojoDndItem") || domClass.contains(node, "dojoDndIgnore")){ break; }
 		}
 		return false;	// Boolean
 	}
 });
+
+return Source;
 
 });

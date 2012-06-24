@@ -8,12 +8,6 @@ define([
 	"dojo/_base/kernel" // kernel.deprecated
 ], function(_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, array, declare, lang, kernel){
 
-/*=====
-	var _WidgetBase = dijit._WidgetBase;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-	var _WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
-=====*/
-
 	// module:
 	//		dijit/_Templated
 	// summary:

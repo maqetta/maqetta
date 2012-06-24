@@ -1,22 +1,17 @@
 define([
 	"dojo/_base/array", // array.filter array.forEach
 	"dojo/_base/declare", // declare
-	"dojo/dom-attr",	// domAttr.has
 	"dojo/dom-class",	// domClass.contains domClass.toggle
 	"dojo/dom-geometry",// domGeometry.contentBox domGeometry.marginBox
+	"dojo/dom-style",
 	"dojo/_base/lang", // lang.mixin
 	"dojo/query", // query
-	"dojo/_base/sniff", // has("ie")
-	"dojo/_base/window", // win.global
+	"dojo/sniff", // has("ie")
 	"../registry",	// registry.byId
-	"./utils",	// marginBox2contextBox
-	"../_Contained"
-], function(array, declare, domAttr, domClass, domGeometry, lang, query, has, win,
-			registry, layoutUtils, _Contained){
-
-/*=====
-var _Contained = dijit._Contained;
-=====*/
+	"../Viewport",
+	"./utils"	// marginBox2contextBox
+], function(array, declare, domClass, domGeometry, domStyle, lang, query, has,
+			registry, Viewport, layoutUtils){
 
 // module:
 //		dijit/layout/_ContentPaneResizeMixin
@@ -68,16 +63,12 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 		}
 
 		if(!this._childOfLayoutWidget){
-			// If my parent isn't a layout container, since my style *may be* width=height=100%
+			// Since my parent isn't a layout container, and my style *may be* width=height=100%
 			// or something similar (either set directly or via a CSS class),
-			// monitor when my size changes so that I can re-layout.
-			// For browsers where I can't directly monitor when my size changes,
-			// monitor when the viewport changes size, which *may* indicate a size change for me.
-			this.connect(has("ie") ? this.domNode : win.global, 'onresize', function(){
-				// Using function(){} closure to ensure no arguments to resize.
-				this._needLayout = !this._childOfLayoutWidget;
-				this.resize();
-			});
+			// monitor when viewport size changes so that I can re-layout.
+			// This is more for subclasses of ContentPane than ContentPane itself, although it
+			// could be useful for a ContentPane if it has a single child widget inheriting ContentPane's size.
+			this.own(Viewport.on("resize", lang.hitch(this, "resize")));
 		}
 	},
 
@@ -88,27 +79,20 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 		//		and should propagate startup() and resize() calls to it.
 		//		Skips over things like data stores since they aren't visible.
 
-		var childNodes = query("> *", this.containerNode).filter(function(node){
-				return node.tagName !== "SCRIPT"; // or a regexp for hidden elements like script|area|map|etc..
-			}),
-			childWidgetNodes = childNodes.filter(function(node){
-				return domAttr.has(node, "data-dojo-type") || domAttr.has(node, "dojoType") || domAttr.has(node, "widgetId");
-			}),
-			candidateWidgets = array.filter(childWidgetNodes.map(registry.byNode), function(widget){
-				return widget && widget.domNode && widget.resize;
-			});
+		var candidateWidgets = [],
+			otherVisibleNodes = false;
 
-		if(
-			// all child nodes are widgets
-			childNodes.length == childWidgetNodes.length &&
+		query("> *", this.containerNode).some(function(node){
+			var widget = registry.byNode(node);
+			if(widget && widget.resize){
+				candidateWidgets.push(widget);
+			}else if(node.offsetHeight){
+				otherVisibleNodes = true;
+			}
+		});
 
-			// all but one are invisible (like dojo.data)
-			candidateWidgets.length == 1
-		){
-			this._singleChild = candidateWidgets[0];
-		}else{
-			delete this._singleChild;
-		}
+		this._singleChild = candidateWidgets.length == 1 && !otherVisibleNodes ?
+			candidateWidgets[0] : null;
 
 		// So we can set overflow: hidden to avoid a safari bug w/scrollbars showing up (#9449)
 		domClass.toggle(this.containerNode, this.baseClass + "SingleChild", !!this._singleChild);
@@ -119,13 +103,6 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 		//		See `dijit.layout._LayoutWidget.resize` for description.
 		//		Although ContentPane doesn't extend _LayoutWidget, it does implement
 		//		the same API.
-
-		// For the TabContainer --> BorderContainer --> ContentPane case, _onShow() is
-		// never called, so resize() is our trigger to do the initial href download (see [20099]).
-		// However, don't load href for closed TitlePanes.
-		if(!this._wasShown && this.open !== false){
-			this._onShow();
-		}
 
 		this._resizeCalled = true;
 
@@ -148,12 +125,21 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 	_layout: function(changeSize, resultSize){
 		// summary:
 		//		Resize myself according to optional changeSize/resultSize parameters, like a layout widget.
-		//		Also, since I am a Container widget, each of my children expects me to
-		//		call resize() or layout() on them.
+		//		Also, since I am an isLayoutContainer widget, each of my children expects me to
+		//		call resize() or layout() on it.
 		//
 		//		Should be called on initialization and also whenever we get new content
 		//		(from an href, or from set('content', ...))... but deferred until
 		//		the ContentPane is visible
+
+		delete this._needLayout;
+
+		// For the TabContainer --> BorderContainer --> ContentPane case, _onShow() is
+		// never called directly, so resize() is our trigger to do the initial href download (see [20099]).
+		// However, don't load href for closed TitlePanes.
+		if(!this._wasShown && this.open !== false){
+			this._onShow();
+		}
 
 		// Set margin box size, unless it wasn't specified, in which case use current size.
 		if(changeSize){
@@ -177,8 +163,6 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 		}
 
 		this._layoutChildren();
-
-		delete this._needLayout;
 	},
 
 	_layoutChildren: function(){
@@ -239,16 +223,16 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 		//
 		//		Does layout/resize of child widget(s)
 
+		// Need to keep track of whether ContentPane has been shown (which is different than
+		// whether or not it's currently visible).
+		this._wasShown = true;
+
 		if(this._needLayout){
 			// If a layout has been scheduled for when we become visible, do it now
 			this._layout(this._changeSize, this._resultSize);
 		}
 
 		this.inherited(arguments);
-
-		// Need to keep track of whether ContentPane has been shown (which is different than
-		// whether or not it's currently visible).
-		this._wasShown = true;
 	}
 });
 

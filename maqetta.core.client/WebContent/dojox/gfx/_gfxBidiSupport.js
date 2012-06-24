@@ -2,7 +2,6 @@ define(["./_base", "dojo/_base/lang","dojo/_base/sniff", "dojo/dom", "dojo/_base
 		"./utils", "./shape", "dojox/string/BidiEngine"], 
   function(g, lang, has, dom, html, arr, utils, shapeLib, BidiEngine){
 	lang.getObject("dojox.gfx._gfxBidiSupport", true);
-	/*===== g = dojox.gfx; =====*/
 	switch (g.renderer){
 		case 'vml':
 			g.isVml = true;
@@ -113,52 +112,51 @@ define(["./_base", "dojo/_base/lang","dojo/_base/sniff", "dojo/dom", "dojo/_base
 			//				Opera [11.01].
 
 			if(textDir && text && text.length > 1){
-			var sourceDir = "ltr", targetDir = textDir;
-
-			if(targetDir == "auto"){
-				//is auto by default
+				var sourceDir = "ltr", targetDir = textDir;
+	
+				if(targetDir == "auto"){
+					//is auto by default
+					if(g.isVml){
+						return text;
+					}
+					targetDir = bidiEngine.checkContextual(text);
+				}
+	
 				if(g.isVml){
+					sourceDir = bidiEngine.checkContextual(text);
+					if(targetDir != sourceDir){
+						if(targetDir == "rtl"){
+							return !bidiEngine.hasBidiChar(text) ? bidiEngine.bidiTransform(text,"IRNNN","ILNNN") : bidi_const.RLM + bidi_const.RLM + text;
+						}else{
+							return bidi_const.LRM + text;
+						}
+					}
 					return text;
 				}
-				targetDir = bidiEngine.checkContextual(text);
-			}
-
-			if(g.isVml){
-				sourceDir = bidiEngine.checkContextual(text);
-				if(targetDir != sourceDir){
+	
+				if(g.isSvgWeb){
 					if(targetDir == "rtl"){
-						return !bidiEngine.hasBidiChar(text) ? bidiEngine.bidiTransform(text,"IRNNN","ILNNN") : bidi_const.RLM + bidi_const.RLM + text;
-					}else{
-						return bidi_const.LRM + text;
+						return bidiEngine.bidiTransform(text,"IRNNN","ILNNN");
 					}
+					return text;
 				}
-				return text;
-			}
-
-			if(g.isSvgWeb){
-				if(targetDir == "rtl"){
-					return bidiEngine.bidiTransform(text,"IRNNN","ILNNN");
+	
+				if(g.isSilverlight){
+					return (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRNNN","VLYNN") : bidiEngine.bidiTransform(text,"ILNNN","VLYNN");
 				}
-				return text;
-			}
-
-			if(g.isSilverlight){
-				return (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRNNN","VLYNN") : bidiEngine.bidiTransform(text,"ILNNN","VLYNN");
-			}
-
-			if(g.isCanvas){
-				return (targetDir == "rtl") ? bidi_const.RLE + text + bidi_const.PDF : bidi_const.LRE + text + bidi_const.PDF;
-			}
-
-			if(g.isSvg){
-				if(has("ff")){
-					return (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRYNN","VLNNN") : bidiEngine.bidiTransform(text,"ILYNN","VLNNN");
+	
+				if(g.isCanvas){
+					return (targetDir == "rtl") ? bidi_const.RLE + text + bidi_const.PDF : bidi_const.LRE + text + bidi_const.PDF;
 				}
-				if(has("chrome") || has("safari") || has("opera")){
-					return bidi_const.LRM + (targetDir == "rtl" ? bidi_const.RLE : bidi_const.LRE) + text + bidi_const.PDF;
+	
+				if(g.isSvg){
+					if(has("ff") < 4){
+						return (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRYNN","VLNNN") : bidiEngine.bidiTransform(text,"ILYNN","VLNNN");
+					}else{
+						return bidi_const.LRM + (targetDir == "rtl" ? bidi_const.RLE : bidi_const.LRE) + text + bidi_const.PDF;
+					}					
 				}					
-			}					
-}
+			}
 			return text;
 		},	
 
@@ -222,9 +220,9 @@ define(["./_base", "dojo/_base/lang","dojo/_base/sniff", "dojo/dom", "dojo/_base
 					return text;
 				}
 				//unlike the g.Text that is rendered in logical layout for Bidi scripts.
-				//for g.TextPath in svg always visual -> bidi script is unreadable (except Opera).
+				//for g.TextPath in svg always visual -> bidi script is unreadable (except Opera and FF start from version 4)
 				if(g.isSvg){
-					if(has("opera")){
+					if(has("opera") || has("ff") >= 4){
 						text = bidi_const.LRM + (targetDir == "rtl"? bidi_const.RLE : bidi_const.LRE) + text + bidi_const.PDF;
 					}else{
 						text = (targetDir == "rtl") ? bidiEngine.bidiTransform(text,"IRYNN","VLNNN") : bidiEngine.bidiTransform(text,"ILYNN","VLNNN");

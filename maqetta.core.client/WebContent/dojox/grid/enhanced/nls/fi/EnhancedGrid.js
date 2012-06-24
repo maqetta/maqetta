@@ -1,16 +1,13 @@
 define(
-//begin v1.x content
 ({
 	singleSort: "Yksinkertainen lajittelu",
 	nestedSort: "Sisäkkäinen lajittelu",
-	ascending: "Nouseva",
-	descending: "Laskeva",
+	ascending: "Lajittele nousevaan järjestykseen napsauttamalla",
+	descending: "Lajittele laskevaan järjestykseen napsauttamalla",
 	sortingState: "${0} - ${1}",
 	unsorted: "Älä lajittele tätä saraketta",
-	indirectSelectionRadio: "Rivi ${0}, yksittäisvalinta, ruutu",
-	indirectSelectionCheckBox: "Rivi ${0}, monivalinta, valintaruutu",
+	indirectSelectionRadio: "Rivi ${0}, yksi valinta, valintanappi",
+	indirectSelectionCheckBox: "Rivi ${0}, useita valintoja, valintaruutu",
 	selectAll: "Valitse kaikki"
 })
-//end v1.x content
 );
-

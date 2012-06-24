@@ -13,7 +13,8 @@
  *
  * Note: Here for simplification, we name zh-hk as source locale,and name zh-hant-hk as alias locale.
  */
-djConfig={baseUrl: "../../../dojo/"};
+
+djConfig={baseUrl: "../../../dojo/", paths: {"dojo/_base/xhr": "../util/buildscripts/cldr/xhr"}};
 
 load("../../../dojo/dojo.js");
 load("../jslib/logger.js");

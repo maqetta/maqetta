@@ -27,34 +27,25 @@ define([
 	"dijit/form/Select" // template
 ], function(declare, lang, win, domConstruct, domClass, domStyle, WidgetBase, WidgetsInTemplateMixin, TemplatedMixin, math, registry, DropDownButton, TooltipDialog, TextBox, CheckBox, ColorPalette, Chart, axis2d, plot2d, Lines, Tufte, colors, template, calc){
 
-	// summary
-	//	provide static functions for Grapher
 	var
 		epsilon = 1e-15 / 9,
 		bigNumber = 1e200,
 		log2 = Math.log(2),
 		defaultParams = {graphNumber:0, fOfX:true, color:{stroke:"black"}};
 
-
-	/*=====
-		WidgetBase = dijit._WidgetBase;
-		WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
-		TemplatedMixin = dijit._TemplatedMixin;
-	=====*/
 	var Grapher = declare(
 		"dojox.calc.Grapher",
 		[WidgetBase, TemplatedMixin, WidgetsInTemplateMixin],
 	{
 		// summary:
 		//		The dialog layout for making graphs
-		//
+
 		templateString: template,
 
 		addXYAxes: function(chart){
 			// summary:
 			//		add or re-add the default x/y axes to the Chart provided
-			// params:
-			//	chart is an instance of dojox.charting.Chart
+			// chart: dojox.charting.Chart
 
 			return chart.addAxis("x", {
 				max: parseInt(this.graphMaxX.get("value")),
@@ -88,15 +79,15 @@ define([
 			});
 		},
 		selectAll: function(){
-			// summary
-			//	select all checkboxes inside the function table
+			// summary:
+			//		select all checkboxes inside the function table
 			for(var i = 0; i < this.rowCount; i++){
 				this.array[i][this.checkboxIndex].set("checked", true);
 			}
 		},
 		deselectAll: function(){
-			// summary
-			//	deselect all checkboxes inside the function table
+			// summary:
+			//		deselect all checkboxes inside the function table
 			for(var i = 0; i < this.rowCount; i++){
 				this.array[i][this.checkboxIndex].set("checked", false);
 			}
@@ -111,9 +102,9 @@ define([
 		},
 		erase: function(i){
 			// summary:
-			//	erase the chart inside this.array with the index i
-			// params:
-			//	i is the integer index to this.array that represents the current row number in the table
+			//		erase the chart inside this.array with the index i
+			// i: Integer
+			//		index to this.array that represents the current row number in the table
 			var nameNum = 0;
 			var name = "Series "+this.array[i][this.funcNumberIndex]+"_"+nameNum;
 			while(name in this.array[i][this.chartIndex].runs){
@@ -126,8 +117,8 @@ define([
 		},
 		onErase: function(){
 			// summary:
-			//	the erase button's onClick method
-			//	it see's if the checkbox is checked and then erases it if it is.
+			//		the erase button's onClick method
+			//		it see's if the checkbox is checked and then erases it if it is.
 			for(var i = 0; i < this.rowCount; i++){
 				if(this.array[i][this.checkboxIndex].get("checked")){
 					this.erase(i);
@@ -136,8 +127,8 @@ define([
 		},
 		onDelete: function(){
 			// summary:
-			//	the delete button's onClick method
-			//	delete all of the selected rows
+			//		The delete button's onClick method.
+			//		Delete all of the selected rows.
 			for(var i = 0; i < this.rowCount; i++){
 				if(this.array[i][this.checkboxIndex].get("checked")){
 					this.erase(i);
@@ -169,7 +160,7 @@ define([
 
 		createFunction: function(){
 			// summary:
-			//	create a new row in the table with all of the dojo objects.
+			//		create a new row in the table with all of the dojo objects.
 
 			var tr = this.graphTable.insertRow(-1);
 			this.array[tr.rowIndex] = [];
@@ -250,16 +241,17 @@ define([
 		},
 		setStatus: function(i, status){
 			// summary:
-			//	set the status of the row i to be status
-			// params:
-			//	i is an integer index of this.array as well as a row index
-			//	status is a String, it is either Error, Hidden, or Drawn
+			//		set the status of the row i to be status
+			// i: Integer
+			//		index of this.array as well as a row index
+			// status: String
+			//		either Error, Hidden, or Drawn
 			this.array[i][this.statusIndex].innerHTML = status; //this.array[i][this.statusIndex].set("value", status);
 		},
 		changedColor: function(){
 			// summary:
-			//	make the color of the chart the new color
-			//	the context is changed to the colorPalette, and a reference to chart was added to it a an attribute
+			//		Make the color of the chart the new color.
+			//		The context is changed to the colorPalette, and a reference to chart was added to it a an attribute.
 			var chart = this.get("chart");
 			var colorBoxFieldset = this.get("colorBox");
 			for(var i = 0; i < chart.series.length; i++){
@@ -275,17 +267,17 @@ define([
 		},
 		makeDirty: function(){
 			// summary:
-			//	if something in the window options is changed, this is called
+			//		if something in the window options is changed, this is called
 			this.dirty = true;
 		},
 		checkDirty1: function(){
 			// summary:
-			//	to stay in sync with onChange, checkDirty is called with a timeout
+			//		to stay in sync with onChange, checkDirty is called with a timeout
 			setTimeout(lang.hitch(this, 'checkDirty'), 0);
 		},
 		checkDirty: function(){
 			// summary:
-			//	adjust all charts in this.array according to any changes in window options
+			//		adjust all charts in this.array according to any changes in window options
 			if(this.dirty){
 				// change the axes of all charts if it is dirty
 				for(var i = 0; i < this.rowCount; i++){
@@ -298,8 +290,8 @@ define([
 			this.dirty = false;
 		},
 		postCreate: function(){
-			// summary
-			//	add Event handlers, some additional attributes, etc
+			// summary:
+			//		add Event handlers, some additional attributes, etc
 			this.inherited(arguments);// this is super class postCreate
 			this.createFunc.set("onClick", lang.hitch(this, 'createFunction'));
 
@@ -325,8 +317,8 @@ define([
 
 		},
 		startup: function(){
-			// summary
-			//	make sure the parent has a close button if it needs to be able to close
+			// summary:
+			//		make sure the parent has a close button if it needs to be able to close
 			this.inherited(arguments);// this is super class startup
 			// close is only valid if the parent is a widget with a close function
 			var parent = registry.getEnclosingWidget(this.domNode.parentNode);
@@ -348,12 +340,14 @@ define([
 
 	return lang.mixin(calc, {
 		draw: function(/*Chart*/ chart, /*Function*/ functionToGraph, params){
-			// summary
-			//	graph a chart with the given function.
-			// params
-			//	chart is a dojox.charting.Chart object, functionToGraph is a function with one numeric parameter (x or y typically)
-			//	and params is an Object the can contain the number of the graph in the chart it is (an integer), a boolean saying if the functionToGraph is a function of x (otherwise y)
-			//	and the color, which is an object with a stroke with a color's name eg: color:{stroke:"black"}
+			// summary:
+			//		graph a chart with the given function.
+			// chart: dojox.charting.Chart
+			// functionToGraph: Function
+			//		Function with one numeric parameter (x or y typically)
+			// params: Object
+			//		can contain the number of the graph in the chart it is (an integer), a boolean saying if the functionToGraph is a function of x (otherwise y)
+			//		and the color, which is an object with a stroke with a color's name eg: color:{stroke:"black"}
 
 			params = lang.mixin({}, defaultParams, params);
 			chart.fullGeometry();
@@ -392,14 +386,25 @@ define([
 
 		generatePoints: function(/*Function*/ funcToGraph, /*String*/ x, /*String*/ y, /*Number*/ width, /*Number*/ minX, /*Number*/ maxX, /*Number*/ minY, /*Number*/ maxY){
 			// summary:
-			//	create the points with information about the graph.
-			// params:
-			//	funcToGraph is a function with one numeric parameter (x or y typically)
-			//	x and y are Strings which always have the values of "x" or "y".  If y="x" and x="y" then it is creating points for the function as though it was a function of y
-			//	Number minX, Number maxX, Number minY, Number maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
-			//	Number width is the pixel width of the chart
+			//		create the points with information about the graph.
+			// funcToGraph: Function
+			//		A function with one numeric parameter (x or y typically)
+			//	x: String
+			//		x and y are Strings which always have the values of "x" or "y".  If y="x" and x="y" then it is creating points for the function as though it was a function of y
+			//	y: String
+			//		x and y are Strings which always have the values of "x" or "y".  If y="x" and x="y" then it is creating points for the function as though it was a function of y
+			// minX:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// maxX:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// minY:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// maxY:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// width:
+			//		pixel width of the chart
 			// output:
-			//	an array of arrays of points
+			//		an array of arrays of points
 			var pow2 = (1 << Math.ceil(Math.log(width) / log2));
 			var
 				dx = (maxX - minX) / pow2, // divide by 2^n instead of width to avoid loss of precision

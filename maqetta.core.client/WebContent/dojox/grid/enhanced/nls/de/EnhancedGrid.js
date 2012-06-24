@@ -1,16 +1,13 @@
 define(
-//begin v1.x content
 ({
-	singleSort: "Einzelne Sortierung",
+	singleSort: "Einfache Sortierung",
 	nestedSort: "Verschachtelte Sortierung",
-	ascending: "Aufsteigend",
-	descending: "Absteigend",
+	ascending: "Für aufsteigende Sortierung hier klicken",
+	descending: "Für absteigende Sortierung hier klicken",
 	sortingState: "${0} - ${1}",
 	unsorted: "Diese Spalte nicht sortieren",
-	indirectSelectionRadio: "Zeile ${0}, einzelne Auswahl, Optionsfeld",
+	indirectSelectionRadio: "Zeile ${0}, Einzelauswahl, Optionsfeld",
 	indirectSelectionCheckBox: "Zeile ${0}, Mehrfachauswahl, Kontrollkästchen",
 	selectAll: "Alles auswählen"
 })
-//end v1.x content
 );
-

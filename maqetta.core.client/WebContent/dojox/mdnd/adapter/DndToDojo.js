@@ -1,6 +1,16 @@
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/connect",
-	"dojo/_base/window","dojo/_base/array","dojox/mdnd/PureSource","dojox/mdnd/LazyManager"],function(dojo){
-	var dtd = dojo.declare(
+define(["dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/connect",
+	"dojo/_base/array",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/topic", // topic.publish()
+	"dojo/_base/window",
+	"dojox/mdnd/PureSource",
+	"dojox/mdnd/LazyManager"
+],function(dojo, declare, connect, array, domClass, domStyle, geom, topic, win){
+	var dtd = declare(
 		"dojox.mdnd.adapter.DndToDojo",
 		null,
 	{
@@ -43,17 +53,17 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			this._dojoList = [];
 			this._currentDojoArea = null;
 			this._dojoxManager = dojox.mdnd.areaManager();
-			this._dragStartHandler = dojo.subscribe("/dojox/mdnd/drag/start", this, function(node, sourceArea, sourceDropIndex){
+			this._dragStartHandler = connect.subscribe("/dojox/mdnd/drag/start", this, function(node, sourceArea, sourceDropIndex){
 				this._draggedNode = node;
-				this._moveHandler = dojo.connect(dojo.doc, "onmousemove", this, "onMouseMove");
+				this._moveHandler = connect.connect(dojo.doc, "onmousemove", this, "onMouseMove");
 			});
-			this._dropHandler = dojo.subscribe("/dojox/mdnd/drop", this, function(node, targetArea, indexChild){
+			this._dropHandler = connect.subscribe("/dojox/mdnd/drop", this, function(node, targetArea, indexChild){
 				if(this._currentDojoArea){
-					dojo.publish("/dojox/mdnd/adapter/dndToDojo/cancel", [this._currentDojoArea.node, this._currentDojoArea.type, this._draggedNode, this.accept]);
+					connect.publish("/dojox/mdnd/adapter/dndToDojo/cancel", [this._currentDojoArea.node, this._currentDojoArea.type, this._draggedNode, this.accept]);
 				}
 				this._draggedNode = null;
 				this._currentDojoArea = null;
-				dojo.disconnect(this._moveHandler);
+				connect.disconnect(this._moveHandler);
 			});
 		},
 	
@@ -90,7 +100,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 	
 			//console.log('dojox.mdnd.adapter.DndToDojo ::: _initCoordinates');
 			if(area){
-				var position = dojo.position(area, true),
+				var position = geom.position(area, true),
 					coords = {};
 				coords.x = position.x
 				coords.y = position.y
@@ -155,7 +165,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			//console.log("dojox.mdnd.adapter.DndToDojo ::: unregisterByType", type);
 			if(type){
 				var tempList = [];
-				dojo.forEach(this._dojoList, function(item, i){
+				array.forEach(this._dojoList, function(item, i){
 					if(item.type != type){
 						tempList.push(item);
 					}
@@ -179,7 +189,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			//console.log("dojox.mdnd.adapter.DndToDojo ::: refresh");
 			var dojoList = this._dojoList;
 			this.unregister();
-			dojo.forEach(dojoList, function(dojo){
+			array.forEach(dojoList, function(dojo){
 				dojo.coords = this._initCoordinates(dojo.node);
 			}, this);
 			this._dojoList = dojoList;
@@ -194,7 +204,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			//console.log("dojox.mdnd.adapter.DndToDojo ::: refresh");
 			var dojoList = this._dojoList;
 			this.unregister();
-			dojo.forEach(dojoList, function(dojo){
+			array.forEach(dojoList, function(dojo){
 				if(dojo.type == type){
 					dojo.coords = this._initCoordinates(dojo.node);
 				}
@@ -277,44 +287,44 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			// specific for drag and drop switch
 			if(this._currentDojoArea.dojo){
 				// disconnect
-				dojo.disconnect(this._dojoxManager._dragItem.handlers.pop());
-				dojo.disconnect(this._dojoxManager._dragItem.handlers.pop());
+				connect.disconnect(this._dojoxManager._dragItem.handlers.pop());
+				connect.disconnect(this._dojoxManager._dragItem.handlers.pop());
 				//disconnect onmousemove of moveable item
 				//console.info("before",this._dojoxManager._dragItem.item.events.pop());
-				dojo.disconnect(this._dojoxManager._dragItem.item.events.pop());
-				dojo.body().removeChild(this._dojoxManager._cover);
-				dojo.body().removeChild(this._dojoxManager._cover2);
+				connect.disconnect(this._dojoxManager._dragItem.item.events.pop());
+				win.body().removeChild(this._dojoxManager._cover);
+				win.body().removeChild(this._dojoxManager._cover2);
 				var node = this._dojoxManager._dragItem.item.node;
 				// hide dragNode :
 				// disconnect the dojoDndAdapter if it's initialize
 				if(dojox.mdnd.adapter._dndFromDojo){
 					dojox.mdnd.adapter._dndFromDojo.unsubscribeDnd();
 				}
-				dojo.style(node, {
+				domStyle.set(node, {
 					'position': "relative",
 					'top': '0',
 					'left': '0'
 				});
 				// launch the drag and drop Dojo.
 				this._lazyManager.startDrag(e, node);
-				var handle = dojo.connect(this._lazyManager.manager, "overSource", this, function(){
-					dojo.disconnect(handle);
+				var handle = connect.connect(this._lazyManager.manager, "overSource", this, function(){
+					connect.disconnect(handle);
 					if(this._lazyManager.manager.canDropFlag){
 						// remove dropIndicator
 						this._dojoxManager._dropIndicator.node.style.display = "none";
 					}
 				});
 	
-				this.cancelHandler = dojo.subscribe("/dnd/cancel", this, function(){
+				this.cancelHandler = connect.subscribe("/dnd/cancel", this, function(){
 					var moveableItem = this._dojoxManager._dragItem.item;
 					// connect onmousemove of moveable item
 					// need to reconnect the onmousedown of movable class.
 					moveableItem.events = [
-						dojo.connect(moveableItem.handle, "onmousedown", moveableItem, "onMouseDown")
+						connect.connect(moveableItem.handle, "onmousedown", moveableItem, "onMouseDown")
 					];
 					// replace the cover and the dragNode in the cover.
-					dojo.body().appendChild(this._dojoxManager._cover);
-					dojo.body().appendChild(this._dojoxManager._cover2);
+					win.body().appendChild(this._dojoxManager._cover);
+					win.body().appendChild(this._dojoxManager._cover2);
 					this._dojoxManager._cover.appendChild(moveableItem.node);
 	
 					var objectArea = this._dojoxManager._areaList[this._dojoxManager._sourceIndexArea];
@@ -327,19 +337,19 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 					if(this._dojoxManager._dropIndicator.node.style.display == "none"){
 						this._dojoxManager._dropIndicator.node.style.display == "";
 					}
-					this._dojoxManager._dragItem.handlers.push(dojo.connect(this._dojoxManager._dragItem.item, "onDrag", this._dojoxManager, "onDrag"));
-					this._dojoxManager._dragItem.handlers.push(dojo.connect(this._dojoxManager._dragItem.item, "onDragEnd", this._dojoxManager, "onDrop"));
+					this._dojoxManager._dragItem.handlers.push(connect.connect(this._dojoxManager._dragItem.item, "onDrag", this._dojoxManager, "onDrag"));
+					this._dojoxManager._dragItem.handlers.push(connect.connect(this._dojoxManager._dragItem.item, "onDragEnd", this._dojoxManager, "onDrop"));
 					this._draggedNode.style.display = "";
 					this._dojoxManager.onDrop(this._draggedNode);
-					dojo.unsubscribe(this.cancelHandler);
-					dojo.unsubscribe(this.dropHandler);
+					connect.unsubscribe(this.cancelHandler);
+					connect.unsubscribe(this.dropHandler);
 					if(dojox.mdnd.adapter._dndFromDojo){
 						dojox.mdnd.adapter._dndFromDojo.subscribeDnd();
 					}
 				});
-				this.dropHandler = dojo.subscribe("/dnd/drop/before", this, function(params){
-					dojo.unsubscribe(this.cancelHandler);
-					dojo.unsubscribe(this.dropHandler);
+				this.dropHandler = connect.subscribe("/dnd/drop/before", this, function(params){
+					connect.unsubscribe(this.cancelHandler);
+					connect.unsubscribe(this.dropHandler);
 					this.onDrop();
 				});
 			}
@@ -347,17 +357,17 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 				this.accept = this.isAccepted(this._dojoxManager._dragItem.item.node, this._currentDojoArea);
 				if(this.accept){
 					// disconnect
-					dojo.disconnect(this._dojoxManager._dragItem.handlers.pop());
-					dojo.disconnect(this._dojoxManager._dragItem.handlers.pop());
+					connect.disconnect(this._dojoxManager._dragItem.handlers.pop());
+					connect.disconnect(this._dojoxManager._dragItem.handlers.pop());
 					// remove dropIndicator
 					this._dojoxManager._dropIndicator.node.style.display = "none";
 					if(!this._moveUpHandler){
-						this._moveUpHandler = dojo.connect(dojo.doc, "onmouseup", this, "onDrop");
+						this._moveUpHandler = connect.connect(dojo.doc, "onmouseup", this, "onDrop");
 					}
 				}
 			}
 			// publish a topic
-			dojo.publish("/dojox/mdnd/adapter/dndToDojo/over",[this._currentDojoArea.node, this._currentDojoArea.type, this._draggedNode, this.accept]);
+			connect.publish("/dojox/mdnd/adapter/dndToDojo/over",[this._currentDojoArea.node, this._currentDojoArea.type, this._draggedNode, this.accept]);
 		},
 	
 		onDragExit: function(/*DOMEvent*/e){
@@ -370,20 +380,20 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			// set the old height of dropIndicator.
 			if(this._oldDojoArea.dojo){
 				// unsubscribe the topic /dnd/cancel and /dnd/drop/before
-				dojo.unsubscribe(this.cancelHandler);
-				dojo.unsubscribe(this.dropHandler);
+				connect.unsubscribe(this.cancelHandler);
+				connect.unsubscribe(this.dropHandler);
 				// launch Drag and Drop
 				var moveableItem = this._dojoxManager._dragItem.item;
 				// connect onmousemove of moveable item
-				this._dojoxManager._dragItem.item.events.push(dojo.connect(
+				this._dojoxManager._dragItem.item.events.push(connect.connect(
 					moveableItem.node.ownerDocument,
 					"onmousemove",
 					moveableItem,
 					"onMove"
 				));
 				// replace the cover and the dragNode in the cover.
-				dojo.body().appendChild(this._dojoxManager._cover);
-				dojo.body().appendChild(this._dojoxManager._cover2);
+				win.body().appendChild(this._dojoxManager._cover);
+				win.body().appendChild(this._dojoxManager._cover2);
 				this._dojoxManager._cover.appendChild(moveableItem.node);
 				// fix style :
 				var style = moveableItem.node.style;
@@ -401,15 +411,15 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 					this._dojoxManager._dropIndicator.node.style.display = "";
 				}
 				// reconnect the areaManager.
-				this._dojoxManager._dragItem.handlers.push(dojo.connect(this._dojoxManager._dragItem.item, "onDrag", this._dojoxManager, "onDrag"));
-				this._dojoxManager._dragItem.handlers.push(dojo.connect(this._dojoxManager._dragItem.item, "onDragEnd", this._dojoxManager, "onDrop"));
+				this._dojoxManager._dragItem.handlers.push(connect.connect(this._dojoxManager._dragItem.item, "onDrag", this._dojoxManager, "onDrag"));
+				this._dojoxManager._dragItem.handlers.push(connect.connect(this._dojoxManager._dragItem.item, "onDragEnd", this._dojoxManager, "onDrop"));
 				this._dojoxManager._dragItem.item.onMove(e);
 			}
 			else{
 				if(this.accept){
 					// disconnect the mouseUp event.
 					if(this._moveUpHandler){
-						dojo.disconnect(this._moveUpHandler);
+						connect.disconnect(this._moveUpHandler);
 						this._moveUpHandler = null;
 					}
 					// redisplay dropIndicator
@@ -417,13 +427,13 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 						this._dojoxManager._dropIndicator.node.style.display = "";
 					}
 					// reconnect the areaManager.
-					this._dojoxManager._dragItem.handlers.push(dojo.connect(this._dojoxManager._dragItem.item, "onDrag", this._dojoxManager, "onDrag"));
-					this._dojoxManager._dragItem.handlers.push(dojo.connect(this._dojoxManager._dragItem.item, "onDragEnd", this._dojoxManager, "onDrop"));
+					this._dojoxManager._dragItem.handlers.push(connect.connect(this._dojoxManager._dragItem.item, "onDrag", this._dojoxManager, "onDrag"));
+					this._dojoxManager._dragItem.handlers.push(connect.connect(this._dojoxManager._dragItem.item, "onDragEnd", this._dojoxManager, "onDrop"));
 					this._dojoxManager._dragItem.item.onMove(e);
 				}
 			}
 			// publish a topic
-			dojo.publish("/dojox/mdnd/adapter/dndToDojo/out",[this._oldDojoArea.node, this._oldDojoArea.type, this._draggedNode, this.accept]);
+			connect.publish("/dojox/mdnd/adapter/dndToDojo/out",[this._oldDojoArea.node, this._oldDojoArea.type, this._draggedNode, this.accept]);
 		},
 	
 		onDrop: function(/*DOMEvent*/e){
@@ -432,7 +442,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			// e:
 			//		Event object.
 	
-	//		console.log("dojox.mdnd.adapter.DndToDojo ::: onDrop", this._currentDojoArea);
+			//console.log("dojox.mdnd.adapter.DndToDojo ::: onDrop", this._currentDojoArea);
 			if(this._currentDojoArea.dojo){
 				// reconnect the dojoDndAdapter
 				if(dojox.mdnd.adapter._dndFromDojo){
@@ -444,24 +454,24 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			}
 			// remove the cover
 			if(this._dojoxManager._cover.parentNode && this._dojoxManager._cover.parentNode.nodeType == 1){
-				dojo.body().removeChild(this._dojoxManager._cover);
-				dojo.body().removeChild(this._dojoxManager._cover2);
+				win.body().removeChild(this._dojoxManager._cover);
+				win.body().removeChild(this._dojoxManager._cover2);
 			}
 			// remove draggedNode of target :
 			if(this._draggedNode.parentNode == this._dojoxManager._cover){
 				this._dojoxManager._cover.removeChild(this._draggedNode);
 			}
-			dojo.disconnect(this._moveHandler);
-			dojo.disconnect(this._moveUpHandler);
+			connect.disconnect(this._moveHandler);
+			connect.disconnect(this._moveUpHandler);
 			this._moveHandler = this._moveUpHandler = null;
-			dojo.publish("/dojox/mdnd/adapter/dndToDojo/drop", [this._draggedNode, this._currentDojoArea.node, this._currentDojoArea.type]);
-			dojo.removeClass(this._draggedNode, "dragNode");
+			connect.publish("/dojox/mdnd/adapter/dndToDojo/drop", [this._draggedNode, this._currentDojoArea.node, this._currentDojoArea.type]);
+			domClass.remove(this._draggedNode, "dragNode");
 			var style = this._draggedNode.style;
 			style.position = "relative";
 			style.left = "0";
 			style.top = "0";
 			style.width = "auto";
-			dojo.forEach(this._dojoxManager._dragItem.handlers, dojo.disconnect);
+			array.forEach(this._dojoxManager._dragItem.handlers, connect.disconnect);
 			this._dojoxManager._deleteMoveableItem(this._dojoxManager._dragItem);
 			this._draggedNode = null;
 			this._currentDojoArea = null;

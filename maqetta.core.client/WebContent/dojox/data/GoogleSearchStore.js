@@ -1,11 +1,11 @@
-define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window", "dojo/_base/query", 
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/query",
 		"dojo/dom-construct","dojo/io/script"], 
-  function(dojo, lang, declare, winUtil, domQuery, domConstruct, scriptIO) {
+  function(kernel, lang, declare, domQuery, domConstruct, scriptIO) {
 
-dojo.experimental("dojox.data.GoogleSearchStore");
+kernel.experimental("dojox.data.GoogleSearchStore");
 
 var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
-	//	summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		This data store acts as a base class for Google searches,
 	//		and has a number of child data stores that implement different
@@ -23,9 +23,9 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	//		</ul>
 	//		The query accepts one parameter: text - The string to search for
 	constructor: function(/*Object*/args){
-		//	summary:
+		// summary:
 		//		Initializer for the GoogleSearchStore store.
-		//	description:
+		// description:
 		//		The GoogleSearchStore is a Datastore interface to
 		//		the Google search service. The constructor accepts the following arguments:
 		//		<ul>
@@ -52,57 +52,57 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	// _id: Integer
-	// A unique identifier for this store.
+	//		A unique identifier for this store.
 	_id: 0,
 
 	// _requestCount: Integer
-	// A counter for the number of requests made. This is used to define
-	// the callback function that GoogleSearchStore will use.
+	//		A counter for the number of requests made. This is used to define
+	//		the callback function that GoogleSearchStore will use.
 	_requestCount: 0,
 
 	// _googleUrl: String
-	// The URL to Googles search web service.
+	//		The URL to Googles search web service.
 	_googleUrl: "http://ajax.googleapis.com/ajax/services/search/",
 
 	// _storeRef: String
-	// The internal reference added to each item pointing at the store which owns it.
+	//		The internal reference added to each item pointing at the store which owns it.
 	_storeRef: "_S",
 
 	// _attributes: Array
-	// The list of attributes that this store supports
+	//		The list of attributes that this store supports
 	_attributes: [	"unescapedUrl", "url", "visibleUrl", "cacheUrl", "title",
 			"titleNoFormatting", "content", "estimatedResultCount"],
 
 	// _aggregtedAttributes: Hash
-	// Maps per-query aggregated attributes that this store supports to the result keys that they come from.
+	//		Maps per-query aggregated attributes that this store supports to the result keys that they come from.
 	_aggregatedAttributes: {
 		estimatedResultCount: "cursor.estimatedResultCount"
 	},
 
 	// label: String
-	// The default attribute which acts as a label for each item.
+	//		The default attribute which acts as a label for each item.
 	label: "titleNoFormatting",
 
 	// type: String
-	// The type of search. Valid values are "web", "local", "video", "blogs", "news", "books", "images".
-	// This should not be set directly. Instead use one of the child classes.
+	//		The type of search. Valid values are "web", "local", "video", "blogs", "news", "books", "images".
+	//		This should not be set directly. Instead use one of the child classes.
 	_type: "web",
 
 	// urlPreventCache: boolean
-	// Sets whether or not to pass preventCache to dojo.io.script.
+	//		Sets whether or not to pass preventCache to dojo.io.script.
 	urlPreventCache: true,
 
 
 	// _queryAttrs: Hash
-	// Maps query hash keys to Google query parameters.
+	//		Maps query hash keys to Google query parameters.
 	_queryAttrs: {
 		text: 'q'
 	},
 
 	_assertIsItem: function(/* item */ item){
-		//	summary:
+		// summary:
 		//		This function tests whether the item passed in is indeed an item in the store.
-		//	item:
+		// item:
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){
 			throw new Error("dojox.data.GoogleSearchStore: a function was passed an item argument that was not an item");
@@ -110,9 +110,9 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	_assertIsAttribute: function(/* attribute-name-string */ attribute){
-		//	summary:
+		// summary:
 		//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		//	attribute:
+		// attribute:
 		//		The attribute to test for being contained by the store.
 		if(typeof attribute !== "string"){
 			throw new Error("dojox.data.GoogleSearchStore: a function was passed an attribute argument that was not an attribute name string");
@@ -120,7 +120,7 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	getFeatures: function(){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getFeatures()
 		return {
 			'dojo.data.api.Read': true
@@ -128,7 +128,7 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
@@ -138,13 +138,13 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	getAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getAttributes()
 		return this._attributes;
 	},
 
 	hasAttribute: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.hasAttributes()
 		if(this.getValue(item,attribute)){
 			return true;
@@ -153,30 +153,30 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	isItemLoaded: function(item){
-		 //	summary:
-		 //		See dojo.data.api.Read.isItemLoaded()
-		 return this.isItem(item);
+		// summary:
+		//		See dojo.data.api.Read.isItemLoaded()
+		return this.isItem(item);
 	},
 
 	loadItem: function(keywordArgs){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.loadItem()
 	},
 
 	getLabel: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getLabel()
 		return this.getValue(item,this.label);
 	},
 
 	getLabelAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getLabelAttributes()
 		return [this.label];
 	},
 
 	containsValue: function(item, attribute, value){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.containsValue()
 		var values = this.getValues(item,attribute);
 		for(var i = 0; i < values.length; i++){
@@ -188,7 +188,7 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	getValues: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -203,7 +203,7 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	isItem: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.isItem()
 		if(item && item[this._storeRef] === this){
 			return true;
@@ -212,7 +212,7 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	close: function(request){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.close()
 	},
 
@@ -221,17 +221,17 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 	},
 
 	fetch: function(request){
-		//	summary:
+		// summary:
 		//		Fetch Google search items that match to a query
-		//	request:
+		// request:
 		//		A request object
-		//	fetchHandler:
+		// fetchHandler:
 		//		A function to call for fetched items
-		//	errorHandler:
+		// errorHandler:
 		//		A function to call on error
 		request = request || {};
 
-		var scope = request.scope || winUtil.global;
+		var scope = request.scope || kernel.global;
 
 		if(!request.query){
 			if(request.onError){
@@ -369,7 +369,7 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 					//Process the items...
 					finished = true;
 					//Clean up the function, it should never be called again
-					winUtil.global[callbackFn] = null;
+					kernel.global[callbackFn] = null;
 					if(request.onItem){
 						request.onComplete.call(scope, null, request);
 					}else{
@@ -385,13 +385,13 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 		var lastCallback = firstRequest.start - 1;
 
 		// Attach a callback function to the global namespace, where Google can call it.
-		winUtil.global[callbackFn] = function(start, data, responseCode, errorMsg){
+		kernel.global[callbackFn] = function(start, data, responseCode, errorMsg){
 			try {
 				if(responseCode != 200){
 					if(request.onError){
 						request.onError.call(scope, new Error("Response from Google was: " + responseCode), request);
 					}
-					winUtil.global[callbackFn] = function(){};//an error occurred, do not return anything else.
+					kernel.global[callbackFn] = function(){};//an error occurred, do not return anything else.
 					return;
 				}
 	
@@ -459,7 +459,7 @@ var SearchStore = declare("dojox.data.GoogleSearchStore",null,{
 });
 
 var WebSearchStore = declare("dojox.data.GoogleWebSearchStore", SearchStore,{
-	//	Summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
 	//		<ul>
@@ -476,7 +476,7 @@ var WebSearchStore = declare("dojox.data.GoogleWebSearchStore", SearchStore,{
 });
 
 var BlogSearchStore = declare("dojox.data.GoogleBlogSearchStore", SearchStore,{
-	//	Summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
 	//		<ul>
@@ -499,7 +499,7 @@ var BlogSearchStore = declare("dojox.data.GoogleBlogSearchStore", SearchStore,{
 
 
 var LocalSearchStore = declare("dojox.data.GoogleLocalSearchStore", SearchStore,{
-	//	summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
 	//		<ul>
@@ -546,7 +546,7 @@ var LocalSearchStore = declare("dojox.data.GoogleLocalSearchStore", SearchStore,
 });
 
 var VideoSearchStore = declare("dojox.data.GoogleVideoSearchStore", SearchStore,{
-	//	summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
 	//		<ul>
@@ -570,7 +570,7 @@ var VideoSearchStore = declare("dojox.data.GoogleVideoSearchStore", SearchStore,
 });
 
 var NewsSearchStore = declare("dojox.data.GoogleNewsSearchStore", SearchStore,{
-	//	summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
 	//		<ul>
@@ -596,7 +596,7 @@ var NewsSearchStore = declare("dojox.data.GoogleNewsSearchStore", SearchStore,{
 });
 
 var BookSearchStore = declare("dojox.data.GoogleBookSearchStore", SearchStore,{
-	// 	summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
 	//		<ul>
@@ -617,7 +617,7 @@ var BookSearchStore = declare("dojox.data.GoogleBookSearchStore", SearchStore,{
 });
 
 var ImageSearchStore = declare("dojox.data.GoogleImageSearchStore", SearchStore,{
-	//	summary:
+	// summary:
 	//		A data store for retrieving search results from Google.
 	//		The following attributes are supported on each item:
 	//		<ul>

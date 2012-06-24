@@ -21,7 +21,7 @@ dojox.xmpp.presence = {
 	STATUS_OFFLINE: 'offline',
 	
 	STATUS_INVISIBLE: 'invisible'
-}
+};
 
 dojo.declare("dojox.xmpp.PresenceService", null, {
 	constructor: function(xmppService){

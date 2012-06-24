@@ -1,5 +1,7 @@
-define(["dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Geometry"],
-	function(dojo, declare, Geometry){
+define([
+	"dojo/_base/declare",
+	"dojox/geo/openlayers/Geometry"],
+	function(declare, Geometry){
 	/*===== 
 	var Geometry = dojox.geo.openlayers.Geometry; 
 	=====*/
@@ -10,7 +12,7 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Geometr
 		setPoint : function(p){
 			//	summary:
 			//		Sets the point for this geometry.
-			//	p : {x, y} Object
+			//	p: {x, y} Object
 			//		The point geometry.
 			this.coordinates = p;
 		},

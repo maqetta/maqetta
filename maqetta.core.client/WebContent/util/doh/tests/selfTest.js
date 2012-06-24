@@ -205,7 +205,7 @@ define(["doh/runner"], function(doh) {
 	});
 	// a stone-stupid async test
 	doh.register("doh/async", [{
-		name: "deferredSuccess",
+		name: "doh.Deferred success",
 		runTest: function(t){
 			var d = new doh.Deferred();
 			setTimeout(d.getTestCallback(function(){
@@ -215,22 +215,52 @@ define(["doh/runner"], function(doh) {
 			return d;
 		}
 	},{
-		name: "deferredFailure--SHOULD FAIL",
+		name: "dojo.Deferred success",
 		runTest: function(t){
-			console.log("running test that SHOULD FAIL");
-			var d = new doh.Deferred();
+			var d = new dojo.Deferred();
 			setTimeout(function(){
-				d.errback(new Error("hrm..."));
+				d.resolve(true);
 			}, 50);
 			return d;
 		}
 	},{
-		name: "timeoutFailure--SHOULD FAIL",
+		name: "doh.Deferred failure--SHOULD FAIL",
+		runTest: function(t){
+			console.log("running test that SHOULD FAIL");
+			var d = new doh.Deferred();
+			setTimeout(d.getTestCallback(function(){
+				t.assertTrue(false);
+			}), 50);
+			return d;
+		}
+	},{
+		name: "dojo.Deferred failure--SHOULD FAIL",
+		runTest: function(t){
+			console.log("running test that SHOULD FAIL");
+			var d = new dojo.Deferred();
+			setTimeout(function(){
+				d.reject(new Error("hrm..."));
+			}, 50);
+			return d;
+		}
+	},{
+		name: "doh.Deferred timeout failure--SHOULD FAIL",
 		timeout: 50,
 		runTest: function(t){
 			console.log("running test that SHOULD FAIL");
 			// timeout of 50
 			var d = new doh.Deferred();
+			setTimeout(d.getTestCallback(function(){
+			}), 100);
+			return d;
+		}
+	},{
+		name: "dojo.Deferred timeout failure--SHOULD FAIL",
+		timeout: 50,
+		runTest: function(t){
+			console.log("running test that SHOULD FAIL");
+			// timeout of 50
+			var d = new dojo.Deferred();
 			setTimeout(function(){
 				d.callback(true);
 			}, 100);

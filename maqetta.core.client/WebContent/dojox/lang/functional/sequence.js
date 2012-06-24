@@ -1,4 +1,4 @@
-define(["dojo/_base/lang", "./lambda"], function(lang, df){
+define(["dojo/_base/kernel", "dojo/_base/lang", "./lambda"], function(kernel, lang, df){
 
 // This module adds high-level functions and related constructs:
 //	- sequence generators
@@ -18,7 +18,7 @@ define(["dojo/_base/lang", "./lambda"], function(lang, df){
 		repeat: function(/*Number*/ n, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
 			// summary: builds an array by repeatedly applying a unary function N times
 			//	with a seed value Z. N should be greater than 0.
-			o = o || dojo.global; f = df.lambda(f);
+			o = o || kernel.global; f = df.lambda(f);
 			var t = new Array(n), i = 1;
 			t[0] = z;
 			for(; i < n; t[i] = z = f.call(o, z), ++i);
@@ -27,7 +27,7 @@ define(["dojo/_base/lang", "./lambda"], function(lang, df){
 		until: function(/*Function|String|Array*/ pr, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
 			// summary: builds an array by repeatedly applying a unary function with
 			//	a seed value Z until the predicate is satisfied.
-			o = o || dojo.global; f = df.lambda(f); pr = df.lambda(pr);
+			o = o || kernel.global; f = df.lambda(f); pr = df.lambda(pr);
 			var t = [];
 			for(; !pr.call(o, z); t.push(z), z = f.call(o, z));
 			return t;	// Array

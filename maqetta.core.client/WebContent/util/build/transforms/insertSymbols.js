@@ -1,4 +1,9 @@
-define(["../buildControl", "../fileUtils", "../fs", "../replace"], function(bc, fileUtils, fs, replace) {
+define([
+	"../buildControl",
+	"../fileUtils",
+	"../fs",
+	"../replace"
+], function(bc, fileUtils, fs, replace) {
 	var symctr = 1,
 		m = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
 		len = m.length,
@@ -87,7 +92,7 @@ define(["../buildControl", "../fileUtils", "../fs", "../replace"], function(bc, 
 						content: function(){
 							var symbolText = [], key, symtbl = bc.symbolTable;
 							for(key in symtbl){
-								symbolText.push(key + ": \"" + symtbl[key] + "\"\n");
+								symbolText.push(key + ": \"" + symtbl[key] + "\"" + bc.newline);
 							}
 							return symbolText.join('');
 						}

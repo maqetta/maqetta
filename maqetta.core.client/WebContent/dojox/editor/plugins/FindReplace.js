@@ -429,7 +429,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 		//		private
 		var ed = this.editor;
 		var win = ed.window;
-		var selectedTxt = dojo.withGlobal(ed.window, "getSelectedText", dijit._editor.selection, [null]);
+		var selectedTxt = ed._sCall("getSelectedText", [null]);
 		if(this._findField && this._findField.textBox){
 			if(selectedTxt){
 				this._findField.textBox.set("value", selectedTxt);
@@ -611,7 +611,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 			var backwards = this._backwards.get("value");
 			
 			//Replace the current selected text if it matches the pattern
-			var selected = dojo.withGlobal(ed.window, "getSelectedText", dijit._editor.selection, [null]);
+			var selected = ed._sCall("getSelectedText", [null]);
 			// Handle checking/replacing current selection.  For some reason on Moz
 			// leading whitespace is trimmed, so we have to trim it down on this check
 			// or we don't always replace.  Moz bug!
@@ -629,7 +629,7 @@ dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
 					// Move to the beginning of the replaced text
 					// to avoid the infinite recursive replace
 					this._findText(repTxt, caseSensitive, backwards);
-					dojo.withGlobal(ed.window, "collapse", dijit._editor.selection, [true]);
+					ed._sCall("collapse", [true]);
 				}
 			}
 			

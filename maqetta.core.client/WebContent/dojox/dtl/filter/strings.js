@@ -23,7 +23,11 @@ define([
 					if(token == " "){
 						return "+";
 					}else{
-						return "%" + token.charCodeAt(0).toString(16).toUpperCase();
+						var hex = token.charCodeAt(0).toString(16).toUpperCase();
+						while(hex.length < 2){
+							hex = "0" + hex;
+						}
+						return "%" + hex;
 					}
 				}
 				return token;

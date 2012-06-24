@@ -161,6 +161,12 @@ return declare("dojox.widget.Standby", [_Widget, _TemplatedMixin],{
 	//		to a particular value.  This is useful when you want to overlay
 	//		things in digit.Dialogs, you can specify a base zIndex to append from.
 	zIndex: "auto",
+	
+	// opacity: float
+	//		The opacity to make the overlay when it is displayed/faded in.
+	//		The default is 0.75.  This does not affect the image opacity, only the
+	//		overlay.
+	opacity: 0.75,	
 
 	startup: function(args){
 		// summary:
@@ -557,7 +563,7 @@ return declare("dojox.widget.Standby", [_Widget, _TemplatedMixin],{
 		var underlayNodeAnim = baseFx.animateProperty({
 			duration: self.duration,
 			node: self._underlayNode,
-			properties: {opacity: {start: 0, end: 0.75}}
+			properties: {opacity: {start: 0, end: self.opacity}}
 		});
 		var imageAnim = baseFx.animateProperty({
 			duration: self.duration,
@@ -581,7 +587,7 @@ return declare("dojox.widget.Standby", [_Widget, _TemplatedMixin],{
 		var underlayNodeAnim = baseFx.animateProperty({
 			duration: self.duration,
 			node: self._underlayNode,
-			properties: {opacity: {start: 0.75, end: 0}},
+			properties: {opacity: {start: self.opacity, end: 0}},
 			onEnd: function(){
 				domStyle.set(this.node,{"display":"none", "zIndex": "-1000"});
 			}

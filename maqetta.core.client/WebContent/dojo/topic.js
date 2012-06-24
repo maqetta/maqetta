@@ -22,12 +22,12 @@ define(["./Evented"], function(Evented){
 		},
 		subscribe: function(topic, listener){
 			// summary:
-			//		Subcribes to a topic on the pub/sub hub
+			//		Subscribes to a topic on the pub/sub hub
 			// topic: String
 			//		The topic to subscribe to
 			//	listener: Function
 			//		A function to call when a message is published to the given topic
 			return hub.on.apply(hub, arguments);
 		}
-	}
+	};
 });

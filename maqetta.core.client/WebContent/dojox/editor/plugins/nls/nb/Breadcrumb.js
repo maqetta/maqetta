@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"nodeActions": "${nodeName} Handlinger",
 	"selectContents": "Velg innhold",
@@ -9,5 +8,4 @@ define(
 	"moveStart": "Flytt markør til start",
 	"moveEnd": "Flytt markør til slutt"
 })
-//end v1.x content
 );

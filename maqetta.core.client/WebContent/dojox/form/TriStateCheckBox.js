@@ -1,27 +1,23 @@
 define([
-	"dojo/_base/kernel",
-	"dojo/_base/declare",
-	"dojo/_base/array",
-	"dojo/_base/event",
-	"dojo/query",
-	"dojo/dom-attr",
+	"dojo/_base/kernel", // kernel.deprecated
+	"dojo/_base/declare", // declare
+	"dojo/_base/array", // array.indexOf
+	"dojo/_base/lang", // lang.isArray, lang.isString
+	"dojo/_base/event", // event.stop
+	"dojo/query", // query()
+	"dojo/dom-attr", // domAttr.set
 	"dojo/text!./resources/TriStateCheckBox.html",
-	"dijit/form/ToggleButton"
-], function(kernel, declare, array, event, query, domAttr, template, ToggleButton){
-//	module:
-//		dojox/form/TriStateCheckBox
-//	summary:
-//		Checkbox with three states
-//
+	"dijit/form/Button",
+	"dijit/form/_ToggleButtonMixin",
+	"dojo/NodeList-dom" // NodeList.addClass/removeClass
+], function(kernel, declare, array, lang, event, query, domAttr, template, Button, _ToggleButtonMixin){
 
-	/*=====
-		ToggleButton = dijit.form.ToggleButton;
-	=====*/
-return declare("dojox.form.TriStateCheckBox", ToggleButton,
-	{
-		// summary:
-		//		Checkbox with three states
+	// module:
+	//		dojox/form/TriStateCheckBox
+	// summary:
+	//		Checkbox with three states
 
+	return declare("dojox.form.TriStateCheckBox", [Button, _ToggleButtonMixin], {
 		templateString: template,
 
 		baseClass: "dojoxTriStateCheckBox",
@@ -31,6 +27,8 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 		//		Overrides `dijit.form.Button.type`.  Users should not change this value.
 		type: "checkbox",
 
+
+		states: "",
 		/*=====
 		// states: Array
 		//		States of TriStateCheckBox.
@@ -38,22 +36,24 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 		states: [false, true, "mixed"],
 		=====*/
 
+		_stateLabels: null,
 		/*=====
 		// _stateLabels: Object
 		//		These characters are used to replace the image to show
 		//		current state of TriStateCheckBox in high contrast mode.
 		_stateLabels: {
-				"False": '&#63219',
+				"False": '&#9633',
 				"True": '&#8730;',
-				"Mixed": '&#8801'
+				"Mixed": '&#9632'
 		},
 		=====*/
 
+		stateValues: null,
 		/*=====
 		// stateValues: Object
 		//		The values of the TriStateCheckBox in corresponding states.
 		stateValues:	{
-				"False": "off",
+				"False": false,
 				"True": "on",
 				"Mixed": "mixed"
 		},
@@ -74,27 +74,48 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 		//		Similar to disabled except readOnly form values are submitted.
 		readOnly: false,
 
+		// checked: Boolean|String
+		//		Current check state of the check box.
+		checked: "",
+		
 		constructor: function(){
 			// summary:
 			//		Runs on widget initialization to setup arrays etc.
 			// tags:
 			//		private
-			this.states = [false, true, "mixed"];
+			this.states = [false, "mixed", true];
+			this.checked = false;
 			this._stateLabels = {
-				"False": '&#63219',
+				"False": '&#9633;',
 				"True": '&#8730;',
-				"Mixed": '&#8801'
+				"Mixed": '&#9632;'
 			};
-			this.stateValues = {
-				"False": "off",
-				"True": "on",
+			this.stateValues = { 
+				"False": false,
+				"True": "on", 
 				"Mixed": "mixed"
 			};
 		},
-
+		
+		_fillContent: function(/*DomNode*/ source){
+			// Override Button::_fillContent() since it doesn't make sense for CheckBox,
+			// since CheckBox doesn't even have a container
+		},
+		
+		postCreate: function(){
+			domAttr.set(this.stateLabelNode, 'innerHTML', this._stateLabels[this._stateType]);
+			this.inherited(arguments);
+		},
+		
+		startup: function(){
+			this.set("checked", this.params.checked || this.states[this._currentState]);
+			domAttr.set(this.stateLabelNode, 'innerHTML', this._stateLabels[this._stateType]);
+			this.inherited(arguments);
+		},
+		
 		// Override behavior from Button, since we don't have an iconNode
 		_setIconClassAttr: null,
-
+		
 		_setCheckedAttr: function(/*String|Boolean*/ checked, /*Boolean?*/ priorityChange){
 			// summary:
 			//		Handler for checked = attribute to constructor, and also calls to
@@ -104,14 +125,29 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 			// description:
 			//		Controls the state of the TriStateCheckBox. Set this.checked,
 			//		this._currentState, value attribute of the <input type=checkbox>
-			//		according to the value of 'checked'.
-			this._set("checked", checked);
-			this._currentState = array.indexOf(this.states, checked);
-			this._stateType = this._getStateType(checked);
-			domAttr.set(this.focusNode || this.domNode, "checked", checked);
-			domAttr.set(this.focusNode, "value", this.stateValues[this._stateType]);
-			(this.focusNode || this.domNode).setAttribute("aria-checked", checked);
-			this._handleOnChange(checked, priorityChange);
+			//		according to the value of 'checked'.			
+			var stateIndex = array.indexOf(this.states, checked), changed = false;
+			if(stateIndex >= 0){
+				this._currentState = stateIndex;
+				if(checked != this.get("checked")){
+					changed = true;
+				}
+				this._set("checked", checked);
+				this._stateType = this._getStateType(checked);
+				if(checked == "mixed"){
+					domAttr.set(this.focusNode || this.domNode, "checked", true);
+				}else{
+					domAttr.set(this.focusNode || this.domNode, "checked", checked);
+				}
+				domAttr.set(this.focusNode, "value", this.stateValues[this._stateType]);
+				domAttr.set(this.stateLabelNode, 'innerHTML', this._stateLabels[this._stateType]);
+				(this.focusNode || this.domNode).setAttribute("aria-checked", checked);
+				if(changed){
+					this._handleOnChange(checked, priorityChange);
+				}
+			}else{
+				console.warn("Invalid state!");
+			}
 		},
 
 		setChecked: function(/*String|Boolean*/ checked){
@@ -121,6 +157,23 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 			this.set('checked', checked);
 		},
 
+		_setStatesAttr: function(/*Array|String*/ states){
+			if(lang.isArray(states)){
+				this._set("states", states);
+			}else if(lang.isString(states)){
+				var map = {
+					"true": true,
+					"false": false,
+					"mixed": "mixed"
+				};
+				states = states.split(/\s*,\s*/);
+				for(var i = 0; i < states.length; i++){
+					states[i] = map[states[i]] !== undefined ? map[states[i]] : false;
+				}
+				this._set("states", states);
+			}
+		},
+		
 		_setReadOnlyAttr: function(/*Boolean*/ value){
 			this._set("readOnly", value);
 			domAttr.set(this.focusNode, "readOnly", value);
@@ -165,7 +218,7 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 			// description:
 			//		Change the value of the TriStateCheckBox in 'mixed' and true states.
 			this.stateValues["True"] = newValues[0] ? newValues[0] : this.stateValues["True"];
-			this.stateValues["Mixed"] = newValues[1] ? newValues[1] : this.stateValues["False"];
+			this.stateValues["Mixed"] = newValues[1] ? newValues[1] : this.stateValues["Mixed"];
 		},
 
 		_getValueAttr: function(){
@@ -176,24 +229,15 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 			return this.stateValues[this._stateType];
 		},
 
-		startup: function(){
-			this.set("checked", this.params.checked || this.states[this._currentState]);
-			domAttr.set(this.stateLabelNode, 'innerHTML', this._stateLabels[this._stateType]);
-			this.inherited(arguments);
-		},
-
-		 _fillContent: function(/*DomNode*/ source){
-			// Override Button::_fillContent() since it doesn't make sense for CheckBox,
-			// since CheckBox doesn't even have a container
-		},
-
 		reset: function(){
 			this._hasBeenBlurred = false;
-			this.stateValues = {
-				"False" : "off",
+			this.set("states", this.params.states || [false, "mixed", true]);
+			this.stateValues = this.params.stateValues || {
+				"False" : false,
 				"True" : "on",
 				"Mixed" : "mixed"
 			};
+			this.set("values", this.params.values || []);
 			this.set('checked', this.params.checked || this.states[0]);
 		},
 
@@ -208,6 +252,7 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 			if(this.id){
 				query("label[for='"+this.id+"']").removeClass("dijitFocusedLabel");
 			}
+			this.mouseFocus = false;
 			this.inherited(arguments);
 		},
 
@@ -219,25 +264,47 @@ return declare("dojox.form.TriStateCheckBox", ToggleButton,
 				event.stop(e);
 				return false;
 			}
-			if(this._currentState >= this.states.length - 1){
-				this._currentState = 0;
-			}else{
-				this._currentState++;
-			}
-			this.set("checked", this.states[this._currentState]);
-			domAttr.set(this.stateLabelNode, 'innerHTML', this._stateLabels[this._stateType]);
+			this.click();
 			return this.onClick(e); // user click actions
 		},
 
+		click: function(){
+			// summary:
+			//		Emulate a click on the check box, but will not trigger the 
+			//		onClick method.
+			if(this._currentState >= this.states.length - 1){
+				this._currentState = 0;
+			}else{
+				if(this._currentState == -1){
+					this.fixState();
+				}else{
+					this._currentState++;
+				}
+			}
+			var oldState = this._currentState;
+			this.set("checked", this.states[this._currentState]);
+			this._currentState = oldState;
+			domAttr.set(this.stateLabelNode, 'innerHTML', this._stateLabels[this._stateType]);
+		},
+		
+		fixState: function(){
+			// summary:
+			//		Fix _currentState property if it's out of bound.
+			this._currentState = this.states.length - 1;
+		},
+		
 		_getStateType: function(/*String|Boolean*/ state){
-			//	summary:
+			// summary:
 			//		Internal function to return the type of a certain state
 			//		false: False
 			//		true: True
 			//		"mixed": Mixed
 			return state ? (state == "mixed" ? "Mixed" : "True") : "False";
+		},
+		
+		_onMouseDown: function(){
+			this.mouseFocus = true;
 		}
-	}
-);
+	});
 
 });

@@ -4,7 +4,7 @@ define({ root:
 // local representation of all CSS3 named colors, companion to dojo.colors.  To be used where descriptive information
 // is required for each color, such as a palette widget, and not for specifying color programatically.
 
-//Note: due to the SVG 1.0 spec additions, some of these are alternate spellings for the same color e.g. gray vs. gray.
+//Note: due to the SVG 1.0 spec additions, some of these are alternate spellings for the same color (e.g. gray / grey).
 //TODO: should we be using unique rgb values as keys instead and avoid these duplicates, or rely on the caller to do the reverse mapping?
 aliceblue: "alice blue",
 antiquewhite: "antique white",
@@ -176,6 +176,7 @@ yellowgreen: "yellow green"
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -185,5 +186,6 @@ yellowgreen: "yellow green"
 "da": true,
 "cs": true,
 "ca": true,
+"az": true,
 "ar": true
 });

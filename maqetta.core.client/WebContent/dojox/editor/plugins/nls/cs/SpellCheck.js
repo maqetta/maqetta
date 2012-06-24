@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Dávková kontrola pravopisu",
 	unfound: "Nenalezeno",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Přeskočit všechny podobné výskyty",
 	iMsg: "Žádné návrhy pravopisu"
 })
-
-//end v1.x content
 );

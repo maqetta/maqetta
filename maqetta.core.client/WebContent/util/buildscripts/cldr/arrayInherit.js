@@ -35,7 +35,7 @@
  *    })
  */
 
-djConfig={baseUrl: "../../../dojo/"};
+djConfig={baseUrl: "../../../dojo/", paths: {"dojo/_base/xhr": "../util/buildscripts/cldr/xhr"}};
 
 load("../../../dojo/dojo.js");
 load("../jslib/logger.js");

@@ -6,18 +6,15 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-style",
 	"dojo/window",
+	"dojo/touch",
 	"dijit/form/_AutoCompleterMixin",
 	"dijit/popup",
 	"./_ComboBoxMenu",
 	"./TextBox",
 	"./sniff"
-], function(kernel, declare, lang, win, domGeometry, domStyle, windowUtils, AutoCompleterMixin, popup, ComboBoxMenu, TextBox, has){
+], function(kernel, declare, lang, win, domGeometry, domStyle, windowUtils, touch, AutoCompleterMixin, popup, ComboBoxMenu, TextBox, has){
 	kernel.experimental("dojox.mobile.ComboBox"); // should be using a more native search-type UI
 
-	/*=====
-		TextBox = dojox.mobile.TextBox;
-		AutoCompleterMixin = dijit.form._AutoCompleterMixin;
-	=====*/
 	return declare("dojox.mobile.ComboBox", [TextBox, AutoCompleterMixin], {
 		// summary:
 		//		A non-templated auto-completing text box widget
@@ -62,9 +59,9 @@ define([
 		_throttleOpenClose: function(){
 			// prevent open/close in rapid succession
 			if(this._throttleHandler){
-				clearTimeout(this._throttleHandler);
+				this._throttleHandler.remove();
 			}
-			this._throttleHandler = setTimeout(lang.hitch(this, function(){ this._throttleHandler = null; }), 500);
+			this._throttleHandler = this.defer(function(){ this._throttleHandler = null; }, 500);
 		},
 
 		_onFocus: function(){
@@ -90,11 +87,12 @@ define([
 			//		protected
 
 			this._throttleOpenClose();
-			if(this.startHandler){
+			if(this.endHandler){
 				this.disconnect(this.startHandler);
-				this.startHandler = null;
-				if(this.moveHandler){ this.disconnect(this.moveHandler); }
-				if(this.endHandler){ this.disconnect(this.endHandler); }
+				this.disconnect(this.endHandler);
+				this.disconnect(this.moveHandler);
+				clearInterval(this.repositionTimer);
+				this.repositionTimer = this.endHandler = null;
 			}
 			this.inherited(arguments);
 			popup.close(this.dropDown);
@@ -116,6 +114,9 @@ define([
 				aroundNode = this.domNode,
 				self = this;
 
+			if(has('touch')){
+				win.global.scrollBy(0, domGeometry.position(aroundNode, false).y); // don't call scrollIntoView since it messes up ScrollableView
+			}
 
 			// TODO: isn't maxHeight dependent on the return value from popup.open(),
 			// ie, dependent on how much space is available (BK)
@@ -191,23 +192,83 @@ define([
 			this._opened=true;
 
 			if(wasClosed){
-				if(retVal.aroundCorner.charAt(0) == 'B'){ // is popup below?
-					this.domNode.scrollIntoView(true); // scroll to top
-				}
-				this.startHandler = this.connect(win.doc.documentElement, has('touch') ? "ontouchstart" : "onmousedown",
-					lang.hitch(this, function(){
-						var isMove = false;
-						this.moveHandler = this.connect(win.doc.documentElement, has('touch') ? "ontouchmove" : "onmousemove", function(){ isMove = true; });
-						this.endHandler = this.connect(win.doc.documentElement, has('touch') ? "ontouchend" : "onmouseup", function(){ if(!isMove){ this.closeDropDown(); } });
-					})
+				var	isGesture = false,
+					skipReposition = false,
+					active = false,
+					wrapper = dropDown.domNode.parentNode,
+					aroundNodePos = domGeometry.position(aroundNode, false),
+					popupPos = domGeometry.position(wrapper, false),
+					deltaX = popupPos.x - aroundNodePos.x,
+					deltaY = popupPos.y - aroundNodePos.y,
+					startX = -1, startY = -1;
+
+				// touchstart isn't really needed since touchmove implies touchstart, but
+				// mousedown is needed since mousemove doesn't know if the left button is down or not
+				this.startHandler = this.connect(win.doc.documentElement, touch.press,
+					function(e){
+						skipReposition = true;
+						active = true;
+						isGesture = false;
+						startX = e.clientX;
+						startY = e.clientY;
+					}
 				);
+				this.moveHandler = this.connect(win.doc.documentElement, touch.move,
+					function(e){
+						skipReposition = true;
+						if(e.touches){
+							active = isGesture = true; // touchmove implies touchstart
+						}else if(active && (e.clientX != startX || e.clientY != startY)){
+							isGesture = true;
+						}
+					}
+				);
+				this.clickHandler = this.connect(dropDown.domNode, "onclick",
+					function(){
+						skipReposition = true;
+						active = isGesture = false; // click implies no gesture movement
+					}
+				);
+				this.endHandler = this.connect(win.doc.documentElement, "onmouseup",//touch.release,
+					function(){
+						this.defer(function(){ // allow onclick to go first
+							skipReposition = true;
+							if(!isGesture && active){ // if click without move, then close dropdown
+								this.closeDropDown();
+							}
+							active = false;
+						});
+					}
+				);
+				this.repositionTimer = setInterval(lang.hitch(this, function(){
+					if(skipReposition){ // don't reposition if busy
+						skipReposition = false;
+						return;
+					}
+					var	currentAroundNodePos = domGeometry.position(aroundNode, false),
+						currentPopupPos = domGeometry.position(wrapper, false),
+						currentDeltaX = currentPopupPos.x - currentAroundNodePos.x,
+						currentDeltaY = currentPopupPos.y - currentAroundNodePos.y;
+					// if the popup is no longer placed correctly, relocate it
+					if(Math.abs(currentDeltaX - deltaX) >= 1 || Math.abs(currentDeltaY - deltaY) >= 1){ // Firefox plays with partial pixels
+						domStyle.set(wrapper, { left: parseInt(domStyle.get(wrapper, "left")) + deltaX - currentDeltaX + 'px', top: parseInt(domStyle.get(wrapper, "top")) + deltaY - currentDeltaY + 'px' });
+					}
+				}), 50); // yield a short time to allow for consolidation for better CPU throughput
 			}
+
 			return retVal;
 		},
 
 		postCreate: function(){
 			this.inherited(arguments);
 			this.connect(this.domNode, "onclick", "_onClick");
+		},
+
+		destroy: function(){
+			if(this.repositionTimer){
+				clearInterval(this.repositionTimer);
+			}
+			this.inherited(arguments);
 		},
 
 		_onClick: function(/*Event*/ e){

@@ -1,5 +1,5 @@
 define([
-	".",
+	"./main",
 	"./_base",
 	"dojo/parser",
 	"./_Widget",

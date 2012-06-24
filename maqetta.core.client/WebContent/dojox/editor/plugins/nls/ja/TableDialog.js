@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "テーブルの挿入",
 	modifyTableTitle: "テーブルの変更",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "テーブル幅:",
 	backgroundColor: "背景色:",
 	borderColor: "ボーダーの色:",
-	borderThickness: "ボーダーの太さ",
+	borderThickness: "ボーダーの太さ:",
 	percent: "パーセント",
 	pixels: "ピクセル",
 	"default": "デフォルト",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "設定", // translated elsewhere?
 	buttonInsert: "挿入",
 	buttonCancel: "キャンセル",
-
 	selectTableLabel: "テーブルの選択",
 	insertTableRowBeforeLabel: "前に行を追加",
 	insertTableRowAfterLabel: "後ろに行を追加",
@@ -30,6 +28,4 @@ define(
 	deleteTableRowLabel: "行の削除",
 	deleteTableColumnLabel: "列の削除"
 })
-	
-//end v1.x content
 );

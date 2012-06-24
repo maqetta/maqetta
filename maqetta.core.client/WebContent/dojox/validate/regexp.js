@@ -11,7 +11,7 @@ dxregexp = dojox.validate.regexp = {
 		//  Supports 5 formats for IPv4: dotted decimal, dotted hex, dotted octal, decimal and hexadecimal.
 		//  Supports 2 formats for Ipv6.
 		//
-		// flags  An object.  All flags are boolean with default = true.
+		// flags: An object.  All flags are boolean with default = true.
 		//    flags.allowDottedDecimal  Example, 207.142.131.235.  No zero padding.
 		//    flags.allowDottedHex  Example, 0x18.0x11.0x9b.0x28.  Case insensitive.  Zero padding allowed.
 		//    flags.allowDottedOctal  Example, 0030.0021.0233.0050.  Zero padding allowed.
@@ -19,6 +19,7 @@ dxregexp = dojox.validate.regexp = {
 		//    flags.allowHex  Example, 0xCF8E83EB.  Hexadecimal number between 0x0-0xFFFFFFFF.
 		//      Case insensitive.  Zero padding allowed.
 		//    flags.allowIPv6   IPv6 address written as eight groups of four hexadecimal digits.
+		
 		//	FIXME: ipv6 can be written multiple ways IIRC
 		//    flags.allowHybrid   IPv6 address written as six groups of four hexadecimal digits
 		//      followed by the usual 4 dotted decimal digit notation of IPv4. x:x:x:x:x:x:d.d.d.d
@@ -144,7 +145,7 @@ dxregexp = dojox.validate.regexp = {
 
 		// summary: Builds a regular expression that matches an email address
 		//
-		//flags: An object
+		// flags: An object
 		//    flags.allowCruft  Allow address like <mailto:foo@yahoo.com>.  Default is false.
 		//    flags in regexp.host can be applied.
 		//    flags in regexp.ipAddress can be applied.
@@ -247,7 +248,7 @@ dxregexp = dojox.validate.regexp = {
 		state: function(/*Object?*/flags){
 			// summary: A regular expression to match US state and territory abbreviations
 			//
-			// flags  An object.
+			// flags: An object.
 			//    flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
 			//    flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
 

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "خصائص الوصلة",
 	insertImageTitle: "خصائص الصورة",
@@ -12,6 +11,4 @@ define(
 	topWindow: "النافذة العلوية",
 	newWindow: "‏نافذة جديدة‏"
 })
-
-//end v1.x content
 );

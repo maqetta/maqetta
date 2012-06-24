@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Guardar",
 	"saveSettingLabelOn": "Definir intervalo de gravação automática...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "Guardado às ${0}",
 	"saveMessageFail": "Falha ao guardar às ${0}"
 })
-
-//end v1.x content
 );

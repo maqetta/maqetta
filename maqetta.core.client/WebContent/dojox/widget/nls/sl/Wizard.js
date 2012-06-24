@@ -1,9 +1,7 @@
 define(
-//begin v1.x content
 ({
 next: "Naprej",
-previous: "Nazaj",
+previous: "Prejšnji",
 done: "Opravljeno"
 })
-//end v1.x content
 );

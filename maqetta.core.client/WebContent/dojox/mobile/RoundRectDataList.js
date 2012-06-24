@@ -4,11 +4,6 @@ define([
 	"./_DataListMixin"
 ], function(declare, RoundRectList, DataListMixin){
 
-/*=====
-	var RoundRectList = dojox.mobile.RoundRectList;
-	var DataListMixin = dojox.mobile._DataListMixin;
-=====*/
-
 	// module:
 	//		dojox/mobile/RoundRectDataList
 	// summary:

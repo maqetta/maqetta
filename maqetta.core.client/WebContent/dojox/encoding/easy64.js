@@ -1,9 +1,5 @@
 define(["dojo/_base/lang"], function(lang) {
 	var easy64 = lang.getObject("dojox.encoding.easy64", true);
-	/*=====
-		easy64 = dojox.encoding.easy64;
-	=====*/
-
 	var c = function(input, length, result){
 		for(var i = 0; i < length; i += 3){
 			result.push(
@@ -16,8 +12,10 @@ define(["dojo/_base/lang"], function(lang) {
 	};
 
 	easy64.encode = function(input){
-		// summary: encodes input data in easy64 string
-		// input: Array: an array of numbers (0-255) to encode
+		// summary:
+		//		encodes input data in easy64 string
+		// input: Array
+		//		an array of numbers (0-255) to encode
 		var result = [], reminder = input.length % 3, length = input.length - reminder;
 		c(input, length, result);
 		if(reminder){
@@ -30,8 +28,10 @@ define(["dojo/_base/lang"], function(lang) {
 	};
 
 	easy64.decode = function(input){
-		// summary: decodes the input string back to array of numbers
-		// input: String: the input string to decode
+		// summary:
+		//		decodes the input string back to array of numbers
+		// input: String
+		//		the input string to decode
 		var n = input.length, r = [], b = [0, 0, 0, 0], i, j, d;
 		for(i = 0; i < n; i += 4){
 			for(j = 0; j < 4; ++j){ b[j] = input.charCodeAt(i + j) - 33; }

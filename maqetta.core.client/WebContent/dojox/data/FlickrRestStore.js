@@ -1,8 +1,6 @@
 define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "dojo/io/script", "dojox/data/FlickrStore", "dojo/_base/connect"], 
   function(lang, declare, array, scriptIO, FlickrStore, connect) {
 
-/*===== var FlickrStore = dojox.data.FlickrStore; =====*/
-
 var FlickrRestStore = declare("dojox.data.FlickrRestStore",
 	FlickrStore, {
 	constructor: function(/*Object*/args){
@@ -78,12 +76,13 @@ var FlickrRestStore = declare("dojox.data.FlickrRestStore",
 	_fetchItems: function(	/*Object*/ request,
 							/*Function*/ fetchHandler,
 							/*Function*/ errorHandler){
-		//	summary: Fetch flickr items that match to a query
-		//	request:
+		// summary:
+		//		Fetch flickr items that match to a query
+		// request:
 		//		A request object
-		//	fetchHandler:
+		// fetchHandler:
 		//		A function to call for fetched items
-		//	errorHandler:
+		// errorHandler:
 		//		A function to call on error
 		var query = {};
 		if(!request.query){
@@ -376,7 +375,7 @@ var FlickrRestStore = declare("dojox.data.FlickrRestStore",
 	},
 
 	getAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getAttributes()
 		return [
 			"title", "author", "imageUrl", "imageUrlSmall", "imageUrlMedium",
@@ -385,7 +384,7 @@ var FlickrRestStore = declare("dojox.data.FlickrRestStore",
 	},
 
 	getValues: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -420,7 +419,8 @@ var FlickrRestStore = declare("dojox.data.FlickrRestStore",
 	},
 
 	_processFlickrData: function(/* Object */data, /* Object */request, /* String */ cacheKey){
-		// summary: Processes the raw data from Flickr and updates the internal cache.
+		// summary:
+		//		Processes the raw data from Flickr and updates the internal cache.
 		// data:
 		//		Data returned from Flickr
 		// request:

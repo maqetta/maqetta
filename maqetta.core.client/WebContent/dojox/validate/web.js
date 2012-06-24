@@ -13,8 +13,8 @@ validate.isIpAddress = function(/*String*/value, /*Object?*/flags) {
 	//  Supports 5 formats for IPv4: dotted decimal, dotted hex, dotted octal, decimal and hexadecimal.
 	//  Supports 2 formats for Ipv6.
 	//
-	// value  A string.
-	// flags  An object.  All flags are boolean with default = true.
+	// value: A string.
+	// flags: An object.  All flags are boolean with default = true.
 	//    flags.allowDottedDecimal  Example, 207.142.131.235.  No zero padding.
 	//    flags.allowDottedHex  Example, 0x18.0x11.0x9b.0x28.  Case insensitive.  Zero padding allowed.
 	//    flags.allowDottedOctal  Example, 0030.0021.0233.0050.  Zero padding allowed.
@@ -61,8 +61,8 @@ validate.isEmailAddress = function(/*String*/value, /*Object?*/flags) {
 validate.isEmailAddressList = function(/*String*/value, /*Object?*/flags) {
 	// summary: Checks if a string could be a valid email address list.
 	//
-	// value  A string.
-	// flags  An object.
+	// value: A string.
+	// flags: An object.
 	//    flags.listSeparator  The character used to separate email addresses.  Default is ";", ",", "\n" or " ".
 	//    flags in regexp.emailAddress can be applied.
 	//    flags in regexp.host can be applied.

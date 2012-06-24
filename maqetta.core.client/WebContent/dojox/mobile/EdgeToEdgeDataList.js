@@ -4,11 +4,6 @@ define([
 	"./_DataListMixin"
 ], function(declare, EdgeToEdgeList, DataListMixin){
 
-/*=====
-	var EdgeToEdgeList = dojox.mobile.EdgeToEdgeList;
-	var DataListMixin = dojox.mobile._DataListMixin;
-=====*/
-
 	// module:
 	//		dojox/mobile/EdgeToEdgeDataList
 	// summary:

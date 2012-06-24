@@ -1,10 +1,8 @@
 define(
-//begin v1.x content
 ({
 	"clearFilterDialogTitle": "Limpar Filtro",
-	"filterDefDialogTitle": "Filtrar",
+	"filterDefDialogTitle": "Filtro",
 	"ruleTitleTemplate": "Regra ${0}",
-	
 	"conditionEqual": "igual",
 	"conditionNotEqual": "não é igual",
 	"conditionLess": "é menor que",
@@ -23,69 +21,55 @@ define(
 	"conditionAfter": "depois",
 	"conditionRange": "intervalo",
 	"conditionIsEmpty": "está vazio",
-	
 	"all": "todos",
-	"any": "qualquer um",
+	"any": "qualquer",
 	"relationAll": "todas as regras",
 	"waiRelAll": "Corresponder a todas as seguintes regras:",
 	"relationAny": "qualquer regra",
 	"waiRelAny": "Corresponder a qualquer uma das seguintes regras:",
-	"relationMsgFront": "Corresponder",
+	"relationMsgFront": "Corresponder:",
 	"relationMsgTail": "",
 	"and": "e",
 	"or": "ou",
-	
 	"addRuleButton": "Incluir Regra",
 	"waiAddRuleButton": "Incluir uma nova regra",
 	"removeRuleButton": "Remover Regra",
 	"waiRemoveRuleButtonTemplate": "Remover regra ${0}",
-	
 	"cancelButton": "Cancelar",
 	"waiCancelButton": "Cancelar este diálogo",
 	"clearButton": "Limpar",
 	"waiClearButton": "Limpar o filtro",
-	"filterButton": "Filtrar",
+	"filterButton": "Filtro",
 	"waiFilterButton": "Enviar o filtro",
-	
 	"columnSelectLabel": "Coluna",
 	"waiColumnSelectTemplate": "Coluna para a regra ${0}",
 	"conditionSelectLabel": "Condição",
 	"waiConditionSelectTemplate": "Condição para a regra ${0}",
 	"valueBoxLabel": "Valor",
 	"waiValueBoxTemplate": "Insira o valor para filtragem da regra ${0}",
-	
-	"rangeTo": "a",
+	"rangeTo": "para",
 	"rangeTemplate": "de ${0} a ${1}",
-	
 	"statusTipHeaderColumn": "Coluna",
 	"statusTipHeaderCondition": "Regras",
 	"statusTipTitle": "Barra de Filtragem",
 	"statusTipMsg": "Clique na barra de filtragem aqui para filtrar os valores de ${0}.",
 	"anycolumn": "qualquer coluna",
 	"statusTipTitleNoFilter": "Barra de Filtragem",
-	"statusTipTitleHasFilter": "Filtrar",
-	"statusTipRelAny": "Quaisquer Regras.",
-	"statusTipRelAll": "Todas as Regras.",
-	
+	"statusTipTitleHasFilter": "Filtro",
+	"statusTipRelAny": "Corresponder a quaisquer regras.",
+	"statusTipRelAll": "Corresponder a todas as regras.",
 	"defaultItemsName": "itens",
 	"filterBarMsgHasFilterTemplate": "${0} de ${1} ${2} mostrados.",
 	"filterBarMsgNoFilterTemplate": "Nenhum filtro aplicado",
-	
 	"filterBarDefButton": "Definir filtro",
 	"waiFilterBarDefButton": "Filtrar a tabela",
 	"a11yFilterBarDefButton": "Filtrar...",
 	"filterBarClearButton": "Limpar filtro",
 	"waiFilterBarClearButton": "Limpar o filtro",
 	"closeFilterBarBtn": "Fechar a barra de filtragem",
-	
 	"clearFilterMsg": "Isso removerá o filtro e mostrará todos os registros disponíveis.",
 	"anyColumnOption": "Qualquer Coluna",
-	
-	"trueLabel": "Verdadeiro",
+	"trueLabel": "True",
 	"falseLabel": "Falso"
 })
-//end v1.x content
 );
-
-
-

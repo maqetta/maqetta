@@ -4,9 +4,6 @@ define([
 	"./TextBox"
 ], function(declare, domConstruct, TextBox){
 
-	/*=====
-		TextBox = dojox.mobile.TextBox;
-	=====*/
 	return declare("dojox.mobile.TextArea",TextBox, {
 		// summary:
 		//		Non-templated TEXTAREA widget.

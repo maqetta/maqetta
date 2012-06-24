@@ -1,26 +1,24 @@
 define(
-//begin v1.x content
 ({
-	smiley: "Infoga känslolägesikon",
-	emoticonSmile: "ler",
-	emoticonLaughing: "skrattar",
-	emoticonWink: "blinkar med ena ögat",
-	emoticonGrin: "ler stort",
-	emoticonCool: "cool",
+	smiley: "Infoga smilis",
+	emoticonSmile: "leende",
+	emoticonLaughing: "skratt",
+	emoticonWink: "blinkning",
+	emoticonGrin: "flin",
+	emoticonCool: "sval",
 	emoticonAngry: "arg",
-	emoticonHalf: "halvt leende",
-	emoticonEyebrow: "lyfter på ena ögonbrynet",
-	emoticonFrown: "rynkar pannan",
+	emoticonHalf: "halv",
+	emoticonEyebrow: "ögonbryn",
+	emoticonFrown: "sur",
 	emoticonShy: "blyg",
 	emoticonGoofy: "knasig",
 	emoticonOops: "hoppsan",
-	emoticonTongue: "räcker ut tungan",
+	emoticonTongue: "tunga",
 	emoticonIdea: "idé",
 	emoticonYes: "ja",
 	emoticonNo: "nej",
 	emoticonAngel: "ängel",
-	emoticonCrying: "gråter"
+	emoticonCrying: "gråt",
+	emoticonHappy: "glad"
 })
-
-//end v1.x content
 );

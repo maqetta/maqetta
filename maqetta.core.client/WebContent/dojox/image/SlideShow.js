@@ -52,7 +52,7 @@ dojo.declare("dojox.image.SlideShow",
 	hasNav: true,
 
 	// images: Array
-	// Contains the DOM nodes that individual images are stored in when loaded or loading.
+	//	Contains the DOM nodes that individual images are stored in when loaded or loading.
 	images: [],
 	
 	// pageSize: Number
@@ -69,7 +69,7 @@ dojo.declare("dojox.image.SlideShow",
 	autoStart: false,
 	
 	// fixedHeight: Boolean
-	// If true, the widget does not resize itself to fix the displayed image.
+	//	If true, the widget does not resize itself to fix the displayed image.
 	fixedHeight: false,
 
 	// imageStore: Object
@@ -93,7 +93,7 @@ dojo.declare("dojox.image.SlideShow",
 	titleAttr: "title",
 
 	// slideshowInterval: Number
-	// Time, in seconds, between image transitions during a slideshow.
+	//	Time, in seconds, between image transitions during a slideshow.
 	slideshowInterval: 3,
 	
 	templateString: dojo.cache("dojox.image", "resources/SlideShow.html"),

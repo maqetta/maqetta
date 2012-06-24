@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -102,7 +101,6 @@ define(
 	yacute:"Latin small letter y with acute",
 	thorn:"Latin small letter thorn",
 	yuml:"Latin small letter y with diaeresis",
-
 // Greek Characters and Symbols
 	fnof:"Latin small f with hook\nfunction\nflorin",
 	Alpha:"Greek capital letter alpha",
@@ -256,5 +254,4 @@ define(
 	rsaquo:"single right-pointing angle quotation mark",
 	euro:"euro sign"
 })
-//end v1.x content
 );

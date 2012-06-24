@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Сохранить",
 	"saveSettingLabelOn": "Задать интервал автосохранения...",
@@ -9,10 +8,8 @@ define(
 	"saveSettingdialogParamName": "Интервал автосохранения",
 	"saveSettingdialogParamLabel": "мин",
 	"saveSettingdialogButtonOk": "Задать интервал",
-	"saveSettingdialogButtonCancel": "Отменить",
+	"saveSettingdialogButtonCancel": "Отмена",
 	"saveMessageSuccess": "Сохранено ${0}",
 	"saveMessageFail": "Не удалось сохранить ${0}"
 })
-
-//end v1.x content
 );

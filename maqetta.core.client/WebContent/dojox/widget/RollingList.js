@@ -853,7 +853,7 @@ dojo.declare("dojox.widget.RollingList",
 		
 		var setFromChain = dojo.hitch(this, function(/*item[]*/itemChain, /*integer*/idx){
 			// Summary: Sets the value of the widget at the given index in the chain - onchanges are not
-			// fired here
+			//  fired here
 			var set = itemChain[idx];
 			var child = this.getChildren()[idx];
 			var conn;
@@ -952,9 +952,10 @@ dojo.declare("dojox.widget.RollingList",
 		this._visibleItem = item;
 	},
 	
-	_getPaneForItem: function(/* item? */ item, /* dijit._Contained? */ parentPane, /* item[]? */ children){		// summary: gets the pane for the given item, and mixes in our needed parts
-		// Returns the pane for the given item (null if the root pane) - after mixing in
-		// its stuff.
+	_getPaneForItem: function(/* item? */ item, /* dijit._Contained? */ parentPane, /* item[]? */ children){
+		// summary: gets the pane for the given item, and mixes in our needed parts
+		//  Returns the pane for the given item (null if the root pane) - after mixing in
+		//  its stuff.
 		var ret = this.getPaneForItem(item, parentPane, children);
 		ret.store = this.store;
 		ret.parentWidget = this;

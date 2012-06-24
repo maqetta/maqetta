@@ -1,6 +1,10 @@
 /* mbl.widget.Heading */
 @import url("iphone-compat.css");
 
+.alertDialogBody { /* 1.8 */
+	-moz-border-radius: 10px;
+}
+
 .alertTitle {
 	background-image: url(compat/heading-bg.png);
 }

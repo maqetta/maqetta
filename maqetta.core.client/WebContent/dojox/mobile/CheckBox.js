@@ -6,10 +6,6 @@ define([
 ],
 	function(declare, domConstruct, CheckBoxMixin, ToggleButton){
 
-	/*=====
-		ToggleButton = dojox.mobile.ToggleButton;
-		CheckBoxMixin = dijit.form._CheckBoxMixin;
-	=====*/
 	return declare("dojox.mobile.CheckBox", [ToggleButton, CheckBoxMixin], {
 		// summary:
 		//		A non-templated checkbox widget that can be in two states (checked or not).

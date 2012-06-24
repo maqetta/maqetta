@@ -12,7 +12,7 @@ define([
 	"dijit/form/CheckBox",
 	"dojo/_base/declare"
 ], function(win, lang, array, connect, domAttr, domClass, manager, Widget, FormWidget, Button, CheckBox, declare){
-	// XXX: This class is loading a bunch of extra widgets just to perform isInstanceOf operations,
+	// TODO: This class is loading a bunch of extra widgets just to perform isInstanceOf operations,
 	// which is wasteful
 
 	var fm = lang.getObject("dojox.form.manager", true),
@@ -20,7 +20,7 @@ define([
 		aa = fm.actionAdapter = function(action){
 			// summary:
 			//		Adapter that automates application of actions to arrays.
-			// action: Function:
+			// action: Function
 			//		Function that takes three parameters: a name, an object
 			//		(usually node or widget), and a value. This action will
 			//		be applied to all elements of array.
@@ -38,7 +38,7 @@ define([
 		ia = fm.inspectorAdapter = function(inspector){
 			// summary:
 			//		Adapter that applies an inspector only to the first item of the array.
-			// inspector: Function:
+			// inspector: Function
 			//		Function that takes three parameters: a name, an object
 			//		(usually node or widget), and a value.
 			return function(name, elem, value){
@@ -133,7 +133,7 @@ define([
 		// summary:
 		//		Mixin to orchestrate dynamic forms.
 		// description:
-		//		This mixin provideas a foundation for an enhanced form
+		//		This mixin provides a foundation for an enhanced form
 		//		functionality: unified access to individual form elements,
 		//		unified "onchange" event processing, general event
 		//		processing, I/O orchestration, and common form-related
@@ -173,9 +173,9 @@ define([
 		registerWidget: function(widget){
 			// summary:
 			//		Register a widget with the form manager
-			// widget: String|Node|dijit.form._FormWidget:
+			// widget: String|Node|dijit.form._FormWidget
 			//		A widget, or its widgetId, or its DOM node
-			// returns: Object:
+			// returns: Object
 			//		Returns self
 			if(typeof widget == "string"){
 				widget = manager.byId(widget);
@@ -193,9 +193,9 @@ define([
 			// summary:
 			//		Removes the widget by name from internal tables unregistering
 			//		connected observers
-			// name: String:
+			// name: String
 			//		Name of the to unregister
-			// returns: Object:
+			// returns: Object
 			//		Returns self
 			if(name in this.formWidgets){
 				array.forEach(this.formWidgets[name].connections, this.disconnect, this);
@@ -207,9 +207,9 @@ define([
 		registerWidgetDescendants: function(widget){
 			// summary:
 			//		Register widget's descendants with the form manager
-			// widget: String|Node|dijit._Widget:
+			// widget: String|Node|dijit._Widget
 			//		A widget, or its widgetId, or its DOM node
-			// returns: Object:
+			// returns: Object
 			//		Returns self
 
 			// convert to widget, if required
@@ -237,9 +237,9 @@ define([
 		unregisterWidgetDescendants: function(widget){
 			// summary:
 			//		Unregister widget's descendants with the form manager
-			// widget: String|Node|dijit._Widget:
+			// widget: String|Node|dijit._Widget
 			//		A widget, or its widgetId, or its DOM node
-			// returns: Object:
+			// returns: Object
 			//		Returns self
 
 			// convert to widget, if required
@@ -259,7 +259,7 @@ define([
 				),
 				function(name){
 					if(name){
-						this.unregisterNode(name);
+						this.unregisterWidget(name);
 					}
 				},
 				this
@@ -275,11 +275,11 @@ define([
 		formWidgetValue: function(elem, value){
 			// summary:
 			//		Set or get a form widget by name.
-			// elem: String|Object|Array:
+			// elem: String|Object|Array
 			//		Form element's name, widget object, or array or radio widgets.
-			// value: Object?:
+			// value: Object?
 			//		Optional. The value to set.
-			// returns: Object:
+			// returns: Object
 			//		For a getter it returns the value, for a setter it returns
 			//		self. If the elem is not valid, null will be returned.
 
@@ -301,10 +301,10 @@ define([
 				if(isSetter){
 					array.forEach(elem, function(widget){
 						widget.set("checked", false, !this.watching);
-					});
+					}, this);
 					array.forEach(elem, function(widget){
 						widget.set("checked", widget.value === value, !this.watching);
-					});
+					}, this);
 					return this;	// self
 				}
 				// getter
@@ -342,11 +342,11 @@ define([
 		formPointValue: function(elem, value){
 			// summary:
 			//		Set or get a node context by name (using dojoAttachPoint).
-			// elem: String|Object|Array:
+			// elem: String|Object|Array
 			//		A node.
-			// value: Object?:
+			// value: Object?
 			//		Optional. The value to set.
-			// returns: Object:
+			// returns: Object
 			//		For a getter it returns the value, for a setter it returns
 			//		self. If the elem is not valid, null will be returned.
 
@@ -377,15 +377,15 @@ define([
 		inspectFormWidgets: function(inspector, state, defaultValue){
 			// summary:
 			//		Run an inspector function on controlled widgets returning a result object.
-			// inspector: Function:
+			// inspector: Function
 			//		A function to be called on a widget. Takes three arguments: a name, a widget object
 			//		or an array of widget objects, and a supplied value. Runs in the context of
 			//		the form manager. Returns a value that will be collected and returned as a state.
-			// state: Object?:
+			// state: Object?
 			//		Optional. If a name-value dictionary --- only listed names will be processed.
 			//		If an array, all names in the array will be processed with defaultValue.
 			//		If omitted or null, all widgets will be processed with defaultValue.
-			// defaultValue: Object?:
+			// defaultValue: Object?
 			//		Optional. The default state (true, if omitted).
 
 			var name, result = {};
@@ -416,15 +416,15 @@ define([
 		inspectAttachedPoints: function(inspector, state, defaultValue){
 			// summary:
 			//		Run an inspector function on "dojoAttachPoint" nodes returning a result object.
-			// inspector: Function:
+			// inspector: Function
 			//		A function to be called on a node. Takes three arguments: a name, a node or
 			//		an array of nodes, and a supplied value. Runs in the context of the form manager.
 			//		Returns a value that will be collected and returned as a state.
-			// state: Object?:
+			// state: Object?
 			//		Optional. If a name-value dictionary --- only listed names will be processed.
 			//		If an array, all names in the array will be processed with defaultValue.
 			//		If omitted or null, all attached point nodes will be processed with defaultValue.
-			// defaultValue: Object?:
+			// defaultValue: Object?
 			//		Optional. The default state (true, if omitted).
 
 			var name, result = {};
@@ -462,16 +462,16 @@ define([
 		inspect: function(inspector, state, defaultValue){
 			// summary:
 			//		Run an inspector function on controlled elements returning a result object.
-			// inspector: Function:
+			// inspector: Function
 			//		A function to be called on a widget, form element, and an attached node.
 			//		Takes three arguments: a name, a node (domNode in the case of widget) or
 			//		an array of such objects, and a supplied value. Runs in the context of
 			//		the form manager. Returns a value that will be collected and returned as a state.
-			// state: Object?:
+			// state: Object?
 			//		Optional. If a name-value dictionary --- only listed names will be processed.
 			//		If an array, all names in the array will be processed with defaultValue.
 			//		If omitted or null, all controlled elements will be processed with defaultValue.
-			// defaultValue: Object?:
+			// defaultValue: Object?
 			//		Optional. The default state (true, if omitted).
 
 			var result = this.inspectFormWidgets(function(name, widget, value){

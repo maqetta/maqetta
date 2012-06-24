@@ -1,19 +1,14 @@
 define([
 	"dojo/_base/declare",	// declare
-	"dojo/_base/kernel", // kernel.deprecated
+	"dojo/has",				// has("dijit-legacy-requires")
+	"dojo/_base/kernel",	// kernel.deprecated
 	"dojo/ready",
 	"../_Widget",
 	"../_CssStateMixin",
 	"../_TemplatedMixin",
 	"./_FormWidgetMixin"
-], function(declare, kernel, ready, _Widget, _CssStateMixin, _TemplatedMixin, _FormWidgetMixin){
+], function(declare, has, kernel, ready, _Widget, _CssStateMixin, _TemplatedMixin, _FormWidgetMixin){
 
-/*=====
-var _Widget = dijit._Widget;
-var _TemplatedMixin = dijit._TemplatedMixin;
-var _CssStateMixin = dijit._CssStateMixin;
-var _FormWidgetMixin = dijit.form._FormWidgetMixin;
-=====*/
 
 // module:
 //		dijit/form/_FormWidget
@@ -22,7 +17,7 @@ var _FormWidgetMixin = dijit.form._FormWidgetMixin;
 
 
 // Back compat w/1.6, remove for 2.0
-if(!kernel.isAsync){
+if(has("dijit-legacy-requires")){
 	ready(0, function(){
 		var requires = ["dijit/form/_FormValueWidget"];
 		require(requires);	// use indirection so modules not rolled into a build
@@ -67,7 +62,7 @@ return declare("dijit.form._FormWidget", [_Widget, _TemplatedMixin, _CssStateMix
 		// Unfortunately we can't use _setNameAttr to set the name due to IE limitations, see #8484, #8660.
 		// Regarding escaping, see heading "Attribute values" in
 		// http://www.w3.org/TR/REC-html40/appendix/notes.html#h-B.3.2
-		this.nameAttrSetting = this.name ? ('name="' + this.name.replace(/'/g, "&quot;") + '"') : '';
+		this.nameAttrSetting = this.name ? ('name="' + this.name.replace(/"/g, "&quot;") + '"') : '';
 		this.inherited(arguments);
 	},
 

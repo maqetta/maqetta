@@ -1,8 +1,8 @@
-dojo.provide("dojox.drawing.manager.Canvas");
+define(["dojo", "../util/oo", "dojox/gfx"], 
+function(dojo, oo, gfx){
 
-(function(){
-	
-	dojox.drawing.manager.Canvas = dojox.drawing.util.oo.declare(
+	//dojox.drawing.manager.Canvas = 
+	return oo.declare(
 		// summary:
 		//		Creates a dojox.gfx.surface to be used for Drawing. Note that
 		//		The 'surface' that Drawing uses is actually a dojox.gfx.group.
@@ -10,15 +10,15 @@ dojo.provide("dojox.drawing.manager.Canvas");
 		//
 		//		Called internally from a dojox.Drawing.
 		//
-		//		Note: Surface creation is asynchrous. Connect to
-		//  		onSurfaceReady in Drawing.
-		//
+		//		Note: Surface creation is asynchronous. Connect to
+		//  	onSurfaceReady in Drawing.
+
 		function(/*Object*/options){
 			dojo.mixin(this, options);
 			
 			var dim = dojo.contentBox(this.srcRefNode);
-			this.height = this.parentHeight = dim.h;
-			this.width = this.parentWidth = dim.w;
+			this.height = this.parentHeight = options.height || dim.h;
+			this.width = this.parentWidth = options.width || dim.w;
 			this.domNode = dojo.create("div", {id:"canvasNode"}, this.srcRefNode);
 			dojo.style(this.domNode, {
 				width:this.width,
@@ -30,13 +30,13 @@ dojo.provide("dojox.drawing.manager.Canvas");
 			this.id = this.id || this.util.uid("surface");
 			
 			console.info("create canvas");
-			this.gfxSurface = dojox.gfx.createSurface(this.domNode, this.width, this.height);
+			this.gfxSurface = gfx.createSurface(this.domNode, this.width, this.height);
 			this.gfxSurface.whenLoaded(this, function(){
 				setTimeout(dojo.hitch(this, function(){
 					this.surfaceReady = true;
 					if(dojo.isIE){
 						//this.gfxSurface.rawNode.parentNode.id = this.id;
-					}else if(dojox.gfx.renderer == "silverlight"){
+					}else if(gfx.renderer == "silverlight"){
 						this.id = this.domNode.firstChild.id
 					}else{
 						//this.gfxSurface.rawNode.id = this.id;
@@ -57,7 +57,7 @@ dojo.provide("dojox.drawing.manager.Canvas");
 		},
 		{
 			// zoom: [readonly] Number
-			//	The amount the canvas is zoomed
+			//		The amount the canvas is zoomed
 			zoom:1,
 						
 			useScrollbars: true,
@@ -68,7 +68,7 @@ dojo.provide("dojox.drawing.manager.Canvas");
 				//		Method used to change size of canvas. Potentially
 				//		called from a container like ContentPane. May be
 				//		called directly.
-				//
+
 				this.parentWidth = width;
 				this.parentHeight = height;
 				this.setDimensions(width, height);
@@ -78,7 +78,7 @@ dojo.provide("dojox.drawing.manager.Canvas");
 				// summary:
 				//		Internal. Changes canvas size and sets scroll position.
 				//		Do not call this, use resize().
-				//
+
 				// changing the size of the surface and setting scroll
 				// if items are off screen
 				var sw = this.getScrollWidth(); //+ 10;
@@ -141,7 +141,7 @@ dojo.provide("dojox.drawing.manager.Canvas");
 				// summary:
 				//		Special method used to detect the width (and height)
 				// 		of the browser scrollbars. Becomes memoized.
-				//
+
 				var p = dojo.create('div');
 				p.innerHTML = '<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:0;left:-1000px;"><div style="height:100px;"></div>';
 				var div = p.firstChild;
@@ -158,4 +158,4 @@ dojo.provide("dojox.drawing.manager.Canvas");
 		}
 	);
 	
-})();
+});

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "הוספת טבלה",
 	modifyTableTitle: "שינוי טבלה",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "הגדרה", // translated elsewhere?
 	buttonInsert: "הוספה",
 	buttonCancel: "ביטול",
-
 	selectTableLabel: "בחירת טבלה",
 	insertTableRowBeforeLabel: "הוספת שורה לפני",
 	insertTableRowAfterLabel: "הוספת שורה אחרי",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "מחיקת שורה",
 	deleteTableColumnLabel: "מחיקת עמודה"
 })
-//end v1.x content
 );

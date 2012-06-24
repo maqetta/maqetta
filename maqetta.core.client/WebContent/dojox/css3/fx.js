@@ -1,5 +1,5 @@
 define([
-	"dojo/_base/kernel",
+	"dojo/_base/lang",
 	"dojo/_base/connect",	// dojo.connect
 	"dojo/dom-style",	// dojo.style
 	"dojo/_base/fx",

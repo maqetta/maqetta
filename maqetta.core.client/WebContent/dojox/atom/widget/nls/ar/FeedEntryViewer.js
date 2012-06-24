@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	displayOptions: "[اختيارات العرض]",
 	title: "العنوان",
@@ -11,5 +10,4 @@ define(
 	summary: "الملخص",
 	content: "المحتويات"
 })
-//end v1.x content
 );

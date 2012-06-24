@@ -67,15 +67,7 @@
 }
 
 .nihilo .dijitTooltipContainer {
-	/*
-		The part with the text.
-
-		NOTE:
-			FF doesn't clip images used as CSS bgs if you specify a border
-			radius. If you use a solid color, it does. Webkit gets it right.
-			Sigh.
-		background: #ffffff url("images/popupMenuBg.gif") repeat-x bottom left;
-	*/
+	/* The part with the text. */
 	background-color: #fff;
 	border:1px solid #d3d3d3;
 	padding:0.45em;

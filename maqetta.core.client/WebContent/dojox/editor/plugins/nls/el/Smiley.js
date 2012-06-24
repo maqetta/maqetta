@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	smiley: "Εισαγωγή εικονιδίου συναισθήματος",
 	emoticonSmile: "Χαμόγελο",
@@ -19,8 +18,7 @@ define(
 	emoticonYes: "Ναι",
 	emoticonNo: "Όχι",
 	emoticonAngel: "Αγγελούδι",
-	emoticonCrying: "Κλάμα"
+	emoticonCrying: "Κλάμα",
+	emoticonHappy: "Ευτυχία"
 })
-
-//end v1.x content
 );

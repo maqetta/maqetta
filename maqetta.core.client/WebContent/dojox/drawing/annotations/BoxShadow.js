@@ -1,19 +1,20 @@
-dojo.provide("dojox.drawing.annotations.BoxShadow");
+define(["dojo", "dojo/_base/Color", "../util/oo"], 
+function(dojo, Color, oo){
 
-dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
-	// summary:
-	//		Creates a box shadow under solid objects. Can change the
-	//		shadow direction, color, size, and intensity. Can center
-	//		the shadow and make it a Glow.
-	// description:
-	//		This is a psuedo shadow, created by duplicating the
-	//		original stencil and increasing the line weight while
-	//		reducing the opacity. Therefore it will not work with
-	//		text. Also won't look very good if the Stencil has no
-	//		fill or is transparent. Can't do knockouts or inner
-	//		shadows. Currently can't do paths - while doable, it
-	//		will most likely choke IE into certain death.
-	//
+// summary:
+//		Creates a box shadow under solid objects. Can change the
+//		shadow direction, color, size, and intensity. Can center
+//		the shadow and make it a Glow.
+// description:
+//		This is a pseudo shadow, created by duplicating the
+//		original stencil and increasing the line weight while
+//		reducing the opacity. Therefore it will not work with
+//		text. Also won't look very good if the Stencil has no
+//		fill or is transparent. Can't do knockouts or inner
+//		shadows. Currently can't do paths - while doable, it
+//		will most likely choke IE into certain death.
+
+return oo.declare(
 	function(/*Object*/options){
 		this.stencil = options.stencil;
 		this.util = options.stencil.util;
@@ -24,21 +25,31 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 			// summary:
 			//		When passing a shadow object into a stencil, that shadow
 			//		object will be mixed in with these defaults.
-			//
-			// size: Number, mult: Number
-			//		These two props work together. Both affect the size and quality
+
+			// size: Number
+			//		Works together with mult. Both affect the size and quality
 			//		of the shadow. size affects the actual size and mult affects the
 			//		lineWidths that overlap to make the shadow. Generally you want a
 			//		bigger 'size' than 'mult'. The defaults are good for a shadow, but
 			//		you will want to increase them when making a glow.
 			//	TODO: Make this more clear or use other properties.
 			size:6,
+
+			// mult: Number
+			//		Works together with size.  Both affect the size and quality
+			//		of the shadow. size affects the actual size and mult affects the
+			//		lineWidths that overlap to make the shadow. Generally you want a
+			//		bigger 'size' than 'mult'. The defaults are good for a shadow, but
+			//		you will want to increase them when making a glow.
+			//	TODO: Make this more clear or use other properties.
 			mult:4,
+
 			// alpha: Float
 			//		Affects the alpha of the shadow. Because this is multiple shapes
 			//		overlapped, you want much less than you may think. .1 is pretty
 			//		dark and . is black. Higher numbers also give a sharper edge.
 			alpha:.05,
+
 			//	place: String
 			//		Tells the position of the shadow:
 			//			B: bottom
@@ -49,6 +60,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 			//		Can be used in combinations such as BR, BL, L, T, etc. 'C' should
 			//		be used by itself.
 			place:"BR",
+
 			//	color: String
 			//		The color of the shadow or glow.
 			color:"#646464"
@@ -56,7 +68,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 		
 		delete options.stencil;
 		this.options = dojo.mixin(shadowDefaults, options);
-		this.options.color = new dojo.Color(this.options.color)
+		this.options.color = new Color(this.options.color)
 		this.options.color.a = this.options.alpha;
 		switch(this.stencil.shortType){
 			case "image":
@@ -208,8 +220,8 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 		
 		arrowPoints: function(){
 			// summary:
-			//	Creates data used to draw arrow head.
-			//
+			//		Creates data used to draw arrow head.
+
 			var d = this.stencil.data;
 			var radius = this.stencil.getRadius();
 			var angle = this.style.zAngle + 30;
@@ -290,8 +302,7 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 			
 			}
 		},
-		
-		
+
 		onTransform: function(){
 			this.render();
 		},
@@ -305,3 +316,5 @@ dojox.drawing.annotations.BoxShadow = dojox.drawing.util.oo.declare(
 		}
 	}
 );
+
+});

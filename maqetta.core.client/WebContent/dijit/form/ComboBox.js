@@ -4,11 +4,6 @@ define([
 	"./ComboBoxMixin"
 ], function(declare, ValidationTextBox, ComboBoxMixin){
 
-/*=====
-	var ValidationTextBox = dijit.form.ValidationTextBox;
-	var ComboBoxMixin = dijit.form.ComboBoxMixin;
-=====*/
-
 	// module:
 	//		dijit/form/ComboBox
 	// summary:

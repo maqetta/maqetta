@@ -4,7 +4,7 @@ define([
 	"dojo/_base/array", // isArray, map
 	"dojo/_base/xhr", // formToObject, queryToObject, xhr
 	"dojo/dom", // byId
-	"dojox/encoding/digests/SHA1", // SHA1
+	"dojox/encoding/digests/SHA1" // SHA1
 ], function(dojo, lang, array, xhr, dom, SHA1){
 dojo.getObject("io.OAuth", true, dojox);
 

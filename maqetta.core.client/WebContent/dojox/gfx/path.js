@@ -1,16 +1,10 @@
 define(["./_base", "dojo/_base/lang","dojo/_base/declare", "./matrix", "./shape"], 
   function(g, lang, declare, matrix, shapeLib){
-/*===== 
-	dojox.gfx.path = {
+	var path = g.path = {
 		// summary:
 		//		This module contains the core graphics Path API.
 		//		Path command format follows the W3C SVG 1.0 Path api.
 	};
-	g = dojox.gfx;
-	shape.Shape = dojox.gfx.shape.Shape;
-  =====*/
-
-	var path = g.path = {};
 	var Path = declare("dojox.gfx.path.Path", shapeLib.Shape, {
 		// summary: a generalized path shape
 

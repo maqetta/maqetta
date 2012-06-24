@@ -4,9 +4,6 @@ define([
 ], function(lang, bits) {
 
 	var lzw = lang.getObject("dojox.encoding.compression.lzw", true);
-	/*=====
-		lzw = dojox.encoding.compression.lzw;
-	=====*/
 
 	var _bits = function(x){
 		var w = 1;

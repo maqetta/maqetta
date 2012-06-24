@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "הוספת עוגן ",
 	title: "תכונות עוגן ",
@@ -8,6 +7,4 @@ define(
 	set: "הגדרה",
 	cancel: "ביטול"
 })
-
-//end v1.x content
 );

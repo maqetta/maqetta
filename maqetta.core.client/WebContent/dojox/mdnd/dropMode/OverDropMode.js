@@ -1,6 +1,11 @@
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_base/html",
-	"dojo/_base/array","dojox/mdnd/AreaManager"],function(dojo){
-	var odm = dojo.declare(
+define(["dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/connect",
+	"dojo/_base/array",
+	"dojo/dom-geometry",
+	"dojox/mdnd/AreaManager"
+],function(dojo, declare, connect, array, geom){
+	var odm = declare(
 		"dojox.mdnd.dropMode.OverDropMode",
 		null,
 	{
@@ -22,7 +27,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_bas
 		constructor: function(){
 			//console.log("dojox.mdnd.dropMode.OverDropMode ::: constructor");
 			this._dragHandler = [
-				dojo.connect(dojox.mdnd.areaManager(), "onDragEnter", function(coords, size){
+				connect.connect(dojox.mdnd.areaManager(), "onDragEnter", function(coords, size){
 					var m = dojox.mdnd.areaManager();
 					if(m._oldIndexArea == -1){
 						m._oldIndexArea = m._lastValidIndexArea;
@@ -44,7 +49,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_bas
 	
 			//console.log("dojox.mdnd.dropMode.OverDropMode ::: addArea");
 			var length = areas.length,
-				position = dojo.position(object.node, true);
+				position = geom.position(object.node, true);
 			object.coords = {'x':position.x, 'y':position.y};
 			if(length == 0){
 				areas.push(object);
@@ -90,7 +95,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_bas
 			//		protected
 	
 			//console.log("dojox.mdnd.dropMode.OverDropMode ::: addArea");
-			var position = dojo.position(area.node, true);
+			var position = geom.position(area.node, true);
 			area.coords.x = position.x;
 			area.coords.x2 = position.x + position.w;
 			area.coords.y = position.y;
@@ -103,10 +108,10 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_bas
 			//		the D&D area.
 	
 			//console.log("dojox.mdnd.dropMode.OverDropMode ::: initItems");
-			dojo.forEach(area.items, function(obj){
+			array.forEach(area.items, function(obj){
 				//get the vertical middle of the item
 				var node = obj.item.node;
-				var position = dojo.position(node, true);
+				var position = geom.position(node, true);
 				var y = position.y + position.h/2;
 				obj.y = y;
 			});
@@ -179,7 +184,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_bas
 			//		coordinates [x,y] of the dragItem (see getDragPoint())
 			// currentIndexArea:
 			//		an index representing the active D&D area
-			//returns:
+			// returns:
 			//		the index of the D&D area
 	
 			//console.log("dojox.mdnd.dropMode.OverDropMode ::: getTargetArea");
@@ -297,7 +302,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/connect","dojo/_bas
 		},
 	
 		destroy: function(){
-			dojo.forEach(this._dragHandler, dojo.disconnect);
+			array.forEach(this._dragHandler, connect.disconnect);
 		}
 	});
 	

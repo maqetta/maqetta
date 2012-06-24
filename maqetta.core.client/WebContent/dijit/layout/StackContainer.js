@@ -3,7 +3,7 @@ define([
 	"dojo/cookie", // cookie
 	"dojo/_base/declare", // declare
 	"dojo/dom-class", // domClass.add domClass.replace
-	"dojo/_base/kernel",	// kernel.isAsync
+	"dojo/has",	// has("dijit-legacy-requires")
 	"dojo/_base/lang",	// lang.extend
 	"dojo/ready",
 	"dojo/topic", // publish
@@ -11,14 +11,8 @@ define([
 	"../_WidgetBase",
 	"./_LayoutWidget",
 	"dojo/i18n!../nls/common"
-], function(array, cookie, declare, domClass, kernel, lang, ready, topic,
+], function(array, cookie, declare, domClass, has, lang, ready, topic,
 			registry, _WidgetBase, _LayoutWidget){
-
-/*=====
-var _WidgetBase = dijit._WidgetBase;
-var _LayoutWidget = dijit.layout._LayoutWidget;
-var StackController = dijit.layout.StackController;
-=====*/
 
 // module:
 //		dijit/layout/StackContainer
@@ -26,7 +20,7 @@ var StackController = dijit.layout.StackController;
 //		A container that has multiple children, but shows only one child at a time.
 
 // Back compat w/1.6, remove for 2.0
-if(!kernel.isAsync){
+if(has("dijit-legacy-requires")){
 	ready(0, function(){
 		var requires = ["dijit/layout/StackController"];
 		require(requires);	// use indirection so modules not rolled into a build
@@ -38,23 +32,29 @@ if(!kernel.isAsync){
 // into the base widget class.  (This is a hack, but it's effective.)
 lang.extend(_WidgetBase, {
 	// selected: Boolean
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
 	//		Specifies that this widget should be the initially displayed pane.
 	//		Note: to change the selected child use `dijit.layout.StackContainer.selectChild`
 	selected: false,
 
+	// disabled: Boolean
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
+	//		Specifies that the button to select this pane should be disabled.
+	//		Doesn't affect programmatic selection of the pane, nor does it deselect the pane if it is currently selected.
+	disabled: false,
+
 	// closable: Boolean
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
 	//		True if user can close (destroy) this child, such as (for example) clicking the X on the tab.
 	closable: false,
 
 	// iconClass: String
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
 	//		CSS Class specifying icon to use in label associated with this pane.
 	iconClass: "dijitNoIcon",
 
 	// showTitle: Boolean
-	//		Parameter for children of `dijit.layout.StackContainer` or subclasses.
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
 	//		When true, display title of this widget as tab label etc., rather than just using
 	//		icon specified in iconClass
 	showTitle: true
@@ -278,6 +278,9 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 	_adjacent: function(/*Boolean*/ forward){
 		// summary:
 		//		Gets the next/previous child widget in this container from the current selection.
+
+		// TODO: remove for 2.0 if this isn't being used.   Otherwise, fix to skip disabled tabs.
+
 		var children = this.getChildren();
 		var index = array.indexOf(children, this.selectedChildWidget);
 		index += forward ? 1 : children.length - 1;

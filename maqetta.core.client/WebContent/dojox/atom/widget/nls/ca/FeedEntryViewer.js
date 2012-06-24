@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	displayOptions: "[mostra opcions]",
 	title: "Títol",
@@ -11,5 +10,4 @@ define(
 	summary: "Resum",
 	content: "Contingut"
 })
-//end v1.x content
 );

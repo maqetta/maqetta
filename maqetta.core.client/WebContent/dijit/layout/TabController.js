@@ -6,22 +6,17 @@ define([
 	"dojo/i18n", // i18n.getLocalization
 	"dojo/_base/lang", // lang.hitch lang.trim
 	"./StackController",
+	"../registry",
 	"../Menu",
 	"../MenuItem",
 	"dojo/text!./templates/_TabButton.html",
 	"dojo/i18n!../nls/common"
-], function(declare, dom, domAttr, domClass, i18n, lang, StackController, Menu, MenuItem, template){
-
-/*=====
-	var StackController = dijit.layout.StackController;
-	var Menu = dijit.Menu;
-	var MenuItem = dijit.MenuItem;
-=====*/
+], function(declare, dom, domAttr, domClass, i18n, lang, StackController, registry, Menu, MenuItem, template){
 
 	// module:
 	//		dijit/layout/TabController
 	// summary:
-	// 		Set of tabs (the things with titles and a close button, that you click to show a tab panel).
+	//		Set of tabs (the things with titles and a close button, that you click to show a tab panel).
 	//		Used internally by `dijit.layout.TabContainer`.
 
 	var TabButton = declare("dijit.layout._TabButton", StackController.StackButton, {
@@ -60,7 +55,7 @@ define([
 
 			// Required to give IE6 a kick, as it initially hides the
 			// tabs until they are focused on.
-			setTimeout(function(){
+			this.defer(function(){
 				n.className = n.className;
 			}, 1);
 		},
@@ -69,36 +64,33 @@ define([
 			// summary:
 			//		Hide/show close button
 			this._set("closeButton", disp);
-			domClass.toggle(this.innerDiv, "dijitClosable", disp);
+			domClass.toggle(this.domNode, "dijitClosable", disp);
 			this.closeNode.style.display = disp ? "" : "none";
 			if(disp){
 				var _nlsResources = i18n.getLocalization("dijit", "common");
 				if(this.closeNode){
-					domAttr.set(this.closeNode,"title", _nlsResources.itemClose);
-				}
-				// add context menu onto title button
-				this._closeMenu = new Menu({
-					id: this.id+"_Menu",
-					dir: this.dir,
-					lang: this.lang,
-					textDir: this.textDir,
-					targetNodeIds: [this.domNode]
-				});
-
-				this._closeMenu.addChild(new MenuItem({
-					label: _nlsResources.itemClose,
-					dir: this.dir,
-					lang: this.lang,
-					textDir: this.textDir,
-					onClick: lang.hitch(this, "onClickCloseButton")
-				}));
-			}else{
-				if(this._closeMenu){
-					this._closeMenu.destroyRecursive();
-					delete this._closeMenu;
+					domAttr.set(this.closeNode, "title", _nlsResources.itemClose);
 				}
 			}
 		},
+
+		_setDisabledAttr: function(/*Boolean*/ disabled){
+			// summary:
+			//		Make tab selected/unselectable
+
+			this.inherited(arguments);
+
+			// Don't show tooltip for close button when tab is disabled
+			if(this.closeNode){
+				if(disabled){
+					domAttr.remove(this.closeNode, "title");
+				}else{
+					var _nlsResources = i18n.getLocalization("dijit", "common");
+					domAttr.set(this.closeNode, "title", _nlsResources.itemClose);
+				}
+			}
+		},
+
 		_setLabelAttr: function(/*String*/ content){
 			// summary:
 			//		Hook for set('label', ...) to work.
@@ -110,20 +102,12 @@ define([
 			if(!this.showLabel && !this.params.title){
 				this.iconNode.alt = lang.trim(this.containerNode.innerText || this.containerNode.textContent || '');
 			}
-		},
-
-		destroy: function(){
-			if(this._closeMenu){
-				this._closeMenu.destroyRecursive();
-				delete this._closeMenu;
-			}
-			this.inherited(arguments);
 		}
 	});
 
 	var TabController = declare("dijit.layout.TabController", StackController, {
 		// summary:
-		// 		Set of tabs (the things with titles and a close button, that you click to show a tab panel).
+		//		Set of tabs (the things with titles and a close button, that you click to show a tab panel).
 		//		Used internally by `dijit.layout.TabContainer`.
 		// description:
 		//		Lets the user select the currently shown pane in a TabContainer or StackContainer.
@@ -145,22 +129,42 @@ define([
 		//		The tab widget to create to correspond to each page
 		buttonWidget: TabButton,
 
-		_rectifyRtlTabList: function(){
-			// summary:
-			//		For left/right TabContainer when page is RTL mode, rectify the width of all tabs to be equal, otherwise the tab widths are different in IE
+		// buttonWidgetClass: String
+		//		Class of each tab, used by event delegation code to tell when the tab was clicked
+		buttonWidgetClass: "dijitTab",
 
-			if(0 >= this.tabPosition.indexOf('-h')){ return; }
-			if(!this.pane2button){ return; }
+		// buttonWidgetCloseClass: String
+		//		Class of [x] close icon, used by event delegation code to tell when close button was clicked
+		buttonWidgetCloseClass: "dijitTabCloseButton",
 
-			var maxWidth = 0;
-			for(var pane in this.pane2button){
-				var ow = this.pane2button[pane].innerDiv.scrollWidth;
-				maxWidth = Math.max(maxWidth, ow);
-			}
-			//unify the length of all the tabs
-			for(pane in this.pane2button){
-				this.pane2button[pane].innerDiv.style.width = maxWidth + 'px';
-			}
+		postCreate: function(){
+			this.inherited(arguments);
+
+			// Setup a close menu to be shared between all the closable tabs (excluding disabled tabs)
+			var closeMenu = new Menu({
+				id: this.id+"_Menu",
+				dir: this.dir,
+				lang: this.lang,
+				textDir: this.textDir,
+				targetNodeIds: [this.domNode],
+				selector: function(node){
+					return domClass.contains(node, "dijitClosable") && !domClass.contains(node, "dijitTabDisabled");
+				}
+			});
+			this.own(closeMenu);
+
+			var _nlsResources = i18n.getLocalization("dijit", "common"),
+				controller = this;
+			closeMenu.addChild(new MenuItem({
+				label: _nlsResources.itemClose,
+				dir: this.dir,
+				lang: this.lang,
+				textDir: this.textDir,
+				onClick: function(evt){
+					var button = registry.byNode(this.getParent().currentTarget);
+					controller.onCloseButtonClick(button);
+				}
+			}));
 		}
 	});
 

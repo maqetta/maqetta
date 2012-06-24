@@ -55,8 +55,10 @@
 }
 .claro .dijitTextBoxHover {
   background-color: #e5f2fe;
-  background-image: url("../form/images/textBox_back.png");
-  background-repeat: repeat-x;
+  background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -ms-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
 }
 /* error state */
 .claro .dijitTextBoxError, .claro .dijitTextBoxError .dijitButtonNode {
@@ -74,8 +76,10 @@
 }
 .claro .dijitTextBoxFocused {
   background-color: #ffffff;
-  background-image: url("../form/images/textBox_back.png");
-  background-repeat: repeat-x;
+  background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -ms-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
 }
 .claro .dijitTextBoxFocused .dijitInputContainer {
   background: #ffffff;
@@ -127,8 +131,13 @@
 }
 .claro .dijitComboBox .dijitButtonNode {
   background-color: #efefef;
-  background-image: url("../form/images/formHighlight.png");
+  background-image: url("../images/standardGradient.png");
   background-repeat: repeat-x;
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -ms-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  _background-image: none;
 }
 /* Arrow "hover" effect:
  * The arrow button should change color whenever the mouse is in a position such that clicking it
@@ -144,7 +153,13 @@
 /* Arrow Button change when drop down is open */
 .claro .dijitComboBox .dijitHasDropDownOpen {
   background-color: #7dbdfa;
-  background-position: 0 -177px;
+  background-image: url("../images/activeGradient.png");
+  background-repeat: repeat-x;
+  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -ms-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  _background-image: none;
   padding: 1px;
 }
 .claro .dijitComboBox .dijitHasDropDownOpen .dijitArrowButtonInner {
@@ -165,10 +180,6 @@
   display: none;
   height: 0;
   width: 0;
-}
-/* ie6 doesn't support transparent background img */
-.dj_ie6 .claro .dijitTextBox, .dj_ie6 .claro .dijitComboBox .dijitButtonNode {
-  background-image: none;
 }
 .dj_borderbox .claro .dijitComboBox .dijitHasDropDownOpen .dijitArrowButtonInner {
   width: 18px;

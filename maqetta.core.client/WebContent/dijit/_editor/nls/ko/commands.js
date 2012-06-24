@@ -1,12 +1,11 @@
 define(
-//begin v1.x content
 ({
 	'bold': '굵게',
 	'copy': '복사',
 	'cut': '잘라내기',
 	'delete': '삭제',
 	'indent': '들여쓰기',
-	'insertHorizontalRule': '수평 자',
+	'insertHorizontalRule': '가로 줄',
 	'insertOrderedList': '번호 목록',
 	'insertUnorderedList': '글머리표 목록',
 	'italic': '기울임꼴',
@@ -45,7 +44,8 @@ define(
 	"print": "인쇄",
 	"newPage": "새 페이지",
 	/* Error messages */
-	'systemShortcut': '"${0}" 조치는 브라우저에서 키보드 단축키를 통해서만 사용 가능합니다. ${1}을(를) 사용하십시오.'
+	'systemShortcut': '"${0}" 조치는 브라우저에서 키보드 단축키를 통해서만 사용 가능합니다. ${1}을(를) 사용하십시오.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-//end v1.x content
 );

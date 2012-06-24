@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Opslaan",
 	"saveSettingLabelOn": "Interval voor automatisch opslaan instellen...",
@@ -10,9 +9,7 @@ define(
 	"saveSettingdialogParamLabel": "min",
 	"saveSettingdialogButtonOk": "Interval instellen",
 	"saveSettingdialogButtonCancel": "Annuleren",
-	"saveMessageSuccess": "Opgeslagen op ${0}",
-	"saveMessageFail": "Opslaan mislukt op ${0}"
+	"saveMessageSuccess": "Opgeslagen om ${0}",
+	"saveMessageFail": "Opslaan mislukt om ${0}"
 })
-
-//end v1.x content
 );

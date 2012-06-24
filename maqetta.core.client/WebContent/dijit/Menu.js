@@ -7,22 +7,17 @@ define([
 	"dojo/dom-attr", // domAttr.get domAttr.set domAttr.has domAttr.remove
 	"dojo/dom-geometry", // domStyle.getComputedStyle domGeometry.position
 	"dojo/dom-style", // domStyle.getComputedStyle
-	"dojo/_base/kernel",
 	"dojo/keys",	// keys.F10
 	"dojo/_base/lang", // lang.hitch
 	"dojo/on",
-	"dojo/_base/sniff", // has("ie"), has("quirks")
-	"dojo/_base/window", // win.body win.doc.documentElement win.doc.frames win.withGlobal
+	"dojo/sniff", // has("ie"), has("quirks")
+	"dojo/_base/window", // win.body win.doc.documentElement win.doc.frames
 	"dojo/window", // winUtils.get
 	"./popup",
 	"./DropDownMenu",
 	"dojo/ready"
-], function(require, array, declare, event, dom, domAttr, domGeometry, domStyle, kernel, keys, lang, on,
+], function(require, array, declare, event, dom, domAttr, domGeometry, domStyle, keys, lang, on,
 			has, win, winUtils, pm, DropDownMenu, ready){
-
-/*=====
-	var DropDownMenu = dijit.DropDownMenu;
-=====*/
 
 // module:
 //		dijit/Menu
@@ -30,7 +25,7 @@ define([
 //		Includes dijit.Menu widget and base class dijit._MenuBase
 
 // Back compat w/1.6, remove for 2.0
-if(!kernel.isAsync){
+if(has("dijit-legacy-requires")){
 	ready(0, function(){
 		var requires = ["dijit/MenuItem", "dijit/PopupMenuItem", "dijit/CheckedMenuItem", "dijit/MenuSeparator"];
 		require(requires);	// use indirection so modules not rolled into a build
@@ -50,6 +45,24 @@ return declare("dijit.Menu", DropDownMenu, {
 	//		Fill this with nodeIds upon widget creation and it becomes context menu for those nodes.
 	targetNodeIds: [],
 
+	// selector: String?
+	//		CSS expression to apply this Menu to descendants of targetNodeIds, rather than to
+	//		the nodes specified by targetNodeIds themselves.    Useful for applying a Menu to
+	//		a range of rows in a table, tree, etc.
+	//
+	//		The application must require() an appropriate level of dojo/query to handle the selector.
+	selector: "",
+
+	// TODO: in 2.0 remove support for multiple targetNodeIds.   selector gives the same effect.
+	// So, change targetNodeIds to a targetNodeId: "", remove bindDomNode()/unBindDomNode(), etc.
+
+/*=====
+	// currentTarget: [readonly] DOMNode
+	//		For context menus, set to the current node that the Menu is being displayed for.
+	//		Useful so that the menu actions can be tailored according to the node
+	currentTarget: null,
+=====*/
+
 	// contextMenuForWindow: [const] Boolean
 	//		If true, right clicking anywhere on the window will cause this context menu to open.
 	//		If false, must specify targetNodeIds.
@@ -60,12 +73,12 @@ return declare("dijit.Menu", DropDownMenu, {
 	leftClickToOpen: false,
 
 	// refocus: Boolean
-	// 		When this menu closes, re-focus the element which had focus before it was opened.
+	//		When this menu closes, re-focus the element which had focus before it was opened.
 	refocus: true,
 
 	postCreate: function(){
 		if(this.contextMenuForWindow){
-			this.bindDomNode(win.body());
+			this.bindDomNode(this.ownerDocumentBody);
 		}else{
 			// TODO: should have _setTargetNodeIds() method to handle initialization and a possible
 			// later set('targetNodeIds', ...) call.  There's also a problem that targetNodeIds[]
@@ -101,7 +114,7 @@ return declare("dijit.Menu", DropDownMenu, {
 	bindDomNode: function(/*String|DomNode*/ node){
 		// summary:
 		//		Attach menu to given node
-		node = dom.byId(node);
+		node = dom.byId(node, this.ownerDocument);
 
 		var cn;	// Connect node
 
@@ -110,12 +123,11 @@ return declare("dijit.Menu", DropDownMenu, {
 		if(node.tagName.toLowerCase() == "iframe"){
 			var iframe = node,
 				window = this._iframeContentWindow(iframe);
-			cn = win.withGlobal(window, win.body);
+			cn = win.body(window.document);
 		}else{
-
 			// To capture these events at the top level, attach to <html>, not <body>.
 			// Otherwise right-click context menu just doesn't work.
-			cn = (node == win.body() ? win.doc.documentElement : node);
+			cn = (node == win.body(this.ownerDocument) ? this.ownerDocument.documentElement : node);
 		}
 
 
@@ -135,20 +147,25 @@ return declare("dijit.Menu", DropDownMenu, {
 		// On linux Shift-F10 produces the oncontextmenu event, but on Windows it doesn't, so
 		// we need to monitor keyboard events in addition to the oncontextmenu event.
 		var doConnects = lang.hitch(this, function(cn){
+			var selector = this.selector,
+				delegatedEvent = selector ?
+					function(eventType){ return on.selector(selector, eventType); } :
+					function(eventType){ return eventType; },
+				self = this;
 			return [
 				// TODO: when leftClickToOpen is true then shouldn't space/enter key trigger the menu,
 				// rather than shift-F10?
-				on(cn, this.leftClickToOpen ? "click" : "contextmenu", lang.hitch(this, function(evt){
+				on(cn, delegatedEvent(this.leftClickToOpen ? "click" : "contextmenu"), function(evt){
 					// Schedule context menu to be opened unless it's already been scheduled from onkeydown handler
 					event.stop(evt);
-					this._scheduleOpen(evt.target, iframe, {x: evt.pageX, y: evt.pageY});
-				})),
-				on(cn, "keydown", lang.hitch(this, function(evt){
+					self._scheduleOpen(this, iframe, {x: evt.pageX, y: evt.pageY});
+				}),
+				on(cn, delegatedEvent("keydown"), function(evt){
 					if(evt.shiftKey && evt.keyCode == keys.F10){
 						event.stop(evt);
-						this._scheduleOpen(evt.target, iframe);	// no coords - open near target node
+						self._scheduleOpen(this, iframe);	// no coords - open near target node
 					}
-				}))
+				})
 			];
 		});
 		binding.connects = cn ? doConnects(cn) : [];
@@ -164,7 +181,7 @@ return declare("dijit.Menu", DropDownMenu, {
 				// access the <body> node because it's already gone, or at least in a state of limbo
 
 				var window = this._iframeContentWindow(iframe);
-					cn = win.withGlobal(window, win.body);
+					cn = win.body(window.document)
 				binding.connects = doConnects(cn);
 			});
 			if(iframe.addEventListener){
@@ -181,7 +198,7 @@ return declare("dijit.Menu", DropDownMenu, {
 
 		var node;
 		try{
-			node = dom.byId(nodeName);
+			node = dom.byId(nodeName, this.ownerDocument);
 		}catch(e){
 			// On IE the dom.byId() call will get an exception if the attach point was
 			// the <body> node of an <iframe> that has since been reloaded (and thus the
@@ -193,7 +210,7 @@ return declare("dijit.Menu", DropDownMenu, {
 		var attrName = "_dijitMenu" + this.id;
 		if(node && domAttr.has(node, attrName)){
 			var bid = domAttr.get(node, attrName)-1, b = this._bindings[bid], h;
-			while(h = b.connects.pop()){
+			while((h = b.connects.pop())){
 				h.remove();
 			}
 
@@ -225,14 +242,14 @@ return declare("dijit.Menu", DropDownMenu, {
 		//		oncontextmenu event.)
 
 		if(!this._openTimer){
-			this._openTimer = setTimeout(lang.hitch(this, function(){
+			this._openTimer = this.defer(function(){
 				delete this._openTimer;
 				this._openMyself({
 					target: target,
 					iframe: iframe,
 					coords: coords
 				});
-			}), 1);
+			}, 1);
 		}
 	},
 
@@ -257,6 +274,9 @@ return declare("dijit.Menu", DropDownMenu, {
 			iframe = args.iframe,
 			coords = args.coords;
 
+		// To be used by MenuItem event handlers to tell which node the menu was opened on
+		this.currentTarget = target;
+
 		// Get coordinates to open menu, either at specified (mouse) position or (if triggered via keyboard)
 		// then near the node the menu is assigned to.
 		if(coords){
@@ -264,7 +284,7 @@ return declare("dijit.Menu", DropDownMenu, {
 				// Specified coordinates are on <body> node of an <iframe>, convert to match main document
 				var ifc = domGeometry.position(iframe, true),
 					window = this._iframeContentWindow(iframe),
-					scroll = win.withGlobal(window, "_docScroll", dojo);
+					scroll = domGeometry.docScroll(window.document);
 
 				var cs = domStyle.getComputedStyle(iframe),
 					tp = domStyle.toPixelValue,
@@ -312,9 +332,9 @@ return declare("dijit.Menu", DropDownMenu, {
 		};
 	},
 
-	uninitialize: function(){
- 		array.forEach(this._bindings, function(b){ if(b){ this.unBindDomNode(b.node); } }, this);
- 		this.inherited(arguments);
+	destroy: function(){
+		array.forEach(this._bindings, function(b){ if(b){ this.unBindDomNode(b.node); } }, this);
+		this.inherited(arguments);
 	}
 });
 

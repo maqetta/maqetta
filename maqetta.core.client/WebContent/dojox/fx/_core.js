@@ -1,6 +1,6 @@
 define(["dojo/_base/lang", "dojo/_base/array","./_base"],
 	function(lang, arrayUtil, dojoxFx){
-	/*===== var dojox.fx._Line = line =====*/
+	/*===== dojox.fx._Line = line =====*/
 	var line = function(start, end){
 		// summary: a custom _Line to accomodate multi-dimensional values
 		//
@@ -30,16 +30,16 @@ define(["dojo/_base/lang", "dojo/_base/array","./_base"],
 		//
 		this.start = start;
 		this.end = end;
-		
+
 		var isArray = lang.isArray(start),
 			d = (isArray ? [] : end - start);
-		
+
 		if(isArray){
 			// multi-dimensional branch
 			arrayUtil.forEach(this.start, function(s, i){
 				d[i] = this.end[i] - s;
 			}, this);
-			
+
 			this.getValue = function(/*float*/ n){
 				var res = [];
 				arrayUtil.forEach(this.start, function(s, i){

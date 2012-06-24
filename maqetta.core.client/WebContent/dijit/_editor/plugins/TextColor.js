@@ -7,10 +7,6 @@ define([
 	"../../form/DropDownButton"
 ], function(require, colors, declare, lang, _Plugin, DropDownButton){
 
-/*=====
-	var _Plugin = dijit._editor._Plugin;
-=====*/
-
 // module:
 //		dijit/_editor/plugins/TextColor
 // summary:

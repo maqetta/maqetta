@@ -4,11 +4,6 @@ define([
 	"./_DateTimeTextBox"
 ], function(declare, Calendar, _DateTimeTextBox){
 
-/*=====
-	var Calendar = dijit.Calendar;
-	var _DateTimeTextBox = dijit.form._DateTimeTextBox;
-=====*/
-
 	// module:
 	//		dijit/form/DateTextBox
 	// summary:

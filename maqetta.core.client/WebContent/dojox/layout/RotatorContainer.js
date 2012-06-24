@@ -17,14 +17,14 @@ var RotatorContainer = declare("dojox.layout.RotatorContainer",[StackContainer, 
 	//		and display navigation in the form of tabs or a pager.
 	//
 	// description:
-	// 		The RotatorContainer cycles through the children with a transition.
+	//		The RotatorContainer cycles through the children with a transition.
 	//
-	// published topics:
-	// 		[widgetId]-update - Notifies pager(s) that a child has changed.
-	//			Parameters:
-	//				/*boolean*/ playing - true if playing, false if paused
-	//				/*int*/ current     - current selected child
-	//				/*int*/ total       - total number of children
+	//		published topics:
+	//			[widgetId]-update - Notifies pager(s) that a child has changed.
+	//				Parameters:
+	//					/*boolean*/ playing - true if playing, false if paused
+	//					/*int*/ current     - current selected child
+	//					/*int*/ total       - total number of children
 	//
 	// example:
 	// |	<div dojoType="dojox.layout.RotatorContainer" id="myRotator" showTabs="true" autoStart="true" transitionDelay="5000">
@@ -358,13 +358,13 @@ declare("dojox.layout.RotatorPager", [Widget, Templated, Contained], {
 	//		Notifications are received from and sent to the RotatorContainer as
 	//		well as other RotatorPagers.
 	//
-	// published topics:
-	//		[widgetId]-cycle - Notify that the next or previous button was pressed.
-	//			Parameters:
-	//				/*boolean*/ next - true if next, false if previous
-	//		[widgetId]-state - Notify that the play/pause button was toggled.
-	//			Parameters:
-	//				/*boolean*/ playing - true if playing, false if paused
+	//	published topics:
+	//			[widgetId]-cycle - Notify that the next or previous button was pressed.
+	//				Parameters:
+	//					/*boolean*/ next - true if next, false if previous
+	//			[widgetId]-state - Notify that the play/pause button was toggled.
+	//				Parameters:
+	//					/*boolean*/ playing - true if playing, false if paused
 	//
 	// example:
 	//		A pager with the current/total children and previous/next buttons.

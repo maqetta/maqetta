@@ -1,8 +1,5 @@
 define(
-//begin v1.x content
 ({
-	"pageBreak": "Interruzione di pagina"
+	"pageBreak": "Interruzione pagina"
 })
-
-//end v1.x content
 );

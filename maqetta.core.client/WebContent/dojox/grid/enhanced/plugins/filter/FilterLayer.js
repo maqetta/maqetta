@@ -1,15 +1,15 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/window",
+	"dojo/_base/kernel",
 	"dojo/_base/json",
 	"../_StoreLayer"
-], function(declare, lang, win, json, layers){
+], function(declare, lang, kernel, json, layers){
 
 	var cmdSetFilter = "filter",
 		cmdClearFilter = "clear",
 		hitchIfCan = function(scope, func){
-			return func ? lang.hitch(scope || win.global, func) : function(){};
+			return func ? lang.hitch(scope || kernel.global, func) : function(){};
 		},
 		shallowClone = function(obj){
 			var res = {};

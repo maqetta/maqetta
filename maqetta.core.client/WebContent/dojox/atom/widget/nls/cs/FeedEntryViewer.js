@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	displayOptions: "[volby zobrazení]",
 	title: "Název",
@@ -11,5 +10,4 @@ define(
 	summary: "Souhrn",
 	content: "Obsah"
 })
-//end v1.x content
 );

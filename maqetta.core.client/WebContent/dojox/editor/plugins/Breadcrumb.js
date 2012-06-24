@@ -145,10 +145,8 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 						break;
 				default:
 					try{
-						dojo.withGlobal(this.editor.window,
-							"collapse", dijit._editor.selection, [null]);
-						dojo.withGlobal(this.editor.window,
-							"selectElementChildren", dijit._editor.selection, [this._menuTarget]);
+						this.editor._sCall("collapse", [null]);
+						this.editor._sCall("selectElementChildren", [this._menuTarget]);
 						this.editor.onDisplayChanged();
 					}catch(e){/*squelch*/}
 			}
@@ -161,8 +159,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		if(this._menuTarget){
 			this.editor.beginEditing();
 			this._selectContents();
-			dojo.withGlobal(this.editor.window,
-				"remove", dijit._editor.selection, [this._menuTarget]);
+			this.editor._sCall("remove", [this._menuTarget]);
 			this.editor.endEditing();
 			this._updateBreadcrumb();
 			this.editor.onDisplayChanged();
@@ -174,10 +171,8 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		//		Internal function for selecting the contents of a node.
 		this.editor.focus();
 		if(this._menuTarget){
-			dojo.withGlobal(this.editor.window,
-				"collapse", dijit._editor.selection, [null]);
-			dojo.withGlobal(this.editor.window,
-				"selectElement", dijit._editor.selection, [this._menuTarget]);
+			this.editor._sCall("collapse", [null]);
+			this.editor._sCall("selectElement", [this._menuTarget]);
 			this.editor.onDisplayChanged();
 			
 		}
@@ -189,8 +184,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		if(this._menuTarget){
 			this.editor.beginEditing();
 			this._selectElement();
-			dojo.withGlobal(this.editor.window,
-				"remove", dijit._editor.selection, [this._menuTarget]);
+			this.editor._sCall("remove", [this._menuTarget]);
 			this.editor.endEditing();
 			this._updateBreadcrumb();
 			this.editor.onDisplayChanged();
@@ -203,8 +197,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		this.editor.focus();
 		if(this._menuTarget){
 			this._selectContents();
-			dojo.withGlobal(this.editor.window,
-				"collapse", dijit._editor.selection, [true]);
+			this.editor._sCall("collapse", [true]);
 		}
 	},
 
@@ -214,8 +207,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 		this.editor.focus();
 		if(this._menuTarget){
 			this._selectContents();
-			dojo.withGlobal(this.editor.window,
-				"collapse", dijit._editor.selection, [false]);
+			this.editor._sCall("collapse", [false]);
 		}
 	},
 
@@ -231,8 +223,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
 				var range = sel.getRangeAt(0);
                 
 				// Check the getSelectedElement call.  Needed when dealing with img tags.
-				var node = dojo.withGlobal(ed.window,
-					"getSelectedElement", dijit._editor.selection) || range.startContainer;
+				var node = ed._sCall("getSelectedElement", []) || range.startContainer;
 				//var node = range.startContainer;
 				var bcList = [];
 

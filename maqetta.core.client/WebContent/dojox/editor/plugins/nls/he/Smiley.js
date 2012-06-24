@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	smiley: "הוספת רגשון",
 	emoticonSmile: "חיוך",
@@ -21,6 +20,4 @@ define(
 	emoticonAngel: "מלאך ",
 	emoticonCrying: "בוכה"
 })
-
-//end v1.x content
 );

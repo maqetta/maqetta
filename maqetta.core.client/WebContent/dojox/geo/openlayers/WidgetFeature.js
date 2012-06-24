@@ -1,6 +1,10 @@
-define(
-	["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/html", "dojo/_base/lang", "dojox/geo/openlayers/Feature"],
-	function(dojo, declare, html, lang, Feature){
+define([
+	"dojo/_base/declare",
+	"dojo/dom-style",
+	"dojo/_base/lang",
+	"dijit/registry",
+	"dojox/geo/openlayers/Feature"],
+	function(declare, style, lang, registry, Feature){
 		/*===== 
 		var Feature = dojox.geo.openlayers.Feature; 
 		=====*/
@@ -12,16 +16,18 @@ define(
 			//		This class allows to add a widget in a `dojox.geo.openlayers.Layer`.
 			//		Parameters are passed to the constructor. These parameters describe the widget
 			//		and provide geo-localisation of this widget.
-			//		parameters can be: 
-			//	* _createWidget_: Function for widget creation. Must return a `dijit._Widget`.
-			//	* _dojoType_: The class of a widget to create;
-			//	* _dijitId_: The digitId of an existing widget.
-			//	* _widget_: An already created widget.
-			//	* _width_: The width of the widget.
-			//	* _height_: The height of the widget.
-			//	* _longitude_: The longitude, in decimal degrees where to place the widget.
-			//	* _latitude_: The latitude, in decimal degrees where to place the widget.
-			//	You must define a least one widget retrieval parameter and the geo-localization parameters.
+			//		parameters can be:
+			//		
+			//		* _createWidget_: Function for widget creation. Must return a `dijit._Widget`.
+			//		* _dojoType_: The class of a widget to create;
+			//		* _dijitId_: The digitId of an existing widget.
+			//		* _widget_: An already created widget.
+			//		* _width_: The width of the widget.
+			//		* _height_: The height of the widget.
+			//		* _longitude_: The longitude, in decimal degrees where to place the widget.
+			//		* _latitude_: The latitude, in decimal degrees where to place the widget.
+			//		
+			//		You must define a least one widget retrieval parameter and the geo-localization parameters.
 			_widget : null,
 			_bbox : null,
 
@@ -66,7 +72,7 @@ define(
 						var c = lang.getObject(params.dojoType);
 						w = new c(params);
 					} else if (params.dijitId) {
-						w = dijit.byId(params.dijitId);
+						w = registry.byId(params.dijitId);
 					} else if (params.widget) {
 						w = params.widget;
 					}
@@ -77,7 +83,7 @@ define(
 							w.startup();
 						var n = w.domNode;
 						if (n != null)
-							html.style(n, {
+							style.set(n, {
 								position : "absolute"
 							});
 					}
@@ -96,7 +102,7 @@ define(
 					return p.width;
 				var w = this._getWidget();
 				if (w)
-					return html.style(w.domNode, "width");
+					return style.get(w.domNode, "width");
 				return 10;
 			},
 
@@ -110,7 +116,7 @@ define(
 					return p.height;
 				var w = this._getWidget();
 				if (w)
-					return html.style(w.domNode, "height");
+					return style.get(w.domNode, "height");
 				return 10;
 			},
 
@@ -159,12 +165,13 @@ define(
 				//		Places the widget with the computed x and y values
 				//	tags:
 				//		private
+				
 				//	var box = this._params;
 
 				var w = this._widget;
 				var dom = w.domNode;
 
-				html.style(dom, {
+				style.set(dom, {
 					position : "absolute",
 					left : box.x + "px",
 					top : box.y + "px",
@@ -173,7 +180,7 @@ define(
 				});
 
 				if (w.srcNodeRef) {
-					html.style(w.srcNodeRef, {
+					style.set(w.srcNodeRef, {
 						position : "absolute",
 						left : box.x + "px",
 						top : box.y + "px",

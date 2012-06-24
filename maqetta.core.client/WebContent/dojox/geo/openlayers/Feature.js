@@ -1,4 +1,4 @@
-define(["dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Map"], function(dojo, declare, Map){
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/_base"], function(dojo, declare, openlayers){
 
 	return declare("dojox.geo.openlayers.Feature", null, {
 		//	summary:
@@ -10,7 +10,7 @@ define(["dojo/_base/kernel", "dojo/_base/declare", "dojox/geo/openlayers/Map"], 
 			//	summary:
 			//		Construct a new Feature
 			this._layer = null;
-			this._coordSys = dojox.geo.openlayers.EPSG4326;
+			this._coordSys = openlayers.EPSG4326;
 		},
 
 		getCoordinateSystem : function(){

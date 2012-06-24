@@ -1,9 +1,13 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/_base/declare",
-	"dojo/Stateful"
-], function(lang, array, declare, Stateful){
+	"dojo/Stateful",
+	"./getStateful",
+	"./getPlainValue",
+	"./StatefulArray"
+], function(kernel, lang, array, declare, Stateful, getStateful, getPlainValue, StatefulArray){
 	/*=====
 		declare = dojo.declare;
 		Stateful = dojo.Stateful;
@@ -223,25 +227,27 @@ define([
 			//		Object
 			//		The plain JavaScript object representation of the data in this
 			//		model.
-			var ret = {};
-			var nested = false;
-			for(var p in this){
-				if(this[p] && lang.isFunction(this[p].toPlainObject)){
-					if(!nested && typeof this.get("length") === "number"){
-						ret = [];
-					}
-					nested = true;
-					ret[p] = this[p].toPlainObject();
-				}
+			return getPlainValue(this, StatefulModel.getPlainValueOptions);
+		},
+
+		splice: function(/*Number*/ idx, /*Number*/ n){
+			// summary:
+			//		Removes and then adds some elements to this array.
+			//		Updates the removed/added elements, as well as the length, as stateful.
+			// idx: Number
+			//		The index where removal/addition should be done.
+			// n: Number
+			//		How many elements to be removed at idx.
+			// varargs: Anything[]
+			//		The elements to be added to idx.
+			// returns: dojox.mvc.StatefulArray
+			//		The removed elements.
+
+			var a = (new StatefulArray([])).splice.apply(this, lang._toArray(arguments));
+			for(var i = 0; i < a.length; i++){
+				(this._removals = this._removals || []).push(a[i].toPlainObject());
 			}
-			if(!nested){
-				if(this.get("length") === 0){
-					ret = [];
-				}else{				
-					ret = this.value;
-				}
-			}
-			return ret;
+			return a;
 		},
 
 		add: function(/*String*/ name, /*dojo.Stateful*/ stateful){
@@ -257,37 +263,12 @@ define([
 			//		In case of arrays, the property names are indices passed
 			//		as Strings. An addition of such a dojo.Stateful node
 			//		results in right-shifting any trailing sibling nodes.
-			var n, n1, elem, elem1, save = new StatefulModel({ data : "" });
+
 			if(typeof this.get("length") === "number" && /^[0-9]+$/.test(name.toString())){
-				n = name;
-				if(!this.get(n)){
-					if(this.get("length") == 0 && n == 0){ // handle the empty array case
-						this.set(n, stateful);
-					} else {
-						n1 = n-1;
-						if(!this.get(n1)){
-							throw new Error("Out of bounds insert attempted, must be contiguous.");
-						}
-						this.set(n, stateful);
-					}
-				}else{
-					n1 = n-0+1;
-					elem = stateful;
-					elem1 = this.get(n1);
-					if(!elem1){
-						this.set(n1, elem);
-					}else{
-						do{
-							this._copyStatefulProperties(elem1, save);
-							this._copyStatefulProperties(elem, elem1);
-							this._copyStatefulProperties(save, elem);
-							this.set(n1, elem1); // for watchers
-							elem1 = this.get(++n1);
-						}while(elem1);
-						this.set(n1, elem);
-					}
+				if(this.get("length") < (name - 0)){
+					throw new Error("Out of bounds insert attempted, must be contiguous.");
 				}
-				this.set("length", this.get("length") + 1);
+				this.splice(name - 0, 0, stateful);
 			}else{
 				this.set(name, stateful);
 			}
@@ -302,33 +283,14 @@ define([
 			//		In case of arrays, the property names are indices passed
 			//		as Strings. A removal of such a dojo.Stateful node
 			//		results in left-shifting any trailing sibling nodes.
-			var n, elem, elem1;
 			if(typeof this.get("length") === "number" && /^[0-9]+$/.test(name.toString())){
-				n = name;
-				elem = this.get(n);
-				if(!elem){
+				if(!this.get(name)){
 					throw new Error("Out of bounds delete attempted - no such index: " + n);
 				}else{
-					this._removals = this._removals || [];
-					this._removals.push(elem.toPlainObject());
-					n1 = n-0+1;
-					elem1 = this.get(n1);
-					if(!elem1){
-						this.set(n, undefined);
-						delete this[n];
-					}else{
-						while(elem1){
-							this._copyStatefulProperties(elem1, elem);
-							elem = this.get(n1++);
-							elem1 = this.get(n1);
-						}
-						this.set(n1-1, undefined);
-						delete this[n1-1];
-					}
-					this.set("length", this.get("length") - 1);
+					this.splice(name - 0, 1);
 				}
 			}else{
-				elem = this.get(name);
+				var elem = this.get(name);
 				if(!elem){
 					throw new Error("Illegal delete attempted - no such property: " + name);
 				}else{
@@ -375,30 +337,28 @@ define([
 			// tags:
 			//		private
 			var data = (args && "data" in args) ? args.data : this.data; 
-			this._createModel(data);
+
+			if(data != null){
+				kernel.deprecated("To create dojox.mvc.StatefulModel from data, dojox.mvc.getStateful() should be used.");
+				data = getStateful(data, StatefulModel.getStatefulOptions);
+				if(lang.isArray(data)){
+					// Some consumers of dojox.mvc.StatefulModel inherits it via dojo.declare(), where we cannot use array inheritance technique
+					// (dojo.declare() does not support return value in constructor)
+					this.length = 0;
+					[].splice.apply(this, data);
+				}else if(lang.isObject(data)){
+					for(var s in data){
+						if(data.hasOwnProperty(s)){
+							this[s] = data[s];
+						}
+					}
+				}else{
+					this.set("value", data);
+				}
+			}
 		},
 
 		//////////////////////// PRIVATE METHODS ////////////////////////
-
-		_createModel: function(/*Object*/ obj){
-			// summary:
-			//		Create this data model from provided input data.
-			//	obj:
-			//		The input for the model, as a plain JavaScript object.
-			// tags:
-			//		private
-			if(lang.isObject(obj) && !(obj instanceof Date) && !(obj instanceof RegExp) && obj !== null){
-				for(var x in obj){
-					var newProp = new StatefulModel({ data : obj[x] });
-					this.set(x, newProp);
-				}
-				if(lang.isArray(obj)){
-					this.set("length", obj.length);
-				}
-			}else{
-				this.set("value", obj);
-			}
-		},
 
 		_commit: function(){
 			// summary:
@@ -437,23 +397,100 @@ define([
 			}else{
 				store.put(dataToCommit);
 			}
+		}
+	});
+
+	lang.mixin(StatefulModel, {
+		getStatefulOptions: {
+			// summary:
+			//		An object that defines how model object should be created from plain object hierarchy.
+
+			getType: function(/*Anything*/ v){
+				// summary:
+				//		Returns the type of the given value.
+				// v: Anything
+				//		The value.
+
+				return lang.isArray(v) ? "array" : v != null && {}.toString.call(v) == "[object Object]" ? "object" : "value"; // String
+			},
+
+			getStatefulArray: function(/*Anything[]*/ a){
+				// summary:
+				//		Create a stateful array from a plain array.
+				// a: Anything[]
+				//		The plain array.
+
+				var _self = this, statefularray = lang.mixin(new StatefulArray(array.map(a, function(item){ return getStateful(item, _self); })));
+				for(var s in StatefulModel.prototype){
+					if(s != "set"){ statefularray[s] = StatefulModel.prototype[s]; }
+				}
+				statefularray.data = a;
+				return statefularray;
+			},
+
+			getStatefulObject: function(/*Object*/ o){
+				// summary:
+				//		Create a stateful object from a plain object.
+				// o: Object
+				//		The plain object.
+
+				var object = new StatefulModel();
+				object.data = o;
+				for(var s in o){
+					object.set(s, getStateful(o[s], this));
+				}
+				return object; // dojox.mvc.StatefulModel
+			},
+
+			getStatefulValue: function(/*Anything*/ v){
+				// summary:
+				//		Create a stateful value from a plain value.
+				// v: Anything
+				//		The plain value.
+
+				var value = new StatefulModel();
+				value.data = v;
+				value.set("value", v);
+				return value;
+			}
 		},
 
-		_copyStatefulProperties: function(/*dojo.Stateful*/ src, /*dojo.Stateful*/ dest){
+		getPlainValueOptions: {
 			// summary:
-			//		Copy only the dojo.Stateful properties from src to dest (uses
-			//		duck typing).
-			//	src:
-			//		The source object for the copy.
-			//	dest:
-			//		The target object of the copy.
-			// tags:
-			//		private
-			for(var x in src){
-				var o = src.get(x);
-				if(o && lang.isObject(o) && lang.isFunction(o.get)){
-					dest.set(x, o);
+			//		An object that defines how plain value should be created from model object.
+
+			getType: function(/*Anything*/ v){
+				// summary:
+				//		Returns the type of the given value.
+				// v: Anything
+				//		The value.
+
+				if(lang.isArray(v)){ return "array"; }
+				if(lang.isObject(v)){ // Primitive values may have their own properties
+					for(var s in v){
+						if(v.hasOwnProperty(s) && s != "value" && (v[s] || {}).get && (v[s] || {}).watch){
+							return "object";
+						}
+					}
 				}
+				return "value";
+			},
+
+			getPlainArray: function(/*dojox.mvc.StatefulArray*/ a){
+				return array.map(a, function(item){ return getPlainValue(item, this); }, this);
+			},
+
+			getPlainObject: function(/*dojox.mvc.StatefulModel*/ o){
+				var plain = {};
+				for(var s in o){
+					if(s == "_watchCallbacks" || (s in StatefulModel.prototype)){ continue; }
+					plain[s] = getPlainValue(o[s], this);
+				}
+				return plain;
+			},
+
+			getPlainValue: function(/*Anything*/ v){
+				return (v || {}).set && (v || {}).watch ? getPlainValue(v.value, this) : v;
 			}
 		}
 	});

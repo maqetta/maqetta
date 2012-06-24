@@ -1,14 +1,14 @@
-define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare", "dojo/_base/array",
-  "dojo/dom-geometry", "dojo/_base/Color", "./_base", "./shape", "./path"],
-  function(lang, win, dom, declare, arr, domGeom, Color, g, gs, pathLib){
-/*=====
-	dojox.gfx.svg = {
-	// module:
-	//		dojox/gfx/svg
-	// summary:
-	//		This the graphics rendering bridge for browsers compliant with W3C SVG1.0.
-	//		This is the preferred renderer to use for interactive and accessible graphics.
+define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "dojo/_base/declare", "dojo/_base/array",
+  "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/Color", "./_base", "./shape", "./path"],
+  function(lang, win, dom, declare, arr, domGeom, domAttr, Color, g, gs, pathLib){
+	var svg = g.svg = {
+		// summary:
+		//		This the graphics rendering bridge for browsers compliant with W3C SVG1.0.
+		//		This is the preferred renderer to use for interactive and accessible graphics.
 	};
+	svg.useSvgWeb = (typeof window.svgweb != "undefined");
+
+	/*=====
 	pathLib.Path = dojox.gfx.path.Path;
 	pathLib.TextPath = dojox.gfx.path.TextPath;
 	svg.Shape = dojox.gfx.canvas.Shape;
@@ -21,10 +21,9 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 	gs.Image = dojox.gfx.shape.Image;
 	gs.Text = dojox.gfx.shape.Text;
 	gs.Surface = dojox.gfx.shape.Surface;
-  =====*/
-  var svg = g.svg = {};
-	svg.useSvgWeb = (typeof window.svgweb != "undefined");
+	=====*/
 
+	
 	// Need to detect iOS in order to workaround bug when
 	// touching nodes with text
 	var uagent = navigator.userAgent.toLowerCase(),
@@ -94,8 +93,29 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 		longdashdotdot:		[8, 3, 1, 3, 1, 3]
 	};
 
+	var clipCount = 0;
+
 	declare("dojox.gfx.svg.Shape", gs.Shape, {
 		// summary: SVG-specific implementation of dojox.gfx.Shape methods
+
+		destroy: function(){
+			if(this.fillStyle && "type" in this.fillStyle){
+				var fill = this.rawNode.getAttribute("fill"),
+					ref  = svg.getRef(fill);
+				if(ref){
+					ref.parentNode.removeChild(ref);
+				}
+			}
+			if(this.clip){
+				var clipPathProp = this.rawNode.getAttribute("clip-path");
+				if(clipPathProp){
+					var clipNode = dom.byId(clipPathProp.match(/gfx_clip[\d]+/)[0]);
+					clipNode && clipNode.parentNode.removeChild(clipNode);
+				}
+			}
+			this.rawNode = null;
+			gs.Shape.prototype.destroy.apply(this, arguments);
+		},
 
 		setFill: function(fill){
 			// summary: sets a fill object (SVG)
@@ -330,9 +350,69 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 			// summary: moves a shape to back of its parent's list of shapes (SVG)
 			this.rawNode.parentNode.insertBefore(this.rawNode, this.rawNode.parentNode.firstChild);
 			return this;	// self
+		},
+		setClip: function(clip){
+			// summary: sets the clipping area of this shape.
+			// description: This method overrides the dojox.gfx.shape.Shape.setClip() method.
+			// clip: Object
+			//		an object that defines the clipping geometry, or null to remove clip.
+			this.inherited(arguments);
+			var clipType = clip ? "width" in clip ? "rect" : 
+							"cx" in clip ? "ellipse" : 
+							"points" in clip ? "polyline" : "d" in clip ? "path" : null : null;
+			if(clip && !clipType){
+				return this;
+			}
+			if(clipType === "polyline"){
+				clip = lang.clone(clip);
+				clip.points = clip.points.join(",");
+			}
+			var clipNode, clipShape,
+				clipPathProp = domAttr.get(this.rawNode, "clip-path");
+			if(clipPathProp){
+				clipNode = dom.byId(clipPathProp.match(/gfx_clip[\d]+/)[0]);
+				if(clipNode){ // may be null if not in the DOM anymore
+					clipNode.removeChild(clipNode.childNodes[0]);
+				}
+			}
+			if(clip){
+				if(clipNode){
+					clipShape = _createElementNS(svg.xmlns.svg, clipType);
+					clipNode.appendChild(clipShape);
+				}else{
+					var idIndex = ++clipCount;
+					var clipId = "gfx_clip" + idIndex;
+					var clipUrl = "url(#" + clipId + ")";
+					this.rawNode.setAttribute("clip-path", clipUrl);
+					clipNode = _createElementNS(svg.xmlns.svg, "clipPath");
+					clipShape = _createElementNS(svg.xmlns.svg, clipType);
+					clipNode.appendChild(clipShape);
+					this.rawNode.parentNode.appendChild(clipNode);
+					domAttr.set(clipNode, "id", clipId);
+				}
+				domAttr.set(clipShape, clip);
+			}else{
+				//remove clip-path
+				this.rawNode.removeAttribute("clip-path");
+				if(clipNode){
+					clipNode.parentNode.removeChild(clipNode);
+				}
+			}
+			return this;
+		},
+		_removeClipNode: function(){
+			var clipNode, clipPathProp = domAttr.get(this.rawNode, "clip-path");
+			if(clipPathProp){
+				clipNode = dom.byId(clipPathProp.match(/gfx_clip[\d]+/)[0]);
+				if(clipNode){
+					clipNode.parentNode.removeChild(clipNode);
+				}
+			}
+			return clipNode;
 		}
 	});
-
+	
+	
 	declare("dojox.gfx.svg.Group", svg.Shape, {
 		// summary: a group shape (SVG), which can be used
 		//	to logically group shapes (e.g, to propagate matricies)
@@ -346,6 +426,14 @@ define(["dojo/_base/lang", "dojo/_base/window", "dojo/dom","dojo/_base/declare",
 			// Bind GFX object with SVG node for ease of retrieval - that is to
 			// save code/performance to keep this association elsewhere
 			this.rawNode.__gfxObject__ = this.getUID();
+		},
+		destroy: function(){
+			// summary:
+			//		Releases all internal resources owned by this shape. Once this method has been called,
+			//		the instance is considered disposed and should not be used anymore.
+			this.clear(true);
+			// avoid this.inherited
+			svg.Shape.prototype.destroy.apply(this, arguments);
 		}
 	});
 	svg.Group.nodeType = "g";
@@ -675,6 +763,8 @@ else
 					this.rawNode.appendChild(shape.rawNode);
 				}
 				C.add.apply(this, arguments);
+				// update clipnode with new parent
+				shape.setClip(shape.clip);
 			}
 			return this;	// self
 		},
@@ -689,6 +779,8 @@ else
 				if(this.fragment && this.fragment == shape.rawNode.parentNode){
 					this.fragment.removeChild(shape.rawNode);
 				}
+				// remove clip node from parent 
+				shape._removeClipNode();
 				C.remove.apply(this, arguments);
 			}
 			return this;	// self
@@ -708,6 +800,7 @@ else
 			}
 			return C.clear.apply(this, arguments);
 		},
+		getBoundingBox: C.getBoundingBox,
 		_moveChildToFront: C._moveChildToFront,
 		_moveChildToBack:  C._moveChildToBack
 	};

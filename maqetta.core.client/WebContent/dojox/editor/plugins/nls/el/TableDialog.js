@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Εισαγωγή πίνακα",
 	modifyTableTitle: "Τροποποίηση πίνακα",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "Πλάτος πίνακα:",
 	backgroundColor: "Χρώμα φόντου:",
 	borderColor: "Χρώμα περιγράμματος:",
-	borderThickness: "Πάχος περιγράμματος",
+	borderThickness: "Πάχος περιγράμματος:",
 	percent: "ποσοστό",
 	pixels: "εικονοστοιχεία",
 	"default": "προεπιλογή",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Ορισμός", // translated elsewhere?
 	buttonInsert: "Εισαγωγή",
 	buttonCancel: "Ακύρωση",
-
 	selectTableLabel: "Επιλογή πίνακα",
 	insertTableRowBeforeLabel: "Προσθήκη γραμμής πριν",
 	insertTableRowAfterLabel: "Προσθήκη γραμμής μετά",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "Διαγραφή γραμμής",
 	deleteTableColumnLabel: "Διαγραφή στήλης"
 })
-//end v1.x content
 );

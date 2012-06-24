@@ -388,8 +388,10 @@ var Rearrange = declare("dojox.grid.enhanced.plugins.Rearrange", _Plugin, {
 						//So try to get attrs from grid.layout.cells[], but this might not be right
 						//since some fields may be missed(e.g ID fields), please use "setIdentifierForNewItem()" 
 						//to add those missed fields
-						attrs = array.map(g.layout.cells, function(cell){
+						attrs = array.filter(array.map(g.layout.cells, function(cell){
 							return cell.field;
+						}), function(field){
+							return field; //non empty
 						});
 					}
 					var rowsToFetch = [];

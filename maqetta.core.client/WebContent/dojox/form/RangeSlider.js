@@ -26,12 +26,7 @@ define([
 		sortForward = function(a, b){ return a - b; }
 	;
 
-	lang.getObject("form", true, dojox);
 
-	/*=====
-		hTemplate = dijit.form.HorizontalSlider;
-		vTemplate = dijit.form.VerticalSlider;
-	=====*/
 	var RangeSliderMixin = declare("dojox.form._RangeSliderMixin", null, {
 
 		value: [0,100],
@@ -369,13 +364,13 @@ define([
 
 	declare("dojox.form.HorizontalRangeSlider", [HorizontalSlider, RangeSliderMixin], {
 		// summary:
-		//	A form widget that allows one to select a range with two horizontally draggable images
+		//		A form widget that allows one to select a range with two horizontally draggable images
 		templateString: hTemplate
 	});
 
 	declare("dojox.form.VerticalRangeSlider", [VerticalSlider, RangeSliderMixin], {
 		// summary:
-		//	A form widget that allows one to select a range with two vertically draggable images
+		//		A form widget that allows one to select a range with two vertically draggable images
 		templateString: vTemplate
 	});
 

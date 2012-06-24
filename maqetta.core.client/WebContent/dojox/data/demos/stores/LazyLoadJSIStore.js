@@ -10,11 +10,10 @@ dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadS
 	},
 	
 	isItemLoaded: function(/*object*/ item) {
-		//	summary:
+		// summary:
 		//		Overload of the isItemLoaded function to look for items of type 'stub', which indicate
 		//		the data hasn't been loaded in yet.
-		//
-		//	item:
+		// item:
 		//		The item to examine.
 		
 		//For this store, if it has the value of stub for its type attribute,
@@ -26,13 +25,12 @@ dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadS
 	},
 		
 	loadItem: function(keywordArgs){
-		//	summary:
+		// summary:
 		//		Overload of the loadItem function to fault in items.  This assumes the data for an item is laid out
 		//		in a RESTful sort of pattern name0/name1/data.json and so on and uses that to load the data.
 		//		It will also detect stub items in the newly loaded item and insert the stubs into the ItemFileReadStore
 		//		list so they can also be loaded in on-demand.
-		//
-		//	item:
+		// item:
 		//		The item to examine.
 
 		var item = keywordArgs.item;
@@ -92,7 +90,7 @@ dojo.declare("dojox.data.demos.stores.LazyLoadJSIStore", dojo.data.ItemFileReadS
 							//We have a stub reference here, we need to create the stub item
 							var stub = {
 								type: ["stub"],
-								name: [value["stub"]],	//
+								name: [value["stub"]],
 								parent: [itemName]		//The child stub item is parented by this item name...
 							};
 							if (parent) {

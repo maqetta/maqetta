@@ -4,9 +4,6 @@ define([
 	"../base64",
 	"./_base"
 ], function(lang, arrayUtil, base64, crypto){
-	/*=====
-		crypto = dojox.encoding.crypto;
-	=====*/
 
 /*	Blowfish
  *	Created based on the C# implementation by Marcus Hahn (http://www.hotpixel.net/)
@@ -14,8 +11,8 @@ define([
  *	2005-12-08
  */
 crypto.Blowfish = new function(){
-	//	summary
-	//	Object for doing Blowfish encryption/decryption.
+	// summary:
+	//		Object for doing Blowfish encryption/decryption.
 	var POW2=Math.pow(2,2);
 	var POW3=Math.pow(2,3);
 	var POW4=Math.pow(2,4);
@@ -277,8 +274,8 @@ crypto.Blowfish = new function(){
 //	PUBLIC FUNCTIONS
 ////////////////////////////////////////////////////////////////////////////
 	this.getIV=function(/* dojox.encoding.crypto.outputTypes? */ outputType){
-		//	summary
-		//	returns the initialization vector in the output format specified by outputType
+		// summary:
+		//		returns the initialization vector in the output format specified by outputType
 		var out=outputType||crypto.outputTypes.Base64;
 		switch(out){
 			case crypto.outputTypes.Hex:{
@@ -299,8 +296,8 @@ crypto.Blowfish = new function(){
 	};
 
 	this.setIV=function(/* string */data, /* dojox.encoding.crypto.outputTypes? */inputType){
-		//	summary
-		//	sets the initialization vector to data (as interpreted as inputType)
+		// summary:
+		//		sets the initialization vector to data (as interpreted as inputType)
 		var ip=inputType||crypto.outputTypes.Base64;
 		var ba=null;
 		switch(ip){
@@ -333,8 +330,8 @@ crypto.Blowfish = new function(){
 	};
 
 	this.encrypt = function(/* string */plaintext, /* string */key, /* object? */ao){
-		//	summary
-		//	encrypts plaintext using key; allows user to specify output type and cipher mode via keyword object "ao"
+		// summary:
+		//		encrypts plaintext using key; allows user to specify output type and cipher mode via keyword object "ao"
 		var out=crypto.outputTypes.Base64;
 		var mode=crypto.cipherModes.ECB;
 		if (ao){
@@ -399,8 +396,8 @@ crypto.Blowfish = new function(){
 	};
 
 	this.decrypt = function(/* string */ciphertext, /* string */key, /* object? */ao){
-		//	summary
-		//	decrypts ciphertext using key; allows specification of how ciphertext is encoded via ao.
+		// summary:
+		//		decrypts ciphertext using key; allows specification of how ciphertext is encoded via ao.
 		var ip=crypto.outputTypes.Base64;
 		var mode=crypto.cipherModes.ECB;
 		if (ao){

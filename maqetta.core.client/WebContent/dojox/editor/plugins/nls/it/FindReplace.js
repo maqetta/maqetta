@@ -1,27 +1,23 @@
 define(
-//begin v1.x content
 ({
 	"findLabel": "Trova:",
-	"findTooltip": "Immettere il testo da trovare",
+	"findTooltip": "Immettere il testo da ricercare",
 	"replaceLabel": "Sostituisci con:",
-	"replaceTooltip": "Immettere il testo sostitutivo",
+	"replaceTooltip": "Immettere il testo con cui sostituire",
 	"findReplace": "Trova e sostituisci",
-	"matchCase": "Maiuscole/minuscole",
-	"matchCaseTooltip": "Maiuscole/minuscole",
+	"matchCase": "Corrispondenza maiuscolo/minuscolo",
+	"matchCaseTooltip": "Corrispondenza maiuscolo/minuscolo",
 	"backwards": "Indietro",
-	"backwardsTooltip": "Cerca testo indietro",
-	"replaceAll": "Tutte le ricorrenze",
-	"replaceAllButton": "Sostituisci tutto",
+	"backwardsTooltip": "Ricercare il testo all'indietro",
+	"replaceAllButton": "Sostituisci tutti",
 	"replaceAllButtonTooltip": "Sostituisci tutto il testo",
 	"findButton": "Trova",
 	"findButtonTooltip": "Trova il testo",
 	"replaceButton": "Sostituisci",
 	"replaceButtonTooltip": "Sostituisci il testo",
-	"replaceDialogText": "${0} ricorrenze sostituite.",
-	"eofDialogText": "Ultima ricorrenza ${0}",
+	"replaceDialogText": "Sostituite ${0} ricorrenze.",
+	"eofDialogText": "Ultime ${0} ricorrenze",
 	"eofDialogTextFind": "trovato",
 	"eofDialogTextReplace": "sostituito"
 })
-
-//end v1.x content
 );

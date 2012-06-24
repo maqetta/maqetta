@@ -1,40 +1,19 @@
 define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/_base/window", "dojo/dom-geometry", 
 		"dojo/dom", "./_base", "./shape", "./path", "./arc", "./matrix", "./decompose"], 
   function(g, lang, arr, declare, win, domGeom, dom, gfxBase, gs, pathLib, ga, m, decompose ){
-/*===== 
-	dojox.gfx.canvas = {
-	// module:
-	//		dojox/gfx/canvas
-	// summary:
-	//		This the graphics rendering bridge for W3C Canvas compliant browsers.
-	//		Since Canvas is an immediate mode graphics api, with no object graph or
-	//		eventing capabilities, use of this module alone will only add in drawing support.
-	//		The additional module, canvasWithEvents extends this module with additional support
-	//		for handling events on Canvas.  By default, the support for events is now included 
-	//		however, if only drawing capabilities are needed, canvas event module can be disabled
-	//		using the dojoConfig option, canvasEvents:true|false.
-	//		The id of the Canvas renderer is 'canvas'.  This id can be used when switch Dojo's
-	//		graphics context between renderer implementations.  See dojox.gfx._base switchRenderer
-	//		API.
+	var canvas = g.canvas = {
+		// summary:
+		//		This the graphics rendering bridge for W3C Canvas compliant browsers.
+		//		Since Canvas is an immediate mode graphics api, with no object graph or
+		//		eventing capabilities, use of this module alone will only add in drawing support.
+		//		The additional module, canvasWithEvents extends this module with additional support
+		//		for handling events on Canvas.  By default, the support for events is now included
+		//		however, if only drawing capabilities are needed, canvas event module can be disabled
+		//		using the dojoConfig option, canvasEvents:true|false.
+		//		The id of the Canvas renderer is 'canvas'.  This id can be used when switch Dojo's
+		//		graphics context between renderer implementations.  See dojox.gfx._base switchRenderer
+		//		API.
 	};
-	g = dojox.gfx;
-	gs = dojox.gfx.shape;
-	pathLib.Path = dojox.gfx.path.Path;
-	pathLib.TextPath = dojox.gfx.path.TextPath;
-	canvas = dojox.gfx.canvas;
-	canvas.Shape = dojox.gfx.canvas.Shape;
-	gs.Shape = dojox.gfx.shape.Shape;
-	gs.Rect = dojox.gfx.shape.Rect;
-	gs.Ellipse = dojox.gfx.shape.Ellipse;
-	gs.Circle = dojox.gfx.shape.Circle;
-	gs.Line = dojox.gfx.shape.Line;
-	gs.PolyLine = dojox.gfx.shape.PolyLine;
-	gs.Image = dojox.gfx.shape.Image;
-	gs.Text = dojox.gfx.shape.Text;
-	gs.Surface = dojox.gfx.shape.Surface;
-  =====*/
-
-	var canvas = g.canvas = {};
 	var pattrnbuffer = null,
 		mp = m.multiplyPoint, 
 		pi = Math.PI, 
@@ -47,10 +26,17 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 			// summary: render the shape
 			ctx.save();
 			this._renderTransform(ctx);
+			this._renderClip(ctx);
 			this._renderShape(ctx);
 			this._renderFill(ctx, true);
 			this._renderStroke(ctx, true);
 			ctx.restore();
+		},
+		_renderClip: function(ctx){
+			if (this.canvasClip){
+				this.canvasClip.render(ctx);
+				ctx.clip();
+			}
 		},
 		_renderTransform: function(/* Object */ ctx){
 			if("canvasTransform" in this){
@@ -120,8 +106,59 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 		// events are not implemented
 		getEventSource: function(){ return null; },
 		connect:		function(){},
-		disconnect:		function(){}
+		disconnect:		function(){},
+		
+		canvasClip:null,
+		setClip: function(/*String||Object*/clip){
+			// summary: sets the clipping area of this shape.
+			// description: This method overrides the dojox.gfx.shape.Shape.setClip() method.
+			// clip: Object
+			//		an object that defines the clipping geometry, or null to remove clip.
+			this.inherited(arguments);
+			var clipType = clip ? "width" in clip ? "rect" : 
+							"cx" in clip ? "ellipse" : 
+							"points" in clip ? "polyline" : "d" in clip ? "path" : null : null;
+			if(clip && !clipType){
+				return this;
+			}
+			this.canvasClip = clip ? makeClip(clipType, clip) : null;
+			this.surface.makeDirty();
+			return this;
+		}
 	});
+
+	var makeClip = function(clipType, geometry){
+		switch(clipType){
+			case "ellipse":
+				return {
+					canvasEllipse: makeEllipse(geometry),
+					render: function(ctx){return canvas.Ellipse.prototype._renderShape.call(this, ctx);}
+				};
+			case "rect":
+				return {
+					shape: lang.delegate(geometry,{r:0}),
+					render: function(ctx){return canvas.Rect.prototype._renderShape.call(this, ctx);}
+				};
+			case "path":
+				return {
+					canvasPath: makeClipPath(geometry),
+					render: function(ctx){this.canvasPath._renderShape(ctx);}
+				}
+			case "polyline":
+				return {
+					canvasPolyline: geometry.points,
+					render: function(ctx){return canvas.Polyline.prototype._renderShape.call(this, ctx);}
+				};
+		}
+		return null;
+	};
+	
+	var makeClipPath = function(geo){	
+		var p = new dojox.gfx.canvas.Path();		
+		p.canvasPath = [];
+		p._setPath(geo.d);
+		return p;
+	};
 
 	var modifyMethod = function(shape, method, extra){
 			var old = shape.prototype[method];
@@ -199,11 +236,20 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 			// summary: render the group
 			ctx.save();
 			this._renderTransform(ctx);
+			this._renderClip(ctx);
 			for(var i = 0; i < this.children.length; ++i){
 				this.children[i]._render(ctx);
 			}
 			ctx.restore();
-		}
+		},
+		destroy: function(){
+			// summary:
+			//		Releases all internal resources owned by this shape. Once this method has been called,
+			//		the instance is considered disposed and should not be used anymore.
+			this.clear(true);
+			// avoid this.inherited
+			canvas.Shape.prototype.destroy.apply(this, arguments);
+		}		
 	});
 
 	declare("dojox.gfx.canvas.Rect", [canvas.Shape, gs.Rect], {
@@ -238,23 +284,27 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 			bezierCircle.push(mp(r, u.c1), mp(r, u.c2), mp(r, u.e));
 		}
 	})();
+	
+	var makeEllipse = function(s){
+		// prepare Canvas-specific structures
+		var t, c1, c2, r = [],
+			M = m.normalize([m.translate(s.cx, s.cy), m.scale(s.rx, s.ry)]);
+		t = mp(M, bezierCircle[0]);
+		r.push([t.x, t.y]);
+		for(var i = 1; i < bezierCircle.length; i += 3){
+			c1 = mp(M, bezierCircle[i]);
+			c2 = mp(M, bezierCircle[i + 1]);
+			t  = mp(M, bezierCircle[i + 2]);
+			r.push([c1.x, c1.y, c2.x, c2.y, t.x, t.y]);
+		}
+		return r;
+	};
 
 	declare("dojox.gfx.canvas.Ellipse", [canvas.Shape, gs.Ellipse], {
 		// summary: an ellipse shape (Canvas)
 		setShape: function(){
 			this.inherited(arguments);
-			// prepare Canvas-specific structures
-			var s = this.shape, t, c1, c2, r = [],
-				M = m.normalize([m.translate(s.cx, s.cy), m.scale(s.rx, s.ry)]);
-			t = mp(M, bezierCircle[0]);
-			r.push([t.x, t.y]);
-			for(var i = 1; i < bezierCircle.length; i += 3){
-				c1 = mp(M, bezierCircle[i]);
-				c2 = mp(M, bezierCircle[i + 1]);
-				t  = mp(M, bezierCircle[i + 2]);
-				r.push([c1.x, c1.y, c2.x, c2.y, t.x, t.y]);
-			}
-			this.canvasEllipse = r;
+			this.canvasEllipse = makeEllipse(this.shape);
 			return this;
 		},
 		_renderShape: function(/* Object */ ctx){
@@ -373,7 +423,8 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 		// Here, we need the fillstyle or strokestyle to be set before calling fillText/strokeText.
 		_render: function(/* Object */ctx){
 			// summary: render the shape
-			// ctx : Object: the drawing context.
+			// ctx: Object
+			//		the drawing context.
 			ctx.save();
 			this._renderTransform(ctx);
 			this._renderFill(ctx, false);
@@ -384,7 +435,8 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 		
 		_renderShape: function(ctx){
 			// summary: a text shape (Canvas)
-			// ctx : Object: the drawing context.
+			// ctx:
+			//		Object: the drawing context.
 			var ta, s = this.shape;
 			if(!s.text || s.text.length == 0){
 				return;
@@ -421,7 +473,6 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 			});
 		}
 	}
-	
 
 	var pathRenderers = {
 			M: "_moveToA", m: "_moveToR",
@@ -706,21 +757,33 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 			// summary: returns an object with properties "width" and "height"
 			return this.rawNode ? {width:  this.rawNode.width, height: this.rawNode.height} : null;	// Object
 		},
-		_render: function(){
+		_render: function(force){
 			// summary: render the all shapes
-			if(this.pendingImageCount){ return; }
+			if(!force && this.pendingImageCount){ return; }
 			var ctx = this.rawNode.getContext("2d");
-			ctx.save();
 			ctx.clearRect(0, 0, this.rawNode.width, this.rawNode.height);
-			for(var i = 0; i < this.children.length; ++i){
-				this.children[i]._render(ctx);
-			}
-			ctx.restore();
+			this.render(ctx);
 			if("pendingRender" in this){
 				clearTimeout(this.pendingRender);
 				delete this.pendingRender;
 			}
 		},
+		render: function(ctx){
+			// summary:
+			//		Renders the gfx scene.
+			// description:
+			//		this method is called to render the gfx scene to the specified context.
+			//		This method should not be invoked directly but should be used instead
+			//		as an extension point on which user can connect to with aspect.before/aspect.after
+			//		to implement pre- or post- image processing jobs on the drawing surface.
+			// ctx: CanvasRenderingContext2D
+			//		The surface Canvas rendering context.
+			ctx.save();
+			for(var i = 0; i < this.children.length; ++i){
+				this.children[i]._render(ctx);
+			}
+			ctx.restore();
+		},		
 		makeDirty: function(){
 			// summary: internal method, which is called when we may need to redraw
 			if(!this.pendingImagesCount && !("pendingRender" in this)){
@@ -745,7 +808,18 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 			img.src = url;
 		},
 		onImageLoad: function(){
-			if(!--this.pendingImageCount){ this._render(); }
+			if(!--this.pendingImageCount){
+				this.onImagesLoaded();
+				this._render();
+			}
+		},
+		onImagesLoaded: function(){
+			// summary:
+			//		An extension point called when all pending images downloads have been completed.
+			// description:
+			//		This method is invoked when all pending images downloads have been completed, just before
+			//		the gfx scene is redrawn. User can connect to this method to get notified when a
+			//		gfx scene containing images is fully resolved.
 		},
 
 		// events are not implemented
@@ -801,6 +875,7 @@ define(["./_base", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", 
 			this.surface.makeDirty();
 			return C.clear.apply(this, arguments);
 		},
+		getBoundingBox: C.getBoundingBox,
 		_moveChildToFront: function(shape){
 			this.surface.makeDirty();
 			return C._moveChildToFront.apply(this, arguments);

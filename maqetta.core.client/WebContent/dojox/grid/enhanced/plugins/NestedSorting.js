@@ -489,7 +489,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 	_focusHeader: function(e){
 		// summary:
 		//		Overwritten, see _FocusManager.focusHeader()
-		//delayed: Boolean
+		// delayed: Boolean
 		//		If called from "this.focus._delayedHeaderFocus()"
 		if(this._currRegionIdx === -1){
 			this._onMove(0, 1, null);

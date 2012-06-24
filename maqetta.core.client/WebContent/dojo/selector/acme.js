@@ -1,4 +1,6 @@
-define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array", "../_base/lang", "../_base/window"], function(dojo, has, dom){
+define([
+	"../dom", "../sniff", "../_base/array", "../_base/lang", "../_base/window"
+], function(dom, has, array, lang, win){
   //  module:
   //    dojo/selector/acme
   //  summary:
@@ -45,17 +47,12 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 	// need to provide these methods and properties. No other porting should be
 	// necessary, save for configuring the system to use a class other than
 	// dojo.NodeList as the return instance instantiator
-	var trim = 			dojo.trim;
-	var each = 			dojo.forEach;
-	// 					d.isIE; // float
-	// 					d.isSafari; // float
-	// 					d.isOpera; // float
-	// 					d.isWebKit; // float
-	// 					d.doc ; // document element
+	var trim = 			lang.trim;
+	var each = 			array.forEach;
 
-	var getDoc = function(){ return dojo.doc; };
+	var getDoc = function(){ return win.doc; };
 	// NOTE(alex): the spec is idiotic. CSS queries should ALWAYS be case-sensitive, but nooooooo
-	var cssCaseBug = ((dojo.isWebKit||dojo.isMozilla) && ((getDoc().compatMode) == "BackCompat"));
+	var cssCaseBug = ((has("webkit")||has("mozilla")) && ((getDoc().compatMode) == "BackCompat"));
 
 	////////////////////////////////////////////////////////////////////////
 	// Global utilities
@@ -103,7 +100,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 		if(specials.indexOf(query.slice(-1)) >= 0){
 			// if we end with a ">", "+", or "~", that means we're implicitly
 			// searching all children, so make it explicit
-			query += " * "
+			query += " * ";
 		}else{
 			// if you have not provided a terminator, one will be provided for
 			// you...
@@ -124,7 +121,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 
 		// state keeping vars
 		var inBrackets = -1, inParens = -1, inMatchFor = -1,
-			inPseudo = -1, inClass = -1, inId = -1, inTag = -1,
+			inPseudo = -1, inClass = -1, inId = -1, inTag = -1, currentQuoteChar,
 			lc = "", cc = "", pStart;
 
 		// iteration vars
@@ -276,7 +273,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 					oper: null, // ...or operator per component. Note that these wind up being exclusive.
 					id: null,	// the id component of a rule
 					getTag: function(){
-						return (caseSensitive) ? this.otag : this.tag;
+						return caseSensitive ? this.otag : this.tag;
 					}
 				};
 
@@ -285,6 +282,19 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				// might fault a little later on, but we detect that and this
 				// iteration will still be fine.
 				inTag = x;
+			}
+
+			// Skip processing all quoted characters.
+			// If we are inside quoted text then currentQuoteChar stores the character that began the quote,
+			// thus that character that will end it.
+			if(currentQuoteChar){
+				if(cc == currentQuoteChar){
+					currentQuoteChar = null;
+				}
+				continue;
+			}else if (cc == "'" || cc == '"'){
+				currentQuoteChar = cc;
+				continue;
 			}
 
 			if(inBrackets >= 0){
@@ -309,6 +319,12 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 							_cp.matchFor = cmf.slice(1, -1);
 						}
 					}
+					// remove backslash escapes from an attribute match, since DOM
+					// querying will get attribute values without backslashes
+					if(_cp.matchFor){
+						_cp.matchFor = _cp.matchFor.replace(/\\([\[\]])/g, "$1");
+					}
+
 					// end the attribute by adding it to the list of attributes.
 					currentPart.attrs.push(_cp);
 					_cp = null; // necessary?
@@ -393,7 +409,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 
 		return function(){
 			return first.apply(window, arguments) && second.apply(window, arguments);
-		}
+		};
 	};
 
 	var getArr = function(i, arr){
@@ -428,7 +444,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				//		an E element whose "foo" attribute value contains
 				//		the substring "bar"
 				return (_getAttr(elem, attr).indexOf(value)>=0);
-			}
+			};
 		},
 		"^=": function(attr, value){
 			// E[foo^="bar"]
@@ -436,7 +452,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			//		with the string "bar"
 			return function(elem){
 				return (_getAttr(elem, attr).indexOf(value)==0);
-			}
+			};
 		},
 		"$=": function(attr, value){
 			// E[foo$="bar"]
@@ -444,8 +460,9 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			//		with the string "bar"
 			return function(elem){
 				var ea = " "+_getAttr(elem, attr);
-				return (ea.lastIndexOf(value)==(ea.length-value.length));
-			}
+				var lastIndex = ea.lastIndexOf(value);
+				return lastIndex > -1 && (lastIndex==(ea.length-value.length));
+			};
 		},
 		"~=": function(attr, value){
 			// E[foo~="bar"]
@@ -458,7 +475,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			return function(elem){
 				var ea = " "+_getAttr(elem, attr)+" ";
 				return (ea.indexOf(tval)>=0);
-			}
+			};
 		},
 		"|=": function(attr, value){
 			// E[hreflang|="en"]
@@ -472,12 +489,12 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 					(ea == value) ||
 					(ea.indexOf(valueDash)==0)
 				);
-			}
+			};
 		},
 		"=": function(attr, value){
 			return function(elem){
 				return (_getAttr(elem, attr) == value);
-			}
+			};
 		}
 	};
 
@@ -506,10 +523,11 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 
 	var getNodeIndex = function(node){
 		var root = node.parentNode;
+		root = root.nodeType != 7 ? root : root.nextSibling; // PROCESSING_INSTRUCTION_NODE
 		var i = 0,
 			tret = root.children || root.childNodes,
-			ci = (node["_i"]||-1),
-			cl = (root["_l"]||-1);
+			ci = (node["_i"]||node.getAttribute("_i")||-1),
+			cl = (root["_l"]|| (typeof root.getAttribute !== "undefined" ? root.getAttribute("_l") : -1));
 
 		if(!tret){ return -1; }
 		var l = tret.length;
@@ -523,11 +541,19 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 		}
 
 		// else re-key things
-		root["_l"] = l;
+		if(has("ie") && typeof root.setAttribute !== "undefined"){
+			root.setAttribute("_l", l);
+		}else{
+			root["_l"] = l;
+		}
 		ci = -1;
 		for(var te = root["firstElementChild"]||root["firstChild"]; te; te = te[_ns]){
 			if(_simpleNodeTest(te)){
-				te["_i"] = ++i;
+				if(has("ie")){
+					te.setAttribute("_i", ++i);
+				}else{
+					te["_i"] = ++i;
+				}
 				if(node === te){
 					// NOTE:
 					//	shortcutting the return at this step in indexing works
@@ -556,7 +582,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 		"checked": function(name, condition){
 			return function(elem){
 				return !!("checked" in elem ? elem.checked : elem.selected);
-			}
+			};
 		},
 		"first-child": function(){ return _lookLeft; },
 		"last-child": function(){ return _lookRight; },
@@ -577,7 +603,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 					if((nt === 1)||(nt == 3)){ return false; }
 				}
 				return true;
-			}
+			};
 		},
 		"contains": function(name, condition){
 			var cz = condition.charAt(0);
@@ -586,7 +612,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			}
 			return function(elem){
 				return (elem.innerHTML.indexOf(condition) >= 0);
-			}
+			};
 		},
 		"not": function(name, condition){
 			var p = getQueryParts(condition)[0];
@@ -600,7 +626,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			var ntf = getSimpleFilterFunc(p, ignores);
 			return function(elem){
 				return (!ntf(elem));
-			}
+			};
 		},
 		"nth-child": function(name, condition){
 			var pi = parseInt;
@@ -638,7 +664,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 					return function(elem){
 						var i = getNodeIndex(elem);
 						return (i>=lb) && (ub<0 || i<=ub) && ((i % pred) == idx);
-					}
+					};
 				}else{
 					condition = idx;
 				}
@@ -646,20 +672,20 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			var ncount = pi(condition);
 			return function(elem){
 				return (getNodeIndex(elem) == ncount);
-			}
+			};
 		}
 	};
 
-	var defaultGetter = (dojo.isIE && (dojo.isIE < 9 || dojo.isQuirks)) ? function(cond){
+	var defaultGetter = (has("ie") && (has("ie") < 9 || has("quirks"))) ? function(cond){
 		var clc = cond.toLowerCase();
 		if(clc == "class"){ cond = "className"; }
 		return function(elem){
 			return (caseSensitive ? elem.getAttribute(cond) : elem[cond]||elem[clc]);
-		}
+		};
 	} : function(cond){
 		return function(elem){
 			return (elem && elem.getAttribute && elem.hasAttribute(cond));
-		}
+		};
 	};
 
 	var getSimpleFilterFunc = function(query, ignores){
@@ -760,7 +786,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				break;
 			}
 			return ret;
-		}
+		};
 	};
 
 	var _nextSiblings = function(filterFunc){
@@ -778,7 +804,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				te = te[_ns];
 			}
 			return ret;
-		}
+		};
 	};
 
 	// get an array of child *elements*, skipping text and comment nodes
@@ -799,15 +825,6 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			return ret;
 		};
 	};
-
-	/*
-	// thanks, Dean!
-	var itemIsAfterRoot = d.isIE ? function(item, root){
-		return (item.sourceIndex > root.sourceIndex);
-	} : function(item, root){
-		return (item.compareDocumentPosition(root) == 2);
-	};
-	*/
 
 	// test to see if node is below root
 	var _isDescendant = function(node, root){
@@ -911,7 +928,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 							return getArr(te, arr);
 						}
 					}
-				}
+				};
 			}else if(
 				ecs &&
 				// isAlien check. Workaround for Prototype.js being totally evil/dumb.
@@ -939,7 +956,8 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				// it's tag only. Fast-path it.
 				retFunc = function(root, arr, bag){
 					var ret = getArr(0, arr), te, x=0;
-					var tret = root.getElementsByTagName(query.getTag());
+					var tag = query.getTag(),
+						tret = tag ? root.getElementsByTagName(tag) : [];
 					while((te = tret[x++])){
 						if(_isUnique(te, bag)){
 							ret.push(te);
@@ -956,7 +974,8 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				retFunc = function(root, arr, bag){
 					var ret = getArr(0, arr), te, x=0;
 					// we use getTag() to avoid case sensitivity issues
-					var tret = root.getElementsByTagName(query.getTag());
+					var tag = query.getTag(),
+						tret = tag ? root.getElementsByTagName(tag) : [];
 					while((te = tret[x++])){
 						if(filterFunc(te, root) && _isUnique(te, bag)){
 							ret.push(te);
@@ -1000,7 +1019,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				// if we have more than one root at this level, provide a new
 				// hash to use for checking group membership but tell the
 				// system not to post-filter us since we will already have been
-				// gauranteed to be unique
+				// guaranteed to be unique
 				bag = {};
 				ret.nozip = true;
 			}
@@ -1029,7 +1048,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 	var _queryFuncCacheDOM = {},
 		_queryFuncCacheQSA = {};
 
-	// this is the second level of spliting, from full-length queries (e.g.,
+	// this is the second level of splitting, from full-length queries (e.g.,
 	// "div.foo .bar") into simple query expressions (e.g., ["div.foo",
 	// ".bar"])
 	var getStepQueryFunc = function(query){
@@ -1046,13 +1065,13 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				var r = tef(root, []);
 				if(r){ r.nozip = true; }
 				return r;
-			}
+			};
 		}
 
 		// otherwise, break it up and return a runner that iterates over the parts recursively
 		return function(root){
 			return filterDown(root, qparts);
-		}
+		};
 	};
 
 	// NOTES:
@@ -1074,42 +1093,35 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 	// we need to determine if we think we can run a given query via
 	// querySelectorAll or if we'll need to fall back on DOM queries to get
 	// there. We need a lot of information about the environment and the query
-	// to make the determiniation (e.g. does it support QSA, does the query in
+	// to make the determination (e.g. does it support QSA, does the query in
 	// question work in the native QSA impl, etc.).
 	var nua = navigator.userAgent;
-	// some versions of Safari provided QSA, but it was buggy and crash-prone.
-	// We need te detect the right "internal" webkit version to make this work.
-	var wk = "WebKit/";
-	var is525 = (
-		dojo.isWebKit &&
-		(nua.indexOf(wk) > 0) &&
-		(parseFloat(nua.split(wk)[1]) > 528)
-	);
 
 	// IE QSA queries may incorrectly include comment nodes, so we throw the
 	// zipping function into "remove" comments mode instead of the normal "skip
 	// it" which every other QSA-clued browser enjoys
-	var noZip = dojo.isIE ? "commentStrip" : "nozip";
+	var noZip = has("ie") ? "commentStrip" : "nozip";
 
 	var qsa = "querySelectorAll";
-	var qsaAvail = (
-		!!getDoc()[qsa] &&
-		// see #5832
-		(!dojo.isSafari || (dojo.isSafari > 3.1) || is525 )
-	);
+	var qsaAvail = !!getDoc()[qsa];
 
 	//Don't bother with n+3 type of matches, IE complains if we modify those.
 	var infixSpaceRe = /n\+\d|([^ ])?([>~+])([^ =])?/g;
 	var infixSpaceFunc = function(match, pre, ch, post){
 		return ch ? (pre ? pre + " " : "") + ch + (post ? " " + post : "") : /*n+3*/ match;
 	};
-
+	
+	//Don't apply the infixSpaceRe to attribute value selectors
+	var attRe = /([^[]*)([^\]]*])?/g;
+	var attFunc = function(match, nonAtt, att) {
+		return nonAtt.replace(infixSpaceRe, infixSpaceFunc) + (att||"");
+	};
 	var getQueryFunc = function(query, forceDOM){
 		//Normalize query. The CSS3 selectors spec allows for omitting spaces around
 		//infix operators, >, ~ and +
 		//Do the work here since detection for spaces is used as a simple "not use QSA"
 		//test below.
-		query = query.replace(infixSpaceRe, infixSpaceFunc);
+		query = query.replace(attRe, attFunc);
 
 		if(qsaAvail){
 			// if we've got a cached variant and we think we can do it, run it!
@@ -1142,7 +1154,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			//		http://www.w3.org/TR/css3-selectors/#w3cselgrammar
 			(specials.indexOf(qcz) == -1) &&
 			// IE's QSA impl sucks on pseudos
-			(!dojo.isIE || (query.indexOf(":") == -1)) &&
+			(!has("ie") || (query.indexOf(":") == -1)) &&
 
 			(!(cssCaseBug && (query.indexOf(".") >= 0))) &&
 
@@ -1189,7 +1201,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 					// default that way in the future
 					return getQueryFunc(query, true)(root);
 				}
-			}
+			};
 		}else{
 			// DOM branch
 			var parts = query.split(/\s*,\s*/);
@@ -1217,7 +1229,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 	// NOTE:
 	//		this function is Moo inspired, but our own impl to deal correctly
 	//		with XML in IE
-	var _nodeUID = dojo.isIE ? function(node){
+	var _nodeUID = has("ie") ? function(node){
 		if(caseSensitive){
 			// XML docs don't have uniqueID on their nodes
 			return (node.getAttribute("_uid") || node.setAttribute("_uid", ++_zipIdx) || _zipIdx);
@@ -1243,7 +1255,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 	};
 
 	// attempt to efficiently determine if an item in a list is a dupe,
-	// returning a list of "uniques", hopefully in doucment order
+	// returning a list of "uniques", hopefully in document order
 	var _zipIdxName = "_zipIdx";
 	var _zip = function(arr){
 		if(arr && arr.nozip){
@@ -1260,18 +1272,19 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 
 		// we have to fork here for IE and XML docs because we can't set
 		// expandos on their nodes (apparently). *sigh*
-		if(dojo.isIE && caseSensitive){
+		var x, te;
+		if(has("ie") && caseSensitive){
 			var szidx = _zipIdx+"";
 			arr[0].setAttribute(_zipIdxName, szidx);
-			for(var x = 1, te; te = arr[x]; x++){
+			for(x = 1; te = arr[x]; x++){
 				if(arr[x].getAttribute(_zipIdxName) != szidx){
 					ret.push(te);
 				}
 				te.setAttribute(_zipIdxName, szidx);
 			}
-		}else if(dojo.isIE && arr.commentStrip){
+		}else if(has("ie") && arr.commentStrip){
 			try{
-				for(var x = 1, te; te = arr[x]; x++){
+				for(x = 1; te = arr[x]; x++){
 					if(_isElement(te)){
 						ret.push(te);
 					}
@@ -1279,7 +1292,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 			}catch(e){ /* squelch */ }
 		}else{
 			if(arr[0]){ arr[0][_zipIdxName] = _zipIdx; }
-			for(var x = 1, te; te = arr[x]; x++){
+			for(x = 1; te = arr[x]; x++){
 				if(arr[x][_zipIdxName] != _zipIdx){
 					ret.push(te);
 				}
@@ -1434,18 +1447,11 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 		//	|		});
 		//	|	});
 
-		root = root||getDoc();
-		var od = root.ownerDocument||root.documentElement;
+		root = root || getDoc();
 
 		// throw the big case sensitivity switch
-
-		// NOTE:
-		//		Opera in XHTML mode doesn't detect case-sensitivity correctly
-		//		and it's not clear that there's any way to test for it
-		caseSensitive = (root.contentType && root.contentType=="application/xml") ||
-						(dojo.isOpera && (root.doctype || od.toString() == "[object XMLDocument]")) ||
-						(!!od) &&
-				(dojo.isIE ? od.xml : (root.xmlVersion || od.xmlVersion));
+		var od = root.ownerDocument || root;	// root is either Document or a node inside the document
+		caseSensitive = (od.createElement("div").tagName === "div");
 
 		// NOTE:
 		//		adding "true" as the 2nd argument to getQueryFunc is useful for
@@ -1469,7 +1475,7 @@ define(["../_base/kernel", "../has", "../dom", "../_base/sniff", "../_base/array
 				(parts.length == 1 && !/[^\w#\.]/.test(filter)) ?
 				getSimpleFilterFunc(parts[0]) :
 				function(node){
-					return dojo.query(filter, root).indexOf(node) != -1;
+					return array.indexOf(query(filter, dom.byId(root)), node) != -1;
 				};
 		for(var x = 0, te; te = nodeList[x]; x++){
 			if(filterFunc(te)){ tmpNodeList.push(te); }

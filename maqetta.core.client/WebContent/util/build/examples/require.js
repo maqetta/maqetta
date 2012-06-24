@@ -4,7 +4,7 @@ require({
 		location:"../../../dojo"
 	},{
 		name:"dijit",
-		location:"../../../dijig"
+		location:"../../../dijit"
 	}]
 });
 

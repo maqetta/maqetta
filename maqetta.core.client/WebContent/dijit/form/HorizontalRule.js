@@ -4,11 +4,6 @@ define([
 	"../_TemplatedMixin"
 ], function(declare, _Widget, _TemplatedMixin){
 
-/*=====
-	var _Widget = dijit._Widget;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-=====*/
-
 // module:
 //		dijit/form/HorizontalRule
 // summary:

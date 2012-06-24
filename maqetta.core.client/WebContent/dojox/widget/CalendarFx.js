@@ -2,8 +2,8 @@ dojo.provide("dojox.widget.CalendarFx");
 dojo.require("dojox.widget.FisheyeLite");
 
 dojo.declare("dojox.widget._FisheyeFX",null, {
-	// summary
-	//   A mixin to add a FisheyeLite effect to the calendar
+	// summary:
+	//		A mixin to add a FisheyeLite effect to the calendar
 	addFx: function(query, fromNode) {
 		//Use the query and base node passed from the calendar view mixin
 		//to select the nodes to attach the event to.
@@ -20,7 +20,8 @@ dojo.declare("dojox.widget._FisheyeFX",null, {
 dojo.declare("dojox.widget.CalendarFisheye",
 	[dojox.widget.Calendar,
 	 dojox.widget._FisheyeFX], {
-	 	// summary: The standard Calendar. It includes day, month and year views.
-		//  FisheyeLite effects are included.
+	 	// summary:
+	 	//		The standard Calendar. It includes day, month and year views.
+		//		FisheyeLite effects are included.
 	 }
 );

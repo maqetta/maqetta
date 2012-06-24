@@ -111,7 +111,7 @@ dojo.declare("dojox.wire.DataWire", dojox.wire.Wire, {
 		//		for the index is returned, instead of the array itself.
 		//	item:
 		//		An item
-		//	attribute
+		//	attribute:
 		//		An attribute name
 		//	returns:
 		//		A value found, otherwise 'undefined'

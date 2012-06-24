@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "שמירה",
 	"saveSettingLabelOn": "הגדרת מרווח שמירה אוטומטית...‏",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "נשמר ${0}",
 	"saveMessageFail": "כשל בשמירה ${0}"
 })
-
-//end v1.x content
 );

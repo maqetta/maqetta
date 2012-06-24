@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"close" : "[çıx]",
 	"title" : "Başlıq",
@@ -11,5 +10,4 @@ define(
 	"displayOptions" : "[göstərmə seçimləri]",
 	"id" : "Şəxsiyyət"
 })
-//end v1.x content
 );

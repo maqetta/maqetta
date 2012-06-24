@@ -10,8 +10,8 @@
   margin: 0;
   width: 100%;
   text-align: -webkit-center;
-  background-color: #eff1f3;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)));
+  background-color: #f6f6f6;
+  background-image: none;
 }
 .mblOverlayHidden *, .mblOverlayHidden {
   visibility: hidden !important;

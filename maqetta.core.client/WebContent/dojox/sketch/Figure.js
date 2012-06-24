@@ -177,6 +177,11 @@ define([
 		};
 		this._mm=function(e){
 			if(!self._ctr){ return; }
+			if(self._c && !self._c.shape){
+				//the selected item is gone, cancel editing mode
+				self._clearMouse();
+				return;
+			}
 			var x=e.clientX-self._ctr.x;
 			var y=e.clientY-self._ctr.y;
 			var dx=x-self._lp.x;
@@ -202,11 +207,15 @@ define([
 		this._mu=function(e){
 			if(self._c){
 				//	record the event.
-				self._c.endEdit();
+				if(self._c.shape){
+					self._c.endEdit(); //make sure it's not deleted
+				}
 			}else{
 				self._ctool.onMouseUp(e);
 			}
-
+			self._clearMouse();
+		};
+		this._clearMouse=function(){
 			//	clear the stuff out.
 			self._c=self._ctr=self._lp=self._action=self._prevState=self._startPoint=null;
 			self._cshape=self._start=self._end=self._absEnd=null;

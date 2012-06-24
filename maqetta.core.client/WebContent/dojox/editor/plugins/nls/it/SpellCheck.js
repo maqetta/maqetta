@@ -1,21 +1,18 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Controllo ortografico batch",
 	unfound: "Non trovato",
 	skip: "Ignora",
 	skipAll: "Ignora tutto",
-	toDic: "Aggiungi al dizionario",
+	toDic: "Aggiungi a dizionario",
 	suggestions: "Suggerimenti",
 	replace: "Sostituisci",
 	replaceWith: "Sostituisci con",
-	replaceAll: "Sostituisci tutto",
+	replaceAll: "Sostituisci tutti",
 	cancel: "Annulla",
-	msg: "Nessun errore di ortografia trovato",
-	iSkip: "Ignora",
-	iSkipAll: "Ignora tutto",
+	msg: "Nessun errore ortografico",
+	iSkip: "Ignora questo",
+	iSkipAll: "Ignora tutti quelli uguali a questo",
 	iMsg: "Nessun suggerimento ortografico"
 })
-
-//end v1.x content
 );

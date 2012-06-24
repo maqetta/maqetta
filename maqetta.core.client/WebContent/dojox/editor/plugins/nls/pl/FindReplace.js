@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"findLabel": "Znajdź:",
 	"findTooltip": "Wprowadź szukany tekst",
@@ -10,8 +9,7 @@ define(
 	"matchCaseTooltip": "Uwzględnij wielkość liter",
 	"backwards": "Do tyłu",
 	"backwardsTooltip": "Wyszukaj tekst wstecz",
-	"replaceAll": "Wszystkie wystąpienia",
-	"replaceAllButton": "Zastąp wszystkie",
+	"replaceAllButton": "Zastąp wszystko",
 	"replaceAllButtonTooltip": "Zastąp cały tekst",
 	"findButton": "Znajdź",
 	"findButtonTooltip": "Znajdź tekst",
@@ -20,8 +18,6 @@ define(
 	"replaceDialogText": "Zastąpione wystąpienia: ${0}.",
 	"eofDialogText": "Ostatnie wystąpienie: ${0}",
 	"eofDialogTextFind": "znaleziono",
-	"eofDialogTextReplace": "zastąpiono"
+	"eofDialogTextReplace": "zastąpione"
 })
-
-//end v1.x content
 );

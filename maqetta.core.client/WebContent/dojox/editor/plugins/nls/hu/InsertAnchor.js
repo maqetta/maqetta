@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "Horgony beszúrása",
 	title: "Horgony tulajdonságai",
@@ -8,6 +7,4 @@ define(
 	set: "Beállítás",
 	cancel: "Mégse"
 })
-
-//end v1.x content
 );

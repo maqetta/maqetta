@@ -323,8 +323,8 @@ define([
 		formatterScope: null,
 		
 		// editable: boolean
-		// indicates if the grid contains editable cells, default is false
-		// set to true if editable cell encountered during rendering
+		//		indicates if the grid contains editable cells, default is false
+		//		set to true if editable cell encountered during rendering
 		editable: false,
 		
 		// private
@@ -801,7 +801,7 @@ define([
 
 		adaptHeight: function(inHeaderHeight){
 			// private: measures and normalizes header height, then sets view heights, and then updates scroller
-			// content extent
+			//  content extent
 			var t = inHeaderHeight === undefined ? this._getHeaderHeight() : inHeaderHeight;
 			var h = (this._autoHeight ? -1 : Math.max(this.domNode.clientHeight - t, 0) || 0);
 			this.views.onEach('setSize', [0, h]);
@@ -839,7 +839,7 @@ define([
 		render: function(){
 			// summary:
 			//	Render the grid, headers, and views. Edit and scrolling states are reset. To retain edit and
-			// scrolling states, see Update.
+			//	scrolling states, see Update.
 
 			if(!this.domNode){return;}
 			if(!this._started){return;}

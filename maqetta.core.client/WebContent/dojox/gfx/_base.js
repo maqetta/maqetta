@@ -7,13 +7,13 @@ define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Color", "dojo/_base/sn
 	//		This module contains common core Graphics API used by different graphics renderers.
 	var g = lang.getObject("dojox.gfx", true),
 		b = g._base = {};
-	/*===== g = dojox.gfx; b = dojox.gfx._base; =====*/
 	
 	// candidates for dojox.style (work on VML and SVG nodes)
 	g._hasClass = function(/*DomNode*/node, /*String*/classStr){
 		//	summary:
 		//		Returns whether or not the specified classes are a portion of the
 		//		class list currently applied to the node.
+		
 		// return (new RegExp('(^|\\s+)'+classStr+'(\\s+|$)')).test(node.className)	// Boolean
 		var cls = node.getAttribute("className");
 		return cls && (" " + cls + " ").indexOf(" " + classStr + " ") >= 0;  // Boolean
@@ -540,9 +540,9 @@ define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Color", "dojo/_base/sn
 			//		string components should follow the W3C specified order
 			//		(see http://www.w3.org/TR/CSS2/fonts.html#font-shorthand):
 			//		style, variant, weight, size, optional line height (will be
-			//		ignored), and family.
+			//		ignored), and family. Note that the Font.size attribute is limited to numeric CSS length.
 			// str: String
-			//		a CSS font string
+			//		a CSS font string.
 			var font = g.getDefault("Font");
 			var t = str.split(/\s+/);
 			do{
@@ -630,6 +630,7 @@ define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Color", "dojo/_base/sn
 			//		object to switch to.
 			var ns = typeof renderer == "string" ? g[renderer] : renderer;
 			if(ns){
+				// If more options are added, update the docblock at the end of shape.js!
 				arr.forEach(["Group", "Rect", "Ellipse", "Circle", "Line",
 						"Polyline", "Image", "Text", "Path", "TextPath",
 						"Surface", "createSurface", "fixTarget"], function(name){
@@ -638,5 +639,11 @@ define(["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Color", "dojo/_base/sn
 			}
 		}
 	});
+	
+	/*=====
+		g.createSurface = function(){};
+		g.fixTarget = function(){};
+	=====*/
+	
 	return g; // defaults object api
 });

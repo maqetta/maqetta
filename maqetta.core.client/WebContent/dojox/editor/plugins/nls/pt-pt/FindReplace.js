@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"findLabel": "Localizar:",
 	"findTooltip": "Introduzir texto a localizar",
@@ -10,7 +9,6 @@ define(
 	"matchCaseTooltip": "Correspondência de maiúsculas/minúsculas",
 	"backwards": "Para trás",
 	"backwardsTooltip": "Procura de texto para trás",
-	"replaceAll": "Todas as ocorrências",
 	"replaceAllButton": "Substituir tudo",
 	"replaceAllButtonTooltip": "Substituir todo o texto",
 	"findButton": "Localizar",
@@ -22,6 +20,4 @@ define(
 	"eofDialogTextFind": "localizado",
 	"eofDialogTextReplace": "substituído"
 })
-
-//end v1.x content
 );

@@ -5,10 +5,9 @@ define([
 	"dojo/dom",			// dom.byId
 	"dojo/dom-attr", // domAttr.attr domAttr.has
 	"dojo/dom-style", // style.style
-	"dojo/_base/sniff", // has("ie")
-	"./_base/manager",	// manager._isElementShown
-	"."	// for exporting methods to dijit namespace
-], function(array, config, declare, dom, domAttr, domStyle, has, manager, dijit){
+	"dojo/sniff", // has("ie")
+	"./main"	// for exporting methods to dijit namespace
+], function(array, config, declare, dom, domAttr, domStyle, has, dijit){
 
 	// module:
 	//		dijit/a11y
@@ -106,7 +105,7 @@ define([
 				node.name && node.name.toLowerCase();
 		}
 
-		var walkTree = function(/*DOMNode*/parent){
+		var walkTree = function(/*DOMNode*/ parent){
 			for(var child = parent.firstChild; child; child = child.nextSibling){
 				// Skip text elements, hidden elements, and also non-HTML elements (those in custom namespaces) in IE,
 				// since show() invokes getAttribute("type"), which crash on VML nodes in IE.
@@ -115,7 +114,7 @@ define([
 				}
 
 				if(isTabNavigable(child)){
-					var tabindex = domAttr.get(child, "tabIndex");
+					var tabindex = +domAttr.get(child, "tabIndex");	// + to convert string --> number
 					if(!domAttr.has(child, "tabIndex") || tabindex == 0){
 						if(!first){
 							first = child;
@@ -151,19 +150,19 @@ define([
 
 		return { first: rs(first), last: rs(last), lowest: rs(lowest), highest: rs(highest) };
 	};
-	dijit.getFirstInTabbingOrder = function(/*String|DOMNode*/ root){
+	dijit.getFirstInTabbingOrder = function(/*String|DOMNode*/ root, /*Document?*/ doc){
 		// summary:
 		//		Finds the descendant of the specified root node
 		//		that is first in the tabbing order
-		var elems = dijit._getTabNavigable(dom.byId(root));
+		var elems = dijit._getTabNavigable(dom.byId(root, doc));
 		return elems.lowest ? elems.lowest : elems.first; // DomNode
 	};
 
-	dijit.getLastInTabbingOrder = function(/*String|DOMNode*/ root){
+	dijit.getLastInTabbingOrder = function(/*String|DOMNode*/ root, /*Document?*/ doc){
 		// summary:
 		//		Finds the descendant of the specified root node
 		//		that is last in the tabbing order
-		var elems = dijit._getTabNavigable(dom.byId(root));
+		var elems = dijit._getTabNavigable(dom.byId(root, doc));
 		return elems.last ? elems.last : elems.highest; // DomNode
 	};
 

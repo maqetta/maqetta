@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertImageTitle: "ادراج صورة",
 	url: "صورة",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "ادخل عنوان URL لصورة",
 	prePopuTextBrowse: " أو تصفح الى ملف محلي."
 })
-
-//end v1.x content
 );

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Zapisz",
 	"saveSettingLabelOn": "Ustaw odstęp czasu automatycznego zapisywania...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "Zapisano: ${0}",
 	"saveMessageFail": "Zapisanie nie powiodło się: ${0}"
 })
-
-//end v1.x content
 );

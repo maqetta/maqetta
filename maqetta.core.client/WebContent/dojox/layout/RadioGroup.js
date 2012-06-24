@@ -13,12 +13,6 @@ kernel.experimental("dojox.layout.RadioGroup");
 //	FIXME: take the Buttons out of the root template, and allow layoutAlign or similar attrib to use a different
 //	template, or build the template dynamically?
 //
-/*=====
-	var StackContainer = dijit.layout.StackContainer,
-		Templated = dijit._Templated,
-		Contained = dijit._Contained,
-		Widget = dijit._Widget;
-=====*/
 
 var RadioGroup = declare("dojox.layout.RadioGroup",[StackContainer,Templated],{
 	// summary: A Container that turns its Layout Children into a single Pane and transitions between states

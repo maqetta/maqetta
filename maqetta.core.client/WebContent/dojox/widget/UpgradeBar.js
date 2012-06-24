@@ -1,16 +1,31 @@
-dojo.provide("dojox.widget.UpgradeBar");
-
-dojo.require("dojo.window");
-dojo.require("dojo.fx");
-dojo.require("dojo.cookie");
-
-dojo.require("dijit._Widget");
-dojo.require("dijit._Templated");
+define([
+	"dojo/_base/kernel", // dojo.eval
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/connect", // connect
+	"dojo/_base/declare", // declare
+	"dojo/_base/fx", // baseFx.animateProperty
+	"dojo/_base/lang", // lang.mixin, lang.hitch
+	"dojo/_base/sniff", // has("ie")
+	"dojo/_base/window", // baseWin.body
+	"dojo/dom-attr", // domAttr.get
+	"dojo/dom-class", // domClass.addClass, domClass.removeClass
+	"dojo/dom-construct", // domConstruct.destroy
+	"dojo/dom-geometry", // domGeo.getContentBox
+	"dojo/dom-style", // style.get, style.set
+	"dojo/cache", // cache
+	"dojo/cookie", // cookie
+	"dojo/domReady", // domReady
+	"dojo/fx", // fx.combine
+	"dojo/window", // win.getBox
+	"dijit/_WidgetBase", // _WidgetBase
+	"dijit/_TemplatedMixin" // _TemplatedMixin
+], function(dojo, array, connect, declare, baseFx, lang, has, baseWin,
+            domAttr, domClass, domConstruct, domGeo, style, cache, cookie,
+            domReady, fx, win, _WidgetBase, _TemplatedMixin){
 
 dojo.experimental("dojox.widget.UpgradeBar");
 
-
-dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
+var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixin], {
 	//	summary:
 	//				Shows a bar at the top of the screen when the user is to
 	//				be notified that they should upgrade their browser or a
@@ -42,7 +57,7 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 	//				bar should show or not. Should be a simple expression
 	//				if used in HTML:
 	//				|	<div validate="!google.gears">
-	//				|	<div validate="dojo.isIE<8">
+	//				|	<div validate="has('ie')<8">
 	notifications:[],
 	//
 	//	buttonCancel:String
@@ -55,16 +70,16 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 	//		link is not displayed.
 	noRemindButton:"Don't Remind Me Again",
 
-	templateString: dojo.cache("dojox.widget","UpgradeBar/UpgradeBar.html"),
+	templateString: cache("dojox.widget","UpgradeBar/UpgradeBar.html"),
 
 	constructor: function(props, node){
 
 		if(!props.notifications && node){
 			// From markup. Create the notifications Array from the
 			//	srcRefNode children.
-			dojo.forEach(node.childNodes, function(n){
+			array.forEach(node.childNodes, function(n){
 				if(n.nodeType==1){
-					var val = dojo.attr(n, "validate");
+					var val = domAttr.get(n, "validate");
 					this.notifications.push({
 						message:n.innerHTML,
 						validate:function(){
@@ -109,15 +124,15 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 	postCreate: function(){
 		this.inherited(arguments);
 		if(this.domNode.parentNode){
-			dojo.style(this.domNode, "display", "none");
+			style.set(this.domNode, "display", "none");
 		}
-		dojo.mixin(this.attributeMap, {
+		lang.mixin(this.attributeMap, {
 			message:{ node:"messageNode", type:"innerHTML" }
 		});
 		if(!this.noRemindButton){
-			dojo.destroy(this.dontRemindButtonNode)
+			domConstruct.destroy(this.dontRemindButtonNode);
 		}
-		if(dojo.isIE==6){
+		if(has("ie")==6){
 			// IE6 is challenged when it comes to 100% width.
 			// It thinks the body has more padding and more
 			// margin than it really does. It would work to
@@ -126,8 +141,8 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 			//
 			var self = this;
 			var setWidth = function(){
-				var v = dojo.window.getBox();
-				dojo.style(self.domNode, "width", v.w+"px");
+				var v = win.getBox();
+				style.set(self.domNode, "width", v.w+"px");
 			}
 			this.connect(window, "resize", function(){
 				setWidth();
@@ -135,24 +150,24 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 
 			setWidth();
 		}
-		dojo.addOnLoad(this, "checkNotifications");
+		domReady(lang.hitch(this, "checkNotifications"));
 		//this.checkNotifications();
 	},
 
 	notify: function(msg){
 		// 	summary:
 		//		Triggers the bar to display. An internal function,
-		//		but could ne called externally for fun.
+		//		but could be called externally for fun.
 		// tags:
 		//		protected
 		//
-		if(dojo.cookie("disableUpgradeReminders")){
+		if(cookie("disableUpgradeReminders")){
 			return;
 		}
 		if(!this.domNode.parentNode || !this.domNode.parentNode.innerHTML){
 			document.body.appendChild(this.domNode);
 		}
-		dojo.style(this.domNode, "display", "");
+		style.set(this.domNode, "display", "");
 		if(msg){
 			this.set("message", msg);
 		}
@@ -166,14 +181,14 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 		// tags:
 		//		private
 		//
-		this._bodyMarginTop = dojo.style(dojo.body(), "marginTop");
-		this._size = dojo.contentBox(this.domNode).h;
-		dojo.style(this.domNode, { display:"block", height:0, opacity:0 });
+		this._bodyMarginTop = style.get(baseWin.body(), "marginTop");
+		this._size = domGeo.getContentBox(this.domNode).h;
+		style.set(this.domNode, { display:"block", height:0, opacity:0 });
 
 		if(!this._showAnim){
-			this._showAnim = dojo.fx.combine([
-				dojo.animateProperty({ node:dojo.body(), duration:500, properties:{ marginTop:this._bodyMarginTop+this._size } }),
-				dojo.animateProperty({ node:this.domNode, duration:500, properties:{ height:this._size, opacity:1 } })
+			this._showAnim = fx.combine([
+				baseFx.animateProperty({ node:baseWin.body(), duration:500, properties:{ marginTop:this._bodyMarginTop+this._size } }),
+				baseFx.animateProperty({ node:this.domNode, duration:500, properties:{ height:this._size, opacity:1 } })
 			]);
 		}
 		this._showAnim.play();
@@ -184,12 +199,12 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 		//		Hides the bar. May be called externally.
 		//
 		if(!this._hideAnim){
-			this._hideAnim = dojo.fx.combine([
-				dojo.animateProperty({ node:dojo.body(), duration:500, properties:{ marginTop:this._bodyMarginTop } }),
-				dojo.animateProperty({ node:this.domNode, duration:500, properties:{ height:0, opacity:0 } })
+			this._hideAnim = fx.combine([
+				baseFx.animateProperty({ node:baseWin.body(), duration:500, properties:{ marginTop:this._bodyMarginTop } }),
+				baseFx.animateProperty({ node:this.domNode, duration:500, properties:{ height:0, opacity:0 } })
 			]);
-			dojo.connect(this._hideAnim, "onEnd", this, function(){
-				dojo.style(this.domNode, "display", "none");
+			connect.connect(this._hideAnim, "onEnd", this, function(){
+				style.set(this.domNode, {display:"none", opacity:1});
 			});
 		}
 		this._hideAnim.play();
@@ -200,7 +215,7 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 		//		Called when user clicks the "do not remind" link.
 		// tags:
 		//		private
-		dojo.cookie("disableUpgradeReminders", true, { expires:3650 });
+		cookie("disableUpgradeReminders", true, { expires:3650 });
 		this.hide();
 	},
 
@@ -209,7 +224,7 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 		//		Called when user hovers over close icon
 		// tags:
 		//		private
-		dojo.addClass(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
+		domClass.add(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
 	},
 
 	_onCloseLeave: function(){
@@ -217,7 +232,10 @@ dojo.declare("dojox.widget.UpgradeBar", [dijit._Widget, dijit._Templated], {
 		//		Called when user stops hovering over close icon
 		// tags:
 		//		private
-		dojo.removeClass(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
+		domClass.remove(this.closeButtonNode, "dojoxUpgradeBarCloseIcon-hover");
 	}
+});
 
+
+return UpgradeBar;
 });

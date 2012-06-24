@@ -1,32 +1,27 @@
 define(["dojo/_base/lang", "dojo/_base/config", "dojo/ready", "dojo/_base/unload", 
         "dojo/_base/sniff", "dojo/_base/xhr", "dojo/_base/json", "dojo/io-query", "dojo/io/script"
 ], function(lang, config, ready, unload, has, xhr, json, ioQuery, scriptIO){
-	/*=====
-		ready = dojo.ready;
-		ioQuery = dojo/io-query;
-		scriptIO = dojo/io/script;
-	=====*/
 
 	var Analytics = function(){
-		// summary: TODOC
+		// summary:
 		//		where we store data until we're ready to send it off.
-		//
-		//the data queue;
+
+		// the data queue;
 		this._data = [];
 
-		//id of messages for this session/page
+		// id of messages for this session/page
 		this._id = 1;
 
-		//some default values
+		// some default values
 		this.sendInterval = config["sendInterval"] || 5000;
 		this.inTransitRetry = config["inTransitRetry"] || 200;
 		this.dataUrl = config["analyticsUrl"] || require.toUrl("dojox/analytics/logger/dojoxAnalytics.php");
 		this.sendMethod = config["sendMethod"] || "xhrPost";
 		this.maxRequestSize = has("ie") ? 2000 : config["maxRequestSize"] || 4000;
 
-		//while we can go ahead and being logging as soon as this constructor is completed
-		//we're not going to schedule pushing data to the server until after the page
-		//has completed loading
+		// while we can go ahead and being logging as soon as this constructor is completed
+		// we're not going to schedule pushing data to the server until after the page
+		// has completed loading
 		ready(this, "schedulePusher");
 		unload.addOnUnload(this, "pushData", true);
 	};
@@ -71,7 +66,7 @@ define(["dojo/_base/lang", "dojo/_base/config", "dojo/ready", "dojo/_base/unload
 			//	the deferred after hooking up completion callbacks.  If there is no data
 			//	to be pushed, return false;
 			if(this._data.length){
-				//clear the queue
+				// clear the queue
 				this._inTransit = this._data;
 				this._data = [];
 				var def;
@@ -101,14 +96,14 @@ define(["dojo/_base/lang", "dojo/_base/config", "dojo/ready", "dojo/_base/unload
 		},
 
 		getQueryPacket: function(){
-			// summary: TODOC
+			// TODOC
 			while(true){
 				var content = {
 					id: this._id++,
 					data: json.toJson(this._inTransit)
 				};
 				
-				//FIXME would like a much better way to get the query down to length
+				// FIXME would like a much better way to get the query down to length
 				var query = this.dataUrl + '?' + ioQuery.objectToQuery(content);
 				if(query.length > this.maxRequestSize){
 					this._data.unshift(this._inTransit.pop());
@@ -121,8 +116,8 @@ define(["dojo/_base/lang", "dojo/_base/config", "dojo/ready", "dojo/_base/unload
 
 		onPushComplete: function(results){
 			// summary:
-			//	If our data push was successfully, remove the _inTransit data and schedule the next
-			//	parser run.
+			//		If our data push was successfully, remove the _inTransit data and schedule the next
+			//		parser run.
 			if(this._inTransit){
 				delete this._inTransit;
 			}
@@ -135,6 +130,6 @@ define(["dojo/_base/lang", "dojo/_base/config", "dojo/ready", "dojo/_base/unload
 		}
 	});
 
-	//create the analytics  singleton
+	// create the analytics singleton
 	return lang.setObject("dojox.analytics",new Analytics());
 });

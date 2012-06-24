@@ -1,5 +1,7 @@
+define(
 ({
-name: "Namn",
-path: "Sökväg",
-size: "Storlek (byte)"
+	name: "Namn",
+	path: "Sökväg",
+	size: "Storlek (i byte)"
 })
+);

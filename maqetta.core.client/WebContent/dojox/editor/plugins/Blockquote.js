@@ -129,10 +129,8 @@ dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
 							}
 						}
 						if(bq){
-							dojo.withGlobal(ed.window,
-								"selectElementChildren", dijit._editor.selection, [bq]);
-							dojo.withGlobal(ed.window,
-								"collapse", dijit._editor.selection, [true]);
+							ed._sCall("selectElementChildren", [bq]);
+							ed._sCall("collapse", [true]);
 						}
 					}else{
 						var curNode;
@@ -150,8 +148,7 @@ dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
 
 						// Try to find the end node.  We have to check the selection junk
 						curNode = start;
-						while(curNode.nextSibling && dojo.withGlobal(ed.window,
-							"inSelection", dijit._editor.selection, [curNode])){
+						while(curNode.nextSibling && ed._sCall("inSelection", [curNode])){
 							curNode = curNode.nextSibling;
 						}
 						end = curNode;
@@ -236,10 +233,8 @@ dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
 							if(this._isEmpty(bq)){
 								bq.parentNode.removeChild(bq);
 							}else{
-								dojo.withGlobal(ed.window,
-									"selectElementChildren", dijit._editor.selection, [bq]);
-								dojo.withGlobal(ed.window,
-									"collapse", dijit._editor.selection, [true]);
+								ed._sCall("selectElementChildren", [bq]);
+								ed._sCall("collapse", [true]);
 							}
 							bq = null;
 						}
@@ -265,10 +260,8 @@ dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
 							}
 							elem.parentNode.removeChild(elem);
 							if(lastChild){
-								dojo.withGlobal(ed.window,
-									"selectElementChildren", dijit._editor.selection, [lastChild]);
-								dojo.withGlobal(ed.window,
-									"collapse", dijit._editor.selection, [true]);
+								ed._sCall("selectElementChildren", [lastChild]);
+								ed._sCall("collapse", [true]);
 							}
 						}
 					}else{
@@ -280,8 +273,7 @@ dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
 						}
 						var selectedNodes = [];
 						var cNode = start;
-						while(cNode && cNode.nextSibling && dojo.withGlobal(ed.window,
-							"inSelection", dijit._editor.selection, [cNode])){
+						while(cNode && cNode.nextSibling && ed._sCall("inSelection", [cNode])){
 							if(cNode.parentNode && this._getTagName(cNode.parentNode) === "blockquote"){
 								cNode = cNode.parentNode;
 							}

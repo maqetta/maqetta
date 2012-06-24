@@ -1,44 +1,46 @@
-define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", "./dom", "./dom-construct", "./parser"], function(dojo, lang, darray, declare, dom, domConstruct, parser) {
+define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", "./dom", "./dom-construct", "./parser"],
+	function(kernel, lang, darray, declare, dom, domConstruct, parser) {
 	// module:
 	//		dojo/html
 	// summary:
 	//		TODOC
 
-	lang.getObject("html", true, dojo);
+	var html = {};
+	lang.setObject("dojo.html", html);
 
 	// the parser might be needed..
 
-	// idCounter is incremented with each instantiation to allow asignment of a unique id for tracking, logging purposes
+	// idCounter is incremented with each instantiation to allow assignment of a unique id for tracking, logging purposes
 	var idCounter = 0;
 
-	dojo.html._secureForInnerHtml = function(/*String*/ cont){
+	html._secureForInnerHtml = function(/*String*/ cont){
 		// summary:
 		//		removes !DOCTYPE and title elements from the html string.
 		//
 		//		khtml is picky about dom faults, you can't attach a style or <title> node as child of body
 		//		must go into head, so we need to cut out those tags
-		//	cont:
+		// cont:
 		//		An html string for insertion into the dom
 		//
 		return cont.replace(/(?:\s*<!DOCTYPE\s[^>]+>|<title[^>]*>[\s\S]*?<\/title>)/ig, ""); // String
 	};
 
-/*====
-	dojo.html._emptyNode = function(node){
-		// summary:
-		//		removes all child nodes from the given node
-		//	node: DOMNode
-		//		the parent element
-	};
-=====*/
-	dojo.html._emptyNode = domConstruct.empty;
+	html._emptyNode = domConstruct.empty;
+	/*=====
+	 dojo.html._emptyNode = function(node){
+		 // summary:
+		 //		removes all child nodes from the given node
+		 // node: DOMNode
+		 //		the parent element
+	 };
+	 =====*/
 
-	dojo.html._setNodeContent = function(/* DomNode */ node, /* String|DomNode|NodeList */ cont){
+		html._setNodeContent = function(/*DomNode*/ node, /*String|DomNode|NodeList*/ cont){
 		// summary:
 		//		inserts the given content into the given node
-		//	node:
+		// node:
 		//		the parent element
-		//	content:
+		// content:
 		//		the content to be set on the parent element.
 		//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
 
@@ -65,7 +67,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 	};
 
 	// we wrap up the content-setting operation in a object
-	declare("dojo.html._ContentSetter", null,
+	html._ContentSetter = declare("dojo.html._ContentSetter", null,
 		{
 			// node: DomNode|String
 			//		An node which will be the parent element that we set content into
@@ -97,15 +99,15 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			//		will search for data-dojo-type (or dojoType).  For backwards compatibility
 			//		reasons defaults to dojo._scopeName (which is "dojo" except when
 			//		multi-version support is used, when it will be something like dojo16, dojo20, etc.)
-			parserScope: dojo._scopeName,
+			parserScope: kernel._scopeName,
 
 			// startup: Boolean
 			//		Start the child widgets after parsing them.	  Only obeyed if parseContent is true.
 			startup: true,
 
-			// lifecyle methods
-			constructor: function(/* Object */params, /* String|DomNode */node){
-				//	summary:
+			// lifecycle methods
+			constructor: function(/*Object*/ params, /*String|DomNode*/ node){
+				// summary:
 				//		Provides a configurable, extensible object to wrap the setting on content on a node
 				//		call the set() method to actually set the content..
 
@@ -124,10 +126,10 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 					].join("_");
 				}
 			},
-			set: function(/* String|DomNode|NodeList? */ cont, /* Object? */ params){
+			set: function(/* String|DomNode|NodeList? */ cont, /*Object?*/ params){
 				// summary:
 				//		front-end to the set-content sequence
-				//	cont:
+				// cont:
 				//		An html string, node or enumerable list of nodes for insertion into the dom
 				//		If not provided, the object's content property will be used
 				if(undefined !== cont){
@@ -142,6 +144,8 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 				this.setContent();
 				this.onEnd();
 
+				// dojox.html._ContentSetter.onEnd() can run asynchronously, so for 2.0 considering switching set()
+				// to return a Deferred
 				return this.node;
 			},
 			setContent: function(){
@@ -154,7 +158,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 					throw new Error(this.declaredClass + ": setContent given no node");
 				}
 				try{
-					node = dojo.html._setNodeContent(node, this.content);
+					node = html._setNodeContent(node, this.content);
 				}catch(e){
 					// check if a domfault occurs when we are appending this.errorMessage
 					// like for instance if domNode is a UL and we try append a DIV
@@ -172,12 +176,20 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			},
 
 			empty: function() {
-				// summary
-				//	cleanly empty out existing content
+				// summary:
+				//		cleanly empty out existing content
+				
+				// If there is a parse in progress, cancel it.
+				if(this.parseDeferred){
+					if(!this.parseDeferred.isResolved()){
+						this.parseDeferred.cancel();
+					}
+					delete this.parseDeferred;
+				}
 
 				// destroy any widgets from a previous run
-				// NOTE: if you dont want this you'll need to empty
-				// the parseResults array property yourself to avoid bad things happenning
+				// NOTE: if you don't want this you'll need to empty
+				// the parseResults array property yourself to avoid bad things happening
 				if(this.parseResults && this.parseResults.length) {
 					darray.forEach(this.parseResults, function(w) {
 						if(w.destroy){
@@ -188,11 +200,11 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 				}
 				// this is fast, but if you know its already empty or safe, you could
 				// override empty to skip this step
-				dojo.html._emptyNode(this.node);
+				html._emptyNode(this.node);
 			},
 
 			onBegin: function(){
-				// summary
+				// summary:
 				//		Called after instantiation, but before set();
 				//		It allows modification of any of the object properties
 				//		- including the node and content provided - before the set operation actually takes place
@@ -202,7 +214,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 
 				if(lang.isString(cont)){
 					if(this.cleanContent){
-						cont = dojo.html._secureForInnerHtml(cont);
+						cont = html._secureForInnerHtml(cont);
 					}
 
 					if(this.extractContent){
@@ -215,35 +227,40 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 				this.empty();
 
 				this.content = cont;
-				return this.node; /* DomNode */
+				return this.node; // DomNode
 			},
 
 			onEnd: function(){
-				// summary
+				// summary:
 				//		Called after set(), when the new content has been pushed into the node
 				//		It provides an opportunity for post-processing before handing back the node to the caller
 				//		This default implementation checks a parseContent flag to optionally run the dojo parser over the new content
 				if(this.parseContent){
-					// populates this.parseResults if you need those..
+					// populates this.parseResults and this.parseDeferred if you need those..
 					this._parse();
 				}
-				return this.node; /* DomNode */
+				return this.node; // DomNode
 			},
 
 			tearDown: function(){
-				// summary
+				// summary:
 				//		manually reset the Setter instance if its being re-used for example for another set()
-				// description
+				// description:
 				//		tearDown() is not called automatically.
 				//		In normal use, the Setter instance properties are simply allowed to fall out of scope
 				//		but the tearDown method can be called to explicitly reset this instance.
 				delete this.parseResults;
+				delete this.parseDeferred;
 				delete this.node;
 				delete this.content;
 			},
 
 			onContentError: function(err){
-				return "Error occured setting content: " + err;
+				return "Error occurred setting content: " + err;
+			},
+
+			onExecError: function(err){
+				return "Error occurred executing scripts: " + err;
 			},
 
 			_mixin: function(params){
@@ -254,7 +271,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 				var empty = {}, key;
 				for(key in params){
 					if(key in empty){ continue; }
-					// TODO: here's our opportunity to mask the properties we dont consider configurable/overridable
+					// TODO: here's our opportunity to mask the properties we don't consider configurable/overridable
 					// .. but history shows we'll almost always guess wrong
 					this[key] = params[key];
 				}
@@ -262,6 +279,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			_parse: function(){
 				// summary:
 				//		runs the dojo parser over the node contents, storing any results in this.parseResults
+				//		and the parse promise in this.parseDeferred
 				//		Any errors resulting from parsing are passed to _onError for handling
 
 				var rootNode = this.node;
@@ -273,11 +291,14 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 							inherited[name] = this[name];
 						}
 					}, this);
-					this.parseResults = parser.parse({
+					var self = this;
+					this.parseDeferred = parser.parse({
 						rootNode: rootNode,
 						noStart: !this.startup,
 						inherited: inherited,
 						scope: this.parserScope
+					}).then(function(results){
+						return self.parseResults = results;
 					});
 				}catch(e){
 					this._onError('Content', e, "Error parsing in _ContentSetter#"+this.id);
@@ -287,17 +308,17 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			_onError: function(type, err, consoleText){
 				// summary:
 				//		shows user the string that is returned by on[type]Error
-				//		overide/implement on[type]Error and return your own string to customize
+				//		override/implement on[type]Error and return your own string to customize
 				var errText = this['on' + type + 'Error'].call(this, err);
 				if(consoleText){
 					console.error(consoleText, err);
 				}else if(errText){ // a empty string won't change current content
-					dojo.html._setNodeContent(this.node, errText, true);
+					html._setNodeContent(this.node, errText, true);
 				}
 			}
-	}); // end dojo.declare()
+	}); // end declare()
 
-	dojo.html.set = function(/* DomNode */ node, /* String|DomNode|NodeList */ cont, /* Object? */ params){
+	html.set = function(/*DomNode*/ node, /*String|DomNode|NodeList*/ cont, /*Object?*/ params){
 			// summary:
 			//		inserts (replaces) the given content into the given node. dojo.place(cont, node, "only")
 			//		may be a better choice for simple HTML insertion.
@@ -307,14 +328,14 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			//		an HTML string into the DOM, but it only handles inserting an HTML string as DOM
 			//		elements, or inserting a DOM node. dojo.place does not handle NodeList insertions
 			//		or the other capabilities as defined by the params object for this method.
-			//	node:
+			// node:
 			//		the parent element that will receive the content
-			//	cont:
+			// cont:
 			//		the content to be set on the parent element.
 			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
-			//	params:
+			// params:
 			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
-			//	example:
+			// example:
 			//		A safe string/node/nodelist content replacement/injection with hooks for extension
 			//		Example Usage:
 			//		dojo.html.set(node, "some string");
@@ -326,11 +347,11 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 		}
 		if(!params){
 			// simple and fast
-			return dojo.html._setNodeContent(node, cont, true);
+			return html._setNodeContent(node, cont, true);
 		}else{
 			// more options but slower
 			// note the arguments are reversed in order, to match the convention for instantiation via the parser
-			var op = new dojo.html._ContentSetter(lang.mixin(
+			var op = new html._ContentSetter(lang.mixin(
 					params,
 					{ content: cont, node: node }
 			));
@@ -338,5 +359,5 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 		}
 	};
 
-	return dojo.html;
+	return html;
 });

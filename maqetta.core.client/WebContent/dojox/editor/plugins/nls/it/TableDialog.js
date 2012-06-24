@@ -1,27 +1,25 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Inserisci tabella",
 	modifyTableTitle: "Modifica tabella",
-	rows: "Righe:",
-	columns: "Colonne:",
-	align: "Allinea:",
-	cellPadding: "Padding celle:",
-	cellSpacing: "Spaziatura celle:",
-	tableWidth: "Larghezza tabelle:",
+	rows: "Righe",
+	columns: "Colonne",
+	align: "Allinea",
+	cellPadding: "Riempimento cella",
+	cellSpacing: "Spazio cella",
+	tableWidth: "Larghezza tabella",
 	backgroundColor: "Colore di sfondo:",
-	borderColor: "Colore bordi:",
-	borderThickness: "Spessore bordi",
+	borderColor: "Colore bordo:",
+	borderThickness: "Spessore bordo:",
 	percent: "percentuale",
 	pixels: "pixel",
-	"default": "predefinito",
+	"default": "impostazione predefinita",
 	left: "sinistra",
 	center: "centro",
 	right: "destra",
 	buttonSet: "Imposta", // translated elsewhere?
 	buttonInsert: "Inserisci",
 	buttonCancel: "Annulla",
-
 	selectTableLabel: "Seleziona tabella",
 	insertTableRowBeforeLabel: "Aggiungi riga prima",
 	insertTableRowAfterLabel: "Aggiungi riga dopo",
@@ -30,7 +28,4 @@ define(
 	deleteTableRowLabel: "Elimina riga",
 	deleteTableColumnLabel: "Elimina colonna"
 })
-	
-
-//end v1.x content
 );

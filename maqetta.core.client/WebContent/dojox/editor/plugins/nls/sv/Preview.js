@@ -1,8 +1,5 @@
 define(
-//begin v1.x content
 ({
-	"preview": "Förhandsgranska"
+	"preview": "Förhandsgranskning"
 })
-
-//end v1.x content
 );

@@ -1,37 +1,6 @@
 define(["dojo/_base/lang","dojo/_base/declare","dojo/_base/array", "dojo/_base/loader" /* dojo._getText */,
 	    "dojo/_base/xhr","./_base", "dojox/xml/DomParser", "dojox/html/metrics","./matrix"],
   function (lang,declare,arr,loader,xhr,gfx,xmlDomParser,HtmlMetrics,Matrix){
-/*===== 
- 	gfx = dojox.gfx;
- 	dojox.gfx.VectorText = {
-		// summary:
-		//		An implementation of the SVG Font 1.1 spec, using dojox.gfx.
-		//
-		// Basic interface:
-		// var f = new dojox.gfx.Font(url|string);
-		// surface||group.createVectorText(text)
-		//	.setFill(fill)
-		//	.setStroke(stroke)
-		//	.setFont(fontStyleObject);
-		//
-		// The arguments passed to createVectorText are the same as you would
-		// pass to surface||group.createText; the difference is that this
-		// is entirely renderer-agnostic, and the return value is a subclass
-		// of dojox.gfx.Group.
-		//
-		// Note also that the "defaultText" object is slightly different:
-		// { type:"vectortext", x:0, y:0, width:null, height: null,
-		//	text: "", align: "start", decoration: "none" }
-		//
-		// ...as well as the "defaultVectorFont" object:
-		// { type:"vectorfont", size:"10pt" }
-		//
-		// The reason for this should be obvious: most of the style for the font is defined
-		// by the font object itself.
-		//
-		// Note that this will only render IF and WHEN you set the font.
-	};
- =====*/ 
 	var _getText = function(url){
 		var result;
 		xhr.get({url:url, sync:true, load:function(text){ // Note synchronous!
@@ -40,7 +9,40 @@ define(["dojo/_base/lang","dojo/_base/declare","dojo/_base/array", "dojo/_base/l
 		return result;
 	};
 	 
+
+	/*=====
+	dojox.gfx.VectorText = {
+		// summary:
+		//		An implementation of the SVG Font 1.1 spec, using dojox.gfx.
+		//
+		//		Basic interface:
+		//		var f = new dojox.gfx.Font(url|string);
+		//		surface||group.createVectorText(text)
+		//		.setFill(fill)
+		//		.setStroke(stroke)
+		//		.setFont(fontStyleObject);
+		//
+		//		The arguments passed to createVectorText are the same as you would
+		//		pass to surface||group.createText; the difference is that this
+		//		is entirely renderer-agnostic, and the return value is a subclass
+		//		of dojox.gfx.Group.
+		//
+		//		Note also that the "defaultText" object is slightly different:
+		//		{ type:"vectortext", x:0, y:0, width:null, height: null,
+		//		text: "", align: "start", decoration: "none" }
+		//
+		//		...as well as the "defaultVectorFont" object:
+		//		{ type:"vectorfont", size:"10pt" }
+		//
+		//		The reason for this should be obvious: most of the style for the font is defined
+		//		by the font object itself.
+		//
+		//		Note that this will only render IF and WHEN you set the font.
+	};
+	=====*/
+
 	lang.getObject("dojox.gfx.VectorText", true);
+	
 	lang.mixin(gfx, {
 		vectorFontFitting: {
 			NONE: 0,	//	render text according to passed size.

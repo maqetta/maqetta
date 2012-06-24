@@ -478,7 +478,7 @@ dojo.extend(dojox.xmpp.xmppSession, {
 						case 'show':
 							p[n.nodeName]=n.firstChild.nodeValue;
 							break;
-						case 'status':
+						case 'priority':
 							p.priority=parseInt(n.firstChild.nodeValue);
 							break;
 						case 'x':

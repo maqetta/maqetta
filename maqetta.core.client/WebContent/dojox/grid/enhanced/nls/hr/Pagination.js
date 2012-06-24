@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} od ${1} ${0}",
 	"firstTip": "Prva stranica",
@@ -17,8 +16,6 @@ define(
 	"pageCountIndication": " (${0} stranica)",
 	"dialogConfirm": "Idi",
 	"dialogCancel": "Opoziv",
-	"all": "svi"
+	"all": "Sve"
 })
-//end v1.x content
 );
-

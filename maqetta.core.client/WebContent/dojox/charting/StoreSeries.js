@@ -3,14 +3,14 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/Deferred"],
 	
 	return declare("dojox.charting.StoreSeries", null, {
 		constructor: function(store, kwArgs, value){
-			//	summary:
+			// summary:
 			//		Series adapter for dojo object stores (dojo.store).
-			//	store: Object:
+			// store: Object
 			//		A dojo object store.
-			//	kwArgs: Object:
+			// kwArgs: Object
 			//		A store-specific keyword parameters used for querying objects.
 			//		See dojo.store docs
-			//	value: Function|Object|String|Null:
+			// value: Function|Object|String|Null
 			//		Function, which takes an object handle, and
 			//		produces an output possibly inspecting the store's item. Or
 			//		a dictionary object, which tells what names to extract from
@@ -43,12 +43,13 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/Deferred"],
 			}
 	
 			this.data = [];
-	
+
+			this._initialRendering = false;
 			this.fetch();
 		},
 	
 		destroy: function(){
-			//	summary:
+			// summary:
 			//		Clean up before GC.
 			if(this.observeHandle){
 				this.observeHandle.dismiss();
@@ -56,9 +57,9 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/Deferred"],
 		},
 	
 		setSeriesObject: function(series){
-			//	summary:
+			// summary:
 			//		Sets a dojox.charting.Series object we will be working with.
-			//	series: dojox.charting.Series:
+			// series: dojox.charting.Series
 			//		Our interface to the chart.
 			this.series = series;
 		},
@@ -66,7 +67,7 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/Deferred"],
 		// store fetch loop
 	
 		fetch: function(){
-			//	summary:
+			// summary:
 			//		Fetches data from the store and updates a chart.
 			var objects = this.objects = [];
 			var self = this;
@@ -91,7 +92,8 @@ define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/Deferred"],
 	
 		_pushDataChanges: function(){
 			if(this.series){
-				this.series.chart.updateSeries(this.series.name, this);
+				this.series.chart.updateSeries(this.series.name, this, this._initialRendering);
+				this._initialRendering = false;
 				this.series.chart.delayedRender();
 			}
 		}

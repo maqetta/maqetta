@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertImageTitle: "Vložiť obrázok",
 	url: "Obrázok",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "Zadajte adresu URL",
 	prePopuTextBrowse: "alebo nájdite lokálny súbor."
 })
-
-//end v1.x content
 );

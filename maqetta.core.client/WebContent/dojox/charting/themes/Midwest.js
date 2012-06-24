@@ -1,5 +1,4 @@
-define(["../Theme", "./common"], function(Theme, themes){
-	
+define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
 	themes.Midwest=new Theme({
 		colors: [
 			"#927b51",
@@ -9,6 +8,5 @@ define(["../Theme", "./common"], function(Theme, themes){
 			"#aebc21"
 		]
 	});
-	
 	return themes.Midwest;
 });

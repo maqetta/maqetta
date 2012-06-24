@@ -19,8 +19,8 @@ OPTIONS
                 Specifies the Javascript environment to use. Defaults to node, if available, java otherwise.
      
                 node             use node.js, if available, automatic downgrade to java
-                node-dbg         same as node, with the --debug argument
-                node-dbg-brk     same as node with the --debug-brk argument
+                node-debug         same as node, with the --debug argument
+                node-debug-brk     same as node with the --debug-brk argument
                 java             use java
      
      Note: the alternative syntax bin=option is supported but deprecated.

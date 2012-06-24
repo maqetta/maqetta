@@ -2,9 +2,8 @@ define([
 	"dojo/_base/array", // array.filter array.forEach array.indexOf array.some
 	"dojo/aspect", // aspect.after
 	"dojo/_base/declare", // declare
-	"dojo/_base/json", // json.stringify
 	"dojo/_base/lang" // lang.hitch
-], function(array, aspect, declare, json, lang){
+], function(array, aspect, declare, lang){
 
 	// module:
 	//		dijit/tree/TreeStoreModel
@@ -41,7 +40,7 @@ define([
 		//		than by calling store.getLabel()
 		labelAttr: "",
 
-	 	// root: [readonly] dojo.data.Item
+		// root: [readonly] dojo.data.Item
 		//		Pointer to the root item (read only, not a parameter)
 		root: null,
 
@@ -55,11 +54,11 @@ define([
 
 		// deferItemLoadingUntilExpand: Boolean
 		//		Setting this to true will cause the TreeStoreModel to defer calling loadItem on nodes
-		// 		until they are expanded. This allows for lazying loading where only one
+		//		until they are expanded. This allows for lazying loading where only one
 		//		loadItem (and generally one network call, consequently) per expansion
-		// 		(rather than one for each child).
-		// 		This relies on partial loading of the children items; each children item of a
-		// 		fully loaded item should contain the label and info about having children.
+		//		(rather than one for each child).
+		//		This relies on partial loading of the children items; each children item of a
+		//		fully loaded item should contain the label and info about having children.
 		deferItemLoadingUntilExpand: false,
 
 		constructor: function(/* Object */ args){
@@ -74,7 +73,7 @@ define([
 
 			var store = this.store;
 			if(!store.getFeatures()['dojo.data.api.Identity']){
-				throw new Error("dijit.Tree: store must support dojo.data.Identity");
+				throw new Error("dijit.tree.TreeStoreModel: store must support dojo.data.Identity");
 			}
 
 			// if the store supports Notification, subscribe to the notification events
@@ -107,8 +106,8 @@ define([
 					query: this.query,
 					onComplete: lang.hitch(this, function(items){
 						if(items.length != 1){
-							throw new Error(this.declaredClass + ": query " + json.stringify(this.query) + " returned " + items.length +
-							 	" items, but must return exactly one item");
+							throw new Error("dijit.tree.TreeStoreModel: root query returned " + items.length +
+								" items, but must return exactly one");
 						}
 						this.root = items[0];
 						onItem(this.root);
@@ -131,7 +130,7 @@ define([
 
 		getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete, /*function*/ onError){
 			// summary:
-			// 		Calls onComplete() with array of child items of given parent item, all loaded.
+			//		Calls onComplete() with array of child items of given parent item, all loaded.
 
 			var store = this.store;
 			if(!store.isItemLoaded(parentItem)){

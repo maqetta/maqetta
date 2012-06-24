@@ -21,7 +21,7 @@ define([
 		gatherEnableState: function(names){
 			// summary:
 			//		Gather enable state of all form elements and return as a dictionary.
-			// names: Object?:
+			// names: Object?
 			//		If it is an array, it is a list of names to be processed.
 			//		If it is an object, dictionary keys are names to be processed.
 			//		If it is omitted, all known form elements are to be processed.
@@ -42,12 +42,12 @@ define([
 		enable: function(state, defaultState){
 			// summary:
 			//		Enable form controls according to the supplied state object.
-			// state: Object?:
+			// state: Object?
 			//		Optional. If a name-value dictionary, the value is true
 			//		to enable and false to disable. If an array, all names in the
 			//		array will be set to defaultState. If omitted, all form
 			//		elements will be set to defaultState.
-			// defaultState: Boolean:
+			// defaultState: Boolean
 			//		The default state (true, if omitted).
 
 			if(arguments.length < 2 || defaultState === undefined){
@@ -71,7 +71,7 @@ define([
 			// summary:
 			//		Disable form controls according to the supplied state object
 			//		returning the previous state.
-			// state: Object?:
+			// state: Object?
 			//		Optional. If a name-value dictionary, the value is true
 			//		to enable and false to disable. If an array, all names in the
 			//		array will be disabled. If omitted, disables all.

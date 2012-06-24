@@ -3,10 +3,6 @@ define([
 	"./RoundRectCategory"
 ], function(declare, RoundRectCategory){
 
-/*=====
-	var RoundRectCategory = dojox.mobile.RoundRectCategory;
-=====*/
-
 	// module:
 	//		dojox/mobile/EdgeToEdgeCategory
 	// summary:

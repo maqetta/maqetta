@@ -6,10 +6,6 @@ define([
 ], function(kernel, ValidationTextBox, ComboBoxMixin, declare){
 kernel.experimental("dojox.form.MultiComboBox");
 
-	/*=====
-		ValidationTextBox = dijit.form.ValidationTextBox;
-		ComboBoxMixin = dijit.form.ComboBoxMixin;
-	=====*/
 return declare("dojox.form.MultiComboBox", [ValidationTextBox, ComboBoxMixin],{
 	// summary:
 	//		A ComboBox that accepts multiple inputs on a single line
@@ -28,7 +24,7 @@ return declare("dojox.form.MultiComboBox", [ValidationTextBox, ComboBoxMixin],{
 		this.inherited(arguments);
 	},
 
-	_addPreviousMatches: function(/* String */text){
+	_addPreviousMatches: function(/*String*/ text){
 		if(this._previousMatches){
 			if(!text.match(new RegExp("^"+this._previousMatches))){
 				text = this._previousMatches+text;
@@ -38,7 +34,7 @@ return declare("dojox.form.MultiComboBox", [ValidationTextBox, ComboBoxMixin],{
 		return text; // String
 	},
 
-	_cleanupDelimiters: function(/* String */text){
+	_cleanupDelimiters: function(/*String*/ text){
 		if(this.delimiter){
 			text = text.replace(new RegExp("  +"), " ");
 			text = text.replace(new RegExp("^ *"+this.delimiter+"* *"), "");
@@ -47,12 +43,12 @@ return declare("dojox.form.MultiComboBox", [ValidationTextBox, ComboBoxMixin],{
 		return text;
 	},
 
-	_autoCompleteText: function(/* String */text){
+	_autoCompleteText: function(/*String*/ text){
 		arguments[0] = this._addPreviousMatches(text);
 		this.inherited(arguments);
 	},
 
-	_startSearch: function(/* String */text){
+	_startSearch: function(/*String*/ text){
 		text = this._cleanupDelimiters(text);
 		var re = new RegExp("^.*"+this.delimiter+" *");
 

@@ -1,19 +1,13 @@
 define([
 	"dojo/_base/connect",
 	"dojo/_base/declare",
-	"dojo/_base/window",
 	"dojo/dom",
 	"dojo/dom-class",
 	"dojo/dom-construct",
-	"dijit/registry",	// registry.byNode
+	"dijit/registry",
 	"dijit/_Contained",
 	"dijit/_WidgetBase"
-], function(connect, declare, win, dom, domClass, domConstruct, registry, Contained, WidgetBase){
-
-/*=====
-	var Contained = dijit._Contained;
-	var WidgetBase = dijit._WidgetBase;
-=====*/
+], function(connect, declare, dom, domClass, domConstruct, registry, Contained, WidgetBase){
 
 	// module:
 	//		dojox/mobile/PageIndicator
@@ -35,13 +29,14 @@ define([
 		//		will be the reference node.
 		refId: "",
 
+		baseClass: "mblPageIndicator",
+
 		buildRendering: function(){
-			this.domNode = this.srcNodeRef || win.doc.createElement("DIV");
-			this.domNode.className = "mblPageIndicator";
-			this._tblNode = domConstruct.create("TABLE", {className:"mblPageIndicatorContainer"}, this.domNode);
+			this.inherited(arguments);
+			this._tblNode = domConstruct.create("table", {className:"mblPageIndicatorContainer"}, this.domNode);
 			this._tblNode.insertRow(-1);
-			this.connect(this.domNode, "onclick", "onClick");
-			connect.subscribe("/dojox/mobile/viewChanged", this, function(view){
+			this._clickHandle = this.connect(this.domNode, "onclick", "_onClick");
+			this.subscribe("/dojox/mobile/viewChanged", function(view){
 				this.reset();
 			});
 		},
@@ -70,7 +65,7 @@ define([
 				domConstruct.empty(r);
 				for(i = 0; i < a.length; i++){
 					c = a[i];
-					dot = domConstruct.create("DIV", {className:"mblPageIndicatorDot"});
+					dot = domConstruct.create("div", {className:"mblPageIndicatorDot"});
 					r.insertCell(-1).appendChild(dot);
 				}
 			}
@@ -92,13 +87,25 @@ define([
 			return (node && node.nodeType === 1 && domClass.contains(node, "mblView"));
 		},
 
-		onClick: function(e){
+		_onClick: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(this.onClick(e) === false){ return; } // user's click action
 			if(e.target !== this.domNode){ return; }
 			if(e.layerX < this._tblNode.offsetLeft){
 				connect.publish("/dojox/mobile/prevPage", [this]);
 			}else if(e.layerX > this._tblNode.offsetLeft + this._tblNode.offsetWidth){
 				connect.publish("/dojox/mobile/nextPage", [this]);
 			}
+		},
+
+		onClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User defined function to handle clicks
+			// tags:
+			//		callback
 		}
 	});
 });

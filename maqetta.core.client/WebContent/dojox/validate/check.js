@@ -82,7 +82,7 @@ validate.check = function(/*HTMLFormElement*/form, /*Object*/profile){
 	//
 	// form: form to be validated
 	// profile: specifies how the form fields are to be validated
-	// {trim:Array, uppercase:Array, lowercase:Array, ucfirst:Array, digit:Array,
+	//	{trim:Array, uppercase:Array, lowercase:Array, ucfirst:Array, digit:Array,
 	//	required:Array, dependencies:Object, constraints:Object, confirm:Object}
 
 	// Essentially private properties of results object

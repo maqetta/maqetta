@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"nodeActions": "פעולות ${nodeName} ",
 	"selectContents": "בחירת תוכן ",
@@ -9,6 +8,4 @@ define(
 	"moveStart": "העברת הסמן להתחלה ",
 	"moveEnd": "העברת הסמן לסוף "
 })
-
-//end v1.x content
 );

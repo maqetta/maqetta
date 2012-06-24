@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} de ${1} ${0}",
 	"firstTip": "Primera pàgina",
@@ -7,6 +6,7 @@ define(
 	"nextTip": "Pàgina següent",
 	"prevTip": "Pàgina anterior",
 	"itemTitle": "elements",
+	"singularItemTitle": "element",
 	"pageStepLabelTemplate": "Pàgina ${0}",
 	"pageSizeLabelTemplate": "${0} elements per pàgina",
 	"allItemsLabelTemplate": "Tots els elements",
@@ -16,8 +16,6 @@ define(
 	"pageCountIndication": " (${0} pàgines)",
 	"dialogConfirm": "Vés-hi",
 	"dialogCancel": "Cancel·la",
-	"all": "tot"
+	"all": "Tots"
 })
-//end v1.x content
 );
-

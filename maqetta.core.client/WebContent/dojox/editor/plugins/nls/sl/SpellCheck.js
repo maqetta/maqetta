@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Paketno preverjanje črkovanja ",
 	unfound: "Ni najdeno ",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Preskoči vse vnose, kot je ta ",
 	iMsg: "Ni predlogov za črkovanje "
 })
-
-//end v1.x content
 );

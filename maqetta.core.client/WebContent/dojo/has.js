@@ -33,7 +33,7 @@ define(["require"], function(require) {
 			element = doc && doc.createElement("DiV"),
 			cache = {};
 
-		has = /*===== dojo.has= =====*/ function(name){
+		has = function(name){
 			//	summary:
 			//		Return the current value of the named feature.
 			//
@@ -44,12 +44,12 @@ define(["require"], function(require) {
 			//		Returns the value of the feature named by name. The feature must have been
 			//		previously added to the cache by has.add.
 
-			return cache[name] = typeof cache[name] == "function" ? cache[name](global, doc, element) : cache[name]; // Boolean
+			return typeof cache[name] == "function" ? (cache[name] = cache[name](global, doc, element)) : cache[name]; // Boolean
 		};
 
 		has.cache = cache;
 
-		has.add = /*====== dojo.has.add= ======*/ function(name, test, now, force){
+		has.add = function(name, test, now, force){
 			// summary:
 			//	 Register a new feature test for some named feature.
 			//
@@ -109,18 +109,24 @@ define(["require"], function(require) {
 		has.add("touch", "ontouchstart" in document);
 		// I don't know if any of these tests are really correct, just a rough guess
 		has.add("device-width", screen.availWidth || innerWidth);
-		has.add("agent-ios", !!agent.match(/iPhone|iP[ao]d/));
-		has.add("agent-android", agent.indexOf("android") > 1);
+
+		// Tests for DOMNode.attributes[] behavior:
+		//   - dom-attributes-explicit - attributes[] only lists explicitly user specified attributes
+		//   - dom-attributes-specified-flag (IE8) - need to check attr.specified flag to skip attributes user didn't specify
+		//   - Otherwise, in IE6-7. attributes[] will list hundreds of values, so need to do outerHTML to get attrs instead.
+		var form = document.createElement("form");
+		has.add("dom-attributes-explicit", form.attributes.length == 0); // W3C
+		has.add("dom-attributes-specified-flag", form.attributes.length > 0 && form.attributes.length < 40);	// IE8
 	}
 
-	has.clearElement = /*===== dojo.has.clearElement= ======*/ function(element) {
+	has.clearElement = function(element) {
 		// summary:
 		//	 Deletes the contents of the element passed to test functions.
 		element.innerHTML= "";
 		return element;
 	};
 
-	has.normalize = /*===== dojo.has.normalize= ======*/ function(id, toAbsMid){
+	has.normalize = function(id, toAbsMid){
 		// summary:
 		//	 Resolves id into a module id based on possibly-nested tenary expression that branches on has feature test value(s).
 		//
@@ -153,7 +159,7 @@ define(["require"], function(require) {
 		return id && toAbsMid(id);
 	};
 
-	has.load = /*===== dojo.has.load= ======*/ function(id, parentRequire, loaded){
+	has.load = function(id, parentRequire, loaded){
 		// summary:
 		//	 Conditional loading of AMD modules based on a has feature test value.
 		//

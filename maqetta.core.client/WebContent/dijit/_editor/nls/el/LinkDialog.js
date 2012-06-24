@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Ιδιότητες σύνδεσης",
 	insertImageTitle: "Ιδιότητες εικόνας",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Παράθυρο σε πρώτο πλάνο",
 	newWindow: "Νέο παράθυρο"
 })
-
-//end v1.x content
 );

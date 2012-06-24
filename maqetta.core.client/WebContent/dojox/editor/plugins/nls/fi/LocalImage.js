@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertImageTitle: "Lisää kuva",
 	url: "Kuva",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "Anna kuvan URL-osoite",
 	prePopuTextBrowse: " tai selaa paikalliseen tiedostoon."
 })
-
-//end v1.x content
 );

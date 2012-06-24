@@ -21,16 +21,16 @@ dojo.require("dojo.AdapterRegistry");
 
 dojox.cometd = {
 	Connection: function(prefix){ // This constructor is stored as dojox.cometd.Connection
-		// summary
-		// This constructor is used to create new cometd connections. Generally, you should use
-		// one cometd connection for each server you connect to. A default connection instance is
-		// created at dojox.cometd.
-		// To connect to a new server you can create an instance like:
-		// var cometd = new dojox.cometd.Connection("/otherServer");
-		// cometd.init("http://otherServer.com/cometd");
+		// summary:
+		//		This constructor is used to create new cometd connections. Generally, you should use
+		//		one cometd connection for each server you connect to. A default connection instance is
+		//		created at dojox.cometd.
+		//		To connect to a new server you can create an instance like:
+		//		var cometd = new dojox.cometd.Connection("/otherServer");
+		//		cometd.init("http://otherServer.com/cometd");
 		//
-		// prefix is the prefix for all the events that are published in the Dojo pub/sub system.
-		// You must include this prefix, and it should start with a slash like "/myprefix".
+		//		prefix is the prefix for all the events that are published in the Dojo pub/sub system.
+		//		You must include this prefix, and it should start with a slash like "/myprefix".
 		
 		// cometd states:
 		// unconnected, handshaking, connecting, connected, disconnected
@@ -76,9 +76,9 @@ dojox.cometd = {
 		this.init = function(	/*String*/	root,
 					/*Object?*/ props,
 					/*Object?*/ bargs){	// return: dojo.Deferred
-			//	summary:
+			// summary:
 			//		Initialize the cometd implementation of the Bayeux protocol
-			//	description:
+			// description:
 			//		Initialize the cometd implementation of the Bayeux protocol by
 			//		sending a handshake message. The cometd state will be changed to CONNECTING
 			//		until a handshake response is received and the first successful connect message
@@ -87,15 +87,15 @@ dojox.cometd = {
 			//		by subscribing to the dojo topic "/prefix/meta" (typically "/cometd/meta") where
 			//		events are published in the form
 			//		   {cometd:this,action:"handshake",successful:true,state:this.state()}
-			//	root:
+			// root:
 			//		The URL of the cometd server. If the root is absolute, the host
 			//		is examined to determine if xd transport is needed. Otherwise the
 			//		same domain is assumed.
-			//	props:
+			// props:
 			//		An optional object that is used as the basis of the handshake message
-			//	bargs:
+			// bargs:
 			//		An optional object of bind args mixed in with the send of the handshake
-			//	example:
+			// example:
 			//	|	dojox.cometd.init("/cometd");
 			//	|	dojox.cometd.init("http://xdHost/cometd",{ext:{user:"fred",pwd:"secret"}});
 	
@@ -207,9 +207,9 @@ dojox.cometd = {
 						/*Object */	objOrFunc,
 						/*String */	funcName,
 						/*Object?*/ props){ // return: dojo.Deferred
-			//	summary:
+			// summary:
 			//		inform the server of this client's interest in channel
-			//	description:
+			// description:
 			//		`dojox.cometd.subscribe()` handles all the hard work of telling
 			//		the server that we want to be notified when events are
 			//		published on a particular topic. `subscribe` accepts a function
@@ -225,30 +225,30 @@ dojox.cometd = {
 			//		The deferred object which `subscribe` returns will callback
 			//		when the server successfuly acknolwedges receipt of our
 			//		"subscribe" request.
-			//	channel:
+			// channel:
 			//		name of the cometd channel to subscribe to
-			//	objOrFunc:
+			// objOrFunc:
 			//		an object scope for funcName or the name or reference to a
 			//		function to be called when messages are delivered to the
 			//		channel
-			//	funcName:
+			// funcName:
 			//		the second half of the objOrFunc/funcName pair for identifying
 			//		a callback function to notifiy upon channel message delivery
-			//	example:
+			// example:
 			//		Simple subscribe use-case
 			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
 			//	|	// log out all incoming messages on /foo/bar
 			//	|	dojox.cometd.subscribe("/foo/bar", console, "debug");
-			//	example:
+			// example:
 			//		Subscribe before connection is initialized
 			//	|	dojox.cometd.subscribe("/foo/bar", console, "debug");
 			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
-			//	example:
+			// example:
 			//		Subscribe an unsubscribe
 			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
 			//	|	var h = dojox.cometd.subscribe("/foo/bar", console, "debug");
 			//	|	dojox.cometd.unsubscribe(h);
-			//	example:
+			// example:
 			//		Listen for successful subscription:
 			//	|	dojox.cometd.init("http://myserver.com:8080/cometd");
 			//	|	var h = dojox.cometd.subscribe("/foo/bar", console, "debug");
@@ -357,11 +357,11 @@ dojox.cometd = {
 		
 		
 		this.disconnect = function(){
-			//	summary:
+			// summary:
 			//		Disconnect from the server.
-			//	description:
+			// description:
 			//		Disconnect from the server by sending a disconnect message
-			//	example:
+			// example:
 			//	|	dojox.cometd.disconnect();
 	
 			for(var tname in this._subscriptions){
@@ -441,7 +441,7 @@ dojox.cometd = {
 		}
 	
 		this._finishInit = function(data){
-			//	summary:
+			// summary:
 			//		Handle the handshake return from the server and initialize
 			//		connection if all is OK
 
@@ -675,7 +675,7 @@ dojox.cometd = {
 	
 		this._connectTimeout = function(){
 			// summary: Return the connect timeout in ms, calculated as the minimum of the advised timeout
-			// and the configured timeout. Else 0 to indicate no client side timeout
+			//  and the configured timeout. Else 0 to indicate no client side timeout
 			var advised=0;
 			if(this._advice && this._advice.timeout && this.expectedNetworkDelay > 0){
 				advised = this._advice.timeout + this.expectedNetworkDelay;

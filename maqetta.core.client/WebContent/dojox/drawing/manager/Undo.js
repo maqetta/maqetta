@@ -1,11 +1,13 @@
-dojo.provide("dojox.drawing.manager.Undo");
+define(["dojo", "../util/oo"],//, "../defaults"], 
+function(dojo, oo){
 
-dojox.drawing.manager.Undo = dojox.drawing.util.oo.declare(
-	// summary
-	//	Handles the Undo in drawing.
-	//	NOTE: Only partially implemented!!! There is very
+//dojox.drawing.manager.Undo = 
+return oo.declare(
+	// summary:
+	//		Handles the Undo in drawing.
+	//		NOTE: Only partially implemented!!! There is very
 	//		little actual undo functionality!
-	//
+
 	function(options){
 		this.keys = options.keys;
 		this.undostack = [];
@@ -14,7 +16,7 @@ dojox.drawing.manager.Undo = dojox.drawing.util.oo.declare(
 	},
 	{
 		onKeyDown: function(evt){
-			if(!evt.cmmd){ return; }
+			if(!evt.cmmd && !evt.ctrl){ return; }
 			
 			if(evt.keyCode==90 && !evt.shift){
 				this.undo();
@@ -55,3 +57,4 @@ dojox.drawing.manager.Undo = dojox.drawing.util.oo.declare(
 		}
 	}
 );
+});

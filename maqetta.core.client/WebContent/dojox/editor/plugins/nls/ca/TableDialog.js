@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Insereix taula",
 	modifyTableTitle: "Modifica taula",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "Amplada de taula:",
 	backgroundColor: "Color de fons:",
 	borderColor: "Color del contorn",
-	borderThickness: "Gruix del contorn",
+	borderThickness: "Gruix del contorn:",
 	percent: "percentatge",
 	pixels: "píxels",
 	"default": "default",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Defineix", // translated elsewhere?
 	buttonInsert: "Insereix",
 	buttonCancel: "Cancel·la",
-
 	selectTableLabel: "Selecciona taula",
 	insertTableRowBeforeLabel: "Afegeix fila abans",
 	insertTableRowAfterLabel: "Afegeix fila després",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "Suprimeix fila",
 	deleteTableColumnLabel: "Suprimeix columna"
 })
-//end v1.x content
 );

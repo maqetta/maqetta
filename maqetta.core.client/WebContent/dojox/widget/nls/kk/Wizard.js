@@ -1,9 +1,7 @@
 define(
-//begin v1.x content
 ({
 next: "Келесі",
 previous: "Алдыңғы",
-done: "Орындалған"
+done: "Дайын"
 })
-//end v1.x content
 );

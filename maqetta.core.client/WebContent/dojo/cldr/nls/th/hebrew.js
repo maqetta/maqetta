@@ -1,110 +1,13 @@
 define(
 //begin v1.x content
 {
-	"dateFormatItem-yM": "M/yyyy",
-	"dateFormatItem-yQ": "Q yyyy",
-	"dayPeriods-format-wide-pm": "‡∏´‡∏•‡∏±‡∏á‡πÄ‡∏ó‡∏µ‡πà‡∏¢‡∏á",
-	"eraNames": [
-		"‡∏¢.‡∏®."
-	],
-	"dateFormatItem-MMMEd": "E d MMM",
-	"dateTimeFormat-full": "{1}, {0}",
-	"dateFormatItem-yQQQ": "QQQ y",
-	"dateTimeFormat-short": "{1}, {0}",
-	"dayPeriods-format-wide-am": "‡∏Å‡πà‡∏≠‡∏ô‡πÄ‡∏ó‡∏µ‡πà‡∏¢‡∏á",
-	"dateTimeFormat-medium": "{1}, {0}",
-	"timeFormat-full": "H ‡∏ô‡∏≤‡∏¨‡∏¥‡∏Å‡∏≤ m ‡∏ô‡∏≤‡∏ó‡∏µ ss ‡∏ß‡∏¥‡∏ô‡∏≤‡∏ó‡∏µ zzzz",
-	"months-standAlone-abbr": [
-		null,
-		"‡πÄ‡∏Æ‡∏ß‡∏≤‡∏ô",
-		"‡∏Å‡∏µ‡∏™‡πÄ‡∏•‡∏ü",
-		"‡πÄ‡∏ï‡πÄ‡∏ß‡∏ï",
-		"‡πÄ‡∏ä‡∏ß‡∏±‡∏ï",
-		"‡∏≠‡∏≤‡∏î‡∏≤‡∏£‡πå  I",
-		"‡∏≠‡∏≤‡∏î‡∏≤‡∏£‡πå",
-		"‡∏ô‡∏¥‡∏™‡∏ã‡∏≤‡∏ô",
-		"‡∏≠‡∏¥‡∏¢‡∏≤‡∏£‡πå",
-		"‡∏™‡∏µ‡∏ß‡∏±‡∏ô",
-		"‡∏ï‡∏≤‡∏°‡∏π‡∏ã",
-		"‡∏≠‡∏±‡∏ü",
-		"‡πÄ‡∏≠‡∏•‡∏≠‡∏∏‡∏•"
-	],
-	"dateFormatItem-yMMM": "MMM y",
-	"days-standAlone-narrow": [
-		"‡∏≠",
-		"‡∏à",
-		"‡∏≠",
-		"‡∏û",
-		"‡∏û",
-		"‡∏®",
-		"‡∏™"
-	],
-	"eraAbbr": [
-		"ย.ศ."
-	],
-	"dateFormat-long": "d MMMM y",
-	"timeFormat-medium": "H:mm:ss",
-	"dateFormatItem-EEEd": "EEE d",
-	"dateFormatItem-Hm": "H:mm",
-	"dateFormat-medium": "d MMM y",
-	"dateFormatItem-Hms": "H:mm:ss",
-	"dateTimeFormat-long": "{1}, {0}",
-	"months-standAlone-wide": [
-		null,
-		"‡πÄ‡∏Æ‡∏ß‡∏≤‡∏ô",
-		"‡∏Å‡∏µ‡∏™‡πÄ‡∏•‡∏ü",
-		"‡πÄ‡∏ï‡πÄ‡∏ß‡∏ï",
-		"‡πÄ‡∏ä‡∏ß‡∏±‡∏ï",
-		"‡∏≠‡∏≤‡∏î‡∏≤‡∏£‡πå  I",
-		"‡∏≠‡∏≤‡∏î‡∏≤‡∏£‡πå",
-		"‡∏ô‡∏¥‡∏™‡∏ã‡∏≤‡∏ô",
-		"‡∏≠‡∏¥‡∏¢‡∏≤‡∏£‡πå",
-		"‡∏™‡∏µ‡∏ß‡∏±‡∏ô",
-		"‡∏ï‡∏≤‡∏°‡∏π‡∏ã",
-		"‡∏≠‡∏±‡∏ü",
-		"‡πÄ‡∏≠‡∏•‡∏≠‡∏∏‡∏•"
-	],
-	"dateFormatItem-MMMd": "d MMM",
-	"timeFormat-long": "H ‡∏ô‡∏≤‡∏¨‡∏¥‡∏Å‡∏≤ m ‡∏ô‡∏≤‡∏ó‡∏µ ss ‡∏ß‡∏¥‡∏ô‡∏≤‡∏ó‡∏µ z",
-	"months-format-abbr": [
-		null,
-		"‡πÄ‡∏Æ‡∏ß‡∏≤‡∏ô",
-		"‡∏Å‡∏µ‡∏™‡πÄ‡∏•‡∏ü",
-		"‡πÄ‡∏ï‡πÄ‡∏ß‡∏ï",
-		"‡πÄ‡∏ä‡∏ß‡∏±‡∏ï",
-		"‡∏≠‡∏≤‡∏î‡∏≤‡∏£‡πå  I",
-		"‡∏≠‡∏≤‡∏î‡∏≤‡∏£‡πå",
-		"‡∏ô‡∏¥‡∏™‡∏ã‡∏≤‡∏ô",
-		"‡∏≠‡∏¥‡∏¢‡∏≤‡∏£‡πå",
-		"‡∏™‡∏µ‡∏ß‡∏±‡∏ô",
-		"‡∏ï‡∏≤‡∏°‡∏π‡∏ã",
-		"‡∏≠‡∏±‡∏ü",
-		"‡πÄ‡∏≠‡∏•‡∏≠‡∏∏‡∏•"
-	],
-	"timeFormat-short": "H:mm",
-	"dateFormatItem-H": "H",
-	"days-format-abbr": [
-		"‡∏≠‡∏≤.",
-		"‡∏à.",
-		"‡∏≠.",
-		"‡∏û.",
-		"‡∏û‡∏§.",
-		"‡∏®.",
-		"‡∏™."
-	],
-	"dateFormatItem-MEd": "E, d/M",
-	"dateFormat-short": "d/M/yyyy",
-	"dateFormatItem-yMMMEd": "EEE d MMM y",
-	"dateFormat-full": "EEEE‡∏ó‡∏µ‡πà d MMMM G y",
-	"dateFormatItem-Md": "d/M",
-	"dateFormatItem-yMEd": "EEE d/M/yyyy",
 	"months-format-wide": [
 		null,
 		"เฮวาน",
 		"กีสเลฟ",
 		"เตเวต",
 		"เชวัต",
-		"อาดาร์  I",
+		"อาดาร์ I",
 		"อาดาร์",
 		"นิสซาน",
 		"อิยาร์",
@@ -113,25 +16,124 @@ define(
 		"อัฟ",
 		"เอลอุล"
 	],
-	"quarters-format-wide": [
-		"‡πÑ‡∏ï‡∏£‡∏°‡∏≤‡∏™ 1",
-		"‡πÑ‡∏ï‡∏£‡∏°‡∏≤‡∏™ 2",
-		"‡πÑ‡∏ï‡∏£‡∏°‡∏≤‡∏™ 3",
-		"‡πÑ‡∏ï‡∏£‡∏°‡∏≤‡∏™ 4"
+	"months-format-wide-leap": "อาดาร์ II",
+	"eraAbbr": [
+		"ย.ศ."
 	],
-	"months-format-wide-leap": "อาดาร์  II",
-	"days-format-wide": [
-		"‡∏ß‡∏±‡∏ô‡∏≠‡∏≤‡∏ó‡∏¥‡∏ï‡∏¢‡πå",
-		"‡∏ß‡∏±‡∏ô‡∏à‡∏±‡∏ô‡∏ó‡∏£‡πå",
-		"‡∏ß‡∏±‡∏ô‡∏≠‡∏±‡∏á‡∏Ñ‡∏≤‡∏£",
-		"‡∏ß‡∏±‡∏ô‡∏û‡∏∏‡∏ò",
-		"‡∏ß‡∏±‡∏ô‡∏û‡∏§‡∏´‡∏±‡∏™‡∏ö‡∏î‡∏µ",
-		"‡∏ß‡∏±‡∏ô‡∏®‡∏∏‡∏Å‡∏£‡πå",
-		"‡∏ß‡∏±‡∏ô‡πÄ‡∏™‡∏≤‡∏£‡πå"
+	"months-format-abbr": [
+		null,
+		"เฮวาน",
+		"กีสเลฟ",
+		"เตเวต",
+		"เชวัต",
+		"อาดาร์ I",
+		"อาดาร์",
+		"นิสซาน",
+		"อิยาร์",
+		"สีวัน",
+		"ตามูซ",
+		"อัฟ",
+		"เอลอุล"
+	],
+	"months-standAlone-abbr": [
+		null,
+		"เฮวาน",
+		"กีสเลฟ",
+		"เตเวต",
+		"เชวัต",
+		"อาดาร์ I",
+		"อาดาร์",
+		"นิสซาน",
+		"อิยาร์",
+		"สีวัน",
+		"ตามูซ",
+		"อัฟ",
+		"เอลอุล"
+	],
+	"months-standAlone-wide": [
+		null,
+		"เฮวาน",
+		"กีสเลฟ",
+		"เตเวต",
+		"เชวัต",
+		"อาดาร์ I",
+		"อาดาร์",
+		"นิสซาน",
+		"อิยาร์",
+		"สีวัน",
+		"ตามูซ",
+		"อัฟ",
+		"เอลอุล"
+	],
+	"eraNames": [
+		"ย.ศ."
 	],
 	"eraNarrow": [
-		"‡∏¢.‡∏®."
-	]
+		"ย.ศ."
+	],
+	"days-format-abbr": [
+		"อา.",
+		"จ.",
+		"อ.",
+		"พ.",
+		"พฤ.",
+		"ศ.",
+		"ส."
+	],
+	"days-format-wide": [
+		"วันอาทิตย์",
+		"วันจันทร์",
+		"วันอังคาร",
+		"วันพุธ",
+		"วันพฤหัสบดี",
+		"วันศุกร์",
+		"วันเสาร์"
+	],
+	"days-standAlone-narrow": [
+		"อ",
+		"จ",
+		"อ",
+		"พ",
+		"พ",
+		"ศ",
+		"ส"
+	],
+	"quarters-format-wide": [
+		"ไตรมาส 1",
+		"ไตรมาส 2",
+		"ไตรมาส 3",
+		"ไตรมาส 4"
+	],
+	"dayPeriods-format-wide-am": "ก่อนเที่ยง",
+	"dayPeriods-format-wide-pm": "หลังเที่ยง",
+	"dateFormat-full": "EEEEที่ d MMMM G y",
+	"dateFormat-long": "d MMMM y",
+	"dateFormat-medium": "d MMM y",
+	"dateFormat-short": "d/M/yyyy",
+	"dateFormatItem-Ed": "E d",
+	"dateFormatItem-H": "H",
+	"dateFormatItem-Hm": "H:mm",
+	"dateFormatItem-Hms": "H:mm:ss",
+	"dateFormatItem-Md": "d/M",
+	"dateFormatItem-MEd": "E, d/M",
+	"dateFormatItem-MMMd": "d MMM",
+	"dateFormatItem-MMMEd": "E d MMM",
+	"dateFormatItem-yM": "M/yyyy",
+	"dateFormatItem-yMd": "d/M/yyyy",
+	"dateFormatItem-yMEd": "E d/M/yyyy",
+	"dateFormatItem-yMMM": "MMM y",
+	"dateFormatItem-yMMMd": "d MMM y",
+	"dateFormatItem-yMMMEd": "E d MMM y",
+	"dateFormatItem-yQ": "Q yyyy",
+	"dateFormatItem-yQQQ": "QQQ y",
+	"timeFormat-full": "H นาฬิกา m นาที ss วินาที zzzz",
+	"timeFormat-long": "H นาฬิกา m นาที ss วินาที z",
+	"timeFormat-medium": "H:mm:ss",
+	"timeFormat-short": "H:mm",
+	"dateTimeFormat-full": "{1}, {0}",
+	"dateTimeFormat-long": "{1}, {0}",
+	"dateTimeFormat-medium": "{1}, {0}",
+	"dateTimeFormat-short": "{1}, {0}"
 }
 //end v1.x content
 );

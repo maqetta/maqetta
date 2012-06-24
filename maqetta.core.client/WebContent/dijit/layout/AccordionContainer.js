@@ -9,10 +9,9 @@ define([
 	"dojo/dom-class", // domClass.remove
 	"dojo/dom-construct", // domConstruct.place
 	"dojo/dom-geometry",
-	"dojo/_base/kernel",
 	"dojo/keys", // keys
 	"dojo/_base/lang", // lang.getObject lang.hitch
-	"dojo/_base/sniff", // has("ie")
+	"dojo/sniff", // has("ie") has("dijit-legacy-requires")
 	"dojo/topic", // publish
 	"../focus",			// focus.focus()
 	"../_base/manager",	// manager.defaultDuration
@@ -25,17 +24,8 @@ define([
 	"./ContentPane",
 	"dojo/text!./templates/AccordionButton.html"
 ], function(require, array, declare, event, fx, dom, domAttr, domClass, domConstruct, domGeometry,
-			kernel, keys, lang, has, topic, focus, manager, ready,
+			keys, lang, has, topic, focus, manager, ready,
 			_Widget, _Container, _TemplatedMixin, _CssStateMixin, StackContainer, ContentPane, template){
-
-/*=====
-	var _Widget = dijit._Widget;
-	var _Container = dijit._Container;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-	var _CssStateMixin = dijit._CssStateMixin;
-	var StackContainer = dijit.layout.StackContainer;
-	var ContentPane = dijit.layout.ContentPane;
-=====*/
 
 	// module:
 	//		dijit/layout/AccordionContainer
@@ -130,8 +120,8 @@ define([
 
 		_setSelectedAttr: function(/*Boolean*/ isSelected){
 			this._set("selected", isSelected);
-			this.focusNode.setAttribute("aria-expanded", isSelected);
-			this.focusNode.setAttribute("aria-selected", isSelected);
+			this.focusNode.setAttribute("aria-expanded", isSelected ? "true" : "false");
+			this.focusNode.setAttribute("aria-selected", isSelected ? "true" : "false");
 			this.focusNode.setAttribute("tabIndex", isSelected ? "0" : "-1");
 		}
 	});
@@ -153,7 +143,7 @@ define([
 /*=====
 		// contentWidget: dijit._Widget
 		//		Pointer to the real child widget
-	 	contentWidget: null,
+		contentWidget: null,
 =====*/
 
 		baseClass: "dijitAccordionInnerContainer",
@@ -249,10 +239,10 @@ define([
 		//		Holds a set of panes where every pane's title is visible, but only one pane's content is visible at a time,
 		//		and switching between panes is visualized by sliding the other panes up/down.
 		// example:
-		//	| 	<div data-dojo-type="dijit.layout.AccordionContainer">
-		//	|		<div data-dojo-type="dijit.layout.ContentPane" title="pane 1">
+		//	|	<div data-dojo-type="dijit/layout/AccordionContainer">
+		//	|		<div data-dojo-type="dijit/layout/ContentPane" title="pane 1">
 		//	|		</div>
-		//	|		<div data-dojo-type="dijit.layout.ContentPane" title="pane 2">
+		//	|		<div data-dojo-type="dijit/layout/ContentPane" title="pane 2">
 		//	|			<p>This is some text</p>
 		//	|		</div>
 		//	|	</div>
@@ -283,9 +273,6 @@ define([
 			if(this._started){ return; }
 			this.inherited(arguments);
 			if(this.selectedChildWidget){
-				var style = this.selectedChildWidget.containerNode.style;
-				style.display = "";
-				style.overflow = "auto";
 				this.selectedChildWidget._wrapperWidget.set("selected", true);
 			}
 		},
@@ -318,7 +305,7 @@ define([
 				}
 			});
 			this._verticalSpace = mySize.h - totalCollapsedHeight - wrapperDomNodeMargin.h
-			 	- wrapperDomNodePadBorder.h - wrapperContainerNodeMargin.h - wrapperContainerNodePadBorder.h
+				- wrapperDomNodePadBorder.h - wrapperContainerNodeMargin.h - wrapperContainerNodePadBorder.h
 				- openPane._buttonWidget.getTitleHeight();
 
 			// Memo size to make displayed child
@@ -538,7 +525,7 @@ define([
 	});
 
 	// Back compat w/1.6, remove for 2.0
-	if(!kernel.isAsync){
+	if(has("dijit-legacy-requires")){
 		ready(0, function(){
 			var requires = ["dijit/layout/AccordionPane"];
 			require(requires);	// use indirection so modules not rolled into a build

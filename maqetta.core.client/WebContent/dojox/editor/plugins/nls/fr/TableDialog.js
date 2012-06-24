@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Insérer une table",
 	modifyTableTitle: "Modifier une table",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "Largeur de table :",
 	backgroundColor: "Couleur d'arrière-plan :",
 	borderColor: "Couleur des bordures :",
-	borderThickness: "Epaisseur des bordures",
+	borderThickness: "Epaisseur des bordures :",
 	percent: "pourcentage",
 	pixels: "pixels",
 	"default": "par défaut",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Définir", // translated elsewhere?
 	buttonInsert: "Insérer",
 	buttonCancel: "Annuler",
-
 	selectTableLabel: "Sélectionner une table",
 	insertTableRowBeforeLabel: "Ajouter une ligne avant",
 	insertTableRowAfterLabel: "Ajouter une ligne après",
@@ -30,6 +28,4 @@ define(
 	deleteTableRowLabel: "Supprimer la ligne",
 	deleteTableColumnLabel: "Supprimer la colonne"
 })
-	
-//end v1.x content
 );

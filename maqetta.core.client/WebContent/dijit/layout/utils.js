@@ -4,7 +4,7 @@ define([
 	"dojo/dom-geometry", // domGeometry.marginBox
 	"dojo/dom-style", // domStyle.getComputedStyle
 	"dojo/_base/lang", // lang.mixin
-	".."	// for exporting symbols to dijit, remove in 2.0
+	"../main"	// for exporting symbols to dijit, remove in 2.0
 ], function(array, domClass, domGeometry, domStyle, lang, dijit){
 
 	// module:
@@ -13,7 +13,7 @@ define([
 	//		marginBox2contentBox() and layoutChildren()
 
 	var layout = lang.getObject("layout", true, dijit);
-	/*===== layout = dijit.layout =====*/
+	/*===== layout = {}; =====*/
 
 	layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 		// summary:

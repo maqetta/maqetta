@@ -171,7 +171,8 @@ dojo.experimental("dojox.av.FLVideo");
 	
 		onStop: function(){
 			// summary:
-			// Fire when the Stop button is clicked
+			//		Fire when the Stop button is clicked
+			
 			// TODO: 	This is not hooked up yet and shouldn't
 			//			fire.
 		},
@@ -293,7 +294,7 @@ dojo.experimental("dojox.av.FLVideo");
 	
 		_sub: function(topic, method){
 			// summary:
-			// helper for subscribing to topics
+			//		helper for subscribing to topics
 			dojo.subscribe(this.id+"/"+topic, this, method);
 		},
 	

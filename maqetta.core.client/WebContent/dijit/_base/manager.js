@@ -1,9 +1,10 @@
 define([
 	"dojo/_base/array",
 	"dojo/_base/config", // defaultDuration
+	/*===== "dojo/_base/lang", =====*/
 	"../registry",
-	".."	// for setting exports to dijit namespace
-], function(array, config, registry, dijit){
+	"../main"	// for setting exports to dijit namespace
+], function(array, config, /*===== lang, =====*/ registry, dijit){
 
 	// module:
 	//		dijit/_base/manager
@@ -60,17 +61,17 @@ define([
 		dijit[name] = registry[name];
 	});
 
-	/*=====
-	dojo.mixin(dijit, {
-		// defaultDuration: Integer
-		//		The default fx.animation speed (in ms) to use for all Dijit
-		//		transitional fx.animations, unless otherwise specified
-		//		on a per-instance basis. Defaults to 200, overrided by
-		//		`djConfig.defaultDuration`
-		defaultDuration: 200
-	});
-	=====*/
 	dijit.defaultDuration = config["defaultDuration"] || 200;
+	/*=====
+	 lang.mixin(dijit, {
+		 // defaultDuration: Integer
+		 //		The default fx.animation speed (in ms) to use for all Dijit
+		 //		transitional fx.animations, unless otherwise specified
+		 //		on a per-instance basis. Defaults to 200, overrided by
+		 //		`djConfig.defaultDuration`
+		 defaultDuration: 200
+	 });
+	 =====*/
 
 	return dijit;
 });

@@ -1,6 +1,9 @@
-define(["dojo/_base/declare","dojo/_base/lang","dojo/_base/html","dojo/_base/array","dojo/_base/event",
+define(["dojo/_base/kernel", "dojo/_base/declare","dojo/_base/lang","dojo/_base/html","dojo/_base/array","dojo/_base/event",
 		"dojo/_base/connect","dojo/dom-construct", "dijit/_Widget", "dojox/gfx", "./Range", "dojo/fx/easing"], 
-  function(declare, lang, html, arr, event, connect, dom, Widget, gfx, Range) {
+  function(kernel, declare, lang, html, arr, event, connect, dom, Widget, gfx, Range) {
+
+  kernel.deprecated("dojox.gauges", "Use the new extensible dojox.dgauges framework instead", "2.0");
+
 
 	var _tooltipModule =  0;
 	var _numberModule =  0;
@@ -547,12 +550,12 @@ return declare("dojox.gauges._Gauge",[Widget],{
 		//			The x coordinate at which to place the text
 		// y:		Number
 		//			The y coordinate at which to place the text
-		// align?:	String
+		// align:	String?
 		//			Indicates how to align the text
 		//			Valid value is 'right', otherwise text is left-aligned
-		// color?:	String
+		// color:	String?
 		//			Indicates the color of the text
-		// font?:	Object
+		// font:	Object?
 		//			A font object, generally of the following format:
 		//			{family: "Helvetica", style: "italic", variant: 'small-caps', weight: 'bold', size: "18pt"}
 

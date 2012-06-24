@@ -1,6 +1,5 @@
-define(["../Theme", "./common"], function(Theme, themes){
-	
-	themes.SageToLime=new Theme({
+define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
+	themes.SageToLime = new SimpleTheme({
 		colors: [
 			"#abdbcb",
 			"#435a51",
@@ -14,6 +13,5 @@ define(["../Theme", "./common"], function(Theme, themes){
 			"#68c5ad"
 		]
 	});
-	
 	return themes.SageToLime;
 });

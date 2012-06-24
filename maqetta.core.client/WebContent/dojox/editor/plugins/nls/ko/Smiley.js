@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	smiley: "이모티콘 삽입",
 	emoticonSmile: "미소",
@@ -19,7 +18,7 @@ define(
 	emoticonYes: "예",
 	emoticonNo: "아니오",
 	emoticonAngel: "천사",
-	emoticonCrying: "울음"
+	emoticonCrying: "울음",
+	emoticonHappy: "기쁜"
 })
-//end v1.x content
 );

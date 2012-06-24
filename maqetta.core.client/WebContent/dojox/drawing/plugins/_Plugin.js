@@ -1,6 +1,8 @@
-dojo.provide("dojox.drawing.plugins._Plugin");
+define(["dojo", "../util/oo"],
+function(dojo, oo){
 
-dojox.drawing.plugins._Plugin = dojox.drawing.util.oo.declare(
+//dojox.drawing.plugins._Plugin = 
+return oo.declare(
 	// summary:
 	//		Base class for plugins.
 	// description:
@@ -37,3 +39,4 @@ dojox.drawing.plugins._Plugin = dojox.drawing.util.oo.declare(
 		}
 	}
 );
+});

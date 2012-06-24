@@ -11,19 +11,20 @@
 // `import,push`, we also pass it a callback, which it'll call once
 // the file has been fetched, and parsed.
 //
-tree.Import = function (path, imports) {
+tree.Import = function (path, imports, features) {
     var that = this;
 
     this._path = path;
+    this.features = features && new(tree.Value)(features);
 
     // The '.less' extension is optional
     if (path instanceof tree.Quoted) {
-        this.path = /\.(le?|c)ss$/.test(path.value) ? path.value : path.value + '.less';
+        this.path = /\.(le?|c)ss(\?.*)?$/.test(path.value) ? path.value : path.value + '.less';
     } else {
         this.path = path.value.value || path.value;
     }
 
-    this.css = /css$/.test(this.path);
+    this.css = /css(\?.*)?$/.test(this.path);
 
     // Only pre-compile .less files
     if (! this.css) {
@@ -46,9 +47,11 @@ tree.Import = function (path, imports) {
 // ruleset.
 //
 tree.Import.prototype = {
-    toCSS: function () {
+    toCSS: function (env) {
+        var features = this.features ? ' ' + this.features.toCSS(env) : '';
+
         if (this.css) {
-            return "@import " + this._path.toCSS() + ';\n';
+            return "@import " + this._path.toCSS() + features + ';\n';
         } else {
             return "";
         }
@@ -57,6 +60,7 @@ tree.Import.prototype = {
         var ruleset;
 
         if (this.css) {
+            this.features = this.features && this.features.eval(env);
             return this;
         } else {
             ruleset = new(tree.Ruleset)(null, this.root.rules.slice(0));
@@ -74,4 +78,4 @@ tree.Import.prototype = {
     }
 };
 
-})(require('less/tree'));
+})(require('../tree'));

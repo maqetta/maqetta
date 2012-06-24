@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "Anker einfügen",
 	title: "Eigenschaften des Ankers",
@@ -8,6 +7,4 @@ define(
 	set: "Festlegen",
 	cancel: "Abbrechen"
 })
-
-//end v1.x content
 );

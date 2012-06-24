@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Krepko',
 	'copy': 'Prekopiraj',
@@ -29,10 +28,10 @@ define(
 	'toggleDir': 'Preklopi smer',
 	'insertImage': 'Vstavi sliko',
 	'insertTable': 'Vstavi/uredi tabelo',
-	'toggleTableBorder': 'Preklopi na rob tabele',
+	'toggleTableBorder': 'Preklopi na obrobo tabele',
 	'deleteTable': 'Izbriši tabelo',
 	'tableProp': 'Lastnost tabele',
-	'htmlToggle': 'Izvorna koda HTML',
+	'htmlToggle': 'Izvor HTML',
 	'foreColor': 'Barva ospredja',
 	'hiliteColor': 'Barva ozadja',
 	'plainFormatBlock': 'Slog odstavka',
@@ -47,5 +46,4 @@ define(
 	/* Error messages */
 	'systemShortcut': 'Dejanje "${0}" lahko v vašem brskalniku uporabite samo z bližnjico na tipkovnici. Uporabite ${1}.'
 })
-//end v1.x content
 );

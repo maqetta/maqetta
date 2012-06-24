@@ -1,4 +1,11 @@
-define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./process"], function(bc, fileUtils, fs, stringify, has, process){
+define([
+	"./buildControl",
+	"./fileUtils",
+	"./fs",
+	"./stringify",
+	"dojo/has",
+	"./process"
+], function(bc, fileUtils, fs, stringify, has, process){
 	// find all files as given by files, dirs, trees, and packages
 	var
 		dirsProcessed =
@@ -37,10 +44,10 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 						};
 				},
 				tag = {},
-				gotOne  = false;
+				gotOne	= false;
 			for(var p in resourceTags){
 				tag[p] = getFilterFunction(resourceTags[p]);
-				gotOne  = true;
+				gotOne	= true;
 			}
 			if(!gotOne){
 				return 0;
@@ -273,7 +280,7 @@ define(["./buildControl", "./fileUtils", "./fs", "./stringify", "dojo/has", "./p
 					mid:moduleInfo.mid,
 					pack:moduleInfo.pack,
 					deps:[],
-					text:"define([], 1);\n",
+					text:"define([], 1);" + bc.newline,
 					getText:function(){
 						return this.text;
 					},

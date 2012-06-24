@@ -1,5 +1,7 @@
-define(["./buildControlBase"], function(bc) {
-	var defaultBc= {
+define([
+	"./buildControlBase"
+], function(bc){
+	var defaultBc = {
 		// v1.6- default values
 		internStrings:true,
 		internSkipList:[],
@@ -11,6 +13,7 @@ define(["./buildControlBase"], function(bc) {
 		scopeMap:[],
 		insertAbsMids:1,
 		applyDojoPragmas:1,
+		localeList:"ar,ca,cs,da,de-de,el,en-gb,en-us,es-es,fi-fi,fr-fr,he-il,hu,it-it,ja-jp,ko-kr,nl-nl,nb,pl,pt-br,pt-pt,ru,sk,sl,sv,th,tr,zh-tw,zh-cn".split(","),
 
 
 		// this is a dojo pragma
@@ -23,6 +26,7 @@ define(["./buildControlBase"], function(bc) {
 				'dojo-loader':1,
 				'dom':1,
 				'host-browser':1,
+				"config-tlmSiblingOfDojo":1,
 
 				// default
 				"config-selectorEngine":"acme"
@@ -71,11 +75,6 @@ define(["./buildControlBase"], function(bc) {
 			'host-rhino':0
 		},
 
-		buildFlags:{
-			stripConsole:"error",
-			optimizeHas:1
-		},
-
 		discoveryProcs:["build/discover"],
 
 		plugins:{
@@ -105,54 +104,54 @@ define(["./buildControlBase"], function(bc) {
 		transformConfig: {},
 
 		transforms:{
-			trace:          ["build/transforms/trace", "read"],
-			read:           ["build/transforms/read", "read"],
-			dojoPragmas:    ["build/transforms/dojoPragmas", "read"],
-			insertSymbols:  ["build/transforms/insertSymbols", "read"],
-			depsScan:       ["build/transforms/depsScan", "ast"],
-			hasFixup:       ["build/transforms/hasFixup", "ast"],
-			write:          ["build/transforms/write", "write"],
-			writeAmd:       ["build/transforms/writeAmd", "write"],
+			trace:			["build/transforms/trace", "read"],
+			read:			["build/transforms/read", "read"],
+			dojoPragmas:	["build/transforms/dojoPragmas", "read"],
+			insertSymbols:	["build/transforms/insertSymbols", "read"],
+			depsScan:		["build/transforms/depsScan", "ast"],
+			hasFixup:		["build/transforms/hasFixup", "ast"],
+			write:			["build/transforms/write", "write"],
+			writeAmd:		["build/transforms/writeAmd", "write"],
 			writeOptimized: ["build/transforms/writeOptimized", "write"],
-			copy:           ["build/transforms/copy", "write"],
-			writeDojo:      ["build/transforms/writeDojo", "write"],
-			optimizeCss:    ["build/transforms/optimizeCss", "optimize"],
-			writeCss:       ["build/transforms/writeCss", "write"],
-			hasFindAll:     ["build/transforms/hasFindAll", "read"],
-			hasReport:      ["build/transforms/hasReport", "cleanup"],
-			depsDump:       ["build/transforms/depsDump", "cleanup"],
-			dojoReport:     ["build/transforms/dojoReport", "report"],
-			report:         ["build/transforms/report", "report"]
+			copy:			["build/transforms/copy", "write"],
+			writeDojo:		["build/transforms/writeDojo", "write"],
+			optimizeCss:	["build/transforms/optimizeCss", "optimize"],
+			writeCss:		["build/transforms/writeCss", "write"],
+			hasFindAll:		["build/transforms/hasFindAll", "read"],
+			hasReport:		["build/transforms/hasReport", "cleanup"],
+			depsDump:		["build/transforms/depsDump", "cleanup"],
+			dojoReport:		["build/transforms/dojoReport", "report"],
+			report:			["build/transforms/report", "report"]
 		},
 
 		transformJobs:[[
 				// immediately filter the stuff to not be transformed in any way
-				function(resource, bc) {
-					return (bc.mini && resource.tag.miniExclude) || (!bc.copyTests && resource.tag.test) || (resource.tag.ignore);
+				function(resource, bc){
+					return(bc.mini && resource.tag.miniExclude) || (!bc.copyTests && resource.tag.test) || (resource.tag.ignore);
 				},
 				[]
 			],[
 				// if the tag says just copy, then just copy
-				function(resource) {
+				function(resource){
 					return resource.tag.copyOnly;
 				},
 				["copy"]
 			],[
 				// the synthetic report module
-				function(resource) {
+				function(resource){
 					return resource.tag.report;
 				},
 				["dojoReport", "insertSymbols", "report"]
 			],[
 				// dojo.js, the loader
-				function(resource, bc) {
-					if (resource.mid=="dojo/dojo") {
-						bc.loader= resource;
-						resource.boots= [];
+				function(resource, bc){
+					if(resource.mid=="dojo/dojo"){
+						bc.loader = resource;
+						resource.boots = [];
 						// the loader is treated as an AMD module when creating the "dojo" layer, but and AMD dependency scan won't
 						// work because it's not an AMD module; therefore, initialize deps here and make sure not to do the depsScan transform
-						resource.deps= [];
-						bc.amdResources[resource.mid]= resource;
+						resource.deps = [];
+						bc.amdResources[resource.mid] = resource;
 						return true;
 					}
 					return false;
@@ -160,30 +159,36 @@ define(["./buildControlBase"], function(bc) {
 				["read", "dojoPragmas", "hasFindAll", "hasFixup", "writeDojo", "writeOptimized"]
 			],[
 				// package has module
-				function(resource) {
-					if (/^\w+\/has$/.test(resource.mid)) {
-						bc.amdResources[resource.mid]= resource;
+				function(resource){
+					if(/^\w+\/has$/.test(resource.mid)){
+						bc.amdResources[resource.mid] = resource;
 						return true;
 					}
 					return false;
 				},
 				["read", "dojoPragmas", "hasFindAll", "hasFixup", "depsScan", "writeAmd", "writeOptimized", "hasReport", "depsDump"]
 			],[
+				// flattened nls bundles
+				function(resource){
+					return !!resource.tag.flattenedNlsBundle;
+				},
+				["writeAmd", "writeOptimized"]
+			],[
 				// nls resources
-				function(resource) {
-					if (/\/nls\//.test(resource.mid) ||	/\/nls\/.+\.js$/.test(resource.src)) {
-						resource.tag.nls= 1;
-						bc.amdResources[resource.mid]= resource;
+				function(resource){
+					if(/\/nls\//.test(resource.mid) ||	/\/nls\/.+\.js$/.test(resource.src)){
+						resource.tag.nls = 1;
+						bc.amdResources[resource.mid] = resource;
 						return true;
 					}
 					return false;
 				},
-				["read", "dojoPragmas", "hasFindAll", "hasFixup", "depsScan", "writeAmd"]
+				["read", "dojoPragmas", "hasFindAll", "hasFixup", "depsScan", "writeAmd", "writeOptimized"]
 			],[
 				// synthetic AMD modules (used to create layers on-the-fly
-				function(resource) {
-					if (resource.tag.synthetic && resource.tag.amd){
-						bc.amdResources[resource.mid]= resource;
+				function(resource){
+					if(resource.tag.synthetic && resource.tag.amd){
+						bc.amdResources[resource.mid] = resource;
 						return true;
 					}
 					return false;
@@ -193,9 +198,9 @@ define(["./buildControlBase"], function(bc) {
 			],[
 				// synthetic dojo/loadInit! resources
 				// FIXME: can't this be added to the previous transform?
-				function(resource) {
-					if (resource.tag.loadInitResource){
-						bc.amdResources[resource.mid]= resource;
+				function(resource){
+					if(resource.tag.loadInitResource){
+						bc.amdResources[resource.mid] = resource;
 						return true;
 					}
 					return false;
@@ -207,9 +212,9 @@ define(["./buildControlBase"], function(bc) {
 				// already marked as an amd resource
 				// ...or...
 				// not dojo/dojo.js (filtered above), not package has module (filtered above), not nls bundle (filtered above), not test or building test, not build control script or profile script but still a Javascript resource...
-				function(resource) {
-					if (resource.tag.amd || (/\.js$/.test(resource.src) && (!resource.tag.test || bc.copyTests=="build") && !/\.(bcs|profile)\.js$/.test(resource.src))) {
-						bc.amdResources[resource.mid]= resource;
+				function(resource){
+					if(resource.tag.amd || (/\.js$/.test(resource.src) && (!resource.tag.test || bc.copyTests=="build") && !/\.(bcs|profile)\.js$/.test(resource.src))){
+						bc.amdResources[resource.mid] = resource;
 						return true;
 					}
 					return false;
@@ -217,33 +222,33 @@ define(["./buildControlBase"], function(bc) {
 				["read", "dojoPragmas", "hasFindAll", "insertSymbols", "hasFixup", "depsScan", "writeAmd", "writeOptimized"]
 			],[
 				// a test resource; if !bc.copyTests then the resource was filtered in the first item; otherwise, if the resource is a potential module and building tests, then it was filtered above;
-				function(resource, bc) {
+				function(resource, bc){
 					return resource.tag.test;
 				},
 				["read", "dojoPragmas", "write"]
 			],[
 				// html file; may need access contents for template interning and/or dojoPragmas; therefore, can't use copy transform
-				function(resource, bc) {
+				function(resource, bc){
 					return /\.(html|htm)$/.test(resource.src);
 				},
 				["read", "dojoPragmas", "write"]
 			],[
 				// css that are designated to compact
-				function(resource, bc) {
+				function(resource, bc){
 					return /\.css$/.test(resource.src);
 				},
 				["read", "optimizeCss", "write"]
 			],[
 				// just copy everything else except tests which were copied above iff desired...
-				function(resource) {
+				function(resource){
 					return !resource.tag.test;
 				},
 				["copy"]
 			]
 		]
 	};
-	for (var p in defaultBc) {
-		bc[p]= defaultBc[p];
+	for(var p in defaultBc){
+		bc[p] = defaultBc[p];
 	}
 	return bc;
 });

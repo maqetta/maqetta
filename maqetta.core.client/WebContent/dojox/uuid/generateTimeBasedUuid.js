@@ -4,7 +4,7 @@ dojox.uuid.generateTimeBasedUuid = function(/*String?*/ node){
 	// summary:
 	//		This function generates time-based UUIDs, meaning "version 1" UUIDs.
 	// description:
-	// For more info, see
+	//		For more info, see
 	//		http://www.webdav.org/specs/draft-leach-uuids-guids-01.txt
 	//		http://www.infonuovo.com/dma/csdocs/sketch/instidid.htm
 	//		http://kruithof.xs4all.nl/uuid/uuidgen

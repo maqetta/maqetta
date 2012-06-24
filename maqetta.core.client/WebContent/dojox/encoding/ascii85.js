@@ -1,9 +1,6 @@
 define(["dojo/_base/lang"], function(lang) {
 
 	var ascii85 = lang.getObject("dojox.encoding.ascii85", true);
-	/*=====
-		ascii85 = dojox.encoding.ascii85;
-	=====*/
 
 	var c = function(input, length, result){
 		var i, j, n, b = [0, 0, 0, 0, 0];
@@ -19,8 +16,10 @@ define(["dojo/_base/lang"], function(lang) {
 	};
 
 	ascii85.encode = function(input){
-		// summary: encodes input data in ascii85 string
-		// input: Array: an array of numbers (0-255) to encode
+		// summary:
+		//		encodes input data in ascii85 string
+		// input: Array
+		//		an array of numbers (0-255) to encode
 		var result = [], reminder = input.length % 4, length = input.length - reminder;
 		c(input, length, result);
 		if(reminder){
@@ -35,8 +34,10 @@ define(["dojo/_base/lang"], function(lang) {
 	};
 
 	ascii85.decode = function(input){
-		// summary: decodes the input string back to array of numbers
-		// input: String: the input string to decode
+		// summary:
+		//		decodes the input string back to array of numbers
+		// input: String
+		//		the input string to decode
 		var n = input.length, r = [], b = [0, 0, 0, 0, 0], i, j, t, x, y, d;
 		for(i = 0; i < n; ++i){
 			if(input.charAt(i) == "z"){

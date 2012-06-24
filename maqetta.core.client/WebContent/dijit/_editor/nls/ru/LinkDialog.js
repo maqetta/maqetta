@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Свойства ссылки",
 	insertImageTitle: "Свойства изображения",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Верхнее окно",
 	newWindow: "Новое окно"
 })
-
-//end v1.x content
 );

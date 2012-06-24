@@ -1,8 +1,16 @@
-define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/connect",
-	"dojo/_base/array","dojo/dnd/Selector","dojo/dnd/Manager"],function(dojo){
-	return dojo.declare(
+define(["dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/connect",
+	"dojo/_base/array",
+	"dojo/dom-class",
+	"dojo/dnd/common",
+	"dojo/dnd/Selector",
+	"dojo/dnd/Manager"
+],function(dojo, declare, lang, connect, array, domClass, dnd, Selector, Manager){
+	return declare(
 		"dojox.mdnd.PureSource",
-		dojo.dnd.Selector,
+		Selector,
 	{
 		// summary:
 		//		A Source Object, which can be used only as a DnD source.
@@ -27,7 +35,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			//		object which is mixed-in to the 'dojo.dnd.Source' instance.
 	
 			//console.log('dojox.mdnd.PureSource ::: constructor');
-			dojo.mixin(this, dojo.mixin({}, params));
+			lang.mixin(this, lang.mixin({}, params));
 			var type = this.accept;
 			
 			// class-specific variables
@@ -36,14 +44,14 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 	
 			// states
 			this.sourceState = "";
-			dojo.addClass(this.node, "dojoDndSource");
+			domClass.add(this.node, "dojoDndSource");
 			if(this.horizontal){
-				dojo.addClass(this.node, "dojoDndHorizontal");
+				domClass.add(this.node, "dojoDndHorizontal");
 			}
 			// set up events
 			this.topics = [
-				dojo.subscribe("/dnd/cancel", this, "onDndCancel"),
-				dojo.subscribe("/dnd/drop", this, "onDndCancel")
+				connect.subscribe("/dnd/cancel", this, "onDndCancel"),
+				connect.subscribe("/dnd/drop", this, "onDndCancel")
 			];
 		},
 		
@@ -79,7 +87,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 	
 			//console.log('dojox.mdnd.PureSource ::: destroy');
 			dojox.mdnd.PureSource.superclass.destroy.call(this);
-			dojo.forEach(this.topics, dojo.unsubscribe);
+			array.forEach(this.topics, connect.unsubscribe);
 			this.targetAnchor = null;
 		},
 	
@@ -109,11 +117,11 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 				return;
 			}
 			dojox.mdnd.PureSource.superclass.onMouseMove.call(this, e);
-			var m = dojo.dnd.manager();
+			var m = Manager.manager();
 			if(this.mouseDown && !this.isDragging && this.isSource){
 				var nodes = this.getSelectedNodes();
 				if(nodes.length){
-					m.startDrag(this, nodes, this.copyState(dojo.isCopyKey(e)));
+					m.startDrag(this, nodes, this.copyState(connect.isCopyKey(e)));
 					this.isDragging = true;
 				}
 			}
@@ -129,7 +137,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 			//		callback
 	
 			//console.log('dojox.mdnd.PureSource ::: onMouseDown');
-			if(this._legalMouseDown(e) && (!this.skipForm || !dojo.dnd.isFormElement(e))){
+			if(this._legalMouseDown(e) && (!this.skipForm || !dnd.isFormElement(e))){
 				this.mouseDown = true;
 				this.mouseButton = e.button;
 				dojox.mdnd.PureSource.superclass.onMouseDown.call(this, e);
@@ -159,7 +167,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 	
 			//console.log('dojox.mdnd.PureSource ::: onOverEvent');
 			dojox.mdnd.PureSource.superclass.onOverEvent.call(this);
-			dojo.dnd.manager().overSource(this);
+			Manager.manager().overSource(this);
 		},
 		
 		onOutEvent: function(){
@@ -170,7 +178,7 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 	
 			//console.log('dojox.mdnd.PureSource ::: onOutEvent');
 			dojox.mdnd.PureSource.superclass.onOutEvent.call(this);
-			dojo.dnd.manager().outSource(this);
+			Manager.manager().outSource(this);
 		},
 		
 		_markDndStatus: function(/*Boolean*/copy){
@@ -197,8 +205,8 @@ define(["dojo/_base/kernel","dojo/_base/declare","dojo/_base/html","dojo/_base/c
 	
 			//console.log('dojox.mdnd.PureSource ::: _legalMouseDown');
 			if(!this.withHandles){ return true; }
-			for(var node = e.target; node && !dojo.hasClass(node, "dojoDndItem"); node = node.parentNode){
-				if(dojo.hasClass(node, "dojoDndHandle")){ return true; }
+			for(var node = e.target; node && !domClass.contains(node, "dojoDndItem"); node = node.parentNode){
+				if(domClass.contains(node, "dojoDndHandle")){ return true; }
 			}
 			return false;	// Boolean
 		}

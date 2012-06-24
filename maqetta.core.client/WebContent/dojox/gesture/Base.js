@@ -70,7 +70,7 @@ define([
 		//		|		return dojox.gesture.a;
 		//		|	});
 		//
-		//		2. A gesture can be used in the following ways(taking dojox.gestre.tap for example):
+		//		2. A gesture can be used in the following ways(taking dojox.gesture.tap for example):
 		//
 		//		A. Used with dojo.connect()
 		//		|	dojo.connect(node, dojox.gesture.tap, function(e){});

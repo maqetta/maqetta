@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Полужирный',
 	'copy': 'Копировать',
@@ -45,8 +44,8 @@ define(
 	"print": "Печать",
 	"newPage": "Создать страницу",
 	/* Error messages */
-	'systemShortcut': 'Действие "${0}" можно выполнить в браузере только путем нажатия клавиш ${1}.'
+	'systemShortcut': 'Действие "${0}" можно выполнить в браузере только путем нажатия клавиш ${1}.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-
-//end v1.x content
 );

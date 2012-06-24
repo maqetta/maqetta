@@ -3,6 +3,7 @@ define([
 	"dojo/_base/config",	// config.isDebug
 	"dojo/_base/connect",	// connect.connect
 	"dojo/_base/declare", // declare
+	"dojo/has",
 	"dojo/_base/kernel", // kernel.deprecated
 	"dojo/_base/lang", // lang.hitch
 	"dojo/query",
@@ -13,14 +14,8 @@ define([
 	"./_FocusMixin",
 	"dojo/uacss",		// browser sniffing (included for back-compat; subclasses may be using)
 	"./hccss"		// high contrast mode sniffing (included to set CSS classes on <body>, module ret value unused)
-], function(aspect, config, connect, declare, kernel, lang, query, ready,
+], function(aspect, config, connect, declare, has, kernel, lang, query, ready,
 			registry, _WidgetBase, _OnDijitClickMixin, _FocusMixin){
-
-/*=====
-	var _WidgetBase = dijit._WidgetBase;
-	var _OnDijitClickMixin = dijit._OnDijitClickMixin;
-	var _FocusMixin = dijit._FocusMixin;
-=====*/
 
 
 // module:
@@ -51,6 +46,9 @@ if(kernel.connect){
 
 var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusMixin], {
 	// summary:
+	//		Base class for all Dijit widgets.
+	//
+	// description:
 	//		Base class for all Dijit widgets.
 	//
 	//		Extends _WidgetBase, adding support for:
@@ -227,8 +225,10 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 
 	on: function(/*String*/ type, /*Function*/ func){
 		if(this[this._onMap(type)] === connectToDomNode){
-			// Use connect.connect() rather than on() to get handling for "onmouseenter" on non-IE, etc.
+			// Use connect.connect() rather than on() to get handling for "onmouseenter" on non-IE,
+			// normalization of onkeypress/onkeydown to behave like firefox, etc.
 			// Also, need to specify context as "this" rather than the default context of the DOMNode
+			// Remove in 2.0.
 			return connect.connect(this.domNode, type.toLowerCase(), this, func);
 		}
 		return this.inherited(arguments);
@@ -341,7 +341,7 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 });
 
 // For back-compat, remove in 2.0.
-if(!kernel.isAsync){
+if(has("dijit-legacy-requires")){
 	ready(0, function(){
 		var requires = ["dijit/_base"];
 		require(requires);	// use indirection so modules not rolled into a build

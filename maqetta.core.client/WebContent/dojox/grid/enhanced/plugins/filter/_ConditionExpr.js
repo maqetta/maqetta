@@ -60,9 +60,8 @@ var _DataExpr = declare("dojox.grid.enhanced.plugins.filter._DataExpr", _Conditi
 	//		this _DataExpr is nothing more than a simple wrapper.
 	//		If the data value to be represent is in a store, then _DataExpr is responsible to extract it
 	//		from the store when this condition is applied to a data row.
-	// private fields:
-	//		_value: anything
-	//		_colArg: anything
+	// _value: [private] anything
+	// _colArg: [private] anything
 	_name: "data",
 
 	constructor: function(/* anything */dataValue,/* bool */isColumn, /* object */convertArgs){

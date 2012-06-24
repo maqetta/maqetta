@@ -1,10 +1,15 @@
 define(["dojo/_base/fx",
 		"dojo/fx",
-		"dojo/_base/lang", 
+		"dojo/_base/lang",
 		"dojo/fx/easing",
 		"dojox/fx"],
 	function(baseFx, coreFx, lang, easingUtil, dojoxFx){ //
-/*===== var dojox.fx.ext-dojo.=====*/
+/*=====
+	// unsure of the purpose of this; the previous attempt seemed clearly wrong
+
+	dojox.fx["ext-dojo"] = dojox.fx["ext-dojo"] || {};
+=====*/
+
 var reverseApi = {
 	// summary:
 	//		A dojo.Animation extension that enables an easy reversal.
@@ -42,7 +47,7 @@ var reverseApi = {
 		;
 		this._endTime = curr + sofar;
 		this._startTime = curr - togo;
-		
+
 		if(playing){
 			this.gotoPercent(togo / d)
 		}
@@ -51,7 +56,7 @@ var reverseApi = {
 			p[nm].start = cp[nm].start = p[nm].end;
 			p[nm].end = cp[nm].end = tmp;
 		}
-		
+
 		if(this._reversed){
 			if(!this.rEase){
 				this.fEase = this.easing;
@@ -66,7 +71,7 @@ var reverseApi = {
 							found = nm; break;
 						}
 					}
-					
+
 					if(found){
 						// find ease's opposite
 						if(/InOut/.test(nm) || !/In|Out/i.test(nm)){
@@ -85,7 +90,7 @@ var reverseApi = {
 						this.rEase = this.easing;
 					}
 				}
-				
+
 			}
 			this.easing = this.rEase;
 		}else{
@@ -94,7 +99,7 @@ var reverseApi = {
 		if(!keepPaused && this.status() != "playing"){
 			this.play();
 		}
-		
+
 		return this;
 	}
 };

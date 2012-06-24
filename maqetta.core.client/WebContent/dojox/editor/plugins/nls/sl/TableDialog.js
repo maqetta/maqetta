@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Vstavi tabelo",
 	modifyTableTitle: "Spremeni tabelo",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Nastavi", // translated elsewhere?
 	buttonInsert: "Vstavi",
 	buttonCancel: "Prekliči",
-
 	selectTableLabel: "Izberi tabelo",
 	insertTableRowBeforeLabel: "Dodaj vrstico pred",
 	insertTableRowAfterLabel: "Dodaj vrstico za",
@@ -30,7 +28,4 @@ define(
 	deleteTableRowLabel: "Izbriši vrstico",
 	deleteTableColumnLabel: "Izbriši stolpec"
 })
-	
-
-//end v1.x content
 );

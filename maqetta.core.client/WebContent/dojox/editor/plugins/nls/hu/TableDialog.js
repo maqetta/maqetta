@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Táblázat beszúrása",
 	modifyTableTitle: "Táblázat módosítása",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "Táblázat szélessége:",
 	backgroundColor: "Háttérszín:",
 	borderColor: "Szegélyszín:",
-	borderThickness: "Szegély vastagsága",
+	borderThickness: "Szegélyvastagság:",
 	percent: "százalék",
 	pixels: "képpont",
 	"default": "alapértelmezett",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Beállítás", // translated elsewhere?
 	buttonInsert: "Beszúrás",
 	buttonCancel: "Mégse",
-
 	selectTableLabel: "Táblázat kijelölése",
 	insertTableRowBeforeLabel: "Sor hozzáadása előtte",
 	insertTableRowAfterLabel: "Sor hozzáadása utána",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "Sor törlése",
 	deleteTableColumnLabel: "Oszlop törlése"
 })
-//end v1.x content
 );

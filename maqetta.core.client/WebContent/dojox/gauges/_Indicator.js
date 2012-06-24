@@ -46,7 +46,7 @@ return declare("dojox.gauges._Indicator",[Widget],{
 
 	// type: String
 	// 		The type of indicator to draw.  Varies by gauge type.  Some examples include
-	// "line", "arrow", and "bar"
+	// 		"line", "arrow", and "bar"
 	type: '',
 
 	// color: String

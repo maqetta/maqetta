@@ -1,5 +1,5 @@
 define([
-	".",
+	"./main",
 	"./dijit",
 	"./ColorPalette",
 	"./Declaration",

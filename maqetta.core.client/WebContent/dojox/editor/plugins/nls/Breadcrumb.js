@@ -1,4 +1,5 @@
 define({ root:
+//begin v1.x content
 ({
 	"nodeActions": "${nodeName} Actions",
 	"selectContents": "Select contents",
@@ -8,8 +9,8 @@ define({ root:
 	"moveStart": "Move cursor to start",
 	"moveEnd": "Move cursor to end"
 })
-,
 //end v1.x content
+,
 "zh": true,
 "zh-tw": true,
 "tr": true,
@@ -29,6 +30,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -40,4 +42,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

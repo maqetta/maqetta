@@ -5,11 +5,6 @@ define([
 	"./_TemplatedMixin"
 ], function(declare, dom, _Widget, _TemplatedMixin){
 
-/*=====
-	var _Widget = dijit._Widget;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-=====*/
-
 	// module:
 	//		dijit/ToolbarSeparator
 	// summary:

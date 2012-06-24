@@ -29,6 +29,7 @@
 }
 
 .soria .dijitMenuPassive .dijitMenuItemHover,
+.soria .dijitComboBoxMenu .dijitMenuItemHover,
 .soria .dijitMenuItemSelected {
 	background-color: #d9e6f9; /* #95a0b0; #555555; #aaaaaa; #646464;  #60a1ea; #848484; */
 	color: #243C5F;

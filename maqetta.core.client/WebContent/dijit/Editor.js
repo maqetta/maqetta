@@ -10,7 +10,7 @@ define([
 	"dojo/_base/event", // event.stop
 	"dojo/keys", // keys.F1 keys.F15 keys.TAB
 	"dojo/_base/lang", // lang.getObject lang.hitch
-	"dojo/_base/sniff", // has("ie") has("mac") has("webkit")
+	"dojo/sniff", // has("ie") has("mac") has("webkit")
 	"dojo/string", // string.substitute
 	"dojo/topic", // topic.publish()
 	"dojo/_base/window", // win.withGlobal
@@ -25,7 +25,7 @@ define([
 	"./_editor/html",
 	"./_editor/range",
 	"./_editor/RichText",
-	".",	// dijit._scopeName
+	"./main",	// dijit._scopeName
 	"dojo/i18n!./_editor/nls/commands"
 ], function(array, declare, Deferred, i18n, domAttr, domClass, domGeometry, domStyle,
 			event, keys, lang, has, string, topic, win,
@@ -130,7 +130,7 @@ define([
 			array.forEach(this.plugins, this.addPlugin, this);
 
 			// Okay, denote the value can now be set.
-			this.setValueDeferred.callback(true);
+			this.setValueDeferred.resolve(true);
 
 			domClass.add(this.iframe.parentNode, "dijitEditorIFrameContainer");
 			domClass.add(this.iframe, "dijitEditorIFrame");
@@ -156,7 +156,7 @@ define([
 			delete this.toolbar;
 			this.inherited(arguments);
 		},
-		addPlugin: function(/*String||Object||Function*/plugin, /*Integer?*/index){
+		addPlugin: function(/*String||Object||Function*/ plugin, /*Integer?*/ index){
 			// summary:
 			//		takes a plugin name as a string or a plugin instance and
 			//		adds it to the toolbar and associates it with this editor
@@ -189,14 +189,14 @@ define([
 					}
 				}
 				if(!o.plugin){
-					var pc = args.ctor || lang.getObject(args.name);
+					// TODO: remove lang.getObject() call in 2.0
+					var pc = args.ctor || lang.getObject(args.name) || require(args.name);
 					if(pc){
-						o.plugin=new pc(args);
+						o.plugin = new pc(args);
 					}
 				}
 				if(!o.plugin){
-					console.warn('Cannot find plugin',plugin);
-					return;
+					throw new Error(this.id + ': cannot find plugin', plugin);
 				}
 				plugin=o.plugin;
 			}
@@ -290,7 +290,7 @@ define([
 				delete this._cursorToStart; // Remove the force to cursor to start position.
 				delete this._savedSelection; // new mouse position overrides old selection
 				if(e.target.tagName == "BODY"){
-					setTimeout(lang.hitch(this, "placeCursorAtEnd"), 0);
+					this.defer("placeCursorAtEnd");
 				}
 				this.inherited(arguments);
 			}
@@ -345,9 +345,9 @@ define([
 			}
 			if(this.editActionInterval>0){
 				if(this._editTimer){
-					clearTimeout(this._editTimer);
+					this._editTimer.remove();
 				}
-				this._editTimer = setTimeout(lang.hitch(this, this.endEditing), this._editInterval);
+				this._editTimer = this.defer("endEditing", this._editInterval);
 			}
 		},
 
@@ -414,7 +414,8 @@ define([
 				}
 			}catch(e){
 				//TODO: when else might we get an exception?  Do we need the Mozilla test below?
-				if(e.code == 1011 /* Mozilla: service denied */){
+				if(e.code == 1011 /* Mozilla: service denied */ ||
+					(e.code == 9 && has("opera") /* Opera not supported */)){
 					// Warn user of platform limitation.  Cannot programmatically access clipboard. See ticket #4136
 					var sub = string.substitute,
 						accel = {cut:'X', copy:'C', paste:'V'};
@@ -455,7 +456,7 @@ define([
 						array.forEach(mark,function(n){
 							bookmark.push(rangeapi.getNode(n,this.editNode));
 						},this);
-						win.withGlobal(this.window,'moveToBookmark',dijit,[{mark: bookmark, isCollapsed: col}]);
+						win.withGlobal(this.window,'moveToBookmark',focusBase,[{mark: bookmark, isCollapsed: col}]);
 					}else{
 						if(mark.startContainer && mark.endContainer){
 							// Use the pseudo WC3 range API.  This works better for positions
@@ -512,7 +513,6 @@ define([
 			//		Handler for editor undo (ex: ctrl-z) operation
 			// tags:
 			//		private
-			//console.log('undo');
 			var ret = false;
 			if(!this._undoRedoActive){
 				this._undoRedoActive = true;
@@ -535,7 +535,6 @@ define([
 			//		Handler for editor redo (ex: ctrl-y) operation
 			// tags:
 			//		private
-			//console.log('redo');
 			var ret = false;
 			if(!this._undoRedoActive){
 				this._undoRedoActive = true;
@@ -559,7 +558,7 @@ define([
 			// tags:
 			//		private
 			if(this._editTimer){
-				clearTimeout(this._editTimer);
+				this._editTimer = this._editTimer.remove();
 			}
 			if(this._inEditing){
 				this._endEditing(ignore_caret);
@@ -633,6 +632,7 @@ define([
 			//		Deals with saving undo; see editActionInterval parameter.
 			// tags:
 			//		private
+			
 			// Avoid filtering to make sure selections restore.
 			var v = html.getChildrenHtml(this.editNode);
 
@@ -680,13 +680,11 @@ define([
 							this.endEditing();//end current typing step if any
 							if(e.keyCode == 88){
 								this.beginEditing('cut');
-								//use timeout to trigger after the cut is complete
-								setTimeout(lang.hitch(this, this.endEditing), 1);
 							}else{
 								this.beginEditing('paste');
-								//use timeout to trigger after the paste is complete
-								setTimeout(lang.hitch(this, this.endEditing), 1);
 							}
+							//use timeout to trigger after the paste is complete
+							this.defer("endEditing", 1);
 							break;
 						}
 						//pass through
@@ -747,7 +745,7 @@ define([
 				// only restore the selection if the current range is collapsed
 				// if not collapsed, then it means the editor does not lose
 				// selection and there is no need to restore it
-				if(win.withGlobal(this.window,'isCollapsed',dijit)){
+				if(win.withGlobal(this.window,'isCollapsed',focusBase)){
 					this._moveToBookmark(this._savedSelection);
 				}
 				delete this._savedSelection;
@@ -785,20 +783,19 @@ define([
 		},
 
 		_setDisabledAttr: function(/*Boolean*/ value){
-			var disableFunc = lang.hitch(this, function(){
+			this.setValueDeferred.then(lang.hitch(this, function(){
 				if((!this.disabled && value) || (!this._buttonEnabledPlugins && value)){
-				// Disable editor: disable all enabled buttons and remember that list
+					// Disable editor: disable all enabled buttons and remember that list
 					array.forEach(this._plugins, function(p){
 						p.set("disabled", true);
-				});
-			}else if(this.disabled && !value){
+					});
+				}else if(this.disabled && !value){
 					// Restore plugins to being active.
 					array.forEach(this._plugins, function(p){
 						p.set("disabled", false);
-				});
-			}
-			});
-			this.setValueDeferred.addCallback(disableFunc);
+					});
+				}
+			}));
 			this.inherited(arguments);
 		},
 

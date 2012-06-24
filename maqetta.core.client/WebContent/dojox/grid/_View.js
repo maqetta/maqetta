@@ -20,7 +20,7 @@ define([
 	"dojo/dnd/Avatar",
 	"dojo/dnd/Manager"
 ], function(dojo, dijit, dojox, declare, array, lang, connect, has, query,
-	win, template, Source, _Widget, _TemplatedMixin, metrics, util, html, _Builder, Avatar){
+	win, template, Source, _Widget, _TemplatedMixin, metrics, util, html, _Builder, Avatar, Manager){
 
 	// a private function
 	var getStyleText = function(inNode, inStyleText){
@@ -287,7 +287,7 @@ define([
 								this.grid.headerMenu.onCancel(true);
 							}
 							// IE reports a left click as 1, where everything else reports 0
-							if(e.button === (has('ie') ? 1 : 0)){
+							if(e.button === (has('ie') < 9 ? 1 : 0)){
 								Source.prototype.onMouseDown.call(this.source, e);
 							}
 						}
@@ -377,7 +377,7 @@ define([
 		},
 
 		_onDndDropBefore: function(source, nodes, copy){
-			if(dojo.dnd.manager().target !== this.source){
+			if(Manager.manager().target !== this.source){
 				return;
 			}
 			this.source._targetNode = this.source.targetAnchor;
@@ -392,8 +392,8 @@ define([
 		},
 
 		_onDndDrop: function(source, nodes, copy){
-			if(dojo.dnd.manager().target !== this.source){
-				if(dojo.dnd.manager().source === this.source){
+			if(Manager.manager().target !== this.source){
+				if(Manager.manager().source === this.source){
 					this._removingColumn = true;
 				}
 				return;
@@ -827,23 +827,23 @@ define([
 			a.appendChild(b);
 			this.node = a;
 
-			var m = dojo.dnd.manager();
+			var m = Manager.manager();
 			this.oldOffsetY = m.OFFSET_Y;
 			m.OFFSET_Y = 1;
 		},
 		destroy: function(){
-			dojo.dnd.manager().OFFSET_Y = this.oldOffsetY;
+			Manager.manager().OFFSET_Y = this.oldOffsetY;
 			this.inherited(arguments);
 		}
 	});
 
-	var oldMakeAvatar = dojo.dnd.manager().makeAvatar;
-	dojo.dnd.manager().makeAvatar = function(){
+	var oldMakeAvatar = Manager.manager().makeAvatar;
+	Manager.manager().makeAvatar = function(){
 		var src = this.source;
 		if(src.viewIndex !== undefined && !html.hasClass(win.body(),"dijit_a11y")){
 			return new _GridAvatar(this);
 		}
-		return oldMakeAvatar.call(dojo.dnd.manager());
+		return oldMakeAvatar.call(Manager.manager());
 	};
 
 	return _View;

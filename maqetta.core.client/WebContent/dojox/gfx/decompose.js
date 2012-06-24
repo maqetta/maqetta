@@ -1,6 +1,5 @@
 define(["./_base", "dojo/_base/lang", "./matrix"], 
   function (g, lang, m){
-	/*===== g = dojox.gfx =====*/
 	function eq(/* Number */ a, /* Number */ b){
 		// summary: compare two FP numbers for equality
 		return Math.abs(a - b) <= 1e-6 * (Math.abs(a) + Math.abs(b));	// Boolean

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Tablo Ekle",
 	modifyTableTitle: "Tabloyu Değiştir",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "Tablo Genişliği",
 	backgroundColor: "Arka Plan Rengi:",
 	borderColor: "Kenarlık Rengi:",
-	borderThickness: "Kenarlık Kalınlığı",
+	borderThickness: "Kenarlık Kalınlığı:",
 	percent: "yüzde",
 	pixels: "piksel",
 	"default": "varsayılan",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Ayarla", // translated elsewhere?
 	buttonInsert: "Ekle",
 	buttonCancel: "İptal",
-
 	selectTableLabel: "Tablo Seç",
 	insertTableRowBeforeLabel: "Satırı Önüne Ekle",
 	insertTableRowAfterLabel: "Satırı Arkasına Ekle",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "Satırı Sil",
 	deleteTableColumnLabel: "Sütunu Sil"
 })
-//end v1.x content
 );

@@ -48,10 +48,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 
 			// instantiate widget, in context of editor iframe
 			var instances = win.require('dojo/parser').instantiate(
-				[{
-					type: dijitWidget,
-					node: node
-				}],
+				[node],
 				mixin,
 				// Don't allow `instantiate()` to call the widget's `startup()`;
 				// it's called later by Maqetta.

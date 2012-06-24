@@ -385,7 +385,7 @@ return declare("dojox.grid._Events", null, {
 		// summary:
 		//		Event fired when the grid header is clicked.
 		// e: Event
-		// Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 	},
 
 	onHeaderCellClick: function(e){

@@ -188,6 +188,7 @@ return declare("dojox.grid.enhanced._Events", null, {
 	onHeaderCellClick: function(e){
 		// summary:
 		//		Overwritten, see dojox.grid._Events.onHeaderCellClick()
+		
 		//move focus to header.
 		this.focus.currentArea("header");
 		//invoke dojox.grid._Events.onHeaderCellClick()

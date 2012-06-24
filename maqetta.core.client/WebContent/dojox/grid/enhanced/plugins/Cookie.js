@@ -155,7 +155,7 @@ define([
 	// Persist sorting order
 	var _loadSortOrder = function(sortOrder, grid){
 		try{
-			if(lang.isObject(sortOrder)){
+			if(sortOrder && lang.isObject(sortOrder)){
 				grid.setSortIndex(sortOrder.idx, sortOrder.asc);
 			}
 		}catch(e){

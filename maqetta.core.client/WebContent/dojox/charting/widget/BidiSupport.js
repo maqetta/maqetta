@@ -1,6 +1,6 @@
-define(["dojo/dom", "dojo/_base/lang", "dojo/_base/html", "dojo/_base/array",  "dojo/_base/connect", "dojo/query",
+define(["dojo/dom", "dojo/_base/lang", "dojo/_base/array",  "dojo/_base/connect", "dojo/query",
 	"dijit/_BidiSupport", "../BidiSupport", "dijit/registry", "./Chart", "./Legend"], 
-	function(dom, lang, html, arrayUtil, hub, query, dBidi, cBidi, widgetManager, Chart, Legend){
+	function(dom, lang, arrayUtil, hub, query, dBidi, cBidi, widgetManager, Chart, Legend){
 
 	// patch only if present
 	if( Legend ){

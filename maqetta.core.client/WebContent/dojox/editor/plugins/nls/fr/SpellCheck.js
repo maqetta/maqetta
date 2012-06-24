@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Vérification orthographique par lots",
 	unfound: "Introuvable",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Ignorer chaque fois",
 	iMsg: "Aucune suggestion orthographique"
 })
-
-//end v1.x content
 );

@@ -9,11 +9,7 @@ define([
 	"dojo/i18n!dijit/nls/loading",
 	"dojo/_base/declare"
 ], function(lang, domAttr, domClass, Button, DropDownButton, ComboButton, i18n, nlsLoading, declare){
-	/*=====
-		Button = dijit.form.Button;
-		DropDownButton = dijit.form.DropDownButton;
-		ComboButton = dijit.form.ComboButton;
-	=====*/
+
 var _BusyButtonMixin = declare("dojox.form._BusyButtonMixin", null, {
 
 	isBusy: false,
@@ -85,7 +81,6 @@ var _BusyButtonMixin = declare("dojox.form._BusyButtonMixin", null, {
 		// this.inherited(arguments); FIXME: throws an Unknown runtime error
 
 		// Begin IE hack
-		// summary: reset the label (text) of the button; takes an HTML string
 		this.label = content;
 		// remove children
 		while(this.containerNode.firstChild){

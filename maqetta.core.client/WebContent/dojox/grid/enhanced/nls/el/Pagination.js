@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"descTemplate": "${2} - ${3} από ${1} ${0}",
 	"firstTip": "Πρώτη σελίδα",
@@ -7,6 +6,7 @@ define(
 	"nextTip": "Επόμενη σελίδα",
 	"prevTip": "Προηγούμενη σελίδα",
 	"itemTitle": "στοιχεία",
+	"singularItemTitle": "στοιχείο",
 	"pageStepLabelTemplate": "Σελίδα ${0}",
 	"pageSizeLabelTemplate": "${0} στοιχεία ανά σελίδα",
 	"allItemsLabelTemplate": "Όλα τα στοιχεία",
@@ -16,8 +16,6 @@ define(
 	"pageCountIndication": " (${0} σελίδες)",
 	"dialogConfirm": "Μετάβαση",
 	"dialogCancel": "Ακύρωση",
-	"all": "όλα"
+	"all": "Όλα"
 })
-//end v1.x content
 );
-

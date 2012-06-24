@@ -5,7 +5,6 @@ define([
 	"dojo/i18n", // i18n.getLocalization
 	"dojo/_base/lang", // lang.delegate lang.hitch lang.isString
 	"dojo/store/Memory", // MemoryStore
-	"dojo/_base/window", // win.withGlobal
 	"../../registry", // registry.getUniqueId
 	"../../_Widget",
 	"../../_TemplatedMixin",
@@ -13,18 +12,9 @@ define([
 	"../../form/FilteringSelect",
 	"../_Plugin",
 	"../range",
-	"../selection",
 	"dojo/i18n!../nls/FontChoice"
-], function(array, declare, domConstruct, i18n, lang, MemoryStore, win,
-	registry, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, FilteringSelect, _Plugin, rangeapi, selectionapi){
-
-/*=====
-	var _Plugin = dijit._editor._Plugin;
-	var _Widget = dijit._Widget;
-	var _TemplatedMixin = dijit._TemplatedMixin;
-	var _WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
-	var FilteringSelect = dijit.form.FilteringSelect;
-=====*/
+], function(array, declare, domConstruct, i18n, lang, MemoryStore,
+	registry, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, FilteringSelect, _Plugin, rangeapi){
 
 
 // module:
@@ -68,7 +58,12 @@ var _FontDropDown = declare("dijit._editor.plugins._FontDropDown",
 
 		// Set some substitution variables used in the template
 		this.label = this.strings[this.command];
-		this.id = registry.getUniqueId(this.declaredClass.replace(/\./g,"_"));	// TODO: unneeded??
+
+		// _WidgetBase sets the id after postMixInProperties(), but we need it now.
+		// Alternative is to have a buildRendering() method and move this.selectId setting there,
+		// or alternately get rid of selectId variable and just access ${id} in template?
+		this.id = registry.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+
 		this.selectId = this.id + "_select";	// used in template
 
 		this.inherited(arguments);
@@ -147,7 +142,7 @@ var _FontNameDropDown = declare("dijit._editor.plugins._FontNameDropDown", _Font
 	// summary:
 	//		Dropdown to select a font; goes in editor toolbar.
 
-	// generic: Boolean
+	// generic: [const] Boolean
 	//		Use generic (web standard) font names
 	generic: false,
 
@@ -292,7 +287,7 @@ var _FormatBlockDropDown = declare("dijit._editor.plugins._FormatBlockDropDown",
 	_execCommand: function(editor, command, choice){
 		// summary:
 		//		Over-ride for default exec-command label.
-		// 		Allows us to treat 'none' as special.
+		//		Allows us to treat 'none' as special.
 		if(choice === "noFormat"){
 			var start;
 			var end;
@@ -323,7 +318,7 @@ var _FormatBlockDropDown = declare("dijit._editor.plugins._FormatBlockDropDown",
 							for(i = 0; i < node.childNodes.length; i++){
 								var c = node.childNodes[i];
 								if(c.nodeType == 1){
-									if(win.withGlobal(editor.window, "inSelection", selectionapi, [c])){
+									if(editor._sCall("inSelection", [c])){
 										var tag = c.tagName? c.tagName.toLowerCase(): "";
 										if(array.indexOf(this.values, tag) !== -1){
 											ary.push(c);
@@ -374,7 +369,7 @@ var _FormatBlockDropDown = declare("dijit._editor.plugins._FormatBlockDropDown",
 					}else{
 						// Probably a multi select, so we have to process it.  Whee.
 						node = start;
-						while(win.withGlobal(editor.window, "inSelection", selectionapi, [node])){
+						while(editor._sCall("inSelection", [node])){
 							if(node.nodeType == 1){
 								tag = node.tagName? node.tagName.toLowerCase(): "";
 								if(array.indexOf(this.values, tag) !== -1){
@@ -411,12 +406,9 @@ var _FormatBlockDropDown = declare("dijit._editor.plugins._FormatBlockDropDown",
 		}else{
 			// Everyone else works fine this way, a paste-over and is native
 			// undo friendly.
-			win.withGlobal(editor.window,
-				 "selectElementChildren", selectionapi, [node]);
-			var html = 	win.withGlobal(editor.window,
-				 "getSelectedHtml", selectionapi, [null]);
-			win.withGlobal(editor.window,
-				 "selectElement", selectionapi, [node]);
+			editor._sCall("selectElementChildren", [node])
+			var html = editor._sCall("getSelectedHtml", [])
+			editor._sCall("selectElement", [node])
 			editor.execCommand("inserthtml", html||"");
 		}
 	}
@@ -448,10 +440,10 @@ var FontChoice = declare("dijit._editor.plugins.FontChoice", _Plugin,{
 	//		It is possible to override the default dropdown list by providing an Array for the `custom` property when
 	//		instantiating this plugin, e.g.
 	//
-	//	|	plugins="[{name:'dijit._editor.plugins.FontChoice', command:'fontName', custom:['Verdana','Myriad','Garamond']},...]"
+	//	|	plugins="[{name:'dijit._editor.plugins.FontChoice', command:'fontName', values:['Verdana','Myriad','Garamond']},...]"
 	//
 	//		Alternatively, for `fontName` only, `generic:true` may be specified to provide a dropdown with
-	//		[CSS generic font families](http://www.w3.org/TR/REC-CSS2/fonts.html#generic-font-families)
+	//		[CSS generic font families](http://www.w3.org/TR/REC-CSS2/fonts.html#generic-font-families).
 	//
 	//		Note that the editor is often unable to properly handle font styling information defined outside
 	//		the context of the current editor instance, such as pre-populated HTML.
@@ -477,7 +469,7 @@ var FontChoice = declare("dijit._editor.plugins.FontChoice", _Plugin,{
 		params = this.params;
 
 		// For back-compat reasons support setting custom values via "custom" parameter
-		// rather than "values" parameter
+		// rather than "values" parameter.   Remove in 2.0.
 		if(this.params.custom){
 			params.values = this.params.custom;
 		}
@@ -587,5 +579,12 @@ array.forEach(["fontName", "fontSize", "formatBlock"], function(name){
 		});
 	};
 });
+
+// Make all classes available through AMD, and return main class
+FontChoice._FontDropDown = _FontDropDown;
+FontChoice._FontNameDropDown = _FontNameDropDown;
+FontChoice._FontSizeDropDown = _FontSizeDropDown;
+FontChoice._FormatBlockDropDown = _FormatBlockDropDown;
+return FontChoice;
 
 });

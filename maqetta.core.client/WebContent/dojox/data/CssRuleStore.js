@@ -1,10 +1,10 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "dojo/_base/json","dojo/_base/window", "dojo/_base/sniff", "dojo/data/util/sorter", "dojo/data/util/filter", "./css"],
- function(lang, declare, array, jsonUtil, winUtil, has, sorter, filter, css) {
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "dojo/_base/json","dojo/_base/kernel", "dojo/_base/sniff", "dojo/data/util/sorter", "dojo/data/util/filter", "./css"],
+ function(lang, declare, array, jsonUtil, kernel, has, sorter, filter, css) {
 
 return declare("dojox.data.CssRuleStore", null, {
-	//	summary:
+	// summary:
 	//		Basic store to display CSS information.
-	//	description:
+	// description:
 	//		The CssRuleStore allows users to get information about active CSS rules in the page running the CssRuleStore.
 	//		It can also filter out rules from specific stylesheets.  The attributes it exposes on rules are as follows:
 	//			selector:				The selector text.
@@ -13,8 +13,8 @@ return declare("dojox.data.CssRuleStore", null, {
 	//			style:					The actual DOM CSSStyleDeclaration object.
 	//			cssText:				The cssText string provided on the rule object.
 	//			styleSheet:				The originating DOM Stylesheet object.
-	//			parentStyleSheet: 		The parent stylesheet to the sheet this rule originates from.
-	//			parentStyleSheetHref: 	The href of the parent stylesheet.
+	//			parentStyleSheet:		The parent stylesheet to the sheet this rule originates from.
+	//			parentStyleSheetHref:	The href of the parent stylesheet.
 	//		AND every style attribute denoted as style.*, such as style.textAlign or style.backgroundColor
 
 	_storeRef: '_S',
@@ -69,7 +69,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getFeatures: function(){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getFeatures()
 		return {
 			"dojo.data.api.Read" : true
@@ -77,7 +77,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	isItem: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.isItem()
 		if(item && item[this._storeRef] == this){
 			return true;
@@ -86,7 +86,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	hasAttribute: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.hasAttribute()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -98,7 +98,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getAttributes()
 		this._assertIsItem(item);
 		var attrs = ['selector', 'classes', 'rule', 'style', 'cssText', 'styleSheet', 'parentStyleSheet', 'parentStyleSheetHref'];
@@ -113,7 +113,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		var value = defaultValue;
@@ -124,7 +124,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getValues: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValues()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -177,14 +177,14 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	getLabel: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getLabel()
 		this._assertIsItem(item);
 		return this.getValue(item, this._labelAttribute);
 	},
 
 	getLabelAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getLabelAttributes()
 		return [this._labelAttribute];
 	},
@@ -192,7 +192,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	containsValue: function(/* item */ item,
 							/* attribute-name-string */ attribute,
 							/* anything */ value){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.containsValue()
 		var regexp = undefined;
 		if(typeof value === "string"){
@@ -202,26 +202,26 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	isItemLoaded: function(/* anything */ something){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.isItemLoaded()
 		return this.isItem(something); //boolean
 	},
 
 	loadItem: function(/* object */ keywordArgs){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.loadItem()
 		this._assertIsItem(keywordArgs.item);
 	},
 
 	fetch: function(request){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.fetch()
 		request = request || {};
 		if(!request.store){
 			request.store = this;
 		}
 
-		var scope = request.scope || winUtil.global;
+		var scope = request.scope || kernel.global;
 		if(this._pending && this._pending.length > 0){
 			this._pending.push({request: request, fetch: true});
 		}else{
@@ -232,9 +232,9 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	_fetch: function(request){
-		//	summary:
+		// summary:
 		//		Populates the _allItems object with unique class names
-		var scope = request.scope || winUtil.global;
+		var scope = request.scope || kernel.global;
 		if(this._allItems === null){
 			this._allItems = {};
 			try{
@@ -255,7 +255,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	_handleRule: function(rule, styleSheet, href){
-		//	summary:
+		// summary:
 		//		Handles the creation of an item based on the passed rule.  In this store, this implies
 		//		parsing out all available class names.
 		var selector = rule['selectorText'];
@@ -283,7 +283,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	_handleReturn: function(){
-		//	summary:
+		// summary:
 		//		Handles the return from a fetching action.  Delegates requests to act on the resulting
 		//		item set to eitehr the _handleFetchReturn or _handleFetchByIdentityReturn depending on
 		//		where the request originated.
@@ -313,9 +313,9 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	_handleFetchReturn: function(/*Request */ request){
-		//	summary:
+		// summary:
 		//		Handles a fetchByIdentity request by finding the correct items.
-		var scope = request.scope || winUtil.global;
+		var scope = request.scope || kernel.global;
 		var items = [];
 		//Check to see if we've looked this query up before
 		//If so, just reuse it, much faster.  Only regen if query changes.
@@ -398,7 +398,7 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	close: function(){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.close()
 		//		Clears out the cache and allItems objects, meaning all future fetches will requery
 		//		the stylesheets.
@@ -407,9 +407,9 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 	
 	_assertIsItem: function(/* item */ item){
-		//	summary:
-		//      This function tests whether the item passed in is indeed an item in the store.
-		//	item:
+		// summary:
+		//		This function tests whether the item passed in is indeed an item in the store.
+		// item:
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){
 			throw new Error(this._cName + ": Invalid item argument.");
@@ -417,9 +417,9 @@ return declare("dojox.data.CssRuleStore", null, {
 	},
 
 	_assertIsAttribute: function(/* attribute-name-string */ attribute){
-		//	summary:
+		// summary:
 		//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		//	attribute:
+		// attribute:
 		//		The attribute to test for being contained by the store.
 		if(typeof attribute !== "string"){
 			throw new Error(this._cName + ": Invalid attribute argument.");
@@ -430,20 +430,19 @@ return declare("dojox.data.CssRuleStore", null, {
 								/* attribute-name-string */ attribute,
 								/* anything */ value,
 								/* RegExp?*/ regexp){
-		//	summary:
+		// summary:
 		//		Internal function for looking at the values contained by the item.
-		//	description:
+		// description:
 		//		Internal function for looking at the values contained by the item.  This
 		//		function allows for denoting if the comparison should be case sensitive for
 		//		strings or not (for handling filtering cases where string case should not matter)
-		//
-		//	item:
+		// item:
 		//		The data item to examine for attribute values.
-		//	attribute:
+		// attribute:
 		//		The attribute to inspect.
-		//	value:
+		// value:
 		//		The value to match.
-		//	regexp:
+		// regexp:
 		//		Optional regular expression generated off value if value was of string type to handle wildcarding.
 		//		If present and attribute values are string, then it can be used for comparison instead of 'value'
 		return array.some(this.getValues(item, attribute), function(possibleValue){

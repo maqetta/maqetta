@@ -38,10 +38,10 @@ define([
 	return declare("dojox.encoding.crypto.RSAKey", null, {
 		constructor: function(rngf){
 			// summary:
-			//	"empty" RSA key constructor
-			// rndf: Function?:
-			//	function that returns an instance of a random number generator
-			//	(see dojox.math.random for details)
+			//		"empty" RSA key constructor
+			// rndf: Function?
+			//		function that returns an instance of a random number generator
+			//		(see dojox.math.random for details)
 			this.rngf = rngf || defaultRngf;
 			this.e = 0;
 			this.n = this.d = this.p = this.q = this.dmp1 = this.dmq1 = this.coeff = null;
@@ -49,7 +49,7 @@ define([
 
 		setPublic: function(N, E){
 			// summary:
-			//	Set the public key fields N and e from hex strings
+			//		Set the public key fields N and e from hex strings
 			if(N && E && N.length && E.length) {
 				this.n = new BigInteger(N, 16);
 				this.e = parseInt(E, 16);

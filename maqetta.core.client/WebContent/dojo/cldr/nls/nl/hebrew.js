@@ -1,18 +1,7 @@
 define(
 //begin v1.x content
 {
-	"quarters-format-abbr": [
-		"K1",
-		"K2",
-		"K3",
-		"K4"
-	],
-	"dateFormat-medium": "d MMM y",
-	"dateFormatItem-MMMEd": "E d MMM",
-	"dateFormatItem-MEd": "E d-M",
-	"dateFormatItem-yMEd": "EEE d-M-y",
-	"dateFormatItem-Md": "d-M",
-	"months-standAlone-wide": [
+	"months-format-wide": [
 		"Tisjrie",
 		"Chesjwan",
 		"Kislev",
@@ -28,14 +17,20 @@ define(
 		"Elloel"
 	],
 	"months-format-wide-leap": "Adar B",
-	"days-standAlone-narrow": [
-		"Z",
-		"M",
-		"D",
-		"W",
-		"D",
-		"V",
-		"Z"
+	"months-format-abbr": [
+		"Tisjrie",
+		"Chesjwan",
+		"Kislev",
+		"Tevet",
+		"Sjevat",
+		"Adar A",
+		"Adar",
+		"Nisan",
+		"Ijar",
+		"Sivan",
+		"Tammoez",
+		"Av",
+		"Elloel"
 	],
 	"months-standAlone-abbr": [
 		"Tisjrie",
@@ -52,11 +47,7 @@ define(
 		"Av",
 		"Elloel"
 	],
-	"dateFormatItem-yQQQ": "QQQ y",
-	"dateFormat-long": "d MMMM y",
-	"dateFormat-short": "dd-MM-yy",
-	"dateFormatItem-yMMMEd": "EEE d MMM y",
-	"months-format-wide": [
+	"months-standAlone-wide": [
 		"Tisjrie",
 		"Chesjwan",
 		"Kislev",
@@ -71,21 +62,14 @@ define(
 		"Av",
 		"Elloel"
 	],
-	"dateFormatItem-yM": "M-y",
-	"months-format-abbr": [
-		"Tisjrie",
-		"Chesjwan",
-		"Kislev",
-		"Tevet",
-		"Sjevat",
-		"Adar A",
-		"Adar",
-		"Nisan",
-		"Ijar",
-		"Sivan",
-		"Tammoez",
-		"Av",
-		"Elloel"
+	"days-format-abbr": [
+		"zo",
+		"ma",
+		"di",
+		"wo",
+		"do",
+		"vr",
+		"za"
 	],
 	"days-format-wide": [
 		"zondag",
@@ -96,8 +80,21 @@ define(
 		"vrijdag",
 		"zaterdag"
 	],
-	"dateFormatItem-yQ": "Q yyyy",
-	"dateFormatItem-yMMM": "MMM y",
+	"days-standAlone-narrow": [
+		"Z",
+		"M",
+		"D",
+		"W",
+		"D",
+		"V",
+		"Z"
+	],
+	"quarters-format-abbr": [
+		"K1",
+		"K2",
+		"K3",
+		"K4"
+	],
 	"quarters-format-wide": [
 		"1e kwartaal",
 		"2e kwartaal",
@@ -105,16 +102,22 @@ define(
 		"4e kwartaal"
 	],
 	"dateFormat-full": "EEEE d MMMM y",
+	"dateFormat-long": "d MMMM y",
+	"dateFormat-medium": "d MMM y",
+	"dateFormat-short": "dd-MM-yy",
+	"dateFormatItem-Ed": "E d",
+	"dateFormatItem-Md": "d-M",
+	"dateFormatItem-MEd": "E d-M",
 	"dateFormatItem-MMMd": "d-MMM",
-	"days-format-abbr": [
-		"zo",
-		"ma",
-		"di",
-		"wo",
-		"do",
-		"vr",
-		"za"
-	]
+	"dateFormatItem-MMMEd": "E d MMM",
+	"dateFormatItem-yM": "M-y",
+	"dateFormatItem-yMd": "d-M-y",
+	"dateFormatItem-yMEd": "E d-M-y",
+	"dateFormatItem-yMMM": "MMM y",
+	"dateFormatItem-yMMMd": "d MMM y",
+	"dateFormatItem-yMMMEd": "E d MMM y",
+	"dateFormatItem-yQ": "Q yyyy",
+	"dateFormatItem-yQQQ": "QQQ y"
 }
 //end v1.x content
 );

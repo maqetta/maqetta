@@ -107,7 +107,7 @@ var useRoot = function(context, query, method){
 	}
 
 	try {
-		return method.call(context, "[id='" + nid + "'] " + query );
+		return method.call(context, "[id='" + nid + "'] " + query);
 	} finally {
 		if ( !old ) {
 			oldContext.removeAttribute( "id" );
@@ -123,13 +123,13 @@ if(!has("dom-matches-selector")){
 			tagName = tagName[caseFix]();
 			return function(node){
 				return node.tagName == tagName;
-			}
+			};
 		}
 		function className(className){
 			var classNameSpaced = ' ' + className + ' ';
 			return function(node){
 				return node.className.indexOf(className) > -1 && (' ' + node.className + ' ').indexOf(classNameSpaced) > -1;
-			}
+			};
 		}
 		var attrComparators = {
 			"^=": function(attrValue, value){
@@ -163,7 +163,7 @@ if(!has("dom-matches-selector")){
 			return function(node){
 				var attrValue = node.getAttribute(name);
 				return attrValue && comparator(attrValue, value);
-			}
+			};
 		}
 		function ancestor(matcher){
 			return function(node, root){
@@ -250,7 +250,7 @@ if(!has("dom-qsa")){
 }
 
 liteEngine.match = matchesSelector ? function(node, selector, root){
-	if(root){
+	if(root && root != document){
 		// doesn't support three args, use rooted id trick
 		return useRoot(root, selector, function(query){
 			return matchesSelector.call(node, query);

@@ -1,9 +1,7 @@
 define(
-//begin v1.x content
 ({
 next: "Successivo",
-previous: "Precedente",
-done: "Eseguito"
+previous: "Indietro",
+done: "Fine"
 })
-//end v1.x content
 );

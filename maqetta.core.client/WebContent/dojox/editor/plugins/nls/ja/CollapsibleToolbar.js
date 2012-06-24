@@ -1,8 +1,6 @@
 define(
-//begin v1.x content
 ({
-	"collapse": "エディターのツールバーを省略",
-	"expand": "エディターのツールバーを展開"
+	"collapse": "エディター・ツールバーを省略",
+	"expand": "エディター・ツールバーを展開"
 })
-//end v1.x content
 );

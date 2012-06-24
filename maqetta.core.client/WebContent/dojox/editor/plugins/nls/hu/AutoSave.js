@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Mentés",
 	"saveSettingLabelOn": "Automatikus mentés időközének beállítása...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "Mentés: ${0}",
 	"saveMessageFail": "Sikertelen mentés: ${0}"
 })
-
-//end v1.x content
 );

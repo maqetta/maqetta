@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "저장",
 	"saveSettingLabelOn": "자동 저장 간격 설정...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "${0}에 저장됨",
 	"saveMessageFail": "${0}에 저장 실패"
 })
-
-//end v1.x content
 );

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Indsæt tabel",
 	modifyTableTitle: "Revidér tabel",
@@ -11,7 +10,7 @@ define(
 	tableWidth: "Tabelbredde:",
 	backgroundColor: "Baggrundsfarve:",
 	borderColor: "Kantfarve:",
-	borderThickness: "Kanttykkelse",
+	borderThickness: "Kanttykkelse:",
 	percent: "procent",
 	pixels: "pixel",
 	"default": "standard",
@@ -21,7 +20,6 @@ define(
 	buttonSet: "Definér", // translated elsewhere?
 	buttonInsert: "Indsæt",
 	buttonCancel: "Annullér",
-
 	selectTableLabel: "Markér tabel",
 	insertTableRowBeforeLabel: "Tilføj række før",
 	insertTableRowAfterLabel: "Tilføj række efter",
@@ -30,5 +28,4 @@ define(
 	deleteTableRowLabel: "Slet række",
 	deleteTableColumnLabel: "Slet kolonne"
 })
-//end v1.x content
 );

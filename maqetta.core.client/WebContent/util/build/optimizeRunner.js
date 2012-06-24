@@ -1,7 +1,7 @@
 function writeFile(filename, contents, encoding, cb) {
 	if (arguments.length==3 && typeof encoding!="string") {
-		cb= encoding;
-		encoding= 0;
+		cb = encoding;
+		encoding = 0;
 	}
 	var
 		outFile = new java.io.File(filename),
@@ -28,26 +28,26 @@ var built = "//>>built\n";
 function sscompile(src, dest, optimizeSwitch, copyright){
 	// decode the optimize switch
 	var
-		options= optimizeSwitch.split("."),
-		comments= 0,
-		keepLines= 0,
-		strip= null;
+		options = optimizeSwitch.split("."),
+		comments = 0,
+		keepLines = 0,
+		strip = null;
 	while(options.length){
 		switch(options.pop()){
 			case "normal":
-				strip= "normal";
+				strip = "normal";
 				break;
 			case "warn":
-				strip= "warn";
+				strip = "warn";
 				break;
 			case "all":
-				strip= "all";
+				strip = "all";
 				break;
 			case "keeplines":
-				keepLines= 1;
+				keepLines = 1;
 				break;
 			case "comments":
-				comments= 1;
+				comments = 1;
 				break;
 		}
 	}
@@ -58,7 +58,7 @@ function sscompile(src, dest, optimizeSwitch, copyright){
 		// Use the interpreter for interactive input (copied this from Main rhino class).
 		context.setOptimizationLevel(-1);
 
-		var text= readFile(src, "utf-8");
+		var text = readFile(src, "utf-8");
 		if(comments){
 			//Strip comments
 			var script = context.compileString(text, dest, 1, null);
@@ -66,7 +66,7 @@ function sscompile(src, dest, optimizeSwitch, copyright){
 
 			//Replace the spaces with tabs.
 			//Ideally do this in the pretty printer rhino code.
-			text = text.replace(/    /g, "\t");
+			text = text.replace(/	 /g, "\t");
 		}else{
 			//Apply compression using custom compression call in Dojo-modified rhino.
 			text = new String(Packages.org.dojotoolkit.shrinksafe.Compressor.compressScript(text, 0, 1, strip));
@@ -80,7 +80,7 @@ function sscompile(src, dest, optimizeSwitch, copyright){
 	writeFile(dest, copyright + built + text, "utf-8");
 }
 
-var JSSourceFilefromCode, closurefromCode, jscomp= 0;
+var JSSourceFilefromCode, closurefromCode, jscomp = 0;
 function ccompile(src, dest, optimizeSwitch, copyright){
 	if(!jscomp){
 		// don't do this unless demanded...it may not be available
@@ -98,7 +98,7 @@ function ccompile(src, dest, optimizeSwitch, copyright){
 
 	//Set up options
 	var options = new jscomp.CompilerOptions();
-	options.prettyPrint = optimizeSwitch.indexOf(".keepLines") !== -1;
+	options.prettyPrint = optimizeSwitch.indexOf(".keeplines") !== -1;
 
 	var FLAG_compilation_level = jscomp.CompilationLevel.SIMPLE_OPTIMIZATIONS;
 	FLAG_compilation_level.setOptionsForCompilationLevel(options);
@@ -113,8 +113,8 @@ function ccompile(src, dest, optimizeSwitch, copyright){
 
 
 var
-	console= new java.io.BufferedReader(new java.io.InputStreamReader(java.lang.System["in"])),
-	readLine= function(){
+	console = new java.io.BufferedReader(new java.io.InputStreamReader(java.lang.System["in"])),
+	readLine = function(){
 		// the + "" convert to a Javascript string
 		return console.readLine() + "";
 	},
@@ -122,15 +122,15 @@ var
 
 while(1){
 	// the + "" convert to a Javascript string
-	src= readLine();
+	src = readLine();
 	if(src=="."){
 		break;
 	}
-	dest= readLine();
-	optimizeSwitch= readLine();
-	copyright= eval(readLine());
+	dest = readLine();
+	optimizeSwitch = readLine();
+	copyright = eval(readLine());
 	print(dest + ":");
-	var start= (new Date()).getTime();
+	var start = (new Date()).getTime();
 	if(/closure/.test(optimizeSwitch)){
 		ccompile(src, dest, optimizeSwitch, copyright);
 	}else{

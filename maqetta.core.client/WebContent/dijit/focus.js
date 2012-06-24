@@ -8,14 +8,14 @@ define([
 	"dojo/_base/lang", // lang.hitch
 	"dojo/on",
 	"dojo/ready",
-	"dojo/_base/sniff", // has("ie")
+	"dojo/sniff", // has("ie")
 	"dojo/Stateful",
 	"dojo/_base/unload", // unload.addOnWindowUnload
 	"dojo/_base/window", // win.body
 	"dojo/window", // winUtils.get
 	"./a11y",	// a11y.isTabNavigable
 	"./registry",	// registry.byId
-	"."		// to set dijit.focus
+	"./main"		// to set dijit.focus
 ], function(aspect, declare, dom, domAttr, domConstruct, Evented, lang, on, ready, has, Stateful, unload, win, winUtils,
 			a11y, registry, dijit){
 
@@ -147,16 +147,15 @@ define([
 			};
 
 			// Listen for blur and focus events on targetWindow's document.
-			// IIRC, I'm using attachEvent() rather than dojo.connect() because focus/blur events don't bubble
-			// through dojo.connect(), and also maybe to catch the focus events early, before onfocus handlers
-			// fire.
+			// Using attachEvent()/addEventListener() rather than on() to catch mouseDown events even
+			// if other code calls evt.stopPropagation().   But maybe that's no longer needed?
 			// Connect to <html> (rather than document) on IE to avoid memory leaks, but document on other browsers because
 			// (at least for FF) the focus event doesn't fire on <html> or <body>.
 			var doc = has("ie") ? targetWindow.document.documentElement : targetWindow.document;
 			if(doc){
 				if(has("ie")){
 					targetWindow.document.body.attachEvent('onmousedown', mousedownListener);
-					var activateListener = function(evt){
+					var focusinListener = function(evt){
 						// IE reports that nodes like <body> have gotten focus, even though they have tabIndex=-1,
 						// ignore those events
 						var tag = evt.srcElement.tagName.toLowerCase();
@@ -171,17 +170,17 @@ define([
 							_this._onTouchNode(effectiveNode || evt.srcElement);
 						}
 					};
-					doc.attachEvent('onactivate', activateListener);
-					var deactivateListener =  function(evt){
+					doc.attachEvent('onfocusin', focusinListener);
+					var focusoutListener =  function(evt){
 						_this._onBlurNode(effectiveNode || evt.srcElement);
 					};
-					doc.attachEvent('ondeactivate', deactivateListener);
+					doc.attachEvent('onfocusout', focusoutListener);
 
 					return {
 						remove: function(){
 							targetWindow.document.detachEvent('onmousedown', mousedownListener);
-							doc.detachEvent('onactivate', activateListener);
-							doc.detachEvent('ondeactivate', deactivateListener);
+							doc.detachEvent('onfocusin', focusinListener);
+							doc.detachEvent('onfocusout', focusoutListener);
 							doc = null;	// prevent memory leak (apparent circular reference via closure)
 						}
 					};
@@ -210,14 +209,22 @@ define([
 			}
 		},
 
-		_onBlurNode: function(/*DomNode*/ /*===== node =====*/){
+		_onBlurNode: function(/*DomNode*/ node){
 			// summary:
-			// 		Called when focus leaves a node.
+			//		Called when focus leaves a node.
 			//		Usually ignored, _unless_ it *isn't* followed by touching another node,
 			//		which indicates that we tabbed off the last field on the page,
 			//		in which case every widget is marked inactive
-			this.set("prevNode", this.curNode);
-			this.set("curNode", null);
+
+			// If the blur event isn't followed by a focus event, it means the user clicked on something unfocusable,
+			// so clear focus.
+			if(this._clearFocusTimer){
+				clearTimeout(this._clearFocusTimer);
+			}
+			this._clearFocusTimer = setTimeout(lang.hitch(this, function(){
+				this.set("prevNode", this.curNode);
+				this.set("curNode", null);
+			}), 0);
 
 			if(this._justMouseDowned){
 				// the mouse down caused a new widget to be marked as active; this blur event
@@ -225,15 +232,14 @@ define([
 				return;
 			}
 
-			// if the blur event isn't followed by a focus event then mark all widgets as inactive.
+			// If the blur event isn't followed by a focus or touch event then mark all widgets as inactive.
 			if(this._clearActiveWidgetsTimer){
 				clearTimeout(this._clearActiveWidgetsTimer);
 			}
 			this._clearActiveWidgetsTimer = setTimeout(lang.hitch(this, function(){
 				delete this._clearActiveWidgetsTimer;
 				this._setStack([]);
-				this.prevNode = null;
-			}), 100);
+			}), 0);
 		},
 
 		_onTouchNode: function(/*DomNode*/ node, /*String*/ by){
@@ -298,9 +304,17 @@ define([
 				return;
 			}
 
+			// There was probably a blur event right before this event, but since we have a new focus, don't
+			// do anything with the blur
+			if(this._clearFocusTimer){
+				clearTimeout(this._clearFocusTimer);
+				delete this._clearFocusTimer;
+			}
+
 			this._onTouchNode(node);
 
 			if(node == this.curNode){ return; }
+			this.set("prevNode", this.curNode);
 			this.set("curNode", node);
 		},
 
@@ -362,17 +376,19 @@ define([
 
 	// register top window and all the iframes it contains
 	ready(function(){
-		var handle = singleton.registerWin(win.doc.parentWindow || win.doc.defaultView);
+		var handle = singleton.registerWin(winUtils.get(win.doc));
 		if(has("ie")){
 			unload.addOnWindowUnload(function(){
-				handle.remove();
-				handle = null;
-			})
+				if(handle){	// because this gets called twice when doh.robot is running
+					handle.remove();
+					handle = null;
+				}
+			});
 		}
 	});
 
 	// Setup dijit.focus as a pointer to the singleton but also (for backwards compatibility)
-	// as a function to set focus.
+	// as a function to set focus.   Remove for 2.0.
 	dijit.focus = function(node){
 		singleton.focus(node);	// indirection here allows dijit/_base/focus.js to override behavior
 	};

@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Proprietăţi legătură",
 	insertImageTitle: "Proprietăţi imagine",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Fereastra cea mai de sus",
 	newWindow: "Fereastra nouă"
 })
-
-//end v1.x content
 );

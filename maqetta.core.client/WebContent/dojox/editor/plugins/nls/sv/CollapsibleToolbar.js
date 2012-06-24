@@ -1,9 +1,6 @@
 define(
-//begin v1.x content
 ({
-	"collapse": "Komprimera redigerarverktygsfältet",
-	"expand": "Expandera redigerarverktygsfältet"
+	"collapse": "Komprimera redigeringsverktygsfältet",
+	"expand": "Expandera redigeringsverktygsfältet"
 })
-
-//end v1.x content
 );

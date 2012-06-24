@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	/* These are already handled in the default RTE
 		amp:"ampersand",lt:"less-than sign",
@@ -102,7 +101,6 @@ define(
 	yacute:"malé latinské písmeno y s dĺžňom",
 	thorn:"malé latinské písmeno thorn",
 	yuml:"malé latinské písmeno y prehlasované",
-
 // Greek Characters and Symbols
 	fnof:"malé latinské písmeno f s háčikom",
 	Alpha:"veľké grécke písmeno alfa",
@@ -256,6 +254,4 @@ define(
 	rsaquo:"jednoduchý pravý ukazovateľ",
 	euro:"znak euro"
 })
-
-//end v1.x content
 );

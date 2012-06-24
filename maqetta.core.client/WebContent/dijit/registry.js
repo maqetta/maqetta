@@ -1,9 +1,9 @@
 define([
 	"dojo/_base/array", // array.forEach array.map
-	"dojo/_base/sniff", // has("ie")
+	"dojo/sniff", // has("ie")
 	"dojo/_base/unload", // unload.addOnWindowUnload
 	"dojo/_base/window", // win.body
-	"."	// dijit._scopeName
+	"./main"	// dijit._scopeName
 ], function(array, has, unload, win, dijit){
 
 	// module:
@@ -16,9 +16,8 @@ define([
 	var _widgetTypeCtr = {}, hash = {};
 
 	var registry =  {
-		// summary:
-		//		A set of widgets indexed by id
-
+		// length: Number
+		//		Number of registered widgets
 		length: 0,
 
 		add: function(/*dijit._Widget*/ widget){
@@ -85,10 +84,14 @@ define([
 			return dijit._scopeName == "dijit" ? id : dijit._scopeName + "_" + id; // String
 		},
 
-		findWidgets: function(/*DomNode*/ root){
+		findWidgets: function(root, skipNode){
 			// summary:
 			//		Search subtree under root returning widgets found.
 			//		Doesn't search for nested widgets (ie, widgets inside other widgets).
+			// root: DOMNode
+			//		Node to search under.
+			// skipNode: DOMNode
+			//		If specified, don't search beneath this node (usually containerNode).
 
 			var outAry = [];
 
@@ -101,7 +104,7 @@ define([
 							if(widget){	// may be null on page w/multiple dojo's loaded
 								outAry.push(widget);
 							}
-						}else{
+						}else if(node !== skipNode){
 							getChildrenHelper(node);
 						}
 					}
@@ -154,20 +157,6 @@ define([
 		_hash: hash
 	};
 
-	if(has("ie")){
-		// Only run _destroyAll() for IE because we think it's only necessary in that case,
-		// and because it causes problems on FF.  See bug #3531 for details.
-		unload.addOnWindowUnload(function(){
-			registry._destroyAll();
-		});
-	}
-
-	/*=====
-	dijit.registry = {
-		// summary:
-		//		A list of widgets on a page.
-	};
-	=====*/
 	dijit.registry = registry;
 
 	return registry;

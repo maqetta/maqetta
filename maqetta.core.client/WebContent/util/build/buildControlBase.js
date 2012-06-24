@@ -3,9 +3,23 @@ define([
 	"./messages",
 	"dojo/text!./copyright.txt",
 	"dojo/text!./buildNotice.txt"
-], function(dojo, messages, defaultCopyright, defaultBuildNotice) {
-	var bc= {
+], function(dojo, messages, defaultCopyright, defaultBuildNotice){
+	var bc = {
 		exitCode:0,
+
+		// use this variable for all newlines inserted by build transforms
+		newline:"\n",
+
+		// user profiles may replace this with a function from string to string that filters newlines
+		// however they desire. For example,
+		//
+		// newlineFilter: function(s){
+		//	 // convert all DOS-style newlines to Unix-style newlines
+		//	 return s.replace(/\r\n/g, "\n").replace(/\n\r/g, "\n");
+		// }
+		//
+		newlineFilter:function(s, resource, hint){return s;},
+
 
 		// useful for dojo pragma including/excluding
 		built:true,

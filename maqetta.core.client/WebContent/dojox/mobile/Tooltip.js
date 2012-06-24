@@ -11,9 +11,6 @@ define([
 	"dijit/_WidgetBase"
 ], function(array, registry, declare, lang, domClass, domConstruct, domGeometry, domStyle, place, WidgetBase){
 
-	/*=====
-		WidgetBase = dijit._WidgetBase;
-	=====*/
 	return declare("dojox.mobile.Tooltip", WidgetBase, {
 		// summary:
 		//		A non-templated popup bubble widget

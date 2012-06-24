@@ -20,7 +20,7 @@ return declare("dijit.form._ButtonMixin", null, {
 	//			valueNode (optional): this node's value gets submitted with FORM elements
 	//			containerNode (optional): this node gets the innerHTML assignment for label
 	// example:
-	// |	<button data-dojo-type="dijit.form.Button" onClick="...">Hello world</button>
+	// |	<button data-dojo-type="dijit/form/Button" onClick="...">Hello world</button>
 	//
 	// example:
 	// |	var button1 = new dijit.form.Button({label: "hello world", onClick: foo});

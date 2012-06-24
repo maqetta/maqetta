@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	displayOptions: "[näyttöasetukset]",
 	title: "Otsikko",
@@ -8,8 +7,7 @@ define(
 	id: "Tunnus",
 	close: "[sulje]",
 	updated: "Päivitetty",
-	summary: "Tiivistelmä",
+	summary: "Yhteenveto",
 	content: "Sisältö"
 })
-//end v1.x content
 );

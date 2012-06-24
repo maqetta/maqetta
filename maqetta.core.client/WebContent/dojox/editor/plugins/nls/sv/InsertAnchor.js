@@ -1,13 +1,10 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "Infoga ankare",
-	title: "Egenskaper för ankare",
+	title: "Ankaregenskaper",
 	anchor: "Namn:",
 	text: "Beskrivning:",
-	set: "Ange",
+	set: "Använd",
 	cancel: "Avbryt"
 })
-
-//end v1.x content
 );

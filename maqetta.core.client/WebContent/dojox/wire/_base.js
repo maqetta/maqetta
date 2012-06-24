@@ -118,8 +118,9 @@ dojox.wire.transfer = function(/*Wire||Object*/source, /*Wire||Object*/target, /
 	//	target:
 	//		A Wire or arguments to create a Wire for a target value
 	//	defaultObject:
-	//	defaultTargetObject;
-	//		Optional default root objects passed to Wires
+	//		Optional default root object passed to Wires
+	//	defaultTargetObject:
+	//		Optional default root object passed to Wires
 	if(!source || !target){
 		return; //undefined
 	}

@@ -1,14 +1,10 @@
 define([
 	"dojo/_base/array", // array.indexOf array.some
 	"dojo/_base/declare", // declare
+	"dojo/_base/kernel", // global
 	"dojo/_base/lang", // lang.hitch
-	"dojo/_base/window", // win.global
 	"./TreeStoreModel"
-], function(array, declare, lang, win, TreeStoreModel){
-
-/*=====
-var TreeStoreModel = dijit.tree.TreeStoreModel;
-=====*/
+], function(array, declare, kernel, lang, TreeStoreModel){
 
 // module:
 //		dijit/tree/ForestStoreModel
@@ -21,7 +17,7 @@ return declare("dijit.tree.ForestStoreModel", TreeStoreModel, {
 	//		Interface between a dijit.Tree and a dojo.data store that doesn't have a root item,
 	//		a.k.a. a store that has multiple "top level" items.
 	//
-	// description
+	// description:
 	//		Use this class to wrap a dojo.data store, making all the items matching the specified query
 	//		appear as children of a fabricated "root item".  If no query is specified then all the
 	//		items returned by fetch() on the underlying store become children of the root item.
@@ -85,7 +81,7 @@ return declare("dijit.tree.ForestStoreModel", TreeStoreModel, {
 
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ callback, /*function*/ onError){
 		// summary:
-		// 		Calls onComplete() with array of child items of given parent item, all loaded.
+		//		Calls onComplete() with array of child items of given parent item, all loaded.
 		if(parentItem === this.root){
 			if(this.root.children){
 				// already loaded, just return
@@ -114,7 +110,7 @@ return declare("dijit.tree.ForestStoreModel", TreeStoreModel, {
 
 	fetchItemByIdentity: function(/* object */ keywordArgs){
 		if(keywordArgs.identity == this.root.id){
-			var scope = keywordArgs.scope?keywordArgs.scope:win.global;
+			var scope = keywordArgs.scope || kernel.global;
 			if(keywordArgs.onItem){
 				keywordArgs.onItem.call(scope, this.root);
 			}
@@ -197,7 +193,7 @@ return declare("dijit.tree.ForestStoreModel", TreeStoreModel, {
 		//		Called when item removed from root of tree; user must override this method
 		//		to modify the item so it doesn't match the query for top level items
 		// example:
-		// 	|	store.unsetAttribute(item, "root");
+		//	|	store.unsetAttribute(item, "root");
 		// tags:
 		//		extension
 		console.log(this, ": item ", item, " removed from root");

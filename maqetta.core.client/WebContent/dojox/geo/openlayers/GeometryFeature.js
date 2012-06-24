@@ -1,13 +1,13 @@
-define(["dojo/_base/kernel",
-				"dojo/_base/declare",
-				"dojo/_base/array",
-				"dojo/_base/lang",
-				"dojox/gfx/matrix",
-				"dojox/geo/openlayers/Point",
-				"dojox/geo/openlayers/LineString",
-				"dojox/geo/openlayers/Collection",
-				"dojox/geo/openlayers/Feature"], function(dojo, declare, array, lang, matrix, Point, LineString,
-																									Collection, Feature){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojox/gfx/matrix",
+	"dojox/geo/openlayers/Point",
+	"dojox/geo/openlayers/LineString",
+	"dojox/geo/openlayers/Collection",
+	"dojox/geo/openlayers/Feature"], 
+	function(declare, array, lang, matrix, Point, LineString, Collection, Feature){
 	/*===== 
 	var Feature = dojox.geo.openlayers.Feature; 
 	=====*/

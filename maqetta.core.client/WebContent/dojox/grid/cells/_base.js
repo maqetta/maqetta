@@ -99,7 +99,7 @@ define([
 			// summary:
 			//	provides the html for a given grid cell.
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			// returns: html for a given grid cell
 			var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
 			d = (d && d.replace && this.grid.escapeHTMLInData) ? d.replace(/&/g, '&amp;').replace(/</g, '&lt;') : d;
@@ -123,7 +123,7 @@ define([
 			// summary:
 			//	gets the dom node for a given grid cell.
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			// returns: dom node for a given grid cell
 			return this.view.getCellNode(inRowIndex, this.index);
 		},
@@ -186,7 +186,7 @@ define([
 			// summary:
 			//	format the editing dom node. Use when editor is a widget.
 			// inNode: dom node
-			// dom node for the editor
+			//	dom node for the editor
 			// inDatum: anything
 			//	cell data to edit
 			// inRowIndex: int
@@ -208,7 +208,7 @@ define([
 			// summary:
 			//	returns value entered into editor
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			// returns:
 			//	value of editor
 			return this.getEditNode(inRowIndex)[this._valueProp];
@@ -217,7 +217,7 @@ define([
 			// summary:
 			//	set the value of the grid editor
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			// inValue: anything
 			//	value of editor
 			var n = this.getEditNode(inRowIndex);
@@ -229,7 +229,7 @@ define([
 			// summary:
 			//	focus the grid editor
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			// inNode: dom node
 			//	editor node
 			focusSelectNode(inNode || this.getEditNode(inRowIndex));
@@ -238,7 +238,7 @@ define([
 			// summary:
 			//	save editor state
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			this.value = this.value || this.getValue(inRowIndex);
 			//console.log("save", this.value, inCell.index, inRowIndex);
 		},
@@ -246,7 +246,7 @@ define([
 			// summary:
 			//	restore editor state
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			this.setValue(inRowIndex, this.value);
 			//console.log("restore", this.value, inCell.index, inRowIndex);
 		},
@@ -255,7 +255,7 @@ define([
 			// summary:
 			//	called when editing is completed to clean up editor
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			dom.setSelectable(this.grid.domNode, false);
 			this.cancelFormatNode();
 		},
@@ -264,7 +264,7 @@ define([
 			// summary:
 			//	apply edit from cell editor
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			this.applyEdit(this.getValue(inRowIndex), inRowIndex);
 			this._finish(inRowIndex);
 		},
@@ -272,7 +272,7 @@ define([
 			// summary:
 			//	cancel cell edit
 			// inRowIndex: int
-			// grid row index
+			//  grid row index
 			this.cancelEdit(inRowIndex);
 			this._finish(inRowIndex);
 		}
@@ -314,8 +314,8 @@ define([
 	};
 
 	var Cell = declare("dojox.grid.cells.Cell", BaseCell, {
-		// summary
-		// grid cell that provides a standard text input box upon editing
+		// summary:
+		//		grid cell that provides a standard text input box upon editing
 		constructor: function(){
 			this.keyFilter = this.keyFilter;
 		},
@@ -371,7 +371,7 @@ define([
 
 	var Select = declare("dojox.grid.cells.Select", Cell, {
 		// summary:
-		// grid cell that provides a standard select for editing
+		// 		grid cell that provides a standard select for editing
 
 		// options: Array
 		// 		text of each item
@@ -439,7 +439,7 @@ define([
 
 	var AlwaysEdit = declare("dojox.grid.cells.AlwaysEdit", Cell, {
 		// summary:
-		// grid cell that is always in an editable state, regardless of grid editing state
+		// 		grid cell that is always in an editable state, regardless of grid editing state
 		alwaysEditing: true,
 		_formatNode: function(inDatum, inRowIndex){
 			this.formatNode(this.getEditNode(inRowIndex), inDatum, inRowIndex);
@@ -456,7 +456,7 @@ define([
 
 	var Bool = declare("dojox.grid.cells.Bool", AlwaysEdit, {
 		// summary:
-		// grid cell that provides a standard checkbox that is always on for editing
+		// 		grid cell that provides a standard checkbox that is always on for editing
 		_valueProp: "checked",
 		formatEditing: function(inDatum, inRowIndex){
 			return '<input class="dojoxGridInput" type="checkbox"' + (inDatum ? ' checked="checked"' : '') + ' style="width: auto" />';

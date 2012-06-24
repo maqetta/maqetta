@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	'bold': 'Tučné',
 	'copy': 'Kopírovat',
@@ -45,7 +44,8 @@ define(
 	"print": "Tisk",
 	"newPage": "Nová stránka",
 	/* Error messages */
-	'systemShortcut': 'Akce "${0}" je v prohlížeči dostupná pouze prostřednictvím klávesové zkratky. Použijte klávesovou zkratku ${1}.'
+	'systemShortcut': 'Akce "${0}" je v prohlížeči dostupná pouze prostřednictvím klávesové zkratky. Použijte klávesovou zkratku ${1}.',
+	'ctrlKey':'ctrl+${0}',
+	'appleKey':'\u2318${0}' // "command" or open-apple key on Macintosh
 })
-//end v1.x content
 );

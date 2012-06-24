@@ -1,12 +1,17 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/_base/declare",
+	"dojo/Stateful",
 	"dijit/registry"
-], function(lang, array, declare, registry){
+], function(dojo, lang, array, declare, Stateful, registry){
 	/*=====
+	Stateful = dojo.Stateful;
 	registry = dijit.registry;
 	=====*/
+
+	dojo.deprecated("dojox.mvc._DataBindingMixin", "Use dojox/mvc/at for data binding.");
 
 	return declare("dojox.mvc._DataBindingMixin", null, {
 		// summary:
@@ -88,7 +93,8 @@ define([
 			//		assess the model validity of the data binding via the
 			//		this.inherited(arguments) hierarchy and declare any values
 			//		failing the test as invalid.
-			return this.get("binding") ? this.get("binding").get("valid") : true;
+			var valid = this.get("valid");
+			return typeof valid != "undefined" ? valid : this.get("binding") ? this.get("binding").get("valid") : true;
 		},
 
 		//////////////////////// LIFECYCLE METHODS ////////////////////////
@@ -107,7 +113,7 @@ define([
 			this._viewWatchHandles = [
 				// 1. data binding refs
 				this.watch("ref", function(name, old, current){
-					if(this._databound){
+					if(this._databound && old !== current){
 						this._setupBinding();
 					}
 				}),
@@ -166,13 +172,14 @@ define([
 			//		  dijits that specify a data binding reference, the binding is
 			//		  calculated by treating the reference String as an expression and
 			//		  evaluating it to obtain the dojo.Stateful node in the datamodel.
-			//		This method throws an Error in these two conditions:
+			//		This method calls console.warn in these two conditions:
 			//		- The ref is an expression i.e. outermost bound dijit, but the
 			//		  expression evaluation fails.
 			//		- The calculated binding turns out to not be an instance of a
 			//		  dojo.Stateful node.
 			// tags:
 			//		private
+
 			if(!this.ref){
 				return; // nothing to do here
 			}
@@ -204,11 +211,14 @@ define([
 					binding = lang.getObject("" + ref, false, parentBinding);
 				}else{
 					try{
-						binding = lang.getObject(ref);
+						var b = lang.getObject("" + ref) || {};
+						if(lang.isFunction(b.set) && lang.isFunction(b.watch)){
+							binding = b;
+						}						
 					}catch(err){
 						if(ref.indexOf("${") == -1){ // Ignore templated refs such as in repeat body
-							throw new Error("dojox.mvc._DataBindingMixin: '" + this.domNode +
-								"' widget with illegal ref expression: '" + ref + "'");
+							console.warn("dojox.mvc._DataBindingMixin: '" + this.domNode +
+								"' widget with illegal ref not evaluating to a dojo.Stateful node: '" + ref + "'");
 						}
 					}
 				}
@@ -216,16 +226,19 @@ define([
 			if(binding){
 				if(lang.isFunction(binding.toPlainObject)){
 					this.binding = binding;
+					if(this[this._relTargetProp || "target"] !== binding){
+						this.set(this._relTargetProp || "target", binding);
+					}
 					this._updateBinding("binding", null, binding);
 				}else{
-					throw new Error("dojox.mvc._DataBindingMixin: '" + this.domNode +
+					console.warn("dojox.mvc._DataBindingMixin: '" + this.domNode +
 						"' widget with illegal ref not evaluating to a dojo.Stateful node: '" + ref + "'");
 				}
 			}
 		},
 
 		_isEqual: function(one, other){
-        	// test for equality
+			// test for equality
 			return one === other ||
 				// test for NaN === NaN
 				isNaN(one) && typeof one === 'number' &&
@@ -328,18 +341,25 @@ define([
 			}
 		},
 
-		_updateChildBindings: function(){
+		_updateChildBindings: function(parentBind){
 			// summary:
 			//		Update this widget's value based on the current binding and
 			//		set up the bindings of all contained widgets so as to refresh
-			//		any relative binding references.
+			//		any relative binding references. 
+			// 		findWidgets does not return children of widgets so need to also
+			//		update children of widgets which are not bound but may hold widgets which are.
+			//	parentBind:
+			//		The binding on the parent of a widget whose children may have bindings 
+			//		which need to be updated.
 			// tags:
 			//		private
-			var binding = this.get("binding");
+			var binding = this.get("binding") || parentBind;
 			if(binding && !this._beingBound){
 				array.forEach(registry.findWidgets(this.domNode), function(widget){
-					if(widget._setupBinding){
+					if(widget.ref && widget._setupBinding){
 						widget._setupBinding(binding);
+					}else{	
+						widget._updateChildBindings(binding);
 					}
 				});
 			}

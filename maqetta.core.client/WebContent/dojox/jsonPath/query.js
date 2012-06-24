@@ -14,13 +14,14 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 
 	var strs = [];
 	function _str(i){ return strs[i];}
+	var _strName = _str.name;
 	var acc;
 	if (arg.resultType == "PATH" && arg.evalType == "RESULT") throw Error("RESULT based evaluation not supported with PATH based results");
 	var P = {
 		resultType: arg.resultType || "VALUE",
 		normalize: function(expr){
 			var subx = [];
-			expr = expr.replace(/'([^']|'')*'/g, function(t){return "_str("+(strs.push(eval(t))-1)+")";});
+			expr = expr.replace(/'([^']|'')*'/g, function(t){return _strName + "("+(strs.push(eval(t))-1)+")";});
 			var ll = -1;
 			while(ll!=subx.length){
 				ll=subx.length;//TODO: Do expression syntax checking
@@ -143,9 +144,9 @@ dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
 						f(m);
 			}
 		},
-		eval: function(x, _v){
-			try { return $ && _v && eval(x.replace(/@/g,'_v')); }
-			catch(e){ throw new SyntaxError("jsonPath: " + e.message + ": " + x.replace(/@/g, "_v").replace(/\^/g, "_a")); }
+		eval: function(x, v){
+			try { return $ && v && eval(x.replace(/@/g,'v')); }
+			catch(e){ throw new SyntaxError("jsonPath: " + e.message + ": " + x.replace(/@/g, "v").replace(/\^/g, "_a")); }
 		}
 	};
 

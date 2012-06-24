@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "Sett inn anker",
 	title: "Ankeregenskaper",
@@ -8,5 +7,4 @@ define(
 	set: "Definer",
 	cancel: "Avbryt"
 })
-//end v1.x content
 );

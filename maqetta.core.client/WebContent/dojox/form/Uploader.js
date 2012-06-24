@@ -18,7 +18,7 @@ define([
 ],function(kernel, declare, lang, array, connect, win, domStyle, domGeometry, domAttr, domConstruct, domForm, dijit, Button, uploader, res, template){
 
 	kernel.experimental("dojox.form.Uploader");
-	//
+
 	// TODO:
 	//		i18n
 	//		label via innerHTML
@@ -30,19 +30,15 @@ define([
 	//		Make it so URL can change (current set to Flash on build)
 	//
 
-	/*=====
-		uploader = dojox.form.uploader.Base;
-		WidgetsInTemplateMixin = dijit._WidgetsInTemplateMixin;
-	=====*/
 declare("dojox.form.Uploader", [uploader, Button], {
-	//
+
 	// Version: 1.6
-	//
+
 	// summary:
 	//		A widget that creates a stylable file-input button, with optional multi-file selection,
 	//		using only HTML elements. Non-HTML5 browsers have fallback options of Flash or an iframe.
 	//
-	//	description:
+	// description:
 	//		A bare-bones, stylable file-input button, with optional multi-file selection. The list
 	//		of files is not displayed, that is for you to handle by connecting to the onChange
 	//		event, or use the dojox.form.uploader.FileList.
@@ -54,46 +50,47 @@ declare("dojox.form.Uploader", [uploader, Button], {
 	//		If the browser supports a file-input with the "multiple" attribute, that will be used.
 	//		If the browser does not support "multiple" (ergo, IE) multiple inputs are used,
 	//		one for each selection.
-	//
-	//
-	//	uploadOnSelect: Boolean
-	//		If true, uploads imediately after a file has been selected. If false,
+
+	// uploadOnSelect: Boolean
+	//		If true, uploads immediately after a file has been selected. If false,
 	//		waits for upload() to be called.
 	uploadOnSelect:false,
-	//	tabIndex: Number|String
+
+	// tabIndex: Number|String
 	//		The tab order in the DOM.
 	tabIndex:0,
-	//	multiple: Boolean
+
+	// multiple: Boolean
 	//		If true and flash mode, multiple files may be selected from the dialog.
 	multiple:false,
-	//
-	//	label: String
+
+	// label: String
 	//		The text used in the button that when clicked, opens a system Browse Dialog.
 	label:res.label,
-	//
+
 	// url: String
 	//		The url targeted for upload. An absolute URL is preferred. Relative URLs are
 	//		changed to absolute.
 	url:"",
-	//
-	//	name: String
+
+	// name: String
 	//		The name attribute needs to end with square brackets: [] as this is the standard way
 	//		of handling an attribute "array". This requires a slightly different technique on the
 	//		server.
 	name:"uploadedfile",
-	//
-	//	flashFieldName: String
+
+	// flashFieldName: String
 	//		If set, this will be the name of the field of the flash uploaded files that the server
 	//		is expecting. If not set, "Flash" is appended to the "name" property.
 	flashFieldName:"",
-	//
-	//	uploadType: String [readonly]
+
+	// uploadType: String [readonly]
 	//		The type of uploader being used. As an alternative to determining the upload type on the
 	//		server based on the fieldName, this property could be sent to the server to help
 	//		determine what type of parsing should be used.
 	uploadType:"form",
-	//
-	//	showInput: String [const]
+
+	// showInput: String [const]
 	//		Position to show an input which shows selected filename(s). Possible
 	//		values are "before", "after", which specifies where the input should
 	//		be placed with reference to the containerNode which contains the
@@ -114,7 +111,6 @@ declare("dojox.form.Uploader", [uploader, Button], {
 		this.inherited(arguments);
 	},
 	buildRendering: function(){
-		console.warn("buildRendering", this.id)
 		this.inherited(arguments);
 		domStyle.set(this.domNode, {
 			overflow:"hidden",
@@ -162,19 +158,19 @@ declare("dojox.form.Uploader", [uploader, Button], {
 	 *	   Public Events	 *
 	 *************************/
 
-	onChange: function(/* Array */fileArray){
-		//	summary:
+	onChange: function(/*Array*/ fileArray){
+		// summary:
 		// 		stub to connect
 		// 		Fires when files are selected
 		// 		Event is an array of last files selected
 	},
 
-	onBegin: function(/* Array */dataArray){
+	onBegin: function(/*Array*/ dataArray){
 		// summary:
 		// 		Fires when upload begins
 	},
 
-	onProgress: function(/* Object */customEvent){
+	onProgress: function(/*Object*/ customEvent){
 		// summary:
 		// 		Stub to connect
 		// 		Fires on upload progress. Event is a normalized object of common properties
@@ -190,7 +186,7 @@ declare("dojox.form.Uploader", [uploader, Button], {
 		//			Timestamp of when event occurred
 	},
 
-	onComplete: function(/* Object */customEvent){
+	onComplete: function(/*Object*/ customEvent){
 		// summary:
 		// 		stub to connect
 		// 		Fires when all files have uploaded
@@ -211,23 +207,23 @@ declare("dojox.form.Uploader", [uploader, Button], {
 		// 		Fires when upload in progress was canceled
 	},
 
-	onError: function(/* Object or String */evtObject){
+	onError: function(/*Object or String*/ evtObject){
 		// summary:
 		//		Fires on errors
-		//
-		//FIXME: Unsure of a standard form of error events
+
+		// FIXME: Unsure of a standard form of error events
 	},
 
 	/*************************
 	 *	   Public Methods	 *
 	 *************************/
 
-	upload: function(/*Object ? */formData){
+	upload: function(/*Object?*/ formData){
 		// summary:
 		// 		When called, begins file upload. Only supported with plugins.
 	},
 
-	submit: function(/* form Node ? */form){
+	submit: function(/*form Node?*/ form){
 		// summary:
 		//		If Uploader is in a form, and other data should be sent along with the files, use
 		//		this instead of form submit.
@@ -237,7 +233,7 @@ declare("dojox.form.Uploader", [uploader, Button], {
 	},
 
 	reset: function(){
-		// summary
+		// summary:
 		// 		Resets entire input, clearing all files.
 		// 		NOTE:
 		// 		Removing individual files is not yet supported, because the HTML5 uploaders can't
@@ -256,7 +252,7 @@ declare("dojox.form.Uploader", [uploader, Button], {
 	getFileList: function(){
 		// summary:
 		// 		Returns a list of selected files.
-		//
+
 		var fileArray = [];
 		if(this.supports("multiple")){
 			array.forEach(this._files, function(f, i){
@@ -314,6 +310,18 @@ declare("dojox.form.Uploader", [uploader, Button], {
 		this._createInput();
 	},
 
+	_getFileFieldName: function(){
+		var name;
+		if(this.multiple && this.supports("multiple")){
+			// FF3.5+, WebKit
+			name = this.name+"s[]";
+		}else{
+			// <=IE8
+			name = this.name + (this.multiple ? this._nameIndex : "");
+		}
+		return name;
+	},
+
 	_createInput: function(){
 		if(this._inputs.length){
 			domStyle.set(this.inputNode, {
@@ -323,14 +331,7 @@ declare("dojox.form.Uploader", [uploader, Button], {
 			this._nameIndex++;
 		}
 
-		var name;
-		if(this.supports("multiple")){
-			// FF3.5+, WebKit
-			name = this.name+"s[]";
-		}else{
-			// <=IE8
-			name = this.name + (this.multiple ? this._nameIndex : "");
-		}
+		var name = this._getFileFieldName();
 		// reset focusNode to the inputNode, so when the button is clicked,
 		// the focus is properly moved to the input element
 		this.focusNode = this.inputNode = domConstruct.create("input", {type:"file", name:name}, this.domNode, "first");
@@ -380,10 +381,10 @@ declare("dojox.form.Uploader", [uploader, Button], {
 		// summary:
 		// 		Handle Uploader plugins. When the dojox.form.addUploaderPlugin() function is called,
 		// 		the dojox.form.Uploader is recreated using the new plugin (mixin).
-		//
+
 		extensions.push(plug);
 		declare("dojox.form.Uploader", extensions, {});
-	}
+	};
 
 	return dojox.form.Uploader;
 });

@@ -1,12 +1,10 @@
 define(["dojo/_base/declare","dojox/data/CssRuleStore"], 
   function(declare, CssRuleStore) {
 
-/*===== var CssRuleStore = dojox.data.CssRuleStore =====*/
-
 return declare("dojox.data.CssClassStore", CssRuleStore, {
-	//	summary:
+	// summary:
 	//		Basic store to display CSS information.
-	//	description:
+	// description:
 	//		The CssClassStore allows users to get information about active Css classes in the page running the CssClassStore.
 	//		It can also filter out classes from specific stylesheets.  The attributes it exposes on classes are as follows:
 	//			class:		The classname, including the '.'.
@@ -17,7 +15,7 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	_cName: "dojox.data.CssClassStore",
 
 	getFeatures: function(){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getFeatures()
 		return {
 			"dojo.data.api.Read" : true,
@@ -26,14 +24,14 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	getAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getAttributes()
 		this._assertIsItem(item);
 		return ['class', 'classSans'];
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
@@ -43,7 +41,7 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	getValues: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValues()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -57,7 +55,7 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	_handleRule: function(rule, styleSheet, href){
-		//	summary:
+		// summary:
 		//		Handles the creation of an item based on the passed rule.  In this store, this implies
 		//		parsing out all available class names.
 		var obj = {};
@@ -82,7 +80,7 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	_handleReturn: function(){
-		//	summary:
+		// summary:
 		//		Handles the return from a fetching action.  Delegates requests to act on the resulting
 		//		item set to eitehr the _handleFetchReturn or _handleFetchByIdentityReturn depending on
 		//		where the request originated.
@@ -111,7 +109,7 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	},
 
 	_handleFetchByIdentityReturn: function(request){
-		//	summary:
+		// summary:
 		//		Handles a fetchByIdentity request by finding the correct item.
 		var items = request._items;
 		// Per https://bugs.webkit.org/show_bug.cgi?id=17935 , Safari 3.x always returns the selectorText
@@ -128,21 +126,21 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 
 	/* Identity API */
 	getIdentity: function(/* item */ item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Identity.getIdentity()
 		this._assertIsItem(item);
 		return this.getValue(item, this._idAttribute);
 	},
 
 	getIdentityAttributes: function(/* item */ item){
-		 //	summary:
-		 //		See dojo.data.api.Identity.getIdentityAttributes()
+		// summary:
+		//		See dojo.data.api.Identity.getIdentityAttributes()
 		this._assertIsItem(item);
 		return [this._idAttribute];
 	},
 
 	fetchItemByIdentity: function(/* request */ request){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Identity.fetchItemByIdentity()
 		request = request || {};
 		if(!request.store){

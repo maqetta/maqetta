@@ -1,13 +1,19 @@
 @import url("../common/domButtons/DomButtonColorButtons.css");
 
+@import url("../common/domButtons/DomButtonBlackCircleCross.css");
+
 @import url("../common/IconContainer_keyframes.css");
 /* dojox.mobile.IconContainer */
 .mblIconContainer {
-  margin: 0px;
-  padding: 0px;
+  margin: 20px 10px;
+  padding: 0;
 }
 /* dojox.mobile.IconItem */
 .mblIconItem {
+  position: relative;
+  overflow: hidden;
+  /* for focus frame */
+
   list-style-type: none;
   float: left;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
@@ -15,29 +21,35 @@
 .mblIconItemTerminator {
   list-style-type: none;
   clear: both;
-  height: 0px;
 }
-.mblIconItemSub {
+.mblIconItemPane {
   list-style-type: none;
   background-color: white;
   color: black;
 }
 .mblIconArea {
-  margin-bottom: 5px;
+  position: relative;
   height: 78px;
-  width: 88px;
-  text-align: center;
   font-family: Helvetica;
   font-size: 12px;
+  text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 88px;
 }
-.mblIconArea div {
+.mblIconArea img {
+  vertical-align: middle;
+}
+.mblIconAreaInner {
   position: relative;
   height: 65px;
   line-height: 65px;
   text-align: center;
 }
-.mblIconArea img {
-  vertical-align: middle;
+.mblIconItemDeleteIcon {
+  position: absolute;
+  top: -4px;
+  left: 2px;
 }
 .mblIconItemSpriteIcon {
   position: absolute;
@@ -54,7 +66,7 @@ table.mblClose {
   position: relative;
   -webkit-animation-duration: .5s;
   -webkit-animation-timing-function: ease-in-out;
-  -webkit-animation-iteration-count: 20;
+  -webkit-animation-iteration-count: infinite;
   -webkit-animation-name: mblVibrate;
   -webkit-transform: rotate(0deg);
 }
@@ -76,22 +88,27 @@ table.mblClose {
 .mblCloseContent.mblShrink3 {
   -webkit-animation-name: mblShrink3;
 }
-/* Icon Content Heading */
-.mblIconContentHeading {
+/* dojox.mobile._IconItemPane */
+.mblIconItemPaneHeading {
   position: relative;
   clear: both;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   margin-top: 0px;
   padding-left: 40px;
   height: 25px;
-  border-top: 1px solid #F1F3F4;
-  border-bottom: 1px solid #717D85;
+  border-top: 1px solid #f1f3f4;
+  border-bottom: 1px solid #717d85;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e0e4e7), to(#b4bec6), color-stop(0.5, #c4ccd2), color-stop(0.5, #bfc8ce));
   font-family: Helvetica;
-  font-size: 16px;
+  font-size: 14px;
   color: white;
   line-height: 26px;
   text-shadow: rgba(0, 0, 0, 0.6) 0px -1px 0px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mblIconItemPaneIcon {
+  position: absolute;
+  top: -2px;
+  left: 1px;
 }

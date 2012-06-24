@@ -3,7 +3,7 @@ define([
 	"dojo/_base/lang", // lang.isArray
 	"dojo/window", // windowUtils.getBox
 	"../place",
-	".."	// export to dijit namespace
+	"../main"	// export to dijit namespace
 ], function(array, lang, windowUtils, place, dijit){
 
 	// module:
@@ -36,12 +36,12 @@ define([
 		//		for the "around" argument and finds a proper processor to place a node.
 		//		Deprecated, new code should use dijit.place.around() instead.
 	};
-	====*/
+	=====*/
 	dijit.placeOnScreenAroundElement = function(node, aroundNode, aroundCorners, layoutNode){
 		// Convert old style {"BL": "TL", "BR": "TR"} type argument
 		// to style needed by dijit.place code:
 		//		[
-		// 			{aroundCorner: "BL", corner: "TL" },
+		//			{aroundCorner: "BL", corner: "TL" },
 		//			{aroundCorner: "BR", corner: "TR" }
 		//		]
 		var positions;

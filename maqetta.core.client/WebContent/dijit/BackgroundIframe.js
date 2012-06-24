@@ -1,12 +1,12 @@
 define([
 	"require",			// require.toUrl
-	".",	// to export dijit.BackgroundIframe
+	"./main",	// to export dijit.BackgroundIframe
 	"dojo/_base/config",
 	"dojo/dom-construct", // domConstruct.create
 	"dojo/dom-style", // domStyle.set
 	"dojo/_base/lang", // lang.extend lang.hitch
 	"dojo/on",
-	"dojo/_base/sniff", // has("ie"), has("mozilla"), has("quirks")
+	"dojo/sniff", // has("ie"), has("mozilla"), has("quirks")
 	"dojo/_base/window" // win.doc.createElement
 ], function(require, dijit, config, domConstruct, domStyle, lang, on, has, win){
 
@@ -86,7 +86,7 @@ define([
 	lang.extend(dijit.BackgroundIframe, {
 		resize: function(node){
 			// summary:
-			// 		Resize the iframe so it's the same size as node.
+			//		Resize the iframe so it's the same size as node.
 			//		Needed on IE6 and IE/quirks because height:100% doesn't work right.
 			if(this.iframe){
 				domStyle.set(this.iframe, {

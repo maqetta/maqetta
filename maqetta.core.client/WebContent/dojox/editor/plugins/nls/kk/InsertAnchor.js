@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "Бетбелгі кірістіру",
 	title: "Бетбелгі сипаттары",
@@ -8,6 +7,4 @@ define(
 	set: "Орнату",
 	cancel: "Болдырмау"
 })
-
-//end v1.x content
 );

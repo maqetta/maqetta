@@ -1,13 +1,12 @@
-define(["../_base/kernel", "../_base/lang", "../_base/Deferred", "../_base/array"
-], function(kernel, lang, Deferred, array) {
-	// module:
-	//		dojo/store/Observable
-	// summary:
-	//		TODOC
+define(["../_base/kernel", "../_base/lang", "../_base/Deferred", "../_base/array" /*=====, "./api/Store" =====*/
+], function(kernel, lang, Deferred, array /*=====, Store =====*/){
 
-var ds = lang.getObject("dojo.store", true);
+// module:
+//		dojo/store/Observable
+// summary:
+//		TODOC
 
-return ds.Observable = function(store){
+var Observable = function(/*Store*/ store){
 	// summary:
 	//		The Observable store wrapper takes a store and sets an observe method on query()
 	//		results that can be used to monitor results for changes.
@@ -39,6 +38,9 @@ return ds.Observable = function(store){
 	var undef, queryUpdaters = [], revision = 0;
 	// a Comet driven store could directly call notify to notify observers when data has
 	// changed on the backend
+	// create a new instance
+	store = lang.delegate(store);
+	
 	store.notify = function(object, existingId){
 		revision++;
 		var updaters = queryUpdaters.slice();
@@ -120,19 +122,20 @@ return ds.Observable = function(store){
 						});
 					});
 				}
-				return {
-					cancel: function(){
-						// remove this listener
-						var index = array.indexOf(listeners, listener);
-						if(index > -1){ // check to make sure we haven't already called cancel
-							listeners.splice(index, 1);
-							if(!listeners.length){
-								// no more listeners, remove the query updater too
-								queryUpdaters.splice(array.indexOf(queryUpdaters, queryUpdater), 1);
-							}
-						}						
+				var handle = {};
+				// TODO: Remove cancel in 2.0.
+				handle.remove = handle.cancel = function(){
+					// remove this listener
+					var index = array.indexOf(listeners, listener);
+					if(index > -1){ // check to make sure we haven't already called cancel
+						listeners.splice(index, 1);
+						if(!listeners.length){
+							// no more listeners, remove the query updater too
+							queryUpdaters.splice(array.indexOf(queryUpdaters, queryUpdater), 1);
+						}
 					}
 				};
+				return handle;
 			};
 		}
 		return results;
@@ -172,4 +175,8 @@ return ds.Observable = function(store){
 
 	return store;
 };
+
+lang.setObject("dojo.store.util.Observable", Observable);
+
+return Observable;
 });

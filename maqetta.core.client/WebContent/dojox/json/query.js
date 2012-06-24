@@ -1,6 +1,6 @@
-define(["dojo/_base/kernel", "dojox", "dojo/_base/array"], function(dojo, dojox){
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojox", "dojo/_base/array"], function(dojo, lang, dojox){
 
-	dojo.getObject("json", true, dojox);
+	lang.getObject("json", true, dojox);
 
 	dojox.json._slice = function(obj,start,end,step){
 		// handles slice operations: [3:6:2]
@@ -12,7 +12,7 @@ define(["dojo/_base/kernel", "dojox", "dojo/_base/array"], function(dojo, dojox)
 	  		results.push(obj[i]);
 	  	}
 		return results;
-	}
+	};
 	dojox.json._find = function e(obj,name){
 		// handles ..name, .*, [*], [val1,val2], [val]
 		// name can be a property to search for, undefined for full recursive, or an array for picking by index
@@ -54,7 +54,7 @@ define(["dojo/_base/kernel", "dojox", "dojo/_base/array"], function(dojo, dojox)
 			walk(obj);
 		}
 		return results;
-	}
+	};
 
 	dojox.json._distinctFilter = function(array, callback){
 		// does the filter with removal of duplicates in O(n)
@@ -83,7 +83,7 @@ define(["dojo/_base/kernel", "dojox", "dojo/_base/array"], function(dojo, dojox)
 			}
 		}
 		return outArr;
-	}
+	};
 	return dojox.json.query = function(/*String*/query,/*Object?*/obj){
 		// summary:
 		// 		Performs a JSONQuery on the provided object and returns the results.

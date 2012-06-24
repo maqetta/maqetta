@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Hivatkozás tulajdonságai",
 	insertImageTitle: "Kép tulajdonságai",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Legfelső szintű ablak",
 	newWindow: "Új ablak"
 })
-
-//end v1.x content
 );

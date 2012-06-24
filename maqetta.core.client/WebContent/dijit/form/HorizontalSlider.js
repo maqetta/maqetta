@@ -8,10 +8,11 @@ define([
 	"dojo/dom-style", // domStyle.getComputedStyle
 	"dojo/keys", // keys.DOWN_ARROW keys.END keys.HOME keys.LEFT_ARROW keys.PAGE_DOWN keys.PAGE_UP keys.RIGHT_ARROW keys.UP_ARROW
 	"dojo/_base/lang", // lang.hitch
-	"dojo/_base/sniff", // has("ie") has("mozilla")
+	"dojo/sniff", // has("ie") has("mozilla")
 	"dojo/dnd/Moveable", // Moveable
 	"dojo/dnd/Mover", // Mover Mover.prototype.destroy.apply
 	"dojo/query", // query
+	"dojo/mouse", // mouse.wheel
 	"../registry", // registry.findWidgets
 	"../focus",		// focus.focus()
 	"../typematic",
@@ -19,14 +20,8 @@ define([
 	"./_FormValueWidget",
 	"../_Container",
 	"dojo/text!./templates/HorizontalSlider.html"
-], function(array, declare, move, event, fx, domGeometry, domStyle, keys, lang, has, Moveable, Mover, query,
+], function(array, declare, move, event, fx, domGeometry, domStyle, keys, lang, has, Moveable, Mover, query, mouse,
 			registry, focus, typematic, Button, _FormValueWidget, _Container, template){
-
-/*=====
-	var Button = dijit.form.Button;
-	var _FormValueWidget = dijit.form._FormValueWidget;
-	var _Container = dijit._Container;
-=====*/
 
 // module:
 //		dijit/form/HorizontalSlider
@@ -278,9 +273,7 @@ var HorizontalSlider = declare("dijit.form.HorizontalSlider", [_FormValueWidget,
 		// summary:
 		//		Event handler for mousewheel where supported
 		event.stop(evt);
-		var janky = !has("mozilla");
-		var scroll = evt[(janky ? "wheelDelta" : "detail")] * (janky ? 1 : -1);
-		this._bumpValue(scroll < 0 ? -1 : 1, true); // negative scroll acts like a decrement
+		this._bumpValue(evt.wheelDelta < 0 ? -1 : 1, true); // negative scroll acts like a decrement
 	},
 
 	startup: function(){
@@ -313,7 +306,7 @@ var HorizontalSlider = declare("dijit.form.HorizontalSlider", [_FormValueWidget,
 		// find any associated label element and add to slider focusnode.
 		var label = query('label[for="'+this.id+'"]');
 		if(label.length){
-			label[0].id = (this.id+"_label");
+			if(!label[0].id){ label[0].id = this.id + "_label"; }
 			this.focusNode.setAttribute("aria-labelledby", label[0].id);
 		}
 
@@ -325,12 +318,12 @@ var HorizontalSlider = declare("dijit.form.HorizontalSlider", [_FormValueWidget,
 		this.inherited(arguments);
 
 		if(this.showButtons){
-			this._connects.push(typematic.addMouseListener(
-				this.decrementButton, this, "_typematicCallback", 25, 500));
-			this._connects.push(typematic.addMouseListener(
-				this.incrementButton, this, "_typematicCallback", 25, 500));
+			this.own(
+				typematic.addMouseListener(this.decrementButton, this, "_typematicCallback", 25, 500),
+				typematic.addMouseListener(this.incrementButton, this, "_typematicCallback", 25, 500)
+			);
 		}
-		this.connect(this.domNode, !has("mozilla") ? "onmousewheel" : "DOMMouseScroll", "_mouseWheeled");
+		this.connect(this.domNode, mouse.wheel, "_mouseWheeled");
 
 		// define a custom constructor for a SliderMover that points back to me
 		var mover = declare(_SliderMover, {
@@ -346,7 +339,6 @@ var HorizontalSlider = declare("dijit.form.HorizontalSlider", [_FormValueWidget,
 		if(this._inProgressAnim && this._inProgressAnim.status != "stopped"){
 			this._inProgressAnim.stop(true);
 		}
-		this._supportingWidgets = registry.findWidgets(this.domNode); // tells destroy about pseudo-child widgets (ruler/labels)
 		this.inherited(arguments);
 	}
 });

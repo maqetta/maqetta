@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/kernel", // kernel.deprecated
 	"./Calendar",
-	"."	// for exporting dijit.Calendar
+	"./main"	// for exporting dijit.Calendar
 ], function(kernel, Calendar, dijit){
 
 	// module:

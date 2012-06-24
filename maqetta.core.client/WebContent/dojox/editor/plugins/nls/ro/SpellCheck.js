@@ -1,21 +1,18 @@
 define(
-//begin v1.x content
 ({
-	widgetLabel: "Verificare ortografică lot",
+	widgetLabel: "Verificare ortografică batch",
 	unfound: "Nu a fost găsit",
-	skip: "Salt",
-	skipAll: "Salt toate",
+	skip: "Salt peste",
+	skipAll: "Se sar toate",
 	toDic: "Adăugare la dicţionar",
 	suggestions: "Sugestii",
 	replace: "Înlocuire",
 	replaceWith: "Înlocuire cu",
 	replaceAll: "Înlocuire toate",
 	cancel: "Anulare",
-	msg: "Nicio greşeală de verificare ortografică nu a fost găsită.",
-	iSkip: "Salt peste acesta",
-	iSkipAll: "Salt peste toate acestea",
-	iMsg: "Nicio sugestie de verificare ortografică"
+	msg: "Nu au fost găsite greşeli de scriere",
+	iSkip: "Salt peste aceasta",
+	iSkipAll: "Se sar toate ca aceasta",
+	iMsg: "Nu există sugestii de scriere corectă"
 })
-
-//end v1.x content
 );

@@ -1,6 +1,4 @@
-dojo.provide("dojox.drawing.library.greek");
-
-dojox.drawing.library.greek = {
+define({
 	// summary:
 	//		Greek characters used by typesetter and greekPalette.
 	// description:
@@ -61,6 +59,5 @@ dojox.drawing.library.greek = {
         "Chi": 935,    //chi, U+03A7 -->
         "Psi": 936,    //psi,   U+03A8 ISOgrk3 -->
         "Omega": 937    //omega,     U+03A9 ISOgrk3 -->
-};
-    
-    
+});
+

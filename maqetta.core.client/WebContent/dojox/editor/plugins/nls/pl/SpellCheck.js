@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	widgetLabel: "Wsadowe sprawdzanie pisowni",
 	unfound: "Nie znaleziono",
@@ -16,6 +15,4 @@ define(
 	iSkipAll: "Pomiń wszystkie pozycje podobne do tej",
 	iMsg: "Brak propozycji pisowni"
 })
-
-//end v1.x content
 );

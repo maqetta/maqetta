@@ -6,10 +6,6 @@ define([
 	"./_FormValueWidget"
 ], function(array, declare, domGeometry, query, _FormValueWidget){
 
-/*=====
-	var _FormValueWidget = dijit.form._FormValueWidget;
-=====*/
-
 // module:
 //		dijit/form/MultiSelect
 // summary:
@@ -36,9 +32,12 @@ return declare("dijit.form.MultiSelect", _FormValueWidget, {
 		//
 		// example:
 		// |	// move all the selected values from "bar" to "foo"
-		// | 	dijit.byId("foo").addSelected(dijit.byId("bar"));
+		// |	dijit.byId("foo").addSelected(dijit.byId("bar"));
 
 		select.getSelected().forEach(function(n){
+			if(this.restoreOriginalText){
+				n.text = this.enforceTextDirWithUcc(this.restoreOriginalText(n), n.text);
+			}
 			this.containerNode.appendChild(n);
 			// scroll to bottom to see item
 			// cannot use scrollIntoView since <option> tags don't support all attributes
@@ -112,7 +111,27 @@ return declare("dijit.form.MultiSelect", _FormValueWidget, {
 	postCreate: function(){
 		this._set('value', this.get('value'));
 		this.inherited(arguments);
+	},
+
+	_setTextDirAttr: function(textDir){
+		// to insure the code executed only when _BidiSupport loaded, and only
+		// when there was a change in textDir
+		if((this.textDir != textDir || !this._created) && this.enforceTextDirWithUcc){
+			this._set("textDir", textDir);
+			
+			query("option",this.containerNode).forEach(function(option){
+				// If the value wasn't defined explicitly, it the same object as
+				// option.text. Since the option.text will be modified (by wrapping of UCC)
+				// we want to save the original option.value for form submission.
+				if(!this._created && option.value === option.text){
+					option.value = option.text;
+				}
+				// apply the bidi support
+				option.text =  this.enforceTextDirWithUcc(option, option.originalText || option.text);
+			},this);
+		}
 	}
+	
 });
 
 });

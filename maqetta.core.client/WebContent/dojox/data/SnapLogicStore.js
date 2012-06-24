@@ -9,9 +9,9 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	url: "",
 
 	constructor: function(/* Object */args){
-		//	summary:
+		// summary:
 		//		Initialize a SnapLogicStore object.
-		//	args:
+		// args:
 		//		An object that contains properties for initializing the new data store object. The
 		//		following properties are understood:
 		//			url:
@@ -20,7 +20,7 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 		//			parameters:
 		//				An object whose properties define parameters to the pipeline. The values of these
 		//				properties will be sent to the pipeline as parameters when it run.
-		//
+
 		if(args.url){
 			this.url = args.url;
 		}
@@ -28,19 +28,19 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	},
 
 	_assertIsItem: function(/* item */item){
-		//	summary:
+		// summary:
 		//		This function tests whether the item passed in is indeed an item in the store.
-		//	item:
+		// item:
 		//		The item to test for being contained by the store.
 		if(!this.isItem(item)){
 			throw new Error("dojox.data.SnapLogicStore: a function was passed an item argument that was not an item");
 		}
 	},
 
-	_assertIsAttribute: function(/* attribute-name-string */ attribute){
-		//	summary:
+	_assertIsAttribute: function(/*attribute-name-string*/ attribute){
+		// summary:
 		//		This function tests whether the item passed in is indeed a valid 'attribute' like type for the store.
-		//	attribute:
+		// attribute:
 		//		The attribute to test for being contained by the store.
 		if(typeof attribute !== "string"){
 			throw new Error("dojox.data.SnapLogicStore: a function was passed an attribute argument that was not an attribute name string");
@@ -48,7 +48,7 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	},
 
 	getFeatures: function(){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getFeatures()
 		return {
 			'dojo.data.api.Read': true
@@ -56,7 +56,7 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	},
 
 	getValue: function(item, attribute, defaultValue){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -68,14 +68,14 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	},
 
 	getAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getAttributes()
 		this._assertIsItem(item);
 		return item.attributes;
 	},
 
 	hasAttribute: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.hasAttributes()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -88,36 +88,36 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	},
 
 	isItemLoaded: function(item){
-		 //	summary:
-		 //		 See dojo.data.api.Read.isItemLoaded()
-		 return this.isItem(item);		// Boolean
+		// summary:
+		//		See dojo.data.api.Read.isItemLoaded()
+		return this.isItem(item);		// Boolean
 	},
 
 	loadItem: function(keywordArgs){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.loadItem()
 	},
 
 	getLabel: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getLabel()
 		return undefined;
 	},
 	
 	getLabelAttributes: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getLabelAttributes()
 		return null;
 	},
 
 	containsValue: function(item, attribute, value){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.containsValue()
 		return this.getValue(item, attribute) === value;		// Boolean
 	},
 
 	getValues: function(item, attribute){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.getValue()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
@@ -129,7 +129,7 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	},
 
 	isItem: function(item){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.isItem()
 		if(item && item._store === this){
 			return true;
@@ -138,15 +138,15 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 	},
 	
 	close: function(request){
-		//	summary:
+		// summary:
 		//		See dojo.data.api.Read.close()
 	},
 
-	_fetchHandler: function(/* Object */request){
-		//	summary:
+	_fetchHandler: function(/*Object*/ request){
+		// summary:
 		//		Process data retrieved via fetch and send it back to requester.
-		//	response:
-		//		The data returend from the I/O transport. In the normal case, it will be an array of result rows
+		// request:
+		//		The data returned from the I/O transport. In the normal case, it will be an array of result rows
 		//		from the pipeline. In the special case for record count optimization, response will be an array
 		//		with a single element containing the total pipeline result row count. See fetch() for details
 		//		on this optimization.
@@ -163,8 +163,8 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 
 			if(!response.length){
 				request.onError.call(scope,
-									 new Error("dojox.data.SnapLogicStore: invalid response of length 0"),
-									 request);
+									new Error("dojox.data.SnapLogicStore: invalid response of length 0"),
+									request);
 				return;
 			}else if(request.query != 'record count'){
 				//If this was not a record count request, the first element returned will contain
@@ -204,14 +204,14 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 		}
 	},
 		
-	_partHandler: function(/* Object */request, /* String */part, /* Object */response){
-		//	summary:
+	_partHandler: function(/*Object */ request, /* String */ part, /* Object*/ response){
+		// summary:
 		//		Handle the individual replies for both data and length requests.
-		//	request:
+		// request:
 		//		The request/handle object used with the original fetch() call.
-		//  part:
+		// part:
 		//		A value indicating which request this handler call is for (this.Parts).
-		//	response:
+		// response:
 		//		Response received from the underlying IO transport.
 
 		if(response instanceof Error){
@@ -240,10 +240,10 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 		}
 	},
 
-	fetch: function(/* Object */request){
-		//	summary:
+	fetch: function(/*Object*/ request){
+		// summary:
 		//		See dojo.data.api.Read.close()
-		//	request:
+		// request:
 		//		See dojo.data.api.Read.close() for generic interface.
 		//
 		//		In addition to the standard Read API fetch support, this store supports an optimization for

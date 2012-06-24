@@ -1,12 +1,12 @@
 define(
-//begin v1.x content
 ({
-redLabel: "c",
-greenLabel: "z",
-blueLabel: "n",
-hueLabel: "barwa",
-saturationLabel: "nas.",
+redLabel: "r",
+greenLabel: "g",
+blueLabel: "b",
+hueLabel: "g.",
+saturationLabel: "s",
 valueLabel: "jas.", /* aka intensity or brightness */
+degLabel: "\u00B0",
 hexLabel: "szesnastkowe",
 huePickerTitle: "Selektor barwy",
 saturationPickerTitle: "Selektor nasycenia"

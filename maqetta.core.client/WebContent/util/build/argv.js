@@ -11,7 +11,7 @@ define([
 	"./messages",
 	"./v1xProfiles",
 	"dojo/text!./help.txt"
-], 	function(require, dojo, has, fs, fileUtils, process, argv, stringify, version, messages, v1xProfiles, help){
+], function(require, dojo, has, fs, fileUtils, process, argv, stringify, version, messages, v1xProfiles, help){
 	///
 	// AMD-ID build/argv
 	//
@@ -402,9 +402,9 @@ define([
 			default:
 				// possible formats
 				//
-				//   -switch value
-				//   --switch value
-				//   switch=value
+				//	 -switch value
+				//	 --switch value
+				//	 switch=value
 
 				var match = arg.match(/^\-\-?(.+)/);
 				if(match && i<end){

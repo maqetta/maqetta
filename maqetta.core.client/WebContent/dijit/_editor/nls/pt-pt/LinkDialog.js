@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Propriedades da ligação",
 	insertImageTitle: "Propriedades da imagem",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Janela superior",
 	newWindow: "Nova janela"
 })
-
-//end v1.x content
 );

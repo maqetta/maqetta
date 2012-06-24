@@ -21,12 +21,6 @@ define([
 ], function(kernel, lang, array, jsonUtil, fx, win, connect, domClass, domStyle, domConstruct, domGeometry, keys, Widget, TemplatedMixin, FormValueWidget, ValidationTextBox, InlineEditBox, i18nCommon, declare){
 kernel.experimental("dojox.form.ListInput");
 
-	/*=====
-		Widget = dijit._Widget;
-		Templated = dijit._TemplatedMixin;
-		FormValueWidget = dijit.form._FormValueWidget;
-		ValidationTextBox = dijit.form.ValidationTextBox;
-	=====*/
 var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	{
 	// summary:
@@ -50,7 +44,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	//		Class which will be used to create the input box. You can implements yours.
 	//		It must be a widget, focusNode or domNode must have "onkeydown" event
 	//		It must have .attr("value") to get value
-	//		It also must impement an (or more) handler for the "onChange" method
+	//		It also must implement an (or more) handler for the "onChange" method
 	inputClass: "dojox.form._ListInputInputBox",
 
 	// inputHandler: String || Array
@@ -66,7 +60,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	},
 
 	// submitOnlyValidValue: Boolean
-	//		If true, only valid value will be submited with form
+	//		If true, only valid value will be submitted with form
 	submitOnlyValidValue:true,
 
 	// useOnBlur: Boolean
@@ -75,12 +69,12 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 
 	// readOnlyInput: Boolean
 	//		if false, the list will be editable
-	//		Can only be set when instanciate
+	//		Can only be set when instantiate
 	readOnlyInput: false,
 
 	// maxItems: Int
 	//		Specify max item the list can have
-	//		null = infiny
+	//		null = infinity
 	maxItems: null,
 
 	// showCloseButtonWhenValid: Boolean
@@ -97,8 +91,8 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	regExp: ".*", //"[a-zA-Z.-_]+@[a-zA-Z.-_]+.[a-zA-Z]+",
 
 	// delimiter: String || Array
-	//		delimiter for the string. Every match will be splitted
-	//		The string can contain only one delimiter
+	//		delimiter for the string. Every match will be splitted.
+	//		The string can contain only one delimiter.
 	delimiter: ",",
 
 	// constraints: ValidationTextBox.__Constraints
@@ -114,7 +108,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	templateString: "<div dojoAttachPoint=\"focusNode\" class=\"dijit dijitReset dijitLeft dojoxListInput\"><select dojoAttachpoint=\"_selectNode\" multiple=\"multiple\" class=\"dijitHidden\" ${!nameAttrSetting}></select><ul dojoAttachPoint=\"_listInput\"><li dojoAttachEvent=\"onclick: _onClick\" class=\"dijitInputField dojoxListInputNode dijitHidden\" dojoAttachPoint=\"_inputNode\"></li></ul></div>",
 
 	// useAnim: Boolean
-	//		If true, then item will use an anime to show hide itself
+	//		If true, then item will use an animation to show hide itself
 	useAnim: true,
 
 	// duration: Integer
@@ -131,12 +125,12 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 
 	// readOnlyItem: Boolean
 	//		If true, items can be edited
-	//		Can only be set when instanciate
+	//		Can only be set when instantiate
 	readOnlyItem: false,
 
 	// useArrowForEdit: Boolean
 	//		If true, arraow left and right can be used for editing
-	//		Can only be set when instanciate
+	//		Can only be set when instantiate
 	useArrowForEdit: true,
 
 	// _items: Array
@@ -167,7 +161,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		this._createInputBox();
 	},
 
-	_setReadOnlyInputAttr: function(/*Boolean*/value){
+	_setReadOnlyInputAttr: function(/*Boolean*/ value){
 		// summary:
 		//		Change status and if needed, create the inputbox
 		// tags:
@@ -177,7 +171,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		this._createInputBox();
 	},
 
-	_setReadOnlyItemAttr: function(/*Boolean*/value){
+	_setReadOnlyItemAttr: function(/*Boolean*/ value){
 		// summary:
 		//		set read only items
 		// tags:
@@ -224,7 +218,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		this.connect(this._input, "onBlur", "_inputOnBlur");
 	},
 
-	compare: function(/*Array*/val1,/*Array*/val2){
+	compare: function(/*Array*/ val1, /*Array*/ val2){
 		// summary:
 		//		Compare 2 values (as returned by attr('value') for this widget).
 		// tags:
@@ -240,7 +234,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 	},
 
-	add: function(/*String || Array*/values){
+	add: function(/*String || Array*/ values){
 		// summary:
 		//		Create new list element
 		if(this._count>=this.maxItems && this.maxItems !== null){return;}
@@ -335,15 +329,15 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		},this);
 	},
 
-	_placeItem: function(/*domNode*/node){
+	_placeItem: function(/*DomNode*/ node){
 		// summary:
 		//		Place item in the list
 		// tags:
 		//		private
-		domConstruct.place(node,this._inputNode,"before");
+		domConstruct.place(node,this._inputNode, "before");
 	},
 
-	_getCursorPos: function(/*domNode*/node){
+	_getCursorPos: function(/*DomNode*/ node){
 		// summary:
 		//		get current cursor pos
 		// tags:
@@ -395,7 +389,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 	},
 
-	_editBefore: function(/*widget*/item){
+	_editBefore: function(/*widget*/ item){
 		// summary:
 		//		move trough items
 		// tags:
@@ -405,7 +399,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 			this._currentItem.edit();
 		}
 	},
-	_editAfter: function(/*widget*/item){
+	_editAfter: function(/*widget*/ item){
 		// summary:
 		//		move trough items
 		// tags:
@@ -447,7 +441,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		domClass.remove(item.domNode,["dijitError", this.baseClass + "Match", this.baseClass + "Mismatch"]);
 	},
 
-	_testItem: function(/*Object*/item,/*String*/value){
+	_testItem: function(/*Object*/ item, /*String*/ value){
 		// summary:
 		//		Change class of item (match, mismatch)
 		// tags:
@@ -487,9 +481,9 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		this.add(this._parseValue(newValue));
 	},
 
-	_parseValue: function(/*String*/newValue){
+	_parseValue: function(/*String*/ newValue){
 		// summary:
-		//		search for delemiters and split if needed
+		//		search for delimiters and split if needed
 		// tags:
 		//		private
 		if(typeof newValue == "string"){
@@ -505,7 +499,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		return newValue;
 	},
 
-	regExpGen: function(/*ValidationTextBox.__Constraints*/constraints){
+	regExpGen: function(/*ValidationTextBox.__Constraints*/ constraints){
 		// summary:
 		//		Overridable function used to generate regExp when dependent on constraints.
 		//		Do not specify both regExp and regExpGen.
@@ -531,7 +525,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		this.inherited(arguments);
 	},
 
-	_onHandler: function(/*String*/value){
+	_onHandler: function(/*String*/ value){
 		// summary:
 		//		When handlers of input are fired, this method check input value and (if needed) modify it
 		// tags:
@@ -542,7 +536,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 	},
 
-	_onClick:  function(/*event*/e){
+	_onClick:  function(/*Event*/ e){
 		// summary:
 		//		give focus to inputbox
 		// tags:
@@ -560,9 +554,9 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 	},
 
-	_inputOnKeyDown: function(/*event*/e){
+	_inputOnKeyDown: function(/*Event*/ e){
 		// summary:
-		//		Used to add keybord interactivity
+		//		Used to add keyboard interactivity
 		// tags:
 		//		private
 		this._currentItem = null;
@@ -605,7 +599,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		return this._getValues(lang.hitch(this,this._mismatchValidator));
 	},
 
-	_getValues: function(/*function*/validator){
+	_getValues: function(/*Function*/ validator){
 		// summary:
 		//		return values with comparator constraint
 		// tags:
@@ -625,14 +619,14 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		return value;
 	},
 
-	_nullValidator: function(/*String*/itemValue){
+	_nullValidator: function(/*String*/ itemValue){
 		// summary:
 		//		return true or false
 		// tags:
 		//		private
 		return true;
 	},
-	_matchValidator: function(/*String*/itemValue){
+	_matchValidator: function(/*String*/ itemValue){
 		// summary:
 		//		return true or false
 		// tags:
@@ -640,7 +634,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		var re = new RegExp(this.regExpGen(this.constraints));
 		return itemValue.match(re);
 	},
-	_mismatchValidator: function(/*String*/itemValue){
+	_mismatchValidator: function(/*String*/ itemValue){
 		// summary:
 		//		return true or false
 		// tags:
@@ -656,7 +650,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		//		private
 		return this._getSomeItem();
 	},
-	_getSomeItem: function(/*dijit._Widget*/ item,/*String*/ position){
+	_getSomeItem: function(/*dijit._Widget*/ item, /*String*/ position){
 		// summary:
 		//		return the item before the one in params
 		// tags:
@@ -759,7 +753,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 var _ListInputInputItem = declare("dojox.form._ListInputInputItem", [Widget, TemplatedMixin],
 	{
 	// summary:
-	//	Item created by ListInputInput when delimiter is found
+	//		Item created by ListInputInput when delimiter is found
 	// description:
 	//		Simple <li> with close button added to ListInputInput when delimiter is found
 
@@ -829,7 +823,7 @@ var _ListInputInputItem = declare("dojox.form._ListInputInputItem", [Widget, Tem
 		this._createInlineEditBox();
 	},
 
-	_setReadOnlyItemAttr: function(/*Boolean*/value){
+	_setReadOnlyItemAttr: function(/*Boolean*/ value){
 		// summary:
 		//		change the readonly state
 		// tags:
@@ -873,7 +867,7 @@ var _ListInputInputItem = declare("dojox.form._ListInputInputItem", [Widget, Tem
 		}
 	},
 
-	_onCloseEdit: function(/*String*/value){
+	_onCloseEdit: function(/*String*/ value){
 		// summary:
 		//		call when inline editor close himself
 		// tags:
@@ -893,7 +887,7 @@ var _ListInputInputItem = declare("dojox.form._ListInputInputItem", [Widget, Tem
 		this.onEdit();
 	},
 
-	_setDisabledAttr: function(/*Boolean*/value){
+	_setDisabledAttr: function(/*Boolean*/ value){
 		// summary:
 		//		disable inline edit box
 		// tags:
@@ -951,13 +945,13 @@ var _ListInputInputItem = declare("dojox.form._ListInputInputItem", [Widget, Tem
 		//		callback when widget is click
 	},
 
-	onChange: function(/*String*/value){
+	onChange: function(/*String*/ value){
 		// summary:
 		//		callback when widget change its content
 	},
 
 
-	onKeyDown: function(/*String*/value){
+	onKeyDown: function(/*String*/ value){
 		// summary:
 		//		callback when widget get a KeyDown
 	}
@@ -965,7 +959,7 @@ var _ListInputInputItem = declare("dojox.form._ListInputInputItem", [Widget, Tem
 var _ListInputInputBox = declare("dojox.form._ListInputInputBox", [ValidationTextBox],
 	{
 	// summary:
-	//	auto-sized text box
+	//		auto-sized text box
 	// description:
 	//		Auto sized textbox based on dijit.form.TextBox
 
@@ -987,7 +981,7 @@ var _ListInputInputBox = declare("dojox.form._ListInputInputBox", [ValidationTex
 	//		Used to get size of textbox content
 	_sizer:null,
 
-	onChange: function(/*string*/value){
+	onChange: function(/*String*/ value){
 		// summary:
 		//		compute content width
 		this.inherited(arguments);

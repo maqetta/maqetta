@@ -4,10 +4,6 @@ define([
 	"./ValidationTextBox"
 ], function(declare, domConstruct, ValidationTextBox){
 
-/*=====
-	var ValidationTextBox = dijit.form.ValidationTextBox;
-=====*/
-
 	// module:
 	//		dijit/form/MappedTextBox
 	// summary:
@@ -76,7 +72,7 @@ define([
 			// (as opposed to the displayed value).
 			// Passing in name as markup rather than calling domConstruct.create() with an attrs argument
 			// to make query(input[name=...]) work on IE. (see #8660)
-			this.valueNode = domConstruct.place("<input type='hidden'" + (this.name ? " name='" + this.name.replace(/'/g, "&quot;") + "'" : "") + "/>", this.textbox, "after");
+			this.valueNode = domConstruct.place("<input type='hidden'" + (this.name ? ' name="' + this.name.replace(/"/g, "&quot;") + '"' : "") + "/>", this.textbox, "after");
 		},
 
 		reset: function(){

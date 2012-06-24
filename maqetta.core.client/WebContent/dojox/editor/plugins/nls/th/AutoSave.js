@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "บันทึก",
 	"saveSettingLabelOn": "ตั้งช่วงเวลาบันทึกอัตโนมัติ...",
@@ -13,6 +12,4 @@ define(
 	"saveMessageSuccess": "ถูกบันทึกเมื่อ ${0}",
 	"saveMessageFail": "ล้มเหลวในการบันทึกเมื่อ ${0}"
 })
-
-//end v1.x content
 );

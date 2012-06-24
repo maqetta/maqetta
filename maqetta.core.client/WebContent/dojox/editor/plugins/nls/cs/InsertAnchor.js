@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertAnchor: "Vložit kotvu",
 	title: "Vlastnosti kotvy",
@@ -8,6 +7,4 @@ define(
 	set: "Nastavit",
 	cancel: "Storno"
 })
-
-//end v1.x content
 );

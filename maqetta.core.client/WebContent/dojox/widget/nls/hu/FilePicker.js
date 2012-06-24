@@ -1,5 +1,7 @@
+define(
 ({
-name: "Név",
-path: "Elérési út",
-size: "Méret (byte)"
+	name: "Név",
+	path: "Elérési út",
+	size: "Méret (byte)"
 })
+);

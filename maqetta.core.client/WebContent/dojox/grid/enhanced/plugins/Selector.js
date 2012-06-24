@@ -1057,6 +1057,7 @@ var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
 		// summary:
 		//		Calculate what status should *target* have.
 		//		If *toSelect* is not provided, this is a no op.
+		
 		// This function is time-critical!!
 		if(toSelect !== undefined){
 			var sltd;
@@ -1108,6 +1109,7 @@ var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
 	_highlightSingle: function(type, toHighlight, target, toSelect, isRefresh){
 		// summary:
 		//		Highlight a single item.
+		
 		// This function is time critical!!
 		var _this = this, toHL, g = _this.grid, cells = g.layout.cells;
 		switch(type){
@@ -1157,6 +1159,7 @@ var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
 		//		Highlight from start point to target.
 		// toSelect: Boolean
 		//		Whether we are selecting or deselecting.
+		
 		// This function is time critical!!
 		if(this._selecting[type] && target !== null){
 			var start = this._startPoint[type],
@@ -1223,9 +1226,7 @@ var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
 		// summary:
 		//		Blur the current point.
 		var f = this.grid.focus;
-		if(type == "col"){
-			f._blurHeader();
-		}else if(type == "cell"){
+		if(type == "cell"){
 			f._blurContent();
 		}
 	},
@@ -1271,6 +1272,7 @@ var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
 	_forEach: function(type, start, end, func, halfClose){
 		// summary:
 		//		Go through items from *start* point to *end* point.
+		
 		// This function is time critical!!
 		if(!this._isValid(type, start, true) || !this._isValid(type, end, true)){
 			return;

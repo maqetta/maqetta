@@ -3,7 +3,6 @@ var buildTimerStart = (new Date()).getTime();
 
 load("../buildscripts/jslib/logger.js");
 load("../buildscripts/jslib/fileUtil.js");
-load("../buildscripts/jslib/buildUtil.js");
 load("checkstyleUtil.js");
 
 //*****************************************************************************
@@ -27,7 +26,7 @@ if(arguments[0] == "help"){
 } else{
 	
 	//Convert arguments to keyword arguments.
-	var kwArgs = buildUtil.makeBuildOptions(arguments);
+	var kwArgs = convertArrayToObject(arguments);
 
 	checkstyle();
 
@@ -36,6 +35,22 @@ if(arguments[0] == "help"){
 
 }
 //*****************************************************************************
+
+// Take from old buildUtil.js in 1.6
+function convertArrayToObject(/*Array*/ary){
+	//summary: converts an array that has String members of "name=value"
+	//into an object, where the properties on the object are the names in the array
+	//member name/value pairs.
+	var result = {};
+	for(var i = 0; i < ary.length; i++){
+		var separatorIndex = ary[i].indexOf("=");
+		if(separatorIndex == -1){
+			throw "Malformed name/value pair: [" + ary[i] + "]. Format should be name=value";
+		}
+		result[ary[i].substring(0, separatorIndex)] = ary[i].substring(separatorIndex + 1, ary[i].length);
+	}
+	return result; //Object
+}
 
 //********* Start checkstyle *********
 function checkstyle(){

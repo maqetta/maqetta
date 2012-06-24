@@ -3,7 +3,6 @@ define(["dojo/_base/lang", "./matrix", "dojo/_base/Color"],
 // Various utilities to deal with a linear gradient (mostly VML-specific)
 	var grad = lang.getObject("dojox.gfx.gradient", true);
 	var C = Color;
-	/*===== grad = dojox.gfx.gradient;  =====*/
 	
 	grad.rescale = function(stops, from, to){
 		// summary:

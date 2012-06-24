@@ -22,94 +22,94 @@ dojo.declare("dojox.image.ThumbnailPicker",
 	// summary: A scrolling Thumbnail Picker widget
 	//
 	// imageStore: Object
-	// A data store that implements the dojo.data Read API.
+	//  A data store that implements the dojo.data Read API.
 	imageStore: null,
 
 	// request: Object
-	// A dojo.data Read API Request object.
+	//  A dojo.data Read API Request object.
 	request: null,
 
 	// size: Number
-	// Width or height in pixels, depending if horizontal or vertical.
+	//  Width or height in pixels, depending if horizontal or vertical.
 	size: 500, 
 
 	// thumbHeight: Number
-	// Default height of a thumbnail image
+	//  Default height of a thumbnail image
 	thumbHeight: 75, 
 
 	// thumbWidth: Number
-	// Default width of an image
+	//  Default width of an image
 	thumbWidth: 100, 
 
 	// useLoadNotifier: Boolean
-	// Setting useLoadNotifier to true makes a colored DIV appear under each
-	// thumbnail image, which is used to display the loading status of each
-	// image in the data store.
+	//  Setting useLoadNotifier to true makes a colored DIV appear under each
+	//  thumbnail image, which is used to display the loading status of each
+	//  image in the data store.
 	useLoadNotifier: false,
 
 	// useHyperlink: boolean
-	// Setting useHyperlink to true causes a click on a thumbnail to open a link.
+	//  Setting useHyperlink to true causes a click on a thumbnail to open a link.
 	useHyperlink: false,
 
 	// hyperlinkTarget: String
-	// If hyperlinkTarget is set to "new", clicking on a thumb will open a new window
-	// If it is set to anything else, clicking a thumbnail will open the url in the
-	// current window.
+	//  If hyperlinkTarget is set to "new", clicking on a thumb will open a new window
+	//  If it is set to anything else, clicking a thumbnail will open the url in the
+	//  current window.
 	hyperlinkTarget: "new",
 
 	// isClickable: Boolean
-	// When set to true, the cursor over a thumbnail changes.
+	//  When set to true, the cursor over a thumbnail changes.
 	isClickable: true,
 
 	// isScrollable: Boolean
-	// When true, uses smoothScroll to move between pages
+	//  When true, uses smoothScroll to move between pages
 	isScrollable: true,
 
 	// isHorizontal: Boolean
-	// If true, the thumbnails are displayed horizontally. Otherwise they are displayed
-	// vertically
+	//  If true, the thumbnails are displayed horizontally. Otherwise they are displayed
+	//  vertically
 	isHorizontal: true,
 
-	//autoLoad: Boolean
+	// autoLoad: Boolean
 	autoLoad: true,
 
 	// linkAttr: String
-	// The attribute name for accessing the url from the data store
+	//  The attribute name for accessing the url from the data store
 	linkAttr: "link",
 	
 	// imageThumbAttr: String
-	// The attribute name for accessing the thumbnail image url from the data store
+	//  The attribute name for accessing the thumbnail image url from the data store
 	imageThumbAttr: "imageUrlThumb",
 	
 	// imageLargeAttr: String
-	// The attribute name for accessing the large image url from the data store
+	//  The attribute name for accessing the large image url from the data store
 	imageLargeAttr: "imageUrl",
 	
 	// pageSize: Number
-	//	The number of images to request each time.
+	//  The number of images to request each time.
 	pageSize: 20,
 	
 	// titleAttr: String
-	// The attribute name for accessing the title from the data store
+	//  The attribute name for accessing the title from the data store
 	titleAttr: "title",
 	
 	templateString: dojo.cache("dojox.image", "resources/ThumbnailPicker.html"),
 	
 	// thumbs: Array
-	// Stores the image nodes for the thumbnails.
+	//  Stores the image nodes for the thumbnails.
 	_thumbs: [],
 	
 	// _thumbIndex: Number
-	// The index of the first thumbnail shown
+	//  The index of the first thumbnail shown
 	_thumbIndex: 0,
 	
 	// _maxPhotos: Number
-	// The total number of photos in the image store
+	//  The total number of photos in the image store
 	_maxPhotos: 0,
 	
 	// _loadedImages: Object
-	// Stores the indices of images that have been marked as loaded using the
-	// markImageLoaded function.
+	//  Stores the indices of images that have been marked as loaded using the
+	//  markImageLoaded function.
 	_loadedImages: {},
 
 	postCreate: function(){

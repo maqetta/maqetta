@@ -3,10 +3,6 @@ define([
 	"./HorizontalRuleLabels"
 ], function(declare, HorizontalRuleLabels){
 
-/*=====
-	var HorizontalRuleLabels = dijit.form.HorizontalRuleLabels;
-=====*/
-
 	// module:
 	//		dijit/form/VerticalRuleLabels
 	// summary:

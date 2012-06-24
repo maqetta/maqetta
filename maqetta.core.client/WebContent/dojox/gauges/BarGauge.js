@@ -28,19 +28,19 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 	//		</div>
 
 	// dataX: Number
-	// x position of data area (default 5)
+	// 		x position of data area (default 5)
 	dataX: 5,
 
 	// dataY: Number
-	// y position of data area (default 5)
+	// 		y position of data area (default 5)
 	dataY: 5,
 
 	// dataWidth: Number
-	// width of data area (default is bar graph width - 10)
+	// 		width of data area (default is bar graph width - 10)
 	dataWidth: 0,
 
 	// dataHeight: Number
-	// height of data area (default is bar graph width - 10)
+	// 		height of data area (default is bar graph width - 10)
 	dataHeight: 0,
 
 	// _defaultIndicator: Object
@@ -152,8 +152,8 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 
 	_dragIndicator: function(/*Object*/widget, /*Object*/ e){
 		// summary:
-		// Handles the dragging of an indicator to the event position, including moving/re-drawing
-		// get angle for mouse position
+		// 		Handles the dragging of an indicator to the event position, including moving/re-drawing
+		// 		get angle for mouse position
 		this._dragIndicatorAt(widget, e.pageX, e.pageY);
 		event.stop(e);
 	},
@@ -162,7 +162,7 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 		
 		// summary:
 		//		Handles the dragging of an indicator, including moving/re-drawing
-		// get new value based on mouse position
+		//		get new value based on mouse position
 		var pos = domGeometry.position(widget.gaugeContent, true);
 		var xl = x - pos.x;
 		var value = widget._getValueForPosition(xl);

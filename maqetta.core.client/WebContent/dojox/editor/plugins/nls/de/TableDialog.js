@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	insertTableTitle: "Tabelle einfügen",
 	modifyTableTitle: "Tabelle ändern",
@@ -10,8 +9,8 @@ define(
 	cellSpacing: "Zellenabstand:",
 	tableWidth: "Tabellenbreite:",
 	backgroundColor: "Hintergrundfarbe:",
-	borderColor: "Randfarbe:",
-	borderThickness: "Randbreite",
+	borderColor: "Umrandungsfarbe:",
+	borderThickness: "Umrandungsstärke:",
 	percent: "Prozent",
 	pixels: "Pixel",
 	"default": "Standard",
@@ -21,14 +20,12 @@ define(
 	buttonSet: "Festlegen", // translated elsewhere?
 	buttonInsert: "Einfügen",
 	buttonCancel: "Abbrechen",
-
 	selectTableLabel: "Tabelle auswählen",
-	insertTableRowBeforeLabel: "Zeile oberhalb einfügen",
-	insertTableRowAfterLabel: "Zeile unterhalb einfügen",
-	insertTableColumnBeforeLabel: "Spalte oberhalb einfügen",
-	insertTableColumnAfterLabel: "Spalte unterhalb einfügen",
+	insertTableRowBeforeLabel: "Zeile davor einfügen",
+	insertTableRowAfterLabel: "Zeile danach einfügen",
+	insertTableColumnBeforeLabel: "Spalte davor einfügen",
+	insertTableColumnAfterLabel: "Spalte danach einfügen",
 	deleteTableRowLabel: "Zeile löschen",
 	deleteTableColumnLabel: "Spalte löschen"
 })
-//end v1.x content
 );

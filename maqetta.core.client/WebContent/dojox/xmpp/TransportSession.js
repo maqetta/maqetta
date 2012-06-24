@@ -157,12 +157,12 @@ dojo.extend(dojox.xmpp.TransportSession, {
 		},
 
 		dispatchPacket: function(msg, protocolMatchType, matchId, matchProperty){
-			// summary
-			// Main Packet dispatcher, most calls should be made with this other
-			// than a few setup calls which use add items to the queue directly
-			//protocolMatchType, matchId, and matchProperty are optional params
-			//that allow a deferred to be tied to a protocol response instad of the whole
-			//rid
+			// summary:
+			//		Main Packet dispatcher, most calls should be made with this other
+			//		than a few setup calls which use add items to the queue directly
+			//		protocolMatchType, matchId, and matchProperty are optional params
+			//		that allow a deferred to be tied to a protocol response instad of the whole
+			//		rid
 	
 		//	//console.log("In dispatchPacket ", msg, protocolMatchType, matchId, matchProperty);
 			if (msg){

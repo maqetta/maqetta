@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"redLabel" : "q",
 	"valueLabel" : "d",
@@ -12,5 +11,4 @@ define(
 	"huePickerTitle" : "Çalar seçimi",
 	"degLabel" : "°"
 })
-//end v1.x content
 );

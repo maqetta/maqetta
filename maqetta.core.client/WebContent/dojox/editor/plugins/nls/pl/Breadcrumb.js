@@ -1,7 +1,6 @@
 define(
-//begin v1.x content
 ({
-	"nodeActions": "${nodeName} - działania",
+	"nodeActions": "${nodeName}Czynności",
 	"selectContents": "Zaznacz treść",
 	"selectElement": "Zaznacz element",
 	"deleteElement": "Usuń element",
@@ -9,6 +8,4 @@ define(
 	"moveStart": "Przenieś kursor na początek",
 	"moveEnd": "Przenieś kursor na koniec"
 })
-
-//end v1.x content
 );

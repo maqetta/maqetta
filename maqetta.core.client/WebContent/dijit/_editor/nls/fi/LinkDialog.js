@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	createLinkTitle: "Linkin ominaisuudet",
 	insertImageTitle: "Kuvan ominaisuudet",
@@ -12,6 +11,4 @@ define(
 	topWindow: "Päällimmäinen ikkuna",
 	newWindow: "Uusi ikkuna"
 })
-
-//end v1.x content
 );

@@ -1,4 +1,5 @@
 define({ root:
+//begin v1.x content
 ({
 	insertImageTitle: "Insert Image",
 	url: "Image",
@@ -9,8 +10,8 @@ define({ root:
 	prePopuTextUrl: "Enter an image URL",
 	prePopuTextBrowse: " or browse to a local file."
 })
-,
 //end v1.x content
+,
 "zh": true,
 "zh-tw": true,
 "tr": true,
@@ -30,6 +31,7 @@ define({ root:
 "ja": true,
 "it": true,
 "hu": true,
+"hr": true,
 "he": true,
 "fr": true,
 "fi": true,
@@ -41,4 +43,3 @@ define({ root:
 "ca": true,
 "ar": true
 });
-

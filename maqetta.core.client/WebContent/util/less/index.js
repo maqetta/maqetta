@@ -1,14 +1,12 @@
 var path = require('path'),
-    sys = require('sys'),
+    sys = require('util'),
     fs = require('fs');
 
-require.paths.unshift(path.join(__dirname, '..'));
-
 var less = {
-    version: [1, 1, 3],
-    Parser: require('less/parser').Parser,
-    importer: require('less/parser').importer,
-    tree: require('less/tree'),
+    version: [1, 1, 6],
+    Parser: require('./parser').Parser,
+    importer: require('./parser').importer,
+    tree: require('./tree'),
     render: function (input, options, callback) {
         options = options || {};
 
@@ -16,7 +14,7 @@ var less = {
             callback = options, options = {};
         }
 
-        var parser = new(this.Parser)(options),
+        var parser = new(less.Parser)(options),
             ee;
 
         if (callback) {
@@ -36,15 +34,18 @@ var less = {
         }
     },
     writeError: function (ctx, options) {
+        options = options || {};
+
         var message = "";
         var extract = ctx.extract;
         var error = [];
-
-        options = options || {};
+        var stylize = options.color ? less.stylize : function (str) { return str };
 
         if (options.silent) { return }
 
-        if (!ctx.index) {
+        if (ctx.stack) { return sys.error(stylize(ctx.stack, 'red')) }
+
+        if (!ctx.hasOwnProperty('index')) {
             return sys.error(ctx.stack || ctx.message);
         }
 
@@ -52,17 +53,20 @@ var less = {
             error.push(stylize((ctx.line - 1) + ' ' + extract[0], 'grey'));
         }
 
-        error.push(ctx.line + ' ' + extract[1].slice(0, ctx.column)
-                            + stylize(stylize(extract[1][ctx.column], 'bold')
-                            + extract[1].slice(ctx.column + 1), 'yellow'));
+        if (extract[1]) {
+            error.push(ctx.line + ' ' + extract[1].slice(0, ctx.column)
+                                + stylize(stylize(extract[1][ctx.column], 'bold')
+                                + extract[1].slice(ctx.column + 1), 'yellow'));
+        }
 
         if (typeof(extract[2]) === 'string') {
             error.push(stylize((ctx.line + 1) + ' ' + extract[2], 'grey'));
         }
         error = error.join('\n') + '\033[0m\n';
 
-        message += stylize(ctx.message, 'red');
-        ctx.filename && (message += stylize(' in ', 'red') + ctx.filename);
+        message += stylize(ctx.type + 'Error: ' + ctx.message, 'red');
+        ctx.filename && (message += stylize(' in ', 'red') + ctx.filename +
+                stylize(':' + ctx.line + ':' + ctx.column, 'grey'));
 
         sys.error(message, error);
 
@@ -70,17 +74,17 @@ var less = {
             sys.error(stylize('from ', 'red')       + (ctx.filename || ''));
             sys.error(stylize(ctx.callLine, 'grey') + ' ' + ctx.callExtract);
         }
-        if (ctx.stack) { sys.error(stylize(ctx.stack, 'red')) }
     }
 };
 
-['color',    'directive', 'operation',  'dimension',
- 'keyword',  'variable',  'ruleset',    'element',
- 'selector', 'quoted',    'expression', 'rule',
- 'call',     'url',       'alpha',      'import',
- 'mixin',    'comment',   'anonymous',  'value', 'javascript'
+['color',      'directive',  'operation',  'dimension',
+ 'keyword',    'variable',   'ruleset',    'element',
+ 'selector',   'quoted',     'expression', 'rule',
+ 'call',       'url',        'alpha',      'import',
+ 'mixin',      'comment',    'anonymous',  'value',
+ 'javascript', 'assignment', 'condition',  'paren'
 ].forEach(function (n) {
-    require(path.join('less', 'tree', n));
+    require('./tree/' + n);
 });
 
 less.Parser.importer = function (file, paths, callback) {
@@ -103,7 +107,7 @@ less.Parser.importer = function (file, paths, callback) {
           if (e) sys.error(e);
 
           new(less.Parser)({
-              paths: [path.dirname(pathname)],
+              paths: [path.dirname(pathname)].concat(paths),
               filename: pathname
           }).parse(data, function (e, root) {
               if (e) less.writeError(e);
@@ -116,7 +120,8 @@ less.Parser.importer = function (file, paths, callback) {
     }
 }
 
-require('less/functions');
+require('./functions');
+require('./colors');
 
 for (var k in less) { exports[k] = less[k] }
 
@@ -134,4 +139,5 @@ function stylize(str, style) {
     return '\033[' + styles[style][0] + 'm' + str +
            '\033[' + styles[style][1] + 'm';
 }
+less.stylize = stylize;
 

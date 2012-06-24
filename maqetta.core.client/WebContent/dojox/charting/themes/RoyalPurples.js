@@ -1,6 +1,5 @@
-define(["../Theme", "./common"], function(Theme, themes){
-	
-	themes.RoyalPurples=new Theme({
+define(["../SimpleTheme", "./common"], function(SimpleTheme, themes){
+	themes.RoyalPurples = new SimpleTheme({
 		colors: [
 			"#473980",
 			"#685aa7",
@@ -9,6 +8,5 @@ define(["../Theme", "./common"], function(Theme, themes){
 			"#7267ae"
 		]
 	});
-	
 	return themes.RoyalPurples;
 });

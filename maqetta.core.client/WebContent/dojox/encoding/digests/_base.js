@@ -1,20 +1,17 @@
 define(["dojo/_base/lang"], function(lang){
 	var d = lang.getObject("dojox.encoding.digests", true);
-	/*=====
-		d = dojox.encoding.digests;
-	=====*/
 
 	//TODO: see if it makes sense to meld this into one with the
 	//	crypto base enums
 	d.outputTypes={
-		//	summary:
+		// summary:
 		//		Enumeration for input and output encodings.
 		Base64:0, Hex:1, String:2, Raw:3
 	};
 
 	//	word-based addition
 	d.addWords=function(/* word */a, /* word */b){
-		//	summary:
+		// summary:
 		//		add a pair of words together with rollover
 		var l=(a&0xFFFF)+(b&0xFFFF);
 		var m=(a>>16)+(b>>16)+(l>>16);
@@ -28,7 +25,7 @@ define(["dojo/_base/lang"], function(lang){
 	var mask=(1<<chrsz)-1;
 
 	d.stringToWord=function(/* string */s){
-		//	summary:
+		// summary:
 		//		convert a string to a word array
 		var wa=[];
 		for(var i=0, l=s.length*chrsz; i<l; i+=chrsz){
@@ -38,26 +35,27 @@ define(["dojo/_base/lang"], function(lang){
 	};
 
 	d.wordToString=function(/* word[] */wa){
-		//	summary:
+		// summary:
 		//		convert an array of words to a string
 		var s=[];
 		for(var i=0, l=wa.length*32; i<l; i+=chrsz){
 			s.push(String.fromCharCode((wa[i>>5]>>>(i%32))&mask));
 		}
 		return s.join("");	//	string
-	}
+	};
 
 	d.wordToHex=function(/* word[] */wa){
-		//	summary:
+		// summary:
 		//		convert an array of words to a hex tab
 		var h="0123456789abcdef", s=[];
 		for(var i=0, l=wa.length*4; i<l; i++){
 			s.push(h.charAt((wa[i>>2]>>((i%4)*8+4))&0xF)+h.charAt((wa[i>>2]>>((i%4)*8))&0xF));
 		}
 		return s.join("");	//	string
-	}
+	};
+
 	d.wordToBase64=function(/* word[] */wa){
-		//	summary:
+		// summary:
 		//		convert an array of words to base64 encoding, should be more efficient
 		//		than using dojox.encoding.base64
 		var p="=", tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", s=[];

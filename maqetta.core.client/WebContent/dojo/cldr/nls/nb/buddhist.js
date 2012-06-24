@@ -1,30 +1,75 @@
 define(
 //begin v1.x content
 {
-	"dateFormatItem-yM": "M y G",
-	"dateFormatItem-yQ": "Q y G",
-	"dateFormatItem-MMMEd": "E d. MMM",
+	"dateFormat-full": "EEEE d. MMMM y G",
+	"dateFormat-long": "d. MMMM y G",
+	"dateFormat-medium": "d. MMM y G",
+	"dateFormat-short": "d.M yyyy",
+	"dateFormatItem-d": "d.",
+	"dateFormatItem-Ed": "E d.",
+	"dateFormatItem-Gy": "y G",
+	"dateFormatItem-hm": "h:mm a",
+	"dateFormatItem-Hm": "HH:mm",
 	"dateFormatItem-hms": "h:mm:ss a",
-	"dateFormatItem-yQQQ": "QQQ y G",
+	"dateFormatItem-Hms": "HH:mm:ss",
+	"dateFormatItem-M": "L",
+	"dateFormatItem-Md": "d.M.",
+	"dateFormatItem-MEd": "E d.M",
 	"dateFormatItem-MMdd": "dd.MM",
 	"dateFormatItem-MMM": "LLL",
-	"months-standAlone-narrow": [
-		"J",
-		"F",
-		"M",
-		"A",
-		"M",
-		"J",
-		"J",
-		"A",
-		"S",
-		"O",
-		"N",
-		"D"
-	],
+	"dateFormatItem-MMMd": "d. MMM",
+	"dateFormatItem-MMMEd": "E d. MMM",
+	"dateFormatItem-ms": "mm.ss",
 	"dateFormatItem-y": "y G",
-	"timeFormat-full": "'kl'. HH:mm:ss zzzz",
+	"dateFormatItem-yM": "M y G",
+	"dateFormatItem-yMd": "d.M.y G",
+	"dateFormatItem-yMEd": "E d.M.y G",
 	"dateFormatItem-yMMM": "MMM y G",
+	"dateFormatItem-yMMMd": "d. MMM y G",
+	"dateFormatItem-yMMMEd": "E d. MMM y G",
+	"dateFormatItem-yQ": "Q y G",
+	"dateFormatItem-yQQQ": "QQQ y G",
+	"dateFormatItem-yyMM": "MM.y G",
+	"dateFormatItem-yyMMM": "MMM y G",
+	"dateFormatItem-yyQ": "Q y G",
+	"dateFormatItem-yyQQQQ": "QQQQ y G",
+	"dateFormatItem-yyyyMMMM": "MMMM y G",
+	"days-format-abbr": [
+		"søn.",
+		"man.",
+		"tir.",
+		"ons.",
+		"tor.",
+		"fre.",
+		"lør."
+	],
+	"days-format-narrow": [
+		"S",
+		"M",
+		"T",
+		"O",
+		"T",
+		"F",
+		"L"
+	],
+	"days-format-wide": [
+		"søndag",
+		"mandag",
+		"tirsdag",
+		"onsdag",
+		"torsdag",
+		"fredag",
+		"lørdag"
+	],
+	"days-standAlone-abbr": [
+		"sø.",
+		"ma.",
+		"ti.",
+		"on.",
+		"to.",
+		"fr.",
+		"lø."
+	],
 	"days-standAlone-narrow": [
 		"S",
 		"M",
@@ -34,18 +79,44 @@ define(
 		"F",
 		"L"
 	],
-	"dateFormatItem-yyyyMMMM": "MMMM y G",
-	"dateFormat-long": "d. MMMM y G",
-	"dateFormatItem-EEEd": "EEE d.",
-	"dateFormatItem-Hm": "HH:mm",
-	"dateFormatItem-yyMM": "MM.y G",
-	"dateFormat-medium": "d. MMM y G",
-	"dateFormatItem-Hms": "HH:mm:ss",
-	"dateFormatItem-yyMMM": "MMM y G",
-	"dateFormatItem-yyQQQQ": "QQQQ y G",
-	"dateFormatItem-ms": "mm.ss",
-	"dateFormatItem-MMMd": "d. MMM",
-	"dateFormatItem-yyQ": "Q y G",
+	"days-standAlone-wide": [
+		"søndag",
+		"mandag",
+		"tirsdag",
+		"onsdag",
+		"torsdag",
+		"fredag",
+		"lørdag"
+	],
+	"quarters-format-abbr": [
+		"K1",
+		"K2",
+		"K3",
+		"K4"
+	],
+	"quarters-format-wide": [
+		"1. kvartal",
+		"2. kvartal",
+		"3. kvartal",
+		"4. kvartal"
+	],
+	"quarters-standAlone-abbr": [
+		"K1",
+		"K2",
+		"K3",
+		"K4"
+	],
+	"quarters-standAlone-wide": [
+		"1. kvartal",
+		"2. kvartal",
+		"3. kvartal",
+		"4. kvartal"
+	],
+	"dayPeriods-format-abbr-am": "a.m.",
+	"dayPeriods-format-abbr-pm": "p.m.",
+	"dayPeriods-format-narrow-am": "a",
+	"dayPeriods-format-narrow-pm": "p",
+	"timeFormat-full": "'kl'. HH:mm:ss zzzz",
 	"months-format-abbr": [
 		"jan.",
 		"feb.",
@@ -60,29 +131,20 @@ define(
 		"nov.",
 		"des."
 	],
-	"quarters-format-abbr": [
-		"K1",
-		"K2",
-		"K3",
-		"K4"
+	"months-format-narrow": [
+		"J",
+		"F",
+		"M",
+		"A",
+		"M",
+		"J",
+		"J",
+		"A",
+		"S",
+		"O",
+		"N",
+		"D"
 	],
-	"days-format-abbr": [
-		"s√∏n.",
-		"man.",
-		"tir.",
-		"ons.",
-		"tor.",
-		"fre.",
-		"l√∏r."
-	],
-	"dateFormatItem-M": "L",
-	"dateFormatItem-MEd": "E d.M",
-	"dateFormatItem-hm": "h:mm a",
-	"dateFormat-short": "d.M yyyy",
-	"dateFormatItem-yMMMEd": "EEE d. MMM y G",
-	"dateFormat-full": "EEEE d. MMMM y G",
-	"dateFormatItem-Md": "d.M.",
-	"dateFormatItem-yMEd": "EEE d.M.y G",
 	"months-format-wide": [
 		"januar",
 		"februar",
@@ -97,21 +159,47 @@ define(
 		"november",
 		"desember"
 	],
-	"dateFormatItem-d": "d.",
-	"quarters-format-wide": [
-		"1. kvartal",
-		"2. kvartal",
-		"3. kvartal",
-		"4. kvartal"
+	"months-standAlone-abbr": [
+		"jan",
+		"feb",
+		"mar",
+		"apr",
+		"mai",
+		"jun",
+		"jul",
+		"aug",
+		"sep",
+		"okt",
+		"nov",
+		"des"
 	],
-	"days-format-wide": [
-		"s√∏ndag",
-		"mandag",
-		"tirsdag",
-		"onsdag",
-		"torsdag",
-		"fredag",
-		"l√∏rdag"
+	"months-standAlone-narrow": [
+		"J",
+		"F",
+		"M",
+		"A",
+		"M",
+		"J",
+		"J",
+		"A",
+		"S",
+		"O",
+		"N",
+		"D"
+	],
+	"months-standAlone-wide": [
+		"januar",
+		"februar",
+		"mars",
+		"april",
+		"mai",
+		"juni",
+		"juli",
+		"august",
+		"september",
+		"oktober",
+		"november",
+		"desember"
 	]
 }
 //end v1.x content

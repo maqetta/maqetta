@@ -1,5 +1,4 @@
 define(
-//begin v1.x content
 ({
 	"saveLabel": "Salvar",
 	"saveSettingLabelOn": "Configurar Intervalo de Salvamento Automático...",
@@ -13,5 +12,4 @@ define(
 	"saveMessageSuccess": "Salvo em ${0}",
 	"saveMessageFail": "Falha ao salvar em ${0}"
 })
-//end v1.x content
 );

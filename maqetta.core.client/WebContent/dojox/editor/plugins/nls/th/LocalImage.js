@@ -1,8 +1,7 @@
 define(
-//begin v1.x content
 ({
 	insertImageTitle: "แทรกรูปภาพ",
-	url: "รูปภาพ",
+	url: "Image",
 	browse: "เรียกดู...",
 	text: "รายละเอียด",
 	set: "แทรก",
@@ -10,6 +9,4 @@ define(
 	prePopuTextUrl: "ป้อน URL ของรูปภาพ",
 	prePopuTextBrowse: " หรือเรียกดูโลคัลไฟล์"
 })
-
-//end v1.x content
 );

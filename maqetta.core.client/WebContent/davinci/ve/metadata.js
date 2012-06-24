@@ -328,7 +328,7 @@ define([
         }else{
 			var base = Workbench.getProject();
         	var resource = system.resource.findResource("./"+ base + "/" + metadataUrl);
-        	metadata = dojo.fromJson(resource.getText());
+        	metadata = dojo.fromJson(resource.getContentSync());
         }
         
         if (!metadata) {

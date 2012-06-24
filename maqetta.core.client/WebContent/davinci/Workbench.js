@@ -24,9 +24,9 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/declare",
 	"dojo/_base/connect",
+	"dojo/_base/xhr",
 	"davinci/review/model/resource/root",
-	"./ui/widgets/DialogContent"
-	
+	"dojo/i18n!davinci/ve/nls/common"
 ], function(
 		Runtime,
 		Path,
@@ -53,8 +53,9 @@ define([
 		Deferred,
 		declare,
 		connect,
+		xhr,
 		reviewResource,
-		DialogContent
+		veNLS
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -131,107 +132,101 @@ var getSelectedResource = function() {
 
 var initializeWorkbenchState = function(){
 
-	if (!Workbench._state || !Workbench._state.hasOwnProperty("editors")) {
-		Workbench._state = Runtime.serverJSONRequest({
-			url: "cmd/getWorkbenchState",
-			handleAs: "json", 
-			sync: true
-		});
-	}
-	
-	function isReview(resPath){
+	var isReview = function (resPath) {
 		return resPath.indexOf(".review") > -1;
-	}
-	
-	function getReviewProject(resPath){
-		var path = new Path(resPath);
-		return path.segment(3);
-	}
-	
-	function getReviewVersion(resPath){
-		var path = new Path(resPath);
-		return path.segment(2);
-	}
-	
-	function getReviewResource(resPath){
-		var path = new Path(resPath);
-		return path.removeFirstSegments(3);
-	}
-	
-	var state = Workbench._state;
-	if (state && state.project) {
-		Workbench.setActiveProject(state.project);
-	}
-	
-	if (state && state.editors) {
-		state.version = davinci.version;
-		
-		var project = null;
-		var singleProject = Workbench.singleProjectMode();
-	
-		if (singleProject) {
-			var p = Workbench.getProject();
-			project = new Path(p);
-		}
-	
-		for (var i=0;i<state.editors.length;i++) {
-		
-			var isReviewRes = isReview(state.editors[i]);
-			if(!isReviewRes && singleProject){
-				// open all reviews and if running in single user mode, only load editors 
-				// open for specific projects
-				var path = new Path(state.editors[i]);
-				if (!path.startsWith(project)) {
-					continue;
-				}
-			}
-			
-			var resource= null;
-			
-			if(isReviewRes){
-				var version = getReviewVersion(state.editors[i]);
-				var resPath = getReviewResource(state.editors[i]).toString();
-				resource = reviewResource.findFile(version, resPath);
-			}else{
-				resource = sysResource.findResource(state.editors[i]);
-			}
-			
-			//var resource = sysResource.findResource(state.editors[i]);
-			
-			// check if activeEditor is part of the current project or not
-			var isActiveEditorInProject = true;
+	};
 
+	var getReviewProject = function (resPath) {
+		return new Path(resPath).segment(3);
+	};
+
+	var getReviewVersion = function (resPath) {
+		return new Path(resPath).segment(2);
+	};
+	
+	var getReviewResource = function (resPath) {
+		return new Path(resPath).removeFirstSegments(3);
+	};
+
+	var init = function (state) {
+		if (state.project) {
+			Workbench.setActiveProject(state.project);
+		}
+		if (state.editors) {
+			state.version = davinci.version;
+			
+			var project = null;
+			var singleProject = Workbench.singleProjectMode();
+		
 			if (singleProject) {
-				var path = new Path(state.activeEditor);
-				if (!path.startsWith(project)) {
-					isActiveEditorInProject = false;
+				var p = Workbench.getProject();
+				project = new Path(p);
+			}
+		
+			state.editors.forEach(function(editor){
+				var isReviewRes = isReview(editor);
+				if(!isReviewRes && singleProject){
+					// open all reviews and if running in single user mode, only load editors 
+					// open for specific projects
+					if (!new Path(editor).startsWith(project)) {
+						return;
+					}
 				}
-			}
-			
-			var noSelect=state.editors[i] != state.activeEditor;
-
-			if (noSelect && !isActiveEditorInProject) {
-				// if the active editor is not in our project, force selection
-				noSelect = false;
-				state.activeEditor = state.editors[i]; // this is now the active editor
-			}
-
-			if (resource) {
-				Workbench.openEditor({
-					fileName: resource,
-					content: resource.getText(),
-					noSelect: noSelect,
-					isDirty: resource.isDirty(),
-					startup: false
-				});
-			}
+				
+				var resource;
+				if(isReviewRes){
+					var version = getReviewVersion(editor);
+					var resPath = getReviewResource(editor).toString();
+					resource = reviewResource.findFile(version, resPath);
+				}else{
+					resource = sysResource.findResource(editor);
+				}
+				
+				// check if activeEditor is part of the current project or not
+				var isActiveEditorInProject = true;
+	
+				if (singleProject) {
+					var path = new Path(state.activeEditor);
+					if (!path.startsWith(project)) {
+						isActiveEditorInProject = false;
+					}
+				}
+				
+				var noSelect = editor != state.activeEditor;
+	
+				if (noSelect && !isActiveEditorInProject) {
+					// if the active editor is not in our project, force selection
+					noSelect = false;
+					state.activeEditor = editor; // this is now the active editor
+				}
+	
+				if (resource) {
+					resource.getContent().then(function(content){						
+						Workbench.openEditor({
+							fileName: resource,
+							content: content,
+							noSelect: noSelect,
+							isDirty: resource.isDirty(),
+							startup: false
+						});
+					});
+				}
+			});
+		} else {
+			state.editors = [];
 		}
+	};
+
+	if (!Workbench._state || !Workbench._state.hasOwnProperty("editors")) { //TODO: is this conditional necessary?  could state have been set prior to initialization?
+		xhr.get({
+			url: "cmd/getWorkbenchState",
+			handleAs: "json"
+		}).then(function(response){
+			init((Workbench._state = response));
+		});
+	} else {
+		init(Workbench._state);
 	}
-	
-	if (!Workbench._state.hasOwnProperty("editors")) {
-		Workbench._state.editors = [];
-	}
-	
 };
 
 var Workbench = {
@@ -654,22 +649,26 @@ var Workbench = {
 			contentStyle: style
 		});
 
-		var handle = dojo.connect(content, "onClose", content, function() {
-			var teardown = true;
+		var handle = dojo.connect(myDialog, "onExecute", content, function() {
+			var cancel = false;
 			if (callback) {
-				teardown = callback();
-				if (!teardown) {
-					// prevent the dialog from being torn down by temporarily overriding _onSubmit() with a call-once, no-op function
-					var oldHandler = myDialog._onSubmit;
-					myDialog._onSubmit = function() {
-						myDialog._onSubmit = oldHandler;
-					};
-					return;
-				}
+				cancel = callback();
+			}
+
+			if (cancel) {
+				return;
 			}
 
 			dojo.disconnect(handle);
-			myDialog.hide();
+			dojo.disconnect(handle2);
+
+			myDialog.destroyRecursive();
+		});
+
+		var handle2 = dojo.connect(content, "onClose", content, function() {
+			dojo.disconnect(handle);
+			dojo.disconnect(handle2);
+
 			myDialog.destroyRecursive();
 		});
 
@@ -680,36 +679,54 @@ var Workbench = {
 
 	// simple dialog with an automatic OK button that closes it.
 	showMessage: function(title, message, style, callback) {
-		return this.showModal(new DialogContent({content: message, hideCancel: true}), title, style, callback);
+		return this.showDialog(title, message, style, callback, null, true);
 	},
 
 	// OK/Cancel dialog with a settable okLabel
-	showDialog: function(title, contents, style, callback, okLabel) {
-		// dialog content is a ContentPane we use that has pre-defined buttons
-		var content = new DialogContent({okLabel: okLabel, content: contents});
+	showDialog: function(title, content, style, callback, okLabel, hideCancel) {
+		var myDialog, handle;
 
-		var myDialog = new ResizeableDialog({
+		function _onCancel() {
+			dojo.disconnect(handle);
+
+			myDialog.destroyRecursive();
+		}
+
+		// construct the new contents
+		var newContent = document.createElement("div");
+
+		var dialogContents = document.createElement("div");
+		dojo.addClass(dialogContents, "dijitDialogPaneContentArea");
+		if (dojo.isString(content)) {
+			dialogContents.innerHTML = content;
+		} else {
+			dialogContents.appendChild(content.domNode);
+		}
+		newContent.appendChild(dialogContents);
+	
+		var dialogActions = document.createElement("div");
+		dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
+		dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit"}).domNode);
+
+		if (!hideCancel) {
+			dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel}).domNode);
+		}
+
+		newContent.appendChild(dialogActions);
+
+		myDialog = new ResizeableDialog({
 			title: title,
-			content: content,
+			content: newContent,
 			contentStyle: style
 		});
-		var handle, handle2;
+		var handle;
 
-		handle = dojo.connect(content, "onClose", content, function() {
-				if (callback) {
-					callback();
-				}
-				dojo.disconnect(handle);
-				dojo.disconnect(handle2);
-				myDialog.hide();
-				myDialog.destroyRecursive();
-		});
+		var handle = dojo.connect(myDialog, "onExecute", function() {
+			if (callback) {
+				callback();
+			}
 
-		handle2 = dojo.connect(content, "onCancel", content, function() {
-				dojo.disconnect(handle);
-				dojo.disconnect(handle2);
-				myDialog.hide();
-				myDialog.destroyRecursive();
+			_onCancel();
 		});
 
 		myDialog.show();

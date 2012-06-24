@@ -119,7 +119,7 @@ define(["dojo/_base/declare",
 			        		found.file.isNew = false; // the file has been saved so don't delete it when closing editor without first save.
 			                Workbench.openEditor({
 			                       fileName: found.file,
-			                       content: found.file.getText()});
+			                       content: found.file.getContentSync()});
 			            } else {
 			            	if (this._loading){ // remove the loading div
 				    			this._loading.parentNode.removeChild(this._loading);
@@ -181,7 +181,6 @@ define(["dojo/_base/declare",
 		
 		okButton : function(){
 			this._createTheme();
-			this.onClose();
 		},
 		
 		cancelButton: function(){

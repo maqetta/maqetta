@@ -17,11 +17,13 @@
         </tstamp>
         <antcall target="clean"/>
 		<!-- base maqetta out of common.xml -->
+		
 		<antcall target="MaqettaOrion"/>
+		<antcall target="scrubFeatures"/>
 		
 		<antcall target="MaqettaOrionHosted"/>
-		
-    </target>
+    	
+	</target>
 
     <target name="init">
         <!--  copy environment vars -->
@@ -62,7 +64,7 @@
     	<property name="repoPath" value="${buildDirectory}/repository/${repoName}"/>
         <property name="repoPathInternal" value="${buildDirectory}/repository/${repoNameInternal}"/>
     	<property name="dojo.cache.directory" value="${buildDirectory}/dojo_cache"/>
-    	<property name="buildType" value="I"/>
+    	
     	
     	
         <!-- default maqettaCodeInternal to the value of $maqettaCode concatenated with "_internal" -->
@@ -80,9 +82,6 @@
         <condition property="run.external.targets">
             <equals arg1="${deployment-type}" arg2="external"/>
         </condition>
-        <tstamp/>
-        <property name="timestamp" value="${DSTAMP}${TSTAMP}" />
-    	
 		<!--
     	<condition property="run.dojo.build">
     		<equals arg1="${dojoBuild}" arg2="true"/>
@@ -92,7 +91,10 @@
     </target>
 	<target name="MaqettaOrion" if="run.external.targets">
 	    <echo message="Running orion build...."/>
-		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
+		
+		<tstamp/>
+		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
+		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-standalone" />
 		<property name="cvsuser" value=":ext:aniefer" />		
 		<property name="builder" value="${builderDir}" />
 		<echo message="Builder..${builder}"/>
@@ -105,18 +107,40 @@
 		 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 			<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
 		 	<property name="run.dojo.build" value="false"/>
-		 	<property name="buildId" value="${buildType}${timestamp}"/>
 		 	<property name="product" value="${builder}/maqettaOrion.product"/>
-		 	 <property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
-		 	 <property name="basedir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
-			 <property name="scriptDir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
+		 	
+		 	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
+		 	<property name="basedir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
+			<property name="scriptDir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
 			<property name="archiveNamePrefix" value="maqetta-orion-${buildLabel}"/>
+			
 		 </ant>
     </target>
+	<target name="scrubFeatures">
+		<property name="buildDirectory" value="${base}/${buildId}"/>
+		<property name="buildType" value="I"/>
+		<property name="buildId" value="${buildType}${timestamp}"/>
+		<property name="buildLabel" value="${buildId}"/>
+		<property name="featureDir" value="${base}/${buildId}/features"/>
+		<echo message="=================================================== Scrubbing:${featureDir} " />
+		<delete includeemptydirs="true" failonerror="false">
+		       <fileset dir="${featureDir}" includes="**/*"/>
+		 </delete>
+		<delete >
+			 <fileset dir="${base}/${buildId}/" includes="*.xml"/>
+		</delete>
+		<delete >
+			 <fileset dir="${base}/${buildId}/" includes="*.properties"/>
+		</delete>
+
+	</target>
 	
 	<target name="MaqettaOrionHosted" if="run.external.targets">
-		 <echo message="Running orion/maqetta hosted build...."/>
-		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}" />
+		    <echo message="Running orion/maqetta hosted build...."/>
+			
+			<tstamp/>
+			<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
+			<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-hosted" />
 			<property name="cvsuser" value=":ext:aniefer" />		
 			<property name="builder" value="${builderDir}" />
 			<echo message="Builder..${builder}"/>
@@ -128,7 +152,6 @@
 			<property name="allElementsFile" value="${builder}/allElements.xml" />
 			 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 				<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
-			 	<property name="buildId" value="${buildType}${timestamp}-hosted"/>
 			 	<property name="run.dojo.build" value="false"/>
 			 	<property name="product" value="${builder}/maqettaOrionHosted.product"/>
 			 	<property name="archiveNamePrefix" value="maqetta-orion-hosted-${buildLabel}"/>

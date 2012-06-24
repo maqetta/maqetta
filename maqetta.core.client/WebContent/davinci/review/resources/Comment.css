@@ -75,7 +75,7 @@
 	background-image: url("img/expand_active.gif") !important;
 	background-position: center center;
 	background-repeat: no-repeat;
-	height: 18px;
+	height: 18px;publishWizard
 	width: 18px;
 }
 .expandView.deactive {
@@ -783,11 +783,6 @@
 	display: inline-block;
 	float:left;
 	padding: 10px 0 0 10px;
-}
-
-.publishWizard {
-	width:600px;
-	height:310px;
 }
 
 .publishWizard .steps {

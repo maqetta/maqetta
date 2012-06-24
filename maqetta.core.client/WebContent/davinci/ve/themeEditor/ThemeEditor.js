@@ -508,7 +508,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 				this.resourceFile.setContents(this._themeFileContent, true);
 			}else {
 				console.error('ThemeEditor.theme file content empty');
-				this._themeFileContent = this.resourceFile.getText();
+				this._themeFileContent = this.resourceFile.getContentSync();
 			}
 		}
 		this.isDirty=true;
@@ -592,7 +592,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
                 dojo.connect(cssFiles[i], 'onChange', context,
                         '_themeChange');
             }
-			this._themeFileContent = this.resourceFile.getText(); // get the content for use later when setting dirty. Timing issue
+			this._themeFileContent = this.resourceFile.getContentSync(); // get the content for use later when setting dirty. Timing issue
 
 			var subs = this._subscriptions;
 			subs.push(dojo.subscribe("/davinci/ui/styleValuesChange", this,
@@ -659,7 +659,11 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		
 		/* add the .theme file to the workingCopy resources so that its removed */
 		
-		results.push({resourceFile: this.resourceFile, getText : function(){ return this.resourceFile.getText(); }, lastModifiedTime:(new Date().getTime()) });
+		results.push({
+			resourceFile: this.resourceFile,
+			getText: function(){ return this.resourceFile.getContentSync(); },
+			lastModifiedTime: Date.now()
+		});
 		return results;
 		
 	},

@@ -1,5 +1,6 @@
 <div class='downloadDialog'>	 
-<!--  remove tables and fillers, use CSS instead -->		
+	<div class="dijitDialogPaneContentArea">
+		<!--  remove tables and fillers, use CSS instead -->		
 		<table class='templateTable' cellSpacing=0 cellPadding=0 align='center'>
 		<tr>
 		<td class='templateFiller1'>&nbsp;</td>
@@ -14,9 +15,9 @@
 		<br></br>
 		<div dojoAttachPoint="_selectionDiv"></div>
 		<div dojoAttachPoint="_tableDiv"></div>
-
-	<div class="dialogButtonContainer">
-		<span dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${downloadButtonLabel}'></span>
-		<span dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'></span>
+  </div>
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${downloadButtonLabel}' type="submit"></button>
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}'></button>
 	</div>
 </div>

@@ -6,34 +6,34 @@ define([
 	
 return declare("davinci.review.model.ReviewTreeModel", null, {
 
-	foldersOnly : false,
+	foldersOnly: false,
+
 	constructor: function(args) {
 		this.root = Resource.getRoot();
 		this.subscription = [dojo.subscribe("/davinci/review/resourceChanged", this, this.resourceChanged)];
 	},
 
 	destroy: function() {
-		for (var i=0; i<this.subscriptions.length; i++)
-			dojo.unsubscribe(this.subscription[i]);
+		this.subscriptions.forEach(dojo.unsubscribe);
 	},
 
 	getRoot: function(onItem) {
 		onItem(this.root);
 	},
-	mayHaveChildren: function(/*dojo.data.Item*/ item) {
-		return item.elementType=="ReviewVersion"&&!item.isDraft;
 
+	mayHaveChildren: function(/*dojo.data.Item*/ item) {
+		return item.elementType == "ReviewVersion" && !item.isDraft;
 	},
 	
-	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete) {
-		parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is too fast for async
+	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete, /*function(items)*/ onError) {
+		parentItem.getChildren(onComplete, onError);
 	},
 	
 	getIdentity: function(/* item */ item) {
 		return item.getPath();
 	},
 
-	resourceChanged : function(result, type, changedResource) {
+	resourceChanged: function(result, type, changedResource) {
 		// Remove the changed resource and its children from the tree. Shortly, we will
 		// tell the tree about it's new children. But, if a child's identity matches the 
 		// identity of an existing item in the model, it will not be replaced with the 

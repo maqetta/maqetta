@@ -71,7 +71,7 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 			this._changeLayoutCommand(ui.getValue());
 		}
 
-		Workbench.showDialog(langObj.newWidgetsShouldUse, ui, null, dojo.hitch(this, _callback), langObj.select);
+		Workbench.showDialog(langObj.newWidgetsShouldUse, ui, {width: 200}, dojo.hitch(this, _callback), langObj.select);
 	}
 });
 });

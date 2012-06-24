@@ -1,8 +1,9 @@
 define([
 	"dojo/_base/declare",
 	"davinci/model/resource/File",
-	"davinci/model/Path"
-], function(declare, File, Path) {
+	"davinci/model/Path",
+	"dojo/_base/Deferred"
+], function(declare, File, Path, Deferred) {
 
 return declare("davinci.review.model.resource.File", File, {
 
@@ -24,8 +25,12 @@ return declare("davinci.review.model.resource.File", File, {
 
 	},
 
-	getText: function() {
+	getContentSync: function() {
 		return "";
+	},
+
+	getContent: function() {
+		return new Deferred().resolve("");
 	},
 
 	removeWorkingCopy: function() {

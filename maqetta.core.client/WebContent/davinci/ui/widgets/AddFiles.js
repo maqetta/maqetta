@@ -79,7 +79,6 @@ define(["dojo/_base/declare",
 		},
 
 		_cancelButton: function(){
-			this.cancel = true;
 			this.onClose();
 		},
 	});

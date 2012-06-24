@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product uid="maqetta.orion" application="org.eclipse.orion.application" useFeatures="true" includeLaunchers="true">
-
+<product uid="maqetta.orion.hosted" application="org.eclipse.orion.application" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -21,14 +20,12 @@
 
    <windowImages/>
 
-
    <launcher name="maqetta.orion">
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CDC-1.0%Foundation-1.0</macos>
@@ -44,8 +41,8 @@
    </plugins>
 
    <features>
-      <feature id="maqetta.orion.feature"/>
       <feature id="org.eclipse.orion"/>
+      <feature id="maqetta.orion.hosted.feature" version="1.0.1"/>
    </features>
 
    <configurations>

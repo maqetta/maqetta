@@ -166,7 +166,7 @@ define(["dojo/_base/declare",
 							continue;
 						}
 						
-						var newSource = pageBuilder.rebuildSource(pages[i].getText(), pages[i]);
+						var newSource = pageBuilder.rebuildSource(pages[i].getContentSync(), pages[i]);
 						pages[i].setContents(newSource, false);
 					}
 					this.onClose();
@@ -230,10 +230,8 @@ define(["dojo/_base/declare",
 
 		okButton: function(){
 			this._processChanges();
-			this.onClose();
 		},
 		cancelButton: function(){
-			this.cancel = true;		
 			this.onClose();
 		},
 		_rewriteDojo: function(){

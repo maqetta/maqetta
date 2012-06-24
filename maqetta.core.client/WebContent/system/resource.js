@@ -330,6 +330,7 @@ var Resource = {
 		}
 		return isWildcard ? foundResources : foundResources[0];
 	},
+
 	alphabeticalSort: function(items){
 		return items.sort(function(a,b) {
 			a = a.name.toLowerCase();

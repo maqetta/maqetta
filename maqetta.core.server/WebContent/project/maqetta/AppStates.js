@@ -25,43 +25,7 @@ States.prototype = {
 	 * Returns an array of all nodes that are state containers (due to having a _maqAppStates.states property)
 	 * @param rootnode
 	 * @returns {Array[Element]}  an array of Elements for all state containers in document
-//FIXME: OLD LOGIC
-	 * Traverses all document nodes starting with rootnode, looking for
-	 * all nodes that are state containers (due to having a _maqAppStates.states property),
-	 * and returning a data structure that lists all state containers. See below
-	 * for details about the returned data structure..
-	 * @param rootnode
-	 * @returns {Array} allStateContainers
-	 *    List of all application state containers in the document that reflects
-	 *    nesting in case some state containers are descendants of other state containers.
-	 *    For example, if BODY defines 2 states "aa" and "bb", and then a inner DIV
-	 *    defines two states "cc" and "dd", and then there is a SPAN that is a descendant of that DIV
-	 *    that defines two states "ee" and "ff", the returned structure will look like this:
-	 *        [{stateContainerNode:BODY,children:
-	 *            [{stateContainerNode:DIV,children:
-	 *                [{stateContainerNode:SPAN,children:[]}]
-	 *            }]
-	 *        }]
-//FIXME: END
 	 */
-/*FIXME: OLD LOGIC
-	getAllStateContainers: function(rootnode){
-		var allStateContainers = [];
-		function findStateContainers(currentNode, stateContainersArray){
-			var childrenStateContainersArray = stateContainersArray;
-			if(currentNode._maqAppStates && currentNode._maqAppStates.states){
-				var o = {stateContainerNode:currentNode, children:[]};
-				stateContainersArray.push(o);
-				childrenStateContainersArray = o.children;
-			}
-			for(var i=0; i<currentNode.children.length; i++){
-				findStateContainers(currentNode.children[i], childrenStateContainersArray);
-			}
-		}
-		findStateContainers(rootnode, allStateContainers);
-		return allStateContainers;
-	},
-*/
 	getAllStateContainers: function(rootnode){
 		var allStateContainers = [];
 		function findStateContainers(currentNode){
@@ -104,16 +68,6 @@ States.prototype = {
 						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
 					}
 				}
-/*FIXME: Code below matches P6 states data structures
-				if(pn.states){
-					if(pn == statesContainerNode){
-						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
-					}else{
-						var current = pn.states.current;
-						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
-					}
-				}
-*/
 				if(pn.tagName == 'BODY'){
 					break;
 				}
@@ -207,9 +161,6 @@ States.prototype = {
 	 * FIXME: get rid of the associative parameter.
 	 */ 
 	getStates: function(node, associative){
-/*FIXME: Old logic
-		node = this._getWidgetNode(node); 
-*/
 		var states = node && node._maqAppStates;
 		if(states && states.states){
 			var names = associative ? {"Normal": "Normal"} : ["Normal"];
@@ -228,23 +179,6 @@ States.prototype = {
 		}else{
 			return associative ? {} : [];
 		}
-/*FIXME OLD LOGIC
-		node = this._getWidgetNode(node); 
-		var names = associative ? {"Normal": "Normal"} : ["Normal"];
-		var states = node && node.states;
-		if (states) {
-			for (var name in states) {
-				if (states[name].origin && name != "Normal") {
-					if (associative) {
-						names[name] = name;
-					} else {
-						names.push(name);
-					}
-				}
-			}
-		}
-		return names;
-*/
 	},
 	
 	/**
@@ -281,16 +215,6 @@ States.prototype = {
 	 * return {boolean} 
 	 */
 	hasState: function(node, state){ 
-/*FIXME: old logic
-		if (arguments.length < 2) {
-			state = arguments[0];
-			node = undefined;
-		}
-		node = this._getWidgetNode(node);
-*/
-/*FIXME: old logic
-		return !!(node && node.states && node.states[state] && node.states[state].origin);
-*/
 		return !!(node && node._maqAppStates && node._maqAppStates.states && node._maqAppStates.states.indexOf(state)>=0);
 	},
 
@@ -301,9 +225,6 @@ States.prototype = {
 	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
 	 */
 	getState: function(node){
-/*FIXME: OLD LOGIC
-		node = this._getWidgetNode(node);
-*/
 		return node && node._maqAppStates && node._maqAppStates.current;
 	},
 	
@@ -326,13 +247,6 @@ States.prototype = {
 	 * FIXME: updateWhenCurrent is ugly. Higher level code could include that logic
 	 * FIXME: _silent is ugly. Higher level code code broadcast the change.
 	 */
-/*FIXME: Old logic
-	setState: function(node, newState, updateWhenCurrent, _silent){
-		if (arguments.length < 2) {
-			newState = arguments[0];
-			node = undefined;
-		}
-*/
 	setState: function(newState, ElemOrEvent, updateWhenCurrent, _silent){
 		var node;
 		// Determine if second param is an Element or Event object
@@ -360,21 +274,6 @@ States.prototype = {
 		} else {
 			node._maqAppStates.current = newState;
 		}
-/*FIXME: OLD LOGIC
-		if (this.isNormalState(newState)) {
-			if (!node._maqAppStates.current) { return; }
-			delete node._maqAppStates.current;
-			newState = undefined;
-		} else {
-			if(node.tagName == 'BODY'){
-				node._maqAppStates.current = newState;
-			}else{
-				if(node._maqAppStates){
-					delete node._maqAppStates.current;
-				}
-			}
-		}
-*/
 		if (!_silent) {
 //FIXME: Reconcile node and statesContainerNode
 			connect.publish("/maqetta/appstates/state/changed", 
@@ -389,16 +288,6 @@ States.prototype = {
 	 * Force a call to setState so that styling properties get reset for the given node
 	 * based on the current application state.
 	 */
-/*FIXME: OLD LOGIC
-	resetState: function(node){
-		if(!node || !node.ownerDocument || !node.ownerDocument.body){
-			return;
-		}
-		var body = node.ownerDocument.body;
-		var currentState = this.getState(body);
-		this.setState(currentState, node, true, true);	
-	},
-*/
 	resetState: function(node){
 		if(!node ){
 			return;
@@ -452,13 +341,9 @@ States.prototype = {
 	},
 	
 	/**
-//FIXME OLD	 * Returns style values for the given node and the given application "state".
-//FIXME OLD	 * If "name" is provided, then only those style values for the given property are return.
-//FIXME OLD	 * If "name" is not provided, then all style values are returns.
 	 * Returns style values for the given node when a particular set of application states are active.
 	 * The list of application states is passed in as an array.
 	 * @param {Element} node
-//FIXME OLD * @param {string} state
 	 * @param {[string]} statesList  
 	 *    Array of appstate names. If all appstates are defined on BODY, then
 	 *    the array will only have one item. If there are nested app state containers,
@@ -472,12 +357,6 @@ States.prototype = {
 	getStyle: function(node, statesList /*FIXME state */, name) {
 		var styleArray, newStyleArray = [];
 //FIXME: Make sure node and statesList are always sent to getStyle
-/*
-		node = this._getWidgetNode(node);
-		if (arguments.length == 1) {
-			state = this.getState();
-		}
-*/
 		for(var i=0; i<statesList.length; i++){
 			var state = statesList[i];
 			// return all styles specific to this state
@@ -500,31 +379,6 @@ States.prototype = {
 			}
 		}
 		return newStyleArray;
-/*FIXME OLD LOGIC
-		var styleArray, newStyleArray;
-		node = this._getWidgetNode(node);
-		if (arguments.length == 1) {
-			state = this.getState();
-		}
-		// return all styles specific to this state
-		styleArray = node && node.states && node.states[state] && node.states[state].style;
-		newStyleArray = dojo.clone(styleArray); // don't want to splice out of original
-		if (arguments.length > 2) {
-			// Remove any properties that don't match 'name'
-			if(newStyleArray){
-				for(var j=newStyleArray.length-1; j>=0; j--){
-					var item = newStyleArray[j];
-					for(var prop in item){		// should be only one prop per item
-						if(prop != name){
-							newStyleArray.splice(j, 1);
-							break;
-						}
-					}
-				}
-			}
-		}
-		return newStyleArray;
-*/
 	},
 	
 	/**
@@ -665,30 +519,6 @@ States.prototype = {
 	},
 	
 	/**
-	 * Takes the current statesArray and returns a simple array
-	 * of the same number of item, where each item in returned array
-	 * indicates the Normal state (indicated by undefined for the present).
-	 * @param {[object]} statesArray  
-	 *    Array of "state containers" that apply to this node,
-	 *    with furthest ancestor at position 0 and nearest at position length-1.
-	 *    Each item in array is an object with these properties
-	 *      statesArray[i].node - a state container node
-	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
-	 *      statesArray[i].newState - the new appstate for this state container node
-	 */
-/*FIXME: Doesn't seem to ever get called
-	_getStatesListNormal: function(statesArray){
-		var statesList = [];
-		if(statesArray){
-			for(var i=0; i<statesArray.length; i++){
-				statesList.push(undefined);
-			}
-		}
-		return statesList;
-	},
-*/
-	
-	/**
 	 * Takes the current statesArray array and returns a simple array
 	 * of the same number of items where each item indicates the state name
 	 * corresponding to the given propName (which in practice can only be
@@ -727,7 +557,7 @@ States.prototype = {
 	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
-	_resetAndCacheNormalStyle: function(node, statesArray /*FIXME oldState*/) {
+	_resetAndCacheNormalStyle: function(node, statesArray) {
 
 		if(!node || !statesArray){
 			return;
@@ -762,33 +592,6 @@ States.prototype = {
 				}
 			}
 		}
-
-		/*FIXME OLD LOGIC
-		var oldStateStyleArray = this.getStyle(node, oldState);
-		var normalStyleArray = this.getStyle(node, undefined);
-		
-		// Clear out any styles corresponding to the oldState
-		if(oldStateStyleArray){
-			for(var j=0; j<oldStateStyleArray.length; j++){
-				var oItem = oldStateStyleArray[j];
-				for(var oProp in oItem){	// Should only be one prop
-					var convertedName = this._convertStyleName(oProp);
-					node.style[convertedName] = '';
-				}
-			}
-		}
-		
-		// Reset normal styles
-		if(normalStyleArray){
-			for(var i=0; i<normalStyleArray.length; i++){
-				var nItem = normalStyleArray[i];
-				for(var nProp in nItem){	// Should only be one prop
-					var convertedName = this._convertStyleName(nProp);
-					node.style[convertedName] = this._getFormattedValue(nProp, nItem[nProp]);
-				}
-			}
-		}
-*/
 	},
 	
 	/**
@@ -797,8 +600,6 @@ States.prototype = {
 	 * Called indirectly when the current state changes (via a setState call)
 	 * from code that listens to event /maqetta/appstates/state/changed
 	 * @param {Element} node
-//FIXME: OLD LOGIC	 * @param {string} oldState
-//FIXME: OLD LOGIC	 * @param {string} newState
 	 * @param {[object]} statesArray  
 	 *    Array of "state containers" that apply to this node,
 	 *    with furthest ancestor at position 0 and nearest at position length-1.
@@ -807,7 +608,7 @@ States.prototype = {
 	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
-	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {
+	_update: function(node, statesArray) {
 		node = this._getWidgetNode(node);
 		if (!node || !node._maqDeltas){
 			return;
@@ -845,44 +646,6 @@ States.prototype = {
 		}else if(dijitWidget && dijitWidget.resize){
 			dijitWidget.resize();
 		}
-/*FIXME OLD LOGIC
-		node = this._getWidgetNode(node);
-		if (!node || !node.states){
-			return;
-		}
-		
-		var styleArray = this.getStyle(node, newState);
-		
-		this._resetAndCacheNormalStyle(node, oldState);
-
-		// Apply new style
-		if(styleArray){
-			for(var i=0; i<styleArray.length; i++){
-				var style = styleArray[i];
-				for (var name in style) {	// should be only one prop in style
-					var convertedName = this._convertStyleName(name);
-					node.style[convertedName] = style[name];
-				}
-			}
-		}
-		
-		//FIXME: This is Dojo-specific. Other libraries are likely to need a similar hook.
-		var dijitWidget, parent;
-		if(node.id && node.ownerDocument){
-			var byId = node.ownerDocument.defaultView.require("dijit/registry").byId;
-			if(byId){
-				dijitWidget = byId && byId(node.id);				
-			}
-		}
-		if(dijitWidget && dijitWidget.getParent){
-			parent = dijitWidget.getParent();
-		}
-		if(parent && parent.resize){
-			parent.resize();
-		}else if(dijitWidget && dijitWidget.resize){
-			dijitWidget.resize();
-		}
-*/
 	},
 	
 	/**
@@ -916,22 +679,11 @@ States.prototype = {
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/added", callback).
 	 */
 	add: function(node, state){ 
-/*FIXME: OLD LOGIC
-		if (arguments.length < 2) {
-			state = arguments[0];
-			node = undefined;
-		}
-		node = this._getWidgetNode(node);
-*/
 		if (!node || this.hasState(node, state)) {
 			//FIXME: This should probably be an error of some sort
 			return;
 		}
 		node._maqAppStates = node._maqAppStates || {};
-/*FIXME: old logic
-		node.states[state] = node.states[state] || {};
-		node.states[state].origin = true;
-*/
 		node._maqAppStates.states = node._maqAppStates.states || [];
 		node._maqAppStates.states.push(state);
 		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
@@ -944,13 +696,6 @@ States.prototype = {
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/removed", callback).
 	 */
 	remove: function(node, state){
-/*FIXME: OLD LOGIC
-		if (arguments.length < 2) {
-			state = arguments[0];
-			node = undefined;
-		}
-		node = this._getWidgetNode(node);
-*/
 		if (!node || !node._maqAppStates || !node._maqAppStates.states || !this.hasState(node, state)) {
 			return;
 		}
@@ -962,12 +707,6 @@ States.prototype = {
 		if (state == currentState) {
 			this.setState(undefined, node);
 		}
-/*FIXME: old logic
-		delete node.states[state].origin;
-		if (this._isEmpty(node.states[state])) {
-			delete node.states[state];
-		}
-*/
 		node._maqAppStates.states.splice(idx, 1);
 		if(node._maqAppStates.states.length==0){
 			delete node._maqAppStates;
@@ -981,14 +720,6 @@ States.prototype = {
 	 * Subscribe using connect.subscribe("/davinci/states/renamed", callback).
 	 */
 	rename: function(node, oldName, newName, property){ 
-/*FIXME: OLD LOGIC
-		if (arguments.length < 3) {
-			newName = arguments[1];
-			oldName = arguments[0];
-			node = undefined;
-		}
-		node = this._getWidgetNode(node);
-*/
 		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
 			return false;
 		}
@@ -1000,34 +731,6 @@ States.prototype = {
 		this._updateSrcState (node);
 		return true;
 	},
-
-	/**
-	 * Returns true if the node is set to visible within the current state, false otherwise.
-	 */ 
-/*FIXME: NOT CALLED ANYMORE
-	isVisible: function(node, state){ 
-		if (arguments.length == 1) {
-			state = this.getState();
-		}
-		node = this._getWidgetNode(node);
-		if (!node){
-			return;
-		}
-		// FIXME: The way the code is now, sometimes there is an "undefined" property
-		// within widget.states. That code seems somewhat accidental and needs
-		// to be studied and cleaned up.
-		var isNormalState = (typeof state == "undefined" || state == "undefined");
-		if(isNormalState){
-			return node.style.display != "none";
-		}else{
-			if(node._maqDeltas && node._maqDeltas[state] && node._maqDeltas[state].style && typeof node._maqDeltas[state].style.display == "string"){
-				return node._maqDeltas[state].style.display != "none";
-			}else{
-				return node.style.display != "none";
-			}
-		}
-	},
-*/
 	
 	/**
 	 * Returns true if object does not directly have property 'name'
@@ -1197,7 +900,6 @@ States.prototype = {
 	/**
 	 * Returns the string value of the attribute that holds node-specific states information (dvStates)
 	 * @param {Element} node  
-//FIXME: OLD	 * @returns {string}  String value for the attribute, or unspecified|null if no such widget or attribute
 	 * @returns {object}  Object with two props, defs:{string|null} and deltas:{string|null},
 	 *                    which hold DELTAS and DEFS attribute values, respectively
 	 */
@@ -1205,11 +907,6 @@ States.prototype = {
 		if (!node){
 			return;
 		}
-/*FIXME: OLD LOGIC
-		// FIXME: Maybe this check between page editor and runtime should be factored out
-		var states = node.getAttribute(this.DELTAS_ATTRIBUTE);
-		return states;
-*/
 		var maqAppStates_attribute = node.getAttribute(this.APPSTATES_ATTRIBUTE);
 		if(!maqAppStates_attribute && node.tagName === 'BODY'){
 			// Previous versions used different attribute name (ie, 'dvStates')
@@ -1231,9 +928,6 @@ States.prototype = {
 		if (!node) return;
 		delete node._maqAppStates;
 		delete node._maqDeltas;
-/*FIXME: Get rid of /davinci/states/cleared ?
-		connect.publish("/davinci/states/cleared", [{node:node}]);
-*/
 	},
 	
 	/**

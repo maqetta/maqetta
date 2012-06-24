@@ -197,6 +197,34 @@ States.prototype = {
 		}
 		return node;
 	},
+
+	/**
+	 * Internal routine. Returns state container corresponding to state and ElemOrEvent.
+	 * @param {undefined|null|string} state   we are searching for a state container that defines this state
+	 * @param {Element|Event} ElemOrEvent 
+	 *        If an Element, then either the given Element is the state container
+	 *        or we will march up the ancestor tree until finding the state container.
+	 *        If an Event, then either the Event.currentTarget is the state container
+	 *        or we will march up the ancestor tree until finding the state container.
+	 * @returns {Element}
+	 */
+	_getSCNodeFromElemOrEvent: function(state, ElemOrEvent) {
+		var node;
+		// Determine if second param is an Element or Event object
+		if(ElemOrEvent && ElemOrEvent.tagName && ElemOrEvent.nodeName){
+			// ElemOrEvent is an Element
+			node = ElemOrEvent._maqAppStates ? ElemOrEvent : this.findStateContainer(ElemOrEvent, state);
+		}else if(ElemOrEvent && ElemOrEvent.target && ElemOrEvent.currentTarget){
+			// ElemOrEvent is an Event
+			node = ElemOrEvent.currentTarget;
+			if(!node._maqAppStates){
+				node = this.findStateContainer(node, state);
+			}
+		}else{
+			node = this._getWidgetNode();;
+		}
+		return node;
+	},
 	
 	/**
 	 * Hook for when included in Maqetta page editor.
@@ -228,7 +256,6 @@ States.prototype = {
 		return node && node._maqAppStates && node._maqAppStates.current;
 	},
 	
-//FIXME: Need to update comments
 	/**
 	 * Trigger updates to the given node based on the given "newState".  
 	 * This gets called for every node that is affected by a change in the given state.
@@ -236,32 +263,21 @@ States.prototype = {
 	 * by publishing a /maqetta/appstates/state/changed event, which indirectly causes
 	 * the _update() routine to be called for the given node.
 	 * 
-	 * @param {null|undefined|Element} node  If not null|undefined, must by BODY
 	 * @param {null|undefined|string} newState  If null|undefined, switch to "Normal" state, else to "newState"
+	 * @param {Element|Event} ElemOrEvent  Identifies state container.
+	 *        If an Element, then either the given Element is the state container
+	 *        or we will march up the ancestor tree until finding the state container.
+	 *        If an Event, then either the Event.currentTarget is the state container
+	 *        or we will march up the ancestor tree until finding the state container.
 	 * @param {boolean} updateWhenCurrent  Force update logic to run even if newState is same as current state
 	 * @param {boolean} _silent  If true, don't broadcast the state change via /davinci/states/state/changed
 	 * 
 	 * Subscribe using davinci.states.subscribe("/maqetta/appstates/state/changed", callback).
-	 * FIXME: Right now the node parameter is useless since things only
-	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
 	 * FIXME: updateWhenCurrent is ugly. Higher level code could include that logic
 	 * FIXME: _silent is ugly. Higher level code code broadcast the change.
 	 */
 	setState: function(newState, ElemOrEvent, updateWhenCurrent, _silent){
-		var node;
-		// Determine if second param is an Element or Event object
-		if(ElemOrEvent && ElemOrEvent.tagName && ElemOrEvent.nodeName){
-			// ElemOrEvent is an Element
-			node = ElemOrEvent._maqAppStates ? ElemOrEvent : this.findStateContainer(ElemOrEvent, newState);
-		}else if(ElemOrEvent && ElemOrEvent.target && ElemOrEvent.currentTarget){
-			// ElemOrEvent is an Event
-			node = ElemOrEvent.currentTarget;
-			if(!node._maqAppStates){
-				node = this.findStateContainer(node, newState);
-			}
-		}else{
-			node = this._getWidgetNode();;
-		}
+		var node = this._getSCNodeFromElemOrEvent(newState, ElemOrEvent);
 		if (!node || !node._maqAppStates || (!updateWhenCurrent && node._maqAppStates.current == newState)) {
 			return;
 		}
@@ -296,6 +312,68 @@ States.prototype = {
 		this.setState(currentState, node, true/*updateWhenCurrent*/, true /*silent*/);	
 	},
 	
+	/**
+	 * Returns the document-level "focus" for the application states feature.
+	 * The "focus" consists of a particular state within a particular state container.
+	 * This feature is primarily used by design-time tools.
+	 * @param {Element} rootNode  BODY element for document
+	 * @returns {null|object}
+	 *      return null if a search through document did not find any state containers
+	 *      that claim to have the focus
+	 *      if search finds at least one state container that claims to have focus,
+	 *      then for first one encountered, return an object of form
+	 *      { stateContainerNode:{Element}, state:{string} }
+	 */
+	getFocus: function(rootNode){
+		var allStateContainerNodes = this.getAllStateContainers(rootNode);
+		for(var i=0; i<allStateContainerNodes.length; i++){
+			maqAppStates = allStateContainerNodes[i]._maqAppStates;
+			if(maqAppStates && maqAppStates.focus){
+				return { stateContainerNode:allStateContainerNodes[i], state:maqAppStates.focus };
+			}
+		}
+		return null;
+	},
+
+	/**
+	 * Set the document-level "focus" to a particular state within a particular state container.
+	 * This feature is primarily used by design-time tools.
+	 * @param {null|undefined|string} state  If null|undefined, set focus to "Normal" state, else to "newState"
+	 * @param {Element|Event} ElemOrEvent  Identifies state container.
+	 *        If an Element, then either the given Element is the state container
+	 *        or we will march up the ancestor tree until finding the state container.
+	 *        If an Event, then either the Event.currentTarget is the state container
+	 *        or we will march up the ancestor tree until finding the state container.
+	 * 
+	 * Subscribe using davinci.states.subscribe("/maqetta/appstates/focus/changed", callback).
+	 */
+	setFocus: function(newState, ElemOrEvent){
+		var node = this._getSCNodeFromElemOrEvent(newState, ElemOrEvent);
+		if (!node || !node._maqAppStates) {
+			return;
+		}
+		var rootNode = (node.ownerDocument && node.ownerDocument.body);
+		if(!rootNode){
+			return;
+		}
+		var currentFocus = this.getFocus(rootNode);
+		if(currentFocus && currentFocus.stateContainerNode == node && currentFocus.state == newState){
+			return;
+		}
+		var maqAppStates;
+		var allStateContainerNodes = this.getAllStateContainers(rootNode);
+		for(var i=0; i<allStateContainerNodes.length; i++){
+			maqAppStates = allStateContainerNodes[i]._maqAppStates;
+			if(maqAppStates){
+				delete maqAppStates.focus;
+			}
+		}
+		node._maqAppStates.focus = newState;
+		connect.publish("/maqetta/appstates/focus/changed", 
+				[{state:newState, statesContainerNode:node}]);
+		this._updateSrcState (node);
+	},
+
 //FIXME: Need to pass node into this routine
 	/**
 	 * Returns true if the given application "state" is the NORMAL state.

@@ -3,8 +3,62 @@ define([
     	"davinci/ve/utils/GeomUtils"
 ], function(declare, GeomUtils){
 
-return declare(null, {
+createTableBodyData = function(context) {
+	var data = {
+		type: "html.tbody", 
+		context: context,
+		children: []
+	};
+	return data;
+};
 
+createTableColGroupData = function(context) {
+	var data = {
+		type: "html.colgroup", 
+		context: context,
+		children: []
+	};
+	return data;
+};
+
+createTableColData = function(context) {
+	var data = {
+		type: "html.col", 
+		context: context
+	};
+	return data;
+};
+
+createTableRowData = function(context) {
+	var data = {
+		type: "html.tr", 
+		context: context,
+		children: []
+	};
+	return data;
+};
+
+createTableCellData = function(context) {
+	var data = {
+		type: "html.td", 
+		context: context,
+		children: "&#8288;"
+	};
+	return data;
+};
+
+createTableHeaderData = function(context) {
+	var data = {
+		type: "html.th", 
+		context: context,
+		children: "&#8288;"
+	};
+	return data;
+};
+
+var TableMatrix = declare(null, {
+
+	table: null, //the <table>
 	tbody: null, //the <tbody>
 	colgroup: null, // the <colgroup>
 	cols: null, // array of cols (<col>)
@@ -16,7 +70,7 @@ return declare(null, {
 		var table = undefined;
 		while(node){
 			if(node.nodeType === 1 && node.nodeName.toLowerCase() == "table"){
-				table = node;
+				table = this.table = node;
 				break;
 			}
 			node = node.parentNode;
@@ -87,6 +141,17 @@ return declare(null, {
 		}
 	},
 
+	getNumRows: function() {
+		return this.rows.length;
+	},
+	
+	getNumCols: function() {
+		if (this.cells.length) {
+			return this.cells[0].length;
+		}
+		return 0;
+	},
+	
 	getCell: function(r, c){
 		return this.cells[r][c];
 	},
@@ -190,8 +255,38 @@ return declare(null, {
 		}
 
 		return returnBox;
+	},
+	
+	isFirstRowHeader: function() {
+		var returnVal = false;
+		if (this.rows.length > 0) {
+			var cols = this.cells[0];
+			dojo.some(cols, function(col) {
+				if (col.nodeName.toLowerCase() === "th") {
+					//We found a TH, so assume first row is header until find a TD
+					returnVal = true;
+				} else {
+					//We found a TD, so our result is false
+					returnVal = false;
+					
+					//break out of loop
+					return true;
+				}
+			});
+		} 
+		return returnVal;
 	}
-
 });
+
+//Make available some "static" functions
+TableMatrix.createTableBodyData = createTableBodyData;
+TableMatrix.createTableColGroupData = createTableColGroupData;
+TableMatrix.createTableColData = createTableColData ;
+TableMatrix.createTableRowData = createTableRowData;
+TableMatrix.createTableCellData = createTableCellData;
+TableMatrix.createTableHeaderData = createTableHeaderData;
+
+return TableMatrix;
+
 });
  

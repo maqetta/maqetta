@@ -92,6 +92,7 @@ _dijit: function(node) {
 	return win.dijit || dijit;
 },
 
+//Turns text into an an array of style values
 parseStyleValues: function(text) {
 	var values = [];
 	if(text){
@@ -109,13 +110,49 @@ parseStyleValues: function(text) {
 	return values;
 },
 
-getStyleString: function(style) {
-	var styleStr = '';
-	for (var p in style){
-		if (style[p]){
-			styleStr = styleStr + p +':' + style[p] + ';';
-		}
+//Looks for a particular property within styleArray
+retrieveStyleProperty: function(styleArray, propName, defaultValue){
+	var propValue = defaultValue;
+	if(styleArray) {
+		dojo.some(styleArray, function(o){
+			if(o.hasOwnProperty(propName)){
+				propValue = o[propName];
+				return true;
+			}
+		});
 	}
+	return propValue;
+},
+
+//sets value of a particular property in styleArray (or adds if property not found)
+setStyleProperty: function(styleArray, propName, value){
+	var modifiedProperty = false;
+	if(styleArray) {
+		dojo.some(styleArray, function(o){
+			if(o.hasOwnProperty(propName)){
+				o[propName] = value;
+				modifiedProperty = true;
+				return true;
+			}
+		});
+	}
+	if (!modifiedProperty) {
+		var o = {};
+		o[propName] = value;
+		styleArray.push(o);
+	}
+},
+
+//turn styleArray back into string
+getStyleString: function(styleArray) {
+	var styleStr = "";
+	dojo.forEach(styleArray, function(style) {
+		for (var p in style){
+			if (style[p]){
+				styleStr = styleStr + p +':' + style[p] + ';';
+			}
+		}
+	});
 	return styleStr;
 },
 

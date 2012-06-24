@@ -1,0 +1,92 @@
+<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" 
+	style="width:{width}; height:{height}" liveSplitters="false" id="borderContainer">
+	
+		<!--Center region -->
+		<div dojoType="dijit.layout.ContentPane" region="center" class="tableInputDialogPropertiesRegion">
+			<table width="100%">
+				<tr class="tableInputDialogHeaderRow">
+					<td class="tableInputDialogHeaderCell">{propertiesHeader}</td>
+				</tr>
+				<tr>
+					<table width="100%" cellspacing="5">
+						<colgroup>
+							<col style="width:40%;"></col>
+							<col style="width:60%;"></col>
+						</colgroup>
+						<tr>
+							<td class="tableInputDialogFieldLabel"><label for="tableInputNumRows">{numRows}</label></td>
+							<td>
+								<input id="tableInputNumRows" data-dojo-type="dijit.form.NumberSpinner" value="2" class="tableInputDialogSpinner"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tableInputDialogFieldLabel"><label for="tableInputNumCols">{numCols}</label></td>
+							<td>
+								<input id="tableInputNumCols" data-dojo-type="dijit.form.NumberSpinner" value="2" class="tableInputDialogSpinner"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tableInputDialogFieldLabel"><label for="tableInputCellpadding">{cellpadding}</label></td>
+							<td>
+								<input id="tableInputCellpadding" data-dojo-type="dijit.form.NumberSpinner" value="0" class="tableInputDialogSpinner"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tableInputDialogFieldLabel"><label for="tableInputCellspacing">{cellspacing}</label></td>
+							<td>
+								<input id="tableInputCellspacing" data-dojo-type="dijit.form.NumberSpinner" value="0" class="tableInputDialogSpinner"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tableInputDialogFieldLabel"><label for="tableInputBorder">{border}</label></td>
+							<td>
+								<input id="tableInputBorder" data-dojo-type="dijit.form.NumberSpinner" value="0" class="tableInputDialogSpinner"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="tableInputDialogFieldLabel"><label for="tableInputTableLayout">{tableLayout}</label></td>
+							<td>
+								<select id="tableInputTableLayout" data-dojo-type="dijit.form.Select" type="text" value="auto">
+									<option value="auto" selected="selected">auto</option>
+								   	<option value="fixed">fixed</option>
+								   	<option value="inherit">inherit</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="tableInputDialogFieldLabel"><label for="tableInputFirstRowHeader">{firstRowHeader}</label></td>
+							<td>
+								<input id="tableInputFirstRowHeader" type="checkbox" data-dojo-type="dijit.form.CheckBox"></input>
+							</td>
+						</tr>
+					</table>
+				</tr>
+			</table>
+        </div>
+		
+        <!--Preview area -- "trailing" region -->
+		<div dojoType="dijit.layout.ContentPane" id="tableInputPreviewRegion" region="trailing" class="tableInputDialogPreviewRegion" >
+			<table width="100%">
+				<tr class="tableInputDialogHeaderRow">
+					<td class="tableInputDialogHeaderCell">{preview}</td>
+				</tr>
+				<!--  child rows for rules and rule labels added dynamically -->
+				<tr>
+					<td>
+						<div dojoType="dijit.layout.ContentPane" id="tableInputPreviewArea" class="tableInputDialogPreviewArea"> 
+					</td>
+				</tr>
+			</table>
+      	</div>
+        
+        <!--OK/Cancel button area on bottom -->
+		<div dojoType="dijit.layout.LayoutContainer" style="height: 4em;" region="bottom">
+			<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 40%"></div>
+			<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px">
+				<button dojoType="dijit.form.Button" type="button" id="tableInputOkButton" >{buttonOk}</button>
+				<button dojoType="dijit.form.Button" type="button" id="tableInputCancelButton">{buttonCancel}</button>
+			<div dojoType="dijit.layout.ContentPane" layoutAlign="right" style="width: 40%"></div>
+			</div>
+		</div>
+
+</div>

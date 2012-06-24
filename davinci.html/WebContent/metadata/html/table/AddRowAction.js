@@ -66,7 +66,7 @@ return declare(_TableAction, {
 		}
 
 		var command = new CompoundCommand();
-		var data = {type: "html.tr", children: [], context: context};
+		var data = TableMatrix.createTableRowData(context);
 		for(var c = 0; c < cols.length; c++){
 			var cell = cols[c];
 			// check is spanning to the neighbor row (e.g., next/prev row)
@@ -76,7 +76,7 @@ return declare(_TableAction, {
 				command.add(new ModifyCommand(widget, properties));
 				c += (matrix.getColSpan(cell) - 1); // skip columns covered by this cell
 			}else{
-				data.children.push(this._createTableCellData(context));
+				data.children.push(TableMatrix.createTableCellData(context));
 			}
 		}
 		var parent = Widget.byNode(rows[r].parentNode);

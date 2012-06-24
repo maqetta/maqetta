@@ -34,7 +34,7 @@ return declare(_TableAction, {
 		var rs = matrix.getRowSpan(sel);
 
 		var command = new CompoundCommand();
-		var data = this._createTableCellData();
+		var data = TableMatrix.createTableCellData();
 		if(cs > 1){
 			data.properties = {colspan: cs};
 		}
@@ -49,7 +49,7 @@ return declare(_TableAction, {
 			command.add(new AddCommand(data, parent, next));
 		}else{
 			// add a new row
-			data = {type: "html.tr", children: [data]};
+			data = TableMatrix.createTableRowData();
 			var parent = Widget.byNode(rows[pos.r].parentNode);
 			var next = (pos.r + rs < rows.length ? Widget.byNode(rows[pos.r + rs]) : undefined);
 			command.add(new AddCommand(data, parent, next));

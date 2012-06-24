@@ -16,6 +16,12 @@
 				"id": "davinci.ve.cutCopyPaste",
 		      	"visible": true,
 	           	"actions": [
+	           		{
+	                    iconClass: "editActionIcon",
+	                    label: "Select table",
+	                    action: "./html/table/SelectTableAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Select column",
@@ -532,7 +538,8 @@
 		                }
 		            ],
 		            "initialSize": "auto",
-		            "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr, html.caption"
+		            "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr, html.caption, html.colgroup",
+		            "inlineEdit": "./html/table/TableInput"
 		        },
 		        {
 		            "name": "<tbody>",

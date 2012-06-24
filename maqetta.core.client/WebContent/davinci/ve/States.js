@@ -15,8 +15,6 @@ var veStates = declare(maqettaStates, {
 	 * Called indirectly when the current state changes (via a setState call)
 	 * from code that listens to event /maqetta/appstates/state/changed
 	 * @param {Element} node
-//FIXME: OLD LOGIC	 * @param {string} oldState
-//FIXME: OLD LOGIC	 * @param {string} newState
 	 * @param {[object]} statesArray  
 	 *    Array of "state containers" that apply to this node,
 	 *    with furthest ancestor at position 0 and nearest at position length-1.
@@ -25,32 +23,11 @@ var veStates = declare(maqettaStates, {
 	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
-	_update: function(node, statesArray /*FIXME: oldState, newState*/ ) {
-/*FIXME: delete this	
-		node = this._getWidgetNode(node);
-*/
+	_update: function(node, statesArray) {
 		if (!node || !node._dvWidget || (!node._maqAppStates && node._maqDeltas)){
 			return;
 		}
 		var widget = node._dvWidget;
-/*FIXME: OLD LOGIC
-		var styleArray = this.getStyle(node, newState);
-
-		var styleValuesAllStates = widget.getStyleValuesAllStates();
-		var stateIndex;
-		if(!newState || newState === 'Normal'){
-			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
-			stateIndex = 'undefined';
-		}else{
-			stateIndex = newState;
-		}
-		if(styleValuesAllStates[stateIndex]){
-			styleValuesAllStates[stateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[stateIndex], styleArray);
-		}else{
-			styleValuesAllStates[stateIndex] = styleArray;
-		}
-		widget.setStyleValuesAllStates(styleValuesAllStates);
-*/
 		this._refresh(widget);
 //FIXME: Generalize beyond BODY?
 		//var body = node.ownerDocument.body;
@@ -102,79 +79,56 @@ var veStates = declare(maqettaStates, {
 	},
 	
 	normalize: function(type, node, name, value) {
-        switch(type) {
-		    case "style":
-/*FIXME: OLD LOGIC
-//FIXME: getState(node)
-	            var state = davinci.ve.states.getState();
-	            if (state) {
-*/
-					var currentStatesList = this.getStatesListCurrent(node);
-					for(var i=0; i<currentStatesList.length; i++){
-						currentStatesList[i] = 'Normal';
+		switch(type) {
+			case "style":
+				var currentStatesList = this.getStatesListCurrent(node);
+				for(var i=0; i<currentStatesList.length; i++){
+					currentStatesList[i] = 'Normal';
+				}
+				var normalValueArray = this.getStyle(node, currentStatesList, name);
+				if (normalValueArray) {
+					for(var i=0; i<normalValueArray.length; i++){
+						if(normalValueArray[i][name]){
+							value = normalValueArray[i][name];
+						}
 					}
-					var normalValueArray = this.getStyle(node, currentStatesList, name);
-/*FIXME: Old logic
-	                var normalValueArray = this.getStyle(node, undefined, name);
-*/
-	                if (normalValueArray) {
-		                for(var i=0; i<normalValueArray.length; i++){
-		                	if(normalValueArray[i][name]){
-		                		value = normalValueArray[i][name];
-		                	}
-		                }
-	                }
-/*
-	            }
-*/
-	            break;
-        }
-        return value;
+				}
+				break;
+		}
+		return value;
 	},
 	
 	normalizeArray: function(type, node, name, valueArray) {
 		var newValueArray = dojo.clone(valueArray);
 		switch(type) {
-		    case "style":
-
-/*FIXME: OLD LOGIC
-//FIXME: getState(node)
-	            var state = davinci.ve.states.getState();
-	            if (state) {
-*/
-					var currentStatesList = this.getStatesListCurrent(node);
-					for(var i=0; i<currentStatesList.length; i++){
-						currentStatesList[i] = 'Normal';
+			case "style":
+				var currentStatesList = this.getStatesListCurrent(node);
+				for(var i=0; i<currentStatesList.length; i++){
+					currentStatesList[i] = 'Normal';
+				}
+				var normalValueArray = this.getStyle(node, currentStatesList, name);
+				if (normalValueArray) {
+					// Remove all entries from valueArray that are in normalValueArray
+					for(var i=0; i<normalValueArray.length; i++){
+					var nItem = normalValueArray[i];
+					for(var nProp in nItem){	// should be only one property 
+						for(var j=newValueArray.length-1; j>=0; j--){
+							var vItem = newValueArray[j];
+							for(var vProp in vItem){	// should be only one property
+								if(vProp == nProp){
+									newValueArray.splice(j, 1);
+									break;
+								}
+							}
+						}
 					}
-					var normalValueArray = this.getStyle(node, currentStatesList, name);
-/*FIXME: Old logic
-	                var normalValueArray = this.getStyle(node, undefined, name);
-*/
-	                if (normalValueArray) {
-	                	// Remove all entries from valueArray that are in normalValueArray
-		                for(var i=0; i<normalValueArray.length; i++){
-		                	var nItem = normalValueArray[i];
-		                	for(var nProp in nItem){	// should be only one property 
-		                		for(var j=newValueArray.length-1; j>=0; j--){
-		                			var vItem = newValueArray[j];
-		                			for(var vProp in vItem){	// should be only one property
-		                				if(vProp == nProp){
-		                					newValueArray.splice(j, 1);
-		                					break;
-		                				}
-		                			}
-		                		}
-		                	}
-		                }
-		                // Append values from normalValueArray
-		                newValueArray = newValueArray.concat(normalValueArray);
-	                }
-/*
-	            }
-*/
-	            break;
-        }
-        return newValueArray;
+				}
+				// Append values from normalValueArray
+				newValueArray = newValueArray.concat(normalValueArray);
+				}
+				break;
+		}
+		return newValueArray;
 	},
 	
 	getEditor: function() {
@@ -223,17 +177,6 @@ var veStates = declare(maqettaStates, {
 		}
 
 	},
-
-/*FIXME: Delete this code
-//FIXME: Why not use the one from AppStates.js?
-	_getWidgetNode: function(node) {
-		if (!node) {
-			var doc = this.getDocument();
-			node = doc && doc.body;
-		}
-		return node;
-	},
-*/
 	
 //FIXME: Need to deal with recursive state containers
 	// Application "state" has been removed from the document
@@ -314,8 +257,7 @@ var veStates = declare(maqettaStates, {
 			state = undefined;
 		}
 		return this._getStateIndex(state);
-	}
-	,
+	},
 
 	initialize: function() {
 	
@@ -341,9 +283,6 @@ var veStates = declare(maqettaStates, {
 					}
 					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.statesContainerNode);
 					this._update(child, statesArray);
-/*FIXME: OLD LOGIC
-					this._update(child, e.newState);
-*/
 				}
 				dojo.publish("/maqetta/appstates/state/changed/end", [e]);
 
@@ -382,9 +321,6 @@ var veStates = declare(maqettaStates, {
 					var stateContainerNode = this.findStateContainer(e.node, e.state);
 					var statesArray = this.getStatesArray(e.node, e.state, e.state, stateContainerNode);
 					this._update(e.node, statesArray);
-/*FIXME: old logic
-					this._update(e.node, e.state, containerState);
-*/
 				}
 			}));
 			
@@ -395,9 +331,6 @@ var veStates = declare(maqettaStates, {
 					var stateContainerNode = this.findStateContainer(newWidget.domNode, containerState);
 					var statesArray = this.getStatesArray(newWidget.domNode, containerState, containerState, stateContainerNode);
 					this._update(newWidget.domNode, statesArray);
-/*FIXME: old logic
-					this._update(newWidget.domNode, containerState, undefined);		
-*/
 				}
 			}));
 			

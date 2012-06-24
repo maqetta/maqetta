@@ -1201,7 +1201,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var states = {},
 		    containerNode = this.getContainerNode();
 
-//FIXME: Do we need to put states onto all state containers?
 		if (data.maqAppStates) {
 			states.body = data.maqAppStates;
 		}
@@ -1377,45 +1376,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._attachChildren(this.rootNode);
 	},
 
-	_attachChildren: function (containerNode)
-	{
+	_attachChildren: function (containerNode){
 		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
-		
-/*FIXME: doesn't seem like states logic below does anything.
-		var currentStateCache = [];
-		var rootWidget = containerNode._dvWidget;
-		rootWidget._srcElement.visit({ visit: function(element){
-			if (element.elementType=="HTMLElement") {
-				var stateSrc=element.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
-				if (stateSrc && stateSrc.length) {
-					var id=element.getAttribute("id");
-					var widget;
-					if (id){
-					  widget=Widget.byId(id);
-					}else{
-						if (element==rootWidget._srcElement){
-							widget=rootWidget;
-						}
-					}
-					var states = davinci.states.deserialize(stateSrc);
-
-					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-					
-					var state = davinci.ve.states.getState();
-					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-						currentStateCache.push({ node: widget.domNode, state: state});
-					}
-				}
-			}
-		}});
-*/
-		/*
-		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
-		for (var i in currentStateCache) {
-			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.node, item.state, true);
-		}
-		*/
 	},
 	
 	/**
@@ -1656,9 +1618,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(statesAttributes.maqDeltas){
 				cache[tempClass].maqDeltas = statesAttributes.maqDeltas;
 			}
-/*FIXME: OLD LOGIC
-			cache[tempClass].states = states;
-*/
 			if(node.style){
 				cache[tempClass].style = node.style.cssText;
 			}else{
@@ -1761,20 +1720,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				davinci.states.transferElementStyle(node, cache[id].style);
 			}
 			
-			/*
-			var state = davinci.ve.states.getState(widget.domNode);
-			if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-				currentStateCache.push({ node: widget.domNode, state: state});
-			}
-			*/
 		}
-		/*
-		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
-		for (var i in currentStateCache) {
-			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.node, item.state, true);
-		}
-		*/
 		// Remove any application states information that are defined on particular widgets
 		// for all states that aren't in the master list of application states.
 		// (This is to clean up after bugs found in older releases)
@@ -3342,36 +3288,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
 		}
 	},
-/*FIXME: OLD LOGIC
-	getCurrentScenes: function(){
-		var a = [];
-		for(var id in this.sceneManagers){
-			var sm = this.sceneManagers[id];
-			var sceneId = sm.getCurrentScene ? sm.getCurrentScene() : null;
-			if(sceneId){
-				a.push({sm:sm, sceneId:sceneId});
-			}
-		}
-		return a;
-	},
-*/
 
-//FIXME: Yikes. May need to make AppStates into a scene manager
 	/**
-	 * Returns an array holding the set of currently selected application states and (mobile) scenes
-	 * @return {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
-	 *                   where sm is undefined or null for application states
+	 * Returns an object holding the set of currently selected application states and (mobile) scenes
+	 * @return {object}  { statesInfo:statesInfo, scenesInfo:scenesInfo }
 	 */
-/*FIXME: OLD LOGIC
-	getStatesScenes: function() {
-		var a = this.getCurrentScenes();
-//FIXME: Yikes. getState(node)?
-//FIXME: This needs to take into account nested state containers
-		var state = davinci.ve.states.getState(this.rootNode);
-		a.push({sceneId:state});
-		return a;
-	},
-*/
 	getStatesScenes: function() {
 		var allStateContainers = States.getAllStateContainers(this.rootNode);
 		var statesInfo = [];
@@ -3406,23 +3327,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 	/**
 	 * Sets the current scene(s) and/or current application state
-	 * @param {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
-	 *                   where sm is undefined or null for application states
+	 * @param {object}  object of form { statesInfo:statesInfo, scenesInfo:scenesInfo }
 	 */
-/*FIXME: OLD LOGIC
-	setStatesScenes: function(arr) {
-		for(var i=0; i<arr.length; i++){
-			var sm = arr[i].sm;
-			var sceneId = arr[i].sceneId;
-			if(sm){
-				sm.selectScene({sceneId:sceneId});
-			}else{
-//FIXME: Yikes. setState(node)?
-				davinci.ve.states.setState(sceneId);
-			}
-		}
-	},
-*/
 	setStatesScenes: function(statesScenes) {
 		var statesInfo = statesScenes.statesInfo;
 		if(statesInfo){

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="copyright" content="Copyright (c) 2010,2012 IBM Corporation and others.">
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/landing.css" />
+<script src="../requirejs/require.js"></script>
+<script type="text/javascript">
+/*global require*/
+require({
+  baseUrl: '..',
+
+  // set the paths to our library packages
+  packages: [
+    {
+      name: 'dojo',
+      location: 'org.dojotoolkit/dojo',
+      main: 'lib/main-browser',
+      lib: '.'
+    },
+    {
+      name: 'dijit',
+      location: 'org.dojotoolkit/dijit',
+      main: 'lib/main',
+      lib: '.'
+    },
+    {
+      name: 'dojox',
+      location: 'org.dojotoolkit/dojox',
+      main: 'lib/main',
+      lib: '.'
+    }		    
+  ],
+  paths: {
+	  text: 'requirejs/text',
+	  i18n: 'requirejs/i18n',
+	  domReady: 'requirejs/domReady'
+  }
+});
+
+require(["LoginWindow.js"]);
+</script>
+<title>Login Page</title>
+</head>
+<body style="margin: 0; padding: 0; min-height:400px;">
+	<div class="orion-banner">
+		<div class="orion-nav-bar">
+			<div class="orion-logo"></div>
+			<a class="orion-rss-link" href="http://planetorion.org/news/" target="_blank"></a>
+			<a class="orion-twitter-link" href="http://twitter.com/orionhub" target="_blank"></a>
+		</div>
+	</div>
+	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
+		<div class="orion-landing-area">
+			<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
+					<div id="errorMessage">&nbsp;</div>
+			</div>
+
+			<div class="orion-welcome-area">
+				<div class="orion-slogan">
+					<div class="orion-slogan-highlight">Tools for the web</div>
+					<div class="orion-slogan-lowlight">on the web</div>
+				</div>
+				<!-- div class="orion-welcome-area-text">
+					<h1>Welcome to Orion</h1>
+					<div class="orion-welcome-area-text-content">Orion is a web based developer platform supporting editing, testing and deploying web applictions. Orion has built in Git support. So create an
+						account, clone a repository to OrionHub and start editing</div>
+				</div -->
+			</div>
+			<div class="orion-login" id="orionLogin">
+				<div class="orion-login-header">Log in</div>
+				<form>
+					<div class="orion-input-holder">
+						<input type="text" class="orion-text-input" name="login" id="login" placeholder="user@domain.com" title="Email" autocomplete="on" autofocus="true" spellcheck="false">
+					</div>
+					<div class="orion-input-holder">
+						<input name="password" type="password" id="password" class="orion-text-input" placeholder="password" title="Password">
+					</div>
+					<div class="orion-login-button-holder">
+						<input type="button" name="password" id="loginButton" class="orion-login-button" value="Sign in" tabindex="0">
+					</div>
+					<div class="orion-login-forgot-holder">
+						<a id="resetUserLink" class="orion-forgot-password">Forgot password?</a>
+					</div>
+				</form>
+			</div>
+
+			<div class="orion-register" id="orionRegister">
+				<div class="orion-register-header">New to Orion?</div>
+				<form>
+					<div class="orion-login-button-holder">
+						<input id="registerButton" type="button" class="orion-register-button" value="Register" tabindex="0">
+					</div>
+				</form>
+			</div>
+
+			<div class="orion-signup" id="newUserHeaderShown" style="visibility: hidden;">
+				<div class="orion-login-header">Verify an account</div>
+				<form>
+					<div class="orion-register-input-holder">
+						<input type="text" class="orion-text-input" placeholder="username" title="Email" readonly id="create_login" spellcheck="false">
+						<input type="hidden" id='loginTolken'/>
+					</div>
+					<div class="orion-register-input-holder">
+						<input type="password" class="orion-text-input" placeholder="password" title="password" autocomplete="on" id="create_password" aria-required="true">
+					</div>
+					<div class="orion-register-input-holder">
+						<input type="password" class="orion-text-input" placeholder="retype password" title="retype password" autocomplete="on" name="passwordRetype" id="create_passwordRetype" aria-required="true">
+					</div>
+					<div class="orion-login-button-holder">
+						<input id="createButton" type="button" class="orion-login-button" value="Sign up" tabindex="0">
+					</div>
+					<div style="padding-right: 5px;"></div>
+					<div class="orion-login-button-holder">
+						<input id="hideRegisterButton" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
+					</div>
+
+				</form>
+			</div>
+			
+			<div class="orion-signup" id="newUserSignup" style="visibility: hidden;">
+				<div class="orion-login-header">Create an account</div>
+				<form>
+					<div class="orion-register-input-holder">
+						<input type="text" class="orion-text-input" placeholder="user@domain.com" title="Email" autocomplete="on" autofocus="autofocus" id="signupEmail" spellcheck="false">
+					</div>
+					<div class="orion-login-button-holder">
+						<input id="signupUserButton" type="button" class="orion-login-button" value="Sign up" tabindex="0">
+					</div>
+					<div style="padding-right: 5px;"></div>
+					<div class="orion-login-button-holder">
+						<input id="hideRegisterButtonSignup" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
+					</div>
+
+				</form>
+			</div>
+			
+			<div class="orion-reset" id="orionReset" style="visibility: hidden;">
+				<div class="orion-reset-header">Reset Orion account</div>
+				<div class="orion-reset-note">Provide your username or email to reset your password.</div>
+				<form>
+					<div class="orion-reset-input-holder">
+						<input type="text" class="orion-text-input" id="reset" placeholder="username">
+					</div>
+					<div class="orion-reset-input-holder">
+						<input type="text" class="orion-text-input" id="resetEmail" placeholder="email">
+					</div>
+					<div class="orion-login-button-holder">
+						<input type="button" id="sendResetButton" class="orion-send-button" tabindex="0" value="Send">
+					</div>
+					<div class="orion-login-button-holder">
+						<input type="button" id="cancleResetButton" class="orion-cancel-button" tabindex="0" value="Cancel">
+					</div>
+				</form>
+			</div>
+
+			<div class="orion-open" id="orionOpen">
+				<!-- div class="orion-or-div">or</div><input type="submit" class="orion-google-button" value="Sign in with Google"><input type="submit" class="orion-openid-button" value="Sign in with OpenId" -->
+				<div id="openIDLogin" class="orion-open-header">Log in with:</div>
+				<div class="orion-open-images">
+					<a id="googleLoginLink" class="loginWindow googleIcon" aria-labelledby="openIDLogin googleLogin"> 
+						<div id="googleLogin" class="googleIcon" alt="Google" title="Google"></div>
+					</a> 
+					<a id="yahooLoginLink" class="loginWindow" aria-labelledby="openIDLogin yahooLogin"> 
+						<div id="yahooLogin" class="yahooIcon" alt="Yahoo!" title="Yahoo!"></div> 
+					</a> 
+					<a id="myopenidLoginLink" class="loginWindow" aria-labelledby="openIDLogin myopenidLogin"> 
+						<div id="myopenidLogin" class="openIdIcon" alt="myOpenID" title="myOpenID"></div> 
+					</a>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+
+<plugin>
+     <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
+        <!-- override the orion login/logoff pages -->
+       
+        <resource alias="/mixloginstatic/LoginWindow.html" base-name="/WebContent/login/LoginWindow.html" />  
+        <resource alias="/mixloginstatic/LoginWindow.css" base-name="/WebContent/login/LoginWindow.css" />  
+        <resource alias="/mixloginstatic/LoginWindow.js" base-name="/WebContent/login/LoginWindow.js" />  
+       
+     </extension>
+	<extension point="org.eclipse.equinox.http.registry.filters">
+      <filter
+            alias="/users"
+            class="maqetta.server.orion.hosted.RegistrationFilter">
+      </filter>
+    </extension>
+    <extension point="maqetta.core.server.command">
+            
+         <command path="register" noLogin="true" 
+               class="maqetta.server.orion.hosted.command.Register" />
+    </extension>
+</plugin>

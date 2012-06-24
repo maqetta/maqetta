@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>maqetta.orion.hosted</name>
-	<comment></comment>
+	<name>maqetta.server.orion.hosted</name>
+		<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>

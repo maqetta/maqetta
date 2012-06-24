@@ -1,22 +1,16 @@
-package maqetta.server.orion.command;
+package maqetta.server.orion.hosted.command;
 
 import java.io.IOException;
 import java.util.Random;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import maqetta.server.orion.MaqettaOrionServerConstants;
 
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.Command;
-import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class Register  extends Command {
 

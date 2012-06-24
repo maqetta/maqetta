@@ -263,16 +263,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateList: function() {
-/*FIXME: OLD LOGIC
-		var allStateContainers = States.getAllStateContainers(this._getRootNode());
-*/
 		var storedScenes = this._getScenes();
-/*FIXME: old logic
-		var latestStates = States.getStates(this._getRootNode(), true), 
-			storedScenes = this._getScenes();
-		if(!this._editor || !latestStates || !storedScenes){
-		if(!this._editor || !allStateContainers || !storedScenes){
-*/
 		if(!this._editor || !storedScenes){
 			return;
 		}
@@ -284,28 +275,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
 		// and then compare the two to see if there are any changes
-/*
-		var fileName;
-		if(this._editor && this._editor.getFileNameToDisplay){
-			fileName = this._editor.getFileNameToDisplay();
-		}else{
-			fileName = (this._editor && this._editor.fileName) ? this._editor.fileName : 'file';
-		}
-*/
-//FIXME: Root should be BODY, not file
-/*FIXME: OLD LOGIC
-		var label = WidgetUtils.getLabel(context.rootWidget);
-		var BodyNode = {name:label, type:'file', category:'file', children:[]};
-*/
-/*FIXME: OLD LOGIC
-		var appStatesCount = 0;
-		for(var s in latestStates){
-			appStatesCount++;
-		}
-*/
-/*FIXME: OLD LOGIC
-		var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', children:[]};
-*/
 		var sceneManagers = context.sceneManagers;
 		var existingItems = [];	// Used inside recurseWidget to look up into existing list of items
 		var that = this;
@@ -429,105 +398,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			this._destroyTree();
 			this._createTree(latestData);
 		}
-return;		
-		
-/*FIXME: OLD LOGIC
-		for(var state in latestStates){
-			AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState' });
-		}
-*/
-		function traverseStateContainers(stateContainer, StateContainerParentObj){
-			var stateContainerNode = stateContainer.stateContainerNode;
-			if(stateContainerNode){
-				var appstates = States.getStates(stateContainerNode);
-				if(appstates.length > 0){
-					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', stateContainerNode:stateContainerNode, children:[]};
-					for(var st=0; st<appstates.length; st++){
-						var state = appstates[st];
-						AppStatesObj.children.push({ name:state, sceneId:state, type:'AppState', stateContainerNode:stateContainerNode });
-	//FIXME: appStates needs to be on node basis?
-						appStatesCount++;
-					}
-					StateContainerParentObj.children.push(AppStatesObj);
-				}
-				if(stateContainer.children){
-					for(var ch=0; ch<stateContainer.children.length; ch++){
-//FIXME: should do a on widget instead of filename
-						var childStateContainer = stateContainer.children[ch];
-						var childStateContainerNode = childStateContainer.stateContainerNode;
-						var label = (childStateContainerNode && childStateContainerNode._dvWidget) 
-							? WidgetUtils.getLabel(childStateContainerNode._dvWidget) 
-							: '<' + childStateContainerNode.tagName.toLowerCase() + '>';
-						var o = {name:label, type:'file', category:'file', children:[]};
-						StateContainerParentObj.children.push(o);
-						traverseStateContainers(childStateContainer, o);
-					}
-				}
-			}
-		}
-//FIXME: Is this right?
-		// Pass allStateContainers[0] because there should a root state container
-		// corresponding to BODY
-		if(allStateContainers.length > 0){
-			traverseStateContainers(allStateContainers[0], BodyNode);
-		}
-		
-		var sceneManagers = context.sceneManagers;
-		// Loop through plugin scene managers, eg Dojo Mobile Views
-/*FIXME: OLD LOGIC
-		var AppStatesAddedAlready = false;
-		var hideAppStates = false;
-*/
-		for(var smIndex in sceneManagers){
-			var sm = sceneManagers[smIndex];
-			if(sm.getAllScenes && sm.name && sm.category){
-				var scenes = sm.getAllScenes();
-/*FIXME: OLD LOGIC
-				var hide = sm.hideAppStates ? sm.hideAppStates() : false;
-				// Don't show application states if SceneManager has hide flag set to true
-				// and if there is only one application state (i.e., Normal)
-				if(!AppStatesAddedAlready){
-					if(appStatesCount <= 1 && hide){
-						hideAppStates = true;
-					}else{
-//FIXME: remove comments
-						//Commented out line below is what we would do if we decided that sometimes
-						//we needed to show an extra nesting level in the Tree which showed
-						//the SceneManager containers.
-						BodyNode.children.push(AppStatesObj);
-//FIXME OLD CODE BodyNode.children = BodyNode.children.concat(AppStatesObj.children);
-						AppStatesAddedAlready = true;
-					}
-				}
-*/
-				//Commented out line below is what we would do if we decided that sometimes
-				//we needed to show an extra nesting level in the Tree which showed
-				//the SceneManager containers.
-				//	BodyNode.children.push({ name:sm.name, type:'SceneManagerRoot', category:sm.category, children:scenes});
-				BodyNode.children = BodyNode.children.concat(scenes);
-			}
-		}
-/*FIXME: OLD LOGIC
-		// If AppStates hasn't been added to store yet and wasn't rejected
-		// by one of the SceneManagers, then add in the AppStates list
-		if(!AppStatesAddedAlready && !hideAppStates){
-			//Commented out line below is what we would do if we decided that sometimes
-			//we needed to show an extra nesting level in the Tree which showed
-			//the SceneManager containers.
-			//	BodyNode.children.push(AppStatesObj);
-			BodyNode.children = BodyNode.children.concat(AppStatesObj.children);
-		}
-*/
-		
-		this._hideShowToolBar();
 
-		// If data in Tree widget is same as latest data, then just return
-		if(!this._compareStructures(latestData, storedScenes)){
-			// Destroy the old Tree widget and create a new Tree widget
-			this._destroyTree();
-			this._createTree(latestData);
-		}
-		
 	},
 	
 	/**
@@ -550,26 +421,6 @@ return;
 		if(!context || !context._statesLoaded){
 			return;
 		}
-/*FIXME: OLD LOGIC
-		var rootNode = this._getRootNode();
-		var allStateContainers_tree = States.getAllStateContainers(rootNode);
-		var allStateContainers_array = [];
-		function recurseStateContainers(stateContainer){
-			allStateContainers_array.push(stateContainer);
-			for(var i=0; i< stateContainer.children.length; i++){
-				recurseStateContainers(stateContainer.children[i]);
-			}
-		}
-		var allAppStateItems = [];
-		if(allStateContainers_tree && allStateContainers_tree.length>0){
-			recurseStateContainers(allStateContainers_tree[0]);
-			this._sceneStore.fetch({query: {type:'AppState'}, queryOptions:{deep:true}, 
-				onComplete: dojo.hitch(this, function(items, request){
-					allAppStateItems = items;
-				})
-			});
-		}
-*/
 		var allAppStateItems = [];
 		this._sceneStore.fetch({query: {type:'AppState'}, queryOptions:{deep:true}, 
 			onComplete: dojo.hitch(this, function(items, request){
@@ -577,9 +428,6 @@ return;
 			})
 		});
 		
-/*FIXME: OLD LOGIC
-		var paths = [];
-*/
 		for(var k=0; k<allAppStateItems.length; k++){
 			var appStateItem = allAppStateItems[k];
 			var sceneContainerNode = appStateItem.sceneContainerNode[0];
@@ -589,12 +437,6 @@ return;
 			}
 			var checkBoxSpan = this._findCheckBoxSpan(appStateItem);
 			if(currentState === appStateItem.sceneId[0]){
-/*FIXME OLD LOGIC
-				var path = this._getTreeSelectionPath(appStateItem);
-				if(path.length>0){
-					paths.push(path);
-				}
-*/
 				if(checkBoxSpan){
 					checkBoxSpan.style.display = '';
 				}
@@ -625,98 +467,12 @@ return;
 					var currentScene = sm.getCurrentScene(sceneContainerNode);
 					var checkBoxSpan = this._findCheckBoxSpan(sceneItem);
 					if(currentScene == sceneItem.node[0]){
-/*FIXME OLD LOGIC
-						var path = this._getTreeSelectionPath(sceneItem);
-						if(path.length>0){
-							paths.push(path);
-						}
-*/
 						if(checkBoxSpan){
 							checkBoxSpan.style.display = '';
 						}
 					}else{
 						if(checkBoxSpan){
 							checkBoxSpan.style.display = 'none';
-						}
-					}
-				}
-			}
-		}
-/*FIXME: OLD LOGIC
-		for(var smIndex in sceneManagers){
-			var sm = sceneManagers[smIndex];
-			if(sm.getCurrentScene){
-				var sceneId;
-				var candidateSceneId = sm.getCurrentScene();
-				var sceneItem = null;
-				if(candidateSceneId){
-					this._sceneStore.fetch({query: {type:sm.category, sceneId:candidateSceneId}, queryOptions:{deep:true}, 
-						onComplete: dojo.hitch(this, function(items, request){
-							if(items.length === 1){
-								sceneItem = items[0];
-							}
-						})
-					});
-					if(sceneItem){
-						var path = this._getTreeSelectionPath(sceneItem);
-						if(path.length>0){
-							paths.push(path);
-						}
-					}
-				}
-			}
-		}
-*/
-/*FIXME: OLD LOGIC
-		this._tree.set('paths', paths);
-*/
-//FIXME: Still need to deal with mobile views
-return;
-
-//FIXME: remove this._onClickHanderInProcess
-		if(!this._sceneStore /*|| this._onClickHanderInProcess*/){
-			return;
-		}
-		var sceneId;
-		
-		// First see if the current Tree is showing the current AppState.
-		// If so, update the Tree to select that AppState
-//FIXME: This needs to be updated for nested themes.
-		var currentState = States.getState(this._getRootNode());
-		if(!currentState){
-			currentState = 'Normal';
-		}
-		this._sceneStore.fetch({query: {type:'AppState', sceneId:currentState}, queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, function(items, request){
-				if(items.length === 1){
-					sceneId = items[0].sceneId[0];
-				}
-			})
-		});
-		if(sceneId){
-			this._updateSelectedScene('AppState', sceneId);
-		}else{
-			var context = this._editor.getContext();
-			var sceneManagers = context.sceneManagers;
-			
-			// Otherwise, current AppState isn't in Tree, so search through SceneManagers
-			// to look for a current scene. If one is found, select that scene in the Tree.
-			for(var smIndex in sceneManagers){
-				var sm = sceneManagers[smIndex];
-				if(sm.getCurrentScene){
-					var sceneId;
-					var candidateSceneId = sm.getCurrentScene();
-					if(candidateSceneId){
-						this._sceneStore.fetch({query: {type:sm.category, sceneId:candidateSceneId}, queryOptions:{deep:true}, 
-							onComplete: dojo.hitch(this, function(items, request){
-								if(items.length === 1){
-									sceneId = items[0].sceneId[0];
-								}
-							})
-						});
-						if(sceneId){
-							this._updateSelectedScene(sm.category, sceneId);
-							break;
 						}
 					}
 				}
@@ -879,9 +635,6 @@ return;
 		});
 		this.centerPane.domNode.appendChild(this._tree.domNode);	
 		dojo.connect(this._tree, "onClick", this, function(item){
-/*FIXME: remove this
-			this._onClickHanderInProcess = true;
-*/
 			var currentEditor = this._editor;
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
@@ -922,9 +675,6 @@ return;
 					}
 				}
 			}
-/*FIXME: remove this
-			this._onClickHanderInProcess = false;
-*/
 		});
 
 		var newItemRecursive = function(obj, parentItem){
@@ -955,6 +705,7 @@ return;
 
 //FIXME: sceneId for states might not be unique the way things are written now
 //FIXME: Need to refactor this
+//FIXME: Seems to be only used by theme editor
 	_updateSelectedScene: function(type, sceneId){
 		// This routine might be called before data structures are set up for first time
 		if(!this._sceneStore){
@@ -981,37 +732,6 @@ return;
 				})
 			});
 		}
-
-/*
-		//This block of logic is necessary if we include an extra nesting level in the tree
-		//where that extra nesting level shows a container node for each different SceneManager.
-		//Not deleting this code quite yet in case we decide sometimes we need to show that extra nesting level
-		this._sceneStore.fetch({query: {type:'SceneManagerRoot', category:sceneManager.category}, queryOptions:{deep:true}, 
-			onComplete: dojo.hitch(this, function(items, request){
-				if(items.length !== 1){
-					console.error('_sceneSelectionChanged error. type='+type);
-					return;
-				}else{
-					var item = items[0];
-					path.splice(0, 0, item.id[0]);
-				}
-			})
-		});
-*/
-
-/* Due to parentItem logic, don't seem to need this anymore
-		this._sceneStore.fetch({query: {type:'file'}, queryOptions:{}, 
-			onComplete: dojo.hitch(this, function(items, request){
-				if(items.length !== 1){
-					console.error('_sceneSelectionChanged error. file not found');
-					return;
-				}else{
-					var item = items[0];
-					path.splice(0, 0, item.id[0]);
-				}
-			})
-		});
-*/
 		path.splice(0, 0, 'StoryRoot');
 		this._tree.set('paths', [path]);
 	},
@@ -1023,41 +743,6 @@ return;
 			return;
 		}
 		var showAppStates = (this._editor.declaredClass === "davinci.ve.PageEditor");
-/*FIXME: OLD LOGIC
-		var showAppStates;	
-		if (this._editor.declaredClass !== "davinci.ve.PageEditor"){
-			showAppStates = false;
-		}else{
-			var context = this._editor.getContext();
-			if(!context || !context._statesLoaded){
-				return;
-			}
-			var latestStates = States.getStates(this._getRootNode(), true);
-			if(!latestStates){
-				return;
-			}
-			var appStatesCount = 0;
-			for(var s in latestStates){
-				appStatesCount++;
-			}
-			// Loop through plugin scene managers, eg Dojo Mobile Views
-			var sceneManagers = context.sceneManagers;
-			showAppStates = (appStatesCount > 1);	// >1 means not just Normal
-			if(!showAppStates){
-				showAppStates = true;
-				for(var smIndex in sceneManagers){
-					var sm = sceneManagers[smIndex];
-					var hide = sm.hideAppStates ? sm.hideAppStates() : false;
-					if(hide){
-						showAppStates = false;
-						break;
-					}
-				}
-			}
-		}
-*/
-
-		// This code prevents +/- icons from appearing when authoring Dojo Mobile UIs
 		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");
 		var d = dijit.byId(this.toolbarDiv.parentNode.id);
 		d.resize();

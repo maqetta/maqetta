@@ -19,15 +19,13 @@ define("dojox/lang/functional/fold", ["dojo/_base/lang", "dojo/_base/array", "do
 
 	var empty = {};
 
-/*=====
-	var df = dojox.lang.functional;
- =====*/
 	lang.mixin(df, {
 		// classic reduce-class functions
 		foldl: function(/*Array|String|Object*/ a, /*Function*/ f, /*Object*/ z, /*Object?*/ o){
-			// summary: repeatedly applies a binary function to an array from left
-			//	to right using a seed value as a starting point; returns the final
-			//	value.
+			// summary:
+			//		repeatedly applies a binary function to an array from left
+			//		to right using a seed value as a starting point; returns the final
+			//		value.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || kernel.global; f = df.lambda(f);
 			var i, n;
@@ -48,8 +46,9 @@ define("dojox/lang/functional/fold", ["dojo/_base/lang", "dojo/_base/array", "do
 			return z;	// Object
 		},
 		foldl1: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: repeatedly applies a binary function to an array from left
-			//	to right; returns the final value.
+			// summary:
+			//		repeatedly applies a binary function to an array from left
+			//		to right; returns the final value.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || kernel.global; f = df.lambda(f);
 			var z, i, n;
@@ -80,17 +79,19 @@ define("dojox/lang/functional/fold", ["dojo/_base/lang", "dojo/_base/array", "do
 			return z;	// Object
 		},
 		foldr: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
-			// summary: repeatedly applies a binary function to an array from right
-			//	to left using a seed value as a starting point; returns the final
-			//	value.
+			// summary:
+			//		repeatedly applies a binary function to an array from right
+			//		to left using a seed value as a starting point; returns the final
+			//		value.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || kernel.global; f = df.lambda(f);
 			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
 			return z;	// Object
 		},
 		foldr1: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: repeatedly applies a binary function to an array from right
-			//	to left; returns the final value.
+			// summary:
+			//		repeatedly applies a binary function to an array from right
+			//		to left; returns the final value.
 			if(typeof a == "string"){ a = a.split(""); }
 			o = o || kernel.global; f = df.lambda(f);
 			var n = a.length, z = a[n - 1], i = n - 1;
@@ -99,19 +100,22 @@ define("dojox/lang/functional/fold", ["dojo/_base/lang", "dojo/_base/array", "do
 		},
 		// JS 1.8 standard array functions, which can take a lambda as a parameter.
 		reduce: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ z){
-			// summary: apply a function simultaneously against two values of the array
-			//	(from left-to-right) as to reduce it to a single value.
+			// summary:
+			//		apply a function simultaneously against two values of the array
+			//		(from left-to-right) as to reduce it to a single value.
 			return arguments.length < 3 ? df.foldl1(a, f) : df.foldl(a, f, z);	// Object
 		},
 		reduceRight: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ z){
-			// summary: apply a function simultaneously against two values of the array
-			//	(from right-to-left) as to reduce it to a single value.
+			// summary:
+			//		apply a function simultaneously against two values of the array
+			//		(from right-to-left) as to reduce it to a single value.
 			return arguments.length < 3 ? df.foldr1(a, f) : df.foldr(a, f, z);	// Object
 		},
 		// the fold's counterpart: unfold
 		unfold: function(/*Function|String|Array*/ pr, /*Function|String|Array*/ f,
 						/*Function|String|Array*/ g, /*Object*/ z, /*Object?*/ o){
-			// summary: builds an array by unfolding a value
+			// summary:
+			//		builds an array by unfolding a value
 			o = o || kernel.global; f = df.lambda(f); g = df.lambda(g); pr = df.lambda(pr);
 			var t = [];
 			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));

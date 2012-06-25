@@ -1,9 +1,7 @@
-define("dojo/cookie", ["./_base/kernel", "./regexp"], function(dojo, regexp) {
-	// module:
-	//		dojo/cookie
-	// summary:
-	//		TODOC
+define("dojo/cookie", ["./_base/kernel", "./regexp"], function(dojo, regexp){
 
+// module:
+//		dojo/cookie
 
 /*=====
 var __cookieProps = function(){

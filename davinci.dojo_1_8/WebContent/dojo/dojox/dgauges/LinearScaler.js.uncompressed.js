@@ -1,40 +1,35 @@
 define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "dojo/Stateful"], function(lang, declare, Stateful){
-
-	/*=====
-	var Stateful = dojo.Stateful;
-	=====*/
-
 	return declare("dojox.dgauges.LinearScaler", Stateful, {
-		//	summary:
+		// summary:
 		//		The linear scaler. This scaler creates major and minor ticks regularly between 
 		//		a minimum and a maximum.
 		//		Scalers are responsible for tick generation and various data-transform operations.		
 		
-		//	minimum: Number
+		// minimum: Number
 		//		The minimum value of the scaler. Default is 0.
 		minimum: 0,
-		//	maximum: Number
+		// maximum: Number
 		//		The maximum value of the scaler. Default is 100.
 		maximum: 100,
-		//	snapInterval:
+		// snapInterval:
 		//		Specifies the increment value to be used as snap values on this scale 
 		//		during user interaction.
 		//		Default is 1.
 		snapInterval: 1,
-		//	majorTickInterval: Number
+		// majorTickInterval: Number
 		//		The interval between two major ticks.
 		majorTickInterval: NaN,
-		//	minorTickInterval: Number
+		// minorTickInterval: Number
 		//		The interval between two minor ticks.
 		minorTickInterval: NaN,
-		//	minorTicksEnabled: Boolean
+		// minorTicksEnabled: Boolean
 		//		If false, minor ticks are not generated. Default is true.
 		minorTicksEnabled: true,
-		//	majorTicks:
+		// majorTicks:
 		//		The array of generated major ticks. You should not set this
 		//		property when using the scaler.
 		majorTicks: null,
-		//	minorTicks:
+		// minorTicks:
 		//		The array of generated minor ticks. You should not set this
 		//		property when using the scaler.
 		minorTicks: null,
@@ -47,6 +42,10 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		},
 
 		_buildMinorTickItems: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var mt = this.majorTicks;
 			var minorTickCache = [];
 			if(this.maximum > this.minimum){
@@ -67,6 +66,10 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		},
 		
 		_buildMajorTickItems: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var majorTickCache = [];
 			if(this.maximum > this.minimum){
 				var majorTickCount = Math.floor((this.maximum - this.minimum) / this.getComputedMajorTickInterval()) + 1;
@@ -83,9 +86,9 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		},
 		
 		getComputedMajorTickInterval: function(){
-			//	summary:
+			// summary:
 			//		The computed or user defined major tick interval.
-			//	returns: Number
+			// returns: Number
 			//		The major tick interval used for ticks generation.
 			if(!isNaN(this.majorTickInterval)){
 				return this.majorTickInterval;
@@ -97,9 +100,9 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		},
 		
 		getComputedMinorTickInterval: function(){
-			//	summary:
+			// summary:
 			//		The computed or user defined minor tick interval.
-			//	returns: Number
+			// returns: Number
 			//		The minor tick interval used for ticks generation.
 			if(!isNaN(this.minorTickInterval)){
 				return this.minorTickInterval;
@@ -111,9 +114,9 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		},
 		
 		computeTicks: function(){
-			//	summary:
+			// summary:
 			//		Creates or re-creates the ticks for this scaler.
-			//	returns: Array
+			// returns: Array
 			//		An array containing all ticks (major then minor ticks).
 			this.majorTicks = this._buildMajorTickItems();
 			this.minorTicks = this.minorTicksEnabled ? this._buildMinorTickItems() : [];
@@ -121,11 +124,11 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		},
 		
 		positionForValue: function(value){
-			//	summary:
+			// summary:
 			//		Transforms a value into a relative position between 0 and 1.
-			//	value: Number
+			// value: Number
 			//		A value to transform.
-			//	returns: Number
+			// returns: Number
 			//		The position between 0 and 1.
 			var position;
 			if(value == null || isNaN(value) || value <= this.minimum){
@@ -141,11 +144,11 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		},
 		
 		valueForPosition: function(position){
-			//	summary:
+			// summary:
 			//		Transforms a relative position (between 0 and 1) into a value.
-			//	value: Number
+			// value: Number
 			//		A relative position to transform.
-			//	returns: Number
+			// returns: Number
 			//		The transformed value between minimum and maximum.
 			var range = Math.abs(this.minimum - this.maximum);
 			var value = this.minimum + range * position;

@@ -3,7 +3,7 @@ define("dojox/charting/axis2d/Invisible", ["dojo/_base/lang", "dojo/_base/declar
 	function(lang, declare, Base, lin, g, du){
 
 /*=====
-	dojox.charting.axis2d.__InvisibleAxisCtorArgs = function(
+	var __InvisibleAxisCtorArgs = function(
 			vertical, fixUpper, fixLower, natural, leftBottom,
 			includeZero, fixed, majorLabels, minorTicks, minorLabels, microTicks,
 			min, max, from, to, majorTickStep, minorTickStep, microTickStep){
@@ -116,9 +116,9 @@ define("dojox/charting/axis2d/Invisible", ["dojo/_base/lang", "dojo/_base/declar
 		constructor: function(chart, kwArgs){
 			// summary:
 			//		The constructor for an invisible axis.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart the axis belongs to.
-			// kwArgs: dojox.charting.axis2d.__InvisibleAxisCtorArgs?
+			// kwArgs: __InvisibleAxisCtorArgs?
 			//		Any optional keyword arguments to be used to define this axis.
 			this.opt = lang.clone(this.defaultParams);
             du.updateWithObject(this.opt, kwArgs);
@@ -132,12 +132,12 @@ define("dojox/charting/axis2d/Invisible", ["dojo/_base/lang", "dojo/_base/declar
 		clear: function(){
 			// summary:
 			//		Clear out all calculated properties on this axis;
-			// returns: dojox.charting.axis2d.Default
+			// returns: dojox/charting/axis2d/Invisible
 			//		The reference to the axis for functional chaining.
 			delete this.scaler;
 			delete this.ticks;
 			this.dirty = true;
-			return this;	//	dojox.charting.axis2d.Default
+			return this;	//	dojox/charting/axis2d/Invisible
 		},
 		initialized: function(){
 			// summary:
@@ -153,11 +153,11 @@ define("dojox/charting/axis2d/Invisible", ["dojo/_base/lang", "dojo/_base/declar
 			//		The new scale for the axis.
 			// offset: Number
 			//		The new offset for the axis.
-			// returns: dojox.charting.axis2d.Default
+			// returns: dojox/charting/axis2d/Invisible
 			//		The reference to the axis for functional chaining.
 			this.scale  = scale;
 			this.offset = offset;
-			return this.clear();	//	dojox.charting.axis2d.Default
+			return this.clear();	//	dojox/charting/axis2d/Invisible
 		},
 		getWindowScale: function(){
 			// summary:
@@ -178,7 +178,7 @@ define("dojox/charting/axis2d/Invisible", ["dojo/_base/lang", "dojo/_base/declar
 			//		The largest value represented on this axis.
 			// span: Number
 			//		The span in pixels over which axis calculations are made.
-			// returns: dojox.charting.axis2d.Default
+			// returns: dojox/charting/axis2d/Invisible
 			//		The reference to the axis for functional chaining.
 			if(this.initialized()){
 				return this;
@@ -228,7 +228,7 @@ define("dojox/charting/axis2d/Invisible", ["dojo/_base/lang", "dojo/_base/declar
 					delete this.offset;
 				}
 			}
-			return this;	//	dojox.charting.axis2d.Default
+			return this;	//	dojox/charting/axis2d/Invisible
 		},
 		getScaler: function(){
 			// summary:

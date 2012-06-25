@@ -1,8 +1,14 @@
 define("dojo/sniff", ["./has"], function(has){
 	// module:
 	//		dojo/sniff
-	// summary:
-	//		This module sets has() flags based on the current browser.
+
+	/*=====
+	return function(){
+		// summary:
+		//		This module sets has() flags based on the current browser.
+		//		It returns the has() function.
+	};
+	=====*/
 
 	if( 1 ){
 		var n = navigator,

@@ -1,4 +1,4 @@
-define("dojox/app/module/lifecycle", ["dojo/_base/declare", "dojo/_base/connect"], function(declare, connect){
+define("dojox/app/module/lifecycle", ["dojo/_base/declare", "dojo/topic"], function(declare, topic){
     return declare(null, {
     
         lifecycle: {
@@ -20,7 +20,7 @@ define("dojox/app/module/lifecycle", ["dojo/_base/declare", "dojo/_base/connect"
             
             // publish /app/stauts event.
             // application can subscribe this event to do some status change operation.
-            connect.publish("/app/status", [newStatus]);
+            topic.publish("/app/status", [newStatus]);
         }
     });
 });

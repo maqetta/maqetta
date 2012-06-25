@@ -3,13 +3,13 @@ require({cache:{
 define("dojox/widget/_CalendarYearView", [
 	"dojo/_base/declare",
 	"dojox/widget/_CalendarView",
-	"dijit/_Templated",
+	"dijit/_TemplatedMixin",
 	"dojo/date",
 	"dojo/dom-class",
 	"dojo/_base/event",
 	"dojo/text!./Calendar/CalendarYear.html"
-], function(declare, _CalendarView, _Templated, dojoDate, domClass, event, template){
-	return declare("dojox.widget._CalendarYearView", [_CalendarView, _Templated], {
+], function(declare, _CalendarView, _TemplatedMixin, dojoDate, domClass, event, template){
+	return declare("dojox.widget._CalendarYearView", [_CalendarView, _TemplatedMixin], {
 		// summary: A Calendar view listing 12 years
 
 		// templateString: String

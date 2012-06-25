@@ -21,7 +21,7 @@ define("dojox/mobile/ProgressIndicator", [
 		//		A progress indication widget.
 		// description:
 		//		ProgressIndicator is a round spinning graphical representation
-		//		that indicates the current task is on-going.
+		//		that indicates the current task is ongoing.
 
 		// interval: Number
 		//		The time interval in milliseconds for updating the spinning
@@ -38,20 +38,23 @@ define("dojox/mobile/ProgressIndicator", [
 		removeOnStop: true,
 
 		// startSpinning: Boolean
-		//		If true, call start() to run the indicator at startup.
+		//		If true, calls start() to run the indicator at startup.
 		startSpinning: false,
 
 		// center: Boolean
 		//		If true, the indicator is displayed as center aligned.
 		center: true,
 
-		// colors: Array
+		// colors: String[]
 		//		An array of indicator colors. 12 colors have to be given.
-		//		If colors are not specified, css styles
+		//		If colors are not specified, CSS styles
 		//		(mblProg0Color - mblProg11Color) are used.
 		colors: null,
 
-		/* internal properties */	
+		/* internal properties */
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.	
 		baseClass: "mblProgressIndicator",
 
 		constructor: function(){
@@ -92,7 +95,7 @@ define("dojox/mobile/ProgressIndicator", [
 
 		start: function(){
 			// summary:
-			//		Starts the ProgressIndicator spinning.
+			//		Starts the spinning of the ProgressIndicator.
 			if(this.imageNode){
 				var img = this.imageNode;
 				var l = Math.round((this.containerNode.offsetWidth - img.offsetWidth) / 2);
@@ -122,7 +125,7 @@ define("dojox/mobile/ProgressIndicator", [
 
 		stop: function(){
 			// summary:
-			//		Stops the ProgressIndicator spinning.
+			//		Stops the spinning of the ProgressIndicator.
 			if(this.timer){
 				clearInterval(this.timer);
 			}

@@ -1,20 +1,9 @@
 
-.claro .dijitSelect .dijitButtonText {
-  padding: 2px;
-}
-.claro .dijitSelect {
-  border: 1px solid #b5bcc7;
-  background-color: #ffffff;
-  border-collapse: separate;
-}
-.claro .dijitSelect .dijitButtonContents {
-  border: 0 solid #b5bcc7;
-  border-right-width: 1px;
+.claro .dijitSelect .dijitArrowButtonContainer {
+  border: 1px solid #ffffff;
 }
 .claro .dijitSelect .dijitArrowButton {
   padding: 0;
-  border: 1px solid #ffffff;
-  border-top: none;
   background-color: #efefef;
   background-image: url("../images/standardGradient.png");
   background-repeat: repeat-x;
@@ -25,14 +14,9 @@
   _background-image: none;
 }
 .claro .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
-  background-image: url("../form/images/commonFormArrows.png");
-  background-position: -35px 70%;
-  background-repeat: no-repeat;
-  width: 16px;
   height: 16px;
 }
 .claro .dijitSelectHover {
-  border: 1px solid #759dc0;
   background-color: #e5f2fe;
   background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
@@ -40,20 +24,14 @@
   background-image: -ms-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
   background-repeat: repeat-x;
 }
-.claro .dijitSelectHover .dijitButtonContents {
+.claro .dijitSelectFocused, .claro .dijitSelectHover {
   border-color: #759dc0;
 }
 .claro .dijitSelectHover .dijitArrowButton {
   background-color: #abd6ff;
 }
 .claro .dijitSelectHover .dijitArrowButton .dijitArrowButtonInner {
-  background-position: -70px 70%;
-}
-.claro .dijitSelectFocused {
-  border: 1px solid #759dc0;
-}
-.claro .dijitSelectFocused .dijitButtonContents {
-  border-color: #759dc0;
+  background-position: -70px 53%;
 }
 .claro .dijitSelectFocused .dijitArrowButton {
   background-color: #7dbefa;
@@ -64,24 +42,22 @@
   background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -ms-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   _background-image: none;
+}
+.claro .dijitSelectFocused .dijitArrowButton {
   border: none;
-  padding: 0 1px;
+  padding: 1px;
 }
 .claro .dijitSelectFocused .dijitArrowButton .dijitArrowButtonInner {
-  background-position: -70px 70%;
-  margin-bottom: 1px;
+  background-position: -70px 53%;
 }
 .claro .dijitSelectDisabled {
-  border: 1px solid #d3d3d3;
+  border-color: #d3d3d3;
   background-color: #efefef;
   background-image: none;
   color: #818181;
 }
-.claro .dijitSelectDisabled .dijitArrowButton {
-  background-color: #efefef;
-}
 .claro .dijitSelectDisabled .dijitArrowButton .dijitArrowButtonInner {
-  background-position: 0 70%;
+  background-position: 0 53%;
 }
 .claro .dijitSelectMenu td.dijitMenuItemIconCell, .claro .dijitSelectMenu td.dijitMenuArrowCell {
   

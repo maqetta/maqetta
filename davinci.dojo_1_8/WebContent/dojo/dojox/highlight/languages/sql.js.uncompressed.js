@@ -46,7 +46,8 @@ define("dojox/highlight/languages/sql", ["dojox/main", "../_base"], function(doj
 
 	var dh = dojox.highlight, dhc = dh.constants;
 	dh.languages.sql = {
-		// summary: SQL highlight definitions
+		// summary:
+		//		SQL highlight definitions
 		case_insensitive: true,
 			defaultMode: {
 				lexems: [dhc.IDENT_RE],

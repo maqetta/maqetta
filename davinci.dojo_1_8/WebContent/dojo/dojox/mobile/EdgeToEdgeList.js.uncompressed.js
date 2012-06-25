@@ -13,8 +13,8 @@ define("dojox/mobile/EdgeToEdgeList", [
 		//		An edge-to-edge layout list.
 		// description:
 		//		EdgeToEdgeList is an edge-to-edge layout list, which displays
-		//		all items in equally sized rows. Each item must be
-		//		dojox.mobile.ListItem.
+		//		all items in equally-sized rows. Each item must be a
+		//		dojox/mobile/ListItem.
 
 		buildRendering: function(){
 			this.inherited(arguments);

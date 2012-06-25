@@ -1,6 +1,7 @@
-define("dojox/av/widget/VolumeButton", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin', 'dijit/form/Button'],function(dojo, dijit){
+define("dojox/av/widget/VolumeButton", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin', 'dijit/form/Button'],	// TODO: why button??
+function(dojo, dijit, _Widget, _TemplatedMixin, Button){
 
-dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._TemplatedMixin], {
+return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		A volume widget to use with dojox.av.widget.Player
 	//
@@ -182,5 +183,4 @@ dojo.declare("dojox.av.widget.VolumeButton", [dijit._Widget, dijit._TemplatedMix
 	}
 });
 
-return dojox.av.widget.VolumeButton;
 });

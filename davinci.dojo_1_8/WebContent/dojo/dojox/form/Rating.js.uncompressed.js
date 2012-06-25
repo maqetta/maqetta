@@ -21,17 +21,18 @@ define("dojox/form/Rating", [
 
 		templateString:null,
 
-		// numStars: Integer/Float
+		// numStars: Integer|Float
 		//		The number of stars to show, default is 3.
 		numStars:3,
 
-		// value: Integer/Float
+		// value: Integer|Float
 		//		The current value of the Rating
 		value:0,
 
 		constructor:function(/*Object*/ params){
-			// Build the templateString. The number of stars is given by this.numStars,
-			// which is normally an attribute to the widget node.
+			// summary:
+			//		Build the templateString. The number of stars is given by this.numStars,
+			//		which is normally an attribute to the widget node.
 			lang.mixin(this, params);
 
 			// TODO actually "dijitInline" should be applied to the surrounding div, but FF2

@@ -5,4 +5,171 @@
 */
 
 //>>built
-define("dojo/Deferred",["./_base/lang","./promise/CancelError","./promise/Promise"],function(_1,_2,_3){"use strict";var _4=0,_5=1,_6=2;var _7="This deferred has already been fulfilled.";var _8=function(){};var _9=Object.freeze||_8;var _a=function(_b,_c,_d){for(var i=0;i<_b.length;i++){_e(_b[i],_c,_d);}};var _e=function(_f,_10,_11){var _12=_f[_10];var _13=_f.deferred;if(_12){try{var _14=_12(_11);if(_14&&typeof _14.then==="function"){_f.cancel=_14.cancel;_14.then(_15(_13,_5),_15(_13,_6),_15(_13,_4));return;}_16(_13,_5,_14);}catch(error){_16(_13,_6,error);}}else{_16(_13,_10,_11);}};var _15=function(_17,_18){return function(_19){_16(_17,_18,_19);};};var _16=function(_1a,_1b,_1c){if(!_1a.isCanceled()){switch(_1b){case _4:_1a.progress(_1c);break;case _5:_1a.resolve(_1c);break;case _6:_1a.reject(_1c);break;}}};var _1d=_1.extend(function(_1e){var _1f=this.promise=new _3();var _20,_21;var _22=false;var _23=[];this.isResolved=_1f.isResolved=function(){return _20===_5;};this.isRejected=_1f.isRejected=function(){return _20===_6;};this.isFulfilled=_1f.isFulfilled=function(){return !!_20;};this.isCanceled=_1f.isCanceled=function(){return _22;};this.progress=function(_24,_25){if(!_20){_a(_23,_4,_24);return _1f;}else{if(_25===true){throw new Error(_7);}else{return _1f;}}};this.resolve=function(_26,_27){if(!_20){_a(_23,_20=_5,_21=_26);_23=null;return _1f;}else{if(_27===true){throw new Error(_7);}else{return _1f;}}};this.reject=function(_28,_29){if(!_20){_a(_23,_20=_6,_21=_28);_23=null;return _1f;}else{if(_29===true){throw new Error(_7);}else{return _1f;}}};this.then=_1f.then=function(_2a,_2b,_2c){var _2d=[_2c,_2a,_2b];_2d.cancel=_1f.cancel;_2d.deferred=new _1d(function(_2e){return _2d.cancel&&_2d.cancel(_2e);});if(_20&&!_23){_e(_2d,_20,_21);}else{_23.push(_2d);}return _2d.deferred.promise;};this.cancel=_1f.cancel=function(_2f,_30){if(!_20){if(_1e){var _31=_1e(_2f);_2f=typeof _31==="undefined"?_2f:_31;}_22=true;if(!_20){if(typeof _2f==="undefined"){_2f=new _2();}_a(_23,_20=_6,_21=_2f);_23=null;return _2f;}else{if(_20===_6&&_21===_2f){return _2f;}}}else{if(_30===true){throw new Error(_7);}}};_9(_1f);},{promise:null,resolve:_8,reject:_8,progress:_8,then:_8,cancel:_8,isResolved:_8,isRejected:_8,isFulfilled:_8,isCanceled:_8});return _1d;});
+define("dojo/Deferred",["./has","./_base/lang","./errors/CancelError","./promise/Promise"],function(_1,_2,_3,_4){
+"use strict";
+var _5=0,_6=1,_7=2;
+var _8="This deferred has already been fulfilled.";
+var _9=Object.freeze||function(){
+};
+var _a=function(_b,_c,_d,_e,_f){
+if(0){
+if(_c===_7&&_10.instrumentRejected&&_b.length===0){
+_10.instrumentRejected(_d,false,_e,_f);
+}
+}
+for(var i=0;i<_b.length;i++){
+_11(_b[i],_c,_d,_e);
+}
+};
+var _11=function(_12,_13,_14,_15){
+var _16=_12[_13];
+var _17=_12.deferred;
+if(_16){
+try{
+var _18=_16(_14);
+if(_18&&typeof _18.then==="function"){
+_12.cancel=_18.cancel;
+_18.then(_19(_17,_6),_19(_17,_7),_19(_17,_5));
+return;
+}
+_1a(_17,_6,_18);
+}
+catch(error){
+_1a(_17,_7,error);
+}
+}else{
+_1a(_17,_13,_14);
+}
+if(0){
+if(_13===_7&&_10.instrumentRejected){
+_10.instrumentRejected(_14,!!_16,_15,_17.promise);
+}
+}
+};
+var _19=function(_1b,_1c){
+return function(_1d){
+_1a(_1b,_1c,_1d);
+};
+};
+var _1a=function(_1e,_1f,_20){
+if(!_1e.isCanceled()){
+switch(_1f){
+case _5:
+_1e.progress(_20);
+break;
+case _6:
+_1e.resolve(_20);
+break;
+case _7:
+_1e.reject(_20);
+break;
+}
+}
+};
+var _10=function(_21){
+var _22=this.promise=new _4();
+var _23=this;
+var _24,_25,_26;
+var _27=false;
+var _28=[];
+if(0&&Error.captureStackTrace){
+Error.captureStackTrace(_23,_10);
+Error.captureStackTrace(_22,_10);
+}
+this.isResolved=_22.isResolved=function(){
+return _24===_6;
+};
+this.isRejected=_22.isRejected=function(){
+return _24===_7;
+};
+this.isFulfilled=_22.isFulfilled=function(){
+return !!_24;
+};
+this.isCanceled=_22.isCanceled=function(){
+return _27;
+};
+this.progress=function(_29,_2a){
+if(!_24){
+_a(_28,_5,_29,null,_23);
+return _22;
+}else{
+if(_2a===true){
+throw new Error(_8);
+}else{
+return _22;
+}
+}
+};
+this.resolve=function(_2b,_2c){
+if(!_24){
+_a(_28,_24=_6,_25=_2b,null,_23);
+_28=null;
+return _22;
+}else{
+if(_2c===true){
+throw new Error(_8);
+}else{
+return _22;
+}
+}
+};
+var _2d=this.reject=function(_2e,_2f){
+if(!_24){
+if(0&&Error.captureStackTrace){
+Error.captureStackTrace(_26={},_2d);
+}
+_a(_28,_24=_7,_25=_2e,_26,_23);
+_28=null;
+return _22;
+}else{
+if(_2f===true){
+throw new Error(_8);
+}else{
+return _22;
+}
+}
+};
+this.then=_22.then=function(_30,_31,_32){
+var _33=[_32,_30,_31];
+_33.cancel=_22.cancel;
+_33.deferred=new _10(function(_34){
+return _33.cancel&&_33.cancel(_34);
+});
+if(_24&&!_28){
+_11(_33,_24,_25,_26);
+}else{
+_28.push(_33);
+}
+return _33.deferred.promise;
+};
+this.cancel=_22.cancel=function(_35,_36){
+if(!_24){
+if(_21){
+var _37=_21(_35);
+_35=typeof _37==="undefined"?_35:_37;
+}
+_27=true;
+if(!_24){
+if(typeof _35==="undefined"){
+_35=new _3();
+}
+_2d(_35);
+return _35;
+}else{
+if(_24===_7&&_25===_35){
+return _35;
+}
+}
+}else{
+if(_36===true){
+throw new Error(_8);
+}
+}
+};
+_9(_22);
+};
+_10.prototype.toString=function(){
+return "[object Deferred]";
+};
+return _10;
+});

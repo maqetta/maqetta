@@ -107,6 +107,9 @@ define("dojox/charting/plot2d/Default", ["dojo/_base/lang", "dojo/_base/declare"
 	var DEFAULT_ANIMATION_LENGTH = 1200;	// in ms
 
 	return declare("dojox.charting.plot2d.Default", [CartesianBase, _PlotEvents], {
+		
+		// defaultParams:
+		//		The default parameters of this plot.
 		defaultParams: {
 			hAxis: "x",		// use a horizontal axis named "x"
 			vAxis: "y",		// use a vertical axis named "y"
@@ -118,6 +121,9 @@ define("dojox/charting/plot2d/Default", ["dojo/_base/lang", "dojo/_base/declare"
 			enableCache: false,
 			interpolate: false
 		},
+		
+		// optionalParams:
+		//		The optional parameters of this plot.
 		optionalParams: {
 			// theme component
 			stroke:		{},
@@ -139,13 +145,13 @@ define("dojox/charting/plot2d/Default", ["dojo/_base/lang", "dojo/_base/declare"
 		constructor: function(chart, kwArgs){
 			// summary:
 			//		Return a new plot.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this plot belongs to.
 			// kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
 			//		An optional arguments object to help define this plot.
 			this.opt = lang.clone(this.defaultParams);
-            du.updateWithObject(this.opt, kwArgs);
-            du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
+			du.updateWithObject(this.opt, kwArgs);
+			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
 			this.series = [];
 			this.hAxis = this.opt.hAxis;
 			this.vAxis = this.opt.vAxis;
@@ -202,7 +208,7 @@ define("dojox/charting/plot2d/Default", ["dojo/_base/lang", "dojo/_base/declare"
 			//		An object of the form { width, height }
 			// offsets: Object
 			//		An object of the form { l, r, t, b }
-			// returns: dojox.charting.plot2d.Default
+			// returns: dojox/charting/plot2d/Default
 			//		A reference to this plot for functional chaining.
 
 			// make sure all the series is not modified
@@ -424,7 +430,7 @@ define("dojox/charting/plot2d/Default", ["dojo/_base/lang", "dojo/_base/declare"
 				}, this.animate)).play();
 			}
 			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.Default
+			return this;	//	dojox/charting/plot2d/Default
 		}
 	});
 });

@@ -3,10 +3,6 @@ define("dojox/gauges/AnalogGauge", ["dojo/_base/kernel","dojo/_base/declare","do
 	function(dojo, declare, arr, lang, html, event, 
 			gfx, Gauge, AnalogLineIndicator, domGeometry) {
 
-/*=====
-	Gauge = dojox.gauges._Gauge;
-=====*/
-
 return declare("dojox.gauges.AnalogGauge",Gauge,{
 	// summary:
 	//		a gauge built using the dojox.gfx package.

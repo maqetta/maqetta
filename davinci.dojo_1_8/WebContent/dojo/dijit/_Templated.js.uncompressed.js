@@ -10,8 +10,6 @@ define("dijit/_Templated", [
 
 	// module:
 	//		dijit/_Templated
-	// summary:
-	//		Deprecated mixin for widgets that are instantiated from a template.
 
 	// These arguments can be specified for widgets which are used in templates.
 	// Since any widget can be specified as sub widgets in template, mix it

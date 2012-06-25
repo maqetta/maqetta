@@ -11,7 +11,7 @@ define("dojox/mdnd/adapter/DndFromDojo", ["dojo/_base/kernel",
 		"dojox.mdnd.adapter.DndFromDojo",
 		null,
 	{
-		// summary
+		// summary:
 		//		Allow communication between Dojo dnd items and DojoX D&D areas
 	
 		// dropIndicatorSize: Object

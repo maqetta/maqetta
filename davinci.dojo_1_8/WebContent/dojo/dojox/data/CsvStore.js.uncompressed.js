@@ -24,10 +24,11 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 	constructor: function(/* Object */ keywordParameters){
 		// summary:
 		//		initializer
-		// keywordParameters: {url: String}
-		// keywordParameters: {data: String}
-		// keywordParameters: {label: String} The column label for the column to use for the label returned by getLabel.
-		// keywordParameters: {identifier: String} The column label for the column to use for the identity.  Optional.  If not set, the identity is the row number.
+		// keywordParameters:
+		//		- url: String
+		//		- data: String
+		//		- label: String: The column label for the column to use for the label returned by getLabel.
+		//		- identifier: String: The column label for the column to use for the identity.  Optional.  If not set, the identity is the row number.
 		
 		this._attributes = [];			// e.g. ["Title", "Year", "Producer"]
 		this._attributeIndexes = {};	// e.g. {Title: 0, Year: 1, Producer: 2}

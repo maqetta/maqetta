@@ -20,9 +20,6 @@ define("dijit/layout/ContentPane", [
 
 // module:
 //		dijit/layout/ContentPane
-// summary:
-//		A widget containing an HTML fragment, specified inline
-//		or by uri.  Fragment may include widgets.
 
 
 return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneResizeMixin], {
@@ -47,11 +44,12 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 	//
 	// example:
 	//		Some quick samples:
-	//		To change the innerHTML: cp.set('content', '<b>new content</b>')
-	//
-	//		Or you can send it a NodeList: cp.set('content', dojo.query('div [class=selected]', userSelection))
-	//
-	//		To do an ajax update: cp.set('href', url)
+	//		To change the innerHTML:
+	// |		cp.set('content', '<b>new content</b>')`
+	//		Or you can send it a NodeList:
+	// |		cp.set('content', dojo.query('div [class=selected]', userSelection))
+	//		To do an ajax update:
+	// |		cp.set('href', url)
 
 	// href: String
 	//		The href of the content that displays now.
@@ -67,8 +65,8 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 	content: "",
 
 	// extractContent: Boolean
-	//		Extract visible content from inside of <body> .... </body>.
-	//		I.e., strip <html> and <head> (and it's contents) from the href
+	//		Extract visible content from inside of `<body> .... </body>`.
+	//		I.e., strip `<html>` and `<head>` (and it's contents) from the href
 	extractContent: false,
 
 	// parseOnLoad: Boolean
@@ -114,7 +112,7 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 	baseClass: "dijitContentPane",
 
 	/*======
-	// ioMethod: dojo.xhrGet|dojo.xhrPost
+	// ioMethod: dojo/_base/xhr.get|dojo._base/xhr.post
 	//		Function that should grab the content specified via href.
 	ioMethod: dojo.xhrGet,
 	======*/

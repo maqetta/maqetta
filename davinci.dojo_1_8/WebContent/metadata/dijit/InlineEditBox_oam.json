@@ -1,0 +1,72 @@
+{
+    "id": "http://dojotoolkit.org/dijit/InlineEditBox",
+    "name": "dijit.InlineEditBox",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/InlineEditBox",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "autoSave": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Auto Save"
+        },
+        "buttonSave": {
+            "datatype": "string",
+            "title": "Save Button Label"
+        },
+        "buttonCancel": {
+            "datatype": "string",
+            "title": "Cancel Button Label"
+        },
+        "renderAsHtml": {
+            "datatype": "boolean",
+            "title": "Render As HTML"
+        },
+        "editor": {
+            "datatype": "string",
+            "defaultValue": "dijit.form.TextBox",
+            "title": "Editor Class"
+        },
+        "editorParams": {
+            "datatype": "json",
+            "defaultValue": "\"{}\"",
+            "title": "Editor Parameters"
+        },
+        "width": {
+            "datatype": "string",
+            "defaultValue": "100%",
+            "title": "Editor Width"
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value",
+            "description": "The display value of the widget in read-only mode"
+        },
+        "_children": {
+            "datatype": "string",
+            "title": "Text"
+        },
+        "noValueIndicator": {
+            "datatype": "string",
+            "defaultValue": "<span style='font-family: wingdings; text-decoration: underline;'>&nbsp;&nbsp;&nbsp;&nbsp;&#x270d;&nbsp;&nbsp;&nbsp;&nbsp;</span>",
+            "title": "No Value Indicator"
+        },
+        "editing": {
+            "datatype": "boolean",
+            "description": "Is the node currently in edit mode?"
+        }
+    },
+    "content": "<span></span>"
+}

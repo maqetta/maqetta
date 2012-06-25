@@ -1,18 +1,18 @@
-define("dojox/app/controllers/Layout", ["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/_base/window", "dojo/_base/array", "dojo/query", "dojo/dom-style", "dojo/dom-attr", "dojo/dom-geometry", "dijit/registry", "../Controller", "../layout/utils"],
-function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registry, Controller, layoutUtils){
+define("dojox/app/controllers/Layout", ["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/on", "dojo/_base/window", "dojo/_base/array", "dojo/query", "dojo/dom-style", "dojo/dom-attr", "dojo/dom-geometry", "dijit/registry", "../Controller", "../layout/utils"],
+function(lang, declare, has, on, win, array, query, dstyle, dattr, dgeometry, registry, Controller, layoutUtils){
 	// module:
 	//		dojox/app/controllers/Layout
 	// summary:
-	//		Bind "layout" and "select" events on dojox.app application's dojo.Evented instance.
+	//		Bind "layout" and "select" events on dojox/app application's dojo/Evented instance.
 
-	return declare("dojox.application.controllers.Layout", Controller, {
+	return declare("dojox.app.controllers.Layout", Controller, {
 
 		constructor: function(app, events){
 			// summary:
 			//		bind "layout" and "select" events on application's domNode.
 			//
 			// app:
-			//		dojox.app application instance.
+			//		dojox/app application instance.
 			// events:
 			//		{event : handler}
 			this.events = {
@@ -20,8 +20,9 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 				"select": this.select
 			};
 			this.inherited(arguments);
-			// bind "resize" event to do browser's resize
-			this.bind(win.global, "resize", lang.hitch(this, this.onResize));
+
+			// bind to browsers orientationchange event for ios otherwise bind to browsers resize
+			this.bind(win.global, has("ios") ? "orientationchange" : "resize", lang.hitch(this, this.onResize));
 		},
 
 		onResize: function(){
@@ -30,7 +31,7 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 
 		layout: function(event){
 			// summary:
-			//		Response to dojox.app "layout" event.
+			//		Response to dojox/app "layout" event.
 			//
 			// example:
 			//		Use trigger() to trigger "layout" event, and this function will response the event. For example:
@@ -64,9 +65,9 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 				/*
 				 fullScreenScene=true;
 				 children=[{domNode: this.selectedChild.domNode,region: "center"}];
-				 dojo.query("> [region]",this.domNode).forEach(function(c){
+				 query("> [region]",this.domNode).forEach(function(c){
 				 if(this.selectedChild.domNode!==c.domNode){
-				 dojo.style(c.domNode,"display","none");
+				 dstyle(c.domNode,"display","none");
 				 }
 				 })
 				 */
@@ -135,11 +136,11 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 			var mb = resultSize || {};
 			lang.mixin(mb, changeSize || {});	// changeSize overrides resultSize
 			if( !("h" in mb) || !("w" in mb) ){
-				mb = lang.mixin(dgeometry.getMarginBox(node), mb);	// just use dojo.marginBox() to fill in missing values
+				mb = lang.mixin(dgeometry.getMarginBox(node), mb);	// just use dojo/_base/html.marginBox() to fill in missing values
 			}
 
 			// Compute and save the size of my border box and content box
-			// (w/out calling dojo.contentBox() since that may fail if size was recently set)
+			// (w/out calling dojo/_base/html.contentBox() since that may fail if size was recently set)
 			var cs = dstyle.getComputedStyle(node);
 			var me = dgeometry.getMarginExtents(node, cs);
 			var be = dgeometry.getBorderExtents(node, cs);
@@ -165,10 +166,10 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 
 		select: function(event){
 			// summary:
-			//		Response to dojox.app "select" event.
+			//		Response to dojox/app "select" event.
 			//
 			// example:
-			//		Use dojo.on.emit to trigger "select" event, and this function will response the event. For example:
+			//		Use dojo/on.emit to trigger "select" event, and this function will response the event. For example:
 			//		|	on.emit(this.app.evented, "select", view);
 			//
 			// event: Object

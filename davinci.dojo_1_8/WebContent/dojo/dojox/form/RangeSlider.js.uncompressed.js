@@ -291,8 +291,7 @@ define("dojox/form/RangeSlider", [
 				widget._isReversed_ = widget._isReversed();
 			}
 
-			var coordEvent = e.touches ? e.touches[0] : e; // if multitouch take first touch for coords
-			var pixelValue = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
+			var pixelValue = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
 			widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount]-pixelValue) : pixelValue, abspos[widget._pixelCount], false, true);
 		},
 
@@ -322,14 +321,12 @@ define("dojox/form/RangeSlider", [
 			if(!bar){
 				bar = widget._bar = domGeometry.position(widget.progressBar, true);
 			}
-			var coordEvent = e.touches ? e.touches[0] : e; // if multitouch take first touch for coords
 
 			if(!mouseOffset){
-				mouseOffset = widget._mouseOffset = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord] - bar[widget._startingPixelCoord];
+				mouseOffset = widget._mouseOffset = e[widget._mousePixelCoord] - bar[widget._startingPixelCoord];
 			}
 
-
-			var pixelValueMin = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord] - mouseOffset,
+			var pixelValueMin = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord] - mouseOffset,
 				pixelValueMax = pixelValueMin + bar[widget._pixelCount];
 				// we don't narrow the slider when it reaches the bumper!
 				// maybe there is a simpler way

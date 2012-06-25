@@ -22,7 +22,7 @@ var PlaceholderMenuItem = declare("dojox.widget.PlaceholderMenuItem", MenuItem, 
 		this.inherited(arguments);
 	},
 	
-	replace: function(/*dijit.MenuItem[]*/ menuItems){
+	replace: function(/*dijit/MenuItem[]*/ menuItems){
 		// summary:
 		//		replaces this menu item with the given menuItems.  The original
 		//		menu item is not actually removed from the menu - so if you want
@@ -70,7 +70,7 @@ var PlaceholderMenuItem = declare("dojox.widget.PlaceholderMenuItem", MenuItem, 
 		this._replacedWith = [];
 		this._replaced = false;
 
-		return r; // dijit.MenuItem[]
+		return r; // dijit/MenuItem[]
 	}
 });
 
@@ -101,7 +101,7 @@ lang.extend(Menu, {
 				}
 			}
 		}, this);
-		return r; // dojox.widget.PlaceholderMenuItem[]
+		return r; // dojox/widget/PlaceholderMenuItem[]
 	}
 });
 

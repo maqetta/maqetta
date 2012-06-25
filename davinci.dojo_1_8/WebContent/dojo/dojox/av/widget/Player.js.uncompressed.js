@@ -1,7 +1,8 @@
-define("dojox/av/widget/Player", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
+define("dojox/av/widget/Player", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit, _Widget, _TemplatedMixin){
 
 dojo.experimental("dojox.av.widget.Player");
-dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._TemplatedMixin], {
+
+return dojo.declare("dojox.av.widget.Player", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		A Media Player UI widget for all types of dojox.av and AIR media.
 	//
@@ -123,5 +124,4 @@ dojo.declare("dojox.av.widget.Player", [dijit._Widget, dijit._TemplatedMixin], {
 
 });
 
-return dojox.av.widget.Player;
 });

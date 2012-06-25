@@ -5,7 +5,7 @@ define("dojox/data/JsonRestStore", ["dojo/_base/lang", "dojo/_base/declare", "do
 var JsonRestStore = declare("dojox.data.JsonRestStore", ServiceStore,
 	{
 		constructor: function(options){
-			//summary:
+			// summary:
 			//		JsonRestStore is a Dojo Data store interface to JSON HTTP/REST web
 			//		storage services that support read and write through GET, PUT, POST, and DELETE.
 			// options:
@@ -129,19 +129,23 @@ var JsonRestStore = declare("dojox.data.JsonRestStore", ServiceStore,
 			this._index = rpcRest._index;
 		},
 		
-		// summary:
+		// loadReferencedSchema: Boolean
 		//		Will load any schemas referenced content-type header or in Link headers
 		loadReferencedSchema: true,
-		// summary:
+		
+		// idAsRef: Boolean
 		//		Treat objects in queries as partially loaded objects
 		idAsRef: false,
+		
 		referenceIntegrity: true,
 		target:"",
-		// summary:
+		
+		// allowNoTrailingSlash: Boolean
 		//		Allow no trailing slash on target paths. This is generally discouraged since
 		//		it creates prevents simple scalar values from being used a relative URLs.
 		//		Disabled by default.
 		allowNoTrailingSlash: false,
+		
 		//Write API Support
 		newItem: function(data, parentInfo){
 			// summary:
@@ -303,7 +307,7 @@ var JsonRestStore = declare("dojox.data.JsonRestStore", ServiceStore,
 		save: function(kwArgs){
 			// summary:
 			//		Saves the dirty data using REST Ajax methods. See dojo.data.api.Write for API.
-			//	kwArgs:
+			// kwArgs:
 			//		global:
 			//			This will cause the save to commit the dirty data for all
 			//			JsonRestStores as a single transaction.

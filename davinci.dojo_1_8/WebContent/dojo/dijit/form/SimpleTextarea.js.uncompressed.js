@@ -7,10 +7,7 @@ define("dijit/form/SimpleTextarea", [
 
 // module:
 //		dijit/form/SimpleTextarea
-// summary:
-//		A simple textarea that degrades, and responds to
-//		minimal LayoutContainer usage, and works with dijit.form.Form.
-//		Doesn't automatically size according to input, like Textarea.
+
 
 return declare("dijit.form.SimpleTextarea", TextBox, {
 	// summary:

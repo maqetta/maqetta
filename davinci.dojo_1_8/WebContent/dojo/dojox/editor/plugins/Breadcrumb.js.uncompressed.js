@@ -4,6 +4,7 @@ define("dojox/editor/plugins/Breadcrumb", [
 	"dojox",
 	"dijit/_Widget",
 	"dijit/_TemplatedMixin",
+	"dijit/_Contained",
 	"dijit/Toolbar",
 	"dijit/Menu",
 	"dijit/MenuItem",
@@ -18,13 +19,14 @@ define("dojox/editor/plugins/Breadcrumb", [
 	"dojo/i18n",
 	"dojo/string",
 	"dojo/i18n!dojox/editor/plugins/nls/Breadcrumb"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Widget, _TemplatedMixin, _Contained, Toolbar, Menu, MenuItem,
+	MenuSeparator, range, selection, _Plugin) {
 
 dojo.experimental("dojox.editor.plugins.Breadcrumb");
 
-dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._TemplatedMixin, dijit._Contained],{
+dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[_Widget, _TemplatedMixin, _Contained],{
 	// summary:
-	//		SImple internal, non-clickable, menu entry to act as a menu title bar.
+	//		Simple internal, non-clickable, menu entry to act as a menu title bar.
 	templateString: "<tr><td dojoAttachPoint=\"title\" colspan=\"4\" class=\"dijitToolbar\" style=\"font-weight: bold; padding: 3px;\"></td></tr>",
 
 	menuTitle: "",
@@ -44,13 +46,12 @@ dojo.declare("dojox.editor.plugins._BreadcrumbMenuTitle",[dijit._Widget, dijit._
 });
 
 
-dojo.declare("dojox.editor.plugins.Breadcrumb",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 	// summary:
-	//		This plugin provides Breadcrumb cabability to the editor.  When
-	//		As you move around the editor, it updates with your current indention
-	//		depth.
+	//		This plugin provides Breadcrumb capability to the editor. As you move
+	//		around the editor, it updates with your current indention depth.
 
-	//	_menu: [private]
+	// _menu: [private] Object
 	//		The popup menu that is displayed.
 	_menu: null,
 

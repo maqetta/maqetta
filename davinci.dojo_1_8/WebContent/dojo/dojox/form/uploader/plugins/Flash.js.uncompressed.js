@@ -14,9 +14,6 @@ define("dojox/form/uploader/plugins/Flash", [
 
 
 var pluginsFlash = declare("dojox.form.uploader.plugins.Flash", [], {
-
-	// Version: 1.6
-
 	// summary:
 	//		A plugin for dojox.form.Uploader that utilizes a Flash SWF for handling to upload in IE.
 	//		All other browsers will use the HTML5 plugin, unless force="flash" is used, then Flash
@@ -27,7 +24,10 @@ var pluginsFlash = declare("dojox.form.uploader.plugins.Flash", [], {
 	// description:
 	//		Inherits all properties from dojox.form.Uploader and formUploaderPluginsHTML5.
 	//		All properties and methods listed here are specific to the Flash plugin only.
+	//
+	// 		Version: 1.6
 
+	
 	// swfPath:String
 	//		Path to SWF. Can be overwritten or provided in djConfig.
 	swfPath:config.uploaderPath || require.toUrl("dojox/form/resources/uploader.swf"),
@@ -89,14 +89,14 @@ var pluginsFlash = declare("dojox.form.uploader.plugins.Flash", [], {
 	 *	   Public Events	 *
 	 *************************/
 
-	onReady: function(/*dojox.form.FileUploader*/ uploader){
+	onReady: function(/*dojox/form/FileUploader*/ uploader){
 		// summary:
 		//		Stub - Fired when embedFlash has created the
 		//		Flash object, but it has not necessarilly finished
 		//		downloading, and is ready to be communicated with.
 	},
 
-	onLoad: function(/*dojox.form.FileUploader*/ uploader){
+	onLoad: function(/*dojox/form/FileUploader*/ uploader){
 		// summary:
 		//		Stub - SWF has been downloaded 100%.
 	},

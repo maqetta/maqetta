@@ -17,10 +17,6 @@ define("dijit/form/_FormSelectWidget", [
 
 // module:
 //		dijit/form/_FormSelectWidget
-// summary:
-//		Extends _FormValueWidget in order to provide "select-specific"
-//		values - i.e., those values that are unique to <select> elements.
-
 
 /*=====
 var __SelectOption = function(){
@@ -40,10 +36,10 @@ var __SelectOption = function(){
 };
 =====*/
 
-return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
+var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 	// summary:
 	//		Extends _FormValueWidget in order to provide "select-specific"
-	//		values - i.e., those values that are unique to <select> elements.
+	//		values - i.e., those values that are unique to `<select>` elements.
 	//		This also provides the mechanism for reading the elements from
 	//		a store, if desired.
 
@@ -53,12 +49,12 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 
 	// options: __SelectOption[]
 	//		The set of options for our select item.  Roughly corresponds to
-	//		the html <option> tag.
+	//		the html `<option>` tag.
 	options: null,
 
-	// store: dojo.store
+	// store: dojo/store/api/Store
 	//		A store to use for getting our list of options - rather than reading them
-	//		from the <option> html tags.   Should support getIdentity().
+	//		from the `<option>` html tags.   Should support getIdentity().
 	//		For back-compat store can also be a dojo.data.api.Identity.
 	store: null,
 
@@ -220,15 +216,15 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		this._loadChildren();
 	},
 
-	setStore: function(/*dojo.data.api.Identity*/ store,
-						/*anything?*/ selectedValue,
-						/*Object?*/ fetchArgs){
+	setStore: function(store,
+						selectedValue,
+						fetchArgs){
 		// summary:
 		//		Sets the store you would like to use with this select widget.
 		//		The selected value is the value of the new store to set.  This
 		//		function returns the original store, in case you want to reuse
 		//		it or something.
-		// store: dojo.store
+		// store: dojo/store/api/Store
 		//		The dojo.store you would like to use - it MUST implement getIdentity()
 		//		and MAY implement observe().
 		//		For backwards-compatibility this can also be a data.data store, in which case
@@ -695,5 +691,11 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		//		from that store are available
 	}
 });
+
+/*=====
+_FormSelectWidget.__SelectOption = __SelectOption;
+=====*/
+
+return _FormSelectWidget;
 
 });

@@ -8,7 +8,7 @@ dojo.require("dojox.lang.functional.lambda");
 //	- currying and partial functions
 //	- argument pre-processing: mixer and flip
 
-// Acknoledgements:
+// Acknowledgements:
 //	- partial() is based on work by Oliver Steele
 //		(http://osteele.com/sources/javascript/functional/functional.js)
 //		which was published under MIT License
@@ -32,20 +32,23 @@ dojo.require("dojox.lang.functional.lambda");
 	dojo.mixin(df, {
 		// currying and partial functions
 		curry: function(/*Function|String|Array*/ f, /*Number?*/ arity){
-			// summary: curries a function until the arity is satisfied, at
-			//	which point it returns the calculated value.
+			// summary:
+			//		curries a function until the arity is satisfied, at
+			//		which point it returns the calculated value.
 			f = df.lambda(f);
 			arity = typeof arity == "number" ? arity : f.length;
 			return currying({func: f, arity: arity, args: []});	// Function
 		},
 		arg: {},	// marker for missing arguments
 		partial: function(/*Function|String|Array*/ f){
-			// summary: creates a function where some arguments are bound, and
-			//	some arguments (marked as dojox.lang.functional.arg) are will be
-			//	accepted by the final function in the order they are encountered.
-			// description: This method is used to produce partially bound
-			//	functions. If you want to change the order of arguments, use
-			//	dojox.lang.functional.mixer() or dojox.lang.functional.flip().
+			// summary:
+			//		creates a function where some arguments are bound, and
+			//		some arguments (marked as dojox.lang.functional.arg) are will be
+			//		accepted by the final function in the order they are encountered.
+			// description:
+			//		This method is used to produce partially bound
+			//		functions. If you want to change the order of arguments, use
+			//		dojox.lang.functional.mixer() or dojox.lang.functional.flip().
 			var a = arguments, l = a.length, args = new Array(l - 1), p = [], i = 1, t;
 			f = df.lambda(f);
 			for(; i < l; ++i){
@@ -66,9 +69,10 @@ dojo.require("dojox.lang.functional.lambda");
 		},
 		// argument pre-processing
 		mixer: function(/*Function|String|Array*/ f, /*Array*/ mix){
-			// summary: changes the order of arguments using an array of
-			//	numbers mix --- i-th argument comes from mix[i]-th place
-			//	of supplied arguments.
+			// summary:
+			//		changes the order of arguments using an array of
+			//		numbers mix --- i-th argument comes from mix[i]-th place
+			//		of supplied arguments.
 			f = df.lambda(f);
 			return function(){	// Function
 				var t = new Array(mix.length), i = 0, l = mix.length;
@@ -79,8 +83,9 @@ dojo.require("dojox.lang.functional.lambda");
 			};
 		},
 		flip: function(/*Function|String|Array*/ f){
-			// summary: changes the order of arguments by reversing their
-			//	order.
+			// summary:
+			//		changes the order of arguments by reversing their
+			//		order.
 			f = df.lambda(f);
 			return function(){	// Function
 				// reverse arguments

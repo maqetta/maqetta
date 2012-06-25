@@ -362,10 +362,11 @@ var Rearrange = declare("dojox.grid.enhanced.plugins.Rearrange", _Plugin, {
 				rowCnt = g.rowCount,
 				mapping = {},
 				obj = {idx: 0},
-				newRows = [], i,
-				emptyTarget = targetPos < 0;
-				_this = this;
-			var len = rowsToMove.length;
+				newRows = [],
+				i,
+				emptyTarget = targetPos < 0,
+				_this = this,
+				len = rowsToMove.length;
 			if(emptyTarget){
 				targetPos = 0;
 			}else{
@@ -467,7 +468,7 @@ var Rearrange = declare("dojox.grid.enhanced.plugins.Rearrange", _Plugin, {
 	_getPageInfo: function(){
 		// summary:
 		//		Find pages that contain visible rows
-		// return: Object
+		// returns: Object
 		//		{topPage: xx, bottomPage: xx, invalidPages: [xx,xx,...]}
 		var scroller = this.grid.scroller,
 			topPage = scroller.page,

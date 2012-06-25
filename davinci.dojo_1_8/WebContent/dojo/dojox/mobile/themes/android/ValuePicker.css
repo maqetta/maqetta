@@ -85,11 +85,12 @@
   width: 90%;
   height: 90%;
   margin: 5% auto;
-  font-size: 28px;
+  padding: 0;
   text-align: center;
   border-style: none;
   background-color: transparent;
+  font-size: 28px;
 }
-.mblValuePickerTimePicker .mblToolBarButton {
+.mblValuePickerTimePicker > .mblToolBarButton {
   top: 45px;
 }

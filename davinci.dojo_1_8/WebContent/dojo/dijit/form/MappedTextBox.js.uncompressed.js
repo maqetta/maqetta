@@ -6,10 +6,6 @@ define("dijit/form/MappedTextBox", [
 
 	// module:
 	//		dijit/form/MappedTextBox
-	// summary:
-	//		A dijit.form.ValidationTextBox subclass which provides a base class for widgets that have
-	//		a visible formatted display value, and a serializable
-	//		value in a hidden input field which is actually sent to the server.
 
 	return declare("dijit.form.MappedTextBox", ValidationTextBox, {
 		// summary:

@@ -14,8 +14,7 @@ define("dojo/_base/xhr", [
 	"../aspect",
 	"../request/watch",
 	"../request/xhr",
-	"../request/util",
-	"../request/notify"
+	"../request/util"
 ], function(dojo, has, require, ioq, dom, domForm, Deferred, config, json, lang, array, on, aspect, watch, _xhr, util){
 	// module:
 	//		dojo/_base/xhr
@@ -598,28 +597,36 @@ define("dojo/_base/xhr", [
 			data: ioArgs.query,
 			timeout: args.timeout,
 			sync: args.sync,
+			withCredentials: args.withCredentials,
 			ioArgs: ioArgs
 		};
 
 		dojo._ioNotifyStart(dfd);
-		rDfd = _xhr(ioArgs.url, options, true);
+		try{
+			rDfd = _xhr(ioArgs.url, options, true);
+		}catch(e){
+			// If XHR creation fails, dojo/request/xhr throws
+			// When this happens, cancel the deferred
+			dfd.cancel();
+			return dfd;
+		}
 
 		// sync ioArgs
 		dfd.ioArgs.xhr = rDfd.response.xhr;
 
-		rDfd.then(function(response){
+		rDfd.then(function(){
 			dfd.resolve(dfd);
 		}).otherwise(function(error){
 			ioArgs.error = error;
 			dfd.reject(error);
 		});
-		return dfd; // dojo.Deferred
+		return dfd; // dojo/_base/Deferred
 	};
 
 	dojo.xhrGet = function(/*dojo.__XhrArgs*/ args){
 		// summary:
 		//		Sends an HTTP GET request to the server.
-		return dojo.xhr("GET", args); // dojo.Deferred
+		return dojo.xhr("GET", args); // dojo/_base/Deferred
 	};
 
 	dojo.rawXhrPost = dojo.xhrPost = function(/*dojo.__XhrArgs*/ args){
@@ -628,7 +635,7 @@ define("dojo/_base/xhr", [
 		//		listed for the dojo.__XhrArgs type, the following property is allowed:
 		// postData:
 		//		String. Send raw data in the body of the POST request.
-		return dojo.xhr("POST", args, true); // dojo.Deferred
+		return dojo.xhr("POST", args, true); // dojo/_base/Deferred
 	};
 
 	dojo.rawXhrPut = dojo.xhrPut = function(/*dojo.__XhrArgs*/ args){
@@ -637,13 +644,13 @@ define("dojo/_base/xhr", [
 		//		listed for the dojo.__XhrArgs type, the following property is allowed:
 		// putData:
 		//		String. Send raw data in the body of the PUT request.
-		return dojo.xhr("PUT", args, true); // dojo.Deferred
+		return dojo.xhr("PUT", args, true); // dojo/_base/Deferred
 	};
 
 	dojo.xhrDelete = function(/*dojo.__XhrArgs*/ args){
 		// summary:
 		//		Sends an HTTP DELETE request to the server.
-		return dojo.xhr("DELETE", args); //dojo.Deferred
+		return dojo.xhr("DELETE", args); // dojo/_base/Deferred
 	};
 
 	/*

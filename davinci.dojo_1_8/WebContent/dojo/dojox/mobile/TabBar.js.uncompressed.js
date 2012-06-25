@@ -58,6 +58,8 @@ define("dojox/mobile/TabBar", [
 		tag: "ul",
 
 		/* internal properties */
+		// selectOne: [private] Boolean
+		//		Specifies that only one item can be selected.
 		selectOne: true,
 		baseClass: "mblTabBar",
 		_fixedButtonWidth: 76,
@@ -89,6 +91,8 @@ define("dojox/mobile/TabBar", [
 		},
 
 		reset: function(){
+			// summary:
+			//		Resets the widget to its initial state.
 			var prev = this._barType;
 			if(typeof this.barType === "object"){
 				this._barType = this.barType["*"];
@@ -169,6 +173,8 @@ define("dojox/mobile/TabBar", [
 		},
 
 		getSelectedTab: function(){
+			// summary:
+			//		Returns the first selected child.
 			return array.filter(this.getChildren(), function(w){ return w.selected; })[0];
 		},
 

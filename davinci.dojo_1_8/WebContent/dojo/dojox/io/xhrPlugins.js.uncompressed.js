@@ -7,7 +7,7 @@ define("dojox/io/xhrPlugins", ["dojo/_base/kernel", "dojo/_base/xhr", "dojo/Adap
 		return plainXhr = dojox.io.xhrPlugins.plainXhr = plainXhr || dojo._defaultXhr || xhr;
 	}
 	dojox.io.xhrPlugins.register = function(){
-		//	summary:
+		// summary:
 		// 		overrides the default xhr handler to implement a registry of
 		// 		xhr handlers
 		var plainXhr = getPlainXhr();
@@ -34,11 +34,11 @@ define("dojox/io/xhrPlugins", ["dojo/_base/kernel", "dojo/_base/xhr", "dojo/Adap
 		return registry.register.apply(registry, arguments);
 	};
 	dojox.io.xhrPlugins.addProxy = function(proxyUrl){
-		//	summary:
+		// summary:
 		//		adds a server side proxy xhr handler for cross-site URLs
-		//	proxyUrl:
+		// proxyUrl:
 		//		This is URL to send the requests to.
-		//	example:
+		// example:
 		//		Define a proxy:
 		//	|	dojox.io.xhrPlugins.addProxy("/proxy?url=");
 		// 		And then when you call:
@@ -62,17 +62,17 @@ define("dojox/io/xhrPlugins", ["dojo/_base/kernel", "dojo/_base/xhr", "dojo/Adap
 	};
 	var csXhrSupport;
 	dojox.io.xhrPlugins.addCrossSiteXhr = function(url, httpAdapter){
-		//	summary:
+		// summary:
 		// 		Adds W3C Cross site XHR or XDomainRequest handling for the given URL prefix
 		//
-		// 	url:
+		// url:
 		//		Requests that start with this URL will be considered for using
 		// 		cross-site XHR.
 		//
-		// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be
+		// httpAdapter: This allows for adapting HTTP requests that could not otherwise be
 		// 		sent with XDR, so you can use a convention for headers and PUT/DELETE methods.
 		//
-		//	description:
+		// description:
 		// 		This can be used for servers that support W3C cross-site XHR. In order for
 		// 		a server to allow a client to make cross-site XHR requests,
 		// 		it should respond with the header like:
@@ -135,7 +135,7 @@ define("dojox/io/xhrPlugins", ["dojo/_base/kernel", "dojo/_base/xhr", "dojo/Adap
 		// 		method name -> ?http-method=PUT
 		// 		Header -> http-Header-Name=header-value
 		//		X-Header -> header_name=header-value
-		//	example:
+		// example:
 		//		dojox.io.xhrPlugins.addXdr("http://somesite.com", dojox.io.xhrPlugins.fullHttpAdapter);
 		return function(method,args,hasBody){
 			var content = {};

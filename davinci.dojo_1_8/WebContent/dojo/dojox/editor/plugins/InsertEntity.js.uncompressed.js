@@ -2,8 +2,8 @@ define("dojox/editor/plugins/InsertEntity", [
 	"dojo",
 	"dijit",
 	"dojox",
-	"dijit/TooltipDialog",
 	"dijit/_editor/_Plugin",
+	"dijit/TooltipDialog",
 	"dijit/form/DropDownButton",
 	"dojo/_base/connect",
 	"dojo/_base/declare",
@@ -11,9 +11,9 @@ define("dojox/editor/plugins/InsertEntity", [
 	"dojox/html/entities",
 	"dojox/editor/plugins/EntityPalette",
 	"dojo/i18n!dojox/editor/plugins/nls/InsertEntity"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.InsertEntity",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.InsertEntity", _Plugin,{
 	// summary:
 	//		This plugin allows the user to select from standard Symbols (HTML Entities)
 	//		to insert at the current cursor position.  It binds to the key pattern:

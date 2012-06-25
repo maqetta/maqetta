@@ -1,22 +1,18 @@
 define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/_base/connect", "dojo/_base/fx", "dojox/gfx", "dojox/widget/_Invalidating", "./IndicatorBase"],
 	function(lang, declare, on, connect, fx, gfx, _Invalidating, IndicatorBase){
-
-	/*=====
-	 var _Invalidating = dojox.widget._Invalidating;
-	 =====*/
 	return declare("dojox.dgauges.ScaleIndicatorBase", IndicatorBase, {
-		//	summary:
+		// summary:
 		//		The base class for indicators that rely on a scale for their rendering.
 		//		Typically, value indicators and range indicators are subclasses of ScaleIndicatorBase.
 
-		//	summary:
+		// summary:
 		//		The scale associated with this indicator.
 		scale: null,
-		//	summary:
+		// summary:
 		//		The value of the indicator. Default is 0.
 		value: 0,
 		
-		//	interactionArea: String
+		// interactionArea: String
 		//		How to interact with the indicator using mouse or touch interactions.
 		//		Can be "indicator", "gauge", "area" or "none". The default value is "gauge".
 		//		If set to "indicator", the indicator shape reacts to mouse and touch events.
@@ -25,17 +21,17 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		//		If "none", interactions are disabled.
 		interactionArea: "gauge",
 
-		//	interactionMode: String
+		// interactionMode: String
 		//		Can be "mouse" or "touch".
 		interactionMode: "mouse",
 
-		//	animationDuration: Number
+		// animationDuration: Number
 		//		The duration of the value change animation in milliseconds. Default is 0.
 		//		The animation occurs on both user interactions and programmatic value changes.
 		//		Set this property to 0 to disable animation.
 		animationDuration: 0,
 
-		//	animationEaser: Object
+		// animationEaser: Object
 		//		The easer function of the value change animation. Default is fx._defaultEasing.
 		animationEaser: null,
 
@@ -58,7 +54,7 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		constructor: function(){
 		
 			// watches changed happening on the "value" property to call this.valueChanged() function which
-			// can be listen by user with dojo.connect
+			// can be listen by user with connect.connect
 			this.watch("value", lang.hitch(this, function(){
 				this.valueChanged(this);
 			}));
@@ -83,6 +79,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_startAnimation: function(prop, oldValue, newValue){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(this.animationDuration == 0){
 				return;
 			}
@@ -101,11 +101,19 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_updateAnimation: function(v){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this._transitionValue = v;
 			this.invalidateRendering();
 		},
 		
 		_endAnimation: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this._transitionValue = NaN; 
 			this.invalidateRendering();			
 		},
@@ -127,10 +135,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		valueChanged: function(indicator){
-			//	summary:
+			// summary:
 			//		Invoked when the value of the indicator changes.
 			//		User can connect an listener on this function: 
-			//				dojo.connect(theIndicator, "valueChanged", dojo.hitch(this, function(){
+			//				connect.connect(theIndicator, "valueChanged", lang.hitch(this, function(){
 			//					//do something
 			//				}));
 			on.emit(this, "valueChanged", {
@@ -141,6 +149,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_disconnectDownListeners: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			for(var i = 0; i < this._downListeners.length; i++){
 				connect.disconnect(this._downListeners[i]);
 			}
@@ -148,6 +160,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_disconnectMoveAndUpListeners: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			for(var i = 0; i < this._moveAndUpListeners.length; i++){
 				connect.disconnect(this._moveAndUpListeners[i]);
 			}
@@ -155,12 +171,20 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_disconnectListeners: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this._disconnectDownListeners();
 			this._disconnectMoveAndUpListeners();
 			this._disconnectCursorListeners();
 		},
 		
 		_connectCursorListeners: function(target){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var listener = target.connect("onmouseover", this, function(){
 				this.scale._gauge._setCursor("pointer");
 			});
@@ -173,6 +197,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_disconnectCursorListeners: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			for(var i = 0; i < this._cursorListeners.length; i++){
 				connect.disconnect(this._cursorListeners[i]);
 			}
@@ -180,6 +208,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 
 		_connectDownListeners: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this._disconnectDownListeners();
 			this._disconnectCursorListeners();
 			var listener = null;
@@ -225,6 +257,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_connectMoveAndUpListeners: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var listener = null;
 			var moveEventName;
 			var upEventName;
@@ -247,11 +283,19 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_onMouseDown: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this._connectMoveAndUpListeners();
 			this._startEditing();
 		},
 		
 		_onMouseMove: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this._preventAnimation = true;
 			if(this._animation){
 				this._animation.stop();
@@ -259,12 +303,20 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_onMouseUp: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this._disconnectMoveAndUpListeners();
 			this._preventAnimation = false;
 			this._endEditing();
 		},
 		
 		_startEditing: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(!this.scale || !this.scale._gauge){
 				return;
 			}else{
@@ -275,6 +327,10 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 		},
 		
 		_endEditing: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(!this.scale || !this.scale._gauge){
 				return;
 			}else{

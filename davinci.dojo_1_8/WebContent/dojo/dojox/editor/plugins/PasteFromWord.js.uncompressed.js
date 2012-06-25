@@ -2,8 +2,8 @@ define("dojox/editor/plugins/PasteFromWord", [
 	"dojo",
 	"dijit",
 	"dojox",
-	"dijit/_base/manager",
 	"dijit/_editor/_Plugin",
+	"dijit/_base/manager",
 	"dijit/_editor/RichText",
 	"dijit/form/Button",
 	"dijit/Dialog",
@@ -15,11 +15,11 @@ define("dojox/editor/plugins/PasteFromWord", [
 	"dojo/i18n!dojox/editor/plugins/nls/PasteFromWord",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!dijit/_editor/nls/commands"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.PasteFromWord", _Plugin, {
 	// summary:
-	//		This plugin provides PasteFromWord cabability to the editor.  When
+	//		This plugin provides PasteFromWord capability to the editor.  When
 	//		clicked, a dialog opens with a spartan RichText instance to paste
 	//		word content into via the keyboard commands.  The contents are
 	//		then filtered to remove word style classes and other meta-junk
@@ -78,10 +78,10 @@ dojo.declare("dojox.editor.plugins.PasteFromWord",dijit._editor._Plugin,{
 	],
 
 	_initButton: function(){
-		this._filters = this._filters.slice(0); 
-		
 		// summary:
 		//		Over-ride for creation of the save button.
+		this._filters = this._filters.slice(0); 
+			
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "PasteFromWord");
 		dojo.mixin(strings, dojo.i18n.getLocalization("dijit", "common"));
 		dojo.mixin(strings, dojo.i18n.getLocalization("dijit._editor", "commands"));

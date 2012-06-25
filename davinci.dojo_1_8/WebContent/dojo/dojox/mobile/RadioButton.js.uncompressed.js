@@ -6,12 +6,16 @@ define("dojox/mobile/RadioButton", [
 
 	return declare("dojox.mobile.RadioButton", [CheckBox, RadioButtonMixin], {
 		// summary:
-		//		A non-templated radiobutton widget that can be in two states (checked or not).
+		//		A non-templated radio button widget that can be in two states (checked or not checked).
 
-		// Override automatic assigning type --> node, it causes exception on IE8.
-		// Instead, type must be specified as this.type when the node is created, as part of the original DOM
+		// _setTypeAttr: [private] Function 
+		//		Overrides the automatic assignement of type to nodes, because it causes 
+		//		exception on IE. Instead, the type must be specified as this.type
+		//		when the node is created, as part of the original DOM.
 		_setTypeAttr: null,
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblRadioButton"
 	});
 });

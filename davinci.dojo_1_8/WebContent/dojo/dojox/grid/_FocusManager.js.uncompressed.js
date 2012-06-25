@@ -257,10 +257,10 @@ return declare("dojox.grid._FocusManager", null, {
 	colSizeAdjust: function (e, colIdx, delta){ // adjust the column specified by colIdx by the specified delta px
 		var headers = this._findHeaderCells();
 		var view = this.focusView;
-		if (!view) {
-			for (var i = 0, cView; (cView = this.grid.views.views[i]); i++) {
+		if(!view || !view.header.tableMap.map){
+			for(var i = 0, cView; (cView = this.grid.views.views[i]); i++){
 				// find first view with a tableMap in order to work with empty grid
-				if(cView.header.tableMap.map ){
+				if(cView.header.tableMap.map){
 					view=cView;
 					break;
 				}

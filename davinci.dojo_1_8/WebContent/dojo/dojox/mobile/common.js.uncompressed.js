@@ -15,10 +15,10 @@ define("dojox/mobile/common", [
 	// module:
 	//		dojox/mobile/common
 	// summary:
-	//		A common module for dojox.mobile.
+	//		A common module for dojox/mobile.
 	// description:
 	//		This module includes common utility functions that are used by
-	//		dojox.mobile widgets. Also, it provides functions that are commonly
+	//		dojox/mobile widgets. Also, it provides functions that are commonly
 	//		necessary for mobile web applications, such as the hide address bar
 	//		function.
 
@@ -35,7 +35,7 @@ define("dojox/mobile/common", [
 
 	dm.updateOrient = function(){
 		// summary:
-		//		Updates the orientation specific css classes, 'dj_portrait' and
+		//		Updates the orientation specific CSS classes, 'dj_portrait' and
 		//		'dj_landscape'.
 		var dim = dm.getScreenSize();
 		domClass.replace(win.doc.documentElement,
@@ -49,7 +49,7 @@ define("dojox/mobile/common", [
 		// summary:
 		//		Detects the screen size and determines if the screen is like
 		//		phone or like tablet. If the result is changed,
-		//		it sets either of the following css class to <html>
+		//		it sets either of the following css class to `<html>`
 		//			- 'dj_phone'
 		//			- 'dj_tablet'
 		//		and it publishes either of the following events.
@@ -73,7 +73,7 @@ define("dojox/mobile/common", [
 	};
 	dm.detectScreenSize();
 
-	// dojox.mobile.hideAddressBarWait: Number
+	// dojox/mobile.hideAddressBarWait: Number
 	//		The time in milliseconds to wait before the fail-safe hiding address
 	//		bar runs. The value must be larger than 800.
 	dm.hideAddressBarWait = typeof(config["mblHideAddressBarWait"]) === "number" ?
@@ -82,6 +82,8 @@ define("dojox/mobile/common", [
 	dm.hide_1 = function(){
 		// summary:
 		//		Internal function to hide the address bar.
+		// tags:
+		//		private
 		scrollTo(0, 1);
 		dm._hidingTimer = (dm._hidingTimer == 0) ? 200 : dm._hidingTimer * 2;
 		setTimeout(function(){ // wait for a while for "scrollTo" to finish
@@ -100,8 +102,8 @@ define("dojox/mobile/common", [
 		// summary:
 		//		Hides the address bar.
 		// description:
-		//		Tries hiding of the address bar a couple of times to do it as
-		//		quick as possible while ensuring resize is done after the hiding
+		//		Tries to hide the address bar a couple of times. The purpose is to do 
+		//		it as quick as possible while ensuring the resize is done after the hiding
 		//		finishes.
 		if(dm.disableHideAddressBar || dm._hiding){ return; }
 		dm._hiding = true;
@@ -137,20 +139,20 @@ define("dojox/mobile/common", [
 
 	dm.resizeAll = function(/*Event?*/evt, /*Widget?*/root){
 		// summary:
-		//		Call the resize() method of all the top level resizable widgets.
+		//		Calls the resize() method of all the top level resizable widgets.
 		// description:
-		//		Find all widgets that do not have a parent or the parent does not
-		//		have the resize() method, and call resize() for them.
-		//		If a widget has a parent that has resize(), call of the widget's
+		//		Finds all widgets that do not have a parent or the parent does not
+		//		have the resize() method, and calls resize() for them.
+		//		If a widget has a parent that has resize(), calling widget's
 		//		resize() is its parent's responsibility.
 		// evt:
 		//		Native event object
 		// root:
-		//		If specified, search the specified widget recursively for top level
+		//		If specified, searches the specified widget recursively for top-level
 		//		resizable widgets.
 		//		root.resize() is always called regardless of whether root is a
 		//		top level widget or not.
-		//		If omitted, search the entire page.
+		//		If omitted, searches the entire page.
 		if(dm.disableResizeAll){ return; }
 		connect.publish("/dojox/mobile/resizeAll", [evt, root]); // back compat
 		connect.publish("/dojox/mobile/beforeResizeAll", [evt, root]);
@@ -181,7 +183,7 @@ define("dojox/mobile/common", [
 
 	dm.openWindow = function(url, target){
 		// summary:
-		//		Opens a new browser window with the given url.
+		//		Opens a new browser window with the given URL.
 		win.global.open(url, target || "_blank");
 	};
 
@@ -189,7 +191,7 @@ define("dojox/mobile/common", [
 		domClass.add(win.doc.documentElement, "mobile");
 	}
 	if(has('chrome')){
-		// dojox.mobile does not load uacss (only _compat does), but we need dj_chrome.
+		// dojox/mobile does not load uacss (only _compat does), but we need dj_chrome.
 		domClass.add(win.doc.documentElement, "dj_chrome");
 	}
 
@@ -220,8 +222,8 @@ define("dojox/mobile/common", [
 			domConstruct.create("style", {innerHTML:".mblView.mblAndroidWorkaround{position:absolute;top:-9999px !important;left:-9999px !important;}"}, win.doc.head, "last");
 		}
 
-		//	You can disable hiding the address bar with the following djConfig.
-		//	var djConfig = { mblHideAddressBar: false };
+		//	You can disable hiding the address bar with the following dojoConfig.
+		//	var dojoConfig = { mblHideAddressBar: false };
 		var f = dm.resizeAll;
 		if(config["mblHideAddressBar"] !== false &&
 			navigator.appVersion.indexOf("Mobile") != -1 ||
@@ -239,11 +241,34 @@ define("dojox/mobile/common", [
 					_f(e);
 				});
 			};
+			var curSize = dm.getScreenSize();
+			// Watch for resize events when the virtual keyboard is shown/hidden,
+			// the heuristic to detect this is that the screen width does not change
+			// and the height changes by more than 100 pixels.
+			connect.connect(null, "onresize", null, function(e){
+				var newSize = dm.getScreenSize();
+				if(newSize.w == curSize.w && Math.abs(newSize.h - curSize.h) >= 100){
+					// keyboard has been shown/hidden
+					_f(e);
+				}
+				curSize = newSize;
+			});
 		}
 		connect.connect(null, win.global.onorientationchange !== undefined
 			? "onorientationchange" : "onresize", null, f);
 		win.body().style.visibility = "visible";
 	});
 
+	/*=====
+    return {
+		// summary:
+		//		A common module for dojox/mobile.
+		// description:
+		//		This module includes common utility functions that are used by
+		//		dojox/mobile widgets. Also, it provides functions that are commonly
+		//		necessary for mobile web applications, such as the hide address bar
+		//		function.
+    };
+    =====*/
 	return dm;
 });

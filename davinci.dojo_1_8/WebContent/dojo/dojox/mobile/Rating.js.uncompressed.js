@@ -15,7 +15,7 @@ define("dojox/mobile/Rating", [
 		// summary:
 		//		A widget that shows rating with stars.
 		// description:
-		//		This widget simply shows specified number of stars. It is a
+		//		This widget simply shows the specified number of stars. It is a
 		//		read-only widget, and has no editing capability.
 
 		// image: String
@@ -32,10 +32,13 @@ define("dojox/mobile/Rating", [
 		value: 0,
 
 		// alt: String
-		//		An alt text for the icon image.
+		//		An alternate text for the icon image.
 		alt: "",
 
-		/* internal properties */	
+		/* internal properties */
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblRating",
 
 		buildRendering: function(){
@@ -50,6 +53,8 @@ define("dojox/mobile/Rating", [
 		_setValueAttr: function(/*Number*/value){
 			// summary:
 			//		Sets the value of the Rating.
+			// tags:
+			//		private
 			this._set("value", value);
 			var h = this.imgNode.height;
 			if(h == 0){ return; } // loading of image has not been completed yet

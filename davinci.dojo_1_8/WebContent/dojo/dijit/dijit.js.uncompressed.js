@@ -2,17 +2,25 @@ require({cache:{
 'dojo/uacss':function(){
 define(["./dom-geometry", "./_base/lang", "./ready", "./sniff", "./_base/window"],
 	function(geometry, lang, ready, has, baseWindow){
+
 	// module:
 	//		dojo/uacss
-	// summary:
-	//		Applies pre-set CSS classes to the top-level HTML node, based on:
-	//			- browser (ex: dj_ie)
-	//			- browser version (ex: dj_ie6)
-	//			- box model (ex: dj_contentBox)
-	//			- text direction (ex: dijitRtl)
-	//
-	//		In addition, browser, browser version, and box model are
-	//		combined with an RTL flag when browser text is RTL. ex: dj_ie-rtl.
+
+	/*=====
+	return {
+		// summary:
+		//		Applies pre-set CSS classes to the top-level HTML node, based on:
+		//			- browser (ex: dj_ie)
+		//			- browser version (ex: dj_ie6)
+		//			- box model (ex: dj_contentBox)
+		//			- text direction (ex: dijitRtl)
+		//
+		//		In addition, browser, browser version, and box model are
+		//		combined with an RTL flag when browser text is RTL. ex: dj_ie-rtl.
+		//
+		//		Returns the has() method.
+	};
+	=====*/
 
 	var
 		html = baseWindow.doc.documentElement,
@@ -68,230 +76,19 @@ define(["./dom-geometry", "./_base/lang", "./ready", "./sniff", "./_base/window"
 });
 
 },
-'dojo/text':function(){
-define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, require, has, xhr){
-	// module:
-	//		dojo/text
-	// summary:
-	//		This module implements the dojo/text! plugin and the dojo.cache API.
-	// description:
-	//		We choose to include our own plugin to leverage functionality already contained in dojo
-	//		and thereby reduce the size of the plugin compared to various foreign loader implementations.
-	//		Also, this allows foreign AMD loaders to be used without their plugins.
-	//
-	//		CAUTION: this module is designed to optionally function synchronously to support the dojo v1.x synchronous
-	//		loader. This feature is outside the scope of the CommonJS plugins specification.
-
-
-	var getText;
-	if( 1 ){
-		getText= function(url, sync, load){
-			xhr("GET", {url: url, sync:!!sync, load: load, headers: dojo.config.textPluginHeaders || {}});
-		};
-	}else{
-		// TODOC: only works for dojo AMD loader
-		if(require.getText){
-			getText= require.getText;
-		}else{
-			console.error("dojo/text plugin failed to load because loader does not support getText");
-		}
-	}
-
-	var
-		theCache= {},
-
-		strip= function(text){
-			//Strips <?xml ...?> declarations so that external SVG and XML
-			//documents can be added to a document without worry. Also, if the string
-			//is an HTML document, only the part inside the body tag is returned.
-			if(text){
-				text= text.replace(/^\s*<\?xml(\s)+version=[\'\"](\d)*.(\d)*[\'\"](\s)*\?>/im, "");
-				var matches= text.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
-				if(matches){
-					text= matches[1];
-				}
-			}else{
-				text = "";
-			}
-			return text;
-		},
-
-		notFound = {},
-
-		pending = {};
-
-	dojo.cache = function(/*String||Object*/module, /*String*/url, /*String||Object?*/value){
-		// summary:
-		//		A getter and setter for storing the string content associated with the
-		//		module and url arguments.
-		// description:
-		//		If module is a string that contains slashes, then it is interpretted as a fully
-		//		resolved path (typically a result returned by require.toUrl), and url should not be
-		//		provided. This is the preferred signature. If module is a string that does not
-		//		contain slashes, then url must also be provided and module and url are used to
-		//		call `dojo.moduleUrl()` to generate a module URL. This signature is deprecated.
-		//		If value is specified, the cache value for the moduleUrl will be set to
-		//		that value. Otherwise, dojo.cache will fetch the moduleUrl and store it
-		//		in its internal cache and return that cached value for the URL. To clear
-		//		a cache value pass null for value. Since XMLHttpRequest (XHR) is used to fetch the
-		//		the URL contents, only modules on the same domain of the page can use this capability.
-		//		The build system can inline the cache values though, to allow for xdomain hosting.
-		// module: String||Object
-		//		If a String with slashes, a fully resolved path; if a String without slashes, the
-		//		module name to use for the base part of the URL, similar to module argument
-		//		to `dojo.moduleUrl`. If an Object, something that has a .toString() method that
-		//		generates a valid path for the cache item. For example, a dojo._Url object.
-		// url: String
-		//		The rest of the path to append to the path derived from the module argument. If
-		//		module is an object, then this second argument should be the "value" argument instead.
-		// value: String||Object?
-		//		If a String, the value to use in the cache for the module/url combination.
-		//		If an Object, it can have two properties: value and sanitize. The value property
-		//		should be the value to use in the cache, and sanitize can be set to true or false,
-		//		to indicate if XML declarations should be removed from the value and if the HTML
-		//		inside a body tag in the value should be extracted as the real value. The value argument
-		//		or the value property on the value argument are usually only used by the build system
-		//		as it inlines cache content.
-		//	example:
-		//		To ask dojo.cache to fetch content and store it in the cache (the dojo["cache"] style
-		//		of call is used to avoid an issue with the build system erroneously trying to intern
-		//		this example. To get the build system to intern your dojo.cache calls, use the
-		//		"dojo.cache" style of call):
-		//		| //If template.html contains "<h1>Hello</h1>" that will be
-		//		| //the value for the text variable.
-		//		| var text = dojo["cache"]("my.module", "template.html");
-		//	example:
-		//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
-		//		 (the dojo["cache"] style of call is used to avoid an issue with the build system
-		//		erroneously trying to intern this example. To get the build system to intern your
-		//		dojo.cache calls, use the "dojo.cache" style of call):
-		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
-		//		| //text variable will contain just "<h1>Hello</h1>".
-		//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
-		//	example:
-		//		Same example as previous, but demonstrates how an object can be passed in as
-		//		the first argument, then the value argument can then be the second argument.
-		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
-		//		| //text variable will contain just "<h1>Hello</h1>".
-		//		| var text = dojo["cache"](new dojo._Url("my/module/template.html"), {sanitize: true});
-
-		//	 * (string string [value]) => (module, url, value)
-		//	 * (object [value])        => (module, value), url defaults to ""
-		//
-		//	 * if module is an object, then it must be convertable to a string
-		//	 * (module, url) module + (url ? ("/" + url) : "") must be a legal argument to require.toUrl
-		//	 * value may be a string or an object; if an object then may have the properties "value" and/or "sanitize"
-		var key;
-		if(typeof module=="string"){
-			if(/\//.test(module)){
-				// module is a version 1.7+ resolved path
-				key = module;
-				value = url;
-			}else{
-				// module is a version 1.6- argument to dojo.moduleUrl
-				key = require.toUrl(module.replace(/\./g, "/") + (url ? ("/" + url) : ""));
-			}
-		}else{
-			key = module + "";
-			value = url;
-		}
-		var
-			val = (value != undefined && typeof value != "string") ? value.value : value,
-			sanitize = value && value.sanitize;
-
-		if(typeof val == "string"){
-			//We have a string, set cache value
-			theCache[key] = val;
-			return sanitize ? strip(val) : val;
-		}else if(val === null){
-			//Remove cached value
-			delete theCache[key];
-			return null;
-		}else{
-			//Allow cache values to be empty strings. If key property does
-			//not exist, fetch it.
-			if(!(key in theCache)){
-				getText(key, true, function(text){
-					theCache[key]= text;
-				});
-			}
-			return sanitize ? strip(theCache[key]) : theCache[key];
-		}
-	};
-
-	return {
-		// the dojo/text caches it's own resources because of dojo.cache
-		dynamic: true,
-
-		normalize: function(id, toAbsMid){
-			// id is something like (path may be relative):
-			//
-			//	 "path/to/text.html"
-			//	 "path/to/text.html!strip"
-			var parts= id.split("!"),
-				url= parts[0];
-			return (/^\./.test(url) ? toAbsMid(url) : url) + (parts[1] ? "!" + parts[1] : "");
-		},
-
-		load: function(id, require, load){
-			// id: String
-			//		Path to the resource.
-			// require: Function
-			//		Object that include the function toUrl with given id returns a valid URL from which to load the text.
-			// load: Function
-			//		Callback function which will be called, when the loading finished.
-
-			// id is something like (path is always absolute):
-			//
-			//	 "path/to/text.html"
-			//	 "path/to/text.html!strip"
-			var
-				parts= id.split("!"),
-				stripFlag= parts.length>1,
-				absMid= parts[0],
-				url = require.toUrl(parts[0]),
-				text = notFound,
-				finish = function(text){
-					load(stripFlag ? strip(text) : text);
-				};
-			if(absMid in theCache){
-				text = theCache[absMid];
-			}else if(url in require.cache){
-				text = require.cache[url];
-			}else if(url in theCache){
-				text = theCache[url];
-			}
-			if(text===notFound){
-				if(pending[url]){
-					pending[url].push(finish);
-				}else{
-					var pendingList = pending[url] = [finish];
-					getText(url, !require.async, function(text){
-						theCache[absMid]= theCache[url]= text;
-						for(var i = 0; i<pendingList.length;){
-							pendingList[i++](text);
-						}
-						delete pending[url];
-					});
-				}
-			}else{
-				finish(text);
-			}
-		}
-	};
-
-});
-
-
-},
 'dijit/hccss':function(){
 define("dijit/hccss", ["dojo/dom-class", "dojo/hccss", "dojo/ready", "dojo/_base/window"], function(domClass, has, ready, win){
 
 	// module:
 	//		dijit/hccss
-	// summary:
-	//		Test if computer is in high contrast mode, and sets dijit_a11y flag on <body> if it is.
-	//		Deprecated, use dojo/hccss instead.
+
+	/*=====
+	return function(){
+		// summary:
+		//		Test if computer is in high contrast mode, and sets `dijit_a11y` flag on `<body>` if it is.
+		//		Deprecated, use ``dojo/hccss`` instead.
+	};
+	=====*/
 
 	// Priority is 90 to run ahead of parser priority of 100.   For 2.0, remove the ready() call and instead
 	// change this module to depend on dojo/domReady!
@@ -313,8 +110,6 @@ define("dijit/_Contained", [
 
 	// module:
 	//		dijit/_Contained
-	// summary:
-	//		Mixin for widgets that are children of a container widget
 
 	return declare("dijit._Contained", null, {
 		// summary:
@@ -335,7 +130,7 @@ define("dijit/_Contained", [
 			do{
 				node = node[which+"Sibling"];
 			}while(node && node.nodeType != 1);
-			return node && registry.byNode(node);	// dijit._Widget
+			return node && registry.byNode(node);	// dijit/_WidgetBase
 		},
 
 		getPreviousSibling: function(){
@@ -343,7 +138,7 @@ define("dijit/_Contained", [
 			//		Returns null if this is the first child of the parent,
 			//		otherwise returns the next element sibling to the "left".
 
-			return this._getSibling("previous"); // dijit._Widget
+			return this._getSibling("previous"); // dijit/_WidgetBase
 		},
 
 		getNextSibling: function(){
@@ -351,7 +146,7 @@ define("dijit/_Contained", [
 			//		Returns null if this is the last child of the parent,
 			//		otherwise returns the next element sibling to the "right".
 
-			return this._getSibling("next"); // dijit._Widget
+			return this._getSibling("next"); // dijit/_WidgetBase
 		},
 
 		getIndexInParent: function(){
@@ -381,14 +176,19 @@ define("dijit/Viewport", [
 
 	// module:
 	//		dijit/Viewport
-	// summary:
-	//		Utility singleton to watch for viewport resizes, avoiding duplicate notifications
-	//		which can lead to infinite loops.
-	//
-	//		Usage: Viewport.on("resize", myCallback).
-	//
-	//		myCallback() is called without arguments in case it's _WidgetBase.resize(),
-	//		which would interpret the argument as the size to make the widget.
+
+	/*=====
+	return {
+		// summary:
+		//		Utility singleton to watch for viewport resizes, avoiding duplicate notifications
+		//		which can lead to infinite loops.
+		// description:
+		//		Usage: Viewport.on("resize", myCallback).
+		//
+		//		myCallback() is called without arguments in case it's _WidgetBase.resize(),
+		//		which would interpret the argument as the size to make the widget.
+	};
+	=====*/
 
 	var Viewport = new Evented();
 
@@ -414,8 +214,6 @@ define(
 
 	// module:
 	//		dojo/parser
-	// summary:
-	//		The Dom/Widget parsing package
 
 	new Date("X"); // workaround for #11279, new Date("") == NaN
 
@@ -471,6 +269,9 @@ define(
 	}
 
 	var parser = {
+		// summary:
+		//		The Dom/Widget parsing package
+
 		_clearCache: function(){
 			// summary:
 			//		Clear cached data.   Used mainly for benchmarking.
@@ -480,10 +281,10 @@ define(
 
 		_functionFromScript: function(script, attrData){
 			// summary:
-			//		Convert a <script type="dojo/method" args="a, b, c"> ... </script>
+			//		Convert a `<script type="dojo/method" args="a, b, c"> ... </script>`
 			//		into a function
 			// script: DOMNode
-			//		The <script> DOMNode
+			//		The `<script>` DOMNode
 			// attrData: String
 			//		For HTML5 compliance, searches for attrData + "args" (typically
 			//		"data-dojo-args") instead of "args"
@@ -505,7 +306,7 @@ define(
 			return new Function(fnArgs, preamble + script.innerHTML + suffix);
 		},
 
-		instantiate: function(nodes, mixin, options) {
+		instantiate: function(nodes, mixin, options){
 			// summary:
 			//		Takes array of nodes, and turns them into class instances and
 			//		potentially calls a startup method to allow them to connect with
@@ -554,7 +355,7 @@ define(
 			// nodes: Array
 			//		Array of objects like
 			//	|		{
-			//	/			ctor: Function (may be null)
+			//	|			ctor: Function (may be null)
 			//	|			types: ["dijit/form/Button", "acme/MyMixin"] (used if ctor not specified)
 			//	|			node: DOMNode,
 			//	|			scripts: [ ... ],	// array of <script type="dojo/..."> children of node
@@ -602,7 +403,7 @@ define(
 			// options: Object?
 			//		An options object used to hold kwArgs for instantiation.   See parse.options argument for details.
 			// scripts: DomNode[]?
-			//		Array of <script type="dojo/*"> DOMNodes.  If not specified, will search for <script> tags inside node.
+			//		Array of `<script type="dojo/*">` DOMNodes.  If not specified, will search for `<script>` tags inside node.
 			// inherited: Object?
 			//		Settings from dir=rtl or lang=... on a node above this node.   Overrides options.inherited.
 
@@ -1088,7 +889,7 @@ define(
 
 		_require: function(/*DOMNode*/ script){
 			// summary:
-			//		Helper for _scanAMD().  Takes a <script type=dojo/require>bar: "acme/bar", ...</script> node,
+			//		Helper for _scanAMD().  Takes a `<script type=dojo/require>bar: "acme/bar", ...</script>` node,
 			//		calls require() to load the specified modules and (asynchronously) assign them to the specified global
 			//		variables, and returns a Promise for when that operation completes.
 			//
@@ -1117,12 +918,10 @@ define(
 		_scanAmd: function(root){
 			// summary:
 			//		Scans the DOM for any declarative requires and returns their values.
-			//
 			// description:
-			//		Looks for <script type=dojo/require>bar: "acme/bar", ...</script> node, calls require() to load the
+			//		Looks for `<script type=dojo/require>bar: "acme/bar", ...</script>` node, calls require() to load the
 			//		specified modules and (asynchronously) assign them to the specified global variables,
 			//		 and returns a Promise for when those operations complete.
-			//
 			// root: DomNode
 			//		The node to base the scan from.
 
@@ -1147,7 +946,6 @@ define(
 		parse: function(rootNode, options){
 			// summary:
 			//		Scan the DOM for class instances, and instantiate them.
-			//
 			// description:
 			//		Search specified node (or root node) recursively for class instances,
 			//		and instantiate them. Searches for either data-dojo-type="Class" or
@@ -1164,13 +962,11 @@ define(
 			//		types by looking up the Class prototype values. This is the default behavior
 			//		from Dojo 1.0 to Dojo 1.5. `dojoType` support is deprecated, and will
 			//		go away in Dojo 2.0.
-			//
 			// rootNode: DomNode?
 			//		A default starting root node from which to start the parsing. Can be
 			//		omitted, defaulting to the entire document. If omitted, the `options`
 			//		object can be passed in this place. If the `options` object has a
 			//		`rootNode` member, that is used.
-			//
 			// options: Object?
 			//		A hash of options.
 			//
@@ -1195,26 +991,21 @@ define(
 			//			* propsThis: Object
 			//				If specified, "this" referenced from data-dojo-props will refer to propsThis.
 			//				Intended for use from the widgets-in-template feature of `dijit._WidgetsInTemplateMixin`
-			//
 			// returns: Mixed
 			//		Returns a blended object that is an array of the instantiated objects, but also can include
 			//		a promise that is resolved with the instantiated objects.  This is done for backwards
 			//		compatibility.  If the parser auto-requires modules, it will always behave in a promise
 			//		fashion and `parser.parse().then(function(instances){...})` should be used.
-			//
 			// example:
 			//		Parse all widgets on a page:
 			//	|		dojo.parser.parse();
-			//
 			// example:
 			//		Parse all classes within the node with id="foo"
 			//	|		dojo.parser.parse(dojo.byId('foo'));
-			//
 			// example:
 			//		Parse all classes in a page, but do not call .startup() on any
 			//		child
 			//	|		dojo.parser.parse({ noStart: true })
-			//
 			// example:
 			//		Parse all classes in a node, but do not call .startup()
 			//	|		dojo.parser.parse(someNode, { noStart:true });
@@ -1242,11 +1033,18 @@ define(
 			// First scan for any <script type=dojo/require> nodes, and execute.
 			// Then scan for all nodes with data-dojo-type, and load any unloaded modules.
 			// Then build the object instances.  Add instances to already existing (but empty) instances[] array,
-			// which may already have been returned to caller.
+			// which may already have been returned to caller.  Also, use otherwise to collect and throw any errors
+			// that occur during the parse().
 			var p =
-				this._scanAmd(root, options).then(
-				function(){ return self.scan(root, options); }).then(
-				function(parsedNodes){ return instances = instances.concat(self._instantiate(parsedNodes, mixin, options));});
+				this._scanAmd(root, options).then(function(){
+					return self.scan(root, options);
+				}).then(function(parsedNodes){
+					return instances = instances.concat(self._instantiate(parsedNodes, mixin, options));
+				}).otherwise(function(e){
+					// TODO Modify to follow better pattern for promise error managment when available
+					console.error("dojo/parser::parse() error", e);
+					throw e;
+				});
 
 			// Blend the array with the promise
 			dlang.mixin(instances, p);
@@ -1278,8 +1076,6 @@ define("dijit/_Container", [
 
 	// module:
 	//		dijit/_Container
-	// summary:
-	//		Mixin for widgets that can contain other widgets.
 
 	return declare("dijit._Container", null, {
 		// summary:
@@ -1293,7 +1089,7 @@ define("dijit/_Container", [
 			}
 		},
 
-		addChild: function(/*dijit._Widget*/ widget, /*int?*/ insertIndex){
+		addChild: function(/*dijit/_WidgetBase*/ widget, /*int?*/ insertIndex){
 			// summary:
 			//		Makes the given widget a child of this widget.
 			// description:
@@ -1346,7 +1142,7 @@ define("dijit/_Container", [
 			return this.getChildren().length > 0;	// Boolean
 		},
 
-		_getSiblingOfChild: function(/*dijit._Widget*/ child, /*int*/ dir){
+		_getSiblingOfChild: function(/*dijit/_WidgetBase*/ child, /*int*/ dir){
 			// summary:
 			//		Get the next or previous widget sibling of child
 			// dir:
@@ -1359,7 +1155,7 @@ define("dijit/_Container", [
 			return children[idx + dir];
 		},
 
-		getIndexOfChild: function(/*dijit._Widget*/ child){
+		getIndexOfChild: function(/*dijit/_WidgetBase*/ child){
 			// summary:
 			//		Gets the index of the child in this container or -1 if not found
 			return array.indexOf(this.getChildren(), child);	// int
@@ -1404,9 +1200,6 @@ define("dijit/layout/_LayoutWidget", [
 
 	// module:
 	//		dijit/layout/_LayoutWidget
-	// summary:
-	//		_LayoutWidget Base class for a _Container widget which is responsible for laying out its children.
-	//		Widgets which mixin this code must define layout() to manage placement and sizing of the children.
 
 
 	return declare("dijit.layout._LayoutWidget", [_Widget, _Container, _Contained], {
@@ -1546,7 +1339,7 @@ define("dijit/layout/_LayoutWidget", [
 			//		protected extension
 		},
 
-		_setupChild: function(/*dijit._Widget*/child){
+		_setupChild: function(/*dijit/_WidgetBase*/child){
 			// summary:
 			//		Common setup for initial children and children which are added after startup
 			// tags:
@@ -1557,7 +1350,7 @@ define("dijit/layout/_LayoutWidget", [
 			domClass.add(child.domNode, cls);
 		},
 
-		addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
+		addChild: function(/*dijit/_WidgetBase*/ child, /*Integer?*/ insertIndex){
 			// Overrides _Container.addChild() to call _setupChild()
 			this.inherited(arguments);
 			if(this._started){
@@ -1565,7 +1358,7 @@ define("dijit/layout/_LayoutWidget", [
 			}
 		},
 
-		removeChild: function(/*dijit._Widget*/ child){
+		removeChild: function(/*dijit/_WidgetBase*/ child){
 			// Overrides _Container.removeChild() to remove class added by _setupChild()
 			var cls = this.baseClass + "-child"
 					+ (child.baseClass ?
@@ -1596,8 +1389,13 @@ define("dijit/_base", [
 
 	// module:
 	//		dijit/_base
-	// summary:
-	//		Includes all the modules in dijit/_base
+
+	/*=====
+	return {
+		// summary:
+		//		Includes all the modules in dijit/_base
+	};
+	=====*/
 
 	return dijit._base;
 });
@@ -1618,14 +1416,11 @@ define("dijit/form/_FormWidgetMixin", [
 
 // module:
 //		dijit/form/_FormWidgetMixin
-// summary:
-//		Mixin for widgets corresponding to native HTML elements such as <checkbox> or <button>,
-//		which can be children of a <form> node or a `dijit.form.Form` widget.
 
 return declare("dijit.form._FormWidgetMixin", null, {
 	// summary:
-	//		Mixin for widgets corresponding to native HTML elements such as <checkbox> or <button>,
-	//		which can be children of a <form> node or a `dijit.form.Form` widget.
+	//		Mixin for widgets corresponding to native HTML elements such as `<checkbox>` or `<button>`,
+	//		which can be children of a `<form>` node or a `dijit/form/Form` widget.
 	//
 	// description:
 	//		Represents a single HTML element.
@@ -1639,15 +1434,15 @@ return declare("dijit.form._FormWidgetMixin", null, {
 	name: "",
 
 	// alt: String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	alt: "",
 
 	// value: String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	value: "",
 
 	// type: [const] String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	type: "text",
 
 	// tabIndex: Integer
@@ -1847,10 +1642,6 @@ define("dijit/BackgroundIframe", [
 
 	// module:
 	//		dijit/BackgroundIFrame
-	// summary:
-	//		new dijit.BackgroundIframe(node)
-	//		Makes a background iframe as a child of node, that fills
-	//		area (and position) of node
 
 	// TODO: remove _frames, it isn't being used much, since popups never release their
 	// iframes (see [22236])
@@ -1959,14 +1750,13 @@ define("dijit/form/_FormValueMixin", [
 
 	// module:
 	//		dijit/form/_FormValueMixin
-	// summary:
-	//		Mixin for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
 
 	return declare("dijit.form._FormValueMixin", _FormWidgetMixin, {
 		// summary:
-		//		Mixin for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
+		//		Mixin for widgets corresponding to native HTML elements such as `<input>` or `<select>`
+		//		that have user changeable values.
 		// description:
-		//		Each _FormValueMixin represents a single input value, and has a (possibly hidden) <input> element,
+		//		Each _FormValueMixin represents a single input value, and has a (possibly hidden) `<input>` element,
 		//		to which it serializes it's input value, so that form submission (either normal submission or via FormBind?)
 		//		works as expected.
 
@@ -2043,12 +1833,9 @@ define("dijit/form/_FormValueMixin", [
 
 },
 'dojo/Stateful':function(){
-define(["./_base/declare", "./_base/lang", "./_base/array", "dojo/when"], function(declare, lang, array, when) {
+define(["./_base/declare", "./_base/lang", "./_base/array", "dojo/when"], function(declare, lang, array, when){
 	// module:
 	//		dojo/Stateful
-	// summary:
-	//		A module that provides the base class for objects that provide named properties
-	//		with auto-magic accessors and the ability to watch for property changes
 
 return declare("dojo.Stateful", null, {
 	// summary:
@@ -2175,7 +1962,7 @@ return declare("dojo.Stateful", null, {
 				self._watchCallbacks(name, oldValue, value);
 			});
 		}
-		return this; //dojo.Stateful
+		return this; // dojo/Stateful
 	},
 	_changeAttrValue: function(name, value){
 		// summary:
@@ -2197,7 +1984,7 @@ return declare("dojo.Stateful", null, {
 		if(this._watchCallbacks){
 			this._watchCallbacks(name, oldValue, value);
 		}
-		return this; //dojo.Stateful
+		return this; // dojo/Stateful
 	},
 	watch: function(/*String?*/name, /*Function*/callback){
 		// summary:
@@ -2269,24 +2056,6 @@ function(dojo, lang, aspect, dom, on, has, mouse, ready, win){
 
 	// module:
 	//		dojo/touch
-	// summary:
-	//		This module provides unified touch event handlers by exporting
-	//		press, move, release and cancel which can also run well on desktop.
-	//		Based on http://dvcs.w3.org/hg/webevents/raw-file/tip/touchevents.html
-	//
-	// example:
-	//		1. Used with dojo.on
-	//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
-	//		|		on(node, touch.press, function(e){});
-	//		|		on(node, touch.move, function(e){});
-	//		|		on(node, touch.release, function(e){});
-	//		|		on(node, touch.cancel, function(e){});
-	//
-	//		2. Used with touch.* directly
-	//		|	touch.press(node, function(e){});
-	//		|	touch.move(node, function(e){});
-	//		|	touch.release(node, function(e){});
-	//		|	touch.cancel(node, function(e){});
 
 	var hasTouch = has("touch");
 
@@ -2371,6 +2140,25 @@ function(dojo, lang, aspect, dom, on, has, mouse, ready, win){
 	};
 	/*=====
 	touch = {
+		// summary:
+		//		This module provides unified touch event handlers by exporting
+		//		press, move, release and cancel which can also run well on desktop.
+		//		Based on http://dvcs.w3.org/hg/webevents/raw-file/tip/touchevents.html
+		//
+		// example:
+		//		1. Used with dojo.on
+		//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
+		//		|		on(node, touch.press, function(e){});
+		//		|		on(node, touch.move, function(e){});
+		//		|		on(node, touch.release, function(e){});
+		//		|		on(node, touch.cancel, function(e){});
+		//
+		//		2. Used with touch.* directly
+		//		|	touch.press(node, function(e){});
+		//		|	touch.move(node, function(e){});
+		//		|	touch.release(node, function(e){});
+		//		|	touch.cancel(node, function(e){});
+
 		press: function(node, listener){
 			// summary:
 			//		Register a listener to 'touchstart'|'mousedown' for the given node
@@ -2474,9 +2262,6 @@ define("dijit/_CssStateMixin", [
 
 // module:
 //		dijit/_CssStateMixin
-// summary:
-//		Mixin for widgets to set CSS classes on the widget DOM nodes depending on hover/mouse press/focus
-//		state changes, and also higher-level state changes such becoming disabled or selected.
 
 var CssStateMixin = declare("dijit._CssStateMixin", [], {
 	// summary:
@@ -2769,7 +2554,7 @@ ready(function(){
 	// Remove for 2.0 (if focus CSS needed, just use :focus pseudo-selector).
 	on(body, "focusin, focusout", function(evt){
 		var node = evt.target;
-		if(node._cssState && !node.hasAttribute("widgetId")){
+		if(node._cssState && !node.getAttribute("widgetId")){
 			var widget = registry.getEnclosingWidget(node);
 			widget._subnodeCssMouseEvent(node, node._cssState, evt);
 		}
@@ -2781,11 +2566,9 @@ return CssStateMixin;
 
 },
 'dojo/_base/url':function(){
-define(["./kernel"], function(dojo) {
+define(["./kernel"], function(dojo){
 	// module:
 	//		dojo/url
-	// summary:
-	//		This module contains dojo._Url
 
 	var
 		ore = new RegExp("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?$"),
@@ -2908,9 +2691,15 @@ define([
 
 	// module:
 	//		dojo/hccss
-	// summary:
-	//		Test if computer is in high contrast mode (i.e. if browser is not displaying background images).
-	//		Defines has("highcontrast") and sets dj_a11y CSS class on <body> if machine is in high contrast mode.
+
+	/*=====
+	return function(){
+		// summary:
+		//		Test if computer is in high contrast mode (i.e. if browser is not displaying background images).
+		//		Defines `has("highcontrast")` and sets `dj_a11y` CSS class on `<body>` if machine is in high contrast mode.
+		//		Returns `has()` method;
+	};
+	=====*/
 
 	// Has() test for when background images aren't displayed.  Don't call has("highcontrast") before dojo/domReady!.
 	has.add("highcontrast", function(){
@@ -2946,14 +2735,15 @@ define([
 define([
 	"./_base/kernel",	// kernel.global
 	"./_base/lang"
-], function(kernel, lang) {
+], function(kernel, lang){
 
 // module:
 //		dojo/string
-// summary:
-//		String utilities for Dojo
 
-var string = {};
+var string = {
+	// summary:
+	//		String utilities for Dojo
+};
 lang.setObject("dojo.string", string);
 
 string.rep = function(/*String*/str, /*Integer*/num){
@@ -3116,16 +2906,14 @@ define("dijit/form/_FormValueWidget", [
 
 // module:
 //		dijit/form/_FormValueWidget
-// summary:
-//		FormValueWidget
-
 
 return declare("dijit.form._FormValueWidget", [_FormWidget, _FormValueMixin],
 {
 	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
+	//		Base class for widgets corresponding to native HTML elements such as `<input>` or `<select>`
+	//		that have user changeable values.
 	// description:
-	//		Each _FormValueWidget represents a single input value, and has a (possibly hidden) <input> element,
+	//		Each _FormValueWidget represents a single input value, and has a (possibly hidden) `<input>` element,
 	//		to which it serializes it's input value, so that form submission (either normal submission or via FormBind?)
 	//		works as expected.
 
@@ -3173,24 +2961,22 @@ define("dijit/registry", [
 
 	// module:
 	//		dijit/registry
-	// summary:
-	//		Registry of existing widget on page, plus some utility methods.
-	//		Must be accessed through AMD api, ex:
-	//		require(["dijit/registry"], function(registry){ registry.byId("foo"); })
 
 	var _widgetTypeCtr = {}, hash = {};
 
 	var registry =  {
+		// summary:
+		//		Registry of existing widget on page, plus some utility methods.
+
 		// length: Number
 		//		Number of registered widgets
 		length: 0,
 
-		add: function(/*dijit._Widget*/ widget){
+		add: function(widget){
 			// summary:
 			//		Add a widget to the registry. If a duplicate ID is detected, a error is thrown.
-			//
-			// widget: dijit._Widget
-			//		Any dijit._Widget subclass.
+			// widget: dijit/_WidgetBase
+			//		Any dijit/_WidgetBase subclass.
 			if(hash[widget.id]){
 				throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
 			}
@@ -3212,13 +2998,13 @@ define("dijit/registry", [
 			// summary:
 			//		Find a widget by it's id.
 			//		If passed a widget then just returns the widget.
-			return typeof id == "string" ? hash[id] : id;	// dijit._Widget
+			return typeof id == "string" ? hash[id] : id;	// dijit/_WidgetBase
 		},
 
 		byNode: function(/*DOMNode*/ node){
 			// summary:
 			//		Returns the widget corresponding to the given DOMNode
-			return hash[node.getAttribute("widgetId")]; // dijit._Widget
+			return hash[node.getAttribute("widgetId")]; // dijit/_WidgetBase
 		},
 
 		toArray: function(){
@@ -3233,7 +3019,7 @@ define("dijit/registry", [
 			for(var id in hash){
 				ar.push(hash[id]);
 			}
-			return ar;	// dijit._Widget[]
+			return ar;	// dijit/_WidgetBase[]
 		},
 
 		getUniqueId: function(/*String*/widgetType){
@@ -3337,8 +3123,6 @@ define("dijit/Destroyable", [
 
 // module:
 //		dijit/Destroyable
-// summary:
-//		Mixin to track handles and release them when instance is destroyed.
 
 return declare("dijit.Destroyable", null, {
 	// summary:
@@ -3368,8 +3152,7 @@ return declare("dijit.Destroyable", null, {
 			var destroyMethodName =
 				"destroyRecursive" in handle ? "destroyRecursive" :	// remove "destroyRecursive" for 2.0
 				"destroy" in handle ? "destroy" :
-				"remove" in handle ? "remove" :
-				"unwatch";		// avoid ("unwatch" in handle) since that's true for all objects in modern browsers
+				"remove";
 
 			// When this is destroyed, destroy handle.  Since I'm using aspect.before(),
 			// the handle will be destroyed before a subclass's destroy() method starts running, before it calls
@@ -3413,7 +3196,7 @@ define("dijit/_base/manager", [
 		// summary:
 		//		Returns a widget by it's id, or if passed a widget, no-op (like dom.byId())
 		// id: String|dijit._Widget
-		return registry.byId(id); // dijit._Widget
+		return registry.byId(id); // dijit/_WidgetBase
 	};
 
 	dijit.getUniqueId = function(widgetType){
@@ -3442,7 +3225,7 @@ define("dijit/_base/manager", [
 		// summary:
 		//		Returns the widget corresponding to the given DOMNode
 		// node: DOMNode
-		return registry.byNode(node); // dijit._Widget
+		return registry.byNode(node); // dijit/_WidgetBase
 	};
 
 	dijit.getEnclosingWidget = function(node){
@@ -3623,14 +3406,11 @@ define("dijit/WidgetSet", [
 
 	// module:
 	//		dijit/WidgetSet
-	// summary:
-	//		Legacy registry code.   New modules should just use registry.
-	//		Will be removed in 2.0.
 
 	var WidgetSet = declare("dijit.WidgetSet", null, {
 		// summary:
-		//		A set of widgets indexed by id. A default instance of this class is
-		//		available as `dijit.registry`
+		//		A set of widgets indexed by id.
+		//		Deprecated, will be removed in 2.0.
 		//
 		// example:
 		//		Create a small list of widgets:
@@ -3639,22 +3419,18 @@ define("dijit/WidgetSet", [
 		//		|	ws.add(dijit.byId("two"));
 		//		|	// destroy both:
 		//		|	ws.forEach(function(w){ w.destroy(); });
-		//
-		// example:
-		//		Using dijit.registry:
-		//		|	dijit.registry.forEach(function(w){ /* do something */ });
 
 		constructor: function(){
 			this._hash = {};
 			this.length = 0;
 		},
 
-		add: function(/*dijit._Widget*/ widget){
+		add: function(/*dijit/_WidgetBase*/ widget){
 			// summary:
 			//		Add a widget to this list. If a duplicate ID is detected, a error is thrown.
 			//
-			// widget: dijit._Widget
-			//		Any dijit._Widget subclass.
+			// widget: dijit/_WidgetBase
+			//		Any dijit/_WidgetBase subclass.
 			if(this._hash[widget.id]){
 				throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
 			}
@@ -3697,7 +3473,7 @@ define("dijit/WidgetSet", [
 			for(id in this._hash){
 				func.call(thisObj, this._hash[id], i++, this._hash);
 			}
-			return this;	// dijit.WidgetSet
+			return this;	// dijit/WidgetSet
 		},
 
 		filter: function(/*Function*/ filter, /* Object? */thisObj){
@@ -3726,7 +3502,7 @@ define("dijit/WidgetSet", [
 					res.add(w);
 				}
 			}
-			return res; // dijit.WidgetSet
+			return res; // dijit/WidgetSet
 		},
 
 		byId: function(/*String*/ id){
@@ -3739,7 +3515,7 @@ define("dijit/WidgetSet", [
 			//		| var t = ws.byId("bar") // returns a widget
 			//		| var x = ws.byId("foo"); // returns undefined
 
-			return this._hash[id];	// dijit._Widget
+			return this._hash[id];	// dijit/_WidgetBase
 		},
 
 		byClass: function(/*String*/ cls){
@@ -3760,7 +3536,7 @@ define("dijit/WidgetSet", [
 					res.add(widget);
 				}
 			 }
-			 return res; // dijit.WidgetSet
+			 return res; // dijit/WidgetSet
 		},
 
 		toArray: function(){
@@ -3775,7 +3551,7 @@ define("dijit/WidgetSet", [
 			for(var id in this._hash){
 				ar.push(this._hash[id]);
 			}
-			return ar;	// dijit._Widget[]
+			return ar;	// dijit/_WidgetBase[]
 		},
 
 		map: function(/* Function */func, /* Object? */thisObj){
@@ -3859,8 +3635,6 @@ define("dijit/a11y", [
 
 	// module:
 	//		dijit/a11y
-	// summary:
-	//		Accessibility utility functions (keyboard, tab stops, etc.)
 
 	var shown = (dijit._isElementShown = function(/*Element*/ elem){
 		var s = domStyle.get(elem);
@@ -4015,6 +3789,9 @@ define("dijit/a11y", [
 	};
 
 	return {
+		// summary:
+		//		Accessibility utility functions (keyboard, tab stops, etc.)
+
 		hasDefaultTabStop: dijit.hasDefaultTabStop,
 		isTabNavigable: dijit.isTabNavigable,
 		_getTabNavigable: dijit._getTabNavigable,
@@ -4038,11 +3815,6 @@ define([
 
 // module:
 //		dijit/typematic
-// summary:
-//		These functions are used to repetitively call a user specified callback
-//		method when a specific key or mouse click over a specific DOM node is
-//		held down for a specific amount of time.
-//		Only 1 such event is allowed to occur on the browser page at 1 time.
 
 var typematic = (dijit.typematic = {
 	// summary:
@@ -4414,7 +4186,7 @@ define("dijit/_base/focus", [
 			//		or removed focus altogether.)   In this case the selected text is not returned,
 			//		since it can't be accurately determined.
 			//
-			// menu: dijit._Widget or {domNode: DomNode} structure
+			// menu: dijit/_WidgetBase|{domNode: DomNode} structure
 			//		The button that was just pressed.  If focus has disappeared or moved
 			//		to this button, returns the previous focus.  In this case the bookmark
 			//		information is already lost, and null is returned.
@@ -4432,7 +4204,7 @@ define("dijit/_base/focus", [
 			}; // Object
 		},
 
-		// _activeStack: dijit._Widget[]
+		// _activeStack: dijit/_WidgetBase[]
 		//		List of currently active widgets (focused widget and it's ancestors)
 		_activeStack: [],
 
@@ -4440,7 +4212,7 @@ define("dijit/_base/focus", [
 			// summary:
 			//		Registers listeners on the specified iframe so that any click
 			//		or focus event on that iframe (or anything in it) is reported
-			//		as a focus/click event on the <iframe> itself.
+			//		as a focus/click event on the `<iframe>` itself.
 			// description:
 			//		Currently only used by editor.
 			// returns:
@@ -4572,8 +4344,6 @@ define("dijit/place", [
 
 	// module:
 	//		dijit/place
-	// summary:
-	//		Code to place a popup relative to another node
 
 
 	function _place(/*DomNode*/ node, choices, layoutNode, aroundNodeCoords){
@@ -4958,8 +4728,6 @@ define("dijit/_Widget", [
 
 // module:
 //		dijit/_Widget
-// summary:
-//		Old base for widgets.   New widgets should extend _WidgetBase instead
 
 
 function connectToDomNode(){
@@ -4984,10 +4752,10 @@ if(kernel.connect){
 
 var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusMixin], {
 	// summary:
-	//		Base class for all Dijit widgets.
+	//		Old base class for widgets.   New widgets should extend `dijit/_WidgetBase` instead
 	//
 	// description:
-	//		Base class for all Dijit widgets.
+	//		Old Base class for Dijit widgets.
 	//
 	//		Extends _WidgetBase, adding support for:
 	//			- declaratively/programatically specifying widget initialization parameters like
@@ -5001,8 +4769,8 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 	//			- onShow(), onHide(), onClose()
 	//
 	//		Also, by loading code in dijit/_base, turns on:
-	//			- browser sniffing (putting browser id like .dj_ie on <html> node)
-	//			- high contrast mode sniffing (add .dijit_a11y class to <body> if machine is in high contrast mode)
+	//			- browser sniffing (putting browser class like `dj_ie` on `<html>` node)
+	//			- high contrast mode sniffing (add `dijit_a11y` class to `<body>` if machine is in high contrast mode)
 
 
 	////////////////// DEFERRED CONNECTS ///////////////////
@@ -5229,7 +4997,7 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 		//		supposed to be internal/hidden, but it's left here for back-compat reasons.
 
 		kernel.deprecated(this.declaredClass+"::getDescendants() is deprecated. Use getChildren() instead.", "", "2.0");
-		return this.containerNode ? query('[widgetId]', this.containerNode).map(registry.byNode) : []; // dijit._Widget[]
+		return this.containerNode ? query('[widgetId]', this.containerNode).map(registry.byNode) : []; // dijit/_WidgetBase[]
 	},
 
 	////////////////// MISCELLANEOUS METHODS ///////////////////
@@ -5299,9 +5067,6 @@ define([
 
 	// module:
 	//		dijit/_FocusMixin
-	// summary:
-	//		Mixin to widget to provide _onFocus() and _onBlur() methods that
-	//		fire when a widget or it's descendants get/lose focus
 
 	// We don't know where _FocusMixin will occur in the inheritance chain, but we need the _onFocus()/_onBlur() below
 	// to be last in the inheritance chain, so mixin to _WidgetBase.
@@ -5352,7 +5117,7 @@ define([
 	return declare("dijit._FocusMixin", null, {
 		// summary:
 		//		Mixin to widget to provide _onFocus() and _onBlur() methods that
-		//		fire when a widget or it's descendants get/lose focus
+		//		fire when a widget or its descendants get/lose focus
 
 		// flag that I want _onFocus()/_onBlur() notifications from focus manager
 		_focusManager: focus
@@ -5374,16 +5139,6 @@ define("dijit/_OnDijitClickMixin", [
 
 	// module:
 	//		dijit/_OnDijitClickMixin
-	// summary:
-	//		Mixin so you can pass "ondijitclick" to this.connect() method,
-	//		as a way to handle clicks by mouse, or by keyboard (SPACE/ENTER key).
-	// description:
-	//		Setting an ondijitclick handler on a node has two effects:
-	//			1. converts keyboard "click" events into actual click events, so
-	//			   that a "click" event bubbles up from the widget to any listeners on ancestor nodes.
-	//			2. sets up a click listener on the node, which catches native click events plus
-	//			   the events generated from the previous step.
-
 
 	// Keep track of where the last keydown event was, to help avoid generating
 	// spurious ondijitclick events when:
@@ -5459,15 +5214,25 @@ define("dijit/_OnDijitClickMixin", [
 			];
 
 			if(has("touch")){
+				// touchstart-->touchend will automatically generate a click event, but there are problems
+				// on iOS after focus has been programatically shifted (#14604, #14918), so do it manually.
+				// But first, let other touchend callbacks execute.
+
+				var clickTimer;
 				handles.push(
 					on(node, "touchend", function(e){
-						// touchstart-->touchend will automatically generate a click event, but there are problems
-						// on iOS after focus has been programatically shifted (#14604, #14918), so do it manually.
+						// Setup timer to fire synthetic click event after other touchend listeners finish executing
+						var target = e.target;
+						clickTimer = setTimeout(function(){
+							clickTimer = null;
+							on.emit(target, "click", {
+								cancelable: true,
+								bubbles: true
+							});
+						}, 0);
+
+						// Prevent the touchend from triggering the native click event
 						e.preventDefault();
-						on.emit(e.target, "click", {
-							cancelable: true,
-							bubbles: true
-						});
 					})
 				);
 			}
@@ -5475,12 +5240,26 @@ define("dijit/_OnDijitClickMixin", [
 			return {
 				remove: function(){
 					array.forEach(handles, function(h){ h.remove(); });
+					if(clickTimer){
+						clearTimeout(clickTimer);
+						clickTimer = null;
+					}
 				}
 			};
 		}
 	};
 
 	var ret = declare("dijit._OnDijitClickMixin", null, {
+		// summary:
+		//		Mixin so you can pass "ondijitclick" to this.connect() method,
+		//		as a way to handle clicks by mouse, or by keyboard (SPACE/ENTER key).
+		// description:
+		//		Setting an ondijitclick handler on a node has two effects:
+		//			1. converts keyboard "click" events into actual click events, so
+		//			   that a "click" event bubbles up from the widget to any listeners on ancestor nodes.
+		//			2. sets up a click listener on the node, which catches native click events plus
+		//			   the events generated from the previous step.
+
 		connect: function(
 				/*Object|null*/ obj,
 				/*String|Function*/ event,
@@ -5522,10 +5301,8 @@ define("dijit/_OnDijitClickMixin", [
 define(["./_base/kernel", "./text"], function(dojo){
 	// module:
 	//		dojo/cache
-	// summary:
-	//		The module defines dojo.cache by loading dojo/text.
 
-	//dojo.cache is defined in dojo/text
+	// dojo.cache is defined in dojo/text
 	return dojo.cache;
 });
 
@@ -5554,11 +5331,8 @@ define("dijit/focus", [
 
 	// module:
 	//		dijit/focus
-	// summary:
-	//		Returns a singleton that tracks the currently focused node, and which widgets are currently "active".
 
-/*=====
-	dijit.focus = {
+	var FocusManager = declare([Stateful, Evented], {
 		// summary:
 		//		Tracks the currently focused node, and which widgets are currently "active".
 		//		Access via require(["dijit/focus"], function(focus){ ... }).
@@ -5578,46 +5352,7 @@ define("dijit/focus", [
 		//		Currently focused item on screen
 		curNode: null,
 
-		// activeStack: dijit._Widget[]
-		//		List of currently active widgets (focused widget and it's ancestors)
-		activeStack: [],
-
-		registerIframe: function(iframe){
-			// summary:
-			//		Registers listeners on the specified iframe so that any click
-			//		or focus event on that iframe (or anything in it) is reported
-			//		as a focus/click event on the <iframe> itself.
-			// description:
-			//		Currently only used by editor.
-			// returns:
-			//		Handle with remove() method to deregister.
-		},
-
-		registerWin: function(targetWindow, effectiveNode){
-			// summary:
-			//		Registers listeners on the specified window (either the main
-			//		window or an iframe's window) to detect when the user has clicked somewhere
-			//		or focused somewhere.
-			// description:
-			//		Users should call registerIframe() instead of this method.
-			// targetWindow: Window?
-			//		If specified this is the window associated with the iframe,
-			//		i.e. iframe.contentWindow.
-			// effectiveNode: DOMNode?
-			//		If specified, report any focus events inside targetWindow as
-			//		an event on effectiveNode, rather than on evt.target.
-			// returns:
-			//		Handle with remove() method to deregister.
-		}
-	};
-=====*/
-
-	var FocusManager = declare([Stateful, Evented], {
-		// curNode: DomNode
-		//		Currently focused item on screen
-		curNode: null,
-
-		// activeStack: dijit._Widget[]
+		// activeStack: dijit/_WidgetBase[]
 		//		List of currently active widgets (focused widget and it's ancestors)
 		activeStack: [],
 
@@ -5639,7 +5374,7 @@ define("dijit/focus", [
 			// summary:
 			//		Registers listeners on the specified iframe so that any click
 			//		or focus event on that iframe (or anything in it) is reported
-			//		as a focus/click event on the <iframe> itself.
+			//		as a focus/click event on the `<iframe>` itself.
 			// description:
 			//		Currently only used by editor.
 			// returns:
@@ -5952,31 +5687,39 @@ define("dijit/main", [
 	"dojo/_base/kernel"
 ], function(dojo){
 	// module:
-	//		dijit
+	//		dijit/main
+
+/*=====
+return {
 	// summary:
-	//		The dijit package main module
+	//		The dijit package main module.
+	//		Deprecated.   Users should access individual modules (ex: dijit/registry) directly.
+};
+=====*/
 
 	return dojo.dijit;
 });
 
 },
 'dojo/date/stamp':function(){
-define(["../_base/lang", "../_base/array"], function(lang, array) {
-	// module:
-	//		dojo/date/stamp
+define(["../_base/lang", "../_base/array"], function(lang, array){
+
+// module:
+//		dojo/date/stamp
+
+var stamp = {
 	// summary:
 	//		TODOC
-
-var stamp = {};
+};
 lang.setObject("dojo.date.stamp", stamp);
 
 // Methods to convert dates to or from a wire (string) format using well-known conventions
 
 stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTime){
-	//	summary:
+	// summary:
 	//		Returns a Date object given a string formatted according to a subset of the ISO-8601 standard.
 	//
-	//	description:
+	// description:
 	//		Accepts a string formatted according to a profile of ISO8601 as defined by
 	//		[RFC3339](http://www.ietf.org/rfc/rfc3339.txt), except that partial input is allowed.
 	//		Can also process dates as specified [by the W3C](http://www.w3.org/TR/NOTE-datetime)
@@ -5998,10 +5741,10 @@ stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTi
 	// 		by the Date constructor (e.g. January 32nd typically gets resolved to February 1st)
 	//		Only years between 100 and 9999 are supported.
 	//
-  	//	formattedString:
+  	// formattedString:
 	//		A string such as 2005-06-30T08:05:00-07:00 or 2005-06-30 or T08:05:00
 	//
-	//	defaultTime:
+	// defaultTime:
 	//		Used for defaults for fields omitted in the formattedString.
 	//		Uses 1970-01-01T00:00:00.0Z by default.
 
@@ -6052,12 +5795,12 @@ stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTi
 
 /*=====
 	var __Options = function(){
-		//	selector: String
+		// selector: String
 		//		"date" or "time" for partial formatting of the Date object.
 		//		Both date and time will be formatted by default.
-		//	zulu: Boolean
+		// zulu: Boolean
 		//		if true, UTC/GMT is used for a timezone
-		//	milliseconds: Boolean
+		// milliseconds: Boolean
 		//		if true, output milliseconds
 		this.selector = selector;
 		this.zulu = zulu;
@@ -6066,15 +5809,15 @@ stamp.fromISOString = function(/*String*/ formattedString, /*Number?*/ defaultTi
 =====*/
 
 stamp.toISOString = function(/*Date*/ dateObject, /*__Options?*/ options){
-	//	summary:
+	// summary:
 	//		Format a Date object as a string according a subset of the ISO-8601 standard
 	//
-	//	description:
+	// description:
 	//		When options.selector is omitted, output follows [RFC3339](http://www.ietf.org/rfc/rfc3339.txt)
 	//		The local time zone is included as an offset from GMT, except when selector=='time' (time without a date)
 	//		Does not check bounds.  Only years between 100 and 9999 are supported.
 	//
-	//	dateObject:
+	// dateObject:
 	//		A Date object
 
 	var _ = function(n){ return (n < 10) ? "0" + n : n; };
@@ -6125,9 +5868,6 @@ define("dijit/form/_FormWidget", [
 
 // module:
 //		dijit/form/_FormWidget
-// summary:
-//		FormWidget
-
 
 // Back compat w/1.6, remove for 2.0
 if(has("dijit-legacy-requires")){
@@ -6139,8 +5879,8 @@ if(has("dijit-legacy-requires")){
 
 return declare("dijit.form._FormWidget", [_Widget, _TemplatedMixin, _CssStateMixin, _FormWidgetMixin], {
 	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as <checkbox> or <button>,
-	//		which can be children of a <form> node or a `dijit.form.Form` widget.
+	//		Base class for widgets corresponding to native HTML elements such as `<checkbox>` or `<button>`,
+	//		which can be children of a `<form>` node or a `dijit.form.Form` widget.
 	//
 	// description:
 	//		Represents a single HTML element.
@@ -6265,8 +6005,6 @@ define("dijit/_TemplatedMixin", [
 
 	// module:
 	//		dijit/_TemplatedMixin
-	// summary:
-	//		Mixin for widgets that are instantiated from a template
 
 	var _TemplatedMixin = declare("dijit._TemplatedMixin", null, {
 		// summary:
@@ -6662,14 +6400,15 @@ define("dijit/_base/wai", [
 },
 'dojo/window':function(){
 define(["./_base/lang", "./sniff", "./_base/window", "./dom", "./dom-geometry", "./dom-style"],
-	function(lang, has, baseWindow, dom, geom, style) {
+	function(lang, has, baseWindow, dom, geom, style){
 
 	// module:
 	//		dojo/window
-	// summary:
-	//		TODOC
 
 	var window = {
+		// summary:
+		//		TODOC
+
 		getBox: function(/*Document?*/ doc){
 			// summary:
 			//		Returns the dimensions and scroll position of the viewable area of a browser window
@@ -6910,61 +6649,6 @@ define("dijit/popup", [
 		this.padding = padding;
 	};
 
-	dijit.popup = {
-		// summary:
-		//		Used to show drop downs (ex: the select list of a ComboBox)
-		//		or popups (ex: right-click context menus).
-		//
-		//		Access via require(["dijit/popup"], function(popup){ ... }).
-
-		moveOffScreen: function(widget){
-			// summary:
-			//		Moves the popup widget off-screen.
-			//		Do not use this method to hide popups when not in use, because
-			//		that will create an accessibility issue: the offscreen popup is
-			//		still in the tabbing order.
-			// widget: dijit._WidgetBase
-			//		The widget
-		},
-
-		hide: function(widget){
-			// summary:
-			//		Hide this popup widget (until it is ready to be shown).
-			//		Initialization for widgets that will be used as popups
-			//
-			//		Also puts widget inside a wrapper DIV (if not already in one)
-			//
-			//		If popup widget needs to layout it should
-			//		do so when it is made visible, and popup._onShow() is called.
-			// widget: dijit._WidgetBase
-			//		The widget
-		},
-
-		open: function(args){
-			// summary:
-			//		Popup the widget at the specified position
-			// example:
-			//		opening at the mouse position
-			//		|		popup.open({popup: menuWidget, x: evt.pageX, y: evt.pageY});
-			// example:
-			//		opening the widget as a dropdown
-			//		|		popup.open({parent: this, popup: menuWidget, around: this.domNode, onClose: function(){...}});
-			//
-			//		Note that whatever widget called dijit.popup.open() should also listen to its own _onBlur callback
-			//		(fired from _base/focus.js) to know that focus has moved somewhere else and thus the popup should be closed.
-			// args: __OpenArgs
-			//		Parameters
-			return {};	// Object specifying which position was chosen
-		},
-
-		close: function(popup){
-			// summary:
-			//		Close specified popup and any popups that it parented.
-			//		If no popup is specified, closes all popups.
-			// widget: dijit._WidgetBase?
-			//		The widget, optional
-		}
-	};
 	=====*/
 
 	function destroyWrapper(){
@@ -6978,7 +6662,11 @@ define("dijit/popup", [
 	}
 
 	var PopupManager = declare(null, {
-		// _stack: dijit._Widget[]
+		// summary:
+		//		Used to show drop downs (ex: the select list of a ComboBox)
+		//		or popups (ex: right-click context menus).
+
+		// _stack: dijit/_WidgetBase[]
 		//		Stack of currently popped up widgets.
 		//		(someone opened _stack[0], and then it opened _stack[1], etc.)
 		_stack: [],
@@ -7067,7 +6755,7 @@ define("dijit/popup", [
 			return stack[pi];
 		},
 
-		open: function(/*dijit.popup.__OpenArgs*/ args){
+		open: function(/*__OpenArgs*/ args){
 			// summary:
 			//		Popup the widget at the specified position
 			//
@@ -7260,8 +6948,6 @@ define("dijit/_WidgetBase", [
 
 // module:
 //		dijit/_WidgetBase
-// summary:
-//		Future base class for all Dijit widgets.
 
 // Flag to make dijit load modules the app didn't explicitly request, for backwards compatibility
 has.add("dijit-legacy-requires", !kernel.isAsync);
@@ -7441,13 +7127,17 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	//		is null for widgets that don't, like TextBox.
 	containerNode: null,
 
-/*=====
 	// ownerDocument: [const] Document?
 	//		The document this widget belongs to.  If not specified to constructor, will default to
 	//		srcNodeRef.ownerDocument, or if no sourceRef specified, then to dojo/_base/window::doc
 	ownerDocument: null,
+	_setOwnerDocumentAttr: function(val){
+		// this setter is merely to avoid automatically trying to set this.domNode.ownerDocument
+		this._set("ownerDocument", val);
+	},
 
-	// _started: Boolean
+/*=====
+	// _started: [readonly] Boolean
 	//		startup() has completed.
 	_started: false,
 =====*/
@@ -7495,7 +7185,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	// _blankGif: [protected] String
 	//		Path to a blank 1x1 image.
-	//		Used by <img> nodes in templates that really get their image via CSS background-image.
+	//		Used by `<img>` nodes in templates that really get their image via CSS background-image.
 	_blankGif: config.blankGif || require.toUrl("dojo/resources/blank.gif"),
 
 	//////////// INITIALIZATION METHODS ///////////////////////////////////////
@@ -8113,7 +7803,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		// summary:
 		//		Returns all the widgets contained by this, i.e., all widgets underneath this.containerNode.
 		//		Does not return nested widgets, nor widgets that are part of this widget's template.
-		return this.containerNode ? registry.findWidgets(this.containerNode) : []; // dijit._Widget[]
+		return this.containerNode ? registry.findWidgets(this.containerNode) : []; // dijit/_WidgetBase[]
 	},
 
 	getParent: function(){
@@ -8208,7 +7898,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		return this.focus && (domStyle.get(this.domNode, "display") != "none");
 	},
 
-	placeAt: function(/* String|DomNode|_Widget */ reference, /* String?|Int? */ position){
+	placeAt: function(/* String|DomNode|_Widget */ reference, /* String|Int? */ position){
 		// summary:
 		//		Place this widget somewhere in the DOM based
 		//		on standard domConstruct.place() conventions.
@@ -8226,7 +7916,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		//		If reference is a DOMNode (or id matching a DOMNode but not a widget),
 		//		the position argument can be a numeric index or a string
 		//		"first", "last", "before", or "after", same as dojo/dom-construct::place().
-		// returns: dijit._WidgetBase
+		// returns: dijit/_WidgetBase
 		//		Provides a useful return of the newly created dijit._Widget instance so you
 		//		can "chain" this function by instantiating, placing, then saving the return value
 		//		to a variable.
@@ -8336,10 +8026,15 @@ define("dijit/dijit", [
 
 	// module:
 	//		dijit/dijit
-	// summary:
-	//		A roll-up for common dijit methods
-	//		All the stuff in _base (these are the function that are guaranteed available without an explicit dojo.require)
-	//		And some other stuff that we tend to pull in all the time anyway
+
+	/*=====
+	return {
+		// summary:
+		//		A roll-up for common dijit methods
+		//		All the stuff in _base (these are the function that are guaranteed available without an explicit dojo.require)
+		//		And some other stuff that we tend to pull in all the time anyway
+	};
+	=====*/
 
 	return dijit;
 });

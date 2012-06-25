@@ -34,14 +34,14 @@ define("dojox/app/widgets/scrollable", [
 //		- Simulates the flick operation using animation.
 //		- Respects header/footer bars if any.
 //
-//		dojox.mobile.scrollable is a simple function object, which holds
+//		dojox/mobile/scrollable is a simple function object, which holds
 //		several properties and functions in it. But if you transform it to a
 //		dojo class, it can be used as a mix-in class for any custom dojo
-//		widgets. dojox.mobile._ScrollableMixin is such a class.
+//		widgets. dojox/mobile/_ScrollableMixin is such a class.
 //
 //		Also, it can be used even for non-dojo applications. In such cases,
-//		several dojo APIs used in this module, such as dojo.connect,
-//		dojo.create, etc., are re-defined so that the code works without dojo.
+//		several dojo APIs used in this module, such as dojo/connect,
+//		dojo/create, etc., are re-defined so that the code works without dojo.
 //		When in dojo, of course those re-defined functions are not necessary.
 //		So, they are surrounded by the includeStart and includeEnd directives
 //		so that they can be excluded from the build.
@@ -1021,7 +1021,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 	};
 
 	this.setSelectable = function(node, selectable){
-		// dojo.setSelectable has dependency on dojo.query. Re-define our own.
+		// dojo/setSelectable has dependency on dojo/query. Re-define our own.
 		node.style.KhtmlUserSelect = selectable ? "auto" : "none";
 		node.style.MozUserSelect = selectable ? "" : "none";
 		node.onselectstart = selectable ? null : function(){return false;};
@@ -1044,7 +1044,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 		win.doc.documentElement.removeChild(elem);
 	}
 
-	// disable dojo mobile resizeAll and let dojox.app layout container to do resize.
+	// disable dojo mobile resizeAll and let dojox/app layout container to do resize.
 	if(!dm.disableResizeAll){
 		dm.disableResizeAll = true;
 	}

@@ -21,8 +21,6 @@ define("dijit/TitlePane", [
 
 // module:
 //		dijit/TitlePane
-// summary:
-//		A pane with a title on top, that can be expanded or collapsed.
 
 
 return declare("dijit.TitlePane", [ContentPane, _TemplatedMixin, _CssStateMixin], {

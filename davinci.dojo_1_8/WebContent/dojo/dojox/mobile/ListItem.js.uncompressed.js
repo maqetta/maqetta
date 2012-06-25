@@ -27,7 +27,7 @@ define("dojox/mobile/ListItem", [
 		// description:
 		//		ListItem represents an item of either RoundRectList or
 		//		EdgeToEdgeList. There are three ways to move to a different
-		//		view, moveTo, href, and url. You can choose only one of them.
+		//		view: moveTo, href, and url. You can choose only one of them.
 		//
 		//		A child DOM node (or widget) can have the layout attribute,
 		//		whose value is "left", "right", or "center". Such nodes will be
@@ -39,8 +39,8 @@ define("dojox/mobile/ListItem", [
 		// |		<div layout="center">Center Node</div>
 		// |	</li>
 		//
-		//		Note that even if you specify variableHeight="true" to the list
-		//		and place a tall object inside the layout node as an example
+		//		Note that even if you specify variableHeight="true" for the list
+		//		and place a tall object inside the layout node as in the example
 		//		below, the layout node does not expand as you may expect,
 		//		because layout node is aligned using float:left, float:right, or
 		//		position:absolute.
@@ -108,7 +108,6 @@ define("dojox/mobile/ListItem", [
 		//		class still works for backward compatibility.
 		variableHeight: false,
 
-
 		// rightIconTitle: String
 		//		An alt text for the right icon.
 		rightIconTitle: "",
@@ -134,6 +133,7 @@ define("dojox/mobile/ListItem", [
 		progStyle: "",
 
 		/* internal properties */	
+		// The following properties are overrides of those in _ItemBase.
 		paramsToInherit: "variableHeight,transition,deleteIcon,icon,rightIcon,rightIcon2,uncheckIcon,arrowClass,checkClass,uncheckClass,deleteIconTitle,deleteIconRole",
 		baseClass: "mblListItem",
 
@@ -238,6 +238,8 @@ define("dojox/mobile/ListItem", [
 		},
 
 		_onTouchStart: function(e){
+			// tags:
+			//		private
 			if(e.target.getAttribute("preventTouch") ||
 				(registry.getEnclosingWidget(e.target) || {}).preventTouch){
 				return;
@@ -276,7 +278,7 @@ define("dojox/mobile/ListItem", [
 
 		onClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks.
 			// tags:
 			//		callback
 		},
@@ -287,6 +289,8 @@ define("dojox/mobile/ListItem", [
 		},
 
 		layoutVariableHeight: function(){
+			// summary:
+			//		Lays out the current item with variable height.
 			var h = this.domNode.offsetHeight;
 			if(h === this.domNodeHeight){ return; }
 			this.domNodeHeight = h;
@@ -335,6 +339,8 @@ define("dojox/mobile/ListItem", [
 		_findRef: function(/*String*/type){
 			// summary:
 			//		Find an appropriate position to insert a new child node.
+			// tags:
+			//		private
 			var i, node, list = ["deleteIcon", "icon", "rightIcon", "uncheckIcon", "rightIcon2", "rightText"];
 			for(i = array.indexOf(list, type) + 1; i < list.length; i++){
 				node = this[list[i] + "Node"];
@@ -348,6 +354,8 @@ define("dojox/mobile/ListItem", [
 		},
 
 		_setIcon: function(/*String*/icon, /*String*/type){
+			// tags:
+			//		private
 			if(!this._isOnLine){ return; } // icon may be invalid because inheritParams is not called yet
 			this._set(type, icon);
 			this[type + "Node"] = iconUtils.setIcon(icon, this[type + "Pos"],
@@ -363,14 +371,20 @@ define("dojox/mobile/ListItem", [
 		},
 
 		_setDeleteIconAttr: function(/*String*/icon){
+			// tags:
+			//		private
 			this._setIcon(icon, "deleteIcon");
 		},
 
 		_setIconAttr: function(icon){
+			// tags:
+			//		private
 			this._setIcon(icon, "icon");
 		},
 
 		_setRightTextAttr: function(/*String*/text){
+			// tags:
+			//		private
 			if(!this.rightTextNode){
 				this.rightTextNode = domConstruct.create("div", {className:"mblListItemRightText"}, this.labelNode, "before");
 			}
@@ -379,18 +393,26 @@ define("dojox/mobile/ListItem", [
 		},
 
 		_setRightIconAttr: function(/*String*/icon){
+			// tags:
+			//		private
 			this._setIcon(icon, "rightIcon");
 		},
 
 		_setUncheckIconAttr: function(/*String*/icon){
+			// tags:
+			//		private
 			this._setIcon(icon, "uncheckIcon");
 		},
 
 		_setRightIcon2Attr: function(/*String*/icon){
+			// tags:
+			//		private
 			this._setIcon(icon, "rightIcon2");
 		},
 
 		_setCheckedAttr: function(/*Boolean*/checked){
+			// tags:
+			//		private
 			if(!this._isOnLine){ return; } // icon may be invalid because inheritParams is not called yet
 			var parent = this.getParent();
 			if(parent && parent.select === "single" && checked){
@@ -413,6 +435,8 @@ define("dojox/mobile/ListItem", [
 		},
 
 		_setBusyAttr: function(/*Boolean*/busy){
+			// tags:
+			//		private
 			var prog = this._prog;
 			if(busy){
 				if(!this._progNode){
@@ -441,6 +465,8 @@ define("dojox/mobile/ListItem", [
 		_setSelectedAttr: function(/*Boolean*/selected){
 			// summary:
 			//		Makes this widget in the selected or unselected state.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			domClass.toggle(this.domNode, this._selClass, selected);
 		}

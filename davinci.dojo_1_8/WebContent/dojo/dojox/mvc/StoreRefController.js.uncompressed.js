@@ -42,11 +42,11 @@ define("dojox/mvc/StoreRefController", [
 		// |			<body>
 		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
 		// |				<span id="ctrl" data-dojo-type="dojox.mvc.StoreRefController" data-dojo-props="store: store"></span>
-		// |				<input type="text" data-dojo-type="dijit.form.TextBox" data-dojo-props="value: at('widget:ctrl', 'value')">
+		// |				<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-props="value: at('widget:ctrl', 'value')">
 		// |			</body>
 		// |		</html>
 
-		// store: dojo.store.*
+		// store: dojo/store.*
 		//		The Dojo Object Store in use.
 		store: null,
 
@@ -58,14 +58,14 @@ define("dojox/mvc/StoreRefController", [
 		//		The property name for the data model, that serves as the data source.
 		_refSourceModelProp: "model",
 
-		queryStore: function(/*Object*/ query, /*dojo.store.api.Store.QueryOptions?*/ options){
+		queryStore: function(/*Object*/ query, /*dojo/store/api/Store.QueryOptions?*/ options){
 			// summary:
 			//		Queries the store for objects.
 			// query: Object
 			//		The query to use for retrieving objects from the store.
-			// options: dojo.store.api.Store.QueryOptions?
+			// options: dojo/store/api/Store.QueryOptions?
 			//		The optional arguments to apply to the resultset.
-			// returns: dojo.store.api.Store.QueryResults
+			// returns: dojo/store/api/Store.QueryResults
 			//		The results of the query, extended with iterative methods.
 
 			if(!(this.store || {}).query){ return; }
@@ -79,7 +79,7 @@ define("dojox/mvc/StoreRefController", [
 				_self.set(_self._refSourceModelProp, results);
 				return results;
 			});
-			// For dojo.store.Observable, which adds a function to query result
+			// For dojo/store/Observable, which adds a function to query result
 			for(var s in queryResult){
 				if(isNaN(s) && queryResult.hasOwnProperty(s) && lang.isFunction(queryResult[s])){
 					result[s] = queryResult[s];
@@ -94,7 +94,7 @@ define("dojox/mvc/StoreRefController", [
 			// id: Number
 			//		The identity to use to lookup the object.
 			// options: Object
-			//		The options for dojo.store.*.get().
+			//		The options for dojo/store.*.get().
 			// returns: Object
 			//		The object in the store that matches the given id.
 
@@ -107,12 +107,12 @@ define("dojox/mvc/StoreRefController", [
 			});
 		},
 
-		putStore: function(/*Object*/ object, /*dojo.store.api.Store.PutDirectives?*/ options){
+		putStore: function(/*Object*/ object, /*dojo/store/api/Store.PutDirectives?*/ options){
 			// summary:
 			//		Stores an object.
 			// object: Object
 			//		The object to store.
-			// options: dojo.store.api.Store.PutDirectives?
+			// options: dojo/store/api/Store.PutDirectives?
 			//		Additional metadata for storing the data.  Includes an "id" property if a specific id is to be used.
 			// returns: Number
 
@@ -125,7 +125,7 @@ define("dojox/mvc/StoreRefController", [
 			//		Creates an object, throws an error if the object already exists.
 			// object: Object
 			//		The object to store.
-			// options: dojo.store.api.Store.PutDirectives?
+			// options: dojo/store/api/Store.PutDirectives?
 			//		Additional metadata for storing the data.  Includes an "id" property if a specific id is to be used.
 			// returns: Number
 
@@ -139,7 +139,7 @@ define("dojox/mvc/StoreRefController", [
 			// id: Number
 			//		The identity to use to delete the object
 			// options: Object
-			//		The options for dojo.store.*.remove().
+			//		The options for dojo/store/*.remove().
 			// returns: Boolean
 			// 		Returns true if an object was removed, falsy (undefined) if no object matched the id.
 

@@ -1,9 +1,5 @@
 define("dojox/gauges/BarCircleIndicator", ["dojo/_base/declare","dojox/gfx","./BarLineIndicator"],
-  function(declare, gfx, BarLineIndicator) { 
-
-/*=====
-	BarLineIndicator = dojox.gauges.BarLineIndicator;
-=====*/
+  function(declare, gfx, BarLineIndicator) {
 
 return declare("dojox.gauges.BarCircleIndicator", [BarLineIndicator], {
 	// summary:

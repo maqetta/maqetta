@@ -9,9 +9,6 @@ define("dojox/form/uploader/plugins/IFrame", [
 	
 
 var pluginsIFrame = declare("dojox.form.uploader.plugins.IFrame", [], {
-
-	// Version: 1.6
-
 	// summary:
 	//		A plugin for dojox.form.Uploader that adds Ajax upload capabilities.
 	//
@@ -21,7 +18,10 @@ var pluginsIFrame = declare("dojox.form.uploader.plugins.IFrame", [], {
 	//		capabilities to browsers that support them. Progress events are not supported.
 	//		Inherits all properties from dojox.form.Uploader and formUploaderPluginsHTML5.
 	//
+	//
+	// Version: 1.6
 
+	
 	force:"",
 
 	postMixInProperties: function(){

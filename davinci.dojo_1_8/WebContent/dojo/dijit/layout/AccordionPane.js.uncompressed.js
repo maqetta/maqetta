@@ -6,8 +6,6 @@ define("dijit/layout/AccordionPane", [
 
 	// module:
 	//		dijit/layout/AccordionPane
-	// summary:
-	//		Deprecated widget.   Use `dijit.layout.ContentPane` instead.
 
 	return declare("dijit.layout.AccordionPane", ContentPane, {
 		// summary:

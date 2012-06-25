@@ -1,14 +1,9 @@
 define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "dojo/dom-geometry", "dijit/registry", "dijit/_WidgetBase", "dojo/_base/html", 
-		"dojo/_base/event", "dojox/gfx", "dojox/widget/_Invalidating","./ScaleBase"],
-	function(lang, declare, domGeom,  WidgetRegistry, _WidgetBase, html, event, gfx, _Invalidating, ScaleBase){
-	
-	/*=====
-	var _WidgetBase = dijit._WidgetBase;
-	var _Invalidating = dojox.widget._Invalidating;
-	=====*/
-	
+		"dojo/_base/event", "dojox/gfx", "dojox/widget/_Invalidating","./ScaleBase", "dojox/gfx/matrix", "dojox/gfx/canvas"],
+	function(lang, // lang.extend
+		declare, domGeom,  WidgetRegistry, _WidgetBase, html, event, gfx, _Invalidating, ScaleBase, matrix, canvas){
 	return declare("dojox.dgauges.GaugeBase", [_WidgetBase, _Invalidating], {
-		//	summary: 
+		// summary: 
 		//		This class is the base class for the circular and 
 		//		rectangular (horizontal and vertical) gauge components.
 		//		A gauge is a composition of elements added to the gauge using the addElement method.
@@ -18,12 +13,11 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		//		- A scale: CircularScale or RectangularScale depending on the type of gauge.
 		//		- A text, using the TextIndicator
 		//		Note: Indicator classes (value indicators, range indicators) are sub-elements of scales
-		//		
 		//		To create a custom gauge, subclass CircularGauge or RectangularGauge and
 		//		configure its elements in the constructor.
-	
-		//		Ready to use, predefined gauges are available in dojox.dgauges.components.
+		//		Ready to use, predefined gauges are available in dojox/dgauges/components/
 		//		They are good examples of gauges built on top of the framework.
+		
 		_elements: null,
 		_scales: null,
 		_elementsIndex: null,
@@ -33,13 +27,13 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		_widgetBox: null,
 		_node: null,
 
-		//	value: Number
+		// value: Number
 		//		A convenient way for setting the value of the first indicator of the first
 		//		scale declared in the gauge. It must be changed using the set method.
 		//		For other indicators, you have to set their value explicitly.
 		value: 0,
 		
-		//	font: Object
+		// font: Object
 		//		The font of the gauge used by scales if not overridden.
 		font: null,
 		
@@ -69,14 +63,21 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		_setCursor: function(type){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(this._node)
 				this._node.style.cursor = type;
 		},
 		
 		_addGroupBoundingBoxSupport: function(){
-		
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			dojox.gfx.addRect = function( /*dojox.gfx.Rectangle*/a, /*dojox.gfx.Rectangle*/ b){
-				//	returns:
+				// returns:
 				//		a rectangle representing the addition of the two given.
 				if(a === null && b === null){
 					return null;
@@ -99,7 +100,7 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 				};
 			};
 			
-			dojo.extend(dojox.gfx.matrix.Matrix2D, {
+			lang.extend(matrix.Matrix2D, {
 				isIdentity: function(){
 					// summary:
 					//		Indicates whether this transform corresponds to the identity operation.
@@ -144,14 +145,14 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 					return r;
 				}
 			});
-			dojo.extend(dojox.gfx.Group, {
+			lang.extend(canvas.Group, {
 				getBoundingBox: function(){
 					var bb = null;
 					var cs = this.children;
 					var ncs = this.children.length;
 					var c;
 					for(var i = 0; i < ncs; ++i){
-						var c = cs[i];
+						c = cs[i];
 						var cbb = c.getBoundingBox();
 						if(!cbb){
 							continue;
@@ -162,34 +163,37 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 						}
 						bb = bb ? dojox.gfx.addRect(bb, cbb) : cbb;
 					}
-
 					return bb;
 				}
 			})
 		},
 		
 		_computeBoundingBox: function(/* Object */element){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			return element ? element.getBoundingBox() : {x:0, y:0, width:0, height:0};
 		},
 		
 		destroy: function(){
-			//	summary:
+			// summary:
 			//		Cleanup when a gauge is to be destroyed.
 			
 			this.surface.destroy();
 		},
 
 		resize: function(width, height){
-			//	summary:
+			// summary:
 			//		Resize the gauge to the dimensions of width and height.
-			//	description:
+			// description:
 			//		Resize the gauge and its surface to the width and height dimensions.
 			//		If no width/height or box is provided, resize the surface to the marginBox of the gauge.
-			//	width: Number
+			// width: Number
 			//		The new width of the gauge.
-			//	height: Number
+			// height: Number
 			//		The new height of the gauge.
-			//	returns: dojox.dgauges.GaugeBase
+			// returns: dojox/dgauges/GaugeBase
 			//		A reference to the current gauge for functional chaining.
 			var box;
 			switch(arguments.length){
@@ -221,11 +225,11 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		addElement: function(/* String */name, /* Object */ element){
-			//	summary:
+			// summary:
 			//		Adds a element to the gauge.
-			//	name: String
+			// name: String
 			//		The name of the element to be added.
-			//	element: Object
+			// element: Object
 			//		This parameter can be:
 			//		- A function which takes on argument of type GFX Group and return null or a
 			//		GFX element retrievable using the getElementRenderer() method.
@@ -264,14 +268,14 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		removeElement: function(/* String */name){
-			//	summary:
+			// summary:
 			//		Remove the element defined by name from the gauge.
-			//	name: String
+			// name: String
 			//		The name of the element as defined using addElement.
-			//	returns: Object
+			// returns: Object
 			//		A reference to the removed element.
 			
-			element = this._elementsIndex[name];
+			var element = this._elementsIndex[name];
 			
 			if(element){
 				element._gfxGroup.removeShape();
@@ -290,21 +294,21 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		getElement: function(/* String */name){
-			//	summary:
+			// summary:
 			//		Get the given element, by name.
-			//	name: String
+			// name: String
 			//		The name of the element as defined using addElement.
-			//	returns: Object
+			// returns: Object
 			//		The element.
 			return this._elementsIndex[name];
 		},
 		
 		getElementRenderer: function(/* String */name){
-			//	summary:
+			// summary:
 			//		Get the given element renderer, by name.
-			//	name: String
+			// name: String
 			//		The name of the element as defined using addElement.
-			//	returns: Object
+			// returns: Object
 			//		The element renderer returned by the
 			//		drawing function or by the refreshRendering() method
 			//		in the case of framework classes.
@@ -313,12 +317,16 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		
 		onStartEditing: function(event){
 			// summary:
-			//		Event dispatched on interaction beginning (keyboard, mouse or gesture).
+			//		Called when an interaction begins (keyboard, mouse or gesture).
+			// tags:
+			//		callback
 		},
 		
 		onEndEditing: function(event){
 			// summary:
-			//		Event dispatched on interaction end (keyboard, mouse or gesture).
+			//		Called when an interaction ends (keyboard, mouse or gesture).
+			// tags:
+			//		callback
 		}
 	})
 });

@@ -12,7 +12,7 @@ define("dojox/app/layout/utils", [
 	//		marginBox2contentBox() and layoutChildren()
 
 	var layout = {};
-	/*===== layout = dijit.layout =====*/
+	/*===== layout = dijit/layout =====*/
 
 	layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 		// summary:

@@ -353,7 +353,9 @@ return declare("dojox.grid.enhanced.plugins.filter.FilterBar", [_Widget, _Templa
 	},
 	_showStatusTooltip: function(){
 		this._handle_statusTooltip = null;
-		this.plugin.filterStatusTip.showDialog(this._tippos.x, this._tippos.y, this.getColumnIdx(this._tippos.x));
+		if(this.plugin){
+			this.plugin.filterStatusTip.showDialog(this._tippos.x, this._tippos.y, this.getColumnIdx(this._tippos.x));
+		}
 	},
 	_highlightHeader: function(/* int */colIdx){
 		if(colIdx != this._previousHeaderIdx){

@@ -1,29 +1,24 @@
 define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./ScaleBase", "./_circularUtils"], function(declare, gfx, ScaleBase, _circularUtils){
-	
-    /*=====
-     var ScaleBase = dojox.dgauges.ScaleBase;
-     =====*/	
-	
 	return declare("dojox.dgauges.CircularScale", ScaleBase, {
-		//	summary:
+		// summary:
 		//		The circular scale. A scaler must be set to use this class.
 
-		//	originX: Number
+		// originX: Number
 		//		The origin x-coordinate of the scale in pixels.
 		originX: 50,
-		//	originY: Number
+		// originY: Number
 		//		The origin y-coordinate of the scale in pixels.
 		originY: 50,
-		//	radius: Number
+		// radius: Number
 		//		The outer radius in pixels of the scale.
 		radius: 50,
-		//	startAngle: Number
+		// startAngle: Number
 		//		The start angle of the scale in degrees.
 		startAngle: 0,
-		//	endAngle: Number
+		// endAngle: Number
 		//		The end angle of the scale in degrees.
 		endAngle: 180,
-		//	orientation: String
+		// orientation: String
 		//		The orientation of the scale. Can be "clockwise" or "cclockwise".
 		//		The default value is "clockwise".
 		orientation: "clockwise",
@@ -36,13 +31,17 @@ define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./Sca
 		},
 		
 		_getOrientationNum: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			return this.orientation == "cclockwise" ? -1 : 1;
 		},
 		
 		positionForValue: function(value){
-			//	summary:
+			// summary:
 			//		Transforms a value into an angle using the associated scaler.
-			//	returns: Number
+			// returns: Number
 			//		An angle in degrees.
 			var totalAngle = _circularUtils.computeTotalAngle(this.startAngle, this.endAngle, this.orientation);
 			var relativePos = this.scaler.positionForValue(value);
@@ -50,14 +49,18 @@ define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./Sca
 		},
 		
 		_positionForTickItem: function(tickItem){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var totalAngle = _circularUtils.computeTotalAngle(this.startAngle, this.endAngle, this.orientation);
 			return _circularUtils.modAngle(this.startAngle + this._getOrientationNum() * totalAngle * tickItem.position, 360);
 		},
 		
 		valueForPosition: function(angle){
-			//	summary:
+			// summary:
 			//		Transforms an angle in degrees into a value using the associated scaler.
-			//	returns: Number
+			// returns: Number
 			//		The value represented by angle. 
 			if(!this.positionInRange(angle)){
 				var min1 = _circularUtils.modAngle(this.startAngle - angle, 360);
@@ -79,9 +82,9 @@ define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./Sca
 		},
 		
 		positionInRange: function(value){
-			//	summary:
+			// summary:
 			//		Returns true if the value parameter is between the accepted scale positions.
-			//	returns: Boolean
+			// returns: Boolean
 			//		True if the value parameter is between the accepted scale positions.
 			if(this.startAngle == this.endAngle){
 				return true;
@@ -103,10 +106,18 @@ define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./Sca
 		},
 		
 		_distance: function(x1, y1, x2, y2){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 		},
 		
 		_layoutLabel: function(label, txt, ox, oy, lrad, angle, labelPlacement){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var font = this._getFont();
 			var box = gfx._base._getTextBox(txt, {
 				font: gfx.makeFontString(gfx.makeParameters(gfx.defaultFont, font))

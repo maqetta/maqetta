@@ -10,11 +10,11 @@ define("dojox/editor/plugins/Blockquote", [
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/i18n!dojox/editor/plugins/nls/Blockquote"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, range, selection, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
 	//	summary:
-	//		This plugin provides Blockquote cabability to the editor.
+	//		This plugin provides Blockquote capability to the editor.
 	//		window/tab
 
 	// iconClassPrefix: [const] String
@@ -346,7 +346,7 @@ dojo.declare("dojox.editor.plugins.Blockquote",dijit._editor._Plugin,{
 
 	_findBlockQuotes: function(nodeList){
 		// summary:
-		//		function to find a ll the blocknode elements in a collection of
+		//		function to find all the blocknode elements in a collection of
 		//		nodes
 		// nodeList:
 		//		The list of nodes.

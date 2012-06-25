@@ -2,15 +2,6 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 		"dojo/_base/connect"],
 	function(dojo,lang,baseFx,coreFx,dojoxFx,arrayUtil,dom,domStyle,domClass,connectUtil){
 	dojo.experimental("dojox.fx.style");
-// summary:
-//		dojox.fx CSS Class Animations:
-//
-// description:
-//		a set of functions to animate properties based on
-//		normalized CSS class definitions.
-//
-//	provides: addClass, removeClass, and toggleClass
-//
 		
 
 	var _getStyleSnapshot = function(/* Object */cache){
@@ -58,28 +49,28 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 		return calculated;
 	};
 
-	var styleFx = { // Augment dojox.fx for compat
+	var styleFx = {
+		// summary:
+		//		dojox.fx CSS Class Animations
+		// description:
+		//		a set of functions to animate properties based on
+		//		normalized CSS class definitions.
 
 		addClass: function(node, cssClass, args){
 			// summary:
 			//		Animate the effects of adding a class to a node
-			//
 			// description:
 			//		Creates an animation that will animate
 			//		the properties of a node to the properties
 			//		defined in a standard CSS .class definition.
 			//		(calculating the differences itself)
-			//
 			// node: String|DomNode
 			//		A String ID or DomNode referce to animate
-			//
 			// cssClass: String
 			//		The CSS class name to add to the node
-			//
 			// args: Object?
 			//		Additional optional `dojo.animateProperty` arguments, such as
 			//		duration, easing and so on.
-			//
 			// example:
 			//	|
 			//	|	.bar { line-height: 12px; }
@@ -118,16 +109,16 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 		},
 	
 		removeClass: function(node, cssClass, args){
-			// summary: Animate the effects of removing a class from a node
+			// summary:
+			//		Animate the effects of removing a class from a node
 			// description:
-			//	Creates an animation that will animate the properties of a
-			// 	node (args.node) to the properties calculated after removing
-			//	a standard CSS className from a that node.
+			//		Creates an animation that will animate the properties of a
+			// 		node (args.node) to the properties calculated after removing
+			//		a standard CSS className from a that node.
 			//
-			//	calls dojo.removeClass(args.cssClass) onEnd of animation
+			//		calls dojo.removeClass(args.cssClass) onEnd of animation
 			//
-			//	standard dojo.Animation object rules apply.
-			//
+			//		standard dojo.Animation object rules apply.
 			// example:
 			// |	// animate the removal of "foo" from a node with id="bar"
 			// |	dojox.fx.removeClass("bar", "foo").play()
@@ -161,13 +152,11 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 		toggleClass: function(node, cssClass, condition, args){
 			// summary:
 			//		Animate the effects of Toggling a class on a Node
-			//
 			// description:
 			//		creates an animation that will animate the effect of
 			//		toggling a class on or off of a node.
 			//		Adds a class to node if not present, or removes if present.
 			//		Pass a boolean condition if you want to explicitly add or remove.
-			//
 			// node: String|DomNode
 			//		The domNode (or string of the id) to toggle
 			// cssClass: String
@@ -176,7 +165,6 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 			//		If passed, true means to add the class, false means to remove.
 			// args: Object?
 			//		Additional `dojo.Animation` args to pass along.
-			//
 			// example:
 			// |	// add the class "sampleClass" to a node id="theNode"
 			// |	dojox.fx.toggleClass("theNode","sampleClass",true).play();
@@ -191,11 +179,12 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 		},
 	
 		_allowedProperties: [
-			// summary: Our pseudo map of properties we will check for.
+			// summary:
+			//		Our pseudo map of properties we will check for.
 			// description:
-			//	it should be much more intuitive. a way to normalize and
-			//	"predict" intent, or even something more clever ...
-			//	open to suggestions.
+			//		it should be much more intuitive. a way to normalize and
+			//		"predict" intent, or even something more clever ...
+			//		open to suggestions.
 
 			// no-brainers:
 			"width",

@@ -1,30 +1,34 @@
 define("dojo/Deferred", [
+	"./has",
 	"./_base/lang",
-	"./promise/CancelError",
+	"./errors/CancelError",
 	"./promise/Promise"
-], function(lang, CancelError, Promise){
+], function(has, lang, CancelError, Promise){
 	"use strict";
 
 	// module:
 	//		dojo/Deferred
-	// summary:
-	//		Deferred base class.
 
 	var PROGRESS = 0,
 			RESOLVED = 1,
 			REJECTED = 2;
 	var FULFILLED_ERROR_MESSAGE = "This deferred has already been fulfilled.";
 
-	var noop = function(){};
-	var freezeObject = Object.freeze || noop;
+	var freezeObject = Object.freeze || function(){};
 
-	var signalWaiting = function(waiting, type, result){
+	var signalWaiting = function(waiting, type, result, rejection, deferred){
+		if( 0 ){
+			if(type === REJECTED && Deferred.instrumentRejected && waiting.length === 0){
+				Deferred.instrumentRejected(result, false, rejection, deferred);
+			}
+		}
+
 		for(var i = 0; i < waiting.length; i++){
-			signalListener(waiting[i], type, result);
+			signalListener(waiting[i], type, result, rejection);
 		}
 	};
 
-	var signalListener = function(listener, type, result){
+	var signalListener = function(listener, type, result, rejection){
 		var func = listener[type];
 		var deferred = listener.deferred;
 		if(func){
@@ -45,6 +49,12 @@ define("dojo/Deferred", [
 			}
 		}else{
 			signalDeferred(deferred, type, result);
+		}
+
+		if( 0 ){
+			if(type === REJECTED && Deferred.instrumentRejected){
+				Deferred.instrumentRejected(result, !!func, rejection, deferred.promise);
+			}
 		}
 	};
 
@@ -70,20 +80,29 @@ define("dojo/Deferred", [
 		}
 	};
 
-	var Deferred = lang.extend(function(/*Function?*/ canceler){
+	var Deferred = function(/*Function?*/ canceler){
 		// summary:
 		//		Constructor for a deferred.
 		// description:
 		//		Creates a new Deferred. This API is preferred over dojo/_base/Deferred.
-		//
 		// canceler:
 		//		Will be invoked if the deferred is canceled. The canceler receives the
 		//		reason the deferred was canceled as its argument. The deferred is
 		//		rejected with its return value, if any.
+
+		// promise: dojo/promise/Promise
+		//		The readonly promise that tells when this Deferred resolves
 		var promise = this.promise = new Promise();
-		var fulfilled, result;
+
+		var deferred = this;
+		var fulfilled, result, rejection;
 		var canceled = false;
 		var waiting = [];
+
+		if( 0  && Error.captureStackTrace){
+			Error.captureStackTrace(deferred, Deferred);
+			Error.captureStackTrace(promise, Deferred);
+		}
 
 		this.isResolved = promise.isResolved = function(){
 			// summary:
@@ -124,7 +143,7 @@ define("dojo/Deferred", [
 			// strict:
 			//		If strict, will throw an error if the deferred is already fulfilled.
 			if(!fulfilled){
-				signalWaiting(waiting, PROGRESS, update);
+				signalWaiting(waiting, PROGRESS, update, null, deferred);
 				return promise;
 			}else if(strict === true){
 				throw new Error(FULFILLED_ERROR_MESSAGE);
@@ -146,7 +165,7 @@ define("dojo/Deferred", [
 			if(!fulfilled){
 				// Set fulfilled, store value. After signaling waiting listeners unset
 				// waiting.
-				signalWaiting(waiting, fulfilled = RESOLVED, result = value);
+				signalWaiting(waiting, fulfilled = RESOLVED, result = value, null, deferred);
 				waiting = null;
 				return promise;
 			}else if(strict === true){
@@ -156,7 +175,7 @@ define("dojo/Deferred", [
 			}
 		};
 
-		this.reject = function(error, /*Boolean?*/ strict){
+		var reject = this.reject = function(error, /*Boolean?*/ strict){
 			// summary:
 			//		Reject the deferred.
 			// returns: dojo/promise/Promise
@@ -167,7 +186,10 @@ define("dojo/Deferred", [
 			// strict:
 			//		If strict, will throw an error if the deferred is already fulfilled.
 			if(!fulfilled){
-				signalWaiting(waiting, fulfilled = REJECTED, result = error);
+				if( 0  && Error.captureStackTrace){
+					Error.captureStackTrace(rejection = {}, reject);
+				}
+				signalWaiting(waiting, fulfilled = REJECTED, result = error, rejection, deferred);
 				waiting = null;
 				return promise;
 			}else if(strict === true){
@@ -182,7 +204,6 @@ define("dojo/Deferred", [
 			//		Add new callbacks to the deferred.
 			// returns: dojo/promise/Promise
 			//		Returns a new promise for the result of the callback(s).
-			//
 			// callback:
 			//		Callback to be invoked when the promise is resolved.
 			// errback:
@@ -199,24 +220,13 @@ define("dojo/Deferred", [
 				return listener.cancel && listener.cancel(reason);
 			});
 			if(fulfilled && !waiting){
-				signalListener(listener, fulfilled, result);
+				signalListener(listener, fulfilled, result, rejection);
 			}else{
 				waiting.push(listener);
 			}
 			return listener.deferred.promise;
 		};
 
-		/**
-		* promise.Deferred#cancel([reason, strict]) -> Boolean | reason
-		* - reason (?): A message that may be sent to the deferred's canceler, explaining why it's being canceled.
-		* - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
-		*
-		* Signal the deferred that we're no longer interested in the result.
-		* The deferred may subsequently cancel its operation and reject the
-		* promise. Can affect other promises that originate with the same
-		* deferred. Returns the rejection reason if the deferred was canceled
-		* normally.
-		**/
 		this.cancel = promise.cancel = function(reason, /*Boolean?*/ strict){
 			// summary:
 			//		Signal the deferred that we're no longer interested in the result.
@@ -226,7 +236,6 @@ define("dojo/Deferred", [
 			//		promise. Can affect other promises that originate with the same
 			//		deferred. Returns the rejection reason if the deferred was canceled
 			//		normally.
-			//
 			// reason:
 			//		A message that may be sent to the deferred's canceler, explaining why
 			//		it's being canceled.
@@ -244,8 +253,7 @@ define("dojo/Deferred", [
 					if(typeof reason === "undefined"){
 						reason = new CancelError();
 					}
-					signalWaiting(waiting, fulfilled = REJECTED, result = reason);
-					waiting = null;
+					reject(reason);
 					return reason;
 				}else if(fulfilled === REJECTED && result === reason){
 					return reason;
@@ -256,19 +264,11 @@ define("dojo/Deferred", [
 		};
 
 		freezeObject(promise);
-	}, {
-		// Define the shape of Deferred instances
-		promise: null,
-		resolve: noop,
-		reject: noop,
-		progress: noop,
-		then: noop,
-		cancel: noop,
-		isResolved: noop,
-		isRejected: noop,
-		isFulfilled: noop,
-		isCanceled: noop
-	});
+	};
+
+	Deferred.prototype.toString = function(){
+		return "[object Deferred]";
+	};
 
 	return Deferred;
 });

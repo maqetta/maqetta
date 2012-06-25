@@ -9,8 +9,6 @@ define("dijit/layout/LayoutContainer", [
 
 // module:
 //		dijit/layout/LayoutContainer
-// summary:
-//		Deprecated.  Use `dijit.layout.BorderContainer` instead.
 
 
 // This argument can be specified for the children of a LayoutContainer.
@@ -68,14 +66,14 @@ return declare("dijit.layout.LayoutContainer", _LayoutWidget, {
 		layoutUtils.layoutChildren(this.domNode, this._contentBox, this.getChildren());
 	},
 
-	addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
+	addChild: function(/*dijit/_WidgetBase*/ child, /*Integer?*/ insertIndex){
 		this.inherited(arguments);
 		if(this._started){
 			layoutUtils.layoutChildren(this.domNode, this._contentBox, this.getChildren());
 		}
 	},
 
-	removeChild: function(/*dijit._Widget*/ widget){
+	removeChild: function(/*dijit/_WidgetBase*/ widget){
 		this.inherited(arguments);
 		if(this._started){
 			layoutUtils.layoutChildren(this.domNode, this._contentBox, this.getChildren());

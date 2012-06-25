@@ -120,7 +120,7 @@ define("dojox/dtl/filter/lists", [
 		unordered_list: function(value){
 			// summary:
 			//		Recursively takes a self-nested list and returns an HTML unordered list --
-			//		WITHOUT opening and closing <ul> tags.
+			//		WITHOUT opening and closing `<ul>` tags.
 			//	description:
 			//		The list is assumed to be in the proper format. For example, if ``var`` contains
 			//		``['States', [['Kansas', [['Lawrence', []], ['Topeka', []]]], ['Illinois', []]]]``,

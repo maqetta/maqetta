@@ -10,18 +10,17 @@ define("dojox/dgauges/components/green/VerticalLinearGauge", [
 		"../DefaultPropertiesMixin"
 	], 
 	function(lang, declare, Color, utils, RectangularGauge, LinearScaler, RectangularScale, RectangularValueIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	var RectangularGauge = dojox.dgauges.RectangularGauge;
-	=====*/
 		return declare("dojox.dgauges.components.green.VerticalLinearGauge", [RectangularGauge, DefaultPropertiesMixin], {
-			//	borderColor:
+			// summary:
+			//		A vertical gauge widget.
+
+			// borderColor: Object|Array|int
 			//		The border color. Default is "#323232".
 			borderColor: [50,50,50],
-			//	fillColor:
+			// fillColor: Object|Array|int
 			//		The background color. Default is "#6DB713".
 			fillColor: [109,183,19],
-			//	indicatorColor:
+			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#000000".
 			indicatorColor: [0,0,0],
 			constructor: function(){
@@ -64,6 +63,16 @@ define("dojox/dgauges/components/green/VerticalLinearGauge", [
 			},
 
 			drawBackground: function(g, w, h){
+				// summary:
+				//		Draws the background shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the background. 
+				// w: Number
+				//		The width of the gauge.
+				// h: Number
+				//		The height of the gauge.
+				// tags:
+				//		protected
 				var lighterFillColor = utils.brightness(new Color(this.fillColor), 100);
 				g.createRect({
 					x: 0,

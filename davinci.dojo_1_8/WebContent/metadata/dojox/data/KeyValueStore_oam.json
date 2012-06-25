@@ -1,0 +1,35 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/KeyValueStore",
+    "name": "dojox.data.KeyValueStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/KeyValueStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Variable Name"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "data": {
+            "datatype": "string",
+            "title": "Data"
+        }
+    },
+    "content": "<span></span>"
+}

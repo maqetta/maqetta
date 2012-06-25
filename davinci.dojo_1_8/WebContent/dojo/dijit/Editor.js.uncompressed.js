@@ -34,8 +34,6 @@ define("dijit/Editor", [
 
 	// module:
 	//		dijit/Editor
-	// summary:
-	//		A rich text Editing widget
 
 	var Editor = declare("dijit.Editor", RichText, {
 		// summary:
@@ -121,6 +119,7 @@ define("dijit/Editor", [
 			if(!this.toolbar){
 				// if we haven't been assigned a toolbar, create one
 				this.toolbar = new Toolbar({
+					ownerDocument: this.ownerDocument,
 					dir: this.dir,
 					lang: this.lang
 				});
@@ -848,7 +847,12 @@ define("dijit/Editor", [
 		"superscript": togglePluginFactory,
 
 		"|": function(){
-			return new _Plugin({ button: new ToolbarSeparator(), setEditor: function(editor){this.editor = editor;}});
+			return new _Plugin({
+				setEditor: function(editor){
+					this.editor = editor;
+					this.button = new ToolbarSeparator({ownerDocument: editor.ownerDocument});
+				}
+			});
 		}
 	});
 

@@ -39,11 +39,7 @@ define("dojox/analytics/_base", ["dojo/_base/lang", "dojo/_base/config", "dojo/r
 
 			if(arguments.length > 2){
 				// FIXME: var c = dojo._toArray(arguments) ?
-				var c = [];
-				for(var i = 1; i < arguments.length; i++){
-					c.push(arguments[i]);
-				}
-				data = c;
+				data = Array.prototype.slice.call(arguments,1);				
 			}
 
 			this._data.push({ plugin: dataType, data: data });

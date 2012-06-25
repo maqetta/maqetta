@@ -10,7 +10,7 @@ define("dojox/mvc/_Controller", [
 			//		If this object is not called from Dojo parser, starts this up right away.
 			//		Also, if widget registry is available, register this object.
 
-			// If there is dijit._WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
+			// If there is dijit/_WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
 			if(this._applyAttributes){
 				this.inherited(arguments);
 			}
@@ -44,7 +44,7 @@ define("dojox/mvc/_Controller", [
 			if(!this._applyAttributes){
 				this._startAtWatchHandles();
 			}
-			// If there is dijit._WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
+			// If there is dijit/_WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
 			this.inherited(arguments);
 		},
 
@@ -55,7 +55,7 @@ define("dojox/mvc/_Controller", [
 			if(!this._applyAttributes){
 				this._stopAtWatchHandles();
 			}
-			// If there is dijit._WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
+			// If there is dijit/_WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
 			this.inherited(arguments);
 		},
 
@@ -95,24 +95,24 @@ define("dojox/mvc/_Controller", [
 				}
 			}
 
-			// If there is dijit._WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
+			// If there is dijit/_WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
 			return this.inherited(arguments);
 		},
 
 		_set: function(/*String*/ name, /*Anything*/ value){
 			// summary:
 			//		Implement _set() interface so that _set() behavior is consistent whether the instance inherits _WidgetBase or not.
-			//		If the instance does not inherit _WidgetBase, use dojo.Stateful._changeAttrValue() that's equivalent to dijit._WidgetBase._set().
+			//		If the instance does not inherit _WidgetBase, use dojo/Stateful/_changeAttrValue() that's equivalent to dijit/_WidgetBase._set().
 			// name: String
 			//		The property name.
 			// value: Anything
 			//		The property value.
 
 			if(!this._applyAttributes){
-				// Call dojo.Stateful._changeAttrValue() that's equivalent to dijit._WidgetBase._set()
+				// Call dojo/Stateful/_changeAttrValue() that's equivalent to dijit/_WidgetBase/_set()
 				return this._changeAttrValue(name, value);
 			}
-			// If there is dijit._WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
+			// If there is dijit/_WidgetBase in upper class hierarchy (happens when this descendant is mixed into a widget), let _WidgetBase do all work
 			return this.inherited(arguments);
 		}
 	});

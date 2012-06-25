@@ -10,8 +10,9 @@ define("dojox/widget/TitleGroup", ["dojo", "dijit/registry", "dijit/_Widget", "d
 	
 	// this might hide this uberprivate function from the docparser.
 	tp._dxfindParent = function(){
-		// summary: TitlePane's MUST be first-children of a TitleGroup. only used by
-		//		`dojox.widget.TitleGroup`. Finds a possible parent TitleGroup of a TitlePane
+		// summary:
+		//	 TitlePane's MUST be first-children of a TitleGroup. only used by
+		//	 `dojox.widget.TitleGroup`. Finds a possible parent TitleGroup of a TitlePane
 		var n = this.domNode.parentNode;
 		if(n){
 			n = registry.getEnclosingWidget(n);
@@ -54,7 +55,7 @@ define("dojox/widget/TitleGroup", ["dojo", "dijit/registry", "dijit/_Widget", "d
 			//
 			// widget: dijit.TitlePane
 			//		A widget reference to add
-			// position: String?|Int?
+			// position: String|Int?
 			//		An optional index or position to pass. defaults to "last"
 			return widget.placeAt(this.domNode, position); // dijit.TitlePane
 		},
@@ -74,7 +75,7 @@ define("dojox/widget/TitleGroup", ["dojo", "dijit/registry", "dijit/_Widget", "d
 				var tp = registry.byNode(n);
 				tp && tp !== widget && tp.open && tp.toggle(); // could race if open is set onEnd of slide
 			});
-			return widget; // dijit.TitlePane
+			return widget; // dijit/TitlePane
 		}
 	
 	});

@@ -3,10 +3,11 @@ define("dojo/dnd/autoscroll", ["../_base/lang", "../sniff", "../_base/window", "
 
 // module:
 //		dojo/dnd/autoscroll
-// summary:
-//		TODOC
 
-var exports = {};
+var exports = {
+	// summary:
+	//		TODOC
+};
 lang.setObject("dojo.dnd.autoscroll", exports);
 
 exports.getViewport = winUtils.getBox;

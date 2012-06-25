@@ -1,10 +1,6 @@
 define("dojox/dgauges/MultiLinearScaler", ["dojo/_base/declare", "dojo/Stateful"], function(declare, Stateful){
-	/*=====
-	var Stateful = dojo.Stateful;
-	=====*/
-	
 	return declare("dojox.dgauges.MultiLinearScaler", Stateful, {
-		//	summary:
+		// summary:
 		//		The multi-linear scaler. This scaler maps numeric values according 
 		//		to the majorTickValues content. 
 		//		This allows display of very large value intervals that are difficult to render 
@@ -14,19 +10,19 @@ define("dojox/dgauges/MultiLinearScaler", ["dojo/_base/declare", "dojo/Stateful"
 		//		two contiguous major ticks.
 		//		Scalers are responsible for tick generation and various data-transform operations.	
 
-		//	majorTickValues: Array
+		// majorTickValues: Array
 		//		An array of Number for creating major ticks.
 		//		This array must be sorted in ascendant order.
 		majorTickValues: null,
-		//	minorTickCount: Array
+		// minorTickCount: Array
 		//		The number of minor ticks between two contiguous major ticks.
 		//		The default value is 4.
 		minorTickCount: 4,
-		//	majorTicks:
+		// majorTicks:
 		//		The array of generated major ticks. You should not set this
 		//		property when using the scaler.
 		majorTicks: null,
-		//	minorTicks:
+		// minorTicks:
 		//		The array of generated minor ticks. You should not set this
 		//		property when using the scaler.
 		minorTicks: null,
@@ -39,9 +35,9 @@ define("dojox/dgauges/MultiLinearScaler", ["dojo/_base/declare", "dojo/Stateful"
 		},
 				
 		computeTicks: function(){
-			//	summary:
+			// summary:
 			//		Creates or re-creates the ticks for this scaler.
-			//	returns: Array
+			// returns: Array
 			//		An array containing all ticks (major then minor ticks).			
 			this.majorTicks = [];
 			this.minorTicks = [];
@@ -76,11 +72,11 @@ define("dojox/dgauges/MultiLinearScaler", ["dojo/_base/declare", "dojo/Stateful"
 		},
 		
 		positionForValue: function(value){
-			//	summary:
+			// summary:
 			//		Transforms a value into a relative position between 0 and 1.
-			//	value: Number
+			// value: Number
 			//		A value to transform.
-			//	returns: Number
+			// returns: Number
 			//		The position between 0 and 1.			
 			if(!this.majorTickValues){
 				return 0;
@@ -96,11 +92,11 @@ define("dojox/dgauges/MultiLinearScaler", ["dojo/_base/declare", "dojo/Stateful"
 		},
 		
 		valueForPosition: function(position){
-			//	summary:
+			// summary:
 			//		Transforms a relative position (between 0 and 1) into a value.
-			//	value: Number
+			// value: Number
 			//		A relative position to transform.
-			//	returns: Number
+			// returns: Number
 			//		The transformed value.
 			if(this.majorTicks == null){
 				return 0;
@@ -111,6 +107,10 @@ define("dojox/dgauges/MultiLinearScaler", ["dojo/_base/declare", "dojo/Stateful"
 		},
 		
 		_getMinMax: function(v, property){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(!property){
 				property = "value";
 			}

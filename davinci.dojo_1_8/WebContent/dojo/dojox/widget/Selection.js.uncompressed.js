@@ -1,10 +1,6 @@
 define("dojox/widget/Selection", ["dojo/_base/declare", "dojo/_base/array", "dojo/_base/lang", "dojo/Stateful"], 
 	function(declare, arr, lang, Stateful){
 		
-	/*=====
-	var Stateful = dojo.Stateful;
-	=====*/		
-	
 	return declare("dojox.widget.Selection", Stateful, {
 		// summary:
 		//		Base class for widgets that manage a list of selected data items.
@@ -13,11 +9,11 @@ define("dojox/widget/Selection", ["dojo/_base/declare", "dojo/_base/array", "doj
 			this.selectedItems = [];
 		},
 		
-		//	selectionMode: String
-		//		Valid values are "none", "single", "multiple".
-		//		- "none": No selection can be done.
-		//		- "single": Only one item can be selected at a time.
-		//		- "multiple": Several item can be selected using the control key modifier.
+		// selectionMode: String
+		//		Valid values are:
+		//		1. "none": No selection can be done.
+		//		2. "single": Only one item can be selected at a time.
+		//		3. "multiple": Several item can be selected using the control key modifier.
 		//		Default value is "single".
 		selectionMode: "single",
 		
@@ -35,7 +31,7 @@ define("dojox/widget/Selection", ["dojo/_base/declare", "dojo/_base/array", "doj
 			}
 		},
 		
-		//	selectedItem: Object
+		// selectedItem: Object
 		//		In single selection mode, the selected item or in multiple selection mode the last selected item.
 		//		Warning: Do not use this property directly, make sure to call set() or get() methods.
 		selectedItem: null,
@@ -47,7 +43,7 @@ define("dojox/widget/Selection", ["dojo/_base/declare", "dojo/_base/array", "doj
 			}
 		},
 		
-		//	selectedItems: Object[]
+		// selectedItems: Object[]
 		//		The list of selected items.
 		//		Warning: Do not use this property directly, make sure to call set() or get() methods.
 		selectedItems: null,
@@ -86,16 +82,18 @@ define("dojox/widget/Selection", ["dojo/_base/declare", "dojo/_base/array", "doj
 		},
 		
 		getIdentity: function(item){
-			//	summary: 
-			//		This function must be implemented to return the id of a item. 
+			// summary:
+			//		This function must be implemented to return the id of a item.
+			// item: Object
+			//		The item to query the identity for.
 		},
 		
 		setItemSelected: function(item, value){
-			//	summary: 
+			// summary:
 			//		Change the selection state of an item.
-			//	item: Object
+			// item: Object
 			//		The item to change the selection state for.
-			//	value: Boolean
+			// value: Boolean
 			//		True to select the item, false to deselect it. 
 			
 			if(this.selectionMode == "none" || item == null){
@@ -136,19 +134,19 @@ define("dojox/widget/Selection", ["dojo/_base/declare", "dojo/_base/array", "doj
 		},
 		
 		selectFromEvent: function(e, item, renderer, dispatch){
-			//	summary: 
+			// summary:
 			//		Applies selection triggered by an user interaction
-			//	e: Event
+			// e: Event
 			//		The source event of the user interaction.
-			//	item: Object
+			// item: Object
 			//		The render item that has been selected/deselected.
-			//	renderer: Object
+			// renderer: Object
 			//		The visual renderer of the selected/deselected item.			
-			//	dispatch: Boolean
+			// dispatch: Boolean
 			//		Whether an event must be dispatched or not.
-			//	returns: Boolean
+			// returns: Boolean
 			//		Returns true if the selection has changed and false otherwise.
-			//	tags:
+			// tags:
 			//		protected
 			
 			if(this.selectionMode == "none"){
@@ -193,15 +191,15 @@ define("dojox/widget/Selection", ["dojo/_base/declare", "dojo/_base/array", "doj
 		},
 		
 		dispatchChange: function(oldSelectedItem, newSelectedItem, renderer, triggerEvent){
-			//	summary: 
+			// summary:
 			//		Dispatch a selection change event.
-			//	oldSelectedItem: Object
-			//		The previously selectedItem
-			//	newSelectedItem: Object
+			// oldSelectedItem: Object
+			//		The previously selectedItem.
+			// newSelectedItem: Object
 			//		The new selectedItem.
-			//	render: Object
+			// renderer: Object
 			//		The visual renderer of the selected/deselected item.
-			//	triggerEvent: Event
+			// triggerEvent: Event
 			//		The event that lead to the selection of the item. 			
 			this.onChange({
 				oldValue: oldSelectedItem,

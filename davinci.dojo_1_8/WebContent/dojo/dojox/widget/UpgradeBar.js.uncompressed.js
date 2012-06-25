@@ -47,9 +47,10 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 	//				or false. You would need to use your own try/catch in that.
 	//
 	//	example:	See tests for examples.
-	//
+
+
 	//	notifications: Array
-	//		An array of objects that hold the criteria for upgrades.
+	//		An array of objects that hold the criteria for upgrades:
 	//			message: String
 	//				The message to display in the bar. Can be HTML.
 	//			validate:Function
@@ -59,11 +60,9 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 	//				|	<div validate="!google.gears">
 	//				|	<div validate="has('ie')<8">
 	notifications:[],
-	//
 	//	buttonCancel:String
 	//		The HTML tip show when hovering over the close button.
 	buttonCancel:"Close for now",
-	//
 	//	noRemindButton:String
 	//		The text link shown that when clicked, permanently dismisses
 	//		the message (sets a cookie). If this string is blank, this

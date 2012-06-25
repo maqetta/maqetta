@@ -58,6 +58,8 @@ define("dojox/mobile/Switch", [
 
 		/* internal properties */
 		baseClass: "mblSwitch",
+		// role: [private] String
+		//		The accessibility role.
 		role: "", // a11y
 		_createdMasks: [],
 
@@ -174,7 +176,7 @@ define("dojox/mobile/Switch", [
 			//		callback
 		},
 
-		onTouchStart: function(e){
+		onTouchStart: function(/*Event*/e){
 			// summary:
 			//		Internal function to handle touchStart events.
 			this._moved = false;
@@ -192,7 +194,7 @@ define("dojox/mobile/Switch", [
 			this._createMaskImage();
 		},
 
-		onTouchMove: function(e){
+		onTouchMove: function(/*Event*/e){
 			// summary:
 			//		Internal function to handle touchMove events.
 			e.preventDefault();
@@ -213,7 +215,7 @@ define("dojox/mobile/Switch", [
 			}
 		},
 
-		onTouchEnd: function(e){
+		onTouchEnd: function(/*Event*/e){
 			// summary:
 			//		Internal function to handle touchEnd events.
 			array.forEach(this._conn, connect.disconnect);

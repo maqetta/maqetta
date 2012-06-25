@@ -40,9 +40,6 @@ define("dijit/Dialog", [
 
 	// module:
 	//		dijit/Dialog
-	// summary:
-	//		A modal dialog Widget
-
 
 	/*=====
 	dijit._underlay = function(kwArgs){
@@ -140,10 +137,10 @@ define("dijit/Dialog", [
 		//		Allows the user to add an aria-describedby attribute onto the dialog.   The value should
 		//		be the id of the container element of text that describes the dialog purpose (usually
 		//		the first text in the dialog).
-		//		<div data-dojo-type="dijit/Dialog" aria-describedby="intro" .....>
-		//			<div id="intro">Introductory text</div>
-		//			<div>rest of dialog contents</div>
-		//		</div>
+		//	|	<div data-dojo-type="dijit/Dialog" aria-describedby="intro" .....>
+		//	|		<div id="intro">Introductory text</div>
+		//	|		<div>rest of dialog contents</div>
+		//	|	</div>
 		"aria-describedby":"",
 
 		// maxRatio: Number
@@ -355,7 +352,7 @@ define("dijit/Dialog", [
 		show: function(){
 			// summary:
 			//		Display the dialog
-			// returns: dojo.Deferred
+			// returns: dojo/_base/Deferred
 			//		Deferred object that resolves when the display animation is complete
 
 			if(this.open){ return; }
@@ -423,7 +420,7 @@ define("dijit/Dialog", [
 		hide: function(){
 			// summary:
 			//		Hide the dialog
-			// returns: dojo.Deferred
+			// returns: dojo/_base/Deferred
 			//		Deferred object that resolves when the hide animation is complete
 
 			// If we haven't been initialized yet then we aren't showing and we can just return.
@@ -518,7 +515,7 @@ define("dijit/Dialog", [
 
 		_beginZIndex: 950,
 
-		show: function(/*dijit._Widget*/ dialog, /*Object*/ underlayAttrs){
+		show: function(/*dijit/_WidgetBase*/ dialog, /*Object*/ underlayAttrs){
 			// summary:
 			//		Call right before fade-in animation for new dialog.
 			//		Saves current focus, displays/adjusts underlay for new dialog,
@@ -533,6 +530,7 @@ define("dijit/Dialog", [
 			ds[ds.length-1].focus = focus.curNode;
 
 			// Display the underlay, or if already displayed then adjust for this new dialog
+			// TODO: one underlay per document (based on dialog.ownerDocument)
 			var underlay = DialogUnderlay._singleton;
 			if(!underlay || underlay._destroyed){
 				underlay = dijit._underlay = DialogUnderlay._singleton = new DialogUnderlay(underlayAttrs);
@@ -553,7 +551,7 @@ define("dijit/Dialog", [
 			ds.push({dialog: dialog, underlayAttrs: underlayAttrs, zIndex: zIndex});
 		},
 
-		hide: function(/*dijit._Widget*/ dialog){
+		hide: function(/*dijit/_WidgetBase*/ dialog){
 			// summary:
 			//		Called when the specified dialog is hidden/destroyed, after the fade-out
 			//		animation ends, in order to reset page focus, fix the underlay, etc.
@@ -614,7 +612,7 @@ define("dijit/Dialog", [
 			}
 		},
 
-		isTop: function(/*dijit._Widget*/ dialog){
+		isTop: function(/*dijit/_WidgetBase*/ dialog){
 			// summary:
 			//		Returns true if specified Dialog is the top in the task
 			return ds[ds.length-1].dialog == dialog;

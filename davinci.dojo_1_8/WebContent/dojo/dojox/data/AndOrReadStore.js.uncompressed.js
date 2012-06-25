@@ -1,6 +1,6 @@
 define("dojox/data/AndOrReadStore", ["dojo/_base/declare", "dojo/_base/lang", "dojo/data/ItemFileReadStore", "dojo/data/util/filter", "dojo/_base/array", "dojo/_base/json"],
   function(declare, lang, ItemFileReadStore, filterUtil, array, json) {
-
+  
 // module:
 //		dojox/data/AndOrReadStore
 // summary:

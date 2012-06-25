@@ -1,13 +1,15 @@
-define("dojox/charting/BidiSupport", ["dojo/_base/lang", "dojo/dom-style", "dojo/_base/array", "dojo/_base/sniff",
+define("dojox/charting/BidiSupport", ["../main", "dojo/_base/lang", "dojo/dom-style", "dojo/_base/array", "dojo/_base/sniff",
 	"dojo/dom","dojo/dom-construct",
 	"dojox/gfx", "dojox/gfx/_gfxBidiSupport", "./Chart", "./axis2d/common", "dojox/string/BidiEngine", "dojox/lang/functional"], 
-	function(lang, domStyle, arr, has, dom, domConstruct, g, gBidi, Chart, da, BidiEngine, df){
+	function(dojox, lang, domStyle, arr, has, dom, domConstruct, g, gBidi, Chart, da, BidiEngine, df){
 
 	var bidiEngine = new BidiEngine();
+
+	var dc = lang.getObject("charting", true, dojox);
 	
 	lang.extend(Chart, {
 		// summary:
-		//		Add support for bidi scripts.
+		//		Add support for bidi scripts to dojox/charting classes.
 		// description:
 		//		Bidi stands for support for languages with a bidirectional script. 
 		//		There's a special need for displaying BIDI text in rtl direction 
@@ -244,8 +246,8 @@ define("dojox/charting/BidiSupport", ["dojo/_base/lang", "dojo/dom-style", "dojo
 
 	// connect labelPreprocess to run before labelTooltip.
 	// patch it only is available
-	if(dojox.charting.axis2d && dojox.charting.axis2d.Default){
-		extendMethod(dojox.charting.axis2d.Default,"labelTooltip",true, labelPreprocess, null);
+	if(dc.axis2d && dc.axis2d.Default){
+		extendMethod(dc.axis2d.Default, "labelTooltip", true, labelPreprocess, null);
 		//extendMethod(dijit,"showTooltip",false, labelPreprocess, null);
 	}
 
@@ -260,5 +262,19 @@ define("dojox/charting/BidiSupport", ["dojo/_base/lang", "dojo/dom-style", "dojo
 	function validateTextDir(textDir){
 		return /^(ltr|rtl|auto)$/.test(textDir) ? textDir : null;
 	}
+
+	/*=====
+	return {
+		// summary:
+		//		Add support to dojox/charting for bidi scripts.
+		// description:
+		//		Bidi stands for support for languages with a bidirectional script.
+		//		There's a special need for displaying BIDI text in rtl direction
+		//		in ltr GUI, sometimes needed auto support.
+		//		dojox.charting does not support control over base text direction provided in Dojo.
+	};
+	 =====*/
+
+	return Chart;
 		
 });

@@ -13,17 +13,26 @@ define("dojox/mobile/bookmarkable", [
 	// module:
 	//		dojox/mobile/bookmarkable
 	// summary:
-	//		Utilities to make view transition bookmarkable
+	//		Utilities to make the view transitions bookmarkable.
 
 	var b = {
+		// settingHash: [private] Boolean
+		//		Whether the browser URL needs to be updated to include the hash.
 		settingHash: false,
+		
+		// transitionInfo: Array
+		//		An array containing information about the transition.
 		transitionInfo: [],
 
 		getTransitionInfo: function(/*String*/ fromViewId, /*String*/ toViewId){
-			return this.transitionInfo[fromViewId.replace(/^#/, "") + ":" + toViewId.replace(/^#/, "")];
+			// summary:
+			//		Returns an array containing the transition information.
+			return this.transitionInfo[fromViewId.replace(/^#/, "") + ":" + toViewId.replace(/^#/, "")]; // Array
 		},
 
 		addTransitionInfo: function(/*String*/ fromViewId, /*String*/ toViewId, /*Object*/args){
+			// summary:
+			//		Adds transition information.
 			this.transitionInfo[fromViewId.replace(/^#/, "") + ":" + toViewId.replace(/^#/, "")] = args;
 		},
 
@@ -38,10 +47,13 @@ define("dojox/mobile/bookmarkable", [
 					view = v;
 				}
 			}
-			return [view.getShowingView(), view]; // fromView, toView
+			// fromView, toView
+			return [view.getShowingView(), view]; // Array 
 		},
 
 		onHashChange: function(value){
+			// summary:
+			//		Called on "/dojo/hashchange" events.
 			if(this.settingHash){
 				this.settingHash = false;
 				return;
@@ -53,7 +65,7 @@ define("dojox/mobile/bookmarkable", [
 
 		handleFragIds: function(/*String*/fragIds){
 			// summary:
-			//		Analyze the given hash (=fragment id).
+			//		Analyzes the given hash (fragment id).
 			// description:
 			//		Given a comma-separated list of view IDs, this method
 			//		searches for a transition destination, and makes all the
@@ -117,7 +129,7 @@ define("dojox/mobile/bookmarkable", [
 
 		setFragIds: function(/*Widget*/toView){
 			// summary:
-			//		Update the hash (=fragment id) in the browser URL.
+			//		Updates the hash (fragment id) in the browser URL.
 			// description:
 			//		The hash value consists of one or more visible view ids
 			//		separated with commas.
@@ -137,5 +149,11 @@ define("dojox/mobile/bookmarkable", [
 		setFragIds: function(){ b.setFragIds.apply(b, arguments); }
 	});
 
+	/*=====
+    return {
+		// summary:
+		//		Utilities to make the view transitions bookmarkable. 
+    };
+    =====*/
 	return b;
 });

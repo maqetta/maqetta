@@ -1,21 +1,18 @@
 define("dojox/dgauges/RectangularScale", ["dojo/_base/declare", "dojox/gfx", "./ScaleBase"], function(declare, gfx, ScaleBase){
-	/*=====
-	var ScaleBase = dojox.dgauges.ScaleBase;
-	=====*/
 	return declare("dojox.dgauges.RectangularScale", ScaleBase, {
-		//	summary:
+		// summary:
 		//		The rectangular scale. A scaler must be set to use this class.
 
-		//	paddingLeft: Number
+		// paddingLeft: Number
 		//		The left padding.
 		paddingLeft: 15,
-		//	paddingTop: Number
+		// paddingTop: Number
 		//		The top padding.
 		paddingTop: 12,
-		//	paddingRight: Number
+		// paddingRight: Number
 		//		The right padding.
 		paddingRight: 15,
-		//	paddingBottom: Number
+		// paddingBottom: Number
 		//		The bottom padding.
 		paddingBottom: 0,
 		_contentBox: null,		
@@ -25,9 +22,9 @@ define("dojox/dgauges/RectangularScale", ["dojo/_base/declare", "dojox/gfx", "./
 		},
 		
 		positionForValue: function(value){
-			//	summary:
+			// summary:
 			//		Transforms a value into a position using the associated scaler.
-			//	returns: Number
+			// returns: Number
 			//		A position in pixels.
 			var relativePos = 0;
 			var position;
@@ -48,9 +45,9 @@ define("dojox/dgauges/RectangularScale", ["dojo/_base/declare", "dojox/gfx", "./
 		},
 		
 		valueForPosition: function(pos){
-			//	summary:
+			// summary:
 			//		Transforms a position in pixels into a value using the associated scaler.
-			//	returns: Number
+			// returns: Number
 			//		The value represented by pos. 
 			var value = this.scaler.minimum;
 			var position = NaN;

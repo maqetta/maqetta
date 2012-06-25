@@ -1,2 +1,3 @@
 //>>built
-define("dijit/_base/typematic",["../typematic"],function(){});
+define("dijit/_base/typematic",["../typematic"],function(){
+});

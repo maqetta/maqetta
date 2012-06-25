@@ -2,7 +2,7 @@ define("dojox/av/FLAudio", ['dojo', 'dojox/embed/Flash', 'dojox/timing/doLater']
 
 dojo.experimental("dojox.av.FLVideo");
 
-dojo.declare("dojox.av.FLAudio", null, {
+return dojo.declare("dojox.av.FLAudio", null, {
 
 	// summary:
 	//		Play MP3 files through the Flash SWF built in the
@@ -17,7 +17,7 @@ dojo.declare("dojox.av.FLAudio", null, {
 	//		may still be missing information. Markup is not
 	//		supported, as it may not be needed.
 	//
-	//	TODO:
+	//		TODO:
 	//		Streaming, playback events, crossdomain, CDN support,
 	//		(alternate SWF location), global volume, ID3 tag,
 	//		factor out doLater, onLoadStatus needs work,
@@ -29,49 +29,47 @@ dojo.declare("dojox.av.FLAudio", null, {
 	//		|		initialPan:0,
 	//		|		autoPlay:false
 	//		|	});
-	//
-	//  id: String?
+
+	// id: String?
 	//		The id of this widget and the id of the SWF movie.
 	id:"",
-	//
-	//	initialVolume: Number
+
+	// initialVolume: Number
 	//		From 0-1
 	//		Sets volume for all files unless changed with doPlay
 	//		or setVolume
 	initialVolume: 0.7,
-	//
-	//	initialPan: Number
+
+	// initialPan: Number
 	//		From -1 to 1 (-1 is left, 1 is right, 0 is middle)
 	//		Sets pan for all files unless changed with play
 	//		or setPan
 	initialPan: 0,
-	//
-	//	autoPlay: Boolean
+
+	// autoPlay: Boolean
 	//		If true, all files will play upon load. If false,
 	//		they load and wait for doPlay() command.
-	//
+
 	// isDebug: Boolean?
 	//		Setting to true tells the SWF to output log messages to Firebug.
 	isDebug: false,
-	//
-	//	statusInterval: Number
+
+	// statusInterval: Number
 	//		How often in milliseconds that the status of the
 	//		player is checked - both load and play
 	statusInterval:200,
-	//
+
 	// _swfPath: Uri
 	//		The path to the video player SWF resource
 	_swfPath: dojo.moduleUrl("dojox.av", "resources/audio.swf"),
-	//
-	//
+
 	// allowScriptAccess: String
 	//		Whether the SWF can access the container JS
 	allowScriptAccess:"always",
-	//
+
 	// allowNetworking: String
 	//		Whether SWF is restricted to a domain
 	allowNetworking: "all",
-	//
 
 	constructor: function(/*Object*/options){
 
@@ -373,5 +371,5 @@ dojo.declare("dojox.av.FLAudio", null, {
 	}
 
 });
-return dojox.av.FLAudio;
+
 });

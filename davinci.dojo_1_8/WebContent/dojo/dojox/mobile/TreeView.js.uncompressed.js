@@ -25,7 +25,7 @@ define("dojox/mobile/TreeView", [
 		// summary:
 		//		A scrollable view with tree-style navigation.
 		// description:
-		//		This widget can be connected to a dojox.data.FileStore as a
+		//		This widget can be connected to a dojox/data/FileStore as a
 		//		quick directory browser. You may use it when implementing the
 		//		Master-Detail pattern.
 
@@ -53,6 +53,10 @@ define("dojox/mobile/TreeView", [
 		},
 
 		handleClick: function(li){
+			// summary:
+			//		Called when the user clicks a tree item.
+			// li: dojox/mobile/ListItem
+			//		The item that the user clicked.
 			var newViewId = "view_";
 			if(li.item[this.model.newItemIdAttr]){
 				newViewId += li.item[this.model.newItemIdAttr];

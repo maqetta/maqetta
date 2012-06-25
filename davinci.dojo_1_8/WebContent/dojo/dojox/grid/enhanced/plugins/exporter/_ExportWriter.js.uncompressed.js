@@ -49,20 +49,20 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		Reference to the current cell.
 		cell: null,
 		
-		//cellIdx: int
+		// cellIdx: int
 		//		The index of the current cell in the current subrow.
 		//		It's different from cell.index, which is the index in the whole line.
 		cellIdx: -1,
 		
-		//row: item
+		// row: item
 		//		The current row of data (logically), a.k.a.: current item.
 		row: null,
 		
-		//rowIdx: int
+		// rowIdx: int
 		//		The index of the current row (item).
 		rowIdx: -1,
 		
-		// spCols: Array<int>
+		// spCols: int[]
 		//		An array of special column indexes(flat,not regarding structure).
 		//		Special columns are typically attached to grid as a kind of UI facility
 		//		by the grid widget, instead of some real data.
@@ -74,8 +74,9 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		If the grid has a _RowSelector view or something else, this view will NOT be
 		//		passed to the user in argObj. So the column index (cell.index) will appear shifted
 		//		(start from 1 instead of 0). This colOffset is provided to remove this shift.
-		// usage:
-		//		var correctColIndex = argObj.cell.index + argObj.colOffset;
+		//
+		// 		usage:
+		//		|	var correctColIndex = argObj.cell.index + argObj.colOffset;
 		colOffset: 0
 	},
 =====*/
@@ -101,8 +102,8 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		Is there anything we should do now?
 		// tags:
 		//		protected extension
-		// return:
-		//		true: go on hanling the header row and then call afterHeader.
+		// returns:
+		//		true: go on handling the header row and then call afterHeader.
 		//		false: skip the header row, won't call afterHeader.
 		return true;	//Boolean
 	},
@@ -121,7 +122,7 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// items:
 		//		All the items fetched from the store
-		// return:
+		// returns:
 		//		true: go on handling the contents and then call afterContent.
 		//		false: skip all the contents, won't call afterContent.
 		return true;	//Boolean
@@ -147,7 +148,7 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//			row,rowIdx,
 		//			spCols
 		//		}
-		// return:
+		// returns:
 		//		true: go on handling the current data row and then call afterContentRow.
 		//		false: skip the current data row, won't call afterContentRow.
 		return true;	//Boolean
@@ -179,7 +180,7 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//			view,viewIdx,
 		//			spCols(if isHeader==false)
 		//		}
-		// return:
+		// returns:
 		//		true: go on handling the current view and then call afterView.
 		//		false: skip the current view, won't call afterView.
 		return true;	//Boolean
@@ -215,7 +216,7 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//			subrow,subrowIdx,
 		//			spCols(if isHeader==false)
 		//		}
-		// return:
+		// returns:
 		//		true: go on handling the current subrow and then call afterSubrow.
 		//		false: skip the current subrow, won't call afterSubrow.
 		return true;	//Boolean

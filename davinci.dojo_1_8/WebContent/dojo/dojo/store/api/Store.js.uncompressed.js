@@ -1,9 +1,7 @@
 define("dojo/store/api/Store", ["../../_base/declare"], function(declare){
 
 // module:
-//		Store
-// summary:
-//		The module defines the Dojo object store interface.
+//		dojo/api/Store
 
 var Store = declare("Store", null, {
 	// summary:

@@ -10,12 +10,12 @@ define("dojox/charting/Theme", ["dojo/_base/lang", "dojo/_base/declare", "dojo/_
 	});
 
 	/*=====
-	dojox.charting.Theme.__DefineColorArgs = function(num, colors, hue, saturation, low, high, base, generator){
+	__DefineColorArgs = function(num, colors, hue, saturation, low, high, base, generator){
 		// summary:
 		//		The arguments object that can be passed to define colors for a theme.
 		// num: Number?
 		//		The number of colors to generate.  Defaults to 5.
-		// colors: String[]|dojo.Color[]?
+		// colors: String[]|dojo/_base/Color[]?
 		//		A pre-defined set of colors; this is passed through to the Theme directly.
 		// hue: Number?
 		//		A hue to base the generated colors from (a number from 0 - 359).
@@ -25,7 +25,7 @@ define("dojox/charting/Theme", ["dojo/_base/lang", "dojo/_base/declare", "dojo/_
 		//		An optional value to determine the lowest value used to generate a color (HSV model)
 		// high: Number?
 		//		An optional value to determine the highest value used to generate a color (HSV model)
-		// base: String|dojo.Color?
+		// base: String|dojo/_base/Color?
 		//		A base color to use if we are defining colors using dojox.color.Palette
 		// generator: String?
 		//		The generator function name from dojox.color.Palette.
@@ -45,19 +45,19 @@ define("dojox/charting/Theme", ["dojo/_base/lang", "dojo/_base/declare", "dojo/_
 			// summary:
 			//		Generate a set of colors for the theme based on keyword
 			//		arguments.
-			// kwArgs: dojox.charting.Theme.__DefineColorArgs
+			// kwArgs: __DefineColorArgs
 			//		The arguments object used to define colors.
-			// returns: dojo.Color[]
+			// returns: dojo/_base/Color[]
 			//		An array of colors for use in a theme.
 			//
 			// example:
-			//	|	var colors = dojox.charting.Theme.defineColors({
+			//	|	var colors = Theme.defineColors({
 			//	|		base: "#369",
 			//	|		generator: "compound"
 			//	|	});
 			//
 			// example:
-			//	|	var colors = dojox.charting.Theme.defineColors({
+			//	|	var colors = Theme.defineColors({
 			//	|		hue: 60,
 			//	|		saturation: 90,
 			//	|		low: 30,

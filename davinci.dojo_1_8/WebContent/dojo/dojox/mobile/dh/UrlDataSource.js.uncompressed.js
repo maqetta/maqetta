@@ -7,7 +7,7 @@ define("dojox/mobile/dh/UrlDataSource", [
 	// module:
 	//		dojox/mobile/dh/UrlDataSource
 	// summary:
-	//		A component that accesses the given URL, and fetches the data as text.
+	//		A component that accesses the given URL and fetches the data as text.
 
 	return declare("dojox.mobile.dh.UrlDataSource", null, {
 		text: "",
@@ -19,6 +19,8 @@ define("dojox/mobile/dh/UrlDataSource", [
 		},
 
 		getData: function(){
+			// summary:
+			//		Returns a Deferred that accesses the given URL and fetches the data as text.
 			var obj = xhr.get({
 				url: this._url,
 				handleAs: "text"

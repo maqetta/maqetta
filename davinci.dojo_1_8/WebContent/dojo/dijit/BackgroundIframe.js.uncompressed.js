@@ -12,10 +12,6 @@ define("dijit/BackgroundIframe", [
 
 	// module:
 	//		dijit/BackgroundIFrame
-	// summary:
-	//		new dijit.BackgroundIframe(node)
-	//		Makes a background iframe as a child of node, that fills
-	//		area (and position) of node
 
 	// TODO: remove _frames, it isn't being used much, since popups never release their
 	// iframes (see [22236])

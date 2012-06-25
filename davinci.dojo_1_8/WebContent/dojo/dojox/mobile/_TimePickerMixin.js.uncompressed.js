@@ -13,9 +13,15 @@ define("dojox/mobile/_TimePickerMixin", [
 		// summary:
 		//		A mixin for time picker widget.
 
+		/*=====
+		// date: Date
+		//		A Date object corresponding to the current values of the picker.
+		date: null,
+		=====*/
+		
 		reset: function(){
 			// summary:
-			//		Goes to now.
+			//		Goes to now. Resets the hour and minutes to the current time.
 			var now = new Date(),
 				h = now.getHours() + "",
 				m = now.getMinutes();
@@ -34,7 +40,9 @@ define("dojox/mobile/_TimePickerMixin", [
 
 		_getDateAttr: function(){
 			// summary:
-			//		Returns a Date object for the current values
+			//		Returns a Date object for the current values.
+			// tags:
+			//		private
 			var v = this.get("values"); // [hour24, minute]
 			return datelocale.parse(v[0] + ":" + v[1], {timePattern:"H:m", selector:"time"});
 		}

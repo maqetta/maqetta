@@ -4,14 +4,20 @@ define("dojox/charting/action2d/Magnify", ["dojo/_base/connect", "dojo/_base/dec
 	function(Hub, declare, PlotAction, m, gf, df, dfe){
 
 	/*=====
-	declare("dojox.charting.action2d.__MagnifyCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
+	var __MagnifyCtorArgs = function(duration, easing, scale){
 		// summary:
-		//		Additional arguments for highlighting actions.
-	
+		//		Additional arguments for magnifying actions.
+		// duration: Number?
+		//		The amount of time in milliseconds for an animation to last.  Default is 400.
+		this.duration = 400;
+		// easing: dojo/fx/easing/*?
+		//		An easing object (see dojo.fx.easing) for use in an animation.  The
+		//		default is dojo.fx.easing.backOut.
+		this.easing = null;
 		// scale: Number?
 		//		The amount to magnify the given object to.  Default is 2.
-		scale: 2
-	});
+		this.scale = 2;
+	};
 	=====*/
 	
 	var DEFAULT_SCALE = 2;
@@ -31,11 +37,11 @@ define("dojox/charting/action2d/Magnify", ["dojo/_base/connect", "dojo/_base/dec
 		constructor: function(chart, plot, kwArgs){
 			// summary:
 			//		Create the magnifying action.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this action belongs to.
 			// plot: String?
 			//		The plot to apply the action to. If not passed, "default" is assumed.
-			// kwArgs: dojox.charting.action2d.__MagnifyCtorArgs?
+			// kwArgs: __MagnifyCtorArgs?
 			//		Optional keyword arguments for this action.
 
 			// process optional named parameters
@@ -47,7 +53,7 @@ define("dojox/charting/action2d/Magnify", ["dojo/_base/connect", "dojo/_base/dec
 		process: function(o){
 			// summary:
 			//		Process the action on the given object.
-			// o: dojox.gfx.Shape
+			// o: dojox/gfx/shape.Shape
 			//		The object on which to process the magnifying action.
 			if(!o.shape || !(o.type in this.overOutEvents) ||
 				!("cx" in o) || !("cy" in o)){ return; }

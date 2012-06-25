@@ -11,6 +11,10 @@ define("dojox/color/NeutralColorModel", ["dojo/_base/array", "dojo/_base/declare
 		_e: 0,
 	
 		constructor: function(startColor, endColor){
+			// startColor: dojo/_base/Color
+			//		The start color.
+			// endColor: dojo/_base/Color?
+			//		The end color.
 		},
 	
 		initialize: function(items, colorFunc){

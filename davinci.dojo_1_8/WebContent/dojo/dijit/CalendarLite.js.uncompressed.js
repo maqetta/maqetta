@@ -23,8 +23,6 @@ define("dijit/CalendarLite", [
 
 	// module:
 	//		dijit/CalendarLite
-	// summary:
-	//		Lightweight version of Calendar widget aimed towards mobile use
 
 	var CalendarLite = declare("dijit.CalendarLite", [_WidgetBase, _TemplatedMixin], {
 		// summary:

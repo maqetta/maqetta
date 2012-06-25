@@ -9,17 +9,17 @@ define("dojox/editor/plugins/ShowBlockNodes", [
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/i18n!dojox/editor/plugins/nls/ShowBlockNodes"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.ShowBlockNodes", _Plugin, {
 	// summary:
-	//		This plugin provides ShowBlockNodes cabability to the editor.  When
+	//		This plugin provides ShowBlockNodes capability to the editor.  When
 	//		clicked, the document in the editor will apply a class to specific
 	//		block nodes to make them visible in the layout.  This info is not
 	//		exposed/extracted when the editor value is obtained, it is purely for help
 	//		while working on the page.
 
-	// useDefaultCommand [protected] boolean
+	// useDefaultCommand: [protected] boolean
 	//		Over-ride indicating that the command processing is done all by this plugin.
 	useDefaultCommand: false,
 
@@ -27,7 +27,7 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes",dijit._editor._Plugin,{
 	//		The CSS class name for the button node is formed from `iconClassPrefix` and `command`
 	iconClassPrefix: "dijitAdditionalEditorIcon",
 
-	// _styled [private] boolean
+	// _styled: [private] boolean
 	//		Flag indicating the document has had the style updates applied.
 	_styled: false,
 

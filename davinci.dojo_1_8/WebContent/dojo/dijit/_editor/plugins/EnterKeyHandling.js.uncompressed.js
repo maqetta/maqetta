@@ -15,12 +15,6 @@ define("dijit/_editor/plugins/EnterKeyHandling", [
 
 // module:
 //		dijit/_editor/plugins/EnterKeyHandling
-// summary:
-//		This plugin tries to make all browsers behave consistently with regard to
-//		how ENTER behaves in the editor window.  It traps the ENTER key and alters
-//		the way DOM is constructed in certain cases to try to commonize the generated
-//		DOM and behaviors across browsers.
-
 
 return declare("dijit._editor.plugins.EnterKeyHandling", _Plugin, {
 	// summary:
@@ -605,7 +599,7 @@ return declare("dijit._editor.plugins.EnterKeyHandling", _Plugin, {
 
 	removeTrailingBr: function(container){
 		// summary:
-		//		If last child of container is a <br>, then remove it.
+		//		If last child of container is a `<br>`, then remove it.
 		// tags:
 		//		private
 		var para = /P|DIV|LI/i.test(container.tagName) ?

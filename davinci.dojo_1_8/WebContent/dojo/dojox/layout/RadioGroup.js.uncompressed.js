@@ -5,19 +5,21 @@ define("dojox/layout/RadioGroup", ["dojo/_base/kernel","dojo/_base/declare","doj
 
 kernel.experimental("dojox.layout.RadioGroup");
 
-//
-//	dojox.layout.RadioGroup - an experimental (probably poorly named) Layout widget extending StackContainer
-//	that accepts ContentPanes as children, and applies aesthetically pleasing responsive transition animations
-//	attached to :hover of the Buttons created.
-//
-//	FIXME: take the Buttons out of the root template, and allow layoutAlign or similar attrib to use a different
-//	template, or build the template dynamically?
-//
-
-var RadioGroup = declare("dojox.layout.RadioGroup",[StackContainer,Templated],{
-	// summary: A Container that turns its Layout Children into a single Pane and transitions between states
-	//	onHover of the button
+/*=====
+return {
+	// summary:
+	//	dojox.layout.RadioGroup - an experimental (probably poorly named) Layout widget extending StackContainer
+	//	that accepts ContentPanes as children, and applies aesthetically pleasing responsive transition animations
+	//	attached to :hover of the Buttons created.
 	//
+	//	FIXME: take the Buttons out of the root template, and allow layoutAlign or similar attrib to use a different
+	//	template, or build the template dynamically?
+	};
+=====*/
+var RadioGroup = declare("dojox.layout.RadioGroup",[StackContainer,Templated],{
+	// summary: 
+	//		A Container that turns its Layout Children into a single Pane and transitions between states
+	//			onHover of the button
 
 	// duration: Integer
 	//	used for Fade and Slide RadioGroup's, the duration to run the transition animation. does not affect anything
@@ -124,7 +126,8 @@ var RadioGroup = declare("dojox.layout.RadioGroup",[StackContainer,Templated],{
 });
 
 declare("dojox.layout.RadioGroupFade", RadioGroup, {
-	// summary: An extension on a stock RadioGroup, that fades the panes.
+	// summary:
+	//		An extension on a stock RadioGroup, that fades the panes.
 
 	_hideChild: function(page){
 		// summary: hide the specified child widget
@@ -147,7 +150,8 @@ declare("dojox.layout.RadioGroupFade", RadioGroup, {
 });
 
 declare("dojox.layout.RadioGroupSlide", RadioGroup, {
-	// summary: A Sliding Radio Group
+	// summary: 
+	//		A Sliding Radio Group
 	// description:
 	//		An extension on a stock RadioGroup widget, sliding the pane
 	//		into view from being hidden. The entry direction is randomized
@@ -240,10 +244,10 @@ declare("dojox.layout.RadioGroupSlide", RadioGroup, {
 });
 
 declare("dojox.layout._RadioButton",[Widget,Templated,Contained],{
-	// summary: The Buttons for a RadioGroup
-	//
-	// description: A private widget used to manipulate the StackContainer (RadioGroup*). Don't create directly.
-	//
+	// summary: 
+	//		The Buttons for a RadioGroup
+	// description: 
+	//		A private widget used to manipulate the StackContainer (RadioGroup*). Don't create directly.
 	
 	// label: String
 	//	the Text Label of the button

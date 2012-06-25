@@ -87,12 +87,12 @@ define("dojox/charting/DataChart", ["dojo/_base/kernel", "dojo/_base/lang", "doj
 		//		so that their charted properties can be compared.
 		comparative:false,
 
-		//		query: String
-		//			Used for fetching items. Will vary depending upon store.
+		// query: String
+		//		Used for fetching items. Will vary depending upon store.
 		query: "*",
 
-		//		queryOptions: String
-		//			Option used for fetching items
+		// queryOptions: String
+		//		Option used for fetching items
 		queryOptions: "",
 
 		/*=====
@@ -104,40 +104,40 @@ define("dojox/charting/DataChart", ["dojo/_base/kernel", "dojo/_base/lang", "doj
 			//		Parameters to sort the fetched items from store
 		=====*/
 
-		//		fieldName: String
-		//			The field in the store item that is getting charted
+		// fieldName: String
+		//		The field in the store item that is getting charted
 		fieldName: "value",
 
-		//		chartTheme: dojox.charting.themes.*
-		//			The theme to style the chart. Defaults to PlotKit.blue.
+		// chartTheme: dojox.charting.themes.*
+		//		The theme to style the chart. Defaults to PlotKit.blue.
 		chartTheme: blue,
 
-		//		displayRange: Number
-		//			The number of major ticks to show on the xaxis
+		// displayRange: Number
+		//		The number of major ticks to show on the xaxis
 		displayRange:0,
 
-		// 		stretchToFit: Boolean
-		//			If true, chart is sized to data. If false, chart is a
-		//			fixed size. Note, is overridden by displayRange.
-		//			TODO: Stretch for the y-axis?
+		// stretchToFit: Boolean
+		//		If true, chart is sized to data. If false, chart is a
+		//		fixed size. Note, is overridden by displayRange.
+		//		TODO: Stretch for the y-axis?
 		stretchToFit:true,
 
-		//		minWidth: Number
-		//			The the smallest the chart width can be
+		// minWidth: Number
+		//		The the smallest the chart width can be
 		minWidth:200,
 
-		//		minHeight: Number
-		//			The the smallest the chart height can be
+		// minHeight: Number
+		//		The the smallest the chart height can be
 		minHeight:100,
 
-		//		showing: Boolean
-		//			Whether the chart is showing (default) on
-		//			initialization or hidden.
+		// showing: Boolean
+		//		Whether the chart is showing (default) on
+		//		initialization or hidden.
 		showing: true,
 
-		//		label: String
-		//			The name field of the store item
-		//			DO NOT SET: Set from store.labelAttribute
+		// label: String
+		//		The name field of the store item
+		//		DO NOT SET: Set from store.labelAttribute
 		label: "name",
 
 		constructor: function(node, kwArgs){

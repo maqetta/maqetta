@@ -1,6 +1,9 @@
-define("dojox/app/main", ["dojo/_base/lang", "dojo/_base/declare", "dojo/Deferred", "dojo/when", "require", "dojo/has", "dojo/_base/config", "dojo/on", "dojo/ready", "dojo/_base/window", "dojo/dom-construct", "./model", "./View", "./controllers/Load", "./controllers/Transition", "./controllers/Layout", "dojo/_base/loader", "dojo/store/Memory"],
-function(lang, declare, Deferred, when, require, has, config, on, ready, baseWindow, dom, Model, View, LoadController, TransitionController, LayoutController){
-	dojo.experimental("dojox.app");
+define("dojox/app/main", ["dojo/_base/kernel",  "require", "dojo/_base/lang", "dojo/_base/declare", "dojo/Deferred", "dojo/when", "dojo/has", "dojo/_base/config",
+	"dojo/on", "dojo/ready", "dojo/_base/window", "dojo/dom-construct", "./model", "./View", "./controllers/Load", "./controllers/Transition",
+	"./controllers/Layout"],
+function(kernel, require, lang, declare, Deferred, when, has, config, on, ready, baseWindow, dom, Model, View,
+		 LoadController, TransitionController, LayoutController){
+	kernel.experimental("dojox.app");
 
 	has.add("app-log-api", (config["app"] || {}).debugApp);
 
@@ -17,7 +20,7 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 
 			// Create a new domNode and append to body
 			// Need to bind startTransition event on application domNode,
-			// Because dojox.mobile.ViewController bind startTransition event on document.body
+			// Because dojox/mobile/ViewController bind startTransition event on document.body
 			// Make application's root domNode id unique because this id can be visited by window namespace on Chrome 18.
 			this.domNode = dom.create("div", {
 				id: this.id+"_Root",
@@ -37,12 +40,13 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 				//create stores in the configuration.
 				for(var item in params.stores){
 					if(item.charAt(0) !== "_"){//skip the private properties
-						var type = params.stores[item].type ? params.stores[item].type : "dojo.store.Memory";
+						var type = params.stores[item].type ? params.stores[item].type : "dojo/store/Memory";
 						var config = {};
 						if(params.stores[item].params){
 							lang.mixin(config, params.stores[item].params);
 						}
-						var storeCtor = lang.getObject(type);
+						// we assume the store is here through dependencies
+						var storeCtor = require(type);
 						if(config.data && lang.isString(config.data)){
 							//get the object specified by string value of data property
 							//cannot assign object literal or reference to data property
@@ -60,7 +64,7 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 			// summary:
 			//		Create controller instance
 			//
-			// parent: Array
+			// controllers: Array
 			//		controller configuration array.
 			// returns:
 			//		controllerDeferred object
@@ -112,12 +116,13 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 			// event: String
 			//		event name. The event is binded by controller.bind() method.
 			// params: Object
-			//		event parameters.
+			//		event params.
 			on.emit(this.domNode, event, params);
 		},
 
 		// setup default view and Controllers and startup the default view
 		start: function(){
+			//
 			//create application level data store
 			this.createDataStore(this.params);
 
@@ -145,6 +150,7 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 
 		setupAppView: function(){
 			//create application level view
+			//
 			if(this.template){
 				this.view = new View({
 					app: this,  // pass the app into the View so it can have easy access to app
@@ -164,6 +170,28 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 			}
 		},
 
+		getParamsFromHash: function(hash){
+			// summary:
+			//		get the params from the hash
+			//
+			// hash: String
+			//		the url hash
+			//
+			// returns:
+			//		the params object
+			//
+			var params = {};
+			if(hash && hash.length){
+				for(var parts= hash.split("&"), x= 0; x<parts.length; x++){
+					var tp = parts[x].split("="), name=tp[0], value=encodeURIComponent(tp[1]||""); 
+					if(name && value) {
+						params[name] = value;
+					}
+				}
+			}
+			return params; // Object
+		},
+
 		setupControllers: function(){
 			// create application controller instance
 			new LoadController(this);
@@ -172,45 +200,66 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 
 			// move set _startView operation from history module to application
 			var hash = window.location.hash;
-			this._startView = ((hash && hash.charAt(0) == "#") ? hash.substr(1) : hash) || this.defaultView;
+			this._startView = (((hash && hash.charAt(0) == "#") ? hash.substr(1) : hash) || this.defaultView).split('&')[0];
+			this._startParams = this.getParamsFromHash(hash) || this.defaultParams || {};
 		},
 
 		startup: function(){
 			// load controllers in configuration file
+			//
 			var controllers = this.createControllers(this.params.controllers);
 			when(controllers, lang.hitch(this, function(result){
 				// emit load event and let controller to load view.
 				this.trigger("load", {
 					"viewId": this.defaultView,
+					"params": this._startParams,
 					"callback": lang.hitch(this, function(){
 						var selectId = this.defaultView.split(",");
 						selectId = selectId.shift();
 						this.selectedChild = this.children[this.id + '_' + selectId];
 						// transition to startView. If startView==defaultView, that means initial the default view.
 						this.trigger("transition", {
-							"viewId": this._startView
+							"viewId": this._startView,
+							"params": this._startParams
 						});
 						this.setStatus(this.lifecycle.STARTED);
 					})
 				});
 			}));
-		}
+		}		
+		
 	});
 
 	function generateApp(config, node, appSchema, validate){
-		// Register application module path
-		var path = window.location.pathname;
-		if(path.charAt(path.length) != "/"){
-			path = path.split("/");
-			path.pop();
-			path = path.join("/");
+		// summary:
+		//		generate the application
+		//
+		// config: Object
+		//		app config
+		// node: domNode
+		//		domNode.
+		if(!config.loaderConfig){
+			config.loaderConfig = {};
 		}
-		dojo.registerModulePath("app", path);
+		if(!config.loaderConfig.paths){
+			config.loaderConfig.paths = {};
+		}
+		if(!config.loaderConfig.paths["app"]){
+			// Register application module path
+			var path = window.location.pathname;
+			if(path.charAt(path.length) != "/"){
+				path = path.split("/");
+				path.pop();
+				path = path.join("/");
+			}
+			config.loaderConfig.paths["app"] = path;
+		}
+		require(config.loaderConfig);
 
 		if(!config.modules){
 			config.modules = [];
 		}
-		// add dojox.app lifecycle module by default
+		// add dojox/app lifecycle module by default
 		config.modules.push("dojox/app/module/lifecycle");
 		var modules = config.modules.concat(config.dependencies);
 
@@ -256,7 +305,6 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 				}
 
 				app.setStatus(app.lifecycle.STARTING);
-				app.start();
 				// Create global namespace for application.
 				// The global name is application id. For example: modelApp
 				var globalAppName = app.id;
@@ -264,6 +312,7 @@ function(lang, declare, Deferred, when, require, has, config, on, ready, baseWin
 					lang.mixin(app, window[globalAppName]);
 				}
 				window[globalAppName] = app;
+				app.start();
 			});
 		});
 	}

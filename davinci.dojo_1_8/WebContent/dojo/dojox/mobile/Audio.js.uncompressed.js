@@ -7,10 +7,11 @@ define("dojox/mobile/Audio", [
 ], function(declare, domConstruct, has, Contained, WidgetBase){
 	// module:
 	//		dojox/mobile/Audio
-	// summary:
-	//		A thin wrapper around the html5 <audio> element.
 
 	return declare("dojox.mobile.Audio", [WidgetBase, Contained], {
+		// summary:
+		//		A thin wrapper around the HTML5 `<audio>` element.
+		
 		// source: Array
 		//		An array of src and type,
 		//		ex. [{src:"a.mp3",type:"audio/mpeg"},{src:"a.ogg",type:"audio/ogg"},...]
@@ -26,7 +27,12 @@ define("dojox/mobile/Audio", [
 		//		The height of the embed element.
 		height: "15px",
 
+		// _playable: [private] Boolean
+		//		Internal flag.
 		_playable: false,
+		
+		// _tag: [private] String
+		//		The name of the tag ("audio").
 		_tag: "audio",
 
 		constructor: function(){
@@ -38,6 +44,8 @@ define("dojox/mobile/Audio", [
 		},
 
 		_getEmbedRegExp: function(){
+			// tags:
+			//		private
 			return has('ff') ? /audio\/mpeg/i :
 				   has('ie') ? /audio\/wav/i :
 				   null;

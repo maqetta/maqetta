@@ -14,9 +14,12 @@ define("dojox/mobile/ValuePickerSlot", [
 	// module:
 	//		dojox/mobile/ValuePickerSlot
 	// summary:
-	//		A widget that shows rating with stars.
+	//		A widget representing one slot of a ValuePicker widget.
 
 	return declare("dojox.mobile.ValuePickerSlot", WidgetBase, {
+		// summary:
+		//		A widget representing one slot of a ValuePicker widget.
+		
 		// items: Array
 		//		An array of array of key-label paris.
 		//		(e.g. [[0,"Jan"],[1,"Feb"],...] ) If key values for each label
@@ -61,6 +64,13 @@ define("dojox/mobile/ValuePickerSlot", [
 		//		Tabindex setting for this widget so users can hit the tab key to
 		//		focus on it.
 		tabIndex: "0",
+
+		// key: Object
+		//		The key of the currently selected value in the items array. This is a read-only property.
+		//		Warning: Do not use this property directly, make sure to call the get() method.
+		/*=====
+		key: null,
+		=====*/
 
 		/* internal properties */	
 		baseClass: "mblValuePickerSlot",
@@ -123,6 +133,10 @@ define("dojox/mobile/ValuePickerSlot", [
 		},
 
 		initLabels: function(){
+			// summary:
+			//		Initializes the labels of this slot according to the labelFrom and labelTo properties.
+			// tags:
+			//		private
 			if(this.labelFrom !== this.labelTo){
 				var a = this.labels = [],
 					zeros = this.zeroPad && Array(this.zeroPad).join("0");
@@ -236,7 +250,7 @@ define("dojox/mobile/ValuePickerSlot", [
 			var x = e.touches ? e.touches[0].pageX : e.clientX;
 			var y = e.touches ? e.touches[0].pageY : e.clientY;
 			if(Math.abs(x - this.touchStartX) >= 4 ||
-			   Math.abs(y - this.touchStartY) >= 4){ // dojox.mobile.scrollable#threshold
+			   Math.abs(y - this.touchStartY) >= 4){ // dojox/mobile/scrollable.threshold
 			   	if(this._timer){
 					clearTimeout(this._timer); // fail safe
 					this._timer = null;

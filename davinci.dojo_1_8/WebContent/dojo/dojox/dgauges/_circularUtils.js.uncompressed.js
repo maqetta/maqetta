@@ -1,6 +1,17 @@
 define("dojox/dgauges/_circularUtils", function(){
+	// module:
+	//		dojox/dgauges/components/_circularUtils
+	// summary:
+	//		Internal circular utilities.
+	// tags:
+	//		private
+
 	return {
 		computeTotalAngle: function(start, end, orientation){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(start == end){
 				return 360;
 			}else{
@@ -9,6 +20,10 @@ define("dojox/dgauges/_circularUtils", function(){
 		},
 		
 		modAngle: function(angle, base){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(base == undefined){
 				base = 6.28318530718;
 			}
@@ -26,6 +41,10 @@ define("dojox/dgauges/_circularUtils", function(){
 		},
 		
 		computeAngle: function(startAngle, endAngle, orientation, base){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(base == undefined){
 				base = 6.28318530718;
 			}
@@ -54,10 +73,18 @@ define("dojox/dgauges/_circularUtils", function(){
 		},
 		
 		toRadians: function(deg){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			return deg * Math.PI / 180;
 		},
 		
 		toDegrees: function(rad){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			return rad * 180 / Math.PI;
 		}
 	}

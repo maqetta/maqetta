@@ -1,13 +1,14 @@
 define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array", "dojo/_base/Color", "dojo/colors"], function(d){
 	/*=====
-	dojox.html.ellipsis = {
-		// summary: offers cross-browser support for text-overflow: ellipsis
-		//
-		// description: Add "dojoxEllipsis" on any node that you want to ellipsis-ize. In order to function properly,
-		//	the node with the dojoxEllipsis class set on it should be a child of a node with a defined width.
-		//	It should also be a block-level element (i.e. <div>) - it will not work on td elements.
-		//	NOTE: When using the dojoxEllipsis class within tables, the table needs to have the table-layout: fixed style
-	}
+	return {
+		// summary:
+		//		offers cross-browser support for text-overflow: ellipsis
+		// description:
+		//		Add "dojoxEllipsis" on any node that you want to ellipsis-ize. In order to function properly,
+		//		the node with the dojoxEllipsis class set on it should be a child of a node with a defined width.
+		//		It should also be a block-level element (i.e. `<div>`) - it will not work on td elements.
+		//		NOTE: When using the dojoxEllipsis class within tables, the table needs to have the table-layout: fixed style
+	};
 	=====*/
 	
 	if(d.isFF < 7){ //TODO: feature detect text-overflow in computed style?
@@ -95,7 +96,7 @@ define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_bas
 			}
 		};
 		var createIFrameEllipsis = function(/* Node */ n){
-			// Summary:
+			// summary:
 			//		Given a node, it creates an iframe and and ellipsis div and
 			//		sets up the connections so that they will work correctly.
 			//		This function is used when createXULEllipsis is not able

@@ -17,7 +17,7 @@ define("dojox/mobile/SpinWheelDatePicker", [
 		//		A SpinWheel-based date picker widget.
 		// description:
 		//		SpinWheelDatePicker is a date picker widget. It is a subclass of
-		//		dojox.mobile.SpinWheel. It has the year, month, and day slots.
+		//		dojox/mobile/SpinWheel. It has three slots: year, month, and day.
 
 		slotClasses: [
 			SpinWheelSlot,

@@ -5,21 +5,20 @@ var dhebrew = lang.getObject("date.hebrew", true, dojox);
 // Utility methods to do arithmetic calculations with hebrew.Dates
 
 // added for compat to date
-dhebrew.getDaysInMonth = function(/*hebrew.Date*/month){
+dhebrew.getDaysInMonth = function(/*dojox/date/hebrew/Date*/month){
 	return month.getDaysInHebrewMonth(month.getMonth(), month.getFullYear());
 };
 
 //TODO: define hebrew.isLeapYear?  Or should it be invalid, since it has different meaning?
 
-dhebrew.compare = function(/*hebrew.Date*/dateheb1, /*hebrew.Date*/dateheb2, /*String?*/portion){
+dhebrew.compare = function(/*dojox/date/hebrew/Date*/dateheb1, /*dojox/date/hebrew/Date*/dateheb2, /*String?*/portion){
 	// summary:
 	//		Compare two hebrew date objects by date, time, or both.
 	// description:
-	//  	Returns 0 if equal, positive if a > b, else negative.
-	// date1:
-	//		hebrew.Date object
-	// date2:
-	//		hebrew.Date object.  If not specified, the current hebrew.Date is used.
+	//		Returns 0 if equal, positive if a > b, else negative.
+	// date1: dojox/date/hebrew/Date
+	// date2: dojox/date/hebrew/Date
+	//		If not specified, the current hebrew.Date is used.
 	// portion:
 	//		A string indicating the "date" or "time" portion of a Date object.
 	//		Compares both "date" and "time" by default.  One of the following:
@@ -36,10 +35,10 @@ dhebrew.compare = function(/*hebrew.Date*/dateheb1, /*hebrew.Date*/dateheb2, /*S
 };
 
 
-dhebrew.add = function(/*dojox.date.hebrew.Date*/date, /*String*/interval, /*int*/amount){
+dhebrew.add = function(/*dojox/date/hebrew/Date*/date, /*String*/interval, /*int*/amount){
 	// summary:
 	//		Add to a Date in intervals of different size, from milliseconds to years
-	// date: hebrew.Date
+	// date: dojox/date/hebrew/Date
 	//		Date object to start with
 	// interval:
 	//		A string representing the interval.  One of the following:
@@ -106,10 +105,12 @@ dhebrew.add = function(/*dojox.date.hebrew.Date*/date, /*String*/interval, /*int
 	return newHebrDate; // dojox.date.hebrew.Date
 };
 
-dhebrew.difference = function(/*dojox.date.hebrew.Date*/date1, /*dojox.date.hebrew.Date?*/date2, /*String?*/interval){
+dhebrew.difference = function(/*dojox/date/hebrew/Date*/date1, /*dojox/date/hebrew/Date?*/date2, /*String?*/interval){
 	// summary:
-	//        date2 - date1
-	//	 date2 is hebrew.Date object.  If not specified, the current hebrew.Date is used.
+	//		date2 - date1
+	// date1: dojox/date/hebrew/Date
+	// date2: dojox/date/hebrew/Date
+	//		If not specified, the current dojox.date.hebrew.Date is used.
 	// interval:
 	//		A string representing the interval.  One of the following:
 	//			"year", "month", "day", "hour", "minute", "second",

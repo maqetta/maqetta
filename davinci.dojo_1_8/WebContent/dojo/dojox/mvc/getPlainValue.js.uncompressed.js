@@ -3,15 +3,17 @@ define("dojox/mvc/getPlainValue", [
 	"dojo/_base/lang",
 	"dojo/Stateful"
 ], function(array, lang, Stateful){
-	var getPlainValueOptions = /*===== dojox.mvc.getPlainValueOptions = =====*/ {
+	var getPlainValueOptions = {
 		// summary:
-		//		Options used for dojox.mvc.getPlainValue().
+		//		Options used for dojox/mvc/getPlainValue().
 
 		getType: function(/*Anything*/ v){
 			// summary:
 			//		Returns the type of the given value.
 			// v: Anything
 			//		The value.
+			// returns:
+			//		 The type of the given value.
 
 			return lang.isArray(v) ? "array" : v != null && {}.toString.call(v) == "[object Object]" ? "object" : "value";
 		},
@@ -21,6 +23,8 @@ define("dojox/mvc/getPlainValue", [
 			//		Returns the stateful version of the given array.
 			// a: Anything[]
 			//		The array.
+			// returns:
+			//		 The converted array.
 
 			return array.map(a, function(item){ return getPlainValue(item, this); }, this); // Anything[]
 		},
@@ -48,16 +52,16 @@ define("dojox/mvc/getPlainValue", [
 		}
 	};
 
-	var getPlainValue = /*===== dojox.mvc.getPlainValue = =====*/ function(/*Anything*/ value, /*dojox.mvc.getPlainValueOptions*/ options){
+	var getPlainValue = function(/*Anything*/ value, /*dojox/mvc/getPlainValueOptions*/ options){
 		// summary:
-		//		Create a raw value from a dojo.Stateful object.
+		//		Create a raw value from a dojo/Stateful object.
 		// description:
 		//		Recursively iterates the stateful value given, and convert them to raw ones.
 		// value: Anything
 		//		The stateful value.
-		// options: dojox.mvc.getPlainValueOptions
+		// options: dojox/mvc/getPlainValueOptions
 		//		The object that defines how plain value should be created from stateful value.
-		// returns: Anything
+		// returns:
 		//		 The converted value.
 
 		return (options || getPlainValue)["getPlain" + (options || getPlainValue).getType(value).replace(/^[a-z]/, function(c){ return c.toUpperCase(); })](value); // Anything

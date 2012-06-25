@@ -27,8 +27,8 @@ define("dojox/fx/flip", [
 	;
 
 	fxExt.flip = function(/*Object*/ args){
-		// summary: Animate a node flipping following a specific direction
-		//
+		// summary:
+		//		Animate a node flipping following a specific direction
 		// description:
 		//		Returns an animation that will flip the
 		//		node around a central axis:
@@ -44,7 +44,7 @@ define("dojox/fx/flip", [
 		//
 		//		depth: Float
 		//			 0 <= depth <= 1 overrides the computed "depth"
-		//			(0: min distorsion, 1: max distorsion)
+		//			(0: min distortion, 1: max distortion)
 		//
 		//		whichAnim: String
 		//			"first"			 : the first half animation
@@ -60,7 +60,7 @@ define("dojox/fx/flip", [
 		//		shift: Integer
 		//			node translation, perpendicular to the rotation axis
 		//
-		//	example:
+		// example:
 		//	|	var anim = dojox.fx.flip({
 		//	|		node: dojo.byId("nodeId"),
 		//	|		dir: "top",
@@ -237,14 +237,13 @@ define("dojox/fx/flip", [
 	}
 
 	fxExt.flipCube = function(/*Object*/ args){
-		// summary: An extension to `dojox.fx.flip` providing a more 3d-like rotation
-		//
+		// summary:
+		//		An extension to `dojox.fx.flip` providing a more 3d-like rotation
 		// description:
 		//		An extension to `dojox.fx.flip` providing a more 3d-like rotation.
 		//		Behaves the same as `dojox.fx.flip`, using the same attributes and
 		//		other standard `dojo.Animation` properties.
-		//
-		//	example:
+		// example:
 		//		See `dojox.fx.flip`
 		var anims = [],
 			mb = domGeom.getMarginBox(args.node),
@@ -327,14 +326,13 @@ define("dojox/fx/flip", [
 	};
 	
 	fxExt.flipPage = function(/*Object*/ args){
-		// summary: An extension to `dojox.fx.flip` providing a page flip like animation.
-		//
+		// summary:
+		//		An extension to `dojox.fx.flip` providing a page flip like animation.
 		// description:
 		//		An extension to `dojox.fx.flip` providing a page flip effect.
 		//		Behaves the same as `dojox.fx.flip`, using the same attributes and
 		//		other standard `dojo.Animation` properties.
-		//
-		//	example:
+		// example:
 		//		See `dojox.fx.flip`
 		var n = args.node,
 			coords = htmlUtil.coords(n, true),
@@ -411,19 +409,16 @@ define("dojox/fx/flip", [
 	
 	
 	fxExt.flipGrid = function(/*Object*/ args){
-		// summary: An extension to `dojox.fx.flip` providing a decomposition in rows * cols flipping elements
-		//
+		// summary:
+		//		An extension to `dojox.fx.flip` providing a decomposition in rows * cols flipping elements
 		// description:
 		//		An extension to `dojox.fx.flip` providing a page flip effect.
 		//		Behaves the same as `dojox.fx.flip`, using the same attributes and
 		//		other standard `dojo.Animation` properties and
-		//
-		//		cols: Integer columns
-		//		rows: Integer rows
-		//
-		//		duration: the single flip duration
-		//
-		//	example:
+		//		- cols: Integer columns
+		//		- rows: Integer rows
+		//		- duration: the single flip duration
+		// example:
 		//		See `dojox.fx.flip`
 		var rows = args.rows || 4,
 			cols = args.cols || 4,

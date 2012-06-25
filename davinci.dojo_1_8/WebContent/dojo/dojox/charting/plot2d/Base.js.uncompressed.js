@@ -12,10 +12,12 @@ dojox.charting.plot2d.__PlotCtorArgs = function(){
 };
 =====*/
 return declare("dojox.charting.plot2d.Base", Element, {
+	// summary:
+	//		Base class for all plot types.
 	constructor: function(chart, kwArgs){
 		// summary:
 		//		Create a base plot for charting.
-		// chart: dojox.chart.Chart
+		// chart: dojox/chart/Chart
 		//		The chart this plot belongs to.
 		// kwArgs: dojox.charting.plot2d.__PlotCtorArgs?
 		//		An optional arguments object to help define the plot.
@@ -27,23 +29,23 @@ return declare("dojox.charting.plot2d.Base", Element, {
 		//		A reference to this plot for functional chaining.
 		this.series = [];
 		this.dirty = true;
-		return this;	//	dojox.charting.plot2d.Base
+		return this;	//	dojox/charting/plot2d/Base
 	},
 	setAxis: function(axis){
 		// summary:
 		//		Set an axis for this plot.
 		// axis: dojox.charting.axis2d.Base
 		//		The axis to set.
-		// returns: dojox.charting.plot2d.Base
+		// returns: dojox/charting/plot2d/Base
 		//		A reference to this plot for functional chaining.
-		return this;	//	dojox.charting.plot2d.Base
+		return this;	//	dojox/charting/plot2d/Base
 	},
 	assignAxes: function(axes){
 		// summary:
 		//		From an array of axes pick the ones that correspond to this plot and
 		// 		assign them to the plot using setAxis method.
 		// axes: Array
-		//		An array of dojox.charting.axis2d.Base
+		//		An array of dojox/charting/axis2d/Base
 		// tags:
 		//		protected
 		arr.forEach(this.axes, function(axis){
@@ -57,10 +59,10 @@ return declare("dojox.charting.plot2d.Base", Element, {
 		//		Add a data series to this plot.
 		// run: dojox.charting.Series
 		//		The series to be added.
-		// returns: dojox.charting.plot2d.Base
+		// returns: dojox/charting/plot2d/Base
 		//		A reference to this plot for functional chaining.
 		this.series.push(run);
-		return this;	//	dojox.charting.plot2d.Base
+		return this;	//	dojox/charting/plot2d/Base
 	},
 	getSeriesStats: function(){
 		// summary:
@@ -74,10 +76,10 @@ return declare("dojox.charting.plot2d.Base", Element, {
 		//		Stub function for running the axis calculations (deprecated).
 		// dim: Object
 		//		An object of the form { width, height }
-		// returns: dojox.charting.plot2d.Base
+		// returns: dojox/charting/plot2d/Base
 		//		A reference to this plot for functional chaining.
 		this.initializeScalers(dim, this.getSeriesStats());
-		return this;	//	dojox.charting.plot2d.Base
+		return this;	//	dojox/charting/plot2d/Base
 	},
 	initializeScalers: function(){
 		// summary:
@@ -98,9 +100,9 @@ return declare("dojox.charting.plot2d.Base", Element, {
 		//		An object of the form { width, height }.
 		// offsets: Object
 		//		An object of the form { l, r, t, b }.
-		// returns: dojox.charting.plot2d.Base
+		// returns: dojox/charting/plot2d/Base
 		//		A reference to this plot for functional chaining.
-		return this;	//	dojox.charting.plot2d.Base
+		return this;	//	dojox/charting/plot2d/Base
 	},
 	getRequiredColors: function(){
 		// summary:

@@ -5,8 +5,6 @@ define("dijit/_Contained", [
 
 	// module:
 	//		dijit/_Contained
-	// summary:
-	//		Mixin for widgets that are children of a container widget
 
 	return declare("dijit._Contained", null, {
 		// summary:
@@ -27,7 +25,7 @@ define("dijit/_Contained", [
 			do{
 				node = node[which+"Sibling"];
 			}while(node && node.nodeType != 1);
-			return node && registry.byNode(node);	// dijit._Widget
+			return node && registry.byNode(node);	// dijit/_WidgetBase
 		},
 
 		getPreviousSibling: function(){
@@ -35,7 +33,7 @@ define("dijit/_Contained", [
 			//		Returns null if this is the first child of the parent,
 			//		otherwise returns the next element sibling to the "left".
 
-			return this._getSibling("previous"); // dijit._Widget
+			return this._getSibling("previous"); // dijit/_WidgetBase
 		},
 
 		getNextSibling: function(){
@@ -43,7 +41,7 @@ define("dijit/_Contained", [
 			//		Returns null if this is the last child of the parent,
 			//		otherwise returns the next element sibling to the "right".
 
-			return this._getSibling("next"); // dijit._Widget
+			return this._getSibling("next"); // dijit/_WidgetBase
 		},
 
 		getIndexInParent: function(){

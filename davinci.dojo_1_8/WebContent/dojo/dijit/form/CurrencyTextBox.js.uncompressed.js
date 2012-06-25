@@ -7,9 +7,6 @@ define("dijit/form/CurrencyTextBox", [
 
 	// module:
 	//		dijit/form/CurrencyTextBox
-	// summary:
-	//		A validating currency textbox
-
 
 	/*=====
 	var __Constraints = declare([NumberTextBox.__Constraints, currency.__FormatOptions, currency.__ParseOptions], {

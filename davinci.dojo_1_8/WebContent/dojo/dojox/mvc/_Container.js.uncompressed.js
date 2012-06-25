@@ -5,10 +5,6 @@ define("dojox/mvc/_Container", [
 	"dijit/_WidgetBase",
 	"dojo/regexp"
 ], function(declare, lang, when, _WidgetBase, regexp){
-	/*=====
-		declare = dojo.declare;
-		_WidgetBase = dijit._WidgetBase;
-	=====*/
 
 	return declare("dojox.mvc._Container", _WidgetBase, {
 	
@@ -31,7 +27,7 @@ define("dojox/mvc/_Container", [
 		//		Same as templateString. Used when this widget is mixed with a regular templated widget.
 		inlineTemplateString : "",
 
-		// _containedWidgets: [protected] dijit._Widget[]
+		// _containedWidgets: [protected] dijit/_Widget[]
 		//		The array of contained widgets at any given point in time within this container.
 		_containedWidgets : [],
 	

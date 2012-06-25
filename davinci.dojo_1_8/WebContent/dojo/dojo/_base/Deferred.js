@@ -5,4 +5,125 @@
 */
 
 //>>built
-define("dojo/_base/Deferred",["./kernel","./config","./lang","../promise/Promise","../when"],function(_1,_2,_3,_4,_5){var _6=function(){};var _7=Object.freeze||function(){};var _8=_1.Deferred=function(_9){var _a,_b,_c,_d,_e;var _f=(this.promise=new _4);function _10(_11){if(_b){throw new Error("This deferred has already been resolved");}_a=_11;_b=true;_12();};function _12(){var _13;while(!_13&&_e){var _14=_e;_e=_e.next;if((_13=(_14.progress==_6))){_b=false;}var _15=(_c?_14.error:_14.resolved);if(_15){try{var _16=_15(_a);if(_16&&typeof _16.then==="function"){_16.then(_3.hitch(_14.deferred,"resolve"),_3.hitch(_14.deferred,"reject"),_3.hitch(_14.deferred,"progress"));continue;}var _17=_13&&_16===undefined;if(_13&&!_17){_c=_16 instanceof Error;}_14.deferred[_17&&_c?"reject":"resolve"](_17?_a:_16);}catch(e){_14.deferred.reject(e);}}else{if(_c){_14.deferred.reject(_a);}else{_14.deferred.resolve(_a);}}}};this.resolve=this.callback=function(_18){this.fired=0;this.results=[_18,null];_10(_18);};this.reject=this.errback=function(_19){_c=true;this.fired=1;_10(_19);this.results=[null,_19];};this.progress=function(_1a){var _1b=_e;while(_1b){var _1c=_1b.progress;_1c&&_1c(_1a);_1b=_1b.next;}};this.addCallbacks=function(_1d,_1e){this.then(_1d,_1e,_6);return this;};_f.then=this.then=function(_1f,_20,_21){var _22=_21==_6?this:new _8(_f.cancel);var _23={resolved:_1f,error:_20,progress:_21,deferred:_22};if(_e){_d=_d.next=_23;}else{_e=_d=_23;}if(_b){_12();}return _22.promise;};var _24=this;_f.cancel=this.cancel=function(){if(!_b){var _25=_9&&_9(_24);if(!_b){if(!(_25 instanceof Error)){_25=new Error(_25);}_25.log=false;_24.reject(_25);}}};_7(_f);};_3.extend(_8,{addCallback:function(_26){return this.addCallbacks(_3.hitch.apply(_1,arguments));},addErrback:function(_27){return this.addCallbacks(null,_3.hitch.apply(_1,arguments));},addBoth:function(_28){var _29=_3.hitch.apply(_1,arguments);return this.addCallbacks(_29,_29);},fired:-1});_8.when=_1.when=_5;return _8;});
+define("dojo/_base/Deferred",["./kernel","../Deferred","../promise/Promise","../has","./lang","../when"],function(_1,_2,_3,_4,_5,_6){
+var _7=function(){
+};
+var _8=Object.freeze||function(){
+};
+var _9=_1.Deferred=function(_a){
+var _b,_c,_d,_e,_f;
+var _10=(this.promise=new _3());
+function _11(_12){
+if(_c){
+throw new Error("This deferred has already been resolved");
+}
+_b=_12;
+_c=true;
+_13();
+};
+function _13(){
+var _14;
+while(!_14&&_f){
+var _15=_f;
+_f=_f.next;
+if((_14=(_15.progress==_7))){
+_c=false;
+}
+var _16=(_d?_15.error:_15.resolved);
+if(0){
+if(_d&&_2.instrumentRejected){
+_2.instrumentRejected(_b,!!_16);
+}
+}
+if(_16){
+try{
+var _17=_16(_b);
+if(_17&&typeof _17.then==="function"){
+_17.then(_5.hitch(_15.deferred,"resolve"),_5.hitch(_15.deferred,"reject"),_5.hitch(_15.deferred,"progress"));
+continue;
+}
+var _18=_14&&_17===undefined;
+if(_14&&!_18){
+_d=_17 instanceof Error;
+}
+_15.deferred[_18&&_d?"reject":"resolve"](_18?_b:_17);
+}
+catch(e){
+_15.deferred.reject(e);
+}
+}else{
+if(_d){
+_15.deferred.reject(_b);
+}else{
+_15.deferred.resolve(_b);
+}
+}
+}
+};
+this.resolve=this.callback=function(_19){
+this.fired=0;
+this.results=[_19,null];
+_11(_19);
+};
+this.reject=this.errback=function(_1a){
+_d=true;
+this.fired=1;
+if(0){
+if(_2.instrumentRejected&&!_f){
+_2.instrumentRejected(_1a,false);
+}
+}
+_11(_1a);
+this.results=[null,_1a];
+};
+this.progress=function(_1b){
+var _1c=_f;
+while(_1c){
+var _1d=_1c.progress;
+_1d&&_1d(_1b);
+_1c=_1c.next;
+}
+};
+this.addCallbacks=function(_1e,_1f){
+this.then(_1e,_1f,_7);
+return this;
+};
+_10.then=this.then=function(_20,_21,_22){
+var _23=_22==_7?this:new _9(_10.cancel);
+var _24={resolved:_20,error:_21,progress:_22,deferred:_23};
+if(_f){
+_e=_e.next=_24;
+}else{
+_f=_e=_24;
+}
+if(_c){
+_13();
+}
+return _23.promise;
+};
+var _25=this;
+_10.cancel=this.cancel=function(){
+if(!_c){
+var _26=_a&&_a(_25);
+if(!_c){
+if(!(_26 instanceof Error)){
+_26=new Error(_26);
+}
+_26.log=false;
+_25.reject(_26);
+}
+}
+};
+_8(_10);
+};
+_5.extend(_9,{addCallback:function(_27){
+return this.addCallbacks(_5.hitch.apply(_1,arguments));
+},addErrback:function(_28){
+return this.addCallbacks(null,_5.hitch.apply(_1,arguments));
+},addBoth:function(_29){
+var _2a=_5.hitch.apply(_1,arguments);
+return this.addCallbacks(_2a,_2a);
+},fired:-1});
+_9.when=_1.when=_6;
+return _9;
+});

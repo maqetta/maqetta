@@ -5,23 +5,20 @@ define("dojox/mvc/_DataBindingMixin", [
 	"dojo/_base/declare",
 	"dojo/Stateful",
 	"dijit/registry"
-], function(dojo, lang, array, declare, Stateful, registry){
-	/*=====
-	Stateful = dojo.Stateful;
-	registry = dijit.registry;
-	=====*/
+], function(kernel, lang, array, declare, Stateful, registry){
 
-	dojo.deprecated("dojox.mvc._DataBindingMixin", "Use dojox/mvc/at for data binding.");
+	kernel.deprecated("dojox.mvc._DataBindingMixin", "Use dojox/mvc/at for data binding.");
 
 	return declare("dojox.mvc._DataBindingMixin", null, {
 		// summary:
+		//		Deprecated.  Use dojox/mvc/at for data binding.
 		//		Provides the ability for dijits or custom view components to become
 		//		data binding aware.
 		//
 		// description:
 		//		Data binding awareness enables dijits or other view layer
 		//		components to bind to locations within a client-side data model,
-		//		which is commonly an instance of the dojox.mvc.StatefulModel class. A
+		//		which is commonly an instance of the dojox/mvc/StatefulModel class. A
 		//		bind is a bi-directional update mechanism which is capable of
 		//		synchronizing value changes between the bound dijit or other view
 		//		component and the specified location within the data model, as well
@@ -43,13 +40,13 @@ define("dojox/mvc/_DataBindingMixin", [
 		//		|		});
 		//		|	</script>
 		//		|
-		//		|	<input id="hello1" data-dojo-type="dijit.form.TextBox"
+		//		|	<input id="hello1" data-dojo-type="dijit/form/TextBox"
 		//		|		data-dojo-props="ref: model.hello"></input>
 		//		|
-		//		|	<input id="hello2" data-dojo-type="dijit.form.TextBox"
+		//		|	<input id="hello2" data-dojo-type="dijit/form/TextBox"
 		//		|		data-dojo-props="ref: model.hello"></input>
 		//
-		//		In the above example, both dijit.form.TextBox instances (with IDs
+		//		In the above example, both dijit/form/TextBox instances (with IDs
 		//		"hello1" and "hello2" respectively) are bound to the same reference
 		//		location in the data model i.e. "hello" via the "ref" expression
 		//		"model.hello". Both will have an initial value of "Hello World".
@@ -58,7 +55,7 @@ define("dojox/mvc/_DataBindingMixin", [
 		//		"hello" which will in turn cause a matching update of the value in
 		//		the other textbox.
 	
-		// ref: String||dojox.mvc.StatefulModel
+		// ref: String||dojox/mvc/StatefulModel
 		//		The value of the data binding expression passed declaratively by
 		//		the developer. This usually references a location within an
 		//		existing datamodel and may be a relative reference based on the
@@ -66,7 +63,7 @@ define("dojox/mvc/_DataBindingMixin", [
 		ref: null,
 
 /*=====
-		// binding: [readOnly] dojox.mvc.StatefulModel
+		// binding: [readOnly] dojox/mvc/StatefulModel
 		//		The read only value of the resolved data binding for this widget.
 		//		This may be a result of resolving various relative refs along
 		//		the parent axis.
@@ -140,7 +137,7 @@ define("dojox/mvc/_DataBindingMixin", [
 
 		_setupBinding: function(parentBinding){
 			// summary:
-			//		Calculate and set the dojo.Stateful data binding for the
+			//		Calculate and set the dojo/Stateful data binding for the
 			//		associated dijit or custom view component.
 			//	parentBinding:
 			//		The binding of this widget/view component's data-bound parent,
@@ -158,7 +155,7 @@ define("dojox/mvc/_DataBindingMixin", [
 			//		the binding is set up for this control and its required, readOnly
 			//		etc. properties are refreshed.
 			//		The data binding may be specified as a direct reference to the
-			//		dojo.Stateful model node or as a string relative to its DOM
+			//		dojo/Stateful model node or as a string relative to its DOM
 			//		parent or another widget.
 			//		There are three ways in which the data binding node reference is
 			//		calculated when specified as a string:
@@ -171,12 +168,12 @@ define("dojox/mvc/_DataBindingMixin", [
 			//		- If no such parent is found i.e. for the outermost container
 			//		  dijits that specify a data binding reference, the binding is
 			//		  calculated by treating the reference String as an expression and
-			//		  evaluating it to obtain the dojo.Stateful node in the datamodel.
+			//		  evaluating it to obtain the dojo/Stateful node in the datamodel.
 			//		This method calls console.warn in these two conditions:
 			//		- The ref is an expression i.e. outermost bound dijit, but the
 			//		  expression evaluation fails.
 			//		- The calculated binding turns out to not be an instance of a
-			//		  dojo.Stateful node.
+			//		  dojo/Stateful node.
 			// tags:
 			//		private
 
@@ -217,8 +214,8 @@ define("dojox/mvc/_DataBindingMixin", [
 						}						
 					}catch(err){
 						if(ref.indexOf("${") == -1){ // Ignore templated refs such as in repeat body
-							console.warn("dojox.mvc._DataBindingMixin: '" + this.domNode +
-								"' widget with illegal ref not evaluating to a dojo.Stateful node: '" + ref + "'");
+							console.warn("dojox/mvc/_DataBindingMixin: '" + this.domNode +
+								"' widget with illegal ref not evaluating to a dojo/Stateful node: '" + ref + "'");
 						}
 					}
 				}
@@ -231,8 +228,8 @@ define("dojox/mvc/_DataBindingMixin", [
 					}
 					this._updateBinding("binding", null, binding);
 				}else{
-					console.warn("dojox.mvc._DataBindingMixin: '" + this.domNode +
-						"' widget with illegal ref not evaluating to a dojo.Stateful node: '" + ref + "'");
+					console.warn("dojox/mvc/_DataBindingMixin: '" + this.domNode +
+						"' widget with illegal ref not evaluating to a dojo/Stateful node: '" + ref + "'");
 				}
 			}
 		},
@@ -248,13 +245,13 @@ define("dojox/mvc/_DataBindingMixin", [
 		_updateBinding: function(name, old, current){
 			// summary:
 			//		Set the data binding to the supplied value, which must be a
-			//		dojo.Stateful node of a data model.
+			//		dojo/Stateful node of a data model.
 			//	name:
 			//		The name of the binding property (always "binding").
 			//	old:
-			//		The old dojo.Stateful binding node of the data model.
+			//		The old dojo/Stateful binding node of the data model.
 			//	current:
-			//		The new dojo.Stateful binding node of the data model.
+			//		The new dojo/Stateful binding node of the data model.
 			// description:
 			//		Applies the specified data binding to the attached widget.
 			//		Loses any prior watch registrations on the previously active

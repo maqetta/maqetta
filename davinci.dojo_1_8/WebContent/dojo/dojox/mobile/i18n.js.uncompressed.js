@@ -7,8 +7,7 @@ define("dojox/mobile/i18n", [
 	// module:
 	//		dojox/mobile/i18n
 	// summary:
-	//		An internationalization utility for dojox.mobile-based user
-	//		applications.
+	//		An internationalization utility for applications based on dojox/mobile.
 
 	var i18n = lang.getObject("dojox.mobile.i18n", true);
 
@@ -34,6 +33,12 @@ define("dojox/mobile/i18n", [
 			return i18n.bundle[lang.trim(s)] || s;
 		}
 	});
-
+	
+	/*=====
+    return {
+		// summary:
+		//		An internationalization utility for applications based on dojox/mobile.
+    };
+    =====*/
 	return i18n;
 });

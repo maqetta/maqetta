@@ -7,8 +7,6 @@ define("dijit/_Container", [
 
 	// module:
 	//		dijit/_Container
-	// summary:
-	//		Mixin for widgets that can contain other widgets.
 
 	return declare("dijit._Container", null, {
 		// summary:
@@ -22,7 +20,7 @@ define("dijit/_Container", [
 			}
 		},
 
-		addChild: function(/*dijit._Widget*/ widget, /*int?*/ insertIndex){
+		addChild: function(/*dijit/_WidgetBase*/ widget, /*int?*/ insertIndex){
 			// summary:
 			//		Makes the given widget a child of this widget.
 			// description:
@@ -75,7 +73,7 @@ define("dijit/_Container", [
 			return this.getChildren().length > 0;	// Boolean
 		},
 
-		_getSiblingOfChild: function(/*dijit._Widget*/ child, /*int*/ dir){
+		_getSiblingOfChild: function(/*dijit/_WidgetBase*/ child, /*int*/ dir){
 			// summary:
 			//		Get the next or previous widget sibling of child
 			// dir:
@@ -88,7 +86,7 @@ define("dijit/_Container", [
 			return children[idx + dir];
 		},
 
-		getIndexOfChild: function(/*dijit._Widget*/ child){
+		getIndexOfChild: function(/*dijit/_WidgetBase*/ child){
 			// summary:
 			//		Gets the index of the child in this container or -1 if not found
 			return array.indexOf(this.getChildren(), child);	// int

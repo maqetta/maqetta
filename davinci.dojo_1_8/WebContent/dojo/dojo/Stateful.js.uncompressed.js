@@ -1,9 +1,6 @@
-define("dojo/Stateful", ["./_base/declare", "./_base/lang", "./_base/array", "dojo/when"], function(declare, lang, array, when) {
+define("dojo/Stateful", ["./_base/declare", "./_base/lang", "./_base/array", "dojo/when"], function(declare, lang, array, when){
 	// module:
 	//		dojo/Stateful
-	// summary:
-	//		A module that provides the base class for objects that provide named properties
-	//		with auto-magic accessors and the ability to watch for property changes
 
 return declare("dojo.Stateful", null, {
 	// summary:
@@ -130,7 +127,7 @@ return declare("dojo.Stateful", null, {
 				self._watchCallbacks(name, oldValue, value);
 			});
 		}
-		return this; //dojo.Stateful
+		return this; // dojo/Stateful
 	},
 	_changeAttrValue: function(name, value){
 		// summary:
@@ -152,7 +149,7 @@ return declare("dojo.Stateful", null, {
 		if(this._watchCallbacks){
 			this._watchCallbacks(name, oldValue, value);
 		}
-		return this; //dojo.Stateful
+		return this; // dojo/Stateful
 	},
 	watch: function(/*String?*/name, /*Function*/callback){
 		// summary:

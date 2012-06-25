@@ -2,22 +2,22 @@ define("dojox/editor/plugins/PageBreak", [
 	"dojo",
 	"dijit",
 	"dojox",
-	"dijit/form/Button",
 	"dijit/_editor/_Plugin",
+	"dijit/form/Button",
 	"dojo/_base/connect",
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/i18n!dojox/editor/plugins/nls/PageBreak"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.PageBreak",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.PageBreak", _Plugin, {
 	//	summary:
 	//		This plugin provides a simple CSS page break plugin that
 	//		lets you insert browser pring recognizable page breaks in
 	//		the document.
 	//		This plugin registers the hotkey command: CTRL-SHIFT-ENTER
 
-	//	useDefaultCommand [protected]
+	//	useDefaultCommand: [protected]
 	//		Over-ride indicating that the command processing is done all by this plugin.
 	useDefaultCommand: false,
 

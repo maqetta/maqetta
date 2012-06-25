@@ -1,6 +1,6 @@
-define("dojox/av/widget/PlayButton", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
+define("dojox/av/widget/PlayButton", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit, _Widget, _TemplatedMixin){
 
-dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin], {
+return dojo.declare("dojox.av.widget.PlayButton", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		A Play/Pause button widget to use with dojox.av.widget.Player
 	//
@@ -8,7 +8,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin
 	//
 	postCreate: function(){
 		// summary:
-		//		Intialize button.
+		//		Initialize button.
 		this.showPlay();
 	},
 
@@ -16,7 +16,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin
 		// summary:
 		//		A common method to set the media in all Player widgets.
 		//		May do connections and initializations.
-		//
+
 		this.media = med;
 		dojo.connect(this.media, "onEnd", this, "showPlay");
 		dojo.connect(this.media, "onStart", this, "showPause");
@@ -25,7 +25,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin
 	onClick: function(){
 		// summary:
 		//		Fired on play or pause click.
-		//
+
 		if(this._mode=="play"){
 			this.onPlay();
 		}else{
@@ -36,7 +36,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin
 	onPlay: function(){
 		// summary:
 		//		Fired on play click.
-		//
+
 		if(this.media){
 			this.media.play();
 		}
@@ -45,7 +45,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin
 	onPause: function(){
 		// summary:
 		//		Fired on pause click.
-		//
+
 		if(this.media){
 			this.media.pause();
 		}
@@ -55,7 +55,7 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin
 		// summary:
 		//		Toggles the pause button invisible and the play
 		//		button visible..
-		//
+
 		this._mode = "play";
 		dojo.removeClass(this.domNode, "Pause");
 		dojo.addClass(this.domNode, "Play");
@@ -64,11 +64,11 @@ dojo.declare("dojox.av.widget.PlayButton", [dijit._Widget, dijit._TemplatedMixin
 		// summary:
 		//		Toggles the play button invisible and the pause
 		//		button visible.
-		//
+
 		this._mode = "pause";
 		dojo.addClass(this.domNode, "Pause");
 		dojo.removeClass(this.domNode, "Play");
 	}
 });
-return dojox.av.widget.PlayButton;
+
 });

@@ -6,7 +6,7 @@ var Equation = oo.declare(
 	//		Essentially the same as the TextBlock tool, but
 	//		allows for a different icon and tooltip title.
 
-	dojox.drawing.tools.TextBlock,
+	TextBlock,
 	function(options){
 	
 	},

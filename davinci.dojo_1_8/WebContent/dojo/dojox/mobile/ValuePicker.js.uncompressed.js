@@ -15,12 +15,12 @@ define("dojox/mobile/ValuePicker", [
 		// description:
 		//		ValuePicker is a widget for selecting some values. The values
 		//		can be selected by the Plus button, the Minus button, or the
-		//		input field
+		//		input field.
 
 		/* internal properties */	
 		baseClass: "mblValuePicker",
 
-		onValueChanged: function(/*Widget*/slot){
+		onValueChanged: function(/*dojox/mobile/ValuePickerSlot*/slot){
 			// summary:
 			//		Callback when the slot value is changed.
 			// slot:

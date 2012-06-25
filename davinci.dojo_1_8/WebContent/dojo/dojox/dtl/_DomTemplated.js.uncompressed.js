@@ -9,15 +9,18 @@ define("dojox/dtl/_DomTemplated", [
 	/*=====
 		dtl = dojox.dtl;
 		cache = dojo.cache;
-		TemplatedMixin = dijit._TemplatedMixin
+		TemplatedMixin = dijit._TemplatedMixin;
 	=====*/
-	dtl._DomTemplated = function(){};
+	dtl._DomTemplated = function(){
+		// summary:
+		//		The base class for DOM-based templating.
+	};
 	dtl._DomTemplated.prototype = {
 		_dijitTemplateCompat: false,
 		buildRendering: function(){
-			//	summary:
-			//		Construct the UI for this widget, setting this.domNode.
-
+			// summary:
+			//		Constructs the DOM representation.
+			
 			//render needs a domNode to work with
 			this.domNode = this.srcNodeRef || dojo.create('div');
 
@@ -41,10 +44,11 @@ define("dojox/dtl/_DomTemplated", [
 				delete this.srcNodeRef;
 			}
 		},
-		setTemplate: function(/*String|dojo._Url*/ template, /*dojox.dtl.Context?*/ context){
+		setTemplate: function(/*String|dojo/url*/ template, /*dojox/dtl/Context?*/ context){
 			// summary:
 			//		Quickly switch between templated by location
-			// template: The new template.
+			// template:
+			//		The new template.
 			// context:
 			//		The runtime context.
 			if(dojox.dtl.text._isTemplate(template)){
@@ -54,7 +58,7 @@ define("dojox/dtl/_DomTemplated", [
 			}
 			this.render(context);
 		},
-		render: function(/*dojox.dtl.Context?*/ context, /*dojox.dtl.DomTemplate?*/ tpl){
+		render: function(/*dojox/dtl/Context?*/ context, /*dojox/dtl/DomTemplate?*/ tpl){
 			// summary:
 			//		Renders this template.
 			// context:
@@ -94,6 +98,6 @@ define("dojox/dtl/_DomTemplated", [
 			));
 		}
 	};
-	return dojox.dtl._DomTemplated;
+	return dtl._DomTemplated;
 });
 

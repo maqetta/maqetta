@@ -11,8 +11,6 @@ define("dijit/MenuSeparator", [
 
 	// module:
 	//		dijit/MenuSeparator
-	// summary:
-	//		A line between two menu items
 
 	return declare("dijit.MenuSeparator", [_WidgetBase, _TemplatedMixin, _Contained], {
 		// summary:

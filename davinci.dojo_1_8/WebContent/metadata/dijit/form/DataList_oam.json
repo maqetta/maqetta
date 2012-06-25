@@ -1,0 +1,21 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/DataList",
+    "name": "dijit.form.DataList",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/DataList",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {},
+    "content": "<select></select>"
+}

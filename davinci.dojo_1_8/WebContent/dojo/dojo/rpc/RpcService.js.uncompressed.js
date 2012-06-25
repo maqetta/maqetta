@@ -1,14 +1,15 @@
 define("dojo/rpc/RpcService", [
 	"../_base/array", "../_base/declare", "../_base/Deferred", "../_base/kernel","../_base/lang",
 	"../_base/url", "../_base/xhr"
-], function(array, declare, Deferred, kernel, lang, _Url, xhr) {
+], function(array, declare, Deferred, kernel, lang, _Url, xhr){
 
 // module:
 //		dojo/rpc/RpcService
-// summary:
-//		TODOC
 
 return declare("dojo.rpc.RpcService", null, {
+	// summary:
+	//		TODOC
+
 	constructor: function(args){
 		// summary:
 		//		Take a string as a url to retrieve an smd or an object that is an smd or partial smd to use
@@ -40,7 +41,7 @@ return declare("dojo.rpc.RpcService", null, {
 				});
 
 				def.addCallback(this, "processSmd");
-				def.addErrback(function() {
+				def.addErrback(function(){
 					throw new Error("Unable to load SMD from " + args);
 				});
 
@@ -82,7 +83,7 @@ return declare("dojo.rpc.RpcService", null, {
 		return obj;
 	},
 
-	errorCallback: function(/* dojo.Deferred */ deferredRequestHandler){
+	errorCallback: function(/* dojo/_base/Deferred */ deferredRequestHandler){
 		// summary:
 		//		create callback that calls the Deferred errback method
 		// deferredRequestHandler: Deferred
@@ -92,7 +93,7 @@ return declare("dojo.rpc.RpcService", null, {
 		};
 	},
 
-	resultCallback: function(/* dojo.Deferred */ deferredRequestHandler){
+	resultCallback: function(/* dojo/_base/Deferred */ deferredRequestHandler){
 		// summary:
 		//		create callback that calls the Deferred's callback method
 		// deferredRequestHandler: Deferred

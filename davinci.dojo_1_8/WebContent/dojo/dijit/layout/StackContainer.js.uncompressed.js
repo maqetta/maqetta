@@ -16,8 +16,6 @@ define("dijit/layout/StackContainer", [
 
 // module:
 //		dijit/layout/StackContainer
-// summary:
-//		A container that has multiple children, but shows only one child at a time.
 
 // Back compat w/1.6, remove for 2.0
 if(has("dijit-legacy-requires")){
@@ -150,7 +148,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		this.inherited(arguments);
 	},
 
-	_setupChild: function(/*dijit._Widget*/ child){
+	_setupChild: function(/*dijit/_WidgetBase*/ child){
 		// Overrides _LayoutWidget._setupChild()
 
 		this.inherited(arguments);
@@ -162,7 +160,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		child.domNode.title = "";
 	},
 
-	addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
+	addChild: function(/*dijit/_WidgetBase*/ child, /*Integer?*/ insertIndex){
 		// Overrides _Container.addChild() to do layout and publish events
 
 		this.inherited(arguments);
@@ -186,7 +184,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		}
 	},
 
-	removeChild: function(/*dijit._Widget*/ page){
+	removeChild: function(/*dijit/_WidgetBase*/ page){
 		// Overrides _Container.removeChild() to do layout and publish events
 
 		this.inherited(arguments);
@@ -220,7 +218,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		}
 	},
 
-	selectChild: function(/*dijit._Widget|String*/ page, /*Boolean*/ animate){
+	selectChild: function(/*dijit/_WidgetBase|String*/ page, /*Boolean*/ animate){
 		// summary:
 		//		Show the given widget (which must be one of my children)
 		// page:
@@ -246,9 +244,9 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		// summary:
 		//		Hide the old widget and display the new widget.
 		//		Subclasses should override this.
-		// newWidget: dijit._Widget
+		// newWidget: dijit/_WidgetBase
 		//		The newly selected widget.
-		// oldWidget: dijit._Widget
+		// oldWidget: dijit/_WidgetBase
 		//		The previously selected widget.
 		// animate: Boolean
 		//		Used by AccordionContainer to turn on/off slide effect.
@@ -284,7 +282,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		var children = this.getChildren();
 		var index = array.indexOf(children, this.selectedChildWidget);
 		index += forward ? 1 : children.length - 1;
-		return children[ index % children.length ]; // dijit._Widget
+		return children[ index % children.length ]; // dijit/_WidgetBase
 	},
 
 	forward: function(){
@@ -315,7 +313,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		}
 	},
 
-	_showChild: function(/*dijit._Widget*/ page){
+	_showChild: function(/*dijit/_WidgetBase*/ page){
 		// summary:
 		//		Show the specified child by changing it's CSS, and call _onShow()/onShow() so
 		//		it can do any updates it needs regarding loading href's etc.
@@ -331,7 +329,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		return (page._onShow && page._onShow()) || true;
 	},
 
-	_hideChild: function(/*dijit._Widget*/ page){
+	_hideChild: function(/*dijit/_WidgetBase*/ page){
 		// summary:
 		//		Hide the specified child by changing it's CSS, and call _onHide() so
 		//		it's notified.
@@ -341,7 +339,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		page.onHide && page.onHide();
 	},
 
-	closeChild: function(/*dijit._Widget*/ page){
+	closeChild: function(/*dijit/_WidgetBase*/ page){
 		// summary:
 		//		Callback when user clicks the [X] to remove a page.
 		//		If onClose() returns true then remove and destroy the child.

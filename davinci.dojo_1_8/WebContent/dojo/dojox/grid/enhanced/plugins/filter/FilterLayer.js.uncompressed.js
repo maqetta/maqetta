@@ -127,23 +127,23 @@ define("dojox/grid/enhanced/plugins/filter/FilterLayer", [
 		//		Add a client side filter layer on top of the data store,
 		//		so any filter expression can be applied to the store.
 /*=====
-		//_items: Array,
+		// _items: Array,
 		//		Cached items (may contain holes)
 		_items: [],
 		
-		//_result: Array,
+		// _result: Array,
 		//		Current fetch result
 		_result: [],
-		
-		//_resultStartIdx: Integer,
+
+		// _resultStartIdx: Integer,
 		//		The index in cache of the first result item
 		_resultStartIdx: 0,
 		
-		//_indexMap: Array,
+		// _indexMap: Array,
 		//		A map from the row index of this._items to the row index of the original store.
 		_indexMap: null,
 		
-		//_getter: function(datarow, colArg, rowIndex, store);
+		// _getter: function(datarow, colArg, rowIndex, store);
 		//		A user defined way to get data from store
 		_getter: null,
 		

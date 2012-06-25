@@ -4,7 +4,7 @@ define("dojox/lang/functional/lambda", ["../..", "dojo/_base/kernel", "dojo/_bas
 // This module adds high-level functions and related constructs:
 //	- anonymous functions built from the string
 
-// Acknoledgements:
+// Acknowledgements:
 //	- lambda() is based on work by Oliver Steele
 //		(http://osteele.com/sources/javascript/functional/functional.js)
 //		which was published under MIT License

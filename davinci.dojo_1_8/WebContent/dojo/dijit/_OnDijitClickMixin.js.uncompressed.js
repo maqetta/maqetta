@@ -10,16 +10,6 @@ define("dijit/_OnDijitClickMixin", [
 
 	// module:
 	//		dijit/_OnDijitClickMixin
-	// summary:
-	//		Mixin so you can pass "ondijitclick" to this.connect() method,
-	//		as a way to handle clicks by mouse, or by keyboard (SPACE/ENTER key).
-	// description:
-	//		Setting an ondijitclick handler on a node has two effects:
-	//			1. converts keyboard "click" events into actual click events, so
-	//			   that a "click" event bubbles up from the widget to any listeners on ancestor nodes.
-	//			2. sets up a click listener on the node, which catches native click events plus
-	//			   the events generated from the previous step.
-
 
 	// Keep track of where the last keydown event was, to help avoid generating
 	// spurious ondijitclick events when:
@@ -95,15 +85,25 @@ define("dijit/_OnDijitClickMixin", [
 			];
 
 			if(has("touch")){
+				// touchstart-->touchend will automatically generate a click event, but there are problems
+				// on iOS after focus has been programatically shifted (#14604, #14918), so do it manually.
+				// But first, let other touchend callbacks execute.
+
+				var clickTimer;
 				handles.push(
 					on(node, "touchend", function(e){
-						// touchstart-->touchend will automatically generate a click event, but there are problems
-						// on iOS after focus has been programatically shifted (#14604, #14918), so do it manually.
+						// Setup timer to fire synthetic click event after other touchend listeners finish executing
+						var target = e.target;
+						clickTimer = setTimeout(function(){
+							clickTimer = null;
+							on.emit(target, "click", {
+								cancelable: true,
+								bubbles: true
+							});
+						}, 0);
+
+						// Prevent the touchend from triggering the native click event
 						e.preventDefault();
-						on.emit(e.target, "click", {
-							cancelable: true,
-							bubbles: true
-						});
 					})
 				);
 			}
@@ -111,12 +111,26 @@ define("dijit/_OnDijitClickMixin", [
 			return {
 				remove: function(){
 					array.forEach(handles, function(h){ h.remove(); });
+					if(clickTimer){
+						clearTimeout(clickTimer);
+						clickTimer = null;
+					}
 				}
 			};
 		}
 	};
 
 	var ret = declare("dijit._OnDijitClickMixin", null, {
+		// summary:
+		//		Mixin so you can pass "ondijitclick" to this.connect() method,
+		//		as a way to handle clicks by mouse, or by keyboard (SPACE/ENTER key).
+		// description:
+		//		Setting an ondijitclick handler on a node has two effects:
+		//			1. converts keyboard "click" events into actual click events, so
+		//			   that a "click" event bubbles up from the widget to any listeners on ancestor nodes.
+		//			2. sets up a click listener on the node, which catches native click events plus
+		//			   the events generated from the previous step.
+
 		connect: function(
 				/*Object|null*/ obj,
 				/*String|Function*/ event,

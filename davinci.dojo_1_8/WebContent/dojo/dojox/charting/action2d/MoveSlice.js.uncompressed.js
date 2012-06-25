@@ -3,18 +3,23 @@ define("dojox/charting/action2d/MoveSlice", ["dojo/_base/connect", "dojo/_base/d
 	function(hub, declare, PlotAction, dfe, m, gf, df, dfs, dff){
 
 	/*=====
-	declare("dojox.charting.action2d.__MoveSliceCtorArgs", dojox.charting.action2d.__PlotActionCtorArgs, {
-		// summary:
-		//		Additional arguments for highlighting actions.
-	
-		// scale: Number?
-		//		The amount to scale the pie slice.  Default is 1.05.
-		scale: 1.05,
-	
-		// shift: Number?
-		//		The amount in pixels to shift the pie slice.  Default is 7.
-		shift: 7
-	});
+	var __MoveSliceCtorArgs = function(duration, easing, scale, shift){
+			// summary:
+			//		Additional arguments for move slice actions.
+			// duration: Number?
+			//		The amount of time in milliseconds for an animation to last.  Default is 400.
+			this.duration = 400;
+			// easing: dojo/fx/easing/*?
+			//		An easing object (see dojo.fx.easing) for use in an animation.  The
+			//		default is dojo.fx.easing.backOut.
+			this.easing = null;
+			// scale: Number?
+			//		The amount to scale the pie slice.  Default is 1.05.
+			this.scale = 1.05;
+			// shift: Number?
+			//		The amount in pixels to shift the pie slice.  Default is 7.
+			this.shift = 7;
+	};
 	=====*/
 	
 	var DEFAULT_SCALE = 1.05,
@@ -36,11 +41,11 @@ define("dojox/charting/action2d/MoveSlice", ["dojo/_base/connect", "dojo/_base/d
 		constructor: function(chart, plot, kwArgs){
 			// summary:
 			//		Create the slice moving action and connect it to the plot.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this action belongs to.
 			// plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
-			// kwArgs: dojox.charting.action2d.__MoveSliceCtorArgs?
+			// kwArgs: __MoveSliceCtorArgs?
 			//		Optional keyword arguments object for setting parameters.
 			if(!kwArgs){ kwArgs = {}; }
 			this.scale = typeof kwArgs.scale == "number" ? kwArgs.scale : DEFAULT_SCALE;
@@ -52,7 +57,7 @@ define("dojox/charting/action2d/MoveSlice", ["dojo/_base/connect", "dojo/_base/d
 		process: function(o){
 			// summary:
 			//		Process the action on the given object.
-			// o: dojox.gfx.Shape
+			// o: dojox/gfx/shape.Shape
 			//		The object on which to process the slice moving action.
 			if(!o.shape || o.element != "slice" || !(o.type in this.overOutEvents)){ return; }
 

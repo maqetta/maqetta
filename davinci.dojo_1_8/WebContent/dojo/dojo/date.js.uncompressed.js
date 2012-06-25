@@ -1,10 +1,11 @@
-define("dojo/date", ["./has", "./_base/lang"], function(has, lang) {
+define("dojo/date", ["./has", "./_base/lang"], function(has, lang){
 // module:
 //		dojo/date
-// summary:
-//		Date manipulation utilities
 
-var date = {};
+var date = {
+	// summary:
+	//		Date manipulation utilities
+};
 
 date.getDaysInMonth = function(/*Date*/dateObject){
 	// summary:

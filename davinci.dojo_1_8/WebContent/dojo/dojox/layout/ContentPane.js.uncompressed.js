@@ -6,13 +6,12 @@ define("dojox/layout/ContentPane", [
 	"dojo/_base/declare"
 ], function (lang, xhrUtil, ContentPane, htmlUtil, declare) {
 
-/*===== var ContentPane = dijit.layout.ContentPane =====*/
 return declare("dojox.layout.ContentPane", ContentPane, {
 	// summary:
 	//		An extended version of dijit.layout.ContentPane.
-	//		Supports infile scripts and external ones declared by <script src=''
+	//		Supports infile scripts and external ones declared by `<script src=''...>`
 	//		relative path adjustments (content fetched from a different folder)
-	//		<style> and <link rel='stylesheet' href='..'> tags,
+	//		`<style>` and `<link rel='stylesheet' href='..'>` tags,
 	//		css paths inside cssText is adjusted (if you set adjustPaths = true)
 	//
 	//		NOTE that dojo.require in script in the fetched file isn't recommended
@@ -24,12 +23,9 @@ return declare("dojox.layout.ContentPane", ContentPane, {
 	adjustPaths: false,
 
 	// cleanContent: Boolean
-	//	summary:
-	//		cleans content to make it less likely to generate DOM/JS errors.
-	//	description:
-	//		useful if you send ContentPane a complete page, instead of a html fragment
-	//		scans for
-	//
+	//		Cleans content to make it less likely to generate DOM/JS errors.
+	//		Useful if you send ContentPane a complete page, instead of a html fragment
+	//		scans for:
 	//			* title Node, remove
 	//			* DOCTYPE tag, remove
 	cleanContent: false,
@@ -53,7 +49,7 @@ return declare("dojox.layout.ContentPane", ContentPane, {
 		this.ioMethod = xhrUtil.get;
 	},
 
-	onExecError: function(e){
+	onExecError: function(/*Event*/ e){
 		// summary:
 		//		event callback, called on script error or on java handler error
 		//		overide and return your own html string if you want a some text

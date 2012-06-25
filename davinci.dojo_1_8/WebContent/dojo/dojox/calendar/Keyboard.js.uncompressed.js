@@ -63,6 +63,7 @@ define("dojox/calendar/Keyboard", ["dojo/_base/array", "dojo/_base/lang", "dojo/
 		tabIndex: "0",
 		
 		// focusedItem: Object
+		//		The data item that currently has the focus.
 		focusedItem: null,
 		
 		_isItemFocused: function(item){
@@ -90,7 +91,11 @@ define("dojox/calendar/Keyboard", ["dojo/_base/array", "dojo/_base/lang", "dojo/
 		},
 		
 		onFocusChange: function(e){
-			//	Event dispatched when the focus has changed.
+			// summary:
+			//		Event dispatched when the focus has changed.
+			// tags:
+			//		callback
+
 		},
 
 		// showFocus: Boolean
@@ -153,7 +158,9 @@ define("dojox/calendar/Keyboard", ["dojo/_base/array", "dojo/_base/lang", "dojo/
 		},
 		
 		_focusNextItemImpl: function(dir, index, max){
-				
+			// tags:
+			//		private
+
 			if(index == -1){ // not found should not occur
 				index = dir > 0 ? 0 : max;
 			}else{				
@@ -172,7 +179,9 @@ define("dojox/calendar/Keyboard", ["dojo/_base/array", "dojo/_base/lang", "dojo/
 		//////////////////////////////////////////////////////////
 
 		_handlePrevNextKeyCode: function(e, dir){
-			
+			// tags:
+			//		private
+
 			if(!this.isLeftToRight()){
 				dir = dir == 1 ? -1 : 1;
 			}
@@ -191,6 +200,8 @@ define("dojox/calendar/Keyboard", ["dojo/_base/array", "dojo/_base/lang", "dojo/
 		},
 
 		_keyboardItemEditing: function(e, dir){
+			// tags:
+			//		private
 
 			event.stop(e);
 
@@ -233,7 +244,9 @@ define("dojox/calendar/Keyboard", ["dojo/_base/array", "dojo/_base/lang", "dojo/
 		},
 						
 		_onKeyDown: function(e){
-			
+			// tags:
+			//		private
+
 			var focusedItem = this.get("focusedItem");
 			
 			switch(e.keyCode){

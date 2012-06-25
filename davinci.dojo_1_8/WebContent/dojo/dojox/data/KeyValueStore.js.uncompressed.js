@@ -43,8 +43,8 @@ var KeyValueStore = declare("dojox.data.KeyValueStore", null, {
 	url: "",
 	data: "",
 
-	//urlPreventCache: boolean
-	//Controls if urlPreventCache should be used with underlying xhrGet.
+	// urlPreventCache: boolean
+	//		Controls if urlPreventCache should be used with underlying xhrGet.
 	urlPreventCache: false,
 	
 	_assertIsItem: function(/* item */ item){

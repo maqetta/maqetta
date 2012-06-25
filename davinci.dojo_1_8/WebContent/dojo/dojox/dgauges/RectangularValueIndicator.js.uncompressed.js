@@ -1,24 +1,19 @@
 define("dojox/dgauges/RectangularValueIndicator", ["dojo/_base/declare", "./ScaleIndicatorBase", "dojox/gfx", "dojo/_base/event", "dojo/dom-geometry"],
 	function(declare, ScaleIndicatorBase, gfx, eventUtil, domGeom){
-
-	/*=====
-     var ScaleIndicatorBase = dojox.dgauges.ScaleIndicatorBase;
-     =====*/
-	
 	return declare("dojox.dgauges.RectangularValueIndicator", ScaleIndicatorBase, {
-		//	summary:
+		// summary:
 		//		The rectangular value indicator, typically used for creating markers or thumbs.
 
-		//	paddingLeft: Number
+		// paddingLeft: Number
 		//		The left padding.
 		paddingLeft: 0,
-		//	paddingTop: Number
+		// paddingTop: Number
 		//		The top padding.
 		paddingTop: 0,
-		//	paddingRight: Number
+		// paddingRight: Number
 		//		The right padding.
 		paddingRight: 0,
-		//	paddingBottom: Number
+		// paddingBottom: Number
 		//		The bottom padding.
 		paddingBottom: 0,
 
@@ -55,6 +50,10 @@ define("dojox/dgauges/RectangularValueIndicator", ["dojo/_base/declare", "./Scal
 		},
 		
 		_onMouseDown: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			var np = domGeom.position(this.scale._gauge.domNode, true);
 			this.set("value", this.scale.valueForPosition({x: event.pageX - np.x, y: event.pageY - np.y}));
@@ -64,6 +63,10 @@ define("dojox/dgauges/RectangularValueIndicator", ["dojo/_base/declare", "./Scal
 		},
 		
 		_onMouseMove: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			
 			var np = domGeom.position(this.scale._gauge.domNode, true);

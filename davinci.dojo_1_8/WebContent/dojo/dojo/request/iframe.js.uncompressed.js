@@ -83,16 +83,19 @@ define("dojo/request/iframe", [
 		return frame;
 	}
 
-	function setSrc(iframe, src, replace){
-		var frame = win.global.frames[iframe.name];
+	function setSrc(_iframe, src, replace){
+		var frame = win.global.frames[_iframe.name];
+
+		if(frame.contentWindow){
+			// We have an iframe node instead of the window
+			frame = frame.contentWindow;
+		}
 
 		try{
-			if(!frame.contentWindow){
-				frame.src = src;
-			}else if(!replace || !frame.contentWindow.document){
-				frame.contentWindow.location = src;
+			if(!replace){
+				frame.location = src;
 			}else{
-				frame.contentWindow.location.replace(src);
+				frame.location.replace(src);
 			}
 		}catch(e){
 			console.log('dojo/request/iframe.setSrc: ', e);
@@ -200,12 +203,14 @@ define("dojo/request/iframe", [
 				formNode.target = iframe._iframeName;
 
 				notify && notify.send(response);
+				iframe._notifyStart(response);
 				formNode.submit();
 			}else{
 				// otherwise we post a GET string by changing URL location for the
 				// iframe
 
 				notify && notify.send(response);
+				iframe._notifyStart(response);
 				iframe.setSrc(iframe._frame, response.url, true);
 			}
 		}catch(e){
@@ -215,42 +220,44 @@ define("dojo/request/iframe", [
 
 	// dojo/request/watch handlers
 	function isValid(response){
-		return !response.error;
+		return !this.isFulfilled();
 	}
 	function isReady(response){
 		return !!this._finished;
 	}
-	function handleResponse(response){
-		try{
-			var options = response.options,
-				doc = iframe.doc(iframe._frame),
-				handleAs = options.handleAs;
+	function handleResponse(response, error){
+		if(!error){
+			try{
+				var options = response.options,
+					doc = iframe.doc(iframe._frame),
+					handleAs = options.handleAs;
 
-			if(handleAs !== 'html'){
-				if(handleAs === 'xml'){
-					// IE6-8 have to parse the XML manually. See http://bugs.dojotoolkit.org/ticket/6334
-					if(doc.documentElement.tagName.toLowerCase() === 'html'){
-						query('a', doc.documentElement).orphan();
-						var xmlText = doc.documentElement.innerText;
-						xmlText = xmlText.replace(/>\s+</g, '><');
-						response.text = lang.trim(xmlText);
+				if(handleAs !== 'html'){
+					if(handleAs === 'xml'){
+						// IE6-8 have to parse the XML manually. See http://bugs.dojotoolkit.org/ticket/6334
+						if(doc.documentElement.tagName.toLowerCase() === 'html'){
+							query('a', doc.documentElement).orphan();
+							var xmlText = doc.documentElement.innerText;
+							xmlText = xmlText.replace(/>\s+</g, '><');
+							response.text = lang.trim(xmlText);
+						}else{
+							response.data = doc;
+						}
 					}else{
-						response.data = doc;
+						// 'json' and 'javascript' and 'text'
+						response.text = doc.getElementsByTagName('textarea')[0].value; // text
 					}
+					handlers(response);
 				}else{
-					// 'json' and 'javascript' and 'text'
-					response.text = doc.getElementsByTagName('textarea')[0].value; // text
+					response.data = doc;
 				}
-				handlers(response);
-			}else{
-				response.data = doc;
+			}catch(e){
+				error = e;
 			}
-		}catch(e){
-			response.error = e;
 		}
 
-		if(response.error){
-			this.reject(response.error);
+		if(error){
+			this.reject(error);
 		}else if(this._finished){
 			this.resolve(response);
 		}else{
@@ -294,10 +301,13 @@ define("dojo/request/iframe", [
 		return returnDeferred ? dfd : dfd.promise;
 	}
 
-	iframe._iframeName = mid + '_IoIframe';
 	iframe.create = create;
 	iframe.doc = doc;
 	iframe.setSrc = setSrc;
+
+	// TODO: Make these truly private in 2.0
+	iframe._iframeName = mid + '_IoIframe';
+	iframe._notifyStart = function(){};
 	iframe._dfdQueue = [];
 	iframe._currentDfd = null;
 	iframe._fireNextRequest = fireNextRequest;

@@ -12,6 +12,12 @@ define("dojox/mobile/ValuePickerDatePicker", [
 	//		A ValuePicker-based date picker widget.
 
 	return declare("dojox.mobile.ValuePickerDatePicker", [ValuePicker, DatePickerMixin], {
+		// summary:
+		//		A ValuePicker-based date picker widget.
+		// description:
+		//		ValuePickerDatePicker is a date picker widget. It is a subclass of
+		//		dojox/mobile/ValuePicker. It has 3 slots: day, month and year.
+		
 		// readOnly: Boolean
 		//		If true, slot input fields are read-only. Only the plus and
 		//		minus buttons can be used to change the values.

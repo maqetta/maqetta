@@ -12,7 +12,7 @@ dojox.io.httpParse = function(/*String*/httpStream, /*String?*/topHeaders,/*Bool
 	//		A true value indicates that the stream may not be finished, it may end arbitrarily in mid stream.
 	//		The last XHR object will have a special property _lastIndex that indicates the how far along
 	// 		the httpStream could be successfully parsed into HTTP messages.
-	// return:
+	// returns:
 	// 		Returns an array of XHR-like object for reading the headers for each message
 	//
 	var xhrs=[];

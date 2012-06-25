@@ -21,6 +21,17 @@ define("dojox/form/ListInput", [
 ], function(kernel, lang, array, jsonUtil, fx, win, connect, domClass, domStyle, domConstruct, domGeometry, keys, Widget, TemplatedMixin, FormValueWidget, ValidationTextBox, InlineEditBox, i18nCommon, declare){
 kernel.experimental("dojox.form.ListInput");
 
+    /*=====
+     var __Constraints = function(){
+     // locale: String
+     //		locale used for validation, picks up value from this widget's lang attribute
+     // _flags_: anything
+     //		various flags passed to pattern function
+     this.locale = "";
+     this._flags_ = "";
+     };
+     =====*/
+
 var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	{
 	// summary:
@@ -47,12 +58,12 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	//		It also must implement an (or more) handler for the "onChange" method
 	inputClass: "dojox.form._ListInputInputBox",
 
-	// inputHandler: String || Array
+	// inputHandler: String|Array
 	//		The widget will connect on all handler to check input value
 	//		You can use comma separated list
 	inputHandler: "onChange",
 
-	// inputProperties: String || Object
+	// inputProperties: String|Object
 	//		Properties used to create input box
 	//		If String, it must be a valid JSON
 	inputProperties: {
@@ -90,12 +101,12 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 	//		Do not specify both regExp and regExpGen
 	regExp: ".*", //"[a-zA-Z.-_]+@[a-zA-Z.-_]+.[a-zA-Z]+",
 
-	// delimiter: String || Array
+	// delimiter: String|Array
 	//		delimiter for the string. Every match will be splitted.
 	//		The string can contain only one delimiter.
 	delimiter: ",",
 
-	// constraints: ValidationTextBox.__Constraints
+	// constraints: __Constraints
 	//		user-defined object needed to pass parameters to the validator functions
 	constraints: {},
 
@@ -234,7 +245,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 	},
 
-	add: function(/*String || Array*/ values){
+	add: function(/*String|Array*/ values){
 		// summary:
 		//		Create new list element
 		if(this._count>=this.maxItems && this.maxItems !== null){return;}
@@ -356,7 +367,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}finally{ range=null; }
 	},
 
-	_onItemClose: function(/*dijit._Widget*/ item){
+	_onItemClose: function(/*dijit/_Widget*/ item){
 		// summary:
 		//		Destroy a list element when close button is clicked
 		// tags:
@@ -375,7 +386,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 	},
 
-	_onItemKeyDown:  function(/*dijit._Widget*/ item, /*Event*/ e){
+	_onItemKeyDown:  function(/*dijit/_Widget*/ item, /*Event*/ e){
 		// summary:
 		//		Call when item get a keypress
 		// tags:
@@ -418,7 +429,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 	},
 
-	_onItemChange: function(/*dijit._Widget*/ item, /*String*/ value){
+	_onItemChange: function(/*dijit/_Widget*/ item, /*String*/ value){
 		// summary:
 		//		Call when item value change
 		// tags:
@@ -433,7 +444,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		this._updateValues();
 	},
 
-	_onItemEdit: function(/*dijit._Widget*/ item){
+	_onItemEdit: function(/*dijit/_Widget*/ item){
 		// summary:
 		//		Call when item is edited
 		// tags:
@@ -469,7 +480,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		return this.value;
 	},
 
-	_setValueAttr: function(/*Array || String*/ newValue){
+	_setValueAttr: function(/*Array|String*/ newValue){
 		// summary:
 		//		Hook so attr('value', value) works.
 		// description:
@@ -499,7 +510,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		return newValue;
 	},
 
-	regExpGen: function(/*ValidationTextBox.__Constraints*/ constraints){
+	regExpGen: function(/*__Constraints*/ constraints){
 		// summary:
 		//		Overridable function used to generate regExp when dependent on constraints.
 		//		Do not specify both regExp and regExpGen.
@@ -650,7 +661,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		//		private
 		return this._getSomeItem();
 	},
-	_getSomeItem: function(/*dijit._Widget*/ item, /*String*/ position){
+	_getSomeItem: function(/*dijit/_Widget*/ item, /*String*/ position){
 		// summary:
 		//		return the item before the one in params
 		// tags:
@@ -682,7 +693,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		}
 		return lastItem;
 	},
-	_getPreviousItem: function(/*dijit._Widget*/ item){
+	_getPreviousItem: function(/*dijit/_Widget*/ item){
 		// summary:
 		//		return the item before the one in params
 		// tags:
@@ -697,7 +708,7 @@ var ListInput = declare("dojox.form.ListInput", [FormValueWidget],
 		return this._getSomeItem(item,"after");
 	},
 
-	_destroyItem: function(/*dijit._Widget*/ item, /*Boolean?*/ updateValue){
+	_destroyItem: function(/*dijit/_Widget*/ item, /*Boolean?*/ updateValue){
 		// summary:
 		//		destroy an item
 		// tags:
@@ -755,7 +766,7 @@ var _ListInputInputItem = declare("dojox.form._ListInputInputItem", [Widget, Tem
 	// summary:
 	//		Item created by ListInputInput when delimiter is found
 	// description:
-	//		Simple <li> with close button added to ListInputInput when delimiter is found
+	//		Simple `<li>` with close button added to ListInputInput when delimiter is found
 
 	templateString: "<li class=\"dijit dijitReset dijitLeft dojoxListInputItem\" dojoAttachEvent=\"onclick: onClick\" ><span dojoAttachPoint=\"labelNode\"></span></li>",
 

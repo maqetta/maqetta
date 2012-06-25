@@ -2,14 +2,14 @@ define("dojox/editor/plugins/NormalizeIndentOutdent", [
 	"dojo",
 	"dijit",
 	"dojox",
+	"dijit/_editor/_Plugin",
 	"dijit/_editor/range",
 	"dijit/_editor/selection",
-	"dijit/_editor/_Plugin",
 	"dojo/_base/connect",
 	"dojo/_base/declare"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent", _Plugin, {
 	// summary:
 	//		This plugin provides improved indent and outdent handling to
 	//		the editor.  It tries to generate valid HTML, as well as be

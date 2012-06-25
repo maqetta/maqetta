@@ -20,15 +20,16 @@ define("dojox/mobile/ScrollablePane", [
 		//		A pane that has the touch-scrolling capability.
 
 		// roundCornerMask: Boolean
-		//		If true, create a rounded corner mask to clip
-		//		corners of a child widget or dom node.
-		//		Works only on WebKit-based browsers.
+		//		If true, creates a rounded corner mask to clip corners of a 
+		//		child widget or DOM node. Works only on WebKit-based browsers.
 		roundCornerMask: false,
 
 		// radius: Number
 		//		Radius of the rounded corner mask.
 		radius: 0,
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblScrollablePane",
 
 		buildRendering: function(){
@@ -78,7 +79,7 @@ define("dojox/mobile/ScrollablePane", [
 		isTopLevel: function(e){
 			// summary:
 			//		Returns true if this is a top-level widget.
-			//		Overrides dojox.mobile.scrollable.
+			//		Overrides dojox/mobile/scrollable.
 			var parent = this.getParent && this.getParent();
 			return (!parent || !parent.resize); // top level widget
 		},
@@ -87,6 +88,7 @@ define("dojox/mobile/ScrollablePane", [
 			// summary:
 			//		Creates a rounded corner rectangle mask.
 			// description:
+			//		Creates a rounded corner rectangle mask.
 			//		This function works only on WebKit-based browsers.
 			if(has("webkit")){
 				if(this.domNode.offsetHeight == 0){ return; } // in a hidden view

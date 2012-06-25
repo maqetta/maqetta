@@ -5,8 +5,6 @@ define("dojo/dnd/Selector", [
 
 // module:
 //		dojo/dnd/Selector
-// summary:
-//		TODOC
 
 /*
 	Container item states:

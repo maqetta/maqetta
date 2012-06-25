@@ -9,11 +9,14 @@ define("dijit/layout/utils", [
 
 	// module:
 	//		dijit/layout/utils
-	// summary:
-	//		marginBox2contentBox() and layoutChildren()
 
 	var layout = lang.getObject("layout", true, dijit);
-	/*===== layout = {}; =====*/
+	/*=====
+	layout = {
+		 // summary:
+		 //		marginBox2contentBox() and layoutChildren()
+	 };
+	 =====*/
 
 	layout.marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 		// summary:

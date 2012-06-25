@@ -79,61 +79,6 @@ define("dijit/popup", [
 		this.padding = padding;
 	};
 
-	dijit.popup = {
-		// summary:
-		//		Used to show drop downs (ex: the select list of a ComboBox)
-		//		or popups (ex: right-click context menus).
-		//
-		//		Access via require(["dijit/popup"], function(popup){ ... }).
-
-		moveOffScreen: function(widget){
-			// summary:
-			//		Moves the popup widget off-screen.
-			//		Do not use this method to hide popups when not in use, because
-			//		that will create an accessibility issue: the offscreen popup is
-			//		still in the tabbing order.
-			// widget: dijit._WidgetBase
-			//		The widget
-		},
-
-		hide: function(widget){
-			// summary:
-			//		Hide this popup widget (until it is ready to be shown).
-			//		Initialization for widgets that will be used as popups
-			//
-			//		Also puts widget inside a wrapper DIV (if not already in one)
-			//
-			//		If popup widget needs to layout it should
-			//		do so when it is made visible, and popup._onShow() is called.
-			// widget: dijit._WidgetBase
-			//		The widget
-		},
-
-		open: function(args){
-			// summary:
-			//		Popup the widget at the specified position
-			// example:
-			//		opening at the mouse position
-			//		|		popup.open({popup: menuWidget, x: evt.pageX, y: evt.pageY});
-			// example:
-			//		opening the widget as a dropdown
-			//		|		popup.open({parent: this, popup: menuWidget, around: this.domNode, onClose: function(){...}});
-			//
-			//		Note that whatever widget called dijit.popup.open() should also listen to its own _onBlur callback
-			//		(fired from _base/focus.js) to know that focus has moved somewhere else and thus the popup should be closed.
-			// args: __OpenArgs
-			//		Parameters
-			return {};	// Object specifying which position was chosen
-		},
-
-		close: function(popup){
-			// summary:
-			//		Close specified popup and any popups that it parented.
-			//		If no popup is specified, closes all popups.
-			// widget: dijit._WidgetBase?
-			//		The widget, optional
-		}
-	};
 	=====*/
 
 	function destroyWrapper(){
@@ -147,7 +92,11 @@ define("dijit/popup", [
 	}
 
 	var PopupManager = declare(null, {
-		// _stack: dijit._Widget[]
+		// summary:
+		//		Used to show drop downs (ex: the select list of a ComboBox)
+		//		or popups (ex: right-click context menus).
+
+		// _stack: dijit/_WidgetBase[]
 		//		Stack of currently popped up widgets.
 		//		(someone opened _stack[0], and then it opened _stack[1], etc.)
 		_stack: [],
@@ -236,7 +185,7 @@ define("dijit/popup", [
 			return stack[pi];
 		},
 
-		open: function(/*dijit.popup.__OpenArgs*/ args){
+		open: function(/*__OpenArgs*/ args){
 			// summary:
 			//		Popup the widget at the specified position
 			//

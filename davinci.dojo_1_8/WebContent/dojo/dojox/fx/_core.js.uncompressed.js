@@ -1,33 +1,31 @@
 define("dojox/fx/_core", ["dojo/_base/lang", "dojo/_base/array","./_base"],
 	function(lang, arrayUtil, dojoxFx){
-	/*===== dojox.fx._Line = line =====*/
+
 	var line = function(start, end){
-		// summary: a custom _Line to accomodate multi-dimensional values
-		//
+		// summary:
+		//		a custom _Line to accommodate multi-dimensional values
 		// description:
-		//	a normal dojo._Line is the curve, and does Line(start,end)
-		//	for propertyAnimation. as we make more complicatied animations, we realize
-		//	some properties can have 2, or 4 values relevant (x,y) or (t,l,r,b) for example
+		//		a normal dojo._Line is the curve, and does Line(start,end)
+		//		for propertyAnimation. as we make more complicatied animations, we realize
+		//		some properties can have 2, or 4 values relevant (x,y) or (t,l,r,b) for example
 		//
-		// 	this function provides support for those Lines, and is ported directly from 0.4
-		//	this is a lot of extra code for something so seldom used, so we'll put it here as
-		//	and optional core addition. you can create a new line, and use it during onAnimate
-		//	as you see fit.
-		//
+		// 		this function provides support for those Lines, and is ported directly from 0.4
+		//		this is a lot of extra code for something so seldom used, so we'll put it here as
+		//		and optional core addition. you can create a new line, and use it during onAnimate
+		//		as you see fit.
 		// start: Integer|Array
-		//	An Integer (or an Array of integers) to use as a starting point
+		//		An Integer (or an Array of integers) to use as a starting point
 		// end: Integer|Array
-		//	An Integer (or an Array of integers) to use as an ending point
-		//
-		// example: see dojox.fx.smoothScroll
-		//
+		//		An Integer (or an Array of integers) to use as an ending point
+		// example:
+		//		see dojox.fx.smoothScroll
 		// example:
 		// |	// this is 10 .. 100 and 50 .. 500
 		// |	var curve = new dojox.fx._Line([10,50],[100,500]);
 		// |	// dojo.Animation.onAnimate is called at every step of the animation
 		// |	// to define current values. this _Line returns an array
 		// | 	// at each step. arguments[0] and [1] in this example.
-		//
+
 		this.start = start;
 		this.end = end;
 

@@ -1,11 +1,8 @@
 define("dojo/store/Memory", ["../_base/declare", "./util/QueryResults", "./util/SimpleQueryEngine" /*=====, "./api/Store" =====*/],
-function(declare, QueryResults, SimpleQueryEngine /*=====, Store =====*/) {
+function(declare, QueryResults, SimpleQueryEngine /*=====, Store =====*/){
 
 //  module:
 //    dojo/store/Memory
-//  summary:
-//    The module defines an in-memory object store.
-
 
 // No base class, but for purposes of documentation, the base class is dojo/store/api/Store
 var base = null;
@@ -14,10 +11,10 @@ var base = null;
 return declare("dojo.store.Memory", base, {
 	// summary:
 	//		This is a basic in-memory object store. It implements dojo.store.api.Store.
-	constructor: function(/*dojo.store.Memory*/ options){
+	constructor: function(options){
 		// summary:
 		//		Creates a memory object store.
-		// options:
+		// options: dojo/store/Memory
 		//		This provides any configuration information that will be mixed into the store.
 		// 		This should generally include the data property to provide the starting set of data.
 		for(var i in options){

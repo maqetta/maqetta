@@ -52,11 +52,15 @@ function(declare, event, lang, on, domStyle, _WidgetBase){
 		onChange: function(value){
 			// summary:
 			//		 An extension point invoked when the value has changed.
+			// tags:
+			//		callback
 		},
 		
 		onScroll: function(value){
 			// summary:
 			//		 An extension point invoked when the user scrolls with the mouse.
+			// tags:
+			//		callback
 		},
 		
 		_setMinimumAttr: function(value){

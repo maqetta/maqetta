@@ -1,8 +1,6 @@
-define("dojo/AdapterRegistry", ["./_base/kernel", "./_base/lang"], function(dojo, lang) {
-	// module:
-	//		dojo/AdapterRegistry
-	// summary:
-	//		TODOC
+define("dojo/AdapterRegistry", ["./_base/kernel", "./_base/lang"], function(dojo, lang){
+// module:
+//		dojo/AdapterRegistry
 
 var AdapterRegistry = dojo.AdapterRegistry = function(/*Boolean?*/ returnWrappers){
 	// summary:

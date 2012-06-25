@@ -151,18 +151,28 @@ define("dojox/charting/widget/Chart", ["dojo/_base/kernel", "dojo/_base/lang", "
 	};
 	
 	return declare("dojox.charting.widget.Chart", _WidgetBase, {
+		// summary:
+		//		A chart widget.  This is leveraging dojox/charting/Chart as a Dijit widget.
+
 		// parameters for the markup
-		
-		// theme for the chart
+
+		// theme: dojox/charting/SimpleTheme?
+		//		An optional theme to use for styling the chart.
 		theme: null,
 		
-		// margins for the chart: {l: 10, r: 10, t: 10, b: 10}
+		// margins: Object?
+		//		The margins around the chart. Default is { l:10, t:10, r:10, b:10 }.
 		margins: null,
 		
 		// chart area, define them as undefined to:
 		// allow the parser to take them into account
 		// but make sure they have no defined value to not override theme
+
+		// stroke: dojox.gfx.Stroke?
+		//		The outline of the chart (stroke in vector graphics terms).
 		stroke: undefined,
+		// fill: dojox.gfx.Fill?
+		//		The color for the chart.
 		fill:   undefined,
 		
 		// methods

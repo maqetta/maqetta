@@ -11,8 +11,6 @@ define("dijit/form/_TextBoxMixin", [
 
 // module:
 //		dijit/form/_TextBoxMixin
-// summary:
-//		A mixin for textbox form input widgets
 
 var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 	// summary:
@@ -51,9 +49,9 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		// summary:
 		//		Hook so get('value') works as we like.
 		// description:
-		//		For `dijit.form.TextBox` this basically returns the value of the <input>.
+		//		For `dijit/form/TextBox` this basically returns the value of the `<input>`.
 		//
-		//		For `dijit.form.MappedTextBox` subclasses, which have both
+		//		For `dijit/form/MappedTextBox` subclasses, which have both
 		//		a "displayed value" and a separate "submit value",
 		//		This treats the "displayed value" as the master value, computing the
 		//		submit value from it via this.parse().

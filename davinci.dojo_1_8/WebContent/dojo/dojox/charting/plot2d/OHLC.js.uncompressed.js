@@ -37,7 +37,7 @@ define("dojox/charting/plot2d/OHLC", ["dojo/_base/lang", "dojo/_base/array", "do
 		constructor: function(chart, kwArgs){
 			// summary:
 			//		The constructor for a candlestick chart.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this plot belongs to.
 			// kwArgs: dojox.charting.plot2d.__BarCtorArgs?
 			//		An optional keyword arguments object to help define the plot.
@@ -55,7 +55,7 @@ define("dojox/charting/plot2d/OHLC", ["dojo/_base/lang", "dojo/_base/array", "do
 			//		Collect all statistics for drawing this chart.  Since the common
 			//		functionality only assumes x and y, OHLC must create it's own
 			//		stats (since data has no y value, but open/close/high/low instead).
-			// series: dojox.charting.Series[]
+			// series: dojox/charting/Series[]
 			//		The data series array to be drawn on this plot.
 			// returns: Object
 			//		Returns an object in the form of { hmin, hmax, vmin, vmax }.
@@ -81,7 +81,7 @@ define("dojox/charting/plot2d/OHLC", ["dojo/_base/lang", "dojo/_base/array", "do
 				if("ymin" in run){ stats.vmin = Math.min(old_vmin, run.ymin); }
 				if("ymax" in run){ stats.vmax = Math.max(old_vmax, run.ymax); }
 			}
-			return stats;
+			return stats; // Object
 		},
 
 		getSeriesStats: function(){
@@ -92,7 +92,7 @@ define("dojox/charting/plot2d/OHLC", ["dojo/_base/lang", "dojo/_base/array", "do
 			var stats = this.collectStats(this.series);
 			stats.hmin -= 0.5;
 			stats.hmax += 0.5;
-			return stats;
+			return stats; // Object
 		},
 
 		render: function(dim, offsets){
@@ -102,7 +102,7 @@ define("dojox/charting/plot2d/OHLC", ["dojo/_base/lang", "dojo/_base/array", "do
 			//		An object in the form of { width, height }
 			// offsets: Object
 			//		An object of the form { l, r, t, b}.
-			// returns: dojox.charting.plot2d.OHLC
+			// returns: dojox/charting/plot2d/OHLC
 			//		A reference to this plot for functional chaining.
 			if(this.zoom && !this.isDataDirty()){
 				return this.performZoom(dim, offsets);
@@ -193,7 +193,7 @@ define("dojox/charting/plot2d/OHLC", ["dojo/_base/lang", "dojo/_base/array", "do
 				run.dirty = false;
 			}
 			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.OHLC
+			return this;	//	dojox/charting/plot2d/OHLC
 		},
 		_animateOHLC: function(shape, voffset, vsize){
 			fx.animateTransform(lang.delegate({

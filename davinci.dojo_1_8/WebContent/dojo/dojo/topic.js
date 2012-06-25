@@ -5,4 +5,11 @@
 */
 
 //>>built
-define("dojo/topic",["./Evented"],function(_1){var _2=new _1;return {publish:function(_3,_4){return _2.emit.apply(_2,arguments);},subscribe:function(_5,_6){return _2.on.apply(_2,arguments);}};});
+define("dojo/topic",["./Evented"],function(_1){
+var _2=new _1;
+return {publish:function(_3,_4){
+return _2.emit.apply(_2,arguments);
+},subscribe:function(_5,_6){
+return _2.on.apply(_2,arguments);
+}};
+});

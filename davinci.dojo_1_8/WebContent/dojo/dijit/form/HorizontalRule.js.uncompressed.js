@@ -6,8 +6,6 @@ define("dijit/form/HorizontalRule", [
 
 // module:
 //		dijit/form/HorizontalRule
-// summary:
-//		Hash marks for `dijit.form.HorizontalSlider`
 
 
 return declare("dijit.form.HorizontalRule", [_Widget, _TemplatedMixin], {

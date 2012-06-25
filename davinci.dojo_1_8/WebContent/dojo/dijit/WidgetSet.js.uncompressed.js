@@ -7,14 +7,11 @@ define("dijit/WidgetSet", [
 
 	// module:
 	//		dijit/WidgetSet
-	// summary:
-	//		Legacy registry code.   New modules should just use registry.
-	//		Will be removed in 2.0.
 
 	var WidgetSet = declare("dijit.WidgetSet", null, {
 		// summary:
-		//		A set of widgets indexed by id. A default instance of this class is
-		//		available as `dijit.registry`
+		//		A set of widgets indexed by id.
+		//		Deprecated, will be removed in 2.0.
 		//
 		// example:
 		//		Create a small list of widgets:
@@ -23,22 +20,18 @@ define("dijit/WidgetSet", [
 		//		|	ws.add(dijit.byId("two"));
 		//		|	// destroy both:
 		//		|	ws.forEach(function(w){ w.destroy(); });
-		//
-		// example:
-		//		Using dijit.registry:
-		//		|	dijit.registry.forEach(function(w){ /* do something */ });
 
 		constructor: function(){
 			this._hash = {};
 			this.length = 0;
 		},
 
-		add: function(/*dijit._Widget*/ widget){
+		add: function(/*dijit/_WidgetBase*/ widget){
 			// summary:
 			//		Add a widget to this list. If a duplicate ID is detected, a error is thrown.
 			//
-			// widget: dijit._Widget
-			//		Any dijit._Widget subclass.
+			// widget: dijit/_WidgetBase
+			//		Any dijit/_WidgetBase subclass.
 			if(this._hash[widget.id]){
 				throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
 			}
@@ -81,7 +74,7 @@ define("dijit/WidgetSet", [
 			for(id in this._hash){
 				func.call(thisObj, this._hash[id], i++, this._hash);
 			}
-			return this;	// dijit.WidgetSet
+			return this;	// dijit/WidgetSet
 		},
 
 		filter: function(/*Function*/ filter, /* Object? */thisObj){
@@ -110,7 +103,7 @@ define("dijit/WidgetSet", [
 					res.add(w);
 				}
 			}
-			return res; // dijit.WidgetSet
+			return res; // dijit/WidgetSet
 		},
 
 		byId: function(/*String*/ id){
@@ -123,7 +116,7 @@ define("dijit/WidgetSet", [
 			//		| var t = ws.byId("bar") // returns a widget
 			//		| var x = ws.byId("foo"); // returns undefined
 
-			return this._hash[id];	// dijit._Widget
+			return this._hash[id];	// dijit/_WidgetBase
 		},
 
 		byClass: function(/*String*/ cls){
@@ -144,7 +137,7 @@ define("dijit/WidgetSet", [
 					res.add(widget);
 				}
 			 }
-			 return res; // dijit.WidgetSet
+			 return res; // dijit/WidgetSet
 		},
 
 		toArray: function(){
@@ -159,7 +152,7 @@ define("dijit/WidgetSet", [
 			for(var id in this._hash){
 				ar.push(this._hash[id]);
 			}
-			return ar;	// dijit._Widget[]
+			return ar;	// dijit/_WidgetBase[]
 		},
 
 		map: function(/* Function */func, /* Object? */thisObj){

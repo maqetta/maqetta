@@ -21,11 +21,8 @@ define("dijit/focus", [
 
 	// module:
 	//		dijit/focus
-	// summary:
-	//		Returns a singleton that tracks the currently focused node, and which widgets are currently "active".
 
-/*=====
-	dijit.focus = {
+	var FocusManager = declare([Stateful, Evented], {
 		// summary:
 		//		Tracks the currently focused node, and which widgets are currently "active".
 		//		Access via require(["dijit/focus"], function(focus){ ... }).
@@ -45,46 +42,7 @@ define("dijit/focus", [
 		//		Currently focused item on screen
 		curNode: null,
 
-		// activeStack: dijit._Widget[]
-		//		List of currently active widgets (focused widget and it's ancestors)
-		activeStack: [],
-
-		registerIframe: function(iframe){
-			// summary:
-			//		Registers listeners on the specified iframe so that any click
-			//		or focus event on that iframe (or anything in it) is reported
-			//		as a focus/click event on the <iframe> itself.
-			// description:
-			//		Currently only used by editor.
-			// returns:
-			//		Handle with remove() method to deregister.
-		},
-
-		registerWin: function(targetWindow, effectiveNode){
-			// summary:
-			//		Registers listeners on the specified window (either the main
-			//		window or an iframe's window) to detect when the user has clicked somewhere
-			//		or focused somewhere.
-			// description:
-			//		Users should call registerIframe() instead of this method.
-			// targetWindow: Window?
-			//		If specified this is the window associated with the iframe,
-			//		i.e. iframe.contentWindow.
-			// effectiveNode: DOMNode?
-			//		If specified, report any focus events inside targetWindow as
-			//		an event on effectiveNode, rather than on evt.target.
-			// returns:
-			//		Handle with remove() method to deregister.
-		}
-	};
-=====*/
-
-	var FocusManager = declare([Stateful, Evented], {
-		// curNode: DomNode
-		//		Currently focused item on screen
-		curNode: null,
-
-		// activeStack: dijit._Widget[]
+		// activeStack: dijit/_WidgetBase[]
 		//		List of currently active widgets (focused widget and it's ancestors)
 		activeStack: [],
 
@@ -106,7 +64,7 @@ define("dijit/focus", [
 			// summary:
 			//		Registers listeners on the specified iframe so that any click
 			//		or focus event on that iframe (or anything in it) is reported
-			//		as a focus/click event on the <iframe> itself.
+			//		as a focus/click event on the `<iframe>` itself.
 			// description:
 			//		Currently only used by editor.
 			// returns:

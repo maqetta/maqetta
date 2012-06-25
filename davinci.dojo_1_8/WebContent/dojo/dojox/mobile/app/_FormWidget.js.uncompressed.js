@@ -10,8 +10,8 @@ dojo.require("dijit.focus");	// dijit.focus()
 
 dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as <checkbox> or <button>,
-	//		which can be children of a <form> node or a `dojox.mobile.app.Form` widget.
+	//		Base class for widgets corresponding to native HTML elements such as `<checkbox>` or `<button>`,
+	//		which can be children of a `<form>` node or a `dojox.mobile.app.Form` widget.
 	//
 	// description:
 	//		Represents a single HTML element.
@@ -25,15 +25,15 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 	name: "",
 
 	// alt: String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	alt: "",
 
 	// value: String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	value: "",
 
 	// type: String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	type: "text",
 
 	// disabled: Boolean
@@ -218,9 +218,10 @@ dojo.declare("dojox.mobile.app._FormWidget", dijit._WidgetBase, {
 dojo.declare("dojox.mobile.app._FormValueWidget", dojox.mobile.app._FormWidget,
 {
 	// summary:
-	//		Base class for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
+	//		Base class for widgets corresponding to native HTML elements such as `<input>` or `<select>`
+	//		that have user changeable values.
 	// description:
-	//		Each _FormValueWidget represents a single input value, and has a (possibly hidden) <input> element,
+	//		Each _FormValueWidget represents a single input value, and has a (possibly hidden) `<input>` element,
 	//		to which it serializes it's input value, so that form submission (either normal submission or via FormBind?)
 	//		works as expected.
 

@@ -49,7 +49,7 @@ function(lang, Deferred, when, config){
 
 	function setupModel(config, item, parent, allModelsLoadedDeferred, loadedModels){
 				// Here we need to create the modelLoader and call it passing in the item and the config[item].params
-				params = config[item].params ? config[item].params : {};
+				var params = config[item].params ? config[item].params : {};
 				var def = new Deferred();
 				
 				var modelLoader = config[item].modelLoader ? config[item].modelLoader : "dojox/app/utils/simpleModel";

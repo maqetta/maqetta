@@ -31,9 +31,9 @@ define("dojox/gfx/gradutils", ["./_base", "dojo/_base/lang", "./matrix", "dojo/_
 	gradutils.getColor = function(fill, pt){
 		// summary:
 		//		sample a color from a gradient using a point
-		// fill: Object:
+		// fill: Object
 		//		fill object
-		// pt: dojox.gfx.Point:
+		// pt: dojox.gfx.Point
 		//		point where to sample a color
 		var o;
 		if(fill){
@@ -62,7 +62,7 @@ define("dojox/gfx/gradutils", ["./_base", "dojo/_base/lang", "./matrix", "dojo/_
 	gradutils.reverse = function(fill){
 		// summary:
 		//		reverses a gradient
-		// fill: Object:
+		// fill: Object
 		//		fill object
 		if(fill){
 			switch(fill.type){

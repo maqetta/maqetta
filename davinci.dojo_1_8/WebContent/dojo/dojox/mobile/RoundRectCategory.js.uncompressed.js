@@ -25,6 +25,9 @@ define("dojox/mobile/RoundRectCategory", [
 		tag: "h2",
 
 		/* internal properties */	
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblRoundRectCategory",
 
 		buildRendering: function(){
@@ -39,9 +42,10 @@ define("dojox/mobile/RoundRectCategory", [
 		_setLabelAttr: function(/*String*/label){
 			// summary:
 			//		Sets the category header text.
+			// tags:
+			//		private
 			this.label = label;
 			this.domNode.innerHTML = this._cv ? this._cv(label) : label;
 		}
 	});
-
 });

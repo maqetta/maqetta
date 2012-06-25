@@ -9,12 +9,10 @@ define("dijit/form/DataList", [
 
 	// module:
 	//		dijit/form/DataList
-	// summary:
-	//		Inefficient but small data store specialized for inlined data via OPTION tags
 
 	function toItem(/*DOMNode*/ option){
 		// summary:
-		//		Convert <option> node to hash
+		//		Convert `<option>` node to hash
 		return {
 			id: option.value,
 			value: option.value,

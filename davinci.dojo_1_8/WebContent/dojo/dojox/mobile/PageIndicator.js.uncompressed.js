@@ -20,8 +20,8 @@ define("dojox/mobile/PageIndicator", [
 		// description:
 		//		PageIndicator displays a series of gray and white dots to
 		//		indicate which page is currently being viewed. It can typically
-		//		be used with dojox.mobile.SwapView. It is also internally used
-		//		in dojox.mobile.Carousel.
+		//		be used with dojox/mobile/SwapView. It is also internally used
+		//		in dojox/mobile/Carousel.
 
 		// refId: String
 		//		An ID of a DOM node to be searched. Siblings of the reference
@@ -29,6 +29,8 @@ define("dojox/mobile/PageIndicator", [
 		//		will be the reference node.
 		refId: "",
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblPageIndicator",
 
 		buildRendering: function(){
@@ -84,7 +86,7 @@ define("dojox/mobile/PageIndicator", [
 		isView: function(node){
 			// summary:
 			//		Returns true if the given node is a view.
-			return (node && node.nodeType === 1 && domClass.contains(node, "mblView"));
+			return (node && node.nodeType === 1 && domClass.contains(node, "mblView")); // Boolean
 		},
 
 		_onClick: function(e){
@@ -103,7 +105,7 @@ define("dojox/mobile/PageIndicator", [
 
 		onClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks.
 			// tags:
 			//		callback
 		}

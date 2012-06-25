@@ -16,11 +16,12 @@ define("dojox/dtl/_Templated", [
 		dd = dojox.dtl;
 	=====*/
 	return declare("dojox.dtl._Templated", TemplatedMixin, {
-		// summary: The base-class for DTL-templated widgets.
+		// summary:
+		//		The base-class for DTL-templated widgets.
 
 		_dijitTemplateCompat: false,
+		
 		buildRendering: function(){
-			// summary: The method overrides dijit._TemplatedMixin.startup.
 			var node;
 
 			if(this.domNode && !this._template){
@@ -128,11 +129,11 @@ define("dojox/dtl/_Templated", [
 			}
 		},
 		render: function(){
-			// summary: Renders the widget.
+			// summary:
+			//		Renders the widget.
 			this.buildRendering();
 		},
 		startup: function(){
-			// summary: The method overrides dijit._TemplatedMixin.startup.
 			Array.forEach(this._startupWidgets, function(w){
 				if(w && !w._started && w.startup){
 					w.startup();

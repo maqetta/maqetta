@@ -83,6 +83,9 @@ function(
 		},
 		
 		_setVisibility: function(value){
+			// tags:
+			//		private
+
 			this.inherited(arguments);
 			if(this.secondarySheet){
 				this.secondarySheet._setVisibility(value);
@@ -90,6 +93,9 @@ function(
 		},
 		
 		invalidateLayout: function(){
+			// tags:
+			//		private
+
 			this._layoutRenderers(this.renderData);
 			if(this.secondarySheet){
 				this.secondarySheet._layoutRenderers(this.secondarySheet.renderData);
@@ -99,6 +105,9 @@ function(
 		onRowHeaderClick: function(e){
 			// summary:
 			//		Event dispatched when the row header cell of the secondary sheet is clicked.
+			// tags:
+			//		callback
+
 		},
 		
 		resizeSecondarySheet: function(height){
@@ -110,7 +119,7 @@ function(
 			if(this.secondarySheetNode){
 				var headerH = domGeometry.getMarginBox(this.header).h;
 				domStyle.set(this.secondarySheetNode, "height", height+"px");
-				this.secondarySheet._resizeHander(null, true);
+				this.secondarySheet._resizeHandler(null, true);
 				var top = (height + headerH + this.headerPadding)+"px";
 				domStyle.set(this.scrollContainer, "top", top);
 				if(this.vScrollBar){
@@ -183,7 +192,7 @@ function(
 		getSecondarySheet: function(){
 			// summary:
 			//		Returns the secondary sheet
-			// returns: dojox.calendar.MatrixView
+			// returns: dojox/calendar/MatrixView
 			return this.secondarySheet;
 		},
 		
@@ -198,6 +207,8 @@ function(
 		},
 		
 		_configureScrollBar: function(renderData){
+
+
 			this.inherited(arguments);
 			if(this.secondarySheetNode){
 				var atRight = this.isLeftToRight() ? true : this.scrollBarRTLPosition == "right";

@@ -7,14 +7,14 @@ define("dojox/editor/plugins/UploadImage", [
 	"dojo/_base/declare",
 	"dojox/form/FileUploader",
 	"dijit/_editor/_Plugin"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Plugin) {
 
 dojo.experimental("dojox.editor.plugins.UploadImage");
 
 dojo.declare("dojox.editor.plugins.UploadImage",
-	dijit._editor._Plugin,
+	_Plugin,
 	{
-		//summary:
+		// summary:
 		// 	Adds an icon to the Editor toolbar that when clicked, opens a system dialog
 		//	Although the toolbar icon is a tiny "image" the uploader could be used for
 		//	any file type
@@ -90,8 +90,9 @@ dojo.declare("dojox.editor.plugins.UploadImage",
 		},
 		
 		insertTempImage: function(){
-			// inserting a "busy" image to show something is hapening
-			//	during upload and download of the image.
+			// summary: 
+			//		inserting a "busy" image to show something is hapening
+			//		during upload and download of the image.
 			this.currentImageId = "img_"+(new Date().getTime());
 			var iTxt = '<img id="'+this.currentImageId+'" src="'+this.tempImageUrl+'" width="32" height="32"/>';
 			this.editor.execCommand('inserthtml', iTxt);

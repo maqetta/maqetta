@@ -660,7 +660,7 @@ dojo.declare("dojox.image.SlideShow",
 	_overElement: function(/*DomNode*/element, /*Event*/e){
 		// summary:
 		//		Returns whether the mouse is over the passed element.
-		//		Element must be display:block (ie, not a <span>)
+		//		Element must be display:block (ie, not a `<span>`)
 		
 		//When the page is unloading, if this method runs it will throw an
 		//exception.

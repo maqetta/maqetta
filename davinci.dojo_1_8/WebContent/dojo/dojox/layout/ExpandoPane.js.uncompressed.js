@@ -18,12 +18,6 @@ define("dojox/layout/ExpandoPane", [
 	"dijit/_Container"
 ], function(kernel,lang,declare,arrayUtil,connectUtil,eventUtil,baseFx,domStyle,domClass,domGeom,
 		template,ContentPane,TemplatedMixin,Contained,Container) {
-/*=====
-var ContentPane = dijit.layout.ContentPane;
-var TemplatedMixin = dijit._TemplatedMixin;
-var Contained = dijit._Contained;
-var Container = dijit._Container;
-  =====*/
 kernel.experimental("dojox.layout.ExpandoPane"); // just to show it can be done?
 
 return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contained, Container],{
@@ -174,7 +168,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_setupAnims: function(){
-		// summary: Create the show and hide animations
+		// summary:
+		//		Create the show and hide animations
 		arrayUtil.forEach(this._animConnects, connectUtil.disconnect);
 		
 		var _common = {
@@ -228,7 +223,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	preview: function(){
-		// summary: Expand this pane in preview mode (does not affect surrounding layout)
+		// summary:
+		//		Expand this pane in preview mode (does not affect surrounding layout)
 
 		if(!this._showing){
 			this._isonlypreview = !this._isonlypreview;
@@ -237,7 +233,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 
 	toggle: function(){
-		// summary: Toggle this pane's visibility
+		// summary:
+		//		Toggle this pane's visibility
 		if(this._showing){
 			this._hideWrapper();
 			this._showAnim && this._showAnim.stop();
@@ -250,7 +247,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_hideWrapper: function(){
-		// summary: Set the Expando state to "closed"
+		// summary:
+		//		Set the Expando state to "closed"
 		domClass.add(this.domNode, "dojoxExpandoClosed");
 		
 		domStyle.set(this.cwrapper,{
@@ -261,7 +259,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_showEnd: function(){
-		// summary: Common animation onEnd code - "unclose"
+		// summary:
+		//		Common animation onEnd code - "unclose"
 		domStyle.set(this.cwrapper, {
 			opacity: 0,
 			visibility:"visible"
@@ -279,7 +278,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_hideEnd: function(){
-		// summary: Callback for the hide animation - "close"
+		// summary:
+		//		Callback for the hide animation - "close"
 
 		// every time we hide, reset the "only preview" state
 		if(!this._isonlypreview){
@@ -291,9 +291,9 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		
 	},
 	
-	resize: function(/* Object? */newSize){
+	resize: function(/*Object?*/newSize){
 		// summary:
-		//		we aren't a layout widget, but need to act like one:
+		//		we aren't a layout widget, but need to act like one.
 		// newSize: Object
 		//		The size object to resize to
 
@@ -315,8 +315,9 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		this._setupAnims();
 	},
 	
-	_trap: function(e){
-		// summary: Trap stray events
+	_trap: function(/*Event*/ e){
+		// summary:
+		//		Trap stray events
 		eventUtil.stop(e);
 	}
 });

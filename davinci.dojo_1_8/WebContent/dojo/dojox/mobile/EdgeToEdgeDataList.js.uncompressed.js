@@ -7,13 +7,13 @@ define("dojox/mobile/EdgeToEdgeDataList", [
 	// module:
 	//		dojox/mobile/EdgeToEdgeDataList
 	// summary:
-	//		An enhanced version of EdgeToEdgeList.
+	//		A dojo/data-enabled version of EdgeToEdgeList.
 
 	return declare("dojox.mobile.EdgeToEdgeDataList", [EdgeToEdgeList, DataListMixin],{
 		// summary:
-		//		An enhanced version of EdgeToEdgeList.
+		//		A dojo/data-enabled version of EdgeToEdgeList.
 		// description:
 		//		EdgeToEdgeDataList is an enhanced version of EdgeToEdgeList. It
-		//		can generate ListItems according to the given dojo.data store.
+		//		can generate ListItems according to the given dojo/data store.
 	});
 });

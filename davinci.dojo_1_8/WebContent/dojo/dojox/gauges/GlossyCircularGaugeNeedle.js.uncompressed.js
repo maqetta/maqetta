@@ -1,9 +1,6 @@
 define("dojox/gauges/GlossyCircularGaugeNeedle", ["dojo/_base/declare","dojo/_base/Color" ,"./AnalogIndicatorBase"],
   function(declare, Color, AnalogIndicatorBase) {
 
-/*=====
-	AnalogIndicatorBase = dojox.gauges.AnalogIndicatorBase;
-=====*/
 
 return declare("dojox.gauges.GlossyCircularGaugeNeedle", [AnalogIndicatorBase], {
 	// summary:

@@ -14,9 +14,9 @@ define("dojox/color/SimpleColorModel", ["dojo/_base/array", "dojo/_base/declare"
 			//		Construct a color model interpolating between start and end color.
 			//		If only start color is provided use it to compute reasonable start and end
 			//		colors from it.
-			// startColor: Color
+			// startColor: dojo/_base/Color
 			//		The start color. 
-			// endColor: Color?
+			// endColor: dojo/_base/Color?
 			//		The end color.
 			if(endColor != undefined){
 				this._startColor = startColor;

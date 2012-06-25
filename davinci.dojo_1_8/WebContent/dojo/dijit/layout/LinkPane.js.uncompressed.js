@@ -6,9 +6,6 @@ define("dijit/layout/LinkPane", [
 
 	// module:
 	//		dijit/layout/LinkPane
-	// summary:
-	//		A ContentPane with an href where (when declared in markup)
-	//		the title is specified as innerHTML rather than as a title attribute.
 
 
 	return declare("dijit.layout.LinkPane", [ContentPane, _TemplatedMixin], {

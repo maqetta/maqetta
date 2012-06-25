@@ -9,10 +9,6 @@ define("dijit/_editor/plugins/ToggleDir", [
 
 	// module:
 	//		dijit/_editor/plugins/ToggleDir
-	// summary:
-	//		This plugin is used to toggle direction of the edited document,
-	//		independent of what direction the whole page is.
-
 
 	kernel.experimental("dijit._editor.plugins.ToggleDir");
 

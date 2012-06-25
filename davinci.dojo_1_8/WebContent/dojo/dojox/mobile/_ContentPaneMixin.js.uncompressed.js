@@ -18,8 +18,8 @@ define("dojox/mobile/_ContentPaneMixin", [
 		// summary:
 		//		Mixin for a very simple content pane to embed an HTML fragment.
 		// description:
-		//		By mixing this class into a widget, the widget can have ability
-		//		to embed an external HTML fragment and run the parser.
+		//		By mixing this class into a widget, the widget can have the ability
+		//		to embed an external HTML fragment and to run the parser.
 
 		// href: String
 		//		URL of the content to embed.
@@ -31,7 +31,7 @@ define("dojox/mobile/_ContentPaneMixin", [
 		lazy: false,
 
 		// content: String
-		//		An html fragment to embed.
+		//		An HTML fragment to embed.
 		content: "",
 
 		// parseOnLoad: Boolean
@@ -74,12 +74,15 @@ define("dojox/mobile/_ContentPaneMixin", [
 
 		onLoad: function(){
 			// summary:
-			//		Stub method to allow the application to connect to.
+			//		Stub method to allow the application to connect to the
+			//		loading of external content (see load()).
 			//		Called when parsing is done and the content is ready.
 			return true;
 		},
 
 		_setHrefAttr: function(/*String*/href){
+			// tags:
+			//		private
 			if(this.lazy || !href || href === this._loaded){
 				this.lazy = false;
 				return null;
@@ -100,6 +103,8 @@ define("dojox/mobile/_ContentPaneMixin", [
 		},
 
 		_setContentAttr: function(/*String|DomNode*/data){
+			// tags:
+			//		private			
 			this.destroyDescendants();
 			if(typeof data === "object"){
 				this.containerNode.appendChild(data);

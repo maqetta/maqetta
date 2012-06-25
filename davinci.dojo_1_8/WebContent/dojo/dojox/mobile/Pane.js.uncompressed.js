@@ -14,9 +14,11 @@ define("dojox/mobile/Pane", [
 		// summary:
 		//		A simple pane widget.
 		// description:
-		//		Pane is a simple pane widget that can be used for any purposes.
-		//		It is a widget, but can be regarded as a simple <div> element.
+		//		Pane is a simple general-purpose pane widget.
+		//		It is a widget, but can be regarded as a simple `<div>` element.
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblPane",
 
 		buildRendering: function(){

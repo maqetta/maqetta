@@ -4,7 +4,7 @@ define("dojox/mvc/ListController", [
 	"dojo/_base/declare",
 	"./ModelRefController"
 ], function(array, lang, declare, ModelRefController){
-	function unwatchHandles(/*dojox.mvc.ListController*/ c){
+	function unwatchHandles(/*dojox/mvc/ListController*/ c){
 		// summary:
 		//		Unwatch model watch handles.
 
@@ -16,7 +16,7 @@ define("dojox/mvc/ListController", [
 		}
 	}
 
-	function setRefInModel(/*dojox.mvc.ListController*/ ctrl, /*dojo.Stateful*/ old, /*dojo.Stateful*/ current){
+	function setRefInModel(/*dojox/mvc/ListController*/ ctrl, /*dojo/Stateful*/ old, /*dojo/Stateful*/ current){
 		// summary:
 		//		A function called when this controller gets newer value as the list data.
 
@@ -52,7 +52,7 @@ define("dojox/mvc/ListController", [
 		ctrl._setCursorIndexAttr(ctrl.cursorIndex);
 	}
 
-	function setRefCursor(/*dojox.mvc.ListController*/ ctrl, /*dojo.Stateful*/ old, /*dojo.Stateful*/ current){
+	function setRefCursor(/*dojox/mvc/ListController*/ ctrl, /*dojo/Stateful*/ old, /*dojo/Stateful*/ current){
 		// summary:
 		//		A function called when this controller gets newer value as the data of current selection.
 		// description:
@@ -109,8 +109,8 @@ define("dojox/mvc/ListController", [
 		// |			</head>
 		// |			<body>
 		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
-		// |				<span id="ctrl" data-dojo-type="dojox.mvc.ListController" data-dojo-props="model: model"></span>
-		// |				<input type="text" data-dojo-type="dijit.form.TextBox" data-dojo-props="value: at('widget:ctrl', 'value')">
+		// |				<span id="ctrl" data-dojo-type="dojox/mvc/ListController" data-dojo-props="model: model"></span>
+		// |				<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-props="value: at('widget:ctrl', 'value')">
 		// |			</body>
 		// |		</html>
 
@@ -126,11 +126,11 @@ define("dojox/mvc/ListController", [
 		//		The index of the selected element in the model.
 		cursorIndex: -1,
 
-		// cursor: dojo.Stateful
+		// cursor: dojo/Stateful
 		//		The selected element in the model array.
 		cursor: null,
 
-		// model: dojox.mvc.StatefulArray
+		// model: dojox/mvc/StatefulArray
 		//		The data model working as an array.
 		model: null,
 

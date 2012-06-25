@@ -1,19 +1,15 @@
 define("dojox/mvc/Group", ["dojo/_base/declare", "dijit/_WidgetBase", 	"dojo/_base/lang"], function(declare, _WidgetBase, lang){
-	/*=====
-		WidgetBase = dijit._WidgetBase;
-		declare = dojo.declare;
-	=====*/
 
 	return declare("dojox.mvc.Group", _WidgetBase, {
 		// summary:
 		//		A simple model-bound container widget with single-node binding to a data model.
 		//
 		// description:
-		//		A group is usually bound to an intermediate dojo.Stateful node in the data model.
+		//		A group is usually bound to an intermediate dojo/Stateful node in the data model.
 		//		Child dijits or custom view components inside a group inherit their parent
 		//		data binding context from it.
 
-		// target: dojo.Stateful
+		// target: dojo/Stateful
 		//		The data model used for relative data binding.
 		target: null,
 
@@ -31,7 +27,7 @@ define("dojox/mvc/Group", ["dojo/_base/declare", "dijit/_WidgetBase", 	"dojo/_ba
 			this.inherited(arguments);
 		},
 
-		_setTargetAttr: function(/*dojo.Stateful*/ value){
+		_setTargetAttr: function(/*dojo/Stateful*/ value){
 			// summary:
 			//		Handler for calls to set("target", val).
 			// description:

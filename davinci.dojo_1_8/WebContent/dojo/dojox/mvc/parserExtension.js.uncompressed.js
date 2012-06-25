@@ -11,7 +11,7 @@ define("dojox/mvc/parserExtension", [
 ], function(require, kernel, lang, win, has, parser, mobileParser, _atBindingMixin){
 
 	// module:
-	//		dojox/mvc/ParserExtension
+	//		dojox/mvc/parserExtension
 	// summary:
 	//		A extension of Dojo parser that allows data binding without specifying data-dojo-type.
 
@@ -22,7 +22,7 @@ define("dojox/mvc/parserExtension", [
 	if(has("dojo-parser")){
 		var oldScan = parser.scan;
 
-		parser.scan = /*====== dojo.parser.scan = ======*/ function(/*DOMNode?*/ root, /*Object*/ options){
+		parser.scan = function(/*DOMNode?*/ root, /*Object*/ options){
 			// summary:
 			//		Find list of DOM nodes that has data-dojo-bind, but not data-dojo-type.
 			//		And add them to list of DOM nodes to instantiate widget (dojox/mvc/Element).
@@ -50,7 +50,7 @@ define("dojox/mvc/parserExtension", [
 	if(has("dojo-mobile-parser")){
 		var oldParse = mobileParser.parse;
 
-		mobileParser.parse = /*====== dojox.mobile.parser.parse = ======*/ function(/*DOMNode?*/ root, /*Object*/ options){
+		mobileParser.parse = function(/*DOMNode?*/ root, /*Object*/ options){
 			// summary:
 			//		Find list of DOM nodes that has data-dojo-bind, but not data-dojo-type.
 			//		Set dojox/mvc/Element to their data-dojo-type.

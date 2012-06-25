@@ -27,8 +27,6 @@ define("dijit/form/HorizontalSlider", [
 
 // module:
 //		dijit/form/HorizontalSlider
-// summary:
-//		A form widget that allows one to select a value with a horizontally draggable handle
 
 
 var _SliderMover = declare("dijit.form._SliderMover", Mover, {
@@ -65,7 +63,7 @@ var HorizontalSlider = declare("dijit.form.HorizontalSlider", [_FormValueWidget,
 	//		Show increment/decrement buttons at the ends of the slider?
 	showButtons: true,
 
-	// minimum:: [const] Integer
+	// minimum: [const] Integer
 	//		The minimum value the slider can be set to.
 	minimum: 0,
 

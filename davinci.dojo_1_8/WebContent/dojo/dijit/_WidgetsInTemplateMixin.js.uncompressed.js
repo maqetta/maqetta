@@ -6,8 +6,6 @@ define("dijit/_WidgetsInTemplateMixin", [
 
 	// module:
 	//		dijit/_WidgetsInTemplateMixin
-	// summary:
-	//		Mixin to supplement _TemplatedMixin when template contains widgets
 
 	return declare("dijit._WidgetsInTemplateMixin", null, {
 		// summary:

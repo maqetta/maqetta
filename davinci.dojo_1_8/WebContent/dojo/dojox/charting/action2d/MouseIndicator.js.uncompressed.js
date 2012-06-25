@@ -3,62 +3,65 @@ define("dojox/charting/action2d/MouseIndicator", ["dojo/_base/lang", "dojo/_base
 	function(lang, declare, hub, win, has, ChartAction, IndicatorElement, du, eventUtil, arr){ 
 
 	/*=====
-	declare("dojox.charting.action2d.__MouseIndicatorCtorArgs", null, {
+	var __MouseIndicatorCtorArgs = function(series, autoScroll, vertical, fixed, precision, lineStroke, lineOutline, lineShadow,
+		stroke, outline, shadow, fill, fillFunc, labelFunc, font, fontColor, markerStroke, markerOutline, markerShadow,
+		markerFill, markerSymbol){
+
 		// summary:
 		//		Additional arguments for mouse indicator.
 		
 		// series: String
 		//		Target series name for this action.
-		series: "",
+		this.series = "";
 		
 		// autoScroll: Boolean?
 		//		Whether when moving indicator the chart is automatically scrolled. Default is true.
-		autoScroll:		true,
+		this.autoScroll = true;
 	
 		// vertical: Boolean?
 		//		Whether the indicator is vertical or not. Default is true.
-		vertical:		true,
+		this.vertical = true;
 		
 		// fixed: Boolean?
 		//		Whether a fixed precision must be applied to data values for display. Default is true.
-		fixed:			true,
+		this.fixed = true;
 
 		// precision: Number?
 		//		The precision at which to round data values for display. Default is 1.
-		precision:		0,
+		this.precision = 0;
 		
-		// lineStroke: dojo.gfx.Stroke?
+		// lineStroke: dojo/gfx/Stroke?
 		//		An optional stroke to use for indicator line.
-		lineStroke:		{},
+		this.lineStroke = {};
 	
-		// lineOutline: dojo.gfx.Stroke?
+		// lineOutline: dojo/gfx/Stroke?
 		//		An optional outline to use for indicator line.
-		lineOutline:		{},
+		this.lineOutline = {};
 	
-		// lineShadow: dojo.gfx.Stroke?
+		// lineShadow: dojo/gfx/Stroke?
 		//		An optional shadow to use for indicator line.
-		lineShadow:		{},
+		this.lineShadow = {};
 		
 		// stroke: dojo.gfx.Stroke?
 		//		An optional stroke to use for indicator label background.
-		stroke:		{},
+		this.stroke = {};
 	
 		// outline: dojo.gfx.Stroke?
 		//		An optional outline to use for indicator label background.
-		outline:		{},
+		this.outline = {};
 	
 		// shadow: dojo.gfx.Stroke?
 		//		An optional shadow to use for indicator label background.
-		shadow:		{},
+		this.shadow = {};
 	
 		// fill: dojo.gfx.Fill?
 		//		An optional fill to use for indicator label background.
-		fill:			{},
+		this.fill = {};
 		
 		// fillFunc: Function?
 		//		An optional function to use to compute label background fill. It takes precedence over
 		//		fill property when available.
-		fillFunc:		null,
+		this.fillFunc = null;
 		
 		// labelFunc: Function?
 		//		An optional function to use to compute label text. It takes precedence over
@@ -68,36 +71,36 @@ define("dojox/charting/action2d/MouseIndicator", ["dojo/_base/lang", "dojo/_base
 		//		`secondDataPoint` is only useful for dual touch indicators not mouse indicators.
 		//		`fixed` is true if fixed precision must be applied.
 		//		`precision` is the requested precision to be applied.
-		labelFunc:		{},
+		this.labelFunc = {};
 	
 		// font: String?
 		//		A font definition to use for indicator label background.
-		font:		"",
+		this.font = "";
 	
 		// fontColor: String|dojo.Color?
 		//		The color to use for indicator label background.
-		fontColor:	"",
+		this.fontColor = "";
 	
 		// markerStroke: dojo.gfx.Stroke?
 		//		An optional stroke to use for indicator marker.
-		markerStroke:		{},
+		this.markerStroke = {};
 	
 		// markerOutline: dojo.gfx.Stroke?
 		//		An optional outline to use for indicator marker.
-		markerOutline:		{},
+		this.markerOutline = {};
 	
 		// markerShadow: dojo.gfx.Stroke?
 		//		An optional shadow to use for indicator marker.
-		markerShadow:		{},
+		this.markerShadow = {};
 	
 		// markerFill: dojo.gfx.Fill?
 		//		An optional fill to use for indicator marker.
-		markerFill:			{},
+		this.markerFill = {};
 		
 		// markerSymbol: String?
 		//		An optional symbol string to use for indicator marker.
-		markerFill:			{}	
-	});
+		this.markerFill = {};
+	};
 	=====*/
 
 	return declare("dojox.charting.action2d.MouseIndicator", ChartAction, {
@@ -134,9 +137,9 @@ define("dojox/charting/action2d/MouseIndicator", ["dojo/_base/lang", "dojo/_base
 		constructor: function(chart, plot, kwArgs){
 			// summary:
 			//		Create an mouse indicator action and connect it.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this action applies to.
-			// kwArgs: dojox.charting.action2d.__MouseIndicatorCtorArgs?
+			// kwArgs: __MouseIndicatorCtorArgs?
 			//		Optional arguments for the chart action.
 			this._listeners = [{eventName: "onmousedown", methodName: "onMouseDown"}];
 			this.opt = lang.clone(this.defaultParams);

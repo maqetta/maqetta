@@ -11,33 +11,30 @@ define("dojox/image/LightboxNano", ["dojo", "dojo/fx"], function(dojo, fx) {
 	;
 
 	return dojo.declare("dojox.image.LightboxNano", null, {
-		//	summary:
+		// summary:
 		//		A simple "nano" version of the lightbox.
-		//
-		//	description:
+		// description:
 		//		Very lightweight lightbox which only displays a larger image.  There is
 		//		no support for a caption or description.  The lightbox can be closed by
 		//		clicking any where or pressing any key.  This widget is intended to be
-		//		used on <a> and <img> tags.  Upon creation, if the domNode is <img> tag,
-		//		then it is wrapped in an <a> tag, then a <div class="enlarge"> is placed
-		//		inside the <a> and can be styled to display an icon that the original
+		//		used on `<a>` and `<img>` tags.  Upon creation, if the domNode is `<img>` tag,
+		//		then it is wrapped in an `<a>` tag, then a `<div class="enlarge">` is placed
+		//		inside the `<a>` and can be styled to display an icon that the original
 		//		can be enlarged.
-		//
-		//	example:
+		// example:
 		//	|	<a dojoType="dojox.image.LightboxNano" href="/path/to/largeimage.jpg"><img src="/path/to/thumbnail.jpg"></a>
-		//
-		//	example:
+		// example:
 		//	|	<img dojoType="dojox.image.LightboxNano" src="/path/to/thumbnail.jpg" href="/path/to/largeimage.jpg">
 
-		//	href: string
+		// href: string
 		//		URL to the large image to show in the lightbox.
 		href: "",
 
-		//	duration: int
+		// duration: int
 		//		The delay in milliseconds of the LightboxNano open and close animation.
 		duration: 500,
 
-		//	preloadDelay: int
+		// preloadDelay: int
 		//		The delay in milliseconds after the LightboxNano is created before preloading the larger image.
 		preloadDelay: 5000,
 

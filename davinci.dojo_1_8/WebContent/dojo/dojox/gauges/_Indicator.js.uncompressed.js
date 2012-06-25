@@ -1,10 +1,6 @@
 define("dojox/gauges/_Indicator", ["dojo/_base/lang","dojo/_base/declare","dojo/_base/fx","dojo/_base/html","dojo/_base/connect","dijit/_Widget","dojo/dom-construct", "dojo/dom-class"], 
 function(lang,declare,fx,html,connect,Widget,dom,domClass) {
 
-/*=====
-	Widget = dijit._Widget;
-=====*/
-
 return declare("dojox.gauges._Indicator",[Widget],{
 	// summary:
 	//		An indicator to be used in a gauge

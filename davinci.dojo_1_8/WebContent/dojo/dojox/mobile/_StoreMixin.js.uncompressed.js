@@ -6,16 +6,19 @@ define("dojox/mobile/_StoreMixin", [
 	// module:
 	//		dojox/mobile/_StoreMixin
 	// summary:
-	//		Mixin for widgets to enable dojo.data data store.
+	//		Mixin for widgets to enable dojo/store data store.
 
 	return declare("dojox.mobile._StoreMixin", null, {
 		// summary:
-		//		Mixin for widgets to enable dojo.store data store.
+		//		Mixin for widgets to enable dojo/store data store.
 		// description:
 		//		By mixing this class into a widget, it can get data through a
-		//		dojo.store data store. The widget must implement
-		//		onComplete(/*Array*/items) to handle the retrieved data.
-
+		//		dojo/store data store. The widget must implement the following
+		//		methods to handle the retrieved data:
+		//		onComplete(/*Array*/items), onError(/*Object*/errorData),
+		//		onUpdate(/*Object*/item, /*Number*/insertedInto), and 
+		//		onDelete(/*Object*/item, /*Number*/removedFrom).
+	
 		// store: Object
 		//		Reference to data provider object used by this widget.
 		store: null,
@@ -29,14 +32,14 @@ define("dojox/mobile/_StoreMixin", [
 		queryOptions: null,
 
 		// labelProperty: String
-		//		A property name (a property in the dojo.store item) that specifies that item's label.
+		//		A property name (a property in the dojo/store item) that specifies that item's label.
 		labelProperty: "label",
 
 		// childrenProperty: String
-		//		A property name (a property in the dojo.store item) that specifies that item's children.
+		//		A property name (a property in the dojo/store item) that specifies that item's children.
 		childrenProperty: "children",
 
-		setStore: function(store, query, queryOptions){
+		setStore: function(/*dojo/store/api/Store*/store, /*String*/query, /*Object*/queryOptions){
 			// summary:
 			//		Sets the store to use with this widget.
 			if(store === this.store){ return null; }
@@ -50,12 +53,14 @@ define("dojox/mobile/_StoreMixin", [
 			return this.refresh();
 		},
 
-		setQuery: function(query, queryOptions){
+		setQuery: function(/*String*/query, /*Object*/queryOptions){
 			this._setQuery(query, queryOptions);
 			return this.refresh();
 		},
 
-		_setQuery: function(query, queryOptions){
+		_setQuery: function(/*String*/query, /*Object*/queryOptions){
+			// tags:
+			//		private
 			this.query = query;
 			this.queryOptions = queryOptions || this.queryOptions;
 		},
@@ -68,7 +73,7 @@ define("dojox/mobile/_StoreMixin", [
 			var promise = this.store.query(this.query, this.queryOptions);
 			Deferred.when(promise, function(results){
 				if(results.items){
-					results = results.items; // looks like dojo.data style items array
+					results = results.items; // looks like dojo/data style items array
 				}
 				if(promise.observe){
 					promise.observe(function(object, removedFrom, insertedInto){
@@ -101,12 +106,12 @@ define("dojox/mobile/_StoreMixin", [
 
 		onUpdate: function(item, insertedInto){
 			// summary:
-			//		Add a new item or update an existing item.
+			//		Adds a new item or updates an existing item.
 		},
 
 		onDelete: function(item, removedFrom){
 			// summary:
-			//		Delete an existing item.
+			//		Deletes an existing item.
 		}
 */
 	});

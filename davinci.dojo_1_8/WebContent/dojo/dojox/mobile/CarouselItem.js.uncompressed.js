@@ -10,13 +10,13 @@ define("dojox/mobile/CarouselItem", [
 	// module:
 	//		dojox/mobile/CarouselItem
 	// summary:
-	//		An item of dojox.mobile.Carousel.
+	//		An item of dojox/mobile/Carousel.
 
 	return declare("dojox.mobile.CarouselItem", [WidgetBase, Contained], {
 		// summary:
-		//		An item of dojox.mobile.Carousel.
+		//		An item of dojox/mobile/Carousel.
 		// description:
-		//		CarouselItem represents an item of dojox.mobile.Carousel. In
+		//		CarouselItem represents an item of dojox/mobile/Carousel. In
 		//		typical use cases, users do not use this widget alone. Instead,
 		//		it is used in conjunction with the Carousel widget.
 
@@ -37,6 +37,9 @@ define("dojox/mobile/CarouselItem", [
 		footerText: "",
 
 		/* internal properties */	
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblCarouselItem",
 
 		buildRendering: function(){
@@ -62,6 +65,8 @@ define("dojox/mobile/CarouselItem", [
 		},
 
 		select: function(){
+			// summary:
+			//		Highlights the item.
 			var img = this.imageNode
 			domStyle.set(img, "opacity", 0.4);
 			setTimeout(function(){
@@ -70,11 +75,15 @@ define("dojox/mobile/CarouselItem", [
 		},
 
 		_setAltAttr: function(/*String*/alt){
+			// tags:
+			//		private
 			this._set("alt", alt);
 			this.imageNode.alt = alt;
 		},
 
 		_setSrcAttr: function(/*String*/src){
+			// tags:
+			//		private
 			this._set("src", src);
 			this.imageNode.src = src;
 		},
@@ -85,6 +94,8 @@ define("dojox/mobile/CarouselItem", [
 		},
 
 		_setFooterTextAttr: function(/*String*/text){
+			// tags:
+			//		private
 			this._set("footerText", text);
 			this.footerTextNode.innerHTML = this._cv ? this._cv(text) : text;
 		}

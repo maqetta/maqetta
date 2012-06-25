@@ -17,7 +17,10 @@ define("dojox/mobile/_base", [
 	// module:
 	//		dojox/mobile/_base
 	// summary:
-	//		Includes the basic dojox.mobile modules
+	//		Includes the basic dojox/mobile modules: common, View, Heading, 
+	//		RoundRect, RoundRectCategory, EdgeToEdgeCategory, RoundRectList,
+	//		EdgeToEdgeList, ListItem, Container, Pane, Switch, ToolBarButton, 
+	//		and ProgressIndicator.
 
 	return common;
 });

@@ -2,18 +2,18 @@ define("dojox/editor/plugins/SafePaste", [
 	"dojo",
 	"dijit",
 	"dojox",
+	"dojox/editor/plugins/PasteFromWord",
 	"dijit/Dialog",
 	"dojo/_base/connect",
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/string",
-	"dojox/editor/plugins/PasteFromWord",
 	"dojo/i18n!dojox/editor/plugins/nls/SafePaste",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!dijit/_editor/nls/commands"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, PasteFromWord) {
 
-dojo.declare("dojox.editor.plugins.SafePaste", [dojox.editor.plugins.PasteFromWord],{
+dojo.declare("dojox.editor.plugins.SafePaste", [PasteFromWord],{
 	// summary:
 	//		This plugin extends from the PasteFromWord plugin and provides
 	//		'safe pasting', meaning that it will not allow keyboard/menu pasting

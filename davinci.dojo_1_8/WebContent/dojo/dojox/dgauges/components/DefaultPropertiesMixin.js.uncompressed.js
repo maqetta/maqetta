@@ -1,31 +1,34 @@
 define("dojox/dgauges/components/DefaultPropertiesMixin", ["dojo/_base/declare", "dojo/_base/Color"], function(declare, Color){
 	return declare("dojox.dgauges.components.DefaultPropertiesMixin", null, {
-		//	minimum: Number
+		// summary:
+		//		This class defines default properties of predefined gauges.
+
+		// minimum: Number
 		//		The minimum value of the scaler. Default is 0.
 		minimum: 0,
-		//	maximum: Number
+		// maximum: Number
 		//		The maximum value of the scaler. Default is 100.
 		maximum: 100,
-		//	snapInterval:
+		// snapInterval:
 		//		Specifies the increment value to be used as snap values on this scale 
 		//		during user interaction.
 		//		Default is 1.
 		snapInterval: 1,
-		//	majorTickInterval: Number
+		// majorTickInterval: Number
 		//		The interval between two major ticks.
 		majorTickInterval: NaN,
-		//	minorTickInterval: Number
+		// minorTickInterval: Number
 		//		The interval between two minor ticks.
 		minorTickInterval: NaN,
-		//	minorTicksEnabled: Boolean
+		// minorTicksEnabled: Boolean
 		//		If false, minor ticks are not generated. Default is true.
 		minorTicksEnabled: true,
 
-		//	summary:
+		// summary:
 		//		The value of the indicator. Default is 0.
 		value: 0,
 		
-		//	interactionArea: String
+		// interactionArea: String
 		//		How to interact with the indicator using mouse or touch interactions.
 		//		Can be "indicator", "gauge" or "none". The default value is "gauge".
 		//		If set to "indicator", the indicator shape reacts to mouse and touch events.
@@ -33,11 +36,11 @@ define("dojox/dgauges/components/DefaultPropertiesMixin", ["dojo/_base/declare",
 		//		If "none", interactions are disabled.
 		interactionArea: "gauge",
 
-		//	interactionMode: String
+		// interactionMode: String
 		//		Can be "mouse" or "touch".
 		interactionMode: "mouse",
 
-		//	animationDuration: Number
+		// animationDuration: Number
 		//		The duration of the value change animation in milliseconds. Default is 0.
 		//		The animation occurs on both user interactions and programmatic value changes.
 		//		Set this property to 0 to disable animation.

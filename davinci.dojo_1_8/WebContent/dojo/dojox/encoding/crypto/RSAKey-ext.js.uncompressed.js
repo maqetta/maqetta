@@ -96,7 +96,7 @@ define("dojox/encoding/crypto/RSAKey-ext", [
 		decrypt: function(ctext){
 			// summary:
 			//		Return the PKCS#1 RSA decryption of "ctext".
-			// ctext: String:
+			// ctext: String
 			//		an even-length hex string
 			// returns:
 			//		a plain string.

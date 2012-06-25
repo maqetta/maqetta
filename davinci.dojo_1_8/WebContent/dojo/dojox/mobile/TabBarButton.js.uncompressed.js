@@ -23,7 +23,7 @@ define("dojox/mobile/TabBarButton", [
 		//		A button widget that is placed in the TabBar widget.
 		// description:
 		//		TabBarButton is a button that is placed in the TabBar widget. It
-		//		is a subclass of dojox.mobile._ItemBase just like ListItem or
+		//		is a subclass of dojox/mobile/_ItemBase just like ListItem or
 		//		IconItem. So, unlike Button, it has similar capability as
 		//		ListItem or IconItem, such as icon support, transition, etc.
 
@@ -40,21 +40,21 @@ define("dojox/mobile/TabBarButton", [
 
 		// iconPos1: String
 		//		The position of an aggregated unselected (typically dark)
-		//		icon. IconPos1 is comma separated values like
+		//		icon. IconPos1 is a comma-separated list of values like
 		//		top,left,width,height (ex. "0,0,29,29"). If iconPos1 is not
 		//		specified, the iconPos parameter of the parent widget is used.
 		iconPos1: "",
 
 		// iconPos2: String
 		//		The position of an aggregated selected (typically highlight)
-		//		icon. IconPos2 is comma separated values like
+		//		icon. IconPos2 is a comma-separated list of values like
 		//		top,left,width,height (ex. "0,0,29,29"). If iconPos2 is not
 		//		specified, the iconPos parameter of the parent widget or
 		//		iconPos1 is used.
 		iconPos2: "",
 
 		// selected: Boolean
-		//		If true, the button is in the selected status.
+		//		If true, the button is in the selected state.
 		selected: false,
 
 		// transition: String
@@ -71,6 +71,8 @@ define("dojox/mobile/TabBarButton", [
 
 		/* internal properties */	
 		baseClass: "mblTabBarButton",
+		// closeIcon: [private] String
+		//		CSS class for the close icon.
 		closeIcon: "mblDomButtonWhiteCross",
 
 		_selStartMethod: "touch",
@@ -85,7 +87,7 @@ define("dojox/mobile/TabBarButton", [
 
 		inheritParams: function(){
 			// summary:
-			//		Overrides dojox.mobile._ItemBase.inheritParams().
+			//		Overrides dojox/mobile/_ItemBase.inheritParams().
 			if(this.icon && !this.icon1){ this.icon1 = this.icon; }
 			var parent = this.getParent();
 			if(parent){
@@ -151,6 +153,8 @@ define("dojox/mobile/TabBarButton", [
 		},
 
 		onClose: function(e){
+			// summary:
+			//		Called when the parent is a dojox/mobile/TabBar whose closable property is true, and the user clicked the close button.
 			connect.publish("/dojox/mobile/tabClose", [this]);
 			return this.getParent().onCloseButtonClick(this);
 		},
@@ -166,6 +170,7 @@ define("dojox/mobile/TabBarButton", [
 		onCloseButtonClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
 			//		User defined function to handle clicks
+			//		when the parent is a dojox/mobile/TabBar whose closable property is true.
 			// tags:
 			//		callback
 		},

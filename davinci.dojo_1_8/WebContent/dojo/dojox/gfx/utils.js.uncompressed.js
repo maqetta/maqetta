@@ -5,16 +5,19 @@ define("dojox/gfx/utils", ["dojo/_base/kernel","dojo/_base/lang","./_base", "doj
 
 	lang.mixin(gu, {
 		forEach: function(
-			/*dojox.gfx.Surface|dojox.gfx.Shape*/ object,
+			/*dojox/gfx/shape.Surface|dojox/gfx/shape.Shape*/ object,
 			/*Function|String|Array*/ f, /*Object?*/ o
 		){
 			// summary:
-			//		Takes a shape or a surface and applies a function "f" to in the context of "o" 
-			//		(or global, if missing). If "shape" was a surface or a group, it applies the same 
+			//		Takes a shape or a surface and applies a function "f" to in the context of "o"
+			//		(or global, if missing). If "shape" was a surface or a group, it applies the same
 			//		function to all children recursively effectively visiting all shapes of the underlying scene graph.
-			// object: The gfx container to iterate.
-			// f: The function to apply.
-			// o: The scope.
+			// object:
+			//		The gfx container to iterate.
+			// f:
+			//		The function to apply.
+			// o:
+			//		The scope.
 			o = o || kernel.global;
 			f.call(o, object);
 			if(object instanceof g.Surface || object instanceof g.Group){
@@ -25,10 +28,13 @@ define("dojox/gfx/utils", ["dojo/_base/kernel","dojo/_base/lang","./_base", "doj
 		},
 
 		serialize: function(
-			/* dojox.gfx.Surface|dojox.gfx.Shape */ object
+			/* dojox/gfx/shape.Surface|dojox/gfx/shape.Shape */ object
 		){
 			// summary:
 			//		Takes a shape or a surface and returns a DOM object, which describes underlying shapes.
+			// object:
+			//		The container to serialize.
+			
 			var t = {}, v, isSurface = object instanceof g.Surface;
 			if(isSurface || object instanceof g.Group){
 				t.children = arr.map(object.children, gu.serialize);
@@ -58,20 +64,30 @@ define("dojox/gfx/utils", ["dojo/_base/kernel","dojo/_base/lang","./_base", "doj
 		},
 
 		toJson: function(
-			/* dojox.gfx.Surface|dojox.gfx.Shape */ object,
+			/* dojox/gfx/shape.Surface|dojox/gfx/shape.Shape */ object,
 			/* Boolean? */ prettyPrint
 		){
 			// summary:
 			//		Works just like serialize() but returns a JSON string. If prettyPrint is true, the string is pretty-printed to make it more human-readable.
+			// object:
+			//		The container to serialize.
+			// prettyPrint
+			//		Indicates whether the output string should be formatted.
+			
 			return jsonLib.toJson(gu.serialize(object), prettyPrint);	// String
 		},
 
 		deserialize: function(
-			/* dojox.gfx.Surface|dojox.gfx.Shape */ parent,
-			/* dojox.gfx.Shape|Array */ object
+			/* dojox/gfx/shape.Surface|dojox/gfx/shape.Shape */ parent,
+			/* dojox/gfx/shape.Shape|Array */ object
 		){
 			// summary:
 			//		Takes a surface or a shape and populates it with an object produced by serialize().
+			// parent:
+			//		The destination container for the deserialized shapes.
+			// object:
+			//		The shapes to deserialize.
+			 
 			if(object instanceof Array){
 				return arr.map(object, lang.hitch(null, gu.deserialize, parent));	// Array
 			}
@@ -91,18 +107,22 @@ define("dojox/gfx/utils", ["dojo/_base/kernel","dojo/_base/lang","./_base", "doj
 			if("children" in object){
 				arr.forEach(object.children, lang.hitch(null, gu.deserialize, shape));
 			}
-			return shape;	// dojox.gfx.Shape
+			return shape;	// dojox/gfx/shape.Shape
 		},
 
 		fromJson: function(
-			/* dojox.gfx.Surface|dojox.gfx.Shape */ parent,
+			/* dojox/gfx/shape.Surface|dojox/gfx/shape.Shape */ parent,
 			/* String */ json){
 			// summary:
 			//		Works just like deserialize() but takes a JSON representation of the object.
-			return gu.deserialize(parent, jsonLib.fromJson(json));	// Array || dojox.gfx.Shape
+			// parent:
+			//		The destination container for the deserialized shapes.
+			// json:
+			//		The shapes to deserialize.
+			return gu.deserialize(parent, jsonLib.fromJson(json));	// Array || dojox/gfx/shape.Shape
 		},
 
-		toSvg: function(/*GFX object*/surface){
+		toSvg: function(/*dojox/gfx/shape.Surface*/surface){
 			// summary:
 			//		Function to serialize a GFX surface to SVG text.
 			// description:
@@ -290,6 +310,8 @@ define("dojox/gfx/utils", ["dojo/_base/kernel","dojo/_base/lang","./_base", "doj
 				if(svg.indexOf("xlink:href") === -1){
 					svg = svg.replace(/href\s*=/g, "xlink:href=");
 				}
+				// in IE, <image are serialized as <img>
+				svg = svg.replace(/<img\b([^>]*)>/gi,"<image $1 />");
 				//Do some other cleanup, like stripping out the
 				//dojoGfx attributes and quoting ids.
 				svg = svg.replace(/\bdojoGfx\w*\s*=\s*(['"])\w*\1/g, "");

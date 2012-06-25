@@ -1,22 +1,20 @@
 define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 
-	/*=====
-		dojox.highlight = {
-			//	summary:
-			//		Syntax highlighting with language auto-detection package
-			//
-			//	description:
-			//
-			//		Syntax highlighting with language auto-detection package.
-			//		Released under CLA by the Dojo Toolkit, original BSD release
-			//		available from: http://softwaremaniacs.org/soft/highlight/
-			//
-			//
-		};
-	=====*/
+
 	var dh = dojo.getObject("dojox.highlight", true),
 		C_NUMBER_RE = '\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)'
 	;
+	/*=====
+	 dh = {
+		 // summary:
+		 //		Syntax highlighting with language auto-detection package
+		 // description:
+		 //		Syntax highlighting with language auto-detection package.
+		 //		Released under CLA by the Dojo Toolkit, original BSD release
+		 //		available from: http://softwaremaniacs.org/soft/highlight/
+	 };
+	 =====*/
+
 	dh.languages = dh.languages || {};
 	// constants
 
@@ -396,8 +394,10 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 	// the public API
 
 	dojox.highlight.processString = function(/* String */ str, /* String? */lang){
-		// summary: highlight a string of text
-		// returns: Object containing:
+		// summary:
+		//		highlight a string of text
+		// returns: Object
+		//		Object containing:
 		//         result - string of html with spans to apply formatting
 		//         partialResult - if the formating failed: string of html
 		//                 up to the point of the failure, otherwise: undefined
@@ -406,14 +406,11 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 	};
 
 	dojox.highlight.init = function(/* String|DomNode */ node){
-		//	summary: Highlight a passed node
-		//
-		//	description:
-		//
+		// summary:
+		//		Highlight a passed node
+		// description:
 		//		Syntax highlight a passed DomNode or String ID of a DomNode
-		//
-		//
-		//	example:
+		// example:
 		//	|	dojox.highlight.init("someId");
 		//
 		node = dojo.byId(node);
@@ -433,31 +430,25 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 		}
 	};
 
-/*=====
-	dojox.highlight.Code = function(props, node){
-		//	summary: A Class object to allow for dojoType usage with the highlight engine. This is
+	dh.Code = function(props, node){
+		// summary:
+		//		A class object to allow for dojoType usage with the highlight engine. This is
 		//		NOT a Widget in the conventional sense, and does not have any member functions for
 		//		the instance. This is provided as a convenience. You likely should be calling
 		//		`dojox.highlight.init` directly.
-		//
-		//	props: Object?
+		// props: Object?
 		//		Unused. Pass 'null' or {}. Positional usage to allow `dojo.parser` to instantiate
 		//		this class as other Widgets would be.
-		//
-		//	node: String|DomNode
+		// node: String|DomNode
 		//		A String ID or DomNode reference to use as the root node of this instance.
-		//
-		//	example:
+		// example:
 		//	|	<pre><code dojoType="dojox.highlight.Code">for(var i in obj){ ... }</code></pre>
 		//
-		//	example:
+		// example:
 		//	|	var inst = new dojox.highlight.Code({}, "someId");
 		//
-		this.node = dojo.byId(node);
+		dh.init(node);
 	};
-=====*/
-
-	dh.Code = function(props, node){ dh.init(node); };
 
 	return dh;
 

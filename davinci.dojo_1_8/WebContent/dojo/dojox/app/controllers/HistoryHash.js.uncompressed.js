@@ -1,9 +1,9 @@
-define("dojox/app/controllers/HistoryHash", ["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/connect", "dojo/on", "../Controller", "dojo/hash"],
-function(lang, declare, connect, on, Controller){
+define("dojox/app/controllers/HistoryHash", ["dojo/_base/lang", "dojo/_base/declare", "dojo/topic", "dojo/on", "../Controller", "dojo/hash"],
+	function(lang, declare, topic, on, Controller){
 	// module:
 	//		dojox/app/controllers/HistoryHash
 	// summary:
-	//		Bind "startTransition" event on dojox.app application's domNode,
+	//		Bind "startTransition" event on dojox/app application's domNode,
 	//		Bind "/dojo/hashchange" event on window object.
 	//		Maintain history by history hash.
 
@@ -11,17 +11,17 @@ function(lang, declare, connect, on, Controller){
 
 		constructor: function(app){
 			// summary:
-			//		Bind "startTransition" event on dojox.app application's domNode,
+			//		Bind "startTransition" event on dojox/app application's domNode,
 			//		subscribe "/dojo/hashchange" event.
 			//
 			// app:
-			//		dojox.app application instance.
+			//		dojox/app application instance.
 			this.events = {
 				"startTransition": this.onStartTransition
 			};
 			this.inherited(arguments);
 
-			connect.subscribe("/dojo/hashchange", lang.hitch(this, function(newhash){
+			topic.subscribe("/dojo/hashchange", lang.hitch(this, function(newhash){
 				this._onHashChange(newhash);
 			}));
 
@@ -58,7 +58,7 @@ function(lang, declare, connect, on, Controller){
 
 		onStartTransition: function(evt){
 			// summary:
-			//		Response to dojox.app "startTransition" event.
+			//		Response to dojox/app "startTransition" event.
 			//
 			// example:
 			//		Use "dojox/mobile/TransitionEvent" to trigger "startTransition" event, and this function will response the event. For example:
@@ -218,7 +218,7 @@ function(lang, declare, connect, on, Controller){
 			this._current = currentHash;
 
 			// publish history back event
-			connect.publish("app/history/back", [{'viewId':currentHash, 'detail':detail}]);
+			topic.publish("app/history/back", [{"viewId": currentHash, "detail": detail}]);
 
 			// transition to the target view
 			this.app.trigger("transition", {
@@ -239,7 +239,7 @@ function(lang, declare, connect, on, Controller){
 			this._current = currentHash;
 
 			// publish history forward event
-			connect.publish("app/history/forward", [{'viewId':currentHash, 'detail':detail}]);
+			topic.publish("app/history/forward", [{"viewId": currentHash, "detail": detail}]);
 
 			// transition to the target view
 			this.app.trigger("transition", {
@@ -259,7 +259,7 @@ function(lang, declare, connect, on, Controller){
 			this._next = this._historyStack[index + 1] ? this._historyStack[index + 1]['hash'] : null;
 
 			// publish history go event
-			connect.publish("app/history/go", [{'viewId':this._current, 'step':step, 'detail':this._historyStack[index]['detail']}]);
+			topic.publish("app/history/go", [{"viewId": this._current, "step": step, "detail": this._historyStack[index]["detail"]}]);
 
 			var param;
 			if(step > 0){

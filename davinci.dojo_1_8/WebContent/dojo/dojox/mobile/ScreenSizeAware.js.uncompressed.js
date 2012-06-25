@@ -82,6 +82,8 @@ define("dojox/mobile/ScreenSizeAware", [
 		},
 
 		init: function(){
+			// summary:
+			//		Initializes the application.
 			if(this._initialized){ return; }
 			this._initialized = true;
 
@@ -127,10 +129,14 @@ define("dojox/mobile/ScreenSizeAware", [
 		},
 
 		isPhone: function(){
-			return this._currentMode === "phone";
+			// summary:
+			//		Returns true if the current mode set by transformUI(mode) is "phone".
+			return this._currentMode === "phone"; // Boolean
 		},
 
 		getShowingView: function(){
+			// summary:
+			//		Returns the view currently shown.
 			var firstView =
 				array.filter(this.rightPane.getChildren(), function(c){ return c.declaredClass.indexOf("View") !== -1; })[0];
 			if(!firstView){ return null; }
@@ -140,14 +146,20 @@ define("dojox/mobile/ScreenSizeAware", [
 		},
 
 		updateStateful: function(){
+			// summary:
+			//		Updates the stateful property of the list widget in the left-side pane.
 			this.leftList.set("stateful", !this.isPhone());
 		},
 
 		getDestinationId: function(item){
+			// summary:
+			//		Returns the id of the target view of the given item.
 			return item.moveTo;
 		},
 
 		updateBackButton: function(){
+			// summary:
+			//		Updates the back button.
 			array.forEach(this.leftList.getChildren(), function(item){
 				var id = this.getDestinationId(item);
 				var view = registry.byId(id);
@@ -164,6 +176,8 @@ define("dojox/mobile/ScreenSizeAware", [
 		},
 
 		updateTransition: function(){
+			// summary:
+			//		Updates the transition property of the items in the left-side widget. 
 			var transition = this.isPhone() ? "slide" : "none";
 			array.forEach(this.leftList.getChildren(), function(item){
 				item.set("transition", transition);
@@ -171,16 +185,23 @@ define("dojox/mobile/ScreenSizeAware", [
 		},
 
 		moveList: function(){
+			// summary:
+			//		Places the list widget. If the current mode is "phone", it 
+			//		places the list widget in the right pane, otherwise in the left pane. 
 			var to = this.isPhone() ? this.rightPane: this.leftPane;
 			to.containerNode.appendChild(this.leftView.domNode);
 		},
 
 		showLeftView: function(){
+			// summary:
+			//		Shows the left-side view.
 			this.leftPane.domNode.style.display = this.isPhone() ? "none" : "";
 			this.leftView.show();
 		},
 
 		showRightView: function(){
+			// summary:
+			//		Shows the right-side view.
 			if(this.isPhone()){ return; }
 			var view = this.getShowingView();
 			if(view){
@@ -191,6 +212,8 @@ define("dojox/mobile/ScreenSizeAware", [
 		},
 
 		updateSelectedItem: function(){
+			// summary:
+			//		Updates the selected item.
 			var id;
 			var view = this.getShowingView();
 			if(view && !this.isPhone()){
@@ -207,10 +230,17 @@ define("dojox/mobile/ScreenSizeAware", [
 			}
 		},
 
-		leftItemSelected: function(e){
+		leftItemSelected: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		Function called when an item in the left-side list is selected.
 		},
 
-		transformUI: function(mode){
+		transformUI: function(/*String*/mode){
+			// summary:
+			//		Applies an UI mode.
+			// mode: 
+			//		If this argument is "phone", sets the UI in phone mode, otherwise 
+			//		in tablet mode.		 
 			this.init();
 			if(mode === this._currentMode){ return; }
 			this._currentMode = mode;

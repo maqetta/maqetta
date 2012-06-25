@@ -10,6 +10,9 @@
 	
 	float:left;
 }
+.dj_ie .dijitTextBoxRtl .dijitInputContainer {
+	clear: right;
+}
 .dijitTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
 .dijitComboBoxRtl .dijitArrowButtonContainer {
@@ -21,6 +24,10 @@
 	right: 0;
 	left: auto;
 }
+.dijitSelectRtl .dijitButtonText {
+	float: right;
+}
+.dijitSelectRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
 .dijitTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitArrowButtonContainer {
@@ -97,6 +104,7 @@
 	right: 0;
 }
 .dijitSelectRtl .dijitButtonContents {
+	border-style: none none none solid;
 	text-align: right;
 }
 .dijitRtl .dojoDndHorizontal .dojoDndItemBefore {
@@ -108,8 +116,8 @@
     padding: 2px 2px 2px 0;
 }
 .claro .dijitTextBoxRtlError .dijitValidationContainer {
-  border-left-width: 0;
-  border-right-width: 1px;
+  border-left-width: 0 !important;
+  border-right-width: 1px !important;
 }
 .claro .dijitComboButtonRtl .dijitStretch {
   -moz-border-radius: 0 4px 4px 0;
@@ -149,10 +157,6 @@
 }
 .claro .dijitSliderRtl .dijitSliderDecrementIconH {
   background-position: -251px 50%;
-}
-.claro .dijitSelectRtl .dijitButtonContents {
-  border-right-width: 0;
-  border-left-width: 1px;
 }
 .claro .dijitDialogRtl .dijitDialogCloseIcon {
   right: auto;

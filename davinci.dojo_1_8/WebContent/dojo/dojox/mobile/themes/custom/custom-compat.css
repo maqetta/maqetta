@@ -1171,7 +1171,7 @@
   background-image: url(compat/togglebutton-chk-mark-bg.png);
 }
 .mblValuePickerSlotButton {
-  background-color: #d6d3d6;
+  background-image: url(compat/valuepicker-button-bg.png);
 }
 .mblValuePickerSlotInputArea {
   background-color: #f7f7f7;
@@ -1183,5 +1183,5 @@
   background-image: -moz-linear-gradient(top, #bbbbbb 0%, #666666 100%);
 }
 .dj_gecko .mblValuePickerSlotInputArea {
-  background-image: -moz-linear-gradient(top, #adaead 0%, #d6d7d6 10%, #f7f7f7 50%, #f7f3f7 90%, #e7e3e7 100%);
+  background-image: -moz-linear-gradient(top, #fafafa 10%, #fafafa 20%, #ffffff 50%, #ffffff 90%);
 }

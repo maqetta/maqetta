@@ -8,9 +8,6 @@ define("dijit/MenuBarItem", [
 
 	// module:
 	//		dijit/MenuBarItem
-	// summary:
-	//		Item in a MenuBar that's clickable, and doesn't spawn a submenu when pressed (or hovered)
-
 
 	var _MenuBarItemMixin = declare("dijit._MenuBarItemMixin", null, {
 		templateString: template,

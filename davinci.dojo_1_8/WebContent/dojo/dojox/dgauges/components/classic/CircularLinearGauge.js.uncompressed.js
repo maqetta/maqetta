@@ -10,19 +10,17 @@ define("dojox/dgauges/components/classic/CircularLinearGauge", [
 		"../DefaultPropertiesMixin"
 	], 
 	function(lang, declare, Color, CircularGauge, LinearScaler, CircularScale, CircularValueIndicator, CircularRangeIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	 var CircularGauge = dojox.dgauges.CircularGauge;
-	 =====*/
-
 		return declare("dojox.dgauges.components.classic.CircularLinearGauge", [CircularGauge, DefaultPropertiesMixin], {
-			//	borderColor:
+			// summary:
+			//		A circular gauge widget.
+
+			// borderColor: Object|Array|int
 			//		The border color. Default is "#797E86".
 			borderColor: [121,126,134],
-			//	fillColor:
+			// fillColor: Object|Array|int
 			//		The background color. Default is "#9498A1".
 			fillColor: [148,152,161],
-			//	indicatorColor:
+			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#FFFFFF".
 			indicatorColor: "#FFFFFF",
 			constructor: function(){
@@ -75,6 +73,12 @@ define("dojox/dgauges/components/classic/CircularLinearGauge", [
 			},
 
 			drawBackground: function(g){
+				// summary:
+				//		Draws the background shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the background. 
+				// tags:
+				//		protected
 				g.createPath({
 					path: "M81.9213 6.4012 C36.7458 6.4012 0 43.1469 0 88.3225 C0 133.498 36.7458 170.2438 81.9213 170.2438 C127.0968 170.2438 163.8426 133.498 163.8425 88.3225 C163.8425 43.147 127.0968 6.4012 81.9213 6.4012 ZM81.9213 14.6771 C122.6195 14.6771 155.5666 47.6241 155.5666 88.3225 C155.5667 129.0207 122.6195 161.9678 81.9213 161.9678 C41.223 161.9678 8.2759 129.0207 8.2759 88.3225 C8.2759 47.6242 41.223 14.6771 81.9213 14.6771 Z"
 				}).setFill(this.borderColor);
@@ -133,6 +137,12 @@ define("dojox/dgauges/components/classic/CircularLinearGauge", [
 			},
 
 			drawForeground: function(g){
+				// summary:
+				//		Draws the foreground shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the foreground. 
+				// tags:
+				//		protected
 				g.createEllipse({
 					cx: 81.85091,
 					cy: 87.72405,

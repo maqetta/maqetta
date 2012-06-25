@@ -8,14 +8,14 @@ define("dojox/mobile/_DataMixin", [
 	// module:
 	//		dojox/mobile/_DataMixin
 	// summary:
-	//		Mixin for widgets to enable dojo.data data store.
+	//		Mixin for widgets to enable dojo/data data store.
 
 	return declare("dojox.mobile._DataMixin", null, {
 		// summary:
-		//		Mixin for widgets to enable dojo.data data store.
+		//		Mixin for widgets to enable dojo/data data store.
 		// description:
 		//		By mixing this class into a widget, it can get data through a
-		//		dojo.data data store. The widget must implement
+		//		dojo/data data store. The widget must implement
 		//		onComplete(/*Array*/items) to handle the retrieved data.
 
 		// store: Object
@@ -30,7 +30,7 @@ define("dojox/mobile/_DataMixin", [
 		//		An optional parameter for the query.
 		queryOptions: null,
 
-		setStore: function(store, query, queryOptions){
+		setStore: function(/*dojo/data/store*/store, /*dojo/data/api/Request|Object*/query, /*Object?*/queryOptions){
 			// summary:
 			//		Sets the store to use with this widget.
 			if(store === this.store){ return null; }
@@ -48,12 +48,16 @@ define("dojox/mobile/_DataMixin", [
 			return this.refresh();
 		},
 
-		setQuery: function(query, queryOptions){
+		setQuery: function(/*dojo/data/api/Request|Object*/query, /*Object?*/queryOptions){
+			// summary:
+			//		Sets a query.
 			this._setQuery(query, queryOptions);
 			return this.refresh();
 		},
 
 		_setQuery: function(query, queryOptions){
+			// tags:
+			//		private
 			this.query = query;
 			this.queryOptions = queryOptions || this.queryOptions;
 		},
@@ -98,17 +102,17 @@ define("dojox/mobile/_DataMixin", [
 
 		onSet: function(item, attribute, oldValue, newValue){
 			// summary:
-			//		See dojo.data.api.Notification.onSet()
+			//		See dojo/data/api/Notification.onSet()
 		},
 
 		onNew: function(newItem, parentInfo){
 			// summary:
-			//		See dojo.data.api.Notification.onNew()
+			//		See dojo/data/api/Notification.onNew()
 		},
 
 		onDelete: function(deletedItem){
 			// summary:
-			//		See dojo.data.api.Notification.onDelete()
+			//		See dojo/data/api/Notification.onDelete()
 		},
 
 		onStoreClose: function(request){

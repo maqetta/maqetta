@@ -470,72 +470,72 @@ dojo.declare("dojox.editor.plugins._SpellCheckScriptMultiPart", null, {
 
 dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 	//	summary:
-	//		This plugin provides a spelling check cabability for the editor.
+	//		This plugin provides a spelling check capability for the editor.
 	
-	// url [public] String
+	// url: [public] String
 	//		The url of the spelling check service
 	url: "",
 	
-	// bufferLength [public] Number
+	// bufferLength: [public] Number
 	//		The max length of each XHR request. It is used to divide the large
 	//		text into pieces so that the server-side piece can hold.
 	bufferLength: 100,
 	
-	// interactive [public] Boolean
+	// interactive: [public] Boolean
 	//		Indicate if the interactive spelling check is enabled
 	interactive: false,
 	
-	// timeout [public] Number
+	// timeout: [public] Number
 	//		The minutes to waiting for the response. The default value is 30 seconds.
 	timeout: 30,
 	
-	// button [protected] dijit.form.DropDownButton
+	// button: [protected] dijit/form/DropDownButton
 	//		The button displayed on the editor's toolbar
 	button: null,
 	
-	// _editor [private] dijit.Editor
+	// _editor: [private] dijit/Editor
 	//		The reference to the editor the plug-in belongs to.
 	_editor: null,
 	
-	// exArgs [private] Object
+	// exArgs: [private] Object
 	//		The object that holds all the parametes passed into the constructor
 	exArgs: null,
 	
-	// _cursorSpan [private] String
+	// _cursorSpan: [private] String
 	//		The span that holds the current position of the cursor
 	_cursorSpan:
 		"<span class=\"cursorPlaceHolder\"></span>",
 	
-	// _cursorSelector [private] String
+	// _cursorSelector: [private] String
 	//		The CSS selector of the cursor span
 	_cursorSelector:
 		"cursorPlaceHolder",
 	
-	// _incorrectWordsSpan [private] String
+	// _incorrectWordsSpan: [private] String
 	//		The wrapper that marks the incorrect words
 	_incorrectWordsSpan:
 		"<span class='incorrectWordPlaceHolder'>${text}</span>",
 		
-	// _ignoredIncorrectStyle [private] Object
+	// _ignoredIncorrectStyle: [private] Object
 	//		The style of the ignored incorrect words
 	_ignoredIncorrectStyle:
 		{"cursor": "inherit", "borderBottom": "none", "backgroundColor": "transparent"},
 		
-	// _normalIncorrectStyle [private] Object
+	// _normalIncorrectStyle: [private] Object
 	//		The style of the marked incorrect words.
 	_normalIncorrectStyle:
 		{"cursor": "pointer", "borderBottom": "1px dotted red", "backgroundColor": "yellow"},
 	
-	// _highlightedIncorrectStyle [private] Object
+	// _highlightedIncorrectStyle: [private] Object
 	//		The style of the highlighted incorrect words
 	_highlightedIncorrectStyle:
 		{"borderBottom": "1px dotted red", "backgroundColor": "#b3b3ff"},
 	
-	// _selector [private] String
+	// _selector: [private] String
 	//		An empty CSS class that identifies the incorrect words
 	_selector: "incorrectWordPlaceHolder",
 	
-	// _maxItemNumber [private] Number
+	// _maxItemNumber: [private] Number
 	//		The max number of the suggestion list items
 	_maxItemNumber: 3,
 	
@@ -933,8 +933,8 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 		// summary:
 		//		Substitute the tag with white charactors so that the server
 		//		can easily process the text. For example:
-		//		"<a src="sample.html">Hello, world!</a>" ==>
-		//		"                     Hello, world!    "
+		// |	"<a src="sample.html">Hello, world!</a>" ==>
+		// |	"                     Hello, world!    "
 		// html:
 		//		The html code
 		// tags:

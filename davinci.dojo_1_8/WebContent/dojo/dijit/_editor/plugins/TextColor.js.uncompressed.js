@@ -9,8 +9,6 @@ define("dijit/_editor/plugins/TextColor", [
 
 // module:
 //		dijit/_editor/plugins/TextColor
-// summary:
-//		This plugin provides dropdown color pickers for setting text color and background color
 
 
 var TextColor = declare("dijit._editor.plugins.TextColor", _Plugin, {
@@ -37,6 +35,7 @@ var TextColor = declare("dijit._editor.plugins.TextColor", _Plugin, {
 		this.button.loadDropDown = function(callback){
 			require(["../../ColorPalette"], lang.hitch(this, function(ColorPalette){
 				this.dropDown = new ColorPalette({
+					ownerDocument: self.editor.ownerDocument,
 					value: self.value,
 					onChange: function(color){
 						self.editor.execCommand(self.command, color);

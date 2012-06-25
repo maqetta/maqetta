@@ -13,8 +13,6 @@ define("dijit/_PaletteMixin", [
 
 // module:
 //		dijit/_PaletteMixin
-// summary:
-//		A keyboard accessible palette, for picking a color/emoticon/etc.
 
 return declare("dijit._PaletteMixin", [_CssStateMixin], {
 	// summary:
@@ -29,7 +27,7 @@ return declare("dijit._PaletteMixin", [_CssStateMixin], {
 	// timeoutChangeRate: Number
 	//		Fraction of time used to change the typematic timer between events
 	//		1.0 means that each typematic event fires at defaultTimeout intervals
-	//		< 1.0 means that each typematic event fires at an increasing faster rate
+	//		Less than 1.0 means that each typematic event fires at an increasing faster rate
 	timeoutChangeRate: 0.90,
 
 	// value: String

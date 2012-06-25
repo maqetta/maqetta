@@ -1,11 +1,12 @@
-define("dojo/behavior", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base/connect", "./query", "./ready"], function(dojo, lang, darray, connect, query, ready) {
-	// module:
-	//		dojo/behavior
-	// summary:
-	//		TODOC
+define("dojo/behavior", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base/connect", "./query", "./ready"],
+function(dojo, lang, darray, connect, query, ready){
 
+// module:
+//		dojo/behavior
 
-dojo.behavior = new function(){
+dojo.deprecated("dojo.behavior", "Use dojo/on with event delegation (on.selector())");
+
+var Behavior = function(){
 	// summary:
 	//		Deprecated.   dojo/behavior's functionality can be achieved using event delegation using dojo/on
 	//		and on.selector().
@@ -239,6 +240,8 @@ dojo.behavior = new function(){
 		});
 	};
 };
+
+dojo.behavior = new Behavior();
 
 ready(dojo.behavior, "apply"); // FIXME: should this use a priority? before/after parser priority?
 

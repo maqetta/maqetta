@@ -1,12 +1,13 @@
 define("dojo/number", ["./_base/lang", "./i18n", "./i18n!./cldr/nls/number", "./string", "./regexp"],
-	function(lang, i18n, nlsNumber, dstring, dregexp) {
+	function(lang, i18n, nlsNumber, dstring, dregexp){
 
 // module:
 //		dojo/number
-// summary:
-//		localized formatting and parsing routines for Number
 
-var number = {};
+var number = {
+	// summary:
+	//		localized formatting and parsing routines for Number
+};
 lang.setObject("dojo.number", number);
 
 /*=====
@@ -70,7 +71,7 @@ number._applyPattern = function(/*Number*/ value, /*String*/ pattern, /*number._
 	// pattern:
 	//		a pattern string as described by
 	//		[unicode.org TR35](http://www.unicode.org/reports/tr35/#Number_Format_Patterns)
-	// options: dojo.number.__FormatOptions?
+	// options: number.__FormatOptions?
 	//		_applyPattern is usually called via `dojo.number.format()` which
 	//		populates an extra property in the options parameter, "customs".
 	//		The customs object specifies group and decimal parameters if set.
@@ -155,7 +156,7 @@ number.__FormatAbsoluteOptions = function(){
 	//		the decimal separator
 	// group: String?
 	//		the group separator
-	// places: Number?|String?
+	// places: Number|String?
 	//		number of decimal places.  the range "n,m" will format to m places.
 	// round: Number?
 	//		5 rounds to nearest .5; 0 rounds to nearest whole (default). -1
@@ -387,7 +388,7 @@ number.__ParseOptions = function(){
 	// strict: Boolean?
 	//		strict parsing, false by default.  Strict parsing requires input as produced by the format() method.
 	//		Non-strict is more permissive, e.g. flexible on white space, omitting thousands separators
-	// fractional: Boolean?|Array?
+	// fractional: Boolean|Array?
 	//		Whether to include the fractional portion, where the number of decimal places are implied by pattern
 	//		or explicit 'places' parameter.  The value [true,false] makes the fractional portion optional.
 	this.pattern = pattern;
@@ -442,14 +443,14 @@ number.__RealNumberRegexpFlags = function(){
 	// decimal: String?
 	//		A string for the character used as the decimal point.  Default
 	//		is ".".
-	// fractional: Boolean?|Array?
+	// fractional: Boolean|Array?
 	//		Whether decimal places are used.  Can be true, false, or [true,
 	//		false].  Default is [true, false] which means optional.
-	// exponent: Boolean?|Array?
+	// exponent: Boolean|Array?
 	//		Express in exponential notation.  Can be true, false, or [true,
 	//		false]. Default is [true, false], (i.e. will match if the
 	//		exponential part is present are not).
-	// eSigned: Boolean?|Array?
+	// eSigned: Boolean|Array?
 	//		The leading plus-or-minus sign on the exponent.  Can be true,
 	//		false, or [true, false].  Default is [true, false], (i.e. will
 	//		match if it is signed or unsigned).  flags in regexp.integer can be

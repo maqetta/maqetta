@@ -22,8 +22,6 @@ define("dijit/_HasDropDown", [
 
 	// module:
 	//		dijit/_HasDropDown
-	// summary:
-	//		Mixin for widgets that need drop down ability.
 
 	return declare("dijit._HasDropDown", _FocusMixin, {
 		// summary:
@@ -102,8 +100,8 @@ define("dijit/_HasDropDown", [
 			//		Callback when the user mousedown's on the arrow icon
 			if(this.disabled || this.readOnly){ return; }
 
-			// Prevent default to stop things like text selection, but don't stop propogation, so that:
-			//		1. TimeTextBox etc. can focusthe <input> on mousedown
+			// Prevent default to stop things like text selection, but don't stop propagation, so that:
+			//		1. TimeTextBox etc. can focus the <input> on mousedown
 			//		2. dropDownButtonActive class applied by _CssStateMixin (on button depress)
 			//		3. user defined onMouseDown handler fires
 			e.preventDefault();
@@ -121,7 +119,7 @@ define("dijit/_HasDropDown", [
 			//		a mouseup event.
 			//
 			//		This is useful for the common mouse movement pattern
-			//		with native browser <select> nodes:
+			//		with native browser `<select>` nodes:
 			//			1. mouse down on the select node (probably on the arrow)
 			//			2. move mouse to a menu item while holding down the mouse button
 			//			3. mouse up.  this selects the menu item as though the user had clicked it.

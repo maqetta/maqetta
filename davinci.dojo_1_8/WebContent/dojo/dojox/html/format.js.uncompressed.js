@@ -22,7 +22,7 @@ define("dojox/html/format", ["dojo/_base/kernel", "./entities", "dojo/_base/arra
 		//		dojox.html.entities.encode function.
 		// xhtml: boolean
 		//		Optional parameter that declares that the returned HTML should try to be 'xhtml' compatible.
-		//		This means normally unclosed tags are terminated with /> instead of >.  Example: <hr> -> <hr />
+		//		This means normally unclosed tags are terminated with /> instead of >.  Example: `<hr>` -> `<hr />`
 		var content = [];
 		var indentDepth = 0;
 		var closeTags = [];

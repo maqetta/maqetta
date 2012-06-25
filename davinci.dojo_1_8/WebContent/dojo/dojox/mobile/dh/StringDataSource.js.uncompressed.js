@@ -15,6 +15,8 @@ define("dojox/mobile/dh/StringDataSource", [
 		},
 
 		getData: function(){
+			// summary:
+			//		Returns the given text.			
 			return this.text;
 		}
 	});

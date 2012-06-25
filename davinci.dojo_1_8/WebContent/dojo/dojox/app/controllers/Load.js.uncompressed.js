@@ -3,7 +3,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 	// module:
 	//		dojox/app/controllers/Load
 	// summary:
-	//		Bind "load" event on dojox.app application's domNode.
+	//		Bind "load" event on dojox/app application's domNode.
 	//		Load child view and sub children at one time.
 
 	return declare("dojox.app.controllers.Load", Controller, {
@@ -13,7 +13,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 			//		bind "load" event on application's domNode.
 			//
 			// app:
-			//		dojox.app application instance.
+			//		dojox/app application instance.
 			// events:
 			//		{event : handler}
 			this.events = {
@@ -24,7 +24,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 
 		load: function(event){
 			// summary:
-			//		Response to dojox.app "load" event.
+			//		Response to dojox/app "load" event.
 			//
 			// example:
 			//		Use trigger() to trigger "load" event, and this function will response the event. For example:
@@ -33,7 +33,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 			// event: Object
 			//		Load event parameter. It should be like this: {"parent":parent, "viewId":viewId, "callback":function(){...}}
 			// returns:
-			//		A dojo.Deferred object.
+			//		A dojo/Deferred object.
 			//		The return value cannot return directly. 
 			//		If the caller need to use the return value, pass callback function in event parameter and process return value in callback function.
 
@@ -42,8 +42,9 @@ function(lang, declare, on, Deferred, when, Controller, View){
 			var parts = viewId.split(',');
 			var childId = parts.shift();
 			var subIds = parts.join(",");
-
-			var def = this.loadChild(parent, childId, subIds);
+			var params = event.params || "";
+			
+			var def = this.loadChild(parent, childId, subIds, params);
 			// call Load event callback
 			if(event.callback){
 				when(def, event.callback);
@@ -51,7 +52,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 			return def;
 		},
 
-		createChild: function(parent, childId, subIds){
+		createChild: function(parent, childId, subIds, params){
 			// summary:
 			//		Create dojox.app.view instance if it is not loaded.
 			//
@@ -70,17 +71,17 @@ function(lang, declare, on, Deferred, when, Controller, View){
 				return parent.children[id];
 			}
 			//create and start child. return Deferred
-			var newView = new View({
+			var newView = new View(lang.mixin({
 				"app": this.app,
 				"id": id,
 				"name": childId,
 				"parent": parent
-			});
+			},{"params": params}));
 			parent.children[id] = newView;
 			return newView.start();
 		},
 
-		loadChild: function(parent, childId, subIds){
+		loadChild: function(parent, childId, subIds, params){
 			// summary:
 			//		Load child and sub children views recursively.
 			//
@@ -90,8 +91,10 @@ function(lang, declare, on, Deferred, when, Controller, View){
 			//		view id need to be loaded.
 			// subIds: String
 			//		sub views' id of this view.
+			// params: Object
+			//		params of this view.
 			// returns:
-			//		A dojo.Deferred instance which will be resovled when all views loaded.
+			//		A dojo/Deferred instance which will be resovled when all views loaded.
 
 			if(!parent){
 				throw Error("No parent for Child '" + childId + "'.");
@@ -106,7 +109,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 			var loadChildDeferred = new Deferred();
 			var createPromise;
 			try{
-				createPromise = this.createChild(parent, childId, subIds);
+				createPromise = this.createChild(parent, childId, subIds, params);
 			}catch(ex){
 				loadChildDeferred.reject("load child '"+childId+"' error.");
 				return loadChildDeferred.promise;
@@ -121,7 +124,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 				childId = parts.shift();
 				subIds = parts.join(',');
 				if(childId){
-					var subLoadDeferred = this.loadChild(child, childId, subIds);
+					var subLoadDeferred = this.loadChild(child, childId, subIds, params);
 					when(subLoadDeferred, function(){
 						loadChildDeferred.resolve();
 					},
@@ -135,7 +138,7 @@ function(lang, declare, on, Deferred, when, Controller, View){
 			function(){
 				loadChildDeferred.reject("load child '"+childId+"' error.")
 			});
-			return loadChildDeferred.promise; //dojo.Deferred promise
+			return loadChildDeferred.promise; // dojo/Deferred.promise
 		}
 	});
 });

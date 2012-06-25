@@ -1,10 +1,12 @@
-define("dojo/cldr/monetary", ["../_base/kernel", "../_base/lang"], function(dojo, lang) {
-	// module:
-	//		dojo/cldr/monetary
+define("dojo/cldr/monetary", ["../_base/kernel", "../_base/lang"], function(dojo, lang){
+
+// module:
+//		dojo/cldr/monetary
+
+var monetary = {
 	// summary:
 	//		TODOC
-
-var monetary = {};
+};
 lang.setObject("dojo.cldr.monetary", monetary);
 
 monetary.getData = function(/*String*/ code){

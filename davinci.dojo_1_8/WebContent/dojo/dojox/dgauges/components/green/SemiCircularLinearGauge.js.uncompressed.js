@@ -11,19 +11,17 @@ define("dojox/dgauges/components/green/SemiCircularLinearGauge", [
 		"../DefaultPropertiesMixin"
 	], 
 	function(lang, declare, Color, utils, CircularGauge, LinearScaler, CircularScale, CircularValueIndicator, CircularRangeIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	 var CircularGauge = dojox.dgauges.CircularGauge;
-	 =====*/
-
 		return declare("dojox.dgauges.components.green.SemiCircularLinearGauge", [CircularGauge, DefaultPropertiesMixin], {
-			//	borderColor:
+			// summary:
+			//		A semi circular gauge widget.
+
+			// borderColor: Object|Array|int
 			//		The border color. Default is "#323232".
 			borderColor: [50,50,50],
-			//	fillColor:
+			// fillColor: Object|Array|int
 			//		The fill color. Default is "#6DB713".
 			fillColor: [109,183,19],
-			//	indicatorColor:
+			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#000000".
 			indicatorColor: [0,0,0],
 			constructor: function(args, node){
@@ -62,6 +60,12 @@ define("dojox/dgauges/components/green/SemiCircularLinearGauge", [
 			},
 
 			drawBackground: function(g){
+				// summary:
+				//		Draws the background shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the background. 
+				// tags:
+				//		protected
 				var lighterFillColor = utils.brightness(new Color(this.fillColor), 100);
 				g.createPath({
 					path: "M260.7431 100.826 C260.7431 172.7911 202.3367 200.1975 130.3716 200.1975 C58.4065 200.1975 -0 172.7911 -0 100.826 C-0 28.8609 58.4065 0.4545 130.3716 0.4545 C202.3367 0.4545 260.7431 28.8609 260.7431 100.826 Z"
@@ -108,6 +112,12 @@ define("dojox/dgauges/components/green/SemiCircularLinearGauge", [
 			},
 
 			drawForeground: function(g){
+				// summary:
+				//		Draws the foreground shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the foreground. 
+				// tags:
+				//		protected
 				var g1 = g.createGroup();
 				g1.createEllipse({
 					cx: 131,

@@ -1,14 +1,10 @@
 define("dojox/dgauges/CircularGauge", ["dojo/_base/declare", "dojo/dom-geometry", "dojox/gfx", "./GaugeBase"], function(declare, domGeom, gfx, GaugeBase){
-
-    /*=====
-     var GaugeBase = dojox.dgauges.GaugeBase;
-     =====*/
-
 	return declare("dojox.dgauges.CircularGauge", GaugeBase, {
-		//	summary:
+		// summary:
 		//		The base class for circular gauges.
 		//		You can create custom circular or semi-circular gauges by extending this class.
 		//		See dojox.dgauges.components.default.CircularLinearGauge.js for an example of circular gauge.
+		
 		_transformProperties: null,
 		
 		refreshRendering: function(){
@@ -47,6 +43,10 @@ define("dojox/dgauges/CircularGauge", ["dojo/_base/declare", "dojo/dom-geometry"
 		},
 		
 		_gaugeToPage: function(px, py){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(this._transformProperties){
 				var np = domGeom.position(this.domNode, true);
 				return {x: np.x + px * this._transformProperties.scale + this._transformProperties.tx, y: np.y + py * this._transformProperties.scale + this._transformProperties.ty};

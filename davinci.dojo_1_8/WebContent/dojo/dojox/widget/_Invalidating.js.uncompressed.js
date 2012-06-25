@@ -1,20 +1,16 @@
 define("dojox/widget/_Invalidating", ["dojo/_base/declare", "dojo/_base/lang", "dojo/Stateful"], 
 	function(declare, lang, Stateful){
 		
-	/*=====
-	var Stateful = dojo.Stateful;
-	=====*/
-	
 	return declare("dojox.widget._Invalidating", Stateful, {
 		// summary:
 		//		Base class for classes (usually widgets) that watch invalidated properties and delay the rendering
 		//		after these properties modifications to the next execution frame.
 		
-		//	invalidatingPoperties: String[]
+		// invalidatingPoperties: String[]
 		//		The list of properties to watch for to trigger invalidation. This list must be initialized in the
 		// 		constructor. Default value is null.
 		invalidatingProperties: null,
-		//	invalidRenderering: Boolean
+		// invalidRenderering: Boolean
 		//		Whether the rendering is invalid or not. This is a readonly information, one must call 
 		//		invalidateRendering to modify this flag. 
 		invalidRendering: false,
@@ -31,7 +27,7 @@ define("dojox/widget/_Invalidating", ["dojo/_base/declare", "dojo/_base/lang", "
 				}
 			}
 		},
-		addInvalidatingProperties: function(/*Array*/ properties){
+		addInvalidatingProperties: function(/*String[]*/ properties){
 			// summary:
 			//		Add properties to the watched properties to trigger invalidation. This method must be called in
 			// 		the constructor. It is typically used by subclasses of a _Invalidating class to add more properties
@@ -51,7 +47,7 @@ define("dojox/widget/_Invalidating", ["dojo/_base/declare", "dojo/_base/lang", "
 		validateRendering: function(){
 			// summary:
 			//		Immediately validate the rendering if it has been invalidated. You generally do not call that method yourself.
-			//	tags:
+			// tags:
 			//		protected
 			if(this.invalidRendering){
 				this.refreshRendering();

@@ -174,7 +174,7 @@ define("dijit/_base/focus", [
 			//		or removed focus altogether.)   In this case the selected text is not returned,
 			//		since it can't be accurately determined.
 			//
-			// menu: dijit._Widget or {domNode: DomNode} structure
+			// menu: dijit/_WidgetBase|{domNode: DomNode} structure
 			//		The button that was just pressed.  If focus has disappeared or moved
 			//		to this button, returns the previous focus.  In this case the bookmark
 			//		information is already lost, and null is returned.
@@ -192,7 +192,7 @@ define("dijit/_base/focus", [
 			}; // Object
 		},
 
-		// _activeStack: dijit._Widget[]
+		// _activeStack: dijit/_WidgetBase[]
 		//		List of currently active widgets (focused widget and it's ancestors)
 		_activeStack: [],
 
@@ -200,7 +200,7 @@ define("dijit/_base/focus", [
 			// summary:
 			//		Registers listeners on the specified iframe so that any click
 			//		or focus event on that iframe (or anything in it) is reported
-			//		as a focus/click event on the <iframe> itself.
+			//		as a focus/click event on the `<iframe>` itself.
 			// description:
 			//		Currently only used by editor.
 			// returns:

@@ -16,9 +16,9 @@ define("dojox/mobile/IconMenuItem", [
 		//		An item of IconMenu.
 		// description:
 		//		IconMenuItem represents a menu item of
-		//		dojox.mobile.MenuItem. This widget inherits from
-		//		dojox.mobile._ItemBase. Basic usage is same as the other
-		//		subclasses such as dojox.mobile.ListItem.
+		//		dojox/mobile/MenuItem. This widget inherits from
+		//		dojox/mobile/_ItemBase. Basic usage is same as the other
+		//		subclasses such as dojox/mobile/ListItem.
 
 		// closeOnAction: Boolean
 		//		Calls the hide() method of the parent widget, which is typically
@@ -30,9 +30,9 @@ define("dojox/mobile/IconMenuItem", [
 		tag: "li",
 
 		/* internal properties */
+		// Note these are overrides for similar properties defined in _ItemBase.
 		baseClass: "mblIconMenuItem",
 		selColor: "mblIconMenuItemSel",
-
 		_selStartMethod: "touch",
 		_selEndMethod: "touch",
 
@@ -98,7 +98,7 @@ define("dojox/mobile/IconMenuItem", [
 
 		onClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks.
 			// tags:
 			//		callback
 		},
@@ -106,6 +106,8 @@ define("dojox/mobile/IconMenuItem", [
 		_setSelectedAttr: function(/*Boolean*/selected){
 			// summary:
 			//		Makes this widget in the selected or unselected state.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			domClass.toggle(this.domNode, this.selColor, selected);
 		}

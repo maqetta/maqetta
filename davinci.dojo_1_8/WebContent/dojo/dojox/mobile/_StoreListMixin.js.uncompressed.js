@@ -9,25 +9,26 @@ define("dojox/mobile/_StoreListMixin", [
 	//		dojox/mobile/_StoreListMixin
 	// summary:
 	//		Mixin for widgets to generate the list items corresponding to the
-	//		dojo.store data provider object.
+	//		dojo/store data provider object.
 
 	return declare("dojox.mobile._StoreListMixin", StoreMixin, {
 		// summary:
 		//		Mixin for widgets to generate the list items corresponding to
-		//		the dojo.store data provider object.
+		//		the dojo/store data provider object.
 		// description:
+		//		Mixin for widgets to generate the list items corresponding to
+		//		the dojo/store data provider object.
 		//		By mixing this class into the widgets, the list item nodes are
 		//		generated as the child nodes of the widget and automatically
-		//		re-generated whenever the corresponding data items are modified.
+		//		regenerated whenever the corresponding data items are modified.
 
 		// append: Boolean
 		//		If true, refresh() does not clear the existing items.
 		append: false,
 
 		// itemMap: Object
-		//		An optional parameter mapping field names from the store to ItemList name.
-		// example:
-		// |	itemMap:{text:'label', profile_image_url:'icon' }
+		//		An optional parameter mapping field names from the store to ItemList names.
+		//		Example: itemMap:{text:'label', profile_image_url:'icon'}
 		itemMap: null,
 
 		buildRendering: function(){
@@ -71,18 +72,18 @@ define("dojox/mobile/_StoreListMixin", [
 
 		onComplete: function(/*Array*/items){
 			// summary:
-			//		An handler that is called after the fetch completes.
+			//		A handler that is called after the fetch completes.
 			this.generateList(items);
 		},
 
-		onError: function(/*Object*/errorData){
+		onError: function(/*Object*/ /*===== errorData =====*/){
 			// summary:
 			//		An error handler.
 		},
 
 		onUpdate: function(/*Object*/item, /*Number*/insertedInto){
 			// summary:
-			//		Add a new item or update an existing item.
+			//		Adds a new item or updates an existing item.
 			if(insertedInto === this.getChildren().length){
 				this.addChild(this.createListItem(item)); // add a new ListItem
 			}else{
@@ -92,7 +93,7 @@ define("dojox/mobile/_StoreListMixin", [
 
 		onDelete: function(/*Object*/item, /*Number*/removedFrom){
 			// summary:
-			//		Delete an existing item.
+			//		Deletes an existing item.
 			this.getChildren()[removedFrom].destroyRecursive();
 		}
 	});

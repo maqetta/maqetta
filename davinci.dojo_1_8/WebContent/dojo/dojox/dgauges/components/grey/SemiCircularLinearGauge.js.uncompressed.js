@@ -11,19 +11,17 @@ define("dojox/dgauges/components/grey/SemiCircularLinearGauge", [
 		"../DefaultPropertiesMixin"
 	], 
 	function(lang, declare, Color, utils, CircularGauge, LinearScaler, CircularScale, CircularValueIndicator, CircularRangeIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	 var CircularGauge = dojox.dgauges.CircularGauge;
-	 =====*/
-
 		return declare("dojox.dgauges.components.grey.SemiCircularLinearGauge", [CircularGauge, DefaultPropertiesMixin], {
-			//	borderColor:
+			// summary:
+			//		A semi circular gauge widget.
+
+			// borderColor: Object|Array|int
 			//		The border color. Default is "#9498A1".
 			borderColor: [148,152,161],
-			//	fillColor:
+			// fillColor: Object|Array|int
 			//		The background color. Default is "#9498A1".
 			fillColor: [148,152,161],
-			//	indicatorColor:
+			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#3F3F3F".
 			indicatorColor: [63,63,63],
 			constructor: function(args, node){
@@ -64,6 +62,12 @@ define("dojox/dgauges/components/grey/SemiCircularLinearGauge", [
 			},
 
 			drawBackground: function(g){
+				// summary:
+				//		Draws the background shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the background. 
+				// tags:
+				//		protected
 				g.createPath({
 					path: "M116.4449 0.014 C82.013 -0 48.0666 7.3389 14.6499 22.4862 C6.1025 25.6372 0 33.8658 0 43.5028 C0 49.8823 2.677 55.6345 6.9637 59.713 L99.9834 180.9853 C99.9859 180.9893 99.9914 180.9917 99.9939 180.9957 C103.9488 187.329 110.9778 191.5406 118.9895 191.5406 C126.8965 191.5406 133.8563 187.4321 137.8385 181.2366 C137.8426 181.2301 137.8448 181.222 137.849 181.2157 L231.3295 59.4197 C235.4368 55.3611 237.9789 49.7288 237.9789 43.5028 C237.9789 33.7053 231.6713 25.3703 222.8998 22.3395 C186.9226 7.6322 151.4291 0.0282 116.4449 0.014 Z"
 				}).setFill(this.borderColor);
@@ -96,6 +100,12 @@ define("dojox/dgauges/components/grey/SemiCircularLinearGauge", [
 			},
 
 			drawForeground: function(g){
+				// summary:
+				//		Draws the foreground shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the foreground. 
+				// tags:
+				//		protected
 				g.createEllipse({
 					cx: 118.80001,
 					cy: 172.81399,

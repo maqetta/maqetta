@@ -13,9 +13,19 @@ define("dojox/mobile/GridLayout", [
 		cols: 0,
 
 		/* internal properties */
+		
+		// childItemClass: String
+		//		The name of the CSS class of grid items.
 		childItemClass: "mblGridItem",
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblGridLayout",
+		
+		// _tags: [private] String
 		_tags: "div",
+		
+		// _createTerminator: [private] Boolean
 		_createTerminator: true
 	});
 });

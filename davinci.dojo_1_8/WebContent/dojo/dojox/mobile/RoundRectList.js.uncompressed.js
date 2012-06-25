@@ -20,8 +20,7 @@ define("dojox/mobile/RoundRectList", [
 		//		A rounded rectangle list.
 		// description:
 		//		RoundRectList is a rounded rectangle list, which can be used to
-		//		display a group of items. Each item must be
-		//		dojox.mobile.ListItem.
+		//		display a group of items. Each item must be a dojox/mobile/ListItem.
 
 		// transition: String
 		//		The default animated transition effect for child items.
@@ -53,15 +52,20 @@ define("dojox/mobile/RoundRectList", [
 		syncWithViews: false,
 
 		// editable: Boolean
-		//		If true, the list can be re-ordered.
+		//		If true, the list can be reordered.
 		editable: false,
 
 		// tag: String
 		//		A name of html tag to create as domNode.
 		tag: "ul",
 
-		/* internal properties */	
+		/* internal properties */
+		// editableMixinClass: String
+		//		The name of the mixin class.
 		editableMixinClass: "dojox/mobile/_EditableListMixin",
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblRoundRectList",
 
 		buildRendering: function(){
@@ -96,7 +100,7 @@ define("dojox/mobile/RoundRectList", [
 			});
 		},
 
-		onCheckStateChanged: function(/*Widget*/listItem, /*String*/newState){
+		onCheckStateChanged: function(/*Widget*//*===== listItem, =====*/ /*String*//*===== newState =====*/){
 			// summary:
 			//		Stub function to connect to from your application.
 			// description:
@@ -104,6 +108,8 @@ define("dojox/mobile/RoundRectList", [
 		},
 
 		_setStatefulAttr: function(stateful){
+			// tags:
+			//		private
 			this._set("stateful", stateful);
 			this.selectOne = stateful;
 			array.forEach(this.getChildren(), function(child){
@@ -111,7 +117,7 @@ define("dojox/mobile/RoundRectList", [
 			});
 		},
 
-		deselectItem: function(/*ListItem*/item){
+		deselectItem: function(/*dojox/mobile/ListItem*/item){
 			// summary:
 			//		Deselects the given item.
 			item.set("selected", false);

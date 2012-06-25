@@ -7,15 +7,15 @@ define("dojox/mvc/EditStoreRefListController", [
 ], function(declare, lang, getPlainValue, EditStoreRefController, ListController){
 	return declare("dojox.mvc.EditStoreRefListController", [EditStoreRefController, ListController], {
 		// summary:
-		//		A child class of dojox.mvc.EditStoreRefController, mixed with ListController.
+		//		A child class of dojox/mvc/EditStoreRefController, mixed with ListController.
 		// description:
-		//		It supports Lists in addition to what dojox.mvc.EditStoreRefController does.
+		//		It supports Lists in addition to what dojox/mvc/EditStoreRefController does.
 		//		NOTE - If this class is used with a widget by data-dojo-mixins, make sure putting the widget in data-dojo-type and putting this class to data-dojo-mixins.
 		// example:
 		//		The check box refers to "value" property in the controller (with "ctrl" ID).
 		//		The controller provides the "value" property, from the data coming from data store ("store" property in the controller), using the first one in array.
 		//		Two seconds later, the check box changes from unchecked to checked.
-		//		The change is committed to the data store, which is reflected to dojo.store.Observable callback. 
+		//		The change is committed to the data store, which is reflected to dojo/store/Observable callback. 
 		// |		<html>
 		// |			<head>
 		// |				<script src="/path/to/dojo-toolkit/dojo/dojo.js" type="text/javascript" data-dojo-config="parseOnLoad: 0"></script>
@@ -40,9 +40,9 @@ define("dojox/mvc/EditStoreRefListController", [
 		// |			</head>
 		// |			<body>
 		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
-		// |				<span id="ctrl" data-dojo-type="dojox.mvc.EditStoreRefListController" 
+		// |				<span id="ctrl" data-dojo-type="dojox/mvc/EditStoreRefListController" 
 		// |				 data-dojo-props="store: store, cursorIndex: 0"></span>
-		// |				<input id="check" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: at('widget:ctrl', 'value')">
+		// |				<input id="check" type="checkbox" data-dojo-type="dijit/form/CheckBox" data-dojo-props="checked: at('widget:ctrl', 'value')">
 		// |			</body>
 		// |		</html>
 

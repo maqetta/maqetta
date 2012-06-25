@@ -26,7 +26,7 @@ define("dojox/mobile/Tooltip", [
 			this.innerArrow = domConstruct.create("div", {"class":"mblTooltipInnerArrow"}, this.anchor);
 		},
 
-		show: function(/*DomNode*/ aroundNode, positions){
+		show: function(/*DomNode*/ aroundNode, /*Array*/positions){
 			// summary:
 			//		Pop up the tooltip and point to aroundNode using the best position
 			// positions:

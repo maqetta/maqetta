@@ -3,23 +3,20 @@ define("dojox/mvc/Bind", [
 	"dojo/_base/array"
 ], function(lang, array){
 	var mvc = lang.getObject("dojox.mvc", true);
-	/*=====
-		mvc = dojox.mvc;
-	=====*/
 
 	return lang.mixin(mvc, {
-		bind: function(/*dojo.Stateful*/ source, /*String*/ sourceProp,
-					/*dojo.Stateful*/ target, /*String*/ targetProp,
+		bind: function(/*dojo/Stateful*/ source, /*String*/ sourceProp,
+					/*dojo/Stateful*/ target, /*String*/ targetProp,
 					/*Function?*/ func, /*Boolean?*/ bindOnlyIfUnequal){
 			// summary:
 			//		Bind the specified property of the target to the specified
 			//		property of the source with the supplied transformation.
 			//	source:
-			//		The source dojo.Stateful object for the bind.
+			//		The source dojo/Stateful object for the bind.
 			//	sourceProp:
 			//		The name of the source's property whose change triggers the bind.
 			//	target:
-			//		The target dojo.Stateful object for the bind whose
+			//		The target dojo/Stateful object for the bind whose
 			//		property will be updated with the result of the function.
 			//	targetProp:
 			//		The name of the target's property to be updated with the
@@ -39,13 +36,13 @@ define("dojox/mvc/Bind", [
 			});
 		},
 
-		bindInputs: function(/*dojo.Stateful[]*/ sourceBindArray, /*Function*/ func){
+		bindInputs: function(/*dojo/Stateful[]*/ sourceBindArray, /*Function*/ func){
 			// summary:
 			//		Bind the values at the sources specified in the first argument
 			//		array such that a composing function in the second argument is
 			//		called when any of the values changes.
 			//	sourceBindArray:
-			//		The array of dojo.Stateful objects to watch values changes on.
+			//		The array of dojo/Stateful objects to watch values changes on.
 			//	func:
 			//		The composing function that is called when any of the source
 			//		values changes.

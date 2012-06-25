@@ -1,75 +1,75 @@
 define("dojox/av/_Media", ['dojo'],function(dojo){
 
-dojo.experimental("dojox.av.FLVideo");
+	dojo.experimental("dojox.av.FLVideo");
 
 	return dojo.declare("dojox.av._Media", null, {
 		// summary:
 		//		Used as a mixin for dojox and AIR media
-		//	description:
+		// description:
 		//		Calculates the current status of the playing media and fires
 		//		the appropriate events.
-		//
+
 		mediaUrl:"",
-		//
+
 		// initialVolume: Float?
 		//		The initial volume setting of the player. Acccepts between 0 and 1.
 		initialVolume:1,
-		//
-		//  autoPlay:Boolean?
+
+		// autoPlay:Boolean?
 		//		Whether the video automatically plays on load or not.
 		autoPlay: false,
-		//
-		//	bufferTime: Number?
+
+		// bufferTime: Number?
 		//		Time in milliseconds that the video should be loaded before it will
 		//		play. May pause and resume to build up buffer. Prevents stuttering.
-		//	Note:
-		//		Older FLVs, without a duration, cannot be buffered.
-		bufferTime: 2000,
 		//
-		//	minBufferTime: Number
-		//		Time in milliseconds bwteen the playhead time and loaded time that
+		//		Note: Older FLVs, without a duration, cannot be buffered.
+		bufferTime: 2000,
+
+		// minBufferTime: Number
+		//		Time in milliseconds between the playhead time and loaded time that
 		//		will trigger the buffer. When buffer is triggered, video will pause
 		//		until the bufferTime amount is buffered.
 		//		Note: Should be a small number, greater than zero.
 		minBufferTime:300,
-		//
+
 		// updateTime: Number
 		//		How often, in milliseconds to get an update of the video position.
 		updateTime: 100,
-		//
+
 		//  id: String?
 		//		The id of this widget and the id of the SWF movie.
 		id:"",
-		//
+
 		// isDebug: Boolean?
 		//		Setting to true tells the SWF to output log messages to Firebug.
 		isDebug: false,
-		//
+
 		// percentDownloaded: read-only-Number
 		//		The percentage the media has downloaded; from 0-100
 		percentDownloaded:0,
-		//
+
 		// _flashObject: read-only-Object
 		//	The dojox.embed object
 		_flashObject:null,
-		//
+
 		// flashMedia: read-only-SWF
 		//		The SWF object. Methods are passed to this.
 		flashMedia:null,
-		//
+
 		// allowScriptAccess: String
 		//		Whether the SWF can access the container JS
 		allowScriptAccess:"always",
-		//
+
 		// allowNetworking: String
 		//		Whether SWF is restricted to a domain
 		allowNetworking: "all",
-		//
-		//	wmode: String
+
+		// wmode: String
 		//		The render type of the SWF
 		wmode: "transparent",
-		//
-		//	allowFullScreen: Boolean
+
+		// allowFullScreen: Boolean
 		//		Whether to allow the SWF to go to fullscreen
 		allowFullScreen:true,
 	
@@ -313,9 +313,8 @@ dojo.experimental("dojox.av.FLVideo");
 		_normalizeUrl: function(_url){
 			// summary:
 			//		Checks that path is relative to HTML file or
-			//		convertes it to an absolute path.
-			//
-	
+			//		converts it to an absolute path.
+
 			console.log("  url:", _url);
 	
 			if(_url && (_url.toLowerCase().indexOf("http")<0 || _url.indexOf("/") == 0)){

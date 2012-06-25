@@ -36,7 +36,8 @@ define("dojox/calendar/Touch", ["dojo/_base/array", "dojo/_base/lang", "dojo/_ba
 		},
 		
 		_onRendererTouchStart: function(e, renderer){
-			
+			// tags:
+			//		private
 			var p = this._edProps;	
 			
 			if(p && p.endEditingTimer){
@@ -152,7 +153,8 @@ define("dojox/calendar/Touch", ["dojo/_base/array", "dojo/_base/lang", "dojo/_ba
 		},
 		
 		_docEditingTouchMoveHandler: function(e){
-			
+			// tags:
+			//		private
 			var p = this._edProps;
 										
 			// When the screen is touched, it can dispatch move events if the 
@@ -227,7 +229,8 @@ define("dojox/calendar/Touch", ["dojo/_base/array", "dojo/_base/lang", "dojo/_ba
 		autoScrollTouchMargin: 10,
 		
 		_docEditingTouchEndHandler: function(e){
-			
+			// tags:
+			//		private
 			event.stop(e);
 			
 			var p = this._edProps;
@@ -395,6 +398,8 @@ define("dojox/calendar/Touch", ["dojo/_base/array", "dojo/_base/lang", "dojo/_ba
 			//		The render item.
 			// e: Event
 			//		The touch event.
+			// tags:
+			//		private
 			
 			var irs = this._getStartEndRenderers(item);
 										

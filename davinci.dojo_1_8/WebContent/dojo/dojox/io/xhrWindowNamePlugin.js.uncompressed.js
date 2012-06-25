@@ -13,9 +13,10 @@ dojox.io.xhrWindowNamePlugin = function(/*String*/url, /*Function?*/httpAdapter,
 	// summary:
 	//		Adds the windowName transport as an XHR plugin for the given site. See
 	//		dojox.io.windowName for more information on the transport.
-	//	url:
+	// url:
 	//		Url prefix of the site which can handle windowName requests.
-	// 	httpAdapter: This allows for adapting HTTP requests that could not otherwise be
+	// httpAdapter:
+	//		This allows for adapting HTTP requests that could not otherwise be
 	// 		sent with window.name, so you can use a convention for headers and PUT/DELETE methods.
 	xhrPlugins.register(
 		"windowName",

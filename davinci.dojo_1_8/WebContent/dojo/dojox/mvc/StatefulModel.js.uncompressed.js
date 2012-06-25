@@ -8,14 +8,11 @@ define("dojox/mvc/StatefulModel", [
 	"./getPlainValue",
 	"./StatefulArray"
 ], function(kernel, lang, array, declare, Stateful, getStateful, getPlainValue, StatefulArray){
-	/*=====
-		declare = dojo.declare;
-		Stateful = dojo.Stateful;
-	=====*/
 
 	var StatefulModel = declare("dojox.mvc.StatefulModel", [Stateful], {
 		// summary:
-		//		The first-class native JavaScript data model based on dojo.Stateful
+		//		Deprecated.  Use dojox/mvc/getStateful, dojox/mvc/getPlainValue, dojox/mvc/StatefulArray or one of the dojox/mvc/*RefControllers instead.
+		//		The first-class native JavaScript data model based on dojo/Stateful
 		//		that wraps any data structure(s) that may be relevant for a view,
 		//		a view portion, a dijit or any custom view layer component.
 		//
@@ -35,19 +32,19 @@ define("dojox/mvc/StatefulModel", [
 		//		|		]
 		//		|	};
 		//		|
-		//		|	var model = dojox.mvc.newStatefulModel({ data : struct });
+		//		|	var model = dojox/mvc.newStatefulModel({ data : struct });
 		//
 		//		The simple example above shows an inline plain JavaScript object
 		//		illustrating the data structure to prime the model with, however
 		//		the underlying data may be made available by other means, such as
-		//		from the results of a dojo.store or dojo.data query.
+		//		from the results of a dojo/store or dojo/data query.
 		//
 		//		To deal with stores providing immediate values or Promises, a
 		//		factory method for model instantiation is provided. This method
 		//		will either return an immediate model or a model Promise depending
 		//		on the nature of the store.
 		//
-		//		|	var model = dojox.mvc.newStatefulModel({ store: someStore });
+		//		|	var model = mvc.newStatefulModel({ store: someStore });
 		//
 		//		The created data model has the following properties:
 		//
@@ -62,16 +59,16 @@ define("dojox/mvc/StatefulModel", [
 		//			  value of one in the view will cause the data model to issue an
 		//			  update to the other containing the new value.
 		//
-		//		- The data model internally creates a tree of dojo.Stateful
+		//		- The data model internally creates a tree of dojo/Stateful
 		//		  objects that matches the input, which is effectively a plain
 		//		  JavaScript object i.e. "pure data". This tree allows dijits or
 		//		  other view components to bind to any node within the data model.
 		//		  Typically, dijits with simple values bind to leaf nodes of the
 		//		  datamodel, whereas containers bind to internal nodes of the
 		//		  datamodel. For example, a datamodel created using the object below
-		//		  will generate the dojo.Stateful tree as shown:
+		//		  will generate the dojo/Stateful tree as shown:
 		//
-		//		|	var model = dojox.mvc.newStatefulModel({ data : {
+		//		|	var model = dojox/mvc/newStatefulModel({ data : {
 		//		|		prop1	: "foo",
 		//		|		prop2	: {
 		//		|			leaf1	: "bar",
@@ -79,7 +76,7 @@ define("dojox/mvc/StatefulModel", [
 		//		|		}
 		//		|	}});
 		//		|
-		//		|	// The created dojo.Stateful tree is illustrated below (all nodes are dojo.Stateful objects)
+		//		|	// The created dojo/Stateful tree is illustrated below (all nodes are dojo/Stateful objects)
 		//		|	//
 		//		|	//	                o  (root node)
 		//		|	//	               / \
@@ -91,7 +88,7 @@ define("dojox/mvc/StatefulModel", [
 		//		|	// node is accessed using the expression "model.prop1", the leaf2 node is accessed using
 		//		|	// the expression "model.prop2.leaf2" and so on.
 		//
-		//		- Each of the dojo.Stateful nodes in the model may store data as well
+		//		- Each of the dojo/Stateful nodes in the model may store data as well
 		//		  as associated "meta-data", which includes things such as whether
 		//		  the data is required or readOnly etc. This meta-data differs from
 		//		  that maintained by, for example, an individual dijit in that this
@@ -99,7 +96,7 @@ define("dojox/mvc/StatefulModel", [
 		//		  datamodel-level constraints that span multiple dijits or even
 		//		  additional criteria such as server-side computations.
 		//
-		//		- When the model is backed by a dojo.store or dojo.data query, the
+		//		- When the model is backed by a dojo/store or dojo/data query, the
 		//		  client-side updates can be persisted once the client is ready to
 		//		  "submit" the changes (which may include both value changes or
 		//		  structural changes - adds/deletes). The datamodel allows control
@@ -120,40 +117,24 @@ define("dojox/mvc/StatefulModel", [
 		//		To illustrate, the following is the "Hello World" of such data-bound
 		//		widget examples:
 		//
-		//		|	<script>
-		//		|		dojo.require("dojox.mvc");
-		//		|		dojo.require("dojo.parser");
-		//		|		var model;
-		//		|		dojo.addOnLoad(function(){
-		//		|			model = dojox.mvc.newStatefulModel({ data : {
-		//		|				hello : "Hello World"
-		//		|			}});
-		//		|			dojo.parser.parse();
-		//		|		}
-		//		|	</script>
-		//		|
-		//		|	<input id="helloInput" dojoType="dijit.form.TextBox"
-		//		|		ref="model.hello">
-		//
-		//		or
 		//
 		//		|	<script>
 		//		|		var model;
-		//		|		require(["dojox/mvc", "dojo/parser"], function(dxmvc, parser){
-		//		|			model = dojox.mvc.newStatefulModel({ data : {
+		//		|		require(["dojox/mvc", "dojo/parser"], function(mvc, parser){
+		//		|			model = mvc.newStatefulModel({ data : {
 		//		|				hello : "Hello World"
 		//		|			}});
 		//		|			parser.parse();
 		//		|		});
 		//		|	</script>
 		//		|
-		//		|	<input id="helloInput" data-dojo-type="dijit.form.TextBox"
+		//		|	<input id="helloInput" data-dojo-type="dijit/form/TextBox"
 		//		|		data-dojo-props="ref: 'model.hello'">
 		//
 		//		Such data binding awareness for dijits is added by extending the
-		//		dijit._WidgetBase class to include data binding capabilities
-		//		provided by dojox.mvc._DataBindingMixin, and this class declares a
-		//		dependency on dojox.mvc._DataBindingMixin.
+		//		dijit/_WidgetBase class to include data binding capabilities
+		//		provided by dojox/mvc/_DataBindingMixin, and this class declares a
+		//		dependency on dojox/mvc/_DataBindingMixin.
 		//
 		//		The presence of a data model and the data-binding capabilities
 		//		outlined above support the flexible development of a number of MVC
@@ -167,7 +148,7 @@ define("dojox/mvc/StatefulModel", [
 		//		Either data or store property must be provided.
 		data: null,
 
-		// store: dojo.store.DataStore
+		// store: dojo/store/DataStore
 		//		The data store from where to retrieve initial data for this model.
 		//		An optional query may also be provided along with this store.
 		//		Either data or store property must be provided.
@@ -200,7 +181,7 @@ define("dojox/mvc/StatefulModel", [
 			}
 		},
 
-		commit: function(/*"dojo.store.DataStore?"*/ store){
+		commit: function(/*"dojo/store/DataStore?"*/ store){
 			// summary:
 			//		Commits this data model:
 			//		- Saves the current state such that a subsequent reset will not
@@ -208,8 +189,8 @@ define("dojox/mvc/StatefulModel", [
 			//		- Persists client-side changes to the data store, if a store
 			//		  has been supplied as a parameter or at instantiation.
 			//	store:
-			//		dojo.store.DataStore
-			//		Optional dojo.store.DataStore to use for this commit, if none
+			//		dojo/store/DataStore
+			//		Optional dojo/store/DataStore to use for this commit, if none
 			//		provided but one was provided at instantiation time, that store
 			//		will be used instead.
 			this._commit();
@@ -240,7 +221,7 @@ define("dojox/mvc/StatefulModel", [
 			//		How many elements to be removed at idx.
 			// varargs: Anything[]
 			//		The elements to be added to idx.
-			// returns: dojox.mvc.StatefulArray
+			// returns: dojox/mvc/StatefulArray
 			//		The removed elements.
 
 			var a = (new StatefulArray([])).splice.apply(this, lang._toArray(arguments));
@@ -250,18 +231,18 @@ define("dojox/mvc/StatefulModel", [
 			return a;
 		},
 
-		add: function(/*String*/ name, /*dojo.Stateful*/ stateful){
+		add: function(/*String*/ name, /*dojo/Stateful*/ stateful){
 			// summary:
-			//		Adds a dojo.Stateful tree represented by the given
-			//		dojox.mvc.StatefulModel at the given property name.
+			//		Adds a dojo/Stateful tree represented by the given
+			//		dojox/mvc/StatefulModel at the given property name.
 			//	name:
 			//		The property name to use whose value will become the given
-			//		dijit.Stateful tree.
+			//		dijit/Stateful tree.
 			//	stateful:
-			//		The dojox.mvc.StatefulModel to insert.
+			//		The dojox/mvc/StatefulModel to insert.
 			// description:
 			//		In case of arrays, the property names are indices passed
-			//		as Strings. An addition of such a dojo.Stateful node
+			//		as Strings. An addition of such a dojo/Stateful node
 			//		results in right-shifting any trailing sibling nodes.
 
 			if(typeof this.get("length") === "number" && /^[0-9]+$/.test(name.toString())){
@@ -276,12 +257,12 @@ define("dojox/mvc/StatefulModel", [
 
 		remove: function(/*String*/ name){
 			// summary:
-			//		Removes the dojo.Stateful tree at the given property name.
+			//		Removes the dojo/Stateful tree at the given property name.
 			//	name:
 			//		The property name from where the tree will be removed.
 			// description:
 			//		In case of arrays, the property names are indices passed
-			//		as Strings. A removal of such a dojo.Stateful node
+			//		as Strings. A removal of such a dojo/Stateful node
 			//		results in left-shifting any trailing sibling nodes.
 			if(typeof this.get("length") === "number" && /^[0-9]+$/.test(name.toString())){
 				if(!this.get(name)){
@@ -326,11 +307,11 @@ define("dojox/mvc/StatefulModel", [
 			// summary:
 			//		Instantiates a new data model that view components may bind to.
 			//		This is a private constructor, use the factory method
-			//		instead: dojox.mvc.newStatefulModel(args)
+			//		instead: dojox/mvc/newStatefulModel(args)
 			//	args:
 			//		The mixin properties.
 			// description:
-			//		Creates a tree of dojo.Stateful objects matching the initial
+			//		Creates a tree of dojo/Stateful objects matching the initial
 			//		data structure passed as input. The mixin property "data" is
 			//		used to provide a plain JavaScript object directly representing
 			//		the data structure.
@@ -339,11 +320,11 @@ define("dojox/mvc/StatefulModel", [
 			var data = (args && "data" in args) ? args.data : this.data; 
 
 			if(data != null){
-				kernel.deprecated("To create dojox.mvc.StatefulModel from data, dojox.mvc.getStateful() should be used.");
+				kernel.deprecated("To create dojox/mvc/StatefulModel from data, dojox/mvc/getStateful() should be used.");
 				data = getStateful(data, StatefulModel.getStatefulOptions);
 				if(lang.isArray(data)){
-					// Some consumers of dojox.mvc.StatefulModel inherits it via dojo.declare(), where we cannot use array inheritance technique
-					// (dojo.declare() does not support return value in constructor)
+					// Some consumers of dojox/mvc/StatefulModel inherits it via dojo/declare(), where we cannot use array inheritance technique
+					// (dojo/declare() does not support return value in constructor)
 					this.length = 0;
 					[].splice.apply(this, data);
 				}else if(lang.isObject(data)){
@@ -374,13 +355,13 @@ define("dojox/mvc/StatefulModel", [
 			this.data = this.toPlainObject();
 		},
 
-		_saveToStore: function(/*"dojo.store.DataStore"*/ store){
+		_saveToStore: function(/*"dojo/store/DataStore"*/ store){
 			// summary:
 			//		Commit the current values to the data store:
 			//		- remove() any deleted entries
 			//		- put() any new or updated entries
 			//	store:
-			//		dojo.store.DataStore to use for this commit.
+			//		dojo/store/DataStore to use for this commit.
 			// tags:
 			//		private
 			if(this._removals){
@@ -439,7 +420,7 @@ define("dojox/mvc/StatefulModel", [
 				for(var s in o){
 					object.set(s, getStateful(o[s], this));
 				}
-				return object; // dojox.mvc.StatefulModel
+				return object; // dojox/mvc/StatefulModel
 			},
 
 			getStatefulValue: function(/*Anything*/ v){
@@ -476,11 +457,11 @@ define("dojox/mvc/StatefulModel", [
 				return "value";
 			},
 
-			getPlainArray: function(/*dojox.mvc.StatefulArray*/ a){
+			getPlainArray: function(/*dojox/mvc/StatefulArray*/ a){
 				return array.map(a, function(item){ return getPlainValue(item, this); }, this);
 			},
 
-			getPlainObject: function(/*dojox.mvc.StatefulModel*/ o){
+			getPlainObject: function(/*dojox/mvc/StatefulModel*/ o){
 				var plain = {};
 				for(var s in o){
 					if(s == "_watchCallbacks" || (s in StatefulModel.prototype)){ continue; }

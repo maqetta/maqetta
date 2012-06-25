@@ -9,8 +9,6 @@ define("dijit/form/_ExpandingTextAreaMixin", [
 
 	// module:
 	//		dijit/form/_ExpandingTextAreaMixin
-	// summary:
-	//		Mixin for textarea widgets to add auto-expanding capability
 
 	// feature detection, true for mozilla and webkit
 	has.add("textarea-needs-help-shrinking", function(){

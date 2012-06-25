@@ -13,9 +13,6 @@ define("dijit/Declaration", [
 
 	// module:
 	//		dijit/Declaration
-	// summary:
-	//		The Declaration widget allows a developer to declare new widget
-	//		classes directly from a snippet of markup.
 
 	return declare("dijit.Declaration", _Widget, {
 		// summary:

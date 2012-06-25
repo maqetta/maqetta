@@ -11,13 +11,6 @@ define("dijit/_editor/plugins/AlwaysShowToolbar", [
 
 // module:
 //		dijit/_editor/plugins/AlwaysShowToolbar
-// summary:
-//		This plugin is required for Editors in auto-expand mode.
-//		It handles the auto-expansion as the user adds/deletes text,
-//		and keeps the editor's toolbar visible even when the top of the editor
-//		has scrolled off the top of the viewport (usually when editing a long
-//		document).
-
 
 return declare("dijit._editor.plugins.AlwaysShowToolbar", _Plugin, {
 	// summary:
@@ -102,7 +95,7 @@ return declare("dijit._editor.plugins.AlwaysShowToolbar", _Plugin, {
 
 	globalOnScrollHandler: function(){
 		// summary:
-		//		Handler for scroll events that bubbled up to <html>
+		//		Handler for scroll events that bubbled up to `<html>`
 		// tags:
 		//		private
 

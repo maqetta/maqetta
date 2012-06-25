@@ -1,17 +1,21 @@
-define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Promise", "../when"], function(dojo, config, lang, Promise, when){
+define("dojo/_base/Deferred", [
+	"./kernel",
+	"../Deferred",
+	"../promise/Promise",
+	"../has",
+	"./lang",
+	"../when"
+], function(dojo, NewDeferred, Promise, has, lang, when){
 	// module:
 	//		dojo/_base/Deferred
-	// summary:
-	//		Deprecated.   This module defines the legacy dojo/_base/Deferred API.
-	//		New code should use dojo/Deferred instead.
 
 	var mutator = function(){};
 	var freeze = Object.freeze || function(){};
 	// A deferred provides an API for creating and resolving a promise.
 	var Deferred = dojo.Deferred = function(/*Function?*/ canceller){
 		// summary:
-		//		Deferreds provide a generic means for encapsulating an asynchronous
-		//		operation and notifying users of the completion and result of the operation.
+		//		Deprecated.   This module defines the legacy dojo/_base/Deferred API.
+		//		New code should use dojo/Deferred instead.
 		// description:
 		//		The Deferred API is based on the concept of promises that provide a
 		//		generic interface into the eventual completion of an asynchronous action.
@@ -152,7 +156,7 @@ define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Pro
 		//		handle the asynchronous case.
 
 		var result, finished, isError, head, nextListener;
-		var promise = (this.promise = new Promise);
+		var promise = (this.promise = new Promise());
 
 		function complete(value){
 			if(finished){
@@ -170,7 +174,13 @@ define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Pro
 				if((mutated = (listener.progress == mutator))){ // assignment and check
 					finished = false;
 				}
+
 				var func = (isError ? listener.error : listener.resolved);
+				if( 0 ){
+					if(isError && NewDeferred.instrumentRejected){
+						NewDeferred.instrumentRejected(result, !!func);
+					}
+				}
 				if(func){
 					try{
 						var newResult = func(result);
@@ -211,6 +221,11 @@ define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Pro
 			//		Fulfills the Deferred instance as an error with the provided error
 			isError = true;
 			this.fired = 1;
+			if( 0 ){
+				if(NewDeferred.instrumentRejected && !nextListener){
+					NewDeferred.instrumentRejected(error, false);
+				}
+			}
 			complete(error);
 			this.results = [null, error];
 		};
@@ -283,7 +298,7 @@ define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Pro
 			return returnDeferred.promise; // Promise
 		};
 		var deferred = this;
-		promise.cancel = this.cancel = function (){
+		promise.cancel = this.cancel = function(){
 			// summary:
 			//		Cancels the asynchronous operation
 			if(!finished){
@@ -300,7 +315,7 @@ define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Pro
 		freeze(promise);
 	};
 	lang.extend(Deferred, {
-		addCallback: function (/*Function*/ callback){
+		addCallback: function(/*Function*/ callback){
 			// summary:
 			// 		Adds successful callback for this deferred instance.
 			// returns:
@@ -308,7 +323,7 @@ define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Pro
 			return this.addCallbacks(lang.hitch.apply(dojo, arguments));	// Deferred
 		},
 
-		addErrback: function (/*Function*/ errback){
+		addErrback: function(/*Function*/ errback){
 			// summary:
 			// 		Adds error callback for this deferred instance.
 			// returns:
@@ -316,7 +331,7 @@ define("dojo/_base/Deferred", ["./kernel", "./config", "./lang", "../promise/Pro
 			return this.addCallbacks(null, lang.hitch.apply(dojo, arguments));	// Deferred
 		},
 
-		addBoth: function (/*Function*/ callback){
+		addBoth: function(/*Function*/ callback){
 			// summary:
 			// 		Add handler as both successful callback and error callback for this deferred instance.
 			// returns:

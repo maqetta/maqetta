@@ -28,14 +28,14 @@ define("dojox/charting/plot2d/Bubble", ["dojo/_base/lang", "dojo/_base/declare",
 		constructor: function(chart, kwArgs){
 			// summary:
 			//		Create a plot of bubbles.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this plot belongs to.
 			// kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
 			//		Optional keyword arguments object to help define plot parameters.
 			this.opt = lang.clone(this.defaultParams);
-            du.updateWithObject(this.opt, kwArgs);
-            du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
-            this.series = [];
+			du.updateWithObject(this.opt, kwArgs);
+			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
+			this.series = [];
 			this.hAxis = this.opt.hAxis;
 			this.vAxis = this.opt.vAxis;
 			this.animate = this.opt.animate;
@@ -49,7 +49,7 @@ define("dojox/charting/plot2d/Bubble", ["dojo/_base/lang", "dojo/_base/declare",
 			//		An object in the form of { width, height }
 			// offsets: Object
 			//		An object of the form { l, r, t, b}.
-			// returns: dojox.charting.plot2d.Bubble
+			// returns: dojox/charting/plot2d/Bubble
 			//		A reference to this plot for functional chaining.
 			if(this.zoom && !this.isDataDirty()){
 				return this.performZoom(dim, offsets);
@@ -206,7 +206,7 @@ define("dojox/charting/plot2d/Bubble", ["dojo/_base/lang", "dojo/_base/declare",
 				run.dirty = false;
 			}
 			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.Bubble
+			return this;	//	dojox/charting/plot2d/Bubble
 		},
 		_animateBubble: function(shape, offset, size){
 			fx.animateTransform(lang.delegate({

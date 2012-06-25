@@ -37,6 +37,8 @@ define("dojox/mobile/Slider", [
 		//		A value of 0 means continuous (as much as allowed by pixel resolution).
 		step: 1,
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblSlider",
 
 		// flip: [const] Boolean
@@ -67,7 +69,9 @@ define("dojox/mobile/Slider", [
 
 		_setValueAttr: function(/*Number*/ value, /*Boolean?*/ priorityChange){
 			// summary:
-			//		Hook so set('value', value) works.
+			//		Hook such that set('value', value) works.
+			// tags:
+			//		private
 			value = Math.max(Math.min(value, this.max), this.min);
 			var fromPercent = (this.value - this.min) * 100 / (this.max - this.min);
 			this.valueNode.value = value;

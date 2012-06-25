@@ -5,4 +5,77 @@
 */
 
 //>>built
-define("dojo/request/node",["require","./util","./handlers"],function(_1,_2,_3){var _4=_1.nodeRequire("http"),_5=_1.nodeRequire("https"),_6=_1.nodeRequire("url"),_7;var _8={method:"GET",query:null,data:_7,headers:{}};function _9(_a,_b){var _c=_2.parseArgs(_a,_2.deepCreate(_8,_b));_a=_c.url;_b=_c.options;var _d=_2.deferred(_c,function(_e,_f){_f.clientRequest.abort();var err=_f.error;if(!err){err=new Error("request canceled");err.dojoType="cancel";}return err;});_a=_6.parse(_a);var _10=_c.requestOptions={host:_a.hostname,method:_b.method,port:_a.port==null?80:_a.port,headers:_b.headers};if(_a.path){_10.path=_a.path;}if(_b.user||_b.password){_10.auth=(_b.user||"")+":"+(_b.password||"");}var req=_c.clientRequest=(_a.protocol=="https:"?_5:_4).request(_10);req.on("response",function(_11){_c.clientResponse=_11;_c.status=_11.statusCode;var _12=[];_11.on("data",function(_13){_d.progress(_13.toString());_12.push(_13);});_11.on("end",function(){if(_14){clearTimeout(_14);}_c.text=_12.join("");_3(_c);_d.resolve(_c);});});req.on("error",function(e){_d.reject(e);});if(_b.data!=null){req.write(_b.data);}req.end();if(_b.timeout!=null){var _14=setTimeout(function(){_c.error=new Error("timeout exceeded");_c.error.dojoType="timeout";_d.cancel();},_b.timeout);}return _d.promise;};_2.addCommonMethods(_9);return _9;});
+define("dojo/request/node",["require","./util","./handlers","../errors/RequestTimeoutError","../node!http","../node!https","../node!url","../node!stream"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+var _9=_8.Stream,_a;
+var _b={method:"GET",query:null,data:_a,headers:{}};
+function _c(_d,_e){
+var _f=_2.parseArgs(_d,_2.deepCreate(_b,_e),_e&&_e.data instanceof _9);
+_d=_f.url;
+_e=_f.options;
+var def=_2.deferred(_f,function(dfd,_10){
+_10.clientRequest.abort();
+});
+_d=_7.parse(_d);
+var _11=_f.requestOptions={hostname:_d.hostname,port:_d.port,socketPath:_e.socketPath,method:_e.method,headers:_e.headers,agent:_e.agent,pfx:_e.pfx,key:_e.key,passphrase:_e.passphrase,cert:_e.cert,ca:_e.ca,ciphers:_e.ciphers,rejectUnauthorized:_e.rejectUnauthorized===false?false:true};
+if(_d.path){
+_11.path=_d.path;
+}
+if(_e.user||_e.password){
+_11.auth=(_e.user||"")+":"+(_e.password||"");
+}
+var req=_f.clientRequest=(_d.protocol==="https:"?_6:_5).request(_11);
+if(_e.socketOptions){
+if("timeout" in _e.socketOptions){
+req.setTimeout(_e.socketOptions.timeout);
+}
+if("noDelay" in _e.socketOptions){
+req.setNoDelay(_e.socketOptions.noDelay);
+}
+if("keepAlive" in _e.socketOptions){
+var _12=_e.socketOptions.keepAlive;
+req.setKeepAlive(_12>=0,_12||0);
+}
+}
+req.on("socket",function(){
+_f.hasSocket=true;
+def.progress(_f);
+});
+req.on("response",function(_13){
+_f.clientResponse=_13;
+_f.status=_13.statusCode;
+_f.getHeader=function(_14){
+return _13.headers[_14.toLowerCase()]||null;
+};
+var _15=[];
+_13.on("data",function(_16){
+_15.push(_16);
+});
+_13.on("end",function(){
+if(_17){
+clearTimeout(_17);
+}
+_f.text=_15.join("");
+_3(_f);
+def.resolve(_f);
+});
+});
+req.on("error",def.reject);
+if(_e.data){
+if(typeof _e.data==="string"){
+req.end(_e.data);
+}else{
+_e.data.pipe(req);
+}
+}else{
+req.end();
+}
+if(_e.timeout){
+var _17=setTimeout(function(){
+def.cancel(new _4(_f));
+},_e.timeout);
+}
+return def.promise;
+};
+_2.addCommonMethods(_c);
+return _c;
+});

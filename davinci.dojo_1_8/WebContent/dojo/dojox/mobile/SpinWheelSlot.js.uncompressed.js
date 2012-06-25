@@ -65,12 +65,26 @@ define("dojox/mobile/SpinWheelSlot", [
 
 		/* internal properties */	
 		baseClass: "mblSpinWheelSlot",
+		// maxSpeed: [private] Number
+		//		Maximum speed.
 		maxSpeed: 500,
+		// minItems: [private] int
+		//		Minimum number of items.
 		minItems: 15,
+		// centerPos: [private] Number
+		//		Inherited from parent.
 		centerPos: 0,
+		// scrollbar: [private] Boolean
+		//		False: no scrollbars must be shown.
 		scrollBar: false,
+		// constraint: [private] Boolean
+		//		False: no scroll constraint.
 		constraint: false,
+		// propagatable: [private] Boolean
+		//		False: stop touchstart event propagation.
 		propagatable: false, // stop touchstart event propagation to make spin wheel work inside scrollable
+		// androidWorkaroud: [private] Boolean
+		//		False.
 		androidWorkaroud: false, // disable workaround in SpinWheel TODO:remove this line later
 
 		buildRendering: function(){
@@ -126,6 +140,10 @@ define("dojox/mobile/SpinWheelSlot", [
 		},
 
 		initLabels: function(){
+			// summary:
+			//		Initializes the slot labels according to the labelFrom/labelTo properties.
+			// tags:
+			//		private
 			if(this.labelFrom !== this.labelTo){
 				var a = this.labels = [],
 					zeros = this.zeroPad && Array(this.zeroPad).join("0");
@@ -278,7 +296,7 @@ define("dojox/mobile/SpinWheelSlot", [
 
 		getSpeed: function(){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.getSpeed().
+			//		Overrides dojox/mobile/scrollable.getSpeed().
 			var y = 0, n = this._time.length;
 			var delta = (new Date()).getTime() - this.startTime - this._time[n - 1];
 			if(n >= 2 && delta < 200){
@@ -291,7 +309,7 @@ define("dojox/mobile/SpinWheelSlot", [
 
 		calcSpeed: function(/*Number*/d, /*Number*/t){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.calcSpeed().
+			//		Overrides dojox/mobile/scrollable.calcSpeed().
 			var speed = this.inherited(arguments);
 			if(!speed){ return 0; }
 			var v = Math.abs(speed);
@@ -304,7 +322,7 @@ define("dojox/mobile/SpinWheelSlot", [
 
 		adjustDestination: function(to, pos, dim){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.adjustDestination().
+			//		Overrides dojox/mobile/scrollable.adjustDestination().
 			var h = this._itemHeight;
 			var j = to.y + Math.round(h/2);
 			var a = Math.abs(j);
@@ -321,7 +339,7 @@ define("dojox/mobile/SpinWheelSlot", [
 
 		slideTo: function(/*Object*/to, /*Number*/duration, /*String*/easing){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.slideTo().
+			//		Overrides dojox/mobile/scrollable.slideTo().
 			var pos = this.getPos();
 			var top = pos.y + this.panelNodes[1].offsetTop;
 			var bottom = top + this.panelNodes[1].offsetHeight;

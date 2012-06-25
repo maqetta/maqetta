@@ -3,7 +3,7 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 	// module:
 	//		dojox/app/View
 	// summary:
-	//		dojox.app view object, each view can have one parent view and several children views.
+	//		dojox/app view object, each view can have one parent view and several children views.
 
 	return declare("dojox.app.View", null, {
 		constructor: function(params){
@@ -70,8 +70,10 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 
 		_loadViewDefinition: function(){
 			// summary:
-			//		Private method. Load view definition by configuration or by default.
-
+			//		Load view definition by configuration or by default.
+			// tags:
+			//		private
+			//
 			var _definitionDef = new Deferred();
 			var path;
 
@@ -79,10 +81,7 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 				_definitionDef.resolve(true);
 				return _definitionDef;
 			}else if(this.definition){
-				var index = this.definition.indexOf('.js');
-				if(index != -1){
-					path = this.definition.substring(0, index);
-				}
+				path = this.definition.replace(/(\.js)$/, "");
 			}else{
 				path = this.id.split("_");
 				path.shift();
@@ -124,8 +123,10 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 
 		_loadViewTemplate: function(){
 			// summary:
-			//		Private method.
 			//		load view HTML template and dependencies.
+			// tags:
+			//		private
+			//
 
 			if(this.templateString){
 				return true;
@@ -196,7 +197,11 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 		},
 
 		_setupModel: function(){
-			//load views model if it is not already loaded then call startup
+			// summary:
+			//		Load views model if it is not already loaded then call _startup.
+			// tags:
+			//		private
+			
 			if (!this.loadedModels) {
 				var loadModelLoaderDeferred = new Deferred();
 				var createPromise;
@@ -227,8 +232,9 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 
 		_startup: function(){
 			// summary:
-			//		private method
 			//		startup widgets in view template.
+			// tags:
+			//		private
 
 			this._widget = this.render(this.templateString);
 			// bind view level data model

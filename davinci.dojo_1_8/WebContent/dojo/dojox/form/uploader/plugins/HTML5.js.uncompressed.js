@@ -6,8 +6,6 @@ define("dojox/form/uploader/plugins/HTML5", [
 ],function(declare, lang, array, dojo){
 
 var pluginsHTML5 = declare("dojox.form.uploader.plugins.HTML5", [], {
-	// Version: 1.6
-
 	// summary:
 	//		A plugin for dojox.form.Uploader that adds HTML5 multiple-file upload capabilities and
 	//		progress events.
@@ -16,7 +14,10 @@ var pluginsHTML5 = declare("dojox.form.uploader.plugins.HTML5", [], {
 	//		Add this plugin to have HTML5 capabilities in the Uploader. Note that it does not add
 	//		these capabilities to browsers that don't support them. For IE or older browsers, add
 	//		additional plugins: IFrame or Flash.
+	//
+	//		Version: 1.6
 
+	
 	errMsg:"Error uploading files. Try checking permissions",
 
 	// Overwrites "form" and could possibly be overwritten again by iframe or flash plugin.

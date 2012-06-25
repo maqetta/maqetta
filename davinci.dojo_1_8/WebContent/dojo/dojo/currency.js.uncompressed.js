@@ -5,22 +5,23 @@ define("dojo/currency", [
 	"./number",
 	"./i18n", "./i18n!./cldr/nls/currency",
 	"./cldr/monetary"
-], function(darray, lang, /*===== declare, =====*/ dnumber, i18n, nlsCurrency, cldrMonetary) {
+], function(darray, lang, /*===== declare, =====*/ dnumber, i18n, nlsCurrency, cldrMonetary){
 
 // module:
 //		dojo/currency
-// summary:
-//		localized formatting and parsing routines for currencies
-// description:
-//		extends dojo.number to provide culturally-appropriate formatting of values
-//		in various world currencies, including use of a currency symbol.  The currencies are specified
-//		by a three-letter international symbol in all uppercase, and support for the currencies is
-//		provided by the data in `dojo.cldr`.  The scripts generating dojo.cldr specify which
-//		currency support is included.  A fixed number of decimal places is determined based
-//		on the currency type and is not determined by the 'pattern' argument.  The fractional
-//		portion is optional, by default, and variable length decimals are not supported.
 
-var currency = {};
+var currency = {
+	// summary:
+	//		localized formatting and parsing routines for currencies
+	// description:
+	//		extends dojo.number to provide culturally-appropriate formatting of values
+	//		in various world currencies, including use of a currency symbol.  The currencies are specified
+	//		by a three-letter international symbol in all uppercase, and support for the currencies is
+	//		provided by the data in `dojo.cldr`.  The scripts generating dojo.cldr specify which
+	//		currency support is included.  A fixed number of decimal places is determined based
+	//		on the currency type and is not determined by the 'pattern' argument.  The fractional
+	//		portion is optional, by default, and variable length decimals are not supported.
+};
 lang.setObject("dojo.currency", currency);
 
 currency._mixInDefaults = function(options){
@@ -103,7 +104,7 @@ lang.extend(__ParseOptions, {
 	//		A [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code will be used if not found.
 	// places: Number?
 	//		fixed number of decimal places to accept.  The default is determined based on which currency is used.
-	// fractional: Boolean?|Array?
+	// fractional: Boolean|Array?
 	//		Whether to include the fractional portion, where the number of decimal places are implied by the currency
 	//		or explicit 'places' parameter.  The value [true,false] makes the fractional portion optional.
 	//		By default for currencies, it the fractional portion is optional.

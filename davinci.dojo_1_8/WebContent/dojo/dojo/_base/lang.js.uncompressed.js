@@ -1,11 +1,9 @@
 define("dojo/_base/lang", ["./kernel", "../has", "../sniff"], function(dojo, has){
 	// module:
 	//		dojo/_base/lang
-	// summary:
-	//		This module defines Javascript language extensions.
 
 	has.add("bug-for-in-skips-shadowed", function(){
-		// if true, the for-in interator skips object properties that exist in Object's prototype (IE 6 - ?)
+		// if true, the for-in iterator skips object properties that exist in Object's prototype (IE 6 - ?)
 		for(var i in {toString: 1}){
 			return 0;
 		}
@@ -48,6 +46,9 @@ define("dojo/_base/lang", ["./kernel", "../has", "../sniff"], function(dojo, has
 
 	// Module export
 	var lang = {
+		// summary:
+		//		This module defines Javascript language extensions.
+
 		// _extraNames: String[]
 		//		Lists property names that must be explicitly processed during for-in iteration
 		//		in environments that have has("bug-for-in-skips-shadowed") true.
@@ -56,11 +57,11 @@ define("dojo/_base/lang", ["./kernel", "../has", "../sniff"], function(dojo, has
 		_mixin: function(dest, source, copyFunc){
 			// summary:
 			//		Copies/adds all properties of source to dest; returns dest.
-			// dest: Object:
+			// dest: Object
 			//		The object to which to copy/add all properties contained in source.
-			// source: Object:
+			// source: Object
 			//		The object from which to draw all properties to copy into dest.
-			// copyFunc: Function?:
+			// copyFunc: Function?
 			//		The process used to copy/add a property in source; defaults to the Javascript assignment operator.
 			// returns:
 			//		dest, as modified
@@ -114,12 +115,12 @@ define("dojo/_base/lang", ["./kernel", "../has", "../sniff"], function(dojo, has
 			//		executes a so-called "shallow copy" and aggregate types are copied/added by reference.
 			// example:
 			//		make a shallow copy of an object
-			//	| var copy = lang.mixin({}, source);
+			//	|	var copy = lang.mixin({}, source);
 			// example:
 			//		many class constructors often take an object which specifies
 			//		values to be configured on the object. In this case, it is
 			//		often simplest to call `lang.mixin` on the `this` object:
-			//	| declare("acme.Base", null, {
+			//	|	declare("acme.Base", null, {
 			//	|		constructor: function(properties){
 			//	|			// property configuration:
 			//	|			lang.mixin(this, properties);
@@ -129,13 +130,13 @@ define("dojo/_base/lang", ["./kernel", "../has", "../sniff"], function(dojo, has
 			//	|		},
 			//	|		quip: "I wasn't born yesterday, you know - I've seen movies.",
 			//	|		// ...
-			//	| });
+			//	|	});
 			//	|
-			//	| // create an instance of the class and configure it
-			//	| var b = new acme.Base({quip: "That's what it does!" });
+			//	|	// create an instance of the class and configure it
+			//	|	var b = new acme.Base({quip: "That's what it does!" });
 			// example:
 			//		copy in properties from multiple objects
-			//	| var flattened = lang.mixin(
+			//	|	var flattened = lang.mixin(
 			//	|		{
 			//	|			name: "Frylock",
 			//	|			braces: true
@@ -143,12 +144,12 @@ define("dojo/_base/lang", ["./kernel", "../has", "../sniff"], function(dojo, has
 			//	|		{
 			//	|			name: "Carl Brutanananadilewski"
 			//	|		}
-			//	| );
+			//	|	);
 			//	|
-			//	| // will print "Carl Brutanananadilewski"
-			//	| console.log(flattened.name);
-			//	| // will print "true"
-			//	| console.log(flattened.braces);
+			//	|	// will print "Carl Brutanananadilewski"
+			//	|	console.log(flattened.name);
+			//	|	// will print "true"
+			//	|	console.log(flattened.braces);
 
 			if(!dest){ dest = {}; }
 			for(var i = 1, l = arguments.length; i < l; i++){

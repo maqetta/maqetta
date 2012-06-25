@@ -16,22 +16,22 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		//
 		//		The class "dojoxRoller" is added to the UL element for styling purposes.
 		//
-		//	example:
+		// example:
 		//	|	// create a scroller from a unordered list with id="lister"
 		//  |	var thinger = new dojox.widget.Roller.Roller({},"lister");
 		//
-		//	example:
+		// example:
 		//	|	// create a scroller from a fixed array, and place in the DOM:
 		//	|	new dojox.widget.Roller({ items:["one","two","three"] }).placeAt(dojo.body());
 		//
-		//	example:
+		// example:
 		//	|	// add an item:
 		//	|	dijit.byId("roller").items.push("I am a new Label");
 		//
-		//  example:
+		// example:
 		//	|	// stop a roller from rolling:
 		//	|	dijit.byId("roller").stop();
-		//
+		
 		// delay: Integer
 		//		Interval between rolls
 		delay: 2000,
@@ -111,7 +111,8 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		},
 
 		_setupConnects: function(){
-			// summary: setup the loop connection logic
+			// summary:
+			//		setup the loop connection logic
 			var anim = this._anim;
 
 			this.connect(anim["out"], "onEnd", function(){
@@ -127,7 +128,8 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		},
 
 		start: function(){
-			// summary: Starts to Roller looping
+			// summary:
+			//		Starts to Roller looping
 			if(!this.rolling){
 				this.rolling = true;
 				this._run();
@@ -139,7 +141,8 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		},
 
 		stop: function(){
-			// summary: Stops the Roller from looping anymore.
+			// summary:
+			//		Stops the Roller from looping anymore.
 			this.rolling = false;
 
 			var m = this._anim,
@@ -151,7 +154,8 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		},
 
 		_setIndex: function(i){
-			// summary: Set the Roller to some passed index. If beyond range, go to first.
+			// summary:
+			//		Set the Roller to some passed index. If beyond range, go to first.
 			var l = this.items.length - 1;
 			if(i < 0){ i = l; }
 			if(i > l){ i = 0; }

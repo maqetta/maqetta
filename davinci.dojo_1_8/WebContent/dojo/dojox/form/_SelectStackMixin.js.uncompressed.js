@@ -24,7 +24,7 @@ return declare("dojox.form._SelectStackMixin", null, {
 	//		The id of the stack that this widget is supposed to control
 	stackId: "",
 
-	// stackPrefix: string
+	// stackPrefix: String
 	//		A prefix to remove from our stack pane ids when setting our options.
 	//		This exists so that we won't run into unique ID constraints.  For
 	//		example, if stackPrefix is set to "foo_", and there are three panes

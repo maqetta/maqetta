@@ -1,10 +1,6 @@
 define("dojox/gauges/AnalogIndicatorBase", ["dojo/_base/lang","dojo/_base/declare","dojo/_base/connect","dojo/_base/fx","dojox/gfx","./_Indicator"],
   function(lang, declare, connect, fx, gfx, Indicator) {
  
-/*=====
-	Indicator = dojox.gauges._indicator;
-=====*/
-
 return declare("dojox.gauges.AnalogIndicatorBase",[Indicator],{
 		//	summary:
 		//		An abstract base class for indicators that can be used in an AnalogGauge.

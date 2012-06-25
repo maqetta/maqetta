@@ -18,8 +18,6 @@ define("dijit/TooltipDialog", [
 
 	// module:
 	//		dijit/TooltipDialog
-	// summary:
-	//		Pops up a dialog that appears like a Tooltip
 
 
 	return declare("dijit.TooltipDialog",

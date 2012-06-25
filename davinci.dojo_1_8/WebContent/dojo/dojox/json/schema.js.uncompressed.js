@@ -34,7 +34,7 @@ dojox.json.schema.checkPropertyChange = function(/*Any*/value,/*Object*/schema, 
 	//		The new instance value/object to check
 	// schema:
 	//		The schema to use to validate
-	// return:
+	// returns:
 	// 		see dojox.validate.jsonSchema.validate
 	//
 	return this._validate(value,schema, property || "property");

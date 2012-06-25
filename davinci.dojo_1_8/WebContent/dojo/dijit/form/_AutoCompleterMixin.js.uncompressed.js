@@ -18,9 +18,6 @@ define("dijit/form/_AutoCompleterMixin", [
 
 	// module:
 	//		dijit/form/_AutoCompleterMixin
-	// summary:
-	//		A mixin that implements the base functionality for `dijit.form.ComboBox`/`dijit.form.FilteringSelect`
-
 
 	return declare("dijit.form._AutoCompleterMixin", SearchMixin, {
 		// summary:
@@ -524,7 +521,7 @@ define("dijit/form/_AutoCompleterMixin", [
 		_escapeHtml: function(/*String*/ str){
 			// TODO Should become dojo.html.entities(), when exists use instead
 			// summary:
-			//		Adds escape sequences for special characters in XML: &<>"'
+			//		Adds escape sequences for special characters in XML: `&<>"'`
 			str = String(str).replace(/&/gm, "&amp;").replace(/</gm, "&lt;")
 				.replace(/>/gm, "&gt;").replace(/"/gm, "&quot;"); //balance"
 			return str; // string
@@ -537,9 +534,13 @@ define("dijit/form/_AutoCompleterMixin", [
 			this.inherited(arguments);
 		},
 
-		labelFunc: function(/*item*/ item, /*dojo.store.api.Store*/ store){
+		labelFunc: function(item, store){
 			// summary:
 			//		Computes the label to display based on the dojo.data store item.
+			// item: Object
+			//		The item from the store
+			// store: dojo/store/api/Store
+			//		The store.
 			// returns:
 			//		The label that the ComboBox should display
 			// tags:

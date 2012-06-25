@@ -200,7 +200,7 @@ define("dojox/mdnd/dropMode/DefaultDropMode", [
 		getTargetArea: function(/*Array*/areaList, /*Object*/ coords, /*integer*/currentIndexArea ){
 			// summary:
 			//		get the nearest DnD area.
-			//		Coordinates are basically provided by the <getDragPoint> method.
+			//		Coordinates are basically provided by the ``getDragPoint`` method.
 			// areaList:
 			//		a list of DnD areas objects
 			// coords:
@@ -260,7 +260,7 @@ define("dojox/mdnd/dropMode/DefaultDropMode", [
 		_checkInterval: function(/*Array*/areaList, /*Integer*/index, /*Coord*/x){
 			// summary:
 			//		check if the dragNode is in the interval.
-			//		The x coordinate is basically provided by the <getDragPoint> method.
+			//		The x coordinate is basically provided by the ``getDragPoint`` method.
 			// areaList:
 			//		a list of DnD areas objects
 			// index:
@@ -268,7 +268,7 @@ define("dojox/mdnd/dropMode/DefaultDropMode", [
 			// x:
 			//		coordinate x, of the dragNode
 			// returns:
-			//		true if the dragNode is in intervall
+			//		true if the dragNode is in interval
 			// tags:
 			//		protected
 	

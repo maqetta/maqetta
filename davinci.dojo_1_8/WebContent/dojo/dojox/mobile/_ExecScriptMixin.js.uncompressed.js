@@ -11,16 +11,16 @@ define("dojox/mobile/_ExecScriptMixin", [
 
 	return declare("dojox.mobile._ExecScriptMixin", null, {
 		// summary:
-		//		Mixin for content handler to have a script execution capability.
+		//		Mixin for providing script execution capability to content handlers.
 		// description:
 		//		This module defines the execScript method, which is called
-		//		from an html content handler.
+		//		from an HTML content handler.
 
 		execScript: function(/*String*/ html){
 			// summary:
 			//		Finds script tags and executes the script.
 			// returns:
-			//		The given html text from which <script> blocks are removed.
+			//		The given HTML text from which `<script>` blocks are removed.
 			var s = html.replace(/\f/g, " ").replace(/<\/script>/g, "\f");
 			s = s.replace(/<script [^>]*src=['"]([^'"]+)['"][^>]*>([^\f]*)\f/ig, function(ignore, path){
 				domConstruct.create("script", {

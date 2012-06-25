@@ -1,8 +1,6 @@
 define("dojo/dom-class", ["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 	// module:
 	//		dojo/dom-class
-	// summary:
-	//		This module defines the core dojo DOM class API.
 
 	var className = "className";
 
@@ -106,6 +104,9 @@ define("dojo/dom-class", ["./_base/lang", "./_base/array", "./dom"], function(la
 	// regular DOM version
 	var fakeNode = {};  // for effective replacement
 	cls = {
+		// summary:
+		//		This module defines the core dojo DOM class API.
+
 		contains: function containsClass(/*DomNode|String*/ node, /*String*/ classStr){
 			// summary:
 			//		Returns whether or not the specified classes are a portion of the

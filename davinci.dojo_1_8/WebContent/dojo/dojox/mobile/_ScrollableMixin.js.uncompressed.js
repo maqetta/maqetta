@@ -15,6 +15,9 @@ define("dojox/mobile/_ScrollableMixin", [
 	//		Mixin for widgets to have a touch scrolling capability.
 
 	var cls = declare("dojox.mobile._ScrollableMixin", Scrollable, {
+		// summary:
+		//		Mixin for widgets to have a touch scrolling capability.
+	
 		// fixedHeader: String
 		//		Id of the fixed header.
 		fixedHeader: "",
@@ -24,14 +27,16 @@ define("dojox/mobile/_ScrollableMixin", [
 		fixedFooter: "",
 
 		// scrollableParams: Object
-		//		Parameters for dojox.mobile.scrollable.init().
+		//		Parameters for dojox/mobile/scrollable.init().
 		scrollableParams: null,
 
 		// allowNestedScrolls: Boolean
-		//		e.g. Allow ScrollableView in a SwapView.
+		//		Flag to allow scrolling in nested containers, e.g. to allow ScrollableView in a SwapView.
 		allowNestedScrolls: true,
 
-		appBars: true, // search for application-level bars
+		// appBars: Boolean
+		//		Enables the search for application-specific bars (header or footer).
+		appBars: true, 
 
 		constructor: function(){
 			this.scrollableParams = {};

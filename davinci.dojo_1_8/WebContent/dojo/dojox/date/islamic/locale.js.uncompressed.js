@@ -104,7 +104,7 @@ define("dojox/date/islamic/locale", ["../..", "dojo/_base/lang", "dojo/_base/arr
 	}
 	
 	// based on and similar to dojo.date.locale.format
-	ilocale.format = function(/*islamic.Date*/dateObject, /*Object?*/options){
+	ilocale.format = function(/*dojox/date/islamic/Date*/dateObject, /*Object?*/options){
 		// summary:
 		//		Format a Date object as a String, using  settings.
 		options = options || {};
@@ -389,7 +389,7 @@ define("dojox/date/islamic/locale", ["../..", "dojo/_base/lang", "dojo/_base/arr
 
 	ilocale.addCustomFormats("dojo.cldr","islamic");
 
-	ilocale.getNames = function(/*String*/item, /*String*/type, /*String?*/context, /*String?*/locale, /*islamic Date Object?*/date){
+	ilocale.getNames = function(/*String*/item, /*String*/type, /*String?*/context, /*String?*/locale, /*dojox/date/islamic/Date?*/date){
 		// summary:
 		//		Used to get localized strings from dojo.cldr for day or month names.
 		var label;

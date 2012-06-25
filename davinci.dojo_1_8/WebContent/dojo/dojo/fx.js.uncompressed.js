@@ -10,12 +10,10 @@ define("dojo/fx", [
 	"./dom-geometry",
 	"./ready",
 	"require" // for context sensitive loading of Toggler
-], function(lang, Evented, dojo, arrayUtil, connect, baseFx, dom, domStyle, geom, ready, require) {
+], function(lang, Evented, dojo, arrayUtil, connect, baseFx, dom, domStyle, geom, ready, require){
 
 	// module:
 	//		dojo/fx
-	// summary:
-	//		Effects library on top of Base animations
 	
 	// For back-compat, remove in 2.0.
 	if(!dojo.isAsync){
@@ -25,7 +23,10 @@ define("dojo/fx", [
 		});
 	}
 
-	var coreFx = dojo.fx = {};
+	var coreFx = dojo.fx = {
+		// summary:
+		//		Effects library on top of Base animations
+	};
 
 	var _baseObj = {
 			_fire: function(evt, args){
@@ -145,7 +146,7 @@ define("dojo/fx", [
 	});
 	lang.extend(_chain, _baseObj);
 
-	coreFx.chain = function(/*dojo.Animation[]*/ animations){
+	coreFx.chain = function(/*dojo/_base/fx.Animation[]*/ animations){
 		// summary:
 		//		Chain a list of `dojo.Animation`s to run in sequence
 		//
@@ -163,7 +164,7 @@ define("dojo/fx", [
 		//	|		dojo.fadeOut({ node:otherNode })
 		//	|	]).play();
 		//
-		return new _chain(animations); // dojo.Animation
+		return new _chain(animations); // dojo/_base/fx.Animation
 	};
 
 	var _combine = function(animations){
@@ -238,7 +239,7 @@ define("dojo/fx", [
 	});
 	lang.extend(_combine, _baseObj);
 
-	coreFx.combine = function(/*dojo.Animation[]*/ animations){
+	coreFx.combine = function(/*dojo/_base/fx.Animation[]*/ animations){
 		// summary:
 		//		Combine a list of `dojo.Animation`s to run in parallel
 		//
@@ -265,7 +266,7 @@ define("dojo/fx", [
 		//	|	});
 		//	|	anim.play(); // play the animation
 		//
-		return new _combine(animations); // dojo.Animation
+		return new _combine(animations); // dojo/_base/fx.Animation
 	};
 
 	coreFx.wipeIn = function(/*Object*/ args){
@@ -321,7 +322,7 @@ define("dojo/fx", [
 		connect.connect(anim, "onStop", fini);
 		connect.connect(anim, "onEnd", fini);
 
-		return anim; // dojo.Animation
+		return anim; // dojo/_base/fx.Animation
 	};
 
 	coreFx.wipeOut = function(/*Object*/ args){
@@ -362,7 +363,7 @@ define("dojo/fx", [
 		connect.connect(anim, "onStop", fini);
 		connect.connect(anim, "onEnd", fini);
 
-		return anim; // dojo.Animation
+		return anim; // dojo/_base/fx.Animation
 	};
 
 	coreFx.slideTo = function(/*Object*/ args){
@@ -411,7 +412,7 @@ define("dojo/fx", [
 		}, args));
 		connect.connect(anim, "beforeBegin", anim, init);
 
-		return anim; // dojo.Animation
+		return anim; // dojo/_base/fx.Animation
 	};
 
 	return coreFx;

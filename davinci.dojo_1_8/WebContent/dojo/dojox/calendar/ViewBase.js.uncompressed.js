@@ -127,14 +127,11 @@ function(
 			this.inherited(arguments);
 		},
 		
-		_createStructure: function(/*Object*/rd){
-			// summary:
-			//		Creates the HTML structure (grid, place holders, headers, etc)
-		},
-		
 		_createRenderData: function(){
 			// summary:
 			//		Creates the object that contains all the data needed to render this widget.
+			// tags:
+			//		protected
 		},
 		
 		_validateProperties: function(){
@@ -381,8 +378,10 @@ function(
 			//		The date to project.
 			// max: Integer
 			//		The size in pixels of the representation of a day.
+			// tags:
+			//		protected
 			// returns: Number
-		
+
 			var cal = renderData.dateModule;
 			
 			if(max <= 0 || cal.compare(date, refDate) == -1){
@@ -491,8 +490,8 @@ function(
 			//		Creates a new Date object.
 			// obj: Object
 			//		This object can have several values:
-			//		|the time in milliseconds since gregorian epoch.
-			//		|a Date instance
+			//		- the time in milliseconds since gregorian epoch.
+			//		- a Date instance
 			// returns: Date
 			return timeUtil.newDate(obj, this.dateClassObj);			
 		},
@@ -524,6 +523,9 @@ function(
 			//		The item to test
 			// returns: Boolean
 			//		Whether the item has been moved to be in view or not.
+			// tags:
+			//		protected
+
 			var rd = this.renderData;
 			var cal = rd.dateModule;
 			
@@ -559,15 +561,24 @@ function(
 		autoScroll: true,				
 		
 		_autoScroll: function(gx, gy, orientation){
+			// summary:
+			//		Starts or stops the auto scroll according to the mouse cursor position during an item editing.
+			// gx: Integer
+			//		The position of the mouse cursor along the x-axis.
+			// gy: Integer
+			//		The position of the mouse cursor along the y-axis.			
+			// tags:
+			//		extension
+
 			return false;
 		},
 			
 		// scrollMethod: String
 		//		Method used to scroll the view, for example the scroll of column view.
 		//		Valid value are: 
-		//			| "auto": let the view decide (default), 
-		//			| "css": use css 3d transform,
-		//			| "dom": use the scrollTop property.
+		//			- "auto": let the view decide (default), 
+		//			- "css": use css 3d transform,
+		//			- "dom": use the scrollTop property.
 		scrollMethod: "auto",
 		
 		_setScrollMethodAttr: function(value){
@@ -587,28 +598,34 @@ function(
 				var pos = this._getScrollPosition();
 				delete this._scrollPos;
 				
-				this._setScrollPosition(pos);				
+				this._setScrollPosition(pos);
 			}
 			
 		},
 		
 		_startAutoScroll: function(step){
+			// summary:
+			//		Starts the auto scroll of the view (if it's scrollable). Used only during editing.
+			// tags:
+			//		protected
+			var sp = this._scrollProps;
+			if(!sp){
+				sp = this._scrollProps = {};
+			}
+				
+			sp.scrollStep = step;
 			
-				var sp = this._scrollProps;
-				if(!sp){
-					sp = this._scrollProps = {};
-				}
-				
-				sp.scrollStep = step;
-				
-				if (!sp.isScrolling){
-					sp.isScrolling = true;
-					sp.scrollTimer = setInterval(lang.hitch(this, this._onScrollTimer_tick), 10);
-				}		
+			if (!sp.isScrolling){
+				sp.isScrolling = true;
+				sp.scrollTimer = setInterval(lang.hitch(this, this._onScrollTimer_tick), 10);
+			}		
 		},
 				
 		_stopAutoScroll: function(){
-			
+			// summary:
+			//		Stops the auto scroll of the view (if it's scrollable). Used only during editing.
+			// tags:
+			//		protected
 			var sp = this._scrollProps;
 			
 			if (sp && sp.isScrolling) {
@@ -642,7 +659,11 @@ function(
 		},				
 		
 		_setScrollPosition: function(pos){
-			
+			// summary:
+			//		Sets the scroll position (if the view is scrollable), using the scroll method defined.
+			// tags:
+			//		protected
+
 			if(this._scrollPos == pos){
 				return;
 			}
@@ -671,6 +692,11 @@ function(
 		},
 		
 		_getScrollPosition: function(){
+			// summary:
+			//		Returns the scroll position (if the view is scrollable), using the scroll method defined.
+			// tags:
+			//		protected
+
 			return this._scrollPos; 
 		},
 		
@@ -679,6 +705,8 @@ function(
 			//		If the view is scrollable, scrolls it to the specified direction.
 			// dir: Integer
 			//		Direction of the scroll. Valid values are -1 and 1.
+			// tags:
+			//		extension
 		},
 		
 		ensureVisibility: function(start, end, margin, visibilityTarget, duration){
@@ -695,6 +723,9 @@ function(
 			//		Valid values are: "start", "end", "both".	
 			// duration: Number
 			//		Optional, the maximum duration of the scroll animation.
+			// tags:
+			//		extension
+
 		},
 
 	  ////////////////////////////////////////////////////////
@@ -723,7 +754,7 @@ function(
 		
 		invalidateLayout: function(){
 			// summary:
-			//		trigger a re-layout of the renderers.
+			//		Triggers a re-layout of the renderers.
 			this._layoutRenderers(this.renderData);
 		},
 		
@@ -731,7 +762,7 @@ function(
 			//this.invalidateRendering();
 		},
 
-	  ////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////
 		//
 		// Layout
 		//
@@ -745,6 +776,9 @@ function(
 			// addedPass: Function
 			//		Whether computes the extent of each item renderer on free sibling lanes.
 			// returns: Object
+			// tags:
+			//		protected
+
 			
 			if(layoutItems.length == 0){
 				return {
@@ -780,7 +814,7 @@ function(
 			// lanes:
 			//		The array of lanes.
 			// tags:
-			//		private
+			//		protected
 			var stop = true;
 			
 			for(var i=0; i<lanes.length; i++){
@@ -824,7 +858,7 @@ function(
 			// items: Object[]
 			//		The list of the items to represent.
 			// tags:
-			//		protected
+			//		extension
 		},
 		
 		// layoutPriorityFunction: Function
@@ -929,6 +963,12 @@ function(
 		////////////////////////////////////////////////////////////////
 		
 		_recycleItemRenderers: function(remove){
+			// summary:
+			//		Recycles all the item renderers.
+			//	remove: Boolean
+			//		Whether remove the DOM node from it parent.
+			// tags:
+			//		protected
 			while(this.rendererList.length>0){
 				this._recycleRenderer(this.rendererList.pop(), remove);
 			}
@@ -951,8 +991,8 @@ function(
 			// summary:
 			//		Returns the renderers that are currently used to displayed the speficied item.
 			//		Returns an array of objects that contains two properties:
-			//			| container: The DOM node that contains the renderer.
-			//			| renderer: The dojox.calendar._RendererMixin instance.
+			//		- container: The DOM node that contains the renderer.
+			//		- renderer: The dojox.calendar._RendererMixin instance.
 			//		Do not keep references on the renderers are they are recycled and reused for other items.
 			// item: Object
 			//		The data or render item.
@@ -986,6 +1026,8 @@ function(
 		},
 		
 		_defaultItemToRendererKindFunc:function(item){
+			// tags:
+			//		private
 			return null
 		},
 
@@ -1057,25 +1099,37 @@ function(
 						
 		onRendererCreated: function(renderer){
 			// summary:
-			//		Event dispatched when an item renderer has been created.			
+			//		Event dispatched when an item renderer has been created.	
+			// tags:
+			//		callback
 		},	
 		
 		onRendererRecycled: function(renderer){
 			// summary:
-			//		Event dispatched when an item renderer has been recycled.			
+			//		Event dispatched when an item renderer has been recycled.
+			// tags:
+			//		callback
+
 		},
 		
 		onRendererReused: function(renderer){
 			// summary:
-			//		Event dispatched when an item renderer that was recycled is reused.			
+			//		Event dispatched when an item renderer that was recycled is reused.	
+			// tags:
+			//		callback
 		},
 		
 		onRendererDestroyed: function(renderer){
 			// summary:
-			//		Event dispatched when an item renderer is destroyed.			
+			//		Event dispatched when an item renderer is destroyed.
+			// tags:
+			//		callback
 		},
 				
 		_onRenderersLayoutDone: function(view){
+			// tags:
+			//		private
+
 			this.onRenderersLayoutDone(view);
 			if(this.owner != null){
 				this.owner.onRenderersLayoutDone(view);
@@ -1085,12 +1139,14 @@ function(
 		onRenderersLayoutDone: function(view){
 			// summary:
 			//		Event triggered when item renderers layout has been done.
+			// tags:
+			//		callback
 		},
 
 		_recycleRenderer: function(renderer, remove){
 			// summary: 
 			//		Recycles the item renderer to be reused in the future.
-			// renderer: dojox.calendar._RendererMixin
+			// renderer: dojox/calendar/_RendererMixin
 			//		The item renderer to recycle.
 			// tags:
 			//		protected			
@@ -1118,7 +1174,7 @@ function(
 		_destroyRenderer: function(renderer){
 			// summary: 
 			//		Destroys the item renderer.
-			// renderer: dojox.calendar._RendererMixin
+			// renderer: dojox/calendar/_RendererMixin
 			//		The item renderer to destroy.
 			// tags:
 			//		protected
@@ -1138,6 +1194,9 @@ function(
 		},
 		
 		_destroyRenderersByKind: function(kind){
+			// tags:
+			//		private
+
 			var list = [];
 			for(var i=0;i<this.rendererList.length;i++){
 				var ir = this.rendererList[i];
@@ -1161,7 +1220,15 @@ function(
 				
 					
 		_updateEditingCapabilities: function(item, renderer){
-			
+			// summary:
+			//		Update the moveEnabled and resizeEnabled properties of a renderer according to its event current editing state.
+			// item: Object
+			//		The event data item.
+			// renderer: dojox/calendar/_RendererMixin
+			//		The item renderer.
+			// tags:
+			//		protected
+
 			var moveEnabled = this.isItemMoveEnabled(item, renderer.rendererKind);
 			var resizeEnabled = this.isItemResizeEnabled(item, renderer.rendererKind);
 			var changed = false;
@@ -1187,6 +1254,9 @@ function(
 			//		A render item or an array of render items.
 			// stateOnly: Boolean
 			//		Whether only the state of the item has changed (selected, edited, edited, focused) or a more global change has occured.
+			// tags:
+			//		protected
+
 			if(obj == null){
 				return;
 			}
@@ -1251,11 +1321,13 @@ function(
 			//		Whether the item is being edited not not.
 			// focused: Boolean
 			//		Whether the item is focused not not.
+			// tags:
+			//		protected
 						
 			domStyle.set(renderer.container, {"zIndex": edited || selected ? 20: item.lane == undefined ? 0 : item.lane});
 		},
 		
-		getIdentity: function(item){			
+		getIdentity: function(item){
 			return this.owner ? this.owner.getIdentity(item) : item.id; 
 		},		
 		
@@ -1266,6 +1338,15 @@ function(
 		////////////////////////////////////////////////////
 
 		_setHoveredItem: function(item, renderer){
+			// summary:
+			//		Sets the current hovered item.
+			// item: Object
+			//		The data item.
+			// renderer: dojox/calendar/_RendererMixin
+			//		The item renderer.
+			// tags:
+			//		protected
+
 			if(this.owner){
 				this.owner._setHoveredItem(item, renderer);
 				return;
@@ -1284,6 +1365,8 @@ function(
 			}
 		},
 		
+		// hoveredItem: Object
+		//		The currently hovered data item.
 		hoveredItem: null,
 		
 		isItemHovered: function(item){
@@ -1291,7 +1374,7 @@ function(
 			//		Returns whether the specified item is hovered or not.
 			// item: Object
 			//		The item.
-			// returns: Boolean								
+			// returns: Boolean
 			if (this._isEditing && this._edProps){
 				return item.id == this._edProps.editedItem.id;
 			}else{
@@ -1438,7 +1521,9 @@ function(
 		
 		_gridMouseDown: false,
 				
-		_onGridMouseDown: function(e){		
+		_onGridMouseDown: function(e){
+			// tags:
+			//		private
 			this._gridMouseDown = true;
 								
 			this.showFocus = false;
@@ -1485,14 +1570,18 @@ function(
 		},
 		
 		_onGridMouseMove: function(e){
-			
+			// tags:
+			//		private
 		},
 		
 		_onGridMouseUp: function(e){
-			
+			// tags:
+			//		private
 		},
 		
 		_onGridTouchStart: function(e){
+			// tags:
+			//		private
 
 			var p = this._edProps;
 
@@ -1526,6 +1615,9 @@ function(
 		},
 		
 		_doEndItemEditing: function(obj, eventSource){
+			// tags:
+			//		private
+
 			if(obj && obj._isEditing){
 				p = obj._edProps;
 				if(p && p.endEditingTimer){
@@ -1537,14 +1629,33 @@ function(
 		},
 					
 		_onGridTouchEnd: function(e){
+			// tags:
+			//		private
 		},
 		
 		_onGridTouchMove: function(e){
+			// tags:
+			//		private
+		},
+		
+		__fixEvt: function(e){
+			// summary:
+			//		Extension point for a view to add some event properties to a calendar event.
+			// tags:
+			//		callback
+			return e;
 		},
 		
 		_dispatchCalendarEvt: function(e, name){
-			// adds view properties to event 
-			// and enable bubbling at owner level.
+			// summary:
+			//		Adds view properties to event and enable bubbling at owner level.
+			// e: Event
+			//		The dispatched event.
+			// name: String
+			//		The event name.
+			// tags:
+			//		protected
+			
 			e = this.__fixEvt(e);
 			this[name](e);
 			if(this.owner){
@@ -1553,7 +1664,9 @@ function(
 			return e;
 		},
 
-		_onGridClick: function(e){			
+		_onGridClick: function(e){
+			// tags:
+			//		private
 			if(!e.triggerEvent){
 				e = {
 					date: this.getTime(e),
@@ -1567,10 +1680,14 @@ function(
 		onGridClick: function(e){
 			// summary:
 			//		Event dispatched when the grid has been clicked.
-
+			// tags:
+			//		callback
 		},
 		
 		_onGridDoubleClick: function(e){
+			// tags:
+			//		private
+
 			if(!e.triggerEvent){
 				e = {
 					date: this.getTime(e),
@@ -1583,35 +1700,57 @@ function(
 				
 		onGridDoubleClick: function(e){
 			// summary:
-			//		Event dispatched when the grid has been double-clicked.			
+			//		Event dispatched when the grid has been double-clicked.
+			// tags:
+			//		protected
+
 		},
 		
 		_onItemClick: function(e){
+			// tags:
+			//		private
+
 			this._dispatchCalendarEvt(e, "onItemClick");
 		},
 		
 		onItemClick: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been clicked.
+			// tags:
+			//		callback
+
 		},
 		
 		_onItemDoubleClick: function(e){
+			// tags:
+			//		private
+
 			this._dispatchCalendarEvt(e, "onItemDoubleClick");	
 		},
 		
 		onItemDoubleClick: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been double-clicked.
+			// tags:
+			//		callback
+
 		},
 
 		_onItemContextMenu: function(e){
-			this._dispatchCalendarEvt(e, "onItemContextMenu");	
+			this._dispatchCalendarEvt(e, "onItemContextMenu");
+			// tags:
+			//		private
+
 		},
 		
 		onItemContextMenu: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been context-clicked.
-		},		
+			// tags:
+			//		callback
+
+		},
+		
 		//////////////////////////////////////////////////////////
 		//
 		//	Editing
@@ -1625,6 +1764,9 @@ function(
 			// item: Object
 			//		The render item.
 			// returns: Object[]
+			// tags:
+			//		protected
+
 
 			var list = this.itemToRenderer[item.id];
 
@@ -1738,6 +1880,9 @@ function(
 			// summary:
 			//		Registers the editing properties used by the editing functions.
 			//		This method should only be called by editing interaction mixins like Mouse, Keyboard and Touch.
+			// tags:
+			//		protected
+
 			this._edProps = props;
 		},
 		
@@ -1748,6 +1893,9 @@ function(
 			//		The item that will be edited.
 			// eventSource: String
 			//		"mouse", "keyboard", "touch"
+			// tags:
+			//		protected
+
 			this._isEditing = true;			
 			var p = this._edProps;
 			
@@ -1800,7 +1948,9 @@ function(
 		},
 		
 		_onItemEditBegin: function(e){
-			
+			// tags:
+			//		private
+
 			this._editStartTimeSave = this.newDate(e.item.startTime);
 			this._editEndTimeSave = this.newDate(e.item.endTime);
 			
@@ -1810,6 +1960,9 @@ function(
 		onItemEditBegin: function(e){
 			// summary:
 			//		Event dispatched when the item is entering the editing mode.
+			// tags:
+			//		callback
+
 		},
 		
 		_endItemEditing: function(/*String*/eventSource, /*Boolean*/canceled){
@@ -1819,6 +1972,9 @@ function(
 			//		The item that was edited.
 			// eventSource: String
 			//		"mouse", "keyboard", "touch"
+			// tags:
+			//		protected
+
 			this._isEditing = false;					
 			
 			var p = this._edProps;
@@ -1847,7 +2003,9 @@ function(
 		},
 		
 		_onItemEditEnd: function(e){
-											
+			// tags:
+			//		private
+								
 			this._dispatchCalendarEvt(e, "onItemEditEnd");
 			
 			if(!e.isDefaultPrevented()){
@@ -1866,9 +2024,15 @@ function(
 		onItemEditEnd: function(e){
 			// summary:
 			//		Event dispatched when the item is leaving the editing mode.
+			// tags:
+			//		protected
+
 		},
 		
 		_createItemEditEvent: function(){
+			// tags:
+			//		private
+
 			var e = {
 				cancelable: true,
 				bubbles: false,
@@ -1899,7 +2063,7 @@ function(
 			// e: Event
 			//		The event at the origin of the editing gesture.
 			// tags:
-			//		private					
+			//		protected
 			
 			var p = this._edProps;
 			
@@ -1978,12 +2142,24 @@ function(
 		onItemEditBeginGesture: function(e){
 			// summary:
 			//		Event dispatched when an editing gesture is beginning.
+			// tags:
+			//		callback
+
 		},
 		
 		_waDojoxAddIssue: function(d, unit, steps){
 			// summary:
 			//		Workaround an issue of dojox.date.XXXXX.date.add() function 
 			//		that does not support the subtraction of time correctly (normalization issues). 
+			// d: Date
+			//		Reference date.
+			// unit: String
+			//		Unit to add.
+			// steps: Integer
+			//		Number of units to add.
+			// tags:
+			//		protected
+
 			var cal = this.renderData.dateModule;
 			if(this._calendar != "gregorian" && steps < 0){
 				var gd = d.toGregorian();
@@ -1995,6 +2171,9 @@ function(
 		},
 						
 		_computeItemEditingTimes: function(item, editKind, rendererKind, times, eventSource){
+			// tags:
+			//		private
+
 			var cal = this.renderData.dateModule;
 			var p = this._edProps;
 			var diff = cal.difference(p.editingTimeFrom[0], times[0], "millisecond");
@@ -2186,6 +2365,9 @@ function(
 		},
 		
 		_findRenderItem: function(id, list){
+			// tags:
+			//		private
+
 			list = list || this.renderData.items;
 			for(var i=0; i<list.length; i++){
 				if(list[i].id == id){
@@ -2196,7 +2378,9 @@ function(
 		},
 
 		_onItemEditMoveGesture: function(e){	
-			
+			// tags:
+			//		private
+
 			this._dispatchCalendarEvt(e, "onItemEditMoveGesture");
 
 			if(!e.isDefaultPrevented()){
@@ -2241,10 +2425,15 @@ function(
 		onItemEditMoveGesture: function(e){
 			// summary:
 			//		Event dispatched during a move editing gesture.
+			// tags:
+			//		callback
+
 		},
 				
 		_onItemEditResizeGesture: function(e){
-			
+			// tags:
+			//		private
+
 			this._dispatchCalendarEvt(e, "onItemEditResizeGesture");
 			
 			if(!e.isDefaultPrevented()){				
@@ -2313,9 +2502,14 @@ function(
 		onItemEditResizeGesture: function(e){
 			// summary:
 			//		Event dispatched during a resize editing gesture.
+			// tags:
+			//		callback
+
 		},
 		
 		_endItemEditingGesture: function(/*String*/eventSource,	/*Event*/e){
+			// tags:
+			//		protected
 
 			if(!this._isEditing){
 				return;
@@ -2341,7 +2535,9 @@ function(
 		},
 		
 		_onItemEditEndGesture: function(e){
-			
+			// tags:
+			//		private
+
 			var p = this._edProps;
 			
 			delete p._itemEditBeginSave;
@@ -2360,7 +2556,7 @@ function(
 							p.editLayer.parentNode.removeChild(p.editLayer);
 							p.editLayer = null;
 						}		
-					}), 10);																		
+					}), 10);
 								
 				}
 			}
@@ -2369,6 +2565,9 @@ function(
 		onItemEditEndGesture: function(e){
 			// summary:
 			//		Event dispatched at the end of an editing gesture.
+			// tags:
+			//		callback
+
 		},
 		
 		ensureMinimalDuration: function(renderData, item, unit, steps, editKind){

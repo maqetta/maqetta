@@ -1,0 +1,91 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/WizardPane",
+    "name": "dojox.widget.WizardPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/Wizard",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "href": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "title": "Extract Content"
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Parse On Load"
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "title": "Prevent Cache"
+        },
+        "preload": {
+            "datatype": "boolean",
+            "title": "Preload"
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "title": "Refresh On Show"
+        },
+/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
+        "loadingMessage": {
+            "datatype": "string",
+            "defaultValue": "<span class='dijitContentPaneLoading'>Loading...</span>",
+            "title": "Loading Message"
+        },
+        "errorMessage": {
+            "datatype": "string",
+            "defaultValue": "<span class='dijitContentPaneError'>Sorry, an error occurred</span>",
+            "title": "Error Message"
+        },
+*/
+        "doLayout": {
+            "datatype": "string",
+            "defaultValue": "auto",
+            "hidden": true
+        },
+        "canGoBack": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Can Go Back"
+        },
+        "passFunction": {
+            "datatype": "string",
+            "title": "Pass Function"
+        },
+        "doneFunction": {
+            "datatype": "string",
+            "title": "Done Function"
+        },
+/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
+        "ioArgs": {
+            "datatype": "json",
+            "description": "Parameters to pass to xhrGet() request, for example:\n\t<div dojoType=\"dijit.layout.ContentPane\" href=\"./bar\" ioArgs=\"{timeout: 500}\">",
+            "hidden": false
+        },
+*/
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "content": "<span></span>"
+}

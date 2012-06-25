@@ -9,9 +9,6 @@ define("dijit/form/FilteringSelect", [
 
 	// module:
 	//		dijit/form/FilteringSelect
-	// summary:
-	//		An enhanced version of the HTML SELECT tag, populated dynamically
-
 
 	return declare("dijit.form.FilteringSelect", [MappedTextBox, ComboBoxMixin], {
 		// summary:

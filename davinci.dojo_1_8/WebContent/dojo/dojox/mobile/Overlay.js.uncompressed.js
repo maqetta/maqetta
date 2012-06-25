@@ -14,14 +14,18 @@ define("dojox/mobile/Overlay", [
 
 	return declare("dojox.mobile.Overlay", WidgetBase, {
 		// summary:
-		//		A non-templated widget that animates up from the bottom, overlaying the current content
-		//
+		//		A non-templated widget that animates up from the bottom, 
+		//		overlaying the current content.
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblOverlay mblOverlayHidden",
 
 		_reposition: function(){
 			// summary:
 			//		Position the overlay at the bottom
+			// tags:
+			//		private
 			var popupPos = domGeometry.position(this.domNode);
 			var vp = windowUtils.getBox();
 			if((popupPos.y+popupPos.h) != vp.h // TODO: should be a has() test for position:fixed not scrolling

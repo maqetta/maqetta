@@ -17,7 +17,7 @@ define("dijit/_base/manager", [
 		// summary:
 		//		Returns a widget by it's id, or if passed a widget, no-op (like dom.byId())
 		// id: String|dijit._Widget
-		return registry.byId(id); // dijit._Widget
+		return registry.byId(id); // dijit/_WidgetBase
 	};
 
 	dijit.getUniqueId = function(widgetType){
@@ -46,7 +46,7 @@ define("dijit/_base/manager", [
 		// summary:
 		//		Returns the widget corresponding to the given DOMNode
 		// node: DOMNode
-		return registry.byNode(node); // dijit._Widget
+		return registry.byNode(node); // dijit/_WidgetBase
 	};
 
 	dijit.getEnclosingWidget = function(node){

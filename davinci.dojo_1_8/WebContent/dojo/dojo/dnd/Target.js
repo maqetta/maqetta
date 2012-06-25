@@ -5,4 +5,9 @@
 */
 
 //>>built
-define("dojo/dnd/Target",["../_base/declare","../dom-class","./Source"],function(_1,_2,_3){return _1("dojo.dnd.Target",_3,{constructor:function(){this.isSource=false;_2.remove(this.node,"dojoDndSource");}});});
+define("dojo/dnd/Target",["../_base/declare","../dom-class","./Source"],function(_1,_2,_3){
+return _1("dojo.dnd.Target",_3,{constructor:function(){
+this.isSource=false;
+_2.remove(this.node,"dojoDndSource");
+}});
+});

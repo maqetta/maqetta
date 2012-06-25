@@ -12,23 +12,20 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 		"../DefaultPropertiesMixin"
 	], 
 	function(lang, declare, connect, Color, utils, RectangularGauge, LinearScaler, RectangularScale, RectangularValueIndicator, TextIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	var RectangularGauge = dojox.dgauges.RectangularGauge;
-	=====*/
-	
 	return declare("dojox.dgauges.components.default.HorizontalLinearGauge", [RectangularGauge, DefaultPropertiesMixin], {
-		//	borderColor:
+		// summary:
+		//		A horizontal gauge widget.
+
+		// borderColor: Object|Array|int
 		//		The border color. Default is "#C9DFF2".
 		borderColor: "#C9DFF2",
-		//	fillColor:
+		// fillColor: Object|Array|int
 		//		The background color. Default is "#FCFCFF".
 		fillColor: "#FCFCFF",
-		//	indicatorColor:
+		// indicatorColor: Object|Array|int
 		//		The indicator fill color. Default is "#F01E28".
 		indicatorColor: "#F01E28",
 		constructor: function(){
-			
 			// Base colors
 			this.borderColor = new Color(this.borderColor);
 			this.fillColor = new Color(this.fillColor);
@@ -76,6 +73,16 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 		},
 		
 		drawBackground: function(g, w, h){
+			// summary:
+			//		Draws the background shape of the gauge.
+			// g: dojox/gfx/canvas.Group
+			//		The group used to draw the background. 
+			// w: Number
+			//		The width of the gauge.
+			// h: Number
+			//		The height of the gauge.
+			// tags:
+			//		protected
 			h = 49;
 			var gap = 0;
 			var cr = 3;
@@ -86,7 +93,7 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 				width: w,
 				height: h,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: 0,
 				y1: 0,
@@ -96,7 +103,7 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 				color: "#A5A5A5",
 				width: 0.2
 			});
-			var entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -50)]);
+			entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -50)]);
 			gap = 4;
 			cr = 2
 			g.createRect({
@@ -105,7 +112,7 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: 0,
 				y1: 0,
@@ -114,14 +121,14 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 			}, entries));
 			gap = 6;
 			cr = 1
-			var entries = utils.createGradient([0, utils.brightness(this.borderColor, 60), 1, utils.brightness(this.borderColor, -40)]);
+			entries = utils.createGradient([0, utils.brightness(this.borderColor, 60), 1, utils.brightness(this.borderColor, -40)]);
 			g.createRect({
 				x: gap,
 				y: gap,
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: 0,
 				y1: 0,
@@ -131,14 +138,14 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 			
 			gap = 7;
 			cr = 0
-			var entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -40)]);
+			entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -40)]);
 			g.createRect({
 				x: gap,
 				y: gap,
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: w,
 				y1: 0,
@@ -147,14 +154,14 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 			}, entries));
 			gap = 5;
 			cr = 0
-			var entries = utils.createGradient([0, [255, 255, 255, 220], 0.8, utils.brightness(this.fillColor, -5), 1, utils.brightness(this.fillColor, -30)]);
+			entries = utils.createGradient([0, [255, 255, 255, 220], 0.8, utils.brightness(this.fillColor, -5), 1, utils.brightness(this.fillColor, -30)]);
 			g.createRect({
 				x: gap,
 				y: gap,
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "radial",
 				cx: w / 2,
 				cy: 0,
@@ -166,6 +173,10 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 			
 		},
 		drawTextBorder: function(g){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			return g.createRect({
 				x: 5,
 				y: 5,

@@ -20,8 +20,6 @@ define("dijit/_Widget", [
 
 // module:
 //		dijit/_Widget
-// summary:
-//		Old base for widgets.   New widgets should extend _WidgetBase instead
 
 
 function connectToDomNode(){
@@ -46,10 +44,10 @@ if(kernel.connect){
 
 var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusMixin], {
 	// summary:
-	//		Base class for all Dijit widgets.
+	//		Old base class for widgets.   New widgets should extend `dijit/_WidgetBase` instead
 	//
 	// description:
-	//		Base class for all Dijit widgets.
+	//		Old Base class for Dijit widgets.
 	//
 	//		Extends _WidgetBase, adding support for:
 	//			- declaratively/programatically specifying widget initialization parameters like
@@ -63,8 +61,8 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 	//			- onShow(), onHide(), onClose()
 	//
 	//		Also, by loading code in dijit/_base, turns on:
-	//			- browser sniffing (putting browser id like .dj_ie on <html> node)
-	//			- high contrast mode sniffing (add .dijit_a11y class to <body> if machine is in high contrast mode)
+	//			- browser sniffing (putting browser class like `dj_ie` on `<html>` node)
+	//			- high contrast mode sniffing (add `dijit_a11y` class to `<body>` if machine is in high contrast mode)
 
 
 	////////////////// DEFERRED CONNECTS ///////////////////
@@ -291,7 +289,7 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 		//		supposed to be internal/hidden, but it's left here for back-compat reasons.
 
 		kernel.deprecated(this.declaredClass+"::getDescendants() is deprecated. Use getChildren() instead.", "", "2.0");
-		return this.containerNode ? query('[widgetId]', this.containerNode).map(registry.byNode) : []; // dijit._Widget[]
+		return this.containerNode ? query('[widgetId]', this.containerNode).map(registry.byNode) : []; // dijit/_WidgetBase[]
 	},
 
 	////////////////// MISCELLANEOUS METHODS ///////////////////

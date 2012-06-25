@@ -31,9 +31,6 @@ define("dijit/layout/AccordionContainer", [
 
 	// module:
 	//		dijit/layout/AccordionContainer
-	// summary:
-	//		Holds a set of panes where every pane's title is visible, but only one pane's content is visible at a time,
-	//		and switching between panes is visualized by sliding the other panes up/down.
 
 
 	// Design notes:
@@ -143,7 +140,7 @@ define("dijit/layout/AccordionContainer", [
 =====*/
 
 /*=====
-		// contentWidget: dijit._Widget
+		// contentWidget: dijit/_WidgetBase
 		//		Pointer to the real child widget
 		contentWidget: null,
 =====*/
@@ -339,7 +336,7 @@ define("dijit/layout/AccordionContainer", [
 			this.inherited(arguments);
 		},
 
-		addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
+		addChild: function(/*dijit/_WidgetBase*/ child, /*Integer?*/ insertIndex){
 			if(this._started){
 				// Adding a child to a started Accordion is complicated because children have
 				// wrapper widgets.  Default code path (calling this.inherited()) would add
@@ -428,7 +425,7 @@ define("dijit/layout/AccordionContainer", [
 			this.inherited(arguments);
 		},
 
-		_transition: function(/*dijit._Widget?*/ newWidget, /*dijit._Widget?*/ oldWidget, /*Boolean*/ animate){
+		_transition: function(/*dijit/_WidgetBase?*/ newWidget, /*dijit/_WidgetBase?*/ oldWidget, /*Boolean*/ animate){
 			// Overrides StackContainer._transition() to provide sliding of title bars etc.
 
 			if(has("ie") < 8){
@@ -503,7 +500,7 @@ define("dijit/layout/AccordionContainer", [
 		},
 
 		// note: we are treating the container as controller here
-		_onKeyPress: function(/*Event*/ e, /*dijit._Widget*/ fromTitle){
+		_onKeyPress: function(/*Event*/ e, /*dijit/_WidgetBase*/ fromTitle){
 			// summary:
 			//		Handle keypress events
 			// description:

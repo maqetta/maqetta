@@ -10,7 +10,7 @@ define("dojox/mobile/lazyLoadUtils", [
 	// module:
 	//		dojox/mobile/lazyLoadUtils
 	// summary:
-	//		Utilities to lazy-load dojo widgets.
+	//		Utilities to lazy-loading of Dojo widgets.
 
 	var lazyLoadUtils = new function(){
 		this._lazyNodes = [];
@@ -51,10 +51,10 @@ define("dojox/mobile/lazyLoadUtils", [
 
 		this.instantiateLazyWidgets = function(root, requires, callback){
 			// summary:
-			//		Instantiate dojo widgets under the root node.
+			//		Instantiates dojo widgets under the root node.
 			// description:
-			//		Find dom nodes that have the dojoType or data-dojo-type attributes,
-			//		require the found dojo modules, and run the parser.
+			//		Finds DOM nodes that have the dojoType or data-dojo-type attributes,
+			//		requires the found Dojo modules, and runs the parser.
 			var d = new Deferred();
 			var req = requires ? requires.split(/,/) : [];
 			var nodes = root.getElementsByTagName("*"); // avoid use of dojo.query
@@ -88,6 +88,13 @@ define("dojox/mobile/lazyLoadUtils", [
 			return d;
 		}	
 	};
+	
+	/*=====
+    return {
+		// summary:
+		//		Utilities to lazy-loading of Dojo widgets.
+    };
+    =====*/
 	return lazyLoadUtils;
 });
 

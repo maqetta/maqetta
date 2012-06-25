@@ -1,0 +1,76 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/Iterator",
+    "name": "dojox.widget.Iterator",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/Iterator",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "widgetClass": {
+            "datatype": "string",
+            "title": "Widget Class"
+        },
+        "replaceVars": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Replace Variables"
+        },
+        "defaults": {
+            "datatype": "json",
+            "title": "Defaults"
+        },
+        "mixins": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Mix-ins"
+        },
+        "start": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Start"
+        },
+        "fetchMax": {
+            "datatype": "number",
+            "defaultValue": 1000,
+            "title": "Maximum Fetch"
+        },
+        "query": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"name\\\":\\\"*\\\"}\"",
+            "title": "Query"
+        },
+        "defaultValue": {
+            "datatype": "string",
+            "title": "Default Value"
+        },
+        "dataValues": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Data Values"
+        },
+        "data": {
+            "datatype": "object",
+            "title": "Data Array"
+        },
+        "store": {
+            "datatype": "object",
+            "title": "Data Store"
+        },
+        "attrs": {
+            "datatype": "array",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>"
+}

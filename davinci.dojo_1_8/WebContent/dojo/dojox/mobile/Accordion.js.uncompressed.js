@@ -21,13 +21,45 @@ define("dojox/mobile/Accordion", [
 
 	// inner class
 	var _AccordionTitle = declare([WidgetBase, Contained], {
+		// summary:
+		//		A widget for the title of the accordion.
+	
+		// label: String
+		//		The title of the accordion.
 		label: "Label",
+		
+		// icon1: String
+		//		A path for the unselected (typically dark) icon. If icon is not
+		//		specified, the iconBase parameter of the parent widget is used.
 		icon1: "",
+
+		// icon2: String
+		//		A path for the selected (typically highlight) icon. If icon is
+		//		not specified, the iconBase parameter of the parent widget or
+		//		icon1 is used.
 		icon2: "",
+
+		// iconPos1: String
+		//		The position of an aggregated unselected (typically dark)
+		//		icon. IconPos1 is a comma-separated list of values like
+		//		top,left,width,height (ex. "0,0,29,29"). If iconPos1 is not
+		//		specified, the iconPos parameter of the parent widget is used.
 		iconPos1: "",
+
+		// iconPos2: String
+		//		The position of an aggregated selected (typically highlight)
+		//		icon. IconPos2 is a comma-separated list of values like
+		//		top,left,width,height (ex. "0,0,29,29"). If iconPos2 is not
+		//		specified, the iconPos parameter of the parent widget or
+		//		iconPos1 is used.
 		iconPos2: "",
+
+		// selected: Boolean
+		//		If true, the widget is in the selected state.
 		selected: false,
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblAccordionTitle",
 
 		buildRendering: function(){
@@ -73,6 +105,8 @@ define("dojox/mobile/Accordion", [
 		},
 
 		_setIcon: function(icon, n){
+			// tags:
+			//		private
 			if(!this.getParent()){ return; } // icon may be invalid because inheritParams is not called yet
 			this._set("icon" + n, icon);
 			if(!this["iconParentNode" + n]){
@@ -86,10 +120,14 @@ define("dojox/mobile/Accordion", [
 		},
 
 		_setIcon1Attr: function(icon){
+			// tags:
+			//		private
 			this._setIcon(icon, 1);
 		},
 
 		_setIcon2Attr: function(icon){
+			// tags:
+			//		private
 			this._setIcon(icon, 2);
 		},
 
@@ -123,12 +161,14 @@ define("dojox/mobile/Accordion", [
 
 		onClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks
 			// tags:
 			//		callback
 		},
 
 		_setSelectedAttr: function(/*Boolean*/selected){
+			// tags:
+			//		private
 			domClass.toggle(this.domNode, "mblAccordionTitleSelected", selected);
 			this._set("selected", selected);
 		}
@@ -150,8 +190,8 @@ define("dojox/mobile/Accordion", [
 		//		A layout widget that allows the user to freely navigate between panes.
 		// description:
 		//		Accordion has no specific child widget. Any widgets can be its
-		//		children. Typically dojox.mobile.Pane, dojox.mobile.Container,
-		//		or dojox.mobile.ContentPane are used as children widgets.
+		//		child. Typically dojox/mobile/Pane, dojox/mobile/Container,
+		//		or dojox/mobile/ContentPane are used as child widgets.
 
 		// iconBase: String
 		//		The default icon path for child widgets.
@@ -184,8 +224,11 @@ define("dojox/mobile/Accordion", [
 		/* internal properties */
 		duration: .3, // [seconds]
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblAccordion",
 
+		// _openSpace: [private] Number|String 
 		_openSpace: 1,
 
 		startup: function(){
@@ -225,6 +268,8 @@ define("dojox/mobile/Accordion", [
 		},
 
 		_setupChild: function(/*Widget*/ child){
+			// tags:
+			//		private
 			if(child.domNode.style.overflow != "hidden"){
 				child.domNode.style.overflow = this.fixedHeight ? "auto" : "hidden";
 			}
@@ -291,6 +336,8 @@ define("dojox/mobile/Accordion", [
 		},
 
 		_updateLast: function(){
+			// tags:
+			//		private
 			var children = this.getChildren();
 			array.forEach(children, function(c, i){
 				// add "mblAccordionTitleLast" to the last, closed accordion title
@@ -301,7 +348,7 @@ define("dojox/mobile/Accordion", [
 
 		expand: function(/*Widget*/pane, /*boolean*/noAnimation){
 			// summary:
-			//		Expand the given pane to make it visible.
+			//		Expands the given pane to make it visible.
 			// pane:
 			//		A pane widget to expand.
 			// noAnimation:
@@ -339,7 +386,7 @@ define("dojox/mobile/Accordion", [
 
 		collapse: function(/*Widget*/pane, /*boolean*/noAnimation){
 			// summary:
-			//		Collapse the given pane to close it.
+			//		Collapses the given pane to close it.
 			// pane:
 			//		A pane widget to collapse.
 			// noAnimation:
@@ -377,7 +424,7 @@ define("dojox/mobile/Accordion", [
 
 		select: function(/*Widget*/pane){
 			// summary:
-			//		Highlight the title bar of the given pane.
+			//		Highlights the title bar of the given pane.
 			// pane:
 			//		A pane widget to highlight.
 			pane._at.set("selected", true);
@@ -385,7 +432,7 @@ define("dojox/mobile/Accordion", [
 
 		deselect: function(/*Widget*/pane){
 			// summary:
-			//		Unhighlight the title bar of the given pane.
+			//		Unhighlights the title bar of the given pane.
 			// pane:
 			//		A pane widget to unhighlight.
 			pane._at.set("selected", false);

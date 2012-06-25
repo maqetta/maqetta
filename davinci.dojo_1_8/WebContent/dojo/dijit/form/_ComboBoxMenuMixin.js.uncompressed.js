@@ -8,8 +8,6 @@ define("dijit/form/_ComboBoxMenuMixin", [
 
 // module:
 //		dijit/form/_ComboBoxMenuMixin
-// summary:
-//		Focus-less menu for internal use in `dijit.form.ComboBox`
 
 return declare( "dijit.form._ComboBoxMenuMixin", null, {
 	// summary:
@@ -184,7 +182,7 @@ return declare( "dijit.form._ComboBoxMenuMixin", null, {
 	},
 
 	getHighlightedOption: function(){
-		return this._getSelectedAttr();
+		return this.selected;
 	}
 });
 

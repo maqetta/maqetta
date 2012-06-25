@@ -6,8 +6,6 @@ define("dijit/form/ComboBox", [
 
 	// module:
 	//		dijit/form/ComboBox
-	// summary:
-	//		Auto-completing text box
 
 	return declare("dijit.form.ComboBox", [ValidationTextBox, ComboBoxMixin], {
 		// summary:

@@ -17,15 +17,13 @@ has.add('file-multiple', function(){return !!({'true':1,'false':1}[domAttr.get(d
 
 
 return declare("dojox.form.uploader.Base", [Widget, TemplatedMixin, WidgetsInTemplateMixin], {
-
-	// Version: 1.6
-
 	// summary:
 	// 		The Base class used for dojox.form.Uploader and dojox.form.uploader.FileList.
 	//
 	// 	description:
 	// 		Should not be used as a standalone. To be mixed in with other classes.
 	//
+	// 		Version: 1.6
 
 	getForm: function(){
 		// summary:

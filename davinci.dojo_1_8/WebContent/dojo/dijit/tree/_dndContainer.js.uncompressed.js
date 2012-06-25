@@ -10,9 +10,6 @@ define("dijit/tree/_dndContainer", [
 
 	// module:
 	//		dijit/tree/_dndContainer
-	// summary:
-	//		This is a base class for `dijit.tree._dndSelector`, and isn't meant to be used directly.
-	//		It's modeled after `dojo.dnd.Container`.
 
 	/*=====
 	 var __Args = function(){

@@ -26,11 +26,13 @@ define("dojox/dtl/_base", [
 
 	/*=====
 		dd._Context = function(dict){
-			// summary: Pass one of these when rendering a template to tell the template what values to use.
+			// summary:
+			//		Pass one of these when rendering a template to tell the template what values to use.
 		}
 	=====*/
 	dd._Context = lang.extend(function(dict){
-		// summary: Pass one of these when rendering a template to tell the template what values to use.
+		// summary:
+		//		Pass one of these when rendering a template to tell the template what values to use.
 		if(dict){
 			lang._mixin(this, dict);
 			if(dict.get){
@@ -112,6 +114,12 @@ define("dojox/dtl/_base", [
 		return parts;
 	}
 
+	/*=====
+	 dd.Token = declare(null,{
+	 	// tags:
+	 	//		private
+	 });
+	 =====*/
 	dd.Token = function(token_type, contents){
 		this.token_type = token_type;
 		this.contents = new String(lang.trim(contents));
@@ -138,7 +146,8 @@ define("dojox/dtl/_base", [
 
 	var ddt = dd.text = {
 		_get: function(module, name, errorless){
-			// summary: Used to find both tags and filters
+			// summary:
+			//		Used to find both tags and filters
 			var params = dd.register.get(module, name.toLowerCase(), errorless);
 			if(!params){
 				if(!errorless){
@@ -240,32 +249,33 @@ define("dojox/dtl/_base", [
 	}
 
 	/*=====
-		dd.Template = function(template, isString){
-			// summary: 
-			// 		The base class for text-based templates.
-			// template: String|dojo._Url
-			//		The string or location of the string to
-			//		use as a template
-			// isString: Boolean
-			//		Indicates whether the template is a string or a url.
-		};
-		dd.Template.prototype.update= function(node, context){
-			// summary:
-			//		Updates this template according to the given context.
-			// node: DOMNode|String|dojo.NodeList
-			//		A node reference or set of nodes
-			// context: dojo._Url|String|Object
-			//		The context object or location
+		dd.Template = declare(null,{
+			constructor: function(template, isString){
+				// summary: 
+				// 		The base class for text-based templates.
+				// template: String|dojo._Url
+				//		The string or location of the string to
+				//		use as a template
+				// isString: Boolean
+				//		Indicates whether the template is a string or a url.
+			},
+			update: function(node, context){
+				// summary:
+				//		Updates this template according to the given context.
+				// node: DOMNode|String|dojo/NodeList
+				//		A node reference or set of nodes
+				// context: dojo._Url|String|Object
+				//		The context object or location
+			},
+			render: function(context, buffer){
+				// summary:
+				//		Renders this template.
+				// context: Object
+				//		The runtime context.
+				// buffer: StringBuilder?
+				//		A string buffer.
 			}
-		dd.Template.prototype.render= function(context, buffer){
-			// summary:
-			//		Renders this template.
-			// context: Object
-			//		The runtime context.
-			// buffer: StringBuilder?
-			//		A string buffer.
-		}
-		
+		});
 	=====*/
 	dd.Template = lang.extend(function(/*String|dojo._Url*/ template, /*Boolean*/ isString){
 		// template:
@@ -280,7 +290,7 @@ define("dojox/dtl/_base", [
 		update: function(node, context){
 			// summary:
 			//		Updates this template according to the given context.
-			// node: DOMNode|String|dojo.NodeList
+			// node: DOMNode|String|dojo/NodeList
 			//		A node reference or set of nodes
 			// context: dojo._Url|String|Object
 			//		The context object or location
@@ -338,7 +348,8 @@ define("dojox/dtl/_base", [
 	});
 
 	dd._Filter = lang.extend(function(token){
-		// summary: Uses a string to find (and manipulate) a variable
+		// summary:
+		//		Uses a string to find (and manipulate) a variable
 		if(!token) throw new Error("Filter must be called with variable name");
 		this.contents = token;
 
@@ -493,7 +504,8 @@ define("dojox/dtl/_base", [
 	});
 
 	dd._TextNode = dd._Node = lang.extend(function(/*Object*/ obj){
-		// summary: Basic catch-all node
+		// summary:
+		//		Basic catch-all node
 		this.contents = obj;
 	},
 	{
@@ -502,7 +514,8 @@ define("dojox/dtl/_base", [
 			return this;
 		},
 		render: function(context, buffer){
-			// summary: Adds content onto the buffer
+			// summary:
+			//		Adds content onto the buffer
 			return buffer.concat(this.contents);
 		},
 		isEmpty: function(){
@@ -512,13 +525,15 @@ define("dojox/dtl/_base", [
 	});
 
 	dd._NodeList = lang.extend(function(/*Node[]*/ nodes){
-		// summary: Allows us to render a group of nodes
+		// summary:
+		//		Allows us to render a group of nodes
 		this.contents = nodes || [];
 		this.last = "";
 	},
 	{
 		push: function(node){
-			// summary: Add a new node to the list
+			// summary:
+			//		Add a new node to the list
 			this.contents.push(node);
 			return this;
 		},
@@ -527,7 +542,8 @@ define("dojox/dtl/_base", [
 			return this;
 		},
 		render: function(context, buffer){
-			// summary: Adds all content onto the buffer
+			// summary:
+			//		Adds all content onto the buffer
 			for(var i = 0; i < this.contents.length; i++){
 				buffer = this.contents[i].render(context, buffer);
 				if(!buffer) throw new Error("Template must return buffer");
@@ -554,7 +570,8 @@ define("dojox/dtl/_base", [
 	});
 
 	dd._VarNode = lang.extend(function(str){
-		// summary: A node to be processed as a variable
+		// summary:
+		//		A node to be processed as a variable
 		this.contents = new dd._Filter(str);
 	},
 	{
@@ -568,13 +585,15 @@ define("dojox/dtl/_base", [
 	});
 
 	dd._noOpNode = new function(){
-		// summary: Adds a no-op node. Useful in custom tags
+		// summary:
+		//		Adds a no-op node. Useful in custom tags
 		this.render = this.unrender = function(){ return arguments[1]; }
 		this.clone = function(){ return this; }
 	}
 
 	dd._Parser = lang.extend(function(tokens){
-		// summary: Parser used during initialization and for tag groups.
+		// summary:
+		//		Parser used during initialization and for tag groups.
 		this.contents = tokens;
 	},
 	{
@@ -653,12 +672,17 @@ define("dojox/dtl/_base", [
 	});
 
 	dd.register = {
+		// summary:
+		//		A register for filters and tags.
+		
 		_registry: {
 			attributes: [],
 			tags: [],
 			filters: []
 		},
 		get: function(/*String*/ module, /*String*/ name){
+			// tags:
+			//		private
 			var registry = dd.register._registry[module + "s"];
 			for(var i = 0, entry; entry = registry[i]; i++){
 				if(typeof entry[0] == "string"){
@@ -671,6 +695,8 @@ define("dojox/dtl/_base", [
 			}
 		},
 		getAttributeTags: function(){
+			// tags:
+			//		private
 			var tags = [];
 			var registry = dd.register._registry.attributes;
 			for(var i = 0, entry; entry = registry[i]; i++){
@@ -713,9 +739,31 @@ define("dojox/dtl/_base", [
 			}
 		},
 		tags: function(/*String*/ base, /*Object*/ locations){
+			// summary:
+			//		Register the specified tag libraries.
+			// description:
+			//		The locations parameter defines the contents of each library as a hash whose keys are the library names and values 
+			//		an array of the tags exported by the library. For example, the tags exported by the logic library would be:
+			//	|	{ logic: ["if", "for", "ifequal", "ifnotequal"] }
+			// base:
+			//		The base path of the libraries.
+			// locations:
+			//		An object defining the tags for each library as a hash whose keys are the library names and values 
+			//		an array of the tags or filters exported by the library.
 			dd.register._any("tags", base, locations);
 		},
 		filters: function(/*String*/ base, /*Object*/ locations){
+			// summary:
+			//		Register the specified filter libraries.
+			// description:
+			//		The locations parameter defines the contents of each library as a hash whose keys are the library names and values 
+			//		an array of the filters exported by the library. For example, the filters exported by the date library would be:
+			//	|	{ "dates": ["date", "time", "timesince", "timeuntil"] }
+			// base:
+			//		The base path of the libraries.
+			// locations:
+			//		An object defining the filters for each library as a hash whose keys are the library names and values 
+			//		an array of the filters exported by the library.
 			dd.register._any("filters", base, locations);
 		}
 	}

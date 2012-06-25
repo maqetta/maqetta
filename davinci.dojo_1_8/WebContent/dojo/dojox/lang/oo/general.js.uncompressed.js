@@ -11,17 +11,20 @@ dojo.require("dojox.lang.oo.Decorator");
 	// generally useful decorators
 
 	oog.augment = md(function(name, newValue, oldValue){
-		// summary: add property, if it was not defined before
+		// summary:
+		//		add property, if it was not defined before
 		return typeof oldValue == "undefined" ? newValue : oldValue;
 	});
 
 	oog.override = md(function(name, newValue, oldValue){
-		// summary: override property only if it was already present
+		// summary:
+		//		override property only if it was already present
 		return typeof oldValue != "undefined" ? newValue : oldValue;
 	});
 
 	oog.shuffle = md(function(name, newValue, oldValue){
-		// summary: replaces arguments for an old method
+		// summary:
+		//		replaces arguments for an old method
 		return isF(oldValue) ?
 			function(){
 				return oldValue.apply(this, newValue.apply(this, arguments));
@@ -29,17 +32,19 @@ dojo.require("dojox.lang.oo.Decorator");
 	});
 
 	oog.wrap = md(function(name, newValue, oldValue){
-		// summary: wraps the old values with a supplied function
+		// summary:
+		//		wraps the old values with a supplied function
 		return function(){ return newValue.call(this, oldValue, arguments); };
 	});
 
 	oog.tap = md(function(name, newValue, oldValue){
-		// summary: always returns "this" ignoring the actual return
+		// summary:
+		//		always returns "this" ignoring the actual return
 		return function(){ newValue.apply(this, arguments); return this; };
 	});
 
 	oog.before = md(function(name, newValue, oldValue){
-		//	summary:
+		// summary:
 		//		creates a chain of calls where the new method is called
 		//		before the old method
 		return isF(oldValue) ?
@@ -50,7 +55,7 @@ dojo.require("dojox.lang.oo.Decorator");
 	});
 
 	oog.after = md(function(name, newValue, oldValue){
-		//	summary:
+		// summary:
 		//		creates a chain of calls where the new method is called
 		//		after the old method
 		return isF(oldValue) ?

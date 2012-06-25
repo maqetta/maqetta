@@ -11,22 +11,20 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 		"../DefaultPropertiesMixin"
 		], 
 	function(lang, declare, Color, utils, CircularGauge, LinearScaler, CircularScale, CircularValueIndicator, TextIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	var CircularGauge = dojox.dgauges.CircularGauge;
-	=====*/
-	
 	return declare("dojox.dgauges.components.default.SemiCircularLinearGauge", [CircularGauge, DefaultPropertiesMixin], {
+		// summary:
+		//		A semi circular gauge widget.
+
 		_radius: 88,
 		_width: 200,
 		_height: 123,
-		//	borderColor:
+		// borderColor: Object|Array|int
 		//		The border color. Default is "#C9DFF2".
 		borderColor: "#C9DFF2",
-		//	fillColor:
+		// fillColor: Object|Array|int
 		//		The background color. Default is "#FCFCFF".
 		fillColor: "#FCFCFF",
-		//	indicatorColor:
+		// indicatorColor: Object|Array|int
 		//		The indicator fill color. Default is "#F01E28".
 		indicatorColor: "#F01E28",
 		constructor: function(){
@@ -48,7 +46,7 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 			this.addElement("scale", scale);
 			
 			// Value indicator
-			indicator = new CircularValueIndicator();
+			var indicator = new CircularValueIndicator();
 			scale.addIndicator("indicator", indicator);
 			
 			// Gauge Foreground (needle cap)
@@ -68,6 +66,12 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 		},
 		
 		drawBackground: function(g){
+			// summary:
+			//		Draws the background shape of the gauge.
+			// g: dojox/gfx/canvas.Group
+			//		The group used to draw the background. 
+			// tags:
+			//		protected
 			var w = this._width;
 			var h = this._height;
 			var gap = 0;
@@ -79,7 +83,7 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 				width: w,
 				height: h,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: 0,
 				y1: 0,
@@ -89,7 +93,7 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 				color: "#A5A5A5",
 				width: 0.2
 			});
-			var entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -50)]);
+			entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -50)]);
 			gap = 4;
 			cr = 2
 			g.createRect({
@@ -98,7 +102,7 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: 0,
 				y1: 0,
@@ -107,14 +111,14 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 			}, entries));
 			gap = 6;
 			cr = 1
-			var entries = utils.createGradient([0, utils.brightness(this.borderColor, 60), 1, utils.brightness(this.borderColor, -40)]);
+			entries = utils.createGradient([0, utils.brightness(this.borderColor, 60), 1, utils.brightness(this.borderColor, -40)]);
 			g.createRect({
 				x: gap,
 				y: gap,
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: 0,
 				y1: 0,
@@ -124,14 +128,14 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 			
 			gap = 7;
 			cr = 0
-			var entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -40)]);
+			entries = utils.createGradient([0, utils.brightness(this.borderColor, 70), 1, utils.brightness(this.borderColor, -40)]);
 			g.createRect({
 				x: gap,
 				y: gap,
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "linear",
 				x1: w,
 				y1: 0,
@@ -140,14 +144,14 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 			}, entries));
 			gap = 5;
 			cr = 0			
-			var entries = utils.createGradient([0, [255, 255, 255, 220], 0.8, utils.brightness(this.fillColor, -5), 1, utils.brightness(this.fillColor, -30)]);
+			entries = utils.createGradient([0, [255, 255, 255, 220], 0.8, utils.brightness(this.fillColor, -5), 1, utils.brightness(this.fillColor, -30)]);
 			g.createRect({
 				x: gap,
 				y: gap,
 				width: w - 2 * gap,
 				height: h - 2 * gap,
 				r: cr
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "radial",
 				cx: w/2,
 				cy: h/2,
@@ -160,6 +164,12 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 		},
 		
 		drawForeground: function(g){
+			// summary:
+			//		Draws the foreground shape of the gauge.
+			// g: dojox/gfx/canvas.Group
+			//		The group used to draw the foreground. 
+			// tags:
+			//		protected
 			var r = 0.07 * this._radius;
 			var entries = utils.createGradient([0, this.borderColor, 1, utils.brightness(this.borderColor, -20)]);
 			g.createEllipse({
@@ -167,7 +177,7 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 				cy: 0.76 * this._height,
 				rx: r,
 				ry: r
-			}).setFill(dojo.mixin({
+			}).setFill(lang.mixin({
 				type: "radial",
 				cx: this._width / 2 - 5,
 				cy: this._height * 0.76 - 5,
@@ -179,6 +189,10 @@ define("dojox/dgauges/components/default/SemiCircularLinearGauge", [
 		},
 		
 		drawTextBorder: function(g){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			return g.createRect({
 				x: this._width / 2 - 12,
 				y: this._height - 20,

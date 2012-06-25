@@ -25,8 +25,6 @@ define("dijit/_editor/plugins/ViewSource", [
 
 // module:
 //		dijit/_editor/plugins/ViewSource
-// summary:
-//		This plugin provides a simple view source capability.
 
 
 var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
@@ -82,6 +80,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 			editor = this.editor;
 		this.button = new ToggleButton({
 			label: strings["viewSource"],
+			ownerDocument: editor.ownerDocument,
 			dir: editor.dir,
 			lang: editor.lang,
 			showLabel: false,
@@ -107,7 +106,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 	},
 
 
-	setEditor: function(/*dijit.Editor*/ editor){
+	setEditor: function(/*dijit/Editor*/ editor){
 		// summary:
 		//		Tell the plugin which Editor it is associated with.
 		// editor: Object

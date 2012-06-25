@@ -118,12 +118,12 @@ define("dojox/charting/plot2d/common", ["dojo/_base/lang", "dojo/_base/array", "
 				// 2nd pass: stack values
 				for(var i = 0; i < stats.hmax; ++i){
 					var v = series[0].data[i];
-                    v = v && (typeof v == "number" ? v : v.y);
+					v = v && (typeof v == "number" ? v : v.y);
 					if(isNaN(v)){ v = 0; }
 					stats.vmin = Math.min(stats.vmin, v);
 					for(var j = 1; j < series.length; ++j){
 						var t = series[j].data[i];
-                        t = t && (typeof t == "number" ? t : t.y);
+						t = t && (typeof t == "number" ? t : t.y);
 						if(isNaN(t)){ t = 0; }
 						v += t;
 					}

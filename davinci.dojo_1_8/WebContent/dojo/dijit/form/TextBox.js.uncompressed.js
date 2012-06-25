@@ -16,8 +16,6 @@ define("dijit/form/TextBox", [
 
 	// module:
 	//		dijit/form/TextBox
-	// summary:
-	//		A base class for textbox form inputs
 
 	var TextBox = declare("dijit.form.TextBox", [_FormValueWidget, _TextBoxMixin], {
 		// summary:
@@ -41,7 +39,7 @@ define("dijit/form/TextBox", [
 		postCreate: function(){
 			this.inherited(arguments);
 
-			if(has("ie")){
+			if(has("ie") < 9){
 				// IE INPUT tag fontFamily has to be set directly using STYLE
 				// the defer gives IE a chance to render the TextBox and to deal with font inheritance
 				this.defer(function(){

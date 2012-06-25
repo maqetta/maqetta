@@ -713,3 +713,16 @@
 .mblProgressBarProgress-compat-gecko () {
 	background-image: -moz-linear-gradient(top, #e7f7ff 0%, #cee7ff 50%, #add7ff 100%);
 }
+
+// ValuePicker.less
+@mbl-value-picker-slot-button-background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#D6D7D6), color-stop(0.5, #d6d3d6), color-stop(0.9, #bdbebd));
+@mbl-value-picker-slot-button-background-image-gecko: -moz-linear-gradient(top, #f7f7f7 0%, #d6d3d6 50%, #bdbebd 90%, #d6d7d6 100%);
+@mbl-value-picker-slot-button-radius: 5px;
+@mbl-value-picker-slot-input-area-backbground-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.1, #fafafa), color-stop(0.2, #fafafa), color-stop(0.5, #ffffff), color-stop(0.9, #ffffff));
+@mbl-value-picker-slot-input-area-backbground-image-geco: -moz-linear-gradient(top, #fafafa 10%, #fafafa 20%, #ffffff 50%, #ffffff 90%);
+.mblValuePickerSlot-style () {
+  margin:  0 5px;
+}
+.mblValuePickerSlot-input-style () {
+  font-size: 28px;  
+}

@@ -2,26 +2,26 @@ define("dojox/editor/plugins/NormalizeStyle", [
 	"dojo",
 	"dijit",
 	"dojox",
-	"dijit/_editor/html",
 	"dijit/_editor/_Plugin",
+	"dijit/_editor/html",
 	"dojo/_base/connect",
 	"dojo/_base/declare"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.NormalizeStyle",dijit._editor._Plugin,{
+dojo.declare("dojox.editor.plugins.NormalizeStyle", _Plugin,{
 	// summary:
-	//		This plugin provides NormalizeStyle cabability to the editor.  It is
+	//		This plugin provides NormalizeStyle capability to the editor.  It is
 	//		a headless plugin that tries to normalize how content is styled when
 	//		it comes out of th editor ('b' or css).   It also auto-converts
 	//		incoming content to the proper one expected by the browser as well so
 	//		that the native styling buttons work.
 
-	// mode [public] String
+	// mode: [public] String
 	//		A String variable indicating if it should use semantic tags 'b', 'i', etc, or
 	//		CSS styling.  The default is semantic.
 	mode: "semantic",
 
-	// condenseSpans [public] Boolean
+	// condenseSpans: [public] Boolean
 	//		A boolean variable indicating if it should try to condense
 	//		'span''span''span' styles  when in css mode
 	//		The default is true, it will try to combine where it can.

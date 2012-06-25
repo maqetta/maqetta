@@ -145,18 +145,19 @@
   height: 48px;
   border-top: 1px solid #7b797b;
   border-bottom: 1px solid #c6c3c6;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#adaead), to(#e7e3e7), color-stop(0.1, #d6d7d6), color-stop(0.5, #f7f7f7), color-stop(0.9, #f7f3f7));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.1, #fafafa), color-stop(0.2, #fafafa), color-stop(0.5, #ffffff), color-stop(0.9, #ffffff));
 }
 .mblValuePickerSlotInput {
   display: block;
   width: 90%;
   height: 90%;
   margin: 5% auto;
-  font-size: 28px;
+  padding: 0;
   text-align: center;
   border-style: none;
   background-color: transparent;
+  font-size: 28px;
 }
-.mblValuePickerTimePicker .mblToolBarButton {
+.mblValuePickerTimePicker > .mblToolBarButton {
   top: 45px;
 }

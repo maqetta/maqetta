@@ -11,19 +11,17 @@ define("dojox/dgauges/components/grey/CircularLinearGauge", [
 		"../DefaultPropertiesMixin"
 	], 
 	function(lang, declare, Color, utils, CircularGauge, LinearScaler, CircularScale, CircularValueIndicator, CircularRangeIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	 var CircularGauge = dojox.dgauges.CircularGauge;
-	 =====*/
-
 		return declare("dojox.dgauges.components.grey.CircularLinearGauge", [CircularGauge, DefaultPropertiesMixin], {
-			//	borderColor:
+			// summary:
+			//		A circular gauge widget.
+
+			// borderColor: Object|Array|int
 			//		The border color. Default is "#9498A1".
 			borderColor: [148,152,161],
-			//	fillColor:
+			// fillColor: Object|Array|int
 			//		The background color. Default is "#9498A1".
 			fillColor: [148,152,161],
-			//	indicatorColor:
+			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#3F3F3F".
 			indicatorColor: [63,63,63],
 			constructor: function(args, node){
@@ -61,6 +59,12 @@ define("dojox/dgauges/components/grey/CircularLinearGauge", [
 			},
 
 			drawBackground: function(g){
+				// summary:
+				//		Draws the background shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the background. 
+				// tags:
+				//		protected
 				g.createEllipse({
 					cx: 73.5,
 					cy: 73.75,
@@ -99,6 +103,12 @@ define("dojox/dgauges/components/grey/CircularLinearGauge", [
 			},
 
 			drawForeground: function(g){
+				// summary:
+				//		Draws the foreground shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the foreground. 
+				// tags:
+				//		protected
 				g.createEllipse({
 					cx: 73.3,
 					cy: 73.8,

@@ -78,7 +78,7 @@ define("dojox/charting/plot2d/Grid", ["dojo/_base/lang", "dojo/_base/declare", "
 		constructor: function(chart, kwArgs){
 			// summary:
 			//		Create the faux Grid plot.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this plot belongs to.
 			// kwArgs: dojox.charting.plot2d.__GridCtorArgs?
 			//		An optional keyword arguments object to help define the parameters of the underlying grid.
@@ -96,16 +96,16 @@ define("dojox/charting/plot2d/Grid", ["dojo/_base/lang", "dojo/_base/declare", "
 		addSeries: function(run){
 			// summary:
 			//		Ignored but included as a dummy method.
-			// returns: dojox.charting.plot2d.Grid
+			// returns: dojox/charting/plot2d/Grid
 			//		The reference to this plot for functional chaining.
-			return this;	//	dojox.charting.plot2d.Grid
+			return this;	//	dojox/charting/plot2d/Grid
 		},
 		getSeriesStats: function(){
 			// summary:
 			//		Returns default stats (irrelevant for this type of plot).
 			// returns: Object
 			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			return lang.delegate(dc.defaultStats);
+			return lang.delegate(dc.defaultStats); // Object
 		},
 		cleanGroup: function(){
 			this.inherited(arguments);
@@ -136,7 +136,7 @@ define("dojox/charting/plot2d/Grid", ["dojo/_base/lang", "dojo/_base/declare", "
 			//		An object of the form { width, height }.
 			// offsets: Object
 			//		An object of the form { l, r, t, b }.
-			// returns: dojox.charting.plot2d.Grid
+			// returns: dojox/charting/plot2d/Grid
 			//		A reference to this plot for functional chaining.
 			if(this.zoom){
 				return this.performZoom(dim, offsets);
@@ -240,7 +240,7 @@ define("dojox/charting/plot2d/Grid", ["dojo/_base/lang", "dojo/_base/declare", "
 				}
 			}
 			this.dirty = false;
-			return this;	//	dojox.charting.plot2d.Grid
+			return this;	//	dojox/charting/plot2d/Grid
 		},
 		_animateGrid: function(shape, type, offset, size){
 			var transStart = type == "h" ? [offset, 0] : [0, offset];

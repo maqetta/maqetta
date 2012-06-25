@@ -12,14 +12,11 @@ define("dijit/form/_FormWidgetMixin", [
 
 // module:
 //		dijit/form/_FormWidgetMixin
-// summary:
-//		Mixin for widgets corresponding to native HTML elements such as <checkbox> or <button>,
-//		which can be children of a <form> node or a `dijit.form.Form` widget.
 
 return declare("dijit.form._FormWidgetMixin", null, {
 	// summary:
-	//		Mixin for widgets corresponding to native HTML elements such as <checkbox> or <button>,
-	//		which can be children of a <form> node or a `dijit.form.Form` widget.
+	//		Mixin for widgets corresponding to native HTML elements such as `<checkbox>` or `<button>`,
+	//		which can be children of a `<form>` node or a `dijit/form/Form` widget.
 	//
 	// description:
 	//		Represents a single HTML element.
@@ -33,15 +30,15 @@ return declare("dijit.form._FormWidgetMixin", null, {
 	name: "",
 
 	// alt: String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	alt: "",
 
 	// value: String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	value: "",
 
 	// type: [const] String
-	//		Corresponds to the native HTML <input> element's attribute.
+	//		Corresponds to the native HTML `<input>` element's attribute.
 	type: "text",
 
 	// tabIndex: Integer

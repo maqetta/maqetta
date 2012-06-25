@@ -59,7 +59,7 @@ var CellMerge = declare("dojox.grid.enhanced.plugins.CellMerge", _Plugin, {
 		//		The column index of the cell whose content should be used as the content of the merged cell.
 		//		It must be larger than or equal to the startColumnIndex, and less than or equal to the endColumnIndex.
 		//		If it is omitted, the content of the leading edge (left-most for ltr, right most for rtl) cell will be used.
-		// return: Object | null
+		// returns: Object | null
 		//		A handler for the merged cells created by a call of this function.
 		//		This handler can be used later to unmerge cells using the function unmergeCells
 		//		If the merge is not valid, returns null;
@@ -92,7 +92,7 @@ var CellMerge = declare("dojox.grid.enhanced.plugins.CellMerge", _Plugin, {
 		//		Get all records of currently merged cells.
 		// tags:
 		//		public
-		// return: Array
+		// returns: Array
 		//		An array of records for merged-cells.
 		//		The record has the following structure:
 		//		{
@@ -113,7 +113,7 @@ var CellMerge = declare("dojox.grid.enhanced.plugins.CellMerge", _Plugin, {
 		//		Get the records of currently merged cells at the given row.
 		// tags:
 		//		public
-		// return: Array
+		// returns: Array
 		//		An array of records for merged-cells. See docs of getMergedCells.
 		return this._merged[rowIndex] || [];
 	},

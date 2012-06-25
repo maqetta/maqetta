@@ -15,16 +15,16 @@ define("dojox/mobile/ProgressBar", [
 		//		A widget that shows the progress of a task.
 		// description:
 		//		The current progress can be specified either in percent or by a
-		//		value between 0 and maximum. Setter for value can be used to
+		//		value between 0 and maximum. The setter for the value can be used to
 		//		update the progress.
 
 		// value: String
 		//		Number ("0" to maximum) or percentage ("0%" to "100%")
-		//		indicating the amount of task completed.
+		//		indicating the degree of completion of the task.
 		value: "0",
 
 		// maximum: Number
-		//		Max sample number.
+		//		Maximum value.
 		maximum: 100,
 
 		// label: String
@@ -32,6 +32,9 @@ define("dojox/mobile/ProgressBar", [
 		label: "",
 
 		/* internal properties */	
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblProgressBar",
 
 		buildRendering: function(){
@@ -47,6 +50,8 @@ define("dojox/mobile/ProgressBar", [
 		_setValueAttr: function(/*String*/value){
 			// summary:
 			//		Sets the new value to the progress bar.
+			// tags:
+			//		private
 			value += "";
 			this._set("value", value);
 
@@ -61,12 +66,14 @@ define("dojox/mobile/ProgressBar", [
 		_setLabelAttr: function(label){
 			// summary:
 			//		Sets a label text to be shown at the center of the progress bar.
+			// tags:
+			//		private
 			this.msgNode.innerHTML = label;
 		},
 
-		onChange: function(/*Number*/ percent){
+		onChange: function(/*Number*/ /*===== percent =====*/){
 			// summary:
-			//		User defined function called when progress updates
+			//		User-defined function called when progress updates.
 			// tags:
 			//		callback
 		}

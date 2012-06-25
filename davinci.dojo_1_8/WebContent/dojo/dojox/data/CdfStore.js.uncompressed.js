@@ -413,7 +413,7 @@ dojo.declare("dojox.data.CdfStore", null, {
 
 /* dojo.data.api.Write */
 
-	newItem: function(/* object? */ keywordArgs, /* object? || String? */parentInfo){
+	newItem: function(/* object? */ keywordArgs, /* Object|String? */ parentInfo){
 		// summary:
 		//		Creates a jsx3.xml.Entity item and inserts it either inside the
 		//		parent or appends it to the root

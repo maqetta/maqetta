@@ -65,7 +65,7 @@ define("dojox/charting/action2d/_IndicatorElement", ["dojo/_base/lang", "dojo/_b
 		return sz;
 	};
 
-	return declare("dojox.charting.action2d._IndicatorElement", Base, {
+	return declare(Base, {
 		// summary:
 		//		Internal element used by indicator actions.
 		// tags:
@@ -330,14 +330,14 @@ define("dojox/charting/action2d/_IndicatorElement", ["dojo/_base/lang", "dojo/_b
 		cleanGroup: function(creator){
 			// summary:
 			//		Clean any elements (HTML or GFX-based) out of our group, and create a new one.
-			// creator: dojox.gfx.Surface?
+			// creator: dojox/gfx/Surface?
 			//		An optional surface to work with.
-			// returns: dojox.charting.Element
+			// returns: dojox/charting/Element
 			//		A reference to this object for functional chaining.
 			this.inherited(arguments);
 			// we always want to be above regular plots and not clipped
 			this.group.moveToFront();
-			return this;	//	dojox.charting.Element
+			return this;	//	dojox/charting/Element
 		},
 		getSeriesStats: function(){
 			// summary:

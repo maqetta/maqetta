@@ -1,16 +1,17 @@
-define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Color", "dojo/_base/sniff", "dojo/_base/window",
+define("dojox/gfx/_base", ["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/Color", "dojo/_base/sniff", "dojo/_base/window",
 	    "dojo/_base/array","dojo/dom", "dojo/dom-construct","dojo/dom-geometry"], 
-  function(lang, html, Color, has, win, arr, dom, domConstruct, domGeom){
+function(kernel, lang, Color, has, win, arr, dom, domConstruct, domGeom){
 	// module:
 	//		dojox/gfx
 	// summary:
 	//		This module contains common core Graphics API used by different graphics renderers.
+
 	var g = lang.getObject("dojox.gfx", true),
 		b = g._base = {};
 	
 	// candidates for dojox.style (work on VML and SVG nodes)
 	g._hasClass = function(/*DomNode*/node, /*String*/classStr){
-		//	summary:
+		// summary:
 		//		Returns whether or not the specified classes are a portion of the
 		//		class list currently applied to the node.
 		
@@ -19,7 +20,7 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 		return cls && (" " + cls + " ").indexOf(" " + classStr + " ") >= 0;  // Boolean
 	};
 	g._addClass = function(/*DomNode*/node, /*String*/classStr){
-		//	summary:
+		// summary:
 		//		Adds the specified classes to the end of the class list on the
 		//		passed node.
 		var cls = node.getAttribute("className") || "";
@@ -28,7 +29,8 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 		}
 	};
 	g._removeClass = function(/*DomNode*/node, /*String*/classStr){
-		//	summary: Removes classes from node.
+		// summary:
+		//		Removes classes from node.
 		var cls = node.getAttribute("className");
 		if(cls){
 			node.setAttribute(
@@ -40,9 +42,9 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 
 	// candidate for dojox.html.metrics (dynamic font resize handler is not implemented here)
 
-	//	derived from Morris John's emResized measurer
+	//		derived from Morris John's emResized measurer
 	b._getFontMeasurements = function(){
-		//	summary:
+		// summary:
 		//		Returns an object that has pixel equivilents of standard font
 		//		size values.
 		var heights = {
@@ -53,12 +55,12 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 		var p;
 
 		if(has("ie")){
-			//	we do a font-size fix if and only if one isn't applied already.
-			//	NOTE: If someone set the fontSize on the HTML Element, this will kill it.
+			//		we do a font-size fix if and only if one isn't applied already.
+			// NOTE: If someone set the fontSize on the HTML Element, this will kill it.
 			win.doc.documentElement.style.fontSize="100%";
 		}
 
-		//	set up the measuring node.
+		//		set up the measuring node.
 		var div = domConstruct.create("div", {style: {
 				position: "absolute",
 				left: "0",
@@ -73,7 +75,7 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 				overflow: "hidden"
 			}}, win.body());
 
-		//	do the measurements.
+		//		do the measurements.
 		for(p in heights){
 			div.style.fontSize = p;
 			heights[p] = Math.round(div.offsetHeight * 12/16) * 16/12 / 1000;
@@ -141,310 +143,512 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 
 	var uniqueId = 0;
 	b._getUniqueId = function(){
-		// summary: returns a unique string for use with any DOM element
+		// summary:
+		//		returns a unique string for use with any DOM element
 		var id;
 		do{
-			id = dojo._scopeName + "xUnique" + (++uniqueId);
+			id = kernel._scopeName + "xUnique" + (++uniqueId);
 		}while(dom.byId(id));
 		return id;
 	};
 
+	/*=====
+	g.Stroke = {
+		// summary:
+		//		A stroke defines stylistic properties that are used when drawing a path.
+
+		// color: String
+		//		The color of the stroke, default value 'black'.
+		color: "black",
+
+		// style: String
+		//		The style of the stroke, one of 'solid', ... . Default value 'solid'.
+		style: "solid",
+
+		// width: Number
+		//		The width of a stroke, default value 1.
+		width: 1,
+
+		// cap: String
+		//		The endcap style of the path. One of 'butt', 'round', ... . Default value 'butt'.
+		cap: "butt",
+
+		// join: Number
+		//		The join style to use when combining path segments. Default value 4.
+		join: 4
+	};
+	
+	g.Fill = {
+		// summary:
+		//		Defines how to fill a shape. Four types of fills can be used: solid, linear gradient, radial gradient and pattern.
+		//		See dojox.gfx.LinearGradient, dojox.gfx.RadialGradient and dojox.gfx.Pattern respectively for more information about the properties supported by each type.
+		
+		// type: String?
+		//		The type of fill. One of 'linear', 'radial', 'pattern' or undefined. If not specified, a solid fill is assumed.
+		type:"",
+		
+		// color: String|dojo/Color?
+		//		The color of a solid fill type.
+		color:null,
+		
+	};
+	
+	g.LinearGradient = {
+		// summary:
+		//		An object defining the default stylistic properties used for Linear Gradient fills.
+		//		Linear gradients are drawn along a virtual line, which results in appearance of a rotated pattern in a given direction/orientation.
+
+		// type: String
+		//		Specifies this object is a Linear Gradient, value 'linear'
+		type: "linear",
+
+		// x1: Number
+		//		The X coordinate of the start of the virtual line along which the gradient is drawn, default value 0.
+		x1: 0,
+
+		// y1: Number
+		//		The Y coordinate of the start of the virtual line along which the gradient is drawn, default value 0.
+		y1: 0,
+
+		// x2: Number
+		//		The X coordinate of the end of the virtual line along which the gradient is drawn, default value 100.
+		x2: 100,
+
+		// y2: Number
+		//		The Y coordinate of the end of the virtual line along which the gradient is drawn, default value 100.
+		y2: 100,
+
+		// colors: Array
+		//		An array of colors at given offsets (from the start of the line).  The start of the line is
+		//		defined at offest 0 with the end of the line at offset 1.
+		//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white.
+		colors: []
+	};
+	
+	g.RadialGradient = {
+		// summary:
+		//		Specifies the properties for RadialGradients using in fills patterns.
+
+		// type: String
+		//		Specifies this is a RadialGradient, value 'radial'
+		type: "radial",
+
+		// cx: Number
+		//		The X coordinate of the center of the radial gradient, default value 0.
+		cx: 0,
+
+		// cy: Number
+		//		The Y coordinate of the center of the radial gradient, default value 0.
+		cy: 0,
+
+		// r: Number
+		//		The radius to the end of the radial gradient, default value 100.
+		r: 100,
+
+		// colors: Array
+		//		An array of colors at given offsets (from the center of the radial gradient).
+		//		The center is defined at offest 0 with the outer edge of the gradient at offset 1.
+		//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white.
+		colors: []
+	};
+	
+	g.Pattern = {
+		// summary:
+		//		An object specifying the default properties for a Pattern using in fill operations.
+
+		// type: String
+		//		Specifies this object is a Pattern, value 'pattern'.
+		type: "pattern",
+
+		// x: Number
+		//		The X coordinate of the position of the pattern, default value is 0.
+		x: 0,
+
+		// y: Number
+		//		The Y coordinate of the position of the pattern, default value is 0.
+		y: 0,
+
+		// width: Number
+		//		The width of the pattern image, default value is 0.
+		width: 0,
+
+		// height: Number
+		//		The height of the pattern image, default value is 0.
+		height: 0,
+
+		// src: String
+		//		A url specifying the image to use for the pattern.
+		src: ""
+	};
+	 =====*/
+
 	lang.mixin(g, {
-		//	summary:
+		// summary:
 		//		defines constants, prototypes, and utility functions for the core Graphics API
 
 		// default shapes, which are used to fill in missing parameters
 		defaultPath: {
-			//	summary:
+			// summary:
 			//		Defines the default Path prototype object.
-			type: "path", 
-			//	type: String
+
+			// type: String
 			//		Specifies this object is a Path, default value 'path'.
-			path: ""
-			//	path: String
-			//		The path commands. See W32C SVG 1.0 specification. 
+			type: "path", 
+
+			// path: String
+			//		The path commands. See W32C SVG 1.0 specification.
 			//		Defaults to empty string value.
+			path: ""
 		},
 		defaultPolyline: {
-			//	summary:
+			// summary:
 			//		Defines the default PolyLine prototype.
-			type: "polyline", 
-			//	type: String
+
+			// type: String
 			//		Specifies this object is a PolyLine, default value 'polyline'.
-			points: []
-			//	points: Array
+			type: "polyline",
+
+			// points: Array
 			//		An array of point objects [{x:0,y:0},...] defining the default polyline's line segments. Value is an empty array [].
+			points: []
 		},
 		defaultRect: {
-			//	summary:
+			// summary:
 			//		Defines the default Rect prototype.
+
+			// type: String
+			//		Specifies this default object is a type of Rect. Value is 'rect'
 			type: "rect",
-			//	type: String
-			//		Specifies this default object is a type of Rect. Value is 'rect' 
-			x: 0, 
-			//	x: Number
+
+			// x: Number
 			//		The X coordinate of the default rectangles position, value 0.
-			y: 0, 
-			//	y: Number
+			x: 0,
+
+			// y: Number
 			//		The Y coordinate of the default rectangle's position, value 0.
-			width: 100, 
-			//	width: Number
+			y: 0,
+
+			// width: Number
 			//		The width of the default rectangle, value 100.
-			height: 100, 
-			//	height: Number
+			width: 100,
+
+			// height: Number
 			//		The height of the default rectangle, value 100.
-			r: 0
-			//	r: Number
+			height: 100,
+
+			// r: Number
 			//		The corner radius for the default rectangle, value 0.
+			r: 0
 		},
 		defaultEllipse: {
-			//	summary:
+			// summary:
 			//		Defines the default Ellipse prototype.
-			type: "ellipse", 
-			//	type: String
+
+			// type: String
 			//		Specifies that this object is a type of Ellipse, value is 'ellipse'
-			cx: 0, 
-			//	cx: Number
+			type: "ellipse",
+
+			// cx: Number
 			//		The X coordinate of the center of the ellipse, default value 0.
-			cy: 0, 
-			//	cy: Number
+			cx: 0,
+
+			// cy: Number
 			//		The Y coordinate of the center of the ellipse, default value 0.
-			rx: 200,
-			//	rx: Number
+			cy: 0,
+
+			// rx: Number
 			//		The radius of the ellipse in the X direction, default value 200.
-			ry: 100
-			//	ry: Number
+			rx: 200,
+
+			// ry: Number
 			//		The radius of the ellipse in the Y direction, default value 200.
+			ry: 100
 		},
 		defaultCircle: {
-			//	summary:
+			// summary:
 			//		An object defining the default Circle prototype.
-			type: "circle", 
-			//	type: String
+
+			// type: String
 			//		Specifies this object is a circle, value 'circle'
-			cx: 0, 
-			//	cx: Number
+			type: "circle",
+
+			// cx: Number
 			//		The X coordinate of the center of the circle, default value 0.
-			cy: 0, 
-			//	cy: Number
+			cx: 0,
+			// cy: Number
 			//		The Y coordinate of the center of the circle, default value 0.
-			r: 100
-			//	r: Number
+			cy: 0,
+
+			// r: Number
 			//		The radius, default value 100.
+			r: 100
 		},
 		defaultLine: {
-			//	summary:
-			//		An pbject defining the default Line prototype.
-			type: "line", 
-			//	type: String
+			// summary:
+			//		An object defining the default Line prototype.
+
+			// type: String
 			//		Specifies this is a Line, value 'line'
-			x1: 0, 
-			//	x1: Number
+			type: "line",
+
+			// x1: Number
 			//		The X coordinate of the start of the line, default value 0.
-			y1: 0, 
-			//	y1: Number
+			x1: 0,
+
+			// y1: Number
 			//		The Y coordinate of the start of the line, default value 0.
-			x2: 100,
-			//	x2: Number
+			y1: 0,
+
+			// x2: Number
 			//		The X coordinate of the end of the line, default value 100.
-			y2: 100
-			//	y2: Number
+			x2: 100,
+
+			// y2: Number
 			//		The Y coordinate of the end of the line, default value 100.
+			y2: 100
 		},
 		defaultImage: {
-			//	summary:
+			// summary:
 			//		Defines the default Image prototype.
-			type: "image",
-			//	type: String
+
+			// type: String
 			//		Specifies this object is an image, value 'image'.
-			x: 0, 
-			//	x: Number
+			type: "image",
+
+			// x: Number
 			//		The X coordinate of the image's position, default value 0.
-			y: 0, 
-			//	y: Number
+			x: 0,
+
+			// y: Number
 			//		The Y coordinate of the image's position, default value 0.
-			width: 0,
-			//	width: Number
+			y: 0,
+
+			// width: Number
 			//		The width of the image, default value 0.
-			height: 0,
-			//	height:Number
+			width: 0,
+
+			// height: Number
 			//		The height of the image, default value 0.
-			src: ""
-			//	src: String
+			height: 0,
+
+			// src: String
 			//		The src url of the image, defaults to empty string.
+			src: ""
 		},
 		defaultText: {
-			//	summary:
+			// summary:
 			//		Defines the default Text prototype.
-			type: "text", 
-			//	type: String
+
+			// type: String
 			//		Specifies this is a Text shape, value 'text'.
-			x: 0, 
-			//	x: Number
+			type: "text",
+
+			// x: Number
 			//		The X coordinate of the text position, default value 0.
-			y: 0, 
-			//	y: Number
+			x: 0,
+
+			// y: Number
 			//		The Y coordinate of the text position, default value 0.
-			text: "",
-			//	text: String
+			y: 0,
+
+			// text: String
 			//		The text to be displayed, default value empty string.
-			align: "start",
-			//	align:	String
+			text: "",
+
+			// align:	String
 			//		The horizontal text alignment, one of 'start', 'end', 'center'. Default value 'start'.
-			decoration: "none",
-			//	decoration: String
+			align: "start",
+
+			// decoration: String
 			//		The text decoration , one of 'none', ... . Default value 'none'.
-			rotated: false,
-			//	rotated: Boolean
+			decoration: "none",
+
+			// rotated: Boolean
 			//		Whether the text is rotated, boolean default value false.
-			kerning: true
-			//	kerning: Boolean
+			rotated: false,
+
+			// kerning: Boolean
 			//		Whether kerning is used on the text, boolean default value true.
+			kerning: true
 		},
 		defaultTextPath: {
-			//	summary:
+			// summary:
 			//		Defines the default TextPath prototype.
-			type: "textpath", 
-			//	type: String
+
+			// type: String
 			//		Specifies this is a TextPath, value 'textpath'.
-			text: "", 
-			//	text: String
+			type: "textpath",
+
+			// text: String
 			//		The text to be displayed, default value empty string.
-			align: "start",
-			//	align: String
+			text: "",
+
+			// align: String
 			//		The horizontal text alignment, one of 'start', 'end', 'center'. Default value 'start'.
-			decoration: "none",
-			//	decoration: String
+			align: "start",
+
+			// decoration: String
 			//		The text decoration , one of 'none', ... . Default value 'none'.
-			rotated: false,
-			//	rotated: Boolean
+			decoration: "none",
+
+			// rotated: Boolean
 			//		Whether the text is rotated, boolean default value false.
-			kerning: true
-			//	kerning: Boolean
+			rotated: false,
+
+			// kerning: Boolean
 			//		Whether kerning is used on the text, boolean default value true.
+			kerning: true
 		},
 
 		// default stylistic attributes
 		defaultStroke: {
-			//	summary:
-			//		A stroke defines stylistic properties that are used when drawing a path.  
+			// summary:
+			//		A stroke defines stylistic properties that are used when drawing a path.
 			//		This object defines the default Stroke prototype.
-			type: "stroke", 
-			//	type: String
+			// type: String
 			//		Specifies this object is a type of Stroke, value 'stroke'.
-			color: "black", 
-			//	color: String
+			type: "stroke",
+
+			// color: String
 			//		The color of the stroke, default value 'black'.
-			style: "solid",
-			//	style: String
+			color: "black",
+
+			// style: String
 			//		The style of the stroke, one of 'solid', ... . Default value 'solid'.
-			width: 1,
-			//	width: Number
+			style: "solid",
+
+			// width: Number
 			//		The width of a stroke, default value 1.
-			cap: "butt",
-			//	cap: String
+			width: 1,
+
+			// cap: String
 			//		The endcap style of the path. One of 'butt', 'round', ... . Default value 'butt'.
-			join: 4
-			//	join: Number
+			cap: "butt",
+
+			// join: Number
 			//		The join style to use when combining path segments. Default value 4.
+			join: 4
 		},
 		defaultLinearGradient: {
-			//	summary:
+			// summary:
 			//		An object defining the default stylistic properties used for Linear Gradient fills.
 			//		Linear gradients are drawn along a virtual line, which results in appearance of a rotated pattern in a given direction/orientation.
-			type: "linear", 
-			//	type: String
+
+			// type: String
 			//		Specifies this object is a Linear Gradient, value 'linear'
-			x1: 0, 
-			//	x1: Number
+			type: "linear",
+
+			// x1: Number
 			//		The X coordinate of the start of the virtual line along which the gradient is drawn, default value 0.
-			y1: 0, 
-			//	y1: Number
+			x1: 0,
+
+			// y1: Number
 			//		The Y coordinate of the start of the virtual line along which the gradient is drawn, default value 0.
-			x2: 100,
-			//	x2: Number
+			y1: 0,
+
+			// x2: Number
 			//		The X coordinate of the end of the virtual line along which the gradient is drawn, default value 100.
-			y2: 100,
-			//	y2: Number
+			x2: 100,
+
+			// y2: Number
 			//		The Y coordinate of the end of the virtual line along which the gradient is drawn, default value 100.
+			y2: 100,
+
+			// colors: Array
+			//		An array of colors at given offsets (from the start of the line).  The start of the line is
+			//		defined at offest 0 with the end of the line at offset 1.
+			//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white.
 			colors: [
 				{ offset: 0, color: "black" }, { offset: 1, color: "white" }
 			]
-			//	colors: Array
-			//		An array of colors at given offsets (from the start of the line).  The start of the line is
-			//		defined at offest 0 with the end of the line at offset 1.
-			//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white. 
 		},
 		defaultRadialGradient: {
 			// summary:
 			//		An object specifying the default properties for RadialGradients using in fills patterns.
-			type: "radial",
-			//	type: String
+
+			// type: String
 			//		Specifies this is a RadialGradient, value 'radial'
-			cx: 0, 
-			//	cx: Number
+			type: "radial",
+
+			// cx: Number
 			//		The X coordinate of the center of the radial gradient, default value 0.
-			cy: 0, 
-			//	cy: Number
+			cx: 0,
+
+			// cy: Number
 			//		The Y coordinate of the center of the radial gradient, default value 0.
-			r: 100,
-			//	r: Number
+			cy: 0,
+
+			// r: Number
 			//		The radius to the end of the radial gradient, default value 100.
+			r: 100,
+
+			// colors: Array
+			//		An array of colors at given offsets (from the center of the radial gradient).
+			//		The center is defined at offest 0 with the outer edge of the gradient at offset 1.
+			//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white.
 			colors: [
 				{ offset: 0, color: "black" }, { offset: 1, color: "white" }
 			]
-			//	colors: Array
-			//		An array of colors at given offsets (from the center of the radial gradient).  
-			//		The center is defined at offest 0 with the outer edge of the gradient at offset 1.
-			//		Default value, [{ offset: 0, color: 'black'},{offset: 1, color: 'white'}], is a gradient from black to white. 
 		},
 		defaultPattern: {
 			// summary:
 			//		An object specifying the default properties for a Pattern using in fill operations.
-			type: "pattern", 
+
 			// type: String
 			//		Specifies this object is a Pattern, value 'pattern'.
-			x: 0, 
-			//	x: Number
+			type: "pattern",
+
+			// x: Number
 			//		The X coordinate of the position of the pattern, default value is 0.
-			y: 0, 
-			//	y: Number
+			x: 0,
+
+			// y: Number
 			//		The Y coordinate of the position of the pattern, default value is 0.
-			width: 0, 
-			//	width: Number
+			y: 0,
+
+			// width: Number
 			//		The width of the pattern image, default value is 0.
-			height: 0, 
-			//	height: Number
+			width: 0,
+
+			// height: Number
 			//		The height of the pattern image, default value is 0.
+			height: 0,
+
+			// src: String
+			//		A url specifying the image to use for the pattern.
 			src: ""
-			//	src: String
-			//		A url specifing the image to use for the pattern.
 		},
 		defaultFont: {
 			// summary:
 			//		An object specifying the default properties for a Font used in text operations.
-			type: "font", 
+
 			// type: String
 			//		Specifies this object is a Font, value 'font'.
-			style: "normal", 
-			//	style: String
+			type: "font",
+
+			// style: String
 			//		The font style, one of 'normal', 'bold', default value 'normal'.
-			variant: "normal",
-			//	variant: String
+			style: "normal",
+
+			// variant: String
 			//		The font variant, one of 'normal', ... , default value 'normal'.
-			weight: "normal", 
-			//	weight: String
+			variant: "normal",
+
+			// weight: String
 			//		The font weight, one of 'normal', ..., default value 'normal'.
-			size: "10pt", 
-			//	size: String
+			weight: "normal",
+
+			// size: String
 			//		The font size (including units), default value '10pt'.
-			family: "serif"
-			//	family: String
+			size: "10pt",
+
+			// family: String
 			//		The font family, one of 'serif', 'sanserif', ..., default value 'serif'.
+			family: "serif"
 		},
 
 		getDefault: (function(){
-			//	summary:
+			// summary:
 			//		Returns a function used to access default memoized prototype objects (see them defined above).
 			var typeCtorCache = {};
 			// a memoized delegate()
@@ -459,19 +663,21 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 			}
 		})(),
 
-		normalizeColor: function(/*dojo.Color|Array|string|Object*/ color){
-			//	summary:
+		normalizeColor: function(/*dojo/Color|Array|string|Object*/ color){
+			// summary:
 			//		converts any legal color representation to normalized
-			//		dojo.Color object
-			return (color instanceof Color) ? color : new Color(color); // dojo.Color
+			//		dojo/Color object
+			// color:
+			//		A color representation.
+			return (color instanceof Color) ? color : new Color(color); // dojo/Color
 		},
 		normalizeParameters: function(existed, update){
-			//	summary:
+			// summary:
 			//		updates an existing object with properties from an 'update'
 			//		object
-			//	existed: Object
+			// existed: Object
 			//		the target object to be updated
-			//	update:  Object
+			// update: Object
 			//		the 'update' object, whose properties will be used to update
 			//		the existed object
 			var x;
@@ -486,12 +692,12 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 			return existed;	// Object
 		},
 		makeParameters: function(defaults, update){
-			//	summary:
+			// summary:
 			//		copies the original object, and all copied properties from the
 			//		'update' object
-			//	defaults: Object
+			// defaults: Object
 			//		the object to be cloned before updating
-			//	update:   Object
+			// update: Object
 			//		the object, which properties are to be cloned during updating
 			var i = null;
 			if(!update){
@@ -507,7 +713,8 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 			return result; // Object
 		},
 		formatNumber: function(x, addSpace){
-			// summary: converts a number to a string using a fixed notation
+			// summary:
+			//		converts a number to a string using a fixed notation
 			// x: Number
 			//		number to be converted
 			// addSpace: Boolean
@@ -528,8 +735,10 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 		},
 		// font operations
 		makeFontString: function(font){
-			// summary: converts a font object to a CSS font string
-			// font:	Object:	font object (see dojox.gfx.defaultFont)
+			// summary:
+			//		converts a font object to a CSS font string
+			// font: Object
+			//		font object (see dojox.gfx.defaultFont)
 			return font.style + " " + font.variant + " " + font.weight + " " + font.size + " " + font.family; // Object
 		},
 		splitFontString: function(str){
@@ -567,31 +776,41 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 			return font;	// Object
 		},
 		// length operations
-		cm_in_pt: 72 / 2.54, 
-			//	cm_in_pt: Number
-			//		points per centimeter (constant)
+
+		// cm_in_pt: Number
+		//		points per centimeter (constant)
+		cm_in_pt: 72 / 2.54,
+
+		// mm_in_pt: Number
+		//		points per millimeter (constant)
 		mm_in_pt: 7.2 / 2.54,
-			//	mm_in_pt: Number
-			//		points per millimeter (constant)
+
 		px_in_pt: function(){
-			//	summary: returns the current number of pixels per point.
+			// summary:
+			//		returns the current number of pixels per point.
 			return g._base._getCachedFontMeasurements()["12pt"] / 12;	// Number
 		},
+
 		pt2px: function(len){
-			//	summary: converts points to pixels
-			//	len: Number
+			// summary:
+			//		converts points to pixels
+			// len: Number
 			//		a value in points
 			return len * g.px_in_pt();	// Number
 		},
+
 		px2pt: function(len){
-			//	summary: converts pixels to points
-			//	len: Number
+			// summary:
+			//		converts pixels to points
+			// len: Number
 			//		a value in pixels
 			return len / g.px_in_pt();	// Number
 		},
+
 		normalizedLength: function(len) {
-			//	summary: converts any length value to pixels
-			//	len: String
+			// summary:
+			//		converts any length value to pixels
+			// len: String
 			//		a length, e.g., '12pc'
 			if(len.length === 0){ return 0; }
 			if(len.length > 2){
@@ -609,23 +828,32 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 			return parseFloat(len);	// Number
 		},
 
+		// pathVmlRegExp: RegExp
+		//		a constant regular expression used to split a SVG/VML path into primitive components
+		// tags:
+		//		private
 		pathVmlRegExp: /([A-Za-z]+)|(\d+(\.\d+)?)|(\.\d+)|(-\d+(\.\d+)?)|(-\.\d+)/g,
-			//	pathVmlRegExp: RegExp
-			//		a constant regular expression used to split a SVG/VML path into primitive components
-		pathSvgRegExp: /([A-Za-z])|(\d+(\.\d+)?)|(\.\d+)|(-\d+(\.\d+)?)|(-\.\d+)/g,
-			//	pathVmlRegExp: RegExp
-			//		a constant regular expression used to split a SVG/VML path into primitive components
 
-		equalSources: function(a /*Object*/, b /*Object*/){
-			//	summary: compares event sources, returns true if they are equal
-			//	a: first event source
-			//	b: event source to compare against a
+		// pathVmlRegExp: RegExp
+		//		a constant regular expression used to split a SVG/VML path into primitive components
+		// tags:
+		//		private
+		pathSvgRegExp: /([A-Za-z])|(\d+(\.\d+)?)|(\.\d+)|(-\d+(\.\d+)?)|(-\.\d+)/g,
+
+		equalSources: function(/*Object*/ a, /*Object*/ b){
+			// summary:
+			//		compares event sources, returns true if they are equal
+			// a:
+			//		first event source
+			// b:
+			//		event source to compare against a
 			return a && b && a === b;
 		},
 
-		switchTo: function(renderer/*String|Object*/){
-			//	summary: switch the graphics implementation to the specified renderer.
-			//	renderer: 
+		switchTo: function(/*String|Object*/ renderer){
+			// summary:
+			//		switch the graphics implementation to the specified renderer.
+			// renderer:
 			//		Either the string name of a renderer (eg. 'canvas', 'svg, ...) or the renderer
 			//		object to switch to.
 			var ns = typeof renderer == "string" ? g[renderer] : renderer;
@@ -642,7 +870,10 @@ define("dojox/gfx/_base", ["dojo/_base/lang", "dojo/_base/html", "dojo/_base/Col
 	
 	/*=====
 		g.createSurface = function(){};
-		g.fixTarget = function(){};
+		g.fixTarget = function(){
+			// tags:
+			//		private
+		};
 	=====*/
 	
 	return g; // defaults object api

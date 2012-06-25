@@ -31,26 +31,38 @@ define("dojox/mobile/_compat", [
 	// module:
 	//		dojox/mobile/compat
 	// summary:
-	//		CSS3 compatibility module
+	//		CSS3 compatibility module.
 	// description:
-	//		This module provides support for some of the CSS3 features to dojox.mobile
-	//		for non-CSS3 browsers, such as IE or Firefox.
-	//		If you load this module, it directly replaces some of the methods of
-	//		dojox.mobile instead of subclassing. This way, html pages remains the same
-	//		regardless of whether this compatibility module is used or not.
-	//		Recommended usage is as follows. the code below loads dojox.mobile.compat
-	//		only when isWebKit is true.
+	//		This module provides to dojox/mobile support for some of the CSS3 features 
+	//		in non-CSS3 browsers, such as IE or Firefox.
+	//		If you require this module, when running in a non-CSS3 browser it directly 
+	//		replaces some of the methods of	dojox/mobile classes, without any subclassing. 
+	//		This way, HTML pages remain the same regardless of whether this compatibility 
+	//		module is used or not.
 	//
-	//		dojo.require("dojox.mobile");
-	//		dojo.requireIf(!has("webkit"), "dojox.mobile.compat");
+	//		Example of usage: 
+	//		|	require([
+	//		|		"dojox/mobile",
+	//		|		"dojox/mobile/compat",
+	//		|		...
+	//		|	], function(...){
+	//		|		...
+	//		|	});
 	//
-	//		This module also loads compatibility CSS files, which has -compat.css
-	//		suffix. You can use either the <link> tag or @import to load theme
+	//		This module also loads compatibility CSS files, which have a -compat.css
+	//		suffix. You can use either the `<link>` tag or `@import` to load theme
 	//		CSS files. Then, this module searches for the loaded CSS files and loads
-	//		compatibility CSS files. For example, if you load iphone.css in a page,
-	//		this module automatically loads iphone-compat.css.
-	//		If you explicitly load iphone-compat.css with <link> or @import,
-	//		this module will not load the already loaded file.
+	//		compatibility CSS files. For example, if you load dojox/mobile/themes/iphone/iphone.css
+	//		in a page, this module automatically loads dojox/mobile/themes/iphone/iphone-compat.css.
+	//		If you explicitly load iphone-compat.css with `<link>` or `@import`,
+	//		this module will not load again the already loaded file.
+	//
+	//		Note that, by default, compatibility CSS files are only loaded for CSS files located
+	//		in a directory containing a "mobile/themes" path. For that, a matching is done using 
+	//		the default pattern	"/\/mobile\/themes\/.*\.css$/". If a custom theme is not located 
+	//		in a directory containing this path, the data-dojo-config needs to specify a custom 
+	//		pattern using the "mblLoadCompatPattern" configuration parameter, for instance:
+	//		|	data-dojo-config="mblLoadCompatPattern: /\/mycustomtheme\/.*\.css$/"
 
 	var dm = lang.getObject("dojox.mobile", true);
 
@@ -59,6 +71,7 @@ define("dojox/mobile/_compat", [
 			_doTransition: function(fromNode, toNode, transition, dir){
 				var anim;
 				this.wakeUp(toNode);
+				var s1, s2;
 				if(!transition || transition == "none"){
 					toNode.style.display = "";
 					fromNode.style.display = "none";
@@ -66,13 +79,13 @@ define("dojox/mobile/_compat", [
 					this.invokeCallback();
 				}else if(transition == "slide" || transition == "cover" || transition == "reveal"){
 					var w = fromNode.offsetWidth;
-					var s1 = fx.slideTo({
+					s1 = fx.slideTo({
 						node: fromNode,
 						duration: 400,
 						left: -w*dir,
 						top: domStyle.get(fromNode, "top")
 					});
-					var s2 = fx.slideTo({
+					s2 = fx.slideTo({
 						node: toNode,
 						duration: 400,
 						left: 0,
@@ -96,13 +109,13 @@ define("dojox/mobile/_compat", [
 					anim.play();
 				}else if(transition == "slidev" || transition == "coverv" || transition == "reavealv"){
 					var h = fromNode.offsetHeight;
-					var s1 = fx.slideTo({
+					s1 = fx.slideTo({
 						node: fromNode,
 						duration: 400,
 						left: 0,
 						top: -h*dir
 					});
-					var s2 = fx.slideTo({
+					s2 = fx.slideTo({
 						node: toNode,
 						duration: 400,
 						left: 0,
@@ -440,7 +453,7 @@ define("dojox/mobile/_compat", [
 
 		dm.loadCssFile = function(/*String*/file){
 			// summary:
-			//		Overrides dojox.mobile.loadCssFile() defined in
+			//		Overrides dojox/mobile.loadCssFile() defined in
 			//		deviceTheme.js.
 			if(!dm.loadedCssFiles){ dm.loadedCssFiles = []; }
 			if(win.doc.createStyleSheet){
@@ -529,7 +542,14 @@ define("dojox/mobile/_compat", [
 			var paths = dm.getCssPaths();
 			for(var i = 0; i < paths.length; i++){
 				var href = paths[i];
-				if((href.match(dm.loadCompatPattern) || location.href.indexOf("mobile/tests/") !== -1) && href.indexOf("-compat.css") === -1){
+				// Load the -compat.css only for css files that belong to a theme. For that, by default
+				// we match on directories containing "mobile/themes". If a custom theme is located
+				// outside a "mobile/themes" directory, the dojoConfig needs to specify a custom 
+				// pattern using the "mblLoadCompatPattern" configuration parameter, for instance:
+				//   data-dojo-config="mblLoadCompatPattern: /\/mycustom\/.*\.css$/"
+				// Additionally, compat css files are loaded for css in the mobile/tests directory.
+				if((href.match(config.mblLoadCompatPattern || dm.loadCompatPattern) || 
+					location.href.indexOf("mobile/tests/") !== -1) && href.indexOf("-compat.css") === -1){
 					var compatCss = href.substring(0, href.length-4)+"-compat.css";
 					dm.loadCss(compatCss);
 				}

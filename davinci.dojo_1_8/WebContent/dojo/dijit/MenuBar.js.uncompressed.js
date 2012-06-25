@@ -10,8 +10,6 @@ define("dijit/MenuBar", [
 
 // module:
 //		dijit/MenuBar
-// summary:
-//		A menu bar, listing menu choices horizontally, like the "File" menu in most desktop applications
 
 return declare("dijit.MenuBar", _MenuBase, {
 	// summary:
@@ -76,7 +74,7 @@ return declare("dijit.MenuBar", _MenuBase, {
 		}
 	},
 
-	onItemClick: function(/*dijit._Widget*/ item, /*Event*/ evt){
+	onItemClick: function(/*dijit/_WidgetBase*/ item, /*Event*/ evt){
 		// summary:
 		//		Handle clicks on an item.   Also called by _moveToPopup() due to a down-arrow key on the item.
 		//		Cancels a dropdown if already open and click is either mouse or space/enter.

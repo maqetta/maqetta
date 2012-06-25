@@ -2,17 +2,7 @@ define("dojox/fx/Timeline", ["dojo/_base/lang","dojo/fx/easing","dojo/_base/fx",
 		"dojo/_base/html", "dojo/_base/array","dojo/_base/Color"],
  function(lang, easingUtil, baseFx, dom, dojoxFx, connectUtil, htmlUtil, arrayUtil, Color){
 
-dojoxFx.animateTimeline = function(/* Object */options, /* DomNode|String */node){
-	// options: Object
-	// 		The paramters passed to the timeline animation. Includes:
-	// 			keys: Array
-	// 				An array of objects, with style properties and values.
-	// 			duration:
-	// 				Duration of the animation in milliseconds.
-	// 				Defaults to 1000.
-	// node: DomNode
-	// 		The DomNode or id to be animated.
-	//
+dojoxFx.animateTimeline = function(options, node){
 	// summary:
 	//		An add-on to dojo.fx that provides the ability to create
 	//		a complex property animation based on an array of "keyframes".
@@ -26,16 +16,24 @@ dojoxFx.animateTimeline = function(/* Object */options, /* DomNode|String */node
 	//		keyframe to the third. "width" is transitioned from the first
 	//		to the second to the third.
 	//		Each keyframe can accept the following custom properties:
-	//	step: String
-	//		The start, finish or percentage that this keyframe represents.
-	//		Allowed parameters are:
+	//		- step: String
+	//		  The start, finish or percentage that this keyframe represents.
+	//		  Allowed parameters are:
 	//			0%-100%
 	//			from (same as 0%, used to conform with the Webkit animation spec)
 	//			to (same as 100%, used to conform with the Webkit animation spec)
-	//	ease: String
-	//		The string name of a dojo.fx.easing ease. Defaults to "linear". Use
-	//		the suffix name of the ease, like: "quadIn", not: "dojo.fx.quadIn".
-	//
+	//		- ease: String
+	//		  The string name of a dojo.fx.easing ease. Defaults to "linear". Use
+	//		  the suffix name of the ease, like: "quadIn", not: "dojo.fx.quadIn".
+	// options: Object
+	// 		The parameters passed to the timeline animation. Includes:
+	// 			keys: Array
+	// 				An array of objects, with style properties and values.
+	// 			duration:
+	// 				Duration of the animation in milliseconds.
+	// 				Defaults to 1000.
+	// node: DomNode|String
+	// 		The DomNode or id to be animated.
 	// example:
 	// 		|	var keys = [
 	// 		|	{
@@ -53,7 +51,7 @@ dojoxFx.animateTimeline = function(/* Object */options, /* DomNode|String */node
 	// 		|	}
 	// 		|	];
 	// 		|	ani = dojox.fx.animateTimeline({keys:keys, duration:2000}, "myDiv").play();
-	//
+
 	var _curve = new Timeline(options.keys);
 	var ani = baseFx.animateProperty({
 		node:dom.byId(node || options.node),

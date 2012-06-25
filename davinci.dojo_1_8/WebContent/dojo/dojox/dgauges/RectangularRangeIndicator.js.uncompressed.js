@@ -1,41 +1,38 @@
 define("dojox/dgauges/RectangularRangeIndicator", ["dojo/_base/declare", "dojox/gfx", "./ScaleIndicatorBase", "dojo/_base/event", "dojo/dom-geometry"],
 	function(declare, gfx, ScaleIndicatorBase, eventUtil, domGeom){
-	/*=====
-	var ScaleIndicatorBase = dojox.dgauges.ScaleIndicatorBase;
-	=====*/
 	return declare("dojox.dgauges.RectangularRangeIndicator", ScaleIndicatorBase, {
-		//	summary:
+		// summary:
 		//		A RectangularRangeIndicator is used to represent a range of values on a scale.
 		//		For adding this kind of indicator instance to the gauge, use the addIndicator 
 		//		method of RectangularScale.
 
-		//	start: Number
+		// start: Number
 		//		The start value of the range. Default is 0.
 		start: 0,
-		//	startThickness: Number
+		// startThickness: Number
 		//		The thickness of the shape at the position defined by the start property.
 		//		Default is 10.
 		startThickness: 10,
-		//	endThickness: Number
+		// endThickness: Number
 		//		The thickness of the shape at the position defined by the value property.
 		//		Default is 10.
 		endThickness: 10,
-		//	fill: Object
+		// fill: Object
 		//		A fill object that will be passed to the setFill method of GFX.
 		fill: null,
-		//	stroke: Object
+		// stroke: Object
 		//		A stroke object that will be passed to the setStroke method of GFX.
 		stroke: null,
-		//	paddingLeft: Number
+		// paddingLeft: Number
 		//		The left padding. Not used for horizontal gauges.
 		paddingLeft: 10,
-		//	paddingTop: Number
+		// paddingTop: Number
 		//		The top padding. Not used for vertical gauges.
 		paddingTop: 10,
-		//	paddingRight: Number
+		// paddingRight: Number
 		//		The right padding. Not used for horizontal gauges.
 		paddingRight: 10,
-		//	paddingBottom: Number
+		// paddingBottom: Number
 		//		The bottom padding. Not used for vertical gauges.
 		paddingBottom: 10,
 		
@@ -51,6 +48,10 @@ define("dojox/dgauges/RectangularRangeIndicator", ["dojo/_base/declare", "dojox/
 		},
 
 		_defaultHorizontalShapeFunc: function(indicator, group, scale, startX, startY, endPosition, startThickness, endThickness, fill, stroke){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var gp = [startX, startY, endPosition, startY, endPosition, startY + endThickness, startX, startY + startThickness, startX, startY]
 			if(fill && fill.colors){
 				// Configure gradient
@@ -63,6 +64,10 @@ define("dojox/dgauges/RectangularRangeIndicator", ["dojo/_base/declare", "dojox/
 		},
 
 		_defaultVerticalShapeFunc: function(indicator, group, scale, startX, startY, endPosition, startThickness, endThickness, fill, stroke){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var gp = [startX, startY, startX, endPosition, startX + endThickness, endPosition, startX, startY + startThickness, startX, startY]
 			if(fill && fill.colors){
 				// Configure gradient
@@ -75,6 +80,10 @@ define("dojox/dgauges/RectangularRangeIndicator", ["dojo/_base/declare", "dojox/
 		},
 				
 		_shapeFunc: function(indicator, group, scale, startX, startY, endPosition, startThickness, endThickness, fill, stroke){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(this.scale._gauge.orientation == "horizontal"){
 				this._defaultHorizontalShapeFunc(indicator, group, scale, startX, startY, endPosition, startThickness, endThickness, fill, stroke);
 			}else{
@@ -110,6 +119,10 @@ define("dojox/dgauges/RectangularRangeIndicator", ["dojo/_base/declare", "dojox/
 		},
 
 		_onMouseDown: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 
 			var np = domGeom.position(this.scale._gauge.domNode, true);
@@ -120,6 +133,10 @@ define("dojox/dgauges/RectangularRangeIndicator", ["dojo/_base/declare", "dojox/
 		},
 		
 		_onMouseMove: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			
 			var np = domGeom.position(this.scale._gauge.domNode, true);

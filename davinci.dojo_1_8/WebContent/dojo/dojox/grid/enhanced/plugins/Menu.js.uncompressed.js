@@ -13,16 +13,16 @@ var Menu = declare("dojox.grid.enhanced.plugins.Menu", _Plugin, {
 	// summary:
 	//		 Provides context menu support, including header menu, row menu, cell menu and selected region menu
 	// example:
-	//		<div dojoType="dojox.grid.EnhancedGrid"
-	//			plugins="{menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",
-	//							   selectedRegionMenu:"selectedRegionMenuId"}}" ...>
-	//		</div>
+	// |	<div dojoType="dojox.grid.EnhancedGrid"
+	// |		plugins="{menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",
+	// |						   selectedRegionMenu:"selectedRegionMenuId"}}" ...>
+	// |	</div>
 	
-	//name: String
+	// name: String
 	//		Plugin name
 	name: "menus",
 
-	//name: [const] Array
+	// types: [const] String[]
 	//		menu types
 	types: ['headerMenu', 'rowMenu', 'cellMenu', 'selectedRegionMenu'],
 	
@@ -92,7 +92,9 @@ var Menu = declare("dojox.grid.enhanced.plugins.Menu", _Plugin, {
 		// summary:
 		//		Show appropriate context menu
 		//		Fired from dojox.grid.enhanced._Events.onRowContextMenu, 'this' scope - Grid
-		//		TODO: test Shift-F10
+
+		// TODO: test Shift-F10
+
 		var inSelectedRegion = (e.cellNode && html.hasClass(e.cellNode, 'dojoxGridRowSelected') ||
 			e.rowNode && (html.hasClass(e.rowNode, 'dojoxGridRowSelected') || html.hasClass(e.rowNode, 'dojoxGridRowbarSelected')));
 		

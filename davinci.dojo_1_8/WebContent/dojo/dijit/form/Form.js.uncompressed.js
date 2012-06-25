@@ -12,8 +12,6 @@ define("dijit/form/Form", [
 
 	// module:
 	//		dijit/form/Form
-	// summary:
-	//		Widget corresponding to HTML form tag, for validation and serialization
 
 
 	return declare("dijit.form.Form", [_Widget, _TemplatedMixin, _FormMixin, _ContentPaneResizeMixin], {

@@ -2,10 +2,6 @@ define("dojox/gauges/BarGauge", ["dojo/_base/declare","dojo/_base/lang","dojo/_b
 		"./_Gauge","./BarLineIndicator", "dojo/dom-geometry"],
  function(declare, lang, arr, html, event, gfx, Gauge, BarLineIndicator, domGeometry) {
 
-/*=====
-	Gauge = dojox.gauges._Gauge;
-=====*/
-
 return declare("dojox.gauges.BarGauge", Gauge, {
 	// summary:
 	//		a bar graph built using the dojox.gfx package.
@@ -14,18 +10,18 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 	//		using dojo.gfx (and thus either SVG or VML based on what is supported), this widget
 	//		builds a bar graph component, used to display numerical data in a familiar format.
 	//
-	// usage:
-	//		<script type="text/javascript">
-	//			require(["dojox/gauges/BarGauge"]);
-	//		</script>
-	//		...
-	//		<div 	dojoType="dojox.gauges.BarGauge"
-	//				id="testBarGauge"
-	//				barGaugeHeight="55"
-	//				dataY="25"
-	//				dataHeight="25"
-	//				dataWidth="225">
-	//		</div>
+	// example:
+	// |	<script type="text/javascript">
+	// |		require(["dojox/gauges/BarGauge"]);
+	// |	</script>
+	// |	...
+	// |	<div 	dojoType="dojox.gauges.BarGauge"
+	// |		id="testBarGauge"
+	// |		barGaugeHeight="55"
+	// |		dataY="25"
+	// |		dataHeight="25"
+	// |		dataWidth="225">
+	// |	</div>
 
 	// dataX: Number
 	// 		x position of data area (default 5)

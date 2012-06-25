@@ -1,0 +1,20 @@
+{
+    "id": "http://dojotoolkit.org/dijit/ToolbarSeparator",
+    "name": "dijit.ToolbarSeparator",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Toolbar",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "content": "<span></span>"
+}

@@ -1,10 +1,8 @@
 define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare", "dojo/on", "dojox/gfx", "./IndicatorBase"], function(declare, on, gfx, IndicatorBase){
-	/*=====
-	var IndicatorBase = dojox.dgauges.IndicatorBase;
-	=====*/
 	return declare("dojox.dgauges.RectangularRangeIndicator", IndicatorBase, {
-		//	summary:
+		// summary:
 		//		A segmented-style range indicator for rectangular gauges.
+		
 		start: 0,
 		startThickness: 10,
 		endThickness: 10,
@@ -34,9 +32,9 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 		ranges: null,
 		
 		constructor: function(){
-			//	summary:
+			// summary:
 			//		Constructor.
-			//	description:
+			// description:
 			//		Creates a segmented range indicator.
 			this.fill = [255, 120, 0];
 			this.stroke = {
@@ -48,7 +46,13 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 		},
 
 		_defaultHorizontalShapeFunc: function(indicator, group, scale, startX, startY, endPosition, startThickness, endThickness, fill, stroke){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var length = scale._contentBox.w ;
+			var shape, i, gp, radius;
+			
 			if(this.ranges){
 				// Configure gradient to represent the ranges
 				fill = {type:"linear", colors:[]};
@@ -59,7 +63,7 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 				
 				var rangeStart = 0;
 				
-				for(var i = 0; i < this.ranges.length; i++){
+				for(i = 0; i < this.ranges.length; i++){
 					var entry1 = {
 						color:this.ranges[i].color,
 						offset: scale.scaler.positionForValue(rangeStart)
@@ -80,7 +84,6 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 				fill.y2 = startY;
 			}
 			
-			var shape, i,gp,radius;
 			var x = startX;
 			var y = startY;
 			var chicklet = (length / this.segments) - this.segmentSpacing;
@@ -126,7 +129,7 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 			// draw the remaining segment part
 			if(remain > 0){
 				ew = sw+( (ew-sw)*remain );
-				var gp = [x, y, x+(chicklet*remain), y, x+(chicklet*remain), y  + ew, x, y + sw, x, y]
+				gp = [x, y, x+(chicklet*remain), y, x+(chicklet*remain), y  + ew, x, y + sw, x, y]
 				shape = group.createPolyline(gp).setFill(fill).setStroke(stroke);
 			}
 			
@@ -134,7 +137,12 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 		},
 
 		_defaultVerticalShapeFunc: function(indicator, group, scale, startX, startY, endPosition, startThickness, endThickness, fill, stroke){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var length = scale._contentBox.h ;
+			var shape, i,gp,radius;
 			if(this.ranges){
 				// Configure gradient to represent the ranges
 				fill = {type:"linear", colors:[]};				
@@ -145,7 +153,7 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 				
 				var rangeStart = 0;
 				
-				for(var i = 0; i < this.ranges.length; i++){
+				for(i = 0; i < this.ranges.length; i++){
 					var entry1 = {
 						color:this.ranges[i].color,
 						offset: scale.scaler.positionForValue(rangeStart)
@@ -166,7 +174,6 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 				fill.y2 = startY + length;
 			}
 			
-			var shape, i,gp,radius;
 			var x = startX;
 			var y = startY;
 			var chicklet = (length / this.segments) - this.segmentSpacing;
@@ -212,7 +219,7 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 			// draw the remaining segment part
 			if(remain > 0){
 				ew = sw+( (ew-sw)*remain );
-				var gp = [x, y, x, y+(chicklet*remain), x+ ew, y+(chicklet*remain), x+ sw, y , x, y];
+				gp = [x, y, x, y+(chicklet*remain), x+ ew, y+(chicklet*remain), x+ sw, y , x, y];
 				shape = group.createPolyline(gp).setFill(fill).setStroke(stroke);
 			}
 			
@@ -220,9 +227,9 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 		},
 				
 		indicatorShapeFunc: function(group, indicator, startX, startY, endPosition, startThickness, endThickness, fill, stroke){
-			//	summary:
+			// summary:
 			//		Constructor.
-			//	description:
+			// description:
 			//		Creates a segmented range indicator.
 			
 			if(indicator.scale._gauge.orientation == "horizontal"){

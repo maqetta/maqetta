@@ -1,35 +1,34 @@
-define("dojox/av/FLVideo", ['dojo', 'dijit', 'dijit/_Widget', 'dojox/embed/Flash', 'dojox/av/_Media'],function(dojo, dijit){
+define("dojox/av/FLVideo", ['dojo', 'dijit', 'dijit/_Widget', 'dojox/embed/Flash', 'dojox/av/_Media'],
+function(dojo, dijit, _Widget, Flash, _Media){
 
 dojo.experimental("dojox.av.FLVideo");
-dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
+dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 
 	// summary:
 	//		Inserts a Flash FLV video into the HTML page and provides methods
 	//		and events for controlling the video. Also plays the H264/M4V codec
 	//		with a little trickery: change the '.M4V' extension to '.flv'.
-	//
 	// example:
-	//
 	//		markup:
 	//		|	<div id="vid" initialVolume=".7",
 	//		|		mediaUrl="../resources/Grog.flv"
 	//		|		dojoType="dojox.av.FLVideo"></div>
+	// example:
 	//		programmatic:
 	//		|	new dojox.av.FLVideo({
 	//		|		initialVolume:.7,
 	//		|		mediaUrl:"../resources/Grog.flv"
 	//		|	}, "vid");
-	//
-	//  mediaUrl: String
+
+	// mediaUrl: String
 	// 		REQUIRED: The Url of the video file that will be played.
 	//		NOTE: Must be either an absolute URL or relative to the HTML file.
 	//		Relative paths will be converted to abslute paths
-	//
+
 	// _swfPath: Uri
 	//		The path to the video player SWF resource
 	_swfPath: dojo.moduleUrl("dojox.av", "resources/video.swf"),
-	//
-	//
+
 	constructor: function(/*Object*/options){
 		// Provide this function for the SWF to ensure that the it is playing
 		// in HTML.
@@ -315,7 +314,6 @@ dojo.declare("dojox.av.FLVideo", [dijit._Widget, dojox.av._Media], {
 		dojo.disconnect(this._positionHandle);
 		this.inherited(arguments);
 	}
-
 });
 
 return dojox.av.FLVideo;

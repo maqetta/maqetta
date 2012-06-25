@@ -19,8 +19,6 @@ define("dijit/ColorPalette", [
 
 // module:
 //		dijit/ColorPalette
-// summary:
-//		A keyboard accessible color-picking widget
 
 var ColorPalette = declare("dijit.ColorPalette", [_Widget, _TemplatedMixin, _PaletteMixin], {
 	// summary:

@@ -32,8 +32,8 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 	//		The CSS class name for the button node is formed from `iconClassPrefix` and `command`
 	iconClassPrefix: "dijitEditorIcon",
 
-	// button: dijit._Widget?
-	//		Pointer to `dijit.form.Button` or other widget (ex: `dijit.form.FilteringSelect`)
+	// button: dijit/_WidgetBase?
+	//		Pointer to `dijit/form/Button` or other widget (ex: `dijit/form/FilteringSelect`)
 	//		that is added to the toolbar to control this plugin.
 	//		If not specified, will be created on initialization according to `buttonClass`
 	button: null,
@@ -79,6 +79,7 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 			if(!this.button){
 				var props = lang.mixin({
 					label: label,
+					ownerDocument: editor.ownerDocument,
 					dir: editor.dir,
 					lang: editor.lang,
 					showLabel: false,
@@ -151,7 +152,7 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 		}
 	},
 
-	setEditor: function(/*dijit.Editor*/ editor){
+	setEditor: function(/*dijit/Editor*/ editor){
 		// summary:
 		//		Tell the plugin which Editor it is associated with.
 
@@ -178,7 +179,7 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 		this.connect(this.editor, "onNormalizedDisplayChanged", "updateState");
 	},
 
-	setToolbar: function(/*dijit.Toolbar*/ toolbar){
+	setToolbar: function(/*dijit/Toolbar*/ toolbar){
 		// summary:
 		//		Tell the plugin to add it's controller widget (often a button)
 		//		to the toolbar.  Does nothing if there is no controller widget.

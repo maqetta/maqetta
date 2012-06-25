@@ -6,8 +6,6 @@ define("dijit/form/RadioButton", [
 
 	// module:
 	//		dijit/form/RadioButton
-	// summary:
-	//		Radio button widget
 
 	return declare("dijit.form.RadioButton", [CheckBox, _RadioButtonMixin], {
 		// summary:

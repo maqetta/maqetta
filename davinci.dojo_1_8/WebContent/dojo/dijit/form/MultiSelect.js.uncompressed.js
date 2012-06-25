@@ -8,13 +8,10 @@ define("dijit/form/MultiSelect", [
 
 // module:
 //		dijit/form/MultiSelect
-// summary:
-//		Widget version of a <select multiple=true> element,
-//		for selecting multiple options.
 
 return declare("dijit.form.MultiSelect", _FormValueWidget, {
 	// summary:
-	//		Widget version of a <select multiple=true> element,
+	//		Widget version of a `<select multiple=true>` element,
 	//		for selecting multiple options.
 
 	// size: Number
@@ -25,7 +22,7 @@ return declare("dijit.form.MultiSelect", _FormValueWidget, {
 
 	templateString: "<select multiple='true' ${!nameAttrSetting} data-dojo-attach-point='containerNode,focusNode' data-dojo-attach-event='onchange: _onChange'></select>",
 
-	addSelected: function(/*dijit.form.MultiSelect*/ select){
+	addSelected: function(/*dijit/form/MultiSelect*/ select){
 		// summary:
 		//		Move the selected nodes of a passed Select widget
 		//		instance to this Select widget.

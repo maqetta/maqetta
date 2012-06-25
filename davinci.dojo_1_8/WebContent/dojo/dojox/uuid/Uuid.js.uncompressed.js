@@ -110,10 +110,10 @@ dojox.uuid.Uuid.prototype.getVariant = function(){
 	//		var variant = uuid.getVariant();
 	//		dojox.uuid.assert(variant == dojox.uuid.variant.DCE);
 	// example:
-	// "3b12f1df-5232-4804-897e-917bf397618a"
-	//                     ^
-	//                     |
-	//         (variant "10__" == DCE)
+	// | "3b12f1df-5232-4804-897e-917bf397618a"
+	// |                     ^
+	// |                     |
+	// |         (variant "10__" == DCE)
 	return dojox.uuid.getVariant(this);
 };
 

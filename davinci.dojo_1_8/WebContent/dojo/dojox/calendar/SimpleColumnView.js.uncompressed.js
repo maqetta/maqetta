@@ -260,6 +260,8 @@ function(
 		},
 		
 		__fixEvt:function(e){
+			// tags:
+			//		private
 			e.sheet = "primary";
 			e.source = this;
 			return e;
@@ -276,7 +278,10 @@ function(
 			//		Computes the row header label for the specified time of day.
 			//		By default a formatter is used, optionally the <code>rowHeaderTimePattern</code> property can be used to set a custom time pattern to the formatter.
 			// d: Date
-			//		The date to format	
+			//		The date to format
+			// tags:
+			//		protected
+
 			return this.renderData.dateLocaleModule.format(d, {
 				selector: "time", 
 				timePattern: this.rowHeaderTimePattern
@@ -289,6 +294,9 @@ function(
 			//		By default a formatter is used, optionally the <code>columnHeaderDatePattern</code> property can be used to set a custom date pattern to the formatter.
 			// d: Date
 			//		The date to format 
+			// tags:
+			//		protected
+
 			return this.renderData.dateLocaleModule.format(d, {
 				selector: "date", 
 				datePattern: this.columnHeaderDatePattern, 
@@ -311,7 +319,13 @@ function(
 		//		Valid values are "left" and "right", default value is "left".
 		scrollBarRTLPosition: "left",
 		
-		_getStartTimeOfDay: function(){			
+		_getStartTimeOfDay: function(){
+			// summary:
+			//		Returns the visible first time of day.
+			// tags:
+			//		protected
+			// returns: Integer[]
+
 			var v = (this.get("maxHours") - this.get("minHours")) * 
 				this._getScrollPosition() / this.renderData.sheetHeight;
 			
@@ -322,6 +336,12 @@ function(
 		},
 		
 		_getEndTimeOfDay: function(){
+			// summary:
+			//		Returns the visible last time of day.
+			// tags:
+			//		protected
+			// returns: Integer[]
+
 			var v = (this.get("maxHours") - this.get("minHours")) * 
 				(this._getScrollPosition() + this.scrollContainer.offsetHeight) / this.renderData.sheetHeight;
 			
@@ -340,7 +360,17 @@ function(
 		},
 		
 		_setStartTimeOfDay: function(hour, minutes, maxDuration, easing){
-			
+			// summary:
+			//		Scrolls the view to show the specified first time of day.
+			// hour: Integer
+			//		The hour of the start time of day.
+			// minutes: Integer
+			//		The minutes part of the start time of day.
+			// maxDuration: Integer
+			//		The max duration of the scroll animation.
+			// tags:
+			//		protected
+
 			var rd = this.renderData;
 			
 			hour = hour || rd.minHours;
@@ -377,6 +407,14 @@ function(
 		},
 		
 		_scrollToPosition: function(position, maxDuration, easing){
+			// summary:
+			//		Scrolls the view to show the specified first time of day.
+			// position: Integer
+			//		The position in pixels.
+			// maxDuration: Integer
+			//		The max duration of the scroll animation.
+			// tags:
+			//		protected
 			
 			if (maxDuration) {
 				
@@ -419,7 +457,7 @@ function(
 			//		Start time of the range of interest.
 			// end: Date
 			//		End time of the range of interest.
-			// margin: int
+			// margin: Integer
 			//		Margin in minutes around the time range.
 			// visibilityTarget: String
 			//		The end(s) of the time range to make visible.
@@ -475,7 +513,11 @@ function(
 			this._setStartTimeOfDay(Math.floor(t/60), t%60);
 		},
 		
-		_mouseWheelScrollHander: function(e){			
+		_mouseWheelScrollHander: function(e){
+			// summary:
+			//		Mouse wheel handler.
+			// tags:
+			//		protected
 			this.scrollView(e.wheelDelta > 0 ? -1 : 1);
 		},		
 		
@@ -500,7 +542,8 @@ function(
 		},
 		
 		_createRendering: function(/*Object*/renderData, /*Object*/oldRenderData){
-
+			// tags:
+			//		private
 			domStyle.set(this.sheetContainer, "height", renderData.sheetHeight + "px");
 			// padding for the scroll bar.
 			this._configureScrollBar(renderData);
@@ -511,6 +554,13 @@ function(
 		},
 		
 		_configureScrollBar: function(renderData){
+			// summary:
+			//		Sets the scroll bar size and position.
+			// renderData: Object
+			//		The render data.
+			// tags:
+			//		protected
+
 			if(has("ie") && this.scrollBar){
 				domStyle.set(this.scrollBar.domNode, "width", (renderData.scrollbarWidth + 1) + "px");
 			}
@@ -535,6 +585,9 @@ function(
 		},
 		
 		_columnHeaderClick: function(e){
+			// tags:
+			//		private
+
 			event.stop(e);
 			var index = query("td", this.columnHeaderTable).indexOf(e.currentTarget);
 			this._onColumnHeaderClick({
@@ -553,6 +606,8 @@ function(
 			//
 			// oldRenderData:
 			//		The previously render data displayed, if any.
+			// tags:
+			//		private
 
 			var table = this.columnHeaderTable;
 			
@@ -696,6 +751,9 @@ function(
 			//		The date displayed by this column
 			// renderData: Object			
 			//		The render data.
+			// tags:
+			//		protected
+
 			if(this.isToday(date)){				
 				return domClass.add(node, "dojoxCalendarToday");
 			} else if(this.isWeekEnd(date)){
@@ -713,6 +771,9 @@ function(
 			//
 			// oldRenderData:
 			//		The previously render data displayed, if any.
+			// tags:
+			//		private
+
 			
 			var rowHeaderTable = this.rowHeaderTable;
 			
@@ -780,7 +841,8 @@ function(
 			//		The time of day displayed by this row header cell.
 			// renderData: Object
 			//		The render data.
-				
+			// tags:
+			//		protected
 		},
 	
 		_buildGrid: function (renderData, oldRenderData){
@@ -791,7 +853,10 @@ function(
 			//		The render data to display.
 			//
 			// oldRenderData:
-			//		The previously render data displayed, if any.				
+			//		The previously render data displayed, if any.	
+			// tags:
+			//		private
+
 									
 			var table = this.gridTable;
 			
@@ -925,7 +990,10 @@ function(
 			// date: Date
 			//		The date displayed by this column
 			// renderData: Object
-			//
+			//		The render data object.
+			// tags:
+			//		protected
+
 			if(this.isToday(date)){				
 				return domClass.add(node, "dojoxCalendarToday");
 			} else if(this.isWeekEnd(date)){
@@ -940,7 +1008,9 @@ function(
 			//		The render data to display.
 			// oldRenderData:
 			//		The previously render data displayed, if any.
-			
+			// tags:
+			//		private
+
 			var table = this.itemContainerTable;
 			
 			if (!table){
@@ -1068,11 +1138,15 @@ function(
 		},
 		
 		_defaultItemToRendererKindFunc: function(item){
+			// tags:
+			//		private
 			return "vertical"; // String
 		},
 		
 		_layoutInterval: function(/*Object*/renderData, /*Integer*/index, /*Date*/start, /*Date*/end, /*Object[]*/items){
-			
+			// tags:
+			//		private
+
 			var verticalItems = [];
 			renderData.colW = this.itemContainer.offsetWidth / renderData.columnCount;
 			
@@ -1089,7 +1163,9 @@ function(
 		},
 
 		_layoutVerticalItems: function(/*Object*/renderData, /*Integer*/index, /*Date*/startTime, /*Date*/endTime, /*Object[]*/items){
-			
+			// tags:
+			//		private
+
 			if(this.verticalRenderer == null){
 				return;
 			}
@@ -1181,6 +1257,9 @@ function(
 		},
 		
 		_sortItemsFunction: function(a, b){
+			// tags:
+			//		private
+
 			var res = this.dateModule.compare(a.startTime, b.startTime);
 			if(res == 0){
 				res = -1 * this.dateModule.compare(a.endTime, b.endTime);
@@ -1263,7 +1342,9 @@ function(
 		///////////////////////////////////////////////////////////////
 		
 		_onGridMouseUp: function(e){
-			
+			// tags:
+			//		private
+
 			this.inherited(arguments);
 			
 			if (this._gridMouseDown) {
@@ -1277,18 +1358,22 @@ function(
 		},			
 			
 		_onGridTouchStart: function(e){
+			// tags:
+			//		private
+
+			this.inherited(arguments);
 			
-			this.inherited(arguments);			
-			
-			var g = this._gridProps;						
-																											
+			var g = this._gridProps;
+
 			g.moved= false;
 			g.start= e.touches[0].screenY;
 			g.scrollTop= this._getScrollPosition();
 		},
 		
 		_onGridTouchMove: function(e){
-			
+			// tags:
+			//		private
+
 			this.inherited(arguments);						
 			
 			if (e.touches.length > 1 && !this._isEditing){
@@ -1326,6 +1411,9 @@ function(
 		},
 		
 		_onGridTouchEnd: function(e){
+			// tags:
+			//		private
+
 			//event.stop(e);
 								
 			this.inherited(arguments);
@@ -1377,6 +1465,9 @@ function(
 		},
 		
 		_onColumnHeaderClick: function(e){
+			// tags:
+			//		private
+
 			this._dispatchCalendarEvt(e, "onColumnHeaderClick");
 		},
 		
@@ -1385,12 +1476,15 @@ function(
 			//		Event dispatched when a column header cell is dispatched.
 			//		e: Event
 			//		The event has the following properties:
-			//			| index: Integer
-			//			|		The column index. 
-			//			| date: Date
-			//			|		The date displayed by the column.
-			//			| triggerEvent: Event
-			//			|		The origin event.
+			//		| index: Integer
+			//		|		The column index. 
+			//		| date: Date
+			//		|		The date displayed by the column.
+			//		| triggerEvent: Event
+			//		|		The origin event.
+			// tags:
+			//		callback
+
 		},
 		
 
@@ -1509,6 +1603,9 @@ function(
 		},
 				
 		_onScrollTimer_tick: function(){
+			// tags:
+			//		private
+
 			this._scrollToPosition(this._getScrollPosition() + this._scrollProps.scrollStep);
 		},
 		

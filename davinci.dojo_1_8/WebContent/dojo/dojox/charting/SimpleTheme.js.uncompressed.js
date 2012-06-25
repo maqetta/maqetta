@@ -133,11 +133,11 @@ define("dojox/charting/SimpleTheme", ["dojo/_base/lang", "dojo/_base/array","doj
 	//
 	// example:
 	//		Defining a new theme is pretty simple:
-	//	|	dojox.charting.themes.Grasslands = new dojox.charting.SimpleTheme({
+	//	|	var Grasslands = new SimpleTheme({
 	//	|		colors: [ "#70803a", "#dde574", "#788062", "#b1cc5d", "#eff2c2" ]
 	//	|	});
 	//	|
-	//	|	myChart.setTheme(dojox.charting.themes.Grasslands);
+	//	|	myChart.setTheme(Grasslands);
 
 	shapeSpaces: {shape: 1, shapeX: 1, shapeY: 1},
 
@@ -304,7 +304,7 @@ define("dojox/charting/SimpleTheme", ["dojo/_base/lang", "dojo/_base/array","doj
 	addMixin: function(theme, elementType, mixin, doPost){
 		// summary:
 		//		Add a mixin object to the passed theme and process.
-		// theme: dojox.charting.SimpleTheme
+		// theme: dojox/charting/SimpleTheme
 		//		The theme to mixin to.
 		// elementType: String
 		//		The type of element in question. Can be "line", "bar" or "circle"
@@ -312,7 +312,7 @@ define("dojox/charting/SimpleTheme", ["dojo/_base/lang", "dojo/_base/array","doj
 		//		The object or objects to mix into the theme.
 		// doPost: Boolean
 		//		If true, run the new theme through the post-processor.
-		// returns: dojox.charting.SimpleTheme
+		// returns: dojox/charting/SimpleTheme
 		//		The new theme.
 		if(lang.isArray(mixin)){
 			arr.forEach(mixin, function(m){
@@ -350,17 +350,17 @@ define("dojox/charting/SimpleTheme", ["dojo/_base/lang", "dojo/_base/array","doj
 		if(doPost){
 			theme = this.post(theme, elementType);
 		}
-		return theme;	//	dojox.charting.SimpleTheme
+		return theme;	//	dojox/charting/SimpleTheme
 	},
 
 	post: function(theme, elementType){
 		// summary:
 		//		Process any post-shape fills.
-		// theme: dojox.charting.SimpleTheme
+		// theme: dojox/charting/SimpleTheme
 		//		The theme to post process with.
 		// elementType: String
 		//		The type of element being filled.  Can be "bar" or "circle".
-		// returns: dojox.charting.SimpleTheme
+		// returns: dojox/charting/SimpleTheme
 		//		The post-processed theme.
 		var fill = theme.series.fill, t;
 		if(!this.noGradConv && this.shapeSpaces[fill.space] && fill.type == "linear"){
@@ -385,7 +385,7 @@ define("dojox/charting/SimpleTheme", ["dojo/_base/lang", "dojo/_base/array","doj
 				return dlu.merge(theme, {series: {fill: t}});
 			}
 		}
-		return theme;	//	dojox.charting.SimpleTheme
+		return theme;	//	dojox/charting/SimpleTheme
 	},
 
 	getTick: function(name, mixin){

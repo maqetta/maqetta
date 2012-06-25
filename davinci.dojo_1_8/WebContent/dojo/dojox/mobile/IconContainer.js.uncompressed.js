@@ -25,7 +25,7 @@ define("dojox/mobile/IconContainer", [
 		//		icons. Each icon represents an application component.
 
 		// defaultIcon: String
-		//		The default fall-back icon, which is displayed only when the
+		//		The default fallback icon, which is displayed only when the
 		//		specified icon has failed to load.
 		defaultIcon: "",
 
@@ -157,6 +157,8 @@ define("dojox/mobile/IconContainer", [
 		},	
 
 		_setLabelAttr: function(/*String*/text){
+			// tags:
+			//		private
 			if(!this.appView){ return; }
 			this.label = text;
 			var s = this._cv ? this._cv(text) : text;

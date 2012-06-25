@@ -3,14 +3,20 @@ define("dojox/charting/action2d/Shake", ["dojo/_base/connect", "dojo/_base/decla
 	function(hub, declare, PlotAction, df, dfe, m, gf){
 
 	/*=====
-	declare("dojox.charting.action2d.__ShakeCtorArgs", dojox.charting.action2d.__PlotActionCtorArgstorArgs, {
-		// summary:
-		//		Additional arguments for highlighting actions.
-	
-		// shift: Number?
-		//		The amount in pixels to shift the pie slice.  Default is 3.
-		shift: 3
-	});
+	var __ShakeCtorArgs = function(duration, easing, shift){
+			// summary:
+			//		Additional arguments for shaking actions.
+			// duration: Number?
+			//		The amount of time in milliseconds for an animation to last.  Default is 400.
+			this.duration = 400;
+			// easing: dojo/fx/easing/*?
+			//		An easing object (see dojo.fx.easing) for use in an animation.  The
+			//		default is dojo.fx.easing.backOut.
+			this.easing = null;
+			// shift: Number?
+			//		The amount in pixels to shift the pie slice.  Default is 3.
+			shift = 3;
+	};
 	=====*/
 
 	var DEFAULT_SHIFT = 3;
@@ -31,11 +37,11 @@ define("dojox/charting/action2d/Shake", ["dojo/_base/connect", "dojo/_base/decla
 		constructor: function(chart, plot, kwArgs){
 			// summary:
 			//		Create the shaking action and connect it to the plot.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this action belongs to.
 			// plot: String?
 			//		The plot this action is attached to.  If not passed, "default" is assumed.
-			// kwArgs: dojox.charting.action2d.__ShakeCtorArgs?
+			// kwArgs: __ShakeCtorArgs?
 			//		Optional keyword arguments object for setting parameters.
 			if(!kwArgs){ kwArgs = {}; }
 			this.shiftX = typeof kwArgs.shiftX == "number" ? kwArgs.shiftX : DEFAULT_SHIFT;
@@ -47,7 +53,7 @@ define("dojox/charting/action2d/Shake", ["dojo/_base/connect", "dojo/_base/decla
 		process: function(o){
 			// summary:
 			//		Process the action on the given object.
-			// o: dojox.gfx.Shape
+			// o: dojox/gfx/shape.Shape
 			//		The object on which to process the slice moving action.
 			if(!o.shape || !(o.type in this.overOutEvents)){ return; }
 

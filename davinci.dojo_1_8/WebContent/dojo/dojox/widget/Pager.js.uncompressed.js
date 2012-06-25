@@ -9,12 +9,13 @@ kernel.experimental("dojox.widget.Pager");
 return declare("dojox.widget.Pager",
 	[_WidgetBase, _TemplatedMixin],
 	{
-	// summary: A Pager, displaying a list of sized nodes
+	// summary: 
+	//		A Pager, displaying a list of sized nodes
 
 
 	templateString: template,
 
-/*=====
+
 	// iconPrevious: String?
 	//		The url of the previous page icon
 	iconPrevious: "",
@@ -22,7 +23,6 @@ return declare("dojox.widget.Pager",
 	// iconNext: String?
 	//		The url of the next page icon
 	iconNext: "",
-=====*/
 
 	iconPage: require.toUrl("dojox/widget/Pager/images/pageInactive.png"),
 	iconPageActive: require.toUrl("dojox/widget/Pager/images/pageActive.png"),
@@ -541,7 +541,8 @@ return declare("dojox.widget.Pager",
 	},
 
 	onScrollEnd: function(){
-		// summary: Stub Function. Fired after the slide is complete. Override or connect.
+		// summary: 
+		//	Stub Function. Fired after the slide is complete. Override or connect.
 	}
 
 });

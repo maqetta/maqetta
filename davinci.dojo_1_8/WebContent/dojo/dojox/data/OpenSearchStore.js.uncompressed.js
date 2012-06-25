@@ -44,8 +44,8 @@ var OpenSearchStore = declare("dojox.data.OpenSearchStore", null, {
 	urlElement: null,
 	iframeElement: null,
 
-	//urlPreventCache: boolean
-	//Flag denoting if xhrGet calls should use the preventCache option.
+	// urlPreventCache: boolean
+	//		Flag denoting if xhrGet calls should use the preventCache option.
 	urlPreventCache: true,
 	
 	ATOM_CONTENT_TYPE: 3,

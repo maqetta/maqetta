@@ -69,8 +69,23 @@ define("dojox/mobile/_DatePickerMixin", [
 		// dayPattern: String
 		//		A pattern to be used to format day.
 		dayPattern: "d",
-
+		
+		/*=====
+		// value: String
+		//		A string representing the date value.
+		//		The setter of this property first converts the value argument by calling 
+		//		the fromISOString method of the dojo/date/stamp module, then sets the 
+		//		values of the picker according to the resulting	Date object. 
+		//		If the string cannot be parsed by fromISOString, the method does nothing.
+		//		Example: set("value", "2012-1-20"); // January 20, 2012
+		//		The getter returns the string formatted as described in the dojo/date/stamp 
+		//		module.
+		value: "",
+		=====*/
+		
 		initSlots: function(){
+			// summary:
+			//		Initializes the slots.
 			var c = this.slotClasses, p = this.slotProps;
 			c[0] = declare(c[0], yearSlotMixin);
 			c[1] = declare(c[1], monthSlotMixin);
@@ -82,6 +97,8 @@ define("dojox/mobile/_DatePickerMixin", [
 		},
 
 		reorderSlots: function(){
+			// summary:
+			//		Reorders the slots.			
 			if(this.slotOrder.length){ return; }
 			var a = datelocale._parseInfo().bundle["dateFormat-short"].toLowerCase().split(/[^ymd]+/, 3);
 			this.slotOrder = array.map(a, function(pat){
@@ -135,6 +152,8 @@ define("dojox/mobile/_DatePickerMixin", [
 		_getDateAttr: function(){
 			// summary:
 			//		Returns a Date object for the current values
+			// tags:
+			//		private			
 			var v = this.get("values"), // [year, month, day]
 				s = this.slots,
 				pat = s[0].pattern + "/" + s[1].pattern + "/" + s[2].pattern;
@@ -154,6 +173,8 @@ define("dojox/mobile/_DatePickerMixin", [
 			//
 			// example:
 			//	|	set("values", [2012, 1, 20]); // January 20, 2012
+			// tags:
+			//		private
 			array.forEach(this.getSlots(), function(w, i){
 				var v = values[i];
 				if(typeof v == "number"){
@@ -174,9 +195,10 @@ define("dojox/mobile/_DatePickerMixin", [
 			//		Date object. If the string cannot be parsed by fromISOString, the method does nothing.
 			// value:
 			//		A string formatted as described in the dojo/date/stamp module.
-			//
 			// example:
 			//	|	set("value", "2012-1-20"); // January 20, 2012
+			// tags:
+			//		private			
 			var date = datestamp.fromISOString(value);
 			this.set("values", array.map(this.slots, function(w){ return w.format(date); }));
 		},
@@ -186,6 +208,8 @@ define("dojox/mobile/_DatePickerMixin", [
 			//		Gets the current date as a String formatted according to a subset of the ISO-8601 standard.
 			// returns:
 			//		A string formatted as described in the dojo/date/stamp module.
+			// tags:
+			//		private			
 			return datestamp.toISOString(this.get("date"), { selector: "date" });
 		}		
 	});

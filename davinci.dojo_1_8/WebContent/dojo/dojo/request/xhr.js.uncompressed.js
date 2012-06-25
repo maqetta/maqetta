@@ -1,22 +1,32 @@
 define("dojo/request/xhr", [
 	'require',
+	'../errors/RequestError',
 	'./watch',
 	'./handlers',
 	'./util',
 	'../has'
-], function(require, watch, handlers, util, has){
-	has.add('native-xhr', function() {
+], function(require, RequestError, watch, handlers, util, has){
+	has.add('native-xhr', function(){
 		// if true, the environment has a native XHR implementation
 		return typeof XMLHttpRequest !== 'undefined';
+	});
+	has.add('dojo-force-activex-xhr', function(){
+		return has('activex') && !document.addEventListener && window.location.protocol === 'file:';
 	});
 
 	has.add('native-xhr2', function(){
 		if(!has('native-xhr')){ return; }
 		var x = new XMLHttpRequest();
-		return typeof x['addEventListener'] !== 'undefined';
+		return typeof x['addEventListener'] !== 'undefined' &&
+			(typeof opera === 'undefined' || typeof x['upload'] !== 'undefined');
 	});
 
-	function handleResponse(response){
+	has.add('native-formdata', function(){
+		// if true, the environment has a native FormData implementation
+		return typeof FormData === 'function';
+	});
+
+	function handleResponse(response, error){
 		var _xhr = response.xhr;
 		response.status = response.xhr.status;
 		response.text = _xhr.responseText;
@@ -25,21 +35,22 @@ define("dojo/request/xhr", [
 			response.data = _xhr.responseXML;
 		}
 
-		try{
-			handlers(response);
-		}catch(e){
-			response.error = e;
+		if(!error){
+			try{
+				handlers(response);
+			}catch(e){
+				error = e;
+			}
 		}
 
-		if(response.error){
-			this.reject(response.error);
+		if(error){
+			this.reject(error);
 		}else if(util.checkStatus(_xhr.status)){
 			this.resolve(response);
 		}else{
-			var err = new Error('Unable to load ' + response.url + ' status: ' + _xhr.status);
-			err.log = false;
+			error = new RequestError('Unable to load ' + response.url + ' status: ' + _xhr.status, response);
 
-			this.reject(err);
+			this.reject(error);
 		}
 	}
 
@@ -62,10 +73,8 @@ define("dojo/request/xhr", [
 			}
 			function onError(evt){
 				var _xhr = evt.target;
-				response.error = new Error('Unable to load ' + response.url + ' status: ' + _xhr.status); 
-				response.error.log = false;
-
-				dfd.handleResponse(response);
+				var error = new RequestError('Unable to load ' + response.url + ' status: ' + _xhr.status, response); 
+				dfd.handleResponse(response, error);
 			}
 
 			function onProgress(evt){
@@ -120,7 +129,11 @@ define("dojo/request/xhr", [
 		//		Sends an HTTP request with the given URL.
 		//	url:
 		//		URL to request
-		var response = util.parseArgs(url, util.deepCreate(defaultOptions, options));
+		var response = util.parseArgs(
+			url,
+			util.deepCreate(defaultOptions, options),
+			has('native-formdata') && options.data && options.data instanceof FormData
+		);
 		url = response.url;
 		options = response.options;
 
@@ -140,11 +153,16 @@ define("dojo/request/xhr", [
 		);
 		var _xhr = response.xhr = xhr._create();
 
-		//If XHR factory fails, cancel the deferred.
 		if(!_xhr){
-			dfd.cancel();
+			// If XHR factory somehow returns nothings,
+			// cancel the deferred.
+			dfd.cancel(new RequestError('XHR was not created'));
 			return returnDeferred ? dfd : dfd.promise;
 		}
+
+		response.getHeader = function(headerName){
+			return this.xhr.getResponseHeader(headerName);
+		};
 
 		if(addListeners){
 			remover = addListeners(_xhr, dfd, response);
@@ -154,38 +172,41 @@ define("dojo/request/xhr", [
 			async = !options.sync,
 			method = options.method;
 
-		// IE6 won't let you call apply() on the native function.
-		_xhr.open(method, url, async, options.user || undefined, options.password || undefined);
+		try{
+			// IE6 won't let you call apply() on the native function.
+			_xhr.open(method, url, async, options.user || undefined, options.password || undefined);
 
-		var headers = options.headers,
-			contentType;
-		if(headers){
-			for(var hdr in headers){
-				if(hdr.toLowerCase() === 'content-type'){
-					contentType = headers[hdr];
-				}else if(headers[hdr]){
-					//Only add header if it has a value. This allows for instance, skipping
-					//insertion of X-Requested-With by specifying empty value.
-					_xhr.setRequestHeader(hdr, headers[hdr]);
+			if(options.withCredentials){
+				_xhr.withCredentials = options.withCredentials;
+			}
+
+			var headers = options.headers,
+				contentType;
+			if(headers){
+				for(var hdr in headers){
+					if(hdr.toLowerCase() === 'content-type'){
+						contentType = headers[hdr];
+					}else if(headers[hdr]){
+						//Only add header if it has a value. This allows for instance, skipping
+						//insertion of X-Requested-With by specifying empty value.
+						_xhr.setRequestHeader(hdr, headers[hdr]);
+					}
 				}
 			}
-		}
 
-		if(contentType && contentType !== false){
-			_xhr.setRequestHeader('Content-Type', contentType);
-		}
-		if(!headers || !('X-Requested-With' in headers)){
-			_xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-		}
+			if(contentType && contentType !== false){
+				_xhr.setRequestHeader('Content-Type', contentType);
+			}
+			if(!headers || !('X-Requested-With' in headers)){
+				_xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			}
 
-		try{
-			var notify = require('./notify');
-			notify.send(response);
-		}catch(e){}
-		try{
+			try{
+				var notify = require('./notify');
+				notify.send(response);
+			}catch(e){}
 			_xhr.send(data);
 		}catch(e){
-			response.error = e;
 			dfd.reject(e);
 		}
 
@@ -200,7 +221,7 @@ define("dojo/request/xhr", [
 		//		does the work of portably generating a new XMLHTTPRequest object.
 		throw new Error('XMLHTTP not available');
 	};
-	if(has('native-xhr')){
+	if(has('native-xhr') && !has('dojo-force-activex-xhr')){
 		xhr._create = function(){
 			return new XMLHttpRequest();
 		};

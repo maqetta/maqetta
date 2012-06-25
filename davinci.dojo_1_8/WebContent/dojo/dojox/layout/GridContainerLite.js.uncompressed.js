@@ -81,7 +81,7 @@ define("dojox/layout/GridContainerLite", [
 		//		template of gridContainer.
 		templateString: template,
 
-		// dragHandleClass: Array :
+		// dragHandleClass: Array
 		//		CSS class enabling a drag handle on a child.
 		dragHandleClass: "dojoxDragHandle",
 

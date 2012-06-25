@@ -1,11 +1,12 @@
 define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./dom-construct", "./_base/window", "require"],
-	function(config, lang, has, dom, domConstruct, baseWindow, require) {
+	function(config, lang, has, dom, domConstruct, baseWindow, require){
 	// module:
 	//		dojo/back
-	// summary:
-	//		Browser history management resources
 
-	var back = {};
+	var back = {
+		// summary:
+		//		Browser history management resources
+	};
 	 1  && lang.setObject("dojo.back", back);
 
 	// everyone deals with encoding the hash slightly differently
@@ -36,7 +37,8 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 	var historyCounter;
 
 	function handleBackButton(){
-		//summary: private method. Do not call this directly.
+		// summary:
+		//		private method. Do not call this directly.
 
 		//The "current" page is always at the top of the history stack.
 		var current = historyStack.pop();
@@ -76,12 +78,14 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 	back.goForward = handleForwardButton;
 
 	function createState(url, args, hash){
-		//summary: private method. Do not call this directly.
+		// summary:
+		//		private method. Do not call this directly.
 		return {"url": url, "kwArgs": args, "urlHash": hash};	//Object
 	}
 
 	function getUrlQuery(url){
-		//summary: private method. Do not call this directly.
+		// summary:
+		//		private method. Do not call this directly.
 		var segments = url.split("?");
 		if(segments.length < 2){
 			return null; //null
@@ -92,7 +96,8 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 	}
 
 	function loadIframeHistory(){
-		//summary: private method. Do not call this directly.
+		// summary:
+		//		private method. Do not call this directly.
 		var url = (config["dojoIframeHistoryUrl"] || require.toUrl("./resources/iframe_history.html")) + "?" + (new Date()).getTime();
 		moveForward = true;
 		if(historyIframe){
@@ -136,8 +141,9 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 	}
 
 	back.init = function(){
-		//summary: Initializes the undo stack. This must be called from a <script>
-		//		   block that lives inside the <body> tag to prevent bugs on IE.
+		//summary:
+		//		Initializes the undo stack. This must be called from a <script>
+		//		block that lives inside the `<body>` tag to prevent bugs on IE.
 		// description:
 		//		Only call this method before the page's DOM is finished loading. Otherwise
 		//		it will not work. Be careful with xdomain loading or djConfig.debugAtAllCosts scenarios,
@@ -147,10 +153,10 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 		if(dom.byId("dj_history")){ return; } 
 
 		var src = config["dojoIframeHistoryUrl"] || require.toUrl("./resources/iframe_history.html");
-		if (config.afterOnLoad) {
+		if (config.afterOnLoad){
 			console.error("dojo/back::init() must be called before the DOM has loaded. "
 						+ "Include dojo/back in a build layer.");
-		} else {
+		}else{
 			document.write('<iframe style="border:0;width:1px;height:1px;position:absolute;visibility:hidden;bottom:0;right:0;" name="dj_history" id="dj_history" src="' + src + '"></iframe>');
 		}
 	};
@@ -182,7 +188,7 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 		//		Upon return to this state from the "back, forward" combination
 		//		of navigation steps, this function will be called. Somewhat
 		//		analogous to the semantic of an "onRedo" event handler.
-		// changeUrl: Boolean?|String?
+		// changeUrl: Boolean|String?
 		//		Boolean indicating whether or not to create a unique hash for
 		//		this state. If a string is passed instead, it is used as the
 		//		hash.
@@ -289,7 +295,7 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 			}
 
 			changingUrl = true;
-			setTimeout(function() {
+			setTimeout(function(){
 					setHash(hash);
 					changingUrl = false;
 				}, 1);
@@ -305,7 +311,7 @@ define("dojo/back", ["./_base/config", "./_base/lang", "./sniff", "./dom", "./do
 				//we will need to pass the handle name to handle.
 				var tcb = function(handleName){
 					if(getHash() != ""){
-						setTimeout(function() { setHash(hash); }, 1);
+						setTimeout(function(){ setHash(hash); }, 1);
 					}
 					//Use apply to set "this" to args, and to try to avoid memory leaks.
 					oldCB.apply(this, [handleName]);

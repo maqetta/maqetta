@@ -6,11 +6,7 @@ define("dojox/mvc/Generate", [
 	"./at",
 	"./Group",
 	"dijit/form/TextBox"
-], function(array, lang, declare, Container){
-	/*=====
-		Container = dojox.mvc._Container;
-		declare = dojo.declare;
-	=====*/
+], function(array, lang, declare, Container, at){
 
 	return declare("dojox.mvc.Generate", [Container], {
 		// summary:
@@ -29,7 +25,7 @@ define("dojox/mvc/Generate", [
 		// defaultWidgetMapping: Object
 		//		The mapping of types to a widget class. Set widgetMapping to override this. 
 		//	
-		_defaultWidgetMapping: {"String" : "dijit.form.TextBox"},
+		_defaultWidgetMapping: {"String" : "dijit/form/TextBox"},
 	
 		// defaultClassMapping: Object
 		//		The mapping of class to use. Set classMapping to override this. 
@@ -42,7 +38,7 @@ define("dojox/mvc/Generate", [
 		//	
 		_defaultIdNameMapping: {"String" : "textbox_t"},
 
-		// children: dojo.Stateful
+		// children: dojo/Stateful
 		//		The array of data model that is used to render child nodes.
 		children: null,
 
@@ -57,7 +53,7 @@ define("dojox/mvc/Generate", [
 
 		////////////////////// PRIVATE METHODS ////////////////////////
 
-		_setChildrenAttr: function(/*dojo.Stateful*/ value){
+		_setChildrenAttr: function(/*dojo/Stateful*/ value){
 			// summary:
 			//		Handler for calls to set("children", val).
 			// description:
@@ -75,11 +71,11 @@ define("dojox/mvc/Generate", [
 			}
 		},
 	
-		_buildContained: function(/*dojo.Stateful*/ children){
+		_buildContained: function(/*dojo/Stateful*/ children){
 			// summary:
 			//		Destroy any existing generated view, recreate it from scratch
 			//		parse the new contents.
-			// children: dojo.Stateful
+			// children: dojo/Stateful
 			//		The array of child widgets.
 			// tags:
 			//		private
@@ -94,11 +90,11 @@ define("dojox/mvc/Generate", [
 			this._createBody();
 		},
 	
-		_generateBody: function(/*dojo.Stateful*/ children, /*Boolean*/ hideHeading){
+		_generateBody: function(/*dojo/Stateful*/ children, /*Boolean*/ hideHeading){
 			// summary:
 			//		Generate the markup for the view associated with this generate
 			//		container.
-			// children: dojo.Stateful
+			// children: dojo/Stateful
 			//		The associated data to generate a view for.
 			// hideHeading: Boolean
 			//		Whether the property name should be displayed as a heading.
@@ -136,10 +132,10 @@ define("dojox/mvc/Generate", [
 			return body.join("");
 		},
 	
-		_generateRepeat: function(/*dojox.mvc.StatefulArray*/ children, /*String*/ repeatHeading){
+		_generateRepeat: function(/*dojox/mvc/StatefulArray*/ children, /*String*/ repeatHeading){
 			// summary:
 			//		Generate a repeating model-bound view.
-			// children: dojox.mvc.StatefulArray
+			// children: dojox/mvc/StatefulArray
 			//		The bound node (a collection/array node) to generate a
 			//		repeating UI/view for.
 			// repeatHeading: String
@@ -148,16 +144,16 @@ define("dojox/mvc/Generate", [
 			//		private
 
 			var headingClass = (this.classMapping && this.classMapping["Heading"]) ? this.classMapping["Heading"] : this._defaultClassMapping["Heading"];
-			return '<div data-dojo-type="dojox.mvc.Group" data-dojo-props="target: dojox.mvc.at(\'rel:\', \'' + repeatHeading + '\')" + id="' + this.id + '_r' + this._counter++ + '">'
+			return '<div data-dojo-type="dojox/mvc/Group" data-dojo-props="target: at(\'rel:\', \'' + repeatHeading + '\')" + id="' + this.id + '_r' + this._counter++ + '">'
 			 + '<div class="' + headingClass + '\">' + repeatHeading + '</div>'
 			 + this._generateBody(children, true)
 			 + '</div>';
 		},
 		
-		_generateGroup: function(/*dojo.Stateful*/ model, /*String*/ groupHeading, /*Boolean*/ hideHeading){
+		_generateGroup: function(/*dojo/Stateful*/ model, /*String*/ groupHeading, /*Boolean*/ hideHeading){
 			// summary:
 			//		Generate a hierarchical model-bound view.
-			// model: dojo.Stateful
+			// model: dojo/Stateful
 			//		The bound (intermediate) model to generate a hierarchical view portion for.
 			// groupHeading: String
 			//		The heading to be used for this portion.
@@ -166,7 +162,7 @@ define("dojox/mvc/Generate", [
 			// tags:
 			//		private
 
-			var html = ['<div data-dojo-type="dojox.mvc.Group" data-dojo-props="target: dojox.mvc.at(\'rel:\', \'' + groupHeading + '\')" + id="' + this.id + '_g' + this._counter++ + '">'];
+			var html = ['<div data-dojo-type="dojox/mvc/Group" data-dojo-props="target: at(\'rel:\', \'' + groupHeading + '\')" + id="' + this.id + '_g' + this._counter++ + '">'];
 			if(!hideHeading){
 				var headingClass = (this.classMapping && this.classMapping["Heading"]) ? this.classMapping["Heading"] : this._defaultClassMapping["Heading"];
 				html.push('<div class="' + headingClass + '\">' + groupHeading + '</div>');
@@ -181,7 +177,7 @@ define("dojox/mvc/Generate", [
 			// prop: String
 			//		The data model property name.
 			// referToValue: Boolean
-			//		True if the property is dojox.mvc.StatefulModel with "value" attribute.
+			//		True if the property is dojox/mvc/StatefulModel with "value" attribute.
 			// tags:
 			//		private
 			// TODO: Data type based widget generation / enhanced meta-data
@@ -192,7 +188,7 @@ define("dojox/mvc/Generate", [
 			var labelClass = (this.classMapping && this.classMapping["Label"]) ? this.classMapping["Label"] : this._defaultClassMapping["Label"];
 			var stringClass = (this.classMapping && this.classMapping["String"]) ? this.classMapping["String"] : this._defaultClassMapping["String"];
 			var rowClass = (this.classMapping && this.classMapping["Row"]) ? this.classMapping["Row"] : this._defaultClassMapping["Row"];
-			var bindingSyntax = 'value: dojox.mvc.at(\'rel:' + (referToValue && prop || '') + '\', \'' + (referToValue ? 'value' : prop) + '\')'; 
+			var bindingSyntax = 'value: at(\'rel:' + (referToValue && prop || '') + '\', \'' + (referToValue ? 'value' : prop) + '\')'; 
 
 			return '<div class="' + rowClass + '\">' +
 					'<label class="' + labelClass + '\">' + prop + ':</label>' +

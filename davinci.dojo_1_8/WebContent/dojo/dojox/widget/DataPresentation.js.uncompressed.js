@@ -378,11 +378,11 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//
 		//	example:
 		//
-		//	 	var pres = new dojox.data.DataPresentation("myChartNode", {
-		//	 		type: "chart",
-		//	 		url: "/data/mydata",
-		//          gridNode: "myGridNode"
-		//	 	});
+		// |	var pres = new dojox.data.DataPresentation("myChartNode", {
+		// |		type: "chart",
+		// |		url: "/data/mydata",
+		// |		gridNode: "myGridNode"
+		// |	});
 		//
 		//	properties:
 		//
@@ -466,23 +466,19 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//      function will be called each time new data is set, loaded or refreshed.
 		//      A call-back function cannot be used if the data is supplied directly
 		//      from a Dojo data store.
-		//
 		//  type: String
 		//      the type of presentation to be applied at the DOM attach point.
 		//      This can be 'chart', 'legend', 'grid', 'title', 'footer'. The
 		//      default type is 'chart'.
 		type: "chart",
-		//
 		//  chartType: String
 		//      the type of chart to display. This can be 'clusteredbars',
 		//      'areas', 'stackedcolumns', 'stackedbars', 'stackedareas',
 		//      'lines', 'hybrid'. The default type is 'bar'.
 		chartType: "clusteredBars",
-		//
-		//  reverse: Boolean
-		//      true if the chart independant axis should be reversed.
+		// reverse: Boolean
+		//		true if the chart independant axis should be reversed.
 		reverse: false,
-		//
 		//  animate: Object
 		//      if an object is supplied, then the chart bars or columns will animate
 		//      into place. If the object contains a field 'duration' then the value
@@ -491,12 +487,10 @@ dojo.require("dojo.data.ItemFileWriteStore");
 		//      supplied to enable animation with the default duration.
 		//      The default is null (no animation).
 		animate: null,
-		//
 		//  labelMod: Integer
 		//      the frequency of label annotations to be included on the
 		//      independent axis. 1=every label. 0=no labels. The default is 1.
 		labelMod: 1,
-		//
 		//  tooltip: String | Function
 		//      a string pattern defining the tooltip text to be applied to chart
 		//      data points, or a function which takes a single parameter and returns

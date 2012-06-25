@@ -114,34 +114,34 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 		clear: function(){
 			// summary:
 			//		Clear out all of the information tied to this plot.
-			// returns: dojox.charting.plot2d.Pie
+			// returns: dojox/charting/plot2d/Pie
 			//		A reference to this plot for functional chaining.
 			this.inherited(arguments);
 			this.dyn = [];
 			this.run = null;
-			return this;	//	dojox.charting.plot2d.Pie
+			return this;	//	dojox/charting/plot2d/Pie
 		},
 		setAxis: function(axis){
 			// summary:
 			//		Dummy method, since axes are irrelevant with a Pie chart.
-			// returns: dojox.charting.plot2d.Pie
+			// returns: dojox/charting/plot2d/Pie
 			//		The reference to this plot for functional chaining.
-			return this;	//	dojox.charting.plot2d.Pie
+			return this;	//	dojox/charting/plot2d/Pie
 		},
 		addSeries: function(run){
 			// summary:
 			//		Add a series of data to this plot.
-			// returns: dojox.charting.plot2d.Pie
+			// returns: dojox/charting/plot2d/Pie
 			//		The reference to this plot for functional chaining.
 			this.run = run;
-			return this;	//	dojox.charting.plot2d.Pie
+			return this;	//	dojox/charting/plot2d/Pie
 		},
 		getSeriesStats: function(){
 			// summary:
 			//		Returns default stats (irrelevant for this type of plot).
 			// returns: Object
 			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			return lang.delegate(dc.defaultStats);
+			return lang.delegate(dc.defaultStats); // Object
 		},
 		getRequiredColors: function(){
 			// summary:
@@ -155,7 +155,7 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 			//		An object of the form { width, height }.
 			// offsets: Object
 			//		An object of the form { l, r, t, b }.
-			// returns: dojox.charting.plot2d.Pie
+			// returns: dojox/charting/plot2d/Pie
 			//		A reference to this plot for functional chaining.
 			if(!this.dirty){ return this; }
 			this.resetEvents();
@@ -471,7 +471,7 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 			this._eventSeries[this.run.name] = df.map(run, function(v){
 				return v <= 0 ? null : eventSeries[esi++];
 			});
-			return this;	//	dojox.charting.plot2d.Pie
+			return this;	//	dojox/charting/plot2d/Pie
 		},
 		
 		_getProperLabelRadius: function(slices, labelHeight, minRidius){

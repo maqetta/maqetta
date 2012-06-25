@@ -7,13 +7,13 @@ define("dojox/mobile/RoundRectStoreList", [
 	// module:
 	//		dojox/mobile/RoundRectStoreList
 	// summary:
-	//		An enhanced version of RoundRectList.
+	//		A dojo/store-enabled version of RoundRectList.
 
 	return declare("dojox.mobile.RoundRectStoreList", [RoundRectList, StoreListMixin], {
 		// summary:
-		//		An enhanced version of RoundRectList.
+		//		A dojo/store-enabled version of RoundRectList.
 		// description:
 		//		RoundRectStoreList is an enhanced version of RoundRectList. It
-		//		can generate ListItems according to the given dojo.store store.
+		//		can generate ListItems according to the given dojo/store store.
 	});
 });

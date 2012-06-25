@@ -21,8 +21,6 @@ define("dijit/Menu", [
 
 // module:
 //		dijit/Menu
-// summary:
-//		Includes dijit.Menu widget and base class dijit._MenuBase
 
 // Back compat w/1.6, remove for 2.0
 if(has("dijit-legacy-requires")){
@@ -261,7 +259,7 @@ return declare("dijit.Menu", DropDownMenu, {
 		//		* target:
 		//			The node that is being clicked
 		//		* iframe:
-		//			If an <iframe> is being clicked, iframe points to that iframe
+		//			If an `<iframe>` is being clicked, iframe points to that iframe
 		//		* coords:
 		//			Put menu at specified x/y position in viewport, or if iframe is
 		//			specified, then relative to iframe.

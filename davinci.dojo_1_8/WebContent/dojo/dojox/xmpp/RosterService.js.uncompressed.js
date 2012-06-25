@@ -6,7 +6,7 @@ dojox.xmpp.roster = {
 	ADDED: 101,
 	CHANGED: 102,
 	REMOVED: 103
-}
+};
 
 dojo.declare("dojox.xmpp.RosterService", null, {
 	constructor: function(xmppSession){

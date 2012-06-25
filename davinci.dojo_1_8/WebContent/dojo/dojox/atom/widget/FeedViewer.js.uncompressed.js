@@ -488,7 +488,7 @@ var FeedViewer = declare("dojox.atom.widget.FeedViewer", [_Widget, _Templated, _
 		//
 		//	filter:
 		//		The basic items to filter on and the values.
-		//		Should be of format: {scheme: <some text or null>, term: <some text or null>, label: <some text or null>}
+		//		Should be of format: {scheme: ``some text or null``, term: ``some text or null``, label: ``some text or null``}
 		//
 		//	returns:
 		//		Nothing.
@@ -533,7 +533,7 @@ var FeedViewer = declare("dojox.atom.widget.FeedViewer", [_Widget, _Templated, _
 		//
 		//	filter:
 		//		The basic items to identify the filter that is present.
-		//		Should be of format: {scheme: <some text or null>, term: <some text or null>, label: <some text or null>}
+		//		Should be of format: {scheme: ``some text or null``, term: ``some text or null``, label: ``some text or null``}
 		//
 		//	returns:
 		//		Nothing.

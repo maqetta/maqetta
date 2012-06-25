@@ -10,6 +10,9 @@
 	
 	float:left;
 }
+.dj_ie .dijitTextBoxRtl .dijitInputContainer {
+	clear: right;
+}
 .dijitTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
 .dijitComboBoxRtl .dijitArrowButtonContainer {
@@ -21,6 +24,10 @@
 	right: 0;
 	left: auto;
 }
+.dijitSelectRtl .dijitButtonText {
+	float: right;
+}
+.dijitSelectRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
 .dijitTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitArrowButtonContainer {
@@ -97,6 +104,7 @@
 	right: 0;
 }
 .dijitSelectRtl .dijitButtonContents {
+	border-style: none none none solid;
 	text-align: right;
 }
 .dijitRtl .dojoDndHorizontal .dojoDndItemBefore {
@@ -176,12 +184,8 @@
 	background:url(images/spriteRoundedIconsSmall.png) no-repeat -30px top;
 	#background:url(images/spriteRoundedIconsSmall.gif) no-repeat -30px top;
 }
-.dijitRtl .nihilo .dijitComboBox .dijitButtonNode {
+.nihilo .dijitComboBoxRtl .dijitButtonNode {
 	border-width: 0 0 0 1px;
-}
-.dijitRtl .nihilo .dijitSelect .dijitButtonContents {
-	border-left: none;
-	border-right-width: 1px;
 }
 .dijitRtl .nihilo .dijitTreeNode,
 .dijitRtl .nihilo .dijitTreeExpandoLeaf {

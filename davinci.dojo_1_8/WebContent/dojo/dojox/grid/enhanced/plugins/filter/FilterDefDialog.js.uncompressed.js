@@ -93,7 +93,7 @@ var FilterAccordionContainer = declare("dojox.grid.enhanced.plugins.filter.Accor
 		if(parseInt(has('ie'), 10) == 7){
 			//IE7 will fire a lot of "onresize" event during initialization.
 			array.some(this._connects, function(cnnt){
-				if(cnnt[0][1] == "onresize"){
+				if((cnnt[0] || {})[1] == "onresize"){
 					this.disconnect(cnnt);
 					return true;
 				}
@@ -293,6 +293,11 @@ var CriteriaBox = declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[_Wid
 		this._showSelectOrLabel(this._condSelect, this._condSelectAlt);
 		
 		this.connect(g.layout, "moveColumn", "onMoveColumn");
+		var _this = this;
+		setTimeout(function(){
+			var type = dlg.getColumnType(dlg.curColIdx);
+			_this._setValueBoxByType(type);
+		}, 0);
 	},
 	_getColumnOptions: function(){
 		var colIdx = this.dlg.curColIdx >= 0 ? String(this.dlg.curColIdx) : "anycolumn";
@@ -612,21 +617,24 @@ var CriteriaBox = declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[_Wid
 			};
 		if(type == "string"){
 			if(cell && (cell.suggestion || cell.autoComplete)){
-				html.mixin(res, {
+				lang.mixin(res, {
 					store: g.store,
 					searchAttr: cell.field || cell.name,
+					query: g.query || {},
 					fetchProperties: {
 						sort: [{"attribute": cell.field || cell.name}],
-						query: g.query,
-						queryOptions: g.queryOptions
+						queryOptions: lang.mixin({
+							ignoreCase: true,
+							deep: true
+						}, g.queryOptions || {})
 					}
 				});
 			}
 		}else if(type == "boolean"){
-			html.mixin(res, this.dlg.builder.defaultArgs["boolean"]);
+			lang.mixin(res, this.dlg.builder.defaultArgs["boolean"]);
 		}
 		if(cell && cell.dataTypeArgs){
-			html.mixin(res, cell.dataTypeArgs);
+			lang.mixin(res, cell.dataTypeArgs);
 		}
 		return res;
 	},

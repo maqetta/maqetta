@@ -15,18 +15,18 @@ define("dojox/mobile/_EditableIconMixin", [
 	// module:
 	//		dojox/mobile/_EditableIconMixin
 	// summary:
-	//		A mixin for IconContainer so it can be editable.
+	//		A mixin for IconContainer to make it editable.
 
 	return declare("dojox.mobile._EditableIconMixin", null, {
 		// summary:
-		//		A mixin for IconContainer so it can be editable.
-		// description:
-		//		
+		//		A mixin for IconContainer to make it editable.
 
 		deleteIconForEdit: "mblDomButtonBlackCircleCross",
 		threshold: 4, // drag threshold value in pixels
 
 		destroy: function(){
+			// summary:
+			//		Destroys the container.
 			if(this._blankItem){
 				this._blankItem.destroy();
 			}
@@ -34,6 +34,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		startEdit: function(){
+			// summary:
+			//		Starts the editing.
 			if(!this.editable || this.isEditing){ return; }
 
 			this.isEditing = true;
@@ -60,6 +62,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		endEdit: function(){
+			// summary:
+			//		Ends the editing.
 			if(!this.isEditing){ return; }
 
 			array.forEach(this.getChildren(), function(w){
@@ -83,6 +87,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		scaleItem: function(/*Widget*/widget, /*Number*/ratio){
+			// summary:
+			//		Scales an item according to the specified ratio.
 			domStyle.set(widget.domNode, {
 				webkitTransition: has("android") ? "" : "-webkit-transform .1s ease-in-out",
 				webkitTransform: ratio == 1 ? "" : "scale(" + ratio + ")"
@@ -90,10 +96,14 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_onTransitionStart: function(e){
+			// tags:
+			//		private
 			event.stop(e);
 		},
 
 		_onTransitionEnd: function(e){
+			// tags:
+			//		private
 			event.stop(e);
 			var w = registry.getEnclosingWidget(e.target);
 			w._moving = false;
@@ -101,6 +111,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_onTouchStart: function(e){
+			// tags:
+			//		private
 			if(!this._blankItem){
 				this._blankItem = new IconItem();
 				this._blankItem.domNode.style.visibility = "hidden";
@@ -136,6 +148,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_onDragStart: function(e){
+			// tags:
+			//		private
 			this._dragging = true;
 
 			var movingItem = this._movingItem;
@@ -164,6 +178,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_onTouchMove: function(e){
+			// tags:
+			//		private
 			var x = e.touches ? e.touches[0].pageX : e.pageX;
 			var y = e.touches ? e.touches[0].pageY : e.pageY;
 			if(this._dragging){
@@ -183,6 +199,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_onTouchEnd: function(e){
+			// tags:
+			//		private
 			this._clearPressTimer();
 			if(this._conn){
 				array.forEach(this._conn, this.disconnect, this);
@@ -210,6 +228,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_clearPressTimer: function(){
+			// tags:
+			//		private
 			if(this._pressTimer){
 				clearTimeout(this._pressTimer);
 				this._pressTimer = null;
@@ -217,6 +237,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_detectOverlap: function(/*Object*/point){
+			// tags:
+			//		private
 			var children = this.getChildren(),
 				blankItem = this._blankItem,
 				blankPos = domGeometry.position(blankItem.domNode, true),
@@ -243,10 +265,14 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		_contains: function(point, pos){
+			// tags:
+			//		private
 			return pos.x < point.x && point.x < pos.x + pos.w && pos.y < point.y && point.y < pos.y + pos.h;
 		},
 
-		_animate: function(/*Integer*/from, /*Integer*/to){
+		_animate: function(/*int*/from, /*int*/to){
+			// tags:
+			//		private
 			if(from == to) { return; }
 			var dir = from < to ? 1 : -1;
 			var children = this.getChildren();
@@ -275,6 +301,8 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		removeChildWithAnimation: function(/*Widget|Number*/widget){
+			// summary:
+			//		Removes the given child with animation.
 			var index = (typeof widget === "number") ? widget : this.getIndexOfChild(widget);
 			this.removeChild(widget);
 
@@ -285,11 +313,15 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		moveChild: function(/*Widget|Number*/widget, /*Number?*/insertIndex){
+			// summary:
+			//		Moves a child without animation.
 			this.addChild(widget, insertIndex);
 			this.paneContainerWidget.addChild(widget.paneWidget, insertIndex);
 		},
 
 		moveChildWithAnimation: function(/*Widget|Number*/widget, /*Number?*/insertIndex){
+			// summary:
+			//		Moves a child with animation.	
 			var index = this.getIndexOfChild(this._blankItem);
 			this.moveChild(widget, insertIndex);
 
@@ -309,12 +341,14 @@ define("dojox/mobile/_EditableIconMixin", [
 
 		deleteIconClicked: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks for the delete icon.
 			// tags:
 			//		callback
 		},
 
 		deleteItem: function(item){
+			// summary:
+			//		Deletes the given item.
 			if(item._deleteHandle){
 				this.disconnect(item._deleteHandle);
 			}
@@ -327,22 +361,28 @@ define("dojox/mobile/_EditableIconMixin", [
 		},
 
 		onDeleteItem: function(/*Widget*/item){
-			// Stub function to connect to from your application.
+			// summary:
+			//		Stub function to connect to from your application.
 		},
 
-		onMoveItem: function(/*Widget*/item, /*Integer*/from, /*Ingeter*/to){
-			// Stub function to connect to from your application.
+		onMoveItem: function(/*Widget*/item, /*int*/from, /*int*/to){
+			// summary:
+			//		Stub function to connect to from your application.
 		},
 
 		onStartEdit: function(){
-			// Stub function to connect to from your application.
+			// summary:
+			//		Stub function to connect to from your application.
 		},
 
 		onEndEdit: function(){
-			// Stub function to connect to from your application.
+			// summary:
+			//		Stub function to connect to from your application.
 		},
 
 		_setEditableAttr: function(/*Boolean*/editable){
+			// tags:
+			//		private
 			this._set("editable", editable);
 			if(editable && !this._touchStartHandle){ // Allow users to start editing by long press on IconItems
 				this._touchStartHandle = this.connect(this.domNode, touch.press, "_onTouchStart");

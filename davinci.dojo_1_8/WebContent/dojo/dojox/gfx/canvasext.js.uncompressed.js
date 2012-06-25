@@ -2,6 +2,14 @@ define("dojox/gfx/canvasext", [
 	"./_base",
 	"./canvas"],
 	function(gfx, canvas){
+
+	/*=====
+	 return {
+	 	// summary:
+	 	//		A module that adds canvas-specific features to the gfx api. You should require this module
+	 	//		when your application specifically targets the HTML5 Canvas renderer.
+	 }
+	 =====*/
 	
 	var ext = gfx.canvasext = {};
 	
@@ -9,7 +17,7 @@ define("dojox/gfx/canvasext", [
 		
 		getImageData: function(rect){
 			// summary:
-			//		Returns the canvas pixel buffer. 
+			//		Returns the canvas pixel buffer.
 			// rect: dojox.gfx.Rectangle
 			//		The canvas area.
 			
@@ -22,7 +30,7 @@ define("dojox/gfx/canvasext", [
 		
 		getContext: function(){
 			// summary:
-			//		Returns the surface CanvasRenderingContext2D. 
+			//		Returns the surface CanvasRenderingContext2D.
 			return this.rawNode.getContext("2d");
 		}
 	});		

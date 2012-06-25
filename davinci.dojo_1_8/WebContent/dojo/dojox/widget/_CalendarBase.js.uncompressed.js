@@ -1,23 +1,24 @@
 require({cache:{
 'url:dojox/widget/Calendar/Calendar.html':"<div class=\"dojoxCalendar\">\n    <div tabindex=\"0\" class=\"dojoxCalendarContainer\" style=\"visibility: visible;\" dojoAttachPoint=\"container\">\n\t\t<div style=\"display:none\">\n\t\t\t<div dojoAttachPoint=\"previousYearLabelNode\"></div>\n\t\t\t<div dojoAttachPoint=\"nextYearLabelNode\"></div>\n\t\t\t<div dojoAttachPoint=\"monthLabelSpacer\"></div>\n\t\t</div>\n        <div class=\"dojoxCalendarHeader\">\n            <div>\n                <div class=\"dojoxCalendarDecrease\" dojoAttachPoint=\"decrementMonth\"></div>\n            </div>\n            <div class=\"\">\n                <div class=\"dojoxCalendarIncrease\" dojoAttachPoint=\"incrementMonth\"></div>\n            </div>\n            <div class=\"dojoxCalendarTitle\" dojoAttachPoint=\"header\" dojoAttachEvent=\"onclick: onHeaderClick\">\n            </div>\n        </div>\n        <div class=\"dojoxCalendarBody\" dojoAttachPoint=\"containerNode\"></div>\n        <div class=\"\">\n            <div class=\"dojoxCalendarFooter\" dojoAttachPoint=\"footer\">                        \n            </div>\n        </div>\n    </div>\n</div>\n"}});
 define("dojox/widget/_CalendarBase", [
-	"dijit/_Widget",
-	"dijit/_Templated",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
 	"dijit/_Container",
 	"dojo/_base/declare",
 	"dojo/date",
+	"dojo/date/stamp",
 	"dojo/date/locale",
 	"dojo/dom-style",
 	"dojo/dom-class",
 	"dojo/dom-construct",
 	"dojo/_base/fx",
-	"dojo/_base/connect",
+	"dojo/on",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/text!./Calendar/Calendar.html",
 	"dijit/typematic"
-], function(_Widget, _Templated, _Container, declare, dojoDate, dojoDateLocale, domStyle, domClass, domConstruct, fx, connect, array, lang, template){
-	return declare("dojox.widget._CalendarBase", [_Widget, _Templated, _Container], {
+], function(_WidgetBase, _TemplatedMixin, _Container, declare, dojoDate, stamp, dojoDateLocale, domStyle, domClass, domConstruct, fx, on, array, lang, template){
+	return declare("dojox.widget._CalendarBase", [_WidgetBase, _TemplatedMixin, _Container], {
 		// summary:
 		//		The Root class for all _Calendar extensions
 
@@ -55,18 +56,22 @@ define("dojox/widget/_CalendarBase", [
 			this.value = new Date();
 		},
 
-		postMixInProperties: function(){
-			var c = this.constraints;
+		_setConstraintsAttr: function(constraints){
+			// summary:
+			//		Sets minimum and maximum constraints
+			var c = this.constraints = constraints;
 			if(c){
-				var fromISO = dojoDate.stamp.fromISOString;
 				if(typeof c.min == "string"){
-					c.min = fromISO(c.min);
+					c.min = stamp.fromISOString(c.min);
 				}
 				if(typeof c.max == "string"){
-					c.max = fromISO(c.max);
+					c.max = stamp.fromISOString(c.max);
 				}
 			}
 			this.value = this.parseInitialValue(this.value);
+		},
+		postMixInProperties: function(){
+
 		},
 
 		parseInitialValue: function(value){
@@ -125,7 +130,7 @@ define("dojox/widget/_CalendarBase", [
 				domStyle.set(widget.domNode, "visibility", "hidden");
 
 				//Listen for the values in a view to be selected
-				connect.connect(widget, "onValueSelected", this, "_onDateSelected");
+				widget.on("valueselected", lang.hitch(this, "_onDateSelected"));
 				widget.set("value", this.get('value'));
 			}, this);
 
@@ -149,7 +154,7 @@ define("dojox/widget/_CalendarBase", [
 					selector:'date',
 					locale:this.lang});
 
-			connect.connect(this.footer, "onclick", this, "goToToday");
+			on(this.footer, "click", lang.hitch(this, "goToToday"));
 
 			var first = this._children[0];
 
@@ -197,7 +202,7 @@ define("dojox/widget/_CalendarBase", [
 				value = new Date();
 			}
 			if(!value["getFullYear"]){
-				value = dojoDate.stamp.fromISOString(value + "");
+				value = stamp.fromISOString(value + "");
 			}
 			if(this._isInvalidDate(value)){
 				return false;

@@ -13,9 +13,11 @@ define("dojox/mobile/Container", [
 		// summary:
 		//		A simple container-type widget.
 		// description:
-		//		Container is a simple container widget that can be used for any purposes.
-		//		It is a widget, but can be regarded as a simple <div> element.
+		//		Container is a simple general-purpose container widget.
+		//		It is a widget, but can be regarded as a simple `<div>` element.
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblContainer"
 	});
 });

@@ -1,2 +1,93 @@
 //>>built
-define("dojox/widget/AutoRotator",["dijit","dojo","dojox","dojo/require!dojox/widget/Rotator"],function(_1,_2,_3){_2.provide("dojox.widget.AutoRotator");_2.require("dojox.widget.Rotator");(function(d){d.declare("dojox.widget.AutoRotator",_3.widget.Rotator,{suspendOnHover:false,duration:4000,autoStart:true,pauseOnManualChange:false,cycles:-1,random:false,reverse:false,constructor:function(){var _4=this;if(_4.cycles-0==_4.cycles&&_4.cycles>0){_4.cycles++;}else{_4.cycles=_4.cycles?-1:0;}_4._connects=[d.connect(_4._domNode,"onmouseover",function(){if(_4.suspendOnHover&&!_4.anim&&!_4.wfe){var t=_4._endTime,n=_4._now();_4._suspended=true;_4._resetTimer();_4._resumeDuration=t>n?t-n:0.01;}}),d.connect(_4._domNode,"onmouseout",function(){if(_4.suspendOnHover&&!_4.anim){_4._suspended=false;if(_4.playing&&!_4.wfe){_4.play(true);}}})];if(_4.autoStart&&_4.panes.length>1){_4.play();}else{_4.pause();}},destroy:function(){d.forEach(this._connects,d.disconnect);this.inherited(arguments);},play:function(_5,_6){this.playing=true;this._resetTimer();if(_5!==true&&this.cycles>0){this.cycles--;}if(this.cycles==0){this.pause();}else{if(!this._suspended){this.onUpdate("play");if(_6){this._cycle();}else{var r=(this._resumeDuration||0)-0,u=(r>0?r:(this.panes[this.idx].duration||this.duration))-0;this._resumeDuration=0;this._endTime=this._now()+u;this._timer=setTimeout(d.hitch(this,"_cycle",false),u);}}}},pause:function(){this.playing=this._suspended=false;this.cycles=-1;this._resetTimer();this.onUpdate("pause");},_now:function(){return (new Date()).getTime();},_resetTimer:function(){clearTimeout(this._timer);},_cycle:function(_7){var _8=this,i=_8.idx,j;if(_8.random){do{j=Math.floor(Math.random()*_8.panes.length+1);}while(j==i);}else{j=i+(_8.reverse?-1:1);}var _9=_8.go(j);if(_9){_9.addCallback(function(_a){_8.onUpdate("cycle");if(_8.playing){_8.play(false,_a);}});}},onManualChange:function(_b){this.cycles=-1;if(_b!="play"){this._resetTimer();if(this.pauseOnManualChange){this.pause();}}if(this.playing){this.play();}}});})(_2);});
+define("dojox/widget/AutoRotator",["dojo/_base/declare","dojox/widget/Rotator"],function(_1,_2){
+return _1("dojox.widget.AutoRotator",_2,{suspendOnHover:false,duration:4000,autoStart:true,pauseOnManualChange:false,cycles:-1,random:false,reverse:false,constructor:function(){
+var _3=this;
+if(_3.cycles-0==_3.cycles&&_3.cycles>0){
+_3.cycles++;
+}else{
+_3.cycles=_3.cycles?-1:0;
+}
+_3._connects=[dojo.connect(_3._domNode,"onmouseover",function(){
+if(_3.suspendOnHover&&!_3.anim&&!_3.wfe){
+var t=_3._endTime,n=_3._now();
+_3._suspended=true;
+_3._resetTimer();
+_3._resumeDuration=t>n?t-n:0.01;
+}
+}),dojo.connect(_3._domNode,"onmouseout",function(){
+if(_3.suspendOnHover&&!_3.anim){
+_3._suspended=false;
+if(_3.playing&&!_3.wfe){
+_3.play(true);
+}
+}
+})];
+if(_3.autoStart&&_3.panes.length>1){
+_3.play();
+}else{
+_3.pause();
+}
+},destroy:function(){
+dojo.forEach(this._connects,dojo.disconnect);
+this.inherited(arguments);
+},play:function(_4,_5){
+this.playing=true;
+this._resetTimer();
+if(_4!==true&&this.cycles>0){
+this.cycles--;
+}
+if(this.cycles==0){
+this.pause();
+}else{
+if(!this._suspended){
+this.onUpdate("play");
+if(_5){
+this._cycle();
+}else{
+var r=(this._resumeDuration||0)-0,u=(r>0?r:(this.panes[this.idx].duration||this.duration))-0;
+this._resumeDuration=0;
+this._endTime=this._now()+u;
+this._timer=setTimeout(dojo.hitch(this,"_cycle",false),u);
+}
+}
+}
+},pause:function(){
+this.playing=this._suspended=false;
+this.cycles=-1;
+this._resetTimer();
+this.onUpdate("pause");
+},_now:function(){
+return (new Date()).getTime();
+},_resetTimer:function(){
+clearTimeout(this._timer);
+},_cycle:function(_6){
+var _7=this,i=_7.idx,j;
+if(_7.random){
+do{
+j=Math.floor(Math.random()*_7.panes.length+1);
+}while(j==i);
+}else{
+j=i+(_7.reverse?-1:1);
+}
+var _8=_7.go(j);
+if(_8){
+_8.addCallback(function(_9){
+_7.onUpdate("cycle");
+if(_7.playing){
+_7.play(false,_9);
+}
+});
+}
+},onManualChange:function(_a){
+this.cycles=-1;
+if(_a!="play"){
+this._resetTimer();
+if(this.pauseOnManualChange){
+this.pause();
+}
+}
+if(this.playing){
+this.play();
+}
+}});
+});

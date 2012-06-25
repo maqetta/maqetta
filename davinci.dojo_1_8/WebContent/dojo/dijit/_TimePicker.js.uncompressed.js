@@ -25,8 +25,6 @@ define("dijit/_TimePicker", [
 
 	// module:
 	//		dijit/_TimePicker
-	// summary:
-	//		A graphical time picker.
 
 
 	var TimePicker = declare("dijit._TimePicker", [_Widget, _TemplatedMixin], {

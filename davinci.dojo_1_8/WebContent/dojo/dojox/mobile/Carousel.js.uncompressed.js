@@ -21,28 +21,28 @@ define("dojox/mobile/Carousel", [
 	// module:
 	//		dojox/mobile/Carousel
 	// summary:
-	//		A carousel widget that manages a list of images
+	//		A carousel widget that manages a list of images.
 
 	return declare("dojox.mobile.Carousel", [WidgetBase, Container, Contained], {
 		// summary:
-		//		A carousel widget that manages a list of images
+		//		A carousel widget that manages a list of images.
 		// description:
 		//		The carousel widget manages a list of images that can be
 		//		displayed horizontally, and allows the user to scroll through
 		//		the list and select a single item.
 		//
 		//		This widget itself has no data store support, but there are two
-		//		subclasses dojox.mobile.DataCarousel and dojox.mobile.StoreCarousel
-		//		available for generating the contents from data store.
-		//		To feed data into Carousel through dojo.data, use DataCarousel.
-		//		To feed data into Carousel through dojo.store, use StoreCarousel.
+		//		subclasses, dojox/mobile/DataCarousel and dojox/mobile/StoreCarousel,
+		//		available for generating the contents from a data store.
+		//		To feed data into a Carousel through a dojo/data, use DataCarousel.
+		//		To feed data into a Carousel through a dojo/store, use StoreCarousel.
 		//
 		//		The Carousel widget loads and instantiates its item contents in
 		//		a lazy manner. For example, if the number of visible items
-		//		(=numVisible) is 2, the widget creates 4 items, 2 for the
+		//		(see the property numVisible) is 2, the widget creates 4 items, 2 for the
 		//		initial pane and 2 for the next page, at startup time. If you
-		//		swipe the page to open the 2nd page, the widget creates 2 more
-		//		items for the 3rd page. If the item to create is a dojo widget,
+		//		swipe the page to open the second page, the widget creates 2 more
+		//		items for the third page. If the item to create is a dojo widget,
 		//		its module is dynamically loaded automatically before instantiation.
 
 		// numVisible: Number
@@ -52,8 +52,7 @@ define("dojox/mobile/Carousel", [
 		// itemWidth: Number
 		//		The number of visible items (=numVisible) is determined by
 		//		(carousel_width / itemWidth).
-		//		If itemWidth is specified, numVisible is automatically
-		//		calculated.
+		//		If itemWidth is specified, numVisible is automatically calculated.
 		//		If resize() is called, numVisible is recalculated and the layout
 		//		is changed accordingly.
 		itemWidth: 0,
@@ -78,10 +77,13 @@ define("dojox/mobile/Carousel", [
 		height: "",
 
 		// selectable: Boolean
-		//		If true, an item can be selected by clicking on it.
+		//		If true, an item can be selected by clicking it.
 		selectable: true,
 
 		/* internal properties */	
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblCarousel",
 
 		buildRendering: function(){
@@ -170,6 +172,8 @@ define("dojox/mobile/Carousel", [
 		},
 
 		resizeItems: function(){
+			// summary:
+			//		Resizes the child items of the carousel.
 			var idx = 0;
 			var h = this.domNode.offsetHeight - (this.headerNode ? this.headerNode.offsetHeight : 0);
 			var m = has("ie") ? 5 / this.numVisible-1 : 5 / this.numVisible;
@@ -254,6 +258,8 @@ define("dojox/mobile/Carousel", [
 		},
 
 		onComplete: function(/*Array*/items){
+			// summary:
+			//		A handler that is called after the fetch completes.
 			array.forEach(this.getChildren(), function(child){
 				if(child instanceof SwapView){
 					child.destroyRecursive();
@@ -285,13 +291,19 @@ define("dojox/mobile/Carousel", [
 			}
 		},
 
-		onError: function(errText){
+		onError: function(/*String*/ /*===== errText =====*/){
+			// summary:
+			//		An error handler.
 		},
 
-		onUpdate: function(item, insertedInto){
+		onUpdate: function(/*Object*/ /*===== item, =====*/ /*Number*/ /*===== insertedInto =====*/){
+			// summary:
+			//		Adds a new item or updates an existing item.
 		},
 
-		onDelete: function(item, removedFrom){
+		onDelete: function(/*Object*/ /*===== item, =====*/ /*Number*/ /*===== removedFrom =====*/){
+			// summary:
+			//		Deletes an existing item.
 		},
 
 		onSet: function(item, attribute, oldValue, newValue){
@@ -301,9 +313,13 @@ define("dojox/mobile/Carousel", [
 		},
 
 		onStoreClose: function(request){
+			// summary:
+			//		Called when the store is closed.
 		},
 
 		getParentView: function(/*DomNode*/node){
+			// summary:
+			//		Returns the parent view of the given DOM node.
 			for(var w = registry.getEnclosingWidget(node); w; w = w.getParent()){
 				if(w.getParent() instanceof SwapView){ return w; }
 			}
@@ -311,6 +327,8 @@ define("dojox/mobile/Carousel", [
 		},
 
 		getIndexByItemWidget: function(/*Widget*/w){
+			// summary:
+			//		Returns the index of a given item widget.
 			if(!w){ return -1; }
 			var view = w.getParent();
 			return array.indexOf(this.getChildren(), view) * this.numVisible +
@@ -318,18 +336,24 @@ define("dojox/mobile/Carousel", [
 		},
 
 		getItemWidgetByIndex: function(/*Number*/index){
+			// summary:
+			//		Returns the index of an item widget at a given index.
 			if(index === -1){ return null; }
 			var view = this.getChildren()[Math.floor(index / this.numVisible)];
 			return view.getChildren()[index % this.numVisible];
 		},
 
-		onPrevBtnClick: function(e){
+		onPrevBtnClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		Called when the "previous" button is clicked.
 			if(this.currentView){
 				this.currentView.goTo(-1);
 			}
 		},
 
-		onNextBtnClick: function(e){
+		onNextBtnClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		Called when the "next" button is clicked.
 			if(this.currentView){
 				this.currentView.goTo(1);
 			}
@@ -362,6 +386,8 @@ define("dojox/mobile/Carousel", [
 		},
 
 		select: function(/*Widget|Number*/itemWidget){
+			// summary:
+			//		Selects the given widget.
 			if(typeof(itemWidget) === "number"){
 				itemWidget = this.getItemWidgetByIndex(itemWidget);
 			}
@@ -380,12 +406,14 @@ define("dojox/mobile/Carousel", [
 
 		onClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks.
 			// tags:
 			//		callback
 		},
 
 		instantiateView: function(view){
+			// summary:
+			//		Instantiates the given view.
 			if(view && !view._instantiated){
 				var isHidden = (domStyle.get(view.domNode, "display") === "none");
 				if(isHidden){
@@ -401,6 +429,8 @@ define("dojox/mobile/Carousel", [
 		},
 
 		handleViewChanged: function(view){
+			// summary:
+			//		Listens to "/dojox/mobile/viewChanged" events.
 			if(view.getParent() !== this){ return; }
 			if(this.currentView.nextView(this.currentView.domNode) === view){
 				this.instantiateView(view.nextView(view.domNode));
@@ -411,6 +441,8 @@ define("dojox/mobile/Carousel", [
 		},
 
 		_setTitleAttr: function(/*String*/title){
+			// tags:
+			//		private
 			this.titleNode.innerHTML = this._cv ? this._cv(title) : title;
 			this._set("title", title);
 		}

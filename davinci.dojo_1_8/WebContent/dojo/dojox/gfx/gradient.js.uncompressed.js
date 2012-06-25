@@ -109,17 +109,17 @@ define("dojox/gfx/gradient", ["dojo/_base/lang", "./matrix", "dojo/_base/Color"]
 	grad.project = function(matrix, gradient, tl, rb, ttl, trb){
 		// summary:
 		//		Returns a new gradient using the "VML algorithm" and suitable for VML.
-		// matrix: dojox.gfx.Matrix2D|Null:
+		// matrix: dojox.gfx.Matrix2D|Null
 		//		matrix to apply to a shape and its gradient
-		// gradient: Object:
+		// gradient: Object
 		//		a linear gradient object to be transformed
-		// tl: dojox.gfx.Point:
+		// tl: dojox.gfx.Point
 		//		top-left corner of shape's bounding box
-		// rb: dojox.gfx.Point:
+		// rb: dojox.gfx.Point
 		//		right-bottom corner of shape's bounding box
-		// ttl: dojox.gfx.Point:
+		// ttl: dojox.gfx.Point
 		//		top-left corner of shape's transformed bounding box
-		// trb: dojox.gfx.Point:
+		// trb: dojox.gfx.Point
 		//		right-bottom corner of shape's transformed bounding box
 		
 		matrix = matrix || m.identity;

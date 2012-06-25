@@ -21,8 +21,6 @@ define("dojo/dnd/Container", [
 
 // module:
 //		dojo/dnd/Container
-// summary:
-//		TODOC
 
 /*
 	Container states:

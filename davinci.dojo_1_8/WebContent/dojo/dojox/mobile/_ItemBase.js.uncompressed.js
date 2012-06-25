@@ -16,11 +16,11 @@ define("dojox/mobile/_ItemBase", [
 	// module:
 	//		dojox/mobile/_ItemBase
 	// summary:
-	//		A base class for item classes (e.g. ListItem, IconItem, etc.)
+	//		A base class for item classes (e.g. ListItem, IconItem, etc.).
 
 	return declare("dojox.mobile._ItemBase", [WidgetBase, Container, Contained],{
 		// summary:
-		//		A base class for item classes (e.g. ListItem, IconItem, etc.)
+		//		A base class for item classes (e.g. ListItem, IconItem, etc.).
 		// description:
 		//		_ItemBase is a base class for widgets that have capability to
 		//		make a view transition when clicked.
@@ -39,7 +39,7 @@ define("dojox/mobile/_ItemBase", [
 		iconPos: "", // top,left,width,height (ex. "0,0,29,29")
 
 		// alt: String
-		//		An alt text for the icon image.
+		//		An alternate text for the icon image.
 		alt: "",
 
 		// href: String
@@ -57,7 +57,7 @@ define("dojox/mobile/_ItemBase", [
 		//		current page.
 		//
 		//		If the value has a hash sign ('#') before the id (e.g. #view1)
-		//		and the dojo.hash module is loaded by the user application, the
+		//		and the dojo/hash module is loaded by the user application, the
 		//		view transition updates the hash in the browser URL so that the
 		//		user can bookmark the destination view. In this case, the user
 		//		can also use the browser's back/forward button to navigate
@@ -68,7 +68,7 @@ define("dojox/mobile/_ItemBase", [
 		moveTo: "",
 
 		// scene: String
-		//		The name of a scene. Used from dojox.mobile.app.
+		//		The name of a scene. Used from dojox/mobile/app.
 		scene: "",
 
 		// clickable: Boolean
@@ -137,7 +137,10 @@ define("dojox/mobile/_ItemBase", [
 		//		Tabindex setting for the item so users can hit the tab key to
 		//		focus on it.
 		tabIndex: "0",
-		_setTabIndexAttr: "", // sets tabIndex to domNode
+		
+		// _setTabIndexAttr: [private] String
+		//		Sets tabIndex to domNode.
+		_setTabIndexAttr: "",
 
 		/* internal properties */	
 
@@ -188,6 +191,9 @@ define("dojox/mobile/_ItemBase", [
 		},
 
 		inheritParams: function(){
+			// summary:
+			//		Copies from the parent the values of parameters specified 
+			//		by the property paramsToInherit.
 			var parent = this.getParent();
 			if(parent){
 				array.forEach(this.paramsToInherit.split(/,/), function(p){
@@ -207,30 +213,33 @@ define("dojox/mobile/_ItemBase", [
 		},
 
 		getTransOpts: function(){
+			// summary:
+			//		Copies from the parent and returns the values of parameters  
+			//		specified by the property paramsToInherit.
 			var opts = this.transitionOptions || {};
 			array.forEach(["moveTo", "href", "hrefTarget", "url", "target",
 				"urlTarget", "scene", "transition", "transitionDir"], function(p){
 				opts[p] = opts[p] || this[p];
 			}, this);
-			return opts;
+			return opts; // Object
 		},
 
-		userClickAction: function(e){
+		userClickAction: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined click action
+			//		User-defined click action.
 		},
 
-		defaultClickAction: function(e){
+		defaultClickAction: function(/*Event*/e){
 			// summary:
-			//		The default action of this item
+			//		The default action of this item.
 			this.handleSelection(e);
 			if(this.userClickAction(e) === false){ return; } // user's click action
 			this.makeTransition(e);
 		},
 
-		handleSelection: function(e){
+		handleSelection: function(/*Event*/e){
 			// summary:
-			//		Handles this items selection state
+			//		Handles this items selection state.
 			if(this._onTouchEndHandle){
 				this.disconnect(this._onTouchEndHandle);
 				this._onTouchEndHandle = null;
@@ -253,7 +262,9 @@ define("dojox/mobile/_ItemBase", [
 			}
 		},
 
-		makeTransition: function(e){
+		makeTransition: function(/*Event*/e){
+			// summary:
+			//		Makes a transition.
 			if(this.back && history){
 				history.back();	
 				return;
@@ -273,15 +284,19 @@ define("dojox/mobile/_ItemBase", [
 			}
 		},
 
-		_onNewWindowOpened: function(e){
-			// subclass may want to implement
+		_onNewWindowOpened: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		Subclasses may want to implement it.
 		},
 
-		_prepareForTransition: function(e, /*Object*/ transOpts){
-			// subclass may want to implement
+		_prepareForTransition: function(/*Event*/e, /*Object*/transOpts){
+			// summary:
+			//		Subclasses may want to implement it.
 		},
 
 		_onTouchStart: function(e){
+			// tags:
+			//		private
 			if(this.getParent().isEditing || this.onTouchStart(e) === false){ return; } // user's touchStart action
 			if(!this._onTouchEndHandle && this._selStartMethod === "touch"){
 				// Connect to the entire window. Otherwise, fail to receive
@@ -304,16 +319,18 @@ define("dojox/mobile/_ItemBase", [
 
 		onTouchStart: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle touchStart
+			//		User-defined function to handle touchStart events.
 			// tags:
 			//		callback
 		},
 
 		_onTouchMove: function(e){
+			// tags:
+			//		private
 			var x = e.touches ? e.touches[0].pageX : e.clientX;
 			var y = e.touches ? e.touches[0].pageY : e.clientY;
 			if(Math.abs(x - this.touchStartX) >= 4 ||
-			   Math.abs(y - this.touchStartY) >= 4){ // dojox.mobile.scrollable#threshold
+			   Math.abs(y - this.touchStartY) >= 4){ // dojox/mobile/scrollable.threshold
 				this.cancel();
 				var p = this.getParent();
 				if(p && p.selectOne){
@@ -325,12 +342,16 @@ define("dojox/mobile/_ItemBase", [
 		},
 
 		_disconnect: function(){
+			// tags:
+			//		private
 			this.disconnect(this._onTouchMoveHandle);
 			this.disconnect(this._onTouchEndHandle);
 			this._onTouchMoveHandle = this._onTouchEndHandle = null;
 		},
 
 		cancel: function(){
+			// summary:
+			//		Cancels an ongoing selection (if any).
 			if(this._selTimer){
 				clearTimeout(this._selTimer);
 				this._selTimer = null;
@@ -339,6 +360,8 @@ define("dojox/mobile/_ItemBase", [
 		},
 
 		_onTouchEnd: function(e){
+			// tags:
+			//		private
 			if(!this._selTimer && this._delayedSelection){ return; }
 			this.cancel();
 			this._onClick(e);
@@ -348,7 +371,7 @@ define("dojox/mobile/_ItemBase", [
 			// summary:
 			//		Stores the clicked position for later use.
 			// description:
-			//		Some of the transition animations (e.g. ScaleIn) needs the
+			//		Some of the transition animations (e.g. ScaleIn) need the
 			//		clicked position.
 			var w = this;
 			while(true){
@@ -361,7 +384,7 @@ define("dojox/mobile/_ItemBase", [
 			}
 		},
 
-		transitionTo: function(/*String|Object*/moveTo, href, url, scene){
+		transitionTo: function(/*String|Object*/moveTo, /*String*/href, /*String*/url, /*String*/scene){
 			// summary:
 			//		Performs a view transition.
 			// description:
@@ -375,12 +398,16 @@ define("dojox/mobile/_ItemBase", [
 		},
 
 		_setIconAttr: function(icon){
+			// tags:
+			//		private
 			if(!this._isOnLine){ return; } // icon may be invalid because inheritParams is not called yet
 			this._set("icon", icon);
 			this.iconNode = iconUtils.setIcon(icon, this.iconPos, this.iconNode, this.alt, this.iconParentNode, this.refNode, this.position);
 		},
 
 		_setLabelAttr: function(/*String*/text){
+			// tags:
+			//		private
 			this._set("label", text);
 			this.labelNode.innerHTML = this._cv ? this._cv(text) : text;
 		},
@@ -390,6 +417,8 @@ define("dojox/mobile/_ItemBase", [
 			//		Makes this widget in the selected or unselected state.
 			// description:
 			//		Subclass should override.
+			// tags:
+			//		private
 			if(selected){
 				var p = this.getParent();
 				if(p && p.selectOne){

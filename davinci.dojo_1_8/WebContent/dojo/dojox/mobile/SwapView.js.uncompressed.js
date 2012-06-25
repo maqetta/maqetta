@@ -22,14 +22,18 @@ define("dojox/mobile/SwapView", [
 		//		SwapView is a container widget that represents entire mobile
 		//		device screen, and can be swiped horizontally. (In dojo-1.6, it
 		//		was called 'FlippableView'.) SwapView is a subclass of
-		//		dojox.mobile.View. SwapView allows the user to swipe the screen
+		//		dojox/mobile/View. SwapView allows the user to swipe the screen
 		//		left or right to move between the views. When SwapView is
 		//		swiped, it finds an adjacent SwapView to open.
 		//		When the transition is done, a topic "/dojox/mobile/viewChanged"
 		//		is published.
 
 		/* internal properties */	
+		// scrollDir: [private] String
+		//		Scroll direction, used by dojox/mobile/scrollable (always "f" for this class).
 		scrollDir: "f",
+		// weight: [private] Number
+		//		Frictional weight used to compute scrolling speed.
 		weight: 1.2,
 
 		buildRendering: function(){
@@ -56,7 +60,7 @@ define("dojox/mobile/SwapView", [
 			});
 		},
 
-		onTouchStart: function(e){
+		onTouchStart: function(/*Event*/e){
 			// summary:
 			//		Internal function to handle touchStart events.
 			var fromTop = this.domNode.offsetTop;
@@ -111,13 +115,13 @@ define("dojox/mobile/SwapView", [
 			}
 		},
 
-		isSwapView: function(node){
+		isSwapView: function(/*DomNode*/node){
 			// summary:
 			//		Returns true if the given node is a SwapView widget.
 			return (node && node.nodeType === 1 && domClass.contains(node, "mblSwapView"));
 		},
 
-		nextView: function(node){
+		nextView: function(/*DomNode*/node){
 			// summary:
 			//		Returns the next view.
 			for(var n = node.nextSibling; n; n = n.nextSibling){
@@ -126,7 +130,7 @@ define("dojox/mobile/SwapView", [
 			return null;
 		},
 
-		previousView: function(node){
+		previousView: function(/*DomNode*/node){
 			// summary:
 			//		Returns the previous view.
 			for(var n = node.previousSibling; n; n = n.previousSibling){
@@ -137,7 +141,7 @@ define("dojox/mobile/SwapView", [
 
 		scrollTo: function(/*Object*/to){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.scrollTo().
+			//		Overrides dojox/mobile/scrollable.scrollTo().
 			if(!this._beingFlipped){
 				var newView, x;
 				if(to.x < 0){
@@ -162,7 +166,7 @@ define("dojox/mobile/SwapView", [
 
 		findDisp: function(/*DomNode*/node){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.findDisp().
+			//		Overrides dojox/mobile/scrollable.findDisp().
 			// description:
 			//		When this function is called from scrollable.js, there are
 			//		two visible views, one is the current view, the other is the
@@ -183,9 +187,9 @@ define("dojox/mobile/SwapView", [
 			return node;
 		},
 
-		slideTo: function(/*Object*/to, /*Number*/duration, /*String*/easing, fake_pos){
+		slideTo: function(/*Object*/to, /*Number*/duration, /*String*/easing, /*Object?*/fake_pos){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.slideTo().
+			//		Overrides dojox/mobile/scrollable.slideTo().
 			if(!this._beingFlipped){
 				var w = this.domNode.offsetWidth;
 				var pos = fake_pos || this.getPos();
@@ -227,16 +231,16 @@ define("dojox/mobile/SwapView", [
 			this.inherited(arguments);
 		},
 
-		onAnimationEnd: function(e){
+		onAnimationEnd: function(/*Event*/e){
 			// summary:
-			//		Overrides dojox.mobile.View.onAnimationEnd().
+			//		Overrides dojox/mobile/View.onAnimationEnd().
 			if(e && e.target && domClass.contains(e.target, "mblScrollableScrollTo2")){ return; }
 			this.inherited(arguments);
 		},
 
-		onFlickAnimationEnd: function(e){
+		onFlickAnimationEnd: function(/*Event*/e){
 			// summary:
-			//		Overrides dojox.mobile.scrollable.onFlickAnimationEnd().
+			//		Overrides dojox/mobile/scrollable.onFlickAnimationEnd().
 			if(e && e.target && !domClass.contains(e.target, "mblScrollableScrollTo2")){ return; }
 			this.inherited(arguments);
 

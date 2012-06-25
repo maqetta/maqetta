@@ -1,0 +1,48 @@
+{
+    "id": "http://dojotoolkit.org/dojox/gauges/Range",
+    "name": "dojox.gauges.Range",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/gauges/_Gauge",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "low": {
+            "datatype": "number",
+            "description": "the low value of the range",
+            "hidden": false
+        },
+        "high": {
+            "datatype": "number",
+            "description": "the high value of the range",
+            "hidden": false
+        },
+        "hover": {
+            "datatype": "string",
+            "description": "the text to put in the tooltip for the gauge",
+            "hidden": false
+        },
+        "color": {
+            "datatype": "json",
+            "description": "the color of the range.  This must be an object of one of two forms:\n{'color': 'color-name'}\nOR\n(for a gradient:)\n{'type': 'linear', 'colors': [{offset: 0, color:'#C0C0C0'}, {offset: 1, color: '#E0E0E0'}] }",
+            "hidden": false,
+            "defaultValue": "{'color': 'red'}"
+        },
+        "size": {
+            "datatype": "number",
+            "description": "for a circular gauge (such as an AnalogGauge), this dictates the size of the arc",
+            "hidden": false
+        }
+    },
+    "content": "<div></div>"
+}

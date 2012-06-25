@@ -56,15 +56,15 @@
 .mblValuePickerSlotButton {
   position: relative;
   height: 38px;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#d6d7d6), color-stop(0.5, #d6d3d6), color-stop(0.9, #bdbebd));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce));
 }
 .mblValuePickerSlotPlusButton {
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 }
 .mblValuePickerSlotMinusButton {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 .mblValuePickerSlotButtonSelected {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#088eef), to(#0851ad), color-stop(0.5, #0869c6));
@@ -78,18 +78,19 @@
   height: 48px;
   border-top: 1px solid #7b797b;
   border-bottom: 1px solid #c6c3c6;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#adaead), to(#e7e3e7), color-stop(0.1, #d6d7d6), color-stop(0.5, #f7f7f7), color-stop(0.9, #f7f3f7));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.1, #fafafa), color-stop(0.2, #fafafa), color-stop(0.5, #ffffff), color-stop(0.9, #ffffff));
 }
 .mblValuePickerSlotInput {
   display: block;
   width: 90%;
   height: 90%;
   margin: 5% auto;
-  font-size: 28px;
+  padding: 0;
   text-align: center;
   border-style: none;
   background-color: transparent;
+  font: 24px/44px Helvetica, sans-serif;
 }
-.mblValuePickerTimePicker .mblToolBarButton {
+.mblValuePickerTimePicker > .mblToolBarButton {
   top: 45px;
 }

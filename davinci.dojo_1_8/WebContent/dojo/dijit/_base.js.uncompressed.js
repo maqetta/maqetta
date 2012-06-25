@@ -15,8 +15,13 @@ define("dijit/_base", [
 
 	// module:
 	//		dijit/_base
-	// summary:
-	//		Includes all the modules in dijit/_base
+
+	/*=====
+	return {
+		// summary:
+		//		Includes all the modules in dijit/_base
+	};
+	=====*/
 
 	return dijit._base;
 });

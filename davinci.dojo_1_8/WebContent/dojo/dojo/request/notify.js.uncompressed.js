@@ -18,8 +18,7 @@ define("dojo/request/notify", ['../topic'], function(topic){
 		},
 		done: function(data){
 			topic.publish('/dojo/request/done', data);
-			pubCount--;
-			if(pubCount <= 0){
+			if(--pubCount <= 0){
 				pubCount = 0;
 				topic.publish('/dojo/request/stop');
 			}

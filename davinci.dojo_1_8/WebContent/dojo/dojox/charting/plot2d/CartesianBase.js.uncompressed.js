@@ -4,10 +4,12 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 	function(lang, declare, hub, Base, primitive, fx){
 
 	return declare("dojox.charting.plot2d.CartesianBase", Base, {
+		// summary:
+		//		Base class for cartesian plot types.
 		constructor: function(chart, kwArgs){
 			// summary:
 			//		Create a cartesian base plot for cartesian charts.
-			// chart: dojox.chart.Chart
+			// chart: dojox/chart/Chart
 			//		The chart this plot belongs to.
 			// kwArgs: dojox.charting.plot2d.__PlotCtorArgs?
 			//		An optional arguments object to help define the plot.
@@ -19,12 +21,12 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 		clear: function(){
 			// summary:
 			//		Clear out all of the information tied to this plot.
-			// returns: dojox.charting.plot2d.CartesianBase
+			// returns: dojox/charting/plot2d/CartesianBase
 			//		A reference to this plot for functional chaining.
 			this.inherited(arguments);
 			this._hAxis = null;
 			this._vAxis = null;
-			return this;	//	dojox.charting.plot2d.CartesianBase
+			return this;	//	dojox/charting/plot2d/CartesianBase
 		},
 		cleanGroup: function(creator){
 			this.inherited(arguments, [creator || this.chart.plotGroup]);
@@ -32,14 +34,14 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 		setAxis: function(axis){
 			// summary:
 			//		Set an axis for this plot.
-			// axis: dojox.charting.axis2d.Base
+			// axis: dojox/charting/axis2d/Base
 			//		The axis to set.
-			// returns: dojox.charting.plot2d.CartesianBase
+			// returns: dojox/charting/plot2d/CartesianBase
 			//		A reference to this plot for functional chaining.
 			if(axis){
 				this[axis.vertical ? "_vAxis" : "_hAxis"] = axis;
 			}
-			return this;	//	dojox.charting.plot2d.CartesianBase
+			return this;	//	dojox/charting/plot2d/CartesianBase
 		},
 		toPage: function(coord){
 			// summary:
@@ -65,7 +67,7 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			};
 			// if no coord return the function so that we can capture the current transforms
 			// and reuse them later on
-			return coord?t(coord):t;
+			return coord?t(coord):t; // Object
 		},
 		toData: function(coord){
 			// summary:
@@ -91,7 +93,7 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			};
 			// if no coord return the function so that we can capture the current transforms
 			// and reuse them later on
-			return coord?t(coord):t;
+			return coord?t(coord):t; // Object
 		},
 		isDirty: function(){
 			// summary:
@@ -107,7 +109,7 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			//		An object of the form { width, height }.
 			// offsets: Object
 			//		An object of the form { l, r, t, b }.
-			// returns: dojox.charting.plot2d.CartesianBase
+			// returns: dojox/charting/plot2d/CartesianBase
 			//		A reference to this plot for functional chaining.
 
 			// get current zooming various
@@ -152,7 +154,7 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			if(this.zoomQueue.length == 1){
 				this.zoomQueue[0].play();
 			}
-			return this;	//	dojox.charting.plot2d.CartesianBase
+			return this;	//	dojox/charting/plot2d/CartesianBase
 		},
 		initializeScalers: function(dim, stats){
 			// summary:
@@ -161,7 +163,7 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			//		Size of a plot area in pixels as {width, height}.
 			// stats: Object
 			//		Min/max of data in both directions as {hmin, hmax, vmin, vmax}.
-			// returns: dojox.charting.plot2d.CartesianBase
+			// returns: dojox/charting/plot2d/CartesianBase
 			//		A reference to this plot for functional chaining.
 			if(this._hAxis){
 				if(!this._hAxis.initialized()){
@@ -179,7 +181,7 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			}else{
 				this._vScaler = primitive.buildScaler(stats.vmin, stats.vmax, dim.height);
 			}
-			return this;	//	dojox.charting.plot2d.CartesianBase
+			return this;	//	dojox/charting/plot2d/CartesianBase
 		}
 	});
 });

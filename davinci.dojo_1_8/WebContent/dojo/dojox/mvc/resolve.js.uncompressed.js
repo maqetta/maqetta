@@ -1,17 +1,18 @@
 define("dojox/mvc/resolve", [
 	"dojo/_base/lang",
-	"dijit/registry"
+	"dijit/registry",
+	"dojo/Stateful"
 ], function(lang, registry){
-	var resolve = /*===== dojox.mvc.resolve = =====*/ function(/*dojo.Stateful|String*/ target, /*dojo.Stateful?*/ parent){
+	var resolve = function(/*dojo/Stateful|String*/ target, /*dojo/Stateful?*/ parent){
 		// summary:
-		//		Find a dojo.Stateful for the target.
+		//		Find a dojo/Stateful for the target.
 		// description:
 		//		If target is not a string, return target itself.
 		//		If target is "widget:widgetid", returns the widget whose ID is widgetid.
 		//		If target is "rel:object.path", or target is other string, returns an object under parent (if specified) or under global scope.
-		// target: dojo.Stateful|String
+		// target: dojo/Stateful|String
 		//		The data binding to resolve.
-		// parent: dojo.Stateful?
+		// parent: dojo/Stateful?
 		//		The parent data binding. Used when the data binding is defined inside repeat.
 
 		if(typeof target == "string"){
@@ -27,7 +28,7 @@ define("dojox/mvc/resolve", [
 			}catch(e){}
 		}
 
-		return target; // dojo.Stateful
+		return target; // dojo/Stateful
 	};
 
 	// lang.setObject() thing is for back-compat, remove it in 2.0

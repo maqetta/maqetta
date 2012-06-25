@@ -1,8 +1,13 @@
 define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../dom-class", "../dom-construct", "../dom-geometry"], function(dojo, dom, style, attr, prop, cls, ctr, geom){
 	// module:
 	//		dojo/dom
-	// summary:
-	//		This module is a stub for the core dojo DOM API.
+
+	/*=====
+	return {
+		// summary:
+		//		This module is a stub for the core dojo DOM API.
+	};
+	=====*/
 
 	// mix-in dom
 	dojo.byId = dom.byId;
@@ -323,7 +328,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//		`dojo.contentBox()` or `dojo.position()`.
 		// node: DOMNode|String
 		//		id or reference to node to get/set style for
-		// name: String?|Object?
+		// name: String|Object?
 		//		the style property to set in DOM-accessor format
 		//		("borderWidth", not "border-width") or an object with key/value
 		//		pairs suitable for setting each property.

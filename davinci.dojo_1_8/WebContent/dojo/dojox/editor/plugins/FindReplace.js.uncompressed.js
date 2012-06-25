@@ -23,11 +23,13 @@ define("dojox/editor/plugins/FindReplace", [
 	"dojo/i18n",
 	"dojo/string",
 	"dojo/i18n!dojox/editor/plugins/nls/FindReplace"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, manager, popup,
+			_Widget, _TemplatedMixin, _KeyNavContainer, _WidgetsInTemplateMixin, TooltipDialog,
+			Toolbar, CheckBox, _TextBoxMixin, TextBox, _Plugin) {
 
 dojo.experimental("dojox.editor.plugins.FindReplace");
 
-dojo.declare("dojox.editor.plugins._FindReplaceCloseBox", [dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
+dojo.declare("dojox.editor.plugins._FindReplaceCloseBox", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	// summary:
 	//		Base class for widgets that contains a button labeled X
 	//		to close the tool bar.
@@ -57,7 +59,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceCloseBox", [dijit._Widget, dijit.
 
 
 dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
-	[dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin],{
+	[_Widget, _TemplatedMixin, _WidgetsInTemplateMixin],{
 	// summary:
 	//		Base class for widgets that contains a label (like "Font:")
 	//		and a TextBox to pick a value.
@@ -163,7 +165,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
 
 
 dojo.declare("dojox.editor.plugins._FindReplaceCheckBox",
-	[dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin],{
+	[_Widget, _TemplatedMixin, _WidgetsInTemplateMixin],{
 	// summary:
 	//		Base class for widgets that contains a label (like "Match case: ")
 	//		and a checkbox to indicate if it is checked or not.
@@ -243,7 +245,7 @@ dojo.declare("dojox.editor.plugins._FindReplaceCheckBox",
 });
 
 
-dojo.declare("dojox.editor.plugins._FindReplaceToolbar", dijit.Toolbar, {
+dojo.declare("dojox.editor.plugins._FindReplaceToolbar", Toolbar, {
 	// summary:
 	//		A toolbar that derived from dijit.Toolbar, which
 	//		eliminates some unnecessary event response such as LEFT_ARROW pressing
@@ -274,9 +276,9 @@ dojo.declare("dojox.editor.plugins._FindReplaceToolbar", dijit.Toolbar, {
 	}
 });
 
-dojo.declare("dojox.editor.plugins.FindReplace",[dijit._editor._Plugin],{
+dojo.declare("dojox.editor.plugins.FindReplace",[_Plugin],{
 	//	summary:
-	//		This plugin provides a Find/Replace cabability for the editor.
+	//		This plugin provides a Find/Replace capability for the editor.
 	//		Note that this plugin is NOT supported on Opera currently, as opera
 	//		does not implement a window.find or equiv function.
 

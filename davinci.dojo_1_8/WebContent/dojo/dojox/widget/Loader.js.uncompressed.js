@@ -46,7 +46,8 @@ dojo.declare("dojox.widget.Loader", [dijit._Widget,dijit._Templated], {
 		+'</div>',
 	
 	postCreate: function(){
-		// summary: setup the loader
+		// summary:
+		//		setup the loader
 
 		if(!this.hasVisuals){
 			this.loadNode.style.display = "none"; // _destroy()?
@@ -67,17 +68,20 @@ dojo.declare("dojox.widget.Loader", [dijit._Widget,dijit._Templated], {
 	},
 
 	_setMessage: function(/* String */ message){
-		// summary: set's the message in the loader
+		// summary:
+		//		set's the message in the loader
 		this.loadMessageNode.innerHTML = message;
 	},
 
 	_putLoader: function(/* Event */ e){
-		// summary: place the floating loading element based on mousemove connection position
+		// summary:
+		//		place the floating loading element based on mousemove connection position
 		dijit.placeOnScreen(this.loadNode,{ x: e.clientX+this._offset, y:e.clientY+this._offset }, ["TL","BR"]);
 	},
 
 	_show: function(){
-		// summary: publish and show progress indicator
+		// summary:
+		//		publish and show progress indicator
 		dojo.publish("Loader",[{ message: 'started' }]);
 		if(this.hasVisuals){
 			if(this.attachToPointer){
@@ -91,7 +95,8 @@ dojo.declare("dojox.widget.Loader", [dijit._Widget,dijit._Templated], {
 	},
 
 	_hide: function(){
-		// summary: publish "xhr ended" and hide progress indicator
+		// summary:
+		//		publish "xhr ended" and hide progress indicator
 		dojo.publish("Loader",[{ message: 'ended' }]);
 		if(this.hasVisuals){
 			if(this.attachToPointer){

@@ -3,7 +3,7 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 	// module:
 	//		dojo/dom-construct
 	// summary:
-	//		This module defines the core dojo DOM construction API.
+	//		This module defines the core dojo DOM construction API. (TODO: make summary appear in API doc)
 
 	// support stuff for toDom()
 	var tagWrap = {
@@ -198,7 +198,7 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 		return node; // DomNode
 	};
 
-	exports.create = function create(/*DOMNode|String*/ tag, /*Object*/ attrs, /*DOMNode?|String?*/ refNode, /*String?*/ pos){
+	exports.create = function create(/*DOMNode|String*/ tag, /*Object*/ attrs, /*DOMNode|String?*/ refNode, /*String?*/ pos){
 		// summary:
 		//		Create an element, allowing for optional attribute decoration
 		//		and placement.
@@ -207,10 +207,10 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 		//		A DOM Element creation function. A shorthand method for creating a node or
 		//		a fragment, and allowing for a convenient optional attribute setting step,
 		//		as well as an optional DOM placement reference.
-		//|
+		//
 		//		Attributes are set by passing the optional object through `dojo.setAttr`.
 		//		See `dojo.setAttr` for noted caveats and nuances, and API if applicable.
-		//|
+		//
 		//		Placement is done via `dojo.place`, assuming the new node to be the action
 		//		node, passing along the optional reference node and position.
 		//
@@ -223,7 +223,7 @@ define("dojo/dom-construct", ["exports", "./_base/kernel", "./sniff", "./_base/w
 		//		Can be null, if you don't want to set any attributes/styles.
 		//		See: `dojo.setAttr` for a description of available attributes.
 		//
-		// refNode: DOMNode?|String?
+		// refNode: DOMNode|String?
 		//		Optional reference node. Used by `dojo.place` to place the newly created
 		//		node somewhere in the dom relative to refNode. Can be a DomNode reference
 		//		or String ID of a node.

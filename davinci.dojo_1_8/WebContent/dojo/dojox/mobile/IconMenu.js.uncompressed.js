@@ -18,9 +18,9 @@ define("dojox/mobile/IconMenu", [
 		// summary:
 		//		A pop-up menu.
 		// description:
-		//		The dojox.mobile.IconMenu widget displays a pop-up menu just
+		//		The dojox/mobile/IconMenu widget displays a pop-up menu just
 		//		like iPhone's call options menu that is shown while you are on a
-		//		call. Each menu item must be dojox.mobile.IconMenuItem.
+		//		call. Each menu item must be dojox/mobile/IconMenuItem.
 
 		// transition: String
 		//		The default animated transition effect for child items.
@@ -44,9 +44,16 @@ define("dojox/mobile/IconMenu", [
 
 		/* internal properties */
 		selectOne: false,
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblIconMenu",
+		
+		// childItemClass: String
+		//		The name of the CSS class of menu items.
 		childItemClass: "mblIconMenuItem",
 
+		// _createTerminator: [private] Boolean
 		_createTerminator: false,
 
 		buildRendering: function(){

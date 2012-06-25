@@ -16,7 +16,8 @@ define("dojox/highlight/languages/groovy", ["dojox/main", "../_base"], function(
 				'try': 1, 'this': 1, 'switch': 1, 'continue': 1, 'def': 2
 			}
 	dh.languages.groovy = {
-		// summary: Groovy highlight definitions
+		// summary:
+		//		Groovy highlight definitions
 		defaultMode: {
 			lexems: [dhc.UNDERSCORE_IDENT_RE],
 			illegal: '</',

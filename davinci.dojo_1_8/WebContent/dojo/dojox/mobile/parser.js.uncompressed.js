@@ -18,11 +18,11 @@ define("dojox/mobile/parser", [
 		// summary:
 		//		A lightweight parser.
 		// description:
-		//		dojox.mobile.parser is an extremely small subset of dojo.parser.
-		//		It has no extended features over dojo.parser, so there is no
-		//		reason you must use dojox.mobile.parser instead of dojo.parser.
-		//		However, if dojox.mobile.parser's capability is enough for your
-		//		application, use of it could reduce the total code size.
+		//		dojox/mobile/parser is an extremely small subset of dojo/parser.
+		//		It has no additional features over dojo/parser, so there is no
+		//		benefit in terms of features by using dojox/mobile/parser instead 
+		//		of dojo/parser.	However, if dojox/mobile/parser's capabilities are
+		//		enough for your	application, using it could reduce the total code size.
 
 		var _ctorMap = {};
 		var getCtor = function(type, mixins){
@@ -35,11 +35,11 @@ define("dojox/mobile/parser", [
 		};
 		var _eval = function(js){ return eval(js); };
 
-		this.instantiate = function(/* Array */nodes, /* Object? */mixin, /* Object? */options){
+		this.instantiate = function(/* DomNode[] */nodes, /* Object? */mixin, /* Object? */options){
 			// summary:
 			//		Function for instantiating a list of widget nodes.
 			// nodes:
-			//		The list of DOMNodes to walk and instantiate widgets on.
+			//		The list of DomNodes to walk and instantiate widgets on.
 			mixin = mixin || {};
 			options = options || {};
 			var i, ws = [];
@@ -94,7 +94,7 @@ define("dojox/mobile/parser", [
 			return ws;
 		};
 
-		this.parse = function(rootNode, options){
+		this.parse = function(/* DomNode */ rootNode, /* Object? */ options){
 			// summary:
 			//		Function to handle parsing for widgets in the current document.
 			//		It is not as powerful as the full parser, but it will handle basic
@@ -150,5 +150,18 @@ define("dojox/mobile/parser", [
 	}
 	dm.parser = parser; // for backward compatibility
 	dojo.parser = dojo.parser || parser; // in case user application calls dojo.parser
+	
+	/*=====
+    return {
+		// summary:
+		//		A lightweight parser.
+		// description:
+		//		dojox/mobile/parser is an extremely small subset of dojo/parser.
+		//		It has no additional features over dojo/parser, so there is no
+		//		benefit in terms of features by using dojox/mobile/parser instead 
+		//		of dojo/parser.	However, if dojox/mobile/parser's capabilities are
+		//		enough for your	application, using it could reduce the total code size.
+    };
+    =====*/
 	return parser;
 });

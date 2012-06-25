@@ -7,6 +7,10 @@ define("dojox/color/MeanColorModel", ["dojo/_base/array", "dojo/_base/declare", 
 		//		using an interpolation between two extremum colors around the mean value.
 			
 		constructor: function(startColor, endColor){
+			// startColor: dojo/_base/Color
+			//		The start color.
+			// endColor: dojo/_base/Color?
+			//		The end color.
 		},
 			
 		computeNeutral: function(min, max, sum, values){

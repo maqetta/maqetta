@@ -1,8 +1,8 @@
 define("dojox/layout/DragPane", ["dojo/_base/declare", "dijit/_Widget", "dojo/_base/html", "dojo/dom-style"],
   function(declare, Widget, htmlUtil, domStyle){
-/*===== var Widget = dijit._Widget; =====*/
 return declare("dojox.layout.DragPane", Widget, {
-	// summary: Makes a pane's content dragable by/within it's surface
+	// summary:
+	//		Makes a pane's content dragable by/within it's surface
 	//
 	// description:
 	//		A small widget which takes a node with overflow:auto and
@@ -21,8 +21,9 @@ return declare("dojox.layout.DragPane", Widget, {
 		this.connect(this.domNode, "onmouseup", "_up");
 	},
 	
-	_down: function(e){
-		// summary: mousedown handler, start the dragging
+	_down: function(/*Event*/ e){
+		// summary:
+		//		mousedown handler, start the dragging
 		var t = this.domNode;
 		e.preventDefault();
 		domStyle.set(t, "cursor", "move");
@@ -35,16 +36,18 @@ return declare("dojox.layout.DragPane", Widget, {
 		}
 	},
 	
-	_up: function(e){
-		// summary: mouseup handler, stop the dragging
+	_up: function(/*Event*/ e){
+		// summary: 
+		//		mouseup handler, stop the dragging
 		htmlUtil.setSelectable(this.domNode,true);
 		domStyle.set(this.domNode, "cursor", "pointer");
 		this._mover && this.disconnect(this._mover);
 		delete this._mover;
 	},
 	
-	_move: function(e){
-		// summary: mousemove listener, offset the scroll amount by the delta
+	_move: function(/*Event*/ e){
+		// summary: 
+		//		mousemove listener, offset the scroll amount by the delta
 		//		since our last call.
 		
 		var mod = this.invert ? 1 : -1;

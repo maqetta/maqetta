@@ -119,6 +119,7 @@ var LinkDialog = declare("dijit._editor.plugins.LinkDialog", _Plugin, {
 				i18n.getLocalization("dijit._editor", "LinkDialog", this.lang));
 			var dropDown = (this.dropDown = this.button.dropDown = new TooltipDialog({
 				title: messages[this.command + "Title"],
+				ownerDocument: this.editor.ownerDocument,
 				dir: this.editor.dir,
 				execute: lang.hitch(this, "setValue"),
 				onOpen: function(){
@@ -465,7 +466,7 @@ var ImgLinkDialog = declare("dijit._editor.plugins.ImgLinkDialog", [LinkDialog],
 	].join(""),
 
 	// htmlTemplate: [protected] String
-	//		String used for templating the <img> HTML to insert at the desired point.
+	//		String used for templating the `<img>` HTML to insert at the desired point.
 	htmlTemplate: "<img src=\"${urlInput}\" _djrealurl=\"${urlInput}\" alt=\"${textInput}\" />",
 
 	// tag: [protected] String
@@ -599,6 +600,8 @@ _Plugin.registry["insertImage"] = function(){
 
 
 // Export both LinkDialog and ImgLinkDialog
+// TODO for 2.0: either return both classes in a hash, or split this file into two separate files.
+// Then the documentation for the module can be applied to the hash, and will show up in the API doc.
 LinkDialog.ImgLinkDialog = ImgLinkDialog;
 return LinkDialog;
 });

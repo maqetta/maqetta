@@ -6,7 +6,7 @@ define("dojox/charting/Chart3D", ["dojo/_base/array", "dojo/dom","dojo/_base/dec
 	//		This module provides basic 3d charting capablities (using 2d vector graphics to simulate 3d.
 
 	/*=====
-	dojox.charting.__Chart3DCtorArgs = function(node, lights, camera, theme){
+	var __Chart3DCtorArgs = function(node, lights, camera, theme){
 		// summary:
 		//		The keyword arguments that can be passed in a Chart constructor.
 		//

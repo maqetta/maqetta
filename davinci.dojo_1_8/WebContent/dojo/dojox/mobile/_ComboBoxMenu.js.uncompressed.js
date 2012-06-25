@@ -9,17 +9,27 @@ define("dojox/mobile/_ComboBoxMenu", [
 	"./scrollable"
 ],
 	function(dojo, declare, domClass, domConstruct, ComboBoxMenuMixin, WidgetBase, ListTouchMixin, Scrollable){
+	// module:
+	//		dojox/mobile/_ComboBoxMenu
+	// summary:
+	//		Focus-less menu for internal use in dojox/mobile/ComboBox.
+	//		Abstract methods that must be defined externally:
+	//		|onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
+	//		|onPage: next(1) or previous(-1) button pressed
 
 	return declare("dojox.mobile._ComboBoxMenu", [WidgetBase, ListTouchMixin, ComboBoxMenuMixin], {
 		// summary:
-		//		Focus-less menu for internal use in `dijit.form.ComboBox`
+		//		Focus-less menu for internal use in dojox/mobile/ComboBox.
 		//		Abstract methods that must be defined externally:
 		//			onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
 		//			onPage: next(1) or previous(-1) button pressed
 		// tags:
 		//		private
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblComboBoxMenu",
+		
 		bgIframe: true, // so it's not created for IE and FF
 
 		buildRendering: function(){
@@ -31,6 +41,7 @@ define("dojox/mobile/_ComboBoxMenu", [
 		},
 
 		_createMenuItem: function(){
+			// override of the method from dijit/form/_ComboBoxMenu.
 			return domConstruct.create("div", {
 				"class": "mblReset mblComboBoxMenuItem" +(this.isLeftToRight() ? "" : " mblComboBoxMenuItemRtl"),
 				role: "option"
@@ -39,17 +50,19 @@ define("dojox/mobile/_ComboBoxMenu", [
 
 		onSelect: function(/*DomNode*/ node){
 			// summary:
-			//		Add selected CSS
+			//		Add selected CSS.
 			domClass.add(node, "mblComboBoxMenuItemSelected");
 		},
 
 		onDeselect: function(/*DomNode*/ node){
 			// summary:
-			//		Remove selected CSS
+			//		Remove selected CSS.
 			domClass.remove(node, "mblComboBoxMenuItemSelected");
 		},
 
 		onOpen: function(){
+			// summary:
+			//		Called when the menu opens.
 			this.scrollable.init({
 				domNode: this.domNode,
 				containerNode: this.containerNode
@@ -58,6 +71,8 @@ define("dojox/mobile/_ComboBoxMenu", [
 		},
 
 		onClose: function(){
+			// summary:
+			//		Called when the menu closes.
 			this.scrollable.cleanup();
 		},
 

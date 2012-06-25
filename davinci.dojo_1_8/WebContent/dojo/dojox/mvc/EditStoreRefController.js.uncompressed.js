@@ -8,15 +8,15 @@ define("dojox/mvc/EditStoreRefController", [
 ], function(declare, lang, when, getPlainValue, EditModelRefController, StoreRefController){
 	return declare("dojox.mvc.EditStoreRefController", [StoreRefController, EditModelRefController], {
 		// summary:
-		//		A child class of dojox.mvc.StoreRefController, managing edits.
+		//		A child class of dojox/mvc/StoreRefController, managing edits.
 		// description:
-		//		In addition to what dojox.mvc.StoreRefController does, the commit() method sends the data model as well as the removed entries in array to the data store.
+		//		In addition to what dojox/mvc/StoreRefController does, the commit() method sends the data model as well as the removed entries in array to the data store.
 		//		NOTE - If this class is used with a widget by data-dojo-mixins, make sure putting the widget in data-dojo-type and putting this class to data-dojo-mixins.
 		// example:
 		//		The check box refers to "value" property in the controller (with "ctrl" ID).
 		//		The controller provides the "value" property, from the data coming from data store ("store" property in the controller), using the first one in array.
 		//		Two seconds later, the check box changes from unchecked to checked.
-		//		The change is committed to the data store, which is reflected to dojo.store.Observable callback. 
+		//		The change is committed to the data store, which is reflected to dojo/store/Observable callback. 
 		// |		<html>
 		// |			<head>
 		// |				<script src="/path/to/dojo-toolkit/dojo/dojo.js" type="text/javascript" data-dojo-config="parseOnLoad: 0"></script>
@@ -41,13 +41,13 @@ define("dojox/mvc/EditStoreRefController", [
 		// |			</head>
 		// |			<body>
 		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
-		// |				<span id="ctrl" data-dojo-type="dojox.mvc.EditStoreRefController" data-dojo-mixins="dojox.mvc.ListController"
+		// |				<span id="ctrl" data-dojo-type="dojox/mvc/EditStoreRefController" data-dojo-mixins="dojox/mvc/ListController"
 		// |				 data-dojo-props="store: store, cursorIndex: 0"></span>
-		// |				<input id="check" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: at('widget:ctrl', 'value')">
+		// |				<input id="check" type="checkbox" data-dojo-type="dijit/form/CheckBox" data-dojo-props="checked: at('widget:ctrl', 'value')">
 		// |			</body>
 		// |		</html>
 
-		// getPlainValueOptions: dojox.mvc.getPlainValueOptions
+		// getPlainValueOptions: dojox/mvc/getPlainValueOptions
 		//		The options to get plain value from stateful object.
 		getPlainValueOptions: null,
 
@@ -55,7 +55,7 @@ define("dojox/mvc/EditStoreRefController", [
 		//		The list of removed elements.
 		_removals: [],
 
-		// _resultsWatchHandle: dojox.mvc.StatefulArray.watchElements.handle
+		// _resultsWatchHandle: dojox/mvc/StatefulArray.watchElements.handle
 		//		The watch handle for model array elements.
 		_resultsWatchHandle: null,
 
@@ -63,14 +63,14 @@ define("dojox/mvc/EditStoreRefController", [
 		//		The property name for the data model, that serves as the data source.
 		_refSourceModelProp: "sourceModel",
 
-		queryStore: function(/*Object*/ query, /*dojo.store.api.Store.QueryOptions?*/ options){
+		queryStore: function(/*Object*/ query, /*dojo/store/api/Store.QueryOptions?*/ options){
 			// summary:
 			//		Queries the store for objects.
 			// query: Object
 			//		The query to use for retrieving objects from the store.
-			// options: dojo.store.api.Store.QueryOptions?
+			// options: dojo/store/api/Store.QueryOptions?
 			//		The optional arguments to apply to the resultset.
-			// returns: dojo.store.api.Store.QueryResults
+			// returns: dojo/store/api/Store.QueryResults
 			//		The results of the query, extended with iterative methods.
 
 			if(!(this.store || {}).query){ return; }
@@ -94,12 +94,12 @@ define("dojox/mvc/EditStoreRefController", [
 			// id: Number
 			//		The identity to use to lookup the object.
 			// options: Object
-			//		The options for dojo.store.*.get().
+			//		The options for dojo/store/*/get().
 			// returns: Object
 			//		The object in the store that matches the given id.
 
 			if(this._resultsWatchHandle){ this._resultsWatchHandle.unwatch(); }
-			this.inherited(arguments);
+			return this.inherited(arguments);
 		},
 
 		commit: function(){
@@ -136,6 +136,7 @@ define("dojox/mvc/EditStoreRefController", [
 			//		Clean up model watch handle as this object is destroyed.
 
 			if(this._resultsWatchHandle){ this._resultsWatchHandle.unwatch(); }
+			this.inherited(arguments);
 		}
 	});
 });

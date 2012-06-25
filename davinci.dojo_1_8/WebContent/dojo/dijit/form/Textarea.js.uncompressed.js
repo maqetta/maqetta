@@ -7,8 +7,6 @@ define("dijit/form/Textarea", [
 
 // module:
 //		dijit/form/Textarea
-// summary:
-//		A textarea widget that adjusts it's height according to the amount of data.
 
 
 return declare("dijit.form.Textarea", [SimpleTextarea, _ExpandingTextAreaMixin], {

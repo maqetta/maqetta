@@ -11,8 +11,6 @@ define("dijit/a11y", [
 
 	// module:
 	//		dijit/a11y
-	// summary:
-	//		Accessibility utility functions (keyboard, tab stops, etc.)
 
 	var shown = (dijit._isElementShown = function(/*Element*/ elem){
 		var s = domStyle.get(elem);
@@ -167,6 +165,9 @@ define("dijit/a11y", [
 	};
 
 	return {
+		// summary:
+		//		Accessibility utility functions (keyboard, tab stops, etc.)
+
 		hasDefaultTabStop: dijit.hasDefaultTabStop,
 		isTabNavigable: dijit.isTabNavigable,
 		_getTabNavigable: dijit._getTabNavigable,

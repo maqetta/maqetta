@@ -32,7 +32,7 @@ define("dojox/mobile/Heading", [
 		//		usually appears at the top of an application. It usually
 		//		displays the title of the current view and can contain a
 		//		navigational control. If you use it with
-		//		dojox.mobile.ScrollableView, it can also be used as a fixed
+		//		dojox/mobile/ScrollableView, it can also be used as a fixed
 		//		header bar or a fixed footer bar. In such cases, specify the
 		//		fixed="top" attribute to be a fixed header bar or the
 		//		fixed="bottom" attribute to be a fixed footer bar. Heading can
@@ -49,7 +49,7 @@ define("dojox/mobile/Heading", [
 		// moveTo: String
 		//		The id of the transition destination of the navigation control.
 		//		If the value has a hash sign ('#') before the id (e.g. #view1)
-		//		and the dojox.mobile.bookmarkable module is loaded by the user application,
+		//		and the dojox/mobile/bookmarkable module is loaded by the user application,
 		//		the view transition updates the hash in the browser URL so that the
 		//		user can bookmark the destination view. In this case, the user
 		//		can also use the browser's back/forward button to navigate
@@ -78,7 +78,7 @@ define("dojox/mobile/Heading", [
 		iconBase: "",
 
 		// tag: String
-		//		A name of html tag to create as domNode.
+		//		A name of HTML tag to create as domNode.
 		tag: "h1",
 
 		// busy: Boolean
@@ -89,7 +89,10 @@ define("dojox/mobile/Heading", [
 		//		A css class name to add to the progress indicator.
 		progStyle: "mblProgWhite",
 
-		/* internal properties */	
+		/* internal properties */
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.	
 		baseClass: "mblHeading",
 
 		buildRendering: function(){
@@ -168,6 +171,8 @@ define("dojox/mobile/Heading", [
 		},
 
 		_setBackAttr: function(/*String*/back){
+			// tags:
+			//		private
 			this._set("back", back);
 			if(!this.backButton){
 				this.backButton = new ToolBarButton({
@@ -187,11 +192,15 @@ define("dojox/mobile/Heading", [
 		},
 
 		_setLabelAttr: function(/*String*/label){
+			// tags:
+			//		private
 			this._set("label", label);
 			this.labelNode.innerHTML = this.labelDivNode.innerHTML = this._cv ? this._cv(label) : label;
 		},
 
 		_setBusyAttr: function(/*Boolean*/busy){
+			// tags:
+			//		private
 			var prog = this._prog;
 			if(busy){
 				if(!prog){

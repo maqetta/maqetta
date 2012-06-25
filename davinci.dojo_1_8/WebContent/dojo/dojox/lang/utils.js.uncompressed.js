@@ -18,9 +18,12 @@ define("dojox/lang/utils", ["..", "dojo/_base/lang"],
 	
 	lang.mixin(du, {
 		coerceType: function(target, source){
-			// summary: Coerces one object to the type of another.
-			// target: Object: object, which typeof result is used to coerce "source" object.
-			// source: Object: object, which will be forced to change type.
+			// summary:
+			//		Coerces one object to the type of another.
+			// target: Object
+			//		object, which typeof result is used to coerce "source" object.
+			// source: Object
+			//		object, which will be forced to change type.
 			switch(typeof target){
 				case "number":	return Number(eval("(" + source + ")"));
 				case "string":	return String(source);
@@ -30,10 +33,14 @@ define("dojox/lang/utils", ["..", "dojo/_base/lang"],
 		},
 		
 		updateWithObject: function(target, source, conv){
-			// summary: Updates an existing object in place with properties from an "source" object.
-			// target: Object: the "target" object to be updated
-			// source: Object: the "source" object, whose properties will be used to source the existed object.
-			// conv: Boolean?: force conversion to the original type
+			// summary:
+			//		Updates an existing object in place with properties from an "source" object.
+			// target: Object
+			//		the "target" object to be updated
+			// source: Object
+			//		the "source" object, whose properties will be used to source the existed object.
+			// conv: Boolean?
+			//		force conversion to the original type
 			if(!source){ return target; }
 			for(var x in target){
 				if(x in source && !(x in empty)){
@@ -49,11 +56,16 @@ define("dojox/lang/utils", ["..", "dojo/_base/lang"],
 		},
 	
 		updateWithPattern: function(target, source, pattern, conv){
-			// summary: Updates an existing object in place with properties from an "source" object.
-			// target: Object: the "target" object to be updated
-			// source: Object: the "source" object, whose properties will be used to source the existed object.
-			// pattern: Object: object, whose properties will be used to pull values from the "source"
-			// conv: Boolean?: force conversion to the original type
+			// summary:
+			//		Updates an existing object in place with properties from an "source" object.
+			// target: Object
+			//		the "target" object to be updated
+			// source: Object
+			//		the "source" object, whose properties will be used to source the existed object.
+			// pattern: Object
+			//		object, whose properties will be used to pull values from the "source"
+			// conv: Boolean?
+			//		force conversion to the original type
 			if(!source || !pattern){ return target; }
 			for(var x in pattern){
 				if(x in source && !(x in empty)){
@@ -64,9 +76,12 @@ define("dojox/lang/utils", ["..", "dojo/_base/lang"],
 		},
 		
 		merge: function(object, mixin){
-			// summary: Merge two objects structurally, mixin properties will override object's properties.
-			// object: Object: original object.
-			// mixin: Object: additional object, which properties will override object's properties.
+			// summary:
+			//		Merge two objects structurally, mixin properties will override object's properties.
+			// object: Object
+			//		original object.
+			// mixin: Object
+			//		additional object, which properties will override object's properties.
 			if(mixin){
 				var otype = opts.call(object), mtype = opts.call(mixin), t, i, l, m;
 				switch(mtype){

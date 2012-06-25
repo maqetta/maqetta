@@ -1,9 +1,14 @@
 define("dojo/_base/sniff", ["./kernel", "./lang", "../sniff"], function(dojo, lang, has){
 	// module:
 	//		dojo/_base/sniff
-	// summary:
-	//		Deprecated.   New code should use dojo/sniff.
-	//		This module populates the dojo browser version sniffing properties like dojo.isIE.
+
+	/*=====
+	return {
+		// summary:
+		//		Deprecated.   New code should use dojo/sniff.
+		//		This module populates the dojo browser version sniffing properties like dojo.isIE.
+	};
+	=====*/
 
 	if(! 1 ){
 		return has;

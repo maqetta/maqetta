@@ -9,19 +9,17 @@ define("dojox/dgauges/components/classic/HorizontalLinearGauge", [
 		"../DefaultPropertiesMixin"
 	], 
 	function(lang, declare, Color, RectangularGauge, LinearScaler, RectangularScale, RectangularValueIndicator, DefaultPropertiesMixin){
-
-	/*=====
-	var RectangularGauge = dojox.dgauges.RectangularGauge;
-	=====*/
-
 		return declare("dojox.dgauges.components.classic.HorizontalLinearGauge", [RectangularGauge, DefaultPropertiesMixin], {
-			//	borderColor:
+			// summary:
+			//		A horizontal gauge widget.
+
+			// borderColor: Object|Array|int
 			//		The border color. Default is "#797E86".
 			borderColor: [121,126,134],
-			//	fillColor:
+			// fillColor: Object|Array|int
 			//		The background color. Default is "#9498A1".
 			fillColor: [148,152,161],
-			//	indicatorColor:
+			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#FFFFFF".
 			indicatorColor: "#FFFFFF",
 			constructor: function(){
@@ -74,6 +72,16 @@ define("dojox/dgauges/components/classic/HorizontalLinearGauge", [
 			},
 
 			drawBackground: function(g, w, h){
+				// summary:
+				//		Draws the background shape of the gauge.
+				// g: dojox/gfx/canvas.Group
+				//		The group used to draw the background. 
+				// w: Number
+				//		The width of the gauge.
+				// h: Number
+				//		The height of the gauge.
+				// tags:
+				//		protected
 				g.createRect({
 					x: 0,
 					y: 0,

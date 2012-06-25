@@ -29,9 +29,6 @@ define("dijit/layout/ScrollingTabController", [
 
 // module:
 //		dijit/layout/ScrollingTabController
-// summary:
-//		Set of tabs with left/right arrow keys and a menu to switch between tabs not
-//		all fitting on a single row.
 
 
 var ScrollingTabController = declare("dijit.layout.ScrollingTabController", [TabController, _WidgetsInTemplateMixin], {
@@ -243,7 +240,7 @@ var ScrollingTabController = declare("dijit.layout.ScrollingTabController", [Tab
 		}
 	},
 
-	onSelectChild: function(/*dijit._Widget*/ page){
+	onSelectChild: function(/*dijit/_WidgetBase*/ page){
 		// summary:
 		//		Smoothly scrolls to a tab when it is selected.
 
@@ -363,7 +360,7 @@ var ScrollingTabController = declare("dijit.layout.ScrollingTabController", [Tab
 		// Disable/enable left/right buttons according to new scroll position
 		this._setButtonClass(x);
 
-		return anim; // dojo._Animation
+		return anim; // dojo/_base/fx/Animation
 	},
 
 	_getBtnNode: function(/*Event*/ e){
@@ -465,6 +462,7 @@ declare(
 	loadDropDown: function(callback){
 		this.dropDown = new Menu({
 			id: this.containerId + "_menu",
+			ownerDocument: this.ownerDocument,
 			dir: this.dir,
 			lang: this.lang,
 			textDir: this.textDir
@@ -476,6 +474,7 @@ declare(
 				label: page.title,
 				iconClass: page.iconClass,
 				disabled: page.disabled,
+				ownerDocument: this.ownerDocument,
 				dir: page.dir,
 				lang: page.lang,
 				textDir: page.textDir,

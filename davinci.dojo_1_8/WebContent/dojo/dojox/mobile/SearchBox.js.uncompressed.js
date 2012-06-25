@@ -10,24 +10,35 @@ define("dojox/mobile/SearchBox", [
 
 	return declare("dojox.mobile.SearchBox", [TextBox, SearchMixin], {
 		// summary:
-		//		A non-templated base class for INPUT type="search"
+		//		A non-templated base class for INPUT type="search".
 
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblTextBox mblSearchBox",
 
+		// type: String
+		//		Corresponds to the type attribute of the HTML `<input>` element.
+		//		The value is "search".
 		type: "search",
 
 		placeHolder: "",
 
 		// incremental: Boolean
-		//		Set true to search on every key or false to only search after pressing ENTER or cancel
+		//		Set true to search on every key or false to only search after 
+		//		pressing ENTER or cancel.
 		incremental: true,
 
 		_setIncrementalAttr: function(val){
-			// custom setter so the INPUT doesn't get the incremental attribute set
+			// summary:
+			//		Custom setter so the INPUT doesn't get the incremental attribute set.
+			// tags:
+			//		private
 			this.incremental = val;
 		},
 
 		_onInput: function(e){
+			// tags:
+			//		private
 			if(e.charOrCode == keys.ENTER){
 				e.charOrCode = 229;
 			}else if(!this.incremental){

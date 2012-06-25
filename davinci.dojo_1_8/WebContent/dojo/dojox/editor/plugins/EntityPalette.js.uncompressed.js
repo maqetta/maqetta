@@ -9,12 +9,12 @@ define("dojox/editor/plugins/EntityPalette", [
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/i18n!dojox/editor/plugins/nls/latinEntities"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Widget, _TemplatedMixin, _PaletteMixin) {
 
 dojo.experimental("dojox.editor.plugins.EntityPalette");
 
 dojo.declare("dojox.editor.plugins.EntityPalette",
-	[dijit._Widget, dijit._TemplatedMixin, dijit._PaletteMixin],
+	[_Widget, _TemplatedMixin, _PaletteMixin],
 	{
 	// summary:
 	//		A keyboard accessible HTML entity-picking widget (for inserting symbol characters)
@@ -73,11 +73,11 @@ dojo.declare("dojox.editor.plugins.EntityPalette",
 	//	  Whether the preview pane will be displayed, to show details about the selected entity.
 	showPreview: true,
 
-	// showCode: [public] boolean
+	// showCode: [public] Boolean
 	//		Show the character code for the entity.
 	showCode: false,
 
-	// showentityName: [public] boolean
+	// showEntityName: [public] Boolean
 	//		Show the entity name for the entity.
 	showEntityName: false,
 
@@ -93,7 +93,8 @@ dojo.declare("dojox.editor.plugins.EntityPalette",
 	cellClass: "dojoxEntityPaletteCell",
 
 	postMixInProperties: function(){
-		// Convert hash of entities into two-dimensional rows/columns table (array of arrays)
+		// summary:
+		//		Convert hash of entities into two-dimensional rows/columns table (array of arrays)
 		var choices = dojo.i18n.getLocalization("dojox.editor.plugins", "latinEntities");
 		var numChoices = 0;
 		var entityKey;
@@ -118,7 +119,8 @@ dojo.declare("dojox.editor.plugins.EntityPalette",
 	},
 
 	buildRendering: function(){
-		// Instantiate the template, which makes a skeleton table which we'll insert the entities
+		// summary:
+		//		Instantiate the template, which makes a skeleton table which we'll insert the entities
 		this.inherited(arguments);
 
 		var i18n = dojo.i18n.getLocalization("dojox.editor.plugins", "latinEntities");

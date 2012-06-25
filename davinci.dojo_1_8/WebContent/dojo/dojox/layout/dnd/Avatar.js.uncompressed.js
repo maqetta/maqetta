@@ -39,7 +39,8 @@ dojo.declare("dojox.layout.dnd.Avatar", dojo.dnd.Avatar, {
 	},
 
 	update: function(){
-		// summary: Updates the avatar to reflect the current DnD state.
+		// summary:
+		//		Updates the avatar to reflect the current DnD state.
 		dojo.toggleClass(this.node, "dojoDndAvatarCanDrop", this.manager.canDropFlag);
 	},
 

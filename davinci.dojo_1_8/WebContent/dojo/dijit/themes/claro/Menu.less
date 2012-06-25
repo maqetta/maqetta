@@ -75,6 +75,8 @@ There are three areas of styling for the Menu:
 	padding:1px;
 }
 /* hover over a MenuItem or MenuBarItem */
+.claro .dijitSelectMenu .dijitMenuItemHover td,
+.claro .dijitSelectMenu .dijitMenuItemSelected td,
 .claro .dijitMenuItemHover,
 .claro .dijitMenuItemSelected {
     // note: seems like the selected MenuItem should use @pressed-background-color
@@ -150,17 +152,20 @@ There are three areas of styling for the Menu:
 	background-image: none;
 }
 
+.claro .dijitSelectMenu .dijitMenuItem td,
 .claro .dijitComboBoxMenu .dijitMenuItem {
 	padding: @textbox-padding;	// Make drop down menu text line up with text in <input>.
 	border-width:1px 0 1px 0;
 	border-style:solid;
 	border-color: @select-dropdownitem-background-color;
 }
+.claro .dijitSelectMenu .dijitMenuItemSelected td,
 .claro .dijitComboBoxMenu .dijitMenuItemSelected {
 	color:@selected-text-color;
 	border-color:@hovered-border-color;
 	background-color:@hovered-background-color;
 }
+.claro .dijitSelectMenu .dijitMenuItemHover td,
 .claro .dijitComboBoxMenu .dijitMenuItemHover {
 	color: #000000;
 	border-color: #769dc0;

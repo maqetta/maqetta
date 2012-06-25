@@ -46,6 +46,10 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 		constructor: function(chart, kwArgs){
 			// summary:
 			//		Create a Spider plot.
+			// chart: dojox/charting/Chart
+			//		The chart this plot belongs to.
+			// kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
+			//		An optional keyword arguments object to help define this plot's parameters.
 			this.opt = lang.clone(this.defaultParams);
 			du.updateWithObject(this.opt, kwArgs);
 			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
@@ -58,7 +62,7 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 		clear: function(){
 			// summary:
 			//		Clear out all of the information tied to this plot.
-			// returns: dojox.charting.plot2d.Spider
+			// returns: dojox/charting/plot2d/Spider
 			//		A reference to this plot for functional chaining.
 			this.inherited(arguments);
 			this.dyn = [];
@@ -67,12 +71,12 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 			this.labelKey = [];
 			this.oldSeriePoints = {};
 			this.animations = {};
-			return this;	//	dojox.charting.plot2d.Spider
+			return this;	//	dojox/charting/plot2d/Spider
 		},
 		setAxis: function(axis){
 			// summary:
 			//		Optionally set axis min and max property.
-			// returns: dojox.charting.plot2d.Spider
+			// returns: dojox/charting/plot2d/Spider
 			//		The reference to this plot for functional chaining.
 
 			// override the computed min/max with provided values if any
@@ -84,14 +88,14 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 					this.datas[axis.name].max = axis.opt.max;
 				}
 			}
-			return this;	//	dojox.charting.plot2d.Spider
+			return this;	//	dojox/charting/plot2d/Spider
 		},
 		addSeries: function(run){
 			// summary:
 			//		Add a data series to this plot.
 			// run: dojox.charting.Series
 			//		The series to be added.
-			// returns: dojox.charting.plot2d.Base
+			// returns: dojox/charting/plot2d/Base
 			//		A reference to this plot for functional chaining.
 			var matched = false;
 			this.series.push(run);
@@ -121,7 +125,7 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 			//		Calculate the min/max on all attached series in both directions.
 			// returns: Object
 			//		{hmin, hmax, vmin, vmax} min/max in both directions.
-			return dc.collectSimpleStats(this.series);
+			return dc.collectSimpleStats(this.series); // Object
 		},
 		render: function(dim, offsets){
 			// summary:
@@ -130,7 +134,7 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 			//		An object of the form { width, height }.
 			// offsets: Object
 			//		An object of the form { l, r, t, b }.
-			// returns: dojox.charting.plot2d.Spider
+			// returns: dojox/charting/plot2d/Spider
 			//		A reference to this plot for functional chaining.
 			if(!this.dirty){ return this; }
 			this.dirty = false;
@@ -368,7 +372,7 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 					}, this);
 				}
 			}
-			return this;	//	dojox.charting.plot2d.Spider
+			return this;	//	dojox/charting/plot2d/Spider
 		},
 		_createSeriesEntry: function(ts, osps, sps, f, sk, r, ro, ms, at){
 			//polygon
@@ -592,5 +596,5 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 		return color;
 	}
 	
-	return Spider; // dojox.plot2d.Spider
+	return Spider; // dojox/plot2d/Spider
 });

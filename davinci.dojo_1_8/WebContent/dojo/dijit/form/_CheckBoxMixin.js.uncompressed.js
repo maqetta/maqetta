@@ -6,8 +6,6 @@ define("dijit/form/_CheckBoxMixin", [
 
 	// module:
 	//		dijit/form/_CheckBoxMixin
-	// summary:
-	//		Mixin to provide widget functionality corresponding to an HTML checkbox
 
 	return declare("dijit.form._CheckBoxMixin", null, {
 		// summary:
@@ -21,8 +19,8 @@ define("dijit/form/_CheckBoxMixin", [
 		//
 
 		// type: [private] String
-		//		type attribute on <input> node.
-		//		Overrides `dijit.form.Button.type`.  Users should not change this value.
+		//		type attribute on `<input>` node.
+		//		Overrides `dijit/form/Button.type`.  Users should not change this value.
 		type: "checkbox",
 
 		// value: String

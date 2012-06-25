@@ -1,19 +1,14 @@
 define("dojox/dgauges/CircularValueIndicator", ["dojo/_base/declare", "dojox/gfx", "./ScaleIndicatorBase", "dojo/_base/event"], function(declare, gfx, ScaleIndicatorBase, eventUtil){
-
-	/*=====
-	var ScaleIndicatorBase = dojox.dgauges.ScaleIndicatorBase;
-	=====*/	
-
 	return declare("dojox.dgauges.CircularValueIndicator", ScaleIndicatorBase, {
-		//	summary:
+		// summary:
 		//		The circular value indicator, typically used for creating needles.
 
 		indicatorShapeFunc: function(group, indicator){
-			//	summary:
+			// summary:
 			//		Draws the indicator. The rotation center is at (0, 0).
-			//	group: dojox.gfx.canvas.Group
+			// group: dojox/gfx/canvas/Group
 			//		A GFX group for drawing. 
-			//	returns: dojox.gfx.canvas.Shape
+			// returns: dojox/gfx/canvas/Shape
 			//		A GFX shape retrievable using the getIndicatorRenderer method of the associated scale. 
 			return group.createLine({
 				x1: 0,
@@ -38,6 +33,10 @@ define("dojox/dgauges/CircularValueIndicator", ["dojo/_base/declare", "dojox/gfx
 		},
 		
 		_onMouseDown: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			var origin = this.scale._gauge._gaugeToPage(this.scale.originX, this.scale.originY);
 			var angle = ((Math.atan2(event.pageY - origin.y, event.pageX - origin.x)) * 180) / (Math.PI);
@@ -48,6 +47,10 @@ define("dojox/dgauges/CircularValueIndicator", ["dojo/_base/declare", "dojox/gfx
 		},
 		
 		_onMouseMove: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			var origin = this.scale._gauge._gaugeToPage(this.scale.originX, this.scale.originY);
 			var angle = ((Math.atan2(event.pageY - origin.y, event.pageX - origin.x)) * 180) / (Math.PI);

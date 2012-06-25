@@ -8,8 +8,6 @@ define("dijit/layout/TabContainer", [
 
 	// module:
 	//		dijit/layout/TabContainer
-	// summary:
-	//		A Container with tabs to select each child (only one of which is displayed at a time).
 
 
 	return declare("dijit.layout.TabContainer", _TabContainerBase, {
@@ -48,6 +46,7 @@ define("dijit/layout/TabContainer", [
 
 			return new TabController({
 				id: this.id + "_tablist",
+				ownerDocument: this.ownerDocument,
 				dir: this.dir,
 				lang: this.lang,
 				textDir: this.textDir,

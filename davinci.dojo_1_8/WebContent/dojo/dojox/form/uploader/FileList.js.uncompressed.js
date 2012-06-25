@@ -10,9 +10,6 @@ define("dojox/form/uploader/FileList", [
 ],function(fx, domStyle, domClass, declare, lang, array, manager, formUploaderBase){
 
 return declare("dojox.form.uploader.FileList", [formUploaderBase], {
-
-	// Version: 1.6
-
 	// summary:
 	//		A simple widget that provides a list of the files currently selected by
 	//		dojox.form.Uploader
@@ -20,6 +17,7 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 	//		There is a required CSS file: resources/UploaderFileList.css.
 	//		This is a very simple widget, and not beautifully styled. It is here mainly for test
 	//		cases, but could very easily be used, extended, modified, or copied.
+	// Version: 1.6
 
 	// uploaderId: String
 	//		The id of the dojox.form.Uploader to connect to.

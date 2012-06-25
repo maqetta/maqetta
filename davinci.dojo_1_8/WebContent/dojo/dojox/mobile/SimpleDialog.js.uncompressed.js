@@ -15,17 +15,18 @@ define("dojox/mobile/SimpleDialog", [
 		// summary:
 		//		A dialog box for mobile.
 		// description:
+		//		SimpleDialog is a dialog box for mobile.
 		//		When a SimpleDialog is created, it is initially hidden and not
 		//		displayed (display="none"). To show the dialog box, you need to
-		//		get a reference to the widget and call the show() method.
+		//		get a reference to the widget and to call its show() method.
 		//
 		//		The contents can be arbitrary HTML, text, or widgets. Note,
 		//		however, that the widget is initially hidden. You need to be
 		//		careful when you place something that cannot be initialized
 		//		under the hidden state into a SimpleDialog.
 		//
-		//		This widget has only very little functionality, but the code
-		//		size is much smaller than dijit.Dialog.
+		//		This widget has much less functionalities than dijit/Dialog, 
+		//		but it has the advantage of a much smaller code size.
 
 		// top: String
 		//		The top edge position of the widget. If "auto", the widget is
@@ -57,11 +58,20 @@ define("dojox/mobile/SimpleDialog", [
 		//		Tabindex setting for the item so users can hit the tab key to
 		//		focus on it.
 		tabIndex: "0",
-		_setTabIndexAttr: "", // sets tabIndex to domNode
+		
+		// _setTabIndexAttr: [private] String
+		//		Sets tabIndex to domNode.
+		_setTabIndexAttr: "",
 
 		/* internal properties */	
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblSimpleDialog",
-		_cover: [], // array is to share the cover instance
+		
+		// _cover: [private] Array
+		//		Array for sharing the cover instances.
+		_cover: [],
 
 		buildRendering: function(){
 			this.containerNode = domConstruct.create("div", {className:"mblSimpleDialogContainer"});
@@ -92,6 +102,8 @@ define("dojox/mobile/SimpleDialog", [
 		},
 
 		addCover: function(){
+			// summary:
+			//		Adds the transparent DIV cover.
 			if(!this._cover[0]){
 				this._cover[0] = domConstruct.create("div", {
 					className: "mblSimpleDialogCover"
@@ -102,28 +114,36 @@ define("dojox/mobile/SimpleDialog", [
 		},
 
 		removeCover: function(){
+			// summary:
+			//		Removes the transparent DIV cover.
 			this._cover[0].style.display = "none";
 		},
 
 		_onCloseButtonClick: function(e){
+			// tags:
+			//		private
 			if(this.onCloseButtonClick(e) === false){ return; } // user's click action
 			this.hide();
 		},
 
 		onCloseButtonClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks.
 			// tags:
 			//		callback
 		},
 
 		_onKeyDown: function(e){
+			// tags:
+			//		private
 			if(e.keyCode == 27){ // ESC
 				this.hide();
 			}
 		},
 
 		refresh: function(){ // TODO: should we call refresh on resize?
+			// summary:
+			//		Refreshes the layout of the dialog.
 			var n = this.domNode;
 			if(this.closeButton){
 				var b = this.closeButtonNode;
@@ -146,6 +166,8 @@ define("dojox/mobile/SimpleDialog", [
 		},
 
 		show: function(){
+			// summary:
+			//		Shows the dialog.
 			if(this.domNode.style.display === ""){ return; }
 			if(this.modal){
 				this.addCover();
@@ -156,6 +178,8 @@ define("dojox/mobile/SimpleDialog", [
 		},
 
 		hide: function(){
+			// summary:
+			//		Hides the dialog.
 			if(this.domNode.style.display === "none"){ return; }
 			this.domNode.style.display = "none";
 			if(this.modal){

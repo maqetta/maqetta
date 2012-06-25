@@ -1,4 +1,15 @@
 define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-class", "./dom-construct", "./dom-geometry", "./dom-attr", "./dom-style"], function(dojo, query, array, lang, domCls, domCtr, domGeom, domAttr, domStyle){
+
+	// module:
+	//		dojo/NodeList-dom.js
+
+	/*=====
+	 return function(){
+		 // summary:
+		 //		Adds DOM related methods to NodeList, and returns NodeList constructor.
+	 };
+	 =====*/
+
 	var magicGuard = function(a){
 		// summary:
 		//		the guard function for dojo.attr() and dojo.style()
@@ -164,8 +175,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			//		innerHTML can be assigned or retrieved as well:
 			//	|	// get the innerHTML (as an array) for each list item
 			//	|	var ih = dojo.query("li.replaceable").attr("innerHTML");
-			return; // dojo.NodeList
-			return; // Array
+			return; // dojo/query.NodeList|Array
 		},
 
 		style: function(property, value){
@@ -179,7 +189,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			// returns:
 			//		if no value is passed, the result is an array of strings.
 			//		If a value is passed, the return is this NodeList
-			return; // dojo.NodeList
+			return; // dojo/query.NodeList
 			return; // Array
 		},
 
@@ -189,7 +199,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			// className: String|Array
 			//		A String class name to add, or several space-separated class names,
 			//		or an array of class names.
-			return; // dojo.NodeList
+			return; // dojo/query.NodeList
 		},
 
 		removeClass: function(className){
@@ -201,7 +211,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			//		will be deleted.
 			// returns:
 			//		dojo.NodeList, this list
-			return; // dojo.NodeList
+			return; // dojo/query.NodeList
 		},
 
 		toggleClass: function(className, condition){
@@ -212,7 +222,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			//		If passed, true means to add the class, false means to remove.
 			// className: String
 			//		the CSS class to add
-			return; // dojo.NodeList
+			return; // dojo/query.NodeList
 		},
 
 		empty: function(){
@@ -220,7 +230,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			//		clears all content from each node in the list. Effectively
 			//		equivalent to removing all child nodes from every item in
 			//		the list.
-			return this.forEach("item.innerHTML='';"); // dojo.NodeList
+			return this.forEach("item.innerHTML='';"); // dojo/query.NodeList
 			// FIXME: should we be checking for and/or disposing of widgets below these nodes?
 		},
 		=====*/
@@ -269,7 +279,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			//		|	"replace"
 			//		or an offset in the childNodes property
 			var item = query(queryOrNode)[0];
-			return this.forEach(function(node){ domCtr.place(node, item, position); }); // dojo.NodeList
+			return this.forEach(function(node){ domCtr.place(node, item, position); }); // dojo/query.NodeList
 		},
 
 		orphan: function(/*String?*/ filter){
@@ -280,7 +290,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			//		CSS selector like ".foo" or "div > span"
 			// returns:
 			//		`dojo.NodeList` containing the orphaned elements
-			return (filter ? query._filterResult(this, filter) : this).forEach(orphan); // dojo.NodeList
+			return (filter ? query._filterResult(this, filter) : this).forEach(orphan); // dojo/query.NodeList
 		},
 
 		adopt: function(/*String||Array||DomNode*/ queryOrListOrNode, /*String?*/ position){
@@ -301,7 +311,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			//		|	"only"
 			//		|	"replace"
 			//		or an offset in the childNodes property
-			return query(queryOrListOrNode).place(this[0], position)._stash(this);	// dojo.NodeList
+			return query(queryOrListOrNode).place(this[0], position)._stash(this);	// dojo/query.NodeList
 		},
 
 		// FIXME: do we need this?
@@ -337,7 +347,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 					}
 				});
 			});
-			return ret._stash(this);	// dojo.NodeList
+			return ret._stash(this);	// dojo/query.NodeList
 		},
 
 		filter: function(/*String|Function*/ filter){
@@ -363,12 +373,12 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 				items = query._filterResult(this, a[0]);
 				if(a.length == 1){
 					// if we only got a string query, pass back the filtered results
-					return items._stash(this); // dojo.NodeList
+					return items._stash(this); // dojo/query.NodeList
 				}
 				// if we got a callback, run it over the filtered items
 				start = 1;
 			}
-			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo.NodeList
+			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo/query.NodeList
 		},
 
 		/*
@@ -444,7 +454,7 @@ define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_b
 			for(var i = 0, node; (node = this[i]); i++){
 				this._place(content, node, position, i > 0);
 			}
-			return this; //dojo.NodeList
+			return this; // dojo/query.NodeList
 		}
 	});
 

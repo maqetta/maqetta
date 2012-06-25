@@ -8,14 +8,19 @@ define("dijit/Viewport", [
 
 	// module:
 	//		dijit/Viewport
-	// summary:
-	//		Utility singleton to watch for viewport resizes, avoiding duplicate notifications
-	//		which can lead to infinite loops.
-	//
-	//		Usage: Viewport.on("resize", myCallback).
-	//
-	//		myCallback() is called without arguments in case it's _WidgetBase.resize(),
-	//		which would interpret the argument as the size to make the widget.
+
+	/*=====
+	return {
+		// summary:
+		//		Utility singleton to watch for viewport resizes, avoiding duplicate notifications
+		//		which can lead to infinite loops.
+		// description:
+		//		Usage: Viewport.on("resize", myCallback).
+		//
+		//		myCallback() is called without arguments in case it's _WidgetBase.resize(),
+		//		which would interpret the argument as the size to make the widget.
+	};
+	=====*/
 
 	var Viewport = new Evented();
 

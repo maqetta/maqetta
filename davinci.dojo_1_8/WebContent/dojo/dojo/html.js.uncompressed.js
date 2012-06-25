@@ -1,11 +1,12 @@
 define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", "./dom", "./dom-construct", "./parser"],
-	function(kernel, lang, darray, declare, dom, domConstruct, parser) {
+	function(kernel, lang, darray, declare, dom, domConstruct, parser){
 	// module:
 	//		dojo/html
-	// summary:
-	//		TODOC
 
-	var html = {};
+	var html = {
+		// summary:
+		//		TODOC
+	};
 	lang.setObject("dojo.html", html);
 
 	// the parser might be needed..
@@ -17,7 +18,7 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 		// summary:
 		//		removes !DOCTYPE and title elements from the html string.
 		//
-		//		khtml is picky about dom faults, you can't attach a style or <title> node as child of body
+		//		khtml is picky about dom faults, you can't attach a style or `<title>` node as child of body
 		//		must go into head, so we need to cut out those tags
 		// cont:
 		//		An html string for insertion into the dom
@@ -47,16 +48,16 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 		// always empty
 		domConstruct.empty(node);
 
-		if(cont) {
-			if(typeof cont == "string") {
+		if(cont){
+			if(typeof cont == "string"){
 				cont = domConstruct.toDom(cont, node.ownerDocument);
 			}
-			if(!cont.nodeType && lang.isArrayLike(cont)) {
+			if(!cont.nodeType && lang.isArrayLike(cont)){
 				// handle as enumerable, but it may shrink as we enumerate it
-				for(var startlen=cont.length, i=0; i<cont.length; i=startlen==cont.length ? i+1 : 0) {
+				for(var startlen=cont.length, i=0; i<cont.length; i=startlen==cont.length ? i+1 : 0){
 					domConstruct.place( cont[i], node, "last");
 				}
-			} else {
+			}else{
 				// pass nodes, documentFragments and unknowns through to dojo.place
 				domConstruct.place(cont, node, "last");
 			}
@@ -87,7 +88,8 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 			cleanContent: false,
 
 			// extractContent: Boolean
-			//		Should the content be treated as a full html document, and the real content stripped of <html>, <body> wrapper before injection
+			//		Should the content be treated as a full html document,
+			//		and the real content stripped of `<html> <body>` wrapper before injection
 			extractContent: false,
 
 			// parseContent: Boolean
@@ -153,7 +155,7 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 				//		sets the content on the node
 
 				var node = this.node;
-				if(!node) {
+				if(!node){
 					// can't proceed
 					throw new Error(this.declaredClass + ": setContent given no node");
 				}
@@ -175,7 +177,7 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 				this.node = node; // DomNode
 			},
 
-			empty: function() {
+			empty: function(){
 				// summary:
 				//		cleanly empty out existing content
 				
@@ -190,8 +192,8 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 				// destroy any widgets from a previous run
 				// NOTE: if you don't want this you'll need to empty
 				// the parseResults array property yourself to avoid bad things happening
-				if(this.parseResults && this.parseResults.length) {
-					darray.forEach(this.parseResults, function(w) {
+				if(this.parseResults && this.parseResults.length){
+					darray.forEach(this.parseResults, function(w){
 						if(w.destroy){
 							w.destroy();
 						}

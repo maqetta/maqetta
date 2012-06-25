@@ -23,11 +23,6 @@ define("dijit/_editor/plugins/FullScreen", [
 
 // module:
 //		dijit/_editor/plugins/FullScreen
-// summary:
-//		This plugin provides FullScreen capability to the editor.  When
-//		toggled on, it will render the editor into the full window and
-//		overlay everything.  It also binds to the hotkey: CTRL-SHIFT-F11
-//		for toggling fullscreen mode.
 
 
 var FullScreen = declare("dijit._editor.plugins.FullScreen",_Plugin,{
@@ -71,6 +66,7 @@ var FullScreen = declare("dijit._editor.plugins.FullScreen",_Plugin,{
 			editor = this.editor;
 		this.button = new ToggleButton({
 			label: strings["fullScreen"],
+			ownerDocument: editor.ownerDocument,
 			dir: editor.dir,
 			lang: editor.lang,
 			showLabel: false,

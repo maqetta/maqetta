@@ -1,6 +1,6 @@
-define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dojox/highlight"], function(dojo, dijit){
+define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dojox/highlight"], function(dojo, dijit, _Widget, _Templated){
 
-	return dojo.declare("dojox.highlight.widget.Code",[dijit._Widget, dijit._Templated],{
+	return dojo.declare("dojox.highlight.widget.Code", [_Widget, _Templated],{
 		// summary:
 		//		A simple source code formatting widget that adds line numbering, alternating line colors
 		//		and line range support on top of dojox.highlight module.
@@ -64,7 +64,8 @@ define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/
 	
 		// FIXME: user _setRangeAttr pattern? so you can code.set('range', [1, 100]);
 		setRange: function(/* Array */range){
-			// summary: update the view to a new passed range
+			// summary:
+			//		update the view to a new passed range
 			if(dojo.isArray(range)){
 				this.range = range;
 				this._updateView();
@@ -72,7 +73,8 @@ define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/
 		},
 	
 		_updateView: function(){
-			// summary: set the list to the current range
+			// summary:
+			//		set the list to the current range
 			if(this.range){
 				var r = this.range;
 				this._lines

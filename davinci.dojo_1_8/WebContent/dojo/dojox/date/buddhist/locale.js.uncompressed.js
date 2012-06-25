@@ -101,7 +101,7 @@ define("dojox/date/buddhist/locale", ["../..", "dojo/_base/lang", "dojo/_base/ar
 		});
 	}
 	
-	blocale.format = function(/*buddhist.Date*/dateObject, /*object?*/options){
+	blocale.format = function(/*dojox/date/buddhist/Date*/dateObject, /*object?*/options){
 		// summary:
 		//		Format a Date object as a String, using  settings.
 
@@ -390,7 +390,7 @@ define("dojox/date/buddhist/locale", ["../..", "dojo/_base/lang", "dojo/_base/ar
 
 	blocale.addCustomFormats("dojo.cldr","buddhist");
 
-	blocale.getNames = function(/*String*/item, /*String*/type, /*String?*/context, /*String?*/locale, /*buddhist Date Object?*/date){
+	blocale.getNames = function(/*String*/item, /*String*/type, /*String?*/context, /*String?*/locale, /*dojox/date/buddhist/Date?*/date){
 		// summary:
 		//		Used to get localized strings from dojo.cldr for day or month names.
 		var label;
@@ -408,4 +408,5 @@ define("dojox/date/buddhist/locale", ["../..", "dojo/_base/lang", "dojo/_base/ar
 		return (label || lookup[props.join('-')]).concat(); /*Array*/
 	};
 
+	return blocale;
 });

@@ -17,9 +17,6 @@ define("dijit/layout/TabController", [
 
 	// module:
 	//		dijit/layout/TabController
-	// summary:
-	//		Set of tabs (the things with titles and a close button, that you click to show a tab panel).
-	//		Used internally by `dijit.layout.TabContainer`.
 
 	var TabButton = declare("dijit.layout._TabButton", StackController.StackButton, {
 		// summary:
@@ -145,6 +142,7 @@ define("dijit/layout/TabController", [
 			// Setup a close menu to be shared between all the closable tabs (excluding disabled tabs)
 			var closeMenu = new Menu({
 				id: this.id+"_Menu",
+				ownerDocument: this.ownerDocument,
 				dir: this.dir,
 				lang: this.lang,
 				textDir: this.textDir,
@@ -159,6 +157,7 @@ define("dijit/layout/TabController", [
 				controller = this;
 			closeMenu.addChild(new MenuItem({
 				label: _nlsResources.itemClose,
+				ownerDocument: this.ownerDocument,
 				dir: this.dir,
 				lang: this.lang,
 				textDir: this.textDir,

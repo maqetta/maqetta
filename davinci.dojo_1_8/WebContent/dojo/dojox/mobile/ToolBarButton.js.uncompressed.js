@@ -18,13 +18,13 @@ define("dojox/mobile/ToolBarButton", [
 		//		A button widget which is placed in the Heading widget.
 		// description:
 		//		ToolBarButton is a button which is typically placed in the
-		//		Heading widget. It is a subclass of dojox.mobile._ItemBase just
+		//		Heading widget. It is a subclass of dojox/mobile/_ItemBase just
 		//		like ListItem or IconItem. So, unlike Button, it has basically
 		//		the same capability as ListItem or IconItem, such as icon
 		//		support, transition, etc.
 
 		// selected: Boolean
-		//		If true, the button is in the selected status.
+		//		If true, the button is in the selected state.
 		selected: false,
 
 		// arrow: String
@@ -32,7 +32,7 @@ define("dojox/mobile/ToolBarButton", [
 		arrow: "",
 
 		// light: Boolean
-		//		If true, this widget produces only a single <span> node when it
+		//		If true, this widget produces only a single `<span>` node when it
 		// 		has only an icon or only a label, and has no arrow. In that
 		// 		case, you cannot have both icon and label, or arrow even if you
 		// 		try to set them.
@@ -41,7 +41,11 @@ define("dojox/mobile/ToolBarButton", [
 		/* internal properties */
 		baseClass: "mblToolBarButton",
 
+		// defaultColor: [private] String
+		//		CSS class for default color.
 		defaultColor: "mblColorDefault",
+		// selColor: [private] String
+		//		CSS class for default selected color.
 		selColor: "mblColorDefaultSel",
 
 		_selStartMethod: "touch",

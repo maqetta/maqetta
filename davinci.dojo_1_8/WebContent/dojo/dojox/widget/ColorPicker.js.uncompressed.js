@@ -16,9 +16,7 @@ define("dojox/widget/ColorPicker", [
 		// stub, this is planned later:
 		return hex;
 	};
-/*===== 
-	var FormWidget = dijit.form._FormWidget;
-=====*/
+
 	// TODO: shouldn't this extend _FormValueWidget?
 	return declare("dojox.widget.ColorPicker", FormWidget, {
 		// summary:
@@ -234,7 +232,7 @@ define("dojox/widget/ColorPicker", [
 			this._updateValue(col, force);
 		},
 		
-		_setTimer: function(/* d.dnd.Mover */mover){
+		_setTimer: function(/* dojo/dnd/Mover */mover){
 			if(mover.node != this.cursorNode){ return; }
 			// FIXME: should I assume this? focus on mouse down so on mouse up
 			FocusManager.focus(mover.node);
@@ -242,7 +240,7 @@ define("dojox/widget/ColorPicker", [
 			this._timer = setInterval(lang.hitch(this, "_updateColor"), 45);
 		},
 		
-		_clearTimer: function(/* d.dnd.Mover */mover){
+		_clearTimer: function(/* dojo/dnd/Mover */mover){
 			if(!this._timer){ return; }
 			clearInterval(this._timer);
 			this._timer = null;
@@ -250,7 +248,7 @@ define("dojox/widget/ColorPicker", [
 			DOM.setSelectable(this.domNode,true);
 		},
 		
-		_setHue: function(/* Decimal */h){
+		_setHue: function(/* Float */h){
 			// summary:
 			//		Sets a natural color background for the
 			//		underlay image against closest hue value (full saturation)
@@ -263,11 +261,11 @@ define("dojox/widget/ColorPicker", [
 			// summary:
 			//		Function used by the typematic code to handle cursor position and update
 			//		via keyboard.
-			// count:
+			// count: Number
 			//		-1 means stop, anything else is just how many times it was called.
-			// node:
+			// node: DomNode
 			//		The node generating the event.
-			// e:
+			// e: Event
 			//		The event.
 			if(count !== -1){
 				var y = html.style(this.hueCursorNode, "top");
@@ -352,7 +350,8 @@ define("dojox/widget/ColorPicker", [
 		},
 
 		_updateColor: function(){
-			// summary: update the previewNode color, and input values [optional]
+			// summary:
+			//	update the previewNode color, and input values [optional]
 			
 			var hueSelCenter = this.PICKER_HUE_SELECTOR_H/2,
 				satSelCenterH = this.PICKER_SAT_SELECTOR_H/2,
@@ -375,8 +374,8 @@ define("dojox/widget/ColorPicker", [
 		},
 		
 		_colorInputChange: function(e){
-			//summary: updates picker position and inputs
-			//         according to rgb, hex or hsv input changes
+			// summary: updates picker position and inputs
+			//		according to rgb, hex or hsv input changes
 			var col, hasit = false;
 			switch(e.target){
 				//transform to hsv to pixels
@@ -408,7 +407,7 @@ define("dojox/widget/ColorPicker", [
 			
 		},
 		
-		_updateValue: function(/* dojox.color.Color */col, /* Boolean */fireChange){
+		_updateValue: function(/* dojox/color/Color */col, /* Boolean */fireChange){
 			// summary: updates the value of the widget
 			//          can cancel reverse onChange by specifying second param
 			var hex = col.toHex();
@@ -421,9 +420,10 @@ define("dojox/widget/ColorPicker", [
 			}
 		},
 		
-		_updatePickerLocations: function(/* dojox.color.Color */col){
-			//summary: update handles on the pickers acording to color values
-			//
+		_updatePickerLocations: function(/* dojox/color/Color */col){
+			// summary: 
+			//		update handles on the pickers acording to color values
+			
 			var hueSelCenter = this.PICKER_HUE_SELECTOR_H/2,
 				satSelCenterH = this.PICKER_SAT_SELECTOR_H/2,
 				satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
@@ -465,9 +465,10 @@ define("dojox/widget/ColorPicker", [
 			
 		},
 		
-		_updateColorInputs: function(/* dojox.color.Color */col){
-			//summary: updates color inputs that were changed through other inputs
-			//or by clicking on the picker
+		_updateColorInputs: function(/* dojox/color/Color */ col){
+			// summary:
+			//		updates color inputs that were changed through other inputs
+			//		or by clicking on the picker
 			
 			var hex = col.toHex();
 			
@@ -496,7 +497,8 @@ define("dojox/widget/ColorPicker", [
 		},
 		
 		_setHuePoint: function(/* Event */evt){
-			// summary: set the hue picker handle on relative y coordinates
+			// summary:
+			//	set the hue picker handle on relative y coordinates
 			var selCenter = this.PICKER_HUE_SELECTOR_H/2;
 			var ypos = evt.layerY - selCenter;
 			if(this.animatePoint){

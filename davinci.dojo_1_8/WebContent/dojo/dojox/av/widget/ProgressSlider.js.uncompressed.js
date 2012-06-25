@@ -1,6 +1,6 @@
-define("dojox/av/widget/ProgressSlider", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit){
+define("dojox/av/widget/ProgressSlider", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_TemplatedMixin'],function(dojo, dijit, _Widget, _TemplatedMixin){
 
-dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedMixin], {
+return dojo.declare("dojox.av.widget.ProgressSlider", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		A custom slider widget to use with dojox.av.widget.Player.
 	//	description:
@@ -12,7 +12,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 	postCreate: function(){
 		// summary:
 		//		Initialize slider.
-		//
+
 		this.seeking = false;
 		this.handleWidth = dojo.marginBox(this.handle).w;
 		var dim = dojo.coords(this.domNode);
@@ -27,7 +27,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 		// summary:
 		//		A common method to set the media in all Player widgets.
 		//		May do connections and initializations.
-		//
+
 		this.playerWidget = playerWidget;
 		this.media = med;
 		dojo.connect(this.media, "onMetaData", this, function(data){
@@ -52,7 +52,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 	onDrag: function(/* HTMLEvent */ evt){
 		// summary:
 		//		Fired when the mouse is moved. Sets the slider.
-		//
+
 		var x = evt.clientX - this.x;
 		if(x<0) x = 0;
 		if(x>this.width-this.handleWidth) x=this.width-this.handleWidth;
@@ -65,7 +65,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 	startDrag: function(){
 		// summary:
 		// 		Fired onmousedown of the slider handle.
-		//
+
 		dojo.setSelectable(this.playerWidget.domNode, false);
 		this.seeking = true;
 		this.cmove = dojo.connect(dojo.doc, "mousemove", this, "onDrag");
@@ -74,7 +74,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 	endDrag: function(){
 		// summary:
 		// 		Fired on document.onmouseup.
-		//
+
 		dojo.setSelectable(this.playerWidget.domNode, true);
 		this.seeking = false;
 		if(this.cmove) dojo.disconnect(this.cmove);
@@ -85,7 +85,7 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 	setHandle: function(time){
 		// summary:
 		//		Sets the slider handle (when it is not being dragged)
-		//
+
 		if(!this.seeking){
 			var w = this.width-this.handleWidth;
 			var p = time/this.duration;
@@ -107,13 +107,13 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 		// summary:
 		//		Highlights the slider handle on mouseover, and
 		//		stays highlighted during drag.
-		//
+
 		dojo.addClass(this.handle, "over");
 	},
 	handleOut: function(){
 		// summary:
 		//		Unhighlights handle onmouseover, or on endDrag.
-		//
+
 		if(!this.seeking){
 			dojo.removeClass(this.handle, "over");
 		}
@@ -129,5 +129,4 @@ dojo.declare("dojox.av.widget.ProgressSlider", [dijit._Widget, dijit._TemplatedM
 
 });
 
-return dojox.av.widget.ProgressSlider;
 });

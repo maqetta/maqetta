@@ -53,11 +53,11 @@ define("dojox/mobile/IconItem", [
 		timeout: 10,
 
 		// content: String
-		//		An html fragment to embed as icon content.
+		//		An HTML fragment to embed as icon content.
 		content: "",
 
 		// badge: String
-		//		A text to show in a badge. (ex. "55")
+		//		A text to show in a badge (ex. "55").
 		badge: "",
 
 		// badgeClass: String
@@ -72,16 +72,17 @@ define("dojox/mobile/IconItem", [
 		deletable: true,
 
 		// deleteIcon: String
-		//		A delete icon to display at the top left corner of the item
+		//		A delete icon to display at the top-left corner of the item
 		//		during edit mode. The value can be either a path for an image
 		//		file or a class name of a DOM button.
 		deleteIcon: "",
 
 		// tag: String
-		//		A name of html tag to create as domNode.
+		//		A name of the HTML tag to create as domNode.
 		tag: "li",
 
 		/* internal properties */	
+		// Note these are overrides for similar properties defined in _ItemBase.
 		paramsToInherit: "transition,icon,deleteIcon,badgeClass,deleteIconTitle,deleteIconRole",
 		baseClass: "mblIconItem",
 		_selStartMethod: "touch",
@@ -182,16 +183,18 @@ define("dojox/mobile/IconItem", [
 
 		onClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks.
 			// tags:
 			//		callback
 		},
 
 		_onNewWindowOpened: function(e){
+			// Override from _ItemBase
 			this.set("selected", false);
 		},
 
 		_prepareForTransition: function(e, transOpts){
+			// Override from _ItemBase
 			if(transOpts){
 				setTimeout(lang.hitch(this, function(d){
 					this.set("selected", false);
@@ -223,7 +226,7 @@ define("dojox/mobile/IconItem", [
 
 		closeIconClicked: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks for the close icon.
 			// tags:
 			//		callback
 		},
@@ -252,6 +255,8 @@ define("dojox/mobile/IconItem", [
 		},
 
 		_open_1: function(){
+			// tags:
+			//		private
 			this.paneWidget.show();
 			this.unhighlight();
 			if(this.lazy){
@@ -263,6 +268,8 @@ define("dojox/mobile/IconItem", [
 		},
 
 		scrollIntoView: function(/*DomNode*/node){
+			// summary:
+			//		Scrolls until the given node is in the view.
 			var s = viewRegistry.getEnclosingScrollable(node);
 			if(s){ // this node is placed inside scrollable
 				s.scrollIntoView(node, true);
@@ -295,15 +302,17 @@ define("dojox/mobile/IconItem", [
 
 		onOpen: function(){
 			// summary:
-			//		Stub method to allow the application to connect to.
+			//		Stub method to allow the application to connect.
 		},
 
 		onClose: function(){
 			// summary:
-			//		Stub method to allow the application to connect to.
+			//		Stub method to allow the application to connect.
 		},
 
 		_setLabelAttr: function(/*String*/text){
+			// tags:
+			//		private
 			this.label = text;
 			var s = this._cv ? this._cv(text) : text;
 			this.labelNode.innerHTML = s;
@@ -313,10 +322,14 @@ define("dojox/mobile/IconItem", [
 		},
 
 		_getBadgeAttr: function(){
+			// tags:
+			//		private
 			return this.badgeObj ? this.badgeObj.getValue() : null;
 		},
 
 		_setBadgeAttr: function(/*String*/value){
+			// tags:
+			//		private
 			if(!this.badgeObj){
 				this.badgeObj = new Badge({fontSize:14, className:this.badgeClass});
 				domStyle.set(this.badgeObj.domNode, {
@@ -334,6 +347,8 @@ define("dojox/mobile/IconItem", [
 		},
 
 		_setDeleteIconAttr: function(icon){
+			// tags:
+			//		private
 			if(!this.getParent()){ return; } // icon may be invalid because inheritParams is not called yet
 
 			this._set("deleteIcon", icon);
@@ -349,6 +364,8 @@ define("dojox/mobile/IconItem", [
 		},
 
 		_setContentAttr: function(/*String|DomNode*/data){
+			// tags:
+			//		private
 			var root;
 			if(!this.paneWidget){
 				if(!this._tmpNode){
@@ -370,6 +387,8 @@ define("dojox/mobile/IconItem", [
 		_setSelectedAttr: function(/*Boolean*/selected){
 			// summary:
 			//		Makes this widget in the selected or unselected state.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			domStyle.set(this.iconNode, "opacity",
 						 selected ? this.getParent().pressedIconOpacity : 1);

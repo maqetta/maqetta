@@ -1,8 +1,6 @@
 define("dojo/_base/array", ["./kernel", "../has", "./lang"], function(dojo, has, lang){
 	// module:
 	//		dojo/_base/array
-	// summary:
-	//		This module defines the Javascript v1.6 array extensions.
 
 	// our old simple function builder stuff
 	var cache = {}, u;
@@ -75,6 +73,9 @@ define("dojo/_base/array", ["./kernel", "../has", "./lang"], function(dojo, has,
 	}
 
 	var array = {						 // the export object
+		// summary:
+		//		The Javascript v1.6 array extensions.
+
 		every: everyOrSome(false),
 		/*=====
 		 every: function(arr, callback, thisObject){

@@ -1,13 +1,6 @@
 define("dojox/gauges/GlossyHorizontalGauge", ["dojo/_base/declare","dojo/_base/connect","dojo/_base/lang","dojo/_base/Color","dojox/gfx","./BarGauge","./BarCircleIndicator","./GlossyHorizontalGaugeMarker"],
   function(declare, connect, lang, Color, gfx, BarGauge, BarCircleIndicator, GlossyHorizontalGaugeMarker) {
 
-
-var NumberUtils
-
-/*=====
-	BarGauge = dojox.gauges.BarGauge;
-=====*/
-
 return declare("dojox.gauges.GlossyHorizontalGauge", [BarGauge], {
 	// summary:
 	//		Represents an horizontal bar gauge with a glossy appearance.

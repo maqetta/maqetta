@@ -1,22 +1,22 @@
 define("dojox/dgauges/components/utils", ["dojo/_base/lang", "dojo/_base/Color"], function(lang, Color){
-	var utils = {};
+	// module:
+	//		dojox/dgauges/components/utils
+	// summary:
+	//		Gauge utilities.
+	// tags:
+	//		public
 
-	/*=====
-	dojox.dgauges.components.utils = {
-		// summary: Gauges utilities.
-	};
-	var utils = dojox.dgauges.components.utils;
-	=====*/
+	var utils = {};
 
 	lang.mixin(utils, {
 		brightness: function(col, b){
-			//	summary:
+			// summary:
 			//		Adjusts the brightness of a color.
-			//	col: Number
+			// col: Number
 			//		The base color
-			//	b: Number
+			// b: Number
 			//		A positive or negative value to adjust the brightness
-			//	returns: Number
+			// returns: Number
 			//		The modified color			
 			var res = lang.mixin(null, col);
 			res.r = Math.max(Math.min(res.r + b, 255), 0);
@@ -26,11 +26,11 @@ define("dojox/dgauges/components/utils", ["dojo/_base/lang", "dojo/_base/Color"]
 		},
 		
 		createGradient: function(entries){
-			//	summary:
+			// summary:
 			//		Creates a gradient object
-			//	entries: Array
+			// entries: Array
 			//		An array of numbers representing colors
-			//	returns: Number
+			// returns: Number
 			//		The modified color			
 			var res = {
 				colors: []
@@ -56,31 +56,31 @@ define("dojox/dgauges/components/utils", ["dojo/_base/lang", "dojo/_base/Color"]
 		},
 		
 		genericCircularGauge: function(scale, indicator, originX, originY, radius, startAngle, endAngle, orientation, font, labelPosition, tickShapeFunc){
-			//	summary:
+			// summary:
 			//		A helper method for configuring a circular gauge.
-			//	scale: CircularScale
+			// scale: CircularScale
 			//		A circular scale
-			//	indicator: IndicatorBase
+			// indicator: IndicatorBase
 			//		A circular indicator
-			//	originX: Number
+			// originX: Number
 			//		The x-coordinate of the center of the scale (in pixels) 
-			//	originY: Number
+			// originY: Number
 			//		The y-coordinate of the center of the scale (in pixels)
-			//	radius: Number
+			// radius: Number
 			//		The radius of the scale (in pixels)
-			//	startAngle: Number
+			// startAngle: Number
 			//		The start angle of the scale (in degrees)
-			//	endAngle: Number
+			// endAngle: Number
 			//		The end angle of the scale (in degrees)
-			//	orientation: String?
+			// orientation: String?
 			//		The orientation of the scale, can be "clockwise" or "cclockwise"
-			//	font: Object?
+			// font: Object?
 			//		The font used for the gauge
-			//	labelPosition: String?
+			// labelPosition: String?
 			//		The position of the labels regarding   
-			//	tickShapeFunc: Object?
+			// tickShapeFunc: Object?
 			//		A drawing function for the ticks
-			//	returns: Number
+			// returns: Number
 			//		The modified color	
 			var attributes = ["originX", "originY", "radius", "startAngle", "endAngle", "orientation", "font", "labelPosition", "tickShapeFunc"];
 			if(!orientation){

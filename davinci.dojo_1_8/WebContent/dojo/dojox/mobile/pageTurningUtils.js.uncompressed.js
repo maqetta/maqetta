@@ -39,6 +39,37 @@ define("dojox/mobile/pageTurningUtils", [
 	
 	kernel.experimental("dojox.mobile.pageTurningUtils");
 
+	/*=====
+    return {
+		// summary:
+		//		Utilities to provide page turning effects just like turning a real book.
+		// example:
+		// |	require([
+		// |		"dojo/ready",
+		// |		"dojox/mobile/pageTurningUtils"
+		// |	], function(ready, pageTurningUtils){
+		// |		var utils = new pageTurningUtils();
+		// |		ready(function(){
+		// |			utils.init(300, 400); // Specify width and height by pixels
+		// |			utils.initCatalog(document.getElementById("catalog"));
+		// |		});
+		// |	);
+		// |	<div id="catalog">
+		// |		<div id="page1">
+		// |			<div id="front1"><img src="img1.png"></div>
+		// |			<div id="back1"><img src="img2.png"></div>
+		// |		</div>
+		// |		<div id="page2">
+		// |			<div id="front2"><img src="img3.png"></div>
+		// |			<div id="back2"><img src="img4.png"></div>
+		// |		</div>
+		// |		<div id="page3">
+		// |			<div id="front3"><img src="img5.png"></div>
+		// |			<div id="back3"></div>
+		// |		</div>
+		// |	</div>
+    };
+    =====*/
 	return function(){
 		this.w = 0;
 		this.h = 0;
@@ -54,15 +85,15 @@ define("dojox/mobile/pageTurningUtils", [
 		this._currentPageNode = null;
 		this._transitionEndHandle = null;
 
-		this.init = function(/*Integer*/w, /*Integer*/h, /*String?*/turnfrom, 
-							/*Integer?*/page, /*Float?*/dogear, /*Float?*/duration,
+		this.init = function(/*int*/w, /*int*/h, /*String?*/turnfrom, 
+							/*int?*/page, /*Number?*/dogear, /*Number?*/duration,
 							/*Boolean?*/alwaysDogeared){
 			// summary:
 			//		Sets property values necessary for calculating the style parameters
 			//		for page positioning and page turning effects.
-			// w: Integer
+			// w: int
 			//		The width of each page by pixels. You cannot specify it by percentage.
-			// h: Integer
+			// h: int
 			//		The height of each page by pixels. You cannot specify it by percentage.
 			// turnfrom: String?
 			//		Specifies from which side/corner the page turning starts. 
@@ -70,26 +101,26 @@ define("dojox/mobile/pageTurningUtils", [
 			//		If "top", each page is turned from top-right corner of the page.
 			//		If "bottom", each page is turned from bottom-right corner of the page.
 			//		And if "left", each page is turned from top-left corner of the page.
-			//		The page is shown as dogeared except the case of "bottom".
-			// page: Integer?
+			//		The page is shown as dog-eared except the case of "bottom".
+			// page: int?
 			//		The number of pages shown in the screen at a time.
 			//		This parameter should be either of 1 or 2. Defaults to 1.
 			//		If 1, the only one side of two facing pages are shown. 
 			//		If 2, the two facing pages are shown at a time.
-			// dogear: Float?
-			//		The ratio of actual dogear width to the maximum dogear width which is
+			// dogear: Number?
+			//		The ratio of actual dog-ear width to the maximum dog-ear width which is
 			//		11 percent of the page width (= 0.11 * w).
 			//		This parameter should be a float number between 0 and 1. Defaults to 1.
-			//		The actual dogear width is calculated by the following formula:
+			//		The actual dog-ear width is calculated by the following formula:
 			//			0.11 * w * dogear.
 			//		This parameter is ignored if "bottom" is specified to turnfrom parameter.
-			// duration: Float?
+			// duration: Number?
 			//		The duration of page turning animations by seconds. (ex. 1.5, 3, etc)
 			//		Defaults to 2.
 			// alwaysDogeared: Boolean?
-			//		Specifies whether all pages are always dogeared or not.
-			//		If true, all pages are always dogeared.
-			//		If false, only the current page is dogeared while the others are not.
+			//		Specifies whether all pages are always dog-eared or not.
+			//		If true, all pages are always dog-eared.
+			//		If false, only the current page is dog-eared while the others are not.
 			//		This parameter is ignored if "bottom" is specified to turnfrom parameter.
 			
 			// Set property values
@@ -101,7 +132,7 @@ define("dojox/mobile/pageTurningUtils", [
 			this.duration = typeof duration !== 'undefined' ? duration : this.duration;
 			this.alwaysDogeared = typeof alwaysDogeared !== 'undefined' ? alwaysDogeared : this.alwaysDogeared
 			
-			if(this.turnfrom === "bottom"){ // dogear is not supported if using "bottom"
+			if(this.turnfrom === "bottom"){ // dog-ear is not supported if using "bottom"
 				this.alwaysDogeared = true;
 			}
 			// Calculate style parameters for page positioning and page turning effects
@@ -109,6 +140,8 @@ define("dojox/mobile/pageTurningUtils", [
 		};
 
 		this._calcStyleParams = function(){
+			// tags:
+			//		private
 			var tan58 = Math.tan(58 * Math.PI/180),
 				cos32 = Math.cos(32 * Math.PI/180),
 				sin32 = Math.sin(32 * Math.PI/180),
@@ -312,7 +345,7 @@ define("dojox/mobile/pageTurningUtils", [
 			};
 		};
 
-		this.getChildren = function(/*Node*/node){
+		this.getChildren = function(/*DomNode*/node){
 			return array.filter(node.childNodes, function(n){ return n.nodeType === 1; });
 		};
 
@@ -328,7 +361,7 @@ define("dojox/mobile/pageTurningUtils", [
 			return this._currentPageNode;
 		};
 
-		this.getIndexOfPage = function(/*Node*/pageNode, /*NodeArray?*/pages){
+		this.getIndexOfPage = function(/*DomNode*/pageNode, /*DomNode[]?*/pages){
 			if(!pages){
 				pages = this.getPages();
 			}
@@ -338,21 +371,21 @@ define("dojox/mobile/pageTurningUtils", [
 			return -1;
 		};
 
-		this.getNextPage = function(/*Node*/pageNode){
+		this.getNextPage = function(/*DomNode*/pageNode){
 			for(var n = pageNode.nextSibling; n; n = n.nextSibling){
 				if(n.nodeType === 1){ return n; }
 			}
 			return null;
 		};
 
-		this.getPreviousPage = function(/*Node*/pageNode){
+		this.getPreviousPage = function(/*DomNode*/pageNode){
 			for(var n = pageNode.previousSibling; n; n = n.previousSibling){
 				if(n.nodeType === 1){ return n; }
 			}
 			return null;
 		};
 
-		this.isPageTurned = function(/*Node*/pageNode){
+		this.isPageTurned = function(/*DomNode*/pageNode){
 			return pageNode.style.webkitTransform == "rotate(0deg)";
 		};
 
@@ -363,7 +396,7 @@ define("dojox/mobile/pageTurningUtils", [
 			}
 		};
 
-		this.onPageTurned = function(/*Node*/pageNode){
+		this.onPageTurned = function(/*DomNode*/ /*===== pageNode =====*/){
 			// summary:
 			//		Stub function to which your application connects 
 			//		to handle the event when each page is tured 
@@ -371,7 +404,7 @@ define("dojox/mobile/pageTurningUtils", [
 			//		Called just after each page is turned.
 		};
 
-		this.initCatalog = function(/*Node*/catalogNode){
+		this.initCatalog = function(/*DomNode*/catalogNode){
 			// summary:
 			//		Initializes the specified catalog/book.
 			// description:
@@ -412,11 +445,11 @@ define("dojox/mobile/pageTurningUtils", [
 			// summary:
 			//		Resets the catalog by adjust the state of child pages.
 			// description:
-			//		Adjust z-index and dogear show/hide state of each child page.
+			//		Adjust z-index and dog-ear show/hide state of each child page.
 			//		This function must be called when you add a new page 
 			//		or remove some page after initialization.
 			
-			// Adjust z-index and dogear of child pages
+			// Adjust z-index and dog-ear of child pages
 			var pages = this.getPages(),
 				len = pages.length,
 				base = this._getBaseZIndex();
@@ -436,7 +469,7 @@ define("dojox/mobile/pageTurningUtils", [
 			}
 		};
 
-		this.initPage = function(/*Node*/pageNode, /*Integer?*/dir){
+		this.initPage = function(/*DomNode*/pageNode, /*int?*/dir){
 			// summary:
 			//		Initializes the specified page.
 			// description:
@@ -445,7 +478,7 @@ define("dojox/mobile/pageTurningUtils", [
 			//		This function must be called when you add a new page after initialization.
 			// pageNode: DOMNode
 			//		The page node to be initialized.
-			// dir: Integer?
+			// dir: int?
 			//		Specified whether the page is turned or not at initialization.
 			//		This parameter should be either of 1 or -1.
 			//		If 1, the page is turned at initialization. If -1, it is not turned.
@@ -485,12 +518,12 @@ define("dojox/mobile/pageTurningUtils", [
 			this._turnPage(pageNode, dir, 0);
 		};
 
-		this.turnToNext = function(/*Float?*/duration){
+		this.turnToNext = function(/*Number?*/duration){
 			// summary:
 			//		Turns a page forward.
 			// description:
 			//		The current page is turned forward if it is not the last page of the book.
-			// duration: Float?
+			// duration: Number?
 			//		The duration of page turning animations by seconds. (ex. 1.5, 3, etc)
 			//		If this parameter is omitted, this.duration property value is used.
 			var nextPage = this.getNextPage(this._currentPageNode);
@@ -500,12 +533,12 @@ define("dojox/mobile/pageTurningUtils", [
 			}
 		};
 
-		this.turnToPrev = function(/*Float?*/duration){
+		this.turnToPrev = function(/*Number?*/duration){
 			// summary:
 			//		Turns a page backward.
 			// description:
 			//		The current page is turned backward if it is not the first page of the book.
-			// duration: Float?
+			// duration: Number?
 			//		The duration of page turning animations by seconds. (ex. 1.5, 3, etc)
 			//		If this parameter is omitted, this.duration property value is used.
 			var prevPage = this.getPreviousPage(this._currentPageNode);
@@ -515,10 +548,10 @@ define("dojox/mobile/pageTurningUtils", [
 			}
 		};
 
-		this.goTo = function(/*Integer*/index){
+		this.goTo = function(/*int*/index){
 			// summary:
 			//		Jumps to the specified page without page turning animations.
-			// index: Integer
+			// index: int
 			//		The index of the page you want to jump to.
 			var pages = this.getPages();
 			if(this._currentPageNode === pages[index] || pages.length <= index) { return; }
@@ -529,7 +562,9 @@ define("dojox/mobile/pageTurningUtils", [
 			}
 		};
 
-		this._turnPage = function(/*Node*/pageNode, /*Integer*/dir, /*Float?*/duration){
+		this._turnPage = function(/*DomNode*/pageNode, /*int*/dir, /*Number?*/duration){
+			// tags:
+			//		private
 			var childNodes = this.getChildren(pageNode),
 				d = ((typeof duration !== 'undefined') ? duration : this.duration) + "s",
 				p = (dir === 1) ? this._styleParams.turnForward : this._styleParams.turnBackward;
@@ -544,7 +579,7 @@ define("dojox/mobile/pageTurningUtils", [
 			p.back.webkitTransitionDuration = d;
 			domStyle.set(childNodes[1], p.back); // backNode
 			
-			// Adjust z-index and dogear
+			// Adjust z-index and dog-ear
 			var pages = this.getPages(),
 				nextPage = this.getNextPage(pageNode),
 				len = pages.length,
@@ -562,14 +597,18 @@ define("dojox/mobile/pageTurningUtils", [
 			}
 		};
 
-		this.showDogear = function(/*Node*/pageNode){
+		this.showDogear = function(/*DomNode*/pageNode){
+			// summary:
+			//		Shows the dog-ear.
 			var childNodes = this.getChildren(pageNode);;
 			domStyle.set(pageNode, "overflow", "");
 			childNodes[1] && domStyle.set(childNodes[1], "display", ""); // backNode
 			childNodes[2] && domStyle.set(childNodes[2], "display", this.turnfrom === "bottom" ? "none" : ""); // shadowNode
 		};
 
-		this.hideDogear = function(/*Node*/pageNode){
+		this.hideDogear = function(/*DomNode*/pageNode){
+			// summary:
+			//		Hides the dog-ear.
 			if(this.turnfrom === "bottom"){ return; }
 			
 			var childNodes = this.getChildren(pageNode);

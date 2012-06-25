@@ -1,2 +1,66 @@
 //>>built
-define("dojox/app/controllers/Load",["dojo/_base/lang","dojo/_base/declare","dojo/on","dojo/Deferred","dojo/when","../Controller","../View"],function(_1,_2,on,_3,_4,_5,_6){return _2("dojox.app.controllers.Load",_5,{constructor:function(_7,_8){this.events={"load":this.load};this.inherited(arguments);},load:function(_9){var _a=_9.parent||this.app;var _b=_9.viewId||"";var _c=_b.split(",");var _d=_c.shift();var _e=_c.join(",");var _f=this.loadChild(_a,_d,_e);if(_9.callback){_4(_f,_9.callback);}return _f;},createChild:function(_10,_11,_12){var id=_10.id+"_"+_11;if(_10.children[id]){return _10.children[id];}var _13=new _6({"app":this.app,"id":id,"name":_11,"parent":_10});_10.children[id]=_13;return _13.start();},loadChild:function(_14,_15,_16){if(!_14){throw Error("No parent for Child '"+_15+"'.");}if(!_15){var _17=_14.defaultView?_14.defaultView.split(","):"default";_15=_17.shift();_16=_17.join(",");}var _18=new _3();var _19;try{_19=this.createChild(_14,_15,_16);}catch(ex){_18.reject("load child '"+_15+"' error.");return _18.promise;}_4(_19,_1.hitch(this,function(_1a){if(!_16&&_1a.defaultView){_16=_1a.defaultView;}var _1b=_16.split(",");_15=_1b.shift();_16=_1b.join(",");if(_15){var _1c=this.loadChild(_1a,_15,_16);_4(_1c,function(){_18.resolve();},function(){_18.reject("load child '"+_15+"' error.");});}else{_18.resolve();}}),function(){_18.reject("load child '"+_15+"' error.");});return _18.promise;}});});
+define("dojox/app/controllers/Load",["dojo/_base/lang","dojo/_base/declare","dojo/on","dojo/Deferred","dojo/when","../Controller","../View"],function(_1,_2,on,_3,_4,_5,_6){
+return _2("dojox.app.controllers.Load",_5,{constructor:function(_7,_8){
+this.events={"load":this.load};
+this.inherited(arguments);
+},load:function(_9){
+var _a=_9.parent||this.app;
+var _b=_9.viewId||"";
+var _c=_b.split(",");
+var _d=_c.shift();
+var _e=_c.join(",");
+var _f=_9.params||"";
+var def=this.loadChild(_a,_d,_e,_f);
+if(_9.callback){
+_4(def,_9.callback);
+}
+return def;
+},createChild:function(_10,_11,_12,_13){
+var id=_10.id+"_"+_11;
+if(_10.children[id]){
+return _10.children[id];
+}
+var _14=new _6(_1.mixin({"app":this.app,"id":id,"name":_11,"parent":_10},{"params":_13}));
+_10.children[id]=_14;
+return _14.start();
+},loadChild:function(_15,_16,_17,_18){
+if(!_15){
+throw Error("No parent for Child '"+_16+"'.");
+}
+if(!_16){
+var _19=_15.defaultView?_15.defaultView.split(","):"default";
+_16=_19.shift();
+_17=_19.join(",");
+}
+var _1a=new _3();
+var _1b;
+try{
+_1b=this.createChild(_15,_16,_17,_18);
+}
+catch(ex){
+_1a.reject("load child '"+_16+"' error.");
+return _1a.promise;
+}
+_4(_1b,_1.hitch(this,function(_1c){
+if(!_17&&_1c.defaultView){
+_17=_1c.defaultView;
+}
+var _1d=_17.split(",");
+_16=_1d.shift();
+_17=_1d.join(",");
+if(_16){
+var _1e=this.loadChild(_1c,_16,_17,_18);
+_4(_1e,function(){
+_1a.resolve();
+},function(){
+_1a.reject("load child '"+_16+"' error.");
+});
+}else{
+_1a.resolve();
+}
+}),function(){
+_1a.reject("load child '"+_16+"' error.");
+});
+return _1a.promise;
+}});
+});

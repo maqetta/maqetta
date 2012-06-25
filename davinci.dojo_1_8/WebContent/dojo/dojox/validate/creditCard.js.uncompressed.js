@@ -1,21 +1,17 @@
 define("dojox/validate/creditCard", ["dojo/_base/lang", "./_base"], function(lang, validate){
-/*=====
 
-	dojox.validate.creditCard = {
+/*=====
+	return {
 		// summary:
 		//		Module provides validation functions for Credit Cards, using account number
-		//		rules in conjunction with the Luhn algorigthm, with a plugable card info database.
+		//		rules in conjunction with the Luhn algorigthm, with a pluggable card info database.
 	};
-
-	validate = dojox.validate;
-
 =====*/
 
 validate._cardInfo = {
-	// summary: A dictionary list of credit card abbreviations
-	//
+	// summary:
+	//		A dictionary list of credit card abbreviations
 	// description:
-	//
 	//		A hash of valid CC abbreviations and regular expressions
 	//
 	//		mc: Mastercard
@@ -28,7 +24,7 @@ validate._cardInfo = {
 	//		jcb: JCB
 	//		er: Enroute
 	//
-	//	example:
+	// example:
 	//		Define your own card, gift-card, whatever. Starts with 7,
 	//		is 15 total length.
 	//	| dojo.mixin(dojox.validate._cardInfo, {
@@ -47,19 +43,16 @@ validate._cardInfo = {
 };
 
 validate.isValidCreditCard = function(value, ccType){
-	// summary: Validate a credit card number by type with Luhn checking.
-	//
+	// summary:
+	//		Validate a credit card number by type with Luhn checking.
 	// description:
 	//		Checks if a credit card type matches the # scheme in a passed value, and if
 	//		the Luhn checksum is accurate (unless its an Enroute card, in which case
 	//		the checkSum is skipped), returning a Boolean to check against.
-	//
 	// value: String|Int
 	//		A Value (credit card number) to validate
-	//
 	// ccType: String
 	//		A credit-card abbreviation.
-	//
 	// example:
 	// |	if(dojox.validate.isValidCreditCard("12345", "mc")){
 	// |		console.log('inconceivable');
@@ -72,10 +65,8 @@ validate.isValidCreditCard = function(value, ccType){
 validate.isValidCreditCardNumber = function(value, ccType){
 	// summary:
 	//		Checks if value matches the pattern for that card or any card types if none is specified
-	//
 	// value: String|Int
 	//		CC #, white spaces and dashes are ignored
-	//
 	// ccType: String?
 	//		One of the abbreviation values in `dojox.validate._cardInfo` --
 	//		if Omitted, function returns a `|` delimited string of matching card types,
@@ -100,10 +91,6 @@ validate.isValidCreditCardNumber = function(value, ccType){
 validate.isValidCvv = function(/* String|Int */value, /* String */ccType) {
 	// summary:
 	//  	Validate the security code (CCV) for a passed credit-card type.
-	//
-	// description:
-	//
-	// value:
 	
 	if(!lang.isString(value)){
 		value = String(value);
@@ -124,5 +111,6 @@ validate.isValidCvv = function(/* String|Int */value, /* String */ccType) {
 	return !!format && value.length && validate.isNumberFormat(value, { format: format }); // Boolean
 };
 
+// TODO: return functions defined in this module, rather than sticking them into "validate"
 return validate;
 });

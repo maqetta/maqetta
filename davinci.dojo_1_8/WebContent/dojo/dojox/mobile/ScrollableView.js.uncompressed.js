@@ -17,22 +17,22 @@ define("dojox/mobile/ScrollableView", [
 		// summary:
 		//		A container that has a touch scrolling capability.
 		// description:
-		//		ScrollableView is a subclass of View (=dojox.mobile.View).
+		//		ScrollableView is a subclass of View (dojox/mobile/View).
 		//		Unlike the base View class, ScrollableView's domNode always stays
 		//		at the top of the screen and its height is "100%" of the screen.
 		//		Inside this fixed domNode, the containerNode scrolls. The browser's
 		//		default scrolling behavior is disabled, and the scrolling mechanism is
-		//		re-implemented in JavaScript. Thus the user does not need to use the
+		//		reimplemented in JavaScript. Thus the user does not need to use the
 		//		two-finger operation to scroll the inner DIV (containerNode).
 		//		The main purpose of this widget is to realize fixed-positioned header
 		//		and/or footer bars.
 
 		// scrollableParams: Object
-		//		Parameters for dojox.mobile.scrollable.init().
+		//		Parameters for dojox/mobile/scrollable.init().
 		scrollableParams: null,
 
 		// keepScrollPos: Boolean
-		//		Overrides dojox.mobile.View.keepScrollPos.
+		//		Overrides dojox/mobile/View/keepScrollPos.
 		keepScrollPos: false,
 
 		constructor: function(){
@@ -68,17 +68,17 @@ define("dojox/mobile/ScrollableView", [
 			});
 		},
 
-		isTopLevel: function(e){
+		isTopLevel: function(/*Event*/e){
 			// summary:
 			//		Returns true if this is a top-level widget.
-			//		Overrides dojox.mobile.scrollable.
+			//		Overrides dojox/mobile/scrollable.isTopLevel.
 			var parent = this.getParent && this.getParent();
 			return (!parent || !parent.resize); // top level widget
 		},
 
 		addFixedBar: function(/*Widget*/widget){
 			// summary:
-			//		Adds a vew local fixed bar to this widget.
+			//		Adds a view local fixed bar to this widget.
 			// description:
 			//		This method can be used to programmatically add a view local
 			//		fixed bar to ScrollableView. The bar is appended to this
@@ -118,14 +118,14 @@ define("dojox/mobile/ScrollableView", [
 
 		onAfterTransitionIn: function(moveTo, dir, transition, context, method){
 			// summary:
-			//		Overrides View#onAfterTransitionIn to flash the scroll bar
+			//		Overrides View.onAfterTransitionIn to flash the scroll bar
 			//		after performing a view transition.
 			this.flashScrollBar();
 		},
 
 		getChildren: function(){
 			// summary:
-			//		Overrides _WidgetBase#getChildren to add local fixed bars,
+			//		Overrides _WidgetBase.getChildren to add local fixed bars,
 			//		which are not under containerNode, to the children array.
 			var children = this.inherited(arguments);
 			if(this.fixedHeader && this.fixedHeader.parentNode === this.domNode){

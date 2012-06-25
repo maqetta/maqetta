@@ -2,15 +2,20 @@ define("dijit/_BidiSupport", ["./_WidgetBase"], function(_WidgetBase){
 
 	// module:
 	//		dijit/_BidiSupport
-	// summary:
-	//		Module that deals with BIDI, special with the auto
-	//		direction if needed without changing the GUI direction.
-	//		Including this module will extend _WidgetBase with BIDI related methods.
-	// description:
-	//		There's a special need for displaying BIDI text in rtl direction
-	//		in ltr GUI, sometimes needed auto support.
-	//		In creation of widget, if it's want to activate this class,
-	//		the widget should define the "textDir".
+
+	/*=====
+	return function(){
+		// summary:
+		//		Module that deals with BIDI, special with the auto
+		//		direction if needed without changing the GUI direction.
+		//		Including this module will extend _WidgetBase with BIDI related methods.
+		// description:
+		//		There's a special need for displaying BIDI text in rtl direction
+		//		in ltr GUI, sometimes needed auto support.
+		//		In creation of widget, if it's want to activate this class,
+		//		the widget should define the "textDir".
+	};
+	=====*/
 
 	_WidgetBase.extend({
 
@@ -63,14 +68,14 @@ define("dijit/_BidiSupport", ["./_WidgetBase"], function(_WidgetBase){
 			// summary:
 			//		Wraps by UCC (Unicode control characters) option's text according to this.textDir
 			// option:
-			//		The element (<option>) we wrapping the text for.
+			//		The element (`<option>`) we wrapping the text for.
 			// text:
 			//		The text to be wrapped.
 			// description:
-			//		There's a dir problem with some HTML elements. For some elements (e.g. <option>, <select>)
+			//		There's a dir problem with some HTML elements. For some elements (e.g. `<option>`, `<select>`)
 			//		defining the dir in different direction then the GUI orientation, won't display correctly. 
 			//		FF 3.6 will change the alignment of the text in option - this doesn't follow the bidi standards (static text
-			//		should be aligned following GUI direction). IE8 and Opera11.10 completely ignore dir setting for <option>.
+			//		should be aligned following GUI direction). IE8 and Opera11.10 completely ignore dir setting for `<option>`.
 			//		Therefore the only solution is to use UCC (Unicode  control characters) to display the text in correct orientation.
 			//		This function saves the original text value for later restoration if needed, for example if the textDir will change etc.
 			if(this.textDir){
@@ -84,7 +89,7 @@ define("dijit/_BidiSupport", ["./_WidgetBase"], function(_WidgetBase){
 			// summary:
 			//		Restores the text of origObj, if needed, after enforceTextDirWithUcc, e.g. set("textDir", textDir).
 			// origObj:
-			//		The element (<option>) to restore.
+			//		The element (`<option>`) to restore.
 			// description:
 			//		Sets the text of origObj to origObj.originalText, which is the original text, without the UCCs.
 			//		The function than removes the originalText from origObj!

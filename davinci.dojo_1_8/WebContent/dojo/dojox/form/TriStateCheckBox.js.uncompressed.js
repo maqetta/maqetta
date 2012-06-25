@@ -14,32 +14,29 @@ define("dojox/form/TriStateCheckBox", [
 	"dojo/NodeList-dom" // NodeList.addClass/removeClass
 ], function(kernel, declare, array, lang, event, query, domAttr, template, Button, _ToggleButtonMixin){
 
-	// module:
-	//		dojox/form/TriStateCheckBox
+return declare("dojox.form.TriStateCheckBox", [Button, _ToggleButtonMixin], {
 	// summary:
 	//		Checkbox with three states
-
-	return declare("dojox.form.TriStateCheckBox", [Button, _ToggleButtonMixin], {
+	
 		templateString: template,
 
 		baseClass: "dojoxTriStateCheckBox",
 
 		// type: [private] String
-		//		type attribute on <input> node.
-		//		Overrides `dijit.form.Button.type`.  Users should not change this value.
+		//		type attribute on `<input>` node.
+		//		Overrides `dijit/form/Button.type`.  Users should not change this value.
 		type: "checkbox",
 
 
 		states: "",
-		/*=====
+
 		// states: Array
 		//		States of TriStateCheckBox.
-		//		The value of This.checked should be one of these three states.
+		//		The value of This.checked should be one of these three states:
+		//		[false, true, "mixed"]
 		states: [false, true, "mixed"],
-		=====*/
 
 		_stateLabels: null,
-		/*=====
 		// _stateLabels: Object
 		//		These characters are used to replace the image to show
 		//		current state of TriStateCheckBox in high contrast mode.
@@ -48,10 +45,7 @@ define("dojox/form/TriStateCheckBox", [
 				"True": '&#8730;',
 				"Mixed": '&#9632'
 		},
-		=====*/
 
-		stateValues: null,
-		/*=====
 		// stateValues: Object
 		//		The values of the TriStateCheckBox in corresponding states.
 		stateValues:	{
@@ -59,8 +53,6 @@ define("dojox/form/TriStateCheckBox", [
 				"True": "on",
 				"Mixed": "mixed"
 		},
-		=====*/
-
 		// _currentState: Integer
 		//		The current state of the TriStateCheckBox
 		_currentState: 0,
@@ -126,7 +118,7 @@ define("dojox/form/TriStateCheckBox", [
 			//		true, false or 'mixed'
 			// description:
 			//		Controls the state of the TriStateCheckBox. Set this.checked,
-			//		this._currentState, value attribute of the <input type=checkbox>
+			//		this._currentState, value attribute of the `<input type=checkbox>`
 			//		according to the value of 'checked'.			
 			var stateIndex = array.indexOf(this.states, checked), changed = false;
 			if(stateIndex >= 0){
@@ -187,7 +179,7 @@ define("dojox/form/TriStateCheckBox", [
 			//		Handler for value = attribute to constructor, and also calls to
 			//		set('value', val).
 			// description:
-			//		During initialization, just saves as attribute to the <input type=checkbox>.
+			//		During initialization, just saves as attribute to the `<input type=checkbox>`.
 			//
 			//		After initialization,
 			//		when passed a boolean or the string 'mixed', controls the state of the

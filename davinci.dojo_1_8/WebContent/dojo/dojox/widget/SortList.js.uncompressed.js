@@ -28,11 +28,11 @@ dojo.declare("dojox.widget.SortList",
 	descending: true,
 
 	// selected: Array
-	//		A list of the selected <li> nodes at any given time.
+	//		A list of the selected `<li>` nodes at any given time.
 	selected: null,
 
 	// sortable: Boolean
-	//	toggle to enable/disable sorting
+	//		toggle to enable/disable sorting
 	sortable: true,
 
 	// FIXME: this is really simple store support
@@ -73,7 +73,8 @@ dojo.declare("dojox.widget.SortList",
 	},
 
 	resize: function(){
-		// summary: do our additional calculations when resize() is called by or in a parent
+		// summary:
+		//		do our additional calculations when resize() is called by or in a parent
 		this.inherited(arguments);
 		// FIXME:
 		// the 10 comes from the difference between the contentBox and calculated height
@@ -85,7 +86,8 @@ dojo.declare("dojox.widget.SortList",
 	},
 	
 	onSort: function(/* Event */e){
-		// summary: sort the data, and style the nodes.
+		// summary:
+		//		sort the data, and style the nodes.
 
 		var arr = dojo.query("li",this.domNode);
 		if (this.sortable){
@@ -103,20 +105,23 @@ dojo.declare("dojox.widget.SortList",
 	},
 	
 	_set: function(/* Event */e){
-		// summary: set hover state
+		// summary:
+		//		set hover state
 		if(e.target !== this.bodyWrapper){
 			dojo.addClass(e.target,"sortListItemHover");
 		}
 	},
 
-	_unset: function(/* Event */e){
-		// summary: remove hover state (FIXME: combine with _set?)
+	_unset: function(/* Event */ e){
+		// summary:
+		//		remove hover state (FIXME: combine with _set?)
 		dojo.removeClass(e.target,"sortListItemHover");
 	},
 
-	_handleClick: function(/* Event */e){
-		// summary: click listener for data portion of widget. toggle selected state
-		//	of node, and update this.selected array accordingly
+	_handleClick: function(/* Event */ e){
+		// summary:
+		//		click listener for data portion of widget. toggle selected state
+		//		of node, and update this.selected array accordingly
 		dojo.toggleClass(e.target,"sortListItemSelected");
 		e.target.focus();
 		this._updateValues(e.target.innerHTML);
@@ -132,7 +137,8 @@ dojo.declare("dojox.widget.SortList",
 	},
 
 	_sorter: function(a,b){
-		// summary: a basic sort function, use query sort, or keep this?
+		// summary:
+		//		a basic sort function, use query sort, or keep this?
 		var aStr = a.innerHTML;
 		var bStr = b.innerHTML;
 		if(aStr>bStr){ return 1; }
@@ -140,13 +146,15 @@ dojo.declare("dojox.widget.SortList",
 		return 0;
 	},
 
-	setTitle: function(/* String */title){
-		// summary: Sets the widget title to a String
+	setTitle: function(/* String */ title){
+		// summary: 
+		//		Sets the widget title to a String
 		this.focusNode.innerHTML = this.title = title;
 	},
 
 	onChanged: function(){
-		// summary: stub function, passes the last changed item, and is fired after current state
+		// summary:
+		//		stub function, passes the last changed item, and is fired after current state
 	}
 	
 });

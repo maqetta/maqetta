@@ -33,9 +33,6 @@ define("dojox/form/Uploader", [
 	//
 
 declare("dojox.form.Uploader", [uploader, Button], {
-
-	// Version: 1.6
-
 	// summary:
 	//		A widget that creates a stylable file-input button, with optional multi-file selection,
 	//		using only HTML elements. Non-HTML5 browsers have fallback options of Flash or an iframe.
@@ -52,6 +49,9 @@ declare("dojox.form.Uploader", [uploader, Button], {
 	//		If the browser supports a file-input with the "multiple" attribute, that will be used.
 	//		If the browser does not support "multiple" (ergo, IE) multiple inputs are used,
 	//		one for each selection.
+	//
+	//		Version: 1.6
+
 
 	// uploadOnSelect: Boolean
 	//		If true, uploads immediately after a file has been selected. If false,

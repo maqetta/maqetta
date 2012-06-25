@@ -16,7 +16,7 @@ define("dojox/mobile/SpinWheelTimePicker", [
 		//		A SpinWheel-based time picker widget.
 		// description:
 		//		SpinWheelTimePicker is a time picker widget. It is a subclass of
-		//		dojox.mobile.SpinWheel. It has the hour and minute slots.
+		//		dojox/mobile/SpinWheel. It has two slots: hour and minute.
 
 		slotClasses: [
 			SpinWheelSlot,

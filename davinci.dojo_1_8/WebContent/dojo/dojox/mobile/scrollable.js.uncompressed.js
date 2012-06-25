@@ -15,11 +15,11 @@ define("dojox/mobile/scrollable", [
 	// summary:
 	//		Mixin for enabling touch scrolling capability.
 	// description:
-	//		Mobile WebKit browsers do not allow scrolling inner DIVs. (You need
-	//		the two-finger operation to scroll them.)
+	//		Mobile WebKit browsers do not allow scrolling inner DIVs. (For instance, 
+	//		on iOS you need the two-finger operation to scroll them.)
 	//		That means you cannot have fixed-positioned header/footer bars.
 	//		To solve this issue, this module disables the browsers default scrolling
-	//		behavior, and re-builds its own scrolling machinery by handling touch
+	//		behavior, and rebuilds its own scrolling machinery by handling touch
 	//		events. In this module, this.domNode has height "100%" and is fixed to
 	//		the window, and this.containerNode scrolls. If you place a bar outside
 	//		of this.containerNode, then it will be fixed-positioned while
@@ -32,7 +32,7 @@ define("dojox/mobile/scrollable", [
 	//		- Simulates the flick operation using animation.
 	//		- Respects header/footer bars if any.
 
-	// TODO: shouldn't be referencing this dojox.mobile variable, would be better to require the mobile.js module
+	// TODO: shouldn't be referencing this dojox/mobile variable, would be better to require the mobile.js module
 	var dm = lang.getObject("dojox.mobile", true);
 
 	// feature detection
@@ -340,6 +340,8 @@ define("dojox/mobile/scrollable", [
 		},
 
 		onTouchStart: function(e){
+			// summary:
+			//		User-defined function to handle touchStart events.
 			if(this.disableTouchScroll){ return; }
 			if(this._conn && (new Date()).getTime() - this.startTime < 500){
 				return; // ignore successive onTouchStart calls
@@ -373,6 +375,8 @@ define("dojox/mobile/scrollable", [
 		},
 
 		onTouchMove: function(e){
+			// summary:
+			//		User-defined function to handle touchMove events.
 			if(this._locked){ return; }
 			var x = e.touches ? e.touches[0].pageX : e.clientX;
 			var y = e.touches ? e.touches[0].pageY : e.clientY;
@@ -455,7 +459,9 @@ define("dojox/mobile/scrollable", [
 			this._posY.push(y);
 		},
 
-		onTouchEnd: function(e){
+		onTouchEnd: function(/*Event*/e){
+			// summary:
+			//		User-defined function to handle touchEnd events.
 			if(this._locked){ return; }
 			var speed = this._speed = {x:0, y:0};
 			var dim = this._dim;
@@ -591,20 +597,20 @@ define("dojox/mobile/scrollable", [
 		adjustDestination: function(/*Object*/to, /*Object*/pos, /*Object*/dim){
 			// summary:
 			//		A stub function to be overridden by subclasses.
+			// description:
+			//		This function is called from onTouchEnd(). The purpose is to give its
+			//		subclasses a chance to adjust the destination position. If this
+			//		function returns false, onTouchEnd() returns immediately without
+			//		performing scroll.
 			// to:
 			//		The destination position. An object with x and y.
 			// pos:
 			//		The current position. An object with x and y.
 			// dim:
-			//		Dimension information returned by getDim().
-			// description:
-			//		This function is called from onTouchEnd(). It is to give its
-			//		subclasses a chance to adjust the destination position. If this
-			//		function returns false, onTouchEnd() returns immediately without
-			//		performing scroll.
+			//		Dimension information returned by getDim().			
 
 			// subclass may want to implement
-			return true;
+			return true; // Boolean
 		},
 
 		abort: function(){
@@ -621,7 +627,7 @@ define("dojox/mobile/scrollable", [
 
 		stopAnimation: function(){
 			// summary:
-			//		Stop the currently running animation.
+			//		Stops the currently running animation.
 			domClass.remove(this.containerNode, "mblScrollableScrollTo2");
 			if(this._scrollBarV){
 				this._scrollBarV.className = "";
@@ -766,7 +772,7 @@ define("dojox/mobile/scrollable", [
 
 		getPos: function(){
 			// summary:
-			//		Get the top position in the midst of animation
+			//		Gets the top position in the midst of animation.
 			if(has("webkit")){
 				var s = win.doc.defaultView.getComputedStyle(this.containerNode, '');
 				if(!this._useTopLeft){
@@ -789,7 +795,7 @@ define("dojox/mobile/scrollable", [
 
 		getDim: function(){
 			// summary:
-			//		Returns various internal dimension information for calculation.
+			//		Returns various internal dimensional information needed for calculation.
 
 			var d = {};
 			// content width/height
@@ -907,12 +913,12 @@ define("dojox/mobile/scrollable", [
 		calcScrollBarPos: function(/*Object*/to){
 			// summary:
 			//		Calculates the scroll bar position.
-			// to:
-			//		The scroll destination position. An object with x and y.
-			//		ex. {x:0, y:-5}
 			// description:
 			//		Given the scroll destination position, calculates the top and/or
 			//		the left of the scroll bar(s). Returns an object with x and y.
+			// to:
+			//		The scroll destination position. An object with x and y.
+			//		ex. {x:0, y:-5}			
 
 			var pos = {};
 			var dim = this._dim;
@@ -997,6 +1003,9 @@ define("dojox/mobile/scrollable", [
 		},
 
 		_runSlideAnimation: function(/*Object*/from, /*Object*/to, /*Number*/duration, /*String*/easing, /*DomNode*/node, /*Number*/idx){
+			// tags:
+			//		private
+			
 			// idx: 0:scrollbarV, 1:scrollbarH, 2:content
 			if(has("webkit")){
 				if(!this._useTopLeft){
@@ -1175,7 +1184,7 @@ define("dojox/mobile/scrollable", [
 
 		setKeyframes: function(/*Object*/from, /*Object*/to, /*Number*/idx){
 			// summary:
-			//		Programmatically set key frames for the scroll animation.
+			//		Programmatically sets key frames for the scroll animation.
 
 			if(!dm._rule){
 				dm._rule = [];
@@ -1204,7 +1213,10 @@ define("dojox/mobile/scrollable", [
 		},
 
 		setSelectable: function(/*DomNode*/node, /*Boolean*/selectable){
-			// dojo.setSelectable has dependency on dojo.query. Re-define our own.
+			// summary
+			//		Sets the given node as selectable or unselectable.
+			 
+			// dojo.setSelectable has dependency on dojo.query. Redefine our own.
 			node.style.KhtmlUserSelect = selectable ? "auto" : "none";
 			node.style.MozUserSelect = selectable ? "" : "none";
 			node.onselectstart = selectable ? null : function(){return false;};
@@ -1220,5 +1232,28 @@ define("dojox/mobile/scrollable", [
 
 	lang.setObject("dojox.mobile.scrollable", Scrollable);
 
+	/*=====
+    return {
+		// summary:
+		//		Mixin for enabling touch scrolling capability.
+		// description:
+		//		Mobile WebKit browsers do not allow scrolling inner DIVs. (For instance, 
+		//		on iOS you need the two-finger operation to scroll them.)
+		//		That means you cannot have fixed-positioned header/footer bars.
+		//		To solve this issue, this module disables the browsers default scrolling
+		//		behavior, and rebuilds its own scrolling machinery by handling touch
+		//		events. In this module, this.domNode has height "100%" and is fixed to
+		//		the window, and this.containerNode scrolls. If you place a bar outside
+		//		of this.containerNode, then it will be fixed-positioned while
+		//		this.containerNode is scrollable.
+		//
+		//		This module has the following features:
+		//		- Scrolls inner DIVs vertically, horizontally, or both.
+		//		- Vertical and horizontal scroll bars.
+		//		- Flashes the scroll bars when a view is shown.
+		//		- Simulates the flick operation using animation.
+		//		- Respects header/footer bars if any.
+	};
+    =====*/
 	return Scrollable;
 });

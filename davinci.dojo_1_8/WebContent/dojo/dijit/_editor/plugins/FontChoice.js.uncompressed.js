@@ -19,8 +19,6 @@ define("dijit/_editor/plugins/FontChoice", [
 
 // module:
 //		dijit/_editor/plugins/FontChoice
-// summary:
-//		fontchoice, fontsize, and formatblock editor plugins
 
 
 var _FontDropDown = declare("dijit._editor.plugins._FontDropDown",

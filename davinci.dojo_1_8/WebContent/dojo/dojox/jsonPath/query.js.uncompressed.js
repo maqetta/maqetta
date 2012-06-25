@@ -2,12 +2,15 @@
 define("dojox/jsonPath/query", ["dijit","dojo","dojox"], function(dijit,dojo,dojox){
 dojo.provide("dojox.jsonPath.query");
 
-dojox.jsonPath.query = function(/*Object*/obj, /*String*/expr, /*Object*/arg){
-	// summaRy
-	// 	Perform jsonPath query `expr` on javascript object or json string `obj`
-	//	obj - object || json string to perform query on
-	//	expr - jsonPath expression (string) to be evaluated
-	//	arg - {}special arugments.
+dojox.jsonPath.query = function(/*Object*/ obj, /*String*/ expr, /*Object*/ arg){
+	// summary:
+	//		Perform jsonPath query `expr` on javascript object or json string `obj`
+	// obj:
+	//		object || json string to perform query on
+	// expr:
+	//		jsonPath expression (string) to be evaluated
+	// arg:
+	//		{} special arguments.
 	//		resultType: "VALUE"||"BOTH"||"PATH"} (defaults to value)
 	//		evalType: "RESULT"||"ITEM"} (defaults to ?)
 

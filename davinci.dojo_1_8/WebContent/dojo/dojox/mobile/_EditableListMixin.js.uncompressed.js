@@ -1,4 +1,3 @@
-
 // TODO: auto scroll?
 
 define("dojox/mobile/_EditableListMixin", [
@@ -24,17 +23,18 @@ define("dojox/mobile/_EditableListMixin", [
 		//		A rounded rectangle list.
 		// description:
 		//		EditableRoundRectList is a rounded rectangle list, which can be used to
-		//		display a group of items. Each item must be
-		//		dojox.mobile.ListItem.
+		//		display a group of items. Each item must be	a dojox/mobile/ListItem.
 
 		rightIconForEdit: "mblDomButtonGrayKnob",
 		deleteIconForEdit: "mblDomButtonRedCircleMinus",
 
 		// isEditing: Boolean
-		//		A read-only flag that indicates whether the widget is in the edit mode.
+		//		A read-only flag that indicates whether the widget is in the editing mode.
 		isEditing: false,
 
 		destroy: function(){
+			// summary:
+			//		Destroys the widget.
 			if(this._blankItem){
 				this._blankItem.destroy();
 			}
@@ -42,6 +42,8 @@ define("dojox/mobile/_EditableListMixin", [
 		},
 
 		_setupMoveItem: function(/*DomNode*/node){
+			// tags:
+			//		private
 			domStyle.set(node, {
 				width: domGeometry.getContentBox(node).w + "px",
 				top: node.offsetTop + "px"
@@ -50,6 +52,8 @@ define("dojox/mobile/_EditableListMixin", [
 		},
 
 		_resetMoveItem: function(/*DomNode*/node){
+			// tags:
+			//		private
 			setTimeout(function(){ // iPhone needs setTimeout
 				domClass.remove(node, "mblListItemFloat");
 				domStyle.set(node, {
@@ -77,12 +81,14 @@ define("dojox/mobile/_EditableListMixin", [
 
 		onClick: function(/*Event*/ /*===== e =====*/){
 			// summary:
-			//		User defined function to handle clicks
+			//		User-defined function to handle clicks.
 			// tags:
 			//		callback
 		},
 
 		_onTouchStart: function(e){
+			// tags:
+			//		private
 			if(this.getChildren().length <= 1){ return; }
 			if(!this._blankItem){
 				this._blankItem = new ListItem();
@@ -118,6 +124,8 @@ define("dojox/mobile/_EditableListMixin", [
 		},
 
 		_onTouchMove: function(e){
+			// tags:
+			//		private
 			var y = e.touches ? e.touches[0].pageY : e.pageY;
 			var index = this._pos.length - 1;
 			for(var i = 1; i < this._pos.length; i++){
@@ -140,6 +148,8 @@ define("dojox/mobile/_EditableListMixin", [
 		},
 
 		_onTouchEnd: function(e){
+			// tags:
+			//		private
 			var ref = this._blankItem.getNextSibling();
 			ref = ref ? ref.domNode : null;
 			this.containerNode.insertBefore(this._movingItem.domNode, ref);
@@ -151,6 +161,8 @@ define("dojox/mobile/_EditableListMixin", [
 		},
 
 		startEdit: function(){
+			// summary:
+			//		Starts the editing.
 			this.isEditing = true;
 			domClass.add(this.domNode, "mblEditableRoundRectList");
 			array.forEach(this.getChildren(), function(child){
@@ -172,6 +184,8 @@ define("dojox/mobile/_EditableListMixin", [
 		},
 
 		endEdit: function(){
+			// summary:
+			//		Ends the editing.
 			domClass.remove(this.domNode, "mblEditableRoundRectList");
 			array.forEach(this.getChildren(), function(child){
 				child.rightIconNode.style.display = "none";

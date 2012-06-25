@@ -8,14 +8,13 @@ define("dijit/form/_FormValueMixin", [
 
 	// module:
 	//		dijit/form/_FormValueMixin
-	// summary:
-	//		Mixin for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
 
 	return declare("dijit.form._FormValueMixin", _FormWidgetMixin, {
 		// summary:
-		//		Mixin for widgets corresponding to native HTML elements such as <input> or <select> that have user changeable values.
+		//		Mixin for widgets corresponding to native HTML elements such as `<input>` or `<select>`
+		//		that have user changeable values.
 		// description:
-		//		Each _FormValueMixin represents a single input value, and has a (possibly hidden) <input> element,
+		//		Each _FormValueMixin represents a single input value, and has a (possibly hidden) `<input>` element,
 		//		to which it serializes it's input value, so that form submission (either normal submission or via FormBind?)
 		//		works as expected.
 

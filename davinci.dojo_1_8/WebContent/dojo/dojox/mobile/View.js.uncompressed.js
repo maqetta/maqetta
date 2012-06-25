@@ -228,7 +228,7 @@ define("dojox/mobile/View", [
 			//		The id of the transition destination view which resides in
 			//		the current page.
 			//		If the value has a hash sign ('#') before the id
-			//		(e.g. #view1) and the dojo.hash module is loaded by the user
+			//		(e.g. #view1) and the dojo/hash module is loaded by the user
 			//		application, the view transition updates the hash in the
 			//		browser URL so that the user can bookmark the destination
 			//		view. In this case, the user can also use the browser's
@@ -313,7 +313,7 @@ define("dojox/mobile/View", [
 			var fromNode = this.domNode;
 			var fromTop = fromNode.offsetTop;
 			toNode = this.toNode = dom.byId(toNode);
-			if(!toNode){ console.log("dojox.mobile.View#performTransition: destination view not found: "+detail.moveTo); return; }
+			if(!toNode){ console.log("dojox/mobile/View.performTransition: destination view not found: "+detail.moveTo); return; }
 			toNode.style.visibility = "hidden";
 			toNode.style.display = "";
 			this._fixViewState(toNode);

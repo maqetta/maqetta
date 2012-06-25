@@ -4,7 +4,6 @@ function(kernel, lang, declare, domClass, domConstruct, arrayUtil, domProp, domS
 
 kernel.experimental("dojox.layout.TableContainer");
 
-/*===== var LayoutWidget = dijit.layout._LayoutWidget; =====*/
 var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	// summary:
 	//		A container that lays out its child widgets in a table layout.

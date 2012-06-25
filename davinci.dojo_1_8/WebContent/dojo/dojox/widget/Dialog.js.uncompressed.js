@@ -39,7 +39,7 @@ define("dojox/widget/Dialog", [
 		viewportPadding: 35,
 
 		// dimensions: Array
-		//		A two-element array of [widht,height] to animate the Dialog to if sizeToViewport="false"
+		//		A two-element array of [width,height] to animate the Dialog to if sizeToViewport="false"
 		//		Defaults to [300,300]
 		dimensions: null,
 
@@ -76,7 +76,8 @@ define("dojox/widget/Dialog", [
 		},
 
 		_setup: function(){
-			// summary: Piggyback on dijit.Dialog's _setup for load-time options, deferred to
+			// summary:
+			//	Piggyback on dijit.Dialog's _setup for load-time options, deferred to
 
 			this.inherited(arguments);
 			if(!this._alreadyInitialized){
@@ -94,7 +95,8 @@ define("dojox/widget/Dialog", [
 		},
 
 		_setSize: function(){
-			// summary: cache and set our desired end position
+			// summary: 
+			//		cache and set our desired end position
 			this._vp = dojo.window.getBox();
 			var tc = this.containerNode,
 				vpSized = this.sizeToViewport
@@ -142,7 +144,8 @@ define("dojox/widget/Dialog", [
 		},
 
 		_handleNav: function(e){
-			// summary: Handle's showing or hiding the close icon
+			// summary: 
+			//		Handle's showing or hiding the close icon
 
 			var navou = "_navOut",
 				navin = "_navIn",
@@ -228,7 +231,8 @@ define("dojox/widget/Dialog", [
 		},
 
 		_showContent: function(e){
-			// summary: Show the inner container after sizing animation
+			// summary: 
+			//	Show the inner container after sizing animation
 
 			var container = this.containerNode;
 			dojo.style(this.domNode, {

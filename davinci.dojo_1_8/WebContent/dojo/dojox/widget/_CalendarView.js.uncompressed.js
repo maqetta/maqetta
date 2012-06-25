@@ -1,12 +1,12 @@
 define("dojox/widget/_CalendarView", [
 	"dojo/_base/declare",
-	"dijit/_Widget",
+	"dijit/_WidgetBase",
 	"dojo/dom-construct",
 	"dojo/query",
 	"dojo/date",
 	"dojo/_base/window"
-], function(declare, _Widget, domConstruct, query, dojoDate, win){
-	return dojo.declare("dojox.widget._CalendarView", dijit._Widget, {
+], function(declare, _WidgetBase, domConstruct, query, dojoDate, win){
+	return dojo.declare("dojox.widget._CalendarView", _WidgetBase, {
 		// summary:
 		//		Base implementation for all view mixins.
 		//		All calendar views should extend this widget.

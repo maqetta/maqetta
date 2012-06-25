@@ -9,12 +9,12 @@ define("dojox/editor/plugins/_SmileyPalette", [
 	"dojo/_base/declare",
 	"dojo/i18n",
 	"dojo/i18n!dojox/editor/plugins/nls/Smiley"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, _Widget, _TemplatedMixin, _PaletteMixin) {
 
 dojo.experimental("dojox.editor.plugins._SmileyPalette");
 
 dojo.declare("dojox.editor.plugins._SmileyPalette",
-	[dijit._Widget, dijit._TemplatedMixin, dijit._PaletteMixin],
+	[_Widget, _TemplatedMixin, _PaletteMixin],
 	{
 	// summary:
 	//		A keyboard accessible emoticon-picking widget (for inserting smiley characters)
@@ -29,7 +29,7 @@ dojo.declare("dojox.editor.plugins._SmileyPalette",
 	// |	var picker = new dojox.editor.plugins._SmileyPalette({ },srcNode);
 	// |	picker.startup();
 
-	//		The template of this widget.
+	//templateString: The template of this widget.
 	templateString:
 		'<table class="dijitInline dijitEditorSmileyPalette dijitPaletteTable"' +
 		' cellSpacing=0 cellPadding=0><tbody dojoAttachPoint="gridNode"></tbody></table>',
@@ -89,7 +89,7 @@ dojo.declare("dojox.editor.plugins.Emoticon",
 
 		imgHtml: function(/*String*/ clazz){
 			// summary:
-			//		Return the HTML string for an <img> node that shows this smiley
+			//		Return the HTML string for an `<img>` node that shows this smiley
 			var eId = "emoticon" + this.id.substr(0,1).toUpperCase() + this.id.substr(1),
 				src = dojo.moduleUrl("dojox.editor.plugins", "resources/emoticons/" + eId + ".gif"),
 				label = dojo.i18n.getLocalization("dojox.editor.plugins", "Smiley")[eId],

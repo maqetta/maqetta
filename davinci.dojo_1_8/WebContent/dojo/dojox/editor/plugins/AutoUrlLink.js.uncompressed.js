@@ -9,15 +9,15 @@ define("dojox/editor/plugins/AutoUrlLink", [
 	"dojo/_base/connect",
 	"dojo/_base/declare",
 	"dojo/string"
-], function(dojo, dijit, dojox) {
+], function(dojo, dijit, dojox, range, selection, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.AutoUrlLink", [dijit._editor._Plugin], {
-	//summary:
+dojo.declare("dojox.editor.plugins.AutoUrlLink", [_Plugin], {
+	// summary:
 	//		This plugin can recognize a URL like string
 	//		(such as http://www.website.com) and turn it into
 	//		a hyperlink that points to that URL.
 	
-	// _template [private] String
+	// _template: [private] String
 	//		The link template
 	_template: "<a _djrealurl='${url}' href='${url}'>${url}</a>",
 	
@@ -123,9 +123,9 @@ dojo.declare("dojox.editor.plugins.AutoUrlLink", [dijit._editor._Plugin], {
 	
 	_inLink: function(/*DomNode*/ node){
 		// summary:
-		//		Check if the node is already embraced within a <a>...</a> tag.
+		//		Check if the node is already embraced within a `<a>...</a>` tag.
 		// node:
-		//		The node to be examed.
+		//		The node to be examined.
 		// tags:
 		//		private
 		var editNode = this.editor.editNode,

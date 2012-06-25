@@ -28,7 +28,7 @@ define("dojox/mvc/_base", [
 		//		The mixin properties.
 		// description:
 		//		Factory method that returns a client-side data model, which is a
-		//		tree of dojo.Stateful objects matching the initial data structure
+		//		tree of dojo/Stateful objects matching the initial data structure
 		//		passed as input:
 		//		- The mixin property "data" is used to provide a plain JavaScript
 		//		  object directly representing the data structure.

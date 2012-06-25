@@ -3,8 +3,8 @@
 About migrationAssist
 =====================
 
-The migrationAssist is a dojo module that helps you migrate your
-dojox.mobile-1.6/1.7 applications to 1.8. To enable migrationAssist,
+The migrationAssist is a Dojo module that helps you migrate your
+dojox/mobile 1.6/1.7 applications to 1.8. To enable migrationAssist,
 all you need to do is require this module as shown in the examples below.
 
 	<script language="JavaScript" type="text/javascript">
@@ -38,8 +38,8 @@ Carousel
 --------
  - Carousel has no backward compatibility, since it was experimental in 1.7.
    There are two subclasses that support data stores.
-   Use DataCarousel if you want to use carousel with dojo.data.
-   Use StoreCarousel if you want to use carousel with dojo.store.
+   Use DataCarousel if you want to use carousel with dojo/data.
+   Use StoreCarousel if you want to use carousel with dojo/store.
 
 FixedSplitter
 -------------
@@ -106,17 +106,17 @@ ToolBarButton
    is no longer supported. Use icon="mblDomButtonWhitePlus" instead.
  - select() and deselect() are no longer supported. Use set("selected", boolean) instead.
 
-dojox.mobile.parser
+dojox/mobile/parser
 -------------------
- - dojox.mobile.parser no longer accepts array-type attribute like
+ - dojox/mobile/parser no longer accepts array-type attribute like
      labels="['A','B','C','D','E']"
-   Instead, you should specify like labels="A,B,C,D,E", which is the format dojo.parser
+   Instead, you should specify like labels="A,B,C,D,E", which is the format dojo/parser
    accepts.
 
 bookmarkable
 ------------
- - To enable the bookmarkable feature, require dojox.mobile.bookmarkable
-   instead of dojo.hash
+ - To enable the bookmarkable feature, require dojox/mobile/bookmarkable
+   instead of dojo/hash
 
 */
 
@@ -163,7 +163,7 @@ define("dojox/mobile/migrationAssist", [
 		};
 
 		this.checkCarousel = function(/*Widget*/ w){
-			console.log('[MIG:error] Carousel has no backward compatibility, since it was experimental in 1.7. The new Carousel supports dojo.store instead of dojo.data.');
+			console.log('[MIG:error] Carousel has no backward compatibility, since it was experimental in 1.7. The new Carousel supports dojo/store instead of dojo/data.');
 		};
 
 		this.checkFixedSplitter = function(/*Widget*/ w){
@@ -190,7 +190,7 @@ define("dojox/mobile/migrationAssist", [
 		};
 
 		this.checkFixedSplitterPane = function(/*Widget*/ w){
-			console.log('[MIG:fixed] FixedSplitterPane: Deprecated. Use dojox.mobile.Container instead.');
+			console.log('[MIG:fixed] FixedSplitterPane: Deprecated. Use dojox/mobile/Container instead.');
 		};
 		this.checkFixedSplitter = function(/*Widget*/ w){
 			// FixedSplitter.css has been moved from the themes/common folder
@@ -235,7 +235,7 @@ define("dojox/mobile/migrationAssist", [
 					w.labels[i] = w.labels[i].replace(/^\[*[\'\"]*/, '');
 					w.labels[i] = w.labels[i].replace(/[\'\"]*\]*$/, '');
 				}
-				console.log('[MIG:fixed] SpinWheelSlot: dojox.mobile.parser no longer accepts array-type attribute like labels="[\'A\',\'B\',\'C\',\'D\',\'E\']". Specify as labels="A,B,C,D,E" instead.' );
+				console.log('[MIG:fixed] SpinWheelSlot: dojox/mobile/parser no longer accepts array-type attribute like labels="[\'A\',\'B\',\'C\',\'D\',\'E\']". Specify as labels="A,B,C,D,E" instead.' );
 			}
 		};
 
@@ -411,7 +411,7 @@ define("dojox/mobile/migrationAssist", [
 
 	ready(function(){
 		if(dojo.hash){
-			console.log('[MIG:fixed] dojo.hash detected. If you would like to enable the bookmarkable feature, require dojox.mobile.bookmarkable instead of dojo.hash');
+			console.log('[MIG:fixed] dojo/hash detected. If you would like to enable the bookmarkable feature, require dojox/mobile/bookmarkable instead of dojo/hash');
 			if(dojo.require){
 				dojo["require"]("dojox.mobile.bookmarkable");
 			}else{
@@ -420,5 +420,11 @@ define("dojox/mobile/migrationAssist", [
 		}
 	});
 
+	/*=====
+    return {
+		// summary:
+		//		Dojo Mobile 1.6/1.7 to 1.8 migration assistance.
+    };
+    =====*/
 	return migrationAssist;
 });

@@ -328,6 +328,11 @@ define("dojox/grid/_Grid", [
 		//		indicates if the grid contains editable cells, default is false
 		//		set to true if editable cell encountered during rendering
 		editable: false,
+
+		// summary: String
+		//		Customizable summary descriptions which will be added to grid.domNode
+		summary: '',
+		_setSummaryAttr: 'domNode',
 		
 		// private
 		sortInfo: 0,

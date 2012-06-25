@@ -41,38 +41,58 @@ return declare("dojox.widget.Standby", [_Widget, _TemplatedMixin],{
 	//		A widget designed to act as a Standby/Busy/Disable/Blocking widget to indicate a
 	//		particular DOM node is processing and cannot be clicked on at this time.
 	//		This widget uses absolute positioning to apply the overlay and image.
-	//
-	// image:
+
+	// image: String
 	//		A URL to an image to center within the blocking overlay.
 	//		The default is a basic spinner.
-	//
-	// imageText:
+	image: require.toUrl("dojox/widget/Standby/images/loading.gif").toString(),
+
+	// imageText: String
 	//		Text to set on the ALT tag of the image.
 	//		The default is 'Please wait...'
-	//
-	// text:
-	//		Text to display in the center instead of an image.
+	imageText: "Please Wait...", // TODO: i18n
+
+	// text: String
+	//		Text/HTML to display in the center of the overlay
+	//		This is used if image center is disabled.
 	//		Defaults to 'Please Wait...'
-	//
-	// centerIndicator:
-	//		Which to use as the center info, the text or the image.
-	//		Defaults to image.
-	//
-	// color:
-	//		The color to use for the translucent overlay.
-	//		Text string such as: darkblue, #FE02FD, etc.
-	//
-	// duration:
-	//		How long the fade in and out effects should run in milliseconds.
-	//		Default is 500ms
-	//
-	// zIndex:
+	text: "Please wait...",
+
+	// centerIndicator: String
+	//		Property to define if the image and its alt text should be used, or
+	//		a simple Text/HTML node should be used.  Allowable values are 'image'
+	//		and 'text'.
+	//		Default is 'image'.
+	centerIndicator: "image",
+	
+	// target: DOMNode||DOMID(String)||WidgetID(String)
+	//		The target to overlay when active.  Can be a widget id, a
+	//		dom id, or a direct node reference.
+	target: "",
+
+	// color:	String
+	//		The color to set the overlay.  Should be in #XXXXXX form.
+	//		Default color for the translucent overlay is light gray.
+	color: "#C0C0C0",
+
+	// duration: Integer
+	//		Integer defining how long the show and hide effects should take in milliseconds.
+	//		Defaults to 500
+	duration: 500,
+	
+	// zIndex: String
 	//		Control that lets you specify if the zIndex for the overlay
 	//		should be auto-computed based off parent zIndex, or should be set
 	//		to a particular value.  This is useful when you want to overlay
 	//		things in digit.Dialogs, you can specify a base zIndex to append from.
-	//		Default is 'auto'.
-
+	zIndex: "auto",
+	
+	// opacity: float
+	//		The opacity to make the overlay when it is displayed/faded in.
+	//		The default is 0.75.  This does not affect the image opacity, only the
+	//		overlay.
+	opacity: 0.75,	
+	
 	// templateString: [protected] String
 	//		The template string defining out the basics of the widget.  No need for an external
 	//		file.
@@ -104,26 +124,6 @@ return declare("dojox.widget.Standby", [_Widget, _TemplatedMixin],{
 	//		Which node to use as the center node, the image or the text node.
 	_centerNode: null,
 
-	// image: String
-	//		The URL to the image to center in the overlay.
-	image: require.toUrl("dojox/widget/Standby/images/loading.gif").toString(),
-
-	// imageText: String
-	//		Text for the ALT tag.
-	imageText: "Please Wait...", // TODO: i18n
-
-	// text: String
-	//		Text/HTML to display in the center of the overlay
-	//		This is used if image center is disabled.
-	text: "Please wait...",
-
-	// centerIndicator: String
-	//		Property to define if the image and its alt text should be used, or
-	//		a simple Text/HTML node should be used.  Allowable values are 'image'
-	//		and 'text'.
-	//		Default is 'image'.
-	centerIndicator: "image",
-
 	// _displayed: [private] Boolean
 	//		Flag to indicate if the overlay is displayed or not.
 	_displayed: false,
@@ -131,20 +131,6 @@ return declare("dojox.widget.Standby", [_Widget, _TemplatedMixin],{
 	// _resizeCheck: [private] Object
 	//		Handle to interval function that checks the target for changes.
 	_resizeCheck: null,
-	
-	// target: DOMNode||DOMID(String)||WidgetID(String)
-	//		The target to overlay when active.  Can be a widget id, a
-	//		dom id, or a direct node reference.
-	target: "",
-
-	// color:	String
-	//		The color to set the overlay.  Should be in #XXXXXX form.
-	//		Default color for the translucent overlay is light gray.
-	color: "#C0C0C0",
-
-	// duration: integer
-	//		Integer defining how long the show and hide effects should take.
-	duration: 500,
 
 	// _started: [private] Boolean
 	//		Trap flag to ensure startup only processes once.
@@ -154,19 +140,6 @@ return declare("dojox.widget.Standby", [_Widget, _TemplatedMixin],{
 	//		Wrapping div for the widget, also used for IE 7 in dealing with the
 	//		zoom issue.
 	_parent: null,
-
-	// zIndex: String
-	//		Control that lets you specify if the zIndex for the overlay
-	//		should be auto-computed based off parent zIndex, or should be set
-	//		to a particular value.  This is useful when you want to overlay
-	//		things in digit.Dialogs, you can specify a base zIndex to append from.
-	zIndex: "auto",
-	
-	// opacity: float
-	//		The opacity to make the overlay when it is displayed/faded in.
-	//		The default is 0.75.  This does not affect the image opacity, only the
-	//		overlay.
-	opacity: 0.75,	
 
 	startup: function(args){
 		// summary:

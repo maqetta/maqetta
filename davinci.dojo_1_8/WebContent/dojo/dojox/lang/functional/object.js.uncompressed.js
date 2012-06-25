@@ -10,13 +10,11 @@ define("dojox/lang/functional/object", ["dojo/_base/kernel", "dojo/_base/lang", 
 
 	var empty = {};
 
-/*=====
-	var df = dojox.lang.functional;
- =====*/
 	lang.mixin(df, {
 		// object helpers
 		keys: function(/*Object*/ obj){
-			// summary: returns an array of all keys in the object
+			// summary:
+			//		returns an array of all keys in the object
 			var t = [];
 			for(var i in obj){
 				if(!(i in empty)){
@@ -26,7 +24,8 @@ define("dojox/lang/functional/object", ["dojo/_base/kernel", "dojo/_base/lang", 
 			return	t; // Array
 		},
 		values: function(/*Object*/ obj){
-			// summary: returns an array of all values in the object
+			// summary:
+			//		returns an array of all values in the object
 			var t = [];
 			for(var i in obj){
 				if(!(i in empty)){
@@ -36,8 +35,9 @@ define("dojox/lang/functional/object", ["dojo/_base/kernel", "dojo/_base/lang", 
 			return	t; // Array
 		},
 		filterIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates new object with all attributes that pass the test
-			//	implemented by the provided function.
+			// summary:
+			//		creates new object with all attributes that pass the test
+			//		implemented by the provided function.
 			o = o || kernel.global; f = df.lambda(f);
 			var t = {}, v, i;
 			for(i in obj){
@@ -49,7 +49,8 @@ define("dojox/lang/functional/object", ["dojo/_base/kernel", "dojo/_base/lang", 
 			return t;	// Object
 		},
 		forIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: iterates over all object attributes.
+			// summary:
+			//		iterates over all object attributes.
 			o = o || kernel.global; f = df.lambda(f);
 			for(var i in obj){
 				if(!(i in empty)){
@@ -59,8 +60,9 @@ define("dojox/lang/functional/object", ["dojo/_base/kernel", "dojo/_base/lang", 
 			return o;	// Object
 		},
 		mapIn: function(/*Object*/ obj, /*Function|String|Array*/ f, /*Object?*/ o){
-			// summary: creates new object with the results of calling
-			//	a provided function on every attribute in this object.
+			// summary:
+			//		creates new object with the results of calling
+			//		a provided function on every attribute in this object.
 			o = o || kernel.global; f = df.lambda(f);
 			var t = {}, i;
 			for(i in obj){

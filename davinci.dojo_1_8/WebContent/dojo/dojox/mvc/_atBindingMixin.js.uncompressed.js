@@ -7,7 +7,7 @@ define("dojox/mvc/_atBindingMixin", [
 	"./sync"
 ], function(array, lang, declare, has, resolve, sync){
 	if(has("mvc-bindings-log-api")){
-		function getLogContent(/*dojo.Stateful*/ target, /*String*/ targetProp){
+		function getLogContent(/*dojo/Stateful*/ target, /*String*/ targetProp){
 			return [target._setIdAttr || !target.declaredClass ? target : target.declaredClass, targetProp].join(":");
 		}
 
@@ -16,10 +16,10 @@ define("dojox/mvc/_atBindingMixin", [
 		}
 	}
 
-	function getParent(/*dijit._WidgetBase*/ w){
+	function getParent(/*dijit/_WidgetBase*/ w){
 		// summary:
 		//		Returns parent widget having data binding target for relative data binding.
-		// w: dijit._WidgetBase
+		// w: dijit/_WidgetBase
 		//		The widget.
 
 		// Usage of dijit/registry module is optional. Return null if it's not already loaded.
@@ -35,61 +35,61 @@ define("dojox/mvc/_atBindingMixin", [
 			if(pw){
 				var relTargetProp = pw._relTargetProp || "target", pt = lang.isFunction(pw.get) ? pw.get(relTargetProp) : pw[relTargetProp];
 				if(pt || relTargetProp in pw.constructor.prototype){
-					return pw; // dijit._WidgetBase
+					return pw; // dijit/_WidgetBase
 				}
 			}
 			pn = pw && pw.domNode.parentNode;
 		}
 	}
 
-	function bind(/*dojo.Stateful|String*/ target, /*String*/ targetProp, /*dijit._WidgetBase*/ source, /*String*/ sourceProp, /*dojox.mvc.sync.options*/ options){
+	function bind(/*dojo/Stateful|String*/ source, /*String*/ sourceProp, /*dijit/_WidgetBase*/ target, /*String*/ targetProp, /*dojox/mvc/sync.options*/ options){
 		// summary:
 		//		Resolves the data binding literal, and starts data binding.
-		// target: dojo.Stateful|String
-		//		Target data binding literal or dojo.Stateful to be synchronized.
-		// targetProp: String
-		//		The property name in target to be synchronized.
-		// source: dijit._WidgetBase
-		//		Source dojo.Stateful to be synchronized.
+		// source: dojo/Stateful|String
+		//		Source data binding literal or dojo/Stateful to be synchronized.
 		// sourceProp: String
 		//		The property name in source to be synchronized.
-		// options: dojox.mvc.sync.options
+		// target: dijit/_WidgetBase
+		//		Target dojo/Stateful to be synchronized.
+		// targetProp: String
+		//		The property name in target to be synchronized.
+		// options: dojox/mvc/sync.options
 		//		Data binding options.
 
-		var _handles = {}, parent = getParent(source), relTargetProp = parent && parent._relTargetProp || "target";
+		var _handles = {}, parent = getParent(target), relTargetProp = parent && parent._relTargetProp || "target";
 
 		function resolveAndBind(){
 			_handles["Two"] && _handles["Two"].unwatch();
 			delete _handles["Two"];
 
 			var relTarget = parent && (lang.isFunction(parent.get) ? parent.get(relTargetProp) : parent[relTargetProp]),
-			 resolvedTarget = resolve(target, relTarget),
-			 resolvedSource = resolve(source, relTarget);
+			 resolvedSource = resolve(source, relTarget),
+			 resolvedTarget = resolve(target, relTarget);
 
-			if(has("mvc-bindings-log-api") && (!resolvedTarget || /^rel:/.test(target) && !parent)){ logResolveFailure(target, targetProp); }
 			if(has("mvc-bindings-log-api") && (!resolvedSource || /^rel:/.test(source) && !parent)){ logResolveFailure(source, sourceProp); }
-			if(!resolvedTarget || !resolvedSource || (/^rel:/.test(target) || /^rel:/.test(source)) && !parent){ return; }
-			if((!resolvedTarget.set || !resolvedTarget.watch) && targetProp == "*"){
-				if(has("mvc-bindings-log-api")){ logResolveFailure(target, targetProp); }
+			if(has("mvc-bindings-log-api") && (!resolvedTarget || /^rel:/.test(target) && !parent)){ logResolveFailure(target, targetProp); }
+			if(!resolvedSource || !resolvedTarget || (/^rel:/.test(source) || /^rel:/.test(target)) && !parent){ return; }
+			if((!resolvedSource.set || !resolvedSource.watch) && sourceProp == "*"){
+				if(has("mvc-bindings-log-api")){ logResolveFailure(source, sourceProp); }
 				return;
 			}
 
-			if(targetProp == null){
-				// If target property is not specified, it means this handle is just for resolving data binding target.
-				// (For dojox.mvc.Group and dojox.mvc.Repeat)
+			if(sourceProp == null){
+				// If source property is not specified, it means this handle is just for resolving data binding target.
+				// (For dojox/mvc/Group and dojox/mvc/Repeat)
 				// Do not perform data binding synchronization in such case.
-				lang.isFunction(resolvedSource.set) ? resolvedSource.set(sourceProp, resolvedTarget) : (resolvedSource[sourceProp] = resolvedTarget);
+				lang.isFunction(resolvedTarget.set) ? resolvedTarget.set(targetProp, resolvedSource) : (resolvedTarget[targetProp] = resolvedSource);
 				if(has("mvc-bindings-log-api")){
-					console.log("dojox.mvc._atBindingMixin set " + resolvedTarget + " to: " + getLogContent(resolvedSource, sourceProp));
+					console.log("dojox/mvc/_atBindingMixin set " + resolvedSource + " to: " + getLogContent(resolvedTarget, targetProp));
 				}
 			}else{
 				// Start data binding
-				_handles["Two"] = sync(resolvedTarget, targetProp, resolvedSource, sourceProp, options); // dojox.mvc.sync.handle
+				_handles["Two"] = sync(resolvedSource, sourceProp, resolvedTarget, targetProp, options); // dojox/mvc/sync.handle
 			}
 		}
 
 		resolveAndBind();
-		if(parent && /^rel:/.test(target) || /^rel:/.test(source) && lang.isFunction(parent.set) && lang.isFunction(parent.watch)){
+		if(parent && /^rel:/.test(source) || /^rel:/.test(target) && lang.isFunction(parent.set) && lang.isFunction(parent.watch)){
 			_handles["rel"] = parent.watch(relTargetProp, function(name, old, current){
 				if(old !== current){
 					if(has("mvc-bindings-log-api")){ console.log("Change in relative data binding target: " + parent); }
@@ -97,19 +97,19 @@ define("dojox/mvc/_atBindingMixin", [
 				}
 			});
 		}
-		return {
-			unwatch: function(){
-				for(var s in _handles){
-					_handles[s] && _handles[s].unwatch();
-					delete _handles[s];
-				}
+		var h = {};
+		h.unwatch = h.remove = function(){
+			for(var s in _handles){
+				_handles[s] && _handles[s].unwatch();
+				delete _handles[s];
 			}
 		};
+		return h;
 	}
 
-	var _atBindingMixin = declare("dojox.mvc._atBindingMixin", null, {
+	var _atBindingMixin = declare("dojox/mvc/_atBindingMixin", null, {
 		// summary:
-		//		The mixin for dijit._WidgetBase to support data binding.
+		//		The mixin for dijit/_WidgetBase to support data binding.
 
 		// dataBindAttr: String
 		//		The attribute name for data binding.
@@ -215,7 +215,9 @@ define("dojox/mvc/_atBindingMixin", [
 			// summary:
 			//		Returns list of all properties that data binding is established with.
 
-			if(this._excludes){ return this._excludes; }
+			if(this._excludes){ 
+				return this._excludes;  // String[] 
+			}
 			var list = [];
 			for(var s in this._atWatchHandles){
 				if(s != "*"){ list.push(s); }
@@ -226,9 +228,11 @@ define("dojox/mvc/_atBindingMixin", [
 		_getPropertiesAttr: function(){
 			// summary:
 			//		Returns list of all properties in this widget, except "id".
+			// returns: String[]
+			//		 The list of all properties in this widget, except "id"..
 
 			if(this.constructor._attribs){
-				return this.constructor._attribs;
+				return this.constructor._attribs; // String[]
 			}
 			var list = ["onClick"].concat(this.constructor._setterAttrs);
 			array.forEach(["id", "excludes", "properties", "ref", "binding"], function(s){

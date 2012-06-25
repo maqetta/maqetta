@@ -4,7 +4,7 @@ define("dojox/mvc/Element", [
 ], function(declare, _WidgetBase){
 	return declare("dojox.mvc.Element", _WidgetBase, {
 		// summary:
-		//		A widget implicitly created by dojox.mvc.parserExtension.
+		//		A widget implicitly created by dojox/mvc/parserExtension.
 		//		Maps "value" attribute to form element value, innerText/innerHTML to element's innerText/innerHTML, and other attributes to DOM attributes.
 		//		Also, for form element, updates value (or checked for check box) as user edits.
 

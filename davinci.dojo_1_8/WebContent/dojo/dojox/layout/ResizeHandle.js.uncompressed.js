@@ -7,74 +7,71 @@ define("dojox/layout/ResizeHandle", ["dojo/_base/kernel","dojo/_base/lang","dojo
 
 kernel.experimental("dojox.layout.ResizeHandle");
 
-/*===== 
-	var Widget = dijit._Widget;
-	var TemplatedMixin = dijit._TemplatedMixin;
-=====*/
 var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	{
-	// summary: A dragable handle used to resize an attached node.
+	// summary:
+	//		A draggable handle used to resize an attached node.
 	//
 	// description:
-	//	The handle on the bottom-right corner of FloatingPane or other widgets that allows
-	//	the widget to be resized.
-	//	Typically not used directly.
-	//
+	//		The handle on the bottom-right corner of FloatingPane or other widgets that allows
+	//		the widget to be resized.
+	//		Typically not used directly.
+
 	// targetId: String
-	//	id of the Widget OR DomNode that I will size
+	//		id of the Widget OR DomNode that I will size
 	targetId: "",
 	
 	// targetContainer: DomNode
-	//	over-ride targetId and attch this handle directly to a reference of a DomNode
+	//		over-ride targetId and attch this handle directly to a reference of a DomNode
 	targetContainer: null,
 	
 	// resizeAxis: String
-	//	one of: x|y|xy limit resizing to a single axis, default to xy ...
+	//		one of: x|y|xy limit resizing to a single axis, default to xy ...
 	resizeAxis: "xy",
 	
 	// activeResize: Boolean
-	// 	if true, node will size realtime with mouse movement,
-	//	if false, node will create virtual node, and only resize target on mouseUp
+	// 		if true, node will size realtime with mouse movement,
+	//		if false, node will create virtual node, and only resize target on mouseUp
 	activeResize: false,
 	
 	// activeResizeClass: String
-	//	css class applied to virtual resize node.
+	//		css class applied to virtual resize node.
 	activeResizeClass: "dojoxResizeHandleClone",
 	
 	// animateSizing: Boolean
-	//	only applicable if activeResize = false. onMouseup, animate the node to the
-	//	new size
+	//		only applicable if activeResize = false. onMouseup, animate the node to the
+	//		new size
 	animateSizing: true,
 	
 	// animateMethod: String
-	// 	one of "chain" or "combine" ... visual effect only. combine will "scale"
-	// 	node to size, "chain" will alter width, then height
+	// 		one of "chain" or "combine" ... visual effect only. combine will "scale"
+	// 		node to size, "chain" will alter width, then height
 	animateMethod: "chain",
 
 	// animateDuration: Integer
-	//	time in MS to run sizing animation. if animateMethod="chain", total animation
-	//	playtime is 2*animateDuration
+	//		time in MS to run sizing animation. if animateMethod="chain", total animation
+	//		playtime is 2*animateDuration
 	animateDuration: 225,
 
 	// minHeight: Integer
-	//	smallest height in px resized node can be
+	//		smallest height in px resized node can be
 	minHeight: 100,
 
 	// minWidth: Integer
-	//	smallest width in px resize node can be
+	//		smallest width in px resize node can be
 	minWidth: 100,
 
 	// constrainMax: Boolean
-	//	Toggle if this widget cares about the maxHeight and maxWidth
-	//	parameters.
+	//		Toggle if this widget cares about the maxHeight and maxWidth
+	//		parameters.
 	constrainMax: false,
 
 	// maxHeight: Integer
-	//	Largest height size in px the resize node can become.
+	//		Largest height size in px the resize node can become.
 	maxHeight:0,
 	
 	// maxWidth: Integer
-	//	Largest width size in px the reize node can become.
+	//		Largest width size in px the resize node can become.
 	maxWidth:0,
 
 	// fixedAspect: Boolean
@@ -100,7 +97,8 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	templateString: '<div dojoAttachPoint="resizeHandle" class="dojoxResizeHandle"><div></div></div>',
 
 	postCreate: function(){
-		// summary: setup our one major listener upon creation
+		// summary:
+		//		setup our one major listener upon creation
 		this.connect(this.resizeHandle, "onmousedown", "_beginSizing");
 		if(!this.activeResize){
 			// there shall be only a single resize rubberbox that at the top
@@ -146,7 +144,8 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 
 	_beginSizing: function(/*Event*/ e){
-		// summary: setup movement listeners and calculate initial size
+		// summary: 
+		//		setup movement listeners and calculate initial size
 		
 		if(this._isSizing){ return; }
 
@@ -161,6 +160,9 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 			var c = domGeometry.position(this.targetDomNode, true);
 			this._resizeHelper.resize({l: c.x, t: c.y, w: c.w, h: c.h});
 			this._resizeHelper.show();
+			if(!this.isLeftToRight()){
+				this._resizeHelper.startPosition = {l: c.x, t: c.y};
+			}
 		}
 
 		this._isSizing = true;
@@ -181,6 +183,10 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 				//width/height as well
 				pbw: padborder.w, pbh: padborder.h,
 				mw: margin.w, mh: margin.h};
+		if(!this.isLeftToRight() && dojo.style(this.targetDomNode, "position") == "absolute"){
+			var p = domGeometry.position(this.targetDomNode, true);
+			this.startPosition = {l: p.x, t: p.y};
+		}
 		
 		this._pconnects = [
 			connect.connect(windowBase.doc,"onmousemove",this,"_updateSizing"),
@@ -191,20 +197,21 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 
 	_updateSizing: function(/*Event*/ e){
-		// summary: called when moving the ResizeHandle ... determines
-		//	new size based on settings/position and sets styles.
+		// summary: 
+		//		called when moving the ResizeHandle ... determines
+		//		new size based on settings/position and sets styles.
 
 		if(this.activeResize){
 			this._changeSizing(e);
 		}else{
-			var tmp = this._getNewCoords(e, 'border');
+			var tmp = this._getNewCoords(e, 'border', this._resizeHelper.startPosition);
 			if(tmp === false){ return; }
 			this._resizeHelper.resize(tmp);
 		}
 		e.preventDefault();
 	},
 
-	_getNewCoords: function(/* Event */ e, /* String */ box){
+	_getNewCoords: function(/* Event */ e, /* String */ box, /* Object */startPosition){
 		
 		// On IE, if you move the mouse above/to the left of the object being resized,
 		// sometimes clientX/Y aren't set, apparently.  Just ignore the event.
@@ -223,6 +230,16 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 			r = this._checkConstraints(newW, newH)
 		;
 		
+		startPosition = (startPosition || this.startPosition);
+		if(startPosition && this._resizeX){
+			// adjust x position for RtoL
+			r.l = startPosition.l + dx;
+			if(r.w != newW){
+				r.l += (newW - r.w);
+			}
+			r.t = startPosition.t;
+		}
+
 		switch(box){
 			case 'margin':
 				r.w += this.startSize.mw;
@@ -239,7 +256,8 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 	
 	_checkConstraints: function(newW, newH){
-		// summary: filter through the various possible constaint possibilities.
+		// summary: 
+		//		filter through the various possible constaint possibilities.
 				
 		// minimum size check
 		if(this.minSize){
@@ -277,7 +295,8 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 		
 	_changeSizing: function(/*Event*/ e){
-		// summary: apply sizing information based on information in (e) to attached node
+		// summary:
+		//		apply sizing information based on information in (e) to attached node
 		
 		var isWidget = this.targetWidget && lang.isFunction(this.targetWidget.resize),
 			tmp = this._getNewCoords(e, isWidget && 'margin');
@@ -317,7 +336,8 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 
 	_endSizing: function(/*Event*/ e){
-		// summary: disconnect listenrs and cleanup sizing
+		// summary:
+		//		disconnect listenrs and cleanup sizing
 		arrayUtil.forEach(this._pconnects, connect.disconnect);
 		var pub = lang.partial(connect.publish, this.endTopic, [ this ]);
 		if(!this.activeResize){
@@ -332,29 +352,34 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 	
 	onResize: function(e){
-		// summary: Stub fired when sizing is done. Fired once
-		//	after resize, or often when `intermediateChanges` is
-		//	set to true.
+		// summary: 
+		//		Stub fired when sizing is done. Fired once
+		//		after resize, or often when `intermediateChanges` is
+		//		set to true.
 	}
 	
 });
 
 var _ResizeHelper = dojo.declare("dojox.layout._ResizeHelper", Widget, {
-	// summary: A global private resize helper shared between any
+	// summary: 
+	//		A global private resize helper shared between any
 	//		`dojox.layout.ResizeHandle` with activeSizing off.
 	
 	show: function(){
-		// summary: show helper to start resizing
+		// summary: 
+		//		show helper to start resizing
 		domStyle.set(this.domNode, "display", "");
 	},
 	
 	hide: function(){
-		// summary: hide helper after resizing is complete
+		// summary:
+		//		hide helper after resizing is complete
 		domStyle.set(this.domNode, "display", "none");
 	},
 	
 	resize: function(/* Object */dim){
-		// summary: size the widget and place accordingly
+		// summary:
+		//		size the widget and place accordingly
 		domGeometry.setMarginBox(this.domNode, dim);
 	}
 	

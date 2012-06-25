@@ -42,7 +42,6 @@ define("dojox/editor/plugins/TablePlugins", [
 ) {
 
 dojo.experimental("dojox.editor.plugins.TablePlugins");
-
 // summary:
 //		A series of plugins that give the Editor the ability to create and edit
 //		HTML tables. See the end of this document for all avaiable plugins
@@ -463,7 +462,7 @@ var TableHandler = declare(_Plugin, {
 });
 
 var TablePlugins = declare("dojox.editor.plugins.TablePlugins", _Plugin, {
-		//summary:
+		// summary:
 		//		A collection of Plugins for inserting and modifying tables in the Editor
 		//		See end of this document for all avaiable plugs
 		//		and dojox/editorPlugins/tests/editorTablePlugs.html for an example
@@ -480,8 +479,9 @@ var TablePlugins = declare("dojox.editor.plugins.TablePlugins", _Plugin, {
 		undoEnabled:true,
 		
 		onDisplayChanged: function(withinTable){
-			// subscribed to from the global object's publish method
-			//
+			// summary:
+			//	 subscribed to from the global object's publish method
+			
 			//console.log("onDisplayChanged", this.commandName);
 			if(!this.alwaysAvailable){
 				this.available = withinTable;
@@ -631,10 +631,10 @@ var TablePlugins = declare("dojox.editor.plugins.TablePlugins", _Plugin, {
 		},
 		
 		makeColumnsEven: function(){
-			//summary:
+			// summary:
 			//		After changing column amount, change widths to
 			//		keep columns even
-			//
+			
 			// the timeout helps prevent an occasional snafu
 			setTimeout(dojo.hitch(this, function(){
 				var o = this.getTableInfo(true);

@@ -1,7 +1,7 @@
 define("dojox/charting/Series", ["dojo/_base/lang", "dojo/_base/declare", "./Element"], 
 	function(lang, declare, Element){ 
 	/*=====
-	dojox.charting.__SeriesCtorArgs = function(plot){
+	var __SeriesCtorArgs = function(plot){
 		// summary:
 		//		An optional arguments object that can be used in the Series constructor.
 		// plot: String?
@@ -15,14 +15,14 @@ define("dojox/charting/Series", ["dojo/_base/lang", "dojo/_base/declare", "./Ele
 		constructor: function(chart, data, kwArgs){
 			// summary:
 			//		Create a new data series object for use within charting.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart that this series belongs to.
 			// data: Array|Object
 			//		The array of data points (either numbers or objects) that
 			//		represents the data to be drawn. Or it can be an object. In
 			//		the latter case, it should have a property "data" (an array),
 			//		destroy(), and setSeriesObject().
-			// kwArgs: dojox.charting.__SeriesCtorArgs?
+			// kwArgs: __SeriesCtorArgs?
 			//		An optional keyword arguments object to set details for this series.
 			lang.mixin(this, kwArgs);
 			if(typeof this.plot != "string"){ this.plot = "default"; }
@@ -56,5 +56,4 @@ define("dojox/charting/Series", ["dojo/_base/lang", "dojo/_base/declare", "./Ele
 			this.clear();
 		}
 	});
-
 });

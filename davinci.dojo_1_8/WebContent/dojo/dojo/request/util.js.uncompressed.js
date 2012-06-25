@@ -1,11 +1,13 @@
 define("dojo/request/util", [
 	'exports',
 	'require',
+	'../errors/RequestError',
+	'../errors/CancelError',
 	'../Deferred',
 	'../io-query',
 	'../_base/array',
 	'../_base/lang'
-], function(exports, require, Deferred, ioQuery, array, lang){
+], function(exports, require, RequestError, CancelError, Deferred, ioQuery, array, lang){
 	exports.deepCopy = function deepCopy(target, source){
 		for(var name in source){
 			var tval = target[name],
@@ -45,13 +47,10 @@ define("dojo/request/util", [
 		var def = new Deferred(function(reason){
 			cancel && cancel(def, response);
 
-			var err = response.error;
-			if(!err){
-				err = new Error('request canceled');
-				err.response = response;
-				err.dojoType='cancel';
+			if(!reason || !(reason instanceof RequestError) && !(reason instanceof CancelError)){
+				return new CancelError('Request canceled', response);
 			}
-			return err;
+			return reason;
 		});
 
 		def.response = response;
@@ -63,12 +62,23 @@ define("dojo/request/util", [
 			error.response = response;
 			throw error;
 		}
-		var promise = def.then(okHandler).otherwise(errHandler);
+		var responsePromise = def.then(okHandler).otherwise(errHandler);
 
 		try{
+			// Handle notify before data promise so notify always runs
+			// before any chained promise
 			var notify = require('./notify');
-			promise.then(notify.load, notify.error);
+			responsePromise.then(notify.load, notify.error);
 		}catch(e){}
+
+		var dataPromise = responsePromise.then(function(response){
+				return response.data || response.text;
+			});
+
+		var promise = freeze(lang.delegate(dataPromise, {
+			response: responsePromise
+		}));
+
 
 		if(last){
 			def.then(function(response){
@@ -121,7 +131,8 @@ define("dojo/request/util", [
 
 		return {
 			url: url,
-			options: options
+			options: options,
+			getHeader: function(headerName){ return null; }
 		};
 	};
 

@@ -1,32 +1,27 @@
 define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIndicatorBase", "./_circularUtils", "dojo/_base/event"],
 	function(declare, ScaleIndicatorBase, _circularUtils, eventUtil){
-
-	/*=====
-	var ScaleIndicatorBase = dojox.dgauges.ScaleIndicatorBase;
-	=====*/
-
 	return declare("dojox.dgauges.CircularRangeIndicator", ScaleIndicatorBase, {
-		//	summary:
+		// summary:
 		//		A CircularRangeIndicator is used to represent a range of values on a scale.
 		//		Use the addIndicator method of CircularScale to use it.
 		//		It is represented as a donut slice.
 		
-		//	start: Number
+		// start: Number
 		//		The start value of the range indicator.
 		start: 0,
-		//	radius: Number
+		// radius: Number
 		//		The outer radius in pixels of the range indicator.
 		radius: NaN,
-		//	startThickness: Number
+		// startThickness: Number
 		//		The start thickness of the donut slice in pixels. 
 		startThickness: 6,
-		//	endThickness: Number
+		// endThickness: Number
 		//		The end thickness of the donut slice in pixels. 
 		endThickness: 6,
-		//	fill: Object
+		// fill: Object
 		//		A fill object that will be passed to the setFill method of GFX.
 		fill: null,
-		//	stroke: Object
+		// stroke: Object
 		//		A stroke object that will be passed to the setStroke method of GFX.
 		stroke: null,
 		constructor: function(){
@@ -42,6 +37,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_interpolateColor: function(from, dest, n){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var fr = (from >> 16) & 0xff;
 			var fg = (from >> 8) & 0xff;
 			var fb = from & 0xff;
@@ -58,6 +57,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_colorsInterpolation: function(colors, ratios, len){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var ret = [];
 			var ilen = 0;
 			
@@ -70,6 +73,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_alphasInterpolation: function(alphas, positions, len){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var ret = [];
 			var ilen = 0;
 			for(var i = 0; i < alphas.length - 1; i++){
@@ -81,6 +88,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_alphaInterpolation: function(c1, c2, len){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var step = (c2 - c1) / (len - 1);
 			var ret = [];
 			for(var i = 0; i < len; i++){
@@ -90,6 +101,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_colorInterpolation: function(c1, c2, len){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var ret = [];
 			for (var i = 0; i < len; i++){
 				ret.push(_interpolateColor(c1, c2, i / (len - 1)));
@@ -98,6 +113,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_getEntriesFor: function(entries, attr){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var ret = [];
 			var e;
 			var val;
@@ -115,7 +134,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_drawColorTrack: function(g, ox, oy, radius, orientation, startAngleRadians, endAngleRadians, sWeight, eWeight, fill, stroke, clippingAngleRadians){
-		
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var angleStep = 0.05;
 			var totalAngle;
 			
@@ -197,6 +219,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_onMouseDown: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			var origin = this.scale._gauge._gaugeToPage(this.scale.originX, this.scale.originY);
 			var angle = ((Math.atan2(event.pageY - origin.y, event.pageX - origin.x)) * 180) / (Math.PI);
@@ -207,6 +233,10 @@ define("dojox/dgauges/CircularRangeIndicator", ["dojo/_base/declare", "./ScaleIn
 		},
 		
 		_onMouseMove: function(event){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			
 			var origin = this.scale._gauge._gaugeToPage(this.scale.originX, this.scale.originY);

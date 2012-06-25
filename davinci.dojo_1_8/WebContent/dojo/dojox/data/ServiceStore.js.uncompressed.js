@@ -1,25 +1,28 @@
-define("dojox/data/ServiceStore", ["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array"], 
-  function(declare, lang, array) {
-
-// note that dojox.rpc.Service is not required, you can create your own services
-
-// A ServiceStore is a readonly data store that provides a data.data interface to an RPC service.
-// var myServices = new dojox.rpc.Service(dojo.moduleUrl("dojox.rpc.tests.resources", "test.smd"));
-// var serviceStore = new dojox.data.ServiceStore({service:myServices.ServiceStore});
-//
-// The ServiceStore also supports lazy loading. References can be made to objects that have not been loaded.
-//	For example if a service returned:
-// {"name":"Example","lazyLoadedObject":{"$ref":"obj2"}}
-//
-// And this object has accessed using the dojo.data API:
-// var obj = serviceStore.getValue(myObject,"lazyLoadedObject");
-// The object would automatically be requested from the server (with an object id of "obj2").
-
+define("dojox/data/ServiceStore", ["dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array"], function(declare, lang, array) {
 return declare("dojox.data.ServiceStore",
 	// ClientFilter is intentionally not required, ServiceStore does not need it, and is more
 	// lightweight without it, but if it is provided, the ServiceStore will use it.
 	lang.getObject("dojox.data.ClientFilter", 0)||null,{
+		// summary:
+		//		note that dojox.rpc.Service is not required, you can create your own services
+		//		A ServiceStore is a readonly data store that provides a data.data interface to an RPC service.
+		//		|		var myServices = new dojox.rpc.Service(dojo.moduleUrl("dojox.rpc.tests.resources", "test.smd"));
+		//		|		var serviceStore = new dojox.data.ServiceStore({service:myServices.ServiceStore});
+		//
+		//		The ServiceStore also supports lazy loading. References can be made to objects that have not been loaded.
+		//		For example if a service returned:
+		// 		|		{"name":"Example","lazyLoadedObject":{"$ref":"obj2"}}
+		//
+		//		And this object has accessed using the dojo.data API:
+		//		|		var obj = serviceStore.getValue(myObject,"lazyLoadedObject");
+		//		The object would automatically be requested from the server (with an object id of "obj2").
+	
+	
+		// service: Object
+		//	This is the service object that is used to retrieve lazy data and save results
+		//	The function should be directly callable with a single parameter of an object id to be loaded
 		service: null,
+		
 		constructor: function(options){
 			// summary:
 			//		ServiceStore constructor, instantiate a new ServiceStore
@@ -93,11 +96,39 @@ return declare("dojox.data.ServiceStore",
 			//	is supplied, it should be null so that auto identification takes place properly
 			this.idAttribute = (options && options.idAttribute) || (this.schema && this.schema._idAttr);
 		},
+		
+		// schema: 
+		//		This is a schema object for this store. This should be JSON Schema format.
 		schema: null,
+		
+		// idAttribute: String
+		//		Defaults to 'id'. The name of the attribute that holds an objects id.
+		//		This can be a preexisting id provided by the server.
+		//		If an ID isn't already provided when an object
+		//		is fetched or added to the store, the autoIdentity system
+		//		will generate an id for it and add it to the index.
+		
 		idAttribute: "id",
 		labelAttribute: "label",
+		
+		// syncMode: Boolean
+		//		Setting this to true will set the store to using synchronous calls by default.
+		//		Sync calls return their data immediately from the calling function, so
+		//		callbacks are unnecessary. This will only work with a synchronous capable service.
 		syncMode: false,
+		
+		// estimateCountFactor:
+		//		This parameter is used by the ServiceStore to estimate the total count. When
+		//		paging is indicated in a fetch and the response includes the full number of items
+		//		requested by the fetch's count parameter, then the total count will be estimated
+		//		to be estimateCountFactor multiplied by the provided count. If this is 1, then it is assumed that the server
+		//		does not support paging, and the response is the full set of items, where the
+		//		total count is equal to the numer of items returned. If the server does support
+		//		paging, an estimateCountFactor of 2 is a good value for estimating the total count
+		//		It is also possible to override _processResults if the server can provide an exact
+		//		total count.	
 		estimateCountFactor: 1,
+		
 		getSchema: function(){
 			return this.schema;
 		},

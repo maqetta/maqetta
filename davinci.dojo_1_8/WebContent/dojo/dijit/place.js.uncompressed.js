@@ -10,8 +10,6 @@ define("dijit/place", [
 
 	// module:
 	//		dijit/place
-	// summary:
-	//		Code to place a popup relative to another node
 
 
 	function _place(/*DomNode*/ node, choices, layoutNode, aroundNodeCoords){

@@ -15,7 +15,7 @@ return declare("dojox.grid.enhanced._Events", null, {
 	//		Methods are copied or replaced for overwriting, this might be refined once
 	//		an overall plugin architecture is set up for DataGrid.
 
-	//_events: Object
+	// _events: Object
 	//		Method map cached from dojox.grid._Events().
 	_events: null,
 

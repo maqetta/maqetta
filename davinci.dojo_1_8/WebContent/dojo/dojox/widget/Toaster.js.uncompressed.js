@@ -68,7 +68,7 @@ define("dojox/widget/Toaster", [
 		//    to slide in more slowly.
 		slideDuration: 500,
 
-		//separator: String
+		// separator: String
 		//		String used to separate messages if consecutive calls are made to setContent before previous messages go away
 		separator: "<hr></hr>",
 
@@ -258,11 +258,13 @@ define("dojox/widget/Toaster", [
 		},
 
 		onSelect: function(/*Event*/e){
-			// summary: callback for when user clicks the message
+			// summary:
+			//		callback for when user clicks the message
 		},
 
 		show: function(){
-			// summary: show the Toaster
+			// summary:'
+			//		show the Toaster
 			domStyle.set(this.domNode, 'display', 'block');
 
 			this._placeClip();
@@ -273,7 +275,8 @@ define("dojox/widget/Toaster", [
 		},
 
 		hide: function(){
-			// summary: hide the Toaster
+			// summary: 
+			//		hide the Toaster
 
 			domStyle.set(this.domNode, 'display', 'none');
 

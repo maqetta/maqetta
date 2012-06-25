@@ -28,8 +28,6 @@ define("dijit/InlineEditBox", [
 
 	// module:
 	//		dijit/InlineEditBox
-	// summary:
-	//		An element with in-line edit capabilities
 
 	var InlineEditor = declare("dijit._InlineEditor", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		// summary:

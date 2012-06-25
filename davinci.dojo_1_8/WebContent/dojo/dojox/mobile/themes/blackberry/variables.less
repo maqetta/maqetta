@@ -693,3 +693,17 @@
 }
 .mblProgressBarProgress-compat-gecko () {
 }
+
+// ValuePicker.less
+@mbl-value-picker-slot-button-background-image: -webkit-gradient(linear, left top, left bottom, from(#f7fbf7), to(#cecfd6), color-stop(0.5, #ced3ce));
+@mbl-value-picker-slot-button-background-image-gecko: -moz-linear-gradient(top, #f7fbf7 0%, #ced3ce 50%, #cecfd6 100%);
+@mbl-value-picker-slot-button-radius: 3px;
+@mbl-value-picker-slot-input-area-backbground-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.1, #fafafa), color-stop(0.2, #fafafa), color-stop(0.5, #ffffff), color-stop(0.9, #ffffff));
+@mbl-value-picker-slot-input-area-backbground-image-geco: -moz-linear-gradient(top, #fafafa 10%, #fafafa 20%, #ffffff 50%, #ffffff 90%);
+
+.mblValuePickerSlot-style () {
+  margin:  0 5px;
+}
+.mblValuePickerSlot-input-style () {
+  font: 24px/44px Helvetica, sans-serif;
+}

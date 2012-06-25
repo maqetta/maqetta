@@ -116,7 +116,9 @@ define("dojox/calendar/StoreMixin", ["dojo/_base/declare", "dojo/_base/array", "
 			//		Computes the data items that are in the displayed interval.
 			// renderData: Object
 			//		The renderData that contains the start and end time of the displayed interval.
-			
+			// tags:
+			//		protected
+
 			var startTime = renderData.startTime;
 			var endTime = renderData.endTime;
 			if(this.items){
@@ -127,6 +129,8 @@ define("dojox/calendar/StoreMixin", ["dojo/_base/declare", "dojo/_base/array", "
 		},
 		
 		_initItems: function(items){
+			// tags:
+			//		private
 			this.set("items", items);
 			return items;
 		},
@@ -138,6 +142,8 @@ define("dojox/calendar/StoreMixin", ["dojo/_base/declare", "dojo/_base/array", "
 			// as soon as we add a item or remove one layout might change,
 			// let's make that the default
 			// TODO: what about items in non visible area...
+			// tags:
+			//		private
 			var layoutCanChange = true;
 			var oldItem = null;
 			var newItem = this.itemToRenderItem(object, this.store);

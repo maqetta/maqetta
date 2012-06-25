@@ -22,7 +22,7 @@ define("dijit/tree/ObjectStoreModel", [
 		//		And in order to have child elements ordered according to how the user dropped them,
 		//		put() must support the before option.
 
-		// store: dojo.store
+		// store: dojo/store/api/Store
 		//		Underlying store
 		store: null,
 
@@ -30,8 +30,8 @@ define("dijit/tree/ObjectStoreModel", [
 		//		Get label for tree node from this attribute
 		labelAttr: "name",
 
-		// root: [readonly] dojo.store.Item
-		//		Pointer to the root item (read only, not a parameter)
+		// root: [readonly] Object
+		//		Pointer to the root item from the dojo/store (read only, not a parameter)
 		root: null,
 
 		// query: anything
@@ -95,7 +95,7 @@ define("dijit/tree/ObjectStoreModel", [
 			}
 		},
 
-		mayHaveChildren: function(/*dojo.store.Item*/ /*===== item =====*/){
+		mayHaveChildren: function(/*===== item =====*/){
 			// summary:
 			//		Tells if an item has or may have children.  Implementing logic here
 			//		avoids showing +/- expando icon for nodes that we know don't have children.
@@ -104,12 +104,16 @@ define("dijit/tree/ObjectStoreModel", [
 			//
 			//		Application code should override this method based on the data, for example
 			//		it could be `return item.leaf == true;`.
+			// item: Object
+			//		Item from the dojo/store
 			return true;
 		},
 
-		getChildren: function(/*dojo.store.Item*/ parentItem, /*function(items)*/ onComplete, /*function*/ onError){
+		getChildren: function(/*Object*/ parentItem, /*function(items)*/ onComplete, /*function*/ onError){
 			// summary:
 			//		Calls onComplete() with array of child items of given parent item.
+			// parentItem:
+			//		Item from the dojo/store
 
 			var id = this.store.getIdentity(parentItem);
 			if(this.childrenCache[id]){
@@ -164,7 +168,7 @@ define("dijit/tree/ObjectStoreModel", [
 			return this.store.getIdentity(item);	// Object
 		},
 
-		getLabel: function(/*dojo.data.Item*/ item){
+		getLabel: function(/*dojo/data/Item*/ item){
 			// summary:
 			//		Get the label for an item
 			return item[this.labelAttr];	// String
@@ -173,7 +177,7 @@ define("dijit/tree/ObjectStoreModel", [
 		// =======================================================================
 		// Write interface, for DnD
 
-		newItem: function(/* dojo.dnd.Item */ args, /*Item*/ parent, /*int?*/ insertIndex, /*Item*/ before){
+		newItem: function(/* dijit/tree/dndSource.__Item */ args, /*Item*/ parent, /*int?*/ insertIndex, /*Item*/ before){
 			// summary:
 			//		Creates a new item.   See `dojo.data.api.Write` for details on args.
 			//		Used in drag & drop when item from external source dropped onto tree.
@@ -215,7 +219,7 @@ define("dijit/tree/ObjectStoreModel", [
 		// =======================================================================
 		// Callbacks
 
-		onChange: function(/*dojo.data.Item*/ /*===== item =====*/){
+		onChange: function(/*dojo/data/Item*/ /*===== item =====*/){
 			// summary:
 			//		Callback whenever an item has changed, so that Tree
 			//		can update the label, icon, etc.   Note that changes
@@ -228,13 +232,14 @@ define("dijit/tree/ObjectStoreModel", [
 		onChildrenChange: function(/*===== parent, newChildrenList =====*/){
 			// summary:
 			//		Callback to do notifications about new, updated, or deleted items.
-			// parent: dojo.data.Item
-			// newChildrenList: dojo.store.Item[]
+			// parent: dojo/data/Item
+			// newChildrenList: Object[]
+			//		Items from the store
 			// tags:
 			//		callback
 		},
 
-		onDelete: function(/*dojo.data.Item*/ /*===== item =====*/){
+		onDelete: function(/*dojo/data/Item*/ /*===== item =====*/){
 			// summary:
 			//		Callback when an item has been deleted.
 			//		Actually we have no way of knowing this with the new dojo.store API,

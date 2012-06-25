@@ -209,7 +209,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		this._updateHeaderNodeUI(node);
 	},
 	_onHeaderCellClick: function(e){
-		// summary
+		// summary:
 		//		See dojox.grid.enhanced._Events._onHeaderCellClick()
 		this._focusRegion(e.target);
 		if(html.hasClass(e.target, 'dojoxGridSortBtn')){
@@ -219,7 +219,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		}
 	},
 	_onHeaderCellMouseOver: function(e){
-		// summary
+		// summary:
 		//		See dojox.grid._Events._onHeaderCellMouseOver()
 		//		When user mouseover other columns than sorted column in a single sorted grid,
 		//		We need to show 1 in the sorted column
@@ -266,7 +266,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		}
 	},
 	_onHeaderCellMouseOut: function(e){
-		// summary
+		// summary:
 		//		See dojox.grid.enhanced._Events._onHeaderCellMouseOut()
 		var p;
 		for(p in this._sortData){
@@ -340,7 +340,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		}
 	},
 	_prepareNestedSort: function(cellIdx){
-		// summary
+		// summary:
 		//		Prepare the nested sorting, this will order the column on existing sorting result.
 		var i = this._sortData[cellIdx] ? this._sortData[cellIdx].index : null;
 		if(i === 0 || !!i){ return; }
@@ -558,7 +558,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		return regions;
 	},
 	_focusRegion: function(region){
-		// summary
+		// summary:
 		//		Focus the given region
 		if(!region){return;}
 		var currRegion = this._getCurrentRegion();

@@ -20,8 +20,6 @@ define("dijit/Calendar", [
 
 	// module:
 	//		dijit/Calendar
-	// summary:
-	//		A simple GUI for choosing a date in the context of a monthly calendar.
 
 	var Calendar = declare("dijit.Calendar",
 		[CalendarLite, _Widget, _CssStateMixin], // _Widget for deprecated methods like setAttribute()

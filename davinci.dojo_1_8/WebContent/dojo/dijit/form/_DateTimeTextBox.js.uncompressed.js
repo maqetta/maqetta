@@ -13,12 +13,8 @@ define("dijit/form/_DateTimeTextBox", [
 
 	// module:
 	//		dijit/form/_DateTimeTextBox
-	// summary:
-	//		Base class for validating, serializable, range-bound date or time text box.
-
 
 	new Date("X"); // workaround for #11279, new Date("") == NaN
-
 
 	var _DateTimeTextBox = declare("dijit.form._DateTimeTextBox", [RangeBoundTextBox, _HasDropDown], {
 		// summary:

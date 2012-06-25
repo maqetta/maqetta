@@ -20,35 +20,35 @@ define("dojox/mobile/FixedSplitter", [
 		//		vertically.
 		// description:
 		//		FixedSplitter is a very simple container widget that layouts its
-		//		child dom nodes side by side either horizontally or
+		//		child DOM nodes side by side either horizontally or
 		//		vertically. An example usage of this widget would be to realize
 		//		the split view on iPad. There is no visual splitter between the
 		//		children, and there is no function to resize the child panes
 		//		with drag-and-drop. If you need a visual splitter, you can
-		//		specify a border of a child dom node with CSS.
+		//		specify a border of a child DOM node with CSS.
 		//
 		//		FixedSplitter has no knowledge of its child widgets.
-		//		dojox.mobile.Container (=formerly known as FixedSplitterPane),
-		//		dojox.mobile.Pane, or dojox.mobile.ContentPane can be used as a
+		//		dojox/mobile/Container (formerly known as FixedSplitterPane),
+		//		dojox/mobile/Pane, or dojox/mobile/ContentPane can be used as a
 		//		child widget of FixedSplitter.
 		//
-		//		- Use dojox.mobile.Container if your content consists of ONLY
-		//		  dojo widgets.
-		//		- Use dojox.mobile.Pane if your content is an inline html
-		//		  fragment (may or may not include dojo widgets).
-		//		- Use dojox.mobile.ContentPane if your content is an external
-		//		  html fragment (may or may not include dojo widgets).
+		//		- Use dojox/mobile/Container if your content consists of ONLY
+		//		  Dojo widgets.
+		//		- Use dojox/mobile/Pane if your content is an inline HTML
+		//		  fragment (may or may not include Dojo widgets).
+		//		- Use dojox/mobile/ContentPane if your content is an external
+		//		  HTML fragment (may or may not include Dojo widgets).
 		//
 		// example:
-		// |	<div dojoType="dojox.mobile.FixedSplitter" orientation="H">
-		// |		<div dojoType="dojox.mobile.Pane"
-		// |			style="width:200px;border-right:1px solid black;">
-		// |			pane #1 (width=200px)
-		// |		</div>
-		// |		<div dojoType="dojox.mobile.Pane">
-		// |			pane #2
-		// |		</div>
-		// |	</div>
+		//	|	<div data-dojo-type="dojox.mobile.FixedSplitter" orientation="H">
+		//	|		<div data-dojo-type="dojox.mobile.Pane"
+		//	|			style="width:200px;border-right:1px solid black;">
+		//	|			pane #1 (width=200px)
+		//	|		</div>
+		//	|		<div data-dojo-type="dojox.mobile.Pane">
+		//	|			pane #2
+		//	|		</div>
+		//	|	</div>
 
 		// orientation: String
 		//		The direction of split. If "H" is specified, panes are split
@@ -68,7 +68,10 @@ define("dojox/mobile/FixedSplitter", [
 		//		A screen-size-aware module to load.
 		screenSizeAwareClass: "dojox/mobile/ScreenSizeAware",
 
-		/* internal properties */	
+		/* internal properties */
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblFixedSplitter",
 
 		startup: function(){
@@ -145,6 +148,8 @@ define("dojox/mobile/FixedSplitter", [
 			//		The value must be either "H" or "V".
 			//		If "H" is specified, panes are split horizontally.
 			//		If "V" is specified, panes are split vertically.
+			// tags:
+			//		private
 			var s = this.baseClass;
 			domClass.replace(this.domNode, s + orientation, s + this.orientation);
 			this.orientation = orientation;

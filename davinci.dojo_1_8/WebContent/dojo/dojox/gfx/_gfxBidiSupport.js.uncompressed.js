@@ -36,15 +36,15 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 		//		Will be used as default for Text/TextPath/Group objects that created by this surface
 		//		and textDir wasn't directly specified for them, though the bidi support was loaded.
 		//		Can be setted in two ways:
-		//			1. When the surface is created and textDir value passed to it as fourth 
-		//			parameter.
-		//			2. Using the setTextDir(String) function, when this function is used the value
-		//			of textDir propogates to all of it's children and the children of children (for Groups) etc.
+		//		1. When the surface is created and textDir value passed to it as fourth
+		//		parameter.
+		//		2. Using the setTextDir(String) function, when this function is used the value
+		//		of textDir propogates to all of it's children and the children of children (for Groups) etc.
 		textDir: "",
 
 		setTextDir: function(/*String*/newTextDir){
 			// summary:
-			//		Used for propogation and change of textDir.
+			//		Used for propagation and change of textDir.
 			//		newTextDir will be forced as textDir for all of it's children (Group/Text/TextPath).
 			setTextDir(this, newTextDir);
 		},
@@ -62,7 +62,7 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 
 		setTextDir: function(/*String*/newTextDir){
 			// summary:
-			//		Used for propogation and change of textDir.
+			//		Used for propagation and change of textDir.
 			//		newTextDir will be forced as textDir for all of it's children (Group/Text/TextPath).
 			setTextDir(this, newTextDir);
 		},
@@ -74,42 +74,42 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 	
 	lang.extend(g.Text, {  
 		// summary:
-		//		Overrides some of dojox.gfx.Text properties, and adds some 
+		//		Overrides some of dojox.gfx.Text properties, and adds some
 		//		for bidi support.
 		
 		// textDir: String
 		//		Used for displaying bidi scripts in right layout.
 		//		Defines the base direction of text that displayed, can have 3 values:
-		//			1. "ltr" - base direction is left to right.
-		//			2. "rtl" - base direction is right to left.
-		//			3. "auto" - base direction is contextual (defined by first strong character).
+		//		1. "ltr" - base direction is left to right.
+		//		2. "rtl" - base direction is right to left.
+		//		3. "auto" - base direction is contextual (defined by first strong character).
 		textDir: "",
 
 		formatText: function (/*String*/ text, /*String*/ textDir){
-			// summary: 
+			// summary:
 			//		Applies the right transform on text, according to renderer.
 			// text:	
 			//		the string for manipulation, by default return value.
 			// textDir:	
 			//		Text direction.
 			//		Can be:
-			//			1. "ltr" - for left to right layout.
-			//			2. "rtl" - for right to left layout
-			//			3. "auto" - for contextual layout: the first strong letter decides the direction.	
-			// discription:
+			//		1. "ltr" - for left to right layout.
+			//		2. "rtl" - for right to left layout
+			//		3. "auto" - for contextual layout: the first strong letter decides the direction.
+			// description:
 			//		Finds the right transformation that should be applied on the text, according to renderer.
 			//		Was tested in:
-			//			Renderers (browser for testing): 
-			//				canvas (FF, Chrome, Safari), 
-			//				vml (IE), 
-			//				svg (FF, Chrome, Safari, Opera), 
-			//				silverlight (IE, Chrome, Safari, Opera), 
-			//				svgWeb(FF, Chrome, Safari, Opera, IE).
-			//			Browsers [browser version that was tested]: 
-			//				IE [6,7,8], FF [3.6], 
-			//				Chrome (latest for March 2011), 
-			//				Safari [5.0.3], 
-			//				Opera [11.01].
+			//		Renderers (browser for testing):
+			//			canvas (FF, Chrome, Safari),
+			//			vml (IE),
+			//			svg (FF, Chrome, Safari, Opera),
+			//			silverlight (IE, Chrome, Safari, Opera),
+			//			svgWeb(FF, Chrome, Safari, Opera, IE).
+			//		Browsers [browser version that was tested]:
+			//			IE [6,7,8], FF [3.6],
+			//			Chrome (latest for March 2011),
+			//			Safari [5.0.3],
+			//			Opera [11.01].
 
 			if(textDir && text && text.length > 1){
 				var sourceDir = "ltr", targetDir = textDir;
@@ -162,34 +162,36 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 
 		bidiPreprocess: function(newShape){     
 			return newShape;
-		}	
+		}
 	});
 
 	lang.extend(g.TextPath, {          
-			// textDir: String
-			//		Used for displaying bidi scripts in right layout.
-			//		Defines the base direction of text that displayed, can have 3 values:
-			//			1. "ltr" - base direction is left to right.
-			//			2. "rtl" - base direction is right to left.
-			//			3. "auto" - base direction is contextual (defined by first strong character).
+		// textDir: String
+		//		Used for displaying bidi scripts in right layout.
+		//		Defines the base direction of text that displayed, can have 3 values:
+		//		1. "ltr" - base direction is left to right.
+		//		2. "rtl" - base direction is right to left.
+		//		3. "auto" - base direction is contextual (defined by first strong character).
 		textDir: "",
 
 		formatText: function (/*String*/text, /*String*/textDir){
-			// summary: 
+			// summary:
 			//		Applies the right transform on text, according to renderer.
-			// text:	the string for manipulation, by default return value.
-			// textDir:	text direction direction.
+			// text:
+			//		the string for manipulation, by default return value.
+			// textDir:
+			//		text direction direction.
 			//		Can be:
-			//			1. "ltr" - for left to right layout.
-			//			2. "rtl" - for right to left layout
-			//			3. "auto" - for contextual layout: the first strong letter decides the direction.	
-			// discription:
+			//		1. "ltr" - for left to right layout.
+			//		2. "rtl" - for right to left layout
+			//		3. "auto" - for contextual layout: the first strong letter decides the direction.
+			// description:
 			//		Finds the right transformation that should be applied on the text, according to renderer.
 			//		Was tested in:
-			//			Renderers: 
-			//				canvas (FF, Chrome, Safari), vml (IE), svg (FF, Chrome, Safari, Opera), silverlight (IE8), svgWeb(FF, Chrome, Safari, Opera, IE).
-			//			Browsers: 
-			//				IE [6,7,8], FF [3.6], Chrome (latest for February 2011), Safari [5.0.3], Opera [11.01].
+			//		Renderers:
+			//			canvas (FF, Chrome, Safari), vml (IE), svg (FF, Chrome, Safari, Opera), silverlight (IE8), svgWeb(FF, Chrome, Safari, Opera, IE).
+			//		Browsers:
+			//			IE [6,7,8], FF [3.6], Chrome (latest for February 2011), Safari [5.0.3], Opera [11.01].
 
 			if(textDir && text && text.length > 1){
 				var sourceDir = "ltr", targetDir = textDir;
@@ -241,12 +243,13 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 	});	
 		
 	var extendMethod = function(shape, method, before, after){
-		// Some helper function. Used for extending metod of shape.
+		// summary:
+		//		Some helper function. Used for extending methods of shape.
 		// shape: Object
-		//		The shape we overriding it's metod.
+		//		The shape we overriding it's method.
 		// method: String
-		//		The method that is extended, the original metod is called before or after
-		//		functions that passed to extendMethod. 
+		//		The method that is extended, the original method is called before or after
+		//		functions that passed to extendMethod.
 		// before: function
 		//		If defined this function will be executed before the original method.
 		// after: function
@@ -287,7 +290,7 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 
 	};
 
-	// Istead of adding bidiPreprocess to all renders one by one
+	// Instead of adding bidiPreprocess to all renders one by one
 	// use the extendMethod, at first there's a need for bidi transformation 
 	// on text then call to original setShape.
 	extendMethod(g.Text,"setShape", bidiPreprocess, null);
@@ -301,7 +304,7 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 		return obj;
 	};
 
-	// Istead of adding restoreText to all renders one by one
+	// Instead of adding restoreText to all renders one by one
 	// use the extendMethod, at first get the shape by calling the original getShape,
 	// than resrore original text (without the text transformations).
 	extendMethod(g.Text, "getShape", null, restoreText);

@@ -24,6 +24,9 @@ define("dojox/mobile/RoundRect", [
 		shadow: false,
 
 		/* internal properties */	
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
 		baseClass: "mblRoundRect",
 
 		buildRendering: function(){

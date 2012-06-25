@@ -9,7 +9,7 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 	//		dojox/css3/transition
 	// summary:
 	//		This module defines the transition utilities which can be used
-	//		to conduct transition effect based on CSS Transition standard
+	//		to perform transition effects based on the CSS Transition standard.
 	
 	//create cross platform animation/transition effects
 	//TODO enable opera mobile when it is hardware accelerated
@@ -31,9 +31,9 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 	//Use the simple object inheritance
 	var transition = function(args){
 		// summary:
-		//		The constructor of the transition object
+		//		The constructor of the transition object.
 		// args:
-		//		The arguments which will be mixed into this transition object
+		//		The arguments which will be mixed into this transition object.
 		
 		//default config should be in animation object itself instead of its prototype
 		//otherwise, it might be easy for making mistake of modifying prototype
@@ -62,7 +62,7 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 		
 		play: function(){
 			// summary:
-			//		play the transition effect defined by this transition object.
+			//		Plays the transition effect defined by this transition object.
 			transition.groupedPlay([this]);
 		},
 		
@@ -79,7 +79,7 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 		
 		initState: function(){
 			// summary:
-			//		method to initialize state for transition
+			//		Method to initialize the state for a transition.
 			
 			//apply the immediate style change for initial state.
 			this.node.style[transitionPrefix + "ransitionProperty"] = "none";
@@ -130,14 +130,15 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 			//		The callback which will be called right after the end
 			//		of the transition effect and after the final state is
 			//		cleared.
-			
 		},
 		
 		start: function(){
 			// summary:
-			//		method to start the transition
+			//		Method to start the transition.
 			this._beforeStart();
-			
+			this._startTime = new Date().getTime(); // set transition start timestamp
+			this._cleared = false; // set clear flag to false
+
 			var self = this;
 			//change the transition duration
 			self.node.style[transitionPrefix + "ransitionProperty"] = "all";
@@ -155,7 +156,12 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 		
 		clear: function(){
 			// summary:
-			//		method to clear state after transition
+			//		Method to clear the state after a transition.
+			if(this._cleared) {
+				return;
+			}
+			this._cleared = true; // set clear flag to true
+
 			this._beforeClear();
 			this._removeState(this.endState);
 			// console.log(this.node.id + " clear.");
@@ -179,7 +185,7 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 	
 	transition.slide = function(node, config){
 		// summary:
-		//		method which is used to create the transition object of slide effect.
+		//		Method which is used to create the transition object of a slide effect.
 		// node:
 		//		The node that the slide transition effect will be applied on.
 		// config:
@@ -206,7 +212,6 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 			}
 		}
 		
-		
 		ret.startState[transitionPrefix + "ransform"]=translateMethodStart+startX+translateMethodEnd;
 		
 		ret.endState[transitionPrefix + "ransform"]=translateMethodStart+endX+translateMethodEnd;
@@ -216,7 +221,7 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 		
 	transition.fade = function(node, config){
 		// summary:
-		//		method which is used to create the transition object of fade effect.
+		//		Method which is used to create the transition object of fade effect.
 		// node:
 		//		The node that the fade transition effect will be applied on.
 		// config:
@@ -247,7 +252,7 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 	
 	transition.flip = function(node, config){
 		// summary:
-		//		method which is used to create the transition object of flip effect.
+		//		Method which is used to create the transition object of flip effect.
 		// node:
 		//		The node that the flip transition effect will be applied on.
 		// config:
@@ -333,7 +338,24 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 			setTimeout(function(){
 				array.forEach(args, function(item){
 					item.start();
-				});			   
+				});
+
+				// check and clear node if the node not cleared.
+				// 1. on Android2.2/2.3, the "fade out" transitionEnd event will be lost if the soft keyboard popup, so we need to check nodes' clear status.
+				// 2. The "fade in" transitionEnd event will before or after "fade out" transitionEnd event and it always occurs.
+				//	  We can check fade out node status in the last "fade in" node transitionEnd event callback, if node transition timeout, we clear it.
+				// NOTE: the last "fade in" transitionEnd event will always fired, so we bind on this event and check other nodes.
+				on.once(args[args.length-1].node, transitionEndEventName, function(){
+					var timeout;
+					for(var i=0; i<args.length-1; i++){
+						if(args[i].deferred.fired !== 0){
+							timeout = new Date().getTime() - args[i]._startTime;
+							if(timeout >= args[i].duration){
+								args[i].clear();
+							}
+						}
+					}
+				});
 			}, 33);
 		});		   
 	};
@@ -382,5 +404,12 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 	//TODO complete the registry mechanism for animation handling and prevent animation conflicts
 	transition.playing = {};
 	
+	/*=====
+    return {
+		// summary:
+		//		This module defines the transition utilities which can be used
+		//		to perform transition effects based on the CSS Transition standard.
+    };
+    =====*/
 	return transition;
 });

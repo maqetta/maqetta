@@ -13,10 +13,11 @@ define("dojox/mobile/Opener", [
 ], function(declare, Deferred, lang, win, domClass, domConstruct, domStyle, domGeometry, Tooltip, Overlay, lazyLoadUtils){
 
 	var isOverlay = domClass.contains(win.doc.documentElement, "dj_phone");
+	
 	var cls = declare("dojox.mobile.Opener", isOverlay ? Overlay : Tooltip, {
 		// summary:
-		//		A non-templated popup widget that will use either Tooltip or Overlay depending on screen size
-		//
+		//		A non-templated popup widget that will use either Tooltip or 
+		//		Overlay depending on screen size.
 
 		// lazy: String
 		//		If true, the content of the widget, which includes dojo markup,
@@ -65,12 +66,16 @@ define("dojox/mobile/Opener", [
 		},
 		
 		_reposition: function(){
+			// tags:
+			//		private
 			var popupPos = this.inherited(arguments);
 			this._resizeCover(popupPos);
 			return popupPos;
 		},
 
 		_resizeCover: function(popupPos){
+			// tags:
+			//		private
 			if(isOverlay){
 				if(parseInt(domStyle.get(this.cover, 'top')) != -popupPos.y || parseInt(domStyle.get(this.cover, 'height')) != popupPos.y){
 					var x = Math.max(popupPos.x, 0); // correct onorientationchange values
@@ -85,6 +90,8 @@ define("dojox/mobile/Opener", [
 		},
 
 		_onBlur: function(e){
+			// tags:
+			//		private
 			var ret = this.onBlur(e);
 			if(ret !== false){ // only exactly false prevents hide()
 				this.hide(e);

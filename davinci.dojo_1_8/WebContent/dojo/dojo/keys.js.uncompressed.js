@@ -1,8 +1,7 @@
-define("dojo/keys", ["./_base/kernel", "./sniff"], function(dojo, has) {
-	// module:
-	//		dojo/keys
-	// summary:
-	//		key constants
+define("dojo/keys", ["./_base/kernel", "./sniff"], function(dojo, has){
+
+// module:
+//		dojo/keys
 
 // Public: client code should test
 // keyCode against these named constants, as the

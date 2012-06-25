@@ -10,13 +10,16 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 	//			class:		The classname, including the '.'.
 	//			classSans:	The classname without the '.'.
 
-	_labelAttribute: 'class', // text representation of the Item [label and identifier may need to stay due to method names]
+	// _labelAttribute:
+	//		text representation of the Item [label and identifier may need to stay due to method names]
+	_labelAttribute: 'class',
+	
 	_idAttribute: 'class',
 	_cName: "dojox.data.CssClassStore",
 
 	getFeatures: function(){
 		// summary:
-		//		See dojo.data.api.Read.getFeatures()
+		//		See dojo/data/api/Read.getFeatures()
 		return {
 			"dojo.data.api.Read" : true,
 			"dojo.data.api.Identity" : true
@@ -25,14 +28,14 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 
 	getAttributes: function(item){
 		// summary:
-		//		See dojo.data.api.Read.getAttributes()
+		//		See dojo/data/api/Read.getAttributes()
 		this._assertIsItem(item);
 		return ['class', 'classSans'];
 	},
 
 	getValue: function(item, attribute, defaultValue){
 		// summary:
-		//		See dojo.data.api.Read.getValue()
+		//		See dojo/data/api/Read.getValue()
 		var values = this.getValues(item, attribute);
 		if(values && values.length > 0){
 			return values[0];
@@ -42,7 +45,7 @@ return declare("dojox.data.CssClassStore", CssRuleStore, {
 
 	getValues: function(item, attribute){
 		// summary:
-		//		See dojo.data.api.Read.getValues()
+		//		See dojo/data/api/Read.getValues()
 		this._assertIsItem(item);
 		this._assertIsAttribute(attribute);
 		var value = [];

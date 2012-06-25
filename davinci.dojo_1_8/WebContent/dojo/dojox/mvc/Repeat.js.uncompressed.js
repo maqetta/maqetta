@@ -11,11 +11,6 @@ define("dojox/mvc/Repeat", [
 	"dijit/registry",
 	"./_Container"
 ], function(declare, lang, has, win, dom, domconstruct, array, query, when, registry, _Container){
-	/*=====
-		declare = dojo.declare;
-		dom = dojo.dom;
-		_Container = dojox.mvc._Container;
-	=====*/
 
 	return declare("dojox.mvc.Repeat", _Container, {
 		// summary:
@@ -24,7 +19,7 @@ define("dojox/mvc/Repeat", [
 		//		iteration within the collection.
 		//
 		// description:
-		//		A repeat is bound to an intermediate dojo.Stateful node corresponding
+		//		A repeat is bound to an intermediate dojo/Stateful node corresponding
 		//		to an array in the data model. Child dijits or custom view components
 		//		inside it inherit their parent data binding context from it.
 
@@ -38,10 +33,10 @@ define("dojox/mvc/Repeat", [
 		//		model. Then, the following CRUD-style UI displays all the names in
 		//		the search results in text boxes where they may be updated or such.
 		//
-		//		|	<div dojoType="dojox.mvc.Repeat" ref="Results">
-		//		|		<div class="row" dojoType="dojox.mvc.Group" ref="${this.index}">
+		//		|	<div dojoType="dojox/mvc/Repeat" ref="Results">
+		//		|		<div class="row" dojoType="dojox/mvc/Group" ref="${this.index}">
 		//		|			<label for="nameInput${this.index}">Name:</label>
-		//		|			<input dojoType="dijit.form.TextBox" id="nameInput${this.index}" ref="'Name'"></input>
+		//		|			<input dojoType="dijit/form/TextBox" id="nameInput${this.index}" ref="'Name'"></input>
 		//		|		</div>
 		//		|	</div>
 		index : 0,
@@ -57,7 +52,7 @@ define("dojox/mvc/Repeat", [
 		//		a Repeat inside of a dojox.mobile list.		
 		removeRepeatNode : false,
 
-		// children: dojox.mvc.StatefulArray
+		// children: dojox/mvc/StatefulArray
 		//		The array of data model that is used to render child nodes.
 		children: null,
 
@@ -109,7 +104,7 @@ define("dojox/mvc/Repeat", [
 
 		////////////////////// PRIVATE METHODS ////////////////////////
 
-		_setChildrenAttr: function(/*dojo.Stateful*/ value){
+		_setChildrenAttr: function(/*dojo/Stateful*/ value){
 			// summary:
 			//		Handler for calls to set("children", val).
 			// description:
@@ -127,11 +122,11 @@ define("dojox/mvc/Repeat", [
 			}
 		},
 
-		_buildContained: function(/*dojox.mvc.StatefulArray*/ children){
+		_buildContained: function(/*dojox/mvc/StatefulArray*/ children){
 			// summary:
 			//		Destroy any existing contained view, recreate the repeating UI
 			//		markup and parse the new contents.
-			// children: dojox.mvc.StatefulArray
+			// children: dojox/mvc/StatefulArray
 			//		The array of child widgets.
 			// tags:
 			//		private
@@ -202,10 +197,10 @@ define("dojox/mvc/Repeat", [
 			});
 		},
 
-		_updateAddRemoveWatch: function(/*dojo.Stateful*/ children){
+		_updateAddRemoveWatch: function(/*dojo/Stateful*/ children){
 			// summary:
 			//		Updates the watch handle when binding changes.
-			// children: dojo.Stateful
+			// children: dojo/Stateful
 			//		The array of child widgets.
 			// tags:
 			//		private

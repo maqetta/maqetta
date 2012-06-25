@@ -130,21 +130,33 @@ function(
 		},
 		
 		_onItemRollOver: function(e){
+			// tags:
+			//		private
+
 			this._dispatchCalendarEvt(e, "onItemRollOver");
 		},
 		
 		onItemRollOver: function(e){
 			// summary:
 			//		Event dispatched when the mouse cursor in going over an item renderer. 
+			// tags:
+			//		callback
+
 		},
 		
 		_onItemRollOut: function(e){
+			// tags:
+			//		private
+
 			this._dispatchCalendarEvt(e, "onItemRollOut");
 		},
 		
 		onItemRollOut: function(e){
 			// summary:
 			//		Event dispatched when the mouse cursor in leaving an item renderer.
+			// tags:
+			//		protected
+
 		},
 		
 		_rendererMouseDownHandler: function(e, renderer){
@@ -152,7 +164,9 @@ function(
 			// summary:
 			//		Callback if the user clicked on the item renderer but not on a handle.
 			//		Manages item selection.
-			
+			// tags:
+			//		private
+
 			event.stop(e);				
 			
 			var item = this.renderItemToItem(renderer.item, this.get("store"));
@@ -165,12 +179,14 @@ function(
 		},
 		
 		_onRendererHandleMouseDown: function(e, renderer, editKind){
-			
 			// summary:
 			//		Callback if the user clicked on a handle of an item renderer.
 			//		Manages item selection and editing gesture. If editing is not allowed, 
 			//		resize handles are not displayed and so this callback will never be called.
 			//		In that case selected is managed by the _rendererMouseDownHandler function.
+			// tags:
+			//		private
+
 			
 			event.stop(e);				
 			
@@ -216,6 +232,9 @@ function(
 		},
 		
 		_editingMouseMoveHandler: function(e){
+			// tags:
+			//		private
+
 			var p = this._edProps;
 					
 			if(this._editingGesture){
@@ -238,6 +257,8 @@ function(
 		},		
 		
 		_editingMouseUpHandler: function(e){
+			// tags:
+			//		private
 			
 			var p = this._edProps;
 			

@@ -35,7 +35,7 @@ define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./
 		var major = window.ScriptEngineMajorVersion;
 		has.add("jscript", major && (major() + ScriptEngineMinorVersion() / 10));
 		has.add("event-orientationchange", has("touch") && !has("android")); // TODO: how do we detect this?
-		has.add("event-stopimmediatepropogation", window.Event && !!window.Event.prototype.stopImmediatePropagation);
+		has.add("event-stopimmediatepropogation", window.Event && !!window.Event.prototype && !!window.Event.prototype.stopImmediatePropagation);
 	}
 	var on = function(target, type, listener, dontFix){
 		if(target.on){ 
@@ -455,7 +455,7 @@ define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./
 		};
 	}
 	if(has("touch")){ 
-		var Event = function (){};
+		var Event = function(){};
 		var windowOrientation = window.orientation; 
 		var fixTouchListener = function(listener){ 
 			return function(originalEvent){ 

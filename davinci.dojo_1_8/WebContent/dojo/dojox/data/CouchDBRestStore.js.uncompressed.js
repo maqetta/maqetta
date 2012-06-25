@@ -1,14 +1,13 @@
 define("dojox/data/CouchDBRestStore", ["dojo", "dojox", "dojox/data/JsonRestStore"], function(dojo, dojox) {
-
-// A CouchDBRestStore is an extension of JsonRestStore to handle CouchDB's idiosyncrasies, special features,
-// and deviations from standard HTTP Rest.
-// NOTE: CouchDB is not designed to be run on a public facing network. There is no access control
-// on database documents, and you should NOT rely on client side control to implement security.
-
-
 dojo.declare("dojox.data.CouchDBRestStore",
 	dojox.data.JsonRestStore,
 	{
+	//	summary:
+	// 		A CouchDBRestStore is an extension of JsonRestStore to handle CouchDB's idiosyncrasies, special features,
+	//		and deviations from standard HTTP Rest.
+	// 		NOTE: CouchDB is not designed to be run on a public facing network. There is no access control
+	//	 	on database documents, and you should NOT rely on client side control to implement security.
+
 		save: function(kwArgs){
 			var actions = this.inherited(arguments); // do the default save and then update for version numbers
 			var prefix = this.service.servicePath;

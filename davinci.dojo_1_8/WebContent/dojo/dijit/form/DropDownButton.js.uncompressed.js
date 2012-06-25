@@ -14,8 +14,6 @@ define("dijit/form/DropDownButton", [
 
 // module:
 //		dijit/form/DropDownButton
-// summary:
-//		A button with a drop down
 
 
 return declare("dijit.form.DropDownButton", [Button, _Container, _HasDropDown], {

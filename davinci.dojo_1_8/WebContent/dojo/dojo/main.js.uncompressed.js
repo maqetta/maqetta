@@ -14,7 +14,8 @@ define("dojo/main", [
 	"./_base/Color",
 	"./has!dojo-firebug?./_firebug/firebug",
 	"./_base/browser",
-	"./_base/loader"
+	"./_base/loader",
+	"require"
 ], function(kernel, has, require, sniff, lang, array, config, ready){
 	// module:
 	//		dojo/main

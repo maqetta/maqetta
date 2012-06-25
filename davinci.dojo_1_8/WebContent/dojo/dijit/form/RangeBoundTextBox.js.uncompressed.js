@@ -6,8 +6,6 @@ define("dijit/form/RangeBoundTextBox", [
 
 	// module:
 	//		dijit/form/RangeBoundTextBox
-	// summary:
-	//		Base class for textbox form widgets which defines a range of valid values.
 
 
 	var RangeBoundTextBox = declare("dijit.form.RangeBoundTextBox", MappedTextBox, {
@@ -23,7 +21,7 @@ define("dijit/form/RangeBoundTextBox", [
 		constraints: {},
 		======*/
 
-		rangeCheck: function(/*Number*/ primitive, /*dijit.form.RangeBoundTextBox.__Constraints*/ constraints){
+		rangeCheck: function(/*Number*/ primitive, /*dijit/form/RangeBoundTextBox.__Constraints*/ constraints){
 			// summary:
 			//		Overridable function used to validate the range of the numeric input value.
 			// tags:

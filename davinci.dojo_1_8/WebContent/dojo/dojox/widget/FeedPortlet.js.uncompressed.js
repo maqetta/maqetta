@@ -289,21 +289,22 @@ dojo.declare("dojox.widget.PortletFeedSettings",
 	// description:
 	//		It provides form items that the user can use to change the URL
 	//		for a feed to load into the FeedPortlet.
-	//		There are two forms that it can take.	<br>
+	//		There are two forms that it can take.
+	//
 	//		The first is to display a text field, with Load and Cancel buttons,
 	//		which is prepopulated with the enclosing FeedPortlet's URL.
-	//		If a <select> DOM node is used as the source node for this widget,
+	//		If a `<select>` DOM node is used as the source node for this widget,
 	//		it displays a list of predefined URLs that the user can select from
 	//		to load into the enclosing FeedPortlet.
 	//
 	// example:
-	//		<div dojoType="dojox.widget.PortletFeedSettings"></div>
+	// |	<div dojoType="dojox.widget.PortletFeedSettings"></div>
 	//
 	// example:
-	//		<select dojoType="dojox.widget.PortletFeedSettings">
-	//			<option>http://www.dojotoolkit.org/aggregator/rss</option>
-	//			<option>http://dojocampus.org/content/category/podcast/feed/</option>
-	//		</select>
+	// |	<select dojoType="dojox.widget.PortletFeedSettings">
+	// |		<option>http://www.dojotoolkit.org/aggregator/rss</option>
+	// |		<option>http://dojocampus.org/content/category/podcast/feed/</option>
+	// |	</select>
 
 	"class" : "dojoxPortletFeedSettings",
 

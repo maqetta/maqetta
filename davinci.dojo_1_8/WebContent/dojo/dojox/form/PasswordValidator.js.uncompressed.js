@@ -188,7 +188,8 @@ return declare("dojox.form.PasswordValidator", FormValueWidget, {
 	},
 
 	reset: function(){
-		// summary: Resetting this widget resets all our children
+		// summary:
+		//		Resetting this widget resets all our children
 		this._hasBeenBlurred = false;
 		array.forEach(this._inputWidgets, function(i){
 			if(i && i.reset){ i.reset(); }
@@ -249,7 +250,7 @@ return declare("dojox.form.PasswordValidator", FormValueWidget, {
 	postCreate: function(){
 		// summary:
 		//		Sets up the correct widgets.  You *MUST* specify one child
-		//		text box (a simple HTML <input> element) with pwType="new"
+		//		text box (a simple HTML `<input>` element) with pwType="new"
 		//		*and* one child text box with pwType="verify".  You *MAY*
 		//		specify a third child text box with pwType="old" in order to
 		//		prompt the user to enter in their old password before the

@@ -399,7 +399,7 @@ return declare("dojox.grid.enhanced._FocusManager", _FocusManager, {
 		// summary:
 		//		Overwritten
 		//		Check whether currently navigating among column headers.
-		// return:
+		// returns:
 		//		true - focus is on a certain column header | false otherwise
 		return this._areaQueue[this._currentAreaIdx] == "header";
 	},

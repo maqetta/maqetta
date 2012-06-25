@@ -7,8 +7,6 @@ define("dijit/form/HorizontalRuleLabels", [
 
 // module:
 //		dijit/form/HorizontalRuleLabels
-// summary:
-//		Labels for `dijit.form.HorizontalSlider`
 
 return declare("dijit.form.HorizontalRuleLabels", HorizontalRule, {
 	// summary:

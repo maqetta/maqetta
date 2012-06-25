@@ -20,19 +20,31 @@ define("dojox/mobile/ViewController", [
 	// module:
 	//		dojox/mobile/ViewController
 	// summary:
-	//		A singleton class that controlls view transition.
+	//		A singleton class that controls view transition.
 
 	var Controller = declare("dojox.mobile.ViewController", null, {
 		// summary:
-		//		A singleton class that controlls view transition.
+		//		A singleton class that controls view transition.
 		// description:
 		//		This class listens to the "startTransition" events and performs
 		//		view transitions. If the transition destination is an external
 		//		view specified with the url parameter, the view content is
 		//		retrieved and parsed to create a new target view.
 
+		// dataHandlerClass: Object
+		//		The data handler class used to load external views,
+		//		by default "dojox/mobile/dh/DataHandler"
+		//		(see the Data Handlers page in the reference documentation).
 		dataHandlerClass: "dojox/mobile/dh/DataHandler",
+		// dataSourceClass: Object
+		//		The data source class used to load external views,
+		//		by default "dojox/mobile/dh/UrlDataSource"
+		//		(see the Data Handlers page in the reference documentation).
 		dataSourceClass: "dojox/mobile/dh/UrlDataSource",
+		// fileTypeMapClass: Object
+		//		The file type map class used to load external views,
+		//		by default "dojox/mobile/dh/SuffixFileTypeMap"
+		//		(see the Data Handlers page in the reference documentation).
 		fileTypeMapClass: "dojox/mobile/dh/SuffixFileTypeMap",
 
 		constructor: function(){
@@ -44,7 +56,11 @@ define("dojox/mobile/ViewController", [
 
 		findTransitionViews: function(/*String*/moveTo){
 			// summary:
-			//		Searches for a starting view and a destination view.
+			//		Parses the moveTo argument and determines a starting view and a destination view.
+			// returns: Array
+			//		An array containing the currently showing view, the destination view
+			//		and the transition parameters, or an empty array if the moveTo argument
+			//		could not be parsed. 
 			if(!moveTo){ return []; }
 			// removes a leading hash mark (#) and params if exists
 			// ex. "#bar&myParam=0003" -> "bar"
@@ -67,13 +83,13 @@ define("dojox/mobile/ViewController", [
 		openExternalView: function(/*Object*/ transOpts, /*DomNode*/ target){
 			// summary:
 			//		Loads an external view and performs a transition to it.
-			// returns: dojo.Deferred
+			// returns: dojo/_base/Deferred
 			//		Deferred object that resolves when the external view is
 			//		ready and a transition starts. Note that it resolves before
 			//		the transition is complete.
 			// description:
 			//		This method loads external view content through the
-			//		dojox.mobile data handlers, creates a new View instance with
+			//		dojox/mobile data handlers, creates a new View instance with
 			//		the loaded content, and performs a view transition to the
 			//		new view. The external view content can be specified with
 			//		the url property of transOpts. The new view is created under
@@ -81,7 +97,7 @@ define("dojox/mobile/ViewController", [
 			//
 			// example:
 			//		This example loads view1.html, creates a new view under
-			//		<body>, and performs a transition to the new view with the
+			//		`<body>`, and performs a transition to the new view with the
 			//		slide animation.
 			//		
 			//	|	var vc = ViewController.getInstance();

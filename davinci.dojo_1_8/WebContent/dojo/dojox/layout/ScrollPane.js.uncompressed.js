@@ -8,13 +8,8 @@ function(kernel,declare,html,baseFx,Templated,ContentPane,domClass,template){
 kernel.experimental("dojox.layout.ScrollPane");
 
 // FIXME: need to adust the _line somehow, it stops scrolling
-	
-/*===== 
-	var ContentPane = dijit.layout.ContentPane,
-		Templated = dijit._Templated;
-=====*/
 
-declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
+var Scrollpane = declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
 	// summary: A pane that "scrolls" its content based on the mouse poisition inside
 	//
 	// description:
@@ -29,12 +24,13 @@ declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
 	// |	<div dojoType="dojox.layout.ScrollPane" style="width:150px height:300px;">
 	// |		<!-- any height content -->
 	// |	</div>
-	//
-	// _line: dojo._Line
+	
+	// _line: dojo/_base/fx._Line
 	// 		storage for our top and bottom most scrollpoints
 	_line: null,
 	
-	// _lo: the height of the visible pane
+	// _lo: 
+	//		the height of the visible pane
 	_lo: null,
 	
 	_offset: 15,
@@ -43,13 +39,15 @@ declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
 	//		either "horizontal" or "vertical" for scroll orientation.
 	orientation: "vertical",
 	
-	// alwaysShow: Boolean
+	// autoHide: Boolean
 	//		whether the scroll helper should hide when mouseleave
 	autoHide: true,
 	templateString: template,
 	
-	resize: function(size){
-		// summary: calculates required sizes. Call this if you add/remove content manually, or reload the content.
+	resize: function(/*Integer?*/ size){
+		// summary: 
+		//		calculates required sizes. Call this if you add/remove
+		//		content manually, or reload the content.
 		
 		// if size is passed, it means we need to take care of sizing ourself (this is for IE<8)
 		if(size){
@@ -120,14 +118,16 @@ declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
 	},
 	
 	_set: function(/* Float */n){
+		// summary:
+		//		set the pane's scroll offset, and position the virtual scroll helper
 		if(!this._size){ return; }
-		// summary: set the pane's scroll offset, and position the virtual scroll helper
 		this.wrapper[this._scroll] = Math.floor(this._line.getValue(n));
 		html.style(this.helper, this._edge, Math.floor(this._helpLine.getValue(n)) + "px");
 	},
 	
 	_calc: function(/* Event */e){
-		// summary: calculate the relative offset of the cursor over the node, and call _set
+		// summary:
+		//		calculate the relative offset of the cursor over the node, and call _set
 		if(!this._lo){ this.resize(); }
 		this._set(this._vertical ?
 			((e.pageY - this._lo.y) / this._lo.h) :
@@ -150,4 +150,5 @@ declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
 		}
 	} 
 });
+return Scrollpane;
 });

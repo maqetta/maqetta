@@ -1,10 +1,6 @@
 define("dojox/gauges/GlossyHorizontalGaugeMarker", ["dojo/_base/declare","dojo/_base/Color","./BarLineIndicator"],
   function(declare, Color, BarLineIndicator) {
 
-/*=====
-	BarLineIndicator = dojox.gauges.BarLineIndicator;
-=====*/
-
 return declare("dojox.gauges.GlossyHorizontalGaugeMarker", [BarLineIndicator], {
 	// summary:
 	//		The marker for the dojox.gauges.GlossyHorizontalGauge.

@@ -1,8 +1,6 @@
 define("dojox/gauges/GlossyCircularGaugeBase", ["dojo/_base/declare","dojo/_base/lang","dojo/_base/connect","dojox/gfx","./AnalogGauge","./AnalogCircleIndicator","./TextIndicator","./GlossyCircularGaugeNeedle"],
 function(declare, lang, connect, gfx, AnalogGauge, AnalogCircleIndicator, TextIndicator, GlossyCircularGaugeNeedle) {
-/*=====
-	AnalogGauge = dojox.gauges.AnalogGauge;
-=====*/
+
 return declare("dojox.gauges.GlossyCircularGaugeBase", [AnalogGauge], {
 	// summary:
 	//		The base class for GlossyCircularGauge and GlossySemiCircularGauge.

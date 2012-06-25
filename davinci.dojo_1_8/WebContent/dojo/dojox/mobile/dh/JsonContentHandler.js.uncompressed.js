@@ -31,82 +31,82 @@ define("dojox/mobile/dh/JsonContentHandler", [
 		//		causes conflict. The v1.8 format has no such limitation.
 		//
 		// example:
-		// |	// v1.7 format
-		// |	{
-		// |	  "dojox.mobile.View": {
-		// |	    "@id": "view1",
-		// |	    "dojox.mobile.Heading": {
-		// |	      "@back": "Home",
-		// |	      "@moveTo": "home",
-		// |	      "@label": "view1.json"
-		// |	    },
-		// |	    "dojox.mobile.EdgeToEdgeList": {
-		// |	      "dojox.mobile.ListItem": [{
-		// |	        "@label": "Jack Coleman"
-		// |	      }, {
-		// |	        "@label": "James Evans"
-		// |	      }, {
-		// |	        "@label": "Jason Griffin"
-		// |	      }]
-		// |	    }
-		// |	  }
-		// |	}
-		// |	
+		// 	|	// v1.7 format
+		//	|	{
+		//	|	  "dojox.mobile.View": {
+		//	|	    "@id": "view1",
+		//	|	    "dojox.mobile.Heading": {
+		//	|	      "@back": "Home",
+		//	|	      "@moveTo": "home",
+		//	|	      "@label": "view1.json"
+		//	|	    },
+		//	|	    "dojox.mobile.EdgeToEdgeList": {
+		//	|	      "dojox.mobile.ListItem": [{
+		//	|	        "@label": "Jack Coleman"
+		//	|	      }, {
+		//	|	        "@label": "James Evans"
+		//	|	      }, {
+		//	|	        "@label": "Jason Griffin"
+		//	|	      }]
+		//	|	    }
+		//	|	  }
+		//	|	}
+		//	|	
 		// example:
-		// |	// v1.8 format
-		// |	{
-		// |	  "class": "dojox.mobile.View",
-		// |	  "@id": "view1",
-		// |	  "children": [
-		// |	
-		// |	    {
-		// |	      "class": "dojox.mobile.Heading",
-		// |	      "@back": "Home",
-		// |	      "@moveTo": "home",
-		// |	      "@label": "view1.json"
-		// |	    },
-		// |	
-		// |	    {
-		// |	      "class": "dojox.mobile.EdgeToEdgeList",
-		// |	      "children": [
-		// |	        {
-		// |	          "class": "dojox.mobile.ListItem",
-		// |	          "@label": "Jack Coleman"
-		// |	        },
-		// |	        {
-		// |	          "class": "dojox.mobile.ListItem",
-		// |	          "@label": "James Evans"
-		// |	        },
-		// |	        {
-		// |	          "class": "dojox.mobile.ListItem",
-		// |	          "@label": "Jason Griffin"
-		// |	        }
-		// |	      ]
-		// |	    }
-		// |	
-		// |	  ]
-		// |	}
-		// |	
+		//	|	// v1.8 format
+		//	|	{
+		//	|	  "class": "dojox.mobile.View",
+		//	|	  "@id": "view1",
+		//	|	  "children": [
+		//	|	
+		//	|	    {
+		//	|	      "class": "dojox.mobile.Heading",
+		//	|	      "@back": "Home",
+		//	|	      "@moveTo": "home",
+		//	|	      "@label": "view1.json"
+		//	|	    },
+		//	|	
+		//	|	    {
+		//	|	      "class": "dojox.mobile.EdgeToEdgeList",
+		//	|	      "children": [
+		//	|	        {
+		//	|	          "class": "dojox.mobile.ListItem",
+		//	|	          "@label": "Jack Coleman"
+		//	|	        },
+		//	|	        {
+		//	|	          "class": "dojox.mobile.ListItem",
+		//	|	          "@label": "James Evans"
+		//	|	        },
+		//	|	        {
+		//	|	          "class": "dojox.mobile.ListItem",
+		//	|	          "@label": "Jason Griffin"
+		//	|	        }
+		//	|	      ]
+		//	|	    }
+		//	|	
+		//	|	  ]
+		//	|	}
+		//	|	
 		// example:
-		// |	// SpinWheel in v1.8 format
-		// |	{
-		// |	  "class": "dojox.mobile.View",
-		// |	  "@id": "view1",
-		// |	  "children": [
-		// |	    {
-		// |	      "class": "dojox.mobile.SpinWheel",
-		// |	      "@id": "spin1",
-		// |	      "@style": {"margin":"10px auto","width":"304px"},
-		// |	      "children": [
-		// |	        {
-		// |	          "class": "dojox.mobile.SpinWheelSlot",
-		// |	          "@labels": "A,B,C,D,E",
-		// |	          "@style": {"textAlign":"center","width":"300px"}
-		// |	        }
-		// |	      ]
-		// |	    }
-		// |	  ]
-		// |	}
+		//	|	// SpinWheel in v1.8 format
+		//	|	{
+		//	|	  "class": "dojox.mobile.View",
+		//	|	  "@id": "view1",
+		//	|	  "children": [
+		//	|	    {
+		//	|	      "class": "dojox.mobile.SpinWheel",
+		//	|	      "@id": "spin1",
+		//	|	      "@style": {"margin":"10px auto","width":"304px"},
+		//	|	      "children": [
+		//	|	        {
+		//	|	          "class": "dojox.mobile.SpinWheelSlot",
+		//	|	          "@labels": "A,B,C,D,E",
+		//	|	          "@style": {"textAlign":"center","width":"300px"}
+		//	|	        }
+		//	|	      ]
+		//	|	    }
+		//	|	  ]
+		//	|	}
 
 		parse: function(/*Object*/ content, /*DomNode*/ target, /*DomNode?*/ refNode){
 			// summary:
@@ -136,6 +136,8 @@ define("dojox/mobile/dh/JsonContentHandler", [
 		},
 
 		_loadPrereqs: function(root){
+			// tags:
+			//		private
 			var d = new Deferred();
 			var req = this._collectRequires(root);
 			if(req.length === 0){ return true; }
@@ -155,6 +157,8 @@ define("dojox/mobile/dh/JsonContentHandler", [
 		},
 
 		_collectRequires: function(obj){
+			// tags:
+			//		private
 			var className = obj["class"];
 			for(var key in obj){
 				if(key.charAt(0) == "@" || key === "children"){ continue; }
@@ -181,6 +185,8 @@ define("dojox/mobile/dh/JsonContentHandler", [
 			// summary:
 			//		Given the evaluated json data, does the same thing as what
 			//		the parser does.
+			// tags:
+			//		private
 			var widget;
 			var className = obj["class"];
 			for(var key in obj){

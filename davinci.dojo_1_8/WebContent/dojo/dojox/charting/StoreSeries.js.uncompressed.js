@@ -10,7 +10,7 @@ define("dojox/charting/StoreSeries", ["dojo/_base/array", "dojo/_base/declare", 
 			// kwArgs: Object
 			//		A store-specific keyword parameters used for querying objects.
 			//		See dojo.store docs
-			// value: Function|Object|String|Null
+			// value: Function|Object|String
 			//		Function, which takes an object handle, and
 			//		produces an output possibly inspecting the store's item. Or
 			//		a dictionary object, which tells what names to extract from
@@ -52,14 +52,14 @@ define("dojox/charting/StoreSeries", ["dojo/_base/array", "dojo/_base/declare", 
 			// summary:
 			//		Clean up before GC.
 			if(this.observeHandle){
-				this.observeHandle.dismiss();
+				this.observeHandle.remove();
 			}
 		},
 	
 		setSeriesObject: function(series){
 			// summary:
 			//		Sets a dojox.charting.Series object we will be working with.
-			// series: dojox.charting.Series
+			// series: dojox/charting/Series
 			//		Our interface to the chart.
 			this.series = series;
 		},
@@ -72,7 +72,7 @@ define("dojox/charting/StoreSeries", ["dojo/_base/array", "dojo/_base/declare", 
 			var objects = this.objects = [];
 			var self = this;
 			if(this.observeHandle){
-				this.observeHandle.dismiss();
+				this.observeHandle.remove();
 			}
 			var results = this.store.query(this.kwArgs.query, this.kwArgs);
 			Deferred.when(results, function(objects){

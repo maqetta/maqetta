@@ -11,8 +11,6 @@ define("dijit/Toolbar", [
 
 	// module:
 	//		dijit/Toolbar
-	// summary:
-	//		A Toolbar widget, used to hold things like `dijit.Editor` buttons
 
 
 	// Back compat w/1.6, remove for 2.0

@@ -7,8 +7,6 @@ define("dijit/ToolbarSeparator", [
 
 	// module:
 	//		dijit/ToolbarSeparator
-	// summary:
-	//		A spacer between two `dijit.Toolbar` items
 
 
 	return declare("dijit.ToolbarSeparator", [_Widget, _TemplatedMixin], {

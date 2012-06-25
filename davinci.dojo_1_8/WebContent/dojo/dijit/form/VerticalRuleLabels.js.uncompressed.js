@@ -5,8 +5,6 @@ define("dijit/form/VerticalRuleLabels", [
 
 	// module:
 	//		dijit/form/VerticalRuleLabels
-	// summary:
-	//		Labels for the `dijit.form.VerticalSlider`
 
 	return declare("dijit.form.VerticalRuleLabels", HorizontalRuleLabels, {
 		// summary:

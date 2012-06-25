@@ -1,31 +1,27 @@
 define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "dojox/gfx", "dojo/_base/array", "dojox/widget/_Invalidating"],
 	function(lang, declare, gfx, array, _Invalidating){
-	/*=====
-	var _Invalidating = dojox.widget._Invalidating;
-	=====*/
-	
 	return declare("dojox.dgauges.ScaleBase", _Invalidating, {
-		//	summary:
+		// summary:
 		//		The ScaleBase class is the base class for the circular and rectangular scales.
-		//		A scaler must be set to use this class. A scaler is responsible for  responsible for 
+		//		A scaler must be set to use this class. A scaler is responsible for
 		//		tick generation and various data-transform operations.	
 
-		//	scaler: Object
+		// scaler: Object
 		//		The scaler used for tick generation and data-transform operations.
 		//		This property is mandatory for using the scale.
 		scaler: null,
-		//	font: Object
+		// font: Object
 		//		The font used for the ticks labels.
 		//		This is null by default which means this scale use the font defined 
 		//		on the gauge.
 		font: null,
-		//	labelPosition: String
+		// labelPosition: String
 		//		See CircularScale and RectangularScale for valid values.
 		labelPosition: null,
-		//	labelGap: Number
+		// labelGap: Number
 		//		The label gap between the ticks and their labels. Default value is 1.
 		labelGap: 1,
-		//	tickStroke: Object
+		// tickStroke: Object
 		//		The GFX stroke used by the default tickShapeFunc implementation.
 		tickStroke: null,
 		_gauge: null,
@@ -59,6 +55,10 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		_watchers: null,
 
 		_watchScaler: function(name, oldValue, newValue){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			array.forEach(this._watchers, lang.hitch(this, function(entry){
 				entry.unwatch();
 			}));
@@ -72,6 +72,10 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		_getFont: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			var font = this.font;
 			if(!font){
 				font = this._gauge.font;
@@ -83,7 +87,7 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		positionForValue: function(value){
-			//	summary:
+			// summary:
 			//		See CircularScale and Rectangular for more informations.
 			//		value: Number
 			//			The value to convert.
@@ -93,7 +97,7 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		valueForPosition: function(position){
-			//	summary:
+			// summary:
 			//		See CircularScale and Rectangular for more informations.
 			//		position: Number
 			//			The position to convert.
@@ -102,7 +106,7 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		tickLabelFunc: function(tickItem){
-			//	summary:
+			// summary:
 			//		Customize the text of ticks labels.
 			//		tickItem: Object
 			//			An object containing the tick informations.
@@ -116,9 +120,9 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		tickShapeFunc: function(group, scale, tickItem){
-			//	summary:
+			// summary:
 			//		Customize the shape of ticks.
-			//		group: dojox.gfx.canvas.Group
+			//		group: dojox/gfx/canvas/Group
 			//			The GFX group used for drawing the tick.
 			//		scale: ScaleBase
 			//			The scale being processed.
@@ -133,21 +137,21 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		getIndicatorRenderer: function(name){
-			//	summary:
+			// summary:
 			//		Gets the GFX shape of an indicator.
-			//	name: String
+			// name: String
 			//		The name of the indicator as defined using addIndicator.
-			//	returns: dojox.gfx.canvas.Shape
+			// returns: dojox/gfx/canvas/Shape
 			//		The GFX shape of the indicator.
 			return this._indicatorsRenderers[name];
 		},
 		
 		removeIndicator: function(name){
-			//	summary:
+			// summary:
 			//		Removes an indicator.
-			//	name: String
+			// name: String
 			//		The name of the indicator as defined using addIndicator.
-			//	returns: IndicatorBase
+			// returns: IndicatorBase
 			//		The removed indicator.
 			var indicator = this._indicatorsIndex[name];
 			if(indicator){
@@ -165,23 +169,23 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		getIndicator: function(name){
-			//	summary:
+			// summary:
 			//		Get an indicator instance.
-			//	name: String
+			// name: String
 			//		The name of the indicator as defined using addIndicator.
-			//	returns: IndicatorBase
+			// returns: IndicatorBase
 			//		The indicator associated with the name parameter.
 			return this._indicatorsIndex[name];
 		},
 		
 		addIndicator: function(name, indicator, behindScale){
-			//	summary:
+			// summary:
 			//		Add an indicator to the scale. Before calling this function, ensure 
 			//		this scale has already been added to a gauge using the addElement method
 			//		of the gauge.
-			//	behindScale: Boolean
+			// behindScale: Boolean
 			//		If true, this indicator is drawn behind the scale. Default value is false.	
-			//	name: String
+			// name: String
 			//		The name of the indicator to be added.
 			if(this._indicatorsIndex[name] && this._indicatorsIndex[name] != indicator){
 				this.removeIndicator(name);
@@ -203,6 +207,10 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 		
 		_createSubGroups: function(){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			if(!this._gfxGroup || this._ticksGroup){
 				return;
 			}

@@ -5,14 +5,15 @@ define("dojo/promise/Promise", [
 
 	// module:
 	//		dojo/promise/Promise
-  // summary:
-	//		Promise base class. All promises will be instances of this class.
 
 	function throwAbstract(){
 		throw new TypeError("abstract");
 	}
 
-	return lang.extend(function Promise(){}, {
+	return lang.extend(function Promise(){
+		// summary:
+		//		Promise base class. All promises will be instances of this class.
+	}, {
 		then: function(/*Function?*/ callback, /*Function?*/ errback, /*Function?*/ progback){
 			// summary:
 			//		Add new callbacks to the promise.
@@ -109,6 +110,10 @@ define("dojo/promise/Promise", [
 			// returns:
 			//		The original promise
 			return this;
+		},
+
+		toString: function(){
+			return "[object Promise]";
 		}
 	});
 });

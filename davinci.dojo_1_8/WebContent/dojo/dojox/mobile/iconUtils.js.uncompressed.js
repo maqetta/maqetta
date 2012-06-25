@@ -16,7 +16,7 @@ define("dojox/mobile/iconUtils", [
 	// module:
 	//		dojox/mobile/iconUtils
 	// summary:
-	//		Utilities to create an icon (image, css sprite image, or DOM Button)
+	//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
 
 	var iconUtils = new function(){
 		this.setupSpriteIcon = function(/*DomNode*/iconNode, /*String*/iconPos){
@@ -231,5 +231,12 @@ define("dojox/mobile/iconUtils", [
 			}
 		};
 	};
+	
+	/*=====
+    return {
+		// summary:
+		//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
+    };
+    =====*/
 	return iconUtils;
 });

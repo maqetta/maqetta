@@ -1,6 +1,7 @@
 define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "dojo/_base/declare", "dojo/_base/array",
   "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/Color", "./_base", "./shape", "./path"],
-  function(lang, win, dom, declare, arr, domGeom, domAttr, Color, g, gs, pathLib){
+function(lang, win, dom, declare, arr, domGeom, domAttr, Color, g, gs, pathLib){
+
 	var svg = g.svg = {
 		// summary:
 		//		This the graphics rendering bridge for browsers compliant with W3C SVG1.0.
@@ -8,22 +9,6 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 	};
 	svg.useSvgWeb = (typeof window.svgweb != "undefined");
 
-	/*=====
-	pathLib.Path = dojox.gfx.path.Path;
-	pathLib.TextPath = dojox.gfx.path.TextPath;
-	svg.Shape = dojox.gfx.canvas.Shape;
-	gs.Shape = dojox.gfx.shape.Shape;
-	gs.Rect = dojox.gfx.shape.Rect;
-	gs.Ellipse = dojox.gfx.shape.Ellipse;
-	gs.Circle = dojox.gfx.shape.Circle;
-	gs.Line = dojox.gfx.shape.Line;
-	gs.PolyLine = dojox.gfx.shape.PolyLine;
-	gs.Image = dojox.gfx.shape.Image;
-	gs.Text = dojox.gfx.shape.Text;
-	gs.Surface = dojox.gfx.shape.Surface;
-	=====*/
-
-	
 	// Need to detect iOS in order to workaround bug when
 	// touching nodes with text
 	var uagent = navigator.userAgent.toLowerCase(),
@@ -40,6 +25,14 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 			return win.doc.createElementNS(ns,nodeType);
 		}else{
 			return win.doc.createElement(nodeType);
+		}
+	}
+	
+	function _setAttributeNS(node, ns, attr, value){
+		if(node.setAttributeNS){
+			return node.setAttributeNS(ns, attr, value);
+		}else{
+			return node.setAttribute(attr, value);
 		}
 	}
 
@@ -65,8 +58,10 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 	};
 
 	svg.getRef = function(name){
-		// summary: returns a DOM Node specified by the name argument or null
-		// name: String: an SVG external reference
+		// summary:
+		//		returns a DOM Node specified by the name argument or null
+		// name: String
+		//		an SVG external reference
 		if(!name || name == "none") return null;
 		if(name.match(/^url\(#.+\)$/)){
 			return dom.byId(name.slice(5, -1));	// Node
@@ -95,8 +90,9 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 
 	var clipCount = 0;
 
-	declare("dojox.gfx.svg.Shape", gs.Shape, {
-		// summary: SVG-specific implementation of dojox.gfx.Shape methods
+	svg.Shape = declare("dojox.gfx.svg.Shape", gs.Shape, {
+		// summary:
+		//		SVG-specific implementation of dojox.gfx.Shape methods
 
 		destroy: function(){
 			if(this.fillStyle && "type" in this.fillStyle){
@@ -118,12 +114,14 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 		},
 
 		setFill: function(fill){
-			// summary: sets a fill object (SVG)
-			// fill: Object: a fill object
-			//	(see dojox.gfx.defaultLinearGradient,
-			//	dojox.gfx.defaultRadialGradient,
-			//	dojox.gfx.defaultPattern,
-			//	or dojo.Color)
+			// summary:
+			//		sets a fill object (SVG)
+			// fill: Object
+			//		a fill object
+			//		(see dojox.gfx.defaultLinearGradient,
+			//		dojox.gfx.defaultRadialGradient,
+			//		dojox.gfx.defaultPattern,
+			//		or dojo.Color)
 
 			if(!fill){
 				// don't fill
@@ -170,9 +168,9 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 		},
 
 		setStroke: function(stroke){
-			//	summary:
+			// summary:
 			//		sets a stroke object (SVG)
-			//	stroke: Object
+			//		stroke: Object
 			// 		a stroke object (see dojox.gfx.defaultStroke)
 
 			var rn = this.rawNode;
@@ -265,7 +263,7 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 				img.setAttribute("y", 0);
 				img.setAttribute("width",  f.width .toFixed(8));
 				img.setAttribute("height", f.height.toFixed(8));
-				img.setAttributeNS(svg.xmlns.xlink, "xlink:href", f.src);
+				_setAttributeNS(img, svg.xmlns.xlink, "xlink:href", f.src);
 				fill.appendChild(img);
 			}else{
 				fill.setAttribute("gradientUnits", "userSpaceOnUse");
@@ -300,9 +298,9 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 
 		setRawNode: function(rawNode){
 			// summary:
-			//	assigns and clears the underlying node that will represent this
-			//	shape. Once set, transforms, gradients, etc, can be applied.
-			//	(no fill & stroke by default)
+			//		assigns and clears the underlying node that will represent this
+			//		shape. Once set, transforms, gradients, etc, can be applied.
+			//		(no fill & stroke by default)
 			var r = this.rawNode = rawNode;
 			if(this.shape.type!="image"){
 				r.setAttribute("fill", "none");
@@ -320,15 +318,17 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 		},
 
 		setShape: function(newShape){
-			// summary: sets a shape object (SVG)
-			// newShape: Object: a shape object
-			//	(see dojox.gfx.defaultPath,
-			//	dojox.gfx.defaultPolyline,
-			//	dojox.gfx.defaultRect,
-			//	dojox.gfx.defaultEllipse,
-			//	dojox.gfx.defaultCircle,
-			//	dojox.gfx.defaultLine,
-			//	or dojox.gfx.defaultImage)
+			// summary:
+			//		sets a shape object (SVG)
+			// newShape: Object
+			//		a shape object
+			//		(see dojox.gfx.defaultPath,
+			//		dojox.gfx.defaultPolyline,
+			//		dojox.gfx.defaultRect,
+			//		dojox.gfx.defaultEllipse,
+			//		dojox.gfx.defaultCircle,
+			//		dojox.gfx.defaultLine,
+			//		or dojox.gfx.defaultImage)
 			this.shape = g.makeParameters(this.shape, newShape);
 			for(var i in this.shape){
 				if(i != "type"){
@@ -342,18 +342,22 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 		// move family
 
 		_moveToFront: function(){
-			// summary: moves a shape to front of its parent's list of shapes (SVG)
+			// summary:
+			//		moves a shape to front of its parent's list of shapes (SVG)
 			this.rawNode.parentNode.appendChild(this.rawNode);
 			return this;	// self
 		},
 		_moveToBack: function(){
-			// summary: moves a shape to back of its parent's list of shapes (SVG)
+			// summary:
+			//		moves a shape to back of its parent's list of shapes (SVG)
 			this.rawNode.parentNode.insertBefore(this.rawNode, this.rawNode.parentNode.firstChild);
 			return this;	// self
 		},
 		setClip: function(clip){
-			// summary: sets the clipping area of this shape.
-			// description: This method overrides the dojox.gfx.shape.Shape.setClip() method.
+			// summary:
+			//		sets the clipping area of this shape.
+			// description:
+			//		This method overrides the dojox.gfx.shape.Shape.setClip() method.
 			// clip: Object
 			//		an object that defines the clipping geometry, or null to remove clip.
 			this.inherited(arguments);
@@ -411,17 +415,20 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 			return clipNode;
 		}
 	});
-	
-	
-	declare("dojox.gfx.svg.Group", svg.Shape, {
-		// summary: a group shape (SVG), which can be used
-		//	to logically group shapes (e.g, to propagate matricies)
+
+
+	svg.Group = declare("dojox.gfx.svg.Group", svg.Shape, {
+		// summary:
+		//		a group shape (SVG), which can be used
+		//		to logically group shapes (e.g, to propagate matricies)
 		constructor: function(){
 			gs.Container._init.call(this);
 		},
 		setRawNode: function(rawNode){
-			// summary: sets a raw SVG node to be used by this shape
-			// rawNode: Node: an SVG node
+			// summary:
+			//		sets a raw SVG node to be used by this shape
+			// rawNode: Node
+			//		an SVG node
 			this.rawNode = rawNode;
 			// Bind GFX object with SVG node for ease of retrieval - that is to
 			// save code/performance to keep this association elsewhere
@@ -438,11 +445,14 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 	});
 	svg.Group.nodeType = "g";
 
-	declare("dojox.gfx.svg.Rect", [svg.Shape, gs.Rect], {
-		// summary: a rectangle shape (SVG)
+	svg.Rect = declare("dojox.gfx.svg.Rect", [svg.Shape, gs.Rect], {
+		// summary:
+		//		a rectangle shape (SVG)
 		setShape: function(newShape){
-			// summary: sets a rectangle shape object (SVG)
-			// newShape: Object: a rectangle shape object
+			// summary:
+			//		sets a rectangle shape object (SVG)
+			// newShape: Object
+			//		a rectangle shape object
 			this.shape = g.makeParameters(this.shape, newShape);
 			this.bbox = null;
 			for(var i in this.shape){
@@ -459,23 +469,24 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 	});
 	svg.Rect.nodeType = "rect";
 
-	declare("dojox.gfx.svg.Ellipse", [svg.Shape, gs.Ellipse], {});
+	svg.Ellipse = declare("dojox.gfx.svg.Ellipse", [svg.Shape, gs.Ellipse], {});
 	svg.Ellipse.nodeType = "ellipse";
 
-	declare("dojox.gfx.svg.Circle", [svg.Shape, gs.Circle], {});
+	svg.Circle = declare("dojox.gfx.svg.Circle", [svg.Shape, gs.Circle], {});
 	svg.Circle.nodeType = "circle";
 
-	declare("dojox.gfx.svg.Line", [svg.Shape, gs.Line], {});
+	svg.Line = declare("dojox.gfx.svg.Line", [svg.Shape, gs.Line], {});
 	svg.Line.nodeType = "line";
 
-	declare("dojox.gfx.svg.Polyline", [svg.Shape, gs.Polyline], {
-		// summary: a polyline/polygon shape (SVG)
+	svg.Polyline = declare("dojox.gfx.svg.Polyline", [svg.Shape, gs.Polyline], {
+		// summary:
+		//		a polyline/polygon shape (SVG)
 		setShape: function(points, closed){
-			// summary: sets a polyline/polygon shape object (SVG)
-			// points: Object: a polyline/polygon shape object
+			// summary:
+			//		sets a polyline/polygon shape object (SVG)
+			// points: Object|Array
+			//		a polyline/polygon shape object, or an array of points
 			if(points && points instanceof Array){
-				// branch
-				// points: Array: an array of points
 				this.shape = g.makeParameters(this.shape, { points: points });
 				if(closed && this.shape.points.length){
 					this.shape.points.push(this.shape.points[0]);
@@ -495,11 +506,14 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 	});
 	svg.Polyline.nodeType = "polyline";
 
-	declare("dojox.gfx.svg.Image", [svg.Shape, gs.Image], {
-		// summary: an image (SVG)
+	svg.Image = declare("dojox.gfx.svg.Image", [svg.Shape, gs.Image], {
+		// summary:
+		//		an image (SVG)
 		setShape: function(newShape){
-			// summary: sets an image shape object (SVG)
-			// newShape: Object: an image shape object
+			// summary:
+			//		sets an image shape object (SVG)
+			// newShape: Object
+			//		an image shape object
 			this.shape = g.makeParameters(this.shape, newShape);
 			this.bbox = null;
 			var rawNode = this.rawNode;
@@ -509,7 +523,7 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 				}
 			}
 			rawNode.setAttribute("preserveAspectRatio", "none");
-			rawNode.setAttributeNS(svg.xmlns.xlink, "xlink:href", this.shape.src);
+			_setAttributeNS(rawNode, svg.xmlns.xlink, "xlink:href", this.shape.src);
 			// Bind GFX object with SVG node for ease of retrieval - that is to
 			// save code/performance to keep this association elsewhere
 			rawNode.__gfxObject__ = this.getUID();
@@ -518,11 +532,14 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 	});
 	svg.Image.nodeType = "image";
 
-	declare("dojox.gfx.svg.Text", [svg.Shape, gs.Text], {
-		// summary: an anchored text (SVG)
+	svg.Text = declare("dojox.gfx.svg.Text", [svg.Shape, gs.Text], {
+		// summary:
+		//		an anchored text (SVG)
 		setShape: function(newShape){
-			// summary: sets a text shape object (SVG)
-			// newShape: Object: a text shape object
+			// summary:
+			//		sets a text shape object (SVG)
+			// newShape: Object
+			//		a text shape object
 			this.shape = g.makeParameters(this.shape, newShape);
 			this.bbox = null;
 			var r = this.rawNode, s = this.shape;
@@ -543,7 +560,8 @@ define("dojox/gfx/svg", ["dojo/_base/lang", "dojo/_base/window", "dojo/dom", "do
 			return this;	// self
 		},
 		getTextWidth: function(){
-			// summary: get the text width in pixels
+			// summary:
+			//		get the text width in pixels
 			var rawNode = this.rawNode,
 				oldParent = rawNode.parentNode,
 				_measurementNode = rawNode.cloneNode(true);
@@ -570,19 +588,24 @@ else
 	});
 	svg.Text.nodeType = "text";
 
-	declare("dojox.gfx.svg.Path", [svg.Shape, pathLib.Path], {
-		// summary: a path shape (SVG)
+	svg.Path = declare("dojox.gfx.svg.Path", [svg.Shape, pathLib.Path], {
+		// summary:
+		//		a path shape (SVG)
 		_updateWithSegment: function(segment){
-			// summary: updates the bounding box of path with new segment
-			// segment: Object: a segment
+			// summary:
+			//		updates the bounding box of path with new segment
+			// segment: Object
+			//		a segment
 			this.inherited(arguments);
 			if(typeof(this.shape.path) == "string"){
 				this.rawNode.setAttribute("d", this.shape.path);
 			}
 		},
 		setShape: function(newShape){
-			// summary: forms a path using a shape (SVG)
-			// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
+			// summary:
+			//		forms a path using a shape (SVG)
+			// newShape: Object
+			//		an SVG path string or a path object (see dojox.gfx.defaultPath)
 			this.inherited(arguments);
 			if(this.shape.path){
 				this.rawNode.setAttribute("d", this.shape.path);
@@ -594,17 +617,22 @@ else
 	});
 	svg.Path.nodeType = "path";
 
-	declare("dojox.gfx.svg.TextPath", [svg.Shape, pathLib.TextPath], {
-		// summary: a textpath shape (SVG)
+	svg.TextPath = declare("dojox.gfx.svg.TextPath", [svg.Shape, pathLib.TextPath], {
+		// summary:
+		//		a textpath shape (SVG)
 		_updateWithSegment: function(segment){
-			// summary: updates the bounding box of path with new segment
-			// segment: Object: a segment
+			// summary:
+			//		updates the bounding box of path with new segment
+			// segment: Object
+			//		a segment
 			this.inherited(arguments);
 			this._setTextPath();
 		},
 		setShape: function(newShape){
-			// summary: forms a path using a shape (SVG)
-			// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
+			// summary:
+			//		forms a path using a shape (SVG)
+			// newShape: Object
+			//		an SVG path string or a path object (see dojox.gfx.defaultPath)
 			this.inherited(arguments);
 			this._setTextPath();
 			return this;	// self
@@ -628,7 +656,7 @@ else
 					var id = g._base._getUniqueId();
 					path.setAttribute("id", id);
 					defs.appendChild(path);
-					r.firstChild.setAttributeNS(svg.xmlns.xlink, "xlink:href", "#" + id);
+					_setAttributeNS(r.firstChild, svg.xmlns.xlink, "xlink:href", "#" + id);
 				}
 			}
 			if(path){
@@ -671,8 +699,9 @@ else
 	});
 	svg.TextPath.nodeType = "text";
 
-	declare("dojox.gfx.svg.Surface", gs.Surface, {
-		// summary: a surface object to be used for drawings (SVG)
+	svg.Surface = declare("dojox.gfx.svg.Surface", gs.Surface, {
+		// summary:
+		//		a surface object to be used for drawings (SVG)
 		constructor: function(){
 			gs.Container._init.call(this);
 		},
@@ -681,16 +710,20 @@ else
 			this.inherited(arguments);
 		},
 		setDimensions: function(width, height){
-			// summary: sets the width and height of the rawNode
-			// width: String: width of surface, e.g., "100px"
-			// height: String: height of surface, e.g., "100px"
+			// summary:
+			//		sets the width and height of the rawNode
+			// width: String
+			//		width of surface, e.g., "100px"
+			// height: String
+			//		height of surface, e.g., "100px"
 			if(!this.rawNode){ return this; }
 			this.rawNode.setAttribute("width",  width);
 			this.rawNode.setAttribute("height", height);
 			return this;	// self
 		},
 		getDimensions: function(){
-			// summary: returns an object with properties "width" and "height"
+			// summary:
+			//		returns an object with properties "width" and "height"
 			var t = this.rawNode ? {
 				width:  g.normalizedLength(this.rawNode.getAttribute("width")),
 				height: g.normalizedLength(this.rawNode.getAttribute("height"))} : null;
@@ -699,10 +732,14 @@ else
 	});
 
 	svg.createSurface = function(parentNode, width, height){
-		// summary: creates a surface (SVG)
-		// parentNode: Node: a parent node
-		// width: String: width of surface, e.g., "100px"
-		// height: String: height of surface, e.g., "100px"
+		// summary:
+		//		creates a surface (SVG)
+		// parentNode: Node
+		//		a parent node
+		// width: String
+		//		width of surface, e.g., "100px"
+		// height: String
+		//		height of surface, e.g., "100px"
 
 		var s = new svg.Surface();
 		s.rawNode = _createElementNS(svg.xmlns.svg, "svg");
@@ -728,7 +765,8 @@ else
 
 	var Font = {
 		_setFont: function(){
-			// summary: sets a font object (SVG)
+			// summary:
+			//		sets a font object (SVG)
 			var f = this.fontStyle;
 			// next line doesn't work in Firefox 2 or Opera 9
 			//this.rawNode.setAttribute("font", dojox.gfx.makeFontString(this.fontStyle));
@@ -742,20 +780,24 @@ else
 
 	var C = gs.Container, Container = {
 		openBatch: function() {
-			// summary: starts a new batch, subsequent new child shapes will be held in
-			//	the batch instead of appending to the container directly
+			// summary:
+			//		starts a new batch, subsequent new child shapes will be held in
+			//		the batch instead of appending to the container directly
 			this.fragment = _createFragment();
 		},
 		closeBatch: function() {
-			// summary: submits the current batch, append all pending child shapes to DOM
+			// summary:
+			//		submits the current batch, append all pending child shapes to DOM
 			if (this.fragment) {
 				this.rawNode.appendChild(this.fragment);
 				delete this.fragment;
 			}
 		},
 		add: function(shape){
-			// summary: adds a shape to a group/surface
-			// shape: dojox.gfx.Shape: an VML shape object
+			// summary:
+			//		adds a shape to a group/surface
+			// shape: dojox.gfx.Shape
+			//		an VML shape object
 			if(this != shape.getParent()){
 				if (this.fragment) {
 					this.fragment.appendChild(shape.rawNode);
@@ -769,9 +811,12 @@ else
 			return this;	// self
 		},
 		remove: function(shape, silently){
-			// summary: remove a shape from a group/surface
-			// shape: dojox.gfx.Shape: an VML shape object
-			// silently: Boolean?: if true, regenerate a picture
+			// summary:
+			//		remove a shape from a group/surface
+			// shape: dojox.gfx.Shape
+			//		an VML shape object
+			// silently: Boolean?
+			//		if true, regenerate a picture
 			if(this == shape.getParent()){
 				if(this.rawNode == shape.rawNode.parentNode){
 					this.rawNode.removeChild(shape.rawNode);
@@ -786,7 +831,8 @@ else
 			return this;	// self
 		},
 		clear: function(){
-			// summary: removes all shapes from a group/surface
+			// summary:
+			//		removes all shapes from a group/surface
 			var r = this.rawNode;
 			while(r.lastChild){
 				r.removeChild(r.lastChild);
@@ -806,11 +852,15 @@ else
 	};
 
 	var Creator = {
-		// summary: SVG shape creators
+		// summary:
+		//		SVG shape creators
 		createObject: function(shapeType, rawShape){
-			// summary: creates an instance of the passed shapeType class
-			// shapeType: Function: a class constructor to create an instance of
-			// rawShape: Object: properties to be passed in to the classes "setShape" method
+			// summary:
+			//		creates an instance of the passed shapeType class
+			// shapeType: Function
+			//		a class constructor to create an instance of
+			// rawShape: Object
+			//		properties to be passed in to the classes "setShape" method
 			if(!this.rawNode){ return null; }
 			var shape = new shapeType(),
 				node = _createElementNS(svg.xmlns.svg, shapeType.nodeType);

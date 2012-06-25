@@ -1,8 +1,14 @@
-define("dojox/NodeList/delegate", ["dojo/_base/lang", "dojo/query", "dojo/_base/NodeList", "dojo/NodeList-traverse"], function(lang, query, NodeList) {
-	// module:
-	//		dojox/NodeList/delegate
-	// summary:
-	//		TODOC
+define("dojox/NodeList/delegate", [
+	"dojo/_base/lang",
+	"dojo/query",
+	"dojo/_base/NodeList",	// for this.connect()
+	"dojo/NodeList-traverse"
+], function(lang, query) {
+
+// module:
+//		dojox/NodeList/delegate
+
+var NodeList = query.NodeList;
 
 lang.extend(NodeList, {
 	delegate: function(/*String*/ selector, /*String*/ eventName, /*Function*/ fn){

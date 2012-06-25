@@ -6,14 +6,18 @@ define("dojox/widget/MultiSelectCalendar", [
     "dojo/cldr/supplemental", 
     "dojo/date", 
     "dojo/date/locale", 
-    "dijit/_Widget", "dijit/_Templated", "dijit/_CssStateMixin", "dijit/form/DropDownButton", "dijit/typematic"],
-    function(dojo, dijit, template) {
+    "dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
+	"dijit/_CssStateMixin", "dijit/form/DropDownButton", "dijit/typematic"
+],
+    function(dojo, dijit, template, supplemental, date, locale,
+		_Widget, _TemplatedMixin, _WidgetsInTemplateMixin,
+		_CssStateMixin, DropDownButton, typematic) {
 
 dojo.experimental("dojox.widget.MultiSelectCalendar");
 
 dojo.declare(
 	"dojox.widget.MultiSelectCalendar",
-	[dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin, dijit._CssStateMixin],
+	[_Widget, _TemplatedMixin, _WidgetsInTemplateMixin, _CssStateMixin],
 	{
 		// summary:
 		//		A simple GUI for choosing several dates in the context of a monthly calendar.
@@ -940,7 +944,7 @@ dojo.declare(
 );
 
 //FIXME: can we use dijit.Calendar._MonthDropDown directly?
-dojo.declare("dojox.widget._MonthDropDown", [dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
+dojo.declare("dojox.widget._MonthDropDown", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	// summary:
 	//		The month drop down
 

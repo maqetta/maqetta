@@ -5,4 +5,69 @@
 */
 
 //>>built
-define("dojo/request/watch",["./util","../_base/array","../_base/window","../has!host-browser?dom-addeventlistener?:../on:"],function(_1,_2,_3,on){var _4=null,_5=[];function _6(){var _7=+(new Date);for(var i=0,_8;i<_5.length&&(_8=_5[i]);i++){var _9=_8.response,_a=_9.options;if(_8.canceled||(_8.isCancelled&&_8.isCanceled())||(_8.isValid&&!_8.isValid(_9))){_5.splice(i--,1);_b._onAction&&_b._onAction();}else{if(_8.isReady&&_8.isReady(_9)){_5.splice(i--,1);_8.handleResponse(_9);_b._onAction&&_b._onAction();}else{if(_8.startTime){if(_8.startTime+(_a.timeout||0)<_7){_5.splice(i--,1);_9.error=new Error("timeout exceeded");_9.error.dojoType="timeout";_8.cancel();_b._onAction&&_b._onAction();}}}}}_b._onInFlight&&_b._onInFlight(_8);if(!_5.length){clearInterval(_4);_4=null;}};function _b(_c){if(_c.response.options.timeout){_c.startTime=+(new Date);}_5.push(_c);if(!_4){_4=setInterval(_6,50);}if(_c.response.options.sync){_6();}};_b.cancelAll=function cancelAll(){try{_2.forEach(_5,function(_d){try{_d.cancel();}catch(e){}});}catch(e){}};if(_3&&on&&_3.doc.attachEvent){on(_3.global,"unload",function(){_b.cancelAll();});}return _b;});
+define("dojo/request/watch",["./util","../errors/RequestTimeoutError","../errors/CancelError","../_base/array","../_base/window","../has!host-browser?dom-addeventlistener?:../on:"],function(_1,_2,_3,_4,_5,on){
+var _6=null,_7=[];
+function _8(){
+var _9=+(new Date);
+for(var i=0,_a;i<_7.length&&(_a=_7[i]);i++){
+var _b=_a.response,_c=_b.options;
+if((_a.isCanceled&&_a.isCanceled())||(_a.isValid&&!_a.isValid(_b))){
+_7.splice(i--,1);
+_d._onAction&&_d._onAction();
+}else{
+if(_a.isReady&&_a.isReady(_b)){
+_7.splice(i--,1);
+_a.handleResponse(_b);
+_d._onAction&&_d._onAction();
+}else{
+if(_a.startTime){
+if(_a.startTime+(_c.timeout||0)<_9){
+_7.splice(i--,1);
+_a.cancel(new _2(_b));
+_d._onAction&&_d._onAction();
+}
+}
+}
+}
+}
+_d._onInFlight&&_d._onInFlight(_a);
+if(!_7.length){
+clearInterval(_6);
+_6=null;
+}
+};
+function _d(_e){
+if(_e.response.options.timeout){
+_e.startTime=+(new Date);
+}
+if(_e.isFulfilled()){
+return;
+}
+_7.push(_e);
+if(!_6){
+_6=setInterval(_8,50);
+}
+if(_e.response.options.sync){
+_8();
+}
+};
+_d.cancelAll=function cancelAll(){
+try{
+_4.forEach(_7,function(_f){
+try{
+_f.cancel(new _3("All requests canceled."));
+}
+catch(e){
+}
+});
+}
+catch(e){
+}
+};
+if(_5&&on&&_5.doc.attachEvent){
+on(_5.global,"unload",function(){
+_d.cancelAll();
+});
+}
+return _d;
+});

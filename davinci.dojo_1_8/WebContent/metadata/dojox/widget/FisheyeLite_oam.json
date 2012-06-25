@@ -1,0 +1,42 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/FisheyeLite",
+    "name": "dojox.widget.FisheyeLite",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/FisheyeLite",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "durationIn": {
+            "datatype": "number",
+            "defaultValue": 350,
+            "title": "Duration In"
+        },
+        "durationOut": {
+            "datatype": "number",
+            "defaultValue": 1420,
+            "title": "Duration Out"
+        },
+        "properties": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"fontSize\\\":2.75}\"",
+            "title": "Properties"
+        },
+        "units": {
+            "datatype": "string",
+            "defaultValue": "px",
+            "title": "Unit"
+        }
+    },
+    "content": "<span></span>"
+}

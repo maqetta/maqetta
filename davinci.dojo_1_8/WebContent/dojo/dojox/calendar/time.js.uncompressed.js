@@ -10,8 +10,8 @@ time.newDate = function(obj, dateClassObj){
 	//		Creates a new Date object.
 	// obj: Object
 	//		This object can have several values:
-	//		|the time in milliseconds since gregorian epoch.
-	//		|a Date instance
+	//		- the time in milliseconds since gregorian epoch.
+	//		- a Date instance
 	// dateClassObj: Object?
 	//		The Date class used, by default the native Date.
 	// returns: Date

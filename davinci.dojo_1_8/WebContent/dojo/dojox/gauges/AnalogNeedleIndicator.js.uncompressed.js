@@ -1,10 +1,6 @@
 define("dojox/gauges/AnalogNeedleIndicator", ["dojo/_base/declare","./AnalogIndicatorBase"],
   function(declare, AnalogIndicatorBase) { 
 
-/*=====
-	AnalogIndicatorBase = dojox.gauges.AnalogIndicatorBase;
-=====*/
-
 return declare("dojox.gauges.AnalogNeedleIndicator", [AnalogIndicatorBase], {
 	// summary:
 	//		An indicator for the AnalogGauge that draws a needle. The needle is drawn on the angle that corresponds

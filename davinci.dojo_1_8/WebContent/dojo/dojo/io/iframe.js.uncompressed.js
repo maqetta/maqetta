@@ -1,15 +1,13 @@
 define("dojo/io/iframe", [
 	"../_base/config", "../_base/json", "../_base/kernel", "../_base/lang",
 	"../_base/xhr", "../sniff", "../_base/window",
-	"../dom", "../dom-construct", "../query", "require", "../request/iframe"
-], function(config, json, kernel, lang, xhr, has, win, dom, domConstruct, query, require, _iframe) {
+	"../dom", "../dom-construct", "../query", "require", "../aspect", "../request/iframe"
+], function(config, json, kernel, lang, xhr, has, win, dom, domConstruct, query, require, aspect, _iframe){
 
 // module:
 //		dojo/io/iframe
-// summary:
-//		TODOC
 
-	dojo.deprecated("dojo/io/iframe", "Use dojo/request/iframe.", "2.0");
+dojo.deprecated("dojo/io/iframe", "Use dojo/request/iframe.", "2.0");
 
 /*=====
 var __ioArgs = function(){
@@ -50,40 +48,47 @@ __ioArgs.prototype = new kernel.__IoArgs();
 =====*/
 
 /*=====
-dojo.io.iframe = {
+return kernel.io.iframe = {
+	// summary:
+	//		Deprecated, use dojo/request/iframe instead.
+	//		Sends an Ajax I/O call using and Iframe (for instance, to upload files)
+
 	create: function(fname, onloadstr, uri){
-		//	summary:
+		// summary:
 		//		Creates a hidden iframe in the page. Used mostly for IO
 		//		transports.  You do not need to call this to start a
 		//		dojo.io.iframe request. Just call send().
-		//	fname: String
+		// fname: String
 		//		The name of the iframe. Used for the name attribute on the
 		//		iframe.
-		//	onloadstr: String
+		// onloadstr: String
 		//		A string of JavaScript that will be executed when the content
 		//		in the iframe loads.
-		//	uri: String
+		// uri: String
 		//		The value of the src attribute on the iframe element. If a
 		//		value is not given, then dojo/resources/blank.html will be
 		//		used.
 	},
 	setSrc: function(iframe, src, replace){
-		//summary:
+		// summary:
 		//		Sets the URL that is loaded in an IFrame. The replace parameter
 		//		indicates whether location.replace() should be used when
 		//		changing the location of the iframe.
 	},
 	doc: function(iframeNode){
-		//summary: Returns the document object associated with the iframe DOM Node argument.
+		// summary:
+		//		Returns the document object associated with the iframe DOM Node argument.
 	}
 };
 =====*/
+
 
 var mid = _iframe._iframeName;
 mid = mid.substring(0, mid.lastIndexOf('_'));
 
 var iframe = lang.delegate(_iframe, {
 	// summary:
+	//		Deprecated, use dojo/request/iframe instead.
 	//		Sends an Ajax I/O call using and Iframe (for instance, to upload files)
 
 	create: function(){
@@ -95,20 +100,22 @@ var iframe = lang.delegate(_iframe, {
 	post: null,
 
 	send: function(/*__ioArgs*/args){
-		//summary:
+		// summary:
 		//		Function that sends the request to the server.
 		//		This transport can only process one send() request at a time, so if send() is called
-		//multiple times, it will queue up the calls and only process one at a time.
+		//		multiple times, it will queue up the calls and only process one at a time.
 		var rDfd;
 
 		//Set up the deferred.
 		var dfd = xhr._ioSetArgs(args,
 			function(/*Deferred*/dfd){
-				//summary: canceller function for xhr._ioSetArgs call.
+				// summary:
+				//		canceller function for xhr._ioSetArgs call.
 				rDfd && rDfd.cancel();
 			},
 			function(/*Deferred*/dfd){
-				//summary: okHandler function for xhr._ioSetArgs call.
+				// summary:
+				//		okHandler function for xhr._ioSetArgs call.
 				var value = null,
 					ioArgs = dfd.ioArgs;
 				try{
@@ -131,7 +138,8 @@ var iframe = lang.delegate(_iframe, {
 				return value;
 			},
 			function(/*Error*/error, /*Deferred*/dfd){
-				//summary: errHandler function for xhr._ioSetArgs call.
+				// summary:
+				//		errHandler function for xhr._ioSetArgs call.
 				dfd.ioArgs._hasError = true;
 				return error;
 			}
@@ -147,11 +155,20 @@ var iframe = lang.delegate(_iframe, {
 			timeout: args.timeout,
 			ioArgs: ioArgs
 		};
+
+		if(config.ioPublish && kernel.publish && ioArgs.args.ioPublish !== false){
+			var start = aspect.after(_iframe, "_notifyStart", function(data){
+				if(data.options.ioArgs === ioArgs){
+					start.remove();
+					xhr._ioNotifyStart(dfd);
+				}
+			}, true);
+		}
 		rDfd = _iframe(ioArgs.url, options, true);
 
 		ioArgs._callNext = rDfd._callNext;
 
-		rDfd.then(function(response){
+		rDfd.then(function(){
 			dfd.resolve(dfd);
 		}).otherwise(function(error){
 			dfd.ioArgs.error = error;

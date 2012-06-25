@@ -5,10 +5,13 @@ define("dojox/mvc/EditModelRefController", [
 	"./getStateful",
 	"./ModelRefController"
 ], function(declare, lang, getPlainValue, getStateful, ModelRefController){
-	function setRefSourceModel(/*dojox.mvc.EditModelRefController*/ ctrl, /*Anything*/ old, /*Anything*/ current){
+	// module:
+	//		dojox/mvc/EditModelRefController
+
+	function setRefSourceModel(/*dojox/mvc/EditModelRefController*/ ctrl, /*Anything*/ old, /*Anything*/ current){
 		// summary:
 		//		A function called when this controller gets newer value as the data source.
-		// ctrl: dojox.mvc.EditModelRefController
+		// ctrl: dojox/mvc/EditModelRefController
 		//		The controller.
 		// old: Anything
 		//		The older value.
@@ -23,7 +26,7 @@ define("dojox/mvc/EditModelRefController", [
 
 	return declare("dojox.mvc.EditModelRefController", ModelRefController, {
 		// summary:
-		//		A child class of dojox.mvc.ModelRefController.
+		//		A child class of dojox/mvc/ModelRefController.
 		//		Keeps a copy (originalModel) of given data model (sourceModel) so that it can manage the data model of before/after the edit.
 		// description:
 		//		Has two modes:
@@ -31,8 +34,8 @@ define("dojox/mvc/EditModelRefController", [
 		//			* Directly reflect the edits to sourceModel (holdModelUntilCommit=false)
 		//			* Don't reflect the edits to sourceModel, until commit() is called (holdModelUntilCommit=true)
 		//
-		//		For the 1st case, dojo.Stateful get()/set()/watch() interfaces will work with sourceModel.
-		//		For the 2nd case, dojo.Stateful get()/set()/watch() interfaces will work with a copy of sourceModel, and sourceModel will be replaced with such copy when commit() is called.
+		//		For the 1st case, dojo/Stateful get()/set()/watch() interfaces will work with sourceModel.
+		//		For the 2nd case, dojo/Stateful get()/set()/watch() interfaces will work with a copy of sourceModel, and sourceModel will be replaced with such copy when commit() is called.
 		//
 		//		NOTE - If this class is used with a widget by data-dojo-mixins, make sure putting the widget in data-dojo-type and putting this class to data-dojo-mixins.
 		// example:
@@ -65,8 +68,8 @@ define("dojox/mvc/EditModelRefController", [
 		// |			</head>
 		// |			<body>
 		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
-		// |				<span id="ctrl" data-dojo-type="dojox.mvc.EditModelRefController" data-dojo-props="sourceModel: model"></span>
-		// |				<input id="check" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: at('widget:ctrl', 'value')">
+		// |				<span id="ctrl" data-dojo-type="dojox/mvc/EditModelRefController" data-dojo-props="sourceModel: model"></span>
+		// |				<input id="check" type="checkbox" data-dojo-type="dijit/form/CheckBox" data-dojo-props="checked: at('widget:ctrl', 'value')">
 		// |			</body>
 		// |		</html>
 		// example:
@@ -93,23 +96,23 @@ define("dojox/mvc/EditModelRefController", [
 		// |			</head>
 		// |			<body>
 		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
-		// |				<span id="ctrlSource" data-dojo-type="dojox.mvc.ModelRefController" data-dojo-props="model: model"></span>
-		// |				<span id="ctrlEdit" data-dojo-type="dojox.mvc.EditModelRefController"
+		// |				<span id="ctrlSource" data-dojo-type="dojox/mvc/ModelRefController" data-dojo-props="model: model"></span>
+		// |				<span id="ctrlEdit" data-dojo-type="dojox/mvc/EditModelRefController"
 		// |				 data-dojo-props="sourceModel: at('widget:ctrlSource', 'model'), holdModelUntilCommit: true"></span>
 		// |				Source:
-		// |				<input id="checkSource" type="checkbox" data-dojo-type="dijit.form.CheckBox"
+		// |				<input id="checkSource" type="checkbox" data-dojo-type="dijit/form/CheckBox"
 		// |				 data-dojo-props="checked: at('widget:ctrlSource', 'value')">
 		// |				Edit:
-		// |				<input id="checkEdit" type="checkbox" data-dojo-type="dijit.form.CheckBox"
+		// |				<input id="checkEdit" type="checkbox" data-dojo-type="dijit/form/CheckBox"
 		// |				 data-dojo-props="checked: at('widget:ctrlEdit', 'value')">
 		// |			</body>
 		// |		</html>
 
-		// getStatefulOptions: dojox.mvc.getStatefulOptions
+		// getStatefulOptions: dojox/mvc/getStatefulOptions
 		//		The options to get stateful object from plain value.
 		getStatefulOptions: null,
 
-		// getPlainValueOptions: dojox.mvc.getPlainValueOptions
+		// getPlainValueOptions: dojox/mvc/getPlainValueOptions
 		//		The options to get plain value from stateful object.
 		getPlainValueOptions: null,
 
@@ -117,11 +120,11 @@ define("dojox/mvc/EditModelRefController", [
 		//		True not to send the change in model back to sourceModel until commit() is called.
 		holdModelUntilCommit: false,
 
-		// originalModel: dojo.Stateful
+		// originalModel: dojo/Stateful
 		//		The data model, that serves as the original data.
 		originalModel: null,
 
-		// originalModel: dojo.Stateful
+		// originalModel: dojo/Stateful
 		//		The data model, that serves as the data source.
 		sourceModel: null,
 

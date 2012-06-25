@@ -8,9 +8,9 @@ define("dojox/charting/action2d/ChartAction", ["dojo/_base/connect", "dojo/_base
 		constructor: function(chart, plot){
 			// summary:
 			//		Create a new base chart action.
-			// chart: dojox.charting.Chart
+			// chart: dojox/charting/Chart
 			//		The chart this action applies to.
-			// plot: String?|dojox.charting.plot2d.Base?
+			// plot: String|dojox/charting/plot2d/Base?
 			//		Optional target plot for this chart action.  Default is "default".
 		},
 	

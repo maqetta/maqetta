@@ -6,9 +6,6 @@ define("dijit/form/DateTextBox", [
 
 	// module:
 	//		dijit/form/DateTextBox
-	// summary:
-	//		A validating, serializable, range-bound date text box with a drop down calendar
-
 
 	return declare("dijit.form.DateTextBox", _DateTimeTextBox, {
 		// summary:

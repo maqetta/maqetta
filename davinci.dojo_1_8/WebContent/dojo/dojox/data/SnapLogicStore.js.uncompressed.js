@@ -16,7 +16,7 @@ dojo.declare("dojox.data.SnapLogicStore", null, {
 		//		following properties are understood:
 		//			url:
 		//				A URL to the SnapLogic pipeline's output routed through PipeToHttp. Typically, this
-		//				will look like "http://<server-host>:<port>/pipe/<pipeline-url>/<pipeline-output-view>".
+		//				will look like `http://<server-host>:<port>/pipe/<pipeline-url>/<pipeline-output-view>`.
 		//			parameters:
 		//				An object whose properties define parameters to the pipeline. The values of these
 		//				properties will be sent to the pipeline as parameters when it run.

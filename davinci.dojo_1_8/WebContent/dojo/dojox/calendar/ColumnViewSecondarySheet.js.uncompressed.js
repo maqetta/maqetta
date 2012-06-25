@@ -28,6 +28,8 @@ define("dojox/calendar/ColumnViewSecondarySheet", ["./MatrixView", "dojo/text!./
 		layoutDuringResize: true,
 		
 		_defaultItemToRendererKindFunc: function(item){
+			// tags:
+			//		private
 			return item.allDay ? "horizontal" : null;
 		},
 		
@@ -73,6 +75,9 @@ define("dojox/calendar/ColumnViewSecondarySheet", ["./MatrixView", "dojo/text!./
 			//		The mouse event.
 			// renderer: Object
 			//		The renderer that was clicked.
+			// tags:
+			//		callback
+
 			
 			event.stop(e);
 			var h = domGeometry.getMarginBox(this.domNode).h;			
@@ -85,6 +90,9 @@ define("dojox/calendar/ColumnViewSecondarySheet", ["./MatrixView", "dojo/text!./
 		},
 		
 		_getExpandedHeight: function(){
+			// tags:
+			//		private
+
 			return this.naturalRowsHeight[0] + this.expandRendererHeight + this.verticalGap + this.verticalGap;
 		},
 		

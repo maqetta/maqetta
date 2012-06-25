@@ -21,8 +21,6 @@ define("dijit/layout/BorderContainer", [
 
 // module:
 //		dijit/layout/BorderContainer
-// summary:
-//		Provides layout in up to 5 regions, a mandatory center with optional borders along its 4 sides.
 
 var _Splitter = declare("dijit.layout._Splitter", [_Widget, _TemplatedMixin ],
 {
@@ -307,7 +305,7 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 		this.inherited(arguments);
 	},
 
-	_setupChild: function(/*dijit._Widget*/ child){
+	_setupChild: function(/*dijit/_WidgetBase*/ child){
 		// Override _LayoutWidget._setupChild().
 
 		var region = child.region;
@@ -352,7 +350,7 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 		this._layoutChildren();
 	},
 
-	addChild: function(/*dijit._Widget*/ child, /*Integer?*/ insertIndex){
+	addChild: function(/*dijit/_WidgetBase*/ child, /*Integer?*/ insertIndex){
 		// Override _LayoutWidget.addChild().
 		this.inherited(arguments);
 		if(this._started){
@@ -360,7 +358,7 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 		}
 	},
 
-	removeChild: function(/*dijit._Widget*/ child){
+	removeChild: function(/*dijit/_WidgetBase*/ child){
 		// Override _LayoutWidget.removeChild().
 
 		var region = child.region;

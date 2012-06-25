@@ -28,7 +28,7 @@ define("dojox/mobile/_DataListMixin", [
 		// itemMap: Object
 		//		An optional parameter mapping field names from the store to ItemList name.
 		// example:
-		// |	itemMap:{text:'label', profile_image_url:'icon' }
+		//	|	itemMap:{text:'label', profile_image_url:'icon' }
 		itemMap: null,
 
 		buildRendering: function(){
@@ -83,18 +83,18 @@ define("dojox/mobile/_DataListMixin", [
 
 		onSet: function(/*Object*/item, /*String*/attribute, /*Object|Array*/oldValue, /*Object|Array*/newValue){
 			// summary:
-			//		See dojo.data.api.Notification.onSet()
+			//		See dojo/data/api/Notification.onSet().
 		},
 
 		onNew: function(/*Object*/newItem, /*Object?*/parentInfo){
 			// summary:
-			//		See dojo.data.api.Notification.onNew()
+			//		See dojo/data/api/Notification.onNew().
 			this.addChild(this.createListItem(newItem));
 		},
 
 		onDelete: function(/*Object*/deletedItem){
 			// summary:
-			//		See dojo.data.api.Notification.onDelete()
+			//		See dojo/data/api/Notification.onDelete().
 			registry.byId(deletedItem._widgetId).destroyRecursive();
 		},
 

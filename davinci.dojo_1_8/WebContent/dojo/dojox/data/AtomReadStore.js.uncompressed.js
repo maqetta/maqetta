@@ -43,7 +43,8 @@ dojo.declare("dojox.data.AtomReadStore", null, {
 
 	unescapeHTML: false,
 
-	//Configurable preventCache option for the URL.
+	// urlPreventCache: Boolean
+	//		Configurable preventCache option for the URL.
 	urlPreventCache: false,
 
 	/* dojo.data.api.Read */

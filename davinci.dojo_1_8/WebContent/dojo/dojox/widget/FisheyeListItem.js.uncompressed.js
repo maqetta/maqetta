@@ -3,11 +3,9 @@ define("dojox/widget/FisheyeListItem", ["dojo/_base/declare", "dojo/_base/sniff"
 
 	return declare("dojox.widget.FisheyeListItem",
 		[_WidgetBase, _TemplatedMixin, _Contained], {
-		/*
-		 * summary
-		 *  Menu item inside of a FisheyeList.
-		 *  See FisheyeList documentation for details on usage.
-		 */
+		// summary:
+		//	Menu item inside of a FisheyeList.
+		//	See FisheyeList documentation for details on usage.
 
 		// iconSrc: String
 		//  pathname to image file (jpg, gif, png, etc.) of icon for this menu item
@@ -41,8 +39,8 @@ define("dojox/widget/FisheyeListItem", ["dojo/_base/declare", "dojo/_base/sniff"
 			return false;
 		},
 
-		_hasParent: function(/*Node*/node){
-			//  summary:
+		_hasParent: function(/*Node*/ node){
+			// summary:
 			//	  returns whether or not node is a child of another node.
 			return Boolean(node && node.parentNode && this._isNode(node.parentNode));   //  boolean
 		},
@@ -92,12 +90,14 @@ define("dojox/widget/FisheyeListItem", ["dojo/_base/declare", "dojo/_base/sniff"
 		},
 
 		onMouseOut: function(/*Event*/ e){
-			// summary: callback when user moves mouse off of this menu item
+			// summary:
+			//		callback when user moves mouse off of this menu item
 			domClass.remove(this.lblNode, "dojoxFishSelected");
 		},
 
 		onClick: function(/*Event*/ e){
-			// summary: user overridable callback when user clicks this menu item
+			// summary:
+			//		user overridable callback when user clicks this menu item
 		}
 	});
 });

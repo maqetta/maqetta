@@ -12,8 +12,6 @@ define("dijit/form/ValidationTextBox", [
 
 	// module:
 	//		dijit/form/ValidationTextBox
-	// summary:
-	//		Base class for textbox widgets with the ability to validate content of various types and provide user feedback.
 
 
 	/*=====
@@ -31,8 +29,6 @@ define("dijit/form/ValidationTextBox", [
 	return ValidationTextBox = declare("dijit.form.ValidationTextBox", TextBox, {
 		// summary:
 		//		Base class for textbox widgets with the ability to validate content of various types and provide user feedback.
-		// tags:
-		//		protected
 
 		templateString: template,
 		baseClass: "dijitTextBox dijitValidationTextBox",
@@ -213,7 +209,9 @@ define("dijit/form/ValidationTextBox", [
 
 		_refreshState: function(){
 			// Overrides TextBox._refreshState()
-			this.validate(this.focused);
+			if(this._started){
+				this.validate(this.focused);
+			}
 			this.inherited(arguments);
 		},
 
@@ -223,11 +221,17 @@ define("dijit/form/ValidationTextBox", [
 			this.constraints = {};
 		},
 
+		startup: function(){
+			this.inherited(arguments);
+			this._refreshState(); // after all _set* methods have run
+		},
+
 		_setConstraintsAttr: function(/*__Constraints*/ constraints){
 			if(!constraints.locale && this.lang){
 				constraints.locale = this.lang;
 			}
 			this._set("constraints", constraints);
+			this._refreshState();
 		},
 
 		_getPatternAttr: function(/*__Constraints*/ constraints){

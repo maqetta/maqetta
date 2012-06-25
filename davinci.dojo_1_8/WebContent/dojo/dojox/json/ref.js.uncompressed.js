@@ -50,7 +50,7 @@ return dojox.json.ref = {
 		//			This provides a map of schemas, from which prototypes can be retrieved
 		//		The *loader* parameter
 		//			This is a function that is called added to the reference objects that can't be resolved (lazy objects)
-		// return:
+		// returns:
 		//		An object, the result of the processing
 		args = args || {};
 		var idAttribute = args.idAttribute || 'id';
@@ -226,7 +226,7 @@ return dojox.json.ref = {
 	//			'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'
 	// args: See resolveJson
 	//
-	// return:
+	// returns:
 	//		An object, the result of the evaluation
 		function ref(target){ // support call styles references as well
 			var refObject = {};
@@ -261,7 +261,7 @@ return dojox.json.ref = {
 		//
 		// idPrefix: The prefix that has been used for the absolute ids
 		//
-		// return:
+		// returns:
 		//		a String representing the serialized version of the passed object.
 		var useRefs = this._useRefs;
 		var addProp = this._addProp;

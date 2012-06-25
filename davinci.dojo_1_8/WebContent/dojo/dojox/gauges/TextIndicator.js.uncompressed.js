@@ -1,9 +1,5 @@
 define("dojox/gauges/TextIndicator", ["dojo/_base/declare","./_Indicator"],
-  function(declare, Indicator) { 
-
-/*=====
-	Indicator = dojox.gauges._Indicator;
-=====*/
+  function(declare, Indicator) {
 
 return declare("dojox.gauges.TextIndicator", [Indicator], {
 	// summary:

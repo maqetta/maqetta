@@ -6,12 +6,12 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		utils, _WidgetBase, _Invalidating, Selection, has){
 
 	return declare("dojox.treemap.TreeMap", [_WidgetBase, _Invalidating, Selection], {
-		//	summary:
+		// summary:
 		//		A treemap widget.
 		
 		baseClass: "dojoxTreeMap",
 		
-		//	store: dojo.store.Store
+		// store: dojo/store/api/Store
 		//		The store that contains the items to display.
 		store: null,
 		
@@ -19,61 +19,61 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		//		A query that can be passed to when querying the store.
 		query: {},
 		
-		//	itemToRenderer: [protected] Object
+		// itemToRenderer: [protected] Object
 		//		The associated array item to renderer list.
 		itemToRenderer: null,
 
 		// Data
 		_dataChanged: false,
 	
-		//	rootItem: Object
+		// rootItem: Object
 		//		The root item of the treemap, that is the first visible item.
 		//		If null the entire treemap hierarchy is shown.	
 		//		Default is null.
 		rootItem: null,
 		_rootItemChanged: false,
 	
-		//	tooltipAttr: String
+		// tooltipAttr: String
 		//		The attribute of the store item that contains the tooltip text of a treemap cell.	
 		//		Default is "". 
 		tooltipAttr: "",
 	
-		//	areaAttr: String
+		// areaAttr: String
 		//		The attribute of the store item that contains the data used to compute the area of a treemap cell.	
 		//		Default is "". 
 		areaAttr: "",
 		_areaChanged: false,
 	
-		//	labelAttr: String
+		// labelAttr: String
 		//		The attribute of the store item that contains the label of a treemap cell.	
 		//		Default is "label". 
 		labelAttr: "label",
 		
-		//	labelThreshold: Number
+		// labelThreshold: Number
 		//		The starting depth level at which the labels are not displayed anymore on cells.  
 		//		If NaN no threshold is applied. The depth is the visual depth of the items on the screen not
 		//		in the data (i.e. after drill down the depth of an item might change).
 		//		Default is NaN.
 		labelThreshold: NaN, 
 		
-		//	colorAttr: String
+		// colorAttr: String
 		//		The attribute of the store item that contains the data used to compute the color of a treemap cell.
 		//		Default is "". 
 		colorAttr: "",
-		//	colorModel: dojox.color.api.ColorModel
+		// colorModel: dojox/color/api/ColorModel
 		//		The optional color model that converts data to color.	
 		//		Default is null.
 		colorModel: null,
 		_coloringChanged: false,
 		
-		//	groupAttrs: Array
+		// groupAttrs: Array
 		//		An array of data attributes used to group data in the treemap.	
 		//		Default is []. 
 		groupAttrs: [],
 
-		//	groupFuncs: Array
+		// groupFuncs: Array
 		//		An array of grouping functions used to group data in the treemap.
-        //      When null, groupAttrs is to compute grouping functions.
+		//		When null, groupAttrs is to compute grouping functions.
 		//		Default is null.
 		groupFuncs: null,
 
@@ -254,10 +254,10 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 			this._set("areaAttr", value);
 		},
 	
-		//	areaFunc: Function
-		//		A function that returns the value use to compute the area of cell from a store item.	
+		// areaFunc: Function
+		//		A function that returns the value use to compute the area of cell from a store item.
 		//		Default implementation is using areaAttr.	
-		areaFunc: function(/*Object*/ item, /*dojo.store.api.Store*/ store){
+		areaFunc: function(/*Object*/ item, /*dojo/store/api/Store*/ store){
 			return (this.areaAttr && this.areaAttr.length > 0)?parseFloat(item[this.areaAttr]):1;
 		},
 		
@@ -266,18 +266,18 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 			this._set("areaFunc", value);
 		},
 
-		//	labelFunc: Function
+		// labelFunc: Function
 		//		A function that returns the label of cell from a store item.	
 		//		Default implementation is using labelAttr.
-		labelFunc: function(/*Object*/ item, /*dojo.store.api.Store*/ store){
+		labelFunc: function(/*Object*/ item, /*dojo/store/api/Store*/ store){
 			var label = (this.labelAttr && this.labelAttr.length > 0)?item[this.labelAttr]:null;
 			return label?label.toString():null;
 		},
 	
-		//	tooltipFunc: Function
+		// tooltipFunc: Function
 		//		A function that returns the tooltip of cell from a store item.	
 		//		Default implementation is using tooltipAttr.
-		tooltipFunc: function(/*Object*/ item, /*dojo.store.api.Store*/ store){
+		tooltipFunc: function(/*Object*/ item, /*dojo/store/api/Store*/ store){
 			var tooltip = (this.tooltipAttr && this.tooltipAttr.length > 0)?item[this.tooltipAttr]:null;
 			return tooltip?tooltip.toString():null;
 		},
@@ -292,12 +292,12 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 			this._set("colorAttr", value);
 		},
 	
-		//	colorFunc: Function
+		// colorFunc: Function
 		//		A function that returns from a store item the color value of cell or the value used by the 
 		//		ColorModel to compute the cell color. If a color must be returned it must be in form accepted by the
-		//		dojo/Color constructor. If a value must be returned it must be a Number.
+		//		dojo/_base/Color constructor. If a value must be returned it must be a Number.
 		//		Default implementation is using colorAttr.
-		colorFunc: function(/*Object*/ item, /*dojo.store.api.Store*/ store){
+		colorFunc: function(/*Object*/ item, /*dojo/store/api/Store*/ store){
 			var color = (this.colorAttr && this.colorAttr.length > 0)?item[this.colorAttr]:0;
 			if(color == null){
 				color = 0;
@@ -311,19 +311,19 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 		
 		createRenderer: function(item, level, kind){
-			//	summary: 
+			// summary:
 			//		Creates an item renderer of the specified kind. This is called only when the treemap
 			//		is created. Default implementation always create div nodes. It also sets overflow
 			//		to hidden and position to absolute on non-header renderers.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	level: Number
+			// level: Number
 			//		The item depth level.		
-			//	kind: String
+			// kind: String
 			//		The specified kind. This can either be "leaf", "group", "header" or "content". 
-			//	returns: DomNode
+			// returns: DomNode
 			//		The renderer use for the specified kind.
-			//	tags:
+			// tags:
 			//		protected					
 			var div = domConstruct.create("div");
 			if(kind != "header"){
@@ -334,19 +334,19 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 		
 		styleRenderer: function(renderer, item, level, kind){
-			//	summary:
+			// summary:
 			//		Style the item renderer. This is called each time the treemap is refreshed.
 			//		For leaf items it colors them with the color computed from the color model. 
 			//		For other items it does nothing.
-			//	renderer: DomNode
+			// renderer: DomNode
 			//		The item renderer.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	level: Number
+			// level: Number
 			//		The item depth level.
-			//	kind: String
+			// kind: String
 			//		The specified kind. This can either be "leaf", "group", "header" or "content". 
-			//	tags:
+			// tags:
 			//		protected
 			switch(kind){
 				case "leaf":
@@ -369,7 +369,7 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 				return;
 			}
 			if(this._groupFuncs != null && this._groupFuncs.length > 0){
-				this._items = utils.group(this._data, this._groupFuncs, dojo.hitch(this, this._getAreaForItem)).children;
+				this._items = utils.group(this._data, this._groupFuncs, lang.hitch(this, this._getAreaForItem)).children;
 			}else{
 				this._items = this._data;
 			}
@@ -419,12 +419,12 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 	
 		getColorForItem: function(item){
-			//	summary:
+			// summary:
 			//		Returns the color for a given item. This either use the colorModel if not null
 			//		or just the result of the colorFunc.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	tags:
+			// tags:
 			//		protected	
 			var value = this.colorFunc(item, this.store);
 			if(this.colorModel != null){
@@ -435,11 +435,11 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 	
 		getLabelForItem: function(item){
-			//	summary:
+			// summary:
 			//		Returns the label for a given item.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	tags:
+			// tags:
 			//		protected	
 			return item.__treeName?item.__treeName:this.labelFunc(item, this.store);
 		},
@@ -559,16 +559,16 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 	
 		_updateGroupRenderer: function(renderer, item, level){
-			//	summary:
+			// summary:
 			//		Update a group renderer. This creates the renderer if not already created,
 			//		call styleRender for it and recurse into children.
-			//	renderer: DomNode
+			// renderer: DomNode
 			//		The item renderer.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	level: Number
+			// level: Number
 			//		The item depth level.
-			//	tags:
+			// tags:
 			//		private				
 			var forceCreate = renderer == null;
 			if(renderer == null){
@@ -590,16 +590,16 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 	
 		_updateHeaderRenderer: function(renderer, item, level){
-			//	summary:
+			// summary:
 			//		Update a leaf renderer. This creates the renderer if not already created,
 			//		call styleRender for it and set the label as its innerHTML.
-			//	renderer: DomNode
+			// renderer: DomNode
 			//		The item renderer.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	level: Number
+			// level: Number
 			//		The item depth level.
-			//	tags:
+			// tags:
 			//		private			
 			if(renderer == null){
 				renderer = this.createRenderer(item, level, "header");
@@ -611,16 +611,16 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 	
 		_updateLeafRenderer: function(renderer, item, level){
-			//	summary:
+			// summary:
 			//		Update a leaf renderer. This creates the renderer if not already created,
 			//		call styleRender for it and set the label as its innerHTML.
-			//	renderer: DomNode
+			// renderer: DomNode
 			//		The item renderer.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	level: Number
+			// level: Number
 			//		The item depth level.
-			//	tags:
+			// tags:
 			//		private				
 			if(renderer == null){
 				renderer = this.createRenderer(item, level, "leaf");
@@ -636,16 +636,16 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},
 	
 		_updateGroupContentRenderer: function(renderer, item, level){
-			//	summary:
+			// summary:
 			//		Update a group content renderer. This creates the renderer if not already created,
 			//		and call styleRender for it.
-			//	renderer:
+			// renderer:
 			//		The item renderer.
-			//	item: Object
+			// item: Object
 			//		The data item.
-			//	level: Number
+			// level: Number
 			//		The item depth level.
-			//	tags:
+			// tags:
 			//		private				
 			if(renderer == null){
 				renderer = this.createRenderer(item, level, "content");
@@ -716,9 +716,9 @@ define("dojox/treemap/TreeMap", ["dojo/_base/array", "dojo/_base/lang", "dojo/_b
 		},		
 		
 		updateRenderers: function(items){
-			//	summary:
+			// summary:
 			//		Updates the renderer(s) that represent the specified item(s).
-			//	item: Object|Array
+			// item: Object|Array
 			//		The item(s).
 			if(!items){
 				return;

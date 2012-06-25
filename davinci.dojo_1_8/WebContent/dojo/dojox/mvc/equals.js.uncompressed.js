@@ -4,9 +4,9 @@ define("dojox/mvc/equals", [
 	"dojo/Stateful",
 	"./StatefulArray"
 ], function(array, lang, Stateful, StatefulArray){
-	var equalsOptions = /*===== dojox.mvc.equalsOptions = =====*/ {
+	var equalsOptions = {
 		// summary:
-		//		Options used for dojox.mvc.equals().
+		//		Options used for dojox/mvc/equals().
 
 		getType: function(/*Anything*/ v){
 			// summary:
@@ -14,7 +14,7 @@ define("dojox/mvc/equals", [
 			// v: Anything
 			//		The value.
 
-			return lang.isArray(v) ? "array" : lang.isFunction((v || {}).getTime) ? "date" : v != null && {}.toString.call(v) == "[object Object]" ? "object" : "value";
+			return lang.isArray(v) ? "array" : lang.isFunction((v || {}).getTime) ? "date" : v != null && ({}.toString.call(v) == "[object Object]" || lang.isFunction((v || {}).set) && lang.isFunction((v || {}).watch)) ? "object" : "value";
 		},
 
 		equalsArray: function(/*Anything[]*/ dst, /*Anything[]*/ src){
@@ -58,22 +58,22 @@ define("dojox/mvc/equals", [
 		}
 	};
 
-	var equals = /*===== dojox.mvc.equals = =====*/ function(/*Anything*/ dst, /*Anything*/ src, /*dojox.mvc.equalsOptions*/ options){
+	var equals = function(/*Anything*/ dst, /*Anything*/ src, /*dojox/mvc/equalsOptions*/ options){
 		// summary:
-		//		Compares two dojo.Stateful objects, by diving into the leaves.
+		//		Compares two dojo/Stateful objects, by diving into the leaves.
 		// description:
 		//		Recursively iterates and compares stateful values.
 		// dst: Anything
 		//		The stateful value to compare with.
 		// src: Anything
 		//		The stateful value to compare with.
-		// options: dojox.mvc.equalsOptions
+		// options: dojox/mvc/equalsOptions
 		//		The object that defines how two stateful values are compared.
 		// returns: Boolean
 		//		True if dst equals to src, false otherwise.
 
-		var options = options || equals, types = [options.getType(dst), options.getType(src)];
-		return types[0] != types[1] ? false : options["equals" + types[0].replace(/^[a-z]/, function(c){ return c.toUpperCase(); })](dst, src); // Boolean
+		var opts = options || equals, types = [opts.getType(dst), opts.getType(src)];
+		return types[0] != types[1] ? false : opts["equals" + types[0].replace(/^[a-z]/, function(c){ return c.toUpperCase(); })](dst, src); // Boolean
 	};
 
 	// lang.setObject() thing is for back-compat, remove it in 2.0

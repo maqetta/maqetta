@@ -1,0 +1,101 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/ColorPicker",
+    "name": "dojox.widget.ColorPicker",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/widget/ColorPicker/ColorPicker.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/ColorPicker",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "showRgb": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show RBG"
+        },
+        "showHsv": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show HSV"
+        },
+        "showHex": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show Hex"
+        },
+        "webSafe": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Web Safe"
+        },
+        "animatePoint": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Animate Point"
+        },
+        "slideDuration": {
+            "datatype": "number",
+            "defaultValue": 250,
+            "title": "Slide Duration"
+        },
+        "liveUpdate": {
+            "datatype": "boolean",
+            "description": "Set to true to fire onChange in an indeterminate way",
+            "hidden": false
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>"
+}

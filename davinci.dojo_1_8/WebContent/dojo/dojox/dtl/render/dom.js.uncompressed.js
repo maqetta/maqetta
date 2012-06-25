@@ -10,7 +10,7 @@ define("dojox/dtl/render/dom", [
 	=====*/
 	lang.getObject("dojox.dtl.render.dom", true);
 
-	dd.render.dom.Render = function(/*DOMNode?*/ attachPoint, /*dojox.dtl.DomTemplate?*/ tpl){
+	dd.render.dom.Render = function(/*DOMNode?*/ attachPoint, /*dojox/dtl/DomTemplate?*/ tpl){
 		this._tpl = tpl;
 		this.domNode = dom.byId(attachPoint);
 	}
@@ -18,7 +18,7 @@ define("dojox/dtl/render/dom", [
 		setAttachPoint: function(/*Node*/ node){
 			this.domNode = node;
 		},
-		render: function(/*Object*/ context, /*dojox.dtl.DomTemplate?*/ tpl, /*dojox.dtl.DomBuffer?*/ buffer){
+		render: function(/*Object*/ context, /*dojox/dtl/DomTemplate?*/ tpl, /*dojox/dtl/DomBuffer?*/ buffer){
 			if(!this.domNode){
 				throw new Error("You cannot use the Render object without specifying where you want to render it");
 			}

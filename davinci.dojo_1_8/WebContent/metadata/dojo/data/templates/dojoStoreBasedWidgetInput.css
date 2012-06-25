@@ -1,0 +1,24 @@
+.dojoStoreBasedWidgetInput {
+}
+
+.dojoStoreBasedWidgetInput .iedResizeDiv {
+	width: 240px; 
+	height: 60px; 
+	border: 1px solid #769DC0; 
+	margin: 0 5px 0 5px;
+	background-color: white;
+}
+
+.dojoStoreBasedWidgetInput .smartInputTextAreaMulti {
+	width: 240px; 
+	height: 60px; 
+}
+
+.smartInputDataGridFolderDiv {
+	background-color: #F7FCFF;	
+	margin: 0 0 0 -1px;
+}
+
+.dojoStoreBasedWidgetInput .smartInputHelpTextDivContentPane {
+	height:auto;	
+}

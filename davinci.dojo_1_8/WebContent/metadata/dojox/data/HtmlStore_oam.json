@@ -1,0 +1,35 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/HtmlStore",
+    "name": "dojox.data.HtmlStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/HtmlStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Variable Name"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "dataId": {
+            "datatype": "string",
+            "title": "HTML element ID"
+        }
+    },
+    "content": "<span></span>"
+}

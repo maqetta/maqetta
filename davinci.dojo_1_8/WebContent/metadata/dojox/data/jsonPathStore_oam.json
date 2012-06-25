@@ -1,0 +1,68 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/jsonPathStore",
+    "name": "dojox.data.jsonPathStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/jsonPathStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Variable Name"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "data": {
+            "datatype": "string",
+            "title": "JSON-formatted Data"
+        },
+        "indexOnLoad": {
+            "datatype": "boolean",
+            "title": "Index on Load"
+        },
+        "idAttribute": {
+            "datatype": "string",
+            "title": "Id Attribute"
+        },
+        "metaLabel": {
+            "datatype": "string",
+            "title": "Meta Label"
+        },
+        "hideMetaAttributes": {
+            "datatype": "boolean",
+            "title": "Hide Meta Attributes"
+        },
+        "autoIdPrefix": {
+            "datatype": "string",
+            "title": "Auto ID Prefix"
+        },
+        "mode": {
+            "datatype": "string",
+            "title": "Auto ID Prefix",
+            "defaultValue": 0,
+            "option": [
+                {
+                    "value": 0
+                },
+                {
+                    "value": 1
+                }
+            ]
+        }
+    },
+    "content": "<span></span>"
+}

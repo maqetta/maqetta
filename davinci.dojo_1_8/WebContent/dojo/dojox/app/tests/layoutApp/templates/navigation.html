@@ -1,0 +1,20 @@
+<div>
+	<!-- left -->
+	<div dojoType="dojox.app.widgets.Container" class="navPane" region="left">
+		<h1 region="top" dojoType="dojox.mobile.Heading">Layout App</h1>
+		<div data-dojo-type="dojox.app.widgets.Container" region="center" data-dojo-props="scrollable:'true'">
+			<h2 dojoType="dojox.mobile.EdgeToEdgeCategory" style="height: 32px;" region="top">Navigation</h2>
+			<ul data-dojo-type="dojox.mobile.RoundRectList" region="center">
+				<li dojoType="dojox.mobile.ListItem" clickable="true" transitionOptions="{title:'simple',target:'simple',url:'#simple'}">
+					Simple Data Binding
+				</li>
+				<li dojoType="dojox.mobile.ListItem" clickable="true" transitionOptions="{title:'repeat',target:'repeat',url:'#repeat'}">
+					Repeat Data Binding
+				</li>
+				<li dojoType="dojox.mobile.ListItem" clickable="true" transitionOptions="{title:'generate',target:'generate',url:'#generate'}">
+					Simple Form Generate
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -48,6 +48,8 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 
 			// instantiate widget, in context of editor iframe
 			var instances = win.require('dojo/parser').instantiate(
+//				[node],
+				// hash argument not supported after Dojo 1.7
 				[{
 					type: dijitWidget,
 					node: node

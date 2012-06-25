@@ -1,0 +1,54 @@
+{
+    "id": "http://dojotoolkit.org/dijit/tree/ForestStoreModel",
+    "name": "dijit.tree.ForestStoreModel",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Tree",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Model ID"
+        },
+        "store": {
+            "datatype": "object",
+            "title": "Data Store"
+        },
+        "childrenAttrs": {
+            "datatype": "array",
+            "defaultValue": "[\"children\"]",
+            "title": "Children Attributes"
+        },
+        "query": {
+            "datatype": "json",
+            "title": "Query"
+        },
+        "rootId": {
+            "datatype": "string",
+            "defaultValue": "$root$",
+            "title": "Root ID"
+        },
+        "rootLabel": {
+            "datatype": "string",
+            "defaultValue": "ROOT",
+            "title": "Root Label"
+        },
+        "labelAttr": {
+            "datatype": "string",
+            "description": "If specified, get label for tree node from this attribute, rather\nthan by calling store.getLabel()",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>"
+}

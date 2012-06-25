@@ -405,38 +405,42 @@ var uiResource = {
 
 		getSelectedResources: function(){
 		  var selection=Runtime.getSelection();
-		  if (selection[0]&&selection[0].resource)
+		  if (selection[0]&&selection[0].resource) {
 			  return dojo.map(selection,function(item){return item.resource;});
+		  }
 		},
 
 		alphabeticalSortFilter:{
 		     filterList: function(list){
-			    return list.sort(function (file1,file2)
-			    	{return file1.name>file2.name ? 1 : file1.name<file2.name ? -1 : 0;});
+			    return list.sort(function (file1,file2) {
+			    	return file1.name > file2.name ? 1 : file1.name<file2.name ? -1 : 0;
+			    });
 		    }
 		
 		},
 	   foldersFilter: {
-	     filterItem: function(item){
-		    if (item.elementType=='File')
+	     filterItem: function (item) {
+		    if (item.elementType=='File') {
 		    	return true;
+		    }
 	    }
 	   },
 
 		openPath: function(path,text){
 			var options = {fileName:path};
-			if(text)
+			if (text) {
 				options.text = text;
+			}
 			Workbench.openEditor(options);
 		},
 	
 		openResource: function(resource, newHtmlParams){
 	
-			if(resource.elementType=="File"){
+			if(resource.elementType == "File"){
 				resource.getContent().then(function(content) {
 					Workbench.openEditor({
 						fileName: resource,
-						content: resource.getContent()
+						content: content
 					}, newHtmlParams);
 				});
 			}

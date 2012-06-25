@@ -15,9 +15,9 @@
 		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
 	</div>
 	<hr />
-	<h1 class="test_title">Eclipse project basic tests</h1>
+	<h1 class="test_title">Eclipse Project Tests</h1>
 
-	<h2 class="test_section">Pull down the most recent Maqetta build</h2>
+	<h2 class="test_section">Create and Download Eclipse Project</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Start maqetta in mutli user mode.  (repeat tests in single user mode)</li>
@@ -28,13 +28,41 @@
 		<li>Add some content to the new HTML file. Save and close</li>
 		<li>Download the entire workspace as a zip by clicking the "Download Workspace" icon on the File Explore shortcut bar.
 		<li>Default settings are fine, click OK and save the file somewhere on the file system</li>
-		<li>Start Eclipse.  Then go to your workspace and right click and select File-->Import</li>
-		<li>In "General"" select "Existing Project into Workspace", Click the radio button next to "From Archive" then browse to find the zip file you just downloaded.</li>
-		<li>The Maqetta project should show up in the lists of projects. Select it and click OK</li> 
-		
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
-	<p class="expectedResults">You should now have a project in your Eclipse workspace with the same name and structure as your maqetta project.  You should be able to open
+	<p class="expectedResults">You should have a zip file in your file system containing a zip file with the same files and structure as your Maqetta workspace. </p>
+	
+	<h2 class="test_section">Import Project into Eclipse</h2>
+	<i>NOTE: If you choose to do the optional Rational Application Developer 8.5 tests in the last section, you can skip this part (since RAD runs on top of Eclipse).</i>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Start Eclipse.</li>
+		<li>Select the <b>File-->Import</b> menu option.</li>
+		<li>In the <b>General</b> section select <b>Existing Project into Workspace</b>, click the radio button next to <b>From Archive</b>, and then browse to find the zip file you just downloaded.</li>
+		<li>The Maqetta project should show up in the list of available projects. Select it and click OK</li> 
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<p class="expectedResults">You should now have a project in your Eclipse workspace with the same name and structure as your Maqetta project.  You should be able to open
 	any of the HTML files in a browser or editor. </p>
+	
+	<h2 class="test_section">Import Project into Rational Application Developer 8.5 (optional)</h2>
+	<i>NOTE: While marked "optional" if you have RAD 8.5 installed, it is strongly recommended you run through this scenario.</i>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>If you don't have Rational Application Developer 8.5 on your system, then <a href="http://www.ibm.com/developerworks/downloads/r/rad/index.html" target="_blank">download and install</a> 
+			the evaluation copy.</li>
+		<li>Start Rational Application Developer 8.5.</li>
+		<li>Select the <b>File-->Import</b> menu option.</li>
+		<li>In the <b>General</b> section select <b>Existing Project into Workspace</b>, click the radio button next to <b>From Archive</b>, and then browse to find the zip file you just downloaded.</li>
+		<li>The Maqetta project should show up in the list of available projects. Select it and click OK</li> 
+		<li>Once the import is complete, switch to the Web Perspective.</li>
+		<li>Open the file you created earlier (or <i>Sample1.html</i>) and you should see the file in RAD's Rich Page Editor with a rendering that looks like it did in Maqetta.</li>
+		<li>Make the Palette tab visible and you should see widgets that can be dragged onto your page.</li>
+		<li>Drag a Dojo widget from the palette onto your page and ensure it gets added where you dropped it with an appropriate rendering.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<p class="expectedResults">You should now have a project in your RAD workspace with the same name and structure as your Maqetta project.  You should be able to open
+	your file in RAD's Rich Page Editor and drag/drop widgets from RAD's widget palette. </p>
+	<img src="images/maqettaToRADPageEditorWithPalette.png">
 </body>
 </html>

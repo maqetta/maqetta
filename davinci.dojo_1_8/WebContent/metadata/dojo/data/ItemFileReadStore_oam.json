@@ -1,0 +1,41 @@
+{
+    "id": "http://dojotoolkit.org/dojo/data/ItemFileReadStore",
+    "name": "dojo.data.ItemFileReadStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/io/xhrScriptPlugin",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojo/data/ItemFileReadStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Store ID"
+        },
+        "data": {
+            "datatype": "json",
+            "title": "Data"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        }
+    },
+    "content": "<span></span>"
+}

@@ -380,7 +380,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		dojo.publish('/davinci/ui/context/pagebuilt', [context]);
 
 		if (failureInfo.errorMessage) {
-			this.loadingDiv.innerHTML = failureInfo.errorMessage;
+			this.loadingDiv.innerHTML = failureInfo.errorMessage || "(unknown)";
 		} else if (failureInfo instanceof Error) {
 			var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
 			if (failureInfo.fileName) {

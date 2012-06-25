@@ -1,0 +1,50 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/FlippableView",
+    "name": "dojox.mobile.FlippableView",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/deviceTheme",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/compat",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojo/hash",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/SwapView",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "selected": {
+            "datatype": "boolean",
+            "defaultValue": false
+        }
+    },
+    "content": "<div></div>"
+}

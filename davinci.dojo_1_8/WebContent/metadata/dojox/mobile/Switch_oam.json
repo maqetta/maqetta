@@ -1,0 +1,46 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/Switch",
+    "name": "dojox.mobile.Switch",
+    "spec": "1.0",
+    "version": "1.7",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/deviceTheme",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/compat",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "value": {
+            "datatype": "string",
+            "defaultValue": "on"
+        },
+        "leftLabel": {
+            "datatype": "string",
+            "defaultValue": "ON"
+        },
+        "rightLabel": {
+            "datatype": "string",
+            "defaultValue": "OFF"
+        }
+    },
+    "content": "<div></div>"
+}

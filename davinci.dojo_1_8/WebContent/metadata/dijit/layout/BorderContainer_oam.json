@@ -1,0 +1,92 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/BorderContainer",
+    "name": "dijit.layout.BorderContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/BorderContainer",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "design": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "headline"
+                },
+                {
+                    "value": "sidebar"
+                }
+            ],
+            "defaultValue": "headline",
+            "title": "Design"
+        },
+        "persist": {
+            "datatype": "boolean",
+            "title": "Persist"
+        },
+        "gutters": {
+            "datatype": "boolean",
+            "description": "Give each pane a border and margin.\nMargin determined by domNode.paddingLeft.\nWhen false, only resizable panes have a gutter (i.e. draggable splitter) for resizing."
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "childProperties": {
+        "region": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                },
+                {
+                    "value": "leading"
+                },
+                {
+                    "value": "trailing"
+                },
+                {
+                    "value": "left"
+                },
+                {
+                    "value": "right"
+                },
+                {
+                    "value": "center"
+                }
+            ],
+            "title": "Region"
+        },
+        "splitter": {
+            "datatype": "boolean",
+            "title": "Splitter"
+        },
+        "minSize": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Minimum Size"
+        },
+        "maxSize": {
+            "datatype": "number",
+            "defaultValue": null,
+            "title": "Maximum Size"
+        }
+    },
+    "content": "<div></div>"
+}

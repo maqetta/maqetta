@@ -1634,9 +1634,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			console.error('Context._restoreStates: this._loadFileStatesCache missing');
 			return;
 		}
-		/*
-		var currentStateCache = [];
-		*/
 		var maqAppStatesString, maqDeltasString, maqAppStates, maqDeltas;
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
@@ -3294,14 +3291,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @return {object}  { statesInfo:statesInfo, scenesInfo:scenesInfo }
 	 */
 	getStatesScenes: function() {
+		var statesFocus = States.getFocus(this.rootNode);
+		if(typeof statesFocus.state != 'string'){
+			statesFocus.state = States.NORMAL;
+		}
 		var allStateContainers = States.getAllStateContainers(this.rootNode);
 		var statesInfo = [];
 		for(var i=0; i<allStateContainers.length; i++){
 			var stateContainer = allStateContainers[i];
 			var currentState = States.getState(stateContainer);
+			var currentStateString = typeof currentState == 'string' ? currentState : States.NORMAL;
 			var xpath = XPathUtils.getXPath(stateContainer._dvWidget._srcElement,
 						HtmlFileXPathAdapter);
-			statesInfo.push({ currentStateXPath:xpath, state:currentState });
+			var focus = (statesFocus.stateContainerNode == stateContainer &&
+							statesFocus.state == currentStateString);
+			statesInfo.push({ currentStateXPath:xpath, state:currentState, focus:focus });
 		}
 		scenesInfo = {};
 		var sceneManagers = this.sceneManagers;
@@ -3337,7 +3341,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var id = this.model.evaluate(xpath).getAttribute('id'),
 					widget = Widget.byId(id, this.getDocument()),
 					node = widget.domNode;
-				States.setState(statesInfo[i].state, node);
+				States.setState(statesInfo[i].state, node, {focus:statesInfo[i].focus});
 			}
 		}
 		var scenesInfo = statesScenes.scenesInfo;

@@ -271,11 +271,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!context || !context._statesLoaded){
 			return;
 		}
+/*FIXME: THIS ISN'T WORKING RIGHT YET
 		var currentStatesFocus = States.getFocus(context.rootNode);
 		if(!currentStatesFocus){
 			// If no current focus, default to the default app state on the BODY
 			States.setFocus(context.rootNode, undefined);
 		}
+*/
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
@@ -667,10 +669,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				} else {
 					if(context && sceneContainerNode){
 						var state = item.sceneId[0];
-//FIXME: Fragile right now. Have to call setFocus before setState because setState
-//triggers updateSelection bug setFocus doesn't.
-						States.setFocus(state, sceneContainerNode);
-						States.setState(state, sceneContainerNode);
+						States.setState(state, sceneContainerNode, {focus:true});
 						context.deselectInvisible();
 						context.updateFocusAll();
 					}

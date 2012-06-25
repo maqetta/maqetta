@@ -257,8 +257,10 @@ States.prototype = {
 	},
 	
 	/**
-	 * Trigger updates to the given node based on the given "newState".  
-	 * This gets called for every node that is affected by a change in the given state.
+	 * Change the current "state" for a particular state container node.
+	 * This will trigger updates to the document such that various properties
+	 * on various node will be altered (e.g., visibility of particular nodes)
+	 * because the document defines state-specific values for particular properties.
 	 * This routine doesn't actually do any updates; instead, updates happen
 	 * by publishing a /maqetta/appstates/state/changed event, which indirectly causes
 	 * the _update() routine to be called for the given node.
@@ -269,14 +271,20 @@ States.prototype = {
 	 *        or we will march up the ancestor tree until finding the state container.
 	 *        If an Event, then either the Event.currentTarget is the state container
 	 *        or we will march up the ancestor tree until finding the state container.
-	 * @param {boolean} updateWhenCurrent  Force update logic to run even if newState is same as current state
-	 * @param {boolean} _silent  If true, don't broadcast the state change via /davinci/states/state/changed
-	 * 
+	 * @param [{object}] params  (Optional) Various flags
+	 *     params.updateWhenCurrent {boolean}  Force update logic to run even if newState is same as current state
+	 *     params.silent {boolean}  If true, don't broadcast the state change via /davinci/states/state/changed
+	 *     params.focus {boolean}  If true, then set the document-level "application state focus" 
+	 *                             to the given state on the given state container.
+	 *                             This feature is primarily used by design-time tools.
 	 * Subscribe using davinci.states.subscribe("/maqetta/appstates/state/changed", callback).
 	 * FIXME: updateWhenCurrent is ugly. Higher level code could include that logic
-	 * FIXME: _silent is ugly. Higher level code code broadcast the change.
+	 * FIXME: silent is ugly. Higher level code code broadcast the change.
 	 */
-	setState: function(newState, ElemOrEvent, updateWhenCurrent, _silent){
+	setState: function(newState, ElemOrEvent, params){
+		var updateWhenCurrent = params ? params.updateWhenCurrent : false;
+		var silent = params ? params.silent : false;
+		var focus = params ? params.focus : false;
 		var node = this._getSCNodeFromElemOrEvent(newState, ElemOrEvent);
 		if (!node || !node._maqAppStates || (!updateWhenCurrent && node._maqAppStates.current == newState)) {
 			return;
@@ -290,7 +298,10 @@ States.prototype = {
 		} else {
 			node._maqAppStates.current = newState;
 		}
-		if (!_silent) {
+		if(focus){
+			this._setFocus(newState, node);
+		}
+		if (!silent) {
 //FIXME: Reconcile node and statesContainerNode
 			connect.publish("/maqetta/appstates/state/changed", 
 					[{node:node, newState:newState, oldState:oldState, statesContainerNode:node}]);
@@ -309,7 +320,7 @@ States.prototype = {
 			return;
 		}
 		var currentState = this.getState(node);
-		this.setState(currentState, node, true/*updateWhenCurrent*/, true /*silent*/);	
+		this.setState(currentState, node, {updateWhenCurrent:true, silent:true});	
 	},
 	
 	/**
@@ -325,6 +336,9 @@ States.prototype = {
 	 *      { stateContainerNode:{Element}, state:{string} }
 	 */
 	getFocus: function(rootNode){
+		if(!rootNode){
+			return null;
+		}
 		var allStateContainerNodes = this.getAllStateContainers(rootNode);
 		for(var i=0; i<allStateContainerNodes.length; i++){
 			maqAppStates = allStateContainerNodes[i]._maqAppStates;
@@ -336,19 +350,13 @@ States.prototype = {
 	},
 
 	/**
-	 * Set the document-level "focus" to a particular state within a particular state container.
+	 * Internal routine, calls by setState() if the "set focus" flag says that we should
+	 * set the document-level "focus" to a particular state within a particular state container.
 	 * This feature is primarily used by design-time tools.
 	 * @param {null|undefined|string} state  If null|undefined, set focus to "Normal" state, else to "newState"
-	 * @param {Element|Event} ElemOrEvent  Identifies state container.
-	 *        If an Element, then either the given Element is the state container
-	 *        or we will march up the ancestor tree until finding the state container.
-	 *        If an Event, then either the Event.currentTarget is the state container
-	 *        or we will march up the ancestor tree until finding the state container.
-	 * 
-	 * Subscribe using davinci.states.subscribe("/maqetta/appstates/focus/changed", callback).
+	 * @param {Element} node  Identifies state container.
 	 */
-	setFocus: function(newState, ElemOrEvent){
-		var node = this._getSCNodeFromElemOrEvent(newState, ElemOrEvent);
+	_setFocus: function(newState, node){
 		if (!node || !node._maqAppStates) {
 			return;
 		}
@@ -369,9 +377,6 @@ States.prototype = {
 			}
 		}
 		node._maqAppStates.focus = newState;
-		connect.publish("/maqetta/appstates/focus/changed", 
-				[{state:newState, statesContainerNode:node}]);
-		this._updateSrcState (node);
 	},
 
 //FIXME: Need to pass node into this routine

@@ -34,7 +34,7 @@ var veStates = declare(maqettaStates, {
 		//var currentState = this.getState(body);
 		//if(!this.isNormalState(currentState)){
 //FIXME: Is this really necessary? Shouldn't we be calling setState only on state containers?
-			//this.setState(currentState, node, true/*updateWhenCurrent*/, true /*silent*/);
+			//this.setState(currentState, node, {updateWhenCurrent:true, silent:true});
 		//}		
 	},
 	
@@ -309,7 +309,7 @@ var veStates = declare(maqettaStates, {
 				}
 				var state = this.getState(e.stateContainerNode);
 				if (state === e.oldName) {
-					this.setState(e.newName, e.stateContainerNode, false, true);
+					this.setState(e.newName, e.stateContainerNode, {updateWhenCurrent:false, silent:true});
 				}
 			}));
 			

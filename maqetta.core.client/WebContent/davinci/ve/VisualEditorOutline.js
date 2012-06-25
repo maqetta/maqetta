@@ -65,7 +65,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		} else {
 			label = item.label || type;
 		}
-		
+
 		var widget = Widget.byId(item.id, this._context.getDocument());
 		if (widget) {
 			var id = widget.getId();
@@ -92,7 +92,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		}
 
 		dojo.forEach(widgets, function(widget) {
-			if (widget.getContext && widget.getContext() && !widget.internal) {
+			if (widget && widget.getContext && widget.getContext() && !widget.internal) {
 				// managed widget only
 				children.push(widget);
 			}

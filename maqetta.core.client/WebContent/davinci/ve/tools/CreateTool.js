@@ -5,7 +5,6 @@ define(["dojo/_base/declare",
 		"../metadata",
 		"../widget",
 		"dojo/DeferredList",
-		"davinci/ui/ErrorDialog",
 		"davinci/commands/CompoundCommand",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
@@ -19,7 +18,6 @@ define(["dojo/_base/declare",
 		Metadata,
 		Widget,
 		DeferredList,
-		ErrorDialog,
 		CompoundCommand,
 		AddCommand,
 		MoveCommand,
@@ -394,8 +392,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				title = 'Error';
 				console.error(e);
 			}
-            var errorDialog = new ErrorDialog({errorText: content});
-            Workbench.showModal(errorDialog, title);
+			Workbench.showMessage(title, content);
 		} finally {
 			// By default, exitCreateToolOnMouseUp returns true, but for
 			// particular widget-specfic CreateTool subclasses, it might return false

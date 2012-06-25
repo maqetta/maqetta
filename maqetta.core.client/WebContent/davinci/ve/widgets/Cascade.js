@@ -6,7 +6,6 @@ define(["dojo/_base/declare",
         "davinci/html/CSSModel",
         "davinci/ui/widgets/DocileDialog",
         "davinci/ve/States",
-        "davinci/ui/ErrorDialog",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
         "system/resource"
@@ -14,7 +13,7 @@ define(["dojo/_base/declare",
         
        
 ],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSModel, DocileDialog, States, 
-		ErrorDialog, veNLS,commonNLS, systemResource){
+		veNLS,commonNLS, systemResource){
 	var cascade =  declare("davinci.ve.widgets.Cascade",  [WidgetLite], {
 	
 		target : null,
@@ -206,8 +205,8 @@ define(["dojo/_base/declare",
 					//FIXME: the commented out message in next line provides a more informative error message
 		            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
 					var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
-					var errorDialog = new ErrorDialog({errorText: content});
-					davinci.Workbench.showModal(errorDialog, langObj.errorModifyingValue, 'width:300px', dojo.hitch(this, function(){
+
+					davinci.Workbench.showMessage(langObj.errorModifyingValue, content, {width: 350}, dojo.hitch(this, function(){
 						innerResolveFunc();
 						return true;
 					}));

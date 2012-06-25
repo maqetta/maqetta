@@ -637,7 +637,7 @@ davinci_top_bar .dijitButtonNode {
 /*    background-image: url(images/palette-folder-bg.gif); */
 .claro .dojoyPaletteFolderHi {
 /*    background-image: url(images/palette-folder-bg-hi.gif); */
-    background: #EAEAEA url(../dijit/themes/claro/images/standardGradient.png) repeat-x scroll left top;
+    background: #EAEAEA url(../dijit/themes/claro/images/titlebar.png) repeat-x scroll left top;
 }
 .dojoyPaletteSearch {
 /*	font-size: 12px;*/

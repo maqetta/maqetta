@@ -53,7 +53,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 				[{
 					type: dijitWidget,
 					node: node
-				}]
+				}],
 				mixin,
 				// Don't allow `instantiate()` to call the widget's `startup()`;
 				// it's called later by Maqetta.

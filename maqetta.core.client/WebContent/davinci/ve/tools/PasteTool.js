@@ -24,7 +24,7 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 		var d = data[0];
 		if(d && d.properties){
 			var styleArray = widget.parseStyleValues(d.properties.style);
-			this._position_prop = this._retrieveProperty(styleArray, 'position', '');
+			this._position_prop = widget.retrieveStyleProperty(styleArray, 'position', '');
 		}
 	},
 	
@@ -52,8 +52,8 @@ var newWidgets = [];
 
 			var styleArray = widget.parseStyleValues((d.properties && d.properties.style));
 			if(this._position_prop == "absolute"){
-				var left = parseInt(this._retrieveProperty(styleArray, 'left', '0px'));
-				var top = parseInt(this._retrieveProperty(styleArray, 'top', '0px'));
+				var left = parseInt(widget.retrieveStyleProperty(styleArray, 'left', '0px'));
+				var top = parseInt(widget.retrieveStyleProperty(styleArray, 'top', '0px'));
 				if(delta){
 					position = {x: left + delta.x,
 						y: top + delta.y};
@@ -131,20 +131,6 @@ newWidgets.push(w);
 				this._context.select(w, i > 0);
 			}, this);
 		}
-	},
-
-	
-	// Looks for a particular property within styleArray
-	 _retrieveProperty: function(styleArray, propName, defaultValue){
-		var propValue = defaultValue;
-		if(styleArray && styleArray.length>0){
-			styleArray.forEach(function(o){	// Should be only one property per object
-				if(o.hasOwnProperty(propName)){
-					propValue = o[propName];
-				}
-			});
-		}
-		return propValue;
 	},
 
 	/**

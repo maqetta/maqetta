@@ -1,0 +1,40 @@
+.tableInputDialog .dijitDialogPaneContent {
+	padding:0px;
+}
+
+.tableInputDialogPropertiesRegion {
+	min-width:190px;
+	max-width:200px;
+}
+
+.tableInputDialogPreviewRegion {
+	width: 65%;
+	overflow:hidden;
+}
+
+.tableInputDialogPreviewArea {
+	overflow:auto;
+}
+
+.tableInputDialogSpinner {
+	width:50px;
+}
+
+.tableInputDialogTableElementPreview {
+	outline: 1px dotted #AAA;
+	outline-color:rgba(128,128,128,0.4);
+}
+
+.tableInputDialogFieldLabel {
+	white-space: nowrap;
+}
+
+
+.tableInputDialogHeaderRow {
+	background-color:#d8d8d8;
+}
+
+.tableInputDialogHeaderCell {
+	padding:2px;
+}
+

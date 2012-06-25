@@ -70,7 +70,7 @@ return declare(_TableAction, {
 				// skip rows covered by this cell
 				r += (matrix.getRowSpan(cell) - 1); 
 			}else{
-				var data = this._createTableCellData(context);
+				var data = TableMatrix.createTableCellData(context);
 				var parent = Widget.byNode(rows[r]);
 				var colIndex = c;
 				if (this._insertAfter) {
@@ -106,7 +106,7 @@ return declare(_TableAction, {
 					if (this._insertAfter) {
 						newColElementIndex++;
 					}
-					var newColData = {type: "html.col", context: context};
+					var newColData = TableMatrix.createTableColData(context);
 					command.add(new AddCommand(newColData, matrix.colgroup, newColElementIndex));
 				}
 			} else {

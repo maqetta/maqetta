@@ -126,7 +126,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 			if(value.appliesTo.type=="proposal"){
 
 				//FIXME: Not included in Undo logic
-				var cssFile = this.context.model.find({elementType:'CSSFile', relativeURL: value.appliesTo.targetFile}, true);
+				var cssFile = context.model.find({elementType:'CSSFile', relativeURL: value.appliesTo.targetFile}, true);
 				if(!cssFile && context.cssFiles){
 					// #23 look in dynamic files
 					for (var i = 0; context.cssFiles.length; i++){

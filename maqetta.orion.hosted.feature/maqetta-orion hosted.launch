@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.pde.ui.EquinoxLauncher">
+<setAttribute key="additional_plugins"/>
+<booleanAttribute key="append.args" value="true"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="true"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/maqetta-orion hosted"/>
+<booleanAttribute key="default" value="false"/>
+<booleanAttribute key="default_auto_start" value="true"/>
+<intAttribute key="default_start_level" value="4"/>
+<stringAttribute key="featureDefaultLocation" value="workspace"/>
+<stringAttribute key="featurePluginResolution" value="workspace"/>
+<booleanAttribute key="includeOptional" value="false"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CDC-1.0%Foundation-1.0"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console&#13;&#10;-data ${workspace_loc}/../foo -clean -product org.eclipse.orion.product -mail.from admin@maqetta.org"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dorg.eclipse.equinox.http.jetty.http.port=8081&#13;&#10;-Dorg.eclipse.equinox.http.jetty.autostart=false&#13;-DloginUrl=&quot;/maqetta/welcome&quot;  &#10;-Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} &#10;-Dmaqetta.serverDebug=true &#10;-Dmaqetta.cacheLevel=100&#10;-Dsmtp.mailServer=localhost&#10;-Dmail.smtp.host=localhost&#10;-Dorion.core.configFile=${project_loc:org.eclipse.orion.client.core}/web-ide.conf"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<setAttribute key="selected_features">
+<setEntry value="maqetta.orion.hosted.feature:default"/>
+<setEntry value="org.eclipse.orion.base.feature:default"/>
+<setEntry value="org.eclipse.orion.client.feature:default"/>
+<setEntry value="org.eclipse.orion.server.authentication.feature:default"/>
+<setEntry value="org.eclipse.orion.server.feature:default"/>
+<setEntry value="org.eclipse.orion.server.search.feature:default"/>
+</setAttribute>
+<booleanAttribute key="show_selected_only" value="false"/>
+<booleanAttribute key="tracing" value="false"/>
+<booleanAttribute key="useCustomFeatures" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+</launchConfiguration>

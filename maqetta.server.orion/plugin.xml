@@ -24,8 +24,6 @@
                class="maqetta.core.server.command.KeepAlive" />
          <command path="login" noLogin="true" 
                class="maqetta.core.server.command.Login" />
-         <command path="register" noLogin="true" 
-               class="maqetta.core.server.command.Register" />
          <command path="listFiles" 
                class="maqetta.core.server.command.ListFiles" />
          <command path="addFiles" 

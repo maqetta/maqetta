@@ -1,5 +1,6 @@
 # maqetta plugins git locations
 
+
 plugin@davinci.dojo_1_7=GIT,repo=https://github.com/maqetta/maqetta.git,path=/davinci.dojo_1_7
 plugin@maqetta.clipart=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.clipart
 plugin@org.apache.commons.io=GIT,repo=https://github.com/maqetta/maqetta.git,path=/org.apache.commons.io
@@ -16,6 +17,9 @@ plugin@maqetta.client.orion=GIT,repo=https://github.com/maqetta/maqetta.git,path
 # plugin@maqetta.core.server.standalone=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.core.server.standalone
 plugin@org.apache.commons.fileupload=GIT,repo=https://github.com/maqetta/maqetta.git,path=/org.apache.commons.fileupload
 # plugin@davinci.product=GIT,repo=https://github.com/maqetta/maqetta.git,path=/releng/davinci.product
+plugin@maqetta.server.orion.hosted=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.hosted
+
 
 #maqetta features
 feature@maqetta.orion.feature=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.orion.feature
+feature@maqetta.orion.hosted.feature=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.orion.hosted.feature

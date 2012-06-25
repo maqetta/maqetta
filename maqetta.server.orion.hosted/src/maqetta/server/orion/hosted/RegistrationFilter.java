@@ -1,4 +1,4 @@
-package maqetta.server.orion;
+package maqetta.server.orion.hosted;
 
 import java.io.IOException;
 
@@ -10,8 +10,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import maqetta.server.orion.command.Register;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.core.users.OrionScope;

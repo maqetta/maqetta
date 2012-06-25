@@ -279,7 +279,7 @@ define(['domReady'], function(domReady) {
 		document.getElementById("signupUserButton").style.visibility='hidden';
 		document.getElementById("hideRegisterButtonSignup").style.visibility='hidden';
 		document.getElementById("errorWin").style.visibility = '';
-		document.getElementById("errorMessage").innerHTML = "Email sent to" + login;
+		document.getElementById("errorMessage").innerHTML = "Email sent to " + login;
 	}
 	
 	function revealRegistration() {

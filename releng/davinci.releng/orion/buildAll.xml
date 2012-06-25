@@ -123,8 +123,8 @@
 		<property name="buildLabel" value="${buildId}"/>
 		<property name="featureDir" value="${base}/${buildId}/features"/>
 		<echo message="=================================================== Scrubbing:${featureDir} " />
-		<delete includeemptydirs="true" quiet="true" failonerror="false">
-		       <fileset dir="${featureDir}" includes="*"/>
+		<delete includeemptydirs="true" failonerror="false">
+		       <fileset dir="${featureDir}" includes="**/*"/>
 		 </delete>
 		<delete >
 			 <fileset dir="${base}/${buildId}/" includes="*.xml"/>

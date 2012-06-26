@@ -7,7 +7,10 @@
        
         <resource alias="/mixloginstatic/LoginWindow.html" base-name="/WebContent/login/LoginWindow.html" />  
         <resource alias="/mixloginstatic/LoginWindow.css" base-name="/WebContent/login/LoginWindow.css" />  
-        <resource alias="/mixloginstatic/LoginWindow.js" base-name="/WebContent/login/LoginWindow.js" />  
+        <resource alias="/mixloginstatic/LoginWindow.js" base-name="/WebContent/login/LoginWindow.js" />
+        
+        /* migrate user workspace pages */
+         <resource alias="/maqetta/static" base-name="/WebContent/migrate" />    
        
      </extension>
 	<extension point="org.eclipse.equinox.http.registry.filters">
@@ -19,6 +22,8 @@
     <extension point="maqetta.core.server.command">
             
          <command path="register" noLogin="true" 
-               class="maqetta.server.orion.hosted.command.Register" />
+              class="maqetta.server.orion.hosted.command.Register" />
+        <command path="migrate"
+              class="maqetta.server.orion.hosted.command.MigrateUser6to1" />      
     </extension>
 </plugin>

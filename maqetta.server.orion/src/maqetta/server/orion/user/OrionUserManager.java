@@ -94,7 +94,7 @@ public class OrionUserManager extends UserManagerImpl {
 		try {
 			user = authenticationService.getAuthenticatedUser(req, null, authProperties);
 			if(user!=null)
-				this.personManager.addPerson(user, "", "");
+				this.personManager.addPerson(user, null, null);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

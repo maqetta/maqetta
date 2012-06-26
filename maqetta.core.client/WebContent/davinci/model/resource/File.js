@@ -77,6 +77,10 @@ return declare("davinci.model.resource.File", Resource, {
 		});
 	},
 
+	getText: function() {
+		return this.getContentSync();
+	},
+
 	getContentSync: function(){
 		return Runtime.serverJSONRequest({
 			url: this.getURL(),

@@ -18,11 +18,11 @@ public class PersonManagerImpl implements IPersonManager {
 
     protected HashMap             persons      = new HashMap();
 
-    static final String USERS_TAG    = "users";
-    static final String USER_TAG     = "user";
-    static final String NAME_TAG     = "name";
-    static final String PASSWORD_TAG = "password";
-    static final String EMAIL_TAG    = "email";
+    protected static final String USERS_TAG    = "users";
+    protected static final String USER_TAG     = "user";
+    protected static final String NAME_TAG     = "name";
+    protected static final String PASSWORD_TAG = "password";
+    protected static final String EMAIL_TAG    = "email";
 
     IStorage                baseDirectory;
 
@@ -174,7 +174,7 @@ public class PersonManagerImpl implements IPersonManager {
         return password.equals(person.password);
     }
 
-    private void loadUsers() {
+    protected void loadUsers() {
         IStorage userFile =this.baseDirectory.newInstance(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         if (userFile.exists()) {
             new UsersFile().load(userFile);
@@ -182,23 +182,23 @@ public class PersonManagerImpl implements IPersonManager {
         }
     }
 
-    private void savePersons() {
+    protected void savePersons() {
         IStorage userFile = this.baseDirectory.newInstance(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         new UsersFile().save(userFile, this.persons.values());
     }
 
     public IPerson getPerson(String userName) {
 
-        PersonImpl person = (PersonImpl) persons.get(userName);
+        IPerson person = (IPerson) persons.get(userName);
         return person;
 
     }
     
     public IPerson getPersonByEmail(String email) {
-    	PersonImpl match = null;
+    	IPerson match = null;
         Iterator peopleIterator = persons.values().iterator();
         while (peopleIterator.hasNext() && match == null) {
-        	PersonImpl person = (PersonImpl)peopleIterator.next();
+        	IPerson person = (IPerson)peopleIterator.next();
         	if (person.getEmail().equals(email)) {
         		match = person;
         	}

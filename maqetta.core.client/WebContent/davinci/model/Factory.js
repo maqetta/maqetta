@@ -44,6 +44,7 @@ var Factory = {
 		}
 		for(var i = 0; i<_resources.length; i++) {
 			if (_resources[i].url == url) {
+				var modelResource = _resources[i];
 				_instances[i]--;
 				if (_instances[i] === 0) {
 					_resources.splice(i,1);
@@ -52,7 +53,7 @@ var Factory = {
 					// be a working copy if the last instance did not save it when they closed the
 					// editor.
 					var resource = systemResource.findResource(url);
-					if (resource){ // models can be created without a real resource.
+					if (resource && modelResource.dirtyResource){ // models can be created without a real resource.
 						resource.removeWorkingCopy(); 
 						resource.dirtyResource = false;
 					}

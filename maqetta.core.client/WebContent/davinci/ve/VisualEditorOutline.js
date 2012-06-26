@@ -175,12 +175,16 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	_widgetChanged: function(type, widget) {
-		if (type === this._context.WIDGET_ADDED) {
-			this.add(widget);
-		} else if (type === this._context.WIDGET_REMOVED) {
-			this.remove(widget);
-		} else if (type === this._context.WIDGET_MODIFIED) {
-			this.onChange(widget);
+		try {
+			if (type === this._context.WIDGET_ADDED) {
+				this.add(widget);
+			} else if (type === this._context.WIDGET_REMOVED) {
+				this.remove(widget);
+			} else if (type === this._context.WIDGET_MODIFIED) {
+				this.onChange(widget);
+			}
+		} catch (e) {
+			console.error("VisualEditorOutline._widgetChanged: e = " + e);
 		}
 	},
 

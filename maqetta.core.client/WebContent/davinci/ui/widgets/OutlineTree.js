@@ -48,16 +48,21 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 			Since we removed all children, this is no longer true - any new children
 			will have to be recreated, hence we need to delete _expandNodeDeferred.
 		*/
-		var parent = this._itemNodesMap[item.id][0].getParent();
 
-		if (parent.item._getChildren) {
-			// could be root, which is a dummy object
-			var children = parent.item._getChildren();
-			if (children.length == 0) {
+		var nodes = this._itemNodesMap[item.id];
+
+		if (nodes && nodes[0] && nodes[0].domNode) {
+			var parent = nodes[0].getParent();
+	
+			if (parent.item._getChildren) {
+				// could be root, which is a dummy object
+				var children = parent.item._getChildren();
+				if (children.length == 0) {
+					delete parent._expandNodeDeferred;
+				}
+			} else {
 				delete parent._expandNodeDeferred;
 			}
-		} else {
-			delete parent._expandNodeDeferred;
 		}
 		
 		this.inherited(arguments);

@@ -32,9 +32,11 @@ return declare("davinci.ve.commands.AddCommand", null, {
 		var widget = undefined;
 		if(this._data){
 			//this.undo(); // try to remove old widget first, mostly for redo
-			if (this._id && this._data.properties)
+			if (this._id && this._data.properties) {
 				this._data.properties.id= this._id;
+			}
 			widget = Widget.createWidget(this._data);
+			this._id = widget.id;
 		}else if(this._id){
 			widget = Widget.byId(this._id, context);
 		}

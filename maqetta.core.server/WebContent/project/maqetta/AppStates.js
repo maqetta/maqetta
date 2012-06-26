@@ -1248,15 +1248,37 @@ var singleton = davinci.states = new States();
 							if(maqDeltasString){
 								maqDeltas = singleton.deserialize(maqDeltasString, {isBody:isBody});
 							}
-//FIXME: May not want to do this anymore
 							if(maqAppStates){
-								delete maqAppStates.current; // FIXME: Always start in normal state for now, fix in 0.7
+								if(maqAppStates.initial){
+									// If user defined an initial state, then set current to that state
+									maqAppStates.current = maqAppStates.initial;
+								}else{
+									if(maqAppStates.focus){
+										// Can't have focus on a state that isn't current
+										delete maqAppStates.focus; 
+									}
+									// Otherwise, delete any current state so that we will be in Normal state by default
+									delete maqAppStates.current;
+								}
 							}
 							singleton.store(node, maqAppStates, maqDeltas);
 							if(maqDeltasString){
 								//FIXME: maybe not be general enough
 								davinci.states.transferElementStyle(node, cache[id].style);
 							}
+						}
+					}
+					
+					// Call setState() on all of the state containers that have non-default
+					// values for their current state (which was set to initial state earlier
+					// in this routine).
+					var allStateContainers = singleton.getAllStateContainers(doc.body);
+					var statesInfo = [];
+					for(var i=0; i<allStateContainers.length; i++){
+						var stateContainer = allStateContainers[i];
+						if(stateContainer._maqAppStates && typeof stateContainer._maqAppStates.current == 'string'){
+							var focus = stateContainer._maqAppStates.focus;
+							singleton.setState(stateContainer._maqAppStates.current, stateContainer, {updateWhenCurrent:true, focus:focus});
 						}
 					}
 				};

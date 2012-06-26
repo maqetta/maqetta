@@ -1311,8 +1311,7 @@ davinci_top_bar .dijitButtonNode {
 }
 .ScenesPaletteCheckBox.ScenesPaletteCheckBoxFocus {
 	font-weight:bold;
-	color:blue;
-	border: 1px solid blue;
+	border: 1px solid black;
 	border-radius: 20px;
 	width: 1.1em;
 	height: 1.1em;

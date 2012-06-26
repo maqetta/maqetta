@@ -1703,9 +1703,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(visualChanged){
 				this.editor._visualChanged();
 			}
-//FIXME: Probably don't want to delete this here
 			if(maqAppStates){
-				delete maqAppStates.current; // FIXME: Always start in normal state for now, fix in 0.7
+				if(maqAppStates.initial){
+					// If user defined an initial state, then set current to that state
+					maqAppStates.current = maqAppStates.initial;
+				}else{
+					if(maqAppStates.focus){
+						// Can't have focus on a state that isn't current
+						delete maqAppStates.focus; 
+					}
+					// Otherwise, delete any current state so that we will be in Normal state by default
+					delete maqAppStates.current;
+				}
 			}
 			davinci.ve.states.store(widget.domNode, maqAppStates, maqDeltas);
 			
@@ -1722,6 +1731,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// for all states that aren't in the master list of application states.
 		// (This is to clean up after bugs found in older releases)
 		davinci.ve.states.removeUnusedStates(this);
+		
+		// Call setState() on all of the state containers that have non-default
+		// values for their current state (which was set to initial state earlier
+		// in this routine).
+		var allStateContainers = davinci.ve.states.getAllStateContainers(this.rootNode);
+		var statesInfo = [];
+		for(var i=0; i<allStateContainers.length; i++){
+			var stateContainer = allStateContainers[i];
+			if(stateContainer._maqAppStates && typeof stateContainer._maqAppStates.current == 'string'){
+				var focus = stateContainer._maqAppStates.focus;
+				davinci.states.setState(stateContainer._maqAppStates.current, stateContainer, {updateWhenCurrent:true, focus:focus});
+			}
+		}
 	},
 
 	getDocument: function(){

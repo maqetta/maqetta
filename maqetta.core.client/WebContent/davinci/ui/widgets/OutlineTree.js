@@ -54,7 +54,7 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		if (nodes && nodes[0] && nodes[0].domNode) {
 			var parent = nodes[0].getParent();
 	
-			if (parent.item._getChildren) {
+			if (parent && parent.item._getChildren) {
 				// could be root, which is a dummy object
 				var children = parent.item._getChildren();
 				if (children.length == 0) {

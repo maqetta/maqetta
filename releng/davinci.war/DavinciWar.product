@@ -43,7 +43,7 @@
    </features>
 
    <configurations>
-      <plugin id="davinci.dojo_1_7" autoStart="true" startLevel="5" />
+      <plugin id="davinci.dojo_1_8" autoStart="true" startLevel="5" />
       <plugin id="davinci.html" autoStart="true" startLevel="5" />
       <plugin id="davinci.review" autoStart="true" startLevel="5" />
       <plugin id="maqetta.core.client" autoStart="true" startLevel="4" />

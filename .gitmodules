@@ -13,3 +13,15 @@
 [submodule "maqetta.core.client/WebContent/util"]
 	path = maqetta.core.client/WebContent/util
 	url = https://github.com/dojo/util.git
+[submodule "davinci.dojo_1_8/WebContent/dojo-src/dojo"]
+	path = davinci.dojo_1_8/WebContent/dojo-src/dojo
+	url = https://github.com/dojo/dojo.git
+[submodule "davinci.dojo_1_8/WebContent/dojo-src/dijit"]
+	path = davinci.dojo_1_8/WebContent/dojo-src/dijit
+	url = https://github.com/dojo/dijit.git
+[submodule "davinci.dojo_1_8/WebContent/dojo-src/dojox"]
+	path = davinci.dojo_1_8/WebContent/dojo-src/dojox
+	url = https://github.com/dojo/dojox.git
+[submodule "davinci.dojo_1_8/WebContent/dojo-src/util"]
+	path = davinci.dojo_1_8/WebContent/dojo-src/util
+	url = https://github.com/dojo/util.git

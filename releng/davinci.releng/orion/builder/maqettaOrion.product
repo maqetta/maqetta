@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product uid="maqetta.orion" application="org.eclipse.orion.application" useFeatures="true" includeLaunchers="true">
+<product name="Maqetta Orion" uid="maqtta.orion" id="org.eclipse.maqetta.orion.product" application="org.eclipse.orion.application" version="0.4.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -10,7 +10,10 @@
       <programArgs>-consoleLog -console -data ${workspace_loc}/../foo -clean -product org.eclipse.orion.product</programArgs>
       <vmArgs>-Dorg.eclipse.equinox.http.jetty.http.port=8081
 -Dorg.eclipse.equinox.http.jetty.autostart=false
--DloginUrl=&quot;/maqetta/welcome&quot;  
+-DloginUrl=&quot;/maqetta/welcome&quot;
+-Dhelp.lucene.tokenizer=standard
+-Xms40m
+-Xmx384m
 -Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} 
 -Dmaqetta.serverDebug=true 
 -Dmaqetta.cacheLevel=100
@@ -20,15 +23,16 @@
 
    <windowImages/>
 
-   <launcher name="maqetta.orion">
+   <launcher name="orion">
+      <macosx icon="html/appicon.icns"/>
       <solaris/>
       <win useIco="false">
+         <ico path="html/orion.ico"/>
          <bmp/>
       </win>
    </launcher>
 
    <vm>
-      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CDC-1.0%Foundation-1.0</macos>
    </vm>
 
    <plugins>
@@ -38,7 +42,8 @@
       <feature id="maqetta.orion.feature"/>
       <feature id="org.eclipse.orion"/>
    </features>
-  <configurations>
+
+   <configurations>
       <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
@@ -50,7 +55,7 @@
       <plugin id="org.eclipse.orion.server.user.securestorage" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.orion.server.useradmin.xml" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
-      <property name="eclipse.buildId" value="I20120425-1416" />
+      <property name="eclipse.buildId" value="@qualifier@" />
       <property name="org.eclipse.update.reconcile" value="false" />
    </configurations>
 

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Widget Palette: Mobile Data Store Based (Basic)</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Widget Palette: Mobile Data Store Based (Basic)</h1>
+	
+	<h2 class="test_section">EdgeToEdgeDataList: Comma separated data</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps" >
+		<li>Create a new HTML file with composition type <i>iPhone</i></li>
+		<li>Open the Dojox Mobile folder in the Widget palette.</li>
+		<li>Drag a View widget onto the canvas.</li>
+		<li>Drag an EdgeToEdgeDataList widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Comma separated data</i> from the drop down list.</li>
+		<li>Change the data in the text area to: </li>
+		<pre>
+Label 1, transitionToPage
+Label 2, transitionToPage
+Label 3, transitionToPage
+Label 4, transitionToPage
+		</pre>
+		<li>Click Finish.</li>
+		<li>The EdgeToEdgeDataList should be updated with the data you entered.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data entered</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The EdgeToEdgeDataList in page editor and preview should be displaying the data you just entered.</li>
+	</ol>
+	
+	<h2 class="test_section">EdgeToEdgeDataList: Data file from workspace</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Open the Dojox Mobile folder in the Widget palette.</li>
+		<li>Drag a View widget onto the canvas.</li>
+		<li>Drag an EdgeToEdgeDataList widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Data file from workspace</i> from the drop down list on the first panel of the wizard.</li>
+		<li>Click on the folder icon.</li>
+		<li>The select a source dialog will be displayed, navigate to the <i>samples/sample_data</i> folder and then 
+			select the <i>mobile_edge_to_edge_or_round_rec__data_list.json</i> file. Click the OK button</li>
+		<li>The EdgeToEdgeDataList should be updated with the data from the file.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the EdgeToEdgeDataList should be displayed with the data from the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The EdgeToEdgeDataList in page editor and preview should be displaying the data from the file.</li>
+	</ol>
+
+	<h2 class="test_section">Carousel: Comma separated data</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps" >
+		<li>Create a new HTML file with composition type <i>iPhone</i></li>
+		<li>Open the Dojox Mobile folder in the Widget palette.</li>
+		<li>Drag a View widget onto the canvas.</li>
+		<li>Drag an Carousel widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Comma separated data</i> from the drop down list.</li>
+		<li>Change the data in the text area to: </li>
+		<pre>
+dogs,  dogs,  ./samples/sample_data/images/i-icon-1.png
+cats,  cats,  ./samples/sample_data/images/i-icon-2.png
+crocodiles,  crocodiles,  ./samples/sample_data/images/i-icon-3.png
+lions,  lions,  ./samples/sample_data/images/i-icon-4.png
+elephants,  elephants,  ./samples/sample_data/images/i-icon-5.png
+hyenas,  hyenas,  ./samples/sample_data/images/i-icon-6.png
+snakes,  snakes,  ./samples/sample_data/images/i-icon-7.png
+turtles,  turtles,  ./samples/sample_data/images/i-icon-8.png
+		</pre>
+		<li>Click Finish.</li>
+		<li>The Carousel should be updated with the data you entered.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the Carousel should be displayed with the data entered</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The Carousel in page editor and preview should be displaying the data you just entered.</li>
+	</ol>
+	
+	<h2 class="test_section">Carousel: Data file from workspace</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Open the Dojox Mobile folder in the Widget palette.</li>
+		<li>Drag a View widget onto the canvas.</li>
+		<li>Drag an Carousel widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Data file from workspace</i> from the drop down list on the first panel of the wizard.</li>
+		<li>Click on the folder icon.</li>
+		<li>The select a source dialog will be displayed, navigate to the <i>samples/sample_data</i> folder and then 
+			select the <i>carousel_data.json</i> file. Click the OK button</li>
+		<li>The Carousel should be updated with the data from the file.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the Carousel should be displayed with the data from the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The Carousel in page editor and preview should be displaying the data from the file.</li>
+	</ol>
+</body>
+</html>

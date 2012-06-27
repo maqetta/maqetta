@@ -88,11 +88,16 @@ return declare([ContentPane, GridWizardPanel], {
 		this._selectedStructureFieldNames = selectedStructureFieldNames;
 		
 		//Get data from the command
-		var dataStoreCommand = compoundCommand._commands[0];
-		var dataStoreProps = dataStoreCommand._properties;
-		
+		var dataStoreProps = null;
+		dojo.some(compoundCommand._commands, function(command) {
+			if (command._data && command._data.properties) {
+				dataStoreProps = command._data.properties;
+				return true;
+			}
+		});
+
 		//If URL-based data store, reuse the one from GridInput
-		if (dataStoreProps.url) {
+		if (dataStoreProps.url && dataStoreProps.url != "") {
 			this._gridStore = gridInput._urlDataStore;
 		} else {
 			//Create data store...
@@ -100,7 +105,13 @@ return declare([ContentPane, GridWizardPanel], {
 		}
 		
 		//Get table command
-		var tableCommand = compoundCommand._commands[compoundCommand._commands.length-1];
+		var tableCommand = null;
+		dojo.some(compoundCommand._commands, function(command) {
+			if (command._properties && command._properties.structure) {
+				tableCommand = command;
+				return true;
+			}
+		});
 		var tableProps = tableCommand._properties;
 		var tableStructure = tableProps.structure;
 		

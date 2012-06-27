@@ -505,7 +505,13 @@ return declare(ContentPane, {
 		}
 		
 		//Making assumption the last command is the one for upgrading the grid itself
-		var lastCommand = compoundCommand._commands[compoundCommand._commands.length-1]; 
+		var tableCommand = null;
+		dojo.some(compoundCommand._commands, function(command) {
+			if (command._properties && command._properties.structure) {
+				tableCommand = command;
+				return true;
+			}
+		});
 		
 		if (modifiedHeaderElements || selectedColumnIds) {
 			//We're going to need to update the structure in the command before
@@ -513,7 +519,7 @@ return declare(ContentPane, {
 			
 			//Find THEAD
 			var tHead = null;
-			dojo.some(lastCommand._children, function(child) {
+			dojo.some(tableCommand._children, function(child) {
 				if (child.type === "html.thead") {
 					tHead = child;
 					return true;
@@ -531,7 +537,7 @@ return declare(ContentPane, {
 			});
 			
 			var currentHeaderElements = tRow.children;
-			var currentStructure = lastCommand._properties.structure;
+			var currentStructure = tableCommand._properties.structure;
 			
 			var newHeaderElements = null;
 			var newStructure = null;
@@ -589,14 +595,14 @@ return declare(ContentPane, {
 			//Transfer new into old data structure
 			if (newHeaderElements && newStructure) {
 				tRow.children = newHeaderElements;
-				lastCommand._properties.structure = newStructure;
+				tableCommand._properties.structure = newStructure;
 			}
 		}
 		
 		//Execute command
 		var context = this._widget.getContext();
 		context.getCommandStack().execute(compoundCommand);	
-		context.select(lastCommand.newWidget);
+		context.select(tableCommand.newWidget);
 	},
 
 	onCancel: function() {

@@ -25,11 +25,11 @@
 		<li>Drag GridX widget onto the canvas.</li>
 		<li>SmartInput is displayed. Choose <i>Data file from workspace</i> from the drop down list on the first panel of the wizard.</li>
 		<li>Click on the folder icon.</li>
-		<li>The select a source dialog will be displayed, navigate to the <i>sample_data folder</i> and then select the <i>sampleManyColumns.json</i> file. Click the OK button</li>
-		<li>The text area should now display the text <i>sample_data/sampleManyColumns.json</i>. Unlike DataGrid, radio buttons to specify plain text or HTML markup should <i>not</i>
+		<li>The select a source dialog will be displayed, navigate to the <i>samples/sample_data folder</i> and then select the <i>sampleManyColumns.json</i> file. Click the OK button</li>
+		<li>The text area should now display the text <i>samples/sample_data/sampleManyColumns.json</i>. Unlike DataGrid, radio buttons to specify plain text or HTML markup should <i>not</i>
 		be displayed.
 		<li>Click the Finish button on the wizard.</li>
-		<li>The GridX should be updated with the data from the <i>sampleManyColumns.json</i> file.</li>
+		<li>The GridX should be updated with the data from the <i>sampleManyColumns.json</i> file. It should also have a width of 100%.</li>
 		<li>Save and close the file.</li>
 		<li>Reopen the file</li>
 		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the file.</li>
@@ -37,15 +37,15 @@
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults">
 		<li>The GridX in page editor and preview should be displaying the data from the file. NOTE: It's expected to be basically unreadable because the dataset contains roughly 19 columns.</li>
+		<img src="images/gridX_ManyColumnsNoResizing.png">
 	</ol>
-	<img src="images/gridX_1.png" >
 
 	<h2 class="test_section">Select Columns</h2>
 	<h3 class="steps_subsection" >Steps</h3>
 	<ol class="steps" >
 		<li>Continuing from the test case above.</li>
 		<li>Double click on the GridX Widget in the design view to display the smart input.</li>
-		<li>SmartInput is displayed. The first panel should still have <i>Data file from workspace</i> selected and <i>sample_data/sampleManyColumns.json</i> in the text field.</li>
+		<li>SmartInput is displayed. The first panel should still have <i>Data file from workspace</i> selected and <i>samples/sample_data/sampleManyColumns.json</i> in the text field.</li>
 		<li>Click Next to go to the 2nd panel of the wizard for column selection.</li>
 		<li>You should see a "slosh bucket" with a multi-select list on the left for <i>Available columns</i> and another multi-select list on the right for <i>Available columns</i>.
 		    In this case, the <i>Available columns</i> list should be empty and the <i>Available columns</i> list should contain all of the columns (roughly 19 of them). </li>
@@ -70,15 +70,15 @@
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults" >
 		<li>The GridX in page editor and preview should be displaying your selected columns in the specified order. </li>
+		<img src="images/gridX_InitialManyColumnSelection.png" >
 	</ol>
-	<img src="images/gridX_2.png" >
 	
 	<h2 class="test_section">Labeling and Resizing Columns</h2>
 	<h3 class="steps_subsection" >Steps</h3>
 	<ol class="steps">
 		<li>Continuing from the test case above.</li>
 		<li>Double click on the GridX Widget in the design view to display the smart input.</li>
-		<li>SmartInput is displayed. The first panel should still have <i>Data file from workspace</i> selected and <i>sample_data/sampleManyColumns.json</i> in the text field.</li>
+		<li>SmartInput is displayed. The first panel should still have <i>Data file from workspace</i> selected and <i>samples/sample_data/sampleManyColumns.json</i> in the text field.</li>
 		<li>Click Next to go to the 2nd panel of the wizard for column selection. The list on the right for selected columns should show the columns you previously selected in the order you 
 		    placed them. All of the rest of the columns should be in the available list on the left side. </li>
 		<li>Click Next to go to the 3rd panel. You should see:
@@ -105,7 +105,6 @@
 		</li>
 		<li>Click the Finish button on the wizard.</li>
 		<li>The GridX should be updated to show new column labels and widths. </li>
-		<li>Resize the table in the page editor so all of the columns are visible without a horizontal scrollbar.</li>
 		<li>Save and close the file.</li>
 		<li>Reopen the file</li>
 		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the service.</li>
@@ -113,8 +112,8 @@
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults" >
 		<li>The GridX in page editor and preview should be displaying your columns with new sizes and labels. </li>
+		<img src="images/gridX_ManyColumnAfterResize.png" >
 	</ol>
-	<img src="images/gridX_3.png" >
 
 </body>
 </html>

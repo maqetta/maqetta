@@ -52,8 +52,14 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 		this._removeAllOptions(this.targetColumnSelect);
 		
 		//Get structure from the proposed command
-		var lastCommand = compoundCommand._commands[compoundCommand._commands.length-1];
-		var props = lastCommand._properties;
+		var tableCommand = null;
+		dojo.some(compoundCommand._commands, function(command) {
+			if (command._properties && command._properties.structure) {
+				tableCommand = command;
+				return true;
+			}
+		});
+		var props = tableCommand._properties;
 		var commandStructure = props.structure;
 		
 		//Create options in target list

@@ -23,7 +23,6 @@
         <!-- -->
         <!-- LIST OF MAQETTA Internal PROJECTS GOES HERE -->
         <!-- -->
-    	<populateDir project="davinci.oneui_2010_08_02" isInternal="true"/>
         <populateDir project="davinci.w3ibm" isInternal="true"/>
         <populateDir project="davinci.w3war" isFeature="true" isInternal="true"/>
     </target>

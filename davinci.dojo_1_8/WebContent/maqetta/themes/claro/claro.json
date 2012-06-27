@@ -617,7 +617,7 @@
                  		]
                     },
 					"selectors": {
-						".claro .dijitButton .dijitButtonNode" : [
+						".claro .dijitButton .dijitButtonNode, .claro .dijitDropDownButton .dijitButtonNode, .claro .dijitComboButton .dijitButtonNode, .claro .dijitToggleButton .dijitButtonNode" : [
 							"border-width",
 							"border",
 							"border-style",

@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"maq-metadata-dojo-1_7/dojox/grid/DataGridInput"
+	"maq-metadata-dojo-1_8/dojox/grid/DataGridInput"
 ], function(
 	declare,
 	DataGridInput

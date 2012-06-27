@@ -73,7 +73,7 @@
          unpack="false"/>
 
    <plugin
-         id="davinci.dojo_1_7"
+         id="davinci.dojo_1_8"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -46,6 +46,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		this._cp = new ContentPane({}, element);
 		this.domNode = this._cp.domNode;
 		this.domNode.className = "ThemeEditor fullPane";
+		this._loadedCSSConnects = [];
 	},
 	
 	onResize: function(){
@@ -588,9 +589,10 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			this._theme = new CSSThemeProvider(metaResources, this.theme);
 			// connect to the css files, so we can update the canvas when the model changes
 			var cssFiles = context._getCssFiles();	
+			
 			for (var i = 0; i < cssFiles.length; i++) {
-                dojo.connect(cssFiles[i], 'onChange', context,
-                        '_themeChange');
+				this._loadedCSSConnects.push(dojo.connect(cssFiles[i], 'onChange', context,'_themeChange'));
+
             }
 			this._themeFileContent = this.resourceFile.getContentSync(); // get the content for use later when setting dirty. Timing issue
 
@@ -692,6 +694,10 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		this._subscriptions.forEach(function(item) {
 			dojo.unsubscribe(item);
 		});
+		if (this._loadedCSSConnects) {
+			dojo.forEach(this._loadedCSSConnects, dojo.disconnect);
+			delete 	this._loadedCSSConnects;
+		}
 		delete this._tempRules;
 	},
 	

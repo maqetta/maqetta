@@ -1535,7 +1535,7 @@
 							"padding-left",
 							"padding-bottom"
 						],
-						".claro .dijitTextBox": [
+						".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode": [
 							"$std_10" 
 						]
 

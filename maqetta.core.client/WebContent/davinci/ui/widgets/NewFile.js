@@ -34,33 +34,30 @@ define(["dojo/_base/declare",
 			var dijitLangObj = commonNLS;
 			dojo.mixin(this, langObj);
 			dojo.mixin(this, dijitLangObj);
-			this.cancel =true;
 			this.inherited(arguments);
 		},
 		
 		postCreate : function(){
 			this.inherited(arguments);
-			
-			
-		
-			
+
 			this.arrowNode = this.fileDialogDetailsArrow;
 			
 			this._tree_collapse_expand();
 			var t = this;
+
 			if(this.dialogSpecificClass){
 				require([this.dialogSpecificClass],function(c){
 					t.dialogSpecificWidget = new c({dialogSpecificButtonsSpan:t.dialogSpecificButtonsSpan}, t.dialogSpecificOptionsDiv);
-				});
-			
-				
+				});	
 			}
+
 			this._whereMenu = new Menu({style: "display: none;"});
 			this._whereDropDownButton = new DropDownButton({
 				className: "whereDropDown",
-	            dropDown: this._whereMenu,
+				dropDown: this._whereMenu,
 				iconClass: "fileDialogWhereIcon"
-	        });
+			});
+
 			this.fileDialogWhereDropDownCell.appendChild(this._whereDropDownButton.domNode);
 			if(!this.value){
 				this._setValueAttr(this._getForcedRootAttr());
@@ -87,7 +84,10 @@ define(["dojo/_base/declare",
 			/* set initial value */
 			
 			this.fileTree.watch("selectedItem", dojo.hitch(this, this._checkValid));
+                                                             
+			this._updateFields();
 
+			this.__okButton.onClick = dojo.hitch(this, this._okButton);
 		},
 		
 		startup: function(){
@@ -233,16 +233,19 @@ define(["dojo/_base/declare",
 			
 			this.__okButton.set('disabled', !valid);
 			return valid;
-		},
+		},             
 		
 		_okButton : function(e){
-	
 			var fullPath = (new Path(Workbench.getProject())).append(this._whereMenu.attr('value')).append(this.fileDialogFileName.get( 'value'));
 			
-			this.value =  fullPath.toString();
-			this.cancel = false;
+			this.value = fullPath.toString();
 
-			return true
+			var check = this.checkFileName(this.value);
+			if (check) {
+				return true
+			} else {
+				return false;
+			}
 		},
 			
 		_newFolder : function(){
@@ -260,7 +263,6 @@ define(["dojo/_base/declare",
 		},
 		
 		cancelButton: function(){
-			this.cancel = true;
 			this.onClose();
 		},
 		

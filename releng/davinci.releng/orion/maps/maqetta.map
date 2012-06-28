@@ -3,7 +3,7 @@
 
 plugin@davinci.dojo_1_8=GIT,repo=https://github.com/maqetta/maqetta.git,path=/davinci.dojo_1_8
 plugin@maqetta.clipart=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.clipart
-plugin@org.apache.commons.io=GIT,repo=https://github.com/maqetta/maqetta.git,path=/org.apache.commons.io
+#plugin@org.apache.commons.io=GIT,repo=https://github.com/maqetta/maqetta.git,path=/org.apache.commons.io
 plugin@davinci.core=GIT,repo=https://github.com/maqetta/maqetta.git,path=/davinci.core
 plugin@davinci.gridx=GIT,repo=https://github.com/maqetta/maqetta.git,path=/davinci.gridx
 # plugin@davinci.server.gzip=GIT,repo=https://github.com/maqetta/maqetta.git,path=/davinci.server.gzip  

@@ -39,30 +39,6 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		return new ToggleTreeNode(args);
 	},
 
-	/* override to fix dijit tree bug */
-	_onItemDelete: function(/*Item*/ item) {
-		/*
-			So here is the issue - if you delete the last child of an expanded
-			tree node, the tree hides the expando icon, but does NOT remove the reference
-			to _expandNodeDeferred, which when set assumes it has been or is being expanded.
-			Since we removed all children, this is no longer true - any new children
-			will have to be recreated, hence we need to delete _expandNodeDeferred.
-		*/
-		var parent = this._itemNodesMap[item.id][0].getParent();
-
-		if (parent.item._getChildren) {
-			// could be root, which is a dummy object
-			var children = parent.item._getChildren();
-			if (children.length == 0) {
-				delete parent._expandNodeDeferred;
-			}
-		} else {
-			delete parent._expandNodeDeferred;
-		}
-		
-		this.inherited(arguments);
-	},
-
 	/* sets selection to the passed nodes*/
 	selectNode: function(items) {
 		var paths = [];

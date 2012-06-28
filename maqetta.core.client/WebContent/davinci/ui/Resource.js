@@ -357,8 +357,11 @@ var uiResource = {
 		  			var newName = renameDialog.attr("value");
 		  			if(!cancel){
 		  				var opened = uiResource.closeEditor(resource,true);
-		  				resource.rename(newName);
-			  			if(opened) uiResource.openResource(resource);
+		  				resource.rename(newName).then(function() {
+				  			if (opened) {
+				  				uiResource.openResource(resource);		  					
+				  			}
+		  				});
 					}
 		  			return true;
 		  		});	

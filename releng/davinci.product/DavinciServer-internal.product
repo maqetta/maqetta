@@ -26,10 +26,9 @@
    </vm>
 
    <plugins>
-      <plugin id="davinci.dojo_1_7"/>
+      <plugin id="davinci.dojo_1_8"/>
       <plugin id="davinci.gridx"/>
       <plugin id="davinci.html"/>
-      <plugin id="davinci.oneui_2010_08_02"/>
       <plugin id="davinci.server.gzip"/>
       <plugin id="davinci.w3ibm"/>
       <plugin id="javax.servlet"/>

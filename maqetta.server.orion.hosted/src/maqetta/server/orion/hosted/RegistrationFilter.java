@@ -38,6 +38,7 @@ public class RegistrationFilter implements Filter {
 			String storedEmail = result.get("SIGNUP_EMAIL", null);
 			if(storedEmail!=null && storedEmail.equals(login)){
 				chain.doFilter(request, response);
+				return;
 			}else{
 				httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 				return;

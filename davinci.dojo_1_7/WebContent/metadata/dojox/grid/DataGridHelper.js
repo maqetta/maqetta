@@ -144,7 +144,7 @@ DataGridHelper.prototype = {
 	},
 	
 	create: function(widget, srcElement, useDataDojoProps){ 
-		var storeId = DataStoreBasedWidgetInput.getStoreId(srcElement, useDataDojoProps);
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget, useDataDojoProps);
 		if(storeId){
 			// we may have the store as an object
 			dojo.withDoc(widget.getContext().getDocument(), function(){
@@ -158,7 +158,7 @@ DataGridHelper.prototype = {
 	},
 	
 	reparent: function(widget, useDataDojoProps){ 
-		var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, useDataDojoProps);
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget, useDataDojoProps);
 		if(storeId){
 			dojo.withDoc(widget.getContext().getDocument(), function(){
 				var storeWidget = Widget.byId(storeId);
@@ -168,7 +168,7 @@ DataGridHelper.prototype = {
 			}.bind(this));
 		}
 	},
-	
+
 	_reparentTheStore: function(widget, storeWidget) {
 		var dataGridParent = widget.getParent();
 		var storeParent = storeWidget.getParent();
@@ -231,7 +231,7 @@ DataGridHelper.prototype = {
 	 */
 	getRemoveCommand: function(widget, useDataDojoProps){
 		var command = new CompoundCommand();
-		var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, useDataDojoProps);
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget, useDataDojoProps);
 		var storeWidget = Widget.byId(storeId);
 		// order is important for undo... 
 		command.add(new RemoveCommand(widget));

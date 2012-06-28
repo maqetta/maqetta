@@ -56,21 +56,60 @@ lastMapTag=${mapsTagTag}
 		</p2.mirror>
 	</target>
 
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+
+	    <!-- emf needs to be part of the "runnable" target, since Eclipse wants to "require" EMF, 
+	         not "include" it -->
+	            
+		<echo message="Mirror from ${emfRepoURL} to ${localRepoLocation}" />
+		<p2.mirror destination="file:${localRepoLocation}" ignoreerrors="true">
+			<source location="${emfRepoURL}" />
+			<slicingOptions includeOptional="false" includeNonGreedy="false" latestVersionOnly="true" followStrict="true" />
+			<iu id="org.eclipse.emf.ecore.feature.group" version="0.0.0" />
+			<iu id="org.eclipse.emf.common.feature.group" version="0.0.0" />
+			<iu id="org.eclipse.emf.ecore.source.feature.group" version="0.0.0" />
+			<iu id="org.eclipse.emf.common.source.feature.group" version="0.0.0" />
+		</p2.mirror>
+
+		<!-- mirror Eclipse RCP feature and all prerequisites -->
+		<echo message="Mirror from ${eclipsePlatformRepo} to ${localRepoLocation}" />
+		<p2.mirror destination="file:${localRepoLocation}" ignoreerrors="true">
+			<source location="${eclipsePlatformRepo}" />
+			<slicingOptions includeOptional="false" includeNonGreedy="false" latestVersionOnly="true" followStrict="true" />
+			<iu id="org.eclipse.rcp.feature.group" version="0.0.0" />
+		</p2.mirror>
+		
+		<!-- convert to runnable form -->
+        <echo message="creating runnable in preSetup" />
+        <echo message="basedir: ${basedir}" />
+		<echo message="buildDirectory: ${buildDirectory}" />	    
+	    <echo message="transformedRepoLocation: ${transformedRepoLocation}" />
+		<p2.repo2runnable destination="${transformedRepoLocation}">
+			<source location="file:${localRepoLocation}" />
+		</p2.repo2runnable>
+		
+	</target>
+
 	<target name="postFetch">
 		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
 			<replacefilter token="HEAD" value="${buildLabel}" />
-			<replacefilter token="origin/master" value="${buildLabel}" />
+			<replacefilter token="origin/mls -alaster" value="${buildLabel}" />
 		</replace>
-		<!--
-		<replace dir="${buildDirectory}" includes="sourceReferences.properties" token="${gitUser}@" value="" />
-		-->
-
+		<!-- Build Id in Orion page footer -->
+		<replace dir="${buildDirectory}" includes="**/web/orion/nls/root/messages.js"  >
+			<replacefilter token="@buildLabel@" value="${buildLabel}" />
+		</replace>
 		<available property="jsdocHome" value="${base}/jsdoc-toolkit" file="${base}/jsdoc-toolkit" />
 		<available property="requirejsHome" value="${base}/requirejs" file="${base}/requirejs" />
 		<property name="closureJar" value="/shared/common/closure/compiler.jar" />
 
 		<antcall target="jsdocs" />
+        <record name="optimizer-log.txt" loglevel="debug" action="start"/>
 		<antcall target="requirejs" />
+        <record name="optimizer-log.txt" action="stop"/>
 	</target>
 
 	<target name="jsdocs" if="jsdocHome" >
@@ -82,7 +121,7 @@ lastMapTag=${mapsTagTag}
 			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.core/web/orion/" />
 			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.editor/web/orion/" />
 			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.git/web/orion/" />
-			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.users.ui/web/orion/" />
+			<arg value="${buildDirectory}/plugins/org.eclipse.orion.client.users/web/orion/" />
 		</java>
 	</target>
 
@@ -94,18 +133,19 @@ lastMapTag=${mapsTagTag}
 			<java classname="org.mozilla.javascript.tools.shell.Main" fork="true" 
 				  dir="${buildDirectory}/optimization">
 				<classpath>
-					<pathelement location="${requirejsHome}/build/lib/rhino/js.jar" />
-					<pathelement location="${requirejsHome}/build/lib/closure/compiler.jar" />
+					<pathelement location="${requirejsHome}/lib/rhino/js.jar" />
+					<pathelement location="${requirejsHome}/lib/closure/compiler.jar" />
 				</classpath>
-				<arg value="${requirejsHome}/bin/x.js"/>
-				<arg value="${requirejsHome}/bin"/>
-				<arg value="${requirejsHome}/build/build.js"/>
+				<!-- JavaScript language version -->
+				<arg value="-version" />
+				<arg value="180" />
+				<arg value="${requirejsHome}/dist/r.js"/>
+				<arg value="-o" />
 				<arg value="./orion.build.js"/>
 				<arg value="optimize=closure" />
 				<arg value="name=@{pageDir}/@{name}" />
 				<arg value="out=@{pageDir}/built-@{name}.js"/>
-				<arg value="appDir=." />
-				<arg value="dir=." />
+				<arg value="dir=" />
 			</java>
 
 			<antcall target="updateHTML">
@@ -123,10 +163,12 @@ lastMapTag=${mapsTagTag}
 	</macrodef>
 
 	<target name="updateHTML" >
-		<condition property="builtResult" value="require([&quot;./built-${name}&quot;]);" else="require([&quot;./${name}&quot;]);" >
+		<condition property="builtResult" value="require([&quot;built-${name}.js&quot;]);" else="require([&quot;${name}.js&quot;]);" >
 			<length file="${minifiedScript}" when="greater" length="0" />
 		</condition>
-		<replace file="${buildDirectory}/optimization/${pageDir}/${name}.html" token="require([&quot;./${name}&quot;]);" value="${builtResult}" />
+		<replace file="${buildDirectory}/optimization/${pageDir}/${name}.html" token="require([&quot;${name}.js&quot;]);" value="${builtResult}" />
+		<replace file="${buildDirectory}/optimization/${pageDir}/${name}.html" token="require([&apos;${name}.js&apos;]);" value="${builtResult}" />
+		<replace file="${buildDirectory}/optimization/${pageDir}/${name}.html" token="requirejs/require.js" value="requirejs/require.min.js" />
 	</target>
 
 	<target name="requirejs" if="requirejsHome" >
@@ -149,7 +191,7 @@ lastMapTag=${mapsTagTag}
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.core/web" includes="**"/>
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.editor/web" includes="**"/>
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.git/web" includes="**"/>
-			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.users.ui/web" includes="**"/>
+			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.users/web" includes="**"/>
 		</copy>
 		<copy todir="${dojoFolder}" >
 			<fileset dir="${buildDirectory}/plugins/org.eclipse.orion.client.core/web" includes="dojo/**" />
@@ -164,24 +206,31 @@ lastMapTag=${mapsTagTag}
 		<optimize pageDir="compare" name="compare" bundle="org.eclipse.orion.client.core" />
 		<optimize pageDir="search" name="search" bundle="org.eclipse.orion.client.core" />
 		<optimize pageDir="settings" name="settings" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="console" name="consolePage" bundle="org.eclipse.orion.client.core" />		
+		<optimize pageDir="plugins/site" name="sitePlugin" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="plugins" name="authenticationPlugin" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="plugins" name="fileClientPlugin" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="plugins" name="preferencesPlugin" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="plugins" name="taskPlugin" bundle="org.eclipse.orion.client.core" />		
 		<optimize pageDir="sites" name="site" bundle="org.eclipse.orion.client.core" />
 		<optimize pageDir="sites" name="sites" bundle="org.eclipse.orion.client.core" />
-		<optimize pageDir="git" name="git-clone" bundle="org.eclipse.orion.client.git" />
+		<optimize pageDir="sites" name="view" bundle="org.eclipse.orion.client.core" />
+		<optimize pageDir="mixloginstatic" name="LoginWindow" bundle="org.eclipse.orion.client.core" />		
 		<optimize pageDir="git" name="git-log" bundle="org.eclipse.orion.client.git" />
 		<optimize pageDir="git" name="git-status" bundle="org.eclipse.orion.client.git" />
+		<optimize pageDir="git" name="git-status2" bundle="org.eclipse.orion.client.git" />
 		<optimize pageDir="git" name="git-repository" bundle="org.eclipse.orion.client.git" />
 		<optimize pageDir="git" name="git-commit" bundle="org.eclipse.orion.client.git" />
-		<optimize pageDir="profile" name="user-list" bundle="org.eclipse.orion.client.users.ui" />
-		<optimize pageDir="profile" name="user-profile" bundle="org.eclipse.orion.client.users.ui" />
+		<optimize pageDir="profile" name="user-list" bundle="org.eclipse.orion.client.users" />
+		<optimize pageDir="profile" name="user-profile" bundle="org.eclipse.orion.client.users" />
 
 		<java classname="org.mozilla.javascript.tools.shell.Main">
 			<classpath>
-				<pathelement location="${requirejsHome}/build/lib/rhino/js.jar" />
+				<pathelement location="${requirejsHome}/lib/rhino/js.jar" />
 				<pathelement location="${closureJar}" />
 			</classpath>
-			<arg value="${requirejsHome}/bin/x.js"/>
-			<arg value="${requirejsHome}/bin"/>
-			<arg value="${requirejsHome}/build/build.js"/>
+			<arg value="${requirejsHome}/dist/r.js"/>
+			<arg value="-o" />
 			<arg value="${builder}/scripts/orion.build.js"/>
 			<arg value="optimize=none" />
 			<arg value="appDir=${buildDirectory}/optimization" />
@@ -195,13 +244,13 @@ lastMapTag=${mapsTagTag}
 		<copy todir="${buildDirectory}/plugins/org.eclipse.orion.client.git/web" >
 			<fileset dir="${buildDirectory}/optimization" includes="git/**/*.css" />
 		</copy>
-		<copy todir="${buildDirectory}/plugins/org.eclipse.orion.client.users.ui/web" >
+		<copy todir="${buildDirectory}/plugins/org.eclipse.orion.client.users/web" >
 			<fileset dir="${buildDirectory}/optimization" includes="profile/**/*.css" />
 		</copy>
 	</target>
 
 	<target name="preGenerate">
-		<replace file="${buildDirectory}/features/org.eclipse.pde.build.container.feature/feature.xml" token="1.0.0" value="0.3.0.qualifier" />
+		<replace file="${buildDirectory}/features/org.eclipse.pde.build.container.feature/feature.xml" token="1.0.0" value="0.5.0.qualifier" />
 	</target>
 
 	<target name="postBuild" >
@@ -210,7 +259,6 @@ lastMapTag=${mapsTagTag}
 		<mkdir dir="${dropLocation}" />
 
 		<antcall target="gatherLogs" />
-		<antcall target="launchWebIDE" />
 		<antcall target="copyResults" />
 
 		<mkdir dir="${buildDirectory}/formatRepo" />
@@ -248,15 +296,6 @@ lastMapTag=${mapsTagTag}
 
 	<target name="copyLog" if="logExists" >
 		<copy file="${base}/logs/current.log" tofile="${dropLocation}/buildLog-${buildLabel}.txt" />
-	</target>
-
-	<target name="launchWebIDE" if="launchWebIDE" >
-		<exec executable="bash" >
-			<arg value="${builder}/scripts/launchWebIDE.sh" />
-			<arg value="-archive" />
-			<arg value="${buildDirectory}/${buildLabel}/${archiveNamePrefix}-linux.gtk.x86.zip"/>
-		</exec>
-		<echo message="${buildLabel}" file="/web/http/build.label" />
 	</target>
 
 	<target name="gatherLogs">

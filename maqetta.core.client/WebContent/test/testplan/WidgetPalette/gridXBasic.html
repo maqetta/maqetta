@@ -17,11 +17,6 @@
 	<hr />
 	<h1 class="test_title">Widget Palette Dojo GridX Tests (Basic)</h1>
 	
-	<h2 class="test_section">Introduction</h2>
-	<p> With the addition of GridX support, Maqetta support for DataGrid has been deprecated. The test scenarios that follow
-	are a lot like the old DataGrid tests but using GridX instead of DataGrid. In order to keep the individual tests relatively 
-	short, more advanced testing of other GridX Configuration Wizard scenarios will be described elsewhere. 
-	
 	<h2 class="test_section">Comma separated data</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps" >
@@ -37,14 +32,14 @@ xxxx, yyy, zzz
 111, 222, 3333
 		</pre>
 		<li>Click Finish.</li>
-		<li>The GridX should be updated with the data you entered.</li>
+		<li>The GridX should be updated with the data you entered. In addition, the grid's width should be 100%.</li>
 		<li>Save and close the file.</li>
 		<li>Reopen the file</li>
 		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data entered</li>
 	</ol>
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults">
-		<li>The GridX in page editor and preview should be displaying the data you just enter.</li>
+		<li>The GridX in page editor and preview should be displaying the data you just entered.</li>
 		<li>You should see 3 columns with the headers one, two and three.</li>
 		<li>You should see 3 rows of data, corresponding to the data you entered.</li>
 	</ol>
@@ -99,8 +94,8 @@ xxxx, yyy, zzz
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults">
 		<li>The GridX in page editor and preview should be displaying the default data.</li>
+		<img height="138" src="images/image01.jpg" width="309">
 	</ol>
-	<img height="138" src="images/image01.jpg" width="309">
 	
 	<h2 class="test_section">Data file from workspace</h2>
 	<h3 class="steps_subsection" >Steps</h3>
@@ -110,8 +105,8 @@ xxxx, yyy, zzz
 		<li>Drag the GridX widget onto the canvas.</li>
 		<li>SmartInput is displayed. Choose <i>Data file from workspace</i> from the drop down list on the first panel of the wizard.</li>
 		<li>Click on the folder icon.</li>
-		<li>The select a source dialog will be displayed, navigate to the <i>sample_data folder</i> and then select the <i>htmlSample.json</i> file. Click the OK button</li>
-		<li>The text area should now display the text <i>sample_data/htmlSample.json</i> Unlike DataGrid, radio buttons to specify plain text or HTML markup should <i>not</i>
+		<li>The select a source dialog will be displayed, navigate to the <i>samples/sample_data folder</i> and then select the <i>htmlSample.json</i> file. Click the OK button</li>
+		<li>The text area should now display the text <i>samples/sample_data/htmlSample.json</i> Unlike DataGrid, radio buttons to specify plain text or HTML markup should <i>not</i>
 		be displayed.
 		<li>Click the Finish button on the wizard.</li>
 		<li>The GridX should be updated with the data from the htmlSample file. Notice that the data is displayed with HTML markup rendered (e.g., <b>Fruits</b> is made bold).</li>
@@ -122,8 +117,8 @@ xxxx, yyy, zzz
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults">
 		<li>The GridX in page editor and preview should be displaying the data from the file.</li>
+		<img height="149" src="images/image00.jpg" width="301">
 	</ol>
-	<img height="149" src="images/image00.jpg" width="301">
 
 	<h2 class="test_section">Data from URL (JSONP)</h2>
 	<h3 class="steps_subsection" >Steps</h3>
@@ -141,8 +136,8 @@ xxxx, yyy, zzz
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults" >
 		<li>The GridX in page editor and preview should be displaying the data from the file. </li>
+		<img height="149" src="images/image00.jpg" width="301">
 	</ol>
-	<img height="149" src="images/image00.jpg" width="301">
 	
 	<h2 class="test_section">Data from URL continued (JSONP)</h2>
 	<h3 class="steps_subsection" >Steps</h3>
@@ -161,8 +156,8 @@ xxxx, yyy, zzz
 	<h3 class="expectedResults_subsection" >Expected results</h3>
 	<ol class="expectedResults" >
 		<li>The two respective grid instances (whether in page editor or preview) should be displaying the data from the two different services. Note in the 2nd grid, no data is marked with HTML (e.g., nothing bolded). </li>
+		<img height="608" src="images/image02.jpg" width="312">
 	</ol>
-	<img height="608" src="images/image02.jpg" width="312">
 
 	<h2 class="test_section">Comma separated data (with empty cells)</h2>
 	<h3 class="steps_subsection">Steps</h3>
@@ -193,6 +188,69 @@ Date de début,Date de fin,Code UT,Intitulé UT
 		<li>You should see 4 columns with the headers specified in your data.</li>
 		<li>You should see 3 rows of data, corresponding to the data you entered.
 		<li>Reopening smart input should show exactly the same data as what you pasted in originally.</li>
+	</ol>
+	
+	<h2 class="test_section">CSV Data file from workspace</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Choose New HTML File from the New menu</li>
+		<li>Open the Dojo Controls folder in the Widget palette.</li>
+		<li>Drag the GridX widget onto the canvas.</li>
+		<li>SmartInput is displayed. Choose <i>Data file from workspace</i> from the drop down list on the first panel of the wizard.</li>
+		<li>Click on the folder icon.</li>
+		<li>The select a source dialog will be displayed, navigate to the <i>samples/sample_data folder</i> and then select the <i>sample.csv</i> file. Click the OK button</li>
+		<li>The text area should now display the text <i>samples/sample_data/sample.csv</i></li>
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated with the data from the <i>sample.csv</i> file.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>The GridX in page editor and preview should be displaying the data from the file.</li>
+		<img src="images/gridX_4_CSV_file.png">
+	</ol>
+	
+	<h2 class="test_section">Switching Between File & Data Source Types</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<li>Continuing with the file from the previous section, double-click on the GridX to bring up smart input.</li>
+		<li>SmartInput is displayed. The <i>Data file from workspace</i> option should still be selected and the text field should contain 
+			<i>samples/sample_data/sample.csv</i>.</li>
+		<li>Click on the folder icon.</li>
+		<li>The select a source dialog will be displayed, navigate to the <i>samples/sample_data folder</i> and then select the <i>sampleManyColumns.json</i> file. Click the OK button</li>
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated with the data from the <i>sampleManyColumns.json</i> file.</li>
+		<img src="images/gridX_ManyColumnsNoResizing.png">
+		<li>Double-click on the GridX to bring up smart input.</li>
+		<li>SmartInput is displayed. The <i>Data file from workspace</i> option should still be selected and the text field should contain 
+			<i>samples/sample_data/sampleManyColumns.json</i>.</li>
+		<li>Click on the folder icon.</li>
+		<li>The select a source dialog will be displayed, navigate to the <i>samples/sample_data folder</i> and then select the <i>sample.json</i> file. Click the OK button</li>
+		<li>Click the Finish button on the wizard.</li>
+		<li>The GridX should be updated with the data from the <i>sample.json</i> file.</li>
+		<img src="images/gridX_SampleJSON.png">
+		<li>Double-click on the GridX to bring up smart input.</li> 
+		<li>SmartInput is displayed. The <i>Data file from workspace</i> option should still be selected and the text field should contain 
+			<i>samples/sample_data/sample.json</i>.</li>
+		<li>Choose <i>Comma separated data</i> from the drop down list on the first panel of the wizard.</li>
+		<li>The text area should be empty. Enter the following: </li>
+		<pre>
+one, two, three
+data 1, data 2, data 3
+xxxx, yyy, zzz
+111, 222, 3333
+		</pre>
+		<li>Click Finish.</li>
+		<li>The GridX should be updated with the data you entered.</li>
+		<li>Save and close the file.</li>
+		<li>Reopen the file</li>
+		<li>Click on the preview icon in the toolbar, this should open a new browser window and the grid should be displayed with the data from the file.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>See above.</li>
 	</ol>
 </body>
 </html>

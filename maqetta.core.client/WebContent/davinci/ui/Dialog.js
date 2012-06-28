@@ -79,7 +79,7 @@ return declare("davinci.ui.Dialog", Dialog, {
 				}
 				this.resize(r);
 			}
-			this.layout();
+//			this.layout();  //TODO: method disappeared in 1.8.0b1
 		}
 
 		return result;

@@ -1,7 +1,7 @@
 {
 	"className":"claro",
 	"name":"Sketch",
-	"version":"1.7",
+	"version":"1.8",
 	"specVersion":"0.81",
 	"files":["sketch.css"],
 	"meta":["../claro/claro.json"],

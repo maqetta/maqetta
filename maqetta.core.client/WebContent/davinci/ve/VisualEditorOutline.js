@@ -182,6 +182,9 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 				this.remove(widget);
 			} else if (type === this._context.WIDGET_MODIFIED) {
 				this.onChange(widget);
+
+				// since it changed, we need to update the widget item stores in the model
+				this.put(widget, {overwrite: true});
 			}
 		} catch (e) {
 			console.error("VisualEditorOutline._widgetChanged: e = " + e);

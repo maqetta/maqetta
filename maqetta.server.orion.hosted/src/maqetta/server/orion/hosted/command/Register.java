@@ -27,6 +27,7 @@ public class Register  extends Command {
 		}
 	    public void run() {
 	    	ServerManager.getServerManger().sendEmail("admin@maqetta.org", emailAdd, "Maqetta.org user activation", message);
+	    	System.out.println("---------------\nSending email:\n"+message );
 	    }
 	}
 	
@@ -37,7 +38,7 @@ public class Register  extends Command {
     	
     	String requestUrl = req.getRequestURL().toString();
     	String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
-    	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/";
+    	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/static/migrate.html";
     	
     	
     	IEclipsePreferences signupTokens = new OrionScope().getNode("signup"); //$NON-NLS-1$
@@ -48,6 +49,7 @@ public class Register  extends Command {
 		result.put(Register.EMAIL_FIELD, emailAdd);
 		
 		sendEmail(emailAdd, EMAIL_TEMPLATE + authLink);
+	
         
     	this.responseString = "OK";
       }

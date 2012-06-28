@@ -233,6 +233,23 @@
 		</copy>
 	</target>
 	
+	<target name="updateSubmodules">
+		<property name='gitRepoFolder' value="${target.folder}../"/>
+		
+		<echo message="Updating git submodule in ${gitRepoFolder}"/>
+		
+		 <exec executable = "git" dir = "${gitRepoFolder}">
+		      <arg value = "submodule init" />
+		      <args/>
+		  </exec>
+	
+		 <exec executable = "git" dir = "${gitRepoFolder}">
+		      <arg value = "submodule update" />
+		      <args/>
+		 </exec>
+		
+	</target>
+	
 	<target name="copy.dojo" if="${run.dojo.build}">
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
@@ -263,6 +280,7 @@
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
 		
+		<antcall target="updateSubmodules"/>
         <echo message="Inserting git describe information"/>
         <antcall target="update.revisions"/>
         <antcall target="update.repositoryinfo.js"/>

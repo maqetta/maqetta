@@ -110,23 +110,12 @@ setPropInDataDojoProps = function(dojoDataPropsValue, propId, propValue) {
  *  
  */ 
 // Helper function that will be made available for "static" use
-getStoreId = function(srcElement, useDataDojoProps) {
+getStoreId = function(widget, useDataDojoProps) {
 	var storeId = "";
-	if (useDataDojoProps) {
-		var dataDojoProps = srcElement.getAttribute("data-dojo-props");
-		if (dataDojoProps) {
-			var keyValuePairs = dataDojoProps.split(",");
-			dojo.some(keyValuePairs, function(pair) {
-				var pairSplit = pair.split(":")
-				if (pairSplit[0].trim() === "store") {
-					storeId = pairSplit[1].trim();
-					return true;
-				}
-			});
-		}
-	} else {
-		storeId = srcElement.getAttribute("store");
-	}
+	if (widget.dijitWidget && widget.dijitWidget.store) {
+		var store = widget.dijitWidget.store;
+		storeId = store.id ? store.id : store._edit_object_id;
+	} 
 	
 	return storeId;
 };
@@ -260,105 +249,78 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		var context = this._getContext();
 		var widget = this._widget;
 
-		var compoundCommand = new OrderedCompoundCommand();
-
-		var storeCmd = this.updateStore();
-		var command = new ModifyCommand(widget, null, null, context);
-		compoundCommand.add(storeCmd);
-		compoundCommand.add(command);
-		
-		updateCommandCallback(compoundCommand);
-	},
-
-	_getDummyDataUpdateWidgetCommandReplaceable: function(updateCommandCallback) {
-		var context = this._getContext();
-		var widget = this._widget;
-
-		var storeId = widget.domNode._dvWidget._srcElement.getAttribute("store");
+		var storeId = this._getStoreId(widget);
 		var storeWidget = Widget.byId(storeId);
 
 		var compoundCommand = new OrderedCompoundCommand();
 
-		var newStore;
-		var newStoreId = "";
+		// remove the old store
+		var removeCmd = new RemoveCommand(storeWidget);
+		compoundCommand.add(removeCmd);
 		
+		// id for the new store
+		var newStoreId = storeId;
 		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			// remove the old store (csv)
-			var removeCmd = new RemoveCommand(storeWidget);
-			compoundCommand.add(removeCmd);
-		
-			// id for the new store
-			var newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+			newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+		}
 
-			// create the item store
-			newStore = new ItemFileReadStore({items: []});
+		var data = {
+			"type": "dojo.data.ItemFileReadStore",
+			"properties": {
+				id: newStoreId,
+				jsId: newStoreId,
+				url: '',
+				data: this.buildData()
+			},
+			context: context,
+		};
+
+		// add the new store
+		var addCmd = new AddCommand(data, widget.getParent(), 0);
+		compoundCommand.add(addCmd);
+
+		// create the item store (which must be created in context of page)
+		var global = this._widget.getContext().getGlobal();
+		global['require']([
+			'dojo/data/ItemFileReadStore'
+		], function(ItemFileReadStore) {
+			//modify the widget using the store
+			var newStore = new ItemFileReadStore({data: data.properties.data});
 			// hack: pass id around for now, as we are passing an object but string may be expected
 			newStore.id = newStoreId;
-		
-			var data = {
-				"type": "dojo.data.ItemFileReadStore",
-				"properties": {
-					id: newStoreId,
-					jsId: newStoreId,
-					url: ''
-				},
-				context: context,
-			}
+			var props = {
+				store: newStore
+			};
+			props = dojo.mixin(props, this._getPropsForDummyDataUpdateWidgetCommand(widget));
+			var command = new ModifyCommand(widget,
+				props,
+				this._getChildrenForDummyDataUpdateWidgetCommand(widget),
+				context
+			);
+			compoundCommand.add(command);
 
-			// add the new store
-			var addCmd = new AddCommand(data, widget.getParent(), 0);
-			compoundCommand.add(addCmd);
-		} else {
-			var storeCmd = this.replaceStoreData(this.buildData());
-			compoundCommand.add(storeCmd);
-		}
-
-		var props = null;
-
-		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			props = {};
-			props.store = newStore;
-		}
-
-		var command = new ModifyCommand(widget,
-			props,
-			null,
-			context
-		);
-
-		compoundCommand.add(command);
-
-		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			var mcmd = new ModifyAttributeCommand(widget, {store: newStoreId});
+			//Update store id
+			var mcmd = this._getModifyAttributeCommandForStoreId(widget, newStoreId);
 			compoundCommand.add(mcmd);
-		}
 
-		//Callback with the new command
-		updateCommandCallback(compoundCommand);
+			//Callback with the new command
+			updateCommandCallback(compoundCommand);
+		}.bind(this));
+	},
+	
+	//Subclass can override
+	_getPropsForDummyDataUpdateWidgetCommand: function() {
+		return {};
+	},
+	
+	//Subclass can override
+	_getChildrenForDummyDataUpdateWidgetCommand: function() {
+		return null;
 	},
 	
 	_getNewWidgetFromCompoundCommand: function(compoundCommand) {
 		var lastCommand = compoundCommand._commands[compoundCommand._commands.length-1];
 		return lastCommand.newWidget;
-	},
-		
-	updateStore: function() {
-		// widget specific code here 
-	},
-
-	replaceStoreData: function(data) {
-		var store = this._widget.dijitWidget.store;
-
-		var storeId = this._getStoreId(this._widget.domNode._dvWidget._srcElement);
-		var storeWidget = Widget.byId(storeId);
-		var properties = {};
-		properties.data = data;
-		storeWidget._srcElement.setAttribute('url', ''); 
-		properties.url = ''; // this is needed to prevent ModifyCommmand mixin from puttting it back//delete properties.url; 
-		var command = new ModifyCommand(storeWidget, properties);
-		store.data = data;
-
-		return command;
 	},
 		
 	updateWidgetForUrlStore: function(){
@@ -418,7 +380,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				queryOptions: {deep: true},
 				onComplete: onComplete.bind(this),
 				onError: function(e){
-					alert('File ' + e	);
+					console.error("DataStoreBasedWidgetInput._getCsvStore error using url = " + url + "; e = " + e);
+					alert('File ' + e);
 				}
 			});
 		}.bind(this));
@@ -453,7 +416,10 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				query: this.query,
 				queryOptions: {deep: true},
 				onComplete: onComplete.bind(this),
-				onError: function(e){ alert('File ' + e	);}
+				onError: function(e){ 
+					console.error("DataStoreBasedWidgetInput._getUpdateWidgetForUrlStoreJSONP error using url = " + url + "; e = " + e);
+					alert('File ' + e	);
+				}
 			});
 		}.bind(this));
 	},
@@ -470,6 +436,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			// relative so we have to get the absolute for the update of the store
 			var file = system.resource.findResource(url, null, parentFolder);
 			if (!file){
+				console.error("DataStoreBasedWidgetInput._getFullUrl error using url = " + url + "; url does not exist.");
 				alert('File: ' + this._url + ' does not exsist.');
 				return;
 			}
@@ -485,11 +452,11 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			return;
 		}
 
-		var storeId = this._getStoreId(this._widget.domNode._dvWidget._srcElement);
+		var widget = this._widget;
+		var storeId = this._getStoreId(widget);
 		var storeWidget = Widget.byId(storeId);
 		var properties = {};
 		var context = this._getContext();
-		var widget = this._widget;
 		properties.url = this._url;
 
 		if (this._callback){
@@ -500,67 +467,73 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 
 		var compoundCommand = new OrderedCompoundCommand();
 
-		if ((this._dataType == "csv" && storeWidget.type == "dojo.data.ItemFileReadStore") ||
-			 (this._dataType != "csv" && storeWidget.type == "dojox.data.CsvStore")) {
+		//Remove the old data store
+		var removeCmd = new RemoveCommand(storeWidget);
+		compoundCommand.add(removeCmd);
 
-			var sid;
-
-			var removeCmd = new RemoveCommand(storeWidget);
-			compoundCommand.add(removeCmd);
-
-			// we need to change the store type
-			if (this._dataType == "csv") {
-				// replace store with csv
-				sid = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
-				var data = {
-					"type": "dojox.data.CsvStore",
-					"properties": {
-						id: sid,
-						jsId: sid,
-						url: this._url,
-						data: ''
-					},
-					context: context,
-				}
-
-				this._urlDataStore.id = sid;
-				var addCmd = new AddCommand(data, widget.getParent(), 0);
-				compoundCommand.add(addCmd);
-			} else {
-				sid = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
-				var data = {
-					"type": "dojo.data.ItemFileReadStore",
-					"properties": {
-						id: sid,
-						jsId: sid,
-						url: this._url,
-						data: ''
-					},
-					context: context,
-				}
-
-				this._urlDataStore.id = sid;
-				var addCmd = new AddCommand(data, widget.getParent(), 0);
-				compoundCommand.add(addCmd);
+		// create new store of appropriate type
+		var newStoreId = storeId; //reuse old id if possible
+		var newDataStoreData = null;
+		if (this._dataType == "csv") {
+			// replace store with csv
+			if (storeWidget.type != "dojox.data.CsvStore") {
+				//changing store type, so let's get a new store id
+				newStoreId = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
 			}
-
-			// update the store id attribute
-			var mcmd = new ModifyAttributeCommand(widget, {store: sid});
-			compoundCommand.add(mcmd);
-
-			// allow subclasses to inject their own data
-			command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
-			compoundCommand.add(command);
+			newDataStoreData = {
+				"type": "dojox.data.CsvStore",
+				"properties": {
+					id: newStoreId,
+					jsId: newStoreId,
+					url: this._url,
+					data: ''
+				},
+				context: context,
+			};
 		} else {
-			var storeCmd = new ModifyCommand(storeWidget, properties);
-			compoundCommand.add(storeCmd);
-
-			command = this._getModifyCommandForUrlDataStore(widget, context, items);
-			compoundCommand.add(command);
+			if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+				//changing store type, so let's get a new store id
+				newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+			}
+			newDataStoreData = {
+				"type": "dojo.data.ItemFileReadStore",
+				"properties": {
+					id: newStoreId,
+					jsId: newStoreId,
+					url: this._url,
+					data: ''
+				},
+				context: context,
+			};
 		}
+		this._urlDataStore.id = newStoreId;
+		var addCmd = new AddCommand(newDataStoreData, widget.getParent(), 0);
+		compoundCommand.add(addCmd);
+
+		// allow subclasses to inject their own data
+		command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
+		compoundCommand.add(command);
+		
+		//update store id
+		command = this._getModifyAttributeCommandForStoreId(widget, this._urlDataStore.id);
+		compoundCommand.add(command);
 
 		//Invoke callback
 		updateCommandCallback(compoundCommand);
+	},
+	
+	_getModifyAttributeCommandForStoreId: function(widget, storeId) {
+		var props = {};
+		if (this.useDataDojoProps) {
+			var widgetData = widget.getData();
+			var currentDataDojoProps = widgetData.properties["data-dojo-props"];
+			props["data-dojo-props"] =  
+				DataStoreBasedWidgetInput.setPropInDataDojoProps(currentDataDojoProps, "store", storeId); 
+		} else {
+			props.store = storeId;
+		}
+		var mcmd = new ModifyAttributeCommand(widget, props);
+		return mcmd;
 	},
 
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
@@ -626,7 +599,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		var dataStoreType = dijit.byId("davinci.ve.input.DataGridInput.dataStoreType");
 		this._connection.push(dojo.connect(dataStoreType, "onChange", this, "changeDataStoreType"));
 
-		var storeId = this._getStoreId(this._widget._srcElement);
+		var storeId = this._getStoreId(this._widget);
  		var storeWidget = Widget.byId(storeId);
 		this._data = storeWidget._srcElement.getAttribute('data'); 
 		this._url = storeWidget._srcElement.getAttribute('url');

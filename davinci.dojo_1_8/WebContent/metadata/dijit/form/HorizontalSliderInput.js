@@ -1,13 +1,17 @@
 define(
 [
-	"dojo/_base/declare", 
+	"dojo/_base/declare",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
 	"../layout/ContainerInput", 
 	"dijit/layout/ContentPane",
 	"dijit/layout/BorderContainer", 
 	"dijit/layout/LayoutContainer",
 	"dijit/form/HorizontalSlider", 
 	"dijit/form/HorizontalRule", 
-	"dijit/form/HorizontalRuleLabels",  
+	"dijit/form/HorizontalRuleLabels", 
+	"davinci/Workbench",
 	"dojo/text!./templates/horizontalSliderInput.html",
 	"dojo/text!./templates/horizontalSliderInputRowTemplate.html",
 	"davinci/css!./templates/horizontalSliderInput.css",
@@ -15,6 +19,9 @@ define(
 	"dojo/i18n!dijit/nls/common"
 ],
 function(declare, 
+		_WidgetBase,
+		_TemplatedMixin,
+		_WidgetsInTemplateMixin,
 		ContainerInput, 
 		ContentPane, 
 		BorderContainer, 
@@ -22,11 +29,36 @@ function(declare,
 		HorizontalSlider, 
 		HorizontalRule, 
 		HorizontalRuleLabels, 
+		Workbench,
 		mainTemplateString,
 		rowTemplate,
 		cssForTemplate,
 		langObj, 
 		dijitLangObj) {
+
+var ContinerInputWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+	widgetsInTemplate: true,
+	templateString: mainTemplateString,
+
+	langObj: langObj,
+	dijitLangObj: dijitLangObj,
+
+	postCreate: function() {
+		if (this.widget.inLineEdit_displayOnCreate) {
+			// hide cancel on widget creation #120
+			delete this.widget.inLineEdit_displayOnCreate;
+			dojo.style(this.cancelButton.domNode, "display", "none");
+		}
+	},
+
+	resize: function(coords) {
+		this.borderContainer.resize();
+	},
+
+	_onCancel: function() {
+		this.onClose();
+	}
+});
 
 return declare(ContainerInput, {
 
@@ -39,69 +71,46 @@ return declare(ContainerInput, {
 	
 	show: function(widgetId) {
 		this._widget = davinci.ve.widget.byId(widgetId);
-		if (!this._inline) {
-			//Set up the dialog
-			var dimensions = this._getDialogDimensions();
-			var width = dimensions.width;
-			var height = dimensions.height;
-			this._inline = new dijit.Dialog({
-				title: this._getDialogTitle(),
-				style: "width: " + width + "px; height: + " + height + "px",
-				"class": "sliderDialog"
-			});
-			this._inline.onCancel = dojo.hitch(this, "onCancel");
-			this._inline.callBackObj = this;
-			
-			//Get template for dialog contents
-			var s = this._getTemplate(width, height);
-		
-			//Set content
-			this._inline.set("content", s);
-			this._inline.show();
+		//Set up the dialog
+		var dimensions = this._getDialogDimensions();
+		var width = dimensions.width;
+		var height = dimensions.height;
 
-			//Loop through slider children to find Rule and RuleLabel elements
-			this._sliderChildrenEntries = [];
-			var data = this._widget.getData();
-			var children = data.children;
-			for(var i=0; i<children.length; i++){
-				var child = children[i];
-				
-				if (this._isValidChildType(child.type)) {
-					var childData = {
-						"type": child.type,
-						"properties": dojo.clone(child.properties)
-					};
-					
-					if (childData.properties.isTempID) {
-						// delete temp id so it does not make its way out to the source
-						// when we recreate the children
-						delete childData.properties.id; 
-					}
-					
-					this._sliderChildrenEntries.push(childData);
-				} else {
-					console.log('WARNING. HorizontalSliderInput.js show(). Invalid child of slider: type = ' + child.type);
-				}
-			}
-			
-			//Configure listeners for OK/Cancel buttons
-			var okButton = dijit.byId('okButton');
-			this._connection.push(dojo.connect(okButton, 'onClick', dojo.hitch(this,function(){
-				this.updateWidget();
-				this.onOk();
-			})));
-			var cancelButton = dijit.byId('cancelButton');
-			this._connection.push(dojo.connect(cancelButton, 'onClick', dojo.hitch(this,function(){
-				this.onCancel();
-			})));
-			if (this._widget.inLineEdit_displayOnCreate){
-				// hide cancel on widget creation #120
-				delete this._widget.inLineEdit_displayOnCreate;
-				dojo.style(cancelButton.domNode, "display", "none");
-			}
-			
-			this._updateDialog();
+		var s = this._getTemplate(width, height);
+
+		function _onOK() {
+			this.updateWidget();
 		}
+
+		this.contentWidget = new ContinerInputWidget({widget: this._widget});
+		this._inline = Workbench.showModal(this.contentWidget, this._getDialogTitle(), {width: width, height: height}, dojo.hitch(this, _onOK));
+
+		//Loop through slider children to find Rule and RuleLabel elements
+		this._sliderChildrenEntries = [];
+		var data = this._widget.getData();
+		var children = data.children;
+		for(var i=0; i<children.length; i++){
+			var child = children[i];
+			
+			if (this._isValidChildType(child.type)) {
+				var childData = {
+					"type": child.type,
+					"properties": dojo.clone(child.properties)
+				};
+				
+				if (childData.properties.isTempID) {
+					// delete temp id so it does not make its way out to the source
+					// when we recreate the children
+					delete childData.properties.id; 
+				}
+				
+				this._sliderChildrenEntries.push(childData);
+			} else {
+				console.log('WARNING. HorizontalSliderInput.js show(). Invalid child of slider: type = ' + child.type);
+			}
+		}
+		
+		this._updateDialog();
 	},
 	
 	hide: function(cancel) {
@@ -244,9 +253,9 @@ return declare(ContainerInput, {
 	_updatePreview: function(){
 		var s = this._getPreviewContent();
 		
-        //Set the content
-        var obj = dijit.byId('previewArea');
-        obj.set("content", s);		
+		//Set the content
+    var obj = this.contentWidget.previewArea;
+    obj.set("content", s);		
 	},
 	
 	_getPreviewContent: function(){
@@ -371,8 +380,8 @@ return declare(ContainerInput, {
 		if (!this._substitutedMainTemplate) {
 			this._substitutedMainTemplate = 
 				dojo.replace(mainTemplateString, {
-					width: width + "px",
-					height: (height - 20) + "px",
+					//width: width + "px",
+					//height: (height - 20) + "px",
 					ruleAndLabelsHeader: langObj.ruleAndLabelsHeader,
 					typeColHeader: langObj.typeColHeader,
 					containerColHeader: langObj.containerColHeader,
@@ -399,6 +408,12 @@ return declare(ContainerInput, {
 			
 		return this._substitutedRowTemplate;
 	},
+
+	destroy: function() {
+		dojo.forEach(this._connection, function(c) {
+				dojo.disconnect(c);
+		})
+	},
 	
 	/*************************************************************
 	 * Functions subclass should override
@@ -409,7 +424,7 @@ return declare(ContainerInput, {
 	
 	_getDialogDimensions: function() {
 		return { 
-			"width": 550,
+			"width": 610,
 			"height": 250
 		};
 	},

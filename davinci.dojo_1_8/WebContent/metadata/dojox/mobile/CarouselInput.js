@@ -57,10 +57,6 @@ return declare(DataStoreBasedWidgetInput, {
 		});
 	},
 
-	updateStore: function() {
-		return this.replaceStoreData(this.buildData());
-	},
-
 	buildData: function() {
 		var textArea = dijit.byId("davinciIleb"),
 				value = textArea.attr('value'),
@@ -83,11 +79,6 @@ return declare(DataStoreBasedWidgetInput, {
 		}
 
 		return data;
-	},
-
-	//called by superclass's updateWidget
-	_getDummyDataUpdateWidgetCommand: function(updateCommandCallback) {
-		this._getDummyDataUpdateWidgetCommandReplaceable(updateCommandCallback);
 	}
 });
 

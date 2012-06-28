@@ -43,29 +43,6 @@ return declare(DataStoreBasedWidgetInput, {
 		this.helpText = String.substitute(dojoxNls.edgeToEdgeDataListHelp, [helpInfo]);
 	},
 
-	updateStore: function() {
-		var textArea = dijit.byId("davinciIleb"),
-				value = textArea.attr('value'),
-				nodes = value,
-				rows = value.split('\n'),
-			data = { identifier: 'label', items:[]},
-			items = data.items;
-		for (var r = 0; r < rows.length; r++){ 
-			var cols = rows[r].split(',');
-			var item = {};
-			item.label = cols[0];
-			if (cols[1]){
-				item.moveTo = cols[1];
-			} else {
-				item.moveTo = 'dummy';
-			}
-
-			items.push(item);
-		}
-
-		return this.replaceStoreData(data);
-	},
-
 	buildData: function() {
 		var textArea = dijit.byId("davinciIleb"),
 				value = textArea.attr('value'),
@@ -87,11 +64,6 @@ return declare(DataStoreBasedWidgetInput, {
 		}
 
 		return data;
-	},
-
-	//called by superclass's updateWidget
-	_getDummyDataUpdateWidgetCommand: function(updateCommandCallback) {
-		this._getDummyDataUpdateWidgetCommandReplaceable(updateCommandCallback);
 	}
 });
 

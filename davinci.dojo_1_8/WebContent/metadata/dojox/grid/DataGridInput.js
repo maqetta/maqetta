@@ -37,31 +37,6 @@ define([
 	dojoxNls
 	/*DropDownSelect*/
 ) {
-
-var ModifyCommandForUrlDataStore = declare(ModifyCommand, {
-	useDataDojoProps: false,
-	
-	execute: function() {
-		// We run as part of a compound command AFTER the data store has been recreated. With GridX, we have an 
-		// issue with GridX having a stale reference to the old data store (it doesn't look it back up by ID). So,
-		// interject ourselves here to update the reference before letting superclass finish the work of the
-		// command execution.
-		var widget = Widget.byId(this._oldId);
-		if (widget) {
-			var storeId = DataStoreBasedWidgetInput.getStoreId(widget._srcElement, false);
-			if (storeId) {
-				var dj = widget.getContext().getDojo();
-				var dj = this._context.getDojo();
-				dojo.withDoc(this._context.getDocument(), function(){
-					var storeWidget = dj.getObject(storeId);
-					this._properties.store = storeWidget;
-				}.bind(this));
-			}
-		}
-		
-		this.inherited(arguments);
-	}
-});
 	
 return declare(DataStoreBasedWidgetInput, {
 
@@ -135,88 +110,27 @@ return declare(DataStoreBasedWidgetInput, {
 	},
 	
 	//called by superclass's updateWidget
-	_getDummyDataUpdateWidgetCommand: function(updateCommandCallback) {
-		var structure = [];
-		
-		var context = this._getContext();
-		var widget = this._widget;
-
-		var storeId = this._getStoreId(widget.domNode._dvWidget._srcElement);
-		var storeWidget = Widget.byId(storeId);
-
-		var compoundCommand = new OrderedCompoundCommand();
-
-		var newStore;
-		var newStoreId = "";
-		
-		var structureData = this.buildStructure(structure);
-
-		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			// remove the old store (csv)
-			var removeCmd = new RemoveCommand(storeWidget);
-			compoundCommand.add(removeCmd);
-		
-			// id for the new store
-			var newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
-
-			// create the item store
-			newStore = new ItemFileReadStore({items: []});
-			// hack: pass id around for now, as we are passing an object but string may be expected
-			newStore.id = newStoreId;
-		
-			var data = {
-				"type": "dojo.data.ItemFileReadStore",
-				"properties": {
-					id: newStoreId,
-					jsId: newStoreId,
-					url: '',
-					data: structureData
-				},
-				context: context,
-			}
-
-			// add the new store
-			var addCmd = new AddCommand(data, widget.getParent(), 0);
-			compoundCommand.add(addCmd);
-		} else {
-			var storeCmd = this.replaceStoreData(structureData);
-			compoundCommand.add(storeCmd);
-		}
-
+	_getPropsForDummyDataUpdateWidgetCommand: function(widget) {
 		structure = this._structure;
-		
 		var props = {
 			structure: structure
 		};
 		if (this.supportsEscapeHTMLInData) {
 			var escapeHTML = (this.getFormat() === 'text');
 			props.escapeHTMLInData = escapeHTML;
-		};
+		}
+
+		return props;
+	},
+	
+	//called by superclass's updateWidget
+	_getChildrenForDummyDataUpdateWidgetCommand: function(widget) {
+		structure = this._structure;
 		
 		//Deal with table column headers
 		var widgetChildren = this._buildTableChildrenForStructure(structure, widget);
 
-		//Deal with store of different type
-		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			props.store = newStore; 
-		}
-
-		//Build the modify command
-		var command = new ModifyCommand(widget,
-			props,
-			widgetChildren,
-			context
-		);
-
-		compoundCommand.add(command);
-
-		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			var mcmd = new ModifyAttributeCommand(widget, {store: newStoreId});
-			compoundCommand.add(mcmd);
-		}
-		
-		//Callback with the new command
-		updateCommandCallback(compoundCommand);
+		return widgetChildren;
 	},
 	
 	_buildTableChildrenForStructure: function(structure, tableWidget) {
@@ -290,14 +204,12 @@ return declare(DataStoreBasedWidgetInput, {
 		};
 	},
 		
-	buildStructure: function(structure, value) {
-		var oldStructure = structure, // we are defining the structure by row one of text area
-				structure = [],
-				textArea = dijit.byId("davinciIleb"),
-				value = textArea.attr('value'),
-				nodes = value,
-				rows = value.split('\n'),
-				cols = rows[0].split(',');
+	buildData: function() {
+		var structure = [], // we are defining the structure by row one of text area
+			textArea = dijit.byId("davinciIleb"),
+			value = textArea.attr('value'),
+			rows = value.split('\n'),
+			cols = rows[0].split(',');
 
 		var currentWidgetStructure = this._widget.attr("structure");
 		for (var c = 0; c < cols.length; c++){
@@ -371,9 +283,6 @@ return declare(DataStoreBasedWidgetInput, {
 			structure.push(tmpStructure);
 		}
 
-
-		var scripts;
-		
 		var props = {
 			structure: structure
 		};
@@ -387,32 +296,12 @@ return declare(DataStoreBasedWidgetInput, {
 
 		if (datastore) {
 			props.store = datastore;
-
-			// need to update data-dojo-props here for the new store id
-			var dataDojoProps = widget._srcElement.getAttribute("data-dojo-props");
-
-			if (dataDojoProps) {
-				var pairs = [];
-
-				var keyValuePairs = dataDojoProps.split(",");
-				dojo.map(keyValuePairs, function(pair) {
-					var pairSplit = pair.split(":")
-					if (pairSplit[0].trim() === "store") {
-						pairs.push("store:" + datastore.id);
-					} else {
-						pairs.push(pair);
-					}
-				});
-	
-				props["data-dojo-props"] = pairs.join(",");
-			}
 		}
 
-		var command = new ModifyCommandForUrlDataStore(widget,
+		var command = new ModifyCommand(widget,
 			props,
 			widgetChildren, 
-			context,
-			scripts
+			context
 		);
 		command.useDataDojoProps = this.useDataDojoProps;
 

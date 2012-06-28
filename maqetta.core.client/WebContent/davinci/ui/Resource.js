@@ -51,6 +51,7 @@ var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificC
 						folderFieldLabel:"Where:", // FIXME: i18n
 						finishButtonLabel:createLabel,
 						value: folder,
+						checkFileName: checkFileName,
 						dialogSpecificClass:dialogSpecificClass};
 	return new NewFile(dialogOptions);
 };
@@ -73,37 +74,29 @@ var uiResource = {
 		newHTML: function(){
 				var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFileOptions";
 				var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "html", dialogSpecificClass);
+
 				var executor = function(){
-					var teardown = true;
-					if(!newDialog.cancel){
-						var optionsWidget = newDialog.dialogSpecificWidget;
-						var options = optionsWidget.getOptions();
-						var resourcePath = newDialog.get('value');
-						var check = checkFileName(resourcePath);
-						if(check){
-							var resource = Resource.createResource(resourcePath);
-							resource.isNew = true;
-							var text = Resource.createText("HTML", {resource:resource});
-							if(text){
-								resource.setText(text);
-							}
-							var device = options.device;
-							if(device === 'desktop'){
-								device = 'none';
-							}
-							var newHtmlParams = {
-								device:device,
-								flowlayout:(options.layout=='flow')+'',	// value need to be strings 'true' or 'false'
-								theme: options.theme,
-								themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
-							};
-							uiResource.openResource(resource, newHtmlParams);
-							Workbench.workbenchStateCustomPropSet('nhfo',options);
-						} else {
-							teardown = false;
-						}
+					var optionsWidget = newDialog.dialogSpecificWidget;
+					var options = optionsWidget.getOptions();
+					var resourcePath = newDialog.get('value');
+					var resource = Resource.createResource(resourcePath);
+					resource.isNew = true;
+					var text = Resource.createText("HTML", {resource:resource});
+					if(text){
+						resource.setText(text);
 					}
-					return teardown;
+					var device = options.device;
+					if(device === 'desktop'){
+						device = 'none';
+					}
+					var newHtmlParams = {
+						device:device,
+						flowlayout:(options.layout=='flow')+'',	// value need to be strings 'true' or 'false'
+						theme: options.theme,
+						themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
+					};
+					uiResource.openResource(resource, newHtmlParams);
+					Workbench.workbenchStateCustomPropSet('nhfo',options);
 				};
 				Workbench.showModal(newDialog, uiNLS.createNewHTMLFile, '', executor);
 		},
@@ -111,22 +104,13 @@ var uiResource = {
 		newCSS: function(){
 			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "css");
 			var executor = function(){
-				var teardown = true;
-				if(!newDialog.cancel){
-					var resourcePath = newDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						var resource = Resource.createResource(resourcePath);
-						resource.isNew = true;
-						var text = Resource.createText("CSS", {resource:resource});
-						if(text)
-							resource.setText(text);
-						uiResource.openResource(resource);
-					} else {
-						teardown = false;
-					}
-				}
-				return teardown;
+				var resourcePath = newDialog.get('value');
+				var resource = Resource.createResource(resourcePath);
+				resource.isNew = true;
+				var text = Resource.createText("CSS", {resource:resource});
+				if(text)
+					resource.setText(text);
+				uiResource.openResource(resource);
 			};
 			Workbench.showModal(newDialog, uiNLS.createNewCSSFile, '', executor);
 		},
@@ -173,28 +157,22 @@ var uiResource = {
 								fileFieldLabel:uiNLS.folderName, 
 								folderFieldLabel:uiNLS.parentFolder,
 								root:folder,
-								finishButtonLabel:uiNLS.createFolder};
+								finishButtonLabel:uiNLS.createFolder,
+								checkFileName: checkFileName
+			};
 			
 			var newFolderDialog =  new NewFolder(dialogOptions);
 			var finished = false;
 			var newFolder;
 			var executor = function(){
-				var cancel = false;
-				if(!newFolderDialog.cancel){
-					var resourcePath = newFolderDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						newFolder= Resource.createResource(resourcePath,true);
-					} else {
-						cancel = true;
-					}
-				}
+				var resourcePath = newFolderDialog.get('value');
+				newFolder= Resource.createResource(resourcePath,true);
+
 				if(callback) {
 					callback(newFolder);
 				}
 				if(newFolder!=null)
 					uiResource.selectResource(newFolder);
-				return cancel;
 			};
 			
 			Workbench.showModal(newFolderDialog, uiNLS.createNewFolder, '', executor);
@@ -220,39 +198,30 @@ var uiResource = {
 			
 			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.save, extension, null, newFileName, oldResource);
 			var executor = function(){
-				var teardown = true;
-				if(!newDialog.cancel){
-					var resourcePath = newDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						var oldResource = Resource.findResource(oldFileName);
-						var oldContent = "";
-						if (oldEditor.editorID == "davinci.html.CSSEditor") {
-							// this does some css formatting
-							oldContent = oldEditor.getText();
-						} else {
-							oldContent = (oldEditor.model && oldEditor.model.getText) ? oldEditor.model.getText() : oldEditor.getText();
-						}
-						var existing=Resource.findResource(resourcePath);
-						oldEditor.editorContainer.forceClose(oldEditor);
-						if(existing){
-							existing.removeWorkingCopy();
-							existing.deleteResource();
-						}
-						// Do various cleanups around currently open file
-						//oldResource.removeWorkingCopy(); // 2453 Factory will clean this up..
-						oldEditor.isDirty = false;
-						// Create a new editor for the new filename
-						var file = Resource.createResource(resourcePath);
-						var pageBuilder =new RebuildPage();
-						var newText = pageBuilder.rebuildSource(oldContent, file);
-						file.setContents(newText);
-						Workbench.openEditor({fileName: file, content: newText});
-					} else {
-						teardown = false;
-					}
+				var resourcePath = newDialog.get('value');
+				var oldResource = Resource.findResource(oldFileName);
+				var oldContent = "";
+				if (oldEditor.editorID == "davinci.html.CSSEditor") {
+					// this does some css formatting
+					oldContent = oldEditor.getText();
+				} else {
+					oldContent = (oldEditor.model && oldEditor.model.getText) ? oldEditor.model.getText() : oldEditor.getText();
 				}
-				return teardown;
+				var existing=Resource.findResource(resourcePath);
+				oldEditor.editorContainer.forceClose(oldEditor);
+				if(existing){
+					existing.removeWorkingCopy();
+					existing.deleteResource();
+				}
+				// Do various cleanups around currently open file
+				//oldResource.removeWorkingCopy(); // 2453 Factory will clean this up..
+				oldEditor.isDirty = false;
+				// Create a new editor for the new filename
+				var file = Resource.createResource(resourcePath);
+				var pageBuilder =new RebuildPage();
+				var newText = pageBuilder.rebuildSource(oldContent, file);
+				file.setContents(newText);
+				Workbench.openEditor({fileName: file, content: newText});
 			};
 			Workbench.showModal(newDialog, uiNLS.saveFileAs, '', executor);
 		},
@@ -260,23 +229,14 @@ var uiResource = {
 		newJS: function(){
 			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "js");
 			var executor = function(){
-				var teardown = true;
-				if(!newDialog.cancel){
-					var resourcePath = newDialog.get('value');
-					var check = checkFileName(resourcePath);
-					if (check) {
-						var resource = Resource.createResource(resourcePath);
-						resource.isNew = true;
-						var text = Resource.createText("CSS", {resource:resource});
-						if(text) {
-							resource.setText(text);
-						}
-						uiResource.openResource(resource);
-					} else {
-						teardown = false;
-					}
+				var resourcePath = newDialog.get('value');
+				var resource = Resource.createResource(resourcePath);
+				resource.isNew = true;
+				var text = Resource.createText("CSS", {resource:resource});
+				if(text) {
+					resource.setText(text);
 				}
-				return teardown;
+				uiResource.openResource(resource);
 			};
 			Workbench.showModal(newDialog, uiNLS.createNewJSFile, '', executor);
 		},

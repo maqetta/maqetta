@@ -119,6 +119,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._widgetIds = [];
 		this._objectIds = [];
 		this._widgets = [];
+		this._loadedCSSConnects = [];
 		this._chooseParent = new ChooseParent({context:this});
 		this.sceneManagers = {};
 
@@ -128,6 +129,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var library = metadata.getLibrary(libId);
 			args = [this];
 			metadata.invokeCallback(library, 'onDocInit', args);
+		}
+	},
+	
+	destroy: function () {
+		
+		this.inherited(arguments);
+		if (this._loadedCSSConnects) {
+			dojo.forEach(this._loadedCSSConnects, dojo.disconnect);
+			delete 	this._loadedCSSConnects;
 		}
 	},
 
@@ -1606,9 +1616,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			var beforeChild = isAppCss ? undefined : appCssImport;
 			this.model.addStyleSheet(url, undefined, undefined, beforeChild);
+			
 			for (var css in this.model._loadedCSS) {
-				dojo.connect(this.model._loadedCSS[css], 'onChange', this,
-						'_themeChange');
+				this._loadedCSSConnects.push(dojo.connect(this.model._loadedCSS[css], 'onChange', this,
+						'_themeChange'));
 			}
 		}
 	},
@@ -3048,7 +3059,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// Connect to the css files, so we can update the canvas when
 				// the model changes.
 				this._getCssFiles().forEach(function(file) {
-					dojo.connect(file, 'onChange', this, '_themeChange');
+					this._loadedCSSConnects.push(dojo.connect(file, 'onChange', this, '_themeChange'));
 				}, this);
 
 				break;

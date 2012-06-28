@@ -230,7 +230,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	    this.fileName = filename;
 	    this.htmlEditor.setContent(filename,content);
 		this.visualEditor.setContent(filename, this.htmlEditor.model, newHtmlParams);
-		dojo.connect(this.htmlEditor.model, "onChange", this, '_themeChange');
+		this._connect(this.htmlEditor.model,"onChange", "_themeChange");
 		// update the source with changes which may have been made during initialization without setting dirty bit
 		this.htmlEditor.setValue(this.model.getText(), true);
 
@@ -242,7 +242,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			this.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.visualEditor.context.hotModifyCssRule(e);
 		}
-	},
+	}, 
 	
 	getDefaultContent: function() {
 		this._isNewFile=true;

@@ -1,11 +1,13 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/xhr",
+	"dojo/_base/connect",
 	"davinci/Runtime",
 	"davinci/model/Model",
 //	"davinci/Workbench",
 	"davinci/model/Path",
 	"davinci/ve/utils/URLRewrite"
-], function(declare, Runtime, Model, /*Workbench,*/ Path, URLRewrite) {
+], function(declare, xhr, connect, Runtime, Model, /*Workbench,*/ Path, URLRewrite) {
 
 return declare("davinci.model.resource.Resource", Model, {
 
@@ -54,16 +56,15 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	rename: function(newName) {
-		var path = new Path(this.getPath()).removeLastSegments();
-		var newPath = path.append(newName);
-		var response = Runtime.serverJSONRequest({
-			url:"cmd/rename", 
-			handleAs:"text", 
-			sync:true,
-			content:{oldName:this.getPath(), newName: newPath.toString()} 
-		});
-		this.name = newName;
-		dojo.publish("/davinci/resource/resourceChanged", ["renamed", this]);
+		var newPath = new Path(this.getPath()).removeLastSegments().append(newName);
+		return xhr.get({
+			url: "cmd/rename", 
+			handleAs: "text", 
+			content: {oldName: this.getPath(), newName: newPath.toString()} 
+		}).then(function() {
+			this.name = newName;
+			connect.publish("/davinci/resource/resourceChanged", ["renamed", this]);
+		}.bind(this));
 	},
 
 	getParentFolder: function() {

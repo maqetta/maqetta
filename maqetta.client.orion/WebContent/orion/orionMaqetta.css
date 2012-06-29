@@ -1,8 +1,10 @@
 .orionIcon {
-	background-image: url(../../../images/orion-small.gif); /* FIXME: add logic for new_document-disabled.gif? */
 	background-repeat: no-repeat;
 
 	width: 43px;
 	height: 14px;
+	background-image: url("../../../images/core_sprites.png");
+    background-position: 0 -517px;
+    
 
 }

@@ -40,7 +40,9 @@ public class OrionUserManager extends UserManagerImpl {
         }
     }
 
-   
+   protected void initWorkspace(){
+	   // noop for orion
+   }
 
     protected boolean checkUserExists(String userName) {
     
@@ -100,17 +102,20 @@ public class OrionUserManager extends UserManagerImpl {
 		String user = null;
 		try {
 			user = authenticationService.getAuthenticatedUser(req, null, authProperties);
-			if(user!=null)
-				this.personManager.addPerson(user, null, null);
+			if(user!=null){
+				return newUser(this.personManager.addPerson(user, null, null), null);
+			
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch (UserException e) {
 			e.printStackTrace();
 		}
-		if(user==null) return null;
 		
-		return getUser(user);
+		return null;
+		
+	
 	
 	}
 }

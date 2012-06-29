@@ -141,9 +141,9 @@
 		<replace file="${target.folder}/${davinciPlugin.dojo.profile}" token="metadata" value="${davinciPlugin.metadata.moduleId}"/>
 		
 		<!-- run dojo build tooling -->
-		<java fork="true" resultproperty="returnCode" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
+		<java fork="true" resultproperty="returnCode" failonerror="false" output="${logFile}" append="true" dir="${basedir}/../maqetta.core.client/WebContent/util/buildscripts"
 			    maxmemory="1024m"
-				classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
+				classpath="${basedir}/../maqetta.core.client/WebContent/util/shrinksafe/js.jar"
 				classname="org.mozilla.javascript.tools.shell.Main"
 				description="Run Dojo build script"
 				>

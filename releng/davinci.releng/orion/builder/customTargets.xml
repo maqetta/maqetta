@@ -56,6 +56,21 @@ lastMapTag=${mapsTagTag}
 		</p2.mirror>
 	</target>
 
+	
+	
+	<!-- git submodules update for the maqetta repo -->
+	<target name="updateSubmodules">
+			<property name='gitRepoFolder' value="${base}/gitClones/https___github_com_maqetta_maqetta_git"/>
+			<echo message="Updating git submodule in ${gitRepoFolder}"/>
+			<exec executable = "git" dir = "${gitRepoFolder}">
+			     <arg value = "submodule" />
+				 <arg value = "update" />
+				 <arg value = "--init" />
+			  </exec>
+	</target>
+	
+	
+	
 	<!-- ===================================================================== -->
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
@@ -63,7 +78,7 @@ lastMapTag=${mapsTagTag}
 
 	    <!-- emf needs to be part of the "runnable" target, since Eclipse wants to "require" EMF, 
 	         not "include" it -->
-	            
+	     
 		<echo message="Mirror from ${emfRepoURL} to ${localRepoLocation}" />
 		<p2.mirror destination="file:${localRepoLocation}" ignoreerrors="true">
 			<source location="${emfRepoURL}" />
@@ -94,6 +109,9 @@ lastMapTag=${mapsTagTag}
 	</target>
 
 	<target name="postFetch">
+		
+		 <antcall target="updateSubmodules"/>     
+		
 		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
 			<replacefilter token="HEAD" value="${buildLabel}" />
 			<replacefilter token="origin/mls -alaster" value="${buildLabel}" />

@@ -232,24 +232,7 @@
 					</fileset>
 		</copy>
 	</target>
-	<!--
-	<target name="updateSubmodules">
-		<property name='gitRepoFolder' value="${target.folder}../"/>
-		
-		<echo message="Updating git submodule in ${gitRepoFolder}"/>
-		
-		 <exec executable = "git" dir = "${gitRepoFolder}">
-		      <arg value = "submodule init" />
-		      <args/>
-		  </exec>
 	
-		 <exec executable = "git" dir = "${gitRepoFolder}">
-		      <arg value = "submodule update" />
-		      <args/>
-		 </exec>
-		
-	</target>
-	-->
 	<target name="copy.dojo" if="${run.dojo.build}">
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>

@@ -20,6 +20,7 @@ import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
+import org.maqetta.server.ServerManager;
 
 public class OrionUserManager extends UserManagerImpl {
 
@@ -29,8 +30,14 @@ public class OrionUserManager extends UserManagerImpl {
 
 
     public OrionUserManager() {
-    	super();
+    	ServerManager serverManger = ServerManager.getServerManger();
+    	this.personManager = ServerManager.getServerManger().getPersonManager();
         authenticationService = ConfiguratorActivator.getDefault().getAuthService();
+
+        String maxUsersStr = serverManger.getDavinciProperty(IDavinciServerConstants.MAX_USERS);
+        if (maxUsersStr != null && maxUsersStr.length() > 0) {
+            this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
+        }
     }
 
    

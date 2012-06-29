@@ -63,15 +63,10 @@ lastMapTag=${mapsTagTag}
 			<property name='gitRepoFolder' value="${base}/gitClones/https___github_com_maqetta_maqetta_git"/>
 			<echo message="Updating git submodule in ${gitRepoFolder}"/>
 			<exec executable = "git" dir = "${gitRepoFolder}">
-			      <arg value = "submodule" />
-			 	  <arg value = "init" />
-			      
+			     <arg value = "submodule" />
+				 <arg value = "update" />
+				 <arg value = "--init" />
 			  </exec>
-		
-		    <exec executable = "git" dir = "${gitRepoFolder}">
-		      <arg value = "submodule" />
-		 	  <arg value = "update" />
-		  </exec>			
 	</target>
 	
 	

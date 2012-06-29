@@ -17,7 +17,7 @@ return declare(HorizontalSliderInput, {
 	
 	_getDialogDimensions: function() {
 		return { 
-			"width": 550,
+			"width": 610,
 			"height": 350
 		};
 	},

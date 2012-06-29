@@ -99,7 +99,7 @@
 	<target name="pre.gather.bin.parts">
 	</target>
 	
-	<target name="davinciPlugin.build" if="run.dojo.build" unless="davinciPlugin.build.exists">
+	<target name="davinciPlugin.build" if="${run.dojo.build}" unless="davinciPlugin.build.exists">
 		<echo message="Doing ${davinciPlugin.id} build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
@@ -198,7 +198,7 @@
 	</target>
 	
 	<!-- copy from the build cache back into the plug-ins working directory-->
-	<target name="copy.davinciPlugin" if="run.dojo.build">
+	<target name="copy.davinciPlugin" if="${run.dojo.build}">
 		<antcall target="copy.davinciPlugin.library"/>
 		<antcall target="copy.davinciPlugin.metadata"/>
 	</target>

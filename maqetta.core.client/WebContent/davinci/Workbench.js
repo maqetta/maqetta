@@ -643,13 +643,15 @@ var Workbench = {
 	},
 
 	showModal: function(content, title, style, callback) {
+		var handles = [];
+
 		var myDialog = new ResizeableDialog({
 			title: title,
 			content: content,
 			contentStyle: style
 		});
 
-		var handle = dojo.connect(myDialog, "onExecute", content, function() {
+		handles.push(dojo.connect(myDialog, "onExecute", content, function() {
 			var cancel = false;
 			if (callback) {
 				cancel = callback();
@@ -659,18 +661,25 @@ var Workbench = {
 				return;
 			}
 
-			dojo.disconnect(handle);
-			dojo.disconnect(handle2);
+			dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
 
 			myDialog.destroyRecursive();
-		});
+		}));
 
-		var handle2 = dojo.connect(content, "onClose", content, function() {
-			dojo.disconnect(handle);
-			dojo.disconnect(handle2);
+		function _destroy() {
+			dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
 
 			myDialog.destroyRecursive();
-		});
+		}
+
+		handles.push(dojo.connect(content, "onClose", function() {
+			_destroy();
+		}));
+
+		// handle the close button
+		handles.push(dojo.connect(myDialog, "onCancel", function() {
+			_destroy();
+		}));
 
 		myDialog.show();
 
@@ -684,10 +693,11 @@ var Workbench = {
 
 	// OK/Cancel dialog with a settable okLabel
 	showDialog: function(title, content, style, callback, okLabel, hideCancel) {
-		var myDialog, handle;
+		var myDialog;
+		var handles = [];
 
 		function _onCancel() {
-			dojo.disconnect(handle);
+			dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
 
 			myDialog.destroyRecursive();
 		}
@@ -719,15 +729,18 @@ var Workbench = {
 			content: newContent,
 			contentStyle: style
 		});
-		var handle;
 
-		var handle = dojo.connect(myDialog, "onExecute", function() {
+		handles.push(dojo.connect(myDialog, "onExecute", function() {
 			if (callback) {
 				callback();
 			}
 
 			_onCancel();
-		});
+		}));
+
+		handles.push(dojo.connect(myDialog, "onCancel", function() {
+			_onCancel();
+		}));
 
 		myDialog.show();
 

@@ -564,8 +564,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// dojox.mobile specific CSS file handling
 
         var dm = lang.getObject("dojox.mobile", false, this.getGlobal());
-        if(dm && dm.loadDeviceTheme) {
-        	dm.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
+        if(dm && dm.deviceTheme && dm.deviceTheme.loadDeviceTheme) {
+        	dm.deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
         }
 	},
 
@@ -3072,13 +3072,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// monitoring of which stylesheets get loaded for a given theme
 
 		var dm = lang.getObject("dojox.mobile", true, this.getGlobal());
-		dm.configDeviceTheme = function() {
-			var loadDeviceTheme = dm.loadDeviceTheme;
-
-			dm.loadDeviceTheme = function(device) {
+		if (dm && dm.deviceTheme) {
 				var djConfig = this.getDojo().config,
 					djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
-					ua = device || djConfig.mblUserAgent || 'none',
+					ua = /*device ||*/ djConfig.mblUserAgent || 'none',
 					themeMap,
 					themeFiles;
 
@@ -3098,10 +3095,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 				this._addCssForDevice(ua, themeMap, this);
 
-				// set/unset themeMap & themeFiles in VE DOM
-				// XXX This won't work for Dojo 1.8, will need to set `themeMap` on
-				//     Dojo config obj and reload VE iframe.
-				dm.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+				dm.deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
 				if (themeFiles) {
 					djConfig.mblThemeFiles = themeFiles;
 				} else {
@@ -3113,12 +3107,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					this.onSelectionChange(this._selection);
 				}
 
-				loadDeviceTheme(device);
-			}.bind(this);
-
-			// This is a call-once function
-			delete dm.configDeviceTheme;
-		}.bind(this);
+				dm.deviceTheme.loadDeviceTheme(ua/*device*/);
+		}
 
 		// Set mobile device CSS files
 		var mobileDevice = this.getMobileDevice();

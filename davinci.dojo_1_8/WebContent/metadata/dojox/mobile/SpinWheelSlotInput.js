@@ -2,7 +2,6 @@ define([
 	"dojo/_base/declare",
 	"dijit/form/_TextBoxMixin",
 	"davinci/ve/input/SmartInput",
-	"davinci/ui/ErrorDialog",
 	"davinci/Workbench",
 	"davinci/ve/commands/ModifyCommand",
 	"dojo/i18n!../nls/dojox"
@@ -10,7 +9,6 @@ define([
 	declare,
 	_TextBoxMixin,
 	SmartInput,
-	ErrorDialog,
 	Workbench,
 	ModifyCommand,
 	dojoxNls
@@ -62,8 +60,7 @@ return declare(SmartInput, {
 			} else {
 				var content = this.getHelpText();
 				var title = 'Invalid Value';
-				var errorDialog = new ErrorDialog({errorText: content});
-				Workbench.showModal(errorDialog, title);
+				Workbench.showMessage(title, content);
 				return;
 			}
 		}

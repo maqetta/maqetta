@@ -102,8 +102,15 @@ public class PersonManagerImpl implements IPersonManager {
 
     }
 
+    protected IStorage getBaseDirectory(){
+    	if(this.baseDirectory==null){
+    		this.baseDirectory = ServerManager.getServerManger().getBaseDirectory();	
+    	}
+    	return this.baseDirectory;
+    }
+    
     public PersonManagerImpl() {
-    	this.baseDirectory = ServerManager.getServerManger().getBaseDirectory();
+    	
     	loadUsers();
     }
     
@@ -175,7 +182,8 @@ public class PersonManagerImpl implements IPersonManager {
     }
 
     protected void loadUsers() {
-        IStorage userFile =this.baseDirectory.newInstance(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
+    	IStorage baseDirectory = getBaseDirectory();
+        IStorage userFile = baseDirectory.newInstance(baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         if (userFile.exists()) {
             new UsersFile().load(userFile);
 
@@ -183,7 +191,8 @@ public class PersonManagerImpl implements IPersonManager {
     }
 
     protected void savePersons() {
-        IStorage userFile = this.baseDirectory.newInstance(this.baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
+    	IStorage baseDirectory = getBaseDirectory();
+        IStorage userFile = baseDirectory.newInstance(baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         new UsersFile().save(userFile, this.persons.values());
     }
 

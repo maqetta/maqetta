@@ -82,4 +82,4 @@ echo Using directory: "$absusersdir"
 
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
-java -Dorion.core.configFile=${scriptdir}//maqetta.conf -Dorg.eclipse.equinox.http.jetty.http.port=$port -jar "$jarFilePath" $consolePort -noExit
+java -Dorion.core.configFile=${scriptdir}//maqetta.conf "-Dmaqetta.baseDirectory=$absusersdir" -Dorg.eclipse.equinox.http.jetty.http.port=$port -jar "$jarFilePath" $consolePort -noExit

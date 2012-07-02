@@ -137,7 +137,11 @@ public class OrionPersonManager extends PersonManagerImpl {
 	        }
 	        return match;
 	    }
-
+	    
+	    /* no need to load the users */
+	    protected void loadUsers(){
+	    	
+	    }
 	    public IPerson[] getPersons(String userName, int resultNumber, int start) {
 	        HashMap<String, IPerson> users = new HashMap<String, IPerson>();
 	        Set<String> names = persons.keySet();

@@ -20,6 +20,7 @@ import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
+import org.maqetta.server.ServerManager;
 
 public class OrionUserManager extends UserManagerImpl {
 
@@ -29,11 +30,19 @@ public class OrionUserManager extends UserManagerImpl {
 
 
     public OrionUserManager() {
-    	super();
+    	ServerManager serverManger = ServerManager.getServerManger();
+    	this.personManager = ServerManager.getServerManger().getPersonManager();
         authenticationService = ConfiguratorActivator.getDefault().getAuthService();
+
+        String maxUsersStr = serverManger.getDavinciProperty(IDavinciServerConstants.MAX_USERS);
+        if (maxUsersStr != null && maxUsersStr.length() > 0) {
+            this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
+        }
     }
 
-   
+   protected void initWorkspace(){
+	   // noop for orion
+   }
 
     protected boolean checkUserExists(String userName) {
     
@@ -93,17 +102,20 @@ public class OrionUserManager extends UserManagerImpl {
 		String user = null;
 		try {
 			user = authenticationService.getAuthenticatedUser(req, null, authProperties);
-			if(user!=null)
-				this.personManager.addPerson(user, null, null);
+			if(user!=null){
+				return newUser(this.personManager.addPerson(user, null, null), null);
+			
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch (UserException e) {
 			e.printStackTrace();
 		}
-		if(user==null) return null;
 		
-		return getUser(user);
+		return null;
+		
+	
 	
 	}
 }

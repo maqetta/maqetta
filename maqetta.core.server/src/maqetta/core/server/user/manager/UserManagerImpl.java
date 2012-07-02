@@ -32,18 +32,9 @@ public class UserManagerImpl implements IUserManager {
 
     public UserManagerImpl() {
     	ServerManager serverManger = ServerManager.getServerManger();
-    	try{
-        	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
-        	this.usersCount = this.baseDirectory.list().length;
-    	}catch(Exception ex){
-    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
-    		
-    	}
-        if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-            System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
-        }
-        System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
 
+    	initWorkspace();
+    	
         String maxUsersStr = serverManger.getDavinciProperty(IDavinciServerConstants.MAX_USERS);
         if (maxUsersStr != null && maxUsersStr.length() > 0) {
             this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
@@ -53,6 +44,19 @@ public class UserManagerImpl implements IUserManager {
 
     }
 
+    protected void initWorkspace(){
+    	ServerManager serverManger = ServerManager.getServerManger();
+    	try{
+        	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
+        	this.usersCount = this.baseDirectory.list().length;
+    	}catch(Exception ex){
+    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
+    		
+    	}
+    	 if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+             System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
+         }
+    }
     /*
      * (non-Javadoc)
      * 

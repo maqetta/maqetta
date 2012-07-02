@@ -26,8 +26,19 @@ return declare("davinci.ve.actions.CutAction", [ContextAction], {
 					if(d){
 						data.push(d);
 					}
-					command.add(new RemoveCommand(w));
+					var helper = w.getHelper();
+					var c;
+					if(helper && helper.getRemoveCommand) {
+						c = helper.getRemoveCommand(w);
+						
+					} else {
+						c = new RemoveCommand(w);
+					}
+					command.add(c /*new RemoveCommand(w)*/);
 				});
+				
+				
+				
 				davinci.Runtime.clipboard=data;
 				context.select(null);
 				context.getCommandStack().execute(command);

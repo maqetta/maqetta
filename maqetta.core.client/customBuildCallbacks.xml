@@ -263,7 +263,7 @@
 	<!-- ===================================================================== -->
 	<target name="post.gather.bin.parts">
 		
-        <echo message="Inserting git describe information"/>
+		<echo message="Inserting git describe information"/>
         <antcall target="update.revisions"/>
         <antcall target="update.repositoryinfo.js"/>
 		

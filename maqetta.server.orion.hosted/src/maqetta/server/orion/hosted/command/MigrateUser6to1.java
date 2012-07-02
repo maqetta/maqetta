@@ -40,6 +40,7 @@ public class MigrateUser6to1 extends Command {
     			migrateUser(user);
     			user.rebuildWorkspace();
     			this.responseString="OK";
+    			return;
     			
     	}
     	this.responseString="WORKSPACE_EXISTS";

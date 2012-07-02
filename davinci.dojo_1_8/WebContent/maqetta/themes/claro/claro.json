@@ -31,7 +31,7 @@
 						".claro .dijitTabContent": [
 							"border-color"
 						],
-						".claro .dijitTabPaneWrapper": [
+						".claro .dijitTabPaneWrapper, .claro .dijitTabContainerTop-tabs, .claro .dijitTabContainerBottom-tabs, .claro .dijitTabContainerLeft-tabs, .claro .dijitTabContainerRight-tabs": [
 							"border-color"
 						],
 						".claro .globalWidget .dijitTabContent": [
@@ -97,11 +97,13 @@
 				},
 				"Active": {
 					"selectors": {
-						".claro .globalWidget .dijitTabActive .dijitTabInnerDiv": [
-							"background-color"
+						".claro .globalWidget .dijitTabActive": [
+							"background-color",
+							"border-color"
 						],
-						".claro .dijitTabActive .dijitTabInnerDiv": [
-							"background-color"
+						".claro .dijitTabActive": [
+							"background-color",
+							"border-color"
 						],
 						".claro .dijitAccordionInnerContainerActive": [
                     		"border-color",
@@ -135,17 +137,13 @@
 				},
 				"Checked": {
 					"selectors": {
-						".claro .globalWidget .dijitTabChecked .dijitTabInnerDiv" : [
-							"background-color" 
+						".claro .globalWidget .dijitTabChecked" : [
+							"background-color",
+							"border-color" 
 						],
-						".claro .globalWidget .dijitTabChecked .dijitTabContent": [
-							"border-color"
-						],
-						".claro .dijitTabChecked .dijitTabInnerDiv" : [
-							"background-color" 
-						],
-						".claro .dijitTabChecked .dijitTabContent": [
-							"border-color"
+						".claro .dijitTabChecked" : [
+							"background-color",
+							"border-color" 
 						]
 						
 					},
@@ -162,16 +160,12 @@
                             "background-color",
 							"border-color"
                         ],
-						".claro .globalWidget .dijitTabHover .dijitTabInnerDiv" : [
-							"background-color"
-						],
-						".claro .globalWidget .dijitTabHover .dijitTabContent": [ 
+						".claro .globalWidget .dijitTabHover" : [
+							"background-color",
 							"border-color"
 						],
-						".claro .dijitTabHover .dijitTabInnerDiv" : [
-							"background-color"
-						],
-						".claro .dijitTabHover .dijitTabContent": [ 
+						".claro .dijitTabHover" : [
+							"background-color",
 							"border-color"
 						],
 						".claro .dijitButtonHover .dijitButtonNode" : [
@@ -1342,10 +1336,18 @@
                     "states": {
                         "Normal": {
                             "selectors": {
-                                ".claro .dijitTabInnerDiv" : [
+                           		 ".claro .dijitTab" : [
+                                	"border",
+                                	"border-color",
+                                	"border-width",
+                                	"border-style",
 									"background-color",
 									"-webkit-transition-property",
+									"-moz-transition-property",
+									"transition-property",
 									"-webkit-transition-duration",
+									"-moz-transition-duration",
+									"transition-duration",									
 									"color",
 									"font-style",
 									"font-family",
@@ -1391,7 +1393,7 @@
 									"border-style",
                                     "border-color"
 								],
-								".claro .dijitTabPaneWrapper": [
+								".claro .dijitTabPaneWrapper, .claro .dijitTabContainerTop-tabs, .claro .dijitTabContainerBottom-tabs, .claro .dijitTabContainerLeft-tabs, .claro .dijitTabContainerRight-tabs": [
 									"border-width",
 									"border-style",
                                     "border-color"
@@ -1403,16 +1405,14 @@
                         },
 						"Active": {
                             "selectors": {
-                                ".claro .dijitTabActive .dijitTabInnerDiv": [
+                                ".claro .dijitTabActive": [
                                     "background-color",
 									"color",
 									"font-style",
 									"font-family",
 									"font-size",
 									"font-weight",
-									"-webkit-transition-duration"
-								],
-								".claro .dijitTabActive .dijitTabContent": [
+									"-webkit-transition-duration",
 									"border-color"
 								]
 							},
@@ -1421,26 +1421,21 @@
                         },
                         "Selected": {
                             "selectors": {
-                                ".claro .dijitTabChecked .dijitTabInnerDiv": [
+                                ".claro .dijitTabChecked": [
                                     "background-color",
 									"color",
 									"font-style",
 									"font-family",
 									"font-size",
-									"font-weight"
-                                ],
-								".claro .dijitTabChecked .dijitTabContent": [
-									"color",
+									"font-weight",
 									"border-color"
-								],
-								".claro .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabContent": [
+                                ],
+								".claro .dijitTabContainerTop-tabs .dijitTabChecked": [
 									"padding-bottom",
 									"padding-top",
 									"background-image",
 									"background-position",
-									"background-repeat"
-								],
-								".claro .dijitTabContainerTop-tabs .dijitTabChecked .dijitTabInnerDiv": [
+									"background-repeat",
 									"box-shadow",
 									"-webkit-box-shadow",
 									"-moz-box-shadow"
@@ -1451,8 +1446,9 @@
                         },
                         "Hover": {
                             "selectors": {
-                                ".claro .dijitTabHover .dijitTabInnerDiv" : [
+                                ".claro .dijitTabHover" : [
                                     "background-color",
+                                    "border-color",
 									"-webkit-transition-duration",
 									"color",
 									"font-style",
@@ -1486,7 +1482,7 @@
 					"states": {
 						"Normal": {
 							"selectors": {
-								".claro .dijitTabPaneWrapper": [
+								".claro .dijitTabPaneWrapper, .claro .dijitTabContainerTop-tabs, .claro .dijitTabContainerBottom-tabs, .claro .dijitTabContainerLeft-tabs, .claro .dijitTabContainerRight-tabs": [
 									/*"display",*/
 									"overflow",
 									"position",

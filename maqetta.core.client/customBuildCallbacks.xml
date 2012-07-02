@@ -175,7 +175,7 @@
 	</target>
 	
 	
-	<target name="dojo.build" if="run.dojo.build" unless="dojo.build.exists">
+	<target name="dojo.build" if="${run.dojo.build}" unless="dojo.build.exists">
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
@@ -233,7 +233,7 @@
 		</copy>
 	</target>
 	
-	<target name="copy.dojo" if="run.dojo.build">
+	<target name="copy.dojo" if="${run.dojo.build}">
 		<delete dir="${target.folder}/WebContent/util"/>
 		<delete dir="${target.folder}/WebContent/dojo"/>
 		<delete dir="${target.folder}/WebContent/dijit"/>

@@ -40,6 +40,8 @@ define(["dojo/_base/declare",
 			if(!this._value){
 				this._setRootAttr(this._getRootAttr());
 			}
+
+			this.okButton.onClick = dojo.hitch(this, this._okButton);
 		},
 		
 		
@@ -91,7 +93,14 @@ define(["dojo/_base/declare",
 			this._okButton.set( 'disabled', !valid);
 		},
 		_okButton : function(){
-			this.value = this.fileDialogParentFolder.innerHTML + "/" + this.folderName.get( 'value');			
+			this.value = this.fileDialogParentFolder.innerHTML + "/" + this.folderName.get( 'value');		
+
+			var check = this.checkFileName(this.value);
+			if (check) {
+				return true
+			} else {
+				return false;
+			}
 		},
 		
 		_getValueAttr : function(){

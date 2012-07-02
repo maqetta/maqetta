@@ -57,7 +57,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		if (!this.existed) {
 			// Ensure that the comment is created on the server when it is "newed".
 			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-			dojo.xhrPost({
+			dojo.xhrGet({
 				url: location + "maqetta/cmd/addComment",
 				handleAs: "json",
 				content: {

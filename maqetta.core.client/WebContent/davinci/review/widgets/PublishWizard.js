@@ -681,7 +681,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var emails = "";
 		var i;
 		for (i=0;i<this.userData.length;i++) {
-			emails = emails+ this.userData[i].email+",";
+			emails = emails+ this.userData[i].email; //AWE TODO +",";
 		}
 		var messageTextarea = this.descriptions;
 		var message = messageTextarea.value;

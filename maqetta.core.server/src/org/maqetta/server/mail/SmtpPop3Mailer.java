@@ -49,11 +49,12 @@ public class SmtpPop3Mailer {
 		adminName = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);
 		password = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_PASSWORD);
 		
-		String[] mailSplit = defaultMailServer.split(":");
-		
-		if(mailSplit.length == 2){
-			defaultMailServer = mailSplit[0];
-			port = mailSplit[1];
+		if (defaultMailServer != null && !"".equals(defaultMailServer)) {
+			String[] mailSplit = defaultMailServer.split(":");
+			if(mailSplit.length == 2){
+				defaultMailServer = mailSplit[0];
+				port = mailSplit[1];
+			}
 		}
 		if(defaultMailServer == null || "".equals(defaultMailServer)){
 			// Read it from the contributor bundle

@@ -163,7 +163,7 @@ public class Publish extends Command {
 		if( ServerManager.getServerManger().sendEmail(from, to, subject, htmlContent) ){
 			this.responseString = "OK";
 		}else{
-			this.responseString = "Email send failure";
+			this.responseString = htmlContent;
 		}
 	
 	}

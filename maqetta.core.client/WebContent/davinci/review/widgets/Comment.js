@@ -200,7 +200,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		// Indicate that this is a change of the comment status (open/close)
 		var updateStatus = arg && arg.statusChanged;
 		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
-		dojo.xhrPost({
+		dojo.xhrGet({
 			url: location + "maqetta/cmd/updateComment",
 			handleAs: "json",
 			content: {

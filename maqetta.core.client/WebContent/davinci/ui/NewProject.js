@@ -63,10 +63,9 @@ define(["dojo/_base/declare",
 				Preferences.savePreferences('davinci.ui.ProjectPrefs',newProjectName, prefValue);
 			}
 			
-			if(Workbench.singleProjectMode())
+			if (Workbench.singleProjectMode()) {
 				Workbench.loadProject(newProjectName);
-			
-			this.onClose();
+			}
 		},
 		
 		_getEclipseProjectAttr : function(){

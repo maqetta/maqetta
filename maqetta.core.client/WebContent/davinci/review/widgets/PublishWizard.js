@@ -681,7 +681,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var emails = "";
 		var i;
 		for (i=0;i<this.userData.length;i++) {
-			emails = emails+ this.userData[i].email; //AWE TODO +",";
+			emails = emails+ this.userData[i].email+",";
 		}
 		var messageTextarea = this.descriptions;
 		var message = messageTextarea.value;
@@ -695,25 +695,29 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		});
 		var receiveEmail = this.receiveEmail.get("value") == "on" ? "true" : "false";
 
+		//Build up args for the xhrPost
+		var urlParms = {
+			isUpdate: this.node && !this.isRestart,
+			isRestart: this.isRestart,
+			vTime: this.node ? this.node.timeStamp : null,
+			emails:emails,
+			message:message,
+			versionTitle:versionTitle,
+			resources :resources,
+			desireWidth:desireWidth,
+			desireHeight:desireHeight,
+			savingDraft:value,
+			dueDate:dueDateString,
+			receiveEmail:receiveEmail
+		};
+		var urlParmsQueryStr = dojo.objectToQuery(urlParms);
 		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
+		
+		//Do the POST
 		dojo.xhrPost({
-			url: location + "maqetta/cmd/publish",
+			url: location + "maqetta/cmd/publish" + "?" + urlParmsQueryStr,
 			sync:false,
 			handleAs:"text",
-			content:{
-				isUpdate: this.node && !this.isRestart,
-				isRestart: this.isRestart,
-				vTime: this.node ? this.node.timeStamp : null,
-				emails:emails,
-				message:message,
-				versionTitle:versionTitle,
-				resources :resources,
-				desireWidth:desireWidth,
-				desireHeight:desireHeight,
-				savingDraft:value,
-				dueDate:dueDateString,
-				receiveEmail:receiveEmail
-			},
 			error: function(response) {
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));

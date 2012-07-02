@@ -7,29 +7,30 @@ define([
 return declare("davinci.ve.actions.RemoveState", [Action], {
 
 	run: function(context){
-		var widget = this.getWidget();
+		var node = this.getNode();
 		var state = this.getState(arguments[1] || arguments[0]);
-		davinci.ve.states.remove(widget.domNode, state);
+		davinci.ve.states.remove(node, state);
 	},
 
 	isEnabled: function(context){
-		return this.getWidget();
+		return this.getNode();
 	},
 
 	shouldShow: function(context){
-		return this.getWidget();
+		return this.getNode();
 	},
 	
-	getWidget: function(widget) {
-		if (!widget) {
-			widget = davinci.ve.states.getContainer();
+	getNode: function(node) {
+		if (!node) {
+			node = davinci.ve.states.getContainer();
 		}
-		return widget;
+		return node;
 	},
 	
 	getState: function(state) {
+		var node = this.getNode();
 		if (!state || typeof state != "string") {
-			state = davinci.ve.states.getState();
+			state = davinci.ve.states.getState(node);
 		}
 		return state;
 	}

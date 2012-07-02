@@ -29,6 +29,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged));
+		dojo.subscribe("/maqetta/appstates/state/changed", dojo.hitch(this, this._stateChanged));
 	},
 
 	pageTemplate : [

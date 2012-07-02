@@ -1246,9 +1246,11 @@ davinci_top_bar .dijitButtonNode {
 	white-space:nowrap;
 	overflow:hidden;
 }
+/*FIXME: OLD LOGIC
 .StatesViewTree .dijitTreeExpando {
 	display:none;
 }
+*/
 .ReviewToolBarText {
 	background-color: ##ffffe0;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8e8), to(#ffffcc)); 
@@ -1299,3 +1301,20 @@ davinci_top_bar .dijitButtonNode {
 .contentassist .selected {
         background-color: #ddd;
 }
+
+.ScenesPaletteCheckBox {
+	float:right;
+	margin-right:5px;
+}
+.ScenesPaletteCheckBox.ScenesPaletteCheckBoxHidden {
+	display:none;
+}
+.ScenesPaletteCheckBox.ScenesPaletteCheckBoxFocus {
+	font-weight:bold;
+	border: 1px solid black;
+	border-radius: 20px;
+	width: 1.1em;
+	height: 1.1em;
+	line-height: 1.25em;
+	text-align: center;
+}}

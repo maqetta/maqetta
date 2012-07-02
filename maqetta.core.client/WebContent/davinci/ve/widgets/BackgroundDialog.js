@@ -538,12 +538,9 @@ define(["dojo/_base/declare",
 		},
 	
 		okButton : function(){
-			this.cancel = false;
-			this.onClose();
 		},
 		
 		cancelButton : function(){
-			this.cancel = true;
 			this.onClose();
 		}
 	

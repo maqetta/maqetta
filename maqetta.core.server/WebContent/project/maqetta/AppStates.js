@@ -341,7 +341,7 @@ States.prototype = {
 		}
 		var allStateContainerNodes = this.getAllStateContainers(rootNode);
 		for(var i=0; i<allStateContainerNodes.length; i++){
-			maqAppStates = allStateContainerNodes[i]._maqAppStates;
+			var maqAppStates = allStateContainerNodes[i]._maqAppStates;
 			if(maqAppStates && maqAppStates.focus){
 				return { stateContainerNode:allStateContainerNodes[i], state:maqAppStates.focus };
 			}

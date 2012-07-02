@@ -3315,6 +3315,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getStatesScenes: function() {
 		var statesFocus = States.getFocus(this.rootNode);
+		if(!statesFocus){
+			statesFocus = {};
+			statesFocus.stateContainerNode = this.rootNode;
+		}
 		if(typeof statesFocus.state != 'string'){
 			statesFocus.state = States.NORMAL;
 		}

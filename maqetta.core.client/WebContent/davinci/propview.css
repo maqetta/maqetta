@@ -197,13 +197,13 @@
 	margin-top:2px; /* Magically makes buttons line up vertically */
 }
 .propertiesSection .propertyButton.incrementButton {
-	background: url('./img/sprite.png') no-repeat;
+	background: url('img/sprite.png') no-repeat;
 	background-position: -1px -1515px;
 	width: 16px;
 	height: 16px;
 }
 .propertiesSection .propertyButton.decrementButton {
-	background: url('./img/sprite.png') no-repeat;
+	background: url('img/sprite.png') no-repeat;
 	background-position: -1px -583px;
 	width: 16px;
 	height: 16px;
@@ -218,7 +218,7 @@
 	margin-top:-4px; /* Webkit layout is 2px different than Mozilla */
 }
 .propertiesSection .propertyButton.showCss.showCssVisible{
-	background: url('./img/sprite.png') no-repeat;
+	background: url('img/sprite.png') no-repeat;
 	background-position: -83px -1192px;
 	width: 16px;
 	height: 16px;		
@@ -362,7 +362,7 @@ button.showCss::-moz-focus-inner {
    height:14px;
   background-repeat: no-repeat;
    border-style:none;
-  background-image:url('./img/sprite.png');
+  background-image:url('img/sprite.png');
   background-position: 0 -648px;
   background-color: transparent;
 }

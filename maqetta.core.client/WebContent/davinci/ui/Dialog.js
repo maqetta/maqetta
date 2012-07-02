@@ -79,6 +79,10 @@ return declare("davinci.ui.Dialog", Dialog, {
 				}
 				this.resize(r);
 			}
+
+			// reposition after changing sizes
+			this._position();
+
 //			this.layout();  //TODO: method disappeared in 1.8.0b1
 		}
 

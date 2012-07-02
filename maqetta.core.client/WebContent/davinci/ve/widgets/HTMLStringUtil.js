@@ -115,8 +115,9 @@ define(["davinci/Runtime",
 					return text;
 					/*todo - write color chooser widget */
 				case "background":
-					var valuesText = dojo.isArray(jsonString.values) ? " data='" + dojo.toJson(jsonString.values) + "'" : "";		
-					var propNameText = " propname='" + (dojo.isArray(jsonString.target) ? dojo.toJson(jsonString.target) : jsonString.target) + "'";
+					var valuesText = dojo.isArray(jsonString.values) ? " data='" + dojo.toJson(jsonString.values) + "'" : "";
+					var propName = dojo.isArray(jsonString.target) ? jsonString.target[0] : jsonString.target;
+					var propNameText = " propname='" + propName + "'";
 					var swatchText = jsonString.colorswatch ? " colorswatch='true'" : '';
 					var text="<div dojoType='davinci.ve.widgets.Background' id='" + id + "'" + valuesText + propNameText + swatchText + "></div>";
 					return text;		

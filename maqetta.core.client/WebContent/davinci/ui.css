@@ -23,7 +23,7 @@
 
 .projectToolbarRenameIcon {
 	/* same as redo icon for now */
-	background-image: url(./img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
 	background-position: -82px -728px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -32,7 +32,7 @@
 
 
 .projectToolbarDeleteIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
 	background-position: 0 -648px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -110,21 +110,21 @@
 }
 
 .downloadAllIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: 0 -1060px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .userLibIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: -82px -132px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .downloadSomeIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: 0 -994px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -132,7 +132,7 @@
 }
 
 .saveIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for save_edit-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for save_edit-disabled.gif? */
 	background-position: -82px -993px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -140,7 +140,7 @@
 }
 
 .saveAsIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for saveas-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for saveas-disabled.gif? */
 	background-position: -82px -1059px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -148,14 +148,14 @@
 }
 
 .saveAsDijitIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: -82px -927px;
 	width: 16px;
 	height: 16px;
 }
 
 .selectThemeIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
 	background-position: -82px -1257px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -163,20 +163,20 @@
 }
 
 .selectLayoutIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
 	background-position: 0 -1250px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .stickynoteIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
 	background-position: 0 -66px;
 	width: 16px;
 	height: 16px;
 }
 .rotateIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: -82px -860px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -186,21 +186,21 @@
 	background-position: -82px -878px;
 }
 .deviceIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: 0 -780px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .undoIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
 	background-position: -82px -1389px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .redoIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
 	background-position: -82px -728px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -209,7 +209,7 @@
 
 .renameIcon {
 	/* same as redo icon for now */
-	background-image: url(./img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
 	background-position: -82px -728px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -218,21 +218,21 @@
 
 
 .deleteIcon {
-	background-image: url(./img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
 	background-position: 0 -648px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .printIcon {
-	background-image: url(./img/sprite.png); /* FIXME: Add logic for print-disabled.gif? */
+	background-image: url(img/sprite.png); /* FIXME: Add logic for print-disabled.gif? */
 	background-position: -82px -596px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .openBrowserIcon {
-	background-image: url(./img/sprite.png); /* FIXME: Disabled version? */
+	background-image: url(img/sprite.png); /* FIXME: Disabled version? */
 	background-position: -82px -530px;
 	background-repeat: no-repeat;
 	width: 16px;
@@ -240,63 +240,63 @@
 }
 
 .propertiesDropDownIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: 0 -846px;
 	width: 16px;
 	height: 16px;
 	background-color:#EAEAEA;
 }
 .copyIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: 0 -450px;
 	width: 18px;
 	height: 18px;
 }
 .gotolineIcon {
-	background-image: url(./img/sprite.pgn);
+	background-image: url(img/sprite.pgn);
 	background-position: 0 -1316px;
 	width: 18px;
 	height: 18px;
 }
 
 .closeIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: 0 -384px;
 	width: 18px;
 	height: 18px;
 }
 .formatIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: -82px -1455px;
 	width: 18px;
 	height: 18px;
 }
 .fullScreenIcon {
-	background-image: url(./img/sprint.png);
+	background-image: url(img/sprint.png);
 	background-position: 0 -1184px;
 	width: 18px;
 	height: 18px;
 }
 .htmlFileIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: -82px -1323px;
 	width: 16px;
 	height: 16px;
 }
 .themeFileIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: 0 -1382px;
 	width: 16px;
 	height: 16px;
 }
 .cssFileIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: -82px -1257px;
 	width: 16px;
 	height: 16px;
 }
 img.readOnlyResource + img.treeReadOnlyLabelNode{
-	background-image: url(./img/readonly.png); /* FIXME: add logic for remove-disabled.gif? */
+	background-image: url(img/readonly.png); /* FIXME: add logic for remove-disabled.gif? */
 	
 	background-repeat: no-repeat;
 	width: 6px;
@@ -311,13 +311,13 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	  	
 }
 .jsFileIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: 0 -1580px;
 	width: 16px;
 	height: 16px;
 }
 .imageFileIcon {
-	background-image: url(./img/sprite.png);
+	background-image: url(img/sprite.png);
 	background-position: 0 -1448px;
 	width: 16px;
 	height: 16px;

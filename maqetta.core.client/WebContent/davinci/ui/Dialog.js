@@ -61,8 +61,6 @@ return declare("davinci.ui.Dialog", Dialog, {
 					}
 			}));
 		}
-
-		this._position();
 	},
 
 	show: function() {

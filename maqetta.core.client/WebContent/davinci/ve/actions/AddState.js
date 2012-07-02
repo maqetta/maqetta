@@ -46,8 +46,6 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 
 	onOk: function() {
 		davinci.ve.states.add(this.widget.domNode, this.input.get("value"));
-
-		this.onClose();
 	},
 
 	onCancel: function() {

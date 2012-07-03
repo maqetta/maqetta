@@ -14,7 +14,7 @@ States.prototype = {
 	 * Returns true if the given node has application states (i.e., node._maqAppStates.states has values)
 	 */
 	isStateContainer: function(node){
-		if(node && node._maqAppStates && node._maqAppStates.states && node._maqAppStates.states.length >0){
+		if(node && node._maqAppStates){
 			return true;
 		}else{
 			return false;
@@ -162,8 +162,8 @@ States.prototype = {
 	 */ 
 	getStates: function(node, associative){
 		var states = node && node._maqAppStates;
+		var names = associative ? {"Normal": "Normal"} : ["Normal"];
 		if(states && states.states){
-			var names = associative ? {"Normal": "Normal"} : ["Normal"];
 			var statesList = states.states;
 			for(var i=0; i<statesList.length; i++){
 				var name = statesList[i];
@@ -175,10 +175,8 @@ States.prototype = {
 					}
 				}
 			}
-			return names;
-		}else{
-			return associative ? {} : [];
 		}
+		return names;
 	},
 	
 	/**
@@ -838,7 +836,7 @@ States.prototype = {
 	serialize: function(node) {
 		var that = this;
 		function munge(propval){
-			var str = '';
+			var str = null;
 			if(node[propval]){
 				var o = require("dojo/_base/lang").clone(node[propval]);
 				delete o["undefined"];
@@ -850,6 +848,8 @@ States.prototype = {
 					});
 					// Replace double quotes with single quotes
 					str = str.replace(/"/g, "'");
+				}else{
+					str = '';
 				}
 			}
 			return str;
@@ -859,11 +859,11 @@ States.prototype = {
 			return obj;
 		}
 		var maqAppStates = munge('_maqAppStates');
-		if(maqAppStates){
+		if(typeof maqAppStates == 'string'){
 			obj.maqAppStates = maqAppStates;
 		}
 		var maqDeltas = munge('_maqDeltas');
-		if(maqDeltas){
+		if(typeof maqDeltas == 'string'){
 			obj.maqDeltas = maqDeltas;
 		}
 		return obj;

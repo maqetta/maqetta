@@ -184,6 +184,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
 		this._restoreStates();
+		this._forceAppStatesOnBody();
 		// The initialization of states object for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
@@ -1754,6 +1755,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var focus = stateContainer._maqAppStates.focus;
 				davinci.states.setState(stateContainer._maqAppStates.current, stateContainer, {updateWhenCurrent:true, focus:focus});
 			}
+		}
+	},
+	
+	/**
+	 * Force a data-maq-appstates attribute on the BODY
+	 */
+	_forceAppStatesOnBody: function(){
+		if(!this.rootNode._maqAppStates){
+			this.rootNode._maqAppStates = {};
+			var bodyModelNode = this.rootWidget._srcElement;
+			var o = States.serialize(this.rootNode);
+			bodyModelNode.setAttribute(States.APPSTATES_ATTRIBUTE, o.maqAppStates);
+			this.editor._visualChanged();
 		}
 	},
 

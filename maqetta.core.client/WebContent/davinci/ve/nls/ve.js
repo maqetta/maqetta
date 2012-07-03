@@ -26,9 +26,11 @@ define({ root:
 		"selectAncestorTitle":"Select ancestor",
 		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
 		
-		//actions/StateActions.js
+		//actions/AddState.js, ModifyState.js
 		"createNewState":"Create New State",
 		"createLabel":"Create",
+		"modifyState":"Modify State",
+		"modifyLabel":"Modify",
 		"stateLabel":"State",
 		"enterStateName":"Please enter a state name.",
 		"stateNameExists":"State name '${name}' already exists. Please enter a different state name.",

@@ -1,0 +1,11 @@
+<div>
+	<div class="dijitDialogPaneContentArea">
+		${veNls.stateLabel}: <input dojoAttachPoint="input" dojoType="dijit.form.TextBox" dojoAttachEvent="onKeyUp:_onKeyPress" type="text"></input>
+		<input type="button" dojoType="dijit.form.Button" id="state_rename_button" label="Rename" style="margin-left: 5px;"></input>
+	</div>
+				
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="okButton" dojoAttachEvent='onClick:onOk' disabled label='${veNls.createLabel}' type="submit"></button>
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:onCancel' label='${commonNls.buttonCancel}'></button>
+	</div>
+</div>

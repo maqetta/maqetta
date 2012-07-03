@@ -705,6 +705,10 @@ davinci_top_bar .dijitButtonNode {
 	background-image: url(img/sprite.png);
 	background-position: 0 -1778px;
 }
+.modifyStateIcon {
+	background-image: url(img/sprite.png);
+	background-position: -82px -483px;
+}
 
 .designModeIcon {
 	background-image: url(img/sprite.png);
@@ -1304,10 +1308,10 @@ davinci_top_bar .dijitButtonNode {
 
 .ScenesPaletteCheckBox {
 	float:right;
-	margin-right:5px;
+	margin-right:6px;
 }
 .ScenesPaletteCheckBox.ScenesPaletteCheckBoxHidden {
-	display:none;
+	visibility:hidden;
 }
 .ScenesPaletteCheckBox.ScenesPaletteCheckBoxFocus {
 	font-weight:bold;
@@ -1317,4 +1321,14 @@ davinci_top_bar .dijitButtonNode {
 	height: 1.1em;
 	line-height: 1.25em;
 	text-align: center;
-}}
+}
+.ScenesPaletteInitial {
+	float:right;
+	margin-right:6px;
+	font-size:78%;
+	margin-top:2px;
+}
+.ScenesPaletteInitial.ScenesPaletteInitialHidden {
+	visibility:hidden;
+}
+

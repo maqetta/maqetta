@@ -771,8 +771,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	 * so we can control visibility of the checkbox to indicate currently active scenes
 	 */
 	_treeNodeContent: function(labelSnippet){
-		return '<span><span class="ScenesPaletteCheckBox">&#x2713;</span><span>'+labelSnippet+'</span></span>';
-	},
+		return '<span><span class="ScenesPaletteInitial">&#x2606;</span><span class="ScenesPaletteCheckBox">&#x2713;</span><span>'+labelSnippet+'</span></span>';
+	}, 
 	
 	/**
 	 * Returns the SPAN inside of the TreeNode that corresponds to the given item in the tree

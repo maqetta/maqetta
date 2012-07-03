@@ -1,10 +1,11 @@
 define(["require",
         "dojo/_base/declare",
+        "dojo/_base/xhr",
         "davinci/model/Path",
         "davinci/Runtime", // TODO: remove this
 //        "davinci/Workbench",
         "davinci/model/resource/Folder"
-],function(require, declare, Path, Runtime, Folder){
+],function(require, declare, xhr, Path, Runtime, Folder){
 var Resource = {
 
 	root: null,
@@ -103,11 +104,10 @@ var Resource = {
 	},
 	
 	createProject: function(projectName, initContent, eclipseSupport){
-		Runtime.serverJSONRequest({
+		return xhr.get({
 			url: "cmd/createProject",
 			handleAs: "text",
-			content: {name: projectName, initContent: initContent, eclipseSupport: eclipseSupport},
-			sync: true
+			content: {name: projectName, initContent: initContent, eclipseSupport: eclipseSupport}
 		});
 	},
 	

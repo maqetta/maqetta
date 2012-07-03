@@ -74,7 +74,7 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	isVirtual: function() {
-		return (this.libraryId != null);
+		return !!this.libraryId;
 	},
 
 	visit: function(visitor, dontLoad) {
@@ -102,7 +102,7 @@ return declare("davinci.model.resource.Resource", Model, {
 				});
 
 			if (found) {
-				dojo.publish("/davinci/resource/resourceChanged", ["deleted", this]);
+				connect.publish("/davinci/resource/resourceChanged", ["deleted", this]);
 				dfd.resolve();
 			} else {
 				dfd.reject();

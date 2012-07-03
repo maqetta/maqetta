@@ -92,26 +92,30 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	deleteResource: function(localOnly) {
-		var response="OK";
-		if (!localOnly) {
-			response = davinci.Runtime.serverJSONRequest({
-				url: "cmd/deleteResource", handleAs: "text",
-				content: {path: this.getPath()}, sync: true
-			});
-		}
-		if (response == "OK") {
-			var found=-1;
-			for(var i=0;i<this.parent.children.length && found==-1;i++){
-				if(this.parent.children[i].getName()==this.getName())
+		if (localOnly) {
+			var found = -1,
+				dfd = new Deferred(),
+				children = this.parent.children;
+			children.some(function(child) {
+				if(child.getName()==this.getName()) {
 					found = i;
+				}				
+			}, this);
+
+			if (found == -1) {
+				dfd.reject();
+			} else {
+				children.splice(found, 1);
+				dojo.publish("/davinci/resource/resourceChanged", ["deleted", this]);
+				dfd.accept();
 			}
-			
-			this.parent.children.splice(found, 1);
-			dojo.publish("/davinci/resource/resourceChanged",["deleted",this]);
-		} else {
-			//TODO: refresh the resource in the tree if it is a dir -- delete may have been partial.
-			alert(response);
+			return dfd;
 		}
+		return xhr.get({
+			url: "cmd/deleteResource",
+			handleAs: "text",
+			content: {path: this.getPath()}
+		});
 	}
 
 });

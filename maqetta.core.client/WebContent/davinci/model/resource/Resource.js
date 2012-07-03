@@ -2,12 +2,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/xhr",
 	"dojo/_base/connect",
+	"dojo/_base/Deferred",
 	"davinci/Runtime",
 	"davinci/model/Model",
-//	"davinci/Workbench",
 	"davinci/model/Path",
 	"davinci/ve/utils/URLRewrite"
-], function(declare, xhr, connect, Runtime, Model, /*Workbench,*/ Path, URLRewrite) {
+], function(declare, xhr, connect, Deferred, Runtime, Model, Path, URLRewrite) {
 
 return declare("davinci.model.resource.Resource", Model, {
 
@@ -44,7 +44,6 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	getURL: function() {
-		
 		var path = this.getPath();
 		if(path.indexOf("./") == 0 ) {
 			path = path.substring(2, path.length);
@@ -93,30 +92,29 @@ return declare("davinci.model.resource.Resource", Model, {
 
 	deleteResource: function(localOnly) {
 		if (localOnly) {
-			var found = -1,
-				dfd = new Deferred(),
-				children = this.parent.children;
-			children.some(function(child) {
-				if(child.getName()==this.getName()) {
-					found = i;
-				}				
-			}, this);
+			var dfd = new Deferred(),
+				name = this.getName(),
+				found = this.parent.children.some(function(child, i, children) {
+					if(child.getName() == name) {
+						children.splice(i, 1);
+						return true;
+					}				
+				});
 
-			if (found == -1) {
-				dfd.reject();
-			} else {
-				children.splice(found, 1);
+			if (found) {
 				dojo.publish("/davinci/resource/resourceChanged", ["deleted", this]);
-				dfd.accept();
+				dfd.resolve();
+			} else {
+				dfd.reject();
 			}
 			return dfd;
 		}
+
 		return xhr.get({
 			url: "cmd/deleteResource",
 			handleAs: "text",
 			content: {path: this.getPath()}
 		});
 	}
-
 });
 });

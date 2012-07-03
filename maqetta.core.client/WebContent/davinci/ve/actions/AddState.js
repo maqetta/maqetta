@@ -65,7 +65,7 @@ return declare("davinci.ve.actions.AddState", [Action], {
 	},
 
 	shouldShow: function(context){
-		return this.getNoe();
+		return this.getNode();
 	},
 
 	isEnabled: function(context){

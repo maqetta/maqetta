@@ -30,6 +30,7 @@ import org.davinci.server.util.JSONWriter;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.Command;
+import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 import org.maqetta.server.VLibraryResource;
@@ -42,7 +43,14 @@ public class Download extends Command {
 	
 	//This should stay in sync with validation rules on the client
 	public static final String DOWNLOAD_FILE_REPLACE_REGEXP = "[^a-zA-z0-9_.]";
-	public static final String BUILD_BASE = "http://build.dojotoolkit.org"; // TODO: parameterize as a preference?
+	public static String buildBase = "http://build.dojotoolkit.org";
+
+	{
+		String builderProp = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.DOJO_WEB_BUILDER);
+		if (builderProp != null) {
+			buildBase = builderProp;
+		}
+	}
 
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	// SECURITY, VALIDATION
@@ -158,7 +166,7 @@ public class Download extends Command {
 
 		for (int i = 0; i < files.length; i++) {
         	if (files[i].isVirtual()) continue;
-			method = new PostMethod(BUILD_BASE + "/api/dependencies");
+			method = new PostMethod(buildBase + "/api/dependencies");
     		try {
 	            String url = new URL(new URL(requestURL), "/maqetta/user/" + userID + "/ws/workspace/" + files[i].getPath()).toExternalForm();
 	            System.out.println("build.dojotoolkit.org: Analyse url="+url);
@@ -238,7 +246,7 @@ public class Download extends Command {
         String content = jsonWriter.getJSON();
 
         HttpClient client = new HttpClient();
-        PostMethod method = new PostMethod(BUILD_BASE + "/api/build");
+        PostMethod method = new PostMethod(buildBase + "/api/build");
         System.out.println("/api/build: " + content);
         try {
         	method.setRequestEntity(new StringRequestEntity(content, "application/json", "utf-8"));

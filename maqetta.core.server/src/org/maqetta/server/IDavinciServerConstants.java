@@ -6,6 +6,7 @@ public interface IDavinciServerConstants {
 	public static final String SERVER_DEBUG = "maqetta.serverDebug";
 	public static final String LOCAL_INSTALL = "maqetta.localInstall";
 	public static final String MAX_USERS = "maqetta.maxUsers";
+	public static final String DOJO_WEB_BUILDER = "maqetta.dojoWebBuilder";
 
 	public static final String BUNDLE_ID = "maqetta.core.server";
 

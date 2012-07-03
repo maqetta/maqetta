@@ -1762,6 +1762,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Force a data-maq-appstates attribute on the BODY
 	 */
 	_forceAppStatesOnBody: function(){
+		if(this.editor.declaredClass !== "davinci.ve.PageEditor"){
+			return;
+		}
 		if(!this.rootNode._maqAppStates){
 			this.rootNode._maqAppStates = {};
 			var bodyModelNode = this.rootWidget._srcElement;

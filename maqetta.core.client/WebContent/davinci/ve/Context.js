@@ -553,7 +553,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      *              'device' is the same as the current device
      */
 	setMobileTheme: function(device) {
-		
         var oldDevice = this.getMobileDevice() || 'none';
         if (oldDevice === device) {
             return;
@@ -561,11 +560,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         this.close(); //// return any singletons for CSSFiles
         this.setMobileDevice(device);
 
-		// dojox.mobile specific CSS file handling
-
-        var dm = lang.getObject("dojox.mobile", false, this.getGlobal());
-        if(dm && dm.deviceTheme && dm.deviceTheme.loadDeviceTheme) {
-        	dm.deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
+        try {
+    		// dojox/mobile specific CSS file handling
+    		var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');        	
+        	deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
+        } catch(e) {
+        	// dojox/mobile/deviceTheme not loaded
         }
 	},
 
@@ -3071,43 +3071,45 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
 		// monitoring of which stylesheets get loaded for a given theme
 
-		var dm = lang.getObject("dojox.mobile", true, this.getGlobal());
-		if (dm && dm.deviceTheme) {
-				var djConfig = this.getDojo().config,
-					djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
-					ua = /*device ||*/ djConfig.mblUserAgent || 'none',
-					themeMap,
-					themeFiles;
+		try {
+			var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
+			var djConfig = this.getDojo().config,
+				djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
+				ua = /*device ||*/ djConfig.mblUserAgent || 'none',
+				themeMap,
+				themeFiles;
 
-				djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
-				themeMap = djConfigModel.themeMap;
-				themeFiles = djConfigModel.mblThemeFiles;
+			djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
+			themeMap = djConfigModel.themeMap;
+			themeFiles = djConfigModel.mblThemeFiles;
 
-				// clear dynamic CSS
-				delete this.themeCssFiles;
-				delete this.cssFiles;
+			// clear dynamic CSS
+			delete this.themeCssFiles;
+			delete this.cssFiles;
 
-				// load CSS files specified by `themeMap`
-				if (!themeMap) {
-					// load defaults if not defined in file
-					themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
-					themeFiles = [];
-				}
-				this._addCssForDevice(ua, themeMap, this);
+			// load CSS files specified by `themeMap`
+			if (!themeMap) {
+				// load defaults if not defined in file
+				themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
+				themeFiles = [];
+			}
+			this._addCssForDevice(ua, themeMap, this);
 
-				dm.deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
-				if (themeFiles) {
-					djConfig.mblThemeFiles = themeFiles;
-				} else {
-					delete djConfig.mblThemeFiles;
-				}
+			deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+			if (themeFiles) {
+				djConfig.mblThemeFiles = themeFiles;
+			} else {
+				delete djConfig.mblThemeFiles;
+			}
 
-				if (this._selection) {
-					// forces style palette to update cascade rules
-					this.onSelectionChange(this._selection);
-				}
+			if (this._selection) {
+				// forces style palette to update cascade rules
+				this.onSelectionChange(this._selection);
+			}
 
-				dm.deviceTheme.loadDeviceTheme(ua/*device*/);
+			deviceTheme.loadDeviceTheme(ua/*device*/);
+		} catch(e) {
+			// dojox/mobile wasn't loaded
 		}
 
 		// Set mobile device CSS files

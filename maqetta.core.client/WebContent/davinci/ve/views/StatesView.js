@@ -21,6 +21,13 @@ var PlainTextTreeNode = declare(Tree._TreeNode, {}),
 	RichHTMLTreeNode = declare(Tree._TreeNode, {
         _setLabelAttr: {node: "labelNode", type: "innerHTML"}
 	});
+// Properties put onto tree model items for each app state or "scene".
+// This list is used to compare old-vs-new tree models for equality.
+// Note that parentItem property is not listed because that's an object pointer
+// to a parent item in an object hierarchy, and therefore will always be different
+// when comparing two object structures.
+var statesScenesProps = ['sceneId','category','node','sceneContainerNode',
+             'isCurrent','isFocus','isInitial'];
 
 return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
@@ -606,14 +613,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 
 	_getScenes: function() {
-		var props = ['sceneId','category','node','parentItem','sceneContainerNode',
-		             'isCurrent','isFocus','isInitial'];
 		var scenes = [];
 		if(this._sceneStore){
 			this._sceneStore.fetch({query:{}, queryOptions:{}, onComplete:dojo.hitch(this, function(items, request){
 				function recurse(storeItem, retArray){
 					var o = { name:storeItem.name[0], type:storeItem.type[0] };
-					for(var prop in props){
+					for(var p=0; p<statesScenesProps.length; p++){
+						var prop = statesScenesProps[p];
 						if(storeItem[prop]){
 							o[prop] = storeItem[prop][0];
 						}
@@ -655,9 +661,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return true;
 		}
 		function compareObjectRecursive(o1, o2){
-			var props = ['sceneId','name','type','category'];
-			for(var pidx = 0; pidx < props.length; pidx++){
-				var p = props[pidx];
+			for(var pidx = 0; pidx < statesScenesProps.length; pidx++){
+				var p = statesScenesProps[pidx];
 				if(!compareProperty(o1, o2, p)){
 					return false;
 				}

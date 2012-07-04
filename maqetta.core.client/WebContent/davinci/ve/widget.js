@@ -531,9 +531,8 @@ createWidget: function(widgetData) {
 	}
 
 //FIXME: Does data.states ever have a value? 
-//Maybe for copy/paste of widgets that have states data - need to try to exercise this code
+//Yes, gets called when changing 'selected' property on a View
 	if(data.maqAppStates || data.maqDeltas){
-		debugger;
 		if(data.maqAppStates){
 			widget.domNode._maqAppStates = dojo.clone(data.maqAppStates);
 		}

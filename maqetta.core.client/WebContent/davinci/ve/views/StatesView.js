@@ -276,13 +276,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!context || !context._statesLoaded){
 			return;
 		}
-/*FIXME: THIS ISN'T WORKING RIGHT YET
-		var currentStatesFocus = States.getFocus(context.rootNode);
-		if(!currentStatesFocus){
-			// If no current focus, default to the default app state on the BODY
-			States.setFocus(context.rootNode, undefined);
-		}
-*/
 		
 		// Build an object structure that contains the latest list of states/scenes/views
 		// We will then build a similar object structure by extracting the list from the ItemFileWriteStore
@@ -516,7 +509,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					var sceneItem = allSceneItems[k];
 					var sceneContainerNode = sceneItem.sceneContainerNode[0];
 					var currentScene = sm.getCurrentScene(sceneContainerNode);
-					var initialScene = sm.getInitialScene(sceneContainerNode);
+					var initialScenes = sm.getInitialScenes(sceneContainerNode);
 					var checkBoxSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCheckBox');
 					var focusSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteFocus');
 					var initialSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteInitial');
@@ -535,7 +528,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					if(focusSpan){
 						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
 					}
-					if(initialScene == sceneItem.node[0]){
+					if(initialScenes.indexOf(sceneItem.node[0])>=0){
 						if(initialSpan){
 							domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
 						}

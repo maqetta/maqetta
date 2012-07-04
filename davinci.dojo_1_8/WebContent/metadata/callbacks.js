@@ -20,10 +20,16 @@
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
 	 *		@returns {boolean}	Return true is a scene was selected
 	 * 
+//FIXME: Returns a node!
 	 * getCurrentScene(sceneContainerNode)
 	 * 		@param {Element} sceneContainerNode  Scene container node into which we are looking for current scene
 	 *		If there is a currently active scene, return its sceneId, else return null.
 	 *		@returns {string} Unique ID for the selected active scene. (Unique ID created by this SceneManager)
+	 * 
+	 * getInitialScenes(sceneContainerNode)
+	 * 		@param {Element} sceneContainerNode  Scene container node into which we are looking for current scene
+	 *		Returns an array of nodes holding all scenes that are flagged as the initial sceneId.
+	 *		@returns {array} Array of Elements
 	 * 
 	 * getAllSceneContainers()
 	 *		Returns all Elements in document that are direct parents of any scene nodes.
@@ -211,13 +217,13 @@
 			var userDoc = this.context.getDocument();
 			var _dijit = (userDoc && userDoc.defaultView && userDoc.defaultView.dijit);
 			var elems = sceneContainerNode.querySelectorAll('.mblView');
-				for(var i=0; i<elems.length; i++){
-					var elem = elems[i];
-					if(elem.parentNode != sceneContainerNode){
-						continue;
-					}
-					viewDijit = null;
-					if(this.context.declaredClass == 'davinci.ve.Context'){
+			for(var i=0; i<elems.length; i++){
+				var elem = elems[i];
+				if(elem.parentNode != sceneContainerNode){
+					continue;
+				}
+				viewDijit = null;
+				if(this.context.declaredClass == 'davinci.ve.Context'){
 					viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
 				}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
 					viewDijit = (_dijit && _dijit.byId && elem.id) ? _dijit.byId(elem.id) : null;
@@ -231,6 +237,32 @@
 				}
 			}
 			return currentScene;
+		},
+		getInitialScenes: function(sceneContainerNode){
+			var arr = [];
+			if(!sceneContainerNode){
+				return arr;
+			}
+			var currentScene, viewDijit;
+			var userDoc = this.context.getDocument();
+			var _dijit = (userDoc && userDoc.defaultView && userDoc.defaultView.dijit);
+			var elems = sceneContainerNode.querySelectorAll('.mblView');
+			for(var i=0; i<elems.length; i++){
+				var elem = elems[i];
+				if(elem.parentNode != sceneContainerNode){
+					continue;
+				}
+				viewDijit = null;
+				if(this.context.declaredClass == 'davinci.ve.Context'){
+					viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+				}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
+					viewDijit = (_dijit && _dijit.byId && elem.id) ? _dijit.byId(elem.id) : null;
+				}
+				if(viewDijit && viewDijit.selected){
+					arr.push(viewDijit.domNode);
+				}
+			}
+			return arr;
 		},
 		getAllSceneContainers: function(){
 			var allSceneContainers = [];

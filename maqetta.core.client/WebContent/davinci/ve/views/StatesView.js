@@ -451,8 +451,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(!currentState){
 				currentState = States.NORMAL;
 			}
+			var initialState = States.getInitial(sceneContainerNode);
+			if(!initialState){
+				initialState = States.NORMAL;
+			}
 			var checkBoxSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteCheckBox');
 			var focusSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteFocus');
+			var initialSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteInitial');
 			if(currentState === appStateItem.sceneId[0]){
 				if(appStateFocus && appStateFocus.stateContainerNode == sceneContainerNode && appStateFocus.state == currentState){
 					if(focusSpan){
@@ -479,6 +484,15 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
 				}
 			}
+			if(initialState === appStateItem.sceneId[0]){
+				if(initialSpan){
+					domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
+				}
+			}else{
+				if(initialSpan){
+					domClass.add(initialSpan, 'ScenesPaletteInitialHidden');
+				}
+			}
 		}
 		// Search through SceneManagers to find currently active scenes. 
 //FIXME: Only finds one View per scene manager, so not dealing with nested Views
@@ -501,6 +515,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					var currentScene = sm.getCurrentScene(sceneContainerNode);
 					var checkBoxSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCheckBox');
 					var focusSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteFocus');
+					var initialSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteInitial');
 					if(currentScene == sceneItem.node[0]){
 						if(checkBoxSpan){
 							domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
@@ -515,6 +530,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					}
 					if(focusSpan){
 						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
+					}
+					//FIXME: Need to add initial scene feature to Dojo Mobile Views
+					if(currentScene == sceneItem.node[0]){
+						if(initialSpan){
+							domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
+						}
+					}else{
+						if(initialSpan){
+							domClass.add(initialSpan, 'ScenesPaletteInitialHidden');
+						}
 					}
 				}
 			}

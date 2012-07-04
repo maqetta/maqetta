@@ -248,10 +248,7 @@ States.prototype = {
 	},
 
 	/**
-	 * Returns the current state for the current node.
-	 * Right now, node must be either empty (null|undefined) or be the BODY node.
-	 * FIXME: Right now the node parameter is useless since things only
-	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
+	 * Returns the current state for the given state container node.
 	 */
 	getState: function(node){
 		return node && node._maqAppStates && node._maqAppStates.current;
@@ -322,6 +319,14 @@ States.prototype = {
 		}
 		var currentState = this.getState(node);
 		this.setState(currentState, node, {updateWhenCurrent:true, silent:true});	
+	},
+
+	/**
+	 * Returns the application state for the given state container node
+	 * that should show at document load time.
+	 */
+	getInitial: function(node){
+		return node && node._maqAppStates && node._maqAppStates.initial;
 	},
 	
 	/**

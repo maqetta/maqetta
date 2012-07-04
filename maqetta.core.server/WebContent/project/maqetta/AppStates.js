@@ -11,7 +11,7 @@ States.prototype = {
 	APPSTATES_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
 
 	/**
-	 * Returns true if the given node has application states (i.e., node._maqAppStates.states has values)
+	 * Returns true if the given node has application states (i.e., node._maqAppStates has a value)
 	 */
 	isStateContainer: function(node){
 		if(node && node._maqAppStates){
@@ -22,14 +22,14 @@ States.prototype = {
 	},
 	
 	/**
-	 * Returns an array of all nodes that are state containers (due to having a _maqAppStates.states property)
+	 * Returns an array of all nodes that are state containers (due to having a _maqAppStates property)
 	 * @param rootnode
 	 * @returns {Array[Element]}  an array of Elements for all state containers in document
 	 */
 	getAllStateContainers: function(rootnode){
 		var allStateContainers = [];
 		function findStateContainers(currentNode){
-			if(currentNode._maqAppStates && currentNode._maqAppStates.states){
+			if(currentNode._maqAppStates){
 				allStateContainers.push(currentNode);
 			}
 			for(var i=0; i<currentNode.children.length; i++){
@@ -59,12 +59,12 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn._maqAppStates && pn._maqAppStates.states){
+				if(pn._maqAppStates){
 					
 					if(pn == statesContainerNode){
 						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
 					}else{
-						var current = pn._maqAppStates.states.current;
+						var current = pn._maqAppStates.states ? pn._maqAppStates.states.current : undefined;
 						statesArray.splice(0, 0, {node:pn, oldState:current, newState:current});
 					}
 				}
@@ -87,7 +87,9 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn._maqAppStates && pn._maqAppStates.states && (!state || state == this.NORMAL || pn._maqAppStates.states.indexOf(state)>=0)){
+				if(pn._maqAppStates && 
+						(!state || state == this.NORMAL ||  
+						(pn._maqAppStates.states && pn._maqAppStates.states.indexOf(state)>=0))){
 					return pn;
 				}
 				if(pn.tagName == 'BODY'){
@@ -113,8 +115,9 @@ States.prototype = {
 			var pn = node.parentNode;
 			while(pn){
 				if(pn._maqAppStates && pn._maqAppStates.states){
-					for(var i=0; i<pn._maqAppStates.states.length; i++){
-						statesList.push(pn._maqAppStates.states[i]);
+					var states = pn._maqAppStates.states ? pn._maqAppStates.states : [];
+					for(var i=0; i<states.length; i++){
+						statesList.push(states[i]);
 					}
 				}
 				if(pn.tagName == 'BODY'){
@@ -140,7 +143,7 @@ States.prototype = {
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
-				if(pn._maqAppStates && pn._maqAppStates.states){
+				if(pn._maqAppStates){
 					statesList.splice(0, 0, pn._maqAppStates.current);
 				}
 				if(pn.tagName == 'BODY'){
@@ -163,8 +166,8 @@ States.prototype = {
 	getStates: function(node, associative){
 		var states = node && node._maqAppStates;
 		var names = associative ? {"Normal": "Normal"} : ["Normal"];
-		if(states && states.states){
-			var statesList = states.states;
+		if(states){
+			var statesList = states.states ? states.states : [];
 			for(var i=0; i<statesList.length; i++){
 				var name = statesList[i];
 				if(name != 'Normal'){
@@ -245,10 +248,7 @@ States.prototype = {
 	},
 
 	/**
-	 * Returns the current state for the current node.
-	 * Right now, node must be either empty (null|undefined) or be the BODY node.
-	 * FIXME: Right now the node parameter is useless since things only
-	 * work if you pass in null|undefined or BODY, and null|undefined are equiv to BODY.
+	 * Returns the current state for the given state container node.
 	 */
 	getState: function(node){
 		return node && node._maqAppStates && node._maqAppStates.current;
@@ -320,6 +320,14 @@ States.prototype = {
 		var currentState = this.getState(node);
 		this.setState(currentState, node, {updateWhenCurrent:true, silent:true});	
 	},
+
+	/**
+	 * Returns the application state for the given state container node
+	 * that should show at document load time.
+	 */
+	getInitial: function(node){
+		return node && node._maqAppStates && node._maqAppStates.initial;
+	},
 	
 	/**
 	 * Returns the document-level "focus" for the application states feature.
@@ -340,7 +348,7 @@ States.prototype = {
 		var allStateContainerNodes = this.getAllStateContainers(rootNode);
 		for(var i=0; i<allStateContainerNodes.length; i++){
 			var maqAppStates = allStateContainerNodes[i]._maqAppStates;
-			if(maqAppStates && maqAppStates.focus){
+			if(maqAppStates && maqAppStates.hasOwnProperty('focus')){
 				return { stateContainerNode:allStateContainerNodes[i], state:maqAppStates.focus };
 			}
 		}
@@ -945,7 +953,9 @@ States.prototype = {
 		if(isBody){
 			var statesArray = [];
 			for(var s in states){
-				statesArray.push(s);
+				if(s != 'current'){
+					statesArray.push(s);
+				}
 			}
 			if(statesArray.length > 0){
 				return { states:statesArray };

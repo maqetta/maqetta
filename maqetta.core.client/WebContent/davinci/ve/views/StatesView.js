@@ -347,12 +347,24 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 				if(isStateContainer){
 					var appstates = States.getStates(node);
+					var currentState = States.getState(node);
+					if(!currentState){
+						currentState = States.NORMAL;
+					}
+					var initialState = States.getInitial(node);
+					if(!initialState){
+						initialState = States.NORMAL;
+					}
 					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', 
 							parentItem:currentParentItem, children:[]};
 					for(var st=0; st<appstates.length; st++){
 						var state = appstates[st];
 						var span = that._treeNodeContent(state);
+						var isFocus = (appStateFocus && appStateFocus.stateContainerNode == node && appStateFocus.state == currentState);
+						var isCurrent = (state === currentState);
+						var isInitial = (state === initialState);
 						var o = { name:span, sceneId:state, type:'AppState', 
+								isFocus:isFocus, isCurrent:isCurrent, isInitial:isInitial,
 								sceneContainerNode:node, parentItem:AppStatesObj };
 						AppStatesObj.children.push(o);
 						existingItems.push(o);
@@ -363,16 +375,22 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				if(isSceneContainer){
 					for(var smIndex in sceneManagers){
 						var sm = sceneManagers[smIndex];
-						if(sm.getSceneChildren && sm.name && sm.category){
+						if(sm.getSceneChildren && sm.getCurrentScene && sm.getInitialScenes && sm.name && sm.category){
 							var sceneChildren = sm.getSceneChildren(node);
 							if(sceneChildren.length > 0){
+								var currentScene = sm.getCurrentScene(node);
+								var initialScenes = sm.getInitialScenes(node);
 								var SceneManagerObj = { name:sm.name, type:'SceneManagerRoot', category:sm.category, 
 										parentItem:currentParentItem, children:[]};
 								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
 									var childSceneNode = sceneChildren[childSceneIndex];
 									var label = WidgetUtils.getLabel(childSceneNode._dvWidget);
 									var span = that._treeNodeContent(label);
+									var isFocus = false;	// No concept if scene focus for plug-in scene managers
+									var isCurrent = (childSceneNode === currentScene);
+									var isInitial = (initialScenes.indexOf(childSceneNode)>=0);
 									var o = { name:span, sceneId:childSceneNode.id, type:sm.category, 
+											isFocus:isFocus, isCurrent:isCurrent, isInitial:isInitial,
 											sceneContainerNode:node, parentItem:SceneManagerObj, node:childSceneNode, children:[] };
 									SceneManagerObj.children.push(o);
 									existingItems.push(o);
@@ -388,6 +406,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			for(var j=0; j<children.length; j++){
 				recurseWidget(children[j], currentParentItem);
 			}
+		}
+		var appStateFocus = States.getFocus(context.rootNode);
+		if(appStateFocus && !appStateFocus.state){
+			appStateFocus.state = States.NORMAL;
 		}
 		// Temporary root object onto which we will attach a BODY item
 		// All other items in the structure will descend from the BODY item
@@ -429,10 +451,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!context || !context._statesLoaded){
 			return;
 		}
+/*FIXME: DELETE THIS
 		var appStateFocus = States.getFocus(context.rootNode);
 		if(appStateFocus && !appStateFocus.state){
 			appStateFocus.state = States.NORMAL;
 		}
+*/
 		var allAppStateItems = [];
 		this._sceneStore.fetch({query: {type:'AppState'}, queryOptions:{deep:true}, 
 			onComplete: dojo.hitch(this, function(items, request){
@@ -443,6 +467,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		for(var k=0; k<allAppStateItems.length; k++){
 			var appStateItem = allAppStateItems[k];
 			var sceneContainerNode = appStateItem.sceneContainerNode[0];
+/*FIXME: DELETE THIS
 			var currentState = States.getState(sceneContainerNode);
 			if(!currentState){
 				currentState = States.NORMAL;
@@ -451,24 +476,31 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(!initialState){
 				initialState = States.NORMAL;
 			}
-			var checkBoxSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteCheckBox');
+*/
+			var checkBoxSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteCurrent');
 			var focusSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteFocus');
 			var initialSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteInitial');
+/*FIXME: DELETE THIS
 			if(currentState === appStateItem.sceneId[0]){
+*/
+			if(appStateItem.isCurrent && appStateItem.isCurrent[0]){
+/*FIXME: DELETE THIS
 				if(appStateFocus && appStateFocus.stateContainerNode == sceneContainerNode && appStateFocus.state == currentState){
+*/
+				if(appStateItem.isFocus && appStateItem.isFocus[0]){
 					if(focusSpan){
 						domClass.remove(focusSpan, 'ScenesPaletteFocusNone');
 					}
 					if(checkBoxSpan){
-						domClass.add(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
+						domClass.add(checkBoxSpan, 'ScenesPaletteCurrentNone');
 					}
 				}else{
 					if(focusSpan){
 						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
 					}
 					if(checkBoxSpan){
-						domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
-						domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
+						domClass.remove(checkBoxSpan, 'ScenesPaletteCurrentNone');
+						domClass.remove(checkBoxSpan, 'ScenesPaletteCurrentHidden');
 					}
 				}
 			}else{
@@ -476,11 +508,14 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					domClass.add(focusSpan, 'ScenesPaletteFocusNone');
 				}
 				if(checkBoxSpan){
-					domClass.add(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
-					domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
+					domClass.add(checkBoxSpan, 'ScenesPaletteCurrentHidden');
+					domClass.remove(checkBoxSpan, 'ScenesPaletteCurrentNone');
 				}
 			}
+/*FIXME: DELETE THIS
 			if(initialState === appStateItem.sceneId[0]){
+*/
+			if(appStateItem.isInitial && appStateItem.isInitial[0]){
 				if(initialSpan){
 					domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
 				}
@@ -508,27 +543,35 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				for(var k=0; k<allSceneItems.length; k++){
 					var sceneItem = allSceneItems[k];
 					var sceneContainerNode = sceneItem.sceneContainerNode[0];
+/*FIXME: DELETE THIS
 					var currentScene = sm.getCurrentScene(sceneContainerNode);
 					var initialScenes = sm.getInitialScenes(sceneContainerNode);
-					var checkBoxSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCheckBox');
+*/
+					var checkBoxSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCurrent');
 					var focusSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteFocus');
 					var initialSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteInitial');
+/*FIXME: DELETE THIS
 					if(currentScene == sceneItem.node[0]){
+*/
+					if(sceneItem.isCurrent && sceneItem.isCurrent[0]){
 						if(checkBoxSpan){
-							domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
+							domClass.remove(checkBoxSpan, 'ScenesPaletteCurrentHidden');
 						}
 					}else{
 						if(checkBoxSpan){
-							domClass.add(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
+							domClass.add(checkBoxSpan, 'ScenesPaletteCurrentHidden');
 						}
 					}
 					if(checkBoxSpan){
-						domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
+						domClass.remove(checkBoxSpan, 'ScenesPaletteCurrentNone');
 					}
 					if(focusSpan){
 						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
 					}
+/*FIXME: DELETE THIS
 					if(initialScenes.indexOf(sceneItem.node[0])>=0){
+*/
+					if(sceneItem.isInitial && sceneItem.isInitial[0]){
 						if(initialSpan){
 							domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
 						}
@@ -563,25 +606,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 
 	_getScenes: function() {
+		var props = ['sceneId','category','node','parentItem','sceneContainerNode',
+		             'isCurrent','isFocus','isInitial'];
 		var scenes = [];
 		if(this._sceneStore){
 			this._sceneStore.fetch({query:{}, queryOptions:{}, onComplete:dojo.hitch(this, function(items, request){
 				function recurse(storeItem, retArray){
 					var o = { name:storeItem.name[0], type:storeItem.type[0] };
-					if(storeItem.sceneId){
-						o.sceneId = storeItem.sceneId[0];
-					}
-					if(storeItem.category){
-						o.category = storeItem.category[0];
-					}
-					if(storeItem.node){
-						o.node = storeItem.node[0];
-					}
-					if(storeItem.parentItem){
-						o.parentItem = storeItem.parentItem[0];
-					}
-					if(storeItem.sceneContainerNode){
-						o.sceneContainerNode = storeItem.sceneContainerNode[0];
+					for(var prop in props){
+						if(storeItem[prop]){
+							o[prop] = storeItem[prop][0];
+						}
 					}
 					retArray.push(o);
 					if(storeItem.children && storeItem.children.length > 0){
@@ -680,7 +715,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			showRoot: false,
 			autoExpand: true,
 			className: 'StatesViewTree',
-			style: 'height:150px; overflow:auto;', 
+			style: 'height:150px; overflow-x:hidden; overflow-y:auto;', 
 			_createTreeNode: function(args) {
 /*FIXME: OLD LOGIC
 				var item = args.item;
@@ -766,7 +801,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			newItemRecursive(obj);
 		});
 		this._sceneStore.save();
-		this._tree.resize();
+		// In some scenarios, necessary to resize the ContentPane that surrounds the Tree
+		if(this._tree.getParent){
+			var parent = this._tree.getParent();
+			if(parent.resize){
+				parent.resize();
+			}
+		}
 	},
 
 //FIXME: sceneId for states might not be unique the way things are written now
@@ -827,7 +868,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	_treeNodeContent: function(labelSnippet){
 		var s = '';
 		s += '<span title="'+veNls.InitialScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteInitial">&#x2713;</span>';
-		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCheckBox">&#x25CF;</span>';
+		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCurrent">&#x25CF;</span>';
 		s += '<span title="'+veNls.AppStateFocus+'" class="ScenesPaletteAppStateIcon ScenesPaletteFocus">&#x25C9;</span>';
 		s += '<span>'+labelSnippet+'</span></span>';
 		return s;

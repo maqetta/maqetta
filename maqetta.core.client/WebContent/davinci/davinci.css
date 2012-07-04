@@ -1322,15 +1322,15 @@ davinci_top_bar .dijitButtonNode {
 	width:12px;
 	height:1.1em;
 }
-.ScenesPaletteAppStateIcon.ScenesPaletteCheckBox {
+.ScenesPaletteAppStateIcon.ScenesPaletteCurrent {
 	font-size:160%;
 	margin:-5px;
 	margin-right:6px;
 }
-.ScenesPaletteAppStateIcon.ScenesPaletteCheckBox.ScenesPaletteCheckBoxHidden {
+.ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentHidden {
 	visibility:hidden;
 }
-.ScenesPaletteAppStateIcon.ScenesPaletteCheckBox.ScenesPaletteCheckBoxNone {
+.ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentNone {
 	display:none;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteFocus {

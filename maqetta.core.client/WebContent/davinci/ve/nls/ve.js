@@ -17,6 +17,9 @@ define({ root:
 		//StatesView.js
 		"Scenes":"Scenes",
 		"States":"States",
+		"ActiveScene":"This scene is currently visible",
+		"AppStateFocus":"This application state is currently visible and is the target for any application-state-specific visibility or styling changes",
+		"InitialScene":"This scene will show initially when the page runs",
 		
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",

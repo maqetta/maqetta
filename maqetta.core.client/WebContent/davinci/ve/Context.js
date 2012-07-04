@@ -184,7 +184,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
 		this._restoreStates();
-		this._forceAppStatesOnBody();
+		this._AppStatesActivateActions();
 		// The initialization of states object for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
@@ -1761,7 +1761,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	/**
 	 * Force a data-maq-appstates attribute on the BODY
 	 */
-	_forceAppStatesOnBody: function(){
+	_AppStatesActivateActions: function(){
 		if(this.editor.declaredClass !== "davinci.ve.PageEditor"){
 			return;
 		}
@@ -1771,6 +1771,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var o = States.serialize(this.rootNode);
 			bodyModelNode.setAttribute(States.APPSTATES_ATTRIBUTE, o.maqAppStates);
 			this.editor._visualChanged();
+		}
+		var statesFocus = States.getFocus(this.rootNode);
+		if(!statesFocus){
+			var currentState = States.getState(this.rootNode);
+			States.setState(currentState, this.rootNode, {updateWhenCurrent:true, silent:true, focus:true });
 		}
 	},
 

@@ -1,5 +1,7 @@
 define([
 		"dojo/_base/declare",
+		"dojo/query",
+		"dojo/dom-class",
 		"dojo/i18n!../nls/ve",
 		"davinci/workbench/ViewPart",
 		"dijit/layout/BorderContainer",
@@ -10,7 +12,7 @@ define([
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
 		"dojo/_base/window"
-], function(declare, veNls, ViewPart, BorderContainer, ContentPane, 
+], function(declare, domQuery, domClass, veNls, ViewPart, BorderContainer, ContentPane, 
 	States, WidgetUtils, ItemFileWriteStore, ForestStoreModel, Tree, win
 ){
 
@@ -424,6 +426,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_updateSelection: function() {
+		if(!this._editor){
+			return;
+		}
 		var context = this._editor.getContext();
 		if(!context || !context._statesLoaded){
 			return;
@@ -446,20 +451,32 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			if(!currentState){
 				currentState = States.NORMAL;
 			}
-			var checkBoxSpan = this._findCheckBoxSpan(appStateItem);
+			var checkBoxSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteCheckBox');
+			var focusSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteFocus');
 			if(currentState === appStateItem.sceneId[0]){
-				if(checkBoxSpan){
-					dojo.removeClass(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
-					if(appStateFocus && appStateFocus.stateContainerNode == sceneContainerNode && appStateFocus.state == currentState){
-						dojo.addClass(checkBoxSpan, 'ScenesPaletteCheckBoxFocus');
-					}else{
-						dojo.removeClass(checkBoxSpan, 'ScenesPaletteCheckBoxFocus');
+				if(appStateFocus && appStateFocus.stateContainerNode == sceneContainerNode && appStateFocus.state == currentState){
+					if(focusSpan){
+						domClass.remove(focusSpan, 'ScenesPaletteFocusNone');
+					}
+					if(checkBoxSpan){
+						domClass.add(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
+					}
+				}else{
+					if(focusSpan){
+						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
+					}
+					if(checkBoxSpan){
+						domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
+						domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
 					}
 				}
 			}else{
+				if(focusSpan){
+					domClass.add(focusSpan, 'ScenesPaletteFocusNone');
+				}
 				if(checkBoxSpan){
-					dojo.addClass(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
-					dojo.removeClass(checkBoxSpan, 'ScenesPaletteCheckBoxFocus');
+					domClass.add(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
+					domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
 				}
 			}
 		}
@@ -482,15 +499,22 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					var sceneItem = allSceneItems[k];
 					var sceneContainerNode = sceneItem.sceneContainerNode[0];
 					var currentScene = sm.getCurrentScene(sceneContainerNode);
-					var checkBoxSpan = this._findCheckBoxSpan(sceneItem);
+					var checkBoxSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCheckBox');
+					var focusSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteFocus');
 					if(currentScene == sceneItem.node[0]){
 						if(checkBoxSpan){
-							checkBoxSpan.style.display = '';
+							domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
 						}
 					}else{
 						if(checkBoxSpan){
-							checkBoxSpan.style.display = 'none';
+							domClass.add(checkBoxSpan, 'ScenesPaletteCheckBoxHidden');
 						}
+					}
+					if(checkBoxSpan){
+						domClass.remove(checkBoxSpan, 'ScenesPaletteCheckBoxNone');
+					}
+					if(focusSpan){
+						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
 					}
 				}
 			}
@@ -620,6 +644,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_createTree: function(latestData){
+		if(!this._editor){
+			return;
+		}
 		var context = this._editor.getContext();
 		var sceneManagers = context.sceneManagers;
 		var skeletonData = { identifier: 'id', label: 'name', items: []};
@@ -655,39 +682,39 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var currentEditor = this._editor;
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
+			var sceneContainerNode = null;
 			if (item && item.type && item.type[0] == 'AppState') {
-				var sceneContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
-				if (this.isThemeEditor()){
-					this.publish("/davinci/states/state/changed", 
-							[{editorClass:currentEditor.declaredClass, widget:'$all', 
-							newState:item.sceneId[0], oldState:this._themeState, context: this._editor.context}]);
-					this._themeState = item.sceneId[0];
-				} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
-					this.publish("/maqetta/appstates/state/changed", 
-							[{editorClass:currentEditor.declaredClass, widget:sceneContainerNode, 
-							newState:item.sceneId[0], sceneContainerNode:sceneContainerNode}]);
-				} else {
-					if(context && sceneContainerNode){
-						var state = item.sceneId[0];
-						States.setState(state, sceneContainerNode, {focus:true});
-						context.deselectInvisible();
-						context.updateFocusAll();
-					}
-				}
-			}else{
+				sceneContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
+			}
+			if (this.isThemeEditor()){
+				this.publish("/davinci/states/state/changed", 
+						[{editorClass:currentEditor.declaredClass, widget:'$all', 
+						newState:item.sceneId[0], oldState:this._themeState, context: this._editor.context}]);
+				this._themeState = item.sceneId[0];
+			} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
+				this.publish("/maqetta/appstates/state/changed", 
+						[{editorClass:currentEditor.declaredClass, widget:sceneContainerNode, 
+						newState:item.sceneId[0], sceneContainerNode:sceneContainerNode}]);
+			} else {	// PageEditor
 /*FIXME: Need to figure out what to do about initial states when using mobile views
 				if(bodyNode){
 					States.setState(null, bodyNode);
 				}
 */
-				if(item.sceneId){
-					// Loop through plugin scene managers, eg Dojo Mobile Views
-					for(var smIndex in sceneManagers){
-						var sm = sceneManagers[smIndex];
-						if(sm.selectScene){
-							if(sm.selectScene({ sceneId:item.sceneId[0]})){
-								break;
-							}
+				if(context && sceneContainerNode){
+					var state = item.sceneId[0];
+					States.setState(state, sceneContainerNode, {focus:true});
+					context.deselectInvisible();
+					context.updateFocusAll();
+				}
+			}
+			if(item.sceneId){
+				// Loop through plugin scene managers, eg Dojo Mobile Views
+				for(var smIndex in sceneManagers){
+					var sm = sceneManagers[smIndex];
+					if(sm.selectScene){
+						if(sm.selectScene({ sceneId:item.sceneId[0]})){
+							break;
 						}
 					}
 				}
@@ -718,6 +745,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			newItemRecursive(obj);
 		});
 		this._sceneStore.save();
+		this._tree.resize();
 	},
 
 //FIXME: sceneId for states might not be unique the way things are written now
@@ -763,6 +791,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");
 		var d = dijit.byId(this.toolbarDiv.parentNode.id);
 		d.resize();
+		var modifyStateSpanList = domQuery('.modifyStateIcon');
+		if(modifyStateSpanList.length){
+			var modifyStateSpan = modifyStateSpanList[0];
+			domClass.add(modifyStateSpan, 'modifyStateIconDisabled');
+		}
 	},
 	
 	/**
@@ -771,19 +804,24 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	 * so we can control visibility of the checkbox to indicate currently active scenes
 	 */
 	_treeNodeContent: function(labelSnippet){
-		return '<span><span class="ScenesPaletteInitial">&#x2606;</span><span class="ScenesPaletteCheckBox">&#x2713;</span><span>'+labelSnippet+'</span></span>';
+		var s = '';
+		s += '<span title="'+veNls.InitialScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteInitial">&#x2713;</span>';
+		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCheckBox">&#x25CF;</span>';
+		s += '<span title="'+veNls.AppStateFocus+'" class="ScenesPaletteAppStateIcon ScenesPaletteFocus">&#x25C9;</span>';
+		s += '<span>'+labelSnippet+'</span></span>';
+		return s;
 	}, 
 	
 	/**
-	 * Returns the SPAN inside of the TreeNode that corresponds to the given item in the tree
+	 * Returns the SPAN inside of the TreeNode that has the given className
 	 */
-	_findCheckBoxSpan: function(item){
+	_findTreeNodeSpanByClass: function(item, className){
 		var treeNodes = this._tree.getNodesByItem(item);
 		var treeNode = (treeNodes && treeNodes.length > 0) ? treeNodes[0] : null;
 		var node = treeNode ? treeNode.domNode : null;
-		var checkBoxSpans = treeNode ? dojo.query('.ScenesPaletteCheckBox', node) : [];
-		var checkBoxSpan = (checkBoxSpans && checkBoxSpans.length > 0) ? checkBoxSpans[0] : null;
-		return checkBoxSpan;
+		var spans = treeNode ? dojo.query('.'+className, node) : [];
+		var span = (spans && spans.length > 0) ? spans[0] : null;
+		return span;
 	}
 });
 });

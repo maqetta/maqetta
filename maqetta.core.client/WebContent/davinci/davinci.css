@@ -701,13 +701,22 @@ davinci_top_bar .dijitButtonNode {
 	background-image: url(img/sprite.png);
 	background-position: -82px -466px;
 }
+.addStateIcon.addStateIconDisabled {
+	background-position: -66px -466px;
+}
 .removeStateIcon, .removeThemeSetIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0 -1778px;
 }
+.removeStateIcon.removeStateIconDisabled {
+	background-position: -17px -1778px;
+}
 .modifyStateIcon {
 	background-image: url(img/sprite.png);
 	background-position: -82px -483px;
+}
+.modifyStateIcon.modifyStateIconDisabled {
+	background-position: -66px -483px;
 }
 
 .designModeIcon {
@@ -1306,29 +1315,34 @@ davinci_top_bar .dijitButtonNode {
         background-color: #ddd;
 }
 
-.ScenesPaletteCheckBox {
+.ScenesPaletteAppStateIcon {
 	float:right;
 	margin-right:6px;
+	display:inline-block;
+	width:12px;
+	height:1.1em;
 }
-.ScenesPaletteCheckBox.ScenesPaletteCheckBoxHidden {
+.ScenesPaletteAppStateIcon.ScenesPaletteCheckBox {
+	font-size:160%;
+	margin:-5px;
+	margin-right:6px;
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteCheckBox.ScenesPaletteCheckBoxHidden {
 	visibility:hidden;
 }
-.ScenesPaletteCheckBox.ScenesPaletteCheckBoxFocus {
-	font-weight:bold;
-	border: 1px solid black;
-	border-radius: 20px;
-	width: 1.1em;
-	height: 1.1em;
-	line-height: 1.25em;
-	text-align: center;
+.ScenesPaletteAppStateIcon.ScenesPaletteCheckBox.ScenesPaletteCheckBoxNone {
+	display:none;
 }
-.ScenesPaletteInitial {
-	float:right;
-	margin-right:6px;
-	font-size:78%;
-	margin-top:2px;
+.ScenesPaletteAppStateIcon.ScenesPaletteFocus {
 }
-.ScenesPaletteInitial.ScenesPaletteInitialHidden {
+.ScenesPaletteAppStateIcon.ScenesPaletteFocus.ScenesPaletteFocusNone {
+	display:none;
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteInitial {
+	margin-right:10px;
+	display:inline-block;
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteInitial.ScenesPaletteInitialHidden {
 	visibility:hidden;
 }
 

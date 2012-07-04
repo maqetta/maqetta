@@ -2,6 +2,7 @@ define([
 		"dojo/_base/declare",
 		"dojo/query",
 		"dojo/dom-class",
+		"dojo/_base/connect",
 		"dojo/i18n!../nls/ve",
 		"davinci/workbench/ViewPart",
 		"dijit/layout/BorderContainer",
@@ -12,7 +13,7 @@ define([
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
 		"dojo/_base/window"
-], function(declare, domQuery, domClass, veNls, ViewPart, BorderContainer, ContentPane, 
+], function(declare, domQuery, domClass, connect, veNls, ViewPart, BorderContainer, ContentPane, 
 	States, WidgetUtils, ItemFileWriteStore, ForestStoreModel, Tree, win
 ){
 
@@ -139,6 +140,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var editor = event.editor;
 		this._destroyTree();
 
+		this._unregisterForContextEvents();
 		if(editor && editor.supports("states")) {
 			this._editor = editor;
 
@@ -153,6 +155,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 			} else {
 				this.set('title', veNls.Scenes);
+				this._registerForContextEvents();
 				this._updateView();
 			}
 			this.container.layout();	
@@ -513,6 +516,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					var sceneItem = allSceneItems[k];
 					var sceneContainerNode = sceneItem.sceneContainerNode[0];
 					var currentScene = sm.getCurrentScene(sceneContainerNode);
+					var initialScene = sm.getInitialScene(sceneContainerNode);
 					var checkBoxSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCheckBox');
 					var focusSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteFocus');
 					var initialSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteInitial');
@@ -531,8 +535,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					if(focusSpan){
 						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
 					}
-					//FIXME: Need to add initial scene feature to Dojo Mobile Views
-					if(currentScene == sceneItem.node[0]){
+					if(initialScene == sceneItem.node[0]){
 						if(initialSpan){
 							domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
 						}
@@ -847,6 +850,42 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var spans = treeNode ? dojo.query('.'+className, node) : [];
 		var span = (spans && spans.length > 0) ? spans[0] : null;
 		return span;
+	},
+
+	/**
+	 * Handler for certain Context.js events. Causes this palette
+	 * to see if any visual updates are needed.
+	 */
+	_contextEventHandler: function() {
+		this._updateView();
+	},
+	
+	/**
+	 * Unregister listeners to certain Context.js events.
+	 */
+	_unregisterForContextEvents: function() {
+		if(this._contextConnects){
+			this._contextConnects.forEach(connect.disconnect);
+			this._contextConnects = null;
+		}
+	},
+	
+	/**
+	 * Upon receiving a new editorSelected event, 
+	 * register listeners to certain Context.js events.
+	 */
+	_registerForContextEvents: function() {
+		var contextEvents = ['widgetChanged', 'widgetAddedOrDeleted'];
+		this._unregisterForContextEvents();
+		var context = (this._editor && this._editor.getContext && this._editor.getContext());
+		if(context){
+			this._contextConnects = [];
+			contextEvents.forEach(function(name){
+				if(context[name]){
+					this._contextConnects.push(connect.connect(context, name, this, '_contextEventHandler'));
+				}
+			}.bind(this));
+		}
 	}
 });
 });

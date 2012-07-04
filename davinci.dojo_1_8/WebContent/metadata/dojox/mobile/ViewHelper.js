@@ -87,13 +87,10 @@ ViewHelper.prototype = {
 				var display, selected;
 				if(node==domNode){
 					display = "";
-					selected = "true";
 				}else{
 					display = "none";
-					selected = null;
 				}	
 				command.add(new StyleCommand(node._dvWidget, [{display: display}]));	
-				command.add(new ModifyAttributeCommand(node._dvWidget, {selected: selected}));	
 			}
 		}
 	},

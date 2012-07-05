@@ -854,15 +854,36 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!this._editor){
 			return;
 		}
+		var context = (this._editor.getContext && this._editor.getContext());
 		var showAppStates = (this._editor.declaredClass === "davinci.ve.PageEditor");
 		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");
 		var d = dijit.byId(this.toolbarDiv.parentNode.id);
 		d.resize();
-		var modifyStateSpanList = domQuery('.modifyStateIcon');
-		if(modifyStateSpanList.length){
-			var modifyStateSpan = modifyStateSpanList[0];
-			domClass.add(modifyStateSpan, 'modifyStateIconDisabled');
+		var AddStateActive, RemoveStateActive, ModifyStateActive;
+		AddStateActive = RemoveStateActive = ModifyStateActive = false;
+		if(context && context.rootNode){
+			var statesFocus = States.getFocus(context.rootNode);
+			if(statesFocus.stateContainerNode){
+				AddStateActive = true;
+			}
+			if(statesFocus.state && statesFocus.state !== States.NORMAL){
+				RemoveStateActive = ModifyStateActive = false;
+			}
 		}
+		function updateIcon(baseClassName, makeActive){
+			var disabledClassName = baseClassName+'Disabled';
+			var spanList = domQuery('.'+baseClassName);
+			if(spanList.length){
+				if(makeActive){
+					domClass.remove(spanList[0], disabledClassName);
+				}else{
+					domClass.add(spanList[0], disabledClassName);
+				}
+			}
+		}
+		updateIcon('addStateIcon', AddStateActive);
+		updateIcon('removeStateIcon', RemoveStateActive);
+		updateIcon('modifyStateIcon', ModifyStateActive);
 	},
 	
 	/**

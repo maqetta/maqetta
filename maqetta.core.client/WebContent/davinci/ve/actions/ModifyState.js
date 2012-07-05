@@ -7,7 +7,9 @@ define([
 	"dijit/_WidgetsInTemplateMixin",
 	"dijit/popup",
 	"dijit/focus",
+	"davinci/ve/States",
 	"davinci/ui/Dialog",
+	"davinci/Runtime",
 	"davinci/Workbench",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
@@ -24,7 +26,9 @@ define([
 		_WidgetsInTemplateMixin,
 		dijitPopup,
 		dijitFocus,
+		States,
 		Dialog, 
+		Runtime, 
 		Workbench, 
 		Action, 
 		veNls, 
@@ -46,6 +50,10 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 		this._connections = [];
 		var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
 		dialogCreateDeferred.then(function(){
+			var modify_state_old_name_node = dojo.byId('modify_state_old_name');
+			if(modify_state_old_name_node && this._statesFocus && this._statesFocus.state){
+				modify_state_old_name_node.innerHTML = this._statesFocus.state;
+			}
 			this._dialog.connect(this._dialog,"hide",function(e){
 				this.onClose();
 			}.bind(this));
@@ -136,7 +144,16 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 
 return declare("davinci.ve.actions.ModifyState", [Action], {
 
-	run: function(context){
+	run: function(){
+		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			var context = davinci.Runtime.currentEditor.currentEditor.context;
+		}else{
+			return;
+		}
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus.state || statesFocus.state === States.NORMAL){
+			return;
+		}
 
 		// Have to use a deferred because of chicken-and-egg problem.
 		// We need to put event connection onto the dialog in the postCreate logic
@@ -144,11 +161,10 @@ return declare("davinci.ve.actions.ModifyState", [Action], {
 		// at that point because the dialog is created after its child widgets are created.
 		dialogCreateDeferred = new Deferred();
 
-		var node = this.getNode();
-
-		var w = new davinci.ve.actions.ModifyStateWidget({node: node});
+		var w = new davinci.ve.actions.ModifyStateWidget();
 		var dialog = Workbench.showModal(w, veNls.modifyState);
 		this._dialog = w._dialog = dialog;
+		w._statesFocus = statesFocus;
 		dialogCreateDeferred.resolve();
 	},
 
@@ -158,13 +174,6 @@ return declare("davinci.ve.actions.ModifyState", [Action], {
 
 	isEnabled: function(context){
 		return this.getNode();
-	},
-
-	getNode: function(node) {
-		if (!node) {
-			node = davinci.ve.states.getContainer();
-		}
-		return node;
 	}
 });
 });

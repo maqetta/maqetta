@@ -29,7 +29,7 @@ define({ root:
 		"selectAncestorTitle":"Select ancestor",
 		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
 		
-		//actions/AddState.js, ModifyState.js
+		//actions/AddState.js, ModifyState.js, RenameState.js
 		"createNewState":"Create New State",
 		"createLabel":"Create",
 		"modifyState":"Modify State",
@@ -37,6 +37,10 @@ define({ root:
 		"stateLabel":"State",
 		"enterStateName":"Please enter a state name.",
 		"stateNameExists":"State name '${name}' already exists. Please enter a different state name.",
+		"renameState":"Rename State",
+		"renameLabel":"Rename",
+		"oldStateLabel":"Current name:",
+		"newStateLabel":"New name:",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

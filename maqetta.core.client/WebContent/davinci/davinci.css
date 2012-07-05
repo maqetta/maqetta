@@ -718,6 +718,13 @@ davinci_top_bar .dijitButtonNode {
 .modifyStateIcon.modifyStateIconDisabled {
 	background-position: -66px -483px;
 }
+.states_rename_table td {
+	white-space:nowrap;
+}
+.states_rename_table td.labelcolumn {
+	padding-right:4px;
+	text-align:right;
+}
 
 .designModeIcon {
 	background-image: url(img/sprite.png);

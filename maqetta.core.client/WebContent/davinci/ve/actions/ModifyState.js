@@ -5,6 +5,7 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
+	"davinci/ui/Dialog",
 	"davinci/Workbench",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
@@ -12,9 +13,18 @@ define([
 	"dojo/text!./templates/ModifyState.html",
 	"dojo/text!./templates/RenameState.html",
 	"dijit/form/TextBox"
-], function(declare, Deferred, connect, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Workbench, Action, veNls, commonNls, templateString, renameTemplateString){
+], function(declare, Deferred, connect, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Dialog, Workbench, Action, veNls, commonNls, templateString, renameTemplateString){
 
 var dialogCreateDeferred = null;
+
+
+declare("davinci.ve.actions.RenameState", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+	templateString: renameTemplateString,
+	widgetsInTemplate: true,
+
+	veNls: veNls,
+	commonNls: commonNls
+});
 
 var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
@@ -34,9 +44,44 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 		}.bind(this));
 	},
 	
+	onOkRename: function(e) {
+//debugger;
+		var newName = dijit.byId('states_rename_new_textbox').attr('value');
+		if (newName) {
+			var a=1;	//FIXME: temporary for debugging.
+		}
+		
+		this.onCloseRename(e);
+	},
+	onCloseRename: function(e) {
+		while (connection = this._RenameState._renameConnections.pop()){
+			dojo.disconnect(connection);
+		}
+		this._RenameState.destroyDescendants();
+		this._RenameState.destroy();
+		delete this._RenameState;
+	},
+
 	renameState: function(e) {
 debugger;
+
+		this._RenameState = new Dialog({
+			id: "renameState",
+			title: veNls.renameState,
+			contentStyle: {width: 300},
+			content: new davinci.ve.actions.RenameState({})
+		});
+		this._RenameState._renameConnections = [];
+		this._RenameState._renameConnections.push(dojo.connect(dijit.byId('states_rename_ok_button'), "onClick", this, "onOkRename"));
+		this._RenameState._renameConnections.push(dojo.connect(dijit.byId('states_rename_cancel_button'), "onClick", this, "onCloseRename"));
+		this._RenameState._renameConnections.push(dojo.connect(this._RenameState, "onCancel", this, "onCloseRename"));
+		this._RenameState.show();
 return;
+		var editBox = dijit.byId('theme_select_themeset_rename_textbox');
+		editBox.attr('value', this._selectedThemeSet.name);
+			dijit.selectInputText(editBox);
+
+
 		var langObj = uiNLS;
 		var loc = commonNLS;
 		var select = dojo.byId('theme_select_themeset_theme_select');
@@ -96,13 +141,6 @@ return;
 			connect.disconnect(connection);
 		}
 	}
-});
-
-declare("davinci.ve.actions.RenameState", [_WidgetBase, _TemplatedMixin], {
-	templateString: renameTemplateString,
-	widgetsInTemplate: true,
-	veNls: veNls,
-	commonNls: commonNls
 });
 
 return declare("davinci.ve.actions.ModifyState", [Action], {

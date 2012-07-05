@@ -1,6 +1,9 @@
 <div>
 	<div class="dijitDialogPaneContentArea">
-		${veNls.stateLabel} <input dojoType="dijit.form.ValidationTextBox" data-dojo-props="required:true" id="states_rename_textbox" style="width: 175px;"/>
+		<table class='states_rename_table'>
+			<tr><td class='labelcolumn'>${veNls.oldStateLabel}</td><td><span id="states_rename_old_textbox" style="width: 175px;"></span></td></tr>
+			<tr><td class='labelcolumn'>${veNls.newStateLabel}</td><td><input dojoType="dijit.form.ValidationTextBox" data-dojo-props="required:true" id="states_rename_new_textbox" style="width: 175px;"/></td></tr>
+		</table>
 	</div>
 
 	<div class="dijitDialogPaneActionBar">

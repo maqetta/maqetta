@@ -5,6 +5,7 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
+	"dijit/popup",
 	"dijit/focus",
 	"davinci/ui/Dialog",
 	"davinci/Workbench",
@@ -20,7 +21,8 @@ define([
 		connect, 
 		_WidgetBase, 
 		_TemplatedMixin, 
-		_WidgetsInTemplateMixin, 
+		_WidgetsInTemplateMixin,
+		dijitPopup,
 		dijitFocus,
 		Dialog, 
 		Workbench, 
@@ -38,6 +40,7 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 
 	veNls: veNls,
 	commonNls: commonNls,
+	_renamed: false,
 	
 	postCreate: function(){
 		this._connections = [];
@@ -79,12 +82,26 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 			e.stopPropagation();
 		});
 		state_rename_do_it_button.connect(state_rename_do_it_button, "onClick", function(e){
-			debugger;
-		});
+			this.renameStateDoIt(e);
+		}.bind(this));
+	},
+	
+	renameStateDoIt: function(e){
+		var modify_state_old_name_node = dojo.byId('modify_state_old_name');
+		var modify_state_old_name = modify_state_old_name_node.innerHTML;
+		var modify_state_new_name_widget = dijit.byId('state_rename_new_name');
+		var new_name = modify_state_new_name_widget ? modify_state_new_name_widget.get('value') : null;
+		var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
+		if(modify_state_old_name_node && new_name && modify_state_old_name !== new_name){
+			modify_state_old_name_node.innerHTML = new_name;
+			this._renamed = true;
+		}
+		if(state_rename_tooltip_dialog){
+			dijitPopup.close(state_rename_tooltip_dialog);
+		}
 	},
 	
 	renameStateHideTooltipDialog: function(e){
-		debugger;
 	},
 	
 	_onKeyPress: function(e) {
@@ -132,26 +149,7 @@ return declare("davinci.ve.actions.ModifyState", [Action], {
 		var w = new davinci.ve.actions.ModifyStateWidget({node: node});
 		var dialog = Workbench.showModal(w, veNls.modifyState);
 		this._dialog = w._dialog = dialog;
-		dialog._maqConnections = [];
-		dialog._maqConnections.push(connect.connect(dialog, "onShow", this, "onShow"));
-		dialog._maqConnections.push(connect.connect(dialog, "onHide", this, "onHide"));
 		dialogCreateDeferred.resolve();
-	},
-	
-	onRenameState: function(e){
-		debugger;
-	},
-
-	onShow: function(e){
-		debugger;
-	},
-
-	onHide: function(e){
-		debugger;
-		this._dialog._maqConnections.forEach();
-		while (connection = this._dialog._maqConnections.pop()){
-			connect.disconnect(connection);
-		}
 	},
 
 	shouldShow: function(context){

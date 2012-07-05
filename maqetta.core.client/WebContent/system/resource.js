@@ -16,7 +16,7 @@ var Resource = {
 		
 		if(changedResource == system.resource.getRoot()){
 			changedResource.reload();
-			system.resource.getRoot().getChildren(dojo.hitch(system.resource,function(children){
+			system.resource.getRoot().getChildrenSync(dojo.hitch(system.resource,function(children){
 				system.resource.onChildrenChange(system.resource.getRoot(),children);
 			})); //TODO: need error handler
 			return system.resource.getRoot();
@@ -47,7 +47,7 @@ var Resource = {
 			}
 			
 			/* force the resource parent to update its children */
-			parent.getChildren(function(children){system.resource.onChildrenChange(parent, children);}, function(e){console.error(e);}); // TODO: error handler	
+			parent.getChildrenSync(function(children){system.resource.onChildrenChange(parent, children);}, function(e){console.error(e);}); // TODO: error handler	
 		}
 		
 		if(type=='deleted'){
@@ -255,13 +255,11 @@ var Resource = {
 			{
 				var found=null;
 //				resource.getChildrenSync(function(){}, true);
-/*
 				if (!resource._isLoaded )
 				{
 					serverFind=true;
 					break;
 				}
-*/
 				//#23
 				if (segments[i] == '..') {
 					//parent

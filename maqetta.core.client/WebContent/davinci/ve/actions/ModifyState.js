@@ -5,26 +5,32 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
+	"dijit/focus",
 	"davinci/ui/Dialog",
 	"davinci/Workbench",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/ModifyState.html",
-	"dojo/text!./templates/RenameState.html",
-	"dijit/form/TextBox"
-], function(declare, Deferred, connect, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Dialog, Workbench, Action, veNls, commonNls, templateString, renameTemplateString){
+	"dijit/form/TextBox",
+	"dijit/form/ValidationTextBox"
+], function(
+		declare, 
+		Deferred, 
+		connect, 
+		_WidgetBase, 
+		_TemplatedMixin, 
+		_WidgetsInTemplateMixin, 
+		dijitFocus,
+		Dialog, 
+		Workbench, 
+		Action, 
+		veNls, 
+		commonNls, 
+		templateString, 
+		TextBox){
 
 var dialogCreateDeferred = null;
-
-
-declare("davinci.ve.actions.RenameState", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-	templateString: renameTemplateString,
-	widgetsInTemplate: true,
-
-	veNls: veNls,
-	commonNls: commonNls
-});
 
 var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
@@ -35,84 +41,52 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 	
 	postCreate: function(){
 		this._connections = [];
-		this._connections.push(connect.connect(dijit.byId('modify_state_rename_button'), "onClick", this, "renameState"));
+		var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
 		dialogCreateDeferred.then(function(){
-			var conn = this._dialog.connect(this._dialog,"hide",function(e){
+			this._dialog.connect(this._dialog,"hide",function(e){
 				this.onClose();
 			}.bind(this));
-			this._connections.push(conn);
+			var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
+			if(state_rename_tooltip_dialog){
+				state_rename_tooltip_dialog.connect(state_rename_tooltip_dialog,"onShow",function(e){
+					this.renameStateShowTooltipDialog(e);
+				}.bind(this));
+				state_rename_tooltip_dialog.connect(state_rename_tooltip_dialog,"onHide",function(e){
+					this.renameStateHideTooltipDialog(e);
+				}.bind(this));
+			}
 		}.bind(this));
 	},
 	
-	onOkRename: function(e) {
-//debugger;
-		var newName = dijit.byId('states_rename_new_textbox').attr('value');
-		if (newName) {
-			var a=1;	//FIXME: temporary for debugging.
+	renameStateShowTooltipDialog: function(e){
+		var modify_state_old_name_node = dojo.byId('modify_state_old_name');
+		var state_rename_new_name_node = dojo.byId('state_rename_new_name');
+		var state_rename_new_name_widget = dijit.byId('state_rename_new_name');
+		if(modify_state_old_name_node && state_rename_new_name_widget){
+			var state_rename_new_name = modify_state_old_name_node.innerText;
+			state_rename_new_name_widget.set('value', state_rename_new_name);
 		}
-		
-		this.onCloseRename(e);
-	},
-	onCloseRename: function(e) {
-		while (connection = this._RenameState._renameConnections.pop()){
-			dojo.disconnect(connection);
-		}
-		this._RenameState.destroyDescendants();
-		this._RenameState.destroy();
-		delete this._RenameState;
-	},
-
-	renameState: function(e) {
-debugger;
-
-		this._RenameState = new Dialog({
-			id: "renameState",
-			title: veNls.renameState,
-			contentStyle: {width: 300},
-			content: new davinci.ve.actions.RenameState({})
+		dijitFocus.focus(state_rename_new_name_node);
+		var state_rename_do_it_button = dijit.byId('state_rename_do_it');
+		state_rename_do_it_button.connect(state_rename_do_it_button, "onMouseDown", function(e){
+			// There is something funny going on in Maqetta with mousedown listeners
+			// where focus is getting reassigned. This messes up Dojo's logic for 
+			// DropDownButton/ToolTipDialog where it checks if focus has moved out
+			// of the ToolTipDialog, and if so, then it hides the ToolTipDialog.
+			// As a result, the Maqetta mousedown listener changes focus, which triggers
+			// onBlur on the DropDownButton, which triggers hiding the dialog
+			// before the onClick event would ever fire.
+			e.stopPropagation();
 		});
-		this._RenameState._renameConnections = [];
-		this._RenameState._renameConnections.push(dojo.connect(dijit.byId('states_rename_ok_button'), "onClick", this, "onOkRename"));
-		this._RenameState._renameConnections.push(dojo.connect(dijit.byId('states_rename_cancel_button'), "onClick", this, "onCloseRename"));
-		this._RenameState._renameConnections.push(dojo.connect(this._RenameState, "onCancel", this, "onCloseRename"));
-		this._RenameState.show();
-return;
-		var editBox = dijit.byId('theme_select_themeset_rename_textbox');
-		editBox.attr('value', this._selectedThemeSet.name);
-			dijit.selectInputText(editBox);
-
-
-		var langObj = uiNLS;
-		var loc = commonNLS;
-		var select = dojo.byId('theme_select_themeset_theme_select');
-		this._renameDialog = new Dialog({
-			id: "rename",
-			title: langObj.renameThemeSet,
-			contentStyle: {width: 300},
-			content: new davinci.ui.ThemeSetsDialogRenameWidget({})
+		state_rename_do_it_button.connect(state_rename_do_it_button, "onClick", function(e){
+			debugger;
 		});
-		this._renameDialog._themesetConnections = [];
-		this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_ok_button'), "onClick", this, "onOkRename"));
-		this._renameDialog._themesetConnections.push(dojo.connect(dijit.byId('theme_set_rename_cancel_button'), "onClick", this, "onCloseRename"));
-		this._renameDialog._themesetConnections.push(dojo.connect(this._renameDialog, "onCancel", this, "onCloseRename"));
-		this._renameDialog.show();
-		var editBox = dijit.byId('theme_select_themeset_rename_textbox');
-		editBox.attr('value', this._selectedThemeSet.name);
-			dijit.selectInputText(editBox);
 	},
-
-	_isValid: function() { 
-		var state = this.input.get("value");
-		// TODO: Replace alerts with inline error messages
-		if (!state) {
-			return false;
-		} else if (davinci.ve.states.hasState(this.node, state)) {
-			alert(dojo.string.substitute(veNls.stateNameExists, { name: state }));
-			return false;
-		}
-		return true;
+	
+	renameStateHideTooltipDialog: function(e){
+		debugger;
 	},
-
+	
 	_onKeyPress: function(e) {
 		if (e.keyCode==dojo.keys.ENTER) {
 			if(this._isValid()){
@@ -157,8 +131,27 @@ return declare("davinci.ve.actions.ModifyState", [Action], {
 
 		var w = new davinci.ve.actions.ModifyStateWidget({node: node});
 		var dialog = Workbench.showModal(w, veNls.modifyState);
-		w._dialog = dialog;
+		this._dialog = w._dialog = dialog;
+		dialog._maqConnections = [];
+		dialog._maqConnections.push(connect.connect(dialog, "onShow", this, "onShow"));
+		dialog._maqConnections.push(connect.connect(dialog, "onHide", this, "onHide"));
 		dialogCreateDeferred.resolve();
+	},
+	
+	onRenameState: function(e){
+		debugger;
+	},
+
+	onShow: function(e){
+		debugger;
+	},
+
+	onHide: function(e){
+		debugger;
+		this._dialog._maqConnections.forEach();
+		while (connection = this._dialog._maqConnections.pop()){
+			connect.disconnect(connection);
+		}
 	},
 
 	shouldShow: function(context){

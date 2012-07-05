@@ -39,7 +39,6 @@ define({ root:
 		"stateNameExists":"State name '${name}' already exists. Please enter a different state name.",
 		"renameState":"Rename State",
 		"renameLabel":"Rename",
-		"oldStateLabel":"Current name:",
 		"newStateLabel":"New name:",
 		
 		//input/RichTextInput.js

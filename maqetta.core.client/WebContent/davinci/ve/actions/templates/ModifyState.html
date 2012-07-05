@@ -1,7 +1,19 @@
 <div>
 	<div class="dijitDialogPaneContentArea">
-		${veNls.stateLabel}: <input dojoAttachPoint="input" dojoType="dijit.form.TextBox" readOnly='true' dojoAttachEvent="onKeyUp:_onKeyPress" type="text"></input>
-		<input type="button" dojoType="dijit.form.Button" id="modify_state_rename_button" label="Rename" style="margin-left: 5px;"></input>
+		<div class='modify_state_container'>
+			<div data-dojo-type="dijit.form.DropDownButton" label='${veNls.renameLabel}' class="modify_state_rename_button">
+					<div data-dojo-type="dijit.TooltipDialog" class='modify_state_rename_container' id='state_rename_tooltip_dialog'>
+						<div>
+							<label for="state_rename_new_name">${veNls.newStateLabel}</label>
+							<input data-dojo-type="dijit.form.ValidationTextBox" id="state_rename_new_name" name="state_rename_new_name"></input>
+						</div>
+						<div>
+							<button id="state_rename_do_it" dojoType='dijit.form.Button' label='${veNls.renameLabel}'></button>
+						</div>
+					</div>
+				</div>
+			${veNls.stateLabel}: <span id='modify_state_old_name'>aaa</span>
+		</div>
 	</div>
 				
 	<div class="dijitDialogPaneActionBar">

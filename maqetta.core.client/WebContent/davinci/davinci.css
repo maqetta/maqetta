@@ -718,12 +718,23 @@ davinci_top_bar .dijitButtonNode {
 .modifyStateIcon.modifyStateIconDisabled {
 	background-position: -66px -483px;
 }
+.modify_state_container {
+	white-space:nowrap;
+	line-height:30px;
+}
 .states_rename_table td {
 	white-space:nowrap;
 }
 .states_rename_table td.labelcolumn {
 	padding-right:4px;
 	text-align:right;
+}
+.modify_state_rename_container {
+	white-space:nowrap;
+}
+.modify_state_rename_button {
+	float:right;
+	margin-left:30px;
 }
 
 .designModeIcon {

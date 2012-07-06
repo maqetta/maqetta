@@ -534,8 +534,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      * @param device {?string} device name
      */
     setMobileDevice: function(device) {
-    	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
-    	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent =
+    	this.getGlobal()["require"]("dojo/_base/config").mblUserAgent =
     			Silhouette.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
         if (! device || device === 'none') {

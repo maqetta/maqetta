@@ -24,8 +24,7 @@ return declare("davinci.review.model.ReviewFileTreeModel", null, {
 	},
 
 	mayHaveChildren: function(/*dojo.data.Item*/ item) {
-		return item.elementType=="Folder";
-
+		return item.elementType == "Folder";
 	},
 
 	getChildren: function(/*dojo.data.Item*/ parentItem, /*function(items)*/ onComplete) {
@@ -33,13 +32,9 @@ return declare("davinci.review.model.ReviewFileTreeModel", null, {
 			parentItem.getChildren(onComplete, true); // need to make the call sync, chrome is to fast for async
 		} else {
 			parentItem.getChildren(function (items) {
-				var children=[];
-				var i;
-				for (i=0;i<items.length;i++) {
-					if (items[i].elementType == "Folder") {
-						children.push(items[i]);
-					}
-				}
+				var children = items.filter(function(item){
+					return item.elementType == "Folder";
+				});
 				onComplete(children);
 			});
 		}
@@ -61,12 +56,10 @@ return declare("davinci.review.model.ReviewFileTreeModel", null, {
 		return label;
 	},
 
-	resourceChanged : function(type,changedResource) {
+	resourceChanged: function(type,changedResource) {
 		if (type == 'created' || type == 'deleted') {
-			var parent=changedResource.parent;
-			var newChildren;
-			parent.getChildren(function(children) { newChildren = children; });
-			this.onChildrenChange(parent,newChildren);
+			var parent = changedResource.parent;
+			parent.getChildren(function(children) { this.onChildrenChange(parent, children); }.bind(this));
 		}
 	},
 

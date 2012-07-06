@@ -41,11 +41,7 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 		// in.
 		if (changedResource) {
 			if (changedResource._isLoaded) {
-				var changedResourceChildren = null;
-				changedResource.getChildren(function(children) { changedResourceChildren = children; }, true);
-				dojo.forEach(changedResourceChildren, function(child) {
-					this.onDelete(child);
-				}.bind(this));
+				changedResource.getChildren(function(children) { children.forEach(this.onDelete, this); }.bind(this), true);
 			}
 			
 			this.onDelete(changedResource);

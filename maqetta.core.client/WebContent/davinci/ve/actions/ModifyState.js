@@ -60,6 +60,9 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 			this.okButton.connect(this.okButton, "onClick", dojo.hitch(this, function(e){
 				this.onOk(e);
 			}));
+			this.cancelButton.connect(this.cancelButton, "onClick", dojo.hitch(this, function(e){
+				this.onCancel(e);
+			}));
 			var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
 			if(state_rename_tooltip_dialog){
 				state_rename_tooltip_dialog.connect(state_rename_tooltip_dialog,"onShow",function(e){
@@ -112,20 +115,6 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 	},
 	
 	renameStateHideTooltipDialog: function(e){
-	},
-	
-	_onKeyPress: function(e) {
-		if (e.keyCode==dojo.keys.ENTER) {
-			if(this._isValid()){
-				this.onOk();
-			}
-		} else {
-			if (this._isValid()) {
-				this.okButton.set("disabled", false);
-			} else {
-				this.okButton.set("disabled", true);
-			}
-		}
 	},
 
 	onOk: function(e) {
@@ -182,14 +171,6 @@ return declare("davinci.ve.actions.ModifyState", [Action], {
 		this._dialog = w._dialog = dialog;
 		w._statesFocus = statesFocus;
 		dialogCreateDeferred.resolve();
-	},
-
-	shouldShow: function(context){
-		return this.getNode();
-	},
-
-	isEnabled: function(context){
-		return this.getNode();
 	}
 });
 });

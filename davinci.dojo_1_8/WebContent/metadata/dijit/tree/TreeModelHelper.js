@@ -1,7 +1,7 @@
 define(function() {
-
-var ForestStoreModelHelper = function() {};
-ForestStoreModelHelper.prototype = {
+	
+var TreeModelHelper = function() {};
+TreeModelHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options){
 		if(!widget){
@@ -24,6 +24,6 @@ ForestStoreModelHelper.prototype = {
 
 };
 
-return ForestStoreModelHelper;
+return TreeModelHelper;
 
 });

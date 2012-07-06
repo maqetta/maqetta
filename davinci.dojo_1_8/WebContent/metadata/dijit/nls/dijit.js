@@ -46,5 +46,27 @@ define({ root: {
 		"preview":"Preview:",
 
 		//ContentPaneHelper
-		"paneRegion": "[region={0}]"
+		"paneRegion": "[region={0}]",
+			
+		//TreeInput.js
+		"treeDialog":"Tree Configuration",
+		"preview": "Preview:",
+		"previewNote": "(Note: The tree below is \"live\" allowing you to manipulate nodes.)",
+		"nodeProperties": "Node properties:",
+		"idLabel": "ID:",
+		"labelLabel": "Label:",
+		"newNodeName": "New Node {0}",
+		"addChild": "Add Child",
+		"insertBefore": "Add Before",
+		"insertAfter": "Add After",
+		"remove": "Remove",
+		"moveUp": "Move Up",
+		"moveDown": "Move Down",
+		"shiftLeft": "Shift Left",
+		"shiftRight": "Shift Right",
+		"iconLabel": "icon:",
+		"onClickLabel": "onClick:",
+		"onDblClickLabel": "onDblClick:",
+		"onCloseLabel": "onClose:"
+		
 }});

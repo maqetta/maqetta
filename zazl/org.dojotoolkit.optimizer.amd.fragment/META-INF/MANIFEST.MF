@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Fragment
+Bundle-SymbolicName: org.dojotoolkit.optimizer.amd.fragment;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: org.dojotoolkit.optimizer.amd;bundle-version="0.3.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -1341,24 +1341,19 @@ davinci_top_bar .dijitButtonNode {
 	height:1.1em;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent {
-	font-size:160%;
-	margin:-5px;
-	margin-right:6px;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentHidden {
 	visibility:hidden;
 }
-.ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentNone {
-	display:none;
-}
 .ScenesPaletteAppStateIcon.ScenesPaletteFocus {
+	margin-top: -2px;
 }
-.ScenesPaletteAppStateIcon.ScenesPaletteFocus.ScenesPaletteFocusNone {
-	display:none;
+.ScenesPaletteAppStateIcon.ScenesPaletteFocus.ScenesPaletteFocusHidden {
+	visibility:hidden;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteInitial {
+	margin-top: -1px;
 	margin-right:10px;
-	display:inline-block;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteInitial.ScenesPaletteInitialHidden {
 	visibility:hidden;

@@ -18,7 +18,7 @@ define({ root:
 		"Scenes":"Scenes",
 		"States":"States",
 		"ActiveScene":"This scene is currently visible",
-		"AppStateFocus":"This application state is currently visible and is the target for any application-state-specific visibility or styling changes",
+		"AppStateFocus":"This application state is the target for application-state-specific visibility or styling changes",
 		"InitialScene":"This scene will show initially when the page runs",
 		
 		//DeviceActions.js

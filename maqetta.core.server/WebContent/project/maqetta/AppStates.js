@@ -832,15 +832,18 @@ States.prototype = {
 		if(stateContainerNode._maqAppStates.focus === oldName){
 			stateContainerNode._maqAppStates.focus = newName;
 		}
+		if(stateContainerNode._maqAppStates.current === oldName){
+			stateContainerNode._maqAppStates.current = newName;
+		}
 		
 		var nodes = [stateContainerNode];
 		var currentState = this.getState(stateContainerNode);
 		nodes = nodes.concat(this._getChildrenOfNode(stateContainerNode));
 		while (nodes.length) {
 			var node = nodes.shift();
-			if(node._maqAppDeltas && node._maqAppDeltas[oldName]){
-				node._maqAppDeltas[newName] = node._maqAppDeltas[oldName];
-				delete node._maqAppDeltas[oldName];
+			if(node._maqDeltas && node._maqDeltas[oldName]){
+				node._maqDeltas[newName] = node._maqDeltas[oldName];
+				delete node._maqDeltas[oldName];
 			}
 			nodes = nodes.concat(this._getChildrenOfNode(node));
 			var statesArray = this.getStatesArray(node, null, newName, stateContainerNode);
@@ -944,15 +947,17 @@ States.prototype = {
 		// for a single property.
 		for (var s in states){
 			var state = states[s];
-			var style = state.style;
-			if(style && !style.length){	// if style exists but isn't an array
-				var statesArray = [];
-				for(var prop in style){
-					var o = {};
-					o[prop] = style[prop];
-					statesArray.push(o);
+			if(state){
+				var style = state.style;
+				if(style && !style.length){	// if style exists but isn't an array
+					var statesArray = [];
+					for(var prop in style){
+						var o = {};
+						o[prop] = style[prop];
+						statesArray.push(o);
+					}
+					state.style = statesArray;
 				}
-				state.style = statesArray;
 			}
 		}
 	},

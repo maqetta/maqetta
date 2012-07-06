@@ -571,11 +571,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 								domClass.add(currentSpan, 'ScenesPaletteCurrentHidden');
 							}
 						}
-						if(currentSpan){
-							domClass.remove(currentSpan, 'ScenesPaletteCurrentNone');
-						}
 						if(focusSpan){
-							domClass.add(focusSpan, 'ScenesPaletteFocusNone');
+							domClass.add(focusSpan, 'ScenesPaletteFocusHidden');
 						}
 	/*FIXME: DELETE THIS
 						if(initialScenes.indexOf(sceneItem.node[0])>=0){
@@ -630,10 +627,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	*/
 					if(appStateItem.isFocus && appStateItem.isFocus[0]){
 						if(focusSpan){
-							domClass.remove(focusSpan, 'ScenesPaletteFocusNone');
+							domClass.remove(focusSpan, 'ScenesPaletteFocusHidden');
 						}
 						if(currentSpan){
-							domClass.add(currentSpan, 'ScenesPaletteCurrentNone');
+							domClass.remove(currentSpan, 'ScenesPaletteCurrentHidden');
 						}
 						if(id === selectedId){
 							selectedNodeIsCorrectType = true;
@@ -642,20 +639,18 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						}
 					}else{
 						if(focusSpan){
-							domClass.add(focusSpan, 'ScenesPaletteFocusNone');
+							domClass.add(focusSpan, 'ScenesPaletteFocusHidden');
 						}
 						if(currentSpan){
-							domClass.remove(currentSpan, 'ScenesPaletteCurrentNone');
 							domClass.remove(currentSpan, 'ScenesPaletteCurrentHidden');
 						}
 					}
 				}else{
 					if(focusSpan){
-						domClass.add(focusSpan, 'ScenesPaletteFocusNone');
+						domClass.add(focusSpan, 'ScenesPaletteFocusHidden');
 					}
 					if(currentSpan){
 						domClass.add(currentSpan, 'ScenesPaletteCurrentHidden');
-						domClass.remove(currentSpan, 'ScenesPaletteCurrentNone');
 					}
 				}
 	/*FIXME: DELETE THIS
@@ -986,7 +981,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	_treeNodeContent: function(labelSnippet){
 		var s = '';
 		s += '<span title="'+veNls.InitialScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteInitial">&#x2713;</span>';
-		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCurrent">&#x25CF;</span>';
+		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCurrent">&#x263C;</span>';
 		s += '<span title="'+veNls.AppStateFocus+'" class="ScenesPaletteAppStateIcon ScenesPaletteFocus">&#x25C9;</span>';
 		s += '<span>'+labelSnippet+'</span></span>';
 		return s;

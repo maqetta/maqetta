@@ -57,6 +57,9 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 			this._dialog.connect(this._dialog,"hide",function(e){
 				this.onClose();
 			}.bind(this));
+			this.okButton.connect(this.okButton, "onClick", dojo.hitch(this, function(e){
+				this.onOk(e);
+			}));
 			var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
 			if(state_rename_tooltip_dialog){
 				state_rename_tooltip_dialog.connect(state_rename_tooltip_dialog,"onShow",function(e){

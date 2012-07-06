@@ -146,6 +146,9 @@ var veStates = declare(maqettaStates, {
 	},
 	_updateSrcState: function (node){
 		var widget = (node && node._dvWidget);
+		if(!widget){
+			return;
+		}
 		var existingDefsAttr = widget._srcElement.getAttribute(davinci.states.APPSTATES_ATTRIBUTE);
 		var existingDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 		if (widget && widget._srcElement) {

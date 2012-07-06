@@ -871,6 +871,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					}
 				}
 			}
+			this._updateSelection();
 		});
 
 		var newItemRecursive = function(obj, parentItem){

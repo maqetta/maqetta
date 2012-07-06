@@ -281,7 +281,7 @@ var veStates = declare(maqettaStates, {
 					if (!this.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.statesContainerNode);
+					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.stateContainerNode);
 					this._update(child, statesArray);
 				}
 				dojo.publish("/maqetta/appstates/state/changed/end", [e]);

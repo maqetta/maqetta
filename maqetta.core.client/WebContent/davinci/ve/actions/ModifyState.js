@@ -20,7 +20,7 @@ define([
 ], function(
 		declare, 
 		Deferred, 
-		connect, 
+		connect,
 		_WidgetBase, 
 		_TemplatedMixin, 
 		_WidgetsInTemplateMixin,
@@ -44,7 +44,7 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 
 	veNls: veNls,
 	commonNls: commonNls,
-	_renamed: false,
+	newName: null,
 	
 	postCreate: function(){
 		this._connections = [];
@@ -96,13 +96,12 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 	
 	renameStateDoIt: function(e){
 		var modify_state_old_name_node = dojo.byId('modify_state_old_name');
-		var modify_state_old_name = modify_state_old_name_node.innerHTML;
 		var modify_state_new_name_widget = dijit.byId('state_rename_new_name');
-		var new_name = modify_state_new_name_widget ? modify_state_new_name_widget.get('value') : null;
+		var newName = modify_state_new_name_widget ? modify_state_new_name_widget.get('value') : null;
 		var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
-		if(modify_state_old_name_node && new_name && modify_state_old_name !== new_name){
-			modify_state_old_name_node.innerHTML = new_name;
-			this._renamed = true;
+		if(modify_state_old_name_node && newName){
+			modify_state_old_name_node.innerHTML = newName;
+			this.newName = newName;
 		}
 		if(state_rename_tooltip_dialog){
 			dijitPopup.close(state_rename_tooltip_dialog);
@@ -126,8 +125,21 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 		}
 	},
 
-	onOk: function() {
-		davinci.ve.states.modify(this.node, this.input.get("value"));
+	onOk: function(e) {
+		var context;
+		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			context = Runtime.currentEditor.currentEditor.context;
+		}else{
+			return;
+		}
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus || !statesFocus.stateContainerNode){
+			return;
+		}
+		if(this.newName !== this._statesFocus.state){
+			States.rename(statesFocus.stateContainerNode, {oldName:this._statesFocus.state, newName:this.newName});
+		}
+		this.onClose();
 	},
 
 	onCancel: function() {

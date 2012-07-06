@@ -65,7 +65,7 @@ return declare("davinci.review.editor.Context", [Context], {
 							var state = args.newState || "Normal";
 							var dv = userWindow.davinci;
 							if(dv && dv.states && dv.states.setState){
-								dv.states.setState(state, args.statesContainerNode);
+								dv.states.setState(state, args.stateContainerNode);
 								// Re-publish at the application level
 								var newArgs = dojo.clone(args);
 								newArgs.editorClass = "davinci.review.editor.ReviewEditor";
@@ -100,7 +100,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				// Push the state change down into the review document
 				var userWin = this.frame && this.frame.contentDocument && this.frame.contentDocument.defaultView;
 				if(userWin && userWin.davinci && userWin.davinci.states && userWin.davinci.states.setState){
-					userWin.davinci.states.setState(args.newState, args.statesContainerNode);
+					userWin.davinci.states.setState(args.newState, args.stateContainerNode);
 				}
 			}.bind(this));
 		}

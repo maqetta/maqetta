@@ -45,7 +45,7 @@ States.prototype = {
 	 * @param {Element} node  An element node in the document
 	 * @param {string|undefined} oldState  The state which used to be active
 	 * @param {string|undefined} newState  The state which has now become active
-	 * @param {Element} statesContainerNode  The (state container) element on which oldState and newState are defined
+	 * @param {Element} stateContainerNode  The (state container) element on which oldState and newState are defined
 	 * @returns {[object]} statesArray  
 	 *    Array of "state containers" that apply to this node,
 	 *    with furthest ancestor at position 0 and nearest at position length-1.
@@ -54,14 +54,14 @@ States.prototype = {
 	 *      statesArray[i].oldState - the previous appstate that had been active on this state container node
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */ 
-	getStatesArray: function(node, oldState, newState, statesContainerNode){
+	getStatesArray: function(node, oldState, newState, stateContainerNode){
 		var statesArray = [];
 		if(node){
 			var pn = node.parentNode;
 			while(pn){
 				if(pn._maqAppStates){
 					
-					if(pn == statesContainerNode){
+					if(pn == stateContainerNode){
 						statesArray.splice(0, 0, {node:pn, oldState:oldState, newState:newState});
 					}else{
 						var current = pn._maqAppStates.states ? pn._maqAppStates.states.current : undefined;
@@ -300,9 +300,9 @@ States.prototype = {
 			this._setFocus(newState, node);
 		}
 		if (!silent) {
-//FIXME: Reconcile node and statesContainerNode
+//FIXME: Reconcile node and stateContainerNode
 			connect.publish("/maqetta/appstates/state/changed", 
-					[{node:node, newState:newState, oldState:oldState, statesContainerNode:node}]);
+					[{node:node, newState:newState, oldState:oldState, stateContainerNode:node}]);
 		}
 		this._updateSrcState (node);
 		
@@ -807,17 +807,47 @@ States.prototype = {
 	/**
 	 * Renames a state in the list of states declared by the widget.
 	 * Subscribe using connect.subscribe("/davinci/states/renamed", callback).
+	 * @param {Element} stateContainerNode  A DOM element that is a state container node (i.e., has _maqAppStates property)
+	 * @param {object} params  Various params:
+	 *    params.oldName {string} old state name (i.e., state name to change)
+	 *    params.newName {string} new state name
+	 * @returns {boolean}  Return true with success, false if failure
 	 */
-	rename: function(node, oldName, newName, property){ 
-		if (!node || !this.hasState(node, oldName, property) || this.hasState(node, newName, property)) {
+	rename: function(stateContainerNode, params){
+		if(!params){
 			return false;
 		}
-		node._maqAppStates[newName] = node._maqAppStates[oldName];
-		delete node._maqAppStates[oldName];
-		if (!property) {
-			connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName, stateContainerNode:node, }]);
+		var oldName = params.oldName;
+		var newName = params.newName;
+		if (!stateContainerNode || !stateContainerNode._maqAppStates || 
+				!stateContainerNode._maqAppStates.states || !stateContainerNode._maqAppStates.states.length){
+			return false;
 		}
-		this._updateSrcState (node);
+		var states = stateContainerNode._maqAppStates.states;
+		if(states.indexOf(oldName) < 0 || states.indexOf(newName) >= 0){
+			return false;
+		}
+		states.splice(states.indexOf(oldName), 1);
+		states.push(newName);
+		if(stateContainerNode._maqAppStates.focus === oldName){
+			stateContainerNode._maqAppStates.focus = newName;
+		}
+		
+		var nodes = [stateContainerNode];
+		var currentState = this.getState(stateContainerNode);
+		nodes = nodes.concat(this._getChildrenOfNode(stateContainerNode));
+		while (nodes.length) {
+			var node = nodes.shift();
+			if(node._maqAppDeltas && node._maqAppDeltas[oldName]){
+				node._maqAppDeltas[newName] = node._maqAppDeltas[oldName];
+				delete node._maqAppDeltas[oldName];
+			}
+			nodes = nodes.concat(this._getChildrenOfNode(node));
+			var statesArray = this.getStatesArray(node, null, newName, stateContainerNode);
+			this._update(node, statesArray);
+			this._updateSrcState (node);
+		}
+		connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName, stateContainerNode:node, }]);
 		return true;
 	},
 	
@@ -1109,7 +1139,7 @@ States.prototype = {
 					if (!davinci.states.isContainer(child)) {
 						children = children.concat(davinci.states._getChildrenOfNode(child));
 					}
-					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.statesContainerNode);
+					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.stateContainerNode);
 					davinci.states._update(child, statesArray);
 				}
 			}.bind(this));

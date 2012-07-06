@@ -481,7 +481,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		editor.save();
 		if(deviceName && deviceName.length && deviceName!='none'){
 			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
-			fileURL = Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param;
+			fileURL = Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param+"&zazl=true";
+		} else {
+			fileURL += '?zazl=true';
 		}
 		window.open(fileURL);
 	},

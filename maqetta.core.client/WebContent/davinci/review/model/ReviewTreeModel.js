@@ -1,8 +1,7 @@
 define([
 	    "dojo/_base/declare",
-	    "davinci/review/model/Resource",
-	    "davinci/ui/widgets/ResourceTreeModel"
-], function(declare, Resource, ResourceTreeModel){
+	    "davinci/review/model/Resource"
+], function(declare, Resource){
 	
 return declare("davinci.review.model.ReviewTreeModel", null, {
 

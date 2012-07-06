@@ -1,12 +1,25 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/actions/Action"
-], function(declare, Action){
+		"dojo/_base/declare",
+		"davinci/Runtime",
+		"davinci/ve/States",
+		"davinci/actions/Action"
+], function(declare, Runtime, States, Action){
 
 
 return declare("davinci.ve.actions.RemoveState", [Action], {
 
-	run: function(context){
+	run: function(){
+		var context;
+		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			context = Runtime.currentEditor.currentEditor.context;
+		}else{
+			return;
+		}
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus || !statesFocus.state || statesFocus.state === States.NORMAL){
+			return;
+		}
+//FIXME: Doesn't work with nested states
 		var node = this.getNode();
 		var state = this.getState(arguments[1] || arguments[0]);
 		davinci.ve.states.remove(node, state);

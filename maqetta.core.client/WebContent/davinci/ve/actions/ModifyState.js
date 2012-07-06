@@ -145,13 +145,14 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 return declare("davinci.ve.actions.ModifyState", [Action], {
 
 	run: function(){
+		var context;
 		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
-			var context = davinci.Runtime.currentEditor.currentEditor.context;
+			context = Runtime.currentEditor.currentEditor.context;
 		}else{
 			return;
 		}
 		var statesFocus = States.getFocus(context.rootNode);
-		if(!statesFocus.state || statesFocus.state === States.NORMAL){
+		if(!statesFocus || !statesFocus.state || statesFocus.state === States.NORMAL){
 			return;
 		}
 

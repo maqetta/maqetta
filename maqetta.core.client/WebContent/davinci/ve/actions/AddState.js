@@ -1,15 +1,17 @@
 define([
-    	"dojo/_base/declare",
-    	"dijit/_WidgetBase",
-    	"dijit/_TemplatedMixin",
-    	"dijit/_WidgetsInTemplateMixin",
-    	"davinci/Workbench",
-    	"davinci/actions/Action",
-    	"dojo/i18n!davinci/ve/nls/ve",
-    	"dojo/i18n!dijit/nls/common",                                                                 
-	 		"dojo/text!./templates/AddState.html",
-	 		"dijit/form/TextBox"
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Workbench, Action, veNls, commonNls, templateString){
+	"dojo/_base/declare",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
+	"davinci/Runtime",
+	"davinci/Workbench",
+	"davinci/ve/States",
+	"davinci/actions/Action",
+	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!dijit/nls/common",                                                                 
+	"dojo/text!./templates/AddState.html",
+	"dijit/form/TextBox"
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Runtime, Workbench, States, Action, veNls, commonNls, templateString){
 
 var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
@@ -55,7 +57,18 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 
 return declare("davinci.ve.actions.AddState", [Action], {
 
-	run: function(context){
+	run: function(){
+		var context;
+		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			context = Runtime.currentEditor.currentEditor.context;
+		}else{
+			return;
+		}
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus || !statesFocus.stateContainerNode){
+			return;
+		}
+//FIXME: Doesn't work with nested states
 		// TODO: Replace dialog with UI to add nodes inline to list
 		var node = this.getNode();
 

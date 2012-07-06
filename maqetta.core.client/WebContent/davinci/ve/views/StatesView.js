@@ -109,7 +109,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if (this.isThemeEditor()){
 			this._updateThemeSelection(event.newState);
 		}else{
-			this._updateSelection();
+			this._updateView();
 		}
 	},
 	
@@ -423,8 +423,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var temporaryRootObj = {children:[]};
 		recurseWidget(context.rootWidget, temporaryRootObj);
 		var latestData = [temporaryRootObj.children[0]];
-		
-		this._hideShowToolBar();
 
 		// If data in Tree widget is same as latest data, then just return
 		if(!this._compareStructures(latestData, storedScenes)){
@@ -432,6 +430,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			this._destroyTree();
 			this._createTree(latestData);
 		}
+		
+		this._hideShowToolBar();
 
 	},
 	
@@ -863,11 +863,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		AddStateActive = RemoveStateActive = ModifyStateActive = false;
 		if(context && context.rootNode){
 			var statesFocus = States.getFocus(context.rootNode);
-			if(statesFocus.stateContainerNode){
+			if(statesFocus && statesFocus.stateContainerNode){
 				AddStateActive = true;
 			}
-			if(statesFocus.state && statesFocus.state !== States.NORMAL){
-				RemoveStateActive = ModifyStateActive = false;
+			if(statesFocus && statesFocus.state && statesFocus.state !== States.NORMAL){
+				RemoveStateActive = ModifyStateActive = true;
 			}
 		}
 		function updateIcon(baseClassName, makeActive){

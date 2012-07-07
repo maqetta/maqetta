@@ -4,7 +4,38 @@ define(["dojo/_base/declare",
         "./HTMLStringUtil",
         "../commands/ModifyCommand"
 ],function(declare, connect, ViewLite, HTMLStringUtil, ModifyCommand){
-  return declare("davinci.ve.widgets.EventSelection", [ViewLite], {
+
+var getEventSelectionValues = function(root){
+	var states = root && davinci.ve.states.getStates(root);
+	var items = [""];
+
+	for(var i in states){
+		items.push(states[i] + ":State");
+	}
+		
+	return items;
+};
+
+var getEventScriptFromValue = function(value) {
+	value.replace(/'/,"\\'");
+	value.replace(/"/,'\\"');
+	
+	if (value && value.match(/.*:State$/)) {
+		value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
+	}
+	
+	return value;
+};
+
+var getValueFromEventScript = function(value) {
+	if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
+		var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
+		value = state + ":State";
+	}
+	return value;
+};
+	
+var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 		pageTemplate: [{display:"onclick", target:"onclick",type:"state", hideCascade:true},
 			{display:"ondblclick",target:"ondblclick",type:"state", hideCascade:true},
 			{display:"onmousedown",target:"onmousedown",type:"state", hideCascade:true},
@@ -71,12 +102,7 @@ define(["dojo/_base/declare",
 			var widget = dijit.byId(this.pageTemplate[index].id);
 			var	value = widget.get('value');
 			
-			value.replace(/'/,"\\'");
-			value.replace(/"/,'\\"');
-			
-			if (value && value.match(/.*:State$/)) {
-				value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
-			}
+			value = getEventScriptFromValue(value);
 			var properties = {};
 			
 			properties[this.pageTemplate[index].target] = value;
@@ -124,12 +150,7 @@ define(["dojo/_base/declare",
 		
 		_buildSelectionValues : function(){
 			var root = this._getRoot();
-			var states = root && davinci.ve.states.getStates(root);
-			var items = [""];
-		
-			for(var i in states){
-				items.push(states[i] + ":State");
-			}
+			var items = getEventSelectionValues(root);
 			
 			for(var i=0;i<this.pageTemplate.length;i++){
 				var box = dijit.byId(this.pageTemplate[i].id);
@@ -146,14 +167,11 @@ define(["dojo/_base/declare",
 		
 				if (widget.properties && widget.properties[name]) {
 					value = widget.properties[name];
-					if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
-						var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
-						value = state + ":State";
-					}
 				}else {
 					/* check the model for the events value */
 					value = widget._srcElement.getAttribute(name);
 				}
+				value = getValueFromEventScript(value);
 				var box = dijit.byId(this.pageTemplate[i].id);
 				if(box){
 					box.set('value', value, false);
@@ -166,4 +184,12 @@ define(["dojo/_base/declare",
 		  this._updateValues({widget: data[0]});
 		}
 	});
+
+//Make helpers available as "static" functions
+EventSelection.getEventSelectionValues = getEventSelectionValues;
+EventSelection.getEventScriptFromValue = getEventScriptFromValue;
+EventSelection.getValueFromEventScript = getValueFromEventScript;
+
+return EventSelection;
+
 });

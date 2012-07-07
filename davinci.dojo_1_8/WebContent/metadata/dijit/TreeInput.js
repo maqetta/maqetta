@@ -7,6 +7,7 @@ define(
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/ModifyAttributeCommand",
 	"davinci/commands/OrderedCompoundCommand",
+	"davinci/ve/widgets/EventSelection",
 	"dijit/Tree",
 	"dojo/store/Memory",
 	"dojo/store/Observable",
@@ -22,7 +23,9 @@ define(
 	"dijit/form/Button", //used in template
 	"dijit/Toolbar", //used in template
 	"dijit/ToolbarSeparator", //used in template
-	"dijit/form/NumberSpinner"//used in template
+	"dijit/form/TextBox", //used in template
+	"dijit/form/ComboBox", //used in template
+	"davinci/ve/widgets/MetaDataStore" //used in template
 ],
 function(declare, 
 		Runtime,
@@ -31,6 +34,7 @@ function(declare,
 		ModifyCommand,
 		ModifyAttributeCommand,
 		OrderedCompoundCommand,
+		EventSelection,
 		Tree,
 		Memory,
 		Observable,
@@ -602,26 +606,28 @@ return declare(ContainerInput, {
 	},
 	
 	_setupNodePropertyInputs: function() {
+		//Add state items to combo box fields in node props section
+		this._addOptionsForEventField("treeOnClickInput");
+		this._addOptionsForEventField("treeOnDblClickInput");
+		this._addOptionsForEventField("treeOnCloseInput");
+		this._addOptionsForEventField("treeOnOpenInput");
+		
 		//Listen for changes to the input fields in the node props section
-		var treeInputLabelInput = dijit.byId("treeInputLabelInput");
-		this._connection.push(dojo.connect(
-				treeInputLabelInput, "onChange", dojo.hitch(this, this._handleLabelInputChanged)));
-		
-		var treeInputIconInput = dijit.byId("treeInputIconInput");
-		this._connection.push(dojo.connect(
-				treeInputIconInput, "onChange", dojo.hitch(this, this._handleIconInputChanged)));
-		
-		var treeOnClickInput = dijit.byId("treeOnClickInput");
-		this._connection.push(dojo.connect(
-				treeOnClickInput, "onChange", dojo.hitch(this, this._handleOnClickInputChanged)));
-		
-		var treeOnDblClickInput = dijit.byId("treeOnDblClickInput");
-		this._connection.push(dojo.connect(
-				treeOnDblClickInput, "onChange", dojo.hitch(this, this._handleOnDblClickInputChanged)));
-		
-		var treeOnCloseInput = dijit.byId("treeOnCloseInput");
-		this._connection.push(dojo.connect(
-				treeOnCloseInput, "onChange", dojo.hitch(this, this._handleOnCloseInputChanged)));
+		this._setupTextFieldChangeListener("treeInputLabelInput", "name");
+		this._setupTextFieldChangeListener("treeInputIconInput", "icon");
+		this._setupTextFieldChangeListener("treeOnClickInput", "onClick", true);
+		this._setupTextFieldChangeListener("treeOnDblClickInput", "onDblClick", true);
+		this._setupTextFieldChangeListener("treeOnCloseInput", "onClose", true);
+		this._setupTextFieldChangeListener("treeOnOpenInput", "onOpen", true);
+	},
+	
+	_setupTextFieldChangeListener: function(textFieldId, fieldId, isEventField) {
+		var textField = dijit.byId(textFieldId);
+		this._connection.push(dojo.connect(textField,
+				"onChange", function(newValue) {
+					this._handleTextFieldChanged(fieldId,
+							newValue, isEventField);
+				}.bind(this)));
 	},
 	
 	_clearNodeProperties: function() {
@@ -633,6 +639,7 @@ return declare(ContainerInput, {
 		this._populateNodeProperty("treeOnClickInput", "", true);
 		this._populateNodeProperty("treeOnDblClickInput", "", true);
 		this._populateNodeProperty("treeOnCloseInput", "", true);
+		this._populateNodeProperty("treeOnOpenInput", "", true);
 	},
 	
 	_populateNodeProperties: function() {
@@ -641,51 +648,37 @@ return declare(ContainerInput, {
 			var treeInputFieldOutput = dojo.byId("treeInputFieldOutput");
 			treeInputFieldOutput.innerHTML = this._selectedItem.id;
 			
-			this._populateNodeProperty("treeInputLabelInput", this._selectedItem.name);
-			this._populateNodeProperty("treeInputIconInput", this._selectedItem.icon);
-			this._populateNodeProperty("treeOnClickInput", this._selectedItem.onClick);
-			this._populateNodeProperty("treeOnDblClickInput", this._selectedItem.onDblClick);
-			this._populateNodeProperty("treeOnCloseInput", this._selectedItem.onClose);
+			this._populateNodeProperty("treeInputLabelInput", this._selectedItem.name, false);
+			this._populateNodeProperty("treeInputIconInput", this._selectedItem.icon, false);
+			this._populateNodeProperty("treeOnClickInput", this._selectedItem.onClick, false, true);
+			this._populateNodeProperty("treeOnDblClickInput", this._selectedItem.onDblClick, false, true);
+			this._populateNodeProperty("treeOnCloseInput", this._selectedItem.onClose, false, true);
+			this._populateNodeProperty("treeOnOpenInput", this._selectedItem.onOpen, false, true);
 		}
 	},
 	
-	_populateNodeProperty: function(fieldId, value, disabled) {
-		var fieldWidget = dijit.byId(fieldId);
+	_populateNodeProperty: function(fieldWidgetId, value, disabled, isEventField) {
+		var fieldWidget = dijit.byId(fieldWidgetId);
+		if (isEventField) {
+			value = EventSelection.getValueFromEventScript(value);
+		}
 		fieldWidget.set("value", value ? value : "");
 		fieldWidget.set("disabled", disabled ? disabled : false);
 	},
 	
-	_handleLabelInputChanged: function(newValue) {
-		if (this._selectedItem) {
-			this._selectedItem.name = newValue;
-			this._observablePreviewStore.put(this._selectedItem);
-		}
+	_addOptionsForEventField: function(fieldWidgetId) {
+		var items = EventSelection.getEventSelectionValues(this._widget.getContext().rootNode);
+		var inputField = dijit.byId(fieldWidgetId);
+		var store = inputField.get("store");
+		store.setValues(items);
 	},
 	
-	_handleIconInputChanged: function(newValue) {
+	_handleTextFieldChanged: function(fieldId, newValue, isEventField) {
 		if (this._selectedItem) {
-			this._selectedItem.icon = newValue;
-			this._observablePreviewStore.put(this._selectedItem);
-		}
-	},
-	
-	_handleOnClickInputChanged: function(newValue) {
-		if (this._selectedItem) {
-			this._selectedItem.onClick = newValue;
-			this._observablePreviewStore.put(this._selectedItem);
-		}
-	},
-	
-	_handleOnDblClickInputChanged: function(newValue) {
-		if (this._selectedItem) {
-			this._selectedItem.onDblClick = newValue;
-			this._observablePreviewStore.put(this._selectedItem);
-		}
-	},
-	
-	_handleOnCloseInputChanged: function(newValue) {
-		if (this._selectedItem) {
-			this._selectedItem.onClose = newValue;
+			if (isEventField) {
+				newValue = EventSelection.getEventScriptFromValue(newValue);
+			}
+			this._selectedItem[fieldId] = newValue;
 			this._observablePreviewStore.put(this._selectedItem);
 		}
 	},
@@ -774,68 +767,47 @@ return declare(ContainerInput, {
 			"if (item.icon) {" +
 			"	return {backgroundImage: 'url(\\'' + item.icon + '\\')'};" +
 			"};" + 
-			"return null;"
-		var child = {
-			type: "html.script",
-			properties: {
-				type: "dojo/method"
-			},
-			children: jsString
-		};
-		child.properties["data-dojo-event"] = "getIconStyle";
-		child.properties["data-dojo-args"] = "item, opened";
-		children.push(child);
+			"return null;";
+		children.push(this._createScriptBlockData("dojo/method", "getIconStyle", "item, opened", jsString));
 		
 		//need <script> block for onClick
-		jsString = 
-			"if (item.onClick) { " +
-			"	dojo.eval(item.onClick);" +
-			"};";
-		dojo.eval('var barBaz = "baz"');
-		child = {
-			type: "html.script",
-			properties: {
-				type: "dojo/connect"
-			},
-			children: jsString
-		};
-		child.properties["data-dojo-event"] = "onClick";
-		child.properties["data-dojo-args"] = "item, node, evt";
-		children.push(child);
+		jsString = this._getJavaScriptForTreeEvent("onClick");
+		children.push(this._createScriptBlockData("dojo/connect", "onClick", "item, node, evt", jsString));
 		
 		//need <script> block for onDblClick
-		jsString = 
-			"if (item.onDblClick) { " +
-			"	dojo.eval(item.onDblClick);" + 
-			"};";
-		child = {
-			type: "html.script",
-			properties: {
-				type: "dojo/connect"
-			},
-			children: jsString
-		};
-		child.properties["data-dojo-event"] = "onDblClick";
-		child.properties["data-dojo-args"] = "item, node, evt";
-		children.push(child);
+		jsString = this._getJavaScriptForTreeEvent("onDblClick");
+		children.push(this._createScriptBlockData("dojo/connect", "onDblClick", "item, node, evt", jsString));
 		
 		//need <script> block for onClose
-		jsString = 
-			"if (item.onClose) { " +
-			"	dojo.eval(item.onClose);" +
-			"};";
-		child = {
+		jsString = this._getJavaScriptForTreeEvent("onClose");
+		children.push(this._createScriptBlockData("dojo/connect", "onClose", "item, node", jsString));
+		
+		//need <script> block for onOpen
+		jsString = this._getJavaScriptForTreeEvent("onOpen");
+		children.push(this._createScriptBlockData("dojo/connect", "onOpen", "item, node", jsString));
+
+		return children;
+	},
+	
+	_createScriptBlockData: function(methodType, dojoEvent, argNames, jsString) {
+		var data = {
 			type: "html.script",
 			properties: {
-				type: "dojo/connect"
+				type: methodType
 			},
 			children: jsString
 		};
-		child.properties["data-dojo-event"] = "onClose";
-		child.properties["data-dojo-args"] = "item, node";
-		children.push(child);
-
-		return children;
+		data.properties["data-dojo-event"] = dojoEvent;
+		data.properties["data-dojo-args"] = argNames;
+		return data;
+	},
+	
+	_getJavaScriptForTreeEvent: function(eventType) {
+		var jsString = 
+			"if (item." + eventType + ") { " +
+			"	dojo.eval(item." + eventType + ");" +
+			"};";
+		return jsString;
 	},
 	
 	_executeCommand: function(compoundCommand) {
@@ -870,6 +842,7 @@ return declare(ContainerInput, {
 					onClickLabel: langObj.onClickLabel,
 					onDblClickLabel: langObj.onDblClickLabel,
 					onCloseLabel: langObj.onCloseLabel,
+					onOpenLabel: langObj.onOpenLabel,
 					addChild: langObj.addChild,
 					insertBefore: langObj.insertBefore,
 					insertAfter: langObj.insertAfter,

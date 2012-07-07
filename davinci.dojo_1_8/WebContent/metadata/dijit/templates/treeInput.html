@@ -47,15 +47,31 @@
 					</tr>
 					<tr>
 						<td><label for="treeOnClickInput">{onClickLabel}</label></td>
-						<td><input id="treeOnClickInput" data-dojo-type="dijit.form.TextBox" type="text" disabled="disabled" class="previewPanelColumnInputField"></input></td>
+						<td>
+							<div dojoType='davinci.ve.widgets.MetaDataStore' jsId="treeOnClickInputStore"></div>
+							<input id="treeOnClickInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnClickInputStore" type="text" disabled="disabled" class="previewPanelColumnInputField"></input>
+						</td>
 					</tr>
 					<tr>
 						<td><label for="treeOnDblClickInput">{onDblClickLabel}</label></td>
-						<td><input id="treeOnDblClickInput" data-dojo-type="dijit.form.TextBox" type="text" disabled="disabled" class="previewPanelColumnInputField"></input></td>
+						<td>
+							<div dojoType='davinci.ve.widgets.MetaDataStore' jsId="treeOnDblClickInputStore"></div>
+							<input id="treeOnDblClickInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnDblClickInputStore" type="text" disabled="disabled" class="previewPanelColumnInputField"></input>
+						</td>
 					</tr>
 					<tr>
 						<td><label for="treeOnCloseInput">{onCloseLabel}</label></td>
-						<td><input id="treeOnCloseInput" data-dojo-type="dijit.form.TextBox" type="text" disabled="disabled" class="previewPanelColumnInputField"></input></td>
+						<td>
+							<div dojoType='davinci.ve.widgets.MetaDataStore' jsId="treeOnCloseInputStore"></div>
+							<input id="treeOnCloseInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnCloseInputStore" type="text" disabled="disabled" class="previewPanelColumnInputField"></input>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="treeOnOpenInput">{onOpenLabel}</label></td>
+						<td>
+							<div dojoType='davinci.ve.widgets.MetaDataStore' jsId="treeOnOpenInputStore"></div>
+							<input id="treeOnOpenInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnOpenInputStore" type="text" disabled="disabled" class="previewPanelColumnInputField"></input>
+						</td>
 					</tr>
 				</table> 
 			</div>

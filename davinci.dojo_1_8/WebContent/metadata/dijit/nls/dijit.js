@@ -53,8 +53,8 @@ define({ root: {
 		"preview": "Preview:",
 		"previewNote": "(Note: The tree below is \"live\" allowing you to manipulate nodes.)",
 		"nodeProperties": "Node properties:",
-		"idLabel": "ID:",
-		"labelLabel": "Label:",
+		"idLabel": "id:",
+		"labelLabel": "name:",
 		"newNodeName": "New Node {0}",
 		"addChild": "Add Child",
 		"insertBefore": "Add Before",
@@ -65,8 +65,9 @@ define({ root: {
 		"shiftLeft": "Shift Left",
 		"shiftRight": "Shift Right",
 		"iconLabel": "icon:",
-		"onClickLabel": "onClick:",
-		"onDblClickLabel": "onDblClick:",
-		"onCloseLabel": "onClose:"
+		"onClickLabel": "onclick:",
+		"onDblClickLabel": "ondblclick:",
+		"onCloseLabel": "onclose:",
+		"onOpenLabel": "onopen:"
 		
 }});

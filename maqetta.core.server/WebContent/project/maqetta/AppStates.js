@@ -756,6 +756,7 @@ States.prototype = {
 	 * @returns {Boolean}
 	 */
 	isContainer: function(node) {
+//FIXME: Need to generalize this for nested states
 		var result = false;
 		if (node) {
 			var doc = this.getDocument();
@@ -901,7 +902,7 @@ States.prototype = {
 					// Replace double quotes with single quotes
 					str = str.replace(/"/g, "'");
 				}else{
-					str = '';
+					str = '{}';
 				}
 			}
 			return str;

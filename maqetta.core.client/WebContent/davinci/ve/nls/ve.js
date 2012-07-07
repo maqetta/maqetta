@@ -29,7 +29,7 @@ define({ root:
 		"selectAncestorTitle":"Select ancestor",
 		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
 		
-		//actions/AddState.js, ModifyState.js, RenameState.js
+		//actions/AddState.js, ModifyState.js, RenameState.js, StateContainer.js
 		"createNewState":"Create New State",
 		"createLabel":"Create",
 		"modifyState":"Modify State",
@@ -41,6 +41,10 @@ define({ root:
 		"renameLabel":"Rename",
 		"newStateLabel":"New name:",
 		"initialStateCheckBoxLabel":"Initial state at document load time",
+		"EnableApplicationStates":"Enable application states",
+		"EnableAsStateContainerWidgetDescription":"Setting the check box below will allow custom application states to be defined on the currently selected widget.",
+		"EnableAsStateContainerWidgetLabel":"Enable application states on this widget",
+		"EnableApplicationStatesCurrentWidget":"Current widget",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

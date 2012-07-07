@@ -740,6 +740,17 @@ davinci_top_bar .dijitButtonNode {
 	clear:both;
 	margin:15px 10px 15px;
 }
+.EnableAsStateContainerWidgetLabel {
+}
+.EnableAsStateContainerDescriptionDiv {
+	margin:8px 0 16px;
+}
+.EnableAsStateContainerCheckBoxDiv {
+	margin:16px 0;
+}
+.EnableAsStateContainerWidgetDiv {
+	margin:16px 0 8px;
+}
 
 .designModeIcon {
 	background-image: url(img/sprite.png);

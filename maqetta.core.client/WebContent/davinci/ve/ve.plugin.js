@@ -205,6 +205,12 @@ return {
                     label: "Move backward",
                     action: "davinci/ve/actions/MoveBackwardAction",
                     menubarPath: "davinci.edit/cut"
+                },
+                {
+                    iconClass: "editActionIcon",
+                    label: "Enable Application States...",
+                    action: "davinci/ve/actions/EnableApplicationStates",
+                    menubarPath: "davinci.edit/cut"
                 }
             ]
         },

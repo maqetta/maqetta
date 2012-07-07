@@ -60,6 +60,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/states/state/renamed", this._renameState.bind(this));
 		this.subscribe("/davinci/states/state/changed", this._changeState.bind(this));
 		this.subscribe("/maqetta/appstates/state/changed", this._changeState.bind(this));
+		this.subscribe("/maqetta/appstates/state/containerChange", this._containerChange.bind(this));
 		this.subscribe("/davinci/ui/context/registerSceneManager", this._registerSceneManager.bind(this));
 		this.subscribe("/davinci/scene/scenesLoaded", this._scenesLoaded.bind(this));
 		this.subscribe("/davinci/scene/added", this._addScene.bind(this));
@@ -112,6 +113,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}else{
 			this._updateView();
 		}
+	},
+	
+	_containerChange: function() {
+		this._updateView();
 	},
 	
 	_registerSceneManager: function(sceneManager) {

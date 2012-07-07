@@ -136,8 +136,9 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 	},
 
 	onOk: function(e) {
-		var context;
+		var context, editor;
 		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			editor = Runtime.currentEditor;
 			context = Runtime.currentEditor.currentEditor.context;
 		}else{
 			return;
@@ -148,6 +149,41 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 		}
 		if(this.newName && this.newName !== this._statesFocus.state){
 			States.rename(statesFocus.stateContainerNode, {oldName:this._statesFocus.state, newName:this.newName});
+			var containerSrcElement = statesFocus.stateContainerNode._dvWidget && statesFocus.stateContainerNode._dvWidget._srcElement;
+			if(containerSrcElement){
+				var currentElement = null;
+				var anyAttributeChanges = false;
+				var value_regex = /^(.*davinci.states.setState\s*\(\s*)('[^']*'|"[^"]*")(\s*\).*)$/;
+				var quoted_state_regex = /^(['"])(.*)(['"])$/;
+				containerSrcElement.visit({ visit: dojo.hitch(this, function(node) {
+					if (node.elementType == "HTMLElement") {
+						currentElement = node;
+					}else if (node.elementType == "HTMLAttribute") {
+						var attrName = node.name;
+						if(attrName && attrName.substr(0,2).toLowerCase() == 'on'){
+							var value = node.value;
+							var outerMatches = value.match(value_regex);
+							if(outerMatches){
+								// If here, the event attribute appears to have davinci.states.setState(blah) inside
+								var innerMatches = outerMatches[2].match(quoted_state_regex);
+								if(innerMatches){
+									// If here, then innerMatches[2] contains the set state value
+									if(innerMatches[2] == this._statesFocus.state){
+										// If here, we need to replace the state name
+										var newValue = outerMatches[1] + innerMatches[1] + this.newName + innerMatches[3] + outerMatches[3];
+										currentElement.setAttribute(attrName, newValue);
+										anyAttributeChanges = true;
+									}
+								}
+							}
+						}
+					}
+				})});
+				if(anyAttributeChanges){
+					editor._visualChanged();
+				}
+			}
+
 		}
 		var initialStateOn = this.initialState.get('checked');
 		if(initialStateOn !== this.oldInitialStateOn){	

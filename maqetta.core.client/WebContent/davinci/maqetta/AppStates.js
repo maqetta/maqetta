@@ -839,8 +839,7 @@ States.prototype = {
 		if(states.indexOf(oldName) < 0 || states.indexOf(newName) >= 0){
 			return false;
 		}
-		states.splice(states.indexOf(oldName), 1);
-		states.push(newName);
+		states.splice(states.indexOf(oldName), 1, newName);
 		if(stateContainerNode._maqAppStates.focus === oldName){
 			stateContainerNode._maqAppStates.focus = newName;
 		}

@@ -44,15 +44,33 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 
 	veNls: veNls,
 	commonNls: commonNls,
+	isNormalState: false,
 	newName: null,
+	oldInitialStateOn: null,
 	
 	postCreate: function(){
 		this._connections = [];
 		var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
 		dialogCreateDeferred.then(function(){
+			if(!this._statesFocus.state || this._statesFocus.state === States.NORMAL){
+				this.isNormalState = true;
+			}
 			var modify_state_old_name_node = dojo.byId('modify_state_old_name');
-			if(modify_state_old_name_node && this._statesFocus && this._statesFocus.state){
-				modify_state_old_name_node.innerHTML = this._statesFocus.state;
+			if(modify_state_old_name_node){
+				if(this._statesFocus && this._statesFocus.state && !this.isNormalState){
+					modify_state_old_name_node.innerHTML = this._statesFocus.state;
+				}else{
+					modify_state_old_name_node.innerHTML = '<i>'+States.NORMAL+'</i>';
+					this.renameButton.set('disabled', true);
+				}
+			}
+			var initialStateOn = (States.getInitial(this._statesFocus.stateContainerNode) === this._statesFocus.state);
+			this.oldInitialStateOn = initialStateOn;
+			this.initialState.set('checked', initialStateOn);
+			if(initialStateOn && this.isNormalState){
+				// Note: if in Normal state and Normal state is initial,
+				// everything in dialog will be disabled.
+				this.initialState.set('disabled', true);
 			}
 			this._dialog.connect(this._dialog,"hide",function(e){
 				this.onClose();
@@ -128,9 +146,18 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
 		}
-		if(this.newName !== this._statesFocus.state){
+		if(this.newName && this.newName !== this._statesFocus.state){
 			States.rename(statesFocus.stateContainerNode, {oldName:this._statesFocus.state, newName:this.newName});
 		}
+		var initialStateOn = this.initialState.get('checked');
+		if(initialStateOn !== this.oldInitialStateOn){	
+			// Get statesFocus again in case state was renamed.
+			statesFocus = States.getFocus(context.rootNode);
+			// Call setState() to cause updates everywhere.
+			var initialState = initialStateOn ? statesFocus.state : null;
+			States.setState(statesFocus.state, statesFocus.stateContainerNode, { initial:initialState, updateWhenCurrent:true });
+		}
+		
 		this.onClose();
 	},
 
@@ -156,7 +183,7 @@ return declare("davinci.ve.actions.ModifyState", [Action], {
 			return;
 		}
 		var statesFocus = States.getFocus(context.rootNode);
-		if(!statesFocus || !statesFocus.state || statesFocus.state === States.NORMAL){
+		if(!statesFocus){
 			return;
 		}
 

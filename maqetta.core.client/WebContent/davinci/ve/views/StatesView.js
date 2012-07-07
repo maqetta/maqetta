@@ -951,7 +951,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(context && context.rootNode){
 			var statesFocus = States.getFocus(context.rootNode);
 			if(statesFocus && statesFocus.stateContainerNode){
-				AddStateActive = true;
+				AddStateActive = ModifyStateActive = true;
 			}
 			if(statesFocus && statesFocus.state && statesFocus.state !== States.NORMAL){
 				RemoveStateActive = ModifyStateActive = true;

@@ -40,6 +40,7 @@ define({ root:
 		"renameState":"Rename State",
 		"renameLabel":"Rename",
 		"newStateLabel":"New name:",
+		"initialStateCheckBoxLabel":"Initial state at document load time",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

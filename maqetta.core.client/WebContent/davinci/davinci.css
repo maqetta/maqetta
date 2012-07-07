@@ -736,6 +736,10 @@ davinci_top_bar .dijitButtonNode {
 	float:right;
 	margin-left:30px;
 }
+.initial_state_row {
+	clear:both;
+	margin:15px 10px 15px;
+}
 
 .designModeIcon {
 	background-image: url(img/sprite.png);

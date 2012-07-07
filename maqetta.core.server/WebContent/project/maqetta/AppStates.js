@@ -275,6 +275,11 @@ States.prototype = {
 	 *     params.focus {boolean}  If true, then set the document-level "application state focus" 
 	 *                             to the given state on the given state container.
 	 *                             This feature is primarily used by design-time tools.
+	 *     params.initial {boolean}  If provided and true, then this state becomes initial state
+	 *                             at document load time for the given state container.
+	 *                             If provided and false, then remove any designation that this
+	 *                             state should be the initial state at document load time.
+	 *                             This feature is primarily used by design-time tools.
 	 * Subscribe using davinci.states.subscribe("/maqetta/appstates/state/changed", callback).
 	 * FIXME: updateWhenCurrent is ugly. Higher level code could include that logic
 	 * FIXME: silent is ugly. Higher level code code broadcast the change.
@@ -298,6 +303,13 @@ States.prototype = {
 		}
 		if(focus){
 			this._setFocus(newState, node);
+		}
+		if(params && params.hasOwnProperty('initial')){
+			if(params.initial){
+				node._maqAppStates.initial = newState;
+			}else if(node._maqAppStates.initial == newState){
+				delete node._maqAppStates.initial;
+			}
 		}
 		if (!silent) {
 //FIXME: Reconcile node and stateContainerNode

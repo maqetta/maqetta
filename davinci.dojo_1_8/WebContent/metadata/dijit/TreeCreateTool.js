@@ -25,7 +25,6 @@ return declare(CreateTool, {
 	},
 	
 	_create: function(args){
-		
 		var command = this._getCreateCommand(args);
 		this._context.getCommandStack().execute(command);
 		this._select(this._tree);
@@ -40,8 +39,10 @@ return declare(CreateTool, {
 		var modelData = this._data[1];
 		var treeData = this._data[2];
 		
-		if(!this._context.loadRequires(storeData.type,true) || !this._context.loadRequires(modelData.type,true) ||
-			!this._context.loadRequires(treeData.type,true)){
+		if(!this._context.loadRequires(storeData.type,true) || 
+			!this._context.loadRequires(modelData.type,true) ||
+			!this._context.loadRequires(treeData.type,true) || 
+			!this._context.loadRequires("html.script",true)) { //We're using html.script in our declarative HTML
 			return;
 		}
 
@@ -52,27 +53,6 @@ return declare(CreateTool, {
 		storeData.properties.jsId = storeId;
 		storeData.properties.id = storeId;
 		storeData.context = this._context;
-		
-		var data = storeData.properties.data;
-		var items = data.items;
-		
-		// Kludge to workaround lack of support for frames in dojo's ItemFileReadStore
-		// Replaces objects and arrays in metadata that were created with the top context with ones created in the frame context
-		var copyUsingFrameObject = dojo.hitch(this, function (items) {
-			var win = this._context.getGlobal();
-			var copyOfItems = win.eval("[]");
-			for (var i = 0; i < items.length; i++) {
-				var item = items[i];
-				var object = win.eval("new Object()");
-				var copy = this._context.getDojo().mixin(object, item);
-				copyOfItems.push(copy);
-				if (copy.children) {
-					copy.children = copyUsingFrameObject(copy.children);
-				}
-			}
-			return copyOfItems;
-		});
-		data.items = copyUsingFrameObject(items);
 		
 		var modelId = Widget.getUniqueObjectId(modelData.type, this._context.getDocument());
 		if(!modelData.properties){
@@ -95,6 +75,9 @@ return declare(CreateTool, {
 		dojo.withDoc(this._context.getDocument(), function(){
 			store = Widget.createWidget(storeData);
 			modelData.properties.store = dj.getObject(storeId);
+			if (!modelData.properties.store.getChildren) {
+				modelData.properties.store.getChildren = function(object) {return this.query({parent: object.id});}; 
+			}
 			model = Widget.createWidget(modelData);
 			treeData.properties.model = dj.getObject(modelId);
 			tree = Widget.createWidget(treeData);
@@ -124,15 +107,11 @@ return declare(CreateTool, {
 			command.add(new ResizeCommand(tree, args.size.w, args.size.h));
 		}
 		
-		//this._context.getCommandStack().execute(command);
-
-		//this._select(tree);
 		this._tree = tree;
 		return command;
 	},
 	
 	addPasteCreateCommand: function(command, args){
-
 		this._context = this._data.context;
 		var model = this._data.properties.model;
 		var modelWidget = Widget.byId(model.id);
@@ -147,7 +126,6 @@ return declare(CreateTool, {
 		command.add( this._getCreateCommand(args));
 		return this._tree;
 	}
-
 });
 
 });

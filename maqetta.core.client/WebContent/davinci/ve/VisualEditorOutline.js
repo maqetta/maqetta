@@ -184,6 +184,9 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 
 				// since it changed, we need to update the widget item stores in the model
 				this.put(widget, {overwrite: true});
+
+				// finally, we tell the widget that its children might have changed
+				this.onChildrenChange(widget, this._getChildren(widget));
 			}
 		} catch (e) {
 			console.error("VisualEditorOutline._widgetChanged: e = " + e);

@@ -509,15 +509,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return folder;
 	},
 
-	_require: function(module){
-		try{
-			return this.getGlobal()["require"]([module.replace(/\./g, "/")]);
-		}catch(e){
-			console.error("FAILED: Context.js _require failure for module="+module);
-			throw e;
-		}
-	},
-	
 	/**
 	 * Retrieve mobile device from Model.
 	 * @returns {?string} mobile device name
@@ -541,11 +532,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      * @param device {?string} device name
      */
     setMobileDevice: function(device) {
-    	this.getDojo().config.mblUserAgent = /* remove this line for Dojo 1.7 final */
-    	this.getGlobal()["require"](["dojo/_base/config"]).mblUserAgent =
+    	this.getGlobal()["require"]("dojo/_base/config").mblUserAgent =
     			Silhouette.getMobileTheme(device + '.svg');
     	var bodyElement = this.getDocumentElement().getChildElement("body");
-        if (! device || device === 'none') {
+        if (!device || device == 'none') {
             bodyElement.removeAttribute(MOBILE_DEV_ATTR, device);
         } else {
             bodyElement.addAttribute(MOBILE_DEV_ATTR, device);
@@ -560,7 +550,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      *              'device' is the same as the current device
      */
 	setMobileTheme: function(device) {
-		
         var oldDevice = this.getMobileDevice() || 'none';
         if (oldDevice === device) {
             return;
@@ -568,11 +557,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         this.close(); //// return any singletons for CSSFiles
         this.setMobileDevice(device);
 
-		// dojox.mobile specific CSS file handling
-
-        var dm = lang.getObject("dojox.mobile", false, this.getGlobal());
-        if(dm && dm.deviceTheme && dm.deviceTheme.loadDeviceTheme) {
-        	dm.deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
+        try {
+    		// dojox/mobile specific CSS file handling
+    		var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');        	
+        	deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
+        } catch(e) {
+        	// dojox/mobile/deviceTheme not loaded
         }
 	},
 
@@ -1415,29 +1405,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	setHeader: function(header){
-		var oldStyleSheets,
+		var oldStyleSheets = [],
 			newStyleSheets,
 			oldBodyClasses,
 			newBodyClasses;
 		if(this._header){
 			oldStyleSheets = this._header.styleSheets || [];
 			oldBodyClasses = this._header.bodyClasses;
-		}else{
-			oldStyleSheets = [];
 		}
 		if(header){
 			newStyleSheets = header.styleSheets || [];
 			newBodyClasses = header.bodyClasses;
 			if(header.modules){
-				dojo.forEach(header.modules, this._require, this);
+				var innerRequire = this.getGlobal()["require"];
+				header.modules.map(function(module) {
+					return [module.replace(/\./g, "/")];
+				}).forEach(innerRequire);
 			}
 
 			if(header.className){
 				var classes = header.className.split(' ');
 				dojo.some(classes, function(clasz, index){
-						classes.splice(index, 1);
-						newBodyClasses = classes.join(' ');
-						return true;
+					classes.splice(index, 1);
+					newBodyClasses = classes.join(' ');
+					return true;
 				});
 			}
 		}
@@ -1450,7 +1441,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			if(newBodyClasses){
 				dojo.addClass(containerNode, newBodyClasses);
 			}
-			
 		}
 
 		if(oldStyleSheets != newStyleSheets){
@@ -1501,7 +1491,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	loadStyleSheet: function(url) {
         // don't add if stylesheet is already loaded in the page
 		var doc = this.getDocument();
-		var dj = this.getDojo();
+		var dj = this.getDojo(); // TODO: use require
 		var links = dj.query('link');
 		var found = links.some(function(val) {
 			return val.getAttribute('href') === url;
@@ -1511,13 +1501,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 
 		dojo.withDoc(doc, function() {
-	        var link = dojo.create('link',
-	            {
-    	            rel: 'stylesheet',
-    	            type: 'text/css',
-    	            href: url
-    	        }
-	        );
+	        var link = dojo.create('link', {
+	            rel: 'stylesheet',
+	            type: 'text/css',
+	            href: url
+	        });
 	        // Make sure app.css is the after library CSS files, and content.css is after app.css
 	        // FIXME: Shouldn't hardcode this sort of thing
 	        var headElem = doc.getElementsByTagName('head')[0],
@@ -1559,7 +1547,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
     unloadStyleSheet: function(url) {
         var self = this;
 		var doc = this.getDocument();
-		var dj = this.getDojo();
+		var dj = this.getDojo(); // TODO: use require
 		var links = dj.query('link');
         links.some(function(val, idx) {
             if (val.getAttribute('href') === url) {
@@ -3150,43 +3138,45 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
 		// monitoring of which stylesheets get loaded for a given theme
 
-		var dm = lang.getObject("dojox.mobile", true, this.getGlobal());
-		if (dm && dm.deviceTheme) {
-				var djConfig = this.getDojo().config,
-					djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
-					ua = /*device ||*/ djConfig.mblUserAgent || 'none',
-					themeMap,
-					themeFiles;
+		try {
+			var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
+			var djConfig = this.getDojo().config,  // TODO: use require
+				djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
+				ua = /*device ||*/ djConfig.mblUserAgent || 'none',
+				themeMap,
+				themeFiles;
 
-				djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
-				themeMap = djConfigModel.themeMap;
-				themeFiles = djConfigModel.mblThemeFiles;
+			djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
+			themeMap = djConfigModel.themeMap;
+			themeFiles = djConfigModel.mblThemeFiles;
 
-				// clear dynamic CSS
-				delete this.themeCssFiles;
-				delete this.cssFiles;
+			// clear dynamic CSS
+			delete this.themeCssFiles;
+			delete this.cssFiles;
 
-				// load CSS files specified by `themeMap`
-				if (!themeMap) {
-					// load defaults if not defined in file
-					themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
-					themeFiles = [];
-				}
-				this._addCssForDevice(ua, themeMap, this);
+			// load CSS files specified by `themeMap`
+			if (!themeMap) {
+				// load defaults if not defined in file
+				themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
+				themeFiles = [];
+			}
+			this._addCssForDevice(ua, themeMap, this);
 
-				dm.deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
-				if (themeFiles) {
-					djConfig.mblThemeFiles = themeFiles;
-				} else {
-					delete djConfig.mblThemeFiles;
-				}
+			deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+			if (themeFiles) {
+				djConfig.mblThemeFiles = themeFiles;
+			} else {
+				delete djConfig.mblThemeFiles;
+			}
 
-				if (this._selection) {
-					// forces style palette to update cascade rules
-					this.onSelectionChange(this._selection);
-				}
+			if (this._selection) {
+				// forces style palette to update cascade rules
+				this.onSelectionChange(this._selection);
+			}
 
-				dm.deviceTheme.loadDeviceTheme(ua/*device*/);
+			deviceTheme.loadDeviceTheme(ua/*device*/);
+		} catch(e) {
+			// dojox/mobile wasn't loaded
 		}
 
 		// Set mobile device CSS files
@@ -3251,7 +3241,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			
 			var node = widget.domNode,
-				dj = this.getDojo(),
+				dj = this.getDojo(),  // TODO: use require
 				computed_style = dj.style(node);
 
 			if(doSnapLinesX || doSnapLinesY){

@@ -2,12 +2,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/xhr",
 	"dojo/_base/connect",
+	"dojo/_base/Deferred",
 	"davinci/Runtime",
 	"davinci/model/Model",
-//	"davinci/Workbench",
 	"davinci/model/Path",
 	"davinci/ve/utils/URLRewrite"
-], function(declare, xhr, connect, Runtime, Model, /*Workbench,*/ Path, URLRewrite) {
+], function(declare, xhr, connect, Deferred, Runtime, Model, Path, URLRewrite) {
 
 return declare("davinci.model.resource.Resource", Model, {
 
@@ -44,7 +44,6 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	getURL: function() {
-		
 		var path = this.getPath();
 		if(path.indexOf("./") == 0 ) {
 			path = path.substring(2, path.length);
@@ -75,7 +74,7 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	isVirtual: function() {
-		return (this.libraryId != null);
+		return !!this.libraryId;
 	},
 
 	visit: function(visitor, dontLoad) {
@@ -92,27 +91,30 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	deleteResource: function(localOnly) {
-		var response="OK";
-		if (!localOnly) {
-			response = davinci.Runtime.serverJSONRequest({
-				url: "cmd/deleteResource", handleAs: "text",
-				content: {path: this.getPath()}, sync: true
-			});
-		}
-		if (response == "OK") {
-			var found=-1;
-			for(var i=0;i<this.parent.children.length && found==-1;i++){
-				if(this.parent.children[i].getName()==this.getName())
-					found = i;
-			}
-			
-			this.parent.children.splice(found, 1);
-			dojo.publish("/davinci/resource/resourceChanged",["deleted",this]);
-		} else {
-			//TODO: refresh the resource in the tree if it is a dir -- delete may have been partial.
-			alert(response);
-		}
-	}
+		if (localOnly) {
+			var dfd = new Deferred(),
+				name = this.getName(),
+				found = this.parent.children.some(function(child, i, children) {
+					if(child.getName() == name) {
+						children.splice(i, 1);
+						return true;
+					}				
+				});
 
+			if (found) {
+				connect.publish("/davinci/resource/resourceChanged", ["deleted", this]);
+				dfd.resolve();
+			} else {
+				dfd.reject();
+			}
+			return dfd;
+		}
+
+		return xhr.get({
+			url: "cmd/deleteResource",
+			handleAs: "text",
+			content: {path: this.getPath()}
+		});
+	}
 });
 });

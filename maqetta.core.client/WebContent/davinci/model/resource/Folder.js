@@ -33,36 +33,37 @@ var Folder = declare(Resource, {
 			isFolder = this.elementType == "Folder";
 		}
 		var response = localOnly ?
-				"OK" :
-				Runtime.serverJSONRequest({
-					url: "cmd/createResource",
-					handleAs: "text",
-					content: {path: file.getPath(), isFolder: isFolder},
-					sync:true
-				});
-			if (response == "OK" && name != null) {
-				this.children.push(file);
-				delete file.libraryId;
-				delete file.libVersion;
-				delete file._readOnly;
-				dojo.publish("/davinci/resource/resourceChanged",["created",file]);
-				return file;
-			}else if(response=="EXISTS"){
-				/* resource already exists on server, so just be gracefull about it. */
-				this.children.push(file);
-				delete file.libraryId;
-				delete file.libVersion;
-				delete file._readOnly;
-				dojo.publish("/davinci/resource/resourceChanged",["created",file]);
-				return file;
-			}else if (response != "OK"){
-				alert(response); //TODO
-			} else {
-				delete file.libraryId;
-				delete file.libVersion;
-				delete file._readOnly;
-				return this;
-			}
+			"OK" :
+			Runtime.serverJSONRequest({
+				url: "cmd/createResource",
+				handleAs: "text",
+				content: {path: file.getPath(), isFolder: isFolder},
+				sync:true
+			});
+		if (response == "OK" && name != null) {
+			this.children.push(file);
+			delete file.libraryId;
+			delete file.libVersion;
+			delete file._readOnly;
+			dojo.publish("/davinci/resource/resourceChanged", ["created", file]);
+			return file;
+		}else if(response=="EXISTS"){
+			/* resource already exists on server, so just be gracefull about it. */
+			this.children.push(file);
+			delete file.libraryId;
+			delete file.libVersion;
+			delete file._readOnly;
+			dojo.publish("/davinci/resource/resourceChanged", ["created", file]);
+			return file;
+		}else if (response != "OK"){
+			throw "Folder.createResource failed: name=" + name + "response=" + response;
+//				alert("ALERT1"+response);
+		} else {
+			delete file.libraryId;
+			delete file.libVersion;
+			delete file._readOnly;
+			return this;
+		}
 	},
 
 	getChildren: function(onComplete, onError) {
@@ -106,7 +107,7 @@ var Folder = declare(Resource, {
 				content: {path: this.getPath()},
 				sync: sync,
 				load: dojo.hitch(this, function(responseObject, ioArgs) {
-					this.setChildren(responseObject);
+					this.setChildrenSync(responseObject);
 					dojo.forEach(this._loadingCallbacks,function(item) {
 						(item)(this.children);
 					}, this);

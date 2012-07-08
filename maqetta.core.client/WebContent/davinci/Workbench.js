@@ -241,7 +241,18 @@ var Workbench = {
 
 		Runtime.subscribe("/davinci/ui/selectionChanged", updateMainToolBar);
 		Runtime.subscribe("/davinci/ui/editorSelected", updateMainToolBar);
-		Runtime.subscribe("/davinci/resource/resourceChanged", Workbench._resourceChanged);
+		Runtime.subscribe("/davinci/resource/resourceChanged",
+			function (type, changedResource) {
+				if (type == 'deleted') {
+					var tab = dijit.byId(filename2id(changedResource.getPath()));
+					if (tab && !tab._isClosing) {
+						var tabContainer = dijit.byId("editors_tabcontainer");
+						tabContainer.removeChild(tab);
+						tab.destroyRecursive();
+					}
+				}
+			}
+		);
 		Runtime.subscribe('/dojo/io/error', handleIoError); // /dojo/io/error" is sent whenever an IO request has errored. 
 		                                                   // requires djConfig.ioPublish be set to true in pagedesigner.html
 
@@ -302,18 +313,6 @@ var Workbench = {
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
 		return d;
-	},
-
-	_resourceChanged: function (type,changedResource) {
-		if (type == 'deleted') {
-			fileName = changedResource.getPath();
-			var tab = dijit.byId(filename2id(fileName));
-			if (tab && !tab._isClosing) {
-				var tabContainer = dijit.byId("editors_tabcontainer");
-				tabContainer.removeChild(tab);
-				tab.destroyRecursive();
-			}
-		}
 	},
 
 	unload: function () {

@@ -57,8 +57,9 @@ define(["dojo/_base/declare",
 		    }
 			
 			var resource = systemResource.findResource(project);
-			resource.deleteResource();
-			Workbench.loadProject(changeToProject);
+			resource.deleteResource().then(function(){
+				Workbench.loadProject(changeToProject);				
+			});
 		},
 		
 		_rename: function(){

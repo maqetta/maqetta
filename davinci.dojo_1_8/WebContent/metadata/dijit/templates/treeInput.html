@@ -1,0 +1,97 @@
+<div data-dojo-type="dijit.layout.BorderContainer" design="headline" gutters="false" 
+	liveSplitters="false" id="borderContainer" class="treeInput">
+	
+	<div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline', gutters:false, liveSplitters:false,region:'center'" class="previewPanelCenterContentPane">
+    	<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'top'" class="previewPanelSectionLabelContainer"> 
+    		<span>{preview}</span><span class="previewPanelPreviewNote">{previewNote}</span>
+    	</div>
+    	<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'center'" class="previewPanelPreviewPaneCenter" id="treeInputPreviewPanelPreviewPaneCenter">
+    		<div data-dojo-type="dijit.layout.LayoutContainer">
+				<div data-dojo-type="dijit.Toolbar" layoutAlign="top">
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputAddChildButton">{addChild}</button> 
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputInsertBeforeButton" >{insertBefore}</button> 
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputInsertAfterButton">{insertAfter}</button> 
+					<span data-dojo-type="dijit.ToolbarSeparator"></span>
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputDeleteButton">{remove}</button> 
+					<span data-dojo-type="dijit.ToolbarSeparator"></span>
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputMoveUpButton">{moveUp}</button> 
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputMoveDownButton">{moveDown}</button> 
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputShiftLeftButton">{shiftLeft}</button>
+					<button data-dojo-type="dijit.form.Button" type="button" id="treeInputShiftRightButton">{shiftRight}</button>
+				</div>
+		    	<div id="previewPanelGridContentPane" data-dojo-type="dijit.layout.ContentPane" layoutAlign="client" class="previewPanelGridContentPane">
+		    </div>
+		</div>
+	</div>
+    </div>
+    <div data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="region:'trailing', design:'headline', gutters:false, liveSplitters:false, splitter:true" class="previewPanelTrailingContentPane">
+    	<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'top'" class="previewPanelSectionLabelContainer"> 
+    		<div>{nodeProperties}</div>
+    	</div>
+    	<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'center'" class="previewPanelNodePropsPaneCenter">
+	    	<div class="previewPanelNodePropsDiv"> 
+		    	<table cellspacing="5px" class="previewPanelNodePropsTable">
+		    		<tr>
+						<td><label>{idLabel}</label></td> 
+						<td><label id="treeInputFieldOutput"></label></td>
+					</tr>
+					<tr>
+						<td><label for="treeInputLabelInput">{labelLabel}</label></td>
+						<td><input id="treeInputLabelInput" data-dojo-type="dijit.form.TextBox" type="text" disabled="disabled" class="previewPanelNodeInputField"></input></td>
+					</tr>
+					<tr>
+						<td><label for="treeInputIconInput">{iconLabel}</label></td>
+						<td>
+							<div id="treeInputIconInput" data-dojo-type="davinci.ui.widgets.FileFieldDialog" disabled="disabled" class="previewPanelNodeInputField"></div>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="treeInputOpenIconInput">{openIconLabel}</label></td>
+						<td>
+							<div id="treeInputOpenIconInput" data-dojo-type="davinci.ui.widgets.FileFieldDialog" disabled="disabled" class="previewPanelNodeInputField"></div>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="treeOnClickInput">{onClickLabel}</label></td>
+						<td>
+							<div data-dojo-type='davinci.ve.widgets.MetaDataStore' jsId="treeOnClickInputStore"></div>
+							<input id="treeOnClickInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnClickInputStore" type="text" disabled="disabled" class="previewPanelNodeInputField"></input>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="treeOnDblClickInput">{onDblClickLabel}</label></td>
+						<td>
+							<div data-dojo-type='davinci.ve.widgets.MetaDataStore' jsId="treeOnDblClickInputStore"></div>
+							<input id="treeOnDblClickInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnDblClickInputStore" type="text" disabled="disabled" class="previewPanelNodeInputField"></input>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="treeOnCloseInput">{onCloseLabel}</label></td>
+						<td>
+							<div data-dojo-type='davinci.ve.widgets.MetaDataStore' jsId="treeOnCloseInputStore"></div>
+							<input id="treeOnCloseInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnCloseInputStore" type="text" disabled="disabled" class="previewPanelNodeInputField"></input>
+						</td>
+					</tr>
+					<tr>
+						<td><label for="treeOnOpenInput">{onOpenLabel}</label></td>
+						<td>
+							<div data-dojo-type='davinci.ve.widgets.MetaDataStore' jsId="treeOnOpenInputStore"></div>
+							<input id="treeOnOpenInput" data-dojo-type="dijit.form.ComboBox" data-dojo-props="store:treeOnOpenInputStore" type="text" disabled="disabled" class="previewPanelNodeInputField"></input>
+						</td>
+					</tr>
+				</table> 
+			</div>
+		</div>
+    </div>
+        
+ 	<!--OK/Cancel button area on bottom -->
+	<div data-dojo-type="dijit.layout.LayoutContainer" style="height: 4em;padding:0px" region="bottom" >
+		<div data-dojo-type="dijit.layout.ContentPane" layoutAlign="left" style="width: 40%;padding:0px;margin:0px;"></div>
+		<div data-dojo-type="dijit.layout.ContentPane" layoutAlign="client" style="width:100px;margin:0px;">
+			<button data-dojo-type="dijit.form.Button" type="button" id="treeInputOkButton" >{buttonOk}</button>
+			<button data-dojo-type="dijit.form.Button" type="button" id="treeInputCancelButton">{buttonCancel}</button>
+		<div data-dojo-type="dijit.layout.ContentPane" layoutAlign="right" style="width: 40%;padding:0px;margin:0px;"></div>
+		</div>
+	</div>
+
+</div>

@@ -68,6 +68,11 @@ return declare("davinci.ui.widgets.FileFieldDialog", [_WidgetBase, _TemplatedMix
 		 this.inherited(arguments);
 	},
 	
+	_setIntermediateChangesAttr: function(value){
+		 this.textField.set("intermediateChanges", value);
+		 this.inherited(arguments);
+	},
+	
 	_onChange: function(){	
 		var value = this.textField.get("value");
 		

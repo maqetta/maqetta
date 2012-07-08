@@ -175,6 +175,18 @@ return declare(ContainerInput, {
 
 	_substitutedMainTemplate: null,
 	
+   	constructor: function(model){
+		this._nodePropWidgetMetadata = [
+       		{widgetId: "treeInputLabelInput", fieldId: "name", type: "label"},
+			{widgetId: "treeInputIconInput", fieldId: "iconStyle", type: "icon"},
+			{widgetId: "treeInputOpenIconInput", fieldId: "iconStyleOpen", type: "icon"},
+			{widgetId: "treeOnClickInput", fieldId: "onClick", type: "event"},
+			{widgetId: "treeOnDblClickInput", fieldId: "onDblClick", type: "event"},
+			{widgetId: "treeOnCloseInput", fieldId: "onClose", type: "event"},
+			{widgetId: "treeOnOpenInput", fieldId: "onOpen", type: "event"}
+       	 ];
+	},
+	
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);
 
@@ -599,7 +611,7 @@ return declare(ContainerInput, {
 	_handleSelectionChanged: function(selectedItems) {
 		// We don't want to allow node selection change if they've entered bad data for currently
 		// selected node, so re-select the previous node and abort
-		if (this._selectedNode && !this._isNodePropertyInputValid()) {
+		if (this._selectedItem && !this._isNodePropertyInputValid()) {
 			return;
 		}
 		
@@ -628,49 +640,44 @@ return declare(ContainerInput, {
 		// of the path put in the file text box
 		var iconInput = dijit.byId("treeInputIconInput");
 		iconInput.set("baseLocation", this._getBaseLocation());
+		iconInput.set("intermediateChanges", true);
 		iconInput = dijit.byId("treeInputOpenIconInput");
 		iconInput.set("baseLocation", this._getBaseLocation());
+		iconInput.set("intermediateChanges", true);
 		
 		//Add state items to combo box fields in node props section
-		this._addOptionsForEventField("treeOnClickInput");
-		this._addOptionsForEventField("treeOnDblClickInput");
-		this._addOptionsForEventField("treeOnCloseInput");
-		this._addOptionsForEventField("treeOnOpenInput");
+		dojo.forEach(this._nodePropWidgetMetadata, function(nodePropWidget) {
+			if (nodePropWidget.type === "event") {
+				this._addOptionsForEventField(nodePropWidget.widgetId);
+			}
+		}.bind(this));
 		
 		//Listen for changes to the input fields in the node props section
-		this._setupTextFieldChangeListener("treeInputLabelInput", "name");
-		this._setupTextFieldChangeListener("treeInputIconInput", "iconStyle");
-		this._setupTextFieldChangeListener("treeInputOpenIconInput", "iconStyleOpen");
-		this._setupTextFieldChangeListener("treeOnClickInput", "onClick", true);
-		this._setupTextFieldChangeListener("treeOnDblClickInput", "onDblClick", true);
-		this._setupTextFieldChangeListener("treeOnCloseInput", "onClose", true);
-		this._setupTextFieldChangeListener("treeOnOpenInput", "onOpen", true);
+		dojo.forEach(this._nodePropWidgetMetadata, function(nodePropWidget) {
+			this._setupTextFieldChangeListener(nodePropWidget.widgetId, nodePropWidget.fieldId);
+		}.bind(this));
 	},
 	
 	_getBaseLocation: function() {
 		return this._widget._edit_context._srcDocument.fileName;
 	},
 	
-	_setupTextFieldChangeListener: function(textFieldId, fieldId, isEventField) {
+	_setupTextFieldChangeListener: function(textFieldId, fieldId) {
 		var textField = dijit.byId(textFieldId);
 		this._connection.push(dojo.connect(textField,
 				"onChange", function(newValue) {
-					this._handleTextFieldChanged(fieldId,
-							newValue, isEventField);
+					this._handleTextFieldChanged(fieldId, newValue);
 				}.bind(this)));
 	},
 	
 	_clearNodeProperties: function() {
 		//Clear and disable property fields
+		var treeInputFieldOutput = dojo.byId("treeInputFieldOutput");
 		treeInputFieldOutput.innerHTML = "";
 		
-		this._populateNodeProperty("treeInputLabelInput", "", true);
-		this._populateNodeProperty("treeInputIconInput", "", true);
-		this._populateNodeProperty("treeInputOpenIconInput", "", true);
-		this._populateNodeProperty("treeOnClickInput", "", true);
-		this._populateNodeProperty("treeOnDblClickInput", "", true);
-		this._populateNodeProperty("treeOnCloseInput", "", true);
-		this._populateNodeProperty("treeOnOpenInput", "", true);
+		dojo.forEach(this._nodePropWidgetMetadata, function(nodePropWidget) {
+			this._populateNodeProperty(nodePropWidget.widgetId, "", true);
+		}.bind(this));
 	},
 	
 	_populateNodeProperties: function() {
@@ -680,21 +687,15 @@ return declare(ContainerInput, {
 			var treeInputFieldOutput = dojo.byId("treeInputFieldOutput");
 			treeInputFieldOutput.innerHTML = this._selectedItem.id;
 			
-			this._populateNodeProperty("treeInputLabelInput", this._getDisplayValueFromStore("name", selectedItem), false);
-			this._populateNodeProperty("treeInputIconInput", this._getDisplayValueFromStore("iconStyle", selectedItem), false);
-			this._populateNodeProperty("treeInputOpenIconInput", this._getDisplayValueFromStore("iconStyleOpen", selectedItem), false);
-			this._populateNodeProperty("treeOnClickInput", this._getDisplayValueFromStore("onClick", selectedItem), false, true);
-			this._populateNodeProperty("treeOnDblClickInput", this._getDisplayValueFromStore("onDblClick", selectedItem), false, true);
-			this._populateNodeProperty("treeOnCloseInput", this._getDisplayValueFromStore("onClose", selectedItem), false, true);
-			this._populateNodeProperty("treeOnOpenInput", this._getDisplayValueFromStore("onOpen", selectedItem), false, true);
+			dojo.forEach(this._nodePropWidgetMetadata, function(nodePropWidget) {
+				var value = this._getDisplayValueFromStore(nodePropWidget.fieldId, selectedItem);
+				this._populateNodeProperty(nodePropWidget.widgetId, value, false);
+			}.bind(this));
 		}
 	},
 	
-	_populateNodeProperty: function(fieldWidgetId, value, disabled, isEventField) {
+	_populateNodeProperty: function(fieldWidgetId, value, disabled) {
 		var fieldWidget = dijit.byId(fieldWidgetId);
-		if (isEventField) {
-			value = EventSelection.getValueFromEventScript(value);
-		}
 		fieldWidget.set("value", value ? value : "");
 		fieldWidget.set("disabled", disabled ? disabled : false);
 	},
@@ -706,11 +707,8 @@ return declare(ContainerInput, {
 		store.setValues(items);
 	},
 	
-	_handleTextFieldChanged: function(fieldId, newValue, isEventField) {
+	_handleTextFieldChanged: function(fieldId, newValue) {
 		if (this._selectedItem) {
-			if (isEventField) {
-				newValue = EventSelection.getEventScriptFromValue(newValue);
-			}
 			var value = this._getFieldValueToStore(fieldId, newValue);
 			this._selectedItem[fieldId] = value;
 			this._observablePreviewStore.put(this._selectedItem);
@@ -719,7 +717,7 @@ return declare(ContainerInput, {
 	
 	_getFieldValueToStore: function(fieldId, value) {
 		if (value && value.trim() != "") {
-			if (fieldId === "iconStyle" || fieldId === "iconStyleOpen") {
+			if (this._getWidgetTypeFromFieldId(fieldId) === "icon") {
 				var backgroundImageURL = 'url(\'' + value + '\')';
 				
 				//Really just care about file name now, but trying to position ourselves to handle other
@@ -728,6 +726,8 @@ return declare(ContainerInput, {
 				jsonStyle["background-image"] = backgroundImageURL ;
 	
 				value = jsonStyle;
+			} else if (this._getWidgetTypeFromFieldId(fieldId) === "event") {
+				value = EventSelection.getEventScriptFromValue(value);
 			}
 		} else {
 			//Let's not put empty values into the store
@@ -737,15 +737,28 @@ return declare(ContainerInput, {
 		return value;
 	},
 	
+	_getWidgetTypeFromFieldId: function(fieldId) {
+		var returnVal = null;
+		dojo.some(this._nodePropWidgetMetadata, function(nodePropWidget) {
+			if (nodePropWidget.fieldId == fieldId) {
+				returnVal = nodePropWidget.type;
+				return true;
+			}
+		}.bind(this));
+		return returnVal;
+	},
+	
 	_getDisplayValueFromStore: function(fieldId, item) {
 		var value = item[fieldId];
 		if (value) {
-			if (fieldId === "iconStyle"  || fieldId === "iconStyleOpen") {
+			if (this._getWidgetTypeFromFieldId(fieldId) === "icon") {
 				var backgroundImage = value["background-image"];
 				if (backgroundImage) {
 					var bgdData = CssUtils.parseBackgroundImage(backgroundImage);
 					value = (bgdData && bgdData.url) ? bgdData.url : "";
 				}
+			} else if (this._getWidgetTypeFromFieldId(fieldId) === "event") {
+					value = EventSelection.getValueFromEventScript(value);
 			}
 		}
 		

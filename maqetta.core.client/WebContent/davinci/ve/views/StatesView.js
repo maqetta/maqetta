@@ -834,9 +834,18 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var currentEditor = this._editor;
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
-			var sceneContainerNode = null;
-			if (item && item.type && item.type[0] == 'AppState') {
-				sceneContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
+			var stateContainerNode = null;
+			if (item && item.type){
+				var type = item.type[0];
+				if(type == 'AppState') {
+					stateContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
+				//FIXME: using type == 'file' for HTMLElements, too. That's wrong.
+				}else if(type == 'file'){
+					if(item.node && item.node[0]._maqAppStates){
+						stateContainerNode = item.node[0];
+					}
+					
+				}
 			}
 			if (this.isThemeEditor()){
 				this.publish("/davinci/states/state/changed", 
@@ -845,17 +854,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				this._themeState = item.sceneId[0];
 			} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
 				this.publish("/maqetta/appstates/state/changed", 
-						[{editorClass:currentEditor.declaredClass, widget:sceneContainerNode, 
-						newState:item.sceneId[0], sceneContainerNode:sceneContainerNode}]);
+						[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
+						newState:item.sceneId[0], sceneContainerNode:stateContainerNode}]);
 			} else {	// PageEditor
 /*FIXME: Need to figure out what to do about initial states when using mobile views
 				if(bodyNode){
 					States.setState(null, bodyNode);
 				}
 */
-				if(context && sceneContainerNode){
-					var state = item.sceneId[0];
-					States.setState(state, sceneContainerNode, {focus:true});
+				if(context && stateContainerNode){
+					var state = States.getState(stateContainerNode);
+					States.setState(state, stateContainerNode, { focus:true, updateWhenCurrent:true });
 					context.deselectInvisible();
 					context.updateFocusAll();
 				}

@@ -48,6 +48,7 @@ define({ root:
 		"EnableAsStateContainerWidgetLabel":"Application states are enabled on this widget",
 		"EnableApplicationStatesCurrentWidget":"Currently selected widget",
 		"EnableApplicationStatesCurrentStates":"Current application states",
+		"EnableApplicationStatesNone":"(none)",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

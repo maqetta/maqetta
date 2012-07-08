@@ -65,6 +65,7 @@ define({ root: {
 		"shiftLeft": "Shift Left",
 		"shiftRight": "Shift Right",
 		"iconLabel": "icon:",
+		"openIconLabel": "open icon:",
 		"onClickLabel": "onclick:",
 		"onDblClickLabel": "ondblclick:",
 		"onCloseLabel": "onclose:",

@@ -18,7 +18,7 @@
 }
 
 .treeInput .previewPanelSectionLabelContainer {
-	padding:0px;
+	padding:2px;
 	height: 14px;
 	white-space: nowrap;
 	background-color:#d8d8d8;
@@ -49,28 +49,28 @@
 }
 
 .treeInput .previewPanelTrailingContentPane {
-	width: 200px;
+	width: 210px;
 	overflow:hidden;
 }
 
-.treeInput .previewPanelColumnPropsPaneCenter {
+.treeInput .previewPanelNodePropsPaneCenter {
 	margin-top: 8px;
 	padding:0px; 
 	overflow:hidden;
 }
 
-.treeInput .previewPanelColumnPropsDiv {
+.treeInput .previewPanelNodePropsDiv {
 	border: 1px solid grey;
 	height:70%;
 	overflow:auto;
 	padding: 5px;
 }
 
-.treeInput .previewPanelColumnPropsTable {
+.treeInput .previewPanelNodePropsTable {
 	width:100%;
 }
 
-.treeInput .previewPanelColumnInputField {
+.treeInput .previewPanelNodeInputField {
 	width:100%;
 	min-width:75px;
 }

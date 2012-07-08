@@ -8,6 +8,8 @@ define(
 	"davinci/ve/commands/ModifyAttributeCommand",
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/ve/widgets/EventSelection",
+	"davinci/ve/widgets/BackgroundDialog",
+	"davinci/ve/utils/CssUtils",
 	"dijit/Tree",
 	"dojo/store/Memory",
 	"dojo/store/Observable",
@@ -25,7 +27,8 @@ define(
 	"dijit/ToolbarSeparator", //used in template
 	"dijit/form/TextBox", //used in template
 	"dijit/form/ComboBox", //used in template
-	"davinci/ve/widgets/MetaDataStore" //used in template
+	"davinci/ve/widgets/MetaDataStore", //used in template,
+	"davinci/ui/widgets/FileFieldDialog" //user in template
 ],
 function(declare, 
 		Runtime,
@@ -35,6 +38,8 @@ function(declare,
 		ModifyAttributeCommand,
 		OrderedCompoundCommand,
 		EventSelection,
+		BackgroundDialog,
+		CssUtils,
 		Tree,
 		Memory,
 		Observable,
@@ -98,6 +103,29 @@ var CustomMemory = declare(Memory, {
 	    	}
 	    }
 	    return this.inherited(arguments);
+	}
+});
+
+/*
+ * Subclassing Tree so we can show custom icons in the preview.
+ */
+var CustomTree = declare(Tree, {
+	treeInput: null,
+	
+	//Need to be able to preview icon settings so attach function to tree
+	getIconStyle: function(item, opened) {
+		var iconStyleFieldId = item.iconStyle ? "iconStyle" : null;
+		if (opened && item.iconStyleOpen) {
+			iconStyleFieldId = "iconStyleOpen";
+		}
+		if (iconStyleFieldId) {
+			var urlInside = this.treeInput._getDisplayValueFromStore(iconStyleFieldId, item);
+			var urlValue = BackgroundDialog.getCSSForWorkspaceURL(this.treeInput._getBaseLocation(), urlInside);
+			return {
+				backgroundImage: urlValue
+			}; 
+		} 
+		return this.inherited(arguments);
 	}
 });
 
@@ -171,16 +199,16 @@ return declare(ContainerInput, {
 			
 			//Configure listeners for OK/Cancel buttons
 			var okButton = dijit.byId('treeInputOkButton');
-			this._connection.push(dojo.connect(okButton, 'onClick', dojo.hitch(this,function(){
+			this._connection.push(dojo.connect(okButton, 'onClick', function(){
 				if (this._isNodePropertyInputValid()) {
 					this.updateWidget();
 					this.onOk();
 				}
-			})));
+			}.bind(this)));
 			var cancelButton = dijit.byId('treeInputCancelButton');
-			this._connection.push(dojo.connect(cancelButton, 'onClick', dojo.hitch(this,function(){
+			this._connection.push(dojo.connect(cancelButton, 'onClick', function(){
 				this.onCancel();
-			})));
+			}.bind(this)));
 			if (this._widget.inLineEdit_displayOnCreate){
 				// hide cancel on widget creation #120
 				delete this._widget.inLineEdit_displayOnCreate;
@@ -223,31 +251,21 @@ return declare(ContainerInput, {
 		});
 		
 		//Create the tree
-		var previewTree = this._previewTree = new Tree({
+		var previewTree = this._previewTree = new CustomTree({
 			showRoot: false,
 			autoExpand: treeWidgetData.properties.autoExpand,
 			model: previewModel,
 			dndController: dndSource,
             betweenThreshold: 5,
-            //Need to be able to preview icon settings so attach function to tree
-    		getIconStyle: function(item, opened) {
-    			if (item.icon) {
-    				var workspaceUrl = Runtime.getUserWorkspaceUrl();
-    				var projectPath = (new davinci.model.Path(this._widget.getContext()._srcDocument.url)).firstSegment() + "/";
-    				var urlValue = "url('" + workspaceUrl + projectPath + item.icon + "')";
-    				return {
-    					backgroundImage: urlValue
-    				}; 
-    			} 
-    			return null;
-    		}.bind(this)
+            //For our custom tree
+            treeInput: this
 		});
 		
 		var previewPanelGridContentPane = dijit.byId("previewPanelGridContentPane");
 		previewPanelGridContentPane.set("content", previewTree);
 		
 		//listen for selection changes
-		previewTree.watch("selectedItems", dojo.hitch(this, function (prop, oldValue, newValue) {
+		this._connection.push(previewTree.watch("selectedItems", function (prop, oldValue, newValue) {
 			this._handleSelectionChanged(newValue);
 		}.bind(this)));
 		
@@ -606,6 +624,13 @@ return declare(ContainerInput, {
 	},
 	
 	_setupNodePropertyInputs: function() {
+		// Set base location on the FileFieldDialog, so the project name is not part
+		// of the path put in the file text box
+		var iconInput = dijit.byId("treeInputIconInput");
+		iconInput.set("baseLocation", this._getBaseLocation());
+		iconInput = dijit.byId("treeInputOpenIconInput");
+		iconInput.set("baseLocation", this._getBaseLocation());
+		
 		//Add state items to combo box fields in node props section
 		this._addOptionsForEventField("treeOnClickInput");
 		this._addOptionsForEventField("treeOnDblClickInput");
@@ -614,11 +639,16 @@ return declare(ContainerInput, {
 		
 		//Listen for changes to the input fields in the node props section
 		this._setupTextFieldChangeListener("treeInputLabelInput", "name");
-		this._setupTextFieldChangeListener("treeInputIconInput", "icon");
+		this._setupTextFieldChangeListener("treeInputIconInput", "iconStyle");
+		this._setupTextFieldChangeListener("treeInputOpenIconInput", "iconStyleOpen");
 		this._setupTextFieldChangeListener("treeOnClickInput", "onClick", true);
 		this._setupTextFieldChangeListener("treeOnDblClickInput", "onDblClick", true);
 		this._setupTextFieldChangeListener("treeOnCloseInput", "onClose", true);
 		this._setupTextFieldChangeListener("treeOnOpenInput", "onOpen", true);
+	},
+	
+	_getBaseLocation: function() {
+		return this._widget._edit_context._srcDocument.fileName;
 	},
 	
 	_setupTextFieldChangeListener: function(textFieldId, fieldId, isEventField) {
@@ -636,6 +666,7 @@ return declare(ContainerInput, {
 		
 		this._populateNodeProperty("treeInputLabelInput", "", true);
 		this._populateNodeProperty("treeInputIconInput", "", true);
+		this._populateNodeProperty("treeInputOpenIconInput", "", true);
 		this._populateNodeProperty("treeOnClickInput", "", true);
 		this._populateNodeProperty("treeOnDblClickInput", "", true);
 		this._populateNodeProperty("treeOnCloseInput", "", true);
@@ -643,17 +674,19 @@ return declare(ContainerInput, {
 	},
 	
 	_populateNodeProperties: function() {
-		if (this._selectedItem) {
+		var selectedItem = this._selectedItem;
+		if (selectedItem) {
 			//Fill and enable property fields
 			var treeInputFieldOutput = dojo.byId("treeInputFieldOutput");
 			treeInputFieldOutput.innerHTML = this._selectedItem.id;
 			
-			this._populateNodeProperty("treeInputLabelInput", this._selectedItem.name, false);
-			this._populateNodeProperty("treeInputIconInput", this._selectedItem.icon, false);
-			this._populateNodeProperty("treeOnClickInput", this._selectedItem.onClick, false, true);
-			this._populateNodeProperty("treeOnDblClickInput", this._selectedItem.onDblClick, false, true);
-			this._populateNodeProperty("treeOnCloseInput", this._selectedItem.onClose, false, true);
-			this._populateNodeProperty("treeOnOpenInput", this._selectedItem.onOpen, false, true);
+			this._populateNodeProperty("treeInputLabelInput", this._getDisplayValueFromStore("name", selectedItem), false);
+			this._populateNodeProperty("treeInputIconInput", this._getDisplayValueFromStore("iconStyle", selectedItem), false);
+			this._populateNodeProperty("treeInputOpenIconInput", this._getDisplayValueFromStore("iconStyleOpen", selectedItem), false);
+			this._populateNodeProperty("treeOnClickInput", this._getDisplayValueFromStore("onClick", selectedItem), false, true);
+			this._populateNodeProperty("treeOnDblClickInput", this._getDisplayValueFromStore("onDblClick", selectedItem), false, true);
+			this._populateNodeProperty("treeOnCloseInput", this._getDisplayValueFromStore("onClose", selectedItem), false, true);
+			this._populateNodeProperty("treeOnOpenInput", this._getDisplayValueFromStore("onOpen", selectedItem), false, true);
 		}
 	},
 	
@@ -678,9 +711,45 @@ return declare(ContainerInput, {
 			if (isEventField) {
 				newValue = EventSelection.getEventScriptFromValue(newValue);
 			}
-			this._selectedItem[fieldId] = newValue;
+			var value = this._getFieldValueToStore(fieldId, newValue);
+			this._selectedItem[fieldId] = value;
 			this._observablePreviewStore.put(this._selectedItem);
 		}
+	},
+	
+	_getFieldValueToStore: function(fieldId, value) {
+		if (value && value.trim() != "") {
+			if (fieldId === "iconStyle" || fieldId === "iconStyleOpen") {
+				var backgroundImageURL = 'url(\'' + value + '\')';
+				
+				//Really just care about file name now, but trying to position ourselves to handle other
+				//style attributes storing as a JSON object
+				var jsonStyle = {};
+				jsonStyle["background-image"] = backgroundImageURL ;
+	
+				value = jsonStyle;
+			}
+		} else {
+			//Let's not put empty values into the store
+			value = null;
+		}
+		
+		return value;
+	},
+	
+	_getDisplayValueFromStore: function(fieldId, item) {
+		var value = item[fieldId];
+		if (value) {
+			if (fieldId === "iconStyle"  || fieldId === "iconStyleOpen") {
+				var backgroundImage = value["background-image"];
+				if (backgroundImage) {
+					var bgdData = CssUtils.parseBackgroundImage(backgroundImage);
+					value = (bgdData && bgdData.url) ? bgdData.url : "";
+				}
+			}
+		}
+		
+		return value;
 	},
 	
 	hide: function(cancel) {
@@ -764,10 +833,11 @@ return declare(ContainerInput, {
 		
 		//need <script> block for getIconStyle
 		var jsString = 
-			"if (item.icon) {" +
-			"	return {backgroundImage: 'url(\\'' + item.icon + '\\')'};" +
+			"var iconStyle = item.iconStyle;" +
+			"if (opened && item.iconStyleOpen) {" +
+			"	iconStyle = item.iconStyleOpen;" +
 			"};" + 
-			"return null;";
+			"return iconStyle;";
 		children.push(this._createScriptBlockData("dojo/method", "getIconStyle", "item, opened", jsString));
 		
 		//need <script> block for onClick
@@ -839,6 +909,7 @@ return declare(ContainerInput, {
 					idLabel: langObj.idLabel,
 					labelLabel: langObj.labelLabel,
 					iconLabel: langObj.iconLabel,
+					openIconLabel: langObj.openIconLabel,
 					onClickLabel: langObj.onClickLabel,
 					onDblClickLabel: langObj.onDblClickLabel,
 					onCloseLabel: langObj.onCloseLabel,

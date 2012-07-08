@@ -24,8 +24,8 @@ define(["dojo/_base/declare",
 		__id : 0,
 		
 		data : null,
-		
-		
+			
+	
 		buildRendering: function(){
 			this.domNode =   dojo.doc.createElement("div",{style:"width:100%"});
 			this._textFieldId = getId();
@@ -184,9 +184,7 @@ define(["dojo/_base/declare",
 								var urlInside = URLRewrite.getUrl(val);
 								if(urlInside){
 									var urlPath = new Path(urlInside);
-									var basePath = new Path(this._baseLocation);
-									var baseParentPath = basePath.getParentPath();
-									var relativeUrl = urlPath.relativeTo(baseParentPath).toString();
+									var relativeUrl = urlPath.toString();
 									val = 'url(\'' + relativeUrl + '\')';
 								}
 								a[i] = val;

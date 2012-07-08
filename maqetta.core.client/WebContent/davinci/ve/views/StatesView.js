@@ -443,8 +443,13 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						onComplete: dojo.hitch(this, function(items, request){
 							if(items.length > 0){
 								selectedItem = items[0];
+/*FIXME: DELETE THIS
 								if(selectedItem.sceneId && selectedItem.sceneContainerNode){
 									oldSelection = { sceneId:selectedItem.sceneId[0], sceneContainerNode:selectedItem.sceneContainerNode[0] };
+								}
+*/
+								if(selectedItem.node){
+									oldSelection = selectedItem.node[0];
 								}
 							}
 						})
@@ -462,11 +467,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				// asynchronously, and appears to do so always in the way we are using
 				// Tree in this routine.
 				this._tree.onLoadDeferred.then(function(){
+/*FIXME: DELETE THIS
 					this._sceneStore.fetch({query: {sceneId:oldSelection.sceneId}, queryOptions:{deep:true}, 
+*/
+					this._sceneStore.fetch({query: {node:oldSelection}, queryOptions:{deep:true}, 
 						onComplete: dojo.hitch(this, function(items, request){
 							for(var i=0; i<items.length; i++){
 								var item = items[i];
+/*FIXME: DELETE THIS
 								if(item.sceneId[0] == oldSelection.sceneId && item.sceneContainerNode[0] == oldSelection.sceneContainerNode){
+*/
+								if(item.node[0] == oldSelection){
 									var path = this._getTreeSelectionPath(item);
 									if(path.length > 0){
 										this._tree.set('path', path);
@@ -850,7 +861,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
 						newState:item.sceneId[0], sceneContainerNode:stateContainerNode}]);
 			} else {	// PageEditor
-/*FIXME: Need to figure out what to do about initial states when using mobile views
+				/*FIXME: Need to figure out what to do about initial states when using mobile views
 				if(bodyNode){
 					States.setState(null, bodyNode);
 				}

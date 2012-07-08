@@ -864,8 +864,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var context = currentEditor ? currentEditor.getContext() : null;
 			var bodyNode = context ? context.rootNode : null;
 			var stateContainerNode = null;
+			var type = null;
+			var newState = null;
 			if (item && item.type){
-				var type = item.type[0];
+				type = item.type[0];
 				if(type == 'AppState') {
 					stateContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
 				//FIXME: using type == 'file' for HTMLElements, too. That's wrong.
@@ -892,8 +894,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}
 */
 				if(context && stateContainerNode){
-					var state = States.getState(stateContainerNode);
-					States.setState(state, stateContainerNode, { focus:true, updateWhenCurrent:true });
+					if(type == 'AppState') {
+						newState = item.sceneId ? item.sceneId[0] : null;
+					}else{
+						newState = States.getState(stateContainerNode);
+					}
+					States.setState(newState, stateContainerNode, { focus:true, updateWhenCurrent:true });
 					context.deselectInvisible();
 					context.updateFocusAll();
 				}

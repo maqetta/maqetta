@@ -208,7 +208,7 @@ return {
                 },
                 {
                     iconClass: "editActionIcon",
-                    label: "Enable Application States...",
+                    label: "Application States...",
                     action: "davinci/ve/actions/EnableApplicationStates",
                     menubarPath: "davinci.edit/cut"
                 }

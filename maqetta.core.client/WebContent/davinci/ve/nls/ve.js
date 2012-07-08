@@ -41,10 +41,13 @@ define({ root:
 		"renameLabel":"Rename",
 		"newStateLabel":"New name:",
 		"initialStateCheckBoxLabel":"Initial state at document load time",
-		"EnableApplicationStates":"Enable application states",
-		"EnableAsStateContainerWidgetDescription":"Setting the check box below will allow custom application states to be defined on the currently selected widget.",
-		"EnableAsStateContainerWidgetLabel":"Enable application states on this widget",
-		"EnableApplicationStatesCurrentWidget":"Current widget",
+		"EnableApplicationStates":"Enable/disable application states",
+		"EnableAsStateContainerDescription":"Setting the check box below and clicking OK will allow custom application states to be defined on the currently selected widget.",
+		"DisableAsStateContainerDescription":"Unsetting the check box below and clicking OK will disallow custom application states on the currently selected widget.",
+		"DisableAsStateContainerDataLoss":"Any existing interactivity based on existing application states will be lost.",
+		"EnableAsStateContainerWidgetLabel":"Application states are enabled on this widget",
+		"EnableApplicationStatesCurrentWidget":"Currently selected widget",
+		"EnableApplicationStatesCurrentStates":"Current application states",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

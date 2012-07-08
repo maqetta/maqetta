@@ -740,16 +740,19 @@ davinci_top_bar .dijitButtonNode {
 	clear:both;
 	margin:15px 10px 15px;
 }
+.EnableAsStateContainerWidgetDiv {
+	margin:1px 0 0px;
+}
+.EnableAsStateContainerStatesDiv {
+	margin:4px 0 0px;
+}
 .EnableAsStateContainerWidgetLabel {
 }
 .EnableAsStateContainerDescriptionDiv {
-	margin:8px 0 16px;
+	margin:24px 0 8px;
 }
 .EnableAsStateContainerCheckBoxDiv {
-	margin:16px 0;
-}
-.EnableAsStateContainerWidgetDiv {
-	margin:16px 0 8px;
+	margin:12px 0 16px 8px;
 }
 
 .designModeIcon {

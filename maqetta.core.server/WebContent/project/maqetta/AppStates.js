@@ -806,12 +806,16 @@ States.prototype = {
 			return;
 		}
 		var currentState = this.getState(node);
-		if (state == currentState) {
-			this.setState(undefined, node);
-		}
+		var body = node.ownerDocument.body;
+		var statesFocus = this.getFocus(body);
 		node._maqAppStates.states.splice(idx, 1);
-		if(node._maqAppStates.states.length==0){
-			delete node._maqAppStates;
+		var params = {};
+		if(statesFocus.stateContainerNode == node && statesFocus.state == state){
+			params.focus = true;
+			params.updateWhenCurrent = true;
+		}
+		if (state == currentState) {
+			this.setState(undefined, node, params);
 		}
 		connect.publish("/davinci/states/state/removed", [{node:node, state:state}]);
 		this._updateSrcState (node);

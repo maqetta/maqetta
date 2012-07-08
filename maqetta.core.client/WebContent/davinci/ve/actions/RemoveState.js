@@ -19,33 +19,9 @@ return declare("davinci.ve.actions.RemoveState", [Action], {
 		if(!statesFocus || !statesFocus.state || statesFocus.state === States.NORMAL){
 			return;
 		}
-//FIXME: Doesn't work with nested states
-		var node = this.getNode();
-		var state = this.getState(arguments[1] || arguments[0]);
+		var node = statesFocus.stateContainerNode;
+		var state = state = davinci.ve.states.getState(node);
 		davinci.ve.states.remove(node, state);
-	},
-
-	isEnabled: function(context){
-		return this.getNode();
-	},
-
-	shouldShow: function(context){
-		return this.getNode();
-	},
-	
-	getNode: function(node) {
-		if (!node) {
-			node = davinci.ve.states.getContainer();
-		}
-		return node;
-	},
-	
-	getState: function(state) {
-		var node = this.getNode();
-		if (!state || typeof state != "string") {
-			state = davinci.ve.states.getState(node);
-		}
-		return state;
 	}
 });
 });

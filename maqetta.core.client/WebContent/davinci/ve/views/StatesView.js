@@ -9,12 +9,13 @@ define([
 		"dijit/layout/ContentPane",
 		"davinci/ve/States",
 		"davinci/ve/widget",
+		"davinci/ve/_Widget",
 		"dojo/data/ItemFileWriteStore",
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
 		"dojo/_base/window"
 ], function(declare, domQuery, domClass, connect, veNls, ViewPart, BorderContainer, ContentPane, 
-	States, WidgetUtils, ItemFileWriteStore, ForestStoreModel, Tree, win
+	States, WidgetUtils, Widget, ItemFileWriteStore, ForestStoreModel, Tree, win
 ){
 
 var PlainTextTreeNode = declare(Tree._TreeNode, {}),
@@ -321,8 +322,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var sceneManagers = context.sceneManagers;
 		var existingItems = [];	// Used inside recurseWidget to look up into existing list of items
 		var that = this;
-		function recurseWidget(widget, currentParentItem){
-			var node = widget.domNode;
+		function recurseWidget(widgetOrNode, currentParentItem){
+			// Page editor passes in a widget, review editor passes in a DOM node
+			var widget, domNode;
+			var isDvWidget = (widgetOrNode.declaredClass && widgetOrNode.isInstanceOf && widgetOrNode.isInstanceOf(Widget));
+			if(isDvWidget){
+				widget = widgetOrNode;
+				node = widget.domNode;
+			}else{
+				widget = null;
+				node = widgetOrNode;
+			}
 			var isStateContainer = States.isStateContainer(node);
 			var isSceneContainer = false;
 			for(var smIndex in sceneManagers){
@@ -370,7 +380,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				if(currentParentItemAlreadyThere){
 					currentParentItem = currentParentItemAlreadyThere;
 				}else{
-					var label = WidgetUtils.getLabel(widget);
+					//FIXME: We currently have bad labels for review/commenting
+					var label = isDvWidget ? WidgetUtils.getLabel(widget) : node.tagName;
 					var o = {name:label, type:'file', category:'file', node:node, children:[]};
 					if(ancestorParentItem){
 						// Make sure that any new nodes are nested within the node corresponding
@@ -422,7 +433,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 										parentItem:currentParentItem, children:[]};
 								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
 									var childSceneNode = sceneChildren[childSceneIndex];
-									var label = WidgetUtils.getLabel(childSceneNode._dvWidget);
+									//FIXME: We currently have bad labels for review/commenting
+									var label = isDvWidget ? WidgetUtils.getLabel(childSceneNode._dvWidget) : childSceneNode.tagName;
 									var span = that._treeNodeContent(label);
 									var isFocus = false;	// No concept if scene focus for plug-in scene managers
 									var isCurrent = (childSceneNode === currentScene);
@@ -440,9 +452,17 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					}
 				}
 			}
-			var children = widget.getChildren();
-			for(var j=0; j<children.length; j++){
-				recurseWidget(children[j], currentParentItem);
+			var children;
+			if(isDvWidget){
+				children = widget.getChildren();
+				for(var j=0; j<children.length; j++){
+					recurseWidget(children[j], currentParentItem);
+				}
+			}else{
+				children = States._getChildrenOfNode(node);
+				for(var j=0; j<children.length; j++){
+					recurseWidget(children[j], currentParentItem);
+				}
 			}
 		}
 		var appStateFocus = States.getFocus(context.rootNode);

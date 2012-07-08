@@ -50,12 +50,14 @@ States.prototype = {
 	 */
 	getAllStateContainers: function(rootnode){
 		var allStateContainers = [];
+		var that = this;
 		function findStateContainers(currentNode){
 			if(currentNode._maqAppStates){
 				allStateContainers.push(currentNode);
 			}
-			for(var i=0; i<currentNode.children.length; i++){
-				findStateContainers(currentNode.children[i]);
+			var children = that._getChildrenOfNode(currentNode);
+			for(var i=0; i<children.length; i++){
+				findStateContainers(children[i]);
 			}
 		}
 		findStateContainers(rootnode);

@@ -8,7 +8,7 @@ define([
 	"davinci/ve/States",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
-	"dojo/i18n!dijit/nls/common",                                                                 
+	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/AddState.html",
 	"dijit/form/TextBox"
 ], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Runtime, Workbench, States, Action, veNls, commonNls, templateString){
@@ -68,28 +68,10 @@ return declare("davinci.ve.actions.AddState", [Action], {
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
 		}
-//FIXME: Doesn't work with nested states
-		// TODO: Replace dialog with UI to add nodes inline to list
-		var node = this.getNode();
 
-		var w = new davinci.ve.actions.AddStateWidget({node: node});
+		var w = new davinci.ve.actions.AddStateWidget({node: statesFocus.stateContainerNode });
 
 		Workbench.showModal(w, veNls.createNewState);
-	},
-
-	shouldShow: function(context){
-		return this.getNode();
-	},
-
-	isEnabled: function(context){
-		return this.getNode();
-	},
-
-	getNode: function(node) {
-		if (!node) {
-			node = davinci.ve.states.getContainer();
-		}
-		return node;
 	}
 });
 });

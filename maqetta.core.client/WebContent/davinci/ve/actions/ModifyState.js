@@ -153,7 +153,7 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 			if(containerSrcElement){
 				var currentElement = null;
 				var anyAttributeChanges = false;
-				var value_regex = /^(.*davinci.states.setState\s*\(\s*)('[^']*'|"[^"]*")(\s*\).*)$/;
+				var value_regex = /^(.*davinci.states.setState\s*\(\s*)('[^']*'|"[^"]*")([^\)]*\).*)$/;
 				var quoted_state_regex = /^(['"])(.*)(['"])$/;
 				containerSrcElement.visit({ visit: dojo.hitch(this, function(node) {
 					if (node.elementType == "HTMLElement") {

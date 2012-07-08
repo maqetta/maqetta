@@ -22,6 +22,28 @@ States.prototype = {
 	},
 	
 	/**
+	 * Returns an array of all ancestor nodes that are state containers (due to having a _maqAppStates property)
+	 * @param node
+	 * @returns {Array[Element]}  an array of Elements for all ancestor state containers.
+	 *      If this node is a state container, it is included in the list.
+	 *      First element in array should be the BODY element.
+	 */
+	getStateContainersForNode: function(node){
+		var allStateContainers = [];
+		var n = node;
+		while(n){
+			if(n._maqAppStates){
+				allStateContainers.splice(0, 0, n);
+			}
+			if(n.tagName == 'BODY'){
+				break;
+			}
+			n = n.parentNode;
+		}
+		return allStateContainers;
+	},
+	
+	/**
 	 * Returns an array of all nodes that are state containers (due to having a _maqAppStates property)
 	 * @param rootnode
 	 * @returns {Array[Element]}  an array of Elements for all state containers in document
@@ -318,19 +340,6 @@ States.prototype = {
 		}
 		this._updateSrcState (node);
 		
-	},
-
-//FIXME: Probably want to get rid of resetState()
-	/**
-	 * Force a call to setState so that styling properties get reset for the given node
-	 * based on the current application state.
-	 */
-	resetState: function(node){
-		if(!node ){
-			return;
-		}
-		var currentState = this.getState(node);
-		this.setState(currentState, node, {updateWhenCurrent:true, silent:true});	
 	},
 
 	/**

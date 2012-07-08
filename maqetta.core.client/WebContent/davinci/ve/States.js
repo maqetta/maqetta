@@ -144,6 +144,25 @@ var veStates = declare(maqettaStates, {
 		var context = this.getContext();
 		return context && context.getDocument && context.getDocument();
 	},
+	
+	/**
+	 * Force a call to setState so that styling properties get reset for the given node
+	 * based on the current application state.
+	 */
+	resetState: function(node){
+		if(!node){
+			return;
+		}
+		var stateContainers = this.getStateContainersForNode(node);
+		var focusState = this.getFocus(node.ownerDocument.body);
+		for(var i=0; i<stateContainers.length; i++){
+			var stateContainerNode = stateContainers[i];
+			var currentState = this.getState(stateContainerNode);
+			var focus = (stateContainerNode == focusState.stateContainerNode && currentState == focusState.state);
+			this.setState(currentState, stateContainerNode, { focus:focus, updateWhenCurrent:true, silent:true });	
+		}
+	},
+	
 	_updateSrcState: function (node){
 		var widget = (node && node._dvWidget);
 		if(!widget){
@@ -155,19 +174,19 @@ var veStates = declare(maqettaStates, {
 			var obj=this.serialize(node);
 			if(obj.maqAppStates){	// _maqAppStates properties was present
 				obj.maqAppStates.trim();
-				if(obj.maqAppStates){
-					widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.maqAppStates);
-				}else{
-					widget._srcElement.removeAttribute(davinci.states.APPSTATES_ATTRIBUTE);
-				}
+			}
+			if(obj.maqAppStates){
+				widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.maqAppStates);
+			}else{
+				widget._srcElement.removeAttribute(davinci.states.APPSTATES_ATTRIBUTE);
 			}
 			if(obj.maqDeltas){	// _maqDeltas properties was present
 				obj.maqDeltas.trim();
-				if(obj.maqDeltas){
-					widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.maqDeltas);
-				}else{
-					widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
-				}
+			}
+			if(obj.maqDeltas){
+				widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.maqDeltas);
+			}else{
+				widget._srcElement.removeAttribute(davinci.states.DELTAS_ATTRIBUTE);
 			}
 			var newDefsAttr = widget._srcElement.getAttribute(davinci.states.APPSTATES_ATTRIBUTE);
 			var newDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
@@ -200,6 +219,16 @@ var veStates = declare(maqettaStates, {
 	_removeStateFromNode: function(node, state){
 		if(node && node._maqDeltas && node._maqDeltas[state]){
 			delete node._maqDeltas[state];
+			var hasAnyProperties = false;
+			for (var prop in node._maqDeltas) {
+				if(prop !== 'undefined'){
+					hasAnyProperties = true;
+					break;
+				}
+			}
+			if (!hasAnyProperties){
+				delete node._maqDeltas;
+			}
 			this._updateSrcState(node);
 		}
 	},
@@ -219,8 +248,7 @@ var veStates = declare(maqettaStates, {
 					var allStatesForNode = this.getAllStatesForNode(node);
 					for(var state in node._maqDeltas){
 						if(state !== 'undefined' && allStatesForNode.indexOf(state) < 0){
-							delete node._maqDeltas[state];
-							this._updateSrcState(node);
+							this._removeStateFromNode(node, state);
 						}
 					}
 				}

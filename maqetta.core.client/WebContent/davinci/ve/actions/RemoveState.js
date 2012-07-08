@@ -21,7 +21,7 @@ return declare("davinci.ve.actions.RemoveState", [Action], {
 		}
 		var node = statesFocus.stateContainerNode;
 		var state = state = davinci.ve.states.getState(node);
-		davinci.ve.states.remove(node, state);
+		States.remove(node, state);
 	}
 });
 });

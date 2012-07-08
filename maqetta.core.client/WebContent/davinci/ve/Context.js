@@ -2015,7 +2015,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			for(var i=this._selection.length-1; i>=0; i--){
 				var widget = this._selection[i];
 				var domNode = widget.domNode;
-				while(domNode.tagName != 'BODY'){
+				while(domNode && domNode.tagName != 'BODY'){
 					var computed_style_display = dojo.style(domNode, 'display');
 					if(computed_style_display == 'none'){
 						this.deselect(widget);

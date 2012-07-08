@@ -47,7 +47,11 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 	},
 
 	onOk: function() {
-		davinci.ve.states.add(this.node, this.input.get("value"));
+		var newState = this.input.get("value");
+		if(newState){
+			States.add(this.node, newState);
+			States.setState(newState, this.node, { focus:true, updateWhenCurrent:true });
+		}
 	},
 
 	onCancel: function() {

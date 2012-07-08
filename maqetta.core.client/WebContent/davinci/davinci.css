@@ -1300,6 +1300,13 @@ davinci_top_bar .dijitButtonNode {
 	display:none;
 }
 */
+/* dijit.Tree defaults to white-space:nowrap, which messes up Firefox, which
+	has a known problem when mixing white-space:nowrap on a container node
+	and then float:right on interior nodes. Firefox pushes the float:right
+	nodes to a subsequent row. */
+.dj_gecko .StatesViewTree .dijitTreeRow, .dj_gecko .StatesViewTree .dijitTreeContent {
+	white-space:normal;
+}
 .ReviewToolBarText {
 	background-color: ##ffffe0;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8e8), to(#ffffcc)); 
@@ -1363,7 +1370,8 @@ davinci_top_bar .dijitButtonNode {
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentHidden {
 	visibility:hidden;
 }
-.ScenesPaletteAppStateIcon.ScenesPaletteFocus {
+/* Need to tweak WebKit to drop bullet icon a couple of pixels */
+.dj_webkit .ScenesPaletteAppStateIcon.ScenesPaletteFocus {
 	margin-top: -2px;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteFocus.ScenesPaletteFocusHidden {

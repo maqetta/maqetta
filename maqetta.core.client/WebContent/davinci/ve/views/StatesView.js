@@ -509,16 +509,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		
 		// Have to wrap in a deferred because dijit.Tree sometimes initially itself
 		// asynchronously, and appears to do so always in the way we are using
-		// Tree in this routine.
+		// Tree in this file.
 		this._tree.onLoadDeferred.then(function(){
 		
-
-/*FIXME: DELETE THIS
-		var appStateFocus = States.getFocus(context.rootNode);
-		if(appStateFocus && !appStateFocus.state){
-			appStateFocus.state = States.NORMAL;
-		}
-*/
 			// In logic below, we will be looking to see which tree node is selected
 			// and whether it matches one of the "scenes" (e.g., a Dojo Mobile View)
 			// or matches the currently focused application state.
@@ -997,7 +990,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		s += '<span title="'+veNls.InitialScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteInitial">&#x2713;</span>';
 		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCurrent">&#x263C;</span>';
 		s += '<span title="'+veNls.AppStateFocus+'" class="ScenesPaletteAppStateIcon ScenesPaletteFocus">&#x25C9;</span>';
-		s += '<span>'+labelSnippet+'</span></span>';
+		s += '<span>'+labelSnippet+'</span>';
 		return s;
 	}, 
 	

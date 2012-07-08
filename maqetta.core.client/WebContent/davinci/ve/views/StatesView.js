@@ -68,6 +68,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/scene/renamed", this._renameScene.bind(this));
 		this.subscribe("/davinci/scene/selectionChanged", this._sceneSelectionChanged.bind(this));
 		dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
+		this.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 		
 		dojo.style(this.toolbarDiv, "display", "none");
 	},
@@ -142,6 +143,30 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this._updateView();
 	},
 
+	_widgetSelectionChanged: function() {
+		if(!this._editor || !this._editor.getContext || !this._tree || !this._sceneStore){
+			return;
+		}
+		var context = this._editor.getContext();
+		var selection = context.getSelection();
+		if(selection.length == 1){
+			var node = selection[0].domNode;
+			// If currently selected widget's DOM node is a state container, then
+			// select the TreenNode that corresponds to that widget and DOM node.
+			if(node && node._maqAppStates){
+				this._sceneStore.fetch({query: {node:node}, queryOptions:{deep:true}, 
+					onComplete: dojo.hitch(this, function(items, request){
+						if(items.length > 0){
+							var path = this._getTreeSelectionPath(items[0]);
+							this._tree.set('path', path);
+						}
+					})
+				});
+				
+			}
+		}
+	},
+	
 	_sceneSelectionChanged: function(sceneManager, sceneId) {
 		if(!sceneManager || !sceneManager.category || !sceneId){
 			return;
@@ -861,7 +886,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
 						newState:item.sceneId[0], sceneContainerNode:stateContainerNode}]);
 			} else {	// PageEditor
-				/*FIXME: Need to figure out what to do about initial states when using mobile views
+/*FIXME: Need to figure out what to do about initial states when using mobile views
 				if(bodyNode){
 					States.setState(null, bodyNode);
 				}
@@ -883,6 +908,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						}
 					}
 				}
+			//FIXME: shouldn't be using 'file' for Elements
+			}else if(item.type && item.type[0] == 'file' && item.node && item.node[0]._dvWidget){
+				// If user clicked on a TreeNode that corresponds to a widget, then select that widget
+				context.select(item.node[0]._dvWidget);
 			}
 			this._updateSelection();
 		});

@@ -26,10 +26,10 @@
 
 		<!-- *** IMPORTANT NOTE: modulePaths needs to be changed before going final *** -->
 
-		<script src="../../dojo/dojo.js" djConfig="modulePaths:{'preview':'../preview'}"></script>
+		<script src="../../dojo/dojo.js" data-dojo-config="modulePaths:{'preview':'../preview'}"></script>
 		<link rel="stylesheet" type="text/css" href="../../dijit/themes/claro/claro.css"/>
 		<script>
-		require(['preview/singlepreview', 'dojo/domReady!'], function(singlepreview){
+		require(['preview/singlepreview', 'dojo/domReady!'], function(SinglePreview){
 			var devicelist=[
 							{value:"0", label:'android_340x480', file:'../images/android_340x480.svg'},
 							{value:"1", label:'android_480x800', file:'../images/android_480x800.svg'},
@@ -48,9 +48,8 @@
 			var showZoom=true;
 
 			function initSinglePreview(){
-
 				var singlepreview_container = document.querySelectorAll(".singlepreview_container")[0];
-				window.singlepreview = new singlepreview({
+				window.singlepreview = new SinglePreview({
 					devicelist:devicelist,
 					currentDevice:currentDevice,
 					svgfilename:svgfilename,
@@ -63,7 +62,7 @@
 			}
 
 			// Used by test case in preview/test folder, not used by preview.html
-			function destroyRecreate(){
+			window.destroyRecreate = function() {
 				singlepreview.destroy(true);
 				initSinglePreview();
 			}

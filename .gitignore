@@ -3,3 +3,6 @@ maqetta.core.client/.settings/org.eclipse.core.resources.prefs
 maqetta.jquery_mobile/WebContent/jquery.mobile/css
 maqetta.jquery_mobile/WebContent/jquery.mobile/external
 maqetta.jquery_mobile/WebContent/jquery.mobile/js
+bin/
+.metadata/
+.DS_Store

@@ -29,7 +29,7 @@ ListItemHelper.prototype = {
 		var data = [];
 
 		// hack - always add the text first
-		data.push(dojo.query(".mblListItemLabel", widget.dijitWidget.box)[0].innerHTML);
+		data.push(widget.dijitWidget.labelNode.innerHTML);
 
 		// now add any children
 		dojo.forEach(widget.getChildren(), function(w) {

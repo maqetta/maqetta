@@ -51,9 +51,12 @@ davinci/davinci = {
 	"./ve/actions/MoveToBackAction",
 	"./ve/actions/MoveForwardAction",
 	"./ve/actions/MoveBackwardAction",
-	
+
+	"./ve/actions/EnableApplicationStates",
+
 	"./ve/actions/AddState",
 	"./ve/actions/RemoveState",
+	"./ve/actions/ModifyState",
 
 	// editorClasses
 	"./ve/PageEditor",

@@ -374,7 +374,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		// At doc load time, call the routine that makes document adjustments each time
 		// new widgets are added or widgets are deleted.
 		context.anyDojoxMobileWidgets = undefined;
-		context.widgetAddedOrDeleted(true);
+//FIXME: All occurrences of context.widgetAddedOrDeleted might need to be
+//removed by br's changes to incorporate document.css into themes.
+		//context.widgetAddedOrDeleted(true);
 		
 		// pagebuilt event triggered after converting model into dom for visual page editor
 		dojo.publish('/davinci/ui/context/pagebuilt', [context]);

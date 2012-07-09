@@ -17,6 +17,9 @@ define({ root:
 		//StatesView.js
 		"Scenes":"Scenes",
 		"States":"States",
+		"ActiveScene":"This scene is currently visible",
+		"AppStateFocus":"This application state is the target for application-state-specific visibility or styling changes",
+		"InitialScene":"This scene will show initially when the page runs",
 		
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",
@@ -26,12 +29,26 @@ define({ root:
 		"selectAncestorTitle":"Select ancestor",
 		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
 		
-		//actions/StateActions.js
+		//actions/AddState.js, ModifyState.js, RenameState.js, StateContainer.js
 		"createNewState":"Create New State",
 		"createLabel":"Create",
-		"stateLabel":"State",
+		"modifyState":"Modify State",
+		"modifyLabel":"Update",
+		"stateLabel":"Name",
 		"enterStateName":"Please enter a state name.",
 		"stateNameExists":"State name '${name}' already exists. Please enter a different state name.",
+		"renameState":"Rename State",
+		"renameLabel":"Rename",
+		"newStateLabel":"New name:",
+		"initialStateCheckBoxLabel":"Initial state at document load time",
+		"EnableApplicationStates":"Enable/disable application states",
+		"EnableAsStateContainerDescription":"Setting the check box below and clicking OK will allow custom application states to be defined on the currently selected widget.",
+		"DisableAsStateContainerDescription":"Unsetting the check box below and clicking OK will disallow custom application states on the currently selected widget.",
+		"DisableAsStateContainerDataLoss":"Any existing interactivity based on existing application states will be lost.",
+		"EnableAsStateContainerWidgetLabel":"Application states are enabled on this widget",
+		"EnableApplicationStatesCurrentWidget":"Currently selected widget",
+		"EnableApplicationStatesCurrentStates":"Current application states",
+		"EnableApplicationStatesNone":"(none)",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

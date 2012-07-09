@@ -57,7 +57,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         
         for ( var i = 0; i < elements.length; i++ ) {
             var n = elements[i];
-            var type = n.getAttribute("dojoType") || n.getAttribute("dvwidget") || n.getAttribute("data-dojo-type");
+            var type = n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || n.getAttribute("dvwidget");
             if (type != null){
             	this.loadRequires(type, true, true, true);
             }

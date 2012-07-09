@@ -1,23 +1,36 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/workbench/ViewPart",
-    	"davinci/ve/widget",
-    	"dijit/Tree",
-    	"dijit/tree/dndSource",
-    	"dijit/layout/BorderContainer",
-    	"dojo/data/ItemFileReadStore",
-    	"dojo/data/ItemFileWriteStore",
-    	"dijit/tree/ForestStoreModel", 
-    	"davinci/Workbench",
-    	"davinci/ve/commands/AddCommand", 
-    	"davinci/ve/commands/ModifyCommand",
-    	"davinci/Runtime",
-    	"davinci/ve/metadata"
-
-], function(declare, ViewPart, Widget, Tree, dndSource, BorderContainer, ItemFileReadStore, 
-		    ItemFileWriteStore, ForestStoreModel, Workbench, AddCommand, ModifyCommand, Runtime, 
-		    Metadata
-		    ){
+	"dojo/_base/declare",
+    "dojo/query",
+	"davinci/workbench/ViewPart",
+	"davinci/ve/widget",
+	"dijit/Tree",
+	"dijit/tree/dndSource",
+	"dijit/layout/BorderContainer",
+	"dojo/data/ItemFileReadStore",
+	"dojo/data/ItemFileWriteStore",
+	"dijit/tree/ForestStoreModel",
+	"davinci/Workbench",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/Runtime",
+	"davinci/ve/metadata"
+], function(
+    declare,
+    query,
+    ViewPart,
+    Widget,
+    Tree,
+    dndSource,
+    BorderContainer,
+    ItemFileReadStore,
+    ItemFileWriteStore,
+    ForestStoreModel,
+    Workbench,
+    AddCommand,
+    ModifyCommand,
+    Runtime,
+    Metadata
+) {
 
 
 return declare("davinci.ve.views.DataStoresView", [ViewPart], {
@@ -59,7 +72,8 @@ return declare("davinci.ve.views.DataStoresView", [ViewPart], {
     },
     
     _drawDataStoresFromDoc: function() {
-        var y = dojo.query("[dojoType^='dojo.data']", this._context.getDocument());
+        var y = query('[data-dojo-type^="dojo.data"], [dojoType^="dojo.data"]',
+                this._context.getDocument());
         dojo.forEach(y, this._createDSFromWidget);
     },
     

@@ -15,7 +15,8 @@ define(["dojo/_base/declare",
 		data: null,
 
 		postCreate: function(){
-			this.domNode.removeAttribute("dojoType");
+			this.domNode.removeAttribute("data-dojo-type");
+			this.domNode.removeAttribute("dojoType");	// backwards compat
 			var topSpan = dojo.doc.createElement("div");
 			this._run = {};
 			if(!this.data ){

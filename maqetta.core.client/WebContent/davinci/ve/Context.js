@@ -1349,7 +1349,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_preProcess: function (node){
 		//need a helper to pre process widget
 		// also, prime the helper cache
-        var type = node.getAttribute("dojoType") || node.getAttribute("data-dojo-type");
+        var type = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
         return Widget.requireWidgetHelper(type).then(function(helper) {        	
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);

@@ -77,28 +77,22 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	_getChildren: function(item) {
-		var widgets, children=[];
+		var widgets;
 
 		if (!this._context.rootWidget || item.type == "state" || item.type == 'html.stickynote' || item.type == 'html.richtext') {
 			return [];
 		}
 
-		if (item.id == "myapp") {
-			widgets = this._context.getTopWidgets();
-		} else if (item === this._context.rootNode) {
+		if (item.id == "myapp" || item === this._context.rootNode) {
 			widgets = this._context.getTopWidgets();
 		} else {
 			widgets = item.getChildren();
 		}
 
-		dojo.forEach(widgets, function(widget) {
-			if (widget && widget.getContext && widget.getContext() && !widget.internal) {
-				// managed widget only
-				children.push(widget);
-			}
+		return widgets.filter(function(widget) {
+			// managed widget only
+			return widget && widget.getContext && widget.getContext() && !widget.internal;
 		});
-
-		return children;
 	},
 	
 	mayHaveChildren: function(item) {
@@ -156,8 +150,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 				return true;
 			default: // if not dropping before or after an item, make sure the target item has a container node
 				var item = dijit.getEnclosingWidget(target).item;
-				var hasContainerNode = (item.getContainerNode && item.getContainerNode()) || item.id == "myapp";
-				return hasContainerNode;
+				return (item.getContainerNode && item.getContainerNode()) || item.id == "myapp";
 		}
 	}, 
 
@@ -213,7 +206,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	_toggle: function(widget, on, node) {
 		var visible = !on;
 		var value = visible ? "" : "none";
-		var command = new StyleCommand(widget, [{"display": value}], 'current');
+		var command = new StyleCommand(widget, [{display: value}], 'current');
 		this._context.getCommandStack().execute(command);
 	},
 

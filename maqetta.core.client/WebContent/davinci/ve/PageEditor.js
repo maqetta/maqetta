@@ -301,6 +301,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			var add = (i != 0);
 			context.select(selections[i], add); 
 		}
+	},
+
+	// dummy handler
+	handleKeyEvent: function(e) {
 	}
 });
 }); 

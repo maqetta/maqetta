@@ -1033,6 +1033,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = Date.now();
 				}
 			});	
+
+			// add key press listener
+			dojo.connect(doc.documentElement, "onkeydown", dojo.hitch(this, function(e) {
+				// we let the editor handle stuff for us
+				this.editor.handleKeyEvent(e);
+			}));	
+
+
 			/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
 				var time = new Date().getTime();
 				var shouldDisplay = time - win.davinciBackspaceKeyTime < 100;
@@ -1349,7 +1357,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_preProcess: function (node){
 		//need a helper to pre process widget
 		// also, prime the helper cache
-        var type = node.getAttribute("dojoType") || node.getAttribute("data-dojo-type");
+        var type = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
         return Widget.requireWidgetHelper(type).then(function(helper) {        	
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);

@@ -33,15 +33,13 @@ return declare("davinci.ve.RebuildPage", Context, {
 	
 	
 	rebuildSource: function(source, resource){
-		if ( !( resource && resource.extension && resource.extension == "html")) return source;
+		if ( !( resource && resource.extension && resource.extension == "html")) {
+			return source;
+		}
 		
 		this.model = this._srcDocument = Factory.getNewFromResource(resource); //getModel({url: resource.getPath()}); // 2453 getNewFromResource(resource);
 		
-		this._resourcePath = null;
-		if(resource)
-			this._resourcePath = new Path(resource.getPath());
-		else 
-			this._resourcePath = new Path("");
+		this._resourcePath = new Path(resource ? resource.getPath() : "");
 		
 		this.model.fileName = this._resourcePath.toString();
 		/* big cheat here.  removing 1 layer of .. for prefix of project, could figure this out with logic and have infinite project depth */
@@ -49,7 +47,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 		this._srcDocument.setText(source, true);
 
 		 
-       var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
+		var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
         var elements = this._srcDocument.find({elementType: "HTMLElement"});
         
@@ -104,15 +102,16 @@ return declare("davinci.ve.RebuildPage", Context, {
 		 //
 		
 		var elements = this._srcDocument.find({elementType: "CSSImport"});
-		
-		for(var i=0;i<elements.length;i++){
-			var n = elements[i];
+		if (elements.some(function(n) {
 			if(n.url && n.url.indexOf(baseSrcPath) > -1){
 				n.setUrl(url);
-				return;
+				return true;
 			}
+		})) {
+			return;
 		}
-/*FIXME: This is needed for LINK elements	
+
+		/*FIXME: This is needed for LINK elements	
        this._srcDocument.addStyleSheet(url, null, true);
 */
     },
@@ -120,70 +119,65 @@ return declare("davinci.ve.RebuildPage", Context, {
     _findScriptAdditions: function(){
     	// this is a bit gross and dojo specific, but...... guess a necisary evil.
     	   	
-    	var documentHeader = this._srcDocument.find({elementType: "HTMLElement", tag:'head'}, true);
-    	var scriptsInHeader = documentHeader.find({elementType:"HTMLElement", tag:'script'});
+    	var documentHeader = this._srcDocument.find({elementType: "HTMLElement", tag: 'head'}, true);
+    	var scriptsInHeader = documentHeader.find({elementType: "HTMLElement", tag: 'script'});
     	for(var i=0;i<scriptsInHeader.length;i++){
     		var text = scriptsInHeader[i].getText();
-    		if(text.indexOf("dojo.require") > -1)
-    			return scriptsInHeader[i];
+    		if(text.indexOf("dojo.require") > -1) {
+    			return scriptsInHeader[i];    			
+    		}
     	}
     	// no requires js header area found
     	return null;
-    	
     },
 
     addJavaScript: function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
-		var elements = this._srcDocument.find({'elementType':"HTMLElement", 'tag': 'script'});
-		
-		for(var i=0;i<elements.length;i++){
-			var n = elements[i];
+		var elements = this._srcDocument.find({elementType: "HTMLElement", tag: 'script'});
+		if (elements.some(function(n) {
 			var elementUrl = n.getAttribute("src");
 			if(elementUrl && elementUrl.indexOf(baseSrcPath) > -1){
 				n.setAttribute("src", url);
-				return;
-			}
+				return true;
+			}			
+		})) {
+			return;
 		}
-	
-		
+
     	if (url) {
             if(url.indexOf("dojo.js")>-1){
                 	// nasty nasty nasty special case for dojo attribute thats required.. need to generalize in the metadata somehow.
-               	this.addHeaderScript(url,{'djConfig':"parseOnLoad: true"});
-              }
+               	this.addHeaderScript(url,{'data-dojo-config': "parseOnLoad: true"});
+            }
            	this.addHeaderScript(url);
         }else if (text) {
-        	this._scriptAdditions = this.addHeaderScriptSrc(text, this._findScriptAdditions(),this._srcDocument.find({'elementType':"HTMLElement",'tag':'head'}, true));
+        	this._scriptAdditions = this.addHeaderScriptSrc(
+        			text,
+        			this._findScriptAdditions(),
+        			this._srcDocument.find({elementType: "HTMLElement", tag: 'head'}, true));
         }
     },
 
     changeThemeBase: function(theme, resourcePath){
     	
     	// find the old theme file name
-		var files = theme.files;
 		/* fixme CHEATING, should determine this programatically */
-		var parentPath = (new Path(theme.file.parent.getPath()));
+		var parentPath = new Path(theme.file.parent.getPath());
 	
-		for (var x=0; x<files.length; x++){
-			var filename = parentPath.append(theme.files[x]);
+		theme.files.forEach(function(file) {
+			var filename = parentPath.append(file);
 			var relativePath = filename.relativeTo(resourcePath, true);
 			
-			this.addModeledStyleSheet(relativePath.toString(), new Path(theme.files[x]), true);
-
-		}
+			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);			
+		});
 	},
 	
 	getCurrentBasePath: function(){
 		var base = new Path(Workbench.getProject());
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
-			basePath = base.append(prefs.webContentFolder);
-		}else{
-			basePath = base;
+		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
+		if(prefs.webContentFolder !== null && prefs.webContentFolder !== ""){
+			base = base.append(prefs.webContentFolder);
 		}
-		return basePath;
-	},
-
-    
-
+		return base;
+	}
 });
 });

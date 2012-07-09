@@ -599,7 +599,9 @@ getWidget: function(node){
 		var data = parseNodeData(node);
 //		var oaWidgetType=node.getAttribute("oawidget");
 		var dvWidgetType=node.getAttribute("dvwidget");
-		if(node.getAttribute("widgetid") || node.getAttribute("dojotype")){
+		if (node.hasAttribute("widgetid") || node.hasAttribute("data-dojo-type") ||
+				node.hasAttribute("dojotype"))
+		{
 			var d = widgetObject._dijit(node);
 			var w= d.byNode(node);
 			if (w) {

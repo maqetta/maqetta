@@ -1,49 +1,54 @@
 define([
-        "dojo/_base/declare",
-        "./_Widget"
-//        "./widget"
-], function(declare, _Widget, widget) {
+	"dojo/_base/declare",
+	"dojo/dom-attr",
+	"./_Widget"
+], function(
+	declare,
+	domAttr,
+	_Widget
+) {
 
 return declare("davinci.ve.ObjectWidget", _Widget, {
+
 	isObjectWidget: true,
 
 	constructor: function (params,node,dijitWidget,metadata,srcElement) {
-		if (dojo.isString(dijitWidget)) {
-			dojo.attr(node, "dojoType", dijitWidget);
-			if(srcElement) {
-				srcElement.addAttribute("dojoType", dijitWidget);
+		if (typeof dijitWidget === 'string') {
+			domAttr.set(node, 'data-dojo-type', dijitWidget);
+			if (srcElement) {
+				srcElement.addAttribute('data-dojo-type', dijitWidget);
 			}
 		}
 	},
 
 	postCreate: function() {
 		var id = this._params.jsId,
-			dj = require("davinci/ve/widget")._dojo(this.domNode);
-		if(id) {
-			this.domNode.setAttribute("jsId", id);
+			dj = require("davinci/ve/widget")._dojo(this.domNode),
+			object;
+		if (id) {
+			domAttr.set(this.domNode, 'jsId', id);
 			var type = this.getObjectType();
-			if(type) {
+			if (type) {
 				var c = dj.getObject(type);
-				if(c) {
-					var object = undefined;
-					if(c.markupFactory) {
+				if (c) {
+					if (c.markupFactory) {
 						object = c.markupFactory(this._params, this.domNode, c);
-					}else if(c.prototype && c.prototype.markupFactory) {
+					} else if(c.prototype && c.prototype.markupFactory) {
 						object = c.prototype.markupFactory(this._params, this.domNode, c);
-					}else{
+					} else {
 						object = new c(this._params, this.domNode);
 					}
-					if(object) {
+					if (object) {
 						object._edit_object_id = id;
 						dj.setObject(id, object);
 					}
 				}
 			}
 		} else {
-			id =this.getObjectId();
-			if(id) {
-				var object = dj.getObject(id);
-				if(object) {
+			id = this.getObjectId();
+			if (id) {
+				object = dj.getObject(id);
+				if (object) {
 					object._edit_object_id = id;
 				}
 			}
@@ -51,11 +56,12 @@ return declare("davinci.ve.ObjectWidget", _Widget, {
 	},
 
 	getObjectType: function() {
-		return this.domNode.getAttribute("dojoType");
+		var node = this.domNode;
+		return domAttr.get(node, 'data-dojo-type') || domAttr.get(node, 'dojoType');
 	},
 
 	getObjectId: function() {
-		return this.domNode.getAttribute("jsId");
+		return domAttr.get(this.domNode, 'jsId');
 	},
 
 	_getChildren: function() {

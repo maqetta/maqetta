@@ -1,9 +1,10 @@
 define(["require",
 	"dojo/_base/declare",
 	"davinci/workbench/_ToolbaredContainer",
+	"davinci/Runtime",
 	"dojo/_base/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
@@ -86,13 +87,21 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					var tabContainer = "editors_tabcontainer";
 					if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
 						// Tab is visible.  Go ahead
-						editor.setContent(fileName, content, newHtmlParams);	
+						editor.setContent(fileName, content, newHtmlParams);
+
+						// keyboard bindings
+						this._setupKeyboardHandler();
+						dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 					}else{
 						// When tab is selected, set up the editor
 						var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
 							if(editor==args.editor){
 								dojo.unsubscribe(handle);
-								editor.setContent(fileName,content);		
+								editor.setContent(fileName,content);
+
+								// keyboard bindings
+								this._setupKeyboardHandler();
+								dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 							}
 						});
 					}
@@ -213,6 +222,58 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
 	_getViewContext: function() {
 		return this.editor;
+	},
+
+	_setupKeyboardHandler: function() {
+		dojo.forEach(this._getViewActions(), dojo.hitch(this, function(actionSet) {
+			dojo.forEach(actionSet.actions,  dojo.hitch(this, function(action) {
+					
+				if (action.keyBinding) {
+					if (!this.keyBindings) {
+						this.keyBindings = [];
+					}
+
+					this.keyBindings.push({keyBinding: action.keyBinding, action: action});
+				}
+			}));
+		}));
+	},
+
+	_handleKeyDown: function(e, isGlobal) {
+		var handled = this._handleKey(e, isGlobal);
+
+		// now pass to runtime if unhandled so global key listeners can take a stab
+		// make sure to not pass global events back up
+		if (!handled && !isGlobal) {
+			Runtime.handleKeyEvent(e);
+		}
+	},
+
+	_handleKey: function(e, isGlobal) {
+		var stopEvent = false;
+
+		if (!this.keyBindings) {
+			return false;
+		}
+
+		var context = this.editor ? (this.editor.getContext ? this.editor.getContext() : null) : null;
+
+		stopEvent = dojo.some(this.keyBindings, dojo.hitch(this, function(globalBinding) {
+			if (isGlobal && !globalBinding.keyBinding.allowGlobal) {
+				return;
+			}
+
+			if (Runtime.isKeyEqualToEvent(globalBinding.keyBinding, e)) {
+				davinci.Workbench._runAction(globalBinding.action, this.editor, globalBinding.action.id);
+				return true;
+			}
+		}));
+
+		if (stopEvent) {
+			dojo.stopEvent(e);
+		}
+
+		return stopEvent;
 	},
 
 	destroy: function() {

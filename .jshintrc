@@ -1,0 +1,22 @@
+{
+	"predef": [
+		"define",
+		"require"
+	],
+
+	"browser": true,
+	"devel": true,
+
+	"curly": true,
+	"evil": false,
+	"forin": true,
+	"latedef": true,
+	"newcap": true,
+	"noarg": true,
+	"nonew": true,
+	"smarttabs": true,
+	"sub": false,
+	"trailing": false,
+	"undef": true,
+	"wsh": false
+}

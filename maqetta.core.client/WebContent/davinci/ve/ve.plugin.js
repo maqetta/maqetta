@@ -308,48 +308,51 @@ return {
                 {
                     id: "cut",
                     label: "Cut",
-                    keySequence: "M1+X",
                     iconClass: "editActionIcon editCutIcon",
                     action: "davinci/ve/actions/CutAction",
-                    toolbarPath: "cutcopypaste"
+                    toolbarPath: "cutcopypaste",
+                    keyBinding: {accel: true, charOrCode: "x"}
+
                 },
                 {
                     id: "copy",
                     label: "Copy",
-                    keySequence: "M1+C",
                     iconClass: "editActionIcon editCopyIcon",
                     action: "davinci/ve/actions/CopyAction",
-                    toolbarPath: "cutcopypaste"
+                    toolbarPath: "cutcopypaste",
+                    keyBinding: {accel: true, charOrCode: "c"}
                 },
                 {
                     id: "paste",
-                    keySequence: "M1+V",
                     iconClass: "editActionIcon editPasteIcon",
                     label: "Paste",
                     action: "davinci/ve/actions/PasteAction",
-                    toolbarPath: "cutcopypaste"
+                    toolbarPath: "cutcopypaste",
+                    keyBinding: {accel: true, charOrCode: "v"}
                 },
                 {
                     id: "undo",
                     iconClass: 'undoIcon',
                     action: "davinci/actions/UndoAction",
                     label: "Undo",
-                    toolbarPath: "undoredo"
+                    toolbarPath: "undoredo",
+                    keyBinding: {accel: true, charOrCode: "z"}
                 },
                 {
                     id: "redo",
                     iconClass: 'redoIcon',
                     action: "davinci/actions/RedoAction",
                     label: "Redo",
-                    toolbarPath: "undoredo"
+                    toolbarPath: "undoredo",
+                    keyBinding: {accel: true, shift: true, charOrCode: "z"}
                 },
                 {
                     id: "delete",
-                    keySequence: "DEL",
                     iconClass: "editActionIcon editDeleteIcon",
                     label: "Delete",
                     action: "davinci/ve/actions/DeleteAction",
-                    toolbarPath: "delete"
+                    toolbarPath: "delete",
+                    keyBinding: {charOrCode: dojo.keys.DELETE}
                 },
                 {
                     id: "openBrowser",
@@ -365,7 +368,8 @@ return {
                         });
                     },
                     label: "Preview in Browser",
-                    toolbarPath: "preview"
+                    toolbarPath: "preview",
+                    keyBinding: {accel: true, charOrCode: "0", allowGlobal: true}
                 },
                 {
                     id: "save",
@@ -379,7 +383,8 @@ return {
                         return require('../Workbench').getOpenEditor();
                     },
                     label: "Save",
-                    toolbarPath: "save"
+                    toolbarPath: "save",
+                    keyBinding: {accel: true, charOrCode: "s", allowGlobal: true}
                 },
                 {
                     id: "saveas",
@@ -391,7 +396,8 @@ return {
                         return require('../Workbench').getOpenEditor();
                     },
                     label: "Save As",
-                    toolbarPath: "save"
+                    toolbarPath: "save",
+                    keyBinding: {accel: true, shift: true, charOrCode: "s", allowGlobal: true}
                 },
                
                {
@@ -452,7 +458,8 @@ return {
                     method: "switchDisplayMode",
                     // initialValue : true,
                     label: "Display Design",
-                    toolbarPath: "displayMode"
+                    toolbarPath: "displayMode",
+                    keyBinding: {accel: true, charOrCode: "1", allowGlobal: true}
                 },
                 {
                     id: "source",
@@ -460,7 +467,8 @@ return {
                     method: "switchDisplayMode",
                     radioGroup: "displayMode",
                     label: "Display Source",
-                    toolbarPath: "displayMode"
+                    toolbarPath: "displayMode",
+                    keyBinding: {accel: true, charOrCode: "2", allowGlobal: true}
                 },
                 {
                     id: "splitVertical",
@@ -468,7 +476,8 @@ return {
                     method: "switchDisplayMode",
                     radioGroup: "displayMode",
                     label: "Split Vertically",
-                    toolbarPath: "displayMode"
+                    toolbarPath: "displayMode",
+                    keyBinding: {accel: true, charOrCode: "3", allowGlobal: true}
                 },
                 {
                     id: "splitHorizontal",
@@ -476,8 +485,18 @@ return {
                     method: "switchDisplayMode",
                     radioGroup: "displayMode",
                     label: "Split Horizontally",
-                    toolbarPath: "displayMode"
-                }
+                    toolbarPath: "displayMode",
+                    keyBinding: {accel: true, charOrCode: "4", allowGlobal: true}
+                },
+                {
+                    id: "closeactiveeditor",
+                    run: function() {
+                        require(['../Workbench'], function(workbench) {
+                            workbench.closeActiveEditor();
+                        });
+                    },
+                    keyBinding: {accel: true, shift: true, charOrCode: "w", allowGlobal: true}
+                },
             ]
         }
     },
@@ -529,7 +548,8 @@ return {
 							return true;
 						},
 						label: "Save",
-						toolbarPath: "save"
+						toolbarPath: "save",
+						keyBinding: {accel: true, charOrCode: "s"}
 					},
 					{
 						id: "saveas",
@@ -541,7 +561,8 @@ return {
 							return require('../Workbench').getOpenEditor();
 						},
 						label: "Save As",
-						toolbarPath: "save"
+						toolbarPath: "save",
+						keyBinding: {accel: true, shift: true, charOrCode: "s"}
 					}
 				]
 			}

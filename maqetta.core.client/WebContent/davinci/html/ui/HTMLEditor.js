@@ -12,10 +12,13 @@ return declare("davinci.html.ui.HTMLEditor", ModelEditor, {
 		var args = {url:fileName};
 		this.htmlFile = Factory.getModel(args); // new HTMLFile();
 		this.model = this.htmlFile;
+
+		this._handle = dojo.connect(this.htmlFile.getDocumentElement(), "onkeydown", this, "onKeyDown");
 	},
 
 	destroy : function() {
 		this.htmlFile.close();
+		dojo.disconnect(this._handle);
 		this.inherited(arguments);
 	},
 
@@ -28,7 +31,10 @@ return declare("davinci.html.ui.HTMLEditor", ModelEditor, {
 
 	getDefaultContent : function () {
 		return "<html>\n <head></head>\n <body></body>\n</html>";
-	}
+	},
 
+	// dummy to listen to
+	onKeyDown: function(e) {
+	}
 });
 });

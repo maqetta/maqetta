@@ -823,7 +823,7 @@ return declare(ContainerInput, {
 				data: props.data
 			};
 			var newStore = new MemoryPage(newMemoryProps);
-			newStore.getChildren = function(object) {return this.query({parent: object.id});};
+			newStore.getChildren = function(object) {return this.query({parent: object.id});}; //to match what we have in script element in src
 			var newModelProps = {
 				store: newStore
 			};
@@ -835,6 +835,7 @@ return declare(ContainerInput, {
 				query: JSON.parse(modelWidget.getData().properties.query),
 				store: newStore
 			});
+			newModel.mayHaveChildren = function(item) {return !item.leaf;}; //to match what we have in script element in src
 			newModel.id = modelWidget.id;
 		
 			var newTableProps = {

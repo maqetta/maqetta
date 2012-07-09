@@ -1,3 +1,8 @@
+/**
+ * THIS FILE IS FOR REFERENCE/DOCUMENTATION ONLY.  Do not use directly, but feel
+ * free to copy for use, update and strip out the unnecessary functions.
+ */
+
 define([
     "dojo/_base/declare",
     "davinci/ve/tools/CreateTool"

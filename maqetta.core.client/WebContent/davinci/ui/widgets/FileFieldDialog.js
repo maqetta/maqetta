@@ -23,9 +23,6 @@ return declare("davinci.ui.widgets.FileFieldDialog", [_WidgetBase, _TemplatedMix
 	templateString: templateString,
 	widgetsInTemplate: true,
 
-	//Maintain set of connections for clean-up
-	_connection: [],
-	
 	_fileSelectionDialog: null,
 
 	_showFileSelectionDialog: function() {
@@ -65,8 +62,19 @@ return declare("davinci.ui.widgets.FileFieldDialog", [_WidgetBase, _TemplatedMix
 		 }
 	},
 	
+	_setDisabledAttr: function(value){
+		 this.textField.set("disabled", value);
+		 this.button.set("disabled", value);
+		 this.inherited(arguments);
+	},
+	
+	_setIntermediateChangesAttr: function(value){
+		 this.textField.set("intermediateChanges", value);
+		 this.inherited(arguments);
+	},
+	
 	_onChange: function(){	
-		var value = this.textField.get("value")
+		var value = this.textField.get("value");
 		
 		if(this.value!=value){			
 			this.value = value;
@@ -79,13 +87,6 @@ return declare("davinci.ui.widgets.FileFieldDialog", [_WidgetBase, _TemplatedMix
 	
 	_getValueAttr: function(){
 		return this.textField.get("value");	
-	},
-	
-	destroy: function() {
-		//Clean-up connections
-		while (connection = this._connection.pop()){
-			dojo.disconnect(connection);
-		}
 	}
 });
 });

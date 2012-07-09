@@ -6,10 +6,10 @@ define([
 	"../drawing/tools/ExchangeTool",
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
-	"davinci/Runtime",
-	"davinci/UserActivityMonitor",
-	"davinci/review/Review",
-	"davinci/ve/Context",
+	"../../Runtime",
+	"../../UserActivityMonitor",
+	"../Review",
+	"../../ve/Context",
 	'preview/silhouetteiframe'
 ], function(declare, connect, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, UserActivityMonitor, Review, Context, Silhouette) {
 	
@@ -34,15 +34,14 @@ return declare("davinci.review.editor.Context", [Context], {
 				onload: dojo.hitch(this,function(event){
 					this._domIsReady = true;
 					var userDoc = event && event.target && event.target.contentDocument;
-					var dj = userDoc && userDoc.defaultView && userDoc.defaultView.dojo;
+					var userWindow = userDoc && userDoc.defaultView && userDoc.defaultView.window;
 					var deviceName = this.frame.contentDocument.body.getAttribute('data-maq-device');
 					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
 							? null : "app/preview/images/" + deviceName + ".svg";
 					if (svgfilename) {
-						var theme = Silhouette.getMobileTheme(svgfilename);
-						dj.ready(function(){
-							var dm = dj.getObject("dojox.mobile", true);
-							dm.loadDeviceTheme(theme);
+						userWindow.require('dojo/ready')(function(){
+				    		var deviceTheme = userWindow.require('dojox/mobile/deviceTheme');        	
+				        	deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(svgfilename));
 						});
 					}
 //					if (dj && dj.subscribe) {
@@ -56,23 +55,20 @@ return declare("davinci.review.editor.Context", [Context], {
 						});
 //					}
 
-					var userWindow = userDoc && userDoc.defaultView && userDoc.defaultView.window;
-					if (userWindow.require) {
-						userWindow.require("dojo/_base/connect").subscribe("/davinci/states/state/changed", function(args) {
-							if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
-								return; 
-							}
-							var state = args.newState || "Normal";
-							var dv = userWindow.davinci;
-							if(dv && dv.states && dv.states.setState){
-								dv.states.setState(undefined, state);
-								// Re-publish at the application level
-								var newArgs = dojo.clone(args);
-								newArgs.editorClass = "davinci.review.editor.ReviewEditor";
-								connect.publish("/davinci/states/state/changed", [newArgs]);
-							}
-						});
-					}
+					userWindow.require("dojo/_base/connect").subscribe("/davinci/states/state/changed", function(args) {
+						if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
+							return; 
+						}
+						var state = args.newState || "Normal";
+						var dv = userWindow.davinci;
+						if(dv && dv.states && dv.states.setState){
+							dv.states.setState(state, args.stateContainerNode);
+							// Re-publish at the application level
+							var newArgs = dojo.clone(args);
+							newArgs.editorClass = "davinci.review.editor.ReviewEditor";
+							connect.publish("/maqetta/appstates/state/changed", [newArgs]);
+						}
+					});
 
 					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
 					this._initDrawing();
@@ -92,7 +88,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					}
 				})
 			}), containerNode);
-			connect.subscribe("/davinci/states/state/changed", function(args) { 
+			connect.subscribe("/maqetta/appstates/state/changed", function(args) { 
 				if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor" ||
 						!this.containerEditor || this.containerEditor != Runtime.currentEditor) { 
 					return; 
@@ -100,7 +96,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				// Push the state change down into the review document
 				var userWin = this.frame && this.frame.contentDocument && this.frame.contentDocument.defaultView;
 				if(userWin && userWin.davinci && userWin.davinci.states && userWin.davinci.states.setState){
-					userWin.davinci.states.setState(undefined, args.newState);
+					userWin.davinci.states.setState(args.newState, args.stateContainerNode);
 				}
 			}.bind(this));
 		}

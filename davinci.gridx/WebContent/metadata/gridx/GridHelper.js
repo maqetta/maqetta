@@ -1,9 +1,11 @@
 define([
 	"maq-metadata-dojo-1_8/dojox/grid/DataGridHelper",
 	"maq-metadata-dojo-1_8/dijit/layout/LayoutContainerHelper",
+	"maq-metadata-dojo-1_8/dijit/HTMLSubElementHelper"
 ], function(
 	DataGridHelper,
-	LayoutContainerHelper
+	LayoutContainerHelper,
+	HTMLSubElementHelper
 ) {
 
 var GridHelper = function() {};
@@ -24,51 +26,13 @@ GridHelper.prototype = {
 		return data;
 	},
 	
+	// We need to provide getChildrenData because we're relying on HTML elements in the 
+	// declarative HTML (e.g., <th> elements). We'll delegate to HTMLSubElementHelper.
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
-		if(!widget || !widget._srcElement){
-			return undefined;
+		if (!this._htmlSubElementHelper) {
+			this._htmlSubElementHelper = new HTMLSubElementHelper();
 		}
-		
-		var children = [];
-		dojo.forEach(widget._srcElement.children, function(child) {
-			this._getChildrenDataHelper(child, children);
-		}.bind(this));
-
-		return children;
-	},
-	
-	_getChildrenDataHelper: function(element, children) {
-		var elementData = this._getElementData(element);
-		if (elementData) {
-			children.push(elementData);
-			dojo.forEach(element.children, function(child) {
-				this._getChildrenDataHelper(child, elementData.children);
-			}.bind(this));
-		}
-	},
-	
-	_getElementData: function(element) {
-		var elementData = null;
-		
-		if (element.elementType == "HTMLElement") {
-			//Create a base data structure
-			elementData = {
-					type: "html." + element.tag,
-					properties: {},
-					children: []
-				};
-			
-			//Get the element attributes and add to data structure
-			dojo.forEach(element.attributes, function(attribute) {
-				if (!attribute.noPersist) {
-					elementData.properties[attribute.name] = attribute.value;
-				}
-			});
-		} else if (element.elementType == "HTMLText") {
-			elementData = element.value.trim();
-		}
-		
-		return elementData;
+		return this._htmlSubElementHelper.getChildrenData(widget, options);
 	},
 	
 	create: function(widget, srcElement){

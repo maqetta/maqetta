@@ -1,15 +1,17 @@
 define([
-    	"dojo/_base/declare",
-    	"dijit/_WidgetBase",
-    	"dijit/_TemplatedMixin",
-    	"dijit/_WidgetsInTemplateMixin",
-    	"davinci/Workbench",
-    	"davinci/actions/Action",
-    	"dojo/i18n!davinci/ve/nls/ve",
-    	"dojo/i18n!dijit/nls/common",                                                                 
-	 		"dojo/text!./templates/AddState.html",
-	 		"dijit/form/TextBox"
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Workbench, Action, veNls, commonNls, templateString){
+	"dojo/_base/declare",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
+	"davinci/Runtime",
+	"davinci/Workbench",
+	"davinci/ve/States",
+	"davinci/actions/Action",
+	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/text!./templates/AddState.html",
+	"dijit/form/TextBox"
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Runtime, Workbench, States, Action, veNls, commonNls, templateString){
 
 var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
@@ -23,7 +25,7 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 		// TODO: Replace alerts with inline error messages
 		if (!state) {
 			return false;
-		} else if (davinci.ve.states.hasState(this.widget.domNode, state)) {
+		} else if (davinci.ve.states.hasState(this.node, state)) {
 			alert(dojo.string.substitute(veNls.stateNameExists, { name: state }));
 			return false;
 		}
@@ -45,7 +47,11 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 	},
 
 	onOk: function() {
-		davinci.ve.states.add(this.widget.domNode, this.input.get("value"));
+		var newState = this.input.get("value");
+		if(newState){
+			States.add(this.node, newState);
+			States.setState(newState, this.node, { focus:true, updateWhenCurrent:true });
+		}
 	},
 
 	onCancel: function() {
@@ -55,28 +61,21 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 
 return declare("davinci.ve.actions.AddState", [Action], {
 
-	run: function(context){
-		// TODO: Replace dialog with UI to add nodes inline to list
-		var widget = this.getWidget();
+	run: function(){
+		var context;
+		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			context = Runtime.currentEditor.currentEditor.context;
+		}else{
+			return;
+		}
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus || !statesFocus.stateContainerNode){
+			return;
+		}
 
-		var w = new davinci.ve.actions.AddStateWidget({widget: widget});
+		var w = new davinci.ve.actions.AddStateWidget({node: statesFocus.stateContainerNode });
 
 		Workbench.showModal(w, veNls.createNewState);
-	},
-
-	shouldShow: function(context){
-		return this.getWidget();
-	},
-
-	isEnabled: function(context){
-		return this.getWidget();
-	},
-
-	getWidget: function(widget) {
-		if (!widget) {
-			widget = davinci.ve.states.getContainer();
-		}
-		return widget;
 	}
 });
 });

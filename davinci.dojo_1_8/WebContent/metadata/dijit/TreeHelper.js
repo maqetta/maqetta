@@ -2,9 +2,10 @@ define(["davinci/ve/widget",
 		"davinci/ve/commands/RemoveCommand",
 		"davinci/commands/CompoundCommand",
 		"../dojo/data/DataStoreBasedWidgetInput",
+		"./HTMLSubElementHelper",
 		"davinci/ve/commands/ReparentCommand",
 		],
-function(Widget, RemoveCommand, CompoundCommand, DataStoreBasedWidgetInput, ReparentCommand){
+function(Widget, RemoveCommand, CompoundCommand, DataStoreBasedWidgetInput, HTMLSubElementHelper, ReparentCommand){
 
 var TreeHelper = function() {};
 TreeHelper.prototype = {
@@ -107,7 +108,7 @@ TreeHelper.prototype = {
 		}
 		var command = new ReparentCommand(assocatedWidget, parent, newIndex);
 		command.execute();
-	}/*,
+	}, /*,
 	
 	updateStore: function(widget, storeWidget, w, useDataDojoProps){
 		var store = widget.dijitWidget.store;
@@ -146,7 +147,15 @@ TreeHelper.prototype = {
 			store.close();
 		}
 	}*/
-
+	
+	// We need to provide getChildrenData because we're relying on <script> elements in the declarative HTML. We'll
+	// delegate to HTMLSubElementHelper
+	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
+		if (!this._htmlSubElementHelper) {
+			this._htmlSubElementHelper = new HTMLSubElementHelper();
+		}
+		return this._htmlSubElementHelper.getChildrenData(widget, options);
+	}
 };
 
 return TreeHelper;

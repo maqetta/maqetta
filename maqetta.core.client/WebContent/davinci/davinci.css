@@ -701,9 +701,58 @@ davinci_top_bar .dijitButtonNode {
 	background-image: url(img/sprite.png);
 	background-position: -82px -466px;
 }
+.addStateIcon.addStateIconDisabled {
+	background-position: -66px -466px;
+}
 .removeStateIcon, .removeThemeSetIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0 -1778px;
+}
+.removeStateIcon.removeStateIconDisabled {
+	background-position: -17px -1778px;
+}
+.modifyStateIcon {
+	background-image: url(img/sprite.png);
+	background-position: -82px -483px;
+}
+.modifyStateIcon.modifyStateIconDisabled {
+	background-position: -66px -483px;
+}
+.modify_state_container {
+	white-space:nowrap;
+	line-height:30px;
+}
+.states_rename_table td {
+	white-space:nowrap;
+}
+.states_rename_table td.labelcolumn {
+	padding-right:4px;
+	text-align:right;
+}
+.modify_state_rename_container {
+	white-space:nowrap;
+}
+.modify_state_rename_button {
+	float:right;
+	margin-left:30px;
+}
+.initial_state_row {
+	clear:both;
+	margin:15px 10px 15px;
+}
+.EnableAsStateContainerWidgetDiv {
+	margin:1px 0 0px;
+}
+.EnableAsStateContainerStatesDiv {
+	margin:4px 0 0px;
+}
+.EnableAsStateContainerWidgetLabel {
+}
+.EnableAsStateContainerDescriptionDiv {
+	margin:24px 0 8px;
+}
+.EnableAsStateContainerCheckBoxDiv {
+	margin:12px 0 16px 8px;
 }
 
 .designModeIcon {
@@ -1246,8 +1295,17 @@ davinci_top_bar .dijitButtonNode {
 	white-space:nowrap;
 	overflow:hidden;
 }
+/*FIXME: OLD LOGIC
 .StatesViewTree .dijitTreeExpando {
 	display:none;
+}
+*/
+/* dijit.Tree defaults to white-space:nowrap, which messes up Firefox, which
+	has a known problem when mixing white-space:nowrap on a container node
+	and then float:right on interior nodes. Firefox pushes the float:right
+	nodes to a subsequent row. */
+.dj_gecko .StatesViewTree .dijitTreeRow, .dj_gecko .StatesViewTree .dijitTreeContent {
+	white-space:normal;
 }
 .ReviewToolBarText {
 	background-color: ##ffffe0;
@@ -1299,3 +1357,31 @@ davinci_top_bar .dijitButtonNode {
 .contentassist .selected {
         background-color: #ddd;
 }
+
+.ScenesPaletteAppStateIcon {
+	float:right;
+	margin-right:6px;
+	display:inline-block;
+	width:12px;
+	height:1.1em;
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteCurrent {
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentHidden {
+	visibility:hidden;
+}
+/* Need to tweak WebKit to drop bullet icon a couple of pixels */
+.dj_webkit .ScenesPaletteAppStateIcon.ScenesPaletteFocus {
+	margin-top: -2px;
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteFocus.ScenesPaletteFocusHidden {
+	visibility:hidden;
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteInitial {
+	margin-top: -1px;
+	margin-right:10px;
+}
+.ScenesPaletteAppStateIcon.ScenesPaletteInitial.ScenesPaletteInitialHidden {
+	visibility:hidden;
+}
+

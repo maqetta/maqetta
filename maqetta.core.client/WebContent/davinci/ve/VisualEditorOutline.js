@@ -1,6 +1,6 @@
 define([
-    "dojo/_base/declare",
-    "dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/_base/connect",
 	"./commands/ReparentCommand",
 	"./commands/StyleCommand",
 	"./widget",
@@ -12,7 +12,7 @@ define([
 	ReparentCommand,
 	StyleCommand,
 	Widget,
-	states,
+	States,
 	dndSource
 ){
 
@@ -28,7 +28,6 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	constructor: function(context) {
 		this._context = context;
 		this._handles = [];
-
 		this._connect("activate", "_rebuild");
 		this._connect("widgetChanged", "_widgetChanged");
 	},
@@ -77,28 +76,22 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	_getChildren: function(item) {
-		var widgets, children=[];
+		var widgets;
 
 		if (!this._context.rootWidget || item.type == "state" || item.type == 'html.stickynote' || item.type == 'html.richtext') {
 			return [];
 		}
 
-		if (item.id == "myapp") {
-			widgets = this._context.getTopWidgets();
-		} else if (item === this._context.rootNode) {
+		if (item.id == "myapp" || item === this._context.rootNode) {
 			widgets = this._context.getTopWidgets();
 		} else {
 			widgets = item.getChildren();
 		}
 
-		dojo.forEach(widgets, function(widget) {
-			if (widget && widget.getContext && widget.getContext() && !widget.internal) {
-				// managed widget only
-				children.push(widget);
-			}
+		return widgets.filter(function(widget) {
+			// managed widget only
+			return widget && widget.getContext && widget.getContext() && !widget.internal;
 		});
-
-		return children;
 	},
 	
 	mayHaveChildren: function(item) {
@@ -156,8 +149,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 				return true;
 			default: // if not dropping before or after an item, make sure the target item has a container node
 				var item = dijit.getEnclosingWidget(target).item;
-				var hasContainerNode = (item.getContainerNode && item.getContainerNode()) || item.id == "myapp";
-				return hasContainerNode;
+				return (item.getContainerNode && item.getContainerNode()) || item.id == "myapp";
 		}
 	}, 
 
@@ -185,6 +177,9 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 
 				// since it changed, we need to update the widget item stores in the model
 				this.put(widget, {overwrite: true});
+
+				// finally, we tell the widget that its children might have changed
+				this.onChildrenChange(widget, this._getChildren(widget));
 			}
 		} catch (e) {
 			console.error("VisualEditorOutline._widgetChanged: e = " + e);
@@ -210,7 +205,15 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	_toggle: function(widget, on, node) {
 		var visible = !on;
 		var value = visible ? "" : "none";
-		var command = new StyleCommand(widget, [{"display": value}], 'current');
+		var state;
+		var currentStatesList = States.getStatesListCurrent(widget.domNode);
+		for(var i=0; i<currentStatesList.length; i++){
+			if(currentStatesList[i]){
+				state = currentStatesList[i];
+				break;
+			}
+		}
+		var command = new StyleCommand(widget, [{display: value}], state);
 		this._context.getCommandStack().execute(command);
 	},
 
@@ -230,7 +233,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	isToggleOn: function(item) {
-		return !states.isVisible(item.domNode);
+		return (item.domNode.style.display === 'none');
 	},
 	// end toggle code
 
@@ -258,8 +261,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		
 		this._widgetModel=new DesignOutlineTreeModel(this._context);
 		//this._srcModel=new HTMLOutlineModel(editor.model);
-
-		connect.subscribe("/davinci/states/state/changed", this,
+		connect.subscribe("/maqetta/appstates/state/changed/end", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&
 						davinci.Runtime.currentEditor &&
@@ -278,7 +280,7 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 				while (children.length) {
 					var child = children.shift();
 					if (child) {
-						var visible = states.isVisible(child.domNode, e.newState);
+						var visible = (child.domNode.style.display !== 'none');
 						this._tree.toggleNode(child, !visible);
 						children = children.concat(child.getChildren());
 					}

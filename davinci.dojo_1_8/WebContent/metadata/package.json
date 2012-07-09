@@ -39,6 +39,11 @@
 		            "description": "Dojo Controls",
 		            "widgetClass": "dijit"
 		        },
+		        "controls-obj": {
+		            "name": "Dojo Controls",
+		            "description": "Dojo Controls",
+		            "widgetClass": "object"
+		        },
 		        "untested": {
 		            "name": "Untested Dojo & HTML",
 		            "widgetClass": "dijit"
@@ -934,58 +939,44 @@
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOJJREFUeNpi/P//PwMlgImBQsCCzAnvPwB3zspCB0aSDQCB7lgLhtLFJzAMxGUwigH//v5lKF5wjIEBGi5EuQIUiMg4qG3nf3QxfBjDC3/+/MawxL9py39GBpBj/jNsqPNhxBsGf3/+ZvCpWQ/xAyMjSA8YTCvwYMiasINwIP759YthR1cYii2eZav+p3dtYvhPTCz8/YXphe1oBpJsgFPWfHC8gEzZNy2RQBj8/s1glzob4tr/IE3A0AZqWdIexxBbsRjDcEZi8oJl0sz//xghqf7k3FRGkg2gaWai2ACAAAMAVbWDTF4DhaYAAAAASUVORK5CYII=",
 		            "data": [
 		                {
-		                    "type": "dojo.data.ItemFileReadStore",
+		                    "type": "dojo.store.Memory",
 		                    "properties": {
-		                        "data": {
-		                            "identifier": "id",
-		                            "label": "label",
-		                            "items": [
-		                                {
-		                                    "label": "1",
-		                                    "id": "1",
-		                                    "children": [
-		                                        {
-		                                            "label": "1.1",
-		                                            "id": "1.1"
-		                                        },
-		                                        {
-		                                            "label": "1.2",
-		                                            "id": "1.2"
-		                                        }
-		                                    ]
-		                                },
-		                                {
-		                                    "label": "2",
-		                                    "id": "2",
-		                                    "children": [
-		                                        {
-		                                            "id": "2.1",
-		                                            "label": "2.1"
-		                                        },
-		                                        {
-		                                            "id": "2.2",
-		                                            "label": "2.2"
-		                                        },
-		                                        {
-		                                            "id": "2.3",
-		                                            "label": "2.3"
-		                                        }
-		                                    ]
-		                                }
-		                            ]
-		                        }
-		                    }
+		                        "data": [
+				                		{"id":"treeRoot","name":"treeRoot"},
+					                		{"id":"1","name":"1","parent":"treeRoot"},
+						                		{"id":"1.1","name":"1.1","parent":"1"},
+						                		{"id":"1.2","name":"1.2","parent":"1"},
+					                		{"id":"2","name":"2","parent":"treeRoot"},
+						                		{"id":"2.1","name":"2.1","parent":"2"},
+						                		{"id":"2.2","name":"2.2","parent":"2"},
+						                		{"id":"2.3","name":"2.3","parent":"2"}
+				                ]
+		                    },
+		                    "children": [
+								{
+									"type": "html.script",
+									"properties": {
+										"type": "dojo/method",
+										"data-dojo-event": "getChildren",
+										"data-dojo-args": "object"
+									},
+									"children": "return this.query({parent: object.id});",
+									"content": "<script></script>"
+								}
+		                    ]
 		                },
 		                {
-		                    "type": "dijit.tree.ForestStoreModel",
+		                    "type": "dijit.tree.ObjectStoreModel",
 		                    "properties": {
-		                        "rootLabel": "Root"
+		                    	"query": {
+		                    		"id": "treeRoot"
+		                    	}
 		                    }
 		                },
 		                {
 		                    "type": "dijit.Tree",
 		                    "properties": {
-		                        "style": "overflow:auto;",
+		                        "style": "min-height:1em;",
 		                        "showRoot": false,
 		                        "autoExpand": true
 		                    }
@@ -1869,11 +1860,13 @@
 		            "name": "ItemFileReadStore",
 		            "description": "ItemFileReadStore",
 		            "type": "dojo.data.ItemFileReadStore",
-		            "category": "untested-obj",
+		            "category": "controls-obj",
 		            "icon": "resources/images/DataPanel.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
 		            "tool": "./dojo/data/DataStoreCreateTool",
+		            "hidden": "true",
 		            "resizable": "none",
+		            "hidden": "true",
 		            "invisible": false,
 		            "helper": "./dojo/data/ItemFileReadStoreHelper",
 		            "inlineEdit": "./dojo/data/ItemFileReadStoreInput"
@@ -1882,11 +1875,12 @@
 		            "name": "ItemFileWriteStore",
 		            "description": "ItemFileWriteStore",
 		            "type": "dojo.data.ItemFileWriteStore",
-		            "category": "untested-obj",
+		            "category": "controls-obj",
 		            "icon": "resources/images/DataPanel.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
 		            "tool": "./dojo/data/DataStoreCreateTool",
 		            "resizable": "none",
+		            "hidden": "true",
 		            "invisible": false,
 		            "inlineEdit": "./dojo/data/ItemFileReadStoreInput"
 		        },
@@ -1894,22 +1888,44 @@
 		            "name": "CsvStore",
 		            "description": "CsvStore",
 		            "type": "dojox.data.CsvStore",
-		            "category": "untested-obj",
+		            "category": "controls-obj",
 		            "icon": "resources/images/DataPanel.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
 		            "tool": "./dojo/data/DataStoreCreateTool",
 		            "resizable": "none",
+		            "hidden": "true",
 		            "invisible": false,
 		            "helper": "./dojox/data/CsvStoreHelper",
 		            "inlineEdit": "./dojox/data/CsvStoreInput"
 		        },
 		        {
+		            "name": "Memory",
+		            "description": "This is a basic in-memory object store. It implements dojo.store.api.Store.",
+		            "type": "dojo.store.Memory",
+		            "category": "controls-obj",
+		            "icon": "resources/images/DataPanel.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP////P2/Pf5/WZ9pmd9pmd+pmZ9pWd9pWt/opmpxevw+fD0+2Z+pmd+pWp/oW+BnoaYto2fvKS0zeXs+Obt+OXs9+3y+m+Bnau70+Pr9+jv+fL2/Pn7/nSEmXSDmOTs9+vx+fX4/Obu+Ojv+PP3/Obu93qHlO/1+/f6/fn7/XqHk/j7/YCJjs/t+3+KjoWMiIuPgoyPgpGSfZGRfZeUd5yXc6CZbpyWc6ecaKWba6Sba6GZb////wAAAAAAACH5BAEAAD0ALAAAAAAQABAAAAaZwJ5wSCz2csikctnTuZ7QKHTXu2mu2CyW17NZMhEQKDNRSL4RCq5XM1XeFfdbPqr1aBswiUQ25yMkMz0xCyGGIYWGiQsyPTAXYBeQZRKQERcwPS0oDJ0MnJ2gDC89JxxgAgJ9EqcRJSs9HiKztLW0Hz0QKWApu5S7EQMYPQ8sHccdxsfKKgk9BAgNBwUICA4H1gYODgVG3kRBADs=",
+		            "tool": "./dojo/data/DataStoreCreateTool",
+		            "resizable": "none",
+		            "hidden": "true",
+		            "invisible": false,
+		            "helper": "./dojo/store/MemoryHelper"
+		        },
+		        {
 		            "name": "ForestStoreModel",
 		            "type": "dijit.tree.ForestStoreModel",
-		            "category": "untested-obj",
+		            "category": "controls-obj",
 		            "hidden": true,
 		            "invisible": true,
-		            "helper": "./dijit/tree/ForestStoreModelHelper"
+		            "helper": "./dijit/tree/TreeModelHelper"
+		        },
+		        {
+		            "name": "ObjectStoreModel",
+		            "type": "dijit.tree.ObjectStoreModel",
+		            "category": "controls-obj",
+		            "hidden": true,
+		            "invisible": true,
+		            "helper": "./dijit/tree/TreeModelHelper"
 		        },
 		        {
 		            "name": "DataList",

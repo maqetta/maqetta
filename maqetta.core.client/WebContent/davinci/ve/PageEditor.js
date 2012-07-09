@@ -194,8 +194,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 		var context = this.visualEditor.context,
 			statesScenes = context ? context.getStatesScenes() : undefined;
-
 		this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
+		dojo.publish('/davinci/ui/context/pagerebuilt', [context]);
 		if(statesScenes){
 			context.setStatesScenes(statesScenes);
 		}

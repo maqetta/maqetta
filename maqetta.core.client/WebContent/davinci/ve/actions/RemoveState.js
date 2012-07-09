@@ -1,37 +1,27 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/actions/Action"
-], function(declare, Action){
+		"dojo/_base/declare",
+		"davinci/Runtime",
+		"davinci/ve/States",
+		"davinci/actions/Action"
+], function(declare, Runtime, States, Action){
 
 
 return declare("davinci.ve.actions.RemoveState", [Action], {
 
-	run: function(context){
-		var widget = this.getWidget();
-		var state = this.getState(arguments[1] || arguments[0]);
-		davinci.ve.states.remove(widget.domNode, state);
-	},
-
-	isEnabled: function(context){
-		return this.getWidget();
-	},
-
-	shouldShow: function(context){
-		return this.getWidget();
-	},
-	
-	getWidget: function(widget) {
-		if (!widget) {
-			widget = davinci.ve.states.getContainer();
+	run: function(){
+		var context;
+		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			context = Runtime.currentEditor.currentEditor.context;
+		}else{
+			return;
 		}
-		return widget;
-	},
-	
-	getState: function(state) {
-		if (!state || typeof state != "string") {
-			state = davinci.ve.states.getState();
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus || !statesFocus.state || statesFocus.state === States.NORMAL){
+			return;
 		}
-		return state;
+		var node = statesFocus.stateContainerNode;
+		var state = state = davinci.ve.states.getState(node);
+		States.remove(node, state);
 	}
 });
 });

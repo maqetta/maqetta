@@ -137,8 +137,6 @@ return declare(ContainerInput, {
 	},
 	
 	_setupPreviewArea: function() {
-		// Set the size of the grid's immediate parent container to be the same
-		// size as the grid is in the VE so user gets a true preview.
 		var previewRegion = dijit.byId("tableInputPreviewRegion");
 		previewRegionPadding = dojo.style(previewRegion.domNode, "padding");
 		var desiredWidth = (dojo.style(previewRegion.domNode, "width") - previewRegionPadding*2) + "px";

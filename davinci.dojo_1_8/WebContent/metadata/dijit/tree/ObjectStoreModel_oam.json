@@ -1,0 +1,41 @@
+{
+    "id": "http://dojotoolkit.org/dijit/tree/ObjectStoreModel",
+    "name": "dijit.tree.ObjectStoreModel",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/tree/ObjectStoreModel",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Model ID"
+        },
+        "store": {
+            "datatype": "object",
+            "title": "Data Store",
+            "description": "Underlying store"
+        },
+        "query": {
+            "datatype": "json",
+            "title": "Query",
+            "description": "Specifies datastore query to return the root item for the tree. Must only return a single item. Alternately, can just pass in pointer to root item."
+        },
+        "labelAttr": {
+            "datatype": "string",
+            "description": "If specified, get label for tree node from this attribute, rather than by calling store.getLabel()",
+            "hidden": false
+        }
+    },
+    "content": "<div></div>"
+}

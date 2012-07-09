@@ -4,9 +4,10 @@ define([
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
 	"./metadata",
+	"davinci/ve/States",
 	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Metadata, GeomUtils) {
+function(require, declare, _WidgetBase, Mover, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -466,7 +467,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			if(this._moverCurrent.l != this._moverStart.l || this._moverCurrent.t != this._moverStart.t ||
 					this._moverCurrent.w != this._moverStart.w || this._moverCurrent.h != this._moverStart.h){
 				// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
-				var applyToWhichStates = this._sKey ? 'current' : undefined;
+				var applyToWhichStates = undefined;
+				if(this._sKey && this._selectedWidget && this._selectedWidget.domNode){
+					var currentStatesList = States.getStatesListCurrent(this._selectedWidget.domNode);
+					for(var i=0; i<currentStatesList.length; i++){
+						if(currentStatesList[i]){
+							applyToWhichStates = currentStatesList[i];
+							break;
+						}
+					}
+				}
 				var newBox = this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent;
 				if(newBox.w == this._moverStart.w){
 					delete newBox.w;

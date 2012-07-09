@@ -1,7 +1,8 @@
 define(["dojo/_base/declare",
-        "dijit/_Templated",
-        "dijit/_Widget",
-        "davinci/Runtime",
+        "dijit/_WidgetBase",
+		"dijit/_TemplatedMixin",
+		"dijit/_WidgetsInTemplateMixin",
+		"davinci/Runtime",
         "davinci/ve/widgets/MutableStore",
         "davinci/ve/widgets/ColorStore",
         "dojo/text!./templates/BackgroundDialog.html",
@@ -15,9 +16,29 @@ define(["dojo/_base/declare",
         "davinci/ve/widgets/ColorPickerFlat",
         "dijit/form/Textarea",
         "davinci/ui/widgets/FileFieldDialog",
-],function(declare, _Templated, _Widget, Runtime, MutableStore, ColorStore, templateString, CSSUtils, veNLS,commonNLS, URLRewrite, Path){
+],function(declare, 
+		_WidgetBase, 
+		_TemplatedMixin, 
+		_WidgetsInTemplateMixin, 
+		Runtime,
+		MutableStore, 
+		ColorStore, 
+		templateString, 
+		CSSUtils, 
+		veNLS,
+		commonNLS, 
+		URLRewrite, 
+		Path){
 
-	return declare("davinci.ve.widgets.BackgroundDialog",   [_Widget, _Templated], {
+	var getCSSForWorkspaceURL = function (baseLocation, relativeURLInside) {
+		var workspaceUrl = Runtime.getUserWorkspaceUrl();
+		//Need to add project path (e.g., "project1") to the front of the image url
+		relativeURLInside = new Path(baseLocation).getParentPath().append(relativeURLInside).toString();
+		val = 'url(\'' + workspaceUrl + relativeURLInside + '\')';
+		return val;
+	};
+	
+	BackgroundDialog = declare("davinci.ve.widgets.BackgroundDialog", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		
 		templateString: templateString,
 		widgetsInTemplate: true,
@@ -251,10 +272,6 @@ define(["dojo/_base/declare",
 			/* back ground image box */
 			
 			var url = (this.bgddata && this.bgddata.url) ? this.bgddata.url : '';
-			if(url.length > 0){
-				var basePath = new Path(this._baseLocation);
-				url = basePath.getParentPath().append(url).toString();
-			}
 			this._filePicker.set('value', url);
 			this.bgddata.url = url;
 			this.connect(this._filePicker, 'onChange', dojo.hitch(this,function(){
@@ -264,13 +281,7 @@ define(["dojo/_base/declare",
 			}));
 			
 		},
-		/*
-		 * This is the base location for the file in question.  Used to caluclate relativity for url(...)
-		 */
-		_setBaseLocationAttr : function(baseLocation){
-			this._filePicker.set("baseLocation", baseLocation);
-		},
-	
+		
 		_updateBackgroundImageType : function(type){
 			var domNode = this.domNode;
 			if(!(type && (type=='none' || type=='url' || type=='linear' || type=='radial' || type=='other'))){
@@ -409,10 +420,15 @@ define(["dojo/_base/declare",
 			this._updateDialogValidity();
 			this._updateBackgroundPreview();
 		},
+		
+		/*
+		 * This is the base location for the file in question.  Used to caluclate relativity for url(...)
+		 */
 		_setBaseLocationAttr : function(baseLocation){
 			this._baseLocation = baseLocation;
-			
+			this._filePicker.set("baseLocation", baseLocation);
 		},
+		
 		_updateDialogValidity: function() {
 			var bgddata = this.bgddata;
 			if(!bgddata || !bgddata.type){
@@ -464,9 +480,7 @@ define(["dojo/_base/declare",
 				if(URLRewrite.containsUrl(val) && !URLRewrite.isAbsolute(val) && this.context){
 					var urlInside = URLRewrite.getUrl(val);
 					if(urlInside){
-						var urlPath = new Path(urlInside);
-						var workspaceUrl = Runtime.getUserWorkspaceUrl();
-						val = 'url(\'' + workspaceUrl + urlInside + '\')';
+						val = getCSSForWorkspaceURL(this._baseLocation, urlInside);
 					}
 				}
 				styleText += ';background-image:' + val;
@@ -545,4 +559,9 @@ define(["dojo/_base/declare",
 		}
 	
 	});
+	
+	//Make helpers available as "static" functions
+	BackgroundDialog.getCSSForWorkspaceURL = getCSSForWorkspaceURL;
+	
+	return BackgroundDialog;
 });

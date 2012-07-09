@@ -11,32 +11,38 @@
  	 *		This 'name' string appears in the Scenes palette.
 	 *		@param {davinci.ve.Context} context  Maqetta context object corresponding to davinci.ve.VisualEditor
 	 * 
+//FIXME: Inconsistent APIs: sometimes we pass node, other times ID
 	 * selectScene(params)
 	 *		A particular scene has been selected in the Scenes palette.
 	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
 	 *		@param {object} params  Has following properties
+	 *			params.sceneContainerNode - Node which contains the node with the given sceneId
 	 *			params.sceneId - Unique ID for the selected scene. (Unique ID created by this SceneManager)
 	 *		@returns {boolean}	Return true is a scene was selected
 	 * 
-	 * getCurrentScene()
+	 * getCurrentScene(sceneContainerNode)
+	 * 		@param {Element} sceneContainerNode  Scene container node into which we are looking for current scene
 	 *		If there is a currently active scene, return its sceneId, else return null.
 	 *		@returns {string} Unique ID for the selected active scene. (Unique ID created by this SceneManager)
 	 * 
-	 * getAllScenes()
-	 *		Returns a potentially nested array of all current scenes managed by this SceneManager.
-	 *		@returns {[object]} retArray  Array of top-level scenes, where each scene is described
-	 *					by an object with these properties
-	 *			sceneId {string} - a document-unique ID for this scene
-	 *			name {string} - the string for this scene that will appear in Scenes palette
-	 *			type {string} - must be set to the "category" property for this SceneManager (see properties below)
-	 *			parentSceneId {string}- if this scene is not top-level, then this must be the sceneId of its parent scene
-	 *			children {[object]} - array of children scenes
+	 * getAllSceneContainers()
+	 *		Returns all Elements in document that are direct parents of any scene nodes.
+	 *		@returns {[Element]} Returns an array of elements
 	 * 
-	 * hideAppStates()
-	 *		Returns true if the app should not show "application states". 
-	 *		Usually, library returns true only if it offers an alternate notion of scenes.
-	 *		NOTE: Called from both page editor (widget helpers available) and review editor (widget helpers not available).
+	 * isSceneContainer(node)
+	 *		Returns true if the given node is a scene container (i.e., it has children that represent a scene)
+	 *		@param {Element} node  A DOM node in document
 	 *		@returns {boolean} 
+	 * 
+	 * getSceneChildren(node)
+	 *      Returns an array that lists the node's child nodes that represent "scenes"
+	 *		@param {Element} node  A DOM node in document. (Presumably, a scene container node)
+	 *		@returns {array} 	Returns an array of Elements, empty array if no scene children.
+	 * 
+	 * getSceneContainerForNode(node)
+	 *      Returns the scene container parent node for the given node.
+	 *		@param {Element} node  A DOM node in document. (Presumably, a scene node)
+	 *		@returns {Element|node} 	Returns the scene container Element, or null if there is no scene container parent.
 	 *
 	 * This class must provide the following properties on the SceneManager instance object:
 	 * 
@@ -197,41 +203,73 @@
 			}
 			return sceneSelected;
 		},
-		getCurrentScene: function(){
+		getCurrentScene: function(sceneContainerNode){
+			if(!sceneContainerNode){
+				return;
+			}
 			var currentScene, viewDijit;
 			var userDoc = this.context.getDocument();
 			var _dijit = (userDoc && userDoc.defaultView && userDoc.defaultView.dijit);
-			var refNode = userDoc;
-			var searchForNested = true;
-			while(searchForNested){
-				var elems = refNode.querySelectorAll('.mblView');
-				if(elems.length === 0){
-					break;
-				}
-				searchForNested = false;
+			var elems = sceneContainerNode.querySelectorAll('.mblView');
 				for(var i=0; i<elems.length; i++){
 					var elem = elems[i];
+					if(elem.parentNode != sceneContainerNode){
+						continue;
+					}
 					viewDijit = null;
 					if(this.context.declaredClass == 'davinci.ve.Context'){
-						viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
-					}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
-						viewDijit = (_dijit && _dijit.byId && elem.id) ? _dijit.byId(elem.id) : null;
-					}
-					if(viewDijit && viewDijit.getShowingView){
-						var showingView = viewDijit.getShowingView();
-						if(showingView && showingView.domNode && showingView.domNode.id){
-							currentScene = showingView.domNode.id;
-							refNode = showingView.domNode;
-							searchForNested = true;
-							break;
-						}
+					viewDijit = (elem._dvWidget && elem._dvWidget.dijitWidget);
+				}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
+					viewDijit = (_dijit && _dijit.byId && elem.id) ? _dijit.byId(elem.id) : null;
+				}
+				if(viewDijit && viewDijit.getShowingView){
+					var showingView = viewDijit.getShowingView();
+					if(showingView && showingView.domNode && showingView.domNode.id){
+						currentScene = showingView.domNode;
+						break;
 					}
 				}
 			}
 			return currentScene;
 		},
-		getAllScenes: function(){
-			if(!this.context){
+		getAllSceneContainers: function(){
+			var allSceneContainers = [];
+			if(!this.context || !this.context.rootNode){
+				return allSceneContainers;
+			}
+			var dj = this.context.getDojo();
+			if(!dj){
+				return allSceneContainers;
+			}
+			var rootNode = this.context.rootNode;
+			var allViews = dj.query('.mblView', rootNode);
+			for(var i=0; i<allViews.length; i++){
+				var view = allViews[i];
+				var pn = view.parentNode;
+				if(pn && allSceneContainers.indexOf(pn) < 0){
+					allSceneContainers.push(pn);
+				}
+			}
+			return allSceneContainers;
+		},
+		isSceneContainer: function(node){
+			if(!this.context || !node){
+				return false;
+			}
+			var dj = this.context.getDojo();
+			if(!dj){
+				return false;
+			}
+			for(var i=0; i<node.children.length; i++){
+				var child = node.children[i];
+				if(dj.hasClass(child, 'mblView')){
+					return true;
+				}
+			}
+			return false;
+		},
+		getSceneChildren: function(node){
+			if(!this.context || !node){
 				return [];
 			}
 			var dj = this.context.getDojo();
@@ -239,83 +277,19 @@
 				return [];
 			}
 			var scenes = [];
-			var flattenedScenes = [];
-			var views = dj.query('.mblView');
-			for(var i=0; i<views.length; i++){
-				var view = views[i];
-				var o = { sceneId:view.id, name:view.id, type:this.category };
-				if(dojo.hasClass(view.parentNode, 'mblView')){
-					o.parentNodeId = view.parentNode.id;		// temporary property, removed below
-				}
-				scenes.push(o);
-				flattenedScenes.push(o);
-			}
-			// The fetch operation above delivers a simple array of Views.
-			// We need to return a data structure that reflects the hierarchy of Views,
-			// so massage the scenes array so that nested Views are moved under the correct parent View.
-			var idx = 0;
-			while(idx < scenes.length){
-				var scene = scenes[idx];
-				parentNodeId = scene.parentNodeId;
-				if(parentNodeId){
-					delete scene.parentNodeId;	// remove temporary property
-					var spliced = false;
-					for(var j=0; j<flattenedScenes.length; j++){
-						if(flattenedScenes[j].name === parentNodeId){
-							if(!flattenedScenes[j].children){
-								flattenedScenes[j].children = [];
-							}
-							scene.parentSceneId = flattenedScenes[j].sceneId;
-							flattenedScenes[j].children.push(scene);
-							scenes.splice(idx, 1);
-							spliced = true;
-							break;
-						}
-					}
-					if(!spliced){
-						console.error('could not find parentNodeId='+parentNodeId);
-						idx++;
-					}
-				}else{
-					idx++;
+			for(var i=0; i<node.children.length; i++){
+				var child = node.children[i];
+				if(dj.hasClass(child, 'mblView')){
+					scenes.push(child);
 				}
 			}
 			return scenes;
 		},
-		hideAppStates: function(){
-			var context = this.context;
-			if(!context){
+		getSceneContainerForNode: function(node){
+			if(!this.context || !node){
 				return false;
 			}
-			/*
-			 * hide application states if there are any mobile views and only the default Normal state
-			 */ 
-			if(context.declaredClass == 'davinci.ve.Context'){
-				var dj = this.context.getDojo();
-				if(!dj){
-					return false;
-				}
-				var views = dj.query('.mblView');
-				if(davinci.states && davinci.states.getStates){
-					var states = davinci.states.getStates();
-					return (views.length > 0 && states.length <= 1);
-				}else{
-					return false;
-				}
-			}else if(context.declaredClass == 'davinci.review.editor.Context'){
-				var body = context.rootNode;
-				var userWin = body && body.ownerDocument && body.ownerDocument.defaultView;
-				var dj = userWin && userWin.dojo;
-				var statesClass =  userWin && userWin.davinci && userWin.davinci.states;
-				if(dj && statesClass && statesClass.getStates){
-					var views = dj.query('.mblView');
-					var states = statesClass.getStates();
-					return (views.length > 0 && states.length <= 1);
-				}else{
-					return false;
-				}
-				
-			}
+			return (node.tagName == 'BODY') ? null : node.parentNode;
 		}
 	};
 

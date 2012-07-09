@@ -124,7 +124,9 @@ return declare(ContainerInput, {
 		for (var i = 0; i < children.length; i++) {
 			var child = children[i];
 			var dijitWidget = child.dijitWidget;
-			var textBoxNode = query('.mblListItemTextBox', dijitWidget.domNode)[0];
+			var labelNode = dijitWidget.labelNode;
+			var text = labelNode ? lang.trim(labelNode.innerHTML) : '';
+			var textBoxNode = dijitWidget.domNode;
 			var text = "";
 			for (var j=0; j<textBoxNode.childNodes.length; j++){
 				var n = textBoxNode.childNodes[j];

@@ -1,4 +1,8 @@
-define(function() {
+define([
+	"..//HTMLSubElementHelper"
+], function(
+	HTMLSubElementHelper
+) {
 	
 var TreeModelHelper = function() {};
 TreeModelHelper.prototype = {
@@ -20,6 +24,15 @@ TreeModelHelper.prototype = {
 		});
 		
 		return data;
+	},
+	
+	// We need to provide getChildrenData because we're relying on <script> elements in the declarative HTML. We'll
+	// delegate to HTMLSubElementHelper
+	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
+		if (!this._htmlSubElementHelper) {
+			this._htmlSubElementHelper = new HTMLSubElementHelper();
+		}
+		return this._htmlSubElementHelper.getChildrenData(widget, options);
 	}
 
 };

@@ -38,7 +38,7 @@
         "autoExpand": {
             "datatype": "boolean",
             "defaultValue": false,
-            "title": "Expand Folders"
+            "title": "Auto Expand"
         },
         "showRoot": {
             "datatype": "boolean",
@@ -52,7 +52,6 @@
         },
         "openOnClick": {
             "datatype": "boolean",
-            "title": "Open On Click"
         },
         "openOnDblClick": {
             "datatype": "boolean",
@@ -65,10 +64,12 @@
         "dndController": {
             "datatype": "string",
             "description": "Class name to use as as the dnd controller.  Specifying this class enables DnD.\nGenerally you should specify this as \"dijit.tree.dndSource\".",
-            "defaultValue": "dijit.tree.dndSource"
+            "defaultValue": "dijit.tree.dndSource",
+            "hidden": true
         },
         "dndParams": {
-            "datatype": "array"
+            "datatype": "array",
+            "hidden": true
         },
         "dragThreshold": {
             "datatype": "number",

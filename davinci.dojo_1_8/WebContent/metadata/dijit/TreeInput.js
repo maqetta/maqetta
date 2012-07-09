@@ -107,6 +107,48 @@ var CustomMemory = declare(Memory, {
 });
 
 /*
+ * Subclassing ObjectStoreModel so we can support dnd and other desired operations (while maintaining order) in
+ * the preview tree.
+ */
+var CustomObjectStoreModel = declare(ObjectStoreModel, {
+	newItem: function(/* dijit/tree/dndSource.__Item */ args, /*Item*/ parent, /*int?*/ insertIndex, /*Item*/ before){
+		//Call superclass
+		this.inherited(arguments);
+	
+		//Add hack to notify tree that parent's children have changed (so ordering can be maintained)
+		this._parentChildrenChanged(parent);
+	},
+	
+	pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem,
+			/*Boolean*/ bCopy, /*int?*/ insertIndex, /*Item*/ before){
+		//Call superclass
+		this.inherited(arguments);
+		
+		//Add hack to notify tree that new parent's children have changed (so ordering can be maintained)
+		if (newParentItem && (oldParentItem != newParentItem)) {
+			this._parentChildrenChanged(newParentItem);
+		} else {
+			this._parentChildrenChanged(oldParentItem);
+		}
+	},
+	
+	_parentChildrenChanged: function(parent) {
+		delete this.childrenCache[this.getIdentity(parent)];
+		var onComplete = function(children) {
+			this.onChildrenChange(parent, children);
+		}.bind(this);
+		var onError = function() {
+			console.error("CustomObjectStoreModel._parentChildrenChanged: problem getting children for parent = " + this.getIdentity(parent));
+		};
+		this.getChildren(parent, onComplete, onError);
+	},
+	
+	mayHaveChildren: function(item) {
+		return !item.leaf;
+	}
+});
+
+/*
  * Subclassing Tree so we can show custom icons in the preview.
  */
 var CustomTree = declare(Tree, {
@@ -126,45 +168,6 @@ var CustomTree = declare(Tree, {
 			}; 
 		} 
 		return this.inherited(arguments);
-	}
-});
-
-/*
- * Subclassing ObjectStoreModel so we can support dnd and other desired operations (while maintaining order) in
- * the preview tree.
- */
-var CustomObjectStoreModel = declare(ObjectStoreModel, {
-	newItem: function(/* dijit/tree/dndSource.__Item */ args, /*Item*/ parent, /*int?*/ insertIndex, /*Item*/ before){
-		//Call superclass
-		this.inherited(arguments);
-	
-		//Add hack to notify tree that parent's children have changed (so ordering can be maintained)
-		this._parentChildrenChanged(parent);
-	},
-	
-	pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem,
-			/*Boolean*/ bCopy, /*int?*/ insertIndex, /*Item*/ before){
-		//Call superclass
-		this.inherited(arguments);
-		
-		
-		//Add hack to notify tree that new parent's children have changed (so ordering can be maintained)
-		if (newParentItem && (oldParentItem != newParentItem)) {
-			this._parentChildrenChanged(newParentItem);
-		} else {
-			this._parentChildrenChanged(oldParentItem);
-		}
-	},
-	
-	_parentChildrenChanged: function(parent) {
-		delete this.childrenCache[this.getIdentity(parent)];
-		var onComplete = function(children) {
-			this.onChildrenChange(parent, children);
-		}.bind(this);
-		var onError = function() {
-			console.error("CustomObjectStoreModel._parentChildrenChanged: problem getting children for parent = " + this.getIdentity(parent));
-		};
-		this.getChildren(parent, onComplete, onError);
 	}
 });
 
@@ -261,6 +264,14 @@ return declare(ContainerInput, {
 			query: JSON.parse(modelWidgetData.properties.query),
 			store: observablePreviewStore
 		});
+		//listen for changes to children so we can update the leaf attr of parent items
+		this._connection.push(dojo.connect(previewModel, "onChildrenChange", function(parentItem, children) {
+			if (children.length == 0 && !parentItem.leaf) {
+				parentItem.leaf = true;
+			} else if (children.length > 0 && parentItem.leaf) {
+				parentItem.leaf = false;
+			}
+		}.bind(this)));
 		
 		//Create the tree
 		var previewTree = this._previewTree = new CustomTree({
@@ -537,12 +548,13 @@ return declare(ContainerInput, {
 		var newId = this._getUniqueId();
 		var newItem = {
 			id: newId,
-			name: dojo.replace(langObj.newNodeName, [newId])
+			name: dojo.replace(langObj.newNodeName, [newId]),
+			leaf: true
 		};
 		previewModel.newItem(newItem, 
 				parent ? parent : previewStore.get("treeRoot"), 
 				-1, 
-				before);		
+				before);	
 
 		//Build up the full path (from root) to the new item and select it
 		this._selectAndScrollToItem(newItem);
@@ -691,6 +703,11 @@ return declare(ContainerInput, {
 				var value = this._getDisplayValueFromStore(nodePropWidget.fieldId, selectedItem);
 				this._populateNodeProperty(nodePropWidget.widgetId, value, false);
 			}.bind(this));
+			
+			// FIXME: special case to disable "open icon" field if current item is a leaf node... should 
+			// probabaly tie into this._nodePropWidgetMetadata metadata somehow
+			var treeInputOpenIconInput = dijit.byId("treeInputOpenIconInput");
+			treeInputOpenIconInput.set("disabled", selectedItem.leaf);
 		}
 	},
 	

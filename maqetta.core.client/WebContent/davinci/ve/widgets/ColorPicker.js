@@ -21,7 +21,8 @@ define(["dojo/_base/declare",
 			
 			this.inherited(arguments);
 
-			this.domNode.removeAttribute("dojoType");
+			this.domNode.removeAttribute("data-dojo-type");
+			this.domNode.removeAttribute("dojoType"); // backwards compat
 
 			this._statics = ["", davinci.ve.widgets.ColorPicker.divider, veNLS.colorPicker, veNLS.removeValue];
 			this._run = {};

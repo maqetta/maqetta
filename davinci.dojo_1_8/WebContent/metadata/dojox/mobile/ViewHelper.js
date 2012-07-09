@@ -48,25 +48,7 @@ ViewHelper.prototype = {
 			if(context.sceneManagers && context.sceneManagers.DojoMobileViews){
 				context.sceneManagers.DojoMobileViews._viewAdded(parentNode._dvWidget, widget);
 			}
-			// Since this may get called twice, check that we haven't already
-			// created this interval.
-			if (! widget._dvDisplayInterval) {
-				widget._dvDisplayInterval = setInterval(function() {
-					if(!node || !node.ownerDocument || !node.ownerDocument.defaultView){
-						return;
-					}
-					var win = windowUtils.get(node.ownerDocument);
-					if(!win || !win.dojox || !win.dojox.mobile){
-						return;
-					}
-					if (win.dojox.mobile.currentView === view ||
-							node.style.display === 'none') {
-						node.style.display = 'block';
-						clearInterval(widget._dvDisplayInterval);
-						delete widget._dvDisplayInterval;
-					}
-				}, 100);
-			}
+			view.show(true /* don't run animations */);
 		});
 	},
 
@@ -106,29 +88,37 @@ ViewHelper.prototype = {
 		if(!domNode || !domNode._dvWidget || !domClass.contains(domNode,"mblView")){
 			return;
 		}
-		var parentNode = domNode.parentNode;
 		var widget = domNode._dvWidget;
 		var context = widget.getContext();
 		var viewsToUpdate = [];
 		var node = domNode;
-		var pnode = parentNode;
+		var parentNode = node.parentNode;
+		
 		// See if this View or any ancestor View is not currently visible
-		while (node.tagName != 'BODY'){
-			if(node.style.display == "none" || node.getAttribute("selected") != "true"){
-				viewsToUpdate.splice(0, 0, node);
-			}else{
-				for(var i=0;i<pnode.children.length;i++){
-					n=pnode.children[i];
-					if(domClass.contains(n,"mblView")){
-						if(n!=node && (n.style.display != "none" || n.getAttribute("selected") == "true")){
-							viewsToUpdate.splice(0, 0, node);
-							break;
+		while (node && node.tagName != 'BODY'){
+			var pnode = node.parentNode;
+			var node_added = false;
+			if(domClass.contains(node,"mblView")){
+				if(node.style.display == "none" || 
+						(node && node._dvWidget && node._dvWidget.dijitWidget &&
+						!node._dvWidget.dijitWidget.get('selected'))){
+					viewsToUpdate.splice(0, 0, node);
+					node_added = true;
+				}
+				if(pnode && !node_added){
+					for(var i=0;i<pnode.children.length;i++){
+						var n = pnode.children[i];
+						if(domClass.contains(n,"mblView")){
+							if(n.style.display != "none" || 
+									(n && n._dvWidget && n._dvWidget.dijitWidget &&
+									n._dvWidget.dijitWidget.get('selected'))){
+								viewsToUpdate.splice(0, 0, node);
+							}
 						}
 					}
 				}
 			}
 			node = pnode;
-			pnode = node.parentNode;
 		}
 		// Update visibility of any Views that need adjusting
 		if(viewsToUpdate.length > 0){

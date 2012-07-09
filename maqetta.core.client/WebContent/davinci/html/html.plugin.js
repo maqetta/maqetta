@@ -58,7 +58,8 @@ return {
 
 					},
 					label: "Save",
-					toolbarPath: "save"
+					toolbarPath: "save",
+					keyBinding: {accel: true, charOrCode: "s", allowGlobal: true}
 				},
 				{
 					id: "saveas",
@@ -70,7 +71,8 @@ return {
 						return require('../Workbench').getOpenEditor();
 					},
 					label: "Save As",
-					toolbarPath: "save"
+					toolbarPath: "save",
+					keyBinding: {accel: true, shift: true, charOrCode: "s", allowGlobal: true}
 				}
 			]
 		}

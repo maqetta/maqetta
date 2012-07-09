@@ -140,6 +140,9 @@ var Runtime = {
 			}
 		});	
 		UserActivityMonitor.setUpInActivityMonitor(dojo.doc);
+
+		// add key press listener
+		dojo.connect(dojo.doc.documentElement, "onkeydown", this, "_handleGlobalDocumentKeyEvent");
 				
 		dojo.addOnUnload(function (e) {
 			//This will hold a warning message (if any) that we'll want to display to the
@@ -336,8 +339,76 @@ var Runtime = {
 		}
 		location.href = newLocation+"/welcome";
 	},
-	
-	
+
+
+	registerKeyBinding: function(keyBinding, pluginAction) {
+		if (!this._globalKeyBindings) {
+			this._globalKeyBindings = [];
+		}
+
+		this._globalKeyBindings.push({keyBinding: keyBinding, action: pluginAction});
+	},
+
+	/* called by any widgets that pass in events from other documents, so iframes from editors */
+	handleKeyEvent: function(e) {
+		this._handleKeyEvent(e, true);
+	},
+
+	/* called when events are trigged on the main document */
+	_handleGlobalDocumentKeyEvent: function(e) {
+		this._handleKeyEvent(e);
+	},
+
+	_handleKeyEvent: function(e, isFromSubDocument) {
+		if (!this._globalKeyBindings) {
+			return;
+		}
+
+		var stopEvent = false;
+
+		stopEvent = dojo.some(this._globalKeyBindings, dojo.hitch(this, function(globalBinding) {
+			if (Runtime.isKeyEqualToEvent(globalBinding.keyBinding, e)) {
+				davinci.Workbench._runAction(globalBinding.action);
+				return true;
+			}
+		}));
+
+		if (stopEvent) {
+			dojo.stopEvent(e);
+		} else if (!isFromSubDocument) {
+			// if not from sub document, let the active editor take a stab
+			if (this.currentEditor && this.currentEditor.handleKeyEvent) {
+				// pass in true to tell it its a global event
+				this.currentEditor.handleKeyEvent(e, true);
+			}
+		}
+	},
+
+	// compares keybinding to event
+	isKeyEqualToEvent: function(keybinding, e) {
+		var equal = true;
+
+		var hasAccel = ((e.ctrlKey && !dojo.isMac) || (dojo.isMac && e.metaKey))
+
+		if ((keybinding.accel && !hasAccel) || (!keybinding.accel && hasAccel)) {
+			equal = false;
+		}
+
+		if ((keybinding.shift && !e.shiftKey) || (!keybinding.shift && e.shiftKey)) {
+			equal = false;
+		}
+
+		if (equal && keybinding.charOrCode && e.which) {
+			if (dojo.isString(keybinding.charOrCode)) {
+				// if we have a string, use fromCharCode
+				equal = (keybinding.charOrCode.toLowerCase() === String.fromCharCode(e.which).toLowerCase());
+			} else {
+				equal = (keybinding.charOrCode === e.which);
+			}
+		}
+
+		return equal;
+	}
 };
 
 davinci.Runtime = Runtime; //FIXME: shouldn't need this

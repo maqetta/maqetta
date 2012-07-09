@@ -151,7 +151,8 @@ return {
                     },
                     label: "HTML File...",
                     // toolbarPath: "davinci.toolbar.main/edit",
-                    menubarPath: "davinci.new/new"
+                    menubarPath: "davinci.new/new",
+                    keyBinding: {accel: true, charOrCode: "n"}
                 },
                 {
                     id: "newCSS",
@@ -202,7 +203,8 @@ return {
                     },
                     label: "File...",
                     toolbarPath: "davinci.toolbar.main/edit",
-                    menubarPath: "davinci.open/open"
+                    menubarPath: "davinci.open/open",
+                    keyBinding: {accel: true, charOrCode: "o"}
                 },
                 {
                     id: "openThemeEditor",
@@ -250,7 +252,8 @@ return {
                     	window.open('app/docs/index.html', 'MaqettaDocumentation');
                     },
                     label: "Documentation",
-                    menubarPath: "davinci.help/help"
+                    menubarPath: "davinci.help/help",
+                    keyBinding: {charOrCode: dojo.keys.F1}
                 },
                 {
                     id: "showTutotials",

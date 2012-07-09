@@ -223,9 +223,11 @@ var initializeWorkbenchState = function(){
 			handleAs: "json"
 		}).then(function(response){
 			init((Workbench._state = response));
+			Workbench.setupGlobalKeyboardHandler();
 		});
-	} else {
+	} else {                              
 		init(Workbench._state);
+		Workbench.setupGlobalKeyboardHandler();
 	}
 };
 
@@ -636,6 +638,24 @@ var Workbench = {
 			return tabContainer.selectedChildWidget.editor;
 		}
 		return null;
+	},
+
+	closeActiveEditor: function() {
+		var tabContainer = dijit.byId("editors_tabcontainer");
+
+		if (tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor) {
+			tabContainer.closeChild(tabContainer.selectedChildWidget);
+		}
+	},
+
+	closeAllEditors: function() {
+		var tabContainer = dijit.byId("editors_tabcontainer");
+
+		if (tabContainer) {
+			array.forEach(tabContainer.getChildren(), function(child){
+				tabContainer.closeChild(child);
+			});
+		}
 	},
 
 	getAllOpenEditorIds: function() {
@@ -1726,9 +1746,20 @@ var Workbench = {
 		}
 		if(!anyErrors){
 			Workbench._lastAutoSave = Date.now();
-		}		
+		}		              
 	},
-	
+
+	setupGlobalKeyboardHandler: function() {
+		var actionSets = Runtime.getExtensions('davinci.actionSets');
+
+		dojo.forEach(actionSets, function(actionSet) {
+			dojo.forEach(actionSet.actions, function(action) {
+				if (action.keyBinding) {
+					Runtime.registerKeyBinding(action.keyBinding, action);
+				}
+			});
+		});
+	},
 
 	_XX_last_member: true	// dummy with no trailing ','
 };

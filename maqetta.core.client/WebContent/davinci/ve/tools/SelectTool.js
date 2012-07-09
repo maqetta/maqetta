@@ -16,6 +16,7 @@ define(["dojo/_base/declare",
 		"davinci/ve/commands/MoveCommand",
 		"davinci/ve/commands/ResizeCommand",
 		"davinci/ve/commands/ModifyCommand",
+		"davinci/ve/States",
 		"davinci/ve/utils/GeomUtils"
 ], function(
 		declare,
@@ -36,6 +37,7 @@ define(["dojo/_base/declare",
 		MoveCommand,
 		ResizeCommand,
 		ModifyCommand,
+		States,
 		GeomUtils
 ){
 
@@ -862,7 +864,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 
 		var doMove = true;
 		var index, moverBox;
-		if(!this._moverBox || !this._moverWidget){
+		if(!this._moverBox || !this._moverWidget || !this._moverWidget.domNode){
 			doMove = false;
 		}else{
 			moverBox = {l:this._moverBox.l, t:this._moverBox.t};
@@ -874,7 +876,16 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		}
 		if(doMove){
 			// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
-			var applyToWhichStates = this._sKey ? 'current' : undefined;
+			var applyToWhichStates = undefined;
+			if(this._sKey){
+				var currentStatesList = States.getStatesListCurrent(this._moverWidget.domNode);
+				for(var i=0; i<currentStatesList.length; i++){
+					if(currentStatesList[i]){
+						applyToWhichStates = currentStatesList[i];
+						break;
+					}
+				}
+			}
 			var offsetParentLeftTop = this._context.getPageLeftTop(this._moverWidget.domNode.offsetParent);
 			var newLeft =  (moverBox.l - offsetParentLeftTop.l);
 			var newTop = (moverBox.t - offsetParentLeftTop.t);

@@ -11,16 +11,15 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 
 	name: "style",
 
-	constructor: function(widget, values, applyToWhichStates){
+	constructor: function(widget, values, applyToWhichState){
 	
 		this._newValues = values;
 		this._id = widget ? widget.id : undefined;
-		// applyToWhichStates controls whether style change is attached to Normal or other states
-		//   "current" => apply to currently active state
-		//   [...array of strings...] => apply to these states (may not yet be implemented)
-		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
-		var veStates = require("davinci/ve/States");
-		this._applyToStateIndex = veStates.getApplyToStateIndex(applyToWhichStates);
+		// applyToWhichState controls whether style change is attached to Normal or other states
+		//   (null|undefined|"undefined"|"Normal") => apply to Normal state
+		//   other string => apply to that particular state
+		this._applyToStateIndex = (!applyToWhichState || applyToWhichState=='Normal' || applyToWhichState=='undefined')
+									? 'undefined' : applyToWhichState;
 	},
 
 	add: function(command){
@@ -38,14 +37,13 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			return;
 		}
 		var widget = require("davinci/ve/widget").byId(this._id);
-		if(!widget){
+		if(!widget || !widget.domNode){
 			return;
 		}
 		
 		var veStates = require("davinci/ve/States");
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
-		var currentStateIndex = veStates.getCurrentStateIndex();
 		if(styleValuesAllStates[this._applyToStateIndex]){
 			styleValuesAllStates[this._applyToStateIndex] = StyleArray.mergeStyleArrays(styleValuesAllStates[this._applyToStateIndex], this._newValues);
 		}else{
@@ -53,7 +51,13 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 		}
 		
 		widget.setStyleValuesAllStates(styleValuesAllStates);
-		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
+		var currentStatesList = veStates.getStatesListCurrent(widget.domNode);
+		var styleValuesCanvas = StyleArray.mergeStyleArrays([], styleValuesAllStates['undefined']);
+		for(var i=0; i<currentStatesList.length; i++){
+			if(styleValuesAllStates[currentStatesList[i]]){
+				styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesCanvas, styleValuesAllStates[currentStatesList[i]]);
+			}
+		}
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(styleValuesAllStates['undefined']);
 		widget.refresh();

@@ -223,6 +223,15 @@ return declare("davinci.html.HTMLElement", HTMLItem, {
 			}
 	},
 
+	hasAttribute: function(name) {
+		for (var i=0; i<this.attributes.length; i++) {
+			if (this.attributes[i].name == name) {
+				return true;
+			}
+		}
+		return false;
+	},
+
 	getAttribute: function(name) {
 		var attr = this._getAttribute(name);
 		if (attr) {

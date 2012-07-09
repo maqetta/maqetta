@@ -117,6 +117,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
 			this._destroyCommentWidgets();
 			this._render();
+//FIXME: THIS IS ALL BROKEN WITH NEW STATES/SCENES REGIME
+//FIXME: getCurrentScene now takes a container node as a required param
+//FIXME: Each saved state/scene needs to be a pair: containerNode + scene/state
+//FIXME: Not sure how we are going to identify containers if they don't have IDs. XPath?
 			var state = this._cached[this._currentPage].pageState,
 				scene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: state, viewScene: scene}, []]);
@@ -156,7 +160,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			// Response to the state change event in the review editor
 			if (global && global.require) {
 				var userConnect = global.require("dojo/_base/connect");
-				userConnect.subscribe("/davinci/states/state/changed", this, function(args) {
+				userConnect.subscribe("/maqetta/appstates/state/changed", this, function(args) {
 					if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
 						return; 
 					}
@@ -654,6 +658,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 						context.rootNode.ownerDocument.defaultView.davinci &&
 						context.rootNode.ownerDocument.defaultView.davinci.states);
 				if(states){
+//FIXME: This isn't working yet with nested state containers.
 					states.setState(widget.pageState);
 				}
 			}

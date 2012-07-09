@@ -21,6 +21,9 @@ define([
 	"./metadata",
 	"./ChooseParent",
 	"./Snap",
+	"./States",
+	"davinci/XPathUtils",
+	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
 	"../html/CSSModel", // shorthands
 	"../html/CSSRule",
@@ -56,6 +59,9 @@ define([
 	metadata,
 	ChooseParent,
 	Snap,
+	States,
+	XPathUtils,
+	HtmlFileXPathAdapter,
 	HTMLWidget,
 	CSSModel,
 	CSSRule,
@@ -178,6 +184,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
 		this._restoreStates();
+		this._AppStatesActivateActions();
 		// The initialization of states object for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
@@ -1177,7 +1184,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//className: data.className,
 			
 			bodyClasses: data.bodyClasses,
-			states: data.states,
+//FIXME: Research setHeader - doesn't seem to use states info
+/*
+			maqAppStates: data.maqAppStates,
+			maqDeltas: data.maqDeltas,
+*/
 			style: data.style
 		});
 
@@ -1190,9 +1201,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		var states = {},
 		    containerNode = this.getContainerNode();
-	
-		if (data.states) {
-			states.body = data.states;
+
+		if (data.maqAppStates) {
+			states.body = data.maqAppStates;
 		}
 		dojo.forEach(this.getTopWidgets(), function(w){
 			if(w.getContext()){
@@ -1259,7 +1270,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			});
 		};
 		collapse(containerNode);
-
 		this._loadFileStatesCache = states;
 		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
 	},
@@ -1367,45 +1377,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._attachChildren(this.rootNode);
 	},
 
-	_attachChildren: function (containerNode)
-	{
+	_attachChildren: function (containerNode){
 		query("> *", containerNode).map(Widget.getWidget).forEach(this.attach, this);
-		/*
-		var currentStateCache = [];
-		*/
-		var rootWidget = containerNode._dvWidget;
-		rootWidget._srcElement.visit({ visit: function(element){
-			if (element.elementType=="HTMLElement") {
-				var stateSrc=element.getAttribute(davinci.ve.states.ATTRIBUTE);
-				if (stateSrc && stateSrc.length) {
-					var id=element.getAttribute("id");
-					var widget;
-					if (id){
-					  widget=Widget.byId(id);
-					}else{
-						if (element==rootWidget._srcElement){
-							widget=rootWidget;
-						}
-					}	
-					var states = davinci.states.deserialize(stateSrc);
-					delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-					
-					/*
-					var state = davinci.ve.states.getState();
-					if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-						currentStateCache.push({ node: widget.domNode, state: state});
-					}
-					*/
-				}
-			}
-		}});
-		/*
-		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
-		for (var i in currentStateCache) {
-			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.node, item.state, true);
-		}
-		*/
 	},
 	
 	/**
@@ -1632,13 +1605,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
-		var states = davinci.ve.states.retrieve(node);
-		if (node.tagName != "BODY" && states) {
+		var statesAttributes = davinci.ve.states.retrieve(node);
+//FIXME: Need to generalize this to any states container
+		if (node.tagName != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
 			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
 			node.className = node.className + ' ' + tempClass;
 			this.maqTempClassCount++;
 			cache[tempClass] = {};
-			cache[tempClass].states = states;
+			if(statesAttributes.maqAppStates){
+				cache[tempClass].maqAppStates = statesAttributes.maqAppStates;
+			}
+			if(statesAttributes.maqDeltas){
+				cache[tempClass].maqDeltas = statesAttributes.maqDeltas;
+			}
 			if(node.style){
 				cache[tempClass].style = node.style.cssText;
 			}else{
@@ -1655,9 +1634,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			console.error('Context._restoreStates: this._loadFileStatesCache missing');
 			return;
 		}
-		/*
-		var currentStateCache = [];
-		*/
+		var maqAppStatesString, maqDeltasString, maqAppStates, maqDeltas;
 		for(var id in cache){
 			//FIXME: This logic depends on the user never add ID "body" to any of his widgets.
 			//That's bad. We should find another way to achieve special case logic for BODY widget.
@@ -1678,33 +1655,116 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				continue;
 			}
 			var widget = Widget.getWidget(node);
-			var states = davinci.states.deserialize(node.tagName == 'BODY' ? cache[id] : cache[id].states);
-			delete states.current; // FIXME: Always start in normal state for now, fix in 0.7
-			davinci.ve.states.store(widget.domNode, states);
+//FIXME: Need to generalize beyond just BODY
+			var isBody = (node.tagName == 'BODY');
+//FIXME: Temporary - doesn't yet take into account nested state containers
+			var srcElement = widget._srcElement;
+			maqAppStatesString = maqDeltasString = maqAppStates = maqDeltas = null;
+			if(isBody){
+				maqAppStatesString = cache[id];
+			}else{
+				maqAppStatesString = cache[id].maqAppStates;
+				maqDeltasString = cache[id].maqDeltas;
+			}
+			var maqAppStates = maqDeltas = null;
+			var visualChanged = false;
+			if(maqAppStatesString){
+				maqAppStates = davinci.states.deserialize(maqAppStatesString, {isBody:isBody});
+//FIXME: If files get migrated, should set dirty bit
+//FIXME: Logic doesn't completely deal with nesting yet.
+				// Migrate states attribute names in the model
+				var oldValue = srcElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE);
+				if(oldValue != maqAppStatesString){
+					srcElement.setAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE, maqAppStatesString);
+					visualChanged = true;
+				}
+				// Remove any lingering old dvStates attribute from model
+				if(srcElement.hasAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6)){
+					srcElement.removeAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
+					visualChanged = true;
+				}
+			}
+			if(maqDeltasString){
+				maqDeltas = davinci.states.deserialize(maqDeltasString, {isBody:isBody});
+//FIXME: If files get migrated, should set dirty bit
+//FIXME: Logic doesn't completely deal with nesting yet.
+				// Migrate states attribute names in the model
+				var oldValue = srcElement.getAttribute(davinci.ve.states.DELTAS_ATTRIBUTE);
+				if(oldValue != maqDeltasString){
+					srcElement.setAttribute(davinci.ve.states.DELTAS_ATTRIBUTE, maqDeltasString);
+					visualChanged = true;
+				}
+				// Remove any lingering old dvStates attribute from model
+				if(srcElement.hasAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6)){
+					srcElement.removeAttribute(davinci.ve.states.DELTAS_ATTRIBUTE_P6);
+					visualChanged = true;
+				}
+			}
+			if(visualChanged){
+				this.editor._visualChanged();
+			}
+			if(maqAppStates){
+				if(maqAppStates.initial){
+					// If user defined an initial state, then set current to that state
+					maqAppStates.current = maqAppStates.initial;
+				}else{
+					if(maqAppStates.focus){
+						// Can't have focus on a state that isn't current
+						delete maqAppStates.focus; 
+					}
+					// Otherwise, delete any current state so that we will be in Normal state by default
+					delete maqAppStates.current;
+				}
+			}
+			davinci.ve.states.store(widget.domNode, maqAppStates, maqDeltas);
+			
+//FIXME: Need to generalize beyond just BODY
+/*FIXME: OLD LOGIC
 			if(node.tagName != 'BODY'){
+*/
+			if(maqDeltas){
 				davinci.states.transferElementStyle(node, cache[id].style);
 			}
 			
-			/*
-			var state = davinci.ve.states.getState(widget.domNode);
-			if (state) { // remember which widgets have state other than normal so we can trigger a set later to update styles of their children
-				currentStateCache.push({ node: widget.domNode, state: state});
-			}
-			*/
 		}
-		/*
-		// Wait until after all states attributes are restored before setting states, so all child attributes are updated properly
-		for (var i in currentStateCache) {
-			var item = currentStateCache[i];
-			davinci.ve.states.setState(item.node, item.state, true);
-		}
-		*/
 		// Remove any application states information that are defined on particular widgets
 		// for all states that aren't in the master list of application states.
 		// (This is to clean up after bugs found in older releases)
-		var body = this.getContainerNode();
-		var activeStates = davinci.ve.states.getStates(body);
-		davinci.ve.states.removeUnusedStates(this, activeStates);
+		davinci.ve.states.removeUnusedStates(this);
+		
+		// Call setState() on all of the state containers that have non-default
+		// values for their current state (which was set to initial state earlier
+		// in this routine).
+		var allStateContainers = davinci.ve.states.getAllStateContainers(this.rootNode);
+		var statesInfo = [];
+		for(var i=0; i<allStateContainers.length; i++){
+			var stateContainer = allStateContainers[i];
+			if(stateContainer._maqAppStates && typeof stateContainer._maqAppStates.current == 'string'){
+				var focus = stateContainer._maqAppStates.focus;
+				davinci.states.setState(stateContainer._maqAppStates.current, stateContainer, {updateWhenCurrent:true, focus:focus});
+			}
+		}
+	},
+	
+	/**
+	 * Force a data-maq-appstates attribute on the BODY
+	 */
+	_AppStatesActivateActions: function(){
+		if(this.editor.declaredClass !== "davinci.ve.PageEditor"){
+			return;
+		}
+		if(!this.rootNode._maqAppStates){
+			this.rootNode._maqAppStates = {};
+			var bodyModelNode = this.rootWidget._srcElement;
+			var o = States.serialize(this.rootNode);
+			bodyModelNode.setAttribute(States.APPSTATES_ATTRIBUTE, o.maqAppStates);
+			this.editor._visualChanged();
+		}
+		var statesFocus = States.getFocus(this.rootNode);
+		if(!statesFocus){
+			var currentState = States.getState(this.rootNode);
+			States.setState(currentState, this.rootNode, {updateWhenCurrent:true, silent:true, focus:true });
+		}
 	},
 
 	getDocument: function(){
@@ -1943,7 +2003,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			for(var i=this._selection.length-1; i>=0; i--){
 				var widget = this._selection[i];
 				var domNode = widget.domNode;
-				while(domNode.tagName != 'BODY'){
+				while(domNode && domNode.tagName != 'BODY'){
 					var computed_style_display = dojo.style(domNode, 'display');
 					if(computed_style_display == 'none'){
 						this.deselect(widget);
@@ -2239,8 +2299,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			data.style = bodyElement.getAttribute("style");
 			data.content = bodyElement.getElementText({includeNoPersist:true, excludeIgnoredContent:true});
 
-			var states = bodyElement.getAttribute(davinci.ve.states.ATTRIBUTE);
-			data.states = states;
+//FIXME: Need to generalize beyond just BODY
+			var states = bodyElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE);
+			if(!states){
+				// Previous versions used different attribute name (ie, 'dvStates')
+				states = bodyElement.getAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
+				if(states){
+					bodyElement.setAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE, states);
+				}
+			}
+			// Remove any lingering old dvStates attribute from model
+			bodyElement.removeAttribute(davinci.ve.states.APPSTATES_ATTRIBUTE_P6);
+			data.maqAppStates = states;
 		}
 		
 		var titleElement=head.getChildElement("title");
@@ -2508,13 +2578,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(!theme) {
 			return [];
 		}
-		
+/*FIXME: OLD LOGIC
+//FIXME: Ramifications if nested states?
+//FIXME: getState(node)?
 		var state = davinci.ve.states.getState();
 		
 		if(!state) {
 			state = "Normal";
 		}
-		
+*/
+		var state = "Normal";
 		var widget = this.getSelection();
 		if(!widget.length){
 			return [];
@@ -2539,9 +2612,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// For theme editor, we need to use whatever state is selected in States palette
 		// For page editor, always use "Normal"
 		var state = "Normal";
+/*FIXME: OLD LOGIC
 		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
+//FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
+//getState(node)
 			state = davinci.ve.states.getState();
 		}
+*/
 		
 		var widgetType = theme.loader.getType(widget),
 			selectors = theme.metadata.getStyleSelectors(widgetType,state);
@@ -2630,10 +2707,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
 		var vArray = widget ? widget.getStyleValues() : [];
-		
+
+//FIXME: isNormalState needs node?
 		var isNormalState = davinci.ve.states.isNormalState();
 		if (!isNormalState) {
-			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode);
+			var currentStatesList = davinci.ve.states.getStatesListCurrent(widget.domNode);
+			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode, currentStatesList);
 			if(stateStyleValuesArray){
 				// Remove entries from vArray that are in stateStyleValuesArray
 				for(var i=0; i<stateStyleValuesArray.length; i++){
@@ -3241,51 +3320,92 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
 		}
 	},
-	
-	getCurrentScenes: function(){
-		var a = [];
-		for(var id in this.sceneManagers){
-			var sm = this.sceneManagers[id];
-			var sceneId = sm.getCurrentScene ? sm.getCurrentScene() : null;
-			if(sceneId){
-				a.push({sm:sm, sceneId:sceneId});
-			}
-		}
-		return a;
-	},
-	
+
 	/**
-	 * Returns an array holding the set of currently selected application states and (mobile) scenes
-	 * @return {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
-	 *                   where sm is undefined or null for application states
+	 * Returns an object holding the set of currently selected application states and (mobile) scenes
+	 * @return {object}  { statesInfo:statesInfo, scenesInfo:scenesInfo }
 	 */
 	getStatesScenes: function() {
-		var a = this.getCurrentScenes();
-		var state = davinci.ve.states.getState();
-		a.push({sceneId:state});
-		return a;
+		var statesFocus = States.getFocus(this.rootNode);
+		if(!statesFocus){
+			statesFocus = {};
+			statesFocus.stateContainerNode = this.rootNode;
+		}
+		if(typeof statesFocus.state != 'string'){
+			statesFocus.state = States.NORMAL;
+		}
+		var allStateContainers = States.getAllStateContainers(this.rootNode);
+		var statesInfo = [];
+		for(var i=0; i<allStateContainers.length; i++){
+			var stateContainer = allStateContainers[i];
+			var currentState = States.getState(stateContainer);
+			var currentStateString = typeof currentState == 'string' ? currentState : States.NORMAL;
+			var xpath = XPathUtils.getXPath(stateContainer._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+			var focus = (statesFocus.stateContainerNode == stateContainer &&
+							statesFocus.state == currentStateString);
+			statesInfo.push({ currentStateXPath:xpath, state:currentState, focus:focus });
+		}
+		scenesInfo = {};
+		var sceneManagers = this.sceneManagers;
+		for(var smIndex in sceneManagers){
+			var sm = sceneManagers[smIndex];
+			scenesInfo[smIndex] = { sm:sm, sceneContainers:[] };
+			var allSceneContainers = sm.getAllSceneContainers();
+			for(var i=0; i<allSceneContainers.length; i++){
+				var o = {};
+				var sceneContainer = allSceneContainers[i];
+				var currentScene = sm.getCurrentScene(sceneContainer);
+				var xpath = XPathUtils.getXPath(sceneContainer._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+				o.sceneContainerXPath = xpath;
+				var xpath = XPathUtils.getXPath(currentScene._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+				o.currentSceneXPath = xpath;
+				scenesInfo[smIndex].sceneContainers.push(o);
+			}
+		}
+		return { statesInfo:statesInfo, scenesInfo:scenesInfo };
 	},
 	
 	/**
 	 * Sets the current scene(s) and/or current application state
-	 * @param {array}  array is an object of form {sm:{scenemanager}, sceneId:{string}},
-	 *                   where sm is undefined or null for application states
+	 * @param {object}  object of form { statesInfo:statesInfo, scenesInfo:scenesInfo }
 	 */
-	setStatesScenes: function(arr) {
-		for(var i=0; i<arr.length; i++){
-			var sm = arr[i].sm;
-			var sceneId = arr[i].sceneId;
-			if(sm){
-				sm.selectScene({sceneId:sceneId});
-			}else{
-				davinci.ve.states.setState(sceneId);
+	setStatesScenes: function(statesScenes) {
+		var statesInfo = statesScenes.statesInfo;
+		if(statesInfo){
+			for(var i=0; i<statesInfo.length; i++){
+				var xpath = statesInfo[i].currentStateXPath;
+				var id = this.model.evaluate(xpath).getAttribute('id'),
+					widget = Widget.byId(id, this.getDocument()),
+					node = widget.domNode;
+				States.setState(statesInfo[i].state, node, {focus:statesInfo[i].focus});
+			}
+		}
+		var scenesInfo = statesScenes.scenesInfo;
+		var sceneManagers = this.sceneManagers;
+		for(var smIndex in scenesInfo){
+			var sm = scenesInfo[smIndex].sm;
+			var allSceneContainers = scenesInfo[smIndex].sceneContainers;
+			for(var i=0; i<allSceneContainers.length; i++){
+				var sceneContainer = allSceneContainers[i];
+				var xpath = sceneContainer.sceneContainerXPath;
+				var id = this.model.evaluate(xpath).getAttribute('id'),
+					widget = Widget.byId(id, this.getDocument()),
+					sceneContainerNode = widget.domNode;
+				xpath = sceneContainer.currentSceneXPath;
+				id = this.model.evaluate(xpath).getAttribute('id');
+				sm.selectScene({ sceneContainerNode:sceneContainerNode, sceneId:id });
 			}
 		}
 	},
 
 	onCommandStackExecute: function() {
 	},
-	
+
+//FIXME: this routine probably will be made obsolete by br's changes to incorporate
+//document.css as part of themes
 	/**
 	 * Called by any commands that can causes widgets to be added or deleted.
 	 * Looks at current document and decide if we need to update the document

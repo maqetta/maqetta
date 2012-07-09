@@ -538,9 +538,9 @@ createWidget: function(widgetData) {
 		}
 	}
 	
-	// In same cases we are handling certain attributes within data-dojo-props 
+	// In some cases we are handling certain attributes within data-dojo-props 
 	// or via child HTML elements, and we do not want to allow those attributes 
-	// to be written out into the final HTMLHere, we give the helper a chance to 
+	// to be written out into the final HTML. Here, we give the helper a chance to 
 	// remove those attributes.
 	var helper = widgetObject.getWidgetHelper(type);
 	if(helper && helper.cleanSrcElement){

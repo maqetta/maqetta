@@ -695,8 +695,8 @@ States.prototype = {
 			
 			// Reset normal styles
 			if(normalStyleArray){
-				for(var i=0; i<normalStyleArray.length; i++){
-					var nItem = normalStyleArray[i];
+				for(var k=0; k<normalStyleArray.length; k++){
+					var nItem = normalStyleArray[k];
 					for(var nProp in nItem){	// Should only be one prop
 						var convertedName = this._convertStyleName(nProp);
 						node.style[convertedName] = this._getFormattedValue(nProp, nItem[nProp]);

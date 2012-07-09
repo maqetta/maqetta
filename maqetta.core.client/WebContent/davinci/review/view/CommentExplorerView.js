@@ -93,6 +93,21 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		 	}.bind(this)
 		});
 
+		var actions = Workbench.getActionSets("davinci.review.reviewNavigator");
+		if (actions && actions.length == 1) {
+			dojo.forEach(actions[0].actions, dojo.hitch(this, function(action) {
+					if (action.keyBinding) {
+						if (!this.keyBindings) {
+							this.keyBindings = [];
+						}
+
+						this.keyBindings.push({keyBinding: action.keyBinding, action: action});
+					}
+			}));
+		}
+
+		dojo.connect(this.tree.domNode, "onkeypress", this, "_onKeyPress");
+
 		this.infoCardContent = dojo.cache("davinci" ,"review/widgets/templates/InfoCard.html");
 
 		// Customize dijit._masterTT so that it will not be closed when the cursor is hovering on it
@@ -406,7 +421,21 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		}
 		
 		return labelClass;
-	}
+	},
 
+	_onKeyPress: function(e) {
+		var stopEvent = dojo.some(this.keyBindings, dojo.hitch(this, function(binding) {
+			if (Runtime.isKeyEqualToEvent(binding.keyBinding, e)) {
+				davinci.Workbench._runAction(binding.action, this, binding.action.id);
+				return true;
+			}
+		}));
+
+		if (stopEvent) {
+			dojo.stopEvent(e);
+		}
+
+		return stopEvent;
+	}
 });
 });

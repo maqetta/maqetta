@@ -129,6 +129,21 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 				}
 			}
 		});
+		
+		var actions = Workbench.getActionSets("davinci.ui.navigator");
+		if (actions) {
+			dojo.forEach(actions[0].actions, dojo.hitch(this, function(action) {
+					if (action.keyBinding) {
+						if (!this.keyBindings) {
+							this.keyBindings = [];
+						}
+
+						this.keyBindings.push({keyBinding: action.keyBinding, action: action});
+					}
+			}));
+		}
+
+		dojo.connect(tree.domNode, "onkeypress", this, "_onKeyPress");
 	},
 
 	destroy: function(){
@@ -143,6 +158,21 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 				isDirty:node.isDirty()
 			});
 		}
+	},
+
+	_onKeyPress: function(e) {
+		var stopEvent = dojo.some(this.keyBindings, dojo.hitch(this, function(binding) {
+			if (Runtime.isKeyEqualToEvent(binding.keyBinding, e)) {
+				davinci.Workbench._runAction(binding.action);
+				return true;
+			}
+		}));
+
+		if (stopEvent) {
+			dojo.stopEvent(e);
+		}
+
+		return stopEvent;
 	}
 });
 });

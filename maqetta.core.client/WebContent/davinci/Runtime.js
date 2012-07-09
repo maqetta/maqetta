@@ -389,12 +389,18 @@ var Runtime = {
 		var equal = true;
 
 		var hasAccel = ((e.ctrlKey && !dojo.isMac) || (dojo.isMac && e.metaKey))
+		var hasMeta = ((e.altKey && !dojo.isMac) || (dojo.isMac && e.ctrlKey))
 
-		if ((keybinding.accel && !hasAccel) || (!keybinding.accel && hasAccel)) {
+
+		if (!!keybinding.accel !== hasAccel) {
 			equal = false;
 		}
 
-		if ((keybinding.shift && !e.shiftKey) || (!keybinding.shift && e.shiftKey)) {
+		if (!!keybinding.meta !== hasMeta) {
+			equal = false;
+		}
+
+		if (!!keybinding.shift !== e.shiftKey) {
 			equal = false;
 		}
 

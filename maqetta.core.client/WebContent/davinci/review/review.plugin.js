@@ -129,7 +129,8 @@ return {
 					label: "Delete",
 					action: "davinci/review/actions/DeleteVersionAction",
 					//iconClass: "viewActionIcon deleteVersionIcon",
-					menubarPath: "newfile"
+					menubarPath: "newfile",
+					keyBinding: {charOrCode: dojo.keys.DELETE}
 				},
 				{
 					id: "davinci.review.restart",

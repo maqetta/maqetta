@@ -12,7 +12,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 
 	name: "resize",
 
-	constructor: function(widget, width, height, applyToWhichStates){
+	constructor: function(widget, width, height, applyToWhichState){
 		this._id = (widget ? widget.id : undefined);
 		var number_regex = /^\s*[-+]?[0-9]*\.?[0-9]+\s*$/;
 	
@@ -26,11 +26,11 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 
 		this._newBox = {w: width, h: height};
 		
-		// applyToWhichStates controls whether style change is attached to Normal or other states
-		//   "current" => apply to currently active state
-		//   [...array of strings...] => apply to these states (may not yet be implemented)
-		//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
-		this._applyToStateIndex = States.getApplyToStateIndex(applyToWhichStates);
+		// applyToWhichState controls whether style change is attached to Normal or other states
+		//   (null|undefined|"undefined"|"Normal") => apply to Normal state
+		//   other string => apply to that particular state
+		this._applyToStateIndex = (!applyToWhichState || applyToWhichState=='Normal' || applyToWhichState=='undefined')
+									? 'undefined' : applyToWhichState;
 	},
 
 	execute: function(){
@@ -39,7 +39,7 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 			return;
 		}
 		var widget = Widget.byId(this._id);
-		if(!widget){
+		if(!widget || !widget.domNode){
 			return;
 		}
 		var node = widget.domNode;
@@ -78,7 +78,6 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		}
 		var styleValuesAllStates = widget.getStyleValuesAllStates();
 		this._oldStyleValuesAllStates = dojo.clone(styleValuesAllStates);
-		var currentStateIndex = States.getCurrentStateIndex();
 		if(this._oldBox){
 			//FIXME: Undo will force a width/height values onto inline style
 			//that might not have been there before.
@@ -93,7 +92,13 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		}
 		
 		widget.setStyleValuesAllStates(styleValuesAllStates);
-		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
+		var currentStatesList = States.getStatesListCurrent(widget.domNode);
+		var styleValuesCanvas = StyleArray.mergeStyleArrays([], styleValuesAllStates['undefined']);
+		for(var i=0; i<currentStatesList.length; i++){
+			if(styleValuesAllStates[currentStatesList[i]]){
+				styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesCanvas, styleValuesAllStates[currentStatesList[i]]);
+			}
+		}
 		widget.setStyleValuesCanvas(styleValuesCanvas);
 		widget.setStyleValuesModel(styleValuesAllStates['undefined']);
 		this._resize(widget);

@@ -530,11 +530,21 @@ createWidget: function(widgetData) {
 		widget.setProperties(modelOnlyProps, true);
 	}
 
-	if(data.states){
-		widget.domNode.states = dojo.clone(data.states);
-		var states_json = davinci.states.serialize(widget.domNode);
-		if(states_json){
-			widget._srcElement.addAttribute(davinci.states.ATTRIBUTE, states_json);
+//FIXME: Does data.states ever have a value? 
+//Yes, gets called when changing 'selected' property on a View
+	if(data.maqAppStates || data.maqDeltas){
+		if(data.maqAppStates){
+			widget.domNode._maqAppStates = dojo.clone(data.maqAppStates);
+		}
+		if(data.maqDeltas){
+			widget.domNode._maqDeltas = dojo.clone(data.maqDeltas);
+		}
+		var obj = davinci.states.serialize(widget.domNode);
+		if(obj.maqAppStates){	// if node has a _maqAppStates property
+			widget._srcElement.addAttribute(davinci.states.APPSTATES_ATTRIBUTE, obj.maqAppStates);
+		}
+		if(obj.maqDeltas){	// if node has a _maqDeltas property
+			widget._srcElement.addAttribute(davinci.states.DELTAS_ATTRIBUTE, obj.maqDeltas);
 		}
 	}
 	

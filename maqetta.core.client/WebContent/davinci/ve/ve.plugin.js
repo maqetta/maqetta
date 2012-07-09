@@ -205,6 +205,12 @@ return {
                     label: "Move backward",
                     action: "davinci/ve/actions/MoveBackwardAction",
                     menubarPath: "davinci.edit/cut"
+                },
+                {
+                    iconClass: "editActionIcon",
+                    label: "Application States...",
+                    action: "davinci/ve/actions/EnableApplicationStates",
+                    menubarPath: "davinci.edit/cut"
                 }
             ]
         },
@@ -265,16 +271,21 @@ return {
 						iconClass: 'viewActionIcon addStateIcon',
 						action: "davinci/ve/actions/AddState",
 						label: "Add State",
-						// menubarPath: "davinci.edit/cut",
-						toolbarPath: "add"
+						toolbarPath: "states1"
 					},
 					{
 						id: "removeState",
 						iconClass: 'viewActionIcon removeStateIcon',
 						action: "davinci/ve/actions/RemoveState",
 						label: "Remove State",
-						// menubarPath: "davinci.edit/cut",
-						toolbarPath: "remove"
+						toolbarPath: "states1"
+					},
+					{
+						id: "modifyState",
+						iconClass: 'viewActionIcon modifyStateIcon',
+						action: "davinci/ve/actions/ModifyState",
+						label: "Modify State",
+						toolbarPath: "states1"
 					}
 
                 ]

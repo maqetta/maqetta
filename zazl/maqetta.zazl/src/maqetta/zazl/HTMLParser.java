@@ -24,6 +24,7 @@ public class HTMLParser extends DefaultFilter {
 
 	private HTMLConfiguration parser = null;
 	private String encoding = null;
+	private String scriptURLPrefix = null;
 	private String scriptURL = null;
 	private String dojoDefaultRoot = null;
 	private String configScriptTag = null;
@@ -51,8 +52,10 @@ public class HTMLParser extends DefaultFilter {
             String value = attrs.getValue("type");
             if (value != null && value.equalsIgnoreCase(SCRIPT_TYPE)) {
             	String src = attrs.getValue("src");
-            	if (src != null && src.equals(dojoDefaultRoot+"/dojo/dojo.js")) {
+            	if (src != null && src.indexOf(dojoDefaultRoot+"/dojo/dojo.js") != -1) {
             		scriptURL = src;
+            		scriptURLPrefix = scriptURL.substring(0, scriptURL.indexOf(dojoDefaultRoot+"/dojo/dojo.js"));
+            		configScriptTag = configScriptTag.replace("__URLPREFIX__", scriptURLPrefix);
             	}
             }
         }
@@ -71,11 +74,9 @@ public class HTMLParser extends DefaultFilter {
                 String value = attrs.getValue("type");
                 if (value != null && value.equalsIgnoreCase(SCRIPT_TYPE)) {
                 	String src = attrs.getValue("src");
-                	if (src != null) {
-                		if (scriptURL != null && scriptURL.equals(dojoDefaultRoot+"/dojo/dojo.js")) {
-                			attrs.setValue(attrs.getIndex("src"), "lib/zazl/zazl.js");
-                			attrs.removeAttributeAt(attrs.getIndex("data-dojo-config"));
-                		}
+                	if (src != null && src.equals(scriptURL)) {
+            			attrs.setValue(attrs.getIndex("src"), scriptURLPrefix+"lib/zazl/zazl.js");
+            			attrs.removeAttributeAt(attrs.getIndex("data-dojo-config"));
                 	}
         			super.printStartElement(element, attrs);
                 } else {
@@ -89,7 +90,7 @@ public class HTMLParser extends DefaultFilter {
         protected void printEndElement(QName element) throws XNIException {
         	super.printEndElement(element);
             if (element.rawname.equalsIgnoreCase("script")) {
-        		if (scriptURL != null && scriptURL.equals(dojoDefaultRoot+"/dojo/dojo.js")) {
+        		if (scriptURL != null && scriptURL.indexOf(dojoDefaultRoot+"/dojo/dojo.js") != -1) {
                 	fPrinter.println();
         			fPrinter.println(configScriptTag);
         			scriptURL = null;

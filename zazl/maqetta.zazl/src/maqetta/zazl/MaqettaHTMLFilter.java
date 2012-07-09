@@ -33,7 +33,7 @@ public class MaqettaHTMLFilter implements Filter {
 	private static final String zazlScriptTagPrefix = "<script type=\"text/javascript\" src=\"lib/zazl/zazl.js\"";
 	private String scriptTagPrefix = null;
 	private StringBuffer configScriptTag = null;
-	private boolean useHTMLParser = false;
+	private boolean useHTMLParser = true;
 	private Library dojoLib = null;
 
 	public MaqettaHTMLFilter(Library dojoLib, List<Library> libraryList) {
@@ -48,9 +48,9 @@ public class MaqettaHTMLFilter implements Filter {
 		configScriptTag.append("	directInject: true,\n");
 		configScriptTag.append("	injectUrl: '/_javascript',\n");
 		configScriptTag.append("	packages:[\n");
-		configScriptTag.append("		{'name':'dojo','location':'"+dojoDefaultRoot+"/dojo'},\n");
-		configScriptTag.append("		{'name':'dijit','location':'"+dojoDefaultRoot+"/dijit'},\n");
-		configScriptTag.append("		{'name':'dojox','location':'"+dojoDefaultRoot+"/dojox'}\n");
+		configScriptTag.append("		{'name':'dojo','location':'__URLPREFIX__"+dojoDefaultRoot+"/dojo'},\n");
+		configScriptTag.append("		{'name':'dijit','location':'__URLPREFIX__"+dojoDefaultRoot+"/dijit'},\n");
+		configScriptTag.append("		{'name':'dojox','location':'__URLPREFIX__"+dojoDefaultRoot+"/dojox'}\n");
 		configScriptTag.append("	]");
 		if (libraryList.size() > 0) {
 			configScriptTag.append(",\n	paths: {\n");
@@ -65,6 +65,7 @@ public class MaqettaHTMLFilter implements Filter {
 						configScriptTag.append(library.getID());
 						configScriptTag.append("' : ");
 						configScriptTag.append("'");
+						configScriptTag.append("__URLPREFIX__");
 						configScriptTag.append(defaultRoot);
 						configScriptTag.append("'");
 						configScriptTag.append(",\n");
@@ -213,13 +214,10 @@ public class MaqettaHTMLFilter implements Filter {
 		}
 		
 		public void setHeader(String name, String value) {
-			System.out.println("setHeader "+name+":"+value);
 		}
 
 		public void addHeader(String name, String value) {
-			System.out.println("addHeader "+name+":"+value);
 		}
-		
 	}
 	
 	public class RequestWrapper extends HttpServletRequestWrapper {

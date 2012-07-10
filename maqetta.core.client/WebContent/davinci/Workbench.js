@@ -1380,7 +1380,29 @@ var Workbench = {
 		   
 		}
 	},
-	
+
+	getActionSets: function(partID) {
+		var actionSetIDs=[], actionSets =[];
+		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
+			function (extension) {
+			   for (var i=0;i<extension.parts.length;i++) {
+				   if (extension.parts[i]==partID) {
+					   actionSetIDs.push(extension.targetID);              
+					   return true;
+				   }
+			   }
+			});
+		
+		if (actionSetIDs.length) {
+		   var actionSets=Runtime.getExtensions("davinci.actionSets",
+				function (extension) {
+			   		return actionSetIDs.some(function(setID) { return setID == extension.id; });
+				});
+		}
+
+		return actionSets;
+	},
+
 	_initActionsKeys: function(actionSets, args) {
 		var keysDomNode = args.keysDomNode || args.domNode,
 			keys = {},
@@ -1753,11 +1775,13 @@ var Workbench = {
 		var actionSets = Runtime.getExtensions('davinci.actionSets');
 
 		dojo.forEach(actionSets, function(actionSet) {
-			dojo.forEach(actionSet.actions, function(action) {
-				if (action.keyBinding) {
-					Runtime.registerKeyBinding(action.keyBinding, action);
-				}
-			});
+			if (actionSet.id == "davinci.ui.main") {
+				dojo.forEach(actionSet.actions, function(action) {
+					if (action.keyBinding) {
+						Runtime.registerKeyBinding(action.keyBinding, action);
+					}
+				});
+			}
 		});
 	},
 

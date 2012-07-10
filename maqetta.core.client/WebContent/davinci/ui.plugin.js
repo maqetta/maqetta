@@ -332,8 +332,8 @@ return {
                     		r.deleteAction();
                     	});
                     },
-                    menubarPath: "delete"
-
+                    menubarPath: "delete",
+                    keyBinding: {charOrCode: dojo.keys.DELETE}
                 },
                 {
                     id: "davinci.ui.download",

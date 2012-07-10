@@ -43,6 +43,23 @@
         <populateDir project="maqetta.shapes"/>
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
+        <populateDir project="org.apache.commons.io"/>
+	    <populateDir project="maqetta.zazl"/>
+	    <populateDir project="org.cyberneko.html"/>
+	    <populateDir project="org.dojotoolkit."/>
+	    <populateDir project="org.dojotoolkit.compressor"/>
+	    <populateDir project="org.dojotoolkit.compressor.shrinksafe"/>
+	    <populateDir project="org.dojotoolkit.json"/>
+	    <populateDir project="org.dojotoolkit.optimizer"/>
+	    <populateDir project="org.dojotoolkit.amd"/>
+	    <populateDir project="org.dojotoolkit.amd.rhinoast"/>
+        <populateDir project="org.dojotoolkit.optimizer.servlet"/>
+        <populateDir project="org.dojotoolkit.server.util"/>
+        <populateDir project="org.dojotoolkit.server.util.js"/>
+        <populateDir project="org.dojotoolkit.shrinksafe"/>
+	    <populateDir project="org.json"/>
+	    <populateDir project="org.mozilla.javascript"/>
+	    <populateDir project="org.dojotoolkit.optimizer.amd.fragment"/>
     </target>
 
     <!--  equinox deps to copy in -->

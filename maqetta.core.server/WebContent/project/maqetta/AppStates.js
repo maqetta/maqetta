@@ -184,22 +184,16 @@ States.prototype = {
 	 * At this point, only the BODY node can have application states declared on it.
 	 * In future, maybe application states will include a recursive feature.
 	 * @param {Element} node  BODY node for document
-	 * @param {boolean} associative  if true return associative array, otherwise regular array
-	 * FIXME: get rid of the associative parameter.
 	 */ 
-	getStates: function(node, associative){
+	getStates: function(node){
 		var states = node && node._maqAppStates;
-		var names = associative ? {"Normal": "Normal"} : ["Normal"];
+		var names = ["Normal"];
 		if(states){
 			var statesList = states.states ? states.states : [];
 			for(var i=0; i<statesList.length; i++){
 				var name = statesList[i];
 				if(name != 'Normal'){
-					if (associative) {
-						names[name] = name;
-					} else {
-						names.push(name);
-					}
+					names.push(name);
 				}
 			}
 		}

@@ -39,4 +39,4 @@
 	url = git://github.com/zazl/optimizer-release.git
 [submodule "zazl/dependencies"]
 	path = zazl/dependencies
-	url = git://github.com/zazl/optimizer-release.git
+	url = git://github.com/zazl/optimizer-dependencies.git

@@ -7,6 +7,7 @@ import javax.servlet.Filter;
 
 import org.davinci.ajaxLibrary.Library;
 import org.dojotoolkit.compressor.JSCompressorFactory;
+import org.dojotoolkit.compressor.shrinksafe.ShrinksafeJSCompressorFactory;
 import org.dojotoolkit.optimizer.JSOptimizerFactory;
 import org.dojotoolkit.optimizer.amd.rhinoast.AMDJSOptimizerFactory;
 import org.dojotoolkit.optimizer.servlet.JSServlet;
@@ -79,7 +80,10 @@ public class Activator implements BundleActivator {
 			ResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManger().getUserManager(), dojoLib);
 			RhinoClassLoader rhinoClassLoader = new RhinoClassLoader(resourceLoader);
 			JSCompressorFactory jsCompressorFactory = null;
-			//JSCompressorFactory jsCompressorFactory = new ShrinksafeJSCompressorFactory();
+			Boolean jscompress = Boolean.valueOf(System.getProperty("maqetta.zazl.jscompress", "true"));
+			if (jscompress) {
+				jsCompressorFactory = new ShrinksafeJSCompressorFactory();
+			}
 			JSOptimizerFactory jsOptimizerFactory = new AMDJSOptimizerFactory();
 	
 			JSServlet jsServlet = new JSServlet(resourceLoader, jsOptimizerFactory, rhinoClassLoader, "zazl", null, null, jsCompressorFactory);

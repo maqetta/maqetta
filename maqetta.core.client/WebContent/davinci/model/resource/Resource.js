@@ -91,30 +91,36 @@ return declare("davinci.model.resource.Resource", Model, {
 	},
 
 	deleteResource: function(localOnly) {
-		if (localOnly) {
-			var dfd = new Deferred(),
-				name = this.getName(),
-				found = this.parent.children.some(function(child, i, children) {
+		var promise,
+			modifyModel = function(){
+				var name = this.getName();
+				this.parent.children.some(function(child, i, children) {
 					if(child.getName() == name) {
 						children.splice(i, 1);
 						return true;
 					}				
 				});
-
-			if (found) {
+	
 				connect.publish("/davinci/resource/resourceChanged", ["deleted", this]);
-				dfd.resolve();
-			} else {
-				dfd.reject();
-			}
-			return dfd;
-		}
+			}.bind(this);
 
-		return xhr.get({
-			url: "cmd/deleteResource",
-			handleAs: "text",
-			content: {path: this.getPath()}
-		});
+		if (localOnly) {
+			promise = new Deferred();
+			modifyModel();
+			promise.resolve();
+		} else {
+			promise = xhr.get({
+				url: "cmd/deleteResource",
+				handleAs: "text",
+				content: {path: this.getPath()}
+			}).then(
+				modifyModel,
+				function(){
+					//TODO: refresh the resource in the tree if it is a dir -- delete may have been partial.
+				}
+			);
+		}
+		return promise;
 	}
 });
 });

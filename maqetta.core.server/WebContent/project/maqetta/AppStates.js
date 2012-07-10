@@ -209,6 +209,7 @@ States.prototype = {
 	 * where some operations can either operate on BODY or on descendant nodes.
 	 * Should instead have different operations for BODY vs the descendant nodes.
 	 */
+/*
 	_getWidgetNode: function(node) {
 		if (!node) {
 			var doc = this.getDocument();
@@ -216,6 +217,7 @@ States.prototype = {
 		}
 		return node;
 	},
+*/
 
 	/**
 	 * Internal routine. Returns state container corresponding to state and ElemOrEvent.
@@ -240,7 +242,7 @@ States.prototype = {
 				node = this.findStateContainer(node, state);
 			}
 		}else{
-			node = this._getWidgetNode();;
+			node = this.getContainer();;
 		}
 		return node;
 	},
@@ -496,8 +498,6 @@ States.prototype = {
 	 * @returns {boolean} 
 	 */
 	hasStyle: function(node, state, name) {
-		node = this._getWidgetNode(node);
-
 		if (!node || !name) { return; }
 		
 		if(node._maqDeltas && node._maqDeltas[state] && node._maqDeltas[state].style){
@@ -525,8 +525,6 @@ States.prototype = {
 	 * @param {boolean} _silent  If true, don't broadcast the state change via /maqetta/appstates/state/changed
 	 */
 	setStyle: function(node, state, styleArray, silent) {
-		node = this._getWidgetNode(node);
-
 		if (!node || !styleArray) { return; }
 		
 		node._maqDeltas = node._maqDeltas || {};
@@ -715,7 +713,6 @@ States.prototype = {
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
 	_update: function(node, statesArray) {
-		node = this._getWidgetNode(node);
 		if (!node || !node._maqDeltas){
 			return;
 		}
@@ -777,7 +774,7 @@ States.prototype = {
 	 * @returns {Element}
 	 */
 	getContainer: function() {
-		return this._getWidgetNode();
+		return document.body;
 	},
 	
 	/**

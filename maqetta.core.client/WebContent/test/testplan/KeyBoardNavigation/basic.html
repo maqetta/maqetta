@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Keyboard Navigation basic tests</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Keyboard Navigation basic tests</h1>
+
+	<div>
+	{Accl} is the default platform keyboard accelerator
+   	<ul>
+   		<li>Windows/Linux: Control</li>
+      <li>Mac OS X: Command</li>
+     </ul>
+	</div>
+	<h2 class="test_section">Global Keyboard Navigation</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary.</li>
+		<li>Press {Accl} n and the new HTML file dialog should show up.</li>
+		<li>Press Enter and a new file should be created.</li>
+		<li>Click the left mousebutton on the empty canvas of the new file.</li>
+		<li>Press {Accl} o (letter O) and the Open File dialog will show up.</li>
+		<li>Press ESC and the dialog should go away.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>These steps should work no matter where the focus is</li>
+	</ol>
+
+	<h2 class="test_section">Visual Editor Keyboard Navigation</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary.</li>
+		<li>Press {Accl} n and the new HTML file dialog should show up.</li>
+		<li>Press Enter and a new file should be created.</li>
+		<li>Drag and drop a Dijit Button</li>
+		<li>In the smart input, change the label of the button and press OK.</li>
+		<li>Click on the canvas of the Visual Editor</li>
+		<li>{Accel} z should undo and {Accel} Shift Z should redo.</li>
+		<li>Click on the Maqetta banner at the top of the page.  The above keyboard commands should not do anything.</li>
+		<li>Now click on the button and press the DELETE key - that should delete the button.</li>
+		<li>Click again on the canvas and press {Accel} 1-4: this should toggle between all 4 display modes.</li>
+		<li>Click on the Maqetta banner and press {Accel} 1-4: this should toggle between all 4 display modes.</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>Undo/Redo should only work when the canvas of the Visual Editor has focus.</li>
+		<li>Display mode keys should work anywhere in the application</li>
+	</ol>
+
+	<h2 class="test_section">Files Palette Keyboard Navigation</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary.</li>
+		<li>Click on any item in the Files Paletta and press the DELETE key - you should get a dialog confirming you want to delete the file.</li>
+	</ol>
+</body>
+</html>

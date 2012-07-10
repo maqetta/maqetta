@@ -54,7 +54,7 @@ define({ root: {
 		"previewNote": "(Note: The tree below is \"live\" allowing you to open, close, and drag and drop nodes.)",
 		"nodeProperties": "Node properties:",
 		"idLabel": "id:",
-		"labelLabel": "name:",
+		"labelLabel": "label:",
 		"newNodeName": "New Node {0}",
 		"addChild": "Add Child",
 		"insertBefore": "Add Before",

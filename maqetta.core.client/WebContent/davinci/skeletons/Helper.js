@@ -6,8 +6,9 @@
 define(["davinci/ve/widget",
 		"davinci/ve/commands/RemoveCommand",
 		"davinci/commands/CompoundCommand",
+		"davinci/ve/commands/ReparentCommand"
 		],
-function(Widget, RemoveCommand, CompoundCommand){
+function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 
 	var Helper = function() {};
 	Helper.prototype = {
@@ -41,11 +42,63 @@ function(Widget, RemoveCommand, CompoundCommand){
 		cleanSrcElement: function(srcElement) {},
 
 		/**
-		 * [create description]
-		 * @param  {davinci/ve/_Widget} widget     [description]
-		 * @param  {davinci/html/HTMLElement} srcElement [description]
+		 * Called  when widget is created at page loading. 
+		 * Use this Helper method for complex widget creation. an example would be a widget that 
+		 * has associated widget like data stores
+		 * @param  {davinci/ve/_Widget} widget      Widget that is being created
+		 * @param  {davinci/html/HTMLElement} srcElement - source element  from the HTML document for Widget that is being created
+		 * @param  {object} useDataDojoProps 
 		 */
-		create: function(widget, srcElement) {},
+		create: function(widget, srcElement, useDataDojoProps){ 
+
+			try{
+				/*
+				 * Find the widget that is associated with widget be created.
+				 */
+				var storeId = "";
+				if (widget.dijitWidget && widget.dijitWidget.store) {
+					var store = widget.dijitWidget.store;
+					storeId = store.id ? store.id : store._edit_object_id;
+				}
+				if(storeId){
+					/*
+					 * we may have the store as an object, stores must be 
+					 * created before the widgets that use them
+					 * So lets make sure this store is defined in the document 
+					 * before the widget we are create.
+					 */
+					
+					dojo.withDoc(widget.getContext().getDocument(), function(){
+						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
+						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
+							/*
+							 * Now that we have the associated widget lets find where to move it to
+							 */
+							var parent = widget.getParent();
+							var assocatedParent = assocatedWidget.getParent();
+							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
+							var i = parent.indexOf(widget);
+							var x = assocatedParent.indexOf(assocatedWidget);
+							if ((parent === assocatedParent) && (i < x )){ // same parent
+								newIndex = parent.indexOf(widget);
+							} else if (parent != assocatedParent) {
+								newIndex = i;
+							}
+							/*
+							 * We do not need to add this to the command stack, but we can use the ReparentCommand 
+							 * for code reuse. 
+							 */
+							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
+							command.execute();
+						}
+					}.bind(this));
+				}
+				
+			} 
+			catch (e) {
+				console.error('Helper.Create error processing tree.');
+			}
+		},
 
 		/**
 		 * [destroy description]

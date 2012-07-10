@@ -255,10 +255,56 @@ function(Widget, RemoveCommand, CompoundCommand){
 		preProcessData: function(data) {},
 
 		/**
-		 * [reparent description]
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 * Called by ReparentCommand when widget is reparent, used for widget that have associated
+		 * That must be reparented to ensure that they appear in the document in the correct order
+		 * For Example widgets with stores and models like dijitTree.
+		 * @param  {davinci/ve/_Widget} widget - Widget that is being reparentted
+		 * @param  {object} useDataDojoProps - Widget that is being reparentted
 		 */
-		reparent: function(widget) {},
+		reparent: function(widget, useDataDojoProps){ 
+
+			try{
+				/*
+				 * Find the widget that is associated with widget be reparented.
+				 */
+				var storeId = "";
+				if (widget.dijitWidget && widget.dijitWidget.store) {
+					var store = widget.dijitWidget.store;
+					storeId = store.id ? store.id : store._edit_object_id;
+				}
+				if(storeId){
+					// we may have the store as an object
+					dojo.withDoc(widget.getContext().getDocument(), function(){
+						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
+						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
+							/*
+							 * Now that we have the associated widget lets find where to move it to
+							 */
+							var parent = widget.getParent();
+							var assocatedParent = assocatedWidget.getParent();
+							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
+							var i = parent.indexOf(widget);
+							var x = assocatedParent.indexOf(assocatedWidget);
+							if ((parent === assocatedParent) && (i < x )){ // same parent
+								newIndex = parent.indexOf(widget);
+							} else if (parent != assocatedParent) {
+								newIndex = i;
+							}
+							/*
+							 * This code is already be executed from the command stack so no need to add this command to the 
+							 * undo/redo stack. Just use the ReparentCommand for code reuse, no need to recode the wheel.
+							 */
+							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
+							command.execute();
+						}
+					}.bind(this));
+				}
+				
+				} 
+				catch (e) {
+					console.error('Helper.Reparent error processing tree.');
+				}
+		},
 
 		/**
 		 * NOTE: Only applies to widgets of class "dijit".

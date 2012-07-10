@@ -51,10 +51,10 @@ define({ root: {
 		//TreeInput.js
 		"treeDialog":"Tree Configuration",
 		"preview": "Preview:",
-		"previewNote": "(Note: The tree below is \"live\" allowing you to manipulate nodes.)",
+		"previewNote": "(Note: The tree below is \"live\" allowing you to open, close, and drag and drop nodes.)",
 		"nodeProperties": "Node properties:",
 		"idLabel": "id:",
-		"labelLabel": "name:",
+		"labelLabel": "label:",
 		"newNodeName": "New Node {0}",
 		"addChild": "Add Child",
 		"insertBefore": "Add Before",

@@ -34,7 +34,7 @@
         "labelAttr": {
             "datatype": "string",
             "description": "If specified, get label for tree node from this attribute, rather than by calling store.getLabel()",
-            "hidden": false
+            "hidden": true
         }
     },
     "content": "<div></div>"

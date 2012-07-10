@@ -497,6 +497,20 @@ return {
                     },
                     keyBinding: {accel: true, shift: true, charOrCode: "w", allowGlobal: true}
                 },
+                {
+                    id: "showWidgetsPalette",
+                    run: function() {
+                    	var tab = dijit.byId("davinci.ve.Palette");
+                    	if (tab) {
+                    		var tabContainer = tab.getParent();
+                    		// Select tab
+                    		if (tabContainer) {
+                    			tabContainer.selectChild(tab);
+                    		}
+                    	} 
+                    },
+                    keyBinding: {meta: true, charOrCode: "p", allowGlobal: true}
+                }
             ]
         }
     },

@@ -184,43 +184,20 @@ States.prototype = {
 	 * At this point, only the BODY node can have application states declared on it.
 	 * In future, maybe application states will include a recursive feature.
 	 * @param {Element} node  BODY node for document
-	 * @param {boolean} associative  if true return associative array, otherwise regular array
-	 * FIXME: get rid of the associative parameter.
 	 */ 
-	getStates: function(node, associative){
+	getStates: function(node){
 		var states = node && node._maqAppStates;
-		var names = associative ? {"Normal": "Normal"} : ["Normal"];
+		var names = ["Normal"];
 		if(states){
 			var statesList = states.states ? states.states : [];
 			for(var i=0; i<statesList.length; i++){
 				var name = statesList[i];
 				if(name != 'Normal'){
-					if (associative) {
-						names[name] = name;
-					} else {
-						names.push(name);
-					}
+					names.push(name);
 				}
 			}
 		}
 		return names;
-	},
-	
-	/**
-	 * Internal routine. If node is null or undefined, return BODY node
-	 * else return the node that was passed in.
-	 * @param {null|undefined|Element} node
-	 * @returns {Element}
-	 * FIXME: This is somewhat ugly. We shouldn't have this sort of double-duty
-	 * where some operations can either operate on BODY or on descendant nodes.
-	 * Should instead have different operations for BODY vs the descendant nodes.
-	 */
-	_getWidgetNode: function(node) {
-		if (!node) {
-			var doc = this.getDocument();
-			node = doc && doc.body;
-		}
-		return node;
 	},
 
 	/**
@@ -246,7 +223,7 @@ States.prototype = {
 				node = this.findStateContainer(node, state);
 			}
 		}else{
-			node = this._getWidgetNode();;
+			node = this.getContainer();;
 		}
 		return node;
 	},
@@ -502,8 +479,6 @@ States.prototype = {
 	 * @returns {boolean} 
 	 */
 	hasStyle: function(node, state, name) {
-		node = this._getWidgetNode(node);
-
 		if (!node || !name) { return; }
 		
 		if(node._maqDeltas && node._maqDeltas[state] && node._maqDeltas[state].style){
@@ -531,8 +506,6 @@ States.prototype = {
 	 * @param {boolean} _silent  If true, don't broadcast the state change via /maqetta/appstates/state/changed
 	 */
 	setStyle: function(node, state, styleArray, silent) {
-		node = this._getWidgetNode(node);
-
 		if (!node || !styleArray) { return; }
 		
 		node._maqDeltas = node._maqDeltas || {};
@@ -721,7 +694,6 @@ States.prototype = {
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
 	_update: function(node, statesArray) {
-		node = this._getWidgetNode(node);
 		if (!node || !node._maqDeltas){
 			return;
 		}
@@ -783,7 +755,7 @@ States.prototype = {
 	 * @returns {Element}
 	 */
 	getContainer: function() {
-		return this._getWidgetNode();
+		return document.body;
 	},
 	
 	/**

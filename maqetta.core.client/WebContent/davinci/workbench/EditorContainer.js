@@ -103,7 +103,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 								this._setupKeyboardHandler();
 								dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 							}
-						});
+						}.bind(this));
 					}
 					editor.editorContainer=this;
 					this.setDirty(editor.isDirty);

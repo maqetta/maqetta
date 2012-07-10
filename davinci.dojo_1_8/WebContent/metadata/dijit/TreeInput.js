@@ -180,7 +180,7 @@ return declare(ContainerInput, {
 	
    	constructor: function(model){
 		this._nodePropWidgetMetadata = [
-       		{widgetId: "treeInputLabelInput", fieldId: "name", type: "label"},
+       		{widgetId: "treeInputLabelInput", fieldId: "label", type: "label"},
 			{widgetId: "treeInputIconInput", fieldId: "iconStyle", type: "icon"},
 			{widgetId: "treeInputOpenIconInput", fieldId: "iconStyleOpen", type: "icon"},
 			{widgetId: "treeOnClickInput", fieldId: "onClick", type: "event"},
@@ -261,6 +261,7 @@ return declare(ContainerInput, {
 		
 		//Create model for preview
 		var previewModel = this._previewModel = new CustomObjectStoreModel({
+			labelAttr: modelWidgetData.properties.labelAttr ? modelWidgetData.properties.labelAttr : "label",
 			query: JSON.parse(modelWidgetData.properties.query),
 			store: observablePreviewStore
 		});
@@ -548,9 +549,9 @@ return declare(ContainerInput, {
 		var newId = this._getUniqueId();
 		var newItem = {
 			id: newId,
-			name: dojo.replace(langObj.newNodeName, [newId]),
 			leaf: true
 		};
+		newItem[previewModel.labelAttr] =  dojo.replace(langObj.newNodeName, [newId]);
 		previewModel.newItem(newItem, 
 				parent ? parent : previewStore.get("treeRoot"), 
 				-1, 
@@ -823,18 +824,22 @@ return declare(ContainerInput, {
 				data: props.data
 			};
 			var newStore = new MemoryPage(newMemoryProps);
-			newStore.getChildren = function(object) {return this.query({parent: object.id});};
+			newStore.getChildren = function(object) {return this.query({parent: object.id});}; //to match what we have in script element in src
 			var newModelProps = {
 				store: newStore
+				
 			};
 			var command = new ModifyCommand(modelWidget, newModelProps);
 			compoundCommand.add(command);
 		
 			//modify the tree using new model
+			var modelWidgetData = modelWidget.getData();
 			var newModel = new ObjectStoreModelPage({
-				query: JSON.parse(modelWidget.getData().properties.query),
+				query: JSON.parse(modelWidgetData.properties.query),
+				labelAttr: modelWidgetData.properties.labelAttr,
 				store: newStore
 			});
+			newModel.mayHaveChildren = function(item) {return !item.leaf;}; //to match what we have in script element in src
 			newModel.id = modelWidget.id;
 		
 			var newTableProps = {

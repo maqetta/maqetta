@@ -3,7 +3,11 @@
  * free to copy for use, update and strip out the unnecessary functions.
  */
 
-define(function() {
+define(["davinci/ve/widget",
+		"davinci/ve/commands/RemoveCommand",
+		"davinci/commands/CompoundCommand",
+		],
+function(Widget, RemoveCommand, CompoundCommand){
 
 	var Helper = function() {};
 	Helper.prototype = {
@@ -102,12 +106,42 @@ define(function() {
 		 */
 		getPropertyValue: function(widget, name) {},
 
+
 		/**
-		 * [getRemoveCommand description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {davinci/ve/commands/RemoveCommand}        [description]
+		 * Called by DeleteAction when widget is to be deleted.
+		 * @param {davinci.ve._Widget} widget  Widget that is being deleted
+		 * @return {davinci.commands.CompoundCommand}  command that is to be added to the command stack.
+		 * 
+		 * Use this helper method to replace the default widget deletions process for complicated widgets.
+		 * For example a widget that has dependent widgets dijitTree that has a data store and a model widget 
+		 * that are associated with it and must be deleted also.
 		 */
-		getRemoveCommand: function(widget) {},
+		getRemoveCommand: function(widget) {
+			
+			/*
+			 * Create a CompoundCommand for the undo/redo functionality
+			 */
+			var command = new CompoundCommand();
+			command.add(new RemoveCommand(widget));
+			/*
+			 * Find the model widget to add to the delete
+			 */
+			var modelId = widget.domNode._dvWidget._srcElement.getAttribute("model");
+			var modelWidget = Widget.byId(modelId);
+			command.add(new RemoveCommand(modelWidget));
+			/*
+			 * Find the Store and add it also
+			 */
+			var storeId = modelWidget._srcElement.getAttribute("store");
+			var storeWidget = Widget.byId(storeId);
+			// order is important for undo... 
+			command.add(new RemoveCommand(storeWidget));
+			/*
+			 * Return the command object to be used by DeleteAction
+			 */
+			return command;
+			
+		}, 
 
 		/**
 		 * [getTargetOverlays description]

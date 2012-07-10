@@ -5,10 +5,16 @@
 
 define([
     "dojo/_base/declare",
-    "davinci/ve/tools/CreateTool"
+    "davinci/ve/tools/CreateTool",
+    "davinci/ve/widget",
+	"davinci/ve/commands/AddCommand",
+	"davinci/commands/CompoundCommand",
 ], function (
     declare,
-    CreateTool
+    CreateTool,
+    Widget,
+    AddCommand,
+    CompoundCommand
 ) {
 
 return declare(CreateTool, {

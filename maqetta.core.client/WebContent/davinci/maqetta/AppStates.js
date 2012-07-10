@@ -199,25 +199,6 @@ States.prototype = {
 		}
 		return names;
 	},
-	
-	/**
-	 * Internal routine. If node is null or undefined, return BODY node
-	 * else return the node that was passed in.
-	 * @param {null|undefined|Element} node
-	 * @returns {Element}
-	 * FIXME: This is somewhat ugly. We shouldn't have this sort of double-duty
-	 * where some operations can either operate on BODY or on descendant nodes.
-	 * Should instead have different operations for BODY vs the descendant nodes.
-	 */
-/*
-	_getWidgetNode: function(node) {
-		if (!node) {
-			var doc = this.getDocument();
-			node = doc && doc.body;
-		}
-		return node;
-	},
-*/
 
 	/**
 	 * Internal routine. Returns state container corresponding to state and ElemOrEvent.

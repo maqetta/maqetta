@@ -942,7 +942,7 @@
 		                    "type": "dojo.store.Memory",
 		                    "properties": {
 		                        "data": [
-				                		{"id":"treeRoot","label":"treeRoot"},
+				                		{"id":"treeRoot","label":"Root"},
 					                		{"id":"1","label":"1","parent":"treeRoot"},
 						                		{"id":"1.1","label":"1.1","parent":"1","leaf":"true"},
 						                		{"id":"1.2","label":"1.2","parent":"1","leaf":"true"},
@@ -951,19 +951,7 @@
 						                		{"id":"2.2","label":"2.2","parent":"2","leaf":"true"},
 						                		{"id":"2.3","label":"2.3","parent":"2","leaf":"true"}
 				                ]
-		                    },
-		                    "children": [
-								{
-									"type": "html.script",
-									"properties": {
-										"type": "dojo/method",
-										"data-dojo-event": "getChildren",
-										"data-dojo-args": "item"
-									},
-									"children": "return this.query({parent: this.getIdentity(item)});",
-									"content": "<script></script>"
-								}
-		                    ]
+		                    }
 		                },
 		                {
 		                    "type": "dijit.tree.ObjectStoreModel",
@@ -972,19 +960,7 @@
 		                    	"query": {
 		                    		"id": "treeRoot"
 		                    	}
-		                    },
-		                    "children": [
-		                    	{
-									"type": "html.script",
-									"properties": {
-										"type": "dojo/method",
-										"data-dojo-event": "mayHaveChildren",
-										"data-dojo-args": "item"
-									},
-									"children": "return !item.leaf;",
-									"content": "<script></script>"
-								}
-							]
+		                    }
 		                },
 		                {
 		                    "type": "dijit.Tree",

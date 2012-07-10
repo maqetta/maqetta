@@ -6,7 +6,8 @@ define([
 	"davinci/ve/commands/AddCommand",
 	"davinci/ve/commands/MoveCommand",
 	"davinci/ve/commands/ResizeCommand",
-	"davinci/ve/commands/StyleCommand"
+	"davinci/ve/commands/StyleCommand",
+	"./TreeHelper"
 ], function(
 	declare,
 	CreateTool,
@@ -15,13 +16,16 @@ define([
 	AddCommand,
 	MoveCommand,
 	ResizeCommand,
-	StyleCommand
+	StyleCommand,
+	TreeHelper
 ) {
 
 return declare(CreateTool, {
 
 	constructor: function(data){
 		this._resizable = "both";
+		
+		this._treeHelper = new TreeHelper();
 	},
 	
 	_create: function(args){
@@ -73,15 +77,21 @@ return declare(CreateTool, {
 		
 		var dj = this._context.getDojo();
 		dojo.withDoc(this._context.getDocument(), function(){
+			//Set-up store
+			this._treeHelper._addStoreScriptBlocks(storeData);
 			store = Widget.createWidget(storeData);
+			
+			//Set-up model
 			modelData.properties.store = dj.getObject(storeId);
-			if (!modelData.properties.store.getChildren) {
-				modelData.properties.store.getChildren = function(object) {return this.query({parent: object.id});}; 
-			}
+			this._treeHelper._addStoreFunctions(modelData.properties.store);
+			this._treeHelper._addModelScriptBlocks(modelData);
 			model = Widget.createWidget(modelData);
+			
+			//Set-up tree
 			treeData.properties.model = dj.getObject(modelId);
+			this._treeHelper._addModelFunctions(treeData.properties.model);
 			tree = Widget.createWidget(treeData);
-		});
+		}.bind(this));
 		
 		if(!store || !model || !tree){
 			return;

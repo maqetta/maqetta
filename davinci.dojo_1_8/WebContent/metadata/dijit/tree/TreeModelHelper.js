@@ -33,7 +33,17 @@ TreeModelHelper.prototype = {
 			this._htmlSubElementHelper = new HTMLSubElementHelper();
 		}
 		return this._htmlSubElementHelper.getChildrenData(widget, options);
-	}
+	},
+	
+	//The actual store object sometimes finds it's way into the source 
+	//element, and we really need the id to be written out to the HTML source
+	//instead of the string "[Object]"
+	cleanSrcElement: function(srcElement, useDataDojoProps) {
+		var store = srcElement.getAttribute("store");
+		if (store && store.id) {
+			srcElement.setAttribute("store", store.id);
+		}
+	},
 
 };
 

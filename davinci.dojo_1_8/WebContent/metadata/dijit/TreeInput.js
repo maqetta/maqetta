@@ -3,6 +3,7 @@ define(
 	"dojo/_base/declare", 
 	"davinci/Runtime",
 	"./layout/ContainerInput", 
+	"./TreeHelper",
 	"davinci/ve/widget", 
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/ModifyAttributeCommand",
@@ -33,6 +34,7 @@ define(
 function(declare, 
 		Runtime,
 		ContainerInput, 
+		TreeHelper,
 		Widget,
 		ModifyCommand,
 		ModifyAttributeCommand,
@@ -55,11 +57,6 @@ function(declare,
  * the preview tree.
  */
 var CustomMemory = declare(Memory, {
-	//Needed by trees
-	getChildren: function(object) {
-		return this.query({parent: object.id});
-	},
-	
 	// Need to override put to support DnD and node ordering
 	put: function(object, options){
 	    if(options) {
@@ -141,10 +138,6 @@ var CustomObjectStoreModel = declare(ObjectStoreModel, {
 			console.error("CustomObjectStoreModel._parentChildrenChanged: problem getting children for parent = " + this.getIdentity(parent));
 		};
 		this.getChildren(parent, onComplete, onError);
-	},
-	
-	mayHaveChildren: function(item) {
-		return !item.leaf;
 	}
 });
 
@@ -188,6 +181,8 @@ return declare(ContainerInput, {
 			{widgetId: "treeOnCloseInput", fieldId: "onClose", type: "event"},
 			{widgetId: "treeOnOpenInput", fieldId: "onOpen", type: "event"}
        	 ];
+		
+		this._treeHelper = new TreeHelper();
 	},
 	
 	show: function(widgetId) {
@@ -255,6 +250,7 @@ return declare(ContainerInput, {
 		var previewStore = new CustomMemory({
 			data: data
 		});		
+		this._treeHelper._addStoreFunctions(previewStore);
 		
 		//wrap store with Observable so we can update the tree
 		var observablePreviewStore = this._observablePreviewStore = new Observable(previewStore);
@@ -265,6 +261,8 @@ return declare(ContainerInput, {
 			query: JSON.parse(modelWidgetData.properties.query),
 			store: observablePreviewStore
 		});
+		this._treeHelper._addModelFunctions(previewModel);
+		
 		//listen for changes to children so we can update the leaf attr of parent items
 		this._connection.push(dojo.connect(previewModel, "onChildrenChange", function(parentItem, children) {
 			if (children.length == 0 && !parentItem.leaf) {
@@ -276,7 +274,8 @@ return declare(ContainerInput, {
 		
 		//Create the tree
 		var previewTree = this._previewTree = new CustomTree({
-			showRoot: false,
+			//odd to check showRoot like this, but since default value is true, it's not included when set
+			showRoot: treeWidgetData.properties.showRoot != false, 
 			autoExpand: treeWidgetData.properties.autoExpand,
 			model: previewModel,
 			dndController: dndSource,
@@ -437,6 +436,7 @@ return declare(ContainerInput, {
 	//Update toolbar button enablement
 	_updateToolbarButtonEnablement: function() {
 		var previewStore = this._observablePreviewStore;
+		var selectedItem = this._selectedItem;
 		
 		//New child button
 		var treeInputNewButton = dijit.byId('treeInputAddChildButton');
@@ -445,23 +445,23 @@ return declare(ContainerInput, {
 		
 		//Insert before button
 		var treeInputInsertBeforeButton = dijit.byId('treeInputInsertBeforeButton');
-		enabled = this._selectedItem; 
+		enabled = selectedItem && selectedItem.parent; 
 		treeInputInsertBeforeButton.set("disabled", !enabled);
 		
 		//Insert after button
 		var treeInputInsertAfterButton = dijit.byId('treeInputInsertAfterButton');
-		enabled = this._selectedItem; 
+		enabled = selectedItem && selectedItem.parent; 
 		treeInputInsertAfterButton.set("disabled", !enabled);
 
 		//Delete button
 		var treeInputDeleteButton = dijit.byId('treeInputDeleteButton');
-		enabled = this._selectedItem; 
+		enabled = selectedItem && selectedItem.parent; 
 		treeInputDeleteButton.set("disabled", !enabled);
 		
 		//Move up button
 		var treeInputMoveUpButton = dijit.byId('treeInputMoveUpButton');
 		enabled = false;
-		if (this._selectedItem) {
+		if (selectedItem && selectedItem.parent) {
 			var itemBefore = this._getItemBefore(this._selectedItem);
 			enabled = this._selectedItem && itemBefore && previewStore.getIdentity(itemBefore) != "treeRoot";
 		}
@@ -470,7 +470,7 @@ return declare(ContainerInput, {
 		//Move down button
 		var treeInputMoveDownButton = dijit.byId('treeInputMoveDownButton');
 		enabled = false;
-		if (this._selectedItem) {
+		if (selectedItem && selectedItem.parent) {
 			enabled = this._selectedItem && this._getItemAfter(this._selectedItem);
 		}
 		treeInputMoveDownButton.set("disabled", !enabled);
@@ -478,7 +478,7 @@ return declare(ContainerInput, {
 		//Shift left
 		var treeInputShiftLeftButton = dijit.byId('treeInputShiftLeftButton');
 		enabled = false;
-		if (this._selectedItem) {
+		if (selectedItem && selectedItem.parent) {
 			var oldParentItem = previewStore.get(this._selectedItem.parent);
 			var newParentItem = previewStore.get(oldParentItem.parent);
 			enabled = this._selectedItem && newParentItem;
@@ -488,7 +488,7 @@ return declare(ContainerInput, {
 		//Shift right
 		var treeInputShiftRightButton = dijit.byId('treeInputShiftRightButton');
 		enabled = false;
-		if (this._selectedItem) {
+		if (selectedItem && selectedItem.parent) {
 			itemBefore = this._getItemBefore(this._selectedItem, true);
 			enabled = this._selectedItem && itemBefore && previewStore.getIdentity(itemBefore) != "treeRoot";
 		}
@@ -824,10 +824,10 @@ return declare(ContainerInput, {
 				data: props.data
 			};
 			var newStore = new MemoryPage(newMemoryProps);
-			newStore.getChildren = function(object) {return this.query({parent: object.id});}; //to match what we have in script element in src
+			newStore.id = storeWidget.id;
+			this._treeHelper._addStoreFunctions(newStore);
 			var newModelProps = {
 				store: newStore
-				
 			};
 			var command = new ModifyCommand(modelWidget, newModelProps);
 			compoundCommand.add(command);
@@ -839,23 +839,13 @@ return declare(ContainerInput, {
 				labelAttr: modelWidgetData.properties.labelAttr,
 				store: newStore
 			});
-			newModel.mayHaveChildren = function(item) {return !item.leaf;}; //to match what we have in script element in src
+			this._treeHelper._addModelFunctions(newModel);
 			newModel.id = modelWidget.id;
 		
 			var newTableProps = {
 				model: newModel
 			};
 			command = new ModifyCommand(this._widget, newTableProps, this._getUpdatedTreeChildren(this._widget));
-			compoundCommand.add(command);
-			
-			// Need the actual store object in the ModifyCommand, but now need to change to id
-			// so it get's put out in source correctly
-			command = new ModifyAttributeCommand(modelWidget, {store: storeWidget.id});
-			compoundCommand.add(command);
-			
-			// Need the actual model object in the ModifyCommand, but now need to change to id
-			// so it get's put out in source correctly
-			command = new ModifyAttributeCommand(this._widget, {model: modelWidget.id});
 			compoundCommand.add(command);
 		
 			//Execute the command
@@ -873,38 +863,25 @@ return declare(ContainerInput, {
 			"	iconStyle = item.iconStyleOpen;" +
 			"};" + 
 			"return iconStyle;";
-		children.push(this._createScriptBlockData("dojo/method", "getIconStyle", "item, opened", jsString));
+		children.push(this._treeHelper._createScriptBlockData("dojo/method", "getIconStyle", "item, opened", jsString));
 		
 		//need <script> block for onClick
 		jsString = this._getJavaScriptForTreeEvent("onClick");
-		children.push(this._createScriptBlockData("dojo/connect", "onClick", "item, node, evt", jsString));
+		children.push(this._treeHelper._createScriptBlockData("dojo/connect", "onClick", "item, node, evt", jsString));
 		
 		//need <script> block for onDblClick
 		jsString = this._getJavaScriptForTreeEvent("onDblClick");
-		children.push(this._createScriptBlockData("dojo/connect", "onDblClick", "item, node, evt", jsString));
+		children.push(this._treeHelper._createScriptBlockData("dojo/connect", "onDblClick", "item, node, evt", jsString));
 		
 		//need <script> block for onClose
 		jsString = this._getJavaScriptForTreeEvent("onClose");
-		children.push(this._createScriptBlockData("dojo/connect", "onClose", "item, node", jsString));
+		children.push(this._treeHelper._createScriptBlockData("dojo/connect", "onClose", "item, node", jsString));
 		
 		//need <script> block for onOpen
 		jsString = this._getJavaScriptForTreeEvent("onOpen");
-		children.push(this._createScriptBlockData("dojo/connect", "onOpen", "item, node", jsString));
+		children.push(this._treeHelper._createScriptBlockData("dojo/connect", "onOpen", "item, node", jsString));
 
 		return children;
-	},
-	
-	_createScriptBlockData: function(methodType, dojoEvent, argNames, jsString) {
-		var data = {
-			type: "html.script",
-			properties: {
-				type: methodType
-			},
-			children: jsString
-		};
-		data.properties["data-dojo-event"] = dojoEvent;
-		data.properties["data-dojo-args"] = argNames;
-		return data;
 	},
 	
 	_getJavaScriptForTreeEvent: function(eventType) {

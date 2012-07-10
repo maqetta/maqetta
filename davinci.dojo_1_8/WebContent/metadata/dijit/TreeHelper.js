@@ -155,7 +155,69 @@ TreeHelper.prototype = {
 			this._htmlSubElementHelper = new HTMLSubElementHelper();
 		}
 		return this._htmlSubElementHelper.getChildrenData(widget, options);
-	}
+	},
+	
+	//The actual model object sometimes finds it's way into the source 
+	//element, and we really need the id to be written out to the HTML source
+	//instead of the string "[Object]"
+	cleanSrcElement: function(srcElement, useDataDojoProps) {
+		var model = srcElement.getAttribute("model");
+		if (model && model.id) {
+			srcElement.setAttribute("model", model.id);
+		}
+	},
+	
+	//**************************************************************************************/
+	// Some "private helpers reserved for use only by other tree-related meta data classes 
+	//*************************************************************************************/
+	_createScriptBlockData: function(methodType, dojoEvent, argNames, jsString) {
+		var data = {
+			type: "html.script",
+			properties: {
+				type: methodType
+			},
+			children: jsString
+		};
+		data.properties["data-dojo-event"] = dojoEvent;
+		data.properties["data-dojo-args"] = argNames;
+		return data;
+	},
+	
+	_addStoreScriptBlocks: function(storeData) {
+		if (!storeData.children) {
+			storeData.children = [];
+		}
+		
+		var jsString = "return this.query({parent: this.getIdentity(item)});";
+		storeData.children.push(this._createScriptBlockData("dojo/method", "getChildren", "item", jsString));
+	},
+	
+	_addStoreFunctions: function(store) {
+		if (!store.getChildren) {
+			store.getChildren = this._getFunctionForGetChildren(); 
+		}
+	},
+	
+	_getFunctionForGetChildren: function() {
+		return function(object) {return this.query({parent: object.id});}; 
+	},
+
+	_addModelScriptBlocks: function(modelData) {
+		if (!modelData.children) {
+			modelData.children = [];
+		}
+		
+		var jsString = "return !item.leaf;";
+		modelData.children.push(this._createScriptBlockData("dojo/method", "mayHaveChildren", "item", jsString));
+	},
+	
+	_addModelFunctions: function(model) {
+		model.mayHaveChildren = this._getFunctionForMayHaveChildren();
+	},
+	
+	_getFunctionForMayHaveChildren: function() {
+		return function(item) {return !item.leaf;};
+	},
 };
 
 return TreeHelper;

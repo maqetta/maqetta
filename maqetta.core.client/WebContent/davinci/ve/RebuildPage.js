@@ -162,13 +162,11 @@ return declare("davinci.ve.RebuildPage", Context, {
     	// find the old theme file name
 		/* fixme CHEATING, should determine this programatically */
 		var parentPath = new Path(theme.file.parent.getPath());
-		for(var i=0;i<theme.files.length;i++){
-			var file = theme.files[i];
+		theme.files.forEach(function(file) {
 			var filename = parentPath.append(file);
 			var relativePath = filename.relativeTo(resourcePath, true);
-			
-			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);			
-		};
+			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
+		}, this);
 	},
 	
 	getCurrentBasePath: function(){

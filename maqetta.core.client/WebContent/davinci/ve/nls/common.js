@@ -118,6 +118,7 @@ showPossibleParents: "When dragging, show possible parents",
 warnOnCSSOverride: "Warn on CSS Override",
 absoluteWidgetsZindex: "z-index for sketch mode",
 liveEdit: "Live Edit",
+zazl: "Enable <a href='http://zazl.org' target='_blank'>Zazl Optimizer</a>",
 
 /* WidgetSelectionPane*/
 selectorPrefix: "Selector Prefix",

@@ -80,7 +80,7 @@ public class Activator implements BundleActivator {
 			ResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManger().getUserManager(), dojoLib);
 			RhinoClassLoader rhinoClassLoader = new RhinoClassLoader(resourceLoader);
 			JSCompressorFactory jsCompressorFactory = null;
-			Boolean jscompress = Boolean.valueOf(System.getProperty("maqetta.zazl.jscompress", "true"));
+			Boolean jscompress = Boolean.valueOf(System.getProperty("maqetta.zazl.jscompress", "false"));
 			if (jscompress) {
 				jsCompressorFactory = new ShrinksafeJSCompressorFactory();
 			}

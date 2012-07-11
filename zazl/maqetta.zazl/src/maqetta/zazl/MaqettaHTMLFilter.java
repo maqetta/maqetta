@@ -98,6 +98,9 @@ public class MaqettaHTMLFilter implements Filter {
 					HTMLParser parser = new HTMLParser(caw, response.getCharacterEncoding(), dojoLib, configScriptTag.toString());
 					parser.parse(responseText);
 					result = caw.toString();
+					if (logger.isLoggable(Level.FINEST)) {
+						logger.logp(Level.FINEST, getClass().getName(), "doFilter", "filter response : "+result);
+					}
 				} else {
 					int index = responseText.indexOf(scriptTagPrefix);
 					logger.logp(Level.INFO, getClass().getName(), "doFilter", "parsing html for "+requestURI+". dojo tag found = "+(index > -1 ? true : false));

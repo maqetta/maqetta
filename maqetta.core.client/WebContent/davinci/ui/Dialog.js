@@ -12,7 +12,7 @@ define([
 	"dojox/layout/ResizeHandle"
 ], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
 
-return declare("davinci.ui.Dialog", Dialog, {
+var DialogClass = declare("davinci.ui.Dialog", Dialog, {
 	contentStyle: null,
 
 	buildRendering: function() {
@@ -89,4 +89,113 @@ return declare("davinci.ui.Dialog", Dialog, {
 		return result;
 	}
 });
+
+// static helper methods
+
+DialogClass.showModal = function(content, title, style, callback) {
+	var handles = [];
+
+	var myDialog = new DialogClass({
+		title: title,
+		content: content,
+		contentStyle: style
+	});
+
+	handles.push(dojo.connect(myDialog, "onExecute", content, function() {
+		var cancel = false;
+		if (callback) {
+			cancel = callback();
+		}
+
+		if (cancel) {
+			return;
+		}
+
+		dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
+
+		myDialog.destroyRecursive();
+	}));
+
+	function _destroy() {
+		dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
+
+		myDialog.destroyRecursive();
+	}
+
+	handles.push(dojo.connect(content, "onClose", function() {
+		_destroy();
+	}));
+
+	// handle the close button
+	handles.push(dojo.connect(myDialog, "onCancel", function() {
+		_destroy();
+	}));
+
+	myDialog.show();
+
+	return myDialog;
+},
+
+// simple dialog with an automatic OK button that closes it.
+DialogClass.showMessage = function(title, message, style, callback) {
+	return this.showDialog(title, message, style, callback, null, true);
+},
+
+// OK/Cancel dialog with a settable okLabel
+DialogClass.showDialog = function(title, content, style, callback, okLabel, hideCancel) {
+	var myDialog;
+	var handles = [];
+
+	function _onCancel() {
+		dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
+
+		myDialog.destroyRecursive();
+	}
+
+	// construct the new contents
+	var newContent = document.createElement("div");
+
+	var dialogContents = document.createElement("div");
+	dojo.addClass(dialogContents, "dijitDialogPaneContentArea");
+	if (dojo.isString(content)) {
+		dialogContents.innerHTML = content;
+	} else {
+		dialogContents.appendChild(content.domNode);
+	}
+	newContent.appendChild(dialogContents);
+
+	var dialogActions = document.createElement("div");
+	dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
+	dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit"}).domNode);
+
+	if (!hideCancel) {
+		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel}).domNode);
+	}
+
+	newContent.appendChild(dialogActions);
+
+	myDialog = new DialogClass({
+		title: title,
+		content: newContent,
+		contentStyle: style
+	});
+
+	handles.push(dojo.connect(myDialog, "onExecute", function() {
+		if (callback) {
+			callback();
+		}
+
+		_onCancel();
+	}));
+
+	handles.push(dojo.connect(myDialog, "onCancel", function() {
+		_onCancel();
+	}));
+
+	myDialog.show();
+
+	return myDialog;
+}
+
+return DialogClass;
 });

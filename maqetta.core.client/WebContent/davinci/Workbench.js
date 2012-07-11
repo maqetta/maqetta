@@ -32,7 +32,7 @@ define([
 		Path,
 		ViewPart,
 		EditorContainer,
-		ResizeableDialog,
+		Dialog,
 		Toolbar,
 		ToolbarSeparator,
 		Menu,
@@ -112,7 +112,7 @@ var sessionTimedOut = function(){
 		loginHref = '/maqetta/';
 	}
 	
-	var dialog = new ResizeableDialog({
+	var dialog = new Dialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"
     });
@@ -662,108 +662,17 @@ var Workbench = {
 	},
 
 	showModal: function(content, title, style, callback) {
-		var handles = [];
-
-		var myDialog = new ResizeableDialog({
-			title: title,
-			content: content,
-			contentStyle: style
-		});
-
-		handles.push(dojo.connect(myDialog, "onExecute", content, function() {
-			var cancel = false;
-			if (callback) {
-				cancel = callback();
-			}
-
-			if (cancel) {
-				return;
-			}
-
-			dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
-
-			myDialog.destroyRecursive();
-		}));
-
-		function _destroy() {
-			dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
-
-			myDialog.destroyRecursive();
-		}
-
-		handles.push(dojo.connect(content, "onClose", function() {
-			_destroy();
-		}));
-
-		// handle the close button
-		handles.push(dojo.connect(myDialog, "onCancel", function() {
-			_destroy();
-		}));
-
-		myDialog.show();
-
-		return myDialog;
+		return Dialog.showModal(content, title, style, callback);
 	},
 
 	// simple dialog with an automatic OK button that closes it.
 	showMessage: function(title, message, style, callback) {
-		return this.showDialog(title, message, style, callback, null, true);
+		return Dialog.showModal(title, message, style, callback);
 	},
 
 	// OK/Cancel dialog with a settable okLabel
 	showDialog: function(title, content, style, callback, okLabel, hideCancel) {
-		var myDialog;
-		var handles = [];
-
-		function _onCancel() {
-			dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
-
-			myDialog.destroyRecursive();
-		}
-
-		// construct the new contents
-		var newContent = document.createElement("div");
-
-		var dialogContents = document.createElement("div");
-		dojo.addClass(dialogContents, "dijitDialogPaneContentArea");
-		if (dojo.isString(content)) {
-			dialogContents.innerHTML = content;
-		} else {
-			dialogContents.appendChild(content.domNode);
-		}
-		newContent.appendChild(dialogContents);
-	
-		var dialogActions = document.createElement("div");
-		dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
-		dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit"}).domNode);
-
-		if (!hideCancel) {
-			dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel}).domNode);
-		}
-
-		newContent.appendChild(dialogActions);
-
-		myDialog = new ResizeableDialog({
-			title: title,
-			content: newContent,
-			contentStyle: style
-		});
-
-		handles.push(dojo.connect(myDialog, "onExecute", function() {
-			if (callback) {
-				callback();
-			}
-
-			_onCancel();
-		}));
-
-		handles.push(dojo.connect(myDialog, "onCancel", function() {
-			_onCancel();
-		}));
-
-		myDialog.show();
-
-		return myDialog;
+		return Dialog.showDialog(title, content, style, callback, okLabel, hideCancel);
 	},
 
 	_createMenuTree: function(actionSets, pathsOptional) {

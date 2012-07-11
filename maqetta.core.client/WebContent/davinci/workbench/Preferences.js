@@ -1,22 +1,25 @@
 define([
 //    "../Workbench",
 		"dojo/_base/declare",
+		"dojo/_base/xhr",
     "../Runtime",
-    "dijit/_Widget",
-    "dijit/_Templated",
+    "dijit/_WidgetBase",
+    "dijit/_TemplatedMixin",
+    "dijit/_WidgetsInTemplateMixin",
     "davinci/ui/Dialog",
     "dijit/Tree",
+    "dijit/tree/ForestStoreModel",
+    "dojo/data/ItemFileReadStore",
     "dojo/i18n!./nls/workbench",
     "dojo/i18n!dijit/nls/common",
     "dojo/text!./templates/Preferences.html",
     "dijit/form/Button"
-], function(/*Workbench,*/ declare, Runtime, _Widget, _Templated, Dialog, Tree, workbenchStrings, commonStrings, templateString) {
+], function(/*Workbench,*/ declare, xhr, Runtime, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Dialog, Tree, ForestStoreModel, ItemFileReadStore, workbenchStrings, commonStrings, templateString) {
 
 
-declare("davinci.workbench.PreferencesWidget", [_Widget, _Templated], {
+var PreferencesWidget = declare([WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
 
 	templateString: templateString,
-	widgetsInTemplate: true,
 
 	commonStrings: commonStrings,
 
@@ -29,47 +32,46 @@ var Preferences = {
 	_allPrefs: {},
 
 	savePreferences: function(id, base, preferences){
-		dojo.xhrPut({
-			url: "cmd/setPreferences?id="+id + "&base=" + escape(base),
+		xhr.put({
+			url: "cmd/setPreferences?id="+id + "&base=" + encodeURIComponent(base),
 			putData: dojo.toJson(preferences),
-			handleAs:"json",
-			sync:true,
-			contentType:"text/html"
-		});	
-		
-		if(!Preferences._allPrefs[base])
-			Preferences._allPrefs[base] = {};
-		
-		Preferences._allPrefs[base][id]=preferences;
-		
-		dojo.publish("/davinci/preferencesChanged",[{id:id, preferences:preferences}]);
+			handleAs: "json",
+			contentType: "text/html"
+		}).then(function() {
+			if(!Preferences._allPrefs[base]) {
+				Preferences._allPrefs[base] = {};			
+			}
+			
+			Preferences._allPrefs[base][id] = preferences;
+			
+			dojo.publish("/davinci/preferencesChanged",[{id: id, preferences: preferences}]);
+		});
 	},
+
 	_loadExtensions: function (){
 		 if(!Preferences._extensions) { Preferences._extensions=Runtime.getExtensions("davinci.preferences"); }
 	},
 	
 	showPreferencePage: function(){
 		Preferences._loadExtensions();
-		var langObj = workbenchStrings;
-		var dijitLangObj = commonStrings;
 	    var prefJson = Preferences.getPrefJson();
  	    if(!prefJson || prefJson.length < 1) {
- 	    	alert(langObj.noUserPref);
+ 	    	alert(workbenchStrings.noUserPref);
  	    	return;
  	    	
  	    }
 
 		this.dialog = new Dialog({
-			title: langObj.preferences,
-			content: new davinci.workbench.PreferencesWidget({}),
+			title: workbenchStrings.preferences,
+			content: new PreferencesWidget({}),
 			contentStyle: {width: 700, height: 500},
 			onCancel:function(){
 				this.destroyRecursive(false);
 			}
 		});	
 
-		var itemStore = new dojo.data.ItemFileReadStore({data:prefJson, jsId: "prefTreeDataStore"});	
-		var forestModel = new dijit.tree.ForestStoreModel({jsId:"fileModel",labelAttr: "name", store:itemStore}) ;
+		var itemStore = new ItemFileReadStore({data: prefJson, jsId: "prefTreeDataStore"});	
+		var forestModel = new ForestStoreModel({jsId: "fileModel", labelAttr: "name", store: itemStore});
 		
 		var dojoTree = dijit.byId("prefTree");
 		if(!dojoTree) {

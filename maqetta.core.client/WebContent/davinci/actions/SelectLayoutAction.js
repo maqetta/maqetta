@@ -11,7 +11,6 @@ define([
 
 declare("davinci.actions.SelectLayoutActionContent", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
   templateString: templateString,
-	widgetsInTemplate: true,
 
 	langObj: langObj,
 

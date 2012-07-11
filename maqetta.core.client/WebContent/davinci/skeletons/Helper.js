@@ -3,55 +3,69 @@
  * free to copy for use, update and strip out the unnecessary functions.
  */
 
-define([
-	"davinci/ve/widget",
-	"davinci/ve/commands/RemoveCommand",
-	"davinci/commands/CompoundCommand",
-	"davinci/ve/commands/ReparentCommand"
-], function(
-	Widget,
-	RemoveCommand,
-	CompoundCommand,
-	ReparentCommand
-) {
+define(function() {
 
 	var Helper = function() {};
 	Helper.prototype = {
 
 		/**
-		 * NOTE: Only applies to widgets of class "dijit".
-		 * @param {davinci/ve/DijitWidget} widget        [description]
-		 * @param {dijit/_Widget} dijitWidget [description]
-		 * @param {Number} index       [description]
+		 * Override the default action in 'DijitWidget.addChild()', which simply calls `addChild()`
+		 * on the associated Dijit widget instance (i.e. `widget.dijitWidget`).
+		 * 
+		 * NOTE: Only applies to widgets of class "dijit", which are instances of DijitWidget.
+		 *
+		 * XXX This should be refactored in such a way that it is available to all widget types,
+		 *     not just DijitWidget instances (or remove from DijitWidget).
+		 * 
+		 * @param {davinci/ve/DijitWidget} widget  the (Maqetta) widget instance
+		 * @param {dijit/_Widget} dijitWidget  the Dijit widget instance
+		 * @param {Number|String} [index]
+		 *             The equivalent of the 'pos' parameter to 'dojo.place()', can be a number or
+		 *             a position name.  Defaults to "last".
 		 */
 		addChild: function(widget, dijitWidget, index) {},
 
 		/**
-		 * [checkValue description]
-		 * (Currently used by AnalogGaugeHelper.js)
-		 * @param  {*} value [description]
-		 * @return {*}       [description]
+		 * Check that there are no discrepencies with 'value'.
+		 * 
+		 * XXX Currently only used by AnalogGaugeHelper.js.  Still necessary?
+		 * XXX Also, badly designed interface: there is no mention of property this value belongs to.
+		 * 
+		 * @param  {*} value
+		 * @return {*}
+		 * @deprecated DO NOT USE, this API will be removed.
 		 */
 		checkValue: function(value) {},
 
 		/**
-		 * By default, when dragging/dropping new widgets onto canvas, Maqetta
-		 * defaults to adding a new widget as a child of the mostly deeply nested
-		 * valid container that is under the mouse points. This helper function
-		 * allows a different default parent choice.
+		 * Override the default action, which adds a new widget as a child of the most deeply nested
+		 * valid container that is under the mouse pointer, when dragging/dropping.  Implement this
+		 * function to allow a different default parent choice.
 		 * 
-		 * @param {Array[davinci.ve._Widget]} allowedParentList List of candidate parent widgets,
-		 * 			where typically BODY is item 0
-		 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
+		 * @param {davinci.ve._Widget[]} allowedParentList
+		 *             List of candidate parent widgets, where typically BODY is item 0.
+		 * 
+		 * @return {davinci.ve._Widget}  an element from 'allowedParentList' array
 		 */
 		chooseParent: function(allowedParentList) {},
 
 		/**
-		 * [cleanSrcElement description]
-		 * (Currently used by widget helpers that have data binding)
-		 * @param  {davinci/html/HTMLElement} srcElement [description]
+		 * Allows you to "clean" (update) an HTML model element.
+		 * 
+		 * For example, for some widgets, other code will handle certain attributes within
+		 * 'data-dojo-props' or via child HTML element, and you would not want to allow those
+		 * attributes to be written to source.  You can use this function to clean out those
+		 * attributes.
+		 *
+		 * XXX We should handle this some other way. Shouldn't require a helper.
+		 * 
+		 * XXX Should have a 'widget' param.  Useful in the case where helper is shared amongst
+		 *     many diff. widget types.  Can at least check 'widget.type' or other info.
+		 * 
+		 * @param  {davinci/html/HTMLElement} srcElement
+		 * @param  {boolean} useDataDojoProps  XXX TODO
 		 */
-		cleanSrcElement: function(srcElement) {},
+		cleanSrcElement: function(srcElement, useDataDojoProps) {},
 
 		/**
 		 * Invoked when adding a new widget to the page; when changing properties on a widget (and

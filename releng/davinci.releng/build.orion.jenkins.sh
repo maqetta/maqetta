@@ -84,17 +84,14 @@ setProperties () {
 	buildLabel=$buildType$date-$time
 	javaHome=/shared/common/sun-jdk1.6.0_21_x64
 	#Properties for compilation boot classpaths
-	JAVA60_HOME=/usr/lib/jvm/jre/
-	JAVA50_HOME=${JAVA60_HOME}
-	JAVA14_HOME==${JAVA60_HOME}
-	#j2se142="/Library/Java/Home/lib/dt.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsee.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/dt.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/Resources/Java/JavaRuntimeSupport.jar"
-	j2se142="=/usr/lib/jvm/jre/lib/rt.jar:/usr/lib/jvm/jre/lib/jce.jar:/usr/lib/jvm/jre/lib/jsse.jar"
-	
-	j2se150=${j2se142}
-	javase160=${j2se142}
-	#j2se142="/Library/Java/Home/lib/dt.jar:/Library/Java/Home/lib/deploy.jar:/Library/Java/Home/lib/apple_provider.jar:"
-	#j2se150="$JAVA50_HOME/jre/lib/rt.jar:$JAVA50_HOME/jre/lib/jsse.jar:$JAVA50_HOME/jre/lib/jce.jar:$JAVA50_HOME/jre/lib/charsets.jar"
-	#javase160="$JAVA60_HOME/jre/lib/resources.jar:$JAVA60_HOME/jre/lib/rt.jar:$JAVA60_HOME/jre/lib/jsse.jar:$JAVA60_HOME/jre/lib/jce.jar:$JAVA60_HOME/jre/lib/charsets.jar"
+	export javaHome=/usr/lib/jvm/jre-1.6.0-openjdk.x86_64/
+	JAVA60_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
+	JAVA50_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
+	JAVA14_HOME=/usr/lib/jvm/java-1.4.2-gcj-1.4.2.0/
+	j2se142="$JAVA14_HOME/jre/lib/rt.jar:$JAVA14_HOME/jre/lib/jsse.jar:$JAVA14_HOME/jre/lib/jce.jar:$JAVA14_HOME/jre/lib/charsets.jar"
+	j2se150="$JAVA50_HOME/jre/lib/rt.jar:$JAVA50_HOME/jre/lib/jsse.jar:$JAVA50_HOME/jre/lib/jce.jar:$JAVA50_HOME/jre/lib/charsets.jar"
+	javase160="$JAVA60_HOME/jre/lib/resources.jar:$JAVA60_HOME/jre/lib/rt.jar:$JAVA60_HOME/jre/lib/jsse.jar:$JAVA60_HOME/jre/lib/jce.jar:$JAVA60_HOME/jre/lib/charsets.jar"
+
 }
 
 

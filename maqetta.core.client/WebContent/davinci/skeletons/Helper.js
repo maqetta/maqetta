@@ -74,53 +74,54 @@ define([
 		 */
 		create: function(widget, srcElement) {
 
-			try{
-				/*
-				 * Find the widget that is associated with widget be created.
-				 */
-				var storeId = "";
-				if (widget.dijitWidget && widget.dijitWidget.store) {
-					var store = widget.dijitWidget.store;
-					storeId = store.id ? store.id : store._edit_object_id;
-				}
-				if(storeId){
-					/*
-					 * we may have the store as an object, stores must be 
-					 * created before the widgets that use them
-					 * So lets make sure this store is defined in the document 
-					 * before the widget we are create.
-					 */
-					
-					dojo.withDoc(widget.getContext().getDocument(), function(){
-						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
-						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
-							/*
-							 * Now that we have the associated widget lets find where to move it to
-							 */
-							var parent = widget.getParent();
-							var assocatedParent = assocatedWidget.getParent();
-							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
-							var i = parent.indexOf(widget);
-							var x = assocatedParent.indexOf(assocatedWidget);
-							if ((parent === assocatedParent) && (i < x )){ // same parent
-								newIndex = parent.indexOf(widget);
-							} else if (parent != assocatedParent) {
-								newIndex = i;
-							}
-							/*
-							 * We do not need to add this to the command stack, but we can use the ReparentCommand 
-							 * for code reuse. 
-							 */
-							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
-							command.execute();
-						}
-					}.bind(this));
-				}
-				
-			} 
-			catch (e) {
-				console.error('Helper.Create error processing tree.');
-			}
+//		Example:
+//			try{
+//				/*
+//				 * Find the widget that is associated with widget be created.
+//				 */
+//				var storeId = "";
+//				if (widget.dijitWidget && widget.dijitWidget.store) {
+//					var store = widget.dijitWidget.store;
+//					storeId = store.id ? store.id : store._edit_object_id;
+//				}
+//				if(storeId){
+//					/*
+//					 * we may have the store as an object, stores must be 
+//					 * created before the widgets that use them
+//					 * So lets make sure this store is defined in the document 
+//					 * before the widget we are create.
+//					 */
+//					
+//					dojo.withDoc(widget.getContext().getDocument(), function(){
+//						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
+//						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
+//							/*
+//							 * Now that we have the associated widget lets find where to move it to
+//							 */
+//							var parent = widget.getParent();
+//							var assocatedParent = assocatedWidget.getParent();
+//							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
+//							var i = parent.indexOf(widget);
+//							var x = assocatedParent.indexOf(assocatedWidget);
+//							if ((parent === assocatedParent) && (i < x )){ // same parent
+//								newIndex = parent.indexOf(widget);
+//							} else if (parent != assocatedParent) {
+//								newIndex = i;
+//							}
+//							/*
+//							 * We do not need to add this to the command stack, but we can use the ReparentCommand 
+//							 * for code reuse. 
+//							 */
+//							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
+//							command.execute();
+//						}
+//					}.bind(this));
+//				}
+//				
+//			} 
+//			catch (e) {
+//				console.error('Helper.Create error processing tree.');
+//			}
 		},
 
 		/**
@@ -158,28 +159,30 @@ define([
 		 * @return {davinci/ve/_Widget[]}  array of child widgets
 		 */
 		getChildren: function(widget, attach) {
-			var children = [];
-
-			// Dijit specific code here.  We only want items inside the box node, and not
-			// the label node (for now).
-			if (widget && widget.dijitWidget && widget.dijitWidget.box) {
-				dojo.forEach(widget.dijitWidget.box.children, function(node) {
-					// the label
-					if(dojo.hasClass(node, "mblListItemLabel")) {
-						return;
-					}
-					if (attach) {
-						children.push(require("davinci/ve/widget").getWidget(node));
-					} else {
-						var widget = node._dvWidget;
-						if (widget) {
-							children.push(widget);
-						}
-					}
-				});
-			}
-
-			return children;
+			
+//		Example:
+//			var children = [];
+//
+//			// Dijit specific code here.  We only want items inside the box node, and not
+//			// the label node (for now).
+//			if (widget && widget.dijitWidget && widget.dijitWidget.box) {
+//				dojo.forEach(widget.dijitWidget.box.children, function(node) {
+//					// the label
+//					if(dojo.hasClass(node, "mblListItemLabel")) {
+//						return;
+//					}
+//					if (attach) {
+//						children.push(require("davinci/ve/widget").getWidget(node));
+//					} else {
+//						var widget = node._dvWidget;
+//						if (widget) {
+//							children.push(widget);
+//						}
+//					}
+//				});
+//			}
+//
+//			return children;
 		},
 		
 		/**
@@ -227,21 +230,23 @@ define([
 		 *             }
 		 */
 		getData: function(/*Widget*/ widget, /*Object*/ options) {
-			if(!widget){
-				return undefined;
-			}
-		
-			// call the base  _getData to get most of the widgets data
-			var data = widget._getData(options);
-			/*
-			 * Add in the missing DataStore and query properties that would be needed to
-			 * reconstruct this widget
-			 */
-			if (widget.dijitWidget.store){
-				data.properties.store = widget.dijitWidget.store; // add the data old store if it has one.
-				data.properties.query = widget.dijitWidget.query;
-			}
-			return data;
+			
+//		Example:
+//			if(!widget){
+//				return undefined;
+//			}
+//		
+//			// call the base  _getData to get most of the widgets data
+//			var data = widget._getData(options);
+//			/*
+//			 * Add in the missing DataStore and query properties that would be needed to
+//			 * reconstruct this widget
+//			 */
+//			if (widget.dijitWidget.store){
+//				data.properties.store = widget.dijitWidget.store; // add the data old store if it has one.
+//				data.properties.query = widget.dijitWidget.query;
+//			}
+//			return data;
 		},
 
 		/*
@@ -288,28 +293,29 @@ define([
 		 */
 		getRemoveCommand: function(widget) {
 			
-			/*
-			 * Create a CompoundCommand for the undo/redo functionality
-			 */
-			var command = new CompoundCommand();
-			command.add(new RemoveCommand(widget));
-			/*
-			 * Find the model widget to add to the delete
-			 */
-			var modelId = widget.domNode._dvWidget._srcElement.getAttribute("model");
-			var modelWidget = Widget.byId(modelId);
-			command.add(new RemoveCommand(modelWidget));
-			/*
-			 * Find the Store and add it also
-			 */
-			var storeId = modelWidget._srcElement.getAttribute("store");
-			var storeWidget = Widget.byId(storeId);
-			// order is important for undo... 
-			command.add(new RemoveCommand(storeWidget));
-			/*
-			 * Return the command object to be used by DeleteAction
-			 */
-			return command;
+//		Example:
+//			/*
+//			 * Create a CompoundCommand for the undo/redo functionality
+//			 */
+//			var command = new CompoundCommand();
+//			command.add(new RemoveCommand(widget));
+//			/*
+//			 * Find the model widget to add to the delete
+//			 */
+//			var modelId = widget.domNode._dvWidget._srcElement.getAttribute("model");
+//			var modelWidget = Widget.byId(modelId);
+//			command.add(new RemoveCommand(modelWidget));
+//			/*
+//			 * Find the Store and add it also
+//			 */
+//			var storeId = modelWidget._srcElement.getAttribute("store");
+//			var storeWidget = Widget.byId(storeId);
+//			// order is important for undo... 
+//			command.add(new RemoveCommand(storeWidget));
+//			/*
+//			 * Return the command object to be used by DeleteAction
+//			 */
+//			return command;
 			
 		}, 
 		/**
@@ -478,47 +484,48 @@ define([
 		 */
 		reparent: function(widget, useDataDojoProps){ 
 
-			try{
-				/*
-				 * Find the widget that is associated with widget be reparented.
-				 */
-				var storeId = "";
-				if (widget.dijitWidget && widget.dijitWidget.store) {
-					var store = widget.dijitWidget.store;
-					storeId = store.id ? store.id : store._edit_object_id;
-				}
-				if(storeId){
-					// we may have the store as an object
-					dojo.withDoc(widget.getContext().getDocument(), function(){
-						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
-						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
-							/*
-							 * Now that we have the associated widget lets find where to move it to
-							 */
-							var parent = widget.getParent();
-							var assocatedParent = assocatedWidget.getParent();
-							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
-							var i = parent.indexOf(widget);
-							var x = assocatedParent.indexOf(assocatedWidget);
-							if ((parent === assocatedParent) && (i < x )){ // same parent
-								newIndex = parent.indexOf(widget);
-							} else if (parent != assocatedParent) {
-								newIndex = i;
-							}
-							/*
-							 * This code is already be executed from the command stack so no need to add this command to the 
-							 * undo/redo stack. Just use the ReparentCommand for code reuse, no need to recode the wheel.
-							 */
-							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
-							command.execute();
-						}
-					}.bind(this));
-				}
-				
-				} 
-				catch (e) {
-					console.error('Helper.Reparent error processing tree.');
-				}
+//		Example:
+//			try{
+//				/*
+//				 * Find the widget that is associated with widget be reparented.
+//				 */
+//				var storeId = "";
+//				if (widget.dijitWidget && widget.dijitWidget.store) {
+//					var store = widget.dijitWidget.store;
+//					storeId = store.id ? store.id : store._edit_object_id;
+//				}
+//				if(storeId){
+//					// we may have the store as an object
+//					dojo.withDoc(widget.getContext().getDocument(), function(){
+//						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
+//						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
+//							/*
+//							 * Now that we have the associated widget lets find where to move it to
+//							 */
+//							var parent = widget.getParent();
+//							var assocatedParent = assocatedWidget.getParent();
+//							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
+//							var i = parent.indexOf(widget);
+//							var x = assocatedParent.indexOf(assocatedWidget);
+//							if ((parent === assocatedParent) && (i < x )){ // same parent
+//								newIndex = parent.indexOf(widget);
+//							} else if (parent != assocatedParent) {
+//								newIndex = i;
+//							}
+//							/*
+//							 * This code is already be executed from the command stack so no need to add this command to the 
+//							 * undo/redo stack. Just use the ReparentCommand for code reuse, no need to recode the wheel.
+//							 */
+//							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
+//							command.execute();
+//						}
+//					}.bind(this));
+//				}
+//				
+//				} 
+//				catch (e) {
+//					console.error('Helper.Reparent error processing tree.');
+//				}
 		},
 
 		/**

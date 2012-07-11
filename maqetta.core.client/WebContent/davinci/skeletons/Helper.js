@@ -239,6 +239,16 @@ define([
 			return data;
 		},
 
+		/*
+		 * Special hooks for shape widgets.
+		 * Returns list of draggable end points for this shape in "px" units
+		 * relative to top/left corner of enclosing SPAN
+		 * @return {object} whose properties represent widget-specific types of draggable points
+		 *   For example, widgets that represent a series of points will include a 'points'
+		 *   property which is an array of object of the form {x:<number>,y:<number>}
+		 */
+		getDraggables: function(){},
+
 		/**
 		 * [getMarginBoxPageCoords description]
 		 * @param  {davinci/ve/_Widget} widget [description]
@@ -297,6 +307,20 @@ define([
 			return command;
 			
 		}, 
+		/**
+		 * Invoked by Snap.js from core application to get a snapping rect for this widget
+		 * and/or a set of snapping points.
+		 * @param {davinci.ve._Widget} widget
+		 * @param {object} widgetSnapInfo. Default snapping info if helper doesn't override.
+		 *      widgetSnapInfo.snapRect: {l:, c:, r:, t:, m:, b:} // all numbers in page coordinate system
+		 * @return {object} Returns either the original widgetSnapInfo or an alternate object that can contain
+		 * 		a snapRect sub-object and/or a snapPoints sub-object (array of objects)
+		 *      {
+		 *         snapRect: {l:, c:, r:, t:, m:, b:} // all numbers in page coordinate system
+		 *         snapPoints: [{x:, y:}] // all numbers in page coordinate system
+		 *      }
+		 */
+		getSnapInfo: function(widget, widgetSnapInfo){},
 
 		/**
 		 * [getTargetOverlays description]
@@ -349,12 +373,11 @@ define([
 		isAllowedError: function(args) {},
 
 		/**
-		 * [onCreateResize description]
-		 * @param  {[type]} command [description]
-		 * @param  {[type]} w       [description]
-		 * @param  {[type]} width   [description]
-		 * @param  {[type]} height  [description]
-		 * @return {[type]}         [description]
+		 * Called whenever a widget is created or resized.
+		 * @param  {davinci.commands.CompoundCommand} command compound command onto which any additional commands should be added
+		 * @param  {[type]} w       widget
+		 * @param  {[type]} width   width for this widget
+		 * @param  {[type]} height  height for this widget
 		 */
 		onCreateResize: function(command, w, width, height) {},
 
@@ -365,10 +388,16 @@ define([
 		onDeselect: function(widget) {},
 
 		/**
-		 * [onHideSelection description]
-		 * @param  {Object} args          [description]
+		 * Called by Focus.js right after Maqetta hides selection chrome on a widget.
+		 * Helper is necessary for certain widgets that add their own selection chrome
+		 * to Maqetta's standard selection chrome.
+		 * @param {object} obj  Data passed into this routine is found on this object
+		 *    obj.widget: A davinci.ve._Widget which has just been selected
+		 *    obj.customDiv: DIV into which widget can inject its own selection chrome
+		 * @return {boolean}  Return false if no problems.
+		 * FIXME: Better if helper had a class inheritance setup
 		 */
-		onHideSelection: function(args) {},
+		onHideSelection: function(obj){},
 
 		/**
 		 * Called at end of document loading, after all widgets initialized.
@@ -391,11 +420,16 @@ define([
 		 */
 		onSelect: function(widget) {},
 
-		/**
-		 * Invoked whenever a widget becomes selected.
-		 * @param  {davinci/ve/_Widget} widget  The widget that is now selected
+		/*
+		 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
+		 * Helper is necessary for certain widgets that add their own selection chrome
+		 * to Maqetta's standard selection chrome.
+		 * @param {object} obj  Data passed into this routine is found on this object
+		 *    obj.widget: A davinci.ve._Widget which has just been selected
+		 *    obj.customDiv: DIV into which widget can inject its own selection chrome
+		 * @return {boolean}  Return false if no problems.
 		 */
-		onShowSelection: function(widget) {},
+		onShowSelection: function(obj){},
 
 		/**
 		 * Invoked whenever user attempts to toggle visibility of a widget
@@ -408,10 +442,13 @@ define([
 		onToggleVisibility: function(widget, on) {},
 
 		/**
-		 * [onWidgetPropertyChange description]
-		 * @param  {Object} args [description]
+		 * Helper function called whenever a widget-specific property is changed
+		 * @param {object} args  - object with these properties
+		 * .    widget  the dvWidget whose property(ies) has changed
+		 *      compoundCommand  the CompoundCommand object that contains the ModifyCommand
+		 *      modifyCommand  the ModifyCommand object that will soon be executed to change properties
 		 */
-		onWidgetPropertyChange: function(args) {},
+		onWidgetPropertyChange: function(args){},
 
 		/**
 		 * [popup description]

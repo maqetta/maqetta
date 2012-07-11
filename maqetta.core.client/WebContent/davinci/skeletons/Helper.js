@@ -28,6 +28,7 @@ define([
 
 		/**
 		 * [checkValue description]
+		 * (Currently used by AnalogGaugeHelper.js)
 		 * @param  {*} value [description]
 		 * @return {*}       [description]
 		 */
@@ -47,6 +48,7 @@ define([
 
 		/**
 		 * [cleanSrcElement description]
+		 * (Currently used by widget helpers that have data binding)
 		 * @param  {davinci/html/HTMLElement} srcElement [description]
 		 */
 		cleanSrcElement: function(srcElement) {},
@@ -60,6 +62,8 @@ define([
 		 * has associated widget like data stores
 		 *
 		 * XXX In which situations would someone use this instead of CreateTool.create()?
+		 * XXX Remember that the CreateTool helper stuff needs to be redone such that we don't
+		 *     copy code out of CreateTool.js into individual widget versions of create()
 		 *
 		 * XXX This is invoked from _Widget.attach().  Rename to "attach"?
 		 * 
@@ -120,8 +124,9 @@ define([
 		},
 
 		/**
-		 * [destroy description]
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 * Invoked when a widget is removed from page editor,
+		 * just before it is destroyed.
+		 * @param  {davinci/ve/_Widget} widget
 		 */
 		destroy: function(widget) {},
 
@@ -330,9 +335,10 @@ define([
 		getTargetOverlays: function(widget) {},
 
 		/**
-		 * [getWidgetText description]
+		 * Helper that allows a custom string that will show as the widget's name
+		 * in various parts of the Maqetta UI (e.g., Outline palette).
 		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {String}        [description]
+		 * @return {string}
 		 */
 		getWidgetText: function(widget) {},
 
@@ -382,8 +388,8 @@ define([
 		onCreateResize: function(command, w, width, height) {},
 
 		/**
-		 * [onDeselect description]
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 * Called by Context.js when a widget becomes deselected.
+		 * @param  {davinci/ve/_Widget} widget
 		 */
 		onDeselect: function(widget) {},
 
@@ -415,8 +421,8 @@ define([
 		onRemove: function(widget) {},
 
 		/**
-		 * [onSelect description]
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 * Called by Context.js when a widget becomes selected.
+		 * @param  {davinci/ve/_Widget} widget
 		 */
 		onSelect: function(widget) {},
 

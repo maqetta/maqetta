@@ -50,8 +50,8 @@
 	    <populateDir project="org.dojotoolkit.compressor.shrinksafe" extPath="/zazl/optimizer"/>
 	    <populateDir project="org.dojotoolkit.json" extPath="/zazl/optimizer"/>
 	    <populateDir project="org.dojotoolkit.optimizer" extPath="/zazl/optimizer"/>
-	    <populateDir project="org.dojotoolkit.amd" extPath="/zazl/optimizer"/>
-	    <populateDir project="org.dojotoolkit.amd.rhinoast" extPath="/zazl/optimizer"/>
+	    <populateDir project="org.dojotoolkit.optimizer.amd" extPath="/zazl/optimizer"/>
+	    <populateDir project="org.dojotoolkit.optimizer.amd.rhinoast" extPath="/zazl/optimizer"/>
         <populateDir project="org.dojotoolkit.optimizer.servlet" extPath="/zazl/optimizer"/>
         <populateDir project="org.dojotoolkit.server.util" extPath="/zazl/optimizer"/>
         <populateDir project="org.dojotoolkit.server.util.js" extPath="/zazl/optimizer"/>

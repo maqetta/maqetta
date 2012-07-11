@@ -165,5 +165,32 @@
 	<ol class="expectedResults">
 		<li>See above.</li>
 	</ol>
+	
+	<h2 class="test_section">Editing "legacy" tree (optional)</h2>
+	<h3 class="steps_subsection" >Steps</h3>
+	<ol class="steps">
+		<p><i>Background: Prior to Maqetta's move to Dojo 1.8 (and prior to the addition of visual editing of tree via the smart input described in
+			previous sections), the Maqetta tree support used ItemFileReadStore and ForestStoreModel. The newer tree support uses Memory and 
+			ObjectStoreModel. An attempt was made to ensure tree smart input still works when it encounters the "legacy" setup, and that is the point
+			of this section.</i></p>
+		<li>Choose New HTML File from the New menu</li>
+		<li>Click "Split Vertically" or "Split Horizontally" in main toolbar to make source pane visible</li>
+		<li>Copy and paste the source from <a href="./support_files/treeLegacySample.html">treeLegacySample.html</a> on top of the source in the source pane. 
+			(Alternatively, you can upload the file to your workspace.)</li>
+		<li>See Tree get rendered and close source pane (e.g., click "Display Design" in main toolbar).</li>
+		<li>Double-click the tree to open up smart input. The dialog should look exactly like the screenshot in the first section of this 
+			document <i>except</i> that the fields for <i>icon</i> and <i>open icon</i> are hidden (due to limitations with allowable property
+			types in ItemFileReadStore).</li>
+		<li>Do some amount of tree manipulation (e.g., add nodes, remove nodes, and rearrange nodes) and ensure the preview is updated appropriately.</li>
+		<li>Select a couple different nodes and change their labels.</li>
+		<li>Select a couples nodes and add JavaScript for different event types (such as, <i>alert("click!")</i> for the <i>onClick</i> event)
+		<li>Click OK to dismiss smart input. The tree in the page editor should look like it did in the preview.</li>
+		<li>Save, close, reopen the file.</li>
+		<li>Preview the file and ensure your event handlers run.</li>
+	</ol>
+	<h3 class="expectedResults_subsection" >Expected results</h3>
+	<ol class="expectedResults">
+		<li>See above.</li>
+	</ol>
 </body>
 </html>

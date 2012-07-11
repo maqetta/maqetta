@@ -114,13 +114,39 @@ function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 		disableDragging: function(widget) {},
 
 		/**
-		 * [getChildren description]
-		 * @param  {davinci/ve/_Widget} widget   [description]
-		 * @param  {boolean} attach [description]
-		 * @return {[davinci/ve/_Widget]}        [description]
+		 * Some widget will have extra children that are added when the widget is constructed by the toolkit.
+		 * This method is used to replace the default getChildren behavior so that only the selected 
+		 * children are return. The getChildren is called to display the children of the widget in 
+		 * the outline palette for example.
+		 * @param  {davinci/ve/_Widget} widget - to return children for.
+		 * @param  {boolean} attach if true attach widgets to this child node.
+		 * @return {[davinci/ve/_Widget]}   Children widgets
 		 */
-		getChildren: function(widget, attach) {},
+		getChildren: function(widget, attach) {
+			var children = [];
 
+			// Dijit specific code here.  We only want items inside the box node, and not
+			// the label node (for now).
+			if (widget && widget.dijitWidget && widget.dijitWidget.box) {
+				dojo.forEach(widget.dijitWidget.box.children, function(node) {
+					// the label
+					if(dojo.hasClass(node, "mblListItemLabel")) {
+						return;
+					}
+					if (attach) {
+						children.push(require("davinci/ve/widget").getWidget(node));
+					} else {
+						var widget = node._dvWidget;
+						if (widget) {
+							children.push(widget);
+						}
+					}
+				});
+			}
+
+			return children;
+		},
+		
 		/**
 		 * [getChildrenData description]
 		 * @param  {davinci/ve/_Widget} widget  [description]
@@ -137,12 +163,30 @@ function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 		getContainerNode: function(widget) {},
 
 		/**
-		 * [getData description]
-		 * @param  {davinci/ve/_Widget} widget  [description]
+		 * getData is used to retrieve the attributes that are needed to reconstruct this widget. 
+		 * For example this helper would be called on a delete action to get the widgets data that would be
+		 * needed to reconstruct this widget if the user undoes the delete action
+		 * @param  {davinci/ve/_Widget} widget  - the widgets that data is to be retrieved from.
 		 * @param  {Object} options [description]
-		 * @return {Object}         [description]
+		 * @return {Object} data - the widgets data.       
 		 */
-		getData: function(widget, options) {},
+		getData: function(/*Widget*/ widget, /*Object*/ options) {
+			if(!widget){
+				return undefined;
+			}
+		
+			// call the base  _getData to get most of the widgets data
+			var data = widget._getData(options);
+			/*
+			 * Add in the missing DataStore and query properties that would be needed to
+			 * reconstruct this widget
+			 */
+			if (widget.dijitWidget.store){
+				data.properties.store = widget.dijitWidget.store; // add the data old store if it has one.
+				data.properties.query = widget.dijitWidget.query;
+			}
+			return data;
+		},
 
 		/**
 		 * [getMarginBoxPageCoords description]

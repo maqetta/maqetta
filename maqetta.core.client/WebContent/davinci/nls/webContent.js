@@ -26,7 +26,7 @@ define({ root:
 		"reviewPageTitle":"Maqetta Review Board",
 		
 		//davinci/Runtime.js
-		"careful":"Careful! You are about to leave daVinci.",
+		"careful":"Warning: You are about to leave Maqetta.",
 		"errorLoadingPlugin":"error loading plugin ${0}, response=${1}",
 		"errorLoadingPlugins":"error loading plugins",
 		"multipleFilesUnsaved":"${0} (NOTE: This is one of ${1} files with unsaved changes.)",

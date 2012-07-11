@@ -34,9 +34,14 @@ define([
 		checkValue: function(value) {},
 
 		/**
-		 * [chooseParent description]
-		 * @param  {Object[]} allowedParentList [description]
-		 * @return {Object}                   [description]
+		 * By default, when dragging/dropping new widgets onto canvas, Maqetta
+		 * defaults to adding a new widget as a child of the mostly deeply nested
+		 * valid container that is under the mouse points. This helper function
+		 * allows a different default parent choice.
+		 * 
+		 * @param {Array[davinci.ve._Widget]} allowedParentList List of candidate parent widgets,
+		 * 			where typically BODY is item 0
+		 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
 		 */
 		chooseParent: function(allowedParentList) {},
 
@@ -121,9 +126,10 @@ define([
 		destroy: function(widget) {},
 
 		/**
-		 * [disableDragging description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {boolean}        [description]
+		 * Called by SelectTool to see if this widget can be dragged to a different location.
+		 * There are various cases where widgets are not allowed to be moved by the user, 
+		 * such as a ContentPane child of a TabContainer.
+		 * @param {davinci.ve._Widget} widget 
 		 */
 		disableDragging: function(widget) {},
 
@@ -307,23 +313,38 @@ define([
 		getWidgetText: function(widget) {},
 
 		/**
-		 * [initialSize description]
-		 * @param  {[type]} args [description]
-		 * @return {[type]}      [description]
+		 * Helper function called to establish widget size at initial creation time
+		 * @param {object} args  holds following values:
+		 * 		parent - target parent widget for initial creation
+		 * 		size {w:(number), h:(number)}
+		 *		position {x:(number), y:(number)} - If present, this widget is being added using absolute positioning
 		 */
 		initialSize: function(args) {},
 
 		/**
-		 * [isAllowed description]
-		 * @param  {Object}  args [description]
-		 * @return {Boolean}      [description]
+		 * Override helper function to ChooseParent.js:isAllowed() for deciding whether 
+		 * this particular widget type can be a child of a particular parent type.
+		 * @param {object} args  - object with following properties
+		 * 		{string} childType - eg "dijit.form.Button"
+		 * 		{array} childClassList - list of valid children for parent, eg ["ANY"] or ["dojox.mobile.ListItem"]
+		 * 		{string} parentType - eg "html.body"
+		 * 		{array} parentClassList - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+		 * 		{boolean} absolute - whether current widget will be added with position:absolute
+		 * 		{boolean} isAllowedChild - whether Maqetta's default processing would allow this child for this parent
+		 * 		{boolean} isAllowedParent - whether Maqetta's default processing would allow this parent for this child
+		 * @returns {boolean}
 		 */
 		isAllowed: function(args) {},
 
 		/**
-		 * [isAllowedError description]
-		 * @param  {Object}  args [description]
-		 * @return {Boolean}      [description]
+		 * Override helper function for error message that appears if CreateTool finds no valid parent targets
+		 * @param {object} args  - object with following properties
+		 * 		{string} errorMsg - default error message from application
+		 * 		{string} type - eg "dijit.form.Button"
+		 * 		{array} allowedParent - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+		 * 		{boolean} absolute - whether current widget will be added with position:absolute
+		 * @returns {string}	Error message to show
+		 * Note: Maqetta's default processing returns args.errorMsg
 		 */
 		isAllowedError: function(args) {},
 
@@ -350,17 +371,17 @@ define([
 		onHideSelection: function(args) {},
 
 		/**
-		 * [onLoad description]
-		 * @param  {davinci/ve/_Widget} widget  [description]
-		 * @param  {[type]} already [description]
+		 * Called at end of document loading, after all widgets initialized.
+		 * @param {davinci.ve._Widget} widget 
+		 * @param {boolean} already  False if this first call for this document. True for subsequent widgets.
 		 */
 		onLoad: function(widget,already) {},
 
 		/**
-		 * May optionally return a function to call after remove command has
-		 * finished the removal.
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {Function}        [description]
+		 * Called by RemoveCommand before removal actions take place.
+		 * Allows helper logic to get invoked after a widget has been removed.
+		 * @param {davinci.ve._Widget} widget  
+		 * @return {function}  Optional function to call after removal actions take place
 		 */
 		onRemove: function(widget) {},
 
@@ -371,16 +392,18 @@ define([
 		onSelect: function(widget) {},
 
 		/**
-		 * [onShowSelection description]
-		 * @param  {Object} args          [description]
+		 * Invoked whenever a widget becomes selected.
+		 * @param  {davinci/ve/_Widget} widget  The widget that is now selected
 		 */
-		onShowSelection: function(args) {},
+		onShowSelection: function(widget) {},
 
 		/**
-		 * [onToggleVisibility description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @param  {[type]} on     [description]
-		 * @return {[type]}        [description]
+		 * Invoked whenever user attempts to toggle visibility of a widget
+		 * (e.g., by clicking on eyeball icon in Outline palette).
+		 * Return false will prevent toggle processing from proceeding.
+		 * @param  {davinci.ve._Widget} widget  Widget whose visibility is being toggled
+		 * @param  {boolean} on  Whether given widget is currently visible
+		 * @return {boolean}  whether standard toggle processing should proceed
 		 */
 		onToggleVisibility: function(widget, on) {},
 

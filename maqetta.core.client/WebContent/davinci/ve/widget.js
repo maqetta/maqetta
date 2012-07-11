@@ -202,7 +202,7 @@ getUniqueObjectId: function(type, node) {
 	var i = 1;
 	var id = base + "_" + i++;
 	var dj = widgetObject._dojo(node);
-	while(dj.getObject(id)){
+	while(dj.getObject(id) || dj.byId(id)){
 		id = base + "_" + i++;
 	}
 	return id;

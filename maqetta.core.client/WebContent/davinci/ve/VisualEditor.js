@@ -473,19 +473,32 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	},
 	
 	previewInBrowser: function(){
-		var deviceName = this.deviceName;
-		var editor = Workbench.getOpenEditor();
-		var fileURL = editor.resourceFile.getURL();
+		var deviceName = this.deviceName,
+			editor = Workbench.getOpenEditor(),
+			fileURL = editor.resourceFile.getURL(),
+			query = [];
+
 		// FIXME. Phil, is there a URL to the working copy of the current file that we can use
 		// Right now I am doing an auto-save which is not right.
 		// Either we should prompt user "You must save before you can preview in browser. OK to save?"
 		// or we should preview the working copy instead of the permanent file.
 		editor.save();
 		if(deviceName && deviceName.length && deviceName!='none'){
-			var orientation_param = (this._orientation == 'landscape') ? '&orientation='+this._orientation : "";
-			fileURL = Workbench.location()+'?preview=1&device='+encodeURI(deviceName)+'&file='+encodeURI(fileURL)+orientation_param+"&zazl=true";
-		} else {
-			fileURL += '?zazl=true';
+			fileURL = Workbench.location();
+			query = [
+			    'preview=1',
+			    'device=' + encodeURIComponent(deviceName),
+			    'file=' + encodeURIComponent(fileURL)
+			];
+			if (this._orientation == 'landscape') {
+				query.push('orientation=' + this._orientation);
+			}
+		}
+		if(this.context.getPreference("zazl")){
+			query.push('zazl=true');
+		}
+		if(query.length) {
+			fileURL += "?" + query.join("&");
 		}
 		window.open(fileURL);
 	},

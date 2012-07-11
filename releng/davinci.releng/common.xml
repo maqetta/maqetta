@@ -43,8 +43,8 @@
         <populateDir project="maqetta.shapes"/>
         <populateDir project="org.apache.commons.fileupload"/>
         <populateDir project="org.apache.commons.io"/>
-        <populateDir project="org.apache.commons.io"/>
-	    <populateDir project="maqetta.zazl"/>
+	    <populateDir project="maqetta.zazl" extPath="/zazl/"/>
+	    <populateDir project="maqetta.zazl.feature" extPath="/zazl/" isFeature="true"/>
 	    <populateDir project="org.cyberneko.html"/>
 	    <populateDir project="org.dojotoolkit."/>
 	    <populateDir project="org.dojotoolkit.compressor"/>
@@ -59,7 +59,7 @@
         <populateDir project="org.dojotoolkit.shrinksafe"/>
 	    <populateDir project="org.json"/>
 	    <populateDir project="org.mozilla.javascript"/>
-	    <populateDir project="org.dojotoolkit.optimizer.amd.fragment"/>
+	    <populateDir project="org.dojotoolkit.optimizer.amd.fragment" extPath="/zazl/"/>
     </target>
 
     <!--  equinox deps to copy in -->

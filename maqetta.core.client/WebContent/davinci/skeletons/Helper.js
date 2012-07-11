@@ -3,12 +3,17 @@
  * free to copy for use, update and strip out the unnecessary functions.
  */
 
-define(["davinci/ve/widget",
-		"davinci/ve/commands/RemoveCommand",
-		"davinci/commands/CompoundCommand",
-		"davinci/ve/commands/ReparentCommand"
-		],
-function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
+define([
+	"davinci/ve/widget",
+	"davinci/ve/commands/RemoveCommand",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/ReparentCommand"
+], function(
+	Widget,
+	RemoveCommand,
+	CompoundCommand,
+	ReparentCommand
+) {
 
 	var Helper = function() {};
 	Helper.prototype = {
@@ -30,7 +35,7 @@ function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 
 		/**
 		 * [chooseParent description]
-		 * @param  {[Object]} allowedParentList [description]
+		 * @param  {Object[]} allowedParentList [description]
 		 * @return {Object}                   [description]
 		 */
 		chooseParent: function(allowedParentList) {},
@@ -42,14 +47,23 @@ function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 		cleanSrcElement: function(srcElement) {},
 
 		/**
-		 * Called  when widget is created at page loading. 
-		 * Use this Helper method for complex widget creation. an example would be a widget that 
+		 * Invoked when adding a new widget to the page; when changing properties on a widget (and
+		 * the widget is recreated); or for each widget when loading a page into the visual editor.
+		 *
+		 * XXX The following sounds like it is describing CreateTool.create ---
+		 * Use this method for complex widget creation. An example would be a widget that 
 		 * has associated widget like data stores
-		 * @param  {davinci/ve/_Widget} widget      Widget that is being created
-		 * @param  {davinci/html/HTMLElement} srcElement - source element  from the HTML document for Widget that is being created
-		 * @param  {object} useDataDojoProps 
+		 *
+		 * XXX In which situations would someone use this instead of CreateTool.create()?
+		 *
+		 * XXX This is invoked from _Widget.attach().  Rename to "attach"?
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 *             the widget instance that is being created
+		 * @param  {davinci/html/HTMLElement} srcElement
+		 *             HTML model element corresponding to widget instance
 		 */
-		create: function(widget, srcElement, useDataDojoProps){ 
+		create: function(widget, srcElement) {
 
 			try{
 				/*
@@ -114,13 +128,23 @@ function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 		disableDragging: function(widget) {},
 
 		/**
-		 * Some widget will have extra children that are added when the widget is constructed by the toolkit.
-		 * This method is used to replace the default getChildren behavior so that only the selected 
-		 * children are return. The getChildren is called to display the children of the widget in 
-		 * the outline palette for example.
-		 * @param  {davinci/ve/_Widget} widget - to return children for.
+		 * Override the default action, which is to return all "widgets" that are children of the
+		 * container node belonging to 'widget' (the container node is the value returned by
+		 * 'widget.getContainerNode()').  This function is called to display the child widgets in
+		 * the Outline view, for example.
+		 *
+		 * Implement this function for widgets whose children are not neatly encapsulated in the
+		 * container node.
+		 *
+		 * XXX The helper func should not have to deal with 'attach'. That's an internal Maqetta
+		 *     detail, and should be handled after calling this func.
+		 * 
+		 * @param  {davinci/ve/_Widget} widget  the widget instance
 		 * @param  {boolean} attach if true attach widgets to this child node.
-		 * @return {[davinci/ve/_Widget]}   Children widgets
+		 *             If true, function must "attach" child widget nodes by calling 
+		 *             'require("davinci/ve/widget").getWidget(node)'.
+		 * 
+		 * @return {davinci/ve/_Widget[]}  array of child widgets
 		 */
 		getChildren: function(widget, attach) {
 			var children = [];
@@ -148,27 +172,48 @@ function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 		},
 		
 		/**
-		 * [getChildrenData description]
-		 * @param  {davinci/ve/_Widget} widget  [description]
-		 * @param  {Object} options [description]
-		 * @return {Object}         [description]
+		 * Override the default implementation of 'widget.getChildrenData()', which calls
+		 * 'getData()' on the children of 'widget' (the value returned from 'widget.getChildren()').
+		 * 
+		 * @param  {davinci/ve/_Widget} widget  the widget instance
+		 * @param  {Object} options
+		 * @param  {boolean} options.identify  XXX TODO
+		 * @param  {boolean} options.preserveTagName  XXX TODO
+		 * 
+		 * @return {Object[]}  An array data for the widget's children.  See 'getData()' docs for
+		 *                     more information on the structure.
 		 */
 		getChildrenData: function(widget, options) {},
 
 		/**
-		 * [getContainerNode description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {DOMElement}        [description]
+		 * Override default implementation, which returns the widget's DOM node which contains the
+		 * widget's children (if any).
+		 * 
+		 * @param  {davinci/ve/_Widget} widget  the widget instance
+		 * 
+		 * @return {DOMElement|null}  If 'widget' can have child widgets, then return the DOM node
+		 *             which contains those children; otherwise, return null.
 		 */
 		getContainerNode: function(widget) {},
 
 		/**
-		 * getData is used to retrieve the attributes that are needed to reconstruct this widget. 
-		 * For example this helper would be called on a delete action to get the widgets data that would be
-		 * needed to reconstruct this widget if the user undoes the delete action
-		 * @param  {davinci/ve/_Widget} widget  - the widgets that data is to be retrieved from.
-		 * @param  {Object} options [description]
-		 * @return {Object} data - the widgets data.       
+		 * Override the default implementation of 'widget._getData()', which returns an object
+		 * containing the attributes needed to reconstruct the given 'widget'.
+		 * 
+		 * @param  {davinci/ve/_Widget} widget  the widget instance
+		 * @param  {Object} options
+		 * @param  {boolean} options.identify  XXX TODO
+		 * @param  {boolean} options.preserveTagName  XXX TODO
+		 *
+		 * XXX Why is the 'options' arg necessary? Does this need to be exposed to helpers?
+		 * 
+		 * @return {Object} An object containing the widget's attributes, with the following props:
+		 *             {
+		 *                 type:        // {String} widget type identifier (i.e. "dijit.form.Button")
+		 *                 properties:  // {Object} properties (from metadata) and their current values
+		 *                 tagName:     // {String} top-most DOM tag for widget
+		 *                 children:    // {[Object]} data for child widgets (from 'widget.getChildrenData()')
+		 *             }
 		 */
 		getData: function(/*Widget*/ widget, /*Object*/ options) {
 			if(!widget){
@@ -196,22 +241,29 @@ function(Widget, RemoveCommand, CompoundCommand, ReparentCommand){
 		getMarginBoxPageCoords: function(widget) {},
 
 		/**
-		 * [getPropertyValue description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @param  {String} name   [description]
-		 * @return {*}        [description]
+		 * Override the default implementation, which simply gets the value of the named attribute
+		 * from the widget's DOM node.
+		 * 
+		 * @param  {davinci/ve/_Widget} widget  the widget instance
+		 * @param  {String} name  the property whose value we are querying
+		 * 
+		 * @return {*}
 		 */
 		getPropertyValue: function(widget, name) {},
 
 
 		/**
-		 * Called by DeleteAction when widget is to be deleted.
-		 * @param {davinci.ve._Widget} widget  Widget that is being deleted
-		 * @return {davinci.commands.CompoundCommand}  command that is to be added to the command stack.
+		 * Called by DeleteAction when a widget is to be deleted.  Use this function to replace the
+		 * default widget deletion process for complicated widgets.  For example, when adding the
+		 * "dijit/Tree" widget, store and model widgets will also get added.  When deleting
+		 * "dijit/Tree", we can use this function to create a command which will also delete the
+		 * associated store and model widgets.
 		 * 
-		 * Use this helper method to replace the default widget deletions process for complicated widgets.
-		 * For example a widget that has dependent widgets dijitTree that has a data store and a model widget 
-		 * that are associated with it and must be deleted also.
+		 * @param {davinci.ve._Widget} widget  the widget instance to be deleted
+		 * 
+		 * @return {davinci.commands.CompoundCommand}
+		 *             A command to delete 'widget' and perform any other necessary actions. Will be
+		 *             added to the command stack.
 		 */
 		getRemoveCommand: function(widget) {
 			

@@ -28,20 +28,27 @@ define([
 
 		/**
 		 * [checkValue description]
+		 * (Currently used by AnalogGaugeHelper.js)
 		 * @param  {*} value [description]
 		 * @return {*}       [description]
 		 */
 		checkValue: function(value) {},
 
 		/**
-		 * [chooseParent description]
-		 * @param  {Object[]} allowedParentList [description]
-		 * @return {Object}                   [description]
+		 * By default, when dragging/dropping new widgets onto canvas, Maqetta
+		 * defaults to adding a new widget as a child of the mostly deeply nested
+		 * valid container that is under the mouse points. This helper function
+		 * allows a different default parent choice.
+		 * 
+		 * @param {Array[davinci.ve._Widget]} allowedParentList List of candidate parent widgets,
+		 * 			where typically BODY is item 0
+		 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
 		 */
 		chooseParent: function(allowedParentList) {},
 
 		/**
 		 * [cleanSrcElement description]
+		 * (Currently used by widget helpers that have data binding)
 		 * @param  {davinci/html/HTMLElement} srcElement [description]
 		 */
 		cleanSrcElement: function(srcElement) {},
@@ -55,6 +62,8 @@ define([
 		 * has associated widget like data stores
 		 *
 		 * XXX In which situations would someone use this instead of CreateTool.create()?
+		 * XXX Remember that the CreateTool helper stuff needs to be redone such that we don't
+		 *     copy code out of CreateTool.js into individual widget versions of create()
 		 *
 		 * XXX This is invoked from _Widget.attach().  Rename to "attach"?
 		 * 
@@ -65,65 +74,68 @@ define([
 		 */
 		create: function(widget, srcElement) {
 
-			try{
-				/*
-				 * Find the widget that is associated with widget be created.
-				 */
-				var storeId = "";
-				if (widget.dijitWidget && widget.dijitWidget.store) {
-					var store = widget.dijitWidget.store;
-					storeId = store.id ? store.id : store._edit_object_id;
-				}
-				if(storeId){
-					/*
-					 * we may have the store as an object, stores must be 
-					 * created before the widgets that use them
-					 * So lets make sure this store is defined in the document 
-					 * before the widget we are create.
-					 */
-					
-					dojo.withDoc(widget.getContext().getDocument(), function(){
-						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
-						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
-							/*
-							 * Now that we have the associated widget lets find where to move it to
-							 */
-							var parent = widget.getParent();
-							var assocatedParent = assocatedWidget.getParent();
-							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
-							var i = parent.indexOf(widget);
-							var x = assocatedParent.indexOf(assocatedWidget);
-							if ((parent === assocatedParent) && (i < x )){ // same parent
-								newIndex = parent.indexOf(widget);
-							} else if (parent != assocatedParent) {
-								newIndex = i;
-							}
-							/*
-							 * We do not need to add this to the command stack, but we can use the ReparentCommand 
-							 * for code reuse. 
-							 */
-							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
-							command.execute();
-						}
-					}.bind(this));
-				}
-				
-			} 
-			catch (e) {
-				console.error('Helper.Create error processing tree.');
-			}
+//		Example:
+//			try{
+//				/*
+//				 * Find the widget that is associated with widget be created.
+//				 */
+//				var storeId = "";
+//				if (widget.dijitWidget && widget.dijitWidget.store) {
+//					var store = widget.dijitWidget.store;
+//					storeId = store.id ? store.id : store._edit_object_id;
+//				}
+//				if(storeId){
+//					/*
+//					 * we may have the store as an object, stores must be 
+//					 * created before the widgets that use them
+//					 * So lets make sure this store is defined in the document 
+//					 * before the widget we are create.
+//					 */
+//					
+//					dojo.withDoc(widget.getContext().getDocument(), function(){
+//						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
+//						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
+//							/*
+//							 * Now that we have the associated widget lets find where to move it to
+//							 */
+//							var parent = widget.getParent();
+//							var assocatedParent = assocatedWidget.getParent();
+//							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
+//							var i = parent.indexOf(widget);
+//							var x = assocatedParent.indexOf(assocatedWidget);
+//							if ((parent === assocatedParent) && (i < x )){ // same parent
+//								newIndex = parent.indexOf(widget);
+//							} else if (parent != assocatedParent) {
+//								newIndex = i;
+//							}
+//							/*
+//							 * We do not need to add this to the command stack, but we can use the ReparentCommand 
+//							 * for code reuse. 
+//							 */
+//							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
+//							command.execute();
+//						}
+//					}.bind(this));
+//				}
+//				
+//			} 
+//			catch (e) {
+//				console.error('Helper.Create error processing tree.');
+//			}
 		},
 
 		/**
-		 * [destroy description]
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 * Invoked when a widget is removed from page editor,
+		 * just before it is destroyed.
+		 * @param  {davinci/ve/_Widget} widget
 		 */
 		destroy: function(widget) {},
 
 		/**
-		 * [disableDragging description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {boolean}        [description]
+		 * Called by SelectTool to see if this widget can be dragged to a different location.
+		 * There are various cases where widgets are not allowed to be moved by the user, 
+		 * such as a ContentPane child of a TabContainer.
+		 * @param {davinci.ve._Widget} widget 
 		 */
 		disableDragging: function(widget) {},
 
@@ -147,28 +159,30 @@ define([
 		 * @return {davinci/ve/_Widget[]}  array of child widgets
 		 */
 		getChildren: function(widget, attach) {
-			var children = [];
-
-			// Dijit specific code here.  We only want items inside the box node, and not
-			// the label node (for now).
-			if (widget && widget.dijitWidget && widget.dijitWidget.box) {
-				dojo.forEach(widget.dijitWidget.box.children, function(node) {
-					// the label
-					if(dojo.hasClass(node, "mblListItemLabel")) {
-						return;
-					}
-					if (attach) {
-						children.push(require("davinci/ve/widget").getWidget(node));
-					} else {
-						var widget = node._dvWidget;
-						if (widget) {
-							children.push(widget);
-						}
-					}
-				});
-			}
-
-			return children;
+			
+//		Example:
+//			var children = [];
+//
+//			// Dijit specific code here.  We only want items inside the box node, and not
+//			// the label node (for now).
+//			if (widget && widget.dijitWidget && widget.dijitWidget.box) {
+//				dojo.forEach(widget.dijitWidget.box.children, function(node) {
+//					// the label
+//					if(dojo.hasClass(node, "mblListItemLabel")) {
+//						return;
+//					}
+//					if (attach) {
+//						children.push(require("davinci/ve/widget").getWidget(node));
+//					} else {
+//						var widget = node._dvWidget;
+//						if (widget) {
+//							children.push(widget);
+//						}
+//					}
+//				});
+//			}
+//
+//			return children;
 		},
 		
 		/**
@@ -216,22 +230,34 @@ define([
 		 *             }
 		 */
 		getData: function(/*Widget*/ widget, /*Object*/ options) {
-			if(!widget){
-				return undefined;
-			}
-		
-			// call the base  _getData to get most of the widgets data
-			var data = widget._getData(options);
-			/*
-			 * Add in the missing DataStore and query properties that would be needed to
-			 * reconstruct this widget
-			 */
-			if (widget.dijitWidget.store){
-				data.properties.store = widget.dijitWidget.store; // add the data old store if it has one.
-				data.properties.query = widget.dijitWidget.query;
-			}
-			return data;
+			
+//		Example:
+//			if(!widget){
+//				return undefined;
+//			}
+//		
+//			// call the base  _getData to get most of the widgets data
+//			var data = widget._getData(options);
+//			/*
+//			 * Add in the missing DataStore and query properties that would be needed to
+//			 * reconstruct this widget
+//			 */
+//			if (widget.dijitWidget.store){
+//				data.properties.store = widget.dijitWidget.store; // add the data old store if it has one.
+//				data.properties.query = widget.dijitWidget.query;
+//			}
+//			return data;
 		},
+
+		/*
+		 * Special hooks for shape widgets.
+		 * Returns list of draggable end points for this shape in "px" units
+		 * relative to top/left corner of enclosing SPAN
+		 * @return {object} whose properties represent widget-specific types of draggable points
+		 *   For example, widgets that represent a series of points will include a 'points'
+		 *   property which is an array of object of the form {x:<number>,y:<number>}
+		 */
+		getDraggables: function(){},
 
 		/**
 		 * [getMarginBoxPageCoords description]
@@ -267,30 +293,45 @@ define([
 		 */
 		getRemoveCommand: function(widget) {
 			
-			/*
-			 * Create a CompoundCommand for the undo/redo functionality
-			 */
-			var command = new CompoundCommand();
-			command.add(new RemoveCommand(widget));
-			/*
-			 * Find the model widget to add to the delete
-			 */
-			var modelId = widget.domNode._dvWidget._srcElement.getAttribute("model");
-			var modelWidget = Widget.byId(modelId);
-			command.add(new RemoveCommand(modelWidget));
-			/*
-			 * Find the Store and add it also
-			 */
-			var storeId = modelWidget._srcElement.getAttribute("store");
-			var storeWidget = Widget.byId(storeId);
-			// order is important for undo... 
-			command.add(new RemoveCommand(storeWidget));
-			/*
-			 * Return the command object to be used by DeleteAction
-			 */
-			return command;
+//		Example:
+//			/*
+//			 * Create a CompoundCommand for the undo/redo functionality
+//			 */
+//			var command = new CompoundCommand();
+//			command.add(new RemoveCommand(widget));
+//			/*
+//			 * Find the model widget to add to the delete
+//			 */
+//			var modelId = widget.domNode._dvWidget._srcElement.getAttribute("model");
+//			var modelWidget = Widget.byId(modelId);
+//			command.add(new RemoveCommand(modelWidget));
+//			/*
+//			 * Find the Store and add it also
+//			 */
+//			var storeId = modelWidget._srcElement.getAttribute("store");
+//			var storeWidget = Widget.byId(storeId);
+//			// order is important for undo... 
+//			command.add(new RemoveCommand(storeWidget));
+//			/*
+//			 * Return the command object to be used by DeleteAction
+//			 */
+//			return command;
 			
 		}, 
+		/**
+		 * Invoked by Snap.js from core application to get a snapping rect for this widget
+		 * and/or a set of snapping points.
+		 * @param {davinci.ve._Widget} widget
+		 * @param {object} widgetSnapInfo. Default snapping info if helper doesn't override.
+		 *      widgetSnapInfo.snapRect: {l:, c:, r:, t:, m:, b:} // all numbers in page coordinate system
+		 * @return {object} Returns either the original widgetSnapInfo or an alternate object that can contain
+		 * 		a snapRect sub-object and/or a snapPoints sub-object (array of objects)
+		 *      {
+		 *         snapRect: {l:, c:, r:, t:, m:, b:} // all numbers in page coordinate system
+		 *         snapPoints: [{x:, y:}] // all numbers in page coordinate system
+		 *      }
+		 */
+		getSnapInfo: function(widget, widgetSnapInfo){},
 
 		/**
 		 * [getTargetOverlays description]
@@ -300,95 +341,126 @@ define([
 		getTargetOverlays: function(widget) {},
 
 		/**
-		 * [getWidgetText description]
+		 * Helper that allows a custom string that will show as the widget's name
+		 * in various parts of the Maqetta UI (e.g., Outline palette).
 		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {String}        [description]
+		 * @return {string}
 		 */
 		getWidgetText: function(widget) {},
 
 		/**
-		 * [initialSize description]
-		 * @param  {[type]} args [description]
-		 * @return {[type]}      [description]
+		 * Helper function called to establish widget size at initial creation time
+		 * @param {object} args  holds following values:
+		 * 		parent - target parent widget for initial creation
+		 * 		size {w:(number), h:(number)}
+		 *		position {x:(number), y:(number)} - If present, this widget is being added using absolute positioning
 		 */
 		initialSize: function(args) {},
 
 		/**
-		 * [isAllowed description]
-		 * @param  {Object}  args [description]
-		 * @return {Boolean}      [description]
+		 * Override helper function to ChooseParent.js:isAllowed() for deciding whether 
+		 * this particular widget type can be a child of a particular parent type.
+		 * @param {object} args  - object with following properties
+		 * 		{string} childType - eg "dijit.form.Button"
+		 * 		{array} childClassList - list of valid children for parent, eg ["ANY"] or ["dojox.mobile.ListItem"]
+		 * 		{string} parentType - eg "html.body"
+		 * 		{array} parentClassList - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+		 * 		{boolean} absolute - whether current widget will be added with position:absolute
+		 * 		{boolean} isAllowedChild - whether Maqetta's default processing would allow this child for this parent
+		 * 		{boolean} isAllowedParent - whether Maqetta's default processing would allow this parent for this child
+		 * @returns {boolean}
 		 */
 		isAllowed: function(args) {},
 
 		/**
-		 * [isAllowedError description]
-		 * @param  {Object}  args [description]
-		 * @return {Boolean}      [description]
+		 * Override helper function for error message that appears if CreateTool finds no valid parent targets
+		 * @param {object} args  - object with following properties
+		 * 		{string} errorMsg - default error message from application
+		 * 		{string} type - eg "dijit.form.Button"
+		 * 		{array} allowedParent - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+		 * 		{boolean} absolute - whether current widget will be added with position:absolute
+		 * @returns {string}	Error message to show
+		 * Note: Maqetta's default processing returns args.errorMsg
 		 */
 		isAllowedError: function(args) {},
 
 		/**
-		 * [onCreateResize description]
-		 * @param  {[type]} command [description]
-		 * @param  {[type]} w       [description]
-		 * @param  {[type]} width   [description]
-		 * @param  {[type]} height  [description]
-		 * @return {[type]}         [description]
+		 * Called whenever a widget is created or resized.
+		 * @param  {davinci.commands.CompoundCommand} command compound command onto which any additional commands should be added
+		 * @param  {[type]} w       widget
+		 * @param  {[type]} width   width for this widget
+		 * @param  {[type]} height  height for this widget
 		 */
 		onCreateResize: function(command, w, width, height) {},
 
 		/**
-		 * [onDeselect description]
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 * Called by Context.js when a widget becomes deselected.
+		 * @param  {davinci/ve/_Widget} widget
 		 */
 		onDeselect: function(widget) {},
 
 		/**
-		 * [onHideSelection description]
-		 * @param  {Object} args          [description]
+		 * Called by Focus.js right after Maqetta hides selection chrome on a widget.
+		 * Helper is necessary for certain widgets that add their own selection chrome
+		 * to Maqetta's standard selection chrome.
+		 * @param {object} obj  Data passed into this routine is found on this object
+		 *    obj.widget: A davinci.ve._Widget which has just been selected
+		 *    obj.customDiv: DIV into which widget can inject its own selection chrome
+		 * @return {boolean}  Return false if no problems.
+		 * FIXME: Better if helper had a class inheritance setup
 		 */
-		onHideSelection: function(args) {},
+		onHideSelection: function(obj){},
 
 		/**
-		 * [onLoad description]
-		 * @param  {davinci/ve/_Widget} widget  [description]
-		 * @param  {[type]} already [description]
+		 * Called at end of document loading, after all widgets initialized.
+		 * @param {davinci.ve._Widget} widget 
+		 * @param {boolean} already  False if this first call for this document. True for subsequent widgets.
 		 */
 		onLoad: function(widget,already) {},
 
 		/**
-		 * May optionally return a function to call after remove command has
-		 * finished the removal.
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {Function}        [description]
+		 * Called by RemoveCommand before removal actions take place.
+		 * Allows helper logic to get invoked after a widget has been removed.
+		 * @param {davinci.ve._Widget} widget  
+		 * @return {function}  Optional function to call after removal actions take place
 		 */
 		onRemove: function(widget) {},
 
 		/**
-		 * [onSelect description]
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 * Called by Context.js when a widget becomes selected.
+		 * @param  {davinci/ve/_Widget} widget
 		 */
 		onSelect: function(widget) {},
 
-		/**
-		 * [onShowSelection description]
-		 * @param  {Object} args          [description]
+		/*
+		 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
+		 * Helper is necessary for certain widgets that add their own selection chrome
+		 * to Maqetta's standard selection chrome.
+		 * @param {object} obj  Data passed into this routine is found on this object
+		 *    obj.widget: A davinci.ve._Widget which has just been selected
+		 *    obj.customDiv: DIV into which widget can inject its own selection chrome
+		 * @return {boolean}  Return false if no problems.
 		 */
-		onShowSelection: function(args) {},
+		onShowSelection: function(obj){},
 
 		/**
-		 * [onToggleVisibility description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @param  {[type]} on     [description]
-		 * @return {[type]}        [description]
+		 * Invoked whenever user attempts to toggle visibility of a widget
+		 * (e.g., by clicking on eyeball icon in Outline palette).
+		 * Return false will prevent toggle processing from proceeding.
+		 * @param  {davinci.ve._Widget} widget  Widget whose visibility is being toggled
+		 * @param  {boolean} on  Whether given widget is currently visible
+		 * @return {boolean}  whether standard toggle processing should proceed
 		 */
 		onToggleVisibility: function(widget, on) {},
 
 		/**
-		 * [onWidgetPropertyChange description]
-		 * @param  {Object} args [description]
+		 * Helper function called whenever a widget-specific property is changed
+		 * @param {object} args  - object with these properties
+		 * .    widget  the dvWidget whose property(ies) has changed
+		 *      compoundCommand  the CompoundCommand object that contains the ModifyCommand
+		 *      modifyCommand  the ModifyCommand object that will soon be executed to change properties
 		 */
-		onWidgetPropertyChange: function(args) {},
+		onWidgetPropertyChange: function(args){},
 
 		/**
 		 * [popup description]
@@ -412,47 +484,48 @@ define([
 		 */
 		reparent: function(widget, useDataDojoProps){ 
 
-			try{
-				/*
-				 * Find the widget that is associated with widget be reparented.
-				 */
-				var storeId = "";
-				if (widget.dijitWidget && widget.dijitWidget.store) {
-					var store = widget.dijitWidget.store;
-					storeId = store.id ? store.id : store._edit_object_id;
-				}
-				if(storeId){
-					// we may have the store as an object
-					dojo.withDoc(widget.getContext().getDocument(), function(){
-						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
-						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
-							/*
-							 * Now that we have the associated widget lets find where to move it to
-							 */
-							var parent = widget.getParent();
-							var assocatedParent = assocatedWidget.getParent();
-							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
-							var i = parent.indexOf(widget);
-							var x = assocatedParent.indexOf(assocatedWidget);
-							if ((parent === assocatedParent) && (i < x )){ // same parent
-								newIndex = parent.indexOf(widget);
-							} else if (parent != assocatedParent) {
-								newIndex = i;
-							}
-							/*
-							 * This code is already be executed from the command stack so no need to add this command to the 
-							 * undo/redo stack. Just use the ReparentCommand for code reuse, no need to recode the wheel.
-							 */
-							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
-							command.execute();
-						}
-					}.bind(this));
-				}
-				
-				} 
-				catch (e) {
-					console.error('Helper.Reparent error processing tree.');
-				}
+//		Example:
+//			try{
+//				/*
+//				 * Find the widget that is associated with widget be reparented.
+//				 */
+//				var storeId = "";
+//				if (widget.dijitWidget && widget.dijitWidget.store) {
+//					var store = widget.dijitWidget.store;
+//					storeId = store.id ? store.id : store._edit_object_id;
+//				}
+//				if(storeId){
+//					// we may have the store as an object
+//					dojo.withDoc(widget.getContext().getDocument(), function(){
+//						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
+//						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
+//							/*
+//							 * Now that we have the associated widget lets find where to move it to
+//							 */
+//							var parent = widget.getParent();
+//							var assocatedParent = assocatedWidget.getParent();
+//							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
+//							var i = parent.indexOf(widget);
+//							var x = assocatedParent.indexOf(assocatedWidget);
+//							if ((parent === assocatedParent) && (i < x )){ // same parent
+//								newIndex = parent.indexOf(widget);
+//							} else if (parent != assocatedParent) {
+//								newIndex = i;
+//							}
+//							/*
+//							 * This code is already be executed from the command stack so no need to add this command to the 
+//							 * undo/redo stack. Just use the ReparentCommand for code reuse, no need to recode the wheel.
+//							 */
+//							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
+//							command.execute();
+//						}
+//					}.bind(this));
+//				}
+//				
+//				} 
+//				catch (e) {
+//					console.error('Helper.Reparent error processing tree.');
+//				}
 		},
 
 		/**

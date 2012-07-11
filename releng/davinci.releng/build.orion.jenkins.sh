@@ -23,7 +23,12 @@ setProperties () {
 	#
 	if [ -z ${MAQETTA_BUILD_DIR} ]
 	then
-	    export MAQETTA_BUILD_DIR="/tmp"
+	    export MAQETTA_BUILD_DIR="/tmp/maqetta-build"
+	fi
+	
+	if [ -z ${MAQETTA_BUILD_DIR} ]
+	then	
+		mkdir ${MAQETTA_BUILD_DIR}
 	fi
 	
 	echo "Using ${MAQETTA_BUILD_DIR} for build out directory.."

@@ -3,6 +3,8 @@ package maqetta.zazl;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IUser;
@@ -14,6 +16,7 @@ import org.maqetta.server.IVResource;
 import org.osgi.framework.BundleContext;
 
 public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
+	private static Logger logger = Logger.getLogger("maqetta.zazl");
 	private IUserManager userManager = null;
 	private Library dojoLib = null;
 	
@@ -47,6 +50,9 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 				dojoPath = dojoPath.removeFirstSegments(2);
 				url = dojoLib.getURL(dojoPath.toString());
 				if (url != null) {
+					if (logger.isLoggable(Level.FINEST)) {
+						logger.logp(Level.FINEST, getClass().getName(), "_getResource", "resource ["+path +"] loaded from dojolib");
+					}
 					return url;
 				}
 			}
@@ -54,6 +60,9 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 		IVResource resource = user.getResource(ipath.toString());
 		if (resource != null) {
 			try {
+				if (logger.isLoggable(Level.FINEST)) {
+					logger.logp(Level.FINEST, getClass().getName(), "_getResource", "resource ["+path +"] loaded from project");
+				}
 				return resource.getURI().toURL();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();

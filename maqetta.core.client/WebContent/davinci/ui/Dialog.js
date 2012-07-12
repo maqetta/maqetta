@@ -6,11 +6,10 @@ define([
 	"dijit/_Container",
 	"dijit/form/Button",
 	"dijit/Dialog",
-	"dijit/form/Button",
 	"dojo/dom-geometry",
 	"dojo/dom-style",
 	"dojo/text!./templates/Dialog.html",
-	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!davinci/ve/nls/common",
 	"dojox/layout/ResizeHandle"
 ], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
 

@@ -51,11 +51,12 @@
       <plugin id="org.dojotoolkit.compressor.shrinksafe"/>
       <plugin id="org.dojotoolkit.json"/>
       <plugin id="org.dojotoolkit.optimizer"/>
-      <plugin id="org.dojotoolkit.optimizer.amd.rhinoast"/>
+      <plugin id="org.dojotoolkit.optimizer.amd"/>
       <plugin id="org.dojotoolkit.optimizer.amd.fragment" fragment="true"/>
+      <plugin id="org.dojotoolkit.optimizer.amd.rhinoast"/>
       <plugin id="org.dojotoolkit.optimizer.servlet"/>
-      <plugin id="org.dojotoolkit.optimizer.servlet.js"/>
       <plugin id="org.dojotoolkit.server.util"/>
+      <plugin id="org.dojotoolkit.server.util.js"/>
       <plugin id="org.dojotoolkit.shrinksafe"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.jobs"/>

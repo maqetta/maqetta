@@ -23,7 +23,12 @@ setProperties () {
 	#
 	if [ -z ${MAQETTA_BUILD_DIR} ]
 	then
-	    export MAQETTA_BUILD_DIR="/tmp"
+	    export MAQETTA_BUILD_DIR="/tmp/maqetta-build"
+	fi
+	
+	if [ -z ${MAQETTA_BUILD_DIR} ]
+	then	
+		mkdir ${MAQETTA_BUILD_DIR}
 	fi
 	
 	echo "Using ${MAQETTA_BUILD_DIR} for build out directory.."
@@ -77,19 +82,13 @@ setProperties () {
 	timestamp=$date$time
 	buildDirectory=$writableBuildRoot/$buildType$timestamp
 	buildLabel=$buildType$date-$time
-	javaHome=/shared/common/sun-jdk1.6.0_21_x64
 	#Properties for compilation boot classpaths
-	JAVA60_HOME=/usr/lib/jvm/jre/
-	JAVA50_HOME=${JAVA60_HOME}
-	JAVA14_HOME==${JAVA60_HOME}
-	#j2se142="/Library/Java/Home/lib/dt.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsee.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/dt.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/Resources/Java/JavaRuntimeSupport.jar"
-	j2se142="=/usr/lib/jvm/jre/lib/rt.jar:/usr/lib/jvm/jre/lib/jce.jar:/usr/lib/jvm/jre/lib/jsse.jar"
-	
-	j2se150=${j2se142}
-	javase160=${j2se142}
-	#j2se142="/Library/Java/Home/lib/dt.jar:/Library/Java/Home/lib/deploy.jar:/Library/Java/Home/lib/apple_provider.jar:"
-	#j2se150="$JAVA50_HOME/jre/lib/rt.jar:$JAVA50_HOME/jre/lib/jsse.jar:$JAVA50_HOME/jre/lib/jce.jar:$JAVA50_HOME/jre/lib/charsets.jar"
-	#javase160="$JAVA60_HOME/jre/lib/resources.jar:$JAVA60_HOME/jre/lib/rt.jar:$JAVA60_HOME/jre/lib/jsse.jar:$JAVA60_HOME/jre/lib/jce.jar:$JAVA60_HOME/jre/lib/charsets.jar"
+	export javaHome=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
+	JAVA60_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
+	JAVA50_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
+	j2se150="$JAVA50_HOME/jre/lib/rt.jar:$JAVA50_HOME/jre/lib/jsse.jar:$JAVA50_HOME/jre/lib/jce.jar:$JAVA50_HOME/jre/lib/charsets.jar"
+	javase160="$JAVA60_HOME/jre/lib/resources.jar:$JAVA60_HOME/jre/lib/rt.jar:$JAVA60_HOME/jre/lib/jsse.jar:$JAVA60_HOME/jre/lib/jce.jar:$JAVA60_HOME/jre/lib/charsets.jar"
+
 }
 
 
@@ -193,11 +192,12 @@ build() {
 				-DbuildType=$buildType -Dtimestamp=$timestamp -DbuildLabel=$buildLabel \
 				-DgitUser=$user \
 				-Ddeployment-type=${MAQETTA_DEPLOYMENT} \
-				-DdojoBuild=${MAQETTA_DOJO_BUILD}
+				-DdojoBuild=${MAQETTA_DOJO_BUILD} \
 				$tagMaps $compareMaps $fetchTag $publish 
-				-DJ2SE-1.4=$j2se142 \
-				-DJ2SE-1.5=$j2se150 \
-				-DJavaSE-1.6=$javase160"
+
+
+#				-DJ2SE-1.5=$j2se150 \
+#				-DJavaSE-1.6=$javase160"
 	$cmd
 }
 

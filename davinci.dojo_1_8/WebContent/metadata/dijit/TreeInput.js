@@ -156,11 +156,18 @@ var CustomTree = declare(Tree, {
 		if (iconStyleFieldId) {
 			var urlInside = this.treeInput._getDisplayValueFromStore(iconStyleFieldId, item);
 			var urlValue = BackgroundDialog.getCSSForWorkspaceURL(this.treeInput._getBaseLocation(), urlInside);
-			return {
+			retVal = {
 				backgroundImage: urlValue
 			}; 
-		} 
-		return this.inherited(arguments);
+		} else {
+			//This is mainly so if the value is removed from the icon field that the icon reverts back to the
+			//default in the preview. If we just return null or {}, then the last non-null backgroundImage value 
+			//is used.
+			retVal = {
+				backgroundImage: null
+			};
+		}
+		return retVal;
 	}
 });
 

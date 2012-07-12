@@ -1,7 +1,7 @@
 define(
 [
 	"dojo/_base/declare", 
-	"maq-metadata-dojo-1_8/dijit/layout/ContainerInput", 
+	"maq-metadata-dojo/dijit/layout/ContainerInput", 
 	"davinci/ve/widget", 
 	"./TableMatrix",
 	"dojo/text!./templates/tableInput.html",

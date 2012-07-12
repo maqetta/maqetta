@@ -91,7 +91,9 @@
     </target>
 	<target name="MaqettaOrion" if="run.external.targets">
 	    <echo message="Running orion build...."/>
-		
+		<echo message="Java 1.5: ${j2se150}"/>
+		<echo message="Java 1.6: ${javase160}"/>
+				
 		<tstamp/>
 		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
 		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-standalone" />

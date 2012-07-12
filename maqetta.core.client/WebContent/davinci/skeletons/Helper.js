@@ -371,12 +371,42 @@ define(function() {
 		getTargetOverlays: function(widget) {},
 
 		/**
+		 * Provide additional widget descriptor.
+		 *
+		 * XXX Only used by ContentPaneHelper.js.  Remove?
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 * 
+		 * @return {String}  additional label text
+		 */
+		getWidgetDescriptor: function(widget) {},
+
+		/**
 		 * Helper that allows a custom string that will show as the widget's name
 		 * in various parts of the Maqetta UI (e.g., Outline palette).
-		 * @param  {davinci/ve/_Widget} widget [description]
+		 *
+		 * XXX Not actually used any where.
+		 * XXX Seems unnecessary.  Why not handle this through metadata?
+		 *
+		 * XXX If we must keep around helpers related to a widget's label, then combine 'getWidgetText',
+		 *     'getWidgetTextExtra' and 'getWidgetDescriptor' into one function.
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 * 
 		 * @return {string}
 		 */
 		getWidgetText: function(widget) {},
+
+		/**
+		 * Adds additional text to a widget's label.
+		 *
+		 * XXX Only used by MenuHelper.js.  Remove?
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 * 
+		 * @return {String}  additional label text
+		 */
+		getWidgetTextExtra: function(widget) {},
 
 		/**
 		 * Helper function called to establish widget size at initial creation time

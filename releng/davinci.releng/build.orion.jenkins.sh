@@ -82,13 +82,10 @@ setProperties () {
 	timestamp=$date$time
 	buildDirectory=$writableBuildRoot/$buildType$timestamp
 	buildLabel=$buildType$date-$time
-	javaHome=/shared/common/sun-jdk1.6.0_21_x64
 	#Properties for compilation boot classpaths
-	export javaHome=/usr/lib/jvm/jre-1.6.0-openjdk.x86_64/
+	export javaHome=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
 	JAVA60_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
 	JAVA50_HOME=/usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64
-	JAVA14_HOME=/usr/lib/jvm/java-1.4.2-gcj-1.4.2.0/
-	j2se142="$JAVA14_HOME/jre/lib/rt.jar:$JAVA14_HOME/jre/lib/jsse.jar:$JAVA14_HOME/jre/lib/jce.jar:$JAVA14_HOME/jre/lib/charsets.jar"
 	j2se150="$JAVA50_HOME/jre/lib/rt.jar:$JAVA50_HOME/jre/lib/jsse.jar:$JAVA50_HOME/jre/lib/jce.jar:$JAVA50_HOME/jre/lib/charsets.jar"
 	javase160="$JAVA60_HOME/jre/lib/resources.jar:$JAVA60_HOME/jre/lib/rt.jar:$JAVA60_HOME/jre/lib/jsse.jar:$JAVA60_HOME/jre/lib/jce.jar:$JAVA60_HOME/jre/lib/charsets.jar"
 
@@ -197,7 +194,7 @@ build() {
 				-Ddeployment-type=${MAQETTA_DEPLOYMENT} \
 				-DdojoBuild=${MAQETTA_DOJO_BUILD}
 				$tagMaps $compareMaps $fetchTag $publish 
-				-DJ2SE-1.4=$j2se142 \
+				
 				-DJ2SE-1.5=$j2se150 \
 				-DJavaSE-1.6=$javase160"
 	$cmd

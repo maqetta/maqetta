@@ -381,8 +381,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				if(currentParentItemAlreadyThere){
 					currentParentItem = currentParentItemAlreadyThere;
 				}else{
-					//FIXME: We currently have bad labels for review/commenting
-					var label = isDvWidget ? WidgetUtils.getLabel(widget) : node.tagName;
+					var label = isDvWidget ? WidgetUtils.getLabel(widget) : WidgetUtils.getLabelForNode(node);
 					var xpath = XPathUtils.getXPath(node);
 					var o = {name:label, type:'file', category:'file', node:node, children:[]};
 					if(ancestorParentItem){
@@ -443,8 +442,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 										parentItem:currentParentItem, children:[]};
 								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
 									var childSceneNode = sceneChildren[childSceneIndex];
-									//FIXME: We currently have bad labels for review/commenting
-									var label = isDvWidget ? WidgetUtils.getLabel(childSceneNode._dvWidget) : childSceneNode.tagName;
+									var label = isDvWidget ? WidgetUtils.getLabel(childSceneNode._dvWidget) : WidgetUtils.getLabelForNode(childSceneNode);
 									var span = that._treeNodeContent(label);
 									var isFocus = false;	// No concept if scene focus for plug-in scene managers
 									var isCurrent = (childSceneNode === currentScene);

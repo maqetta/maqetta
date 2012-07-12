@@ -208,36 +208,75 @@ getUniqueObjectId: function(type, node) {
 	return id;
 },
 
-getLabel: function(widget) {
-	var text = "<span class='propertiesTitleWidgetName'>";
-	//FIXME: This is a hack so that meaningful names
-	//don't show a bunch of ugly prefix stuff.
-	//Need a better approach for this.
-	var remove_prefix=function(str){
-		var returnstr = str;
-		var prefixes_to_remove=[
-		                	    'dijit.form.',
-		                	    'dijit.layout.',
-		                	    'dijit.',
-		                	    'dojox.mobile.',
-		                	    'html.',
-		                	    'OpenAjax.'];
-		for(var i=0; i<prefixes_to_remove.length; i++){
-			if(str.indexOf(prefixes_to_remove[i])==0){ // use ===?
-				returnstr=str.substr(prefixes_to_remove[i].length);
-				//FIXME: Another hack. Need a better approach for this.
-				//Special case logic for HTML widgets
-				if(prefixes_to_remove[i]=='html.'){
-					returnstr='&lt;'+returnstr+'&gt;';
-				}
-				break;
+//FIXME: This is a hack so that meaningful names
+//don't show a bunch of ugly prefix stuff.
+//Need a better approach for this.
+_remove_prefix: function(str){
+	var returnstr = str;
+	var prefixes_to_remove=[
+	                	    'dijit.form.',
+	                	    'dijit.layout.',
+	                	    'dijit.',
+	                	    'dojox.mobile.',
+	                	    'html.',
+	                	    'OpenAjax.'];
+	for(var i=0; i<prefixes_to_remove.length; i++){
+		if(str.indexOf(prefixes_to_remove[i])==0){ // use ===?
+			returnstr=str.substr(prefixes_to_remove[i].length);
+			//FIXME: Another hack. Need a better approach for this.
+			//Special case logic for HTML widgets
+			if(prefixes_to_remove[i]=='html.'){
+				returnstr='&lt;'+returnstr+'&gt;';
 			}
+			break;
 		}
-		return returnstr;
-	};
+	}
+	return returnstr;
+},
 
-	text+=remove_prefix(widget.type);
+_getWidgetNameText: function(type){
+	var text = "<span class='propertiesTitleWidgetName'>";
+	text+=this._remove_prefix(type);
 	text+="</span> ";
+	return text;
+},
+
+_getWidgetClassText: function(id, className){
+	var text = "<span class='propertiesTitleClassName'>";
+	//text += node.tagName;
+	if (id) {
+		text += "#" + id;
+	}
+	if (className) {
+		text += "." + className.replace(/\s+/g,".");
+	}
+	text += "</span> ";
+	return text;
+},
+
+/**
+ * Simpler version of getLabel, called as part of review/commenting,
+ * when there isn't a widget object available.
+ * @param node
+ * @returns string to display in Maqetta's UI
+ */
+getLabelForNode: function(node) {
+	var type = node.getAttribute('data-dojo-type') || node.getAttribute('dojoType');
+	if(!type){
+		type = node.tagName.toLowerCase();
+	}
+	var text = this._getWidgetNameText(type);
+	//FIXME: temporarily not showing classname because mobile views look better
+	// in review/commenting, but really instead of hard-coding this, we should
+	// default to showing classname and allow sceneManager to override the default
+	if(node.id /* || node.className*/){
+		text += this._getWidgetClassText(node.id /*, node.className*/);
+	}
+	return text;
+},
+
+getLabel: function(widget) {
+	var text = this._getWidgetNameText(widget.type);
 
 	var widgetText,
 		helper = widgetObject.getWidgetHelper(widget.type);
@@ -279,6 +318,7 @@ getLabel: function(widget) {
 	var classAttr = srcElement && srcElement.getAttribute("class");
 	var className = classAttr && classAttr.trim();
 	if (id || className) {
+/*
 		text += "<span class='propertiesTitleClassName'>";
 		//text += node.tagName;
 		if (id) {
@@ -288,6 +328,8 @@ getLabel: function(widget) {
 			text += "." + className.replace(/\s+/g,".");
 		}
 		text += "</span> ";
+*/
+		text += this._getWidgetClassText(id, className);
 	}
 
 	if (helper && helper.getWidgetTextExtra) {

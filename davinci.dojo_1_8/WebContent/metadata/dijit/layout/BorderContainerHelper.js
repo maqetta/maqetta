@@ -51,11 +51,6 @@ return declare(LayoutContainerHelper, {
 				widget._edit_context.select(selection[0]); // FIXME: should use updateFocus?
 			}
 		});
-	},
-	
-	initialSize: function(args) {
-		//Pass in true so BorderContainer fills BODY if we're the only child
-		return this.inherited(arguments);
 	}
 });
 

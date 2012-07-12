@@ -1,10 +1,12 @@
 define([
+	"dojo/_base/declare",
 	"dojo/query",
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/RemoveCommand",
 	"./InitialSizeHelper"
 ], function (
+	declare,
 	query,
 	Widget,
 	CompoundCommand,
@@ -12,8 +14,7 @@ define([
 	InitialSizeHelper
 ) {
 
-var EdgeToEdgeDataListHelper = function() {};
-EdgeToEdgeDataListHelper.prototype = {
+return declare(InitialSizeHelper, {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options) {
 		if(!widget){
@@ -30,8 +31,7 @@ EdgeToEdgeDataListHelper.prototype = {
 		return data;
 	},
 
-	preProcessData: function(data){
-
+	preProcessData: function(data) {
 	  if (data.properties.store._edit_object_id) {
 	    var store = data.context.getDojo().getObject(data.properties.store._edit_object_id);
 	    if (store) {
@@ -43,10 +43,8 @@ EdgeToEdgeDataListHelper.prototype = {
 	},
 	
 	create: function(widget, srcElement) {
-
 		this.stopOnClickListItems(widget);
 	},
-
 	
 	stopOnClickListItems: function(widget){
 		var dijitWidget = widget.dijitWidget;
@@ -77,7 +75,6 @@ EdgeToEdgeDataListHelper.prototype = {
 	 * This widget has a data store widget that is associated with it and must be deleted also.
 	 */
 	getRemoveCommand: function(widget) {
-		
 		var command = new CompoundCommand();
 		var storeId = widget._srcElement.getAttribute("store");
 		var storeWidget = Widget.byId(storeId);
@@ -85,15 +82,8 @@ EdgeToEdgeDataListHelper.prototype = {
 		command.add(new RemoveCommand(widget));
 		command.add(new RemoveCommand(storeWidget));
 		return command;
-		
-	},
-	
-	initialSize: function(args){
-		return InitialSizeHelper.prototype.initialSize(args);
 	}
 
-};
-
-return EdgeToEdgeDataListHelper;
+});
 
 });

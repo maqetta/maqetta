@@ -76,6 +76,7 @@ define(function() {
 		 * has associated widget like data stores
 		 *
 		 * XXX In which situations would someone use this instead of CreateTool.create()?
+		 * 
 		 * XXX Remember that the CreateTool helper stuff needs to be redone such that we don't
 		 *     copy code out of CreateTool.js into individual widget versions of create()
 		 *
@@ -139,17 +140,22 @@ define(function() {
 		},
 
 		/**
-		 * Invoked when a widget is removed from page editor,
-		 * just before it is destroyed.
+		 * Override the default action, which attempts to destroy the child widgets of 'widget'.
+		 * Invoked when a widget is removed from page editor.
+		 * 
 		 * @param  {davinci/ve/_Widget} widget
 		 */
 		destroy: function(widget) {},
 
 		/**
-		 * Called by SelectTool to see if this widget can be dragged to a different location.
+		 * Allows you to disable dragging of a widget within the Visual Editor.
+		 * 
 		 * There are various cases where widgets are not allowed to be moved by the user, 
 		 * such as a ContentPane child of a TabContainer.
-		 * @param {davinci.ve._Widget} widget 
+		 * 
+		 * @param  {davinci.ve._Widget} widget
+		 * 
+		 * @return {boolean}  'true' is dragging of 'widget' should be disabled
 		 */
 		disableDragging: function(widget) {},
 
@@ -263,20 +269,13 @@ define(function() {
 //			return data;
 		},
 
-		/*
-		 * Special hooks for shape widgets.
-		 * Returns list of draggable end points for this shape in "px" units
-		 * relative to top/left corner of enclosing SPAN
-		 * @return {object} whose properties represent widget-specific types of draggable points
-		 *   For example, widgets that represent a series of points will include a 'points'
-		 *   property which is an array of object of the form {x:<number>,y:<number>}
-		 */
-		getDraggables: function(){},
-
 		/**
-		 * [getMarginBoxPageCoords description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {Object}        [description]
+		 * Override default action, which is to call 'GeomUtils.getMarginBoxPageCoords(widget.domNode)'.
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 * 
+		 * @return {Object}  coordinates object of form {l:, t:, w:, h: }
+		 * @see davinci/ve/utils/GeomUtils#getMarginBoxPageCoords
 		 */
 		getMarginBoxPageCoords: function(widget) {},
 
@@ -332,14 +331,21 @@ define(function() {
 //			return command;
 			
 		}, 
+
 		/**
 		 * Invoked by Snap.js from core application to get a snapping rect for this widget
 		 * and/or a set of snapping points.
-		 * @param {davinci.ve._Widget} widget
-		 * @param {object} widgetSnapInfo. Default snapping info if helper doesn't override.
-		 *      widgetSnapInfo.snapRect: {l:, c:, r:, t:, m:, b:} // all numbers in page coordinate system
-		 * @return {object} Returns either the original widgetSnapInfo or an alternate object that can contain
-		 * 		a snapRect sub-object and/or a snapPoints sub-object (array of objects)
+		 *
+		 * XXX Only used by _PathHelperMixin.js in the Shapes library.  Is there some other way of
+		 *     handling this, other than through a helper?
+		 * 
+		 * @param {davinci/ve/_Widget} widget
+		 * @param {Object} widgetSnapInfo  Default snapping info if helper doesn't override.
+		 * @param {Object} widgetSnapInfo.snapRect
+		 *             Object in form of {l:, c:, r:, t:, m:, b:} // all numbers in page coordinate system
+		 * 
+		 * @return {Object}  either the original 'widgetSnapInfo' or an alternate object that can
+		 *      contain a snapRect sub-object and/or a snapPoints sub-object (array of objects)
 		 *      {
 		 *         snapRect: {l:, c:, r:, t:, m:, b:} // all numbers in page coordinate system
 		 *         snapPoints: [{x:, y:}] // all numbers in page coordinate system
@@ -348,9 +354,19 @@ define(function() {
 		getSnapInfo: function(widget, widgetSnapInfo){},
 
 		/**
-		 * [getTargetOverlays description]
-		 * @param  {davinci/ve/_Widget} widget [description]
-		 * @return {[type]}        [description]
+		 * Normally, a widget is treated as a single entity in the Visual Editor.  But some widgets
+		 * have children/sub-component widgets which the user should be allowed to select, in
+		 * order to further customize (change properties).
+		 *
+		 * Implement this helper in order to let the Visual Editor know about the regions within
+		 * the widget container that should be covered by "target overlays" (and are therefore
+		 * made user-selectable).
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 * 
+		 * @return {Object[]}  An array of "overlay" objects, containing coordinate and 
+		 *             dimension properties: { x:, y:, width:, height: }.  Coordinates are in
+		 *             the page coordinate system.
 		 */
 		getTargetOverlays: function(widget) {},
 

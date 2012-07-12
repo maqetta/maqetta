@@ -1,13 +1,11 @@
 define([
 	"dojo/_base/declare",
-	"./_ShapeHelper",
-	"./_TextHelperMixin"
+	"./_ShapeHelper"
 ], function(
 	declare,
-	_ShapeHelper,
-	_TextHelperMixin
+	_ShapeHelper
 ) {
 
-return declare([_ShapeHelper, _TextHelperMixin], {});
+return declare([_ShapeHelper], {});
 
 });

@@ -204,6 +204,20 @@ _ShapeHelper.prototype = {
 				dragNob.style.display = (i == index) ? 'block' : 'none';
 			}
 		}
+	},
+
+	/*
+	 * Returns list of draggable end points for this shape in "px" units
+	 * relative to top/left corner of enclosing SPAN.
+	 * Can be overridden for particular widgets.
+	 * 
+	 * @return {object} whose properties represent widget-specific types of draggable points
+	 *   For example, widgets that represent a series of points will include a 'points'
+	 *   property which is an array of object of the form {x:<number>,y:<number>}
+	 */
+	getDraggables: function() {
+		// default impl is to return no points
+		return {points:[]};
 	}
 
 };

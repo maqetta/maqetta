@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Untitled</title>
+<script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'shapes','location':'../../shapes'},{'name':'clipart','location':'../../clipart'},{'name':'gridx','location':'../gridx'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'dojo-src','location':'..'},{'name':'widgets','location':'../../widgets'}]"></script>
+<script type="text/javascript">
+require([
+  "dijit/dijit",
+  "dojo/parser",
+  "maqetta/space",
+  "maqetta/AppStates"
+]);
+</script>
+<style>@import "themes/claro/claro.css";@import "app.css";
+</style>
+<script type="text/javascript" src="app.js"></script>
+</head>
+<body class="claro" data-maq-flow-layout="true" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+
+<span dojoType="dojo.data.ItemFileReadStore" id="ItemFileReadStore_1" jsId="ItemFileReadStore_1" data="{&quot;identifier&quot;:&quot;id&quot;,&quot;label&quot;:&quot;label&quot;,&quot;items&quot;:[{&quot;id&quot;:355926219840,&quot;label&quot;:&quot;1&quot;,&quot;children&quot;:[{&quot;id&quot;:967934769578,&quot;label&quot;:&quot;1.1&quot;},{&quot;id&quot;:634159871843,&quot;label&quot;:&quot;1.2&quot;}]},{&quot;id&quot;:131589373341,&quot;label&quot;:&quot;2&quot;,&quot;children&quot;:[{&quot;id&quot;:568764823955,&quot;label&quot;:&quot;2.1&quot;},{&quot;id&quot;:650218448834,&quot;label&quot;:&quot;2.2&quot;},{&quot;id&quot;:412661765236,&quot;label&quot;:&quot;2.3&quot;}]}]}"></span><span dojoType="dijit.tree.ForestStoreModel" id="ForestStoreModel_1" rootLabel="Root" jsId="ForestStoreModel_1" store="ItemFileReadStore_1"></span><span data-dojo-type="dijit.Tree" style="width: 250px; height: 250px; overflow:auto;" showRoot="false" autoExpand="true" model="ForestStoreModel_1"></span>
+
+</body>
+</html>

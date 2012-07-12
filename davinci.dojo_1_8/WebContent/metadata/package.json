@@ -87,7 +87,7 @@
 		            ],
 		            "allowedChild": "dijit.layout.ContentPane",
 		            "inlineEdit": "./dijit/layout/AccordionContainerInput",
-		            "helper": "./dijit/layout/AccordionContainerHelper"
+		            "helper": "./dijit/layout/LayoutContainerHelper"
 		        },
 		        {
 		            "name": "BorderContainer",
@@ -275,7 +275,7 @@
 		            "initialSize": "auto",
 		            "allowedChild": "dijit.layout.ContentPane",
 		            "inlineEdit": "./dijit/layout/StackContainerInput",
-		            "helper": "./dijit/layout/TabContainerHelper"
+		            "helper": "./dijit/layout/LayoutContainerHelper"
 		        },
 		        {
 		            "name": "TitlePane",

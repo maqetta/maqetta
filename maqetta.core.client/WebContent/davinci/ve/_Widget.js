@@ -767,6 +767,7 @@ return declare("davinci.ve._Widget", null, {
 			return;
 		}
 		if (this.dijitWidget) {
+			// XXX Dijit-specific code, doesn't belong here.
 			this.dijitWidget.destroyRecursive();
 		} else {
 			dojo.forEach(this.getChildren(),function(each) { each.destroyWidget(); });

@@ -1,22 +1,21 @@
 define([
-	"maq-metadata-dojo-1_8/dojox/grid/DataGridHelper",
-	"maq-metadata-dojo-1_8/dijit/layout/LayoutContainerHelper",
-	"maq-metadata-dojo-1_8/dijit/HTMLSubElementHelper"
+	"dojo/_base/declare",
+	"maq-metadata-dojo/dojox/grid/DataGridHelper",
+	"maq-metadata-dojo/dijit/layout/LayoutContainerHelper",
+	"maq-metadata-dojo/dijit/HTMLSubElementHelper"
 ], function(
+	declare,
 	DataGridHelper,
 	LayoutContainerHelper,
 	HTMLSubElementHelper
 ) {
 
-var GridHelper = function() {};
-GridHelper.prototype = {
-	 _dataGridHelper: new DataGridHelper(),
-	 _layoutContainerHelper: new LayoutContainerHelper(),
-	 
+return declare([LayoutContainerHelper, DataGridHelper], {
+
 	 _useDataDojoProps: true,
 
-	getData: function(/*Widget*/ widget, /*Object*/ options){
-		var data = this._dataGridHelper.getData(widget, options, this._useDataDojoProps);
+	getData: function(/*Widget*/ widget, /*Object*/ options) {
+		var data = this.inherited(arguments, [widget, options, this._useDataDojoProps]);
 		
 		//Need to worry about cacheClass for GridX. The data store is handled in DataGridHelper
 		if (widget.dijitWidget.cacheClass){
@@ -35,20 +34,20 @@ GridHelper.prototype = {
 		return this._htmlSubElementHelper.getChildrenData(widget, options);
 	},
 	
-	create: function(widget, srcElement){
-		this._dataGridHelper.create(widget, srcElement, this._useDataDojoProps);
+	create: function(widget, srcElement) {
+		this.inherited(arguments, [widget, srcElement, this._useDataDojoProps]);
 	},
 	
 	reparent: function(widget) {
-		this._dataGridHelper.reparent(widget, this._useDataDojoProps);
+		this.inherited(arguments, [widget, this._useDataDojoProps]);
 	},
 	
 	updateStore: function(widget, storeWidget, w) {
-		this._dataGridHelper.updateStore(widget, storeWidget, w, this._useDataDojoProps);
+		this.inherited(arguments, [widget, storeWidget, w, this._useDataDojoProps]);
 	},
 	
 	getRemoveCommand: function(widget) {
-		return this._dataGridHelper.getRemoveCommand(widget, this._useDataDojoProps);
+		return this.inherited(arguments, [widget, this._useDataDojoProps]);
 	},
 	
 	/*
@@ -62,7 +61,7 @@ GridHelper.prototype = {
 		srcElement.removeAttribute("structure");
 		
 		//Defer to data grid helper for "store"
-		this._dataGridHelper.cleanSrcElement(srcElement, this._useDataDojoProps);
+		this.inherited(arguments, [srcElement, this._useDataDojoProps]);
 	},
 	
 	/*
@@ -73,13 +72,8 @@ GridHelper.prototype = {
 		var dijitWidget = widget.dijitWidget;
 		dijitWidget.resize();
 		dijitWidget.setColumns(dijitWidget.structure);
-	},
-	
-	initialSize: function(args) {
-		return this._layoutContainerHelper.initialSize(args);
 	}
-};
 
-return GridHelper;
+});
 
 });

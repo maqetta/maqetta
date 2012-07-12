@@ -156,11 +156,18 @@ var CustomTree = declare(Tree, {
 		if (iconStyleFieldId) {
 			var urlInside = this.treeInput._getDisplayValueFromStore(iconStyleFieldId, item);
 			var urlValue = BackgroundDialog.getCSSForWorkspaceURL(this.treeInput._getBaseLocation(), urlInside);
-			return {
+			retVal = {
 				backgroundImage: urlValue
 			}; 
-		} 
-		return this.inherited(arguments);
+		} else {
+			//This is mainly so if the value is removed from the icon field that the icon reverts back to the
+			//default in the preview. If we just return null or {}, then the last non-null backgroundImage value 
+			//is used.
+			retVal = {
+				backgroundImage: null
+			};
+		}
+		return retVal;
 	}
 });
 
@@ -170,6 +177,8 @@ var CustomTree = declare(Tree, {
 return declare(ContainerInput, {
 
 	_substitutedMainTemplate: null,
+	
+	_isLegacy: false,
 	
    	constructor: function(model){
 		this._nodePropWidgetMetadata = [
@@ -240,15 +249,27 @@ return declare(ContainerInput, {
 		
 		//Look up store
 		var storeWidget = Widget.byId(modelWidget._srcElement.getAttribute("store"));
-		var dataStr = storeWidget._srcElement.getAttribute("data");
-		var data = JSON.parse(dataStr);
+		var storeWidgetData = storeWidget.getData();
 		
 		//Get tree's data
 		var treeWidgetData = this._widget.getData();
 		
+		var dataStoreItems = null;
+		if (storeWidgetData.type == "dojo.store.Memory") {
+			dataStoreItems = storeWidgetData.properties.data;
+		} else if (storeWidgetData.type == "dojo.data.ItemFileReadStore") {
+			// To preview and edit "legacy" data, convert format in 
+			// ItemFileReadStore (which uses "children" attribute) to
+			// relational format (where items point back to children)
+			this._isLegacy = true;
+			var rootNode = {"id":"treeRoot","label":"Root"};
+			dataStoreItems = [rootNode];
+			this._getRelationalFormat(rootNode, storeWidgetData.properties.data.items, dataStoreItems);
+		}
+		
 		//Create the backing Memory widget (e.g., the "store")
 		var previewStore = new CustomMemory({
-			data: data
+			data: dataStoreItems
 		});		
 		this._treeHelper._addStoreFunctions(previewStore);
 		
@@ -258,7 +279,7 @@ return declare(ContainerInput, {
 		//Create model for preview
 		var previewModel = this._previewModel = new CustomObjectStoreModel({
 			labelAttr: modelWidgetData.properties.labelAttr ? modelWidgetData.properties.labelAttr : "label",
-			query: JSON.parse(modelWidgetData.properties.query),
+			query: JSON.parse(modelWidgetData.properties.query ? modelWidgetData.properties.query : '{"id":"treeRoot"}'),
 			store: observablePreviewStore
 		});
 		this._treeHelper._addModelFunctions(previewModel);
@@ -669,6 +690,27 @@ return declare(ContainerInput, {
 		dojo.forEach(this._nodePropWidgetMetadata, function(nodePropWidget) {
 			this._setupTextFieldChangeListener(nodePropWidget.widgetId, nodePropWidget.fieldId);
 		}.bind(this));
+		
+		// For legacy case, we can't store JSON in a property field as ItemFileReadStore tries to 
+		// treat it as an item (rather than an attribute value). See the comment for 
+		// ItemFileReadStore's valueIsAnItem function. 
+		//
+		//		Given any sort of value that could be in the raw json data,
+		//		return true if we should interpret the value as being an
+		//		item itself, rather than a literal value or a reference.
+		//
+		// So, since it's so convenient to represent iconStyle for an item as JSON (since that's 
+		// what dijit.Tree's getIconStyle function that we override expects), I'm going to assert
+		// we won't support iconStyle in the legacy case. So, hide the field.
+		if ( this._isLegacy) {
+			//iconStyle
+			var row = dojo.byId("treeInputIconInputRow");
+			dojo.style(row, "display", "none");
+			
+			//iconStyleOpen
+			row = dojo.byId("treeInputOpenIconInputRow");
+			dojo.style(row, "display", "none");
+		}
 	},
 	
 	_getBaseLocation: function() {
@@ -804,9 +846,18 @@ return declare(ContainerInput, {
 
 		var modelWidget = Widget.byId(this._widget._srcElement.getAttribute("model"));
 		var storeWidget = Widget.byId(modelWidget._srcElement.getAttribute("store"));
+		var storeWidgetData = storeWidget.getData();
 		
-		var userModifiedStoreData = this._observablePreviewStore.data;
-
+		var previewStore = this._observablePreviewStore;
+		var userModifiedStoreData = null;
+		if (storeWidgetData.type == "dojo.store.Memory") {
+			userModifiedStoreData = previewStore.data;
+		} else if (storeWidgetData.type == "dojo.data.ItemFileReadStore") {
+			// For "legacy" mode we want to convert back from relational (using "parent
+			// attribute) to using "children" attribute
+			userModifiedStoreData = this._getDataForItemFileReadStore(previewStore);
+		}
+		
 		var props= {
 			data: userModifiedStoreData
 		};
@@ -818,14 +869,23 @@ return declare(ContainerInput, {
 		global['require']([
 			"dojo/store/Memory", 
 			"dijit/tree/ObjectStoreModel",
-		], function(MemoryPage, ObjectStoreModelPage) {
+			"dojo/data/ItemFileReadStore", //legacy
+			"dijit/tree/ForestStoreModel" //legacy
+		], function(MemoryPage, ObjectStoreModelPage, ItemFileReadStore, ForestStoreModel) {
 			//modify the modelWidget using a new store
 			var newMemoryProps = {
 				data: props.data
 			};
-			var newStore = new MemoryPage(newMemoryProps);
+			var newStore = null;
+			if (storeWidgetData.type == "dojo.store.Memory") {
+				newStore = new MemoryPage(newMemoryProps);
+				this._treeHelper._addStoreFunctions(newStore);
+			} else if (storeWidgetData.type == "dojo.data.ItemFileReadStore") {
+				//Handle legacy case
+				newStore = new ItemFileReadStore(newMemoryProps);
+			}
 			newStore.id = storeWidget.id;
-			this._treeHelper._addStoreFunctions(newStore);
+			newStore.jsId = newStore.id;
 			var newModelProps = {
 				store: newStore
 			};
@@ -834,13 +894,21 @@ return declare(ContainerInput, {
 		
 			//modify the tree using new model
 			var modelWidgetData = modelWidget.getData();
-			var newModel = new ObjectStoreModelPage({
-				query: JSON.parse(modelWidgetData.properties.query),
-				labelAttr: modelWidgetData.properties.labelAttr,
-				store: newStore
-			});
-			this._treeHelper._addModelFunctions(newModel);
+			var newModel = null;
+			if (modelWidgetData.type == "dijit.tree.ObjectStoreModel") {
+				newModel = new ObjectStoreModelPage({
+					query: JSON.parse(modelWidgetData.properties.query),
+					labelAttr: modelWidgetData.properties.labelAttr,
+					store: newStore
+				});
+				this._treeHelper._addModelFunctions(newModel);
+			} else if (modelWidgetData.type == "dijit.tree.ForestStoreModel") {
+				newModel = new ForestStoreModel({
+					store: newStore
+				});
+			}
 			newModel.id = modelWidget.id;
+			newModel.jsId = newModel.id;
 		
 			var newTableProps = {
 				model: newModel
@@ -857,13 +925,17 @@ return declare(ContainerInput, {
 		var children = [];
 		
 		//need <script> block for getIconStyle
-		var jsString = 
-			"var iconStyle = item.iconStyle;" +
-			"if (opened && item.iconStyleOpen) {" +
-			"	iconStyle = item.iconStyleOpen;" +
-			"};" + 
-			"return iconStyle;";
-		children.push(this._treeHelper._createScriptBlockData("dojo/method", "getIconStyle", "item, opened", jsString));
+		var jsString = null;
+		if (!this._isLegacy) {
+			//We're not supporting icons legacy mode
+			jsString = 
+				"var iconStyle = item.iconStyle;" +
+				"if (opened && item.iconStyleOpen) {" +
+				"	iconStyle = item.iconStyleOpen;" +
+				"};" + 
+				"return iconStyle;";
+			children.push(this._treeHelper._createScriptBlockData("dojo/method", "getIconStyle", "item, opened", jsString));
+		}
 		
 		//need <script> block for onClick
 		jsString = this._getJavaScriptForTreeEvent("onClick");
@@ -885,10 +957,20 @@ return declare(ContainerInput, {
 	},
 	
 	_getJavaScriptForTreeEvent: function(eventType) {
-		var jsString = 
-			"if (item." + eventType + ") { " +
-			"	dojo.eval(item." + eventType + ");" +
-			"};";
+		var jsString = null;
+		if (this._isLegacy) {
+			jsString =  
+				"var eventStr = this.model.store.getValue(item, '" + eventType + "');" +
+				"if (eventStr) {" +
+				"	dojo.eval(eventStr);" +
+				"}";
+		} else {
+			jsString =
+				"var eventStr = item['" + eventType + "'];" +
+				"if (eventStr) { " +
+				"	dojo.eval(eventStr);" +
+				"}";
+		}
 		return jsString;
 	},
 	
@@ -940,6 +1022,118 @@ return declare(ContainerInput, {
 		}
 			
 		return this._substitutedMainTemplate;
+	},
+	
+	/*
+	 * Takes data from an ItemFileReadStore and returns a new relational data structure
+	 * appopriate for Memory.
+	 */
+	_getRelationalFormat: function(parent, children, output) {
+		dojo.forEach(children, function(child) {
+			var childClone = dojo.clone(child);
+			childClone.id = childClone.id.toString();
+			
+			//Create pointer from child back to parent
+			childClone.parent = parent.id;
+			
+			//Mark as leaf or not
+			var childChildren = childClone.children;
+			
+			//add child to the output
+			output.push(childClone);
+			
+			//Recurse
+			if (childChildren) {
+				this._getRelationalFormat(childClone, childChildren, output);
+				
+				delete childClone.children;
+			}
+			childClone.leaf = !childChildren || childChildren.length == 0;
+			
+		}.bind(this));
+	},
+	
+	/*
+	 * Takes a Memory object and generates a new data structure appropriate
+	 * for ItemFileReadStore.
+	 */
+	_getDataForItemFileReadStore: function(previewStore) {
+		var userModifiedStoreData = this._getBaseDataForItemFileReadStore();
+		var treeRoot = previewStore.query({id: "treeRoot"});
+		var treeRootChildren = previewStore.query({parent: "treeRoot"});
+		this._getChildrenFormat(previewStore, treeRoot[0], treeRootChildren, userModifiedStoreData.items);
+		return userModifiedStoreData;
+	},
+	
+	_getChildrenFormat: function(memoryStore, parent, children, output) {
+		dojo.forEach(children, function(child) {
+			var global = this._widget.getContext().getGlobal();
+
+			// Kludge to work around lack of support for frames in ItemFileReadStore::valueIsAnItem method
+			var childToPush = global.eval("new Object()");
+			dojo.mixin(childToPush, child);
+			delete childToPush.parent;
+			delete childToPush.leaf;
+			if (memoryStore.getIdentity(parent) != "treeRoot") {
+				//Parent is not root, so add child to parent's "children" attribute
+				if (!parent.children) {
+					parent.children = [];
+				}
+				parent.children.push(childToPush);
+			} else {
+				//Child's parent in "relational" model was root, so should 
+				//just be a top-level item
+				output.push(childToPush);
+			}
+				
+			//Recurse
+			var childChildren = memoryStore.query({parent: child.id});
+			if (childChildren) {
+				this._getChildrenFormat(memoryStore, childToPush, childChildren, output);
+			}
+			
+		}.bind(this));
+	},
+	
+	_getBaseDataForItemFileReadStore: function() {
+		var data = { identifier: 'id', label: 'label', items:[], __json__: function(){ 
+			// Kludge to avoid too much recursion exception when storing data as json
+			// required because ItemFileReadStore adds cyclic references to data object
+			var self = {};
+			
+			//Copy in select attributes to self
+			for (attr in this) {
+				if (this.hasOwnProperty(attr)) {
+					if (attr != "__json__" && attr != "children" && attr != "items") {
+						self[attr] = this[attr];
+					}
+				}
+			}
+			
+			//Deal with children
+			if (this.items || this.children) {
+				var items = this.items || this.children;
+				var __json__ = arguments.callee;
+				
+				items = dojo.map(items, function(item){
+					var copy = dojo.mixin({}, item);
+					copy.__json__ = __json__;
+					delete copy._0;
+					delete copy._RI;
+					delete copy._S;
+					return copy;
+				});
+				
+				if (this.items) {
+					self.items = items;
+				} else if (this.children) {
+					self.children = items;
+				}
+			}
+			return self;
+		}};
+		
+		return data;
 	}
 });
 });

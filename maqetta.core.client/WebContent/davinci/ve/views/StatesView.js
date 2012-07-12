@@ -7,6 +7,7 @@ define([
 		"davinci/workbench/ViewPart",
 		"dijit/layout/BorderContainer",
 		"dijit/layout/ContentPane",
+		"davinci/XPathUtils",
 		"davinci/ve/States",
 		"davinci/ve/widget",
 		"davinci/ve/_Widget",
@@ -15,7 +16,7 @@ define([
 		"dijit/Tree",
 		"dojo/_base/window"
 ], function(declare, domQuery, domClass, connect, veNls, ViewPart, BorderContainer, ContentPane, 
-	States, WidgetUtils, Widget, ItemFileWriteStore, ForestStoreModel, Tree, win
+		XPathUtils, States, WidgetUtils, Widget, ItemFileWriteStore, ForestStoreModel, Tree, win
 ){
 
 var PlainTextTreeNode = declare(Tree._TreeNode, {}),
@@ -382,13 +383,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				}else{
 					//FIXME: We currently have bad labels for review/commenting
 					var label = isDvWidget ? WidgetUtils.getLabel(widget) : node.tagName;
+					var xpath = XPathUtils.getXPath(node);
 					var o = {name:label, type:'file', category:'file', node:node, children:[]};
 					if(ancestorParentItem){
 						// Make sure that any new nodes are nested within the node corresponding
 						// to their nearest ancestor node
+						o.maqid = ancestorParentItem.maqid + '$' + xpath;
 						ancestorParentItem.children.push(o);
 					}else{
 						// This should only happen for BODY
+						o.maqid = currentParentItem.maqid + '$' + xpath;
 						currentParentItem.children.push(o);
 					}
 					existingItems.push(o);
@@ -404,15 +408,18 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					if(!initialState){
 						initialState = States.NORMAL;
 					}
-					var AppStatesObj = {name:'Application States', type:'SceneManagerRoot', category:'AppStates', 
-							parentItem:currentParentItem, children:[]};
+					var AppStatesObjId = currentParentItem.maqid + '$' + 'AppStates';
+					var AppStatesObj = { maqid:AppStatesObjId,
+							name:'Application States', type:'SceneManagerRoot', category:'AppStates', 
+							sceneContainerNode:node, parentItem:currentParentItem, children:[]};
 					for(var st=0; st<appstates.length; st++){
 						var state = appstates[st];
 						var span = that._treeNodeContent(state);
 						var isFocus = (appStateFocus && appStateFocus.stateContainerNode == node && appStateFocus.state == currentState);
 						var isCurrent = (state === currentState);
 						var isInitial = (state === initialState);
-						var o = { name:span, sceneId:state, type:'AppState', 
+						var stateId = AppStatesObj.maqid + '$' + state;
+						var o = { maqid:stateId, name:span, sceneId:state, type:'AppState', 
 								isFocus:isFocus, isCurrent:isCurrent, isInitial:isInitial,
 								sceneContainerNode:node, parentItem:AppStatesObj };
 						AppStatesObj.children.push(o);
@@ -429,7 +436,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 							if(sceneChildren.length > 0){
 								var currentScene = sm.getCurrentScene(node);
 								var initialScenes = sm.getInitialScenes(node);
-								var SceneManagerObj = { name:sm.name, type:'SceneManagerRoot', category:sm.category, 
+								var xpath = XPathUtils.getXPath(node);
+								var idForSceneMgr = currentParentItem.maqid + '$' + xpath;
+								var SceneManagerObj = { maqid:idForSceneMgr,
+										name:sm.name, type:'SceneManagerRoot', category:sm.category, 
 										parentItem:currentParentItem, children:[]};
 								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
 									var childSceneNode = sceneChildren[childSceneIndex];
@@ -439,7 +449,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 									var isFocus = false;	// No concept if scene focus for plug-in scene managers
 									var isCurrent = (childSceneNode === currentScene);
 									var isInitial = (initialScenes.indexOf(childSceneNode)>=0);
-									var o = { name:span, sceneId:childSceneNode.id, type:sm.category, 
+									var xpath = XPathUtils.getXPath(childSceneNode);
+									var idForScene = SceneManagerObj.maqid + '$' + xpath;
+									var o = { maqid:idForScene, name:span, sceneId:childSceneNode.id, type:sm.category, 
 											isFocus:isFocus, isCurrent:isCurrent, isInitial:isInitial,
 											sceneContainerNode:node, parentItem:SceneManagerObj, node:childSceneNode, children:[] };
 									SceneManagerObj.children.push(o);
@@ -471,7 +483,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		}
 		// Temporary root object onto which we will attach a BODY item
 		// All other items in the structure will descend from the BODY item
-		var temporaryRootObj = {children:[]};
+		var temporaryRootObj = {maqid:'root', children:[]};
 		recurseWidget(context.rootWidget, temporaryRootObj);
 		var latestData = [temporaryRootObj.children[0]];
 
@@ -483,22 +495,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				var selectedItem = null;
 				var path = this._tree.get('path');
 				if(path.length > 0){
-					var selectedId = path[path.length-1].id[0];
-					this._sceneStore.fetch({query: {id:selectedId}, queryOptions:{deep:true}, 
-						onComplete: dojo.hitch(this, function(items, request){
-							if(items.length > 0){
-								selectedItem = items[0];
-/*FIXME: DELETE THIS
-								if(selectedItem.sceneId && selectedItem.sceneContainerNode){
-									oldSelection = { sceneId:selectedItem.sceneId[0], sceneContainerNode:selectedItem.sceneContainerNode[0] };
-								}
-*/
-								if(selectedItem.node){
-									oldSelection = selectedItem.node[0];
-								}
-							}
-						})
-					});
+					oldSelection = path[path.length-1].maqid[0];
 				}
 			}
 			
@@ -512,21 +509,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				// asynchronously, and appears to do so always in the way we are using
 				// Tree in this routine.
 				this._tree.onLoadDeferred.then(function(){
-/*FIXME: DELETE THIS
-					this._sceneStore.fetch({query: {sceneId:oldSelection.sceneId}, queryOptions:{deep:true}, 
-*/
-					this._sceneStore.fetch({query: {node:oldSelection}, queryOptions:{deep:true}, 
+					this._sceneStore.fetch({query: {maqid:oldSelection}, queryOptions:{deep:true}, 
 						onComplete: dojo.hitch(this, function(items, request){
-							for(var i=0; i<items.length; i++){
-								var item = items[i];
-/*FIXME: DELETE THIS
-								if(item.sceneId[0] == oldSelection.sceneId && item.sceneContainerNode[0] == oldSelection.sceneContainerNode){
-*/
-								if(item.node[0] == oldSelection){
-									var path = this._getTreeSelectionPath(item);
-									if(path.length > 0){
-										this._tree.set('path', path);
-									}
+							if(items.length === 1){
+								var path = this._getTreeSelectionPath(items[0]);
+								if(path.length > 0){
+									this._tree.set('path', path);
 								}
 							}
 						})
@@ -720,15 +708,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					}
 				}
 			}
-			// Update selected node in the Tree if the current selected node
-			// isn't set to either a "scene" (e.g., Dojo Mobile View) or
-			// the currently focused application state.
-			if(!selectedNodeIsCorrectType && candidateItem){
-				var newPath = this._getTreeSelectionPath(candidateItem);
-				if(newPath.length > 0){
-					this._tree.set('path', newPath);
-				}
-			}
 		}.bind(this));
 	},
 
@@ -888,14 +867,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			var newState = null;
 			if (item && item.type){
 				type = item.type[0];
-				if(type == 'AppState') {
+				var category = item.category && item.category[0];
+				if(type == 'AppState' || (type == 'SceneManagerRoot' && category == 'AppStates')) {
 					stateContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
 				//FIXME: using type == 'file' for HTMLElements, too. That's wrong.
-				}else if(type == 'file'){
-					if(item.node && item.node[0]._maqAppStates){
-						stateContainerNode = item.node[0];
-					}
-					
+				}else if(item.node && item.node[0]._maqAppStates){
+					stateContainerNode = item.node[0];
 				}
 			}
 			if (this.isThemeEditor()){

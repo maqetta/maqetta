@@ -50,7 +50,6 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 		var newState = this.input.get("value");
 		if(newState){
 			States.add(this.node, newState);
-			States.setState(newState, this.node, { focus:true, updateWhenCurrent:true });
 		}
 	},
 

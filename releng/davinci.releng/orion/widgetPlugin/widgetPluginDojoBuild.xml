@@ -267,7 +267,8 @@
 		<echo>Post gather for &quot;${davinciPlugin.id}&quot;, version=&quot;${davinciPlugin.normalizedVersion}&quot; ...</echo>
 
 		<property name="davinciPlugin.dojo.cache.directory" value="${dojo.cache.directory}/${davinciPlugin.id}-${davinciPlugin.normalizedVersion}"/>
-		<property name="davinciPlugin.metadata.moduleId" value="maq-metadata-${davinciPlugin.id}-${davinciPlugin.normalizedVersion}"/>
+<!-- disable version		<property name="davinciPlugin.metadata.moduleId" value="maq-metadata-${davinciPlugin.id}-${davinciPlugin.normalizedVersion}"/> -->
+		<property name="davinciPlugin.metadata.moduleId" value="maq-metadata-${davinciPlugin.id}"/>
 		<property name="davinciPlugin.dojo.profile" value="${davinciPlugin.id}.profile.js"/>
     	<condition property="davinciPlugin.build.exists">
     		<available file="${davinciPlugin.dojo.cache.directory}" type="dir"/>

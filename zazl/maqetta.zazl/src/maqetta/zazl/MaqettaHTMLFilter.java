@@ -1,17 +1,20 @@
 package maqetta.zazl;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -98,6 +101,9 @@ public class MaqettaHTMLFilter implements Filter {
 					HTMLParser parser = new HTMLParser(caw, response.getCharacterEncoding(), dojoLib, configScriptTag.toString());
 					parser.parse(responseText);
 					result = caw.toString();
+					if (logger.isLoggable(Level.FINEST)) {
+						logger.logp(Level.FINEST, getClass().getName(), "doFilter", "filter response : "+result);
+					}
 				} else {
 					int index = responseText.indexOf(scriptTagPrefix);
 					logger.logp(Level.INFO, getClass().getName(), "doFilter", "parsing html for "+requestURI+". dojo tag found = "+(index > -1 ? true : false));
@@ -141,11 +147,30 @@ public class MaqettaHTMLFilter implements Filter {
 		} 
 		
 		public String toString(String encoding) {
+			GZIPInputStream gzipis = null;
 			try {
-				return baos.toString(encoding);
-			} catch (UnsupportedEncodingException e) {
+				byte[] bytes = baos.toByteArray();
+				if ((bytes[0] & 0xFF) == 0x1F && (bytes[1] & 0xFF) == 0x8B && (bytes[2] & 0xFF) == 0x08) {
+					if (logger.isLoggable(Level.FINEST)) {
+						logger.logp(Level.FINEST, getClass().getName(), "toString", "response content is gzipped");
+					}
+					gzipis = new GZIPInputStream(new ByteArrayInputStream(bytes));
+					BufferedReader br = new BufferedReader(new InputStreamReader(gzipis, encoding));
+					StringBuffer sb = new StringBuffer();
+					String s = null;
+					while ((s = br.readLine()) != null) {
+						sb.append(s);
+						sb.append("\n");
+					}
+					return sb.toString();
+				} else {
+					return baos.toString(encoding);
+				}
+			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
+			} finally {
+				if (gzipis != null) { try { gzipis.close(); } catch (IOException e) {}}
 			}
 		}
 	}

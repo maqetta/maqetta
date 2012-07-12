@@ -717,7 +717,6 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		// No user-specified size, so invoke widget's initialSize helper (if it exists)
 		var helper = w.getHelper();
 		if(helper && helper.initialSize){
-			//debugger;
 			var size =  helper.initialSize(args);
 			if(size){
 				returnSize = size;

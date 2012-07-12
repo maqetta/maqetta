@@ -2012,10 +2012,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var widget = this._selection[i];
 				var domNode = widget.domNode;
 				while(domNode && domNode.tagName != 'BODY'){
-					var computed_style_display = dojo.style(domNode, 'display');
-					if(computed_style_display == 'none'){
-						this.deselect(widget);
-						break;
+					// Sometimes browsers haven't set up defaultView yet,
+					// and dojo.style will raise exception if defaultView isn't there yet
+					if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
+						var computed_style_display = dojo.style(domNode, 'display');
+						if(computed_style_display == 'none'){
+							this.deselect(widget);
+							break;
+						}
 					}
 					domNode = domNode.parentNode;
 				}

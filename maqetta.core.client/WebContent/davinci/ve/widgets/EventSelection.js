@@ -1,18 +1,28 @@
 define(["dojo/_base/declare",
-        "dojo/_base/connect",
-        "../../workbench/ViewLite",
-        "./HTMLStringUtil",
+		"dojo/_base/connect",
+		"../../workbench/ViewLite",
+		"./HTMLStringUtil",
+		"davinci/ve/States",
         "../commands/ModifyCommand"
-],function(declare, connect, ViewLite, HTMLStringUtil, ModifyCommand){
+],function(declare, connect, ViewLite, HTMLStringUtil, States, ModifyCommand){
 
 var getEventSelectionValues = function(root){
-	var states = root && davinci.ve.states.getStates(root);
+	var states = [];
+	var stateContainers = root && States.getAllStateContainers(root);
+	if(stateContainers){
+		for(var j=0; j<stateContainers.length; j++){
+			var statesList = States.getStates(stateContainers[j]);
+			states = states.concat(statesList);
+		}
+	}
 	var items = [""];
 
-	for(var i in states){
-		items.push(states[i] + ":State");
+	for(var i=0; i<states.length; i++){
+		var val = states[i] + ":State";
+		if(items.indexOf(val) < 0){
+			items.push(val);
+		}
 	}
-		
 	return items;
 };
 
@@ -21,7 +31,7 @@ var getEventScriptFromValue = function(value) {
 	value.replace(/"/,'\\"');
 	
 	if (value && value.match(/.*:State$/)) {
-		value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
+		value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "',event)";
 	}
 	
 	return value;

@@ -6,7 +6,7 @@
 <setEntry value="davinci.gridx:1.0.0.qualifier:default:true"/>
 <setEntry value="davinci.html:1.0.0.qualifier:default:true"/>
 <setEntry value="davinci.jqueryui_1_8:1.0.0.qualifier:default:true"/>
-<setEntry value="davinci.server.gzip:1.0.0.qualifier:default:false"/>
+<setEntry value="davinci.server.gzip:1.0.0.qualifier:default:true"/>
 <setEntry value="davinci.yui_2_6_0:1.0.0.qualifier:default:true"/>
 <setEntry value="javax.mail:1.4.0.v201005080615:default:true"/>
 <setEntry value="maqetta.clipart:1.0.0.qualifier:default:true"/>

@@ -39,7 +39,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true  -Dorg.eclipse.equinox.http.jetty.http.port=8081 -Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} -Dmaqetta.serverDebug=true -DloginUrl=&quot;/maqetta/welcome&quot;  -Dmaqetta.cacheLevel=100 -Dmaqetta.localInstall=true -Djava.util.logging.config.file=${workspace_loc}/zazl/maqetta.zazl/logging.properties -Dmaqetta.zazl.jscompress=false"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true  -Dorg.eclipse.equinox.http.jetty.http.port=8081 -Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} -Dmaqetta.serverDebug=true -DloginUrl=&quot;/maqetta/welcome&quot;  -Dmaqetta.cacheLevel=100 -Dmaqetta.localInstall=true -Djava.util.logging.config.file=${workspace_loc}/zazl/maqetta.zazl/logging.properties -Dmaqetta.zazl.jscompress=true"/>
 <stringAttribute key="pde.version" value="3.3"/>
 <setAttribute key="selected_features">
 <setEntry value="maqetta.zazl.feature:default"/>

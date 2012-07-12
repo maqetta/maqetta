@@ -90,13 +90,17 @@ return declare("davinci.ve.ChooseParent", null, {
 			var isAllowedParent = child.allowedParent[0] === "ANY" ||
 								  containsClass(child.allowedParent, parentClassList);
 			var helper = widget.getWidgetHelper(child.type);
-			if(helper && helper.isAllowed){
-				var args = { childType:child.type, childClassList: child.classList,
-							parentType:parentType, parentClassList:parentClassList,
-							absolute:params.absolute,
-							isAllowedChild:isAllowedChild, isAllowedParent:isAllowedParent };
-				return helper.isAllowed(args);
-			}else{
+			if (helper && helper.isAllowed) {
+				return helper.isAllowed({
+					childType: child.type,
+					childClassList: child.classList,
+					parentType: parentType,
+					parentClassList: parentClassList,
+					absolute: params.absolute,
+					isAllowedChild: isAllowedChild,
+					isAllowedParent: isAllowedParent
+				});
+			} else {
 				return isAllowedChild && isAllowedParent;
 			}
 		});

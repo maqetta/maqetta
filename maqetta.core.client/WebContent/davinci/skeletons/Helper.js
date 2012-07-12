@@ -409,38 +409,62 @@ define(function() {
 		getWidgetTextExtra: function(widget) {},
 
 		/**
-		 * Helper function called to establish widget size at initial creation time
-		 * @param {object} args  holds following values:
-		 * 		parent - target parent widget for initial creation
-		 * 		size {w:(number), h:(number)}
-		 *		position {x:(number), y:(number)} - If present, this widget is being added using absolute positioning
+		 * Return the initial size for a widget, overriding the default code in CreateTool.js.
+		 *
+		 * XXX Should pass in 'widget' instance, to keep in line with other helpers.  Also, wouldn't
+		 *     we be able to use this (widget.parent??) instead of passing in 'args.parent'?
+		 * 
+		 * @param {object} args
+		 * @param {davinci/ve/_Widget} [args.parent]  target parent widget for initial creation
+		 * @param {Object} [args.size]  User-generated size (by dragging out size of widget).
+		 *             In form of { w:, h: } (dimensions).
+		 * @param {Object} [args.position]  If present, this widget is being added using
+		 *             absolute positioning.
+		 *
+		 * @return {Object}  Dimensions for widget's initial size, in form { w:, h: }
 		 */
 		initialSize: function(args) {},
 
 		/**
-		 * Override helper function to ChooseParent.js:isAllowed() for deciding whether 
+		 * Override the default action of ChooseParent.js#isAllowed() for deciding whether 
 		 * this particular widget type can be a child of a particular parent type.
-		 * @param {object} args  - object with following properties
-		 * 		{string} childType - eg "dijit.form.Button"
-		 * 		{array} childClassList - list of valid children for parent, eg ["ANY"] or ["dojox.mobile.ListItem"]
-		 * 		{string} parentType - eg "html.body"
-		 * 		{array} parentClassList - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
-		 * 		{boolean} absolute - whether current widget will be added with position:absolute
-		 * 		{boolean} isAllowedChild - whether Maqetta's default processing would allow this child for this parent
-		 * 		{boolean} isAllowedParent - whether Maqetta's default processing would allow this parent for this child
-		 * @returns {boolean}
+		 *
+		 * XXX The name 'isAllowed' is very generic.  Rename to 'isAllowedChild'?
+		 * 
+		 * @param {Object} args  object with following properties:
+		 * @param {String} args.childType
+		 *             child widget type identifier (i.e. "dijit.form.Button")
+		 * @param {String[]} args.childClassList
+		 *             list of valid children for parent, eg ["ANY"] or ["dojox.mobile.ListItem"]
+		 * @param {String} args.parentType
+		 *             parent widget type identifier (i.e. "html.body")
+		 * @param {String[]} args.parentClassList
+		 *             list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+		 * @param {boolean} args.absolute
+		 *             'true' if current child widget will be added with position:absolute
+		 * @param {boolean} args.isAllowedChild
+		 *             'true' if Maqetta's default processing would allow this child for this parent
+		 * @param {boolean} args.isAllowedParent
+		 *             'true' if Maqetta's default processing would allow this parent for this child
+		 * 
+		 * @returns {boolean}  'true' if the given child is allowed to be child of given parent
 		 */
 		isAllowed: function(args) {},
 
 		/**
-		 * Override helper function for error message that appears if CreateTool finds no valid parent targets
-		 * @param {object} args  - object with following properties
-		 * 		{string} errorMsg - default error message from application
-		 * 		{string} type - eg "dijit.form.Button"
-		 * 		{array} allowedParent - list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
-		 * 		{boolean} absolute - whether current widget will be added with position:absolute
-		 * @returns {string}	Error message to show
-		 * Note: Maqetta's default processing returns args.errorMsg
+		 * Returns error message to display if CreateTool cannot find valid parent targets.
+		 * 
+		 * @param {Object} args  object with following properties
+		 * @param {String} args.errorMsg
+		 *             default error message from application
+		 * @param {String} args.type
+		 *             widget type identifier (i.e. "dijit.form.Button")
+		 * @param {String[]} args.allowedParent
+		 *             list of valid parent for child, eg ["ANY"] or ["dojox.mobile.RoundRectList","dojox.mobile.EdgeToEdgeList"]
+		 * @param {boolean} args.absolute
+		 *             'true' if current child widget will be added with position:absolute
+		 * 
+		 * @returns {String}	Error message to show
 		 */
 		isAllowedError: function(args) {},
 
@@ -540,9 +564,8 @@ define(function() {
 		 * That must be reparented to ensure that they appear in the document in the correct order
 		 * For Example widgets with stores and models like dijitTree.
 		 * @param  {davinci/ve/_Widget} widget - Widget that is being reparentted
-		 * @param  {object} useDataDojoProps - Widget that is being reparentted
 		 */
-		reparent: function(widget, useDataDojoProps){ 
+		reparent: function(widget) { 
 
 //		Example:
 //			try{

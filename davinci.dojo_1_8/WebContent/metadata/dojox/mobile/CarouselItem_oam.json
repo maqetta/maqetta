@@ -1,8 +1,8 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/Carousel",
-    "name": "dojox.mobile.Carousel",
+    "id": "http://dojotoolkit.org/dojox/mobile/IconItem",
+    "name": "dojox.mobile.IconItem",
     "spec": "1.0",
-    "version": "1.7",
+    "version": "1.8",
     "require": [
         {
             "type": "javascript-module",
@@ -25,7 +25,7 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/mobile/Carousel",
+            "src": "dojox/mobile/CarouselItem",
             "$library": "dojo"
         }
     ],
@@ -35,24 +35,17 @@
         }
     },
     "property": {
-        "numVisible": {
-            "datatype": "number",
-            "defaultValue": 3
-        },
-        "title": {
+        "value": {
             "datatype": "string"
         },
-        "pageIndicator": {
-            "datatype": "boolean",
-            "defaultValue": true
+        "src": {
+            "datatype": "string"
         },
-        "navButton": {
-            "datatype": "boolean",
-            "defaultValue": false
+        "headerText": {
+            "datatype": "string"
         },
-        "height": {
-            "datatype": "string",
-            "defaultValue": "300px"
+        "footerText": {
+            "datatype": "string"
         }
     },
     "content": "<div></div>"

@@ -4,26 +4,14 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"dijit/_Container",
-	"dijit/Dialog",
 	"dijit/form/Button",
+	"dijit/Dialog",
 	"dojo/dom-geometry",
 	"dojo/dom-style",
 	"dojo/text!./templates/Dialog.html",
-	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!davinci/ve/nls/common",
 	"dojox/layout/ResizeHandle"
-], function(
-	declare,
-	_WidgetBase,
-	_TemplatedMixin,
-	_WidgetsInTemplateMixin,
-	_Container,
-	Dialog,
-	Button,
-	domGeometry,
-	style,
-	dialogTemplateString,
-	veNLS
-) {
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
 
 var DialogClass = declare("davinci.ui.Dialog", Dialog, {
 	contentStyle: null,

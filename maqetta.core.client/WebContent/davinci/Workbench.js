@@ -667,7 +667,7 @@ var Workbench = {
 
 	// simple dialog with an automatic OK button that closes it.
 	showMessage: function(title, message, style, callback) {
-		return Dialog.showModal(title, message, style, callback);
+		return Dialog.showMessage(title, message, style, callback);
 	},
 
 	// OK/Cancel dialog with a settable okLabel

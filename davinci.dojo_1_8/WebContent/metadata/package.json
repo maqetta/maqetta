@@ -2538,21 +2538,91 @@
 		            "category": "mobile",
 		            "icon": "resources/images/CarouselSideScrollableList.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKFMUiI5ZjxsuTlckz1jmj1jmVyL0T1kmUNvpERvpERuo0Rvo16W2jx7wEeO4Et7r0x7r26ayUt8r0x8rqrS+lGHuVKHuZXN/1aOv6u7yJypq+38++v6+aiysJ6uqWpNK5RcON6CV+esnbq2tf/X0t26tuxmXtaJhL+Zmf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZswJRwSCwSA8YhUrlMBpbPpjEqfCarUmlRezVivmBMKgweXyIMgUGMOafXKcvog2o4LKnKvH5PTUIgIh0UECkPgIIUEikLGQAnGxoJKQiOkBoKKQUcJSYkHgUpBJyeHgcpA6mqA6irqV2wsUJBADs=",
+								"properties": {
+										"navButton": true,
+										"numVisible": 2,
+										"title": "Carousel",
+										"height": "100px"
+								},
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.SwapView",
+		                    "children": [
+		                    		{
+		                    				"type": "dojox.mobile.CarouselItem",
+		                    				"properties": {
+		                    						"value":"one", 
+		                    						"headerText":"one", 
+		                    						"src":"./samples/sample_data/images/i-icon-1.png"
+		                    				}
+		                    		},
+		                    		{
+		                    				"type": "dojox.mobile.CarouselItem",
+		                    				"properties": {
+		                    						"value":"two", 
+		                    						"headerText":"two", 
+		                    						"src":"./samples/sample_data/images/i-icon-2.png"
+		                    				}
+		                    		}
+		                    ]
+		                },
+		                {
+		                    "type": "dojox.mobile.SwapView",
+		                    "children": [
+		                    		{
+		                    				"type": "dojox.mobile.CarouselItem",
+		                    				"properties": {
+		                    						"value":"three", 
+		                    						"headerText":"three", 
+		                    						"src":"./samples/sample_data/images/i-icon-3.png"
+		                    				}
+		                    		},
+		                    		{
+		                    				"type": "dojox.mobile.CarouselItem",
+		                    				"properties": {
+		                    						"value":"four", 
+		                    						"headerText":"four", 
+		                    						"src":"./samples/sample_data/images/i-icon-4.png"
+		                    				}
+		                    		}
+		                    ]
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.SwapView",
+		            "inlineEdit": "./dojox/mobile/CarouselInput",
+		            "helper": "./dojox/mobile/CarouselHelper"
+		        },
+		        {
+		            "name": "CarouselItem",
+		            "description": "Carousel Item",
+		            "type": "dojox.mobile.CarouselItem",
+		            "category": "untested",
+		            "properties": {
+		            },
+		            "resizable": "none",
+		            "allowedParent": "dojox.mobile.SwapView"
+		        },
+		        {
+		            "name": "DataCarousel",
+		            "type": "dojox.mobile.DataCarousel",
+		            "category": "mobile",
+		            "icon": "resources/images/CarouselSideScrollableList.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKFMUiI5ZjxsuTlckz1jmj1jmVyL0T1kmUNvpERvpERuo0Rvo16W2jx7wEeO4Et7r0x7r26ayUt8r0x8rqrS+lGHuVKHuZXN/1aOv6u7yJypq+38++v6+aiysJ6uqWpNK5RcON6CV+esnbq2tf/X0t26tuxmXtaJhL+Zmf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZswJRwSCwSA8YhUrlMBpbPpjEqfCarUmlRezVivmBMKgweXyIMgUGMOafXKcvog2o4LKnKvH5PTUIgIh0UECkPgIIUEikLGQAnGxoJKQiOkBoKKQUcJSYkHgUpBJyeHgcpA6mqA6irqV2wsUJBADs=",
 		            "data": [
 		                {
 		                    "type": "dojo.data.ItemFileReadStore",
 		                    "properties": {
 		                        "data": {
 		                            "items": [
-		                                {"value":"one", "headerText":"one", "src":"./sample_data/images/i-icon-1.png"},
-		                                {"value":"two", "headerText":"two", "src":"./sample_data/images/i-icon-2.png"},
-		                                {"value":"three", "headerText":"three", "src":"./sample_data/images/i-icon-3.png"}
+		                                {"value":"one", "headerText":"one", "src":"./samples/sample_data/images/i-icon-1.png"},
+		                                {"value":"two", "headerText":"two", "src":"./samples/sample_data/images/i-icon-2.png"},
+		                                {"value":"three", "headerText":"three", "src":"./samples/sample_data/images/i-icon-3.png"}
 		                            ]
 		                        }
 		                    }
 		                },
 		                {
-		                    "type": "dojox.mobile.Carousel",
+		                    "type": "dojox.mobile.DataCarousel",
 		                    "properties": {
 		                        "navButton": true,
 		                        "numVisible": 2,
@@ -2562,8 +2632,8 @@
 		                }
 		            ],
 		            "tool": "./dojox/mobile/EdgeToEdgeDataListCreateTool",
-		            "inlineEdit": "./dojox/mobile/CarouselInput",
-		            "helper": "./dojox/mobile/CarouselHelper"
+		            "inlineEdit": "./dojox/mobile/DataCarouselInput",
+		            "helper": "./dojox/mobile/DataCarouselHelper"
 		        },
 		        {
 		            "name": "FixedSplitter",

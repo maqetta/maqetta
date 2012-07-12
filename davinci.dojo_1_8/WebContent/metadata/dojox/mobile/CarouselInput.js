@@ -1,85 +1,144 @@
 define([
 	"dojo/_base/declare",
-	"dojo/string",
-	"dijit/registry",
-	"davinci/ve/commands/ModifyCommand",
-	"davinci/commands/OrderedCompoundCommand",
-	"davinci/ve/commands/ModifyAttributeCommand",
-	"davinci/ve/commands/AddCommand",
-	"davinci/ve/commands/RemoveCommand",
+	"dojo/_base/lang",
+	"dojo/_base/window",
+	"dojo/query",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojox/html/entities",
+	"../../dijit/layout/ContainerInput",
 	"davinci/ve/widget",
-	"dojo/data/ItemFileReadStore",
-	"../../dojo/data/DataStoreBasedWidgetInput",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/commands/ReparentCommand",
 	"dojo/i18n!../nls/dojox"
-], function(
+], function (
 	declare,
-	String,
-	Registry,
-	ModifyCommand,
-	OrderedCompoundCommand,
-	ModifyAttributeCommand,
-	AddCommand,
-	RemoveCommand,
+	lang,
+	window,
+	query,
+	domClass,
+	construct,
+	entities,
+	ContainerInput,
 	Widget,
-	ItemFileReadStore,
-	DataStoreBasedWidgetInput,
+	CompoundCommand,
+	AddCommand,
+	ReparentCommand,
 	dojoxNls
 ) {
 
-return declare(DataStoreBasedWidgetInput, {
+return declare(ContainerInput, {
 
-	displayOnCreate: "true",
-	
-	delimiter: ", ",
-	
 	multiLine: "true",
-
-	supportsHTML: "false", 
+	format: "rows",
+	supportsHTML: "true",
+	helpText:  "",
 	
-	helpText: "",
-
-	refreshStoreView: function(){
-		var textArea = Registry.byId("davinciIleb"),
-			value ='';
-		this._widget.dijitWidget.store.fetch({
-			query: this.query, // XXX No `query` func on this obj
-			queryOptions:{deep:true}, 
-			onComplete: function(items) {
-				items.forEach(function(item){	                    
-					value += item.value + ", ";
-					value += item.headerText + ", ";
-					value += item.src;
-					value += '\n';
-				});
-				this._data = value;
-				textArea.attr('value', value);
-			}.bind(this)
-		});
+	constructor : function() {
 	},
 
-	buildData: function() {
-		var textArea = dijit.byId("davinciIleb"),
-				value = textArea.attr('value'),
-				nodes = value,
-				rows = value.split('\n'),
-			data = { identifier: 'value', items:[]},
-			items = data.items;
-		for (var r = 0; r < rows.length; r++){ 
-			var cols = rows[r].split(',');
-			var item = {};
-			item.value = cols[0];
-			if (cols[1]){
-				item.headerText = cols[1];
-			}
-			if (cols[2]){
-				item.src = cols[2];
+	parse: function(input) {
+		var result = this.parseItems(input);
+		return result;
+	},
+	
+	update: function(widget, value) {
+		var values = value;
+		
+		this.command = new CompoundCommand();
+
+		var children = widget.getChildren();
+		var numVisible = widget.dijitWidget.get("numVisible");
+
+		// Carousel doesn't handle adding views dynamically, so rebuild the entire widget
+		dojo.forEach(children, dojo.hitch(this, function(child) {
+			this._removeChild(child);
+		}));
+
+		// go through new children and create appropriate swawpviews and CarouselItems
+		var views = [];
+		var swapView;
+		for (var i = 0; i < value.length; i++) {
+			if (i % numVisible == 0) {
+				// build new SwapView
+				swapView = {type: "dojox.mobile.SwapView", properties: {}, children: [], context: this._getContext()};
+				views.push(swapView);
 			}
 
-			items.push(item);
+			var parsed = this.parse(value[i].text);
+			swapView.children.push({type: "dojox.mobile.CarouselItem", properties: {value: parsed[0].text, headerText: parsed[1].text, src: parsed[2].text}});
 		}
 
-		return data;
+		dojo.forEach(views, dojo.hitch(this, function(view) {
+			this._addChild(widget, view);
+		}));
+
+		// now reparent
+		this._reparentWidget(widget);
+
+
+		this._addOrExecCommand();
+		return widget;
+	},
+	
+	_attr: function(widget, value) {
+		var properties = {};
+		var command = new ModifyCommand(widget, properties, value);
+		this._addOrExecCommand(command);
+	},
+	
+	_addChild: function(widget, data, index) {
+	
+		var child;
+		window.withDoc(this._getContext().getDocument(), function(){
+			child = Widget.createWidget(data);
+		}, this);
+		
+		var command = new AddCommand(child, widget, index);
+		this._addOrExecCommand(command);
+	},
+
+	_reparentWidget: function(widget) {
+		var index = dojo.indexOf(widget.getParent(), widget);
+
+		var command = new ReparentCommand(widget, widget.getParent(), index);
+		this._addOrExecCommand(command);
+	},
+
+	serialize: function(widget, callback, value) {
+		var result = [];
+		var children = widget.getChildren();
+
+		// walk all SwapViews
+		for (var i = 0; i < children.length; i++) {
+			var swapview = children[i];
+
+			dojo.forEach(swapview.getChildren(), function(item) {
+					var r = "";
+					r += item.dijitWidget.get("value") + ", ";
+
+					var ht = item.dijitWidget.get("headerText");
+					if (ht) {
+						r += ht;
+					}
+
+					r += ", " 
+
+					var src = item.dijitWidget.get("src");
+					if (src) {
+						r += src;
+					}
+
+					result.push(r);
+			});
+		}
+		
+		result = this.serializeItems(result);
+	
+		callback(result); 
 	}
+
 });
 
 });

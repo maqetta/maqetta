@@ -494,7 +494,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 				query.push('orientation=' + this._orientation);
 			}
 		}
-		if(this.context.getPreference("zazl")){
+		var useZazl = this.context.getPreference("zazl");
+		if(useZazl !== false){
 			query.push('zazl=true');
 		}
 		if(query.length) {

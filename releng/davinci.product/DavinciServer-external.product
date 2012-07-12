@@ -31,16 +31,32 @@
       <plugin id="davinci.html"/>
       <plugin id="davinci.server.gzip"/>
       <plugin id="javax.servlet"/>
+      <plugin id="javax.xml"/>
       <plugin id="maqetta.clipart"/>
       <plugin id="maqetta.core.client"/>
       <plugin id="maqetta.core.server"/>
       <plugin id="maqetta.core.server.standalone"/>
       <plugin id="maqetta.shapes"/>
+      <plugin id="maqetta.zazl"/>
       <plugin id="org.apache.commons.codec"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.httpclient"/>
       <plugin id="org.apache.commons.io"/>
       <plugin id="org.apache.commons.logging"/>
+      <plugin id="org.apache.xerces"/>
+      <plugin id="org.apache.xml.resolver"/>
+      <plugin id="org.apache.xml.serializer"/>
+      <plugin id="org.cyberneko.html"/>
+      <plugin id="org.dojotoolkit.compressor"/>
+      <plugin id="org.dojotoolkit.compressor.shrinksafe"/>
+      <plugin id="org.dojotoolkit.json"/>
+      <plugin id="org.dojotoolkit.optimizer"/>
+      <plugin id="org.dojotoolkit.optimizer.amd.rhinoast"/>
+      <plugin id="org.dojotoolkit.optimizer.amd.fragment" fragment="true"/>
+      <plugin id="org.dojotoolkit.optimizer.servlet"/>
+      <plugin id="org.dojotoolkit.optimizer.servlet.js"/>
+      <plugin id="org.dojotoolkit.server.util"/>
+      <plugin id="org.dojotoolkit.shrinksafe"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.runtime"/>
@@ -53,11 +69,14 @@
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
+      <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.update.configurator"/>
+      <plugin id="org.json"/>
       <plugin id="org.mortbay.jetty.server"/>
       <plugin id="org.mortbay.jetty.util"/>
+      <plugin id="org.mozilla.javascript"/>
    </plugins>
 
 

@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"maq-metadata-dojo-1_8/dojox/grid/DataGridCreateTool"
+	"maq-metadata-dojo/dojox/grid/DataGridCreateTool"
 ], function(
 	declare,
 	DataGridCreateTool

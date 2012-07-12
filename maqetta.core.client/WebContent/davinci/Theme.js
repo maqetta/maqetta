@@ -366,7 +366,7 @@ Theme.custom_themeset = {
 Theme.dojoThemeSets =  { 
         "version": "1.7",
         "specVersion": "0.8",
-        "helper": "maq-metadata-dojo-1_7/dojox/mobile/ThemeHelper",
+        "helper": "maq-metadata-dojo/dojox/mobile/ThemeHelper",
         "themeSets": [ 
                Theme.custom_themeset           
         ]

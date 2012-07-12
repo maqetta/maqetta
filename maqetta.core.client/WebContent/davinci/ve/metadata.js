@@ -224,7 +224,7 @@ define([
         // used by helper and creation tool classes.
         // Replace periods with underscores for module id's in case we want to do custom builds 
         // for thos modules later
-        pkg.__metadataModuleId = 'maq-metadata-' + pkg.name + '-' + pkg.version.replace(/\./g, "_");
+        pkg.__metadataModuleId = 'maq-metadata-' + pkg.name /* + '-' + pkg.version.replace(/\./g, "_")*/;
 		var packages = [ {
 			name : pkg.__metadataModuleId,
 			location : new Path(location.href).append(path).toString()

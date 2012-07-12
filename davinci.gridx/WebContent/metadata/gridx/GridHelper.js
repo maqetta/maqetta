@@ -1,8 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"maq-metadata-dojo-1_8/dojox/grid/DataGridHelper",
-	"maq-metadata-dojo-1_8/dijit/layout/LayoutContainerHelper",
-	"maq-metadata-dojo-1_8/dijit/HTMLSubElementHelper"
+	"maq-metadata-dojo/dojox/grid/DataGridHelper",
+	"maq-metadata-dojo/dijit/layout/LayoutContainerHelper",
+	"maq-metadata-dojo/dijit/HTMLSubElementHelper"
 ], function(
 	declare,
 	DataGridHelper,

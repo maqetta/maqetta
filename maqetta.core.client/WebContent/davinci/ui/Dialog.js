@@ -4,6 +4,7 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"dijit/_Container",
+	"dijit/form/Button",
 	"dijit/Dialog",
 	"dijit/form/Button",
 	"dojo/dom-geometry",
@@ -11,6 +12,7 @@ define([
 	"dojo/text!./templates/Dialog.html",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojox/layout/ResizeHandle"
+<<<<<<< HEAD
 ], function(
 	declare,
 	_WidgetBase,
@@ -24,6 +26,9 @@ define([
 	dialogTemplateString,
 	veNLS
 ) {
+=======
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
+>>>>>>> for #2135 - make carousel work
 
 var DialogClass = declare("davinci.ui.Dialog", Dialog, {
 	contentStyle: null,

@@ -10,8 +10,8 @@ define([
 	RemoveCommand
 ) {
 
-var CarouselHelper = function() {};
-CarouselHelper.prototype = {
+var DataCarouselHelper = function() {};
+DataCarouselHelper.prototype = {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options) {
 		if(!widget){
@@ -61,6 +61,6 @@ CarouselHelper.prototype = {
 
 };
 
-return CarouselHelper;
+return DataCarouselHelper;
 
 });

@@ -3449,23 +3449,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		// If the current document has changed from having zero dojox.mobile widgets to at least one
 		// or vice versa, then either remove or add document.css.
-		if(resetEverything || this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
+		var themeCssRootArr = this._themeUrl.split('/');
+		themeCssRootArr.pop();
+		themeCssRootArr.pop();
+		var documentFileName= themeCssRootArr.join('/') + '/' + this.theme.className + '/document.css';
+		if(resetEverything ||this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
 			var documentCssHeader, documentCssImport, themeCssHeader, themeCssImport;
 			var header = dojo.clone( this.getHeader());
 			for(var ss=0; ss<header.styleSheets.length; ss++){
-				if(header.styleSheets[ss].indexOf('document.css') >= 0){
+				if(header.styleSheets[ss] == documentFileName){
 					documentCssHeader = header.styleSheets[ss];
 				}
-				if(header.styleSheets[ss].indexOf('themes/') >= 0){
+				if(header.styleSheets[ss] == this._themeUrl){
 					themeCssHeader = header.styleSheets[ss];
 				}
 			}
 			var imports = this.model.find({elementType:'CSSImport'});
 			for(var imp=0; imp<imports.length; imp++){
-				if(imports[imp].url.indexOf('document.css') >= 0){
+				if(imports[imp].url == documentFileName){
 					documentCssImport = imports[imp];
 				}
-				if(imports[imp].url.indexOf('themes/') >= 0){
+				if(imports[imp].url == this._themeUrl){
 					themeCssImport = imports[imp];
 				}
 			}
@@ -3509,9 +3513,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					if(parent && documentCssFile){
 						var css = new CSSImport();
 						css.url = documentCssFileName;
-						var args = {url:documentCssPath}
-						var cssFile = Factory.getModel(args); //newHTML();
-						css.cssFile = cssFile; //documentCssFile;
+						var args = {url:documentCssPath, includeImports: true};
+						var cssFile = Factory.getModel(args); 
+						css.cssFile = cssFile; 
 						parent.addChild(css,0);
 					}
 				}

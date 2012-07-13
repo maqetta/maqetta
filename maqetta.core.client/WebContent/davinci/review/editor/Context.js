@@ -62,7 +62,7 @@ return declare("davinci.review.editor.Context", [Context], {
 						var state = args.newState || "Normal";
 						var dv = userWindow.davinci;
 						if(dv && dv.states && dv.states.setState){
-							dv.states.setState(state, args.stateContainerNode, { silent:true, updateWhenCurrent:true });
+							dv.states.setState(state, args.stateContainerNode, { focus:true, silent:true, updateWhenCurrent:true });
 							// Re-publish at the application level
 							var newArgs = dojo.clone(args);
 							newArgs.editorClass = "davinci.review.editor.ReviewEditor";

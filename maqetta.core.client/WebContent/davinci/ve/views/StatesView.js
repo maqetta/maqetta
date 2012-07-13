@@ -852,10 +852,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						[{editorClass:currentEditor.declaredClass, widget:'$all', 
 						newState:item.sceneId[0], oldState:this._themeState, context: this._editor.context}]);
 				this._themeState = item.sceneId[0];
-			} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
-				this.publish("/maqetta/appstates/state/changed", 
-						[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
-						newState:item.sceneId[0], stateContainerNode:stateContainerNode}]);
 			} else {	// PageEditor
 				if(context && stateContainerNode){
 					if(type == 'AppState') {

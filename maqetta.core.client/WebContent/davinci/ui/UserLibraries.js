@@ -1,34 +1,31 @@
 define(["dojo/_base/declare",
-        "dijit/_Templated",
-        "dijit/_Widget",
-        "davinci/Workbench",
+        "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dijit/_WidgetsInTemplateMixin",
+        "../Workbench",
         "dijit/form/Button",
         "dijit/form/TextBox",
         "dijit/form/RadioButton",
         "dijit/MenuItem",
         "dijit/Menu",
-        "davinci/library",
+        "../library",
         "dijit/form/ComboBox",
-        "dojo/i18n!davinci/ui/nls/ui",
+        "dojo/i18n!./nls/ui",
         "dojo/i18n!dijit/nls/common",
-        "davinci/model/Path",
+        "../model/Path",
         "system/resource",
-        "davinci/ve/RebuildPage",
+        "../ve/RebuildPage",
         "dojo/text!./templates/UserLibraries.html",
-        "davinci/Theme"
+        "../Theme"
         
-], function(declare, _Templated, _Widget, Workbench, Button, TextBox, RadioButton, MenuItem, Menu, Library, 
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Workbench, Button, TextBox, RadioButton, MenuItem, Menu, Library, 
 			ComboBox, uiNLS, commonNLS, Path, Resource, RebuildPage, templateString, Theme
 			){
 	
-	return declare("davinci.ui.UserLibraries", [_Widget, _Templated], {
-		
-		widgetsInTemplate: true,
-
-		uiNLS: uiNLS,
-
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		postMixInProperties: function() {
 			dojo.mixin(this, commonNLS);
+			dojo.mixin(this, uiNLS);
 			this.inherited(arguments);
 		},
 		
@@ -45,38 +42,38 @@ define(["dojo/_base/declare",
 			this._allLibs = Library.getInstalledLibs();
 			this._userLibs = Library.getUserLibs(this.getResourceBase());
 			var uiArray = [
-			    "<table cellspacing='0' cellpadding='0' width='100%'><tr><td class='header'></td><td class='header'>"+uiNLS.library+"</td><td class='header'>"+uiNLS.version+"</td><td class='header'>"+uiNLS.workspaceLocation+"</td></tr>",
+			    "<table cellspacing='0' cellpadding='0' width='100%'>",
+			    "<tr><td class='header'></td><td class='header'>{library}</td><td class='header'>{version}</td><td class='header'>{workspaceLocation}</td></tr>",
 				"<tr></tr>"
 			];
 			this.libraries = {};
 			/* build UI table */
-			for(var i =0;i<this._allLibs.length;i++){
-				this._allLibs[i].initRoot = this._getLibRoot(this._allLibs[i].id,this._allLibs[i].version);
-				var name = this._allLibs[i].id; // may want to use a better name here eventually
-				this._allLibs[i].checked = false;
+			this._allLibs.forEach(function (lib, i) {				
+				lib.initRoot = this._getLibRoot(lib.id,lib.version);
+				var name = lib.id; // may want to use a better name here eventually
+				lib.checked = false;
 				
-				if(this._getUserLib(this._allLibs[i].id,this._allLibs[i].version)!=null){
-					this._allLibs[i].checked = true;
+				if(this._getUserLib(lib.id, lib.version)){
+					lib.checked = true;
 				}
-				var checkedString = this._allLibs[i].checked?"checked":"";
+				var checkedString = lib.checked ? "checked" : "";
 				uiArray.push("<tr>");
 				uiArray.push("<td class='columna'><input type='checkbox' libItemCheck='"+ i +"'"+ checkedString +"></input></td>");
 				uiArray.push("<td class='columnb'>" + name + "</td>");
-				uiArray.push("<td class='columnc'>" + this._allLibs[i].version + "</td>");
+				uiArray.push("<td class='columnc'>" + lib.version + "</td>");
 				
-				if(this._allLibs[i].initRoot!=null){
-					uiArray.push("<td class='columnd'><input type='text' value='" + this._allLibs[i].initRoot + "' libItemPath='"+i+ "'></input></td>");
+				if(lib.initRoot){
+					uiArray.push("<td class='columnd'><input type='text' value='" + lib.initRoot + "' libItemPath='"+i+ "'></input></td>");
 				}else{
 					uiArray.push("<td class='columnd'></td>");
 				}
 				uiArray.push("</tr>");
-				
-			}
+			}, this);
 			uiArray.push("</table>");
-			var html =  uiArray.join("");
+			var html = dojo.replace(uiArray.join(""), uiNLS);
 			dojo.place(html, this._tableDiv);
-		
 		},
+
 		/* returns the base resource for this change (folder)
 		 * this is essentially the 'project', since any settings applied to a root
 		 * folder cascade to its children.
@@ -91,14 +88,6 @@ define(["dojo/_base/declare",
 			}
 		},
 
-		_getGlobalLib: function( id, version){
-			for(var i=0;i<this._allLibs.length;i++){
-				if(this._allLibs[i].id==id && this._allLibs[i].version==version) {
-					return this._allLibs[i].root;
-				}
-			}
-			return null;
-		},
 		_destroy: function(){
 			var containerNode = this.domNode;
 			dojo.forEach(dojo.query("[widgetId]", containerNode).map(dijit.byNode), function(w){
@@ -114,20 +103,29 @@ define(["dojo/_base/declare",
 		},
 		
 		_getLibRoot: function(id,version){
-			for(var i=0;i<this._userLibs.length;i++){
-				if(this._userLibs[i].id==id && this._userLibs[i].version==version)
-					return this._userLibs[i].root;
+			var libRoot;
+			if (!this._userLibs.some(function (lib) {
+				if(lib.id == id && lib.version == version) {
+					libRoot = lib.root;
+					return true;
+				}
+			})) {
+				this._allLibs.some(function (lib) {
+					if(lib.id == id && lib.version == version) {
+						libRoot = lib.root;
+						return true;
+					}
+				});
 			}
-			return this._getGlobalLib(id,version);
+			return libRoot;
 		},
 		
 		_getUserLib: function(id,version){
-			for(var i=0;i<this._userLibs.length;i++){
-				if(this._userLibs[i].id==id && this._userLibs[i].version==version)
-					return true;
-			}
-			
+			return this._userLibs.some(function (lib) {
+				return lib.id == id && lib.version == version;
+			});
 		},
+
 		_makeChange: function(values){
 			if(values.length){
 				var isOk = Library.modifyLib(values);
@@ -142,40 +140,42 @@ define(["dojo/_base/declare",
 				 * 
 				 * */
 				for(var i=0;i<values.length;i++){
-					/* check parent */
-					var baseDirectory = (new Path(values[i].base).append(values[i].oldPath)).removeLastSegments(1);
-					var found = false
+//					/* check parent */
+// unused?			var baseDirectory = new Path(values[i].base).append(values[i].oldPath).removeLastSegments(1);
 					var basePath = new Path(values[i].base);
-					for(var j=0;j<resourceChanges.length && !found;j++){
-						if(resourceChanges[j].equals(basePath)) {
-							found = true;
-						}
-					}
+					var found = resourceChanges.some(function(path) {
+						return path.equals(basePath);
+					});
 					if(!found) {
 						resourceChanges.push(basePath);
 					}
 				}
 
 				dojo.subscribe("/davinci/ui/libraryChanged", this, function(){			
-					var pages = Resource.findResource("*.html", true, this.getResourceBase(), true);
-					var pageBuilder = new RebuildPage();
-					
-					for(var i=0;i<pages.length;i++){
-						/* dont process theme editor pages */
-						if(Theme.isThemeHTML(pages[i])) {
-							continue;
-						}
-						
-						var newSource = pageBuilder.rebuildSource(pages[i].getContentSync(), pages[i]);
-						pages[i].setContents(newSource, false);
-					}
-					this.onClose();
+					Resource.findResourceAsync("*.html", true, this.getResourceBase(), true).then(function(pages){
+						var pageBuilder = new RebuildPage(),
+							promises = new DeferredList();
+						pages.forEach(function(page) {
+							/* don't process theme editor pages */
+							if(Theme.isThemeHTML(page)) {
+								return;
+							}
+							
+							promises.push(pageBuilder.rebuildSource(page.getContentSync(), page).then(function(newSource) {
+								page.setContents(newSource, false);								
+							}));
+						});
+						promises.then(function() {
+							this.onClose();
+						});
+					}.bind(this));
 				});
 
-				for(var i=0;i<resourceChanges.length;i++){
-					Resource.resourceChanged("reload", resourceChanges[i].toString());
-					Library.themesChanged(resourceChanges[i].toString());
-				}
+				resourceChanges.forEach(function (path) {
+					var loc = path.toString();
+					Resource.resourceChanged("reload", loc);
+					Library.themesChanged(loc);
+				});
 				
 				// this event will trigger a "/davinci/ui/libraryChanged" event and run the code above
 				dojo.publish("/davinci/ui/libraryChanged/start");
@@ -186,54 +186,53 @@ define(["dojo/_base/declare",
 			var changes = [];
 			function searchM (id,version){
 				for(var i=0;i<changes.length;i++){
-					if(changes[i].id == id && changes[i].version == version)
+					if(changes[i].id == id && changes[i].version == version) {
 						return changes[i];
+					}
 				}
 			}
-			var nodeList = dojo.query("[libItemCheck]", this.domNode );
-			for(var i =0;i<nodeList.length;i++){
-				var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
-				var value = dojo.attr(nodeList[i], "checked");
-				if(this._allLibs[element].checked != value){
+			dojo.query("[libItemCheck]", this.domNode).forEach(function (node) {
+				var element = parseInt(dojo.attr(node, "libItemCheck")),
+					value = dojo.attr(node, "checked"),
+					lib = this._allLibs[element];
+				if(lib.checked != value){
 					//this._updateInstall(this._allLibs[element], value);
-					
-					var item = searchM(this._allLibs[element].id,this._allLibs[element].version)
+					var item = searchM(lib.id, lib.version);
 					if(!item){
-						item = {id:this._allLibs[element].id, version:this._allLibs[element].version};
+						item = {id: lib.id, version: lib.version};
 						changes.push(item);
 					}
 					item.installed = value;
 					item.base = this.getResourceBase();
 				}
-			
-			}
-			nodeList = dojo.query("[libItemPath]", this.domNode );
-			for(var i =0;i<nodeList.length;i++){
-				
-				var element = parseInt(dojo.attr(nodeList[i], "libItemPath"));
-				var value = dojo.attr(nodeList[i], "value");
-				if(this._allLibs[element].initRoot != value){
+			}, this);
+			dojo.query("[libItemPath]", this.domNode).forEach(function (node) {
+				var element = parseInt(dojo.attr(node, "libItemPath")),
+					value = dojo.attr(node, "value"),
+					lib = this._allLibs[element];
+				if(lib.initRoot != value){
 					//this._updateInstall(this._allLibs[element], value);
-					
-					var item = searchM(this._allLibs[element].id,this._allLibs[element].version)
+					var item = searchM(lib.id, lib.version);
 					if(!item){
-						item = {id:this._allLibs[element].id, version:this._allLibs[element].version};
+						item = {id: lib.id, version: lib.version};
 						changes.push(item);
 					}
 					item.path = value;
-					item.oldPath = this._allLibs[element].initRoot;
+					item.oldPath = lib.initRoot;
 					item.base = this.getResourceBase();
 				}
-			}
+			}, this);
 			this._makeChange(changes);
 		},
 
 		okButton: function(){
 			this._processChanges();
 		},
+
 		cancelButton: function(){
 			this.onClose();
 		},
+
 		_rewriteDojo: function(){
 			var checked = dojo.attr(this.__rewriteDojo, "checked");
 			dojo.attr(this.__rewriteDojoURL, "disabled", !checked);

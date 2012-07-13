@@ -61,13 +61,12 @@
 
 				var initSinglePreview = function() {
 					// fill object urlparams with URL parameters
-					var urlparams_string = window.location.search.substring(1);
-					var urlparams_array = urlparams_string.split("&");
+					var urlparams_array = window.location.search.substring(1).split("&");
 					var urlparams = {};
 					for (var i=0; i<urlparams_array.length; i++){
 						var param=urlparams_array[i].split('=');
 						if(param.length==2){
-							urlparams[param[0]] = param[1];
+							urlparams[param[0]] = decodeURIComponent(param[1]);
 						}	
 					}
 					

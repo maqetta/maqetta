@@ -1,11 +1,12 @@
 define(["require",
         "dojo/_base/declare",
         "dojo/_base/xhr",
+        "dojo/Deferred",
         "davinci/model/Path",
         "davinci/Runtime", // TODO: remove this
 //        "davinci/Workbench",
         "davinci/model/resource/Folder"
-],function(require, declare, xhr, Path, Runtime, Folder){
+],function(require, declare, xhr, Deferred, Path, Runtime, Folder){
 var Resource = {
 
 	root: null,
@@ -201,23 +202,37 @@ var Resource = {
 		var rootString = "";
 		
 		if(userLibs) {
-			libString = "&libs="+escape(dojo.toJson(userLibs));
+			libString = "&libs="+encodeURIComponent(dojo.toJson(userLibs));
 		}
 		
 		if(root) {
-			rootString = "&root="+ escape(root);
+			rootString = "&root="+ encodeURIComponent(root);
 		}
 
 		if (options) {
 			for (var name in options) {
-				rootString += "&" + escape(name) + "=" + escape(options[name]);
+				rootString += "&" + encodeURIComponent(name) + "=" + encodeURIComponent(options[name]);
 			}
 		}
 		
-		window.location.href= "cmd/download?fileName=" + archiveName + rootString + "&resources="+escape(dojo.toJson(files))+libString;
+		window.location.href= "cmd/download?fileName=" + archiveName + rootString + "&resources="+encodeURIComponent(dojo.toJson(files))+libString;
 	},
 	
 	
+	/**
+	 * @param name  Path of resource to find.  May include wildcard.
+	 * @param ignoreCase
+	 * @param inFolder  String or Resource object in which to start search.
+	 * @returns  Promise
+	 */
+	findResourceAsync: function(name, ignoreCase, inFolder, workspaceOnly) {
+		// Deferred API placeholder until we have a real async implementation
+		var promise = new Deferred();
+		var resource = this.findResource(name, ignoreCase, inFolder, workspaceOnly);
+		promise.resolve(resource);
+		return promise;
+	},
+
 	/**
 	 * @param name  Path of resource to find.  May include wildcard.
 	 * @param ignoreCase

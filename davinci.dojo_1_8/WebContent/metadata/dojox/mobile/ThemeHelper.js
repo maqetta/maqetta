@@ -48,10 +48,6 @@ return {
 		}
 	},
 	
-	getHeadImports: function(theme){
-	    return '';
-	},
-	
 	
 	onContentChange: function(context, theme){
 		if(!context || !context.editor || !context.editor.isActiveEditor()){

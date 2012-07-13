@@ -125,7 +125,7 @@ define(["dojo/_base/declare",
 					allResources = [resource];
 				}
 				//FIXME: is it possible allResources will be repeated from the last time through the loop?
-				allResources.forEach(function(res)){
+				allResources.forEach(function(res){
 					if(!Theme.isThemeHTML(res)) {
 						promises.push(pageBuilder.rebuildSource(res.getContentSync(), res).then(function (newSource) {
 							res.setContents(newSource, true);						

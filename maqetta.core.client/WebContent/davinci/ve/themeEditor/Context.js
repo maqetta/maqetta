@@ -263,7 +263,10 @@ return declare([Context], {
 
 	getFullResourcePath: function() {
 		return this.visualEditor.basePath;
-	}
+	},
+	
+	widgetAddedOrDeleted : function(){}
+	
 });
 });
 

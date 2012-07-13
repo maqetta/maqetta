@@ -1001,7 +1001,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 					body._edit_context = this; // TODO: find a better place to stash the root context
 					this._configDojoxMobile();
-
 					var requires = this._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
 						// this is needed for FF4 to keep dijit.editor.RichText from throwing at line 32 dojo 1.5
@@ -1301,6 +1300,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var newCons = [];
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
+		this.widgetAddedOrDeleted();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	},
 

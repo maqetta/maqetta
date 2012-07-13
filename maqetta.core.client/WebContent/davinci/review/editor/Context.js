@@ -55,14 +55,14 @@ return declare("davinci.review.editor.Context", [Context], {
 						});
 //					}
 
-					userWindow.require("dojo/_base/connect").subscribe("/davinci/states/state/changed", function(args) {
+					userWindow.require("dojo/_base/connect").subscribe("/maqetta/appstates/state/changed", function(args) {
 						if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
 							return; 
 						}
 						var state = args.newState || "Normal";
 						var dv = userWindow.davinci;
 						if(dv && dv.states && dv.states.setState){
-							dv.states.setState(state, args.stateContainerNode);
+							dv.states.setState(state, args.stateContainerNode, { silent:true, updateWhenCurrent:true });
 							// Re-publish at the application level
 							var newArgs = dojo.clone(args);
 							newArgs.editorClass = "davinci.review.editor.ReviewEditor";

@@ -1,11 +1,12 @@
 define([
         "dojo/_base/declare",
         "dojo/_base/connect",
+        "davinci/Runtime",
         "davinci/maqetta/AppStates",
         "./commands/EventCommand",
         "./commands/StyleCommand",
     	"davinci/ve/utils/StyleArray"
-], function(declare, connect, maqettaStates, EventCommand, StyleCommand, StyleArray){
+], function(declare, connect, Runtime, maqettaStates, EventCommand, StyleCommand, StyleArray){
 
 var veStates = declare(maqettaStates, {
 	
@@ -24,6 +25,9 @@ var veStates = declare(maqettaStates, {
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
 	_update: function(node, statesArray) {
+		if(!Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.ve.PageEditor"){
+			return;
+		}
 		if (!node || !node._dvWidget || (!node._maqAppStates && node._maqDeltas)){
 			return;
 		}

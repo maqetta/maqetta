@@ -75,6 +75,9 @@
         "timeout": {
             "datatype": "number",
             "defaultValue": 10
+        },
+        "badge": {
+            "datatype": "string"
         }
     },
     "content": "<li label='IconItem'></li>"

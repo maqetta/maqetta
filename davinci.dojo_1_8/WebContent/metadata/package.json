@@ -2384,14 +2384,27 @@
 		                {
 		                    "type": "dojox.mobile.TabBarButton",
 		                    "properties": {
-		                        "selected": true
+		                    		"label": "Tab 1",
+		                        "selected": true,
+		                        "icon1": "samples/sample_data/images/i-icon-1.png",
+		                        "icon2": "samples/sample_data/images/i-icon-1.png"
 		                    }
 		                },
 		                {
-		                    "type": "dojox.mobile.TabBarButton"
+		                    "type": "dojox.mobile.TabBarButton",
+		                    "properties": {
+		                    		"label": "Tab 2",
+		                        "icon1": "samples/sample_data/images/i-icon-2.png",
+		                        "icon2": "samples/sample_data/images/i-icon-2.png"
+		                    }
 		                },
 		                {
-		                    "type": "dojox.mobile.TabBarButton"
+		                    "type": "dojox.mobile.TabBarButton",
+		                    "properties": {
+		                    		"label": "Tab 3",
+		                        "icon1": "samples/sample_data/images/i-icon-3.png",
+		                        "icon2": "samples/sample_data/images/i-icon-3.png"
+		                    }
 		                }
 		            ]
 		        },

@@ -134,8 +134,6 @@ return declare(ContainerInput, {
 					if(domClass.contains(n, 'mblListItemLabel')){
 						// Don't show the markup around mblListItemLabel nodes
 						text += lang.trim(n.innerHTML);
-					}else{
-						text += lang.trim(n.outerHTML);
 					}
 				}else if(n.nodeType === 3){	//textNode
 					text += n.nodeValue;

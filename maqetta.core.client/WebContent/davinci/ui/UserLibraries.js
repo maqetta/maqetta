@@ -153,17 +153,21 @@ define(["dojo/_base/declare",
 
 				dojo.subscribe("/davinci/ui/libraryChanged", this, function(){			
 					Resource.findResourceAsync("*.html", true, this.getResourceBase(), true).then(function(pages){
-						var pageBuilder = new RebuildPage();
+						var pageBuilder = new RebuildPage(),
+							promises = new DeferredList();
 						pages.forEach(function(page) {
 							/* don't process theme editor pages */
 							if(Theme.isThemeHTML(page)) {
 								return;
 							}
 							
-							var newSource = pageBuilder.rebuildSource(page.getContentSync(), page);
-							page.setContents(newSource, false);
+							promises.push(pageBuilder.rebuildSource(page.getContentSync(), page).then(function(newSource) {
+								page.setContents(newSource, false);								
+							}));
 						});
-						this.onClose();
+						promises.then(function() {
+							this.onClose();
+						});
 					}.bind(this));
 				});
 

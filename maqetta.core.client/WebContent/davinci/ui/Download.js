@@ -110,7 +110,7 @@ define(["dojo/_base/declare",
 		
 		_rewriteUrls: function(){
 			var resources = this._getResources(),
-				promises = new DeferredList();
+				promises = [];
 
 			//this._pages = Resource.findResource("*.html", true, null, true);
 			
@@ -133,7 +133,7 @@ define(["dojo/_base/declare",
 					}
 				});
 			}
-			return promises;
+			return new DeferredList(promises);
 		},
 		
 		okButton: function(){

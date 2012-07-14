@@ -10,7 +10,7 @@
             id="zazl"
             version="0.3.0">
             <libraryPath location="/loader/amd" name="/lib/zazl"></libraryPath>
-            <metadata location="app/metadata/zazl/0.3.0" />
+            <metadata location="app/metadata/core/0.3" />
       </ajaxLibrary>
    </extension>
 

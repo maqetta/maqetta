@@ -71,6 +71,9 @@
             "datatype": "string",
             "defaultValue": "TabButton"
         },
+        "badge": {
+            "datatype": "string"
+        },
         "selected": {
             "datatype": "boolean",
             "defaultValue": false

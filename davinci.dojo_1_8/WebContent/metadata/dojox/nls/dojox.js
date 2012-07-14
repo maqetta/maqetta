@@ -33,5 +33,9 @@ define({ root: {
 		"iconContainerLabel": "Label:",
 		"iconContainerIcon": "Icon:",
 		"iconContainerChooseIcon": "Choose Icon...",
-		"iconContainerNewItem": "Item "
+		"iconContainerNewItem": "Item ",
+		"iconContainerTitle": "Icon Container",
+
+		//mobile/IconMenuInput
+		"iconMenuTitle": "Icon Menu"
 }});

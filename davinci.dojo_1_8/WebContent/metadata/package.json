@@ -2685,9 +2685,75 @@
 		            "category": "untested",
 		            "icon": "resources/images/Overlay.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAPr6//z8//39//z8/vn6//T2/fH0/PT2/O7y+/P2/eju+vT3/ff5/fv8/ubt+urw++3y+/H1/OXt+uTs+efu+ujv+uvx+/T3/Orx+/P3/fn7/jdimzlknb3L3u3z+/D1/O/0+zllnTtooDtonz1roz5rokBvpvP3/ERzqUd4rkd4rUp9skt+skp9sU2BtU2BtEt8r42szPb5/FGIulCFuFCFt1KJu1KIulOJu1WMvQBAeFSMvVaOv+/1+gBVlvz9/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEAALAAAAAAQABAAAAekgECCg4SFgjyIiYqLQDwCj5CRkDxAOZKXjztANgMCMJ+goAIBOEA0BJiRADVALgwNnzEdPh0xnw0ML0AtCxq+Gj46Pr8aCy1AKQYMssE6wrUMESpAKBAXCxkFCwcFJwkLBR4oQCYYEYuKHw8mQCQKCDwNP/P0PBAUJUAiDhg3Mv8AZcywIGEEEA4TKqwA0aOhQxYKJoQAsmFDh4oYM17cYKjjoEAAOw=="
+		        },
+	        {
+		            "name": "IconMenu",
+		            "type": "dojox.mobile.IconMenu",
+		            "category": "mobile",
+		            "icon": "resources/images/contextmenu.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzpeljpfljpflTtfljtflT1jmT9mnT9nnT9onUJtokVyp0Zyp0Zypkl3rEp4q0x9sU1+sU19sE+DtVSLvVKHuVKIuVWLvVaOv////////wAAAAAAAAAAACH5BAEAABwALAAAAAAQABAAAAVQICeOZGmepqaurEpmWyzPFoltABAISTNdmwupMituKiQKTsfzASUkiHEWIT2Wu95v4yAxpjIGSYFtbhckBDiGIA0KhwPBIB8QCgaUfs/vhwAAOw==",
+		            "properties": {
+		            		"cols": 3,
+		                "style": "width:400px; height:200px"
+		            },
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.IconMenuItem",
+		                    "properties": {
+		                    		"selected": "true",
+		                        "label": "Menu 1",
+		                        "icon": "samples/sample_data/images/i-icon-1.png"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.IconMenuItem",
+		                    "properties": {
+		                        "label": "Menu 2",
+		                        "icon": "samples/sample_data/images/i-icon-2.png"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.IconMenuItem",
+		                    "properties": {
+		                        "label": "Menu 3",
+		                        "icon": "samples/sample_data/images/i-icon-3.png"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.IconMenuItem",
+		                    "properties": {
+		                        "label": "Menu 4",
+		                        "icon": "samples/sample_data/images/i-icon-4.png"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.IconMenuItem",
+		                    "properties": {
+		                        "label": "Menu 5",
+		                        "icon": "samples/sample_data/images/i-icon-5.png"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.IconMenuItem",
+		                    "properties": {
+		                        "label": "Menu 6",
+		                        "icon": "samples/sample_data/images/i-icon-6.png"
+		                    }
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.IconMenuItem",
+		            "inlineEdit": "./dojox/mobile/IconMenuInput"
+		        },
+		        {
+		            "name": "IconMenuItem",
+		            "type": "dojox.mobile.IconMenuItem",
+		            "category": "mobile",
+		            "icon": "resources/images/menuitem.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
+		            "allowedParent": "dojox.mobile.IconMenu",
 		        }
 		    ]
-		}
+		    }
       }
     }
   }

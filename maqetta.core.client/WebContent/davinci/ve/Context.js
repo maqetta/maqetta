@@ -826,9 +826,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-		// Get the helper before creating the IFRAME, or bad things happen in FF
-		var helper = Theme.getHelper(this.visualEditor.theme);
-
 		this._srcDocument=source;
 		
 		// if it's NOT the theme editor loading
@@ -956,9 +953,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 
-			if (helper && helper.getHeadImports){
-			    subs.themeHeadImports = helper.getHeadImports(this.visualEditor.theme);
-			} else if(source.themeCssFiles) { // css files need to be added to doc before body content
+			if(source.themeCssFiles) { // css files need to be added to doc before body content
 				subs.themeCssFiles = '' +
 				source.themeCssFiles.map(function(file) {
 					return '<link rel="stylesheet" type="text/css" href="' + file + '">';

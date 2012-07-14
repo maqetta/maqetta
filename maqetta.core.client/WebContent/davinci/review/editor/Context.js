@@ -62,7 +62,7 @@ return declare("davinci.review.editor.Context", [Context], {
 						var state = args.newState || "Normal";
 						var dv = userWindow.davinci;
 						if(dv && dv.states && dv.states.setState){
-							dv.states.setState(state, args.stateContainerNode, { silent:true, updateWhenCurrent:true });
+							dv.states.setState(state, args.stateContainerNode, { focus:true, silent:true, updateWhenCurrent:true });
 							// Re-publish at the application level
 							var newArgs = dojo.clone(args);
 							newArgs.editorClass = "davinci.review.editor.ReviewEditor";
@@ -71,6 +71,18 @@ return declare("davinci.review.editor.Context", [Context], {
 					});
 
 					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
+					
+					// Set "focus" for application states
+					var States = require("davinci/maqetta/AppStates");
+					var statesFocus = States.prototype.getFocus(this.rootNode);
+					if(!statesFocus){
+						var stateContainers = States.prototype.getAllStateContainers(this.rootNode);
+						if(stateContainers.length > 0){
+							var initialState = States.prototype.getInitial(stateContainers[0]);
+							States.prototype.setState(initialState, stateContainers[0], { focus:true, updateWhenCurrent:true });
+						}
+					}
+					
 					this._initDrawing();
 					connect.publish("/davinci/review/context/loaded", [this, this.fileName]);
 					
@@ -88,6 +100,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					}
 				})
 			}), containerNode);
+/*FIXME: Pretty sure it's not needed, so commenting out for now, but leaving around in case problems crop up
 			connect.subscribe("/maqetta/appstates/state/changed", function(args) { 
 				if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor" ||
 						!this.containerEditor || this.containerEditor != Runtime.currentEditor) { 
@@ -99,6 +112,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					userWin.davinci.states.setState(args.newState, args.stateContainerNode);
 				}
 			}.bind(this));
+*/
 		}
 	},
 

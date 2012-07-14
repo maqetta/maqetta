@@ -388,6 +388,10 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var form = this._commentForm,
 		_comments = this._cached[this._currentPage] || [];
 
+		var bodyNode = this._cached[this._currentPage].context.rootNode;
+		var States = require("davinci/maqetta/AppStates");
+		var statesFocus = States.prototype.getFocus(bodyNode);
+
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
 				[this, this._cached[this._currentPage].pageState, (this._cached[this._currentPage].viewScene || this._getCurrentScene().s)]);

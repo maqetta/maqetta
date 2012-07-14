@@ -19,13 +19,7 @@ define(function() {
 		 */
 		preThemeConfig: function(context) {},
 
-		/**
-		 * [getHeadImports description]
-		 * @param  {davinci/Theme} theme [description]
-		 * @return {String}       [description]
-		 */
-		getHeadImports: function(theme) {},
-
+		
 		/**
 		 * [onContentChange description]
 		 * @param  {davinci/ve/Context} context [description]

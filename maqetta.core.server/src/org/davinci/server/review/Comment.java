@@ -32,7 +32,11 @@ public class Comment implements Serializable {
 
 	public static final String PAGE_STATE = "pageState";
 
+	public static final String PAGE_STATE_LIST = "pageStateList";
+
 	public static final String VIEW_SCENE = "viewScene";
+
+	public static final String VIEW_SCENE_LIST = "viewSceneList";
 
 	public static final String OWNER_ID = "ownerId";
 	
@@ -97,7 +101,11 @@ public class Comment implements Serializable {
 
 	private String pageState;
 
+	private String pageStateList;
+
 	private String viewScene;
+
+	private String viewSceneList;
 
 	private String drawingJson;
 
@@ -139,7 +147,9 @@ public class Comment implements Serializable {
 	static {
 		fieldInclusionMap.put(Comment.ID, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.PAGE_STATE, Boolean.TRUE);
+		fieldInclusionMap.put(Comment.PAGE_STATE_LIST, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.VIEW_SCENE, Boolean.TRUE);
+		fieldInclusionMap.put(Comment.VIEW_SCENE_LIST, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.DESIGNER_ID, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.PAGE_NAME, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.OWNER_ID, Boolean.TRUE);
@@ -241,12 +251,28 @@ public class Comment implements Serializable {
 		this.pageState = pageState;
 	}
 
+	public String getPageStateList() {
+		return pageStateList;
+	}
+
+	public void setPageStateList(String pageStateList) {
+		this.pageStateList = pageStateList;
+	}
+
 	public String getViewScene() {
 		return viewScene;
 	}
 
 	public void setViewScene(String viewScene) {
 		this.viewScene = viewScene;
+	}
+
+	public String getViewSceneList() {
+		return viewSceneList;
+	}
+
+	public void setViewSceneList(String viewSceneList) {
+		this.viewSceneList = viewSceneList;
 	}
 
 	public IDavinciProject getProject() {

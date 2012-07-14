@@ -11,6 +11,9 @@
 							<element name="depth" type="integer"></element>
 							<element name="PageVersion" type="string"></element>
 							<element name="PageState" type="string"></element>
+							<element name="PageStateList" type="string"></element>
+							<element name="ViewScene" type="string"></element>
+							<element name="ViewSceneList" type="string"></element>
 							<element name="Flags">
 								<complexType>
 									<sequence>

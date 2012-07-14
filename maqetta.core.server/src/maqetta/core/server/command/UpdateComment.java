@@ -68,8 +68,14 @@ public class UpdateComment extends Command {
 		paramValue = req.getParameter(Comment.PAGE_STATE);
 		comment.setPageState(paramValue);
 
+		paramValue = req.getParameter(Comment.PAGE_STATE_LIST);
+		comment.setPageStateList(paramValue);
+
 		paramValue = req.getParameter(Comment.VIEW_SCENE);
 		comment.setViewScene(paramValue);
+
+		paramValue = req.getParameter(Comment.VIEW_SCENE_LIST);
+		comment.setViewSceneList(paramValue);
 
 		paramValue = req.getParameter(Comment.SUBJECT);
 		comment.setSubject(paramValue);
@@ -106,8 +112,12 @@ public class UpdateComment extends Command {
 					existingComment.setContent(comment.getContent());
 				if (comment.getPageState() != null)
 					existingComment.setPageState(comment.getPageState());
+				if (comment.getPageStateList() != null)
+					existingComment.setPageStateList(comment.getPageStateList());
 				if (comment.getViewScene() != null)
 					existingComment.setViewScene(comment.getViewScene());
+				if (comment.getViewSceneList() != null)
+					existingComment.setViewSceneList(comment.getViewSceneList());
 				if (comment.getSubject() != null)
 					existingComment.setSubject(comment.getSubject());
 				if (comment.getDrawingJson() != null)

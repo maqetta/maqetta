@@ -7,12 +7,17 @@ define([
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
 	"../../Runtime",
+	"davinci/XPathUtils",
+	"davinci/maqetta/AppStates",
 	"../../UserActivityMonitor",
 	"../Review",
 	"../../ve/Context",
 	'preview/silhouetteiframe'
-], function(declare, connect, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, UserActivityMonitor, Review, Context, Silhouette) {
-	
+], function(declare, connect, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, XPathUtils, AppStates, UserActivityMonitor, Review, Context, Silhouette) {
+
+// AppStates functions are only available on the prototype object
+var States = AppStates.prototype;
+
 return declare("davinci.review.editor.Context", [Context], {
 
 	setSource: function(){
@@ -183,8 +188,10 @@ return declare("davinci.review.editor.Context", [Context], {
 				 surface.commentId = ""; // Clear the filter so that no shapes can be selected
 			 })),
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(/*Object*/ stateinfo, /*Array*/ commentIds) {
-				 surface.filterScene = stateinfo.viewScene;
 				 surface.filterState = stateinfo.pageState;
+				 surface.filterStateList = stateinfo.pageStateList;
+				 surface.filterScene = stateinfo.viewScene;
+				 surface.filterSceneList = stateinfo.viewSceneList;
 				 surface.filterComments = commentIds;
 				 this._refreshSurface(surface);
 			 })),
@@ -311,6 +318,49 @@ return declare("davinci.review.editor.Context", [Context], {
 		if (doc) {
 			delete doc.annotationSureface;
 		}
+	},
+	
+	getCurrentStates: function(){
+		var rootNode = this.rootNode;
+		var currentStates = States.getAllCurrentStates(rootNode);
+		var arr = [];
+		for(var i=0; i<currentStates.length; i++){
+			var node = currentStates[i].stateContainerNode;
+			var id = node ? node.id : '';
+			var xpath = node ? XPathUtils.getXPath(node) : '';
+			arr.push({ id:id, xpath:xpath, state:currentStates[i].state });
+		}
+		return arr;
+	},
+	
+	getCurrentStatesJson: function(){
+		return dojo.toJson(this.getCurrentStates());
+	},
+	
+	getCurrentScenes: function(){
+		debugger;
+		var sceneManagers = this.sceneManagers;
+		var sceneManagerObj = {};
+		for (var smIndex in sceneManagers) {
+			var sm = sceneManagers[smIndex];
+			if (sm.getAllSceneContainers && sm.getCurrentScene) {
+				var sceneContainers = sm.getAllSceneContainers();
+				var arr = [];
+				for(var j=0; j<sceneContainers.length; j++){
+					var sc = sceneContainers[j];
+					var scene = sm.getCurrentScene(sc);
+					var sceneId = (scene && scene.id) ? scene.id : '';
+					var sceneXpath = (scene && scene.id) ? XPathUtils.getXPath(scene) : '';
+					arr.push( {scId:sc.id, scXpath:XPathUtils.getXPath(sc), sceneId:sceneId, sceneXpath:sceneXpath });
+				}
+				sceneManagerObj[sm.id] = arr;
+			}
+		}
+		return sceneManagerObj;
+	},
+	
+	getCurrentScenesJson: function(){
+		return dojo.toJson(this.getCurrentScenes());
 	}
 
 });

@@ -158,7 +158,9 @@ public class AddComment extends Command {
 		props.put("status", comment.getStatus());
 		props.put("content", comment.getContent());
 		props.put("pagestate", comment.getPageState());
+		props.put("pagestatelist", comment.getPageStateList());
 		props.put("viewscene", comment.getViewScene());
+		props.put("viewscenelist", comment.getViewSceneList());
 		props.put("time", comment.getCreated().toString());
 		
 		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
@@ -189,8 +191,14 @@ public class AddComment extends Command {
 		paramValue = req.getParameter(Comment.PAGE_STATE);
 		comment.setPageState(paramValue);
 
+		paramValue = req.getParameter(Comment.PAGE_STATE_LIST);
+		comment.setPageStateList(paramValue);
+
 		paramValue = req.getParameter(Comment.VIEW_SCENE);
 		comment.setViewScene(paramValue);
+
+		paramValue = req.getParameter(Comment.VIEW_SCENE_LIST);
+		comment.setViewSceneList(paramValue);
 
 		paramValue = req.getParameter(Comment.SUBJECT);
 		comment.setSubject(paramValue);

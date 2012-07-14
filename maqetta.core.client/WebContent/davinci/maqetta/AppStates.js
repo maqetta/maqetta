@@ -180,6 +180,25 @@ States.prototype = {
 	},
 
 	/**
+	 * Returns the array of objects that lists all statecontainers that are on the given rootnode
+	 * or any descendants and the currently active state for each given statecontainer.
+	 * @param {Element} rootnode  
+	 * @returns {[object]}  An array of objects, where each object has the following properties
+	 *           {Element} stateContainerNode
+	 *           {string|undefined|null} currently active state
+	 */ 
+	getAllCurrentStates: function(rootnode){
+		var allStateContainers = this.getAllStateContainers(rootnode);
+		var currentStates = [];
+		for(var i=0; i<allStateContainers.length; i++){
+			var node = allStateContainers[i];
+			var state = this.getState(node);
+			currentStates.push({ stateContainerNode:node, state:state });
+		}
+		return currentStates;
+	},
+
+	/**
 	 * Returns the array of application states declared on the given node.
 	 * At this point, only the BODY node can have application states declared on it.
 	 * In future, maybe application states will include a recursive feature.

@@ -137,7 +137,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				scene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
 				sceneList = this._cached[this._currentPage].viewSceneList || this._context.getCurrentScenes();
 			dojo.publish(this._currentPage+"/davinci/review/drawing/filter", 
-					[{pageState: state, pageStateList:stateList, viewScene: scene, viewSceneList:sceneList}, []]);
+					[{ /*FIXME: No longer used 
+						pageState: state, 
+						pageStateList:stateList, 
+						viewScene: scene, 
+						viewSceneList:sceneList
+						*/}, []]);
 
 		});
 
@@ -173,10 +178,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					var scene = this._getCurrentScene().s;
 					var sceneList = this._context.getCurrentScenes();
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", 
-							[{pageState: stateFocus.state, 
+							[{ /*FIXME: No longer used 
+								pageState: stateFocus.state, 
 								pageStateList: stateList, 
 								viewScene: scene,
-								viewSceneList: sceneList}, 
+								viewSceneList: sceneList
+								*/}, 
 							[]]);
 					}.bind(this), 100);
 			}
@@ -197,7 +204,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					var scene = this._cached[this._currentPage].viewScene = this._getCurrentScene().s;
 					var sceneList = this._cached[this._currentPage].viewSceneList = this._context.getCurrentScenes();
 					dojo.publish(this._currentPage+"/davinci/review/drawing/filter", 
-							[{pageState: state, pageStateList:stateList, viewScene: scene, viewSceneList:sceneList}, []]);
+							[{ /*FIXME: No longer used 
+								pageState: state, 
+								pageStateList:stateList, 
+								viewScene: scene, 
+								viewSceneList:sceneList
+								*/}, []]);
 				});
 			}
 			this.updateStatesScenes();
@@ -740,10 +752,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}
 			this.publish(this._currentPage + "/davinci/review/drawing/filter", 
 //FIXME: Shouldn't send the structure to /davinci/review/drawing/filter
-					[{pageState: this._cached[this._currentPage].pageState, 
+					[{ /*FIXME: No longer used 
+						pageState: this._cached[this._currentPage].pageState, 
 						pageStateList: this._cached[this._currentPage].pageStateList, 
 						viewScene: viewScene, 
-						viewSceneList: this._cached[this._currentPage].viewSceneList}, 
+						viewSceneList: this._cached[this._currentPage].viewSceneList
+						*/}, 
 					 focusedComments]);
 		}
 	},
@@ -763,10 +777,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 //FIXME
 		var viewScene = this._cached[this._currentPage].viewScene || this._getCurrentScene().s;
 		this.publish(this._currentPage+"/davinci/review/drawing/filter", 
-				[{pageState: this._cached[this._currentPage].pageState, 
+				[{ /*FIXME: No longer used 
+					pageState: this._cached[this._currentPage].pageState, 
 					pageStateList: this._cached[this._currentPage].pageStateList, 
 					viewScene: viewScene, 
-					viewSceneList: this._cached[this._currentPage].viewSceneList}, 
+					viewSceneList: this._cached[this._currentPage].viewSceneList
+					*/}, 
 				focusedComments]);
 		this.publish(this._currentPage+"/davinci/review/drawing/filter", [{pageState: this._cached[this._currentPage].pageState, viewScene: viewScene}, focusedComments]);
 	},
@@ -783,10 +799,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			this.commentIndices[focusedComments[0]].show();
 		}
 		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", 
-				[{pageState: pageState, 
+				[{ /*FIXME: No longer used 
+					pageState: pageState, 
 					pageStateList: pageStateList, 
 					viewScene: viewScene, 
-					viewSceneList: viewSceneList}, 
+					viewSceneList: viewSceneList
+					*/}, 
 				focusedComments]);
 	},
 
@@ -1111,10 +1129,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var focusedComments = this._cached[this._currentPage].focusedComments;
 //FIXME
 		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", 
-				[{pageState: pageState, 
+				[{ /*FIXME: No longer used 
+					pageState: pageState, 
 					pageStateList: pageStateList,
 					viewScene: viewScene, 
-					viewSceneList: viewSceneList}, 
+					viewSceneList: viewSceneList
+					*/ }, 
 				 focusedComments]);
 	},
 

@@ -214,6 +214,8 @@ return declare("davinci.review.editor.Context", [Context], {
 				 surface.filterScene = stateinfo.viewScene;
 				 surface.filterSceneList = stateinfo.viewSceneList;
 */
+/*FIXME: We shouldn't be updating the surface here. That should be done
+	by state change and scene change listeners */
 				 var statesFocus = States.getFocus(this.rootNode);
 				 surface.filterState = statesFocus ? statesFocus.state : undefined;
 				 surface.filterStateList = this.getCurrentStates();

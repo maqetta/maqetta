@@ -338,7 +338,6 @@ return declare("davinci.review.editor.Context", [Context], {
 	},
 	
 	getCurrentScenes: function(){
-		debugger;
 		var sceneManagers = this.sceneManagers;
 		var sceneManagerObj = {};
 		for (var smIndex in sceneManagers) {

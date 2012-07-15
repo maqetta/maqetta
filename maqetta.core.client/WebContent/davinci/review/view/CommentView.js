@@ -67,7 +67,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 /*
 				if (comment.pageState == pageState) {
 */
-				debugger;
 //FIXME: THIS IS WRONG. SHOULD CHECK focusedComments, not current status.
 				if(that.commentIsActive(comment)){
 					comment.enable();
@@ -531,7 +530,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		}).sort(function(c1,c2){
 			return c1.created > c2.created ? 1 : c1.created < c2.created ? -1 : 0;
 		});
-		debugger;
 		for(var i=0; i<this._cached[pageName].length; i++){
 			var comment = this._cached[pageName][i];
 			comment.pageStateList = (comment.hasOwnProperty('pageStateList') && comment.pageStateList) ? 
@@ -1078,7 +1076,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	 * Returns true if the given comment should be shown based on currently active states and scenes.
 	 */
 	commentIsActive: function(comment){
-		debugger;
 		function normalizeNormalState(val){
 			return !val ? States.NORMAL : val;
 		}

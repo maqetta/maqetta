@@ -13,9 +13,9 @@ return declare("davinci.review.drawing.tools.ExchangeTool", _ToolCommon, {
 		// summary:
 		//		Export the shapes with the same tag. If the tag is not specified, export all the shapes
 		var shapes = this.surface.getShapesByAttribute(attrName, values), 
-		tmpStr,
-		jsonString = [], 
-		type;
+			tmpStr,
+			jsonString = [], 
+			type;
 		
 		dojo.forEach(shapes, function(shape) {
 			if (shape.isInstanceOf(davinci.review.drawing.shapes.Arrow)) {
@@ -29,18 +29,18 @@ return declare("davinci.review.drawing.tools.ExchangeTool", _ToolCommon, {
 			} else {
 				return;
 			}
-
-			tmpStr = "{type:\"" + type + "\",x1:" + shape.x1 + ",y1:" + shape.y1 + ",x2:" + shape.x2 + ",y2:" + shape.y2;
+			var o = {type:type ,x1:shape.x1, y1:shape.y1, x2:shape.x2, y2:shape.y2};
 			for (var attr in shape.attributeMap) {
 				if (shape.attributeMap.hasOwnProperty(attr)) {
-					tmpStr += "," + attr + ":\"" + shape[attr] + "\"";
+					var s = (attr == 'stateList' || attr == 'sceneList') ?
+							dojo.toJson(shape[attr]) : shape[attr];
+					o[attr] = s;
 				}
 			}
 			if (type == "Text") {
-				tmpStr += ",text:\"" + escape(shape.getText()) + "\"}";
-			} else {
-				tmpStr += "}";
+				o.text = escape(shape.getText());
 			}
+			tmpStr = dojo.toJson(o);
 			jsonString.push(tmpStr);
 		});
 		return "[" + jsonString.join(",") + "]";
@@ -71,6 +71,12 @@ return declare("davinci.review.drawing.tools.ExchangeTool", _ToolCommon, {
 			delete s.y1;
 			delete s.y2;
 			s.a2c = a2c;
+			if(s.stateList){
+				s.stateList = dojo.fromJson(s.stateList);
+			}
+			if(s.sceneList){
+				s.sceneList = dojo.fromJson(s.sceneList);
+			}
 			shape = new clazz(this.surface, x1, y1, x2, y2, s);
 			shape.filterAttributes = this.filterAttributes;
 			shape.render();

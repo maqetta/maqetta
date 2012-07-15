@@ -1,5 +1,7 @@
 define([
 	"dojo/_base/declare",
+	"davinci/XPathUtils",
+	"davinci/maqetta/AppStates",
 	"davinci/review/Review",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
@@ -10,7 +12,10 @@ define([
 	"dojo/date/stamp",
 	"dojo/i18n!./nls/widgets",
 	"dojo/text!./templates/Comment.html"
-], function(declare, Review, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, widgetsNls, commentTemplate) {
+], function(declare, XPathUtils, AppStates, Review, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, widgetsNls, commentTemplate) {
+
+// AppStates functions are only available on the prototype object
+var States = AppStates.prototype;
 
 /*
  * Transform the date passed to a relative time against current time on server.
@@ -425,6 +430,60 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 
 	getBody: function() {
 		return this.mainBody;
+	},
+	
+	/**
+	 * Set current states and scenes based on comment.pageStateList and comment.viewSceneList
+	 */
+	setStatesScenes: function() {
+		var e = davinci.Workbench.getOpenEditor(); 
+		var ctx = (e && e.getContext) ? e.getContext() : null;
+		var rootNode = ctx ? ctx.rootNode : null;
+		var doc = rootNode && rootNode.ownerDocument;
+		if(doc){
+			if(this.pageStateList){
+				// Go backwards so that highest-level states are set last
+				for(var i=this.pageStateList.length-1; i>-0; i--){
+					var o = this.pageStateList[i];
+					var stateContainerNode = o.id ? doc.getElementById(o.id) : null;
+					if(!stateContainerNode && o.xpath){
+						var query = XPathUtils.toCssPath(o.xpath);
+						stateContainerNode = doc.querySelector(query);
+					}
+					if(stateContainerNode){
+						States.setState(o.state, stateContainerNode, { updateWhenCurrent:true });
+					}
+				}
+			}
+			if(this.viewSceneList && ctx.sceneManagers){
+				for(var smIndex in this.viewSceneList){
+					var sm = ctx.sceneManagers[smIndex];
+					if(sm){
+						var viewSceneItems = this.viewSceneList[smIndex];
+						// Go backwards so that highest-level scenes are set last
+						for(var j=viewSceneItems.length-1; j>=0; j--){
+							var o = viewSceneItems[j];
+							var sceneContainerNode = o.scId ? doc.getElementById(o.scId) : null;
+							if(!sceneContainerNode && o.scXpath){
+								var query = XPathUtils.toCssPath(o.scXpath);
+								sceneContainerNode = doc.querySelector(query);
+							}
+/*FIXME: Probably should fix the signature of selectScene. If so, then this logic would be needed
+							var sceneNode = o.sceneId ? doc.getElementById(o.sceneId) : null;
+							if(!sceneNode && o.sceneXpath){
+								var query = XPathUtils.toCssPath(o.sceneXpath);
+								sceneNode = doc.querySelector(query);
+							}
+							if(sceneContainerNode && sceneNode){
+*/
+							if(sceneContainerNode && o.sceneId){
+								sm.selectScene({sceneContainerNode:sceneContainerNode, sceneId:o.sceneId});
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 });

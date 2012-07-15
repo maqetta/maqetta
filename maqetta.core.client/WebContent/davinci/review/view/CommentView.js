@@ -200,11 +200,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 							[{pageState: state, pageStateList:stateList, viewScene: scene, viewSceneList:sceneList}, []]);
 				});
 			}
-			
-			var sceneObj = this._getCurrentScene();
-			if (sceneObj.s) { // if there is a sceneId in the scene object
-				this.setCurrentScene(sceneObj.sm, sceneObj.s);
-			}
+			this.updateStatesScenes();
 		});
 
 		dojo.subscribe("/davinci/ui/editorSelected", this, function(args) {
@@ -709,9 +705,13 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			}, this);
 			focusedComments.length = 0;
 			focusedComments.push(widget.commentId);
+			var comment = this.commentIndices[widget.commentId];
+			comment.setStatesScenes();
 		} else if (evt.ctrlKey || evt.metaKey) {
 			if (!dojo.some(focusedComments, function(commentId){ return commentId == widget.commentId; })) {
 				focusedComments.push(widget.commentId);
+				var comment = this.commentIndices[widget.commentId];
+				comment.setStatesScenes();
 			}
 		}
 
@@ -739,6 +739,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				viewScene = widget.viewScene;
 			}
 			this.publish(this._currentPage + "/davinci/review/drawing/filter", 
+//FIXME: Shouldn't send the structure to /davinci/review/drawing/filter
 					[{pageState: this._cached[this._currentPage].pageState, 
 						pageStateList: this._cached[this._currentPage].pageStateList, 
 						viewScene: viewScene, 
@@ -1100,19 +1101,24 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		})]).play();
 	},
 	
-	setCurrentScene: function(SceneManager, sceneId){
-		this._cached[this._currentPage].viewScene = sceneId;
-		var pageState = this._cached[this._currentPage].pageState;
+	updateStatesScenes: function(){
+		var rootNode = this._context.rootNode;
+		var statesFocus = States.getFocus(rootNode);
+		var pageState = this._cached[this._currentPage].pageState = statesFocus.state;
+		var pageStateList = this._cached[this._currentPage].pageStateList = this._context.getCurrentStates();;
+		var viewScene = this._cached[this._currentPage].viewScene = this._getCurrentScene().s;
+		var viewSceneList = this._cached[this._currentPage].viewSceneList = this._context.getCurrentScenes();;
 		var focusedComments = this._cached[this._currentPage].focusedComments;
 //FIXME
 		dojo.publish(this._currentPage+"/davinci/review/drawing/filter", 
 				[{pageState: pageState, 
-					pageStateList: this._cached[this._currentPage].pageStateList,
-					viewScene: sceneId, 
-					viewSceneList: this._cached[this._currentPage].viewSceneList}, 
+					pageStateList: pageStateList,
+					viewScene: viewScene, 
+					viewSceneList: viewSceneList}, 
 				 focusedComments]);
 	},
-	
+
+//FIXME: Is this really used and needed?
 	/**
 	 * Returns true if the given comment should be shown based on currently active states and scenes.
 	 */

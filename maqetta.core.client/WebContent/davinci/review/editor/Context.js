@@ -55,7 +55,7 @@ return declare("davinci.review.editor.Context", [Context], {
 								return; 
 							}
 							if (this._commentView) {
-								this._commentView.setCurrentScene(SceneManager, sceneId);
+								this._commentView.updateStatesScenes();
 							}							
 						});
 //					}
@@ -67,7 +67,12 @@ return declare("davinci.review.editor.Context", [Context], {
 						var state = args.newState || "Normal";
 						var dv = userWindow.davinci;
 						if(dv && dv.states && dv.states.setState){
+/*FIXME: Shouldn't be necessary - event was spawned because state just changed. No need to change it again.
 							dv.states.setState(state, args.stateContainerNode, { focus:true, silent:true, updateWhenCurrent:true });
+*/
+							if (this._commentView) {
+								this._commentView.updateStatesScenes();
+							}							
 							// Re-publish at the application level
 							var newArgs = dojo.clone(args);
 							newArgs.editorClass = "davinci.review.editor.ReviewEditor";
@@ -203,10 +208,17 @@ return declare("davinci.review.editor.Context", [Context], {
 			 })),
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(/*Object*/ stateinfo, /*Array*/ commentIds) {
 				 var surface = this.surface;
+/*FIXME: surface should update based on event listeners to setstate and setscene
 				 surface.filterState = stateinfo.pageState;
 				 surface.filterStateList = stateinfo.pageStateList;
 				 surface.filterScene = stateinfo.viewScene;
 				 surface.filterSceneList = stateinfo.viewSceneList;
+*/
+				 var statesFocus = States.getFocus(this.rootNode);
+				 surface.filterState = statesFocus ? statesFocus.state : undefined;
+				 surface.filterStateList = this.getCurrentStates();
+				 surface.filterScene =  this.getCurrentScene();
+				 surface.filterSceneList = this.getCurrentScenes();
 				 surface.filterComments = commentIds;
 				 this._refreshSurface(surface);
 			 })),
@@ -269,9 +281,7 @@ return declare("davinci.review.editor.Context", [Context], {
 
 		dojo.forEach(shapes, function(shape) {
 			var result = "hidden";
-			// Note: surface.filterColorAliases.length == 0 in single-user mode
-			// The dojo.some check if for multi-user mode
-			if (surface.filterColorAliases.length == 0 ||
+			if (Runtime.singleUserMode() ||
 					dojo.some(surface.filterColorAliases, function(colorAlias) {
 				//FIXME: Hack to fix #1486 just before Preview 4 release
 				// Old code - quick check - covers case where server uses same string for username and email
@@ -370,6 +380,26 @@ return declare("davinci.review.editor.Context", [Context], {
 			}
 		}
 		return sceneManagerObj;
+	},
+	
+	// FIXME: Probably not needed because should be using sceneList everywhere now
+	// instead of checking for current scene
+	getCurrentScene: function(){
+		var sceneManagers = this.sceneManagers;
+		var sceneManagerObj = {};
+		for (var smIndex in sceneManagers) {
+			var sm = sceneManagers[smIndex];
+			if (sm.getAllSceneContainers && sm.getCurrentScene) {
+				var sceneContainers = sm.getAllSceneContainers();
+				for(var j=0; j<sceneContainers.length; j++){
+					var sc = sceneContainers[j];
+					var scene = sm.getCurrentScene(sc);
+					var sceneId = (scene && scene.id) ? scene.id : '';
+					return sceneId;
+				}
+			}
+		}
+		return;
 	},
 	
 	/**

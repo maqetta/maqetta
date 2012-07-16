@@ -34,12 +34,23 @@
 .editFocusActionBar {
 	width:300px;
 	height:32px;
-	background:#D3E1EE;
-	border:1px solid gray;
 	position:absolute;
 	left:0px;
 	top:-40px;
-	opacity:.9;
+	background:rgba(255,255,255,.9);
+}
+.editFocusActionBar:hover {
+	background:white;
+}
+.editFocusActionBarButton {
+	display:inline-block;
+	width:30px;
+	height:30px;
+	border:1px solid gray;
+	color: #666;
+	line-height:30px;
+	font-size:18px;
+	text-align:center;
 }
 .editFocusFrame {
 	position:absolute;

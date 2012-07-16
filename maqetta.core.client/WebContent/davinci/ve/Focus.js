@@ -31,6 +31,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		dojo.addClass(this.domNode, 'maqFocus');
 		dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
 		this._actionBar = dojo.create("div", {"class": "editFocusActionBar"}, this.domNode);
+		for(var i=0; i<7; i++){
+			dojo.create("span", {"class": "editFocusActionBarButton", innerHTML:i }, this._actionBar);
+		}
 		this._stdChrome = dojo.create("div", {"class": "editFocusStdChrome"}, this.domNode);
 		
 		this._frames = [];

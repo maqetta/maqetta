@@ -58,6 +58,9 @@ BODY{
 #davinci_app .dijitSplitterV {
 	width:4px;
 }
+.claro #editors_tabcontainer {
+	z-index:-4;	/* For some reason, need negative z-index when using StackContainer */
+}
 .claro #editors_tabcontainer .dijitBorderContainer {
 	background-color:#888;
 }

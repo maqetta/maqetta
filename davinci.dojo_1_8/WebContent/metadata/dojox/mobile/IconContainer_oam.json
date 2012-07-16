@@ -40,7 +40,23 @@
         },
         "pressedIconOpacity": {
             "datatype": "number",
-            "defaultValue": 0.4
+            "defaultValue": 0.4,
+            "option": [
+                {"value": "slide"},
+                {"value": "fade"},
+                {"value": "flip"},
+                {"value": "cover"},
+                {"value": "coverv"},
+                {"value": "dissolve"},
+                {"value": "reveal"},
+                {"value": "revealv"},
+                {"value": "scaleIn"},
+                {"value": "scaleOut"},
+                {"value": "slidev"},
+                {"value": "swirl"},
+                {"value": "zoomIn"},
+                {"value": "zoomOut"}
+            ]
         },
         "transition": {
             "datatype": "string",
@@ -61,6 +77,10 @@
             "defaultValue": "My Application"
         },
         "single": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "editable": {
             "datatype": "boolean",
             "defaultValue": false
         }

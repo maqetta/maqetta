@@ -61,6 +61,19 @@
         "iconPos": {
             "datatype": "string"
         },
+        "select": {
+            "datatype": "string",
+            "defaultValue": "",
+            "option": [
+                {"value": ""},
+                {"value": "single"},
+                {"value": "multiple"}
+            ]
+        },
+        "editable": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
         "query": {
             "datatype": "json",
             "hidden": true

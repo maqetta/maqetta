@@ -15,8 +15,10 @@ define([
 	"dijit/form/DropDownButton",
 	"dijit/form/ToggleButton",
 	"dijit/layout/BorderContainer",
+	"dijit/layout/StackController",
 	"dijit/layout/StackContainer",
 	"dijit/layout/ContentPane",
+	"dijit/layout/TabController",
 	"dijit/layout/TabContainer",
 	"system/resource",
 	"dojo/i18n!./nls/webContent",
@@ -44,8 +46,10 @@ define([
 		DropDownButton,
 		ToggleButton,
 		BorderContainer,
+		StackController,
 		StackContainer,
 		ContentPane,
+		TabController,
 		TabContainer,
 		sysResource,
 		webContent,
@@ -235,6 +239,7 @@ var Workbench = {
 	activePerspective: "",
 	actionScope: [],
 	_DEFAULT_PROJECT: "project1",
+	hideEditorTabs: true,
 
 	run: function() {
 		Runtime.run();
@@ -484,12 +489,14 @@ var Workbench = {
 			Workbench.editorTabs = mainBody.tabs.editors =
 				new (Workbench.hideEditorTabs ? StackContainer : TabContainer)({
 					id: "editors_tabcontainer",
-					controllerWidget: "dijit.layout.TabController"
+					controllerWidget: (Workbench.hideEditorTabs ? "dijit.layout.StackController" : "dijit.layout.TabController")
 				});
-			Workbench.editorTabs.setTitle = function(tab, title) { 
-				tab.attr('title', title);
-				this.tablist.pane2button[tab.id].attr('label', title);
-			};
+			if(!Workbench.hideEditorTabs){
+				Workbench.editorTabs.setTitle = function(tab, title) { 
+					tab.attr('title', title);
+					this.tablist.pane2button[tab.id].attr('label', title);
+				};
+			}
 			
 			dojo.connect(mainBody.tabs.editors, "removeChild", this, Workbench._editorTabClosed);
 		}
@@ -1225,9 +1232,11 @@ var Workbench = {
 		}
 
 		// add loading spinner
-		var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
-		dojo.addClass(loadIcon[0],'tabButtonLoadingIcon');
-		dojo.removeClass(loadIcon[0],'dijitNoIcon');
+		if(!Workbench.hideEditorTabs){
+			var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
+			dojo.addClass(loadIcon[0],'tabButtonLoadingIcon');
+			dojo.removeClass(loadIcon[0],'dijitNoIcon');
+		}
 		
 		if (!keywordArgs.noSelect) {
 			tabContainer.selectChild(tab);
@@ -1244,16 +1253,20 @@ var Workbench = {
 				Workbench._switchEditor(tab.editor, keywordArgs.startup);
 			}
 
-			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
-			dojo.addClass(loadIcon[0],'dijitNoIcon');
+			if(!Workbench.hideEditorTabs){
+				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
+				dojo.addClass(loadIcon[0],'dijitNoIcon');
+			}
 
 			setTimeout(function() {
 				tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 			}, 100);
 			d.resolve(tab.editor);
 		}, function(error) {
-			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
-			dojo.addClass(loadIcon[0],'tabButtonErrorIcon');
+			if(!Workbench.hideEditorTabs){
+				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
+				dojo.addClass(loadIcon[0],'tabButtonErrorIcon');
+			}
 
 			d.reject(error);
 		});

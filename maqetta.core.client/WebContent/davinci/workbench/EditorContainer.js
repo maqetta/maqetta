@@ -2,9 +2,10 @@ define(["require",
 	"dojo/_base/declare",
 	"davinci/workbench/_ToolbaredContainer",
 	"davinci/Runtime",
+	"davinci/Workbench",
 	"dojo/_base/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, Workbench, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
@@ -54,6 +55,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
+		this.toolbarDiv.style.display = 'none';
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
 		require([editorExtension.editorClass], function(EditorCtor) {
@@ -129,11 +131,13 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	setDirty: function (isDirty) {
-		var title = this._getTitle();
-		if (isDirty){
-			title="*"+title;
+		if(!davinci.Workbench.hideEditorTabs){
+			var title = this._getTitle();
+			if (isDirty){
+				title="*"+title;
+			}
+			davinci.Workbench.editorTabs.setTitle(this,title);
 		}
-		davinci.Workbench.editorTabs.setTitle(this,title);
 		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
 	},

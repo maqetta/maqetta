@@ -1664,7 +1664,7 @@
 		            "name": "Rating",
 		            "description": "Rating",
 		            "type": "dojox.form.Rating",
-		            "category": "untested",
+		            "category": "mobile",
 		            "icon": "resources/images/rating.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAG6awXqgwpe72ylro16XyHehxZy71J691qPA2LTP5rrQ4r3S487e63+pyZu918DV5c3f7c/g7P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVAoCSOZGmeaKquLEkQIyGMSUIOwzgEo2GIuGAw4Cv6HMIGjvgwQiQAXAG6W0gUPqtkgDjkuIufIcL4tc7otLoUAgA7",
 		            "resizable": "none"
@@ -2751,6 +2751,37 @@
 		            "icon": "resources/images/menuitem.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
 		            "allowedParent": "dojox.mobile.IconMenu",
+		        },
+		        {
+		            "name": "Accordion",
+		            "description": "Accordion",
+		            "type": "dojox.mobile.Accordion",
+		            "category": "mobile",
+		            "icon": "resources/images/accordion.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
+		            "initialSize": "auto",
+		            "properties": {
+		                "fixedHeight": "true",
+		                "roundRect": "true"
+		            },
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.ContentPane",
+		                    "properties": {
+		                        "label": "Pane 1",
+		                        "selected": "true"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.ContentPane",
+		                    "properties": {
+		                        "label": "Pane 2"
+		                    }
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.ContentPane, dojox.mobile.ScrollableView",
+		            "inlineEdit": "./dojox/mobile/AccordionInput",
+		            "helper": "./dijit/layout/LayoutContainerHelper"
 		        }
 		    ]
 		    }

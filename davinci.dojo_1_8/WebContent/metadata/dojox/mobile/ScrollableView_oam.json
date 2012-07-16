@@ -64,6 +64,10 @@
         "disableFlashScrollBar": {
             "datatype": "boolean",
             "defaultValue": false
+        },
+        "threshold": {
+        	"datatype": "number",
+        	"defaultValue": 4	
         }
     },
     "content": "<div></div>"

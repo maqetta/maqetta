@@ -672,7 +672,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 label: 'WidgetOuterContainer',
                 id: this._context.theme.name + '_WidgetOuterContainer',
                 checked: checked,
-                onClick: dojo.hitch(this, "_subwidgetSelected")
+                onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_WidgetOuterContainer')
             });
             pMenu.addChild(item);
             this._currentItem = item;
@@ -682,7 +682,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                     label: s,
                     id: this._context.theme.name + '_' + s,
                     checked: checked,
-                    onClick: dojo.hitch(this, "_subwidgetSelected")
+                    onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_' + s)
                 });
                 pMenu.addChild(menuItem);
                 if (checked) {
@@ -705,11 +705,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         e.stopPropagation();
     },
     
-    _subwidgetSelected: function(e){
+    _subwidgetSelected: function(id, e){
         e.stopPropagation();
         var localDijit = this._context.getDijit();
-        var item = localDijit.byId(e.currentTarget.id);
-        //var item = dijit.byId(e.currentTarget.id);
+        var item = localDijit.byId(id);
         var subwidget;
         if (item.checked){
             if (this._currentItem && item != this._currentItem) {
@@ -718,7 +717,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._currentItem = item;
             subwidget = this._currentItem.label;
         } else {
-            //this._currentItem = dijit.byId(this._context.theme.name + '_WidgetOuterContainer');
             this._currentItem = localDijit.byId(this._context.theme.name + '_WidgetOuterContainer');
             if (this._currentItem) {
                 this._currentItem.set("checked", true);

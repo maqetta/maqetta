@@ -1737,10 +1737,10 @@
 		            "helper": "./dijit/layout/ContentPaneHelper"
 		        },
 		        {
-		            "name": "ScrollPane",
+		            "name": "ScrollablePane",
 		            "description": "Scroll Pane",
-		            "type": "dojox.layout.ScrollPane",
-		            "category": "untested",
+		            "type": "dojox.layout.ScrollablePane",
+		            "category": "mobile",
 		            "icon": "resources/images/scrollpane.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPn6/jFOiDFOh+zx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DZYkDhbkzdYkDlbk97o+ODp+N/o9z5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm/X4/ENupENuo0Ruo+fv+fL2+0l3rEl4rEh2qkl2qk6BtE+BtFCFt1CEtlOIu1OJulaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaTwFdrSCwaXymXUlVpNpPLl8kVSJSczWm19Nq4LiINtuIFa16PQ6OBWLvTa8Rr5Ro7WQuFhDWv2yt4enwnLhaGh4YnExMRKC8kLiGSk5IjixEkj5GUk5aMmR4uA6OkoyAeHh8fLxkuDK+wrxxKLhQvDi4duru6EFQJEC8GLgDFxsXDGAQFLwHOAs7R0s4v1dbX2C9BADs=",
 		            "initialSize": "auto",

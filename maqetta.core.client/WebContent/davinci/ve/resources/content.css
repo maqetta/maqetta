@@ -31,6 +31,16 @@
 	z-index:1000000;
 }
 
+.editFocusActionBar {
+	width:300px;
+	height:32px;
+	background:#D3E1EE;
+	border:1px solid gray;
+	position:absolute;
+	left:0px;
+	top:-40px;
+	opacity:.9;
+}
 .editFocusFrame {
 	position:absolute;
 	overflow:hidden;

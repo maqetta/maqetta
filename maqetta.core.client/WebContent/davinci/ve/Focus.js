@@ -30,6 +30,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 		dojo.addClass(this.domNode, 'maqFocus');
 		dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
+		this._actionBar = dojo.create("div", {"class": "editFocusActionBar"}, this.domNode);
 		this._stdChrome = dojo.create("div", {"class": "editFocusStdChrome"}, this.domNode);
 		
 		this._frames = [];
@@ -78,7 +79,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		return this._moverCurrent;
 	},
 
-	show: function(widget, inline){
+	show: function(widget, params){
+		var inline = params && params.inline;
+		var actionBar = params && params.actionBar;
 		if (!widget){
 			// sometimes you get no widget when  DnD in split screen
 			return; 

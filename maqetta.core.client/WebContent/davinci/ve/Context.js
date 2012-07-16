@@ -2064,7 +2064,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	selectionShowFocus: function(){
 		var selection = this.getSelection();
 		for(var i=0; i<selection.length; i++){
-			this._focuses[i].show(selection[i]);
+			this._focuses[i].show(selection[i], { actionBar:(selection.length==1) });
 		}
 	},
 	
@@ -2103,7 +2103,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(focus.domNode.parentNode != containerNode){
 					containerNode.appendChild(focus.domNode);
 				}
-				focus.show(w[windex],inline);
+				focus.show(w[windex], { inline:inline, actionBar:(this._selection.length==1 && !inline) });
 			}else{ // hide
 				focus.hide();
 			}

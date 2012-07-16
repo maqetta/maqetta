@@ -1006,7 +1006,7 @@ var Workbench = {
 		if (position == 'left' && !mainBody.tabs.perspective.left) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 230px;', id:"left_mainBody", 
+					style: 'width: 300px;', id:"left_mainBody", 
 					region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
 		}
@@ -1021,24 +1021,26 @@ var Workbench = {
 
 			var region = positionSplit[0],
 				parent = mainBodyContainer,
-				clazz = '',
+				clazz = 'davinciPalette ',
 				style = '';
 			if (positionSplit[1] && (region == 'left' || region == 'right')) {
 				parent = mainBody.tabs.perspective[region];
 				region = positionSplit[1];
 				if (positionSplit[1] == "top") {
 					region = "center";
-					clazz = "davinciTopPalette";
+					clazz += "davinciTopPalette";
 				} else {
-					style = 'height:25%;';
-					clazz = "davinciBottomPalette";
+					style = 'height:50%;';
+					clazz += "davinciBottomPalette";
 				}
 			} else if(region == 'bottom') {
 				style = 'height:80px;';
-				clazz = "davinciBottomPalette";
+				clazz += "davinciBottomPalette";
 			}
 			cp1 = mainBody.tabs.perspective[position] = new TabContainer({
 				region: region,
+				tabPosition:positionSplit[0]+'-h',
+				tabStrip:false,
 				'class': clazz,
 				style: style,
 				splitter: region != "center",

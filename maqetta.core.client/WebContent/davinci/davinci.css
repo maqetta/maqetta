@@ -376,8 +376,24 @@ davinci_top_bar .dijitButtonNode {
 	text-decoration:underline;
 }
 
-#davinci_file_tabs, #davinci_toolbar_pane {
+#davinci_file_tabs {
 	height:32px;
+}
+
+#davinci_toolbar_pane {
+	height:32px;
+	padding:0px;
+}
+
+#davinci_app .davinciPalette .dijitTab {
+	width:32px;
+	height:32px;
+	background-image: url(img/sprite.png);
+	background-position: 0 -516px;
+}
+
+#davinci_app .davinciPalette .dijitTab .tabLabel {
+	display:none;
 }
 
 #toolbar_container {

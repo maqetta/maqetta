@@ -44,12 +44,8 @@ return {
                     position: "left"
                 },
                 {
-                    viewID: "davinci.ve.style",
-                    position: "right"
-                },
-                {
                     viewID: "davinci.ui.comment",
-                    position: "right"
+                    position: "left"
                 },
                 {
                     viewID: "davinci.ui.navigator",
@@ -64,8 +60,12 @@ return {
                     position: "left"
                 },
                 {
+                    viewID: "davinci.ve.style",
+                    position: "left"
+                },
+                {
                     viewID: "davinci.ve.states",
-                    position: "right-bottom"
+                    position: "left-bottom"
                 }
             /*
              * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }

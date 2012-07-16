@@ -505,17 +505,40 @@ var Workbench = {
 		// Put the toolbar and the main window in a border container
 		var appBorderContainer = dijit.byId('davinci_app');
 		if (!appBorderContainer) {
-			appBorderContainer = new BorderContainer({       
+			appBorderContainer = new BorderContainer({
 				design: "headline",
 				gutters: false,
 				liveSplitters: false
 			}, "davinci_app");
 			
 			var topBarPane = new ContentPane({
-					region: "top"                    
+				region: "top",
+				layoutPriority:1,
 			}, "davinci_top_bar");
 			
+			var fileTabsPane = new TabContainer({
+				id:'davinci_file_tabs',
+				region: "top",
+				layoutPriority:2
+			});
+			var toolbarPane = new ContentPane({
+				id:'davinci_toolbar_pane',
+				region: "top",
+				layoutPriority:3,
+				content:'toolbar goes here'
+			});
+			var tempCP = new ContentPane({
+				title:'file1.html',
+				content:'hello there'
+			});
+			fileTabsPane.addChild(tempCP);
+			//fileTabsPane.layout();
+			//fileTabsPane.startup();
+			//fileTabsPane.layout();
+		
 			appBorderContainer.addChild(topBarPane);
+			appBorderContainer.addChild(fileTabsPane);
+			appBorderContainer.addChild(toolbarPane);
 			appBorderContainer.addChild(mainBodyContainer);
 			appBorderContainer.layout();	
 			appBorderContainer.startup();

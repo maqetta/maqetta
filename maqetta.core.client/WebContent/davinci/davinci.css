@@ -375,6 +375,11 @@ davinci_top_bar .dijitButtonNode {
 #davinci_logoff:hover {
 	text-decoration:underline;
 }
+
+#davinci_file_tabs, #davinci_toolbar_pane {
+	height:32px;
+}
+
 #toolbar_container {
 	display: table;
 	margin: 0 auto;

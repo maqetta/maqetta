@@ -561,7 +561,7 @@ States.prototype = {
 						}
 						var o = {};
 						o[p] = this._getFormattedValue(p, value);
-						newArray.push(o)
+						newArray.push(o);
 					}
 				}
 			}
@@ -868,7 +868,7 @@ States.prototype = {
 			this._update(node, statesArray);
 			this._updateSrcState (node);
 		}
-		connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName, stateContainerNode:node, }]);
+		connect.publish("/davinci/states/state/renamed", [{node:node, oldName:oldName, newName:newName, stateContainerNode:node }]);
 		return true;
 	},
 	
@@ -1151,7 +1151,7 @@ States.prototype = {
 	
 	initialize: function() {	
 		if (!this.subscribed) {
-			connect.subscribe("/maqetta/appstates/state/changed", function(e) { 
+			connect.subscribe("/maqetta/appstates/state/changed", this, function(e) { 
 				if(e.editorClass){
 					// Event targets one of Maqetta's editors, not from runtime events
 					return;
@@ -1165,7 +1165,7 @@ States.prototype = {
 					var statesArray = this.getStatesArray(child, e.oldState, e.newState, e.stateContainerNode);
 					davinci.states._update(child, statesArray);
 				}
-			}.bind(this));
+			});
 			
 			this.subscribed = true;
 		}

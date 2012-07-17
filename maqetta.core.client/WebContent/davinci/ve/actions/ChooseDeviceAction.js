@@ -11,7 +11,8 @@ define([
     	"dojo/text!../../ui/templates/ChooseDevice.html",
     	"dojo/i18n!davinci/ve/nls/ve",
     	"dojo/i18n!../../actions/nls/actions",
-    	"dojo/i18n!dijit/nls/common"
+    	"dojo/i18n!dijit/nls/common",
+    	"dijit/form/Select"
 ], function(declare, Action, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, CompoundCommand, RemoveCommand, Workbench, Memory, templateString, veNls, actionNLS, commonNls){
 
 
@@ -19,19 +20,20 @@ declare("davinci.ve.actions.ChooseDeviceActionContent", [_WidgetBase, _Templated
   templateString: templateString,
 	widgetsInTemplate: true,
 
-	combobox: null,
+	select: null,
 
 	device: null,
 	deviceList: null,
 
 	postCreate: function() {
-    var store = new Memory({data:this.deviceList});
-    this.combobox.set("store", store);
-		this.combobox.set("value", this.device);
+    var store = new Memory({data:this.deviceList, idProperty: "name"});
+    this.select.labelAttr = "name";
+    this.select.setStore(store);
+		this.select.set("value", this.device);
 	},
 
 	getValue: function() {
-		return this.combobox.get("value")
+		return this.select.get("value")
 	}
 });	
 
@@ -50,7 +52,7 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 				message = dojo.string.substitute(veNls.filesHasUnsavedChanges, [e.fileName]);
 			}
 		    okToSwitch=confirm(message);
-		}
+		}                                                     
 		if (okToSwitch){
 			this.showDevices(); 
 		}

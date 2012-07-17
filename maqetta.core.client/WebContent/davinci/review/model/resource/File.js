@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare",
 	"davinci/model/resource/File",
 	"davinci/model/Path",
-	"dojo/_base/Deferred"
+	"dojo/Deferred"
 ], function(declare, File, Path, Deferred) {
 
 return declare("davinci.review.model.resource.File", File, {

@@ -406,6 +406,28 @@ davinci_top_bar .dijitButtonNode {
 	height: 32px;
 }
 
+.toolbaredContainer_titleBarDiv {
+	height:24px;
+	line-height:24px;
+	font-size:16px;
+	padding-left:30px;
+	text-transform:uppercase;
+	color:#444;
+	background:#d3d3d3;
+}
+.toolbaredContainer_titleBarDiv .paletteCloseBox {
+	float:right;
+	display:inline-block;
+	border:1px #333 solid;
+	width: 12px;
+	height: 12px;
+	font-size: 12px;
+	line-height: 12px;
+	text-align: center;
+	margin-top: 4px;
+	margin-right: 4px;
+}
+
 .EditorContainer .toolbaredContainer_toolbarDiv {
 	height: 28px;
 }

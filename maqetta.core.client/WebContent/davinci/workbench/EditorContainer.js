@@ -55,6 +55,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
+		this.titleBarDiv.style.display = 'none';
 		this.toolbarDiv.style.display = 'none';
 		var d = new Deferred();
 		this.editorExtension = editorExtension;

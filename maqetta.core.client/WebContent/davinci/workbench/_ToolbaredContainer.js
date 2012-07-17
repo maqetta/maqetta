@@ -5,7 +5,7 @@ define([
 ], function(declare, LayoutWidget, Templated){
 
 return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated], {
-	templateString: "<div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
+	templateString: "<div><div dojoAttachPoint='titleBarDiv' class='toolbaredContainer_titleBarDiv'></div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
 
 	gutters: false,
 
@@ -14,19 +14,20 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 
 		// position and size the toolbar and the container node
 		var children = [
+			{ domNode: this.titleBarDiv, layoutAlign: "top" },
 			{ domNode: this.toolbarDiv, layoutAlign: "top" },
 			{ domNode: this.containerNode, layoutAlign: "client" }
 		];
 
 		dijit.layout.layoutChildren(this.domNode, this._contentBox, children);
 		// Compute size to make each of my children.
-		// children[1] is the margin-box size of this.containerNode, set by layoutChildren() call above
-		this._containerContentBox = dijit.layout.marginBox2contentBox(this.containerNode, children[1]);
+		// children[2] is the margin-box size of this.containerNode, set by layoutChildren() call above
+		this._containerContentBox = dijit.layout.marginBox2contentBox(this.containerNode, children[2]);
 		var widget = dijit.byNode(this.containerNode);
 		if (widget && widget.resize) {
 			widget.resize(this._containerContentBox);
 		}
-		dojo.marginBox(this.containerNode, children[1]);//KLUDGE: top doesn't get set without this.
+		dojo.marginBox(this.containerNode, children[2]);//KLUDGE: top doesn't get set without this.
 	},
 
 	setContent: function(/*Widget*/data){
@@ -41,6 +42,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		if (!this._toolbarCreated) {
 			this._createToolbar();
 		}
+		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span>'+this.title+'</span>';
 		if(this._started) this.layout();
 	},
 

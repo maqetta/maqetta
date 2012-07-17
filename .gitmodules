@@ -37,6 +37,8 @@
 [submodule "zazl/optimizer"]
 	path = zazl/optimizer
 	url = git://github.com/zazl/optimizer-release.git
+        ignore=dirty
 [submodule "zazl/dependencies"]
 	path = zazl/dependencies
 	url = git://github.com/zazl/optimizer-dependencies.git
+        ignore=dirty

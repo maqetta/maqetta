@@ -1,5 +1,6 @@
 define([
     	"dojo/_base/declare",
+	"dojo/Deferred",
     	"davinci/commands/CommandStack",
     	"davinci/ve/widget",
     	"davinci/ve/themeEditor/SelectTool",
@@ -7,7 +8,7 @@ define([
     	"davinci/library",
     	"davinci/ve/metadata",
     	"davinci/Theme"
-], function(declare, CommandStack, Widget, SelectTool, Context, Library, Metadata, Theme){
+], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, Library, Metadata, Theme){
 
 
 return declare([Context], {
@@ -84,7 +85,7 @@ return declare([Context], {
 		var escapees = [],
 			scripts = {},
 			dvAttributes = {},
-			promise = new dojo.Deferred();
+			promise = new Deferred();
 		dojo.forEach(this.getTopWidgets(), function(w){
 			if(w.getContext()){
 				w.destroyWidget();
@@ -93,13 +94,13 @@ return declare([Context], {
 		containerNode.innerHTML = content;
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
-			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/);
+			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/); //TODO: use Deferred?
 			//this.loadRequires(n.getAttribute("dojoType"));
 		}, this);
 		this.getGlobal()["require"]("dojo/ready")(function(){
 			try {
 				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
-				promise.callback();
+				promise.resolve();
 			} catch(e) {
 				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 				// the dojo parser will throw an exception trying to compute style on hidden containers
@@ -113,7 +114,7 @@ return declare([Context], {
 				});
 				this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",  dojo.hitch(this, this._editorSelectionChange));
 
-				promise.errback();
+				promise.reject();
 				throw e;
 			}
 		}.bind(this));

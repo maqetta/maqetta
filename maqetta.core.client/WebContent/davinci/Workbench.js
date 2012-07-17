@@ -560,7 +560,7 @@ var Workbench = {
 var floatingPropertiesPalette = dojo.create('div', 
 		{ id:'floatingPropertiesPalette',
 			'class':'floatingPropertiesPalette',
-			style:'position:absolute; z-index:1000000; width:300px; height:500px; left:800px; top:200px;border:1px solid black;background:white;' },
+			style:'position:absolute; z-index:100; width:300px; height:500px; left:800px; top:200px;border:1px solid black;background:white;' },
 		document.body);
 new Moveable(floatingPropertiesPalette);
 		

@@ -2782,6 +2782,11 @@
 		            "allowedChild": "dojox.mobile.ContentPane, dojox.mobile.ScrollableView",
 		            "inlineEdit": "./dojox/mobile/AccordionInput",
 		            "helper": "./dijit/layout/LayoutContainerHelper"
+		        },
+		        {
+		            "name": "ValuePickerDatePicker",
+		            "type": "dojox.mobile.ValuePickerDatePicker",
+		            "category": "mobile"
 		        }
 		    ]
 		    }

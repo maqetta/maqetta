@@ -27,6 +27,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"dojo/_base/xhr",
+	"dojo/dnd/Moveable",
 	"davinci/review/model/resource/root",
 	"dojo/i18n!davinci/ve/nls/common"
 ], function(
@@ -58,6 +59,7 @@ define([
 		declare,
 		connect,
 		xhr,
+		Moveable,
 		reviewResource,
 		veNLS
 ) {
@@ -553,6 +555,14 @@ var Workbench = {
 			window.onresize = Workbench.onResize; //alert("All done");}
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
 		}
+		
+//FIXME: Temporary
+var floatingPropertiesPalette = dojo.create('div', 
+		{ id:'floatingPropertiesPalette',
+			'class':'floatingPropertiesPalette',
+			style:'position:absolute; z-index:1000000; width:300px; height:500px; left:800px; top:200px;border:1px solid black;background:white;' },
+		document.body);
+new Moveable(floatingPropertiesPalette);
 		
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {
@@ -1081,12 +1091,18 @@ var Workbench = {
 			}
 			return d;
 		};
-
 		getTab(view).then(function(tab) {
+//FIXME: Temporary
+if(view.id == 'davinci.ve.style'){
+	var floatingPropertiesPalette = dojo.byId('floatingPropertiesPalette');
+	floatingPropertiesPalette.appendChild(tab.domNode);
+	tab.startup();
+}else{
 			cp1.addChild(tab);
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}
+}
 		});
 	  } catch (ex) {
 		  console.error("Error loading view: "+view.id);

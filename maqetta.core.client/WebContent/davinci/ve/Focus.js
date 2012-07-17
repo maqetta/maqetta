@@ -654,7 +654,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._contexDiv = contexDiv;
             this.domNode.appendChild(contexDiv);
             var span = this._contexDiv.firstElementChild,
-                menuId = this._context._themeName + '_subwidgetmenu',
+                menuId = this._context.theme.name + '_subwidgetmenu',
                 pMenu = dijit.byId(menuId);
             if (pMenu) {
                 pMenu.destroyRecursive(false);
@@ -670,9 +670,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             }
             var item = new localDijit.CheckedMenuItem({
                 label: 'WidgetOuterContainer',
-                id: this._context._themeName + '_WidgetOuterContainer',
+                id: this._context.theme.name + '_WidgetOuterContainer',
                 checked: checked,
-                onClick: dojo.hitch(this, "_subwidgetSelected")
+                onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_WidgetOuterContainer')
             });
             pMenu.addChild(item);
             this._currentItem = item;
@@ -680,9 +680,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 checked = (widget.subwidget === s);
                 var menuItem = new localDijit.CheckedMenuItem({
                     label: s,
-                    id: this._context._themeName + '_' + s,
+                    id: this._context.theme.name + '_' + s,
                     checked: checked,
-                    onClick: dojo.hitch(this, "_subwidgetSelected")
+                    onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_' + s)
                 });
                 pMenu.addChild(menuItem);
                 if (checked) {
@@ -705,11 +705,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
         e.stopPropagation();
     },
     
-    _subwidgetSelected: function(e){
+    _subwidgetSelected: function(id, e){
         e.stopPropagation();
         var localDijit = this._context.getDijit();
-        var item = localDijit.byId(e.currentTarget.id);
-        //var item = dijit.byId(e.currentTarget.id);
+        var item = localDijit.byId(id);
         var subwidget;
         if (item.checked){
             if (this._currentItem && item != this._currentItem) {
@@ -718,14 +717,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
             this._currentItem = item;
             subwidget = this._currentItem.label;
         } else {
-            //this._currentItem = dijit.byId(this._context._themeName + '_WidgetOuterContainer');
-            this._currentItem = localDijit.byId(this._context._themeName + '_WidgetOuterContainer');
+            this._currentItem = localDijit.byId(this._context.theme.name + '_WidgetOuterContainer');
             if (this._currentItem) {
                 this._currentItem.set("checked", true);
             }
             subwidget = null;
         }
-        if (e.currentTarget.id === (this._context._themeName + '_WidgetOuterContainer')){
+        if (e.currentTarget.id === (this._context.theme.name + '_WidgetOuterContainer')){
             subwidget = null;
         }
         dojo.publish("/davinci/ui/subwidgetSelectionChanged",[{subwidget: subwidget, origin: this.declaredClass}]);
@@ -744,12 +742,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 this._currentItem.set("checked", false); // unset the one we have
             }
             if (e.subwidget){
-                this._currentItem = localDijit.byId(this._context._themeName + '_' + e.subwidget);
+                this._currentItem = localDijit.byId(this._context.theme.name + '_' + e.subwidget);
                 if (this._currentItem) {
                     this._currentItem.set("checked", true);
                 }
             } else{
-                this._currentItem = localDijit.byId(this._context._themeName + '_WidgetOuterContainer');
+                this._currentItem = localDijit.byId(this._context.theme.name + '_WidgetOuterContainer');
                 if (this._currentItem) {
                     this._currentItem.set("checked", true);
                 }

@@ -5,8 +5,9 @@ define([
 	"./Context",
 	"../model/Path",
 	"davinci/model/Factory",
-	"dojo/_base/Deferred"
-], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred) {
+	"dojo/_base/Deferred",
+	"dojo/DeferredList"
+], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred, DeferredList) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -46,22 +47,21 @@ return declare("davinci.ve.RebuildPage", Context, {
 		
 		this._srcDocument.setText(source, true);
 
-		 
 		var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
-        var elements = this._srcDocument.find({elementType: "HTMLElement"});
-        
-        this.loadRequires("html.body", true, true,true);
+        var elements = this._srcDocument.find({elementType: "HTMLElement"}),
+        	promises = [];
+
+        promises.push(this.loadRequires("html.body", true, true, true));
         
         for ( var i = 0; i < elements.length; i++ ) {
             var n = elements[i];
             var type = n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || n.getAttribute("dvwidget");
             if (type != null){
-            	this.loadRequires(type, true, true, true);
+            	promises.push(this.loadRequires(type, true, true, true));
             }
         }
-      
-        
+
         if (themeMetaobject) {
             this.changeThemeBase(themeMetaobject.theme, this._resourcePath);
         }
@@ -82,17 +82,12 @@ return declare("davinci.ve.RebuildPage", Context, {
             var jsFileString = jsFilePath.relativeTo(resourceParentPath).toString();
             this.addJavaScript(jsFileString, null, null, null, jsChanges[i]);
         }
-        
-       /* this._pageRebuilt = new Deferred();
-        var deferred = this.model.save();
-        deferred.then(function(){
-        	this._pageRebuilt.newText = this._srcDocument.getText();
-        	this._pageRebuilt.resolve();
-        }.bind(this));
 
-		return this._pageRebuilt; //retText; // #2453 
-		
-*/		return this._srcDocument.getText();
+        var deferred = new Deferred();
+        new DeferredList(promises).then(function(){
+        	deferred.resolve(this._srcDocument.getText());
+        }.bind(this));
+        return deferred;
 	},
 	
 	addModeledStyleSheet: function(url, baseSrcPath) {

@@ -34,8 +34,19 @@ return declare([_FixedElemMixin, InitialSizeHelper], {
 				}, true);
 			}
 		}
-	}
+	},
 
+	getData: function(/*Widget*/ widget, /*Object*/ options) {
+		var data = widget._getData(options);
+
+		// the backButton, defined by the back property, creates a child ToolbarButton
+		// when set.  So we want to make sure we don't include it in any getData
+		// calls.
+		if (widget.dijitWidget.backButton) {
+			data.children.splice(0,1)
+		}
+		return data;
+	}
 });
 
 });

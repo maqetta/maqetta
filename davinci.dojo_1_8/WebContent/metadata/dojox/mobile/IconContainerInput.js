@@ -3,7 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/dom-construct",
 	"dojo/query",
-	"dijit/Dialog",
+	"davinci/ui/Dialog",
 	"davinci/ve/commands/AddCommand",
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/commands/CompoundCommand",
@@ -32,41 +32,19 @@ define([
 
 return declare(SmartInput, {
 	_substitutedMainTemplate: null,
+	childType: "dojox.mobile.IconItem",
+	dialogTitle: dojoxNLS.iconContainerTitle,
 
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);
 
-		if (!this._inline) {
-			this._inline = new Dialog({
-				title: "Icon Container"
-			});
-
-			var s = this._getTemplate();
-		
-			//Set content
-			this._inline.set("content", s);
-			this._inline.show();
-
-			var okButton = dijit.byNode(Query(".okButton", this._inline.containerNode)[0]);
-			this._connection.push(dojo.connect(okButton, "onClick", this, "_onOk"));
-
-			var cancelButton = dijit.byNode(Query(".cancelButton", this._inline.containerNode)[0]);
-			this._connection.push(dojo.connect(cancelButton, "onClick", this, "_onCancel"));
-		} else {
-			// clear all rows
-			var rows = Query(".iconContaienrInputRow", this._inline.containerNode);
-			for (var i = 0; i < rows.length; i++) {
-				dijit.byNode(rows[i]).destroyRecursive();
-			}
-
-			this._inline.show();
-		}
+		this._inline = Dialog.showDialog(this.dialogTitle, this._getTemplate(), {width: 550, height: 300}, dojo.hitch(this, "_onOk"));
 
 		// fill in rows
 		var data = this._widget.getData();
 		for (var i = 0; i < data.children.length; i++) {
 			var child = data.children[i];
-			if (child.type == "dojox.mobile.IconItem") {
+			if (child.type == this.childType) {
 				var label = child.properties.label;
 				var icon = child.properties.icon;
 
@@ -91,7 +69,7 @@ return declare(SmartInput, {
 
 	_onAddRow: function(widget) {
 		var pos;
-		var children = Query(".iconContaienrInputRow", this._inline.containerNode);
+		var children = Query(".iconContainerInputRow", this._inline.containerNode);
 
 		for (var i = 0; i < children.length; i++) {
 			if (children[i] == widget.domNode) {
@@ -107,7 +85,7 @@ return declare(SmartInput, {
 	},
 
 	_onRemoveRow: function(widget) {
-		var children = Query(".iconContaienrInputRow", this._inline.containerNode);
+		var children = Query(".iconContainerInputRow", this._inline.containerNode);
 
 		// don't allow removing the last row
 		if (children.length > 1) {
@@ -138,13 +116,13 @@ return declare(SmartInput, {
 		}
 
 		// now add the new children
-		var children = Query(".iconContaienrInputRow", this._inline.containerNode);
+		var children = Query(".iconContainerInputRow", this._inline.containerNode);
 
 		for (var i = 0; i < children.length; i++) {
 			var row = dijit.byNode(children[i]);
 
 			var w;
-			var data = {"type": "dojox.mobile.IconItem", context: context, "properties": {"label": row.getLabel(), "icon": row.getIcon()}};
+			var data = {"type": this.childType, context: context, "properties": {"label": row.getLabel(), "icon": row.getIcon()}};
 			dojo.withDoc(context.getDocument(), function(){
 					w = Widget.createWidget(data, {parent: this._widget});
 			}, this);

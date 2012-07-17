@@ -91,8 +91,12 @@ public class Unmarshaller {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				if (Comment.PAGE_STATE.equalsIgnoreCase(node.getNodeName()))
 					comment.setPageState(getValue(node));
+				else if (Comment.PAGE_STATE_LIST.equalsIgnoreCase(node.getNodeName()))
+					comment.setPageStateList(getValue(node));
 				else if (Comment.VIEW_SCENE.equalsIgnoreCase(node.getNodeName()))
 					comment.setViewScene(getValue(node));
+				else if (Comment.VIEW_SCENE_LIST.equalsIgnoreCase(node.getNodeName()))
+					comment.setViewSceneList(getValue(node));
 				else if (Comment.PAGE_NAME.equalsIgnoreCase(node.getNodeName()))
 					comment.setPageName(getValue(node));
 				else if (Comment.SUBJECT.equalsIgnoreCase(node.getNodeName()))

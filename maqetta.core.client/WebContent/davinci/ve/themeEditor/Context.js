@@ -75,7 +75,6 @@ return declare([Context], {
 			style: data.style
 		});
 		content = (data.content || "");
-		this._themeName = data.theme; 
 		var containerNode = this.getContainerNode();
 		var active = this.isActive();
 		if(active){
@@ -263,7 +262,10 @@ return declare([Context], {
 
 	getFullResourcePath: function() {
 		return this.visualEditor.basePath;
-	}
+	},
+	
+	widgetAddedOrDeleted : function(){}
+	
 });
 });
 

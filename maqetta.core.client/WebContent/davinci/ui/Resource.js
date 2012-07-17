@@ -15,7 +15,7 @@ define(['dojo/_base/declare',
        './NewProject',
        'dojox/form/uploader/FileList', 
        'dojox/form/Uploader',
-       'davinci/ui/Dialog',
+       './Dialog',
        'dojo/i18n!./nls/ui',
        'dojo/i18n!dijit/nls/common',
        'dijit/form/Button',
@@ -179,28 +179,28 @@ var uiResource = {
 		},
 	
 		/* close an editor editting given resource */
-		closeEditor : function(resource,flush){
+		closeEditor: function(resource,flush){
 			var oldEditor = Workbench.getOpenEditor(resource);
 			if(oldEditor!=null){
 				if(flush) oldEditor.save();
 				oldEditor.editorContainer.forceClose(oldEditor);
 			}
 			/* return true if we closed an open editor */
-			return (oldEditor !=null);
+			return oldEditor != null;
 		},
 		
 		saveAs: function(extension){
 			var oldEditor = Workbench.getOpenEditor();
 			var oldFileName = oldEditor.fileName;
 			
-			var newFileName = (new Path(oldFileName)).lastSegment();
+			var newFileName = new Path(oldFileName).lastSegment();
 			var oldResource = Resource.findResource(oldFileName);
 			
 			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.save, extension, null, newFileName, oldResource);
 			var executor = function(){
 				var resourcePath = newDialog.get('value');
 				var oldResource = Resource.findResource(oldFileName);
-				var oldContent = "";
+				var oldContent;
 				if (oldEditor.editorID == "davinci.html.CSSEditor") {
 					// this does some css formatting
 					oldContent = oldEditor.getText();
@@ -218,10 +218,10 @@ var uiResource = {
 				oldEditor.isDirty = false;
 				// Create a new editor for the new filename
 				var file = Resource.createResource(resourcePath);
-				var pageBuilder =new RebuildPage();
-				var newText = pageBuilder.rebuildSource(oldContent, file);
-				file.setContents(newText);
-				Workbench.openEditor({fileName: file, content: newText});
+				new RebuildPage().rebuildSource(oldContent, file).then(function(newText) {
+					file.setContents(newText);
+					Workbench.openEditor({fileName: file, content: newText});					
+				});
 			};
 			Workbench.showModal(newDialog, uiNLS.saveFileAs, '', executor);
 		},

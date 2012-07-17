@@ -1,8 +1,8 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/Carousel",
-    "name": "dojox.mobile.Carousel",
+    "id": "http://dojotoolkit.org/dojox/mobile/Accordion",
+    "name": "dojox.mobile.Accordion",
     "spec": "1.0",
-    "version": "1.7",
+    "version": "1.8",
     "require": [
         {
             "type": "javascript-module",
@@ -25,7 +25,7 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/mobile/Carousel",
+            "src": "dojox/mobile/Accordion",
             "$library": "dojo"
         }
     ],
@@ -35,24 +35,51 @@
         }
     },
     "property": {
-        "numVisible": {
-            "datatype": "number",
-            "defaultValue": 3
-        },
-        "title": {
+        "iconBase": {
             "datatype": "string"
         },
-        "pageIndicator": {
-            "datatype": "boolean",
-            "defaultValue": true
+        "iconPos": {
+            "datatype": "string"
         },
-        "navButton": {
+        "fixedHeight": {
             "datatype": "boolean",
             "defaultValue": false
         },
-        "height": {
-            "datatype": "string",
-            "defaultValue": "300px"
+        "singleOpen": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "animation": {
+            "datatype": "boolean",
+            "defaultValue": true
+        }
+    },
+    "childProperties": {
+        "alt": {
+            "datatype": "string"
+        },
+        "icon1": {
+            "datatype": "string"
+        },
+        "icon2": {
+            "datatype": "string"
+        },
+        "iconPos1": {
+            "datatype": "string"
+        },
+        "iconPos2": {
+            "datatype": "string"
+        },
+        "label": {
+            "datatype": "string"
+        },
+        "selected": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "lazy": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
     "content": "<div></div>"

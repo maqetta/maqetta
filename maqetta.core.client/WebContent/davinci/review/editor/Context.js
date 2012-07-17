@@ -7,12 +7,17 @@ define([
 	"../drawing/tools/HighlightTool",
 	"../drawing/tools/SelectTool",
 	"../../Runtime",
+	"davinci/XPathUtils",
+	"davinci/maqetta/AppStates",
 	"../../UserActivityMonitor",
 	"../Review",
 	"../../ve/Context",
 	'preview/silhouetteiframe'
-], function(declare, connect, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, UserActivityMonitor, Review, Context, Silhouette) {
-	
+], function(declare, connect, Surface, CreateTool, ExchangeTool, HighlightTool, SelectTool, Runtime, XPathUtils, AppStates, UserActivityMonitor, Review, Context, Silhouette) {
+
+// AppStates functions are only available on the prototype object
+var States = AppStates.prototype;
+
 return declare("davinci.review.editor.Context", [Context], {
 
 	setSource: function(){
@@ -50,19 +55,24 @@ return declare("davinci.review.editor.Context", [Context], {
 								return; 
 							}
 							if (this._commentView) {
-								this._commentView.setCurrentScene(SceneManager, sceneId);
+								this._commentView.updateStatesScenes();
 							}							
 						});
 //					}
 
-					userWindow.require("dojo/_base/connect").subscribe("/davinci/states/state/changed", function(args) {
+					userWindow.require("dojo/_base/connect").subscribe("/maqetta/appstates/state/changed", function(args) {
 						if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
 							return; 
 						}
 						var state = args.newState || "Normal";
 						var dv = userWindow.davinci;
 						if(dv && dv.states && dv.states.setState){
-							dv.states.setState(state, args.stateContainerNode);
+/*FIXME: Shouldn't be necessary - event was spawned because state just changed. No need to change it again.
+							dv.states.setState(state, args.stateContainerNode, { focus:true, silent:true, updateWhenCurrent:true });
+*/
+							if (this._commentView) {
+								this._commentView.updateStatesScenes();
+							}							
 							// Re-publish at the application level
 							var newArgs = dojo.clone(args);
 							newArgs.editorClass = "davinci.review.editor.ReviewEditor";
@@ -71,6 +81,17 @@ return declare("davinci.review.editor.Context", [Context], {
 					});
 
 					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
+					
+					// Set "focus" for application states
+					var statesFocus = States.getFocus(this.rootNode);
+					if(!statesFocus){
+						var stateContainers = States.getAllStateContainers(this.rootNode);
+						if(stateContainers.length > 0){
+							var initialState = States.getInitial(stateContainers[0]);
+							States.setState(initialState, stateContainers[0], { focus:true, updateWhenCurrent:true });
+						}
+					}
+					
 					this._initDrawing();
 					connect.publish("/davinci/review/context/loaded", [this, this.fileName]);
 					
@@ -82,12 +103,12 @@ return declare("davinci.review.editor.Context", [Context], {
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
 					this._statesLoaded = true;
 					connect.publish('/davinci/ui/context/statesLoaded', [this]);
-					var doc = this.getDocument(), surface = (doc && doc.annotationSurface);
-					if(surface){
-						this._refreshSurface(surface);
+					if(this.surface){
+						this._refreshSurface(this.surface);
 					}
 				})
 			}), containerNode);
+/*FIXME: Pretty sure it's not needed, so commenting out for now, but leaving around in case problems crop up
 			connect.subscribe("/maqetta/appstates/state/changed", function(args) { 
 				if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor" ||
 						!this.containerEditor || this.containerEditor != Runtime.currentEditor) { 
@@ -99,6 +120,7 @@ return declare("davinci.review.editor.Context", [Context], {
 					userWin.davinci.states.setState(args.newState, args.stateContainerNode);
 				}
 			}.bind(this));
+*/
 		}
 	},
 
@@ -117,14 +139,14 @@ return declare("davinci.review.editor.Context", [Context], {
 		//        Shapes with commentId, state and colorAlias(reviewer)
 		var doc = this.frame.contentDocument, 
 			surface;
-		if (!doc.annotationSurface) {
-			surface = doc.annotationSurface = new Surface(doc.body, doc, this);
+		if (!this.surface) {
+			surface = this.surface = new Surface(doc.body, doc, this);
 			new CreateTool(surface, ["commentId"]);
 			new SelectTool(surface, ["commentId"]).activate();
 			new ExchangeTool(surface, ["commentId"]);
 			new HighlightTool(surface).activate();
 		} else {
-			surface = doc.annotationSurface;
+			surface = this.surface;
 		}
 		this._cxtConns = [
 			 connect.connect(surface.highlightTool, "onShapeMouseDown", function(shape) {
@@ -138,43 +160,72 @@ return declare("davinci.review.editor.Context", [Context], {
 			];
 		this._cxtSubs = [
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor) {
-				 surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
-			 }),
-			 connect.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, pageState, viewScene) {
+				 this.surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
+			 }.bind(this)),
+			 connect.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, args) {
+				 var pageState = args.pageState;
+				 var pageStateList = args.pageStateList;
+				 var viewScene = args.viewScene;
+				 var viewSceneList = args.viewSceneList;
+				 var surface = this.surface;
 				 surface.activate();
 				 surface.cached = surface.exchangeTool.exportShapesByAttribute();
 				 surface.currentReviewer = reviewer;
 				 surface.commentId = commentId;
 				 surface.filterState = pageState;
+				 surface.filterStateList = pageStateList;
 				 surface.filterScene = viewScene;
+				 surface.filterSceneList = viewSceneList;
 				 surface.filterComments = [commentId];
 				 this._refreshSurface(surface);
-			 }),
-			 connect.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", dojo.hitch(this,function(obj, state, scene) {
+			 }.bind(this)),
+			 connect.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", 
+					 dojo.hitch(this,function(obj, args) {
 				 if (obj._currentPage != this.fileName) {
 					 return;
 				 }
+				 var state = args.state;
+				 var stateList = args.stateList;
+				 var scene = args.scene;
+				 var sceneList = args.sceneList;
+				 var surface = this.surface;
 				 surface.selectTool.deselectShape();
 				 surface.setValueByAttribute("commentId", surface.commentId, "state", state);
+				 surface.setValueByAttribute("commentId", surface.commentId, "stateList", stateList);
 				 surface.setValueByAttribute("commentId", surface.commentId, "scene", scene);
+				 surface.setValueByAttribute("commentId", surface.commentId, "sceneList", sceneList);
 				 obj.drawingJson = surface.exchangeTool.exportShapesByAttribute("commentId", [surface.commentId]);
 				 surface.deactivate();
 				 surface.commentId = "";
 			 })),
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/cancelEditing", dojo.hitch(this, function() {
 				 // Restore the previous status
+				 var surface = this.surface;
 				 surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
 				 surface.deactivate();
 				 this._refreshSurface(surface);
 				 surface.commentId = ""; // Clear the filter so that no shapes can be selected
 			 })),
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(/*Object*/ stateinfo, /*Array*/ commentIds) {
-				 surface.filterScene = stateinfo.viewScene;
+				 var surface = this.surface;
+/*FIXME: surface should update based on event listeners to setstate and setscene
 				 surface.filterState = stateinfo.pageState;
+				 surface.filterStateList = stateinfo.pageStateList;
+				 surface.filterScene = stateinfo.viewScene;
+				 surface.filterSceneList = stateinfo.viewSceneList;
+*/
+/*FIXME: We shouldn't be updating the surface here. That should be done
+	by state change and scene change listeners */
+				 var statesFocus = States.getFocus(this.rootNode);
+				 surface.filterState = statesFocus ? statesFocus.state : undefined;
+				 surface.filterStateList = this.getCurrentStates();
+				 surface.filterScene =  this.getCurrentScene();
+				 surface.filterSceneList = this.getCurrentScenes();
 				 surface.filterComments = commentIds;
 				 this._refreshSurface(surface);
 			 })),
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/setShownColorAliases", dojo.hitch(this,function(colorAliases) {
+				 var surface = this.surface;
 				 surface.filterColorAliases = colorAliases;
 				 this._refreshSurface(surface);
 			 })),
@@ -212,20 +263,18 @@ return declare("davinci.review.editor.Context", [Context], {
 	},
 
 	_refreshSurface: function(surface) {
+		var that = this;
 		if(!this._domIsReady){
 			return;
 		}
 		
 		// Return true if shape and surface have different values for state or scene
-		function differentStateScene(Shape, Surface){
-			if(!Shape || !Surface){
+		function differentStateScene(shape, surface){
+			if(!shape || !surface){
 				return false;
 			}
-			if(Shape.state && Surface.filterState && Shape.state != Surface.filterState){
-				return true;	// there is a difference
-			}
-			if(Shape.scene && Surface.filterScene && Shape.scene != Surface.filterScene){
-				return true;	// there is a difference
+			if(!that.stateSceneCheck(shape.stateList, shape.sceneList, surface.filterStateList, surface.filterSceneList)){
+				return true;
 			}
 			return false;
 		}
@@ -233,8 +282,9 @@ return declare("davinci.review.editor.Context", [Context], {
 		var shapes = surface.shapes, result;
 
 		dojo.forEach(shapes, function(shape) {
-			result = "hidden";
-			if (dojo.some(surface.filterColorAliases, function(colorAlias) {
+			var result = "hidden";
+			if (Runtime.singleUserMode() ||
+					dojo.some(surface.filterColorAliases, function(colorAlias) {
 				//FIXME: Hack to fix #1486 just before Preview 4 release
 				// Old code - quick check - covers case where server uses same string for username and email
 				if (shape.colorAlias == colorAlias) {
@@ -285,18 +335,132 @@ return declare("davinci.review.editor.Context", [Context], {
 		});
 	},
 
+	destroy: function() {
+		this._destroyDrawing();
+	},
+	
 	_destroyDrawing: function() {
 		try {
-			var doc = this.getDocument(), surface = (doc && doc.annotationSurface);
-			if (surface) {
-				surface.destroy();
+			if (this.surface) {
+				this.surface.destroy();
+				delete this.surface;
 			}
 		} catch(err) { /*Do nothing*/ }
 		dojo.forEach(this._cxtConns, connect.disconnect);
 		dojo.forEach(this._cxtSubs, connect.unsubscribe);
-		if (doc) {
-			delete doc.annotationSureface;
+	},
+	
+	getCurrentStates: function(){
+		var rootNode = this.rootNode;
+		var currentStates = States.getAllCurrentStates(rootNode);
+		var arr = [];
+		for(var i=0; i<currentStates.length; i++){
+			var node = currentStates[i].stateContainerNode;
+			var id = node ? node.id : '';
+			var xpath = node ? XPathUtils.getXPath(node) : '';
+			arr.push({ id:id, xpath:xpath, state:currentStates[i].state });
 		}
+		return arr;
+	},
+	
+	getCurrentScenes: function(){
+		var sceneManagers = this.sceneManagers;
+		var sceneManagerObj = {};
+		for (var smIndex in sceneManagers) {
+			var sm = sceneManagers[smIndex];
+			if (sm.getAllSceneContainers && sm.getCurrentScene) {
+				var sceneContainers = sm.getAllSceneContainers();
+				var arr = [];
+				for(var j=0; j<sceneContainers.length; j++){
+					var sc = sceneContainers[j];
+					var scene = sm.getCurrentScene(sc);
+					var sceneId = (scene && scene.id) ? scene.id : '';
+					var sceneXpath = (scene && scene.id) ? XPathUtils.getXPath(scene) : '';
+					arr.push( {scId:sc.id, scXpath:XPathUtils.getXPath(sc), sceneId:sceneId, sceneXpath:sceneXpath });
+				}
+				sceneManagerObj[sm.id] = arr;
+			}
+		}
+		return sceneManagerObj;
+	},
+	
+	// FIXME: Probably not needed because should be using sceneList everywhere now
+	// instead of checking for current scene
+	getCurrentScene: function(){
+		var sceneManagers = this.sceneManagers;
+		var sceneManagerObj = {};
+		for (var smIndex in sceneManagers) {
+			var sm = sceneManagers[smIndex];
+			if (sm.getAllSceneContainers && sm.getCurrentScene) {
+				var sceneContainers = sm.getAllSceneContainers();
+				for(var j=0; j<sceneContainers.length; j++){
+					var sc = sceneContainers[j];
+					var scene = sm.getCurrentScene(sc);
+					var sceneId = (scene && scene.id) ? scene.id : '';
+					return sceneId;
+				}
+			}
+		}
+		return;
+	},
+	
+	/**
+	 * Returns true if given object's states and scenes match what's in the reference object's
+	 * states and scenes.
+	 * @param {array} objPageStateList  Array of objects of form
+	 *     [ { id:{string}, xpath:{string}, state:{string} } ]
+	 *     where id and xpath identify a state container object
+	 * @param {object} objViewSceneList  Associative array, with one entry
+	 *     for each plugginable "scene container". Each entry in associative
+	 *     array is a regular old array (of objects), with one entry for each scene container node.
+	 *     Each of these objects with that regular old array has the following form:
+	 *     [ { scId:{string}, scXpath:{string}, sceneId:{string}, sceneXPath:{string} } ]
+	 *     where scId and scXpath identify a scene container node and
+	 *     where sceneId and sceneXPath identify a scene node.
+	 * @param {array} refPageStateList  Reference object's state list
+	 * @param {object} refViewSceneList  Reference object's scene list
+	 */
+	stateSceneCheck: function(objPageStateList, objViewSceneList, refPageStateList, refViewSceneList){
+		function normalizeNormalState(val){
+			return !val ? States.NORMAL : val;
+		}
+		var i, obj, ref;
+		if(objPageStateList && refPageStateList){
+			for(i=0; i<refPageStateList.length; i++){
+				ref = refPageStateList[i];
+				var refState = normalizeNormalState(ref.state);
+				obj = objPageStateList[i];
+				var objState = normalizeNormalState(obj.state);
+				if(obj && ref){
+					if(((obj.id && obj.id === ref.id) || 
+							(obj.xpath && obj.xpath === ref.xpath)) &&
+							objState !== refState){
+						return false;
+					}
+				}
+			}
+		}
+		if(objViewSceneList && refViewSceneList){
+			for(var smIndex in refViewSceneList){
+				var _refViewSceneList = refViewSceneList[smIndex];
+				var _objViewSceneList = objViewSceneList[smIndex];
+				if(_refViewSceneList && _objViewSceneList){
+					for(i=0; i<_refViewSceneList.length; i++){
+						ref = _refViewSceneList[i];
+						obj = _objViewSceneList[i];
+						if(obj && ref){
+							if(((obj && obj.scId && ref && obj.scId === ref.scId) ||
+									(obj && obj.scXpath && ref && obj.scXpath === ref.scXpath)) &&
+								((obj && obj.sceneId && ref && obj.sceneId !== ref.sceneId) ||
+									(obj && obj.sceneXpath && ref && obj.sceneXpath !== ref.sceneXpath))){
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 });

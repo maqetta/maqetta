@@ -5,6 +5,11 @@
     "version": "1.7",
     "require": [
         {
+            "type": "css",
+            "src": "dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css",
+            "$library": "dojo"
+        },
+        {
             "type": "javascript-module",
             "format": "amd",
             "src": "dojox/mobile",
@@ -37,7 +42,23 @@
     "property": {
         "transition": {
             "datatype": "string",
-            "defaultValue": "none"
+            "defaultValue": "none",
+            "option": [
+                {"value": "slide"},
+                {"value": "fade"},
+                {"value": "flip"},
+                {"value": "cover"},
+                {"value": "coverv"},
+                {"value": "dissolve"},
+                {"value": "reveal"},
+                {"value": "revealv"},
+                {"value": "scaleIn"},
+                {"value": "scaleOut"},
+                {"value": "slidev"},
+                {"value": "swirl"},
+                {"value": "zoomIn"},
+                {"value": "zoomOut"}
+            ]
         },
         "transitionDir": {
             "datatype": "number",
@@ -70,6 +91,9 @@
         "label": {
             "datatype": "string",
             "defaultValue": "TabButton"
+        },
+        "badge": {
+            "datatype": "string"
         },
         "selected": {
             "datatype": "boolean",

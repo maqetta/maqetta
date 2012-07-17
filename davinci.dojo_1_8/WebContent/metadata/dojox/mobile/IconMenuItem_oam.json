@@ -1,8 +1,8 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/IconContainer",
-    "name": "dojox.mobile.IconContainer",
+    "id": "http://dojotoolkit.org/dojox/mobile/IconMenuItem",
+    "name": "dojox.mobile.IconMenuItem",
     "spec": "1.0",
-    "version": "1.7",
+    "version": "1.8",                               
     "require": [
         {
             "type": "javascript-module",
@@ -25,7 +25,7 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/mobile/IconContainer",
+            "src": "dojox/mobile/IconMenuItem",
             "$library": "dojo"
         }
     ],
@@ -35,12 +35,9 @@
         }
     },
     "property": {
-        "defaultIcon": {
-            "datatype": "string"
-        },
-        "pressedIconOpacity": {
-            "datatype": "number",
-            "defaultValue": 0.4,
+        "transition": {
+            "datatype": "string",
+            "defaultValue": "slide",
             "option": [
                 {"value": "slide"},
                 {"value": "fade"},
@@ -58,32 +55,48 @@
                 {"value": "zoomOut"}
             ]
         },
-        "transition": {
-            "datatype": "string",
-            "defaultValue": "below"
+        "transitionDir": {
+            "datatype": "number",
+            "defaultValue": 1
         },
-        "iconBase": {
+        "icon": {
             "datatype": "string"
         },
         "iconPos": {
             "datatype": "string"
         },
-        "back": {
-            "datatype": "string",
-            "defaultValue": "Home"
+        "moveTo": {
+            "datatype": "string"
+        },
+        "href": {
+            "datatype": "string"
+        },
+        "hrefTarget": {
+            "datatype": "string"
+        },
+        "selected": {
+            "datatype": "boolean"
+        },
+        "url": {
+            "datatype": "string"
+        },
+        "urlTarget": {
+            "datatype": "string"
+        },
+        "callback": {
+            "datatype": "string"
         },
         "label": {
             "datatype": "string",
-            "defaultValue": "My Application"
+            "defaultValue": "IconMenuItem"
         },
-        "single": {
-            "datatype": "boolean",
-            "defaultValue": false
+        "alt": {
+            "datatype": "string"
         },
-        "editable": {
-            "datatype": "boolean",
-            "defaultValue": false
+        "tabindex": {
+            "datatype": "string",
+            "defaultValue": "0"
         }
     },
-    "content": "<ul></ul>"
+    "content": "<li label='IconMenuItem'></li>"
 }

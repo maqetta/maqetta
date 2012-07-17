@@ -381,8 +381,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				if(currentParentItemAlreadyThere){
 					currentParentItem = currentParentItemAlreadyThere;
 				}else{
-					//FIXME: We currently have bad labels for review/commenting
-					var label = isDvWidget ? WidgetUtils.getLabel(widget) : node.tagName;
+					var label = isDvWidget ? WidgetUtils.getLabel(widget) : WidgetUtils.getLabelForNode(node);
 					var xpath = XPathUtils.getXPath(node);
 					var o = {name:label, type:'file', category:'file', node:node, children:[]};
 					if(ancestorParentItem){
@@ -443,8 +442,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 										parentItem:currentParentItem, children:[]};
 								for(var childSceneIndex=0; childSceneIndex<sceneChildren.length; childSceneIndex++){
 									var childSceneNode = sceneChildren[childSceneIndex];
-									//FIXME: We currently have bad labels for review/commenting
-									var label = isDvWidget ? WidgetUtils.getLabel(childSceneNode._dvWidget) : childSceneNode.tagName;
+									var label = isDvWidget ? WidgetUtils.getLabel(childSceneNode._dvWidget) : WidgetUtils.getLabelForNode(childSceneNode);
 									var span = that._treeNodeContent(label);
 									var isFocus = false;	// No concept if scene focus for plug-in scene managers
 									var isCurrent = (childSceneNode === currentScene);
@@ -495,6 +493,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				var selectedItem = null;
 				var path = this._tree.get('path');
 				if(path.length > 0){
+					// Programming note: the maqid property above was carefully designed
+					// to ensure that each maqid is globally unique within a document
+					// and that the same maqid will be computed across document reloads.
+					// Each maqid consists of its parent's maqid+'$'<itemid>, where <itemid>
+					// for nodes is the xpath for that node.
 					oldSelection = path[path.length-1].maqid[0];
 				}
 			}
@@ -565,9 +568,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			//    to match top-level selected scene
 			//  * otherwise, select application state that has "focus"
 			var path = this._tree.get('path');
-			var selectedId = (path.length > 0) ? path[path.length-1].id[0] : null;
-			var selectedNodeIsCorrectType = false;
-			var candidateItem = null;
+			var selectedMaqId = (path.length > 0) ? path[path.length-1].maqid[0] : null;
 			
 			// Search through SceneManagers to find all scene containers for each scene manager
 			// and then all scenes for each scene container.
@@ -589,24 +590,12 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						var sceneItem = allSceneItems[k];
 						var sceneContainerNode = sceneItem.sceneContainerNode[0];
 						var id = sceneItem.id[0];
-	/*FIXME: DELETE THIS
-						var currentScene = sm.getCurrentScene(sceneContainerNode);
-						var initialScenes = sm.getInitialScenes(sceneContainerNode);
-	*/
 						var currentSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCurrent');
 						var focusSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteFocus');
 						var initialSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteInitial');
-	/*FIXME: DELETE THIS
-						if(currentScene == sceneItem.node[0]){
-	*/
 						if(sceneItem.isCurrent && sceneItem.isCurrent[0]){
 							if(currentSpan){
 								domClass.remove(currentSpan, 'ScenesPaletteCurrentHidden');
-							}
-							if(id === selectedId){
-								selectedNodeIsCorrectType = true;
-							}else if(!candidateItem){
-								candidateItem = sceneItem;
 							}
 						}else{
 							if(currentSpan){
@@ -616,9 +605,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						if(focusSpan){
 							domClass.add(focusSpan, 'ScenesPaletteFocusHidden');
 						}
-	/*FIXME: DELETE THIS
-						if(initialScenes.indexOf(sceneItem.node[0])>=0){
-	*/
 						if(sceneItem.isInitial && sceneItem.isInitial[0]){
 							if(initialSpan){
 								domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
@@ -626,6 +612,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						}else{
 							if(initialSpan){
 								domClass.add(initialSpan, 'ScenesPaletteInitialHidden');
+							}
+						}
+						// If this scene is selected in the Scenes palette, 
+						// and this scene is a state container node, then 
+						// make this scene the currently focused scene.
+						if(sceneItem.maqId && sceneItem.maqId[0] == selectedMaqId){
+							var node = sceneItem.node && sceneItem.node[0];
+							if(node && node._maqAppStates){
+								var currentState = States.getState(node);
+								States.setState(currentState, node, { focus:true, updateWhenCurrent:true });
 							}
 						}
 					}
@@ -647,37 +643,16 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				var appStateItem = allAppStateItems[k];
 				var sceneContainerNode = appStateItem.sceneContainerNode[0];
 				var id = appStateItem.id[0];
-	/*FIXME: DELETE THIS
-				var currentState = States.getState(sceneContainerNode);
-				if(!currentState){
-					currentState = States.NORMAL;
-				}
-				var initialState = States.getInitial(sceneContainerNode);
-				if(!initialState){
-					initialState = States.NORMAL;
-				}
-	*/
 				var currentSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteCurrent');
 				var focusSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteFocus');
 				var initialSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteInitial');
-	/*FIXME: DELETE THIS
-				if(currentState === appStateItem.sceneId[0]){
-	*/
 				if(appStateItem.isCurrent && appStateItem.isCurrent[0]){
-	/*FIXME: DELETE THIS
-					if(appStateFocus && appStateFocus.stateContainerNode == sceneContainerNode && appStateFocus.state == currentState){
-	*/
 					if(appStateItem.isFocus && appStateItem.isFocus[0]){
 						if(focusSpan){
 							domClass.remove(focusSpan, 'ScenesPaletteFocusHidden');
 						}
 						if(currentSpan){
 							domClass.remove(currentSpan, 'ScenesPaletteCurrentHidden');
-						}
-						if(id === selectedId){
-							selectedNodeIsCorrectType = true;
-						}else if(!candidateItem){
-							candidateItem = appStateItem;
 						}
 					}else{
 						if(focusSpan){
@@ -695,9 +670,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						domClass.add(currentSpan, 'ScenesPaletteCurrentHidden');
 					}
 				}
-	/*FIXME: DELETE THIS
-				if(initialState === appStateItem.sceneId[0]){
-	*/
 				if(appStateItem.isInitial && appStateItem.isInitial[0]){
 					if(initialSpan){
 						domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
@@ -880,16 +852,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						[{editorClass:currentEditor.declaredClass, widget:'$all', 
 						newState:item.sceneId[0], oldState:this._themeState, context: this._editor.context}]);
 				this._themeState = item.sceneId[0];
-			} else if(currentEditor.declaredClass == 'davinci.review.editor.ReviewEditor') {
-				this.publish("/maqetta/appstates/state/changed", 
-						[{editorClass:currentEditor.declaredClass, widget:stateContainerNode, 
-						newState:item.sceneId[0], sceneContainerNode:stateContainerNode}]);
 			} else {	// PageEditor
-/*FIXME: Need to figure out what to do about initial states when using mobile views
-				if(bodyNode){
-					States.setState(null, bodyNode);
-				}
-*/
 				if(context && stateContainerNode){
 					if(type == 'AppState') {
 						newState = item.sceneId ? item.sceneId[0] : null;

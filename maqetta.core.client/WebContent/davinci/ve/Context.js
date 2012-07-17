@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/lang",
+    "dojo/_base/xhr",
 	"dojo/query",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
@@ -39,6 +40,7 @@ define([
 ], function(
 	declare,
 	lang,
+	xhr,
 	query,
 	Deferred,
 	DeferredList,
@@ -369,22 +371,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, skipDomUpdate) {
 		// this method is used heavily in RebuildPage.js, so please watch out when changing  API!
-
-		if (!type) {
-			return false;
-		}
-		
 		var requires = metadata.query(type, "require");
+
 		if (!requires) {
-			return true;
+			var noop = new Deferred();
+			noop.resolve();
+			return noop;
 		}
 
+		var promises = [];
 		var libraries = metadata.query(type, 'library'),
 			libs = {},
-			context = this,
-			succeeded;
+			context = this;
 
-		function _loadLibrary(libId, lib) {
+		function loadLibrary(libId, lib) {
 			if (libs.hasOwnProperty(libId)) {
 				return true;
 			}
@@ -412,7 +412,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var m = lib.src.match(/((?:\.\.\/)*)(.*)/);
 						// m[1] => relative path
 						// m[2] => main library JS file
-				_loadJSFile(libId, m[2]);
+				promises.push(_loadJSFile(libId, m[2]));
 			}
 
 			return true;
@@ -423,25 +423,26 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 
 		function _loadJSFile(libId, src) {
-			context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
+			return context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
 		}
 
 		// first load any referenced libraries
 		for (var libId in libraries) {
 			if (libraries.hasOwnProperty(libId)) {
-				succeeded = _loadLibrary(libId, libraries[libId]);
-				if (! succeeded) {
-					return false;
+				if(!loadLibrary(libId, libraries[libId])) {
+					var d = new Deferred();
+					d.reject();
+					return d;
 				}
 			}
 		}
 
 		// next, load the require statements
-		return requires.every(function(r) {
+		requires.every(function(r) {
 			// If this require belongs under a library, load library file first
 			// (if necessary).
 			if (r.$library) {
-				if (! _loadLibrary(r.$library)) {
+				if (!loadLibrary(r.$library)) {
 					return false; // break 'every' loop
 				}
 			}
@@ -449,7 +450,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			switch (r.type) {
 				case "javascript":
 					if (r.src) {
-						_loadJSFile(r.$library, r.src);
+						promises.push(_loadJSFile(r.$library, r.src));
 					} else {
 						this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
 					}
@@ -461,10 +462,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						console.error("Unknown javascript-module format");
 					}
 					if (r.src) {
-						this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires,
-								skipDomUpdate);
+						promises.push(
+							this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires, skipDomUpdate));
 					} else {
-						console.error("Inline 'javascript-module' not handled");
+						console.error("Inline 'javascript-module' not handled src=" + r.src);
 					}
 					break;
 				
@@ -477,7 +478,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 							this.loadStyleSheet(src);
 						}
 					} else {
-						console.error("Inline CSS not handled");
+						console.error("Inline CSS not handled src=" + r.src);
 					}
 					break;
 				
@@ -486,11 +487,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					break;
 					
 				default:
-					console.error("Unhandled metadata resource type '" + r.type +
+					console.error("Unhandled metadata resource type='" + r.type +
 							"' for widget '" + type + "'");
 			}
 			return true;
 		}, this);
+
+		return new DeferredList(promises);
 	},
 
 	_getWidgetFolder: function(){
@@ -758,7 +761,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
        	        defaultThemeName = newHtmlParms.theme;
        	    }
        	}
-    	var imports = model.find({elementType:'CSSImport'});
+    	var imports = model.find({elementType: 'CSSImport'});
 		
 		
 		/* remove the .theme file, and find themes in the given base location */
@@ -823,18 +826,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-		// Get the helper before creating the IFRAME, or bad things happen in FF
-		var helper = Theme.getHelper(this.visualEditor.theme);
-
 		this._srcDocument=source;
 		
-		// determine if it's the theme editor loading
+		// if it's NOT the theme editor loading
 		if (!source.themeCssFiles) { // css files need to be added to doc before body content
 			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
-			this.loadRequires("html.body", true /*updateSrc*/, false /*doUpdateModelDojoRequires*/,
-					true /*skipDomUpdate*/ );
-			// make sure this file has a valid/good theme
-			this.loadTheme(newHtmlParams);
+			this.loadRequires(
+					"html.body",
+					true /*updateSrc*/,
+					false /*doUpdateModelDojoRequires*/,
+					true /*skipDomUpdate*/
+			).then(function(){
+					// make sure this file has a valid/good theme
+					this.loadTheme(newHtmlParams);						
+			}.bind(this));
 		}
 
 		//FIXME: Need to add logic for initial themes and device size.
@@ -948,9 +953,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 
-			if (helper && helper.getHeadImports){
-			    subs.themeHeadImports = helper.getHeadImports(this.visualEditor.theme);
-			} else if(source.themeCssFiles) { // css files need to be added to doc before body content
+			if(source.themeCssFiles) { // css files need to be added to doc before body content
 				subs.themeCssFiles = '' +
 				source.themeCssFiles.map(function(file) {
 					return '<link rel="stylesheet" type="text/css" href="' + file + '">';
@@ -993,7 +996,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 					body._edit_context = this; // TODO: find a better place to stash the root context
 					this._configDojoxMobile();
-
 					var requires = this._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
 						// this is needed for FF4 to keep dijit.editor.RichText from throwing at line 32 dojo 1.5
@@ -1293,6 +1295,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var newCons = [];
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
+		this.widgetAddedOrDeleted();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	},
 
@@ -1307,7 +1310,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
 			//we had old files that were missing some of their dojo.require() statements.
-			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/);
+			prereqs.push(this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/));
 			prereqs.push(this._preProcess(n));
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
@@ -2012,10 +2015,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var widget = this._selection[i];
 				var domNode = widget.domNode;
 				while(domNode && domNode.tagName != 'BODY'){
-					var computed_style_display = dojo.style(domNode, 'display');
-					if(computed_style_display == 'none'){
-						this.deselect(widget);
-						break;
+					// Sometimes browsers haven't set up defaultView yet,
+					// and dojo.style will raise exception if defaultView isn't there yet
+					if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
+						var computed_style_display = dojo.style(domNode, 'display');
+						if(computed_style_display == 'none'){
+							this.deselect(widget);
+							break;
+						}
 					}
 					domNode = domNode.parentNode;
 				}
@@ -2776,29 +2783,29 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	addJavaScriptSrc: function(url, doUpdateModel, baseSrcPath, skipDomUpdate) {
-		var isDojoJS = /\/dojo.js$/.test(url);
+		var isDojoJS = /\/dojo.js$/.test(url),
+			promises = [];
 		// XXX HACK: Don't add dojo.js to the editor iframe, since it already has an instance.
 		//	  Adding it again will overwrite the existing Dojo, breaking some things.
 		//	  See bug 7585.
 		if (!isDojoJS && !skipDomUpdate) {
 			var context = this,
-				absoluteUrl = (new dojo._Url(this.getDocument().baseURI, url)).toString();
+				absoluteUrl = new dojo._Url(this.getDocument().baseURI, url).toString();
 			// This xhrGet() used to include `handleAs: "javascript"`, surrounded
 			// by a `dojo.withGlobal`.  However, `dojo.eval` regressed in Dojo 1.7,
 			// such that it no longer evals using `dojo.global` -- instead evaling
 			// into the global context. To work around that, we do our own `eval` call.
-			dojo.xhrGet({
+			push(xhr.get({
 				url: absoluteUrl,
-				sync: true    // XXX -> async
+				sync: true    // XXX -> async, Defer rest of method
 			}).then(function(data) {
 				context.getGlobal()['eval'](data);
-			});
+			}));
 		}
 		if (doUpdateModel) {				
 			// update the script if found
 			var head = this.getDocumentElement().getChildElement('head'),
 				config = {
-					async: true,
 					parseOnLoad: true,
 					packages: this._getLoaderPackages()
 				},
@@ -2823,21 +2830,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					});
 	
 					// TODO: these two dependencies should be part of widget or library metadata
-					this.addJavaScriptModule("dijit/dijit", true, true);
-					this.addJavaScriptModule("dojo/parser", true, true);
+					promises.push(this.addJavaScriptModule("dijit/dijit", true, true));
+					promises.push(this.addJavaScriptModule("dojo/parser", true, true));
 				}else{
 					this.addHeaderScript(url);
 				}
 			}
 		}
+
+		return new DeferredList(promises);
 	},
 
 	_reRequire: /\brequire\s*\(\s*\[\s*([\s\S]*?)\s*\]\s*\)/,
 	_reModuleId: /[\w.\/]+/g,
 
 	addJavaScriptModule: function(mid, doUpdateModel, skipDomUpdate) {
+		var promise = new Deferred();
 		if (!skipDomUpdate) {
-			this.getGlobal().require([mid]); //FIXME: needs to pass in async callback
+			this.getGlobal().require([mid], function(module) {
+				promise.resolve(module);
+			});
+		} else {
+			promise.resolve();
 		}
 
 		if (doUpdateModel) {
@@ -2860,7 +2874,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (!found) {
 					// no such element exists yet; create now
 					this._requireHtmlElem = this.addHeaderScriptText('require(["' + mid + '"]);\n');
-					return;
+					return promise;
 				}
 			}
 
@@ -2881,6 +2895,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				scriptText.parent.setScript(text);
 			}
 		}
+
+		return promise;
 	},
 
 	addJavaScriptText: function(text, doUpdateModel, skipDomUpdate) {
@@ -3445,23 +3461,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		// If the current document has changed from having zero dojox.mobile widgets to at least one
 		// or vice versa, then either remove or add document.css.
-		if(resetEverything || this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
+		var themeCssRootArr = this._themeUrl.split('/');
+		themeCssRootArr.pop();
+		themeCssRootArr.pop();
+		var documentFileName= themeCssRootArr.join('/') + '/' + this.theme.className + '/document.css';
+		if(resetEverything ||this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
 			var documentCssHeader, documentCssImport, themeCssHeader, themeCssImport;
 			var header = dojo.clone( this.getHeader());
 			for(var ss=0; ss<header.styleSheets.length; ss++){
-				if(header.styleSheets[ss].indexOf('document.css') >= 0){
+				if(header.styleSheets[ss] == documentFileName){
 					documentCssHeader = header.styleSheets[ss];
 				}
-				if(header.styleSheets[ss].indexOf('themes/') >= 0){
+				if(header.styleSheets[ss] == this._themeUrl){
 					themeCssHeader = header.styleSheets[ss];
 				}
 			}
 			var imports = this.model.find({elementType:'CSSImport'});
 			for(var imp=0; imp<imports.length; imp++){
-				if(imports[imp].url.indexOf('document.css') >= 0){
+				if(imports[imp].url == documentFileName){
 					documentCssImport = imports[imp];
 				}
-				if(imports[imp].url.indexOf('themes/') >= 0){
+				if(imports[imp].url == this._themeUrl){
 					themeCssImport = imports[imp];
 				}
 			}
@@ -3505,9 +3525,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					if(parent && documentCssFile){
 						var css = new CSSImport();
 						css.url = documentCssFileName;
-						var args = {url:documentCssPath}
-						var cssFile = Factory.getModel(args); //newHTML();
-						css.cssFile = cssFile; //documentCssFile;
+						var args = {url:documentCssPath, includeImports: true};
+						var cssFile = Factory.getModel(args); 
+						css.cssFile = cssFile; 
 						parent.addChild(css,0);
 					}
 				}

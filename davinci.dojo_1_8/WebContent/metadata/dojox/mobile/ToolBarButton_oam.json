@@ -78,6 +78,33 @@
         "selected": {
             "datatype": "boolean",
             "defaultValue": false
+        },
+        "url": {
+            "datatype": "string",
+        },
+        "urlTarget": {
+            "datatype": "string",
+        },
+        "sync": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "back": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "toogle": {
+            "datatype": "boolean",
+            "defaultValue": false
+        },
+        "arrow": {
+            "datatype": "string",
+            "defaultValue": "",
+            "option": [
+                {"value": ""},
+                {"value": "right"},
+                {"value": "left"}
+            ]
         }
     },
     "content": "<div label='ToolBarButton'></div>"

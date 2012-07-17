@@ -483,18 +483,19 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		// Either we should prompt user "You must save before you can preview in browser. OK to save?"
 		// or we should preview the working copy instead of the permanent file.
 		editor.save();
-		if(deviceName && deviceName.length && deviceName!='none'){
-			fileURL = Workbench.location();
+		if(deviceName && deviceName.length && deviceName != 'none'){
 			query = [
 			    'preview=1',
 			    'device=' + encodeURIComponent(deviceName),
 			    'file=' + encodeURIComponent(fileURL)
 			];
+			fileURL = Workbench.location();
 			if (this._orientation == 'landscape') {
 				query.push('orientation=' + this._orientation);
 			}
 		}
-		if(this.context.getPreference("zazl")){
+		var useZazl = this.context.getPreference("zazl");
+		if(useZazl !== false){
 			query.push('zazl=true');
 		}
 		if(query.length) {

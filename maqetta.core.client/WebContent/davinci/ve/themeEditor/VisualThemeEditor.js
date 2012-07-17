@@ -97,7 +97,6 @@ return declare([], {
 				htmlFile.themeCssFiles.push(relPath.toString()+'/'+this.theme.name+'/'+file); // #23 css files need to be added to doc before body content
 			}.bind(this));
 			this.context.model = htmlFile;
-			this.context._themeName = this.theme.name;
 			if(!this.initialSet){
 				this.context.deactivate();
 				this.context._setSource(htmlFile, function(failureInfo) {

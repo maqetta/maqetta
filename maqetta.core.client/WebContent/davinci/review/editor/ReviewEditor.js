@@ -85,10 +85,14 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
 	destroy: function() {
 		 //Clear any pending comment from view cache
-		if (this.context && this.context._commentView) {
-			this.context._commentView._setPendingEditComment(this, null);
+		if (this.context){
+			if(this.context._commentView) {
+				this.context._commentView._setPendingEditComment(this, null);
+			}
+			if(this.context.destroy){
+				this.context.destroy();
+			}
 		}
-		
 		this.inherited(arguments);
 	},
 

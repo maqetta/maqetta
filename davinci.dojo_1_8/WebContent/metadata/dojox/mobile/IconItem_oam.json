@@ -5,6 +5,11 @@
     "version": "1.7",
     "require": [
         {
+            "type": "css",
+            "src": "dojox/mobile/themes/common/domButtons/DomButtonRedBadge.css",
+            "$library": "dojo"
+        },
+        {
             "type": "javascript-module",
             "format": "amd",
             "src": "dojox/mobile",
@@ -75,6 +80,9 @@
         "timeout": {
             "datatype": "number",
             "defaultValue": 10
+        },
+        "badge": {
+            "datatype": "string"
         }
     },
     "content": "<li label='IconItem'></li>"

@@ -4,7 +4,7 @@ define(["dojo/_base/declare",
         "dijit/_WidgetsInTemplateMixin",
         "davinci/library",
         "system/resource",
-        "davinci/Runtime",
+        "dojo/DeferredList",
         "davinci/Workbench",
         "davinci/ve/RebaseDownload",
         "dojo/i18n!./nls/ui",
@@ -14,7 +14,7 @@ define(["dojo/_base/declare",
         "dijit/form/Button",
         "dijit/form/ValidationTextBox"
 
-],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Library, Resource, Runtime, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
+],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Library, Resource, DeferredList, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
 		
@@ -109,8 +109,8 @@ define(["dojo/_base/declare",
 		},
 		
 		_rewriteUrls: function(){
-		
-			var resources = this._getResources();
+			var resources = this._getResources(),
+				promises = [];
 
 			//this._pages = Resource.findResource("*.html", true, null, true);
 			
@@ -124,15 +124,16 @@ define(["dojo/_base/declare",
 				}else if(resource.extension=="html"){
 					allResources = [resource];
 				}
-				
-				for(var k=0;k<allResources.length;k++){
-					if(Theme.isThemeHTML(allResources[k])) {
-						continue;
+				//FIXME: is it possible allResources will be repeated from the last time through the loop?
+				allResources.forEach(function(res){
+					if(!Theme.isThemeHTML(res)) {
+						promises.push(pageBuilder.rebuildSource(res.getContentSync(), res).then(function (newSource) {
+							res.setContents(newSource, true);						
+						}));
 					}
-					var newSource = pageBuilder.rebuildSource(allResources[k].getContentSync(), allResources[k]);
-					allResources[k].setContents(newSource, true);
-				}
+				});
 			}
+			return new DeferredList(promises);
 		},
 		
 		okButton: function(){
@@ -152,23 +153,24 @@ define(["dojo/_base/declare",
 					}
 				}
 				var fileName = dojo.attr( this.__fileName, "value");
-				if (fileName.indexOf(".zip") != fileName.length-4) {
+				if (fileName.slice(-4) != ".zip") {
 					fileName = fileName + ".zip";
 				}
-				this._rewriteUrls();
-			
-				var allFiles = this._getResources();
-				var pages = this._noRewrite ? [] : this._pages;
-				/* have to close the dialog before the download call starts */
-				var actualLibs = allFiles.userLibs.filter(function(lib){
-					return lib.includeSrc;
-				});
-	
-				var options = {};
-				if (this.__optimize.getValue()) {
-					options.build = "1";
-				}
-				setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs, options), 300);
+				this._rewriteUrls().then(function() {
+					var allFiles = this._getResources();
+					var pages = this._noRewrite ? [] : this._pages;
+					/* have to close the dialog before the download call starts */
+					var actualLibs = allFiles.userLibs.filter(function(lib){
+						return lib.includeSrc;
+					});
+		
+					var options = {};
+					if (this.__optimize.getValue()) {
+						options.build = "1";
+					}
+
+					setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs, options), 300);					
+				}.bind(this));
 			}
 		},
 		

@@ -67,8 +67,17 @@ define([
 // Cheap polyfill to approximate bind(), make Safari happy
 Function.prototype.bind = Function.prototype.bind || function(that){ return dojo.hitch(that, this);};
 
+// Convert filename path into an ID string
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
+};
+// Convert the result from filename2id into a different ID string that replaces "editor" with "shadow"
+var editorIdToShadowId = function(editorFileName) {
+	return editorFileName.replace(/^editor/, "shadow");
+};
+//Convert the result from filename2id into a different ID string that replaces "editor" with "shadow"
+var shadowIdToEditorId = function(shadowFileName) {
+	return shadowFileName.replace(/^shadow/, "editor");
 };
 
 var updateMainToolBar = function (change, toolbarID) {
@@ -253,11 +262,17 @@ var Workbench = {
 		Runtime.subscribe("/davinci/resource/resourceChanged",
 			function (type, changedResource) {
 				if (type == 'deleted') {
-					var tab = dijit.byId(filename2id(changedResource.getPath()));
-					if (tab && !tab._isClosing) {
-						var tabContainer = dijit.byId("editors_tabcontainer");
-						tabContainer.removeChild(tab);
-						tab.destroyRecursive();
+					var editorId = filename2id(changedResource.getPath());
+					var shadowId = editorIdToShadowId(editorId);
+					var editorContainer = dijit.byId(editorId);
+					var shadowTab = dijit.byId(shadowId);
+					if (tabeditorContainer && !editorContainer._isClosing) {
+						var editorsContainer = dijit.byId("editors_container");
+						var shadowTabContainer = dijit.byId("davinci_file_tabs");
+//FIXME: shadow tab handling here? (DONE)
+						editorsContainer.removeChild(editorContainer);
+						editorContainer.destroyRecursive();
+						shadowTabContainer.removeChild(shadowTab);
 					}
 				}
 			}
@@ -490,23 +505,42 @@ var Workbench = {
 		if (!mainBody.tabs.editors) {
 			Workbench.editorTabs = mainBody.tabs.editors =
 				new (Workbench.hideEditorTabs ? StackContainer : TabContainer)({
-					id: "editors_tabcontainer",
+					id: "editors_container",
 					controllerWidget: (Workbench.hideEditorTabs ? "dijit.layout.StackController" : "dijit.layout.TabController")
 				});
-			if(!Workbench.hideEditorTabs){
-				Workbench.editorTabs.setTitle = function(tab, title) { 
-					tab.attr('title', title);
-					this.tablist.pane2button[tab.id].attr('label', title);
-				};
-			}
+//FIXME: need to add similar logic for shadow tabs? (DONE - injected further down)
+//Research this.tablist (NOT YET DONE)
+			Workbench.editorTabs.setTitle = function(editorContainer, title) { 
+				editorContainer.attr('title', title);
+				if(!Workbench.hideEditorTabs){
+					this.tablist.pane2button[editorContainer.id].attr('label', title);
+				}else{
+					var editorId = editorContainer.id;
+					var shadowId = editorIdToShadowId(editorId);
+					var shadowTabContainer = dijit.byId("davinci_file_tabs");
+					shadowTabContainer.tablist.pane2button[shadowId].attr('label', title);
+				}
+			};
 			
 			dojo.connect(mainBody.tabs.editors, "removeChild", this, Workbench._editorTabClosed);
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.tabs.editors);
 		mainBody.editorsStackContainer.selectChild(mainBody.editorsWelcomePage);
-		dojo.connect(dijit.byId("editors_tabcontainer"), "selectChild", function(child) {
-			if (child.editor) {
-				Workbench._switchEditor(child.editor);
+//FIXME: need to connect to shadow tabcontainer instead (DONE - lower down)
+		dojo.connect(dijit.byId("editors_container"), "selectChild", function(child) {
+			if(!Workbench._processingSelectChild){
+				Workbench._processingSelectChild = true;
+				var editorId = child.id;
+				var shadowId = editorIdToShadowId(editorId);
+				var shadowTab = dijit.byId(shadowId);
+				var shadowTabContainer = dijit.byId("davinci_file_tabs");
+				if(shadowTab && shadowTabContainer){
+					shadowTabContainer.selectChild(shadowTab);
+				}
+				if (child.editor) {
+					Workbench._switchEditor(child.editor);
+				}
+				Workbench._processingSelectChild = false;
 			}
 		});
 		mainBodyContainer.startup();
@@ -525,10 +559,25 @@ var Workbench = {
 				layoutPriority:1,
 			}, "davinci_top_bar");
 			
-			var fileTabsPane = new TabContainer({
+			var shadowTabContainer = Workbench.shadowTabs = new TabContainer({
 				id:'davinci_file_tabs',
 				region: "top",
 				layoutPriority:2
+			});
+			Workbench.shadowTabs.setTitle = function(tab, title) { 
+				tab.attr('title', title);
+				this.tablist.pane2button[tab.id].attr('label', title);
+			};
+			dojo.connect(shadowTabContainer, "selectChild", function(child) {
+				var shadowId = child.id;
+				var editorId = shadowIdToEditorId(shadowId);
+				var editorContainer = dijit.byId(editorId);
+				var editorsContainer = dijit.byId("editors_container");
+				if (editorsContainer && editorContainer && editorContainer.editor) {
+					// This is trigger (indirectly) the selectChild callback function on 
+					// the editors_container widget, which will trigger Workbench._switchEditor
+					editorsContainer.selectChild(editorContainer);
+				}
 			});
 			var toolbarPane = new ContentPane({
 				id:'davinci_toolbar_pane',
@@ -536,17 +585,17 @@ var Workbench = {
 				layoutPriority:3,
 				content:'toolbar goes here'
 			});
+//FIXME: shadow fixes - delete this
+/*
 			var tempCP = new ContentPane({
 				title:'file1.html',
 				content:'hello there'
 			});
-			fileTabsPane.addChild(tempCP);
-			//fileTabsPane.layout();
-			//fileTabsPane.startup();
-			//fileTabsPane.layout();
+			shadowTabContainer.addChild(tempCP);
+*/
 		
 			appBorderContainer.addChild(topBarPane);
-			appBorderContainer.addChild(fileTabsPane);
+			appBorderContainer.addChild(shadowTabContainer);
 			appBorderContainer.addChild(toolbarPane);
 			appBorderContainer.addChild(mainBodyContainer);
 			appBorderContainer.layout();	
@@ -673,27 +722,36 @@ new Moveable(floatingPropertiesPalette);
 		}
 		
 		
-		var tabContainer = dijit.byId("editors_tabcontainer");
-		if (tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor) {
-			return tabContainer.selectedChildWidget.editor;
+		var editorsContainer = dijit.byId("editors_container");
+		if (editorsContainer && editorsContainer.selectedChildWidget && editorsContainer.selectedChildWidget.editor) {
+			return editorsContainer.selectedChildWidget.editor;
 		}
 		return null;
 	},
 
 	closeActiveEditor: function() {
-		var tabContainer = dijit.byId("editors_tabcontainer");
+		var editorsContainer = dijit.byId("editors_container");
+		var shadowTabContainer = dijit.byId("davinci_file_tabs");
 
-		if (tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor) {
-			tabContainer.closeChild(tabContainer.selectedChildWidget);
+		if (editorsContainer && editorsContainer.selectedChildWidget && editorsContainer.selectedChildWidget.editor) {
+//FIXME: Need to also work with shadow tab container (DONE)
+			var editorId = selectedChildWidget.id;
+			var shadowId = editorIdToShadowId(editorId);
+			editorsContainer.closeChild(editorsContainer.selectedChildWidget);
+			var shadowTab = dijit.byId(shadowId);
+			if(shadowTab){
+				shadowTabContainer.closeChild(shadowTab);
+			}
 		}
 	},
 
 	closeAllEditors: function() {
-		var tabContainer = dijit.byId("editors_tabcontainer");
+		var editorsContainer = dijit.byId("editors_container");
 
-		if (tabContainer) {
-			array.forEach(tabContainer.getChildren(), function(child){
-				tabContainer.closeChild(child);
+		if (editorsContainer) {
+			array.forEach(editorsContainer.getChildren(), function(child){
+//FIXME: Need to also work with shadow tab container
+				editorsContainer.closeChild(child);
 			});
 		}
 	},
@@ -1152,13 +1210,14 @@ if(view.id == 'davinci.ve.style'){
 				fileName=fileName.getPath();
 			}
 	
-			var tab = dijit.byId(filename2id(fileName)),
-				tabContainer = dijit.byId("editors_tabcontainer");
+			var editorContainer = dijit.byId(filename2id(fileName)),
+				editorsContainer = dijit.byId("editors_container");
 	
-			if (tab) {
+			if (editorContainer) {
 				// already open
-				tabContainer.selectChild(tab);
-				var editor=tab.editor;
+				editorsContainer.selectChild(editorContainer);
+//FIXME: also need to select shadow tab container
+				var editor=editorContainer.editor;
 				if (keywordArgs.startOffset) {
 					editor.select(keywordArgs);
 				}
@@ -1215,24 +1274,33 @@ if(view.id == 'davinci.ve.style'){
 		}
 
 		var editorsStackContainer = dijit.byId('editorsStackContainer'),
-			editors_tabcontainer = dijit.byId('editors_tabcontainer');
-		if (editorsStackContainer && editors_tabcontainer) {
-			editorsStackContainer.selectChild(editors_tabcontainer);
+			editors_container = dijit.byId('editors_container');
+		if (editorsStackContainer && editors_container) {
+			editorsStackContainer.selectChild(editors_container);
 		}
 
+//FIXME: shadow tab (DONE)
 		var content = keywordArgs.content,
-			tab = dijit.byId(filename2id(fileName)),
-			tabContainer = dijit.byId("editors_tabcontainer"),
-			tabCreated = false;
-		if (!tab) {
-			tabCreated = true;
+			editorContainer = dijit.byId(filename2id(fileName)),
+			editorsContainer = dijit.byId("editors_container"),
+			shadowTabContainer = dijit.byId("davinci_file_tabs"),
+			editorCreated = false,
+			shadowTab = null;
+		if (!editorContainer) {
+			editorCreated = true;
 
-			tab = new EditorContainer({
+			var editorId = filename2id(fileName);
+			var shadowId = editorIdToShadowId(editorId);
+			editorContainer = new EditorContainer({
 				title: nodeName,
-				id: filename2id(fileName), 
+				id: editorId, 
 				'class': "EditorContainer",
 				closable: true,
 				isDirty: keywordArgs.isDirty
+			});
+			shadowTab = new ContentPane({
+				title:nodeName,
+				id:shadowId
 			});
 		}
 		
@@ -1243,30 +1311,32 @@ if(view.id == 'davinci.ve.style'){
 			};
 		}
 
-		if (tabCreated) {
-			tabContainer.addChild(tab);
+		if (editorCreated) {
+//FIXME: Add shadow tab here?
+			editorsContainer.addChild(editorContainer);
+			shadowTabContainer.addChild(shadowTab);
 		}
 
 		// add loading spinner
 		if(!Workbench.hideEditorTabs){
-			var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
+			var loadIcon = dojo.query('.dijitTabButtonIcon',editorContainer.controlButton.domNode);
 			dojo.addClass(loadIcon[0],'tabButtonLoadingIcon');
 			dojo.removeClass(loadIcon[0],'dijitNoIcon');
 		}
 		
 		if (!keywordArgs.noSelect) {
-			tabContainer.selectChild(tab);
+			editorsContainer.selectChild(editorContainer);
 		}
-		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams).then(function(editor) {
+		editorContainer.setEditor(editorExtension, fileName, content, keywordArgs.fileName, editorContainer.domNode, newHtmlParams).then(function(editor) {
 			if (keywordArgs.startLine) {
-				tab.editor.select(keywordArgs);
+				editorContainer.editor.select(keywordArgs);
 			}
 			
 			if (!keywordArgs.noSelect) {
 	            if (Workbench._state.editors.indexOf(fileName) === -1) {
 	            	Workbench._state.editors.push(fileName);
 	            }
-				Workbench._switchEditor(tab.editor, keywordArgs.startup);
+				Workbench._switchEditor(editorContainer.editor, keywordArgs.startup);
 			}
 
 			if(!Workbench.hideEditorTabs){
@@ -1275,9 +1345,9 @@ if(view.id == 'davinci.ve.style'){
 			}
 
 			setTimeout(function() {
-				tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
+				editorContainer.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 			}, 100);
-			d.resolve(tab.editor);
+			d.resolve(editorContainer.editor);
 		}, function(error) {
 			if(!Workbench.hideEditorTabs){
 				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
@@ -1586,11 +1656,12 @@ if(view.id == 'davinci.ve.style'){
 					// parent to find the right TabContainer
 					var tab = dijit.byId(paletteId);
 					if (tab) {
-						var tabContainer = tab.getParent();
+						var editorsContainer = tab.getParent();
 	
 						// Select tab
-						if (tabContainer) {
-							tabContainer.selectChild(tab);
+//FIXME: also have to do shadow tab container
+						if (editorsContainer) {
+							editorsContainer.selectChild(tab);
 						}
 					}
 				}
@@ -1618,7 +1689,7 @@ if(view.id == 'davinci.ve.style'){
             }
 			Workbench._updateWorkbenchState();
 		}
-		var editors=dijit.byId("editors_tabcontainer").getChildren();
+		var editors=dijit.byId("editors_container").getChildren();
 		if (!editors.length) {
 			Workbench._switchEditor(null);
 			var editorsStackContainer = dijit.byId('editorsStackContainer');

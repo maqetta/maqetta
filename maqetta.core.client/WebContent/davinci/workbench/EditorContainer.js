@@ -87,8 +87,8 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					// Don't populate the editor until the tab is selected.  Defer processing,
 					// but also avoid problems with display:none on hidden tabs making it impossible
 					// to do geometry measurements in editor initialization
-					var tabContainer = "editors_tabcontainer";
-					if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
+					var editorsContainer = "editors_container";
+					if(dijit.byId(editorsContainer).selectedChildWidget.domNode == this.domNode){
 						// Tab is visible.  Go ahead
 						editor.setContent(fileName, content, newHtmlParams);
 
@@ -97,7 +97,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 						dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 					}else{
 						// When tab is selected, set up the editor
-						var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
+						var handle = dojo.subscribe(editorsContainer + "-selectChild", null, function(args){
 							if(editor==args.editor){
 								dojo.unsubscribe(handle);
 								editor.setContent(fileName,content);
@@ -108,7 +108,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 							}
 						}.bind(this));
 					}
-					editor.editorContainer=this;
+					editor.editorsContainer=this;
 					this.setDirty(editor.isDirty);
 				}.bind(this);
 				if(editor.deferreds){
@@ -132,13 +132,15 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	setDirty: function (isDirty) {
-		if(!davinci.Workbench.hideEditorTabs){
+		//FIXME: davinci.Workbench.hideEditorTabs is always true now
+		//Need to clean up this logic (make less hacky)
+		//if(!davinci.Workbench.hideEditorTabs){
 			var title = this._getTitle();
 			if (isDirty){
 				title="*"+title;
 			}
 			davinci.Workbench.editorTabs.setTitle(this,title);
-		}
+		//}
 		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
 	},

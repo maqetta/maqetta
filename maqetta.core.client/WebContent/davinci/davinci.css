@@ -58,13 +58,13 @@ BODY{
 #davinci_app .dijitSplitterV {
 	width:4px;
 }
-.claro #editors_tabcontainer {
+.claro #editors_container {
 	z-index:-4;	/* For some reason, need negative z-index when using StackContainer */
 }
-.claro #editors_tabcontainer .dijitBorderContainer {
+.claro #editors_container .dijitBorderContainer {
 	background-color:#888;
 }
-.claro #editors_tabcontainer .dijitBorderContainer-dijitContentPane {
+.claro #editors_container .dijitBorderContainer-dijitContentPane {
 	border:1px #444 solid;
 	-moz-border-radius:2px;
 	-webkit-border-radius:2px;
@@ -288,7 +288,7 @@ BODY{
     color: #464646;
 }
 
-#editors_tabcontainer > .dijitTabPaneWrapper {
+#editors_container > .dijitTabPaneWrapper {
 	background-color:white;
 }
 
@@ -854,7 +854,7 @@ davinci_top_bar .dijitButtonNode {
 	border-bottom:none;
 	height:100%;		
 }
-#welcome_page_new_open_container, #editors_tabcontainer_new_open_container {
+#welcome_page_new_open_container, #editors_container_new_open_container {
 	display:inline-block;
 	white-space:no-wrap;
 	float:right;

@@ -561,6 +561,7 @@ var Workbench = {
 			
 			var shadowTabContainer = Workbench.shadowTabs = new TabContainer({
 				id:'davinci_file_tabs',
+				closable: true,
 				region: "top",
 				layoutPriority:2
 			});
@@ -1295,11 +1296,11 @@ if(view.id == 'davinci.ve.style'){
 				title: nodeName,
 				id: editorId, 
 				'class': "EditorContainer",
-				closable: true,
 				isDirty: keywordArgs.isDirty
 			});
 			shadowTab = new ContentPane({
 				title:nodeName,
+				closable: true,
 				id:shadowId
 			});
 		}

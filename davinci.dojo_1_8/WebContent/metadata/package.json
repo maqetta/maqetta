@@ -2792,6 +2792,16 @@
 		            "name": "ValuePickerTimePicker",
 		            "type": "dojox.mobile.ValuePickerTimePicker",
 		            "category": "mobile"
+		        },
+		        {
+		            "name": "DatePicker",
+		            "type": "dojox.mobile.DatePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "TimePicker",
+		            "type": "dojox.mobile.TimePicker",
+		            "category": "mobile"
 		        }
 		    ]
 		    }

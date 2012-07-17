@@ -14,6 +14,8 @@ return declare("davinci.ve.palette.HtmlWidgets", ViewPart, {
 			this.setContext( [ editorChange.editor.getContext()]);	
 			dojo.removeClass(this.palette.domNode, "dijitHidden");
 		}else{
+			// scroll back to the top of the palette before hiding
+			this.palette.domNode.scrollTop = 0;
 			dojo.addClass(this.palette.domNode, "dijitHidden");
 		}
 	},

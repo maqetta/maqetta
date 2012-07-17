@@ -3,7 +3,7 @@ define(["davinci/ve/widget",
 		"davinci/commands/CompoundCommand",
 		"../dojo/data/DataStoreBasedWidgetInput",
 		"./HTMLSubElementHelper",
-		"davinci/ve/commands/ReparentCommand",
+		"davinci/ve/commands/ReparentCommand"
 		],
 function(Widget, RemoveCommand, CompoundCommand, DataStoreBasedWidgetInput, HTMLSubElementHelper, ReparentCommand){
 

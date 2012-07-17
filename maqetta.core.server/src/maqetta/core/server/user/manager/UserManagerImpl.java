@@ -21,6 +21,7 @@ import org.maqetta.server.ServerManager;
 
 public class UserManagerImpl implements IUserManager {
 
+	private static IUser localUser;
     protected static UserManagerImpl theUserManager;
   //  protected HashMap                users    = new HashMap();
     protected IStorage            baseDirectory;
@@ -186,36 +187,39 @@ public class UserManagerImpl implements IUserManager {
     }
 
     public IUser getSingleUser() {
-        class LocalPerson implements IPerson {
-            public String getEmail() {
-                return "";
-            }
-            public String getFirstName() {
-                return "";
-            }
-            public String getLastName() {
-                return "";
-            }
-            public String getUserID() {
-                return IDavinciServerConstants.LOCAL_INSTALL_USER;
-            }
-        }
-        IStorage userDir = this.baseDirectory;
+    	if (localUser == null) {
+	    	class LocalPerson implements IPerson {
+	            public String getEmail() {
+	                return "";
+	            }
+	            public String getFirstName() {
+	                return "";
+	            }
+	            public String getLastName() {
+	                return "";
+	            }
+	            public String getUserID() {
+	                return IDavinciServerConstants.LOCAL_INSTALL_USER;
+	            }
+	        }
 
-        userDir.mkdir();
-        IUser user =  new User(new LocalPerson(), userDir);
-        IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-        if (!settingsDir.exists()) {
-            settingsDir.mkdir();
-            IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
-        }
-       return user;
+	    	IStorage userDir = this.baseDirectory;
+	        userDir.mkdir();
 
+	        localUser = new User(new LocalPerson(), userDir);
+	        IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+	        if (!settingsDir.exists()) {
+	            settingsDir.mkdir();
+	            IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+	        }
+    	}
+    	return localUser;
     }
 
 	public IUser getUser(HttpServletRequest req) {
-		if ( ServerManager.LOCAL_INSTALL ) 
+		if (ServerManager.LOCAL_INSTALL) {
 			return this.getSingleUser();
+		}
 		return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 	}
 

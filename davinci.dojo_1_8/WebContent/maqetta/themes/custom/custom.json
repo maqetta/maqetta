@@ -130,24 +130,7 @@
                             "color",
                             "text-align"
                         ],
-                        ".mblColorDefault": [
-                            "background-color",
-                            "background-image",
-                            "background-position",
-                            "background-position-x",
-                            "background-position-y",
-                            "background-repeat",
-                            "background-origin",
-                            "background-size",
-                            "background-clip",
-                            "font-family",
-                            "font-size",
-                            "font-style",
-                            "font-weight",
-                            "color",
-                            "text-align"
-                        ],
-                        ".mblTabPanelHeader": [
+                        ".mblTabBarSegmentedControl": [
                             "background-color",
                             "background-image",
                             "background-position",
@@ -197,9 +180,12 @@
             "states": {
                 "Normal": {
                     "selectors": {
-                        ".mblToolBarButton": [
+                        ".mblColorDefault": [
+                            "color",
                             "background-color",
-                            "background-image",
+                            "background-image"
+                        ],
+                        ".mblToolBarButton": [
                             "background-position",
                             "background-position-x",
                             "background-position-y",
@@ -211,44 +197,9 @@
                             "font-size",
                             "font-style",
                             "font-weight",
-                            "color",
                             "text-align"
                         ],
                         ".mblTabButton": [
-                            "background-color",
-                            "background-image",
-                            "background-position",
-                            "background-position-x",
-                            "background-position-y",
-                            "background-repeat",
-                            "background-origin",
-                            "background-size",
-                            "background-clip",
-                            "font-family",
-                            "font-size",
-                            "font-style",
-                            "font-weight",
-                            "color",
-                            "text-align"
-                        ],
-                        ".mblArrowButtonHead": [
-                            "background-color",
-                            "background-image",
-                            "background-position",
-                            "background-position-x",
-                            "background-position-y",
-                            "background-repeat",
-                            "background-origin",
-                            "background-size",
-                            "background-clip",
-                            "font-family",
-                            "font-size",
-                            "font-style",
-                            "font-weight",
-                            "color",
-                            "text-align"
-                        ],
-                        ".mblArrowButtonBody": [
                             "background-color",
                             "background-image",
                             "background-position",
@@ -366,7 +317,7 @@
                 },
                 "Selected": {
                     "selectors": {
-                        ".mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
+                        ".mblTabBarSegmentedControl .mblTabBarButtonSelected": [
                             "background-color",
                             "background-image",
                             "background-position",
@@ -1244,16 +1195,16 @@
         "TabBar": {
             "displayName": "TabBar",
             "rootSelectors": [
-                ".mblTabPanelHeader"
+                ".mblTabBarSegmentedControl"
             ],
             "states": {
                 "Normal": {
                     "selectors": {
-                        ".mblTabPanelHeader": [
+                        ".mblTabBarSegmentedControl": [
                             "$std_10"
-                        ]
-                    },
-                    "query": ""
+                        ],
+                        "query": ""
+                    }
                 }
             },
             "subwidgets": {
@@ -1262,7 +1213,7 @@
                     "states": {
                         "Normal": {
                             "selectors": {
-                                ".mblTabButton": [
+                                ".mblTabBarSegmentedControl .mblTabBarButton": [
                                     "position",
                                     "float",
                                     "list-style-type",
@@ -1301,26 +1252,33 @@
                                     "font-weight",
                                     "color",
                                     "text-align"
-                                ],
-                                ".mblTabPanelHeader .mblTabButton": [
-                                    "margin-top"
-                                ],
-                                ".mblTabBarButtonAnchor": [
-                                    "display",
-                                    "text-decoration"
                                 ]
                             },
-                            "query": ".mblTabButton"
+                            "query": ".mblTabBarButton"
                         },
                         "Selected": {
                             "selectors": {
-                                ".mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
+                                ".mblTabBarSegmentedControl .mblTabBarButtonSelected": [
                                     "background-color",
-                                    "background-image"
+                                    "background-image",
+                                    "background-position",
+                                    "background-position-x",
+                                    "background-position-y",
+                                    "background-repeat",
+                                    "background-origin",
+                                    "background-size",
+                                    "background-clip",
+                                    "font-family",
+                                    "font-size",
+                                    "font-style",
+                                    "font-weight",
+                                    "color",
+                                    "text-align",
+                                    "border-radius"
                                 ]
                             },
-                            "query": ".mblTabButton",
-                            "simulate": "mblTabButtonSelected"
+                            "query": ".mblTabBarButton",
+                            "simulate": "mblTabBarButtonSelected"
                         }
                     }
                 }

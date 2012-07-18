@@ -88,7 +88,7 @@ return declare(CreateTool, {
 			command.add(new StyleCommand(comboBoxWidget, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(comboBoxWidget, args.position.x, args.position.y));
 		}
-		args.size = this._getInititalSize(comboBoxWidget, args);
+		args.size = this._getInitialSize(comboBoxWidget, args);
 		if(args.size){
 			command.add(new ResizeCommand(comboBoxWidget, args.size.w, args.size.h));
 		}

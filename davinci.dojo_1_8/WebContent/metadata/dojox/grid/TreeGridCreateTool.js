@@ -102,7 +102,7 @@ return declare(CreateTool, {
 			command.add(new StyleCommand(dataGrid, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(dataGrid, args.position.x, args.position.y));
 		}
-		args.size = this._getInititalSize(dataGrid, args);
+		args.size = this._getInitialSize(dataGrid, args);
 		if(args.size){
 			command.add(new ResizeCommand(dataGrid, args.size.w, args.size.h));
 		}

@@ -1,6 +1,6 @@
 define([
     	"dojo/_base/declare",
-    	"dojo/DeferredList",
+    	"dojo/promise/all",
     	"./Workbench",
     	"./library",
     	"./workbench/Preferences",
@@ -8,7 +8,7 @@ define([
     	"./html/HTMLFile",
     	"./model/Factory",
     	"system/resource"
-], function(declare, DeferredList, Workbench, Library, Preferences, Path, HTMLFile, Factory, systemResource) {
+], function(declare, all, Workbench, Library, Preferences, Path, HTMLFile, Factory, systemResource) {
 
 	var Theme = {
 		TEMP_CLONE_PRE: "clone_",
@@ -60,7 +60,7 @@ define([
 		return resource.getName().indexOf("dojo-theme-editor.html") > -1;
 	},
 
-	CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles ){
+	CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles){
 	    
 		var deferreds = [];
 		var fileBase = originalTheme.file.parent;
@@ -137,8 +137,7 @@ define([
 		}
 		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
 		deferreds.push(themeCssFile.setContents(imports));
-		var defs = new DeferredList(deferreds);
-		return defs;
+		return all(deferreds);
 	},
 	
 	getHelper: function(theme){

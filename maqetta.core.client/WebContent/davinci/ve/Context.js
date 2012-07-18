@@ -3,8 +3,8 @@ define([
     "dojo/_base/lang",
     "dojo/_base/xhr",
 	"dojo/query",
-	"dojo/_base/Deferred",
-	"dojo/DeferredList",
+	"dojo/Deferred",
+	"dojo/promise/all",
 	"dojo/_base/connect",
 	"dojo/window",
     'system/resource',
@@ -43,7 +43,7 @@ define([
 	xhr,
 	query,
 	Deferred,
-	DeferredList,
+	all,
 	connect,
 	windowUtils,
 	Resource,
@@ -493,7 +493,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return true;
 		}, this);
 
-		return new DeferredList(promises);
+		return all(promises);
 	},
 
 	_getWidgetFolder: function(){
@@ -1320,7 +1320,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._preserveStates(n, states);
 		}, this);
 		var promise = new Deferred();
-		new DeferredList(prereqs).then(function() {
+		all(prereqs).then(function() {
 			this.getGlobal()["require"]("dojo/ready")(function(){
 				try {
 					this.getGlobal()["require"]("dojo/parser").parse(containerNode);
@@ -2842,7 +2842,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-		return new DeferredList(promises);
+		return all(promises);
 	},
 
 	_reRequire: /\brequire\s*\(\s*\[\s*([\s\S]*?)\s*\]\s*\)/,

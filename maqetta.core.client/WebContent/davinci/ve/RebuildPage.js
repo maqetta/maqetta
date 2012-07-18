@@ -6,8 +6,8 @@ define([
 	"../model/Path",
 	"davinci/model/Factory",
 	"dojo/Deferred",
-	"dojo/DeferredList"
-], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred, DeferredList) {
+	"dojo/promise/all"
+], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred, all) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -84,7 +84,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         }
 
         var deferred = new Deferred();
-        new DeferredList(promises).then(function(){
+        all(promises).then(function(){
         	deferred.resolve(this._srcDocument.getText());
         }.bind(this));
         return deferred;

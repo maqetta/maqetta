@@ -4,7 +4,7 @@ define(["dojo/_base/declare",
         "dijit/_WidgetsInTemplateMixin",
         "davinci/library",
         "system/resource",
-        "dojo/DeferredList",
+        "dojo/promise/all",
         "davinci/Workbench",
         "davinci/ve/RebaseDownload",
         "dojo/i18n!./nls/ui",
@@ -14,7 +14,7 @@ define(["dojo/_base/declare",
         "dijit/form/Button",
         "dijit/form/ValidationTextBox"
 
-],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Library, Resource, DeferredList, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
+],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Library, Resource, all, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
 		
@@ -133,7 +133,7 @@ define(["dojo/_base/declare",
 					}
 				});
 			}
-			return new DeferredList(promises);
+			return all(promises);
 		},
 		
 		okButton: function(){

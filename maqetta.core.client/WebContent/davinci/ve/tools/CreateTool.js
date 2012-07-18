@@ -5,7 +5,7 @@ define(["dojo/_base/declare",
 		"../metadata",
 		"../widget",
 		"dojo/Deferred",
-		"dojo/DeferredList",
+		"dojo/promise/all",
 		"davinci/commands/CompoundCommand",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
@@ -19,7 +19,7 @@ define(["dojo/_base/declare",
 		Metadata,
 		Widget,
 		Deferred,
-		DeferredList,
+		all,
 		CompoundCommand,
 		AddCommand,
 		MoveCommand,
@@ -27,7 +27,7 @@ define(["dojo/_base/declare",
 		StyleCommand
 ) {
 
-var defaultInvalidTargetWidgetMessage = 'The selected target is not a valid parent for the given widget.';
+var defaultInvalidTargetWidgetMessage = 'The selected target is not a valid parent for the given widget.'; //TODO: i18n
 
 return declare("davinci.ve.tools.CreateTool", _Tool, {
 	
@@ -575,7 +575,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 //		}
 		this._data.context=this._context;
 
-		new DeferredList(this._requireHelpers(this._data)).then(function() {
+		all(this._requireHelpers(this._data)).then(function() {
 			this._create({parent: parent, index: index, position: position, size: args.size});			
 		}.bind(this));
 	},
@@ -604,7 +604,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			return d;
 		}
 
-		new DeferredList(promises).then(function(){
+		all(promises).then(function(){
 			var w;
 			if(this.createNewWidget()){
 				dojo.withDoc(this._context.getDocument(), function(){

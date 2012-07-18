@@ -1,0 +1,27 @@
+<div>
+	<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" style="" liveSplitters="true" dojoAttachPoint="borderContainer">
+		<div dojoType="dijit.layout.LayoutContainer" style="height: 3em;" region="top">
+			<div dojoType="dijit.layout.ContentPane" layoutAlign="left" style="width: 100px">${dijitNls.borderDesign}</div>
+			<div dojoType="dijit.layout.ContentPane" layoutAlign="client" style="width: 100px"><input type="radio" dojoType="dijit.form.RadioButton" name="headline" dojoAttachPoint="headlineRadio" value="headline" /> <label for="headlineRadio">${dijitNls.borderHeadline}</label></div>
+			<div dojoType="dijit.layout.ContentPane" layoutAlign="right" ><input type="radio" dojoType="dijit.form.RadioButton" name="sidebar" dojoAttachPoint="sidebarRadio" value="sidebar" /> <label for="sidebarRadio">${dijitNls.borderSidebar}</label></div>
+		</div>
+		<div dojoType="dijit.layout.ContentPane" style="width: 7em;" region="leading">
+			<table>
+				<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="left" dojoAttachPoint="leftCheckBox" value="left" /> <label for="leftCheckBox">${dijitNls.borderLeft}</label></td></tr>
+				<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="right" dojoAttachPoint="rightCheckBox" value="right" /> <label for="rightCheckBox">${dijitNls.borderRight}</label></td></tr>
+				<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="top" dojoAttachPoint="topCheckBox" value="top" /> <label for="topCheckBox">${dijitNls.borderTop}</label></td></tr>
+				<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="bottom" dojoAttachPoint="bottomCheckBox" value="bottom" /> <label for="bottomCheckBox">${dijitNls.borderBottom}</label></td></tr>
+				<tr><td><input type="radio" dojoType="dijit.form.CheckBox" name="center" dojoAttachPoint="centerCheckBox" value="center" /> <label for="centerCheckBox">${dijitNls.borderCenter}</label></td></tr>
+			</table>
+		</div>
+		<div dojoType="dijit.layout.ContentPane"  region="center" dojoAttachPoint="centerWorkspace">
+			<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="true" liveSplitters="true" dojoAttachPoint="workspaceBorderContainer">
+				<div dojoType="dijit.layout.ContentPane" splitter="true" region="left">  </div>
+				<div dojoType="dijit.layout.ContentPane" splitter="true" region="right">  </div>
+				<div dojoType="dijit.layout.ContentPane" splitter="true" region="top">  </div>
+				<div dojoType="dijit.layout.ContentPane" splitter="true" region="bottom">  </div>
+				<div dojoType="dijit.layout.ContentPane" splitter="true" region="center">  </div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -204,6 +204,11 @@ require([
   	padding:10px;
 }
 
+/* FIXME: this is a fix for #2873 it may not be need if dojo changes the base theme */
+	.mblListItem {
+	position: static;
+}
+
 </style>
 <div class="resetClaroFontBg" style="margin: -1px;">
  <div class="theming-group">
@@ -321,7 +326,7 @@ require([
        <div class="theming-widget">
         <ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
          <li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
-         <li label="Item 2" dojoType="dojox.mobile.ListItem"></li>
+         <li label="Item 2" dojoType="dojox.mobile.ListItem"   checked="true"></li>
         </ul>
        </div>
       </div>

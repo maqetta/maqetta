@@ -81,6 +81,7 @@ var uiResource = {
 					var resourcePath = newDialog.get('value');
 					var resource = Resource.createResource(resourcePath);
 					resource.isNew = true;
+					resource.dirtyResource = true;
 					var text = Resource.createText("HTML", {resource:resource});
 					if(text){
 						resource.setText(text);
@@ -208,11 +209,6 @@ var uiResource = {
 					oldContent = (oldEditor.model && oldEditor.model.getText) ? oldEditor.model.getText() : oldEditor.getText();
 				}
 				var existing=Resource.findResource(resourcePath);
-				
-				if(existing && existing.readOnly()){
-					Dialog.showMessage("Error", "Can't save over a read only file!");
-					return;
-				}
 				
 				oldEditor.editorContainer.forceClose(oldEditor);
 				if(existing){

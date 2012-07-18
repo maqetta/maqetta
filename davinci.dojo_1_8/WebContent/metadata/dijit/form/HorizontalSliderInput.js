@@ -37,7 +37,6 @@ function(declare,
 		dijitLangObj) {
 
 var ContinerInputWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-	widgetsInTemplate: true,
 	templateString: mainTemplateString,
 
 	langObj: langObj,

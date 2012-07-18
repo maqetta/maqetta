@@ -3,7 +3,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/connect",
-	"dojo/DeferredList",
+	"dojo/promise/all",
 	"dojo/text!davinci/ve/template.html",
 	"../Runtime",
 	"../Workbench",
@@ -24,7 +24,7 @@ define([
 	declare,
 	lang,
 	connect,
-	DeferredList,
+	all,
 	template,
 	Runtime,
 	Workbench,
@@ -124,7 +124,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 				}
 			}
 		});
-		this._pageEditor.deferreds = new DeferredList(Metadata.getDeferreds());
+		this._pageEditor.deferreds = all(Metadata.getDeferreds());
 	},
 	
 	getDevice: function() {

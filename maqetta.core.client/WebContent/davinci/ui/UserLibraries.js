@@ -2,6 +2,7 @@ define(["dojo/_base/declare",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
         "dijit/_WidgetsInTemplateMixin",
+        "dojo/promise/all",
         "../Workbench",
         "dijit/form/Button",
         "dijit/form/TextBox",
@@ -18,7 +19,7 @@ define(["dojo/_base/declare",
         "dojo/text!./templates/UserLibraries.html",
         "../Theme"
         
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Workbench, Button, TextBox, RadioButton, MenuItem, Menu, Library, 
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, all, Workbench, Button, TextBox, RadioButton, MenuItem, Menu, Library, 
 			ComboBox, uiNLS, commonNLS, Path, Resource, RebuildPage, templateString, Theme
 			){
 	
@@ -154,7 +155,7 @@ define(["dojo/_base/declare",
 				dojo.subscribe("/davinci/ui/libraryChanged", this, function(){			
 					Resource.findResourceAsync("*.html", true, this.getResourceBase(), true).then(function(pages){
 						var pageBuilder = new RebuildPage(),
-							promises = new DeferredList();
+							promises = [];
 						pages.forEach(function(page) {
 							/* don't process theme editor pages */
 							if(Theme.isThemeHTML(page)) {
@@ -165,7 +166,7 @@ define(["dojo/_base/declare",
 								page.setContents(newSource, false);								
 							}));
 						});
-						promises.then(function() {
+						all(promises).then(function() {
 							this.onClose();
 						});
 					}.bind(this));

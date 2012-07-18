@@ -4,35 +4,35 @@
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/dojo"]
 	path = maqetta.core.client/WebContent/dojo
-	url = https://github.com/dojo/dojo.git
+	url = git://github.com/dojo/dojo.git
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/dijit"]
 	path = maqetta.core.client/WebContent/dijit
-	url = https://github.com/dojo/dijit.git
+	url = git://github.com/dojo/dijit.git
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/dojox"]
 	path = maqetta.core.client/WebContent/dojox
-	url = https://github.com/dojo/dojox.git
+	url = git://github.com/dojo/dojox.git
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/util"]
 	path = maqetta.core.client/WebContent/util
-	url = https://github.com/dojo/util.git
+	url = git://github.com/dojo/util.git
 	ignore=dirty
 [submodule "davinci.dojo_1_8/WebContent/dojo-src/dojo"]
 	path = davinci.dojo_1_8/WebContent/dojo-src/dojo
-	url = https://github.com/dojo/dojo.git
+	url = git://github.com/dojo/dojo.git
 	ignore=dirty
 [submodule "davinci.dojo_1_8/WebContent/dojo-src/dijit"]
 	path = davinci.dojo_1_8/WebContent/dojo-src/dijit
-	url = https://github.com/dojo/dijit.git
+	url = git://github.com/dojo/dijit.git
 	ignore=dirty
 [submodule "davinci.dojo_1_8/WebContent/dojo-src/dojox"]
 	path = davinci.dojo_1_8/WebContent/dojo-src/dojox
-	url = https://github.com/dojo/dojox.git
+	url = git://github.com/dojo/dojox.git
 	ignore=dirty
 [submodule "davinci.dojo_1_8/WebContent/dojo-src/util"]
 	path = davinci.dojo_1_8/WebContent/dojo-src/util
-	url = https://github.com/dojo/util.git
+	url = git://github.com/dojo/util.git
 	ignore=dirty
 [submodule "zazl/optimizer"]
 	path = zazl/optimizer

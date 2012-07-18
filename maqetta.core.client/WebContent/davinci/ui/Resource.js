@@ -81,6 +81,7 @@ var uiResource = {
 					var resourcePath = newDialog.get('value');
 					var resource = Resource.createResource(resourcePath);
 					resource.isNew = true;
+					resource.dirtyResource = true;
 					var text = Resource.createText("HTML", {resource:resource});
 					if(text){
 						resource.setText(text);

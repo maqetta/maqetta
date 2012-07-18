@@ -3,7 +3,7 @@ define([
     "dojo/_base/lang",
     "dojo/_base/xhr",
 	"dojo/query",
-	"dojo/Deferred",
+	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/_base/connect",
 	"dojo/window",
@@ -1279,11 +1279,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
-		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
-		
-		dojo.connect(this.getGlobal(), 'onload', this, function() {
-            this.onload();
-        });
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(function(){
+			   dojo.connect(this.getGlobal(), 'onload', this, function() {
+			      this.onload();
+			   }.bind(this));
+		}.bind(this))
 		
 	},
 
@@ -1294,12 +1294,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onload: function() {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
-		this.editor.setDirty(this.hasDirtyResources());
+		
 		var newCons = [];
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
 		this.widgetAddedOrDeleted();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
+	    this.editor.setDirty(this.hasDirtyResources());
 	},
 
 	/**
@@ -3572,7 +3573,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	hasDirtyResources: function(){
-		debugger;
 		var dirty = false;
 		var baseRes = this.getBaseResource(); // theme editors don't have a base resouce. 
 		if (baseRes){

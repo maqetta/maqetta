@@ -812,7 +812,7 @@ States.prototype = {
 		var statesFocus = this.getFocus(body);
 		node._maqAppStates.states.splice(idx, 1);
 		var params = {};
-		if(statesFocus.stateContainerNode == node && statesFocus.state == state){
+		if(statesFocus && statesFocus.stateContainerNode == node && statesFocus.state == state){
 			params.focus = true;
 			params.updateWhenCurrent = true;
 		}

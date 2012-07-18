@@ -932,16 +932,17 @@
                                     "padding-bottom",
                                     "padding-left",
                                     "height",
-                                    "border-bottom",
-                                    "border-bottom-style",
-                                    "border-bottom-width",
-                                    "border-bottom-color",
+                                    "border",
+                                    "border-style",
+                                    "border-width",
+                                    "border-color",
                                     "background-color",
                                     "font-size",
                                     "color",
-                                    "line-height"
-                                ],
-                                ".mblListItem .mblListItemAnchor": [
+                                    "line-height",
+                                     "overflow",
+                                    "white-space",
+                                    "text-overflow",
                                     "-webkit-tap-highlight-color",
                                     "background-image",
                                     "background-position",
@@ -953,14 +954,48 @@
                                     "background-clip",
                                     "text-decoration",
                                     "padding-right"
-                                ],
-                                ".mblListItemTextBox": [
-                                    "overflow",
-                                    "white-space",
-                                    "text-overflow"
                                 ]
                             },
                             "query": ".mblListItem"
+                        },
+                        "Selected": {
+                            "selectors": {
+                                ".mblListItemSelected": [
+                                    "position",
+                                    "list-style-type",
+                                    "vertical-align",
+                                    "padding",
+                                    "padding-top",
+                                    "padding-right",
+                                    "padding-bottom",
+                                    "padding-left",
+                                    "height",
+                                    "border",
+                                    "border-style",
+                                    "border-width",
+                                    "border-color",
+                                    "background-color",
+                                    "font-size",
+                                    "color",
+                                    "line-height",
+                                     "overflow",
+                                    "white-space",
+                                    "text-overflow",
+                                    "-webkit-tap-highlight-color",
+                                    "background-image",
+                                    "background-position",
+                                    "background-position-x",
+                                    "background-position-y",
+                                    "background-repeat",
+                                    "background-origin",
+                                    "background-size",
+                                    "background-clip",
+                                    "text-decoration",
+                                    "padding-right"
+                                ]
+                            },
+                            "query": ".mblListItem",
+                            "simulate": "mblListItemSelected"
                         }
                     }
                 },
@@ -969,7 +1004,7 @@
                     "states": {
                         "Normal": {
                             "selectors": {
-                                ".mblDomButtonGrayArrow > div": [
+                                ".mblDomButtonGrayArrow > div, .mblDomButtonArrow > div": [
                                     "border-width",
                                     "border-top-width",
                                     "border-right-width",
@@ -979,7 +1014,28 @@
                                     "border-color"
                                 ]
                             },
-                            "query": ".mblListItemRightIcon"
+                            "query": "li:first-child > div:first-child"
+                        },
+                        "Selected": {
+                            "selectors": {
+                                ".mblListItemSelected .mblDomButton div": [
+                                    "border-color"
+                                ]
+                            },
+                            "query": "li:first-child > div:first-child"
+                        }
+                    }
+                },
+                "Checked": {
+                    "displayName": "Checked",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblDomButtonDarkBlueCheck > div, .mblDomButtonCheck > div": [
+                                    "border-color"
+                                ]
+                            },
+                            "query": "li[checked] > div:first-child"
                         }
                     }
                 }

@@ -210,11 +210,6 @@ var uiResource = {
 				}
 				var existing=Resource.findResource(resourcePath);
 				
-				if(existing && existing.readOnly()){
-					Dialog.showMessage("Error", "Can't save over a read only file!");
-					return;
-				}
-				
 				oldEditor.editorContainer.forceClose(oldEditor);
 				if(existing){
 					existing.removeWorkingCopy();

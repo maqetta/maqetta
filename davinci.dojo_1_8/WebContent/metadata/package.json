@@ -2750,7 +2750,7 @@
 		            "category": "mobile",
 		            "icon": "resources/images/menuitem.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
-		            "allowedParent": "dojox.mobile.IconMenu",
+		            "allowedParent": "dojox.mobile.IconMenu"
 		        },
 		        {
 		            "name": "Accordion",
@@ -2801,6 +2801,58 @@
 		        {
 		            "name": "TimePicker",
 		            "type": "dojox.mobile.TimePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "ValuePicker",
+		            "description": "ValuePicker",
+		            "type": "dojox.mobile.ValuePicker",
+		            "category": "mobile",
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.ValuePickerSlot",
+		                    "properties": {
+		                        "labelFrom": 0,
+		                        "labelTo": 9,
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.ValuePickerSlot",
+		                    "properties": {
+		                    		"labels": ["miles", "kilometers"]
+		                    }
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.ValuePickerSlot"
+		        },
+		        {
+		            "name": "ValuePickerSlot",
+		            "description": "ValuePickerSlot",
+		            "type": "dojox.mobile.ValuePickerSlot",
+		            "category": "mobile",
+		            "allowedParent": "dojox.mobile.ValuePicker"
+		        },
+		        {
+		            "name": "ScreenSizeAware",
+		            "type": "dojox.mobile.ScreenSizeAware",
+		            "category": "untested"
+		        },
+		        {
+		            "name": "SearchBox",
+		            "description": "SearchBox",
+		            "type": "dojox.mobile.SearchBox",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "ProgressIndicator",
+		            "description": "ProgressIndicator",
+		            "type": "dojox.mobile.ProgressIndicator",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "Container",
+		            "description": "Container",
+		            "type": "dojox.mobile.Container",
 		            "category": "mobile"
 		        }
 		    ]

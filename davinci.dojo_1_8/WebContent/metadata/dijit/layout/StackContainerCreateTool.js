@@ -71,7 +71,7 @@ return declare(CreateTool, {
 			command.add(new MoveCommand(controller, args.position.x, args.position.y - 30));
 			command.add(new MoveCommand(container, args.position.x, args.position.y));
 		}
-		args.size = this._getInititalSize(container, args);
+		args.size = this._getInitialSize(container, args);
 		if(args.size){
 			command.add(new ResizeCommand(container, args.size.w, args.size.h));
 		}

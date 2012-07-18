@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/xhr",
 	"dojo/_base/connect",
-	"dojo/_base/Deferred",
+	"dojo/Deferred",
 	"davinci/Runtime",
 	"davinci/model/Model",
 	"davinci/model/Path",

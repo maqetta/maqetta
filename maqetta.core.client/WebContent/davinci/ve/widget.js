@@ -1,7 +1,7 @@
 define([
 	"davinci/html/HTMLElement", //HTMLElement
 	"davinci/ve/metadata",
-	"dojo/_base/Deferred",
+	"dojo/Deferred",
 	"davinci/ve/DijitWidget",
 	"davinci/ve/GenericWidget",
 	"davinci/ve/HTMLWidget",

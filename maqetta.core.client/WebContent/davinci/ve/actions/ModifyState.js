@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/Deferred",
+	"dojo/Deferred",
 	"dojo/_base/connect",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",

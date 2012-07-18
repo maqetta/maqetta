@@ -3,7 +3,7 @@ define([
     "dojo/_base/lang",
     "dojo/_base/xhr",
 	"dojo/query",
-	"dojo/_base/Deferred",
+	"dojo/Deferred",
 	"dojo/DeferredList",
 	"dojo/_base/connect",
 	"dojo/window",

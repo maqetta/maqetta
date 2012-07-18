@@ -5,7 +5,7 @@ define([
 	"./Context",
 	"../model/Path",
 	"davinci/model/Factory",
-	"dojo/_base/Deferred",
+	"dojo/Deferred",
 	"dojo/DeferredList"
 ], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred, DeferredList) {
 

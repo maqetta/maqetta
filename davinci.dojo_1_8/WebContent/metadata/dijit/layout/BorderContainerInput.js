@@ -35,7 +35,6 @@ define([
 ) {
 
 var ContinerInputWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-	widgetsInTemplate: true,
 	templateString: templateString,
 
 	dijitNls: dijitNls,

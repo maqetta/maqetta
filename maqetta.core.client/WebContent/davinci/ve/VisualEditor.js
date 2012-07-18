@@ -501,7 +501,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		if(query.length) {
 			fileURL += "?" + query.join("&");
 		}
-		window.open(fileURL);
+		window.open(fileURL, "preview");
 	},
 
 	/**

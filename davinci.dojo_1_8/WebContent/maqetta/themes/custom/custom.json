@@ -401,6 +401,18 @@
                             "font-weight",
                             "color",
                             "text-align"
+                        ],
+                        ".mblColorDefaultSel": [
+                            "color",
+                            "background-color",
+                            "background-image",
+                            "background-position",
+                            "background-position-x",
+                            "background-position-y",
+                            "background-repeat",
+                            "background-origin",
+                            "background-size",
+                            "background-clip"
                         ]
                     },
                     "defaults": {
@@ -867,6 +879,24 @@
                         ]
                     },
                     "query": ".mblToolBarButton"
+                }, 
+                "Selected": {
+                    "selectors": {
+                        ".mblColorDefaultSel": [
+                            "color",
+                            "background-color",
+                            "background-image",
+                            "background-position",
+                            "background-position-x",
+                            "background-position-y",
+                            "background-repeat",
+                            "background-origin",
+                            "background-size",
+                            "background-clip"
+                        ]
+                    },
+                    "query": ".mblToolBarButtonBody",
+                    "simulate": "mblColorDefaultSel"
                 }
             }
         },

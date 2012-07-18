@@ -1182,9 +1182,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-        dojo.connect(this.getGlobal(), 'onload', this, function() {
-            this.onload();
-        });
+        
 
 		this.setHeader({
 			title: data.title,
@@ -1282,6 +1280,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
 		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
+		
+		dojo.connect(this.getGlobal(), 'onload', this, function() {
+            this.onload();
+        });
+		
 	},
 
 	/**
@@ -3569,6 +3572,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	hasDirtyResources: function(){
+		debugger;
 		var dirty = false;
 		var baseRes = this.getBaseResource(); // theme editors don't have a base resouce. 
 		if (baseRes){

@@ -2823,8 +2823,7 @@
 		                    }
 		                }
 		            ],
-		            "allowedChild": "dojox.mobile.ValuePickerSlot",
-		            "inlineEdi2t": "./dojox/mobile/ValuePickerInput",
+		            "allowedChild": "dojox.mobile.ValuePickerSlot"
 		        },
 		        {
 		            "name": "ValuePickerSlot",
@@ -2832,6 +2831,29 @@
 		            "type": "dojox.mobile.ValuePickerSlot",
 		            "category": "mobile",
 		            "allowedParent": "dojox.mobile.ValuePicker"
+		        },
+		        {
+		            "name": "ScreenSizeAware",
+		            "type": "dojox.mobile.ScreenSizeAware",
+		            "category": "untested"
+		        },
+		        {
+		            "name": "SearchBox",
+		            "description": "SearchBox",
+		            "type": "dojox.mobile.SearchBox",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "ProgressIndicator",
+		            "description": "ProgressIndicator",
+		            "type": "dojox.mobile.ProgressIndicator",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "Container",
+		            "description": "Container",
+		            "type": "dojox.mobile.Container",
+		            "category": "mobile"
 		        }
 		    ]
 		    }

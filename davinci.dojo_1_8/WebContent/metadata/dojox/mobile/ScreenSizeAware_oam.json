@@ -1,0 +1,55 @@
+{
+    "id": "http://dojotoolkit.org/dojox/mobile/ScreenSizeAware",
+    "name": "dojox.mobile.ScreenSizeAware",
+    "spec": "1.0",
+    "version": "1.8",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/deviceTheme",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/compat",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/mobile/ScreenSizeAware",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+      "splitterId": {
+      	"datatype": "string"
+			},
+      "leftPaneId": {
+      	"datatype": "string"
+			},
+      "rightPaneId": {
+      	"datatype": "string"
+			},
+      "leftViewId": {
+      	"datatype": "string"
+			},
+      "leftListId": {
+      	"datatype": "string"
+			}
+    },
+    "content": "<span></span>"
+}

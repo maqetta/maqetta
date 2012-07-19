@@ -3,7 +3,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/connect",
-	"dojo/DeferredList",
+	"dojo/promise/all",
 	"dojo/text!davinci/ve/template.html",
 	"../Runtime",
 	"../Workbench",
@@ -24,7 +24,7 @@ define([
 	declare,
 	lang,
 	connect,
-	DeferredList,
+	all,
 	template,
 	Runtime,
 	Workbench,
@@ -124,7 +124,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 				}
 			}
 		});
-		this._pageEditor.deferreds = new DeferredList(Metadata.getDeferreds());
+		this._pageEditor.deferreds = all(Metadata.getDeferreds());
 	},
 	
 	getDevice: function() {
@@ -337,67 +337,71 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	},
 
 	_connectCallback: function(failureInfo) {
-		var context = this.context,
-			popup;
+		try {
+			var context = this.context,
+				popup;
 
-		this.savePoint = 0;
-		context.activate();
+			this.savePoint = 0;
+			context.activate();
 
-		popup = Workbench.createPopup({
-			partID: 'davinci.ve.visualEditor',
-			domNode: context.getContainerNode(), 
-			keysDomNode: context.getDocument(),
-			context: context
-		});
-
-		popup.adjustPosition = function(event) {
-			// Adjust for the x/y position of the visual editor's IFRAME relative to the workbench
-			// Adjust for the scrolled position of the document in the visual editor, since the popup menu callback assumes (0, 0)
-			var coords = dojo.position(context.frameNode);
-			dojo.withDoc(context.getDocument(), function(){
-				var scroll = dojo.docScroll();
-				coords.x -= scroll.x;
-				coords.y -= scroll.y;
+			popup = Workbench.createPopup({
+				partID: 'davinci.ve.visualEditor',
+				domNode: context.getContainerNode(), 
+				keysDomNode: context.getDocument(),
+				context: context
 			});
-
-			return coords;
-		};
-
-		// resize kludge to make Dijit visualEditor contents resize
-		// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
-		context.getTopWidgets().forEach(function (widget) {
-			if (widget.resize) {
-				widget.resize();
+	
+			popup.adjustPosition = function(event) {
+				// Adjust for the x/y position of the visual editor's IFRAME relative to the workbench
+				// Adjust for the scrolled position of the document in the visual editor, since the popup menu callback assumes (0, 0)
+				var coords = dojo.position(context.frameNode);
+				dojo.withDoc(context.getDocument(), function(){
+					var scroll = dojo.docScroll();
+					coords.x -= scroll.x;
+					coords.y -= scroll.y;
+				});
+	
+				return coords;
+			};
+	
+			// resize kludge to make Dijit visualEditor contents resize
+			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
+			context.getTopWidgets().forEach(function (widget) {
+				if (widget.resize) {
+					widget.resize();
+				}
+			});
+			
+			// At doc load time, call the routine that makes document adjustments each time
+			// new widgets are added or widgets are deleted.
+			context.anyDojoxMobileWidgets = undefined;
+	//FIXME: All occurrences of context.widgetAddedOrDeleted might need to be
+	//removed by br's changes to incorporate document.css into themes.
+			//context.widgetAddedOrDeleted(true);
+			
+			// pagebuilt event triggered after converting model into dom for visual page editor
+			dojo.publish('/davinci/ui/context/pagebuilt', [context]);
+		} catch(e) {
+			failureInfo = e;
+		} finally {
+			if (failureInfo.errorMessage) {
+				this.loadingDiv.innerHTML = failureInfo.errorMessage || "(unknown)";
+			} else if (failureInfo instanceof Error) {
+				var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
+				if (failureInfo.fileName) {
+					message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
+				}
+				if (failureInfo.stack) {
+					message += "<br><pre>" + failureInfo.stack + "</pre>";
+				}
+				this.loadingDiv.innerHTML = message;
+				dojo.addClass(this.loadingDiv, 'error');
+			} else {
+				if (this.loadingDiv.parentNode) {
+					this.loadingDiv.parentNode.removeChild(this.loadingDiv);				
+				}
+				delete this.loadingDiv;
 			}
-		});
-		
-		// At doc load time, call the routine that makes document adjustments each time
-		// new widgets are added or widgets are deleted.
-		context.anyDojoxMobileWidgets = undefined;
-//FIXME: All occurrences of context.widgetAddedOrDeleted might need to be
-//removed by br's changes to incorporate document.css into themes.
-		//context.widgetAddedOrDeleted(true);
-		
-		// pagebuilt event triggered after converting model into dom for visual page editor
-		dojo.publish('/davinci/ui/context/pagebuilt', [context]);
-
-		if (failureInfo.errorMessage) {
-			this.loadingDiv.innerHTML = failureInfo.errorMessage || "(unknown)";
-		} else if (failureInfo instanceof Error) {
-			var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
-			if (failureInfo.fileName) {
-				message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
-			}
-			if (failureInfo.stack) {
-				message += "<br><pre>" + failureInfo.stack + "</pre>";
-			}
-			this.loadingDiv.innerHTML = message;
-			dojo.addClass(this.loadingDiv, 'error');
-		} else {
-			if (this.loadingDiv.parentNode) {
-				this.loadingDiv.parentNode.removeChild(this.loadingDiv);				
-			}
-			delete this.loadingDiv;
 		}
 	},
 
@@ -501,7 +505,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		if(query.length) {
 			fileURL += "?" + query.join("&");
 		}
-		window.open(fileURL);
+		window.open(fileURL, "preview");
 	},
 
 	/**

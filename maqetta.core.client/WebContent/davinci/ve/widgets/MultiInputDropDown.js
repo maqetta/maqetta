@@ -112,14 +112,18 @@ define(["dojo/_base/declare",
 				if(i>0)
 					result+=" ";
 				var bits = split[i].match(/([-\d\.]+)([a-zA-Z%]*)/);
-				if(bits.length == 1){
-					result+=bits[0]; 
+				if(!bits){
+					result+=split[i];
 				}else{
-					for(var z=1;z<bits.length;z++){
-						if(!isNaN(bits[z]) && bits[z]!=""){
-							result+= parseFloat(bits[z]) + delta;
-						}else{
-							result +=bits[z];
+					if(bits.length == 1){
+						result+=bits[0]; 
+					}else{
+						for(var z=1;z<bits.length;z++){
+							if(!isNaN(bits[z]) && bits[z]!=""){
+								result+= parseFloat(bits[z]) + delta;
+							}else{
+								result +=bits[z];
+							}
 						}
 					}
 				}

@@ -100,7 +100,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	
 	selectSubwidget: function(widget, subwidget){
-		if (!widget || !subwidget) { return; }
+		if (!widget || !subwidget || subwidget == 'WidgetOuterContainer') { return; }
 		var widgetType = this._theme.getWidgetType(widget);
 		var domNode = this._theme.getDomNode(widget.domNode, widgetType, subwidget);
 		

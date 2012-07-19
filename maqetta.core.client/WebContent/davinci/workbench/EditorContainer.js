@@ -3,7 +3,7 @@ define(["require",
 	"davinci/workbench/_ToolbaredContainer",
 	"davinci/Runtime",
 	"davinci/Workbench",
-	"dojo/_base/Deferred",
+	"dojo/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
 ], function(require, declare, ToolbaredContainer, Runtime, Workbench, Deferred, workbenchStrings) {
 

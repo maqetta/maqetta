@@ -863,23 +863,23 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					context.deselectInvisible();
 					context.updateFocusAll();
 				}
-			}
-			if(item.sceneId){
-				// Loop through plugin scene managers, eg Dojo Mobile Views
-				for(var smIndex in sceneManagers){
-					var sm = sceneManagers[smIndex];
-					if(sm.selectScene){
-						if(sm.selectScene({ sceneId:item.sceneId[0]})){
-							break;
+				if(item.sceneId){
+					// Loop through plugin scene managers, eg Dojo Mobile Views
+					for(var smIndex in sceneManagers){
+						var sm = sceneManagers[smIndex];
+						if(sm.selectScene){
+							if(sm.selectScene({ sceneId:item.sceneId[0]})){
+								break;
+							}
 						}
 					}
+				//FIXME: shouldn't be using 'file' for Elements
+				}else if(item.type && item.type[0] == 'file' && item.node && item.node[0]._dvWidget){
+					// If user clicked on a TreeNode that corresponds to a widget, then select that widget
+					context.select(item.node[0]._dvWidget);
 				}
-			//FIXME: shouldn't be using 'file' for Elements
-			}else if(item.type && item.type[0] == 'file' && item.node && item.node[0]._dvWidget){
-				// If user clicked on a TreeNode that corresponds to a widget, then select that widget
-				context.select(item.node[0]._dvWidget);
+				this._updateSelection();
 			}
-			this._updateSelection();
 		});
 
 		var newItemRecursive = function(obj, parentItem){

@@ -69,10 +69,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._sKey = false;
 		var createMover = false;
 		this._areaSelectClear();
-		if((dojo.isMac && event.ctrlKey) || event.button == 2){
-			// this is a context menu ("right" click)  Don't change the selection.
-			return;
-		}
+
 		// See if mouse is within selection rectangle for a primitive widget
 		// Sometimes that rectangle is a bit bigger than _getTarget or getEnclosingWidget
 		var widget = context.checkFocusXY(event.pageX, event.pageY);
@@ -92,6 +89,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(!widget){
 			return;
 		}
+
+		if((dojo.isMac && event.ctrlKey) || event.button == 2){
+			// this is a context menu ("right" click).  Select the widget, but skip the rest
+			// of the logic.
+			context.select(widget);
+			return;
+		}
+
 		var selection = context.getSelection();
 		
 		// See if widget is a descendant of any widgets in selection

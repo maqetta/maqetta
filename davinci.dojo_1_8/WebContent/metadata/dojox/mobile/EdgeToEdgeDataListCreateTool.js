@@ -118,7 +118,7 @@ return declare(CreateTool, {
 		
 		// Call superclass to potentially invoke widget initialSize helper if this is widget's initial creation time
 		// (i.e., initialCreationArgs is provided)
-		args.size = this._getInititalSize(edge2Edge, args);
+		args.size = this._getInitialSize(edge2Edge, args);
 		if(args.size){
 			command.add(new ResizeCommand(edge2Edge, args.size.w, args.size.h));
 		}
@@ -129,7 +129,8 @@ return declare(CreateTool, {
 		
 	addPasteCreateCommand: function(command, args) {
 		this._context = this._data.context;
-		var storeId = this._data.properties.store._edit_object_id;
+		var store = this._data.properties.store;
+		var storeId = store.id ? store.id : store._edit_object_id;
 		var storeWidget = Widget.byId(storeId);
 		var storeData = storeWidget.getData();
 		var data = [];

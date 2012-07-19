@@ -3,8 +3,8 @@ define([
     "dojo/_base/lang",
     "dojo/_base/xhr",
 	"dojo/query",
-	"dojo/_base/Deferred",
-	"dojo/DeferredList",
+	"dojo/Deferred",
+	"dojo/promise/all",
 	"dojo/_base/connect",
 	"dojo/window",
     'system/resource',
@@ -43,7 +43,7 @@ define([
 	xhr,
 	query,
 	Deferred,
-	DeferredList,
+	all,
 	connect,
 	windowUtils,
 	Resource,
@@ -493,7 +493,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return true;
 		}, this);
 
-		return new DeferredList(promises);
+		return all(promises);
 	},
 
 	_getWidgetFolder: function(){
@@ -1087,7 +1087,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						callback.call((scope || this), failureInfo);
 					}.bind(this));
 				} else {
-					// FIXME: caller doesn't handle error data?
 					callback.call((scope || this), failureInfo);
 				}
 			}
@@ -1182,9 +1181,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-        dojo.connect(this.getGlobal(), 'onload', this, function() {
-            this.onload();
-        });
+        
 
 		this.setHeader({
 			title: data.title,
@@ -1281,7 +1278,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
-		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(function(){
+			connect.connect(this.getGlobal(), 'onload', this, function() {
+				this.onload();
+			});
+		}.bind(this));		
 	},
 
 	/**
@@ -1291,12 +1292,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onload: function() {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
-		this.editor.setDirty(this.hasDirtyResources());
+		
 		var newCons = [];
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
 		this.widgetAddedOrDeleted();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
+	    this.editor.setDirty(this.hasDirtyResources());
 	},
 
 	/**
@@ -1316,7 +1318,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._preserveStates(n, states);
 		}, this);
 		var promise = new Deferred();
-		new DeferredList(prereqs).then(function() {
+		all(prereqs).then(function() {
 			this.getGlobal()["require"]("dojo/ready")(function(){
 				try {
 					this.getGlobal()["require"]("dojo/parser").parse(containerNode);
@@ -2838,7 +2840,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-		return new DeferredList(promises);
+		return all(promises);
 	},
 
 	_reRequire: /\brequire\s*\(\s*\[\s*([\s\S]*?)\s*\]\s*\)/,

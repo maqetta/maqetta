@@ -1664,7 +1664,7 @@
 		            "name": "Rating",
 		            "description": "Rating",
 		            "type": "dojox.form.Rating",
-		            "category": "untested",
+		            "category": "mobile",
 		            "icon": "resources/images/rating.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAG6awXqgwpe72ylro16XyHehxZy71J691qPA2LTP5rrQ4r3S487e63+pyZu918DV5c3f7c/g7P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVAoCSOZGmeaKquLEkQIyGMSUIOwzgEo2GIuGAw4Cv6HMIGjvgwQiQAXAG6W0gUPqtkgDjkuIufIcL4tc7otLoUAgA7",
 		            "resizable": "none"
@@ -1737,10 +1737,10 @@
 		            "helper": "./dijit/layout/ContentPaneHelper"
 		        },
 		        {
-		            "name": "ScrollPane",
+		            "name": "ScrollablePane",
 		            "description": "Scroll Pane",
-		            "type": "dojox.layout.ScrollPane",
-		            "category": "untested",
+		            "type": "dojox.layout.ScrollablePane",
+		            "category": "mobile",
 		            "icon": "resources/images/scrollpane.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPn6/jFOiDFOh+zx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DZYkDhbkzdYkDlbk97o+ODp+N/o9z5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm/X4/ENupENuo0Ruo+fv+fL2+0l3rEl4rEh2qkl2qk6BtE+BtFCFt1CEtlOIu1OJulaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaTwFdrSCwaXymXUlVpNpPLl8kVSJSczWm19Nq4LiINtuIFa16PQ6OBWLvTa8Rr5Ro7WQuFhDWv2yt4enwnLhaGh4YnExMRKC8kLiGSk5IjixEkj5GUk5aMmR4uA6OkoyAeHh8fLxkuDK+wrxxKLhQvDi4duru6EFQJEC8GLgDFxsXDGAQFLwHOAs7R0s4v1dbX2C9BADs=",
 		            "initialSize": "auto",
@@ -2750,7 +2750,110 @@
 		            "category": "mobile",
 		            "icon": "resources/images/menuitem.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
-		            "allowedParent": "dojox.mobile.IconMenu",
+		            "allowedParent": "dojox.mobile.IconMenu"
+		        },
+		        {
+		            "name": "Accordion",
+		            "description": "Accordion",
+		            "type": "dojox.mobile.Accordion",
+		            "category": "mobile",
+		            "icon": "resources/images/accordion.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
+		            "initialSize": "auto",
+		            "properties": {
+		                "fixedHeight": "true",
+		                "roundRect": "true"
+		            },
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.ContentPane",
+		                    "properties": {
+		                        "label": "Pane 1",
+		                        "selected": "true"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.ContentPane",
+		                    "properties": {
+		                        "label": "Pane 2"
+		                    }
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.ContentPane, dojox.mobile.ScrollableView",
+		            "inlineEdit": "./dojox/mobile/AccordionInput",
+		            "helper": "./dijit/layout/LayoutContainerHelper"
+		        },
+		        {
+		            "name": "ValuePickerDatePicker",
+		            "type": "dojox.mobile.ValuePickerDatePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "ValuePickerTimePicker",
+		            "type": "dojox.mobile.ValuePickerTimePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "DatePicker",
+		            "type": "dojox.mobile.DatePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "TimePicker",
+		            "type": "dojox.mobile.TimePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "ValuePicker",
+		            "description": "ValuePicker",
+		            "type": "dojox.mobile.ValuePicker",
+		            "category": "mobile",
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.ValuePickerSlot",
+		                    "properties": {
+		                        "labelFrom": 0,
+		                        "labelTo": 9,
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.ValuePickerSlot",
+		                    "properties": {
+		                    		"labels": ["miles", "kilometers"]
+		                    }
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.ValuePickerSlot"
+		        },
+		        {
+		            "name": "ValuePickerSlot",
+		            "description": "ValuePickerSlot",
+		            "type": "dojox.mobile.ValuePickerSlot",
+		            "category": "mobile",
+		            "allowedParent": "dojox.mobile.ValuePicker"
+		        },
+		        {
+		            "name": "ScreenSizeAware",
+		            "type": "dojox.mobile.ScreenSizeAware",
+		            "category": "untested"
+		        },
+		        {
+		            "name": "SearchBox",
+		            "description": "SearchBox",
+		            "type": "dojox.mobile.SearchBox",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "ProgressIndicator",
+		            "description": "ProgressIndicator",
+		            "type": "dojox.mobile.ProgressIndicator",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "Container",
+		            "description": "Container",
+		            "type": "dojox.mobile.Container",
+		            "category": "mobile"
 		        }
 		    ]
 		    }

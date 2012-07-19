@@ -23,7 +23,7 @@ define([
 	"system/resource",
 	"dojo/i18n!./nls/webContent",
 	"./ve/metadata",
-	"dojo/_base/Deferred",
+	"dojo/Deferred",
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"dojo/_base/xhr",

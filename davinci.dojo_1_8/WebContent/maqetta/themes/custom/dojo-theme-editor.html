@@ -204,6 +204,11 @@ require([
   	padding:10px;
 }
 
+/* FIXME: this is a fix for #2873 it may not be need if dojo changes the base theme */
+	.mblListItem {
+	position: static;
+}
+
 </style>
 <div class="resetClaroFontBg" style="margin: -1px;">
  <div class="theming-group">
@@ -278,7 +283,7 @@ require([
  <div class="theming-group-widgets" style="background:white; height:160px;">
   <div class="theming-note">To change styling for particular widgets, navigate into the appropriate section below, click on a particular widget below to select it, then change styling properties in the Properties palette.</div>
 
-
+ <div class="theming-group-widgets" style="background:white;">
   <div data-dojo-type="dijit.layout.TabContainer" data-dojo-props="style:&quot;width: 100%; height: 600px; margin:0 15px;&quot; ">
    <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:&quot;Headings &amp; TabBars&quot;">
     <div class="fakeSilhouette3" style="width:420px;">
@@ -287,7 +292,7 @@ require([
        <div class="widgetLabel">Heading:</div>
        <div class="theming-widget" style="width: auto;">
 
-        <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget" back="back"></h1>
+        <h1 label="Heading" dojoType="dojox.mobile.Heading" class="dvThemeWidget"></h1>
        </div>
        <div class="widgetLabel">ToolBarButton:</div>
        <div class="theming-widget" style="min-height: 27px;">
@@ -321,7 +326,7 @@ require([
        <div class="theming-widget">
         <ul dojoType="dojox.mobile.RoundRectList" class="dvThemeWidget">
          <li label="Item 1" dojoType="dojox.mobile.ListItem" sync="true" moveTo="test"></li>
-         <li label="Item 2" dojoType="dojox.mobile.ListItem"></li>
+         <li label="Item 2" dojoType="dojox.mobile.ListItem"   checked="true"></li>
         </ul>
        </div>
       </div>
@@ -422,7 +427,7 @@ require([
     </div>
    </div>
   </div>
-
+</div>
 
  </div>
 </div>

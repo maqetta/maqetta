@@ -1,4 +1,5 @@
 define(["dojo/_base/declare",
+        "dojo/Deferred",
         "davinci/workbench/WidgetLite",
         "davinci/ve/widgets/ColorPickerFlat",
         "davinci/ve/widgets/ColorStore",
@@ -14,18 +15,18 @@ define(["dojo/_base/declare",
         "davinci/ve/widgets/ColorPicker"
         
 
-],function(declare, WidgetLite, ColorPickerFlat, ColorStore, MutableStore, ComboBox,BackgroundDialog, Workbench, URLRewrite, Path, veNLS, commonNLS, CssUtils, ColorPicker){
+],function(declare, Deferred, WidgetLite, ColorPickerFlat, ColorStore, MutableStore, ComboBox,BackgroundDialog, Workbench, URLRewrite, Path, veNLS, commonNLS, CssUtils, ColorPicker){
 	var idPrefix = "davinci_ve_widgets_properties_border_generated"
-	var	__id=0;
-	function getId(){
-		return  (idPrefix + (__id++));
-	}
+	var	__id=0,
+		getId = function(){
+			return idPrefix + (__id++);
+		};
+
 	return declare("davinci.ve.widgets.Background", [WidgetLite], {
-		__id : 0,
-		
-		data : null,
-			
-	
+		__id: 0,
+
+		data: null,
+
 		buildRendering: function(){
 			this.domNode =   dojo.doc.createElement("div",{style:"width:100%"});
 			this._textFieldId = getId();
@@ -152,7 +153,7 @@ define(["dojo/_base/declare",
 					var propNum = 0;
 					var propList = cascadeBatch.propList = [];	// Array of properties whose values actually changed
 					var actions = cascadeBatch.actions = {};	// per-prop: logic to change the combox box on properties palette
-					var deferreds = cascadeBatch.deferreds = {};	// per-prop: dojo.Deferred objects to help with managing async issues
+					var deferreds = cascadeBatch.deferreds = {};	// per-prop: Deferred objects to help with managing async issues
 					cascadeBatch.askUserResponse = undefined;
 					
 					// Call buildBackgroundImage to convert the bgddata object
@@ -171,7 +172,7 @@ define(["dojo/_base/declare",
 										o.propPaletteWidget._comboBoxUpdateDueTo = 'backgroundDialog';
 										o.propPaletteWidget.set('value', newValue);
 									}, o, newValue);
-									deferreds[propName] = new dojo.Deferred();
+									deferreds[propName] = new Deferred();
 								}
 							}
 						}
@@ -209,7 +210,7 @@ define(["dojo/_base/declare",
 								o.propPaletteWidget._comboBoxUpdateDueTo = 'backgroundDialog';
 								o.propPaletteWidget.set('value', newValue);
 							}, o, newValue);
-							deferreds[propName] = new dojo.Deferred();
+							deferreds[propName] = new Deferred();
 						}
 						for(var i=0; i<propList.length; i++){
 							var propName = propList[i];

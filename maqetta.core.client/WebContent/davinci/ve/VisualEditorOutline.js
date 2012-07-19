@@ -206,11 +206,16 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		var visible = !on;
 		var value = visible ? "" : "none";
 		var state;
-		var currentStatesList = States.getStatesListCurrent(widget.domNode);
-		for(var i=0; i<currentStatesList.length; i++){
-			if(currentStatesList[i]){
-				state = currentStatesList[i];
-				break;
+		var statesFocus = States.getFocus(widget.domNode.ownerDocument.body);
+		if(statesFocus){
+			state = statesFocus.state;
+		}else{
+			var currentStatesList = States.getStatesListCurrent(widget.domNode);
+			for(var i=0; i<currentStatesList.length; i++){
+				if(currentStatesList[i]){
+					state = currentStatesList[i];
+					break;
+				}
 			}
 		}
 		var command = new StyleCommand(widget, [{display: value}], state);

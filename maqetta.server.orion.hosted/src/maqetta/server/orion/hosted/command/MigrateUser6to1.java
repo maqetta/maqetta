@@ -28,9 +28,9 @@ public class MigrateUser6to1 extends Command {
 	 * 
 	 */
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-    	File oldWorkspace = getOldWorkspace(user);
     	String migrate = req.getParameter("migrate");
-    	if(!oldWorkspace.exists() || getOldWorkspaceLocation()==null){
+        File oldWorkspace = getOldWorkspace(user);
+    	if(oldWorkspace==null){
     		this.responseString = "NO_WORKSPACE";
     		return;
     	}
@@ -69,9 +69,12 @@ public class MigrateUser6to1 extends Command {
     private File getOldWorkspace(IUser user){
     	String email = user.getPerson().getEmail();
     	String absoluteWorkspace =getOldWorkspaceLocation();
-    	IPath filePath = new Path(absoluteWorkspace).append(email);
-    	return new File(filePath.toOSString());
+    	if(absoluteWorkspace!=null){
+    		IPath filePath = new Path(absoluteWorkspace).append(email);
+    		return new File(filePath.toOSString());
+    	}
     	
+    	return null;
     }
     
     public static void copyDirectory(IStorage source, IStorage destination) {

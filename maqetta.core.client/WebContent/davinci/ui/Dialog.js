@@ -8,12 +8,14 @@ define([
 	"dijit/Dialog",
 	"dojo/dom-geometry",
 	"dojo/dom-style",
+	"dojo/_base/connect",
 	"dojo/text!./templates/Dialog.html",
 	"dojo/i18n!davinci/ve/nls/common",
 	"dojox/layout/ResizeHandle"
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, dialogTemplateString, veNLS) {
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, connect,
+		dialogTemplateString, veNLS, ResizeHandle) {
 
-var DialogClass = declare("davinci.ui.Dialog", Dialog, {
+var DialogClass = declare(Dialog, {
 	contentStyle: null,
 
 	buildRendering: function() {
@@ -27,11 +29,11 @@ var DialogClass = declare("davinci.ui.Dialog", Dialog, {
 		var div = dojo.doc.createElement("div");
 		this.containerNode.appendChild(div);
 
-		new dojox.layout.ResizeHandle({targetId: this.id}, div);
+		new ResizeHandle({targetId: this.id}, div);
 	},
 
 	resize: function(coords) {
-		var titleBarHeight = dojo.marginBox(this.titleBar).h;
+		var titleBarHeight = domGeometry.getMarginBox(this.titleBar).h;
 
 		if (coords) {
 			// compute paddings
@@ -102,7 +104,7 @@ DialogClass.showModal = function(content, title, style, callback) {
 		contentStyle: style
 	});
 
-	handles.push(dojo.connect(myDialog, "onExecute", content, function() {
+	handles.push(connect.connect(myDialog, "onExecute", content, function() {
 		var cancel = false;
 		if (callback) {
 			cancel = callback();
@@ -112,23 +114,23 @@ DialogClass.showModal = function(content, title, style, callback) {
 			return;
 		}
 
-		dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
+		handles.forEach(connect.disconnect);
 
 		myDialog.destroyRecursive();
 	}));
 
 	function _destroy() {
-		dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
+		handles.forEach(connect.disconnect);
 
 		myDialog.destroyRecursive();
 	}
 
-	handles.push(dojo.connect(content, "onClose", function() {
+	handles.push(connect.connect(content, "onClose", function() {
 		_destroy();
 	}));
 
 	// handle the close button
-	handles.push(dojo.connect(myDialog, "onCancel", function() {
+	handles.push(connect.connect(myDialog, "onCancel", function() {
 		_destroy();
 	}));
 
@@ -148,8 +150,7 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 	var handles = [];
 
 	function _onCancel() {
-		dojo.forEach(handles, function(handle){dojo.disconnect(handle)});
-
+		handles.forEach(connect.disconnect);
 		myDialog.destroyRecursive();
 	}
 
@@ -181,7 +182,7 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 		contentStyle: style
 	});
 
-	handles.push(dojo.connect(myDialog, "onExecute", function() {
+	handles.push(connect.connect(myDialog, "onExecute", function() {
 		if (callback) {
 			callback();
 		}
@@ -189,7 +190,7 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 		_onCancel();
 	}));
 
-	handles.push(dojo.connect(myDialog, "onCancel", function() {
+	handles.push(connect.connect(myDialog, "onCancel", function() {
 		_onCancel();
 	}));
 

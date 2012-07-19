@@ -28,16 +28,16 @@
 	                    action: "./html/table/SelectColumnAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
-	           		{
-	                    iconClass: "editActionIcon",
-	                    label: "Insert column after",
-	                    action: "./html/table/AddColumnAction",
-	                    menubarPath: "davinci.edit/cut"
-	                },
 	                {
 	                    iconClass: "editActionIcon",
 	                    label: "Insert column before",
 	                    action: "./html/table/AddColumnBeforeAction",
+	                    menubarPath: "davinci.edit/cut"
+	                },
+	           		{
+	                    iconClass: "editActionIcon",
+	                    label: "Insert column after",
+	                    action: "./html/table/AddColumnAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
@@ -54,14 +54,14 @@
 	                },
 	                {
 	                    iconClass: "editActionIcon",
-	                    label: "Insert row after",
-	                    action: "./html/table/AddRowAction",
+	                    label: "Insert row before",
+	                    action: "./html/table/AddRowBeforeAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {
 	                    iconClass: "editActionIcon",
-	                    label: "Insert row before",
-	                    action: "./html/table/AddRowBeforeAction",
+	                    label: "Insert row after",
+	                    action: "./html/table/AddRowAction",
 	                    menubarPath: "davinci.edit/cut"
 	                },
 	                {

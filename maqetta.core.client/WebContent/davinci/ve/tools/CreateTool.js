@@ -4,7 +4,8 @@ define(["dojo/_base/declare",
 		"davinci/workbench/Preferences",
 		"../metadata",
 		"../widget",
-		"dojo/DeferredList",
+		"dojo/Deferred",
+		"dojo/promise/all",
 		"davinci/commands/CompoundCommand",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
@@ -17,7 +18,8 @@ define(["dojo/_base/declare",
 		Preferences,
 		Metadata,
 		Widget,
-		DeferredList,
+		Deferred,
+		all,
 		CompoundCommand,
 		AddCommand,
 		MoveCommand,
@@ -25,7 +27,7 @@ define(["dojo/_base/declare",
 		StyleCommand
 ) {
 
-var defaultInvalidTargetWidgetMessage = 'The selected target is not a valid parent for the given widget.';
+var defaultInvalidTargetWidgetMessage = 'The selected target is not a valid parent for the given widget.'; //TODO: i18n
 
 return declare("davinci.ve.tools.CreateTool", _Tool, {
 	
@@ -573,20 +575,20 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 //		}
 		this._data.context=this._context;
 
-		new DeferredList(this._requireHelpers(this._data)).then(function() {
+		all(this._requireHelpers(this._data)).then(function() {
 			this._create({parent: parent, index: index, position: position, size: args.size});			
 		}.bind(this));
 	},
 
 	_create: function(args){
-		var context = this._context;
+		var context = this._context,
+			promises = [],
+			d = new Deferred();
 		var loadType = function(data){
 			if(!data || !data.type){
 				return false;
 			}
-			if(!context.loadRequires(data.type,true)){
-				return false;
-			}
+			promises.push(context.loadRequires(data.type, true));
 			if(data.children && !dojo.isString(data.children)){
 				if(!dojo.every(data.children, function(c){
 					return loadType(c);
@@ -595,66 +597,70 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				}
 			}
 			return true;
-		}
+		};
 
 		if(!loadType(this._data)){
-			return;
+			d.reject();
+			return d;
 		}
 
-		var w;
-		if(this.createNewWidget()){
-			dojo.withDoc(this._context.getDocument(), function(){
-				w = Widget.createWidget(this._data);
-			}, this);
-		}else{
-			w = this._widget;
-		}
-		if(!w){
-			return;
-		}
-
-		var command = new davinci.commands.CompoundCommand();
-
-		if(this.createNewWidget()){
-			args.size = this._getInititalSize(w, args);
-			
-			command.add(new AddCommand(w,
-				args.parent || this._context.getContainerNode(),
-				args.index));
-			if(args.position){
-				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
-				command.add(new StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
-				command.add(new MoveCommand(w, args.position.x, args.position.y));
+		all(promises).then(function(){
+			var w;
+			if(this.createNewWidget()){
+				dojo.withDoc(this._context.getDocument(), function(){
+					w = Widget.createWidget(this._data);
+				}, this);
+			}else{
+				w = this._widget;
 			}
-			if(args.size){
-				// For containers, issue a resize regardless of whether an explicit size was set.
-				// In the case where a widget is nested in a layout container,
-				// resize()+layout() will not get called during create. 
-				var width = args.size.w,
-					height = args.size.h;
-				command.add(new ResizeCommand(w, width, height));
-				var helper = Widget.getWidgetHelper(w.type);
-				if(helper && helper.onCreateResize){
-					helper.onCreateResize(command, w, width, height);
+			if(!w){
+				d.reject(new Error("Failed to create widget"));
+			}
+	
+			var command = new davinci.commands.CompoundCommand();
+	
+			if(this.createNewWidget()){
+				args.size = this._getInitialSize(w, args);
+				
+				command.add(new AddCommand(w,
+					args.parent || this._context.getContainerNode(),
+					args.index));
+				if(args.position){
+					var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
+					command.add(new StyleCommand(w, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
+					command.add(new MoveCommand(w, args.position.x, args.position.y));
+				}
+				if(args.size){
+					// For containers, issue a resize regardless of whether an explicit size was set.
+					// In the case where a widget is nested in a layout container,
+					// resize()+layout() will not get called during create. 
+					var width = args.size.w,
+						height = args.size.h;
+					command.add(new ResizeCommand(w, width, height));
+					var helper = Widget.getWidgetHelper(w.type);
+					if(helper && helper.onCreateResize){
+						helper.onCreateResize(command, w, width, height);
+					}
 				}
 			}
-		}
-		var w_id = w.id;
-		// Custom CreateTools might define this function
-		if(this.addToCommandStack){
-			this.addToCommandStack(command, {widget:w})
-		}
-		if(!command.isEmpty()){
-			this._context.getCommandStack().execute(command);
-		}
-		
-		if(w.isLayoutContainer){
-			w.resize();
-		}
-		var w = Widget.byId(w_id);
-		this._select(w);
-		this._widget = w;
-		return w;
+			var w_id = w.id;
+			// Custom CreateTools might define this function
+			if(this.addToCommandStack){
+				this.addToCommandStack(command, {widget:w})
+			}
+			if(!command.isEmpty()){
+				this._context.getCommandStack().execute(command);
+			}
+			
+			if(w.isLayoutContainer){
+				w.resize();
+			}
+			var w = Widget.byId(w_id);
+			this._select(w);
+			this._widget = w;
+			d.resolve(w);
+		}.bind(this));
+		return d;
 	},
 	
 	/* 
@@ -711,7 +717,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	 * 
 	 * For any finer grain control, the initialSize helper function should be implemented.
 	 */
-	_getInititalSize: function(w, args) {
+	_getInitialSize: function(w, args) {
 		var returnSize = args.size;
 		
 		// No user-specified size, so invoke widget's initialSize helper (if it exists)

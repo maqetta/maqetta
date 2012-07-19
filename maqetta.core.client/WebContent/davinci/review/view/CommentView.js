@@ -173,7 +173,9 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					// Show annotations
 					this._reviewFilterChanged(); // Set reviewer list to be shown
 					var rootNode = this._context.rootNode;
+					/*FIXME: No longer used. If resurrected, need to check for statesFocus being null
 					var stateFocus = States.getFocus(rootNode);
+					*/
 					var stateList = this._context.getCurrentStates();
 					var scene = this._getCurrentScene().s;
 					var sceneList = this._context.getCurrentScenes();
@@ -427,7 +429,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		_comments = this._cached[this._currentPage] || [];
 
 		var bodyNode = this._cached[this._currentPage].context.rootNode;
-		var statesFocus = States.getFocus(bodyNode);
 
 		// Get drawing JSON string
 		dojo.publish(this._currentPage+"/davinci/review/drawing/getShapesInEditing", 
@@ -1122,7 +1123,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	updateStatesScenes: function(){
 		var rootNode = this._context.rootNode;
 		var statesFocus = States.getFocus(rootNode);
-		var pageState = this._cached[this._currentPage].pageState = statesFocus.state;
+		var pageState = this._cached[this._currentPage].pageState = statesFocus ? statesFocus.state : undefined;
 		var pageStateList = this._cached[this._currentPage].pageStateList = this._context.getCurrentStates();;
 		var viewScene = this._cached[this._currentPage].viewScene = this._getCurrentScene().s;
 		var viewSceneList = this._cached[this._currentPage].viewSceneList = this._context.getCurrentScenes();;

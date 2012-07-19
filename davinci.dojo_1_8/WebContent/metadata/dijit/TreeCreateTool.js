@@ -112,7 +112,7 @@ return declare(CreateTool, {
 			command.add(new StyleCommand(tree, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(tree, args.position.x, args.position.y));
 		}
-		args.size = this._getInititalSize(tree, args);
+		args.size = this._getInitialSize(tree, args);
 		if(args.size){
 			command.add(new ResizeCommand(tree, args.size.w, args.size.h));
 		}
@@ -126,7 +126,8 @@ return declare(CreateTool, {
 		var model = this._data.properties.model;
 		var modelWidget = Widget.byId(model.id);
 		var modelData = modelWidget.getData();
-		var storeWidget = Widget.byId(model.store._edit_object_id);
+		var storeId = model.store.id ? model.store.id : model.store._edit_object_id;
+		var storeWidget = Widget.byId(storeId);
 		var storeData = storeWidget.getData();
 		var data = [];
 		data[0] = storeData;

@@ -14,6 +14,11 @@ return declare("davinci.ve.palette.HtmlWidgets", ViewPart, {
 			this.setContext( [ editorChange.editor.getContext()]);	
 			dojo.removeClass(this.palette.domNode, "dijitHidden");
 		}else{
+			/* Scroll back to the top of the palette before hiding.  This is needed
+			 	due to a Chrome/Mac issue where the palette would not show up if it has
+			 	been scrolled down a lot.
+			*/
+			this.palette.domNode.scrollTop = 0;
 			dojo.addClass(this.palette.domNode, "dijitHidden");
 		}
 	},

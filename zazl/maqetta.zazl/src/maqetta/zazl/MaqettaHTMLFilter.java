@@ -98,7 +98,9 @@ public class MaqettaHTMLFilter implements Filter {
 				String result = responseText;
 				if (useHTMLParser) {
 					CharArrayWriter caw = new CharArrayWriter();
-					HTMLParser parser = new HTMLParser(caw, response.getCharacterEncoding(), dojoLib, configScriptTag.toString());
+					// Maqetta's servlet overrides the encoding with UTF-8, as does the HTML META tag in
+					// typical Maqetta content.  Not clear if either of those get picked up.  Hard-code UTF-8, for now.
+					HTMLParser parser = new HTMLParser(caw, /*response.getCharacterEncoding()*/ "UTF-8", dojoLib, configScriptTag.toString());
 					parser.parse(responseText);
 					result = caw.toString();
 					if (logger.isLoggable(Level.FINEST)) {

@@ -1,14 +1,14 @@
 define([
 	"require",
-	"dojo/_base/Deferred",
-    "dojo/DeferredList",
+	"dojo/Deferred",
+    "dojo/promise/all",
     "dojo/_base/lang",
     "dojo/_base/connect",
    // "davinci/Workbench",
 	"../library",
 	"../model/Path",
 	"../repositoryinfo"
-], function(require, Deferred, DeferredList, lang, connect, Library, Path, info) {
+], function(require, Deferred, all, lang, connect, Library, Path, info) {
 
 	var Metadata,
 		Workbench,
@@ -475,7 +475,7 @@ define([
 			
 			//if(descriptor.custom.length > 0 ) parseLibraryDescriptor(descriptor.custom.name, descriptor.custom, descriptor.custom.metaPath);
 
-			return new DeferredList(deferreds);
+			return all(deferreds);
 		},
         
 		// used to update a library descriptor after the fact

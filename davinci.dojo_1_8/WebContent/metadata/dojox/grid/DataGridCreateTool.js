@@ -121,7 +121,7 @@ return declare(CreateTool, {
 			command.add(new StyleCommand(dataGrid, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
 			command.add(new MoveCommand(dataGrid, args.position.x, args.position.y));
 		}
-		args.size = this._getInititalSize(dataGrid, args);
+		args.size = this._getInitialSize(dataGrid, args);
 		if(args.size){
 			command.add(new ResizeCommand(dataGrid, args.size.w, args.size.h));
 		}
@@ -137,8 +137,8 @@ return declare(CreateTool, {
 	
 	addPasteCreateCommand: function(command, args) {
 		this._context = this._data.context;
-		var storeId = this._data.properties.store._edit_object_id;
-		//var storeId = this._widget._srcElement.getAttribute("store"); 
+		var store = this._data.properties.store;
+		var storeId = store.id ? store.id : store._edit_object_id;
 		var storeWidget = Widget.byId(storeId);
 		var storeData = storeWidget.getData();
 		var data = [];

@@ -594,7 +594,7 @@
                 },
                 "Disabled": {
                     "selectors": {
-                        ".mblButtonDisabled": [
+                        ".mblButtonDisabled, .mblButton:disabled": [
                             "$std_10"
                         ]
                     },

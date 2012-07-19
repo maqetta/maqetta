@@ -31,7 +31,7 @@ return declare(ContainerInput, {
 		this._widget = davinci.ve.widget.byId(widgetId);
 		if (!this._inline) {
 			//Set up the dialog
-			var width = 600;
+			var width = 650;
 			var height = 300;
 			this._inline = new dijit.Dialog({
 				title: langObj.tableDialog,
@@ -92,6 +92,7 @@ return declare(ContainerInput, {
 		value = matrix.getNumCols();;
 		this._configureSpinner("tableInputNumCols", {min:1,max:100,places:0}, value);
 		
+		/* It turns out document.css messes up cellpadding/cellspacing on tables, so get rid of for now...
 		//Cellspacing
 		value = properties.cellspacing ? properties.cellspacing : 0;
 		this._configureSpinner("tableInputCellspacing", {min:0,max:100,places:0}, value);
@@ -99,10 +100,19 @@ return declare(ContainerInput, {
 		//Cellpadding
 		value = properties.cellpadding ? properties.cellpadding : 0;
 		this._configureSpinner("tableInputCellpadding", {min:0,max:100,places:0}, value);
+		*/
 		
 		//Border
 		value = properties.border ? properties.border : 0;
 		this._configureSpinner("tableInputBorder", {min:0,max:50,places:0}, value);
+		
+		//Border collapse
+		value = this._getValueFromStyleStr(properties.style, "border-collapse");
+		value = value ? value : dojo.style(this._widget.domNode, "border-collapse");
+		var borderCollapseSelect = dijit.byId("tableInputBorderCollapse");
+		borderCollapseSelect.set("value", value);
+		this._connection.push(dojo.connect(
+				borderCollapseSelect, "onChange", dojo.hitch(this, this._handleValueChange)));
 		
 		//Table layout
 		value = this._getValueFromStyleStr(properties.style, "table-layout");
@@ -174,11 +184,13 @@ return declare(ContainerInput, {
 		var userInput = this._getUserInput();
 	
 		//create new properties to be applied to the widget
+		var styleStr = this._getUpdatedStyleStr(data.properties.style, "table-layout", userInput.tableLayout);
+		styleStr = this._getUpdatedStyleStr(styleStr, "border-collapse", userInput.borderCollapse);
 		var newTableProperties = {
 			cellspacing: userInput.cellspacing,
 			cellpadding: userInput.cellpadding,
 			border: userInput.border,
-			style: this._getUpdatedStyleStr(data.properties.style, "table-layout", userInput.tableLayout)
+			style: styleStr
 		};
 		
 		//Figure out how the table's child elements need to be modified
@@ -385,9 +397,12 @@ return declare(ContainerInput, {
 		return {
 			numRows: dijit.byId("tableInputNumRows").get("value"),
 			numCols: dijit.byId("tableInputNumCols").get("value"),
+			/* It turns out document.css messes up cellpadding/cellspacing on tables, so get rid of for now...
 			cellspacing: dijit.byId("tableInputCellspacing").get("value"),
 			cellpadding: dijit.byId("tableInputCellpadding").get("value"),
+			*/
 			border: dijit.byId("tableInputBorder").get("value"),
+			borderCollapse: dijit.byId("tableInputBorderCollapse").get("value"),
 			tableLayout: dijit.byId("tableInputTableLayout").get("value"),
 			firstRowHeader: dijit.byId("tableInputFirstRowHeader").get("value")
 		};
@@ -396,9 +411,12 @@ return declare(ContainerInput, {
 	_isUserInputChanged: function(newInput) {
 		return this._initialSettings.numRows != newInput.numRows ||
 			this._initialSettings.numCols != newInput.numCols ||
+			/* It turns out document.css messes up cellpadding/cellspacing on tables, so get rid of for now...
 			this._initialSettings.cellspacing != newInput.cellspacing ||
 			this._initialSettings.cellpadding != newInput.cellpadding ||
+			*/
 			this._initialSettings.border != newInput.border ||
+			this._initialSettings.borderCollapse != newInput.borderCollapse ||
 			this._initialSettings.tableLayout != newInput.tableLayout ||
 			this._initialSettings.firstRowHeader != newInput.firstRowHeader;
 	},
@@ -406,8 +424,10 @@ return declare(ContainerInput, {
 	_isUserInputValid: function() {
 		return dijit.byId("tableInputNumRows").isValid() &&
 			dijit.byId("tableInputNumCols").isValid() &&
+			/* It turns out document.css messes up cellpadding/cellspacing on tables, so get rid of for now...
 			dijit.byId("tableInputCellspacing").isValid() &&
 			dijit.byId("tableInputCellpadding").isValid() &&
+			*/
 			dijit.byId("tableInputBorder").isValid();
 	},
 	
@@ -434,12 +454,15 @@ return declare(ContainerInput, {
 		
 		//Create table
 		var table = this.previewTable = dojo.doc.createElement("table");
+		/* It turns out document.css messes up cellpadding/cellspacing on tables, so get rid of for now...
 		dojo.attr(table, "cellspacing", userInput.cellspacing);
 		dojo.attr(table, "cellpadding", userInput.cellpadding);
+		*/
 		dojo.attr(table, "border", userInput.border);
+		dojo.style(table, "border-collapse", userInput.borderCollapse);
 		dojo.style(table, "table-layout", userInput.tableLayout);
 		dojo.style(table, "width", "100%");
-		dojo.addClass(table, "tableInputDialogTableElementPreview");
+		dojo.addClass(table, "tableElementPreview");
 
 		var tbody = dojo.doc.createElement("tbody");
 		table.appendChild(tbody);
@@ -458,7 +481,7 @@ return declare(ContainerInput, {
 					cell = dojo.doc.createElement("td");
 					cell.innerHTML  = "&#8288;";
 				}
-				dojo.addClass(cell, "tableInputDialogTableElementPreview");
+				dojo.addClass(cell, "tableElementPreview");
 				row.appendChild(cell);
 			}
 			tbody.appendChild(row);
@@ -476,9 +499,12 @@ return declare(ContainerInput, {
 					propertiesHeader: langObj.propertiesHeader,
 					numRows: langObj.numRows,
 					numCols: langObj.numCols,
+					/* It turns out document.css messes up cellpadding/cellspacing on tables, so get rid of for now...
 					cellspacing: langObj.cellspacing,
 					cellpadding: langObj.cellpadding,
+					*/
 					border: langObj.border,
+					borderCollapse: langObj.borderCollapse,
 					tableLayout: langObj.tableLayout,
 					firstRowHeader: langObj.firstRowHeader,
 					preview: langObj.preview,

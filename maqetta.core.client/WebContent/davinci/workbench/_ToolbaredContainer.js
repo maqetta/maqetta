@@ -43,6 +43,13 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 			this._createToolbar();
 		}
 		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span>'+this.title+'</span>';
+		var closeBoxNodes = dojo.query('.paletteCloseBox', this.titleBarDiv);
+		if(closeBoxNodes.length > 0){
+			var closeBox = closeBoxNodes[0];
+			dojo.connect(closeBox, 'click', this, function(event){
+				davinci.Workbench.collapsePaletteContainer(event.currentTarget);
+			});
+		}
 		if(this._started) this.layout();
 	},
 

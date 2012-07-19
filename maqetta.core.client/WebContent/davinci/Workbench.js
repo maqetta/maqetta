@@ -1125,6 +1125,11 @@ new Moveable(floatingPropertiesPalette);
 				controllerWidget: "dijit.layout.TabController"
 			});
 			parent.addChild(cp1);
+			dojo.connect(cp1, 'selectChild', this, function(tab){
+				if(tab && tab.domNode){
+					this.expandPaletteContainer(tab.domNode);
+				}
+			});
 		} else {
 			cp1 = mainBody.tabs.perspective[position];
 		}
@@ -1846,6 +1851,74 @@ if(view.id == 'davinci.ve.style'){
 				});
 			}
 		});
+	},
+	
+	/**
+	 * Look for an ancestor "palette container node", identified by its
+	 * having class 'davinciPaletteContainer'
+	 * @param {Element} node  a descendant of the palette container node
+	 * @returns {Element|undefined}  the palette container node, if found
+	 */
+	findPaletteContainerNode: function(node){
+		var paletteContainerNode;
+		var pn = node.parentNode;
+		while(pn && pn.tagName != 'BODY'){
+			if(dojo.hasClass(pn, 'davinciPaletteContainer')){
+				paletteContainerNode = pn;
+				break;
+			}
+			pn = pn.parentNode;
+		}
+		return paletteContainerNode;
+	},
+	
+	/**
+	 * In response to clicking on palette's collapse button,
+	 * collapse all palettes within the given palette container node to just show tabs.
+	 * @param {Element} node  A descendant node of the palette container node.
+	 * 		In practice, the node for the collapse icon (that the user has clicked).
+	 */
+	collapsePaletteContainer: function(node){
+		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
+		if(paletteContainerNode){
+			var paletteContainerNodeWidth = dojo.style(paletteContainerNode, 'width');
+			var paletteContainerWidget = dijit.byNode(paletteContainerNode);
+			var tablistNodes = dojo.query('[role=tablist]', paletteContainerNode);
+			if(paletteContainerWidget && !paletteContainerWidget._isCollapsed && tablistNodes.length > 0){
+				var tablistNode = tablistNodes[0];
+				var tablistNodeSize = dojo.marginBox(tablistNode);
+				var parentWidget = paletteContainerWidget.getParent();
+				if(parentWidget && parentWidget.resize && tablistNodeSize && tablistNodeSize.w){
+					paletteContainerNode.style.width = tablistNodeSize.w + 'px';
+					parentWidget.resize();
+					paletteContainerWidget._isCollapsed = true;
+					paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
+				}
+			}
+		}
+	},
+	
+	/**
+	 * In response to user clicking on one of the palette tabs,
+	 * see if the parent palette container node is collapsed.
+	 * If so, expand it.
+	 * @param {Element} node  A descendant node of the palette container node.
+	 * 		In practice, the node for the collapse icon (that the user has clicked).
+	 */
+	expandPaletteContainer: function(node){
+		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
+		if(paletteContainerNode){
+			var paletteContainerWidget = dijit.byNode(paletteContainerNode);
+			if(paletteContainerWidget && paletteContainerWidget._isCollapsed && paletteContainerWidget._expandedWidth){
+				var parentWidget = paletteContainerWidget.getParent();
+				if(parentWidget && parentWidget.resize){
+					paletteContainerNode.style.width = paletteContainerWidget._expandedWidth + 'px';
+					parentWidget.resize();
+					delete paletteContainerWidget._isCollapsed;
+					delete paletteContainerWidget._expandedWidth;
+				}
+			}
+		}
 	},
 
 	_XX_last_member: true	// dummy with no trailing ','

@@ -54,13 +54,16 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
       	*/
 	},
 	
-	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
+	layout: function() {
 		// Don't show the title bar or tool bar strips above the editors's main content area
 		// Note that the toolbar shared by all of the editors gets automagically injected
 		// into the Workbench's DIV with id="davinci_toolbar_container".
 		this.titleBarDiv.style.display = 'none';
 		this.toolbarDiv.style.display = 'none';
-		
+		this.inherited(arguments);
+	},
+	
+	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){		
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
 		require([editorExtension.editorClass], function(EditorCtor) {
@@ -304,8 +307,15 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		if(this.toolbarCreated()){
 			return;
 		}
-		this.toolbarDiv = dojo.byId("davinci_toolbar_container");
 		this.inherited(arguments);
+	},
+	
+	/**
+	 * Returns an {Element} that is the container DIV into which editor toolbar should go
+	 * This function can be overridden by subclasses (e.g., EditorContainer.js)
+	 */
+	getToolbarDiv: function(){
+		return dojo.byId("davinci_toolbar_container");
 	},
 	
 	/**

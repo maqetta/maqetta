@@ -68,10 +68,11 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 	 */
 	_createToolbar: function(){
 		var Workbench = require('davinci/Workbench');
+		var toolbarDiv = this.getToolbarDiv();
 		
 		var topAddition=this.getTopAdditions();
 		if (topAddition) {
-			this.toolbarDiv.appendChild(topAddition);
+			toolbarDiv.appendChild(topAddition);
 		}
 		
 		// If descendant class provides a value for toolbarMenuActionSets,
@@ -80,7 +81,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
     		// Note: menu routines in Dojo and Workbench require unique names
     		var unique="m" + Date.now();
     		var menuContainerId=unique+"_menucontainer";
-        	var menuContainerElem = dojo.create("span", {'id':menuContainerId, 'class':"paletteDropdown"}, this.toolbarDiv);
+        	var menuContainerElem = dojo.create("span", {'id':menuContainerId, 'class':"paletteDropdown"}, toolbarDiv);
     		var menuId=unique+"_menu";
         	var menuElem = dojo.create("span", {id:menuId}, menuContainerElem);
         	Workbench.updateMenubar(menuElem, this.toolbarMenuActionSets);
@@ -89,7 +90,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		var viewActions=this._getViewActions();
         if (viewActions && viewActions.length)
         {
-    		var tb=dojo.create("span", {style: {display: "inline-block"}},this.toolbarDiv);
+    		var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
     		
         	var toolbar = Workbench._createToolBar("xx", tb, viewActions,this._getViewContext());
     		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
@@ -100,6 +101,14 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 	_getViewContext: function()
 	{
 		return this;
+	},
+	
+	/**
+	 * Returns an {Element} that is the container DIV into which editor toolbar should go
+	 * This function can be overridden by subclasses (e.g., EditorContainer.js)
+	 */
+	getToolbarDiv: function(){
+		return this.toolbarDiv;
 	},
 	
 	/**

@@ -104,31 +104,16 @@ define(["dojo/_base/declare",
 			    var basePath = this.getBase();
 			    // first we clone the theme which creates temp css files
 				Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true).then(function(results){
-				    var error = false;
-
-			        for (var x=0; x < results.length; x++){
-			            if(!results[x][0] ){
-			                error = true;
-			            }  
-			        }
-				
-			        if (!error){
-			        	// #23
-			        	var found = Theme.getTheme(base, true);
-			            if (found){
-			        		found.file.isNew = false; // the file has been saved so don't delete it when closing editor without first save.
-			                Workbench.openEditor({
-			                       fileName: found.file,
-			                       content: found.file.getContentSync()});
-			            } else {
-			            	throw new Error(langObj.errorCreatingTheme + base);
-			            }
-			        } else {
-			    		if (this._loading){ // remove the loading div
-			    			this._loading.parentNode.removeChild(this._loading);
-			    			delete this._loading;
-			    		}
-			        } 
+		        	// #23
+		        	var found = Theme.getTheme(base, true);
+		            if (found){
+		        		found.file.isNew = false; // the file has been saved so don't delete it when closing editor without first save.
+		                Workbench.openEditor({
+		                       fileName: found.file,
+		                       content: found.file.getContentSync()});
+		            } else {
+		            	throw new Error(langObj.errorCreatingTheme + base);
+		            }
 			    }.bind(this)).otherwise(function(failureInfo){
 					var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
 					if (failureInfo.fileName) {
@@ -139,7 +124,7 @@ define(["dojo/_base/declare",
 					}
 					//TODO: where in the UI can we surface this message?  Send to console, for now.
 					console.error(message);
-
+			    }).always(function(){
 					if (this._loading){ // remove the loading div
 		    			this._loading.parentNode.removeChild(this._loading);
 		    			delete this._loading;

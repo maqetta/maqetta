@@ -1,2 +1,10 @@
 @import url("../dojox/mobile/themes/android/android.css");
 /* Maqetta modifications */
+
+/* FIXME workaround until issue #2075*/
+.mblToggleButton:disabled, .mblToggleButton.maqDisable {
+	border-color: grey;
+	background-image: none;
+	color: grey;
+	cursor: default;
+}

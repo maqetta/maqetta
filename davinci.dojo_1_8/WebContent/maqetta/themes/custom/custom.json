@@ -594,7 +594,7 @@
                 },
                 "Disabled": {
                     "selectors": {
-                        ".mblButtonDisabled": [
+                        ".mblButtonDisabled, .mblButton:disabled": [
                             "$std_10"
                         ]
                     },
@@ -1321,12 +1321,12 @@
                 },
                 "Disabled": {
                     "selectors": {
-                        ".mblToggleButton:disabled": [
+                        ".mblToggleButton:disabled, .mblToggleButton.maqDisable": [
                             "$std_10"
                         ]
                     },
                     "query": ".mblToggleButton",
-                    "simulate": ":disabled='true'"
+                    "simulate": "maqDisable"
                 },
                 "Selected": {
                     "selectors": {

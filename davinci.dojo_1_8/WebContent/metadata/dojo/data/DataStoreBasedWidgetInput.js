@@ -288,9 +288,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			var newStore = new ItemFileReadStore({data: data.properties.data});
 			// hack: pass id around for now, as we are passing an object but string may be expected
 			newStore.id = newStoreId;
-			var props = {
-				store: newStore
-			};
+			var props = this._getPropsForNewStore(widget, newStore);
 			props = dojo.mixin(props, this._getPropsForDummyDataUpdateWidgetCommand(widget));
 			var command = new ModifyCommand(widget,
 				props,
@@ -298,10 +296,6 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				context
 			);
 			compoundCommand.add(command);
-
-			//Update store id
-			var mcmd = this._getModifyAttributeCommandForStoreId(widget, newStoreId);
-			compoundCommand.add(mcmd);
 
 			//Callback with the new command
 			updateCommandCallback(compoundCommand);
@@ -316,6 +310,22 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	//Subclass can override
 	_getChildrenForDummyDataUpdateWidgetCommand: function() {
 		return null;
+	},
+	
+	_getPropsForNewStore: function(widget, store) {
+		var props = {};
+		
+		if (store) {
+			if (this.useDataDojoProps) {
+				var widgetData = widget.getData();
+				var currentDataDojoProps = widgetData.properties["data-dojo-props"];
+				props["data-dojo-props"] =  
+					DataStoreBasedWidgetInput.setPropInDataDojoProps(currentDataDojoProps, "store", store.id); 
+			} 
+			props.store = store;
+		}
+		
+		return props;
 	},
 	
 	_getNewWidgetFromCompoundCommand: function(compoundCommand) {
@@ -513,35 +523,13 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		// allow subclasses to inject their own data
 		command = this._getModifyCommandForUrlDataStore(widget, context, items, this._urlDataStore);
 		compoundCommand.add(command);
-		
-		//update store id
-		command = this._getModifyAttributeCommandForStoreId(widget, this._urlDataStore.id);
-		compoundCommand.add(command);
 
 		//Invoke callback
 		updateCommandCallback(compoundCommand);
 	},
-	
-	_getModifyAttributeCommandForStoreId: function(widget, storeId) {
-		var props = {};
-		if (this.useDataDojoProps) {
-			var widgetData = widget.getData();
-			var currentDataDojoProps = widgetData.properties["data-dojo-props"];
-			props["data-dojo-props"] =  
-				DataStoreBasedWidgetInput.setPropInDataDojoProps(currentDataDojoProps, "store", storeId); 
-		} else {
-			props.store = storeId;
-		}
-		var mcmd = new ModifyAttributeCommand(widget, props);
-		return mcmd;
-	},
 
 	_getModifyCommandForUrlDataStore: function(widget, context, items, datastore) {
-		var props = {};
-
-		if (datastore) {
-			props.store = datastore;
-		}
+		var props = this._getPropsForNewStore(widget, datastore);
 
 		return new ModifyCommand(widget, props, null, context);
 	},

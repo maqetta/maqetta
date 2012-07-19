@@ -1,4 +1,5 @@
 define([
+	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/dom-form",
 	"davinci/ve/widget",
@@ -8,8 +9,10 @@ define([
 	"davinci/html/HTMLElement",
 	"davinci/html/HTMLText",
 	"../../dojo/data/DataStoreBasedWidgetInput",
+	"../../dojo/data/DataStoreBasedWidgetHelper",
 	"dojo/i18n!../nls/dojox"
 ], function(
+	declare,
 	array,
 	form,
 	Widget,
@@ -19,11 +22,11 @@ define([
 	HTMLElement,
 	HTMLText,
 	DataStoreBasedWidgetInput,
+	DataStoreBasedWidgetHelper,
 	nlsDojox
 ) {
 
-var DataGridHelper = function() {};
-DataGridHelper.prototype = {
+return declare([DataStoreBasedWidgetHelper], {
 
 	getData: function(/*Widget*/ widget, /*Object*/ options, useDataDojoProps){
 		// summary:
@@ -222,35 +225,6 @@ DataGridHelper.prototype = {
 		}
 	},
 	
-	/*
-	 * Called by DeleteAction when widget is deleted.
-	 * @param {davinci.ve._Widget} widget	Widget that is being deleted
-	 * @return {davinci.commands.CompoundCommand}	command that is to be added to the command stack.
-	 * 
-	 * This widget has a data store widget that is associated with it and must be deleted also.
-	 */
-	getRemoveCommand: function(widget, useDataDojoProps){
-		var command = new CompoundCommand();
-		var storeId = DataStoreBasedWidgetInput.getStoreId(widget, useDataDojoProps);
-		var storeWidget = Widget.byId(storeId);
-		// order is important for undo... 
-		command.add(new RemoveCommand(widget));
-		command.add(new RemoveCommand(storeWidget));
-		return command;
-	},
-	
-	/*
-	 * In same cases we are handling certain attributes within data-dojo-props 
-	 * or via child HTML elements, and we do not want to allow those attributes 
-	 * to be written out into the final HTML. So, here, we clean out those
-	 * attributes.
-	*/
-	cleanSrcElement: function(srcElement, useDataDojoProps) {
-		if (useDataDojoProps) {
-			srcElement.removeAttribute("store");
-		}
-	},
-	
 	 preProcess: function(node, context){
 
 		 // User scripts are not loaded in page designer so replace the function in page designer only to keep the widget happy
@@ -269,7 +243,7 @@ DataGridHelper.prototype = {
 		    		 var args = e.toString().split(' ');
 		    		 if (args.length > 4 && args[0] === 'ReferenceError:' && args[3] === 'not' && args[4] === 'defined'){
 		    			 // format function not defined
-		    			 context.getGlobal()[args[1]] = function(value, row) { return dojo.string.substitute(nlsDojox.properyNotSupported, ['formatter']);}
+		    			 context.getGlobal()[args[1]] = function(value, row) { return dojo.string.substitute(nlsDojox.properyNotSupported, ['formatter']);};
 		    			 funcNotDefined = true;
 		    			 num++;
 		    		 } else {
@@ -283,8 +257,6 @@ DataGridHelper.prototype = {
 	      }
 	    
    }
-};
-
-return DataGridHelper;
+});
 
 });

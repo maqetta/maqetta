@@ -294,9 +294,7 @@ return declare(DataStoreBasedWidgetInput, {
 		//Deal with table column headers
 		var widgetChildren = this._buildTableChildrenForStructure(structure, widget);
 
-		if (datastore) {
-			props.store = datastore;
-		}
+		props = dojo.mixin(props, this._getPropsForNewStore(widget, datastore));
 
 		var command = new ModifyCommand(widget,
 			props,

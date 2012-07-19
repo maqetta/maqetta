@@ -580,6 +580,7 @@ var Workbench = {
 					editorsContainer.selectChild(editorContainer);
 				}
 			});
+			dojo.connect(shadowTabContainer, "removeChild", this, Workbench._shadowTabClosed);
 			var toolbarPane = new ContentPane({
 				id:'davinci_toolbar_pane',
 				region: "top",
@@ -1682,6 +1683,15 @@ if(view.id == 'davinci.ve.style'){
 		dojo.doc.title=newTitle;
 	},
 
+	/**
+	 * With standard TabContainer setup, this callback is invoked 
+	 * whenever an editor tab is closed via user action.
+	 * But if we are using the "shadow" approach where there is a shadow
+	 * TabContainer that shows tabs for the open files, and a StackContainer
+	 * to hold the actual editors, then this callback is invoked indirectly
+	 * via a removeChild() call in routine _shadowTabClosed() below.
+	 * @param page  The child widget that is being closed.
+	 */
 	_editorTabClosed: function(page) {
 		if (page && page.editor && page.editor.fileName) {
             var i = Workbench._state.editors.indexOf(page.editor.fileName);
@@ -1698,6 +1708,24 @@ if(view.id == 'davinci.ve.style'){
 			if (editorsStackContainer && editorsWelcomePage){
 				editorsStackContainer.selectChild(editorsWelcomePage);
 			}
+		}
+	},
+
+	/**
+	 * When using the "shadow" approach where there is a shadow
+	 * TabContainer that shows tabs for the open files, and a StackContainer
+	 * to hold the actual editors, then this callback is invoked when a user clicks
+	 * on the tab of the shadow TabContainer. This routine then calls
+	 * removeChild() on the StackContainer to remove to corresponding editor.
+	 * @param page  The child widget that is being closed.
+	 */
+	_shadowTabClosed: function(page) {
+		var shadowId = page.id;
+		var editorId = shadowIdToEditorId(shadowId);
+		var editorContainer = dijit.byId(editorId);
+		var editorsContainer = dijit.byId("editors_container");
+		if(editorsContainer && editorContainer){
+			editorsContainer.removeChild(editorContainer);
 		}
 	},
 

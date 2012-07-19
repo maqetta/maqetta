@@ -112,7 +112,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 							}
 						}.bind(this));
 					}
-					editor.editorsContainer=this;
+					editor.editorContainer=this;
 					this.setDirty(editor.isDirty);
 				}.bind(this);
 				if(editor.deferreds){

@@ -122,7 +122,7 @@ define(["dojo/_base/declare",
 					}
 					//TODO: where in the UI can we surface this message?  Send to console, for now.
 					console.error(message);
-			    }).always(function(){
+			    }).otherwise(function(){
 					if (this._loading){ // remove the loading div
 		    			this._loading.parentNode.removeChild(this._loading);
 		    			delete this._loading;

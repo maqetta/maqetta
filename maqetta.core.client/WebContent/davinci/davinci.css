@@ -52,6 +52,10 @@ BODY{
 	display:none;
 }
 
+#davinci_app .davinciPalette {
+	overflow:hidden;
+}
+	
 #davinci_app .dijitSplitterH {
 	height:4px;
 }

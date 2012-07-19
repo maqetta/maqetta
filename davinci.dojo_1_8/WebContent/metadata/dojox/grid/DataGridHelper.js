@@ -59,7 +59,7 @@ DataGridHelper.prototype = {
 		}
 		if (widget.dijitWidget.store){
 			// add the data old store if it has one.
-			data.properties.store = widget.dijitWidget.store; 
+			var store = data.properties.store = widget.dijitWidget.store; 
 
 			if (useDataDojoProps) {
 				var currentDataDojoProps =
@@ -68,7 +68,7 @@ DataGridHelper.prototype = {
 				data.properties["data-dojo-props"] =
 						DataStoreBasedWidgetInput.setPropInDataDojoProps(
 								currentDataDojoProps, "store",
-								data.properties.store._edit_object_id);
+								store.id ? store.id : store._edit_object_id);
 			}
 		}
 		return data;

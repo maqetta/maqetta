@@ -630,6 +630,7 @@ var Workbench = {
 			if (tab) {
 				return tab.editor;
 			}
+			return null; // no editor found for given resource
 		}
 		
 		

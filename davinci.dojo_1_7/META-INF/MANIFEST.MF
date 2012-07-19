@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Require-Bundle: maqetta.core.server;bundle-version="1.0.0"
+Eclipse-BundleShape: dir

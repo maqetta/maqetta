@@ -41,6 +41,10 @@
         },
         "label": {
             "datatype": "string"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
     "content": "<button></button>"

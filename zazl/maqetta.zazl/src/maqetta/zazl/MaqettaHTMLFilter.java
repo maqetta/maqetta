@@ -152,6 +152,9 @@ public class MaqettaHTMLFilter implements Filter {
 			GZIPInputStream gzipis = null;
 			try {
 				byte[] bytes = baos.toByteArray();
+				if (bytes.length < 1) {
+					return "";
+				}
 				if ((bytes[0] & 0xFF) == 0x1F && (bytes[1] & 0xFF) == 0x8B && (bytes[2] & 0xFF) == 0x08) {
 					if (logger.isLoggable(Level.FINEST)) {
 						logger.logp(Level.FINEST, getClass().getName(), "toString", "response content is gzipped");

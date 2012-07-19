@@ -1659,12 +1659,11 @@ if(view.id == 'davinci.ve.style'){
 					// parent to find the right TabContainer
 					var tab = dijit.byId(paletteId);
 					if (tab) {
-						var editorsContainer = tab.getParent();
+						var tabContainer = tab.getParent();
 	
 						// Select tab
-//FIXME: also have to do shadow tab container
-						if (editorsContainer) {
-							editorsContainer.selectChild(tab);
+						if (tabContainer) {
+							tabContainer.selectChild(tab);
 						}
 					}
 				}

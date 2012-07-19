@@ -60,7 +60,6 @@ return {
 			editorClass: "davinci/review/editor/ReviewEditor",
 			editorClassName: "ReviewEditor",
             palettesToTop: [
-                "davinci.review.reviewNavigator", //Reviews
                 "davinci.ui.comment", //Comments
                 "davinci.ve.states" //States(Scenes)
             ]

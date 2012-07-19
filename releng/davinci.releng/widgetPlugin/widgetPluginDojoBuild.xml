@@ -111,6 +111,15 @@
     		<available file="${target.folder}/WebContent/dojo" type="dir"/>
     	</condition>
     	<antcall target="backup.davinciPlugin.dojoDir"/>
+		<!-- for zazl, we want to keep around a copy of the library's source -->
+		<antcall target="copy.davinciPlugin.libSrc"/>
+		
+		<!-- need to move/copy metadata to directory with same name as runtime module id before building -->
+				<copy todir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}" failonerror="true" overwrite="true" description="copying metadata files">
+						<fileset dir="${target.folder}/WebContent/metadata">
+							<include name="*/**"/>
+						</fileset>
+				</copy>
 
 		<!-- copy in dojo and dojo build utils to working directory in prep for build -->
 		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying base dojo">
@@ -232,6 +241,15 @@
     	<move file="${target.folder}/WebContent/dojo_BACKUP/dojo" todir="${target.folder}/WebContent"/>
     	<delete dir="${target.folder}/WebContent/dojo_BACKUP"/>
   	</target>
+	
+	<!-- copy the plug-ins lib src to a new src directory (if it's not the dojo lib) -->
+	<target name="copy.davinciPlugin.libSrc" unless="davinciPlugin.dojoDir.exists">
+		<copy todir="${target.folder}/WebContent/${davinciPlugin.id}-src" failonerror="true" overwrite="true" description="copying library src to lib-src folder">
+			<fileset dir="${target.folder}/WebContent/${davinciPlugin.id}">
+				<include name="*/**"/>
+			</fileset>
+		</copy>
+	</target>
 	
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the target gather.bin.parts                         -->

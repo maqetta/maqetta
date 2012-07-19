@@ -1,25 +1,23 @@
 define(["dojo/_base/declare",
-        "dijit/_Templated",
-        "dijit/_Widget",
-        "davinci/library",
+        "dijit/_TemplatedMixin",
+        "dijit/_WidgetBase",
+        "dijit/_WidgetsInTemplateMixin",
         "system/resource",
-        "davinci/Runtime",
-        "davinci/model/Path",
-        "davinci/Workbench",
-        "davinci/workbench/Preferences",
-        "dojo/i18n!davinci/ui/nls/ui",
+        "../model/Path",
+        "../Workbench",
+        "../workbench/Preferences",
+        "dojo/i18n!./nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/newtheme.html",
-        "davinci/Theme",
-        "davinci/ui/widgets/ThemeSelection",
+        "../Theme",
+        "./widgets/ThemeSelection",
         "dijit/form/Button",
         "dijit/form/ValidationTextBox"
 
-],function(declare, _Templated, _Widget,  Library, Resource, Runtime, Path, Workbench, Preferences, 
+],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Resource, Path, Workbench, Preferences, 
 			uiNLS, commonNLS, templateString, Theme, ThemeSelection, Button, ValidationTextBox){
-	return declare("davinci.ui.NewTheme",   [dijit._Widget, dijit._Templated], {
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
-		widgetsInTemplate: true,
 		_themeSelection: null,
 		_okButton : null,
 		_folder : null,
@@ -85,7 +83,7 @@ define(["dojo/_base/declare",
 			
 			this._okButton.set( 'disabled', true);
 			var langObj = uiNLS;
-			var oldTheme = this._themeSelection.attr('value');
+			var oldTheme = this._themeSelection.get('value');
 			var selector = dojo.attr(this._selector, 'value');
 			var themeName = selector;
 			var version = null;
@@ -130,10 +128,7 @@ define(["dojo/_base/declare",
 		    			delete this._loading;
 		    		}
 			    }.bind(this));
-			
 			}
-			
-			
 	  	},
 		
 		/*
@@ -157,15 +152,15 @@ define(["dojo/_base/declare",
 			var base = this.getBase();
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 			
-			var projectThemeBase = (new Path(base).append(prefs['themeFolder']));
+			var projectThemeBase = new Path(base).append(prefs.themeFolder);
 			
-			return  projectThemeBase.append(selector).toString();
+			return projectThemeBase.append(selector).toString();
 		},
 		
 		_checkValid : function(){
 			
 			var isOk = true;
-			var oldTheme = this._themeSelection.attr('value');
+			var oldTheme = this._themeSelection.get('value');
 			var selector = dojo.attr(this._selector, 'value');
 			
 			if( oldTheme==null || oldTheme =="" || selector==null || selector =="") { isOk = false;}
@@ -183,11 +178,6 @@ define(["dojo/_base/declare",
 		},
 
 		onClose : function(){}
-	
-
-		
-
-
 	});
 });
 

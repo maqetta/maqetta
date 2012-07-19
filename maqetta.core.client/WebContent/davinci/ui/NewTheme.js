@@ -103,15 +103,15 @@ define(["dojo/_base/declare",
 				dojo.style(this._loading, 'opacity', '0.5');
 			    var basePath = this.getBase();
 			    // first we clone the theme which creates temp css files
-				var deferedList = Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
-				deferedList.then(function(results){
-					
+				Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true).then(function(results){
 				    var error = false;
+
 			        for (var x=0; x < results.length; x++){
 			            if(!results[x][0] ){
 			                error = true;
 			            }  
 			        }
+				
 			        if (!error){
 			        	// #23
 			        	var found = Theme.getTheme(base, true);
@@ -121,13 +121,7 @@ define(["dojo/_base/declare",
 			                       fileName: found.file,
 			                       content: found.file.getContentSync()});
 			            } else {
-			            	if (this._loading){ // remove the loading div
-				    			this._loading.parentNode.removeChild(this._loading);
-				    			delete this._loading;
-				    		}
-			                // error message
-			                alert(langObj.errorCreatingTheme + base);
-			                
+			            	throw new Error(langObj.errorCreatingTheme + base);
 			            }
 			        } else {
 			    		if (this._loading){ // remove the loading div
@@ -135,6 +129,21 @@ define(["dojo/_base/declare",
 			    			delete this._loading;
 			    		}
 			        } 
+			    }.bind(this)).otherwise(function(failureInfo){
+					var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
+					if (failureInfo.fileName) {
+						message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
+					}
+					if (failureInfo.stack) {
+						message += "<br><pre>" + failureInfo.stack + "</pre>";
+					}
+					//TODO: where in the UI can we surface this message?  Send to console, for now.
+					console.error(message);
+
+					if (this._loading){ // remove the loading div
+		    			this._loading.parentNode.removeChild(this._loading);
+		    			delete this._loading;
+		    		}
 			    }.bind(this));
 			
 			}

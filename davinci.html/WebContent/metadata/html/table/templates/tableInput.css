@@ -2,39 +2,38 @@
 	padding:0px;
 }
 
-.tableInputDialogPropertiesRegion {
-	min-width:190px;
-	max-width:200px;
+.tableInputDialog .propertiesRegion {
+	min-width:210px;
+	max-width:225px;
 }
 
-.tableInputDialogPreviewRegion {
+.tableInputDialog .previewRegion {
 	width: 65%;
 	overflow:hidden;
 }
 
-.tableInputDialogPreviewArea {
+.tableInputDialog .previewArea {
 	overflow:auto;
 }
 
-.tableInputDialogSpinner {
-	width:50px;
+.tableInputDialog .propertyInputWidget {
+	width:100%;
 }
 
-.tableInputDialogTableElementPreview {
+.tableInputDialog .tableElementPreview {
 	outline: 1px dotted #AAA;
 	outline-color:rgba(128,128,128,0.4);
 }
 
-.tableInputDialogFieldLabel {
+.tableInputDialog .propertyFieldLabel {
 	white-space: nowrap;
 }
 
-
-.tableInputDialogHeaderRow {
+.tableInputDialog .sectionHeaderRow {
 	background-color:#d8d8d8;
 }
 
-.tableInputDialogHeaderCell {
+.tableInputDialog .sectionHeaderCell {
 	padding:2px;
 }
 

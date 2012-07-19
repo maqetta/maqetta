@@ -124,6 +124,10 @@ var ContinerInputWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTempl
 
 		delete value.properties.variablePane;
 
+		if (value.properties.isTempID){
+			delete value.properties.id; // delete temp id so it does not make it's way out to the source
+		}
+
 		var children = Query(".inputRow", this.rows);
 
 		var idx = 0;
@@ -152,22 +156,26 @@ var ContinerInputWidgetRow = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTe
 		this._buildOrientation();
 
 		if (this.data && this.data.properties) {
-			var hasWidth = false;
+			var hasValue = false;
 
+			// if we have style, get the width/height value
 			if (this.data.properties.style) {
 				var parse = CSSParser.parse(".foo{"+this.data.properties.style+"}");
 	
 				if (parse.model) {
 					dojo.forEach(parse.model[0].children, dojo.hitch(this, function(prop) {
-							if (prop.name == "width") {
-								this.textBox.set("value", prop.value);
-								hasWidth = true;
-							}
+						if (prop.name == "width" && this.orientation == "H") {
+							this.textBox.set("value", prop.value);
+							hasValue = true;
+						} else if (prop.name == "height" && this.orientation == "V") {
+							this.textBox.set("value", prop.value);
+							hasValue = true;
+						}
 					}));
 				}
 			}
 
-			if (!hasWidth) {
+			if (!hasValue) {
 				this.useRemaingingSpace.set("checked", true);
 			}
 		}
@@ -215,29 +223,55 @@ var ContinerInputWidgetRow = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTe
 		var value = {type: "dojox.mobile.Pane", properties: {}};
 
 		var style = "";
-		var width = this.textBox.get("value");
+		var textValue = this.textBox.get("value");
 
 		if (this.data && this.data.properties && this.data.properties.style) {
 			var parse = CSSParser.parse(".foo{"+this.data.properties.style+"}");
 	
+			var foundProp = false;
+
 			if (parse.model) {
 				dojo.forEach(parse.model[0].children, dojo.hitch(this, function(prop) {
 					if (prop.name == "width") {
-						if (!this.useRemaingingSpace.get("checked")) {		
-							if (width) {
-								prop.value = width;
-								style += prop.getText();
-							} else {
+						if (this.orientation == "H") {
+							if (!this.useRemaingingSpace.get("checked")) {		
+								if (textValue) {
+									prop.value = textValue;
+									style += prop.getText();
+									foundProp = true;
+								}
+							}
+						}
+					} else if (prop.name == "height") {
+						if (this.orientation == "V") {
+							if (!this.useRemaingingSpace.get("checked")) {		
+								if (textValue) {
+									prop.value = textValue;
+									style += prop.getText();
+									foundProp = true;
+								}
 							}
 						}
 					} else {
 						style += prop.getText();
 					}
 				}));
+
+				if (!this.useRemaingingSpace.get("checked") && textValue && !foundProp) {
+					if (this.orientation == "H") {
+						style += "width:"+textValue+";"
+					} else {
+						style += "height:"+textValue+";"
+					}
+				}
 			}
 		} else {
-			if (!this.useRemaingingSpace.get("checked") && width) {
-				style = "width:"+width+";"
+			if (!this.useRemaingingSpace.get("checked") && textValue) {
+				if (this.orientation == "H") {
+					style = "width:"+textValue+";"
+				} else {
+					style = "height:"+textValue+";"
+				}
 			}
 		}
 

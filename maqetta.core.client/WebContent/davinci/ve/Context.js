@@ -1087,7 +1087,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						callback.call((scope || this), failureInfo);
 					}.bind(this));
 				} else {
-					// FIXME: caller doesn't handle error data?
 					callback.call((scope || this), failureInfo);
 				}
 			}
@@ -1280,11 +1279,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
 		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(function(){
-			   dojo.connect(this.getGlobal(), 'onload', this, function() {
-			      this.onload();
-			   }.bind(this));
-		}.bind(this))
-		
+			connect.connect(this.getGlobal(), 'onload', this, function() {
+				this.onload();
+			});
+		}.bind(this));		
 	},
 
 	/**

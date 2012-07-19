@@ -25,5 +25,6 @@ define({ root: {
 	"cellpadding": "cellpadding:", //using attribute name to match props palette
 	"border": "border:", //using attribute name to match props palette
 	"tableLayout": "table-layout:", //using attribute name to match props palette
+	"borderCollapse": "border-collapse:", //using attribute name to match props palette
 	"firstRowHeader": "First row header:"
 }});

@@ -55,8 +55,12 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
+		// Don't show the title bar or tool bar strips above the editors's main content area
+		// Note that the toolbar shared by all of the editors gets automagically injected
+		// into the Workbench's DIV with id="davinci_toolbar_container".
 		this.titleBarDiv.style.display = 'none';
 		this.toolbarDiv.style.display = 'none';
+		
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
 		require([editorExtension.editorClass], function(EditorCtor) {
@@ -290,6 +294,32 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
         	this.editor.destroy();
         }
         delete this.editor;
+	},
+	
+	/**
+	 * Override the _createToolbar function in _ToolbaredContainer.js to redirect
+	 * the toolbar creation logic to target the DIV with id="davinci_toolbar_container"
+	 */
+	_createToolbar: function(){
+		if(this.toolbarCreated()){
+			return;
+		}
+		this.toolbarDiv = dojo.byId("davinci_toolbar_container");
+		this.inherited(arguments);
+	},
+	
+	/**
+	 * Getter/setting for whether toolbar has been created.
+	 * Note that this function overrides the function from _ToolbaredContainer.js
+	 * @param {boolean} [toolbarHasBeenCreated]  If provided, sets status for whether toolbar has been created
+	 * @returns {boolean}  Whether toolbar has been created
+	 */
+	toolbarCreated: function(toolbarHasBeenCreated){
+		if(arguments.length > 0){
+			davinci.Workbench._editorToolbarCreated = toolbarHasBeenCreated;
+		}
+		return davinci.Workbench._editorToolbarCreated;
 	}
+
 });
 });

@@ -584,7 +584,7 @@ var Workbench = {
 				id:'davinci_toolbar_pane',
 				region: "top",
 				layoutPriority:3,
-				content:'toolbar goes here'
+				content:'<div id="davinci_toolbar_container"></div>'
 			});
 //FIXME: shadow fixes - delete this
 /*

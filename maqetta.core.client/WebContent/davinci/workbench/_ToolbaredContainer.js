@@ -39,7 +39,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		this.containerNode = domNode;
 
 		//TODO: move this to part of the widget life cycle
-		if (!this._toolbarCreated) {
+		if (!this.toolbarCreated()) {
 			this._createToolbar();
 		}
 		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span>'+this.title+'</span>';
@@ -61,6 +61,11 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 
 	getTopAdditions: function(){},
 
+	/**
+	 * Creates toolbar for this view or editor using data from appropriate *.plugin.js directives
+	 * for this particular view or editor.
+	 * Note that this routine can be overridden by a subclass (e.g., EditorContainer.js)
+	 */
 	_createToolbar: function(){
 		var Workbench = require('davinci/Workbench');
 		
@@ -89,12 +94,25 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
         	var toolbar = Workbench._createToolBar("xx", tb, viewActions,this._getViewContext());
     		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
         }
-		this._toolbarCreated=true;
+        this.toolbarCreated(true);
 	},
 	
 	_getViewContext: function()
 	{
 		return this;
+	},
+	
+	/**
+	 * Getter/setting for whether toolbar has been created.
+	 * Note that this function can be overridden by a subclass (e.g., EditorContainer)
+	 * @param {boolean} [toolbarHasBeenCreated]  If provided, sets status for whether toolbar has been created
+	 * @returns {boolean}  Whether toolbar has been created
+	 */
+	toolbarCreated: function(toolbarHasBeenCreated){
+		if(arguments.length > 0){
+			this._toolbarCreated = toolbarHasBeenCreated;
+		}
+		return this._toolbarCreated;
 	}
 
 //TODO: implement destroy/getChildren to destroy toolbarDiv and containerNode?

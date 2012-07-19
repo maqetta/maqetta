@@ -2654,30 +2654,22 @@
 		            "category": "mobile",
 		            "icon": "resources/images/FixedSplitter.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
-		            "allowedChild": "html.div, dojox.mobile.FixedSplitterPane",
+		            "allowedChild": "dojox.mobile.Pane, dojox.mobile.Container, dojox.mobile.ContentPane",
 		            "properties": {
 		                "orientation": "H"
 		            },
 		            "children": [
 		                {
-		                    "type": "html.div",
+		                    "type": "dojox.mobile.Pane",
 		                    "properties": {
-		                        "style": "width: 200px; border-right: 1px solid black;"
+		                        "style": "width: 200px;"
 		                    }
 		                },
 		                {
-		                    "type": "html.div"
+		                    "type": "dojox.mobile.Pane"
 		                }
-		            ]
-		        },
-		        {
-		            "name": "FixedSplitterPane",
-		            "type": "dojox.mobile.FixedSplitterPane",
-		            "category": "mobile",
-		            "icon": "resources/images/FixedSplitterPane.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck/P2+ztfljtgljxhlz5mnD9mnEJtokNtokdzp0h0qeTt+Obu+Ed1qUp6rUx9sFCEt06As0x9r1GEtlGGuFOKvFOKu1SKvFaOv8/t+////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoCaOZCliaKqqZ+a+8Cte2WLfN6OLVBasQFHEh4nBMCIHsYa7ITUJX8UXqFoDFtHBN6FeqxCRwSdpmM/nh4jgU3i/DRHAh3hfEXJfwW4t5AMDfFUCfwCGh4gAJoskIQA7",
-		            "allowedParent": "dojox.mobile.FixedSplitter",
-		            "allowedChild": "ANY"
+		            ],
+		            "inlineEdit": "./dojox/mobile/FixedSplitterInput",
 		        },
 		        {
 		            "name": "Overlay",
@@ -2853,7 +2845,17 @@
 		            "name": "Container",
 		            "description": "Container",
 		            "type": "dojox.mobile.Container",
-		            "category": "mobile"
+		            "category": "mobile",
+		            "icon": "resources/images/content-pane.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII="
+		        },
+		        {
+		            "name": "Pane",
+		            "description": "Pane",
+		            "type": "dojox.mobile.Pane",
+		            "category": "mobile",
+		            "icon": "resources/images/content-pane.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII="
 		        }
 		    ]
 		    }

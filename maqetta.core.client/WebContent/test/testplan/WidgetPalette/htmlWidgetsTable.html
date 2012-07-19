@@ -118,14 +118,24 @@
 			<ul>
 				<li><i>Number of rows</i> to 6</li> 
 				<li><i>Number of columns</i> to 8</li>
-				<li><i>cellpadding</i> to 5 <b>NOTE: due to a known issue at the time of this writing, you probably won't see the preview change.</b></li>
-				<li><i>cellspacing</i> to 10</li>
 				<li><i>border</i> to 5</li>
-				<li><i>table-layout</i> to "fixed"</li>
+				<li><i>border-collapse</i> to "separate". Possible values for <i>border-collapse</i> are described below:</li>
+					<ul>
+						<li>collapse -- Borders are collapsed into a single border when possible </li>
+						<li>separate -- Borders are detached </li>
+						<li>inherit	-- inherited from the parent element</li>
+					</ul>
+				<li><i>table-layout</i> to "fixed". Possible values for <i>table-layout</i> are described below.</li>
+					<ul>
+						<li>auto -- column width is set by the widest unbreakable content in the cells</li>
+						<li>fixed -- horizontal layout only depends on the table's width and the width of the columns, not the contents of the cells </li>
+						<li>inherit	-- inherited from the parent element</li>
+						<b>NOTE: since <i>table-layout</i> is dependent on cell contents, you likely won't see any change in the preview when changing the value.</b>
+					</ul>
 			</ul>
 		</li>
 		<li>After the Smart Input is dismissed, your table should look something like the following in the page editor. Note the new rows and columns were added <i>after</i> the 
-		    existing rows and columns. <b>NOTE: at the time of this writing, there is a known issue with cellpadding not rendering correctly.</b></li>
+		    existing rows and columns.</li>
 		<center><img src="images/tableAfterSmartInputAddedRowsAndCols.png"></center>
 		<li>Double-click on the selected table to bring up smart input again. Verify the values in the fields accurately reflect what you set before clicking OK. </li>
 		<li>Change <i>Number of rows</i> to 2 and <i>Number of columns</i> to 3. Verify the preview table updates appropriately, and and click OK.</li>
@@ -141,18 +151,25 @@
 	<h2 class="test_section">&lt;table&gt; Smart Input (Header Row)</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>Continuing with the file from the previous section, select the table and double-click to bring up smart input. Verify the field values
+		<li>Unfortunately, document.css wipes out the styling you'd expect to see in &lt;th&gt; elements. So, go into <i>app.css</i> and add the following style so we can see
+		a difference between &lt;td&gt; and &lt;th&gt; elements as we do the rest of the steps in this section. Be sure to save <i>app.css</i> after adding the style.
+<pre>
+#myapp th {
+	font-weight: bold;
+	text-align: center;
+}
+</pre>
+		<li>Save and reopen the file from the previous section (to pick up the changes to <i>app.css</i>)</li>
+		<li>Select the table and double-click to bring up smart input. Verify the field values
 			reflect what you've entered earlier (in particular, <i>Number of rows</i> should be 2 and <i>Number of columns</i> should be 3).</li>
 		<li>Check the checkbox for <i>First row header</i>. The cells in the first row of the preview table should each be populated with the string
-			"TH". <b>NOTE: at the time of this writing, there is a known issue with header styling not previewing correctly.</b></li>
-		<li>Click OK. Verify the first row of the table in the page editor is rendered with header styling. <b>NOTE: at the time of this writing, there 
-		    is a known issue with header styling not rendering correctly. For the time being, you could look at the HTML source and verify the
-		    elements in the first row of the &lt;table&gt; are &lt;th&gt; elements.</b>	</li>
+			"TH". <b>NOTE: The preview in the dialog does not make use of any style defs in the page editor (like in <i>app.css</i>), so there will be no 
+			styling of the text in the preview.</b></li>
+		<li>Click OK. The first row of the table should now have &lt;th&gt; elements and any text in the first row should be bold and centered.</li>
+		<center><img src="images/tableWithHeaderRow.png"></center>
 		<li>Double-click to bring up the table's smart input dialog again. Verify <i>First row header</i> is still checked. Uncheck it and verify the
 			cell contents (the "TH" strings) in the first row of the preview table are removed.</li>
-		<li>Click OK. Verify the first row of the table in the page editor is rendered normally (e.g., <i>without</i> with header styling). <b>NOTE: at the time of this writing, there 
-		    is a known issue with header styling not rendering correctly so you may not see a change. For the time being, you could look at the HTML source and verify the
-		    elements in the first row of the &lt;table&gt; are &lt;td&gt; elements.</b>	</li>
+		<li>Click OK. Verify the first row of the table in the page editor is rendered normally (e.g., <i>without</i> with header styling).</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">

@@ -1384,4 +1384,7 @@ davinci_top_bar .dijitButtonNode {
 .ScenesPaletteAppStateIcon.ScenesPaletteInitial.ScenesPaletteInitialHidden {
 	visibility:hidden;
 }
-
+
+.dj_webkit #davinci_app .dijitToolbar .dijitButton .dijitButtonNode {
+	-webkit-transition-duration:0;	/* Prevents jiggling buttons in Chrome */
+}

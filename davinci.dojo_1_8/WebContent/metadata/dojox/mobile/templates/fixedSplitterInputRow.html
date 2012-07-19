@@ -1,0 +1,14 @@
+<div class="inputRow" style="display: table-row; width: 100%;">
+  <div style="display: table-cell; padding-top: 10px">
+    <div style="padding-bottom: 5px;" dojoAttachPoint="propertyContainer"></div>
+    <div>
+    	<input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="textBox" data-dojo-props="intermediateChanges: true" data-dojo-attach-event="onChange:_onChangeTextbox"/>
+    	<span style="margin-left: 20px; margin-right: 20px">${dojoxNLS.fixedSpliterInputOr}</span>
+    	<input name="useRemaingingSpace" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="useRemaingingSpace" data-dojo-attach-event="onChange:_onChangeCheckbox"/><label for="useRemaingingSpace">${dojoxNLS.fixedSpliterInputRemaining}</label>
+    </div>
+  </div>
+  <div style="display: table-cell; vertical-align: middle; text-align: right; padding-top: 10px">
+  	<input data-dojo-type="dijit.form.Button" label="+" data-dojo-attach-event="onClick:_onAddRow"/>
+  	<input data-dojo-type="dijit.form.Button" label="-" data-dojo-attach-event="onClick:_onRemoveRow"/>
+  </div>
+</div>

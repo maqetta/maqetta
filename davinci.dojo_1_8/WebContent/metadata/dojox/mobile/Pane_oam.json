@@ -1,8 +1,8 @@
 {
-    "id": "http://dojotoolkit.org/dojox/mobile/FixedSplitter",
-    "name": "dojox.mobile.FixedSplitter",
+    "id": "http://dojotoolkit.org/dojox/mobile/Pane",
+    "name": "dojox.mobile.Pane",
     "spec": "1.0",
-    "version": "1.7",
+    "version": "1.8",
     "require": [
         {
             "type": "javascript-module",
@@ -25,31 +25,13 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/mobile/FixedSplitter",
+            "src": "dojox/mobile/Pane",
             "$library": "dojo"
         }
     ],
     "library": {
         "dojo": {
             "src": "../../../dojo/dojo.js"
-        }
-    },
-    "property": {
-        "orientation": {
-            "datatype": "string",
-            "defaultValue": "H",
-            "option": [
-                {"value": "H"},
-                {"value": "V"}
-            ]
-        },
-        "variablePane": {
-            "datatype": "number",
-            "defaultValue": -1
-        },
-        "screenSizeAware": {
-            "datatype": "boolean",
-            "defaultValue": false
         }
     },
     "content": "<div></div>"

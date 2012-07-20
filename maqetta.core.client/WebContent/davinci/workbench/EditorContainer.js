@@ -54,6 +54,17 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
       	*/
 	},
 	
+	postCreate: function(){
+		this.subscribe("/davinci/ui/editorSelected", function(){
+			var toolbarDiv = this.getToolbarDiv();
+			toolbarDiv.innerHTML = '';
+			var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
+			if(toolbar){
+				toolbarDiv.appendChild(toolbar.domNode);
+			}
+		}.bind(this));
+	},
+	
 	layout: function() {
 		// Don't show the title bar or tool bar strips above the editors's main content area
 		// Note that the toolbar shared by all of the editors gets automagically injected
@@ -63,7 +74,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		this.inherited(arguments);
 	},
 	
-	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){		
+	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
 		require([editorExtension.editorClass], function(EditorCtor) {
@@ -79,7 +90,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					}
 					editor.editorID=editorExtension.id;
 					editor.isDirty= !editor.isReadOnly && this.isDirty;
-					this._createToolbar();
+					this._createToolbar(editorExtension.editorClass);
 					if (!content) {
 						content=editor.getDefaultContent();
 						editor.isDirty=!editor.isReadOnly;
@@ -303,8 +314,8 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	 * Override the _createToolbar function in _ToolbaredContainer.js to redirect
 	 * the toolbar creation logic to target the DIV with id="davinci_toolbar_container"
 	 */
-	_createToolbar: function(){
-		if(this.toolbarCreated()){
+	_createToolbar: function(editorClass){
+		if(this.toolbarCreated(editorClass)){
 			return;
 		}
 		this.inherited(arguments);
@@ -321,14 +332,18 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	/**
 	 * Getter/setting for whether toolbar has been created.
 	 * Note that this function overrides the function from _ToolbaredContainer.js
-	 * @param {boolean} [toolbarHasBeenCreated]  If provided, sets status for whether toolbar has been created
+	 * @param {string} editorClass  Class name for editor, such as 'davinci.ve.PageEditor'
+	 * @param {boolean} [toolbar]  If provided, toolbar widget
 	 * @returns {boolean}  Whether toolbar has been created
 	 */
-	toolbarCreated: function(toolbarHasBeenCreated){
-		if(arguments.length > 0){
-			davinci.Workbench._editorToolbarCreated = toolbarHasBeenCreated;
+	toolbarCreated: function(editorClass, toolbar){
+		if(!davinci.Workbench._editorToolbarCreated){
+			davinci.Workbench._editorToolbarCreated = {};
 		}
-		return davinci.Workbench._editorToolbarCreated;
+		if(arguments.length > 1){
+			davinci.Workbench._editorToolbarCreated[editorClass] = toolbar;
+		}
+		return davinci.Workbench._editorToolbarCreated[editorClass];
 	}
 
 });

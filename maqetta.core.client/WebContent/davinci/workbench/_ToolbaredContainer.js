@@ -8,6 +8,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 	templateString: "<div><div dojoAttachPoint='titleBarDiv' class='toolbaredContainer_titleBarDiv'></div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
 
 	gutters: false,
+	_toolbarCreated:{},
 
 	layout: function() {
 		// Configure the main pane to take up all the space except for where the toolbar is
@@ -39,8 +40,8 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		this.containerNode = domNode;
 
 		//TODO: move this to part of the widget life cycle
-		if (!this.toolbarCreated()) {
-			this._createToolbar();
+		if (!this.toolbarCreated(this.declaredClass)) {
+			this._createToolbar(this.declaredClass);
 		}
 		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span>'+this.title+'</span>';
 		var closeBoxNodes = dojo.query('.paletteCloseBox', this.titleBarDiv);
@@ -72,8 +73,9 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 	 * Creates toolbar for this view or editor using data from appropriate *.plugin.js directives
 	 * for this particular view or editor.
 	 * Note that this routine can be overridden by a subclass (e.g., EditorContainer.js)
+	 * @param {string} editorClass  Class name for editor, such as 'davinci.ve.PageEditor'
 	 */
-	_createToolbar: function(){
+	_createToolbar: function(containerClass){
 		var Workbench = require('davinci/Workbench');
 		var toolbarDiv = this.getToolbarDiv();
 		
@@ -101,8 +103,8 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
     		
         	var toolbar = Workbench._createToolBar("xx", tb, viewActions,this._getViewContext());
     		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
+            this.toolbarCreated(containerClass, toolbar);
         }
-        this.toolbarCreated(true);
 	},
 	
 	_getViewContext: function()
@@ -121,14 +123,15 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 	/**
 	 * Getter/setting for whether toolbar has been created.
 	 * Note that this function can be overridden by a subclass (e.g., EditorContainer)
-	 * @param {boolean} [toolbarHasBeenCreated]  If provided, sets status for whether toolbar has been created
+	 * @param {string} containerClass  Class name for view or editor, such as 'davinci.ve.PageEditor'
+	 * @param {boolean} [toolbar]  If provided, toolbar widget
 	 * @returns {boolean}  Whether toolbar has been created
 	 */
-	toolbarCreated: function(toolbarHasBeenCreated){
-		if(arguments.length > 0){
-			this._toolbarCreated = toolbarHasBeenCreated;
+	toolbarCreated: function(containerClass, toolbar){
+		if(arguments.length > 1){
+			this._toolbarCreated[containerClass] = toolbar;
 		}
-		return this._toolbarCreated;
+		return this._toolbarCreated[containerClass];
 	}
 
 //TODO: implement destroy/getChildren to destroy toolbarDiv and containerNode?

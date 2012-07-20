@@ -1,5 +1,5 @@
 define([
-	"..//HTMLSubElementHelper"
+	"../HTMLSubElementHelper"
 ], function(
 	HTMLSubElementHelper
 ) {
@@ -43,8 +43,7 @@ TreeModelHelper.prototype = {
 		if (store && store.id) {
 			srcElement.setAttribute("store", store.id);
 		}
-	},
-
+	}
 };
 
 return TreeModelHelper;

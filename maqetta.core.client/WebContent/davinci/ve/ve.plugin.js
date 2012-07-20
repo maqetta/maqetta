@@ -336,7 +336,7 @@ return {
                     action: "davinci/actions/UndoAction",
                     label: "Undo",
                     toolbarPath: "undoredo",
-                    keyBinding: {accel: true, charOrCode: "z"}
+                    keyBinding: {accel: true, charOrCode: "z", allowGlobal: true}
                 },
                 {
                     id: "redo",
@@ -344,7 +344,7 @@ return {
                     action: "davinci/actions/RedoAction",
                     label: "Redo",
                     toolbarPath: "undoredo",
-                    keyBinding: {accel: true, shift: true, charOrCode: "z"}
+                    keyBinding: {accel: true, shift: true, charOrCode: "z", allowGlobal: true}
                 },
                 {
                     id: "delete",

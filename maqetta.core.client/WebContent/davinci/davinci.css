@@ -311,6 +311,7 @@ BODY{
 	background-color:transparent;
 	background-image:none;
 	border-bottom:none;
+	width:100%;
 }
 .claro .dijitToolbar.davinciToolbar .dijitButtonContents {
 	padding:0 2px;
@@ -333,6 +334,9 @@ BODY{
 }
 #davinci_app .davinciToolbar  .dijitDropDownButton {
 	padding-left:0;	/* override claro theme value */
+}
+#davinci_app .davinciToolbar  .davinciFloatRight {
+	float:right;
 }
 #davinci_app {
 	height: 100%;

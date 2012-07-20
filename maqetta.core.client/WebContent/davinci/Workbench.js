@@ -369,8 +369,10 @@ var Workbench = {
 		var firstgroup = true;
 		for (var value in _toolbarcache) {
 			if (!firstgroup) {
+/*FIXME: No separators for time being
 				var separator = new ToolbarSeparator();
 				toolbar1.addChild(separator);
+*/
 			} else {
 				firstgroup = false;
 			}

@@ -400,6 +400,7 @@ return {
                 {
                     id: "openBrowser",
                     iconClass: 'openBrowserIcon',
+                    className: 'davinciFloatRight',
                     run: function() {
                         require(['../Workbench'], function(workbench) {
                             var editor = workbench.getOpenEditor();
@@ -417,20 +418,15 @@ return {
                 {
                     id: "theme",
                     iconClass: 'selectThemeIcon',
+                    className: "davinciFloatRight",
                     action: "davinci/actions/SelectThemeAction",
                     label: "Switch theme",
                     toolbarPath: "theme"
                 },
                 {
-                    id: "layout",
-                    iconClass: 'selectLayoutIcon',
-                    action: "davinci/actions/SelectLayoutAction",
-                    label: "Switch layout",
-                    toolbarPath: "layout"
-                },
-                {
                     id: "stickynote",
                     iconClass: 'stickynoteIcon',
+                    className: 'davinciFloatRight',
                     action: "davinci/actions/StickyNoteAction",
                     label: "Add note",
                     toolbarPath: "stickynote"
@@ -438,6 +434,7 @@ return {
                 {
                     id: "chooseDevice",
                     iconClass: 'deviceIcon',
+                    className: "davinciFloatRight",
                     action: "davinci/ve/actions/ChooseDeviceAction",
                     label: "Choose device",
                     toolbarPath: "chooseDevice"
@@ -445,10 +442,43 @@ return {
                 {
                     id: "rotateDevice",
                     iconClass: 'rotateIcon',
+                    className: "davinciFloatRight",
                     action: "davinci/ve/actions/RotateDeviceAction",
                     label: "Rotate device",
                     toolbarPath: "rotateDevice"
                 },
+                {
+                    id: "layout",
+                    className: "maqLabelButton davinciFloatRight",
+                    showLabel: true,
+                    label: "Flow",	// will be updated by code
+                    toolbarPath: "layout",
+                    type:'DropDownButton',
+                    dropdown:[
+                        {
+                            label: "Flow",
+                            iconClass: "selectLayoutIcon",
+                            action: "davinci/actions/SelectLayoutAction"
+                        },
+                        {
+                            label: "Absolute",
+                            iconClass: "selectLayoutIcon",
+                            action: "davinci/actions/SelectLayoutAction"
+                        }
+                   ]
+                 },
+/*FIXME: REMOVE
+                 {
+                    id: "layout",
+                    showLabel: true,
+                    //iconClass: 'selectLayoutIcon davinciFloatRight',
+                    className: 'davinciFloatRight',
+                    action: "davinci/actions/SelectLayoutAction",
+                    label: "Layout",
+                    toolbarPath: "layout"
+                },
+*/
+/*FIXME: DELETE THIS
                 {
                     id: "design",
                     iconClass: 'designModeIcon editActionIcon',
@@ -459,6 +489,8 @@ return {
                     toolbarPath: "displayMode",
                     keyBinding: {accel: true, charOrCode: "1", allowGlobal: true}
                 },
+*/
+/*FIXME: DELETE THIS
                 {
                     id: "source",
                     iconClass: 'sourceModeIcon editActionIcon',
@@ -485,6 +517,61 @@ return {
                     label: "Split Horizontally",
                     toolbarPath: "displayMode",
                     keyBinding: {accel: true, charOrCode: "4", allowGlobal: true}
+                },
+*/
+                {
+                    id: "sourcecombo",
+                    className: "maqLabelButton davinciFloatRight",
+                    showLabel: true,
+                    label: "Source",
+                    toolbarPath: "source",
+                    type:'ComboButton',
+                    dropdown:[
+                       {
+                            iconClass: 'sourceModeIcon',
+                            run: function() {
+                                //require(['../Workbench'], function(workbench) {
+                                    //workbench.getOpenEditor().save();
+                                //});
+                            },
+                            isEnabled: function(context) {
+                                return require('../Workbench').getOpenEditor();
+                            },
+                            label: "Source only"
+                        },
+                        {
+                            iconClass: 'splitVerticalIcon',
+                            run: function() {
+                                //require("../ui/Resource").saveAs('html');
+                            },
+                            isEnabled: function(context) {
+                                return require('../Workbench').getOpenEditor();
+                            },
+                            label: "Split Vertically"
+                        },
+                        {
+                            iconClass: 'splitHorizontalIcon',
+                            run: function() {
+                                //require("../ui/Resource").saveAs('html');
+                            },
+                            isEnabled: function(context) {
+                                return require('../Workbench').getOpenEditor();
+                            },
+                            label: "Split Horizontally"
+                        }
+                    ]
+                },
+                {
+                    id: "design",
+                    //iconClass: 'designModeIcon editActionIcon',
+                    showLabel: true,
+                    className: 'maqLabelButton davinciFloatRight',
+                    radioGroup: "displayMode",
+                    method: "switchDisplayMode",
+                    // initialValue : true,
+                    label: "Design",
+                    toolbarPath: "displayMode",
+                    keyBinding: {accel: true, charOrCode: "1", allowGlobal: true}
                 },
                 {
                     id: "closeactiveeditor",

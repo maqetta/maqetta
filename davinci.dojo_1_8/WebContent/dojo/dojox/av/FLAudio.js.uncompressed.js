@@ -147,19 +147,19 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		// summary:
 		//		Adds a media object to the playlist
 		//		***This can be called repeatedly to add multiple items.
-		//	options: Object
-		//		url: String
+		// options: Object
+		//		- url: String:
 		//			(required) path to MP3 media
 		//			url must be absolute or relative to SWF,
 		//			not dojo or the html. An effort will be made
 		//			to fix incorrect paths.
-		//		id: String
+		//		- id: String:
 		//			(optional) an identifier to later determine
 		//			which media to control.
-		//	returns:
+		// returns:
 		//		The normalized url, which can be used to identify the
 		//		audio.
-		//
+
 		if(dojox.timing.doLater(this.flashMedia, this)){ return false; }
 		if(!options.url){
 			throw new Error("An url is required for loading media");
@@ -181,17 +181,18 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		//		Tell media to play, based on
 		//		the options passed.
 		// options: Object
-		//		volume: Number
+		//		- volume: Number:
 		//			Sets the volume
-		//		pan: Number
+		//		- pan: Number:
 		//			Sets left/right pan
-		//		index:Number OR id:String OR url:String
-		//			Choose one of the above to indentify
+		//		- index:Number OR id:String OR url:String:
+		//			Choose one of the above to identify
 		//			the media you wish to control. id is
 		//			set by you. index is the order in which
 		//			media was added (zero based)
 		//			NOTE: lack of an identifier will default
 		//			to first (or only) item.
+
 		//	NOTE: Can't name this method "play()" as it causes
 		//			an IE error.
 		this.flashMedia.doPlay(options);
@@ -202,9 +203,9 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		//		Tell media to pause, based on identifier in
 		//		the options passed.
 		// options: Object
-		//		index:Number OR id:String OR url:String
-		//			See doPlay()
-		//
+		//		index:Number OR id:String OR url:String.
+		//		See doPlay().
+
 		this.flashMedia.pause(options);
 	},
 
@@ -213,9 +214,9 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		//		Tell media to stop, based on identifier in
 		//		the options passed.
 		// options:
-		//		index:Number OR id:String OR url:String
-		//			See doPlay()
-		//
+		//		index:Number OR id:String OR url:String.
+		//		See doPlay().
+
 		this.flashMedia.doStop(options);
 	},
 
@@ -226,9 +227,9 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		// options:
 		//		volume: Number
 		//		0 to 1
-		//		index:Number OR id:String OR url:String
-		//			See doPlay()
-		//
+		//		index:Number OR id:String OR url:String.
+		//		See doPlay().
+
 		this.flashMedia.setVolume(options);
 	},
 
@@ -237,11 +238,9 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		//		Set media pan, based on identifier in
 		//		the options passed.
 		// options:
-		//		pan:Number
-		//			-1 to 1
-		//		index:Number OR id:String OR url:String
-		//			See doPlay()
-		//
+		//		- pan:Number (from -1 to 1)
+		//		- index:Number OR id:String OR url:String (see doPlay())
+
 		this.flashMedia.setPan(options);
 	},
 
@@ -250,9 +249,9 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		//		Get media volume, based on identifier in
 		//		the options passed.
 		// options:
-		//		index:Number OR id:String OR url:String
-		//			See doPlay()
-		//
+		//		index:Number OR id:String OR url:String.
+		//		See doPlay().
+
 		return this.flashMedia.getVolume(options);
 	},
 
@@ -261,9 +260,9 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		//		Set media pan, based on identifier in
 		//		the options passed.
 		// options:
-		//		index:Number OR id:String OR url:String
-		//			See doPlay()
-		//
+		//		index:Number OR id:String OR url:String.
+		//		See doPlay().
+
 		return this.flashMedia.getPan(options);
 	},
 
@@ -271,9 +270,9 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		// summary:
 		//		Get the current time.
 		// options:
-		//		index:Number OR id:String OR url:String
-		//			See doPlay()
-		//
+		//		index:Number OR id:String OR url:String.
+		//		See doPlay().
+
 		return this.flashMedia.getPosition(options);
 	},
 
@@ -309,7 +308,7 @@ return dojo.declare("dojox.av.FLAudio", null, {
 		//		stub fired when SWF is ready
 	},
 	onID3: function(evt){
-		//	summary:
+		// summary:
 		//		Fired when the ID3 data is received.
 	},
 
@@ -317,7 +316,7 @@ return dojo.declare("dojox.av.FLAudio", null, {
 
 	destroy: function(){
 		// summary:
-		// 		destroys flash
+		//		destroys flash
 		if(!this.flashMedia){
 			this._cons.push(dojo.connect(this, "onLoad", this, "destroy"));
 			return;
@@ -355,8 +354,8 @@ return dojo.declare("dojox.av.FLAudio", null, {
 	_normalizeUrl: function(_url){
 		// summary:
 		//		Checks that path is relative to HTML file or
-		//		convertes it to an absolute path.
-		//
+		//		converts it to an absolute path.
+
 		if(_url && _url.toLowerCase().indexOf("http")<0){
 			//
 			// Appears to be a relative path. Attempt to  convert it to absolute,

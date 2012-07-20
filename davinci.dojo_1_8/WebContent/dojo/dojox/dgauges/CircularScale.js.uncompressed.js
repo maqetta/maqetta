@@ -38,7 +38,7 @@ define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./Sca
 			return this.orientation == "cclockwise" ? -1 : 1;
 		},
 		
-		positionForValue: function(value){
+		positionForValue: function(/* Number */value){
 			// summary:
 			//		Transforms a value into an angle using the associated scaler.
 			// returns: Number
@@ -57,7 +57,7 @@ define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./Sca
 			return _circularUtils.modAngle(this.startAngle + this._getOrientationNum() * totalAngle * tickItem.position, 360);
 		},
 		
-		valueForPosition: function(angle){
+		valueForPosition: function(/* Number */angle){
 			// summary:
 			//		Transforms an angle in degrees into a value using the associated scaler.
 			// returns: Number
@@ -81,7 +81,7 @@ define("dojox/dgauges/CircularScale", ["dojo/_base/declare", "dojox/gfx", "./Sca
 			return this.scaler.valueForPosition(pos);
 		},
 		
-		positionInRange: function(value){
+		positionInRange: function(/* Number */value){
 			// summary:
 			//		Returns true if the value parameter is between the accepted scale positions.
 			// returns: Boolean

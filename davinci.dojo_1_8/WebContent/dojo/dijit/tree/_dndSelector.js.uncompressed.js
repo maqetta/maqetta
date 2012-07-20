@@ -39,14 +39,6 @@ define("dijit/tree/_dndSelector", [
 			this.selection={};
 			this.anchor = null;
 
-			if(this.tree.showRoot){
-				this.tree.domNode.setAttribute("aria-multiselectable", !this.singular);
-			}else{
-				// TODO: this will fail in a race condition sometimes, this.tree.rootNode might not exist yet.
-				// Do not fix with a setTimeout().
-				// this.tree.rootNode.containerNode.setAttribute("aria-multiselectable", !this.singular);
-			}
-
 			if(!this.cookieName && this.tree.id){
 				this.cookieName = this.tree.id + "SaveSelectedCookie";
 			}
@@ -58,7 +50,7 @@ define("dijit/tree/_dndSelector", [
 			);
 		},
 
-		//	singular: Boolean
+		// singular: Boolean
 		//		Allows selection of only one element, if true.
 		//		Tree hasn't been tested in singular=true mode, unclear if it works.
 		singular: false,

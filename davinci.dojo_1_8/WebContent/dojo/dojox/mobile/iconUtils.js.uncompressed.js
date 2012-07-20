@@ -15,10 +15,11 @@ define("dojox/mobile/iconUtils", [
 
 	// module:
 	//		dojox/mobile/iconUtils
-	// summary:
-	//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
 
-	var iconUtils = new function(){
+	var IconUtils = function(){
+		// summary:
+		//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
+
 		this.setupSpriteIcon = function(/*DomNode*/iconNode, /*String*/iconPos){
 			// summary:
 			//		Sets up CSS sprite for a foreground image.
@@ -231,12 +232,7 @@ define("dojox/mobile/iconUtils", [
 			}
 		};
 	};
-	
-	/*=====
-    return {
-		// summary:
-		//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
-    };
-    =====*/
-	return iconUtils;
+
+	// Return singleton.  (TODO: can we replace IconUtils class and singleton w/a simple hash of functions?)
+	return new IconUtils();
 });

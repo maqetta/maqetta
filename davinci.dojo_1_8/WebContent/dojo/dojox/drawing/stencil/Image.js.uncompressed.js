@@ -2,16 +2,16 @@ define("dojox/drawing/stencil/Image", ["dojo", "../util/oo", "./_Base", "../mana
 function(dojo, oo, Base, registry){
 
 var Image = oo.declare(
-	// summary:
-	//		Creates an dojox.gfx Image based on the data
-	//		provided.
-
 	Base,
 	function(options){
 		// summary:
 		//		constructor
 	},
 	{
+		// summary:
+		//		Creates an dojox.gfx Image based on the data
+		//		provided.
+
 		type:"dojox.drawing.stencil.Image",
 		anchorType: "group",
 		baseRender:true,

@@ -12,6 +12,7 @@ dxregexp = dojox.validate.regexp = {
 		//		Supports 2 formats for Ipv6.
 		// flags: Object?
 		//		All flags are boolean with default = true.
+		//
 		//		- flags.allowDottedDecimal  Example, 207.142.131.235.  No zero padding.
 		//		- flags.allowDottedHex  Example, 0x18.0x11.0x9b.0x28.  Case insensitive.  Zero padding allowed.
 		//		- flags.allowDottedOctal  Example, 0030.0021.0233.0050.  Zero padding allowed.
@@ -198,10 +199,11 @@ dxregexp = dojox.validate.regexp = {
 		//		Use this method for phone numbers, social security numbers, zip-codes, etc.
 		//		The RE can match one format or one of multiple formats.
 		//
-		//  	Format
-		//			- #        Stands for a digit, 0-9.
-		//			- ?        Stands for an optional digit, 0-9 or nothing.
-		//			- All other characters must appear literally in the expression.
+		//		Format:
+		//
+		//		- #        Stands for a digit, 0-9.
+		//		- ?        Stands for an optional digit, 0-9 or nothing.
+		//		- All other characters must appear literally in the expression.
 		//
 		// example:
 		//		- "(###) ###-####"		-    ->   (510) 542-9742
@@ -234,12 +236,14 @@ dxregexp = dojox.validate.regexp = {
 	ca: {
 
 		postalCode: function(){
-			// summary: String regular Express to match Canadain Postal Codes
+			// summary:
+			//		String regular Express to match Canadain Postal Codes
 			return "([A-Z][0-9][A-Z] [0-9][A-Z][0-9])";
 		},
 
 		province: function(){
-			// summary: a regular expression to match Canadian Province Abbreviations
+			// summary:
+			//		a regular expression to match Canadian Province Abbreviations
 			return "(AB|BC|MB|NB|NL|NS|NT|NU|ON|PE|QC|SK|YT)";
 		}
 
@@ -253,7 +257,7 @@ dxregexp = dojox.validate.regexp = {
 			//		- flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
 			//		- flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
 
-			// assign default values to missing paramters
+			// assign default values to missing parameters
 			flags = (typeof flags == "object") ? flags : {};
 			if(typeof flags.allowTerritories != "boolean"){ flags.allowTerritories = true; }
 			if(typeof flags.allowMilitary != "boolean"){ flags.allowMilitary = true; }

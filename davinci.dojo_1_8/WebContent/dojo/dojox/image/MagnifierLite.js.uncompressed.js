@@ -3,23 +3,24 @@ define("dojox/image/MagnifierLite", ["dojo/_base/kernel", "dojo/_base/declare", 
 	kernel.experimental("dojox.image.MagnifierLite");
 	
 	return declare("dojox.image.MagnifierLite", _Widget, {
-		// summary:	Adds magnification on a portion of an image element
-		//
-		// description: An unobtrusive way to add an unstyled overlay
-		// 		above the srcNode image element. The overlay/glass is a
+		// summary:
+		//		Adds magnification on a portion of an image element
+		// description:
+		//		An unobtrusive way to add an unstyled overlay
+		//		above the srcNode image element. The overlay/glass is a
 		//		scaled version of the src image (so larger images sized down
 		//		are clearer).
 		//
 		//		The logic behind requiring the src image to be large is
 		//		"it's going to be downloaded, anyway" so this method avoids
 		//		having to make thumbnails and 2 http requests among other things.
-		//
+
 		// glassSize: Int
-		// 		the width and height of the bounding box
+		//		the width and height of the bounding box
 		glassSize: 125,
 
 		// scale: Decimal
-		// 		the multiplier of the Mangification.
+		//		the multiplier of the Mangification.
 		scale: 6,
 
 		postCreate: function(){
@@ -40,7 +41,8 @@ define("dojox/image/MagnifierLite", ["dojo/_base/kernel", "dojo/_base/declare", 
 		},
 
 		_createGlass: function(){
-			// summary: make img and glassNode elements as children of the body
+			// summary:
+			//		make img and glassNode elements as children of the body
 
 			var node = this.glassNode = construct.create('div', {
 				style: {
@@ -63,7 +65,8 @@ define("dojox/image/MagnifierLite", ["dojo/_base/kernel", "dojo/_base/declare", 
 		},
 
 		_adjustScale: function(){
-			// summary: update the calculations should this.scale change
+			// summary:
+			//		update the calculations should this.scale change
 
 			this.offset = geometry.position(this.domNode, true);
 			console.dir(this.offset);
@@ -75,7 +78,8 @@ define("dojox/image/MagnifierLite", ["dojo/_base/kernel", "dojo/_base/declare", 
 		},
 
 		_showGlass: function(e){
-			// summary: show the overlay
+			// summary:
+			//		show the overlay
 			this._placeGlass(e);
 			style.set(this.glassNode, {
 				visibility: "visible",
@@ -84,7 +88,8 @@ define("dojox/image/MagnifierLite", ["dojo/_base/kernel", "dojo/_base/declare", 
 		},
 
 		_hideGlass: function(e){
-			// summary: hide the overlay
+			// summary:
+			//		hide the overlay
 			style.set(this.glassNode, {
 				visibility: "hidden",
 				display:"none"
@@ -92,7 +97,8 @@ define("dojox/image/MagnifierLite", ["dojo/_base/kernel", "dojo/_base/declare", 
 		},
 
 		_placeGlass: function(e){
-			// summary: position the overlay centered under the cursor
+			// summary:
+			//		position the overlay centered under the cursor
 
 			this._setImage(e);
 			var sub = Math.floor(this.glassSize / 2);
@@ -103,7 +109,8 @@ define("dojox/image/MagnifierLite", ["dojo/_base/kernel", "dojo/_base/declare", 
 		},
 
 		_setImage: function(e){
-			// summary: set the image's offset in the clipping window relative to the mouse position
+			// summary:
+			//		set the image's offset in the clipping window relative to the mouse position
 
 			var xOff = (e.pageX - this.offset.x) / this.offset.w,
 				yOff = (e.pageY - this.offset.y) / this.offset.h,

@@ -1,8 +1,8 @@
 define("dojo/store/util/QueryResults", ["../../_base/array", "../../_base/lang", "../../_base/Deferred"
 ], function(array, lang, Deferred){
 
-//  module:
-//    dojo/store/util/QueryResults
+// module:
+//		dojo/store/util/QueryResults
 
 var QueryResults = function(results){
 	// summary:
@@ -17,6 +17,9 @@ var QueryResults = function(results){
 	//		the same.
 	//
 	//		Additional methods include `forEach`, `filter` and `map`.
+	//
+	//	results: Array | dojo/promise
+	//		The result set as an array, or a promise for an array.
 	//
 	// returns: Object
 	//		An array-like object that can be used for iterating over.

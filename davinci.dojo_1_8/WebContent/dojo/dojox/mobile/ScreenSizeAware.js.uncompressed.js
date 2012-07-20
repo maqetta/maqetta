@@ -12,8 +12,6 @@ define("dojox/mobile/ScreenSizeAware", [
 
 	// module:
 	//		dojox/mobile/ScreenSizeAware
-	// summary:
-	//		A module to make a screen size aware application.
 
 	kernel.experimental("dojox.mobile.ScreenSizeAware"); // should consider support for other UI layout patterns
 
@@ -69,7 +67,11 @@ define("dojox/mobile/ScreenSizeAware", [
 		//		The id of the list widget in the left view.
 		leftListId: "",
 
-		constructor: function(options){
+		constructor: function(/*Object?*/options){
+			// summary:
+			//		Creates a new instance of the class.
+			// options:
+			//		Contains properties to be set.
 			if (options){
 				lang.mixin(this, options);
 			}

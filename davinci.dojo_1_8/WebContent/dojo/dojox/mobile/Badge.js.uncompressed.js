@@ -7,8 +7,6 @@ define("dojox/mobile/Badge", [
 ], function(declare, lang, domClass, domConstruct, iconUtils){
 	// module:
 	//		dojox/mobile/Badge
-	// summary:
-	//		A utility to create/update a badge node.
 
 	return declare("dojox.mobile.Badge", null, {
 		// summary:
@@ -30,7 +28,13 @@ define("dojox/mobile/Badge", [
 		//		button itself.
 		fontSize: 16, // [px]
 
-		constructor: function(params, node){
+		constructor: function(/*Object?*/params, /*DomNode?*/node){
+			// summary:
+			//		Creates a new instance of the class.
+			// params:
+			//		Contains properties to be set.
+			// node:
+			//		The DOM node. If none is specified, it is automatically created. 
 			if (params){
 				lang.mixin(this, params);
 			}

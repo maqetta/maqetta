@@ -1,6 +1,18 @@
-define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/_Templated", "dojox/highlight"], function(dojo, dijit, _Widget, _Templated){
+define("dojox/highlight/widget/Code", [
+	"dojo/_base/declare", 
+	"dojo/_base/lang", 
+	"dojo/_base/array", 
+	"dojo/query",
+	"dojo/dom-class",
+	"dojo/dom-attr",
+	"dojo/dom-construct",
+	"dojo/request/xhr",
+	"dijit/_Widget", 
+	"dijit/_Templated", 
+	"dojox/highlight"
+], function(declare, lang, array, query, domClass, domAttr, domConstruct, xhr, _Widget, _Templated){
 
-	return dojo.declare("dojox.highlight.widget.Code", [_Widget, _Templated],{
+	return declare("dojox.highlight.widget.Code", [_Widget, _Templated],{
 		// summary:
 		//		A simple source code formatting widget that adds line numbering, alternating line colors
 		//		and line range support on top of dojox.highlight module.
@@ -23,13 +35,14 @@ define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/
 		postCreate: function(){
 			this.inherited(arguments);
 			if(this.url){
+				xhr(this.url, {}).then(lang.hitch(this,"_populate"), lang.hitch(this,"_loadError"));
 				// load from a url
-				dojo.xhrGet({
+				/*dojo.xhrGet({
 					url: this.url,
 					// then poopulate:
-					load: dojo.hitch(this,"_populate"),
-					error: dojo.hitch(this,"_loadError")
-				});
+					load: lang.hitch(this,"_populate"),
+					error: lang.hitch(this,"_loadError")
+				});*/
 			}else{
 				// or just populate from our internal content
 				this._populate(this.containerNode.innerHTML);
@@ -43,22 +56,22 @@ define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/
 					data.replace(/\</g,"&lt;") +
 				"</code></pre>";
 			// highlight it
-			dojo.query("pre > code",this.containerNode).forEach(dojox.highlight.init);
+			query("pre > code",this.containerNode).forEach(dojox.highlight.init);
 			// FIXME: in ie7, the innerHTML in a real <pre> isn't split by \n's ?
 			// split the content into lines
 			var lines = this.containerNode.innerHTML.split("\n");
-			dojo.forEach(lines,function(line,i){
+			array.forEach(lines,function(line,i){
 				// setup all the lines of the content as <li>'s
-				var li = dojo.doc.createElement('li');
+				var li = domConstruct.create('li');
 				// add some style sugar:
-				dojo.addClass(li, (i % 2 !== 0 ? "even" : "odd"));
+				domClass.add(li, (i % 2 !== 0 ? "even" : "odd"));
 				line = "<pre><code>" + line + "&nbsp;</code></pre>";
 				line = line.replace(/\t/g," &nbsp; ");
 				li.innerHTML = line;
 				this.codeList.appendChild(li);
 			},this);
 			// save our data
-			this._lines = dojo.query("li",this.codeList);
+			this._lines = query("li",this.codeList);
 			this._updateView();
 		},
 	
@@ -66,7 +79,7 @@ define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/
 		setRange: function(/* Array */range){
 			// summary:
 			//		update the view to a new passed range
-			if(dojo.isArray(range)){
+			if(range instanceof Array){
 				this.range = range;
 				this._updateView();
 			}
@@ -88,12 +101,13 @@ define("dojox/highlight/widget/Code", ["dojo", "dijit", "dijit/_Widget", "dijit/
 					.style({ display:"" })
 				;
 				// set the "start" attribute on the OL so numbering works
-				dojo.attr(this.codeList,"start",r[0]);
+				domAttr.set(this.codeList,"start",r[0]);
 			}
 		},
 	
 		_loadError: function(error){
-			// summary: a generic error handler for the url=""
+			// summary:
+			//		a generic error handler for the url=""
 			console.warn("loading: ", this.url, " FAILED", error);
 		}
 

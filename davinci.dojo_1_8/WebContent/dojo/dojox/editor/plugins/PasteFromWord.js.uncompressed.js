@@ -17,7 +17,7 @@ define("dojox/editor/plugins/PasteFromWord", [
 	"dojo/i18n!dijit/_editor/nls/commands"
 ], function(dojo, dijit, dojox, _Plugin) {
 
-dojo.declare("dojox.editor.plugins.PasteFromWord", _Plugin, {
+var PasteFromWord = dojo.declare("dojox.editor.plugins.PasteFromWord", _Plugin, {
 	// summary:
 	//		This plugin provides PasteFromWord capability to the editor.  When
 	//		clicked, a dialog opens with a spartan RichText instance to paste
@@ -218,12 +218,12 @@ dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
 	if(o.plugin){ return; }
 	var name = o.args.name.toLowerCase();
 	if(name === "pastefromword"){
-		o.plugin = new dojox.editor.plugins.PasteFromWord({
+		o.plugin = new PasteFromWord({
 			width: ("width" in o.args)?o.args.width:"400px",
 			height: ("height" in o.args)?o.args.width:"300px"
 		});
 	}
 });
 
-return dojox.editor.plugins.PasteFromWord;
+return PasteFromWord;
 });

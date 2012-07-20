@@ -145,7 +145,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//		Getter/setter for the margin-box of node.
 		//		Returns an object in the expected format of box (regardless
 		//		if box is passed). The object might look like:
-		//			`{ l: 50, t: 200, w: 300: h: 150 }`
+		//		`{ l: 50, t: 200, w: 300: h: 150 }`
 		//		for a node offset from its parent 50px to the left, 200px from
 		//		the top with a margin width of 300px and a margin-height of
 		//		150px.
@@ -173,7 +173,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		// description:
 		//		Returns an object in the expected format of box (regardless if box is passed).
 		//		The object might look like:
-		//			`{ l: 50, t: 200, w: 300: h: 150 }`
+		//		`{ l: 50, t: 200, w: 300: h: 150 }`
 		//		for a node offset from its parent 50px to the left, 200px from
 		//		the top with a content width of 300px and a content-height of
 		//		150px. Note that the content box may have a much larger border
@@ -195,9 +195,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		// summary:
 		//		Deprecated: Use position() for border-box x/y/w/h
 		//		or marginBox() for margin-box w/h/l/t.
-		//		Returns an object representing a node's size and position.
 		//
-		// description:
 		//		Returns an object that measures margin-box (w)idth/(h)eight
 		//		and absolute position x/y of the border-box. Also returned
 		//		is computed (l)eft and (t)op values in pixels from the
@@ -284,7 +282,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//	|	});
 		//
 		// example:
-		//	Style is s special case: Only set with an object hash of styles
+		//		Style is s special case: Only set with an object hash of styles
 		//	|	dojo.prop("someNode",{
 		//	|		id:"bar",
 		//	|		style:{
@@ -293,7 +291,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//	|	});
 		//
 		// example:
-		//	Again, only set style as an object hash of styles:
+		//		Again, only set style as an object hash of styles:
 		//	|	var obj = { color:"#fff", backgroundColor:"#000" };
 		//	|	dojo.prop("someNode", "style", obj);
 		//	|
@@ -371,8 +369,8 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//	|	});
 		//
 		// example:
-		//		dojo.NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
-		//		dojo.style() on every element of the list. See: `dojo.query()` and `dojo.NodeList()`
+		//		dojo/NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
+		//		dojo.style() on every element of the list. See: `dojo/query` and `dojo/NodeList`
 		//	|	dojo.query(".someClassName").style("visibility","hidden");
 		//	|	// or
 		//	|	dojo.query("#baz > div").style({

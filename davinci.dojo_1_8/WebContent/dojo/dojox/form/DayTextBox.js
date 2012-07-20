@@ -1,27 +1,27 @@
 //>>built
-define("dojox/form/DayTextBox",["dojo/_base/kernel","dojo/_base/lang","dojox/widget/DailyCalendar","dijit/form/TextBox","dijit/form/_DateTimeTextBox","dojox/form/DateTextBox","dojo/_base/declare",],function(_1,_2,_3,_4,_5,_6,_7){
-_1.experimental("dojox/form/DateTextBox");
-return _7("dojox.form.DayTextBox",[_3,_4,_5,_6],{popupClass:"dojox/widget/DailyCalendar",parse:function(_8){
-return _8;
-},format:function(_9){
-return _9.getDate?_9.getDate():_9;
-},validator:function(_a){
-var _b=Number(_a);
-var _c=/(^-?\d\d*$)/.test(String(_a));
-return _a==""||_a==null||(_c&&_b>=1&&_b<=31);
-},_setValueAttr:function(_d,_e,_f){
-if(_d){
-if(_d.getDate){
-_d=_d.getDate();
+define("dojox/form/DayTextBox",["dojo/_base/kernel","dojo/_base/lang","dojox/widget/DailyCalendar","dijit/form/TextBox","./DateTextBox","dojo/_base/declare"],function(_1,_2,_3,_4,_5,_6){
+_1.experimental("dojox/form/DayTextBox");
+return _6("dojox.form.DayTextBox",_5,{popupClass:_3,parse:function(_7){
+return _7;
+},format:function(_8){
+return _8.getDate?_8.getDate():_8;
+},validator:function(_9){
+var _a=Number(_9);
+var _b=/(^-?\d\d*$)/.test(String(_9));
+return _9==""||_9==null||(_b&&_a>=1&&_a<=31);
+},_setValueAttr:function(_c,_d,_e){
+if(_c){
+if(_c.getDate){
+_c=_c.getDate();
 }
 }
-_4.prototype._setValueAttr.call(this,_d,_e,_f);
+_4.prototype._setValueAttr.call(this,_c,_d,_e);
 },openDropDown:function(){
 this.inherited(arguments);
-this.dropDown.onValueSelected=_2.hitch(this,function(_10){
+this.dropDown.onValueSelected=_2.hitch(this,function(_f){
 this.focus();
 setTimeout(_2.hitch(this,"closeDropDown"),1);
-_4.prototype._setValueAttr.call(this,String(_10.getDate()),true,String(_10.getDate()));
+_4.prototype._setValueAttr.call(this,String(_f.getDate()),true,String(_f.getDate()));
 });
 }});
 });

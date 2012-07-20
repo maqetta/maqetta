@@ -10,7 +10,11 @@ return _1("dojo.dnd.Avatar",null,{constructor:function(_9){
 this.manager=_9;
 this.construct();
 },construct:function(){
-var a=_6.create("table",{"class":"dojoDndAvatar",style:{position:"absolute",zIndex:"1999",margin:"0px"}}),_a=this.manager.source,_b,b=_6.create("tbody",null,a),tr=_6.create("tr",null,b),td=_6.create("td",null,tr),_c=_7("highcontrast")?_6.create("span",{id:"a11yIcon",innerHTML:this.manager.copy?"+":"<"},td):null,_d=_6.create("span",{innerHTML:_a.generateText?this._generateText():""},td),k=Math.min(5,this.manager.nodes.length),i=0;
+var a=_6.create("table",{"class":"dojoDndAvatar",style:{position:"absolute",zIndex:"1999",margin:"0px"}}),_a=this.manager.source,_b,b=_6.create("tbody",null,a),tr=_6.create("tr",null,b),td=_6.create("td",null,tr),k=Math.min(5,this.manager.nodes.length),i=0;
+if(_7("highcontrast")){
+_6.create("span",{id:"a11yIcon",innerHTML:this.manager.copy?"+":"<"},td);
+}
+_6.create("span",{innerHTML:_a.generateText?this._generateText():""},td);
 _4.set(tr,{"class":"dojoDndAvatarHeader",style:{opacity:0.9}});
 for(;i<k;++i){
 if(_a.creator){
@@ -18,9 +22,9 @@ _b=_a._normalizedCreator(_a.getItem(this.manager.nodes[i].id).data,"avatar").nod
 }else{
 _b=this.manager.nodes[i].cloneNode(true);
 if(_b.tagName.toLowerCase()=="tr"){
-var _e=_6.create("table"),_f=_6.create("tbody",null,_e);
-_f.appendChild(_b);
-_b=_e;
+var _c=_6.create("table"),_d=_6.create("tbody",null,_c);
+_d.appendChild(_b);
+_b=_c;
 }
 }
 _b.id="";
@@ -36,23 +40,23 @@ this.node=false;
 },update:function(){
 _5.toggle(this.node,"dojoDndAvatarCanDrop",this.manager.canDropFlag);
 if(_7("highcontrast")){
-var _10=_3.byId("a11yIcon");
-var _11="+";
+var _e=_3.byId("a11yIcon");
+var _f="+";
 if(this.manager.canDropFlag&&!this.manager.copy){
-_11="< ";
+_f="< ";
 }else{
 if(!this.manager.canDropFlag&&!this.manager.copy){
-_11="o";
+_f="o";
 }else{
 if(!this.manager.canDropFlag){
-_11="x";
+_f="x";
 }
 }
 }
-_10.innerHTML=_11;
+_e.innerHTML=_f;
 }
-_8(("tr.dojoDndAvatarHeader td span"+(_7("highcontrast")?" span":"")),this.node).forEach(function(_12){
-_12.innerHTML=this.manager.source.generateText?this._generateText():"";
+_8(("tr.dojoDndAvatarHeader td span"+(_7("highcontrast")?" span":"")),this.node).forEach(function(_10){
+_10.innerHTML=this.manager.source.generateText?this._generateText():"";
 },this);
 },_generateText:function(){
 return this.manager.nodes.length.toString();

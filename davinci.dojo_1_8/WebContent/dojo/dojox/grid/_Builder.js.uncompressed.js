@@ -269,10 +269,6 @@ define("dojox/grid/_Builder", [
 					m = cell.markup; cc = cell.customClasses = []; cs = cell.customStyles = [];
 					// content (format can fill in cc and cs as side-effects)
 					m[5] = cell.format(inRowIndex, item);
-					if(has('ie') < 8 && (m[5] === null || m[5] === '' || /^\s+$/.test(m[5]))){
-						//fix IE 6/7 quirks - border style not effective for empty td
-						m[5] = '&nbsp;'
-					}
 					// classes
 					m[1] = cc.join(' ');
 					// styles
@@ -673,7 +669,8 @@ define("dojox/grid/_Builder", [
 		map: null,
 
 		mapRows: function(inRows){
-			// summary: Map table topography
+			// summary:
+			//		Map table topography
 
 			//console.log('mapRows');
 			// # of rows
@@ -713,7 +710,8 @@ define("dojox/grid/_Builder", [
 		},
 
 		getMapCoords: function(inRow, inCol){
-			// summary: Find node's map coords by it's structure coords
+			// summary:
+			//		Find node's map coords by it's structure coords
 			for(var j=0, row; (row=this.map[j]); j++){
 				for(var i=0, cell; (cell=row[i]); i++){
 					if(cell.c==inCol && cell.r == inRow){
@@ -726,7 +724,8 @@ define("dojox/grid/_Builder", [
 		},
 		
 		getNode: function(inTable, inRow, inCol){
-			// summary: Find a node in inNode's table with the given structure coords
+			// summary:
+			//		Find a node in inNode's table with the given structure coords
 			var row = inTable && inTable.rows[inRow];
 			return row && row.cells[inCol];
 		},

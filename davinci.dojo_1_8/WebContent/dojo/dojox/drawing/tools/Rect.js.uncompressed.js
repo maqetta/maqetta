@@ -3,15 +3,15 @@ function(lang, oo, registry, StencilRect){
 
 //dojox.drawing.tools.Rect 
 var Rect = oo.declare(
-	// summary:
-	// 		Class for a drawable rectangle
-
 	StencilRect,
 	function(){
 		// summary:
 		//		constructor
 	},
 	{
+		// summary:
+		//		Class for a drawable rectangle
+
 		draws:true,
 		
 		onDrag: function(/*EventObject*/obj){

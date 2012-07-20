@@ -72,7 +72,15 @@ define("dijit/layout/StackController", [
 		//		CSS class of [x] close icon, used by event delegation code to tell when close button was clicked
 		buttonWidgetCloseClass: "dijitStackCloseButton",
 
-		constructor: function(){
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
 			this.pane2button = {};		// mapping from pane id to buttons
 		},
 
@@ -91,8 +99,7 @@ define("dijit/layout/StackController", [
 			// No need to worry about ENTER/SPACe key handling: tabs are selected via left/right arrow keys,
 			// and closed via shift-F10 (to show the close menu).
 			this.connect(this.containerNode, 'click', function(evt){
-				var button = registry.getEnclosingWidget(evt.target),
-					page = button.page;
+				var button = registry.getEnclosingWidget(evt.target);
 				if(button != this.containerNode && !button.disabled){
 					for(var target = evt.target; target !== this.containerNode; target = target.parentNode){
 						if(domClass.contains(target, this.buttonWidgetCloseClass)){

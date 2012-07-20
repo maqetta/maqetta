@@ -171,7 +171,7 @@ function(lang, win, dom, declare, arr, domGeom, domAttr, Color, g, gs, pathLib){
 			// summary:
 			//		sets a stroke object (SVG)
 			//		stroke: Object
-			// 		a stroke object (see dojox.gfx.defaultStroke)
+			//		a stroke object (see dojox.gfx.defaultStroke)
 
 			var rn = this.rawNode;
 			if(!stroke){
@@ -887,12 +887,12 @@ else
 	// Mouse/Touch event
 	svg.fixTarget = function(event, gfxElement) {
 		// summary:
-		//     Adds the gfxElement to event.gfxTarget if none exists. This new
-		//     property will carry the GFX element associated with this event.
+		//		Adds the gfxElement to event.gfxTarget if none exists. This new
+		//		property will carry the GFX element associated with this event.
 		// event: Object
-		//     The current input event (MouseEvent or TouchEvent)
+		//		The current input event (MouseEvent or TouchEvent)
 		// gfxElement: Object
-		//     The GFX target element
+		//		The GFX target element
 		if (!event.gfxTarget) {
 			if (safMobile && event.target.wholeText) {
 				// Workaround iOS bug when touching text nodes

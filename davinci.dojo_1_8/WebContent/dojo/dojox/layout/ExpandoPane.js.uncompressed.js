@@ -1,5 +1,5 @@
 require({cache:{
-'url:dojox/layout/resources/ExpandoPane.html':"<div class=\"dojoxExpandoPane\">\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"onclick:toggle\"><span class=\"a11yNode\">X</span></div>\t\t\t\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\n\t</div>\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\n\t</div>\n</div>\n"}});
+'url:dojox/layout/resources/ExpandoPane.html':"<div class=\"dojoxExpandoPane\">\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"ondijitclick:toggle\"><span class=\"a11yNode\">X</span></div>\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\n\t</div>\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\n\t</div>\n</div>\n"}});
 define("dojox/layout/ExpandoPane", [
 	"dojo/_base/kernel",
 	"dojo/_base/lang",
@@ -21,12 +21,11 @@ define("dojox/layout/ExpandoPane", [
 kernel.experimental("dojox.layout.ExpandoPane"); // just to show it can be done?
 
 return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contained, Container],{
-	// summary: An experimental collapsing-pane for dijit.layout.BorderContainer
-	//
+	// summary:
+	//		An experimental collapsing-pane for dijit.layout.BorderContainer
 	// description:
 	//		Works just like a ContentPane inside of a borderContainer. Will expand/collapse on
 	//		command, and supports having Layout Children as direct descendants
-	//
 
 	//maxHeight: "",
 	//maxWidth: "",
@@ -62,6 +61,11 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	//		If true, will override the default behavior of a double-click calling a full toggle.
 	//		If false, a double-click will cause the preview to popup
 	previewOnDblClick: false,
+
+	// tabIndex: String
+	//		Order fields are traversed when user hits the tab key
+	tabIndex: "0",
+	_setTabIndexAttr: "iconNode",
 
 	baseClass: "dijitExpandoPane",
 
@@ -109,6 +113,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		
 		this.connect(this.domNode, "ondblclick", this.previewOnDblClick ? "preview" : "toggle");
 		
+		this.iconNode.setAttribute("aria-controls", this.id);
+		
 		if(this.previewOnDblClick){
 			this.connect(this.getParent(), "_layoutChildren", lang.hitch(this, function(){
 				this._isonlypreview = false;
@@ -144,6 +150,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			this._hideAnim.gotoPercent(99,true);
 		}
 		
+		this.domNode.setAttribute("aria-expanded", this._showing);
 		this._hasSizes = true;
 	},
 	
@@ -244,6 +251,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			this._showAnim.play();
 		}
 		this._showing = !this._showing;
+		this.domNode.setAttribute("aria-expanded", this._showing);
 	},
 	
 	_hideWrapper: function(){

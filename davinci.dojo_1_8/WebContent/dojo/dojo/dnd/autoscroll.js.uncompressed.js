@@ -6,7 +6,8 @@ define("dojo/dnd/autoscroll", ["../_base/lang", "../sniff", "../_base/window", "
 
 var exports = {
 	// summary:
-	//		TODOC
+	//		Used by dojo/dnd/Manager to scroll document or internal node when the user
+	//		drags near the edge of the viewport or a scrollable node
 };
 lang.setObject("dojo.dnd.autoscroll", exports);
 
@@ -18,24 +19,49 @@ exports.H_TRIGGER_AUTOSCROLL = 32;
 exports.V_AUTOSCROLL_VALUE = 16;
 exports.H_AUTOSCROLL_VALUE = 16;
 
+// These are set by autoScrollStart().
+// Set to default values in case autoScrollStart() isn't called. (back-compat, remove for 2.0)
+var viewport,
+	doc = win.doc,
+	maxScrollTop = Infinity,
+	maxScrollLeft = Infinity;
+
+exports.autoScrollStart = function(d){
+	// summary:
+	//		Called at the start of a drag.
+	// d: Document
+	//		The document of the node being dragged.
+
+	doc = d;
+	viewport = winUtils.getBox(doc);
+
+	// Save height/width of document at start of drag, before it gets distorted by a user dragging an avatar past
+	// the document's edge
+	var html = win.body(doc).parentNode;
+	maxScrollTop = Math.max(html.scrollHeight - viewport.h, 0);
+	maxScrollLeft = Math.max(html.scrollWidth - viewport.w, 0);	// usually 0
+};
+
 exports.autoScroll = function(e){
 	// summary:
-	//		a handler for onmousemove event, which scrolls the window, if
+	//		a handler for mousemove and touchmove events, which scrolls the window, if
 	//		necessary
 	// e: Event
-	//		onmousemove event
+	//		mousemove/touchmove event
 
 	// FIXME: needs more docs!
-	var v = winUtils.getBox(), dx = 0, dy = 0;
+	var v = viewport || winUtils.getBox(doc), // getBox() call for back-compat, in case autoScrollStart() wasn't called
+		html = win.body(doc).parentNode,
+		dx = 0, dy = 0;
 	if(e.clientX < exports.H_TRIGGER_AUTOSCROLL){
 		dx = -exports.H_AUTOSCROLL_VALUE;
 	}else if(e.clientX > v.w - exports.H_TRIGGER_AUTOSCROLL){
-		dx = exports.H_AUTOSCROLL_VALUE;
+		dx = Math.min(exports.H_AUTOSCROLL_VALUE, maxScrollLeft - html.scrollLeft);	// don't scroll past edge of doc
 	}
 	if(e.clientY < exports.V_TRIGGER_AUTOSCROLL){
 		dy = -exports.V_AUTOSCROLL_VALUE;
 	}else if(e.clientY > v.h - exports.V_TRIGGER_AUTOSCROLL){
-		dy = exports.V_AUTOSCROLL_VALUE;
+		dy = Math.min(exports.V_AUTOSCROLL_VALUE, maxScrollTop - html.scrollTop);	// don't scroll past edge of doc
 	}
 	window.scrollBy(dx, dy);
 };
@@ -45,10 +71,10 @@ exports._validOverflow = {"auto": 1, "scroll": 1};
 
 exports.autoScrollNodes = function(e){
 	// summary:
-	//		a handler for onmousemove event, which scrolls the first available
+	//		a handler for mousemove and touchmove events, which scrolls the first available
 	//		Dom element, it falls back to exports.autoScroll()
 	// e: Event
-	//		onmousemove event
+	//		mousemove/touchmove event
 
 	// FIXME: needs more docs!
 

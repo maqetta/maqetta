@@ -12,21 +12,21 @@ return declare("dojo.data.ItemFileWriteStore", ItemFileReadStore, {
 	constructor: function(/* object */ keywordParameters){
 		// keywordParameters:
 		//		The structure of the typeMap object is as follows:
-		//		{
-		//			type0: function || object,
-		//			type1: function || object,
-		//			...
-		//			typeN: function || object
-		//		}
+		// |	{
+		// |		type0: function || object,
+		// |		type1: function || object,
+		// |		...
+		// |		typeN: function || object
+		// |	}
 		//		Where if it is a function, it is assumed to be an object constructor that takes the
 		//		value of _value as the initialization parameters.  It is serialized assuming object.toString()
 		//		serialization.  If it is an object, then it is assumed
 		//		to be an object of general form:
-		//		{
-		//			type: function, //constructor.
-		//			deserialize:	function(value) //The function that parses the value and constructs the object defined by type appropriately.
-		//			serialize:	function(object) //The function that converts the object back into the proper file format form.
-		//		}
+		// |	{
+		// |		type: function, //constructor.
+		// |		deserialize:	function(value) //The function that parses the value and constructs the object defined by type appropriately.
+		// |		serialize:	function(object) //The function that converts the object back into the proper file format form.
+		// |	}
 
 		// ItemFileWriteStore extends ItemFileReadStore to implement these additional dojo.data APIs
 		this._features['dojo.data.api.Write'] = true;
@@ -165,8 +165,8 @@ return declare("dojo.data.ItemFileWriteStore", ItemFileReadStore, {
 				// need to move all our private info to some other property
 				// of all the items/objects.  So, we need to iterate over all
 				// the items and do something like:
-				//    item.__S = item._S;
-				//    item._S = undefined;
+				//	  item.__S = item._S;
+				//	  item._S = undefined;
 				// But first we have to make sure the new "__S" variable is
 				// not in use, which means we have to iterate over all the
 				// items checking for that.
@@ -373,7 +373,7 @@ return declare("dojo.data.ItemFileWriteStore", ItemFileReadStore, {
 			var newValueArray;
 			if(lang.isArray(newValueOrValues)){
 				// Unfortunately, it's not safe to just do this:
-				//    newValueArray = newValueOrValues;
+				//	  newValueArray = newValueOrValues;
 				// Instead, we need to copy the array, which slice() does very nicely.
 				// This is so that our internal data structure won't
 				// get corrupted if the user mucks with the values array *after*
@@ -533,9 +533,9 @@ return declare("dojo.data.ItemFileWriteStore", ItemFileReadStore, {
 			// Given an item, return an serializable object that provides a
 			// reference to the item.
 			// For example, given kermit:
-			//    var kermit = store.newItem({id:2, name:"Kermit"});
+			//	  var kermit = store.newItem({id:2, name:"Kermit"});
 			// we want to return
-			//    {_reference:2}
+			//	  {_reference:2}
 			return {_reference: this.getIdentity(value)};
 		}else{
 			if(typeof value === "object"){

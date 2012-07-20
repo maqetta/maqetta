@@ -19,18 +19,20 @@ define("dojox/charting/BidiSupport", ["../main", "dojo/_base/lang", "dojo/dom-st
 		// textDir: String
 		//		Bi-directional support,	the main variable which is responsible for the direction of the text.
 		//		The text direction can be different than the GUI direction by using this parameter.
-		// 		Allowed values:
-		//			1. "ltr"
-		//			2. "rtl"
-		//			3. "auto" - contextual the direction of a text defined by first strong letter.
-		//		By default is as the page direction.		
+		//		Allowed values:
+		//
+		//		1. "ltr"
+		//		2. "rtl"
+		//		3. "auto" - contextual the direction of a text defined by first strong letter.
+		//
+		//		By default is as the page direction.
 		textDir:"",
 		
 		getTextDir: function(/*String*/text){
 			// summary:
 			//		Return direction of the text. 
 			// description:
-			// 		If textDir is ltr or rtl returns the value.
+			//		If textDir is ltr or rtl returns the value.
 			//		If it's auto, calls to another function that responsible 
 			//		for checking the value, and defining the direction.			
 			// text:
@@ -158,15 +160,19 @@ define("dojox/charting/BidiSupport", ["../main", "dojo/_base/lang", "dojo/dom-st
 			//		Enables bidi support for truncated labels.
 			// description:
 			//		Can be two types of labels: html or gfx.
-			//		gfx labels: 
-			//			Need to be stored in registry to be used when the textDir will be set dynamically.
-			//			Additional work on truncated labels is needed for case as 111111A (A stands for "bidi" character rtl directioned).
-			//			let say in this case the truncation is "111..." If the textDir is auto, the display should be: "...111" but in gfx
-			//			case we will get "111...". Because this.surface.setTextDir will calculate the dir of truncated
-			//			label, which value is "111..." but th real is "111111A".
-			//			each time we created a gfx truncated label we store it in the truncatedLabelsRegistry.
-			//		html labels:
-			//			no need for repository (stored in another place). Here we only need to update the current dir according to textDir.
+			//
+			//		####gfx labels:
+			//
+			//		Need to be stored in registry to be used when the textDir will be set dynamically.
+			//		Additional work on truncated labels is needed for case as 111111A (A stands for "bidi" character rtl directioned).
+			//		let's say in this case the truncation is "111..." If the textDir is auto, the display should be: "...111" but in gfx
+			//		case we will get "111...". Because this.surface.setTextDir will calculate the dir of truncated
+			//		label, which value is "111..." but th real is "111111A".
+			//		each time we created a gfx truncated label we store it in the truncatedLabelsRegistry.
+			//
+			//		####html labels:
+			//
+			//		no need for repository (stored in another place). Here we only need to update the current dir according to textDir.
 			// tags:
 			//		private
 		
@@ -273,7 +279,7 @@ define("dojox/charting/BidiSupport", ["../main", "dojo/_base/lang", "dojo/dom-st
 		//		in ltr GUI, sometimes needed auto support.
 		//		dojox.charting does not support control over base text direction provided in Dojo.
 	};
-	 =====*/
+	=====*/
 
 	return Chart;
 		

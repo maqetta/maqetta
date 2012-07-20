@@ -9,7 +9,7 @@ define("dojox/mobile/RadioButton", [
 		//		A non-templated radio button widget that can be in two states (checked or not checked).
 
 		// _setTypeAttr: [private] Function 
-		//		Overrides the automatic assignement of type to nodes, because it causes 
+		//		Overrides the automatic assignment of type to nodes, because it causes
 		//		exception on IE. Instead, the type must be specified as this.type
 		//		when the node is created, as part of the original DOM.
 		_setTypeAttr: null,

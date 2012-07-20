@@ -11,20 +11,20 @@ define("dojox/mvc/Bind", [
 			// summary:
 			//		Bind the specified property of the target to the specified
 			//		property of the source with the supplied transformation.
-			//	source:
+			// source:
 			//		The source dojo/Stateful object for the bind.
-			//	sourceProp:
+			// sourceProp:
 			//		The name of the source's property whose change triggers the bind.
-			//	target:
+			// target:
 			//		The target dojo/Stateful object for the bind whose
 			//		property will be updated with the result of the function.
-			//	targetProp:
+			// targetProp:
 			//		The name of the target's property to be updated with the
 			//		result of the function.
-			//	func:
+			// func:
 			//		The optional calculation to be performed to obtain the target
 			//		property value.
-			//	bindOnlyIfUnequal:
+			// bindOnlyIfUnequal:
 			//		Whether the bind notification should happen only if the old and
 			//		new values are unequal (optional, defaults to false).
 			var convertedValue;
@@ -41,9 +41,9 @@ define("dojox/mvc/Bind", [
 			//		Bind the values at the sources specified in the first argument
 			//		array such that a composing function in the second argument is
 			//		called when any of the values changes.
-			//	sourceBindArray:
+			// sourceBindArray:
 			//		The array of dojo/Stateful objects to watch values changes on.
-			//	func:
+			// func:
 			//		The composing function that is called when any of the source
 			//		values changes.
 			// tags:

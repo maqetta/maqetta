@@ -222,8 +222,8 @@ define("dojox/charting/action2d/_IndicatorElement", ["dojo/_base/lang", "dojo/_b
 			var cx = mark.x - c.x, cy = mark.y - c.y;
 			var x1 = v?cx:min.x - c.x, y1 = v?min.y - c.y:cy, x2 = v?x1:max.x - c.x, y2 = v?max.y - c.y:y1;
 			var sh = inter.opt.lineShadow?inter.opt.lineShadow:t.indicator.lineShadow,
-					ls = inter.opt.lineStroke?inter.opt.lineStroke:t.indicator.lineStroke,
-							ol = inter.opt.lineOutline?inter.opt.lineOutline:t.indicator.lineOutline;
+				ls = inter.opt.lineStroke?inter.opt.lineStroke:t.indicator.lineStroke,
+				ol = inter.opt.lineOutline?inter.opt.lineOutline:t.indicator.lineOutline;
 			if(sh){
 				this.group.createLine({x1: x1 + sh.dx, y1: y1 + sh.dy, x2: x2 + sh.dx, y2: y2 + sh.dy}).setStroke(sh);
 			}
@@ -269,9 +269,9 @@ define("dojox/charting/action2d/_IndicatorElement", ["dojo/_base/lang", "dojo/_b
 					text, inter.opt.font?inter.opt.font:t.indicator.font, inter.opt.fontColor?inter.opt.fontColor:t.indicator.fontColor);
 			var b = getBoundingBox(label);
 			b.x-=2; b.y-=1; b.width+=4; b.height+=2; b.r = inter.opt.radius?inter.opt.radius:t.indicator.radius;
-			sh = inter.opt.shadow?inter.opt.shadow:t.indicator.shadow;
-			ls = inter.opt.stroke?inter.opt.stroke:t.indicator.stroke;
-			ol = inter.opt.outline?inter.opt.outline:t.indicator.outline;
+			var sh = inter.opt.shadow?inter.opt.shadow:t.indicator.shadow,
+				ls = inter.opt.stroke?inter.opt.stroke:t.indicator.stroke,
+				ol = inter.opt.outline?inter.opt.outline:t.indicator.outline;
 			if(sh){
 				this.group.createRect(b).setFill(sh.color).setStroke(sh);
 			}

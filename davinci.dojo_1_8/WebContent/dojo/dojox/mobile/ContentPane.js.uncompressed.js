@@ -6,8 +6,6 @@ define("dojox/mobile/ContentPane", [
 
 	// module:
 	//		dojox/mobile/ContentPane
-	// summary:
-	//		A very simple content pane to embed an HTML fragment.
 
 	return declare("dojox.mobile.ContentPane", [Container, ContentPaneMixin], {
 		// summary:

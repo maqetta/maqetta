@@ -102,7 +102,7 @@ define(
 	thorn:"Latince küçük harf thorn",
 	yuml:"Umlaut imiyle Latince küçük harf y",
 // Greek Characters and Symbols
-	fnof:"Kanca imiyle Latince küçük f\nfonksiyon\nflorin",
+	fnof:"Kanca imiyle Latince küçük f\nişlev\nflorin",
 	Alpha:"Yunanca büyük harf alpha",
 	Beta:"Yunanca büyük harf beta",
 	Gamma:"Yunanca büyük harf gamma",

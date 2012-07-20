@@ -2,8 +2,8 @@ define("dojo/selector/acme", [
 	"../dom", "../sniff", "../_base/array", "../_base/lang", "../_base/window"
 ], function(dom, has, array, lang, win){
 
-	//  module:
-	//    dojo/selector/acme
+	// module:
+	//		dojo/selector/acme
 
 /*
 	acme architectural overview:
@@ -45,7 +45,7 @@ define("dojo/selector/acme", [
 	// if you are extracting acme for use in your own system, you will
 	// need to provide these methods and properties. No other porting should be
 	// necessary, save for configuring the system to use a class other than
-	// dojo/query.NodeList as the return instance instantiator
+	// dojo/NodeList as the return instance instantiator
 	var trim = 			lang.trim;
 	var each = 			array.forEach;
 
@@ -321,7 +321,7 @@ define("dojo/selector/acme", [
 					// remove backslash escapes from an attribute match, since DOM
 					// querying will get attribute values without backslashes
 					if(_cp.matchFor){
-						_cp.matchFor = _cp.matchFor.replace(/\\([\[\]])/g, "$1");
+						_cp.matchFor = _cp.matchFor.replace(/\\/g, "");
 					}
 
 					// end the attribute by adding it to the list of attributes.
@@ -583,6 +583,16 @@ define("dojo/selector/acme", [
 				return !!("checked" in elem ? elem.checked : elem.selected);
 			};
 		},
+		"disabled": function(name, condition){
+			return function(elem){
+				return elem.disabled;
+			};
+		},
+		"enabled": function(name, condition){
+			return function(elem){
+				return !elem.disabled;
+			};
+		},
 		"first-child": function(){ return _lookLeft; },
 		"last-child": function(){ return _lookRight; },
 		"only-child": function(name, condition){
@@ -707,7 +717,7 @@ define("dojo/selector/acme", [
 		if(!("tag" in ignores)){
 			if(query.tag != "*"){
 				ff = agree(ff, function(elem){
-					return (elem && (elem.tagName == query.getTag()));
+					return (elem && ((caseSensitive ? elem.tagName : elem.tagName.toUpperCase()) == query.getTag()));
 				});
 			}
 		}
@@ -1094,7 +1104,6 @@ define("dojo/selector/acme", [
 	// there. We need a lot of information about the environment and the query
 	// to make the determination (e.g. does it support QSA, does the query in
 	// question work in the native QSA impl, etc.).
-	var nua = navigator.userAgent;
 
 	// IE QSA queries may incorrectly include comment nodes, so we throw the
 	// zipping function into "remove" comments mode instead of the normal "skip
@@ -1105,7 +1114,7 @@ define("dojo/selector/acme", [
 	var qsaAvail = !!getDoc()[qsa];
 
 	//Don't bother with n+3 type of matches, IE complains if we modify those.
-	var infixSpaceRe = /n\+\d|([^ ])?([>~+])([^ =])?/g;
+	var infixSpaceRe = /\\[>~+]|n\+\d|([^ \\])?([>~+])([^ =])?/g;
 	var infixSpaceFunc = function(match, pre, ch, post){
 		return ch ? (pre ? pre + " " : "") + ch + (post ? " " + post : "") : /*n+3*/ match;
 	};
@@ -1203,7 +1212,7 @@ define("dojo/selector/acme", [
 			};
 		}else{
 			// DOM branch
-			var parts = query.split(/\s*,\s*/);
+			var parts = query.match(/([^\s,](?:"(?:\\.|[^"])+"|'(?:\\.|[^'])+'|[^,])*)/g);
 			return _queryFuncCacheDOM[query] = ((parts.length < 2) ?
 				// if not a compound query (e.g., ".foo, .bar"), cache and return a dispatcher
 				getStepQueryFunc(query) :
@@ -1319,33 +1328,33 @@ define("dojo/selector/acme", [
 		//
 		//		acme supports a rich set of CSS3 selectors, including:
 		//
-		//			* class selectors (e.g., `.foo`)
-		//			* node type selectors like `span`
-		//			* ` ` descendant selectors
-		//			* `>` child element selectors
-		//			* `#foo` style ID selectors
-		//			* `*` universal selector
-		//			* `~`, the preceded-by sibling selector
-		//			* `+`, the immediately preceded-by sibling selector
-		//			* attribute queries:
-		//			|	* `[foo]` attribute presence selector
-		//			|	* `[foo='bar']` attribute value exact match
-		//			|	* `[foo~='bar']` attribute value list item match
-		//			|	* `[foo^='bar']` attribute start match
-		//			|	* `[foo$='bar']` attribute end match
-		//			|	* `[foo*='bar']` attribute substring match
-		//			* `:first-child`, `:last-child`, and `:only-child` positional selectors
-		//			* `:empty` content emtpy selector
-		//			* `:checked` pseudo selector
-		//			* `:nth-child(n)`, `:nth-child(2n+1)` style positional calculations
-		//			* `:nth-child(even)`, `:nth-child(odd)` positional selectors
-		//			* `:not(...)` negation pseudo selectors
+		//		- class selectors (e.g., `.foo`)
+		//		- node type selectors like `span`
+		//		- ` ` descendant selectors
+		//		- `>` child element selectors
+		//		- `#foo` style ID selectors
+		//		- `*` universal selector
+		//		- `~`, the preceded-by sibling selector
+		//		- `+`, the immediately preceded-by sibling selector
+		//		- attribute queries:
+		//			- `[foo]` attribute presence selector
+		//			- `[foo='bar']` attribute value exact match
+		//			- `[foo~='bar']` attribute value list item match
+		//			- `[foo^='bar']` attribute start match
+		//			- `[foo$='bar']` attribute end match
+		//			- `[foo*='bar']` attribute substring match
+		//		- `:first-child`, `:last-child`, and `:only-child` positional selectors
+		//		- `:empty` content emtpy selector
+		//		- `:checked` pseudo selector
+		//		- `:nth-child(n)`, `:nth-child(2n+1)` style positional calculations
+		//		- `:nth-child(even)`, `:nth-child(odd)` positional selectors
+		//		- `:not(...)` negation pseudo selectors
 		//
 		//		Any legal combination of these selectors will work with
 		//		`dojo.query()`, including compound selectors ("," delimited).
 		//		Very complex and useful searches can be constructed with this
 		//		palette of selectors and when combined with functions for
-		//		manipulation presented by dojo.NodeList, many types of DOM
+		//		manipulation presented by dojo/NodeList, many types of DOM
 		//		manipulation operations become very straightforward.
 		//
 		//		Unsupported Selectors:
@@ -1355,14 +1364,14 @@ define("dojo/selector/acme", [
 		//		what's reasonable for a programmatic node querying engine to
 		//		handle. Currently unsupported selectors include:
 		//
-		//			* namespace-differentiated selectors of any form
-		//			* all `::` pseduo-element selectors
-		//			* certain pseduo-selectors which don't get a lot of day-to-day use:
-		//			|	* `:root`, `:lang()`, `:target`, `:focus`
-		//			* all visual and state selectors:
-		//			|	* `:root`, `:active`, `:hover`, `:visisted`, `:link`,
+		//		- namespace-differentiated selectors of any form
+		//		- all `::` pseduo-element selectors
+		//		- certain pseudo-selectors which don't get a lot of day-to-day use:
+		//			- `:root`, `:lang()`, `:target`, `:focus`
+		//		- all visual and state selectors:
+		//			- `:root`, `:active`, `:hover`, `:visited`, `:link`,
 		//				  `:enabled`, `:disabled`
-		//			* `:*-of-type` pseudo selectors
+		//			- `:*-of-type` pseudo selectors
 		//
 		//		dojo.query and XML Documents:
 		//		-----------------------------
@@ -1381,7 +1390,7 @@ define("dojo/selector/acme", [
 		//		---------------------
 		//
 		//		If something other than a String is passed for the query,
-		//		`dojo.query` will return a new `dojo.NodeList` instance
+		//		`dojo.query` will return a new `dojo/NodeList` instance
 		//		constructed from that parameter alone and all further
 		//		processing will stop. This means that if you have a reference
 		//		to a node or NodeList, you can quickly construct a new NodeList
@@ -1463,11 +1472,11 @@ define("dojo/selector/acme", [
 		if(r && r.nozip){
 			return r;
 		}
-		return _zip(r); // dojo/query.NodeList
+		return _zip(r); // dojo/NodeList
 	};
 	query.filter = function(/*Node[]*/ nodeList, /*String*/ filter, /*String|DOMNode?*/ root){
 		// summary:
-		// 		function for filtering a NodeList based on a selector, optimized for simple selectors
+		//		function for filtering a NodeList based on a selector, optimized for simple selectors
 		var tmpNodeList = [],
 			parts = getQueryParts(filter),
 			filterFunc =
@@ -1482,4 +1491,4 @@ define("dojo/selector/acme", [
 		return tmpNodeList;
 	};
 	return query;
-});//end defineQuery
+});

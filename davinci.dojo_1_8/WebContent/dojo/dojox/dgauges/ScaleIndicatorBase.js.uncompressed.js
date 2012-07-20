@@ -138,9 +138,9 @@ define("dojox/dgauges/ScaleIndicatorBase", ["dojo/_base/lang", "dojo/_base/decla
 			// summary:
 			//		Invoked when the value of the indicator changes.
 			//		User can connect an listener on this function: 
-			//				connect.connect(theIndicator, "valueChanged", lang.hitch(this, function(){
-			//					//do something
-			//				}));
+			// |	connect.connect(theIndicator, "valueChanged", lang.hitch(this, function(){
+			// |		//do something
+			// |	}));
 			on.emit(this, "valueChanged", {
 				target: this,
 				bubbles: true,

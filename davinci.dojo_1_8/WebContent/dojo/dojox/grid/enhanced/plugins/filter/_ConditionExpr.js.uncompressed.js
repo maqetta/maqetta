@@ -111,13 +111,10 @@ var _DataExpr = declare("dojox.grid.enhanced.plugins.filter._DataExpr", _Conditi
 	},
 
 	_convertData: function(/* anything */dataValue){
-		// summary:
-		//
 		// tags:
 		//		protected extension
 		// dataValue: anything
 		//		This argument should come from a store.
-		// returns:
 		return dataValue;
 	},
 

@@ -14,7 +14,6 @@ define("dojox/mobile/Tooltip", [
 	return declare("dojox.mobile.Tooltip", WidgetBase, {
 		// summary:
 		//		A non-templated popup bubble widget
-		//
 
 		baseClass: "mblTooltip mblTooltipHidden",
 
@@ -31,10 +30,12 @@ define("dojox/mobile/Tooltip", [
 			//		Pop up the tooltip and point to aroundNode using the best position
 			// positions:
 			//		Ordered list of positions to try matching up.
-			//			* before: places drop down before the aroundNode
-			//			* after: places drop down after the aroundNode
-			//			* above-centered: drop down goes above aroundNode
-			//			* below-centered: drop down goes below aroundNode
+			//
+			//		- before-centered: places drop down before the aroundNode
+			//		- after-centered: places drop down after the aroundNode
+			//		- above-centered: drop down goes above aroundNode
+			//		- below-centered: drop down goes below aroundNode
+
 			var domNode = this.domNode;
 			var connectorClasses = {
 				"MRM": "mblTooltipAfter",
@@ -59,8 +60,15 @@ define("dojox/mobile/Tooltip", [
 					widget.resize();
 				}
 			});
-			var best = place.around(domNode, aroundNode, positions || ['below-centered', 'above-centered', 'after', 'before'], this.isLeftToRight());
-			var connectorClass = connectorClasses[best.corner + best.aroundCorner.charAt(0)] || '';
+			// Convert before/after to before-centered/after-centered for compatibility
+			// TODO remove this 1.7->1.8 compatibility code in 2.0
+			if(positions){
+				positions = array.map(positions, function(pos){
+					return {after: "after-centered", before: "before-centered"}[pos] || pos;
+				});
+			}
+			var best = place.around(domNode, aroundNode, positions || ["below-centered", "above-centered", "after-centered", "before-centered"], this.isLeftToRight());
+			var connectorClass = connectorClasses[best.corner + best.aroundCorner.charAt(0)] || "";
 			domClass.add(domNode, connectorClass);
 			var pos = domGeometry.position(aroundNode, true);
 			domStyle.set(this.anchor, (connectorClass == "mblTooltipAbove" || connectorClass == "mblTooltipBelow")

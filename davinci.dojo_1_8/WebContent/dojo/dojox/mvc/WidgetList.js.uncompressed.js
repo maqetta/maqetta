@@ -24,7 +24,7 @@ define("dojox/mvc/WidgetList", [
 
 	var WidgetList = declare("dojox.mvc.WidgetList", [_WidgetBase, _Container], {
 		// summary:
-		//		A widget that creates child widgets repeatedly based on children attribute (the repeated data) and childType/childMixins/childParams attributes (determines how to create each child widget).
+		//		A widget that creates child widgets repeatedly based on the children attribute (the repeated data) and childType/childMixins/childParams attributes (determines how to create each child widget).
 		// example:
 		//		Create multiple instances of dijit/TextBox based on the data in array.
 		//		The text box refers to First property in the array item.
@@ -84,7 +84,7 @@ define("dojox/mvc/WidgetList", [
 		// |		}, dom.byId("programmaticRepeatWithSeparateBindingDeclaration"))).startup();
 
 		// childClz: Function
-		//		The class of child widget. Takes precedence over childType/childMixins.
+		//		The class of the child widget. Takes precedence over childType/childMixins.
 		childClz: null,
 
 		// childType: String
@@ -101,8 +101,9 @@ define("dojox/mvc/WidgetList", [
 		//		The mixin properties for child widget.
 		//		Can be specified via data-mvc-child-props attribute of widget declaration.
 		//		"this" in data-mvc-child-props will have the following properties:
-		//			parent - This widget's instance.
-		//			target - The data item in children.
+		//
+		//		- parent - This widget's instance.
+		//		- target - The data item in children.
 		childParams: null,
 
 		// childBindings: Object
@@ -158,7 +159,7 @@ define("dojox/mvc/WidgetList", [
 					value.watch !== {}.watch && (this._handles = this._handles || []).push(value.watch(function(name, old, current){
 						if(!isNaN(name)){
 							var w = _self.getChildren()[name - 0];
-							w && w.set("target", current);
+							w && w.set(w._relTargetProp || "target", current);
 						}
 					}));
 				}
@@ -180,10 +181,11 @@ define("dojox/mvc/WidgetList", [
 					array.forEach(array.map(children, function(child, idx){
 						var params = {
 							ownerDocument: _self.ownerDocument,
-							target: child,
 							parent: _self,
 							indexAtStartup: startIndex + idx // Won't be updated even if there are removals/adds of repeat items after startup
 						};
+						params[(_self.childParams || _self[childParamsAttr] && evalParams.call(params, _self[childParamsAttr]) || {})._relTargetProp || clz.prototype._relTargetProp || "target"] = child;
+
 						var childParams = _self.childParams || _self[childParamsAttr] && evalParams.call(params, _self[childParamsAttr]),
 						 childBindings = _self.childBindings || _self[childBindingsAttr] && evalParams.call(params, _self[childBindingsAttr]);
 						if(_self.templateString && !params.templateString && !clz.prototype.templateString){ params.templateString = _self.templateString; }

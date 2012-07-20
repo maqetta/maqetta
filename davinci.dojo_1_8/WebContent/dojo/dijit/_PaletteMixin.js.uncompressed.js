@@ -328,9 +328,9 @@ declare("dijit.Dye",
 		fillCell: function(cell, blankGif){
 			// summary:
 			//		Add cell DOMNode inner structure
-			//	cell: DomNode
+			// cell: DomNode
 			//		The surrounding cell
-			//	blankGif: String
+			// blankGif: String
 			//		URL for blank cell image
 		}
 	}

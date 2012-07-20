@@ -3,6 +3,8 @@ define("dojox/dgauges/IndicatorBase", ["dojo/_base/declare", "dojox/widget/_Inva
 		// summary:
 		//		The base class for indicators. Basically, an indicator is used to render a value.
 
+		// value: Number
+		//		The value of this indicator.
 		value: null
 	});
 });

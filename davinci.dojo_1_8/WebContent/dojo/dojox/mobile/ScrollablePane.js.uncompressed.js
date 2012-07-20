@@ -12,8 +12,6 @@ define("dojox/mobile/ScrollablePane", [
 
 	// module:
 	//		dojox/mobile/ScrollablePane
-	// summary:
-	//		A pane that has the touch-scrolling capability.
 
 	return declare("dojox.mobile.ScrollablePane", [Pane, ScrollableMixin], {
 		// summary:

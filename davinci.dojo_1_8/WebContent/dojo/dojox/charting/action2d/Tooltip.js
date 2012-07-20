@@ -38,6 +38,13 @@ _f.x=o.cx-o.cr;
 _f.y=o.cy-o.cr;
 _f.w=_f.h=2*o.cr;
 break;
+case "spider_circle":
+_f.x=o.cx;
+_f.y=o.cy;
+_f.w=_f.h=1;
+break;
+case "spider_plot":
+return;
 case "column":
 _10=["above-centered","below-centered"];
 case "bar":

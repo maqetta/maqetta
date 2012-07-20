@@ -5,15 +5,17 @@ define("dojox/mvc/_TextBoxExtensions", [
 	"dijit/form/NumberTextBox"
 ], function(lang, WidgetBase, ValidationTextBox, NumberTextBox){
 
-	// monkey patch dijit/form/ValidationTextBox.isValid to check this.inherited for isValid
+	// monkey patch dijit/form/ValidationTextBox.isValid to check this.inherited for isValid.
+	// hide patch from doc parser though because we want it to display the original definition of isValid.
 	var oldValidationTextBoxIsValid = ValidationTextBox.prototype.isValid;
-	ValidationTextBox.prototype.isValid = function(/*Boolean*/ isFocused){
+	ValidationTextBox.prototype.isValid = /*===== oldValidationTextBoxIsValid || =====*/ function(/*Boolean*/ isFocused){
 		return (this.inherited("isValid", arguments) !== false && oldValidationTextBoxIsValid.apply(this, [isFocused]));
 	};
 
-	// monkey patch dijit/form/NumberTextBox.isValid to check this.inherited for isValid
+	// monkey patch dijit/form/NumberTextBox.isValid to check this.inherited for isValid.
+	// hide patch from doc parser though because we want it to display the original definition of isValid.
 	var oldNumberTextBoxIsValid = NumberTextBox.prototype.isValid;
-	NumberTextBox.prototype.isValid = function(/*Boolean*/ isFocused){
+	NumberTextBox.prototype.isValid = /*===== oldNumberTextBoxIsValid || =====*/ function(/*Boolean*/ isFocused){
 		return (this.inherited("isValid", arguments) !== false && oldNumberTextBoxIsValid.apply(this, [isFocused]));
 	};
 

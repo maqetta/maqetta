@@ -13,7 +13,7 @@ dojox.help = {
 	locate: function(/*String*/ searchFor, /*String|Object|String[]|Object[]*/ searchIn, /*Number*/ maxResults){
 		// summary:
 		//		Search for dojo functionality that has something to do with the given string.
-		//  description:
+		// description:
 		//		Search for locally available data; variable names and any cached
 		//		documentation results for matches containing our search parameter
 		// searchFor:

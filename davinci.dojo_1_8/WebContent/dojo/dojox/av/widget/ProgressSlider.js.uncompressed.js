@@ -3,11 +3,11 @@ define("dojox/av/widget/ProgressSlider", ['dojo', 'dijit', 'dijit/_Widget', 'dij
 return dojo.declare("dojox.av.widget.ProgressSlider", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		A custom slider widget to use with dojox.av.widget.Player.
-	//	description:
+	// description:
 	//		Displays the current playhead position of the media. Has two
 	//		progress bars: one for playhead position, and one for download
 	//		progress.
-	//
+
 	templateString: dojo.cache("dojox.av.widget","resources/ProgressSlider.html"),
 	postCreate: function(){
 		// summary:
@@ -64,7 +64,7 @@ return dojo.declare("dojox.av.widget.ProgressSlider", [_Widget, _TemplatedMixin]
 	},
 	startDrag: function(){
 		// summary:
-		// 		Fired onmousedown of the slider handle.
+		//		Fired onmousedown of the slider handle.
 
 		dojo.setSelectable(this.playerWidget.domNode, false);
 		this.seeking = true;
@@ -73,7 +73,7 @@ return dojo.declare("dojox.av.widget.ProgressSlider", [_Widget, _TemplatedMixin]
 	},
 	endDrag: function(){
 		// summary:
-		// 		Fired on document.onmouseup.
+		//		Fired on document.onmouseup.
 
 		dojo.setSelectable(this.playerWidget.domNode, true);
 		this.seeking = false;
@@ -119,7 +119,7 @@ return dojo.declare("dojox.av.widget.ProgressSlider", [_Widget, _TemplatedMixin]
 		}
 	},
 	onResize: function(playerDimensions){
-		//	summary:
+		// summary:
 		//		Handles player resize. Need to recalculate the width of
 		//		position an download bars.
 		var dim = dojo.coords(this.domNode);

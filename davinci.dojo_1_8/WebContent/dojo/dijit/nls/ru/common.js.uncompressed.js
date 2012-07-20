@@ -1,7 +1,7 @@
 define(
 "dijit/nls/ru/common", ({
 	buttonOk: "OK",
-	buttonCancel: "Отменить",
+	buttonCancel: "Отмена",
 	buttonSave: "Сохранить",
 	itemClose: "Закрыть"
 })

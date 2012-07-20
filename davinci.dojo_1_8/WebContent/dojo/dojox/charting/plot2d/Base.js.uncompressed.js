@@ -43,7 +43,7 @@ return declare("dojox.charting.plot2d.Base", Element, {
 	assignAxes: function(axes){
 		// summary:
 		//		From an array of axes pick the ones that correspond to this plot and
-		// 		assign them to the plot using setAxis method.
+		//		assign them to the plot using setAxis method.
 		// axes: Array
 		//		An array of dojox/charting/axis2d/Base
 		// tags:

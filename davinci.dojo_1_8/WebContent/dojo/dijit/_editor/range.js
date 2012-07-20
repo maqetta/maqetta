@@ -327,6 +327,8 @@ len++;
 }else{
 _4a.moveToElementText(_48.parentNode);
 _4a.collapse(true);
+_4a.move("character",1);
+_4a.move("character",-1);
 }
 _49+=len;
 if(_49>0){

@@ -20,17 +20,6 @@ function(dojo, dijit, oo, registry, StencilText){
 	});
 	
 	var TextBlock = oo.declare(
-		// summary:
-		//		A tool to create text fields on a canvas.
-		// description:
-		//		Extends stencil.Text by adding an HTML layer that
-		//		can be dragged out to a certain size, and accept
-		//		a text entry. Will wrap text to the width of the
-		//		html field.
-		//		When created programmtically, use 'auto' to shrink
-		//		the width to the size of the text. Use line breaks
-		//		( \n ) to create new lines.
-
 		// TODO - disable zoom while showing?
 
 		// FIXME:
@@ -97,6 +86,17 @@ function(dojo, dijit, oo, registry, StencilText){
 			//console.log("TextBlock:", this.id)
 		},
 		{
+			// summary:
+			//		A tool to create text fields on a canvas.
+			// description:
+			//		Extends stencil.Text by adding an HTML layer that
+			//		can be dragged out to a certain size, and accept
+			//		a text entry. Will wrap text to the width of the
+			//		html field.
+			//		When created programmtically, use 'auto' to shrink
+			//		the width to the size of the text. Use line breaks
+			//		( \n ) to create new lines.
+
 			draws:true,
 			baseRender:false,
 			type:"dojox.drawing.tools.TextBlock",
@@ -451,7 +451,7 @@ StencilData: {
 			cleanText: function(/*String*/txt, /*Boolean*/removeBreaks){
 				// summary:
 				//		Cleans text. Strings HTML chars and double spaces
-				//  	and optionally removes line breaks.
+				//		and optionally removes line breaks.
 				var replaceHtmlCodes = function(str){
 					var chars = {
 						"&lt;":"<",

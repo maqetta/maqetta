@@ -41,8 +41,8 @@ dislamic.add = function(/*dojox/date/islamic/Date*/date, /*String*/interval, /*i
 	//		Date object to start with
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond", "week", "weekday"
 	// amount:
 	//		How much to add to the date.
 
@@ -114,8 +114,9 @@ dislamic.difference = function(/*dojox/date/islamic/Date*/date1, /*dojox/date/is
 	//		If not specified, the current dojox.date.islamic.Date is used.
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond",  "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond",  "week", "weekday"
+	//
 	//		Defaults to "day".
 
 	//	based on and similar to dojo.date.difference

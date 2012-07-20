@@ -4,11 +4,12 @@ define("dojox/html/ext-dojo/style", ["dojo/_base/kernel", "dojo/dom-style", "doj
 	kernel.experimental("dojox.html.ext-dojo.style");
 	var st = lang.getObject("dojox.html.ext-dojo.style", true);
 	var HtmlX = lang.getObject("dojox.html");
-	// summary: Extensions to dojo.style adding the css3 "transform" and "transform-origin" properties on IE5.5+
+	// summary:
+	//		Extensions to dojo.style adding the css3 "transform" and "transform-origin" properties on IE5.5+
 	// description:
-	//	A Package to extend the dojo.style function
-	//	Supported transformation functions:
-	//  matrix, translate, translateX, translateY, scale, scaleX, scaleY, rotate, skewX, skewY, skew
+	//		A Package to extend the dojo.style function
+	//		Supported transformation functions:
+	//	 	matrix, translate, translateX, translateY, scale, scaleX, scaleY, rotate, skewX, skewY, skew
 	lang.mixin(HtmlX["ext-dojo"].style, {
 		supportsTransform: true,
 		_toPx: function(measure){

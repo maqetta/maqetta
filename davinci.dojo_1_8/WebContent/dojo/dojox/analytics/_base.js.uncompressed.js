@@ -28,14 +28,15 @@ define("dojox/analytics/_base", ["dojo/_base/lang", "dojo/_base/config", "dojo/r
 
 	lang.extend(Analytics, {
 		schedulePusher: function(/* Int */interval){
-			// summary: Schedule the data pushing routines to happen in interval ms
+			// summary:
+			//		Schedule the data pushing routines to happen in interval ms
 			setTimeout(lang.hitch(this, "checkData"), interval || this.sendInterval);
 		},
 
 		addData: function(dataType, data){
 			// summary:
-			//	add data to the queue. Will be pusshed to the server on the next
-			//	data push
+			//		add data to the queue. Will be pusshed to the server on the next
+			//		data push
 
 			if(arguments.length > 2){
 				// FIXME: var c = dojo._toArray(arguments) ?
@@ -46,7 +47,8 @@ define("dojox/analytics/_base", ["dojo/_base/lang", "dojo/_base/config", "dojo/r
 		},
 
 		checkData: function(){
-			// summary: TODOC?
+			// summary:
+			//		TODOC?
 			if(this._inTransit){
 				this.schedulePusher(this.inTransitRetry);
 				return;
@@ -58,9 +60,9 @@ define("dojox/analytics/_base", ["dojo/_base/lang", "dojo/_base/config", "dojo/r
 
 		pushData: function(){
 			// summary:
-			//	pushes data to the server if any exists.  If a push is done, return
-			//	the deferred after hooking up completion callbacks.  If there is no data
-			//	to be pushed, return false;
+			//		pushes data to the server if any exists.  If a push is done, return
+			//		the deferred after hooking up completion callbacks.  If there is no data
+			//		to be pushed, return false;
 			if(this._data.length){
 				// clear the queue
 				this._inTransit = this._data;

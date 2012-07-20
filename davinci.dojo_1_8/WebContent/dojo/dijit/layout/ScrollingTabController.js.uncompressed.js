@@ -395,8 +395,8 @@ var ScrollingTabController = declare("dijit.layout.ScrollingTabController", [Tab
 		// summary:
 		//		Scrolls the tab list to the left or right by 75% of the widget width.
 		// direction:
-		//		If the direction is 1, the widget scrolls to the right, if it is
-		//		-1, it scrolls to the left.
+		//		If the direction is 1, the widget scrolls to the right, if it is -1,
+		//		it scrolls to the left.
 
 		if(node && domClass.contains(node, "dijitTabDisabled")){return;}
 

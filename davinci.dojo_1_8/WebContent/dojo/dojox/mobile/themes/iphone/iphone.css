@@ -18,7 +18,7 @@ html.mobile, .mobile body {
 .mblColorDefault {
   color: white;
   background-color: #5877a2;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#222222), color-stop(0.02, #8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
 }
 .mblColorDefaultSel {
   color: white;
@@ -203,14 +203,14 @@ html.mobile, .mobile body {
   width: 20px;
   height: 19px;
   border-radius: 1px;
-  -webkit-transform: scale(0.7, 1.05) rotate(45deg);
+  -webkit-transform: scale(0.7, 1) rotate(45deg);
   border: 1px solid #9cacc0;
 }
 .mblToolBarButtonHasLeftArrow .mblToolBarButtonArrow {
-  left: -1px;
+  left: 1px;
 }
 .mblToolBarButtonHasRightArrow .mblToolBarButtonArrow {
-  right: -1px;
+  right: 0px;
 }
 .mblHeading .mblToolBarButtonArrow {
   border-width: 1px;
@@ -244,13 +244,9 @@ html.mobile, .mobile body {
 }
 .mblToolBarButtonHasLeftArrow .mblToolBarButtonBody {
   border-left-width: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
 }
 .mblToolBarButtonHasRightArrow .mblToolBarButtonBody {
   border-right-width: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
 }
 .mblToolBarButtonText .mblToolBarButtonIcon {
   padding-left: 10px;
@@ -3915,7 +3911,7 @@ table.mblClose {
   left: 0px;
 }
 .mblTabBarSegmentedControl .mblTabBarButtonSelected {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#222222), color-stop(0.02, #8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
 }
 .mblHeading .mblTabBarSegmentedControl {
   display: inline;
@@ -3945,7 +3941,7 @@ table.mblClose {
 }
 .mblTabBarStandardTab .mblTabBarButtonSelected {
   background-color: #5877a2;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#222222), color-stop(0.02, #8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
 }
 .mblTabBarStandardTab .mblTabBarButtonHasIcon .mblTabBarButtonLabel {
   margin-left: 20px;

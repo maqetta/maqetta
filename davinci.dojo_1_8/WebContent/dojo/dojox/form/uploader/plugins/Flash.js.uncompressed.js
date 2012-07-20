@@ -25,7 +25,7 @@ var pluginsFlash = declare("dojox.form.uploader.plugins.Flash", [], {
 	//		Inherits all properties from dojox.form.Uploader and formUploaderPluginsHTML5.
 	//		All properties and methods listed here are specific to the Flash plugin only.
 	//
-	// 		Version: 1.6
+	//		Version: 1.6
 
 	
 	// swfPath:String
@@ -33,7 +33,7 @@ var pluginsFlash = declare("dojox.form.uploader.plugins.Flash", [], {
 	swfPath:config.uploaderPath || require.toUrl("dojox/form/resources/uploader.swf"),
 
 	// skipServerCheck: Boolean
-	// 		If true, will not verify that the server was sent the correct format.
+	//		If true, will not verify that the server was sent the correct format.
 	//		This can be safely set to true. The purpose of the server side check
 	//		is mainly to show the dev if they've implemented the different returns
 	//		correctly.
@@ -103,15 +103,15 @@ var pluginsFlash = declare("dojox.form.uploader.plugins.Flash", [], {
 
 	onFileChange: function(fileArray){
 		// summary:
-		// 		Stub - Flash-specific event. Fires on each selection of files
-		// 		and only provides the files selected on that event - not all files
-		// 		selected, as with HTML5
+		//		Stub - Flash-specific event. Fires on each selection of files
+		//		and only provides the files selected on that event - not all files
+		//		selected, as with HTML5
 	},
 
 	onFileProgress: function(fileArray){
 		// summary:
-		// 		Stub - Flash-specific event. Fires on progress of upload
-		// 		and only provides a file-specific event
+		//		Stub - Flash-specific event. Fires on progress of upload
+		//		and only provides a file-specific event
 	},
 
 
@@ -136,7 +136,7 @@ var pluginsFlash = declare("dojox.form.uploader.plugins.Flash", [], {
 
 	uploadFlash: function(/*Object ? */ formData){
 		// summary:
-		// 		Uploads selected files. Alias "upload()" should be used instead.
+		//		Uploads selected files. Alias "upload()" should be used instead.
 		// tags:
 		//		private
 		this.onBegin(this.getFileList());

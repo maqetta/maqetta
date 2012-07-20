@@ -188,9 +188,6 @@ m=_3a.markup;
 cc=_3a.customClasses=[];
 cs=_3a.customStyles=[];
 m[5]=_3a.format(_36,_39);
-if(_6("ie")<8&&(m[5]===null||m[5]===""||/^\s+$/.test(m[5]))){
-m[5]="&nbsp;";
-}
 m[1]=cc.join(" ");
 m[3]=cs.join(";");
 _37.push.apply(_37,m);

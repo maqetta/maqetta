@@ -7,8 +7,13 @@ define("dijit/_base/popup", [
 
 // module:
 //		dijit/_base/popup
-// summary:
-//		Old module for popups, new code should use dijit/popup directly
+
+/*=====
+return {
+	// summary:
+	//		Deprecated.   Old module for popups, new code should use dijit/popup directly.
+};
+=====*/
 
 
 // Hack support for old API passing in node instead of a widget (to various methods)

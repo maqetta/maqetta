@@ -75,7 +75,7 @@ _33.code+=_37+";";
 },error:_33.errBack});
 }
 };
-return _32.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))(?:[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?)*>([\s\S]*?)<\/script>/gi,function(_38,_39,src,_3a){
+return _32.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?>([\s\S]*?)<\/script>/gi,function(_38,_39,src,_3a){
 if(src){
 _35(src);
 }else{
@@ -159,10 +159,14 @@ catch(e){
 this._onError("Exec","Error eval script in "+this.id+", "+e.message,e);
 }
 }
-var _48=this.getInherited(arguments),_49=arguments;
+var _48=this.getInherited(arguments),_49=arguments,d=new _2();
 _7(_6.hitch(this,function(){
 _48.apply(this,_49);
+this.parseDeferred.then(function(){
+d.resolve();
+});
 }));
+return d.promise;
 },tearDown:function(){
 this.inherited(arguments);
 delete this._styles;

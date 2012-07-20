@@ -2,23 +2,12 @@ define("dojox/dtl/Context", [
 	"dojo/_base/lang",
 	"./_base"
 ], function(lang,dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
-	
-	/*=====
-	 dd.Context = function(dict){
-	 	// summary: 
-	 	//		Represents a runtime context used by DTL templates.
-	 }
-	 
-	=====*/
 	dd.Context = lang.extend(function(/*Object*/dict){
-	 	// summary: 
+	 	// summary:
 	 	//		Represents a runtime context used by DTL templates.
 		this._this = {};
-		dd._Context.call(this, dict);
-	}, dd._Context.prototype,
+		dd._Context.call(this, dict);	// TODO: huh?
+	}, dd._Context.prototype,		// TODO: huh?
 	{
 		getKeys: function(){
 			// summary:

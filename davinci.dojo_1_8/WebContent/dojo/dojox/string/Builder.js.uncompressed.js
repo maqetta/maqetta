@@ -2,19 +2,20 @@ define("dojox/string/Builder", ["dojo/_base/lang"],
   function(lang){
 	lang.getObject("string", true, dojox).Builder = 
 	  function(/*String?*/str){
-		//	summary:
+		// summary:
 		//		A fast buffer for creating large strings.
-		//
-		//	length: Number
-		//		The current length of the internal string.
 
 		//	N.B. the public nature of the internal buffer is no longer
 		//	needed because the IE-specific fork is no longer needed--TRT.
 		var b = "";
+
+		// length: Number
+		//		The current length of the internal string.
 		this.length = 0;
 		
 		this.append = function(/* String... */s){
-			// summary: Append all arguments to the end of the buffer
+			// summary:
+			//		Append all arguments to the end of the buffer
 			if(arguments.length>1){
 				/*
 					This is a loop unroll was designed specifically for Firefox;
@@ -68,13 +69,13 @@ define("dojox/string/Builder", ["dojo/_base/lang"],
 		};
 		
 		this.concat = function(/*String...*/s){
-			//	summary:
+			// summary:
 			//		Alias for append.
 			return this.append.apply(this, arguments);	//	dojox.string.Builder
 		};
 		
 		this.appendArray = function(/*Array*/strings) {
-			//	summary:
+			// summary:
 			//		Append an array of items to the internal buffer.
 
 			//	Changed from String.prototype.concat.apply because of IE.
@@ -82,7 +83,7 @@ define("dojox/string/Builder", ["dojo/_base/lang"],
 		};
 		
 		this.clear = function(){
-			//	summary:
+			// summary:
 			//		Remove all characters from the buffer.
 			b = "";
 			this.length = 0;
@@ -98,7 +99,7 @@ define("dojox/string/Builder", ["dojo/_base/lang"],
 		};
 		
 		this.remove = function(/* Number */start, /* Number? */len){
-			//	summary:
+			// summary:
 			//		Remove len characters starting at index start.  If len
 			//		is not provided, the end of the string is assumed.
 			if(len===undefined){ len = b.length; }
@@ -109,7 +110,7 @@ define("dojox/string/Builder", ["dojo/_base/lang"],
 		};
 		
 		this.insert = function(/* Number */index, /* String */str){
-			//	summary:
+			// summary:
 			//		Insert string str starting at index.
 			if(index == 0){
 				b = str + b;
@@ -121,7 +122,7 @@ define("dojox/string/Builder", ["dojo/_base/lang"],
 		};
 		
 		this.toString = function(){
-			//	summary:
+			// summary:
 			//		Return the string representation of the internal buffer.
 			return b;	//	String
 		};

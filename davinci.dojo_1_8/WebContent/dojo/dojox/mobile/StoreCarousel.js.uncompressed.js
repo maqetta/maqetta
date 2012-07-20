@@ -6,8 +6,6 @@ define("dojox/mobile/StoreCarousel", [
 
 	// module:
 	//		dojox/mobile/StoreCarousel
-	// summary:
-	//		A dojo/store enabled Carousel.
 
 	return declare("dojox.mobile.StoreCarousel", [Carousel, StoreMixin], {
 		// summary:

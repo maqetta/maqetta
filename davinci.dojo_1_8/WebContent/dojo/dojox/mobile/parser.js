@@ -1,7 +1,7 @@
 //>>built
 define("dojox/mobile/parser",["dojo/_base/kernel","dojo/_base/array","dojo/_base/config","dojo/_base/lang","dojo/_base/window","dojo/ready"],function(_1,_2,_3,_4,_5,_6){
 var dm=_4.getObject("dojox.mobile",true);
-var _7=new function(){
+var _7=function(){
 var _8={};
 var _9=function(_a,_b){
 if(typeof (_b)==="string"){
@@ -111,20 +111,21 @@ _1a.push(n);
 var _1c=_18&&_18.template?{template:true}:null;
 return this.instantiate(_1a,_1c,_18);
 };
-}();
+};
+var _1d=new _7();
 if(_3.parseOnLoad){
 _6(100,function(){
 try{
 if(!require("dojo/parser")){
-_7.parse();
+_1d.parse();
 }
 }
 catch(e){
-_7.parse();
+_1d.parse();
 }
 });
 }
-dm.parser=_7;
-_1.parser=_1.parser||_7;
-return _7;
+dm.parser=_1d;
+_1.parser=_1.parser||_1d;
+return _1d;
 });

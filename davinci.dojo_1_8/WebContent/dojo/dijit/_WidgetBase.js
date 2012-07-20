@@ -284,7 +284,7 @@ map[_50.replace(/^on/,"").toLowerCase()]=_50;
 }
 }
 }
-return map[_4e.toLowerCase()];
+return map[typeof _4e=="string"&&_4e.toLowerCase()];
 },toString:function(){
 return "[Widget "+this.declaredClass+", "+(this.id||"NO ID")+"]";
 },getChildren:function(){

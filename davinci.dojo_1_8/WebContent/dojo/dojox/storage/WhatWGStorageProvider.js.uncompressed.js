@@ -14,11 +14,12 @@ dojo.declare("dojox.storage.WhatWGStorageProvider", [ dojox.storage.Provider ], 
 	//
 	//		You can disable this storage provider with the following djConfig
 	//		variable:
-	//		var djConfig = { disableWhatWGStorage: true };
+	// |	var djConfig = { disableWhatWGStorage: true };
 	//
-	//		Authors of this storage provider-
-	//			JB Boisseau, jb.boisseau@eutech-ssii.com
-	//			Brad Neuberg, bkn3@columbia.edu
+	//		Authors of this storage provider:
+	//
+	//		- JB Boisseau, jb.boisseau@eutech-ssii.com
+	//		- Brad Neuberg, bkn3@columbia.edu
 
 	initialized: false,
 	

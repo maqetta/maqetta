@@ -9,11 +9,11 @@ dojo.require("dojox.xml.parser");
 /*=====
 dojo.declare("dojox.xmpp.bosh.__initArgs", null, {
 	constructor: function(){
-		//	summary:
+		// summary:
 		//		The arguments passed to dojox.xmpp.bosh.initialize
-		//	iframes:
+		// iframes:
 		//		The number of iframes to use for transmission
-		//	load:
+		// load:
 		//		The function called when the first iframe is
 		//		loaded.  Generally used to signal when to send
 		//		login information
@@ -23,12 +23,12 @@ dojo.declare("dojox.xmpp.bosh.__initArgs", null, {
 });
 dojo.declare("dojox.xmpp.bosh.__ioArgs", dojo.__IoArgs, {
 	constructor: function(){
-		//	summary:
+		// summary:
 		//		All the properties described in the dojo.__ioArgs type, apply to this
 		//		type as well, EXCEPT "handleAs". It is not applicable to
 		//		dojox.xmpp.bosh.get() calls, since it is implied that the
 		//		return will be a string of XML.
-		//	rid:
+		// rid:
 		//		The rid of the message being sent.
 		this.rid = rid;
 	}
@@ -94,7 +94,7 @@ dojox.xmpp.bosh = {
 	},
 
 	get: function(/*dojox.xmpp.bosh.__ioArgs*/args){
-		//	summary:
+		// summary:
 		//		sends a get request using a dynamically created script tag.
 		var iframe = this.findOpenIframe();
 		var iframeDoc = dojo.io.iframe.doc(iframe);

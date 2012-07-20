@@ -15,8 +15,6 @@ define("dojox/mobile/TabBarButton", [
 
 	// module:
 	//		dojox/mobile/TabBarButton
-	// summary:
-	//		A button widget that is placed in the TabBar widget.
 
 	return declare("dojox.mobile.TabBarButton", ItemBase,{
 		// summary:

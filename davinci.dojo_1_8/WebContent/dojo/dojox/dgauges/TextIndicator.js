@@ -1,6 +1,6 @@
 //>>built
 define("dojox/dgauges/TextIndicator",["dojo/_base/lang","dojo/_base/declare","dojo/_base/sniff","dojo/_base/array","dojo/on","dojox/gfx","./IndicatorBase"],function(_1,_2,_3,_4,on,_5,_6){
-return _2("dojox.dgauges.ScaleIndicatorBase",_6,{font:null,x:0,y:0,align:"middle",color:"black",indicator:null,labelFunc:null,constructor:function(){
+return _2("dojox.dgauges.TextIndicator",_6,{font:null,x:0,y:0,align:"middle",color:"black",indicator:null,labelFunc:null,constructor:function(){
 this.addInvalidatingProperties(["indicator"]);
 var _7=["x","y","font","align","color","labelFunc"];
 _4.forEach(_7,_1.hitch(this,function(_8){

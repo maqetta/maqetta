@@ -31,8 +31,8 @@ define("dojo/_base/kernel", ["../has", "./config", "require", "module"], functio
 	// Built, legacy modules use the scope map to allow those modules to be expressed as if dojo, dijit, and dojox,
 	// where global when in fact they are either global under different names or not global at all. In v1.6-, the
 	// config variable "scopeMap" was used to map names as used within a module to global names. This has been
-	// subsumed by the dojo packageMap configuration variable which relocates packages to different names. See
-	// http://livedocs.dojotoolkit.org/developer/design/loader#legacy-cross-domain-mode for details.
+	// subsumed by the AMD map configuration variable which can relocate packages to different names. For backcompat,
+	// only the "*" mapping is supported. See http://livedocs.dojotoolkit.org/developer/design/loader#legacy-cross-domain-mode for details.
 	//
 	// The following computations contort the packageMap for this dojo instance into a scopeMap.
 	var scopeMap =
@@ -46,9 +46,10 @@ define("dojo/_base/kernel", ["../has", "./config", "require", "module"], functio
 
 		packageMap =
 			// the package map for this dojo instance; note, a foreign loader or no pacakgeMap results in the above default config
-			(require.packs && require.packs[module.id.match(/[^\/]+/)[0]].packageMap) || {},
+			(require.map && require.map[module.id.match(/[^\/]+/)[0]]),
 
 		item;
+
 
 	// process all mapped top-level names for this instance of dojo
 	for(p in packageMap){
@@ -70,7 +71,7 @@ define("dojo/_base/kernel", ["../has", "./config", "require", "module"], functio
 		}
 	}
 	dojo.scopeMap = scopeMap;
-	
+
 	/*===== dojo.__docParserConfigureScopeMap(scopeMap); =====*/
 
 	// FIXME: dojo.baseUrl and dojo.config.baseUrl should be deprecated
@@ -78,19 +79,20 @@ define("dojo/_base/kernel", ["../has", "./config", "require", "module"], functio
 	dojo.isAsync = ! 1  || require.async;
 	dojo.locale = config.locale;
 
-	var rev = "$Rev: 28997 $".match(/\d+/);
+	var rev = "$Rev: 29347 $".match(/\d+/);
 	dojo.version = {
 		// summary:
 		//		Version number of the Dojo Toolkit
 		// description:
 		//		Hash about the version, including
-		//			* major: Integer: Major version. If total version is "1.2.0beta1", will be 1
-		//			* minor: Integer: Minor version. If total version is "1.2.0beta1", will be 2
-		//			* patch: Integer: Patch version. If total version is "1.2.0beta1", will be 0
-		//			* flag: String: Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
-		//			* revision: Number: The SVN rev from which dojo was pulled
+		//
+		//		- major: Integer: Major version. If total version is "1.2.0beta1", will be 1
+		//		- minor: Integer: Minor version. If total version is "1.2.0beta1", will be 2
+		//		- patch: Integer: Patch version. If total version is "1.2.0beta1", will be 0
+		//		- flag: String: Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
+		//		- revision: Number: The SVN rev from which dojo was pulled
 
-		major: 1, minor: 8, patch: 0, flag: "b1",
+		major: 1, minor: 8, patch: 0, flag: "rc1",
 		revision: rev ? +rev[0] : NaN,
 		toString: function(){
 			var v = dojo.version;

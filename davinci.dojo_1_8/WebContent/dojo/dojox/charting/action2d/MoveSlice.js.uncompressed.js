@@ -3,22 +3,18 @@ define("dojox/charting/action2d/MoveSlice", ["dojo/_base/connect", "dojo/_base/d
 	function(hub, declare, PlotAction, dfe, m, gf, df, dfs, dff){
 
 	/*=====
-	var __MoveSliceCtorArgs = function(duration, easing, scale, shift){
+	var __MoveSliceCtorArgs = {
 			// summary:
 			//		Additional arguments for move slice actions.
 			// duration: Number?
 			//		The amount of time in milliseconds for an animation to last.  Default is 400.
-			this.duration = 400;
 			// easing: dojo/fx/easing/*?
 			//		An easing object (see dojo.fx.easing) for use in an animation.  The
 			//		default is dojo.fx.easing.backOut.
-			this.easing = null;
 			// scale: Number?
 			//		The amount to scale the pie slice.  Default is 1.05.
-			this.scale = 1.05;
 			// shift: Number?
 			//		The amount in pixels to shift the pie slice.  Default is 7.
-			this.shift = 7;
 	};
 	=====*/
 	

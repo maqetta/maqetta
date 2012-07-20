@@ -391,9 +391,9 @@ define("dojox/calc/Grapher", [
 			//		create the points with information about the graph.
 			// funcToGraph: Function
 			//		A function with one numeric parameter (x or y typically)
-			//	x: String
+			// x: String
 			//		x and y are Strings which always have the values of "x" or "y".  If y="x" and x="y" then it is creating points for the function as though it was a function of y
-			//	y: String
+			// y: String
 			//		x and y are Strings which always have the values of "x" or "y".  If y="x" and x="y" then it is creating points for the function as though it was a function of y
 			// minX:
 			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y

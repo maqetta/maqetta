@@ -68,6 +68,9 @@ return this._instantiate(_2a,_24,_25);
 },_instantiate:function(_2f,_30,_31){
 var _32=_3.map(_2f,function(obj){
 var _33=obj.ctor||_16(obj.types);
+if(!_33){
+throw new Error("Unable to resolve constructor for: '"+obj.types.join()+"'");
+}
 return this.construct(_33,obj.node,_30,_31,obj.scripts,obj.inherited);
 },this);
 if(!_30._started&&!_31.noStart){
@@ -335,6 +338,9 @@ _68=_72;
 }
 var d=new _b();
 if(_5c.length){
+if(_c("dojo-debug-messages")){
+console.warn("WARNING: Modules being Auto-Required: "+_5c.join(", "));
+}
 require(_5c,function(){
 d.resolve(_3.filter(_5b,function(_77){
 if(!_77.ctor){

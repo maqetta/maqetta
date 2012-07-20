@@ -14,6 +14,7 @@ validate.isText = function(value, flags){
 	// value: String
 	// flags: Object?
 	//		{length: Number, minlength: Number, maxlength: Number}
+	//
 	//		- flags.length  If set, checks if there are exactly flags.length number of characters.
 	//		- flags.minlength  If set, checks if there are at least flags.minlength number of characters.
 	//		- flags.maxlength  If set, checks if there are at most flags.maxlength number of characters.
@@ -79,13 +80,11 @@ validate.isNumberFormat = function(value, flags){
 	//		|   #        Stands for a digit, 0-9.
 	//		|   ?        Stands for an optional digit, 0-9 or nothing.
 	//		All other characters must appear literally in the expression.
-	//
 	// example:
 	// |  "(###) ###-####"       ->   (510) 542-9742
 	// |  "(###) ###-#### x#???" ->   (510) 542-9742 x153
 	// |  "###-##-####"          ->   506-82-1089       i.e. social security number
 	// |  "#####-####"           ->   98225-1649        i.e. zip code
-	//
 	// value: String
 	// flags: Object?
 	//		- flags.format  A string or an Array of strings for multiple formats.
@@ -93,7 +92,7 @@ validate.isNumberFormat = function(value, flags){
 	//	|	// returns true:
 	//	|	dojox.validate.isNumberFormat("123-45", { format:"###-##" });
 	// example:
-	// 		Check Multiple formats:
+	//		Check Multiple formats:
 	// |	dojox.validate.isNumberFormat("123-45", {
 	// |		format:["### ##","###-##","## ###"]
 	// |	});

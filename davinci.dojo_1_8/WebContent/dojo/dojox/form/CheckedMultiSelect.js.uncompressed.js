@@ -11,7 +11,7 @@ define("dojox/form/CheckedMultiSelect", [
 	"dojo/dom-class",
 	"dojo/dom-construct",
 	"dojo/i18n",
-	"dijit/_Widget",
+	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"dijit/registry",
@@ -468,6 +468,16 @@ var formCheckedMultiSelect = declare("dojox.form.CheckedMultiSelect", FormSelect
 		this._handleOnChange(this.value);
 		array.forEach(this._getChildren(), function(item){
 			item._updateBox();
+		});
+		domConstruct.empty(this.containerNode);
+		var self = this;
+		array.forEach(this.value, function(item){
+			var opt = domConstruct.create("option", {
+				"value": item,
+				"label": item,
+				"selected": "selected"
+			});
+			domConstruct.place(opt, self.containerNode);
 		});
 		if(this.dropDown && this.dropDownButton){
 			var i = 0, label = "";

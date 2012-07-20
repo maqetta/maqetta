@@ -6,7 +6,6 @@
 
 //>>built
 define("dojo/_base/xhr",["./kernel","./sniff","require","../io-query","../dom","../dom-form","./Deferred","./config","./json","./lang","./array","../on","../aspect","../request/watch","../request/xhr","../request/util"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,on,_c,_d,_e,_f){
-_1.deprecated("dojo/_base/xhr","Use dojo/request.","2.0");
 _1._xhrObj=_e._create;
 var cfg=_1.config;
 _1.objectToQuery=_4.objectToQuery;
@@ -95,27 +94,28 @@ dfd.ioArgs.error=err;
 }
 return err;
 });
-d.addCallbacks(_17,function(_1e){
-return _18(_1e,d);
-});
+d.addCallback(_17);
 var ld=_15.load;
 if(ld&&_a.isFunction(ld)){
-d.addCallback(function(_1f){
-return ld.call(_15,_1f,_19);
+d.addCallback(function(_1e){
+return ld.call(_15,_1e,_19);
 });
 }
 var err=_15.error;
 if(err&&_a.isFunction(err)){
-d.addErrback(function(_20){
-return err.call(_15,_20,_19);
+d.addErrback(function(_1f){
+return err.call(_15,_1f,_19);
 });
 }
-var _21=_15.handle;
-if(_21&&_a.isFunction(_21)){
-d.addBoth(function(_22){
-return _21.call(_15,_22,_19);
+var _20=_15.handle;
+if(_20&&_a.isFunction(_20)){
+d.addBoth(function(_21){
+return _20.call(_15,_21,_19);
 });
 }
+d.addErrback(function(_22){
+return _18(_22,d);
+});
 if(cfg.ioPublish&&_1.publish&&_19.args.ioPublish!==false){
 d.addCallbacks(function(res){
 _1.publish("/dojo/io/load",[d,res]);
@@ -205,7 +205,22 @@ _1._ioAddQueryToUrl(_35);
 }
 }
 }
-var _36={method:_31,handleAs:"text",headers:_32.headers,data:_35.query,timeout:_32.timeout,sync:_32.sync,withCredentials:_32.withCredentials,ioArgs:_35};
+var _36={method:_31,handleAs:"text",timeout:_32.timeout,withCredentials:_32.withCredentials,ioArgs:_35};
+if(typeof _32.headers!=="undefined"){
+_36.headers=_32.headers;
+}
+if(typeof _32.contentType!=="undefined"){
+if(!_36.headers){
+_36.headers={};
+}
+_36.headers["Content-Type"]=_32.contentType;
+}
+if(typeof _35.query!=="undefined"){
+_36.data=_35.query;
+}
+if(typeof _32.sync!=="undefined"){
+_36.sync=_32.sync;
+}
 _1._ioNotifyStart(dfd);
 try{
 _34=_e(_35.url,_36,true);

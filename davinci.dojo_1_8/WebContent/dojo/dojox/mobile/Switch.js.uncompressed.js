@@ -15,8 +15,6 @@ define("dojox/mobile/Switch", [
 
 	// module:
 	//		dojox/mobile/Switch
-	// summary:
-	//		A toggle switch with a sliding knob.
 
 	return declare("dojox.mobile.Switch", [WidgetBase, Contained],{
 		// summary:

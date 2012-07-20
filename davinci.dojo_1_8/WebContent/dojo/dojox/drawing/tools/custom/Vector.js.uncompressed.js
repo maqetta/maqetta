@@ -2,20 +2,19 @@ define("dojox/drawing/tools/custom/Vector", ["dojo", "../../util/oo", "../../man
 function(dojo, oo, registry, positioning, Arrow){
 
 var Vector = oo.declare(
-	// summary:
-	//		Creates a Vector Stencil.
-	// description:
-	//		Generally the same as an arrow, except that the arrow
-	//		head is only at the end. There is additionaly functionality
-	//		to allow for a 'zero vector' - one with no length.
-
-
 	Arrow,
 	function(options){
 		this.minimumSize = this.style.arrows.length;
 		this.addShadow({size:3, mult:2});
 	},
 	{
+		// summary:
+		//		Creates a Vector Stencil.
+		// description:
+		//		Generally the same as an arrow, except that the arrow
+		//		head is only at the end. There is additionaly functionality
+		//		to allow for a 'zero vector' - one with no length.
+
 		draws:true,
 		type:"dojox.drawing.tools.custom.Vector",
 		minimumSize:30,
@@ -24,7 +23,7 @@ var Vector = oo.declare(
 		
 		
 		changeAxis: function(cosphi){
-			//	summary:
+			// summary:
 			//		Converts a vector to and from the z axis.
 			//		If passed a cosphi value that is used to set
 			//		the axis, otherwise it is the opp of what it is.
@@ -122,8 +121,8 @@ var Vector = oo.declare(
 		
 		onTransform: function(/* ? manager.Anchor */anchor){
 			// summary:
-			// 		Called from anchor point mouse drag
-			// 		also called from plugins.Pan.checkBounds
+			//		Called from anchor point mouse drag
+			//		also called from plugins.Pan.checkBounds
 			if(!this._isBeingModified){
 				this.onTransformBegin();
 			}
@@ -135,7 +134,7 @@ var Vector = oo.declare(
 		},
 		
 		anchorConstrain: function(x, y){
-			//	summary:
+			// summary:
 			//		Called from anchor point mouse drag
 			if(!this.style.zAxis){ return null; }
 			var radians = this.style.zAngle*Math.PI/180;
@@ -147,7 +146,7 @@ var Vector = oo.declare(
 		},
 		
 		zPoint: function(obj){
-			//	summary:
+			// summary:
 			//		Takes any point and converts it to
 			//		be on the z-axis.
 			if(obj===undefined){

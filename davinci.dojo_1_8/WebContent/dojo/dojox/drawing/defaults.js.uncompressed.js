@@ -7,8 +7,8 @@ define("dojox/drawing/defaults", {
 	//		To change all these styles, create a copy of this file
 	//		and point to it in the Drawing properties:
 	//		|	<div dojoType="dojox.drawing.Drawing" id="drawing" defaults="MyCustom.defaults"></div>
-	//		See:
-	//			Drawing.changeDefaults
+	//
+	//		See: Drawing.changeDefaults
 
 	// clickMode: Boolean
 	//		Determines whether in draw or edit mode (whether stencils
@@ -29,15 +29,15 @@ define("dojox/drawing/defaults", {
 	currentHit:null,
 
 	// angleSnap: Number
-	// 		Line, arrows, vector and axes will all snap to this angle on mouse up
-	// 		shown angle also reflects the snap
-	// 		currently cannot accept less than 1 degree
+	//		Line, arrows, vector and axes will all snap to this angle on mouse up
+	//		shown angle also reflects the snap
+	//		currently cannot accept less than 1 degree
 	angleSnap:1,
 
 	// zAxis:  Boolean
-    // 		If true, draw current object in z-direction.
+    //		If true, draw current object in z-direction.
 	// zAxisEnabled: Boolean
-    // 		If true, render axes with Z-axis included, allow objects drawn in z-direction.
+    //		If true, render axes with Z-axis included, allow objects drawn in z-direction.
 	//		If false the z-axis button will not show up.
 	zAxis: false,
 	zAxisEnabled: true,
@@ -45,13 +45,13 @@ define("dojox/drawing/defaults", {
 	
 	// renderHitLines: Boolean
 	//		If true, renders a second, larger layer for lines to make
-	// 		them more easily clickable.
+	//		them more easily clickable.
 	renderHitLines: true,
 
 	// renderHitLayer:
-	// 		If true, renders a second layer for each Stencil, one
-	// 		acting as a 'hit' object for a wider mouse-click area.
-	// 		It also doubles as a hilight. If true, overrides
+	//		If true, renders a second layer for each Stencil, one
+	//		acting as a 'hit' object for a wider mouse-click area.
+	//		It also doubles as a hilight. If true, overrides
 	//		renderHitLines setting.
 	renderHitLayer:true,
 
@@ -64,9 +64,9 @@ define("dojox/drawing/defaults", {
 
 	norm:{
 		// summary:
-		// 		Normal style of all shapes
-		// 		will get overridden by
-		// 		above andes styles
+		//		Normal style of all shapes
+		//		will get overridden by
+		//		above andes styles
 		width:1,
 		color:"#000000",
 		style:"Solid",
@@ -76,8 +76,8 @@ define("dojox/drawing/defaults", {
 
 	selected:{
 		// summary:
-		// 		Selected style of all shapes
-		// 		styles not shown will used from
+		//		Selected style of all shapes
+		//		styles not shown will used from
 		//	norm
 		width:6,
 		color:"#00FF00"
@@ -85,8 +85,8 @@ define("dojox/drawing/defaults", {
 
 	highlighted:{
 		// summary:
-		// 		Highlighted style of all shapes
-		// 		NOT CURRENTLY BEING USED
+		//		Highlighted style of all shapes
+		//		NOT CURRENTLY BEING USED
 		width:6,
 		color:"#FF00FF",
 		style:"Solid",
@@ -96,7 +96,7 @@ define("dojox/drawing/defaults", {
 
 	disabled:{
 		// summary:
-		// 		Disabled or "locked" or "fade" style of all shapes
+		//		Disabled or "locked" or "fade" style of all shapes
 		width:1,
 		color:"#666666",
 		style:"solid",
@@ -139,7 +139,7 @@ define("dojox/drawing/defaults", {
 
 	anchors:{
 		// summary:
-		// 		Style for the anchor resize-points
+		//		Style for the anchor resize-points
 		size:10,
 		width:2,
 		color:"#999",
@@ -151,16 +151,16 @@ define("dojox/drawing/defaults", {
 	},
 	arrows:{
 		// summary:
-		// 		Size of arrows on vectors.
-		// 		length is in pixels
-		// 		width is actually an angle
-		// 		but is close to pixels in size
+		//		Size of arrows on vectors.
+		//		length is in pixels
+		//		width is actually an angle
+		//		but is close to pixels in size
 		length:30,
 		width:16
 	},
 	text:{
 		// summary:
-		// 		Style of text
+		//		Style of text
 		minWidth:100,
 		deleteEmptyCreate:true,
 		deleteEmptyModify:true,
@@ -172,7 +172,7 @@ define("dojox/drawing/defaults", {
 	},
 	textDisabled:{
 		// summary:
-		// 		Style of disabled text
+		//		Style of disabled text
 		size:"18px",
 		family:"sans-serif",
 		weight:"normal",
@@ -181,7 +181,7 @@ define("dojox/drawing/defaults", {
 
 	textMode:{
 		// summary:
-		// 		These styles apply to the containing
+		//		These styles apply to the containing
 		//		text box (edit mode), and not the text itself
 		create:{
 			width:2,
@@ -250,7 +250,7 @@ define("dojox/drawing/defaults", {
 		// summary:
 		//		Each shape gets its own copy
 		//		of these styles so that instances
-		// 		do not change each other's styles
+		//		do not change each other's styles
 
 		var cpy = function(obj){
 				if(typeof(obj)!="object" || obj===null || obj===undefined){

@@ -204,6 +204,30 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 		}
 	},
 
+	_startChildren: function(){
+		// summary:
+		//		Called when content is loaded.   Calls startup on each child widget.   Similar to ContentPane.startup()
+		//		itself, but avoids marking the ContentPane itself as "restarted" (see #15581).
+
+		// This starts all the widgets
+		array.forEach(this.getChildren(), function(obj){
+			if(!obj._started && !obj._destroyed && lang.isFunction(obj.startup)){
+				obj.startup();
+				obj._started = true;
+			}
+		});
+
+		// And this catches stuff like dojo.dnd.Source
+		if(this._contentSetter){
+			array.forEach(this._contentSetter.parseResults, function(obj){
+				if(!obj._started && !obj._destroyed && lang.isFunction(obj.startup)){
+					obj.startup();
+					obj._started = true;
+				}
+			}, this);
+		}
+	},
+
 	setHref: function(/*String|Uri*/ href){
 		// summary:
 		//		Deprecated.   Use set('href', ...) instead.
@@ -216,7 +240,7 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 		// description:
 		//		Reset the (external defined) content of this pane and replace with new url
 		//		Note: It delays the download until widget is shown if preload is false.
-		//	href:
+		// href:
 		//		url to the page you want to get, must be within the same domain as your mainpage
 
 		// Cancel any in-flight requests (a set('href', ...) will cancel any in-flight set('href', ...))
@@ -251,7 +275,7 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 		// summary:
 		//		Hook to make set("content", ...) work.
 		//		Replaces old content with data content, include style classes from old content
-		//	data:
+		// data:
 		//		the new Content may be String, DomNode or NodeList
 		//
 		//		if data is a NodeList (or an array of nodes) nodes are copied
@@ -518,18 +542,20 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 			textDir: this.textDir
 		}, this._contentSetterParams || {});
 
-		setter.set( (lang.isObject(cont) && cont.domNode) ? cont.domNode : cont, setterParams );
-		
+		var p = setter.set( (lang.isObject(cont) && cont.domNode) ? cont.domNode : cont, setterParams );
+
+		// dojox/layout/html/_base::_ContentSetter.set() returns a Promise that indicates when everything is completed.
+		// dojo/html::_ContentSetter.set() currently returns the DOMNode, but that will be changed for 2.0.
+		// So, if set() returns a promise then use it, otherwise fallback to waiting on setter.parseDeferred
 		var self = this;
-		return when(setter.parseDeferred, function(){
+		return when(p && p.then ? p : setter.parseDeferred, function(){
 			// setter params must be pulled afresh from the ContentPane each time
 			delete self._contentSetterParams;
 			
 			if(!isFakeContent){
 				if(self._started){
 					// Startup each top level child widget (and they will start their children, recursively)
-					delete self._started;
-					self.startup();
+					self._startChildren();
 					
 					// Call resize() on each of my child layout widgets,
 					// or resize() on my single child layout widget...

@@ -3,16 +3,6 @@ function(dojo, oo, gfx){
 
 	//dojox.drawing.manager.Canvas = 
 	return oo.declare(
-		// summary:
-		//		Creates a dojox.gfx.surface to be used for Drawing. Note that
-		//		The 'surface' that Drawing uses is actually a dojox.gfx.group.
-		//		This allows for more versatility.
-		//
-		//		Called internally from a dojox.Drawing.
-		//
-		//		Note: Surface creation is asynchronous. Connect to
-		//  	onSurfaceReady in Drawing.
-
 		function(/*Object*/options){
 			dojo.mixin(this, options);
 			
@@ -56,6 +46,16 @@ function(dojo, oo, gfx){
 			this._mouseHandle = this.mouse.register(this);
 		},
 		{
+			// summary:
+			//		Creates a dojox.gfx.surface to be used for Drawing. Note that
+			//		The 'surface' that Drawing uses is actually a dojox.gfx.group.
+			//		This allows for more versatility.
+			//
+			//		Called internally from a dojox.Drawing.
+			//
+			//		Note: Surface creation is asynchronous. Connect to
+			//		onSurfaceReady in Drawing.
+
 			// zoom: [readonly] Number
 			//		The amount the canvas is zoomed
 			zoom:1,
@@ -140,7 +140,7 @@ function(dojo, oo, gfx){
 			getScrollWidth: function(){
 				// summary:
 				//		Special method used to detect the width (and height)
-				// 		of the browser scrollbars. Becomes memoized.
+				//		of the browser scrollbars. Becomes memoized.
 
 				var p = dojo.create('div');
 				p.innerHTML = '<div style="width:50px;height:50px;overflow:hidden;position:absolute;top:0;left:-1000px;"><div style="height:100px;"></div>';

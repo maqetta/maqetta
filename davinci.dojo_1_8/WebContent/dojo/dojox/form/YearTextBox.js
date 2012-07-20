@@ -1,36 +1,36 @@
 //>>built
-define("dojox/form/YearTextBox",["dojo/_base/kernel","dojo/_base/lang","dojox/widget/YearlyCalendar","dijit/form/TextBox","dijit/form/_DateTimeTextBox","dojox/form/DateTextBox","dojo/_base/declare"],function(_1,_2,_3,_4,_5,_6,_7){
+define("dojox/form/YearTextBox",["dojo/_base/kernel","dojo/_base/lang","dojox/widget/YearlyCalendar","dijit/form/TextBox","./DateTextBox","dojo/_base/declare"],function(_1,_2,_3,_4,_5,_6){
 _1.experimental("dojox/form/DateTextBox");
-return _7("dojox.form.YearTextBox",[_3,_4,_5,_6],{popupClass:"dojox/widget/YearlyCalendar",format:function(_8){
-if(typeof _8=="string"){
-return _8;
+return _6("dojox.form.YearTextBox",_5,{popupClass:_3,format:function(_7){
+if(typeof _7=="string"){
+return _7;
 }else{
-if(_8.getFullYear){
-return _8.getFullYear();
+if(_7.getFullYear){
+return _7.getFullYear();
 }
 }
-return _8;
-},validator:function(_9){
-return _9==""||_9==null||/(^-?\d\d*$)/.test(String(_9));
-},_setValueAttr:function(_a,_b,_c){
-if(_a){
-if(_a.getFullYear){
-_a=_a.getFullYear();
+return _7;
+},validator:function(_8){
+return _8==""||_8==null||/(^-?\d\d*$)/.test(String(_8));
+},_setValueAttr:function(_9,_a,_b){
+if(_9){
+if(_9.getFullYear){
+_9=_9.getFullYear();
 }
 }
-_4.prototype._setValueAttr.call(this,_a,_b,_c);
+_4.prototype._setValueAttr.call(this,_9,_a,_b);
 },openDropDown:function(){
 this.inherited(arguments);
-this.dropDown.onValueSelected=_2.hitch(this,function(_d){
+this.dropDown.onValueSelected=_2.hitch(this,function(_c){
 this.focus();
 setTimeout(_2.hitch(this,"closeDropDown"),1);
-_4.prototype._setValueAttr.call(this,_d,true,_d);
+_4.prototype._setValueAttr.call(this,_c,true,_c);
 });
-},parse:function(_e,_f){
-return _e||(this._isEmpty(_e)?null:undefined);
-},filter:function(val){
-if(val&&val.getFullYear){
-return val.getFullYear().toString();
+},parse:function(_d,_e){
+return _d||(this._isEmpty(_d)?null:undefined);
+},filter:function(_f){
+if(_f&&_f.getFullYear){
+return _f.getFullYear().toString();
 }
 return this.inherited(arguments);
 }});

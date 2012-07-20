@@ -11,7 +11,7 @@ dojox.io.xhrScriptPlugin = function(/*String*/url, /*String*/callbackParamName, 
 	//		Url prefix of the site which can handle JSONP requests.
 	// httpAdapter:
 	//		This allows for adapting HTTP requests that could not otherwise be
-	// 		sent with JSONP, so you can use a convention for headers and PUT/DELETE methods.
+	//		sent with JSONP, so you can use a convention for headers and PUT/DELETE methods.
 	xhrPlugins.register(
 		"script",
 		function(method,args){

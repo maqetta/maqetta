@@ -7,13 +7,14 @@ define("dijit/_base/wai", [
 
 	// module:
 	//		dijit/_base/wai
-	// summary:
-	//		Deprecated methods for setting/getting wai roles and states.
-	//		New code should call setAttribute()/getAttribute() directly.
-	//
-	//		Also loads hccss to apply dj_a11y class to root node if machine is in high-contrast mode.
 
-	lang.mixin(dijit, {
+	var exports = {
+		// summary:
+		//		Deprecated methods for setting/getting wai roles and states.
+		//		New code should call setAttribute()/getAttribute() directly.
+		//
+		//		Also loads hccss to apply dj_a11y class to root node if machine is in high-contrast mode.
+
 		hasWaiRole: function(/*Element*/ elem, /*String?*/ role){
 			// summary:
 			//		Determines if an element has a particular role.
@@ -99,7 +100,10 @@ define("dijit/_base/wai", [
 
 			elem.removeAttribute("aria-"+state);
 		}
-	});
+	};
 
-	return dijit;
+	lang.mixin(dijit, exports);
+
+	/*===== return exports; =====*/
+	return dijit;	// for back compat :-(
 });

@@ -48,11 +48,11 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			//		Compute page coordinates from plot axis data coordinates.
 			// coord: Object?
 			//		The coordinates in plot axis data coordinate space. For cartesian charts that is of the following form:
-			//			`{ hAxisName: 50, vAxisName: 200 }`
-			//		If not provided return the tranform method instead of the result of the transformation.
+			//		`{ hAxisName: 50, vAxisName: 200 }`
+			//		If not provided return the transform method instead of the result of the transformation.
 			// returns: Object
 			//		The resulting page pixel coordinates. That is of the following form:
-			//			`{ x: 50, y: 200 }`
+			//		`{ x: 50, y: 200 }`
 			var ah = this._hAxis, av = this._vAxis,
 				sh = ah.getScaler(), sv = av.getScaler(),
 				th = sh.scaler.getTransformerFromModel(sh),
@@ -74,11 +74,11 @@ define("dojox/charting/plot2d/CartesianBase", ["dojo/_base/lang", "dojo/_base/de
 			//		Compute plot axis data coordinates from page coordinates.
 			// coord: Object
 			//		The pixel coordinate in page coordinate space. That is of the following form:
-			//			`{ x: 50, y: 200 }`
+			//		`{ x: 50, y: 200 }`
 			//		If not provided return the tranform method instead of the result of the transformation.
 			// returns: Object
 			//		The resulting plot axis data coordinates. For cartesian charts that is of the following form:
-			//			`{ hAxisName: 50, vAxisName: 200 }`
+			//		`{ hAxisName: 50, vAxisName: 200 }`
 			var ah = this._hAxis, av = this._vAxis,
 				sh = ah.getScaler(), sv = av.getScaler(),
 				th = sh.scaler.getTransformerFromPlot(sh),

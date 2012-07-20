@@ -424,16 +424,11 @@ var FontChoice = declare("dijit._editor.plugins.FontChoice", _Plugin,{
 	// description:
 	//		The commands provided by this plugin are:
 	//
-	//		* fontName
-	//	|		Provides a drop down to select from a list of font names
-	//		* fontSize
-	//	|		Provides a drop down to select from a list of font sizes
-	//		* formatBlock
-	//	|		Provides a drop down to select from a list of block styles
-	//	|
-	//
-	//		which can easily be added to an editor by including one or more of the above commands
-	//		in the `plugins` attribute as follows:
+	//		- fontName: Provides a drop down to select from a list of font names
+	//		- fontSize: Provides a drop down to select from a list of font sizes
+	//		- formatBlock: Provides a drop down to select from a list of block styles
+	//		  which can easily be added to an editor by including one or more of the above commands
+	//		  in the `plugins` attribute as follows:
 	//
 	//	|	plugins="['fontName','fontSize',...]"
 	//
@@ -692,7 +687,7 @@ define([
 			//		Deprecated.  Use get('displayedValue') instead.
 			// tags:
 			//		deprecated
-			kernel.deprecated(this.declaredClass+"::getDisplayedValue() is deprecated. Use set('displayedValue') instead.", "", "2.0");
+			kernel.deprecated(this.declaredClass+"::getDisplayedValue() is deprecated. Use get('displayedValue') instead.", "", "2.0");
 			return this.get('displayedValue');
 		},
 
@@ -1390,8 +1385,8 @@ var ScrollingTabController = declare("dijit.layout.ScrollingTabController", [Tab
 		// summary:
 		//		Scrolls the tab list to the left or right by 75% of the widget width.
 		// direction:
-		//		If the direction is 1, the widget scrolls to the right, if it is
-		//		-1, it scrolls to the left.
+		//		If the direction is 1, the widget scrolls to the right, if it is -1,
+		//		it scrolls to the left.
 
 		if(node && domClass.contains(node, "dijitTabDisabled")){return;}
 
@@ -1731,16 +1726,16 @@ define([
 	"dojo/dom-class", // domClass.add domClass.contains domClass.remove
 	"dojo/dom-geometry", // domGeometry.marginBox domGeometry.position
 	"dojo/dom-style", // domStyle.set
-	"dojo/sniff",	// has("ios")
+	"dojo/has",	// has("touch")
 	"dojo/keys", // keys.DOWN_ARROW keys.ENTER keys.ESCAPE
 	"dojo/_base/lang", // lang.hitch lang.isFunction
-	"dojo/touch",
+	"dojo/on",
 	"dojo/window", // winUtils.getBox
 	"./registry",	// registry.byNode()
 	"./focus",
 	"./popup",
 	"./_FocusMixin"
-], function(declare, Deferred, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, touch,
+], function(declare, Deferred, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, on,
 			winUtils, registry, focus, popup, _FocusMixin){
 
 
@@ -1802,12 +1797,12 @@ define([
 		//		This variable controls the position of the drop down.
 		//		It's an array of strings with the following values:
 		//
-		//			* before: places drop down to the left of the target node/widget, or to the right in
-		//			  the case of RTL scripts like Hebrew and Arabic
-		//			* after: places drop down to the right of the target node/widget, or to the left in
-		//			  the case of RTL scripts like Hebrew and Arabic
-		//			* above: drop down goes above target node
-		//			* below: drop down goes below target node
+		//		- before: places drop down to the left of the target node/widget, or to the right in
+		//		  the case of RTL scripts like Hebrew and Arabic
+		//		- after: places drop down to the right of the target node/widget, or to the left in
+		//		  the case of RTL scripts like Hebrew and Arabic
+		//		- above: drop down goes above target node
+		//		- below: drop down goes below target node
 		//
 		//		The list is positions is tried, in order, until a position is found where the drop down fits
 		//		within the viewport.
@@ -1830,7 +1825,7 @@ define([
 			//		3. user defined onMouseDown handler fires
 			e.preventDefault();
 
-			this._docHandler = this.connect(this.ownerDocument, touch.release, "_onDropDownMouseUp");
+			this._docHandler = this.connect(this.ownerDocument, "mouseup", "_onDropDownMouseUp");
 
 			this.toggleDropDown();
 		},
@@ -1844,9 +1839,10 @@ define([
 			//
 			//		This is useful for the common mouse movement pattern
 			//		with native browser `<select>` nodes:
-			//			1. mouse down on the select node (probably on the arrow)
-			//			2. move mouse to a menu item while holding down the mouse button
-			//			3. mouse up.  this selects the menu item as though the user had clicked it.
+			//
+			//		1. mouse down on the select node (probably on the arrow)
+			//		2. move mouse to a menu item while holding down the mouse button
+			//		3. mouse up.  this selects the menu item as though the user had clicked it.
 			if(e && this._docHandler){
 				this.disconnect(this._docHandler);
 			}
@@ -1907,10 +1903,11 @@ define([
 		},
 
 		_onDropDownClick: function(/*Event*/ e){
-			if(has("ios") && !this._justGotMouseUp){
-				// This branch fires on iPhone for ComboBox, because the button node is an <input> and doesn't
-				// generate touchstart/touchend events.   Pretend we just got a mouse down / mouse up.
-				// The if(has("ios") is necessary since IE and desktop safari get spurious onclick events
+			if(has("touch") && !this._justGotMouseUp){
+				// If there was no preceding mousedown/mouseup (like on android), then simulate them to
+				// toggle the drop down.
+				//
+				// The if(has("touch") is necessary since IE and desktop safari get spurious onclick events
 				// when there are nested tables (specifically, clicking on a table that holds a dijit.form.Select,
 				// but not on the Select itself, causes an onclick event on the Select)
 				this._onDropDownMouseDown(e);
@@ -1944,14 +1941,16 @@ define([
 
 		postCreate: function(){
 			// summary:
-			//		set up nodes and connect our mouse and keypress events
+			//		set up nodes and connect our mouse and keyboard events
 
 			this.inherited(arguments);
 
-			this.connect(this._buttonNode, touch.press, "_onDropDownMouseDown");
-			this.connect(this._buttonNode, "onclick", "_onDropDownClick");
-			this.connect(this.focusNode, "onkeypress", "_onKey");
-			this.connect(this.focusNode, "onkeyup", "_onKeyUp");
+			this.own(
+				on(this._buttonNode, "mousedown", lang.hitch(this, "_onDropDownMouseDown")),
+				on(this._buttonNode, "click", lang.hitch(this, "_onDropDownClick")),
+				on(this.focusNode, "keydown", lang.hitch(this, "_onKey")),
+				on(this.focusNode, "keyup", lang.hitch(this, "_onKeyUp"))
+			);
 		},
 
 		destroy: function(){
@@ -1971,7 +1970,6 @@ define([
 			//		Callback when the user presses a key while focused on the button node
 
 			if(this.disabled || this.readOnly){ return; }
-
 			var d = this.dropDown, target = e.target;
 			if(d && this._opened && d.handleKey){
 				if(d.handleKey(e) === false){
@@ -1980,12 +1978,12 @@ define([
 					return;
 				}
 			}
-			if(d && this._opened && e.charOrCode == keys.ESCAPE){
+			if(d && this._opened && e.keyCode == keys.ESCAPE){
 				this.closeDropDown();
 				event.stop(e);
 			}else if(!this._opened &&
-					(e.charOrCode == keys.DOWN_ARROW ||
-						( (e.charOrCode == keys.ENTER || e.charOrCode == " ") &&
+					(e.keyCode == keys.DOWN_ARROW ||
+						( (e.keyCode == keys.ENTER || e.keyCode == dojo.keys.SPACE) &&
 						  //ignore enter and space if the event is for a text input
 						  ((target.tagName || "").toLowerCase() !== 'input' ||
 						     (target.type && target.type.toLowerCase() !== 'text'))))){
@@ -2200,7 +2198,8 @@ define([
 			domAttr.set(this._popupStateNode, "popupActive", "true");
 			domClass.add(this._popupStateNode, "dijitHasDropDownOpen");
 			this._set("_opened", true);	// use set() because _CssStateMixin is watching
-
+			this.domNode.setAttribute("aria-expanded", "true");
+			
 			return retVal;
 		},
 
@@ -2217,6 +2216,7 @@ define([
 				delete this._focusDropDownTimer;
 			}
 			if(this._opened){
+				this.domNode.setAttribute("aria-expanded", "false");
 				if(focus){ this.focus(); }
 				popup.close(this.dropDown);
 				this._opened = false;
@@ -2638,60 +2638,60 @@ return declare("dijit._editor.plugins.EnterKeyHandling", _Plugin, {
 	// description:
 	//		This plugin has three modes:
 	//
-	//			* blockNodeForEnter=BR
-	//			* blockNodeForEnter=DIV
-	//			* blockNodeForEnter=P
+	//		- blockNodeForEnter=BR
+	//		- blockNodeForEnter=DIV
+	//		- blockNodeForEnter=P
 	//
 	//		In blockNodeForEnter=P, the ENTER key starts a new
 	//		paragraph, and shift-ENTER starts a new line in the current paragraph.
 	//		For example, the input:
 	//
-	//		|	first paragraph <shift-ENTER>
-	//		|	second line of first paragraph <ENTER>
-	//		|	second paragraph
+	//	|	first paragraph <shift-ENTER>
+	//	|	second line of first paragraph <ENTER>
+	//	|	second paragraph
 	//
 	//		will generate:
 	//
-	//		|	<p>
-	//		|		first paragraph
-	//		|		<br/>
-	//		|		second line of first paragraph
-	//		|	</p>
-	//		|	<p>
-	//		|		second paragraph
-	//		|	</p>
+	//	|	<p>
+	//	|		first paragraph
+	//	|		<br/>
+	//	|		second line of first paragraph
+	//	|	</p>
+	//	|	<p>
+	//	|		second paragraph
+	//	|	</p>
 	//
 	//		In BR and DIV mode, the ENTER key conceptually goes to a new line in the
 	//		current paragraph, and users conceptually create a new paragraph by pressing ENTER twice.
 	//		For example, if the user enters text into an editor like this:
 	//
-	//		|		one <ENTER>
-	//		|		two <ENTER>
-	//		|		three <ENTER>
-	//		|		<ENTER>
-	//		|		four <ENTER>
-	//		|		five <ENTER>
-	//		|		six <ENTER>
+	//	|		one <ENTER>
+	//	|		two <ENTER>
+	//	|		three <ENTER>
+	//	|		<ENTER>
+	//	|		four <ENTER>
+	//	|		five <ENTER>
+	//	|		six <ENTER>
 	//
 	//		It will appear on the screen as two 'paragraphs' of three lines each.  Markupwise, this generates:
 	//
 	//		BR:
-	//		|		one<br/>
-	//		|		two<br/>
-	//		|		three<br/>
-	//		|		<br/>
-	//		|		four<br/>
-	//		|		five<br/>
-	//		|		six<br/>
+	//	|		one<br/>
+	//	|		two<br/>
+	//	|		three<br/>
+	//	|		<br/>
+	//	|		four<br/>
+	//	|		five<br/>
+	//	|		six<br/>
 	//
 	//		DIV:
-	//		|		<div>one</div>
-	//		|		<div>two</div>
-	//		|		<div>three</div>
-	//		|		<div>&nbsp;</div>
-	//		|		<div>four</div>
-	//		|		<div>five</div>
-	//		|		<div>six</div>
+	//	|		<div>one</div>
+	//	|		<div>two</div>
+	//	|		<div>three</div>
+	//	|		<div>&nbsp;</div>
+	//	|		<div>four</div>
+	//	|		<div>five</div>
+	//	|		<div>six</div>
 
 	// blockNodeForEnter: String
 	//		This property decides the behavior of Enter key. It can be either P,
@@ -3193,14 +3193,14 @@ return declare("dijit._editor.plugins.EnterKeyHandling", _Plugin, {
 
 	_adjustNodeAndOffset: function(/*DomNode*/node, /*Int*/offset){
 		// summary:
-		//              In the case there are multiple text nodes in a row the offset may not be within the node.  If the offset is larger than the node length, it will attempt to find
-		//              the next text sibling until it locates the text node in which the offset refers to
+		//		In the case there are multiple text nodes in a row the offset may not be within the node.  If the offset is larger than the node length, it will attempt to find
+		//		the next text sibling until it locates the text node in which the offset refers to
 		// node:
-		//              The node to check.
+		//		The node to check.
 		// offset:
-		//              The position to find within the text node
+		//		The position to find within the text node
 		// tags:
-		//              private.
+		//		private.
 		while(node.length < offset && node.nextSibling && node.nextSibling.nodeType==3){
 			//Adjust the offset and node in the case of multiple text nodes in a row
 			offset = offset - node.length;
@@ -3245,14 +3245,14 @@ define([
 	"dojo/mouse",	// mouse.enter, mouse.leave
 	"dojo/on",
 	"dojo/window",
+	"./a11yclick",
 	"./popup",
 	"./registry",
 	"./_Widget",
 	"./_KeyNavContainer",
-	"./_OnDijitClickMixin",
 	"./_TemplatedMixin"
 ], function(array, declare, dom, domAttr, domClass, lang, mouse, on, winUtils,
-			pm, registry, _Widget, _KeyNavContainer, _OnDijitClickMixin, _TemplatedMixin){
+			a11yclick, pm, registry, _Widget, _KeyNavContainer, _TemplatedMixin){
 
 
 // module:
@@ -3287,7 +3287,7 @@ return declare("dijit._MenuBase",
 			on(this.containerNode, on.selector(matches, mouse.leave), function(){
 				self.onItemUnhover(registry.byNode(this));
 			}),
-			on(this.containerNode, on.selector(matches, _OnDijitClickMixin.a11yclick), function(evt){
+			on(this.containerNode, on.selector(matches, a11yclick), function(evt){
 				self.onItemClick(registry.byNode(this), evt);
 				evt.stopPropagation();
 				evt.preventDefault();
@@ -3540,8 +3540,10 @@ return declare("dijit._MenuBase",
 		// summary:
 		//		Mark this menu's state as active.
 		//		Called when this Menu gets focus from:
-		//			1) clicking it (mouse or via space/arrow key)
-		//			2) being opened by a parent menu.
+		//
+		//		1. clicking it (mouse or via space/arrow key)
+		//		2. being opened by a parent menu.
+		//
 		//		This is not called just from mouse hover.
 		//		Focusing a menu via TAB does NOT automatically set isActive
 		//		since TAB is a navigation operation and not a selection one.
@@ -3617,9 +3619,11 @@ return declare("dijit._MenuBase",
 	_onItemFocus: function(/*MenuItem*/ item){
 		// summary:
 		//		Called when child of this Menu gets focus from:
-		//			1) clicking it
-		//			2) tabbing into it
-		//			3) being opened by a parent menu.
+		//
+		//		1. clicking it
+		//		2. tabbing into it
+		//		3. being opened by a parent menu.
+		//
 		//		This is not called just from mouse hover.
 		if(this._hoveredChild && this._hoveredChild != item){
 			this.onItemUnhover(this._hoveredChild);	// any previous mouse movement is trumped by focus selection
@@ -3695,11 +3699,12 @@ return declare("dijit.tree.ForestStoreModel", TreeStoreModel, {
 	//
 	//		When using this class the developer must override a number of methods according to their app and
 	//		data, including:
-	//			- onNewRootItem
-	//			- onAddToRoot
-	//			- onLeaveRoot
-	//			- onNewItem
-	//			- onSetItem
+	//
+	//		- onNewRootItem
+	//		- onAddToRoot
+	//		- onLeaveRoot
+	//		- onNewItem
+	//		- onSetItem
 
 	// Parameters to constructor
 
@@ -4506,11 +4511,9 @@ define("dijit/form/_SearchMixin", [
 			}
 		},
 
-		_onInput: function(/*Event*/ evt){
+		_processInput: function(/*Event*/ evt){
 			// summary:
 			//		Handles input (keyboard/paste) events
-			this.inherited(arguments);
-
 			if(this.disabled || this.readOnly){ return; }
 			var key = evt.charOrCode;
 
@@ -4668,7 +4671,6 @@ define("dijit/form/_SearchMixin", [
 
 		postMixInProperties: function(){
 			if(!this.store){
-				var srcNodeRef = this.srcNodeRef;
 				var list = this.list;
 				if(list){
 					this.store = registry.byId(list);
@@ -5284,6 +5286,7 @@ define("dijit/layout/AccordionContainer", [
 		},
 
 		addChild: function(/*dijit/_WidgetBase*/ child, /*Integer?*/ insertIndex){
+			// Overrides _LayoutWidget.addChild().
 			if(this._started){
 				// Adding a child to a started Accordion is complicated because children have
 				// wrapper widgets.  Default code path (calling this.inherited()) would add
@@ -5516,26 +5519,7 @@ define("dijit/layout/SplitContainer", [
 // FIXME: sizeWidth should be a CSS attribute (at 7 because css wants it to be 7 until we fix to css)
 //
 
-// These arguments can be specified for the children of a SplitContainer.
-// Since any widget can be specified as a SplitContainer child, mix them
-// into the base widget class.  (This is a hack, but it's effective.)
-lang.extend(_WidgetBase, {
-	// sizeMin: [deprecated] Integer
-	//		Deprecated.  Parameter for children of `dijit.layout.SplitContainer`.
-	//		Minimum size (width or height) of a child of a SplitContainer.
-	//		The value is relative to other children's sizeShare properties.
-	sizeMin: 10,
-
-	// sizeShare: [deprecated] Integer
-	//		Deprecated.  Parameter for children of `dijit.layout.SplitContainer`.
-	//		Size (width or height) of a child of a SplitContainer.
-	//		The value is relative to other children's sizeShare properties.
-	//		For example, if there are two children and each has sizeShare=10, then
-	//		each takes up 50% of the available space.
-	sizeShare: 10
-});
-
-return declare("dijit.layout.SplitContainer", _LayoutWidget, {
+var SplitContainer = declare("dijit.layout.SplitContainer", _LayoutWidget, {
 	// summary:
 	//		Deprecated.  Use `dijit.layout.BorderContainer` instead.
 	// description:
@@ -5545,6 +5529,9 @@ return declare("dijit.layout.SplitContainer", _LayoutWidget, {
 	//		and you can adjust the relative size of each child by dragging the bars.
 	//
 	//		You must specify a size (width and height) for the SplitContainer.
+	//
+	//		See `SplitContainer.ChildWidgetProperties` for details on the properties that can be set on
+	//		children of a `SplitContainer`.
 	// tags:
 	//		deprecated
 
@@ -6062,6 +6049,30 @@ return declare("dijit.layout.SplitContainer", _LayoutWidget, {
 	}
 });
 
+SplitContainer.ChildWidgetProperties = {
+	// summary:
+	//		These properties can be specified for the children of a SplitContainer.
+
+	// sizeMin: [deprecated] Integer
+	//		Minimum size (width or height) of a child of a SplitContainer.
+	//		The value is relative to other children's sizeShare properties.
+	sizeMin: 10,
+
+	// sizeShare: [deprecated] Integer
+	//		Size (width or height) of a child of a SplitContainer.
+	//		The value is relative to other children's sizeShare properties.
+	//		For example, if there are two children and each has sizeShare=10, then
+	//		each takes up 50% of the available space.
+	sizeShare: 10
+};
+
+// Since any widget can be specified as a SplitContainer child, mix them
+// into the base widget class.  (This is a hack, but it's effective.)
+// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ SplitContainer.ChildWidgetProperties);
+
+return SplitContainer;
+
 });
 
 },
@@ -6193,11 +6204,12 @@ define([
 			this._abortQuery();
 
 			// _HasDropDown will do some of the work:
-			//		1. when drop down is not yet shown:
-			//			- if user presses the down arrow key, call loadDropDown()
-			//		2. when drop down is already displayed:
-			//			- on ESC key, call closeDropDown()
-			//			- otherwise, call dropDown.handleKey() to process the keystroke
+			//
+			//	1. when drop down is not yet shown:
+			//		- if user presses the down arrow key, call loadDropDown()
+			//	2. when drop down is already displayed:
+			//		- on ESC key, call closeDropDown()
+			//		- otherwise, call dropDown.handleKey() to process the keystroke
 			this.inherited(arguments);
 
 			if(evt.altKey || evt.ctrlKey || evt.metaKey){ return; } // don't process keys with modifiers  - but we want shift+TAB
@@ -7083,7 +7095,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 	onInput: function(){},
 
 	__skipInputEvent: false,
-	_onInput: function(){
+	_onInput: function(/*Event*/ evt){
 		// summary:
 		//		Called AFTER the input event has happened
 
@@ -7091,6 +7103,13 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		if(this.textDir == "auto"){
 			this.applyTextDir(this.focusNode, this.focusNode.value);
 		}
+
+		this._processInput(evt);
+	},
+
+	_processInput: function(/*Event*/ evt){
+		// summary:
+		//		Default action handler for user input events
 
 		this._refreshState();
 
@@ -7107,7 +7126,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 
 		// normalize input events to reduce spurious event processing
 		//	onkeydown: do not forward modifier keys
-		//	           set charOrCode to numeric keycode
+		//		       set charOrCode to numeric keycode
 		//	onkeypress: do not forward numeric charOrCode keys (already sent through onkeydown)
 		//	onpaste & oncut: set charOrCode to 229 (IME)
 		//	oninput: if primary event not already processed, set charOrCode to 229 (IME), else do not forward
@@ -7215,8 +7234,10 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		//		value on blur or form submit.
 		// description:
 		//		For MappedTextBox subclasses, this is called twice
-		//			- once with the display value
-		//			- once the value as set/returned by set('value', ...)
+		//
+		//		- once with the display value
+		//		- once the value as set/returned by set('value', ...)
+		//
 		//		and get('value'), ex: a Number for NumberTextBox.
 		//
 		//		In the latter case it does corrections like converting null to NaN.  In
@@ -7758,8 +7779,16 @@ define([
 			array.forEach(before.concat(after, moreAfter), function(n){ this.timeMenu.appendChild(n); }, this);
 		},
 
-		constructor: function(){
-			this.constraints = {}; // create instance object
+		constructor: function(/*===== params, srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
+			this.constraints = {};
 		},
 
 		postMixInProperties: function(){
@@ -7871,7 +7900,7 @@ define([
 			// summary:
 			//		Notification that a time was selected.  It may be the same as the previous value.
 			// tags:
-			//      public
+			//		public
 		},
 
 		_highlightOption: function(/*node*/ node, /*Boolean*/ highlight){
@@ -7982,7 +8011,7 @@ define([
 			//		from the `dijit.form.TimeTextBox` to be handled in this widget
 			// tags:
 			//		protected
-			if(e.charOrCode == keys.DOWN_ARROW || e.charOrCode == keys.UP_ARROW){
+			if(e.keyCode == keys.DOWN_ARROW || e.keyCode == keys.UP_ARROW){
 				event.stop(e);
 				// Figure out which option to highlight now and then highlight it
 				if(this._highlighted_option && !this._highlighted_option.parentNode){
@@ -7993,12 +8022,12 @@ define([
 				if(!tgt){
 					tgt = timeMenu.childNodes[0];
 				}else if(timeMenu.childNodes.length){
-					if(e.charOrCode == keys.DOWN_ARROW && !tgt.nextSibling){
+					if(e.keyCode == keys.DOWN_ARROW && !tgt.nextSibling){
 						this._onArrowDown();
-					}else if(e.charOrCode == keys.UP_ARROW && !tgt.previousSibling){
+					}else if(e.keyCode == keys.UP_ARROW && !tgt.previousSibling){
 						this._onArrowUp();
 					}
-					if(e.charOrCode == keys.DOWN_ARROW){
+					if(e.keyCode == keys.DOWN_ARROW){
 						tgt = tgt.nextSibling;
 					}else{
 						tgt = tgt.previousSibling;
@@ -8007,9 +8036,9 @@ define([
 				this._highlightOption(tgt, true);
 				this._keyboardSelected = tgt;
 				return false;
-			}else if(e.charOrCode == keys.ENTER || e.charOrCode === keys.TAB){
+			}else if(e.keyCode == keys.ENTER || e.keyCode === keys.TAB){
 				// mouse hover followed by TAB is NO selection
-				if(!this._keyboardSelected && e.charOrCode === keys.TAB){
+				if(!this._keyboardSelected && e.keyCode === keys.TAB){
 					return true;	// true means don't call stopEvent()
 				}
 
@@ -8020,7 +8049,7 @@ define([
 
 				// Call stopEvent() for ENTER key so that form doesn't submit,
 				// but not for TAB, so that TAB does switch focus
-				return e.charOrCode === keys.TAB;
+				return e.keyCode === keys.TAB;
 			}
 			return undefined;
 		}
@@ -8331,10 +8360,11 @@ define([
 		//		inline values a TextBox), but you can specify an editor such as
 		//		dijit.Editor (for editing HTML) or a Slider (for adjusting a number).
 		//		An edit widget must support the following API to be used:
-		//			- displayedValue or value as initialization parameter,
+		//
+		//		- displayedValue or value as initialization parameter,
 		//			and available through set('displayedValue') / set('value')
-		//			- void focus()
-		//			- DOM-node focusNode = node containing editable text
+		//		- void focus()
+		//		- DOM-node focusNode = node containing editable text
 
 		// editing: [readonly] Boolean
 		//		Is the node currently in edit mode?
@@ -8403,11 +8433,18 @@ define([
 			"<span style='font-family: wingdings; text-decoration: underline;'>&#160;&#160;&#160;&#160;&#x270d;&#160;&#160;&#160;&#160;</span>" :
 			"<span style='text-decoration: underline;'>&#160;&#160;&#160;&#160;&#x270d;&#160;&#160;&#160;&#160;</span>", // &#160; == &nbsp;
 
-		constructor: function(){
+		constructor: function(/*===== params, srcNodeRef =====*/){
 			// summary:
-			//		Sets up private arrays etc.
-			// tags:
-			//		private
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified:
+			//
+			//		- use srcNodeRef.innerHTML as my value
+			//		- replace srcNodeRef with my generated DOM tree
+
 			this.editorParams = {};
 		},
 
@@ -8724,7 +8761,8 @@ define(["../_base/lang", "../sniff", "../_base/window", "../dom-geometry", "../d
 
 var exports = {
 	// summary:
-	//		TODOC
+	//		Used by dojo/dnd/Manager to scroll document or internal node when the user
+	//		drags near the edge of the viewport or a scrollable node
 };
 lang.setObject("dojo.dnd.autoscroll", exports);
 
@@ -8736,24 +8774,49 @@ exports.H_TRIGGER_AUTOSCROLL = 32;
 exports.V_AUTOSCROLL_VALUE = 16;
 exports.H_AUTOSCROLL_VALUE = 16;
 
+// These are set by autoScrollStart().
+// Set to default values in case autoScrollStart() isn't called. (back-compat, remove for 2.0)
+var viewport,
+	doc = win.doc,
+	maxScrollTop = Infinity,
+	maxScrollLeft = Infinity;
+
+exports.autoScrollStart = function(d){
+	// summary:
+	//		Called at the start of a drag.
+	// d: Document
+	//		The document of the node being dragged.
+
+	doc = d;
+	viewport = winUtils.getBox(doc);
+
+	// Save height/width of document at start of drag, before it gets distorted by a user dragging an avatar past
+	// the document's edge
+	var html = win.body(doc).parentNode;
+	maxScrollTop = Math.max(html.scrollHeight - viewport.h, 0);
+	maxScrollLeft = Math.max(html.scrollWidth - viewport.w, 0);	// usually 0
+};
+
 exports.autoScroll = function(e){
 	// summary:
-	//		a handler for onmousemove event, which scrolls the window, if
+	//		a handler for mousemove and touchmove events, which scrolls the window, if
 	//		necessary
 	// e: Event
-	//		onmousemove event
+	//		mousemove/touchmove event
 
 	// FIXME: needs more docs!
-	var v = winUtils.getBox(), dx = 0, dy = 0;
+	var v = viewport || winUtils.getBox(doc), // getBox() call for back-compat, in case autoScrollStart() wasn't called
+		html = win.body(doc).parentNode,
+		dx = 0, dy = 0;
 	if(e.clientX < exports.H_TRIGGER_AUTOSCROLL){
 		dx = -exports.H_AUTOSCROLL_VALUE;
 	}else if(e.clientX > v.w - exports.H_TRIGGER_AUTOSCROLL){
-		dx = exports.H_AUTOSCROLL_VALUE;
+		dx = Math.min(exports.H_AUTOSCROLL_VALUE, maxScrollLeft - html.scrollLeft);	// don't scroll past edge of doc
 	}
 	if(e.clientY < exports.V_TRIGGER_AUTOSCROLL){
 		dy = -exports.V_AUTOSCROLL_VALUE;
 	}else if(e.clientY > v.h - exports.V_TRIGGER_AUTOSCROLL){
-		dy = exports.V_AUTOSCROLL_VALUE;
+		dy = Math.min(exports.V_AUTOSCROLL_VALUE, maxScrollTop - html.scrollTop);	// don't scroll past edge of doc
 	}
 	window.scrollBy(dx, dy);
 };
@@ -8763,10 +8826,10 @@ exports._validOverflow = {"auto": 1, "scroll": 1};
 
 exports.autoScrollNodes = function(e){
 	// summary:
-	//		a handler for onmousemove event, which scrolls the first available
+	//		a handler for mousemove and touchmove events, which scrolls the first available
 	//		Dom element, it falls back to exports.autoScroll()
 	// e: Event
-	//		onmousemove event
+	//		mousemove/touchmove event
 
 	// FIXME: needs more docs!
 
@@ -9046,7 +9109,8 @@ return declare( "dijit.form._ListMouseMixin", _ListBase, {
 	// summary:
 	//		a Mixin to handle mouse or touch events for a focus-less menu
 	//		Abstract methods that must be defined externally:
-	//			- onClick: item was chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
+	//
+	//		- onClick: item was chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
 	// tags:
 	//		private
 
@@ -9163,16 +9227,16 @@ define(["./_base/kernel", "./regexp"], function(dojo, regexp){
 
 /*=====
 var __cookieProps = function(){
-	//	expires: Date|String|Number?
+	// expires: Date|String|Number?
 	//		If a number, the number of days from today at which the cookie
 	//		will expire. If a date, the date past which the cookie will expire.
 	//		If expires is in the past, the cookie will be deleted.
 	//		If expires is omitted or is 0, the cookie will expire when the browser closes.
-	//	path: String?
+	// path: String?
 	//		The path to use for the cookie.
-	//	domain: String?
+	// domain: String?
 	//		The domain to use for the cookie.
-	//	secure: Boolean?
+	// secure: Boolean?
 	//		Whether to only send the cookie on secure connections
 	this.expires = expires;
 	this.path = path;
@@ -9186,8 +9250,8 @@ dojo.cookie = function(/*String*/name, /*String?*/ value, /*__cookieProps?*/ pro
 	// summary:
 	//		Get or set a cookie.
 	// description:
-	// 		If one argument is passed, returns the value of the cookie
-	// 		For two or more arguments, acts as a setter.
+	//		If one argument is passed, returns the value of the cookie
+	//		For two or more arguments, acts as a setter.
 	// name:
 	//		Name of the cookie
 	// value:
@@ -9197,15 +9261,21 @@ dojo.cookie = function(/*String*/name, /*String?*/ value, /*__cookieProps?*/ pro
 	// example:
 	//		set a cookie with the JSON-serialized contents of an object which
 	//		will expire 5 days from now:
-	//	|	dojo.cookie("configObj", dojo.toJson(config), { expires: 5 });
+	//	|	require(["dojo/cookie", "dojo/json"], function(cookie, json){
+	//	|		cookie("configObj", json.stringify(config, {expires: 5 }));
+	//	|	});
 	//
 	// example:
 	//		de-serialize a cookie back into a JavaScript object:
-	//	|	var config = dojo.fromJson(dojo.cookie("configObj"));
+	//	|	require(["dojo/cookie", "dojo/json"], function(cookie, json){
+	//	|		config = json.parse(cookie("configObj"));
+	//	|	});
 	//
 	// example:
 	//		delete a cookie:
-	//	|	dojo.cookie("configObj", null, {expires: -1});
+	//	|	require(["dojo/cookie"], function(cookie){
+	//	|		cookie("configObj", null, {expires: -1});
+	//	|	});
 	var c = document.cookie, ret;
 	if(arguments.length == 1){
 		var matches = c.match(new RegExp("(?:^|; )" + regexp.escapeString(name) + "=([^;]*)"));
@@ -9234,7 +9304,7 @@ dojo.cookie = function(/*String*/name, /*String?*/ value, /*__cookieProps?*/ pro
 };
 
 dojo.cookie.isSupported = function(){
-	//	summary:
+	// summary:
 	//		Use to determine if the current browser supports cookies or not.
 	//
 	//		Returns true if user allows cookies.
@@ -9669,15 +9739,15 @@ define([
 		//		NumberTextBox is a textbox for entering and displaying numbers, supporting
 		//		the following main features:
 		//
-		//			1. Enforce minimum/maximum allowed values (as well as enforcing that the user types
-		//				a number rather than a random string)
-		//			2. NLS support (altering roles of comma and dot as "thousands-separator" and "decimal-point"
-		//				depending on locale).
-		//			3. Separate modes for editing the value and displaying it, specifically that
-		//				the thousands separator character (typically comma) disappears when editing
-		//				but reappears after the field is blurred.
-		//			4. Formatting and constraints regarding the number of places (digits after the decimal point)
-		//				allowed on input, and number of places displayed when blurred (see `constraints` parameter).
+		//		1. Enforce minimum/maximum allowed values (as well as enforcing that the user types
+		//			a number rather than a random string)
+		//		2. NLS support (altering roles of comma and dot as "thousands-separator" and "decimal-point"
+		//			depending on locale).
+		//		3. Separate modes for editing the value and displaying it, specifically that
+		//			the thousands separator character (typically comma) disappears when editing
+		//			but reappears after the field is blurred.
+		//		4. Formatting and constraints regarding the number of places (digits after the decimal point)
+		//			allowed on input, and number of places displayed when blurred (see `constraints` parameter).
 
 		baseClass: "dijitTextBox dijitNumberTextBox"
 	});
@@ -10054,21 +10124,9 @@ define([
 // module:
 //		dijit/layout/LayoutContainer
 
-
-// This argument can be specified for the children of a LayoutContainer.
-// Since any widget can be specified as a LayoutContainer child, mix it
-// into the base widget class.  (This is a hack, but it's effective.)
-lang.extend(_WidgetBase, {
-	// layoutAlign: String
-	//		"none", "left", "right", "bottom", "top", and "client".
-	//		See the LayoutContainer description for details on this parameter.
-	layoutAlign: 'none'
-});
-
-return declare("dijit.layout.LayoutContainer", _LayoutWidget, {
+var LayoutContainer = declare("dijit.layout.LayoutContainer", _LayoutWidget, {
 	// summary:
 	//		Deprecated.  Use `dijit.layout.BorderContainer` instead.
-	//
 	// description:
 	//		Provides Delphi-style panel layout semantics.
 	//
@@ -10083,6 +10141,9 @@ return declare("dijit.layout.LayoutContainer", _LayoutWidget, {
 	//
 	//		Note that there can only be one client element, but there can be multiple left, right, top,
 	//		or bottom elements.
+	//
+	//		See `LayoutContainer.ChildWidgetProperties` for details on the properties that can be set on
+	//		children of a `LayoutContainer`.
 	//
 	// example:
 	// |	<style>
@@ -10125,6 +10186,22 @@ return declare("dijit.layout.LayoutContainer", _LayoutWidget, {
 	}
 });
 
+LayoutContainer.ChildWidgetProperties = {
+	// summary:
+	//		This property can be specified for the children of a LayoutContainer.
+
+	// layoutAlign: String
+	//		"none", "left", "right", "bottom", "top", and "client".
+	//		See the LayoutContainer description for details on this parameter.
+	layoutAlign: 'none'
+};
+
+// Since any widget can be specified as a LayoutContainer child, mix it
+// into the base widget class.  (This is a hack, but it's effective.)
+// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ LayoutContainer.ChildWidgetProperties);
+
+return LayoutContainer;
 });
 
 },
@@ -10360,7 +10437,7 @@ define([
 		
 		_setAutoTextDir: function(/*Object*/node){
 		    // summary:
-		    //	    Resolve "auto" text direction for children nodes
+		    //		Resolve "auto" text direction for children nodes
 		    // tags:
 		    //		private
 
@@ -10560,10 +10637,6 @@ define([
 			// tags:
 			//		private
 
-			// keep a tooltip open if the associated element still has focus (even though the
-			// mouse moved away)
-			if(this._focus){ return; }
-
 			if(this._showTimer){
 				this._showTimer.remove();
 				delete this._showTimer;
@@ -10646,12 +10719,12 @@ define([
 	//		the Tooltip widget or *TextBox widget itself.  It's an array of strings with the values
 	//		possible for `dijit/place::around()`.   The recommended values are:
 	//
-	//			* before-centered: centers tooltip to the left of the anchor node/widget, or to the right
-	//				 in the case of RTL scripts like Hebrew and Arabic
-	//			* after-centered: centers tooltip to the right of the anchor node/widget, or to the left
-	//				 in the case of RTL scripts like Hebrew and Arabic
-	//			* above-centered: tooltip is centered above anchor node
-	//			* below-centered: tooltip is centered above anchor node
+	//		- before-centered: centers tooltip to the left of the anchor node/widget, or to the right
+	//		  in the case of RTL scripts like Hebrew and Arabic
+	//		- after-centered: centers tooltip to the right of the anchor node/widget, or to the left
+	//		  in the case of RTL scripts like Hebrew and Arabic
+	//		- above-centered: tooltip is centered above anchor node
+	//		- below-centered: tooltip is centered above anchor node
 	//
 	//		The list is positions is tried, in order, until a position is found where the tooltip fits
 	//		within the viewport.
@@ -10890,7 +10963,7 @@ date.compare = function(/*Date*/date1, /*Date?*/date2, /*String?*/portion){
 	// summary:
 	//		Compare two date objects by date, time, or both.
 	// description:
-	//  	Returns 0 if equal, positive if a > b, else negative.
+	//		Returns 0 if equal, positive if a > b, else negative.
 	// date1:
 	//		Date object
 	// date2:
@@ -10926,8 +10999,8 @@ date.add = function(/*Date*/date, /*String*/interval, /*int*/amount){
 	//		Date object to start with
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "quarter", "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond", "quarter", "week", "weekday"
 	// amount:
 	//		How much to add to the date.
 
@@ -11023,8 +11096,9 @@ date.difference = function(/*Date*/date1, /*Date?*/date2, /*String?*/interval){
 	//		Date object.  If not specified, the current Date is used.
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "quarter", "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond", "quarter", "week", "weekday"
+	//
 	//		Defaults to "day".
 
 	date2 = date2 || new Date();
@@ -11185,8 +11259,7 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 
 	// doLayout: Boolean
 	//		- false - don't adjust size of children
-	//		- true - if there is a single visible child widget, set it's size to
-	//				however big the ContentPane is
+	//		- true - if there is a single visible child widget, set it's size to however big the ContentPane is
 	doLayout: true,
 
 	// isLayoutContainer: [protected] Boolean
@@ -11595,7 +11668,14 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	// tags:
 	//		private
 
-	constructor: function(params){
+	constructor: function(params /*===== , srcNodeRef =====*/){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Initial settings for any of the widget attributes, except readonly attributes.
+		// srcNodeRef: DOMNode
+		//		The widget replaces the specified DOMNode.
+
 		// contentPreFilters: Function(String)[]
 		//		Pre content filter function register array.
 		//		these filters will be executed before the actual
@@ -12450,7 +12530,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		// summary:
 		//		Handler for onkeyup event
 		// tags:
-		//      callback
+		//		callback
 	},
 
 	setDisabled: function(/*Boolean*/ disabled){
@@ -12463,7 +12543,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	},
 	_setValueAttr: function(/*String*/ value){
 		// summary:
-		//      Registers that attr("value", foo) should call setValue(foo)
+		//		Registers that attr("value", foo) should call setValue(foo)
 		this.setValue(value);
 	},
 	_setDisableSpellCheckAttr: function(/*Boolean*/ disabled){
@@ -12977,7 +13057,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		// summary:
 		//		Return the current content of the editing area (post filters
 		//		are applied).  Users should call get('value') instead.
-		//	nonDestructive:
+		// nonDestructive:
 		//		defaults to false. Should the post-filtering be run over a copy
 		//		of the live DOM? Most users should pass "true" here unless they
 		//		*really* know that none of the installed filters are going to
@@ -13126,11 +13206,11 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		//		the DOM which is passed is run through each of the
 		//		contentPostFilters functions.
 		//
-		//	dom:
+		// dom:
 		//		a node, set of nodes, which to filter using each of the current
 		//		members of the contentDomPostFilters and contentPostFilters arrays.
 		//
-		//	nonDestructive:
+		// nonDestructive:
 		//		defaults to "false". If true, ensures that filtering happens on
 		//		a clone of the passed-in content and not the actual node
 		//		itself.
@@ -14767,8 +14847,8 @@ define([
 'dojo/store/util/SimpleQueryEngine':function(){
 define(["../../_base/array" /*=====, "../api/Store" =====*/], function(arrayUtil /*=====, Store =====*/){
 
-//  module:
-//    dojo/store/util/SimpleQueryEngine
+// module:
+//		dojo/store/util/SimpleQueryEngine
 
 return function(query, options){
 	// summary:
@@ -14792,8 +14872,8 @@ return function(query, options){
 	//		An object hash with fields that may match fields of items in the store.
 	//		Values in the hash will be compared by normal == operator, but regular expressions
 	//		or any object that provides a test() method are also supported and can be
-	// 		used to match strings by more complex expressions
-	// 		(and then the regex's or object's test() method will be used to match values).
+	//		used to match strings by more complex expressions
+	//		(and then the regex's or object's test() method will be used to match values).
 	//
 	// options: Store.QueryOptions?
 	//		An object that contains optional information such as sort, start, and count.
@@ -14849,13 +14929,14 @@ return function(query, options){
 		// execute the whole query, first we filter
 		var results = arrayUtil.filter(array, query);
 		// next we sort
-		if(options && options.sort){
-			results.sort(function(a, b){
-				for(var sort, i=0; sort = options.sort[i]; i++){
+		var sortSet = options && options.sort;
+		if(sortSet){
+			results.sort(typeof sortSet == "function" ? sortSet : function(a, b){
+				for(var sort, i=0; sort = sortSet[i]; i++){
 					var aValue = a[sort.attribute];
 					var bValue = b[sort.attribute];
 					if (aValue != bValue){
-						return !!sort.descending == aValue > bValue ? -1 : 1;
+						return !!sort.descending == (aValue == null || aValue > bValue) ? -1 : 1;
 					}
 				}
 				return 0;
@@ -15699,7 +15780,15 @@ define([
 		//		CSS class of [x] close icon, used by event delegation code to tell when close button was clicked
 		buttonWidgetCloseClass: "dijitStackCloseButton",
 
-		constructor: function(){
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
 			this.pane2button = {};		// mapping from pane id to buttons
 		},
 
@@ -15718,8 +15807,7 @@ define([
 			// No need to worry about ENTER/SPACe key handling: tabs are selected via left/right arrow keys,
 			// and closed via shift-F10 (to show the close menu).
 			this.connect(this.containerNode, 'click', function(evt){
-				var button = registry.getEnclosingWidget(evt.target),
-					page = button.page;
+				var button = registry.getEnclosingWidget(evt.target);
 				if(button != this.containerNode && !button.disabled){
 					for(var target = evt.target; target !== this.containerNode; target = target.parentNode){
 						if(domClass.contains(target, this.buttonWidgetCloseClass)){
@@ -16050,6 +16138,10 @@ return declare("dojo.dnd.Mover", [Evented], {
 			on(d, "dragstart",   event.stop),
 			on(d.body, "selectstart", event.stop)
 		];
+
+		// Tell autoscroll that a drag is starting
+		autoscroll.autoScrollStart(d);
+
 		// notify that the move has started
 		if(h && h.onMoveStart){
 			h.onMoveStart(this);
@@ -16223,6 +16315,9 @@ define([
 		//		A TabContainer is a container that has multiple panes, but shows only
 		//		one pane at a time.  There are a set of tabs corresponding to each pane,
 		//		where each tab has the name (aka title) of the pane, and optionally a close button.
+		//
+		//		See `StackContainer.ChildWidgetProperties` for details on the properties that can be set on
+		//		children of a `TabContainer`.
 
 		// useMenu: [const] Boolean
 		//		True if a menu should be used to select tabs when they are too
@@ -17009,8 +17104,8 @@ return declare("dijit.layout._TabContainerBase", [StackContainer, _TemplatedMixi
 define(["../_base/declare", "./util/QueryResults", "./util/SimpleQueryEngine" /*=====, "./api/Store" =====*/],
 function(declare, QueryResults, SimpleQueryEngine /*=====, Store =====*/){
 
-//  module:
-//    dojo/store/Memory
+// module:
+//		dojo/store/Memory
 
 // No base class, but for purposes of documentation, the base class is dojo/store/api/Store
 var base = null;
@@ -17024,7 +17119,7 @@ return declare("dojo.store.Memory", base, {
 		//		Creates a memory object store.
 		// options: dojo/store/Memory
 		//		This provides any configuration information that will be mixed into the store.
-		// 		This should generally include the data property to provide the starting set of data.
+		//		This should generally include the data property to provide the starting set of data.
 		for(var i in options){
 			this[i] = options[i];
 		}
@@ -17047,11 +17142,11 @@ return declare("dojo.store.Memory", base, {
 	//		Defines the query engine to use for querying the data store
 	queryEngine: SimpleQueryEngine,
 	get: function(id){
-		//	summary:
+		// summary:
 		//		Retrieves an object by its identity
-		//	id: Number
+		// id: Number
 		//		The identity to use to lookup the object
-		//	returns: Object
+		// returns: Object
 		//		The object in the store that matches the given id.
 		return this.data[this.index[id]];
 	},
@@ -17060,7 +17155,7 @@ return declare("dojo.store.Memory", base, {
 		//		Returns an object's identity
 		// 	object: Object
 		//		The object to get the identity from
-		//	returns: Number
+		// returns: Number
 		return object[this.idProperty];
 	},
 	put: function(object, options){
@@ -17071,7 +17166,7 @@ return declare("dojo.store.Memory", base, {
 		// 	options: Store.PutDirectives??
 		//		Additional metadata for storing the data.  Includes an "id"
 		//		property if a specific id is to be used.
-		//	returns: Number
+		// returns: Number
 		var data = this.data,
 			index = this.index,
 			idProperty = this.idProperty;
@@ -17097,7 +17192,7 @@ return declare("dojo.store.Memory", base, {
 		// 	options: Store.PutDirectives??
 		//		Additional metadata for storing the data.  Includes an "id"
 		//		property if a specific id is to be used.
-		//	returns: Number
+		// returns: Number
 		(options = options || {}).overwrite = false;
 		// call put with overwrite being false
 		return this.put(object, options);
@@ -17108,7 +17203,7 @@ return declare("dojo.store.Memory", base, {
 		// 	id: Number
 		//		The identity to use to delete the object
 		// returns: Boolean
-		// 		Returns true if an object was removed, falsy (undefined) if no object matched the id
+		//		Returns true if an object was removed, falsy (undefined) if no object matched the id
 		var index = this.index;
 		var data = this.data;
 		if(id in index){
@@ -17119,17 +17214,17 @@ return declare("dojo.store.Memory", base, {
 		}
 	},
 	query: function(query, options){
-		// 	summary:
+		// summary:
 		//		Queries the store for objects.
-		// 	query: Object
+		// query: Object
 		//		The query to use for retrieving objects from the store.
-		//	options: Store.QueryOptions?
+		// options: Store.QueryOptions?
 		//		The optional arguments to apply to the resultset.
-		//	returns: Store.QueryResults
+		// returns: Store.QueryResults
 		//		The results of the query, extended with iterative methods.
 		//
-		// 	example:
-		// 		Given the following store:
+		// example:
+		//		Given the following store:
 		//
 		// 	|	var store = new dojo.store.Memory({
 		// 	|		data: [
@@ -17151,9 +17246,9 @@ return declare("dojo.store.Memory", base, {
 		return QueryResults(this.queryEngine(query, options)(this.data));
 	},
 	setData: function(data){
-		// 	summary:
+		// summary:
 		//		Sets the given data as the source for this store, and indexes it
-		//	data: Object[]
+		// data: Object[]
 		//		An array of objects to use as the source of data.
 		if(data.items){
 			// just for convenience with the data format IFRS expects
@@ -17236,11 +17331,13 @@ define([
 		//		A list of extra plugin names which will be appended to plugins array
 		extraPlugins: null,
 
-		constructor: function(){
+		constructor: function(/*===== params, srcNodeRef =====*/){
 			// summary:
-			//		Runs on widget initialization to setup arrays etc.
-			// tags:
-			//		private
+			//		Create the widget.
+			// params: Object|null
+			//		Initial settings for any of the attributes, except readonly attributes.
+			// srcNodeRef: DOMNode
+			//		The editor replaces the specified DOMNode.
 
 			if(!lang.isArray(this.plugins)){
 				this.plugins=["undo","redo","|","cut","copy","paste","|","bold","italic","underline","strikethrough","|",
@@ -17339,13 +17436,11 @@ define([
 			//		plugins array. If index is passed, it's placed in the plugins
 			//		array at that index. No big magic, but a nice helper for
 			//		passing in plugin names via markup.
-			//
-			// plugin: String, args object, plugin instance, or plugin constructor
-			//
+			// plugin:
+			//		String, args object, plugin instance, or plugin constructor
 			// args:
 			//		This object will be passed to the plugin constructor
-			//
-			// index: Integer
+			// index:
 			//		Used when creating an instance from
 			//		something already in this.plugins. Ensures that the new
 			//		instance is assigned to this.plugins at that index.
@@ -17364,14 +17459,18 @@ define([
 					}
 				}
 				if(!o.plugin){
-					// TODO: remove lang.getObject() call in 2.0
-					var pc = args.ctor || lang.getObject(args.name) || require(args.name);
-					if(pc){
-						o.plugin = new pc(args);
+					try{
+						// TODO: remove lang.getObject() call in 2.0
+						var pc = args.ctor || lang.getObject(args.name) || require(args.name);
+						if(pc){
+							o.plugin = new pc(args);
+						}
+					}catch(e){
+						throw new Error(this.id + ": cannot find plugin [" + args.name + "]");
 					}
 				}
 				if(!o.plugin){
-					throw new Error(this.id + ': cannot find plugin', plugin);
+					throw new Error(this.id + ": cannot find plugin [" + args.name + "]");
 				}
 				plugin=o.plugin;
 			}
@@ -17533,7 +17632,7 @@ define([
 		execCommand: function(cmd){
 			// summary:
 			//		Main handler for executing any commands to the editor, like paste, bold, etc.
-			//      Called by plugins, but not meant to be called by end users.
+			//		Called by plugins, but not meant to be called by end users.
 			// tags:
 			//		protected
 			if(this.customUndo && (cmd == 'undo' || cmd == 'redo')){
@@ -17605,7 +17704,7 @@ define([
 		queryCommandEnabled: function(cmd){
 			// summary:
 			//		Returns true if specified editor command is enabled.
-			//      Used by the plugins to know when to highlight/not highlight buttons.
+			//		Used by the plugins to know when to highlight/not highlight buttons.
 			// tags:
 			//		protected
 			if(this.customUndo && (cmd == 'undo' || cmd == 'redo')){
@@ -18110,40 +18209,7 @@ if(has("dijit-legacy-requires")){
 	});
 }
 
-// These arguments can be specified for the children of a StackContainer.
-// Since any widget can be specified as a StackContainer child, mix them
-// into the base widget class.  (This is a hack, but it's effective.)
-lang.extend(_WidgetBase, {
-	// selected: Boolean
-	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
-	//		Specifies that this widget should be the initially displayed pane.
-	//		Note: to change the selected child use `dijit.layout.StackContainer.selectChild`
-	selected: false,
-
-	// disabled: Boolean
-	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
-	//		Specifies that the button to select this pane should be disabled.
-	//		Doesn't affect programmatic selection of the pane, nor does it deselect the pane if it is currently selected.
-	disabled: false,
-
-	// closable: Boolean
-	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
-	//		True if user can close (destroy) this child, such as (for example) clicking the X on the tab.
-	closable: false,
-
-	// iconClass: String
-	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
-	//		CSS Class specifying icon to use in label associated with this pane.
-	iconClass: "dijitNoIcon",
-
-	// showTitle: Boolean
-	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
-	//		When true, display title of this widget as tab label etc., rather than just using
-	//		icon specified in iconClass
-	showTitle: true
-});
-
-return declare("dijit.layout.StackContainer", _LayoutWidget, {
+var StackContainer = declare("dijit.layout.StackContainer", _LayoutWidget, {
 	// summary:
 	//		A container that has multiple children, but shows only
 	//		one child at a time
@@ -18155,6 +18221,9 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 	//		Publishes topics [widgetId]-addChild, [widgetId]-removeChild, and [widgetId]-selectChild
 	//
 	//		Can be base class for container, Wizard, Show, etc.
+	//
+	//		See `StackContainer.ChildWidgetProperties` for details on the properties that can be set on
+	//		children of a `StackContainer`.
 
 	// doLayout: Boolean
 	//		If true, change the size of my currently displayed child to match my size
@@ -18220,6 +18289,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 	},
 
 	resize: function(){
+		// Overrides _LayoutWidget.resize()
 		// Resize is called when we are first made visible (it's called from startup()
 		// if we are initially visible). If this is the first time we've been made
 		// visible then show our first child.
@@ -18280,7 +18350,7 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 		}
 
 		// If all our children are being destroyed than don't run the code below (to select another page),
-		//  because we are deleting every page one by one
+		// because we are deleting every page one by one
 		if(this._descendantsBeingDestroyed){ return; }
 
 		// Select new page to display, also updating TabController to show the respective tab.
@@ -18451,6 +18521,45 @@ return declare("dijit.layout.StackContainer", _LayoutWidget, {
 	}
 });
 
+StackContainer.ChildWidgetProperties = {
+	// summary:
+	//		These properties can be specified for the children of a StackContainer.
+
+	// selected: Boolean
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
+	//		Specifies that this widget should be the initially displayed pane.
+	//		Note: to change the selected child use `dijit.layout.StackContainer.selectChild`
+	selected: false,
+
+	// disabled: Boolean
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
+	//		Specifies that the button to select this pane should be disabled.
+	//		Doesn't affect programmatic selection of the pane, nor does it deselect the pane if it is currently selected.
+	disabled: false,
+
+	// closable: Boolean
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
+	//		True if user can close (destroy) this child, such as (for example) clicking the X on the tab.
+	closable: false,
+
+	// iconClass: String
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
+	//		CSS Class specifying icon to use in label associated with this pane.
+	iconClass: "dijitNoIcon",
+
+	// showTitle: Boolean
+	//		Attribute of children of `dijit.layout.StackContainer` and subclasses.
+	//		When true, display title of this widget as tab label etc., rather than just using
+	//		icon specified in iconClass
+	showTitle: true
+};
+
+// Since any widget can be specified as a StackContainer child, mix them
+// into the base widget class.  (This is a hack, but it's effective.)
+// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ StackContainer.ChildWidgetProperties);
+
+return StackContainer;
 });
 
 },
@@ -18467,7 +18576,7 @@ var regexp = {
 lang.setObject("dojo.regexp", regexp);
 
 regexp.escapeString = function(/*String*/str, /*String?*/except){
-	//	summary:
+	// summary:
 	//		Adds escape sequences for special characters in regular expressions
 	// except:
 	//		a String with special characters to be left unescaped
@@ -18481,9 +18590,9 @@ regexp.escapeString = function(/*String*/str, /*String?*/except){
 };
 
 regexp.buildGroupRE = function(/*Object|Array*/arr, /*Function*/re, /*Boolean?*/nonCapture){
-	//	summary:
+	// summary:
 	//		Builds a regular expression that groups subexpressions
-	//	description:
+	// description:
 	//		A utility function used by some of the RE generators. The
 	//		subexpressions are constructed by the function, re, in the second
 	//		parameter.  re builds one subexpression for each elem in the array
@@ -18601,12 +18710,11 @@ define([
 		//		which indicates that the form is ready to be submitted.
 		state: "",
 
-		//	TODO:
+		// TODO:
 		//	* Repeater
 		//	* better handling for arrays.  Often form elements have names with [] like
 		//	* people[3].sex (for a list of people [{name: Bill, sex: M}, ...])
-		//
-		//
+
 
 		_getDescendantFormWidgets: function(/*dijit/_WidgetBase[]?*/ children){
 			// summary:
@@ -18633,11 +18741,10 @@ define([
 		validate: function(){
 			// summary:
 			//		returns if the form is valid - same as isValid - but
-			//		provides a few additional (ui-specific) features.
-			//		1 - it will highlight any sub-widgets that are not
-			//			valid
-			//		2 - it will call focus() on the first invalid
-			//			sub-widget
+			//		provides a few additional (ui-specific) features:
+			//
+			//		1. it will highlight any sub-widgets that are not valid
+			//		2. it will call focus() on the first invalid sub-widget
 			var didFocus = false;
 			return array.every(array.map(this._getDescendantFormWidgets(), function(widget){
 				// Need to set this so that "required" widgets get their
@@ -19046,10 +19153,10 @@ var LinkDialog = declare("dijit._editor.plugins.LinkDialog", _Plugin, {
 	// summary:
 	//		This plugin provides the basis for an 'anchor' (link) dialog and an extension of it
 	//		provides the image link dialog.
-	//
 	// description:
 	//		The command provided by this plugin is:
-	//		* createLink
+	//
+	//		- createLink
 
 	// Override _Plugin.buttonClass.   This plugin is controlled by a DropDownButton
 	// (which triggers a TooltipDialog).
@@ -19460,10 +19567,10 @@ var ImgLinkDialog = declare("dijit._editor.plugins.ImgLinkDialog", [LinkDialog],
 	// summary:
 	//		This plugin extends LinkDialog and adds in a plugin for handling image links.
 	//		provides the image link dialog.
-	//
 	// description:
 	//		The command provided by this plugin is:
-	//		* insertImage
+	//
+	//		- insertImage
 
 	// linkDialogTemplate: [protected] String
 	//		Over-ride for template since img dialog doesn't need target that anchor tags may.
@@ -19724,7 +19831,18 @@ return declare("dijit.Menu", DropDownMenu, {
 	// summary:
 	//		A context menu you can assign to multiple elements
 
-	constructor: function(){
+	constructor: function(/*===== params, srcNodeRef =====*/){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- replace srcNodeRef with my generated DOM tree
+
 		this._bindings = [];
 	},
 
@@ -19946,13 +20064,11 @@ return declare("dijit.Menu", DropDownMenu, {
 		//		Internal function for opening myself when the user does a right-click or something similar.
 		// args:
 		//		This is an Object containing:
-		//		* target:
-		//			The node that is being clicked
-		//		* iframe:
-		//			If an `<iframe>` is being clicked, iframe points to that iframe
-		//		* coords:
-		//			Put menu at specified x/y position in viewport, or if iframe is
-		//			specified, then relative to iframe.
+		//
+		//		- target: The node that is being clicked
+		//		- iframe: If an `<iframe>` is being clicked, iframe points to that iframe
+		//		- coords: Put menu at specified x/y position in viewport, or if iframe is
+		//		  specified, then relative to iframe.
 		//
 		//		_openMyself() formerly took the event object, and since various code references
 		//		evt.target (after connecting to _openMyself()), using an Object for parameters
@@ -20317,6 +20433,30 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 		}
 	},
 
+	_startChildren: function(){
+		// summary:
+		//		Called when content is loaded.   Calls startup on each child widget.   Similar to ContentPane.startup()
+		//		itself, but avoids marking the ContentPane itself as "restarted" (see #15581).
+
+		// This starts all the widgets
+		array.forEach(this.getChildren(), function(obj){
+			if(!obj._started && !obj._destroyed && lang.isFunction(obj.startup)){
+				obj.startup();
+				obj._started = true;
+			}
+		});
+
+		// And this catches stuff like dojo.dnd.Source
+		if(this._contentSetter){
+			array.forEach(this._contentSetter.parseResults, function(obj){
+				if(!obj._started && !obj._destroyed && lang.isFunction(obj.startup)){
+					obj.startup();
+					obj._started = true;
+				}
+			}, this);
+		}
+	},
+
 	setHref: function(/*String|Uri*/ href){
 		// summary:
 		//		Deprecated.   Use set('href', ...) instead.
@@ -20329,7 +20469,7 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 		// description:
 		//		Reset the (external defined) content of this pane and replace with new url
 		//		Note: It delays the download until widget is shown if preload is false.
-		//	href:
+		// href:
 		//		url to the page you want to get, must be within the same domain as your mainpage
 
 		// Cancel any in-flight requests (a set('href', ...) will cancel any in-flight set('href', ...))
@@ -20364,7 +20504,7 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 		// summary:
 		//		Hook to make set("content", ...) work.
 		//		Replaces old content with data content, include style classes from old content
-		//	data:
+		// data:
 		//		the new Content may be String, DomNode or NodeList
 		//
 		//		if data is a NodeList (or an array of nodes) nodes are copied
@@ -20631,18 +20771,20 @@ return declare("dijit.layout.ContentPane", [_Widget, _Container, _ContentPaneRes
 			textDir: this.textDir
 		}, this._contentSetterParams || {});
 
-		setter.set( (lang.isObject(cont) && cont.domNode) ? cont.domNode : cont, setterParams );
-		
+		var p = setter.set( (lang.isObject(cont) && cont.domNode) ? cont.domNode : cont, setterParams );
+
+		// dojox/layout/html/_base::_ContentSetter.set() returns a Promise that indicates when everything is completed.
+		// dojo/html::_ContentSetter.set() currently returns the DOMNode, but that will be changed for 2.0.
+		// So, if set() returns a promise then use it, otherwise fallback to waiting on setter.parseDeferred
 		var self = this;
-		return when(setter.parseDeferred, function(){
+		return when(p && p.then ? p : setter.parseDeferred, function(){
 			// setter params must be pulled afresh from the ContentPane each time
 			delete self._contentSetterParams;
 			
 			if(!isFakeContent){
 				if(self._started){
 					// Startup each top level child widget (and they will start their children, recursively)
-					delete self._started;
-					self.startup();
+					self._startChildren();
 					
 					// Call resize() on each of my child layout widgets,
 					// or resize() on my single child layout widget...
@@ -20765,7 +20907,7 @@ define([
 		focusedChild: null,
 =====*/
 
-		// tabIndex: Integer
+		// tabIndex: String
 		//		Tab index of the container; same as HTML tabIndex attribute.
 		//		Note then when user tabs into the container, focus is immediately
 		//		moved to the first item in the container.
@@ -20971,8 +21113,8 @@ define([
 			// child: Widget
 			//		The current widget
 			// dir: Integer
-			//		* 1 = after
-			//		* -1 = before
+			//		- 1 = after
+			//		- -1 = before
 			if(child){
 				child = this._getSiblingOfChild(child, dir);
 			}
@@ -21059,11 +21201,12 @@ define([
 		// dim:
 		//		{l, t, w, h} object specifying dimensions of container into which to place children
 		// children:
-		//		an array of Widgets or at least objects containing:
-		//			* domNode: pointer to DOM node to position
-		//			* region or layoutAlign: position to place DOM node
-		//			* resize(): (optional) method to set size of node
-		//			* id: (optional) Id of widgets, referenced from resize object, below.
+		//		An array of Widgets or at least objects containing:
+		//
+		//		- domNode: pointer to DOM node to position
+		//		- region or layoutAlign: position to place DOM node
+		//		- resize(): (optional) method to set size of node
+		//		- id: (optional) Id of widgets, referenced from resize object, below.
 		// changedRegionId:
 		//		If specified, the slider for the region with the specified id has been dragged, and thus
 		//		the region's height or width should be adjusted according to changedRegionSize
@@ -21175,7 +21318,15 @@ define([
 		//	|		<option value="AL">Alabama</option>
 		//	|		...
 
-		constructor: function(/*Object?*/ params, /*DomNode|String*/ srcNodeRef){
+		constructor: function(params, srcNodeRef){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String
+			//		Attach widget to this DOM node.
+
 			// store pointer to original DOM tree
 			this.domNode = dom.byId(srcNodeRef);
 
@@ -21226,7 +21377,12 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 	//		Base class for a "plugin" to the editor, which is usually
 	//		a single button on the Toolbar and some associated code
 
-	constructor: function(/*Object?*/args){
+	constructor: function(args){
+		// summary:
+		//		Create the plugin.
+		// args: Object?
+		//		Initial settings for any of the attributes.
+
 		this.params = args || {};
 		lang.mixin(this, this.params);
 		this._connects=[];
@@ -21348,11 +21504,13 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 					this.enabled = enabled;
 					this.button.set('disabled', !enabled);
 				}
-				if(typeof this.button.checked == 'boolean'){
-					checked = e.queryCommandState(c);
-					if(this.checked !== checked){
-						this.checked = checked;
-						this.button.set('checked', e.queryCommandState(c));
+				if(enabled){
+					if(typeof this.button.checked == 'boolean'){
+						checked = e.queryCommandState(c);
+						if(this.checked !== checked){
+							this.checked = checked;
+							this.button.set('checked', e.queryCommandState(c));
+						}
 					}
 				}
 			}catch(e){
@@ -21404,9 +21562,9 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 	set: function(/* attribute */ name, /* anything */ value){
 		// summary:
 		//		Set a property on a plugin
-		//	name:
+		// name:
 		//		The property to set.
-		//	value:
+		// value:
 		//		The value to set in the property.
 		// description:
 		//		Sets named properties on a plugin which may potentially be handled by a
@@ -21421,12 +21579,12 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 		//		would be equivalent to writing:
 		//	|	plugin.bar = 3;
 		//
-		//	set() may also be called with a hash of name/value pairs, ex:
+		//		set() may also be called with a hash of name/value pairs, ex:
 		//	|	plugin.set({
 		//	|		foo: "Howdy",
 		//	|		bar: 3
 		//	|	})
-		//	This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
+		//		This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
 		if(typeof name === "object"){
 			for(var x in name){
 				this.set(x, name[x]);
@@ -21446,7 +21604,7 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 	get: function(name){
 		// summary:
 		//		Get a property from a plugin.
-		//	name:
+		// name:
 		//		The property to get.
 		// description:
 		//		Get a named property from a plugin. The property may
@@ -21540,8 +21698,9 @@ define([
 		//		we update the state of the checkbox/radio.
 		//
 		//		There are two modes:
-		//			1. High contrast mode
-		//			2. Normal mode
+		//
+		//		1. High contrast mode
+		//		2. Normal mode
 		//
 		//		In case 1, the regular html inputs are shown and used by the user.
 		//		In case 2, the regular html inputs are invisible but still used by
@@ -21663,14 +21822,6 @@ define([
 			this.selection={};
 			this.anchor = null;
 
-			if(this.tree.showRoot){
-				this.tree.domNode.setAttribute("aria-multiselectable", !this.singular);
-			}else{
-				// TODO: this will fail in a race condition sometimes, this.tree.rootNode might not exist yet.
-				// Do not fix with a setTimeout().
-				// this.tree.rootNode.containerNode.setAttribute("aria-multiselectable", !this.singular);
-			}
-
 			if(!this.cookieName && this.tree.id){
 				this.cookieName = this.tree.id + "SaveSelectedCookie";
 			}
@@ -21682,7 +21833,7 @@ define([
 			);
 		},
 
-		//	singular: Boolean
+		// singular: Boolean
 		//		Allows selection of only one element, if true.
 		//		Tree hasn't been tested in singular=true mode, unclear if it works.
 		singular: false,
@@ -22030,7 +22181,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 		//		the parent element
 		// content:
 		//		the content to be set on the parent element.
-		//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
+		//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
 
 		// always empty
 		domConstruct.empty(node);
@@ -22131,12 +22282,19 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 
 				this.onBegin();
 				this.setContent();
-				this.onEnd();
 
-				// dojox.html._ContentSetter.onEnd() can run asynchronously, so for 2.0 considering switching set()
-				// to return a Deferred
-				return this.node;
+				var ret = this.onEnd();
+
+				if(ret && ret.then){
+					// Make dojox.html._ContentSetter.set() return a Promise that resolves when load and parse complete.
+					return ret;
+				}else{
+					// Vanilla dojo/html._ContentSetter.set() returns a DOMNode for back compat.   For 2.0, switch it to
+					// return a Deferred like above.
+					return this.node;
+				}
 			},
+
 			setContent: function(){
 				// summary:
 				//		sets the content on the node
@@ -22195,8 +22353,8 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			onBegin: function(){
 				// summary:
 				//		Called after instantiation, but before set();
-				//		It allows modification of any of the object properties
-				//		- including the node and content provided - before the set operation actually takes place
+				//		It allows modification of any of the object properties -
+				//		including the node and content provided - before the set operation actually takes place
 				//		This default implementation checks for cleanContent and extractContent flags to
 				//		optionally pre-process html string content
 				var cont = this.content;
@@ -22229,6 +22387,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 					this._parse();
 				}
 				return this.node; // DomNode
+				// TODO: for 2.0 return a Promise indicating that the parse completed.
 			},
 
 			tearDown: function(){
@@ -22321,7 +22480,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			//		the parent element that will receive the content
 			// cont:
 			//		the content to be set on the parent element.
-			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
+			//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
 			// params:
 			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
 			// example:
@@ -22683,9 +22842,9 @@ declare("dijit.Dye",
 		fillCell: function(cell, blankGif){
 			// summary:
 			//		Add cell DOMNode inner structure
-			//	cell: DomNode
+			// cell: DomNode
 			//		The surrounding cell
-			//	blankGif: String
+			// blankGif: String
 			//		URL for blank cell image
 		}
 	}
@@ -22728,7 +22887,6 @@ define([
 		//		Base class for textbox widgets with the ability to validate content of various types and provide user feedback.
 
 		templateString: template,
-		baseClass: "dijitTextBox dijitValidationTextBox",
 
 		// required: Boolean
 		//		User is required to enter data into this field.
@@ -22906,7 +23064,7 @@ define([
 
 		_refreshState: function(){
 			// Overrides TextBox._refreshState()
-			if(this._started){
+			if(this._created){
 				this.validate(this.focused);
 			}
 			this.inherited(arguments);
@@ -22914,8 +23072,17 @@ define([
 
 		//////////// INITIALIZATION METHODS ///////////////////////////////////////
 
-		constructor: function(){
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree.
+
 			this.constraints = {};
+			this.baseClass += ' dijitValidationTextBox';
 		},
 
 		startup: function(){
@@ -23046,19 +23213,19 @@ define([
 var _Splitter = declare("dijit.layout._Splitter", [_Widget, _TemplatedMixin ],
 {
 	// summary:
-	//		A draggable spacer between two items in a `dijit.layout.BorderContainer`.
+	//		A draggable spacer between two items in a `dijit/layout/BorderContainer`.
 	// description:
-	//		This is instantiated by `dijit.layout.BorderContainer`.  Users should not
+	//		This is instantiated by `dijit/layout/BorderContainer`.  Users should not
 	//		create it directly.
 	// tags:
 	//		private
 
 /*=====
-	// container: [const] dijit.layout.BorderContainer
+	// container: [const] dijit/layout/BorderContainer
 	//		Pointer to the parent BorderContainer
 	container: null,
 
-	// child: [const] dijit.layout._LayoutWidget
+	// child: [const] dijit/layout/_LayoutWidget
 	//		Pointer to the pane associated with this splitter
 	child: null,
 
@@ -23237,7 +23404,7 @@ var _Gutter = declare("dijit.layout._Gutter", [_Widget, _TemplatedMixin],
 	//		Just a spacer div to separate side pane from center pane.
 	//		Basically a trick to lookup the gutter/splitter width from the theme.
 	// description:
-	//		Instantiated by `dijit.layout.BorderContainer`.  Users should not
+	//		Instantiated by `dijit/layout/BorderContainer`.  Users should not
 	//		create directly.
 	// tags:
 	//		private
@@ -23258,7 +23425,6 @@ var _Gutter = declare("dijit.layout._Gutter", [_Widget, _TemplatedMixin],
 var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 	// summary:
 	//		Provides layout in up to 5 regions, a mandatory center with optional borders along its 4 sides.
-	//
 	// description:
 	//		A BorderContainer is a box with a specified size, such as style="width: 500px; height: 500px;",
 	//		that contains a child widget marked region="center" and optionally children widgets marked
@@ -23276,6 +23442,9 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 	//		layoutPriority flag on the children determines which child is closer to the edge (low layoutPriority)
 	//		and which child is closer to the center (high layoutPriority).   layoutPriority can also be used
 	//		instead of the design attribute to control layout precedence of horizontal vs. vertical panes.
+	//
+	//		See `BorderContainer.ChildWidgetProperties` for details on the properties that can be set on
+	//		children of a `BorderContainer`.
 	// example:
 	// |	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'sidebar', gutters: false"
 	// |            style="width: 400px; height: 300px;">
@@ -23286,9 +23455,9 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 
 	// design: String
 	//		Which design is used for the layout:
-	//			- "headline" (default) where the top and bottom extend
-	//				the full width of the container
-	//			- "sidebar" where the left and right sides extend from top to bottom.
+	//
+	//		- "headline" (default) where the top and bottom extend the full width of the container
+	//		- "sidebar" where the left and right sides extend from top to bottom.
 	design: "headline",
 
 	// gutters: [const] Boolean
@@ -23524,38 +23693,39 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 	}
 });
 
-// This argument can be specified for the children of a BorderContainer.
-// Since any widget can be specified as a LayoutContainer child, mix it
-// into the base widget class.  (This is a hack, but it's effective.)
-lang.extend(_WidgetBase, {
+BorderContainer.ChildWidgetProperties = {
+	// summary:
+	//		These properties can be specified for the children of a BorderContainer.
+
 	// region: [const] String
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Values: "top", "bottom", "leading", "trailing", "left", "right", "center".
-	//		See the `dijit.layout.BorderContainer` description for details.
+	//		See the `dijit/layout/BorderContainer` description for details.
 	region: '',
 
 	// layoutPriority: [const] Number
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Children with a higher layoutPriority will be placed closer to the BorderContainer center,
 	//		between children with a lower layoutPriority.
 	layoutPriority: 0,
 
 	// splitter: [const] Boolean
-	//		Parameter for child of `dijit.layout.BorderContainer` where region != "center".
+	//		Parameter for children where region != "center".
 	//		If true, enables user to resize the widget by putting a draggable splitter between
 	//		this widget and the region=center widget.
 	splitter: false,
 
 	// minSize: [const] Number
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Specifies a minimum size (in pixels) for this widget when resized by a splitter.
 	minSize: 0,
 
 	// maxSize: [const] Number
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Specifies a maximum size (in pixels) for this widget when resized by a splitter.
 	maxSize: Infinity
-});
+};
+
+// Since any widget can be specified as a LayoutContainer child, mix it
+// into the base widget class.  (This is a hack, but it's effective.)
+// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ BorderContainer.ChildWidgetProperties);
 
 // For monkey patching
 BorderContainer._Splitter = _Splitter;
@@ -23695,12 +23865,12 @@ number.round = function(/*Number*/ value, /*Number?*/ places, /*Number?*/ increm
 	// increment:
 	//		Rounds next place to nearest value of increment/10.  10 by default.
 	// example:
-	//		>>> dojo.number.round(-0.5)
-	//		-1
-	//		>>> dojo.number.round(162.295, 2)
-	//		162.29  // note floating point error.  Should be 162.3
-	//		>>> dojo.number.round(10.71, 0, 2.5)
-	//		10.75
+	// |	>>> dojo.number.round(-0.5)
+	// |	-1
+	// |	>>> dojo.number.round(162.295, 2)
+	// |	162.29  // note floating point error.  Should be 162.3
+	// |	>>> dojo.number.round(10.71, 0, 2.5)
+	// |	10.75
 	var factor = 10 / (increment || 10);
 	return (factor * +value).toFixed(places) / factor; // Number
 };
@@ -23716,6 +23886,9 @@ if((0.9).toFixed() == 0){
 		}
 		return round(v, p, m) + (v > 0 ? d : -d);
 	};
+
+	// Use "doc hint" so the doc parser ignores this new definition of round(), and uses the one above.
+	/*===== number.round = round; =====*/
 }
 
 /*=====
@@ -24087,7 +24260,7 @@ number.__IntegerRegexpFlags = function(){
 	//		makes ',' optional.
 	// groupSize: Number?
 	//		group size between separators
-	//	groupSize2: Number?
+	// groupSize2: Number?
 	//		second grouping, where separators 2..n have a different interval than the first separator (for India)
 	this.signed = signed;
 	this.separator = separator;
@@ -24183,6 +24356,11 @@ define([
 					scope: "dojo"	// even in multi-version mode templates use dojoType/data-dojo-type
 				}));
 
+				if(!cw.isFulfilled()){
+					throw new Error(this.declaredClass + ": parser returned unfilled promise (probably waiting for module auto-load), " +
+						"unsupported by _WidgetsInTemplateMixin.   Must pre-load all supporting widgets before instantiation.");
+				}
+
 				// _WidgetBase::destroy() will destroy any supporting widgets under this.domNode.
 				// If we wanted to, we could call this.own() on anything in this._startupWidgets that was moved outside
 				// of this.domNode (like Dialog, which is moved to <body>).
@@ -24221,18 +24399,22 @@ filter.patternToRegExp = function(/*String*/pattern, /*boolean?*/ ignoreCase){
 	// description:
 	//		Returns a regular expression object that conforms to the defined conversion rules.
 	//		For example:
-	//			- ca*   -> /^ca.*$/
-	//			- *ca*  -> /^.*ca.*$/
-	//			- *c\*a*  -> /^.*c\*a.*$/
-	//			- *c\*a?*  -> /^.*c\*a..*$/
-	//			and so on.
+	//
+	//		- ca*   -> /^ca.*$/
+	//		- *ca*  -> /^.*ca.*$/
+	//		- *c\*a*  -> /^.*c\*a.*$/
+	//		- *c\*a?*  -> /^.*c\*a..*$/
+	//
+	//		and so on.
 	// pattern: string
 	//		A simple matching pattern to convert that follows basic rules:
-	//			- * Means match anything, so ca* means match anything starting with ca
-	//			- ? Means match single character.  So, b?b will match to bob and bab, and so on.
-	//      	- \ is an escape character.  So for example, \* means do not treat * as a match, but literal character *.
-	//				To use a \ as a character in the string, it must be escaped.  So in the pattern it should be
-	//				represented by \\ to be treated as an ordinary \ character instead of an escape.
+	//
+	//		- * Means match anything, so ca* means match anything starting with ca
+	//		- ? Means match single character.  So, b?b will match to bob and bab, and so on.
+	//		- \ is an escape character.  So for example, \* means do not treat * as a match, but literal character *.
+	//
+	//		To use a \ as a character in the string, it must be escaped.  So in the pattern it should be
+	//		represented by \\ to be treated as an ordinary \ character instead of an escape.
 	// ignoreCase:
 	//		An optional flag to indicate if the pattern matching should be treated as case-sensitive or not when comparing
 	//		By default, it is assumed case sensitive.
@@ -24405,17 +24587,19 @@ define([
 		//		attribute on 1 of the child OPTION tags.
 		//
 		//		Similar features:
-		//			- There is a drop down list of possible values.
-		//			- You can only enter a value from the drop down list.  (You can't
-		//				enter an arbitrary value.)
-		//			- The value submitted with the form is the hidden value (ex: CA),
-		//				not the displayed value a.k.a. label (ex: California)
+		//
+		//		- There is a drop down list of possible values.
+		//		- You can only enter a value from the drop down list.  (You can't
+		//			enter an arbitrary value.)
+		//		- The value submitted with the form is the hidden value (ex: CA),
+		//			not the displayed value a.k.a. label (ex: California)
 		//
 		//		Enhancements over plain HTML version:
-		//			- If you type in some text then it will filter down the list of
-		//				possible values in the drop down list.
-		//			- List can be specified either as a static list or via a javascript
-		//				function (that can get the list from a server)
+		//
+		//		- If you type in some text then it will filter down the list of
+		//			possible values in the drop down list.
+		//		- List can be specified either as a static list or via a javascript
+		//			function (that can get the list from a server)
 
 		// required: Boolean
 		//		True (default) if user is required to enter a value into this field.
@@ -24661,10 +24845,10 @@ sorter.createSortFunction = function(	/* attributes[] */sortSpec, /*dojo/data/ap
 	// sortSpec:
 	//		A JS object that array that defines out what attribute names to sort on and whether it should be descenting or asending.
 	//		The objects should be formatted as follows:
-	//		{
-	//			attribute: "attributeName-string" || attribute,
-	//			descending: true|false;   // Default is false.
-	//		}
+	// |	{
+	// |		attribute: "attributeName-string" || attribute,
+	// |		descending: true|false;   // Default is false.
+	// |	}
 	// store:
 	//		The datastore object to look up item values from.
 
@@ -24730,13 +24914,14 @@ return declare("dijit.form._ButtonMixin", null, {
 	//		A mixin to add a thin standard API wrapper to a normal HTML button
 	// description:
 	//		A label should always be specified (through innerHTML) or the label attribute.
+	//
 	//		Attach points:
-	//			focusNode (required): this node receives focus
-	//			valueNode (optional): this node's value gets submitted with FORM elements
-	//			containerNode (optional): this node gets the innerHTML assignment for label
+	//
+	//		- focusNode (required): this node receives focus
+	//		- valueNode (optional): this node's value gets submitted with FORM elements
+	//		- containerNode (optional): this node gets the innerHTML assignment for label
 	// example:
 	// |	<button data-dojo-type="dijit/form/Button" onClick="...">Hello world</button>
-	//
 	// example:
 	// |	var button1 = new dijit.form.Button({label: "hello world", onClick: foo});
 	// |	dojo.body().appendChild(button1.domNode);
@@ -25110,7 +25295,6 @@ define([
 			domClass.add(this.node, "dojoDndContainer");
 
 			// set up events
-			var self = this;
 			this.events = [
 				// Mouse (or touch) enter/leave on Tree itself
 				on(this.node, touch.enter, lang.hitch(this, "onOverEvent")),
@@ -25220,8 +25404,9 @@ define([
 	"../i18n",
 	"../regexp",
 	"../string",
-	"../i18n!../cldr/nls/gregorian"
-], function(lang, array, date, supplemental, i18n, regexp, string, gregorian){
+	"../i18n!../cldr/nls/gregorian",
+	"module"
+], function(lang, array, date, supplemental, i18n, regexp, string, gregorian, module){
 
 // module:
 //		dojo/date/locale
@@ -25230,7 +25415,7 @@ var exports = {
 	// summary:
 	//		This modules defines dojo.date.locale, localization methods for Date.
 };
-lang.setObject("dojo.date.locale", exports);
+lang.setObject(module.id.replace(/\//g, "."), exports);
 
 // Localization methods for Date.   Honor local customs using locale-dependent dojo.cldr data.
 
@@ -25388,23 +25573,23 @@ lang.setObject("dojo.date.locale", exports);
 
 /*=====
 var __FormatOptions = exports.__FormatOptions = function(){
-	//	selector: String
+	// selector: String
 	//		choice of 'time','date' (default: date and time)
-	//	formatLength: String
+	// formatLength: String
 	//		choice of long, short, medium or full (plus any custom additions).  Defaults to 'short'
-	//	datePattern:String
+	// datePattern:String
 	//		override pattern with this string
-	//	timePattern:String
+	// timePattern:String
 	//		override pattern with this string
-	//	am: String
+	// am: String
 	//		override strings for am in times
-	//	pm: String
+	// pm: String
 	//		override strings for pm in times
-	//	locale: String
+	// locale: String
 	//		override the locale used to determine formatting rules
-	//	fullYear: Boolean
+	// fullYear: Boolean
 	//		(format only) use 4 digit years whenever 2 digit years are called for
-	//	strict: Boolean
+	// strict: Boolean
 	//		(parse only) strict parsing, off by default
 	this.selector = selector;
 	this.formatLength = formatLength;
@@ -25847,7 +26032,7 @@ exports._getGregorianBundle = function(/*String*/ locale){
 	return gregorian; /*Object*/
 };
 
-exports.addCustomFormats("dojo.cldr","gregorian");
+exports.addCustomFormats(module.id.replace(/\/date\/locale$/, ".cldr"),"gregorian");
 
 exports.getNames = function(/*String*/ item, /*String*/ type, /*String?*/ context, /*String?*/ locale){
 	// summary:
@@ -25893,7 +26078,8 @@ exports.isWeekend = function(/*Date?*/ dateObject, /*String?*/ locale){
 // These are used only by format and strftime.  Do they need to be public?  Which module should they go in?
 
 exports._getDayOfYear = function(/*Date*/ dateObject){
-	// summary: gets the day of the year as represented by dateObject
+	// summary:
+	//		gets the day of the year as represented by dateObject
 	return date.difference(new Date(dateObject.getFullYear(), 0, 1, dateObject.getHours()), dateObject) + 1; // Number
 };
 
@@ -26067,9 +26253,10 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 		// returns:
 		//		The option corresponding with the given value or index.  null
 		//		is returned if any of the following are true:
-		//			- A string value is passed in which doesn't exist
-		//			- An index is passed in which is outside the bounds of the array of options
-		//			- A dijit.form.__SelectOption is passed in which is not a part of the select
+		//
+		//		- A string value is passed in which doesn't exist
+		//		- An index is passed in which is outside the bounds of the array of options
+		//		- A dijit.form.__SelectOption is passed in which is not a part of the select
 
 		// NOTE: the compare for passing in a dijit.form.__SelectOption checks
 		//		if the value property matches - NOT if the exact option exists
@@ -26184,9 +26371,10 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 		//		has been loaded
 		// fetchArgs: Object?
 		//		Hash of parameters to set filter on store, etc.
-		//			- query: new value for Select.query,
-		//			- queryOptions: new value for Select.queryOptions,
-		//			- onFetch: callback function for each item in data (Deprecated)
+		//
+		//		- query: new value for Select.query,
+		//		- queryOptions: new value for Select.queryOptions,
+		//		- onFetch: callback function for each item in data (Deprecated)
 		var oStore = this.store;
 		fetchArgs = fetchArgs || {};
 
@@ -26426,7 +26614,7 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 				var isSelected = array.some(val, function(v){
 					return child.option && (v === child.option.value);
 				});
-				domClass.toggle(child.domNode, this.baseClass + "SelectedOption", isSelected);
+				domClass.toggle(child.domNode, this.baseClass.replace(/\s+|$/g, "SelectedOption "), isSelected);
 				child.domNode.setAttribute("aria-selected", isSelected ? "true" : "false");
 			}, this);
 		}
@@ -26504,11 +26692,18 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 		this.addOption(newOpt);
 	},
 
-	constructor: function(/*Object*/ keywordArgs){
+	constructor: function(params /*===== , srcNodeRef =====*/){
 		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
 		//		Saves off our value, if we have an initial one set so we
 		//		can use it if we have a store as well (see startup())
-		this._oValue = (keywordArgs || {}).value || null;
+		this._oValue = (params || {}).value || null;
 		this._notifyConnections = [];	// remove for 2.0
 	},
 
@@ -26759,7 +26954,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 	//		This is a "styleable" select box - it is basically a DropDownButton which
 	//		can take a `<select>` as its input.
 
-	baseClass: "dijitSelect",
+	baseClass: "dijitSelect dijitValidationTextBox",
 
 	templateString: template,
 
@@ -26777,7 +26972,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 	//		Currently displayed error/prompt message
 	message: "",
 
-	//	tooltipPosition: String[]
+	// tooltipPosition: String[]
 	//		See description of `dijit/Tooltip.defaultPosition` for details on this parameter.
 	tooltipPosition: [],
 
@@ -26804,7 +26999,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		}
 		// Create the dropDown widget
 		this.dropDown = new _SelectMenu({ id: this.id + "_menu", parentWidget: this });
-		domClass.add(this.dropDown.domNode, this.baseClass + "Menu");
+		domClass.add(this.dropDown.domNode, this.baseClass.replace(/\s+|$/g, "Menu "));
 	},
 
 	_getMenuItemForOption: function(/*_FormSelectWidget.__SelectOption*/ option){
@@ -26825,7 +27020,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 				dir: this.dir,
 				disabled: option.disabled || false
 			});
-			item.focusNode.setAttribute("role", "listitem");
+			item.focusNode.setAttribute("role", "option");
 			return item;
 		}
 	},
@@ -26851,7 +27046,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		// summary:
 		//		Resets the menu and the length attribute of the button - and
 		//		ensures that the label is appropriately set.
-		//	loadMenuItems: Boolean
+		// loadMenuItems: Boolean
 		//		actually loads the child menu items - we only do this when we are
 		//		populating for showing the dropdown.
 
@@ -26924,8 +27119,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		// summary:
 		//		sets the display for the given value (or values)
 		var lbl = newDisplay || this.emptyLabel;
-		this.containerNode.innerHTML = '<span class="dijitReset dijitInline ' + this.baseClass + 'Label">' + lbl + '</span>';
-		this.focusNode.setAttribute("aria-valuetext", lbl);
+		this.containerNode.innerHTML = '<span role="option" class="dijitReset dijitInline ' + this.baseClass.replace(/\s+|$/g, "Label ")+'">' + lbl + '</span>';
 	},
 
 	validate: function(/*Boolean*/ isFocused){
@@ -26976,9 +27170,10 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		//		stop mousemove from selecting text on IE to be consistent with other browsers
 
 		this.inherited(arguments);
-
+ 
 		this.connect(this.domNode, "onselectstart", event.stop);
-
+		this.domNode.setAttribute("aria-expanded", "false");
+		
 		if(has("ie") < 9){
 			// IE INPUT tag fontFamily has to be set directly using STYLE
 			// the defer gives IE a chance to render the TextBox and to deal with font inheritance
@@ -27004,7 +27199,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 
 	_setStyleAttr: function(/*String||Object*/ value){
 		this.inherited(arguments);
-		domClass.toggle(this.domNode, this.baseClass + "FixedWidth", !!this.domNode.style.width);
+		domClass.toggle(this.domNode, this.baseClass.replace(/\s+|$/g, "FixedWidth "), !!this.domNode.style.width);
 	},
 
 	isLoaded: function(){
@@ -27453,6 +27648,11 @@ if(!window.getSelection){
 				}else{
 					atmrange.moveToElementText(container.parentNode);
 					atmrange.collapse(true);
+
+					// Correct internal cursor position
+					// http://bugs.dojotoolkit.org/ticket/15578
+					atmrange.move('character', 1);
+					atmrange.move('character', -1);
 				}
 
 				offset += len;
@@ -27618,8 +27818,8 @@ return dijit.range;
 define(["../../_base/array", "../../_base/lang", "../../_base/Deferred"
 ], function(array, lang, Deferred){
 
-//  module:
-//    dojo/store/util/QueryResults
+// module:
+//		dojo/store/util/QueryResults
 
 var QueryResults = function(results){
 	// summary:
@@ -27634,6 +27834,9 @@ var QueryResults = function(results){
 	//		the same.
 	//
 	//		Additional methods include `forEach`, `filter` and `map`.
+	//
+	//	results: Array | dojo/promise
+	//		The result set as an array, or a promise for an array.
 	//
 	// returns: Object
 	//		An array-like object that can be used for iterating over.
@@ -27695,8 +27898,9 @@ return declare( "dijit.form._ListBase", null, {
 	// summary:
 	//		Focus-less menu to handle UI events consistently
 	//		Abstract methods that must be defined externally:
-	//			- onSelect: item is active (mousedown but not yet mouseup, or keyboard arrow selected but no Enter)
-	//			- onDeselect:  cancels onSelect
+	//
+	//		- onSelect: item is active (mousedown but not yet mouseup, or keyboard arrow selected but no Enter)
+	//		- onDeselect:  cancels onSelect
 	// tags:
 	//		private
 
@@ -27826,6 +28030,7 @@ define(["./_base/kernel", "./_base/Deferred", "./_base/array"], function(dojo, D
 
 dojo.DeferredList = function(/*Array*/ list, /*Boolean?*/ fireOnOneCallback, /*Boolean?*/ fireOnOneErrback, /*Boolean?*/ consumeErrors, /*Function?*/ canceller){
 	// summary:
+	//		Deprecated, use dojo/promise/all instead.
 	//		Provides event handling for a group of Deferred objects.
 	// description:
 	//		DeferredList takes an array of existing deferreds and returns a new deferred of its own
@@ -28018,7 +28223,7 @@ define([
 		//		How to represent the days of the week in the calendar header. See locale
 		dayWidth: "narrow",
 
-		// tabIndex: Integer
+		// tabIndex: String
 		//		Order fields are traversed when user hits the tab key
 		tabIndex: "0",
 
@@ -28069,7 +28274,7 @@ define([
 			// value:
 			//		Either a Date or the number of seconds since 1970.
 			// tags:
-			//      protected
+			//		protected
 			if(typeof value == "string"){
 				value = stamp.fromISOString(value);
 			}
@@ -28111,7 +28316,7 @@ define([
 			//		This just sets the content of node to the specified text.
 			//		Can't do "node.innerHTML=text" because of an IE bug w/tables, see #3434.
 			// tags:
-			//      private
+			//		private
 			while(node.firstChild){
 				node.removeChild(node.firstChild);
 			}
@@ -28120,10 +28325,10 @@ define([
 
 		_populateGrid: function(){
 			// summary:
-			//      Fills in the calendar grid with each day (1-31).
+			//		Fills in the calendar grid with each day (1-31).
 			//		Call this on creation, when moving to a new month.
 			// tags:
-			//      private
+			//		private
 
 			var month = new this.dateClassObj(this.currentFocus);
 			month.setDate(1);
@@ -28196,7 +28401,7 @@ define([
 			// summary:
 			//		Fill in localized month, and prev/current/next years
 			// tags:
-			//      protected
+			//		protected
 
 			var month = new this.dateClassObj(this.currentFocus);
 			month.setDate(1);
@@ -28215,14 +28420,22 @@ define([
 
 		goToToday: function(){
 			// summary:
-			//      Sets calendar's value to today's date
+			//		Sets calendar's value to today's date
 			this.set('value', new this.dateClassObj());
 		},
 
-		constructor: function(/*Object*/ args){
-			this.dateModule = args.datePackage ? lang.getObject(args.datePackage, false) : date;
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
+			this.dateModule = params.datePackage ? lang.getObject(params.datePackage, false) : date;
 			this.dateClassObj = this.dateModule.Date || Date;
-			this.dateLocaleModule = args.datePackage ? lang.getObject(args.datePackage+".locale", false) : locale;
+			this.dateLocaleModule = params.datePackage ? lang.getObject(params.datePackage+".locale", false) : locale;
 		},
 
 		_createMonthWidget: function(){
@@ -28273,7 +28486,7 @@ define([
 			// summary:
 			//		Set up connects for increment/decrement of months/years
 			// tags:
-			//      protected
+			//		protected
 
 			var connect = lang.hitch(this, function(nodeProp, part, amount){
 				this.connect(this[nodeProp], "onclick", function(){
@@ -28336,9 +28549,9 @@ define([
 
 		_onDayClick: function(/*Event*/ evt){
 			// summary:
-			//      Handler for day clicks, selects the date if appropriate
+			//		Handler for day clicks, selects the date if appropriate
 			// tags:
-			//      protected
+			//		protected
 			event.stop(evt);
 			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
 			if(node && !domClass.contains(node, "dijitCalendarDisabledDate")){
@@ -28385,7 +28598,7 @@ define([
 			// dateObject: Date
 			// locale: String?
 			// tags:
-			//      extension
+			//		extension
 /*=====
 			return false; // Boolean
 =====*/
@@ -28398,7 +28611,7 @@ define([
 			// dateObject: Date
 			// locale: String?
 			// tags:
-			//      extension
+			//		extension
 
 /*=====
 			return ""; // String
@@ -28411,10 +28624,11 @@ define([
 		//		Displays name of current month padded to the width of the month
 		//		w/the longest name, so that changing months doesn't change width.
 		//
-		//		Create as new dijit.Calendar._MonthWidget({
-		//			lang: ...,
-		//			dateLocaleModule: ...
-		//		})
+		//		Create as:
+		// |	new Calendar._MonthWidget({
+		// |			lang: ...,
+		// |			dateLocaleModule: ...
+		// |		})
 
 		_setMonthAttr: function(month){
 			// summary:
@@ -28690,8 +28904,9 @@ define([
 		// summary:
 		//		Focus-less menu for internal use in `dijit.form.ComboBox`
 		//		Abstract methods that must be defined externally:
-		//			- onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
-		//			- onPage: next(1) or previous(-1) button pressed
+		//
+		//		- onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
+		//		- onPage: next(1) or previous(-1) button pressed
 		// tags:
 		//		private
 
@@ -28781,7 +28996,7 @@ define([
 			// summary:
 			//		Handle keystroke event forwarded from ComboBox, returning false if it's
 			//		a keystroke I recognize and process, true otherwise.
-			switch(evt.charOrCode){
+			switch(evt.keyCode){
 				case keys.DOWN_ARROW:
 					this.selectNextNode();
 					return false;
@@ -28860,22 +29075,6 @@ define("dijit/Dialog", [
 	=====*/
 
 	var _DialogBase = declare("dijit._DialogBase", [_TemplatedMixin, _FormMixin, _DialogMixin, _CssStateMixin], {
-		// summary:
-		//		A modal dialog Widget
-		//
-		// description:
-		//		Pops up a modal dialog window, blocking access to the screen
-		//		and also graying out the screen Dialog is extended from
-		//		ContentPane so it supports all the same parameters (href, etc.)
-		//
-		// example:
-		// |	<div data-dojo-type="dijit/Dialog" data-dojo-props="href: 'test.html'"></div>
-		//
-		// example:
-		// |	var foo = new dijit.Dialog({ title: "test dialog", content: "test content" };
-		// |	dojo.body().appendChild(foo.domNode);
-		// |	foo.startup();
-
 		templateString: template,
 
 		baseClass: "dijitDialog",
@@ -29310,7 +29509,20 @@ define("dijit/Dialog", [
 		}
 	});
 
-	var Dialog = declare("dijit.Dialog", [ContentPane, _DialogBase], {});
+	var Dialog = declare("dijit.Dialog", [ContentPane, _DialogBase], {
+		// summary:
+		//		A modal dialog Widget.
+		// description:
+		//		Pops up a modal dialog window, blocking access to the screen
+		//		and also graying out the screen Dialog is extended from
+		//		ContentPane so it supports all the same parameters (href, etc.).
+		// example:
+		// |	<div data-dojo-type="dijit/Dialog" data-dojo-props="href: 'test.html'"></div>
+		// example:
+		// |	var foo = new Dialog({ title: "test dialog", content: "test content" };
+		// |	foo.placeAt(win.body());
+		// |	foo.startup();
+	});
 	Dialog._DialogBase = _DialogBase;	// for monkey patching and dojox/widget/DialogSimple
 
 	var DialogLevelManager = Dialog._DialogLevelManager = {
@@ -29505,7 +29717,7 @@ return declare("dijit.form.MultiSelect", _FormValueWidget, {
 		//		Access the NodeList of the selected options directly
 		return query("option",this.containerNode).filter(function(n){
 			return n.selected; // Boolean
-		}); // dojo.NodeList
+		}); // dojo/NodeList
 	},
 
 	_getValueAttr: function(){
@@ -29613,6 +29825,11 @@ define([
 		//		Set this textbox to display a down arrow button, to open the drop down list.
 		hasDownArrow: true,
 
+		// Set classes like dijitDownArrowButtonHover depending on mouse action over button node
+		cssStateNodes: {
+			"_buttonNode": "dijitDownArrowButton"
+		},
+
 		/*=====
 		// constraints: _DateTimeTextBox.__Constraints
 		//		Despite the name, this parameter specifies both constraints on the input
@@ -29698,10 +29915,18 @@ define([
 		//		Subclass must specify this.
 		_selector: "",
 
-		constructor: function(/*Object*/ args){
-			this.dateModule = args.datePackage ? lang.getObject(args.datePackage, false) : date;
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
+			this.dateModule = params.datePackage ? lang.getObject(params.datePackage, false) : date;
 			this.dateClassObj = this.dateModule.Date || Date;
-			this.dateLocaleModule = args.datePackage ? lang.getObject(args.datePackage+".locale", false) : locale;
+			this.dateLocaleModule = params.datePackage ? lang.getObject(params.datePackage+".locale", false) : locale;
 			this._set('pattern', this.dateLocaleModule.regexp);
 			this._invalidDate = this.constructor.prototype.value.toString();
 		},
@@ -29917,10 +30142,11 @@ define([
 		//
 		// description:
 		//		See CalendarLite for general description.   Calendar extends CalendarLite, adding:
-		//			- month drop down list
-		//			- keyboard navigation
-		//			- CSS classes for hover/mousepress on date, month, and year nodes
-		//			- support of deprecated methods (will be removed in 2.0)
+		//
+		//		- month drop down list
+		//		- keyboard navigation
+		//		- CSS classes for hover/mousepress on date, month, and year nodes
+		//		- support of deprecated methods (will be removed in 2.0)
 
 		// Set node classes for various mouse events, see dijit._CssStateMixin for more details
 		cssStateNodes: {
@@ -29932,9 +30158,9 @@ define([
 
 		setValue: function(/*Date*/ value){
 			// summary:
-			//      Deprecated.   Use set('value', ...) instead.
+			//		Deprecated.   Use set('value', ...) instead.
 			// tags:
-			//      deprecated
+			//		deprecated
 			kernel.deprecated("dijit.Calendar:setValue() is deprecated.  Use set('value', ...) instead.", "", "2.0");
 			this.set('value', value);
 		},
@@ -29956,7 +30182,7 @@ define([
 			this.inherited(arguments);
 
 			// Events specific to Calendar, not used in CalendarLite
-			this.connect(this.domNode, "onkeypress", "_onKeyPress");
+			this.connect(this.domNode, "onkeydown", "_onKeyDown");
 			this.connect(this.dateRowsNode, "onmouseover", "_onDayMouseOver");
 			this.connect(this.dateRowsNode, "onmouseout", "_onDayMouseOut");
 			this.connect(this.dateRowsNode, "onmousedown", "_onDayMouseDown");
@@ -29965,21 +30191,26 @@ define([
 
 		_onMonthSelect: function(/*Number*/ newMonth){
 			// summary:
-			//      Handler for when user selects a month from the drop down list
+			//		Handler for when user selects a month from the drop down list
 			// tags:
-			//      protected
+			//		protected
 
 			// move to selected month, bounding by the number of days in the month
-			// (ex: dec 31 --> jan 28, not jan 31)
-			this._setCurrentFocusAttr(this.dateModule.add(this.currentFocus, "month",
-				newMonth - this.currentFocus.getMonth()));
+			// (ex: jan 31 --> feb 28, not feb 31)
+			var date  = new this.dateClassObj(this.currentFocus);
+			date.setDate(1);
+			date.setMonth(newMonth);
+			var daysInMonth = this.dateModule.getDaysInMonth(date);
+			var currentDate = this.currentFocus.getDate();
+			date.setDate(Math.min(currentDate, daysInMonth));
+			this._setCurrentFocusAttr(date);
 		},
 
 		_onDayMouseOver: function(/*Event*/ evt){
 			// summary:
-			//      Handler for mouse over events on days, sets hovered style
+			//		Handler for mouse over events on days, sets hovered style
 			// tags:
-			//      protected
+			//		protected
 
 			// event can occur on <td> or the <span> inside the td,
 			// set node to the <td>.
@@ -29999,9 +30230,9 @@ define([
 
 		_onDayMouseOut: function(/*Event*/ evt){
 			// summary:
-			//      Handler for mouse out events on days, clears hovered style
+			//		Handler for mouse out events on days, clears hovered style
 			// tags:
-			//      protected
+			//		protected
 
 			if(!this._currentNode){ return; }
 
@@ -30034,18 +30265,18 @@ define([
 			// summary:
 			//		Provides keyboard navigation of calendar.
 			// description:
-			//		Called from _onKeyPress() to handle keypress on a stand alone Calendar,
-			//		and also from `dijit.form._DateTimeTextBox` to pass a keypress event
+			//		Called from _onKeyDown() to handle keypress on a stand alone Calendar,
+			//		and also from `dijit.form._DateTimeTextBox` to pass a keydown event
 			//		from the `dijit.form.DateTextBox` to be handled in this widget
 			// returns:
 			//		False if the key was recognized as a navigation key,
-			//		to indicate that the event was handled by Calendar and shouldn't be propogated
+			//		to indicate that the event was handled by Calendar and shouldn't be propagated
 			// tags:
 			//		protected
 			var increment = -1,
 				interval,
 				newValue = this.currentFocus;
-			switch(evt.charOrCode){
+			switch(evt.keyCode){
 				case keys.RIGHT_ARROW:
 					increment = 1;
 					//fallthrough...
@@ -30076,7 +30307,7 @@ define([
 					newValue.setDate(1);
 					break;
 				case keys.ENTER:
-				case " ":
+				case keys.SPACE:
 					this.set("value", this.currentFocus);
 					break;
 				default:
@@ -30092,7 +30323,7 @@ define([
 			return false;
 		},
 
-		_onKeyPress: function(/*Event*/ evt){
+		_onKeyDown: function(/*Event*/ evt){
 			// summary:
 			//		For handling keypress events on a stand alone calendar
 			if(!this.handleKey(evt)){
@@ -30104,10 +30335,10 @@ define([
 			// summary:
 			//		Deprecated.   Notification that a date cell was selected.  It may be the same as the previous value.
 			// description:
-			//      Formerly used by `dijit.form._DateTimeTextBox` (and thus `dijit.form.DateTextBox`)
-			//      to get notification when the user has clicked a date.  Now onExecute() (above) is used.
+			//		Formerly used by `dijit.form._DateTimeTextBox` (and thus `dijit.form.DateTextBox`)
+			//		to get notification when the user has clicked a date.  Now onExecute() (above) is used.
 			// tags:
-			//      protected
+			//		protected
 		},
 
 		onChange: function(value){
@@ -30121,7 +30352,7 @@ define([
 			// dateObject: Date
 			// locale: String?
 			// tags:
-			//      extension
+			//		extension
 
 /*=====
 			return ""; // String
@@ -30194,7 +30425,7 @@ define([
 });
 
 },
-'url:dijit/form/templates/Select.html':"<table class=\"dijit dijitReset dijitInline dijitLeft\"\n\tdata-dojo-attach-point=\"_buttonNode,tableNode,focusNode\" cellspacing='0' cellpadding='0'\n\trole=\"combobox\" aria-haspopup=\"true\"\n\t><tbody role=\"presentation\"><tr role=\"presentation\"\n\t\t><td class=\"dijitReset dijitStretch dijitButtonContents\" role=\"presentation\"\n\t\t\t><div class=\"dijitReset dijitInputField dijitButtonText\"  data-dojo-attach-point=\"containerNode,_popupStateNode\"></div\n\t\t\t><div class=\"dijitReset dijitValidationContainer\"\n\t\t\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t/></div\n\t\t\t><input type=\"hidden\" ${!nameAttrSetting} data-dojo-attach-point=\"valueNode\" value=\"${value}\" aria-hidden=\"true\"\n\t\t/></td\n\t\t><td class=\"dijitReset dijitRight dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer\"\n\t\t\tdata-dojo-attach-point=\"titleNode\" role=\"presentation\"\n\t\t\t><input class=\"dijitReset dijitInputField dijitArrowButtonInner\" value=\"&#9660; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t\t${_buttonInputDisabled}\n\t\t/></td\n\t></tr></tbody\n></table>\n",
+'url:dijit/form/templates/Select.html':"<table class=\"dijit dijitReset dijitInline dijitLeft\"\n\tdata-dojo-attach-point=\"_buttonNode,tableNode,focusNode\" cellspacing='0' cellpadding='0'\n\trole=\"listbox\" aria-haspopup=\"true\"\n\t><tbody role=\"presentation\"><tr role=\"presentation\"\n\t\t><td class=\"dijitReset dijitStretch dijitButtonContents\" role=\"presentation\"\n\t\t\t><div class=\"dijitReset dijitInputField dijitButtonText\"  data-dojo-attach-point=\"containerNode,_popupStateNode\" role=\"presentation\"></div\n\t\t\t><div class=\"dijitReset dijitValidationContainer\"\n\t\t\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t/></div\n\t\t\t><input type=\"hidden\" ${!nameAttrSetting} data-dojo-attach-point=\"valueNode\" value=\"${value}\" aria-hidden=\"true\"\n\t\t/></td\n\t\t><td class=\"dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer\"\n\t\t\tdata-dojo-attach-point=\"titleNode\" role=\"presentation\"\n\t\t\t><input class=\"dijitReset dijitInputField dijitArrowButtonInner\" value=\"&#9660; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t\t${_buttonInputDisabled}\n\t\t/></td\n\t></tr></tbody\n></table>\n",
 'dijit/_editor/selection':function(){
 define([
 	"dojo/dom", // dom.byId
@@ -31032,9 +31263,9 @@ define("dijit/_DialogMixin", [
 
 		onCancel: function(){
 			// summary:
-			//	    Called when user has pressed the Dialog's cancel button, to notify container.
+			//		Called when user has pressed the Dialog's cancel button, to notify container.
 			// description:
-			//	    Developer shouldn't override or connect to this method;
+			//		Developer shouldn't override or connect to this method;
 			//		it's a private communication device between the TooltipDialog
 			//		and the thing that opened it (ex: `dijit.form.DropDownButton`)
 			// type:
@@ -31043,9 +31274,9 @@ define("dijit/_DialogMixin", [
 
 		onExecute: function(){
 			// summary:
-			//	    Called when user has pressed the dialog's OK button, to notify container.
+			//		Called when user has pressed the dialog's OK button, to notify container.
 			// description:
-			//	    Developer shouldn't override or connect to this method;
+			//		Developer shouldn't override or connect to this method;
 			//		it's a private communication device between the TooltipDialog
 			//		and the thing that opened it (ex: `dijit.form.DropDownButton`)
 			// type:
@@ -31082,13 +31313,14 @@ define([
 	"dojo/_base/connect",	// connect.isCopyKey()
 	"dojo/cookie", // cookie
 	"dojo/_base/declare", // declare
-	"dojo/_base/Deferred", // Deferred
+	"dojo/Deferred", // Deferred
 	"dojo/DeferredList", // DeferredList
 	"dojo/dom", // dom.isDescendant
 	"dojo/dom-class", // domClass.add domClass.remove domClass.replace domClass.toggle
 	"dojo/dom-geometry", // domGeometry.setMarginBox domGeometry.position
 	"dojo/dom-style",// domStyle.set
 	"dojo/_base/event", // event.stop
+	"dojo/errors/create",	// createError
 	"dojo/fx", // fxUtils.wipeIn fxUtils.wipeOut
 	"dojo/_base/kernel", // kernel.deprecated
 	"dojo/keys",	// arrows etc.
@@ -31111,13 +31343,18 @@ define([
 	"./tree/ForestStoreModel",
 	"./tree/_dndSelector"
 ], function(array, connect, cookie, declare, Deferred, DeferredList,
-			dom, domClass, domGeometry, domStyle, event, fxUtils, kernel, keys, lang, on, topic, touch, when,
+			dom, domClass, domGeometry, domStyle, event, createError, fxUtils, kernel, keys, lang, on, topic, touch, when,
 			focus, registry, manager, _Widget, _TemplatedMixin, _Container, _Contained, _CssStateMixin,
 			treeNodeTemplate, treeTemplate, TreeStoreModel, ForestStoreModel, _dndSelector){
 
 // module:
 //		dijit/Tree
 
+// Back-compat shim
+Deferred = declare(Deferred, {
+	addCallback: function(callback){ this.then(callback); },
+	addErrback: function(errback){ this.then(null, errback); }
+});
 
 var TreeNode = declare(
 	"dijit._TreeNode",
@@ -31448,7 +31685,6 @@ var TreeNode = declare(
 					node.destroyRecursive();
 				}
 			});
-
 		});
 
 		this.state = "LOADED";
@@ -31614,7 +31850,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		This widget displays hierarchical data from a store.
 
-	// store: [deprecated] String||dojo.data.Store
+	// store: [deprecated] String|dojo/data/Store
 	//		Deprecated.  Use "model" parameter instead.
 	//		The store to get data to display in the tree.
 	store: null,
@@ -31647,12 +31883,12 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 
 	// paths: String[][] or Item[][]
 	//		Full paths from rootNode to selected nodes expressed as array of items or array of ids.
-	//		Since setting the paths may be asynchronous (because ofwaiting on dojo.data), set("paths", ...)
+	//		Since setting the paths may be asynchronous (because of waiting on dojo.data), set("paths", ...)
 	//		returns a Deferred to indicate when the set is complete.
 	paths: [],
 
 	// path: String[] or Item[]
-	//      Backward compatible singular variant of paths.
+	//		Backward compatible singular variant of paths.
 	path: [],
 
 	// selectedItems: [readonly] Item[]
@@ -31663,7 +31899,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	selectedItems: null,
 
 	// selectedItem: [readonly] Item
-	//      Backward compatible singular variant of selectedItems.
+	//		Backward compatible singular variant of selectedItems.
 	selectedItem: null,
 
 	// openOnClick: Boolean
@@ -31687,7 +31923,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	// dndController: [protected] Function|String
 	//		Class to use as as the dnd controller.  Specifying this class enables DnD.
 	//		Generally you should specify this as dijit.tree.dndSource.
-	//      Setting of dijit.tree._dndSelector handles selection only (no actual DnD).
+	//		Setting of dijit.tree._dndSelector handles selection only (no actual DnD).
 	dndController: _dndSelector,
 
 	// parameters to pull off of the tree and pass on to the dndController as its params
@@ -31700,6 +31936,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	//		Generally this doesn't need to be set.
 	onDndDrop: null,
 
+	itemCreator: null,
 	/*=====
 	itemCreator: function(nodes, target, source){
 		// summary:
@@ -31707,7 +31944,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		//		dropped onto the tree.   Developer must override this method to enable
 		//		dropping from external sources onto this Tree, unless the Tree.model's items
 		//		happen to look like {id: 123, name: "Apple" } with no other attributes.
-		// description:
+		//
 		//		For each node in nodes[], which came from source, create a hash of name/value
 		//		pairs to be passed to Tree.model.newItem().  Returns array of those hashes.
 		// nodes: DomNode[]
@@ -31727,7 +31964,6 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		return [{}];
 	},
 	=====*/
-	itemCreator: null,
 
 	// onDndCancel: [protected] Function
 	//		Parameter to dndController, see `dijit.tree.dndSource.onDndCancel`.
@@ -31809,13 +32045,17 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 			this.persist = false;
 		}
 
-		this._itemNodesMap={};
+		this._itemNodesMap = {};
 
 		if(!this.cookieName && this.id){
 			this.cookieName = this.id + "SaveStateCookie";
 		}
 
-		this.onLoadDeferred = new Deferred();
+		// Deferred that fires when all the children have loaded.
+		this.expandChildrenDeferred  = new Deferred();
+
+		// Deferred that fires when all pending operations complete.
+		this.pendingCommandsDeferred = this.expandChildrenDeferred;
 
 		this.inherited(arguments);
 	},
@@ -31859,8 +32099,6 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		this.connect(this.model, "onChildrenChange", "_onItemChildrenChange");
 		this.connect(this.model, "onDelete", "_onItemDelete");
 
-		this._load();
-
 		this.inherited(arguments);
 
 		if(this.dndController){
@@ -31875,6 +32113,19 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 			}
 			this.dndController = new this.dndController(this, params);
 		}
+
+		this._load();
+
+		// If no path was specified to the constructor, use path saved in cookie
+		if(!this.params.path && !this.params.paths && this.persist){
+			this.set("paths", this.dndController._getSavedPaths());
+		}
+
+		// onLoadDeferred should fire when all commands that are part of initialization have completed.
+		// It will include all the set("paths", ...) commands that happen during initialization.
+		this.onLoadDeferred = this.pendingCommandsDeferred;
+				
+		this.onLoadDeferred.then(lang.hitch(this, "onLoad"));
 	},
 
 	_store2model: function(){
@@ -31931,6 +32182,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 					textDir: this.textDir,
 					indent: this.showRoot ? 0 : -1
 				}));
+				
 				if(!this.showRoot){
 					rn.rowNode.style.display="none";
 					// if root is not visible, move tree role to the invisible
@@ -31942,7 +32194,11 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 					rn.labelNode.setAttribute("role", "presentation");
 					rn.containerNode.setAttribute("role", "tree");
 					rn.containerNode.setAttribute("aria-expanded","true");
+					rn.containerNode.setAttribute("aria-multiselectable", !this.dndController.singular);
+				}else{
+				  this.domNode.setAttribute("aria-multiselectable", !this.dndController.singular);
 				}
+				
 				this.domNode.appendChild(rn.domNode);
 				var identity = this.model.getIdentity(item);
 				if(this._itemNodesMap[identity]){
@@ -31953,26 +32209,12 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 
 				rn._updateLayout();		// sets "dijitTreeIsRoot" CSS classname
 
-				// Load top level children (and if persist=true all nodes
-				// that were previously opened)
+				// Load top level children, and if persist==true, all nodes that were previously opened
 				this._expandNode(rn).then(lang.hitch(this, function(){
 					// Then, select the nodes that were selected last time, or
 					// the ones specified by params.paths[].
 
-					// Figure out which nodes to select:
-					// the nodes specified by paths[] argument to constructor, or
-					// those saved in cookie if persists=true
-					var paths = this._initialPaths ||
-						(this.persist && this.dndController._getSavedPaths()) || [];
-
-					// Set flag to tell this.set("paths", ...) to start functioning
-					this._loadCalled = true;
-
-					// Do the selection and then fire onLoad()
-					when(this.set("paths", paths), lang.hitch(this, function(){
-						this.onLoadDeferred.resolve(true);
-						this.onLoad();
-					}));
+					this.expandChildrenDeferred.resolve(true);
 				}));
 			}),
 			lang.hitch(this, function(err){
@@ -32003,7 +32245,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		//		WARNING: if model use multi-parented items or desired tree node isn't already loaded
 		//		behavior is undefined. Use set('paths', ...) instead.
 		var tree = this;
-		this.onLoadDeferred.then( lang.hitch(this, function(){
+		return this.pendingCommandsDeferred = this.pendingCommandsDeferred.then( lang.hitch(this, function(){
 			var identities = array.map(items, function(item){
 				return (!item || lang.isString(item)) ? item : tree.model.getIdentity(item);
 			});
@@ -32017,7 +32259,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 
 	_setPathAttr: function(/*Item[] || String[]*/ path){
 		// summary:
-		//      Singular variant of _setPathsAttr
+		//		Singular variant of _setPathsAttr
 		if(path.length){
 			return this.set("paths", [path]);
 		}else{
@@ -32034,38 +32276,30 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		// returns:
 		//		Deferred to indicate when the set is complete
 
-		if(!this._loadCalled){
-			// If this is called during initialization because the user has specified a paths[]
-			// parameter to the constructor, then handle it in _load().   If it's called during
-			// initialization with the default [] path, then just ignore it.
-			if("paths" in this.params || "path" in this.params){
-				this._initialPaths = paths;
-			}
-			return;
-		}
-
 		var tree = this;
 
-		// We may need to wait for some nodes to expand, so setting
-		// each path will involve a Deferred. We bring those deferreds
-		// together with a DeferredList.
-		var dl = new DeferredList(array.map(paths, function(path){
-			var d = new Deferred();
+		// Let any previous set("path", ...) commands complete before this one starts.
+		return this.pendingCommandsDeferred = this.pendingCommandsDeferred.then(function(){
+			// We may need to wait for some nodes to expand, so setting
+			// each path will involve a Deferred. We bring those deferreds
+			// together with a DeferredList.
+			return new DeferredList(array.map(paths, function(path){
+				var d = new Deferred();
 
-			// normalize path to use identity
-			path = array.map(path, function(item){
-				return lang.isString(item) ? item : tree.model.getIdentity(item);
-			});
+				// normalize path to use identity
+				path = array.map(path, function(item){
+					return lang.isString(item) ? item : tree.model.getIdentity(item);
+				});
 
-			if(path.length){
-				selectPath(path, [tree.rootNode], d);
-			}else{
-				d.reject("Empty path");
-			}
-			return d;
-		}));
-		dl.then(setNodes);
-		return dl;
+				if(path.length){
+					// Wait for the tree to load, if it hasn't already.
+					selectPath(path, [tree.rootNode], d);
+				}else{
+					d.reject(new Tree.PathError("Empty path"));
+				}
+				return d;
+			}));
+		}).then(setNodes);
 
 		function selectPath(path, nodes, def){
 			// Traverse path; the next path component should be among "nodes".
@@ -32081,7 +32315,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 					def.resolve(nextNode);
 				}
 			}else{
-				def.reject("Could not expand path at " + nextPath);
+				def.reject(new Tree.PathError("Could not expand path at " + nextPath));
 			}
 		}
 
@@ -32908,8 +33142,6 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		//		Promise that tells when the operation will complete.  Alternately, if it's just a Boolean, it signifies
 		//		that the operation was synchronous, and already completed.
 
-		if(!this._started){ return; }
-
 		this._outstandingPaintOperations++;
 		if(this._adjustWidthsTimer){
 			this._adjustWidthsTimer.remove();
@@ -32919,7 +33151,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		var oc = lang.hitch(this, function(){
 			this._outstandingPaintOperations--;
 
-			if(this._outstandingPaintOperations <= 0 && !this._adjustWidthsTimer){
+			if(this._outstandingPaintOperations <= 0 && !this._adjustWidthsTimer && this._started){
 				// Use defer() to avoid a width adjustment when another operation will immediately follow,
 				// such as a sequence of opening a node, then it's children, then it's grandchildren, etc.
 				this._adjustWidthsTimer = this.defer("_adjustWidths");
@@ -32939,8 +33171,8 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 			delete this._adjustWidthsTimer;
 		}
 
-		var maxWidth = 0;
-		nodes = [];
+		var maxWidth = 0,
+			nodes = [];
 		function collect(/*TreeNode*/ parent){
 			var node = parent.rowNode;
 			node.style.width = "auto";		// erase setting from previous run
@@ -32976,6 +33208,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	}
 });
 
+Tree.PathError = createError("TreePathError");
 Tree._TreeNode = TreeNode;	// for monkey patching or creating subclasses of TreeNode
 
 return Tree;
@@ -33332,7 +33565,7 @@ return HorizontalSlider;
 });
 
 },
-'*now':function(r){r(['dojo/i18n!*preload*dijit/nls/dijit-all*["ar","ca","cs","da","de-de","el","en-gb","en-us","es-es","fi-fi","fr-fr","he-il","hu","it-it","ja-jp","ko-kr","nl-nl","nb","pl","pt-br","pt-pt","ru","sk","sl","sv","th","tr","zh-tw","zh-cn","ROOT"]']);}
+'*now':function(r){r(['dojo/i18n!*preload*dijit/nls/dijit-all*["ar","ca","cs","da","de","el","en-gb","en-us","es-es","fi-fi","fr-fr","he-il","hu","it-it","ja-jp","ko-kr","nl-nl","nb","pl","pt-br","pt-pt","ru","sk","sl","sv","th","tr","zh-tw","zh-cn","ROOT"]']);}
 }});
 define("dijit/dijit-all", [
 	"./main",

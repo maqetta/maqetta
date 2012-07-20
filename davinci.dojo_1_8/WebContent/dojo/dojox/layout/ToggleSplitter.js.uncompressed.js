@@ -142,7 +142,7 @@ var ToggleSplitter = dojo.declare("dojox.layout.ToggleSplitter", dijit.layout._S
 	},
 
 	_handleOnChange: function(preState){
-		// summary
+		// summary:
 		//		Effect the state change with the new value of this.state
 		var paneNode = this.child.domNode,
 			openProps, paneStyle,

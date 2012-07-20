@@ -14,8 +14,6 @@ define("dojox/mobile/TabBar", [
 
 	// module:
 	//		dojox/mobile/TabBar
-	// summary:
-	//		A bar widget that has buttons to control visibility of views.
 
 	return declare("dojox.mobile.TabBar", [WidgetBase, Container, Contained],{
 		// summary:

@@ -13,62 +13,52 @@ function(dojo, defaults, registry, keys, Mouse, Canvas, Undo, Anchors, Stencil, 
 		//		a Dijit to keep the file size light. But if Dijit is available, Drawing
 		//		will register itself with it and can be accessed dijit.byId('myDrawing')
 		//
-		//	NOTES:
+		//		NOTES:
 		//		Although not Drawing and Toolbar, all other objects are created with a custom
 		//		declare. See dojox.drawing.util.oo
 		//
 		//		The files are laid out as such:
-		//		- Drawing
-		//			The master class. More than one instance of a Drawing can be placed
+		//
+		//		- Drawing: The master class. More than one instance of a Drawing can be placed
 		//			on a page at one time (although this has not yet been tested). Plugins
 		//			can be added in markup.
-		//		- Toolbar
-		//			Like Drawing, Toolbar is a psudeo Dijit that does not need Dijit. It is
+		//		- Toolbar: Like Drawing, Toolbar is a psudeo Dijit that does not need Dijit. It is
 		//			optional. It can be oriented horizontal or vertical by placing one of
 		//			those params in the class (at least one is required).  Plugins
 		//			can be added in markup. A drawingId is required to point toolbar to
 		//			the drawing.
-		//		- defaults
-		//			Contains the default styles and dimensions for Stencils. An individual
+		//		- defaults: Contains the default styles and dimensions for Stencils. An individual
 		//			Stencil can be changed by calling stencil.att({color obj}); To change
 		//			all styles, a custom defaults file should be used.
-		//		-Stencils
-		//			Drawing uses a concept of 'Stencils' to avoid confusion between a
+		//		- Stencils: Drawing uses a concept of 'Stencils' to avoid confusion between a
 		//			Dojox Shape and a Drawing Shape. The classes in the 'stencils' package
 		//			are display only, they are not used for actually drawing (see 'tools').
 		//			This package contains _Base from which stencils inherit most of their
-		//			methods.(Path and Image are display only and not found in Tools)
-		//		- Tools
-		//			The Tools package contains Stencils that are attached to mouse events
+		//			methods. (Path and Image are display only and not found in Tools)
+		//		- Tools: The Tools package contains Stencils that are attached to mouse events
 		//			and can be used for drawing. Items in this package can also be selected
 		//			and modified.
-		//		- Tools / Custom
-		//			Holds tools that do not directly extend Stencil base classes and often
+		//		- Tools / Custom: Holds tools that do not directly extend Stencil base classes and often
 		//			have very custom code.
-		//		- Library (not implemented)
-		//			The Library package, which is not yet implemented, will be the place to
+		//		- Library (not implemented): The Library package, which is not yet implemented, will be the place to
 		//			hold stencils that have very specific data points that result in a picture.
 		//			Flag-like-banners, fancy borders, or other complex shapes would go here.
-		//		- Annotations
-		//			Annotations 'decorate' and attach to other Stencils, such as a 'Label'
+		//		- Annotations: Annotations 'decorate' and attach to other Stencils, such as a 'Label'
 		//			that can show text on a stencil, or an 'Angle' that shows while dragging
 		//			or modifying a Vector, or an Arrow head that is attached to the beginning
 		//			or end of a line.
-		//		- Manager
-		//			Contains classes that control functionality of a Drawing.
-		//		- Plugins
-		//			Contains optional classes that are 'plugged into' a Drawing. There are two
+		//		- Manager: Contains classes that control functionality of a Drawing.
+		//		- Plugins: Contains optional classes that are 'plugged into' a Drawing. There are two
 		//			types: 'drawing' plugins that modify the canvas, and 'tools' which would
 		//			show in the toolbar.
-		//		- Util
-		//			A collection of common tasks.
+		//		- Util: A collection of common tasks.
 		//
 		// example:
 		//		|	<div dojoType="dojox.drawing.Drawing" id="drawing" defaults="myCustom.defaults"
 		//		|		plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:100}}]">
 		//		|   </div>
 		//
-		//	example:
+		// example:
 		//		|	<div dojoType="dojox.drawing.Toolbar" drawingId="drawing" class="drawingToolbar vertical">
 		//		|		<div tool="dojox.drawing.tools.Line" selected="false">Line</div>
 		//		|		<div tool="dojox.drawing.tools.Rect" selected="false">Rect</div>
@@ -104,9 +94,10 @@ function(dojo, defaults, registry, keys, Mouse, Canvas, Undo, Anchors, Stencil, 
 		constructor: function(/* Object */props, /* HTMLNode */node){
 			// summary:
 			//		Drawing is not a Dijit. This is the master method.
+			//
 			//		NOTE:
-			// 			props is always null since this is not a real widget
-			//			Will change when Drawing can be created programmatically.
+			//		props is always null since this is not a real widget
+			//		Will change when Drawing can be created programmatically.
 
 			var def = dojo.attr(node, "defaults");
 			this.defaults =  def ? (typeof def === 'string' ? dojo.getObject(def) : def) : defaults;
@@ -205,7 +196,7 @@ function(dojo, defaults, registry, keys, Mouse, Canvas, Undo, Anchors, Stencil, 
 
 		getShapeProps: function(/* Object */data, mode){
 			// summary:
-			// 		The common objects that are mixed into
+			//		The common objects that are mixed into
 			//		a new Stencil. Mostly internal, but could be used.
 
 			var surface = data.stencilType;
@@ -233,8 +224,8 @@ function(dojo, defaults, registry, keys, Mouse, Canvas, Undo, Anchors, Stencil, 
 
 		initPlugins: function(){
 			// summary:
-			// 		Called from Toolbar after a plugin has been loaded
-			// 		The call to this coming from toobar is a bit funky as the timing
+			//		Called from Toolbar after a plugin has been loaded
+			//		The call to this coming from toolbar is a bit funky as the timing
 			//		of IE for canvas load is different than other browsers
 			if(!this.canvas || !this.canvas.surfaceReady){
 				var c = dojo.connect(this, "onSurfaceReady", this, function(){
@@ -300,10 +291,11 @@ function(dojo, defaults, registry, keys, Mouse, Canvas, Undo, Anchors, Stencil, 
 			// summary:
 			//		Use this method to programmatically add Stencils that display on
 			//		the canvas.
+			//
 			//		FIXME: Currently only supports Stencils that have been registered,
-			//			which is items in the toolbar, and the additional Stencils at the
-			//			end of onSurfaceReady. This covers all Stencils, but you can't
-			//			use 'display only' Stencils for Line, Rect, and Ellipse.
+			//		which is items in the toolbar, and the additional Stencils at the
+			//		end of onSurfaceReady. This covers all Stencils, but you can't
+			//		use 'display only' Stencils for Line, Rect, and Ellipse.
 			// type: String
 			//		The final name of the tool, lower case: 'image', 'line', 'textBlock'
 			// options:
@@ -336,10 +328,11 @@ function(dojo, defaults, registry, keys, Mouse, Canvas, Undo, Anchors, Stencil, 
 			// summary:
 			//		Use this method to programmatically add Stencils that display on
 			//		the canvas.
+			//
 			//		FIXME: Currently only supports Stencils that have been registered,
-			//			which is items in the toolbar, and the additional Stencils at the
-			//			end of onSurfaceReady. This covers all Stencils, but you can't
-			//			use 'display only' Stencils for Line, Rect, and Ellipse.
+			//		which is items in the toolbar, and the additional Stencils at the
+			//		end of onSurfaceReady. This covers all Stencils, but you can't
+			//		use 'display only' Stencils for Line, Rect, and Ellipse.
 			// type: String
 			//		The final name of the tool, lower case: 'image', 'line', 'textBlock'
 			// options: Object
@@ -415,7 +408,7 @@ function(dojo, defaults, registry, keys, Mouse, Canvas, Undo, Anchors, Stencil, 
 		changeDefaults: function(/*Object*/newStyle,/*Boolean*/value){
 			// summary:
 			//		Change the defaults so that all Stencils from this
-			// 		point on will use the newly changed style.
+			//		point on will use the newly changed style.
 			// newStyle: Object
 			//		An object that represents one of the objects in
 			//		drawing.style that will be mixed in. Not all

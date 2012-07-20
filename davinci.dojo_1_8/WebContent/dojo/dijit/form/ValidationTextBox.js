@@ -2,7 +2,7 @@
 require({cache:{"url:dijit/form/templates/ValidationTextBox.html":"<div class=\"dijit dijitReset dijitInline dijitLeft\"\n\tid=\"widget_${id}\" role=\"presentation\"\n\t><div class='dijitReset dijitValidationContainer'\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t/></div\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\n\t\t><input class=\"dijitReset dijitInputInner\" data-dojo-attach-point='textbox,focusNode' autocomplete=\"off\"\n\t\t\t${!nameAttrSetting} type='${type}'\n\t/></div\n></div>\n"}});
 define("dijit/form/ValidationTextBox",["dojo/_base/declare","dojo/_base/kernel","dojo/i18n","./TextBox","../Tooltip","dojo/text!./templates/ValidationTextBox.html","dojo/i18n!./nls/validate"],function(_1,_2,_3,_4,_5,_6){
 var _7;
-return _7=_1("dijit.form.ValidationTextBox",_4,{templateString:_6,baseClass:"dijitTextBox dijitValidationTextBox",required:false,promptMessage:"",invalidMessage:"$_unset_$",missingMessage:"$_unset_$",message:"",constraints:{},pattern:".*",regExp:"",regExpGen:function(){
+return _7=_1("dijit.form.ValidationTextBox",_4,{templateString:_6,required:false,promptMessage:"",invalidMessage:"$_unset_$",missingMessage:"$_unset_$",message:"",constraints:{},pattern:".*",regExp:"",regExpGen:function(){
 },state:"",tooltipPosition:[],_deprecateRegExp:function(_8,_9){
 if(_9!=_7.prototype[_8]){
 _2.deprecated("ValidationTextBox id="+this.id+", set('"+_8+"', ...) is deprecated.  Use set('pattern', ...) instead.","","2.0");
@@ -62,29 +62,30 @@ _5.show(_16,this.domNode,this.tooltipPosition,!this.isLeftToRight());
 _5.hide(this.domNode);
 }
 },_refreshState:function(){
-if(this._started){
+if(this._created){
 this.validate(this.focused);
 }
 this.inherited(arguments);
-},constructor:function(){
+},constructor:function(_17){
 this.constraints={};
+this.baseClass+=" dijitValidationTextBox";
 },startup:function(){
 this.inherited(arguments);
 this._refreshState();
-},_setConstraintsAttr:function(_17){
-if(!_17.locale&&this.lang){
-_17.locale=this.lang;
+},_setConstraintsAttr:function(_18){
+if(!_18.locale&&this.lang){
+_18.locale=this.lang;
 }
-this._set("constraints",_17);
+this._set("constraints",_18);
 this._refreshState();
-},_getPatternAttr:function(_18){
+},_getPatternAttr:function(_19){
 var p=this.pattern;
-var _19=(typeof p).toLowerCase();
-if(_19=="function"){
-p=this.pattern(_18||this.constraints);
+var _1a=(typeof p).toLowerCase();
+if(_1a=="function"){
+p=this.pattern(_19||this.constraints);
 }
 if(p!=this._lastRegExp){
-var _1a="";
+var _1b="";
 this._lastRegExp=p;
 if(p!=".*"){
 p.replace(/\\.|\[\]|\[.*?[^\\]{1}\]|\{.*?\}|\(\?[=:!]|./g,function(re){
@@ -97,41 +98,41 @@ case "^":
 case "$":
 case "|":
 case "(":
-_1a+=re;
+_1b+=re;
 break;
 case ")":
-_1a+="|$)";
+_1b+="|$)";
 break;
 default:
-_1a+="(?:"+re+"|$)";
+_1b+="(?:"+re+"|$)";
 break;
 }
 });
 }
 try{
-"".search(_1a);
+"".search(_1b);
 }
 catch(e){
-_1a=this.pattern;
+_1b=this.pattern;
 console.warn("RegExp error in "+this.declaredClass+": "+this.pattern);
 }
-this._partialre="^(?:"+_1a+")$";
+this._partialre="^(?:"+_1b+")$";
 }
 return p;
 },postMixInProperties:function(){
 this.inherited(arguments);
 this.messages=_3.getLocalization("dijit.form","validate",this.lang);
 this._setConstraintsAttr(this.constraints);
-},_setDisabledAttr:function(_1b){
+},_setDisabledAttr:function(_1c){
 this.inherited(arguments);
 this._refreshState();
-},_setRequiredAttr:function(_1c){
-this._set("required",_1c);
-this.focusNode.setAttribute("aria-required",_1c);
+},_setRequiredAttr:function(_1d){
+this._set("required",_1d);
+this.focusNode.setAttribute("aria-required",_1d);
 this._refreshState();
-},_setMessageAttr:function(_1d){
-this._set("message",_1d);
-this.displayMessage(_1d);
+},_setMessageAttr:function(_1e){
+this._set("message",_1e);
+this.displayMessage(_1e);
 },reset:function(){
 this._maskValidSubsetError=true;
 this.inherited(arguments);

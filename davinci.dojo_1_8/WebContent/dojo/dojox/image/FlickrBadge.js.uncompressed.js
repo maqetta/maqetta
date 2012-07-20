@@ -5,28 +5,28 @@ define("dojox/image/FlickrBadge", ["dojo", "dojox/main", "dojox/image/Badge", "d
 		children: "a.flickrImage",
 
 		// userid: String
-		// 		If you know your Flickr userid, you can set it to prevent a call to fetch the id
+		//		If you know your Flickr userid, you can set it to prevent a call to fetch the id
 		userid: "",
 
 		// username: String
-		// 		Your Flickr username
+		//		Your Flickr username
 		username: "",
 
 		// setid: String
-		// 		The id of the set to display
+		//		The id of the set to display
 		setid: "",
 
 		// tags: String|Array
-		// 		A comma separated list of tags or an array of tags to grab from Flickr
+		//		A comma separated list of tags or an array of tags to grab from Flickr
 		tags: "",
 
 		// searchText: String
-		// 		Free text search.  Photos who's title, description, or tags contain the text will be displayed
+		//		Free text search.  Photos who's title, description, or tags contain the text will be displayed
 		searchText: "",
 
 		// target: String
-		// 		Where to display the pictures when clicked on.  Valid values are the same as the target attribute
-		// 		of the A tag.
+		//		Where to display the pictures when clicked on.  Valid values are the same as the target attribute
+		//		of the A tag.
 		target: "",
 
 		apikey: "8c6803164dbc395fb7131c9d54843627",
@@ -101,6 +101,5 @@ define("dojox/image/FlickrBadge", ["dojo", "dojox/main", "dojox/image/Badge", "d
 			}
 		}
 	});
-	
 });
 

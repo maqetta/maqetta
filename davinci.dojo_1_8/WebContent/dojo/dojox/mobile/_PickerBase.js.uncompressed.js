@@ -8,8 +8,6 @@ define("dojox/mobile/_PickerBase", [
 
 	// module:
 	//		dojox/mobile/_PickerBase
-	// summary:
-	//		A base class for picker classes (e.g. SpinWheel, ValuePicker)
 
 	return declare("dojox.mobile._PickerBase", [WidgetBase, Container, Contained], {
 		// summary:

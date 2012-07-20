@@ -53,7 +53,7 @@ _9.toggleClass(n,this.focusClass,_d);
 if(_d){
 var sl=this.scrollIntoView();
 try{
-if(!this.grid.edit.isEditing()){
+if(_6("webkit")||!this.grid.edit.isEditing()){
 _8.fire(n,"focus");
 if(sl){
 this.cell.view.scrollboxNode.scrollLeft=sl;
@@ -316,7 +316,7 @@ this.move(_30>0?++_30:--_30,_31);
 return;
 }else{
 if((!n||_9.style(n,"display")==="none")&&_31){
-if((col+_30)>=0&&(col+_30)<=cc){
+if((col+_31)>=0&&(col+_31)<=cc){
 this.move(_30,_31>0?++_31:--_31);
 }
 return;

@@ -17,7 +17,6 @@ define("dojox/mobile/Slider", [
 	return declare("dojox.mobile.Slider", [WidgetBase, FormValueMixin], {
 		// summary:
 		//		A non-templated Slider widget similar to the HTML5 INPUT type=range.
-		//
 
 		// value: [const] Number
 		//		The current slider value.

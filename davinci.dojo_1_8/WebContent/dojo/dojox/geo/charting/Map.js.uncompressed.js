@@ -567,7 +567,7 @@ define("dojox/geo/charting/Map", [
 			//		the x coordinate of the point to convert.
 			// screenY: Number
 			//		the y coordinate of the point to convert.
-			//	returns: {x:,y:}
+			// returns:
 			//		the map coordinates corresponding to the specified screen coordinates.
 			var invMatrix = gfx.matrix.invert(this.mapObj.getTransform());
 			var mapPoint = gfx.matrix.multiplyPoint(invMatrix, screenX, screenY);

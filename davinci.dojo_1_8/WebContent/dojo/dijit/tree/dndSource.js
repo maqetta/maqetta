@@ -5,7 +5,6 @@ if(!_d){
 _d={};
 }
 _6.mixin(this,_d);
-this.isSource=typeof _d.isSource=="undefined"?true:_d.isSource;
 var _e=_d.accept instanceof Array?_d.accept:["text","treeNode"];
 this.accept=null;
 if(_e.length){

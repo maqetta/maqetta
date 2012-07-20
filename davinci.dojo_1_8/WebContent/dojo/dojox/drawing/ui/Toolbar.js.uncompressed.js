@@ -6,13 +6,13 @@ return dojo.declare("dojox.drawing.ui.Toolbar", [], {
 	//		A Toolbar used for holding buttons; typically representing the Stencils
 	//		used for a DojoX Drawing.
 	// description:
-	//		Creates a GFX-based toobar that holds GFX-based buttons. Can be either created
-	//		within the actual drawing or within a seperate DOM element. When within the
+	//		Creates a GFX-based toolbar that holds GFX-based buttons. Can be either created
+	//		within the actual drawing or within a separate DOM element. When within the
 	//		drawing, the toolbar will cover a portion of the drawing; hence the option.
 	//
-	//		A Toolbar can be created programmtically or in markup. Currently markup is as
-	//		a separate DOM element and programmtic is within the drawing.
-	// examples:
+	//		A Toolbar can be created programmatically or in markup. Currently markup is as
+	//		a separate DOM element and programmatic is within the drawing.
+	// example:
 	//		|	dojo.connect(myDrawing, "onSurfaceReady", function(){
 	//		|		new dojox.drawing.ui.Toolbar({
 	//		|			drawing:myDrawing,

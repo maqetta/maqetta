@@ -31,8 +31,8 @@ define("dojox/mvc/EditModelRefController", [
 		// description:
 		//		Has two modes:
 		//
-		//			* Directly reflect the edits to sourceModel (holdModelUntilCommit=false)
-		//			* Don't reflect the edits to sourceModel, until commit() is called (holdModelUntilCommit=true)
+		//		- Directly reflect the edits to sourceModel (holdModelUntilCommit=false)
+		//		- Don't reflect the edits to sourceModel, until commit() is called (holdModelUntilCommit=true)
 		//
 		//		For the 1st case, dojo/Stateful get()/set()/watch() interfaces will work with sourceModel.
 		//		For the 2nd case, dojo/Stateful get()/set()/watch() interfaces will work with a copy of sourceModel, and sourceModel will be replaced with such copy when commit() is called.

@@ -5,10 +5,10 @@ dojo.provide("dojox.socket.Reconnect");
 dojox.socket.Reconnect = function(socket, options){
 	// summary:
 	//		Provides auto-reconnection to a websocket after it has been closed
-	//	socket:
+	// socket:
 	//		Socket to add reconnection support to.
 	// returns:
-	// 		An object that implements the WebSocket API
+	//		An object that implements the WebSocket API
 	// example:
 	//		You can use the Reconnect module:
 	//		| dojo.require("dojox.socket");

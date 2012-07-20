@@ -90,7 +90,7 @@ define("dojox/mdnd/dropMode/OverDropMode", ["dojo/_base/kernel",
 			// summary:
 			//		update the D&D area object (i.e. update coordinates of its DOM node)
 			// area:
-			// 		the D&D area.
+			//		the D&D area.
 			// tags:
 			//		protected
 	
@@ -155,17 +155,18 @@ define("dojox/mdnd/dropMode/OverDropMode", ["dojo/_base/kernel",
 		getDragPoint: function(/*Object*/coords, /*Object*/size, /*Object*/mousePosition){
 			// summary:
 			//		return coordinates of the draggable item.
+			//
 			//		- For X point : the x position of mouse
 			//		- For Y point : the y position of mouse
 			// returns:
 			//		an object of coordinates
-			// 		examples:{'x':10,'y':10}
+			//		examples:{'x':10,'y':10}
 			// coords:
 			//		an object encapsulating X and Y position
 			// size:
-			// 		an object encapsulating width and height values
+			//		an object encapsulating width and height values
 			// mousePosition:
-			// 		coordinates of mouse
+			//		coordinates of mouse
 	
 			//console.log("dojox.mdnd.OverDropMode ::: getDragPoint");
 			return {			// Object
@@ -179,7 +180,7 @@ define("dojox/mdnd/dropMode/OverDropMode", ["dojo/_base/kernel",
 			// summary:
 			//		get the nearest D&D area.
 			// areaList:
-			// 		a list of D&D areas objects
+			//		a list of D&D areas objects
 			// coords:
 			//		coordinates [x,y] of the dragItem (see getDragPoint())
 			// currentIndexArea:

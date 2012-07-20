@@ -12,6 +12,7 @@ this.marginBox={l:e.pageX,t:e.pageY};
 this.mouseButton=e.button;
 var h=(this.host=_f),d=_e.ownerDocument;
 this.events=[on(d,_b.move,_4.hitch(this,"onFirstMove")),on(d,_b.move,_4.hitch(this,"onMouseMove")),on(d,_b.release,_4.hitch(this,"onMouseUp")),on(d,"dragstart",_3.stop),on(d.body,"selectstart",_3.stop)];
+_d.autoScrollStart(d);
 if(h&&h.onMoveStart){
 h.onMoveStart(this);
 }

@@ -10,10 +10,7 @@ define("dojox/dtl/dom", [
 	"dojo/_base/connect",
 	"dojo/_base/sniff"
 ], function(lang,dd,Tokenize,context,dom,domconstruct,html,array,connect,has){
-	/*=====
-		Tokenize = dojox.string.tokenize;
-		dd = dojox.dtl;
-	=====*/
+
 	dd.BOOLS = {checked: 1, disabled: 1, readonly: 1};
 	dd.TOKEN_CHANGE = -11;
 	dd.TOKEN_ATTR = -12;
@@ -568,30 +565,38 @@ define("dojox/dtl/dom", [
 		/*=====
 		,
 		onSetParent: function(node, up){
-			// summary: Stub called when setParent is used.
+			// summary:
+			//		Stub called when setParent is used.
 		},
 		onAddNode: function(node){
-			// summary: Stub called before new nodes are added
+			// summary:
+			//		Stub called before new nodes are added
 		},
 		onAddNodeComplete: function(node){
-			// summary: Stub called after new nodes are added
+			// summary:
+			//		Stub called after new nodes are added
 		},
 		onRemoveNode: function(node){
-			// summary: Stub called when nodes are removed
+			// summary:
+			//		Stub called when nodes are removed
 		},
 		onChangeAttribute: function(node, attribute, old, updated){
-			// summary: Stub called when an attribute is changed
+			// summary:
+			//		Stub called when an attribute is changed
 		},
 		onChangeData: function(node, old, updated){
-			// summary: Stub called when a data in a node is changed
+			// summary:
+			//		Stub called when a data in a node is changed
 		},
 		onClone: function(from, to){
-			// summary: Stub called when a node is duplicated
+			// summary:
+			//		Stub called when a node is duplicated
 			// from: DOMNode
 			// to: DOMNode
 		},
 		onAddEvent: function(node, type, description){
-			// summary: Stub to call when you're adding an event
+			// summary:
+			//		Stub to call when you're adding an event
 			// node: DOMNode
 			// type: String
 			// description: String
@@ -653,7 +658,8 @@ define("dojox/dtl/dom", [
 			return buffer;
 		},
 		dummyRender: function(context, buffer, asNode){
-			// summary: A really expensive way of checking to see how a rendering will look.
+			// summary:
+			//		A really expensive way of checking to see how a rendering will look.
 			//		Used in the ifchanged tag
 			var div = document.createElement("div");
 
@@ -1005,7 +1011,7 @@ define("dojox/dtl/dom", [
 					var fn = ddt.getTag("node:" + value.tagName.toLowerCase(), true);
 					if(fn){
 						// TODO: We need to move this to tokenization so that it's before the
-						// 				node and the parser can be passed here instead of null
+						//				node and the parser can be passed here instead of null
 						nodelist.push(fn(null, new dd.Token(type, value), value.tagName.toLowerCase()));
 					}
 					nodelist.push(new dd._DomNode(value));
@@ -1040,7 +1046,8 @@ define("dojox/dtl/dom", [
 			return nodelist;
 		},
 		next_token: function(){
-			// summary: Returns the next token in the list.
+			// summary:
+			//		Returns the next token in the list.
 			var token = this.contents[this.i++];
 			return new dd.Token(token[0], token[1]);
 		},

@@ -8,8 +8,6 @@ define("dojox/mobile/FixedSplitterPane", [
 
 	// module:
 	//		dojox/mobile/FixedSplitterPane
-	// summary:
-	//		Deprecated widget. Use dojox/mobile/Container instead.
 
 	return declare("dojox.mobile.FixedSplitterPane", Container, {
 		// summary:

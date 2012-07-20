@@ -3,16 +3,18 @@ function(lang, oo, registry, StencilPath){
 
 //dojox.drawing.tools.Pencil 
 var Pencil = oo.declare(
-	// summary:
-	//		Class for a drawable, continuous Path
-
 	StencilPath,
 	function(){
-		// summary: constructor
+		// summary:
+		//		constructor
 		this._started = false;
 	},
 	{
+		// summary:
+		//		Class for a drawable, continuous Path
+
 		draws:true,
+
 		// minDist: Number
 		//		The distance the mouse must travel before rendering
 		//		a path segment. Lower number is a higher definition

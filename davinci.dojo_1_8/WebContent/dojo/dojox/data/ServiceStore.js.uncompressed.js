@@ -11,7 +11,7 @@ return declare("dojox.data.ServiceStore",
 		//
 		//		The ServiceStore also supports lazy loading. References can be made to objects that have not been loaded.
 		//		For example if a service returned:
-		// 		|		{"name":"Example","lazyLoadedObject":{"$ref":"obj2"}}
+		//		|		{"name":"Example","lazyLoadedObject":{"$ref":"obj2"}}
 		//
 		//		And this object has accessed using the dojo.data API:
 		//		|		var obj = serviceStore.getValue(myObject,"lazyLoadedObject");
@@ -31,35 +31,40 @@ return declare("dojox.data.ServiceStore",
 			// options:
 			//		Keyword arguments
 			//
-			//		The *schema* parameter
-			//			This is a schema object for this store. This should be JSON Schema format.
+			//		####The *schema* parameter
 			//
-			//		The *service* parameter
-			//			This is the service object that is used to retrieve lazy data and save results
-			//			The function should be directly callable with a single parameter of an object id to be loaded
+			//		This is a schema object for this store. This should be JSON Schema format.
 			//
-			//		The *idAttribute* parameter
-			//			Defaults to 'id'. The name of the attribute that holds an objects id.
-			//			This can be a preexisting id provided by the server.
-			//			If an ID isn't already provided when an object
-			//			is fetched or added to the store, the autoIdentity system
-			//			will generate an id for it and add it to the index.
+			//		####The *service* parameter
 			//
-			//		The *estimateCountFactor* parameter
-			//			This parameter is used by the ServiceStore to estimate the total count. When
-			//			paging is indicated in a fetch and the response includes the full number of items
-			//			requested by the fetch's count parameter, then the total count will be estimated
-			//			to be estimateCountFactor multiplied by the provided count. If this is 1, then it is assumed that the server
-			//			does not support paging, and the response is the full set of items, where the
-			//			total count is equal to the numer of items returned. If the server does support
-			//			paging, an estimateCountFactor of 2 is a good value for estimating the total count
-			//			It is also possible to override _processResults if the server can provide an exact
-			//			total count.
+			//		This is the service object that is used to retrieve lazy data and save results
+			//		The function should be directly callable with a single parameter of an object id to be loaded
 			//
-			//		The *syncMode* parameter
-			//			Setting this to true will set the store to using synchronous calls by default.
-			//			Sync calls return their data immediately from the calling function, so
-			//			callbacks are unnecessary. This will only work with a synchronous capable service.
+			//		####The *idAttribute* parameter
+			//
+			//		Defaults to 'id'. The name of the attribute that holds an objects id.
+			//		This can be a preexisting id provided by the server.
+			//		If an ID isn't already provided when an object
+			//		is fetched or added to the store, the autoIdentity system
+			//		will generate an id for it and add it to the index.
+			//
+			//		####The *estimateCountFactor* parameter
+			//
+			//		This parameter is used by the ServiceStore to estimate the total count. When
+			//		paging is indicated in a fetch and the response includes the full number of items
+			//		requested by the fetch's count parameter, then the total count will be estimated
+			//		to be estimateCountFactor multiplied by the provided count. If this is 1, then it is assumed that the server
+			//		does not support paging, and the response is the full set of items, where the
+			//		total count is equal to the number of items returned. If the server does support
+			//		paging, an estimateCountFactor of 2 is a good value for estimating the total count
+			//		It is also possible to override _processResults if the server can provide an exact
+			//		total count.
+			//
+			//		####The *syncMode* parameter
+			//
+			//		Setting this to true will set the store to using synchronous calls by default.
+			//		Sync calls return their data immediately from the calling function, so
+			//		callbacks are unnecessary. This will only work with a synchronous capable service.
 			//
 			// description:
 			//		ServiceStore can do client side caching and result set updating if
@@ -130,6 +135,9 @@ return declare("dojox.data.ServiceStore",
 		estimateCountFactor: 1,
 		
 		getSchema: function(){
+			// summary:
+			//		Returns a reference to the JSON Schema
+			// returns: Object
 			return this.schema;
 		},
 
@@ -292,15 +300,18 @@ return declare("dojox.data.ServiceStore",
 			// summary:
 			//		See dojo.data.api.Read.fetch
 			// args:
-			//		The *queryOptions.cache* parameter
-			//			If true, indicates that the query result should be cached for future use. This is only available
-			//			if dojox.data.ClientFilter has been loaded before the ServiceStore
+			//		####The *queryOptions.cache* parameter
 			//
-			//		The *syncMode* parameter
-			//			Indicates that the call should be fetch synchronously if possible (this is not always possible)
+			//		If true, indicates that the query result should be cached for future use. This is only available
+			//		if dojox.data.ClientFilter has been loaded before the ServiceStore
 			//
-			//		The *clientFetch* parameter
-			//			This is a fetch keyword argument for explicitly doing client side filtering, querying, and paging
+			//		####The *syncMode* parameter
+			//
+			//		Indicates that the call should be fetch synchronously if possible (this is not always possible)
+			//
+			//		####The *clientFetch* parameter
+			//
+			//		This is a fetch keyword argument for explicitly doing client side filtering, querying, and paging
 
 			args = args || {};
 

@@ -162,51 +162,51 @@ declare("dojox.form.Uploader", [uploader, Button], {
 
 	onChange: function(/*Array*/ fileArray){
 		// summary:
-		// 		stub to connect
-		// 		Fires when files are selected
-		// 		Event is an array of last files selected
+		//		stub to connect
+		//		Fires when files are selected
+		//		Event is an array of last files selected
 	},
 
 	onBegin: function(/*Array*/ dataArray){
 		// summary:
-		// 		Fires when upload begins
+		//		Fires when upload begins
 	},
 
 	onProgress: function(/*Object*/ customEvent){
 		// summary:
-		// 		Stub to connect
-		// 		Fires on upload progress. Event is a normalized object of common properties
-		// 		from HTML5 uploaders and the Flash uploader. Will not fire for IFrame.
+		//		Stub to connect
+		//		Fires on upload progress. Event is a normalized object of common properties
+		//		from HTML5 uploaders and the Flash uploader. Will not fire for IFrame.
 		// customEvent:
-		// 		bytesLoaded: Number
-		// 			Amount of bytes uploaded so far of entire payload (all files)
-		//		bytesTotal: Number
+		//		- bytesLoaded: Number:
+		//			Amount of bytes uploaded so far of entire payload (all files)
+		//		- bytesTotal: Number:
 		//			Amount of bytes of entire payload (all files)
-		//		type: String
+		//		- type: String:
 		//			Type of event (progress or load)
-		//		timeStamp: Number
+		//		- timeStamp: Number:
 		//			Timestamp of when event occurred
 	},
 
 	onComplete: function(/*Object*/ customEvent){
 		// summary:
-		// 		stub to connect
-		// 		Fires when all files have uploaded
-		// 		Event is an array of all files
+		//		stub to connect
+		//		Fires when all files have uploaded
+		//		Event is an array of all files
 		this.reset();
 	},
 
 	onCancel: function(){
 		// summary:
-		// 		Stub to connect
-		// 		Fires when dialog box has been closed
+		//		Stub to connect
+		//		Fires when dialog box has been closed
 		//		without a file selection
 	},
 
 	onAbort: function(){
 		// summary:
-		// 		Stub to connect
-		// 		Fires when upload in progress was canceled
+		//		Stub to connect
+		//		Fires when upload in progress was canceled
 	},
 
 	onError: function(/*Object or String*/ evtObject){
@@ -222,7 +222,7 @@ declare("dojox.form.Uploader", [uploader, Button], {
 
 	upload: function(/*Object?*/ formData){
 		// summary:
-		// 		When called, begins file upload. Only supported with plugins.
+		//		When called, begins file upload. Only supported with plugins.
 	},
 
 	submit: function(/*form Node?*/ form){
@@ -236,12 +236,12 @@ declare("dojox.form.Uploader", [uploader, Button], {
 
 	reset: function(){
 		// summary:
-		// 		Resets entire input, clearing all files.
-		// 		NOTE:
-		// 		Removing individual files is not yet supported, because the HTML5 uploaders can't
-		// 		be edited.
-		// 		TODO:
-		// 		Add this ability by effectively, not uploading them
+		//		Resets entire input, clearing all files.
+		//		NOTE:
+		//		Removing individual files is not yet supported, because the HTML5 uploaders can't
+		//		be edited.
+		//		TODO:
+		//		Add this ability by effectively, not uploading them
 		//
 		delete this._files;
 		this._disconnectButton();
@@ -253,7 +253,7 @@ declare("dojox.form.Uploader", [uploader, Button], {
 
 	getFileList: function(){
 		// summary:
-		// 		Returns a list of selected files.
+		//		Returns a list of selected files.
 
 		var fileArray = [];
 		if(this.supports("multiple")){
@@ -381,8 +381,8 @@ declare("dojox.form.Uploader", [uploader, Button], {
 	var extensions = [dojox.form.UploaderOrg];
 	dojox.form.addUploaderPlugin = function(plug){
 		// summary:
-		// 		Handle Uploader plugins. When the dojox.form.addUploaderPlugin() function is called,
-		// 		the dojox.form.Uploader is recreated using the new plugin (mixin).
+		//		Handle Uploader plugins. When the dojox.form.addUploaderPlugin() function is called,
+		//		the dojox.form.Uploader is recreated using the new plugin (mixin).
 
 		extensions.push(plug);
 		declare("dojox.form.Uploader", extensions, {});

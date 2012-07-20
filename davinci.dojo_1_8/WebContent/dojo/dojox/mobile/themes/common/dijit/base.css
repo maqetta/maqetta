@@ -60,10 +60,9 @@ table.dijitInline {
 TABLE.dijitSelect {
 	padding: 0 !important; 
 }
-.dijitSelect .dijitValidationContainer,
 .dijitTextBox .dijitSpinnerButtonContainer,
 .dijitTextBox .dijitArrowButtonContainer,
-.dijitTextBox .dijitValidationContainer {
+.dijitValidationTextBox .dijitValidationContainer {
 	float: right;
 	text-align: center;
 }
@@ -73,8 +72,7 @@ TABLE.dijitSelect {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 }
-.dijitSelect .dijitValidationContainer,
-.dijitTextBox .dijitValidationContainer {
+.dijitValidationTextBox .dijitValidationContainer {
 	display: none;
 }
 .dijitTeeny {
@@ -342,7 +340,7 @@ div.dijitArrowButton {
 .dj_a11y .dijitTextBox input {
 	margin: 0 !important;
 }
-.dijitError input.dijitValidationInner,
+.dijitValidationTextBoxError input.dijitValidationInner,
 .dijitSelect input,
 .dijitTextBox input.dijitArrowButtonInner {
 	
@@ -391,7 +389,7 @@ div.dijitArrowButton {
 	#text-align: left !important;
 	color: black !important;
 }
-.dijitError .dijitValidationContainer {
+.dijitValidationTextBoxError .dijitValidationContainer {
 	display: inline;
 	cursor: default;
 }
@@ -400,6 +398,7 @@ div.dijitArrowButton {
 	
 	border-width: 0 0 0 1px !important; 
 }
+.dj_a11y .dijitSelect .dijitArrowButtonContainer,
 .dijitToolbar .dijitComboBox .dijitArrowButtonContainer {
 	
 	border-width: 0 !important;
@@ -2027,9 +2026,8 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitSelectRtl .dijitButtonText {
 	float: right;
 }
-.dijitSelectRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
-.dijitTextBoxRtl .dijitValidationContainer,
+.dijitValidationTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitArrowButtonContainer {
 	float: left;
 }

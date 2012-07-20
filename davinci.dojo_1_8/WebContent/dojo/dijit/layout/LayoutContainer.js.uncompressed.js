@@ -10,21 +10,9 @@ define("dijit/layout/LayoutContainer", [
 // module:
 //		dijit/layout/LayoutContainer
 
-
-// This argument can be specified for the children of a LayoutContainer.
-// Since any widget can be specified as a LayoutContainer child, mix it
-// into the base widget class.  (This is a hack, but it's effective.)
-lang.extend(_WidgetBase, {
-	// layoutAlign: String
-	//		"none", "left", "right", "bottom", "top", and "client".
-	//		See the LayoutContainer description for details on this parameter.
-	layoutAlign: 'none'
-});
-
-return declare("dijit.layout.LayoutContainer", _LayoutWidget, {
+var LayoutContainer = declare("dijit.layout.LayoutContainer", _LayoutWidget, {
 	// summary:
 	//		Deprecated.  Use `dijit.layout.BorderContainer` instead.
-	//
 	// description:
 	//		Provides Delphi-style panel layout semantics.
 	//
@@ -39,6 +27,9 @@ return declare("dijit.layout.LayoutContainer", _LayoutWidget, {
 	//
 	//		Note that there can only be one client element, but there can be multiple left, right, top,
 	//		or bottom elements.
+	//
+	//		See `LayoutContainer.ChildWidgetProperties` for details on the properties that can be set on
+	//		children of a `LayoutContainer`.
 	//
 	// example:
 	// |	<style>
@@ -81,4 +72,20 @@ return declare("dijit.layout.LayoutContainer", _LayoutWidget, {
 	}
 });
 
+LayoutContainer.ChildWidgetProperties = {
+	// summary:
+	//		This property can be specified for the children of a LayoutContainer.
+
+	// layoutAlign: String
+	//		"none", "left", "right", "bottom", "top", and "client".
+	//		See the LayoutContainer description for details on this parameter.
+	layoutAlign: 'none'
+};
+
+// Since any widget can be specified as a LayoutContainer child, mix it
+// into the base widget class.  (This is a hack, but it's effective.)
+// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ LayoutContainer.ChildWidgetProperties);
+
+return LayoutContainer;
 });

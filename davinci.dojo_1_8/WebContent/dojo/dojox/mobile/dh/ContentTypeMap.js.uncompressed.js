@@ -4,11 +4,13 @@ define("dojox/mobile/dh/ContentTypeMap", [
 
 	// module:
 	//		dojox/mobile/dh/ContentTypeMap
-	// summary:
-	//		A component that provides a map for determining the content handler
-	//		class from a content-type.
 
-	var o = lang.getObject("dojox.mobile.dh.ContentTypeMap", true);
+	var o = {
+		// summary:
+		//		A component that provides a map for determining the content handler
+		//		class from a content-type.
+	};
+	lang.setObject("dojox.mobile.dh.ContentTypeMap", o);
 
 	o.map = {
 		"html": "dojox/mobile/dh/HtmlContentHandler",

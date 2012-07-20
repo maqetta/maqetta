@@ -19,15 +19,15 @@ var reverseApi = {
 	_reversed: false,
 	reverse: function(/*Boolean*/keepPaused, /*Function ? */reverseEase){
 		// summary:
-		// 		The key method added to an animation to enable reversal.
+		//		The key method added to an animation to enable reversal.
 		// keepPaused: Boolean
-		// 		By default, calling reverse() will play the animation if
-		// 		it was paused. Pass in true to keep it paused (will have
-		// 		no effect if reverse is called while animation is playing).
+		//		By default, calling reverse() will play the animation if
+		//		it was paused. Pass in true to keep it paused (will have
+		//		no effect if reverse is called while animation is playing).
 		// reverseEase: Function
-		// 		A function to use for the reverse easing. This allows for
-		// 		the possibility of custom eases that are not in the dojo.fx
-		// 		library.
+		//		A function to use for the reverse easing. This allows for
+		//		the possibility of custom eases that are not in the dojo.fx
+		//		library.
 
 		var playing = this.status() == "playing";
 		this.pause();

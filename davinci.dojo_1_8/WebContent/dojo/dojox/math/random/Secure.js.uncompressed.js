@@ -17,7 +17,7 @@ dojo.declare("dojox.math.random.Secure", null, {
 		//		Initializes an instance of a secure random generator.
 		// prng: Function
 		//		function that returns an instance of PRNG (pseudo random number generator)
-		//  	with two methods: init(array) and next(). It should have a property "size"
+		//		with two methods: init(array) and next(). It should have a property "size"
 		//		to indicate the required pool size.
 		// noEvents: Boolean?
 		//		if false or absent, onclick and onkeypress event will be used to add

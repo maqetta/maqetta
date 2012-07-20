@@ -41,11 +41,13 @@ if(this.enabled!==_d){
 this.enabled=_d;
 this.button.set("disabled",!_d);
 }
+if(_d){
 if(typeof this.button.checked=="boolean"){
 _c=e.queryCommandState(c);
 if(this.checked!==_c){
 this.checked=_c;
 this.button.set("checked",e.queryCommandState(c));
+}
 }
 }
 }

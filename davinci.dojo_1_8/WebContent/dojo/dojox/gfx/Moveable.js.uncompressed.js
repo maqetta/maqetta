@@ -1,6 +1,6 @@
-define("dojox/gfx/Moveable", ["dojo/_base/lang","dojo/_base/declare","dojo/_base/array","dojo/_base/event","dojo/_base/connect",
+define("dojox/gfx/Moveable", ["dojo/_base/lang","dojo/_base/declare","dojo/_base/array","dojo/_base/event","dojo/topic",
 	"dojo/dom-class","dojo/_base/window","./Mover"], 
-  function(lang,declare,arr,event,connect,domClass,win,Mover){
+  function(lang,declare,arr,event,topic,domClass,win,Mover){
 
 	/*=====
 	declare("dojox.gfx.__MoveableCtorArgs", null, {
@@ -30,7 +30,8 @@ define("dojox/gfx/Moveable", ["dojo/_base/lang","dojo/_base/declare","dojo/_base
 			this.delay = (params && params.delay > 0) ? params.delay : 0;
 			this.mover = (params && params.mover) ? params.mover : Mover;
 			this.events = [
-				this.shape.connect("onmousedown", this, "onMouseDown")
+				this.shape.connect("onmousedown", this, "onMouseDown"),
+				this.shape.connect("touchstart", this, "onMouseDown")
 				// cancel text selection and text dragging
 				//, dojo.connect(this.handle, "ondragstart",   dojo, "stopEvent")
 				//, dojo.connect(this.handle, "onselectstart", dojo, "stopEvent")
@@ -51,33 +52,41 @@ define("dojox/gfx/Moveable", ["dojo/_base/lang","dojo/_base/declare","dojo/_base
 			//		event processor for onmousedown, creates a Mover for the shape
 			// e: Event
 			//		mouse event
+			var eOrig = e;
+			e = e.touches ? e.touches[0] : e;
 			if(this.delay){
 				this.events.push(
 					this.shape.connect("onmousemove", this, "onMouseMove"),
-					this.shape.connect("onmouseup", this, "onMouseUp"));
+					this.shape.connect("onmouseup", this, "onMouseUp"),
+					this.shape.connect("touchmove", this, "onMouseMove"),
+					this.shape.connect("touchend", this, "onMouseUp"));
 				this._lastX = e.clientX;
 				this._lastY = e.clientY;
 			}else{
-				new this.mover(this.shape, e, this);
+				new this.mover(this.shape, eOrig, this);
 			}
-			event.stop(e);
+			event.stop(eOrig);
 		},
 		onMouseMove: function(e){
 			// summary:
 			//		event processor for onmousemove, used only for delayed drags
 			// e: Event
 			//		mouse event
+			var eOrig = e;
+			e = e.touches ? e.touches[0] : e;
 			if(Math.abs(e.clientX - this._lastX) > this.delay || Math.abs(e.clientY - this._lastY) > this.delay){
 				this.onMouseUp(e);
 				new this.mover(this.shape, e, this);
 			}
-			event.stop(e);
+			event.stop(eOrig);
 		},
 		onMouseUp: function(e){
 			// summary:
 			//		event processor for onmouseup, used only for delayed delayed drags
 			// e: Event
 			//		mouse event
+			this.shape.disconnect(this.events.pop());
+			this.shape.disconnect(this.events.pop());
 			this.shape.disconnect(this.events.pop());
 			this.shape.disconnect(this.events.pop());
 		},
@@ -88,7 +97,7 @@ define("dojox/gfx/Moveable", ["dojo/_base/lang","dojo/_base/declare","dojo/_base
 			//		called before every move operation
 			// mover:
 			//		A Mover instance that fired the event.
-			connect.publish("/gfx/move/start", [mover]);
+			topic.publish("/gfx/move/start", mover);
 			domClass.add(win.body(), "dojoMove");
 		},
 		onMoveStop: function(/* dojox/gfx/Mover */ mover){
@@ -96,7 +105,7 @@ define("dojox/gfx/Moveable", ["dojo/_base/lang","dojo/_base/declare","dojo/_base
 			//		called after every move operation
 			// mover:
 			//		A Mover instance that fired the event.
-			connect.publish("/gfx/move/stop", [mover]);
+			topic.publish("/gfx/move/stop", mover);
 			domClass.remove(win.body(), "dojoMove");
 		},
 		onFirstMove: function(/* dojox/gfx/Mover */ mover){

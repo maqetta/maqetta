@@ -4,11 +4,7 @@ define("dojox/dtl/Inline", [
 	"dijit/_WidgetBase",
 	"dojo/query" // dojo.query
 ], function(lang,dd,Widget,Query){
-	/*=====
-		Widget = dijit._WidgetBase;
-		Query = dojo.query;
-		dd = dojox.dtl;
-	=====*/ 
+
 	dd.Inline = lang.extend(function(args, node){
 			this.create(args, node);
 		},

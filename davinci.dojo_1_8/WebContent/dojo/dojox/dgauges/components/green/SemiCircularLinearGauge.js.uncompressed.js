@@ -24,7 +24,7 @@ define("dojox/dgauges/components/green/SemiCircularLinearGauge", [
 			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#000000".
 			indicatorColor: [0,0,0],
-			constructor: function(args, node){
+			constructor: function(){
 				var scaler = new LinearScaler({
 					majorTickInterval: 25,
 					minorTickInterval: 5
@@ -62,7 +62,7 @@ define("dojox/dgauges/components/green/SemiCircularLinearGauge", [
 			drawBackground: function(g){
 				// summary:
 				//		Draws the background shape of the gauge.
-				// g: dojox/gfx/canvas.Group
+				// g: dojox/gfx/Group
 				//		The group used to draw the background. 
 				// tags:
 				//		protected
@@ -114,7 +114,7 @@ define("dojox/dgauges/components/green/SemiCircularLinearGauge", [
 			drawForeground: function(g){
 				// summary:
 				//		Draws the foreground shape of the gauge.
-				// g: dojox/gfx/canvas.Group
+				// g: dojox/gfx/Group
 				//		The group used to draw the foreground. 
 				// tags:
 				//		protected

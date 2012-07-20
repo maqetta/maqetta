@@ -41,7 +41,7 @@ return declare("dijit.form._FormWidgetMixin", null, {
 	//		Corresponds to the native HTML `<input>` element's attribute.
 	type: "text",
 
-	// tabIndex: Integer
+	// tabIndex: String
 	//		Order fields are traversed when user hits the tab key
 	tabIndex: "0",
 	_setTabIndexAttr: "focusNode",	// force copy even when tabIndex default value, needed since Button is <span>

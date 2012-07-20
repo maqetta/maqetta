@@ -3,7 +3,7 @@ define("dojox/app/widgets/Container",["dojo/_base/declare","dojo/_base/lang","di
 return _1("dojox.app.widgets.Container",[_7,_8,_9,_d],{buildRendering:function(){
 if(!this.region){
 this.region="center";
-_4.set(this.srcNodeRef,"region","center");
+_4.set(this.srcNodeRef,"data-app-region","center");
 }
 this.inherited(arguments);
 _6.set(this.domNode,"overflow-x","hidden");
@@ -40,12 +40,13 @@ var pe=_5.getPadExtents(_10,cs);
 this._contentBox={l:_6.toPixelValue(_10,cs.paddingLeft),t:_6.toPixelValue(_10,cs.paddingTop),w:bb.w-pe.w,h:bb.h-pe.h};
 this.layout();
 },layout:function(){
-children=_b("> [region]",this.domNode).map(function(_11){
+children=_b("> [data-app-region], > [region]",this.domNode).map(function(_11){
 var w=_3.getEnclosingWidget(_11);
 if(w){
+w.region=_4.get(_11,"data-app-region")||_4.get(_11,"region");
 return w;
 }
-return {domNode:_11,region:_4.get(_11,"region")};
+return {domNode:_11,region:_4.get(_11,"data-app-region")||dom.Attr.get(_11,"region")};
 });
 if(this._contentBox){
 _c.layoutChildren(this.domNode,this._contentBox,children);

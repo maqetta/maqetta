@@ -1,17 +1,18 @@
 define("dojox/mobile/ToolBarButton", [
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/window",
 	"dojo/dom-class",
 	"dojo/dom-construct",
 	"dojo/dom-style",
 	"./sniff",
 	"./_ItemBase"
-], function(declare, lang, domClass, domConstruct, domStyle, has, ItemBase){
+], function(declare, lang, win, domClass, domConstruct, domStyle, has, ItemBase){
 
 	// module:
 	//		dojox/mobile/ToolBarButton
-	// summary:
-	//		A button widget which is placed in the Heading widget.
+
+	var classHash = {}; // static member to store CSS classes
 
 	return declare("dojox.mobile.ToolBarButton", ItemBase, {
 		// summary:
@@ -33,20 +34,21 @@ define("dojox/mobile/ToolBarButton", [
 
 		// light: Boolean
 		//		If true, this widget produces only a single `<span>` node when it
-		// 		has only an icon or only a label, and has no arrow. In that
-		// 		case, you cannot have both icon and label, or arrow even if you
-		// 		try to set them.
+		//		has only an icon or only a label, and has no arrow. In that
+		//		case, you cannot have both icon and label, or arrow even if you
+		//		try to set them.
 		light: true,
+
+		// defaultColor: String
+		//		CSS class for the default color.
+		defaultColor: "mblColorDefault",
+
+		// selColor: String
+		//		CSS class for the selected color.
+		selColor: "mblColorDefaultSel",
 
 		/* internal properties */
 		baseClass: "mblToolBarButton",
-
-		// defaultColor: [private] String
-		//		CSS class for default color.
-		defaultColor: "mblColorDefault",
-		// selColor: [private] String
-		//		CSS class for default selected color.
-		selColor: "mblColorDefaultSel",
 
 		_selStartMethod: "touch",
 		_selEndMethod: "touch",
@@ -71,7 +73,7 @@ define("dojox/mobile/ToolBarButton", [
 			if(this.arrow === "left" || this.arrow === "right"){
 				this.arrowNode = domConstruct.create("span", {
 					className: "mblToolBarButtonArrow mblToolBarButton" +
-					(this.arrow === "left" ? "Left" : "Right") + "Arrow"
+					(this.arrow === "left" ? "Left" : "Right") + "Arrow " + this.defaultColor 
 				}, this.domNode);
 				domClass.add(this.domNode, "mblToolBarButtonHas" +
 					(this.arrow === "left" ? "Left" : "Right") + "Arrow");
@@ -121,11 +123,14 @@ define("dojox/mobile/ToolBarButton", [
 			if(this.arrowNode && !has("ie")){
 				domStyle.set(this.arrowNode, "backgroundColor", domStyle.get(this.bodyNode, "backgroundColor"));
 				var s = domStyle.get(this.bodyNode, "backgroundImage");
-				if(s === "none"){ return false; }					
-				domStyle.set(this.arrowNode, "backgroundImage",
-							 s.replace(/\(top,/, "(top left,") // webkit new
-							 .replace(/0% 0%, 0% 100%/, "0% 0%, 100% 100%") // webkit old
-							 .replace(/50% 0%/, "0% 0%")); // moz
+				var cls = domClass.contains(this.bodyNode, this.defaultColor) ? this.defaultColor : this.selColor;
+				if(s === "none" || classHash[cls]){ return false; }
+				var style = ".mblToolBarButtonArrow." + cls + "{background-image:" +
+					s.replace(/\(top,/, "(top left,") // webkit new
+					 .replace(/0% 0%, 0% 100%/, "0% 0%, 100% 100%") // webkit old
+					 .replace(/50% 0%/, "0% 0%") + ";}"; // moz
+				classHash[cls] = 1;
+				domConstruct.create("style", {innerHTML:style}, win.doc.head, "first");
 			}
 			return true;
 		},
@@ -160,8 +165,14 @@ define("dojox/mobile/ToolBarButton", [
 			this.inherited(arguments);
 			if(selected){
 				domClass.replace(this.bodyNode, this.selColor, this.defaultColor);
+				if(this.arrowNode){
+					domClass.replace(this.arrowNode, this.selColor, this.defaultColor);
+				}
 			}else{
 				domClass.replace(this.bodyNode, this.defaultColor, this.selColor);
+				if(this.arrowNode){
+					domClass.replace(this.arrowNode, this.defaultColor, this.selColor);
+				}
 			}
 			domClass.toggle(this.domNode, "mblToolBarButtonSelected", selected);
 			domClass.toggle(this.bodyNode, "mblToolBarButtonBodySelected", selected);

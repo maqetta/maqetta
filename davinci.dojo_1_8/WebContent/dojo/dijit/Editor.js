@@ -57,13 +57,18 @@ _e.publish(_1b._scopeName+".Editor.getPlugin",o);
 }
 }
 if(!o.plugin){
+try{
 var pc=_1f.ctor||_b.getObject(_1f.name)||require(_1f.name);
 if(pc){
 o.plugin=new pc(_1f);
 }
 }
+catch(e){
+throw new Error(this.id+": cannot find plugin ["+_1f.name+"]");
+}
+}
 if(!o.plugin){
-throw new Error(this.id+": cannot find plugin",_1d);
+throw new Error(this.id+": cannot find plugin ["+_1f.name+"]");
 }
 _1d=o.plugin;
 }

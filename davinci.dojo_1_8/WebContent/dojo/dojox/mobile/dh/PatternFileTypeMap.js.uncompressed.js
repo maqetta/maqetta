@@ -4,11 +4,13 @@ define("dojox/mobile/dh/PatternFileTypeMap", [
 
 	// module:
 	//		dojox/mobile/dh/PatternFileTypeMap
-	// summary:
-	//		A component that provides a map for determining content-type from
-	//		the pattern of the URL.
 
-	var o = lang.getObject("dojox.mobile.dh.PatternFileTypeMap", true);
+	var o = {
+		// summary:
+		//		A component that provides a map for determining content-type from
+		//		the pattern of the URL.
+	};
+	lang.setObject("dojox.mobile.dh.PatternFileTypeMap", o);
 
 	o.map = {
 		".*\.html": "html",

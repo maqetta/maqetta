@@ -6,11 +6,7 @@ define("dojox/dtl/_DomTemplated", [
 	"dojo/cache",
 	"dijit/_TemplatedMixin"
 	], function(domConstruct,dtl,ddcd,ddrd,cache,TemplatedMixin){
-	/*=====
-		dtl = dojox.dtl;
-		cache = dojo.cache;
-		TemplatedMixin = dijit._TemplatedMixin;
-	=====*/
+
 	dtl._DomTemplated = function(){
 		// summary:
 		//		The base class for DOM-based templating.

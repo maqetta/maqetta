@@ -3,11 +3,11 @@ dojo.deprecated("dojox.drawing.ui.dom.Toolbar", "It may not even make it to the 
 
 return dojo.declare("dojox.drawing.ui.dom.Toolbar", [], {
 		// NOTE:
-		//			dojox.drawing.Toolbar is DEPRECATED.
-		//			The intention never was to use HTML as buttons for a Drawing.
-		//			This was implemented in order to finish the project for which
-		//			Drawing was developed.
-		//			Instead use: drawing/ui/Toolbar.js
+		//		dojox.drawing.Toolbar is DEPRECATED.
+		//		The intention never was to use HTML as buttons for a Drawing.
+		//		This was implemented in order to finish the project for which
+		//		Drawing was developed.
+		//		Instead use: drawing/ui/Toolbar.js
 
 		// summary:
 		//		Creates a Toolbar to be used with a DojoX Drawing.
@@ -32,15 +32,15 @@ return dojo.declare("dojox.drawing.ui.dom.Toolbar", [], {
 		// NOTE: There are plans to make the toolbar out of dojox.gfx vectors.
 		//		 This may change the APIs in the future.
 
-		//	baseClass:String
+		// baseClass:String
 		//		The CSS style to apply to the toolbar node
 		baseClass:"drawingToolbar",
 
-		//	buttonClass:String
+		// buttonClass:String
 		//		The CSS style to apply to each button node
 		buttonClass:"drawingButton",
 
-		//	iconClass:String
+		// iconClass:String
 		//		The CSS style to apply to each button icon node
 		iconClass:"icon",
 

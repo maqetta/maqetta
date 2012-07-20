@@ -48,14 +48,20 @@ var HtmlStore = declare("dojox.data.HtmlStore", null, {
 		//
 		// args:
 		//		An anonymous object to initialize properties.  It expects the following values:
-		//		dataId:	The id of the HTML table to use.
+		//
+		//		- dataId:	The id of the HTML table to use.
+		//
 		//		OR
-		//		url:	The url of the remote page to load
-		//		dataId:	The id of the table element in the remote page
+		//
+		//		- url:	The url of the remote page to load
+		//		- dataId:	The id of the table element in the remote page
+		//
 		//		and the option:
-		//		trimWhitespace:  Trim off any surrounding whitespace from the headers (attribute
-		//			names) and text content of the items in question.  Default is false for
-		//			backwards compatibility.
+		//
+		//		- trimWhitespace:  Trim off any surrounding whitespace from the headers (attribute
+		//		names) and text content of the items in question.  Default is false for
+		//		backwards compatibility.
+
 		if(args && "urlPreventCache" in args){
 			this.urlPreventCache = args.urlPreventCache?true:false;
 		}

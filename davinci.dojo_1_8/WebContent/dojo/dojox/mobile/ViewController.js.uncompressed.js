@@ -19,8 +19,6 @@ define("dojox/mobile/ViewController", [
 
 	// module:
 	//		dojox/mobile/ViewController
-	// summary:
-	//		A singleton class that controls view transition.
 
 	var Controller = declare("dojox.mobile.ViewController", null, {
 		// summary:
@@ -48,6 +46,10 @@ define("dojox/mobile/ViewController", [
 		fileTypeMapClass: "dojox/mobile/dh/SuffixFileTypeMap",
 
 		constructor: function(){
+			// summary:
+			//		Creates a new instance of the class.
+			// tags:
+			//		private
 			this.viewMap = {};
 			ready(lang.hitch(this, function(){
 				on(win.body(), "startTransition", lang.hitch(this, "onStartTransition"));

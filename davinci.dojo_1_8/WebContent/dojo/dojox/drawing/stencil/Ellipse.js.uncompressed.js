@@ -23,16 +23,15 @@ var __StencilData = {
 =====*/
 
 var Ellipse = oo.declare(
-	// summary:
-	//		Creates a dojox.gfx Ellipse based on data or points provided.
-
 	Base,
 	function(options){
 		// summary:
 		//		constructor
 	},
 	{
-		
+		// summary:
+		//		Creates a dojox.gfx Ellipse based on data or points provided.
+
 		type:"dojox.drawing.stencil.Ellipse",
 		anchorType: "group",
 		baseRender:true,

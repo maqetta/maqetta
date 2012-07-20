@@ -23,25 +23,28 @@ var Printer = declare("dojox.grid.enhanced.plugins.Printer", _Plugin, {
 	//	|								{table:"border='border'"}		//tagName:"attrbuteList" pairs, optional,
 	//	|																//control the html tags in the generated html
 	//	|	);
-	
-	// __printArgs: {
-	//		title: String
-	//			A title of the printed page can be specified. Optional.
-	//			If given, it's shown in an <h1> tag at the top of the page.
-	//		cssFiles: Array | String
-	//			CSS file paths. Optional.
-	//			Every row and column is given CSS classes, including:
-	//				grid_row_{row-number}, grid_odd_row, grid_even_row, grid_header,
-	//				grid_col_{col-number}, grid_odd_col, grid_even_col
-	//			{row_number} and {col-number} are both integers starting from 1.
-	//			Row classes are for <thead> and <tbody> tags.
-	//			Column classes are for <th> and <td> tags.
-	//			Users can use these classes in the CSS files, but cannot define their own.
-	//		writerArgs: Object (Association Array)
-	//			Arguments for TableWriter.
-	//		fetchArgs: object?
-	//			Any arguments for store.fetch
-	// }
+
+	/*=====
+	__printArgs: {
+		// title: String
+		//		A title of the printed page can be specified. Optional.
+		//		If given, it's shown in an <h1> tag at the top of the page.
+		// cssFiles: Array | String
+		//		CSS file paths. Optional.
+		//		Every row and column is given CSS classes, including:
+		//
+		//		- grid_row_{row-number}, grid_odd_row, grid_even_row, grid_header,
+		//				grid_col_{col-number}, grid_odd_col, grid_even_col
+		//		- {row_number} and {col-number} are both integers starting from 1.
+		//		- Row classes are for <thead> and <tbody> tags.
+		//		- Column classes are for <th> and <td> tags.
+		//		- Users can use these classes in the CSS files, but cannot define their own.
+		// writerArgs: Object (Association Array)
+		//		Arguments for TableWriter.
+		// fetchArgs: object?
+		//		Any arguments for store.fetch
+	},
+	=====*/
 	
 	// name: String
 	//		Plugin name

@@ -13,19 +13,20 @@ var _12=_f.resultSize||null;
 this._doResize(_10,_11,_12);
 },_doLayout:function(_13){
 if(!_13){
-console.warn("layout empaty view.");
+console.warn("layout empty view.");
 return;
 }
 var _14,_15,_16;
 if(_13.selectedChild&&_13.selectedChild.isFullScreen){
 console.warn("fullscreen sceen layout");
 }else{
-_15=_6("> [region]",_13.domNode).map(function(_17){
+_15=_6("> [data-app-region], > [region]",_13.domNode).map(function(_17){
 var w=_a.getEnclosingWidget(_17);
 if(w){
+w.region=_8.get(_17,"data-app-region")||_8.get(_17,"region");
 return w;
 }
-return {domNode:_17,region:_8.get(_17,"region")};
+return {domNode:_17,region:_8.get(_17,"data-app-region")||_8.get(_17,"region")};
 });
 if(_13.selectedChild){
 _15=_5.filter(_15,function(c){
@@ -41,13 +42,6 @@ _7.set(c.domNode,"zIndex",100);
 }
 return c.domNode&&c.region;
 },_13);
-}else{
-_5.forEach(_15,function(c){
-if(c&&(c instanceof dojox.app.View)&&c.domNode&&c.region=="center"){
-_7.set(c.domNode,"zIndex",25);
-_7.set(c.domNode,"display","none");
-}
-});
 }
 }
 if(_13._contentBox){

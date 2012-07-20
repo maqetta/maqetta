@@ -134,10 +134,13 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	//		Bi-directional support,	the main variable which is responsible for the direction of the text.
 	//		The text direction can be different than the GUI direction by using this parameter in creation
 	//		of a widget.
+	//
 	//		Allowed values:
-	//			1. "ltr"
-	//			2. "rtl"
-	//			3. "auto" - contextual the direction of a text defined by first strong letter.
+	//
+	//		1. "ltr"
+	//		2. "rtl"
+	//		3. "auto" - contextual the direction of a text defined by first strong letter.
+	//
 	//		By default is as the page direction.
 	textDir: "",
 
@@ -257,8 +260,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	//		formats of the above list.
 	//
 	//		There are also some shorthands for backwards compatibility:
+	//
 	//		- string --> { node: string, type: "attribute" }, for example:
+	//
 	//	|	"focusNode" ---> { node: "focusNode", type: "attribute" }
+	//
 	//		- "" --> { node: "domNode", type: "attribute" }
 	attributeMap: {},
 
@@ -269,6 +275,22 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	//////////// INITIALIZATION METHODS ///////////////////////////////////////
 
+	/*=====
+	constructor: function(params, srcNodeRef){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- if this is a behavioral widget then apply behavior to that srcNodeRef
+		//		- otherwise, replace srcNodeRef with my generated DOM tree
+	 },
+	=====*/
+
 	postscript: function(/*Object?*/params, /*DomNode|String*/srcNodeRef){
 		// summary:
 		//		Kicks off widget instantiation.  See create() for details.
@@ -277,20 +299,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		this.create(params, srcNodeRef);
 	},
 
-	create: function(/*Object?*/params, /*DomNode|String?*/srcNodeRef){
+	create: function(params, srcNodeRef){
 		// summary:
 		//		Kick off the life-cycle of a widget
-		// params:
-		//		Hash of initialization parameters for widget, including
-		//		scalar values (like title, duration etc.) and functions,
-		//		typically callbacks like onClick.
-		// srcNodeRef:
-		//		If a srcNodeRef (DOM node) is specified:
-		//			- use srcNodeRef.innerHTML as my contents
-		//			- if this is a behavioral widget then apply behavior
-		//			  to that srcNodeRef
-		//			- otherwise, replace srcNodeRef with my generated DOM
-		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
 		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
@@ -298,6 +309,15 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		//
 		//		Of course, adventurous developers could override create entirely, but this should
 		//		only be done as a last resort.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- if this is a behavioral widget then apply behavior to that srcNodeRef
+		//		- otherwise, replace srcNodeRef with my generated DOM tree
 		// tags:
 		//		private
 
@@ -684,7 +704,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	get: function(name){
 		// summary:
 		//		Get a property from a widget.
-		//	name:
+		// name:
 		//		The property to get.
 		// description:
 		//		Get a named property from a widget. The property may
@@ -704,9 +724,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	set: function(name, value){
 		// summary:
 		//		Set a property on a widget
-		//	name:
+		// name:
 		//		The property to set.
-		//	value:
+		// value:
 		//		The value to set in the property.
 		// description:
 		//		Sets named properties on a widget which may potentially be handled by a
@@ -834,9 +854,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		return ret;
 	},
 
-	on: function(/*String*/ type, /*Function*/ func){
+	on: function(/*String|Function*/ type, /*Function*/ func){
 		// summary:
 		//		Call specified function when event occurs, ex: myWidget.on("click", function(){ ... }).
+		// type:
+		//		Name of event (ex: "click") or extension event like touch.press.
 		// description:
 		//		Call specified function when event `type` occurs, ex: `myWidget.on("click", function(){ ... })`.
 		//		Note that the function is not run in any particular scope, so if (for example) you want it to run in the
@@ -853,9 +875,10 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		return this.own(on(this.domNode, type, func))[0];
 	},
 
-	_onMap: function(/*String*/ type){
+	_onMap: function(/*String|Function*/ type){
 		// summary:
-		//		Maps on() type parameter (ex: "mousemove") to method name (ex: "onMouseMove")
+		//		Maps on() type parameter (ex: "mousemove") to method name (ex: "onMouseMove").
+		//		If type is a synthetic event like touch.press then returns undefined.
 		var ctor = this.constructor, map = ctor._onMap;
 		if(!map){
 			map = (ctor._onMap = {});
@@ -865,7 +888,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 				}
 			}
 		}
-		return map[type.toLowerCase()];	// String
+		return map[typeof type == "string" && type.toLowerCase()];	// String
 	},
 
 	toString: function(){
@@ -896,9 +919,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 			/*String|Function*/ event,
 			/*String|Function*/ method){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use this.own(on(...)) or this.own(aspect.after(...)) instead.
+		//
 		//		Connects specified obj/event to specified method of this object
 		//		and registers for disconnect() on widget destroy.
-		// description:
+		//
 		//		Provide widget-specific analog to dojo.connect, except with the
 		//		implicit use of this widget as the target object.
 		//		Events connected with `this.connect` are disconnected upon
@@ -921,8 +946,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	disconnect: function(handle){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use handle.remove() instead.
+		//
 		//		Disconnects handle created by `connect`.
-		//		Deprecated.	Will be removed in 2.0.	Just use handle.remove() instead.
 		// tags:
 		//		protected
 
@@ -931,9 +957,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	subscribe: function(t, method){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use this.own(topic.subscribe()) instead.
+		//
 		//		Subscribes to the specified topic and calls the specified method
 		//		of this object and registers for unsubscribe() on widget destroy.
-		// description:
+		//
 		//		Provide widget-specific analog to dojo.subscribe, except with the
 		//		implicit use of this widget as the target object.
 		// t: String
@@ -954,6 +982,8 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	unsubscribe: function(/*Object*/ handle){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use handle.remove() instead.
+		//
 		//		Unsubscribes handle created by this.subscribe.
 		//		Also removes handle from this widget's list of subscriptions
 		// tags:
@@ -1042,7 +1072,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		//		The function overridden in the _BidiSupport module,
 		//		its main purpose is to calculate the direction of the
 		//		text, if was defined by the programmer through textDir.
-		//	tags:
+		// tags:
 		//		protected.
 		return originalDir;
 	},

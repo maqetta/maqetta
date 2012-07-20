@@ -8,17 +8,20 @@ return declare("dojox.data.FileStore", null, {
 		// description:
 		//		A simple store that provides a datastore interface to a filesystem.  It takes a few parameters
 		//		for initialization:
-		//			url:	The URL of the service which provides the file store serverside implementation.
-		//			label:	The attribute of the file to use as the huma-readable text.  Default is 'name'.
+		//
+		//		- url:	The URL of the service which provides the file store serverside implementation.
+		//		- label:	The attribute of the file to use as the human-readable text.  Default is 'name'.
+		//
 		//		The purpose of this store is to represent a file as a datastore item.  The
 		//		datastore item by default has the following attributes that can be examined on it.
-		//			directory:	Boolean indicating if the file item represents a directory.
-		//			name:	The filename with no path informatiom.
-		//			path:	The file complete file path including name, relative to the location the
-		//					file service scans from
-		//			size:	The size of the file, in bytes.
-		//			parentDir:	The parent directory path.
-		//			children:	Any child files contained by a directory file item.
+		//
+		//		- directory:	Boolean indicating if the file item represents a directory.
+		//		- name:	The filename with no path informatiom.
+		//		- path:	The file complete file path including name, relative to the location the
+		//			file service scans from
+		//		- size:	The size of the file, in bytes.
+		//		- parentDir:	The parent directory path.
+		//		- children:	Any child files contained by a directory file item.
 		//
 		//		Note that the store's server call pattern is RESTlike.
 		//

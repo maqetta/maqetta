@@ -9,6 +9,7 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		//		A gauge is a composition of elements added to the gauge using the addElement method.
 		//		Elements are drawn from back to front in the same order they are added (using addElement).
 		//		An elements can be: 
+		//
 		//		- A GFX drawing functions typically used for defining the style of the gauge.
 		//		- A scale: CircularScale or RectangularScale depending on the type of gauge.
 		//		- A text, using the TextIndicator
@@ -34,11 +35,10 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		value: 0,
 		
 		// font: Object
-		//		The font of the gauge used by scales if not overridden.
+		//		The font of the gauge used by elements if not overridden.
 		font: null,
 		
 		constructor: function(/* Object */args, /* DOMNode */ node){
-			this._addGroupBoundingBoxSupport();
 			this.font = {
 				family: "Helvetica",
 				style: "normal",
@@ -69,103 +69,6 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 			//		private
 			if(this._node)
 				this._node.style.cursor = type;
-		},
-		
-		_addGroupBoundingBoxSupport: function(){
-			// summary:
-			//		Internal method.
-			// tags:
-			//		private
-			dojox.gfx.addRect = function( /*dojox.gfx.Rectangle*/a, /*dojox.gfx.Rectangle*/ b){
-				// returns:
-				//		a rectangle representing the addition of the two given.
-				if(a === null && b === null){
-					return null;
-				}
-				if(a === null && b !== null){
-					return b;
-				}
-				if(b === null){
-					return a;
-				}
-				var single1 = Math.min(a.x, b.x);
-				var single2 = Math.max(a.x + a.width, b.x + b.width);
-				var single3 = Math.min(a.y, b.y);
-				var single4 = Math.max(a.y + a.height, b.y + b.height);
-				return {
-					x: single1,
-					y: single3,
-					width: single2 - single1,
-					height: single4 - single3
-				};
-			};
-			
-			lang.extend(matrix.Matrix2D, {
-				isIdentity: function(){
-					// summary:
-					//		Indicates whether this transform corresponds to the identity operation.
-					return this.xy === 0 && this.yx === 0 && this.xx === 1 && this.yy === 1 && this.dx === 0 && this.dy === 0;
-				},
-				transformRectangle: function(/* dojox.gfx.Rectangle */rect){
-					// summary:
-					//		Applies the transformation to a rectangle.
-					// description:
-					//		The method applies the transformation on all corners of the
-					//		rectangle and returns the smallest rectangle enclosing the 4 transformed
-					//		points.
-					rect = rect ||
-					{
-						x: 0,
-						y: 0,
-						width: 0,
-						height: 0
-					};
-					if(this.isIdentity()){
-						return {
-							"x": rect.x,
-							"y": rect.y,
-							"width": rect.width,
-							"height": rect.height
-						};
-					}
-					var m = dojox.gfx.matrix;
-					var p0 = m.multiplyPoint(this, rect.x, rect.y);
-					var p1 = m.multiplyPoint(this, rect.x, rect.y + rect.height);
-					var p2 = m.multiplyPoint(this, rect.x + rect.width, rect.y);
-					var p3 = m.multiplyPoint(this, rect.x + rect.width, rect.y + rect.height);
-					var minx = Math.min(p0.x, Math.min(p1.x, Math.min(p2.x, p3.x)));
-					var miny = Math.min(p0.y, Math.min(p1.y, Math.min(p2.y, p3.y)));
-					var maxx = Math.max(p0.x, Math.max(p1.x, Math.max(p2.x, p3.x)));
-					var maxy = Math.max(p0.y, Math.max(p1.y, Math.max(p2.y, p3.y)));
-					var r = {};
-					r.x = minx;
-					r.y = miny;
-					r.width = maxx - minx;
-					r.height = maxy - miny;
-					return r;
-				}
-			});
-			lang.extend(canvas.Group, {
-				getBoundingBox: function(){
-					var bb = null;
-					var cs = this.children;
-					var ncs = this.children.length;
-					var c;
-					for(var i = 0; i < ncs; ++i){
-						c = cs[i];
-						var cbb = c.getBoundingBox();
-						if(!cbb){
-							continue;
-						}
-						var ct = c.getTransform();
-						if(ct && !ct.isIdentity()){
-							cbb = ct.transformRectangle(cbb);
-						}
-						bb = bb ? dojox.gfx.addRect(bb, cbb) : cbb;
-					}
-					return bb;
-				}
-			})
 		},
 		
 		_computeBoundingBox: function(/* Object */element){
@@ -231,6 +134,7 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 			//		The name of the element to be added.
 			// element: Object
 			//		This parameter can be:
+			//
 			//		- A function which takes on argument of type GFX Group and return null or a
 			//		GFX element retrievable using the getElementRenderer() method.
 			//		- A Scale instance, i.e. CircularScale or RectangularScale.
@@ -318,6 +222,8 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		onStartEditing: function(event){
 			// summary:
 			//		Called when an interaction begins (keyboard, mouse or gesture).
+			// event:
+			//		On object with a unique member "indicator". This member is a reference to the modified indicator.
 			// tags:
 			//		callback
 		},
@@ -325,6 +231,8 @@ define("dojox/dgauges/GaugeBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		onEndEditing: function(event){
 			// summary:
 			//		Called when an interaction ends (keyboard, mouse or gesture).
+			// event:
+			//		On object with a unique member "indicator". This member is a reference to the modified indicator.
 			// tags:
 			//		callback
 		}

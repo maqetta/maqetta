@@ -4,11 +4,6 @@ define("dojox/drawing/ui/Button", ["dojo", "../util/oo", "../stencil/Rect", "../
 
 //dojox.drawing.ui.Button = 
 var Button = oo.declare(
-	// summary:
-	//		Creates a clickable button in "UI" mode of the drawing.
-	// description:
-	//		Creates a 4-state button: normal, hover, active, selected.
-	//		Optionally may include button text or an icon.
 	function(options){
 		options.subShape = true;
 		dojo.mixin(this, options);
@@ -77,7 +72,12 @@ var Button = oo.declare(
 		this.onOut();
 		
 	},{
-		
+		// summary:
+		//		Creates a clickable button in "UI" mode of the drawing.
+		// description:
+		//		Creates a 4-state button: normal, hover, active, selected.
+		//		Optionally may include button text or an icon.
+
 		callback:null,
 		scope:null,
 		hitched:null,

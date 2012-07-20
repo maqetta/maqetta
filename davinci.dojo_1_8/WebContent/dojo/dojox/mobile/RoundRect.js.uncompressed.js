@@ -6,8 +6,6 @@ define("dojox/mobile/RoundRect", [
 
 	// module:
 	//		dojox/mobile/RoundRect
-	// summary:
-	//		A simple round rectangle container.
 
 	return declare("dojox.mobile.RoundRect", Container, {
 		// summary:

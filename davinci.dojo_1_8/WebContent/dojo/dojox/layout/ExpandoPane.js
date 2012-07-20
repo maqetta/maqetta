@@ -1,8 +1,8 @@
 //>>built
-require({cache:{"url:dojox/layout/resources/ExpandoPane.html":"<div class=\"dojoxExpandoPane\">\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"onclick:toggle\"><span class=\"a11yNode\">X</span></div>\t\t\t\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\n\t</div>\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\n\t</div>\n</div>\n"}});
+require({cache:{"url:dojox/layout/resources/ExpandoPane.html":"<div class=\"dojoxExpandoPane\">\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"ondijitclick:toggle\"><span class=\"a11yNode\">X</span></div>\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\n\t</div>\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\n\t</div>\n</div>\n"}});
 define("dojox/layout/ExpandoPane",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/array","dojo/_base/connect","dojo/_base/event","dojo/_base/fx","dojo/dom-style","dojo/dom-class","dojo/dom-geometry","dojo/text!./resources/ExpandoPane.html","dijit/layout/ContentPane","dijit/_TemplatedMixin","dijit/_Contained","dijit/_Container"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f){
 _1.experimental("dojox.layout.ExpandoPane");
-return _3("dojox.layout.ExpandoPane",[_c,_d,_e,_f],{attributeMap:_2.delegate(_c.prototype.attributeMap,{title:{node:"titleNode",type:"innerHTML"}}),templateString:_b,easeOut:"dojo._DefaultEasing",easeIn:"dojo._DefaultEasing",duration:420,startExpanded:true,previewOpacity:0.75,previewOnDblClick:false,baseClass:"dijitExpandoPane",postCreate:function(){
+return _3("dojox.layout.ExpandoPane",[_c,_d,_e,_f],{attributeMap:_2.delegate(_c.prototype.attributeMap,{title:{node:"titleNode",type:"innerHTML"}}),templateString:_b,easeOut:"dojo._DefaultEasing",easeIn:"dojo._DefaultEasing",duration:420,startExpanded:true,previewOpacity:0.75,previewOnDblClick:false,tabIndex:"0",_setTabIndexAttr:"iconNode",baseClass:"dijitExpandoPane",postCreate:function(){
 this.inherited(arguments);
 this._animConnects=[];
 this._isHorizontal=true;
@@ -38,6 +38,7 @@ this._isHorizontal=/top|bottom/.test(this.region);
 }
 _8.set(this.domNode,{overflow:"hidden",padding:0});
 this.connect(this.domNode,"ondblclick",this.previewOnDblClick?"preview":"toggle");
+this.iconNode.setAttribute("aria-controls",this.id);
 if(this.previewOnDblClick){
 this.connect(this.getParent(),"_layoutChildren",_2.hitch(this,function(){
 this._isonlypreview=false;
@@ -64,6 +65,7 @@ this._showing=false;
 this._hideWrapper();
 this._hideAnim.gotoPercent(99,true);
 }
+this.domNode.setAttribute("aria-expanded",this._showing);
 this._hasSizes=true;
 },_afterResize:function(e){
 var tmp=this._currentSize;
@@ -115,6 +117,7 @@ this._hideAnim&&this._hideAnim.stop();
 this._showAnim.play();
 }
 this._showing=!this._showing;
+this.domNode.setAttribute("aria-expanded",this._showing);
 },_hideWrapper:function(){
 _9.add(this.domNode,"dojoxExpandoClosed");
 _8.set(this.cwrapper,{visibility:"hidden",opacity:"0",overflow:"hidden"});

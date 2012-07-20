@@ -2,17 +2,16 @@ define("dojox/css3/transit", ["dojo/_base/array","dojo/dom-style","dojo/Deferred
 	function(darray, domStyle, DeferredList, transition){
 	// module: 
 	//		dojox/css3/transit
-	// summary:
-	//		This module defines the transit method which is used
-	//		to transit the specific region of an application from 
-	//		one view/page to another view/page. This module relies 
-	//		on utilities provided by dojox/css3/transition for the 
-	//		transition effects.
 	
-	var transit = function(from, to, options){
+	var transit = function(/*DomNode*/from, /*DomNode*/to, /*Object?*/options){
 		// summary:
-		//		The method to transit from node out of display and 
-		//		transit to node into display.
+		//		Performs a transition to hide a node and show another node.
+		// description:
+		//		This module defines the transit method which is used
+		//		to transit the specific region of an application from 
+		//		one view/page to another view/page. This module relies 
+		//		on utilities provided by dojox/css3/transition for the 
+		//		transition effects.
 		// options:
 		//		The argument to specify the transit effect and direction.
 		//		The effect can be specified in options.transition. The
@@ -78,15 +77,5 @@ define("dojox/css3/transit", ["dojo/_base/array","dojo/dom-style","dojo/Deferred
 		}
 	};
 	
-	/*=====
-    return {
-		// summary:
-		//		This module defines the transit function which is used
-		//		to transit the specific region of an application from 
-		//		one view/page to another view/page. This module relies 
-		//		on utilities provided by dojox/css3/transition for the 
-		//		transition effects.
-    };
-    =====*/
 	return transit;
 });

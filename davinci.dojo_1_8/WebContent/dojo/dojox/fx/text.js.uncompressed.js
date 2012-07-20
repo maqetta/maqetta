@@ -7,18 +7,20 @@ textFx._split = function(/*Object*/ args){
 	// description:
 	//		Returns an animation that will split the node into a grid
 	//		of pieces that move independently.
+	//
 	//		NOTE:
-	//			In some rendering engines, the text will appear to "jump" from its initial position
-	//			when the animation begins.	To work around this bug, enclose the node's text in a `<p>` or `<div>`.
+	//		In some rendering engines, the text will appear to "jump" from its initial position
+	//		when the animation begins.	To work around this bug, enclose the node's text in a `<p>` or `<div>`.
 	// args:
 	//		- args.crop: Boolean - If true, pieces will be positioned relatively rather than absolutely
 	//		- args.text: String - Text to place inside the node (otherwise node.innerHTML is used)
 	//		- args.words: Boolean - If true, the text will be split into words rather than characters
 	//		- args.pieceAnimation: Function(piece, pieceCoords, nodeCoords, number, numPieces)
-	//			- Returns either the dojo.Animation or an array of dojo.Animation objects for the piece;
-	//			  * pieceCoords is the result of dojo.coords(piece, true);
-	//			  * nodeCoords is the result of dojo.coords(args.node, true);
-	//			  * number is the piece's position in the array of pieces, and numPieces is the array.length
+	//			Returns either the dojo.Animation or an array of dojo.Animation objects for the piece.
+	//			The arguments:
+	//			- pieceCoords is the result of dojo.coords(piece, true);
+	//			- nodeCoords is the result of dojo.coords(args.node, true);
+	//			- number is the piece's position in the array of pieces, and numPieces is the array.length
 
 	var node = args.node = dom.byId(args.node),
 		s = node.style,
@@ -373,13 +375,13 @@ textFx.backspace = function(/*Object*/ args){
 	//		or characters that appear as if they were being backspaced (or typed) in real-time.
 	// args:
 	//		- args.interval: Float - The number of milliseconds between each piece's animation
-	//							     (default is determined by text length and args.duration);
+	//		  (default is determined by text length and args.duration);
 	//		- args.wordDelay: Integer - The number of milliseconds between each word
-	//								    (only effective when args.unhide = true)
+	//		  (only effective when args.unhide = true)
 	//		- args.fixed: Boolean - If true, only style.opacity changes; otherwise, style.display
-	//							    changes between none and inline, adding realism (default = false)
+	//		  changes between none and inline, adding realism (default = false)
 	//		- args.random: Float - If true, pieces have a random delay. The value defines how much
-	//							   randomness is introduced (only effective when args.unhide = true)
+	//		  randomness is introduced (only effective when args.unhide = true)
 	//		- args.unhide: Boolean - If true, the animation is reversed
 
 	var node = args.node = dom.byId(args.node);

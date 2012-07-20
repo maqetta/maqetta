@@ -119,7 +119,8 @@ define("dojo/request/iframe", [
 	}
 
 	function fireNextRequest(){
-		// summary: Internal method used to fire the next request in the queue.
+		// summary:
+		//		Internal method used to fire the next request in the queue.
 		var dfd;
 		try{
 			if(iframe._currentDfd || !iframe._dfdQueue.length){
@@ -138,11 +139,7 @@ define("dojo/request/iframe", [
 				options = response.options,
 				c2c = dfd._contentToClean = [],
 				formNode = dom.byId(options.form),
-				notify;
-
-			try{
-				notify = require('./notify');
-			}catch(e){}
+				notify = util.notify;
 
 			var data = options.data || null;
 
@@ -202,14 +199,14 @@ define("dojo/request/iframe", [
 				}
 				formNode.target = iframe._iframeName;
 
-				notify && notify.send(response);
+				notify && notify.emit('send', response);
 				iframe._notifyStart(response);
 				formNode.submit();
 			}else{
 				// otherwise we post a GET string by changing URL location for the
 				// iframe
 
-				notify && notify.send(response);
+				notify && notify.emit('send', response);
 				iframe._notifyStart(response);
 				iframe.setSrc(iframe._frame, response.url, true);
 			}

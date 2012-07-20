@@ -25,19 +25,19 @@ define("dijit/layout/BorderContainer", [
 var _Splitter = declare("dijit.layout._Splitter", [_Widget, _TemplatedMixin ],
 {
 	// summary:
-	//		A draggable spacer between two items in a `dijit.layout.BorderContainer`.
+	//		A draggable spacer between two items in a `dijit/layout/BorderContainer`.
 	// description:
-	//		This is instantiated by `dijit.layout.BorderContainer`.  Users should not
+	//		This is instantiated by `dijit/layout/BorderContainer`.  Users should not
 	//		create it directly.
 	// tags:
 	//		private
 
 /*=====
-	// container: [const] dijit.layout.BorderContainer
+	// container: [const] dijit/layout/BorderContainer
 	//		Pointer to the parent BorderContainer
 	container: null,
 
-	// child: [const] dijit.layout._LayoutWidget
+	// child: [const] dijit/layout/_LayoutWidget
 	//		Pointer to the pane associated with this splitter
 	child: null,
 
@@ -216,7 +216,7 @@ var _Gutter = declare("dijit.layout._Gutter", [_Widget, _TemplatedMixin],
 	//		Just a spacer div to separate side pane from center pane.
 	//		Basically a trick to lookup the gutter/splitter width from the theme.
 	// description:
-	//		Instantiated by `dijit.layout.BorderContainer`.  Users should not
+	//		Instantiated by `dijit/layout/BorderContainer`.  Users should not
 	//		create directly.
 	// tags:
 	//		private
@@ -237,7 +237,6 @@ var _Gutter = declare("dijit.layout._Gutter", [_Widget, _TemplatedMixin],
 var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 	// summary:
 	//		Provides layout in up to 5 regions, a mandatory center with optional borders along its 4 sides.
-	//
 	// description:
 	//		A BorderContainer is a box with a specified size, such as style="width: 500px; height: 500px;",
 	//		that contains a child widget marked region="center" and optionally children widgets marked
@@ -255,6 +254,9 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 	//		layoutPriority flag on the children determines which child is closer to the edge (low layoutPriority)
 	//		and which child is closer to the center (high layoutPriority).   layoutPriority can also be used
 	//		instead of the design attribute to control layout precedence of horizontal vs. vertical panes.
+	//
+	//		See `BorderContainer.ChildWidgetProperties` for details on the properties that can be set on
+	//		children of a `BorderContainer`.
 	// example:
 	// |	<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design: 'sidebar', gutters: false"
 	// |            style="width: 400px; height: 300px;">
@@ -265,9 +267,9 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 
 	// design: String
 	//		Which design is used for the layout:
-	//			- "headline" (default) where the top and bottom extend
-	//				the full width of the container
-	//			- "sidebar" where the left and right sides extend from top to bottom.
+	//
+	//		- "headline" (default) where the top and bottom extend the full width of the container
+	//		- "sidebar" where the left and right sides extend from top to bottom.
 	design: "headline",
 
 	// gutters: [const] Boolean
@@ -503,38 +505,39 @@ var BorderContainer = declare("dijit.layout.BorderContainer", _LayoutWidget, {
 	}
 });
 
-// This argument can be specified for the children of a BorderContainer.
-// Since any widget can be specified as a LayoutContainer child, mix it
-// into the base widget class.  (This is a hack, but it's effective.)
-lang.extend(_WidgetBase, {
+BorderContainer.ChildWidgetProperties = {
+	// summary:
+	//		These properties can be specified for the children of a BorderContainer.
+
 	// region: [const] String
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Values: "top", "bottom", "leading", "trailing", "left", "right", "center".
-	//		See the `dijit.layout.BorderContainer` description for details.
+	//		See the `dijit/layout/BorderContainer` description for details.
 	region: '',
 
 	// layoutPriority: [const] Number
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Children with a higher layoutPriority will be placed closer to the BorderContainer center,
 	//		between children with a lower layoutPriority.
 	layoutPriority: 0,
 
 	// splitter: [const] Boolean
-	//		Parameter for child of `dijit.layout.BorderContainer` where region != "center".
+	//		Parameter for children where region != "center".
 	//		If true, enables user to resize the widget by putting a draggable splitter between
 	//		this widget and the region=center widget.
 	splitter: false,
 
 	// minSize: [const] Number
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Specifies a minimum size (in pixels) for this widget when resized by a splitter.
 	minSize: 0,
 
 	// maxSize: [const] Number
-	//		Parameter for children of `dijit.layout.BorderContainer`.
 	//		Specifies a maximum size (in pixels) for this widget when resized by a splitter.
 	maxSize: Infinity
-});
+};
+
+// Since any widget can be specified as a LayoutContainer child, mix it
+// into the base widget class.  (This is a hack, but it's effective.)
+// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ BorderContainer.ChildWidgetProperties);
 
 // For monkey patching
 BorderContainer._Splitter = _Splitter;

@@ -1,6 +1,6 @@
 //>>built
 require({cache:{"url:dojox/widget/Calendar/CalendarMonthYear.html":"<div class=\"dojoxCal-MY-labels\" style=\"left: 0px;\"\t\n\tdojoAttachPoint=\"myContainer\" dojoAttachEvent=\"onclick: onClick\">\n\t\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\n\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr class=\"dojoxCal-MY-G-Template\">\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t\t\t <tr class=\"dojoxCal-MY-btns\">\n\t\t\t\t\t\t \t <td class=\"dojoxCal-MY-btns\" colspan=\"4\">\n\t\t\t\t\t\t \t\t <span class=\"dijitReset dijitInline dijitButtonNode ok-btn\" dojoAttachEvent=\"onclick: onOk\" dojoAttachPoint=\"okBtn\">\n\t\t\t\t\t\t \t \t \t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">OK</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t\t\t <span class=\"dijitReset dijitInline dijitButtonNode cancel-btn\" dojoAttachEvent=\"onclick: onCancel\" dojoAttachPoint=\"cancelBtn\">\n\t\t\t\t\t\t \t \t\t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">Cancel</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t \t </td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t</tbody>\n\t\t</table>\n</div>\n"}});
-define("dojox/widget/_CalendarMonthYearView",["dojo/_base/declare","dojox/widget/_CalendarView","dijit/_TemplatedMixin","dojo/query","dojo/dom-class","dojo/_base/connect","dojo/_base/event","dojo/_base/lang","dojo/date/locale","dojo/text!./Calendar/CalendarMonthYear.html"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
+define("dojox/widget/_CalendarMonthYearView",["dojo/_base/declare","./_CalendarView","dijit/_TemplatedMixin","dojo/query","dojo/dom-class","dojo/_base/connect","dojo/_base/event","dojo/_base/lang","dojo/date/locale","dojo/text!./Calendar/CalendarMonthYear.html"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
 return _1("dojox.widget._CalendarMonthYearView",[_2,_3],{templateString:_a,datePart:"year",displayedYears:10,useHeader:false,postCreate:function(){
 this.cloneClass(".dojoxCal-MY-G-Template",5,".dojoxCal-MY-btns");
 this.monthContainer=this.yearContainer=this.myContainer;
@@ -100,16 +100,14 @@ var _20="dijitCalendarDisabledDate";
 _1f.forEach(_8.hitch(this,function(_21,cnt){
 if(cnt<=max){
 this._setText(_21,_1e+cnt);
-_5.remove(_21,_20);
-}else{
-_5.add(_21,_20);
 }
+_5.toggle(_21,_20,cnt>max);
 }));
 if(this._incBtn){
-_5[max<_1f.length?"add":"remove"](this._incBtn,_20);
+_5.toggle(this._incBtn,_20,max<_1f.length);
 }
 if(this._decBtn){
-_5[min>=_1e?"add":"remove"](this._decBtn,_20);
+_5.toggle(this._decBtn,_20,min>=_1e);
 }
 var h=this.getHeader();
 if(h){
@@ -117,7 +115,7 @@ this._setText(this.getHeader(),_1e+" - "+(_1e+11));
 }
 },_updateSelectedYear:function(){
 this._year=String((this._cachedDate||this.get("value")).getFullYear());
-this._updateSelectedNode(".dojoxCalendarYearLabel",_8.hitch(this,function(_22,idx){
+this._updateSelectedNode(".dojoxCalendarYearLabel",_8.hitch(this,function(_22){
 return this._year!==null&&_22.innerHTML==this._year;
 }));
 },_updateSelectedMonth:function(){
@@ -129,7 +127,7 @@ return idx==_23;
 },_updateSelectedNode:function(_25,_26){
 var sel="dijitCalendarSelectedDate";
 _4(_25,this.domNode).forEach(function(_27,idx,_28){
-_5[_26(_27,idx,_28)?"add":"remove"](_27.parentNode,sel);
+_5.toggle(_27.parentNode,sel,_26(_27,idx,_28));
 });
 var _29=_4(".dojoxCal-MY-M-Template div",this.myContainer).filter(function(_2a){
 return _5.contains(_2a.parentNode,sel);
@@ -138,11 +136,9 @@ if(!_29){
 return;
 }
 var _2b=_5.contains(_29,"dijitCalendarDisabledDate");
-_5[_2b?"add":"remove"](this.okBtn,"dijitDisabled");
+_5.toggle(this.okBtn,"dijitDisabled",_2b);
 },onClick:function(evt){
 var _2c;
-var _2d=this;
-var sel="dijitCalendarSelectedDate";
 function hc(c){
 return _5.contains(evt.target,c);
 };

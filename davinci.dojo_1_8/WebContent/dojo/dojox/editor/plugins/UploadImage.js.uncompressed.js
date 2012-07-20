@@ -15,9 +15,9 @@ dojo.declare("dojox.editor.plugins.UploadImage",
 	_Plugin,
 	{
 		// summary:
-		// 	Adds an icon to the Editor toolbar that when clicked, opens a system dialog
-		//	Although the toolbar icon is a tiny "image" the uploader could be used for
-		//	any file type
+		// 		Adds an icon to the Editor toolbar that when clicked, opens a system dialog
+		//		Although the toolbar icon is a tiny "image" the uploader could be used for
+		//		any file type
 		
 		tempImageUrl: "",
 		iconClassPrefix: "editorIcon",
@@ -51,7 +51,7 @@ dojo.declare("dojox.editor.plugins.UploadImage",
 				height:"20px",
 				paddingLeft:"8px",
 				paddingRight:"8px"
-			})
+			});
 			this.button = new dojox.form.FileUploader({
 				isDebug:true,
 				//force:"html",
@@ -90,7 +90,7 @@ dojo.declare("dojox.editor.plugins.UploadImage",
 		},
 		
 		insertTempImage: function(){
-			// summary: 
+			// summary:
 			//		inserting a "busy" image to show something is hapening
 			//		during upload and download of the image.
 			this.currentImageId = "img_"+(new Date().getTime());

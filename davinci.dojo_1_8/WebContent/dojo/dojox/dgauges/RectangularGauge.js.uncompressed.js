@@ -61,8 +61,8 @@ define("dojox/dgauges/RectangularGauge", ["dojo/_base/declare", "./GaugeBase", "
 			//		GFX element retrievable using the getElementRenderer() method.
 			//		- A Scale instance, i.e. CircularScale or RectangularScale.
 			//		- A TextIndicator instance.
-			// location: "leading"|"middle"|"trailing"
-			//		The area to place the element. Leading and trailing areas are fixed size. The
+			// location: String
+			//		The area to place the element. Valid values are "leading"|"middle"|"trailing". Leading and trailing areas are fixed size. The
 			//		middle area use the remaining size. If not specified, the element's refreshRendering 
 			//		is called with the whole gauge size as argument.
 

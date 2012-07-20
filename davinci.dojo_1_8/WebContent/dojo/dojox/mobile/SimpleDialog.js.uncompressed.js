@@ -8,8 +8,6 @@ define("dojox/mobile/SimpleDialog", [
 ], function(declare, win, domClass, domConstruct, Pane, iconUtils){
 	// module:
 	//		dojox/mobile/SimpleDialog
-	// summary:
-	//		A dialog box for mobile.
 
 	return declare("dojox.mobile.SimpleDialog", Pane, {
 		// summary:

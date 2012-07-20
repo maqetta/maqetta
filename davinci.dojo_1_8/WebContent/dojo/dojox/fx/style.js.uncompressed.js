@@ -7,8 +7,8 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 	var _getStyleSnapshot = function(/* Object */cache){
 		// summary:
 		//		uses a dojo.getComputedStyle(node) cache reference and
-		// 		iterates through the 'documented/supported animate-able'
-		// 		properties.
+		//		iterates through the 'documented/supported animate-able'
+		//		properties.
 		//
 		// returns:  Array
 		//		an array of raw, calculcated values (no keys), to be normalized/compared
@@ -19,15 +19,15 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 	};
 
 	var _getCalculatedStyleChanges = function(node, cssClass, addClass){
-		// summary: Calculate the difference in style properties between two states
+		// summary:
+		//		Calculate the difference in style properties between two states
 		// description:
-		//	calculate and normalize(?) the differences between two states
-		//	of a node (args.node) by quickly adding or removing a class, and
-		//	iterateing over the results of dojox.fx._getStyleSnapshot()
-		//
+		//		calculate and normalize(?) the differences between two states
+		//		of a node (args.node) by quickly adding or removing a class, and
+		//		iterating over the results of dojox.fx._getStyleSnapshot()
 		// addClass:
-		// 	true to calculate what adding a class would do,
-		// 	false to calculate what removing the class would do
+		//		true to calculate what adding a class would do,
+		//		false to calculate what removing the class would do
 
 		node = dom.byId(node);
 		var	cs = domStyle.getComputedStyle(node);
@@ -85,12 +85,13 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 			node = dom.byId(node);
 
 			var pushClass = (function(n){
-				// summary: onEnd we want to add the class to the node
-				//	(as dojo.addClass naturally would) in case our
-				//	class parsing misses anything the browser would
-				// 	otherwise interpret. this may cause some flicker,
-				//	and will only apply the class so children can inherit
-				//	after the animation is done (potentially more flicker)
+				// summary:
+				//		onEnd we want to add the class to the node
+				//		(as dojo.addClass naturally would) in case our
+				//		class parsing misses anything the browser would
+				//		otherwise interpret. this may cause some flicker,
+				//		and will only apply the class so children can inherit
+				//		after the animation is done (potentially more flicker)
 				return function(){
 					domClass.add(n, cssClass);
 					n.style.cssText = _beforeStyle;
@@ -113,7 +114,7 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 			//		Animate the effects of removing a class from a node
 			// description:
 			//		Creates an animation that will animate the properties of a
-			// 		node (args.node) to the properties calculated after removing
+			//		node (args.node) to the properties calculated after removing
 			//		a standard CSS className from a that node.
 			//
 			//		calls dojo.removeClass(args.cssClass) onEnd of animation
@@ -126,13 +127,14 @@ define("dojox/fx/style", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/fx",
 			node = dom.byId(node);
 
 			var pullClass = (function(n){
-				// summary: onEnd we want to remove the class from the node
-				//	(as dojo.removeClass naturally would) in case our class
-				//	parsing misses anything the browser would otherwise
-				//	interpret. this may cause some flicker, and will only
-				//	apply the class so children can inherit after the
-				//	animation is done (potentially more flicker)
-				//
+				// summary:
+				//		onEnd we want to remove the class from the node
+				//		(as dojo.removeClass naturally would) in case our class
+				//		parsing misses anything the browser would otherwise
+				//		interpret. this may cause some flicker, and will only
+				//		apply the class so children can inherit after the
+				//		animation is done (potentially more flicker)
+
 				return function(){
 					domClass.remove(n, cssClass);
 					n.style.cssText = _beforeStyle;

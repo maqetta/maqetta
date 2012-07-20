@@ -61,7 +61,14 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	// tags:
 	//		private
 
-	constructor: function(params){
+	constructor: function(params /*===== , srcNodeRef =====*/){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Initial settings for any of the widget attributes, except readonly attributes.
+		// srcNodeRef: DOMNode
+		//		The widget replaces the specified DOMNode.
+
 		// contentPreFilters: Function(String)[]
 		//		Pre content filter function register array.
 		//		these filters will be executed before the actual
@@ -916,7 +923,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		// summary:
 		//		Handler for onkeyup event
 		// tags:
-		//      callback
+		//		callback
 	},
 
 	setDisabled: function(/*Boolean*/ disabled){
@@ -929,7 +936,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	},
 	_setValueAttr: function(/*String*/ value){
 		// summary:
-		//      Registers that attr("value", foo) should call setValue(foo)
+		//		Registers that attr("value", foo) should call setValue(foo)
 		this.setValue(value);
 	},
 	_setDisableSpellCheckAttr: function(/*Boolean*/ disabled){
@@ -1443,7 +1450,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		// summary:
 		//		Return the current content of the editing area (post filters
 		//		are applied).  Users should call get('value') instead.
-		//	nonDestructive:
+		// nonDestructive:
 		//		defaults to false. Should the post-filtering be run over a copy
 		//		of the live DOM? Most users should pass "true" here unless they
 		//		*really* know that none of the installed filters are going to
@@ -1592,11 +1599,11 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		//		the DOM which is passed is run through each of the
 		//		contentPostFilters functions.
 		//
-		//	dom:
+		// dom:
 		//		a node, set of nodes, which to filter using each of the current
 		//		members of the contentDomPostFilters and contentPostFilters arrays.
 		//
-		//	nonDestructive:
+		// nonDestructive:
 		//		defaults to "false". If true, ensures that filtering happens on
 		//		a clone of the passed-in content and not the actual node
 		//		itself.

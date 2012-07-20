@@ -40,6 +40,76 @@ function(
 	timeUtil, 
 	StoreMixin){
 	
+	/*=====
+	var __GridClickEventArgs = function(date, triggerEvent){
+		// summary:
+		//		The event dispatched when the grid is clicked or double-clicked.
+		// date: Date
+		//		The start of the previously displayed time interval, if any. 
+		// triggerEvent: Event
+		//		The event at the origin of this event.
+		
+		this.date = date;
+		this.triggerEvent = triggerEvent;
+	};
+	=====*/
+	
+	/*=====
+	var __ItemMouseEventArgs = function(item, renderer, triggerEvent){
+		// summary:
+		//		The event dispatched when an item is clicked, double-clicked or context-clicked.
+		// item: Object
+		//		The item clicked.
+		// renderer: dojox/calendar/_RendererMixin
+		//		The item renderer clicked.
+		// triggerEvent: Event
+		//		The event at the origin of this event.
+		
+		this.item = item;
+		this.renderer = renderer;
+		this.triggerEvent = triggerEvent;
+	};
+	=====*/
+	
+	/*=====
+	var __itemEditingEventArgs = function(item, editKind, dates, startTime, endTimesheet, source, eventSource, triggerEvent){
+		// summary:
+		//		An item editing event.
+		// item: Object
+		//		The date item that is being edited.
+		// editKind: String
+		//		Kind of edit: "resizeBoth", "resizeStart", "resizeEnd" or "move".
+		// dates: Date[]
+		//		The computed date/time of the during the event editing. One entry per edited date (touch use case).
+		// startTime: Date?
+		//		The start time of data item.
+		// endTime: Date?
+		//		The end time of data item.
+		// sheet: String
+		//		For views with several sheets (columns view for example), the sheet when the event occurred.
+		// source: dojox/calendar/ViewBase
+		//		The view where the event occurred.
+		// eventSource: String
+		//		The device that triggered the event. This property can take the following values:
+		//
+		//		- "mouse", 
+		//		- "keyboard", 
+		//		- "touch"		
+		// triggerEvent: Event
+		//		The event at the origin of this event.
+			
+		this.item = item;
+		this.editKind = editKind;
+		this.dates = dates;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.sheet = sheet;
+		this.source = source;
+		this.eventSource = eventSource;
+		this.triggerEvent = triggerEvent;
+	};
+	=====*/
+	
 
 	return declare("dojox.calendar.ViewBase", [_WidgetBase, StoreMixin, _Invalidating, Selection], {
 		
@@ -56,16 +126,12 @@ function(
 		//		Kind of the view. Used by the calendar widget to determine how to configure the view.
 		viewKind: null,
 		
-		// _layoutStep: Integer
-		//		The number of units displayed by a visual layout unit (i.e. a column or a row) 
-		// tags:
-		//		protected
+		// _layoutStep: [protected] Integer
+		//		The number of units displayed by a visual layout unit (i.e. a column or a row)
 		_layoutStep: 1,
 		
-		// _layoutStep: Integer
-		//		The unit displayed by a visual layout unit (i.e. a column or a row) 
-		// tags:
-		//		protected
+		// _layoutStep: [protected] Integer
+		//		The unit displayed by a visual layout unit (i.e. a column or a row)
 		_layoutUnit: "day",
 		
 		// resizeCursor: String
@@ -281,13 +347,13 @@ function(
 			//		is overlapping the second time range defined by the start2 and end2 parameters.
 			// renderData: Object
 			//		The render data.
-			//	start1: Date
+			// start1: Date
 			//		The start time of the first time range.
-			//	end1: Date
+			// end1: Date
 			//		The end time of the first time range.
-			//	start2: Date
+			// start2: Date
 			//		The start time of the second time range.
-			//	end2: Date
+			// end2: Date
 			//		The end time of the second time range.
 			// includeLimits: Boolean
 			//		Whether include the end time or not.
@@ -490,6 +556,7 @@ function(
 			//		Creates a new Date object.
 			// obj: Object
 			//		This object can have several values:
+			//
 			//		- the time in milliseconds since gregorian epoch.
 			//		- a Date instance
 			// returns: Date
@@ -575,10 +642,11 @@ function(
 			
 		// scrollMethod: String
 		//		Method used to scroll the view, for example the scroll of column view.
-		//		Valid value are: 
-		//			- "auto": let the view decide (default), 
-		//			- "css": use css 3d transform,
-		//			- "dom": use the scrollTop property.
+		//		Valid value are:
+		//
+		//		- "auto": let the view decide (default),
+		//		- "css": use css 3d transform,
+		//		- "dom": use the scrollTop property.
 		scrollMethod: "auto",
 		
 		_setScrollMethodAttr: function(value){
@@ -728,7 +796,7 @@ function(
 
 		},
 
-	  ////////////////////////////////////////////////////////
+	  	////////////////////////////////////////////////////////
 		//
 		// Store & Items
 		//
@@ -965,7 +1033,7 @@ function(
 		_recycleItemRenderers: function(remove){
 			// summary:
 			//		Recycles all the item renderers.
-			//	remove: Boolean
+			// remove: Boolean
 			//		Whether remove the DOM node from it parent.
 			// tags:
 			//		protected
@@ -1039,7 +1107,7 @@ function(
 			// kind: String
 			//		The kind of renderer.
 			// rendererClass: Object
-			//		The class to instanciate to create the renderer.
+			//		The class to instantiate to create the renderer.
 			// returns: Object
 			// tags:
 			//		protected				
@@ -1099,7 +1167,9 @@ function(
 						
 		onRendererCreated: function(renderer){
 			// summary:
-			//		Event dispatched when an item renderer has been created.	
+			//		Event dispatched when an item renderer has been created.
+			// renderer: dojox/calendar/_RendererMixin
+			//		The renderer created.
 			// tags:
 			//		callback
 		},	
@@ -1107,6 +1177,8 @@ function(
 		onRendererRecycled: function(renderer){
 			// summary:
 			//		Event dispatched when an item renderer has been recycled.
+			// renderer: dojox/calendar/_RendererMixin
+			//		The renderer recycled.
 			// tags:
 			//		callback
 
@@ -1114,7 +1186,9 @@ function(
 		
 		onRendererReused: function(renderer){
 			// summary:
-			//		Event dispatched when an item renderer that was recycled is reused.	
+			//		Event dispatched when an item renderer that was recycled is reused.
+			// renderer: dojox/calendar/_RendererMixin
+			//		The renderer reused.
 			// tags:
 			//		callback
 		},
@@ -1122,6 +1196,8 @@ function(
 		onRendererDestroyed: function(renderer){
 			// summary:
 			//		Event dispatched when an item renderer is destroyed.
+			// renderer: dojox/calendar/_RendererMixin
+			//		The renderer destroyed.
 			// tags:
 			//		callback
 		},
@@ -1680,6 +1756,8 @@ function(
 		onGridClick: function(e){
 			// summary:
 			//		Event dispatched when the grid has been clicked.
+			// e: __GridClickEventArgs
+			//		The event dispatched when the grid is clicked.
 			// tags:
 			//		callback
 		},
@@ -1701,6 +1779,8 @@ function(
 		onGridDoubleClick: function(e){
 			// summary:
 			//		Event dispatched when the grid has been double-clicked.
+			// e: __GridClickEventArgs
+			//		The event dispatched when the grid is double-clicked.
 			// tags:
 			//		protected
 
@@ -1716,6 +1796,8 @@ function(
 		onItemClick: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been clicked.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when an item is clicked.
 			// tags:
 			//		callback
 
@@ -1731,6 +1813,8 @@ function(
 		onItemDoubleClick: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been double-clicked.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when an item is double-clicked.
 			// tags:
 			//		callback
 
@@ -1746,6 +1830,8 @@ function(
 		onItemContextMenu: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been context-clicked.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when an item is context-clicked.
 			// tags:
 			//		callback
 
@@ -1819,9 +1905,10 @@ function(
 		//		A flag that indicates whether the user can move items displayed.
 		//		If <code>true</code>, the user can move the items.
 		moveEnabled: true,
-		
-		//	A flag that indicates whether the items can be resized.
-		//	If <code>true</code>, the control supports resizing of items.
+
+		// resizeEnabled: Boolean
+		//		A flag that indicates whether the items can be resized.
+		//		If `true`, the control supports resizing of items.
 		resizeEnabled: true,
 		
 		isItemEditable: function(item, rendererKind){
@@ -2142,6 +2229,8 @@ function(
 		onItemEditBeginGesture: function(e){
 			// summary:
 			//		Event dispatched when an editing gesture is beginning.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 
@@ -2425,6 +2514,8 @@ function(
 		onItemEditMoveGesture: function(e){
 			// summary:
 			//		Event dispatched during a move editing gesture.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 
@@ -2502,6 +2593,8 @@ function(
 		onItemEditResizeGesture: function(e){
 			// summary:
 			//		Event dispatched during a resize editing gesture.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 
@@ -2565,6 +2658,8 @@ function(
 		onItemEditEndGesture: function(e){
 			// summary:
 			//		Event dispatched at the end of an editing gesture.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 
@@ -2573,16 +2668,16 @@ function(
 		ensureMinimalDuration: function(renderData, item, unit, steps, editKind){
 			// summary:
 			//		During the resize editing gesture, ensures that the item has the specified minimal duration.
-			//		renderData: Object
-			//			The render data.
-			//		item: Object
-			//			The edited item.
-			//		unit: String
-			//			The unit used to define the minimal duration.
-			//		steps: Integer
-			//			The number of time units.
-			//		editKind: String
-			//			The edit kind: "resizeStart" or "resizeEnd".
+			// renderData: Object
+			//		The render data.
+			// item: Object
+			//		The edited item.
+			// unit: String
+			//		The unit used to define the minimal duration.
+			// steps: Integer
+			//		The number of time units.
+			// editKind: String
+			//		The edit kind: "resizeStart" or "resizeEnd".
 			var minTime;
 			var cal = renderData.dateModule;
 			
@@ -2633,7 +2728,7 @@ function(
 		//		Specifies if the start and end time of an item can be swapped during an editing gesture. Note that using the keyboard this property is ignored.	
 		allowStartEndSwap: true,			
 		
-		//	allowResizeLessThan24H: Boolean
+		// allowResizeLessThan24H: Boolean
 		//		If an event has a duration greater than 24 hours, indicates if using a resize gesture, it can be resized to last less than 24 hours.
 		//		This flag is usually used when two different kind of renderers are used (MatrixView) to prevent changing the kind of renderer during an editing gesture.
 		allowResizeLessThan24H: false

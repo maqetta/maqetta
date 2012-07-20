@@ -3,7 +3,7 @@ define("dojox/treemap/DrillDownUp", ["dojo/_base/lang", "dojo/_base/event", "doj
 	function(lang, event, declare, domGeom, domConstruct, domStyle, fx, tap){
 
 	return declare("dojox.treemap.DrillDownUp", null, {
-		//	summary:
+		// summary:
 		//		Specializes TreeMap to support drill down and up operations.
 
 		postCreate: function(){
@@ -38,9 +38,9 @@ define("dojox/treemap/DrillDownUp", ["dojo/_base/lang", "dojo/_base/event", "doj
 		},
 
 		drillUp: function(renderer){
-			//	summary:
+			// summary:
 			//		Drill up from the given renderer.
-			//	renderer: DomNode
+			// renderer: DomNode
 			//		The item renderer.
 			var item = renderer.item;
 
@@ -82,9 +82,9 @@ define("dojox/treemap/DrillDownUp", ["dojo/_base/lang", "dojo/_base/event", "doj
 		},
 
 		drillDown: function(renderer){
-			//	summary:
+			// summary:
 			//		Drill up from the given renderer.
-			//	renderer: DomNode
+			// renderer: DomNode
 			//		The item renderer.
 			var box = domGeom.getMarginBox(this.domNode);
 			var item = renderer.item;

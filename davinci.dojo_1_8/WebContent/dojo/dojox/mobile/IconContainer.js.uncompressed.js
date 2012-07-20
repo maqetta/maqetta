@@ -14,8 +14,6 @@ define("dojox/mobile/IconContainer", [
 
 	// module:
 	//		dojox/mobile/IconContainer
-	// summary:
-	//		A container widget which can hold multiple icons.
 
 	return declare("dojox.mobile.IconContainer", [WidgetBase, Container, Contained],{
 		// summary:

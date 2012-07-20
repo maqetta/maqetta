@@ -55,7 +55,15 @@ define("dijit/_TemplatedMixin", [
 		_attachEvents: [],
  =====*/
 
-		constructor: function(){
+		constructor: function(/*===== params, srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree.
+
 			this._attachPoints = [];
 			this._attachEvents = [];
 		},
@@ -150,8 +158,9 @@ define("dijit/_TemplatedMixin", [
 			//		Map widget properties and functions to the handlers specified in
 			//		the dom node and it's descendants. This function iterates over all
 			//		nodes and looks for these properties:
-			//			* dojoAttachPoint/data-dojo-attach-point
-			//			* dojoAttachEvent/data-dojo-attach-event
+			//
+			//		- dojoAttachPoint/data-dojo-attach-point
+			//		- dojoAttachEvent/data-dojo-attach-event
 			// rootNode: DomNode|Widget[]
 			//		the node to search for properties. All children will be searched.
 			// getAttrFunc: Function
@@ -288,8 +297,9 @@ define("dijit/_TemplatedMixin", [
 
 	// These arguments can be specified for widgets which are used in templates.
 	// Since any widget can be specified as sub widgets in template, mix it
-	// into the base widget class.  (This is a hack, but it's effective.)
-	lang.extend(_WidgetBase,{
+	// into the base widget class.  (This is a hack, but it's effective.).
+	// Remove for 2.0.   Also, hide from API doc parser.
+	lang.extend(_WidgetBase, /*===== {} || =====*/ {
 		dojoAttachEvent: "",
 		dojoAttachPoint: ""
 	});

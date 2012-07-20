@@ -13,8 +13,6 @@ define("dojox/mobile/SpinWheelSlot", [
 
 	// module:
 	//		dojox/mobile/SpinWheelSlot
-	// summary:
-	//		A slot of a SpinWheel.
 
 	return declare("dojox.mobile.SpinWheelSlot", [WidgetBase, Contained, Scrollable], {
 		// summary:

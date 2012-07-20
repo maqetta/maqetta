@@ -4,8 +4,14 @@ define("dojox/grid/util", [
 	"dojo/dom"
 ], function(dojox, lang, dom){
 
-// summary: grid utility library
 	var dgu = lang.getObject("grid.util", true, dojox);
+
+/*=====
+dgu = {
+	// summary:
+	//		grid utility library
+};
+=====*/
 
 	dgu.na = '...';
 	dgu.rowIndexTag = "gridRowIndex";
@@ -69,6 +75,6 @@ define("dojox/grid/util", [
 		inArray[inJ] = cache;
 	};
 
-	return dojox.grid.util;
+	return dgu;
 
 });

@@ -223,8 +223,16 @@ define("dijit/_TimePicker", [
 			array.forEach(before.concat(after, moreAfter), function(n){ this.timeMenu.appendChild(n); }, this);
 		},
 
-		constructor: function(){
-			this.constraints = {}; // create instance object
+		constructor: function(/*===== params, srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
+			this.constraints = {};
 		},
 
 		postMixInProperties: function(){
@@ -336,7 +344,7 @@ define("dijit/_TimePicker", [
 			// summary:
 			//		Notification that a time was selected.  It may be the same as the previous value.
 			// tags:
-			//      public
+			//		public
 		},
 
 		_highlightOption: function(/*node*/ node, /*Boolean*/ highlight){
@@ -447,7 +455,7 @@ define("dijit/_TimePicker", [
 			//		from the `dijit.form.TimeTextBox` to be handled in this widget
 			// tags:
 			//		protected
-			if(e.charOrCode == keys.DOWN_ARROW || e.charOrCode == keys.UP_ARROW){
+			if(e.keyCode == keys.DOWN_ARROW || e.keyCode == keys.UP_ARROW){
 				event.stop(e);
 				// Figure out which option to highlight now and then highlight it
 				if(this._highlighted_option && !this._highlighted_option.parentNode){
@@ -458,12 +466,12 @@ define("dijit/_TimePicker", [
 				if(!tgt){
 					tgt = timeMenu.childNodes[0];
 				}else if(timeMenu.childNodes.length){
-					if(e.charOrCode == keys.DOWN_ARROW && !tgt.nextSibling){
+					if(e.keyCode == keys.DOWN_ARROW && !tgt.nextSibling){
 						this._onArrowDown();
-					}else if(e.charOrCode == keys.UP_ARROW && !tgt.previousSibling){
+					}else if(e.keyCode == keys.UP_ARROW && !tgt.previousSibling){
 						this._onArrowUp();
 					}
-					if(e.charOrCode == keys.DOWN_ARROW){
+					if(e.keyCode == keys.DOWN_ARROW){
 						tgt = tgt.nextSibling;
 					}else{
 						tgt = tgt.previousSibling;
@@ -472,9 +480,9 @@ define("dijit/_TimePicker", [
 				this._highlightOption(tgt, true);
 				this._keyboardSelected = tgt;
 				return false;
-			}else if(e.charOrCode == keys.ENTER || e.charOrCode === keys.TAB){
+			}else if(e.keyCode == keys.ENTER || e.keyCode === keys.TAB){
 				// mouse hover followed by TAB is NO selection
-				if(!this._keyboardSelected && e.charOrCode === keys.TAB){
+				if(!this._keyboardSelected && e.keyCode === keys.TAB){
 					return true;	// true means don't call stopEvent()
 				}
 
@@ -485,7 +493,7 @@ define("dijit/_TimePicker", [
 
 				// Call stopEvent() for ENTER key so that form doesn't submit,
 				// but not for TAB, so that TAB does switch focus
-				return e.charOrCode === keys.TAB;
+				return e.keyCode === keys.TAB;
 			}
 			return undefined;
 		}

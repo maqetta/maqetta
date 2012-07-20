@@ -2,7 +2,7 @@ define("dojox/data/util/JsonQuery", ["dojo", "dojox"], function(dojo, dojox) {
 
 // this is a mixin to convert object attribute queries to
 // JSONQuery/JSONPath syntax to be sent to the server.
-dojo.declare("dojox.data.util.JsonQuery", null, {
+return dojo.declare("dojox.data.util.JsonQuery", null, {
 	useFullIdInQueries: false,
 	_toJsonQuery: function(args, jsonQueryPagination){
 		var first = true;
@@ -94,5 +94,4 @@ dojo.declare("dojox.data.util.JsonQuery", null, {
 	
 });
 
-return dojox.data.util.JsonQuery;
 });

@@ -13,8 +13,7 @@ dojo.setObject("dojox.atom.io.model", model);
 model._Constants = {
 	// summary:
 	//		Container for general constants.
-	// description:
-	//		Container for general constants.
+
 	"ATOM_URI": "http://www.w3.org/2005/Atom",
 	"ATOM_NS": "http://www.w3.org/2005/Atom",
 	"PURL_NS": "http://purl.org/atom/app#",
@@ -125,8 +124,6 @@ model.util = {
 	createDate: function(/*DOMNode*/ node){
 		// summary:
 		//		Utility function to create a date from a DOM node's text content.
-		// description:
-		//		Utility function to create a date from a DOM node's text content.
 		// node:
 		//		The DOM node to inspect.
 		// returns:
@@ -140,8 +137,6 @@ model.util = {
 	escapeHtml: function(/*String*/ str){
 		// summary:
 		//		Utility function to escape XML special characters in an HTML string.
-		// description:
-		//		Utility function to escape XML special characters in an HTML string.
 		// str:
 		//		The string to escape
 		// returns:
@@ -152,8 +147,6 @@ model.util = {
 	unEscapeHtml: function(/*String*/ str){
 		// summary:
 		//		Utility function to un-escape XML special characters in an HTML string.
-		// description:
-		//		Utility function to un-escape XML special characters in an HTML string.
 		// str:
 		//		The string to un-escape.
 		// returns:
@@ -163,9 +156,6 @@ model.util = {
 	},
 	getNodename: function(/*DOMNode*/ node){
 		// summary:
-		//		Utility function to get a node name and deal with IE's bad handling of namespaces
-		//		on tag names.
-		// description:
 		//		Utility function to get a node name and deal with IE's bad handling of namespaces
 		//		on tag names.
 		// node:
@@ -295,7 +285,10 @@ model.Node = declare(null, {
 //Types are as follows: links: array of Link, authors: array of Person, categories: array of Category
 //contributors: array of Person, ico
 model.AtomItem = declare(model.Node,{
-	 constructor: function(args){
+	// summary:
+	//		Class container for generic Atom items.
+
+	constructor: function(args){
 		this.ATOM_URI = model._Constants.ATOM_URI;
 		this.links = null;						//Array of Link
 		this.authors = null;					//Array of Person
@@ -313,8 +306,7 @@ model.AtomItem = declare(model.Node,{
 		this._objName = "AtomItem";			 //for debugging purposes
 		this.nodeType = "AtomItem";
 	},
-	// summary: Class container for generic Atom items.
-	// description: Class container for generic Atom items.
+
 	_getAttributeNames: function(){return null;},
 	_accepts: {},
 	accept: function(tag){return Boolean(this._accepts[tag]);},
@@ -359,8 +351,6 @@ model.AtomItem = declare(model.Node,{
 	addAuthor: function(/*String*/ name, /*String*/ email, /*String*/ uri){
 		// summary:
 		//		Function to add in an author to the list of authors.
-		// description:
-		//		Function to add in an author to the list of authors.
 		// name:
 		//		The author's name.
 		// email:
@@ -372,8 +362,6 @@ model.AtomItem = declare(model.Node,{
 	},
 	addContributor: function(/*String*/ name, /*String*/ email, /*String*/ uri){
 		// summary:
-		//		Function to add in an author to the list of authors.
-		// description:
 		//		Function to add in an author to the list of authors.
 		// name:
 		//		The author's name.
@@ -387,14 +375,6 @@ model.AtomItem = declare(model.Node,{
 	addLink: function(/*String*/ href,/*String*/ rel,/*String*/ hrefLang,/*String*/ title,/*String*/ type){
 		// summary:
 		//		Function to add in a link to the list of links.
-		// description:
-		//		Function to add in a link to the list of links.
-		// href:
-		//		The href.
-		// rel:
-		//		String
-		// hrefLang:
-		//		String
 		// title:
 		//		A title to associate with the link.
 		// type:
@@ -405,12 +385,8 @@ model.AtomItem = declare(model.Node,{
 	removeLink: function(/*String*/ href, /*String*/ rel){
 		// summary:
 		//		Function to remove a link from the list of links.
-		// description:
-		//		Function to remove a link from the list of links.
 		// href:
 		//		The href.
-		// rel:
-		//		String
 		if(!this.links || !lang.isArray(this.links)){return;}
 		var count = 0;
 		for(var i = 0; i < this.links.length; i++){
@@ -423,8 +399,6 @@ model.AtomItem = declare(model.Node,{
 	removeBasicLinks: function(){
 		// summary:
 		//		Function to remove all basic links from the list of links.
-		// description:
-		//		Function to remove all basic link from the list of links.
 		if(!this.links){return;}
 		var count = 0;
 		for(var i = 0; i < this.links.length; i++){
@@ -435,25 +409,16 @@ model.AtomItem = declare(model.Node,{
 	addCategory: function(/*String*/ scheme, /*String*/ term, /*String*/ label){
 		// summary:
 		//		Function to add in a category to the list of categories.
-		// description:
-		//		Function to add in a category to the list of categories.
-		// scheme:
-		//		String
-		// term:
-		//		String
-		// label:
-		//		String
+
 		if(!this.categories){this.categories = [];}
 		this.categories.push(new model.Category(scheme,term,label));
 	},
 	getCategories: function(/*String*/ scheme){
 		// summary:
 		//		Function to get all categories that match a particular scheme.
-		// description:
-		//		Function to get all categories that match a particular scheme.
 		// scheme:
-		//		String
 		//		The scheme to filter on.
+
 		if(!scheme){return this.categories;}
 		//If categories belonging to a particular scheme are required, then create a new array containing these
 		var arr = [];
@@ -464,8 +429,6 @@ model.AtomItem = declare(model.Node,{
 	},
 	removeCategories: function(/*String*/ scheme, /*String*/ term){
 		// summary:
-		//		Function to remove all categories that match a particular scheme and term.
-		// description:
 		//		Function to remove all categories that match a particular scheme and term.
 		// scheme:
 		//		The scheme to filter on.
@@ -483,8 +446,6 @@ model.AtomItem = declare(model.Node,{
 	setTitle: function(/*String*/ str, /*String*/ type){
 		// summary:
 		//		Function to set the title of the item.
-		// description:
-		//		Function to set the title of the item.
 		// str:
 		//		The title to set.
 		// type:
@@ -496,8 +457,6 @@ model.AtomItem = declare(model.Node,{
 	},
 	addExtension: function(/*String*/ name_space,/*String*/ name, /*Array*/ attributes, /*String*/ content, /*String*/ shortNS){
 		// summary:
-		//		Function to add in an extension namespace into the item.
-		// description:
 		//		Function to add in an extension namespace into the item.
 		// name_space:
 		//		The namespace of the extension.
@@ -512,8 +471,6 @@ model.AtomItem = declare(model.Node,{
 	},
 	getExtensions: function(/*String*/ name_space, /*String*/ name){
 		// summary:
-		//		Function to get extensions that match a namespace and name.
-		// description:
 		//		Function to get extensions that match a namespace and name.
 		// name_space:
 		//		The namespace of the extension.
@@ -530,8 +487,6 @@ model.AtomItem = declare(model.Node,{
 	},
 	removeExtensions: function(/*String*/ name_space, /*String*/ name){
 		// summary:
-		//		Function to remove extensions that match a namespace and name.
-		// description:
 		//		Function to remove extensions that match a namespace and name.
 		// name_space:
 		//		The namespace of the extension.
@@ -564,8 +519,7 @@ model.AtomItem = declare(model.Node,{
 model.Category = declare(model.Node,{
 	// summary:
 	//		Class container for 'Category' types.
-	// description:
-	//		Class container for 'Category' types.
+
 	constructor: function(/*String*/ scheme, /*String*/ term, /*String*/ label){
 		this.scheme = scheme; this.term = term; this.label = label;
 		this._objName = "Category";//for debugging
@@ -578,8 +532,6 @@ model.Category = declare(model.Node,{
 	toString: function(){
 		// summary:
 		//		Function to construct string form of the category tag, which is an XML structure.
-		// description:
-		//		Function to construct string form of the category tag, which is an XML structure.
 		var s = [];
 		s.push('<category ');
 		if(this.label){s.push(' label="'+this.label+'" ');}
@@ -590,8 +542,6 @@ model.Category = declare(model.Node,{
 	},
 	buildFromDom: function(/*DOMNode*/ node){
 		// summary:
-		//		Function to do construction of the Category data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the Category data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for content.
@@ -606,8 +556,7 @@ model.Category = declare(model.Node,{
 model.Content = declare(model.Node,{
 	// summary:
 	//		Class container for 'Content' types. Such as summary, content, username, and so on types of data.
-	// description:
-	//		Class container for 'Content' types. Such as summary, content, username, and so on types of data.
+
 	constructor: function(tagName, value, src, type,xmlLang){
 		this.tagName = tagName; this.value = value; this.src = src; this.type=type; this.xmlLang = xmlLang;
 		this.HTML = "html"; this.TEXT = "text"; this.XHTML = "xhtml"; this.XML="xml";
@@ -618,8 +567,6 @@ model.Content = declare(model.Node,{
 	_postBuild: function(){},
 	buildFromDom: function(/*DOMNode*/ node){
 		// summary:
-		//		Function to do construction of the Content data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the Content data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for content.
@@ -671,8 +618,7 @@ model.Content = declare(model.Node,{
 	toString: function(){
 		// summary:
 		//		Function to construct string form of the content tag, which is an XML structure.
-		// description:
-		//		Function to construct string form of the content tag, which is an XML structure.
+
 		var s = [];
 		s.push('<'+this.tagName+' ');
 		if(!this.type){this.type = "text";}
@@ -694,8 +640,7 @@ model.Content = declare(model.Node,{
 model.Link = declare(model.Node,{
 	// summary:
 	//		Class container for 'link' types.
-	// description:
-	//		Class container for 'link' types.
+
 	constructor: function(href,rel,hrefLang,title,type){
 		this.href = href; this.hrefLang = hrefLang; this.rel = rel; this.title = title;this.type = type;
 		this.nodeType = "Link";
@@ -704,8 +649,6 @@ model.Link = declare(model.Node,{
 	_postBuild: function(){},
 	buildFromDom: function(node){
 		// summary:
-		//		Function to do construction of the link data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the link data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for link data.
@@ -720,8 +663,7 @@ model.Link = declare(model.Node,{
 	toString: function(){
 		// summary:
 		//		Function to construct string form of the link tag, which is an XML structure.
-		// description:
-		//		Function to construct string form of the link tag, which is an XML structure.
+
 		var s = [];
 		s.push('<link ');
 		if(this.href){s.push(' href="'+this.href+'" ');}
@@ -736,9 +678,8 @@ model.Link = declare(model.Node,{
 
 model.Person = declare(model.Node,{
 	// summary:
-	//		Class container for 'person' types, such as Author, controbutors, and so on.
-	// description:
-	//		Class container for 'person' types, such as Author, controbutors, and so on.
+	//		Class container for 'person' types, such as Author, contributors, and so on.
+
 	constructor: function(personType, name, email, uri){
 		this.author = "author";
 		this.contributor = "contributor";
@@ -757,8 +698,6 @@ model.Person = declare(model.Node,{
 	accept: function(tag){return Boolean(this._accepts[tag]);},
 	buildFromDom: function(node){
 		// summary:
-		//		Function to do construction of the person data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the person data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for person data.
@@ -793,8 +732,7 @@ model.Person = declare(model.Node,{
 	toString: function(){
 		// summary:
 		//		Function to construct string form of the Person tag, which is an XML structure.
-		// description:
-		//		Function to construct string form of the Person tag, which is an XML structure.
+
 		var s = [];
 		s.push('<'+this.personType+'>\n');
 		if(this.name){s.push('\t<name>'+this.name+'</name>\n');}
@@ -808,8 +746,7 @@ model.Person = declare(model.Node,{
 model.Generator = declare(model.Node,{
 	// summary:
 	//		Class container for 'Generator' types.
-	// description:
-	//		Class container for 'Generator' types.
+
 	constructor: function(/*String*/ uri, /*String*/ version, /*String*/ value){
 		this.uri = uri;
 		this.version = version;
@@ -818,8 +755,6 @@ model.Generator = declare(model.Node,{
 	_postBuild: function(){},
 	buildFromDom: function(node){
 		// summary:
-		//		Function to do construction of the generator data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the generator data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for link data.
@@ -835,8 +770,7 @@ model.Generator = declare(model.Node,{
 	toString: function(){
 		// summary:
 		//		Function to construct string form of the Generator tag, which is an XML structure.
-		// description:
-		//		Function to construct string form of the Generator tag, which is an XML structure.
+
 		var s = [];
 		s.push('<generator ');
 		if(this.uri){s.push(' uri="'+this.uri+'" ');}
@@ -850,8 +784,7 @@ model.Generator = declare(model.Node,{
 model.Entry = declare(model.AtomItem,{
 	// summary:
 	//		Class container for 'Entry' types.
-	// description:
-	//		Class container for 'Entry' types.
+
 	constructor: function(/*String*/ id){
 		this.id = id; this._objName = "Entry"; this.feedUrl = null;
 	},
@@ -876,8 +809,7 @@ model.Entry = declare(model.AtomItem,{
 	toString: function(amPrimary){
 		// summary:
 		//		Function to construct string form of the entry tag, which is an XML structure.
-		// description:
-		//		Function to construct string form of the entry tag, which is an XML structure.
+
 		var s = [];
 		var i;
 		if(amPrimary){
@@ -917,8 +849,6 @@ model.Entry = declare(model.AtomItem,{
 	getEditHref: function(){
 		// summary:
 		//		Function to get the href that allows editing of this feed entry.
-		// description:
-		//		Function to get the href that allows editing of this feed entry.
 		// returns:
 		//		The href that specifies edit capability.
 		if(this.links === null || this.links.length === 0){
@@ -948,8 +878,7 @@ model.Entry = declare(model.AtomItem,{
 model.Feed = declare(model.AtomItem,{
 	// summary:
 	//		Class container for 'Feed' types.
-	// description:
-	//		Class container for 'Feed' types.
+
 	_accepts: {
 		'author': true,
 		'content': true,
@@ -974,8 +903,6 @@ model.Feed = declare(model.AtomItem,{
 	addEntry: function(/*object*/ entry){
 		// summary:
 		//		Function to add an entry to this feed.
-		// description:
-		//		Function to add an entry to this feed.
 		// entry:
 		//		The entry object to add.
 		if(!entry.id){
@@ -988,8 +915,6 @@ model.Feed = declare(model.AtomItem,{
 	getFirstEntry: function(){
 		// summary:
 		//		Function to get the first entry of the feed.
-		// description:
-		//		Function to get the first entry of the feed.
 		// returns:
 		//		The first entry in the feed.
 		if(!this.entries || this.entries.length === 0){return null;}
@@ -997,8 +922,6 @@ model.Feed = declare(model.AtomItem,{
 	},
 	getEntry: function(/*String*/ entryId){
 		// summary:
-		//		Function to get an entry by its id.
-		// description:
 		//		Function to get an entry by its id.
 		// returns:
 		//		The entry desired, or null if none.
@@ -1012,8 +935,6 @@ model.Feed = declare(model.AtomItem,{
 	},
 	removeEntry: function(/*object*/ entry){
 		// summary:
-		//		Function to remove an entry from the list of links.
-		// description:
 		//		Function to remove an entry from the list of links.
 		// entry:
 		//		The entry.
@@ -1030,8 +951,6 @@ model.Feed = declare(model.AtomItem,{
 	setEntries: function(/*array*/ arrayOfEntry){
 		// summary:
 		//		Function to add a set of entries to the feed.
-		// description:
-		//		Function to get an entry by its id.
 		// arrayOfEntry:
 		//		An array of entry objects to add to the feed.
 		for(var x in arrayOfEntry){
@@ -1040,8 +959,6 @@ model.Feed = declare(model.AtomItem,{
 	},
 	toString: function(){
 		// summary:
-		//		Function to construct string form of the feed tag, which is an XML structure.
-		// description:
 		//		Function to construct string form of the feed tag, which is an XML structure.
 		var s = [];
 		var i;
@@ -1082,8 +999,6 @@ model.Feed = declare(model.AtomItem,{
 	createEntry: function(){
 		// summary:
 		//		Function to Create a new entry object in the feed.
-		// description:
-		//		Function to Create a new entry object in the feed.
 		// returns:
 		//		An empty entry object in the feed.
 		var entry = new model.Entry();
@@ -1092,8 +1007,6 @@ model.Feed = declare(model.AtomItem,{
 	},
 	getSelfHref: function(){
 		// summary:
-		//		Function to get the href that refers to this feed.
-		// description:
 		//		Function to get the href that refers to this feed.
 		// returns:
 		//		The href that refers to this feed or null if none.
@@ -1112,8 +1025,7 @@ model.Feed = declare(model.AtomItem,{
 model.Service = declare(model.AtomItem,{
 	// summary:
 	//		Class container for 'Feed' types.
-	// description:
-	//		Class container for 'Feed' types.
+
 	constructor: function(href){
 		this.href = href;
 	},
@@ -1122,8 +1034,6 @@ model.Service = declare(model.AtomItem,{
 	//"create-entry" , "user-prefs" , "search-entries" , "edit-template" , "categories"
 	buildFromDom: function(/*DOMNode*/ node){
 		// summary:
-		//		Function to do construction of the Service data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the Service data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for content.
@@ -1166,8 +1076,6 @@ model.Service = declare(model.AtomItem,{
 	getCollection: function(/*String*/ url){
 		// summary:
 		//		Function to collections that match a specific url.
-		// description:
-		//		Function to collections that match a specific url.
 		// url:
 		//		e URL to match collections against.
 		for(var i=0;i<this.workspaces.length;i++){
@@ -1185,8 +1093,6 @@ model.Service = declare(model.AtomItem,{
 model.Workspace = declare(model.AtomItem,{
 	// summary:
 	//		Class container for 'Workspace' types.
-	// description:
-	//		Class container for 'Workspace' types.
 	constructor: function(title){
 		this.title = title;
 		this.collections = [];
@@ -1194,8 +1100,6 @@ model.Workspace = declare(model.AtomItem,{
 
 	buildFromDom: function(/*DOMNode*/ node){
 		// summary:
-		//		Function to do construction of the Workspace data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the Workspace data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for content.
@@ -1228,8 +1132,7 @@ model.Workspace = declare(model.AtomItem,{
 model.Collection = declare(model.AtomItem,{
 	// summary:
 	//		Class container for 'Collection' types.
-	// description:
-	//		Class container for 'Collection' types.
+
 	constructor: function(href, title){
 		this.href = href;
 		this.title = title;
@@ -1242,8 +1145,6 @@ model.Collection = declare(model.AtomItem,{
 
 	buildFromDom: function(/*DOMNode*/ node){
 		// summary:
-		//		Function to do construction of the Collection data from the DOM node containing it.
-		// description:
 		//		Function to do construction of the Collection data from the DOM node containing it.
 		// node:
 		//		The DOM node to process for content.

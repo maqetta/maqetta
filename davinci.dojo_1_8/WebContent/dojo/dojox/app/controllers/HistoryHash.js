@@ -110,7 +110,7 @@ this._previous=this._historyStack[this._index-1]["hash"];
 this._previous=null;
 }
 this._current=_f;
-_3.publish("app/history/back",[{"viewId":_f,"detail":_10}]);
+_3.publish("/app/history/back",{"viewId":_f,"detail":_10});
 this.app.trigger("transition",{"viewId":_f,"opts":{reverse:true}});
 },_forward:function(_11,_12){
 this._previous=this._historyStack[this._index]["hash"];
@@ -121,7 +121,7 @@ this._next=this._historyStack[this._index+1]["hash"];
 this._next=null;
 }
 this._current=_11;
-_3.publish("app/history/forward",[{"viewId":_11,"detail":_12}]);
+_3.publish("/app/history/forward",{"viewId":_11,"detail":_12});
 this.app.trigger("transition",{"viewId":_11,"opts":{reverse:false}});
 },_go:function(_13,_14){
 if(_13<0||(_13>window.history.length-1)){
@@ -131,7 +131,7 @@ this._index=_13;
 this._current=this._historyStack[_13]["hash"];
 this._previous=this._historyStack[_13-1]?this._historyStack[_13-1]["hash"]:null;
 this._next=this._historyStack[_13+1]?this._historyStack[_13+1]["hash"]:null;
-_3.publish("app/history/go",[{"viewId":this._current,"step":_14,"detail":this._historyStack[_13]["detail"]}]);
+_3.publish("/app/history/go",{"viewId":this._current,"step":_14,"detail":this._historyStack[_13]["detail"]});
 var _15;
 if(_14>0){
 _15={"viewId":this._current,"opts":{reverse:false}};

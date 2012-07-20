@@ -10,7 +10,8 @@ dojo.require("dojox.data.GoogleFeedStore");
 dojo.declare("dojox.widget.FeedPortlet", dojox.widget.Portlet, {
 	// summary:
 	//		A Portlet that loads a XML feed.
-	// description: The feed is displayed as
+	// description:
+	//		The feed is displayed as
 	//		an unordered list of links.	When a link is hovered over
 	//		by the mouse, it displays a summary in a tooltip.
 

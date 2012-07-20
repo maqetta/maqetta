@@ -98,12 +98,7 @@ if(!dfd||dfd.canceled||(dfd.isCanceled&&dfd.isCanceled())){
 _f._currentDfd=null;
 return;
 }
-var _21=dfd.response,_22=_21.options,c2c=dfd._contentToClean=[],_23=_9.byId(_22.form),_24;
-try{
-_24=_2("./notify");
-}
-catch(e){
-}
+var _21=dfd.response,_22=_21.options,c2c=dfd._contentToClean=[],_23=_9.byId(_22.form),_24=_4.notify;
 var _25=_22.data||null;
 if(_23){
 if(_25){
@@ -147,11 +142,11 @@ _2b.value=_f._iframeName;
 _23.setAttribute("target",_f._iframeName);
 }
 _23.target=_f._iframeName;
-_24&&_24.send(_21);
+_24&&_24.emit("send",_21);
 _f._notifyStart(_21);
 _23.submit();
 }else{
-_24&&_24.send(_21);
+_24&&_24.emit("send",_21);
 _f._notifyStart(_21);
 _f.setSrc(_f._frame,_21.url,true);
 }

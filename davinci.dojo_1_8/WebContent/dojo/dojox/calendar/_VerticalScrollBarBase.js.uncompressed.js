@@ -52,6 +52,8 @@ function(declare, event, lang, on, domStyle, _WidgetBase){
 		onChange: function(value){
 			// summary:
 			//		 An extension point invoked when the value has changed.
+			// value: Integer
+			//		The postiion of the scroll bar in pixels.
 			// tags:
 			//		callback
 		},
@@ -59,6 +61,8 @@ function(declare, event, lang, on, domStyle, _WidgetBase){
 		onScroll: function(value){
 			// summary:
 			//		 An extension point invoked when the user scrolls with the mouse.
+			// value: Integer
+			//		The position of the scroll bar in pixels.
 			// tags:
 			//		callback
 		},

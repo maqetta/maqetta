@@ -174,7 +174,7 @@ return _1f;
 };
 _5.position=function(_21,_22){
 _21=_3.byId(_21);
-var db=_2.body(_21.ownerDocument),dh=db.parentNode,ret=_21.getBoundingClientRect();
+var db=_2.body(_21.ownerDocument),ret=_21.getBoundingClientRect();
 ret={x:ret.left,y:ret.top,w:ret.right-ret.left,h:ret.bottom-ret.top};
 if(_1("ie")){
 var _23=_5.getIeDocumentElementOffset(_21.ownerDocument);

@@ -41,12 +41,11 @@ define("dojox/grid/_View", [
 		defaultWidth: "18em",
 
 		// viewWidth: String
-		// 		Width for the view, in valid css unit
+		//		Width for the view, in valid css unit
 		viewWidth: "",
 
 		templateString: template,
-		
-		themeable: false,
+
 		classTag: 'dojoxGrid',
 		marginBottom: 0,
 		rowPad: 2,
@@ -698,8 +697,12 @@ define("dojox/grid/_View", [
 		// scrolling
 		lastTop: 0,
 		firstScroll:0,
+		_nativeScroll: false,
 
 		doscroll: function(inEvent){
+			if(has('ff') >= 13){
+				this._nativeScroll = true;
+			}
 			//var s = dojo.marginBox(this.headerContentNode.firstChild);
 			var isLtr = this.grid.isLeftToRight();
 			if(this.firstScroll < 2){
@@ -725,12 +728,16 @@ define("dojox/grid/_View", [
 			if(top !== this.lastTop){
 				this.grid.scrollTo(top);
 			}
+			this._nativeScroll = false;
 		},
 
 		setScrollTop: function(inTop){
 			// 'lastTop' is a semaphore to prevent feedback-loop with doScroll above
 			this.lastTop = inTop;
-			this.scrollboxNode.scrollTop = inTop;
+			if(!this._nativeScroll){
+				//fix #15487
+				this.scrollboxNode.scrollTop = inTop;
+			}
 			return this.scrollboxNode.scrollTop;
 		},
 

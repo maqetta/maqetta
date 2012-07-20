@@ -67,9 +67,9 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 		//		returns an object with properties useful for noting the border
 		//		dimensions.
 		// description:
-		//		* l/t/r/b = the sum of left/top/right/bottom border (respectively)
-		//		* w = the sum of the left and right border
-		//		* h = the sum of the top and bottom border
+		//		- l/t/r/b = the sum of left/top/right/bottom border (respectively)
+		//		- w = the sum of the left and right border
+		//		- h = the sum of the top and bottom border
 		//
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
@@ -97,9 +97,9 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 		//		Returns object with properties useful for box fitting with
 		//		regards to padding.
 		// description:
-		//		* l/t/r/b = the sum of left/top/right/bottom padding and left/top/right/bottom border (respectively)
-		//		* w = the sum of the left and right padding and border
-		//		* h = the sum of the top and bottom padding and border
+		//		- l/t/r/b = the sum of left/top/right/bottom padding and left/top/right/bottom border (respectively)
+		//		- w = the sum of the left and right padding and border
+		//		- h = the sum of the top and bottom padding and border
 		//
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
@@ -132,9 +132,9 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 		//		returns object with properties useful for box fitting with
 		//		regards to box margins (i.e., the outer-box).
 		//
-		//		* l/t = marginLeft, marginTop, respectively
-		//		* w = total width, margin inclusive
-		//		* h = total height, margin inclusive
+		//		- l/t = marginLeft, marginTop, respectively
+		//		- w = total width, margin inclusive
+		//		- h = total height, margin inclusive
 		//
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
@@ -328,8 +328,8 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 		//		padding, or borders.
 		// node: DOMNode
 		// box: Object
-		//      hash with optional "w", and "h" properties for "width", and "height"
-		//      respectively. All specified properties should have numeric values in whole pixels.
+		//		hash with optional "w", and "h" properties for "width", and "height"
+		//		respectively. All specified properties should have numeric values in whole pixels.
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
@@ -362,8 +362,8 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 		//		you.
 		// node: DOMNode
 		// box: Object
-		//      hash with optional "l", "t", "w", and "h" properties for "left", "right", "width", and "height"
-		//      respectively. All specified properties should have numeric values in whole pixels.
+		//		hash with optional "l", "t", "w", and "h" properties for "left", "right", "width", and "height"
+		//		respectively. All specified properties should have numeric values in whole pixels.
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
@@ -408,7 +408,7 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 
 	geom.isBodyLtr = function isBodyLtr(/*Document?*/ doc){
 		// summary:
-		//      Returns true if the current language is left-to-right, and false otherwise.
+		//		Returns true if the current language is left-to-right, and false otherwise.
 		// doc: Document?
 		//		Optional document to query.   If unspecified, use win.doc.
 		// returns: Boolean
@@ -419,7 +419,7 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 
 	geom.docScroll = function docScroll(/*Document?*/ doc){
 		// summary:
-		//      Returns an object with {node, x, y} with corresponding offsets.
+		//		Returns an object with {node, x, y} with corresponding offsets.
 		// doc: Document?
 		//		Optional document to query.   If unspecified, use win.doc.
 		// returns: Object
@@ -478,10 +478,10 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 
 	geom.fixIeBiDiScrollLeft = function fixIeBiDiScrollLeft(/*Integer*/ scrollLeft, /*Document?*/ doc){
 		// summary:
-		//      In RTL direction, scrollLeft should be a negative value, but IE
-		//      returns a positive one. All codes using documentElement.scrollLeft
-		//      must call this function to fix this error, otherwise the position
-		//      will offset to right when there is a horizontal scrollbar.
+		//		In RTL direction, scrollLeft should be a negative value, but IE
+		//		returns a positive one. All codes using documentElement.scrollLeft
+		//		must call this function to fix this error, otherwise the position
+		//		will offset to right when there is a horizontal scrollbar.
 		// scrollLeft: Number
 		// doc: Document?
 		//		Optional document to query.   If unspecified, use win.doc.
@@ -514,7 +514,7 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 		//
 		// description:
 		//		Returns an object of the form:
-		//			{ x: 100, y: 300, w: 20, h: 15 }
+		//		`{ x: 100, y: 300, w: 20, h: 15 }`.
 		//		If includeScroll==true, the x and y values will include any
 		//		document offsets that may affect the position relative to the
 		//		viewport.
@@ -526,7 +526,6 @@ define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"]
 
 		node = dom.byId(node);
 		var	db = win.body(node.ownerDocument),
-			dh = db.parentNode,
 			ret = node.getBoundingClientRect();
 		ret = {x: ret.left, y: ret.top, w: ret.right - ret.left, h: ret.bottom - ret.top};
 

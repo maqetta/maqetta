@@ -13,12 +13,11 @@ kernel.experimental("dojox.layout.FloatingPane");
 var FloatingPane = declare("dojox.layout.FloatingPane", [ ContentPane, TemplatedMixin ],{
 	// summary:
 	//		A non-modal Floating window.
-	//
 	// description:
 	//		Makes a `dojox.layout.ContentPane` float and draggable by it's title [similar to TitlePane]
 	//		and over-rides onClick to onDblClick for wipeIn/Out of containerNode
 	//		provides minimize(dock) / show() and hide() methods, and resize [almost]
-	//
+
 	// closable: Boolean
 	//		Allow closure of this Node
 	closable: true,
@@ -61,7 +60,7 @@ var FloatingPane = declare("dojox.layout.FloatingPane", [ ContentPane, Templated
 	=====*/
 
 	// contentClass: String
-	// 		The className to give to the inner node which has the content
+	//		The className to give to the inner node which has the content
 	contentClass: "dojoxFloatingPaneContent",
 
 	// animation holders for toggle

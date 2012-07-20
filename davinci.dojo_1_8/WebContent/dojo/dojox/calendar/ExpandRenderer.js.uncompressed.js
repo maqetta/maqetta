@@ -1,5 +1,5 @@
 require({cache:{
-'url:dojox/calendar/templates/ExpandRenderer.html':"<div class=\"dojoxCalendarExpand\" onselectstart=\"return false;\" data-dojo-attach-event=\"click:_onClick,touchstart:_onMouseDown,touchend:_onClick,mousedown:_onMouseDown,mouseup:_onMouseUp,mouseover:_onMouseOver,mouseout:_onMouseOut\">\n\t<div class=\"bg\"><span data-dojo-attach-point=\"expand\">▼</span><span style=\"display:none\" data-dojo-attach-point=\"collapse\">▲</span></div>\t\n</div>"}});
+'url:dojox/calendar/templates/ExpandRenderer.html':"<div class=\"dojoxCalendarExpand\" onselectstart=\"return false;\" data-dojo-attach-event=\"click:_onClick,touchstart:_onMouseDown,touchend:_onClick,mousedown:_onMouseDown,mouseup:_onMouseUp,mouseover:_onMouseOver,mouseout:_onMouseOut\">\n\t<div class=\"bg\"><span data-dojo-attach-point=\"expand\">▼</span><span style=\"display:none\" data-dojo-attach-point=\"collapse\">▲</span></div>\t\n</div>\n"}});
 define("dojox/calendar/ExpandRenderer", [
 "dojo/_base/declare", 
 "dojo/_base/lang", 

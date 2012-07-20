@@ -14,8 +14,8 @@ function(dojo, utilCommon){
 		// summary:
 		//		A singleton, master object that detects
 		//		keyboard keys and events
-		// 		Connect to it like:
-		//		dojo.connect(this.keys, "onEnter", ....);
+		//		Connect to it like:
+		//	|	dojo.connect(this.keys, "onEnter", ....);
 
 		// arrowIncrement: Number
 		//		The amount, in pixels, a selected Stencil will
@@ -45,7 +45,7 @@ function(dojo, utilCommon){
 
 		// meta: [readonly] Boolean
 		//		Indicates whether any 'meta' key is currently pressed:
-		//			shift || ctrl || cmmd || alt
+		//		shift || ctrl || cmd || alt
 		meta:false, // any meta key
 		
 		onDelete: function(/* Event */evt){
@@ -114,7 +114,7 @@ function(dojo, utilCommon){
 		editMode: function(_isedit){
 			// summary:
 			//		Relinquishes control of events to another portion
-			// 		of Drawing; namely the TextBlock.
+			//		of Drawing; namely the TextBlock.
 			isEdit = _isedit;
 		},
 		

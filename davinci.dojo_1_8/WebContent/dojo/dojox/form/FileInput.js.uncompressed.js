@@ -67,7 +67,7 @@ return declare("dojox.form.FileInput", FormWidget,
 	reset: function(/*Event*/ e){
 		// summary:
 		//		on click of cancel button, since we can't clear the input because of
-		// 		security reasons, we destroy it, and add a new one in it's place.
+		//		security reasons, we destroy it, and add a new one in it's place.
 		this.disconnect(this._listener);
 		this.disconnect(this._keyListener);
 		if(this.fileInput){

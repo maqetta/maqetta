@@ -81,7 +81,7 @@ evt.preventDefault();
 _8.stop();
 })),on(_1a,"dblclick",_5.hitch(this,function(evt){
 evt.preventDefault();
-if(_6("ie")){
+if(_6("ie")<9){
 _8.trigger(evt,_1b,_1a,_1c,_1a,_1d,_1e,_1f);
 setTimeout(_5.hitch(this,_8.stop),50);
 }

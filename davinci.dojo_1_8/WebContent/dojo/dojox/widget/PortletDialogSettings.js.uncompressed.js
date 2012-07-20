@@ -20,8 +20,8 @@ define("dojox/widget/PortletDialogSettings", [
 			},
 
 			toggle: function(){
-			// summary:
-			//		Shows and hides the Dialog box.
+				// summary:
+				//		Shows and hides the Dialog box.
 				
 				if(!this.dialog){
 					//require("dijit.Dialog");

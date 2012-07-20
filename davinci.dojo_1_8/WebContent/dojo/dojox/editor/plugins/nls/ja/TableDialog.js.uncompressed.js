@@ -20,7 +20,7 @@ define(
 	buttonSet: "設定", // translated elsewhere?
 	buttonInsert: "挿入",
 	buttonCancel: "キャンセル",
-	selectTableLabel: "テーブルの選択",
+	selectTableLabel: "表の選択",
 	insertTableRowBeforeLabel: "前に行を追加",
 	insertTableRowAfterLabel: "後ろに行を追加",
 	insertTableColumnBeforeLabel: "前に列を追加",

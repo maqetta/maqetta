@@ -50,7 +50,7 @@
 	background-color:#ff6;
 	background-image:none;
 }
-.soria .dijitValidationIcon {
+.soria .dijitValidationTextBoxError .dijitValidationIcon {
 	
 	width: 16px;
 	background: transparent url('../images/warning.png') no-repeat center center;

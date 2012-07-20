@@ -98,10 +98,10 @@ define("dojox/app/controllers/HistoryHash", ["dojo/_base/lang", "dojo/_base/decl
 		},
 
 		_addHistory: function(hash){
-			//	summary:
+			// summary:
 			//		Add hash to application history stack, update history management flags.
 			//
-			//	hash:
+			// hash:
 			//		new hash should be added to _historyStack.
 			this._historyStack.push({
 				'hash': hash,
@@ -124,10 +124,10 @@ define("dojox/app/controllers/HistoryHash", ["dojo/_base/lang", "dojo/_base/decl
 		},
 
 		_onHashChange: function(currentHash){
-			//	summary:
+			// summary:
 			//		subscribe /dojo/hashchange and do add history, back, forward and go operation.
 			//
-			//	currentHash:
+			// currentHash:
 			//		the new url hash when /dojo/hashchange is triggered.
 
 			if(this._index < 0 || this._index > (window.history.length - 1)){
@@ -218,7 +218,7 @@ define("dojox/app/controllers/HistoryHash", ["dojo/_base/lang", "dojo/_base/decl
 			this._current = currentHash;
 
 			// publish history back event
-			topic.publish("app/history/back", [{"viewId": currentHash, "detail": detail}]);
+			topic.publish("/app/history/back", {"viewId": currentHash, "detail": detail});
 
 			// transition to the target view
 			this.app.trigger("transition", {
@@ -239,7 +239,7 @@ define("dojox/app/controllers/HistoryHash", ["dojo/_base/lang", "dojo/_base/decl
 			this._current = currentHash;
 
 			// publish history forward event
-			topic.publish("app/history/forward", [{"viewId": currentHash, "detail": detail}]);
+			topic.publish("/app/history/forward", {"viewId": currentHash, "detail": detail});
 
 			// transition to the target view
 			this.app.trigger("transition", {
@@ -259,7 +259,7 @@ define("dojox/app/controllers/HistoryHash", ["dojo/_base/lang", "dojo/_base/decl
 			this._next = this._historyStack[index + 1] ? this._historyStack[index + 1]['hash'] : null;
 
 			// publish history go event
-			topic.publish("app/history/go", [{"viewId": this._current, "step": step, "detail": this._historyStack[index]["detail"]}]);
+			topic.publish("/app/history/go", {"viewId": this._current, "step": step, "detail": this._historyStack[index]["detail"]});
 
 			var param;
 			if(step > 0){

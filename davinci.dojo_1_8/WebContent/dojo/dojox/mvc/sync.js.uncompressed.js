@@ -125,13 +125,16 @@ define("dojox/mvc/sync", [
 	}
 
 	var directions = {
-		// Data binding goes from the source to the target
+		// from: Number
+		//		Data binding goes from the source to the target
 		from: 1,
 
-		// Data binding goes from the target to the source
+		// to: Number
+		//		Data binding goes from the target to the source
 		to: 2,
 
-		// Data binding goes in both directions (dojox/mvc/Bind.from | dojox/mvc/Bind.to)
+		// both: Number
+		//		Data binding goes in both directions (dojox/mvc/Bind.from | dojox/mvc/Bind.to)
 		both: 3
 	}, undef;
 

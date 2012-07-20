@@ -3,14 +3,15 @@ function(lang, oo, registry, StencilEllipse){
 
 //dojox.drawing.tools.Ellipse = 
 var Ellipse = oo.declare(
-	// summary:
-	//		A drawable Ellipse.
-
 	StencilEllipse,
 	function(){
-		// summary: constructor
+		// summary:
+		//		constructor
 	},
 	{
+		// summary:
+		//		A drawable Ellipse.
+
 		draws:true,
 		onDrag: function(/*EventObject*/obj){
 			var s = obj.start, e = obj;

@@ -338,7 +338,7 @@ var MultipleRowSelector = declare("dojox.grid.cells.MultipleRowSelector", RowSel
 	_onRowMouseOver: function(e){
 		// summary:
 		//		Event fired when mouse moves over a data row(outside of this column).
-		//      - from dojox.grid.enhanced._Events.onRowMouseOver()
+		//		- from dojox.grid.enhanced._Events.onRowMouseOver()
 		// e: Event
 		//		Decorated event object which contains reference to grid, cell, and rowIndex
 		this._updateSelection(e, 0);
@@ -551,7 +551,7 @@ var IndirectSelection = declare("dojox.grid.enhanced.plugins.IndirectSelection",
 	//
 	// example:
 	// |	<div dojoType="dojox.grid.EnhancedGrid" plugins="{indirectSelection: true}" ...></div>
-	// 		or
+	//		or
 	// |	<div dojoType="dojox.grid.EnhancedGrid" plugins="{indirectSelection: {name: 'xxx', width:'30px', styles:'text-align: center;'}}" ...></div>
 
 	// name: String

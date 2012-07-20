@@ -240,8 +240,8 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	
 	destroyDescendants: function(/*Boolean*/ preserveDom){
 		// summary:
-		//      Destroys all the widgets inside this.containerNode,
-		//      but not this widget itself
+		//		Destroys all the widgets inside this.containerNode,
+		//		but not this widget itself
 		arrayUtil.forEach(this._children, function(child){ child.destroyRecursive(preserveDom); });
 	},
 	
@@ -255,9 +255,10 @@ var TableContainer = declare("dojox.layout.TableContainer", _LayoutWidget, {
 	}
 });
 
-// Extend the default widget with both label and title elements, as
-// well as a "spanLabel" attribute.  If a widget
-lang.extend(_WidgetBase, {
+TableContainer.ChildWidgetProperties = {
+	// summary:
+	//		Properties to be set on children of TableContainer
+
 	// label: String
 	//		The label to display for a given widget
 	label: "",
@@ -276,6 +277,10 @@ lang.extend(_WidgetBase, {
 	// colspan: Number
 	//		The number of columns this widget should span.
 	colspan: 1
-});
+};
+
+// Add to widget base for benefit of parser.   Remove for 2.0.   Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ TableContainer.ChildWidgetProperties);
+
 return TableContainer;
 });

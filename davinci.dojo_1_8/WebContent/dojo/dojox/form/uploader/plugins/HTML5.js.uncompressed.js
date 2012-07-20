@@ -45,7 +45,7 @@ var pluginsHTML5 = declare("dojox.form.uploader.plugins.HTML5", [], {
 
 	upload: function(/*Object ? */ formData){
 		// summary:
-		// 		See: dojox.form.Uploader.upload
+		//		See: dojox.form.Uploader.upload
 
 		this.onBegin(this.getFileList());
 		if(this.supports("FormData")){
@@ -75,10 +75,10 @@ var pluginsHTML5 = declare("dojox.form.uploader.plugins.HTML5", [], {
 	
 	sendAsBinary: function(/*Object*/ data){
 		// summary:
-		// 		Used primarily in FF < 4.0. Sends files and form object as binary data, written to
-		// 		still enable use of $_FILES in PHP (or equivalent).
+		//		Used primarily in FF < 4.0. Sends files and form object as binary data, written to
+		//		still enable use of $_FILES in PHP (or equivalent).
 		// tags:
-		// 		private
+		//		private
 
 		if(!this.getUrl()){
 			console.error("No upload url found.", this); return;
@@ -105,10 +105,10 @@ var pluginsHTML5 = declare("dojox.form.uploader.plugins.HTML5", [], {
 	},
 	uploadWithFormData: function(/*Object*/ data){
 		// summary:
-		// 		Used with WebKit and Firefox 4+
-		// 		Upload files using the much friendlier FormData browser object.
+		//		Used with WebKit and Firefox 4+
+		//		Upload files using the much friendlier FormData browser object.
 		// tags:
-		// 		private
+		//		private
 
 		if(!this.getUrl()){
 			console.error("No upload url found.", this); return;

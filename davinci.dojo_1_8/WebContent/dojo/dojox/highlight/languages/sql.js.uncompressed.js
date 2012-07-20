@@ -1,4 +1,4 @@
-define("dojox/highlight/languages/sql", ["dojox/main", "../_base"], function(dojox){
+define("dojox/highlight/languages/sql", ["../_base"], function(dh){
 
 	var SQL_KEYWORDS = {
 		'all': 1, 'partial': 1, 'global': 1, 'month': 1,
@@ -44,7 +44,7 @@ define("dojox/highlight/languages/sql", ["dojox/main", "../_base"], function(doj
 		'having': 1, 'left': 1
 	};
 
-	var dh = dojox.highlight, dhc = dh.constants;
+	var dhc = dh.constants;
 	dh.languages.sql = {
 		// summary:
 		//		SQL highlight definitions

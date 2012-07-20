@@ -3,9 +3,7 @@ define("dojox/dtl/render/html", [
 	"../render/dom",
 	"../_base"
 ], function(lang,ddrd,dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/ 
+
 	lang.getObject("dojox.dtl.render.html", true);
 
 	dd.render.html.Render = ddrd.Render;

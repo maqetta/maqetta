@@ -63,8 +63,15 @@ _1a.splice(_1e,0,_18);
 }
 }
 }else{
-if(_18&&!_f.start){
-_1e=_1d>=0?_1d:(_6.defaultIndex||0);
+if(_18){
+if(_19!==_7){
+_1e=_1d;
+}else{
+if(!_f.start){
+_1e=_6.defaultIndex||0;
+_1a.splice(_1e,0,_18);
+}
+}
 }
 }
 if((_1d>-1||_1e>-1)&&(_17||!_12||(_1d!=_1e))){

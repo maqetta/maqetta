@@ -5,16 +5,16 @@ define("dojo/cookie", ["./_base/kernel", "./regexp"], function(dojo, regexp){
 
 /*=====
 var __cookieProps = function(){
-	//	expires: Date|String|Number?
+	// expires: Date|String|Number?
 	//		If a number, the number of days from today at which the cookie
 	//		will expire. If a date, the date past which the cookie will expire.
 	//		If expires is in the past, the cookie will be deleted.
 	//		If expires is omitted or is 0, the cookie will expire when the browser closes.
-	//	path: String?
+	// path: String?
 	//		The path to use for the cookie.
-	//	domain: String?
+	// domain: String?
 	//		The domain to use for the cookie.
-	//	secure: Boolean?
+	// secure: Boolean?
 	//		Whether to only send the cookie on secure connections
 	this.expires = expires;
 	this.path = path;
@@ -28,8 +28,8 @@ dojo.cookie = function(/*String*/name, /*String?*/ value, /*__cookieProps?*/ pro
 	// summary:
 	//		Get or set a cookie.
 	// description:
-	// 		If one argument is passed, returns the value of the cookie
-	// 		For two or more arguments, acts as a setter.
+	//		If one argument is passed, returns the value of the cookie
+	//		For two or more arguments, acts as a setter.
 	// name:
 	//		Name of the cookie
 	// value:
@@ -39,15 +39,21 @@ dojo.cookie = function(/*String*/name, /*String?*/ value, /*__cookieProps?*/ pro
 	// example:
 	//		set a cookie with the JSON-serialized contents of an object which
 	//		will expire 5 days from now:
-	//	|	dojo.cookie("configObj", dojo.toJson(config), { expires: 5 });
+	//	|	require(["dojo/cookie", "dojo/json"], function(cookie, json){
+	//	|		cookie("configObj", json.stringify(config, {expires: 5 }));
+	//	|	});
 	//
 	// example:
 	//		de-serialize a cookie back into a JavaScript object:
-	//	|	var config = dojo.fromJson(dojo.cookie("configObj"));
+	//	|	require(["dojo/cookie", "dojo/json"], function(cookie, json){
+	//	|		config = json.parse(cookie("configObj"));
+	//	|	});
 	//
 	// example:
 	//		delete a cookie:
-	//	|	dojo.cookie("configObj", null, {expires: -1});
+	//	|	require(["dojo/cookie"], function(cookie){
+	//	|		cookie("configObj", null, {expires: -1});
+	//	|	});
 	var c = document.cookie, ret;
 	if(arguments.length == 1){
 		var matches = c.match(new RegExp("(?:^|; )" + regexp.escapeString(name) + "=([^;]*)"));
@@ -76,7 +82,7 @@ dojo.cookie = function(/*String*/name, /*String?*/ value, /*__cookieProps?*/ pro
 };
 
 dojo.cookie.isSupported = function(){
-	//	summary:
+	// summary:
 	//		Use to determine if the current browser supports cookies or not.
 	//
 	//		Returns true if user allows cookies.

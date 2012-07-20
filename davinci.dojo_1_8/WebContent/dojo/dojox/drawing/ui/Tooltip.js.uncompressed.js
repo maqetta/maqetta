@@ -1,10 +1,6 @@
 define("dojox/drawing/ui/Tooltip", ["dojo", "../util/oo", "../plugins/_Plugin", "../manager/_registry"], 
 function(dojo, oo, Plugin, registry){
 	
-	//	summary:
-	//		Used for UI tooltips. Buttons in the toolbar.
-	// 		This file is not complete.
-
 	var master = null;
 	var MasterC = oo.declare(
 		Plugin,
@@ -12,6 +8,10 @@ function(dojo, oo, Plugin, registry){
 			this.createDom();
 		},
 		{
+			// summary:
+			//		Used for UI tooltips. Buttons in the toolbar.
+			//		This file is not complete.
+
 			show: function(button, text){
 				this.domNode.innerHTML = text;
 				

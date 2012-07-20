@@ -56,6 +56,7 @@ var pluginsIFrame = declare("dojox.form.uploader.plugins.IFrame", [], {
 			form: form,
 			handleAs: "json",
 			content: data,
+			method: "POST",
 			error: lang.hitch(this, function(err){
 				if(destroyAfter){ domConstruct.destroy(form); }
 				this.onError(err);

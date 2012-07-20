@@ -11,8 +11,6 @@ define("dojox/mobile/dh/HtmlContentHandler", [
 
 	// module:
 	//		dojox/mobile/dh/HtmlContentHandler
-	// summary:
-	//		An HTML content handler.
 
 	return declare("dojox.mobile.dh.HtmlContentHandler", null, {
 		// summary:

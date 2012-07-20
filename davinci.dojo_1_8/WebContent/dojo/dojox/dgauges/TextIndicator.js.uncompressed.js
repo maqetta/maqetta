@@ -1,6 +1,6 @@
 define("dojox/dgauges/TextIndicator", ["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/sniff", "dojo/_base/array", "dojo/on", "dojox/gfx", "./IndicatorBase"],
 	function(lang, declare, has, array, on, gfx, IndicatorBase){
-	return declare("dojox.dgauges.ScaleIndicatorBase", IndicatorBase, {
+	return declare("dojox.dgauges.TextIndicator", IndicatorBase, {
 		// summary:
 		//		This type of indicator is used to render text.
 		//		To render an arbitrary text, set the value property.
@@ -8,12 +8,33 @@ define("dojox/dgauges/TextIndicator", ["dojo/_base/lang", "dojo/_base/declare", 
 		//		Setting the indicator property takes precedence on setting the value property.
 		//		When the indicator property is set, the text is automatically updated on value changes.
 
+		// font: Object
+		//		Font used by this element.
 		font: null,
+		// x: Number
+		//		The text anchor x-position. Default is 0.
 		x: 0,
+		// y: Number
+		//		The text anchor y-position. Default is 0.
 		y: 0,
+		// align: String
+		//		An alignment of a text in regards to the anchor position:
+		//
+		//		- "start": A text's baseline starts at the anchor. 
+		//		This is the default value of the align attribute.
+		//		- "middle": A text's baseline is centered on the anchor point.
+		//		- "end": A text's baseline ends at the anchor point.
 		align: "middle",
+		// color: Object
+		//		The color of the text.
 		color: "black",
+		// indicator: dojox/dgauges/IndicatorBase
+		//		If this property is set, the value of the indicator is automatically
+		//		rendered by this text element.
 		indicator: null,
+		// labelFunc: Object
+		//		If set, this method allows to format the value of this text indicator.
+		//		A label function takes the text to render as argument and returns a String. 
 		labelFunc: null,
 		
 		constructor: function(){
@@ -28,6 +49,10 @@ define("dojox/dgauges/TextIndicator", ["dojo/_base/lang", "dojo/_base/declare", 
 		},
 
 		postscript: function(mixin){
+			// summary:
+			//		Internal method
+			// tags:
+			//		private
 			this.inherited(arguments);
 			if(mixin && mixin.indicator){
 				this._indicatorChanged("indicator", null, mixin.indicator);

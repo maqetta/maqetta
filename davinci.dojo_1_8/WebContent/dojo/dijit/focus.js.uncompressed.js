@@ -105,8 +105,9 @@ define("dijit/focus", [
 			};
 
 			// Listen for blur and focus events on targetWindow's document.
-			// Using attachEvent()/addEventListener() rather than on() to catch mouseDown events even
-			// if other code calls evt.stopPropagation().   But maybe that's no longer needed?
+			// Using attachEvent()/addEventListener() rather than on() to try to catch mouseDown events even
+			// if other code calls evt.stopPropagation().  But rethink for 2.0 since that doesn't work for attachEvent(),
+			// which watches events at the bubbling phase rather than capturing phase, like addEventListener(..., false).
 			// Connect to <html> (rather than document) on IE to avoid memory leaks, but document on other browsers because
 			// (at least for FF) the focus event doesn't fire on <html> or <body>.
 			var doc = has("ie") ? targetWindow.document.documentElement : targetWindow.document;

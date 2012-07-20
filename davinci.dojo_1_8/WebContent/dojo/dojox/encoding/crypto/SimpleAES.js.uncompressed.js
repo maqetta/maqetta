@@ -297,25 +297,25 @@ define("dojox/encoding/crypto/SimpleAES", ["../base64", "./_base"],
 
 	crypto.SimpleAES = new (function(){
 		// summary:
-		// 		SimpleAES, ported from dojox.sql, and done without the need for
-		// 		a Google Gears worker pool.
+		//		SimpleAES, ported from dojox.sql, and done without the need for
+		//		a Google Gears worker pool.
 		// description:
 		//		Taken from http://www.movable-type.co.uk/scripts/aes.html by
-		// 		Chris Veness (CLA signed); adapted for Dojo by Brad Neuberg
-		// 		(bkn3 AT columbia.edu) and moved to DojoX crypto by Tom Trenka
-		// 		(ttrenka AT gmail.com).
+		//		Chris Veness (CLA signed); adapted for Dojo by Brad Neuberg
+		//		(bkn3 AT columbia.edu) and moved to DojoX crypto by Tom Trenka
+		//		(ttrenka AT gmail.com).
 		//
-		// 		A few notes:
-		// 		1) This algorithm uses a customized version of CBC mode by creating
-		// 		a nonce, using it as an initialization vector, and storing the
-		// 		IV as the first portion of the encrypted text.  Because of this, it
-		// 		is HIGHLY PROBABLE that it will NOT be usable by other AES implementations.
-		// 		2) All encoding is done in hex format; other encoding formats (such
-		// 		as base 64) are not supported.
-		// 		3) The bit depth of the key is hardcoded at 256, despite the ability
-		// 		of the code to handle all three recommended bit depths.
-		// 		4) The passed key will be padded (as opposed to enforcing a strict
-		// 		length) with null bytes.
+		//		A few notes:
+		//		1) This algorithm uses a customized version of CBC mode by creating
+		//		a nonce, using it as an initialization vector, and storing the
+		//		IV as the first portion of the encrypted text.  Because of this, it
+		//		is HIGHLY PROBABLE that it will NOT be usable by other AES implementations.
+		//		2) All encoding is done in hex format; other encoding formats (such
+		//		as base 64) are not supported.
+		//		3) The bit depth of the key is hardcoded at 256, despite the ability
+		//		of the code to handle all three recommended bit depths.
+		//		4) The passed key will be padded (as opposed to enforcing a strict
+		//		length) with null bytes.
 		this.encrypt = function(/* String */plaintext, /* String */key){
 			// summary:
 			//		Encrypt the passed plaintext using the key, with a

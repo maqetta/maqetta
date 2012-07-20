@@ -474,14 +474,12 @@ define("dojox/charting/plot2d/Spider", ["dojo/_base/lang", "dojo/_base/declare",
 					var aroundRect = {type: "rect"};
 					aroundRect.x = o.cx;
 					aroundRect.y = o.cy;
-					aroundRect.width = aroundRect.height = 1;
+					aroundRect.w = aroundRect.h = 1;
 					var lt = this.chart.getCoords();
 					aroundRect.x += lt.x;
 					aroundRect.y += lt.y;
 					aroundRect.x = Math.round(aroundRect.x);
 					aroundRect.y = Math.round(aroundRect.y);
-					aroundRect.w = Math.ceil(aroundRect.width);
-					aroundRect.h = Math.ceil(aroundRect.height);
 					this.aroundRect = aroundRect;
 					var position = ["after-centered", "before-centered"];
 					dc.doIfLoaded("dijit/Tooltip", lang.hitch(this, function(Tooltip){

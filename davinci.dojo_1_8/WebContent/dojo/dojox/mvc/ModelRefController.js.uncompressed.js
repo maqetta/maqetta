@@ -11,9 +11,9 @@ define("dojox/mvc/ModelRefController", [
 		// description:
 		//		Does the following on behalf of such model:
 		//
-		//			* Provides data from model via dojo/Stateful get() interface
-		//			* Stores data to model via dojo/Stateful set() interface
-		//			* Watches for change in model via dojo/Stateful watch() interface (The callback is called when there is a change in data model, as well as when the data model itself is replaced with different one)
+		//		- Provides data from model via dojo/Stateful get() interface
+		//		- Stores data to model via dojo/Stateful set() interface
+		//		- Watches for change in model via dojo/Stateful watch() interface (The callback is called when there is a change in data model, as well as when the data model itself is replaced with different one)
 		//
 		//		Can also be used to do some application-specific stuffs upon change in properties in model, by defining setter functions. 
 		//		Doing so will help keep models and widgets free from application-specific logic, and will help keep application logic free from specifics of models and widgets.

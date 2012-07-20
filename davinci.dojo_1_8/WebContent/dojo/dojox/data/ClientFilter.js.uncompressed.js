@@ -32,10 +32,11 @@ define("dojox/data/ClientFilter", ["dojo/_base/declare", "dojo/_base/lang", "doj
 				//		results by itself in this case. In this situations, data stores can provide a isUpdateable(request) function
 				//		and matchesQuery(item,request) function. If a data store can handle a query, it can return true from
 				//		isUpdateable and if an item matches a query, it can return true from matchesQuery. Here is
-				//		definition of isUpdateable and matchesQuery
-				//		isUpdateable(request)  - request is the keywords arguments as is passed to the fetch function.
-				//		matchesQuery(item,request) - item is the item to test, and request is the value arguments object
-				//				for the fetch function.
+				//		definition of isUpdateable and matchesQuery:
+				//
+				//		- isUpdateable(request)  - request is the keywords arguments as is passed to the fetch function.
+				//		- matchesQuery(item,request) - item is the item to test, and request is the value arguments object
+				//		for the fetch function.
 				//
 				//		You can define a property on this object instance "cacheByDefault" to a value of true that will
 				//		cause all queries to be cached by default unless the cache queryOption is explicitly set to false.

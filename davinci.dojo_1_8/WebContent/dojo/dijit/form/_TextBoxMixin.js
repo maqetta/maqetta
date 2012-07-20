@@ -44,10 +44,12 @@ return _e==null?"":(_e.toString?_e.toString():_e);
 return _f;
 },_refreshState:function(){
 },onInput:function(){
-},__skipInputEvent:false,_onInput:function(){
+},__skipInputEvent:false,_onInput:function(evt){
 if(this.textDir=="auto"){
 this.applyTextDir(this.focusNode,this.focusNode.value);
 }
+this._processInput(evt);
+},_processInput:function(evt){
 this._refreshState();
 this._set("displayedValue",this.get("displayedValue"));
 },postCreate:function(){

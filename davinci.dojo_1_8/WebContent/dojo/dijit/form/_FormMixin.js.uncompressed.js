@@ -41,12 +41,11 @@ define("dijit/form/_FormMixin", [
 		//		which indicates that the form is ready to be submitted.
 		state: "",
 
-		//	TODO:
+		// TODO:
 		//	* Repeater
 		//	* better handling for arrays.  Often form elements have names with [] like
 		//	* people[3].sex (for a list of people [{name: Bill, sex: M}, ...])
-		//
-		//
+
 
 		_getDescendantFormWidgets: function(/*dijit/_WidgetBase[]?*/ children){
 			// summary:
@@ -73,11 +72,10 @@ define("dijit/form/_FormMixin", [
 		validate: function(){
 			// summary:
 			//		returns if the form is valid - same as isValid - but
-			//		provides a few additional (ui-specific) features.
-			//		1 - it will highlight any sub-widgets that are not
-			//			valid
-			//		2 - it will call focus() on the first invalid
-			//			sub-widget
+			//		provides a few additional (ui-specific) features:
+			//
+			//		1. it will highlight any sub-widgets that are not valid
+			//		2. it will call focus() on the first invalid sub-widget
 			var didFocus = false;
 			return array.every(array.map(this._getDescendantFormWidgets(), function(widget){
 				// Need to set this so that "required" widgets get their

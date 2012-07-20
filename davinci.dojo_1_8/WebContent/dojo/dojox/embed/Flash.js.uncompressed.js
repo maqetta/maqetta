@@ -381,15 +381,14 @@ var __flashArgs = function(path, id, width, height, style, params, vars, express
 			// description:
 			//		Probably includes methods for outdated
 			//		browsers, but this should catch all cases.
-			// arguments:
-			//		movieName: String
-			//			The name of the SWF
-			//		doc: Object
-			//			The document, if not current window
-			//			(not fully supported)
+			// movieName: String
+			//		The name of the SWF
+			// doc: Object
+			//		The document, if not current window
+			//		(not fully supported)
 			// example:
-			//	| var movie = dojox.embed.Flash.byId("myId");
-			//
+			//	|	var movie = dojox.embed.Flash.byId("myId");
+
 			doc = doc || document;
 			if(doc.embeds[movieName]){
 				return doc.embeds[movieName];

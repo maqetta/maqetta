@@ -8,7 +8,7 @@ dojo.require("dojox.mobile.app.SceneController");
 dojo.declare("dojox.mobile.app.StageController", null,{
 
 	// scenes: Array
-	//    The list of scenes currently in existance in the app.
+	//		The list of scenes currently in existence in the app.
 	scenes: null,
 
 	effect: "fade",

@@ -422,16 +422,11 @@ var FontChoice = declare("dijit._editor.plugins.FontChoice", _Plugin,{
 	// description:
 	//		The commands provided by this plugin are:
 	//
-	//		* fontName
-	//	|		Provides a drop down to select from a list of font names
-	//		* fontSize
-	//	|		Provides a drop down to select from a list of font sizes
-	//		* formatBlock
-	//	|		Provides a drop down to select from a list of block styles
-	//	|
-	//
-	//		which can easily be added to an editor by including one or more of the above commands
-	//		in the `plugins` attribute as follows:
+	//		- fontName: Provides a drop down to select from a list of font names
+	//		- fontSize: Provides a drop down to select from a list of font sizes
+	//		- formatBlock: Provides a drop down to select from a list of block styles
+	//		  which can easily be added to an editor by including one or more of the above commands
+	//		  in the `plugins` attribute as follows:
 	//
 	//	|	plugins="['fontName','fontSize',...]"
 	//

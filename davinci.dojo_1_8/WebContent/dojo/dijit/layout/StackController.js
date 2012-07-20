@@ -4,7 +4,7 @@ var _d=_2("dijit.layout._StackButton",_c,{tabIndex:"-1",closeButton:false,_aria_
 this.inherited(arguments);
 (this.focusNode||this.domNode).setAttribute("role","tab");
 }});
-var _f=_2("dijit.layout.StackController",[_9,_a,_b],{baseClass:"dijitStackController",templateString:"<span role='tablist' data-dojo-attach-event='onkeypress'></span>",containerId:"",buttonWidget:_d,buttonWidgetClass:"dijitToggleButton",buttonWidgetCloseClass:"dijitStackCloseButton",constructor:function(){
+var _f=_2("dijit.layout.StackController",[_9,_a,_b],{baseClass:"dijitStackController",templateString:"<span role='tablist' data-dojo-attach-event='onkeypress'></span>",containerId:"",buttonWidget:_d,buttonWidgetClass:"dijitToggleButton",buttonWidgetCloseClass:"dijitStackCloseButton",constructor:function(_10){
 this.pane2button={};
 },postCreate:function(){
 this.inherited(arguments);
@@ -14,15 +14,15 @@ this.subscribe(this.containerId+"-removeChild","onRemoveChild");
 this.subscribe(this.containerId+"-selectChild","onSelectChild");
 this.subscribe(this.containerId+"-containerKeyPress","onContainerKeyPress");
 this.connect(this.containerNode,"click",function(evt){
-var _10=_8.getEnclosingWidget(evt.target),_11=_10.page;
-if(_10!=this.containerNode&&!_10.disabled){
+var _11=_8.getEnclosingWidget(evt.target);
+if(_11!=this.containerNode&&!_11.disabled){
 for(var _12=evt.target;_12!==this.containerNode;_12=_12.parentNode){
 if(_3.contains(_12,this.buttonWidgetCloseClass)){
-this.onCloseButtonClick(_10);
+this.onCloseButtonClick(_11);
 break;
 }else{
 if(_3.contains(_12,this.buttonWidgetClass)){
-this.onButtonClick(_10);
+this.onButtonClick(_11);
 break;
 }
 }

@@ -14,18 +14,19 @@ var XmlStore = declare("dojox.data.XmlStore", null, {
 		//		Constructor for the XML store.
 		// args:
 		//		An anonymous object to initialize properties.  It expects the following values:
-		//		url:		The url to a service or an XML document that represents the store
-		//		rootItem:	A tag name for root items
-		//		keyAttribute:	An attribute name for a key or an identity (unique identifier)
+		//
+		//		- url:		The url to a service or an XML document that represents the store
+		//		- rootItem:	A tag name for root items
+		//		- keyAttribute:	An attribute name for a key or an identity (unique identifier)
 		//						Required for serverside fetchByIdentity, etc.  Not required for
 		//						client side fetchItemBIdentity, as it will use an XPath-like
 		//						structure if keyAttribute was not specified.  Recommended to always
 		//						set this, though, for consistent identity behavior.
-		//		attributeMap:   An anonymous object contains properties for attribute mapping,
+		//		- attributeMap: An anonymous object contains properties for attribute mapping,
 		//						{"tag_name.item_attribute_name": "@xml_attribute_name", ...}
-		//		sendQuery:		A boolean indicate to add a query string to the service URL.
+		//		- sendQuery:	A boolean indicate to add a query string to the service URL.
 		//						Default is false.
-		//		urlPreventCache: Parameter to indicate whether or not URL calls should apply
+		//		- urlPreventCache: Parameter to indicate whether or not URL calls should apply
 		//						 the preventCache option to the xhr request.
 		if(args){
 			this.url = args.url;

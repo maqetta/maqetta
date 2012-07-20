@@ -44,7 +44,7 @@ _e+=(_12-_f)*(up?-1:1);
 _f=_12;
 }
 },handleKey:function(evt){
-switch(evt.charOrCode){
+switch(evt.keyCode){
 case _4.DOWN_ARROW:
 this.selectNextNode();
 return false;

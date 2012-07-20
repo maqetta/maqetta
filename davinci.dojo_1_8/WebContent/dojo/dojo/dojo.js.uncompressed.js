@@ -30,9 +30,9 @@
 	//
 	//		This loader includes sniffing machinery to determine the environment; the following environments are supported:
 	//
-	//			* browser
-	//			* node.js
-	//			* rhino
+	//		- browser
+	//		- node.js
+	//		- rhino
 	//
 	//		This is the so-called "source loader". As such, it includes many optional features that may be discadred by
 	//		building a customized verion with the build system.
@@ -220,14 +220,17 @@
 		req.isXdUrl = noop;
 
 		req.initSyncLoader = function(dojoRequirePlugin_, checkDojoRequirePlugin_, transformToAmd_){
+			// the first dojo/_base/loader loaded gets to define these variables; they are designed to work
+			// in the presense of zero to many mapped dojo/_base/loaders
 			if(!dojoRequirePlugin){
 				dojoRequirePlugin = dojoRequirePlugin_;
 				checkDojoRequirePlugin = checkDojoRequirePlugin_;
 				transformToAmd = transformToAmd_;
 			}
+
 			return {
 				sync:sync,
-				xd:xd,
+				requested:requested,
 				arrived:arrived,
 				nonmodule:nonmodule,
 				executing:executing,
@@ -243,13 +246,12 @@
 				execModule:execModule,
 				dojoRequirePlugin:dojoRequirePlugin,
 				getLegacyMode:function(){return legacyMode;},
-				holdIdle:function(){checkCompleteGuard++;},
-				releaseIdle:function(){checkIdle();}
+				guardCheckComplete:guardCheckComplete
 			};
 		};
 
 		if( 1 ){
-			// in legacy sync mode, the loader needs a minimal XHR library to load dojo/_base/loader and dojo/_base/xhr
+			// in legacy sync mode, the loader needs a minimal XHR library
 
 			var locationProtocol = location.protocol,
 				locationHost = location.host;
@@ -380,13 +382,12 @@
 			// a map from packageId to package configuration object; see fixupPackageInfo
 			= {},
 
-		packageMap
-			// map from package name to local-installed package name
+		map = req.map
+			// AMD map config variable; dojo/_base/kernel needs req.map to figure out the scope map
 			= {},
 
-		packageMapProg
-			// list of (from-package, to-package, regex, length) derived from packageMap;
-			// a "program" to apply paths; see computeMapProg
+		mapProgs
+			// vector of quads as described by computeMapProg; map-key is AMD map key, map-value is AMD map value
 			= [],
 
 		modules
@@ -400,7 +401,7 @@
 			// deps: the dependency vector for this module (vector of modules objects)
 			// def: the factory for this module
 			// result: the result of the running the factory for this module
-			// injected: (requested | arrived | nonmodule) the status of the module; nonmodule means the resource did not call define
+			// injected: (0 | requested | arrived) the status of the module; nonmodule means the resource did not call define
 			// load: plugin load function; applicable only for plugins
 			//
 			// Modules go through several phases in creation:
@@ -423,11 +424,24 @@
 			= "",
 
 		cache
-			// hash:(mid)-->(function)
+			// hash:(mid | url)-->(function | string)
 			//
-			// Gives the contents of a cached resource; function should cause the same actions as if the given mid was downloaded
-			// and evaluated by the host environment
+			// A cache of resources. The resources arrive via a config.cache object, which is a hash from either mid --> function or
+			// url --> string. The url key is distinguished from the mid key by always containing the prefix "url:". url keys as provided
+			// by config.cache always have a string value that represents the contents of the resource at the given url. mid keys as provided
+			// by configl.cache always have a function value that causes the same code to execute as if the module was script injected.
+			//
+			// Both kinds of key-value pairs are entered into cache via the function consumePendingCache, which may relocate keys as given
+			// by any mappings *iff* the config.cache was received as part of a module resource request.
+			//
+			// Further, for mid keys, the implied url is computed and the value is entered into that key as well. This allows mapped modules
+			// to retrieve cached items that may have arrived consequent to another namespace.
+			//
 			 = {},
+
+		urlKeyPrefix
+			// the prefix to prepend to a URL key in the cache.
+			= "url:",
 
 		pendingCacheInsert
 			// hash:(mid)-->(function)
@@ -445,16 +459,17 @@
 
 	if( 1 ){
 		var consumePendingCacheInsert = function(referenceModule){
-				var p, item, match, now;
+				var p, item, match, now, m;
 				for(p in pendingCacheInsert){
 					item = pendingCacheInsert[p];
 					match = p.match(/^url\:(.+)/);
 					if(match){
-						cache[toUrl(match[1], referenceModule)] =  item;
+						cache[urlKeyPrefix + toUrl(match[1], referenceModule)] =  item;
 					}else if(p=="*now"){
 						now = item;
 					}else if(p!="*noref"){
-						cache[getModuleInfo(p, referenceModule).mid] = item;
+						m = getModuleInfo(p, referenceModule);
+						cache[m.mid] = cache[urlKeyPrefix + m.url] = item;
 					}
 				}
 				if(now){
@@ -463,59 +478,52 @@
 				pendingCacheInsert = {};
 			},
 
-			computeMapProg = function(map, dest, packName){
-				// This routine takes a map target-prefix(string)-->replacement(string) into a vector
-				// of quads (target-prefix, replacement, regex-for-target-prefix, length-of-target-prefix)
-				//
-				// The loader contains processes that map one string prefix to another. These
-				// are encountered when applying the requirejs paths configuration and when mapping
-				// package names. We can make the mapping and any replacement easier and faster by
-				// replacing the map with a vector of quads and then using this structure in the simple machine runMapProg.
-				dest.splice(0, dest.length);
-				var p, i, item, reverseName = 0;
-				for(p in map){
-					dest.push([p, map[p]]);
-					if(map[p]==packName){
-						reverseName = p;
-					}
-				}
-				dest.sort(function(lhs, rhs){
-					return rhs[0].length - lhs[0].length;
-				});
-				for(i = 0; i < dest.length;){
-					item = dest[i++];
-					item[2] = new RegExp("^" + item[0].replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, function(c){ return "\\" + c; }) + "(\/|$)");
-					item[3] = item[0].length + 1;
-				}
-				return reverseName;
+			escapeString = function(s){
+				return s.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, function(c){ return "\\" + c; });
 			},
 
-			fixupPackageInfo = function(packageInfo, baseUrl){
-				// calculate the precise (name, baseUrl, main, mappings) for a package
+			computeMapProg = function(map, dest){
+				// This routine takes a map as represented by a JavaScript object and initializes dest, a vector of
+				// quads of (map-key, map-value, refex-for-map-key, length-of-map-key), sorted decreasing by length-
+				// of-map-key. The regex looks for the map-key followed by either "/" or end-of-string at the beginning
+				// of a the search source. Notice the map-value is irrelevent to the algorithm
+				dest.splice(0, dest.length);
+				for(var p in map){
+					dest.push([
+						p,
+						map[p],
+						new RegExp("^" + escapeString(p) + "(\/|$)"),
+						p.length]);
+				}
+				dest.sort(function(lhs, rhs){ return rhs[3] - lhs[3]; });
+				return dest;
+			},
+
+			fixupPackageInfo = function(packageInfo){
+				// calculate the precise (name, location, main, mappings) for a package
 				var name = packageInfo.name;
 				if(!name){
 					// packageInfo must be a string that gives the name
 					name = packageInfo;
 					packageInfo = {name:name};
 				}
-				packageInfo = mix({main:"main", mapProg:[]}, packageInfo);
-				packageInfo.location = (baseUrl || "") + (packageInfo.location ? packageInfo.location : name);
-				packageInfo.reverseName = computeMapProg(packageInfo.packageMap, packageInfo.mapProg, name);
+				packageInfo = mix({main:"main"}, packageInfo);
+				packageInfo.location = packageInfo.location ? packageInfo.location : name;
+
+				// packageMap is depricated in favor of AMD map
+				if(packageInfo.packageMap){
+					map[name] = packageInfo.packageMap;
+				}
 
 				if(!packageInfo.main.indexOf("./")){
 					packageInfo.main = packageInfo.main.substring(2);
 				}
 
-				// allow paths to be specified in the package info
-				// TODO: this is not supported; remove
-				mix(paths, packageInfo.paths);
-
 				// now that we've got a fully-resolved package object, push it into the configuration
 				packs[name] = packageInfo;
-				packageMap[name] = name;
 			},
 
-			config = function(config, booting){
+			config = function(config, booting, referenceModule){
 				for(var p in config){
 					if(p=="waitSeconds"){
 						req.waitms = (config[p] || 0) * 1000;
@@ -562,27 +570,46 @@
 				// for each package found in any packages config item, augment the packs map owned by the loader
 				forEach(config.packages, fixupPackageInfo);
 
-				// for each packagePath found in any packagePaths config item, augment the packs map owned by the loader
+				// for each packagePath found in any packagePaths config item, augment the packageConfig
+				// packagePaths is depricated; remove in 2.0
 				for(baseUrl in config.packagePaths){
 					forEach(config.packagePaths[baseUrl], function(packageInfo){
-						fixupPackageInfo(packageInfo, baseUrl + "/");
+						var location = baseUrl + "/" + packageInfo;
+						if(isString(packageInfo)){
+							packageInfo = {name:packageInfo};
+						}
+						packageInfo.location = location;
+						fixupPackageInfo(packageInfo);
 					});
 				}
 
+				// notice that computeMapProg treats the dest as a reference; therefore, if/when that variable
+				// is published (see dojo-publish-privates), the published variable will always hold a valid value.
+
+				// this must come after all package processing since package processing may mutate map
+				computeMapProg(mix(map, config.map), mapProgs);
+				forEach(mapProgs, function(item){
+					item[1] = computeMapProg(item[1], []);
+					if(item[0]=="*"){
+						mapProgs.star = item[1];
+					}
+				});
+
 				// push in any paths and recompute the internal pathmap
-				// warning: this cann't be done until the package config is processed since packages may include path info
 				computeMapProg(mix(paths, config.paths), pathsMapProg);
 
 				// aliases
 				forEach(config.aliases, function(pair){
 					if(isString(pair[0])){
-						pair[0] = new RegExp("^" + pair[0].replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, function(c){return "\\" + c;}) + "$");
+						pair[0] = new RegExp("^" + escapeString(pair[0]) + "$");
 					}
 					aliases.push(pair);
 				});
 
-				// mix any packageMap config item and recompute the internal packageMapProg
-				computeMapProg(mix(packageMap, config.packageMap), packageMapProg);
+				for(p in config.config){
+					var module = getModule(p, referenceModule);
+					module.config = mix(module.config || {}, config.config[p]);
+				}
 
 				// push in any new cache values
 				if(config.cache){
@@ -667,8 +694,7 @@
 		pathsMapProg = defaultConfig.pathsMapProg;
 		packs = defaultConfig.packs;
 		aliases = defaultConfig.aliases;
-		packageMap = defaultConfig.packageMap;
-		packageMapProg = defaultConfig.packageMapProg;
+		mapProgs = defaultConfig.mapProgs;
 		modules = defaultConfig.modules;
 		cache = defaultConfig.cache;
 		cacheBust = defaultConfig.cacheBust;
@@ -689,26 +715,26 @@
 	// build the loader machinery iaw configuration, including has feature tests
 	var	injectDependencies = function(module){
 			// checkComplete!=0 holds the idle signal; we're not idle if we're injecting dependencies
-			checkCompleteGuard++;
-			forEach(module.deps, injectModule);
-			if( 0  && comboPending && !comboPendingTimer){
-				comboPendingTimer = setTimeout(function(){
-					comboPending = 0;
-					comboPendingTimer = null;
-					req.combo.done(function(mids, url){
-						var onLoadCallback= function(){
-							// defQ is a vector of module definitions 1-to-1, onto mids
-							runDefQ(0, mids);
-							checkComplete();
-						};
-						combosPending.push(mids);
-						injectingModule = mids;
-						req.injectUrl(url, onLoadCallback, mids);
-						injectingModule = 0;
-					}, req);
-				}, 0);
-			}
-			checkIdle();
+			guardCheckComplete(function(){
+				forEach(module.deps, injectModule);
+				if( 0  && comboPending && !comboPendingTimer){
+					comboPendingTimer = setTimeout(function() {
+						comboPending = 0;
+						comboPendingTimer = null;
+						req.combo.done(function(mids, url) {
+							var onLoadCallback= function(){
+								// defQ is a vector of module definitions 1-to-1, onto mids
+								runDefQ(0, mids);
+								checkComplete();
+							};
+							combosPending.push(mids);
+							injectingModule = mids;
+							req.injectUrl(url, onLoadCallback, mids);
+							injectingModule = 0;
+						}, req);
+					}, 0);
+				}
+			});
 		},
 
 		contextRequire = function(a1, a2, a3, referenceModule, contextRequire){
@@ -723,7 +749,7 @@
 			}
 			if(!isArray(a1)){
 				// a1 is a configuration
-				config(a1);
+				config(a1, 0, referenceModule);
 
 				// juggle args; (a2, a3) may be (dependencies, callback)
 				a1 = a2;
@@ -760,9 +786,9 @@
 					// it's possible to execute this require later after the current traversal completes and avoid the circular dependency.
 					// ...but *always* insist on immediate in synch mode
 					var strict = checkCompleteGuard && req.async;
-					checkCompleteGuard++;
-					execModule(module, strict);
-					checkIdle();
+					guardCheckComplete(function(){
+						execModule(module, strict);
+					});
 					if(!module.executed){
 						// some deps weren't on board or circular dependency detected and strict; therefore, push into the execQ
 						execQ.push(module);
@@ -800,7 +826,7 @@
 						var nlsModuleInfo = getModuleInfo(mid, module),
 							nlsModule = modules[nlsModuleInfo.mid];
 						if(!nlsModule || !nlsModule.executed){
-							cached = cache[nlsModuleInfo.mid] || cache[nlsModuleInfo.cacheId];
+							cached = cache[nlsModuleInfo.mid] || cache[urlKeyPrefix + nlsModuleInfo.url];
 							if(cached){
 								evalModuleText(cached);
 								nlsModule = modules[nlsModuleInfo.mid];
@@ -855,10 +881,12 @@
 
 		runMapProg = function(targetMid, map){
 			// search for targetMid in map; return the map item if found; falsy otherwise
+			if(map){
 			for(var i = 0; i < map.length; i++){
 				if(map[i][2].test(targetMid)){
 					return map[i];
 				}
+			}
 			}
 			return 0;
 		},
@@ -879,24 +907,26 @@
 			return result.join("/");
 		},
 
-		makeModuleInfo = function(pid, mid, pack, url, cacheId){
+		makeModuleInfo = function(pid, mid, pack, url){
 			if( 1 ){
 				var xd= req.isXdUrl(url);
-				return {pid:pid, mid:mid, pack:pack, url:url, executed:0, def:0, isXd:xd, isAmd:!!(xd || (packs[pid] && packs[pid].isAmd)), cacheId:cacheId};
+				return {pid:pid, mid:mid, pack:pack, url:url, executed:0, def:0, isXd:xd, isAmd:!!(xd || (packs[pid] && packs[pid].isAmd))};
 			}else{
-				return {pid:pid, mid:mid, pack:pack, url:url, executed:0, def:0, cacheId:cacheId};
+				return {pid:pid, mid:mid, pack:pack, url:url, executed:0, def:0};
 			}
 		},
 
-		getModuleInfo_ = function(mid, referenceModule, packs, modules, baseUrl, packageMapProg, pathsMapProg, alwaysCreate){
+		getModuleInfo_ = function(mid, referenceModule, packs, modules, baseUrl, mapProgs, pathsMapProg, alwaysCreate){
 			// arguments are passed instead of using lexical variables so that this function my be used independent of the loader (e.g., the builder)
 			// alwaysCreate is useful in this case so that getModuleInfo never returns references to real modules owned by the loader
-			var pid, pack, midInPackage, mapProg, mapItem, path, url, result, isRelative, requestedMid, cacheId=0;
+			var pid, pack, midInPackage, mapProg, mapItem, url, result, isRelative, requestedMid;
 			requestedMid = mid;
 			isRelative = /^\./.test(mid);
 			if(/(^\/)|(\:)|(\.js$)/.test(mid) || (isRelative && !referenceModule)){
 				// absolute path or protocol of .js filetype, or relative path but no reference module and therefore relative to page
 				// whatever it is, it's not a module but just a URL of some sort
+				// note: pid===0 indicates the routine is returning an unmodified mid
+
 				return makeModuleInfo(0, mid, 0, mid);
 			}else{
 				// relative module ids are relative to the referenceModule; get rid of any dots
@@ -904,21 +934,22 @@
 				if(/^\./.test(mid)){
 					throw makeError("irrationalPath", mid);
 				}
-				// find the package indicated by the mid, if any
-				mapProg = referenceModule && referenceModule.pack && referenceModule.pack.mapProg;
-				mapItem = (mapProg && runMapProg(mid, mapProg)) || runMapProg(mid, packageMapProg);
+				// at this point, mid is an absolute mid
+
+				// map the mid
+				if(referenceModule){
+					mapItem = runMapProg(referenceModule.mid, mapProgs);
+				}
+				mapItem = mapItem || mapProgs.star;
+				mapItem = mapItem && runMapProg(mid, mapItem[1]);
 				if(mapItem){
-					// mid specified a module that's a member of a package; figure out the package id and module id
-					// notice we expect pack.main to be valid with no pre or post slash
-					pid = mapItem[1];
-					mid = mid.substring(mapItem[3]);
-					pack = packs[pid];
-					if(!mid){
-						mid= pack.main;
+					mid = mapItem[1] + mid.substring(mapItem[3]);
 					}
-					midInPackage = mid;
-					cacheId = pack.reverseName + "/" + mid;
-					mid = pid + "/" + mid;
+
+				match = mid.match(/^([^\/]+)(\/(.+))?$/);
+				pid = match ? match[1] : "";
+				if((pack = packs[pid])){
+					mid = pid + "/" + (midInPackage = (match[3] || pack.main));
 				}else{
 					pid = "";
 				}
@@ -933,20 +964,21 @@
 					}
 				});
 				if(candidate){
-					return getModuleInfo_(candidate, 0, packs, modules, baseUrl, packageMapProg, pathsMapProg, alwaysCreate);
+					return getModuleInfo_(candidate, 0, packs, modules, baseUrl, mapProgs, pathsMapProg, alwaysCreate);
 				}
 
 				result = modules[mid];
 				if(result){
-					return alwaysCreate ? makeModuleInfo(result.pid, result.mid, result.pack, result.url, cacheId) : modules[mid];
+					return alwaysCreate ? makeModuleInfo(result.pid, result.mid, result.pack, result.url) : modules[mid];
 				}
 			}
 			// get here iff the sought-after module does not yet exist; therefore, we need to compute the URL given the
 			// fully resolved (i.e., all relative indicators and package mapping resolved) module id
 
+			// note: pid!==0 indicates the routine is returning a url that has .js appended unmodified mid
 			mapItem = runMapProg(mid, pathsMapProg);
 			if(mapItem){
-				url = mapItem[1] + mid.substring(mapItem[3] - 1);
+				url = mapItem[1] + mid.substring(mapItem[3]);
 			}else if(pid){
 				url = pack.location + "/" + midInPackage;
 			}else if(has("config-tlmSiblingOfDojo")){
@@ -959,11 +991,11 @@
 				url = baseUrl + url;
 			}
 			url += ".js";
-			return makeModuleInfo(pid, mid, pack, compactPath(url), cacheId);
+			return makeModuleInfo(pid, mid, pack, compactPath(url));
 		},
 
 		getModuleInfo = function(mid, referenceModule){
-			return getModuleInfo_(mid, referenceModule, packs, modules, req.baseUrl, packageMapProg, pathsMapProg);
+			return getModuleInfo_(mid, referenceModule, packs, modules, req.baseUrl, mapProgs, pathsMapProg);
 		},
 
 		resolvePluginResourceId = function(plugin, prid, referenceModule){
@@ -983,9 +1015,9 @@
 				if( 1  && legacyMode == sync && !plugin.executed){
 					injectModule(plugin);
 					if(plugin.injected===arrived && !plugin.executed){
-						checkCompleteGuard++;
-						execModule(plugin);
-						checkIdle();
+						guardCheckComplete(function(){
+							execModule(plugin);
+						});
 					}
 					if(plugin.executed){
 						promoteModuleToPlugin(plugin);
@@ -1023,7 +1055,7 @@
 
 		toUrl = req.toUrl = function(name, referenceModule){
 			var moduleInfo = getModuleInfo(name+"/x", referenceModule),
-				url = moduleInfo.url;
+				url= moduleInfo.url;
 			return fixupUrl(moduleInfo.pid===0 ?
 				// if pid===0, then name had a protocol or absolute path; either way, toUrl is the identify function in such cases
 				name :
@@ -1086,8 +1118,7 @@
 			var map = {};
 			forEach(plugin.loadQ, function(pseudoPluginResource){
 				// manufacture and insert the real module in modules
-				var pseudoMid = pseudoPluginResource.mid,
-					prid = resolvePluginResourceId(plugin, pseudoPluginResource.prid, pseudoPluginResource.req.module),
+				var prid = resolvePluginResourceId(plugin, pseudoPluginResource.prid, pseudoPluginResource.req.module),
 					mid = plugin.dynamic ? pseudoPluginResource.mid.replace(/waitingForPlugin$/, prid) : (plugin.mid + "!" + prid),
 					pluginResource = mix(mix({}, pseudoPluginResource), {mid:mid, prid:prid, injected:0});
 				if(!modules[mid]){
@@ -1137,7 +1168,7 @@
 				}
 			}
 			// delete references to synthetic modules
-	        if (/^require\*/.test(module.mid)){
+	        if (/^require\*/.test(module.mid)) {
 	            delete modules[module.mid];
 	        }
 		},
@@ -1199,7 +1230,19 @@
 		},
 
 
-		checkCompleteGuard =  0,
+		checkCompleteGuard = 0,
+
+		guardCheckComplete = function(proc){
+			try{
+				checkCompleteGuard++;
+				proc();
+			}finally{
+				checkCompleteGuard--;
+			}
+			if(execComplete()){
+				signal("idle", []);
+			}
+		},
 
 		checkComplete = function(){
 			// keep going through the execQ as long as at least one factory is executed
@@ -1207,30 +1250,23 @@
 			if(checkCompleteGuard){
 				return;
 			}
-			checkCompleteGuard++;
-			checkDojoRequirePlugin();
-			for(var currentDefOrder, module, i = 0; i < execQ.length;){
-				currentDefOrder = defOrder;
-				module = execQ[i];
-				execModule(module);
-				if(currentDefOrder!=defOrder){
-					// defOrder was bumped one or more times indicating something was executed (note, this indicates
-					// the execQ was modified, maybe a lot (for example a later module causes an earlier module to execute)
-					checkDojoRequirePlugin();
-					i = 0;
-				}else{
-					// nothing happened; check the next module in the exec queue
-					i++;
+			guardCheckComplete(function(){
+				checkDojoRequirePlugin();
+				for(var currentDefOrder, module, i = 0; i < execQ.length;){
+					currentDefOrder = defOrder;
+					module = execQ[i];
+					execModule(module);
+					if(currentDefOrder!=defOrder){
+						// defOrder was bumped one or more times indicating something was executed (note, this indicates
+						// the execQ was modified, maybe a lot (for example a later module causes an earlier module to execute)
+						checkDojoRequirePlugin();
+						i = 0;
+					}else{
+						// nothing happened; check the next module in the exec queue
+						i++;
+					}
 				}
-			}
-			checkIdle();
-		},
-
-		checkIdle = function(){
-			checkCompleteGuard--;
-			if(execComplete()){
-				signal("idle", []);
-			}
+			});
 		};
 
 
@@ -1379,7 +1415,7 @@
 						checkComplete();
 					}
 				};
-				cached = cache[mid] || cache[module.cacheId];
+				cached = cache[mid] || cache[urlKeyPrefix + module.url];
 				if(cached){
 					req.trace("loader-inject", ["cache", module.mid, url]);
 					evalModuleText(cached, module);
@@ -1495,6 +1531,9 @@
 						exports: (module.result = {}),
 						setExports: function(exports){
 							module.cjs.exports = exports;
+						},
+						config:function(){
+							return module.config;
 						}
 					}
 				});
@@ -1802,7 +1841,6 @@
 			// these may be interesting to look at when debugging
 			paths:paths,
 			aliases:aliases,
-			packageMap:packageMap,
 			modules:modules,
 			legacyMode:legacyMode,
 			execQ:execQ,
@@ -1811,8 +1849,9 @@
 
 			// these are used for testing
 			// TODO: move testing infrastructure to a different has feature
+			packs:packs,
+			mapProgs:mapProgs,
 			pathsMapProg:pathsMapProg,
-			packageMapProg:packageMapProg,
 			listenerQueues:listenerQueues,
 
 			// these are used by the builder (at least)
@@ -1829,6 +1868,7 @@
 		if( 1 ){
 			signal(error, makeError("defineAlreadyDefined", 0));
 		}
+		return;
 	}else{
 		global.define = def;
 		global.require = req;
@@ -1898,27 +1938,29 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 	};
 
 	var _Line = basefx._Line = function(/*int*/ start, /*int*/ end){
-		//	summary:
+		// summary:
 		//		Object used to generate values from a start value to an end value
-		//	start: int
+		// start: int
 		//		Beginning value for range
-		//	end: int
+		// end: int
 		//		Ending value for range
 		this.start = start;
 		this.end = end;
 	};
 
 	_Line.prototype.getValue = function(/*float*/ n){
-		//	summary: Returns the point on the line
-		//	n: a floating point number greater than 0 and less than 1
+		// summary:
+		//		Returns the point on the line
+		// n:
+		//		a floating point number greater than 0 and less than 1
 		return ((this.end - this.start) * n) + this.start; // Decimal
 	};
 
 	var Animation = basefx.Animation = function(args){
-		//	summary:
+		// summary:
 		//		A generic animation class that fires callbacks into its handlers
 		//		object at various states.
-		//	description:
+		// description:
 		//		A generic animation class that fires callbacks into its handlers
 		//		object at various states. Nearly all dojo animation functions
 		//		return an instance of this method, usually without calling the
@@ -2009,17 +2051,17 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 			return _e ? _e(_p) : _p;
 		},
 		_fire: function(/*Event*/ evt, /*Array?*/ args){
-			//	summary:
+			// summary:
 			//		Convenience function.  Fire event "evt" and pass it the
 			//		arguments specified in "args".
-			//	description:
+			// description:
 			//		Convenience function.  Fire event "evt" and pass it the
 			//		arguments specified in "args".
 			//		Fires the callback in the scope of this Animation
 			//		instance.
-			//	evt:
+			// evt:
 			//		The event to fire.
-			//	args:
+			// args:
 			//		The arguments to pass to the event.
 			var a = args||[];
 			if(this[evt]){
@@ -2101,7 +2143,8 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 		},
 
 		pause: function(){
-			// summary: Pauses a running animation.
+			// summary:
+			//		Pauses a running animation.
 			var _t = this;
 			if(_t._delayTimer){ _t._clearTimer(); }
 			_t._stopTimer();
@@ -2112,11 +2155,11 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 		},
 
 		gotoPercent: function(/*Decimal*/ percent, /*Boolean?*/ andPlay){
-			//	summary:
+			// summary:
 			//		Sets the progress of the animation.
-			//	percent:
+			// percent:
 			//		A percentage in decimal notation (between and including 0.0 and 1.0).
-			//	andPlay:
+			// andPlay:
 			//		If true, play the animation after setting the progress.
 			var _t = this;
 			_t._stopTimer();
@@ -2127,8 +2170,10 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 		},
 
 		stop: function(/*boolean?*/ gotoEnd){
-			// summary: Stops a running animation.
-			// gotoEnd: If true, the animation will end.
+			// summary:
+			//		Stops a running animation.
+			// gotoEnd:
+			//		If true, the animation will end.
 			var _t = this;
 			if(_t._delayTimer){ _t._clearTimer(); }
 			if(!_t._timer){ return _t; /* Animation */ }
@@ -2195,7 +2240,8 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 		},
 
 		_clearTimer: function(){
-			// summary: Clear the play delay timer
+			// summary:
+			//		Clear the play delay timer
 			clearTimeout(this._delayTimer);
 			delete this._delayTimer;
 		}
@@ -2250,7 +2296,7 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 		function(){};
 
 	basefx._fade = function(/*Object*/ args){
-		//	summary:
+		// summary:
 		//		Returns an animation that will fade the node defined by
 		//		args.node from the start to end values passed (args.start
 		//		args.end) (end is mandatory, start is optional)
@@ -2273,11 +2319,11 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 
 	/*=====
 	var __FadeArgs = function(node, duration, easing){
-		//	node: DOMNode|String
+		// node: DOMNode|String
 		//		The node referenced in the animation
-		//	duration: Integer?
+		// duration: Integer?
 		//		Duration of the animation in milliseconds.
-		//	easing: Function?
+		// easing: Function?
 		//		An easing function.
 		this.node = node;
 		this.duration = duration;
@@ -2300,7 +2346,8 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 	};
 
 	basefx._defaultEasing = function(/*Decimal?*/ n){
-		// summary: The default easing function for Animation(s)
+		// summary:
+		//		The default easing function for Animation(s)
 		return 0.5 + ((Math.sin((n + 1.5) * Math.PI)) / 2);	// Decimal
 	};
 
@@ -2337,7 +2384,7 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 	var __AnimArgs = function(){};
 	__AnimArgs.prototype = new __FadeArgs();
 	lang.extend(__AnimArgs, {
-		// Properties: Object?
+		// properties: Object?
 		//		A hash map of style properties to Objects describing the transition,
 		//		such as the properties of _Line with an additional 'units' property
 		properties: {}
@@ -2494,11 +2541,11 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 							/*Function?*/		easing,
 							/*Function?*/		onEnd,
 							/*Integer?*/		delay){
-		//	summary:
+		// summary:
 		//		A simpler interface to `animateProperty()`, also returns
 		//		an instance of `Animation` but begins the animation
 		//		immediately, unlike nearly every other Dojo animation API.
-		//	description:
+		// description:
 		//		Simpler (but somewhat less powerful) version
 		//		of `animateProperty`.  It uses defaults for many basic properties
 		//		and allows for positional parameters to be used in place of the
@@ -2507,28 +2554,28 @@ define(["./kernel", "./config", "./lang", "../Evented", "./Color", "./connect", 
 		//
 		//		The `Animation` object returned will be already playing, so
 		//		calling play() on it again is (usually) a no-op.
-		//	node:
+		// node:
 		//		a DOM node or the id of a node to animate CSS properties on
-		//	duration:
+		// duration:
 		//		The number of milliseconds over which the animation
 		//		should run. Defaults to the global animation default duration
 		//		(350ms).
-		//	easing:
+		// easing:
 		//		An easing function over which to calculate acceleration
 		//		and deceleration of the animation through its duration.
 		//		A default easing algorithm is provided, but you may
 		//		plug in any you wish. A large selection of easing algorithms
 		//		are available in `dojo/fx/easing`.
-		//	onEnd:
+		// onEnd:
 		//		A function to be called when the animation finishes
 		//		running.
-		//	delay:
+		// delay:
 		//		The number of milliseconds to delay beginning the
 		//		animation by. The default is 0.
-		//	example:
+		// example:
 		//		Fade out a node
 		//	|	basefx.anim("id", { opacity: 0 });
-		//	example:
+		// example:
 		//		Fade out a node over a full second
 		//	|	basefx.anim("id", { opacity: 0 }, 1000);
 		return basefx.animateProperty({ // Animation
@@ -2640,8 +2687,6 @@ define(["./_base/lang", "./dom", "./io-query", "./json"], function(lang, dom, io
 			//		elements, buttons, and other non-value form elements are skipped.
 			//		Multi-select elements are returned as an array of string values.
 			// formNode: DOMNode|String
-			// returns: Object
-			//
 			// example:
 			//		This form:
 			//		|	<form id="test_form">
@@ -2706,11 +2751,11 @@ define(["./_base/lang", "./dom", "./io-query", "./json"], function(lang, dom, io
 
 },
 'dojo/i18n':function(){
-define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config", "./_base/lang", "./_base/xhr", "./json"],
-	function(dojo, require, has, array, config, lang, xhr, json){
+define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config", "./_base/lang", "./_base/xhr", "./json", "module"],
+	function(dojo, require, has, array, config, lang, xhr, json, module){
+
 	// module:
 	//		dojo/i18n
-
 
 	has.add("dojo-preload-i18n-Api",
 		// if true, define the preload localizations machinery
@@ -2749,18 +2794,22 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 			bundlePath,
 			bundleName
 		){
-			// return a vector of module ids containing all available locales with respect to the target locale
-			// For example, assuming:
-			//	 * the root bundle indicates specific bundles for "fr" and "fr-ca",
-			//	 * bundlePath is "myPackage/nls"
-			//	 * bundleName is "myBundle"
-			// Then a locale argument of "fr-ca" would return
-			//	 ["myPackage/nls/myBundle", "myPackage/nls/fr/myBundle", "myPackage/nls/fr-ca/myBundle"]
-			// Notice that bundles are returned least-specific to most-specific, starting with the root.
+			// summary:
+			//		return a vector of module ids containing all available locales with respect to the target locale
+			//		For example, assuming:
 			//
-			// If root===false indicates we're working with a pre-AMD i18n bundle that doesn't tell about the available locales;
-			// therefore, assume everything is available and get 404 errors that indicate a particular localization is not available
+			//		- the root bundle indicates specific bundles for "fr" and "fr-ca",
+			//		-  bundlePath is "myPackage/nls"
+			//		- bundleName is "myBundle"
 			//
+			//		Then a locale argument of "fr-ca" would return
+			//
+			//			["myPackage/nls/myBundle", "myPackage/nls/fr/myBundle", "myPackage/nls/fr-ca/myBundle"]
+			//
+			//		Notice that bundles are returned least-specific to most-specific, starting with the root.
+			//
+			//		If root===false indicates we're working with a pre-AMD i18n bundle that doesn't tell about the available locales;
+			//		therefore, assume everything is available and get 404 errors that indicate a particular localization is not available
 
 			for(var result = [bundlePath + bundleName], localeParts = locale.split("-"), current = "", i = 0; i<localeParts.length; i++){
 				current += (current ? "-" : "") + localeParts[i];
@@ -2773,17 +2822,22 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 
 		cache = {},
 
-		getL10nName = dojo.getL10nName = function(moduleName, bundleName, locale){
+		getBundleName = function(moduleName, bundleName, locale){
 			locale = locale ? locale.toLowerCase() : dojo.locale;
-			moduleName = "dojo/i18n!" + moduleName.replace(/\./g, "/");
+			moduleName = moduleName.replace(/\./g, "/");
 			bundleName = bundleName.replace(/\./g, "/");
 			return (/root/i.test(locale)) ?
 				(moduleName + "/nls/" + bundleName) :
 				(moduleName + "/nls/" + locale + "/" + bundleName);
 		},
 
+		getL10nName = dojo.getL10nName = function(moduleName, bundleName, locale){
+			return moduleName = module.id + "!" + getBundleName(moduleName, bundleName, locale);
+		},
+
 		doLoad = function(require, bundlePathAndName, bundlePath, bundleName, locale, load){
-			// get the root bundle which instructs which other bundles are required to construct the localized bundle
+			// summary:
+			//		get the root bundle which instructs which other bundles are required to construct the localized bundle
 			require([bundlePathAndName], function(root){
 				var current = lang.clone(root.root),
 					availableLocales = getAvailableLocales(!root._v1x && root, locale, bundlePath, bundleName);
@@ -2800,9 +2854,10 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 		},
 
 		normalize = function(id, toAbsMid){
-			// id may be relative
-			// preload has form *preload*<path>/nls/<module>*<flattened locales> and
-			// therefore never looks like a relative
+			// summary:
+			//		id may be relative.
+			//		preload has form `*preload*<path>/nls/<module>*<flattened locales>` and
+			//		therefore never looks like a relative
 			return /^\./.test(id) ? toAbsMid(id) : id;
 		},
 
@@ -2814,130 +2869,130 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 		},
 
 		load = function(id, require, load){
+			// summary:
+			//		id is in one of the following formats
 			//
-			// id is in one of the following formats
+			//		1. <path>/nls/<bundle>
+			//			=> load the bundle, localized to config.locale; load all bundles localized to
+			//			config.extraLocale (if any); return the loaded bundle localized to config.locale.
 			//
-			//	1. <path>/nls/<bundle>
-			//		=> load the bundle, localized to config.locale; load all bundles localized to
-			//      config.extraLocale (if any); return the loaded bundle localized to config.locale.
+			//		2. <path>/nls/<locale>/<bundle>
+			//			=> load then return the bundle localized to <locale>
 			//
-			//  2. <path>/nls/<locale>/<bundle>
-			//		=> load then return the bundle localized to <locale>
+			//		3. *preload*<path>/nls/<module>*<JSON array of available locales>
+			//			=> for config.locale and all config.extraLocale, load all bundles found
+			//			in the best-matching bundle rollup. A value of 1 is returned, which
+			//			is meaningless other than to say the plugin is executing the requested
+			//			preloads
 			//
-			//  3. *preload*<path>/nls/<module>*<JSON array of available locales>
-			//		=> for config.locale and all config.extraLocale, load all bundles found
-			//		   in the best-matching bundle rollup. A value of 1 is returned, which
-			//         is meaningless other than to say the plugin is executing the requested
-			//         preloads
+			//		In cases 1 and 2, <path> is always normalized to an absolute module id upon entry; see
+			//		normalize. In case 3, it <path> is assumed to be absolute; this is arranged by the builder.
 			//
-			// In cases 1 and 2, <path> is always normalized to an absolute module id upon entry; see
-			// normalize. In case 3, it <path> is assumed to be absolue; this is arranged by the builder.
+			//		To load a bundle means to insert the bundle into the plugin's cache and publish the bundle
+			//		value to the loader. Given <path>, <bundle>, and a particular <locale>, the cache key
 			//
-			// To load a bundle means to insert the bundle into the plugin's cache and publish the bundle
-			// value to the loader. Given <path>, <bundle>, and a particular <locale>, the cache key
+			//			<path>/nls/<bundle>/<locale>
 			//
-			//   <path>/nls/<bundle>/<locale>
+			//		will hold the value. Similarly, then plugin will publish this value to the loader by
 			//
-			// will hold the value. Similarly, then plugin will publish this value to the loader by
+			//			define("<path>/nls/<bundle>/<locale>", <bundle-value>);
 			//
-			//   define("<path>/nls/<bundle>/<locale>", <bundle-value>);
+			//		Given this algorithm, other machinery can provide fast load paths be preplacing
+			//		values in the plugin's cache, which is public. When a load is demanded the
+			//		cache is inspected before starting any loading. Explicitly placing values in the plugin
+			//		cache is an advanced/experimental feature that should not be needed; use at your own risk.
 			//
-			// Given this algorithm, other machinery can provide fast load paths be preplacing
-			// values in the plugin's cache, which is public. When a load is demanded the
-			// cache is inspected before starting any loading. Explicitly placing values in the plugin
-			// cache is an advanced/experimental feature that should not be needed; use at your own risk.
+			//		For the normal AMD algorithm, the root bundle is loaded first, which instructs the
+			//		plugin what additional localized bundles are required for a particular locale. These
+			//		additional locales are loaded and a mix of the root and each progressively-specific
+			//		locale is returned. For example:
 			//
-			// For the normal AMD algorithm, the root bundle is loaded first, which instructs the
-			// plugin what additional localized bundles are required for a particular locale. These
-			// additional locales are loaded and a mix of the root and each progressively-specific
-			// locale is returned. For example:
+			//		1. The client demands "dojo/i18n!some/path/nls/someBundle
 			//
-			// 1. The client demands "dojo/i18n!some/path/nls/someBundle
+			//		2. The loader demands load(some/path/nls/someBundle)
 			//
-			// 2. The loader demands load(some/path/nls/someBundle)
+			//		3. This plugin require's "some/path/nls/someBundle", which is the root bundle.
 			//
-			// 3. This plugin require's "some/path/nls/someBundle", which is the root bundle.
+			//		4. Assuming config.locale is "ab-cd-ef" and the root bundle indicates that localizations
+			//		are available for "ab" and "ab-cd-ef" (note the missing "ab-cd", then the plugin
+			//		requires "some/path/nls/ab/someBundle" and "some/path/nls/ab-cd-ef/someBundle"
 			//
-			// 4. Assuming config.locale is "ab-cd-ef" and the root bundle indicates that localizations
-			//    are available for "ab" and "ab-cd-ef" (note the missing "ab-cd", then the plugin
-			//    requires "some/path/nls/ab/someBundle" and "some/path/nls/ab-cd-ef/someBundle"
+			//		5. Upon receiving all required bundles, the plugin constructs the value of the bundle
+			//		ab-cd-ef as...
 			//
-			// 5. Upon receiving all required bundles, the plugin constructs the value of the bundle
-			//    ab-cd-ef as...
+			//				mixin(mixin(mixin({}, require("some/path/nls/someBundle"),
+			//		  			require("some/path/nls/ab/someBundle")),
+			//					require("some/path/nls/ab-cd-ef/someBundle"));
 			//
-			//      mixin(mixin(mixin({}, require("some/path/nls/someBundle"),
-			//        require("some/path/nls/ab/someBundle")),
-			//          require("some/path/nls/ab-cd-ef/someBundle"));
+			//		This value is inserted into the cache and published to the loader at the
+			//		key/module-id some/path/nls/someBundle/ab-cd-ef.
 			//
-			//    This value is inserted into the cache and published to the loader at the
-			//    key/module-id some/path/nls/someBundle/ab-cd-ef.
+			//		The special preload signature (case 3) instructs the plugin to stop servicing all normal requests
+			//		(further preload requests will be serviced) until all ongoing preloading has completed.
 			//
-			// The special preload signature (case 3) instructs the plugin to stop servicing all normal requests
-			// (further preload requests will be serviced) until all ongoing preloading has completed.
+			//		The preload signature instructs the plugin that a special rollup module is available that contains
+			//		one or more flattened, localized bundles. The JSON array of available locales indicates which locales
+			//		are available. Here is an example:
 			//
-			// The preload signature instructs the plugin that a special rollup module is available that contains
-			// one or more flattened, localized bundles. The JSON array of available locales indicates which locales
-			// are available. Here is an example:
+			//			*preload*some/path/nls/someModule*["root", "ab", "ab-cd-ef"]
 			//
-			//   *preload*some/path/nls/someModule*["root", "ab", "ab-cd-ef"]
+			//		This indicates the following rollup modules are available:
 			//
-			// This indicates the following rollup modules are available:
+			//			some/path/nls/someModule_ROOT
+			//			some/path/nls/someModule_ab
+			//			some/path/nls/someModule_ab-cd-ef
 			//
-			//   some/path/nls/someModule_ROOT
-			//   some/path/nls/someModule_ab
-			//   some/path/nls/someModule_ab-cd-ef
+			//		Each of these modules is a normal AMD module that contains one or more flattened bundles in a hash.
+			//		For example, assume someModule contained the bundles some/bundle/path/someBundle and
+			//		some/bundle/path/someOtherBundle, then some/path/nls/someModule_ab would be expressed as follows:
 			//
-			// Each of these modules is a normal AMD module that contains one or more flattened bundles in a hash.
-			// For example, assume someModule contained the bundles some/bundle/path/someBundle and
-			// some/bundle/path/someOtherBundle, then some/path/nls/someModule_ab would be expressed as folllows:
+			//			define({
+			//				some/bundle/path/someBundle:<value of someBundle, flattened with respect to locale ab>,
+			//				some/bundle/path/someOtherBundle:<value of someOtherBundle, flattened with respect to locale ab>,
+			//			});
 			//
-			// define({
-			//   some/bundle/path/someBundle:<value of someBundle, flattened with respect to locale ab>,
-			//   some/bundle/path/someOtherBundle:<value of someOtherBundle, flattened with respect to locale ab>,
-			// });
+			//		E.g., given this design, preloading for locale=="ab" can execute the following algorithm:
 			//
-			// E.g., given this design, preloading for locale=="ab" can execute the following algorithm:
+			//			require(["some/path/nls/someModule_ab"], function(rollup){
+			//				for(var p in rollup){
+			//					var id = p + "/ab",
+			//					cache[id] = rollup[p];
+			//					define(id, rollup[p]);
+			//				}
+			//			});
 			//
-			// require(["some/path/nls/someModule_ab"], function(rollup){
-			//   for(var p in rollup){
-			//     var id = p + "/ab",
-			//     cache[id] = rollup[p];
-			//     define(id, rollup[p]);
-			//   }
-			// });
+			//		Similarly, if "ab-cd" is requested, the algorithm can determine that "ab" is the best available and
+			//		load accordingly.
 			//
-			// Similarly, if "ab-cd" is requested, the algorithm can determine that "ab" is the best available and
-			// load accordingly.
+			//		The builder will write such rollups for every layer if a non-empty localeList  profile property is
+			//		provided. Further, the builder will include the following cache entry in the cache associated with
+			//		any layer.
 			//
-			// The builder will write such rollups for every layer if a non-empty localeList  profile property is
-			// provided. Further, the builder will include the following cache entry in the cache associated with
-			// any layer.
+			//			"*now":function(r){r(['dojo/i18n!*preload*<path>/nls/<module>*<JSON array of available locales>']);}
 			//
-			//   "*now":function(r){r(['dojo/i18n!*preload*<path>/nls/<module>*<JSON array of available locales>']);}
+			//		The *now special cache module instructs the loader to apply the provided function to context-require
+			//		with respect to the particular layer being defined. This causes the plugin to hold all normal service
+			//		requests until all preloading is complete.
 			//
-			// The *now special cache module instructs the loader to apply the provided function to context-require
-			// with respect to the particular layer being defined. This causes the plugin to hold all normal service
-			// requests until all preloading is complete.
+			//		Notice that this algorithm is rarely better than the standard AMD load algorithm. Consider the normal case
+			//		where the target locale has a single segment and a layer depends on a single bundle:
 			//
-			// Notice that this algorithm is rarely better than the standard AMD load algorithm. Consider the normal case
-			// where the target locale has a single segment and a layer depends on a single bundle:
+			//		Without Preloads:
 			//
-			// Without Preloads:
+			//		1. Layer loads root bundle.
+			//		2. bundle is demanded; plugin loads single localized bundle.
 			//
-			//   1. Layer loads root bundle.
-			//   2. bundle is demanded; plugin loads single localized bundle.
+			//		With Preloads:
 			//
-			// With Preloads:
+			//		1. Layer causes preloading of target bundle.
+			//		2. bundle is demanded; service is delayed until preloading complete; bundle is returned.
 			//
-			//   1. Layer causes preloading of target bundle.
-			//   2. bundle is demanded; service is delayed until preloading complete; bundle is returned.
-			//
-			// In each case a single transaction is required to load the target bundle. In cases where multiple bundles
-			// are required and/or the locale has multiple segments, preloads still requires a single transaction whereas
-			// the normal path requires an additional transaction for each additional bundle/locale-segment. However all
-			// of these additional transactions can be done concurrently. Owing to this analysis, the entire preloading
-			// algorithm can be discard during a build by setting the has feature dojo-preload-i18n-Api to false.
-			//
+			//		In each case a single transaction is required to load the target bundle. In cases where multiple bundles
+			//		are required and/or the locale has multiple segments, preloads still requires a single transaction whereas
+			//		the normal path requires an additional transaction for each additional bundle/locale-segment. However all
+			//		of these additional transactions can be done concurrently. Owing to this analysis, the entire preloading
+			//		algorithm can be discard during a build by setting the has feature dojo-preload-i18n-Api to false.
+
 			if(has("dojo-preload-i18n-Api")){
 				var split = id.split("*"),
 					preloadDemand = split[1] == "preload";
@@ -2946,7 +3001,7 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 						// use cache[id] to prevent multiple preloads of the same preload; this shouldn't happen, but
 						// who knows what over-aggressive human optimizers may attempt
 						cache[id] = 1;
-						preloadL10n(split[2], json.parse(split[3]), 1);
+						preloadL10n(split[2], json.parse(split[3]), 1, require);
 					}
 					// don't stall the loader!
 					load(1);
@@ -2961,7 +3016,7 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 				bundleName = match[5] || match[4],
 				bundlePathAndName = bundlePath + bundleName,
 				localeSpecified = (match[5] && match[4]),
-				targetLocale =  localeSpecified || dojo.locale,
+				targetLocale =	localeSpecified || dojo.locale,
 				loadTarget = bundlePathAndName + "/" + targetLocale,
 				loadList = localeSpecified ? [targetLocale] : getLocalesToLoad(targetLocale),
 				remaining = loadList.length,
@@ -2993,9 +3048,9 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 				return result == "root" ? "ROOT" : result;
 			},
 
-			isXd = function(mid){
+			isXd = function(mid, contextRequire){
 				return ( 1  &&  1 ) ?
-					require.isXdUrl(require.toUrl(mid + ".js")) :
+					contextRequire.isXdUrl(require.toUrl(mid + ".js")) :
 					true;
 			},
 
@@ -3003,29 +3058,40 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 
 			preloadWaitQueue = [],
 
-			preloadL10n = thisModule._preloadLocalizations = function(/*String*/bundlePrefix, /*Array*/localesGenerated, /*boolean*/ guaranteedAmdFormat){
-				//	summary:
+			preloadL10n = thisModule._preloadLocalizations = function(/*String*/bundlePrefix, /*Array*/localesGenerated, /*boolean?*/ guaranteedAmdFormat, /*function?*/ contextRequire){
+				// summary:
 				//		Load available flattened resource bundles associated with a particular module for dojo.locale and all dojo.config.extraLocale (if any)
-				//
-				//  descirption:
+				// description:
 				//		Only called by built layer files. The entire locale hierarchy is loaded. For example,
 				//		if locale=="ab-cd", then ROOT, "ab", and "ab-cd" are loaded. This is different than v1.6-
-				//		in that the v1.6- would lonly load ab-cd...which was *always* flattened.
+				//		in that the v1.6- would only load ab-cd...which was *always* flattened.
 				//
 				//		If guaranteedAmdFormat is true, then the module can be loaded with require thereby circumventing the detection algorithm
 				//		and the extra possible extra transaction.
-				//
+
+				// If this function is called from legacy code, then guaranteedAmdFormat and contextRequire will be undefined. Since the function
+				// needs a require in order to resolve module ids, fall back to the context-require associated with this dojo/i18n module, which
+				// itself may have been mapped.
+				contextRequire = contextRequire || require;
+
+				function doRequire(mid, callback){
+					if(isXd(mid, contextRequire) || guaranteedAmdFormat){
+						contextRequire([mid], callback);
+					}else{
+						syncRequire([mid], callback, contextRequire);
+					}
+				}
 
 				function forEachLocale(locale, func){
 					// given locale= "ab-cd-ef", calls func on "ab-cd-ef", "ab-cd", "ab", "ROOT"; stops calling the first time func returns truthy
 					var parts = locale.split("-");
 					while(parts.length){
 						if(func(parts.join("-"))){
-							return true;
+							return;
 						}
 						parts.pop();
 					}
-					return func("ROOT");
+					func("ROOT");
 				}
 
 				function preload(locale){
@@ -3034,9 +3100,9 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 						if(array.indexOf(localesGenerated, loc)>=0){
 							var mid = bundlePrefix.replace(/\./g, "/")+"_"+loc;
 							preloading++;
-							(isXd(mid) || guaranteedAmdFormat ? require : syncRequire)([mid], function(rollup){
+							doRequire(mid, function(rollup){
 								for(var p in rollup){
-									cache[p + "/" + locale] = rollup[p];
+									cache[require.toAbsMid(p) + "/" + loc] = rollup[p];
 								}
 								--preloading;
 								while(!preloading && preloadWaitQueue.length){
@@ -3058,7 +3124,10 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 					preloadWaitQueue.push([id, require, load]);
 				}
 				return preloading;
-			};
+			},
+
+			checkForLegacyModules = function()
+				{};
 	}
 
 	if( 1 ){
@@ -3066,9 +3135,9 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 		var evalBundle =
 				// use the function ctor to keep the minifiers away (also come close to global scope, but this is secondary)
 				new Function(
-					"__bundle",                // the bundle to evalutate
+					"__bundle",				   // the bundle to evalutate
 					"__checkForLegacyModules", // a function that checks if __bundle defined __mid in the global space
-					"__mid",                   // the mid that __bundle is intended to define
+					"__mid",				   // the mid that __bundle is intended to define
 
 					// returns one of:
 					//		1 => the bundle was an AMD bundle
@@ -3077,7 +3146,7 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 
 					  // used to detect when __bundle calls define
 					  "var define = function(){define.called = 1;},"
-					+ "    require = function(){define.called = 1;};"
+					+ "	   require = function(){define.called = 1;};"
 
 					+ "try{"
 					+		"define.called = 0;"
@@ -3095,13 +3164,13 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 					// either way, re-eval *after* surrounding with parentheses
 
 					+ "try{"
-					+ 		"return eval('('+__bundle+')');"
+					+		"return eval('('+__bundle+')');"
 					+ "}catch(e){"
-					+ 		"return e;"
+					+		"return e;"
 					+ "}"
 				),
 
-			syncRequire = function(deps, callback){
+			syncRequire = function(deps, callback, require){
 				var results = [];
 				array.forEach(deps, function(mid){
 					var url = require.toUrl(mid + ".js");
@@ -3161,28 +3230,37 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 					}
 				});
 				callback && callback.apply(null, results);
-			},
-
-			checkForLegacyModules = function(target){
-				// legacy code may have already loaded [e.g] the raw bundle x/y/z at x.y.z; when true, push into the cache
-				for(var result, names = target.split("/"), object = dojo.global[names[0]], i = 1; object && i<names.length-1; object = object[names[i++]]){}
-				if(object){
-					result = object[names[i]];
-					if(!result){
-						// fallback for incorrect bundle build of 1.6
-						result = object[names[i].replace(/-/g,"_")];
-					}
-					if(result){
-						cache[target] = result;
-					}
-				}
-				return result;
 			};
+
+		checkForLegacyModules = function(target){
+			// legacy code may have already loaded [e.g] the raw bundle x/y/z at x.y.z; when true, push into the cache
+			for(var result, names = target.split("/"), object = dojo.global[names[0]], i = 1; object && i<names.length-1; object = object[names[i++]]){}
+			if(object){
+				result = object[names[i]];
+				if(!result){
+					// fallback for incorrect bundle build of 1.6
+					result = object[names[i].replace(/-/g,"_")];
+				}
+				if(result){
+					cache[target] = result;
+				}
+			}
+			return result;
+		};
 
 		thisModule.getLocalization = function(moduleName, bundleName, locale){
 			var result,
-				l10nName = getL10nName(moduleName, bundleName, locale).substring(10);
-			load(l10nName, (!isXd(l10nName) ? syncRequire : require), function(result_){ result = result_; });
+				l10nName = getBundleName(moduleName, bundleName, locale);
+			load(
+				l10nName,
+
+				// isXd() and syncRequire() need a context-require in order to resolve the mid with respect to a reference module.
+				// Since this legacy function does not have the concept of a reference module, resolve with respect to this
+				// dojo/i18n module, which, itself may have been mapped.
+				(!isXd(l10nName, require) ? function(deps, callback){ syncRequire(deps, callback, require); } : require),
+
+				function(result_){ result = result_; }
+			);
 			return result;
 		};
 
@@ -3219,6 +3297,60 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 		load:load,
 		cache:cache
 	});
+});
+
+},
+'dojo/promise/tracer':function(){
+define([
+	"../_base/lang",
+	"./Promise",
+	"../Evented"
+], function(lang, Promise, Evented){
+	"use strict";
+
+	// module:
+	//		dojo/promise/tracer
+
+	/*=====
+	return {
+		// summary:
+		//		Trace promise fulfillment.
+		// description:
+		//		Trace promise fulfillment. Calling `.trace()` or `.traceError()` on a
+		//		promise enables tracing. Will emit `resolved`, `rejected` or `progress`
+		//		events.
+	};
+	=====*/
+
+	var evented = new Evented;
+	var emit = evented.emit;
+	evented.emit = null;
+	// Emit events asynchronously since they should not change the promise state.
+	function emitAsync(args){
+		setTimeout(function(){
+			emit.apply(evented, args);
+		}, 0);
+	}
+
+	Promise.prototype.trace = function(){
+		var args = lang._toArray(arguments);
+		this.then(
+			function(value){ emitAsync(["resolved", value].concat(args)); },
+			function(error){ emitAsync(["rejected", error].concat(args)); },
+			function(update){ emitAsync(["progress", update].concat(args)); }
+		);
+		return this;
+	};
+
+	Promise.prototype.traceRejected = function(){
+		var args = lang._toArray(arguments);
+		this.otherwise(function(error){
+			emitAsync(["rejected", error].concat(args));
+		});
+		return this;
+	};
+
+	return evented;
 });
 
 },
@@ -3388,7 +3520,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//		Getter/setter for the margin-box of node.
 		//		Returns an object in the expected format of box (regardless
 		//		if box is passed). The object might look like:
-		//			`{ l: 50, t: 200, w: 300: h: 150 }`
+		//		`{ l: 50, t: 200, w: 300: h: 150 }`
 		//		for a node offset from its parent 50px to the left, 200px from
 		//		the top with a margin width of 300px and a margin-height of
 		//		150px.
@@ -3416,7 +3548,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		// description:
 		//		Returns an object in the expected format of box (regardless if box is passed).
 		//		The object might look like:
-		//			`{ l: 50, t: 200, w: 300: h: 150 }`
+		//		`{ l: 50, t: 200, w: 300: h: 150 }`
 		//		for a node offset from its parent 50px to the left, 200px from
 		//		the top with a content width of 300px and a content-height of
 		//		150px. Note that the content box may have a much larger border
@@ -3438,9 +3570,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		// summary:
 		//		Deprecated: Use position() for border-box x/y/w/h
 		//		or marginBox() for margin-box w/h/l/t.
-		//		Returns an object representing a node's size and position.
 		//
-		// description:
 		//		Returns an object that measures margin-box (w)idth/(h)eight
 		//		and absolute position x/y of the border-box. Also returned
 		//		is computed (l)eft and (t)op values in pixels from the
@@ -3527,7 +3657,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//	|	});
 		//
 		// example:
-		//	Style is s special case: Only set with an object hash of styles
+		//		Style is s special case: Only set with an object hash of styles
 		//	|	dojo.prop("someNode",{
 		//	|		id:"bar",
 		//	|		style:{
@@ -3536,7 +3666,7 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//	|	});
 		//
 		// example:
-		//	Again, only set style as an object hash of styles:
+		//		Again, only set style as an object hash of styles:
 		//	|	var obj = { color:"#fff", backgroundColor:"#000" };
 		//	|	dojo.prop("someNode", "style", obj);
 		//	|
@@ -3614,8 +3744,8 @@ define("dojo/_base/html", ["./kernel", "../dom", "../dom-style", "../dom-attr", 
 		//	|	});
 		//
 		// example:
-		//		dojo.NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
-		//		dojo.style() on every element of the list. See: `dojo.query()` and `dojo.NodeList()`
+		//		dojo/NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
+		//		dojo.style() on every element of the list. See: `dojo/query` and `dojo/NodeList`
 		//	|	dojo.query(".someClassName").style("visibility","hidden");
 		//	|	// or
 		//	|	dojo.query("#baz > div").style({
@@ -3671,8 +3801,8 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 	// Built, legacy modules use the scope map to allow those modules to be expressed as if dojo, dijit, and dojox,
 	// where global when in fact they are either global under different names or not global at all. In v1.6-, the
 	// config variable "scopeMap" was used to map names as used within a module to global names. This has been
-	// subsumed by the dojo packageMap configuration variable which relocates packages to different names. See
-	// http://livedocs.dojotoolkit.org/developer/design/loader#legacy-cross-domain-mode for details.
+	// subsumed by the AMD map configuration variable which can relocate packages to different names. For backcompat,
+	// only the "*" mapping is supported. See http://livedocs.dojotoolkit.org/developer/design/loader#legacy-cross-domain-mode for details.
 	//
 	// The following computations contort the packageMap for this dojo instance into a scopeMap.
 	var scopeMap =
@@ -3686,9 +3816,10 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 
 		packageMap =
 			// the package map for this dojo instance; note, a foreign loader or no pacakgeMap results in the above default config
-			(require.packs && require.packs[module.id.match(/[^\/]+/)[0]].packageMap) || {},
+			(require.map && require.map[module.id.match(/[^\/]+/)[0]]),
 
 		item;
+
 
 	// process all mapped top-level names for this instance of dojo
 	for(p in packageMap){
@@ -3710,7 +3841,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 		}
 	}
 	dojo.scopeMap = scopeMap;
-	
+
 	/*===== dojo.__docParserConfigureScopeMap(scopeMap); =====*/
 
 	// FIXME: dojo.baseUrl and dojo.config.baseUrl should be deprecated
@@ -3718,19 +3849,20 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 	dojo.isAsync = ! 1  || require.async;
 	dojo.locale = config.locale;
 
-	var rev = "$Rev: 28997 $".match(/\d+/);
+	var rev = "$Rev: 29347 $".match(/\d+/);
 	dojo.version = {
 		// summary:
 		//		Version number of the Dojo Toolkit
 		// description:
 		//		Hash about the version, including
-		//			* major: Integer: Major version. If total version is "1.2.0beta1", will be 1
-		//			* minor: Integer: Minor version. If total version is "1.2.0beta1", will be 2
-		//			* patch: Integer: Patch version. If total version is "1.2.0beta1", will be 0
-		//			* flag: String: Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
-		//			* revision: Number: The SVN rev from which dojo was pulled
+		//
+		//		- major: Integer: Major version. If total version is "1.2.0beta1", will be 1
+		//		- minor: Integer: Minor version. If total version is "1.2.0beta1", will be 2
+		//		- patch: Integer: Patch version. If total version is "1.2.0beta1", will be 0
+		//		- flag: String: Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
+		//		- revision: Number: The SVN rev from which dojo was pulled
 
-		major: 1, minor: 8, patch: 0, flag: "b1",
+		major: 1, minor: 8, patch: 0, flag: "rc1",
 		revision: rev ? +rev[0] : NaN,
 		toString: function(){
 			var v = dojo.version;
@@ -4041,10 +4173,11 @@ define([
 	"./kernel",
 	"../Deferred",
 	"../promise/Promise",
+	"../errors/CancelError",
 	"../has",
 	"./lang",
 	"../when"
-], function(dojo, NewDeferred, Promise, has, lang, when){
+], function(dojo, NewDeferred, Promise, CancelError, has, lang, when){
 	// module:
 	//		dojo/_base/Deferred
 
@@ -4087,10 +4220,10 @@ define([
 		//
 		//		The Deferred instances also provide the following functions for backwards compatibility:
 		//
-		//			* addCallback(handler)
-		//			* addErrback(handler)
-		//			* callback(result)
-		//			* errback(result)
+		//		- addCallback(handler)
+		//		- addErrback(handler)
+		//		- callback(result)
+		//		- errback(result)
 		//
 		//		Callbacks are allowed to return promises themselves, so
 		//		you can build complicated sequences of events with ease.
@@ -4215,7 +4348,7 @@ define([
 				}
 
 				var func = (isError ? listener.error : listener.resolved);
-				if( 0 ){
+				if(has("config-useDeferredInstrumentation")){
 					if(isError && NewDeferred.instrumentRejected){
 						NewDeferred.instrumentRejected(result, !!func);
 					}
@@ -4260,9 +4393,9 @@ define([
 			//		Fulfills the Deferred instance as an error with the provided error
 			isError = true;
 			this.fired = 1;
-			if( 0 ){
-				if(NewDeferred.instrumentRejected && !nextListener){
-					NewDeferred.instrumentRejected(error, false);
+			if(has("config-useDeferredInstrumentation")){
+				if(NewDeferred.instrumentRejected){
+					NewDeferred.instrumentRejected(error, !!nextListener);
 				}
 			}
 			complete(error);
@@ -4283,11 +4416,11 @@ define([
 			// summary:
 			//		Adds callback and error callback for this deferred instance.
 			// callback: Function?
-			// 		The callback attached to this deferred object.
+			//		The callback attached to this deferred object.
 			// errback: Function?
-			// 		The error callback attached to this deferred object.
+			//		The error callback attached to this deferred object.
 			// returns:
-			// 		Returns this deferred object.
+			//		Returns this deferred object.
 			this.then(callback, errback, mutator);
 			return this;	// Deferred
 		};
@@ -4308,7 +4441,7 @@ define([
 			//		handler is the fulfillment value for the returned promise. If the callback
 			//		throws an error, the returned promise will be moved to failed state.
 			//
-			// returns: 
+			// returns:
 			//		Returns a new promise that represents the result of the
 			//		execution of the callback. The callbacks will never affect the original promises value.
 			// example:
@@ -4344,7 +4477,7 @@ define([
 				var error = canceller && canceller(deferred);
 				if(!finished){
 					if (!(error instanceof Error)){
-						error = new Error(error);
+						error = new CancelError(error);
 					}
 					error.log = false;
 					deferred.reject(error);
@@ -4356,25 +4489,25 @@ define([
 	lang.extend(Deferred, {
 		addCallback: function(/*Function*/ callback){
 			// summary:
-			// 		Adds successful callback for this deferred instance.
+			//		Adds successful callback for this deferred instance.
 			// returns:
-			// 		Returns this deferred object.
+			//		Returns this deferred object.
 			return this.addCallbacks(lang.hitch.apply(dojo, arguments));	// Deferred
 		},
 
 		addErrback: function(/*Function*/ errback){
 			// summary:
-			// 		Adds error callback for this deferred instance.
+			//		Adds error callback for this deferred instance.
 			// returns:
-			// 		Returns this deferred object.
+			//		Returns this deferred object.
 			return this.addCallbacks(null, lang.hitch.apply(dojo, arguments));	// Deferred
 		},
 
 		addBoth: function(/*Function*/ callback){
 			// summary:
-			// 		Add handler as both successful callback and error callback for this deferred instance.
+			//		Add handler as both successful callback and error callback for this deferred instance.
 			// returns:
-			// 		Returns this deferred object.
+			//		Returns this deferred object.
 			var enclosed = lang.hitch.apply(dojo, arguments);
 			return this.addCallbacks(enclosed, enclosed);	// Deferred
 		},
@@ -4486,7 +4619,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 		_cloneNode: function(/*DOMNode*/ node){
 			// summary:
 			//		private utility to clone a node. Not very interesting in the vanilla
-			//		dojo.NodeList case, but delegates could do interesting things like
+			//		dojo/NodeList case, but delegates could do interesting things like
 			//		clone event handlers if that is derivable from the node.
 			return node.cloneNode(true);
 		},
@@ -4534,6 +4667,8 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			}
 		},
 
+
+		position: aam(domGeom.position),
 		/*=====
 		position: function(){
 			// summary:
@@ -4543,7 +4678,10 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 
 			return dojo.map(this, dojo.position); // Array
 		},
+		=====*/
 
+		attr: awc(getSet(domAttr), magicGuard),
+		/*=====
 		attr: function(property, value){
 			// summary:
 			//		gets or sets the DOM attribute for every element in the
@@ -4565,9 +4703,12 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		innerHTML can be assigned or retrieved as well:
 			//	|	// get the innerHTML (as an array) for each list item
 			//	|	var ih = dojo.query("li.replaceable").attr("innerHTML");
-			return; // dojo/query.NodeList|Array
+			return; // dojo/NodeList|Array
 		},
+		=====*/
 
+		style: awc(getSet(domStyle), magicGuard),
+		/*=====
 		style: function(property, value){
 			// summary:
 			//		gets or sets the CSS property for every element in the NodeList
@@ -4579,19 +4720,25 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			// returns:
 			//		if no value is passed, the result is an array of strings.
 			//		If a value is passed, the return is this NodeList
-			return; // dojo/query.NodeList
+			return; // dojo/NodeList
 			return; // Array
 		},
+		=====*/
 
+		addClass: aafe(domCls.add),
+		/*=====
 		addClass: function(className){
 			// summary:
 			//		adds the specified class to every node in the list
 			// className: String|Array
 			//		A String class name to add, or several space-separated class names,
 			//		or an array of class names.
-			return; // dojo/query.NodeList
+			return; // dojo/NodeList
 		},
+		=====*/
 
+		removeClass: aafe(domCls.remove),
+		/*=====
 		removeClass: function(className){
 			// summary:
 			//		removes the specified class from every node in the list
@@ -4600,10 +4747,13 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		class names, or an array of class names. If omitted, all class names
 			//		will be deleted.
 			// returns:
-			//		dojo.NodeList, this list
-			return; // dojo/query.NodeList
+			//		this list
+			return; // dojo/NodeList
 		},
+		=====*/
 
+		toggleClass: aafe(domCls.toggle),
+		/*=====
 		toggleClass: function(className, condition){
 			// summary:
 			//		Adds a class to node if not present, or removes if present.
@@ -4612,33 +4762,57 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		If passed, true means to add the class, false means to remove.
 			// className: String
 			//		the CSS class to add
-			return; // dojo/query.NodeList
+			return; // dojo/NodeList
 		},
+		=====*/
 
+		replaceClass: aafe(domCls.replace),
+		/*=====
+		replaceClass: function(addClassStr, removeClassStr){
+			// summary:
+			//		Replaces one or more classes on a node if not present.
+			//		Operates more quickly than calling `removeClass()` and `addClass()`
+			// addClassStr: String|Array
+			//		A String class name to add, or several space-separated class names,
+			//		or an array of class names.
+			// removeClassStr: String|Array?
+			//		A String class name to remove, or several space-separated class names,
+			//		or an array of class names.
+			return; // dojo/NodeList
+		 },
+		 =====*/
+
+		empty: aafe(domCtr.empty),
+		/*=====
 		empty: function(){
 			// summary:
 			//		clears all content from each node in the list. Effectively
 			//		equivalent to removing all child nodes from every item in
 			//		the list.
-			return this.forEach("item.innerHTML='';"); // dojo/query.NodeList
+			return this.forEach("item.innerHTML='';"); // dojo/NodeList
 			// FIXME: should we be checking for and/or disposing of widgets below these nodes?
 		},
 		=====*/
 
-		// useful html methods
-		attr: awc(getSet(domAttr), magicGuard),
-		style: awc(getSet(domStyle), magicGuard),
-
-		addClass: aafe(domCls.add),
-		removeClass: aafe(domCls.remove),
-		replaceClass: aafe(domCls.replace),
-		toggleClass: aafe(domCls.toggle),
-
-		empty: aafe(domCtr.empty),
 		removeAttr: aafe(domAttr.remove),
+		/*=====
+		 removeAttr: function(name){
+			// summary:
+			//		Removes an attribute from each node in the list.
+			// name: String
+			//		the name of the attribute to remove
+			return;		// dojo/NodeList
+		},
+		=====*/
 
-		position: aam(domGeom.position),
 		marginBox: aam(domGeom.getMarginBox),
+		/*=====
+		marginBox: function(){
+			// summary:
+			//		Returns margin-box size of nodes
+		 	return; // dojo/NodeList
+		 },
+		 =====*/
 
 		// FIXME: connectPublisher()? connectRunOnce()?
 
@@ -4661,15 +4835,17 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		for relative positioning.
 			// position:
 			//		can be one of:
-			//		|	"last" (default)
-			//		|	"first"
-			//		|	"before"
-			//		|	"after"
-			//		|	"only"
-			//		|	"replace"
+			//
+			//		-	"last" (default)
+			//		-	"first"
+			//		-	"before"
+			//		-	"after"
+			//		-	"only"
+			//		-	"replace"
+			//
 			//		or an offset in the childNodes property
 			var item = query(queryOrNode)[0];
-			return this.forEach(function(node){ domCtr.place(node, item, position); }); // dojo/query.NodeList
+			return this.forEach(function(node){ domCtr.place(node, item, position); }); // dojo/NodeList
 		},
 
 		orphan: function(/*String?*/ filter){
@@ -4679,29 +4855,31 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			// filter:
 			//		CSS selector like ".foo" or "div > span"
 			// returns:
-			//		`dojo.NodeList` containing the orphaned elements
-			return (filter ? query._filterResult(this, filter) : this).forEach(orphan); // dojo/query.NodeList
+			//		NodeList containing the orphaned elements
+			return (filter ? query._filterResult(this, filter) : this).forEach(orphan); // dojo/NodeList
 		},
 
 		adopt: function(/*String||Array||DomNode*/ queryOrListOrNode, /*String?*/ position){
 			// summary:
 			//		places any/all elements in queryOrListOrNode at a
 			//		position relative to the first element in this list.
-			//		Returns a dojo.NodeList of the adopted elements.
+			//		Returns a dojo/NodeList of the adopted elements.
 			// queryOrListOrNode:
 			//		a DOM node or a query string or a query result.
 			//		Represents the nodes to be adopted relative to the
 			//		first element of this NodeList.
 			// position:
 			//		can be one of:
-			//		|	"last" (default)
-			//		|	"first"
-			//		|	"before"
-			//		|	"after"
-			//		|	"only"
-			//		|	"replace"
+			//
+			//		-	"last" (default)
+			//		-	"first"
+			//		-	"before"
+			//		-	"after"
+			//		-	"only"
+			//		-	"replace"
+			//
 			//		or an offset in the childNodes property
-			return query(queryOrListOrNode).place(this[0], position)._stash(this);	// dojo/query.NodeList
+			return query(queryOrListOrNode).place(this[0], position)._stash(this);	// dojo/NodeList
 		},
 
 		// FIXME: do we need this?
@@ -4721,7 +4899,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//	|		<p>great comedians may not be funny <span>in person</span></p>
 			//	|	</div>
 			//		If we are presented with the following definition for a NodeList:
-			//	|	var l = new dojo.NodeList(dojo.byId("foo"), dojo.byId("bar"));
+			//	|	var l = new NodeList(dojo.byId("foo"), dojo.byId("bar"));
 			//		it's possible to find all span elements under paragraphs
 			//		contained by these elements with this sub-query:
 			//	|	var spans = l.query("p span");
@@ -4737,7 +4915,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 					}
 				});
 			});
-			return ret._stash(this);	// dojo/query.NodeList
+			return ret._stash(this);	// dojo/NodeList
 		},
 
 		filter: function(/*String|Function*/ filter){
@@ -4763,12 +4941,12 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 				items = query._filterResult(this, a[0]);
 				if(a.length == 1){
 					// if we only got a string query, pass back the filtered results
-					return items._stash(this); // dojo/query.NodeList
+					return items._stash(this); // dojo/NodeList
 				}
 				// if we got a callback, run it over the filtered items
 				start = 1;
 			}
-			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo/query.NodeList
+			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo/NodeList
 		},
 
 		/*
@@ -4780,7 +4958,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 		},
 		*/
 
-		addContent: function(/*String||DomNode||Object||dojo.NodeList*/ content, /*String||Integer?*/ position){
+		addContent: function(/*String||DomNode||Object||dojo/NodeList*/ content, /*String||Integer?*/ position){
 			// summary:
 			//		add a node, NodeList or some HTML as a string to every item in the
 			//		list.  Returns the original list.
@@ -4802,12 +4980,14 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		should be used to transform the "template".
 			// position:
 			//		can be one of:
-			//		|	"last"||"end" (default)
-			//		|	"first||"start"
-			//		|	"before"
-			//		|	"after"
-			//		|	"replace" (replaces nodes in this NodeList with new content)
-			//		|	"only" (removes other children of the nodes so new content is the only child)
+			//
+			//		-	"last"||"end" (default)
+			//		-	"first||"start"
+			//		-	"before"
+			//		-	"after"
+			//		-	"replace" (replaces nodes in this NodeList with new content)
+			//		-	"only" (removes other children of the nodes so new content is the only child)
+			//
 			//		or an offset in the childNodes property
 			// example:
 			//		appends content to the end if the position is omitted
@@ -4825,26 +5005,26 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//	|	dojo.query(".note").addContent(dojo.byId("foo"));
 			// example:
 			//		Append nodes from a templatized string.
-			//		dojo.require("dojo.string");
-			//		dojo.query(".note").addContent({
-			//			template: '<b>${id}: </b><span>${name}</span>',
-			//			id: "user332",
-			//			name: "Mr. Anderson"
-			//		});
+			// |	dojo.require("dojo.string");
+			// |	dojo.query(".note").addContent({
+			// |		template: '<b>${id}: </b><span>${name}</span>',
+			// |		id: "user332",
+			// |		name: "Mr. Anderson"
+			// |	});
 			// example:
 			//		Append nodes from a templatized string that also has widgets parsed.
-			//		dojo.require("dojo.string");
-			//		dojo.require("dojo.parser");
-			//		var notes = dojo.query(".note").addContent({
-			//			template: '<button dojoType="dijit.form.Button">${text}</button>',
-			//			parse: true,
-			//			text: "Send"
-			//		});
+			// |	dojo.require("dojo.string");
+			// |	dojo.require("dojo.parser");
+			// |	var notes = dojo.query(".note").addContent({
+			// |		template: '<button dojoType="dijit.form.Button">${text}</button>',
+			// |		parse: true,
+			// |		text: "Send"
+			// |	});
 			content = this._normalize(content, this[0]);
 			for(var i = 0, node; (node = this[i]); i++){
 				this._place(content, node, position, i > 0);
 			}
-			return this; // dojo/query.NodeList
+			return this; // dojo/NodeList
 		}
 	});
 
@@ -4865,9 +5045,9 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 	
 	var ap = Array.prototype, aps = ap.slice, apc = ap.concat, forEach = array.forEach;
 
-	var tnl = function(/*Array*/ a, /*dojo/query.NodeList?*/ parent, /*Function?*/ NodeListCtor){
+	var tnl = function(/*Array*/ a, /*dojo/NodeList?*/ parent, /*Function?*/ NodeListCtor){
 		// summary:
-		//		decorate an array to make it look like a `dojo/query.NodeList`.
+		//		decorate an array to make it look like a `dojo/NodeList`.
 		// a:
 		//		Array of nodes to decorate.
 		// parent:
@@ -4877,7 +5057,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		// NodeListCtor:
 		//		An optional constructor function to use for any
 		//		new NodeList calls. This allows a certain chain of
-		//		NodeList calls to use a different object than dojo.NodeList.
+		//		NodeList calls to use a different object than dojo/NodeList.
 		var nodeList = new (NodeListCtor || this._NodeListCtor || nl)(a);
 		return parent ? nodeList._stash(parent) : nodeList;
 	};
@@ -5104,11 +5284,11 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		private function to hold to a parent NodeList. end() to return the parent NodeList.
 			//
 			// example:
-			//		How to make a `dojo.NodeList` method that only returns the third node in
-			//		the dojo.NodeList but allows access to the original NodeList by using this._stash:
-			//	|	dojo.extend(dojo.NodeList, {
+			//		How to make a `dojo/NodeList` method that only returns the third node in
+			//		the dojo/NodeList but allows access to the original NodeList by using this._stash:
+			//	|	dojo.extend(NodeList, {
 			//	|		third: function(){
-			//	|			var newNodeList = dojo.NodeList(this[2]);
+			//	|			var newNodeList = NodeList(this[2]);
 			//	|			return newNodeList._stash(this);
 			//	|		}
 			//	|	});
@@ -5122,14 +5302,14 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//	|
 			//
 			this._parent = parent;
-			return this; // dojo/query.NodeList
+			return this; // dojo/NodeList
 		},
 
 		on: function(eventName, listener){
 			// summary:
 			//		Listen for events on the nodes in the NodeList. Basic usage is:
 			//		| query(".my-class").on("click", listener);
-			// 		This supports event delegation by using selectors as the first argument with the event names as
+			//		This supports event delegation by using selectors as the first argument with the event names as
 			//		pseudo selectors. For example:
 			//		| dojo.query("#my-list").on("li:click", listener);
 			//		This will listen for click events within `<li>` elements that are inside the `#my-list` element.
@@ -5187,9 +5367,9 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		Returns a new NodeList, maintaining this one in place
 			// description:
 			//		This method behaves exactly like the Array.slice method
-			//		with the caveat that it returns a dojo.NodeList and not a
-			//		raw Array. For more details, see Mozilla's (slice
-			//		documentation)[http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:slice]
+			//		with the caveat that it returns a dojo/NodeList and not a
+			//		raw Array. For more details, see Mozilla's [slice
+			//		documentation](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/slice)
 			// begin: Integer
 			//		Can be a positive or negative integer, with positive
 			//		integers noting the offset to begin at, and negative
@@ -5209,9 +5389,9 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		at an offset, optionally deleting elements
 			// description:
 			//		This method behaves exactly like the Array.splice method
-			//		with the caveat that it returns a dojo.NodeList and not a
-			//		raw Array. For more details, see Mozilla's (splice
-			//		documentation)[http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:splice]
+			//		with the caveat that it returns a dojo/NodeList and not a
+			//		raw Array. For more details, see Mozilla's [splice
+			//		documentation](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/splice)
 			//		For backwards compatibility, calling .end() on the spliced NodeList
 			//		does not return the original NodeList -- splice alters the NodeList in place.
 			// index: Integer
@@ -5226,9 +5406,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			// item: Object...?
 			//		Any number of optional parameters may be passed in to be
 			//		spliced into the NodeList
-			// returns:
-			//		dojo.NodeList
-			return this._wrap(a.splice.apply(this, arguments));
+			return this._wrap(a.splice.apply(this, arguments));	// dojo/NodeList
 		},
 
 		indexOf: function(value, fromIndex){
@@ -5241,8 +5419,8 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		The location to start searching from. Optional. Defaults to 0.
 			// description:
 			//		For more details on the behavior of indexOf, see Mozilla's
-			//		(indexOf
-			//		docs)[http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:indexOf]
+			//		[indexOf
+			//		docs](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf)
 			// returns:
 			//		Positive Integer or 0 for a match, -1 of not found.
 			return d.indexOf(this, value, fromIndex); // Integer
@@ -5254,8 +5432,8 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		acted-on array is implicitly this NodeList
 			// description:
 			//		For more details on the behavior of lastIndexOf, see
-			//		Mozilla's (lastIndexOf
-			//		docs)[http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:lastIndexOf]
+			//		Mozilla's [lastIndexOf
+			//		docs](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/lastIndexOf)
 			// value: Object
 			//		The value to search for.
 			// fromIndex: Integer?
@@ -5267,8 +5445,8 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 
 		every: function(callback, thisObject){
 			// summary:
-			//		see `dojo.every()` and the (Array.every
-			//		docs)[http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:every].
+			//		see `dojo.every()` and the [Array.every
+			//		docs](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every).
 			//		Takes the same structure of arguments and returns as
 			//		dojo.every() with the caveat that the passed array is
 			//		implicitly this NodeList
@@ -5284,8 +5462,8 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		Takes the same structure of arguments and returns as
 			//		`dojo.some()` with the caveat that the passed array is
 			//		implicitly this NodeList.  See `dojo.some()` and Mozilla's
-			//		(Array.some
-			//		documentation)[http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:some].
+			//		[Array.some
+			//		documentation](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/some).
 			// callback: Function
 			//		the callback
 			// thisObject: Object?
@@ -5301,31 +5479,27 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			// description:
 			//		This method behaves exactly like the Array.concat method
 			//		with the caveat that it returns a `NodeList` and not a
-			//		raw Array. For more details, see the (Array.concat
-			//		docs)[http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array:concat]
+			//		raw Array. For more details, see the [Array.concat
+			//		docs](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/concat)
 			// item: Object?
 			//		Any number of optional parameters may be passed in to be
 			//		spliced into the NodeList
 
 			//return this._wrap(apc.apply(this, arguments));
-			// the line above won't work for the native NodeList :-(
+			// the line above won't work for the native NodeList, or for Dojo NodeLists either :-(
 
 			// implementation notes:
-			// 1) Native NodeList is not an array, and cannot be used directly
-			// in concat() --- the latter doesn't recognize it as an array, and
-			// does not inline it, but append as a single entity.
-			// 2) On some browsers (e.g., Safari) the "constructor" property is
-			// read-only and cannot be changed. So we have to test for both
-			// native NodeList and dojo.NodeList in this property to recognize
-			// the node list.
+			// Array.concat() doesn't recognize native NodeLists or Dojo NodeLists
+			// as arrays, and so does not inline them into a unioned array, but
+			// appends them as single entities. Both the original NodeList and the
+			// items passed in as parameters must be converted to raw Arrays
+			// and then the concatenation result may be re-_wrap()ed as a Dojo NodeList.
 
-			var t = lang.isArray(this) ? this : aps.call(this, 0),
+			var t = aps.call(this, 0),
 				m = array.map(arguments, function(a){
-					return a && !lang.isArray(a) &&
-						(typeof NodeList != "undefined" && a.constructor === NodeList || a.constructor === this._NodeListCtor) ?
-							aps.call(a, 0) : a;
+					return aps.call(a, 0);
 				});
-			return this._wrap(apc.apply(t, m), this);	// dojo/query.NodeList
+			return this._wrap(apc.apply(t, m), this);	// dojo/NodeList
 		},
 
 		map: function(/*Function*/ func, /*Function?*/ obj){
@@ -5333,7 +5507,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		see dojo.map(). The primary difference is that the acted-on
 			//		array is implicitly this NodeList and the return is a
 			//		NodeList (a subclass of Array)
-			return this._wrap(array.map(this, func, obj), this); // dojo/query.NodeList
+			return this._wrap(array.map(this, func, obj), this); // dojo/NodeList
 		},
 
 		forEach: function(callback, thisObj){
@@ -5343,7 +5517,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		of the forEach loop, use every() or some() instead.
 			forEach(this, callback, thisObj);
 			// non-standard return to allow easier chaining
-			return this; // dojo/query.NodeList
+			return this; // dojo/NodeList
 		},
 		filter: function(/*String|Function*/ filter){
 			// summary:
@@ -5368,12 +5542,12 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 				items = query._filterResult(this, a[0]);
 				if(a.length == 1){
 					// if we only got a string query, pass back the filtered results
-					return items._stash(this); // dojo/query.NodeList
+					return items._stash(this); // dojo/NodeList
 				}
 				// if we got a callback, run it over the filtered items
 				start = 1;
 			}
-			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo/query.NodeList
+			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo/NodeList
 		},
 		instantiate: function(/*String|Object*/ declaredClass, /*Object?*/ properties){
 			// summary:
@@ -5387,7 +5561,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			properties = properties || {};
 			return this.forEach(function(node){
 				new c(properties, node);
-			});	// dojo/query.NodeList
+			});	// dojo/NodeList
 		},
 		at: function(/*===== index =====*/){
 			// summary:
@@ -5401,16 +5575,16 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//
 			// example:
 			//	Shorten the list to the first, second, and third elements
-			//	|	dojo.query("a").at(0, 1, 2).forEach(fn);
+			//	|	query("a").at(0, 1, 2).forEach(fn);
 			//
 			// example:
 			//	Retrieve the first and last elements of a unordered list:
-			//	|	dojo.query("ul > li").at(0, -1).forEach(cb);
+			//	|	query("ul > li").at(0, -1).forEach(cb);
 			//
 			// example:
 			//	Do something for the first element only, but end() out back to
 			//	the original list and continue chaining:
-			//	|	dojo.query("a").at(0).onclick(fn).end().forEach(function(n){
+			//	|	query("a").at(0).onclick(fn).end().forEach(function(n){
 			//	|		console.log(n); // all anchors on the page.
 			//	|	})
 
@@ -5419,13 +5593,13 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 				if(i < 0){ i = this.length + i; }
 				if(this[i]){ t.push(this[i]); }
 			}, this);
-			return t._stash(this); // dojo/query.NodeList
+			return t._stash(this); // dojo/NodeList
 		}
 	});
 
 	function queryForEngine(engine, NodeList){
 		var query = function(/*String*/ query, /*String|DOMNode?*/ root){
-			//	summary:
+			// summary:
 			//		Returns nodes which match the given CSS selector, searching the
 			//		entire document by default but optionally taking a node to scope
 			//		the search by. Returns an instance of NodeList.
@@ -5435,7 +5609,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 					return new NodeList([]);
 				}
 			}
-			var results = typeof query == "string" ? engine(query, root) : query.orphan ? query : [query];
+			var results = typeof query == "string" ? engine(query, root) : query ? query.orphan ? query : [query] : [];
 			if(results.orphan){
 				// already wrapped
 				return results;
@@ -5466,71 +5640,73 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 	}
 	var query = queryForEngine(defaultEngine, NodeList);
 	/*=====
-	 query = function(selector, context){
-		 // summary:
-		 //		This modules provides DOM querying functionality. The module export is a function
-		 //		that can be used to query for DOM nodes by CSS selector and returns a NodeList
-		 //		representing the matching nodes.
-		 // selector: String
-		 //		A CSS selector to search for.
-		 // context: String|DomNode?
-		 //		An optional context to limit the searching scope. Only nodes under `context` will be
-		 //		scanned.
-		 //	example:
-		 //		add an onclick handler to every submit button in the document
-		 //		which causes the form to be sent via Ajax instead:
-		 //	|	define(["dojo/query"], function(query){
-		 // 	|	query("input[type='submit']").on("click", function(e){
-		 //	|		dojo.stopEvent(e); // prevent sending the form
-		 //	|		var btn = e.target;
-		 //	|		dojo.xhrPost({
-		 //	|			form: btn.form,
-		 //	|			load: function(data){
-		 //	|				// replace the form with the response
-		 //	|				var div = dojo.doc.createElement("div");
-		 //	|				dojo.place(div, btn.form, "after");
-		 //	|				div.innerHTML = data;
-		 //	|				dojo.style(btn.form, "display", "none");
-		 //	|			}
-		 //	|		});
-		 //	|	});
-		 //
-		 // description:
-		 //		dojo/query is responsible for loading the appropriate query engine and wrapping
-		 //		its results with a `NodeList`. You can use dojo/query with a specific selector engine
-		 //		by using it as a plugin. For example, if you installed the sizzle package, you could
-		 //		use it as the selector engine with:
-		 //		|	define("dojo/query!sizzle", function(query){
-		 //		|		query("div")...
-		 //
-		 //		The id after the ! can be a module id of the selector engine or one of the following values:
-		 //		|	+ acme: This is the default engine used by Dojo base, and will ensure that the full
-		 //		|	Acme engine is always loaded.
-		 //		|
-		 //		|	+ css2: If the browser has a native selector engine, this will be used, otherwise a
-		 //		|	very minimal lightweight selector engine will be loaded that can do simple CSS2 selectors
-		 //		|	(by #id, .class, tag, and [name=value] attributes, with standard child or descendant (>)
-		 //		|	operators) and nothing more.
-		 //		|
-		 //		|	+ css2.1: If the browser has a native selector engine, this will be used, otherwise the
-		 //		|	full Acme engine will be loaded.
-		 //		|
-		 //		|	+ css3: If the browser has a native selector engine with support for CSS3 pseudo
-		 //		|	selectors (most modern browsers except IE8), this will be used, otherwise the
-		 //		|	full Acme engine will be loaded.
-		 //		|
-		 //		|	+ Or the module id of a selector engine can be used to explicitly choose the selector engine
-		 //
-		 //		For example, if you are using CSS3 pseudo selectors in module, you can specify that
-		 //		you will need support them with:
-		 //		|	define("dojo/query!css3", function(query){
-		 //		|		query('#t > h3:nth-child(odd)')...
-		 //
-		 //		You can also choose the selector engine/load configuration by setting the query-selector:
-		 //		For example:
-		 //		|	<script data-dojo-config="query-selector:'css3'" src="dojo.js"></script>
-		 //
-		 return new NodeList(); // dojo/query.NodeList
+	query = function(selector, context){
+		// summary:
+		//		This modules provides DOM querying functionality. The module export is a function
+		//		that can be used to query for DOM nodes by CSS selector and returns a NodeList
+		//		representing the matching nodes.
+		// selector: String
+		//		A CSS selector to search for.
+		// context: String|DomNode?
+		//		An optional context to limit the searching scope. Only nodes under `context` will be
+		//		scanned.
+		// example:
+		//		add an onclick handler to every submit button in the document
+		//		which causes the form to be sent via Ajax instead:
+		//	|	require(["dojo/query"], function(query){
+		//	|		query("input[type='submit']").on("click", function(e){
+		//	|			dojo.stopEvent(e); // prevent sending the form
+		//	|			var btn = e.target;
+		//	|			dojo.xhrPost({
+		//	|				form: btn.form,
+		//	|				load: function(data){
+		//	|					// replace the form with the response
+		//	|					var div = dojo.doc.createElement("div");
+		//	|					dojo.place(div, btn.form, "after");
+		//	|					div.innerHTML = data;
+		//	|					dojo.style(btn.form, "display", "none");
+		//	|				}
+		//	|			});
+		//	|		});
+		// |	});
+		//
+		// description:
+		//		dojo/query is responsible for loading the appropriate query engine and wrapping
+		//		its results with a `NodeList`. You can use dojo/query with a specific selector engine
+		//		by using it as a plugin. For example, if you installed the sizzle package, you could
+		//		use it as the selector engine with:
+		//		|	require(["dojo/query!sizzle"], function(query){
+		//		|		query("div")...
+		//
+		//		The id after the ! can be a module id of the selector engine or one of the following values:
+		//
+		//		- acme: This is the default engine used by Dojo base, and will ensure that the full
+		//		Acme engine is always loaded.
+		//
+		//		- css2: If the browser has a native selector engine, this will be used, otherwise a
+		//		very minimal lightweight selector engine will be loaded that can do simple CSS2 selectors
+		//		(by #id, .class, tag, and [name=value] attributes, with standard child or descendant (>)
+		//		operators) and nothing more.
+		//
+		//		- css2.1: If the browser has a native selector engine, this will be used, otherwise the
+		//		full Acme engine will be loaded.
+		//
+		//		- css3: If the browser has a native selector engine with support for CSS3 pseudo
+		//		selectors (most modern browsers except IE8), this will be used, otherwise the
+		//		full Acme engine will be loaded.
+		//
+		//		- Or the module id of a selector engine can be used to explicitly choose the selector engine
+		//
+		//		For example, if you are using CSS3 pseudo selectors in module, you can specify that
+		//		you will need support them with:
+		//		|	require(["dojo/query!css3"], function(query){
+		//		|		query('#t > h3:nth-child(odd)')...
+		//
+		//		You can also choose the selector engine/load configuration by setting the query-selector:
+		//		For example:
+		//		|	<script data-dojo-config="query-selector:'css3'" src="dojo.js"></script>
+		//
+		return new NodeList(); // dojo/NodeList
 	 };
 	 =====*/
 
@@ -5541,13 +5717,14 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 	// instantiate.
 	dojo.query = queryForEngine(defaultEngine, function(array){
 		// call it without the new operator to invoke the back-compat behavior that returns a true array
-		return NodeList(array);
+		return NodeList(array);	// dojo/NodeList
 	});
 
-	query.load = /*===== dojo.query.load= ======*/ function(id, parentRequire, loaded, config){
-		// summary: can be used as AMD plugin to conditionally load new query engine
+	query.load = function(id, parentRequire, loaded){
+		// summary:
+		//		can be used as AMD plugin to conditionally load new query engine
 		// example:
-		//	|	define(["dojo/query!custom"], function(qsa){
+		//	|	require(["dojo/query!custom"], function(qsa){
 		//	|		// loaded selector/custom.js as engine
 		//	|		qsa("#foobar").forEach(...);
 		//	|	});
@@ -5565,7 +5742,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 
 },
 'dojo/has':function(){
-define(["require"], function(require){
+define(["require", "module"], function(require, module){
 	// module:
 	//		dojo/has
 	// summary:
@@ -5573,19 +5750,17 @@ define(["require"], function(require){
 	// description:
 	//		This module defines the has API as described by the project has.js with the following additional features:
 	//
-	//			* the has test cache is exposed at has.cache.
-	//			* the method has.add includes a forth parameter that controls whether or not existing tests are replaced
-	//			* the loader's has cache may be optionally copied into this module's has cahce.
+	//		- the has test cache is exposed at has.cache.
+	//		- the method has.add includes a forth parameter that controls whether or not existing tests are replaced
+	//		- the loader's has cache may be optionally copied into this module's has cahce.
 	//
 	//		This module adopted from https://github.com/phiggins42/has.js; thanks has.js team!
 
 	// try to pull the has implementation from the loader; both the dojo loader and bdLoad provide one
+	// if using a foreign loader, then the has cache may be initialized via the config object for this module
 	// WARNING: if a foreign loader defines require.has to be something other than the has.js API, then this implementation fail
 	var has = require.has || function(){};
 	if(! 1 ){
-		// notice the condition is written so that if  1  is transformed to 1 during a build
-		// the conditional will be (!1 && typeof has=="function") which is statically false and the closure
-		// compiler will discard the block.
 		var
 			isBrowser =
 				// the most fundamental decision: are we in the browser?
@@ -5598,16 +5773,16 @@ define(["require"], function(require){
 			global = this,
 			doc = isBrowser && document,
 			element = doc && doc.createElement("DiV"),
-			cache = {};
+			cache = (module.config && module.config()) || {};
 
 		has = function(name){
-			//	summary:
+			// summary:
 			//		Return the current value of the named feature.
 			//
-			//	name: String|Integer
+			// name: String|Integer
 			//		The name (if a string) or identifier (if an integer) of the feature to test.
 			//
-			//	description:
+			// description:
 			//		Returns the value of the feature named by name. The feature must have been
 			//		previously added to the cache by has.add.
 
@@ -5618,43 +5793,38 @@ define(["require"], function(require){
 
 		has.add = function(name, test, now, force){
 			// summary:
-			//	 Register a new feature test for some named feature.
-			//
+			//	 	Register a new feature test for some named feature.
 			// name: String|Integer
-			//	 The name (if a string) or identifier (if an integer) of the feature to test.
-			//
+			//	 	The name (if a string) or identifier (if an integer) of the feature to test.
 			// test: Function
-			//	 A test function to register. If a function, queued for testing until actually
-			//	 needed. The test function should return a boolean indicating
-			//	 the presence of a feature or bug.
-			//
+			//		 A test function to register. If a function, queued for testing until actually
+			//		 needed. The test function should return a boolean indicating
+			//	 	the presence of a feature or bug.
 			// now: Boolean?
-			//	 Optional. Omit if `test` is not a function. Provides a way to immediately
-			//	 run the test and cache the result.
-			//
+			//		 Optional. Omit if `test` is not a function. Provides a way to immediately
+			//		 run the test and cache the result.
 			// force: Boolean?
-			//	 Optional. If the test already exists and force is truthy, then the existing
-			//	 test will be replaced; otherwise, add does not replace an existing test (that
-			//	 is, by default, the first test advice wins).
+			//	 	Optional. If the test already exists and force is truthy, then the existing
+			//	 	test will be replaced; otherwise, add does not replace an existing test (that
+			//	 	is, by default, the first test advice wins).
+			// example:
+			//		A redundant test, testFn with immediate execution:
+			//	|	has.add("javascript", function(){ return true; }, true);
 			//
 			// example:
-			//			A redundant test, testFn with immediate execution:
-			//	|				has.add("javascript", function(){ return true; }, true);
+			//		Again with the redundantness. You can do this in your tests, but we should
+			//		not be doing this in any internal has.js tests
+			//	|	has.add("javascript", true);
 			//
 			// example:
-			//			Again with the redundantness. You can do this in your tests, but we should
-			//			not be doing this in any internal has.js tests
-			//	|				has.add("javascript", true);
-			//
-			// example:
-			//			Three things are passed to the testFunction. `global`, `document`, and a generic element
-			//			from which to work your test should the need arise.
-			//	|				has.add("bug-byid", function(g, d, el){
-			//	|						// g	== global, typically window, yadda yadda
-			//	|						// d	== document object
-			//	|						// el == the generic element. a `has` element.
-			//	|						return false; // fake test, byid-when-form-has-name-matching-an-id is slightly longer
-			//	|				});
+			//		Three things are passed to the testFunction. `global`, `document`, and a generic element
+			//		from which to work your test should the need arise.
+			//	|	has.add("bug-byid", function(g, d, el){
+			//	|		// g	== global, typically window, yadda yadda
+			//	|		// d	== document object
+			//	|		// el == the generic element. a `has` element.
+			//	|		return false; // fake test, byid-when-form-has-name-matching-an-id is slightly longer
+			//	|	});
 
 			(typeof cache[name]=="undefined" || force) && (cache[name]= test);
 			return now && has(name);
@@ -5670,7 +5840,6 @@ define(["require"], function(require){
 	}
 
 	if( 1 ){
-		var agent = navigator.userAgent;
 		// Common application level tests
 		has.add("dom-addeventlistener", !!document.addEventListener);
 		has.add("touch", "ontouchstart" in document);
@@ -5678,9 +5847,9 @@ define(["require"], function(require){
 		has.add("device-width", screen.availWidth || innerWidth);
 
 		// Tests for DOMNode.attributes[] behavior:
-		//   - dom-attributes-explicit - attributes[] only lists explicitly user specified attributes
-		//   - dom-attributes-specified-flag (IE8) - need to check attr.specified flag to skip attributes user didn't specify
-		//   - Otherwise, in IE6-7. attributes[] will list hundreds of values, so need to do outerHTML to get attrs instead.
+		//	 - dom-attributes-explicit - attributes[] only lists explicitly user specified attributes
+		//	 - dom-attributes-specified-flag (IE8) - need to check attr.specified flag to skip attributes user didn't specify
+		//	 - Otherwise, in IE6-7. attributes[] will list hundreds of values, so need to do outerHTML to get attrs instead.
 		var form = document.createElement("form");
 		has.add("dom-attributes-explicit", form.attributes.length == 0); // W3C
 		has.add("dom-attributes-specified-flag", form.attributes.length > 0 && form.attributes.length < 40);	// IE8
@@ -5728,15 +5897,12 @@ define(["require"], function(require){
 
 	has.load = function(id, parentRequire, loaded){
 		// summary:
-		//	 Conditional loading of AMD modules based on a has feature test value.
-		//
+		//		Conditional loading of AMD modules based on a has feature test value.
 		// id: String
-		//	 Gives the resolved module id to load.
-		//
+		//		Gives the resolved module id to load.
 		// parentRequire: Function
-		//	 The loader require function with respect to the module that contained the plugin resource in it's
-		//	 dependency list.
-		//
+		//		The loader require function with respect to the module that contained the plugin resource in it's
+		//		dependency list.
 		// loaded: Function
 		//	 Callback to loader that consumes result of plugin demand.
 
@@ -5752,11 +5918,11 @@ define(["require"], function(require){
 
 },
 'dojo/_base/loader':function(){
-define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"], function(dojo, has, require, thisModule, json, lang, array){
+define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"], function(dojo, has, require, thisModule, json, lang, array) {
 	// module:
 	//		dojo/_base/loader
 
-	// This module defines the v1.x synchronous loader API.
+	//		This module defines the v1.x synchronous loader API.
 
 	// signal the loader in sync mode...
 	//>>pure-amd
@@ -5765,6 +5931,9 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		console.error("cannot load the Dojo v1.x loader with a foreign loader");
 		return 0;
 	}
+
+	 1 || has.add("dojo-fast-sync-require", 1);
+
 
 	var makeErrorToken = function(id){
 			return {src:thisModule.id, id:id};
@@ -5789,96 +5958,128 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			checkDojoRequirePlugin();
 		},
 
-		// checkDojoRequirePlugin inspects all of the modules demanded by a dojo/require!<module-list> dependency
-		// to see if they have arrived. The loader does not release *any* of these modules to be instantiated
-		// until *all* of these modules are on board, thereby preventing the evaluation of a module with dojo.require's
-		// that reference modules that are not available.
-		//
-		// The algorithm works by traversing the dependency graphs (remember, there can be cycles so they are not trees)
-		// of each module in the dojoRequireModuleStack array (which contains the list of modules demanded by dojo/require!).
-		// The moment a single module is discovered that is missing, the algorithm gives up and indicates that not all
-		// modules are on board. dojo/loadInit! and dojo/require! are ignored because there dependencies are inserted
-		// directly in dojoRequireModuleStack. For example, if "your/module" module depends on "dojo/require!my/module", then
-		// *both* "dojo/require!my/module" and "my/module" will be in dojoRequireModuleStack. Obviously, if "my/module"
-		// is on board, then "dojo/require!my/module" is also satisfied, so the algorithm doesn't check for "dojo/require!my/module".
-		//
-		// Note: inserting a dojo/require!<some-module-list> dependency in the dojoRequireModuleStack achieves nothing
-		// with the current algorithm; however, having such modules present makes it possible to optimize the algorithm
-		//
-		// Note: prior versions of this algorithm had an optimization that signaled loaded on dojo/require! dependencies
-		// individually (rather than waiting for them all to be resolved). The implementation proved problematic with cycles
-		// and plugins. However, it is possible to reattach that strategy in the future.
-
-		// a set from module-id to {undefined | 1 | 0}, where...
-		//   undefined => the module has not been inspected
-		//   0 => the module or at least one of its dependencies has not arrived
-		//   1 => the module is a loadInit! or require! plugin resource, or is currently being traversed (therefore, assume
-		//        OK until proven otherwise), or has been completely traversed and all dependencies have arrived
-		touched,
-
-		traverse = function(m){
-		    touched[m.mid] = 1;
-			for(var t, module, deps = m.deps || [], i= 0; i<deps.length; i++){
-				module = deps[i];
-				if(!(t = touched[module.mid])){
-					if(t===0 || !traverse(module)){
-						touched[m.mid] = 0;
-						return false;
-					}
-				}
-			}
-			return true;
-		},
-
-		checkDojoRequirePlugin = function(){
-			// initialize the touched hash with easy-to-compute values that help short circuit recursive algorithm;
-			// recall loadInit/require plugin modules are dependencies of modules in dojoRequireModuleStack...
-			// which would cause a circular dependency chain that would never be resolved if checked here
-			// notice all dependencies of any particular loadInit/require plugin module will already
-			// be checked since those are pushed into dojoRequireModuleStack explicitly by the
-			// plugin...so if a particular loadInitPlugin module's dependencies are not really
-			// on board, that *will* be detected elsewhere in the traversal.
-			var module, mid;
-			touched = {};
-			for(mid in modules){
-				module = modules[mid];
-				// this could be improved by remembering the result of the regex tests
-				if(module.executed || module.noReqPluginCheck){
-					touched[mid] = 1;
-				}else{
-					if(module.noReqPluginCheck!==0){
+		checkDojoRequirePlugin = ( 1  ?
+			// This version of checkDojoRequirePlugin makes the observation that all dojoRequireCallbacks can be released
+			// when all *non-dojo/require!, dojo/loadInit!* modules are either executed, not requested, or arrived. This is
+			// the case since there are no more modules the loader is waiting for, therefore, dojo/require! must have
+			// everything it needs on board.
+			//
+			// The potential weakness of this algorithm is that dojo/require will not execute callbacks until *all* dependency
+			// trees are ready. It is possible that some trees may be ready earlier than others, and this extra wait is non-optimal.
+			// Still, for big projects, this seems better than the original algorithm below that proved slow in some cases.
+			// Note, however, the original algorithm had the potential to execute partial trees,  but that potential was never enabled.
+			// There are also other optimization available with the original algorithm that have not been explored.
+			function(){
+				var module, mid;
+				for(mid in modules){
+					module = modules[mid];
+					if(module.noReqPluginCheck===undefined){
 						// tag the module as either a loadInit or require plugin or not for future reference
 						module.noReqPluginCheck = /loadInit\!/.test(mid) || /require\!/.test(mid) ? 1 : 0;
 					}
-					if(module.noReqPluginCheck){
-						touched[mid] = 1;
-					}else if(module.injected!==arrived){
-						// not executed, has not arrived, and is not a loadInit or require plugin resource
-						touched[mid] = 0;
-					}// else, leave undefined and we'll traverse the dependencies
-				}
-			}
-
-			for(var t, i = 0, end = dojoRequireModuleStack.length; i<end; i++){
-				module = dojoRequireModuleStack[i];
-				if(!(t = touched[module.mid])){
-					if(t===0 || !traverse(module)){
+					if(!module.executed && !module.noReqPluginCheck && module.injected==requested){
 						return;
 					}
 				}
-			}
-			loaderVars.holdIdle();
-			var oldCallbacks = dojoRequireCallbacks;
-			dojoRequireCallbacks = [];
-			array.forEach(oldCallbacks, function(cb){cb(1);});
-			loaderVars.releaseIdle();
-		},
+
+				guardCheckComplete(function(){
+					var oldCallbacks = dojoRequireCallbacks;
+					dojoRequireCallbacks = [];
+					array.forEach(oldCallbacks, function(cb){cb(1);});
+				});
+		} : (function(){
+			// Note: this is the original checkDojoRequirePlugin that is much slower than the algorithm above. However, we know it
+			// works, so we leave it here in case the algorithm above fails in some corner case.
+			//
+			// checkDojoRequirePlugin inspects all of the modules demanded by a dojo/require!<module-list> dependency
+			// to see if they have arrived. The loader does not release *any* of these modules to be instantiated
+			// until *all* of these modules are on board, thereby preventing the evaluation of a module with dojo.require's
+			// that reference modules that are not available.
+			//
+			// The algorithm works by traversing the dependency graphs (remember, there can be cycles so they are not trees)
+			// of each module in the dojoRequireModuleStack array (which contains the list of modules demanded by dojo/require!).
+			// The moment a single module is discovered that is missing, the algorithm gives up and indicates that not all
+			// modules are on board. dojo/loadInit! and dojo/require! are ignored because there dependencies are inserted
+			// directly in dojoRequireModuleStack. For example, if "your/module" module depends on "dojo/require!my/module", then
+			// *both* "dojo/require!my/module" and "my/module" will be in dojoRequireModuleStack. Obviously, if "my/module"
+			// is on board, then "dojo/require!my/module" is also satisfied, so the algorithm doesn't check for "dojo/require!my/module".
+			//
+			// Note: inserting a dojo/require!<some-module-list> dependency in the dojoRequireModuleStack achieves nothing
+			// with the current algorithm; however, having such modules present makes it possible to optimize the algorithm
+			//
+			// Note: prior versions of this algorithm had an optimization that signaled loaded on dojo/require! dependencies
+			// individually (rather than waiting for them all to be resolved). The implementation proved problematic with cycles
+			// and plugins. However, it is possible to reattach that strategy in the future.
+
+			// a set from module-id to {undefined | 1 | 0}, where...
+			//	 undefined => the module has not been inspected
+			//	 0 => the module or at least one of its dependencies has not arrived
+			//	 1 => the module is a loadInit! or require! plugin resource, or is currently being traversed (therefore, assume
+			//		  OK until proven otherwise), or has been completely traversed and all dependencies have arrived
+
+			var touched,
+			traverse = function(m){
+				touched[m.mid] = 1;
+				for(var t, module, deps = m.deps || [], i= 0; i<deps.length; i++){
+					module = deps[i];
+					if(!(t = touched[module.mid])){
+						if(t===0 || !traverse(module)){
+							touched[m.mid] = 0;
+							return false;
+						}
+					}
+				}
+				return true;
+			};
+
+			return function(){
+				// initialize the touched hash with easy-to-compute values that help short circuit recursive algorithm;
+				// recall loadInit/require plugin modules are dependencies of modules in dojoRequireModuleStack...
+				// which would cause a circular dependency chain that would never be resolved if checked here
+				// notice all dependencies of any particular loadInit/require plugin module will already
+				// be checked since those are pushed into dojoRequireModuleStack explicitly by the
+				// plugin...so if a particular loadInitPlugin module's dependencies are not really
+				// on board, that *will* be detected elsewhere in the traversal.
+				var module, mid;
+				touched = {};
+				for(mid in modules){
+					module = modules[mid];
+					if(module.executed || module.noReqPluginCheck){
+						touched[mid] = 1;
+					}else{
+						if(module.noReqPluginCheck!==0){
+							// tag the module as either a loadInit or require plugin or not for future reference
+							module.noReqPluginCheck = /loadInit\!/.test(mid) || /require\!/.test(mid) ? 1 : 0;
+						}
+						if(module.noReqPluginCheck){
+							touched[mid] = 1;
+						}else if(module.injected!==arrived){
+							// not executed, has not arrived, and is not a loadInit or require plugin resource
+							touched[mid] = 0;
+						}// else, leave undefined and we'll traverse the dependencies
+					}
+				}
+				for(var t, i = 0, end = dojoRequireModuleStack.length; i<end; i++){
+					module = dojoRequireModuleStack[i];
+					if(!(t = touched[module.mid])){
+						if(t===0 || !traverse(module)){
+							return;
+						}
+					}
+				}
+				guardCheckComplete(function(){
+					var oldCallbacks = dojoRequireCallbacks;
+					dojoRequireCallbacks = [];
+					array.forEach(oldCallbacks, function(cb){cb(1);});
+				});
+			};
+		})()),
 
 		dojoLoadInitPlugin = function(mid, require, loaded){
 			// mid names a module that defines a "dojo load init" bundle, an object with two properties:
 			//
-			//   * names: a vector of module ids that give top-level names to define in the lexical scope of def
-			//   * def: a function that contains some some legacy loader API applications
+			//	 * names: a vector of module ids that give top-level names to define in the lexical scope of def
+			//	 * def: a function that contains some some legacy loader API applications
 			//
 			// The point of def is to possibly cause some modules to be loaded (but not executed) by dojo/require! where the module
 			// ids are possibly-determined at runtime. For example, here is dojox.gfx from v1.6 expressed as an AMD module using the dojo/loadInit
@@ -5886,37 +6087,37 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			//
 			// // dojox/gfx:
 			//
-			//   define("*loadInit_12, {
-			//     names:["dojo", "dijit", "dojox"],
-			//     def: function(){
-			//       dojo.loadInit(function(){
-			//         var gfx = lang.getObject("dojox.gfx", true);
+			//	 define("*loadInit_12, {
+			//	   names:["dojo", "dijit", "dojox"],
+			//	   def: function(){
+			//		 dojo.loadInit(function(){
+			//		   var gfx = lang.getObject("dojox.gfx", true);
 			//
-			//         //
-			//         // code required to set gfx properties ommitted...
-			//         //
+			//		   //
+			//		   // code required to set gfx properties ommitted...
+			//		   //
 			//
-			//         // now use the calculations to include the runtime-dependent module
-			//         dojo.require("dojox.gfx." + gfx.renderer);
-			//       });
+			//		   // now use the calculations to include the runtime-dependent module
+			//		   dojo.require("dojox.gfx." + gfx.renderer);
+			//		 });
 			//	   }
-			//   });
+			//	 });
 			//
-			//   define(["dojo", "dojo/loadInit!" + id].concat("dojo/require!dojox/gfx/matric,dojox/gfx/_base"), function(dojo){
-			//     // when this AMD factory function is executed, the following modules are guaranteed downloaded but not executed:
-			//     //   "dojox.gfx." + gfx.renderer
-			//     //   dojox.gfx.matrix
-			//     //   dojox.gfx._base
-			//     dojo.provide("dojo.gfx");
-			//     dojo.require("dojox.gfx.matrix");
-			//     dojo.require("dojox.gfx._base");
-			//     dojo.require("dojox.gfx." + gfx.renderer);
-			//     return lang.getObject("dojo.gfx");
-			//   });
-			//  })();
+			//	 define(["dojo", "dojo/loadInit!" + id].concat("dojo/require!dojox/gfx/matric,dojox/gfx/_base"), function(dojo){
+			//	   // when this AMD factory function is executed, the following modules are guaranteed downloaded but not executed:
+			//	   //	"dojox.gfx." + gfx.renderer
+			//	   //	dojox.gfx.matrix
+			//	   //	dojox.gfx._base
+			//	   dojo.provide("dojo.gfx");
+			//	   dojo.require("dojox.gfx.matrix");
+			//	   dojo.require("dojox.gfx._base");
+			//	   dojo.require("dojox.gfx." + gfx.renderer);
+			//	   return lang.getObject("dojo.gfx");
+			//	 });
+			//	})();
 			//
 			// The idea is to run the legacy loader API with global variables shadowed, which allows these variables to
-			// be relocated. For example, dojox and dojo could be relocated to different names by giving a packageMap and the code above will
+			// be relocated. For example, dojox and dojo could be relocated to different names by giving a map and the code above will
 			// execute properly (because the plugin below resolves the load init bundle.names module with respect to the module that demanded
 			// the plugin resource).
 			//
@@ -5936,10 +6137,12 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 					eval(scopeText);
 
 					var callingModule = require.module,
-						deps = [],
-						hold = {},
+						// the list of modules that need to be downloaded but not executed before the callingModule can be executed
 						requireList = [],
-						p,
+
+						// the list of i18n bundles that are xdomain; undefined if none
+						i18nDeps,
+
 						syncLoaderApi = {
 							provide:function(moduleName){
 								// mark modules that arrive consequent to multiple provides in this module as arrived since they can't be injected
@@ -5955,20 +6158,27 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 								requireList.push(moduleName);
 							},
 							requireLocalization:function(moduleName, bundleName, locale){
-								// since we're going to need dojo/i8n, add it to deps if not already there
-								deps.length || (deps = ["dojo/i18n"]);
+								// since we're going to need dojo/i8n, add it to i18nDeps if not already there
+								if(!i18nDeps){
+									// don't have to map since that will occur when the dependency is resolved
+									i18nDeps = ["dojo/i18n"];
+								}
 
-								// figure out if the bundle is xdomain; if so, add it to the depsSet
+								// figure out if the bundle is xdomain; if so, add it to the i18nDepsSet
 								locale = (locale || dojo.locale).toLowerCase();
 								moduleName = slashName(moduleName) + "/nls/" + (/root/i.test(locale) ? "" : locale + "/") + slashName(bundleName);
 								if(getModule(moduleName, callingModule).isXd){
-									deps.push("dojo/i18n!" + moduleName);
+									// don't have to map since that will occur when the dependency is resolved
+									i18nDeps.push("dojo/i18n!" + moduleName);
 								}// else the bundle will be loaded synchronously when the module is evaluated
 							},
 							loadInit:function(f){
 								f();
 							}
-						};
+						},
+
+						hold = {},
+						p;
 
 					// hijack the correct dojo and apply bundle.def
 					try{
@@ -5985,23 +6195,22 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 						}
 					}
 
-					// requireList is the list of modules that need to be downloaded but not executed before the callingModule can be executed
-					requireList.length && deps.push("dojo/require!" + requireList.join(","));
+					if(i18nDeps){
+						requireList = requireList.concat(i18nDeps);
+					}
 
-					dojoRequireCallbacks.push(loaded);
-					array.forEach(requireList, function(mid){
-						var module = getModule(mid, require.module);
-						dojoRequireModuleStack.push(module);
-						injectModule(module);
-					});
-					checkDojoRequirePlugin();
+					if(requireList.length){
+						dojoRequirePlugin(requireList.join(","), require, loaded);
+					}else{
+						loaded();
+					}
 				});
 			});
 		},
 
 		extractApplication = function(
-			text,             // the text to search
-			startSearch,      // the position in text to start looking for the closing paren
+			text,			  // the text to search
+			startSearch,	  // the position in text to start looking for the closing paren
 			startApplication  // the position in text where the function application expression starts
 		){
 			// find end of the call by finding the matching end paren
@@ -6032,7 +6241,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		// the following regex is taken from 1.6. It is a very poor technique to remove comments and
 		// will fail in some cases; for example, consider the code...
 		//
-		//    var message = "Category-1 */* Category-2";
+		//	  var message = "Category-1 */* Category-2";
 		//
 		// The regex that follows will see a /* comment and trash the code accordingly. In fact, there are all
 		// kinds of cases like this with strings and regexs that will cause this design to fail miserably.
@@ -6053,11 +6262,11 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			// to otherApplications string. If no applications were found, return 0, signalling an AMD module. Otherwise, return
 			// loadInitApplications + otherApplications. Fixup text by replacing
 			//
-			//   dojo.loadInit(// etc...
+			//	 dojo.loadInit(// etc...
 			//
 			// with
 			//
-			//   \n 0 && dojo.loadInit(// etc...
+			//	 \n 0 && dojo.loadInit(// etc...
 			//
 			// Which results in the dojo.loadInit from *not* being applied. This design goes a long way towards protecting the
 			// code from an over-agressive removeCommentRe. However...
@@ -6081,7 +6290,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			// find and extract all dojo.loadInit applications
 			while((match = syncLoaderApiRe.exec(noCommentText))){
 				startSearch = syncLoaderApiRe.lastIndex;
-				startApplication = startSearch  - match[0].length;
+				startApplication = startSearch	- match[0].length;
 				application = extractApplication(noCommentText, startSearch, startApplication);
 				if(match[2]=="loadInit"){
 					loadInitApplications.push(application[0]);
@@ -6105,12 +6314,12 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			// module in terms of AMD define instead of creating the dojo proprietary xdomain module expression.
 			// The module could have originated from several sources:
 			//
-			//   * amd require() a module, e.g., require(["my/module"])
-			//   * amd require() a nonmodule, e.g., require(["my/resource.js"')
-			//   * amd define() deps vector (always a module)
-			//   * dojo.require() a module, e.g. dojo.require("my.module")
-			//   * dojo.require() a nonmodule, e.g., dojo.require("my.module", true)
-			//   * dojo.requireIf/requireAfterIf/platformRequire a module
+			//	 * amd require() a module, e.g., require(["my/module"])
+			//	 * amd require() a nonmodule, e.g., require(["my/resource.js"')
+			//	 * amd define() deps vector (always a module)
+			//	 * dojo.require() a module, e.g. dojo.require("my.module")
+			//	 * dojo.require() a nonmodule, e.g., dojo.require("my.module", true)
+			//	 * dojo.requireIf/requireAfterIf/platformRequire a module
 			//
 			// The module is scanned for legacy loader API applications; if none are found, then assume the module is an
 			// AMD module and return 0. Otherwise, a synthetic dojo/loadInit plugin resource is created and the module text
@@ -6121,6 +6330,8 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			// when the dojo/loadInit plugin reports it has been loaded, all modules required by the given module are guaranteed
 			// loaded (but not executed). This then allows the module to execute it's code path without interupts, thereby
 			// following the synchronous code path.
+			//
+			// Notice that this function behaves the same whether or not it happens to be in a mapped dojo/loader module.
 
 			var extractResult, id, names = [], namesAsStrings = [];
 			if(buildDetectRe.test(text) || !(extractResult = extractLegacyApiApplications(text))){
@@ -6141,12 +6352,13 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			}
 
 			// rewrite the module as a synthetic dojo/loadInit plugin resource + the module expressed as an AMD module that depends on this synthetic resource
-			return "// xdomain rewrite of " + module.path + "\n" +
+			// don't have to map dojo/init since that will occur when the dependency is resolved
+			return "// xdomain rewrite of " + module.mid + "\n" +
 				"define('" + id + "',{\n" +
 				"\tnames:" + dojo.toJson(names) + ",\n" +
 				"\tdef:function(" + names.join(",") + "){" + extractResult[1] + "}" +
 				"});\n\n" +
-			    "define(" + dojo.toJson(names.concat(["dojo/loadInit!"+id])) + ", function(" + names.join(",") + "){\n" + extractResult[0] + "});";
+				"define(" + dojo.toJson(names.concat(["dojo/loadInit!"+id])) + ", function(" + names.join(",") + "){\n" + extractResult[0] + "});";
 		},
 
 		loaderVars = require.initSyncLoader(dojoRequirePlugin, checkDojoRequirePlugin, transformToAmd),
@@ -6154,8 +6366,8 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		sync =
 			loaderVars.sync,
 
-		xd =
-			loaderVars.xd,
+		requested =
+			loaderVars.requested,
 
 		arrived =
 			loaderVars.arrived,
@@ -6197,7 +6409,13 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			loaderVars.execModule,
 
 		getLegacyMode =
-			loaderVars.getLegacyMode;
+			loaderVars.getLegacyMode,
+
+		guardCheckComplete =
+			loaderVars.guardCheckComplete;
+
+	// there is exactly one dojoRequirePlugin among possibly-many dojo/_base/loader's (owing to mapping)
+	dojoRequirePlugin = loaderVars.dojoRequirePlugin;
 
 	dojo.provide = function(mid){
 		var executingModule = syncExecStack[0],
@@ -6218,7 +6436,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 
 	has.add("config-publishRequireResult", 1, 0, 0);
 
-	dojo.require = function(moduleName, omitModuleCheck){
+	dojo.require = function(moduleName, omitModuleCheck) {
 		//	summary:
 		//		loads a Javascript module from the appropriate URI
 		//
@@ -6238,39 +6456,39 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		//		when called as `dojo.require("a.b.c", true)`
 		//
 		//	description:
-		// 		Modules are loaded via dojo.require by using one of two loaders: the normal loader
-		// 		and the xdomain loader. The xdomain loader is used when dojo was built with a
-		// 		custom build that specified loader=xdomain and the module lives on a modulePath
-		// 		that is a whole URL, with protocol and a domain. The versions of Dojo that are on
-		// 		the Google and AOL CDNs use the xdomain loader.
+		//		Modules are loaded via dojo.require by using one of two loaders: the normal loader
+		//		and the xdomain loader. The xdomain loader is used when dojo was built with a
+		//		custom build that specified loader=xdomain and the module lives on a modulePath
+		//		that is a whole URL, with protocol and a domain. The versions of Dojo that are on
+		//		the Google and AOL CDNs use the xdomain loader.
 		//
-		// 		If the module is loaded via the xdomain loader, it is an asynchronous load, since
-		// 		the module is added via a dynamically created script tag. This
-		// 		means that dojo.require() can return before the module has loaded. However, this
-		// 		should only happen in the case where you do dojo.require calls in the top-level
-		// 		HTML page, or if you purposely avoid the loader checking for dojo.require
-		// 		dependencies in your module by using a syntax like dojo["require"] to load the module.
+		//		If the module is loaded via the xdomain loader, it is an asynchronous load, since
+		//		the module is added via a dynamically created script tag. This
+		//		means that dojo.require() can return before the module has loaded. However, this
+		//		should only happen in the case where you do dojo.require calls in the top-level
+		//		HTML page, or if you purposely avoid the loader checking for dojo.require
+		//		dependencies in your module by using a syntax like dojo["require"] to load the module.
 		//
-		// 		Sometimes it is useful to not have the loader detect the dojo.require calls in the
-		// 		module so that you can dynamically load the modules as a result of an action on the
-		// 		page, instead of right at module load time.
+		//		Sometimes it is useful to not have the loader detect the dojo.require calls in the
+		//		module so that you can dynamically load the modules as a result of an action on the
+		//		page, instead of right at module load time.
 		//
-		// 		Also, for script blocks in an HTML page, the loader does not pre-process them, so
-		// 		it does not know to download the modules before the dojo.require calls occur.
+		//		Also, for script blocks in an HTML page, the loader does not pre-process them, so
+		//		it does not know to download the modules before the dojo.require calls occur.
 		//
-		// 		So, in those two cases, when you want on-the-fly module loading or for script blocks
-		// 		in the HTML page, special care must be taken if the dojo.required code is loaded
-		// 		asynchronously. To make sure you can execute code that depends on the dojo.required
-		// 		modules, be sure to add the code that depends on the modules in a dojo.addOnLoad()
-		// 		callback. dojo.addOnLoad waits for all outstanding modules to finish loading before
-		// 		executing.
+		//		So, in those two cases, when you want on-the-fly module loading or for script blocks
+		//		in the HTML page, special care must be taken if the dojo.required code is loaded
+		//		asynchronously. To make sure you can execute code that depends on the dojo.required
+		//		modules, be sure to add the code that depends on the modules in a dojo.addOnLoad()
+		//		callback. dojo.addOnLoad waits for all outstanding modules to finish loading before
+		//		executing.
 		//
-		// 		This type of syntax works with both xdomain and normal loaders, so it is good
-		// 		practice to always use this idiom for on-the-fly code loading and in HTML script
-		// 		blocks. If at some point you change loaders and where the code is loaded from,
-		// 		it will all still work.
+		//		This type of syntax works with both xdomain and normal loaders, so it is good
+		//		practice to always use this idiom for on-the-fly code loading and in HTML script
+		//		blocks. If at some point you change loaders and where the code is loaded from,
+		//		it will all still work.
 		//
-		// 		More on how dojo.require
+		//		More on how dojo.require
 		//		`dojo.require("A.B")` first checks to see if symbol A.B is
 		//		defined. If it is, it is simply returned (nothing to do).
 		//
@@ -6281,32 +6499,32 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		//		to load, or if the symbol `A.B` is not defined after loading.
 		//
 		//		It returns the object `A.B`, but note the caveats above about on-the-fly loading and
-		// 		HTML script blocks when the xdomain loader is loading a module.
+		//		HTML script blocks when the xdomain loader is loading a module.
 		//
 		//		`dojo.require()` does nothing about importing symbols into
-		//		the current namespace.  It is presumed that the caller will
+		//		the current namespace.	It is presumed that the caller will
 		//		take care of that.
 		//
-		// 	example:
-		// 		To use dojo.require in conjunction with dojo.ready:
+		//	example:
+		//		To use dojo.require in conjunction with dojo.ready:
 		//
 		//		|	dojo.require("foo");
 		//		|	dojo.require("bar");
-		//	   	|	dojo.addOnLoad(function(){
-		//	   	|		//you can now safely do something with foo and bar
-		//	   	|	});
+		//		|	dojo.addOnLoad(function(){
+		//		|		//you can now safely do something with foo and bar
+		//		|	});
 		//
 		//	example:
 		//		For example, to import all symbols into a local block, you might write:
 		//
-		//		|	with (dojo.require("A.B")){
+		//		|	with (dojo.require("A.B")) {
 		//		|		...
 		//		|	}
 		//
 		//		And to import just the leaf symbol to a local variable:
 		//
 		//		|	var B = dojo.require("A.B");
-		//	   	|	...
+		//		|	...
 		//
 		//	returns:
 		//		the required namespace object
@@ -6339,9 +6557,10 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 			if(module.executed!==executed && module.injected===arrived){
 				// the module was already here before injectModule was called probably finishing up a xdomain
 				// load, but maybe a module given to the loader directly rather than having the loader retrieve it
-				loaderVars.holdIdle();
-				execModule(module);
-				loaderVars.releaseIdle();
+
+				loaderVars.guardCheckComplete(function(){
+					execModule(module);
+				});
 			}
 			if(module.executed){
 				return module.result;
@@ -6349,8 +6568,8 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 
 			if(currentMode==sync){
 				// the only way to get here is in sync mode and dojo.required a module that
-				//   * was loaded async in the injectModule application a few lines up
-				//   * was an AMD module that had deps that are being loaded async and therefore couldn't execute
+				//	 * was loaded async in the injectModule application a few lines up
+				//	 * was an AMD module that had deps that are being loaded async and therefore couldn't execute
 				if(module.cjs){
 					// the module was an AMD module; unshift, not push, which causes the current traversal to be reattempted from the top
 					execQ.unshift(module);
@@ -6374,7 +6593,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		return result;
 	};
 
-	dojo.loadInit = function(f){
+	dojo.loadInit = function(f) {
 		f();
 	};
 
@@ -6426,7 +6645,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		//		"common" array will *always* be loaded, regardless of which
 		//		list is chosen.
 		//	example:
- 		//		|	dojo.platformRequire({
+		//		|	dojo.platformRequire({
 		//		|		browser: [
 		//		|			"foo.sample", // simple module
 		//		|			"foo.test",
@@ -6471,7 +6690,7 @@ define(["./kernel", "../has", "require", "module", "./json", "./lang", "./array"
 		//		This module defines the v1.x synchronous loader API.
 
 		extractLegacyApiApplications:extractLegacyApiApplications,
-		require:loaderVars.dojoRequirePlugin,
+		require:dojoRequirePlugin,
 		loadInit:dojoLoadInitPlugin
 	};
 });
@@ -6502,21 +6721,21 @@ define(["./has"], function(has){
 
 			parse: has("json-parse") ? JSON.parse : function(str, strict){
 				// summary:
-				// 		Parses a [JSON](http://json.org) string to return a JavaScript object.
+				//		Parses a [JSON](http://json.org) string to return a JavaScript object.
 				// description:
 				//		This function follows [native JSON API](https://developer.mozilla.org/en/JSON)
-				// 		Throws for invalid JSON strings. This delegates to eval() if native JSON
-				// 		support is not available. By default this will evaluate any valid JS expression.
+				//		Throws for invalid JSON strings. This delegates to eval() if native JSON
+				//		support is not available. By default this will evaluate any valid JS expression.
 				//		With the strict parameter set to true, the parser will ensure that only
 				//		valid JSON strings are parsed (otherwise throwing an error). Without the strict
-				// 		parameter, the content passed to this method must come
+				//		parameter, the content passed to this method must come
 				//		from a trusted source.
 				// str:
 				//		a string literal of a JSON item, for instance:
-				//			`'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'`
+				//		`'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'`
 				// strict:
 				//		When set to true, this will ensure that only valid, secure JSON is ever parsed.
-				// 		Make sure this is set to true for untrusted content. Note that on browsers/engines
+				//		Make sure this is set to true for untrusted content. Note that on browsers/engines
 				//		without native JSON support, setting this to true will run slower.
 				if(strict && !/^([\s\[\{]*(?:"(?:\\.|[^"])+"|-?\d[\d\.]*(?:[Ee][+-]?\d+)?|null|true|false|)[\s\]\}]*(?:,|:|$))+$/.test(str)){
 					throw new SyntaxError("Invalid characters in JSON");
@@ -6536,7 +6755,6 @@ define(["./has"], function(has){
 				//		A replacer function that is called for each value and can return a replacement
 				// spacer:
 				//		A spacer string to be used for pretty printing of JSON
-				//		
 				// example:
 				//		simple serialization of a trivial object
 				//	|	define(["dojo/json"], function(JSON){
@@ -7740,8 +7958,8 @@ define(["./sniff", "./_base/lang", "./_base/window"],
 	/*=====
 	 dom.byId = function(id, doc){
 		 // summary:
-		 //		Returns DOM node with matching `id` attribute or `null`
-		 //		if not found. If `id` is a DomNode, this function is a no-op.
+		 //		Returns DOM node with matching `id` attribute or falsy value (ex: null or undefined)
+		 //		if not found.  If `id` is a DomNode, this function is a no-op.
 		 //
 		 // id: String|DOMNode
 		 //		A string to match an HTML id attribute or a reference to a DOM Node
@@ -7867,8 +8085,8 @@ define([
 	"../dom", "../sniff", "../_base/array", "../_base/lang", "../_base/window"
 ], function(dom, has, array, lang, win){
 
-	//  module:
-	//    dojo/selector/acme
+	// module:
+	//		dojo/selector/acme
 
 /*
 	acme architectural overview:
@@ -7910,7 +8128,7 @@ define([
 	// if you are extracting acme for use in your own system, you will
 	// need to provide these methods and properties. No other porting should be
 	// necessary, save for configuring the system to use a class other than
-	// dojo/query.NodeList as the return instance instantiator
+	// dojo/NodeList as the return instance instantiator
 	var trim = 			lang.trim;
 	var each = 			array.forEach;
 
@@ -8186,7 +8404,7 @@ define([
 					// remove backslash escapes from an attribute match, since DOM
 					// querying will get attribute values without backslashes
 					if(_cp.matchFor){
-						_cp.matchFor = _cp.matchFor.replace(/\\([\[\]])/g, "$1");
+						_cp.matchFor = _cp.matchFor.replace(/\\/g, "");
 					}
 
 					// end the attribute by adding it to the list of attributes.
@@ -8448,6 +8666,16 @@ define([
 				return !!("checked" in elem ? elem.checked : elem.selected);
 			};
 		},
+		"disabled": function(name, condition){
+			return function(elem){
+				return elem.disabled;
+			};
+		},
+		"enabled": function(name, condition){
+			return function(elem){
+				return !elem.disabled;
+			};
+		},
 		"first-child": function(){ return _lookLeft; },
 		"last-child": function(){ return _lookRight; },
 		"only-child": function(name, condition){
@@ -8572,7 +8800,7 @@ define([
 		if(!("tag" in ignores)){
 			if(query.tag != "*"){
 				ff = agree(ff, function(elem){
-					return (elem && (elem.tagName == query.getTag()));
+					return (elem && ((caseSensitive ? elem.tagName : elem.tagName.toUpperCase()) == query.getTag()));
 				});
 			}
 		}
@@ -8959,7 +9187,6 @@ define([
 	// there. We need a lot of information about the environment and the query
 	// to make the determination (e.g. does it support QSA, does the query in
 	// question work in the native QSA impl, etc.).
-	var nua = navigator.userAgent;
 
 	// IE QSA queries may incorrectly include comment nodes, so we throw the
 	// zipping function into "remove" comments mode instead of the normal "skip
@@ -8970,7 +9197,7 @@ define([
 	var qsaAvail = !!getDoc()[qsa];
 
 	//Don't bother with n+3 type of matches, IE complains if we modify those.
-	var infixSpaceRe = /n\+\d|([^ ])?([>~+])([^ =])?/g;
+	var infixSpaceRe = /\\[>~+]|n\+\d|([^ \\])?([>~+])([^ =])?/g;
 	var infixSpaceFunc = function(match, pre, ch, post){
 		return ch ? (pre ? pre + " " : "") + ch + (post ? " " + post : "") : /*n+3*/ match;
 	};
@@ -9068,7 +9295,7 @@ define([
 			};
 		}else{
 			// DOM branch
-			var parts = query.split(/\s*,\s*/);
+			var parts = query.match(/([^\s,](?:"(?:\\.|[^"])+"|'(?:\\.|[^'])+'|[^,])*)/g);
 			return _queryFuncCacheDOM[query] = ((parts.length < 2) ?
 				// if not a compound query (e.g., ".foo, .bar"), cache and return a dispatcher
 				getStepQueryFunc(query) :
@@ -9184,33 +9411,33 @@ define([
 		//
 		//		acme supports a rich set of CSS3 selectors, including:
 		//
-		//			* class selectors (e.g., `.foo`)
-		//			* node type selectors like `span`
-		//			* ` ` descendant selectors
-		//			* `>` child element selectors
-		//			* `#foo` style ID selectors
-		//			* `*` universal selector
-		//			* `~`, the preceded-by sibling selector
-		//			* `+`, the immediately preceded-by sibling selector
-		//			* attribute queries:
-		//			|	* `[foo]` attribute presence selector
-		//			|	* `[foo='bar']` attribute value exact match
-		//			|	* `[foo~='bar']` attribute value list item match
-		//			|	* `[foo^='bar']` attribute start match
-		//			|	* `[foo$='bar']` attribute end match
-		//			|	* `[foo*='bar']` attribute substring match
-		//			* `:first-child`, `:last-child`, and `:only-child` positional selectors
-		//			* `:empty` content emtpy selector
-		//			* `:checked` pseudo selector
-		//			* `:nth-child(n)`, `:nth-child(2n+1)` style positional calculations
-		//			* `:nth-child(even)`, `:nth-child(odd)` positional selectors
-		//			* `:not(...)` negation pseudo selectors
+		//		- class selectors (e.g., `.foo`)
+		//		- node type selectors like `span`
+		//		- ` ` descendant selectors
+		//		- `>` child element selectors
+		//		- `#foo` style ID selectors
+		//		- `*` universal selector
+		//		- `~`, the preceded-by sibling selector
+		//		- `+`, the immediately preceded-by sibling selector
+		//		- attribute queries:
+		//			- `[foo]` attribute presence selector
+		//			- `[foo='bar']` attribute value exact match
+		//			- `[foo~='bar']` attribute value list item match
+		//			- `[foo^='bar']` attribute start match
+		//			- `[foo$='bar']` attribute end match
+		//			- `[foo*='bar']` attribute substring match
+		//		- `:first-child`, `:last-child`, and `:only-child` positional selectors
+		//		- `:empty` content emtpy selector
+		//		- `:checked` pseudo selector
+		//		- `:nth-child(n)`, `:nth-child(2n+1)` style positional calculations
+		//		- `:nth-child(even)`, `:nth-child(odd)` positional selectors
+		//		- `:not(...)` negation pseudo selectors
 		//
 		//		Any legal combination of these selectors will work with
 		//		`dojo.query()`, including compound selectors ("," delimited).
 		//		Very complex and useful searches can be constructed with this
 		//		palette of selectors and when combined with functions for
-		//		manipulation presented by dojo.NodeList, many types of DOM
+		//		manipulation presented by dojo/NodeList, many types of DOM
 		//		manipulation operations become very straightforward.
 		//
 		//		Unsupported Selectors:
@@ -9220,14 +9447,14 @@ define([
 		//		what's reasonable for a programmatic node querying engine to
 		//		handle. Currently unsupported selectors include:
 		//
-		//			* namespace-differentiated selectors of any form
-		//			* all `::` pseduo-element selectors
-		//			* certain pseduo-selectors which don't get a lot of day-to-day use:
-		//			|	* `:root`, `:lang()`, `:target`, `:focus`
-		//			* all visual and state selectors:
-		//			|	* `:root`, `:active`, `:hover`, `:visisted`, `:link`,
+		//		- namespace-differentiated selectors of any form
+		//		- all `::` pseduo-element selectors
+		//		- certain pseudo-selectors which don't get a lot of day-to-day use:
+		//			- `:root`, `:lang()`, `:target`, `:focus`
+		//		- all visual and state selectors:
+		//			- `:root`, `:active`, `:hover`, `:visited`, `:link`,
 		//				  `:enabled`, `:disabled`
-		//			* `:*-of-type` pseudo selectors
+		//			- `:*-of-type` pseudo selectors
 		//
 		//		dojo.query and XML Documents:
 		//		-----------------------------
@@ -9246,7 +9473,7 @@ define([
 		//		---------------------
 		//
 		//		If something other than a String is passed for the query,
-		//		`dojo.query` will return a new `dojo.NodeList` instance
+		//		`dojo.query` will return a new `dojo/NodeList` instance
 		//		constructed from that parameter alone and all further
 		//		processing will stop. This means that if you have a reference
 		//		to a node or NodeList, you can quickly construct a new NodeList
@@ -9328,11 +9555,11 @@ define([
 		if(r && r.nozip){
 			return r;
 		}
-		return _zip(r); // dojo/query.NodeList
+		return _zip(r); // dojo/NodeList
 	};
 	query.filter = function(/*Node[]*/ nodeList, /*String*/ filter, /*String|DOMNode?*/ root){
 		// summary:
-		// 		function for filtering a NodeList based on a selector, optimized for simple selectors
+		//		function for filtering a NodeList based on a selector, optimized for simple selectors
 		var tmpNodeList = [],
 			parts = getQueryParts(filter),
 			filterFunc =
@@ -9347,7 +9574,7 @@ define([
 		return tmpNodeList;
 	};
 	return query;
-});//end defineQuery
+});
 
 },
 'dojo/errors/RequestTimeoutError':function(){
@@ -9438,9 +9665,9 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		//		returns an object with properties useful for noting the border
 		//		dimensions.
 		// description:
-		//		* l/t/r/b = the sum of left/top/right/bottom border (respectively)
-		//		* w = the sum of the left and right border
-		//		* h = the sum of the top and bottom border
+		//		- l/t/r/b = the sum of left/top/right/bottom border (respectively)
+		//		- w = the sum of the left and right border
+		//		- h = the sum of the top and bottom border
 		//
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
@@ -9468,9 +9695,9 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		//		Returns object with properties useful for box fitting with
 		//		regards to padding.
 		// description:
-		//		* l/t/r/b = the sum of left/top/right/bottom padding and left/top/right/bottom border (respectively)
-		//		* w = the sum of the left and right padding and border
-		//		* h = the sum of the top and bottom padding and border
+		//		- l/t/r/b = the sum of left/top/right/bottom padding and left/top/right/bottom border (respectively)
+		//		- w = the sum of the left and right padding and border
+		//		- h = the sum of the top and bottom padding and border
 		//
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
@@ -9503,9 +9730,9 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		//		returns object with properties useful for box fitting with
 		//		regards to box margins (i.e., the outer-box).
 		//
-		//		* l/t = marginLeft, marginTop, respectively
-		//		* w = total width, margin inclusive
-		//		* h = total height, margin inclusive
+		//		- l/t = marginLeft, marginTop, respectively
+		//		- w = total width, margin inclusive
+		//		- h = total height, margin inclusive
 		//
 		//		The w/h are used for calculating boxes.
 		//		Normally application code will not need to invoke this
@@ -9699,8 +9926,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		//		padding, or borders.
 		// node: DOMNode
 		// box: Object
-		//      hash with optional "w", and "h" properties for "width", and "height"
-		//      respectively. All specified properties should have numeric values in whole pixels.
+		//		hash with optional "w", and "h" properties for "width", and "height"
+		//		respectively. All specified properties should have numeric values in whole pixels.
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
@@ -9733,8 +9960,8 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		//		you.
 		// node: DOMNode
 		// box: Object
-		//      hash with optional "l", "t", "w", and "h" properties for "left", "right", "width", and "height"
-		//      respectively. All specified properties should have numeric values in whole pixels.
+		//		hash with optional "l", "t", "w", and "h" properties for "left", "right", "width", and "height"
+		//		respectively. All specified properties should have numeric values in whole pixels.
 		// computedStyle: Object?
 		//		This parameter accepts computed styles object.
 		//		If this parameter is omitted, the functions will call
@@ -9779,7 +10006,7 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 
 	geom.isBodyLtr = function isBodyLtr(/*Document?*/ doc){
 		// summary:
-		//      Returns true if the current language is left-to-right, and false otherwise.
+		//		Returns true if the current language is left-to-right, and false otherwise.
 		// doc: Document?
 		//		Optional document to query.   If unspecified, use win.doc.
 		// returns: Boolean
@@ -9790,7 +10017,7 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 
 	geom.docScroll = function docScroll(/*Document?*/ doc){
 		// summary:
-		//      Returns an object with {node, x, y} with corresponding offsets.
+		//		Returns an object with {node, x, y} with corresponding offsets.
 		// doc: Document?
 		//		Optional document to query.   If unspecified, use win.doc.
 		// returns: Object
@@ -9849,10 +10076,10 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 
 	geom.fixIeBiDiScrollLeft = function fixIeBiDiScrollLeft(/*Integer*/ scrollLeft, /*Document?*/ doc){
 		// summary:
-		//      In RTL direction, scrollLeft should be a negative value, but IE
-		//      returns a positive one. All codes using documentElement.scrollLeft
-		//      must call this function to fix this error, otherwise the position
-		//      will offset to right when there is a horizontal scrollbar.
+		//		In RTL direction, scrollLeft should be a negative value, but IE
+		//		returns a positive one. All codes using documentElement.scrollLeft
+		//		must call this function to fix this error, otherwise the position
+		//		will offset to right when there is a horizontal scrollbar.
 		// scrollLeft: Number
 		// doc: Document?
 		//		Optional document to query.   If unspecified, use win.doc.
@@ -9885,7 +10112,7 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		//
 		// description:
 		//		Returns an object of the form:
-		//			{ x: 100, y: 300, w: 20, h: 15 }
+		//		`{ x: 100, y: 300, w: 20, h: 15 }`.
 		//		If includeScroll==true, the x and y values will include any
 		//		document offsets that may affect the position relative to the
 		//		viewport.
@@ -9897,7 +10124,6 @@ define(["./sniff", "./_base/window","./dom", "./dom-style"],
 
 		node = dom.byId(node);
 		var	db = win.body(node.ownerDocument),
-			dh = db.parentNode,
 			ret = node.getBoundingClientRect();
 		ret = {x: ret.left, y: ret.top, w: ret.right - ret.left, h: ret.bottom - ret.top};
 
@@ -10100,7 +10326,7 @@ define("dojo/dom-style", ["./sniff", "./dom"], function(has, dom){
 	/*=====
 	style.toPixelValue = function(node, value){
 		// summary:
-		//      converts style value to pixels on IE or return a numeric value.
+		//		converts style value to pixels on IE or return a numeric value.
 		// node: DOMNode
 		// value: String
 		// returns: Number
@@ -10262,8 +10488,8 @@ define("dojo/dom-style", ["./sniff", "./dom"], function(has, dom){
 		//	|	});
 		//
 		// example:
-		//		dojo.NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
-		//		dojo.style() on every element of the list. See: `dojo.query()` and `dojo.NodeList()`
+		//		dojo/NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
+		//		dojo.style() on every element of the list. See: `dojo.query()` and `dojo/NodeList`
 		//	|	dojo.query(".someClassName").style("visibility","hidden");
 		//	|	// or
 		//	|	dojo.query("#baz > div").style({
@@ -10293,7 +10519,9 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 	//		dojo/dom-prop
 	// summary:
 	//		This module defines the core dojo DOM properties API.
-	//      Indirectly depends on dojo.empty() and dojo.toDom().
+	//		Indirectly depends on dojo.empty() and dojo.toDom().
+
+	// TODOC: summary not showing up in output, see https://github.com/csnover/js-doc-parse/issues/42
 
 	// =============================
 	// Element properties Functions
@@ -10490,7 +10718,7 @@ define([
 		//		a promise if the initial value is a promise, or the result of the
 		//		callback otherwise.
 		// returns: dojo/promise/Promise
-		//
+		//		Promise, or if a callback is provided, the result of the callback.
 		// valueOrPromise:
 		//		Either a regular value or a promise.
 		// callback: 
@@ -10530,6 +10758,8 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 	//		dojo/dom-attr
 	// summary:
 	//		This module defines the core dojo DOM attributes API.
+
+	// TODOC: summary not showing up in output see https://github.com/csnover/js-doc-parse/issues/42
 
 	// =============================
 	// Element attribute Functions
@@ -10604,9 +10834,9 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 		node = dom.byId(node);
 		var lc = name.toLowerCase(),
 			propName = prop.names[lc] || name,
-			forceProp = forcePropNames[propName];
-		// should we access this attribute via a property or via getAttribute()?
-		value = node[propName];
+			forceProp = forcePropNames[propName],
+			value = node[propName];		// should we access this attribute via a property or via getAttribute()?
+
 		if(forceProp && typeof value != "undefined"){
 			// node's property
 			return value;	// Anything
@@ -10729,7 +10959,7 @@ define(["exports", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-pro
 		// name: String
 		//		the name of the attribute
 		// returns:
-		//      the value of the attribute
+		//		the value of the attribute
 
 		node = dom.byId(node);
 		var lc = name.toLowerCase(), propName = prop.names[lc] || name;
@@ -10750,7 +10980,9 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 	// module:
 	//		dojo/dom-construct
 	// summary:
-	//		This module defines the core dojo DOM construction API. (TODO: make summary appear in API doc)
+	//		This module defines the core dojo DOM construction API.
+
+	// TODOC: summary not showing up in output, see https://github.com/csnover/js-doc-parse/issues/42
 
 	// support stuff for toDom()
 	var tagWrap = {
@@ -10817,8 +11049,8 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		// doc: DocumentNode?
 		//		optional document to use when creating DOM nodes, defaults to
 		//		dojo.doc if not specified.
-		// returns: DocumentFragment
-		//
+		// returns:
+		//		Document fragment, unless it's a single node in which case it returns the node itself
 		// example:
 		//		Create a table row:
 		//	|	var tr = dojo.toDom("<tr><td>First!</td></tr>");
@@ -10858,50 +11090,44 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		while(fc = master.firstChild){ // intentional assignment
 			df.appendChild(fc);
 		}
-		return df; // DOMNode
+		return df; // DocumentFragment
 	};
 
 	exports.place = function place(/*DOMNode|String*/ node, /*DOMNode|String*/ refNode, /*String|Number?*/ position){
 		// summary:
 		//		Attempt to insert node into the DOM, choosing from various positioning options.
 		//		Returns the first argument resolved to a DOM node.
-		//
 		// node: DOMNode|String
 		//		id or node reference, or HTML fragment starting with "<" to place relative to refNode
-		//
 		// refNode: DOMNode|String
 		//		id or node reference to use as basis for placement
-		//
 		// position: String|Number?
 		//		string noting the position of node relative to refNode or a
 		//		number indicating the location in the childNodes collection of refNode.
 		//		Accepted string values are:
-		//	|	* before
-		//	|	* after
-		//	|	* replace
-		//	|	* only
-		//	|	* first
-		//	|	* last
+		//
+		//		- before
+		//		- after
+		//		- replace
+		//		- only
+		//		- first
+		//		- last
+		//
 		//		"first" and "last" indicate positions as children of refNode, "replace" replaces refNode,
 		//		"only" replaces all children.  position defaults to "last" if not specified
-		//
 		// returns: DOMNode
 		//		Returned values is the first argument resolved to a DOM node.
 		//
-		//		.place() is also a method of `dojo.NodeList`, allowing `dojo.query` node lookups.
-		//
+		//		.place() is also a method of `dojo/NodeList`, allowing `dojo.query` node lookups.
 		// example:
 		//		Place a node by string id as the last child of another node by string id:
 		//	|	dojo.place("someNode", "anotherNode");
-		//
 		// example:
 		//		Place a node by string id before another node by string id
 		//	|	dojo.place("someNode", "anotherNode", "before");
-		//
 		// example:
 		//		Create a Node, and place it in the body element (last child):
 		//	|	dojo.place("<div></div>", dojo.body());
-		//
 		// example:
 		//		Put a new LI as the first child of a list by id:
 		//	|	dojo.place("<li></li>", "someUl", "first");
@@ -10949,7 +11175,6 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		// summary:
 		//		Create an element, allowing for optional attribute decoration
 		//		and placement.
-		//
 		// description:
 		//		A DOM Element creation function. A shorthand method for creating a node or
 		//		a fragment, and allowing for a convenient optional attribute setting step,
@@ -10960,29 +11185,22 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//
 		//		Placement is done via `dojo.place`, assuming the new node to be the action
 		//		node, passing along the optional reference node and position.
-		//
 		// tag: DOMNode|String
 		//		A string of the element to create (eg: "div", "a", "p", "li", "script", "br"),
 		//		or an existing DOM node to process.
-		//
 		// attrs: Object
 		//		An object-hash of attributes to set on the newly created node.
 		//		Can be null, if you don't want to set any attributes/styles.
 		//		See: `dojo.setAttr` for a description of available attributes.
-		//
 		// refNode: DOMNode|String?
 		//		Optional reference node. Used by `dojo.place` to place the newly created
 		//		node somewhere in the dom relative to refNode. Can be a DomNode reference
 		//		or String ID of a node.
-		//
 		// pos: String?
 		//		Optional positional reference. Defaults to "last" by way of `dojo.place`,
 		//		though can be set to "first","after","before","last", "replace" or "only"
 		//		to further control the placement of the new node relative to the refNode.
 		//		'refNode' is required if a 'pos' is specified.
-		//
-		// returns: DOMNode
-		//
 		// example:
 		//		Create a DIV:
 		//	|	var n = dojo.create("div");
@@ -11009,7 +11227,7 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//	|	dojo.create("a", { href:"foo.html", title:"Goto FOO!" }, dojo.body());
 		//
 		// example:
-		//		Create a `dojo.NodeList()` from a new element (for syntatic sugar):
+		//		Create a `dojo/NodeList()` from a new element (for syntactic sugar):
 		//	|	dojo.query(dojo.create('div'))
 		//	|		.addClass("newDiv")
 		//	|		.onclick(function(e){ console.log('clicked', e.target) })
@@ -11094,13 +11312,12 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 },
 'dojo/request/xhr':function(){
 define("dojo/request/xhr", [
-	'require',
 	'../errors/RequestError',
 	'./watch',
 	'./handlers',
 	'./util',
 	'../has'
-], function(require, RequestError, watch, handlers, util, has){
+], function(RequestError, watch, handlers, util, has){
 	has.add('native-xhr', function(){
 		// if true, the environment has a native XHR implementation
 		return typeof XMLHttpRequest !== 'undefined';
@@ -11154,15 +11371,18 @@ define("dojo/request/xhr", [
 		// Any platform with XHR2 will only use the watch mechanism for timeout.
 
 		isValid = function(response){
-			// summary: Check to see if the request should be taken out of the watch queue
+			// summary:
+			//		Check to see if the request should be taken out of the watch queue
 			return !this.isFulfilled();
 		};
 		cancel = function(dfd, response){
-			// summary: Canceler for deferred
+			// summary:
+			//		Canceler for deferred
 			response.xhr.abort();
 		};
 		addListeners = function(_xhr, dfd, response){
-			// summary: Adds event listeners to the XMLHttpRequest object
+			// summary:
+			//		Adds event listeners to the XMLHttpRequest object
 			function onLoad(evt){
 				dfd.handleResponse(response);
 			}
@@ -11198,7 +11418,8 @@ define("dojo/request/xhr", [
 			return 4 === response.xhr.readyState; //boolean
 		};
 		cancel = function(dfd, response){
-			// summary: canceller function for util.deferred call.
+			// summary:
+			//		canceller function for util.deferred call.
 			var xhr = response.xhr;
 			var _at = typeof xhr.abort;
 			if(_at === 'function' || _at === 'object' || _at === 'unknown'){
@@ -11218,11 +11439,11 @@ define("dojo/request/xhr", [
 			}
 		};
 	function xhr(/*String*/ url, /*Object?*/ options, /*Boolean?*/ returnDeferred){
-		//	summary:
+		// summary:
 		//		Sends an HTTP request with the given URL and options.
-		//	description:
+		// description:
 		//		Sends an HTTP request with the given URL.
-		//	url:
+		// url:
 		//		URL to request
 		var response = util.parseArgs(
 			url,
@@ -11296,10 +11517,9 @@ define("dojo/request/xhr", [
 				_xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 			}
 
-			try{
-				var notify = require('./notify');
-				notify.send(response);
-			}catch(e){}
+			if(util.notify){
+				util.notify.emit('send', response);
+			}
 			_xhr.send(data);
 		}catch(e){
 			dfd.reject(e);
@@ -11416,7 +11636,7 @@ define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, req
 		//		inside a body tag in the value should be extracted as the real value. The value argument
 		//		or the value property on the value argument are usually only used by the build system
 		//		as it inlines cache content.
-		//	example:
+		// example:
 		//		To ask dojo.cache to fetch content and store it in the cache (the dojo["cache"] style
 		//		of call is used to avoid an issue with the build system erroneously trying to intern
 		//		this example. To get the build system to intern your dojo.cache calls, use the
@@ -11424,7 +11644,7 @@ define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, req
 		//		| //If template.html contains "<h1>Hello</h1>" that will be
 		//		| //the value for the text variable.
 		//		| var text = dojo["cache"]("my.module", "template.html");
-		//	example:
+		// example:
 		//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
 		//		 (the dojo["cache"] style of call is used to avoid an issue with the build system
 		//		erroneously trying to intern this example. To get the build system to intern your
@@ -11432,7 +11652,7 @@ define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, req
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
 		//		| //text variable will contain just "<h1>Hello</h1>".
 		//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
-		//	example:
+		// example:
 		//		Same example as previous, but demonstrates how an object can be passed in as
 		//		the first argument, then the value argument can then be the second argument.
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
@@ -11524,14 +11744,15 @@ define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, req
 				stripFlag= parts.length>1,
 				absMid= parts[0],
 				url = require.toUrl(parts[0]),
+				requireCacheUrl = "url:" + url,
 				text = notFound,
 				finish = function(text){
 					load(stripFlag ? strip(text) : text);
 				};
 			if(absMid in theCache){
 				text = theCache[absMid];
-			}else if(url in require.cache){
-				text = require.cache[url];
+			}else if(requireCacheUrl in require.cache){
+				text = require.cache[requireCacheUrl];
 			}else if(url in theCache){
 				text = theCache[url];
 			}
@@ -11561,81 +11782,80 @@ define(["./_base/kernel", "require", "./has", "./_base/xhr"], function(dojo, req
 'dojo/keys':function(){
 define("dojo/keys", ["./_base/kernel", "./sniff"], function(dojo, has){
 
-// module:
-//		dojo/keys
+	// module:
+	//		dojo/keys
 
-// Public: client code should test
-// keyCode against these named constants, as the
-// actual codes can vary by browser.
-return dojo.keys = {
-	// summary:
-	//		Definitions for common key values
-	BACKSPACE: 8,
-	TAB: 9,
-	CLEAR: 12,
-	ENTER: 13,
-	SHIFT: 16,
-	CTRL: 17,
-	ALT: 18,
-	META: has("webkit") ? 91 : 224,		// the apple key on macs
-	PAUSE: 19,
-	CAPS_LOCK: 20,
-	ESCAPE: 27,
-	SPACE: 32,
-	PAGE_UP: 33,
-	PAGE_DOWN: 34,
-	END: 35,
-	HOME: 36,
-	LEFT_ARROW: 37,
-	UP_ARROW: 38,
-	RIGHT_ARROW: 39,
-	DOWN_ARROW: 40,
-	INSERT: 45,
-	DELETE: 46,
-	HELP: 47,
-	LEFT_WINDOW: 91,
-	RIGHT_WINDOW: 92,
-	SELECT: 93,
-	NUMPAD_0: 96,
-	NUMPAD_1: 97,
-	NUMPAD_2: 98,
-	NUMPAD_3: 99,
-	NUMPAD_4: 100,
-	NUMPAD_5: 101,
-	NUMPAD_6: 102,
-	NUMPAD_7: 103,
-	NUMPAD_8: 104,
-	NUMPAD_9: 105,
-	NUMPAD_MULTIPLY: 106,
-	NUMPAD_PLUS: 107,
-	NUMPAD_ENTER: 108,
-	NUMPAD_MINUS: 109,
-	NUMPAD_PERIOD: 110,
-	NUMPAD_DIVIDE: 111,
-	F1: 112,
-	F2: 113,
-	F3: 114,
-	F4: 115,
-	F5: 116,
-	F6: 117,
-	F7: 118,
-	F8: 119,
-	F9: 120,
-	F10: 121,
-	F11: 122,
-	F12: 123,
-	F13: 124,
-	F14: 125,
-	F15: 126,
-	NUM_LOCK: 144,
-	SCROLL_LOCK: 145,
-	UP_DPAD: 175,
-	DOWN_DPAD: 176,
-	LEFT_DPAD: 177,
-	RIGHT_DPAD: 178,
-	// virtual key mapping
-	copyKey: has("mac") && !has("air") ? (has("safari") ? 91 : 224 ) : 17
-};
+	return dojo.keys = {
+		// summary:
+		//		Definitions for common key values.  Client code should test keyCode against these named constants,
+		//		as the actual codes can vary by browser.
+
+		BACKSPACE: 8,
+		TAB: 9,
+		CLEAR: 12,
+		ENTER: 13,
+		SHIFT: 16,
+		CTRL: 17,
+		ALT: 18,
+		META: has("webkit") ? 91 : 224,		// the apple key on macs
+		PAUSE: 19,
+		CAPS_LOCK: 20,
+		ESCAPE: 27,
+		SPACE: 32,
+		PAGE_UP: 33,
+		PAGE_DOWN: 34,
+		END: 35,
+		HOME: 36,
+		LEFT_ARROW: 37,
+		UP_ARROW: 38,
+		RIGHT_ARROW: 39,
+		DOWN_ARROW: 40,
+		INSERT: 45,
+		DELETE: 46,
+		HELP: 47,
+		LEFT_WINDOW: 91,
+		RIGHT_WINDOW: 92,
+		SELECT: 93,
+		NUMPAD_0: 96,
+		NUMPAD_1: 97,
+		NUMPAD_2: 98,
+		NUMPAD_3: 99,
+		NUMPAD_4: 100,
+		NUMPAD_5: 101,
+		NUMPAD_6: 102,
+		NUMPAD_7: 103,
+		NUMPAD_8: 104,
+		NUMPAD_9: 105,
+		NUMPAD_MULTIPLY: 106,
+		NUMPAD_PLUS: 107,
+		NUMPAD_ENTER: 108,
+		NUMPAD_MINUS: 109,
+		NUMPAD_PERIOD: 110,
+		NUMPAD_DIVIDE: 111,
+		F1: 112,
+		F2: 113,
+		F3: 114,
+		F4: 115,
+		F5: 116,
+		F6: 117,
+		F7: 118,
+		F8: 119,
+		F9: 120,
+		F10: 121,
+		F11: 122,
+		F12: 123,
+		F13: 124,
+		F14: 125,
+		F15: 126,
+		NUM_LOCK: 144,
+		SCROLL_LOCK: 145,
+		UP_DPAD: 175,
+		DOWN_DPAD: 176,
+		LEFT_DPAD: 177,
+		RIGHT_DPAD: 178,
+		// virtual key mapping
+		copyKey: has("mac") && !has("air") ? (has("safari") ? 91 : 224 ) : 17
+	};
 });
 
 },
@@ -11661,7 +11881,7 @@ define(['./has'], function(has){
 				if(fixReadyState){ doc.readyState = "complete"; }
 
 				while(readyQ.length){
-					(readyQ.shift())();
+					(readyQ.shift())(doc);
 				}
 			},
 			on = function(node, event){
@@ -11726,7 +11946,7 @@ define(['./has'], function(has){
 		// summary:
 		//		Plugin to delay require()/define() callback from firing until the DOM has finished loading.
 		if(ready){
-			callback(1);
+			callback(doc);
 		}else{
 			readyQ.push(callback);
 		}
@@ -12348,14 +12568,13 @@ define("dojo/_base/lang", ["./kernel", "../has", "../sniff"], function(dojo, has
 'dojo/request/util':function(){
 define("dojo/request/util", [
 	'exports',
-	'require',
 	'../errors/RequestError',
 	'../errors/CancelError',
 	'../Deferred',
 	'../io-query',
 	'../_base/array',
 	'../_base/lang'
-], function(exports, require, RequestError, CancelError, Deferred, ioQuery, array, lang){
+], function(exports, RequestError, CancelError, Deferred, ioQuery, array, lang){
 	exports.deepCopy = function deepCopy(target, source){
 		for(var name in source){
 			var tval = target[name],
@@ -12412,12 +12631,12 @@ define("dojo/request/util", [
 		}
 		var responsePromise = def.then(okHandler).otherwise(errHandler);
 
-		try{
-			// Handle notify before data promise so notify always runs
-			// before any chained promise
-			var notify = require('./notify');
-			responsePromise.then(notify.load, notify.error);
-		}catch(e){}
+		if(exports.notify){
+			responsePromise.then(
+				lang.hitch(exports.notify, 'emit', 'load'),
+				lang.hitch(exports.notify, 'emit', 'error')
+			);
+		}
 
 		var dataPromise = responsePromise.then(function(response){
 				return response.data || response.text;
@@ -12504,11 +12723,11 @@ define("dojo/Evented", ["./aspect", "./on"], function(aspect, on){
 	function Evented(){
 		// summary:
 		//		A class that can be used as a mixin or base class,
-		// 		to add on() and emit() methods to a class
-		// 		for listening for events and emitting events:
+		//		to add on() and emit() methods to a class
+		//		for listening for events and emitting events:
 		//
-		// 		|	define(["dojo/Evented"], function(Evented){
-		// 		|		var EventedWidget = dojo.declare([Evented, dijit._Widget], {...});
+		//		|	define(["dojo/Evented"], function(Evented){
+		//		|		var EventedWidget = dojo.declare([Evented, dijit._Widget], {...});
 		//		|		widget = new EventedWidget();
 		//		|		widget.on("open", function(event){
 		//		|		... do something with event
@@ -12727,9 +12946,6 @@ define("dojo/_base/xhr", [
 ], function(dojo, has, require, ioq, dom, domForm, Deferred, config, json, lang, array, on, aspect, watch, _xhr, util){
 	// module:
 	//		dojo/_base/xhr
-	// summary:
-	//		Deprecated.   Use dojo/request instead.
-	dojo.deprecated("dojo/_base/xhr", "Use dojo/request.", "2.0");
 
 	/*=====
 	dojo._xhrObj = function(){
@@ -12758,16 +12974,14 @@ define("dojo/_base/xhr", [
 	// MOW: remove dojo._contentHandlers alias in 2.0
 	var handlers = dojo._contentHandlers = dojo.contentHandlers = {
 		// summary:
-		//		A map of availble XHR transport handle types. Name matches the
+		//		A map of available XHR transport handle types. Name matches the
 		//		`handleAs` attribute passed to XHR calls.
-		//
 		// description:
-		//		A map of availble XHR transport handle types. Name matches the
+		//		A map of available XHR transport handle types. Name matches the
 		//		`handleAs` attribute passed to XHR calls. Each contentHandler is
 		//		called, passing the xhr object for manipulation. The return value
 		//		from the contentHandler will be passed to the `load` or `handle`
 		//		functions defined in the original xhr call.
-		//
 		// example:
 		//		Creating a custom content-handler:
 		//	|	dojo.contentHandlers.makeCaps = function(xhr){
@@ -12781,15 +12995,18 @@ define("dojo/_base/xhr", [
 		//	|	});
 
 		"text": function(xhr){
-			// summary: A contentHandler which simply returns the plaintext response data
+			// summary:
+			//		A contentHandler which simply returns the plaintext response data
 			return xhr.responseText;
 		},
 		"json": function(xhr){
-			// summary: A contentHandler which returns a JavaScript object created from the response data
+			// summary:
+			//		A contentHandler which returns a JavaScript object created from the response data
 			return json.fromJson(xhr.responseText || null);
 		},
 		"json-comment-filtered": function(xhr){
-			// summary: A contentHandler which expects comment-filtered JSON.
+			// summary:
+			//		A contentHandler which expects comment-filtered JSON.
 			// description:
 			//		A contentHandler which expects comment-filtered JSON.
 			//		the json-comment-filtered option was implemented to prevent
@@ -12818,13 +13035,15 @@ define("dojo/_base/xhr", [
 			return json.fromJson(value.substring(cStartIdx+2, cEndIdx));
 		},
 		"javascript": function(xhr){
-			// summary: A contentHandler which evaluates the response data, expecting it to be valid JavaScript
+			// summary:
+			//		A contentHandler which evaluates the response data, expecting it to be valid JavaScript
 
 			// FIXME: try Moz and IE specific eval variants?
 			return dojo.eval(xhr.responseText);
 		},
 		"xml": function(xhr){
-			// summary: A contentHandler returning an XML Document parsed from the response data
+			// summary:
+			//		A contentHandler returning an XML Document parsed from the response data
 			var result = xhr.responseXML;
 
 			if(has("ie")){
@@ -12847,7 +13066,8 @@ define("dojo/_base/xhr", [
 			return result; // DOMDocument
 		},
 		"json-comment-optional": function(xhr){
-			// summary: A contentHandler which checks the presence of comment-filtered JSON and
+			// summary:
+			//		A contentHandler which checks the presence of comment-filtered JSON and
 			//		alternates between the `json` and `json-comment-filtered` contentHandlers.
 			if(xhr.responseText && /^[^{\[]*\/\*/.test(xhr.responseText)){
 				return handlers["json-comment-filtered"](xhr);
@@ -12862,70 +13082,81 @@ define("dojo/_base/xhr", [
 	// kwargs function parameter definitions.   Assigning to dojo namespace rather than making them local variables
 	// because they are used by dojo/io modules too
 
-	dojo.__IoArgs = function(){
+	dojo.__IoArgs = function(url, content, timeout, form, preventCache, handleAs, rawBody, ioPublish){
 		// url: String
 		//		URL to server endpoint.
+		this.url = url;
+
 		// content: Object?
 		//		Contains properties with string values. These
 		//		properties will be serialized as name1=value2 and
 		//		passed in the request.
+		this.content = content;
+
 		// timeout: Integer?
 		//		Milliseconds to wait for the response. If this time
 		//		passes, the then error callbacks are called.
+		this.timeout = timeout;
+
 		// form: DOMNode?
 		//		DOM node for a form. Used to extract the form values
 		//		and send to the server.
+		this.form = form;
+
 		// preventCache: Boolean?
 		//		Default is false. If true, then a
 		//		"dojo.preventCache" parameter is sent in the request
 		//		with a value that changes with each request
 		//		(timestamp). Useful only with GET-type requests.
+		this.preventCache = preventCache;
+
 		// handleAs: String?
 		//		Acceptable values depend on the type of IO
 		//		transport (see specific IO calls for more information).
+		this.handleAs = handleAs;
+
 		// rawBody: String?
 		//		Sets the raw body for an HTTP request. If this is used, then the content
 		//		property is ignored. This is mostly useful for HTTP methods that have
 		//		a body to their requests, like PUT or POST. This property can be used instead
 		//		of postData and putData for dojo.rawXhrPost and dojo.rawXhrPut respectively.
+		this.rawBody = rawBody;
+
 		// ioPublish: Boolean?
 		//		Set this explicitly to false to prevent publishing of topics related to
 		//		IO operations. Otherwise, if djConfig.ioPublish is set to true, topics
 		//		will be published via dojo.publish for different phases of an IO operation.
 		//		See dojo.__IoPublish for a list of topics that are published.
-		// load: Function?
-		//		This function will be
-		//		called on a successful HTTP response code.
-		// error: Function?
-		//		This function will
-		//		be called when the request fails due to a network or server error, the url
-		//		is invalid, etc. It will also be called if the load or handle callback throws an
-		//		exception, unless djConfig.debugAtAllCosts is true.	 This allows deployed applications
-		//		to continue to run even when a logic error happens in the callback, while making
-		//		it easier to troubleshoot while in debug mode.
-		// handle: Function?
-		//		This function will
-		//		be called at the end of every request, whether or not an error occurs.
-		this.url = url;
-		this.content = content;
-		this.timeout = timeout;
-		this.form = form;
-		this.preventCache = preventCache;
-		this.handleAs = handleAs;
 		this.ioPublish = ioPublish;
+
 		this.load = function(response, ioArgs){
-			// ioArgs: dojo.__IoCallbackArgs
+			// summary:
+			//		This function will be
+			//		called on a successful HTTP response code.
+	 		// ioArgs: dojo.__IoCallbackArgs
 			//		Provides additional information about the request.
 			// response: Object
 			//		The response in the format as defined with handleAs.
-		}
+		};
+
 		this.error = function(response, ioArgs){
+			// summary:
+			//		This function will
+			//		be called when the request fails due to a network or server error, the url
+			//		is invalid, etc. It will also be called if the load or handle callback throws an
+			//		exception, unless djConfig.debugAtAllCosts is true.	 This allows deployed applications
+			//		to continue to run even when a logic error happens in the callback, while making
+			//		it easier to troubleshoot while in debug mode.
 			// ioArgs: dojo.__IoCallbackArgs
 			//		Provides additional information about the request.
 			// response: Object
 			//		The response in the format as defined with handleAs.
-		}
+		};
+
 		this.handle = function(loadOrError, response, ioArgs){
+			// summary:
+	 		//		This function will
+	 		//		be called at the end of every request, whether or not an error occurs.
 			// loadOrError: String
 			//		Provides a string that tells you whether this function
 			//		was called because of success (load) or failure (error).
@@ -12933,36 +13164,50 @@ define("dojo/_base/xhr", [
 			//		The response in the format as defined with handleAs.
 			// ioArgs: dojo.__IoCallbackArgs
 			//		Provides additional information about the request.
-		}
+		};
 	};
 
 	dojo.__IoCallbackArgs = function(args, xhr, url, query, handleAs, id, canDelete, json){
 		// args: Object
 		//		the original object argument to the IO call.
+		this.args = args;
+
 		// xhr: XMLHttpRequest
 		//		For XMLHttpRequest calls only, the
 		//		XMLHttpRequest object that was used for the
 		//		request.
+		this.xhr = xhr;
+
 		// url: String
 		//		The final URL used for the call. Many times it
 		//		will be different than the original args.url
 		//		value.
+		this.url = url;
+
 		// query: String
 		//		For non-GET requests, the
 		//		name1=value1&name2=value2 parameters sent up in
 		//		the request.
+		this.query = query;
+
 		// handleAs: String
 		//		The final indicator on how the response will be
 		//		handled.
+		this.handleAs = handleAs;
+
 		// id: String
 		//		For dojo.io.script calls only, the internal
 		//		script ID used for the request.
+		this.id = id;
+
 		// canDelete: Boolean
 		//		For dojo.io.script calls only, indicates
 		//		whether the script tag that represents the
 		//		request can be deleted after callbacks have
 		//		been called. Used internally to know when
 		//		cleanup can happen on JSONP-type requests.
+		this.canDelete = canDelete;
+
 		// json: Object
 		//		For dojo.io.script calls only: holds the JSON
 		//		response for JSONP-type requests. Used
@@ -12970,13 +13215,6 @@ define("dojo/_base/xhr", [
 		//		You should not need to access it directly --
 		//		the same object should be passed to the success
 		//		callbacks directly.
-		this.args = args;
-		this.xhr = xhr;
-		this.url = url;
-		this.query = query;
-		this.handleAs = handleAs;
-		this.id = id;
-		this.canDelete = canDelete;
 		this.json = json;
 	};
 
@@ -12987,33 +13225,39 @@ define("dojo/_base/xhr", [
 		//		published for any Input/Output, network operation. So,
 		//		dojo.xhr, dojo.io.script and dojo.io.iframe can all
 		//		trigger these topics to be published.
+
 		// start: String
 		//		"/dojo/io/start" is sent when there are no outstanding IO
 		//		requests, and a new IO request is started. No arguments
 		//		are passed with this topic.
+		this.start = "/dojo/io/start";
+
 		// send: String
 		//		"/dojo/io/send" is sent whenever a new IO request is started.
 		//		It passes the dojo.Deferred for the request with the topic.
+		this.send = "/dojo/io/send";
+
 		// load: String
 		//		"/dojo/io/load" is sent whenever an IO request has loaded
 		//		successfully. It passes the response and the dojo.Deferred
 		//		for the request with the topic.
+		this.load = "/dojo/io/load";
+
 		// error: String
 		//		"/dojo/io/error" is sent whenever an IO request has errored.
 		//		It passes the error and the dojo.Deferred
 		//		for the request with the topic.
+		this.error = "/dojo/io/error";
+
 		// done: String
 		//		"/dojo/io/done" is sent whenever an IO request has completed,
 		//		either by loading or by erroring. It passes the error and
 		//		the dojo.Deferred for the request with the topic.
+		this.done = "/dojo/io/done";
+
 		// stop: String
 		//		"/dojo/io/stop" is sent when all outstanding IO requests have
 		//		finished. No arguments are passed with this topic.
-		this.start = "/dojo/io/start";
-		this.send = "/dojo/io/send";
-		this.load = "/dojo/io/load";
-		this.error = "/dojo/io/error";
-		this.done = "/dojo/io/done";
 		this.stop = "/dojo/io/stop";
 	};
 	=====*/
@@ -13085,9 +13329,7 @@ define("dojo/_base/xhr", [
 			}
 			return err;
 		});
-		d.addCallbacks(okHandler, function(error){
-			return errHandler(error, d);
-		});
+		d.addCallback(okHandler);
 
 		//Support specifying load, error and handle callback functions from the args.
 		//For those callbacks, the "this" object will be the args object.
@@ -13111,6 +13353,13 @@ define("dojo/_base/xhr", [
 				return handle.call(args, value, ioArgs);
 			});
 		}
+
+		// Attach error handler last (not including topic publishing)
+		// to catch any errors that may have been generated from load
+		// or handle functions.
+		d.addErrback(function(error){
+			return errHandler(error, d);
+		});
 
 		//Plug in topic publishing, if dojo.publish is loaded.
 		if(cfg.ioPublish && dojo.publish && ioArgs.args.ioPublish !== false){
@@ -13138,13 +13387,15 @@ define("dojo/_base/xhr", [
 	};
 
 	var _deferredOk = function(/*Deferred*/dfd){
-		// summary: okHandler function for dojo._ioSetArgs call.
+		// summary:
+		//		okHandler function for dojo._ioSetArgs call.
 
 		var ret = handlers[dfd.ioArgs.handleAs](dfd.ioArgs.xhr);
 		return ret === undefined ? null : ret;
 	};
 	var _deferError = function(/*Error*/error, /*Deferred*/dfd){
-		// summary: errHandler function for dojo._ioSetArgs call.
+		// summary:
+		//		errHandler function for dojo._ioSetArgs call.
 
 		if(!dfd.ioArgs.args.failOk){
 			console.error(error);
@@ -13238,37 +13489,43 @@ define("dojo/_base/xhr", [
 	};
 
 	/*=====
-	 dojo.__XhrArgs = function(){
-		 // summary:
-		 //		In addition to the properties listed for the dojo._IoArgs type,
-		 //		the following properties are allowed for dojo.xhr* methods.
-		 // handleAs: String?
-		 //		Acceptable values are: text (default), json, json-comment-optional,
-		 //		json-comment-filtered, javascript, xml. See `dojo.contentHandlers`
-		 // sync: Boolean?
-		 //		false is default. Indicates whether the request should
-		 //		be a synchronous (blocking) request.
-		 // headers: Object?
-		 //		Additional HTTP headers to send in the request.
-		 // failOk: Boolean?
-		 //		false is default. Indicates whether a request should be
-		 //		allowed to fail (and therefore no console error message in
-		 //		the event of a failure)
-		 // contentType: String|Boolean
-		 //		"application/x-www-form-urlencoded" is default. Set to false to
-		 //		prevent a Content-Type header from being sent, or to a string
-		 //		to send a different Content-Type.
-		 this.handleAs = handleAs;
-		 this.sync = sync;
-		 this.headers = headers;
-		 this.failOk = failOk;
+	dojo.__XhrArgs = function(handleAs, sync, header, failOk, contentType){
+		// summary:
+		//		In addition to the properties listed for the dojo._IoArgs type,
+		//		the following properties are allowed for dojo.xhr* methods.
+
+		// handleAs: String?
+		//		Acceptable values are: text (default), json, json-comment-optional,
+		//		json-comment-filtered, javascript, xml. See `dojo.contentHandlers`
+	 	this.handleAs = handleAs;
+
+	 	// sync: Boolean?
+		//		false is default. Indicates whether the request should
+		//		be a synchronous (blocking) request.
+		this.sync = sync;
+
+		// headers: Object?
+		//		Additional HTTP headers to send in the request.
+		this.headers = headers;
+
+		// failOk: Boolean?
+		//		false is default. Indicates whether a request should be
+		//		allowed to fail (and therefore no console error message in
+		//		the event of a failure)
+		this.failOk = failOk;
+
+		// contentType: String|Boolean
+		//		"application/x-www-form-urlencoded" is default. Set to false to
+		//		prevent a Content-Type header from being sent, or to a string
+		//		to send a different Content-Type.
+		this.contentType = contentType;
 	 };
 	 dojo.__XhrArgs.prototype = new dojo.__IoArgs();
 	=====*/
 
 	dojo.xhr = function(/*String*/ method, /*dojo.__XhrArgs*/ args, /*Boolean?*/ hasBody){
 		// summary:
-		//		Sends an HTTP request with the given method.
+		//		Deprecated.   Use dojo/request instead.
 		// description:
 		//		Sends an HTTP request with the given method.
 		//		See also dojo.xhrGet(), xhrPost(), xhrPut() and dojo.xhrDelete() for shortcuts
@@ -13302,13 +13559,26 @@ define("dojo/_base/xhr", [
 		var options = {
 			method: method,
 			handleAs: "text",
-			headers: args.headers,
-			data: ioArgs.query,
 			timeout: args.timeout,
-			sync: args.sync,
 			withCredentials: args.withCredentials,
 			ioArgs: ioArgs
 		};
+
+		if(typeof args.headers !== 'undefined'){
+			options.headers = args.headers;
+		}
+		if(typeof args.contentType !== 'undefined'){
+			if(!options.headers){
+				options.headers = {};
+			}
+			options.headers['Content-Type'] = args.contentType;
+		}
+		if(typeof ioArgs.query !== 'undefined'){
+			options.data = ioArgs.query;
+		}
+		if(typeof args.sync !== 'undefined'){
+			options.sync = args.sync;
+		}
 
 		dojo._ioNotifyStart(dfd);
 		try{
@@ -13432,8 +13702,8 @@ define("dojo/topic", ["./Evented"], function(Evented){
 		publish: function(topic, event){
 			// summary:
 			//		Publishes a message to a topic on the pub/sub hub. All arguments after
-			// 		the first will be passed to the subscribers, so any number of arguments
-			// 		can be provided (not just event).
+			//		the first will be passed to the subscribers, so any number of arguments
+			//		can be provided (not just event).
 			// topic: String
 			//		The name of the topic to publish to
 			// event: Object
@@ -13446,7 +13716,7 @@ define("dojo/topic", ["./Evented"], function(Evented){
 			//		Subscribes to a topic on the pub/sub hub
 			// topic: String
 			//		The topic to subscribe to
-			//	listener: Function
+			// listener: Function
 			//		A function to call when a message is published to the given topic
 			return hub.on.apply(hub, arguments);
 		}
@@ -13480,7 +13750,7 @@ var unload = {		// module export
 		// summary:
 		//		registers a function to be triggered when window.onunload
 		//		fires.
-		//	description:
+		// description:
 		//		The first time that addOnWindowUnload is called Dojo
 		//		will register a page listener to trigger your unload
 		//		handler with. Note that registering these handlers may
@@ -13492,9 +13762,9 @@ var unload = {		// module export
 		//		heavy JavaScript work since it fires at the equivalent of
 		//		the page's "onbeforeunload" event.
 		// example:
-		//	| unload.addOnWindowUnload(functionPointer)
-		//	| unload.addOnWindowUnload(object, "functionName");
-		//	| unload.addOnWindowUnload(object, function(){ /* ... */});
+		//	|	unload.addOnWindowUnload(functionPointer)
+		//	|	unload.addOnWindowUnload(object, "functionName");
+		//	|	unload.addOnWindowUnload(object, function(){ /* ... */});
 
 		if (!dojo.windowUnloaded){
 			on(win, "unload", (dojo.windowUnloaded = function(){
@@ -13515,7 +13785,7 @@ var unload = {		// module export
 	addOnUnload: function(/*Object?|Function?*/ obj, /*String|Function?*/ functionName){
 		// summary:
 		//		registers a function to be triggered when the page unloads.
-		//	description:
+		// description:
 		//		The first time that addOnUnload is called Dojo will
 		//		register a page listener to trigger your unload handler
 		//		with.
@@ -13533,9 +13803,9 @@ var unload = {		// module export
 		//		browsers from using a "fast back" cache to make page
 		//		loading via back button instantaneous.
 		// example:
-		//	| dojo.addOnUnload(functionPointer)
-		//	| dojo.addOnUnload(object, "functionName")
-		//	| dojo.addOnUnload(object, function(){ /* ... */});
+		//	|	dojo.addOnUnload(functionPointer)
+		//	|	dojo.addOnUnload(object, "functionName")
+		//	|	dojo.addOnUnload(object, function(){ /* ... */});
 
 		on(win, "beforeunload", lang.hitch(obj, functionName));
 	}
@@ -13554,8 +13824,9 @@ define([
 	"./has",
 	"./_base/lang",
 	"./errors/CancelError",
-	"./promise/Promise"
-], function(has, lang, CancelError, Promise){
+	"./promise/Promise",
+	"./promise/instrumentation"
+], function(has, lang, CancelError, Promise, instrumentation){
 	"use strict";
 
 	// module:
@@ -13569,7 +13840,7 @@ define([
 	var freezeObject = Object.freeze || function(){};
 
 	var signalWaiting = function(waiting, type, result, rejection, deferred){
-		if( 0 ){
+		if( 1 ){
 			if(type === REJECTED && Deferred.instrumentRejected && waiting.length === 0){
 				Deferred.instrumentRejected(result, false, rejection, deferred);
 			}
@@ -13603,7 +13874,7 @@ define([
 			signalDeferred(deferred, type, result);
 		}
 
-		if( 0 ){
+		if( 1 ){
 			if(type === REJECTED && Deferred.instrumentRejected){
 				Deferred.instrumentRejected(result, !!func, rejection, deferred.promise);
 			}
@@ -13651,7 +13922,7 @@ define([
 		var canceled = false;
 		var waiting = [];
 
-		if( 0  && Error.captureStackTrace){
+		if( 1  && Error.captureStackTrace){
 			Error.captureStackTrace(deferred, Deferred);
 			Error.captureStackTrace(promise, Deferred);
 		}
@@ -13738,7 +14009,7 @@ define([
 			// strict:
 			//		If strict, will throw an error if the deferred is already fulfilled.
 			if(!fulfilled){
-				if( 0  && Error.captureStackTrace){
+				if( 1  && Error.captureStackTrace){
 					Error.captureStackTrace(rejection = {}, reject);
 				}
 				signalWaiting(waiting, fulfilled = REJECTED, result = error, rejection, deferred);
@@ -13822,6 +14093,10 @@ define([
 		return "[object Deferred]";
 	};
 
+	if(instrumentation){
+		instrumentation(Deferred);
+	}
+
 	return Deferred;
 });
 
@@ -13829,12 +14104,12 @@ define([
 'dojo/_base/NodeList':function(){
 define("dojo/_base/NodeList", ["./kernel", "../query", "./array", "./html", "../NodeList-dom"], function(dojo, query, array){
 	// module:
-	//    dojo/_base/NodeList
+	//		dojo/_base/NodeList
 
 	/*=====
 	return {
 		// summary:
-		//		This module extends dojo/query.NodeList with the legacy connect(), coords(),
+		//		This module extends dojo/NodeList with the legacy connect(), coords(),
 		//		blur(), focus(), change(), click(), error(), keydown(), keypress(),
 		//		keyup(), load(), mousedown(), mouseenter(), mouseleave(), mousemove(),
 		//		mouseout(), mouseover(), mouseup(), and submit() methods.
@@ -14156,6 +14431,99 @@ define(["./kernel", "./lang", "./array", "./config"], function(dojo, lang, Array
 });
 
 },
+'dojo/promise/instrumentation':function(){
+define([
+	"./tracer",
+	"../has",
+	"../_base/lang",
+	"../_base/array"
+], function(tracer, has, lang, arrayUtil){
+	function logError(error, rejection, deferred){
+		var stack = "";
+		if(error && error.stack){
+			stack += error.stack;
+		}
+		if(rejection && rejection.stack){
+			stack += "\n    ----------------------------------------\n    rejected" + rejection.stack.split("\n").slice(1).join("\n").replace(/^\s+/, " ");
+		}
+		if(deferred && deferred.stack){
+			stack += "\n    ----------------------------------------\n" + deferred.stack;
+		}
+		console.error(error, stack);
+	}
+
+	function reportRejections(error, handled, rejection, deferred){
+		if(!handled){
+			logError(error, rejection, deferred);
+		}
+	}
+
+	var errors = [];
+	var activeTimeout = false;
+	var unhandledWait = 1000;
+	function trackUnhandledRejections(error, handled, rejection, deferred){
+		if(handled){
+			arrayUtil.some(errors, function(obj, ix){
+				if(obj.error === error){
+					errors.splice(ix, 1);
+					return true;
+				}
+			});
+		}else if(!arrayUtil.some(errors, function(obj){ return obj.error === error; })){
+			errors.push({
+				error: error,
+				rejection: rejection,
+				deferred: deferred,
+				timestamp: new Date().getTime()
+			});
+		}
+
+		if(!activeTimeout){
+			activeTimeout = setTimeout(logRejected, unhandledWait);
+		}
+	}
+
+	function logRejected(){
+		var now = new Date().getTime();
+		var reportBefore = now - unhandledWait;
+		errors = arrayUtil.filter(errors, function(obj){
+			if(obj.timestamp < reportBefore){
+				logError(obj.error, obj.rejection, obj.deferred);
+				return false;
+			}
+			return true;
+		});
+
+		if(errors.length){
+			activeTimeout = setTimeout(logRejected, errors[0].timestamp + unhandledWait - now);
+		}
+	}
+
+	return function(Deferred){
+		var usage = has("config-useDeferredInstrumentation");
+		if(usage){
+			tracer.on("resolved", lang.hitch(console, "log", "resolved"));
+			tracer.on("rejected", lang.hitch(console, "log", "rejected"));
+			tracer.on("progress", lang.hitch(console, "log", "progress"));
+
+			var args = [];
+			if(typeof usage === "string"){
+				args = usage.split(",");
+				usage = args.shift();
+			}
+			if(usage === "report-rejections"){
+				Deferred.instrumentRejected = reportRejections;
+			}else if(usage === "report-unhandled-rejections" || usage === true || usage === 1){
+				Deferred.instrumentRejected = trackUnhandledRejections;
+				unhandledWait = parseInt(args[0], 10) || unhandledWait;
+			}else{
+				throw new Error("Unsupported instrumentation usage <" + usage + ">");
+			}
+		}
+	};
+});
+
+},
 'dojo/selector/_loader':function(){
 define(["../has", "require"],
 		function(has, require){
@@ -14441,46 +14809,47 @@ define([
 },
 'dojo/on':function(){
 define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], function(aspect, dojo, has){
-	// summary:
-	//		The export of this module is a function that provides core event listening functionality. With this function
-	//		you can provide a target, event type, and listener to be notified of
-	//		future matching events that are fired.
-	// target: Element|Object
-	//		This is the target object or DOM element that to receive events from
-	// type: String|Function
-	//		This is the name of the event to listen for or an extension event type.
-	// listener: Function
-	//		This is the function that should be called when the event fires.
-	// returns: Object
-	//		An object with a remove() method that can be used to stop listening for this
-	//		event.
-	// description:
-	//		To listen for "click" events on a button node, we can do:
-	//		|	define(["dojo/on"], function(listen){
-	//		|		on(button, "click", clickHandler);
-	//		|		...
-	//		Evented JavaScript objects can also have their own events.
-	//		|	var obj = new Evented;
-	//		|	on(obj, "foo", fooHandler);
-	//		And then we could publish a "foo" event:
-	//		|	on.emit(obj, "foo", {key: "value"});
-	//		We can use extension events as well. For example, you could listen for a tap gesture:
-	//		|	define(["dojo/on", "dojo/gesture/tap", function(listen, tap){
-	//		|		on(button, tap, tapHandler);
-	//		|		...
-	//		which would trigger fooHandler. Note that for a simple object this is equivalent to calling:
-	//		|	obj.onfoo({key:"value"});
-	//		If you use on.emit on a DOM node, it will use native event dispatching when possible.
 
 	"use strict";
 	if( 1 ){ // check to make sure we are in a browser, this module should work anywhere
 		var major = window.ScriptEngineMajorVersion;
 		has.add("jscript", major && (major() + ScriptEngineMinorVersion() / 10));
 		has.add("event-orientationchange", has("touch") && !has("android")); // TODO: how do we detect this?
-		has.add("event-stopimmediatepropogation", window.Event && !!window.Event.prototype && !!window.Event.prototype.stopImmediatePropagation);
+		has.add("event-stopimmediatepropagation", window.Event && !!window.Event.prototype && !!window.Event.prototype.stopImmediatePropagation);
 	}
 	var on = function(target, type, listener, dontFix){
-		if(target.on){ 
+		// summary:
+		//		A function that provides core event listening functionality. With this function
+		//		you can provide a target, event type, and listener to be notified of
+		//		future matching events that are fired.
+		// target: Element|Object
+		//		This is the target object or DOM element that to receive events from
+		// type: String|Function
+		//		This is the name of the event to listen for or an extension event type.
+		// listener: Function
+		//		This is the function that should be called when the event fires.
+		// returns: Object
+		//		An object with a remove() method that can be used to stop listening for this
+		//		event.
+		// description:
+		//		To listen for "click" events on a button node, we can do:
+		//		|	define(["dojo/on"], function(listen){
+		//		|		on(button, "click", clickHandler);
+		//		|		...
+		//		Evented JavaScript objects can also have their own events.
+		//		|	var obj = new Evented;
+		//		|	on(obj, "foo", fooHandler);
+		//		And then we could publish a "foo" event:
+		//		|	on.emit(obj, "foo", {key: "value"});
+		//		We can use extension events as well. For example, you could listen for a tap gesture:
+		//		|	define(["dojo/on", "dojo/gesture/tap", function(listen, tap){
+		//		|		on(button, tap, tapHandler);
+		//		|		...
+		//		which would trigger fooHandler. Note that for a simple object this is equivalent to calling:
+		//		|	obj.onfoo({key:"value"});
+		//		If you use on.emit on a DOM node, it will use native event dispatching when possible.
+
+		if(target.on && typeof type != "function"){ 
 			// delegate to the target's on() method, so it can handle it's own listening if it wants
 			return target.on(type, listener);
 		}
@@ -14602,16 +14971,16 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], func
 		//		only calls the listener when the CSS selector matches the target of the event.
 		//
 		//		The application must require() an appropriate level of dojo/query to handle the selector.
-		//	selector:
+		// selector:
 		//		The CSS selector to use for filter events and determine the |this| of the event listener.
-		//	eventType:
+		// eventType:
 		//		The event to listen for
 		// children:
 		//		Indicates if children elements of the selector should be allowed. This defaults to 
 		//		true
-		//	example:
-		//		define(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(listen, mouse){
-		//			on(node, on.selector(".my-class", mouse.enter), handlerForMyHover);
+		// example:
+		// |	require(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(listen, mouse){
+		// |		on(node, on.selector(".my-class", mouse.enter), handlerForMyHover);
 		return function(target, listener){
 			// if the selector is function, use it to select the node, otherwise use the matches method
 			var matchesTarget = typeof selector == "function" ? {matches: selector} : this,
@@ -14651,14 +15020,14 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], func
 		syntheticDispatch = on.emit = function(target, type, event){
 		// summary:
 		//		Fires an event on the target object.
-		//	target:
+		// target:
 		//		The target object to fire the event on. This can be a DOM element or a plain 
 		//		JS object. If the target is a DOM element, native event emiting mechanisms
 		//		are used when possible.
-		//	type:
+		// type:
 		//		The event type name. You can emulate standard native events like "click" and 
 		//		"mouseover" or create custom events like "open" or "finish".
-		//	event:
+		// event:
 		//		An object that provides the properties for the event. See https://developer.mozilla.org/en/DOM/event.initEvent 
 		//		for some of the properties. These properties are copied to the event object.
 		//		Of particular importance are the cancelable and bubbles properties. The
@@ -14669,11 +15038,11 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], func
 		//		on the target and then each parent successively until the top of the tree
 		//		is reached or stopPropagation() is called. Both bubbles and cancelable 
 		//		default to false.
-		//	returns:
+		// returns:
 		//		If the event is cancelable and the event is not cancelled,
 		//		emit will return true. If the event is cancelable and the event is cancelled,
 		//		emit will return false.
-		//	details:
+		// details:
 		//		Note that this is designed to emit events for listeners registered through
 		//		dojo/on. It should actually work with any event listener except those
 		//		added through IE's attachEvent (IE8 and below's non-W3C event emiting
@@ -14682,7 +15051,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], func
 		//		action, it only returns a value to indicate if the default action should take
 		//		place. For example, emiting a keypress event would not cause a character
 		//		to appear in a textbox.
-		//	example:
+		// example:
 		//		To fire our own click event
 		//	|	on.emit(dojo.byId("button"), "click", {
 		//	|		cancelable: true,
@@ -14718,7 +15087,7 @@ define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], func
 		return event && event.cancelable && event; // if it is still true (was cancelable and was cancelled), return the event to indicate default action should happen
 	};
 	var captures = {};
-	if(!has("event-stopimmediatepropogation")){
+	if(!has("event-stopimmediatepropagation")){
 		var stopImmediatePropagation =function(){
 			this.immediatelyStopped = true;
 			this.modified = true; // mark it as modified so the event will be cached in IE
@@ -15197,13 +15566,13 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			 //		run over sparse arrays, this implementation passes the "holes" in the sparse array to
 			 //		the callback function with a value of undefined. JavaScript 1.6's every skips the holes in the sparse array.
 			 //		For more details, see:
-			 //			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/every
+			 //		https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/every
 			 // example:
-			 //	| // returns false
-			 //	| array.every([1, 2, 3, 4], function(item){ return item>1; });
+			 //	|	// returns false
+			 //	|	array.every([1, 2, 3, 4], function(item){ return item>1; });
 			 // example:
-			 //	| // returns true
-			 //	| array.every([1, 2, 3, 4], function(item){ return item>0; });
+			 //	|	// returns true
+			 //	|	array.every([1, 2, 3, 4], function(item){ return item>0; });
 		 },
 		 =====*/
 
@@ -15226,7 +15595,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//		run over sparse arrays, this implementation passes the "holes" in the sparse array to
 			//		the callback function with a value of undefined. JavaScript 1.6's some skips the holes in the sparse array.
 			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/some
+			//		https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/some
 			// example:
 			//	| // is true
 			//	| array.some([1, 2, 3, 4], function(item){ return item>1; });
@@ -15247,7 +15616,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//		run over sparse arrays, the Dojo function invokes the callback for every index whereas JavaScript
 			//		1.6's indexOf skips the holes in the sparse array.
 			//		For details on this method, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/indexOf
+			//		https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/indexOf
 			// arr: Array
 			// value: Object
 			// fromIndex: Integer?
@@ -15267,11 +15636,11 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//		run over sparse arrays, the Dojo function invokes the callback for every index whereas JavaScript
 			//		1.6's lastIndexOf skips the holes in the sparse array.
 			//		For details on this method, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/lastIndexOf
-			//	arr: Array,
-			//	value: Object,
-			//	fromIndex: Integer?
-			//	returns: Number
+			//		https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/lastIndexOf
+			// arr: Array,
+			// value: Object,
+			// fromIndex: Integer?
+			// returns: Number
 		},
 		=====*/
 
@@ -15291,7 +15660,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//		run over sparse arrays, this implementation passes the "holes" in the sparse array to
 			//		the callback function with a value of undefined. JavaScript 1.6's forEach skips the holes in the sparse array.
 			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/forEach
+			//		https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/forEach
 			// example:
 			//	| // log out all members of the array:
 			//	| array.forEach(
@@ -15366,7 +15735,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//		run over sparse arrays, this implementation passes the "holes" in the sparse array to
 			//		the callback function with a value of undefined. JavaScript 1.6's map skips the holes in the sparse array.
 			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
+			//		https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/map
 			// example:
 			//	| // returns [2, 3, 4, 5]
 			//	| array.map([1, 2, 3, 4], function(item){ return item+1 });
@@ -15406,7 +15775,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//		run over sparse arrays, this implementation passes the "holes" in the sparse array to
 			//		the callback function with a value of undefined. JavaScript 1.6's filter skips the holes in the sparse array.
 			//		For more details, see:
-			//			https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter
+			//		https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Objects/Array/filter
 			// example:
 			//	| // returns [2, 3, 4]
 			//	| array.filter([1, 2, 3, 4], function(item){ return item>1; });
@@ -15449,12 +15818,12 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 define(["./kernel", "../json"], function(dojo, json){
 
 // module:
-//    dojo/_base/json
+//		dojo/_base/json
 
 /*=====
 return {
 	// summary:
-	//    This module defines the dojo JSON API.
+	//		This module defines the dojo JSON API.
 };
 =====*/
 
@@ -15469,7 +15838,7 @@ dojo.fromJson = function(/*String*/ js){
 	//		implementation uses the (faster) native JSON parse when available.
 	// js:
 	//		a string literal of a JavaScript expression, for instance:
-	//			`'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'`
+	//		`'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'`
 
 	return eval("(" + js + ")"); // Object
 };
@@ -15509,7 +15878,7 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint){
 	//		Note that if native JSON support is available, it will be used for serialization,
 	//		and native implementations vary on the exact spacing used in pretty printing.
 	// returns:
-	// 		A JSON string serialization of the passed-in object.
+	//		A JSON string serialization of the passed-in object.
 	// example:
 	//		simple serialization of a trivial object
 	//		|	var jsonStr = dojo.toJson({ howdy: "stranger!", isStrange: true });
@@ -15790,15 +16159,10 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			// summary:
 			//		Returns whether or not the specified classes are a portion of the
 			//		class list currently applied to the node.
-			//
 			// node: String|DOMNode
 			//		String ID or DomNode reference to check the class for.
-			//
 			// classStr: String
 			//		A string class name to look for.
-			//
-			// returns: Boolean
-			//
 			// example:
 			//		Do something if a node with id="someNode" has class="aSillyClassName" present
 			//	|	if(dojo.hasClass("someNode","aSillyClassName")){ ... }
@@ -15820,19 +16184,27 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//
 			// example:
 			//		Add a class to some node:
-			//	|	dojo.addClass("someNode", "anewClass");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.add("someNode", "anewClass");
+			//	|	});
 			//
 			// example:
 			//		Add two classes at once:
-			//	|	dojo.addClass("someNode", "firstClass secondClass");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.add("someNode", "firstClass secondClass");
+			//	|	});
 			//
 			// example:
 			//		Add two classes at once (using array):
-			//	|	dojo.addClass("someNode", ["firstClass", "secondClass"]);
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.add("someNode", ["firstClass", "secondClass"]);
+			//	|	});
 			//
 			// example:
-			//		Available in `dojo.NodeList` for multiple additions
-			//	|	dojo.query("ul > li").addClass("firstLevel");
+			//		Available in `dojo/NodeList` for multiple additions
+			//	|	require(["dojo/query"], function(query){
+			//	|		query("ul > li").addClass("firstLevel");
+			//	|	});
 
 			node = dom.byId(node);
 			classStr = str2array(classStr);
@@ -15865,23 +16237,33 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//
 			// example:
 			//		Remove a class from some node:
-			//	|	dojo.removeClass("someNode", "firstClass");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.remove("someNode", "firstClass");
+			//	|	});
 			//
 			// example:
 			//		Remove two classes from some node:
-			//	|	dojo.removeClass("someNode", "firstClass secondClass");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.remove("someNode", "firstClass secondClass");
+			//	|	});
 			//
 			// example:
 			//		Remove two classes from some node (using array):
-			//	|	dojo.removeClass("someNode", ["firstClass", "secondClass"]);
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.remove("someNode", ["firstClass", "secondClass"]);
+			//	|	});
 			//
 			// example:
 			//		Remove all classes from some node:
-			//	|	dojo.removeClass("someNode");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.remove("someNode");
+			//	|	});
 			//
 			// example:
-			//		Available in `dojo.NodeList()` for multiple removal
-			//	|	dojo.query(".foo").removeClass("foo");
+			//		Available in `dojo/NodeList` for multiple removal
+			//	|	require(["dojo/query"], function(query){
+			//	|		query("ul > li").removeClass("foo");
+			//	|	});
 
 			node = dom.byId(node);
 			var cls;
@@ -15915,15 +16297,21 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//		or an array of class names.
 			//
 			// example:
-			//	|	dojo.replaceClass("someNode", "add1 add2", "remove1 remove2");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.replace("someNode", "add1 add2", "remove1 remove2");
+			//	|	});
 			//
 			// example:
 			//	Replace all classes with addMe
-			//	|	dojo.replaceClass("someNode", "addMe");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.replace("someNode", "addMe");
+			//	|	});
 			//
 			// example:
-			//	Available in `dojo.NodeList()` for multiple toggles
-			//	|	dojo.query(".findMe").replaceClass("addMe", "removeMe");
+			//	Available in `dojo/NodeList` for multiple toggles
+			//	|	require(["dojo/query"], function(query){
+			//	|		query(".findMe").replaceClass("addMe", "removeMe");
+			//	|	});
 
 			node = dom.byId(node);
 			fakeNode[className] = node[className];
@@ -15938,7 +16326,7 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			// summary:
 			//		Adds a class to node if not present, or removes if present.
 			//		Pass a boolean condition if you want to explicitly add or remove.
-			//      Returns the condition that was specified directly or indirectly.
+			//		Returns the condition that was specified directly or indirectly.
 			//
 			// node: String|DOMNode
 			//		String ID or DomNode reference to toggle a class string
@@ -15949,18 +16337,24 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//
 			// condition:
 			//		If passed, true means to add the class, false means to remove.
-			//      Otherwise dojo.hasClass(node, classStr) is used to detect the class presence.
+			//		Otherwise dojo.hasClass(node, classStr) is used to detect the class presence.
 			//
 			// example:
-			//	|	dojo.toggleClass("someNode", "hovered");
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.toggle("someNode", "hovered");
+			//	|	});
 			//
 			// example:
 			//		Forcefully add a class
-			//	|	dojo.toggleClass("someNode", "hovered", true);
+			//	|	require(["dojo/dom-class"], function(domClass){
+			//	|		domClass.toggle("someNode", "hovered", true);
+			//	|	});
 			//
 			// example:
-			//		Available in `dojo.NodeList()` for multiple toggles
-			//	|	dojo.query(".toggleMe").toggleClass("toggleMe");
+			//		Available in `dojo/NodeList` for multiple toggles
+			//	|	require(["dojo/query"], function(query){
+			//	|		query(".toggleMe").toggleClass("toggleMe");
+			//	|	});
 
 			node = dom.byId(node);
 			if(condition === undefined){
@@ -15991,8 +16385,8 @@ return {
 	//		This module defines the user configuration during bootstrap.
 	// description:
 	//		By defining user configuration as a module value, an entire configuration can be specified in a build,
-    //		thereby eliminating the need for sniffing and or explicitly setting in the global variable dojoConfig.
-    //		Also, when multiple instances of dojo exist in a single application, each will necessarily be located
+	//		thereby eliminating the need for sniffing and or explicitly setting in the global variable dojoConfig.
+	//		Also, when multiple instances of dojo exist in a single application, each will necessarily be located
 	//		at an unique absolute module identifier as given by the package configuration. Implementing configuration
 	//		as a module allows for specifying unique, per-instance configurations.
 	// example:
@@ -16003,7 +16397,7 @@ return {
 	//		|		packages:[{
 	//		|			name:"myDojo",
 	//		|			location:".", //assume baseUrl points to dojo.js
-	//		|	    }]
+	//		|		}]
 	//		|	});
 	//		|
 	//		|	// specify a configuration for the myDojo instance
@@ -16101,8 +16495,8 @@ return {
 
 	// ioPublish: Boolean?
 	//		Set this to true to enable publishing of topics for the different phases of
-	// 		IO operations. Publishing is done via dojo.publish. See dojo.__IoPublish for a list
-	// 		of topics that are published.
+	//		IO operations. Publishing is done via dojo.publish. See dojo.__IoPublish for a list
+	//		of topics that are published.
 	ioPublish: false,
 
 	// useCustomLogger: Anything?
@@ -16161,8 +16555,7 @@ define([
 	"./_base/Color",
 	"./has!dojo-firebug?./_firebug/firebug",
 	"./_base/browser",
-	"./_base/loader",
-	"require"
+	"./_base/loader"
 ], function(kernel, has, require, sniff, lang, array, config, ready){
 	// module:
 	//		dojo/main
@@ -16400,136 +16793,6 @@ define([
 });
 
 },
-'dojo/ready':function(){
-define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang){
-	// module:
-	//		dojo/ready
-	// note:
-	//		This module should be unnecessary in dojo 2.0
-
-	var
-		// truthy if DOMContentLoaded or better (e.g., window.onload fired) has been achieved
-		isDomReady = 0,
-
-		// a function to call to cause onLoad to be called when all requested modules have been loaded
-		requestCompleteSignal,
-
-		// The queue of functions waiting to execute as soon as dojo.ready conditions satisfied
-		loadQ = [],
-
-		// prevent recursion in onLoad
-		onLoadRecursiveGuard = 0,
-
-		handleDomReady = function(){
-			isDomReady = 1;
-			dojo._postLoad = dojo.config.afterOnLoad = true;
-			if(loadQ.length){
-				requestCompleteSignal(onLoad);
-			}
-		},
-
-		// run the next function queued with dojo.ready
-		onLoad = function(){
-			if(isDomReady && !onLoadRecursiveGuard && loadQ.length){
-				//guard against recursions into this function
-				onLoadRecursiveGuard = 1;
-				var f = loadQ.shift();
-					try{
-						f();
-					}
-						// FIXME: signal the error via require.on
-					finally{
-						onLoadRecursiveGuard = 0;
-					}
-				onLoadRecursiveGuard = 0;
-				if(loadQ.length){
-					requestCompleteSignal(onLoad);
-				}
-			}
-		};
-
-	require.on("idle", onLoad);
-	requestCompleteSignal = function(){
-		if(require.idle()){
-			onLoad();
-		} // else do nothing, onLoad will be called with the next idle signal
-	};
-
-	var ready = dojo.ready = dojo.addOnLoad = function(priority, context, callback){
-		// summary:
-		//		Add a function to execute on DOM content loaded and all requested modules have arrived and been evaluated.
-		// priority: Integer?
-		//		The order in which to exec this callback relative to other callbacks, defaults to 1000
-		// context: Object?|Function
-		//		The context in which to run execute callback, or a callback if not using context
-		// callback: Function?
-		//		The function to execute.
-		//
-		// example:
-		//	Simple DOM and Modules ready syntax
-		//	|	dojo.ready(function(){ alert("Dom ready!"); });
-		//
-		// example:
-		//	Using a priority
-		//	|	dojo.ready(2, function(){ alert("low priority ready!"); })
-		//
-		// example:
-		//	Using context
-		//	|	dojo.ready(foo, function(){
-		//	|		// in here, this == foo
-		//	|	})
-		//
-		// example:
-		//	Using dojo.hitch style args:
-		//	|	var foo = { dojoReady: function(){ console.warn(this, "dojo dom and modules ready."); } };
-		//	|	dojo.ready(foo, "dojoReady");
-
-		var hitchArgs = lang._toArray(arguments);
-		if(typeof priority != "number"){
-			callback = context;
-			context = priority;
-			priority = 1000;
-		}else{
-			hitchArgs.shift();
-		}
-		callback = callback ?
-			lang.hitch.apply(dojo, hitchArgs) :
-			function(){
-				context();
-			};
-		callback.priority = priority;
-		for(var i = 0; i < loadQ.length && priority >= loadQ[i].priority; i++){}
-		loadQ.splice(i, 0, callback);
-		requestCompleteSignal();
-	};
-
-	 1 || has.add("dojo-config-addOnLoad", 1);
-	if( 1 ){
-		var dca = dojo.config.addOnLoad;
-		if(dca){
-			ready[(lang.isArray(dca) ? "apply" : "call")](dojo, dca);
-		}
-	}
-
-	if( 1  && dojo.config.parseOnLoad && !dojo.isAsync){
-		ready(99, function(){
-			if(!dojo.parser){
-				dojo.deprecated("Add explicit require(['dojo/parser']);", "", "2.0");
-				require(["dojo/parser"]);
-			}
-		});
-	}
-
-	if( 1 ){
-		domReady(handleDomReady);
-	}else{
-		handleDomReady();
-	}
-
-	return ready;
-});
-
-},
 'dojo/aspect':function(){
 define("dojo/aspect", [], function(){
 
@@ -16537,7 +16800,7 @@ define("dojo/aspect", [], function(){
 	//		dojo/aspect
 
 	"use strict";
-	var nextId = 0;
+	var undefined, nextId = 0;
 	function advise(dispatcher, type, advice, receiveArguments){
 		var previous = dispatcher[type];
 		var around = type == "around";
@@ -16623,8 +16886,13 @@ define("dojo/aspect", [], function(){
 					// after advice
 					var after = dispatcher.after;
 					while(after && after.id < executionId){
-						results = after.receiveArguments ? after.advice.apply(this, args) || results :
-								after.advice.call(this, results);
+						if(after.receiveArguments){
+							var newResults = after.advice.apply(this, args);
+							// change the return value only if a new value was returned
+							results = newResults === undefined ? results : newResults;
+						}else{
+							results = after.advice.call(this, results, args);
+						}
 						after = after.next;
 					}
 					return results;
@@ -16647,7 +16915,8 @@ define("dojo/aspect", [], function(){
 	var after = aspect("after");
 	/*=====
 	after = function(target, methodName, advice, receiveArguments){
-		// summary: The "after" export of the aspect module is a function that can be used to attach
+		// summary:
+		//		The "after" export of the aspect module is a function that can be used to attach
 		//		"after" advice to a method. This function will be executed after the original method
 		//		is executed. By default the function will be called with a single argument, the return
 		//		value of the original method, or the the return value of the last executed advice (if a previous one exists).
@@ -16672,7 +16941,8 @@ define("dojo/aspect", [], function(){
 	var before = aspect("before");
 	/*=====
 	before = function(target, methodName, advice){
-		// summary: The "before" export of the aspect module is a function that can be used to attach
+		// summary:
+		//		The "before" export of the aspect module is a function that can be used to attach
 		//		"before" advice to a method. This function will be executed before the original method
 		//		is executed. This function will be called with the arguments used to call the method.
 		//		This function may optionally return an array as the new arguments to use to call
@@ -16692,7 +16962,8 @@ define("dojo/aspect", [], function(){
 	var around = aspect("around");
 	/*=====
 	 around = function(target, methodName, advice){
-		// summary: The "around" export of the aspect module is a function that can be used to attach
+		// summary:
+		//		The "around" export of the aspect module is a function that can be used to attach
 		//		"around" advice to a method. The advisor function is immediately executed when
 		//		the around() is called, is passed a single argument that is a function that can be
 		//		called to continue execution of the original method (or the next around advisor).
@@ -16744,10 +17015,149 @@ define("dojo/aspect", [], function(){
 });
 
 },
+'dojo/ready':function(){
+define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang){
+	// module:
+	//		dojo/ready
+	// note:
+	//		This module should be unnecessary in dojo 2.0
+
+	var
+		// truthy if DOMContentLoaded or better (e.g., window.onload fired) has been achieved
+		isDomReady = 0,
+
+		// a function to call to cause onLoad to be called when all requested modules have been loaded
+		requestCompleteSignal,
+
+		// The queue of functions waiting to execute as soon as dojo.ready conditions satisfied
+		loadQ = [],
+
+		// prevent recursion in onLoad
+		onLoadRecursiveGuard = 0,
+
+		handleDomReady = function(){
+			isDomReady = 1;
+			dojo._postLoad = dojo.config.afterOnLoad = true;
+			if(loadQ.length){
+				requestCompleteSignal(onLoad);
+			}
+		},
+
+		// run the next function queued with dojo.ready
+		onLoad = function(){
+			if(isDomReady && !onLoadRecursiveGuard && loadQ.length){
+				//guard against recursions into this function
+				onLoadRecursiveGuard = 1;
+				var f = loadQ.shift();
+					try{
+						f();
+					}
+						// FIXME: signal the error via require.on
+					finally{
+						onLoadRecursiveGuard = 0;
+					}
+				onLoadRecursiveGuard = 0;
+				if(loadQ.length){
+					requestCompleteSignal(onLoad);
+				}
+			}
+		};
+
+	require.on("idle", onLoad);
+	requestCompleteSignal = function(){
+		if(require.idle()){
+			onLoad();
+		} // else do nothing, onLoad will be called with the next idle signal
+	};
+
+	var ready = dojo.ready = dojo.addOnLoad = function(priority, context, callback){
+		// summary:
+		//		Add a function to execute on DOM content loaded and all requested modules have arrived and been evaluated.
+		//		In most cases, the `domReady` plug-in should suffice and this method should not be needed.
+		// priority: Integer?
+		//		The order in which to exec this callback relative to other callbacks, defaults to 1000
+		// context: Object?|Function
+		//		The context in which to run execute callback, or a callback if not using context
+		// callback: Function?
+		//		The function to execute.
+		//
+		// example:
+		//	Simple DOM and Modules ready syntax
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		ready(function(){ alert("Dom ready!"); });
+		//	|	});
+		//
+		// example:
+		//	Using a priority
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		ready(2, function(){ alert("low priority ready!"); })
+		//	|	});
+		//
+		// example:
+		//	Using context
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		ready(foo, function(){
+		//	|			// in here, this == foo
+		//	|		});
+		//	|	});
+		//
+		// example:
+		//	Using dojo/hitch style args:
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		var foo = { dojoReady: function(){ console.warn(this, "dojo dom and modules ready."); } };
+		//	|		ready(foo, "dojoReady");
+		//	|	});
+
+		var hitchArgs = lang._toArray(arguments);
+		if(typeof priority != "number"){
+			callback = context;
+			context = priority;
+			priority = 1000;
+		}else{
+			hitchArgs.shift();
+		}
+		callback = callback ?
+			lang.hitch.apply(dojo, hitchArgs) :
+			function(){
+				context();
+			};
+		callback.priority = priority;
+		for(var i = 0; i < loadQ.length && priority >= loadQ[i].priority; i++){}
+		loadQ.splice(i, 0, callback);
+		requestCompleteSignal();
+	};
+
+	 1 || has.add("dojo-config-addOnLoad", 1);
+	if( 1 ){
+		var dca = dojo.config.addOnLoad;
+		if(dca){
+			ready[(lang.isArray(dca) ? "apply" : "call")](dojo, dca);
+		}
+	}
+
+	if( 1  && dojo.config.parseOnLoad && !dojo.isAsync){
+		ready(99, function(){
+			if(!dojo.parser){
+				dojo.deprecated("Add explicit require(['dojo/parser']);", "", "2.0");
+				require(["dojo/parser"]);
+			}
+		});
+	}
+
+	if( 1 ){
+		domReady(handleDomReady);
+	}else{
+		handleDomReady();
+	}
+
+	return ready;
+});
+
+},
 'dojo/_base/connect':function(){
 define(["./kernel", "../on", "../topic", "../aspect", "./event", "../mouse", "./sniff", "./lang", "../keys"], function(dojo, on, hub, aspect, eventModule, mouse, has, lang){
-//  module:
-//    dojo/_base/connect
+// module:
+//		dojo/_base/connect
 
 has.add("events-keypress-typed", function(){ // keypresses should only occur a printable character is hit
 	var testKeyEvent = {charCode: 0};
@@ -16839,7 +17249,7 @@ if(has("events-keypress-typed")){
 			var k=evt.keyCode;
 			// These are Windows Virtual Key Codes
 			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/WinUI/WindowsUserInterface/UserInput/VirtualKeyCodes.asp
-			var unprintable = (k!=13 || (has("ie") >= 9 && !has("quirks"))) && k!=32 && (k!=27||!has("ie")) && (k<48||k>90) && (k<96||k>111) && (k<186||k>192) && (k<219||k>222) && k!=229;
+			var unprintable = (k!=13) && k!=32 && (k!=27||!has("ie")) && (k<48||k>90) && (k<96||k>111) && (k<186||k>192) && (k<219||k>222) && k!=229;
 			// synthesize keypress for most unprintables and CTRL-keys
 			if(unprintable||evt.ctrlKey){
 				var c = unprintable ? 0 : k;
@@ -17039,25 +17449,25 @@ var connect = {
 	},
 
 	subscribe:function(topic, context, method){
-		//	summary:
+		// summary:
 		//		Attach a listener to a named topic. The listener function is invoked whenever the
 		//		named topic is published (see: dojo.publish).
 		//		Returns a handle which is needed to unsubscribe this listener.
-		//	topic: String
+		// topic: String
 		//		The topic to which to subscribe.
-		//	context: Object?
+		// context: Object?
 		//		Scope in which method will be invoked, or null for default scope.
-		//	method: String|Function
+		// method: String|Function
 		//		The name of a function in context, or a function reference. This is the function that
 		//		is invoked when topic is published.
-		//	example:
+		// example:
 		//	|	dojo.subscribe("alerts", null, function(caption, message){ alert(caption + "\n" + message); });
 		//	|	dojo.publish("alerts", [ "read this", "hello world" ]);
 		return hub.subscribe(topic, lang.hitch(context, method));
 	},
 
 	publish:function(topic, args){
-		//	summary:
+		// summary:
 		//		Invoke all listener method subscribed to topic.
 		// topic: String
 		//		The name of the topic to publish.

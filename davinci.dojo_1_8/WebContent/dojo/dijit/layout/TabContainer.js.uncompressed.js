@@ -17,6 +17,9 @@ define("dijit/layout/TabContainer", [
 		//		A TabContainer is a container that has multiple panes, but shows only
 		//		one pane at a time.  There are a set of tabs corresponding to each pane,
 		//		where each tab has the name (aka title) of the pane, and optionally a close button.
+		//
+		//		See `StackContainer.ChildWidgetProperties` for details on the properties that can be set on
+		//		children of a `TabContainer`.
 
 		// useMenu: [const] Boolean
 		//		True if a menu should be used to select tabs when they are too

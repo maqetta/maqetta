@@ -14,11 +14,11 @@ declare("dojox.fx.Shadow", Widget,{
 		// |	});
 
 		// shadowPng: String
-		// 		Base location for drop-shadow images
+		//		Base location for drop-shadow images
 		shadowPng: kernel.moduleUrl("dojox.fx", "resources/shadow"),
 	
 		// shadowThickness: Integer
-		// 		How wide (in px) to make the shadow
+		//		How wide (in px) to make the shadow
 		shadowThickness: 7,
 	
 		// shadowOffset: Integer
@@ -30,11 +30,11 @@ declare("dojox.fx.Shadow", Widget,{
 		opacity: 0.75,
 	
 		// animate: Boolean
-		// 		A toggle to disable animated transitions
+		//		A toggle to disable animated transitions
 		animate: false,
 	
 		// node: DomNode
-		// 		The node we will be applying this shadow to
+		//		The node we will be applying this shadow to
 		node: null,
 	
 		startup: function(){

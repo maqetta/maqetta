@@ -12,8 +12,6 @@ define("dojox/mobile/SwapView", [
 
 	// module:
 	//		dojox/mobile/SwapView
-	// summary:
-	//		A container that can be swiped horizontally.
 
 	return declare("dojox.mobile.SwapView", [View, ScrollableMixin], {
 		// summary:

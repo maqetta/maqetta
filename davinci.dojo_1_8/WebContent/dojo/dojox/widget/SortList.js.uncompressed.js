@@ -9,7 +9,8 @@ dojo.require("dijit._Templated");
 dojo.declare("dojox.widget.SortList",
 	[dijit.layout._LayoutWidget, dijit._Templated],
 	{
-	// summary: A sortable unordered-list with a fixed header for use in dijit.demos.chat
+	// summary:
+	//		A sortable unordered-list with a fixed header for use in dijit.demos.chat
 	//		for demonstration purposes only for now. feel free to make API suggestions
 	//		or fixes.
 	//
@@ -147,7 +148,7 @@ dojo.declare("dojox.widget.SortList",
 	},
 
 	setTitle: function(/* String */ title){
-		// summary: 
+		// summary:
 		//		Sets the widget title to a String
 		this.focusNode.innerHTML = this.title = title;
 	},

@@ -46,6 +46,10 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		},
 
 		postscript: function(mixin){
+			// summary:
+			//		Internal method.
+			// tags:
+			//		private
 			this.inherited(arguments);
 			if(mixin && mixin.scaler){
 				this._watchScaler("scaler", null, mixin.scaler);
@@ -89,29 +93,29 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		positionForValue: function(value){
 			// summary:
 			//		See CircularScale and Rectangular for more informations.
-			//		value: Number
-			//			The value to convert.
-			//		returns: Number
-			//			The position corresponding to the value.
+			// value: Number
+			//		The value to convert.
+			// returns: Number
+			//		The position corresponding to the value.
 			return 0;
 		},
 		
 		valueForPosition: function(position){
 			// summary:
 			//		See CircularScale and Rectangular for more informations.
-			//		position: Number
-			//			The position to convert.
-			//		returns: Number
-			//			The value corresponding to the position.
+			// position: Number
+			//		The position to convert.
+			// returns: Number
+			//		The value corresponding to the position.
 		},
 		
 		tickLabelFunc: function(tickItem){
 			// summary:
 			//		Customize the text of ticks labels.
-			//		tickItem: Object
-			//			An object containing the tick informations.
-			//		returns: String
-			//			The text to be aligned with the tick. If null, the tick has no label.
+			// tickItem: Object
+			//		An object containing the tick informations.
+			// returns: String
+			//		The text to be aligned with the tick. If null, the tick has no label.
 			if(tickItem.isMinor){
 				return null;
 			}else{
@@ -122,12 +126,12 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 		tickShapeFunc: function(group, scale, tickItem){
 			// summary:
 			//		Customize the shape of ticks.
-			//		group: dojox/gfx/canvas/Group
-			//			The GFX group used for drawing the tick.
-			//		scale: ScaleBase
-			//			The scale being processed.
-			//		tickItem: Object
-			//			An object containing the tick informations.
+			// group: dojox/gfx/Group
+			//		The GFX group used for drawing the tick.
+			// scale: dojox/dgauges/ScaleBase
+			//		The scale being processed.
+			// tickItem: Object
+			//		An object containing the tick informations.
 			return group.createLine({
 				x1: 0,
 				y1: 0,
@@ -183,10 +187,12 @@ define("dojox/dgauges/ScaleBase", ["dojo/_base/lang", "dojo/_base/declare", "doj
 			//		Add an indicator to the scale. Before calling this function, ensure 
 			//		this scale has already been added to a gauge using the addElement method
 			//		of the gauge.
-			// behindScale: Boolean
-			//		If true, this indicator is drawn behind the scale. Default value is false.	
 			// name: String
 			//		The name of the indicator to be added.
+			// indicator: dojox/dgauges/IndicatorBase
+			//		The indicator to add to this scale.
+			// behindScale: Boolean
+			//		If true, this indicator is drawn behind the scale. Default value is false.	
 			if(this._indicatorsIndex[name] && this._indicatorsIndex[name] != indicator){
 				this.removeIndicator(name);
 			}

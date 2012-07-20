@@ -3,10 +3,6 @@ define("dijit/tree/_dndSelector",["dojo/_base/array","dojo/_base/connect","dojo/
 return _3("dijit.tree._dndSelector",_a,{constructor:function(){
 this.selection={};
 this.anchor=null;
-if(this.tree.showRoot){
-this.tree.domNode.setAttribute("aria-multiselectable",!this.singular);
-}else{
-}
 if(!this.cookieName&&this.tree.id){
 this.cookieName=this.tree.id+"SaveSelectedCookie";
 }

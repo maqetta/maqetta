@@ -19,8 +19,7 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes", _Plugin, {
 	//		exposed/extracted when the editor value is obtained, it is purely for help
 	//		while working on the page.
 
-	// useDefaultCommand: [protected] boolean
-	//		Over-ride indicating that the command processing is done all by this plugin.
+	// Over-ride indicating that the command processing is done all by this plugin.
 	useDefaultCommand: false,
 
 	// iconClassPrefix: [const] String
@@ -32,7 +31,7 @@ dojo.declare("dojox.editor.plugins.ShowBlockNodes", _Plugin, {
 	_styled: false,
 
 	_initButton: function(){
-		//	summary:
+		// summary:
 		//		Over-ride for creation of the preview button.
 		var strings = dojo.i18n.getLocalization("dojox.editor.plugins", "ShowBlockNodes");
 		this.button = new dijit.form.ToggleButton({

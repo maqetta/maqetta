@@ -1,7 +1,7 @@
 //>>built
 define("dojox/mobile/iconUtils",["dojo/_base/array","dojo/_base/config","dojo/_base/connect","dojo/_base/event","dojo/_base/lang","dojo/_base/window","dojo/dom-class","dojo/dom-construct","dojo/dom-style","./sniff"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
 var dm=_5.getObject("dojox.mobile",true);
-var _b=new function(){
+var _b=function(){
 this.setupSpriteIcon=function(_c,_d){
 if(_c&&_d){
 var _e=_1.map(_d.split(/[ ,]/),function(_f){
@@ -158,5 +158,5 @@ return null;
 }
 };
 };
-return _b;
+return new _b();
 });

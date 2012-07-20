@@ -3,19 +3,16 @@ define("dojox/charting/action2d/Highlight", ["dojo/_base/kernel", "dojo/_base/la
 	function(dojo, lang, declare, Color, hub, c, PlotAction, dfe, dgf){
 
 	/*=====
-	var __HighlightCtorArgs = function(duration, easing, highlight){
+	var __HighlightCtorArgs = {
 		// summary:
 		//		Additional arguments for highlighting actions.
 		// duration: Number?
 		//		The amount of time in milliseconds for an animation to last.  Default is 400.
-		this.duration = 400;
 		// easing: dojo/fx/easing/*?
 		//		An easing object (see dojo.fx.easing) for use in an animation.  The
 		//		default is dojo.fx.easing.backOut.
-		this.easing = null;
 		// highlight: String|dojo/_base/Color|Function?
 		//		Either a color or a function that creates a color when highlighting happens.
-		this.highlight = null;
 	};
 	=====*/
 	

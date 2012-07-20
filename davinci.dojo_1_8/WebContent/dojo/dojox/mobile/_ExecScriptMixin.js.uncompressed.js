@@ -6,8 +6,6 @@ define("dojox/mobile/_ExecScriptMixin", [
 ], function(kernel, declare, win, domConstruct){
 	// module:
 	//		dojox/mobile/_ExecScriptMixin
-	// summary:
-	//		Mixin for content handler to have a script execution capability.
 
 	return declare("dojox.mobile._ExecScriptMixin", null, {
 		// summary:
@@ -19,8 +17,10 @@ define("dojox/mobile/_ExecScriptMixin", [
 		execScript: function(/*String*/ html){
 			// summary:
 			//		Finds script tags and executes the script.
-			// returns:
-			//		The given HTML text from which `<script>` blocks are removed.
+			// html: String
+			//		The HTML input.
+			// returns: String
+			//		The given HTML text from which &lt;script&gt; blocks are removed.
 			var s = html.replace(/\f/g, " ").replace(/<\/script>/g, "\f");
 			s = s.replace(/<script [^>]*src=['"]([^'"]+)['"][^>]*>([^\f]*)\f/ig, function(ignore, path){
 				domConstruct.create("script", {

@@ -11,18 +11,14 @@ define("dojox/mobile/_ComboBoxMenu", [
 	function(dojo, declare, domClass, domConstruct, ComboBoxMenuMixin, WidgetBase, ListTouchMixin, Scrollable){
 	// module:
 	//		dojox/mobile/_ComboBoxMenu
-	// summary:
-	//		Focus-less menu for internal use in dojox/mobile/ComboBox.
-	//		Abstract methods that must be defined externally:
-	//		|onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
-	//		|onPage: next(1) or previous(-1) button pressed
 
 	return declare("dojox.mobile._ComboBoxMenu", [WidgetBase, ListTouchMixin, ComboBoxMenuMixin], {
 		// summary:
 		//		Focus-less menu for internal use in dojox/mobile/ComboBox.
 		//		Abstract methods that must be defined externally:
-		//			onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
-		//			onPage: next(1) or previous(-1) button pressed
+		//
+		//		- onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu);
+		//		- onPage: next(1) or previous(-1) button pressed.
 		// tags:
 		//		private
 
@@ -30,6 +26,8 @@ define("dojox/mobile/_ComboBoxMenu", [
 		//		The name of the CSS class of this widget.
 		baseClass: "mblComboBoxMenu",
 		
+		// bgIframe: [private] Boolean
+		//		Flag to prevent the creation of a background iframe, when appropriate. For internal usage. 
 		bgIframe: true, // so it's not created for IE and FF
 
 		buildRendering: function(){

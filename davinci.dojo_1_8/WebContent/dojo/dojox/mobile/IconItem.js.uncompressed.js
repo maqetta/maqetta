@@ -18,8 +18,6 @@ define("dojox/mobile/IconItem", [
 
 	// module:
 	//		dojox/mobile/IconItem
-	// summary:
-	//		An icon item widget.
 
 	return declare("dojox.mobile.IconItem", ItemBase, {
 		// summary:

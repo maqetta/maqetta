@@ -1,7 +1,12 @@
-define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
+define("dojox/highlight/_base", [
+	"dojo/_base/lang", 
+	"dojo/_base/array", 
+	"dojo/dom", 
+	"dojo/dom-class"
+], function(lang, array, dom, domClass){
 
 
-	var dh = dojo.getObject("dojox.highlight", true),
+	var dh = lang.getObject("dojox.highlight", true),
 		C_NUMBER_RE = '\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)'
 	;
 	/*=====
@@ -71,14 +76,14 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 	}
 	
 	function verifyText(block){
-		return dojo.every(block.childNodes, function(node){
+		return array.every(block.childNodes, function(node){
 			return node.nodeType == 3 || String(node.nodeName).toLowerCase() == 'br';
 		});
 	}
 
 	function blockText(block){
 		var result = [];
-		dojo.forEach(block.childNodes, function(node){
+		array.forEach(block.childNodes, function(node){
 			if(node.nodeType == 3){
 				result.push(node.nodeValue);
 			}else if(String(node.nodeName).toLowerCase() == 'br'){
@@ -104,10 +109,10 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 		}
 	}
 	
-	function buildKeywords(lang){
-		if(lang.defaultMode && lang.modes){
-			buildKeywordGroups(lang.defaultMode);
-			dojo.forEach(lang.modes, buildKeywordGroups);
+	function buildKeywords(language){
+		if(language.defaultMode && language.modes){
+			buildKeywordGroups(language.defaultMode);
+			array.forEach(language.modes, buildKeywordGroups);
 		}
 	}
 	
@@ -144,9 +149,9 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 		}
 	};
 
-	dojo.extend(Highlighter, {
+	lang.extend(Highlighter, {
 		buildRes: function(){
-			dojo.forEach(this.lang.modes, function(mode){
+			array.forEach(this.lang.modes, function(mode){
 				if(mode.begin){
 					mode.beginRe = this.langRe('^' + mode.begin);
 				}
@@ -199,8 +204,8 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 			var mode = this.modes[this.modes.length - 1],
 				terminators = {};
 			if(mode.contains){
-				dojo.forEach(this.lang.modes, function(lmode){
-					if(dojo.indexOf(mode.contains, lmode.className) >= 0){
+				array.forEach(this.lang.modes, function(lmode){
+					if(array.indexOf(mode.contains, lmode.className) >= 0){
 						terminators[lmode.begin] = 1;
 					}
 				});
@@ -251,7 +256,7 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 		
 		buildLexemes: function(mode){
 			var lexemes = {};
-			dojo.forEach(mode.lexems, function(lexeme){
+			array.forEach(mode.lexems, function(lexeme){
 				lexemes[lexeme] = 1;
 			});
 			var t = [];
@@ -358,13 +363,13 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 			node.innerHTML = text;
 		}
 	}
-	function highlightStringLanguage(lang, str){
-		var highlight = new Highlighter(lang, str);
-		return {result:highlight.result, langName:lang, partialResult:highlight.partialResult};
+	function highlightStringLanguage(language, str){
+		var highlight = new Highlighter(language, str);
+		return {result:highlight.result, langName:language, partialResult:highlight.partialResult};
 	}
 
-	function highlightLanguage(block, lang){
-		var result = highlightStringLanguage(lang, blockText(block));
+	function highlightLanguage(block, language){
+		var result = highlightStringLanguage(language, blockText(block));
 		replaceText(block, block.className, result.result);
 	}
 
@@ -398,10 +403,11 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 		//		highlight a string of text
 		// returns: Object
 		//		Object containing:
-		//         result - string of html with spans to apply formatting
-		//         partialResult - if the formating failed: string of html
-		//                 up to the point of the failure, otherwise: undefined
-		//         langName - the language used to do the formatting
+		//
+		//		- result - string of html with spans to apply formatting
+		//		- partialResult - if the formatting failed: string of html
+		//		  up to the point of the failure, otherwise: undefined
+		//		- langName - the language used to do the formatting
 		return lang ? highlightStringLanguage(lang, str) : highlightStringAuto(str);
 	};
 
@@ -413,12 +419,12 @@ define("dojox/highlight/_base", ["dojo", "dojox/main"], function(dojo, dojox){
 		// example:
 		//	|	dojox.highlight.init("someId");
 		//
-		node = dojo.byId(node);
-		if(dojo.hasClass(node, "no-highlight")){ return; }
+		node = dom.byId(node);
+		if(domClass.contains(node, "no-highlight")){ return; }
 		if(!verifyText(node)){ return; }
 	
 		var classes = node.className.split(/\s+/),
-			flag = dojo.some(classes, function(className){
+			flag = array.some(classes, function(className){
 				if(className.charAt(0) != "_" && dh.languages[className]){
 					highlightLanguage(node, className);
 					return true;	// stop iterations

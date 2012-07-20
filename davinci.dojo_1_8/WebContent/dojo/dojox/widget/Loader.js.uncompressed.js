@@ -7,33 +7,34 @@ dojo.require("dijit._Widget");
 dojo.require("dijit._Templated");
 
 dojo.declare("dojox.widget.Loader", [dijit._Widget,dijit._Templated], {
-	// summary: a configurable global xhr-listener to display
-	//	a loading message during running xhr's or to simply provide
-	//	base-level topic to subscribe to for custom loading messages
-	//
+	// summary:
+	//		a configurable global xhr-listener to display
+	//		a loading message during running xhr's or to simply provide
+	//		base-level topic to subscribe to for custom loading messages
+
 	// loadIcon: String
-	// 	location to the icon used.
+	// 		location to the icon used.
 	loadIcon: dojo.moduleUrl("dojox.widget.Loader","icons/loading.gif"),
 
 	// loadMessage: String
-	//	string to use for progress loading
+	//		string to use for progress loading
 	loadMessage: 'Loading ...',
 
 	// hasVisuals: Boolean
-	// 	true to display a fixed loading message in TR cornder, false to unly provide
-	//	"Loader" topic to subscribe to for your own custom loading message.
+	//		true to display a fixed loading message in TR cornder, false to unly provide
+	//		"Loader" topic to subscribe to for your own custom loading message.
 	hasVisuals: true,
 
 	// attachToPointer
-	// 	true to use visual indicator where cursor is
+	//		true to use visual indicator where cursor is
 	attachToPointer: true,
 
 	// duration: Integer
-	//	time in ms to toggle in/out the visual load indicator
+	//		time in ms to toggle in/out the visual load indicator
 	duration: 125,
 
 	// _offset: Integer
-	//	distance in px from the mouse pointer to show attachToPointer avatar
+	//		distance in px from the mouse pointer to show attachToPointer avatar
 	_offset: 16,
 
 	// holder for mousemove connection

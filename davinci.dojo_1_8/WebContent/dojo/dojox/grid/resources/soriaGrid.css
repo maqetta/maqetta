@@ -168,7 +168,7 @@
 	height: 0;
 	overflow: hidden;
 }
-.dojoxGridCell {
+.dojoxGrid .dojoxGridCell {
 	border: 1px solid;
 	border-color: #EBEADB;
 	border-right-color: #D5CDB5;

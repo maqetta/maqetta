@@ -6,8 +6,6 @@ define("dojox/mobile/RoundRectDataList", [
 
 	// module:
 	//		dojox/mobile/RoundRectDataList
-	// summary:
-	//		A dojo/data-enabled version of RoundRectList.
 
 	return declare("dojox.mobile.RoundRectDataList", [RoundRectList, DataListMixin], {
 		// summary:

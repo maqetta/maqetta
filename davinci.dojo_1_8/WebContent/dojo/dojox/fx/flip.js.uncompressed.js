@@ -32,32 +32,37 @@ define("dojox/fx/flip", [
 		// description:
 		//		Returns an animation that will flip the
 		//		node around a central axis:
+		//
 		//		if args.dir is "left" or "right" --> y axis
+		//
 		//		if args.dir is "top" or "bottom" --> x axis
 		//
-		//		This effect is obtained using a border distorsion applied to a helper node.
+		//		This effect is obtained using a border distortion applied to a helper node.
 		//
 		//		The user can specify three background colors for the helper node:
-		//		darkColor: the darkest color reached during the animation
-		//		lightColor: the brightest color
-		//		endColor: the final backgroundColor for the node
 		//
-		//		depth: Float
-		//			 0 <= depth <= 1 overrides the computed "depth"
-		//			(0: min distortion, 1: max distortion)
+		//		- darkColor: the darkest color reached during the animation
+		//		- lightColor: the brightest color
+		//		- endColor: the final backgroundColor for the node
 		//
-		//		whichAnim: String
-		//			"first"			 : the first half animation
-		//			"last"			 : the second one
-		//			"both" (default) : both
+		//		Other arguments:
 		//
-		//		axis: String
-		//			"center" (default)	  : the node is flipped around his center
-		//			"shortside"			  : the node is flipped around his "short" (in perspective) side
-		//			"longside"			  : the node is flipped around his "long" (in perspective) side
-		//			"cube"				  : the node flips around the central axis of the cube
+		//		- depth: Float
+		//			 - 0 <= depth <= 1 overrides the computed "depth"
+		//			- (0: min distortion, 1: max distortion)
 		//
-		//		shift: Integer
+		//		- whichAnim: String
+		//			- "first"			 : the first half animation
+		//			- "last"			 : the second one
+		//			- "both" (default) : both
+		//
+		//		- axis: String
+		//			- "center" (default)	  : the node is flipped around his center
+		//			- "shortside"			  : the node is flipped around his "short" (in perspective) side
+		//			- "longside"			  : the node is flipped around his "long" (in perspective) side
+		//			- "cube"				  : the node flips around the central axis of the cube
+		//
+		//		- shift: Integer:
 		//			node translation, perpendicular to the rotation axis
 		//
 		// example:
@@ -415,6 +420,7 @@ define("dojox/fx/flip", [
 		//		An extension to `dojox.fx.flip` providing a page flip effect.
 		//		Behaves the same as `dojox.fx.flip`, using the same attributes and
 		//		other standard `dojo.Animation` properties and
+		//
 		//		- cols: Integer columns
 		//		- rows: Integer rows
 		//		- duration: the single flip duration

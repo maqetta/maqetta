@@ -137,10 +137,9 @@ dojo.provide("dojox.lang.docs");
 	dojox.lang.docs.init = function(/*Boolean*/async){
 		// summary:
 		//		Loads the documentation and applies it to the previously defined classes
-		// 		and any future defined classes
-		//
+		//		and any future defined classes
 		// async:
-		// 		 If true, the documentation will be loaded asynchronously
+		//		 If true, the documentation will be loaded asynchronously
 		function loadFullDocs(){
 			dojo.require = defaultRequire;
 			requiredModules = null;

@@ -23,7 +23,7 @@ return this._get(_a,this._getAttrNames(_a));
 },set:function(_b,_c){
 if(typeof _b==="object"){
 for(var x in _b){
-if(_b.hasOwnProperty(x)){
+if(_b.hasOwnProperty(x)&&x!="_watchCallbacks"){
 this.set(x,_b[x]);
 }
 }

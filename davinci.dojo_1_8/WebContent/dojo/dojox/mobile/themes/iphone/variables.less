@@ -5,8 +5,8 @@
 
 @default-button-color: white;
 @default-button-background-color: #5877a2;
-@default-button-background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
-@default-button-background-image-gecko: -moz-linear-gradient(top, #8ea4c1 0%, #5877a2 50%, #476999 50%, #4a6c9b 100%);
+@default-button-background-image: -webkit-gradient(linear, left top, left bottom, from(#222), color-stop(.02, #8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+@default-button-background-image-gecko: -moz-linear-gradient(top, #222 0%, #8ea4c1 2%, #5877a2 50%, #476999 50%, #4a6c9b 100%);
 @default-button-border-radius: 5px;
 
 @default-button-selected-color: white;
@@ -28,6 +28,14 @@
 .default-button-border-styles () {
 	border-color: #9cacc0;
 	border-radius: @default-button-border-radius;
+}
+
+.mblToolBarButtonBodyInLeftArrow-styles () {
+  border-left-width: 0;
+}
+
+.mblToolBarButtonBodyInRightArrow-styles () {
+  border-right-width: 0;
 }
 
 // background styles of form controls
@@ -89,6 +97,7 @@
 .mblToolBarButton-styles () {
 }
 .mblToolBarButtonArrow-styles () {
+  -webkit-transform: scale(0.7, 1.0) rotate(45deg);
 	border: 1px solid #9cacc0;
 }
 .mblToolBarButtonArrowInHeading-styles () {
@@ -107,6 +116,12 @@
 }
 .mblToolBarButtonHasRightArrowInHeading-compat-gecko () {
 	-moz-box-shadow: 1px 0 0 rgba(255,255,255,0.305);
+}
+.mblToolBarButtonArrowInLeftArrow-styles () {
+  left: 1px;
+}
+.mblToolBarButtonArrowInRightArrow-styles () {
+  right: 0px;
 }
 .mblToolBarButtonBody-styles () {
 	border: 1px outset #9cacc0;

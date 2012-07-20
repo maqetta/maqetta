@@ -30,7 +30,7 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	resizeAxis: "xy",
 	
 	// activeResize: Boolean
-	// 		if true, node will size realtime with mouse movement,
+	//		if true, node will size realtime with mouse movement,
 	//		if false, node will create virtual node, and only resize target on mouseUp
 	activeResize: false,
 	
@@ -44,8 +44,8 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	animateSizing: true,
 	
 	// animateMethod: String
-	// 		one of "chain" or "combine" ... visual effect only. combine will "scale"
-	// 		node to size, "chain" will alter width, then height
+	//		one of "chain" or "combine" ... visual effect only. combine will "scale"
+	//		node to size, "chain" will alter width, then height
 	animateMethod: "chain",
 
 	// animateDuration: Integer
@@ -144,7 +144,7 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 
 	_beginSizing: function(/*Event*/ e){
-		// summary: 
+		// summary:
 		//		setup movement listeners and calculate initial size
 		
 		if(this._isSizing){ return; }
@@ -197,7 +197,7 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 
 	_updateSizing: function(/*Event*/ e){
-		// summary: 
+		// summary:
 		//		called when moving the ResizeHandle ... determines
 		//		new size based on settings/position and sets styles.
 
@@ -256,7 +256,7 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 	
 	_checkConstraints: function(newW, newH){
-		// summary: 
+		// summary:
 		//		filter through the various possible constaint possibilities.
 				
 		// minimum size check
@@ -352,7 +352,7 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 	},
 	
 	onResize: function(e){
-		// summary: 
+		// summary:
 		//		Stub fired when sizing is done. Fired once
 		//		after resize, or often when `intermediateChanges` is
 		//		set to true.
@@ -361,12 +361,12 @@ var ResizeHandle = declare("dojox.layout.ResizeHandle",[Widget, TemplatedMixin],
 });
 
 var _ResizeHelper = dojo.declare("dojox.layout._ResizeHelper", Widget, {
-	// summary: 
+	// summary:
 	//		A global private resize helper shared between any
 	//		`dojox.layout.ResizeHandle` with activeSizing off.
 	
 	show: function(){
-		// summary: 
+		// summary:
 		//		show helper to start resizing
 		domStyle.set(this.domNode, "display", "");
 	},

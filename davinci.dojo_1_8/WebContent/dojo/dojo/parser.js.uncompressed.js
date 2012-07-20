@@ -163,6 +163,10 @@ define(
 			// Call widget constructors
 			var thelist = darray.map(nodes, function(obj){
 				var ctor = obj.ctor || getCtor(obj.types);
+				// If we still haven't resolved a ctor, it is fatal now
+				if(!ctor){
+					throw new Error("Unable to resolve constructor for: '" + obj.types.join() + "'");
+				}
 				return this.construct(ctor, obj.node, mixin, options, obj.scripts, obj.inherited);
 			}, this);
 
@@ -640,6 +644,10 @@ define(
 
 			// If there are modules to load then require them in
 			if(mids.length){
+				// Warn that there are modules being auto-required
+				if(has("dojo-debug-messages")){
+					console.warn("WARNING: Modules being Auto-Required: " + mids.join(", "));
+				}
 				require(mids, function(){
 					// Go through list of widget nodes, filling in missing constructors, and filtering out nodes that shouldn't
 					// be instantiated due to a stopParser flag on an ancestor that we belatedly learned about due to
@@ -761,27 +769,27 @@ define(
 			// options: Object?
 			//		A hash of options.
 			//
-			//			* noStart: Boolean?
-			//				when set will prevent the parser from calling .startup()
-			//				when locating the nodes.
-			//			* rootNode: DomNode?
-			//				identical to the function's `rootNode` argument, though
-			//				allowed to be passed in via this `options object.
-			//			* template: Boolean
-			//				If true, ignores ContentPane's stopParser flag and parses contents inside of
-			//				a ContentPane inside of a template.   This allows dojoAttachPoint on widgets/nodes
-			//				nested inside the ContentPane to work.
-			//			* inherited: Object
-			//				Hash possibly containing dir and lang settings to be applied to
-			//				parsed widgets, unless there's another setting on a sub-node that overrides
-			//			* scope: String
-			//				Root for attribute names to search for.   If scopeName is dojo,
-			//				will search for data-dojo-type (or dojoType).   For backwards compatibility
-			//				reasons defaults to dojo._scopeName (which is "dojo" except when
-			//				multi-version support is used, when it will be something like dojo16, dojo20, etc.)
-			//			* propsThis: Object
-			//				If specified, "this" referenced from data-dojo-props will refer to propsThis.
-			//				Intended for use from the widgets-in-template feature of `dijit._WidgetsInTemplateMixin`
+			//		- noStart: Boolean?:
+			//			when set will prevent the parser from calling .startup()
+			//			when locating the nodes.
+			//		- rootNode: DomNode?:
+			//			identical to the function's `rootNode` argument, though
+			//			allowed to be passed in via this `options object.
+			//		- template: Boolean:
+			//			If true, ignores ContentPane's stopParser flag and parses contents inside of
+			//			a ContentPane inside of a template.   This allows dojoAttachPoint on widgets/nodes
+			//			nested inside the ContentPane to work.
+			//		- inherited: Object:
+			//			Hash possibly containing dir and lang settings to be applied to
+			//			parsed widgets, unless there's another setting on a sub-node that overrides
+			//		- scope: String:
+			//			Root for attribute names to search for.   If scopeName is dojo,
+			//			will search for data-dojo-type (or dojoType).   For backwards compatibility
+			//			reasons defaults to dojo._scopeName (which is "dojo" except when
+			//			multi-version support is used, when it will be something like dojo16, dojo20, etc.)
+			//		- propsThis: Object:
+			//			If specified, "this" referenced from data-dojo-props will refer to propsThis.
+			//			Intended for use from the widgets-in-template feature of `dijit._WidgetsInTemplateMixin`
 			// returns: Mixed
 			//		Returns a blended object that is an array of the instantiated objects, but also can include
 			//		a promise that is resolved with the instantiated objects.  This is done for backwards
@@ -844,7 +852,7 @@ define(
 	};
 
 	if( 1 ){
-		dojo.parser  = parser
+		dojo.parser  = parser;
 	}
 
 	// Register the parser callback. It should be the first callback

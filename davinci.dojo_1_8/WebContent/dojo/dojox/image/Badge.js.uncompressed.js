@@ -13,7 +13,7 @@ function(dojo, dijit, dojox, _Widget, _TemplatedMixin){
 		templateString:'<div class="dojoxBadge" dojoAttachPoint="containerNode"></div>',
 
 		// children: String
-		// 		A CSS3 Selector that determines the node to become a child
+		//		A CSS3 Selector that determines the node to become a child
 		children: "div.dojoxBadgeImage",
 
 		// rows: Integer
@@ -232,5 +232,5 @@ function(dojo, dijit, dojox, _Widget, _TemplatedMixin){
 	});
 
 	return dojox.image.Badge;
-})
+});
 

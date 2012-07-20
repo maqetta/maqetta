@@ -1,8 +1,14 @@
 define("dojox/mvc", ["./mvc/_base"], function(dxmvc){
 	// module:
 	//		dojox/mvc
-	// summary:
-	//		Adds elements of MVC support to Dojo.
+
+	/*=====
+	 return {
+	 // summary:
+	 //		Deprecated.  Should require dojox/mvc modules directly rather than trying to access them through
+	 //		this module.
+	 };
+	 =====*/
 
 	return dxmvc;
 });

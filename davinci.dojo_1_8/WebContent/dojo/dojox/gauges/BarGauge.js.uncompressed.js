@@ -24,23 +24,23 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 	// |	</div>
 
 	// dataX: Number
-	// 		x position of data area (default 5)
+	//		x position of data area (default 5)
 	dataX: 5,
 
 	// dataY: Number
-	// 		y position of data area (default 5)
+	//		y position of data area (default 5)
 	dataY: 5,
 
 	// dataWidth: Number
-	// 		width of data area (default is bar graph width - 10)
+	//		width of data area (default is bar graph width - 10)
 	dataWidth: 0,
 
 	// dataHeight: Number
-	// 		height of data area (default is bar graph width - 10)
+	//		height of data area (default is bar graph width - 10)
 	dataHeight: 0,
 
 	// _defaultIndicator: Object
-	// 		override of dojox.gauges._Gauge._defaultIndicator
+	//		override of dojox.gauges._Gauge._defaultIndicator
 	_defaultIndicator: BarLineIndicator,
 
 	startup: function(){
@@ -63,8 +63,8 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 		// summary:
 		//		This is a helper function used to determine the position that represents
 		//		a given value on the bar graph
-		// value:	Number
-		//			A value to be converted to a position for this bar graph.
+		// value: Number
+		//		A value to be converted to a position for this bar graph.
 
 		return this.dataX + Math.floor((value - this.min)/(this.max - this.min)*this.dataWidth);
 	},
@@ -73,8 +73,8 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 		// summary:
 		//		This is a helper function used to determine the value represented by
 		//		a position on the bar graph
-		// pos:		Number
-		//			A position to be converted to a value.
+		// pos:	Number
+		//		A position to be converted to a value.
 		return (pos - this.dataX)*(this.max - this.min)/this.dataWidth + this.min;
 	},
 
@@ -85,7 +85,7 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 		//		Draws a range (colored area on the background of the gauge) 
 		//		based on the given arguments.
 		// group:
-		//      The GFX group where the range must be drawn.
+		//		The GFX group where the range must be drawn.
 		// range:
 		//		A range is either a dojox.gauges.Range or an object
 		//		with similar parameters (low, high, hover, etc.).
@@ -130,8 +130,8 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 	getRangeUnderMouse: function(/*Object*/e){
 		// summary:
 		//		Determines which range the mouse is currently over
-		// e:	Object
-		//			The event object as received by the mouse handling functions below.
+		// e: Object
+		//		The event object as received by the mouse handling functions below.
 		var range = null;
 		var pos = domGeometry.getContentBox(this.gaugeContent);
 		var x = e.clientX - pos.x;
@@ -148,8 +148,8 @@ return declare("dojox.gauges.BarGauge", Gauge, {
 
 	_dragIndicator: function(/*Object*/widget, /*Object*/ e){
 		// summary:
-		// 		Handles the dragging of an indicator to the event position, including moving/re-drawing
-		// 		get angle for mouse position
+		//		Handles the dragging of an indicator to the event position, including moving/re-drawing
+		//		get angle for mouse position
 		this._dragIndicatorAt(widget, e.pageX, e.pageY);
 		event.stop(e);
 	},

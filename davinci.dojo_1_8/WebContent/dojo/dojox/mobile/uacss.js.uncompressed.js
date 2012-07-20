@@ -12,5 +12,18 @@ define("dojox/mobile/uacss", [
 		has('ipod') ? "dj_ipod" : "",
 		has('ipad') ? "dj_ipad" : ""
 	].join(" ").replace(/ +/g," "));
+	
+	/*=====
+	return {
+		// summary:
+		//		Requiring this module adds CSS classes to your document's `<html`> tag:
+		//
+		//		- "dj_android" when running on Android;
+		//		- "dj_bb" when running on BlackBerry;
+		//		- "dj_iphone" when running on iPhone;
+		//		- "dj_ipod" when running on iPod;
+		//		- "dj_ipad" when running on iPad.
+	};
+	=====*/
 	return dojo;
 });

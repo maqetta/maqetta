@@ -7,7 +7,7 @@
 //>>built
 define("dojo/_base/kernel",["../has","./config","require","module"],function(_1,_2,_3,_4){
 var i,p,_5={},_6={},_7={config:_2,global:this,dijit:_5,dojox:_6};
-var _8={dojo:["dojo",_7],dijit:["dijit",_5],dojox:["dojox",_6]},_9=(_3.packs&&_3.packs[_4.id.match(/[^\/]+/)[0]].packageMap)||{},_a;
+var _8={dojo:["dojo",_7],dijit:["dijit",_5],dojox:["dojox",_6]},_9=(_3.map&&_3.map[_4.id.match(/[^\/]+/)[0]]),_a;
 for(p in _9){
 if(_8[p]){
 _8[p][0]=_9[p];
@@ -26,8 +26,8 @@ _7.scopeMap=_8;
 _7.baseUrl=_7.config.baseUrl=_3.baseUrl;
 _7.isAsync=!1||_3.async;
 _7.locale=_2.locale;
-var _b="$Rev: 28997 $".match(/\d+/);
-_7.version={major:1,minor:8,patch:0,flag:"b1",revision:_b?+_b[0]:NaN,toString:function(){
+var _b="$Rev: 29347 $".match(/\d+/);
+_7.version={major:1,minor:8,patch:0,flag:"rc1",revision:_b?+_b[0]:NaN,toString:function(){
 var v=_7.version;
 return v.major+"."+v.minor+"."+v.patch+v.flag+" ("+v.revision+")";
 }};

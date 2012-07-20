@@ -254,14 +254,12 @@ _5f=_60;
 var _61={type:"rect"};
 _61.x=o.cx;
 _61.y=o.cy;
-_61.width=_61.height=1;
+_61.w=_61.h=1;
 var lt=this.chart.getCoords();
 _61.x+=lt.x;
 _61.y+=lt.y;
 _61.x=Math.round(_61.x);
 _61.y=Math.round(_61.y);
-_61.w=Math.ceil(_61.width);
-_61.h=Math.ceil(_61.height);
 this.aroundRect=_61;
 var _62=["after-centered","before-centered"];
 dc.doIfLoaded("dijit/Tooltip",_1.hitch(this,function(_63){

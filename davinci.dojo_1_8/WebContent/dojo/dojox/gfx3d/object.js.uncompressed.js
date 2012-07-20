@@ -69,12 +69,13 @@ declare("dojox.gfx3d.Object", null, {
 		this.fillStyle = null;
 
 		// shape: dojox.gfx.Shape
-		//			an underlying 2D shape
+		//		an underlying 2D shape
 		this.shape = null;
 	},
 
 	setObject: function(newObject){
-		// summary: sets a Object object
+		// summary:
+		//		sets a Object object
 		// object: Object
 		//		an abstract Object object
 		//		(see dojox.gfx3d.defaultEdges,
@@ -353,8 +354,8 @@ declare("dojox.gfx3d.Orbit", gfx3d.Object, {
 		// http://www.3dsoftware.com/Math/PlaneCurves/EllipseAlgebra/
 		// After we normalize the marks, the equation is:
 		// a x^2 + 2b xy + cy^2 + f = 0: let a = 1
-		//  so the final equation is:
-		//  [ xy, y^2, 1] * [2b, c, f]' = [ -x^2 ]'
+		// so the final equation is:
+		//		[ xy, y^2, 1] * [2b, c, f]' = [ -x^2 ]'
 
 		var A = {
 			xx: marks[0].x * marks[0].y, xy: marks[0].y * marks[0].y, xz: 1,
@@ -802,8 +803,8 @@ declare("dojox.gfx3d.Cylinder", gfx3d.Object, {
 		// http://www.3dsoftware.com/Math/PlaneCurves/EllipseAlgebra/
 		// After we normalize the marks, the equation is:
 		// a x^2 + 2b xy + cy^2 + f = 0: let a = 1
-		//  so the final equation is:
-		//  [ xy, y^2, 1] * [2b, c, f]' = [ -x^2 ]'
+		// so the final equation is:
+		//		[ xy, y^2, 1] * [2b, c, f]' = [ -x^2 ]'
 
 		var A = {
 			xx: marks[0].x * marks[0].y, xy: marks[0].y * marks[0].y, xz: 1,

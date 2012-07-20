@@ -538,7 +538,6 @@ var TreeGrid = declare("dojox.grid.TreeGrid", DataGrid, {
 	//		A grid that supports nesting rows - it provides an expando function
 	//		similar to dijit.Tree.  It also provides mechanisms for aggregating
 	//		the values of subrows
-	//
 	// description:
 	//		TreeGrid currently only works on "simple" structures.  That is,
 	//		single-view structures with a single row in them.
@@ -552,8 +551,8 @@ var TreeGrid = declare("dojox.grid.TreeGrid", DataGrid, {
 	defaultOpen: true,
 
 	// sortChildItems: Boolean
-	// 		If true, child items will be returned sorted according to the sorting
-	// 		properties of the grid.
+	//		If true, child items will be returned sorted according to the sorting
+	//		properties of the grid.
 	sortChildItems: false,
 
 	// openAtLevels: Array
@@ -575,10 +574,9 @@ var TreeGrid = declare("dojox.grid.TreeGrid", DataGrid, {
 	//		index of the cell in which to place the actual expando
 	expandoCell: 0,
 
-	// private values
 	// aggregator: Object
 	//		The aggregator class - it will be populated automatically if we
-	//		are a collapsable grid
+	//		are a collapsible grid
 	aggregator: null,
 
 

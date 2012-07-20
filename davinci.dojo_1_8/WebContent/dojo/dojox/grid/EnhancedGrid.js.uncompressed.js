@@ -38,7 +38,9 @@ var EnhancedGrid = declare("dojox.grid.EnhancedGrid", DataGrid, {
 	// |	</script>
 	//
 	//		Step 2. Use EnhancedGrid
+	//
 	//		- Via HTML markup
+	//
 	// |	<div dojoType="dojox.grid.EnhancedGrid" ...
 	// |		plugins="{nestedSorting: true, dnd: true, indirectSelection: true,
 	// |		menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",
@@ -47,6 +49,7 @@ var EnhancedGrid = declare("dojox.grid.EnhancedGrid", DataGrid, {
 	// |	</div>
 	//
 	//		- Or via JavaScript
+	//
 	// |	<script type="text/javascript">
 	// |		var grid = new dojox.grid.EnhancedGrid({plugins : {nestedSorting: true, dnd: true, indirectSelection: true,
 	// |	               menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",selectedRegionMenu:"selectedRegionMenuId"}},
@@ -59,6 +62,7 @@ var EnhancedGrid = declare("dojox.grid.EnhancedGrid", DataGrid, {
 	//		[Note: Plugin support is still experimental]
 	//
 	//		You can either customize the default plugins or add new ones, more details please see
+	//
 	//		- dojox.grid.enhanced._PluginManager
 	//		- dojox.grid.enhanced._Plugin
 	//		- dojox.grid.enhanced.plugins.*

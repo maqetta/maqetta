@@ -11,6 +11,9 @@ return _9=="*"?".*":_9=="?"?".":_9;
 };
 return _3("dojo.data.ObjectStore",[_2],{objectStore:null,constructor:function(_a){
 this._dirtyObjects=[];
+if(_a.labelAttribute){
+_a.labelProperty=_a.labelAttribute;
+}
 _1.mixin(this,_a);
 },labelProperty:"label",getValue:function(_b,_c,_d){
 return typeof _b.get==="function"?_b.get(_c):_c in _b?_b[_c]:_d;
@@ -246,44 +249,44 @@ _4a.commit();
 catch(e){
 _42.onError.call(_42.scope,value);
 }
-},revert:function(_4f){
-var _50=this._dirtyObjects;
-for(var i=_50.length;i>0;){
+},revert:function(){
+var _4f=this._dirtyObjects;
+for(var i=_4f.length;i>0;){
 i--;
-var _51=_50[i];
-var _52=_51.object;
-var old=_51.old;
-if(_52&&old){
+var _50=_4f[i];
+var _51=_50.object;
+var old=_50.old;
+if(_51&&old){
 for(var j in old){
-if(old.hasOwnProperty(j)&&_52[j]!==old[j]){
-this.onSet(_52,j,_52[j],old[j]);
-_52[j]=old[j];
+if(old.hasOwnProperty(j)&&_51[j]!==old[j]){
+this.onSet(_51,j,_51[j],old[j]);
+_51[j]=old[j];
 }
 }
-for(j in _52){
+for(j in _51){
 if(!old.hasOwnProperty(j)){
-this.onSet(_52,j,_52[j]);
-delete _52[j];
+this.onSet(_51,j,_51[j]);
+delete _51[j];
 }
 }
 }else{
 if(!old){
-this.onDelete(_52);
+this.onDelete(_51);
 }else{
 this.onNew(old);
 }
 }
-delete (_52||old).__isDirty;
-_50.splice(i,1);
+delete (_51||old).__isDirty;
+_4f.splice(i,1);
 }
-},isDirty:function(_53){
-if(!_53){
+},isDirty:function(_52){
+if(!_52){
 return !!this._dirtyObjects.length;
 }
-return _53.__isDirty;
+return _52.__isDirty;
 },onSet:function(){
 },onNew:function(){
 },onDelete:function(){
-},onFetch:function(_54){
+},onFetch:function(_53){
 }});
 });

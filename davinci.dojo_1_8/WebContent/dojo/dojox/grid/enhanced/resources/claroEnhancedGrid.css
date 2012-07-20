@@ -169,7 +169,7 @@
 	height: 0;
 	overflow: hidden;
 }
-.dojoxGridCell {
+.dojoxGrid .dojoxGridCell {
 	border: 1px solid;
 	border-color: #EBEADB;
 	border-right-color: #D5CDB5;
@@ -435,6 +435,11 @@
 .dj_ie .claro .dojoxGridHeader .dojoxGridRowTable {
 	border-collapse:separate;
 }
+.dj_ie6 .claro .dojoxGridHeader .dojoxGridRowTable,
+.dj_ie7 .claro .dojoxGridHeader .dojoxGridRowTable {
+	border-collapse:collapse;
+	border-right: 0px;	
+}
 .claro .dojoxGridHeader .dojoxGridRowTable tr {
 	background: none;
 }
@@ -480,6 +485,10 @@
 .dj_ie .claro .dojoxGridMasterView .dojoxGridRowTable {
 	border-collapse:separate;
 }
+.dj_ie6 .claro .dojoxGridMasterView .dojoxGridRowTable,
+.dj_ie7 .claro .dojoxGridMasterView .dojoxGridRowTable {
+	border-collapse: collapse;
+}
 .claro .dojoxGridRowTable tr {
 	background:url(../../resources/images/row_back.png) #fff repeat-x;
 }
@@ -489,12 +498,16 @@
 .claro .dojoxGridRowSelected .dojoxGridRowTable tr {
 	background-color:#cee6fa;
 }
-.claro .dojoxGridCell {
+.claro .dojoxGrid .dojoxGridCell {
 	outline: none;
 	padding: 3px 5px;
 	word-wrap: break-word;
 	border:1px solid transparent;
 	border-color: transparent #E5DAC8 #E5DAC8 transparent;
+}
+.dj_ie7 .claro .dojoxGridCell,
+.dj_ie7 .claro .dojoxGridHeader .dojoxGridCell {
+	border-left: 0px;
 }
 .dj_ie6 .claro .dojoxGridCell {
 	border-color: #F5F5F5;
@@ -522,7 +535,6 @@
 }
 .dj_ie6 .claro .dojoxGridRowOver .dojoxGridCell,
 .dj_ie7 .claro .dojoxGridRowOver .dojoxGridCell {
-	border-left:1px solid #ABD6FF;
 	border-right:1px solid #ABD6FF;
 }
 .claro .dojoxGridRowActive .dojoxGridCell {
@@ -1312,39 +1324,6 @@ html > body .dojoxGridSorted .dojoxGridCellSortFocus .dojoxGridSortBtnNested {
 .dojoxGridCellSortFocus .dojoxGridRowSelector,
 .dojoxGridCellSortFocus .dojoxGridSortBtnFocus {
 	border: 1px dashed #666;
-}
-.dijitToasterContent {
-	padding:1em;
-	padding-top:0.25em;
-	background:#73c74a;
-}
-.dijitToasterMessage{ 
-	color:#fff;
-}
-.dijitToasterWarning{ }
-.dijitToasterError,
-.dijitToasterFatal{
-	font-weight:bold;
-	color:#fff;
-}
-.dijitToasterWarning .dijitToasterContent{
-	background:#d4d943;
-} 
-.dijitToasterError .dijitToasterContent{
-	background:#c46600;
-}
- 
-.dijitToasterClip {
-	position: absolute;
-	z-index: 5000;
-	overflow: hidden;
-}
-.dijitToasterContainer {
-	display: block;
-	position: absolute;
-	width: 17.5em;
-	margin: 0px;
-	font:0.75em;
 }
 .dojoxEllipsis,
 .dojoxEllipsisShown {

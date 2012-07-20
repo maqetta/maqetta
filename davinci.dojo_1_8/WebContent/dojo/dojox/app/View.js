@@ -151,7 +151,7 @@ this.domNode=this._widget.domNode;
 this.parent.domNode.appendChild(this.domNode);
 this._widget.startup();
 _6.set(this.domNode,"id",this.id);
-_6.set(this.domNode,"region","center");
+_6.set(this.domNode,"data-app-region","center");
 _6.set(this.domNode,"style","width:100%; height:100%");
 this._widget.region="center";
 if(this._definition){

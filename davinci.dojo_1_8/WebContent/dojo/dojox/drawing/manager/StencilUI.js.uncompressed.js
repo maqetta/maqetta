@@ -3,13 +3,6 @@ function(dojo, oo){
 	var surface, surfaceNode;
 	//dojox.drawing.manager.StencilUI = 
 	return oo.declare(
-		// summary:
-		//		Used for handling Stencils as UI components.
-		// description:
-		//		Replaces manager.Stencil. Handles basic UI mouse
-		//		events like onmouseover. Does not handle selections
-		//		or support delete, etc.
-
 		function(options){
 
 			// TODO: mixin props
@@ -24,6 +17,13 @@ function(dojo, oo){
 			this.stencils = {};
 		},
 		{
+			// summary:
+			//		Used for handling Stencils as UI components.
+			// description:
+			//		Replaces manager.Stencil. Handles basic UI mouse
+			//		events like onmouseover. Does not handle selections
+			//		or support delete, etc.
+
 			register: function(/*Object*/stencil){
 				this.stencils[stencil.id] = stencil;
 				return stencil;

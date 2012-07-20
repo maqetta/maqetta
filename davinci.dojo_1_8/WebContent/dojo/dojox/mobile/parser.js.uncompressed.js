@@ -9,12 +9,10 @@ define("dojox/mobile/parser", [
 
 	// module:
 	//		dojox/mobile/parser
-	// summary:
-	//		A lightweight parser.
 
 	var dm = lang.getObject("dojox.mobile", true);
 
-	var parser = new function(){
+	var Parser = function(){
 		// summary:
 		//		A lightweight parser.
 		// description:
@@ -131,7 +129,11 @@ define("dojox/mobile/parser", [
 			var mixin = options && options.template ? {template: true} : null;
 			return this.instantiate(list, mixin, options);
 		};
-	}();
+	};
+
+	// Singleton.   (TODO: replace parser class and singleton w/a simple hash of functions)
+	var parser = new Parser();
+
 	if(config.parseOnLoad){
 		ready(100, function(){
 			// Now that all the modules are loaded, check if the app loaded dojo/parser too.
@@ -150,18 +152,6 @@ define("dojox/mobile/parser", [
 	}
 	dm.parser = parser; // for backward compatibility
 	dojo.parser = dojo.parser || parser; // in case user application calls dojo.parser
-	
-	/*=====
-    return {
-		// summary:
-		//		A lightweight parser.
-		// description:
-		//		dojox/mobile/parser is an extremely small subset of dojo/parser.
-		//		It has no additional features over dojo/parser, so there is no
-		//		benefit in terms of features by using dojox/mobile/parser instead 
-		//		of dojo/parser.	However, if dojox/mobile/parser's capabilities are
-		//		enough for your	application, using it could reduce the total code size.
-    };
-    =====*/
+
 	return parser;
 });

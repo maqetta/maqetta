@@ -4,7 +4,7 @@ define("dojox/widget/FisheyeList", ["dojo/_base/declare", "dojo/_base/sniff", "d
 		return declare("dojox.widget.FisheyeList",
 			[_WidgetBase, _TemplatedMixin, _Container], {
 				// summary:
-				//	Menu similar to the fish eye menu on the Mac OS
+				//		Menu similar to the fish eye menu on the Mac OS
 				// example:
 				// |	<div dojoType="dojo.widget.FisheyeList"
 				// |		itemWidth="40" itemHeight="40"
@@ -49,55 +49,53 @@ define("dojox/widget/FisheyeList", ["dojo/_base/declare", "dojo/_base/sniff", "d
 				snarfChildDomOutput: true,
 
 				// itemWidth: Integer
-				//	width of menu item (in pixels) in it's dormant state (when the mouse is far away)
+				//		width of menu item (in pixels) in it's dormant state (when the mouse is far away)
 				itemWidth: 40,
 
 				// itemHeight: Integer
-				//	height of menu item (in pixels) in it's dormant state (when the mouse is far away)
+				//		height of menu item (in pixels) in it's dormant state (when the mouse is far away)
 				itemHeight: 40,
 
 				// itemMaxWidth: Integer
-				//	width of menu item (in pixels) in it's fully enlarged state (when the mouse is directly over it)
+				//		width of menu item (in pixels) in it's fully enlarged state (when the mouse is directly over it)
 				itemMaxWidth: 150,
 
 				// itemMaxHeight: Integer
-				//	height of menu item (in pixels) in it's fully enlarged state (when the mouse is directly over it)
+				//		height of menu item (in pixels) in it's fully enlarged state (when the mouse is directly over it)
 				itemMaxHeight: 150,
 
 				imgNode: null,
 
 				// orientation: String
-				//	orientation of the menu, either "horizontal" or "vertical"
+				//		orientation of the menu, either "horizontal" or "vertical"
 				orientation: 'horizontal',
 
 				// isFixed: Boolean
-				//	toggle to enable additional listener (window scroll) if FisheyeList is in a fixed postion
+				//		toggle to enable additional listener (window scroll) if FisheyeList is in a fixed postion
 				isFixed: false,
 
 				// conservativeTrigger: Boolean
-				//	if true, don't start enlarging menu items until mouse is over an image;
-				//	if false, start enlarging menu items as the mouse moves near them.
+				//		if true, don't start enlarging menu items until mouse is over an image;
+				//		if false, start enlarging menu items as the mouse moves near them.
 				conservativeTrigger: false,
 
 				// effectUnits: Number
-				//	controls how much reaction the menu makes, relative to the distance of the mouse from the menu
+				//		controls how much reaction the menu makes, relative to the distance of the mouse from the menu
 				effectUnits: 2,
 
 				// itemPadding: Integer
-				//	padding (in pixels) betweeen each menu item
+				//		padding (in pixels) between each menu item
 				itemPadding: 10,
 
 				// attachEdge: String
-				//	controls the border that the menu items don't expand past;
-				//	for example, if set to "top", then the menu items will drop downwards as they expand.
-				//  values
-				//	"center", "left", "right", "top", "bottom".
+				//		controls the border that the menu items don't expand past;
+				//		for example, if set to "top", then the menu items will drop downwards as they expand.
+				//		values: "center", "left", "right", "top", "bottom".
 				attachEdge: 'center',
 
 				// labelEdge: String
-				//	controls were the labels show up in relation to the menu item icons
-				//  values
-				//	"center", "left", "right", "top", "bottom".
+				//		controls were the labels show up in relation to the menu item icons
+				//		values: "center", "left", "right", "top", "bottom".
 				labelEdge: 'bottom',
 
 				postCreate: function(){
@@ -165,7 +163,7 @@ define("dojox/widget/FisheyeList", ["dojo/_base/declare", "dojo/_base/sniff", "d
 
 				startup: function(){
 					// summary:
-					//	create our connections and setup our FisheyeList
+					//		create our connections and setup our FisheyeList
 					this.children = this.getChildren();
 					//original postCreate() --tk
 					this._initializePositioning();
@@ -267,7 +265,7 @@ define("dojox/widget/FisheyeList", ["dojo/_base/declare", "dojo/_base/sniff", "d
 						&& mouse.x <= right
 						&& mouse.y >= top
 						&& mouse.y <= bottom
-						);	//	boolean
+						);	// Boolean
 				},
 
 				_onBodyOut: function(/*Event*/ e){
@@ -279,7 +277,7 @@ define("dojox/widget/FisheyeList", ["dojo/_base/declare", "dojo/_base/sniff", "d
 				},
 
 				_setDormant: function(/*Event*/ e){
-					// summary: 
+					// summary:
 					//		called when mouse moves out of menu's range
 
 					if(!this.isOver){ return; }	// already dormant?

@@ -3,14 +3,6 @@ define("dojox/drawing/tools/custom/Axes", ["dojo/_base/lang", "../../util/oo", "
 function(lang, oo, registry, StencilPath, Arrow, Label, Vector){
 
 var Axes = oo.declare(
-	// summary:
-	//		Draws a right-angle Axes (shaped like an L, not a +)
-	// description:
-	//		This Stencil is created with a Path so that the L shape
-	//		is one continuous piece. Arrow heads are placed at the end
-	// 		of each axis. The Axes can be rotated. There are custom
-	// 		label methods.
-
 	StencilPath,
 	function(options){
 		this.closePath = false;
@@ -66,6 +58,14 @@ var Axes = oo.declare(
 		}
 	},
 	{
+		// summary:
+		//		Draws a right-angle Axes (shaped like an L, not a +)
+		// description:
+		//		This Stencil is created with a Path so that the L shape
+		//		is one continuous piece. Arrow heads are placed at the end
+		//		of each axis. The Axes can be rotated. There are custom
+		//		label methods.
+
 		draws:true,
 		type:"dojox.drawing.tools.custom.Axes",
 		minimumSize:30,
@@ -236,7 +236,7 @@ var Axes = oo.declare(
 			// summary:
 			//		Gets called from anchor to check if its current
 			//		position is ok. If not, its x or y transform will
-			// 		be changed until this passes.
+			//		be changed until this passes.
 
 			var pm = this.container.getParent().getTransform();
 			var am = anchor.shape.getTransform();
@@ -380,8 +380,8 @@ var Axes = oo.declare(
 
 		_postSetPoints: function(/*Array*/pts){
 			// summary:
-			// 		Because Axes only has one anchor,
-			// 		we substitute a special setPoints method
+			//		Because Axes only has one anchor,
+			//		we substitute a special setPoints method
 
 			this.points[0] = pts[0];
 			if(this.pointsToData){

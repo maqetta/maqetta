@@ -232,10 +232,10 @@ define("dojox/sketch/Figure", [
 		this._ctool=t;
 	};
     //gridSize: int
-    //      if it is greater than 0, all new shapes placed on the drawing will have coordinates
-    //      snapped to the gridSize. For example, if gridSize is set to 10, all coordinates
-    //      (only including coordinates which specifies the x/y position of shape are affected
-    //      by this parameter) will be dividable by 10
+    //		if it is greater than 0, all new shapes placed on the drawing will have coordinates
+    //		snapped to the gridSize. For example, if gridSize is set to 10, all coordinates
+    //		(only including coordinates which specifies the x/y position of shape are affected
+    //		by this parameter) will be dividable by 10
     p.gridSize=0;
     p._calCol=function(v){
         return this.gridSize?(Math.round(v/this.gridSize)*this.gridSize):v;

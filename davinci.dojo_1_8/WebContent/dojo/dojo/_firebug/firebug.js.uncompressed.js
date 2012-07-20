@@ -15,25 +15,28 @@ define("dojo/_firebug/firebug", [
 	// description:
 	//		Opens a console for logging, debugging, and error messages.
 	//		Contains partial functionality to Firebug. See function list below.
-	// NOTE:
+	//
+	//		NOTE:
 	//		Firebug is a Firefox extension created by Joe Hewitt (see license). You do not need Dojo to run Firebug.
 	//		Firebug Lite is included in Dojo by permission from Joe Hewitt
 	//		If you are new to Firebug, or used to the Dojo 0.4 dojo.debug, you can learn Firebug
 	//		functionality by reading the function comments below or visiting http://www.getfirebug.com/docs.html
-	// NOTE:
+	//
+	//		NOTE:
 	//		To test Firebug Lite in Firefox:
-	//			FF2: set "console = null" before loading dojo and set djConfig.isDebug=true
-	//			FF3: disable Firebug and set djConfig.isDebug=true
+	//
+	//		- FF2: set "console = null" before loading dojo and set djConfig.isDebug=true
+	//		- FF3: disable Firebug and set djConfig.isDebug=true
 	//
 	// example:
 	//		Supports inline objects in object inspector window (only simple trace of dom nodes, however)
-	//		|	console.log("my object", {foo:"bar"})
+	//	|	console.log("my object", {foo:"bar"})
 	// example:
 	//		Option for console to open in popup window
-	//		|	var djConfig = {isDebug: true, popup:true };
+	//	|	var djConfig = {isDebug: true, popup:true };
 	// example:
 	//		Option for console height (ignored for popup)
-	//		|	var djConfig = {isDebug: true, debugHeight:100 }
+	//	|	var djConfig = {isDebug: true, debugHeight:100 }
 
 
 	var isNewIE = (/Trident/.test(window.navigator.userAgent));
@@ -149,7 +152,7 @@ define("dojo/_firebug/firebug", [
 		error: function(){
 			// summary:
 			//		Sends error arguments (object) to console, highlighted with (X) icon and yellow style
-			//			NEW: error object now displays in object inspector
+			//		NEW: error object now displays in object inspector
 			logFormatted(arguments, "error");
 		},
 
@@ -175,8 +178,6 @@ define("dojo/_firebug/firebug", [
 		},
 
 		dirxml: function(node){
-			// summary:
-			//
 			var html = [];
 			appendNode(node, html);
 			logRow(html, "dirxml");
@@ -185,7 +186,7 @@ define("dojo/_firebug/firebug", [
 		group: function(){
 			// summary:
 			//		collects log messages into a group, starting with this call and ending with
-			//			groupEnd(). Missing collapse functionality
+			//		groupEnd(). Missing collapse functionality
 			logRow(arguments, "group", pushGroup);
 		},
 
@@ -198,7 +199,7 @@ define("dojo/_firebug/firebug", [
 		time: function(name){
 			// summary:
 			//		Starts timers assigned to name given in argument. Timer stops and displays on timeEnd(title);
-			//	example:
+			// example:
 			//	|	console.time("load");
 			//	|	console.time("myFunction");
 			//	|	console.timeEnd("load");

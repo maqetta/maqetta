@@ -433,7 +433,7 @@ define("dojox/gfx/matrix", ["./_base","dojo/_base/lang"],
 			// a: Number|dojox.gfx.Point
 			//		an x component of a central point, or a central point
 			// b: Number?
-			// 		a y component of a central point
+			//		a y component of a central point
 
 			if(arguments.length > 2){
 				return m._sandwich(m.skewXg(degree), a, b); // dojox.gfx.matrix.Matrix2D

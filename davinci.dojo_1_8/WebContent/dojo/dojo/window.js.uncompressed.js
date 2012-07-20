@@ -39,9 +39,11 @@ define("dojo/window", ["./_base/lang", "./sniff", "./_base/window", "./dom", "./
 			};
 		},
 
-		get: function(doc){
+		get: function(/*Document*/ doc){
 			// summary:
-			//		Get window object associated with document doc
+			//		Get window object associated with document doc.
+			// doc:
+			//		The document to get the associated window for.
 
 			// In some IE versions (at least 6.0), document.parentWindow does not return a
 			// reference to the real window object (maybe a copy), so we must fix it as well
@@ -81,7 +83,7 @@ define("dojo/window", ["./_base/lang", "./sniff", "./_base/window", "./dom", "./
 					return;
 				}
 				var backCompat = doc.compatMode == 'BackCompat',
-					clientAreaRoot = (isIE >= 9 && node.ownerDocument.parentWindow.frameElement)
+					clientAreaRoot = (isIE >= 9 && "frameElement" in node.ownerDocument.parentWindow)
 						? ((html.clientHeight > 0 && html.clientWidth > 0 && (body.clientHeight == 0 || body.clientWidth == 0 || body.clientHeight > html.clientHeight || body.clientWidth > html.clientWidth)) ? html : body)
 						: (backCompat ? body : html),
 					scrollRoot = isWK ? body : clientAreaRoot,

@@ -3,9 +3,6 @@ function(lang, oo, registry, StencilPath){
 
 //dojox.drawing.tools.Path
 var Path = oo.declare(
-	// summary:
-	//		Class for a drawable Path
-
 	StencilPath,
 	function(){
 		// summary:
@@ -18,6 +15,9 @@ var Path = oo.declare(
 		
 	},
 	{
+		// summary:
+		//		Class for a drawable Path
+
 		draws:true,
 		onDown: function(obj){
 			if(!this._started){

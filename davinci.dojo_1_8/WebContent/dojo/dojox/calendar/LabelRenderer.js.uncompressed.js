@@ -1,5 +1,5 @@
 require({cache:{
-'url:dojox/calendar/templates/LabelRenderer.html':"<div class=\"dojoxCalendarEvent dojoxCalendarLabel\" onselectstart=\"return false;\">\t\n\t<div class=\"labels\">\n\t\t<span data-dojo-attach-point=\"startTimeLabel\" class=\"startTime\"></span>\n\t\t<span data-dojo-attach-point=\"summaryLabel\" class=\"summary\"></span>\n\t\t<span data-dojo-attach-point=\"endTimeLabel\" class=\"endTime\"></span>\n\t</div>\t\n\t<div data-dojo-attach-point=\"moveHandle\" class=\"handle moveHandle\" ></div>\n</div>"}});
+'url:dojox/calendar/templates/LabelRenderer.html':"<div class=\"dojoxCalendarEvent dojoxCalendarLabel\" onselectstart=\"return false;\">\t\n\t<div class=\"labels\">\n\t\t<span data-dojo-attach-point=\"startTimeLabel\" class=\"startTime\"></span>\n\t\t<span data-dojo-attach-point=\"summaryLabel\" class=\"summary\"></span>\n\t\t<span data-dojo-attach-point=\"endTimeLabel\" class=\"endTime\"></span>\n\t</div>\t\n\t<div data-dojo-attach-point=\"moveHandle\" class=\"handle moveHandle\" ></div>\n</div>\n"}});
 define("dojox/calendar/LabelRenderer", ["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin",
 	"dojox/calendar/_RendererMixin", "dojo/text!./templates/LabelRenderer.html"],
 	 

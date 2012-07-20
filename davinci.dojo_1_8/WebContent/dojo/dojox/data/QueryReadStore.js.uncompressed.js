@@ -15,10 +15,10 @@ dojo.declare("dojox.data.QueryReadStore",
 		//		letters "ac" it returns only items like "action", "acting", etc.
 		//
 		//		note:
-		//			The field name "id" in a query is reserved for looking up data
-		//			by id. This is necessary as before the first fetch, the store
-		//			has no way of knowing which field the server will declare as
-		//			identifier.
+		//		The field name "id" in a query is reserved for looking up data
+		//		by id. This is necessary as before the first fetch, the store
+		//		has no way of knowing which field the server will declare as
+		//		identifier.
 		//
 		// example:
 		// |	// The parameter "query" contains the data that are sent to the server.
@@ -337,28 +337,30 @@ dojo.declare("dojox.data.QueryReadStore",
 			//		The request contains the data as defined in the Read-API.
 			//		Additionally there is following keyword "serverQuery".
 			//
-			//		The *serverQuery* parameter, optional.
-			//			This parameter contains the data that will be sent to the server.
-			//			If this parameter is not given the parameter "query"'s
-			//			data are sent to the server. This is done for some reasons:
-			//			- to specify explicitly which data are sent to the server, they
-			//			  might also be a mix of what is contained in "query", "queryOptions"
-			//			  and the paging parameters "start" and "count" or may be even
-			//			  completely different things.
-			//			- don't modify the request.query data, so the interface using this
-			//			  store can rely on unmodified data, as the combobox dijit currently
-			//			  does it, it compares if the query has changed
-			//			- request.query is required by the Read-API
+			//		####The *serverQuery* parameter, optional.
+			//
+			//		This parameter contains the data that will be sent to the server.
+			//		If this parameter is not given the parameter "query"'s
+			//		data are sent to the server. This is done for some reasons:
+			//
+			//		- to specify explicitly which data are sent to the server, they
+			//		  might also be a mix of what is contained in "query", "queryOptions"
+			//		  and the paging parameters "start" and "count" or may be even
+			//		  completely different things.
+			//		- don't modify the request.query data, so the interface using this
+			//		  store can rely on unmodified data, as the combobox dijit currently
+			//		  does it, it compares if the query has changed
+			//		- request.query is required by the Read-API
 			//
 			//		I.e. the following examples might be sent via GET:
-			//		  fetch({query:{name:"abc"}, queryOptions:{ignoreCase:true}})
+			//	|	  fetch({query:{name:"abc"}, queryOptions:{ignoreCase:true}})
 			//		  the URL will become:   /url.php?name=abc
 			//
-			//		  fetch({serverQuery:{q:"abc", c:true}, query:{name:"abc"}, queryOptions:{ignoreCase:true}})
+			//	|	  fetch({serverQuery:{q:"abc", c:true}, query:{name:"abc"}, queryOptions:{ignoreCase:true}})
 			//		  the URL will become:   /url.php?q=abc&c=true
-			//		  // The serverQuery-parameter has overruled the query-parameter
-			//		  // but the query parameter stays untouched, but is not sent to the server!
-			//		  // The serverQuery contains more data than the query, so they might differ!
+			//	|	  // The serverQuery-parameter has overruled the query-parameter
+			//	|	  // but the query parameter stays untouched, but is not sent to the server!
+			//	|	  // The serverQuery contains more data than the query, so they might differ!
 
 			var serverQuery = request.serverQuery || request.query || {};
 			//Need to add start and count

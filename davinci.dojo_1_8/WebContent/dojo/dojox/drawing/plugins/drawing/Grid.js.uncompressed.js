@@ -2,13 +2,6 @@ define("dojox/drawing/plugins/drawing/Grid", ["dojo", "../../util/oo", "../_Plug
 function(dojo, oo, Plugin){
 
 var Grid = oo.declare(
-	// summary:
-	//		Plugin that displays a grid on the Drawing canvas.
-	// example:
-	//		|	<div dojoType="dojox.drawing.Drawing" id="drawingNode"
-	//		|		plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:50}}]">
-	//		|	</div>
-
 	Plugin,
 	function(options){
 		if(options.gap){
@@ -21,6 +14,13 @@ var Grid = oo.declare(
 		dojo.connect(this.canvas, "setZoom", this, "setZoom");
 	},
 	{
+		// summary:
+		//		Plugin that displays a grid on the Drawing canvas.
+		// example:
+		//		|	<div dojoType="dojox.drawing.Drawing" id="drawingNode"
+		//		|		plugins="[{'name':'dojox.drawing.plugins.drawing.Grid', 'options':{gap:50}}]">
+		//		|	</div>
+
 		type:"dojox.drawing.plugins.drawing.Grid",
 
 		// gap: Number

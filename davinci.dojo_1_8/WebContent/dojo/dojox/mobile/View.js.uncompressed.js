@@ -24,8 +24,6 @@ define("dojox/mobile/View", [
 
 	// module:
 	//		dojox/mobile/View
-	// summary:
-	//		A widget that represents a view that occupies the full screen
 
 	var dm = lang.getObject("dojox.mobile", true);
 
@@ -47,13 +45,19 @@ define("dojox/mobile/View", [
 		keepScrollPos: true,
 
 		// tag: String
-		//		A name of html tag to create as domNode.
+		//		A name of the HTML tag to create as domNode.
 		tag: "div",
 
 		/* internal properties */
 		baseClass: "mblView",
 
-		constructor: function(params, node){
+		constructor: function(/*Object*/params, /*DomNode?*/node){
+			// summary:
+			//		Creates a new instance of the class.
+			// params:
+			//		Contains the parameters.
+			// node:
+			//		The DOM node. If none is specified, it is automatically created. 
 			if(node){
 				dom.byId(node).style.visibility = "hidden";
 			}
@@ -88,9 +92,9 @@ define("dojox/mobile/View", [
 
 			// Determine which view among the siblings should be visible.
 			// Priority:
-			//   1. fragment id in the url (ex. #view1,view2)
-			//   2. this.selected
-			//   3. the first view
+			//	 1. fragment id in the url (ex. #view1,view2)
+			//	 2. this.selected
+			//	 3. the first view
 			if(this._visible === undefined){
 				var views = this.getSiblingViews();
 				var ids = location.hash && location.hash.substring(1).split(/,/);

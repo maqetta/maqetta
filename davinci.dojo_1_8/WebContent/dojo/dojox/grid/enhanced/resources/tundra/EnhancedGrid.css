@@ -168,7 +168,7 @@
 	height: 0;
 	overflow: hidden;
 }
-.dojoxGridCell {
+.dojoxGrid .dojoxGridCell {
 	border: 1px solid;
 	border-color: #EBEADB;
 	border-right-color: #D5CDB5;
@@ -1247,39 +1247,6 @@ html > body .dojoxGridSorted .dojoxGridCellSortFocus .dojoxGridSortBtnNested {
 .dojoxGridCellSortFocus .dojoxGridRowSelector,
 .dojoxGridCellSortFocus .dojoxGridSortBtnFocus {
 	border: 1px dashed #666;
-}
-.dijitToasterContent {
-	padding:1em;
-	padding-top:0.25em;
-	background:#73c74a;
-}
-.dijitToasterMessage{ 
-	color:#fff;
-}
-.dijitToasterWarning{ }
-.dijitToasterError,
-.dijitToasterFatal{
-	font-weight:bold;
-	color:#fff;
-}
-.dijitToasterWarning .dijitToasterContent{
-	background:#d4d943;
-} 
-.dijitToasterError .dijitToasterContent{
-	background:#c46600;
-}
- 
-.dijitToasterClip {
-	position: absolute;
-	z-index: 5000;
-	overflow: hidden;
-}
-.dijitToasterContainer {
-	display: block;
-	position: absolute;
-	width: 17.5em;
-	margin: 0px;
-	font:0.75em;
 }
 .dojoxEllipsis,
 .dojoxEllipsisShown {

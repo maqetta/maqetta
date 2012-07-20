@@ -34,7 +34,18 @@ return declare("dijit.Menu", DropDownMenu, {
 	// summary:
 	//		A context menu you can assign to multiple elements
 
-	constructor: function(){
+	constructor: function(/*===== params, srcNodeRef =====*/){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- replace srcNodeRef with my generated DOM tree
+
 		this._bindings = [];
 	},
 
@@ -256,13 +267,11 @@ return declare("dijit.Menu", DropDownMenu, {
 		//		Internal function for opening myself when the user does a right-click or something similar.
 		// args:
 		//		This is an Object containing:
-		//		* target:
-		//			The node that is being clicked
-		//		* iframe:
-		//			If an `<iframe>` is being clicked, iframe points to that iframe
-		//		* coords:
-		//			Put menu at specified x/y position in viewport, or if iframe is
-		//			specified, then relative to iframe.
+		//
+		//		- target: The node that is being clicked
+		//		- iframe: If an `<iframe>` is being clicked, iframe points to that iframe
+		//		- coords: Put menu at specified x/y position in viewport, or if iframe is
+		//		  specified, then relative to iframe.
 		//
 		//		_openMyself() formerly took the event object, and since various code references
 		//		evt.target (after connecting to _openMyself()), using an Object for parameters

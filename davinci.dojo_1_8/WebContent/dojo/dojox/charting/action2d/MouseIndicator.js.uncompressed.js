@@ -3,66 +3,36 @@ define("dojox/charting/action2d/MouseIndicator", ["dojo/_base/lang", "dojo/_base
 	function(lang, declare, hub, win, has, ChartAction, IndicatorElement, du, eventUtil, arr){ 
 
 	/*=====
-	var __MouseIndicatorCtorArgs = function(series, autoScroll, vertical, fixed, precision, lineStroke, lineOutline, lineShadow,
-		stroke, outline, shadow, fill, fillFunc, labelFunc, font, fontColor, markerStroke, markerOutline, markerShadow,
-		markerFill, markerSymbol){
-
+	var __MouseIndicatorCtorArgs = {
 		// summary:
 		//		Additional arguments for mouse indicator.
-		
 		// series: String
 		//		Target series name for this action.
-		this.series = "";
-		
 		// autoScroll: Boolean?
 		//		Whether when moving indicator the chart is automatically scrolled. Default is true.
-		this.autoScroll = true;
-	
 		// vertical: Boolean?
 		//		Whether the indicator is vertical or not. Default is true.
-		this.vertical = true;
-		
 		// fixed: Boolean?
 		//		Whether a fixed precision must be applied to data values for display. Default is true.
-		this.fixed = true;
-
 		// precision: Number?
 		//		The precision at which to round data values for display. Default is 1.
-		this.precision = 0;
-		
 		// lineStroke: dojo/gfx/Stroke?
 		//		An optional stroke to use for indicator line.
-		this.lineStroke = {};
-	
 		// lineOutline: dojo/gfx/Stroke?
 		//		An optional outline to use for indicator line.
-		this.lineOutline = {};
-	
 		// lineShadow: dojo/gfx/Stroke?
 		//		An optional shadow to use for indicator line.
-		this.lineShadow = {};
-		
 		// stroke: dojo.gfx.Stroke?
 		//		An optional stroke to use for indicator label background.
-		this.stroke = {};
-	
 		// outline: dojo.gfx.Stroke?
 		//		An optional outline to use for indicator label background.
-		this.outline = {};
-	
 		// shadow: dojo.gfx.Stroke?
 		//		An optional shadow to use for indicator label background.
-		this.shadow = {};
-	
 		// fill: dojo.gfx.Fill?
 		//		An optional fill to use for indicator label background.
-		this.fill = {};
-		
 		// fillFunc: Function?
 		//		An optional function to use to compute label background fill. It takes precedence over
 		//		fill property when available.
-		this.fillFunc = null;
-		
 		// labelFunc: Function?
 		//		An optional function to use to compute label text. It takes precedence over
 		//		the default text when available.
@@ -71,35 +41,20 @@ define("dojox/charting/action2d/MouseIndicator", ["dojo/_base/lang", "dojo/_base
 		//		`secondDataPoint` is only useful for dual touch indicators not mouse indicators.
 		//		`fixed` is true if fixed precision must be applied.
 		//		`precision` is the requested precision to be applied.
-		this.labelFunc = {};
-	
 		// font: String?
 		//		A font definition to use for indicator label background.
-		this.font = "";
-	
 		// fontColor: String|dojo.Color?
 		//		The color to use for indicator label background.
-		this.fontColor = "";
-	
 		// markerStroke: dojo.gfx.Stroke?
 		//		An optional stroke to use for indicator marker.
-		this.markerStroke = {};
-	
 		// markerOutline: dojo.gfx.Stroke?
 		//		An optional outline to use for indicator marker.
-		this.markerOutline = {};
-	
 		// markerShadow: dojo.gfx.Stroke?
 		//		An optional shadow to use for indicator marker.
-		this.markerShadow = {};
-	
 		// markerFill: dojo.gfx.Fill?
 		//		An optional fill to use for indicator marker.
-		this.markerFill = {};
-		
 		// markerSymbol: String?
 		//		An optional symbol string to use for indicator marker.
-		this.markerFill = {};
 	};
 	=====*/
 

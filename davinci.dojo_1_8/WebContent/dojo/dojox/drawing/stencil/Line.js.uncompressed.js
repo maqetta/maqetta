@@ -1,15 +1,15 @@
 define("dojox/drawing/stencil/Line", ["dojo/_base/lang", "../util/oo", "./_Base", "../manager/_registry"], 
 function(lang, oo, Base, registry){
 var Line = oo.declare(
-	// summary:
-	//		Creates a dojox.gfx Line based on data or points provided.
-
 	Base,
 	function(options){
 		// summary:
 		//		constructor
 	},
 	{
+		// summary:
+		//		Creates a dojox.gfx Line based on data or points provided.
+
 		type:"dojox.drawing.stencil.Line",
 		anchorType: "single",
 		baseRender:true,
@@ -44,7 +44,7 @@ StencilData: {
 StencilPoints: [
 	// summary:
 	//		An Array of dojox.__StencilPoint objects that describe the Stencil
-	// 		[First point, Second point]
+	//		[First point, Second point]
 ],
 =====*/
 		

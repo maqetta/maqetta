@@ -226,9 +226,7 @@ b.y-=1;
 b.width+=4;
 b.height+=2;
 b.r=_29.opt.radius?_29.opt.radius:t.indicator.radius;
-sh=_29.opt.shadow?_29.opt.shadow:t.indicator.shadow;
-ls=_29.opt.stroke?_29.opt.stroke:t.indicator.stroke;
-ol=_29.opt.outline?_29.opt.outline:t.indicator.outline;
+var sh=_29.opt.shadow?_29.opt.shadow:t.indicator.shadow,ls=_29.opt.stroke?_29.opt.stroke:t.indicator.stroke,ol=_29.opt.outline?_29.opt.outline:t.indicator.outline;
 if(sh){
 this.group.createRect(b).setFill(sh.color).setStroke(sh);
 }

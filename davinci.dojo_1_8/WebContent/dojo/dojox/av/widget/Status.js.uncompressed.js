@@ -3,12 +3,11 @@ define("dojox/av/widget/Status", ['dojo', 'dijit', 'dijit/_Widget', 'dijit/_Temp
 return dojo.declare("dojox.av.widget.Status", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		A Status widget to use with dojox.av.widget.Player
-	//
-	//	description:
+	// description:
 	//		Displays the name of the media file, and it's current status
 	//		(playing, paused, buffering, etc.) in the middle. Displays
 	//		the playhead time on the left and the duration on the right.
-	//
+
 	templateString: dojo.cache("dojox.av.widget","resources/Status.html"),
 
 	setMedia: function(/* Object */med){

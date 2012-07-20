@@ -28,8 +28,7 @@ return declare("dijit.layout._ContentPaneResizeMixin", null, {
 
 	// doLayout: Boolean
 	//		- false - don't adjust size of children
-	//		- true - if there is a single visible child widget, set it's size to
-	//				however big the ContentPane is
+	//		- true - if there is a single visible child widget, set it's size to however big the ContentPane is
 	doLayout: true,
 
 	// isLayoutContainer: [protected] Boolean

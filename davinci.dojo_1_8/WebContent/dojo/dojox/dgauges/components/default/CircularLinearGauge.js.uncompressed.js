@@ -64,7 +64,7 @@ define("dojox/dgauges/components/default/CircularLinearGauge", [
 		drawBackground: function(g){
 			// summary:
 			//		Draws the background shape of the gauge.
-			// g: dojox/gfx/canvas.Group
+			// g: dojox/gfx/Group
 			//		The group used to draw the background. 
 			// tags:
 			//		protected
@@ -151,7 +151,7 @@ define("dojox/dgauges/components/default/CircularLinearGauge", [
 		drawForeground: function(g){
 			// summary:
 			//		Draws the foreground shape of the gauge.
-			// g: dojox/gfx/canvas.Group
+			// g: dojox/gfx/Group
 			//		The group used to draw the foreground. 
 			// tags:
 			//		protected

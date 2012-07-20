@@ -11,8 +11,6 @@ define("dojox/mobile/IconMenu", [
 ], function(declare, has, domClass, domConstruct, domStyle, Contained, Container, WidgetBase){
 	// module:
 	//		dojox/mobile/IconMenu
-	// summary:
-	//		A pop-up menu.
 
 	return declare("dojox.mobile.IconMenu", [WidgetBase, Container, Contained], {
 		// summary:

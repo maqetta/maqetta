@@ -252,7 +252,7 @@ define("dojox/gfx3d/matrix", ["dojo/_base/lang", "./_base"], function(lang, gfx3
 			//		around the origin of coordinates (0, 0) by specified degree.
 			//		See dojox.gfx3d.matrix.rotateZ() for comparison.
 			// degree: Number
-			// 		an angle of rotation in degrees (>0 for CW)
+			//		an angle of rotation in degrees (>0 for CW)
 			return gfx3d.matrix.rotateZ(gfx3d.matrix._degToRad(degree)); // dojox.gfx3d.matrix.Matrix3D
 		},
 	
@@ -323,7 +323,7 @@ define("dojox/gfx3d/matrix", ["dojo/_base/lang", "./_base"], function(lang, gfx3
 			// matrix: dojox.gfx3d.matrix.Matrix3D
 			//		a 3D matrix object to be applied
 			// a: Number|Object
-			// 		an x coordinate of a point, or an Object specifying the whole point
+			//		an x coordinate of a point, or an Object specifying the whole point
 			// b: Number?
 			//		a y coordinate of a point
 			// c: Number?

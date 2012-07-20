@@ -43,7 +43,7 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 		//		the parent element
 		// content:
 		//		the content to be set on the parent element.
-		//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
+		//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
 
 		// always empty
 		domConstruct.empty(node);
@@ -144,12 +144,19 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 
 				this.onBegin();
 				this.setContent();
-				this.onEnd();
 
-				// dojox.html._ContentSetter.onEnd() can run asynchronously, so for 2.0 considering switching set()
-				// to return a Deferred
-				return this.node;
+				var ret = this.onEnd();
+
+				if(ret && ret.then){
+					// Make dojox.html._ContentSetter.set() return a Promise that resolves when load and parse complete.
+					return ret;
+				}else{
+					// Vanilla dojo/html._ContentSetter.set() returns a DOMNode for back compat.   For 2.0, switch it to
+					// return a Deferred like above.
+					return this.node;
+				}
 			},
+
 			setContent: function(){
 				// summary:
 				//		sets the content on the node
@@ -208,8 +215,8 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 			onBegin: function(){
 				// summary:
 				//		Called after instantiation, but before set();
-				//		It allows modification of any of the object properties
-				//		- including the node and content provided - before the set operation actually takes place
+				//		It allows modification of any of the object properties -
+				//		including the node and content provided - before the set operation actually takes place
 				//		This default implementation checks for cleanContent and extractContent flags to
 				//		optionally pre-process html string content
 				var cont = this.content;
@@ -242,6 +249,7 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 					this._parse();
 				}
 				return this.node; // DomNode
+				// TODO: for 2.0 return a Promise indicating that the parse completed.
 			},
 
 			tearDown: function(){
@@ -334,7 +342,7 @@ define("dojo/html", ["./_base/kernel", "./_base/lang", "./_base/array", "./_base
 			//		the parent element that will receive the content
 			// cont:
 			//		the content to be set on the parent element.
-			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
+			//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
 			// params:
 			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
 			// example:

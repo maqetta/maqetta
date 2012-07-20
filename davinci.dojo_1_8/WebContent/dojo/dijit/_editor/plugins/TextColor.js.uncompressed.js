@@ -14,11 +14,11 @@ define("dijit/_editor/plugins/TextColor", [
 var TextColor = declare("dijit._editor.plugins.TextColor", _Plugin, {
 	// summary:
 	//		This plugin provides dropdown color pickers for setting text color and background color
-	//
 	// description:
 	//		The commands provided by this plugin are:
-	//		* foreColor - sets the text color
-	//		* hiliteColor - sets the background color
+	//
+	//		- foreColor - sets the text color
+	//		- hiliteColor - sets the background color
 
 	// Override _Plugin.buttonClass to use DropDownButton (with ColorPalette) to control this plugin
 	buttonClass: DropDownButton,

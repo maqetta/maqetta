@@ -2,9 +2,7 @@ define("dojox/dtl/filter/integers", [
 	"dojo/_base/lang",
 	"../_base"
 ], function(lang,dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.filter.integers", true);
 
 	lang.mixin(dd.filter.integers, {

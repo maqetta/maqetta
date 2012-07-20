@@ -71,7 +71,7 @@ define("dojo/text", ["./_base/kernel", "require", "./has", "./_base/xhr"], funct
 		//		inside a body tag in the value should be extracted as the real value. The value argument
 		//		or the value property on the value argument are usually only used by the build system
 		//		as it inlines cache content.
-		//	example:
+		// example:
 		//		To ask dojo.cache to fetch content and store it in the cache (the dojo["cache"] style
 		//		of call is used to avoid an issue with the build system erroneously trying to intern
 		//		this example. To get the build system to intern your dojo.cache calls, use the
@@ -79,7 +79,7 @@ define("dojo/text", ["./_base/kernel", "require", "./has", "./_base/xhr"], funct
 		//		| //If template.html contains "<h1>Hello</h1>" that will be
 		//		| //the value for the text variable.
 		//		| var text = dojo["cache"]("my.module", "template.html");
-		//	example:
+		// example:
 		//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
 		//		 (the dojo["cache"] style of call is used to avoid an issue with the build system
 		//		erroneously trying to intern this example. To get the build system to intern your
@@ -87,7 +87,7 @@ define("dojo/text", ["./_base/kernel", "require", "./has", "./_base/xhr"], funct
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
 		//		| //text variable will contain just "<h1>Hello</h1>".
 		//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
-		//	example:
+		// example:
 		//		Same example as previous, but demonstrates how an object can be passed in as
 		//		the first argument, then the value argument can then be the second argument.
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
@@ -179,14 +179,15 @@ define("dojo/text", ["./_base/kernel", "require", "./has", "./_base/xhr"], funct
 				stripFlag= parts.length>1,
 				absMid= parts[0],
 				url = require.toUrl(parts[0]),
+				requireCacheUrl = "url:" + url,
 				text = notFound,
 				finish = function(text){
 					load(stripFlag ? strip(text) : text);
 				};
 			if(absMid in theCache){
 				text = theCache[absMid];
-			}else if(url in require.cache){
-				text = require.cache[url];
+			}else if(requireCacheUrl in require.cache){
+				text = require.cache[requireCacheUrl];
 			}else if(url in theCache){
 				text = theCache[url];
 			}

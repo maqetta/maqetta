@@ -3,7 +3,7 @@
 _2();
 }:define)(["dojo/_base/config","dojo/_base/lang","dojo/_base/window","require"],function(_3,_4,_5,_6){
 var dm=_4&&_4.getObject("dojox.mobile",true)||{};
-var _7=new function(){
+var _7=function(){
 if(!_5){
 _5=window;
 _5.doc=document;
@@ -89,8 +89,9 @@ break;
 }
 }
 };
-}();
-_7.loadDeviceTheme();
-window.deviceTheme=dm.deviceTheme=_7;
-return _7;
+};
+var _18=new _7();
+_18.loadDeviceTheme();
+window.deviceTheme=dm.deviceTheme=_18;
+return _18;
 });

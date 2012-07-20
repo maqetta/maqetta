@@ -19,7 +19,7 @@ dojo.require("dojox.lang.oo.general");
 	ooa.before = md(function(name, newValue, oldValue){
 		// summary:
 		//		creates a "before" advise, by calling new function
-		//  	before the old one
+		//		before the old one
 
 		// dummy body
 	});
@@ -27,8 +27,8 @@ dojo.require("dojox.lang.oo.general");
 	ooa.around = md(function(name, newValue, oldValue){
 		// summary:
 		//		creates an "around" advise,
-		//  	the previous value is passed as a first argument and can be null,
-		//  	arguments are passed as a second argument
+		//		the previous value is passed as a first argument and can be null,
+		//		arguments are passed as a second argument
 
 		// dummy body
 	});
@@ -38,7 +38,7 @@ dojo.require("dojox.lang.oo.general");
 	ooa.afterReturning = md(function(name, newValue, oldValue){
 		// summary:
 		//		creates an "afterReturning" advise,
-		//  	the returned value is passed as the only argument
+		//		the returned value is passed as the only argument
 		return isF(oldValue) ?
 			function(){
 				var ret = oldValue.apply(this, arguments);
@@ -50,7 +50,7 @@ dojo.require("dojox.lang.oo.general");
 	ooa.afterThrowing = md(function(name, newValue, oldValue){
 		// summary:
 		//		creates an "afterThrowing" advise,
-		//  	the exception is passed as the only argument
+		//		the exception is passed as the only argument
 		return isF(oldValue) ?
 			function(){
 				var ret;
@@ -67,7 +67,7 @@ dojo.require("dojox.lang.oo.general");
 	ooa.after = md(function(name, newValue, oldValue){
 		// summary:
 		//		creates an "after" advise,
-		//  	it takes no arguments
+		//		it takes no arguments
 		return isF(oldValue) ?
 			function(){
 				var ret;

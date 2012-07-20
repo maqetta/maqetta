@@ -24,7 +24,7 @@ define("dojox/dgauges/components/green/CircularLinearGauge", [
 			// indicatorColor: Object|Array|int
 			//		The indicator fill color. Default is "#000000".
 			indicatorColor: [0,0,0],
-			constructor: function(args, node){
+			constructor: function(){
 				var scaler = new LinearScaler();
 				this.addElement("background", lang.hitch(this, this.drawBackground));
 				var scale = new CircularScale();
@@ -59,7 +59,7 @@ define("dojox/dgauges/components/green/CircularLinearGauge", [
 			drawBackground: function(g){
 				// summary:
 				//		Draws the background shape of the gauge.
-				// g: dojox/gfx/canvas.Group
+				// g: dojox/gfx/Group
 				//		The group used to draw the background. 
 				// tags:
 				//		protected
@@ -121,7 +121,7 @@ define("dojox/dgauges/components/green/CircularLinearGauge", [
 			drawForeground: function(g){
 				// summary:
 				//		Draws the foreground shape of the gauge.
-				// g: dojox/gfx/canvas.Group
+				// g: dojox/gfx/Group
 				//		The group used to draw the foreground. 
 				// tags:
 				//		protected

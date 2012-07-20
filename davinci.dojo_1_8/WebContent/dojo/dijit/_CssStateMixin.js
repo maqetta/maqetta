@@ -137,10 +137,12 @@ if(!_3.isDescendant(evt.relatedTarget,evt.target)){
 for(var _1d=evt.target;_1d&&_1d!=evt.relatedTarget;_1d=_1d.parentNode){
 if(_1d._cssState){
 var _1e=_8.getEnclosingWidget(_1d);
+if(_1e){
 if(_1d==_1e.domNode){
 _1e._cssMouseEvent(evt);
 }else{
 _1e._subnodeCssMouseEvent(_1d,_1d._cssState,evt);
+}
 }
 }
 }

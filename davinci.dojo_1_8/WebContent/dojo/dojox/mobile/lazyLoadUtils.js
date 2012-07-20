@@ -1,6 +1,6 @@
 //>>built
 define("dojox/mobile/lazyLoadUtils",["dojo/_base/kernel","dojo/_base/array","dojo/_base/config","dojo/_base/window","dojo/_base/Deferred","dojo/ready"],function(_1,_2,_3,_4,_5,_6){
-var _7=new function(){
+var _7=function(){
 this._lazyNodes=[];
 var _8=this;
 if(_3.parseOnLoad){
@@ -76,5 +76,5 @@ d.resolve(true);
 return d;
 };
 };
-return _7;
+return new _7();
 });

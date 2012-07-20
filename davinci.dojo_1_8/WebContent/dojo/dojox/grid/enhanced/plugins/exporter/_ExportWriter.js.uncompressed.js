@@ -9,11 +9,14 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 	//		This is an abstract class for all kinds of writers used in the Exporter plugin.
 	//		It utilizes the strategy pattern to break the export work into several stages,
 	//		and provide interfaces for all of them.
-	//			Implementations might choose some of the functions in this class to override,
+	//
+	//		Implementations might choose some of the functions in this class to override,
 	//		thus providing their own functionalities.
-	//			The Exporter will go through the grid line by line. So in every line, all the Views
+	//
+	//		The Exporter will go through the grid line by line. So in every line, all the Views
 	//		will be reached, and the header line is only handled once.
-	//			An *argObj* object is passed to most functions of this class.
+	//
+	//		An *argObj* object is passed to most functions of this class.
 	//		It carries context arguments that make sense when they are called.
 
 /*=====
@@ -75,7 +78,7 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		passed to the user in argObj. So the column index (cell.index) will appear shifted
 		//		(start from 1 instead of 0). This colOffset is provided to remove this shift.
 		//
-		// 		usage:
+		//		usage:
 		//		|	var correctColIndex = argObj.cell.index + argObj.colOffset;
 		colOffset: 0
 	},
@@ -143,11 +146,11 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// argObj:
 		//		An object with at least the following context properties available:
-		//		{
-		//			grid,isHeader,
-		//			row,rowIdx,
-		//			spCols
-		//		}
+		// |	{
+		// |		grid,isHeader,
+		// |		row,rowIdx,
+		// |		spCols
+		// |	}
 		// returns:
 		//		true: go on handling the current data row and then call afterContentRow.
 		//		false: skip the current data row, won't call afterContentRow.
@@ -160,11 +163,11 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// argObj:
 		//		An object with at least the following context properties available:
-		//		{
-		//			grid,isHeader,
-		//			row,rowIdx,
-		//			spCols
-		//		}
+		// |	{
+		// |		grid,isHeader,
+		// |		row,rowIdx,
+		// |		spCols
+		// |	}
 		// returns:
 		//		undefined
 	},
@@ -175,11 +178,11 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// argObj:
 		//		An object with at least the following context properties available:
-		//		{
-		//			grid,isHeader,
-		//			view,viewIdx,
-		//			spCols(if isHeader==false)
-		//		}
+		// |	{
+		// |		grid,isHeader,
+		// |		view,viewIdx,
+		// |		spCols(if isHeader==false)
+		// |	}
 		// returns:
 		//		true: go on handling the current view and then call afterView.
 		//		false: skip the current view, won't call afterView.
@@ -192,11 +195,11 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// argObj:
 		//		An object with at least the following context properties available:
-		//		{
-		//			grid,isHeader,
-		//			view,viewIdx,
-		//			spCols(if isHeader==false)
-		//		}
+		// |	{
+		// |		grid,isHeader,
+		// |		view,viewIdx,
+		// |		spCols(if isHeader==false)
+		// |	}
 		// tags:
 		//		protected extension
 		// returns:
@@ -209,13 +212,13 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// argObj:
 		//		An object with at least the following context properties available:
-		//		{
-		//			grid,isHeader,
-		//			row,rowIdx,
-		//			view,viewIdx,
-		//			subrow,subrowIdx,
-		//			spCols(if isHeader==false)
-		//		}
+		// |	{
+		// |		grid,isHeader,
+		// |		row,rowIdx,
+		// |		view,viewIdx,
+		// |		subrow,subrowIdx,
+		// |		spCols(if isHeader==false)
+		// |	}
 		// returns:
 		//		true: go on handling the current subrow and then call afterSubrow.
 		//		false: skip the current subrow, won't call afterSubrow.
@@ -228,13 +231,13 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// argObj:
 		//		An object with at least the following context properties available:
-		//		{
-		//			grid,isHeader,
-		//			row,rowIdx,
-		//			view,viewIdx,
-		//			subrow,subrowIdx,
-		//			spCols(if isHeader==false)
-		//		}
+		// |	{
+		// |		grid,isHeader,
+		// |		row,rowIdx,
+		// |		view,viewIdx,
+		// |		subrow,subrowIdx,
+		// |		spCols(if isHeader==false)
+		// |	}
 		// returns:
 		//		undefined
 	},
@@ -245,14 +248,14 @@ return declare("dojox.grid.enhanced.plugins.exporter._ExportWriter", null, {
 		//		protected extension
 		// argObj:
 		//		An object with at least the following context properties available:
-		//		{
-		//			grid,isHeader,
-		//			row,rowIdx,
-		//			view,viewIdx,
-		//			subrow,subrowIdx,
-		//			cell,cellIdx,
-		//			spCols(if isHeader==false)
-		//		}
+		// |	{
+		// |		grid,isHeader,
+		// |		row,rowIdx,
+		// |		view,viewIdx,
+		// |		subrow,subrowIdx,
+		// |		cell,cellIdx,
+		// |		spCols(if isHeader==false)
+		// |	}
 		// returns:
 		//		undefined
 	},

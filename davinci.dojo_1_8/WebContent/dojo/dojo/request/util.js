@@ -5,112 +5,109 @@
 */
 
 //>>built
-define("dojo/request/util",["exports","require","../errors/RequestError","../errors/CancelError","../Deferred","../io-query","../_base/array","../_base/lang"],function(_1,_2,_3,_4,_5,_6,_7,_8){
-_1.deepCopy=function deepCopy(_9,_a){
-for(var _b in _a){
-var _c=_9[_b],_d=_a[_b];
-if(_c!==_d){
-if(_c&&typeof _c==="object"&&_d&&typeof _d==="object"){
-_1.deepCopy(_c,_d);
+define("dojo/request/util",["exports","../errors/RequestError","../errors/CancelError","../Deferred","../io-query","../_base/array","../_base/lang"],function(_1,_2,_3,_4,_5,_6,_7){
+_1.deepCopy=function deepCopy(_8,_9){
+for(var _a in _9){
+var _b=_8[_a],_c=_9[_a];
+if(_b!==_c){
+if(_b&&typeof _b==="object"&&_c&&typeof _c==="object"){
+_1.deepCopy(_b,_c);
 }else{
-_9[_b]=_d;
+_8[_a]=_c;
 }
 }
 }
-return _9;
+return _8;
 };
-_1.deepCreate=function deepCreate(_e,_f){
-_f=_f||{};
-var _10=_8.delegate(_e),_11,_12;
-for(_11 in _e){
-_12=_e[_11];
-if(_12&&typeof _12==="object"){
-_10[_11]=_1.deepCreate(_12,_f[_11]);
+_1.deepCreate=function deepCreate(_d,_e){
+_e=_e||{};
+var _f=_7.delegate(_d),_10,_11;
+for(_10 in _d){
+_11=_d[_10];
+if(_11&&typeof _11==="object"){
+_f[_10]=_1.deepCreate(_11,_e[_10]);
 }
 }
-return _1.deepCopy(_10,_f);
+return _1.deepCopy(_f,_e);
 };
-var _13=Object.freeze||function(obj){
+var _12=Object.freeze||function(obj){
 return obj;
 };
-function _14(_15){
-return _13(_15);
+function _13(_14){
+return _12(_14);
 };
-_1.deferred=function deferred(_16,_17,_18,_19,_1a,_1b){
-var def=new _5(function(_1c){
-_17&&_17(def,_16);
-if(!_1c||!(_1c instanceof _3)&&!(_1c instanceof _4)){
-return new _4("Request canceled",_16);
+_1.deferred=function deferred(_15,_16,_17,_18,_19,_1a){
+var def=new _4(function(_1b){
+_16&&_16(def,_15);
+if(!_1b||!(_1b instanceof _2)&&!(_1b instanceof _3)){
+return new _3("Request canceled",_15);
 }
-return _1c;
+return _1b;
 });
-def.response=_16;
-def.isValid=_18;
-def.isReady=_19;
-def.handleResponse=_1a;
-function _1d(_1e){
-_1e.response=_16;
-throw _1e;
+def.response=_15;
+def.isValid=_17;
+def.isReady=_18;
+def.handleResponse=_19;
+function _1c(_1d){
+_1d.response=_15;
+throw _1d;
 };
-var _1f=def.then(_14).otherwise(_1d);
-try{
-var _20=_2("./notify");
-_1f.then(_20.load,_20.error);
+var _1e=def.then(_13).otherwise(_1c);
+if(_1.notify){
+_1e.then(_7.hitch(_1.notify,"emit","load"),_7.hitch(_1.notify,"emit","error"));
 }
-catch(e){
-}
-var _21=_1f.then(function(_22){
-return _22.data||_22.text;
+var _1f=_1e.then(function(_20){
+return _20.data||_20.text;
 });
-var _23=_13(_8.delegate(_21,{response:_1f}));
-if(_1b){
-def.then(function(_24){
-_1b.call(def,_24);
-},function(_25){
-_1b.call(def,_16,_25);
+var _21=_12(_7.delegate(_1f,{response:_1e}));
+if(_1a){
+def.then(function(_22){
+_1a.call(def,_22);
+},function(_23){
+_1a.call(def,_15,_23);
 });
 }
-def.promise=_23;
-def.then=_23.then;
+def.promise=_21;
+def.then=_21.then;
 return def;
 };
-_1.addCommonMethods=function addCommonMethods(_26,_27){
-_7.forEach(_27||["GET","POST","PUT","DELETE"],function(_28){
-_26[(_28==="DELETE"?"DEL":_28).toLowerCase()]=function(url,_29){
-_29=_8.delegate(_29||{});
-_29.method=_28;
-return _26(url,_29);
+_1.addCommonMethods=function addCommonMethods(_24,_25){
+_6.forEach(_25||["GET","POST","PUT","DELETE"],function(_26){
+_24[(_26==="DELETE"?"DEL":_26).toLowerCase()]=function(url,_27){
+_27=_7.delegate(_27||{});
+_27.method=_26;
+return _24(url,_27);
 };
 });
 };
-_1.parseArgs=function parseArgs(url,_2a,_2b){
-var _2c=_2a.data,_2d=_2a.query;
-if(_2c&&!_2b){
-if(typeof _2c==="object"){
-_2a.data=_6.objectToQuery(_2c);
+_1.parseArgs=function parseArgs(url,_28,_29){
+var _2a=_28.data,_2b=_28.query;
+if(_2a&&!_29){
+if(typeof _2a==="object"){
+_28.data=_5.objectToQuery(_2a);
 }
 }
-if(_2d){
-if(typeof _2d==="object"){
-_2d=_6.objectToQuery(_2d);
+if(_2b){
+if(typeof _2b==="object"){
+_2b=_5.objectToQuery(_2b);
 }
-if(_2a.preventCache){
-_2d+=(_2d?"&":"")+"request.preventCache="+(+(new Date));
+if(_28.preventCache){
+_2b+=(_2b?"&":"")+"request.preventCache="+(+(new Date));
 }
 }else{
-if(_2a.preventCache){
-_2d="request.preventCache="+(+(new Date));
+if(_28.preventCache){
+_2b="request.preventCache="+(+(new Date));
 }
 }
-if(url&&_2d){
-url+=(~url.indexOf("?")?"&":"?")+_2d;
+if(url&&_2b){
+url+=(~url.indexOf("?")?"&":"?")+_2b;
 }
-return {url:url,options:_2a,getHeader:function(_2e){
+return {url:url,options:_28,getHeader:function(_2c){
 return null;
 }};
 };
-_1.checkStatus=function(_2f){
-_2f=_2f||0;
-return (_2f>=200&&_2f<300)||_2f===304||_2f===1223||!_2f;
+_1.checkStatus=function(_2d){
+_2d=_2d||0;
+return (_2d>=200&&_2d<300)||_2d===304||_2d===1223||!_2d;
 };
 });

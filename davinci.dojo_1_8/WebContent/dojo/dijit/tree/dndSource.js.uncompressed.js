@@ -32,7 +32,7 @@ var dndSource = declare("dijit.tree.dndSource", _dndSelector, {
 	// summary:
 	//		Handles drag and drop operations (as a source or a target) for `dijit.Tree`
 
-	// isSource: [private] Boolean
+	// isSource: Boolean
 	//		Can be used as a DnD source.
 	isSource: true,
 
@@ -63,7 +63,6 @@ var dndSource = declare("dijit.tree.dndSource", _dndSelector, {
 		//		private
 		if(!params){ params = {}; }
 		lang.mixin(this, params);
-		this.isSource = typeof params.isSource == "undefined" ? true : params.isSource;
 		var type = params.accept instanceof Array ? params.accept : ["text", "treeNode"];
 		this.accept = null;
 		if(type.length){

@@ -120,12 +120,13 @@ var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
 	// summary:
 	//		Provides standard extended selection for grid.
 	//		Supports mouse/keyboard selection, multi-selection, and de-selection.
+	//
 	//		Acceptable plugin parameters:
-	//			The whole plugin parameter object is a config object passed to the setupConfig function.
+	//		The whole plugin parameter object is a config object passed to the setupConfig function.
 	//
 	//		Acceptable cell parameters defined in layout:
-	//		1. notselectable: boolean
-	//			Whether this column is (and all the cells in it are) selectable.
+	//
+	//		1. notselectable: Boolean: Whether this column is (and all the cells in it are) selectable.
 	
 	// name: String
 	//		plugin name
@@ -205,12 +206,12 @@ var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
 		//		Set selection mode for row/col/cell.
 		// config: Object
 		//		An object with the following structure (all properties are optional):
-		//		{
-		//			//Default is "multi", all other values are same as "multi".
-		//			row: false|"disabled"|"single",
-		//			col: false|"disabled"|"single",
-		//			cell: false|"disabled"|"single"
-		//		}
+		// |	{
+		// |		//Default is "multi", all other values are same as "multi".
+		// |		row: false|"disabled"|"single",
+		// |		col: false|"disabled"|"single",
+		// |		cell: false|"disabled"|"single"
+		// |	}
 		if(!config || !lang.isObject(config)){
 			return;
 		}

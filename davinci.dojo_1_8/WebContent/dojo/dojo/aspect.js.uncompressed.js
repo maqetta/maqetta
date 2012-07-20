@@ -4,7 +4,7 @@ define("dojo/aspect", [], function(){
 	//		dojo/aspect
 
 	"use strict";
-	var nextId = 0;
+	var undefined, nextId = 0;
 	function advise(dispatcher, type, advice, receiveArguments){
 		var previous = dispatcher[type];
 		var around = type == "around";
@@ -90,8 +90,13 @@ define("dojo/aspect", [], function(){
 					// after advice
 					var after = dispatcher.after;
 					while(after && after.id < executionId){
-						results = after.receiveArguments ? after.advice.apply(this, args) || results :
-								after.advice.call(this, results);
+						if(after.receiveArguments){
+							var newResults = after.advice.apply(this, args);
+							// change the return value only if a new value was returned
+							results = newResults === undefined ? results : newResults;
+						}else{
+							results = after.advice.call(this, results, args);
+						}
 						after = after.next;
 					}
 					return results;
@@ -114,7 +119,8 @@ define("dojo/aspect", [], function(){
 	var after = aspect("after");
 	/*=====
 	after = function(target, methodName, advice, receiveArguments){
-		// summary: The "after" export of the aspect module is a function that can be used to attach
+		// summary:
+		//		The "after" export of the aspect module is a function that can be used to attach
 		//		"after" advice to a method. This function will be executed after the original method
 		//		is executed. By default the function will be called with a single argument, the return
 		//		value of the original method, or the the return value of the last executed advice (if a previous one exists).
@@ -139,7 +145,8 @@ define("dojo/aspect", [], function(){
 	var before = aspect("before");
 	/*=====
 	before = function(target, methodName, advice){
-		// summary: The "before" export of the aspect module is a function that can be used to attach
+		// summary:
+		//		The "before" export of the aspect module is a function that can be used to attach
 		//		"before" advice to a method. This function will be executed before the original method
 		//		is executed. This function will be called with the arguments used to call the method.
 		//		This function may optionally return an array as the new arguments to use to call
@@ -159,7 +166,8 @@ define("dojo/aspect", [], function(){
 	var around = aspect("around");
 	/*=====
 	 around = function(target, methodName, advice){
-		// summary: The "around" export of the aspect module is a function that can be used to attach
+		// summary:
+		//		The "around" export of the aspect module is a function that can be used to attach
 		//		"around" advice to a method. The advisor function is immediately executed when
 		//		the around() is called, is passed a single argument that is a function that can be
 		//		called to continue execution of the original method (or the next around advisor).

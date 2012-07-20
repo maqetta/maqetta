@@ -64,19 +64,22 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 			this.outlineModel = this.outlineProvider.getModel(this.currentEditor);
 		}
 
-		var iconFunction = this.outlineProvider.getIconClass && dojo.hitch(this.outlineProvider,this.outlineProvider.getIconClass);
  
 		// create tree
 		var treeArgs = {
 			context: this.currentEditor.getContext(),
 			model: this.outlineModel,
-			getIconClass: iconFunction,
 			showRoot: this.outlineModel.showRoot,
 			betweenThreshold: this.outlineModel.betweenThreshold,
 			checkItemAcceptance: this.outlineModel.checkItemAcceptance,
 			isMultiSelect: true,
 			persist: false
 		};
+
+		var iconFunction = this.outlineProvider.getIconClass && dojo.hitch(this.outlineProvider,this.outlineProvider.getIconClass);
+		if (iconFunction) {
+			treeArgs.getIconClass = iconFunction
+		}
 
 		// #2256 - dijit tree cannot have a null dndController
 		if (this.outlineModel.dndController) {

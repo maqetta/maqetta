@@ -4,5 +4,5 @@
 <!-- ===================================================================== -->	
 <project name="Build widget plugin" default="noDefault">
 	<property environment="env"/>
-<!--	<import file="${env.relEngDir}/widgetPlugin/widgetPluginDojoBuild.xml"/>-->
+	<import file="${env.relEngDir}/widgetPlugin/widgetPluginDojoBuild.xml"/>
 </project>

@@ -303,53 +303,99 @@ return {
             targetID: "davinci.ve.HTMLPageEditor",
             actions: [
                 {
-                    id: "cut",
-                    label: "Cut",
-                    iconClass: "editActionIcon editCutIcon",
-                    action: "davinci/ve/actions/CutAction",
-                    toolbarPath: "cutcopypaste",
-                    keyBinding: {accel: true, charOrCode: "x"}
-
-                },
-                {
-                    id: "copy",
-                    label: "Copy",
-                    iconClass: "editActionIcon editCopyIcon",
-                    action: "davinci/ve/actions/CopyAction",
-                    toolbarPath: "cutcopypaste",
-                    keyBinding: {accel: true, charOrCode: "c"}
-                },
-                {
-                    id: "paste",
-                    iconClass: "editActionIcon editPasteIcon",
-                    label: "Paste",
-                    action: "davinci/ve/actions/PasteAction",
-                    toolbarPath: "cutcopypaste",
-                    keyBinding: {accel: true, charOrCode: "v"}
-                },
-                {
-                    id: "undo",
-                    iconClass: 'undoIcon',
+                	id: "undo",
+                    //iconClass: 'undoIcon',
                     action: "davinci/actions/UndoAction",
                     label: "Undo",
+                    className: "maqLabelButton",
+                    showLabel: true,
                     toolbarPath: "undoredo",
                     keyBinding: {accel: true, charOrCode: "z"}
                 },
                 {
                     id: "redo",
-                    iconClass: 'redoIcon',
+                    //iconClass: 'redoIcon',
                     action: "davinci/actions/RedoAction",
+                    className: "maqLabelButton",
+                    showLabel: true,
                     label: "Redo",
                     toolbarPath: "undoredo",
                     keyBinding: {accel: true, shift: true, charOrCode: "z"}
                 },
                 {
-                    id: "delete",
-                    iconClass: "editActionIcon editDeleteIcon",
-                    label: "Delete",
-                    action: "davinci/ve/actions/DeleteAction",
-                    toolbarPath: "delete",
-                    keyBinding: {charOrCode: dojo.keys.DELETE}
+                    id: "edit",
+                    className: "maqLabelButton",
+                    showLabel: true,
+                    label: "Edit",
+                    toolbarPath: "undoredo",
+                    type:'DropDownButton',
+                    dropdown:[
+                        {
+                            label: "Cut",
+                            iconClass: "editActionIcon editCutIcon",
+                            action: "davinci/ve/actions/CutAction"
+                        },
+                        {
+                            label: "Copy",
+                            iconClass: "editActionIcon editCopyIcon",
+                            action: "davinci/ve/actions/CopyAction"
+                        },
+                        {
+                            iconClass: "editActionIcon editPasteIcon",
+                            label: "Paste",
+                            action: "davinci/ve/actions/PasteAction"
+                        },
+                        {
+                            iconClass: "editActionIcon editDeleteIcon",
+                            label: "Delete",
+                            action: "davinci/ve/actions/DeleteAction"
+                        }
+                    ]
+                },
+                {
+                    id: "savecombo",
+                    className: "maqLabelButton",
+                    showLabel: true,
+                    label: "Save",
+                    toolbarPath: "save",
+                    type:'ComboButton',
+                    dropdown:[
+                       {
+                            iconClass: 'saveIcon',
+                            run: function() {
+                                require(['../Workbench'], function(workbench) {
+                                    workbench.getOpenEditor().save();
+                                });
+                            },
+                            isEnabled: function(context) {
+                                return require('../Workbench').getOpenEditor();
+                            },
+                            label: "Save"
+                        },
+                        {
+                            iconClass: 'saveAsIcon',
+                            run: function() {
+                                require("../ui/Resource").saveAs('html');
+                            },
+                            isEnabled: function(context) {
+                                return require('../Workbench').getOpenEditor();
+                            },
+                            label: "Save As"
+                        },
+                        {
+                            id: "saveasdijit",
+                            iconClass: 'saveAsDijitIcon',
+                            run: function(){
+                                return require(['davinci/de/resource'], function(r){
+                                  	r.createDijiFromNewDialog();
+                                })
+                            },
+                            isEnabled: function(context) {
+                                return require('../Workbench').getOpenEditor();
+                             },
+                             label: "Save As Widget"
+                         },
+                    ]
                 },
                 {
                     id: "openBrowser",
@@ -368,51 +414,6 @@ return {
                     toolbarPath: "preview",
                     keyBinding: {accel: true, charOrCode: "0", allowGlobal: true}
                 },
-                {
-                    id: "save",
-                    iconClass: 'saveIcon',
-                    run: function() {
-                        require(['../Workbench'], function(workbench) {
-                            workbench.getOpenEditor().save();
-                        });
-                    },
-                    isEnabled: function(context) {
-                        return require('../Workbench').getOpenEditor();
-                    },
-                    label: "Save",
-                    toolbarPath: "save",
-                    keyBinding: {accel: true, charOrCode: "s", allowGlobal: true}
-                },
-                {
-                    id: "saveas",
-                    iconClass: 'saveAsIcon',
-                    run: function() {
-                    	require("../ui/Resource").saveAs('html');
-                    },
-                    isEnabled: function(context) {
-                        return require('../Workbench').getOpenEditor();
-                    },
-                    label: "Save As",
-                    toolbarPath: "save",
-                    keyBinding: {accel: true, shift: true, charOrCode: "s", allowGlobal: true}
-                },
-               
-               {
-                  id: "saveasdijit",
-                    iconClass: 'saveAsDijitIcon',
-                    run: function(){
-                    	return require(['davinci/de/resource'], function(r){
-                    		r.createDijiFromNewDialog();
-                    	})
-                    },
-                    isEnabled: function(context) {
-                        return require('../Workbench').getOpenEditor();
-               
-
-                    },
-                    label: "Save As Widget",
-                    toolbarPath: "save"
-                 },
                 {
                     id: "theme",
                     iconClass: 'selectThemeIcon',

@@ -301,8 +301,11 @@ BODY{
 }
 
 /* Tweaks to Claro for editor toolbar */
+#davinci_toolbar_pane {
+	overflow:hidden;
+}
 .claro .dijitToolbar.davinciToolbar {
-	padding:2px 4px 4px; 
+	padding:2px 0px 4px; 
 	line-height:18px;
 	font-size:10px;
 	background-color:transparent;
@@ -313,7 +316,24 @@ BODY{
 	padding:0 2px;
 	line-height:16px;
 }
-
+#davinci_app .davinciToolbar .maqLabelButton .dijitButtonNode {
+	padding: 4px;
+	border-radius: 4px;
+	font-size: 12px;
+	border: 1px solid #333;
+	background: #EEE;
+}
+#davinci_app .davinciToolbar .maqLabelButton .dijitButtonText {
+	opacity: .9;
+	font-weight: bold;
+}
+#davinci_app .davinciToolbar .maqLabelButton {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+#davinci_app .davinciToolbar  .dijitDropDownButton {
+	padding-left:0;	/* override claro theme value */
+}
 #davinci_app {
 	height: 100%;
 }

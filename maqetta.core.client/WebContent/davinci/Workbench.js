@@ -13,6 +13,7 @@ define([
 	"dijit/PopupMenuBarItem",
 	"dijit/form/Button",
 	"dijit/form/DropDownButton",
+	"dijit/form/ComboButton",
 	"dijit/form/ToggleButton",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/StackController",
@@ -45,6 +46,7 @@ define([
 		PopupMenuBarItem,
 		Button,
 		DropDownButton,
+		ComboButton,
 		ToggleButton,
 		BorderContainer,
 		StackController,
@@ -373,63 +375,92 @@ var Workbench = {
 				firstgroup = false;
 			}
 			var children;
-				var actions = _toolbarcache[value];
-				  for (var p = 0; p<actions.length; p++) {
-					    var action = actions[p];
-			 			var id = action.id;
-			 			// dont add dupes
-			 	
-			 			Workbench._loadActionClass(action);
-						var parms = {showLabel:false/*, id:(id + "_toolbar")*/};
-						if (action.label) {
-							parms.label = action.label;
-						}
-						if (action.iconClass) {
-							parms.iconClass = action.iconClass;
-						}
-						var dojoAction;
-						var dojoActionDeferred = new Deferred();
-						if (action.toggle || action.radioGroup) {
-							dojoAction = new ToggleButton(parms);
-							dojoAction.item = action;
-							dojoAction.set('checked', action.initialValue);
-							if (action.radioGroup) {
-								var group = radioGroups[action.radioGroup];
-								if (!group) {
-									group = radioGroups[action.radioGroup]=[];
-								}
-								group.push(dojoAction);
-								dojoAction.onChange = dojo.hitch(this, "_toggleButton", dojoAction, context, group);
-							} else {
-								dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
-							}
-							dojoActionDeferred.resolve();
-						}else if(action.type){
-							require([action.type], function(ReviewToolBarText) {
-								dojoAction = new ReviewToolBarText();
-								dojoActionDeferred.resolve();
-							});
-						}else{
-							dojoAction = new Button(parms);
-							dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
-							dojoActionDeferred.resolve();
-						}
-						if (action.icon) {
-							var imageNode = document.createElement('img');
-							imageNode.src = action.icon;
-							imageNode.height = imageNode.width = 18;
-							dojoAction.domNode.appendChild(imageNode);
-						}
-						dojoActionDeferred.then(function(){
-							toolbar1.addChild(dojoAction);
-							if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
-								dojoAction.isEnabled = action.isEnabled;
-								dojoAction.set('disabled', true);
-							} else {
-								dojoAction.set('disabled', false);
-							}
-						});
+			var actions = _toolbarcache[value];
+			for (var p = 0; p<actions.length; p++) {
+				var action = actions[p];
+				var id = action.id;
+				// dont add dupes
+		
+				Workbench._loadActionClass(action);
+//FIXME: Have plugin files explicitly define showLabel
+				var parms = {showLabel:false/*, id:(id + "_toolbar")*/};
+				['label','showLabel','iconClass'].forEach(function(prop){
+					if(action.hasOwnProperty(prop)){
+						parms[prop] = action[prop];
+					}
+				});
+				if (action.className) {
+					parms['class'] = action.className;
 				}
+				var dojoAction;
+				var dojoActionDeferred = new Deferred();
+				if(action.dropdown && (action.type == 'DropDownButton' || action.type == 'ComboButton')){
+					var menu = new dijit.Menu({
+						style: "display: none;"
+					});
+					for(var ddIndex=0; ddIndex<action.dropdown.length; ddIndex++){
+						var menuItemObj = action.dropdown[ddIndex];
+						Workbench._loadActionClass(menuItemObj);
+						var menuItemParms = {
+							onClick: dojo.hitch(this, "_runAction", menuItemObj, context)
+						};
+						if(menuItemObj.label){
+							menuItemParms.label = menuItemObj.label;
+						}
+						if(menuItemObj.iconClass){
+							menuItemParms.iconClass = menuItemObj.iconClass;
+						}
+						var menuItem = new dijit.MenuItem(menuItemParms);
+						menu.addChild(menuItem);
+					}
+					parms.dropDown = menu;
+					if(action.type == 'DropDownButton'){
+						dojoAction = new DropDownButton(parms);
+					}else{
+						dojoAction = new ComboButton(parms);
+					}
+					dojoActionDeferred.resolve();
+				}else if (action.toggle || action.radioGroup) {
+					dojoAction = new ToggleButton(parms);
+					dojoAction.item = action;
+					dojoAction.set('checked', action.initialValue);
+					if (action.radioGroup) {
+						var group = radioGroups[action.radioGroup];
+						if (!group) {
+							group = radioGroups[action.radioGroup]=[];
+						}
+						group.push(dojoAction);
+						dojoAction.onChange = dojo.hitch(this, "_toggleButton", dojoAction, context, group);
+					} else {
+						dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
+					}
+					dojoActionDeferred.resolve();
+				}else if(action.type){
+					require([action.type], function(ReviewToolBarText) {
+						dojoAction = new ReviewToolBarText();
+						dojoActionDeferred.resolve();
+					});
+				}else{
+					dojoAction = new Button(parms);
+					dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
+					dojoActionDeferred.resolve();
+				}
+				if (action.icon) {
+					var imageNode = document.createElement('img');
+					imageNode.src = action.icon;
+					imageNode.height = imageNode.width = 18;
+					dojoAction.domNode.appendChild(imageNode);
+				}
+				dojoActionDeferred.then(function(){
+					toolbar1.addChild(dojoAction);
+					if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
+						dojoAction.isEnabled = action.isEnabled;
+						dojoAction.set('disabled', true);
+					} else {
+						dojoAction.set('disabled', false);
+					}
+				});
+			}
 		}
 		return toolbar1;
 	},

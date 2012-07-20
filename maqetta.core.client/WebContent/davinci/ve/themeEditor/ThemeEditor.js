@@ -391,7 +391,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		var rules = this.getRules(widget, subWidget, state);
 		for (var r = 0; r < rules.length; r++){
 			var rule = rules[r];
-			if(!property || this._theme.isPropertyVaildForWidgetRule(rule,property,this._selectedWidget, subWidget, state)){
+			if(/*!property ||*/ this._theme.isPropertyVaildForWidgetRule(rule,property,this._selectedWidget, subWidget, state)){
 				var deltaRule = this.getContext().getDeltaRule(rule);
 				deltaRules[deltaRule.getSelectorText()] = deltaRule;
 				
@@ -446,12 +446,20 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 									}
 								}
 							}
-							command = this._addCommandsForValue(command, this._selectedWidget, this._selectedSubWidget, c, value);
+							for(var i=0;i<value.values.length;i++){
+								for(var a in value.values[i]){
+									command = this._addCommandsForValue(command, this._selectedWidget, this._selectedSubWidget, c, value, a);
+								}
+							}
 						} 
 					}
 				} else {
 					//Normal
-					command = this._addCommandsForValue(command, this._selectedWidget, this._selectedSubWidget, this._currentState, value);
+					for(var i=0;i<value.values.length;i++){
+						for(var a in value.values[i]){
+							command = this._addCommandsForValue(command, this._selectedWidget, this._selectedSubWidget, this._currentState, value, a);
+						}
+					}
 				}
 			}
 		} else {

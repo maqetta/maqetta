@@ -51,6 +51,22 @@ public class OrionUserManager extends UserManagerImpl {
 		return result!=null;
     
     }
+    
+    public IUser getUser(String userName) {
+
+        // IUser user = (IUser) users.get(userName);
+         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
+             return this.getSingleUser();
+         }
+      
+         if (this.checkUserExists(userName)) {
+             IPerson person = this.personManager.getPerson(userName);
+             return newUser(person, null);
+             
+         }
+         return null;
+
+     }
     public IUser newUser(IPerson person, IStorage baseDirectory) {
 
      	IUser user =  new OrionUser(person);

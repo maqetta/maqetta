@@ -5,171 +5,174 @@
 */
 
 //>>built
-define("dojo/Deferred",["./has","./_base/lang","./errors/CancelError","./promise/Promise"],function(_1,_2,_3,_4){
+define("dojo/Deferred",["./has","./_base/lang","./errors/CancelError","./promise/Promise","./promise/instrumentation"],function(_1,_2,_3,_4,_5){
 "use strict";
-var _5=0,_6=1,_7=2;
-var _8="This deferred has already been fulfilled.";
-var _9=Object.freeze||function(){
+var _6=0,_7=1,_8=2;
+var _9="This deferred has already been fulfilled.";
+var _a=Object.freeze||function(){
 };
-var _a=function(_b,_c,_d,_e,_f){
-if(0){
-if(_c===_7&&_10.instrumentRejected&&_b.length===0){
-_10.instrumentRejected(_d,false,_e,_f);
+var _b=function(_c,_d,_e,_f,_10){
+if(1){
+if(_d===_8&&_11.instrumentRejected&&_c.length===0){
+_11.instrumentRejected(_e,false,_f,_10);
 }
 }
-for(var i=0;i<_b.length;i++){
-_11(_b[i],_c,_d,_e);
+for(var i=0;i<_c.length;i++){
+_12(_c[i],_d,_e,_f);
 }
 };
-var _11=function(_12,_13,_14,_15){
-var _16=_12[_13];
-var _17=_12.deferred;
-if(_16){
+var _12=function(_13,_14,_15,_16){
+var _17=_13[_14];
+var _18=_13.deferred;
+if(_17){
 try{
-var _18=_16(_14);
-if(_18&&typeof _18.then==="function"){
-_12.cancel=_18.cancel;
-_18.then(_19(_17,_6),_19(_17,_7),_19(_17,_5));
+var _19=_17(_15);
+if(_19&&typeof _19.then==="function"){
+_13.cancel=_19.cancel;
+_19.then(_1a(_18,_7),_1a(_18,_8),_1a(_18,_6));
 return;
 }
-_1a(_17,_6,_18);
+_1b(_18,_7,_19);
 }
 catch(error){
-_1a(_17,_7,error);
+_1b(_18,_8,error);
 }
 }else{
-_1a(_17,_13,_14);
+_1b(_18,_14,_15);
 }
-if(0){
-if(_13===_7&&_10.instrumentRejected){
-_10.instrumentRejected(_14,!!_16,_15,_17.promise);
+if(1){
+if(_14===_8&&_11.instrumentRejected){
+_11.instrumentRejected(_15,!!_17,_16,_18.promise);
 }
 }
 };
-var _19=function(_1b,_1c){
-return function(_1d){
-_1a(_1b,_1c,_1d);
+var _1a=function(_1c,_1d){
+return function(_1e){
+_1b(_1c,_1d,_1e);
 };
 };
-var _1a=function(_1e,_1f,_20){
-if(!_1e.isCanceled()){
-switch(_1f){
-case _5:
-_1e.progress(_20);
-break;
+var _1b=function(_1f,_20,_21){
+if(!_1f.isCanceled()){
+switch(_20){
 case _6:
-_1e.resolve(_20);
+_1f.progress(_21);
 break;
 case _7:
-_1e.reject(_20);
+_1f.resolve(_21);
+break;
+case _8:
+_1f.reject(_21);
 break;
 }
 }
 };
-var _10=function(_21){
-var _22=this.promise=new _4();
-var _23=this;
-var _24,_25,_26;
-var _27=false;
-var _28=[];
-if(0&&Error.captureStackTrace){
-Error.captureStackTrace(_23,_10);
-Error.captureStackTrace(_22,_10);
+var _11=function(_22){
+var _23=this.promise=new _4();
+var _24=this;
+var _25,_26,_27;
+var _28=false;
+var _29=[];
+if(1&&Error.captureStackTrace){
+Error.captureStackTrace(_24,_11);
+Error.captureStackTrace(_23,_11);
 }
-this.isResolved=_22.isResolved=function(){
-return _24===_6;
+this.isResolved=_23.isResolved=function(){
+return _25===_7;
 };
-this.isRejected=_22.isRejected=function(){
-return _24===_7;
+this.isRejected=_23.isRejected=function(){
+return _25===_8;
 };
-this.isFulfilled=_22.isFulfilled=function(){
-return !!_24;
+this.isFulfilled=_23.isFulfilled=function(){
+return !!_25;
 };
-this.isCanceled=_22.isCanceled=function(){
-return _27;
+this.isCanceled=_23.isCanceled=function(){
+return _28;
 };
-this.progress=function(_29,_2a){
-if(!_24){
-_a(_28,_5,_29,null,_23);
-return _22;
+this.progress=function(_2a,_2b){
+if(!_25){
+_b(_29,_6,_2a,null,_24);
+return _23;
 }else{
-if(_2a===true){
-throw new Error(_8);
+if(_2b===true){
+throw new Error(_9);
 }else{
-return _22;
+return _23;
 }
 }
 };
-this.resolve=function(_2b,_2c){
-if(!_24){
-_a(_28,_24=_6,_25=_2b,null,_23);
-_28=null;
-return _22;
+this.resolve=function(_2c,_2d){
+if(!_25){
+_b(_29,_25=_7,_26=_2c,null,_24);
+_29=null;
+return _23;
 }else{
-if(_2c===true){
-throw new Error(_8);
+if(_2d===true){
+throw new Error(_9);
 }else{
-return _22;
+return _23;
 }
 }
 };
-var _2d=this.reject=function(_2e,_2f){
-if(!_24){
-if(0&&Error.captureStackTrace){
-Error.captureStackTrace(_26={},_2d);
+var _2e=this.reject=function(_2f,_30){
+if(!_25){
+if(1&&Error.captureStackTrace){
+Error.captureStackTrace(_27={},_2e);
 }
-_a(_28,_24=_7,_25=_2e,_26,_23);
-_28=null;
-return _22;
+_b(_29,_25=_8,_26=_2f,_27,_24);
+_29=null;
+return _23;
 }else{
-if(_2f===true){
-throw new Error(_8);
+if(_30===true){
+throw new Error(_9);
 }else{
-return _22;
+return _23;
 }
 }
 };
-this.then=_22.then=function(_30,_31,_32){
-var _33=[_32,_30,_31];
-_33.cancel=_22.cancel;
-_33.deferred=new _10(function(_34){
-return _33.cancel&&_33.cancel(_34);
+this.then=_23.then=function(_31,_32,_33){
+var _34=[_33,_31,_32];
+_34.cancel=_23.cancel;
+_34.deferred=new _11(function(_35){
+return _34.cancel&&_34.cancel(_35);
 });
-if(_24&&!_28){
-_11(_33,_24,_25,_26);
+if(_25&&!_29){
+_12(_34,_25,_26,_27);
 }else{
-_28.push(_33);
+_29.push(_34);
 }
-return _33.deferred.promise;
+return _34.deferred.promise;
 };
-this.cancel=_22.cancel=function(_35,_36){
-if(!_24){
-if(_21){
-var _37=_21(_35);
-_35=typeof _37==="undefined"?_35:_37;
+this.cancel=_23.cancel=function(_36,_37){
+if(!_25){
+if(_22){
+var _38=_22(_36);
+_36=typeof _38==="undefined"?_36:_38;
 }
-_27=true;
-if(!_24){
-if(typeof _35==="undefined"){
-_35=new _3();
+_28=true;
+if(!_25){
+if(typeof _36==="undefined"){
+_36=new _3();
 }
-_2d(_35);
-return _35;
+_2e(_36);
+return _36;
 }else{
-if(_24===_7&&_25===_35){
-return _35;
+if(_25===_8&&_26===_36){
+return _36;
 }
 }
 }else{
-if(_36===true){
-throw new Error(_8);
+if(_37===true){
+throw new Error(_9);
 }
 }
 };
-_9(_22);
+_a(_23);
 };
-_10.prototype.toString=function(){
+_11.prototype.toString=function(){
 return "[object Deferred]";
 };
-return _10;
+if(_5){
+_5(_11);
+}
+return _11;
 });

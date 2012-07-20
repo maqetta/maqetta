@@ -127,7 +127,7 @@ dojo.declare("dojox.editor.plugins._AutoSaveSettingDialog", [_Widget, _Templated
 	_onKeyDown: function(evt){
 		// summary:
 		//		Handle the keydown event
-		//	tags:
+		// tags:
 		//		private
 		if(evt.keyCode == dojo.keys.ENTER){
 			this.onOk();
@@ -147,7 +147,7 @@ dojo.declare("dojox.editor.plugins._AutoSaveSettingDialog", [_Widget, _Templated
 	},
 	
 	_setValueAttr: function(/*String*/ val){
-		//	summary:
+		// summary:
 		//		Set the value attribute if it is acceptable
 		// val:
 		//		The interval value

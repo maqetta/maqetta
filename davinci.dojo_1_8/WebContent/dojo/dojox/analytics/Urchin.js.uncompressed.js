@@ -13,9 +13,9 @@ define("dojox/analytics/Urchin", ["dojo/_base/lang", "dojo/_base/declare", "dojo
 	=====*/
 
 	return declare("dojox.analytics.Urchin", null, {
-		// summary: A Google-analytics helper, for post-onLoad inclusion of the tracker, and
+		// summary:
+		//		A Google-analytics helper, for post-onLoad inclusion of the tracker, and
 		//		dynamic tracking during long-lived page cycles.
-		//
 		// description:
 		//		A small class object will allows for lazy-loading the Google Analytics API
 		//		at any point during a page lifecycle. Most commonly, Google-Analytics is loaded
@@ -32,7 +32,6 @@ define("dojox/analytics/Urchin", ["dojo/_base/lang", "dojo/_base/declare", "dojo
 		//		This module will not work simultaneously with the core dojox.analytics
 		//		package. If you need the ability to run Google Analytics AND your own local
 		//		analytics system, you MUST include dojox.analytics._base BEFORE dojox.analytics.Urchin
-		//
 		// example:
 		//	|	// create the tracker programatically:
 		//	|	var tracker = new dojox.analytics.Urchin({ acct:"UA-123456-7" });
@@ -81,7 +80,8 @@ define("dojox/analytics/Urchin", ["dojo/_base/lang", "dojo/_base/declare", "dojo
 		},
 
 		_gotGA: function(){
-			// summary: initialize the tracker
+			// summary:
+			//		initialize the tracker
 			this.tracker = _gat._getTracker(this.acct);
 			this.GAonLoad.apply(this, arguments);
 		},
@@ -111,12 +111,11 @@ define("dojox/analytics/Urchin", ["dojo/_base/lang", "dojo/_base/declare", "dojo
 		},
 
 		trackPageView: function(/* string */url){
-			// summary: A public API attached to this widget instance, allowing you
+			// summary:
+			//		A public API attached to this widget instance, allowing you
 			//		Ajax-like notification of updates.
-			//
 			// url: String
 			//		A location to tell the tracker to track, eg: "/my-ajaxy-endpoint"
-			//
 			// example:
 			//		Track clicks from a container of anchors and populate a `ContentPane`
 			//	|	// 'tracker' is our `Urchin` instance, pane is the `ContentPane` ref.

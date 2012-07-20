@@ -120,7 +120,7 @@ define("dojo/dom-style", ["./sniff", "./dom"], function(has, dom){
 	/*=====
 	style.toPixelValue = function(node, value){
 		// summary:
-		//      converts style value to pixels on IE or return a numeric value.
+		//		converts style value to pixels on IE or return a numeric value.
 		// node: DOMNode
 		// value: String
 		// returns: Number
@@ -282,8 +282,8 @@ define("dojo/dom-style", ["./sniff", "./dom"], function(has, dom){
 		//	|	});
 		//
 		// example:
-		//		dojo.NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
-		//		dojo.style() on every element of the list. See: `dojo.query()` and `dojo.NodeList()`
+		//		dojo/NodeList implements .style() using the same syntax, omitting the "node" parameter, calling
+		//		dojo.style() on every element of the list. See: `dojo.query()` and `dojo/NodeList`
 		//	|	dojo.query(".someClassName").style("visibility","hidden");
 		//	|	// or
 		//	|	dojo.query("#baz > div").style({

@@ -28,7 +28,7 @@
 							"border-color",
 							"background-color"
                         ],
-						".claro .dijitTabContent": [
+                        ".claro .dijitTab": [
 							"border-color"
 						],
 						".claro .dijitTabPaneWrapper, .claro .dijitTabContainerTop-tabs, .claro .dijitTabContainerBottom-tabs, .claro .dijitTabContainerLeft-tabs, .claro .dijitTabContainerRight-tabs": [
@@ -176,8 +176,9 @@
 						    "border-color",
 							"background-color"
 						],
-						".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionContainer-child":[
-							"border-color"
+						".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper, .claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper": [
+						    "border-color",
+							"background-color"
 						],
 						".claro .dijitTitlePaneTitleHover" : [
                             "background-color",
@@ -193,15 +194,7 @@
 						".claro .dijitSplitterHHover .dijitSplitterThumb": [
 							"background-color"
 						],
-						".claro .dijitComboBoxHover .dijitButtonNode" : [
-							"background-color",
-							"border-color"
-						],
-						".claro .dijitMenuPassive .dijitMenuItemHover": [
-							"background-color",
-							"border-color"
-						],
-						".claro .dijitMenuActive .dijitMenuItemHover": [
+						".claro .dijitSelectMenu .dijitMenuItemHover td, .claro .dijitSelectMenu .dijitMenuItemSelected td, .claro .dijitMenuItemHover, .claro .dijitMenuItemSelected": [
 							"background-color",
 							"border-color"
 						]
@@ -273,7 +266,7 @@
 				},
 				"CalendarPreviousMonth": {
 					"selectors": {
-						".claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel" : [
+						".claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel, .claro .dijitCalendarNextMonth .dijitCalendarDateLabel" : [
 							"background-color",
 							"border-color"
 						]  
@@ -414,16 +407,11 @@
                         },						
                          "Hover": {
                             "selectors": {
-                            	".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionContainer-child":[
-                            		"background-color",
-									"-webkit-box-shadow:",
-									"-moz-box-shadow" 
-                            	],
-                            	".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper": [
+                            	".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper, .claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper": [
 									"border-color",
 									"border-style",
 									"border-width",
-                            	]   
+                            	],
 							},
                             "query": ".dijitAccordionInnerContainer",
 							"simulate": "dijitSelectedHover dijitAccordionInnerContainerSelectedHover"
@@ -996,7 +984,7 @@
                     "states": {
                         "Normal": {
                             "selectors": {
-                                ".claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel" : [
+                                ".claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel, .claro .dijitCalendarNextMonth .dijitCalendarDateLabel" : [
                                     "$std_10" 
                                 ] 
                             },
@@ -1075,15 +1063,6 @@
                      },
                      "query": "",
                      "simulate": "dijitComboBox"
-                },
-                "Hover": {
-                	"selectors": {
-                                ".claro .dijitComboBoxHover .dijitButtonNode" : [
-                                    "$std_10" 
-                                ] 
-                     },
-                     "query": "$auto",
-                     "simulate": "dijitComboBox dijitHover dijitTextBoxHover dijitComboBoxHover"
                 }
              },
              "subwidgets": {
@@ -1210,7 +1189,7 @@
 						},
 						"Hover": {
 							"selectors": {
-								".claro .dijitMenuPassive .dijitMenuItemHover": [
+								".claro .dijitSelectMenu .dijitMenuItemHover td, .claro .dijitSelectMenu .dijitMenuItemSelected td, .claro .dijitMenuItemHover, .claro .dijitMenuItemSelected": [
 									"background-color",
 									"background-position",
 									"border",
@@ -1383,11 +1362,6 @@
 									"-webkit-border-top-left-radius",
 									"-webkit-border-top-right-radius"
 								],
-								".claro .dijitTabContent": [
-									"border-style", 
-									"border-width",
-									"border-color"
-								],
 								".claro .dijitTabContainerTop-tabs": [
 									"border-width",
 									"border-style",
@@ -1492,11 +1466,6 @@
                                     "border-color"
 									/*"padding",*/
 									/*"margin"*/
-								],
-								".claro .dijitTabContent": [
-									"border-style", 
-									"border-width",
-									"border-color"
 								],
 								".claro .dijitTabContainerTop-dijitContentPane": [
 									"background-color", 

@@ -202,7 +202,7 @@ dojo.extend(dojox.xmpp.TransportSession, {
 
 			if (!this.authId){
 				//FIXME according to original nodes, this should wait a little while and try
-				//      again up to three times to see if we get this data.
+				//		again up to three times to see if we get this data.
 				console.debug("TransportSession::dispatchPacket() No authId, packet dropped [FIXME]")
 				return;
 			}
@@ -428,10 +428,10 @@ dojo.extend(dojox.xmpp.TransportSession, {
 
 
 		processProtocolResponse: function(msg, rid){
-			//summary
-			//process the individual protocol messages and if there
-			//is a matching set of protocolMatchType, matchId, and matchPropery
-			//fire off the deferred
+			// summary:
+			//		process the individual protocol messages and if there
+			//		is a matching set of protocolMatchType, matchId, and matchPropery
+			//		fire off the deferred
 
 			this.onProcessProtocolResponse(msg);
 			var key = msg.nodeName + "-" +msg.getAttribute("id");

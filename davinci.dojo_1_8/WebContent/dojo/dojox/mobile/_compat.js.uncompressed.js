@@ -30,6 +30,9 @@ define("dojox/mobile/_compat", [
 
 	// module:
 	//		dojox/mobile/compat
+
+/*=====
+return {
 	// summary:
 	//		CSS3 compatibility module.
 	// description:
@@ -63,6 +66,8 @@ define("dojox/mobile/_compat", [
 	//		in a directory containing this path, the data-dojo-config needs to specify a custom 
 	//		pattern using the "mblLoadCompatPattern" configuration parameter, for instance:
 	//		|	data-dojo-config="mblLoadCompatPattern: /\/mycustomtheme\/.*\.css$/"
+};
+=====*/
 
 	var dm = lang.getObject("dojox.mobile", true);
 
@@ -546,7 +551,7 @@ define("dojox/mobile/_compat", [
 				// we match on directories containing "mobile/themes". If a custom theme is located
 				// outside a "mobile/themes" directory, the dojoConfig needs to specify a custom 
 				// pattern using the "mblLoadCompatPattern" configuration parameter, for instance:
-				//   data-dojo-config="mblLoadCompatPattern: /\/mycustom\/.*\.css$/"
+				// data-dojo-config="mblLoadCompatPattern: /\/mycustom\/.*\.css$/"
 				// Additionally, compat css files are loaded for css in the mobile/tests directory.
 				if((href.match(config.mblLoadCompatPattern || dm.loadCompatPattern) || 
 					location.href.indexOf("mobile/tests/") !== -1) && href.indexOf("-compat.css") === -1){

@@ -8,8 +8,6 @@ define("dojox/mobile/SpinWheelTimePicker", [
 
 	// module:
 	//		dojox/mobile/SpinWheelTimePicker
-	// summary:
-	//		A SpinWheel-based time picker widget.
 
 	return declare("dojox.mobile.SpinWheelTimePicker", [SpinWheel, TimePickerMixin], {
 		// summary:

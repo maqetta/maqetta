@@ -46,6 +46,110 @@ _Invalidating,
 Selection, 
 timeUtil,
 _nls){
+	
+	/*=====
+	var __HeaderClickEventArgs = function(index, date, triggerEvent){
+		// summary:
+		//		A column click event.
+		// index: Integer
+		//		The column index. 
+		// date: Date
+		//		The date displayed by the column.
+		// triggerEvent: Event
+		//		The origin event.
+		this.index = index;
+		this.date = date;
+		this.triggerEvent = triggerEvent;
+	}
+	=====*/
+	
+	/*=====
+	var __TimeIntervalChangeArgs = function(oldStartTime, startTime, oldEndTime, endTime){
+		// summary:
+		//		An time interval change event, dispatched when the calendar displayed time range has changed.
+		// oldStartTime: Date
+		//		The start of the previously displayed time interval, if any. 
+		// startTime: Date
+		//		The new start of the displayed time interval.
+		// oldEndTime: Date
+		//		The end of the previously displayed time interval, if any.
+		// endTime: Date
+		//		The new end of the displayed time interval.
+		this.oldStartTime = oldStartTime;
+		this.startTime = startTime;
+		this.oldEndTime = oldEndTime;
+		this.endTime = endTime;
+	}
+	=====*/
+	
+	/*=====
+	var __GridClickEventArgs = function(date, triggerEvent){
+		// summary:
+		//		The event dispatched when the grid is clicked or double-clicked.
+		// date: Date
+		//		The start of the previously displayed time interval, if any. 
+		// triggerEvent: Event
+		//		The event at the origin of this event.
+		
+		this.date = date;
+		this.triggerEvent = triggerEvent;
+	}
+	=====*/
+	
+	/*=====
+	var __ItemMouseEventArgs = function(item, renderer, triggerEvent){
+		// summary:
+		//		The event dispatched when an item is clicked, double-clicked or context-clicked.
+		// item: Object
+		//		The item clicked.
+		// renderer: dojox/calendar/_RendererMixin
+		//		The item renderer clicked.
+		// triggerEvent: Event
+		//		The event at the origin of this event.
+		
+		this.item = item;
+		this.renderer = renderer;
+		this.triggerEvent = triggerEvent;
+	}
+	=====*/
+	
+	/*=====
+	var __itemEditingEventArgs = function(item, editKind, dates, startTime, endTimesheet, source, eventSource, triggerEvent){
+		// summary:
+		//		An item editing event.
+		// item: Object
+		//		The date item that is being edited.
+		// editKind: String
+		//		Kind of edit: "resizeBoth", "resizeStart", "resizeEnd" or "move".
+		// dates: Date[]
+		//		The computed date/time of the during the event editing. One entry per edited date (touch use case).
+		// startTime: Date?
+		//		The start time of data item.
+		// endTime: Date?
+		//		The end time of data item.
+		// sheet: String
+		//		For views with several sheets (columns view for example), the sheet when the event occured.
+		// source: dojox/calendar/ViewBase
+		//		The view where the event occurred.
+		// eventSource: String
+		//		The device that triggered the event. This property can take the following values:
+		//		- "mouse", 
+		//		- "keyboard", 
+		//		- "touch"		
+		// triggerEvent: Event
+		//		The event at the origin of this event.
+			
+		this.item = item;
+		this.editKind = editKind;
+		this.dates = dates;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.sheet = sheet;
+		this.source = source;
+		this.eventSource = eventSource;
+		this.triggerEvent = triggerEvent;
+	}
+	=====*/
 
 	return declare("dojox.calendar.CalendarBase", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, StoreMixin, _Invalidating, Selection], {
 		
@@ -140,6 +244,7 @@ _nls){
 		//		A user supplied function that creates a new event.
 		//		This function is used when createOnGridClick is set to true and the user is clicking and dragging on the grid.
 		//		This view takes two parameters:
+		//
 		//		- view: the current view,
 		//		- d: the date at the clicked location.
 		createItemFunc: null,
@@ -436,8 +541,8 @@ _nls){
 		onTimeIntervalChange: function(e){
 			// summary:
 			//		Event dispatched when the displayed time interval has changed.
-			// e: Object
-			//		An event that contains the oldStartTime, startTime, oldEndTime and endTime properties.
+			// e: __TimeIntervalChangeArgs
+			//		The time interval change event.
 			// tags:
 			//		callback
 		},
@@ -1137,6 +1242,8 @@ _nls){
 		onGridClick: function(e){
 			// summary:
 			//		Event dispatched when the grid has been clicked.
+			// e: __GridClickEventArgs
+			//		The event dispatched when the grid is clicked.
 			// tags:
 			//		callback
 
@@ -1144,7 +1251,9 @@ _nls){
 		
 		onGridDoubleClick: function(e){
 			// summary:
-			//		Event dispatched when the grid has been double-clicked.		
+			//		Event dispatched when the grid has been double-clicked.	
+			// e: __GridClickEventArgs
+			//		The event dispatched when the grid is double-clicked.
 			// tags:
 			//		callback
 		},	
@@ -1152,6 +1261,8 @@ _nls){
 		onItemClick: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been clicked.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when an item is clicked.
 			// tags:
 			//		callback
 		},
@@ -1159,6 +1270,8 @@ _nls){
 		onItemDoubleClick: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been double-clicked.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when an item is double-clicked.
 			// tags:
 			//		callback
 		},
@@ -1166,6 +1279,8 @@ _nls){
 		onItemContextMenu: function(e){
 			// summary:
 			//		Event dispatched when an item renderer has been context-clicked.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when an item is context-clicked.
 			// tags:
 			//		callback
 		},
@@ -1173,6 +1288,8 @@ _nls){
 		onItemEditBegin: function(e){
 			// summary:
 			//		Event dispatched when the item is entering the editing mode.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 		},
@@ -1180,6 +1297,8 @@ _nls){
 		onItemEditEnd: function(e){
 			// summary:
 			//		Event dispatched when the item is leaving the editing mode.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 		},
@@ -1187,13 +1306,17 @@ _nls){
 		onItemEditBeginGesture: function(e){
 			// summary:
 			//		Event dispatched when an editing gesture is beginning.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 		},
 		
 		onItemEditMoveGesture: function(e){
 			// summary:
-			//		Event dispatched during a move editing gesture.			
+			//		Event dispatched during a move editing gesture.		
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 		},
@@ -1201,6 +1324,8 @@ _nls){
 		onItemEditResizeGesture: function(e){
 			// summary:
 			//		Event dispatched during a resize editing gesture.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 		},
@@ -1208,13 +1333,17 @@ _nls){
 		onItemEditEndGesture: function(e){
 			// summary:
 			//		Event dispatched at the end of an editing gesture.
+			// e: __itemEditingEventArgs
+			//		The editing event.
 			// tags:
 			//		callback
 		},
 		
 		onItemRollOver: function(e){
 			// Summary:
-			//		Event dispatched when the mouse cursor in going over an item renderer. 	
+			//		Event dispatched when the mouse cursor in going over an item renderer.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when the mouse cursor enters in the item renderer.
 			// tags:
 			//		callback
 		},
@@ -1222,6 +1351,8 @@ _nls){
 		onItemRollOut: function(e){
 			// Summary:
 			//		Event dispatched when the mouse cursor in leaving an item renderer.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when the mouse cursor enters in the item renderer.
 			// tags:
 			//		callback
 		},
@@ -1229,14 +1360,8 @@ _nls){
 		onColumnHeaderClick: function(e){
 			// summary:
 			//		Event dispatched when a column header cell is dispatched.
-			// e: Event
-			//		The event has the following properties:
-			//		| index: Integer
-			//		|		The column index. 
-			//		| date: Date
-			//		|		The date displayed by the column.
-			//		| triggerEvent: Event
-			//		|		The origin event.
+			// e: __HeaderClickEventArgs
+			//		Header click event.
 			// tags:
 			//		callback
 		},
@@ -1244,6 +1369,8 @@ _nls){
 		onRowHeaderClick: function(e){
 			// summary:
 			//		Event dispatched when a row header cell is clicked.
+			// e: __HeaderClickEventArgs
+			//		Header click event.
 			// tags:
 			//		callback
 		},		
@@ -1287,6 +1414,8 @@ _nls){
 		onRenderersLayoutDone: function(view){
 			// summary:
 			//		Event triggered when item renderers layout has been done.
+			// view: dojox/calendar/ViewBase
+			//		The view that has been laid-out.
 			// tags:
 			//		callback
 		}

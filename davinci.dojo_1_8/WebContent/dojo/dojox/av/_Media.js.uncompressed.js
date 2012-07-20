@@ -37,7 +37,7 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 		//		How often, in milliseconds to get an update of the video position.
 		updateTime: 100,
 
-		//  id: String?
+		// id: String?
 		//		The id of this widget and the id of the SWF movie.
 		id:"",
 
@@ -88,8 +88,9 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 	
 		getTime: function(){
 			// summary:
-			// 		Returns the current time of the video
-			//	Note:
+			//		Returns the current time of the video
+
+			//		Note:
 			//		Consider the onPosition event, which returns
 			//		the time at a set interval. Too many trips to
 			//		the SWF could impact performance.
@@ -102,9 +103,8 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 	
 		onLoad: function(/* SWF */ mov){
 			// summary:
-			// 		Fired when the SWF player has loaded
-			// 		NOT when the video has loaded
-			//
+			//		Fired when the SWF player has loaded
+			//		NOT when the video has loaded
 		},
 	
 		onDownloaded: function(/* Number */percent){
@@ -115,27 +115,30 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 	
 		onClick: function(/* Object */ evt){
 			// summary:
-			// 		TODO: Return x/y of click
-			// 		Fires when the player is clicked
-			// 		Could be used to toggle play/pause, or
-			// 		do an external activity, like opening a new
+			//		Fires when the player is clicked
+			//		Could be used to toggle play/pause, or
+			//		do an external activity, like opening a new
 			//		window.
+
+			// TODO: Return x/y of click
 		},
 	
 		onSwfSized: function(/* Object */ data){
 			// summary:
-			// 		Fired on SWF resize, or when its
-			// 		toggled between fullscreen.
+			//		Fired on SWF resize, or when its
+			//		toggled between fullscreen.
 		},
 	
 		onMetaData: function(/* Object */ data, /* Object */ evt){
 			// summary:
-			// 		The video properties. Width, height, duration, etc.
-			// 		NOTE: 	if data is empty, this is an older FLV with no meta data.
-			// 				Duration cannot be determined. In original FLVs, duration
-			//				could only be obtained with Flash Media Server.
-			// 		NOTE: 	Older FLVs can still return width and height
-			//				and will do so on a second event call
+			//		The video properties. Width, height, duration, etc.
+
+			// NOTE: 	if data is empty, this is an older FLV with no meta data.
+			//			Duration cannot be determined. In original FLVs, duration
+			//			could only be obtained with Flash Media Server.
+			// NOTE: 	Older FLVs can still return width and height
+			//			and will do so on a second event call
+
 			console.warn("onMeta", data)
 			this.duration = data.duration;
 		},
@@ -147,26 +150,26 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 	
 		onStart: function(/* Object */ data){
 			// summary:
-			// 		Fires when video starts
-			// 		Good for setting the play button to pause
-			// 		during an autoPlay for example
+			//		Fires when video starts
+			//		Good for setting the play button to pause
+			//		during an autoPlay for example
 		},
 	
 		onPlay: function(/* Object */ data){
 			// summary:
-			// 		Fires when video starts and resumes
+			//		Fires when video starts and resumes
 		},
 	
 		onPause: function(/* Object */ data){
 			// summary:
-			// 		Fires when the pause button is clicked
+			//		Fires when the pause button is clicked
 		},
 	
 		onEnd: function(/* Object */ data){
 			// summary:
-			// 		Fires when video ends
-			// 		Could be used to change pause button to play
-			// 		or show a post video graphic, like YouTube
+			//		Fires when video ends
+			//		Could be used to change pause button to play
+			//		or show a post video graphic, like YouTube
 		},
 	
 		onStop: function(){
@@ -187,7 +190,7 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 	
 		onError: function(/* Object */ data, /* String */ url){
 			// summary:
-			// 		Fired when the player encounters an error
+			//		Fired when the player encounters an error
 			// example:
 			//		| console.warn("ERROR-"+data.type.toUpperCase()+":",
 			//		|		data.info.code, " - URL:", url);
@@ -196,13 +199,13 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 	
 		onStatus: function(/* Object */data){
 			// summary:
-			// 		Simple status
+			//		Simple status
 		},
 	
 		onPlayerStatus: function(/* Object */data){
 			// summary:
-			// 		The status of the video from the SWF
-			// 		playing, stopped, bufering, etc.
+			//		The status of the video from the SWF
+			//		playing, stopped, bufering, etc.
 		},
 	
 		onResize: function(){
@@ -213,9 +216,10 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 			// summary:
 			//		Calculate media status, based on playhead movement, and
 			//		onStop and onStart events
+
 			// TODO:
 			//		Figure in real status from the media for more accurate results.
-			//
+
 			var pos = this.getTime();
 			//console.log(pos, this.duration,  (pos>this.duration-.5), (this.duration && pos>this.duration-.5))
 	
@@ -286,7 +290,7 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 				//seconds:this.toSeconds(this._channel.position*.001),
 				//percentPlayed:this._getPercent(),
 				status:this.status
-			}
+			};
 			return evt; // Object
 		},
 	
@@ -333,7 +337,7 @@ define("dojox/av/_Media", ['dojo'],function(dojo){
 	
 		destroy: function(){
 			// summary:
-			// 		destroys flash
+			//		destroys flash
 			if(!this.flashMedia){
 				this._cons.push(dojo.connect(this, "onLoad", this, "destroy"));
 				return;

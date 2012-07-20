@@ -33,8 +33,7 @@ dojo.experimental("dojox.atom.widget.FeedEntryEditor");
 var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryViewer,{
 	// summary:
 	//		An ATOM feed entry editor that allows viewing of the individual attributes of an entry.
-	// description:
-	//		An ATOM feed entry editor that allows viewing of the individual attributes of an entry.
+
 	_contentEditor: null,
 	_oldContent: null,
 	_setObject: null,
@@ -72,9 +71,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	setEntry: function(/*object*/entry, /*object*/feed, /*boolean*/leaveMenuState){
 		// summary:
 		//		Function to set the current entry that is being edited.
-		// description:
-		//		Function to set the current entry that is being edited.
-		//
 		// entry:
 		//		Instance of dojox.atom.io.model.Entry to display for reading/editing.
 		if(this._entry !== entry){
@@ -104,9 +100,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	_toggleEdit: function(){
 		// summary:
 		//		Internal function for toggling/enabling the display of edit mode
-		// description:
-		//		Internal function for toggling/enabling the display of edit mode
-		//
 		// returns:
 		//		Nothing.
 		if(this._editable && this.enableEdit){
@@ -122,12 +115,8 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	_handleEvent: function(/*object*/entrySelectionEvent){
 		// summary:
 		//		Internal function for listening to a topic that will handle entry notification.
-		// description:
-		//		Internal function for listening to a topic that will handle entry notification.
-		//
 		// entrySelectionEvent:
 		//		The topic message containing the entry that was selected for view.
-		//
 		// returns:
 		//		Nothing.
 		if(entrySelectionEvent.source != this && entrySelectionEvent.action == "delete" &&
@@ -143,10 +132,8 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Internal function for determining of a particular entry is editable.
 		//		This is used for determining if the delete action should be displayed or not.
-		//
 		// entry:
 		//		The dojox.atom.io.model.Entry object to examine
-		//
 		// returns:
 		//		Boolean denoting if the entry seems editable or not..
 		var retVal = false;
@@ -169,14 +156,13 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to set the contents of the title node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// titleAnchorNode:
 		//		The DOM node to attach the title data to.
 		// editMode:
-		// 		Boolean to indicate if the display should be in edit mode or not.
+		//		Boolean to indicate if the display should be in edit mode or not.
 		// entry:
 		//		The Feed Entry to work with.
-		//
+
 		if(!editMode){
 			FeedEntryEditor.superclass.setTitle.call(this, titleAnchorNode, editMode, entry);
 			if(entry.title && entry.title.value && entry.title.value !== null){
@@ -204,13 +190,12 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to set the contents of the author node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// authorsAnchorNode:
 		//		The DOM node to attach the author data to.
 		// editMode:
-		// 		Boolean to indicate if the display should be in edit mode or not.
+		//		Boolean to indicate if the display should be in edit mode or not.
 		// entry:
-		// 		The Feed Entry to work with.
+		//		The Feed Entry to work with.
 		if(!editMode){
 			FeedEntryEditor.superclass.setAuthors.call(this, authorsAnchorNode, editMode, entry);
 			if(entry.authors && entry.authors.length > 0){
@@ -231,7 +216,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to set the contents of the contributor node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// contributorsAnchorNode:
 		//		The DOM node to attach the contributor data to.
 		// editMode:
@@ -258,7 +242,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to set the contents of the ID node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// idAnchorNode:
 		//		The DOM node to attach the ID data to.
 		// editMode:
@@ -284,9 +267,8 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to set the contents of the updated node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// updatedAnchorNode:
-		//		The DOM node to attach the udpated data to.
+		//		The DOM node to attach the updated data to.
 		// editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
 		// entry:
@@ -311,7 +293,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to set the contents of the summary node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// summaryAnchorNode:
 		//		The DOM node to attach the summary data to.
 		// editMode:
@@ -345,7 +326,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to set the contents of the content node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// summaryAnchorNode:
 		//		The DOM node to attach the content data to.
 		// editMode:
@@ -375,9 +355,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	_createEditor: function(/*DOM node*/anchorNode, /*DOM node*/node, /*boolean*/multiline, /*object*/rte){
 		// summary:
 		//		Function to create an appropriate text editor widget based on the given parameters.
-		// description:
-		//		Function to create an appropriate text editor widget based on the given parameters.
-		//
 		// anchorNode:
 		//		The DOM node to attach the editor widget to.
 		// node:
@@ -388,7 +365,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		//		single line (such as a textbox).
 		// rte:
 		//		A boolean indicating whether the content should be a rich text editor widget.
-		//
 		// returns:
 		//		Either a widget (for textarea or textbox widgets) or an anonymous object to be used to create a
 		//		rich text area widget.
@@ -485,7 +461,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		// description:
 		//		Function to switch between a rich text editor and a textarea widget.  Used for title, summary,
 		//		And content when switching between text and html/xhtml content.
-		//
 		// event:
 		//		The event generated by the change in the select box on the page.
 		var type = null;
@@ -547,17 +522,14 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	
 	_createPeopleEditor: function(/*DOM node*/anchorNode, /*DOM node*/node){
 		// summary:
-		//		Creates a People Editor widget and returns it.
-		// description:
 		//		Creates a People Editor widget, sets its value, and returns it.
-		//
 		// anchorNode:
 		//		The node to attach the editor to.
 		// node:
 		//		An object containing the value to be put into the editor. Typically, this is an
 		//		dojox.atom.io.model.Person object.
-		//
-		// returns: A new People Editor object.
+		// returns:
+		//		A new People Editor object.
 		var viewNode = document.createElement("div");
 		anchorNode.appendChild(viewNode);
 		return new PeopleEditor(node,viewNode);
@@ -570,7 +542,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 		//		Saves edits submitted when the 'save' button is pressed.  Distinguishes between new and existing
 		//		entries and saves appropriately.  Fetches the values of the editors, and, if existing, compares them to
 		//		the existing values and submits the updates, otherwise creates a new entry and posts it as a new entry.
-		//
 		// returns:
 		//		Nothing.
 		domStyle.set(this.entrySaveCancelButtons, 'display', 'none');
@@ -710,7 +681,7 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 				//var atomIO = new dojox.atom.io.Connection();
 				//atomIO.updateEntry(entry, dojo.hitch(this,this._handleSave));
 				//WARNING: Use above when testing with SimpleProxy (or any other servlet which
-				// 			doesn't actually create a new entry and return it properly)
+				//			doesn't actually create a new entry and return it properly)
 				//atomIO.updateEntry(entry, dojo.hitch(this,this._handleSave), true);
 			}
 		}else{
@@ -766,9 +737,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	_handleSave: function(/*object*/entry, /*string*/ location){
 		// summary:
 		//		Function for handling the save of an entry, cleaning up the display after the edit is completed.
-		// description:
-		//		Function for handling the save of an entry, cleaning up the display after the edit is completed.
-		//
 		// entry: dojox.atom.io.model.Entry object
 		//		The entry that was saved.
 		// Location: String
@@ -786,9 +754,6 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	cancelEdits: function(){
 		// summary:
 		//		Cancels edits and reverts the editor to its previous state (display mode)
-		// description:
-		//		Cancels edits and reverts the editor to its previous state (display mode)
-		//
 		// returns:
 		//		Nothing.
 		this._new = false;
@@ -806,9 +771,7 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 
 	clear: function(){
 		// summary:
-		//		Clears the editor, destorys all editors, leaving the editor completely clear
-		// description:
-		//		Clears the editor, destorys all editors, leaving the editor completely clear
+		//		Clears the editor, destroys all editors, leaving the editor completely clear
 		this._editable=false;
 		this.clearEditors();
 		FeedEntryEditor.superclass.clear.apply(this);
@@ -833,12 +796,8 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	_enforceXhtml: function(/*string*/html){
 		// summary:
 		//		Function for cleaning up/enforcing the XHTML standard in HTML returned from the editor2 widget.
-		// description:
-		//		Function for cleaning up/enforcing the XHTML standard in HTML returned from the editor2 widget.
-		//
 		// 	html:
 		//		HTML string to be enforced as xhtml.
-		//
 		// 	returns:
 		//		string of cleaned up HTML.
 		var xhtml = null;
@@ -859,16 +818,13 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	_closeTag: function(/*string*/xhtml, /*string*/tag){
 		// summary:
 		//		Function for closing tags in a text of HTML/XHTML
-		// description:
-		//		Function for closing tags in a text of HTML/XHTML
-		//
 		// xhtml: String
 		//		XHTML string which needs the closing tag.
 		// tag:
 		//		The tag to close.
-		//
-		// returns:  string of cleaned up HTML.
-		//
+		// returns:
+		//		string of cleaned up HTML.
+
 		// NOTE:  Probably should redo this function in a more efficient way.  This could get expensive.
 		var tagStart = "<" + tag;
 		var tagIndex = xhtml.indexOf(tagStart);
@@ -900,9 +856,7 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	_toggleNew: function(){
 		// summary:
 		//		Function to put the editor into a state to create a new entry.
-		// description:
-		//		Function to put the editor into a state to create a new entry.
-		
+
 		// Hide the edit/new buttons and show the save/cancel buttons.
 		domStyle.set(this.entryNewButton, 'display', 'none');
 		domStyle.set(this.entryEditButton, 'display', 'none');
@@ -968,9 +922,9 @@ var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryView
 	},
 	
 	_displaySections: function(){
-		// summary: Function to display the appropriate sections based on validity.
-		// description: Function to display the appropriate sections based on validity.
-		
+		// summary:
+		//		Function to display the appropriate sections based on validity.
+
 		// Hide select boxes.
 		domStyle.set(this.entrySummarySelect, 'display', 'none');
 		domStyle.set(this.entryContentSelect, 'display', 'none');
@@ -1057,9 +1011,6 @@ var PeopleEditor = declare("dojox.atom.widget.PeopleEditor", [_Widget, _Template
 		_createEditors: function(/*string*/name, /*string*/email, /*string*/uri, /*int*/index, /*string*/widgetName){
 			// summary:
 			//		creates editor boxes (textbox widgets) for the individual values of a Person.
-			// description:
-			//		creates editor boxes (textbox widgets) for the individual values of a Person.
-			//
 			// name:
 			//		The name of this Person.
 			// email:
@@ -1127,9 +1078,6 @@ var PeopleEditor = declare("dojox.atom.widget.PeopleEditor", [_Widget, _Template
 		_createEditor: function(/*string*/value, /*string*/id, /*string*/name, /*DOM node*/labelNode, /*DOM node*/node){
 			// summary:
 			//		Creates an individual editor widget (textbox) for a value.
-			// 	description:
-			//		Creates an individual editor widget (textbox) for a value.
-			//
 			// 	value:
 			//		The initial value of the textbox
 			// 	id:
@@ -1140,7 +1088,6 @@ var PeopleEditor = declare("dojox.atom.widget.PeopleEditor", [_Widget, _Template
 			//		The node to attach the label to.
 			// node:
 			//		The node to attach the editor rows to.
-			//
 			// returns:
 			//		Editor widget.
 			var row = document.createElement("tr");
@@ -1175,7 +1122,6 @@ var PeopleEditor = declare("dojox.atom.widget.PeopleEditor", [_Widget, _Template
 			// description:
 			//		Removes a Person from our list of editors by removing the block of editors that
 			//		make up that Person.
-			//
 			// event:
 			//		The event generated when the remove button is pressed on the page.
 			var target = null;
@@ -1211,8 +1157,6 @@ var PeopleEditor = declare("dojox.atom.widget.PeopleEditor", [_Widget, _Template
 		_add: function(){
 			// summary:
 			//		Adds a new block of blank editors to represent a Person.
-			// description:
-			//		Adds a new block of blank editors to represent a Person.
 			this._createEditors(null, null, null, this._index);
 			this._index++;
 			this._numRows++;
@@ -1223,7 +1167,6 @@ var PeopleEditor = declare("dojox.atom.widget.PeopleEditor", [_Widget, _Template
 			//		Gets the values of this editor in an array.
 			// description:
 			//		Gets the values of this editor in an array, with each Person as an object within the array.
-			//
 			// returns:
 			//		An array of anonymous objects representing dojox.atom.io.model.Persons.
 			var values = [];

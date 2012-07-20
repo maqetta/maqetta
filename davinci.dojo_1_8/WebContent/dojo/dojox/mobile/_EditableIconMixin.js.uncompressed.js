@@ -9,13 +9,12 @@ define("dojox/mobile/_EditableIconMixin", [
 	"dojo/touch",
 	"dijit/registry",
 	"./IconItem",
-	"./sniff"
-], function(array, connect, declare, event, lang, domGeometry, domStyle, touch, registry, IconItem, has){
+	"./sniff",
+	"./viewRegistry"
+], function(array, connect, declare, event, lang, domGeometry, domStyle, touch, registry, IconItem, has, viewRegistry){
 
 	// module:
 	//		dojox/mobile/_EditableIconMixin
-	// summary:
-	//		A mixin for IconContainer to make it editable.
 
 	return declare("dojox.mobile._EditableIconMixin", null, {
 		// summary:
@@ -129,9 +128,11 @@ define("dojox/mobile/_EditableIconMixin", [
 			if(!iconPressed){ return; }
 
 			if(!this._conn){
+				// don't use touch.move since this is actually an event listened to on the document,
+				// so we can't stop it when we are in a ScrollableView (to prevent the view from scrolling while dragging icons).
 				this._conn = [
-					this.connect(this.domNode, touch.move, "_onTouchMove"),
-					this.connect(this.domNode, touch.release, "_onTouchEnd")
+					this.connect(this.domNode, has("touch") ? "ontouchmove" : "onmousemove", "_onTouchMove"),
+					this.connect(this.domNode, has("touch") ? "ontouchend" : "onmouseup", "_onTouchEnd")
 				];
 			}
 			this._touchStartPosX = e.touches ? e.touches[0].pageX : e.pageX;
@@ -160,10 +161,21 @@ define("dojox/mobile/_EditableIconMixin", [
 
 			var x = e.touches ? e.touches[0].pageX : e.pageX;
 			var y = e.touches ? e.touches[0].pageY : e.pageY;
+			
+			var enclosingScrollable = viewRegistry.getEnclosingScrollable(movingItem.domNode);
+			var dx = 0;
+			var dy = 0;
+			if(enclosingScrollable){ // this node is placed inside a scrollable
+				var pos = enclosingScrollable.getPos();
+				dx = pos.x;
+				dy = pos.y;
+				event.stop(e);
+			}
+			
 			var startPos = this._startPos = domGeometry.position(movingItem.domNode, true);
 			this._offsetPos = {
-				x: startPos.x - x,
-				y: startPos.y - y
+				x: startPos.x - x - dx,
+				y: startPos.y - y - dy
 			};
 
 			this._startIndex = this.getIndexOfChild(movingItem);
@@ -171,8 +183,8 @@ define("dojox/mobile/_EditableIconMixin", [
 			this.moveChild(movingItem, this.getChildren().length);
 			domStyle.set(movingItem.domNode, {
 				position: "absolute",
-				top: startPos.y + "px",
-				left: startPos.x + "px",
+				top: (startPos.y - dy) + "px",
+				left: (startPos.x - dx) + "px",
 				zIndex: 100
 			});
 		},
@@ -277,13 +289,14 @@ define("dojox/mobile/_EditableIconMixin", [
 			var dir = from < to ? 1 : -1;
 			var children = this.getChildren();
 			var posArray = [];
-			for(var i=from; i!=to; i+=dir){
+			var i;
+			for(i=from; i!=to; i+=dir){
 				posArray.push({
 					t: (children[i+dir].domNode.offsetTop - children[i].domNode.offsetTop) + "px",
 					l: (children[i+dir].domNode.offsetLeft - children[i].domNode.offsetLeft) + "px"
 				});
 			}
-			for(var i=from, j=0; i!=to; i+=dir, j++){
+			for(i=from, j=0; i!=to; i+=dir, j++){
 				var w = children[i];
 				w._moving = true;
 				domStyle.set(w.domNode, {
@@ -346,7 +359,7 @@ define("dojox/mobile/_EditableIconMixin", [
 			//		callback
 		},
 
-		deleteItem: function(item){
+		deleteItem: function(/*Widget*/item){
 			// summary:
 			//		Deletes the given item.
 			if(item._deleteHandle){

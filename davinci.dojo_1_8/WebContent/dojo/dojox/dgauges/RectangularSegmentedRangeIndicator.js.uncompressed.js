@@ -1,7 +1,8 @@
 define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare", "dojo/on", "dojox/gfx", "./IndicatorBase"], function(declare, on, gfx, IndicatorBase){
-	return declare("dojox.dgauges.RectangularRangeIndicator", IndicatorBase, {
+	return declare("dojox.dgauges.RectangularSegmentedRangeIndicator", IndicatorBase, {
 		// summary:
 		//		A segmented-style range indicator for rectangular gauges.
+		//		This class will be replaced by a cleaner implementation in a future version.
 		
 		start: 0,
 		startThickness: 10,
@@ -27,8 +28,8 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 		//		Default is true.		
 		rounded: true,
 		
-		// ranges: Object
-		//
+		// ranges: Array
+		//		An array containing objects to define color ranges. Example [{color:"#FF0000", size:20}, {color:"#FF8800", size:50}].
 		ranges: null,
 		
 		constructor: function(){
@@ -61,7 +62,7 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 				fill.x2 = startX + length;
 				fill.y2 = startY;
 				
-				var rangeStart = 0;
+				var rangeStart = this.start;
 				
 				for(i = 0; i < this.ranges.length; i++){
 					var entry1 = {
@@ -228,9 +229,9 @@ define("dojox/dgauges/RectangularSegmentedRangeIndicator", ["dojo/_base/declare"
 				
 		indicatorShapeFunc: function(group, indicator, startX, startY, endPosition, startThickness, endThickness, fill, stroke){
 			// summary:
-			//		Constructor.
-			// description:
-			//		Creates a segmented range indicator.
+			//		Internal method.
+			// tags:
+			//		private
 			
 			if(indicator.scale._gauge.orientation == "horizontal"){
 				this._defaultHorizontalShapeFunc(indicator, group, indicator.scale, startX, startY, endPosition, startThickness, endThickness, fill, stroke);

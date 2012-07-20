@@ -25,12 +25,11 @@ dojo.experimental("dojox.atom.widget.FeedEntryViewer");
 var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Templated, _Container],{
 	// summary:
 	//		An ATOM feed entry editor for publishing updated ATOM entries, or viewing non-editable entries.
-	// description:
-	//		An ATOM feed entry editor for publishing updated ATOM entries, or viewing non-editable entries.
+
 	entrySelectionTopic: "",	//The topic to listen on for entries to edit.
 
 	_validEntryFields: {},		//The entry fields that were present on the entry and are being displayed.
-								//This works in conjuntion with what is selected to be displayed.
+								//This works in conjunction with what is selected to be displayed.
 	displayEntrySections: "", //What current sections of the entries to display as a comma separated list.
 	_displayEntrySections: null,
 	
@@ -85,8 +84,7 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	clear: function(){
 		// summary:
 		//		Function to clear the state of the widget.
-		// description:
-		//		Function to clear the state of the widget.
+
 		this.destroyDescendants();
 		this._entry=null;
 		this._feed=null;
@@ -95,8 +93,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	
 	clearNodes: function(){
 		// summary:
-		//		Function to clear all the display nodes for the ATOM entry from the viewer.
-		// description:
 		//		Function to clear all the display nodes for the ATOM entry from the viewer.
 
 		arrayUtil.forEach([
@@ -122,9 +118,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	setEntry: function(/*object*/entry, /*object*/feed, /*boolean*/leaveMenuState){
 		// summary:
 		//		Function to set the current entry that is being edited.
-		// description:
-		//		Function to set the current entry that is being edited.
-		//
 		// entry:
 		//		Instance of dojox.atom.io.model.Entry to display for reading/editing.
 		this.clear();
@@ -199,14 +192,13 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the title header node in the template to some value.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
-		// titleAchorNode:
+		// titleAnchorNode:
 		//		The DOM node to attach the title data to.
 		// editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
 		// entry:
 		//		The Feed Entry to work with.
-		//
+
 		if(entry.title && entry.title.value && entry.title.value !== null){
 			var _nlsResources = i18nViewer;
 			var titleHeader = new EntryHeader({title: _nlsResources.title});
@@ -220,8 +212,7 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the title node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
-		// titleAchorNode:
+		// titleAnchorNode:
 		//		The DOM node to attach the title data to.
 		// editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
@@ -247,7 +238,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the title format for the authors section of the author row in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the author data is filled out from an entry.
-		//
 		// authorHeaderNode:
 		//		The DOM node to attach the author section header data to.
 		// entry:
@@ -265,8 +255,7 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the author node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
-		// authorsAchorNode:
+		// authorsAnchorNode:
 		//		The DOM node to attach the author data to.
 		// editMode:
 		//		Boolean to indicate if the display should be in edit mode or not.
@@ -303,7 +292,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the contributor header node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// contributorsHeaderNode:
 		//		The DOM node to attach the contributor title to.
 		// entry:
@@ -322,7 +310,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the contributor node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// contributorsAnchorNode:
 		//		The DOM node to attach the contributor data to.
 		// editMode:
@@ -347,7 +334,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the ID node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// idAnchorNode:
 		//		The DOM node to attach the ID data to.
 		// entry:
@@ -366,7 +352,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the ID node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// idAnchorNode:
 		//		The DOM node to attach the ID data to.
 		// 	editMode:
@@ -386,7 +371,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the updated header node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// updatedHeaderNode:
 		//		The DOM node to attach the updated header data to.
 		// entry:
@@ -404,7 +388,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the updated node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// updatedAnchorNode:
 		//		The DOM node to attach the udpated data to.
 		// editMode:
@@ -424,7 +407,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the summary node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// summaryHeaderNode:
 		//		The DOM node to attach the summary title to.
 		// entry:
@@ -443,7 +425,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the summary node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// summaryAnchorNode:
 		//		The DOM node to attach the summary data to.
 		// editMode:
@@ -465,7 +446,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the content node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// contentHeaderNode:
 		//		The DOM node to attach the content data to.
 		// entry:
@@ -483,7 +463,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Function to set the contents of the content node in the template to some value from the entry.
 		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
-		//
 		// contentAnchorNode:
 		//		The DOM node to attach the content data to.
 		// editMode:
@@ -503,9 +482,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	_displaySections: function(){
 		// summary:
 		//		Internal function for determining which sections of the view to actually display.
-		// description:
-		//		Internal function for determining which sections of the view to actually display.
-		//
 		// returns:
 		//		Nothing.
 		domStyle.set(this.entryTitleRow, 'display', 'none');
@@ -546,12 +522,8 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	setDisplaySections: function(/*array*/sectionsArray){
 		// summary:
 		//		Function for setting which sections of the entry should be displayed.
-		// description:
-		//		Function for setting which sections of the entry should be displayed.
-		//
 		// sectionsArray:
 		//		Array of string names that indicate which sections to display.
-		//
 		// returns:
 		//		Nothing.
 		if(sectionsArray !== null){
@@ -565,9 +537,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	_setDisplaySectionsCheckboxes: function(){
 		// summary:
 		//		Internal function for setting which checkboxes on the display are selected.
-		// description:
-		//		Internal function for setting which checkboxes on the display are selected.
-		//
 		// returns:
 		//		Nothing.
 		var items = ["title","authors","contributors","summary","content","id","updated"];
@@ -583,11 +552,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	_readDisplaySections: function(){
 		// summary:
 		//		Internal function for reading what is currently checked for display and generating the display list from it.
-		// description:
-		//		Internal function for reading what is currently checked for display and generating the display list from it.
-		//
-		// returns:
-		//		Nothing.
 		var checkedList = [];
 
 		if(this.feedEntryCheckBoxTitle.checked){
@@ -620,12 +584,8 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Internal function for determining of a particular entry is editable.
 		//		This is used for determining if the delete action should be displayed or not.
-		//
 		// checkBox:
 		//		The checkbox object to toggle the selection on.
-		//
-		// returns:
-		//		Nothing
 		if(checkBox.checked){
 			checkBox.checked=false;
 		}else{
@@ -641,12 +601,8 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		// description:
 		//		Internal function for determining of a particular entry is editable.
 		//		This is used for determining if the delete action should be displayed or not.
-		//
 		// checkBox:
 		//		The checkbox object to toggle the selection on.
-		//
-		// returns:
-		//		Nothing
 		if(this.enableMenu){
 			var fade = null;
 			var anim;
@@ -693,12 +649,8 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	_handleEvent: function(/*object*/entrySelectionEvent){
 		// summary:
 		//		Internal function for listening to a topic that will handle entry notification.
-		// description:
-		//		Internal function for listening to a topic that will handle entry notification.
-		//
 		// entrySelectionEvent:
 		//		The topic message containing the entry that was selected for view.
-		//
 		// returns:
 		//		Nothing.
 		if(entrySelectionEvent.source != this){
@@ -717,12 +669,10 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 		//		Function to set whether a field in the view is valid and displayable.
 		//		This is needed for over-riding of the set* functions and customization of how data is displayed in the attach point.
 		//		So if custom implementations use their own display logic, they can still enable the field.
-		//
 		// field:
 		//		The field name to set the valid parameter on.  Such as 'content', 'id', etc.
 		// isValid:
 		//		Flag denoting if the field is valid or not.
-		//
 		// returns:
 		//		Nothing.
 		if(field){
@@ -734,12 +684,8 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 	isFieldValid: function(/*string*/field){
 		// summary:
 		//		Function to return if a displayable field is valid or not
-		// description:
-		//		Function to return if a displayable field is valid or not
-		//
 		// field:
 		//		The field name to get the valid parameter of.  Such as 'content', 'id', etc.
-		//
 		// returns:
 		//		boolean denoting if the field is valid and set.
 		return this._validEntryFields[field.toLowerCase()];
@@ -761,8 +707,6 @@ var FeedEntryViewer = declare("dojox.atom.widget.FeedEntryViewer", [_Widget, _Te
 
 var EntryHeader = FeedEntryViewer.EntryHeader = declare("dojox.atom.widget.EntryHeader", [_Widget, _Templated, _Container],{
 	// summary:
-	//		Widget representing a header in a FeedEntryViewer/Editor
-	// description:
 	//		Widget representing a header in a FeedEntryViewer/Editor
 	title: "",
 	templateString: headerTemplate,

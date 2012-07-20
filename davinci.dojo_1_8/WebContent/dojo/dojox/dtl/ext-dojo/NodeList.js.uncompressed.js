@@ -9,7 +9,7 @@ define("dojox/dtl/ext-dojo/NodeList", [
 
 	lang.extend(NodeList, {
 		dtl: function(template, context){
-			// summary: 
+			// summary:
 			//		Renders the specified template in each of the NodeList entries.
 			// template: dojox/dtl/__StringArgs|String
 			//		The template string or location

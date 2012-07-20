@@ -24,6 +24,8 @@ define("dojox/dgauges/RectangularScale", ["dojo/_base/declare", "dojox/gfx", "./
 		positionForValue: function(value){
 			// summary:
 			//		Transforms a value into a position using the associated scaler.
+			// value:
+			//		The value to transform.
 			// returns: Number
 			//		A position in pixels.
 			var relativePos = 0;
@@ -47,6 +49,8 @@ define("dojox/dgauges/RectangularScale", ["dojo/_base/declare", "dojox/gfx", "./
 		valueForPosition: function(pos){
 			// summary:
 			//		Transforms a position in pixels into a value using the associated scaler.
+			// pos:
+			//		The position to transform.
 			// returns: Number
 			//		The value represented by pos. 
 			var value = this.scaler.minimum;

@@ -75,6 +75,7 @@ return declare("dojox.grid.enhanced.plugins._SelectionPreserver", _SelectionPres
 	_updateMapping: function(trustSelection, isSelect, isForAll, from, to){
 		// summary:
 		//		This function try to keep the selection info updated when range selection is performed.
+		//
 		//		1. Calculate how many unloaded rows are there;
 		//		2. update _selectedById data if grid.selection._selected can be trusted, so loaded but unselected rows can
 		//			be properly recorded.

@@ -42,8 +42,8 @@ dhebrew.add = function(/*dojox/date/hebrew/Date*/date, /*String*/interval, /*int
 	//		Date object to start with
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond", "week", "weekday"
 	// amount:
 	//		How much to add to the date.
 
@@ -113,8 +113,9 @@ dhebrew.difference = function(/*dojox/date/hebrew/Date*/date1, /*dojox/date/hebr
 	//		If not specified, the current dojox.date.hebrew.Date is used.
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond",  "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond",  "week", "weekday"
+	//
 	//		Defaults to "day".
 
 	//	based on and similar to dojo.date.difference

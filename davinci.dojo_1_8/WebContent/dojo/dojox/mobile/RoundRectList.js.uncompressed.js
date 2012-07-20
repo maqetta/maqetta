@@ -12,8 +12,6 @@ define("dojox/mobile/RoundRectList", [
 
 	// module:
 	//		dojox/mobile/RoundRectList
-	// summary:
-	//		A rounded rectangle list.
 
 	return declare("dojox.mobile.RoundRectList", [WidgetBase, Container, Contained], {
 		// summary:

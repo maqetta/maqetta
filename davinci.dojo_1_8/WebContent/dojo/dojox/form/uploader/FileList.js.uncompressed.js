@@ -29,19 +29,19 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 	uploader:null,
 
 	// headerIndex: String
-	// 		The label for the index column.
+	//		The label for the index column.
 	headerIndex:"#",
 
 	// headerType: String
-	// 		The label for the file type column.
+	//		The label for the file type column.
 	headerType:"Type",
 
 	// headerFilename: String
-	// 		The label for the file name column.
+	//		The label for the file name column.
 	headerFilename:"File Name",
 
 	// headerFilesize: String
-	// 		The label for the file size column.
+	//		The label for the file size column.
 	headerFilesize:"Size",
 
 	_upCheckCnt:0,
@@ -143,7 +143,7 @@ return declare("dojox.form.uploader.FileList", [formUploaderBase], {
 		var node = this.progressNode;
 		var onEnd = function(){
 			domStyle.set(node, "display", o.endDisp);
-		}
+		};
 		if(o.ani){
 			domStyle.set(node, "display", "block");
 			fx.animateProperty({

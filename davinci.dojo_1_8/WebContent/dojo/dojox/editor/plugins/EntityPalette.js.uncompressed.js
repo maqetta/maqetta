@@ -217,8 +217,7 @@ dojo.declare("dojox.editor.plugins.LatinEntity",
 
 		getValue: function(){
 			// summary:
-			//   Returns HTML representing the character, like &amp;
-			//
+			//		Returns HTML representing the character, like &amp;
 			return "&" + this._alias + ";";
 		},
 

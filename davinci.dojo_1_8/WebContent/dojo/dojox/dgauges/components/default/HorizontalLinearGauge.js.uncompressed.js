@@ -75,7 +75,7 @@ define("dojox/dgauges/components/default/HorizontalLinearGauge", [
 		drawBackground: function(g, w, h){
 			// summary:
 			//		Draws the background shape of the gauge.
-			// g: dojox/gfx/canvas.Group
+			// g: dojox/gfx/Group
 			//		The group used to draw the background. 
 			// w: Number
 			//		The width of the gauge.

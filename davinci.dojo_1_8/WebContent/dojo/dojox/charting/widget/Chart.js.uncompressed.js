@@ -268,7 +268,7 @@ define("dojox/charting/widget/Chart", ["dojo/_base/kernel", "dojo/_base/lang", "
 			//		Resize the widget.
 			// description:
 			//		Resize the domNode and the widget surface to the dimensions of a box of the following form:
-			//			`{ l: 50, t: 200, w: 300: h: 150 }`
+			//		`{ l: 50, t: 200, w: 300: h: 150 }`
 			//		If no box is provided, resize the surface to the marginBox of the domNode.
 			// box:
 			//		If passed, denotes the new size of the widget.

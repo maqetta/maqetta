@@ -6,8 +6,6 @@ define("dojox/mobile/viewRegistry", [
 
 	// module:
 	//		dojox/mobile/viewRegistry
-	// summary:
-	//		A registry of existing views.
 
 	var viewRegistry = {
 		// summary:
@@ -16,10 +14,12 @@ define("dojox/mobile/viewRegistry", [
 		// length: Number
 		//		The number of registered views.
 		length: 0,
+		
 		// hash: [private] Object
 		//		The object used to register views.
 		hash: {},
-		// initialView: [private] doox/mobile/View
+		
+		// initialView: [private] dojox/mobile/View
 		//		The initial view.
 		initialView: null,
 

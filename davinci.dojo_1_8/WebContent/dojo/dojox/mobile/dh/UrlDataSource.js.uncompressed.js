@@ -6,15 +6,18 @@ define("dojox/mobile/dh/UrlDataSource", [
 
 	// module:
 	//		dojox/mobile/dh/UrlDataSource
-	// summary:
-	//		A component that accesses the given URL and fetches the data as text.
 
 	return declare("dojox.mobile.dh.UrlDataSource", null, {
+		// summary:
+		//		A component that accesses the given URL and fetches the data as text.
+
 		text: "",
 
 		_url: "",
 
 		constructor: function(/*String*/ url){
+			// summary:
+			//		Creates a new instance of the class.
 			this._url = url;
 		},
 

@@ -26,8 +26,8 @@ dbuddhist.add = function(/*dojox/date/buddhist/Date*/date, /*String*/interval, /
 	//		Date object to start with
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond", "week", "weekday"
 	// amount:
 	//		How much to add to the date.
 
@@ -106,8 +106,9 @@ dbuddhist.difference = function(/*dojox/date/buddhist/Date*/date1, /*dojox/date/
 	//		If not specified, the current dojox.date.dbuddhist.Date is used.
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond",  "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond",  "week", "weekday"
+	//
 	//		Defaults to "day".
 
 	//	based on and similar to dojo.date.difference

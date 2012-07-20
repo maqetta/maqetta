@@ -5,15 +5,15 @@ function(lang, oo, Plugin, registry){
 	//		The amount of zoom that will occur upon each click.
 	var zoomInc = Math.pow(2.0,0.25),
 
-	//	maxZoom: Number
+	// maxZoom: Number
 	//		The maximum the canvas can be zoomed in. 10 = 1000%
 	maxZoom = 10,
 
-	//	minZoom: Float
+	// minZoom: Float
 	//		The most the canvas can be zoomed out. .1 = 10%
 	minZoom = 0.1,
 
-	//	zoomFactor: [readonly] Float
+	// zoomFactor: [readonly] Float
 	//		The current zoom amount
 	zoomFactor = 1, 
 	dt;

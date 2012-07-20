@@ -31,7 +31,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		This function takes the URL for a specific ATOM feed and returns
 		//		the data from that feed to the caller through the use of a callback
 		//		handler.
-		//
 		// url: String
 		//		The URL of the ATOM feed to fetch.
 		// callback:
@@ -40,7 +39,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		The callback should accept two parameters:  The feed object and the original complete DOM object.
 		// scope: Object
 		//		The scope to use for all callbacks.
-		//
 		// returns:
 		//		Nothing. The return is handled through the callback handler.
 		this._getXmlDoc(url, "feed", new model.Feed(), model._Constants.ATOM_NS, callback, /*handleDocumentRetrieved,*/ errorCallback, scope);
@@ -52,7 +50,6 @@ return declare("dojox.atom.io.Connection",null,{
 		// description:
 		//		This function takes the URL for an ATOM item and feed and returns
 		//		the introspection document.
-		//
 		// url:
 		//		String
 		//		The URL of the ATOM document to obtain the introspection document of.
@@ -60,7 +57,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		Function
 		//		A function reference that will handle the introspection document when it has been retrieved.
 		//		The callback should accept two parameters:  The introspection document object and the original complete DOM object.
-		//
 		// returns:
 		//		Nothing. The return is handled through the callback handler.
 		this._getXmlDoc(url, "service", new model.Service(url), model._Constants.APP_NS, callback, errorCallback, scope);
@@ -72,7 +68,6 @@ return declare("dojox.atom.io.Connection",null,{
 		// description:
 		//		This function takes the URL for an ATOM entry and returns the constructed dojox.atom.io.model.Entry object through
 		//		the specified callback.
-		//
 		// url:
 		//		String
 		//		The URL of the ATOM Entry document to parse.
@@ -80,7 +75,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		Function
 		//		A function reference that will handle the Entry object obtained.
 		//		The callback should accept two parameters, the dojox.atom.io.model.Entry object and the original dom.
-		//
 		// returns:
 		//		Nothing. The return is handled through the callback handler.
 		this._getXmlDoc(url, "entry", new model.Entry(), model._Constants.ATOM_NS, callback, errorCallback, scope);
@@ -92,7 +86,6 @@ return declare("dojox.atom.io.Connection",null,{
 		// description:
 		//		This internal function takes the URL for an XML document and and passes the
 		//		parsed contents to a specified callback.
-		//
 		// url:
 		//		String
 		//		The URL of the XML document to retrieve
@@ -100,7 +93,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		Function
 		//		A function reference that will handle the retrieved XML data.
 		//		The callback should accept one parameter, the DOM of the parsed XML document.
-		//
 		// returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
@@ -183,7 +175,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		This function takes a specific dojox.atom.io.model.Entry object and pushes the
 		//		changes back to the provider of the Entry.
 		//		The entry MUST have a link tag with rel="edit" for this to work.
-		//
 		// entry:
 		//		Object
 		//		The dojox.atom.io.model.Entry object to update.
@@ -202,7 +193,6 @@ return declare("dojox.atom.io.Connection",null,{
 		// scope:
 		//		Object
 		//		The scope to use for all callbacks.
-		//
 		// returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
@@ -280,7 +270,6 @@ return declare("dojox.atom.io.Connection",null,{
 		// description:
 		//		This function takes a specific dojox.atom.io.model.Entry object and pushes the
 		//		changes back to the provider of the Entry.
-		//
 		// entry:
 		//		Object
 		//		The dojox.atom.io.model.Entry object to publish.
@@ -296,7 +285,6 @@ return declare("dojox.atom.io.Connection",null,{
 		// scope:
 		//		Object
 		//	 	The scope to use for all callbacks.
-		//
 		// returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){
@@ -377,7 +365,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		This function takes a specific dojox.atom.io.model.Entry object and calls for a delete on the
 		//		service housing the ATOM Entry database.
 		//		The entry MUST have a link tag with rel="edit" for this to work.
-		//
 		// entry:
 		//		Object
 		//		The dojox.atom.io.model.Entry object to delete.
@@ -385,7 +372,6 @@ return declare("dojox.atom.io.Connection",null,{
 		//		Function
 		//		A function reference that will handle the results from the entry delete.
 		//		The callback is called only if the delete is successful.
-		//
 		// returns:
 		//		Nothing. The return is handled through the callback handler.
 		if(!scope){

@@ -3,13 +3,15 @@ function(lang, oo, registry, StencilLine){
 
 //dojox.drawing.tools.Line 
 var Line = oo.declare(
-	// summary:
-	//		Class for a drawable Line
 	StencilLine,
 	function(){
-		// summary: constructor
+		// summary:
+		//		constructor
 	},
 	{
+		// summary:
+		//		Class for a drawable Line
+
 		draws:true,
 		showAngle:true,
 		onTransformEnd: function(/*manager.Anchor*/anchor){

@@ -41,11 +41,9 @@ define("dojox/charting/DataChart", ["dojo/_base/kernel", "dojo/_base/lang", "doj
 
 	return declare("dojox.charting.DataChart", Chart, {
 		// summary:
-		//		DataChart
 		//		Extension to the 2D chart that connects to a data store in
 		//		a simple manner. Convenience methods have been added for
 		//		connecting store item labels to the chart labels.
-		//
 		// description:
 		//		This code should be considered very experimental and the APIs subject
 		//		to change. This is currently an alpha version and will need some testing
@@ -65,9 +63,7 @@ define("dojox/charting/DataChart", ["dojo/_base/kernel", "dojo/_base/lang", "doj
 		//		Currently, plot lines can only be set at initialization. Setting
 		//		a new store query will have no effect (although using setStore
 		//		may work but its untested).
-		//
 		// example:
-		//
 		//	|	var chart = new dojox.charting.DataChart("myNode", {
 		//	|		displayRange:8,
 		//	|		store:dataStore,
@@ -144,20 +140,14 @@ define("dojox/charting/DataChart", ["dojo/_base/kernel", "dojo/_base/lang", "doj
 			// summary:
 			//		Set up properties and initialize chart build.
 			// node: DomNode
-			//			The node to attach the chart to.
+			//		The node to attach the chart to.
 			// kwArgs: Object
-			//			xaxis: Object
-			//				optional parameters for xaxis (see above)
-			//			yaxis: Object
-			//				optional parameters for yaxis (see above)
-			//			store: Object
-			//				dojo.data store (currently nly supports Persevere)
-			//			xaxis: Object
-			//				First query for store
-			//			grid: Object
-			//				Options for the grid plot
-			//			chartPlot: Object
-			//				Options for chart elements (lines, bars, etc)
+			//		- xaxis: Object: optional parameters for xaxis (see above)
+			//		- yaxis: Object: optional parameters for yaxis (see above)
+			//		- store: Object: dojo.data store (currently nly supports Persevere)
+			//		- xaxis: Object: First query for store
+			//		- grid: Object: Options for the grid plot
+			//		- chartPlot: Object: Options for chart elements (lines, bars, etc)
 
 			this.domNode = dom.byId(node);
 
@@ -373,7 +363,7 @@ define("dojox/charting/DataChart", ["dojo/_base/kernel", "dojo/_base/lang", "doj
 
 			}else{
 
-				// each item is a seperate series.
+				// each item is a separate series.
 				arr.forEach(items, function(m, i){
 					var nm = this.store.getLabel(m);
 					if(!this.seriesData[nm]){
@@ -508,7 +498,7 @@ define("dojox/charting/DataChart", ["dojo/_base/kernel", "dojo/_base/lang", "doj
 			//		Call this function to change the chart size.
 			//		Can be connected to a layout widget that calls
 			//		resize.
-			//
+
 			var w = Math.max(dim.w, this.minWidth);
 			var h = Math.max(dim.h, this.minHeight);
 			this.resize(w, h);

@@ -62,7 +62,7 @@ define("dojox/charting/axis2d/Invisible", ["dojo/_base/lang", "dojo/_base/declar
 	return declare("dojox.charting.axis2d.Invisible", Base, {
 		// summary:
 		//		A axis object used in dojox.charting.  You can use that axis if you want the axis to be invisible.
-		// 		See dojox.charting.Chart.addAxis for details.
+		//		See dojox.charting.Chart.addAxis for details.
 		//
 		// defaultParams: Object
 		//		The default parameters used to define any axis.

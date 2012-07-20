@@ -19,7 +19,6 @@ this._border={h:_5("ie")?_8.getBorderExtents(this.gridContainerTable).h:0,w:(_5(
 _7.set(this.domNode,"overflowY","hidden");
 _7.set(this.gridContainerTable,"height","auto");
 }
-this.inherited(arguments);
 },startup:function(){
 if(this._started){
 return;
@@ -361,7 +360,7 @@ this.addChild(_4e,i,j);
 _a.set(_4a,"tabIndex","0");
 _11.focus(_4a);
 }else{
-_f.publish("/dojox/layout/gridContainer/moveRestriction",[this]);
+_f.publish("/dojox/layout/gridContainer/moveRestriction",this);
 }
 }else{
 _11.focus(_48);
@@ -425,7 +424,7 @@ this.addChild(_4e,z,_55);
 _a.set(r,"tabIndex","0");
 _11.focus(r);
 }else{
-_f.publish("/dojox/layout/gridContainer/moveRestriction",[this]);
+_f.publish("/dojox/layout/gridContainer/moveRestriction",this);
 }
 }else{
 var _56=_4a.parentNode;
@@ -480,6 +479,7 @@ m.unregister(_58.node);
 });
 this.inherited(arguments);
 }});
-_c.extend(_13,{column:"1",dragRestriction:false});
+gcl.ChildWidgetProperties={column:"1",dragRestriction:false};
+_c.extend(_13,gcl.ChildWidgetProperties);
 return gcl;
 });

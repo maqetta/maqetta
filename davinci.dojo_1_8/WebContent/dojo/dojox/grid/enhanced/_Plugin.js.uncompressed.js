@@ -10,7 +10,6 @@ define("dojox/grid/enhanced/_Plugin", [
 return declare("dojox.grid.enhanced._Plugin", null, {
 	// summary:
 	//		Base class for all plugins.
-	//
 	// description:
 	//		Provides common plugin functionality and basic life cycle management.
 	//
@@ -20,7 +19,8 @@ return declare("dojox.grid.enhanced._Plugin", null, {
 	// |												dojox.grid.enhanced.plugins.DnD /*full class name of a plugin*/
 	// |												{"preInit": false, "dependency": ["nestedSorting"]} /*properties*/);
 	//
-	//		[Keywords] of plugin properties(case sensitive)
+	//		[Keywords] of plugin properties (case sensitive):
+	//
 	//		- "preInit": boolean, whether a plugin should be created before EnhancedGrid.postCreate(),
 	//		   false by default(plugins are created after EnhancedGrid.postCreate()).
 	//		- "dependency": array or string, plugin(s) indicated by "dependency" will be created before the current one.
@@ -29,6 +29,7 @@ return declare("dojox.grid.enhanced._Plugin", null, {
 	//
 	// example:
 	//		1. Customize default DnD plugin
+	//
 	// |	declare("mygrid.MyDnD", dojox.grid.enhanced.plugins.DnD, {
 	// |		name:"dnd" //still reuse the plugin name
 	// |		constructor: function(inGrid, option){ ... }
@@ -36,6 +37,7 @@ return declare("dojox.grid.enhanced._Plugin", null, {
 	// |	dojox.grid.EnhancedGrid.registerPlugin("dnd", mygrid.MyDnD);
 	//
 	//		2. Add new plugin - PluginA
+	//
 	// |	declare("mygrid.PluginA", dojox.grid.enhanced._Plugin, {
 	// |		name: "pA",
 	// |		constructor: function(inGrid, option){ ... }
@@ -43,9 +45,10 @@ return declare("dojox.grid.enhanced._Plugin", null, {
 	// |	dojox.grid.EnhancedGrid.registerPlugin("pA",mygrid.PluginA);
 	//
 	//		3. Use plugins
+	//
 	// |	dojo.require("mygrid.MyDnD");
 	// |	dojo.require("mygrid.PluginA");
-	
+	// |
 	// |	<script type="text/javascript">
 	// |		var grid = new dojox.grid.EnhancedGrid(
 	// |		{plugins: {dnd:true, pA:true}, ... }, dojo.byId("gridDiv"));

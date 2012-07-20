@@ -6,7 +6,7 @@ define("dojox/editor/plugins/NormalizeStyle", [
 	"dijit/_editor/html",
 	"dojo/_base/connect",
 	"dojo/_base/declare"
-], function(dojo, dijit, dojox, _Plugin) {
+], function(dojo, dijit, dojox, _Plugin, editorHtml) {
 
 dojo.declare("dojox.editor.plugins.NormalizeStyle", _Plugin,{
 	// summary:
@@ -526,10 +526,11 @@ dojo.declare("dojox.editor.plugins.NormalizeStyle", _Plugin,{
 		// tags:
 		//		private
 		if(html){
+			var doc = this.editor.document;
 			var div = doc.createElement("div");
 			div.innerHTML = html;
 			div = this._browserFilter(div);
-			html = dijit._editor.getChildrenHtml(div);
+			html = editorHtml.getChildrenHtml(div);
 			div.innerHTML = "";
 
 			// Call the over-ride, or if not available, just execute it.

@@ -22,9 +22,10 @@ define("dojox/layout/GridContainer", [
 		//
 		// description:
 		//		This component inherits of all features of gridContainerLite plus :
-		//			- Resize colums
-		//			- Add / remove columns
-		//			- Fix columns at left or at right.
+		//
+		//		- Resize colums
+		//		- Add / remove columns
+		//		- Fix columns at left or at right.
 		// example:
 		// 	|	<div dojoType="dojox.layout.GridContainer" nbZones="3" isAutoOrganized="true">
 		// 	|		<div dojoType="dijit.layout.ContentPane">Content Pane 1 : Drag Me !</div>
@@ -61,7 +62,7 @@ define("dojox/layout/GridContainer", [
 		minColWidth: 20,
 
 		// minChildWidth: Integer
-		// 		Minimum children width in pixel (only used for IE6 which doesn't handle min-width css property)
+		//		Minimum children width in pixel (only used for IE6 which doesn't handle min-width css property)
 		minChildWidth: 150,
 
 		// mode: String
@@ -111,7 +112,7 @@ define("dojox/layout/GridContainer", [
 			// targetArea:
 			//		AreaManager Object containing information of targetArea
 			// indexChild:
-			// 		Index where the dropped widget has been placed
+			//		Index where the dropped widget has been placed
 
 			if(this.inherited(arguments)){
 				this._placeGrips();
@@ -140,7 +141,7 @@ define("dojox/layout/GridContainer", [
 			//		IE6 calls method resize itself.
 			//		If the GridContainer is not visible at this time,
 			//		the method _placeGrips can return a negative value with
-			// 		contentBox method. (see method _placeGrip() with Fix Ie6 for the height)
+			//		contentBox method. (see method _placeGrip() with Fix Ie6 for the height)
 			if(this._isShown() && this.hasResizableColumns){
 				this._placeGrips();
 			}
@@ -283,7 +284,7 @@ define("dojox/layout/GridContainer", [
 					}
 				});
 				return width;
-			}
+			};
 			var currentColumnMinWidth = calculateChildMinWidth(this._currentColumn.childNodes, this.minChildWidth);
 
 			var nextColumnMinWidth = calculateChildMinWidth(this._nextColumn.childNodes, this.minChildWidth);

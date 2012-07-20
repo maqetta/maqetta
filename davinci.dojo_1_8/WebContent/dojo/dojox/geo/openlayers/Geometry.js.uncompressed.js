@@ -6,7 +6,8 @@ define("dojox/geo/openlayers/Geometry", [
 		// summary:
 		//		A Geometry handles description of shapes to be rendered in a GfxLayer
 		//		using a GeometryFeature feature.
-		//		A Geometry can be 
+		//		A Geometry can be:
+		//
 		//		- A point geometry of type dojox.geo.openlayers.Point. Coordinates are a an 
 		//		Object {x, y}
 		//		- A line string geometry of type dojox.geo.openlayers.LineString. Coordinates are

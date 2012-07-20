@@ -65,7 +65,7 @@ define("dojox/widget/Toaster", [
 
 		// slideDuration: Integer
 		//		Number of milliseconds for the slide animation, increasing will cause the Toaster
-		//    to slide in more slowly.
+		//		to slide in more slowly.
 		slideDuration: 500,
 
 		// separator: String
@@ -275,7 +275,7 @@ define("dojox/widget/Toaster", [
 		},
 
 		hide: function(){
-			// summary: 
+			// summary:
 			//		hide the Toaster
 
 			domStyle.set(this.domNode, 'display', 'none');

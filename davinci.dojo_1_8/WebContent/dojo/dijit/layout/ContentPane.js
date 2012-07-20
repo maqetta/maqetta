@@ -34,6 +34,21 @@ obj._started=true;
 }
 },this);
 }
+},_startChildren:function(){
+_9.forEach(this.getChildren(),function(obj){
+if(!obj._started&&!obj._destroyed&&_2.isFunction(obj.startup)){
+obj.startup();
+obj._started=true;
+}
+});
+if(this._contentSetter){
+_9.forEach(this._contentSetter.parseResults,function(obj){
+if(!obj._started&&!obj._destroyed&&_2.isFunction(obj.startup)){
+obj.startup();
+obj._started=true;
+}
+},this);
+}
 },setHref:function(_14){
 _1.deprecated("dijit.layout.ContentPane.setHref() is deprecated. Use set('href', ...) instead.","","2.0");
 return this.set("href",_14);
@@ -184,14 +199,13 @@ console.error("Fatal "+this.id+" could not change content due to "+e.message,e);
 })});
 }
 var _27=_2.mixin({cleanContent:this.cleanContent,extractContent:this.extractContent,parseContent:!_23.domNode&&this.parseOnLoad,parserScope:this.parserScope,startup:false,dir:this.dir,lang:this.lang,textDir:this.textDir},this._contentSetterParams||{});
-_25.set((_2.isObject(_23)&&_23.domNode)?_23.domNode:_23,_27);
+var p=_25.set((_2.isObject(_23)&&_23.domNode)?_23.domNode:_23,_27);
 var _28=this;
-return _10(_25.parseDeferred,function(){
+return _10(p&&p.then?p:_25.parseDeferred,function(){
 delete _28._contentSetterParams;
 if(!_24){
 if(_28._started){
-delete _28._started;
-_28.startup();
+_28._startChildren();
 _28._scheduleLayout();
 }
 _28._onLoadHandler(_23);

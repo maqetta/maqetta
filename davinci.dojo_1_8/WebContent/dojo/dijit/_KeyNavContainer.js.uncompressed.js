@@ -29,7 +29,7 @@ define("dijit/_KeyNavContainer", [
 		focusedChild: null,
 =====*/
 
-		// tabIndex: Integer
+		// tabIndex: String
 		//		Tab index of the container; same as HTML tabIndex attribute.
 		//		Note then when user tabs into the container, focus is immediately
 		//		moved to the first item in the container.
@@ -235,8 +235,8 @@ define("dijit/_KeyNavContainer", [
 			// child: Widget
 			//		The current widget
 			// dir: Integer
-			//		* 1 = after
-			//		* -1 = before
+			//		- 1 = after
+			//		- -1 = before
 			if(child){
 				child = this._getSiblingOfChild(child, dir);
 			}

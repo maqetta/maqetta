@@ -201,7 +201,7 @@ define("dojox/mdnd/PureSource", ["dojo/_base/kernel",
 			// returns:
 			//		True if user clicked on "approved" items.
 			// tags:
-			// 		protected
+			//		protected
 	
 			//console.log('dojox.mdnd.PureSource ::: _legalMouseDown');
 			if(!this.withHandles){ return true; }

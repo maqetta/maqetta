@@ -160,9 +160,6 @@ this.open(_38);
 },this.showDelay);
 }
 },_onUnHover:function(){
-if(this._focus){
-return;
-}
 if(this._showTimer){
 this._showTimer.remove();
 delete this._showTimer;

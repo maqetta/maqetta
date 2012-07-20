@@ -53,7 +53,7 @@ this._phspan.style.display=(this.placeHolder&&!this.focused&&!this.textbox.value
 this.inherited(arguments);
 this._updatePlaceHolder();
 },getDisplayedValue:function(){
-_4.deprecated(this.declaredClass+"::getDisplayedValue() is deprecated. Use set('displayedValue') instead.","","2.0");
+_4.deprecated(this.declaredClass+"::getDisplayedValue() is deprecated. Use get('displayedValue') instead.","","2.0");
 return this.get("displayedValue");
 },setDisplayedValue:function(_11){
 _4.deprecated(this.declaredClass+"::setDisplayedValue() is deprecated. Use set('displayedValue', ...) instead.","","2.0");

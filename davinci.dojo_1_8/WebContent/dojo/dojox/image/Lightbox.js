@@ -1,5 +1,5 @@
 //>>built
-require({cache:{"url:dojox/image/resources/Lightbox.html":"<div class=\"dojoxLightbox\" dojoAttachPoint=\"containerNode\">\n\t<div style=\"position:relative\">\n\t\t<div dojoAttachPoint=\"imageContainer\" class=\"dojoxLightboxContainer\" dojoAttachEvent=\"onclick: _onImageClick\">\n\t\t\t<img dojoAttachPoint=\"imgNode\" src=\"${imgUrl}\" class=\"dojoxLightboxImage\" alt=\"${title}\">\n\t\t\t<div class=\"dojoxLightboxFooter\" dojoAttachPoint=\"titleNode\">\n\t\t\t\t<div class=\"dijitInline LightboxClose\" dojoAttachPoint=\"closeButtonNode\"></div>\n\t\t\t\t<div class=\"dijitInline LightboxNext\" dojoAttachPoint=\"nextButtonNode\"></div>\t\n\t\t\t\t<div class=\"dijitInline LightboxPrev\" dojoAttachPoint=\"prevButtonNode\"></div>\n\t\t\t\t<div class=\"dojoxLightboxText\" dojoAttachPoint=\"titleTextNode\"><span dojoAttachPoint=\"textNode\">${title}</span><span dojoAttachPoint=\"groupCount\" class=\"dojoxLightboxGroupText\"></span></div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>"}});
+require({cache:{"url:dojox/image/resources/Lightbox.html":"<div class=\"dojoxLightbox\" dojoAttachPoint=\"containerNode\">\n\t<div style=\"position:relative\">\n\t\t<div dojoAttachPoint=\"imageContainer\" class=\"dojoxLightboxContainer\" dojoAttachEvent=\"onclick: _onImageClick\">\n\t\t\t<img dojoAttachPoint=\"imgNode\" src=\"${imgUrl}\" class=\"${imageClass}\" alt=\"${title}\">\n\t\t\t<div class=\"dojoxLightboxFooter\" dojoAttachPoint=\"titleNode\">\n\t\t\t\t<div class=\"dijitInline LightboxClose\" dojoAttachPoint=\"closeButtonNode\"></div>\n\t\t\t\t<div class=\"dijitInline LightboxNext\" dojoAttachPoint=\"nextButtonNode\"></div>\t\n\t\t\t\t<div class=\"dijitInline LightboxPrev\" dojoAttachPoint=\"prevButtonNode\"></div>\n\t\t\t\t<div class=\"dojoxLightboxText\" dojoAttachPoint=\"titleTextNode\"><span dojoAttachPoint=\"textNode\">${title}</span><span dojoAttachPoint=\"groupCount\" class=\"dojoxLightboxGroupText\"></span></div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>"}});
 define("dojox/image/Lightbox",["dojo","dijit","dojox","dojo/text!./resources/Lightbox.html","dijit/Dialog","dojox/fx/_base"],function(_1,_2,_3,_4){
 _1.experimental("dojox.image.Lightbox");
 _1.getObject("image",true,_3);
@@ -38,7 +38,7 @@ this._allowPassthru=false;
 this._attachedDialog.removeImage(this);
 this.inherited(arguments);
 }});
-_1.declare("dojox.image.LightboxDialog",_2.Dialog,{title:"",inGroup:null,imgUrl:_2._Widget.prototype._blankGif,errorMessage:"Image not found.",adjust:true,modal:false,errorImg:_1.moduleUrl("dojox.image","resources/images/warning.png"),templateString:_4,constructor:function(_6){
+_1.declare("dojox.image.LightboxDialog",_2.Dialog,{title:"",inGroup:null,imgUrl:_2._Widget.prototype._blankGif,errorMessage:"Image not found.",adjust:true,modal:false,imageClass:"dojoxLightboxImage",errorImg:_1.moduleUrl("dojox.image","resources/images/warning.png"),templateString:_4,constructor:function(_6){
 this._groups=this._groups||(_6&&_6._groups)||{XnoGroupX:[]};
 },startup:function(){
 this.inherited(arguments);
@@ -60,7 +60,7 @@ _8._modalconnects.push(_1.connect(_2._underlay.domNode,"onclick",this,"onCancel"
 }
 }
 if(this._wasStyled){
-var _9=_1.create("img",null,_8.imgNode,"after");
+var _9=_1.create("img",{className:_8.imageClass},_8.imgNode,"after");
 _1.destroy(_8.imgNode);
 _8.imgNode=_9;
 _8._makeAnims();

@@ -9,7 +9,7 @@ kernel.experimental("dojox.widget.Pager");
 return declare("dojox.widget.Pager",
 	[_WidgetBase, _TemplatedMixin],
 	{
-	// summary: 
+	// summary:
 	//		A Pager, displaying a list of sized nodes
 
 
@@ -46,7 +46,7 @@ return declare("dojox.widget.Pager",
 	pagerPos: "center",
 
 	// duration: Integer
-	// 		Time in milliseconds to transition the pages
+	//		Time in milliseconds to transition the pages
 	duration: 500,
 
 	// itemSpace: Integer
@@ -54,7 +54,7 @@ return declare("dojox.widget.Pager",
 	itemSpace: 2,
 
 	// resizeChildren: Boolean
-	// 		TODOC
+	//		TODOC
 	resizeChildren: true,
 
 	// itemClass: String || Widget
@@ -85,13 +85,15 @@ return declare("dojox.widget.Pager",
 	},
 
 	_a11yStyle: function(e){
-		// summary: top level onfocus/onblur listen to set a class "pagerFocus" on some node
-		// 		and remove it onblur
+		// summary:
+		//		top level onfocus/onblur listen to set a class "pagerFocus" on some node
+		//		and remove it onblur
 		domClass.toggle(e.target, "pagerFocus", (e.type == "focus"));
 	},
 
 	_handleKey: function(e){
-		// summary: Handle keyboard navigation internally
+		// summary:
+		//		Handle keyboard navigation internally
 
 		var key = (e.charCode == keys.SPACE ? keys.SPACE : e.keyCode);
 		switch(key){
@@ -130,8 +132,8 @@ return declare("dojox.widget.Pager",
 
 	generatePagerItem: function(/*item */ item, /* Number */ cnt){
 		// summary:
-		//     this method instantiates pagerItems to be used by the pager, it is overridable to allow
-		//     customizing these items
+		//		this method instantiates pagerItems to be used by the pager, it is overridable to allow
+		//		customizing these items
 
 		// only use getObject if its not the default _PagerItem value
 		var itemClass = this.itemClass,
@@ -541,8 +543,8 @@ return declare("dojox.widget.Pager",
 	},
 
 	onScrollEnd: function(){
-		// summary: 
-		//	Stub Function. Fired after the slide is complete. Override or connect.
+		// summary:
+		//		Stub Function. Fired after the slide is complete. Override or connect.
 	}
 
 });

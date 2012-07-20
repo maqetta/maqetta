@@ -6,22 +6,16 @@ define("dojox/mobile/ListItem", [
 	"dojo/dom-construct",
 	"dojo/dom-style",
 	"dijit/registry",
+	"dijit/_WidgetBase",
 	"./iconUtils",
 	"./_ItemBase",
 	"./ProgressIndicator"
-], function(array, declare, lang, domClass, domConstruct, domStyle, registry, iconUtils, ItemBase, ProgressIndicator){
+], function(array, declare, lang, domClass, domConstruct, domStyle, registry, WidgetBase, iconUtils, ItemBase, ProgressIndicator){
 
 	// module:
 	//		dojox/mobile/ListItem
-	// summary:
-	//		An item of either RoundRectList or EdgeToEdgeList.
 
-	lang.extend(dijit._WidgetBase, {
-		layout: "",
-		preventTouch: false
-	});
-
-	return declare("dojox.mobile.ListItem", ItemBase, {
+	var ListItem = declare("dojox.mobile.ListItem", ItemBase, {
 		// summary:
 		//		An item of either RoundRectList or EdgeToEdgeList.
 		// description:
@@ -471,4 +465,23 @@ define("dojox/mobile/ListItem", [
 			domClass.toggle(this.domNode, this._selClass, selected);
 		}
 	});
+	
+	ListItem.ChildWidgetProperties = {
+		// summary:
+		//		These properties can be specified for the children of a dojox/mobile/ListItem.
+
+		// layout: String
+		//		Specifies the position of the ListItem child ("left", "center" or "right").
+		layout: "",
+		// preventTouch: Boolean
+		//		Disables touch events on the ListItem child.
+		preventTouch: false
+	};
+	
+	// Since any widget can be specified as a ListItem child, mix ChildWidgetProperties
+	// into the base widget class.  (This is a hack, but it's effective.)
+	// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+	lang.extend(WidgetBase, /*===== {} || =====*/ ListItem.ChildWidgetProperties);
+
+	return ListItem;
 });

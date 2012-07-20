@@ -26,8 +26,7 @@ dojo.declare("dojox.editor.plugins.PrettyPrint", _Plugin,{
 	//		which means unlimited line length.
 	lineLength: -1,
 
-	//	useDefaultCommand: [protected]
-	//		Over-ride indicating that the command processing is done all by this plugin.
+	// Over-ride indicating that the command processing is done all by this plugin.
 	useDefaultCommand: false,
 	
 	// map: [public] Array

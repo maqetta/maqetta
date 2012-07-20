@@ -17,7 +17,12 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 	//		Base class for a "plugin" to the editor, which is usually
 	//		a single button on the Toolbar and some associated code
 
-	constructor: function(/*Object?*/args){
+	constructor: function(args){
+		// summary:
+		//		Create the plugin.
+		// args: Object?
+		//		Initial settings for any of the attributes.
+
 		this.params = args || {};
 		lang.mixin(this, this.params);
 		this._connects=[];
@@ -139,11 +144,13 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 					this.enabled = enabled;
 					this.button.set('disabled', !enabled);
 				}
-				if(typeof this.button.checked == 'boolean'){
-					checked = e.queryCommandState(c);
-					if(this.checked !== checked){
-						this.checked = checked;
-						this.button.set('checked', e.queryCommandState(c));
+				if(enabled){
+					if(typeof this.button.checked == 'boolean'){
+						checked = e.queryCommandState(c);
+						if(this.checked !== checked){
+							this.checked = checked;
+							this.button.set('checked', e.queryCommandState(c));
+						}
 					}
 				}
 			}catch(e){
@@ -195,9 +202,9 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 	set: function(/* attribute */ name, /* anything */ value){
 		// summary:
 		//		Set a property on a plugin
-		//	name:
+		// name:
 		//		The property to set.
-		//	value:
+		// value:
 		//		The value to set in the property.
 		// description:
 		//		Sets named properties on a plugin which may potentially be handled by a
@@ -212,12 +219,12 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 		//		would be equivalent to writing:
 		//	|	plugin.bar = 3;
 		//
-		//	set() may also be called with a hash of name/value pairs, ex:
+		//		set() may also be called with a hash of name/value pairs, ex:
 		//	|	plugin.set({
 		//	|		foo: "Howdy",
 		//	|		bar: 3
 		//	|	})
-		//	This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
+		//		This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
 		if(typeof name === "object"){
 			for(var x in name){
 				this.set(x, name[x]);
@@ -237,7 +244,7 @@ var _Plugin = declare("dijit._editor._Plugin", null, {
 	get: function(name){
 		// summary:
 		//		Get a property from a plugin.
-		//	name:
+		// name:
 		//		The property to get.
 		// description:
 		//		Get a named property from a plugin. The property may

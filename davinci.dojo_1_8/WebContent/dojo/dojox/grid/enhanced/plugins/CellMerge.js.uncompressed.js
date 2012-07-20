@@ -10,22 +10,23 @@ define("dojox/grid/enhanced/plugins/CellMerge", [
 var CellMerge = declare("dojox.grid.enhanced.plugins.CellMerge", _Plugin, {
 	// summary:
 	//		This plugin provides functions to merge(un-merge) adjacent cells within one row.
-	//		Acceptable plugin paramters:
-	//		1. mergedCells: Array
-	//			An array of objects with structure:
-	//			{
-	//				row: function(Integer)|Integer
-	//					If it's a function, it's a predicate to decide which rows are to be merged.
-	//					It takes an integer (the row index), and should return true or false;
-	//				start: Integer
-	//					The column index of the left most cell that shall be merged.
-	//				end: Integer
-	//					The column index of the right most cell that shall be merged.
-	//				major: Integer
-	//					The column index of the cell whose content should be used as the content of the merged cell.
-	//					It must be larger than or equal to the startColumnIndex, and less than or equal to the endColumnIndex.
-	//					If it is omitted, the content of the leading edge (left-most for ltr, right most for rtl) cell will be used.
-	//			}
+	//		Acceptable plugin parameters:
+	//
+	//		- mergedCells: Array: An array of objects with structure:
+	//
+	// |		{
+	// |			row: function(Integer)|Integer
+	// |				If it's a function, it's a predicate to decide which rows are to be merged.
+	// |				It takes an integer (the row index), and should return true or false;
+	// |			start: Integer
+	// |				The column index of the left most cell that shall be merged.
+	// |			end: Integer
+	// |				The column index of the right most cell that shall be merged.
+	// |			major: Integer
+	// |				The column index of the cell whose content should be used as the content of the merged cell.
+	// |				It must be larger than or equal to the startColumnIndex, and less than or equal to the endColumnIndex.
+	// |				If it is omitted, the content of the leading edge (left-most for ltr, right most for rtl) cell will be used.
+	// |		}
 	
 	// name: String
 	//		Plugin name
@@ -95,13 +96,13 @@ var CellMerge = declare("dojox.grid.enhanced.plugins.CellMerge", _Plugin, {
 		// returns: Array
 		//		An array of records for merged-cells.
 		//		The record has the following structure:
-		//		{
-		//			"row": 1, //the row index
-		//			"start": 2, //the start column index
-		//			"end": 4, //the end column index
-		//			"major": 3, //the major column index
-		//			"handle": someHandle, //The handler that covers this merge cell record.
-		//		}
+		// |	{
+		// |		"row": 1, //the row index
+		// |		"start": 2, //the start column index
+		// |		"end": 4, //the end column index
+		// |		"major": 3, //the major column index
+		// |		"handle": someHandle, //The handler that covers this merge cell record.
+		// |	}
 		var res = [];
 		for(var i in this._merged){
 			res = res.concat(this._merged[i]);

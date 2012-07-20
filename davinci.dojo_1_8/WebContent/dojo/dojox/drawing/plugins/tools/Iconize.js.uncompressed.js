@@ -3,16 +3,16 @@ function(dojo, oo, Plugin, registry){
 
 //dojox.drawing.plugins.tools.Iconize = 
 var Iconize = oo.declare(
-	// summary:
-	//		Somewhat of internal use...
-	//		Outputs a path to be used as an icon. Will end up being a
-	//		sub-icon under Export options
-	
 	Plugin,
 	function(options){
 	
 	},
 	{
+		// summary:
+		//		Somewhat of internal use...
+		//		Outputs a path to be used as an icon. Will end up being a
+		//		sub-icon under Export options
+
 		onClick: function(){
 			var item;
 			for(var nm in this.stencils.stencils){

@@ -473,7 +473,7 @@ tr.removeChild(tr.lastChild);
 }
 }
 _11("td>div",_51).forEach(function(div,i){
-_d.set(div,{"height":_4f.sheetHeight+"px","marginBottom":"-"+_4f.sheetHeight+"px"});
+_d.set(div,{"height":_4f.sheetHeight+"px"});
 _52.push(div);
 },this);
 _4f.cells=_52;

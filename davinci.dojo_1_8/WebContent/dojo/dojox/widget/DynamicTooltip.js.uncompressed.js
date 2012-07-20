@@ -9,7 +9,7 @@ dojo.requireLocalization("dijit", "loading");
 dojo.declare("dojox.widget.DynamicTooltip", dijit.Tooltip,
 	{
 		// summary:
-		//		Extention of dijit.Tooltip providing content set via XHR
+		//		Extension of dijit.Tooltip providing content set via XHR
 		//		request via href param
 
 		// hasLoaded: Boolean
@@ -21,11 +21,11 @@ dojo.declare("dojox.widget.DynamicTooltip", dijit.Tooltip,
 		href: "",
 		
 		// label: String
-		//		contents to diplay in the tooltip. Initialized to a loading icon.
+		//		contents to display in the tooltip. Initialized to a loading icon.
 		label: "",
 
 		// preventCache: Boolean
-		//		Cache content retreived externally
+		//		Cache content retrieved externally
 		preventCache:	false,
 		
 		postMixInProperties: function(){

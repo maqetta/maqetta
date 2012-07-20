@@ -31,9 +31,9 @@
   -webkit-transition-property: background-color;
   -moz-transition-property: background-color;
   transition-property: background-color;
-  -webkit-transition-duration: 0.3s, 0.35s;
-  -moz-transition-duration: 0.3s, 0.35s;
-  transition-duration: 0.3s, 0.35s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  transition-duration: 0.3s;
   background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);

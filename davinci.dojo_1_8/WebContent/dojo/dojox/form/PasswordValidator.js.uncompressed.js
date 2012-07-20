@@ -229,11 +229,11 @@ return declare("dojox.form.PasswordValidator", FormValueWidget, {
 		//		true if it's OK to continue, and false if it is not.
 		//
 		//		IMPORTANT SECURITY NOTE:  Do NOT EVER EVER EVER check this in
-		//									HTML or JavaScript!!!
+		//		HTML or JavaScript!!!
 		//
 		//		You will probably want to override this function to callback
 		//		to a server to verify the password (the callback will need to
-		//		be syncronous) - and it's probably a good idea to validate
+		//		be synchronous) - and it's probably a good idea to validate
 		//		it again on form submission before actually doing
 		//		anything destructive - that's why the "oldName" value
 		//		is available.

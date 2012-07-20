@@ -1,44 +1,45 @@
 define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], function(aspect, dojo, has){
-	// summary:
-	//		The export of this module is a function that provides core event listening functionality. With this function
-	//		you can provide a target, event type, and listener to be notified of
-	//		future matching events that are fired.
-	// target: Element|Object
-	//		This is the target object or DOM element that to receive events from
-	// type: String|Function
-	//		This is the name of the event to listen for or an extension event type.
-	// listener: Function
-	//		This is the function that should be called when the event fires.
-	// returns: Object
-	//		An object with a remove() method that can be used to stop listening for this
-	//		event.
-	// description:
-	//		To listen for "click" events on a button node, we can do:
-	//		|	define(["dojo/on"], function(listen){
-	//		|		on(button, "click", clickHandler);
-	//		|		...
-	//		Evented JavaScript objects can also have their own events.
-	//		|	var obj = new Evented;
-	//		|	on(obj, "foo", fooHandler);
-	//		And then we could publish a "foo" event:
-	//		|	on.emit(obj, "foo", {key: "value"});
-	//		We can use extension events as well. For example, you could listen for a tap gesture:
-	//		|	define(["dojo/on", "dojo/gesture/tap", function(listen, tap){
-	//		|		on(button, tap, tapHandler);
-	//		|		...
-	//		which would trigger fooHandler. Note that for a simple object this is equivalent to calling:
-	//		|	obj.onfoo({key:"value"});
-	//		If you use on.emit on a DOM node, it will use native event dispatching when possible.
 
 	"use strict";
 	if( 1 ){ // check to make sure we are in a browser, this module should work anywhere
 		var major = window.ScriptEngineMajorVersion;
 		has.add("jscript", major && (major() + ScriptEngineMinorVersion() / 10));
 		has.add("event-orientationchange", has("touch") && !has("android")); // TODO: how do we detect this?
-		has.add("event-stopimmediatepropogation", window.Event && !!window.Event.prototype && !!window.Event.prototype.stopImmediatePropagation);
+		has.add("event-stopimmediatepropagation", window.Event && !!window.Event.prototype && !!window.Event.prototype.stopImmediatePropagation);
 	}
 	var on = function(target, type, listener, dontFix){
-		if(target.on){ 
+		// summary:
+		//		A function that provides core event listening functionality. With this function
+		//		you can provide a target, event type, and listener to be notified of
+		//		future matching events that are fired.
+		// target: Element|Object
+		//		This is the target object or DOM element that to receive events from
+		// type: String|Function
+		//		This is the name of the event to listen for or an extension event type.
+		// listener: Function
+		//		This is the function that should be called when the event fires.
+		// returns: Object
+		//		An object with a remove() method that can be used to stop listening for this
+		//		event.
+		// description:
+		//		To listen for "click" events on a button node, we can do:
+		//		|	define(["dojo/on"], function(listen){
+		//		|		on(button, "click", clickHandler);
+		//		|		...
+		//		Evented JavaScript objects can also have their own events.
+		//		|	var obj = new Evented;
+		//		|	on(obj, "foo", fooHandler);
+		//		And then we could publish a "foo" event:
+		//		|	on.emit(obj, "foo", {key: "value"});
+		//		We can use extension events as well. For example, you could listen for a tap gesture:
+		//		|	define(["dojo/on", "dojo/gesture/tap", function(listen, tap){
+		//		|		on(button, tap, tapHandler);
+		//		|		...
+		//		which would trigger fooHandler. Note that for a simple object this is equivalent to calling:
+		//		|	obj.onfoo({key:"value"});
+		//		If you use on.emit on a DOM node, it will use native event dispatching when possible.
+
+		if(target.on && typeof type != "function"){ 
 			// delegate to the target's on() method, so it can handle it's own listening if it wants
 			return target.on(type, listener);
 		}
@@ -160,16 +161,16 @@ define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./
 		//		only calls the listener when the CSS selector matches the target of the event.
 		//
 		//		The application must require() an appropriate level of dojo/query to handle the selector.
-		//	selector:
+		// selector:
 		//		The CSS selector to use for filter events and determine the |this| of the event listener.
-		//	eventType:
+		// eventType:
 		//		The event to listen for
 		// children:
 		//		Indicates if children elements of the selector should be allowed. This defaults to 
 		//		true
-		//	example:
-		//		define(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(listen, mouse){
-		//			on(node, on.selector(".my-class", mouse.enter), handlerForMyHover);
+		// example:
+		// |	require(["dojo/on", "dojo/mouse", "dojo/query!css2"], function(listen, mouse){
+		// |		on(node, on.selector(".my-class", mouse.enter), handlerForMyHover);
 		return function(target, listener){
 			// if the selector is function, use it to select the node, otherwise use the matches method
 			var matchesTarget = typeof selector == "function" ? {matches: selector} : this,
@@ -209,14 +210,14 @@ define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./
 		syntheticDispatch = on.emit = function(target, type, event){
 		// summary:
 		//		Fires an event on the target object.
-		//	target:
+		// target:
 		//		The target object to fire the event on. This can be a DOM element or a plain 
 		//		JS object. If the target is a DOM element, native event emiting mechanisms
 		//		are used when possible.
-		//	type:
+		// type:
 		//		The event type name. You can emulate standard native events like "click" and 
 		//		"mouseover" or create custom events like "open" or "finish".
-		//	event:
+		// event:
 		//		An object that provides the properties for the event. See https://developer.mozilla.org/en/DOM/event.initEvent 
 		//		for some of the properties. These properties are copied to the event object.
 		//		Of particular importance are the cancelable and bubbles properties. The
@@ -227,11 +228,11 @@ define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./
 		//		on the target and then each parent successively until the top of the tree
 		//		is reached or stopPropagation() is called. Both bubbles and cancelable 
 		//		default to false.
-		//	returns:
+		// returns:
 		//		If the event is cancelable and the event is not cancelled,
 		//		emit will return true. If the event is cancelable and the event is cancelled,
 		//		emit will return false.
-		//	details:
+		// details:
 		//		Note that this is designed to emit events for listeners registered through
 		//		dojo/on. It should actually work with any event listener except those
 		//		added through IE's attachEvent (IE8 and below's non-W3C event emiting
@@ -240,7 +241,7 @@ define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./
 		//		action, it only returns a value to indicate if the default action should take
 		//		place. For example, emiting a keypress event would not cause a character
 		//		to appear in a textbox.
-		//	example:
+		// example:
 		//		To fire our own click event
 		//	|	on.emit(dojo.byId("button"), "click", {
 		//	|		cancelable: true,
@@ -276,7 +277,7 @@ define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./
 		return event && event.cancelable && event; // if it is still true (was cancelable and was cancelled), return the event to indicate default action should happen
 	};
 	var captures = {};
-	if(!has("event-stopimmediatepropogation")){
+	if(!has("event-stopimmediatepropagation")){
 		var stopImmediatePropagation =function(){
 			this.immediatelyStopped = true;
 			this.modified = true; // mark it as modified so the event will be cached in IE

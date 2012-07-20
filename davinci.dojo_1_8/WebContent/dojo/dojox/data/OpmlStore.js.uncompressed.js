@@ -279,7 +279,9 @@ var OpmlStore = declare("dojox.data.OpmlStore", null, {
 		//		See dojo.data.api.Read.loadItem()
 		// description:
 		//		The OpmlStore always loads all items, so if it's an item, then it's loaded.
+		//
 		//		From the dojo.data.api.Read.loadItem docs:
+		//
 		//			If a call to isItemLoaded() returns true before loadItem() is even called,
 		//			then loadItem() need not do any work at all and will not even invoke the callback handlers.
 	},

@@ -74,7 +74,7 @@ define("dojox/geo/openlayers/GreatCircle", [
 			// description:
 			//		Create a geodetic line as a OpenLayers.Geometry.LineString between the point p1
 			//		and the point p2. Result is a polyline approximation for which a new point is 
-			// 		calculated every <em>increment</em> degrees.
+			//		calculated every <em>increment</em> degrees.
 			// p1: Point
 			//		The first point of the geodetic line. x and y fields are longitude and
 			//		latitude in decimal degrees.
@@ -92,7 +92,7 @@ define("dojox/geo/openlayers/GreatCircle", [
 			// summary:
 			//		Create a geodetic line as an array of dojox.geo.openlayers.GeometryFeature.
 			// description:
-			// 		Create a geodetic line as a dojox.geo.openlayers.GeometryFeature between the point p1
+			//		Create a geodetic line as a dojox.geo.openlayers.GeometryFeature between the point p1
 			//		ant the point p2. Result is a polyline approximation for which a new point is 
 			//		calculated every <em>increment</em> degrees.
 			// p1: Point

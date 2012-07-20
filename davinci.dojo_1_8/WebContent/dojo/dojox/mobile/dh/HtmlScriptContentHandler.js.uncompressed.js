@@ -6,8 +6,6 @@ define("dojox/mobile/dh/HtmlScriptContentHandler", [
 
 	// module:
 	//		dojox/mobile/dh/HtmlScriptContentHandler
-	// summary:
-	//		An HTML content handler that has script execution capability.
 
 	return declare("dojox.mobile.dh.HtmlScriptContentHandler", [HtmlContentHandler, _ExecScriptMixin], {
 		// summary:

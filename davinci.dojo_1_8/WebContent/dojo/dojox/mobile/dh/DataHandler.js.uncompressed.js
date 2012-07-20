@@ -7,8 +7,6 @@ define("dojox/mobile/dh/DataHandler", [
 
 	// module:
 	//		dojox/mobile/dh/DataHandler
-	// summary:
-	//		A component that provides an interface between data and handlers.
 
 	return declare("dojox.mobile.dh.DataHandler", null, {
 		// summary:
@@ -30,6 +28,8 @@ define("dojox/mobile/dh/DataHandler", [
 		refNode: null,
 
 		constructor: function(/*DataSource*/ ds, /*DomNode*/ target, /*DomNode?*/ refNode){
+			// summary:
+			//		Creates a new instance of the class.
 			this.ds = ds;
 			this.target = target;
 			this.refNode = refNode;

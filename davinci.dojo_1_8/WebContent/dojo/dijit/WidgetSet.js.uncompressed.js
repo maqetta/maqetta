@@ -15,11 +15,14 @@ define("dijit/WidgetSet", [
 		//
 		// example:
 		//		Create a small list of widgets:
-		//		|	var ws = new dijit.WidgetSet();
-		//		|	ws.add(dijit.byId("one"));
-		//		|	ws.add(dijit.byId("two"));
-		//		|	// destroy both:
-		//		|	ws.forEach(function(w){ w.destroy(); });
+		//		|	require(["dijit/WidgetSet", "dijit/registry"],
+		//		|		function(WidgetSet, registry){
+		//		|		var ws = new WidgetSet();
+		//		|		ws.add(registry.byId("one"));
+		//		|		ws.add(registry.byId("two"));
+		//		|		// destroy both:
+		//		|		ws.forEach(function(w){ w.destroy(); });
+		//		|	});
 
 		constructor: function(){
 			this._hash = {};
@@ -62,8 +65,11 @@ define("dijit/WidgetSet", [
 			//
 			// example:
 			//		Using the default `dijit.registry` instance:
-			//		|	dijit.registry.forEach(function(widget){
-			//		|		console.log(widget.declaredClass);
+			//		|	require(["dijit/WidgetSet", "dijit/registry"],
+			//		|		function(WidgetSet, registry){
+			//		|		registry.forEach(function(widget){
+			//		|			console.log(widget.declaredClass);
+			//		|		});
 			//		|	});
 			//
 			// returns:
@@ -91,9 +97,15 @@ define("dijit/WidgetSet", [
 			//
 			// example:
 			//		Arbitrary: select the odd widgets in this list
-			//		|	dijit.registry.filter(function(w, i){
-			//		|		return i % 2 == 0;
-			//		|	}).forEach(function(w){ /* odd ones */ });
+			//		|	
+			//		|		
+			//		|	
+			//		|	require(["dijit/WidgetSet", "dijit/registry"],
+			//		|		function(WidgetSet, registry){
+			//		|		registry.filter(function(w, i){
+			//		|			return i % 2 == 0;
+			//		|		}).forEach(function(w){ /* odd ones */ });
+			//		|	});
 
 			thisObj = thisObj || kernel.global;
 			var res = new WidgetSet(), i = 0, id;
@@ -111,10 +123,13 @@ define("dijit/WidgetSet", [
 			//		Find a widget in this list by it's id.
 			// example:
 			//		Test if an id is in a particular WidgetSet
-			//		| var ws = new dijit.WidgetSet();
-			//		| ws.add(dijit.byId("bar"));
-			//		| var t = ws.byId("bar") // returns a widget
-			//		| var x = ws.byId("foo"); // returns undefined
+			//		|	require(["dijit/WidgetSet", "dijit/registry"],
+			//		|		function(WidgetSet, registry){
+			//		|		var ws = new WidgetSet();
+			//		|		ws.add(registry.byId("bar"));
+			//		|		var t = ws.byId("bar") // returns a widget
+			//		|		var x = ws.byId("foo"); // returns undefined
+			//		|	});
 
 			return this._hash[id];	// dijit/_WidgetBase
 		},
@@ -128,7 +143,10 @@ define("dijit/WidgetSet", [
 			//
 			// example:
 			//		Find all `dijit.TitlePane`s in a page:
-			//		|	dijit.registry.byClass("dijit.TitlePane").forEach(function(tp){ tp.close(); });
+			//		|	require(["dijit/WidgetSet", "dijit/registry"],
+			//		|		function(WidgetSet, registry){
+			//		|		registry.byClass("dijit.TitlePane").forEach(function(tp){ tp.close(); });
+			//		|	});
 
 			var res = new WidgetSet(), id, widget;
 			for(id in this._hash){
@@ -146,7 +164,11 @@ define("dijit/WidgetSet", [
 			//
 			// example:
 			//		Work with the widget .domNodes in a real Array
-			//		|	array.map(dijit.registry.toArray(), function(w){ return w.domNode; });
+			//		|	require(["dijit/WidgetSet", "dijit/registry"],
+			//		|		function(WidgetSet, registry){
+			//		|		array.map(registry.toArray(), function(w){ return w.domNode; });
+			//		|	});
+
 
 			var ar = [];
 			for(var id in this._hash){
@@ -159,7 +181,10 @@ define("dijit/WidgetSet", [
 			// summary:
 			//		Create a new Array from this WidgetSet, following the same rules as `array.map`
 			// example:
-			//		|	var nodes = dijit.registry.map(function(w){ return w.domNode; });
+			//		|	require(["dijit/WidgetSet", "dijit/registry"],
+			//		|		function(WidgetSet, registry){
+			//		|		var nodes = registry.map(function(w){ return w.domNode; });
+			//		|	});
 			//
 			// returns:
 			//		A new array of the returned values.

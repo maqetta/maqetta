@@ -146,7 +146,7 @@ define("dojox/dgauges/LinearScaler", ["dojo/_base/lang", "dojo/_base/declare", "
 		valueForPosition: function(position){
 			// summary:
 			//		Transforms a relative position (between 0 and 1) into a value.
-			// value: Number
+			// position: Number
 			//		A relative position to transform.
 			// returns: Number
 			//		The transformed value between minimum and maximum.

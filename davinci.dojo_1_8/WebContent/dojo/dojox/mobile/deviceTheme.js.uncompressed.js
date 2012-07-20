@@ -7,12 +7,103 @@
 
 	// module:
 	//		dojox/mobile/deviceTheme
-	// summary:
-	//		Automatic theme loader
 
 	var dm = lang && lang.getObject("dojox.mobile", true) || {};
 
-	var deviceTheme = new function(){
+	var DeviceTheme = function(){
+		// summary:
+		//		Automatic theme loader.
+		// description:
+		//		This module detects the user agent of the browser and loads the
+		//		appropriate theme files. It can be enabled by simply requiring
+		//		dojox/mobile/deviceTheme from your application.
+		//
+		//		You can also pass an additional query parameter string,
+		//		device={theme id} to force a specific theme through the browser
+		//		URL input. The available theme ids are Android, BlackBerry,
+		//		Custom, iPhone, and iPad. The names are case-sensitive. If the given
+		//		id does not match, the iPhone theme is used.
+		//
+		//	|	http://your.server.com/yourapp.html // automatic detection
+		//	|	http://your.server.com/yourapp.html?theme=Android // forces Android theme
+		//
+		//		To simulate a particular device, the user agent may be
+		//		overridden by setting dojoConfig.mblUserAgent.
+		//
+		//		By default, an all-in-one theme file (e.g. themes/iphone/iphone.css) is
+		//		loaded. The all-in-one theme files contain style sheets for all the
+		//		dojox/mobile widgets regardless of whether they are used in your
+		//		application or not.
+		//		If you want to choose what theme files to load, you can specify them
+		//		via dojoConfig as shown in the following example:
+		//
+		//	|	data-dojo-config="parseOnLoad:true, mblThemeFiles:['base','Button']"
+		//
+		//		Or you may want to use dojox/mobile/themeFiles as follows to get the
+		//		same result. Note that the assignment has to be done before loading
+		//		deviceTheme.js.
+		//
+		//	|	dojo.require("dojox.mobile");
+		//	|	dojox.mobile.themeFiles = ['base','Button'];
+		//	|	dojo.require("dojox.mobile.deviceTheme");
+		//
+		//		In the case of this example, if iphone is detected, for example, the
+		//		following files will be loaded:
+		//
+		//	|	dojox/mobile/themes/iphone/base.css
+		//	|	dojox/mobile/themes/iphone/Button.css
+		//
+		//		If you want to load style sheets for your own custom widgets, you can
+		//		specify a package name along with a theme file name in an array.
+		//
+		//	|	['base',['com.acme','MyWidget']]
+		//
+		//		In this case, the following files will be loaded.
+		//
+		//	|	dojox/mobile/themes/iphone/base.css
+		//	|	com/acme/themes/iphone/MyWidget.css
+		//
+		//		If you specify '@theme' as a theme file name, it will be replaced with
+		//		the theme folder name (e.g. 'iphone'). For example,
+		//
+		//	|	['@theme',['com.acme','MyWidget']]
+		//
+		//		will load the following files.
+		//
+		//	|	dojox/mobile/themes/iphone/iphone.css
+		//	|	com/acme/themes/iphone/MyWidget.css
+		//
+		//		Note that loading of the theme files is performed asynchronously by
+		//		the browser, so you cannot assume that the load has been completed
+		//		when your application is initialized. For example, if some widget in
+		//		your application uses node dimensions that cannot be determined
+		//		without CSS styles being applied to them to calculate its layout at
+		//		initialization, the layout calculation may fail.
+		//
+		//		A possible workaround for this problem is to use dojo.require to load
+		//		deviceTheme.js and place it in a separate `<script>` block immediately
+		//		below the script tag that loads dojo.js as below. However, this is not
+		//		guaranteed to solve the problem.
+		//
+		//	|	<script src="dojo.js"></script>
+		//	|	<script>
+		//	|		dojo.require("dojox.mobile.deviceTheme");
+		//	|	</script>
+		//	|	<script>
+		//	|		dojo.require("dojox.mobile");
+		//	|		....
+		//
+		//		Another option is to use deviceTheme.js as non-dojo JavaScript code.
+		//		You could load deviceTheme.js prior to loading dojo.js using a
+		//		script tag as follows.
+		//
+		//	|	<script src="dojox/mobile/deviceTheme.js"
+		//	|		 data-dojo-config="mblThemeFiles:['base','Button']"></script>
+		//	|	<script src="dojo/dojo.js" data-dojo-config="parseOnLoad: true"></script>
+		//
+		//		A safer solution would be to not use deviceTheme and use `<link>`
+		//		or `@import` instead to load the theme files.
+
 		if(!win){
 			win = window;
 			win.doc = document;
@@ -164,105 +255,13 @@
 				}
 			}
 		};
-	}();
+	};
+
+	// Singleton.  (TODO: can we replace DeviceTheme class and singleton w/a simple hash of functions?)
+	var deviceTheme = new DeviceTheme();
+
 	deviceTheme.loadDeviceTheme();
 	window.deviceTheme = dm.deviceTheme = deviceTheme;
-	
-	/*=====
-    return {
-		// summary:
-		//		Automatic theme loader.
-		// description:
-		//		This module detects the user agent of the browser and loads the
-		//		appropriate theme files. It can be enabled by simply requiring
-		//		dojox/mobile/deviceTheme from your application.
-		//
-		//		You can also pass an additional query parameter string,
-		//		device={theme id} to force a specific theme through the browser
-		//		URL input. The available theme ids are Android, BlackBerry,
-		//		Custom, iPhone, and iPad. The names are case-sensitive. If the given
-		//		id does not match, the iPhone theme is used.
-		//
-		//	|	http://your.server.com/yourapp.html // automatic detection
-		//	|	http://your.server.com/yourapp.html?theme=Android // forces Android theme
-		//
-		//		To simulate a particular device, the user agent may be
-		//		overridden by setting dojoConfig.mblUserAgent.
-		//
-		//		By default, an all-in-one theme file (e.g. themes/iphone/iphone.css) is
-		//		loaded. The all-in-one theme files contain style sheets for all the
-		//		dojox/mobile widgets regardless of whether they are used in your
-		//		application or not.
-		//		If you want to choose what theme files to load, you can specify them
-		//		via dojoConfig as shown in the following example:
-		//
-		//	|	data-dojo-config="parseOnLoad:true, mblThemeFiles:['base','Button']"
-		//
-		//		Or you may want to use dojox/mobile/themeFiles as follows to get the
-		//		same result. Note that the assignment has to be done before loading
-		//		deviceTheme.js.
-		//
-		//	|	dojo.require("dojox.mobile");
-		//	|	dojox.mobile.themeFiles = ['base','Button'];
-		//	|	dojo.require("dojox.mobile.deviceTheme");
-		//
-		//		In the case of this example, if iphone is detected, for example, the
-		//		following files will be loaded:
-		//
-		//	|	dojox/mobile/themes/iphone/base.css
-		//	|	dojox/mobile/themes/iphone/Button.css
-		//
-		//		If you want to load style sheets for your own custom widgets, you can
-		//		specify a package name along with a theme file name in an array.
-		//
-		//	|	['base',['com.acme','MyWidget']]
-		//
-		//		In this case, the following files will be loaded.
-		//
-		//	|	dojox/mobile/themes/iphone/base.css
-		//	|	com/acme/themes/iphone/MyWidget.css
-		//
-		//		If you specify '@theme' as a theme file name, it will be replaced with
-		//		the theme folder name (e.g. 'iphone'). For example,
-		//
-		//	|	['@theme',['com.acme','MyWidget']]
-		//
-		//		will load the following files.
-		//
-		//	|	dojox/mobile/themes/iphone/iphone.css
-		//	|	com/acme/themes/iphone/MyWidget.css
-		//
-		//		Note that loading of the theme files is performed asynchronously by
-		//		the browser, so you cannot assume that the load has been completed
-		//		when your application is initialized. For example, if some widget in
-		//		your application uses node dimensions that cannot be determined
-		//		without CSS styles being applied to them to calculate its layout at
-		//		initialization, the layout calculation may fail.
-		//
-		//		A possible workaround for this problem is to use dojo.require to load
-		//		deviceTheme.js and place it in a separate `<script>` block immediately
-		//		below the script tag that loads dojo.js as below. However, this is not 
-		//		guaranteed to solve the problem.
-		//
-		//	|	<script src="dojo.js"></script>
-		//	|	<script>
-		//	|		dojo.require("dojox.mobile.deviceTheme");
-		//	|	</script>
-		//	|	<script>
-		//	|		dojo.require("dojox.mobile");
-		//	|		....
-		//
-		//		Another option is to use deviceTheme.js as non-dojo JavaScript code.
-		//		You could load deviceTheme.js prior to loading dojo.js using a
-		//		script tag as follows.
-		//
-		//	|	<script src="dojox/mobile/deviceTheme.js"
-		//	|		 data-dojo-config="mblThemeFiles:['base','Button']"></script>
-		//	|	<script src="dojo/dojo.js" data-dojo-config="parseOnLoad: true"></script>
-		//
-		//		A safer solution would be to not use deviceTheme and use `<link>`
-		//		or `@import` instead to load the theme files.
-    };
-    =====*/
+
 	return deviceTheme;
 });

@@ -17,13 +17,13 @@ define("dojox/widget/WizardPane", [
 ], function (lang, declare, connect, StackContainer, ContentPane, Button, _TemplatedMixin, _WidgetsInTemplateMixin, i18n, template, wizardPane) {
   
 var WizardPane = declare("dojox.widget.WizardPane", ContentPane, {
-	// summary: A panel in a `dojox.widget.Wizard`
-	//
+	// summary:
+	//		A panel in a `dojox.widget.Wizard`
 	// description:
-	//	An extended ContentPane with additional hooks for passing named
-	//	functions to prevent the pane from going either forward or
-	//	backwards.
-	//
+	//		An extended ContentPane with additional hooks for passing named
+	//		functions to prevent the pane from going either forward or
+	//		backwards.
+
 	// canGoBack: Boolean
 	//		If true, then can move back to a previous panel (by clicking the "Previous" button)
 	canGoBack: true,

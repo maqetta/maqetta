@@ -26,44 +26,45 @@ define("dojox/widget/UpgradeBar", [
 dojo.experimental("dojox.widget.UpgradeBar");
 
 var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixin], {
-	//	summary:
-	//				Shows a bar at the top of the screen when the user is to
-	//				be notified that they should upgrade their browser or a
-	//				plugin.
-	//
-	//	description:
-	//				You can insert custom validations to trigger the UpgradeBar
-	//				to display. An evaluation of 'true' shows the bar (as this
-	//				version *is* less than it should be). Multiple validations
-	//				may be checked, although only the first in the list will be
-	//				displayed.
-	//				Markup and programmatic are supported. Markup is a little
-	//				cleaner, since a majority of the parameters are the HTML
-	//				snippets to be displayed. In markup, the validate code should
-	//				be an expression that will evaluate to true or false. This
-	//				expression is wrapped in a try/catch, so if it blows up, it
-	//				is assumed to be true and trigger the bar.
-	//				In programmtic, a function should be used that returns true
-	//				or false. You would need to use your own try/catch in that.
-	//
-	//	example:	See tests for examples.
+	// summary:
+	//		Shows a bar at the top of the screen when the user is to
+	//		be notified that they should upgrade their browser or a
+	//		plugin.
+	// description:
+	//		You can insert custom validations to trigger the UpgradeBar
+	//		to display. An evaluation of 'true' shows the bar (as this
+	//		version *is* less than it should be). Multiple validations
+	//		may be checked, although only the first in the list will be
+	//		displayed.
+	//		Markup and programmatic are supported. Markup is a little
+	//		cleaner, since a majority of the parameters are the HTML
+	//		snippets to be displayed. In markup, the validate code should
+	//		be an expression that will evaluate to true or false. This
+	//		expression is wrapped in a try/catch, so if it blows up, it
+	//		is assumed to be true and trigger the bar.
+	//		In programmatic, a function should be used that returns true
+	//		or false. You would need to use your own try/catch in that.
+	// example:
+	//		See tests for examples.
 
 
-	//	notifications: Array
+	// notifications: Array
 	//		An array of objects that hold the criteria for upgrades:
-	//			message: String
-	//				The message to display in the bar. Can be HTML.
-	//			validate:Function
-	//				The expression to evaluate to determine if the
-	//				bar should show or not. Should be a simple expression
-	//				if used in HTML:
-	//				|	<div validate="!google.gears">
-	//				|	<div validate="has('ie')<8">
+	//
+	//		- message: String: The message to display in the bar. Can be HTML.
+	//		- validate: Function: The expression to evaluate to determine if the
+	//			bar should show or not. Should be a simple expression
+	//			if used in HTML:
+	//
+	//	|	<div validate="!google.gears">
+	//	|	<div validate="has('ie')<8">
 	notifications:[],
-	//	buttonCancel:String
+
+	// buttonCancel:String
 	//		The HTML tip show when hovering over the close button.
 	buttonCancel:"Close for now",
-	//	noRemindButton:String
+
+	// noRemindButton:String
 	//		The text link shown that when clicked, permanently dismisses
 	//		the message (sets a cookie). If this string is blank, this
 	//		link is not displayed.
@@ -75,7 +76,7 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 
 		if(!props.notifications && node){
 			// From markup. Create the notifications Array from the
-			//	srcRefNode children.
+			// srcRefNode children.
 			array.forEach(node.childNodes, function(n){
 				if(n.nodeType==1){
 					var val = domAttr.get(n, "validate");
@@ -99,11 +100,11 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 
 	checkNotifications: function(){
 		// 	summary:
-		//			Internal. Go through the notifications Array
-		//			and check for any that evaluate to true.
+		//		Internal. Go through the notifications Array
+		//		and check for any that evaluate to true.
 		// tags:
 		//		private
-		//
+
 		if(!this.notifications.length){
 			// odd. why use the bar but not set any notifications?
 			return;
@@ -142,7 +143,7 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 			var setWidth = function(){
 				var v = win.getBox();
 				style.set(self.domNode, "width", v.w+"px");
-			}
+			};
 			this.connect(window, "resize", function(){
 				setWidth();
 			});
@@ -159,7 +160,7 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 		//		but could be called externally for fun.
 		// tags:
 		//		protected
-		//
+
 		if(cookie("disableUpgradeReminders")){
 			return;
 		}
@@ -174,12 +175,12 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 	},
 
 	show: function(){
-		//	summary:
+		// summary:
 		//		Internal. Shows the bar. Do not call directly.
 		//		Use notify();
 		// tags:
 		//		private
-		//
+
 		this._bodyMarginTop = style.get(baseWin.body(), "marginTop");
 		this._size = domGeo.getContentBox(this.domNode).h;
 		style.set(this.domNode, { display:"block", height:0, opacity:0 });
@@ -194,9 +195,9 @@ var UpgradeBar = declare("dojox.widget.UpgradeBar", [_WidgetBase, _TemplatedMixi
 	},
 
 	hide: function(){
-		//	summary:
+		// summary:
 		//		Hides the bar. May be called externally.
-		//
+
 		if(!this._hideAnim){
 			this._hideAnim = fx.combine([
 				baseFx.animateProperty({ node:baseWin.body(), duration:500, properties:{ marginTop:this._bodyMarginTop } }),

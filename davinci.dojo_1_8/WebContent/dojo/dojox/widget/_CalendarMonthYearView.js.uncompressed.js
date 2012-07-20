@@ -2,7 +2,7 @@ require({cache:{
 'url:dojox/widget/Calendar/CalendarMonthYear.html':"<div class=\"dojoxCal-MY-labels\" style=\"left: 0px;\"\t\n\tdojoAttachPoint=\"myContainer\" dojoAttachEvent=\"onclick: onClick\">\n\t\t<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"margin: auto;\">\n\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr class=\"dojoxCal-MY-G-Template\">\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-M-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarMonthLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td class=\"dojoxCal-MY-Y-Template\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"dojoxCalendarYearLabel\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t\t\t <tr class=\"dojoxCal-MY-btns\">\n\t\t\t\t\t\t \t <td class=\"dojoxCal-MY-btns\" colspan=\"4\">\n\t\t\t\t\t\t \t\t <span class=\"dijitReset dijitInline dijitButtonNode ok-btn\" dojoAttachEvent=\"onclick: onOk\" dojoAttachPoint=\"okBtn\">\n\t\t\t\t\t\t \t \t \t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">OK</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t\t\t <span class=\"dijitReset dijitInline dijitButtonNode cancel-btn\" dojoAttachEvent=\"onclick: onCancel\" dojoAttachPoint=\"cancelBtn\">\n\t\t\t\t\t\t \t \t\t <button\tclass=\"dijitReset dijitStretch dijitButtonContents\">Cancel</button>\n\t\t\t\t\t\t\t\t </span>\n\t\t\t\t\t\t \t </td>\n\t\t\t\t\t\t </tr>\n\t\t\t\t</tbody>\n\t\t</table>\n</div>\n"}});
 define("dojox/widget/_CalendarMonthYearView", [
 	"dojo/_base/declare",
-	"dojox/widget/_CalendarView",
+	"./_CalendarView",
 	"dijit/_TemplatedMixin",
 	"dojo/query",
 	"dojo/dom-class",
@@ -155,7 +155,6 @@ define("dojox/widget/_CalendarMonthYearView", [
 			var min = constraints && constraints.min ? constraints.min.getFullYear() : firstYear -10000;
 			firstYear = Math.max(min, firstYear);
 
-			// summary: Writes the years to display to the view
 			this._displayedYear = dispYear;
 
 			var yearLabels = query(".dojoxCalendarYearLabel", this.yearContainer);
@@ -166,17 +165,15 @@ define("dojox/widget/_CalendarMonthYearView", [
 			yearLabels.forEach(lang.hitch(this, function(node, cnt){
 				if(cnt <= max){
 					this._setText(node, firstYear + cnt);
-					domClass.remove(node, disabledClass);
-				}else{
-					domClass.add(node, disabledClass);
 				}
+				domClass.toggle(node, disabledClass, cnt > max);
 			}));
 
 			if(this._incBtn){
-				domClass[max < yearLabels.length ? "add" : "remove"](this._incBtn, disabledClass);
+				domClass.toggle(this._incBtn, disabledClass, max < yearLabels.length);
 			}
 			if(this._decBtn){
-				domClass[min >= firstYear ? "add" : "remove"](this._decBtn, disabledClass);
+				domClass.toggle(this._decBtn, disabledClass, min >= firstYear);
 			}
 
 			var h = this.getHeader();
@@ -187,7 +184,7 @@ define("dojox/widget/_CalendarMonthYearView", [
 
 		_updateSelectedYear: function(){
 			this._year = String((this._cachedDate || this.get("value")).getFullYear());
-			this._updateSelectedNode(".dojoxCalendarYearLabel", lang.hitch(this, function(node, idx){
+			this._updateSelectedNode(".dojoxCalendarYearLabel", lang.hitch(this, function(node){
 				return this._year !== null && node.innerHTML == this._year;
 			}));
 		},
@@ -204,7 +201,7 @@ define("dojox/widget/_CalendarMonthYearView", [
 			var sel = "dijitCalendarSelectedDate";
 			query(queryNode, this.domNode)
 				.forEach(function(node, idx, array){
-					domClass[filter(node, idx, array) ? "add" : "remove"](node.parentNode, sel);
+					domClass.toggle(node.parentNode, sel, filter(node, idx, array));
 			});
 			var selMonth = query('.dojoxCal-MY-M-Template div', this.myContainer)
 				.filter(function(node){
@@ -213,15 +210,13 @@ define("dojox/widget/_CalendarMonthYearView", [
 			if(!selMonth){return;}
 			var disabled = domClass.contains(selMonth, 'dijitCalendarDisabledDate');
 
-			domClass[disabled ? 'add' : 'remove'](this.okBtn, "dijitDisabled");
+			domClass.toggle(this.okBtn, "dijitDisabled", disabled);
 		},
 
 		onClick: function(evt){
 			// summary:
 			//		Handles clicks on month names
 			var clazz;
-			var _this = this;
-			var sel = "dijitCalendarSelectedDate";
 			function hc(c){
 				return domClass.contains(evt.target, c);
 			}

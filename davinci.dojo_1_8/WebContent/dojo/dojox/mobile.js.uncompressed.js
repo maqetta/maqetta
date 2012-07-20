@@ -21,8 +21,6 @@ define("dojox/mobile/ViewController", [
 
 	// module:
 	//		dojox/mobile/ViewController
-	// summary:
-	//		A singleton class that controls view transition.
 
 	var Controller = declare("dojox.mobile.ViewController", null, {
 		// summary:
@@ -50,6 +48,10 @@ define("dojox/mobile/ViewController", [
 		fileTypeMapClass: "dojox/mobile/dh/SuffixFileTypeMap",
 
 		constructor: function(){
+			// summary:
+			//		Creates a new instance of the class.
+			// tags:
+			//		private
 			this.viewMap = {};
 			ready(lang.hitch(this, function(){
 				on(win.body(), "startTransition", lang.hitch(this, "onStartTransition"));
@@ -263,8 +265,6 @@ define("dojox/mobile/RoundRect", [
 
 	// module:
 	//		dojox/mobile/RoundRect
-	// summary:
-	//		A simple round rectangle container.
 
 	return declare("dojox.mobile.RoundRect", Container, {
 		// summary:
@@ -311,8 +311,6 @@ define("dojox/mobile/RoundRectList", [
 
 	// module:
 	//		dojox/mobile/RoundRectList
-	// summary:
-	//		A rounded rectangle list.
 
 	return declare("dojox.mobile.RoundRectList", [WidgetBase, Container, Contained], {
 		// summary:
@@ -470,11 +468,11 @@ define("dojox/mobile/sniff", [
 	}
 
 	/*=====
-    return {
+	return {
 		// summary:
 		//		This module sets has() flags based on the userAgent of the current browser.
-    };
-    =====*/
+	};
+	=====*/
 	return has;
 });
 
@@ -488,8 +486,6 @@ define("dojox/mobile/viewRegistry", [
 
 	// module:
 	//		dojox/mobile/viewRegistry
-	// summary:
-	//		A registry of existing views.
 
 	var viewRegistry = {
 		// summary:
@@ -498,10 +494,12 @@ define("dojox/mobile/viewRegistry", [
 		// length: Number
 		//		The number of registered views.
 		length: 0,
+		
 		// hash: [private] Object
 		//		The object used to register views.
 		hash: {},
-		// initialView: [private] doox/mobile/View
+		
+		// initialView: [private] dojox/mobile/View
 		//		The initial view.
 		initialView: null,
 
@@ -766,10 +764,13 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	//		Bi-directional support,	the main variable which is responsible for the direction of the text.
 	//		The text direction can be different than the GUI direction by using this parameter in creation
 	//		of a widget.
+	//
 	//		Allowed values:
-	//			1. "ltr"
-	//			2. "rtl"
-	//			3. "auto" - contextual the direction of a text defined by first strong letter.
+	//
+	//		1. "ltr"
+	//		2. "rtl"
+	//		3. "auto" - contextual the direction of a text defined by first strong letter.
+	//
 	//		By default is as the page direction.
 	textDir: "",
 
@@ -889,8 +890,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	//		formats of the above list.
 	//
 	//		There are also some shorthands for backwards compatibility:
+	//
 	//		- string --> { node: string, type: "attribute" }, for example:
+	//
 	//	|	"focusNode" ---> { node: "focusNode", type: "attribute" }
+	//
 	//		- "" --> { node: "domNode", type: "attribute" }
 	attributeMap: {},
 
@@ -901,6 +905,22 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	//////////// INITIALIZATION METHODS ///////////////////////////////////////
 
+	/*=====
+	constructor: function(params, srcNodeRef){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- if this is a behavioral widget then apply behavior to that srcNodeRef
+		//		- otherwise, replace srcNodeRef with my generated DOM tree
+	 },
+	=====*/
+
 	postscript: function(/*Object?*/params, /*DomNode|String*/srcNodeRef){
 		// summary:
 		//		Kicks off widget instantiation.  See create() for details.
@@ -909,20 +929,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		this.create(params, srcNodeRef);
 	},
 
-	create: function(/*Object?*/params, /*DomNode|String?*/srcNodeRef){
+	create: function(params, srcNodeRef){
 		// summary:
 		//		Kick off the life-cycle of a widget
-		// params:
-		//		Hash of initialization parameters for widget, including
-		//		scalar values (like title, duration etc.) and functions,
-		//		typically callbacks like onClick.
-		// srcNodeRef:
-		//		If a srcNodeRef (DOM node) is specified:
-		//			- use srcNodeRef.innerHTML as my contents
-		//			- if this is a behavioral widget then apply behavior
-		//			  to that srcNodeRef
-		//			- otherwise, replace srcNodeRef with my generated DOM
-		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
 		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
@@ -930,6 +939,15 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		//
 		//		Of course, adventurous developers could override create entirely, but this should
 		//		only be done as a last resort.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- if this is a behavioral widget then apply behavior to that srcNodeRef
+		//		- otherwise, replace srcNodeRef with my generated DOM tree
 		// tags:
 		//		private
 
@@ -1316,7 +1334,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	get: function(name){
 		// summary:
 		//		Get a property from a widget.
-		//	name:
+		// name:
 		//		The property to get.
 		// description:
 		//		Get a named property from a widget. The property may
@@ -1336,9 +1354,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	set: function(name, value){
 		// summary:
 		//		Set a property on a widget
-		//	name:
+		// name:
 		//		The property to set.
-		//	value:
+		// value:
 		//		The value to set in the property.
 		// description:
 		//		Sets named properties on a widget which may potentially be handled by a
@@ -1466,9 +1484,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		return ret;
 	},
 
-	on: function(/*String*/ type, /*Function*/ func){
+	on: function(/*String|Function*/ type, /*Function*/ func){
 		// summary:
 		//		Call specified function when event occurs, ex: myWidget.on("click", function(){ ... }).
+		// type:
+		//		Name of event (ex: "click") or extension event like touch.press.
 		// description:
 		//		Call specified function when event `type` occurs, ex: `myWidget.on("click", function(){ ... })`.
 		//		Note that the function is not run in any particular scope, so if (for example) you want it to run in the
@@ -1485,9 +1505,10 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		return this.own(on(this.domNode, type, func))[0];
 	},
 
-	_onMap: function(/*String*/ type){
+	_onMap: function(/*String|Function*/ type){
 		// summary:
-		//		Maps on() type parameter (ex: "mousemove") to method name (ex: "onMouseMove")
+		//		Maps on() type parameter (ex: "mousemove") to method name (ex: "onMouseMove").
+		//		If type is a synthetic event like touch.press then returns undefined.
 		var ctor = this.constructor, map = ctor._onMap;
 		if(!map){
 			map = (ctor._onMap = {});
@@ -1497,7 +1518,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 				}
 			}
 		}
-		return map[type.toLowerCase()];	// String
+		return map[typeof type == "string" && type.toLowerCase()];	// String
 	},
 
 	toString: function(){
@@ -1528,9 +1549,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 			/*String|Function*/ event,
 			/*String|Function*/ method){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use this.own(on(...)) or this.own(aspect.after(...)) instead.
+		//
 		//		Connects specified obj/event to specified method of this object
 		//		and registers for disconnect() on widget destroy.
-		// description:
+		//
 		//		Provide widget-specific analog to dojo.connect, except with the
 		//		implicit use of this widget as the target object.
 		//		Events connected with `this.connect` are disconnected upon
@@ -1553,8 +1576,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	disconnect: function(handle){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use handle.remove() instead.
+		//
 		//		Disconnects handle created by `connect`.
-		//		Deprecated.	Will be removed in 2.0.	Just use handle.remove() instead.
 		// tags:
 		//		protected
 
@@ -1563,9 +1587,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	subscribe: function(t, method){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use this.own(topic.subscribe()) instead.
+		//
 		//		Subscribes to the specified topic and calls the specified method
 		//		of this object and registers for unsubscribe() on widget destroy.
-		// description:
+		//
 		//		Provide widget-specific analog to dojo.subscribe, except with the
 		//		implicit use of this widget as the target object.
 		// t: String
@@ -1586,6 +1612,8 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	unsubscribe: function(/*Object*/ handle){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use handle.remove() instead.
+		//
 		//		Unsubscribes handle created by this.subscribe.
 		//		Also removes handle from this widget's list of subscriptions
 		// tags:
@@ -1674,7 +1702,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		//		The function overridden in the _BidiSupport module,
 		//		its main purpose is to calculate the direction of the
 		//		text, if was defined by the programmer through textDir.
-		//	tags:
+		// tags:
 		//		protected.
 		return originalDir;
 	},
@@ -1750,8 +1778,6 @@ define("dojox/mobile/View", [
 
 	// module:
 	//		dojox/mobile/View
-	// summary:
-	//		A widget that represents a view that occupies the full screen
 
 	var dm = lang.getObject("dojox.mobile", true);
 
@@ -1773,13 +1799,19 @@ define("dojox/mobile/View", [
 		keepScrollPos: true,
 
 		// tag: String
-		//		A name of html tag to create as domNode.
+		//		A name of the HTML tag to create as domNode.
 		tag: "div",
 
 		/* internal properties */
 		baseClass: "mblView",
 
-		constructor: function(params, node){
+		constructor: function(/*Object*/params, /*DomNode?*/node){
+			// summary:
+			//		Creates a new instance of the class.
+			// params:
+			//		Contains the parameters.
+			// node:
+			//		The DOM node. If none is specified, it is automatically created. 
 			if(node){
 				dom.byId(node).style.visibility = "hidden";
 			}
@@ -1814,9 +1846,9 @@ define("dojox/mobile/View", [
 
 			// Determine which view among the siblings should be visible.
 			// Priority:
-			//   1. fragment id in the url (ex. #view1,view2)
-			//   2. this.selected
-			//   3. the first view
+			//	 1. fragment id in the url (ex. #view1,view2)
+			//	 2. this.selected
+			//	 3. the first view
 			if(this._visible === undefined){
 				var views = this.getSiblingViews();
 				var ids = location.hash && location.hash.substring(1).split(/,/);
@@ -2363,8 +2395,14 @@ define("dojox/mobile/View", [
 define("dojox/main", ["dojo/_base/kernel"], function(dojo) {
 	// module:
 	//		dojox/main
-	// summary:
-	//		The dojox package main module; dojox package is somewhat unusual in that the main module currently just provides an empty object.
+
+	/*=====
+	return {
+		// summary:
+		//		The dojox package main module; dojox package is somewhat unusual in that the main module currently just provides an empty object.
+		//		Apps should require modules from the dojox packages directly, rather than loading this module.
+	};
+	=====*/
 
 	return dojo.dojox;
 });
@@ -2491,14 +2529,14 @@ function(dojo, lang, aspect, dom, on, has, mouse, ready, win){
 		//		Based on http://dvcs.w3.org/hg/webevents/raw-file/tip/touchevents.html
 		//
 		// example:
-		//		1. Used with dojo.on
+		//		Used with dojo.on
 		//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
 		//		|		on(node, touch.press, function(e){});
 		//		|		on(node, touch.move, function(e){});
 		//		|		on(node, touch.release, function(e){});
 		//		|		on(node, touch.cancel, function(e){});
-		//
-		//		2. Used with touch.* directly
+		// example:
+		//		Used with touch.* directly
 		//		|	touch.press(node, function(e){});
 		//		|	touch.move(node, function(e){});
 		//		|	touch.release(node, function(e){});
@@ -2603,9 +2641,7 @@ return declare("dojo.Stateful", null, {
 	//		control and the ability to watch for property changes
 	//
 	//		The class also provides the functionality to auto-magically manage getters
-	//		and setters for object attributes/properties, as well as provides 
-	//		dojo/Stateful watch functionality and dojo/Evented emit/on functionality 
-	//		for the attributes/properties.
+	//		and setters for object attributes/properties.
 	//		
 	//		Getters and Setters should follow the format of _xxxGetter or _xxxSetter where 
 	//		the xxx is a name of the attribute to handle.  So an attribute of "foo" 
@@ -2646,22 +2682,22 @@ return declare("dojo.Stateful", null, {
 	_get: function(name, names){
 		// summary:
 		//		Private function that does a get based off a hash of names
-		//	names:
+		// names:
 		//		Hash of names of custom attributes
 		return typeof this[names.g] === "function" ? this[names.g]() : this[name];
 	},
 	get: function(/*String*/name){
 		// summary:
 		//		Get a property on a Stateful instance.
-		//	name:
+		// name:
 		//		The property to get.
-		//	returns:
+		// returns:
 		//		The property value on this Stateful instance.
 		// description:
 		//		Get a named property on a Stateful object. The property may
 		//		potentially be retrieved via a getter method in subclasses. In the base class
-		// 		this just retrieves the object's property.
-		// 		For example:
+		//		this just retrieves the object's property.
+		//		For example:
 		//	|	stateful = new dojo.Stateful({foo: 3});
 		//	|	stateful.get("foo") // returns 3
 		//	|	stateful.foo // returns 3
@@ -2671,16 +2707,16 @@ return declare("dojo.Stateful", null, {
 	set: function(/*String*/name, /*Object*/value){
 		// summary:
 		//		Set a property on a Stateful instance
-		//	name:
+		// name:
 		//		The property to set.
-		//	value:
+		// value:
 		//		The value to set in the property.
-		//	returns:
+		// returns:
 		//		The function returns this dojo.Stateful instance.
 		// description:
 		//		Sets named properties on a stateful object and notifies any watchers of
-		// 		the property. A programmatic setter may be defined in subclasses.
-		// 		For example:
+		//		the property. A programmatic setter may be defined in subclasses.
+		//		For example:
 		//	|	stateful = new dojo.Stateful();
 		//	|	stateful.watch(function(name, oldValue, value){
 		//	|		// this will be called on the set below
@@ -2697,7 +2733,7 @@ return declare("dojo.Stateful", null, {
 		// If an object is used, iterate through object
 		if(typeof name === "object"){
 			for(var x in name){
-				if(name.hasOwnProperty(x)){
+				if(name.hasOwnProperty(x) && x !="_watchCallbacks"){
 					this.set(x, name[x]);
 				}
 			}
@@ -2728,9 +2764,9 @@ return declare("dojo.Stateful", null, {
 		// summary:
 		//		Internal helper for directly changing an attribute value.
 		//
-		//	name: String
+		// name: String
 		//		The property to set.
-		//	value: Mixed
+		// value: Mixed
 		//		The value to set in the property.
 		//
 		// description:
@@ -2749,19 +2785,19 @@ return declare("dojo.Stateful", null, {
 	watch: function(/*String?*/name, /*Function*/callback){
 		// summary:
 		//		Watches a property for changes
-		//	name:
+		// name:
 		//		Indicates the property to watch. This is optional (the callback may be the
-		// 		only parameter), and if omitted, all the properties will be watched
+		//		only parameter), and if omitted, all the properties will be watched
 		// returns:
 		//		An object handle for the watch. The unwatch method of this object
-		// 		can be used to discontinue watching this property:
+		//		can be used to discontinue watching this property:
 		//		|	var watchHandle = obj.watch("foo", callback);
 		//		|	watchHandle.unwatch(); // callback won't be called now
-		//	callback:
+		// callback:
 		//		The function to execute when the property changes. This will be called after
 		//		the property has been changed. The callback will be called with the |this|
 		//		set to the instance, the first argument as the name of the property, the
-		// 		second argument as the old value and the third argument as the new value.
+		//		second argument as the old value and the third argument as the new value.
 
 		var callbacks = this._watchCallbacks;
 		if(!callbacks){
@@ -2832,8 +2868,6 @@ define("dojox/mobile/Heading", [
 
 	// module:
 	//		dojox/mobile/Heading
-	// summary:
-	//		A widget that represents a navigation bar.
 
 	var dm = lang.getObject("dojox.mobile", true);
 
@@ -3049,8 +3083,6 @@ define("dojox/mobile/Switch", [
 
 	// module:
 	//		dojox/mobile/Switch
-	// summary:
-	//		A toggle switch with a sliding knob.
 
 	return declare("dojox.mobile.Switch", [WidgetBase, Contained],{
 		// summary:
@@ -3313,22 +3345,16 @@ define("dojox/mobile/ListItem", [
 	"dojo/dom-construct",
 	"dojo/dom-style",
 	"dijit/registry",
+	"dijit/_WidgetBase",
 	"./iconUtils",
 	"./_ItemBase",
 	"./ProgressIndicator"
-], function(array, declare, lang, domClass, domConstruct, domStyle, registry, iconUtils, ItemBase, ProgressIndicator){
+], function(array, declare, lang, domClass, domConstruct, domStyle, registry, WidgetBase, iconUtils, ItemBase, ProgressIndicator){
 
 	// module:
 	//		dojox/mobile/ListItem
-	// summary:
-	//		An item of either RoundRectList or EdgeToEdgeList.
 
-	lang.extend(dijit._WidgetBase, {
-		layout: "",
-		preventTouch: false
-	});
-
-	return declare("dojox.mobile.ListItem", ItemBase, {
+	var ListItem = declare("dojox.mobile.ListItem", ItemBase, {
 		// summary:
 		//		An item of either RoundRectList or EdgeToEdgeList.
 		// description:
@@ -3778,6 +3804,25 @@ define("dojox/mobile/ListItem", [
 			domClass.toggle(this.domNode, this._selClass, selected);
 		}
 	});
+	
+	ListItem.ChildWidgetProperties = {
+		// summary:
+		//		These properties can be specified for the children of a dojox/mobile/ListItem.
+
+		// layout: String
+		//		Specifies the position of the ListItem child ("left", "center" or "right").
+		layout: "",
+		// preventTouch: Boolean
+		//		Disables touch events on the ListItem child.
+		preventTouch: false
+	};
+	
+	// Since any widget can be specified as a ListItem child, mix ChildWidgetProperties
+	// into the base widget class.  (This is a hack, but it's effective.)
+	// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+	lang.extend(WidgetBase, /*===== {} || =====*/ ListItem.ChildWidgetProperties);
+
+	return ListItem;
 });
 
 },
@@ -3955,8 +4000,6 @@ define("dojox/mobile/Pane", [
 
 	// module:
 	//		dojox/mobile/Pane
-	// summary:
-	//		A simple div-wrapper pane widget.
 
 	return declare("dojox.mobile.Pane", [WidgetBase, Contained], {
 		// summary:
@@ -4005,13 +4048,6 @@ define("dojox/mobile/common", [
 
 	// module:
 	//		dojox/mobile/common
-	// summary:
-	//		A common module for dojox/mobile.
-	// description:
-	//		This module includes common utility functions that are used by
-	//		dojox/mobile widgets. Also, it provides functions that are commonly
-	//		necessary for mobile web applications, such as the hide address bar
-	//		function.
 
 	var dm = lang.getObject("dojox.mobile", true);
 
@@ -4040,12 +4076,16 @@ define("dojox/mobile/common", [
 		// summary:
 		//		Detects the screen size and determines if the screen is like
 		//		phone or like tablet. If the result is changed,
-		//		it sets either of the following css class to `<html>`
-		//			- 'dj_phone'
-		//			- 'dj_tablet'
-		//		and it publishes either of the following events.
-		//			- '/dojox/mobile/screenSize/phone'
-		//			- '/dojox/mobile/screenSize/tablet'
+		//		it sets either of the following css class to `<html>`:
+		//
+		//		- 'dj_phone'
+		//		- 'dj_tablet'
+		//
+		//		and it publishes either of the following events:
+		//
+		//		- '/dojox/mobile/screenSize/phone'
+		//		- '/dojox/mobile/screenSize/tablet'
+
 		var dim = dm.getScreenSize();
 		var sz = Math.min(dim.w, dim.h);
 		var from, to;
@@ -4250,8 +4290,11 @@ define("dojox/mobile/common", [
 		win.body().style.visibility = "visible";
 	});
 
+	// TODO: return functions declared above in this hash, rather than
+	// dojox.mobile.
+
 	/*=====
-    return {
+	return {
 		// summary:
 		//		A common module for dojox/mobile.
 		// description:
@@ -4259,8 +4302,8 @@ define("dojox/mobile/common", [
 		//		dojox/mobile widgets. Also, it provides functions that are commonly
 		//		necessary for mobile web applications, such as the hide address bar
 		//		function.
-    };
-    =====*/
+	};
+	=====*/
 	return dm;
 });
 
@@ -4283,10 +4326,11 @@ define("dojox/mobile/iconUtils", [
 
 	// module:
 	//		dojox/mobile/iconUtils
-	// summary:
-	//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
 
-	var iconUtils = new function(){
+	var IconUtils = function(){
+		// summary:
+		//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
+
 		this.setupSpriteIcon = function(/*DomNode*/iconNode, /*String*/iconPos){
 			// summary:
 			//		Sets up CSS sprite for a foreground image.
@@ -4499,14 +4543,9 @@ define("dojox/mobile/iconUtils", [
 			}
 		};
 	};
-	
-	/*=====
-    return {
-		// summary:
-		//		Utilities to create an icon (image, CSS sprite image, or DOM Button).
-    };
-    =====*/
-	return iconUtils;
+
+	// Return singleton.  (TODO: can we replace IconUtils class and singleton w/a simple hash of functions?)
+	return new IconUtils();
 });
 
 },
@@ -4525,6 +4564,19 @@ define("dojox/mobile/uacss", [
 		has('ipod') ? "dj_ipod" : "",
 		has('ipad') ? "dj_ipad" : ""
 	].join(" ").replace(/ +/g," "));
+	
+	/*=====
+	return {
+		// summary:
+		//		Requiring this module adds CSS classes to your document's `<html`> tag:
+		//
+		//		- "dj_android" when running on Android;
+		//		- "dj_bb" when running on BlackBerry;
+		//		- "dj_iphone" when running on iPhone;
+		//		- "dj_ipod" when running on iPod;
+		//		- "dj_ipad" when running on iPad.
+	};
+	=====*/
 	return dojo;
 });
 
@@ -4540,8 +4592,6 @@ define("dojox/mobile/RoundRectCategory", [
 
 	// module:
 	//		dojox/mobile/RoundRectCategory
-	// summary:
-	//		A category header for a rounded rectangle list.
 
 	return declare("dojox.mobile.RoundRectCategory", [WidgetBase, Contained], {
 		// summary:
@@ -4599,8 +4649,6 @@ define("dojox/mobile/ProgressIndicator", [
 
 	// module:
 	//		dojox/mobile/ProgressIndicator
-	// summary:
-	//		A progress indication widget.
 
 	var cls = declare("dojox.mobile.ProgressIndicator", [WidgetBase, Contained], {
 		// summary:
@@ -4644,6 +4692,8 @@ define("dojox/mobile/ProgressIndicator", [
 		baseClass: "mblProgressIndicator",
 
 		constructor: function(){
+			// summary:
+			//		Creates a new instance of the class.
 			this.colors = [];
 			this._bars = [];
 		},
@@ -4758,8 +4808,6 @@ define("dojox/mobile/EdgeToEdgeList", [
 
 	// module:
 	//		dojox/mobile/EdgeToEdgeCategory
-	// summary:
-	//		An edge-to-edge layout list.
 
 	return declare("dojox.mobile.EdgeToEdgeList", RoundRectList, {
 		// summary:
@@ -4785,8 +4833,6 @@ define("dojox/mobile/EdgeToEdgeCategory", [
 
 	// module:
 	//		dojox/mobile/EdgeToEdgeCategory
-	// summary:
-	//		A category header for an edge-to-edge list.
 
 	return declare("dojox.mobile.EdgeToEdgeCategory", RoundRectCategory, {
 		// summary:
@@ -4808,8 +4854,6 @@ define("dojox/mobile/Container", [
 
 	// module:
 	//		dojox/mobile/Container
-	// summary:
-	//		A simple container-type widget.
 
 	return declare("dojox.mobile.Container", [Pane, Container], {
 		// summary:
@@ -4829,17 +4873,18 @@ define("dojox/mobile/Container", [
 define("dojox/mobile/ToolBarButton", [
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/window",
 	"dojo/dom-class",
 	"dojo/dom-construct",
 	"dojo/dom-style",
 	"./sniff",
 	"./_ItemBase"
-], function(declare, lang, domClass, domConstruct, domStyle, has, ItemBase){
+], function(declare, lang, win, domClass, domConstruct, domStyle, has, ItemBase){
 
 	// module:
 	//		dojox/mobile/ToolBarButton
-	// summary:
-	//		A button widget which is placed in the Heading widget.
+
+	var classHash = {}; // static member to store CSS classes
 
 	return declare("dojox.mobile.ToolBarButton", ItemBase, {
 		// summary:
@@ -4861,20 +4906,21 @@ define("dojox/mobile/ToolBarButton", [
 
 		// light: Boolean
 		//		If true, this widget produces only a single `<span>` node when it
-		// 		has only an icon or only a label, and has no arrow. In that
-		// 		case, you cannot have both icon and label, or arrow even if you
-		// 		try to set them.
+		//		has only an icon or only a label, and has no arrow. In that
+		//		case, you cannot have both icon and label, or arrow even if you
+		//		try to set them.
 		light: true,
+
+		// defaultColor: String
+		//		CSS class for the default color.
+		defaultColor: "mblColorDefault",
+
+		// selColor: String
+		//		CSS class for the selected color.
+		selColor: "mblColorDefaultSel",
 
 		/* internal properties */
 		baseClass: "mblToolBarButton",
-
-		// defaultColor: [private] String
-		//		CSS class for default color.
-		defaultColor: "mblColorDefault",
-		// selColor: [private] String
-		//		CSS class for default selected color.
-		selColor: "mblColorDefaultSel",
 
 		_selStartMethod: "touch",
 		_selEndMethod: "touch",
@@ -4899,7 +4945,7 @@ define("dojox/mobile/ToolBarButton", [
 			if(this.arrow === "left" || this.arrow === "right"){
 				this.arrowNode = domConstruct.create("span", {
 					className: "mblToolBarButtonArrow mblToolBarButton" +
-					(this.arrow === "left" ? "Left" : "Right") + "Arrow"
+					(this.arrow === "left" ? "Left" : "Right") + "Arrow " + this.defaultColor 
 				}, this.domNode);
 				domClass.add(this.domNode, "mblToolBarButtonHas" +
 					(this.arrow === "left" ? "Left" : "Right") + "Arrow");
@@ -4949,11 +4995,14 @@ define("dojox/mobile/ToolBarButton", [
 			if(this.arrowNode && !has("ie")){
 				domStyle.set(this.arrowNode, "backgroundColor", domStyle.get(this.bodyNode, "backgroundColor"));
 				var s = domStyle.get(this.bodyNode, "backgroundImage");
-				if(s === "none"){ return false; }					
-				domStyle.set(this.arrowNode, "backgroundImage",
-							 s.replace(/\(top,/, "(top left,") // webkit new
-							 .replace(/0% 0%, 0% 100%/, "0% 0%, 100% 100%") // webkit old
-							 .replace(/50% 0%/, "0% 0%")); // moz
+				var cls = domClass.contains(this.bodyNode, this.defaultColor) ? this.defaultColor : this.selColor;
+				if(s === "none" || classHash[cls]){ return false; }
+				var style = ".mblToolBarButtonArrow." + cls + "{background-image:" +
+					s.replace(/\(top,/, "(top left,") // webkit new
+					 .replace(/0% 0%, 0% 100%/, "0% 0%, 100% 100%") // webkit old
+					 .replace(/50% 0%/, "0% 0%") + ";}"; // moz
+				classHash[cls] = 1;
+				domConstruct.create("style", {innerHTML:style}, win.doc.head, "first");
 			}
 			return true;
 		},
@@ -4988,8 +5037,14 @@ define("dojox/mobile/ToolBarButton", [
 			this.inherited(arguments);
 			if(selected){
 				domClass.replace(this.bodyNode, this.selColor, this.defaultColor);
+				if(this.arrowNode){
+					domClass.replace(this.arrowNode, this.selColor, this.defaultColor);
+				}
 			}else{
 				domClass.replace(this.bodyNode, this.defaultColor, this.selColor);
+				if(this.arrowNode){
+					domClass.replace(this.arrowNode, this.defaultColor, this.selColor);
+				}
 			}
 			domClass.toggle(this.domNode, "mblToolBarButtonSelected", selected);
 			domClass.toggle(this.bodyNode, "mblToolBarButtonBodySelected", selected);
@@ -5017,8 +5072,6 @@ define("dojox/mobile/_ItemBase", [
 
 	// module:
 	//		dojox/mobile/_ItemBase
-	// summary:
-	//		A base class for item classes (e.g. ListItem, IconItem, etc.).
 
 	return declare("dojox.mobile._ItemBase", [WidgetBase, Container, Contained],{
 		// summary:
@@ -5459,11 +5512,11 @@ define("dijit/_Contained", [
 
 		_getSibling: function(/*String*/ which){
 			// summary:
-			//      Returns next or previous sibling
+			//		Returns next or previous sibling
 			// which:
-			//      Either "next" or "previous"
+			//		Either "next" or "previous"
 			// tags:
-			//      private
+			//		private
 			var node = this.domNode;
 			do{
 				node = node[which+"Sibling"];
@@ -5522,12 +5575,16 @@ define("dojox/mobile/_base", [
 ], function(common, View, Heading, RoundRect, RoundRectCategory, EdgeToEdgeCategory, RoundRectList, EdgeToEdgeList, ListItem, Switch, ToolBarButton, ProgressIndicator){
 	// module:
 	//		dojox/mobile/_base
-	// summary:
-	//		Includes the basic dojox/mobile modules: common, View, Heading, 
-	//		RoundRect, RoundRectCategory, EdgeToEdgeCategory, RoundRectList,
-	//		EdgeToEdgeList, ListItem, Container, Pane, Switch, ToolBarButton, 
-	//		and ProgressIndicator.
 
+	/*=====
+	return {
+		// summary:
+		//		Includes the basic dojox/mobile modules: common, View, Heading, 
+		//		RoundRect, RoundRectCategory, EdgeToEdgeCategory, RoundRectList,
+		//		EdgeToEdgeList, ListItem, Container, Pane, Switch, ToolBarButton, 
+		//		and ProgressIndicator.
+	};
+	=====*/
 	return common;
 });
 
@@ -5594,7 +5651,7 @@ return declare("dijit.Destroyable", null, {
 			// When this is destroyed, destroy handle.  Since I'm using aspect.before(),
 			// the handle will be destroyed before a subclass's destroy() method starts running, before it calls
 			// this.inherited() or even if it doesn't call this.inherited() at all.  If that's an issue, make an
-			//  onDestroy() method and connect to that instead.
+			// onDestroy() method and connect to that instead.
 			handle._odh = aspect.before(this, "destroy", function(preserveDom){
 				handle._odh.remove();
 				handle[destroyMethodName](preserveDom);
@@ -5617,9 +5674,8 @@ return declare("dijit.Destroyable", null, {
 define("dijit/_Container", [
 	"dojo/_base/array", // array.forEach array.indexOf
 	"dojo/_base/declare", // declare
-	"dojo/dom-construct", // domConstruct.place
-	"./registry"	// registry.byNode()
-], function(array, declare, domConstruct, registry){
+	"dojo/dom-construct" // domConstruct.place
+], function(array, declare, domConstruct){
 
 	// module:
 	//		dijit/_Container
@@ -5696,7 +5752,7 @@ define("dijit/_Container", [
 			//		if 1, get the next sibling
 			//		if -1, get the previous sibling
 			// tags:
-			//      private
+			//		private
 			var children = this.getChildren(),
 				idx = array.indexOf(this.getChildren(), child);	// int
 			return children[idx + dir];
@@ -5717,5 +5773,12 @@ define("dojox/mobile", [
 	"dojox/mobile/_base"
 ], function(dojox, lang, base){
 	lang.getObject("mobile", true, dojox);
+	/*=====
+	return {
+		// summary:
+		//		Deprecated.  Should require dojox/mobile classes directly rather than trying to access them through
+		//		this module.
+	};
+	=====*/
 	return dojox.mobile;
 });

@@ -9,8 +9,6 @@ define("dojox/mobile/CarouselItem", [
 
 	// module:
 	//		dojox/mobile/CarouselItem
-	// summary:
-	//		An item of dojox/mobile/Carousel.
 
 	return declare("dojox.mobile.CarouselItem", [WidgetBase, Contained], {
 		// summary:

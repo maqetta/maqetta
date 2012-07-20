@@ -1,8 +1,10 @@
 define("dojox/image", ["./image/_base"], function(image){
 	/*=====
-	dojox.image = {
-		// summary: Collection of image-related widgets and controls
-	};
-	=====*/
+	 return {
+	 // summary:
+	 //		Deprecated.  Should require dojox/image modules directly rather than trying to access them through
+	 //		this module.
+	 };
+	 =====*/
 	return image;
 });

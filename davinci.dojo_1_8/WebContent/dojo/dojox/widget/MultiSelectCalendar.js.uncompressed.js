@@ -1,5 +1,5 @@
 require({cache:{
-'url:dojox/widget/MultiSelectCalendar/MultiSelectCalendar.html':"<table cellspacing=\"0\" cellpadding=\"0\" class=\"dijitCalendarContainer\" role=\"grid\" dojoAttachEvent=\"onkeypress: _onKeyPress\" aria-labelledby=\"${id}_year\">\n\t<thead>\n\t\t<tr class=\"dijitReset dijitCalendarMonthContainer\" valign=\"top\">\n\t\t\t<th class='dijitReset dijitCalendarArrow' dojoAttachPoint=\"decrementMonth\">\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarDecrease\" role=\"presentation\"/>\n\t\t\t\t<span dojoAttachPoint=\"decreaseArrowNode\" class=\"dijitA11ySideArrow\">-</span>\n\t\t\t</th>\n\t\t\t<th class='dijitReset' colspan=\"5\">\n\t\t\t\t<div dojoType=\"dijit.form.DropDownButton\" dojoAttachPoint=\"monthDropDownButton\"\n\t\t\t\t\tid=\"${id}_mddb\" tabIndex=\"-1\">\n\t\t\t\t</div>\n\t\t\t</th>\n\t\t\t<th class='dijitReset dijitCalendarArrow' dojoAttachPoint=\"incrementMonth\">\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarIncrease\" role=\"presentation\"/>\n\t\t\t\t<span dojoAttachPoint=\"increaseArrowNode\" class=\"dijitA11ySideArrow\">+</span>\n\t\t\t</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th class=\"dijitReset dijitCalendarDayLabelTemplate\" role=\"columnheader\"><span class=\"dijitCalendarDayLabel\"></span></th>\n\t\t</tr>\n\t</thead>\n\t<tbody dojoAttachEvent=\"onclick: _onDayClick, onmouseover: _onDayMouseOver, onmouseout: _onDayMouseOut, onmousedown: _onDayMouseDown, onmouseup: _onDayMouseUp\" class=\"dijitReset dijitCalendarBodyContainer\">\n\t\t<tr class=\"dijitReset dijitCalendarWeekTemplate\" role=\"row\">\n\t\t\t<td class=\"dijitReset dijitCalendarDateTemplate\" role=\"gridcell\"><span class=\"dijitCalendarDateLabel\"></span></td>\n\t\t</tr>\n\t</tbody>\n\t<tfoot class=\"dijitReset dijitCalendarYearContainer\">\n\t\t<tr>\n\t\t\t<td class='dijitReset' valign=\"top\" colspan=\"7\">\n\t\t\t\t<h3 class=\"dijitCalendarYearLabel\">\n\t\t\t\t\t<span dojoAttachPoint=\"previousYearLabelNode\" class=\"dijitInline dijitCalendarPreviousYear\"></span>\n\t\t\t\t\t<span dojoAttachPoint=\"currentYearLabelNode\" class=\"dijitInline dijitCalendarSelectedYear\" id=\"${id}_year\"></span>\n\t\t\t\t\t<span dojoAttachPoint=\"nextYearLabelNode\" class=\"dijitInline dijitCalendarNextYear\"></span>\n\t\t\t\t</h3>\n\t\t\t</td>\n\t\t</tr>\n\t</tfoot>\n</table>"}});
+'url:dojox/widget/MultiSelectCalendar/MultiSelectCalendar.html':"<table cellspacing=\"0\" cellpadding=\"0\" class=\"dijitCalendarContainer\" role=\"grid\" dojoAttachEvent=\"onkeydown: _onKeyDown\" aria-labelledby=\"${id}_year\">\n\t<thead>\n\t\t<tr class=\"dijitReset dijitCalendarMonthContainer\" valign=\"top\">\n\t\t\t<th class='dijitReset dijitCalendarArrow' dojoAttachPoint=\"decrementMonth\">\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarDecrease\" role=\"presentation\"/>\n\t\t\t\t<span dojoAttachPoint=\"decreaseArrowNode\" class=\"dijitA11ySideArrow\">-</span>\n\t\t\t</th>\n\t\t\t<th class='dijitReset' colspan=\"5\">\n\t\t\t\t<div dojoType=\"dijit.form.DropDownButton\" dojoAttachPoint=\"monthDropDownButton\"\n\t\t\t\t\tid=\"${id}_mddb\" tabIndex=\"-1\">\n\t\t\t\t</div>\n\t\t\t</th>\n\t\t\t<th class='dijitReset dijitCalendarArrow' dojoAttachPoint=\"incrementMonth\">\n\t\t\t\t<img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarIncrease\" role=\"presentation\"/>\n\t\t\t\t<span dojoAttachPoint=\"increaseArrowNode\" class=\"dijitA11ySideArrow\">+</span>\n\t\t\t</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<th class=\"dijitReset dijitCalendarDayLabelTemplate\" role=\"columnheader\"><span class=\"dijitCalendarDayLabel\"></span></th>\n\t\t</tr>\n\t</thead>\n\t<tbody dojoAttachEvent=\"onclick: _onDayClick, onmouseover: _onDayMouseOver, onmouseout: _onDayMouseOut, onmousedown: _onDayMouseDown, onmouseup: _onDayMouseUp\" class=\"dijitReset dijitCalendarBodyContainer\">\n\t\t<tr class=\"dijitReset dijitCalendarWeekTemplate\" role=\"row\">\n\t\t\t<td class=\"dijitReset dijitCalendarDateTemplate\" role=\"gridcell\"><span class=\"dijitCalendarDateLabel\"></span></td>\n\t\t</tr>\n\t</tbody>\n\t<tfoot class=\"dijitReset dijitCalendarYearContainer\">\n\t\t<tr>\n\t\t\t<td class='dijitReset' valign=\"top\" colspan=\"7\">\n\t\t\t\t<h3 class=\"dijitCalendarYearLabel\">\n\t\t\t\t\t<span dojoAttachPoint=\"previousYearLabelNode\" class=\"dijitInline dijitCalendarPreviousYear\"></span>\n\t\t\t\t\t<span dojoAttachPoint=\"currentYearLabelNode\" class=\"dijitInline dijitCalendarSelectedYear\" id=\"${id}_year\"></span>\n\t\t\t\t\t<span dojoAttachPoint=\"nextYearLabelNode\" class=\"dijitInline dijitCalendarNextYear\"></span>\n\t\t\t\t</h3>\n\t\t\t</td>\n\t\t</tr>\n\t</tfoot>\n</table>"}});
 define("dojox/widget/MultiSelectCalendar", [
     "dojo/main", "dijit", 
     "dojo/text!./MultiSelectCalendar/MultiSelectCalendar.html", 
@@ -50,7 +50,7 @@ dojo.declare(
 		//		How to represent the days of the week in the calendar header. See dojo.date.locale
 		dayWidth: "narrow",
 
-		// tabIndex: Integer
+		// tabIndex: String
 		//		Order fields are traversed when user hits the tab key
 		tabIndex: "0",
 		
@@ -87,7 +87,8 @@ dojo.declare(
 		},
 
 		_getValueAttr: function(){
-			// summary: this method returns the list of selected dates in an array structure
+			// summary:
+			//		this method returns the list of selected dates in an array structure
 			if(this.returnIsoRanges){
 				datesWithRanges = this._returnDatesWithIsoRanges(this._sort());
 				return datesWithRanges;
@@ -100,12 +101,12 @@ dojo.declare(
 			// summary:
 			//		Support set("value", ...)
 			// description:
-			// 		Set the passed dates to the selected date and updates the value of this widget
+			//		Set the passed dates to the selected date and updates the value of this widget
 			//		to reflect that
 			// value:
 			//		Can be a Date, the number of milliseconds since 1970 or an array of ISO dates (['2011-07-01', '2001-06-01']).
 			// tags:
-			//      protected
+			//		protected
 			
 			//If we are passed an array of ISO dates, we are going to mark each date in the list as selected
 			//We perform the normalization of the passed date
@@ -196,7 +197,7 @@ dojo.declare(
 			//		This just sets the content of node to the specified text.
 			//		Can't do "node.innerHTML=text" because of an IE bug w/tables, see #3434.
 			// tags:
-			//      private
+			//		private
 			while(node.firstChild){
 				node.removeChild(node.firstChild);
 			}
@@ -205,9 +206,9 @@ dojo.declare(
 
 		_populateGrid: function(){
 			// summary:
-			//      Fills in the calendar grid with each day (1-31)
+			//		Fills in the calendar grid with each day (1-31)
 			// tags:
-			//      private
+			//		private
 
 			var month = new this.dateClassObj(this.currentFocus);
 			month.setDate(1);
@@ -310,7 +311,7 @@ dojo.declare(
 
 		goToToday: function(){
 			// summary:
-			//      We go to today but we do no select it
+			//		We go to today but we do no select it
 			this.set('currentFocus', new this.dateClassObj(), false);
 		},
 
@@ -373,13 +374,13 @@ dojo.declare(
 
 		_adjustDisplay: function(/*String*/ part, /*int*/ amount){
 			// summary:
-			//      Moves calendar forwards or backwards by months or years
+			//		Moves calendar forwards or backwards by months or years
 			// part:
-			//      "month" or "year"
+			//		"month" or "year"
 			// amount:
-			//      Number of months or years
+			//		Number of months or years
 			// tags:
-			//      private
+			//		private
 			this._setCurrentFocusAttr(this.dateFuncObj.add(this.currentFocus, part, amount));
 		},
 
@@ -432,9 +433,9 @@ dojo.declare(
 
 		_onMonthSelect: function(/*Number*/ newMonth){
 			// summary:
-			//      Handler for when user selects a month from the drop down list
+			//		Handler for when user selects a month from the drop down list
 			// tags:
-			//      protected
+			//		protected
 
 			// move to selected month, bounding by the number of days in the month
 			// (ex: dec 31 --> jan 28, not jan 31)
@@ -488,9 +489,9 @@ dojo.declare(
 
 		_onDayClick: function(/*Event*/ evt){
 			// summary:
-			//      Handler for day clicks, selects the date if appropriate
+			//		Handler for day clicks, selects the date if appropriate
 			// tags:
-			//      protected
+			//		protected
 			
 			//If we coming out of selecting a range, we need to skip this onDayClick or else we
 			//are going to deselect a date that has just been selected or deselect one that just was 
@@ -516,9 +517,9 @@ dojo.declare(
 
 		_onDayMouseOver: function(/*Event*/ evt){
 			// summary:
-			//      Handler for mouse over events on days, sets hovered style
+			//		Handler for mouse over events on days, sets hovered style
 			// tags:
-			//      protected
+			//		protected
 
 			// event can occur on <td> or the <span> inside the td,
 			// set node to the <td>.
@@ -534,9 +535,9 @@ dojo.declare(
 		},
 		_setEndRangeAttr: function(/*Date*/ value){
 			// description:
-			// 		records the end of a date range
+			//		records the end of a date range
 			// tags:
-			//      protected
+			//		protected
 			value = new this.dateClassObj(value);
 			value.setHours(1); // to avoid issues when DST shift occurs at midnight, see #8521, #9366
 			this.endRange = value;
@@ -556,9 +557,9 @@ dojo.declare(
 
 		_onDayMouseOut: function(/*Event*/ evt){
 			// summary:
-			//      Handler for mouse out events on days, clears hovered style
+			//		Handler for mouse out events on days, clears hovered style
 			// tags:
-			//      protected
+			//		protected
 	
 			if(!this._currentNode){ return; }
 			
@@ -603,7 +604,7 @@ dojo.declare(
 			// summary:
 			//		Provides keyboard navigation of calendar.
 			// description:
-			//		Called from _onKeyPress() to handle keypress on a stand alone Calendar,
+			//		Called from _onKeyDown() to handle keypress on a stand alone Calendar,
 			//		and also from `dijit.form._DateTimeTextBox` to pass a keypress event 
 			//		from the `dijit.form.DateTextBox` to be handled in this widget
 			// returns:
@@ -676,7 +677,7 @@ dojo.declare(
 			return false;
 		},
 
-		_onKeyPress: function(/*Event*/ evt){
+		_onKeyDown: function(/*Event*/ evt){
 			// summary:
 			//		For handling keypress events on a stand alone calendar
 			if(!this.handleKey(evt)){
@@ -829,18 +830,18 @@ dojo.declare(
 			// summary:
 			//		Notification that a date cell or more were selected.
 			// description:
-			//      Passes on the list of ISO dates that are selected
+			//		Passes on the list of ISO dates that are selected
 			// tags:
-			//      protected
+			//		protected
 		},
 
 		onValueUnselected: function(/*array of ISO dates*/ dates){
 			// summary:
 			//		Notification that a date cell or more were unselected.
 			// description:
-			//      Passes on the list of ISO dates that are unselected
+			//		Passes on the list of ISO dates that are unselected
 			// tags:
-			//      protected
+			//		protected
 		},
 		onChange: function(/*Date*/ date){
 			// summary:
@@ -859,7 +860,7 @@ dojo.declare(
 			// summary:
 			//		May be overridden to disable certain dates in the calendar e.g. `isDisabledDate=dojo.date.locale.isWeekend`
 			// tags:
-			//      extension
+			//		extension
 /*=====
 			return false; // Boolean
 =====*/
@@ -870,7 +871,7 @@ dojo.declare(
 			//		May be overridden to return CSS classes to associate with the date entry for the given dateObject,
 			//		for example to indicate a holiday in specified locale.
 			// tags:
-			//      extension
+			//		extension
 
 /*=====
 			return ""; // String

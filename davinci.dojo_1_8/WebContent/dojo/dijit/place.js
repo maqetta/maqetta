@@ -56,19 +56,25 @@ return _8(_1f,_22);
 },around:function(_24,_25,_26,_27,_28){
 var _29=(typeof _25=="string"||"offsetWidth" in _25)?_2.position(_25,true):_25;
 if(_25.parentNode){
-var _2a=_25.parentNode;
-while(_2a&&_2a.nodeType==1&&_2a.nodeName!="BODY"){
-var _2b=_2.position(_2a,true);
-var _2c=_3.getComputedStyle(_2a).overflow;
-if(_2c=="hidden"||_2c=="auto"||_2c=="scroll"){
-var _2d=Math.min(_29.y+_29.h,_2b.y+_2b.h);
-var _2e=Math.min(_29.x+_29.w,_2b.x+_2b.w);
-_29.x=Math.max(_29.x,_2b.x);
-_29.y=Math.max(_29.y,_2b.y);
+var _2a=_3.getComputedStyle(_25).position=="absolute";
+var _2b=_25.parentNode;
+while(_2b&&_2b.nodeType==1&&_2b.nodeName!="BODY"){
+var _2c=_2.position(_2b,true),pcs=_3.getComputedStyle(_2b);
+if(/relative|absolute/.test(pcs.position)){
+_2a=false;
+}
+if(!_2a&&/hidden|auto|scroll/.test(pcs.overflow)){
+var _2d=Math.min(_29.y+_29.h,_2c.y+_2c.h);
+var _2e=Math.min(_29.x+_29.w,_2c.x+_2c.w);
+_29.x=Math.max(_29.x,_2c.x);
+_29.y=Math.max(_29.y,_2c.y);
 _29.h=_2d-_29.y;
 _29.w=_2e-_29.x;
 }
-_2a=_2a.parentNode;
+if(pcs.position=="absolute"){
+_2a=true;
+}
+_2b=_2b.parentNode;
 }
 }
 var x=_29.x,y=_29.y,_2f="w" in _29?_29.w:(_29.w=_29.width),_30="h" in _29?_29.h:(_4.deprecated("place.around: dijit.place.__Rectangle: { x:"+x+", y:"+y+", height:"+_29.height+", width:"+_2f+" } has been deprecated.  Please use { x:"+x+", y:"+y+", h:"+_29.height+", w:"+_2f+" }","","2.0"),_29.h=_29.height);

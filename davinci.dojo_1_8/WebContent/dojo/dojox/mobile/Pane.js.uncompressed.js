@@ -7,8 +7,6 @@ define("dojox/mobile/Pane", [
 
 	// module:
 	//		dojox/mobile/Pane
-	// summary:
-	//		A simple div-wrapper pane widget.
 
 	return declare("dojox.mobile.Pane", [WidgetBase, Contained], {
 		// summary:

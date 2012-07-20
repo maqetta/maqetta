@@ -355,11 +355,14 @@ var LazyTreeGrid = declare("dojox.grid.LazyTreeGrid", TreeGrid, {
 	defaultState: null,
 	// colSpans: Object
 	//		a json object that defines column span of each level rows
+	//
 	//		attributes:
-	//			0/1/..: which level need to colspan
-	//			start: start column index of colspan
-	//			end: end column index of colspan
-	//			primary: index of column which content will be displayed (default is value of start).
+	//
+	//		- 0/1/..: which level need to colspan
+	//		- start: start column index of colspan
+	//		- end: end column index of colspan
+	//		- primary: index of column which content will be displayed (default is value of start).
+	//
 	//		example:
 	//		|	colSpans = {
 	//		|	0:	[
@@ -454,21 +457,21 @@ var LazyTreeGrid = declare("dojox.grid.LazyTreeGrid", TreeGrid, {
 		this.inherited(arguments);
 	},
 	expand: function(itemId){
-		//	summary:
+		// summary:
 		//		Expand the row with the given itemId.
-		//	id: string?
+		// itemId: String?
 		this._fold(itemId, true);
 	},
 	collapse: function(itemId){
-		//	summary:
+		// summary:
 		//		Collapse the row with the given itemId.
-		//	id: string?
+		// itemId: String?
 		this._fold(itemId, false);
 	},
 	refresh: function(keepState){
-		//	summary:
+		// summary:
 		//		Refresh, and persist the expand/collapse state when keepState equals true
-		//	keepState: boolean
+		// keepState: Boolean
 		if(!keepState){
 			this._cleanup();
 		}

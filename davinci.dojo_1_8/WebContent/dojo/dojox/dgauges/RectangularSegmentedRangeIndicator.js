@@ -1,6 +1,6 @@
 //>>built
 define("dojox/dgauges/RectangularSegmentedRangeIndicator",["dojo/_base/declare","dojo/on","dojox/gfx","./IndicatorBase"],function(_1,on,_2,_3){
-return _1("dojox.dgauges.RectangularRangeIndicator",_3,{start:0,startThickness:10,endThickness:10,fill:null,stroke:null,paddingLeft:0,paddingTop:0,paddingRight:0,paddingBottom:0,segments:10,segmentSpacing:2,rounded:true,ranges:null,constructor:function(){
+return _1("dojox.dgauges.RectangularSegmentedRangeIndicator",_3,{start:0,startThickness:10,endThickness:10,fill:null,stroke:null,paddingLeft:0,paddingTop:0,paddingRight:0,paddingBottom:0,segments:10,segmentSpacing:2,rounded:true,ranges:null,constructor:function(){
 this.fill=[255,120,0];
 this.stroke={color:"black",width:0.2};
 this.addInvalidatingProperties(["start","startThickness","endThickness","fill","stroke","segments","segmentSpacing","ranges"]);
@@ -13,7 +13,7 @@ _c.x1=_7;
 _c.y1=_8;
 _c.x2=_7+_e;
 _c.y2=_8;
-var _11=0;
+var _11=this.start;
 for(i=0;i<this.ranges.length;i++){
 var _12={color:this.ranges[i].color,offset:_6.scaler.positionForValue(_11)};
 var _13={color:this.ranges[i].color,offset:_6.scaler.positionForValue(_11+this.ranges[i].size)};

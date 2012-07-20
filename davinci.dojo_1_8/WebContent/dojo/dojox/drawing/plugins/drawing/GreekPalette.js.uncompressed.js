@@ -22,7 +22,7 @@ var Greeks = dojo.declare(null,
 
 	getValue: function(){
 		// summary:
-		//   Returns HTML representing the character, like &amp;
+		//		Returns HTML representing the character, like &amp;
 
 		return this._alias;
 	},
@@ -217,7 +217,7 @@ return dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 		// description:
    		//		At any point in time there's exactly one
 		//		cell with tabIndex != -1.   If focus is inside the palette then
-		// 		focus is on that cell.
+		//		focus is on that cell.
 		//
 		//		After calling this method, arrow key handlers and mouse click handlers
 		//		should focus the cell in a setTimeout().
@@ -305,9 +305,9 @@ return dojo.declare("dojox.drawing.plugins.drawing.GreekPalette",
 	_navigateByArrow: function(evt){
 		// summary:
 		// 	  	This is a departure from the dijit, the textBlock needs
-		// 		navigation without losing focus, this allows that
+		//		navigation without losing focus, this allows that
 		// increment:
-		// 		How much the key is navigated.
+		//		How much the key is navigated.
 		// tags:
 		//		private
 		var keyIncrementMap = {

@@ -7,9 +7,6 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 		function(lang, array, Deferred, DeferredList, on, has){
 	// module: 
 	//		dojox/css3/transition
-	// summary:
-	//		This module defines the transition utilities which can be used
-	//		to perform transition effects based on the CSS Transition standard.
 	
 	//create cross platform animation/transition effects
 	//TODO enable opera mobile when it is hardware accelerated
@@ -29,9 +26,10 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 	
 	//TODO find a way to lock the animation and prevent animation conflict
 	//Use the simple object inheritance
-	var transition = function(args){
+	var transition = function(/*Object?*/args){
 		// summary:
-		//		The constructor of the transition object.
+		//		This module defines the transition utilities which can be used
+		//		to perform transition effects based on the CSS Transition standard.
 		// args:
 		//		The arguments which will be mixed into this transition object.
 		
@@ -404,12 +402,5 @@ define("dojox/css3/transition", ["dojo/_base/lang",
 	//TODO complete the registry mechanism for animation handling and prevent animation conflicts
 	transition.playing = {};
 	
-	/*=====
-    return {
-		// summary:
-		//		This module defines the transition utilities which can be used
-		//		to perform transition effects based on the CSS Transition standard.
-    };
-    =====*/
 	return transition;
 });

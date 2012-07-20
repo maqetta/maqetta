@@ -17,5 +17,5 @@ define('dijit/nls/dijit-all_ru',{
 ,
 'dijit/form/nls/ComboBox':{"previousMessage":"Предыдущие варианты","nextMessage":"Следующие варианты"}
 ,
-'dijit/nls/common':{"buttonOk":"OK","buttonCancel":"Отменить","buttonSave":"Сохранить","itemClose":"Закрыть"}
+'dijit/nls/common':{"buttonOk":"OK","buttonCancel":"Отмена","buttonSave":"Сохранить","itemClose":"Закрыть"}
 });

@@ -71,7 +71,7 @@ define("dijit/CalendarLite", [
 		//		How to represent the days of the week in the calendar header. See locale
 		dayWidth: "narrow",
 
-		// tabIndex: Integer
+		// tabIndex: String
 		//		Order fields are traversed when user hits the tab key
 		tabIndex: "0",
 
@@ -122,7 +122,7 @@ define("dijit/CalendarLite", [
 			// value:
 			//		Either a Date or the number of seconds since 1970.
 			// tags:
-			//      protected
+			//		protected
 			if(typeof value == "string"){
 				value = stamp.fromISOString(value);
 			}
@@ -164,7 +164,7 @@ define("dijit/CalendarLite", [
 			//		This just sets the content of node to the specified text.
 			//		Can't do "node.innerHTML=text" because of an IE bug w/tables, see #3434.
 			// tags:
-			//      private
+			//		private
 			while(node.firstChild){
 				node.removeChild(node.firstChild);
 			}
@@ -173,10 +173,10 @@ define("dijit/CalendarLite", [
 
 		_populateGrid: function(){
 			// summary:
-			//      Fills in the calendar grid with each day (1-31).
+			//		Fills in the calendar grid with each day (1-31).
 			//		Call this on creation, when moving to a new month.
 			// tags:
-			//      private
+			//		private
 
 			var month = new this.dateClassObj(this.currentFocus);
 			month.setDate(1);
@@ -249,7 +249,7 @@ define("dijit/CalendarLite", [
 			// summary:
 			//		Fill in localized month, and prev/current/next years
 			// tags:
-			//      protected
+			//		protected
 
 			var month = new this.dateClassObj(this.currentFocus);
 			month.setDate(1);
@@ -268,14 +268,22 @@ define("dijit/CalendarLite", [
 
 		goToToday: function(){
 			// summary:
-			//      Sets calendar's value to today's date
+			//		Sets calendar's value to today's date
 			this.set('value', new this.dateClassObj());
 		},
 
-		constructor: function(/*Object*/ args){
-			this.dateModule = args.datePackage ? lang.getObject(args.datePackage, false) : date;
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
+			this.dateModule = params.datePackage ? lang.getObject(params.datePackage, false) : date;
 			this.dateClassObj = this.dateModule.Date || Date;
-			this.dateLocaleModule = args.datePackage ? lang.getObject(args.datePackage+".locale", false) : locale;
+			this.dateLocaleModule = params.datePackage ? lang.getObject(params.datePackage+".locale", false) : locale;
 		},
 
 		_createMonthWidget: function(){
@@ -326,7 +334,7 @@ define("dijit/CalendarLite", [
 			// summary:
 			//		Set up connects for increment/decrement of months/years
 			// tags:
-			//      protected
+			//		protected
 
 			var connect = lang.hitch(this, function(nodeProp, part, amount){
 				this.connect(this[nodeProp], "onclick", function(){
@@ -389,9 +397,9 @@ define("dijit/CalendarLite", [
 
 		_onDayClick: function(/*Event*/ evt){
 			// summary:
-			//      Handler for day clicks, selects the date if appropriate
+			//		Handler for day clicks, selects the date if appropriate
 			// tags:
-			//      protected
+			//		protected
 			event.stop(evt);
 			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
 			if(node && !domClass.contains(node, "dijitCalendarDisabledDate")){
@@ -438,7 +446,7 @@ define("dijit/CalendarLite", [
 			// dateObject: Date
 			// locale: String?
 			// tags:
-			//      extension
+			//		extension
 /*=====
 			return false; // Boolean
 =====*/
@@ -451,7 +459,7 @@ define("dijit/CalendarLite", [
 			// dateObject: Date
 			// locale: String?
 			// tags:
-			//      extension
+			//		extension
 
 /*=====
 			return ""; // String
@@ -464,10 +472,11 @@ define("dijit/CalendarLite", [
 		//		Displays name of current month padded to the width of the month
 		//		w/the longest name, so that changing months doesn't change width.
 		//
-		//		Create as new dijit.Calendar._MonthWidget({
-		//			lang: ...,
-		//			dateLocaleModule: ...
-		//		})
+		//		Create as:
+		// |	new Calendar._MonthWidget({
+		// |			lang: ...,
+		// |			dateLocaleModule: ...
+		// |		})
 
 		_setMonthAttr: function(month){
 			// summary:

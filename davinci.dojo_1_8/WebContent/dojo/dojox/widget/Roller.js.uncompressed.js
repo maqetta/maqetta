@@ -1,8 +1,8 @@
 define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo, dijit){
 
 	dojo.declare("dojox.widget.Roller", dijit._Widget, {
-		// summary: A simple widget to take an unordered-list of Text and roll through them
-		//
+		// summary:
+		//		A simple widget to take an unordered-list of Text and roll through them
 		// description:
 		//		The Roller widget takes an unordered-list of items, and converts
 		//		them to a single-area (the size of one list-item, however you so choose
@@ -15,10 +15,9 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		//		standard array manipulation techniques.
 		//
 		//		The class "dojoxRoller" is added to the UL element for styling purposes.
-		//
 		// example:
 		//	|	// create a scroller from a unordered list with id="lister"
-		//  |	var thinger = new dojox.widget.Roller.Roller({},"lister");
+		//	|	var thinger = new dojox.widget.Roller.Roller({},"lister");
 		//
 		// example:
 		//	|	// create a scroller from a fixed array, and place in the DOM:
@@ -48,7 +47,7 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		itemSelector: "> li",
 
 		// durationIn: Integer
-		// 		Speed (in ms) to apply to the "in" animation (show the node)
+		//		Speed (in ms) to apply to the "in" animation (show the node)
 		durationIn: 400,
 
 		// durationOut: Integer
@@ -96,8 +95,9 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		},
 
 		makeAnims: function(){
-			// summary: Animation creator function. Need to create an 'in' and 'out'
-			// 		Animation stored in _anim Object, which the rest of the widget
+			// summary:
+			//		Animation creator function. Need to create an 'in' and 'out'
+			//		Animation stored in _anim Object, which the rest of the widget
 			//		will reuse.
 			var n = this.domNode;
 			dojo.mixin(this, {
@@ -166,15 +166,17 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 	});
 
 	dojo.declare("dojox.widget.RollerSlide", dojox.widget.Roller, {
-		// summary: An add-on to the Roller to modify animations. This produces
+		// summary:
+		//		An add-on to the Roller to modify animations. This produces
 		//		a slide-from-bottom like effect. See `dojox.widget.Roller` for
 		//		full API information.
 
 		durationOut: 175, // slightly faster than default
 
 		makeAnims: function(){
-			// summary: Animation creator function. Need to create an 'in' and 'out'
-			// 		Animation stored in _anim Object, which the rest of the widget
+			// summary:
+			//		Animation creator function. Need to create an 'in' and 'out'
+			//		Animation stored in _anim Object, which the rest of the widget
 			//		will reuse.
 
 			var n = this.domNode, pos = "position",
@@ -206,7 +208,8 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 	});
 
 	dojo.declare("dojox.widget._RollerHover", null, {
-		// summary: A mixin class to provide a way to automate the "stop on hover" functionality.
+		// summary:
+		//		A mixin class to provide a way to automate the "stop on hover" functionality.
 		//
 		// description:
 		//		A mixin class used to provide a way to automate a "stop on hover" behavior,
@@ -219,8 +222,8 @@ define("dojox/widget/Roller", ["dojo", "dijit", "dijit/_Widget"], function(dojo,
 		//		will start if a mouse enters and leaves the node in this case.
 		//
 		// example:
-		// | dojo.declare("my.Roller", [dojox.widget.RollerSlide, dojox.widget._RollerHover], {});
-		// | new my.Roller({}, "myList");
+		// |	dojo.declare("my.Roller", [dojox.widget.RollerSlide, dojox.widget._RollerHover], {});
+		// |	new my.Roller({}, "myList");
 
 		postCreate: function(){
 			this.inherited(arguments);

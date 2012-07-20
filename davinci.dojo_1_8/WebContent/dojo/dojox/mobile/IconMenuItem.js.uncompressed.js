@@ -8,8 +8,6 @@ define("dojox/mobile/IconMenuItem", [
 ], function(declare, lang, domClass, domConstruct, iconUtils, ItemBase){
 	// module:
 	//		dojox/mobile/IconMenuItem
-	// summary:
-	//		An item of IconMenu.
 
 	return declare("dojox.mobile.IconMenuItem", ItemBase, { 
 		// summary:

@@ -9,16 +9,11 @@ define("dojox/css3/fx", [
 	"dojox/fx/ext-dojo/complex"],
 function(lang,connectUtil,domStyle,baseFx,coreFx,htmlUtil,htmlStyleExt,complexFx){
 	var css3fx = lang.getObject("dojox.css3.fx", true);
-	/*===== css3fx = dojox.css3.fx =====*/
-	
-	/*=====
-    return {
+
+	var css3fxFunctions = {
 		// summary:
 		//		Utilities for animation effects.
-    };
-    =====*/
-   
-	return lang.mixin(css3fx, {
+		
 		puff: function(/*Object*/args){
 			// summary:
 			//		Returns an animation that will do a "puff" effect on the given node.
@@ -194,5 +189,10 @@ function(lang,connectUtil,domStyle,baseFx,coreFx,htmlUtil,htmlStyleExt,complexFx
 
 			return coreFx.chain(anims);
 		}
-	});
+	};
+	
+	/*=====
+	return css3fxFunctions;
+	 =====*/
+	return lang.mixin(css3fx, css3fxFunctions);
 });

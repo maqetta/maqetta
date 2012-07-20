@@ -172,9 +172,8 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 			var rx = (dim.width  - offsets.l - offsets.r) / 2,
 				ry = (dim.height - offsets.t - offsets.b) / 2,
 				r  = Math.min(rx, ry),
-				taFont = "font" in this.opt ? this.opt.font : t.axis.font,
-				size = taFont ? g.normalizedLength(g.splitFontString(taFont).size) : 0,
-				taFontColor = "fontColor" in this.opt ? this.opt.fontColor : t.axis.fontColor,
+				labelFont = "font" in this.opt ? this.opt.font : t.series.font,
+				size,
 				startAngle = m._degToRad(this.opt.startAngle),
 				start = startAngle, step, filteredRun, slices, labels, shift, labelR,
 				run = this.run.data,
@@ -248,6 +247,7 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 			}, this);
 
 			if(this.opt.labels){
+				size = labelFont ? g.normalizedLength(g.splitFontString(labelFont).size) : 0;
 				shift = df.foldl1(df.map(labels, function(label, i){
 					var font = themes[i].series.font;
 					return g._base._getTextBox(label, {font: font}).w;
@@ -345,7 +345,7 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 						lineTo(circle.cx, circle.cy).
 						closePath().
 						setStroke(theme.series.stroke);
-					var specialFill = theme.series.fill;
+					specialFill = theme.series.fill;
 					if(specialFill && specialFill.type === "radial"){
 						specialFill = this._shapeFill(specialFill, {x: circle.cx - circle.r, y: circle.cy - circle.r, width: 2 * circle.r, height: 2 * circle.r});
 						if(this.opt.radGrad === "linear"){
@@ -388,10 +388,10 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 							// degenerated slice
 							return false;	// continue
 						}
-						var theme = themes[i];
+						var theme = themes[i], elem;
 						if(slice >= 1){
 							// whole pie
-							var v = run[i], elem = da.createText[this.opt.htmlLabels && g.renderer != "vml" ? "html" : "gfx"](
+							elem = da.createText[this.opt.htmlLabels && g.renderer != "vml" ? "html" : "gfx"](
 									this.chart, s, circle.cx, circle.cy + size / 2, "middle", labels[i],
 									theme.series.font, theme.series.fontColor);
 							if(this.opt.htmlLabels){
@@ -400,7 +400,7 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 							return true;	// stop iteration
 						}
 						// calculate the geometry of the slice
-						var end = start + slice * 2 * Math.PI, v = run[i];
+						var end = start + slice * 2 * Math.PI;
 						if(i + 1 == slices.length){
 							end = startAngle + 2 * Math.PI;
 						}
@@ -411,7 +411,7 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 							x = circle.cx + labelR * Math.cos(labelAngle),
 							y = circle.cy + labelR * Math.sin(labelAngle) + size / 2;
 						// draw the label
-						var elem = da.createText[this.opt.htmlLabels && g.renderer != "vml" ? "html" : "gfx"]
+						elem = da.createText[this.opt.htmlLabels && g.renderer != "vml" ? "html" : "gfx"]
 								(this.chart, s, x, y, "middle", labels[i], theme.series.font, theme.series.fontColor);
 						if(this.opt.htmlLabels){
 							this.htmlElements.push(elem);
@@ -440,14 +440,14 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 						start = end;
 					});
 					//calculate label radius to each slice
-					var labelHeight = g._base._getTextBox("a",{font:taFont}).h;
+					var labelHeight = g._base._getTextBox("a",{ font: labelFont }).h;
 					this._getProperLabelRadius(labeledSlices, labelHeight, circle.r * 1.1);
 					//draw label and wiring
 					arr.forEach(labeledSlices, function(slice, i){
 						if(!slice.omit){
 							var leftColumn = circle.cx - circle.r * 2,
 								rightColumn = circle.cx + circle.r * 2,
-								labelWidth = g._base._getTextBox(labels[i], {font: taFont}).w,
+								labelWidth = g._base._getTextBox(labels[i], {font: slice.theme.series.font}).w,
 								x = circle.cx + slice.labelR * Math.cos(slice.angle),
 								y = circle.cy + slice.labelR * Math.sin(slice.angle),
 								jointX = (slice.left) ? (leftColumn + labelWidth) : (rightColumn - labelWidth),
@@ -501,10 +501,10 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 		},
 		_calculateLabelR: function(firstSlice, slices, labelHeight){
 			var i = firstSlice.index,length = slices.length,
-				currentLabelR = firstSlice.labelR;
+				currentLabelR = firstSlice.labelR, nextLabelR;
 			while(!(slices[i%length].left ^ slices[(i+1)%length].left)){
 				if(!slices[(i + 1) % length].omit){
-					var nextLabelR = (Math.sin(slices[i % length].angle) * currentLabelR + ((slices[i % length].left) ? (-labelHeight) : labelHeight)) /
+					nextLabelR = (Math.sin(slices[i % length].angle) * currentLabelR + ((slices[i % length].left) ? (-labelHeight) : labelHeight)) /
 					Math.sin(slices[(i + 1) % length].angle);
 					currentLabelR = (nextLabelR < firstSlice.labelR) ? firstSlice.labelR : nextLabelR;
 					slices[(i + 1) % length].labelR = currentLabelR;
@@ -515,7 +515,7 @@ define("dojox/charting/plot2d/Pie", ["dojo/_base/lang", "dojo/_base/array" ,"doj
 			var j = (i == 0)?length-1 : i - 1;
 			while(!(slices[i].left ^ slices[j].left)){
 				if(!slices[j].omit){
-					var nextLabelR = (Math.sin(slices[i].angle) * currentLabelR + ((slices[i].left) ? labelHeight : (-labelHeight))) /
+					nextLabelR = (Math.sin(slices[i].angle) * currentLabelR + ((slices[i].left) ? labelHeight : (-labelHeight))) /
 					Math.sin(slices[j].angle);
 					currentLabelR = (nextLabelR < firstSlice.labelR) ? firstSlice.labelR : nextLabelR;
 					slices[j].labelR = currentLabelR;

@@ -3,10 +3,6 @@ define("dojox/drawing/plugins/drawing/Silverlight", ["dijit","dojo","dojox"], fu
 dojo.provide("dojox.drawing.plugins.drawing.Silverlight");
 
 dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
-	// summary:
-	//		"Plugin" to allow the Silverlight plugin to work
-	//		with DojoX Drawing.
-
 	//	WARNING: This is not completely implemented. For the most
 	//	part, DojoX Drawing does not support Silverlight. This class
 	//	was created in an attempt for support, but there were too many
@@ -186,7 +182,9 @@ dojox.drawing.plugins.drawing.Silverlight = dojox.drawing.util.oo.declare(
 		}
 	},
 	{
-		
+		// summary:
+		//		"Plugin" to allow the Silverlight plugin to work
+		//		with DojoX Drawing.
 	}
 );
 });

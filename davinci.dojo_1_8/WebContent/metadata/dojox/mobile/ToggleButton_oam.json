@@ -50,6 +50,10 @@
         "checked": {
             "datatype": "boolean",
             "defaultValue": false
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "defaultValue": false
         }
     },
     "content": "<button label='ToggleButton'></button>"

@@ -31,6 +31,18 @@
 	border-radius: @default-button-border-radius;
 }
 
+.mblToolBarButtonBodyInLeftArrow-styles () {
+  border-left-width: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.mblToolBarButtonBodyInRightArrow-styles () {
+  border-right-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 // background styles of form controls
 @mbl-button-background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
 @mbl-button-selected-background-image: @default-selected-background-image;
@@ -93,6 +105,7 @@
 	text-shadow: none;
 }
 .mblToolBarButtonArrow-styles () {
+  -webkit-transform: scale(0.7, 1.05) rotate(45deg);
 	border: 1px solid #9b9b9b;
 	border-right-color: #767676;
 	border-bottom-color: #767676;
@@ -106,6 +119,12 @@
 .mblToolBarButtonHasRightArrowInHeading-styles () {
 }
 .mblToolBarButtonHasRightArrowInHeading-compat-gecko () {
+}
+.mblToolBarButtonArrowInLeftArrow-styles () {
+  left: -1px;
+}
+.mblToolBarButtonArrowInRightArrow-styles () {
+  right: -1px;
 }
 .mblToolBarButtonBody-styles () {
 	border: 1px solid #9b9b9b;

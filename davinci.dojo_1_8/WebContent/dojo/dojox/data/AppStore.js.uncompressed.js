@@ -744,11 +744,11 @@ dojo.declare("dojox.data.AppStore",
 		// summary:
 		//		See dojo.data.api.Write.save()
 		// keywordArgs:
-		//		{
-		//			onComplete: function
-		//			onError: function
-		//			scope: object
-		//		}
+		// |	{
+		// |		onComplete: function
+		// |		onError: function
+		// |		scope: object
+		// |	}
 		var i;
 		for(i in this._adds){
 			this._atomIO.addEntry(this._adds[i], null, function(){}, keywordArgs.onError, false, keywordArgs.scope);

@@ -35,20 +35,22 @@
   width: 20px;
   height: 19px;
   border-radius: 1px;
-  -webkit-transform: scale(0.7, 1.05) rotate(45deg);
+  -webkit-transform: scale(0.7, 1) rotate(45deg);
   border: 1px solid #9cacc0;
 }
 .mblToolBarButtonHasLeftArrow .mblToolBarButtonArrow {
-  left: -1px;
+  left: 1px;
+  border: 1px inset #9cacc0;
 }
 .mblToolBarButtonHasRightArrow .mblToolBarButtonArrow {
-  right: -1px;
+  right: 0px;
+  border: 1px inset #9cacc0;
 }
 .mblToolBarButtonBody {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px outset #9cacc0;
 }
 .mblToolBarButton .mblToolBarButtonBody {
@@ -62,13 +64,9 @@
 }
 .mblToolBarButtonHasLeftArrow .mblToolBarButtonBody {
   border-left-width: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
 }
 .mblToolBarButtonHasRightArrow .mblToolBarButtonBody {
   border-right-width: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
 }
 .mblToolBarButtonText .mblToolBarButtonIcon {
   padding-left: 10px;

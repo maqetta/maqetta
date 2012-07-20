@@ -13,8 +13,7 @@
 	color: @text-color;
 }
 
-.claro .dijitSelectError .dijitValidationContainer,
-.claro .dijitTextBoxError .dijitValidationContainer {
+.claro .dijitValidationTextBoxError .dijitValidationContainer {
 	background-color: @erroricon-background-color;
 	background-image: url("../@{image-form-error}");
 	background-position: top center;
@@ -26,8 +25,7 @@
 	border-left-width: 1px;
 }
 
-.claro .dijitSelectError .dijitValidationIcon,
-.claro .dijitTextBoxError .dijitValidationIcon {
+.claro .dijitValidationTextBoxError .dijitValidationIcon {
 	width: 0;
 	background-color: transparent !important; /* so the INPUT doesn't obscure the border in rtl+a11y */
 }
@@ -176,10 +174,9 @@
 
 /* Add 1px vertical padding to the <input> where user types and the validation icon,
    to match the 1px border on arrow button */
-.claro .dijitSelect .dijitValidationContainer,
 .claro .dijitSelectLabel,
 .claro .dijitTextBox .dijitInputInner,
-.claro .dijitTextBox .dijitValidationContainer {
+.claro .dijitValidationTextBox .dijitValidationContainer {
 	padding: 1px 0;
 }
 

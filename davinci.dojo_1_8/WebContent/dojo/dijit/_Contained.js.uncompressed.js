@@ -16,11 +16,11 @@ define("dijit/_Contained", [
 
 		_getSibling: function(/*String*/ which){
 			// summary:
-			//      Returns next or previous sibling
+			//		Returns next or previous sibling
 			// which:
-			//      Either "next" or "previous"
+			//		Either "next" or "previous"
 			// tags:
-			//      private
+			//		private
 			var node = this.domNode;
 			do{
 				node = node[which+"Sibling"];

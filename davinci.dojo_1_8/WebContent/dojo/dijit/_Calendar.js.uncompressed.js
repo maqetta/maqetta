@@ -6,8 +6,13 @@ define("dijit/_Calendar", [
 
 	// module:
 	//		dijit/_Calendar
-	// summary:
-	//		Deprecated widget, used dijit/Calendar instead.   Will be removed in 2.0.
+
+	/*=====
+	return {
+		// summary:
+		//		Deprecated widget, used dijit/Calendar instead.   Will be removed in 2.0.
+	};
+	=====*/
 
 	kernel.deprecated("dijit._Calendar is deprecated", "dijit._Calendar moved to dijit.Calendar", 2.0);
 

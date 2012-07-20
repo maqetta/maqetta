@@ -4,14 +4,6 @@ function(dojo, oo, defaults){
 	var surface, surfaceNode;
 	//dojox.drawing.manager.Stencil = 
 	return oo.declare(
-		// summary:
-		//		The main class for tracking Stencils that are cretaed, added,
-		//		selected, or deleted. Also handles selections, multiple
-		//		selections, adding and removing from selections, and dragging
-		//		selections. It's this class that triggers the anchors to
-		//		appear on a Stencil and whther there are anchor on a multiple
-		//		select or not (currently not)
-
 		function(options){
 
 			// TODO: mixin props
@@ -34,6 +26,14 @@ function(dojo, oo, defaults){
 			
 		},
 		{
+			// summary:
+			//		The main class for tracking Stencils that are cretaed, added,
+			//		selected, or deleted. Also handles selections, multiple
+			//		selections, adding and removing from selections, and dragging
+			//		selections. It's this class that triggers the anchors to
+			//		appear on a Stencil and whther there are anchor on a multiple
+			//		select or not (currently not)
+
 			_dragBegun: false,
 			_wasDragged:false,
 			_secondClick:false,
@@ -109,7 +109,7 @@ function(dojo, oo, defaults){
 				// summary:
 				//		Method for removing Stencils from the manager.
 				//		This doesn't delete them, only removes them from
-				// 		the list.
+				//		the list.
 
 				console.log("Selection.unregister ::::::", stencil.id, "sel:", stencil.selected);
 				if(stencil){
@@ -120,7 +120,7 @@ function(dojo, oo, defaults){
 			
 			onArrow: function(/*Key Event*/evt){
 				// summary:
-				// 		Moves selection based on keyboard arrow keys
+				//		Moves selection based on keyboard arrow keys
 
 				// FIXME: Check constraints
 				if(this.hasSelected()){
@@ -137,7 +137,7 @@ function(dojo, oo, defaults){
 			saveMoveState: function(){
 				// summary:
 				//		Internal. Used for the prototype undo stack.
-				// 		Saves selection position.
+				//		Saves selection position.
 
 				var mx = this.group.getTransform();
 				if(mx.dx == this._lastmxx && mx.dy == this._lastmxy){ return; }
@@ -452,7 +452,7 @@ function(dojo, oo, defaults){
 				this._isBusy = false;
 				
 				// TODO:
-				//  dojo.style(surfaceNode, "cursor", "pointer");
+				//	dojo.style(surfaceNode, "cursor", "pointer");
 				
 				// TODO:
 				this.undo.add({
@@ -622,7 +622,7 @@ function(dojo, oo, defaults){
 			
 			hasSelected: function(){
 				// summary:
-				// 		Returns number of selected (generally used
+				//		Returns number of selected (generally used
 				//		as truthy or falsey)
 
 				// FIXME: should be areSelected?

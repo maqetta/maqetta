@@ -50,14 +50,13 @@ define("dojox/html/ellipsis",["dojo/_base/kernel", "dojo/_base/lang", "dojo/_bas
 		var dd = d.doc;
 		var dp = d.place;
 		var iFrame = create("iframe", {className: "dojoxEllipsisIFrame",
-					src: "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'"});
+					src: "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'", style: {display: "none"}});
 		var rollRange = function(/* W3C Range */ r, /* int? */ cnt){
-			// Summary:
+			// summary:
 			//		Rolls the given range back one character from the end
-			//
-			//	r: W3C Range
+			// r: W3C Range
 			//		The range to roll back
-			//	cnt: int?
+			// cnt: int?
 			//		An optional number of times to roll back (defaults 1)
 			if(r.collapsed){
 				// Do nothing - we are already collapsed

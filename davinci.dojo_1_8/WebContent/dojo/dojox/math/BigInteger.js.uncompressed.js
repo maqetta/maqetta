@@ -425,9 +425,9 @@ define("dojox/math/BigInteger", ["dojo", "dojox"], function(dojo, dojox) {
 
 	// (protected) return "-1/this % 2^DB"; useful for Mont. reduction
 	// justification:
-	//         xy == 1 (mod m)
-	//         xy =  1+km
-	//   xy(2-xy) = (1+km)(1-km)
+	// xy == 1 (mod m)
+	// xy =  1+km
+	// xy(2-xy) = (1+km)(1-km)
 	// x[y(2-xy)] = 1-k^2m^2
 	// x[y(2-xy)] == 1 (mod m^2)
 	// if y is 1/x mod m, then y(2-xy) is 1/x mod m^2

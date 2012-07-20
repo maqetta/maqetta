@@ -25,19 +25,19 @@ define("dojox/geo/openlayers/Map", [
 		// baseLayerType: String
 		//		 type of the base layer. Can be any of
 		//
-		//		* `dojox.geo.openlayers.BaseLayerType.OSM`: Open Street Map base layer
-		//		* `dojox.geo.openlayers.BaseLayerType.WMS`: Web Map Service layer
-		//		* `dojox.geo.openlayers.BaseLayerType.GOOGLE`: Google layer
-		//		* `dojox.geo.openlayers.BaseLayerType.VIRTUAL_EARTH`: Virtual Earth layer
-		//		* `dojox.geo.openlayers.BaseLayerType.BING`: Bing layer
-		//		* `dojox.geo.openlayers.BaseLayerType.YAHOO`: Yahoo layer
-		//		* `dojox.geo.openlayers.BaseLayerType.ARCGIS`: ESRI ArgGIS layer
+		//		- `dojox.geo.openlayers.BaseLayerType.OSM`: Open Street Map base layer
+		//		- `dojox.geo.openlayers.BaseLayerType.WMS`: Web Map Service layer
+		//		- `dojox.geo.openlayers.BaseLayerType.GOOGLE`: Google layer
+		//		- `dojox.geo.openlayers.BaseLayerType.VIRTUAL_EARTH`: Virtual Earth layer
+		//		- `dojox.geo.openlayers.BaseLayerType.BING`: Bing layer
+		//		- `dojox.geo.openlayers.BaseLayerType.YAHOO`: Yahoo layer
+		//		- `dojox.geo.openlayers.BaseLayerType.ARCGIS`: ESRI ArgGIS layer
 		// baseLayerName: String
 		//		The name of the base layer.
 		// baseLayerUrl: String
 		//		Some layer may need an url such as Web Map Server.
 		// baseLayerOptions: String
-		//		Addtional specific options passed to OpensLayers layer, such as The list of layer to display, for Web Map Server layer.
+		//		Additional specific options passed to OpensLayers layer, such as The list of layer to display, for Web Map Server layer.
 		this.baseLayerType = baseLayerType;
 		this.baseLayerName = baseLayerName;
 		this.baseLayerUrl = baseLayerUrl;
@@ -57,23 +57,23 @@ define("dojox/geo/openlayers/Map", [
 		//		type and the base layer parameters such as url or options depending on the type
 		//		specified. These parameters can be any of:
 		//
-		//		_baseLayerType_: type of the base layer. Can be any of
+		//		_baseLayerType_: type of the base layer. Can be any of:
 		//		
-		//		* `dojox.geo.openlayers.BaseLayerType.OSM`: Open Street Map base layer
-		//		* `dojox.geo.openlayers.BaseLayerType.WMS`: Web Map Service layer
-		//		* `dojox.geo.openlayers.BaseLayerType.GOOGLE`: Google layer
-		//		* `dojox.geo.openlayers.BaseLayerType.VIRTUAL_EARTH`: Virtual Earth layer
-		//		* `dojox.geo.openlayers.BaseLayerType.BING`: Bing layer
-		//		* `dojox.geo.openlayers.BaseLayerType.YAHOO`: Yahoo layer
-		//		* `dojox.geo.openlayers.BaseLayerType.ARCGIS`: ESRI ArgGIS layer
+		//		- `dojox.geo.openlayers.BaseLayerType.OSM`: Open Street Map base layer
+		//		- `dojox.geo.openlayers.BaseLayerType.WMS`: Web Map Service layer
+		//		- `dojox.geo.openlayers.BaseLayerType.GOOGLE`: Google layer
+		//		- `dojox.geo.openlayers.BaseLayerType.VIRTUAL_EARTH`: Virtual Earth layer
+		//		- `dojox.geo.openlayers.BaseLayerType.BING`: Bing layer
+		//		- `dojox.geo.openlayers.BaseLayerType.YAHOO`: Yahoo layer
+		//		- `dojox.geo.openlayers.BaseLayerType.ARCGIS`: ESRI ArgGIS layer
 		//		
 		//		Note that access to commercial server such as Google, Virtual Earth or Yahoo may need specific licencing.
 		//		
 		//		The parameters value also include:
 		//		
-		//		* `baseLayerName`: The name of the base layer.
-		//		* `baseLayerUrl`: Some layer may need an url such as Web Map Server
-		//		* `baseLayerOptions`: Additional specific options passed to OpensLayers layer,
+		//		- `baseLayerName`: The name of the base layer.
+		//		- `baseLayerUrl`: Some layer may need an url such as Web Map Server
+		//		- `baseLayerOptions`: Additional specific options passed to OpensLayers layer,
 		//		  such as The list of layer to display, for Web Map Server layer.
 		//
 		// example:

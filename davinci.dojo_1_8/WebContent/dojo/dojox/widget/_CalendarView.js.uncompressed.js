@@ -6,7 +6,7 @@ define("dojox/widget/_CalendarView", [
 	"dojo/date",
 	"dojo/_base/window"
 ], function(declare, _WidgetBase, domConstruct, query, dojoDate, win){
-	return dojo.declare("dojox.widget._CalendarView", _WidgetBase, {
+	return declare("dojox.widget._CalendarView", _WidgetBase, {
 		// summary:
 		//		Base implementation for all view mixins.
 		//		All calendar views should extend this widget.
@@ -24,6 +24,7 @@ define("dojox/widget/_CalendarView", [
 					template.parentNode.appendChild(template.cloneNode(true));
 				}
 			}else{
+				// XXX: this is the same as template!
 				var bNode = query(clazz, this.domNode)[0];
 				for(i = 0; i < n; i++){
 					template.parentNode.insertBefore(template.cloneNode(true), bNode);
@@ -44,7 +45,7 @@ define("dojox/widget/_CalendarView", [
 			// summary:
 			//		Returns the header node of a view. If none exists,
 			//		an empty DIV is created and returned.
-			return this.header || (this.header = this.header = domConstruct.create("span", { "class":this.headerClass }));
+			return this.header || (this.header = domConstruct.create("span", { "class":this.headerClass }));
 		},
 
 		onValueSelected: function(date){

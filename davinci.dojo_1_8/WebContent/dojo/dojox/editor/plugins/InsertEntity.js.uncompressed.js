@@ -21,7 +21,8 @@ dojo.declare("dojox.editor.plugins.InsertEntity", _Plugin,{
 	//
 	// description:
 	//		The commands provided by this plugin are:
-	//		* insertEntity - inserts the selected HTML entity character
+	//
+	//		- insertEntity - inserts the selected HTML entity character
 
 	// iconClassPrefix: [const] String
 	//		The CSS class name for the button node is formed from `iconClassPrefix` and `command`

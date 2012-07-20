@@ -7,8 +7,7 @@ _2.require("dojo.fx.easing");
 _2.require("dojo.fx");
 _2.require("dijit._Widget");
 _2.require("dijit._Templated");
-_2.declare("dojox.image.ThumbnailPicker",[_1._Widget,_1._Templated],{imageStore:null,request:null,size:500,thumbHeight:75,thumbWidth:100,useLoadNotifier:false,useHyperlink:false,hyperlinkTarget:"new",isClickable:true,isScrollable:true,isHorizontal:true,autoLoad:true,linkAttr:"link",imageThumbAttr:"imageUrlThumb",imageLargeAttr:"imageUrl",pageSize:20,titleAttr:"title",templateString:_2.cache("dojox.image","resources/ThumbnailPicker.html","<div dojoAttachPoint=\"outerNode\" class=\"thumbOuter\">\n\t<div dojoAttachPoint=\"navPrev\" class=\"thumbNav thumbClickable\">\n\t  <img src=\"\" dojoAttachPoint=\"navPrevImg\"/>    \n\t</div>\n\t<div dojoAttachPoint=\"thumbScroller\" class=\"thumbScroller\">\n\t  <div dojoAttachPoint=\"thumbsNode\" class=\"thumbWrapper\"></div>\n\t</div>\n\t<div dojoAttachPoint=\"navNext\" class=\"thumbNav thumbClickable\">\n\t  <img src=\"\" dojoAttachPoint=\"navNextImg\"/>  \n\t</div>\n</div>"),_thumbs:[],_thumbIndex:0,_maxPhotos:0,_loadedImages:{},postCreate:function(){
-this.widgetid=this.id;
+_2.declare("dojox.image.ThumbnailPicker",[_1._Widget,_1._Templated],{imageStore:null,request:null,size:500,thumbHeight:75,thumbWidth:100,useLoadNotifier:false,useHyperlink:false,hyperlinkTarget:"new",isClickable:true,isScrollable:true,isHorizontal:true,autoLoad:true,linkAttr:"link",imageThumbAttr:"imageUrlThumb",imageLargeAttr:"imageUrl",pageSize:20,titleAttr:"title",templateString:_2.cache("dojox.image","resources/ThumbnailPicker.html","<div dojoAttachPoint=\"outerNode\" class=\"thumbOuter\">\n\t<div dojoAttachPoint=\"navPrev\" class=\"thumbNav thumbClickable\">\n\t  <img src=\"\" dojoAttachPoint=\"navPrevImg\"/>    \n\t</div>\n\t<div dojoAttachPoint=\"thumbScroller\" class=\"thumbScroller\">\n\t  <div dojoAttachPoint=\"thumbsNode\" class=\"thumbWrapper\"></div>\n\t</div>\n\t<div dojoAttachPoint=\"navNext\" class=\"thumbNav thumbClickable\">\n\t  <img src=\"\" dojoAttachPoint=\"navNextImg\"/>  \n\t</div>\n</div>"),_thumbs:[],_thumbIndex:0,_maxPhotos:0,_loadedImages:{},baseClass:"ThumbnailPicker",cellClass:"Thumbnail",postCreate:function(){
 this.inherited(arguments);
 this.pageSize=Number(this.pageSize);
 this._scrollerSize=this.size-(51*2);
@@ -64,9 +63,9 @@ this._loadNextPage();
 }
 return true;
 },getClickTopicName:function(){
-return (this.widgetId||this.id)+"/select";
+return this.id+"/select";
 },getShowTopicName:function(){
-return (this.widgetId||this.id)+"/show";
+return this.id+"/show";
 },setDataStore:function(_9,_a,_b){
 this.reset();
 this.request={query:{},start:_a.start||0,count:_a.count||10,onBegin:_2.hitch(this,function(_c){
@@ -192,7 +191,7 @@ this.thumbScroller.scrollTop=top;
 this._checkLoad(img,_21);
 }
 },markImageLoaded:function(_25){
-var _26=_2.byId("loadingDiv_"+this.widgetid+"_"+_25);
+var _26=_2.byId("loadingDiv_"+this.id+"_"+_25);
 if(_26){
 this._setThumbClass(_26,"thumbLoaded");
 }
@@ -244,14 +243,14 @@ this.imageStore.fetch(this.request);
 },_loadImage:function(_32,_33,_34){
 var _35=this.imageStore;
 var url=_35.getValue(_32,this.imageThumbAttr);
-var _36=_2.create("div",{id:"img_"+this.widgetid+"_"+_33});
+var _36=_2.create("div",{id:"img_"+this.id+"_"+_33,"class":this.cellClass});
 var img=_2.create("img",{},_36);
 img._index=_33;
 img._data=_32;
 this._thumbs[_33]=_36;
 var _37;
 if(this.useLoadNotifier){
-_37=_2.create("div",{id:"loadingDiv_"+this.widgetid+"_"+_33},_36);
+_37=_2.create("div",{id:"loadingDiv_"+this.id+"_"+_33},_36);
 this._setThumbClass(_37,this._loadedImages[_33]?"thumbLoaded":"thumbNotifier");
 }
 var _38=_2.marginBox(this.thumbsNode);
@@ -280,6 +279,8 @@ return false;
 }));
 _2.connect(img,"onclick",this,function(evt){
 _2.publish(this.getClickTopicName(),[{index:evt.target._index,data:evt.target._data,url:img.getAttribute("src"),largeUrl:this.imageStore.getValue(_32,this.imageLargeAttr),title:this.imageStore.getValue(_32,this.titleAttr),link:this.imageStore.getValue(_32,this.linkAttr)}]);
+_2.query("."+this.cellClass,this.thumbsNode).removeClass(this.cellClass+"Selected");
+_2.addClass(evt.target.parentNode,this.cellClass+"Selected");
 return false;
 });
 _2.addClass(img,"imageGalleryThumb");
@@ -290,17 +291,15 @@ img.setAttribute("title",_3b);
 }
 this._updateNavControls();
 },_updateNavControls:function(){
-var _3c=[];
-var _3d=function(_3e,add){
+var _3c=function(_3d,add){
 var fn=add?"addClass":"removeClass";
-_2[fn](_3e,"enabled");
-_2[fn](_3e,"thumbClickable");
+_2[fn](_3d,"enabled");
+_2[fn](_3d,"thumbClickable");
 };
 var pos=this.isHorizontal?"scrollLeft":"scrollTop";
-var _3f=this.isHorizontal?"offsetWidth":"offsetHeight";
-_3d(this.navPrev,(this.thumbScroller[pos]>0));
-var _40=this._thumbs[this._thumbs.length-1];
-var _41=(this.thumbScroller[pos]+this._scrollerSize<this.thumbsNode[_3f]);
-_3d(this.navNext,_41);
+var _3e=this.isHorizontal?"offsetWidth":"offsetHeight";
+_3c(this.navPrev,(this.thumbScroller[pos]>0));
+var _3f=(this.thumbScroller[pos]+this._scrollerSize<this.thumbsNode[_3e]);
+_3c(this.navNext,_3f);
 }});
 });

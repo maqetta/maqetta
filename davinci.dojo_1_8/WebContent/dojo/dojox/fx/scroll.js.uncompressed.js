@@ -7,7 +7,7 @@ define("dojox/fx/scroll", ["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/fx
 		//		Returns an animation that will smooth-scroll to a node
 		// description:
 		//		This implementation support either horizontal or vertical scroll, as well as
-		//  	both. In addition, element in iframe can be scrolled to correctly.
+		//		both. In addition, element in iframe can be scrolled to correctly.
 		// args:
 		//		- offset: {x: int, y: int} this will be added to the target position
 		//		- duration: Duration of the animation in milliseconds.

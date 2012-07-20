@@ -5,6 +5,8 @@ define("dojo/dom-attr", ["exports", "./sniff", "./_base/lang", "./dom", "./dom-s
 	// summary:
 	//		This module defines the core dojo DOM attributes API.
 
+	// TODOC: summary not showing up in output see https://github.com/csnover/js-doc-parse/issues/42
+
 	// =============================
 	// Element attribute Functions
 	// =============================
@@ -78,9 +80,9 @@ define("dojo/dom-attr", ["exports", "./sniff", "./_base/lang", "./dom", "./dom-s
 		node = dom.byId(node);
 		var lc = name.toLowerCase(),
 			propName = prop.names[lc] || name,
-			forceProp = forcePropNames[propName];
-		// should we access this attribute via a property or via getAttribute()?
-		value = node[propName];
+			forceProp = forcePropNames[propName],
+			value = node[propName];		// should we access this attribute via a property or via getAttribute()?
+
 		if(forceProp && typeof value != "undefined"){
 			// node's property
 			return value;	// Anything
@@ -203,7 +205,7 @@ define("dojo/dom-attr", ["exports", "./sniff", "./_base/lang", "./dom", "./dom-s
 		// name: String
 		//		the name of the attribute
 		// returns:
-		//      the value of the attribute
+		//		the value of the attribute
 
 		node = dom.byId(node);
 		var lc = name.toLowerCase(), propName = prop.names[lc] || name;

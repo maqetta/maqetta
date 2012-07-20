@@ -19,6 +19,23 @@ function(
 	mouse,
 	on, 	
 	keys){
+	
+	/*=====
+	var __ItemMouseEventArgs = function(item, renderer, triggerEvent){
+		// summary:
+		//		The event dispatched when an item is clicked, double-clicked or context-clicked.
+		// item: Object
+		//		The item clicked.
+		// renderer: dojox/calendar/_RendererMixin
+		//		The item renderer clicked.
+		// triggerEvent: Event
+		//		The event at the origin of this event.
+		
+		this.item = item;
+		this.renderer = renderer;
+		this.triggerEvent = triggerEvent;
+	}
+	=====*/
 			
 	return declare("dojox.calendar.Mouse", null, {
 
@@ -138,7 +155,9 @@ function(
 		
 		onItemRollOver: function(e){
 			// summary:
-			//		Event dispatched when the mouse cursor in going over an item renderer. 
+			//		Event dispatched when the mouse cursor in going over an item renderer.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when the mouse cursor enters in the item renderer.
 			// tags:
 			//		callback
 
@@ -154,6 +173,8 @@ function(
 		onItemRollOut: function(e){
 			// summary:
 			//		Event dispatched when the mouse cursor in leaving an item renderer.
+			// e: __ItemMouseEventArgs
+			//		The event dispatched when the mouse cursor enters in the item renderer.
 			// tags:
 			//		protected
 

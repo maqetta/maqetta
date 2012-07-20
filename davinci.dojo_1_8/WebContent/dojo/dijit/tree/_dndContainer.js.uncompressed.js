@@ -71,7 +71,6 @@ define("dijit/tree/_dndContainer", [
 			domClass.add(this.node, "dojoDndContainer");
 
 			// set up events
-			var self = this;
 			this.events = [
 				// Mouse (or touch) enter/leave on Tree itself
 				on(this.node, touch.enter, lang.hitch(this, "onOverEvent")),

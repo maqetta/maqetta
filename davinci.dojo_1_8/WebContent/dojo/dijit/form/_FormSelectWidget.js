@@ -247,7 +247,7 @@ _1.forEach(this._getChildren(),function(_31){
 var _32=_1.some(val,function(v){
 return _31.option&&(v===_31.option.value);
 });
-_7.toggle(_31.domNode,this.baseClass+"SelectedOption",_32);
+_7.toggle(_31.domNode,this.baseClass.replace(/\s+|$/g,"SelectedOption "),_32);
 _31.domNode.setAttribute("aria-selected",_32?"true":"false");
 },this);
 }

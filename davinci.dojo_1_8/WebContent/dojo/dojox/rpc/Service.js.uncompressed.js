@@ -5,8 +5,11 @@ dojo.declare("dojox.rpc.Service", null, {
 		// summary:
 		//		Take a string as a url to retrieve an smd or an object that is an smd or partial smd to use
 		//		as a definition for the service
-		//
-		//	smd: object
+		// description:
+		//		dojox.rpc.Service must be loaded prior to any plugin services like dojox.rpc.Rest
+		//		dojox.rpc.JsonRpc in order for them to register themselves, otherwise you get
+		//		a "No match found" error.
+		// smd: object
 		//		Takes a number of properties as kwArgs for defining the service.  It also
 		//		accepts a string.  When passed a string, it is treated as a url from
 		//		which it should synchronously retrieve an smd file.  Otherwise it is a kwArgs
@@ -16,11 +19,7 @@ dojo.declare("dojox.rpc.Service", null, {
 		//		matches those defined in the smd.  smdString allows a developer to pass
 		//		a jsonString directly, which will be converted into an object or alternatively
 		//		smdObject is accepts an smdObject directly.
-		//
-		//	description:
-		//		dojox.rpc.Service must be loaded prior to any plugin services like dojox.rpc.Rest
-		// 		dojox.rpc.JsonRpc in order for them to register themselves, otherwise you get
-		// 		a "No match found" error.
+
 		var url;
 		var self = this;
 		function processSmd(smd){

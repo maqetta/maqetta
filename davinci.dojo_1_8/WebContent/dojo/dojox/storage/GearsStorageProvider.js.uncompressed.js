@@ -20,10 +20,10 @@ if(dojo.gears.available){
 			// description:
 			//		You can disable this storage provider with the following djConfig
 			//		variable:
-			//		var djConfig = { disableGearsStorage: true };
+			// |		var djConfig = { disableGearsStorage: true };
 			//
 			//		Authors of this storage provider-
-			//			Brad Neuberg, bkn3@columbia.edu
+			//		Brad Neuberg, bkn3@columbia.edu
 			constructor: function(){
 			},
 			// instance methods and properties

@@ -3,31 +3,23 @@ define("dojox/charting/action2d/MouseZoomAndPan", ["dojo/_base/declare", "dojo/_
 	function(declare, win, arr, eventUtil, connect, mouse, ChartAction, has, domProp, keys){
 
 	/*=====
-	var __MouseZoomAndPanCtorArgs = function(axis, scaleFactor, maxScale, enableScroll, enableDoubleClickZooom, enableKeyZoom, keyZoomModifier){
+	var __MouseZoomAndPanCtorArgs = {
 		// summary:
 		//		Additional arguments for mouse zoom and pan actions.
-	
 		// axis: String?
 		//		Target axis name for this action.  Default is "x".
-		this.axis = "x";
 		// scaleFactor: Number?
 		//		The scale factor applied on mouse wheel zoom.  Default is 1.2.
-		this.scaleFactor = 1.2;
 		// maxScale: Number?
 		//		The max scale factor accepted by this chart action.  Default is 100.
-		this.maxScale = 100;
 		// enableScroll: Boolean?
 		//		Whether mouse drag gesture should scroll the chart.  Default is true.
-		this.enableScroll = true;
 		// enableDoubleClickZoom: Boolean?
 		//		Whether a double click gesture should toggle between fit and zoom on the chart.  Default is true.
-		this.enableDoubleClickZoom = true;
 		// enableKeyZoom: Boolean?
 		//		Whether a keyZoomModifier + + or keyZoomModifier + - key press should zoom in our out on the chart.  Default is true.
-		this.enableKeyZoom = true;
 		// keyZoomModifier: String?
 		//		Which keyboard modifier should used for keyboard zoom in and out. This should be one of "alt", "ctrl", "shift" or "none" for no modifier. Default is "ctrl".
-		this.keyZoomModifier = "ctrl";
 	};
 	=====*/
 

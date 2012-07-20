@@ -3,13 +3,10 @@ define("dojox/drawing/tools/Arrow", ["dojo/_base/lang", "../util/oo", "../manage
 function(lang, oo, registry, Line, AnnotationArrow, positioning){
 
 var Arrow = oo.declare(
-	// summary:
-	//		Extends stencil.Line and adds an arrow head
-	//		to the end and or start.
-
 	Line,
 	function(options){
-		// summary: constructor
+		// summary:
+		//		constructor
 		if(this.arrowStart){
 			this.begArrow = new AnnotationArrow({stencil:this, idx1:0, idx2:1});
 		}
@@ -25,6 +22,10 @@ var Arrow = oo.declare(
 		}
 	},
 	{
+		// summary:
+		//		Extends stencil.Line and adds an arrow head
+		//		to the end and or start.
+
 		draws:true,
 		type:"dojox.drawing.tools.Arrow",
 		baseRender:false,

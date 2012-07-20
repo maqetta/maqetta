@@ -9,6 +9,7 @@
 }
 .soria .dijitSelect .dijitArrowButton {
 	background: #bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
+	border-width: 0;
 }
 .soria .dijitSelectDisabled,
 .soria .dijitSelectDisabled TD {

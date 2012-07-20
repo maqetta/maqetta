@@ -7,7 +7,7 @@ dojo.require("dojo.dnd.common");
 
 dojo.declare("dojox.layout.dnd.Avatar", dojo.dnd.Avatar, {
 	// summary:
-	//      An Object, which represents the object being moved in a GridContainer
+	//		An Object, which represents the object being moved in a GridContainer
 	constructor: function(manager, opacity){
 		this.opacity = opacity || 0.9;
 	},

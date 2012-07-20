@@ -52,7 +52,7 @@ dojox.uuid.generateTimeBasedUuid._generator = new function(){
 	this.GREGORIAN_CHANGE_OFFSET_IN_HOURS = 3394248;
 	
 	// Number of seconds between October 15, 1582 and January 1, 1970:
-	//   dojox.uuid.generateTimeBasedUuid.GREGORIAN_CHANGE_OFFSET_IN_SECONDS = 12219292800;
+	//	 dojox.uuid.generateTimeBasedUuid.GREGORIAN_CHANGE_OFFSET_IN_SECONDS = 12219292800;
 	
 	// --------------------------------------------------
 	// Private variables:

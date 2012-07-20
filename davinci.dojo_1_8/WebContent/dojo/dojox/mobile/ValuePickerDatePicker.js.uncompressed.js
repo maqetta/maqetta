@@ -8,8 +8,6 @@ define("dojox/mobile/ValuePickerDatePicker", [
 
 	// module:
 	//		dojox/mobile/ValuePickerDatePicker
-	// summary:
-	//		A ValuePicker-based date picker widget.
 
 	return declare("dojox.mobile.ValuePickerDatePicker", [ValuePicker, DatePickerMixin], {
 		// summary:

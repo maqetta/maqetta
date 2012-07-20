@@ -14,7 +14,7 @@ kernel.experimental("dojox.layout.Dock");
 var Dock = declare("dojox.layout.Dock",[Widget, TemplatedMixin],{
 	// summary:
 	//		A widget that attaches to a node and keeps track of incoming / outgoing FloatingPanes
-	// 		and handles layout
+	//		and handles layout
 
 	templateString: '<div class="dojoxDock"><ul dojoAttachPoint="containerNode" class="dojoxDockList"></ul></div>',
 
@@ -28,7 +28,7 @@ var Dock = declare("dojox.layout.Dock",[Widget, TemplatedMixin],{
 	
 	addNode: function(refNode){
 		// summary:
-		//		Instert a dockNode refernce into the dock
+		//		Insert a dockNode reference into the dock
 		
 		var div = domConstruct.create('li', null, this.containerNode),
 			node = new DockNode({
@@ -76,14 +76,12 @@ var Dock = declare("dojox.layout.Dock",[Widget, TemplatedMixin],{
 });
 
 var DockNode = declare("dojox.layout._DockNode",[Widget, TemplatedMixin],{
-  // module:
-  //		dojox.layout._DockNode
 	// summary:
 	//		dojox.layout._DockNode is a private widget used to keep track of
 	//		which pane is docked.
-	//
+
 	// title: String
-	// 		Shown in dock icon. should read parent iconSrc?
+	//		Shown in dock icon. should read parent iconSrc?
 	title: "",
 
 	// paneRef: Widget
@@ -97,7 +95,8 @@ var DockNode = declare("dojox.layout._DockNode",[Widget, TemplatedMixin],{
 		'</li>',
 
 	restore: function(){
-		// summary: remove this dock item from parent dock, and call show() on reffed floatingpane
+		// summary:
+		//		remove this dock item from parent dock, and call show() on reffed floatingpane
 		this.paneRef.show();
 		this.paneRef.bringToTop();
 		this.destroy();

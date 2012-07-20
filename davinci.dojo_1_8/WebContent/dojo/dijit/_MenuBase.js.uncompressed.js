@@ -8,14 +8,14 @@ define("dijit/_MenuBase", [
 	"dojo/mouse",	// mouse.enter, mouse.leave
 	"dojo/on",
 	"dojo/window",
+	"./a11yclick",
 	"./popup",
 	"./registry",
 	"./_Widget",
 	"./_KeyNavContainer",
-	"./_OnDijitClickMixin",
 	"./_TemplatedMixin"
 ], function(array, declare, dom, domAttr, domClass, lang, mouse, on, winUtils,
-			pm, registry, _Widget, _KeyNavContainer, _OnDijitClickMixin, _TemplatedMixin){
+			a11yclick, pm, registry, _Widget, _KeyNavContainer, _TemplatedMixin){
 
 
 // module:
@@ -50,7 +50,7 @@ return declare("dijit._MenuBase",
 			on(this.containerNode, on.selector(matches, mouse.leave), function(){
 				self.onItemUnhover(registry.byNode(this));
 			}),
-			on(this.containerNode, on.selector(matches, _OnDijitClickMixin.a11yclick), function(evt){
+			on(this.containerNode, on.selector(matches, a11yclick), function(evt){
 				self.onItemClick(registry.byNode(this), evt);
 				evt.stopPropagation();
 				evt.preventDefault();
@@ -303,8 +303,10 @@ return declare("dijit._MenuBase",
 		// summary:
 		//		Mark this menu's state as active.
 		//		Called when this Menu gets focus from:
-		//			1) clicking it (mouse or via space/arrow key)
-		//			2) being opened by a parent menu.
+		//
+		//		1. clicking it (mouse or via space/arrow key)
+		//		2. being opened by a parent menu.
+		//
 		//		This is not called just from mouse hover.
 		//		Focusing a menu via TAB does NOT automatically set isActive
 		//		since TAB is a navigation operation and not a selection one.
@@ -380,9 +382,11 @@ return declare("dijit._MenuBase",
 	_onItemFocus: function(/*MenuItem*/ item){
 		// summary:
 		//		Called when child of this Menu gets focus from:
-		//			1) clicking it
-		//			2) tabbing into it
-		//			3) being opened by a parent menu.
+		//
+		//		1. clicking it
+		//		2. tabbing into it
+		//		3. being opened by a parent menu.
+		//
 		//		This is not called just from mouse hover.
 		if(this._hoveredChild && this._hoveredChild != item){
 			this.onItemUnhover(this._hoveredChild);	// any previous mouse movement is trumped by focus selection

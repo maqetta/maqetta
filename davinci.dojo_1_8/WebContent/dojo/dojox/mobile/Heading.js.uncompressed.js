@@ -19,8 +19,6 @@ define("dojox/mobile/Heading", [
 
 	// module:
 	//		dojox/mobile/Heading
-	// summary:
-	//		A widget that represents a navigation bar.
 
 	var dm = lang.getObject("dojox.mobile", true);
 

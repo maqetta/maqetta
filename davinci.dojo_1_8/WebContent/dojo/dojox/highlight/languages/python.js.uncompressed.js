@@ -1,6 +1,6 @@
-define("dojox/highlight/languages/python", ["dojox/main", "../_base"], function(dojox){
+define("dojox/highlight/languages/python", ["../_base"], function(dh){
 
-	var dh = dojox.highlight, dhc = dh.constants;
+	var dhc = dh.constants;
 	dh.languages.python = {
 		// summary:
 		//		Python highlight definitions

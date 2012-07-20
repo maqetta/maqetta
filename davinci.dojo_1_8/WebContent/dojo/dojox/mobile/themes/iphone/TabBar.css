@@ -130,7 +130,7 @@
   left: 0px;
 }
 .mblTabBarSegmentedControl .mblTabBarButtonSelected {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#222222), color-stop(0.02, #8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
 }
 .mblHeading .mblTabBarSegmentedControl {
   display: inline;
@@ -160,7 +160,7 @@
 }
 .mblTabBarStandardTab .mblTabBarButtonSelected {
   background-color: #5877a2;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#222222), color-stop(0.02, #8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
 }
 .mblTabBarStandardTab .mblTabBarButtonHasIcon .mblTabBarButtonLabel {
   margin-left: 20px;

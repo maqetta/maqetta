@@ -1,5 +1,5 @@
 require({cache:{
-'url:dojox/widget/ColorPicker/ColorPicker.html':"<table class=\"dojoxColorPicker\" dojoAttachEvent=\"onkeypress: _handleKey\" cellpadding=\"0\" cellspacing=\"0\">\n\t<tr>\n\t\t<td valign=\"top\" class=\"dojoxColorPickerRightPad\">\n\t\t\t<div class=\"dojoxColorPickerBox\">\n\t\t\t\t<!-- Forcing ABS in style attr due to dojo DND issue with not picking it up form the class. -->\n\t\t\t\t<img role=\"status\" title=\"${saturationPickerTitle}\" alt=\"${saturationPickerTitle}\" class=\"dojoxColorPickerPoint\" src=\"${_pickerPointer}\" tabIndex=\"0\" dojoAttachPoint=\"cursorNode\" style=\"position: absolute; top: 0px; left: 0px;\">\n\t\t\t\t<img role=\"presentation\" alt=\"\" dojoAttachPoint=\"colorUnderlay\" dojoAttachEvent=\"onclick: _setPoint, onmousedown: _stopDrag\" class=\"dojoxColorPickerUnderlay\" src=\"${_underlay}\" ondragstart=\"return false\">\n\t\t\t</div>\n\t\t</td>\n\t\t<td valign=\"top\" class=\"dojoxColorPickerRightPad\">\n\t\t\t<div class=\"dojoxHuePicker\">\n\t\t\t\t<!-- Forcing ABS in style attr due to dojo DND issue with not picking it up form the class. -->\n\t\t\t\t<img role=\"status\" dojoAttachPoint=\"hueCursorNode\" tabIndex=\"0\" class=\"dojoxHuePickerPoint\" title=\"${huePickerTitle}\" alt=\"${huePickerTitle}\" src=\"${_huePickerPointer}\" style=\"position: absolute; top: 0px; left: 0px;\">\n\t\t\t\t<div class=\"dojoxHuePickerUnderlay\" dojoAttachPoint=\"hueNode\">\n\t\t\t\t    <img role=\"presentation\" alt=\"\" dojoAttachEvent=\"onclick: _setHuePoint, onmousedown: _stopDrag\" src=\"${_hueUnderlay}\">\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</td>\n\t\t<td valign=\"top\">\n\t\t\t<table cellpadding=\"0\" cellspacing=\"0\">\n\t\t\t\t<tr>\n\t\t\t\t\t<td valign=\"top\" class=\"dojoxColorPickerPreviewContainer\">\n\t\t\t\t\t\t<table cellpadding=\"0\" cellspacing=\"0\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<td valign=\"top\" class=\"dojoxColorPickerRightPad\">\n\t\t\t\t\t\t\t\t\t<div dojoAttachPoint=\"previewNode\" class=\"dojoxColorPickerPreview\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td valign=\"top\">\n\t\t\t\t\t\t\t\t\t<div dojoAttachPoint=\"safePreviewNode\" class=\"dojoxColorPickerWebSafePreview\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td valign=\"bottom\">\n\t\t\t\t\t\t<table class=\"dojoxColorPickerOptional\" cellpadding=\"0\" cellspacing=\"0\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t<div class=\"dijitInline dojoxColorPickerRgb\" dojoAttachPoint=\"rgbNode\">\n\t\t\t\t\t\t\t\t\t\t<table cellpadding=\"1\" cellspacing=\"1\">\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_r\">${redLabel}</label></td><td><input id=\"${_uId}_r\" dojoAttachPoint=\"Rval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"></td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_g\">${greenLabel}</label></td><td><input id=\"${_uId}_g\" dojoAttachPoint=\"Gval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"></td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_b\">${blueLabel}</label></td><td><input id=\"${_uId}_b\" dojoAttachPoint=\"Bval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"></td></tr>\n\t\t\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t<div class=\"dijitInline dojoxColorPickerHsv\" dojoAttachPoint=\"hsvNode\">\n\t\t\t\t\t\t\t\t\t\t<table cellpadding=\"1\" cellspacing=\"1\">\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_h\">${hueLabel}</label></td><td><input id=\"${_uId}_h\" dojoAttachPoint=\"Hval\"size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"> ${degLabel}</td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_s\">${saturationLabel}</label></td><td><input id=\"${_uId}_s\" dojoAttachPoint=\"Sval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"> ${percentSign}</td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_v\">${valueLabel}</label></td><td><input id=\"${_uId}_v\" dojoAttachPoint=\"Vval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"> ${percentSign}</td></tr>\n\t\t\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<td colspan=\"2\">\n\t\t\t\t\t\t\t\t\t<div class=\"dojoxColorPickerHex\" dojoAttachPoint=\"hexNode\" aria-live=\"polite\">\t\n\t\t\t\t\t\t\t\t\t\t<label for=\"${_uId}_hex\">&nbsp;${hexLabel}&nbsp;</label><input id=\"${_uId}_hex\" dojoAttachPoint=\"hexCode, focusNode, valueNode\" size=\"6\" class=\"dojoxColorPickerHexCode\" dojoAttachEvent=\"onchange: _colorInputChange\">\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</table>\n\t\t</td>\n\t</tr>\n</table>\n\n"}});
+'url:dojox/widget/ColorPicker/ColorPicker.html':"<table class=\"dojoxColorPicker\" dojoAttachEvent=\"onkeypress: _handleKey\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n\t<tr>\n\t\t<td valign=\"top\" class=\"dojoxColorPickerRightPad\">\n\t\t\t<div class=\"dojoxColorPickerBox\">\n\t\t\t\t<!-- Forcing ABS in style attr due to dojo DND issue with not picking it up form the class. -->\n\t\t\t\t<img title=\"${saturationPickerTitle}\" alt=\"${saturationPickerTitle}\" class=\"dojoxColorPickerPoint\" src=\"${_pickerPointer}\" tabIndex=\"0\" dojoAttachPoint=\"cursorNode\" style=\"position: absolute; top: 0px; left: 0px;\">\n\t\t\t\t<img role=\"presentation\" alt=\"\" dojoAttachPoint=\"colorUnderlay\" dojoAttachEvent=\"onclick: _setPoint, onmousedown: _stopDrag\" class=\"dojoxColorPickerUnderlay\" src=\"${_underlay}\" ondragstart=\"return false\">\n\t\t\t</div>\n\t\t</td>\n\t\t<td valign=\"top\" class=\"dojoxColorPickerRightPad\">\n\t\t\t<div class=\"dojoxHuePicker\">\n\t\t\t\t<!-- Forcing ABS in style attr due to dojo DND issue with not picking it up form the class. -->\n\t\t\t\t<img dojoAttachPoint=\"hueCursorNode\" tabIndex=\"0\" class=\"dojoxHuePickerPoint\" title=\"${huePickerTitle}\" alt=\"${huePickerTitle}\" src=\"${_huePickerPointer}\" style=\"position: absolute; top: 0px; left: 0px;\">\n\t\t\t\t<div class=\"dojoxHuePickerUnderlay\" dojoAttachPoint=\"hueNode\">\n\t\t\t\t    <img role=\"presentation\" alt=\"\" dojoAttachEvent=\"onclick: _setHuePoint, onmousedown: _stopDrag\" src=\"${_hueUnderlay}\">\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</td>\n\t\t<td valign=\"top\">\n\t\t\t<table cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n\t\t\t\t<tr>\n\t\t\t\t\t<td valign=\"top\" class=\"dojoxColorPickerPreviewContainer\">\n\t\t\t\t\t\t<table cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<td valign=\"top\" class=\"dojoxColorPickerRightPad\">\n\t\t\t\t\t\t\t\t\t<div dojoAttachPoint=\"previewNode\" class=\"dojoxColorPickerPreview\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td valign=\"top\">\n\t\t\t\t\t\t\t\t\t<div dojoAttachPoint=\"safePreviewNode\" class=\"dojoxColorPickerWebSafePreview\"></div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td valign=\"bottom\">\n\t\t\t\t\t\t<table class=\"dojoxColorPickerOptional\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t<div class=\"dijitInline dojoxColorPickerRgb\" dojoAttachPoint=\"rgbNode\">\n\t\t\t\t\t\t\t\t\t\t<table cellpadding=\"1\" cellspacing=\"1\" role=\"presentation\">\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_r\">${redLabel}</label></td><td><input id=\"${_uId}_r\" dojoAttachPoint=\"Rval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"></td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_g\">${greenLabel}</label></td><td><input id=\"${_uId}_g\" dojoAttachPoint=\"Gval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"></td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_b\">${blueLabel}</label></td><td><input id=\"${_uId}_b\" dojoAttachPoint=\"Bval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"></td></tr>\n\t\t\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t<div class=\"dijitInline dojoxColorPickerHsv\" dojoAttachPoint=\"hsvNode\">\n\t\t\t\t\t\t\t\t\t\t<table cellpadding=\"1\" cellspacing=\"1\" role=\"presentation\">\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_h\">${hueLabel}</label></td><td><input id=\"${_uId}_h\" dojoAttachPoint=\"Hval\"size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"> ${degLabel}</td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_s\">${saturationLabel}</label></td><td><input id=\"${_uId}_s\" dojoAttachPoint=\"Sval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"> ${percentSign}</td></tr>\n\t\t\t\t\t\t\t\t\t\t<tr><td><label for=\"${_uId}_v\">${valueLabel}</label></td><td><input id=\"${_uId}_v\" dojoAttachPoint=\"Vval\" size=\"1\" dojoAttachEvent=\"onchange: _colorInputChange\"> ${percentSign}</td></tr>\n\t\t\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<td colspan=\"2\">\n\t\t\t\t\t\t\t\t\t<div class=\"dojoxColorPickerHex\" dojoAttachPoint=\"hexNode\" aria-live=\"polite\">\t\n\t\t\t\t\t\t\t\t\t\t<label for=\"${_uId}_hex\">&nbsp;${hexLabel}&nbsp;</label><input id=\"${_uId}_hex\" dojoAttachPoint=\"hexCode, focusNode, valueNode\" size=\"6\" class=\"dojoxColorPickerHexCode\" dojoAttachEvent=\"onchange: _colorInputChange\">\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</table>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</table>\n\t\t</td>\n\t</tr>\n</table>\n\n"}});
 define("dojox/widget/ColorPicker", [
 	"dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array",
 	"dojo/_base/html","dojo/_base/connect","dojo/_base/sniff","dojo/_base/window",
@@ -21,13 +21,11 @@ define("dojox/widget/ColorPicker", [
 	return declare("dojox.widget.ColorPicker", FormWidget, {
 		// summary:
 		//		a HSV color picker - similar to Photoshop picker
-		//
 		// description:
 		//		Provides an interactive HSV ColorPicker similar to
 		//		PhotoShop's color selction tool. This is an enhanced
 		//		version of the default dijit.ColorPalette, though provides
 		//		no accessibility.
-		//
 		// example:
 		// |	var picker = new dojox.widget.ColorPicker({
 		// |		// a couple of example toggles:
@@ -36,33 +34,32 @@ define("dojox/widget/ColorPicker", [
 		// |		webSafe: false,
 		// |		showRgb: false
 		// |	});
-		//
 		// example:
 		// |	<!-- markup: -->
 		// |	<div dojoType="dojox.widget.ColorPicker"></div>
-		//
+
 		// showRgb: Boolean
-		//	show/update RGB input nodes
+		//		show/update RGB input nodes
 		showRgb: true,
 	
 		// showHsv: Boolean
-		//	show/update HSV input nodes
+		//		show/update HSV input nodes
 		showHsv: true,
 	
 		// showHex: Boolean
-		//	show/update Hex value field
+		//		show/update Hex value field
 		showHex: true,
 
 		// webSafe: Boolean
-		//	deprecated? or just use a toggle to show/hide that node, too?
+		//		deprecated? or just use a toggle to show/hide that node, too?
 		webSafe: true,
 
 		// animatePoint: Boolean
-		//	toggle to use slideTo (true) or just place the cursor (false) on click
+		//		toggle to use slideTo (true) or just place the cursor (false) on click
 		animatePoint: true,
 
 		// slideDuration: Integer
-		//	time in ms picker node will slide to next location (non-dragging) when animatePoint=true
+		//		time in ms picker node will slide to next location (non-dragging) when animatePoint=true
 		slideDuration: 250,
 
 		// liveUpdate: Boolean
@@ -70,15 +67,15 @@ define("dojox/widget/ColorPicker", [
 		liveUpdate: false,
 
 		// PICKER_HUE_H: int
-		//     Height of the hue picker, used to calculate positions
+		//		Height of the hue picker, used to calculate positions
 		PICKER_HUE_H: 150,
 		
 		// PICKER_SAT_VAL_H: int
-		//     Height of the 2d picker, used to calculate positions
+		//		Height of the 2d picker, used to calculate positions
 		PICKER_SAT_VAL_H: 150,
 		
 		// PICKER_SAT_VAL_W: int
-		//     Width of the 2d picker, used to calculate positions
+		//		Width of the 2d picker, used to calculate positions
 		PICKER_SAT_VAL_W: 150,
 
 		// PICKER_HUE_SELECTOR_H: int
@@ -97,9 +94,9 @@ define("dojox/widget/ColorPicker", [
 		PICKER_SAT_SELECTOR_W: 10,
 
 		// value: String
-		//	Default color for this component. Only hex values are accepted as incoming/returned
-		//	values. Adjust this value with `.attr`, eg: dijit.byId("myPicker").attr("value", "#ededed");
-		//	to cause the points to adjust and the values to reflect the current color.
+		//		Default color for this component. Only hex values are accepted as incoming/returned
+		//		values. Adjust this value with `.attr`, eg: dijit.byId("myPicker").attr("value", "#ededed");
+		//		to cause the points to adjust and the values to reflect the current color.
 		value: "#ffffff",
 		
 		_underlay: kernel.moduleUrl("dojox.widget","ColorPicker/images/underlay.png"),
@@ -223,9 +220,10 @@ define("dojox/widget/ColorPicker", [
 		},
 		
 		setColor: function(/* String */col, force){
-			// summary: Set a color on a picker. Usually used to set
-			//          initial color as an alternative to passing defaultColor option
-			//          to the constructor.
+			// summary:
+			//		Set a color on a picker. Usually used to set
+			//		initial color as an alternative to passing defaultColor option
+			//		to the constructor.
 			col = color.fromString(col);
 			this._updatePickerLocations(col);
 			this._updateColorInputs(col);
@@ -252,7 +250,8 @@ define("dojox/widget/ColorPicker", [
 			// summary:
 			//		Sets a natural color background for the
 			//		underlay image against closest hue value (full saturation)
-			//		h: 0..360
+			// h:
+			//		0..360
 			html.style(this.colorUnderlay, "backgroundColor", color.fromHsv(h,100,100).toHex());
 			
 		},
@@ -351,7 +350,7 @@ define("dojox/widget/ColorPicker", [
 
 		_updateColor: function(){
 			// summary:
-			//	update the previewNode color, and input values [optional]
+			//		update the previewNode color, and input values [optional]
 			
 			var hueSelCenter = this.PICKER_HUE_SELECTOR_H/2,
 				satSelCenterH = this.PICKER_SAT_SELECTOR_H/2,
@@ -374,7 +373,8 @@ define("dojox/widget/ColorPicker", [
 		},
 		
 		_colorInputChange: function(e){
-			// summary: updates picker position and inputs
+			// summary:
+			//		updates picker position and inputs
 			//		according to rgb, hex or hsv input changes
 			var col, hasit = false;
 			switch(e.target){
@@ -408,8 +408,9 @@ define("dojox/widget/ColorPicker", [
 		},
 		
 		_updateValue: function(/* dojox/color/Color */col, /* Boolean */fireChange){
-			// summary: updates the value of the widget
-			//          can cancel reverse onChange by specifying second param
+			// summary:
+			//		updates the value of the widget
+			//		can cancel reverse onChange by specifying second param
 			var hex = col.toHex();
 			
 			this.value = this.valueNode.value = hex;
@@ -421,7 +422,7 @@ define("dojox/widget/ColorPicker", [
 		},
 		
 		_updatePickerLocations: function(/* dojox/color/Color */col){
-			// summary: 
+			// summary:
 			//		update handles on the pickers acording to color values
 			
 			var hueSelCenter = this.PICKER_HUE_SELECTOR_H/2,
@@ -498,7 +499,7 @@ define("dojox/widget/ColorPicker", [
 		
 		_setHuePoint: function(/* Event */evt){
 			// summary:
-			//	set the hue picker handle on relative y coordinates
+			//		set the hue picker handle on relative y coordinates
 			var selCenter = this.PICKER_HUE_SELECTOR_H/2;
 			var ypos = evt.layerY - selCenter;
 			if(this.animatePoint){
@@ -516,8 +517,10 @@ define("dojox/widget/ColorPicker", [
 		},
 		
 		_setPoint: function(/* Event */evt){
-			// summary: set our picker point based on relative x/y coordinates
-			//  evt.preventDefault();
+			// summary:
+			//		set our picker point based on relative x/y coordinates
+
+			//	evt.preventDefault();
 			var satSelCenterH = this.PICKER_SAT_SELECTOR_H/2;
 			var satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
 			var newTop = evt.layerY - satSelCenterH;
@@ -557,8 +560,8 @@ define("dojox/widget/ColorPicker", [
 
 		_stopDrag: function(e){
 			// summary:
-			//		Function to hald the mouse down default
-			//		to disable draggong of images out of the color
+			//		Function to halt the mouse down default
+			//		to disable dragging of images out of the color
 			//		picker.
 			Event.stop(e);
 		},

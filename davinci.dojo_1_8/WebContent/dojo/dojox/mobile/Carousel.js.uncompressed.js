@@ -20,8 +20,6 @@ define("dojox/mobile/Carousel", [
 
 	// module:
 	//		dojox/mobile/Carousel
-	// summary:
-	//		A carousel widget that manages a list of images.
 
 	return declare("dojox.mobile.Carousel", [WidgetBase, Container, Contained], {
 		// summary:

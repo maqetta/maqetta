@@ -27,26 +27,7 @@ define("dijit/layout/SplitContainer", [
 // FIXME: sizeWidth should be a CSS attribute (at 7 because css wants it to be 7 until we fix to css)
 //
 
-// These arguments can be specified for the children of a SplitContainer.
-// Since any widget can be specified as a SplitContainer child, mix them
-// into the base widget class.  (This is a hack, but it's effective.)
-lang.extend(_WidgetBase, {
-	// sizeMin: [deprecated] Integer
-	//		Deprecated.  Parameter for children of `dijit.layout.SplitContainer`.
-	//		Minimum size (width or height) of a child of a SplitContainer.
-	//		The value is relative to other children's sizeShare properties.
-	sizeMin: 10,
-
-	// sizeShare: [deprecated] Integer
-	//		Deprecated.  Parameter for children of `dijit.layout.SplitContainer`.
-	//		Size (width or height) of a child of a SplitContainer.
-	//		The value is relative to other children's sizeShare properties.
-	//		For example, if there are two children and each has sizeShare=10, then
-	//		each takes up 50% of the available space.
-	sizeShare: 10
-});
-
-return declare("dijit.layout.SplitContainer", _LayoutWidget, {
+var SplitContainer = declare("dijit.layout.SplitContainer", _LayoutWidget, {
 	// summary:
 	//		Deprecated.  Use `dijit.layout.BorderContainer` instead.
 	// description:
@@ -56,6 +37,9 @@ return declare("dijit.layout.SplitContainer", _LayoutWidget, {
 	//		and you can adjust the relative size of each child by dragging the bars.
 	//
 	//		You must specify a size (width and height) for the SplitContainer.
+	//
+	//		See `SplitContainer.ChildWidgetProperties` for details on the properties that can be set on
+	//		children of a `SplitContainer`.
 	// tags:
 	//		deprecated
 
@@ -572,5 +556,29 @@ return declare("dijit.layout.SplitContainer", _LayoutWidget, {
 		}, this);
 	}
 });
+
+SplitContainer.ChildWidgetProperties = {
+	// summary:
+	//		These properties can be specified for the children of a SplitContainer.
+
+	// sizeMin: [deprecated] Integer
+	//		Minimum size (width or height) of a child of a SplitContainer.
+	//		The value is relative to other children's sizeShare properties.
+	sizeMin: 10,
+
+	// sizeShare: [deprecated] Integer
+	//		Size (width or height) of a child of a SplitContainer.
+	//		The value is relative to other children's sizeShare properties.
+	//		For example, if there are two children and each has sizeShare=10, then
+	//		each takes up 50% of the available space.
+	sizeShare: 10
+};
+
+// Since any widget can be specified as a SplitContainer child, mix them
+// into the base widget class.  (This is a hack, but it's effective.)
+// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+lang.extend(_WidgetBase, /*===== {} || =====*/ SplitContainer.ChildWidgetProperties);
+
+return SplitContainer;
 
 });

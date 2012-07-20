@@ -633,9 +633,9 @@ function(lang, declare, hub, Color, dom, domGeom, g, canvas, shapeLib, m){
 	// Mouse/Touch event
 	var isEventStopped = function(/*Event*/ evt){
 		// summary:
-		//    queries whether an event has been stopped or not
+		//		queries whether an event has been stopped or not
 		// evt: Event
-		//    The event object.
+		//		The event object.
 		if(evt.cancelBubble !== undefined){
 			return evt.cancelBubble;
 		}
@@ -644,12 +644,12 @@ function(lang, declare, hub, Color, dom, domGeom, g, canvas, shapeLib, m){
 	
 	canvasWithEvents.fixTarget = function(event, gfxElement){
 		// summary:
-		//     Adds the gfxElement to event.gfxTarget if none exists. This new 
-		//     property will carry the GFX element associated with this event.
+		//		Adds the gfxElement to event.gfxTarget if none exists. This new
+		//		property will carry the GFX element associated with this event.
 		// event: Object 
-		//     The current input event (MouseEvent or TouchEvent)
+		//		The current input event (MouseEvent or TouchEvent)
 		// gfxElement: Object
-		//     The GFX target element (a Surface in this case)
+		//		The GFX target element (a Surface in this case)
 		if(isEventStopped(event)){
 			return false;
 		}

@@ -11,8 +11,6 @@ define("dojox/mobile/FixedSplitter", [
 
 	// module:
 	//		dojox/mobile/FixedSplitter
-	// summary:
-	//		A layout container that splits the window horizontally or vertically.
 
 	return declare("dojox.mobile.FixedSplitter", [WidgetBase, Container, Contained], {
 		// summary:

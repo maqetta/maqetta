@@ -7,26 +7,25 @@ function(kernel,declare,html,baseFx,Templated,ContentPane,domClass,template){
 
 kernel.experimental("dojox.layout.ScrollPane");
 
-// FIXME: need to adust the _line somehow, it stops scrolling
+// FIXME: need to adjust the _line somehow, it stops scrolling
 
 var Scrollpane = declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
-	// summary: A pane that "scrolls" its content based on the mouse poisition inside
-	//
+	// summary:
+	//		A pane that "scrolls" its content based on the mouse poisition inside
 	// description:
 	//		A sizable container that takes it's content's natural size and creates
 	//		a scroll effect based on the relative mouse position. It is an interesting
 	//		way to display lists of data, or blocks of content, within a confined
 	//		space.
 	//
-	// 		Horizontal scrolling is supported. Combination scrolling is not.
-	//
+	//		Horizontal scrolling is supported. Combination scrolling is not.
 	// example:
 	// |	<div dojoType="dojox.layout.ScrollPane" style="width:150px height:300px;">
 	// |		<!-- any height content -->
 	// |	</div>
 	
 	// _line: dojo/_base/fx._Line
-	// 		storage for our top and bottom most scrollpoints
+	//		storage for our top and bottom most scrollpoints
 	_line: null,
 	
 	// _lo: 
@@ -45,7 +44,7 @@ var Scrollpane = declare("dojox.layout.ScrollPane",[ContentPane, Templated],{
 	templateString: template,
 	
 	resize: function(/*Integer?*/ size){
-		// summary: 
+		// summary:
 		//		calculates required sizes. Call this if you add/remove
 		//		content manually, or reload the content.
 		

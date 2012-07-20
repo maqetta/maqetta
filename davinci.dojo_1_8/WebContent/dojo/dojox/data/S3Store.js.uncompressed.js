@@ -2,7 +2,7 @@ define("dojox/data/S3Store", ["dojo/_base/declare", "dojox/data/JsonRestStore", 
   function(declare, JsonRestStore, ProxiedPath) {
 return declare("dojox.data.S3Store", JsonRestStore,
 	{
-	// summary: 
+	// summary:
 	//		S3JsonRestStore is an extension of JsonRestStore to handle
 	//		Amazon's S3 service using JSON data
 		_processResults : function(results){

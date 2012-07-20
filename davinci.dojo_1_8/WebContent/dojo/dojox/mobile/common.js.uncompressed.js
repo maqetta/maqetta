@@ -14,13 +14,6 @@ define("dojox/mobile/common", [
 
 	// module:
 	//		dojox/mobile/common
-	// summary:
-	//		A common module for dojox/mobile.
-	// description:
-	//		This module includes common utility functions that are used by
-	//		dojox/mobile widgets. Also, it provides functions that are commonly
-	//		necessary for mobile web applications, such as the hide address bar
-	//		function.
 
 	var dm = lang.getObject("dojox.mobile", true);
 
@@ -49,12 +42,16 @@ define("dojox/mobile/common", [
 		// summary:
 		//		Detects the screen size and determines if the screen is like
 		//		phone or like tablet. If the result is changed,
-		//		it sets either of the following css class to `<html>`
-		//			- 'dj_phone'
-		//			- 'dj_tablet'
-		//		and it publishes either of the following events.
-		//			- '/dojox/mobile/screenSize/phone'
-		//			- '/dojox/mobile/screenSize/tablet'
+		//		it sets either of the following css class to `<html>`:
+		//
+		//		- 'dj_phone'
+		//		- 'dj_tablet'
+		//
+		//		and it publishes either of the following events:
+		//
+		//		- '/dojox/mobile/screenSize/phone'
+		//		- '/dojox/mobile/screenSize/tablet'
+
 		var dim = dm.getScreenSize();
 		var sz = Math.min(dim.w, dim.h);
 		var from, to;
@@ -259,8 +256,11 @@ define("dojox/mobile/common", [
 		win.body().style.visibility = "visible";
 	});
 
+	// TODO: return functions declared above in this hash, rather than
+	// dojox.mobile.
+
 	/*=====
-    return {
+	return {
 		// summary:
 		//		A common module for dojox/mobile.
 		// description:
@@ -268,7 +268,7 @@ define("dojox/mobile/common", [
 		//		dojox/mobile widgets. Also, it provides functions that are commonly
 		//		necessary for mobile web applications, such as the hide address bar
 		//		function.
-    };
-    =====*/
+	};
+	=====*/
 	return dm;
 });

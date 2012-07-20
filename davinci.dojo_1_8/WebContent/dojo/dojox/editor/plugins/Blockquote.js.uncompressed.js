@@ -13,7 +13,7 @@ define("dojox/editor/plugins/Blockquote", [
 ], function(dojo, dijit, dojox, range, selection, _Plugin) {
 
 dojo.declare("dojox.editor.plugins.Blockquote", _Plugin, {
-	//	summary:
+	// summary:
 	//		This plugin provides Blockquote capability to the editor.
 	//		window/tab
 

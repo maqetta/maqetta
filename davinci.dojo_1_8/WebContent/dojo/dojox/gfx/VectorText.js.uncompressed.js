@@ -581,8 +581,8 @@ define("dojox/gfx/VectorText", ["dojo/_base/lang","dojo/_base/declare","dojo/_ba
 			//		In addition to straight text fragments, draw() supports a few advanced
 			//		operations not normally available with vector graphics:
 			//
-			//		* Flow operations (i.e. wrap to a given width)
-			//		* Fitting operations (i.e. find a best fit to a given rectangle)
+			//		- Flow operations (i.e. wrap to a given width)
+			//		- Fitting operations (i.e. find a best fit to a given rectangle)
 			//
 			//		To enable either, pass a `fitting` property along with the textArgs object.
 			//		The possible values are contained in the dojox.gfx.vectorFontFitting enum

@@ -22,7 +22,7 @@ define("dojox/mdnd/dropMode/VerticalDropMode", [
 		_oldYPoint: null,
 	
 		// _oldBehaviour: String
-		// 		see <getDragPoint>
+		//		see `getDragPoint`
 		_oldBehaviour: "up",
 	
 		addArea: function(/*Array*/areas, /*Object*/object){
@@ -139,7 +139,7 @@ define("dojox/mdnd/dropMode/VerticalDropMode", [
 			// area:
 			//		a DnD area object
 			// indexItem:
-			// 		index of a draggable item
+			//		index of a draggable item
 			// size:
 			//		dropIndicator size
 			// added:
@@ -172,10 +172,11 @@ define("dojox/mdnd/dropMode/VerticalDropMode", [
 			//		return coordinates of the draggable item
 			// description:
 			//		return for:
-			// 			- X point : the middle
-			//	  		- Y point : search if the user goes up or goes down with his mouse.
-			//	  		- Up : top of the draggable item
-			//	  		- Down : bottom of the draggable item
+			//
+			//		- X point : the middle
+			//	  	- Y point : search if the user goes up or goes down with his mouse.
+			//	  	- Up : top of the draggable item
+			//	  	- Down : bottom of the draggable item
 			// coords:
 			//		an object encapsulating X and Y position
 			// size:
@@ -184,7 +185,7 @@ define("dojox/mdnd/dropMode/VerticalDropMode", [
 			//		coordinates of mouse
 			// returns:
 			//		an object of coordinates
-			// 		example : {'x':10,'y':10}
+			//		example : {'x':10,'y':10}
 	
 			//console.log("dojox.mdnd.dropMode.VerticalDropMode ::: getDragPoint");
 			var y = coords.y;
@@ -310,7 +311,7 @@ define("dojox/mdnd/dropMode/VerticalDropMode", [
 			// coords:
 			//		coordinates [x,y] of the draggable item
 			// returns:
-			// 		a number
+			//		a number
 			//		or -1 if the area has no children or the drop index represents the last position in to the area
 	
 			//console.log("dojox.mdnd.dropMode.VerticalDropMode ::: getDropIndex");

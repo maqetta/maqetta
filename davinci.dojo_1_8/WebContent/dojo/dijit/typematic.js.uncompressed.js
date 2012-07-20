@@ -101,23 +101,19 @@ var typematic = (dijit.typematic = {
 		//		See also the trigger method for other parameters.
 		// keyObject:
 		//		an object defining the key to listen for:
-		//		charOrCode:
-		//			the printable character (string) or keyCode (number) to listen for.
-		//		keyCode:
-		//			(deprecated - use charOrCode) the keyCode (number) to listen for (implies charCode = 0).
-		//		charCode:
-		//			(deprecated - use charOrCode) the charCode (number) to listen for.
-		//		ctrlKey:
-		//			desired ctrl key state to initiate the callback sequence:
+		//
+		//		- charOrCode: the printable character (string) or keyCode (number) to listen for.
+		//		- keyCode: (deprecated - use charOrCode) the keyCode (number) to listen for (implies charCode = 0).
+		//		- charCode: (deprecated - use charOrCode) the charCode (number) to listen for.
+		//		- ctrlKey: desired ctrl key state to initiate the callback sequence:
 		//			- pressed (true)
 		//			- released (false)
 		//			- either (unspecified)
-		//		altKey:
-		//			same as ctrlKey but for the alt key
-		//		shiftKey:
-		//			same as ctrlKey but for the shift key
+		//		- altKey: same as ctrlKey but for the alt key
+		//		- shiftKey: same as ctrlKey but for the shift key
 		// returns:
 		//		a connection handle
+
 		if(keyObject.keyCode){
 			keyObject.charOrCode = keyObject.keyCode;
 			kernel.deprecated("keyCode attribute parameter for dijit.typematic.addKeyListener is deprecated. Use charOrCode instead.", "", "2.0");
@@ -172,7 +168,7 @@ var typematic = (dijit.typematic = {
 			})),
 			on(node, "dblclick", lang.hitch(this, function(evt){
 				evt.preventDefault();
-				if(has("ie")){
+				if(has("ie") < 9){
 					typematic.trigger(evt, _this, node, callback, node, subsequentDelay, initialDelay, minDelay);
 					setTimeout(lang.hitch(this, typematic.stop), 50);
 				}

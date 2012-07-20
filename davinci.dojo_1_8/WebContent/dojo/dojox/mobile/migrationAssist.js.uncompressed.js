@@ -147,12 +147,13 @@ define("dojox/mobile/migrationAssist", [
 
 	// module:
 	//		dojox/mobile/migrationAssist
-	// summary:
-	//		Dojo Mobile 1.6/1.7 to 1.8 migration assistance.
 
 	var currentTheme;
 
-	var migrationAssist = new function(){
+	var MigrationAssist = function(){
+		// summary:
+		//		Dojo Mobile 1.6/1.7 to 1.8 migration assistance.
+
 		var get = function(w, key){
 			return w[key] || w.srcNodeRef && w.srcNodeRef.getAttribute(key);
 		};
@@ -298,7 +299,10 @@ define("dojox/mobile/migrationAssist", [
 
 	dojox.mobile.FlippableView = SwapView;
 
-	WidgetBase.prototype.postMixInProperties = function(){
+	var migrationAssist = new MigrationAssist();
+
+	// Hide from the API doc tool, we want to get the documentation for the normal WidgetBase.postMixInProperties()
+	WidgetBase.prototype.postMixInProperties = /*===== WidgetBase.prototype.postMixInProperties || =====*/ function(){
 		migrationAssist.dispatch(this.declaredClass, this);
 		dojo.forEach([FixedSplitterPane, Heading, RoundRect, SpinWheel, TabBarButton, ToolBarButton, View], function(module){
 			if(this.declaredClass !== module.prototype.declaredClass && this instanceof module){
@@ -420,11 +424,6 @@ define("dojox/mobile/migrationAssist", [
 		}
 	});
 
-	/*=====
-    return {
-		// summary:
-		//		Dojo Mobile 1.6/1.7 to 1.8 migration assistance.
-    };
-    =====*/
+	// Return singleton.  (TODO: can we replace LazyLoadUtils class and singleton w/a simple hash of functions?)
 	return migrationAssist;
 });

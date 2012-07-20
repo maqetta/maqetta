@@ -4,6 +4,6 @@ return _1(null,{lifecycle:{UNKNOWN:0,STARTING:1,STARTED:2,STOPPING:3,STOPPED:4},
 return this._status;
 },setStatus:function(_3){
 this._status=_3;
-_2.publish("/app/status",[_3]);
+_2.publish("/app/status",_3);
 }});
 });

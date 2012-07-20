@@ -14,28 +14,29 @@ declare("dojox.string.BidiEngine", null, {
 	//		Unicode Bidi Algorithm is not invoked or is not properly applied. This may occur in situation in which software
 	//		responsible for rendering the text is not leveraging Unicode Bidi Algorithm implemented by OS (e.g. dojox.GFX renderers).
 	//
-	//		Bidi engine provided in this class implements Unicode Bidi Algorithm as specified at:
-	//			http://www.unicode.org/reports/tr9/. 
+	//		Bidi engine provided in this class implements Unicode Bidi Algorithm as specified at
+	//		http://www.unicode.org/reports/tr9/.
 	//
-	//		For more information on basic Bidi concepts please read following article:
-	//			"Bidirectional script support - A primer" available from:
-	//				http://www.ibm.com/developerworks/websphere/library/techarticles/bidi/bidigen.html
+	//		For more information on basic Bidi concepts please read
+	//		"Bidirectional script support - A primer" available from
+	//		http://www.ibm.com/developerworks/websphere/library/techarticles/bidi/bidigen.html.
 	//
 	//		As of February 2011, Bidi engine has following limitations:
-	//			1. No support for following numeric shaping options: 
-	//				H - Hindi, 
-	//				C - Contextual, 
-	//				N - Nominal.
-	//			2. No support for following shaping options: 
-	//				I - Initial shaping, 
-	//				M - Middle shaping, 
-	//				F - Final shaping, 
-	//				B - Isolated shaping.
-	//			3. No support for source-to-target or/and target-to-source maps.
-	//			4. No support for LRE/RLE/LRO/RLO/PDF (they are handled like neutrals).
-	//			5. No support for Windows compatibility.
-	//			6. No support for  insert/remove marks.
-	//			7. No support for code pages (currently only UTF-8 is supported. Ideally we should convert from any code page to UTF-8).
+	//
+	//		1. No support for following numeric shaping options:
+	//		    - H - Hindi,
+	//		    - C - Contextual,
+	//		    - N - Nominal.
+	//		2. No support for following shaping options:
+	//		    - I - Initial shaping,
+	//		    - M - Middle shaping,
+	//		    - F - Final shaping,
+	//		    - B - Isolated shaping.
+	//		3. No support for source-to-target or/and target-to-source maps.
+	//		4. No support for LRE/RLE/LRO/RLO/PDF (they are handled like neutrals).
+	//		5. No support for Windows compatibility.
+	//		6. No support for  insert/remove marks.
+	//		7. No support for code pages (currently only UTF-8 is supported. Ideally we should convert from any code page to UTF-8).
 	
 	bidiTransform: function (/*String*/text, /*String*/formatIn, /*String*/formatOut){
 		// summary:
@@ -53,60 +54,65 @@ declare("dojox.string.BidiEngine", null, {
 		//		Possible and default values for each one of the letters are provided below:
 		//
 		//		First letter:
-		//			Letter position/index:	
-		//				1
-		//			Letter meaning:			
-		//				Ordering Schema.
-		//			Possible values:
-		//				I - Implicit (Logical).
-		//				V - Visual.
-		//			Default value:
-		//				I
+		//
+		//		- Letter position/index:
+		//			1
+		//		- Letter meaning:
+		//			Ordering Schema.
+		//		- Possible values:
+		//			- I - Implicit (Logical).
+		//			- V - Visual.
+		//		- Default value:
+		//			I
 		//
 		//		Second letter:
-		//			Letter position/index:	
-		//				2
-		//			Letter meaning:			
-		//				Orientation.
-		//			Possible values:
-		//				L - Left To Right.
-		//				R - Right To Left.
-		//				C - Contextual Left to Right.
-		//				D - Contextual Right to Left.
-		//			Default value:
-		//				L		
+		//
+		//		- Letter position/index:
+		//			2
+		//		- Letter meaning:
+		//			Orientation.
+		//		- Possible values:
+		//			- L - Left To Right.
+		//			- R - Right To Left.
+		//			- C - Contextual Left to Right.
+		//			- D - Contextual Right to Left.
+		//		- Default value:
+		//			L		
 		//
 		//		Third letter:
-		//			Letter position/index:	
-		//				3
-		//			Letter meaning:			
-		//				Symmetric Swapping.
-		//			Possible values:
-		//				Y - Symmetric swapping is on.
-		//				N - Symmetric swapping is off.
-		//			Default value:
-		//				Y		
+		//
+		//		- Letter position/index:
+		//			3
+		//		- Letter meaning:
+		//			Symmetric Swapping.
+		//		- Possible values:
+		//			- Y - Symmetric swapping is on.
+		//			- N - Symmetric swapping is off.
+		//		- Default value:
+		//			Y		
 		//
 		//		Fourth letter:
-		//			Letter position/index:	
-		//				4
-		//			Letter meaning:			
-		//				Shaping.
-		//			Possible values:
-		//				S - Text is shaped.
-		//				N - Text is not shaped.
-		//			Default value:
-		//				N				
+		//
+		//		- Letter position/index:
+		//			4
+		//		- Letter meaning:
+		//			Shaping.
+		//		- Possible values:
+		//			- S - Text is shaped.
+		//			- N - Text is not shaped.
+		//		- Default value:
+		//			N				
 		//
 		//		Fifth letter:
-		//			Letter position/index:	
-		//				5
-		//			Letter meaning:			
-		//				Numeric Shaping.
-		//			Possible values:
-		//				N - Nominal.
-		//			Default value:
-		//				N				
+		//
+		//		- Letter position/index:
+		//			5
+		//		- Letter meaning:
+		//			Numeric Shaping.
+		//		- Possible values:
+		//			- N - Nominal.
+		//		- Default value:
+		//			N				
 		//
 		//		The output of this function is original text (passed via first argument) transformed from input Bidi layout (second argument)
 		//		to output Bidi layout (last argument). 
@@ -115,7 +121,7 @@ declare("dojox.string.BidiEngine", null, {
 		//	|	mytext = bidiTransform("HELLO WORLD", "ILYNN", "VLYNN");
 		//		In this case, "HELLO WORLD" text is transformed from Logical - LTR to Visual - LTR Bidi layout with 
 		//		default values for symmetric swapping (Yes), shaping (Not shaped) and numeric shaping (Nominal).
-		// returns: /*String*/ or throws an exception.
+		// returns: String
 		//		Original text transformed from input Bidi layout (second argument)
 		//		to output Bidi layout (last argument).
 		//		Throws an exception if the bidi layout strings are not valid.
@@ -182,7 +188,7 @@ declare("dojox.string.BidiEngine", null, {
 		}
 	},
 	checkContextual: function(/*String*/text){
-		// summary: 	
+		// summary:
 		//		Determine the base direction of a bidi text according
 		//		to its first strong directional character.
 		// text: 
@@ -235,12 +241,12 @@ declare("dojox.string.BidiEngine", null, {
 
 function doBidiReorder(/*String*/text, /*String*/inFormat,
 						/*String*/outFormat, /*String*/swap){
-	// summary: 	
+	// summary:
 	//		Reorder the source text according to the bidi attributes
 	//		of source and result.
-	//	text:
+	// text:
 	//		The text to reorder.
-	//	inFormat:	
+	// inFormat:
 	//		Ordering scheme and base direction of the source text.
 	//		Can be "LLTR", "LRTL", "LCLR", "LCRL", "VLTR", "VRTL",
 	//		"VCLR", "VCRL".
@@ -252,11 +258,11 @@ function doBidiReorder(/*String*/text, /*String*/inFormat,
 	//		"CRL" means contextual direction defaulting to RTL if
 	//		there is no strong letter.
 	//		The initial value is "LLTR", if none, the initial value is used.
-	//	outFormat:	
+	// outFormat:
 	//		Required ordering scheme and base direction of the
 	//		result. Has the same format as inFormat.
 	//		If none, the initial value "VLTR" is used.
-	//	swap:
+	// swap:
 	//		Symmetric swapping attributes of source and result.
 	//		The allowed values can be "YN", "NY", "YY" and "NN".
 	//		The first letter reflects the symmetric swapping attribute
@@ -372,7 +378,7 @@ function doBidiReorder(/*String*/text, /*String*/inFormat,
 		return text;
 	}
 
-};
+}
 
 function shape(/*boolean*/rtl, /*String*/text, /*boolean*/compress){
 	// summary:
@@ -385,7 +391,8 @@ function shape(/*boolean*/rtl, /*String*/text, /*boolean*/compress){
 	// compress:
 	//		A flag indicates to insert extra space after the lam alef compression
 	//		to preserve the buffer size or not insert an extra space which will lead
-	//		to decrease the buffer size. this option can be:
+	//		to decrease the buffer size. This option can be:
+	//
 	//		- true (default) to not insert extra space after compressing Lam+Alef into one character Lamalef
 	//		- false to insert an extra space after compressed Lamalef to preserve the buffer size
 	// returns:
@@ -464,7 +471,8 @@ function shape(/*boolean*/rtl, /*String*/text, /*boolean*/compress){
 		}
 	}
 	return outBuf;
-};
+}
+
 function firstStrongDir(/*String*/text){
 	// summary:
 	//		Return the first strong character direction
@@ -475,7 +483,7 @@ function firstStrongDir(/*String*/text){
 	//		searching for first "strong" character. 
 	//		Returns if strong character was found with the direction defined by this 
 	//		character, if no strong character was found returns an empty string.
-	// returns: /*String*/
+	// returns: String
 	//		"ltr" - if the first strong character is Latin.
 	//		"rtl" - if the first strong character is RTL directed character.
 	//		"" - if the strong character wasn't found.
@@ -498,7 +506,8 @@ function firstStrongDir(/*String*/text){
 		}
 	}
 	return "";
-};
+}
+
 function lastStrongDir(text){
 	// summary:
 	//		Return the last strong character direction
@@ -525,7 +534,8 @@ function lastStrongDir(text){
 		}
 	}
 	return "";
-};
+}
+
 function deshape(/*String*/text, /*boolean*/rtl, /*boolean*/consume_next_space){
 	// summary:
 	//		deshape the source text.
@@ -539,7 +549,8 @@ function deshape(/*String*/text, /*boolean*/rtl, /*boolean*/consume_next_space){
 	//		the lam alef if there is a space followed the Lamalef character to preserve the buffer size. 
 	//		In case there is no space next to the lam alef the buffer size will be increased due to the
 	//		expansion of the lam alef one character into lam+alef two characters
-	// returns:	text deshaped.
+	// returns:
+	//		text deshaped.
 	if(text.length == 0){
 		return;
 	}
@@ -596,7 +607,8 @@ function deshape(/*String*/text, /*boolean*/rtl, /*boolean*/consume_next_space){
 		}
 	}
 	return outBuf;
-};
+}
+
 function doReorder(str){
 	// summary:
 	//		Helper to the doBidiReorder. Manages the UBA.
@@ -613,7 +625,8 @@ function doReorder(str){
 	invertLevel(2, chars, levels);
 	invertLevel(1, chars, levels);
 	return chars.join("");
-};
+}
+
 function computeLevels(chars, levels){
 	var len = chars.length
 		, impTab = bdx.dir ? impTab_RTL : impTab_LTR
@@ -679,7 +692,8 @@ function computeLevels(chars, levels){
 			}
 		}
 	}
-};
+}
+
 function swapChars(chars, levels){
 	// summary:
 	//		Swap characters with symmetrical mirroring as all kinds of parenthesis.
@@ -697,13 +711,14 @@ function swapChars(chars, levels){
 
 	if(bdx.hiLevel == 0 || bdx.swap.substr(0, 1) == bdx.swap.substr(1, 2)){
 		return;
-	};
+	}
 
 	//console.log("bdx.hiLevel == 0: " + bdx.hiLevel + "bdx.swap[0]: "+ bdx.swap[0] +" bdx.swap[1]: " +bdx.swap[1]);
 	for(var i = 0; i < chars.length; i++){
 		if(levels[i] == 1){chars[i] = getMirror(chars[i]);}
 	}
-};
+}
+
 function getCharacterType(ch){
 	// summary:
 	//		Return the type of the character.
@@ -718,7 +733,8 @@ function getCharacterType(ch){
 	var uc = ch.charCodeAt(0)
 		, hi = MasterTable[uc >> 8];
 	return (hi < TBBASE) ? hi : UnicodeTable[hi - TBBASE][uc & 0xFF];
-};
+}
+
 function invertStr(str){
 	// summary:
 	//		Return the reversed string.
@@ -731,7 +747,8 @@ function invertStr(str){
 	var chars = str.split("");
 	chars.reverse();
 	return chars.join("");
-};
+}
+
 function indexOf(cArray, cLength, idx){
 	var counter = -1;
 	for(var i = 0; i < cLength; i++){
@@ -740,7 +757,8 @@ function indexOf(cArray, cLength, idx){
 		}
 	}
 	return -1;
-};
+}
+
 function isArabicAlefbet(c){
 	for(var i = 0; i < ArabicAlefBetIntervalsBegine.length; i++){
 		if(c >= ArabicAlefBetIntervalsBegine[i] && c <= ArabicAlefBetIntervalsEnd[i]){
@@ -748,7 +766,8 @@ function isArabicAlefbet(c){
 		}
 	}
 	return false;
-};
+}
+
 function isNextArabic(str06, index, step, nIEnd){
 	while(((index) * step) < nIEnd && isArabicDiacritics(str06[index])){
 		index += step;
@@ -757,7 +776,8 @@ function isNextArabic(str06, index, step, nIEnd){
 		return true;
 	}
 	return false;
-};
+}
+
 function isNextAlef(str06, index, step, nIEnd){
 	while(((index) * step) < nIEnd && isArabicDiacritics(str06[index])){
 		index += step;
@@ -774,7 +794,8 @@ function isNextAlef(str06, index, step, nIEnd){
 		}
 	}
 	return false;
-};
+}
+
 function invertLevel(lev, chars, levels){
 	if(bdx.hiLevel < lev){
 		return;
@@ -799,7 +820,8 @@ function invertLevel(lev, chars, levels){
 		}
 		start++;
 	}
-};
+}
+
 function getCharClass(chars, types, classes, ix){
 	// summary:
 	//		Return the class if ix character in chars.
@@ -896,7 +918,8 @@ function getCharClass(chars, types, classes, ix){
 		case UBAT_BN:
 			return UBAT_ON;
 	}
-};
+}
+
 function getMirror(c){
 	// summary:
 	//		Calculates the mirrored character of c
@@ -917,7 +940,8 @@ function getMirror(c){
 		}
 	}
 	return c;
-};
+}
+
 function isStandAlonCharacter(c){
 	for(var i = 0; i < StandAlonForm.length; i++){
 		if(StandAlonForm[i] == c){
@@ -925,7 +949,8 @@ function isStandAlonCharacter(c){
 		}
 	}
 	return false;
-};
+}
+
 function getMedialFormCharacterFE(c){
 	for(var i = 0; i < BaseForm.length; i++){
 		if(c == BaseForm[i]){
@@ -933,7 +958,8 @@ function getMedialFormCharacterFE(c){
 		}
 	}
 	return c;
-};
+}
+
 function getFormCharacterFE(/*char*/ c, /*char[]*/formArr){
 	for(var i = 0; i < BaseForm.length; i++){
 		if(c == BaseForm[i]){
@@ -941,10 +967,12 @@ function getFormCharacterFE(/*char*/ c, /*char[]*/formArr){
 		}
 	}
 	return c;
-};
+}
+
 function isArabicDiacritics(c){
 	return	(c >= '\u064b' && c <= '\u0655') ? true : false;
-};
+}
+
 function getOrientation(/*Char*/ oc){
 	if(oc == 'L'){
 		return "LTR";
@@ -958,7 +986,8 @@ function getOrientation(/*Char*/ oc){
 	if(oc == 'D'){
 		return "CRL";
 	}
-};
+}
+
 function setAlefToSpace(str06, index, step, nIEnd){
 	while(((index) * step) < nIEnd && isArabicDiacritics(str06[index])){
 		index += step;
@@ -968,7 +997,8 @@ function setAlefToSpace(str06, index, step, nIEnd){
 		return true;
 	}
 	return false;
-};
+}
+
 function getLamAlefFE(alef06, LamAlefForm){
 	for(var i = 0; i < AlefTable.length; i++){
 		if(alef06 == AlefTable[i]){
@@ -976,7 +1006,8 @@ function getLamAlefFE(alef06, LamAlefForm){
 		}
 	}
 	return alef06;
-};
+}
+
 function LamAlef(alef){
 	// summary:
 	//		If the alef variable is an ARABIC ALEF letter,
@@ -995,7 +1026,7 @@ function LamAlef(alef){
 		}
 	}
 	return 0;
-};
+}
 
 var	bdx = {
 		dir: 0,

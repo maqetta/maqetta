@@ -3,17 +3,16 @@ define("dojox/form/YearTextBox", [
 	"dojo/_base/lang",
 	"dojox/widget/YearlyCalendar",
 	"dijit/form/TextBox",
-	"dijit/form/_DateTimeTextBox",
-	"dojox/form/DateTextBox",
+	"./DateTextBox",
 	"dojo/_base/declare"
-	], function(kernel, lang, YearlyCalendar, TextBox, _DateTimeTextBox, DateTextBox, declare){
+	], function(kernel, lang, YearlyCalendar, TextBox, DateTextBox, declare){
 		kernel.experimental("dojox/form/DateTextBox");
-		return declare("dojox.form.YearTextBox", [YearlyCalendar, TextBox, _DateTimeTextBox, DateTextBox],
+		return declare("dojox.form.YearTextBox", DateTextBox,
 		{
 			// summary:
 			//		A validating, serializable, range-bound date text box with a popup calendar that contains only years
 
-			popupClass: "dojox/widget/YearlyCalendar",
+			popupClass: YearlyCalendar,
 
 			format: function(value){
 				//console.log('Year format ' + value);

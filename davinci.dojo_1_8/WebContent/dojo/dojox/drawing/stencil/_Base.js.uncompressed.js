@@ -83,7 +83,7 @@ points:[],
 data:null,
 
 // marginZero [readonly] Number
-// 		How closely shape can get to y:0 or x:0. Less than zero has
+//		How closely shape can get to y:0 or x:0. Less than zero has
 //		bugs in VML. This is set with defaults, and should be equal
 //		to half the size of an anchor point (5 px)
 marginZero:0,
@@ -140,12 +140,6 @@ var ToolsSetup = {
 =====*/
 
 var Base = oo.declare(
-	// summary:
-	//		The base class used for all Stencils.
-	// description:
-	//		All stencils extend this base class.
-	//		Most methods and events can be found here.
-
 	function(options){
 		//console.log("______Base", this.type, options)
 		// clone style so changes are reflected in future shapes
@@ -277,11 +271,16 @@ var Base = oo.declare(
 
 	},
 	{
+		// summary:
+		//		The base class used for all Stencils.
+		// description:
+		//		All stencils extend this base class.
+		//		Most methods and events can be found here.
 
 		// type: String
 		//		The type of Stencil this is. Should be overridden
 		//		by extending classes.
-		//	FIXME: should this be declaredClass?
+		//		FIXME: should this be declaredClass?
 		type:"dojox.drawing.stencil",
 
 		// minimumSize: Number
@@ -352,13 +351,13 @@ var Base = oo.declare(
 		onRender: function(/*Object*/ stencil){
 			// summary:
 			//		Stub - Fires on creation.
-			// 		Drawing connects to this (once!) to be
-			// 		notified of drag completion. But only if it
+			//		Drawing connects to this (once!) to be
+			//		notified of drag completion. But only if it
 			//		was registered as a Tool. Creating Stencil in and of
-			// 		itself does not register it.
+			//		itself does not register it.
 			//
-			// 		This should fire
-			// 		at the *end* of creation (not during drag)
+			//		This should fire
+			//		at the *end* of creation (not during drag)
 
 			//	FIXME:
 			//		This should probably be onCreate. It should
@@ -652,7 +651,7 @@ var Base = oo.declare(
 
 
 		//	TODO:
-		// 		Makes these all called by att()
+		//		Makes these all called by att()
 		//		Should points and data be?
 
 		disable: function(){
@@ -753,15 +752,15 @@ var Base = oo.declare(
 
 		onTransformEnd: function(/* manager.Anchor */anchor){
 			// summary:
-			// 		Called from anchor point up mouse up
+			//		Called from anchor point up mouse up
 			this._isBeingModified = false;
 			this.onModify(this);
 		},
 
 		onTransform: function(/* ? manager.Anchor */anchor){
 			// summary:
-			// 		Called from anchor point mouse drag
-			// 		also called from plugins.Pan.checkBounds
+			//		Called from anchor point mouse drag
+			//		also called from plugins.Pan.checkBounds
 			if(!this._isBeingModified){
 				this.onTransformBegin();
 			}
@@ -803,16 +802,16 @@ var Base = oo.declare(
 		applyTransform: function(mx){
 			// summary:
 			//		Applies the transform to the stencil
-			//		NOTE: PARTIALLY IMPLEMENTED
-			//			Only applies x y coords
+			//
+			//		NOTE: PARTIALLY IMPLEMENTED.  Only applies x y coords.
 			this.transformPoints(mx);
 		},
 
 		setTransform: function(/*Object*/mx){
 			// summary:
 			//		Sets the transform to the stencil
-			//		NOTE: PARTIALLY IMPLEMENTED
-			//			Only applies x y coords
+			//
+			//		NOTE: PARTIALLY IMPLEMENTED.  Only applies x y coords.
 			this.attr({
 				x:mx.dx,
 				y:mx.dy
@@ -908,7 +907,7 @@ var Base = oo.declare(
 			//		canvas. Therefore Lines could get flipped. Use absolute
 			//		to prevent this.
 			// absolute: Boolean
-			//			Keeps lines from flipping (see note).
+			//		Keeps lines from flipping (see note).
 
 			var p = this.points, x1, y1, x2, y2;
 			if(p.length==2){
@@ -1020,7 +1019,7 @@ var Base = oo.declare(
 			// summary:
 			//		Internal. Sets the rawNode attribute. (Or in Silverlight
 			//		an "object attribute". "stencil" is
-			// 		used by the application to determine if
+			//		used by the application to determine if
 			//		something is selectable or not. This also
 			//		sets the mouse custom events like:
 			//		"onStencilUp". To disable the selectability,
@@ -1056,7 +1055,7 @@ var Base = oo.declare(
 		remove: function(/*Shape...*/){
 			// summary:
 			//		Removes shape(s), typically before a re-render
-			// 		No args defaults to this.shape
+			//		No args defaults to this.shape
 			//		Pass in multiple args to remove multiple shapes
 
 			// FIXME: Use an Array of all shapes
@@ -1076,7 +1075,7 @@ var Base = oo.declare(
 		connectMult: function(/*dojo.connect args */){
 			// summary:
 			//		Convenience method for batches of quick connects
-			// 		Handles are not returned and therefore cannot be
+			//		Handles are not returned and therefore cannot be
 			//		disconnected until Shape destroy time
 
 			if(arguments.length>1){
@@ -1191,7 +1190,7 @@ var Base = oo.declare(
 		onDrag: function(/*EventObject*/obj){
 			// summary:
 			//		Mouse event, fired on mousemove while mouse
-			// 		is down on canvas
+			//		is down on canvas
 		},
 		onUp: function(/*EventObject*/obj){
 			// summary:

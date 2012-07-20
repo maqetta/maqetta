@@ -4,7 +4,7 @@ define("dojox/grid/_View",["dojo","dijit/registry","../main","dojo/_base/declare
 var _15=function(_16,_17){
 return _16.style.cssText==undefined?_16.getAttribute("style"):_16.style.cssText;
 };
-var _18=_4("dojox.grid._View",[_d,_e],{defaultWidth:"18em",viewWidth:"",templateString:_b,themeable:false,classTag:"dojoxGrid",marginBottom:0,rowPad:2,_togglingColumn:-1,_headerBuilderClass:_12._HeaderBuilder,_contentBuilderClass:_12._ContentBuilder,postMixInProperties:function(){
+var _18=_4("dojox.grid._View",[_d,_e],{defaultWidth:"18em",viewWidth:"",templateString:_b,classTag:"dojoxGrid",marginBottom:0,rowPad:2,_togglingColumn:-1,_headerBuilderClass:_12._HeaderBuilder,_contentBuilderClass:_12._ContentBuilder,postMixInProperties:function(){
 this.rowNodes={};
 },postCreate:function(){
 this.connect(this.scrollboxNode,"onscroll","doscroll");
@@ -491,7 +491,10 @@ this.buildRow(_65,_66);
 return _66;
 },updateRowStyles:function(_67){
 this.styleRowNode(_67,this.getRowNode(_67));
-},lastTop:0,firstScroll:0,doscroll:function(_68){
+},lastTop:0,firstScroll:0,_nativeScroll:false,doscroll:function(_68){
+if(_8("ff")>=13){
+this._nativeScroll=true;
+}
 var _69=this.grid.isLeftToRight();
 if(this.firstScroll<2){
 if((!_69&&this.firstScroll==1)||(_69&&this.firstScroll===0)){
@@ -512,9 +515,12 @@ var top=this.scrollboxNode.scrollTop;
 if(top!==this.lastTop){
 this.grid.scrollTo(top);
 }
+this._nativeScroll=false;
 },setScrollTop:function(_6a){
 this.lastTop=_6a;
+if(!this._nativeScroll){
 this.scrollboxNode.scrollTop=_6a;
+}
 return this.scrollboxNode.scrollTop;
 },doContentEvent:function(e){
 if(this.content.decorateEvent(e)){

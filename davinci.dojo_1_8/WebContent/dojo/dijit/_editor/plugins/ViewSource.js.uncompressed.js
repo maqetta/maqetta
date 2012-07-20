@@ -7,7 +7,7 @@ define("dijit/_editor/plugins/ViewSource", [
 	"dojo/dom-style", // domStyle.set
 	"dojo/_base/event", // event.stop
 	"dojo/i18n", // i18n.getLocalization
-	"dojo/keys",	//  keys.F12
+	"dojo/keys",	// keys.F12
 	"dojo/_base/lang", // lang.hitch
 	"dojo/on", // on()
 	"dojo/sniff", // has("ie") has("webkit")
@@ -160,7 +160,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 				ed.set("value", html);
 				array.forEach(edPlugins, function(p){
 					// Turn off any plugins not controlled by queryCommandenabled.
-					if(p && !(p instanceof ViewSource)){
+					if(p && !(p instanceof ViewSource) && p.isInstanceOf(_Plugin)){
 						p.set("disabled", true)
 					}
 				});
@@ -265,7 +265,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 
 				array.forEach(edPlugins, function(p){
 					// Turn back on any plugins we turned off.
-					if(p){
+					if(p && p.isInstanceOf(_Plugin)){
 						p.set("disabled", false);
 					}
 				});

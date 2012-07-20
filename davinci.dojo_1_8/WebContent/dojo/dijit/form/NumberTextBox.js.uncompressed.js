@@ -239,15 +239,15 @@ define("dijit/form/NumberTextBox", [
 		//		NumberTextBox is a textbox for entering and displaying numbers, supporting
 		//		the following main features:
 		//
-		//			1. Enforce minimum/maximum allowed values (as well as enforcing that the user types
-		//				a number rather than a random string)
-		//			2. NLS support (altering roles of comma and dot as "thousands-separator" and "decimal-point"
-		//				depending on locale).
-		//			3. Separate modes for editing the value and displaying it, specifically that
-		//				the thousands separator character (typically comma) disappears when editing
-		//				but reappears after the field is blurred.
-		//			4. Formatting and constraints regarding the number of places (digits after the decimal point)
-		//				allowed on input, and number of places displayed when blurred (see `constraints` parameter).
+		//		1. Enforce minimum/maximum allowed values (as well as enforcing that the user types
+		//			a number rather than a random string)
+		//		2. NLS support (altering roles of comma and dot as "thousands-separator" and "decimal-point"
+		//			depending on locale).
+		//		3. Separate modes for editing the value and displaying it, specifically that
+		//			the thousands separator character (typically comma) disappears when editing
+		//			but reappears after the field is blurred.
+		//		4. Formatting and constraints regarding the number of places (digits after the decimal point)
+		//			allowed on input, and number of places displayed when blurred (see `constraints` parameter).
 
 		baseClass: "dijitTextBox dijitNumberTextBox"
 	});

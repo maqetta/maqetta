@@ -9,38 +9,10 @@ define("dojox/mobile/pageTurningUtils", [
 ], function(kernel, array, connect, event, domClass, domConstruct, domStyle){
 	// module:
 	//		dojox/mobile/pageTurningUtils
-	// summary:
-	//		Utilities to provide page turning effects just like turning a real book.
-	// example:
-	// |	require([
-	// |		"dojo/ready",
-	// |		"dojox/mobile/pageTurningUtils"
-	// |	], function(ready, pageTurningUtils){
-	// |		var utils = new pageTurningUtils();
-	// |		ready(function(){
-	// |			utils.init(300, 400); // Specify width and height by pixels
-	// |			utils.initCatalog(document.getElementById("catalog"));
-	// |		});
-	// |	);
-	// |	<div id="catalog">
-	// |		<div id="page1">
-	// |			<div id="front1"><img src="img1.png"></div>
-	// |			<div id="back1"><img src="img2.png"></div>
-	// |		</div>
-	// |		<div id="page2">
-	// |			<div id="front2"><img src="img3.png"></div>
-	// |			<div id="back2"><img src="img4.png"></div>
-	// |		</div>
-	// |		<div id="page3">
-	// |			<div id="front3"><img src="img5.png"></div>
-	// |			<div id="back3"></div>
-	// |		</div>
-	// |	</div>
 	
 	kernel.experimental("dojox.mobile.pageTurningUtils");
 
-	/*=====
-    return {
+	return function(){
 		// summary:
 		//		Utilities to provide page turning effects just like turning a real book.
 		// example:
@@ -68,9 +40,7 @@ define("dojox/mobile/pageTurningUtils", [
 		// |			<div id="back3"></div>
 		// |		</div>
 		// |	</div>
-    };
-    =====*/
-	return function(){
+
 		this.w = 0;
 		this.h = 0;
 		this.turnfrom = "top";
@@ -112,7 +82,7 @@ define("dojox/mobile/pageTurningUtils", [
 			//		11 percent of the page width (= 0.11 * w).
 			//		This parameter should be a float number between 0 and 1. Defaults to 1.
 			//		The actual dog-ear width is calculated by the following formula:
-			//			0.11 * w * dogear.
+			// |		0.11 * w * dogear.
 			//		This parameter is ignored if "bottom" is specified to turnfrom parameter.
 			// duration: Number?
 			//		The duration of page turning animations by seconds. (ex. 1.5, 3, etc)
@@ -147,14 +117,14 @@ define("dojox/mobile/pageTurningUtils", [
 				sin32 = Math.sin(32 * Math.PI/180),
 				tan32 = Math.tan(32 * Math.PI/180),
 				w = this.w,
-				h = this.h
+				h = this.h,
 				page = this.page,
 				turnfrom = this.turnfrom,
 				params = this._styleParams;
 			
 			// Calculate each div size and position based on the page turning algorithm
-			//   fw: frontWidth, fh: frontHeight, dw: dogear, cx: posX, cy: posY, 
-			//   dx: dogearX, dy: dogearY, fy:actualPagePos
+			//	 fw: frontWidth, fh: frontHeight, dw: dogear, cx: posX, cy: posY,
+			//	 dx: dogearX, dy: dogearY, fy:actualPagePos
 			var Q = fold = w * tan58,
 				fw = Q * sin32 + Q * cos32 * tan58,
 				fh = fold + w + w/tan58,

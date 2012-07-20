@@ -36,6 +36,8 @@ define("dojox/mobile/Audio", [
 		_tag: "audio",
 
 		constructor: function(){
+			// summary:
+			//		Creates a new instance of the class.
 			this.source = [];
 		},
 

@@ -1,5 +1,6 @@
-define("dojox/app/controllers/Layout", ["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/on", "dojo/_base/window", "dojo/_base/array", "dojo/query", "dojo/dom-style", "dojo/dom-attr", "dojo/dom-geometry", "dijit/registry", "../Controller", "../layout/utils"],
-function(lang, declare, has, on, win, array, query, dstyle, dattr, dgeometry, registry, Controller, layoutUtils){
+define("dojox/app/controllers/Layout", ["dojo/_base/lang", "dojo/_base/declare", "dojo/sniff", "dojo/on", "dojo/_base/window", "dojo/_base/array",
+	"dojo/query", "dojo/dom-style", "dojo/dom-attr", "dojo/dom-geometry", "dijit/registry", "../Controller", "../layout/utils"],
+function(lang, declare, has, on, win, array, query, domStyle, domAttr, domGeom, registry, Controller, layoutUtils){
 	// module:
 	//		dojox/app/controllers/Layout
 	// summary:
@@ -54,7 +55,7 @@ function(lang, declare, has, on, win, array, query, dstyle, dattr, dgeometry, re
 			//		view instance needs to do layout.
 
 			if(!view){
-				console.warn("layout empaty view.");
+				console.warn("layout empty view.");
 				return;
 			}
 
@@ -72,40 +73,31 @@ function(lang, declare, has, on, win, array, query, dstyle, dattr, dgeometry, re
 				 })
 				 */
 			}else{
-				children = query("> [region]", view.domNode).map(function(node){
+				// TODO: remove non HTML5 "region" in future versions
+				children = query("> [data-app-region], > [region]", view.domNode).map(function(node){
 					var w = registry.getEnclosingWidget(node);
 					if(w){
+						w.region = domAttr.get(node, "data-app-region") || domAttr.get(node, "region");
 						return w;
 					}
 
 					return {
 						domNode: node,
-						region: dattr.get(node, "region")
+						region: domAttr.get(node, "data-app-region") || domAttr.get(node, "region")
 					};
 				});
 				if(view.selectedChild){
 					children = array.filter(children, function(c){
 						if((c.region == "center") && view.selectedChild && (view.selectedChild.domNode !== c.domNode)){
-							dstyle.set(c.domNode, "zIndex", 25);
-							dstyle.set(c.domNode, 'display', 'none');
+							domStyle.set(c.domNode, "zIndex", 25);
+							domStyle.set(c.domNode, "display", "none");
 							return false;
-						}
-						else if(c.region != "center"){
-							dstyle.set(c.domNode, "display", "");
-							dstyle.set(c.domNode, "zIndex", 100);
+						}else if(c.region != "center"){
+							domStyle.set(c.domNode, "display", "");
+							domStyle.set(c.domNode, "zIndex", 100);
 						}
 						return c.domNode && c.region;
 					}, view);
-				}
-				else{
-					array.forEach(children, function(c){
-						// fix layout container dispaly issue.
-						// only need to undisplay view
-						if(c && (c instanceof dojox.app.View) && c.domNode && c.region == "center"){
-							dstyle.set(c.domNode, "zIndex", 25);
-							dstyle.set(c.domNode, 'display', 'none');
-						}
-					});
 				}
 			}
 			// We don't need to layout children if this._contentBox is null for the operation will do nothing.
@@ -124,7 +116,7 @@ function(lang, declare, has, on, win, array, query, dstyle, dattr, dgeometry, re
 			var node = view.domNode;
 			// set margin box size, unless it wasn't specified, in which case use current size
 			if(changeSize){
-				dgeometry.setMarginBox(node, changeSize);
+				domGeom.setMarginBox(node, changeSize);
 				// set offset of the node
 				if(changeSize.t){ node.style.top = changeSize.t + "px"; }
 				if(changeSize.l){ node.style.left = changeSize.l + "px"; }
@@ -136,22 +128,22 @@ function(lang, declare, has, on, win, array, query, dstyle, dattr, dgeometry, re
 			var mb = resultSize || {};
 			lang.mixin(mb, changeSize || {});	// changeSize overrides resultSize
 			if( !("h" in mb) || !("w" in mb) ){
-				mb = lang.mixin(dgeometry.getMarginBox(node), mb);	// just use dojo/_base/html.marginBox() to fill in missing values
+				mb = lang.mixin(domGeom.getMarginBox(node), mb);	// just use dojo/_base/html.marginBox() to fill in missing values
 			}
 
 			// Compute and save the size of my border box and content box
 			// (w/out calling dojo/_base/html.contentBox() since that may fail if size was recently set)
-			var cs = dstyle.getComputedStyle(node);
-			var me = dgeometry.getMarginExtents(node, cs);
-			var be = dgeometry.getBorderExtents(node, cs);
+			var cs = domStyle.getComputedStyle(node);
+			var me = domGeom.getMarginExtents(node, cs);
+			var be = domGeom.getBorderExtents(node, cs);
 			var bb = (view._borderBox = {
 				w: mb.w - (me.w + be.w),
 				h: mb.h - (me.h + be.h)
 			});
-			var pe = dgeometry.getPadExtents(node, cs);
+			var pe = domGeom.getPadExtents(node, cs);
 			view._contentBox = {
-				l: dstyle.toPixelValue(node, cs.paddingLeft),
-				t: dstyle.toPixelValue(node, cs.paddingTop),
+				l: domStyle.toPixelValue(node, cs.paddingLeft),
+				t: domStyle.toPixelValue(node, cs.paddingTop),
 				w: bb.w - pe.w,
 				h: bb.h - pe.h
 			};
@@ -184,11 +176,11 @@ function(lang, declare, has, on, win, array, query, dstyle, dattr, dgeometry, re
 
 			if(view !== parent.selectedChild){
 				if(parent.selectedChild){
-					dstyle.set(parent.selectedChild.domNode, "zIndex", 25);
+					domStyle.set(parent.selectedChild.domNode, "zIndex", 25);
 				}
 
-				dstyle.set(view.domNode, "display", "");
-				dstyle.set(view.domNode, "zIndex", 50);
+				domStyle.set(view.domNode, "display", "");
+				domStyle.set(view.domNode, "zIndex", 50);
 				parent.selectedChild = view;
 			}
 			// do selected view layout

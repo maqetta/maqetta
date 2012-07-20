@@ -57,9 +57,10 @@ define("dijit/BackgroundIframe", [
 		//		For IE/FF z-index schenanigans. id attribute is required.
 		//
 		// description:
-		//		new dijit.BackgroundIframe(node)
-		//			Makes a background iframe as a child of node, that fills
-		//			area (and position) of node
+		//		new dijit.BackgroundIframe(node).
+		//
+		//		Makes a background iframe as a child of node, that fills
+		//		area (and position) of node
 
 		if(!node.id){ throw new Error("no id"); }
 		if(has("ie") || has("mozilla")){

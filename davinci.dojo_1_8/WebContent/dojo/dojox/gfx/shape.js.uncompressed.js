@@ -196,7 +196,7 @@ define("dojox/gfx/shape", ["./_base", "dojo/_base/lang", "dojo/_base/declare", "
 		},
 		getEventSource: function(){
 			// summary:
-			// 		returns a Node, which is used as
+			//		returns a Node, which is used as
 			//		a source of events for this shape
 			
 			// COULD BE RE-IMPLEMENTED BY THE RENDERER!
@@ -215,15 +215,18 @@ define("dojox/gfx/shape", ["./_base", "dojo/_base/lang", "dojo/_base/declare", "
 			//		supported by all the renderers. vml only supports rectangle clipping, while the gfx silverlight renderer does not
 			//		support path clipping.
 			//		The clip parameter defines the clipping area geometry, and should be an object with the following properties:
-			//		* {x:Number, y:Number, width:Number, height:Number} for rectangular clip
-			//		* {cx:Number, cy:Number, rx:Number, ry:Number} for ellipse clip
-			//		* {points:Array} for polyline clip
-			//		* {d:String} for a path clip.
+			//
+			//		- {x:Number, y:Number, width:Number, height:Number} for rectangular clip
+			//		- {cx:Number, cy:Number, rx:Number, ry:Number} for ellipse clip
+			//		- {points:Array} for polyline clip
+			//		- {d:String} for a path clip.
+			//
 			//		The clip geometry coordinates are expressed in the coordinate system used to draw the shape. In other
 			//		words, the clipping area is defined in the shape parent coordinate system and the shape transform is automatically applied.
 			//		example:
 			//		The following example shows how to clip a gfx image with all the possible clip geometry: a rectangle,
-			//		an ellipse, a circle (using the ellipse geometry), a polyline and a path :
+			//		an ellipse, a circle (using the ellipse geometry), a polyline and a path:
+			//
 			//	|	surface.createImage({src:img, width:200,height:200}).setClip({x:10,y:10,width:50,height:50});
 			//	|	surface.createImage({src:img, x:100,y:50,width:200,height:200}).setClip({cx:200,cy:100,rx:20,ry:30});
 			//	|	surface.createImage({src:img, x:0,y:350,width:200,height:200}).setClip({cx:100,cy:425,rx:60,ry:60});
@@ -414,7 +417,7 @@ define("dojox/gfx/shape", ["./_base", "dojo/_base/lang", "dojo/_base/declare", "
 			// summary:
 			//		removes the shape from its parent's list of shapes
 			// silently: Boolean
-			// 		if true, do not redraw a picture yet
+			//		if true, do not redraw a picture yet
 			if(this.parent){
 				this.parent.remove(this, silently);
 			}

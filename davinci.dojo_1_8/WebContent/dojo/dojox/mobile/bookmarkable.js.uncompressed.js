@@ -12,10 +12,11 @@ define("dojox/mobile/bookmarkable", [
 
 	// module:
 	//		dojox/mobile/bookmarkable
-	// summary:
-	//		Utilities to make the view transitions bookmarkable.
 
 	var b = {
+		// summary:
+		//		Utilities to make the view transitions bookmarkable.
+
 		// settingHash: [private] Boolean
 		//		Whether the browser URL needs to be updated to include the hash.
 		settingHash: false,
@@ -149,11 +150,5 @@ define("dojox/mobile/bookmarkable", [
 		setFragIds: function(){ b.setFragIds.apply(b, arguments); }
 	});
 
-	/*=====
-    return {
-		// summary:
-		//		Utilities to make the view transitions bookmarkable. 
-    };
-    =====*/
 	return b;
 });

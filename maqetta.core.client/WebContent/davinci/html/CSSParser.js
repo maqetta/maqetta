@@ -214,6 +214,7 @@ CSSParser.parse = function (text, parentElement) {
 	var combined;
 	var combiner = ' ';
 	var errors = [];
+	var models = [];
 	var model, wsAfterSel;
 	function error(text) {
 		console.log("ERROR: " + text);
@@ -302,8 +303,12 @@ CSSParser.parse = function (text, parentElement) {
 					throw StopIteration;
 				}
 				model = new CSSRule();
+				models.push(model);
 				model.startOffset = token.offset;
-				parentElement.addChild(model, undefined, true);
+
+				if (parentElement) {
+					parentElement.addChild(model, undefined, true);
+				}
 
 				wsAfterSel = false;
 				combined = undefined;
@@ -478,7 +483,11 @@ CSSParser.parse = function (text, parentElement) {
 				var atRule = (ruleName == "import") ? new CSSImport()
 				: new CSSAtRule();
 				atRule.startOffset = token.offset;
-				parentElement.addChild(atRule, undefined, true);
+
+				if (parentElement) {
+					parentElement.addChild(atRule, undefined, true);
+				}
+
 				if (ruleName == "import") {
 					var cssImport = atRule;
 					nextToken();
@@ -559,7 +568,7 @@ CSSParser.parse = function (text, parentElement) {
 			pushComment = null;
 		}
 	}
-	return {errors:errors};
+	return {errors:errors, model: models};
 };
 
 return CSSParser;

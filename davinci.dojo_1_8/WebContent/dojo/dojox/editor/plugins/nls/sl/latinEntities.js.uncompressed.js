@@ -190,7 +190,7 @@ define(
 	minus:"znak za minus",
 	lowast:"operator zvezdice",
 	radic:"kvadratni koren",
-	prop:"proporcialno z",
+	prop:"proporcionalno z",
 	infin:"neskončnost",
 	ang:"kot",
 	and:"logični in",

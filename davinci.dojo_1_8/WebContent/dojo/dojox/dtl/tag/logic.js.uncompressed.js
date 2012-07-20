@@ -2,9 +2,7 @@ define("dojox/dtl/tag/logic", [
 	"dojo/_base/lang",
 	"../_base"
 ], function(lang, dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.tag.logic", true);
 
 	var ddt = dd.text;

@@ -13,20 +13,18 @@ define("dojox/mobile/ValuePickerSlot", [
 
 	// module:
 	//		dojox/mobile/ValuePickerSlot
-	// summary:
-	//		A widget representing one slot of a ValuePicker widget.
 
 	return declare("dojox.mobile.ValuePickerSlot", WidgetBase, {
 		// summary:
 		//		A widget representing one slot of a ValuePicker widget.
 		
 		// items: Array
-		//		An array of array of key-label paris.
+		//		An array of array of key-label pairs.
 		//		(e.g. [[0,"Jan"],[1,"Feb"],...] ) If key values for each label
 		//		are not necessary, labels can be used instead.
 		items: [],
 
-		// labels: Array
+		// labels: String[]
 		//		An array of labels to be displayed on the value picker.
 		//		(e.g. ["Jan","Feb",...] ) This is a simplified version of the
 		//		items property.

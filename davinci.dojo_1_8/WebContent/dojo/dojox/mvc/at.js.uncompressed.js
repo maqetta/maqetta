@@ -4,8 +4,79 @@ define("dojox/mvc/at", [
 	"./sync",
 	"./_atBindingExtension"
 ], function(kernel, lang, sync){
+
+	kernel.experimental("dojox.mvc");
+
+	var at = function(/*dojo/Stateful|String*/ target, /*String*/ targetProp){
+		// summary:
+		//		Returns a pointer to data binding target (a dojo/Stateful property), called at handle, which is used for start synchronization with data binding source (another dojo/Stateful property).
+		// description:
+		//		Typically used in data-dojo-props so that a widget can synchronize its attribute with another dojo/Stateful, like shown in the example.
+		// target: dojo/Stateful|String
+		//		dojo/Stateful to be synchronized.
+		// targetProp: String
+		//		The property name in target to be synchronized.
+		// returns:
+		//		A pointer to data binding target (a dojo/Stateful property), called at handle, which is used for start synchronization with data binding source (another dojo/Stateful property).
+		// example:
+		//		Two seconds later, the text box changes from "Foo" to "Bar" as the "value" property in model changes.
+		// |		<html>
+		// |			<head>
+		// |				<script src="/path/to/dojo-toolkit/dojo/dojo.js" type="text/javascript" data-dojo-config="parseOnLoad: 0"></script>
+		// |				<script type="text/javascript">
+		// |					require([
+		// |						"dojo/parser", "dojo/Stateful", "dijit/form/TextBox", "dojo/domReady!"
+		// |					], function(parser, Stateful){
+		// |						model = new Stateful({value: "Foo"});
+		// |						setTimeout(function(){ model.set("value", "Bar"); }, 2000);
+		// |						parser.parse();
+		// |					});
+		// |				</script>
+		// |			</head>
+		// |			<body>
+		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
+		// |				<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-props="value: at(model, 'value')">
+		// |			</body>
+		// |		</html>
+		// example:
+		//		Edit in text box is reflected to the text next to it.
+		// |		<html>
+		// |			<head>
+		// |				<script src="/path/to/dojo-toolkit/dojo/dojo.js" type="text/javascript" data-dojo-config="parseOnLoad: 0"></script>
+		// |				<script type="text/javascript">
+		// |					require([
+		// |						"dojo/parser", "dojo/Stateful", "dojo/domReady!"
+		// |					], function(parser, Stateful){
+		// |						model = new Stateful({value: "Foo"});
+		// |						parser.parse();
+		// |					});
+		// |				</script>
+		// |			</head>
+		// |			<body>
+		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
+		// |				<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-props="value: at(model, 'value')">
+		// |				<span data-dojo-type="dijit/_WidgetBase" data-dojo-props="_setValueAttr: {node: 'domNode', type: 'innerText'}, value: at(model, 'value')"></span>
+		// |			</body>
+		// |		</html>
+
+		return { // dojox/mvc/at.handle
+			atsignature: "dojox.mvc.at",
+			target: target,
+			targetProp: targetProp,
+			bindDirection: sync.both,
+			direction: function(/*Number*/ bindDirection){
+				this.bindDirection = bindDirection;
+				return this;
+			},
+			transform: function(/*dojox/mvc/sync.converter*/ converter){
+				this.converter = converter;
+				return this;
+			}
+		};
+	};
+
 	/*=====
-	dojox.mvc.at.handle = {
+	at.handle = {
 		// summary:
 		//		A handle of data binding target (a dojo/Stateful property), which is used for start synchronization with data binding source (another dojo/Stateful property).
 
@@ -40,55 +111,6 @@ define("dojox/mvc/at", [
 		}
 	};
 	=====*/
-	kernel.experimental("dojox.mvc");
-
-	var at = function(/*dojo/Stateful|String*/ target, /*String*/ targetProp){
-		// summary:
-		//		Returns a handle of data binding target (a dojo/Stateful property), which is used for start synchronization with data binding source (another dojo/Stateful property).
-		// description:
-		//		Typically used in ref property in data-dojo-props so that a widget can synchronize its attribute with another dojo/Stateful, like shown in the example.
-		// target: dojo/Stateful|String
-		//		dojo/Stateful to be synchronized.
-		// targetProp: String
-		//		The property name in target to be synchronized.
-		// returns:
-		//		A handle of data binding target (a dojo/Stateful property), which is used for start synchronization with data binding source (another dojo/Stateful property).
-		// example:
-		//		Two seconds later, the text box changes from "Foo" to "Bar" as the "value" property in model changes.
-		// |		<html>
-		// |			<head>
-		// |				<script src="/path/to/dojo-toolkit/dojo/dojo.js" type="text/javascript" data-dojo-config="parseOnLoad: 0"></script>
-		// |				<script type="text/javascript">
-		// |					require([
-		// |						"dojo/parser", "dojo/Stateful", "dijit/form/TextBox", "dojo/domReady!"
-		// |					], function(parser, Stateful){
-		// |						model = new Stateful({value: "Foo"});
-		// |						setTimeout(function(){ model.set("value", "Bar"); }, 2000);
-		// |						parser.parse();
-		// |					});
-		// |				</script>
-		// |			</head>
-		// |			<body>
-		// |				<script type="dojo/require">at: "dojox/mvc/at"</script>
-		// |				<input type="text" data-dojo-type="dijit/form/TextBox" data-dojo-props="value: at(model, 'value')">
-		// |			</body>
-		// |		</html>
-
-		return {
-			atsignature: "dojox.mvc.at",
-			target: target,
-			targetProp: targetProp,
-			bindDirection: sync.both,
-			direction: function(/*Number*/ bindDirection){
-				this.bindDirection = bindDirection;
-				return this;
-			},
-			transform: function(/*dojox/mvc/sync.converter*/ converter){
-				this.converter = converter;
-				return this;
-			}
-		}; // dojox/mvc/at handle
-	};
 
 	// Data binding bindDirections
 	at.from = sync.from;

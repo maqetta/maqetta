@@ -22,7 +22,7 @@ define("dojox/mdnd/Moveable", [
 		handle: null,
 		
 		// skip: Boolean
-		// 		A flag to control a drag action if a form element has been focused.
+		//		A flag to control a drag action if a form element has been focused.
 		//		If true, the drag action is not executed.
 		skip: true,
 	
@@ -33,7 +33,7 @@ define("dojox/mdnd/Moveable", [
 		
 		constructor: function(/*Object*/params, /*DOMNode*/node){
 			// summary:
-			// 		Configure parameters and listen to mousedown events from handle
+			//		Configure parameters and listen to mousedown events from handle
 			//		node.
 			// params:
 			//		Hash of parameters
@@ -215,7 +215,7 @@ define("dojox/mdnd/Moveable", [
 			//		Notes : border box model
 			// node:
 			//		a DOM node
-			//	coords:
+			// coords:
 			//		absolute position of the main node
 			// size:
 			//		an object encapsulating width an height values

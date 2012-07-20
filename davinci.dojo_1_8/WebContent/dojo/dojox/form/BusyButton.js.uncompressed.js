@@ -57,7 +57,7 @@ var _BusyButtonMixin = declare("dojox.form._BusyButtonMixin", null, {
 	cancel: function(){
 		// summary:
 		//		if no timeout is set or for other reason the user can put the button back
-		//  	to being idle
+		//		to being idle
 		this.set("disabled", false);
 		this.isBusy = false;
 		this.setLabel(this._label);

@@ -114,9 +114,9 @@ _24[_26]=_27;
 }
 return _24;
 },setupControllers:function(){
-new _e(this);
-new _f(this);
-new _10(this);
+this.controllers.push(new _e(this));
+this.controllers.push(new _f(this));
+this.controllers.push(new _10(this));
 var _28=window.location.hash;
 this._startView=(((_28&&_28.charAt(0)=="#")?_28.substr(1):_28)||this.defaultView).split("&")[0];
 this._startParams=this.getParamsFromHash(_28)||this.defaultParams||{};
@@ -133,6 +133,7 @@ this.setStatus(this.lifecycle.STARTED);
 }));
 }});
 function _2c(_2d,_2e,_2f,_30){
+var _31;
 if(!_2d.loaderConfig){
 _2d.loaderConfig={};
 }
@@ -140,7 +141,7 @@ if(!_2d.loaderConfig.paths){
 _2d.loaderConfig.paths={};
 }
 if(!_2d.loaderConfig.paths["app"]){
-var _31=window.location.pathname;
+_31=window.location.pathname;
 if(_31.charAt(_31.length)!="/"){
 _31=_31.split("/");
 _31.pop();
@@ -155,7 +156,11 @@ _2d.modules=[];
 _2d.modules.push("dojox/app/module/lifecycle");
 var _32=_2d.modules.concat(_2d.dependencies);
 if(_2d.template){
-_32.push("dojo/text!"+"app/"+_2d.template);
+_31=_2d.template;
+if(_31.indexOf("./")==0){
+_31="app/"+_31;
+}
+_32.push("dojo/text!"+_31);
 }
 _2(_32,function(){
 var _33=[_11];

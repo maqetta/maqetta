@@ -5,7 +5,7 @@
 */
 
 //>>built
-define("dojo/main",["./_base/kernel","./has","require","./sniff","./_base/lang","./_base/array","./_base/config","./ready","./_base/declare","./_base/connect","./_base/Deferred","./_base/json","./_base/Color","./has!dojo-firebug?./_firebug/firebug","./_base/browser","./_base/loader","require"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+define("dojo/main",["./_base/kernel","./has","require","./sniff","./_base/lang","./_base/array","./_base/config","./ready","./_base/declare","./_base/connect","./_base/Deferred","./_base/json","./_base/Color","./has!dojo-firebug?./_firebug/firebug","./_base/browser","./_base/loader"],function(_1,_2,_3,_4,_5,_6,_7,_8){
 if(_7.isDebug){
 _3(["./_firebug/firebug"]);
 }

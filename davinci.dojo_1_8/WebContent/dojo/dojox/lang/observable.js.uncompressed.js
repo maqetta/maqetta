@@ -15,14 +15,12 @@ dojo.experimental("dojox.lang.observable");
 // This has performance implications as well.
 dojox.lang.observable = function(/*Object*/wrapped,/*function*/onRead,/*function*/onWrite,/*function*/onInvoke){
 	// 	summary:
-	// 		Creates a wrapper object, which can be observed. The wrapper object
-	// 		is a proxy to the wrapped object. If you will be making multiple wrapper
-	// 		objects with the same set of listeners, it is recommended that you
-	// 		use makeObservable, as it is more memory efficient.
-	//
-	// 	wrapped:
-	// 		The object to be wrapped and monitored for property access and modification
-	//
+	//		Creates a wrapper object, which can be observed. The wrapper object
+	//		is a proxy to the wrapped object. If you will be making multiple wrapper
+	//		objects with the same set of listeners, it is recommended that you
+	//		use makeObservable, as it is more memory efficient.
+	// wrapped:
+	//		The object to be wrapped and monitored for property access and modification
 	// onRead:
 	//		See dojox.lang.makeObservable.onRead
 	// onWrite:
@@ -31,45 +29,41 @@ dojox.lang.observable = function(/*Object*/wrapped,/*function*/onRead,/*function
 	//		See dojox.lang.makeObservable.onInvoke
 	
 	return dojox.lang.makeObservable(onRead,onWrite,onInvoke)(wrapped);
-}
+};
 dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*function*/onInvoke,/*Object*/hiddenFunctions){
 		
-	// 	summary:
-	// 		Creates and returns an observable creator function. All the objects that
-	// 		are created with the returned constructor will use the provided onRead and
-	// 		onWrite listeners.
-	// 		The created constructor should be called with a single argument,
-	// 		the object that will be wrapped to be observed. The constructor will
-	// 		return the wrapper object.
-	//
+	// summary:
+	//		Creates and returns an observable creator function. All the objects that
+	//		are created with the returned constructor will use the provided onRead and
+	//		onWrite listeners.
+	//		The created constructor should be called with a single argument,
+	//		the object that will be wrapped to be observed. The constructor will
+	//		return the wrapper object.
 	// onRead:
-	// 		This is called whenever one of the wrapper objects created
-	// 		from the constructor has a property that is accessed. onRead
-	// 		will be called with two arguments, the first being the wrapped object,
-	// 		and the second is the name of property that is being accessed.
-	// 		The value that onRead returns will be used as the value returned
-	// 		by the property access
-	//
+	//		This is called whenever one of the wrapper objects created
+	//		from the constructor has a property that is accessed. onRead
+	//		will be called with two arguments, the first being the wrapped object,
+	//		and the second is the name of property that is being accessed.
+	//		The value that onRead returns will be used as the value returned
+	//		by the property access
 	// onWrite:
-	// 		This is called whenever one of the wrapper objects created
-	// 		from the constructor has a property that is modified. onWrite
-	// 		will be called with three arguments, the first being the wrapped object,
-	// 		the second is the name of property that is being modified, and the
-	// 		third is the value that is being set on the property.
-	//
-	// 	onInvoke:
-	// 		This is called when a method on the object is invoked. The first
-	// 		argument is the wrapper object, the second is the original wrapped object,
-	// 		the third is the method name, and the fourth is the arguments.
+	//		This is called whenever one of the wrapper objects created
+	//		from the constructor has a property that is modified. onWrite
+	//		will be called with three arguments, the first being the wrapped object,
+	//		the second is the name of property that is being modified, and the
+	//		third is the value that is being set on the property.
+	// onInvoke:
+	//		This is called when a method on the object is invoked. The first
+	//		argument is the wrapper object, the second is the original wrapped object,
+	//		the third is the method name, and the fourth is the arguments.
 	//
 	// hiddenFunctions:
-	// 		allows you to define functions that should be delegated
-	// 		but may not be enumerable on the wrapped objects, so they must be
-	// 		explicitly included
-	//
+	//		allows you to define functions that should be delegated
+	//		but may not be enumerable on the wrapped objects, so they must be
+	//		explicitly included
 	// example:
-	// 		The following could be used to create a wrapper that would
-	// 		prevent functions from being accessed on an object:
+	//		The following could be used to create a wrapper that would
+	//		prevent functions from being accessed on an object:
 	// 	|	function onRead(obj,prop){
 	//	|		return typeof obj[prop] == 'function' ? null : obj[prop];
 	//	|	}
@@ -78,7 +72,7 @@ dojox.lang.makeObservable = function(/*function*/onRead,/*function*/onWrite,/*fu
 	//	|	obj = observable(obj);
 	//	|	obj.foo -> 1
 	//	|	obj.bar -> null
-	//
+
 	hiddenFunctions = hiddenFunctions || {};
 	onInvoke = onInvoke || function(scope,obj,method,args){
 		// default implementation for onInvoke, just passes the call through
@@ -251,8 +245,8 @@ if(!{}.__defineGetter__){
 
 dojox.lang.ReadOnlyProxy =
 // summary:
-// 		Provides a read only proxy to another object, this can be
-// 		very useful in object-capability systems
+//		Provides a read only proxy to another object, this can be
+//		very useful in object-capability systems
 // example:
 // 	|	var obj = {foo:"bar"};
 // 	|	var readonlyObj = dojox.lang.ReadOnlyProxy(obj);

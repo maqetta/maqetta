@@ -5,15 +5,13 @@ define("dojox/dtl/render/dom", [
 	"../dom",
 	"../_base"
 ], function(lang,dom,ddc,dddom,dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.render.dom", true);
 
 	dd.render.dom.Render = function(/*DOMNode?*/ attachPoint, /*dojox/dtl/DomTemplate?*/ tpl){
 		this._tpl = tpl;
 		this.domNode = dom.byId(attachPoint);
-	}
+	};
 	lang.extend(dd.render.dom.Render, {
 		setAttachPoint: function(/*Node*/ node){
 			this.domNode = node;

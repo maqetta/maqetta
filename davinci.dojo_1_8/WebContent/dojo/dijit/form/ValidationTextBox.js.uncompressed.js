@@ -31,7 +31,6 @@ define("dijit/form/ValidationTextBox", [
 		//		Base class for textbox widgets with the ability to validate content of various types and provide user feedback.
 
 		templateString: template,
-		baseClass: "dijitTextBox dijitValidationTextBox",
 
 		// required: Boolean
 		//		User is required to enter data into this field.
@@ -209,7 +208,7 @@ define("dijit/form/ValidationTextBox", [
 
 		_refreshState: function(){
 			// Overrides TextBox._refreshState()
-			if(this._started){
+			if(this._created){
 				this.validate(this.focused);
 			}
 			this.inherited(arguments);
@@ -217,8 +216,17 @@ define("dijit/form/ValidationTextBox", [
 
 		//////////// INITIALIZATION METHODS ///////////////////////////////////////
 
-		constructor: function(){
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree.
+
 			this.constraints = {};
+			this.baseClass += ' dijitValidationTextBox';
 		},
 
 		startup: function(){

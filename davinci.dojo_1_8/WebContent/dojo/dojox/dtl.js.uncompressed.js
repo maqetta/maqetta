@@ -10,28 +10,16 @@ define([
 	"dojox/string/Builder",
 	"dojo/_base/Deferred"], 
 	function(kernel, lang, Tokenize, json, dom, xhr, StringBuilder, deferred){
-	/*=====
-		Tokenize = dojox.string.tokenize;
-		StringBuilder = dojox.string.Builder;
-	=====*/
+
 	kernel.experimental("dojox.dtl");
 	var dd = lang.getObject("dojox.dtl", true);
 	dd._base = {};
-	/*=====
-		dd = dojox.dtl;
-	=====*/
 
 	dd.TOKEN_BLOCK = -1;
 	dd.TOKEN_VAR = -2;
 	dd.TOKEN_COMMENT = -3;
 	dd.TOKEN_TEXT = 3;
 
-	/*=====
-		dd._Context = function(dict){
-			// summary:
-			//		Pass one of these when rendering a template to tell the template what values to use.
-		}
-	=====*/
 	dd._Context = lang.extend(function(dict){
 		// summary:
 		//		Pass one of these when rendering a template to tell the template what values to use.
@@ -114,22 +102,18 @@ define([
 		}
 		parts.push(this.slice(lastIndex));
 		return parts;
-	}
+	};
 
-	/*=====
-	 dd.Token = declare(null,{
-	 	// tags:
-	 	//		private
-	 });
-	 =====*/
 	dd.Token = function(token_type, contents){
+		// tags:
+		//		private
 		this.token_type = token_type;
 		this.contents = new String(lang.trim(contents));
 		this.contents.split = split;
 		this.split = function(){
 			return String.prototype.split.apply(this.contents, arguments);
 		}
-	}
+	};
 	dd.Token.prototype.split_contents = function(/*Integer?*/ limit){
 		var bit, bits = [], i = 0;
 		limit = limit || 999;
@@ -144,7 +128,7 @@ define([
 			}
 		}
 		return bits;
-	}
+	};
 
 	var ddt = dd.text = {
 		_get: function(module, name, errorless){
@@ -248,41 +232,16 @@ define([
 				return [dd.TOKEN_BLOCK, tag];
 			}
 		}
-	}
+	};
 
-	/*=====
-		dd.Template = declare(null,{
-			constructor: function(template, isString){
-				// summary: 
-				// 		The base class for text-based templates.
-				// template: String|dojo._Url
-				//		The string or location of the string to
-				//		use as a template
-				// isString: Boolean
-				//		Indicates whether the template is a string or a url.
-			},
-			update: function(node, context){
-				// summary:
-				//		Updates this template according to the given context.
-				// node: DOMNode|String|dojo/NodeList
-				//		A node reference or set of nodes
-				// context: dojo._Url|String|Object
-				//		The context object or location
-			},
-			render: function(context, buffer){
-				// summary:
-				//		Renders this template.
-				// context: Object
-				//		The runtime context.
-				// buffer: StringBuilder?
-				//		A string buffer.
-			}
-		});
-	=====*/
 	dd.Template = lang.extend(function(/*String|dojo._Url*/ template, /*Boolean*/ isString){
-		// template:
+		// summary:
+		//		The base class for text-based templates.
+		// template: String|dojo/_base/url
 		//		The string or location of the string to
 		//		use as a template
+		// isString: Boolean
+		//		Indicates whether the template is a string or a url.
 		var str = isString ? template : ddt._resolveTemplateArg(template, true) || "";
 		var tokens = ddt.tokenize(str);
 		var parser = new dd._Parser(tokens);
@@ -294,7 +253,7 @@ define([
 			//		Updates this template according to the given context.
 			// node: DOMNode|String|dojo/NodeList
 			//		A node reference or set of nodes
-			// context: dojo._Url|String|Object
+			// context: dojo/base/url|String|Object
 			//		The context object or location
 			return ddt._resolveContextArg(context).addCallback(this, function(contextObject){
 				var content = this.render(new dd._Context(contextObject));
@@ -308,7 +267,13 @@ define([
 				return this;
 			});
 		},
-		render: function(context, /*concatenatable?*/ buffer){
+		render: function(context, buffer){
+			// summary:
+			//		Renders this template.
+			// context: Object
+			//		The runtime context.
+			// buffer: StringBuilder?
+			//		A string buffer.
 			buffer = buffer || this.getBuffer();
 			context = context || new dd._Context({});
 			return this.nodelist.render(context, buffer) + "";
@@ -329,7 +294,7 @@ define([
 				return new dd._Filter(token);
 			}));
 		}
-	}
+	};
 
 	dd._QuickNodeList = lang.extend(function(contents){
 		this.contents = contents;
@@ -591,7 +556,7 @@ define([
 		//		Adds a no-op node. Useful in custom tags
 		this.render = this.unrender = function(){ return arguments[1]; }
 		this.clone = function(){ return this; }
-	}
+	};
 
 	dd._Parser = lang.extend(function(tokens){
 		// summary:
@@ -601,8 +566,10 @@ define([
 	{
 		i: 0,
 		parse: function(/*Array?*/ stop_at){
-			// summary: Turns tokens into nodes
-			// description: Steps into tags are they're found. Blocks use the parse object
+			// summary:
+			//		Turns tokens into nodes
+			// description:
+			//		Steps into tags are they're found. Blocks use the parse object
 			//		to find their closing tag (the stop_at array). stop_at is inclusive, it
 			//		returns the node that matched.
 			var terminators = {}, token;
@@ -646,7 +613,8 @@ define([
 			return nodelist;
 		},
 		next_token: function(){
-			// summary: Returns the next token in the list.
+			// summary:
+			//		Returns the next token in the list.
 			var token = this.contents[this.i++];
 			return new dd.Token(token[0], token[1]);
 		},
@@ -776,9 +744,10 @@ define([
 	var escapeqt = /'/g;
 	var escapedblqt = /"/g;
 	dd._base.escape = function(value){
-		// summary: Escapes a string's HTML
+		// summary:
+		//		Escapes a string's HTML
 		return dd.mark_safe(value.replace(escapeamp, '&amp;').replace(escapelt, '&lt;').replace(escapegt, '&gt;').replace(escapedblqt, '&quot;').replace(escapeqt, '&#39;'));
-	}
+	};
 
 	dd._base.safe = function(value){
 		if(typeof value == "string"){
@@ -788,7 +757,7 @@ define([
 			value.safe = true;
 		}
 		return value;
-	}
+	};
 	dd.mark_safe = dd._base.safe;
 
 	dd.register.tags("dojox.dtl.tag", {
@@ -822,9 +791,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/connect"
 ], function(lang,dd,array,connect){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.tag.loader", true);
 
 	var ddtl = dd.tag.loader;
@@ -1204,7 +1171,7 @@ date.compare = function(/*Date*/date1, /*Date?*/date2, /*String?*/portion){
 	// summary:
 	//		Compare two date objects by date, time, or both.
 	// description:
-	//  	Returns 0 if equal, positive if a > b, else negative.
+	//		Returns 0 if equal, positive if a > b, else negative.
 	// date1:
 	//		Date object
 	// date2:
@@ -1240,8 +1207,8 @@ date.add = function(/*Date*/date, /*String*/interval, /*int*/amount){
 	//		Date object to start with
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "quarter", "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond", "quarter", "week", "weekday"
 	// amount:
 	//		How much to add to the date.
 
@@ -1337,8 +1304,9 @@ date.difference = function(/*Date*/date1, /*Date?*/date2, /*String?*/interval){
 	//		Date object.  If not specified, the current Date is used.
 	// interval:
 	//		A string representing the interval.  One of the following:
-	//			"year", "month", "day", "hour", "minute", "second",
-	//			"millisecond", "quarter", "week", "weekday"
+	//		"year", "month", "day", "hour", "minute", "second",
+	//		"millisecond", "quarter", "week", "weekday"
+	//
 	//		Defaults to "day".
 
 	date2 = date2 || new Date();
@@ -1829,7 +1797,7 @@ define([
 
 	lang.extend(NodeList, {
 		dtl: function(template, context){
-			// summary: 
+			// summary:
 			//		Renders the specified template in each of the NodeList entries.
 			// template: dojox/dtl/__StringArgs|String
 			//		The template string or location
@@ -1876,7 +1844,8 @@ define([
 			return (!this.date.getMinutes()) ? this.g() : this.g() + ":" + this.i();
 		},
 		N: function(){
-			// summary: Month abbreviation in Associated Press style. Proprietary extension.
+			// summary:
+			//		Month abbreviation in Associated Press style. Proprietary extension.
 			return dojox.dtl.utils.date._months_ap[this.date.getMonth()];
 		},
 		P: function(){
@@ -1943,10 +1912,7 @@ define([
 	"../_base",
 	"dojox/string/tokenize"
 ], function(lang,array,json,dd,Tokenize){
-	/*=====
-		Tokenize = dojox.string.tokenize;
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.tag.loop", true);
 
 	var ddtl = dd.tag.loop;
@@ -2073,7 +2039,8 @@ define([
 
 	lang.mixin(ddtl, {
 		cycle: function(parser, token){
-			// summary: Cycle among the given strings each time this tag is encountered
+			// summary:
+			//		Cycle among the given strings each time this tag is encountered
 			var args = token.split_contents();
 
 			if(args.length < 2){
@@ -2143,19 +2110,20 @@ define(["dojo/_base/lang"],
   function(lang){
 	lang.getObject("string", true, dojox).Builder = 
 	  function(/*String?*/str){
-		//	summary:
+		// summary:
 		//		A fast buffer for creating large strings.
-		//
-		//	length: Number
-		//		The current length of the internal string.
 
 		//	N.B. the public nature of the internal buffer is no longer
 		//	needed because the IE-specific fork is no longer needed--TRT.
 		var b = "";
+
+		// length: Number
+		//		The current length of the internal string.
 		this.length = 0;
 		
 		this.append = function(/* String... */s){
-			// summary: Append all arguments to the end of the buffer
+			// summary:
+			//		Append all arguments to the end of the buffer
 			if(arguments.length>1){
 				/*
 					This is a loop unroll was designed specifically for Firefox;
@@ -2209,13 +2177,13 @@ define(["dojo/_base/lang"],
 		};
 		
 		this.concat = function(/*String...*/s){
-			//	summary:
+			// summary:
 			//		Alias for append.
 			return this.append.apply(this, arguments);	//	dojox.string.Builder
 		};
 		
 		this.appendArray = function(/*Array*/strings) {
-			//	summary:
+			// summary:
 			//		Append an array of items to the internal buffer.
 
 			//	Changed from String.prototype.concat.apply because of IE.
@@ -2223,7 +2191,7 @@ define(["dojo/_base/lang"],
 		};
 		
 		this.clear = function(){
-			//	summary:
+			// summary:
 			//		Remove all characters from the buffer.
 			b = "";
 			this.length = 0;
@@ -2239,7 +2207,7 @@ define(["dojo/_base/lang"],
 		};
 		
 		this.remove = function(/* Number */start, /* Number? */len){
-			//	summary:
+			// summary:
 			//		Remove len characters starting at index start.  If len
 			//		is not provided, the end of the string is assumed.
 			if(len===undefined){ len = b.length; }
@@ -2250,7 +2218,7 @@ define(["dojo/_base/lang"],
 		};
 		
 		this.insert = function(/* Number */index, /* String */str){
-			//	summary:
+			// summary:
 			//		Insert string str starting at index.
 			if(index == 0){
 				b = str + b;
@@ -2262,7 +2230,7 @@ define(["dojo/_base/lang"],
 		};
 		
 		this.toString = function(){
-			//	summary:
+			// summary:
 			//		Return the string representation of the internal buffer.
 			return b;	//	String
 		};
@@ -2328,9 +2296,7 @@ define([
 	"dojo/_base/connect",
 	"../_base"
 ], function(lang,array,connect,dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.tag.misc", true);
 
 	var ddtm = dd.tag.misc;
@@ -2548,16 +2514,19 @@ define([
 
 	lang.mixin(ddtm, {
 		comment: function(parser, token){
-			// summary: Ignore everything between {% comment %} and {% endcomment %}
+			// summary:
+			//		Ignore everything between {% comment %} and {% endcomment %}
 			parser.skip_past("endcomment");
 			return dd._noOpNode;
 		},
 		debug: function(parser, token){
-			// summary: Output the current context, maybe add more stuff later.
+			// summary:
+			//		Output the current context, maybe add more stuff later.
 			return new ddtm.DebugNode(parser.create_text_node());
 		},
 		filter: function(parser, token){
-			// summary: Filter the contents of the blog through variable filters.
+			// summary:
+			//		Filter the contents of the blog through variable filters.
 			var rest = token.contents.split(null, 1)[1];
 			var varnode = parser.create_variable_node("var|" + rest);
 			var nodelist = parser.parse(["endfilter"]);
@@ -2621,23 +2590,12 @@ define([
 	"dojo/_base/lang",
 	"./_base"
 ], function(lang,dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
-	
-	/*=====
-	 dd.Context = function(dict){
-	 	// summary: 
-	 	//		Represents a runtime context used by DTL templates.
-	 }
-	 
-	=====*/
 	dd.Context = lang.extend(function(/*Object*/dict){
-	 	// summary: 
+	 	// summary:
 	 	//		Represents a runtime context used by DTL templates.
 		this._this = {};
-		dd._Context.call(this, dict);
-	}, dd._Context.prototype,
+		dd._Context.call(this, dict);	// TODO: huh?
+	}, dd._Context.prototype,		// TODO: huh?
 	{
 		getKeys: function(){
 			// summary:
@@ -2722,9 +2680,7 @@ define([
 	"dojo/_base/lang",
 	"../_base"
 ], function(lang, dd){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.tag.logic", true);
 
 	var ddt = dd.text;
@@ -3005,16 +2961,14 @@ define([
 	"../_base",
 	"../utils/date"
 ], function(lang,dd,ddud){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.tag.date", true);
 
 	dojox.dtl.tag.date.NowNode = function(format, node){
 		this._format = format;
 		this.format = new ddud.DateFormat(format);
 		this.contents = node;
-	}
+	};
 	lang.extend(dd.tag.date.NowNode, {
 		render: function(context, buffer){
 			this.contents.set(this.format.format(new Date()));
@@ -3041,5 +2995,12 @@ define([
 
 }}});
 define("dojox/dtl", ["./dtl/_base"], function(dxdtl){
+	/*=====
+	 return {
+	 // summary:
+	 //		Deprecated.  Should require dojox/dtl modules directly rather than trying to access them through
+	 //		this module.
+	 };
+	 =====*/
 	return dxdtl;
 });

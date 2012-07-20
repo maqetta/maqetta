@@ -5,26 +5,34 @@
 */
 
 //>>built
-define("dojo/request/notify",["../topic"],function(_1){
-var _2=0;
-var _3={send:function(_4){
-if(!_2){
-_1.publish("/dojo/request/start");
+define("dojo/request/notify",["../Evented","../_base/lang","./util"],function(_1,_2,_3){
+var _4=0;
+var _5=_2.mixin(new _1,{onsend:function(_6){
+if(!_4){
+this.emit("start");
 }
-_2++;
-_1.publish("/dojo/request/send",_4);
-},load:function(_5){
-_1.publish("/dojo/request/load",_5);
-_3.done(_5);
-},error:function(_6){
-_1.publish("/dojo/request/error",_6);
-_3.done(_6);
-},done:function(_7){
-_1.publish("/dojo/request/done",_7);
-if(--_2<=0){
-_2=0;
-_1.publish("/dojo/request/stop");
+_4++;
+},_onload:function(_7){
+this.emit("done",_7);
+},_onerror:function(_8){
+this.emit("done",_8);
+},_ondone:function(_9){
+if(--_4<=0){
+_4=0;
+this.emit("stop");
 }
-}};
-return _3;
+},emit:function(_a,_b){
+var _c=_1.prototype.emit.apply(this,arguments);
+if(this["_on"+_a]){
+this["_on"+_a].call(this,_b);
+}
+return _c;
+}});
+function _d(_e,_f){
+return _5.on(_e,_f);
+};
+_d.emit=function(_10,_11){
+return _5.emit(_10,_11);
+};
+return _3.notify=_d;
 });

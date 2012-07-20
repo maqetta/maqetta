@@ -3,22 +3,6 @@ function(dojo, oo, defaults){
 
 //dojox.drawing.manager.Mouse = 
 return oo.declare(
-	// summary:
-	//		Master object (instance) that tracks mouse
-	//		events. A new instance is created for each
-	//		Drawing object.
-	// description:
-	//		You could connect to any method or event in this
-	//		class, but it is designed to have the object
-	//		'registered'. All objects with the current event
-	//		will be called directly.
-	//
-	//		Custom events are used often. In addition to
-	//		standard events onDown, onUp, onDrag, etc, if
-	//		a certain object is clicked upon (or dragged, etc),
-	//		that object's drawingType will create the custom event,
-	//		such as onAnchorDown, or onStencilDown.
-
 	function(/* Object */options){
 		this.util = options.util;
 		this.keys = options.keys;
@@ -28,6 +12,23 @@ return oo.declare(
 	},
 	
 	{
+		// summary:
+		//		Master object (instance) that tracks mouse
+		//		events. A new instance is created for each
+		//		Drawing object.
+		// description:
+		//		You could connect to any method or event in this
+		//		class, but it is designed to have the object
+		//		'registered'. All objects with the current event
+		//		will be called directly.
+		//
+		//		Custom events are used often. In addition to
+		//		standard events onDown, onUp, onDrag, etc, if
+		//		a certain object is clicked upon (or dragged, etc),
+		//		that object's drawingType will create the custom event,
+		//		such as onAnchorDown, or onStencilDown.
+
+
 		// doublClickSpeed: Number
 		//		Milliseconds between clicks to
 		//		register as for onDoubleClick
@@ -50,8 +51,8 @@ return oo.declare(
 			//		will be sent a EventObject event object.
 			//
 			//		NOTE:
-			//			Events happen anywhere in the document unless
-			//			otherwise noted.
+			//		Events happen anywhere in the document unless
+			//		otherwise noted.
 
 			// onMove: Function
 			//		Fires on mousemove when mouse is up
@@ -76,8 +77,9 @@ return oo.declare(
 			// summary:
 			//		The custom event object that is sent to registered objects
 			//		and their respective methods.
+			//
 			//		NOTE: Most event objects are the same with the exception
-			//			of the onDown events, which have fewer.
+			//		of the onDown events, which have fewer.
 
 			// id: String
 			//		Id of the focused object (included in onDown)
@@ -114,7 +116,7 @@ return oo.declare(
 		=====*/
 			
 		init: function(/* HTMLNode*/node){
-			//	summary:
+			// summary:
 			//		Internal. Initializes mouse.
 
 			this.container = node;
@@ -193,7 +195,7 @@ return oo.declare(
 		},
 		unregister: function(handle){
 			// summary:
-			// 		Disconnects object. Mouse events are no longer
+			//		Disconnects object. Mouse events are no longer
 			//		called for it.
 			if(!this.registered[handle]){ return; }
 			delete this.registered[handle];
@@ -211,7 +213,7 @@ return oo.declare(
 		
 		onDown: function(obj){
 			// summary:
-			// 		Create on[xx]Down event and send to broadcaster.
+			//		Create on[xx]Down event and send to broadcaster.
 			//		Could be connected to.
 			
 			//console.info("onDown:", this.eventName("down"))
@@ -220,7 +222,7 @@ return oo.declare(
 		
 		onDrag: function(obj){
 			// summary:
-			// 		Create on[xx]Drag event and send to broadcaster.
+			//		Create on[xx]Drag event and send to broadcaster.
 			//		Could be connected to.
 
 			var nm = this.eventName("drag");
@@ -232,7 +234,7 @@ return oo.declare(
 		
 		onMove: function(obj){
 			// summary:
-			// 		Create onMove event and send to broadcaster.
+			//		Create onMove event and send to broadcaster.
 			//		Could be connected to.
 			//		Note: onMove never uses a custom event
 			//		Note: onMove is currently not enabled in the app.
@@ -256,14 +258,12 @@ return oo.declare(
 		},
 		
 		onOut: function(obj){
-			// summary:
-			//
 			this._broadcastEvent(this.overName(obj,"out"), obj);
 		},
 		
 		onUp: function(obj){
 			// summary:
-			// 		Create on[xx]Up event and send to broadcaster.
+			//		Create on[xx]Up event and send to broadcaster.
 			//		Could be connected to.
 			
 			// 	blocking first click-off (deselect), largely for TextBlock
@@ -303,7 +303,7 @@ return oo.declare(
 		zoom: 1,
 		setZoom: function(zoom){
 			// summary:
-			// 		Internal. Sets the mouse zoom percentage to
+			//		Internal. Sets the mouse zoom percentage to
 			//		that of the canvas
 			this.zoom = 1/zoom;
 		},
@@ -312,7 +312,7 @@ return oo.declare(
 			// summary:
 			//		Sets the mouse mode s that custom events can be called.
 			//		Also can 'disable' events by using a bogus mode:
-			// 		|	mouse.setEventMode("DISABLED")
+			// |	mouse.setEventMode("DISABLED")
 			//		(unless any object subscribes to this event,
 			//		it is effectively disabled)
 

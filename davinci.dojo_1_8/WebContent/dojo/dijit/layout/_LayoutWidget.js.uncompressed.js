@@ -72,32 +72,33 @@ define("dijit/layout/_LayoutWidget", [
 			// summary:
 			//		Call this to resize a widget, or after its size has changed.
 			// description:
-			//		Change size mode:
-			//			When changeSize is specified, changes the marginBox of this widget
-			//			and forces it to re-layout its contents accordingly.
-			//			changeSize may specify height, width, or both.
+			//		####Change size mode:
 			//
-			//			If resultSize is specified it indicates the size the widget will
-			//			become after changeSize has been applied.
+			//		When changeSize is specified, changes the marginBox of this widget
+			//		and forces it to re-layout its contents accordingly.
+			//		changeSize may specify height, width, or both.
 			//
-			//		Notification mode:
-			//			When changeSize is null, indicates that the caller has already changed
-			//			the size of the widget, or perhaps it changed because the browser
-			//			window was resized.  Tells widget to re-layout its contents accordingly.
+			//		If resultSize is specified it indicates the size the widget will
+			//		become after changeSize has been applied.
 			//
-			//			If resultSize is also specified it indicates the size the widget has
-			//			become.
+			//		####Notification mode:
+			//
+			//		When changeSize is null, indicates that the caller has already changed
+			//		the size of the widget, or perhaps it changed because the browser
+			//		window was resized.  Tells widget to re-layout its contents accordingly.
+			//
+			//		If resultSize is also specified it indicates the size the widget has
+			//		become.
 			//
 			//		In either mode, this method also:
-			//			1. Sets this._borderBox and this._contentBox to the new size of
-			//				the widget.  Queries the current domNode size if necessary.
-			//			2. Calls layout() to resize contents (and maybe adjust child widgets).
 			//
+			//		1. Sets this._borderBox and this._contentBox to the new size of
+			//			the widget.  Queries the current domNode size if necessary.
+			//		2. Calls layout() to resize contents (and maybe adjust child widgets).
 			// changeSize: Object?
 			//		Sets the widget to this margin-box size and position.
 			//		May include any/all of the following properties:
 			//	|	{w: int, h: int, l: int, t: int}
-			//
 			// resultSize: Object?
 			//		The margin-box size of this widget after applying changeSize (if
 			//		changeSize is specified).  If caller knows this size and

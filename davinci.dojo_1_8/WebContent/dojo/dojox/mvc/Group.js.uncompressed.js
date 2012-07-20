@@ -31,7 +31,7 @@ define("dojox/mvc/Group", ["dojo/_base/declare", "dijit/_WidgetBase", 	"dojo/_ba
 			// summary:
 			//		Handler for calls to set("target", val).
 			// description:
-			//		Sets "ref" property so that child widgets can refer to.
+			//		Sets target and "ref" property so that child widgets can refer to.
 
 			this._set("target", value);
 			if(this.binding != value){

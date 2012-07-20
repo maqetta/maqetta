@@ -2,18 +2,6 @@ define("dojox/drawing/plugins/tools/Pan", ["dojo/_base/lang", "../../util/oo", "
 function(lang, oo, Plugin, registry){
 
 var Pan = oo.declare(
-	// summary:
-	//		A plugin that allows for a scrolling canvas. An action
-	//		tool is added to the toolbar that allows for panning. Holding
-	//		the space bar is a shortcut to that action. The canvas will
-	//		only pan and scroll if there are objects out of the viewable
-	//		area.
-	// example:
-	//		|	<div dojoType="dojox.drawing.Toolbar" drawingId="drawingNode" class="drawingToolbar vertical">
-	//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
-	//		|		<div plugin="dojox.drawing.plugins.tools.Pan" options="{}">Pan</div>
-	//		|	</div>
-
 	Plugin,
 	function(options){
 		this.domNode = options.node;
@@ -42,6 +30,18 @@ var Pan = oo.declare(
 		//this.checkBounds();
 		
 	},{
+		// summary:
+		//		A plugin that allows for a scrolling canvas. An action
+		//		tool is added to the toolbar that allows for panning. Holding
+		//		the space bar is a shortcut to that action. The canvas will
+		//		only pan and scroll if there are objects out of the viewable
+		//		area.
+		// example:
+		//		|	<div dojoType="dojox.drawing.Toolbar" drawingId="drawingNode" class="drawingToolbar vertical">
+		//		|		<div tool="dojox.drawing.tools.Line" selected="true">Line</div>
+		//		|		<div plugin="dojox.drawing.plugins.tools.Pan" options="{}">Pan</div>
+		//		|	</div>
+
 		selected:false,
 		keyScroll:false,
 		type:"dojox.drawing.plugins.tools.Pan",
@@ -128,10 +128,10 @@ var Pan = oo.declare(
 			
 			// summary:
 			//		Scans all items on the canvas and checks if they are out of
-			// 		bounds. If so, a scroll bar (in Canvas) is shown. If the position
-			// 		is left or top, the canvas is scrolled all items are relocated
-			// 		the distance of the scroll. Ideally, it should look as if the
-			// 		items do not move.
+			//		bounds. If so, a scroll bar (in Canvas) is shown. If the position
+			//		is left or top, the canvas is scrolled all items are relocated
+			//		the distance of the scroll. Ideally, it should look as if the
+			//		items do not move.
 			
 			// logging stuff here so it can be turned on and off. This method is
 			// very high maintenance.

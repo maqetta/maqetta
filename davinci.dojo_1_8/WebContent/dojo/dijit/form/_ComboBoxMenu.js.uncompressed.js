@@ -18,8 +18,9 @@ define("dijit/form/_ComboBoxMenu", [
 		// summary:
 		//		Focus-less menu for internal use in `dijit.form.ComboBox`
 		//		Abstract methods that must be defined externally:
-		//			- onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
-		//			- onPage: next(1) or previous(-1) button pressed
+		//
+		//		- onChange: item was explicitly chosen (mousedown somewhere on the menu and mouseup somewhere on the menu)
+		//		- onPage: next(1) or previous(-1) button pressed
 		// tags:
 		//		private
 
@@ -109,7 +110,7 @@ define("dijit/form/_ComboBoxMenu", [
 			// summary:
 			//		Handle keystroke event forwarded from ComboBox, returning false if it's
 			//		a keystroke I recognize and process, true otherwise.
-			switch(evt.charOrCode){
+			switch(evt.keyCode){
 				case keys.DOWN_ARROW:
 					this.selectNextNode();
 					return false;

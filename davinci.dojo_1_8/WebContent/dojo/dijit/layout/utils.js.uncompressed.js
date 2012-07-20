@@ -63,11 +63,12 @@ define("dijit/layout/utils", [
 		// dim:
 		//		{l, t, w, h} object specifying dimensions of container into which to place children
 		// children:
-		//		an array of Widgets or at least objects containing:
-		//			* domNode: pointer to DOM node to position
-		//			* region or layoutAlign: position to place DOM node
-		//			* resize(): (optional) method to set size of node
-		//			* id: (optional) Id of widgets, referenced from resize object, below.
+		//		An array of Widgets or at least objects containing:
+		//
+		//		- domNode: pointer to DOM node to position
+		//		- region or layoutAlign: position to place DOM node
+		//		- resize(): (optional) method to set size of node
+		//		- id: (optional) Id of widgets, referenced from resize object, below.
 		// changedRegionId:
 		//		If specified, the slider for the region with the specified id has been dragged, and thus
 		//		the region's height or width should be adjusted according to changedRegionSize

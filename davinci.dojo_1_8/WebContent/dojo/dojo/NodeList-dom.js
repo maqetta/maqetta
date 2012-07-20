@@ -79,7 +79,7 @@ _1e.parentNode.insertBefore(_21,_1e);
 }
 _1e=_21;
 }
-},attr:_e(_10(_8),_a),style:_e(_10(_9),_a),addClass:_f(_5.add),removeClass:_f(_5.remove),replaceClass:_f(_5.replace),toggleClass:_f(_5.toggle),empty:_f(_6.empty),removeAttr:_f(_8.remove),position:aam(_7.position),marginBox:aam(_7.getMarginBox),place:function(_22,_23){
+},position:aam(_7.position),attr:_e(_10(_8),_a),style:_e(_10(_9),_a),addClass:_f(_5.add),removeClass:_f(_5.remove),toggleClass:_f(_5.toggle),replaceClass:_f(_5.replace),empty:_f(_6.empty),removeAttr:_f(_8.remove),marginBox:aam(_7.getMarginBox),place:function(_22,_23){
 var _24=_2(_22)[0];
 return this.forEach(function(_25){
 _6.place(_25,_24,_23);

@@ -8,6 +8,7 @@
 }
 .nihilo .dijitSelect .dijitArrowButton {
 	background: #bcd5f0 url("../images/buttonEnabled.png") repeat-x top left;
+	border-width: 0;
 }
 .nihilo .dijitSelectDisabled,
 .nihilo .dijitSelectDisabled TD {

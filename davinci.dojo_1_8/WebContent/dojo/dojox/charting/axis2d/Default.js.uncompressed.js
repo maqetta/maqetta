@@ -84,11 +84,11 @@ define("dojox/charting/axis2d/Default", ["dojo/_base/lang", "dojo/_base/array", 
 		// titleGap: Number?
 		//		An optional grap between axis title and axis label
 		// titleFont: String?
-		// 		An optional font definition for axis title
+		//		An optional font definition for axis title
 		// titleFontColor: String?
-		// 		An optional axis title color
+		//		An optional axis title color
 		// titleOrientation: String?
-		// 		An optional orientation for axis title. "axis" means the title facing the axis, "away" means facing away.
+		//		An optional orientation for axis title. "axis" means the title facing the axis, "away" means facing away.
 		//		If no value is set "axis" is used.
 		// enableCache: Boolean?
 		//		Whether the ticks and labels are cached from one rendering to another. This improves the rendering performance of

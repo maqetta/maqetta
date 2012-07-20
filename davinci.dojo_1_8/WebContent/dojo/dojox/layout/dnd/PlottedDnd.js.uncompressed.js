@@ -309,7 +309,8 @@ dojo.declare("dojox.layout.dnd.PlottedDnd", [dojo.dnd.Source], {
 	},
 	
 	deleteDashedZone: function() {
-		// summary: hide the dashed zone
+		// summary:
+		//		hide the dashed zone
 		this._drop.style.display = "none";
 			var next = this._drop.nextSibling;
 			while (next != null) {

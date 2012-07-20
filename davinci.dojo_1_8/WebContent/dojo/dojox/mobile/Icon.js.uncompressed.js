@@ -8,8 +8,6 @@ define("dojox/mobile/Icon", [
 
 	// module:
 	//		dojox/mobile/Icon
-	// summary:
-	//		A wrapper for image icon, CSS sprite icon, or DOM Button.
 
 	return declare("dojox.mobile.Icon", null, {
 		// summary:
@@ -51,7 +49,13 @@ define("dojox/mobile/Icon", [
 		//		A name of html tag to create as this.domNode.
 		tag: "div",
 
-		constructor: function(args, node){
+		constructor: function(/*Object?*/args, /*DomNode?*/node){
+			// summary:
+			//		Creates a new instance of the class.
+			// args:
+			//		Contains properties to be set.
+			// node:
+			//		The DOM node. If none is specified, it is automatically created. 
 			if(args){
 				lang.mixin(this, args);
 			}

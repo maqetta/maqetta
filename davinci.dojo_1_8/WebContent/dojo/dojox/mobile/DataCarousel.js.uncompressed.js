@@ -7,8 +7,6 @@ define("dojox/mobile/DataCarousel", [
 
 	// module:
 	//		dojox/mobile/DataCarousel
-	// summary:
-	//		A dojo/data-enabled Carousel.
 
 	kernel.deprecated("dojox/mobile/DataCarousel is deprecated", "Use dojox/mobile/StoreCarousel instead", 2.0);
 	return declare("dojox.mobile.DataCarousel", [Carousel, DataMixin], {

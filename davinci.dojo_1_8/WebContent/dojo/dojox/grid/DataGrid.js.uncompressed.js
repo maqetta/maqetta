@@ -10,10 +10,11 @@ define(["./dom-geometry", "./_base/lang", "./ready", "./sniff", "./_base/window"
 	return {
 		// summary:
 		//		Applies pre-set CSS classes to the top-level HTML node, based on:
-		//			- browser (ex: dj_ie)
-		//			- browser version (ex: dj_ie6)
-		//			- box model (ex: dj_contentBox)
-		//			- text direction (ex: dijitRtl)
+		//
+		//		- browser (ex: dj_ie)
+		//		- browser version (ex: dj_ie6)
+		//		- box model (ex: dj_contentBox)
+		//		- text direction (ex: dijitRtl)
 		//
 		//		In addition, browser, browser version, and box model are
 		//		combined with an RTL flag when browser text is RTL. ex: dj_ie-rtl.
@@ -144,12 +145,11 @@ define([
 		defaultWidth: "18em",
 
 		// viewWidth: String
-		// 		Width for the view, in valid css unit
+		//		Width for the view, in valid css unit
 		viewWidth: "",
 
 		templateString: template,
-		
-		themeable: false,
+
 		classTag: 'dojoxGrid',
 		marginBottom: 0,
 		rowPad: 2,
@@ -801,8 +801,12 @@ define([
 		// scrolling
 		lastTop: 0,
 		firstScroll:0,
+		_nativeScroll: false,
 
 		doscroll: function(inEvent){
+			if(has('ff') >= 13){
+				this._nativeScroll = true;
+			}
 			//var s = dojo.marginBox(this.headerContentNode.firstChild);
 			var isLtr = this.grid.isLeftToRight();
 			if(this.firstScroll < 2){
@@ -828,12 +832,16 @@ define([
 			if(top !== this.lastTop){
 				this.grid.scrollTo(top);
 			}
+			this._nativeScroll = false;
 		},
 
 		setScrollTop: function(inTop){
 			// 'lastTop' is a semaphore to prevent feedback-loop with doScroll above
 			this.lastTop = inTop;
-			this.scrollboxNode.scrollTop = inTop;
+			if(!this._nativeScroll){
+				//fix #15487
+				this.scrollboxNode.scrollTop = inTop;
+			}
 			return this.scrollboxNode.scrollTop;
 		},
 
@@ -974,11 +982,11 @@ define("dijit/_Contained", [
 
 		_getSibling: function(/*String*/ which){
 			// summary:
-			//      Returns next or previous sibling
+			//		Returns next or previous sibling
 			// which:
-			//      Either "next" or "previous"
+			//		Either "next" or "previous"
 			// tags:
-			//      private
+			//		private
 			var node = this.domNode;
 			do{
 				node = node[which+"Sibling"];
@@ -1036,11 +1044,11 @@ define([
 
 /*=====
 var __SelectorArgs = declare([Container.__ContainerArgs], {
-	//	singular: Boolean
+	// singular: Boolean
 	//		allows selection of only one element, if true
 	singular: false,
 
-	//	autoSync: Boolean
+	// autoSync: Boolean
 	//		autosynchronizes the source with its list of DnD nodes,
 	autoSync: false
 });
@@ -1500,6 +1508,10 @@ var Manager = declare("dojo.dnd.Manager", [Evented], {
 		//		the list of transferred items
 		// copy: Boolean
 		//		copy items, if true, move items otherwise
+
+		// Tell autoscroll that a drag is starting
+		autoscroll.autoScrollStart(win.doc);
+
 		this.source = source;
 		this.nodes  = nodes;
 		this.copy   = Boolean(copy); // normalizing to true boolean
@@ -1656,6 +1668,140 @@ return Manager;
 });
 
 },
+'dijit/a11yclick':function(){
+define("dijit/a11yclick", [
+	"dojo/on",
+	"dojo/_base/array", // array.forEach
+	"dojo/keys", // keys.ENTER keys.SPACE
+	"dojo/_base/declare", // declare
+	"dojo/has", // has("dom-addeventlistener")
+	"dojo/_base/unload", // unload.addOnWindowUnload
+	"dojo/_base/window" // win.doc.addEventListener win.doc.attachEvent win.doc.detachEvent
+], function(on, array, keys, declare, has, unload, win){
+
+	// module:
+	//		dijit/a11yclick
+
+	// Keep track of where the last keydown event was, to help avoid generating
+	// spurious ondijitclick events when:
+	// 1. focus is on a <button> or <a>
+	// 2. user presses then releases the ENTER key
+	// 3. onclick handler fires and shifts focus to another node, with an ondijitclick handler
+	// 4. onkeyup event fires, causing the ondijitclick handler to fire
+	var lastKeyDownNode = null;
+	if(has("dom-addeventlistener")){
+		win.doc.addEventListener('keydown', function(evt){
+			lastKeyDownNode = evt.target;
+		}, true);
+	}else{
+		// Fallback path for IE6-8
+		(function(){
+			var keydownCallback = function(evt){
+				lastKeyDownNode = evt.srcElement;
+			};
+			win.doc.attachEvent('onkeydown', keydownCallback);
+			unload.addOnWindowUnload(function(){
+				win.doc.detachEvent('onkeydown', keydownCallback);
+			});
+		})();
+	}
+
+	function clickKey(/*Event*/ e){
+		return (e.keyCode === keys.ENTER || e.keyCode === keys.SPACE) &&
+			!e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
+	}
+
+	return function(node, listener){
+		// summary:
+		//		Custom a11yclick (a.k.a. ondijitclick) event
+		//		which triggers on a mouse click, touch, or space/enter keyup.
+
+		if(/input|button/i.test(node.nodeName)){
+			// pass through, the browser already generates click event on SPACE/ENTER key
+			return on(node, "click", listener);
+		}else{
+			// Don't fire the click event unless both the keydown and keyup occur on this node.
+			// Avoids problems where focus shifted to this node or away from the node on keydown,
+			// either causing this node to process a stray keyup event, or causing another node
+			// to get a stray keyup event.
+
+			var handles = [
+				on(node, "keydown", function(e){
+					//console.log(this.id + ": onkeydown, e.target = ", e.target, ", lastKeyDownNode was ", lastKeyDownNode, ", equality is ", (e.target === lastKeyDownNode));
+					if(clickKey(e)){
+						// needed on IE for when focus changes between keydown and keyup - otherwise dropdown menus do not work
+						lastKeyDownNode = e.target;
+
+						// Prevent viewport scrolling on space key in IE<9.
+						// (Reproducible on test_Button.html on any of the first dijit.form.Button examples)
+						e.preventDefault();
+					}
+				}),
+
+				on(node, "keyup", function(e){
+					//console.log(this.id + ": onkeyup, e.target = ", e.target, ", lastKeyDownNode was ", lastKeyDownNode, ", equality is ", (e.target === lastKeyDownNode));
+					if(clickKey(e) && e.target == lastKeyDownNode){	// === breaks greasemonkey
+						//need reset here or have problems in FF when focus returns to trigger element after closing popup/alert
+						lastKeyDownNode = null;
+						on.emit(e.target, "click", {
+							cancelable: true,
+							bubbles: true
+						});
+					}
+				}),
+
+				on(node, "click", function(e){
+					// catch mouse clicks, plus the on.emit() calls from above and below
+					listener.call(this, e);
+				})
+			];
+
+			if(has("touch")){
+				// touchstart-->touchend will automatically generate a click event, but there are problems
+				// on iOS after focus has been programatically shifted (#14604, #14918), so setup a failsafe
+				// if click doesn't fire naturally.
+
+				var clickTimer;
+				handles.push(
+					on(node, "touchend", function(e){
+						var target = e.target;
+						clickTimer = setTimeout(function(){
+							clickTimer = null;
+							on.emit(target, "click", {
+								cancelable: true,
+								bubbles: true
+							});
+						}, 600);
+					}),
+					on(node, "click", function(e){
+						// If browser generates a click naturally, clear the timer to fire a synthetic click event
+						if(clickTimer){
+							clearTimeout(clickTimer);
+						}
+					})
+					// TODO: if the touchstart and touchend were <100ms apart, and then there's another touchstart
+					// event <300ms after the touchend event, then clear the synthetic click timer, because user
+					// is doing a zoom.   Alternately monitor screen.deviceXDPI (or something similar) to see if
+					// zoom level has changed.
+				);
+			}
+
+			return {
+				remove: function(){
+					array.forEach(handles, function(h){ h.remove(); });
+					if(clickTimer){
+						clearTimeout(clickTimer);
+						clickTimer = null;
+					}
+				}
+			};
+		}
+	};
+
+	return ret;
+});
+
+},
 'dojox/grid/_RowSelector':function(){
 define([
 	"dojo/_base/declare",
@@ -1689,7 +1835,7 @@ return declare('dojox.grid._RowSelector', _View, {
 	},
 	adaptWidth: function(){
 		// Only calculate this here - rather than every call to buildRowContent
-		if(!("contentWidth" in this) && this.contentNode){
+		if(!("contentWidth" in this) && this.contentNode && this.contentNode.offsetWidth > 0){
 			this.contentWidth = this.contentNode.offsetWidth - this.padBorderWidth;
 		}
 	},
@@ -2034,57 +2180,57 @@ define("dojox/grid/_Grid", [
 	}
 	/*=====
 	dojox.grid.__CellDef = function(){
-		//	name: String?
+		// name: String?
 		//		The text to use in the header of the grid for this cell.
-		//	get: Function?
+		// get: Function?
 		//		function(rowIndex){} rowIndex is of type Integer.  This
 		//		function will be called when a cell	requests data.  Returns the
 		//		unformatted data for the cell.
-		//	value: String?
+		// value: String?
 		//		If "get" is not specified, this is used as the data for the cell.
-		//	defaultValue: String?
+		// defaultValue: String?
 		//		If "get" and "value" aren't specified or if "get" returns an undefined
 		//		value, this is used as the data for the cell.  "formatter" is not run
 		//		on this if "get" returns an undefined value.
-		//	formatter: Function?
+		// formatter: Function?
 		//		function(data, rowIndex){} data is of type anything, rowIndex
 		//		is of type Integer.  This function will be called after the cell
 		//		has its data but before it passes it back to the grid to render.
 		//		Returns the formatted version of the cell's data.
-		//	type: dojox.grid.cells._Base|Function?
+		// type: dojox.grid.cells._Base|Function?
 		//		TODO
-		//	editable: Boolean?
+		// editable: Boolean?
 		//		Whether this cell should be editable or not.
-		//	hidden: Boolean?
+		// hidden: Boolean?
 		//		If true, the cell will not be displayed.
-		//	noresize: Boolean?
+		// noresize: Boolean?
 		//		If true, the cell will not be able to be resized.
-		//	width: Integer|String?
+		// width: Integer|String?
 		//		A CSS size.  If it's an Integer, the width will be in em's.
-		//	colSpan: Integer?
+		// colSpan: Integer?
 		//		How many columns to span this cell.  Will not work in the first
 		//		sub-row of cells.
-		//	rowSpan: Integer?
+		// rowSpan: Integer?
 		//		How many sub-rows to span this cell.
-		//	styles: String?
+		// styles: String?
 		//		A string of styles to apply to both the header cell and main
 		//		grid cells.  Must end in a ';'.
-		//	headerStyles: String?
+		// headerStyles: String?
 		//		A string of styles to apply to just the header cell.  Must end
 		//		in a ';'
-		//	cellStyles: String?
+		// cellStyles: String?
 		//		A string of styles to apply to just the main grid cells.  Must
 		//		end in a ';'
-		//	classes: String?
+		// classes: String?
 		//		A space separated list of classes to apply to both the header
 		//		cell and the main grid cells.
-		//	headerClasses: String?
+		// headerClasses: String?
 		//		A space separated list of classes to apply to just the header
 		//		cell.
-		//	cellClasses: String?
+		// cellClasses: String?
 		//		A space separated list of classes to apply to just the main
 		//		grid cells.
-		//	attrs: String?
+		// attrs: String?
 		//		A space separated string of attribute='value' pairs to add to
 		//		the header cell element and main grid cell elements.
 		this.name = name;
@@ -2104,35 +2250,35 @@ define("dojox/grid/_Grid", [
 		this.headerClasses = headerClasses;
 		this.cellClasses = cellClasses;
 		this.attrs = attrs;
-	}
+	};
 	=====*/
 
 	/*=====
 	dojox.grid.__ViewDef = function(){
-		//	noscroll: Boolean?
+		// noscroll: Boolean?
 		//		If true, no scrollbars will be rendered without scrollbars.
-		//	width: Integer|String?
+		// width: Integer|String?
 		//		A CSS size.  If it's an Integer, the width will be in em's. If
 		//		"noscroll" is true, this value is ignored.
-		//	cells: dojox.grid.__CellDef[]|Array[dojox.grid.__CellDef[]]?
+		// cells: dojox.grid.__CellDef[]|Array[dojox.grid.__CellDef[]]?
 		//		The structure of the cells within this grid.
-		//	type: String?
+		// type: String?
 		//		A string containing the constructor of a subclass of
 		//		dojox.grid._View.  If this is not specified, dojox.grid._View
 		//		is used.
-		//	defaultCell: dojox.grid.__CellDef?
+		// defaultCell: dojox.grid.__CellDef?
 		//		A cell definition with default values for all cells in this view.  If
 		//		a property is defined in a cell definition in the "cells" array and
 		//		this property, the cell definition's property will override this
 		//		property's property.
-		//	onBeforeRow: Function?
+		// onBeforeRow: Function?
 		//		function(rowIndex, cells){} rowIndex is of type Integer, cells
 		//		is of type Array[dojox.grid.__CellDef[]].  This function is called
 		//		before each row of data is rendered.  Before the header is
 		//		rendered, rowIndex will be -1.  "cells" is a reference to the
 		//		internal structure of this view's cells so any changes you make to
 		//		it will persist between calls.
-		//	onAfterRow: Function?
+		// onAfterRow: Function?
 		//		function(rowIndex, cells, rowNode){} rowIndex is of type Integer, cells
 		//		is of type Array[dojox.grid.__CellDef[]], rowNode is of type DOMNode.
 		//		This function is called	after each row of data is rendered.  After the
@@ -2146,17 +2292,17 @@ define("dojox/grid/_Grid", [
 		this.defaultCell = defaultCell;
 		this.onBeforeRow = onBeforeRow;
 		this.onAfterRow = onAfterRow;
-	}
+	};
 	=====*/
 
 	var _Grid = declare('dojox.grid._Grid',
 		[ _Widget, _TemplatedMixin, _Events ],
 		{
 		// summary:
-		// 		A grid widget with virtual scrolling, cell editing, complex rows,
-		// 		sorting, fixed columns, sizeable columns, etc.
+		//		A grid widget with virtual scrolling, cell editing, complex rows,
+		//		sorting, fixed columns, sizeable columns, etc.
 		//
-		//	description:
+		// description:
 		//		_Grid provides the full set of grid features without any
 		//		direct connection to a data store.
 		//
@@ -2166,7 +2312,7 @@ define("dojox/grid/_Grid", [
 		//		The grid is rendered based on its structure, an object describing
 		//		column and cell layout.
 		//
-		//	example:
+		// example:
 		//		A quick sample:
 		//
 		//		define a get function
@@ -2192,7 +2338,7 @@ define("dojox/grid/_Grid", [
 		templateString: template,
 
 		// classTag: String
-		// 		CSS class applied to the grid's domNode
+		//		CSS class applied to the grid's domNode
 		classTag: 'dojoxGrid',
 
 		// settings
@@ -2231,7 +2377,7 @@ define("dojox/grid/_Grid", [
 		//		If rowHeight is set to a positive number, it will define the height of the rows
 		//		in pixels. This can provide a significant performance advantage, since it
 		//		eliminates the need to measure row sizes during rendering, which is one
-		// 		the primary bottlenecks in the DataGrid's performance.
+		//		the primary bottlenecks in the DataGrid's performance.
 		rowHeight: 0,
 		
 		// autoRender: Boolean
@@ -2265,21 +2411,21 @@ define("dojox/grid/_Grid", [
 		selectionMode: 'extended',
 
 		// rowSelector: Boolean|String
-		// 		If set to true, will add a row selector view to this grid.  If set to a CSS width, will add
-		// 		a row selector of that width to this grid.
+		//		If set to true, will add a row selector view to this grid.  If set to a CSS width, will add
+		//		a row selector of that width to this grid.
 		rowSelector: '',
 
 		// columnReordering: Boolean
-		// 		If set to true, will add drag and drop reordering to views with one row of columns.
+		//		If set to true, will add drag and drop reordering to views with one row of columns.
 		columnReordering: false,
 
 		// headerMenu: dijit.Menu
-		// 		If set to a dijit.Menu, will use this as a context menu for the grid headers.
+		//		If set to a dijit.Menu, will use this as a context menu for the grid headers.
 		headerMenu: null,
 
 		// placeholderLabel: String
-		// 		Label of placeholders to search for in the header menu to replace with column toggling
-		// 		menu items.
+		//		Label of placeholders to search for in the header menu to replace with column toggling
+		//		menu items.
 		placeholderLabel: "GridColumns",
 		
 		// selectable: Boolean
@@ -2290,28 +2436,28 @@ define("dojox/grid/_Grid", [
 		_click: null,
 		
 		// loadingMessage: String
-		//  Message that shows while the grid is loading
+		//		Message that shows while the grid is loading
 		loadingMessage: "<span class='dojoxGridLoading'>${loadingState}</span>",
 
 		// errorMessage: String
-		//  Message that shows when the grid encounters an error loading
+		//		Message that shows when the grid encounters an error loading
 		errorMessage: "<span class='dojoxGridError'>${errorState}</span>",
 
 		// noDataMessage: String
-		//  Message that shows if the grid has no data - wrap it in a
-		//  span with class 'dojoxGridNoData' if you want it to be
-		//  styled similar to the loading and error messages
+		//		Message that shows if the grid has no data - wrap it in a
+		//		span with class 'dojoxGridNoData' if you want it to be
+		//		styled similar to the loading and error messages
 		noDataMessage: "",
 		
 		// escapeHTMLInData: Boolean
 		//		This will escape HTML brackets from the data to prevent HTML from
-		// 		user-inputted data being rendered with may contain JavaScript and result in
-		// 		XSS attacks. This is true by default, and it is recommended that it remain
-		// 		true. Setting this to false will allow data to be displayed in the grid without
-		// 		filtering, and should be only used if it is known that the data won't contain
-		// 		malicious scripts. If HTML is needed in grid cells, it is recommended that
-		// 		you use the formatter function to generate the HTML (the output of
-		// 		formatter functions is not filtered, even with escapeHTMLInData set to true).
+		//		user-inputted data being rendered with may contain JavaScript and result in
+		//		XSS attacks. This is true by default, and it is recommended that it remain
+		//		true. Setting this to false will allow data to be displayed in the grid without
+		//		filtering, and should be only used if it is known that the data won't contain
+		//		malicious scripts. If HTML is needed in grid cells, it is recommended that
+		//		you use the formatter function to generate the HTML (the output of
+		//		formatter functions is not filtered, even with escapeHTMLInData set to true).
 		escapeHTMLInData: true,
 		
 		// formatterScope: Object
@@ -2330,9 +2476,10 @@ define("dojox/grid/_Grid", [
 		summary: '',
 		_setSummaryAttr: 'domNode',
 		
-		// private
+		// sortInfo: [private] Number
 		sortInfo: 0,
-		themeable: true,
+
+		// _placeholders: [private] Array
 		_placeholders: null,
 
 		// _layoutClass: Object
@@ -2493,7 +2640,8 @@ define("dojox/grid/_Grid", [
 		},
 
 		createScroller: function(){
-			// summary: Creates a new virtual scroller
+			// summary:
+			//		Creates a new virtual scroller
 			this.scroller = new _Scroller();
 			this.scroller.grid = this;
 			this.scroller.renderRow = lang.hitch(this, "renderRow");
@@ -2501,13 +2649,14 @@ define("dojox/grid/_Grid", [
 		},
 
 		createLayout: function(){
-			// summary: Creates a new Grid layout
+			// summary:
+			//		Creates a new Grid layout
 			this.layout = new this._layoutClass(this);
 			this.connect(this.layout, "moveColumn", "onMoveColumn");
 		},
 
 		onMoveColumn: function(){
-			this.render();
+			this.update();
 		},
 		
 		onResizeColumn: function(/*int*/ cellIdx){
@@ -2567,7 +2716,8 @@ define("dojox/grid/_Grid", [
 		},
 		
 		getColumnTogglingItems: function(){
-			// Summary: returns an array of dijit.CheckedMenuItem widgets that can be
+			// summary:
+			//		returns an array of dijit.CheckedMenuItem widgets that can be
 			//		added to a menu for toggling columns on and off.
 			var items, checkedItems = [];
 			items = array.map(this.layout.cells, function(cell){
@@ -2792,7 +2942,10 @@ define("dojox/grid/_Grid", [
 		},
 
 		adaptWidth: function() {
-			// private: sets width and position for views and update grid width if necessary
+			// summary:
+			//		sets width and position for views and update grid width if necessary
+			// tags:
+			//		private
 			var doAutoWidth = (!this.initialWidth && this.autoWidth);
 			var w = doAutoWidth ? 0 : this.domNode.clientWidth || (this.domNode.offsetWidth - this._getPadBorder().w),
 				vw = this.views.arrange(1, w);
@@ -2803,8 +2956,11 @@ define("dojox/grid/_Grid", [
 		},
 
 		adaptHeight: function(inHeaderHeight){
-			// private: measures and normalizes header height, then sets view heights, and then updates scroller
-			//  content extent
+			// summary:
+			//		measures and normalizes header height, then sets view heights, and then updates scroller
+			//		content extent
+			// tags:
+			//		private
 			var t = inHeaderHeight === undefined ? this._getHeaderHeight() : inHeaderHeight;
 			var h = (this._autoHeight ? -1 : Math.max(this.domNode.clientHeight - t, 0) || 0);
 			this.views.onEach('setSize', [0, h]);
@@ -2888,12 +3044,18 @@ define("dojox/grid/_Grid", [
 		},
 
 		renderRow: function(inRowIndex, inNodes){
-			// summary: private, used internally to render rows
+			// summary:
+			//		used internally to render rows
+			// tags:
+			//		private
 			this.views.renderRow(inRowIndex, inNodes, this._skipRowRenormalize);
 		},
 
 		rowRemoved: function(inRowIndex){
-			// summary: private, used internally to remove rows
+			// summary:
+			//		used internally to remove rows
+			// tags:
+			//		private
 			this.views.rowRemoved(inRowIndex);
 		},
 
@@ -3029,7 +3191,7 @@ define("dojox/grid/_Grid", [
 			//		Update grid when the height of a row has changed. Row height is handled automatically as rows
 			//		are rendered. Use this function only to update a row's height outside the normal rendering process.
 			// inRowIndex: Integer
-			// 		index of the row that has changed height
+			//		index of the row that has changed height
 
 			this.views.renormalizeRow(inRowIndex);
 			this.scroller.rowHeightChanged(inRowIndex);
@@ -3088,12 +3250,15 @@ define("dojox/grid/_Grid", [
 			// summary:
 			//		Scroll the grid to a specific row.
 			// inRowIndex: Integer
-			// 		grid row index
+			//		grid row index
 			this.setScrollTop(this.scroller.findScrollTop(inRowIndex) + 1);
 		},
 
-		// styling (private, used internally to style individual parts of a row)
 		styleRowNode: function(inRowIndex, inRowNode){
+			// summary:
+			//		styling (used internally to style individual parts of a row)
+			// tags:
+			//		private
 			if(inRowNode){
 				this.rows.styleRowNode(inRowIndex, inRowNode);
 			}
@@ -3109,7 +3274,7 @@ define("dojox/grid/_Grid", [
 			// summary:
 			//		Retrieves the cell object for a given grid column.
 			// inIndex: Integer
-			// 		Grid column index of cell to retrieve
+			//		Grid column index of cell to retrieve
 			// returns:
 			//		a grid cell
 			return this.layout.cells[inIndex];
@@ -3120,7 +3285,8 @@ define("dojox/grid/_Grid", [
 		},
 
 		getCellName: function(inCell){
-			// summary: Returns the cell name of a passed cell
+			// summary:
+			//		Returns the cell name of a passed cell
 			return "Cell " + inCell.index; // String
 		},
 
@@ -3130,7 +3296,7 @@ define("dojox/grid/_Grid", [
 			//		Determines if the grid can be sorted
 			// inSortInfo: Integer
 			//		Sort information, 1-based index of column on which to sort, positive for an ascending sort
-			// 		and negative for a descending sort
+			//		and negative for a descending sort
 			// returns: Boolean
 			//		True if grid can be sorted on the given column in the given direction
 		},
@@ -3154,11 +3320,11 @@ define("dojox/grid/_Grid", [
 
 		setSortIndex: function(inIndex, inAsc){
 			// summary:
-			// 		Sort the grid on a column in a specified direction
+			//		Sort the grid on a column in a specified direction
 			// inIndex: Integer
-			// 		Column index on which to sort.
+			//		Column index on which to sort.
 			// inAsc: Boolean
-			// 		If true, sort the grid in ascending order, otherwise in descending order
+			//		If true, sort the grid in ascending order, otherwise in descending order
 			var si = inIndex +1;
 			if(inAsc != undefined){
 				si *= (inAsc ? 1 : -1);
@@ -3406,8 +3572,14 @@ define("dojox/grid/_Grid", [
 define("dojox/main", ["dojo/_base/kernel"], function(dojo) {
 	// module:
 	//		dojox/main
-	// summary:
-	//		The dojox package main module; dojox package is somewhat unusual in that the main module currently just provides an empty object.
+
+	/*=====
+	return {
+		// summary:
+		//		The dojox package main module; dojox package is somewhat unusual in that the main module currently just provides an empty object.
+		//		Apps should require modules from the dojox packages directly, rather than loading this module.
+	};
+	=====*/
 
 	return dojo.dojox;
 });
@@ -3454,6 +3626,10 @@ return declare("dojo.dnd.Mover", [Evented], {
 			on(d, "dragstart",   event.stop),
 			on(d.body, "selectstart", event.stop)
 		];
+
+		// Tell autoscroll that a drag is starting
+		autoscroll.autoScrollStart(d);
+
 		// notify that the move has started
 		if(h && h.onMoveStart){
 			h.onMoveStart(this);
@@ -3546,9 +3722,7 @@ return declare("dojo.Stateful", null, {
 	//		control and the ability to watch for property changes
 	//
 	//		The class also provides the functionality to auto-magically manage getters
-	//		and setters for object attributes/properties, as well as provides 
-	//		dojo/Stateful watch functionality and dojo/Evented emit/on functionality 
-	//		for the attributes/properties.
+	//		and setters for object attributes/properties.
 	//		
 	//		Getters and Setters should follow the format of _xxxGetter or _xxxSetter where 
 	//		the xxx is a name of the attribute to handle.  So an attribute of "foo" 
@@ -3589,22 +3763,22 @@ return declare("dojo.Stateful", null, {
 	_get: function(name, names){
 		// summary:
 		//		Private function that does a get based off a hash of names
-		//	names:
+		// names:
 		//		Hash of names of custom attributes
 		return typeof this[names.g] === "function" ? this[names.g]() : this[name];
 	},
 	get: function(/*String*/name){
 		// summary:
 		//		Get a property on a Stateful instance.
-		//	name:
+		// name:
 		//		The property to get.
-		//	returns:
+		// returns:
 		//		The property value on this Stateful instance.
 		// description:
 		//		Get a named property on a Stateful object. The property may
 		//		potentially be retrieved via a getter method in subclasses. In the base class
-		// 		this just retrieves the object's property.
-		// 		For example:
+		//		this just retrieves the object's property.
+		//		For example:
 		//	|	stateful = new dojo.Stateful({foo: 3});
 		//	|	stateful.get("foo") // returns 3
 		//	|	stateful.foo // returns 3
@@ -3614,16 +3788,16 @@ return declare("dojo.Stateful", null, {
 	set: function(/*String*/name, /*Object*/value){
 		// summary:
 		//		Set a property on a Stateful instance
-		//	name:
+		// name:
 		//		The property to set.
-		//	value:
+		// value:
 		//		The value to set in the property.
-		//	returns:
+		// returns:
 		//		The function returns this dojo.Stateful instance.
 		// description:
 		//		Sets named properties on a stateful object and notifies any watchers of
-		// 		the property. A programmatic setter may be defined in subclasses.
-		// 		For example:
+		//		the property. A programmatic setter may be defined in subclasses.
+		//		For example:
 		//	|	stateful = new dojo.Stateful();
 		//	|	stateful.watch(function(name, oldValue, value){
 		//	|		// this will be called on the set below
@@ -3640,7 +3814,7 @@ return declare("dojo.Stateful", null, {
 		// If an object is used, iterate through object
 		if(typeof name === "object"){
 			for(var x in name){
-				if(name.hasOwnProperty(x)){
+				if(name.hasOwnProperty(x) && x !="_watchCallbacks"){
 					this.set(x, name[x]);
 				}
 			}
@@ -3671,9 +3845,9 @@ return declare("dojo.Stateful", null, {
 		// summary:
 		//		Internal helper for directly changing an attribute value.
 		//
-		//	name: String
+		// name: String
 		//		The property to set.
-		//	value: Mixed
+		// value: Mixed
 		//		The value to set in the property.
 		//
 		// description:
@@ -3692,19 +3866,19 @@ return declare("dojo.Stateful", null, {
 	watch: function(/*String?*/name, /*Function*/callback){
 		// summary:
 		//		Watches a property for changes
-		//	name:
+		// name:
 		//		Indicates the property to watch. This is optional (the callback may be the
-		// 		only parameter), and if omitted, all the properties will be watched
+		//		only parameter), and if omitted, all the properties will be watched
 		// returns:
 		//		An object handle for the watch. The unwatch method of this object
-		// 		can be used to discontinue watching this property:
+		//		can be used to discontinue watching this property:
 		//		|	var watchHandle = obj.watch("foo", callback);
 		//		|	watchHandle.unwatch(); // callback won't be called now
-		//	callback:
+		// callback:
 		//		The function to execute when the property changes. This will be called after
 		//		the property has been changed. The callback will be called with the |this|
 		//		set to the instance, the first argument as the name of the property, the
-		// 		second argument as the old value and the third argument as the new value.
+		//		second argument as the old value and the third argument as the new value.
 
 		var callbacks = this._watchCallbacks;
 		if(!callbacks){
@@ -3849,14 +4023,14 @@ function(dojo, lang, aspect, dom, on, has, mouse, ready, win){
 		//		Based on http://dvcs.w3.org/hg/webevents/raw-file/tip/touchevents.html
 		//
 		// example:
-		//		1. Used with dojo.on
+		//		Used with dojo.on
 		//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
 		//		|		on(node, touch.press, function(e){});
 		//		|		on(node, touch.move, function(e){});
 		//		|		on(node, touch.release, function(e){});
 		//		|		on(node, touch.cancel, function(e){});
-		//
-		//		2. Used with touch.* directly
+		// example:
+		//		Used with touch.* directly
 		//		|	touch.press(node, function(e){});
 		//		|	touch.move(node, function(e){});
 		//		|	touch.release(node, function(e){});
@@ -4335,17 +4509,19 @@ var CssStateMixin = declare("dijit._CssStateMixin", [], {
 		//
 		//		The widget may have one or more of the following states, determined
 		//		by this.state, this.checked, this.valid, and this.selected:
-		//			- Error - ValidationTextBox sets this.state to "Error" if the current input value is invalid
-		//			- Incomplete - ValidationTextBox sets this.state to "Incomplete" if the current input value is not finished yet
-		//			- Checked - ex: a checkmark or a ToggleButton in a checked state, will have this.checked==true
-		//			- Selected - ex: currently selected tab will have this.selected==true
+		//
+		//		- Error - ValidationTextBox sets this.state to "Error" if the current input value is invalid
+		//		- Incomplete - ValidationTextBox sets this.state to "Incomplete" if the current input value is not finished yet
+		//		- Checked - ex: a checkmark or a ToggleButton in a checked state, will have this.checked==true
+		//		- Selected - ex: currently selected tab will have this.selected==true
 		//
 		//		In addition, it may have one or more of the following states,
 		//		based on this.disabled and flags set in _onMouse (this.active, this.hovering) and from focus manager (this.focused):
-		//			- Disabled	- if the widget is disabled
-		//			- Active		- if the mouse (or space/enter key?) is being pressed down
-		//			- Focused		- if the widget has focus
-		//			- Hover		- if the mouse is over the widget
+		//
+		//		- Disabled	- if the widget is disabled
+		//		- Active		- if the mouse (or space/enter key?) is being pressed down
+		//		- Focused		- if the widget has focus
+		//		- Hover		- if the mouse is over the widget
 
 		// Compute new set of classes
 		var newStateClasses = this.baseClass.split(" ");
@@ -4459,9 +4635,10 @@ var CssStateMixin = declare("dijit._CssStateMixin", [], {
 		//		current state.   Usually not called directly, but via cssStateNodes attribute.
 		// description:
 		//		Given class=foo, will set the following CSS class on the node
-		//			- fooActive: if the user is currently pressing down the mouse button while over the node
-		//			- fooHover: if the user is hovering the mouse over the node, but not pressing down a button
-		//			- fooFocus: if the node is focused
+		//
+		//		- fooActive: if the user is currently pressing down the mouse button while over the node
+		//		- fooHover: if the user is hovering the mouse over the node, but not pressing down a button
+		//		- fooFocus: if the node is focused
 		//
 		//		Note that it won't set any classes if the widget is disabled.
 		// node: DomNode
@@ -4490,12 +4667,14 @@ ready(function(){
 				// but could also be sub-nodes within a widget
 				if(node._cssState){
 					var widget = registry.getEnclosingWidget(node);
-					if(node == widget.domNode){
-						// event on the widget's root node
-						widget._cssMouseEvent(evt);
-					}else{
-						// event on widget's sub-node
-						widget._subnodeCssMouseEvent(node, node._cssState, evt);
+					if(widget){
+						if(node == widget.domNode){
+							// event on the widget's root node
+							widget._cssMouseEvent(evt);
+						}else{
+							// event on widget's sub-node
+							widget._subnodeCssMouseEvent(node, node._cssState, evt);
+						}
 					}
 				}
 			}
@@ -4852,6 +5031,7 @@ return declare("dojo.dnd.Avatar", null, {
 		// summary:
 		//		constructor function;
 		//		it is separate so it can be (dynamically) overwritten in case of need
+
 		var a = domConstruct.create("table", {
 				"class": "dojoDndAvatar",
 				style: {
@@ -4864,14 +5044,18 @@ return declare("dojo.dnd.Avatar", null, {
 			b = domConstruct.create("tbody", null, a),
 			tr = domConstruct.create("tr", null, b),
 			td = domConstruct.create("td", null, tr),
-			icon = has("highcontrast") ? domConstruct.create("span", {
-						id : "a11yIcon",
-						innerHTML : this.manager.copy ? '+' : "<"
-					}, td) : null,
-			span = domConstruct.create("span", {
-				innerHTML: source.generateText ? this._generateText() : ""
-			}, td),
 			k = Math.min(5, this.manager.nodes.length), i = 0;
+
+		if(has("highcontrast")){
+			domConstruct.create("span", {
+				id : "a11yIcon",
+				innerHTML : this.manager.copy ? '+' : "<"
+			}, td)
+		}
+		domConstruct.create("span", {
+			innerHTML: source.generateText ? this._generateText() : ""
+		}, td);
+
 		// we have to set the opacity on IE only after the node is live
 		domAttr.set(tr, {
 			"class": "dojoDndAvatarHeader",
@@ -4932,7 +5116,8 @@ return declare("dojo.dnd.Avatar", null, {
 			}, this);
 	},
 	_generateText: function(){
-		// summary: generates a proper text to reflect copying or moving of items
+		// summary:
+		//		generates a proper text to reflect copying or moving of items
 		return this.manager.nodes.length.toString();
 	}
 });
@@ -5466,34 +5651,36 @@ return declare("dojox.grid._Events", null, {
 	//		retain default implementation or override them for custom handling.
 	
 	// cellOverClass: String
-	// 		css class to apply to grid cells over which the cursor is placed.
+	//		css class to apply to grid cells over which the cursor is placed.
 	cellOverClass: "dojoxGridCellOver",
 	
 	onKeyEvent: function(e){
-		// summary: top level handler for Key Events
+		// summary:
+		//		top level handler for Key Events
 		this.dispatchKeyEvent(e);
 	},
 
 	onContentEvent: function(e){
-		// summary: Top level handler for Content events
+		// summary:
+		//		Top level handler for Content events
 		this.dispatchContentEvent(e);
 	},
 
 	onHeaderEvent: function(e){
-		// summary: Top level handler for header events
+		// summary:
+		//		Top level handler for header events
 		this.dispatchHeaderEvent(e);
 	},
 
 	onStyleRow: function(inRow){
 		// summary:
 		//		Perform row styling on a given row. Called whenever row styling is updated.
-		//
 		// inRow: Object
-		// 		Object containing row state information: selected, true if the row is selcted; over:
-		// 		true of the mouse is over the row; odd: true if the row is odd. Use customClasses and
-		// 		customStyles to control row css classes and styles; both properties are strings.
-		//
-		// example: onStyleRow({ selected: true, over:true, odd:false })
+		//		Object containing row state information: selected, true if the row is selcted; over:
+		//		true of the mouse is over the row; odd: true if the row is odd. Use customClasses and
+		//		customStyles to control row css classes and styles; both properties are strings.
+		// example:
+		// |	onStyleRow({ selected: true, over:true, odd:false })
 		var i = inRow;
 		i.customClasses += (i.odd?" dojoxGridRowOdd":"") + (i.selected?" dojoxGridRowSelected":"") + (i.over?" dojoxGridRowOver":"");
 		this.focus.styleRow(inRow);
@@ -5502,8 +5689,8 @@ return declare("dojox.grid._Events", null, {
 	
 	onKeyDown: function(e){
 		// summary:
-		// 		Grid key event handler. By default enter begins editing and applies edits, escape cancels an edit,
-		// 		tab, shift-tab, and arrow keys move grid cell focus.
+		//		Grid key event handler. By default enter begins editing and applies edits, escape cancels an edit,
+		//		tab, shift-tab, and arrow keys move grid cell focus.
 		if(e.altKey || e.metaKey){
 			return;
 		}
@@ -5688,7 +5875,7 @@ return declare("dojox.grid._Events", null, {
 		// summary:
 		//		Event fired when mouse is down in a header cell.
 		// e: Event
-		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 	},
 
 	onCellClick: function(e){
@@ -5773,21 +5960,21 @@ return declare("dojox.grid._Events", null, {
 		// summary:
 		//		Event fired when mouse moves out of a data row.
 		// e: Event
-		// 		Decorated event object contains reference to grid, cell, and rowIndex
+		//		Decorated event object contains reference to grid, cell, and rowIndex
 	},
 	
 	onRowMouseDown: function(e){
 		// summary:
 		//		Event fired when mouse is down in a row.
 		// e: Event
-		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 	},
 
 	onRowContextMenu: function(e){
 		// summary:
 		//		Event fired when a row context menu is accessed via mouse right click.
 		// e: Event
-		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 		event.stop(e);
 	},
 
@@ -5796,21 +5983,21 @@ return declare("dojox.grid._Events", null, {
 		// summary:
 		//		Event fired when mouse moves over the grid header.
 		// e: Event
-		// 		Decorated event object contains reference to grid, cell, and rowIndex
+		//		Decorated event object contains reference to grid, cell, and rowIndex
 	},
 
 	onHeaderMouseOut: function(e){
 		// summary:
 		//		Event fired when mouse moves out of the grid header.
 		// e: Event
-		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 	},
 
 	onHeaderCellMouseOver: function(e){
 		// summary:
 		//		Event fired when mouse moves over a header cell.
 		// e: Event
-		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 		if(e.cellNode){
 			domClass.add(e.cellNode, this.cellOverClass);
 		}
@@ -5820,7 +6007,7 @@ return declare("dojox.grid._Events", null, {
 		// summary:
 		//		Event fired when mouse moves out of a header cell.
 		// e: Event
-		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 		if(e.cellNode){
 			domClass.remove(e.cellNode, this.cellOverClass);
 		}
@@ -5830,7 +6017,7 @@ return declare("dojox.grid._Events", null, {
 		// summary:
 		//		Event fired when mouse is down in a header cell.
 		// e: Event
-		// 		Decorated event object which contains reference to grid, cell, and rowIndex
+		//		Decorated event object which contains reference to grid, cell, and rowIndex
 	},
 
 	onHeaderClick: function(e){
@@ -5967,7 +6154,8 @@ define(["../_base/lang", "../sniff", "../_base/window", "../dom-geometry", "../d
 
 var exports = {
 	// summary:
-	//		TODOC
+	//		Used by dojo/dnd/Manager to scroll document or internal node when the user
+	//		drags near the edge of the viewport or a scrollable node
 };
 lang.setObject("dojo.dnd.autoscroll", exports);
 
@@ -5979,24 +6167,49 @@ exports.H_TRIGGER_AUTOSCROLL = 32;
 exports.V_AUTOSCROLL_VALUE = 16;
 exports.H_AUTOSCROLL_VALUE = 16;
 
+// These are set by autoScrollStart().
+// Set to default values in case autoScrollStart() isn't called. (back-compat, remove for 2.0)
+var viewport,
+	doc = win.doc,
+	maxScrollTop = Infinity,
+	maxScrollLeft = Infinity;
+
+exports.autoScrollStart = function(d){
+	// summary:
+	//		Called at the start of a drag.
+	// d: Document
+	//		The document of the node being dragged.
+
+	doc = d;
+	viewport = winUtils.getBox(doc);
+
+	// Save height/width of document at start of drag, before it gets distorted by a user dragging an avatar past
+	// the document's edge
+	var html = win.body(doc).parentNode;
+	maxScrollTop = Math.max(html.scrollHeight - viewport.h, 0);
+	maxScrollLeft = Math.max(html.scrollWidth - viewport.w, 0);	// usually 0
+};
+
 exports.autoScroll = function(e){
 	// summary:
-	//		a handler for onmousemove event, which scrolls the window, if
+	//		a handler for mousemove and touchmove events, which scrolls the window, if
 	//		necessary
 	// e: Event
-	//		onmousemove event
+	//		mousemove/touchmove event
 
 	// FIXME: needs more docs!
-	var v = winUtils.getBox(), dx = 0, dy = 0;
+	var v = viewport || winUtils.getBox(doc), // getBox() call for back-compat, in case autoScrollStart() wasn't called
+		html = win.body(doc).parentNode,
+		dx = 0, dy = 0;
 	if(e.clientX < exports.H_TRIGGER_AUTOSCROLL){
 		dx = -exports.H_AUTOSCROLL_VALUE;
 	}else if(e.clientX > v.w - exports.H_TRIGGER_AUTOSCROLL){
-		dx = exports.H_AUTOSCROLL_VALUE;
+		dx = Math.min(exports.H_AUTOSCROLL_VALUE, maxScrollLeft - html.scrollLeft);	// don't scroll past edge of doc
 	}
 	if(e.clientY < exports.V_TRIGGER_AUTOSCROLL){
 		dy = -exports.V_AUTOSCROLL_VALUE;
 	}else if(e.clientY > v.h - exports.V_TRIGGER_AUTOSCROLL){
-		dy = exports.V_AUTOSCROLL_VALUE;
+		dy = Math.min(exports.V_AUTOSCROLL_VALUE, maxScrollTop - html.scrollTop);	// don't scroll past edge of doc
 	}
 	window.scrollBy(dx, dy);
 };
@@ -6006,10 +6219,10 @@ exports._validOverflow = {"auto": 1, "scroll": 1};
 
 exports.autoScrollNodes = function(e){
 	// summary:
-	//		a handler for onmousemove event, which scrolls the first available
+	//		a handler for mousemove and touchmove events, which scrolls the first available
 	//		Dom element, it falls back to exports.autoScroll()
 	// e: Event
-	//		onmousemove event
+	//		mousemove/touchmove event
 
 	// FIXME: needs more docs!
 
@@ -6291,7 +6504,7 @@ return declare("dijit.Destroyable", null, {
 			// When this is destroyed, destroy handle.  Since I'm using aspect.before(),
 			// the handle will be destroyed before a subclass's destroy() method starts running, before it calls
 			// this.inherited() or even if it doesn't call this.inherited() at all.  If that's an issue, make an
-			//  onDestroy() method and connect to that instead.
+			// onDestroy() method and connect to that instead.
 			handle._odh = aspect.before(this, "destroy", function(preserveDom){
 				handle._odh.remove();
 				handle[destroyMethodName](preserveDom);
@@ -6837,16 +7050,16 @@ define("dijit/a11y", [
 	dijit._getTabNavigable = function(/*DOMNode*/ root){
 		// summary:
 		//		Finds descendants of the specified root node.
-		//
 		// description:
 		//		Finds the following descendants of the specified root node:
-		//		* the first tab-navigable element in document order
+		//
+		//		- the first tab-navigable element in document order
 		//		  without a tabIndex or with tabIndex="0"
-		//		* the last tab-navigable element in document order
+		//		- the last tab-navigable element in document order
 		//		  without a tabIndex or with tabIndex="0"
-		//		* the first element in document order with the lowest
+		//		- the first element in document order with the lowest
 		//		  positive tabIndex value
-		//		* the last element in document order with the highest
+		//		- the last element in document order with the highest
 		//		  positive tabIndex value
 		var first, last, lowest, lowestTabindex, highest, highestTabindex, radioSelected = {};
 
@@ -7679,12 +7892,14 @@ return declare('dojox.grid._ViewManager', null, {
 
 			if(!self.grid.isLeftToRight()){
 				ds.right = l + 'px';
-				// fixed rtl, the scrollbar is on the right side in FF or WebKit
-				if (has('ff') < 4 || has('webkit')){
+				// fixed rtl, the scrollbar is on the right side in FF < 4
+				if(has('ff') < 4){
 					hs.right = l + v.getScrollbarWidth() + 'px';
-					hs.width = parseInt(hs.width, 10) - v.getScrollbarWidth() + 'px';
 				}else{
 					hs.right = l + 'px';
+				}
+				if(!has('webkit')){
+					hs.width = parseInt(hs.width, 10) - v.getScrollbarWidth() + 'px';					
 				}
 			}else{
 				ds.left = l + 'px';
@@ -7785,7 +8000,8 @@ return declare('dojox.grid._ViewManager', null, {
 	},
 	
 	getFirstScrollingView: function(){
-		// summary: Returns the first grid view with a scroll bar
+		// summary:
+		//		Returns the first grid view with a scroll bar
 		for(var i=0, v; (v=this.views[i]); i++){
 			if(v.hasHScrollbar() || v.hasVScrollbar()){
 				return v;
@@ -7849,24 +8065,25 @@ if(kernel.connect){
 var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusMixin], {
 	// summary:
 	//		Old base class for widgets.   New widgets should extend `dijit/_WidgetBase` instead
-	//
 	// description:
 	//		Old Base class for Dijit widgets.
 	//
 	//		Extends _WidgetBase, adding support for:
-	//			- declaratively/programatically specifying widget initialization parameters like
-	//				onMouseMove="foo" that call foo when this.domNode gets a mousemove event
-	//			- ondijitclick
-	//				Support new data-dojo-attach-event="ondijitclick: ..." that is triggered by a mouse click or a SPACE/ENTER keypress
-	//			- focus related functions
-	//				In particular, the onFocus()/onBlur() callbacks.   Driven internally by
-	//				dijit/_base/focus.js.
-	//			- deprecated methods
-	//			- onShow(), onHide(), onClose()
+	//
+	//		- declaratively/programatically specifying widget initialization parameters like
+	//			onMouseMove="foo" that call foo when this.domNode gets a mousemove event
+	//		- ondijitclick:
+	//			Support new data-dojo-attach-event="ondijitclick: ..." that is triggered by a mouse click or a SPACE/ENTER keypress
+	//		- focus related functions:
+	//			In particular, the onFocus()/onBlur() callbacks.   Driven internally by
+	//			dijit/_base/focus.js.
+	//		- deprecated methods
+	//		- onShow(), onHide(), onClose()
 	//
 	//		Also, by loading code in dijit/_base, turns on:
-	//			- browser sniffing (putting browser class like `dj_ie` on `<html>` node)
-	//			- high contrast mode sniffing (add `dijit_a11y` class to `<body>` if machine is in high contrast mode)
+	//
+	//		- browser sniffing (putting browser class like `dj_ie` on `<html>` node)
+	//		- high contrast mode sniffing (add `dijit_a11y` class to `<body>` if machine is in high contrast mode)
 
 
 	////////////////// DEFERRED CONNECTS ///////////////////
@@ -8004,7 +8221,19 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 	},
 	=====*/
 
-	constructor: function(params){
+	constructor: function(params /*===== ,srcNodeRef =====*/){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- if this is a behavioral widget then apply behavior to that srcNodeRef
+		//		- otherwise, replace srcNodeRef with my generated DOM tree
+
 		// extract parameters like onMouseMove that should connect directly to this.domNode
 		this._toConnect = {};
 		for(var name in params){
@@ -8025,7 +8254,7 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 		delete this._toConnect;
 	},
 
-	on: function(/*String*/ type, /*Function*/ func){
+	on: function(/*String|Function*/ type, /*Function*/ func){
 		if(this[this._onMap(type)] === connectToDomNode){
 			// Use connect.connect() rather than on() to get handling for "onmouseenter" on non-IE,
 			// normalization of onkeypress/onkeydown to behave like firefox, etc.
@@ -8057,11 +8286,11 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 	attr: function(/*String|Object*/name, /*Object?*/value){
 		// summary:
 		//		Set or get properties on a widget instance.
-		//	name:
+		// name:
 		//		The property to get or set. If an object is passed here and not
 		//		a string, its keys are used as names of attributes to be set
 		//		and the value of the object as values to set in the widget.
-		//	value:
+		// value:
 		//		Optional. If provided, attr() operates as a setter. If omitted,
 		//		the current value of the named property is returned.
 		// description:
@@ -8118,13 +8347,13 @@ var _Widget = declare("dijit._Widget", [_WidgetBase, _OnDijitClickMixin, _FocusM
 
 	onHide: function(){
 		// summary:
-			//		Called when another widget becomes the selected pane in a
-			//		`dijit.layout.TabContainer`, `dijit.layout.StackContainer`,
-			//		`dijit.layout.AccordionContainer`, etc.
-			//
-			//		Also called to indicate hide of a `dijit.Dialog`, `dijit.TooltipDialog`, or `dijit.TitlePane`.
-			// tags:
-			//		callback
+		//		Called when another widget becomes the selected pane in a
+		//		`dijit.layout.TabContainer`, `dijit.layout.StackContainer`,
+		//		`dijit.layout.AccordionContainer`, etc.
+		//
+		//		Also called to indicate hide of a `dijit.Dialog`, `dijit.TooltipDialog`, or `dijit.TitlePane`.
+		// tags:
+		//		callback
 	},
 
 	onClose: function(){
@@ -8230,132 +8459,14 @@ define("dijit/_OnDijitClickMixin", [
 	"dojo/_base/declare", // declare
 	"dojo/has", // has("dom-addeventlistener")
 	"dojo/_base/unload", // unload.addOnWindowUnload
-	"dojo/_base/window" // win.doc.addEventListener win.doc.attachEvent win.doc.detachEvent
-], function(on, array, keys, declare, has, unload, win){
+	"dojo/_base/window", // win.doc.addEventListener win.doc.attachEvent win.doc.detachEvent
+	"./a11yclick"
+], function(on, array, keys, declare, has, unload, win, a11yclick){
 
 	// module:
 	//		dijit/_OnDijitClickMixin
 
-	// Keep track of where the last keydown event was, to help avoid generating
-	// spurious ondijitclick events when:
-	// 1. focus is on a <button> or <a>
-	// 2. user presses then releases the ENTER key
-	// 3. onclick handler fires and shifts focus to another node, with an ondijitclick handler
-	// 4. onkeyup event fires, causing the ondijitclick handler to fire
-	var lastKeyDownNode = null;
-	if(has("dom-addeventlistener")){
-		win.doc.addEventListener('keydown', function(evt){
-			lastKeyDownNode = evt.target;
-		}, true);
-	}else{
-		// Fallback path for IE6-8
-		(function(){
-			var keydownCallback = function(evt){
-				lastKeyDownNode = evt.srcElement;
-			};
-			win.doc.attachEvent('onkeydown', keydownCallback);
-			unload.addOnWindowUnload(function(){
-				win.doc.detachEvent('onkeydown', keydownCallback);
-			});
-		})();
-	}
-
-	function clickKey(/*Event*/ e){
-		return (e.keyCode === keys.ENTER || e.keyCode === keys.SPACE) &&
-				!e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey;
-	}
-
-	// Custom a11yclick (a.k.a. ondijitclick) event
-	var a11yclick = function(node, listener){
-		if(/input|button/i.test(node.nodeName)){
-			// pass through, the browser already generates click event on SPACE/ENTER key
-			return on(node, "click", listener);
-		}else{
-			// Don't fire the click event unless both the keydown and keyup occur on this node.
-			// Avoids problems where focus shifted to this node or away from the node on keydown,
-			// either causing this node to process a stray keyup event, or causing another node
-			// to get a stray keyup event.
-
-			var handles = [
-				on(node, "keypress", function(e){
-					//console.log(this.id + ": onkeydown, e.target = ", e.target, ", lastKeyDownNode was ", lastKeyDownNode, ", equality is ", (e.target === lastKeyDownNode));
-					if(clickKey(e)){
-						// needed on IE for when focus changes between keydown and keyup - otherwise dropdown menus do not work
-						lastKeyDownNode = e.target;
-
-						// Prevent viewport scrolling on space key in IE<9.
-						// (Reproducible on test_Button.html on any of the first dijit.form.Button examples)
-						// Do this onkeypress rather than onkeydown because onkeydown.preventDefault() will
-						// suppress the onkeypress event, breaking _HasDropDown
-						e.preventDefault();
-					}
-				}),
-
-				on(node, "keyup", function(e){
-					//console.log(this.id + ": onkeyup, e.target = ", e.target, ", lastKeyDownNode was ", lastKeyDownNode, ", equality is ", (e.target === lastKeyDownNode));
-					if(clickKey(e) && e.target == lastKeyDownNode){	// === breaks greasemonkey
-						//need reset here or have problems in FF when focus returns to trigger element after closing popup/alert
-						lastKeyDownNode = null;
-						on.emit(e.target, "click", {
-							cancelable: true,
-							bubbles: true
-						});
-					}
-				}),
-
-				on(node, "click", function(e){
-					// catch mouse clicks, plus the on.emit() calls from above and below
-					listener.call(this, e);
-				})
-			];
-
-			if(has("touch")){
-				// touchstart-->touchend will automatically generate a click event, but there are problems
-				// on iOS after focus has been programatically shifted (#14604, #14918), so do it manually.
-				// But first, let other touchend callbacks execute.
-
-				var clickTimer;
-				handles.push(
-					on(node, "touchend", function(e){
-						// Setup timer to fire synthetic click event after other touchend listeners finish executing
-						var target = e.target;
-						clickTimer = setTimeout(function(){
-							clickTimer = null;
-							on.emit(target, "click", {
-								cancelable: true,
-								bubbles: true
-							});
-						}, 0);
-
-						// Prevent the touchend from triggering the native click event
-						e.preventDefault();
-					})
-				);
-			}
-
-			return {
-				remove: function(){
-					array.forEach(handles, function(h){ h.remove(); });
-					if(clickTimer){
-						clearTimeout(clickTimer);
-						clickTimer = null;
-					}
-				}
-			};
-		}
-	};
-
 	var ret = declare("dijit._OnDijitClickMixin", null, {
-		// summary:
-		//		Mixin so you can pass "ondijitclick" to this.connect() method,
-		//		as a way to handle clicks by mouse, or by keyboard (SPACE/ENTER key).
-		// description:
-		//		Setting an ondijitclick handler on a node has two effects:
-		//			1. converts keyboard "click" events into actual click events, so
-		//			   that a "click" event bubbles up from the widget to any listeners on ancestor nodes.
-		//			2. sets up a click listener on the node, which catches native click events plus
-		//			   the events generated from the previous step.
-
 		connect: function(
 				/*Object|null*/ obj,
 				/*String|Function*/ event,
@@ -8387,7 +8498,7 @@ define("dijit/_OnDijitClickMixin", [
 		}
 	});
 
-	ret.a11yclick = a11yclick;
+	ret.a11yclick = a11yclick;	// back compat
 
 	return ret;
 });
@@ -8511,8 +8622,9 @@ define("dijit/focus", [
 			};
 
 			// Listen for blur and focus events on targetWindow's document.
-			// Using attachEvent()/addEventListener() rather than on() to catch mouseDown events even
-			// if other code calls evt.stopPropagation().   But maybe that's no longer needed?
+			// Using attachEvent()/addEventListener() rather than on() to try to catch mouseDown events even
+			// if other code calls evt.stopPropagation().  But rethink for 2.0 since that doesn't work for attachEvent(),
+			// which watches events at the bubbling phase rather than capturing phase, like addEventListener(..., false).
 			// Connect to <html> (rather than document) on IE to avoid memory leaks, but document on other browsers because
 			// (at least for FF) the focus event doesn't fire on <html> or <body>.
 			var doc = has("ie") ? targetWindow.document.documentElement : targetWindow.document;
@@ -8776,8 +8888,14 @@ define("dojox/grid/util", [
 	"dojo/dom"
 ], function(dojox, lang, dom){
 
-// summary: grid utility library
 	var dgu = lang.getObject("grid.util", true, dojox);
+
+/*=====
+dgu = {
+	// summary:
+	//		grid utility library
+};
+=====*/
 
 	dgu.na = '...';
 	dgu.rowIndexTag = "gridRowIndex";
@@ -8841,7 +8959,7 @@ define("dojox/grid/util", [
 		inArray[inJ] = cache;
 	};
 
-	return dojox.grid.util;
+	return dgu;
 
 });
 },
@@ -8882,8 +9000,8 @@ define("dojox/grid/_FocusManager", [
 // focus management
 return declare("dojox.grid._FocusManager", null, {
 	// summary:
-	//	Controls grid cell focus. Owned by grid and used internally for focusing.
-	//	Note: grid cell actually receives keyboard input only when cell is being edited.
+	//		Controls grid cell focus. Owned by grid and used internally for focusing.
+	//		Note: grid cell actually receives keyboard input only when cell is being edited.
 	constructor: function(inGrid){
 		this.grid = inGrid;
 		this.cell = null;
@@ -8919,13 +9037,13 @@ return declare("dojox.grid._FocusManager", null, {
 	},
 	isFocusCell: function(inCell, inRowIndex){
 		// summary:
-		//	states if the given cell is focused
+		//		states if the given cell is focused
 		// inCell: object
-		//	grid cell object
+		//		grid cell object
 		// inRowIndex: int
-		//	grid row index
+		//		grid row index
 		// returns:
-		//	true of the given grid cell is focused
+		//		true of the given grid cell is focused
 		return (this.cell == inCell) && (this.rowIndex == inRowIndex);
 	},
 	isLastFocusCell: function(){
@@ -8945,16 +9063,16 @@ return declare("dojox.grid._FocusManager", null, {
 	},
 	isNavHeader: function(){
 		// summary:
-		//	states whether currently navigating among column headers.
+		//		states whether currently navigating among column headers.
 		// returns:
-		//	true if focus is on a column header; false otherwise.
+		//		true if focus is on a column header; false otherwise.
 		return (!!this._colHeadNode);
 	},
 	getHeaderIndex: function(){
 		// summary:
-		//	if one of the column headers currently has focus, return its index.
+		//		if one of the column headers currently has focus, return its index.
 		// returns:
-		//	index of the focused column header, or -1 if none have focus.
+		//		index of the focused column header, or -1 if none have focus.
 		if(this._colHeadNode){
 			return array.indexOf(this._findHeaderCells(), this._colHeadNode);
 		}else{
@@ -8968,7 +9086,7 @@ return declare("dojox.grid._FocusManager", null, {
 			if(inBork){
 				var sl = this.scrollIntoView();
 				try{
-					if(!this.grid.edit.isEditing()){
+					if(has("webkit") || !this.grid.edit.isEditing()){
 						util.fire(n, "focus");
 						if(sl){ this.cell.view.scrollboxNode.scrollLeft = sl; }
 					}
@@ -9158,20 +9276,20 @@ return declare("dojox.grid._FocusManager", null, {
 	},
 	setFocusIndex: function(inRowIndex, inCellIndex){
 		// summary:
-		//	focuses the given grid cell
+		//		focuses the given grid cell
 		// inRowIndex: int
-		//	grid row index
+		//		grid row index
 		// inCellIndex: int
-		//	grid cell index
+		//		grid cell index
 		this.setFocusCell(this.grid.getCell(inCellIndex), inRowIndex);
 	},
 	setFocusCell: function(inCell, inRowIndex){
 		// summary:
-		//	focuses the given grid cell
+		//		focuses the given grid cell
 		// inCell: object
-		//	grid cell object
+		//		grid cell object
 		// inRowIndex: int
-		//	grid row index
+		//		grid row index
 		if(inCell && !this.isFocusCell(inCell, inRowIndex)){
 			this.tabbingOut = false;
 			if (this._colHeadNode){
@@ -9245,11 +9363,11 @@ return declare("dojox.grid._FocusManager", null, {
 	},
 	move: function(inRowDelta, inColDelta) {
 		// summary:
-		//	focus grid cell or  simulate focus to column header based on position relative to current focus
+		//		focus grid cell or  simulate focus to column header based on position relative to current focus
 		// inRowDelta: int
-		//	vertical distance from current focus
+		//		vertical distance from current focus
 		// inColDelta: int
-		//	horizontal distance from current focus
+		//		horizontal distance from current focus
 
 		var colDir = inColDelta < 0 ? -1 : 1;
 		// Handle column headers.
@@ -9305,7 +9423,7 @@ return declare("dojox.grid._FocusManager", null, {
 					}
 					return;
 				}else if((!n || html.style(n, "display") === "none") && inColDelta){
-					if((col + inRowDelta) >= 0 && (col + inRowDelta) <= cc){
+					if((col + inColDelta) >= 0 && (col + inColDelta) <= cc){
 						this.move(inRowDelta, inColDelta > 0 ? ++inColDelta : --inColDelta);
 					}
 					return;
@@ -9757,7 +9875,15 @@ define("dijit/_TemplatedMixin", [
 		_attachEvents: [],
  =====*/
 
-		constructor: function(){
+		constructor: function(/*===== params, srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree.
+
 			this._attachPoints = [];
 			this._attachEvents = [];
 		},
@@ -9852,8 +9978,9 @@ define("dijit/_TemplatedMixin", [
 			//		Map widget properties and functions to the handlers specified in
 			//		the dom node and it's descendants. This function iterates over all
 			//		nodes and looks for these properties:
-			//			* dojoAttachPoint/data-dojo-attach-point
-			//			* dojoAttachEvent/data-dojo-attach-event
+			//
+			//		- dojoAttachPoint/data-dojo-attach-point
+			//		- dojoAttachEvent/data-dojo-attach-event
 			// rootNode: DomNode|Widget[]
 			//		the node to search for properties. All children will be searched.
 			// getAttrFunc: Function
@@ -9990,8 +10117,9 @@ define("dijit/_TemplatedMixin", [
 
 	// These arguments can be specified for widgets which are used in templates.
 	// Since any widget can be specified as sub widgets in template, mix it
-	// into the base widget class.  (This is a hack, but it's effective.)
-	lang.extend(_WidgetBase,{
+	// into the base widget class.  (This is a hack, but it's effective.).
+	// Remove for 2.0.   Also, hide from API doc parser.
+	lang.extend(_WidgetBase, /*===== {} || =====*/ {
 		dojoAttachEvent: "",
 		dojoAttachPoint: ""
 	});
@@ -10031,8 +10159,8 @@ return declare("dojox.grid._SelectionPreserver", null, {
 		this._connects = [
 			connect.connect(grid, '_setStore', this, 'reset'),
 			connect.connect(grid, '_addItem', this, '_reSelectById'),
-			connect.connect(selection, 'addToSelection', lang.hitch(this, '_selectById', true)),
-			connect.connect(selection, 'deselect', lang.hitch(this, '_selectById', false)),
+			connect.connect(selection, 'onSelected', lang.hitch(this, '_selectById', true)),
+			connect.connect(selection, 'onDeselected', lang.hitch(this, '_selectById', false)),
 			connect.connect(selection, 'deselectAll', this, 'reset')
 		];
 	},
@@ -10110,9 +10238,11 @@ define(["./_base/lang", "./sniff", "./_base/window", "./dom", "./dom-geometry", 
 			};
 		},
 
-		get: function(doc){
+		get: function(/*Document*/ doc){
 			// summary:
-			//		Get window object associated with document doc
+			//		Get window object associated with document doc.
+			// doc:
+			//		The document to get the associated window for.
 
 			// In some IE versions (at least 6.0), document.parentWindow does not return a
 			// reference to the real window object (maybe a copy), so we must fix it as well
@@ -10152,7 +10282,7 @@ define(["./_base/lang", "./sniff", "./_base/window", "./dom", "./dom-geometry", 
 					return;
 				}
 				var backCompat = doc.compatMode == 'BackCompat',
-					clientAreaRoot = (isIE >= 9 && node.ownerDocument.parentWindow.frameElement)
+					clientAreaRoot = (isIE >= 9 && "frameElement" in node.ownerDocument.parentWindow)
 						? ((html.clientHeight > 0 && html.clientWidth > 0 && (body.clientHeight == 0 || body.clientWidth == 0 || body.clientHeight > html.clientHeight || body.clientWidth > html.clientWidth)) ? html : body)
 						: (backCompat ? body : html),
 					scrollRoot = isWK ? body : clientAreaRoot,
@@ -10509,10 +10639,6 @@ define([
 					m = cell.markup; cc = cell.customClasses = []; cs = cell.customStyles = [];
 					// content (format can fill in cc and cs as side-effects)
 					m[5] = cell.format(inRowIndex, item);
-					if(has('ie') < 8 && (m[5] === null || m[5] === '' || /^\s+$/.test(m[5]))){
-						//fix IE 6/7 quirks - border style not effective for empty td
-						m[5] = '&nbsp;'
-					}
 					// classes
 					m[1] = cc.join(' ');
 					// styles
@@ -10913,7 +11039,8 @@ define([
 		map: null,
 
 		mapRows: function(inRows){
-			// summary: Map table topography
+			// summary:
+			//		Map table topography
 
 			//console.log('mapRows');
 			// # of rows
@@ -10953,7 +11080,8 @@ define([
 		},
 
 		getMapCoords: function(inRow, inCol){
-			// summary: Find node's map coords by it's structure coords
+			// summary:
+			//		Find node's map coords by it's structure coords
 			for(var j=0, row; (row=this.map[j]); j++){
 				for(var i=0, cell; (cell=row[i]); i++){
 					if(cell.c==inCol && cell.r == inRow){
@@ -10966,7 +11094,8 @@ define([
 		},
 		
 		getNode: function(inTable, inRow, inCol){
-			// summary: Find a node in inNode's table with the given structure coords
+			// summary:
+			//		Find a node in inNode's table with the given structure coords
 			var row = inTable && inTable.rows[inRow];
 			return row && row.cells[inCol];
 		},
@@ -11027,33 +11156,33 @@ define([
 
 /*=====
 var __SourceArgs = function(){
-	//	summary:
+	// summary:
 	//		a dict of parameters for DnD Source configuration. Note that any
 	//		property on Source elements may be configured, but this is the
 	//		short-list
-	//	isSource: Boolean?
+	// isSource: Boolean?
 	//		can be used as a DnD source. Defaults to true.
-	//	accept: Array?
+	// accept: Array?
 	//		list of accepted types (text strings) for a target; defaults to
 	//		["text"]
-	//	autoSync: Boolean
+	// autoSync: Boolean
 	//		if true refreshes the node list on every operation; false by default
-	//	copyOnly: Boolean?
+	// copyOnly: Boolean?
 	//		copy items, if true, use a state of Ctrl key otherwise,
 	//		see selfCopy and selfAccept for more details
-	//	delay: Number
+	// delay: Number
 	//		the move delay in pixels before detecting a drag; 0 by default
-	//	horizontal: Boolean?
+	// horizontal: Boolean?
 	//		a horizontal container, if true, vertical otherwise or when omitted
-	//	selfCopy: Boolean?
+	// selfCopy: Boolean?
 	//		copy items by default when dropping on itself,
 	//		false by default, works only if copyOnly is true
-	//	selfAccept: Boolean?
+	// selfAccept: Boolean?
 	//		accept its own items when copyOnly is true,
 	//		true by default, works only if copyOnly is true
-	//	withHandles: Boolean?
+	// withHandles: Boolean?
 	//		allows dragging only by handles, false by default
-	//  generateText: Boolean?
+	// generateText: Boolean?
 	//		generate text node for drag and drop, true by default
 	this.isSource = isSource;
 	this.accept = accept;
@@ -11561,10 +11690,10 @@ define("dojox/grid/cells/_base", [
 
 	var BaseCell = declare("dojox.grid.cells._Base", null, {
 		// summary:
-		//	Respresents a grid cell and contains information about column options and methods
-		//	for retrieving cell related information.
-		//	Each column in a grid layout has a cell object and most events and many methods
-		//	provide access to these objects.
+		//		Represents a grid cell and contains information about column options and methods
+		//		for retrieving cell related information.
+		//		Each column in a grid layout has a cell object and most events and many methods
+		//		provide access to these objects.
 		styles: '',
 		classes: '',
 		editable: false,
@@ -11617,10 +11746,11 @@ define("dojox/grid/cells/_base", [
 		// data source
 		format: function(inRowIndex, inItem){
 			// summary:
-			//	provides the html for a given grid cell.
+			//		provides the html for a given grid cell.
 			// inRowIndex: int
-			//  grid row index
-			// returns: html for a given grid cell
+			//		grid row index
+			// returns:
+			//		html for a given grid cell
 			var f, i=this.grid.edit.info, d=this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
 			d = (d && d.replace && this.grid.escapeHTMLInData) ? d.replace(/&/g, '&amp;').replace(/</g, '&lt;') : d;
 			if(this.editable && (this.alwaysEditing || (i.rowIndex==inRowIndex && i.cell==this))){
@@ -11631,20 +11761,22 @@ define("dojox/grid/cells/_base", [
 		},
 		formatEditing: function(inDatum, inRowIndex){
 			// summary:
-			//	formats the cell for editing
+			//		formats the cell for editing
 			// inDatum: anything
-			//	cell data to edit
+			//		cell data to edit
 			// inRowIndex: int
-			//	grid row index
-			// returns: string of html to place in grid cell
+			//		grid row index
+			// returns:
+			//		string of html to place in grid cell
 		},
 		// utility
 		getNode: function(inRowIndex){
 			// summary:
-			//	gets the dom node for a given grid cell.
+			//		gets the dom node for a given grid cell.
 			// inRowIndex: int
-			//  grid row index
-			// returns: dom node for a given grid cell
+			//		grid row index
+			// returns:
+			//		dom node for a given grid cell
 			return this.view.getCellNode(inRowIndex, this.index);
 		},
 		getHeaderNode: function(){
@@ -11663,7 +11795,9 @@ define("dojox/grid/cells/_base", [
 		},
 		// edit support
 		applyEdit: function(inValue, inRowIndex){
-			this.grid.edit.applyCellEdit(inValue, this, inRowIndex);
+			if(this.getNode(inRowIndex)){
+				this.grid.edit.applyCellEdit(inValue, this, inRowIndex);
+			}
 		},
 		cancelEdit: function(inRowIndex){
 			this.grid.doCancelEdit(inRowIndex);
@@ -11704,13 +11838,13 @@ define("dojox/grid/cells/_base", [
 		//protected
 		formatNode: function(inNode, inDatum, inRowIndex){
 			// summary:
-			//	format the editing dom node. Use when editor is a widget.
+			//		format the editing dom node. Use when editor is a widget.
 			// inNode: dom node
-			//	dom node for the editor
+			//		dom node for the editor
 			// inDatum: anything
-			//	cell data to edit
+			//		cell data to edit
 			// inRowIndex: int
-			//	grid row index
+			//		grid row index
 			if(has('ie')){
 				// IE sux bad
 				whenIdle(this, "focus", inRowIndex, inNode);
@@ -11726,20 +11860,20 @@ define("dojox/grid/cells/_base", [
 		//public
 		getValue: function(inRowIndex){
 			// summary:
-			//	returns value entered into editor
+			//		returns value entered into editor
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			// returns:
-			//	value of editor
+			//		value of editor
 			return this.getEditNode(inRowIndex)[this._valueProp];
 		},
 		setValue: function(inRowIndex, inValue){
 			// summary:
-			//	set the value of the grid editor
+			//		set the value of the grid editor
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			// inValue: anything
-			//	value of editor
+			//		value of editor
 			var n = this.getEditNode(inRowIndex);
 			if(n){
 				n[this._valueProp] = inValue;
@@ -11747,52 +11881,52 @@ define("dojox/grid/cells/_base", [
 		},
 		focus: function(inRowIndex, inNode){
 			// summary:
-			//	focus the grid editor
+			//		focus the grid editor
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			// inNode: dom node
-			//	editor node
+			//		editor node
 			focusSelectNode(inNode || this.getEditNode(inRowIndex));
 		},
 		save: function(inRowIndex){
 			// summary:
-			//	save editor state
+			//		save editor state
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			this.value = this.value || this.getValue(inRowIndex);
 			//console.log("save", this.value, inCell.index, inRowIndex);
 		},
 		restore: function(inRowIndex){
 			// summary:
-			//	restore editor state
+			//		restore editor state
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			this.setValue(inRowIndex, this.value);
 			//console.log("restore", this.value, inCell.index, inRowIndex);
 		},
 		//protected
 		_finish: function(inRowIndex){
 			// summary:
-			//	called when editing is completed to clean up editor
+			//		called when editing is completed to clean up editor
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			dom.setSelectable(this.grid.domNode, false);
 			this.cancelFormatNode();
 		},
 		//public
 		apply: function(inRowIndex){
 			// summary:
-			//	apply edit from cell editor
+			//		apply edit from cell editor
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			this.applyEdit(this.getValue(inRowIndex), inRowIndex);
 			this._finish(inRowIndex);
 		},
 		cancel: function(inRowIndex){
 			// summary:
-			//	cancel cell edit
+			//		cancel cell edit
 			// inRowIndex: int
-			//  grid row index
+			//		grid row index
 			this.cancelEdit(inRowIndex);
 			this._finish(inRowIndex);
 		}
@@ -11891,10 +12025,10 @@ define("dojox/grid/cells/_base", [
 
 	var Select = declare("dojox.grid.cells.Select", Cell, {
 		// summary:
-		// 		grid cell that provides a standard select for editing
+		//		grid cell that provides a standard select for editing
 
 		// options: Array
-		// 		text of each item
+		//		text of each item
 		options: null,
 
 		// values: Array
@@ -11902,7 +12036,7 @@ define("dojox/grid/cells/_base", [
 		values: null,
 
 		// returnIndex: Integer
-		// 		editor returns only the index of the selected option and not the value
+		//		editor returns only the index of the selected option and not the value
 		returnIndex: -1,
 
 		constructor: function(inCell){
@@ -11959,7 +12093,7 @@ define("dojox/grid/cells/_base", [
 
 	var AlwaysEdit = declare("dojox.grid.cells.AlwaysEdit", Cell, {
 		// summary:
-		// 		grid cell that is always in an editable state, regardless of grid editing state
+		//		grid cell that is always in an editable state, regardless of grid editing state
 		alwaysEditing: true,
 		_formatNode: function(inDatum, inRowIndex){
 			this.formatNode(this.getEditNode(inRowIndex), inDatum, inRowIndex);
@@ -11976,7 +12110,7 @@ define("dojox/grid/cells/_base", [
 
 	var Bool = declare("dojox.grid.cells.Bool", AlwaysEdit, {
 		// summary:
-		// 		grid cell that provides a standard checkbox that is always on for editing
+		//		grid cell that provides a standard checkbox that is always on for editing
 		_valueProp: "checked",
 		formatEditing: function(inDatum, inRowIndex){
 			return '<input class="dojoxGridInput" type="checkbox"' + (inDatum ? ' checked="checked"' : '') + ' style="width: auto" />';
@@ -12132,10 +12266,13 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	//		Bi-directional support,	the main variable which is responsible for the direction of the text.
 	//		The text direction can be different than the GUI direction by using this parameter in creation
 	//		of a widget.
+	//
 	//		Allowed values:
-	//			1. "ltr"
-	//			2. "rtl"
-	//			3. "auto" - contextual the direction of a text defined by first strong letter.
+	//
+	//		1. "ltr"
+	//		2. "rtl"
+	//		3. "auto" - contextual the direction of a text defined by first strong letter.
+	//
 	//		By default is as the page direction.
 	textDir: "",
 
@@ -12255,8 +12392,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	//		formats of the above list.
 	//
 	//		There are also some shorthands for backwards compatibility:
+	//
 	//		- string --> { node: string, type: "attribute" }, for example:
+	//
 	//	|	"focusNode" ---> { node: "focusNode", type: "attribute" }
+	//
 	//		- "" --> { node: "domNode", type: "attribute" }
 	attributeMap: {},
 
@@ -12267,6 +12407,22 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	//////////// INITIALIZATION METHODS ///////////////////////////////////////
 
+	/*=====
+	constructor: function(params, srcNodeRef){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- if this is a behavioral widget then apply behavior to that srcNodeRef
+		//		- otherwise, replace srcNodeRef with my generated DOM tree
+	 },
+	=====*/
+
 	postscript: function(/*Object?*/params, /*DomNode|String*/srcNodeRef){
 		// summary:
 		//		Kicks off widget instantiation.  See create() for details.
@@ -12275,20 +12431,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		this.create(params, srcNodeRef);
 	},
 
-	create: function(/*Object?*/params, /*DomNode|String?*/srcNodeRef){
+	create: function(params, srcNodeRef){
 		// summary:
 		//		Kick off the life-cycle of a widget
-		// params:
-		//		Hash of initialization parameters for widget, including
-		//		scalar values (like title, duration etc.) and functions,
-		//		typically callbacks like onClick.
-		// srcNodeRef:
-		//		If a srcNodeRef (DOM node) is specified:
-		//			- use srcNodeRef.innerHTML as my contents
-		//			- if this is a behavioral widget then apply behavior
-		//			  to that srcNodeRef
-		//			- otherwise, replace srcNodeRef with my generated DOM
-		//			  tree
 		// description:
 		//		Create calls a number of widget methods (postMixInProperties, buildRendering, postCreate,
 		//		etc.), some of which of you'll want to override. See http://dojotoolkit.org/reference-guide/dijit/_WidgetBase.html
@@ -12296,6 +12441,15 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		//
 		//		Of course, adventurous developers could override create entirely, but this should
 		//		only be done as a last resort.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified:
+		//
+		//		- use srcNodeRef.innerHTML as my contents
+		//		- if this is a behavioral widget then apply behavior to that srcNodeRef
+		//		- otherwise, replace srcNodeRef with my generated DOM tree
 		// tags:
 		//		private
 
@@ -12682,7 +12836,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	get: function(name){
 		// summary:
 		//		Get a property from a widget.
-		//	name:
+		// name:
 		//		The property to get.
 		// description:
 		//		Get a named property from a widget. The property may
@@ -12702,9 +12856,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 	set: function(name, value){
 		// summary:
 		//		Set a property on a widget
-		//	name:
+		// name:
 		//		The property to set.
-		//	value:
+		// value:
 		//		The value to set in the property.
 		// description:
 		//		Sets named properties on a widget which may potentially be handled by a
@@ -12832,9 +12986,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		return ret;
 	},
 
-	on: function(/*String*/ type, /*Function*/ func){
+	on: function(/*String|Function*/ type, /*Function*/ func){
 		// summary:
 		//		Call specified function when event occurs, ex: myWidget.on("click", function(){ ... }).
+		// type:
+		//		Name of event (ex: "click") or extension event like touch.press.
 		// description:
 		//		Call specified function when event `type` occurs, ex: `myWidget.on("click", function(){ ... })`.
 		//		Note that the function is not run in any particular scope, so if (for example) you want it to run in the
@@ -12851,9 +13007,10 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		return this.own(on(this.domNode, type, func))[0];
 	},
 
-	_onMap: function(/*String*/ type){
+	_onMap: function(/*String|Function*/ type){
 		// summary:
-		//		Maps on() type parameter (ex: "mousemove") to method name (ex: "onMouseMove")
+		//		Maps on() type parameter (ex: "mousemove") to method name (ex: "onMouseMove").
+		//		If type is a synthetic event like touch.press then returns undefined.
 		var ctor = this.constructor, map = ctor._onMap;
 		if(!map){
 			map = (ctor._onMap = {});
@@ -12863,7 +13020,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 				}
 			}
 		}
-		return map[type.toLowerCase()];	// String
+		return map[typeof type == "string" && type.toLowerCase()];	// String
 	},
 
 	toString: function(){
@@ -12894,9 +13051,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 			/*String|Function*/ event,
 			/*String|Function*/ method){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use this.own(on(...)) or this.own(aspect.after(...)) instead.
+		//
 		//		Connects specified obj/event to specified method of this object
 		//		and registers for disconnect() on widget destroy.
-		// description:
+		//
 		//		Provide widget-specific analog to dojo.connect, except with the
 		//		implicit use of this widget as the target object.
 		//		Events connected with `this.connect` are disconnected upon
@@ -12919,8 +13078,9 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	disconnect: function(handle){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use handle.remove() instead.
+		//
 		//		Disconnects handle created by `connect`.
-		//		Deprecated.	Will be removed in 2.0.	Just use handle.remove() instead.
 		// tags:
 		//		protected
 
@@ -12929,9 +13089,11 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	subscribe: function(t, method){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use this.own(topic.subscribe()) instead.
+		//
 		//		Subscribes to the specified topic and calls the specified method
 		//		of this object and registers for unsubscribe() on widget destroy.
-		// description:
+		//
 		//		Provide widget-specific analog to dojo.subscribe, except with the
 		//		implicit use of this widget as the target object.
 		// t: String
@@ -12952,6 +13114,8 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 
 	unsubscribe: function(/*Object*/ handle){
 		// summary:
+		//		Deprecated, will be removed in 2.0, use handle.remove() instead.
+		//
 		//		Unsubscribes handle created by this.subscribe.
 		//		Also removes handle from this widget's list of subscriptions
 		// tags:
@@ -13040,7 +13204,7 @@ return declare("dijit._WidgetBase", [Stateful, Destroyable], {
 		//		The function overridden in the _BidiSupport module,
 		//		its main purpose is to calculate the direction of the
 		//		text, if was defined by the programmer through textDir.
-		//	tags:
+		// tags:
 		//		protected.
 		return originalDir;
 	},
@@ -13277,7 +13441,7 @@ return Moveable;
 });
 
 },
-'*now':function(r){r(['dojo/i18n!*preload*dojox/grid/nls/DataGrid*["ar","ca","cs","da","de-de","el","en-gb","en-us","es-es","fi-fi","fr-fr","he-il","hu","it-it","ja-jp","ko-kr","nl-nl","nb","pl","pt-br","pt-pt","ru","sk","sl","sv","th","tr","zh-tw","zh-cn","ROOT"]']);}
+'*now':function(r){r(['dojo/i18n!*preload*dojox/grid/nls/DataGrid*["ar","ca","cs","da","de","el","en-gb","en-us","es-es","fi-fi","fr-fr","he-il","hu","it-it","ja-jp","ko-kr","nl-nl","nb","pl","pt-br","pt-pt","ru","sk","sl","sv","th","tr","zh-tw","zh-cn","ROOT"]']);}
 }});
 define("dojox/grid/DataGrid", [
 	"../main",
@@ -13294,11 +13458,11 @@ define("dojox/grid/DataGrid", [
 /*=====
 declare("dojox.grid.__DataCellDef", dojox.grid.__CellDef, {
 	constructor: function(){
-		//	field: String?
+		// field: String?
 		//		The attribute to read from the dojo.data item for the row.
-		//  fields: String[]?
+		// fields: String[]?
 		//		An array of fields to grab the values of and pass as an array to the grid
-		//	get: Function?
+		// get: Function?
 		//		function(rowIndex, item?){} rowIndex is of type Integer, item is of type
 		//		Object.  This function will be called when a cell requests data.  Returns
 		//		the unformatted data for the cell.
@@ -13309,9 +13473,9 @@ declare("dojox.grid.__DataCellDef", dojox.grid.__CellDef, {
 /*=====
 declare("dojox.grid.__DataViewDef", dojox.grid.__ViewDef, {
 	constructor: function(){
-		//	cells: dojox.grid.__DataCellDef[]|Array[dojox.grid.__DataCellDef[]]?
+		// cells: dojox.grid.__DataCellDef[]|Array[dojox.grid.__DataCellDef[]]?
 		//		The structure of the cells within this grid.
-		//	defaultCell: dojox.grid.__DataCellDef?
+		// defaultCell: dojox.grid.__DataCellDef?
 		//		A cell definition with default values for all cells in this view.  If
 		//		a property is defined in a cell definition in the "cells" array and
 		//		this property, the cell definition's property will override this
@@ -13336,7 +13500,7 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 
 /*=====
 	// structure: dojox.grid.__DataViewDef|dojox.grid.__DataViewDef[]|dojox.grid.__DataCellDef[]|Array[dojox.grid.__DataCellDef[]]
-	//		View layout defintion.
+	//		View layout definition.
 	structure: '',
 =====*/
 
@@ -13384,7 +13548,8 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	},
 
 	get: function(inRowIndex, inItem){
-		// summary: Default data getter.
+		// summary:
+		//		Default data getter.
 		// description:
 		//		Provides data to display in a grid cell. Called in grid cell context.
 		//		So this.cell.index is the column index.
@@ -13815,7 +13980,8 @@ var DataGrid = declare("dojox.grid.DataGrid", _Grid, {
 	},
 
 	styleRowState: function(inRow){
-		// summary: Perform row styling
+		// summary:
+		//		Perform row styling
 		if(this.store && this.store.getState){
 			var states=this.store.getState(inRow.index), c='';
 			for(var i=0, ss=["inflight", "error", "inserting"], s; s=ss[i]; i++){

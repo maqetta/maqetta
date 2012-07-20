@@ -1,5 +1,6 @@
 //>>built
 define("dojox/mvc/StatefulModel",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/Stateful","./getStateful","./getPlainValue","./StatefulArray"],function(_1,_2,_3,_4,_5,_6,_7,_8){
+_1.deprecated("dojox/mvc/StatefulModel","Use dojox/mvc/getStateful, dojox/mvc/getPlainValue, dojox/mvc/StatefulArray or one of the dojox/mvc/*RefControllers instead");
 var _9=_4("dojox.mvc.StatefulModel",[_5],{data:null,store:null,valid:true,value:"",reset:function(){
 if(_2.isObject(this.data)&&!(this.data instanceof Date)&&!(this.data instanceof RegExp)){
 for(var x in this){
@@ -58,7 +59,6 @@ return this.value===""&&this.data?this.data.toString():this.value.toString();
 },constructor:function(_10){
 var _11=(_10&&"data" in _10)?_10.data:this.data;
 if(_11!=null){
-_1.deprecated("To create dojox/mvc/StatefulModel from data, dojox/mvc/getStateful() should be used.");
 _11=_6(_11,_9.getStatefulOptions);
 if(_2.isArray(_11)){
 this.length=0;

@@ -47,8 +47,8 @@ define("dojox/math/_base", ["dojo", "dojox"], function(dojo, dojox) {
 			// c[0] = sqrt(2*PI) / exp(a)
 			// var kfact = 1
 			// for (var k=1; k < a; k++){
-			//      c[k] = pow(-k + a, k - 0.5) * exp(-k) / kfact
-			//      kfact *= -k  // (-1)^(k-1) * (k-1)!
+			//		c[k] = pow(-k + a, k - 0.5) * exp(-k) / kfact
+			//		kfact *= -k  // (-1)^(k-1) * (k-1)!
 			// }
 			var c = [ // precomputed from the above algorithm
 					 5.6658056015186327e-6,

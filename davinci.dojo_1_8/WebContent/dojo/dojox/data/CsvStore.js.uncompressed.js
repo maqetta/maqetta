@@ -259,6 +259,7 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 		//		See dojo.data.api.Read.loadItem()
 		// description:
 		//		The CsvStore always loads all items, so if it's an item, then it's loaded.
+		//
 		//		From the dojo.data.api.Read.loadItem docs:
 		//			If a call to isItemLoaded() returns true before loadItem() is even called,
 		//			then loadItem() need not do any work at all and will not even invoke
@@ -433,14 +434,14 @@ var CsvStore = declare("dojox.data.CsvStore", null, {
 		//		columns in the CSV data.
 		// example:
 		//		For example, given this CSV string as input:
-		//			"Title, Year, Producer \n Alien, 1979, Ridley Scott \n Blade Runner, 1982, Ridley Scott"
+		// |		"Title, Year, Producer \n Alien, 1979, Ridley Scott \n Blade Runner, 1982, Ridley Scott"
 		//		this._dataArray will be set to:
-		//			[["Alien", "1979", "Ridley Scott"],
-		//			["Blade Runner", "1982", "Ridley Scott"]]
+		// |		[["Alien", "1979", "Ridley Scott"],
+		// |		["Blade Runner", "1982", "Ridley Scott"]]
 		//		And this._attributes will be set to:
-		//			["Title", "Year", "Producer"]
+		// |		["Title", "Year", "Producer"]
 		//		And this._attributeIndexes will be set to:
-		//			{ "Title":0, "Year":1, "Producer":2 }
+		// |		{ "Title":0, "Year":1, "Producer":2 }
 		// tags:
 		//		private
 		if(lang.isString(csvFileContents)){

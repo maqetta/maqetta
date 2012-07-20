@@ -83,7 +83,9 @@ return _5.hitch(this._store,this._originFetch)(_1d);
 }});
 var _18=function(evt){
 try{
+if(evt){
 _7.stop(evt);
+}
 }
 catch(e){
 }

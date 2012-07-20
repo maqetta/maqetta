@@ -4,19 +4,19 @@ define("dojox/widget/FisheyeListItem", ["dojo/_base/declare", "dojo/_base/sniff"
 	return declare("dojox.widget.FisheyeListItem",
 		[_WidgetBase, _TemplatedMixin, _Contained], {
 		// summary:
-		//	Menu item inside of a FisheyeList.
-		//	See FisheyeList documentation for details on usage.
+		//		Menu item inside of a FisheyeList.
+		//		See FisheyeList documentation for details on usage.
 
 		// iconSrc: String
-		//  pathname to image file (jpg, gif, png, etc.) of icon for this menu item
+		//		pathname to image file (jpg, gif, png, etc.) of icon for this menu item
 		iconSrc: "",
 
 		// label: String
-		//  label to print next to the icon, when it is moused-over
+		//		label to print next to the icon, when it is moused-over
 		label: "",
 
 		// id: String
-		//  will be set to the id of the orginal div element
+		//		will be set to the id of the orginal div element
 		id: "",
 
 		templateString:
@@ -26,23 +26,23 @@ define("dojox/widget/FisheyeListItem", ["dojo/_base/declare", "dojo/_base/sniff"
 			'</div>',
 
 		_isNode: function(/* object */wh){
-			//  summary:
-			//	  checks to see if wh is actually a node.
+			// summary:
+			//		checks to see if wh is actually a node.
 			if(typeof Element == "function"){
 				try{
-					return wh instanceof Element;   //  boolean
+					return wh instanceof Element;   // Boolean
 				}catch(e){}
 			}else{
 				// best-guess
-				return wh && !isNaN(wh.nodeType);   //  boolean
+				return wh && !isNaN(wh.nodeType);   // Boolean
 			}
 			return false;
 		},
 
 		_hasParent: function(/*Node*/ node){
 			// summary:
-			//	  returns whether or not node is a child of another node.
-			return Boolean(node && node.parentNode && this._isNode(node.parentNode));   //  boolean
+			//		returns whether or not node is a child of another node.
+			return Boolean(node && node.parentNode && this._isNode(node.parentNode));   // Boolean
 		},
 
 		postCreate: function(){
@@ -78,8 +78,9 @@ define("dojox/widget/FisheyeListItem", ["dojo/_base/declare", "dojo/_base/sniff"
 		},
 
 		onMouseOver: function(/*Event*/ e){
-			// summary: callback when user moves mouse over this menu item
-			//  in conservative mode, don't activate the menu until user mouses over an icon
+			// summary:
+			//		callback when user moves mouse over this menu item
+			//		in conservative mode, don't activate the menu until user mouses over an icon
 			if(!this.parent.isOver){
 				this.parent._setActive(e);
 			}

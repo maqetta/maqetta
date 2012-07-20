@@ -37,6 +37,15 @@ function(lang, declare, arr, Color, has, config, dom, domGeom, kernel, g, gs, pa
 
 	vml._bool = {"t": 1, "true": 1};
 
+	vml._reparentEvents = function(dst, src){
+		for(var name in src){
+			if(name.substr(0, 2).toLowerCase() == "on"){
+				dst[name] = src[name];
+				src[name] = null;
+			}
+		}
+	};
+
 	vml.Shape = declare("dojox.gfx.vml.Shape", gs.Shape, {
 		// summary:
 		//		VML-specific implementation of dojox.gfx.Shape methods
@@ -464,6 +473,7 @@ function(lang, declare, arr, Color, has, config, dom, domGeom, kernel, g, gs, pa
 				var node = this.rawNode.ownerDocument.createElement("v:roundrect");
 				node.arcsize = r;
 				node.style.display = "inline-block";
+				vml._reparentEvents(node, this.rawNode);
 				this.rawNode = node;
 				this.rawNode.__gfxObject__ = this.getUID();						
 			}else{
@@ -1392,12 +1402,12 @@ function(lang, declare, arr, Color, has, config, dom, domGeom, kernel, g, gs, pa
 	// Mouse/Touch event
 	vml.fixTarget = function(event, gfxElement){
 		// summary:
-		//     Adds the gfxElement to event.gfxTarget if none exists. This new 
-		//     property will carry the GFX element associated with this event.
+		//		Adds the gfxElement to event.gfxTarget if none exists. This new
+		//		property will carry the GFX element associated with this event.
 		// event: Object 
-		//     The current input event (MouseEvent or TouchEvent)
+		//		The current input event (MouseEvent or TouchEvent)
 		// gfxElement: Object
-		//     The GFX target element
+		//		The GFX target element
 		if (!event.gfxTarget) {
 			event.gfxTarget = gs.byId(event.target.__gfxObject__);
 		}

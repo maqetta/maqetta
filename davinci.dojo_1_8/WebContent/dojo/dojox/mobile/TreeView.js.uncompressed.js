@@ -16,8 +16,6 @@ define("dojox/mobile/TreeView", [
 
 	// module:
 	//		dojox/mobile/TreeView
-	// summary:
-	//		A scrollable view with tree-style navigation.
 
 	kernel.experimental("dojox.mobile.TreeView");
 

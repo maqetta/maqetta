@@ -8,9 +8,6 @@ define("dojox/mobile/_DataListMixin", [
 
 	// module:
 	//		dojox/mobile/_DataListMixin
-	// summary:
-	//		Mixin for widgets to generate the list items corresponding to the
-	//		data provider object.
 
 	return declare("dojox.mobile._DataListMixin", DataMixin, {
 		// summary:

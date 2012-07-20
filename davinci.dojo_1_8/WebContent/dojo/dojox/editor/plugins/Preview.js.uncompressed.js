@@ -11,13 +11,12 @@ define("dojox/editor/plugins/Preview", [
 ], function(dojo, dijit, dojox, _Plugin) {
 
 dojo.declare("dojox.editor.plugins.Preview", _Plugin, {
-	//	summary:
+	// summary:
 	//		This plugin provides Preview capability to the editor.  When
 	//		clicked, the document in the editor frame will displayed in a separate
 	//		window/tab
 
-	//	useDefaultCommand: [protected]
-	//		Over-ride indicating that the command processing is done all by this plugin.
+	// Over-ride indicating that the command processing is done all by this plugin.
 	useDefaultCommand: false,
 
 	// styles: [public] String

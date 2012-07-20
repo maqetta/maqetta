@@ -31,20 +31,19 @@ kernel.deprecated("dojox.form.FileUploader", "Use dojox.form.Uploader", "2.0");
 
 	//	Usage Notes:
 	//		To center text vertically, use vertical-align:middle;
-	//			which emulates a boxModel button. Using line-height to center text
-	//			can cause height problems in IE6
+	//		which emulates a boxModel button. Using line-height to center text
+	//		can cause height problems in IE6
 
 return declare("dojox.form.FileUploader", [Widget, TemplatedMixin, Contained], {
 	// version:
 	//		1.5 (deprecated)
 	// summary:
-	// 		Handles File Uploading to a server (PHP script included for testing)
+	//		Handles File Uploading to a server (PHP script included for testing)
 	//
 	//		FileUploader is now a WIDGET. You do not have to pass a button
 	//		in. Passing a button is still supported until version 1.5 to maintain
 	//		backwards compatibility, but it is not recommended. Just create your
 	//		uploader like any other widget.
-	//
 	// description:
 	//		If the correct version of Flash Player is available (> 9.0) , a SWF
 	//		is used. If Flash Player is not installed or is outdated, a typical
@@ -62,55 +61,61 @@ return declare("dojox.form.FileUploader", [Widget, TemplatedMixin, Contained], {
 	//		The HTML button is created in a new way and it is now inline as is the
 	//		FLash button. Styling is much easier and more versatile.
 	//
-	//		Dependencies:
-	//			FileUploader no longer uses FileInput.css. It now uses FileUploader.css
-	//			See requires for JavaScript dependencies.
+	//		###Dependencies
 	//
-	//		NEW FEATURES -
-	//			There are a ton of features and fixes in this version.
-	//				Disabled: Can be toggled with widget.set("disabled", true|false)
-	//				Submit: A convenience method has been added for if the uploader is in a form.
-	//					Instead of submitting the form, call uploader.submit(theForm), and the
-	//					Uploader will handle all of the form values and post the data.
-	//				Selected List: If passing the ID of a container, the Uploaders will populate it
-	//					with the selected files.
-	//				Deleting Files: You can now delete pending files.
-	//				Progress Built in: showProgress:true will change the button to a progress
-	//					bar on upload.
-	//				Progress Attach: Passing progressWidgetId will tell the Uploader of a progress
-	//					widget. If the Progress widget is initially hidden, it will change to
-	//					visible and then restored after upload.
-	//				A11Y: The Flash button can be accessed with the TAB key. (The HTML cannot due
-	//					to browser limtations)
-	//				Deferred Uploading: (Flash only) throttles the upload to one file at a time
+	//		FileUploader no longer uses FileInput.css. It now uses FileUploader.css
+	//		See requires for JavaScript dependencies.
 	//
+	//		###NEW FEATURES
 	//
-	//		CDN USERS -
-	//			FileUpload now works with the CDN but with limitations. The SWF must
-	//			be from the same domain as the HTML page. 'swfPath' has been exposed
-	//			so that you may link to that file (could of course be the same SWF in
-	//			dojox resource folder). The SWF will *NOT* work from the
-	//			CDN server. This would require a special XML file that would allow
-	//			access to your server, and the logistics to that is impossible.
+	//		There are a ton of features and fixes in this version:
 	//
-	//		LIMITATIONS
-	//			- This is not designed to be a part of a form, it contains its own. (See submit())
-	//			- Currently does not in a Dialog box or a Tab where it is not initially visible,
-	//			- The default style inherits font sizes - but a parent container should have a font size
-	//				set somewhere of the results could be inconsistent.
+	//		- Disabled: Can be toggled with widget.set("disabled", true|false)
+	//		- Submit: A convenience method has been added for if the uploader is in a form.
+	//			Instead of submitting the form, call uploader.submit(theForm), and the
+	//			Uploader will handle all of the form values and post the data.
+	//		- Selected List: If passing the ID of a container, the Uploaders will populate it
+	//			with the selected files.
+	//		- Deleting Files: You can now delete pending files.
+	//		- Progress Built in: showProgress:true will change the button to a progress
+	//			bar on upload.
+	//		- Progress Attach: Passing progressWidgetId will tell the Uploader of a progress
+	//			widget. If the Progress widget is initially hidden, it will change to
+	//			visible and then restored after upload.
+	//		- A11Y: The Flash button can be accessed with the TAB key. (The HTML cannot due
+	//			to browser limitations)
+	//		- Deferred Uploading: (Flash only) throttles the upload to one file at a time
 	//
-	//		OPERA USERS -
-	//			It works better than the 1.3 version. fileInputs apperantly can't have opacity
-	//			set to zero. The Flash uploader works but files are auto-uploaded. Must be a
-	//			flashVar problem.
+	//		###CDN USERS
 	//
-	//		Safari Bug note:
+	//		FileUpload now works with the CDN but with limitations. The SWF must
+	//		be from the same domain as the HTML page. 'swfPath' has been exposed
+	//		so that you may link to that file (could of course be the same SWF in
+	//		dojox resource folder). The SWF will *NOT* work from the
+	//		CDN server. This would require a special XML file that would allow
+	//		access to your server, and the logistics to that is impossible.
+	//
+	//		###LIMITATIONS
+	//
+	//		- This is not designed to be a part of a form, it contains its own. (See submit())
+	//		- Currently does not in a Dialog box or a Tab where it is not initially visible,
+	//		- The default style inherits font sizes - but a parent container should have a font size
+	//			set somewhere of the results could be inconsistent.
+	//
+	//		###OPERA USERS
+	//
+	//		It works better than the 1.3 version. fileInputs apperantly can't have opacity
+	//		set to zero. The Flash uploader works but files are auto-uploaded. Must be a
+	//		flashVar problem.
+	//
+	//		###Safari Bug note:
+	//
 	//		The bug is in the way Safari handles the connection:
-	//			https://bugs.webkit.org/show_bug.cgi?id=5760
-	//			I added this to the virtual host in the Apache conf file, and now it
-	//			works like a charm:
-	//			BrowserMatch Safari nokeepalive
-	//
+	//		https://bugs.webkit.org/show_bug.cgi?id=5760
+	//		I added this to the virtual host in the Apache conf file, and now it
+	//		works like a charm:
+	//	|	BrowserMatch Safari nokeepalive
+
 	swfPath: config.uploaderPath || require.toUrl("dojox/form/resources/fileuploader.swf"),
 
 
@@ -217,22 +222,24 @@ return declare("dojox.form.FileUploader", [Widget, TemplatedMixin, Contained], {
 	flashFieldName:"flashUploadFiles",
 
 	// fileMask:  Array[ Array[Description, FileTypes], Array[...]...]
-	// 		(an array, or an array of arrays)
+	//		(an array, or an array of arrays)
 	//		Restrict file selection to certain file types
-	// 		Empty array defaults to "All Files"
+	//		Empty array defaults to "All Files"
+	//
 	//		example:
-	//			|	fileMask = ["Images", "*.jpg;*.jpeg;*.gif;*.png"]
-	//			or
-	//		|	fileMask = [
-	//		|		["Jpeg File", 	"*.jpg;*.jpeg"],
-	//		|		["GIF File", 	"*.gif"],
-	//		|		["PNG File", 	"*.png"],
-	//		|		["All Images", 	"*.jpg;*.jpeg;*.gif;*.png"],
-	//		|	]
+	//
+	//	|	fileMask = ["Images", "*.jpg;*.jpeg;*.gif;*.png"]
+	//		or
+	//	|	fileMask = [
+	//	|		["Jpeg File", 	"*.jpg;*.jpeg"],
+	//	|		["GIF File", 	"*.gif"],
+	//	|		["PNG File", 	"*.png"],
+	//	|		["All Images", 	"*.jpg;*.jpeg;*.gif;*.png"],
+	//	|	]
 	//
 	//		NOTE: MacType is not supported, as it does not work very well.
-	//			fileMask will work on a Mac, but differently than
-	//			Windows.
+	//		fileMask will work on a Mac, but differently than
+	//		Windows.
 	fileMask: null,
 
 	// minFlashVersion: Number
@@ -268,7 +275,7 @@ return declare("dojox.form.FileUploader", [Widget, TemplatedMixin, Contained], {
 	progressWidgetId:"",
 
 	// skipServerCheck: Boolean
-	// 		If true, will not verify that the server was sent the correct format.
+	//		If true, will not verify that the server was sent the correct format.
 	//		This can be safely set to true. The purpose of the server side check
 	//		is mainly to show the dev if they've implemented the different returns
 	//		correctly.
@@ -542,31 +549,31 @@ return declare("dojox.form.FileUploader", [Widget, TemplatedMixin, Contained], {
 
 	onChange: function(dataArray){
 		// summary:
-		// 		stub to connect
-		// 		Fires when files are selected
-		// 		Event is an array of last files selected
+		//		stub to connect
+		//		Fires when files are selected
+		//		Event is an array of last files selected
 	},
 
 	onProgress: function(dataArray){
 		// summary:
-		// 		Stub to connect
-		// 		Fires as progress returns from SWF
-		// 		Event is an array of all files uploading
+		//		Stub to connect
+		//		Fires as progress returns from SWF
+		//		Event is an array of all files uploading
 		//		Can be connected to for HTML uploader,
 		//		but will not return anything.
 	},
 
 	onComplete: function(dataArray){
 		// summary:
-		// 		stub to connect
-		// 		Fires when all files have uploaded
-		// 		Event is an array of all files
+		//		stub to connect
+		//		Fires when all files have uploaded
+		//		Event is an array of all files
 	},
 
 	onCancel: function(){
 		// summary:
-		// 		Stub to connect
-		// 		Fires when dialog box has been closed
+		//		Stub to connect
+		//		Fires when dialog box has been closed
 		//		without a file selection
 	},
 
@@ -603,7 +610,7 @@ return declare("dojox.form.FileUploader", [Widget, TemplatedMixin, Contained], {
 	},
 	upload: function(/*Object ? */ data){
 		// summary:
-		// 		When called, begins file upload
+		//		When called, begins file upload
 		// data: Object
 		//		postData to be sent to server
 
@@ -946,7 +953,7 @@ return declare("dojox.form.FileUploader", [Widget, TemplatedMixin, Contained], {
 		//		which can also handle the post data.
 
 		// NOTE on deferredUploading:
-		// 		This is not enabled for HTML. Workaround would be to force
+		//		This is not enabled for HTML. Workaround would be to force
 		//		singleFile uploads.
 		// TODO:
 		//		Investigate removing fileInputs and resending form

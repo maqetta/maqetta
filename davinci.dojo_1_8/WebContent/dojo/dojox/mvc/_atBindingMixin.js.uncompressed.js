@@ -107,6 +107,7 @@ define("dojox/mvc/_atBindingMixin", [
 		return h;
 	}
 
+	// TODO: Like _DataBindingMixin, this should probably just be a plain Object rather than a Class
 	var _atBindingMixin = declare("dojox/mvc/_atBindingMixin", null, {
 		// summary:
 		//		The mixin for dijit/_WidgetBase to support data binding.

@@ -7,7 +7,6 @@ _5.mixin(this,_8);
 this.current=null;
 this.containerState="";
 _3.add(this.node,"dojoDndContainer");
-var _9=this;
 this.events=[on(this.node,_6.enter,_5.hitch(this,"onOverEvent")),on(this.node,_6.leave,_5.hitch(this,"onOutEvent")),_1.after(this.tree,"_onNodeMouseEnter",_5.hitch(this,"onMouseOver"),true),_1.after(this.tree,"_onNodeMouseLeave",_5.hitch(this,"onMouseOut"),true),on(this.node,"dragstart",_5.hitch(_4,"stop")),on(this.node,"selectstart",_5.hitch(_4,"stop"))];
 },destroy:function(){
 var h;
@@ -15,19 +14,19 @@ while(h=this.events.pop()){
 h.remove();
 }
 this.node=this.parent=null;
-},onMouseOver:function(_a){
-this.current=_a;
+},onMouseOver:function(_9){
+this.current=_9;
 },onMouseOut:function(){
 this.current=null;
-},_changeState:function(_b,_c){
-var _d="dojoDnd"+_b;
-var _e=_b.toLowerCase()+"State";
-_3.replace(this.node,_d+_c,_d+this[_e]);
-this[_e]=_c;
-},_addItemClass:function(_f,_10){
-_3.add(_f,"dojoDndItem"+_10);
-},_removeItemClass:function(_11,_12){
-_3.remove(_11,"dojoDndItem"+_12);
+},_changeState:function(_a,_b){
+var _c="dojoDnd"+_a;
+var _d=_a.toLowerCase()+"State";
+_3.replace(this.node,_c+_b,_c+this[_d]);
+this[_d]=_b;
+},_addItemClass:function(_e,_f){
+_3.add(_e,"dojoDndItem"+_f);
+},_removeItemClass:function(_10,_11){
+_3.remove(_10,"dojoDndItem"+_11);
 },onOverEvent:function(){
 this._changeState("Container","Over");
 },onOutEvent:function(){

@@ -25,10 +25,10 @@ var LinkDialog = declare("dijit._editor.plugins.LinkDialog", _Plugin, {
 	// summary:
 	//		This plugin provides the basis for an 'anchor' (link) dialog and an extension of it
 	//		provides the image link dialog.
-	//
 	// description:
 	//		The command provided by this plugin is:
-	//		* createLink
+	//
+	//		- createLink
 
 	// Override _Plugin.buttonClass.   This plugin is controlled by a DropDownButton
 	// (which triggers a TooltipDialog).
@@ -439,10 +439,10 @@ var ImgLinkDialog = declare("dijit._editor.plugins.ImgLinkDialog", [LinkDialog],
 	// summary:
 	//		This plugin extends LinkDialog and adds in a plugin for handling image links.
 	//		provides the image link dialog.
-	//
 	// description:
 	//		The command provided by this plugin is:
-	//		* insertImage
+	//
+	//		- insertImage
 
 	// linkDialogTemplate: [protected] String
 	//		Over-ride for template since img dialog doesn't need target that anchor tags may.

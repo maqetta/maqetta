@@ -33,6 +33,7 @@ _a.publish("/dnd/source/over",null);
 _a.publish("/dnd/source/over",null);
 }
 },startDrag:function(_12,_13,_14){
+_d.autoScrollStart(_5.doc);
 this.source=_12;
 this.nodes=_13;
 this.copy=Boolean(_14);

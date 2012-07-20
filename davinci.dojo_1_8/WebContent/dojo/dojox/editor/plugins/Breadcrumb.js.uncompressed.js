@@ -55,7 +55,7 @@ dojo.declare("dojox.editor.plugins.Breadcrumb", _Plugin,{
 	//		The popup menu that is displayed.
 	_menu: null,
 
-	//	breadcrumbBar: [protected]
+	// breadcrumbBar: [protected] dijit/Toolbar
 	//		The toolbar containing the breadcrumb.
 	breadcrumbBar: null,
 

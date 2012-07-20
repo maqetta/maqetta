@@ -4,8 +4,13 @@ define("dijit/_base/scroll", [
 ], function(windowUtils, dijit){
 	// module:
 	//		dijit/_base/scroll
-	// summary:
-	//		Back compatibility module, new code should use windowUtils directly instead of using this module.
+
+	/*=====
+	return {
+		// summary:
+		//		Back compatibility module, new code should use windowUtils directly instead of using this module.
+	};
+	=====*/
 
 	dijit.scrollIntoView = function(/*DomNode*/ node, /*Object?*/ pos){
 		// summary:

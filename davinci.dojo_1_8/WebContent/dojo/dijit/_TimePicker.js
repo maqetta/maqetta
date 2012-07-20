@@ -185,7 +185,7 @@ this.timeMenu.removeChild(this.timeMenu.childNodes[0]);
 this.timeMenu.appendChild(_36[0]);
 }
 },handleKey:function(e){
-if(e.charOrCode==_a.DOWN_ARROW||e.charOrCode==_a.UP_ARROW){
+if(e.keyCode==_a.DOWN_ARROW||e.keyCode==_a.UP_ARROW){
 _8.stop(e);
 if(this._highlighted_option&&!this._highlighted_option.parentNode){
 this._highlighted_option=null;
@@ -195,14 +195,14 @@ if(!tgt){
 tgt=_37.childNodes[0];
 }else{
 if(_37.childNodes.length){
-if(e.charOrCode==_a.DOWN_ARROW&&!tgt.nextSibling){
+if(e.keyCode==_a.DOWN_ARROW&&!tgt.nextSibling){
 this._onArrowDown();
 }else{
-if(e.charOrCode==_a.UP_ARROW&&!tgt.previousSibling){
+if(e.keyCode==_a.UP_ARROW&&!tgt.previousSibling){
 this._onArrowUp();
 }
 }
-if(e.charOrCode==_a.DOWN_ARROW){
+if(e.keyCode==_a.DOWN_ARROW){
 tgt=tgt.nextSibling;
 }else{
 tgt=tgt.previousSibling;
@@ -213,14 +213,14 @@ this._highlightOption(tgt,true);
 this._keyboardSelected=tgt;
 return false;
 }else{
-if(e.charOrCode==_a.ENTER||e.charOrCode===_a.TAB){
-if(!this._keyboardSelected&&e.charOrCode===_a.TAB){
+if(e.keyCode==_a.ENTER||e.keyCode===_a.TAB){
+if(!this._keyboardSelected&&e.keyCode===_a.TAB){
 return true;
 }
 if(this._highlighted_option){
 this._onOptionSelected({target:this._highlighted_option});
 }
-return e.charOrCode===_a.TAB;
+return e.keyCode===_a.TAB;
 }
 }
 return undefined;

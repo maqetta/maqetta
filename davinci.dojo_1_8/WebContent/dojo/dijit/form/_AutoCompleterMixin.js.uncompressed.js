@@ -124,11 +124,12 @@ define("dijit/form/_AutoCompleterMixin", [
 			this._abortQuery();
 
 			// _HasDropDown will do some of the work:
-			//		1. when drop down is not yet shown:
-			//			- if user presses the down arrow key, call loadDropDown()
-			//		2. when drop down is already displayed:
-			//			- on ESC key, call closeDropDown()
-			//			- otherwise, call dropDown.handleKey() to process the keystroke
+			//
+			//	1. when drop down is not yet shown:
+			//		- if user presses the down arrow key, call loadDropDown()
+			//	2. when drop down is already displayed:
+			//		- on ESC key, call closeDropDown()
+			//		- otherwise, call dropDown.handleKey() to process the keystroke
 			this.inherited(arguments);
 
 			if(evt.altKey || evt.ctrlKey || evt.metaKey){ return; } // don't process keys with modifiers  - but we want shift+TAB

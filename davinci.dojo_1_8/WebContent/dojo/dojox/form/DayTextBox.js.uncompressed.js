@@ -3,19 +3,18 @@ define("dojox/form/DayTextBox", [
 	"dojo/_base/lang",
 	"dojox/widget/DailyCalendar",
 	"dijit/form/TextBox",
-	"dijit/form/_DateTimeTextBox",
-	"dojox/form/DateTextBox",
-	"dojo/_base/declare",
-	], function(kernel, lang, DailyCalendar, TextBox, _DateTimeTextBox, DateTextBox, declare){
-		kernel.experimental("dojox/form/DateTextBox");
-	return declare( "dojox.form.DayTextBox", [DailyCalendar, TextBox, _DateTimeTextBox, DateTextBox],
+	"./DateTextBox",
+	"dojo/_base/declare"
+	], function(kernel, lang, DailyCalendar, TextBox, DateTextBox, declare){
+		kernel.experimental("dojox/form/DayTextBox");
+	return declare("dojox.form.DayTextBox", DateTextBox,
 		{
 			// summary:
 			//		A validating, serializable, range-bound date text box with a popup calendar that contains just months.
 
 			// popupClass: String
 			//		The popup widget to use. In this case, a calendar with just a Month view.
-			popupClass: "dojox/widget/DailyCalendar",
+			popupClass: DailyCalendar,
 
 			parse: function(displayVal){
 				return displayVal;

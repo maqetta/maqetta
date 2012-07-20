@@ -9,7 +9,7 @@ return declare("dojox.gauges.AnalogCircleIndicator", [AnalogIndicatorBase], {
 	
 	
 	_getShapes: function(group){
-		// summary: 
+		// summary:
 		//		Override of dojox.gauges.AnalogLineIndicator._getShapes
 		var color = this.color ? this.color : 'black';
 		var strokeColor = this.strokeColor ? this.strokeColor : color;

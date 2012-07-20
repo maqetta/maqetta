@@ -26,7 +26,7 @@ define("dijit/_BidiSupport", ["./_WidgetBase"], function(_WidgetBase){
 			//		If textDir is ltr or rtl returns the value.
 			//		If it's auto, calls to another function that responsible
 			//		for checking the value, and defining the direction.
-			//	tags:
+			// tags:
 			//		protected.
 			return this.textDir == "auto" ? this._checkContextual(text) : this.textDir;
 		},
@@ -35,7 +35,7 @@ define("dijit/_BidiSupport", ["./_WidgetBase"], function(_WidgetBase){
 			// summary:
 			//		Finds the first strong (directional) character, return ltr if isLatin
 			//		or rtl if isBidiChar.
-			//	tags:
+			// tags:
 			//		private.
 
 			// look for strong (directional) characters
@@ -55,7 +55,7 @@ define("dijit/_BidiSupport", ["./_WidgetBase"], function(_WidgetBase){
 			//		If textDir is ltr or rtl returns the value.
 			//		If it's auto, calls to another function that responsible
 			//		for checking the value, and defining the direction.
-			//	tags:
+			// tags:
 			//		protected.
 
 			var textDir = this.textDir == "auto" ? this._checkContextual(text) : this.textDir;

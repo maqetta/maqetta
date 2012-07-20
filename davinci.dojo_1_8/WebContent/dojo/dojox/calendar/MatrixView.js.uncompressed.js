@@ -42,6 +42,22 @@ function(
 	template, 
 	_TemplatedMixin){
 	
+	/*=====
+	var __HeaderClickEventArgs = function(index, date, triggerEvent){
+		// summary:
+		//		A column click event.
+		// index: Integer
+		//		The column index. 
+		// date: Date
+		//		The date displayed by the column.
+		// triggerEvent: Event
+		//		The origin event.
+		this.index = index;
+		this.date = date;
+		this.triggerEvent = triggerEvent;
+	}
+	=====*/
+	
 	return declare("dojox.calendar.MatrixView", [ViewBase, _TemplatedMixin], {
 		
 		// summary:
@@ -1239,7 +1255,7 @@ function(
 			//		Destroys the expand renderer.
 			// renderer: dojox/calendar/_RendererMixin
 			//		The item renderer to destroy.
-			//	tags
+			// tags:
 			//		protected
 			
 			arr.forEach(renderer.__handles, function(handle){
@@ -1365,7 +1381,7 @@ function(
 			//		Third pass of the overlap layout (optional). Compute the number of lanes used by sub interval.
 			// lanes: Object[]
 			//		The array of lanes.
-			//	tags
+			// tags:
 			//		private
 
 			var pos=0, posEnd=0;
@@ -2191,6 +2207,8 @@ function(
 		onRowHeaderClick: function(e){
 			// summary:
 			//		Event dispatched when a row header cell is clicked.
+			// e: __HeaderClickEventArgs
+			//		Header click event.
 			// tags:
 			//		callback
 		},

@@ -3,16 +3,14 @@ define("dojox/charting/action2d/PlotAction", ["dojo/_base/connect", "dojo/_base/
 	function(hub, declare, Base, dfe, df, dlfo){
 	
 	/*=====
-	var __PlotActionCtorArgs = function(duration, easing){
+	var __PlotActionCtorArgs = {
 	 	// summary:
 		//		The base keyword arguments object for creating an action2d.
 		// duration: Number?
 		//		The amount of time in milliseconds for an animation to last.  Default is 400.
-		this.duration = duration;
 		// easing: dojo/fx/easing/*?
 		//		An easing object (see dojo.fx.easing) for use in an animation.  The
 		//		default is dojo.fx.easing.backOut.
-		this.easing = easing;
 	};
 	=====*/
 

@@ -58,9 +58,10 @@ define("dijit/popup", [
 		//		and the top-right corner.
 		// onCancel: Function
 		//		callback when user has canceled the popup by
-		//			1. hitting ESC or
-		//			2. by using the popup widget's proprietary cancel mechanism (like a cancel button in a dialog);
-		//			   i.e. whenever popupWidget.onCancel() is called, args.onCancel is called
+		//
+		//		1. hitting ESC or
+		//		2. by using the popup widget's proprietary cancel mechanism (like a cancel button in a dialog);
+		//		   i.e. whenever popupWidget.onCancel() is called, args.onCancel is called
 		// onClose: Function
 		//		callback whenever this popup is closed
 		// onExecute: Function

@@ -37,11 +37,19 @@
     "property": {
         "orientation": {
             "datatype": "string",
-            "defaultValue": "H"
+            "defaultValue": "H",
+            "option": [
+                {"value": "H"},
+                {"value": "V"}
+            ]
         },
-        "isContainer": {
+        "variablePane": {
+            "datatype": "number",
+            "defaultValue": -1
+        },
+        "screenSizeAware": {
             "datatype": "boolean",
-            "defaultValue": true
+            "defaultValue": false
         }
     },
     "content": "<div></div>"

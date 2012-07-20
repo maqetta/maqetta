@@ -4,6 +4,9 @@ return _2("dijit._WidgetsInTemplateMixin",null,{_earlyTemplatedStartup:false,wid
 if(this.widgetsInTemplate){
 var _4=this.domNode;
 var cw=(this._startupWidgets=_3.parse(_4,{noStart:!this._earlyTemplatedStartup,template:true,inherited:{dir:this.dir,lang:this.lang,textDir:this.textDir},propsThis:this,scope:"dojo"}));
+if(!cw.isFulfilled()){
+throw new Error(this.declaredClass+": parser returned unfilled promise (probably waiting for module auto-load), "+"unsupported by _WidgetsInTemplateMixin.   Must pre-load all supporting widgets before instantiation.");
+}
 this._attachTemplateNodes(cw,function(n,p){
 return n[p];
 });

@@ -37,5 +37,15 @@ define({ root: {
 		"iconContainerTitle": "Icon Container",
 
 		//mobile/IconMenuInput
-		"iconMenuTitle": "Icon Menu"
+		"iconMenuTitle": "Icon Menu",
+
+		//mobile/FixedSplitterInput,
+		"fixedSpliterInputTitle": "Fixed Splitter",
+		"fixedSpliterInputOrientation": "Orientation:",
+		"fixedSpliterInputHorizontal": "Horizontal",
+		"fixedSpliterInputVertical": "Vertical",
+		"fixedSpliterInputOr": "or",
+		"fixedSpliterInputRemaining": "Use up remaining space",
+		"fixedSpliterInputWidth": "Width",
+		"fixedSpliterInputHeight": "Height",
 }});

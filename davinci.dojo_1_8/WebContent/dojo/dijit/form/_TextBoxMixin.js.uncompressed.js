@@ -202,7 +202,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 	onInput: function(){},
 
 	__skipInputEvent: false,
-	_onInput: function(){
+	_onInput: function(/*Event*/ evt){
 		// summary:
 		//		Called AFTER the input event has happened
 
@@ -210,6 +210,13 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		if(this.textDir == "auto"){
 			this.applyTextDir(this.focusNode, this.focusNode.value);
 		}
+
+		this._processInput(evt);
+	},
+
+	_processInput: function(/*Event*/ evt){
+		// summary:
+		//		Default action handler for user input events
 
 		this._refreshState();
 
@@ -226,7 +233,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 
 		// normalize input events to reduce spurious event processing
 		//	onkeydown: do not forward modifier keys
-		//	           set charOrCode to numeric keycode
+		//		       set charOrCode to numeric keycode
 		//	onkeypress: do not forward numeric charOrCode keys (already sent through onkeydown)
 		//	onpaste & oncut: set charOrCode to 229 (IME)
 		//	oninput: if primary event not already processed, set charOrCode to 229 (IME), else do not forward
@@ -334,8 +341,10 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		//		value on blur or form submit.
 		// description:
 		//		For MappedTextBox subclasses, this is called twice
-		//			- once with the display value
-		//			- once the value as set/returned by set('value', ...)
+		//
+		//		- once with the display value
+		//		- once the value as set/returned by set('value', ...)
+		//
 		//		and get('value'), ex: a Number for NumberTextBox.
 		//
 		//		In the latter case it does corrections like converting null to NaN.  In

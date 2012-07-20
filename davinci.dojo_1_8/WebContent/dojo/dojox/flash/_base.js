@@ -3,8 +3,6 @@ define("dojox/flash/_base",["dijit","dojo","dojox","dojo/require!dojo/window"],f
 _2.provide("dojox.flash._base");
 _2.experimental("dojox.flash");
 _2.require("dojo.window");
-_3.flash=function(){
-};
 _3.flash={ready:false,url:null,_visible:true,_loadedListeners:[],_installingListeners:[],setSwf:function(_4,_5){
 this.url=_4;
 this._visible=true;

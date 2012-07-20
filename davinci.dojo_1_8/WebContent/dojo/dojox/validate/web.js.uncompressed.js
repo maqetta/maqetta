@@ -9,6 +9,7 @@ validate.isIpAddress = function(value, flags) {
 	// value: String
 	// flags: Object?
 	//		All flags are boolean with default = true.
+	//
 	//		- flags.allowDottedDecimal  Example, 207.142.131.235.  No zero padding.
 	//		- flags.allowDottedHex  Example, 0x18.0x11.0x9b.0x28.  Case insensitive.  Zero padding allowed.
 	//		- flags.allowDottedOctal  Example, 0030.0021.0233.0050.  Zero padding allowed.

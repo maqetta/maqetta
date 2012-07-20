@@ -11,10 +11,10 @@ if(1){
 var _4=window.ScriptEngineMajorVersion;
 _3.add("jscript",_4&&(_4()+ScriptEngineMinorVersion()/10));
 _3.add("event-orientationchange",_3("touch")&&!_3("android"));
-_3.add("event-stopimmediatepropogation",window.Event&&!!window.Event.prototype&&!!window.Event.prototype.stopImmediatePropagation);
+_3.add("event-stopimmediatepropagation",window.Event&&!!window.Event.prototype&&!!window.Event.prototype.stopImmediatePropagation);
 }
 var on=function(_5,_6,_7,_8){
-if(_5.on){
+if(_5.on&&typeof _6!="function"){
 return _5.on(_6,_7);
 }
 return on.parse(_5,_6,_7,_9,_8,this);
@@ -143,7 +143,7 @@ _3a[_3e]&&_3a[_3e].apply(_3a,_3d);
 return _3c&&_3c.cancelable&&_3c;
 };
 var _28={};
-if(!_3("event-stopimmediatepropogation")){
+if(!_3("event-stopimmediatepropagation")){
 var _40=function(){
 this.immediatelyStopped=true;
 this.modified=true;

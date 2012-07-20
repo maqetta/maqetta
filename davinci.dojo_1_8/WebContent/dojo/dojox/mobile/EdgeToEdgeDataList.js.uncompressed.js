@@ -6,8 +6,6 @@ define("dojox/mobile/EdgeToEdgeDataList", [
 
 	// module:
 	//		dojox/mobile/EdgeToEdgeDataList
-	// summary:
-	//		A dojo/data-enabled version of EdgeToEdgeList.
 
 	return declare("dojox.mobile.EdgeToEdgeDataList", [EdgeToEdgeList, DataListMixin],{
 		// summary:

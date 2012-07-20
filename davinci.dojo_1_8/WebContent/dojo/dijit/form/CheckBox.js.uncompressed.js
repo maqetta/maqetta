@@ -35,8 +35,9 @@ define("dijit/form/CheckBox", [
 		//		we update the state of the checkbox/radio.
 		//
 		//		There are two modes:
-		//			1. High contrast mode
-		//			2. Normal mode
+		//
+		//		1. High contrast mode
+		//		2. Normal mode
 		//
 		//		In case 1, the regular html inputs are shown and used by the user.
 		//		In case 2, the regular html inputs are invisible but still used by

@@ -1206,9 +1206,9 @@ dojo.query differences that cause some tests to fail:
 
 	function copyEventHandlers(/*DOMNode*/ src, /*DOMNode*/ target){
 		// summary:
-		// 		copies the event handlers from onne src *element* node to
-		// 		another target *element* node. Assumes that target had
-		// 		no previous events on it, and is a clone of the src node.
+		//		copies the event handlers from onne src *element* node to
+		//		another target *element* node. Assumes that target had
+		//		no previous events on it, and is a clone of the src node.
 
 		//Get src listeners.
 		var srcNodeId = target.getAttribute(eventAttr);
@@ -1367,7 +1367,7 @@ dojo.query differences that cause some tests to fail:
 
 	f._cloneNode = function(/*DOMNode*/ src){
 		// summary:
-		// 		private utiltity to clone a node. Copies event handlers too.
+		//		private utiltity to clone a node. Copies event handlers too.
 		var target = src.cloneNode(true);
 
 		if(src.nodeType == 1){

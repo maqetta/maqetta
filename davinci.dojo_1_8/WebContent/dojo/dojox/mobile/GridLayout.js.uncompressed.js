@@ -4,10 +4,11 @@ define("dojox/mobile/GridLayout", [
 ], function(declare, IconMenu){
 	// module:
 	//		dojox/mobile/GridLayout
-	// summary:
-	//		A container widget that places its children in a grid layout.
 
 	return declare("dojox.mobile.GridLayout", IconMenu, {
+		// summary:
+		//		A container widget that places its children in a grid layout.
+
 		// cols: Number
 		//		The number of child items in a row.
 		cols: 0,

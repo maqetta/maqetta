@@ -8,8 +8,8 @@ us.isState = function(value, flags){
 	// value: String
 	//		A two character string
 	// flags: Object?
-	//    flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
-	//    flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
+	//		- flags.allowTerritories  Allow Guam, Puerto Rico, etc.  Default is true.
+	//		- flags.allowMilitary  Allow military 'states', e.g. Armed Forces Europe (AE).  Default is true.
 
 	var re = new RegExp("^" + xregexp.us.state(flags) + "$", "i");
 	return re.test(value); // Boolean

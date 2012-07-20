@@ -30,7 +30,8 @@ dojo.declare("dojox.editor.plugins.InsertAnchor", _Plugin, {
 	//
 	// description:
 	//		The command provided by this plugin is:
-	//		* insertAnchor
+	//
+	//		- insertAnchor
 
 	// htmlTemplate: [protected] String
 	//		String used for templating the HTML to insert at the desired point.

@@ -1,5 +1,5 @@
 require({cache:{
-'url:dijit/form/templates/Select.html':"<table class=\"dijit dijitReset dijitInline dijitLeft\"\n\tdata-dojo-attach-point=\"_buttonNode,tableNode,focusNode\" cellspacing='0' cellpadding='0'\n\trole=\"combobox\" aria-haspopup=\"true\"\n\t><tbody role=\"presentation\"><tr role=\"presentation\"\n\t\t><td class=\"dijitReset dijitStretch dijitButtonContents\" role=\"presentation\"\n\t\t\t><div class=\"dijitReset dijitInputField dijitButtonText\"  data-dojo-attach-point=\"containerNode,_popupStateNode\"></div\n\t\t\t><div class=\"dijitReset dijitValidationContainer\"\n\t\t\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t/></div\n\t\t\t><input type=\"hidden\" ${!nameAttrSetting} data-dojo-attach-point=\"valueNode\" value=\"${value}\" aria-hidden=\"true\"\n\t\t/></td\n\t\t><td class=\"dijitReset dijitRight dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer\"\n\t\t\tdata-dojo-attach-point=\"titleNode\" role=\"presentation\"\n\t\t\t><input class=\"dijitReset dijitInputField dijitArrowButtonInner\" value=\"&#9660; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t\t${_buttonInputDisabled}\n\t\t/></td\n\t></tr></tbody\n></table>\n"}});
+'url:dijit/form/templates/Select.html':"<table class=\"dijit dijitReset dijitInline dijitLeft\"\n\tdata-dojo-attach-point=\"_buttonNode,tableNode,focusNode\" cellspacing='0' cellpadding='0'\n\trole=\"listbox\" aria-haspopup=\"true\"\n\t><tbody role=\"presentation\"><tr role=\"presentation\"\n\t\t><td class=\"dijitReset dijitStretch dijitButtonContents\" role=\"presentation\"\n\t\t\t><div class=\"dijitReset dijitInputField dijitButtonText\"  data-dojo-attach-point=\"containerNode,_popupStateNode\" role=\"presentation\"></div\n\t\t\t><div class=\"dijitReset dijitValidationContainer\"\n\t\t\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t/></div\n\t\t\t><input type=\"hidden\" ${!nameAttrSetting} data-dojo-attach-point=\"valueNode\" value=\"${value}\" aria-hidden=\"true\"\n\t\t/></td\n\t\t><td class=\"dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer\"\n\t\t\tdata-dojo-attach-point=\"titleNode\" role=\"presentation\"\n\t\t\t><input class=\"dijitReset dijitInputField dijitArrowButtonInner\" value=\"&#9660; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\n\t\t\t\t${_buttonInputDisabled}\n\t\t/></td\n\t></tr></tbody\n></table>\n"}});
 define("dijit/form/Select", [
 	"dojo/_base/array", // array.forEach
 	"dojo/_base/declare", // declare
@@ -108,7 +108,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 	//		This is a "styleable" select box - it is basically a DropDownButton which
 	//		can take a `<select>` as its input.
 
-	baseClass: "dijitSelect",
+	baseClass: "dijitSelect dijitValidationTextBox",
 
 	templateString: template,
 
@@ -126,7 +126,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 	//		Currently displayed error/prompt message
 	message: "",
 
-	//	tooltipPosition: String[]
+	// tooltipPosition: String[]
 	//		See description of `dijit/Tooltip.defaultPosition` for details on this parameter.
 	tooltipPosition: [],
 
@@ -153,7 +153,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		}
 		// Create the dropDown widget
 		this.dropDown = new _SelectMenu({ id: this.id + "_menu", parentWidget: this });
-		domClass.add(this.dropDown.domNode, this.baseClass + "Menu");
+		domClass.add(this.dropDown.domNode, this.baseClass.replace(/\s+|$/g, "Menu "));
 	},
 
 	_getMenuItemForOption: function(/*_FormSelectWidget.__SelectOption*/ option){
@@ -174,7 +174,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 				dir: this.dir,
 				disabled: option.disabled || false
 			});
-			item.focusNode.setAttribute("role", "listitem");
+			item.focusNode.setAttribute("role", "option");
 			return item;
 		}
 	},
@@ -200,7 +200,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		// summary:
 		//		Resets the menu and the length attribute of the button - and
 		//		ensures that the label is appropriately set.
-		//	loadMenuItems: Boolean
+		// loadMenuItems: Boolean
 		//		actually loads the child menu items - we only do this when we are
 		//		populating for showing the dropdown.
 
@@ -273,8 +273,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		// summary:
 		//		sets the display for the given value (or values)
 		var lbl = newDisplay || this.emptyLabel;
-		this.containerNode.innerHTML = '<span class="dijitReset dijitInline ' + this.baseClass + 'Label">' + lbl + '</span>';
-		this.focusNode.setAttribute("aria-valuetext", lbl);
+		this.containerNode.innerHTML = '<span role="option" class="dijitReset dijitInline ' + this.baseClass.replace(/\s+|$/g, "Label ")+'">' + lbl + '</span>';
 	},
 
 	validate: function(/*Boolean*/ isFocused){
@@ -325,9 +324,10 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 		//		stop mousemove from selecting text on IE to be consistent with other browsers
 
 		this.inherited(arguments);
-
+ 
 		this.connect(this.domNode, "onselectstart", event.stop);
-
+		this.domNode.setAttribute("aria-expanded", "false");
+		
 		if(has("ie") < 9){
 			// IE INPUT tag fontFamily has to be set directly using STYLE
 			// the defer gives IE a chance to render the TextBox and to deal with font inheritance
@@ -353,7 +353,7 @@ var Select = declare("dijit.form.Select", [_FormSelectWidget, _HasDropDown], {
 
 	_setStyleAttr: function(/*String||Object*/ value){
 		this.inherited(arguments);
-		domClass.toggle(this.domNode, this.baseClass + "FixedWidth", !!this.domNode.style.width);
+		domClass.toggle(this.domNode, this.baseClass.replace(/\s+|$/g, "FixedWidth "), !!this.domNode.style.width);
 	},
 
 	isLoaded: function(){

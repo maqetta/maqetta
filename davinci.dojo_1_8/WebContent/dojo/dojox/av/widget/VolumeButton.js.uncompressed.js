@@ -4,14 +4,13 @@ function(dojo, dijit, _Widget, _TemplatedMixin, Button){
 return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		A volume widget to use with dojox.av.widget.Player
-	//
-	//	description:
+	// description:
 	//		Controls and displays the volume of the media. This widget
 	//		opens a slider on click that is used to adjust the volume.
 	//		The icon changes according to the volume level.
-	//
+
 	templateString: dojo.cache("dojox.av.widget","resources/VolumeButton.html"),
-	//
+
 	postCreate: function(){
 		// summary:
 		//	Initialize the widget.
@@ -93,9 +92,9 @@ return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], 
 	},
 
 	onHideVolume: function(){
-		//	summary:
+		// summary:
 		//		Hides volume slider.
-		//
+
 		this.endDrag();
 		dojo.style(this.volumeSlider, "display", "none");
 		this.showing = false;
@@ -119,7 +118,7 @@ return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], 
 	startDrag: function(){
 		// summary:
 		//		Fired on mousedown of the slider handle.
-		//
+
 		this.isDragging = true;
 		this.cmove = dojo.connect(dojo.doc, "mousemove", this, "onDrag");
 		this.cup = dojo.connect(dojo.doc, "mouseup", this, "endDrag");
@@ -127,7 +126,7 @@ return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], 
 	endDrag: function(){
 		// summary:
 		//		Fired on mouseup of the slider handle.
-		//
+
 		this.isDragging = false;
 		if(this.cmove) dojo.disconnect(this.cmove);
 		if(this.cup) dojo.disconnect(this.cup);
@@ -138,7 +137,7 @@ return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], 
 		// summary:
 		//		Highlights the slider handle on mouseover, and
 		//		stays highlighted during drag.
-		//
+
 		dojo.addClass(this.handle, "over");
 	},
 	handleOut: function(){
@@ -155,7 +154,7 @@ return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], 
 		//		Gets dimensions of slider background node.
 		//		Only uses dojo.coords once, unless the page
 		//		or player is resized.
-		//
+
 		if(this._domCoords){
 			return this._domCoords;
 		}
@@ -177,7 +176,7 @@ return dojo.declare("dojox.av.widget.VolumeButton", [_Widget, _TemplatedMixin], 
 		// summary:
 		//		Fired on player resize. Zeros dimensions
 		//		so that it can be calculated again.
-		//
+
 		this.onHideVolume();
 		this._domCoords = null;
 	}

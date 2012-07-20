@@ -110,7 +110,8 @@ dojox.xmpp.util.stripHtml = function(str){
 };
 
 dojox.xmpp.util.decodeHtmlEntities = function(str){
-	// Summary: decodes HTML entities to js characters so the string can be
+	// summary:
+	//		decodes HTML entities to js characters so the string can be
 	//		fed to a textarea.value
 	var ta = dojo.doc.createElement("textarea");
 	ta.innerHTML = str.replace(/</g,"&lt;").replace(/>/g,"&gt;");

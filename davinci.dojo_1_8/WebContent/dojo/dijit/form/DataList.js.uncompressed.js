@@ -31,7 +31,15 @@ define("dijit/form/DataList", [
 		//	|		<option value="AL">Alabama</option>
 		//	|		...
 
-		constructor: function(/*Object?*/ params, /*DomNode|String*/ srcNodeRef){
+		constructor: function(params, srcNodeRef){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String
+			//		Attach widget to this DOM node.
+
 			// store pointer to original DOM tree
 			this.domNode = dom.byId(srcNodeRef);
 

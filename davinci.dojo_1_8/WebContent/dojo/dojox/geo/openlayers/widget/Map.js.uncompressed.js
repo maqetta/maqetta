@@ -19,9 +19,9 @@ define("dojox/geo/openlayers/widget/Map", [
 		//		version of the `dojox.geo.openlayers.Map` component. 
 		//		With this widget, user can specify some attributes in the markup such as
 		//		
-		//		* `baseLayerType`: The type of the base layer. Permitted values are 
-		//		* `initialLocation`: The initial location as for the dojox.geo.openlayers.Map.fitTo method
-		//		* `touchHandler`: Tells if we attach touch handler or not.
+		//		- `baseLayerType`: The type of the base layer. Permitted values are
+		//		- `initialLocation`: The initial location as for the dojox.geo.openlayers.Map.fitTo method
+		//		- `touchHandler`: Tells if we attach touch handler or not.
 		//
 		// example:
 		//	| <div id="map" dojoType="dojox.geo.openlayers.widget.Map" baseLayerType="Google" initialLocation="{
@@ -31,13 +31,14 @@ define("dojox/geo/openlayers/widget/Map", [
 		//
 
 		// baseLayerType: String
-		//		Base layer type as defined in `dojox.geo.openlayer.BaseLayerType`. Can be either
-		//		* `OSM`
-		//		* `WMS`
-		//		* `Google`
-		//		* `VirtualEarth`
-		//		* `Yahoo`
-		//		* `ArcGIS`
+		//		Base layer type as defined in `dojox.geo.openlayer.BaseLayerType`. Can be one of:
+		//
+		//		- `OSM`
+		//		- `WMS`
+		//		- `Google`
+		//		- `VirtualEarth`
+		//		- `Yahoo`
+		//		- `ArcGIS`
 		baseLayerType: openlayers.BaseLayerType.OSM,
 
 		// initialLocation: String
@@ -119,11 +120,11 @@ define("dojox/geo/openlayers/widget/Map", [
 			//		Resize the widget.
 			// description:
 			//		Resize the domNode and the widget to the dimensions of a box of the following form:
-			//			`{ l: 50, t: 200, w: 300: h: 150 }`
+			//		`{ l: 50, t: 200, w: 300: h: 150 }`
 			// b: Object|Number?
 			//		If passed, denotes the new size of the widget.
-			// 		Can be either nothing (widget adapts to the div),
-			// 		an Object describing a box, or a Number representing the width.
+			//		Can be either nothing (widget adapts to the div),
+			//		an Object describing a box, or a Number representing the width.
 			// h: Number?
 			//		The new height. Requires that a width has been specified in the first parameter.
 

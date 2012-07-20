@@ -89,10 +89,10 @@ this.inherited(arguments);
 dojo.style(this.domNode,"visibility","visible");
 },_placeSettingsWidgets:function(){
 dojo.forEach(this.getChildren(),dojo.hitch(this,function(_11){
-if(_11.portletIconClass&&_11.toggle&&!_11.attr("portlet")){
+if(_11.portletIconClass&&_11.toggle&&!_11.get("portlet")){
 this._createIcon(_11.portletIconClass,_11.portletIconHoverClass,dojo.hitch(_11,"toggle"));
 dojo.place(_11.domNode,this.containerNode,"before");
-_11.attr("portlet",this);
+_11.set("portlet",this);
 this._settingsWidget=_11;
 }
 }));

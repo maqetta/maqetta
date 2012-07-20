@@ -73,7 +73,7 @@ define("dojox/geo/openlayers/TouchInteractionSupport", [
 			return {
 				x: middleX,
 				y: middleY
-			}; //  Object
+			}; // Object
 
 		},
 

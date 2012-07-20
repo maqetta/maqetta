@@ -9,8 +9,6 @@ define("dojox/mobile/SpinWheelDatePicker", [
 
 	// module:
 	//		dojox/mobile/SpinWheelDatePicker
-	// summary:
-	//		A SpinWheel-based date picker widget.
 
 	return declare("dojox.mobile.SpinWheelDatePicker", [SpinWheel, DatePickerMixin], {
 		// summary:

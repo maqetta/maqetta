@@ -54,22 +54,6 @@ define("dijit/Dialog", [
 	=====*/
 
 	var _DialogBase = declare("dijit._DialogBase", [_TemplatedMixin, _FormMixin, _DialogMixin, _CssStateMixin], {
-		// summary:
-		//		A modal dialog Widget
-		//
-		// description:
-		//		Pops up a modal dialog window, blocking access to the screen
-		//		and also graying out the screen Dialog is extended from
-		//		ContentPane so it supports all the same parameters (href, etc.)
-		//
-		// example:
-		// |	<div data-dojo-type="dijit/Dialog" data-dojo-props="href: 'test.html'"></div>
-		//
-		// example:
-		// |	var foo = new dijit.Dialog({ title: "test dialog", content: "test content" };
-		// |	dojo.body().appendChild(foo.domNode);
-		// |	foo.startup();
-
 		templateString: template,
 
 		baseClass: "dijitDialog",
@@ -504,7 +488,20 @@ define("dijit/Dialog", [
 		}
 	});
 
-	var Dialog = declare("dijit.Dialog", [ContentPane, _DialogBase], {});
+	var Dialog = declare("dijit.Dialog", [ContentPane, _DialogBase], {
+		// summary:
+		//		A modal dialog Widget.
+		// description:
+		//		Pops up a modal dialog window, blocking access to the screen
+		//		and also graying out the screen Dialog is extended from
+		//		ContentPane so it supports all the same parameters (href, etc.).
+		// example:
+		// |	<div data-dojo-type="dijit/Dialog" data-dojo-props="href: 'test.html'"></div>
+		// example:
+		// |	var foo = new Dialog({ title: "test dialog", content: "test content" };
+		// |	foo.placeAt(win.body());
+		// |	foo.startup();
+	});
 	Dialog._DialogBase = _DialogBase;	// for monkey patching and dojox/widget/DialogSimple
 
 	var DialogLevelManager = Dialog._DialogLevelManager = {

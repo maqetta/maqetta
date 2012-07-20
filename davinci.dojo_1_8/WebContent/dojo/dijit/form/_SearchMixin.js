@@ -20,8 +20,7 @@ this._cancelingQuery=false;
 }
 this._fetchHandle=null;
 }
-},_onInput:function(_b){
-this.inherited(arguments);
+},_processInput:function(_b){
 if(this.disabled||this.readOnly){
 return;
 }
@@ -115,10 +114,9 @@ this.query={};
 this.fetchProperties={};
 },postMixInProperties:function(){
 if(!this.store){
-var _16=this.srcNodeRef;
-var _17=this.list;
-if(_17){
-this.store=_a.byId(_17);
+var _16=this.list;
+if(_16){
+this.store=_a.byId(_16);
 }
 }
 this.inherited(arguments);

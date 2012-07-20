@@ -5,7 +5,7 @@ kernel.experimental("dojox.fx.ext-dojo.NodeList");
 /*=====
 return {
 	// summary:
-	//		Core extensions to dojo/query.NodeList providing additional fx to dojo.NodeList-fx
+	//		Core extensions to dojo/NodeList providing additional fx to dojo.NodeList-fx
 	// description:
 	//		A Package to extend dojo base NodeList with fx provided by the dojox.fx project.
 	//		These are experimental animations, in an experimental

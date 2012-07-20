@@ -43,7 +43,7 @@ _1a=ed.get("value");
 _1a=this._filter(_1a);
 ed.set("value",_1a);
 _1.forEach(_19,function(p){
-if(p&&!(p instanceof _14)){
+if(p&&!(p instanceof _14)&&p.isInstanceOf(_f)){
 p.set("disabled",true);
 }
 });
@@ -114,7 +114,7 @@ ed.set("value",_1a);
 ed.endEditing();
 }
 _1.forEach(_19,function(p){
-if(p){
+if(p&&p.isInstanceOf(_f)){
 p.set("disabled",false);
 }
 });

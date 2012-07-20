@@ -62,29 +62,29 @@ define("dojox/dnd/BoundingBoxController", ["dojo", "dojox"], function(dojo, dojo
 				//		Override-able by the client as an extra check to ensure that a bounding
 				//		box should begin to be drawn. If the client has any preconditions to when a
 				//		bounding box should be drawn, they should be included in this method.
-				//	evt: Object
+				// evt: Object
 				//		the mouse event which caused this callback to fire.
 				return true;
 			},
 
 			boundingBoxIsViable: function(evt) {
-				//	summary:
+				// summary:
 				//		Override-able by the client as an extra check to ensure that a bounding
 				//		box is viable. In some instances, it might not make sense that
 				//		a mouse down -> mouse move -> mouse up interaction represents a bounding box.
 				//		For example, if a dialog is open the client might want to suppress a bounding
 				//		box. This function could be used by the client to ensure that a bounding box is only
 				//		drawn on the document when certain conditions are met.
-				//	evt: Object
+				// evt: Object
 				//		the mouse event which caused this callback to fire.
 				return true;
 			},
 
 			_onMouseDown: function(evt) {
-				//	summary:
+				// summary:
 				//		Executed when the user mouses down on the document. Resets the
 				//		this._startX and this._startY member variables.
-				//	evt: Object
+				// evt: Object
 				//		the mouse event which caused this callback to fire.
 				if (this.shouldStartDrawingBox(evt) && dojo.mouseButtons.isLeft(evt)) {
 					if (this._startX == null) {
@@ -98,12 +98,12 @@ define("dojox/dnd/BoundingBoxController", ["dojo", "dojox"], function(dojo, dojo
 			},
 
 			_onMouseMove: function(evt) {
-				//	summary:
+				// summary:
 				//		Executed when the user moves the mouse over the document. Delegates to
 				//		this._drawBoundingBox if the user is trying to draw a bounding box.
 				//		whether the user was drawing a bounding box and publishes to the
 				//		"/dojox/dnd/bounding" topic if the user is finished drawing their bounding box.
-				//	evt: Object
+				// evt: Object
 				//		the mouse event which caused this callback to fire.
 				this._endX = evt.clientX;
 				this._endY = evt.clientY;
@@ -111,11 +111,11 @@ define("dojox/dnd/BoundingBoxController", ["dojo", "dojox"], function(dojo, dojo
 			},
 
 			_onMouseUp: function(evt) {
-				//	summary:
+				// summary:
 				//		Executed when the users mouses up on the document. Checks to see
 				//		whether the user was drawing a bounding box and publishes to the
 				//		"/dojox/dnd/bounding" topic if the user is finished drawing their bounding box.
-				//	evt: Object
+				// evt: Object
 				//		the mouse event which caused this callback to fire.
 				if (this._endX !== null && this.boundingBoxIsViable(evt)) {
 					// the user has moused up ... tell the selector to check to see whether

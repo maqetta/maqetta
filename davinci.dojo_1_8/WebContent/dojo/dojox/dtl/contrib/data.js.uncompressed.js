@@ -4,9 +4,7 @@ define("dojox/dtl/contrib/data", [
 	"../_base",
 	"dojo/_base/array"
 ], function(kernel,lang,dd,array){
-	/*=====
-		dd = dojox.dtl;
-	=====*/
+
 	lang.getObject("dojox.dtl.contrib.data", true);
 
 	var ddcd = dd.contrib.data;

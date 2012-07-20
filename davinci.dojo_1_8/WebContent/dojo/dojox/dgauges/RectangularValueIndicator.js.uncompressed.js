@@ -22,6 +22,22 @@ define("dojox/dgauges/RectangularValueIndicator", ["dojo/_base/declare", "./Scal
 			this.addInvalidatingProperties(["paddingTop", "paddingLeft", "paddingRight", "paddingBottom"]);
 		},
 		
+		indicatorShapeFunc: function(group, indicator){
+			// summary:
+			//		Draws the indicator.
+			// group: dojox/gfx/Group
+			//		A GFX group for drawing. The indicator is always centered horizontally and is
+			//		automatically rotated if the scale is vertical.
+			// indicator: dojox/dgauges/IndicatorBase
+			//		A reference to this indicator.
+			// returns: dojox/gfx/shape.Shape
+			//		A GFX shape retrievable using the getIndicatorRenderer method of the associated scale. 
+			return group.createPolyline([0, 0, 10, 0, 0, 10, -10, 0, 0, 0]).setStroke({
+					color: "black",
+					width: 1
+				});
+		},
+				
 		refreshRendering: function(){
 			this.inherited(arguments);
 

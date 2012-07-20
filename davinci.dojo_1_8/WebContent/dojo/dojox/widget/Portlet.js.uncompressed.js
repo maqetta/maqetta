@@ -10,7 +10,8 @@ define("dojox/widget/Portlet", [
 	kernel.experimental("dojox.widget.Portlet");
 	
 	return declare("dojox.widget.Portlet", [TitlePane, dijit._Container],{
-		// summary: A container widget that is designed to be contained
+		// summary:
+		//		A container widget that is designed to be contained
 		//		in a dojox.layout.GridContainer. Child widgets can insert
 		//		an icon into the title bar of the Portlet, which when
 		//		clicked, executes the "toggle" method of the child widget.
@@ -166,16 +167,17 @@ define("dojox/widget/Portlet", [
 		},
 
 		_placeSettingsWidgets: function(){
-			// summary: Checks all the children to see if they are instances
+			// summary:
+			//		Checks all the children to see if they are instances
 			//		of dojox.widget.PortletSettings. If they are,
 			//		create an icon for them in the title bar which when clicked,
 			//		calls their toggle() method.
 
 			dojo.forEach(this.getChildren(), dojo.hitch(this, function(child){
-				if(child.portletIconClass && child.toggle && !child.attr("portlet")){
+				if(child.portletIconClass && child.toggle && !child.get("portlet")){
 					this._createIcon(child.portletIconClass, child.portletIconHoverClass, dojo.hitch(child, "toggle"));
 					dojo.place(child.domNode, this.containerNode, "before");
-					child.attr("portlet", this);
+					child.set("portlet", this);
 					this._settingsWidget = child;
 				}
 			}));
@@ -287,7 +289,8 @@ define("dojox/widget/Portlet", [
 		},
 
 		_publish: function(){
-			// summary: Publishes an event that all other portlets listen to.
+			// summary:
+			//		Publishes an event that all other portlets listen to.
 			//		This causes them to update their child widgets if their
 			//		size has changed.
 			dojo.publish("/Portlet/sizechange",[this]);

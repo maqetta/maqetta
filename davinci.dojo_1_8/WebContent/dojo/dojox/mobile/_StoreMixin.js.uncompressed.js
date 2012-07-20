@@ -5,8 +5,6 @@ define("dojox/mobile/_StoreMixin", [
 
 	// module:
 	//		dojox/mobile/_StoreMixin
-	// summary:
-	//		Mixin for widgets to enable dojo/store data store.
 
 	return declare("dojox.mobile._StoreMixin", null, {
 		// summary:
@@ -15,9 +13,10 @@ define("dojox/mobile/_StoreMixin", [
 		//		By mixing this class into a widget, it can get data through a
 		//		dojo/store data store. The widget must implement the following
 		//		methods to handle the retrieved data:
-		//		onComplete(/*Array*/items), onError(/*Object*/errorData),
-		//		onUpdate(/*Object*/item, /*Number*/insertedInto), and 
-		//		onDelete(/*Object*/item, /*Number*/removedFrom).
+		//
+		//		- onComplete(/*Array*/items), onError(/*Object*/errorData),
+		//		- onUpdate(/*Object*/item, /*Number*/insertedInto), and
+		//		- onDelete(/*Object*/item, /*Number*/removedFrom).
 	
 		// store: Object
 		//		Reference to data provider object used by this widget.
@@ -91,10 +90,10 @@ define("dojox/mobile/_StoreMixin", [
 			return promise;
 		}
 
-/*
+/*=====
 		// Subclass MUST implement the following methods.
 
-		onComplete: function(items){
+		, onComplete: function(items){
 			// summary:
 			//		An handler that is called after the fetch completes.
 		},
@@ -113,6 +112,6 @@ define("dojox/mobile/_StoreMixin", [
 			// summary:
 			//		Deletes an existing item.
 		}
-*/
+=====*/
 	});
 });

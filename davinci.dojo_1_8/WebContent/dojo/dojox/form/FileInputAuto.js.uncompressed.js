@@ -31,7 +31,7 @@ var FileInputAuto = declare("dojox.form.FileInputAuto", FileInput,
 	//		all the parameters allowed to FileInput apply
 
 	// url: String
-	// 		the URL where our background FileUpload will be sent
+	//		the URL where our background FileUpload will be sent
 	url: "",
 
 	// blurDelay: Integer
@@ -51,7 +51,7 @@ var FileInputAuto = declare("dojox.form.FileInputAuto", FileInput,
 	// triggerEvent: String
 	//		Event which triggers the upload. Defaults to onblur, sending the file selected
 	//		'blurDelay' milliseconds after losing focus. Set to "onchange" with a low blurDelay
-	// 		to send files immediately after uploading.
+	//		to send files immediately after uploading.
 	triggerEvent: "onblur",
 	
 	_sent: false,
@@ -203,7 +203,7 @@ declare("dojox.form.FileInputBlind", FileInputAuto, {
 	// summary:
 	//		An extended version of dojox.form.FileInputAuto
 	//		that does not display an input node, but rather only a button
-	// 		and otherwise behaves just like FileInputAuto
+	//		and otherwise behaves just like FileInputAuto
 	
 	startup: function(){
 		// summary:

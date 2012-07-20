@@ -2,21 +2,22 @@
 define("dojox/sql/_crypto", ["dijit","dojo","dojox"], function(dijit,dojo,dojox){
 dojo.provide("dojox.sql._crypto");
 dojo.mixin(dojox.sql._crypto, {
-	// summary: dojox.sql cryptography code
+	// summary:
+	//		dojox.sql cryptography code
 	// description:
-	//	Taken from http://www.movable-type.co.uk/scripts/aes.html by
-	// 	Chris Veness (CLA signed); adapted for Dojo and Google Gears Worker Pool
-	// 	by Brad Neuberg, bkn3@columbia.edu
-	//
+	//		Taken from http://www.movable-type.co.uk/scripts/aes.html by
+	//		Chris Veness (CLA signed); adapted for Dojo and Google Gears Worker Pool
+	//		by Brad Neuberg, bkn3@columbia.edu
+
 	// _POOL_SIZE:
-	//	Size of worker pool to create to help with crypto
+	//		Size of worker pool to create to help with crypto
 	_POOL_SIZE: 100,
 
 	encrypt: function(plaintext, password, callback){
 		// summary:
-		//	Use Corrected Block TEA to encrypt plaintext using password
-		//	(note plaintext & password must be strings not string objects).
-		//	Results will be returned to the 'callback' asychronously.
+		//		Use Corrected Block TEA to encrypt plaintext using password
+		//		(note plaintext & password must be strings not string objects).
+		//		Results will be returned to the 'callback' asychronously.
 		this._initWorkerPool();
 
 		var msg ={plaintext: plaintext, password: password};
@@ -28,9 +29,9 @@ dojo.mixin(dojox.sql._crypto, {
 
 	decrypt: function(ciphertext, password, callback){
 		// summary:
-		//	Use Corrected Block TEA to decrypt ciphertext using password
-		//	(note ciphertext & password must be strings not string objects).
-		//	Results will be returned to the 'callback' asychronously.
+		//		Use Corrected Block TEA to decrypt ciphertext using password
+		//		(note ciphertext & password must be strings not string objects).
+		//		Results will be returned to the 'callback' asychronously.
 		this._initWorkerPool();
 
 		var msg = {ciphertext: ciphertext, password: password};
@@ -85,7 +86,7 @@ dojo.mixin(dojox.sql._crypto, {
 			
 					// return results
 					callback(msg);
-				}
+				};
 			
 				var workerInit = "function _workerInit(){"
 									+ "gearsWorkerPool.onmessage = "

@@ -60,10 +60,9 @@ table.dijitInline {
 TABLE.dijitSelect {
 	padding: 0 !important; 
 }
-.dijitSelect .dijitValidationContainer,
 .dijitTextBox .dijitSpinnerButtonContainer,
 .dijitTextBox .dijitArrowButtonContainer,
-.dijitTextBox .dijitValidationContainer {
+.dijitValidationTextBox .dijitValidationContainer {
 	float: right;
 	text-align: center;
 }
@@ -73,8 +72,7 @@ TABLE.dijitSelect {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 }
-.dijitSelect .dijitValidationContainer,
-.dijitTextBox .dijitValidationContainer {
+.dijitValidationTextBox .dijitValidationContainer {
 	display: none;
 }
 .dijitTeeny {
@@ -342,7 +340,7 @@ div.dijitArrowButton {
 .dj_a11y .dijitTextBox input {
 	margin: 0 !important;
 }
-.dijitError input.dijitValidationInner,
+.dijitValidationTextBoxError input.dijitValidationInner,
 .dijitSelect input,
 .dijitTextBox input.dijitArrowButtonInner {
 	
@@ -391,7 +389,7 @@ div.dijitArrowButton {
 	#text-align: left !important;
 	color: black !important;
 }
-.dijitError .dijitValidationContainer {
+.dijitValidationTextBoxError .dijitValidationContainer {
 	display: inline;
 	cursor: default;
 }
@@ -400,6 +398,7 @@ div.dijitArrowButton {
 	
 	border-width: 0 0 0 1px !important; 
 }
+.dj_a11y .dijitSelect .dijitArrowButtonContainer,
 .dijitToolbar .dijitComboBox .dijitArrowButtonContainer {
 	
 	border-width: 0 !important;
@@ -2002,7 +2001,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTextBox, .claro .dijitInputInner {
   color: #000000;
 }
-.claro .dijitSelectError .dijitValidationContainer, .claro .dijitTextBoxError .dijitValidationContainer {
+.claro .dijitValidationTextBoxError .dijitValidationContainer {
   background-color: #d46464;
   background-image: url(form/images/error.png);
   background-position: top center;
@@ -2012,7 +2011,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTextBoxError .dijitValidationContainer {
   border-left-width: 1px;
 }
-.claro .dijitSelectError .dijitValidationIcon, .claro .dijitTextBoxError .dijitValidationIcon {
+.claro .dijitValidationTextBoxError .dijitValidationIcon {
   width: 0;
   background-color: transparent !important;
   
@@ -2126,10 +2125,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitToolbar .dijitComboBox .dijitArrowButtonInner {
   border: none;
 }
-.claro .dijitSelect .dijitValidationContainer,
-.claro .dijitSelectLabel,
-.claro .dijitTextBox .dijitInputInner,
-.claro .dijitTextBox .dijitValidationContainer {
+.claro .dijitSelectLabel, .claro .dijitTextBox .dijitInputInner, .claro .dijitValidationTextBox .dijitValidationContainer {
   padding: 1px 0;
 }
 .claro .dijitComboBox .dijitButtonNode {
@@ -4089,9 +4085,9 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   -webkit-transition-property: background-color;
   -moz-transition-property: background-color;
   transition-property: background-color;
-  -webkit-transition-duration: 0.3s, 0.35s;
-  -moz-transition-duration: 0.3s, 0.35s;
-  transition-duration: 0.3s, 0.35s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  transition-duration: 0.3s;
   background-image: url(images/standardGradient.png);
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -4515,9 +4511,8 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitSelectRtl .dijitButtonText {
 	float: right;
 }
-.dijitSelectRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitSpinnerButtonContainer,
-.dijitTextBoxRtl .dijitValidationContainer,
+.dijitValidationTextBoxRtl .dijitValidationContainer,
 .dijitTextBoxRtl .dijitArrowButtonContainer {
 	float: left;
 }

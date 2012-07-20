@@ -22,18 +22,18 @@ define("dojox/mvc/StatefulArray", [
 		// description:
 		//		Supported methods are:
 		//
-		//			* pop() - Stateful update is done for the removed element, as well as the length.
-		//			* push() - Stateful update is done for the added element, as well as the length.
-		//			* reverse() - Stateful update is done for the elements.
-		//			* shift() - Stateful update is done for the removed element, as well as the length.
-		//			* sort() - Stateful update is done for the elements.
-		//			* splice() - Stateful update is done for the removed/added elements, as well as the length. Returns an instance of StatefulArray instead of the native array.
-		//			* unshift() - Stateful update is done for the added element, as well as the length.
-		//			* concat() - Returns an instance of StatefulArray instead of the native Array.
-		//			* join() - The length as well as the elements are obtained via stateful getters, instead of direct access.
-		//			* slice() - The length as well as the elements are obtained via stateful getters, instead of direct access.
-		//			* Setting an element to this array via set() - Stateful update is done for the new element as well as the new length.
-		//			* Setting a length to this array via set() - Stateful update is done for the removed/added elements as well as the new length.
+		//		- pop() - Stateful update is done for the removed element, as well as the length.
+		//		- push() - Stateful update is done for the added element, as well as the length.
+		//		- reverse() - Stateful update is done for the elements.
+		//		- shift() - Stateful update is done for the removed element, as well as the length.
+		//		- sort() - Stateful update is done for the elements.
+		//		- splice() - Stateful update is done for the removed/added elements, as well as the length. Returns an instance of StatefulArray instead of the native array.
+		//		- unshift() - Stateful update is done for the added element, as well as the length.
+		//		- concat() - Returns an instance of StatefulArray instead of the native Array.
+		//		- join() - The length as well as the elements are obtained via stateful getters, instead of direct access.
+		//		- slice() - The length as well as the elements are obtained via stateful getters, instead of direct access.
+		//		- Setting an element to this array via set() - Stateful update is done for the new element as well as the new length.
+		//		- Setting a length to this array via set() - Stateful update is done for the removed/added elements as well as the new length.
 
 		var array = lang._toArray(a);
 		var ctor = StatefulArray;

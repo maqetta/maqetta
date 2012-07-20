@@ -2,7 +2,7 @@
 .claro .dijitTextBox, .claro .dijitInputInner {
   color: #000000;
 }
-.claro .dijitSelectError .dijitValidationContainer, .claro .dijitTextBoxError .dijitValidationContainer {
+.claro .dijitValidationTextBoxError .dijitValidationContainer {
   background-color: #d46464;
   background-image: url("../form/images/error.png");
   background-position: top center;
@@ -12,7 +12,7 @@
 .claro .dijitTextBoxError .dijitValidationContainer {
   border-left-width: 1px;
 }
-.claro .dijitSelectError .dijitValidationIcon, .claro .dijitTextBoxError .dijitValidationIcon {
+.claro .dijitValidationTextBoxError .dijitValidationIcon {
   width: 0;
   background-color: transparent !important;
   
@@ -126,10 +126,7 @@
 .claro .dijitToolbar .dijitComboBox .dijitArrowButtonInner {
   border: none;
 }
-.claro .dijitSelect .dijitValidationContainer,
-.claro .dijitSelectLabel,
-.claro .dijitTextBox .dijitInputInner,
-.claro .dijitTextBox .dijitValidationContainer {
+.claro .dijitSelectLabel, .claro .dijitTextBox .dijitInputInner, .claro .dijitValidationTextBox .dijitValidationContainer {
   padding: 1px 0;
 }
 .claro .dijitComboBox .dijitButtonNode {

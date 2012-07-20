@@ -7,8 +7,6 @@ define("dojox/mobile/_IconItemPane", [
 
 	// module:
 	//		dojox/mobile/_IconItemPane
-	// summary:
-	//		An internal widget used for IconContainer.
 
 	return declare("dojox.mobile._IconItemPane", Pane, {
 		// summary:

@@ -44,8 +44,12 @@ this._mixin(_11);
 }
 this.onBegin();
 this.setContent();
-this.onEnd();
+var ret=this.onEnd();
+if(ret&&ret.then){
+return ret;
+}else{
 return this.node;
+}
 },setContent:function(){
 var _12=this.node;
 if(!_12){

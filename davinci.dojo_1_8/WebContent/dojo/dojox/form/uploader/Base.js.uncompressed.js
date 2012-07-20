@@ -18,16 +18,16 @@ has.add('file-multiple', function(){return !!({'true':1,'false':1}[domAttr.get(d
 
 return declare("dojox.form.uploader.Base", [Widget, TemplatedMixin, WidgetsInTemplateMixin], {
 	// summary:
-	// 		The Base class used for dojox.form.Uploader and dojox.form.uploader.FileList.
+	//		The Base class used for dojox.form.Uploader and dojox.form.uploader.FileList.
 	//
 	// 	description:
-	// 		Should not be used as a standalone. To be mixed in with other classes.
+	//		Should not be used as a standalone. To be mixed in with other classes.
 	//
-	// 		Version: 1.6
+	//		Version: 1.6
 
 	getForm: function(){
 		// summary:
-		// 		Finds the parent form of the Uploader, if it exists.
+		//		Finds the parent form of the Uploader, if it exists.
 
 		if(!this.form){
 			var n = this.domNode;
@@ -44,8 +44,8 @@ return declare("dojox.form.uploader.Base", [Widget, TemplatedMixin, WidgetsInTem
 
 	getUrl: function(){
 		// summary:
-		// 		Finds the URL to upload to, whether it be the action in the parent form, this.url or
-		// 		this.uploadUrl
+		//		Finds the URL to upload to, whether it be the action in the parent form, this.url or
+		//		this.uploadUrl
 
 		if(this.uploadUrl) this.url = this.uploadUrl;
 		if(this.url) return this.url;
@@ -70,7 +70,7 @@ return declare("dojox.form.uploader.Base", [Widget, TemplatedMixin, WidgetsInTem
 
 	supports: function(what){
 		// summary:
-		// 		Does feature testing for uploader capabilities. (No browser sniffing - yay)
+		//		Does feature testing for uploader capabilities. (No browser sniffing - yay)
 
 		switch(what){
 			case "multiple":
@@ -92,13 +92,13 @@ return declare("dojox.form.uploader.Base", [Widget, TemplatedMixin, WidgetsInTem
 	},
 	getFileType: function(/*String*/ name){
 		// summary:
-		// 		Gets the extension of a file
+		//		Gets the extension of a file
 		return name.substring(name.lastIndexOf(".")+1).toUpperCase(); // String
 	},
 	convertBytes: function(bytes){
 		// summary:
-		// 		Converts bytes. Returns an object with all conversions. The "value" property is
-		// 		considered the most likely desired result.
+		//		Converts bytes. Returns an object with all conversions. The "value" property is
+		//		considered the most likely desired result.
 
 		var kb = Math.round(bytes/1024*100000)/100000;
 		var mb = Math.round(bytes/1048576*100000)/100000;

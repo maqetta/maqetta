@@ -11,8 +11,6 @@ define("dojox/mobile/_ContentPaneMixin", [
 
 	// module:
 	//		dojox/mobile/_ContentPaneMixin
-	// summary:
-	//		Mixin for a very simple content pane to embed an HTML fragment.
 
 	return declare("dojox.mobile._ContentPaneMixin", ExecScriptMixin, {
 		// summary:
@@ -48,6 +46,10 @@ define("dojox/mobile/_ContentPaneMixin", [
 		executeScripts: true,
 
 		constructor: function(){
+			// summary:
+			//		Creates a new instance of the class.
+			// tags:
+			//		private
 			if(this.prog){
 				this._p = ProgressIndicator.getInstance();
 			}

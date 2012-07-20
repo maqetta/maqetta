@@ -53,7 +53,7 @@ return declare("dijit.form.MultiSelect", _FormValueWidget, {
 		//		Access the NodeList of the selected options directly
 		return query("option",this.containerNode).filter(function(n){
 			return n.selected; // Boolean
-		}); // dojo.NodeList
+		}); // dojo/NodeList
 	},
 
 	_getValueAttr: function(){

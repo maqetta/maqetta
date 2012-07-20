@@ -37,7 +37,7 @@ lang.extend(NodeList, {
 		// fn:
 		//		Callback function passed the event object, and where this == the node that matches the selector.
 		//		That means that for example, after setting up a handler via
-		//			 dojo.query("body").delegate("fieldset", "onclick", ...)
+		// |		 dojo.query("body").delegate("fieldset", "onclick", ...)
 		//		clicking on a fieldset or *any nodes inside of a fieldset* will be reported
 		//		as a click on the fieldset itself.
 		// example:
@@ -58,7 +58,7 @@ lang.extend(NodeList, {
 			if(closest.length){
 				fn.call(closest[0], evt);
 			}
-		}); //dojo.NodeList
+		}); //dojo/NodeList
 	}
 });
 

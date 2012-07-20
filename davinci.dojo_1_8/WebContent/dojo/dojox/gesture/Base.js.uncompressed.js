@@ -120,7 +120,7 @@ define("dojox/gesture/Base", [
 		//		Whether the gesture is touch-device only
 		touchOnly : false,
 
-		//	_elements: Array
+		// _elements: Array
 		//		List of elements that wraps target node and gesture data
 		_elements: null,
 

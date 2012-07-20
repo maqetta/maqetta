@@ -6,13 +6,14 @@ define("dijit/Tree", [
 	"dojo/_base/connect",	// connect.isCopyKey()
 	"dojo/cookie", // cookie
 	"dojo/_base/declare", // declare
-	"dojo/_base/Deferred", // Deferred
+	"dojo/Deferred", // Deferred
 	"dojo/DeferredList", // DeferredList
 	"dojo/dom", // dom.isDescendant
 	"dojo/dom-class", // domClass.add domClass.remove domClass.replace domClass.toggle
 	"dojo/dom-geometry", // domGeometry.setMarginBox domGeometry.position
 	"dojo/dom-style",// domStyle.set
 	"dojo/_base/event", // event.stop
+	"dojo/errors/create",	// createError
 	"dojo/fx", // fxUtils.wipeIn fxUtils.wipeOut
 	"dojo/_base/kernel", // kernel.deprecated
 	"dojo/keys",	// arrows etc.
@@ -35,13 +36,18 @@ define("dijit/Tree", [
 	"./tree/ForestStoreModel",
 	"./tree/_dndSelector"
 ], function(array, connect, cookie, declare, Deferred, DeferredList,
-			dom, domClass, domGeometry, domStyle, event, fxUtils, kernel, keys, lang, on, topic, touch, when,
+			dom, domClass, domGeometry, domStyle, event, createError, fxUtils, kernel, keys, lang, on, topic, touch, when,
 			focus, registry, manager, _Widget, _TemplatedMixin, _Container, _Contained, _CssStateMixin,
 			treeNodeTemplate, treeTemplate, TreeStoreModel, ForestStoreModel, _dndSelector){
 
 // module:
 //		dijit/Tree
 
+// Back-compat shim
+Deferred = declare(Deferred, {
+	addCallback: function(callback){ this.then(callback); },
+	addErrback: function(errback){ this.then(null, errback); }
+});
 
 var TreeNode = declare(
 	"dijit._TreeNode",
@@ -372,7 +378,6 @@ var TreeNode = declare(
 					node.destroyRecursive();
 				}
 			});
-
 		});
 
 		this.state = "LOADED";
@@ -538,7 +543,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	// summary:
 	//		This widget displays hierarchical data from a store.
 
-	// store: [deprecated] String||dojo.data.Store
+	// store: [deprecated] String|dojo/data/Store
 	//		Deprecated.  Use "model" parameter instead.
 	//		The store to get data to display in the tree.
 	store: null,
@@ -571,12 +576,12 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 
 	// paths: String[][] or Item[][]
 	//		Full paths from rootNode to selected nodes expressed as array of items or array of ids.
-	//		Since setting the paths may be asynchronous (because ofwaiting on dojo.data), set("paths", ...)
+	//		Since setting the paths may be asynchronous (because of waiting on dojo.data), set("paths", ...)
 	//		returns a Deferred to indicate when the set is complete.
 	paths: [],
 
 	// path: String[] or Item[]
-	//      Backward compatible singular variant of paths.
+	//		Backward compatible singular variant of paths.
 	path: [],
 
 	// selectedItems: [readonly] Item[]
@@ -587,7 +592,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	selectedItems: null,
 
 	// selectedItem: [readonly] Item
-	//      Backward compatible singular variant of selectedItems.
+	//		Backward compatible singular variant of selectedItems.
 	selectedItem: null,
 
 	// openOnClick: Boolean
@@ -611,7 +616,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	// dndController: [protected] Function|String
 	//		Class to use as as the dnd controller.  Specifying this class enables DnD.
 	//		Generally you should specify this as dijit.tree.dndSource.
-	//      Setting of dijit.tree._dndSelector handles selection only (no actual DnD).
+	//		Setting of dijit.tree._dndSelector handles selection only (no actual DnD).
 	dndController: _dndSelector,
 
 	// parameters to pull off of the tree and pass on to the dndController as its params
@@ -624,6 +629,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	//		Generally this doesn't need to be set.
 	onDndDrop: null,
 
+	itemCreator: null,
 	/*=====
 	itemCreator: function(nodes, target, source){
 		// summary:
@@ -631,7 +637,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		//		dropped onto the tree.   Developer must override this method to enable
 		//		dropping from external sources onto this Tree, unless the Tree.model's items
 		//		happen to look like {id: 123, name: "Apple" } with no other attributes.
-		// description:
+		//
 		//		For each node in nodes[], which came from source, create a hash of name/value
 		//		pairs to be passed to Tree.model.newItem().  Returns array of those hashes.
 		// nodes: DomNode[]
@@ -651,7 +657,6 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		return [{}];
 	},
 	=====*/
-	itemCreator: null,
 
 	// onDndCancel: [protected] Function
 	//		Parameter to dndController, see `dijit.tree.dndSource.onDndCancel`.
@@ -733,13 +738,17 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 			this.persist = false;
 		}
 
-		this._itemNodesMap={};
+		this._itemNodesMap = {};
 
 		if(!this.cookieName && this.id){
 			this.cookieName = this.id + "SaveStateCookie";
 		}
 
-		this.onLoadDeferred = new Deferred();
+		// Deferred that fires when all the children have loaded.
+		this.expandChildrenDeferred  = new Deferred();
+
+		// Deferred that fires when all pending operations complete.
+		this.pendingCommandsDeferred = this.expandChildrenDeferred;
 
 		this.inherited(arguments);
 	},
@@ -783,8 +792,6 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		this.connect(this.model, "onChildrenChange", "_onItemChildrenChange");
 		this.connect(this.model, "onDelete", "_onItemDelete");
 
-		this._load();
-
 		this.inherited(arguments);
 
 		if(this.dndController){
@@ -799,6 +806,19 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 			}
 			this.dndController = new this.dndController(this, params);
 		}
+
+		this._load();
+
+		// If no path was specified to the constructor, use path saved in cookie
+		if(!this.params.path && !this.params.paths && this.persist){
+			this.set("paths", this.dndController._getSavedPaths());
+		}
+
+		// onLoadDeferred should fire when all commands that are part of initialization have completed.
+		// It will include all the set("paths", ...) commands that happen during initialization.
+		this.onLoadDeferred = this.pendingCommandsDeferred;
+				
+		this.onLoadDeferred.then(lang.hitch(this, "onLoad"));
 	},
 
 	_store2model: function(){
@@ -855,6 +875,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 					textDir: this.textDir,
 					indent: this.showRoot ? 0 : -1
 				}));
+				
 				if(!this.showRoot){
 					rn.rowNode.style.display="none";
 					// if root is not visible, move tree role to the invisible
@@ -866,7 +887,11 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 					rn.labelNode.setAttribute("role", "presentation");
 					rn.containerNode.setAttribute("role", "tree");
 					rn.containerNode.setAttribute("aria-expanded","true");
+					rn.containerNode.setAttribute("aria-multiselectable", !this.dndController.singular);
+				}else{
+				  this.domNode.setAttribute("aria-multiselectable", !this.dndController.singular);
 				}
+				
 				this.domNode.appendChild(rn.domNode);
 				var identity = this.model.getIdentity(item);
 				if(this._itemNodesMap[identity]){
@@ -877,26 +902,12 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 
 				rn._updateLayout();		// sets "dijitTreeIsRoot" CSS classname
 
-				// Load top level children (and if persist=true all nodes
-				// that were previously opened)
+				// Load top level children, and if persist==true, all nodes that were previously opened
 				this._expandNode(rn).then(lang.hitch(this, function(){
 					// Then, select the nodes that were selected last time, or
 					// the ones specified by params.paths[].
 
-					// Figure out which nodes to select:
-					// the nodes specified by paths[] argument to constructor, or
-					// those saved in cookie if persists=true
-					var paths = this._initialPaths ||
-						(this.persist && this.dndController._getSavedPaths()) || [];
-
-					// Set flag to tell this.set("paths", ...) to start functioning
-					this._loadCalled = true;
-
-					// Do the selection and then fire onLoad()
-					when(this.set("paths", paths), lang.hitch(this, function(){
-						this.onLoadDeferred.resolve(true);
-						this.onLoad();
-					}));
+					this.expandChildrenDeferred.resolve(true);
 				}));
 			}),
 			lang.hitch(this, function(err){
@@ -927,7 +938,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		//		WARNING: if model use multi-parented items or desired tree node isn't already loaded
 		//		behavior is undefined. Use set('paths', ...) instead.
 		var tree = this;
-		this.onLoadDeferred.then( lang.hitch(this, function(){
+		return this.pendingCommandsDeferred = this.pendingCommandsDeferred.then( lang.hitch(this, function(){
 			var identities = array.map(items, function(item){
 				return (!item || lang.isString(item)) ? item : tree.model.getIdentity(item);
 			});
@@ -941,7 +952,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 
 	_setPathAttr: function(/*Item[] || String[]*/ path){
 		// summary:
-		//      Singular variant of _setPathsAttr
+		//		Singular variant of _setPathsAttr
 		if(path.length){
 			return this.set("paths", [path]);
 		}else{
@@ -958,38 +969,30 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		// returns:
 		//		Deferred to indicate when the set is complete
 
-		if(!this._loadCalled){
-			// If this is called during initialization because the user has specified a paths[]
-			// parameter to the constructor, then handle it in _load().   If it's called during
-			// initialization with the default [] path, then just ignore it.
-			if("paths" in this.params || "path" in this.params){
-				this._initialPaths = paths;
-			}
-			return;
-		}
-
 		var tree = this;
 
-		// We may need to wait for some nodes to expand, so setting
-		// each path will involve a Deferred. We bring those deferreds
-		// together with a DeferredList.
-		var dl = new DeferredList(array.map(paths, function(path){
-			var d = new Deferred();
+		// Let any previous set("path", ...) commands complete before this one starts.
+		return this.pendingCommandsDeferred = this.pendingCommandsDeferred.then(function(){
+			// We may need to wait for some nodes to expand, so setting
+			// each path will involve a Deferred. We bring those deferreds
+			// together with a DeferredList.
+			return new DeferredList(array.map(paths, function(path){
+				var d = new Deferred();
 
-			// normalize path to use identity
-			path = array.map(path, function(item){
-				return lang.isString(item) ? item : tree.model.getIdentity(item);
-			});
+				// normalize path to use identity
+				path = array.map(path, function(item){
+					return lang.isString(item) ? item : tree.model.getIdentity(item);
+				});
 
-			if(path.length){
-				selectPath(path, [tree.rootNode], d);
-			}else{
-				d.reject("Empty path");
-			}
-			return d;
-		}));
-		dl.then(setNodes);
-		return dl;
+				if(path.length){
+					// Wait for the tree to load, if it hasn't already.
+					selectPath(path, [tree.rootNode], d);
+				}else{
+					d.reject(new Tree.PathError("Empty path"));
+				}
+				return d;
+			}));
+		}).then(setNodes);
 
 		function selectPath(path, nodes, def){
 			// Traverse path; the next path component should be among "nodes".
@@ -1005,7 +1008,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 					def.resolve(nextNode);
 				}
 			}else{
-				def.reject("Could not expand path at " + nextPath);
+				def.reject(new Tree.PathError("Could not expand path at " + nextPath));
 			}
 		}
 
@@ -1832,8 +1835,6 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		//		Promise that tells when the operation will complete.  Alternately, if it's just a Boolean, it signifies
 		//		that the operation was synchronous, and already completed.
 
-		if(!this._started){ return; }
-
 		this._outstandingPaintOperations++;
 		if(this._adjustWidthsTimer){
 			this._adjustWidthsTimer.remove();
@@ -1843,7 +1844,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 		var oc = lang.hitch(this, function(){
 			this._outstandingPaintOperations--;
 
-			if(this._outstandingPaintOperations <= 0 && !this._adjustWidthsTimer){
+			if(this._outstandingPaintOperations <= 0 && !this._adjustWidthsTimer && this._started){
 				// Use defer() to avoid a width adjustment when another operation will immediately follow,
 				// such as a sequence of opening a node, then it's children, then it's grandchildren, etc.
 				this._adjustWidthsTimer = this.defer("_adjustWidths");
@@ -1863,8 +1864,8 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 			delete this._adjustWidthsTimer;
 		}
 
-		var maxWidth = 0;
-		nodes = [];
+		var maxWidth = 0,
+			nodes = [];
 		function collect(/*TreeNode*/ parent){
 			var node = parent.rowNode;
 			node.style.width = "auto";		// erase setting from previous run
@@ -1900,6 +1901,7 @@ var Tree = declare("dijit.Tree", [_Widget, _TemplatedMixin], {
 	}
 });
 
+Tree.PathError = createError("TreePathError");
 Tree._TreeNode = TreeNode;	// for monkey patching or creating subclasses of TreeNode
 
 return Tree;

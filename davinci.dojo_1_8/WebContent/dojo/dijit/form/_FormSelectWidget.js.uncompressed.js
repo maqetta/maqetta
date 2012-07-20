@@ -118,9 +118,10 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 		// returns:
 		//		The option corresponding with the given value or index.  null
 		//		is returned if any of the following are true:
-		//			- A string value is passed in which doesn't exist
-		//			- An index is passed in which is outside the bounds of the array of options
-		//			- A dijit.form.__SelectOption is passed in which is not a part of the select
+		//
+		//		- A string value is passed in which doesn't exist
+		//		- An index is passed in which is outside the bounds of the array of options
+		//		- A dijit.form.__SelectOption is passed in which is not a part of the select
 
 		// NOTE: the compare for passing in a dijit.form.__SelectOption checks
 		//		if the value property matches - NOT if the exact option exists
@@ -235,9 +236,10 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 		//		has been loaded
 		// fetchArgs: Object?
 		//		Hash of parameters to set filter on store, etc.
-		//			- query: new value for Select.query,
-		//			- queryOptions: new value for Select.queryOptions,
-		//			- onFetch: callback function for each item in data (Deprecated)
+		//
+		//		- query: new value for Select.query,
+		//		- queryOptions: new value for Select.queryOptions,
+		//		- onFetch: callback function for each item in data (Deprecated)
 		var oStore = this.store;
 		fetchArgs = fetchArgs || {};
 
@@ -477,7 +479,7 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 				var isSelected = array.some(val, function(v){
 					return child.option && (v === child.option.value);
 				});
-				domClass.toggle(child.domNode, this.baseClass + "SelectedOption", isSelected);
+				domClass.toggle(child.domNode, this.baseClass.replace(/\s+|$/g, "SelectedOption "), isSelected);
 				child.domNode.setAttribute("aria-selected", isSelected ? "true" : "false");
 			}, this);
 		}
@@ -555,11 +557,18 @@ var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget
 		this.addOption(newOpt);
 	},
 
-	constructor: function(/*Object*/ keywordArgs){
+	constructor: function(params /*===== , srcNodeRef =====*/){
 		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
 		//		Saves off our value, if we have an initial one set so we
 		//		can use it if we have a store as well (see startup())
-		this._oValue = (keywordArgs || {}).value || null;
+		this._oValue = (params || {}).value || null;
 		this._notifyConnections = [];	// remove for 2.0
 	},
 

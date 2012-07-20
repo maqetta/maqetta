@@ -32,6 +32,7 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 			//
 			// example:
 			//		|	var viewObj = new View({
+			//		|		app: this.app,
 			//		|		id: this.id,
 			//		|		name: this.name,
 			//		|		parent: this,
@@ -42,6 +43,7 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 			//
 			// params:
 			//		view parameters, include:
+			//		app: the app
 			//		id: view id
 			//		name: view name
 			//		template: view template url. If templateString not empty, ignore this parameter.
@@ -246,7 +248,7 @@ function(declare, lang, Deferred, when, require, dattr, TemplatedMixin, WidgetsI
 
 			// set widget attributes
 			dattr.set(this.domNode, "id", this.id);
-			dattr.set(this.domNode, "region", "center");
+			dattr.set(this.domNode, "data-app-region", "center");
 			dattr.set(this.domNode, "style", "width:100%; height:100%");
 			this._widget.region = "center";
 

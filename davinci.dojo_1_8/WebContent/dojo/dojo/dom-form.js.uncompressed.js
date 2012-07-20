@@ -86,8 +86,6 @@ define("dojo/dom-form", ["./_base/lang", "./dom", "./io-query", "./json"], funct
 			//		elements, buttons, and other non-value form elements are skipped.
 			//		Multi-select elements are returned as an array of string values.
 			// formNode: DOMNode|String
-			// returns: Object
-			//
 			// example:
 			//		This form:
 			//		|	<form id="test_form">

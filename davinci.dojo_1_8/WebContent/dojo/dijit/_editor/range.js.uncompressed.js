@@ -393,6 +393,11 @@ if(!window.getSelection){
 				}else{
 					atmrange.moveToElementText(container.parentNode);
 					atmrange.collapse(true);
+
+					// Correct internal cursor position
+					// http://bugs.dojotoolkit.org/ticket/15578
+					atmrange.move('character', 1);
+					atmrange.move('character', -1);
 				}
 
 				offset += len;

@@ -21,9 +21,9 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 	//		|	}, "vid");
 
 	// mediaUrl: String
-	// 		REQUIRED: The Url of the video file that will be played.
+	//		REQUIRED: The Url of the video file that will be played.
 	//		NOTE: Must be either an absolute URL or relative to the HTML file.
-	//		Relative paths will be converted to abslute paths
+	//		Relative paths will be converted to absolute paths
 
 	// _swfPath: Uri
 	//		The path to the video player SWF resource
@@ -105,7 +105,7 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 
 	pause: function(){
 		// summary:
-		// 		Pauses the video
+		//		Pauses the video
 		this.isPlaying = false;
 		this.isStopped = false;
 		if(this.onPaused){
@@ -116,7 +116,7 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 
 	seek: function(/* Float */ time ){
 		// summary:
-		// 		Goes to the time passed in the argument
+		//		Goes to the time passed in the argument
 		this.flashMedia.seek(time);
 	},
 
@@ -149,8 +149,8 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 	/*=====
 	onLoad: function(mov){
 		// summary:
-		// 		Fired when the SWF player has loaded
-		// 		NOT when the video has loaded
+		//		Fired when the SWF player has loaded
+		//		NOT when the video has loaded
 	},
 
 	onDownloaded: function(percent){
@@ -161,26 +161,28 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 
 	onClick: function(evt){
 		// summary:
-		// 		Fires when the player is clicked
-		// 		Could be used to toggle play/pause, or
-		// 		do an external activity, like opening a new
+		//		Fires when the player is clicked
+		//		Could be used to toggle play/pause, or
+		//		do an external activity, like opening a new
 		//		window.
 	},
 
 	onSwfSized: function(data){
 		// summary:
-		// 		Fired on SWF resize, or when its
-		// 		toggled between fullscreen.
+		//		Fired on SWF resize, or when its
+		//		toggled between fullscreen.
 	},
 
 	onMetaData: function(data, evt){
 		// summary:
-		// 		The video properties. Width, height, duration, etc.
-		// 		NOTE: 	if data is empty, this is an older FLV with no meta data.
-		// 				Duration cannot be determined. In original FLVs, duration
-		//				could only be obtained with Flash Media Server.
-		// 		NOTE: 	Older FLVs can still return width and height
-		//				and will do so on a second event call
+		//		The video properties. Width, height, duration, etc.
+		//
+		//		NOTE: if data is empty, this is an older FLV with no meta data.
+		//		Duration cannot be determined. In original FLVs, duration
+		//		could only be obtained with Flash Media Server.
+		//
+		//		NOTE: Older FLVs can still return width and height
+		//		and will do so on a second event call
 	},
 
 	onPosition: function( time){
@@ -190,26 +192,26 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 
 	onStart: function( data){
 		// summary:
-		// 		Fires when video starts
-		// 		Good for setting the play button to pause
-		// 		during an autoPlay for example
+		//		Fires when video starts
+		//		Good for setting the play button to pause
+		//		during an autoPlay for example
 	},
 
 	onPlay: function(data){
 		// summary:
-		// 		Fires when video starts and resumes
+		//		Fires when video starts and resumes
 	},
 
 	onPause: function(data){
 		// summary:
-		// 		Fires when the pause button is clicked
+		//		Fires when the pause button is clicked
 	},
 
 	onEnd: function(data){
 		// summary:
-		// 		Fires when video ends
-		// 		Could be used to change pause button to play
-		// 		or show a post video graphic, like YouTube
+		//		Fires when video ends
+		//		Could be used to change pause button to play
+		//		or show a post video graphic, like YouTube
 	},
 
 	onStop: function(){
@@ -230,7 +232,7 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 
 	onError: function(data, url){
 		// summary:
-		// 		Fired when the player encounters an error
+		//		Fired when the player encounters an error
 		// example:
 		//		| console.warn("ERROR-"+data.type.toUpperCase()+":",
 		//		|		data.info.code, " - URL:", url);
@@ -238,13 +240,13 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 
 	onStatus: function(data){
 		// summary:
-		// 		Simple status
+		//		Simple status
 	},
 
 	onPlayerStatus: function(data){
 		// summary:
-		// 		The status of the video from the SWF
-		// 		playing, stopped, bufering, etc.
+		//		The status of the video from the SWF
+		//		playing, stopped, bufering, etc.
 	},
 
 	onResize: function(){
@@ -263,7 +265,7 @@ dojo.declare("dojox.av.FLVideo", [_Widget, _Media], {
 		//		current playhead time and the amount of data loaded.
 		//		Works only on FLVs with a duration (not older). Pauses
 		//		the video while continuing download.
-		//
+
 		if(this.percentDownloaded == 100){
 			if(this.isBuffering){
 				this.onBuffer(false);

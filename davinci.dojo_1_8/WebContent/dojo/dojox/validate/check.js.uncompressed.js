@@ -306,7 +306,7 @@ validate.evaluateConstraint=function(profile, /*Array*/constraint, fieldName, el
 	//	|    }
 	//
 	//		This function evaluates a single array function in the format of:
-	//      [functionName, argument1, argument2, etc]
+	//		[functionName, argument1, argument2, etc]
 	//
 	//		The function will be parsed out and evaluated against the incoming parameters.
 	// profile:

@@ -9,6 +9,8 @@ define("dojox/mvc/_DataBindingMixin", [
 
 	kernel.deprecated("dojox.mvc._DataBindingMixin", "Use dojox/mvc/at for data binding.");
 
+	// Note: This should be a plain Object, not a Class.
+	// But no need to change it since it's deprecated.
 	return declare("dojox.mvc._DataBindingMixin", null, {
 		// summary:
 		//		Deprecated.  Use dojox/mvc/at for data binding.
@@ -54,8 +56,10 @@ define("dojox/mvc/_DataBindingMixin", [
 		//		will cause an update of the value in the data model at location
 		//		"hello" which will in turn cause a matching update of the value in
 		//		the other textbox.
+		// tags:
+		//		deprecated
 	
-		// ref: String||dojox/mvc/StatefulModel
+		// ref: [deprecated] String||dojox/mvc/StatefulModel
 		//		The value of the data binding expression passed declaratively by
 		//		the developer. This usually references a location within an
 		//		existing datamodel and may be a relative reference based on the
@@ -81,10 +85,12 @@ define("dojox/mvc/_DataBindingMixin", [
 			// description:
 			//		This function is meant to provide an API bridge to the dijit API.
 			//		Validity of data-bound dijits is a function of multiple concerns:
+			//
 			//		- The validity of the value as ascertained by the data binding
 			//		  and constraints specified in the data model (usually semantic).
 			//		- The validity of the value as ascertained by the widget itself
 			//		  based on widget constraints (usually syntactic).
+			//
 			//		In order for dijits to function correctly in data-bound
 			//		environments, it is imperative that their isValid() functions
 			//		assess the model validity of the data binding via the
@@ -139,18 +145,20 @@ define("dojox/mvc/_DataBindingMixin", [
 			// summary:
 			//		Calculate and set the dojo/Stateful data binding for the
 			//		associated dijit or custom view component.
-			//	parentBinding:
+			// parentBinding:
 			//		The binding of this widget/view component's data-bound parent,
 			//		if available.
 			// description:
 			//		The declarative data binding reference may be specified in two
 			//		ways via markup:
+			//
 			//		- For older style documents (non validating), controls may use
 			//		  the "ref" attribute to specify the data binding reference
 			//		  (String).
 			//		- For validating documents using the new Dojo parser, controls
 			//		  may specify the data binding reference (String) as the "ref"
 			//		  property specified in the data-dojo-props attribute.
+			//
 			//		Once the ref value is obtained using either of the above means,
 			//		the binding is set up for this control and its required, readOnly
 			//		etc. properties are refreshed.
@@ -159,6 +167,7 @@ define("dojox/mvc/_DataBindingMixin", [
 			//		parent or another widget.
 			//		There are three ways in which the data binding node reference is
 			//		calculated when specified as a string:
+			//
 			//		- If an explicit parent widget is specified, the binding is
 			//		  calculated relative to the parent widget's data binding.
 			//		- For any dijits that specify a data binding reference,
@@ -169,7 +178,9 @@ define("dojox/mvc/_DataBindingMixin", [
 			//		  dijits that specify a data binding reference, the binding is
 			//		  calculated by treating the reference String as an expression and
 			//		  evaluating it to obtain the dojo/Stateful node in the datamodel.
+			//
 			//		This method calls console.warn in these two conditions:
+			//
 			//		- The ref is an expression i.e. outermost bound dijit, but the
 			//		  expression evaluation fails.
 			//		- The calculated binding turns out to not be an instance of a
@@ -246,11 +257,11 @@ define("dojox/mvc/_DataBindingMixin", [
 			// summary:
 			//		Set the data binding to the supplied value, which must be a
 			//		dojo/Stateful node of a data model.
-			//	name:
+			// name:
 			//		The name of the binding property (always "binding").
-			//	old:
+			// old:
 			//		The old dojo/Stateful binding node of the data model.
-			//	current:
+			// current:
 			//		The new dojo/Stateful binding node of the data model.
 			// description:
 			//		Applies the specified data binding to the attached widget.
@@ -307,19 +318,19 @@ define("dojox/mvc/_DataBindingMixin", [
 		_updateProperty: function(name, old, current, defaultValue, setPropName, setPropValue){
 			// summary:
 			//		Update a binding property of the bound widget.
-			//	name:
+			// name:
 			//		The binding property name.
-			//	old:
+			// old:
 			//		The old value of the binding property.
-			//	current:
+			// current:
 			//		The new or current value of the binding property.
-			//	defaultValue:
+			// defaultValue:
 			//		The optional value to be applied as the current value of the
 			//		binding property if the current value is null.
-			//	setPropName:
+			// setPropName:
 			//		The optional name of a stateful property to set on the bound
 			//		widget.
-			//	setPropValue:
+			// setPropValue:
 			//		The value, if an optional name is provided, for the stateful
 			//		property of the bound widget.
 			// tags:
@@ -343,9 +354,9 @@ define("dojox/mvc/_DataBindingMixin", [
 			//		Update this widget's value based on the current binding and
 			//		set up the bindings of all contained widgets so as to refresh
 			//		any relative binding references. 
-			// 		findWidgets does not return children of widgets so need to also
+			//		findWidgets does not return children of widgets so need to also
 			//		update children of widgets which are not bound but may hold widgets which are.
-			//	parentBind:
+			// parentBind:
 			//		The binding on the parent of a widget whose children may have bindings 
 			//		which need to be updated.
 			// tags:
@@ -387,7 +398,7 @@ define("dojox/mvc/_DataBindingMixin", [
 		_unwatchArray: function(watchHandles){
 			// summary:
 			//		Given an array of watch handles, unwatch all.
-			//	watchHandles:
+			// watchHandles:
 			//		The array of watch handles.
 			// tags:
 			//		private

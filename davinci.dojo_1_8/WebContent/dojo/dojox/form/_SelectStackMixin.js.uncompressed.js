@@ -54,7 +54,7 @@ return declare("dojox.form._SelectStackMixin", null, {
 	_togglePane: function(/*dijit._Widget*/ pane, /*Boolean*/ shown){
 		// summary:
 		//		called when a pane is either shown or hidden (so that
-		//  	we can toggle the widgets on it)
+		//		we can toggle the widgets on it)
 
 		if(pane._shown != undefined && pane._shown == shown){ return; }
 		var widgets = array.filter(pane.getDescendants(), "return item.name;");

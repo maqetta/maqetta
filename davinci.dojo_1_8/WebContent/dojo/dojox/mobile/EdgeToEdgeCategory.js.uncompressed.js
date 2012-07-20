@@ -5,8 +5,6 @@ define("dojox/mobile/EdgeToEdgeCategory", [
 
 	// module:
 	//		dojox/mobile/EdgeToEdgeCategory
-	// summary:
-	//		A category header for an edge-to-edge list.
 
 	return declare("dojox.mobile.EdgeToEdgeCategory", RoundRectCategory, {
 		// summary:

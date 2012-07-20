@@ -5,7 +5,7 @@ define("dojox/widget/PortletSettings", [
 	"dijit/TitlePane"
 	], function(declare, kernel, fx, TitlePane){
 		
-	return declare("dojox.widget.PortletSettings", [dijit._Container, dijit.layout.ContentPane],{
+return declare("dojox.widget.PortletSettings", [dijit._Container, dijit.layout.ContentPane], {
 	// summary:
 	//		A settings widget to be used with a dojox.widget.Portlet.
 	// description:

@@ -1,6 +1,4 @@
-.tundra .dijitSelect .dijitArrowButton {
-	background: #fff url("../images/buttonEnabled.png") repeat-x bottom left;
-}
+
 .tundra .dijitSelectError .dijitButtonContents,
 .tundra .dijitSelectHover .dijitArrowButton,
 .tundra .dijitSelectActive .dijitArrowButton,
@@ -8,6 +6,10 @@
 .tundra .dijitSelectDisabled .dijitArrowButton,
 .tundra .dijitSelectReadOnly .dijitArrowButton {
 	background: transparent none;
+}
+.tundra .dijitSelect .dijitArrowButton {
+	background: #fff url("../images/buttonEnabled.png") repeat-x bottom left;
+	border-width: 0;
 }
 .tundra .dijitSelectDisabled,
 .tundra .dijitSelectDisabled TD {

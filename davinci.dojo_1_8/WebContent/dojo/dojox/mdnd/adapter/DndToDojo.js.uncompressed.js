@@ -46,7 +46,7 @@ define("dojox/mdnd/adapter/DndToDojo", ["dojo/_base/kernel",
 		_moveUpHandler: null,
 	
 		// _draggedNode: DOMNode
-		// 		The current dragged node
+		//		The current dragged node
 		_draggedNode: null,
 	
 		constructor: function(){
@@ -102,8 +102,8 @@ define("dojox/mdnd/adapter/DndToDojo", ["dojo/_base/kernel",
 			if(area){
 				var position = geom.position(area, true),
 					coords = {};
-				coords.x = position.x
-				coords.y = position.y
+				coords.x = position.x;
+				coords.y = position.y;
 				coords.x1 = position.x + position.w;
 				coords.y1 = position.y + position.h;
 				return coords;	// 	Object
@@ -111,18 +111,19 @@ define("dojox/mdnd/adapter/DndToDojo", ["dojo/_base/kernel",
 			return null;
 		},
 	
-		register: function(/*DOMNode*/area, /*String*/ type,/*Boolean*/ dojoTarget){
+		register: function(/*DOMNode*/area, /*String*/ type, /*Boolean*/ dojoTarget){
 			// summary:
 			//		Register a target dojo.
 			//		The target is represented by an object containing :
-			// 			- the dojo area node
-			// 			- the type reference to identify a group node
-			// 			- the coords of the area to enable refresh position
+			//
+			//		- the dojo area node
+			//		- the type reference to identify a group node
+			//		- the coords of the area to enable refresh position
 			// area:
 			//		The DOM node which has to be registered.
 			// type:
 			//		A String to identify the node.
-			// dojoTarger:
+			// dojoTarget:
 			//		True if the dojo D&D have to be enable when mouse is hover the registered target dojo.
 	
 			//console.log("dojox.mdnd.adapter.DndToDojo ::: registerDojoArea", area, type, dojoTarget);
@@ -483,7 +484,7 @@ define("dojox/mdnd/adapter/DndToDojo", ["dojo/_base/kernel",
 	dojox.mdnd.adapter._dndToDojo = null;
 	dojox.mdnd.adapter.dndToDojo = function(){
 		// summary:
-		// 		returns the current areaManager, creates one if it is not created yet
+		//		returns the current areaManager, creates one if it is not created yet
 		if(!dojox.mdnd.adapter._dndToDojo){
 			dojox.mdnd.adapter._dndToDojo = new dojox.mdnd.adapter.DndToDojo();
 		}

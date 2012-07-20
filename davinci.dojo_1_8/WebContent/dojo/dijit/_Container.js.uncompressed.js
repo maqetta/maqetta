@@ -1,9 +1,8 @@
 define("dijit/_Container", [
 	"dojo/_base/array", // array.forEach array.indexOf
 	"dojo/_base/declare", // declare
-	"dojo/dom-construct", // domConstruct.place
-	"./registry"	// registry.byNode()
-], function(array, declare, domConstruct, registry){
+	"dojo/dom-construct" // domConstruct.place
+], function(array, declare, domConstruct){
 
 	// module:
 	//		dijit/_Container
@@ -80,7 +79,7 @@ define("dijit/_Container", [
 			//		if 1, get the next sibling
 			//		if -1, get the previous sibling
 			// tags:
-			//      private
+			//		private
 			var children = this.getChildren(),
 				idx = array.indexOf(this.getChildren(), child);	// int
 			return children[idx + dir];

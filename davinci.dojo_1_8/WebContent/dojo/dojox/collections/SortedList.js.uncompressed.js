@@ -140,7 +140,7 @@ define("dojox/collections/SortedList", ["dojo/_base/kernel", "dojo/_base/array",
 			return -1;	//	int
 		};
 		this.item=function(/*string*/ k){
-			// 	summary
+			// summary:
 			//		return the value of the object at location k.
 			if(k in items && !testObject[k]){
 				return items[k].valueOf();	//	object
@@ -148,7 +148,7 @@ define("dojox/collections/SortedList", ["dojo/_base/kernel", "dojo/_base/array",
 			return undefined;	//	object
 		};
 		this.remove=function(/*string*/ k){
-			// 	summary
+			// summary:
 			//		remove the item at location k and rebuild the internal collections.
 			delete items[k];
 			build();

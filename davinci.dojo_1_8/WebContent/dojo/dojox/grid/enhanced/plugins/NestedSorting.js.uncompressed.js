@@ -19,6 +19,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 	//
 	// description:
 	//		A flexible way to control multiple column sorting, including
+	//
 	//		1. Set default sorting order
 	//		2. Disable sorting for certain columns
 	//		3. Set sorting order dynamically with JS API

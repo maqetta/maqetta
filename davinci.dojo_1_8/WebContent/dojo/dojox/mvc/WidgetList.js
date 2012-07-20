@@ -35,7 +35,7 @@ _12._buildChildren(_10);
 _10.watch!=={}.watch&&(this._handles=this._handles||[]).push(_10.watch(function(_15,old,_16){
 if(!isNaN(_15)){
 var w=_12.getChildren()[_15-0];
-w&&w.set("target",_16);
+w&&w.set(w._relTargetProp||"target",_16);
 }
 }));
 }
@@ -55,7 +55,8 @@ return;
 var clz=_4([].slice.call(arguments,1),{}),_19=this;
 function _1a(_1b,_1c){
 _2.forEach(_2.map(_1b,function(_1d,idx){
-var _1e={ownerDocument:_19.ownerDocument,target:_1d,parent:_19,indexAtStartup:_1c+idx};
+var _1e={ownerDocument:_19.ownerDocument,parent:_19,indexAtStartup:_1c+idx};
+_1e[(_19.childParams||_19[_a]&&_c.call(_1e,_19[_a])||{})._relTargetProp||clz.prototype._relTargetProp||"target"]=_1d;
 var _1f=_19.childParams||_19[_a]&&_c.call(_1e,_19[_a]),_20=_19.childBindings||_19[_b]&&_c.call(_1e,_19[_b]);
 if(_19.templateString&&!_1e.templateString&&!clz.prototype.templateString){
 _1e.templateString=_19.templateString;

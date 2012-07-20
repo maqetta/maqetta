@@ -9,7 +9,7 @@ define("dojox/fx/_core", ["dojo/_base/lang", "dojo/_base/array","./_base"],
 		//		for propertyAnimation. as we make more complicatied animations, we realize
 		//		some properties can have 2, or 4 values relevant (x,y) or (t,l,r,b) for example
 		//
-		// 		this function provides support for those Lines, and is ported directly from 0.4
+		//		this function provides support for those Lines, and is ported directly from 0.4
 		//		this is a lot of extra code for something so seldom used, so we'll put it here as
 		//		and optional core addition. you can create a new line, and use it during onAnimate
 		//		as you see fit.
@@ -48,8 +48,10 @@ define("dojox/fx/_core", ["dojo/_base/lang", "dojo/_base/array","./_base"],
 		}else{
 			// single value branch, document here for both branches:
 			this.getValue = function(/*float*/ n){
-				// summary: Returns the point on the line, or an array of points
-				// n: a floating point number greater than 0 and less than 1
+				// summary:
+				//		Returns the point on the line, or an array of points
+				// n:
+				//		a floating point number greater than 0 and less than 1
 				// returns: Mixed
 				return (d * n) + this.start; // Decimal
 			}

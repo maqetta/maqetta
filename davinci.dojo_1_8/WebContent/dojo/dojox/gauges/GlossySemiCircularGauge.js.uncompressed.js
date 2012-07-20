@@ -41,7 +41,7 @@ return declare("dojox.gauges.GlossySemiCircularGauge", [GlossyCircularGaugeBase]
 	
 
 	constructor: function(){
-		// summary: 
+		// summary:
 		//		Creates a new GlossySemiCircularGauge
 		this.min = 0;
 		this.max = 100;
@@ -50,7 +50,7 @@ return declare("dojox.gauges.GlossySemiCircularGauge", [GlossyCircularGaugeBase]
 	},
 
 	drawBackground: function(group){
-		// summary: 
+		// summary:
 		//		Draws the background of the gauge
 		// group: dojox.gfx.Group
 		//		The GFX group where the background must be drawn
@@ -145,7 +145,7 @@ return declare("dojox.gauges.GlossySemiCircularGauge", [GlossyCircularGaugeBase]
 	
 	
 	drawForeground: function(group){
-		// summary: 
+		// summary:
 		//		Draws the foreground of the gauge
 		// group: dojox.gfx.Group
 		//		The GFX group where the foreground must be drawn

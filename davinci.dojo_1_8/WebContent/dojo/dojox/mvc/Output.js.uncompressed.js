@@ -14,12 +14,17 @@ define("dojox/mvc/Output", [
 		// description:
 		//		Simple output example:
 		//
-		//		|  <span dojoType="dojox/mvc/Output" ref="model.balance">
+		//		|  <span data-dojo-type="dojox/mvc/Output" data-dojo-props="value: at(model, 'balance')"></span>
+		//
+		//		Another simple output example:
+		//
+		//		|  <span data-dojo-type="dojox/mvc/Output" data-dojo-props="value: at(model, 'balance')">
 		//		|    Your balance is: ${this.value}
 		//		|  </span>
 		//
+		//
 		//		The output widget being data-bound, if the balance changes in the
-		//		dojox/mvc/StatefulModel, the content within the `<span>` will be
+		//		model, the content within the `<span>` will be
 		//		updated accordingly.
 
 		// exprchar:  Character
@@ -44,9 +49,9 @@ define("dojox/mvc/Output", [
 		set: function(name, value){
 			// summary:
 			//		Override and refresh output on value change.
-			//	name:
+			// name:
 			//		The property to set.
-			//	value:
+			// value:
 			//		The value to set in the property.
 			this.inherited(arguments);
 			if(name === "value"){

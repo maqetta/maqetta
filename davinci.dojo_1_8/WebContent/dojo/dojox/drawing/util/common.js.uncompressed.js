@@ -164,15 +164,16 @@ define("dojox/drawing/util/common", ["dojo", "dojox/math/round"], function(dojo,
 			return this.pointOnCircle(obj.start.x,obj.start.y,radius, new_angle); // Object
 		},
 		
-		snapAngle: function(/*EventObject*/obj, /*Float*/ca){
+		snapAngle: function(/*EventObject*/ obj, /*Float*/ ca){
 			// summary:
 			//		Snaps a line to the nearest angle
-			//			obj: Mouse object (see dojox.drawing.Mouse)
-			//			ca: Fractional amount to snap to
-			//				A decimal number fraction of a half circle
-			//				.5 would snap to 90 degrees
-			//				.25  would snap to 45 degrees
-			//				.125 would snap to 22.5 degrees, etc.
+			// obj: Mouse object (see dojox.drawing.Mouse)
+			// ca: Fractional amount to snap to
+			//		A decimal number fraction of a half circle.
+			//
+			//		- .5 would snap to 90 degrees
+			//		- .25  would snap to 45 degrees
+			//		- .125 would snap to 22.5 degrees, etc.
 
 			var radians = this.radians(obj),
 				radius = this.length(obj),
@@ -189,7 +190,7 @@ define("dojox/drawing/util/common", ["dojo", "dojox/math/round"], function(dojo,
 			start=num;
 		},
 		
-		uid: function(/* ? String */str){
+		uid: function(/*String?*/ str){
 			// summary:
 			//		Creates a unique ID.
 			// str: String

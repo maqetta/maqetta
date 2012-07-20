@@ -101,7 +101,7 @@ define("dojox/geo/openlayers/GfxLayer", [
 
 		moveTo: function(event){
 			// summary:
-			//   Called when this layer is moved or zoomed.
+			//		Called when this layer is moved or zoomed.
 			// event:
 			//		The event
 			var s = style.get(this.olLayer.map.layerContainerDiv);

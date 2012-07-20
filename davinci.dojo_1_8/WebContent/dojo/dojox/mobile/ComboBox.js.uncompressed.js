@@ -49,12 +49,14 @@ define("dojox/mobile/ComboBox", [
 		// dropDownPosition: [const] String[]
 		//		This variable controls the position of the drop-down.
 		//		It is an array of strings with the following values:
-		//			* before: places drop down to the left of the target node/widget, or to the right in
-		//			  the case of RTL scripts like Hebrew and Arabic
-		//			* after: places drop down to the right of the target node/widget, or to the left in
-		//			  the case of RTL scripts like Hebrew and Arabic
-		//			* above: drop down goes above target node
-		//			* below: drop down goes below target node
+		//
+		//		- before: places drop down to the left of the target node/widget, or to the right in
+		//		  the case of RTL scripts like Hebrew and Arabic
+		//		- after: places drop down to the right of the target node/widget, or to the left in
+		//		  the case of RTL scripts like Hebrew and Arabic
+		//		- above: drop down goes above target node
+		//		- below: drop down goes below target node
+		//
 		//		The list is positions is tried, in order, until a position is found where the drop down fits
 		//		within the viewport.
 		dropDownPosition: ["below","above"],

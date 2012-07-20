@@ -4,13 +4,6 @@ function(exports, lang, oo, Text){
 // TODO: why not just return Label?
 
 exports.Label = oo.declare(
-	// summary:
-	//		An annotation called internally to label an Stencil.
-	// description:
-	//		Annotation is positioned with dojox.drawing.util.positioning.label
-	//		That method should be overwritten for custom placement. Or,
-	//		add a 'setLabelCustom' method to the Stencil and it will be used.
-
 	Text,
 	function(/*Object*/options){
 		// options: Object
@@ -29,6 +22,13 @@ exports.Label = oo.declare(
 			this.connect(this.master, "attr", this, "beforeAttr");
 		}
 	},{
+		// summary:
+		//		An annotation called internally to label an Stencil.
+		// description:
+		//		Annotation is positioned with dojox.drawing.util.positioning.label
+		//		That method should be overwritten for custom placement. Or,
+		//		add a 'setLabelCustom' method to the Stencil and it will be used.
+
 		_align:"start",
 		drawingType:"label",
 		

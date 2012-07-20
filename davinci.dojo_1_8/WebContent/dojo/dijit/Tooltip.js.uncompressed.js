@@ -231,7 +231,7 @@ define("dijit/Tooltip", [
 		
 		_setAutoTextDir: function(/*Object*/node){
 		    // summary:
-		    //	    Resolve "auto" text direction for children nodes
+		    //		Resolve "auto" text direction for children nodes
 		    // tags:
 		    //		private
 
@@ -431,10 +431,6 @@ define("dijit/Tooltip", [
 			// tags:
 			//		private
 
-			// keep a tooltip open if the associated element still has focus (even though the
-			// mouse moved away)
-			if(this._focus){ return; }
-
 			if(this._showTimer){
 				this._showTimer.remove();
 				delete this._showTimer;
@@ -517,12 +513,12 @@ define("dijit/Tooltip", [
 	//		the Tooltip widget or *TextBox widget itself.  It's an array of strings with the values
 	//		possible for `dijit/place::around()`.   The recommended values are:
 	//
-	//			* before-centered: centers tooltip to the left of the anchor node/widget, or to the right
-	//				 in the case of RTL scripts like Hebrew and Arabic
-	//			* after-centered: centers tooltip to the right of the anchor node/widget, or to the left
-	//				 in the case of RTL scripts like Hebrew and Arabic
-	//			* above-centered: tooltip is centered above anchor node
-	//			* below-centered: tooltip is centered above anchor node
+	//		- before-centered: centers tooltip to the left of the anchor node/widget, or to the right
+	//		  in the case of RTL scripts like Hebrew and Arabic
+	//		- after-centered: centers tooltip to the right of the anchor node/widget, or to the left
+	//		  in the case of RTL scripts like Hebrew and Arabic
+	//		- above-centered: tooltip is centered above anchor node
+	//		- below-centered: tooltip is centered above anchor node
 	//
 	//		The list is positions is tried, in order, until a position is found where the tooltip fits
 	//		within the viewport.

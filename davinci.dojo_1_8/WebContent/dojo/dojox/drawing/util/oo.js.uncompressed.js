@@ -93,7 +93,7 @@ return {
 		//		|	var A = function(){};
 		//		|	var B = function(){};
 		//		|	var C = function(){};
-		// 		|	var D = dojox.drawing.util.oo.extend(A, B, C);
+		//		|	var D = dojox.drawing.util.oo.extend(A, B, C);
 		//		|	var e = new D();
 
 		var a = arguments, sub = a[0];

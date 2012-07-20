@@ -18,27 +18,25 @@ dojo.declare("dojox.editor.plugins.Smiley", _Plugin, {
 	// summary:
 	//		This plugin allows the user to select from emoticons or "smileys"
 	//		to insert at the current cursor position.
-	//
 	// description:
 	//		The commands provided by this plugin are:
-	//		* smiley - inserts the selected emoticon
+	//
+	//		- smiley - inserts the selected emoticon
 
 	// iconClassPrefix: [const] String
 	//		The CSS class name for the button node is formed from `iconClassPrefix` and `command`
 	iconClassPrefix: "dijitAdditionalEditorIcon",
 
 	// emoticonMarker:
-	// 		a marker for emoticon wrap like [:-)] for regexp convienent
+	//		a marker for emoticon wrap like [:-)] for regexp convienent
 	//		when a message which contains an emoticon stored in a database or view source, this marker include also
 	//		but when user enter an emoticon by key board, user don't need to enter this marker.
-	// 		also emoticon definition character set can not contains this marker
+	//		also emoticon definition character set can not contains this marker
 	emoticonMarker: '[]',
 
 	emoticonImageClass: 'dojoEditorEmoticon',
 
 	_initButton: function(){
-		// summary:
-		//
 		this.dropDown = new dojox.editor.plugins._SmileyPalette();
 		this.connect(this.dropDown, "onChange", function(ascii){
 			this.button.closeDropDown();
@@ -108,8 +106,7 @@ dojo.declare("dojox.editor.plugins.Smiley", _Plugin, {
 		//		content passed in
 		// tags:
 		//		private.
-		//
-		//
+
 		return value.replace(/\[([^\]]*)\]/g, dojo.hitch(this, this._decode));
 	},
 

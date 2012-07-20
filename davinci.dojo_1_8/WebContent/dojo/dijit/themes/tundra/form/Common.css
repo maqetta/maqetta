@@ -42,7 +42,7 @@
 	background-color:#f9f999;
 	background-image:none;
 }
-.tundra .dijitValidationIcon {
+.tundra .dijitValidationTextBoxError .dijitValidationIcon {
 	
 	width: 16px;
 	background: transparent url('../images/warning.png') no-repeat center center;

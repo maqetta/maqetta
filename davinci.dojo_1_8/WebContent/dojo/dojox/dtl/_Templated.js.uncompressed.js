@@ -8,13 +8,7 @@ define("dojox/dtl/_Templated", [
 	"dojo/string",
 	"dojo/parser"
 ], function(declare,dd,TemplatedMixin, domConstruct,Cache,Array,dString,Parser){
-	/*=====
-		Cache = dojo.cache;
-		dString = dojo.string;
-		Parser = dojo.parser;
-		TemplatedMixin = dijit._TemplatedMixin;
-		dd = dojox.dtl;
-	=====*/
+
 	return declare("dojox.dtl._Templated", TemplatedMixin, {
 		// summary:
 		//		The base-class for DTL-templated widgets.

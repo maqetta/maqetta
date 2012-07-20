@@ -263,10 +263,11 @@ define("dijit/InlineEditBox", [
 		//		inline values a TextBox), but you can specify an editor such as
 		//		dijit.Editor (for editing HTML) or a Slider (for adjusting a number).
 		//		An edit widget must support the following API to be used:
-		//			- displayedValue or value as initialization parameter,
+		//
+		//		- displayedValue or value as initialization parameter,
 		//			and available through set('displayedValue') / set('value')
-		//			- void focus()
-		//			- DOM-node focusNode = node containing editable text
+		//		- void focus()
+		//		- DOM-node focusNode = node containing editable text
 
 		// editing: [readonly] Boolean
 		//		Is the node currently in edit mode?
@@ -335,11 +336,18 @@ define("dijit/InlineEditBox", [
 			"<span style='font-family: wingdings; text-decoration: underline;'>&#160;&#160;&#160;&#160;&#x270d;&#160;&#160;&#160;&#160;</span>" :
 			"<span style='text-decoration: underline;'>&#160;&#160;&#160;&#160;&#x270d;&#160;&#160;&#160;&#160;</span>", // &#160; == &nbsp;
 
-		constructor: function(){
+		constructor: function(/*===== params, srcNodeRef =====*/){
 			// summary:
-			//		Sets up private arrays etc.
-			// tags:
-			//		private
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified:
+			//
+			//		- use srcNodeRef.innerHTML as my value
+			//		- replace srcNodeRef with my generated DOM tree
+
 			this.editorParams = {};
 		},
 

@@ -1,5 +1,5 @@
-define("dojox/gfx/Mover", ["dojo/_base/lang","dojo/_base/array", "dojo/_base/declare", "dojo/_base/connect", "dojo/_base/event"], 
-  function(lang,arr,declare,connect,evt){
+define("dojox/gfx/Mover", ["dojo/_base/lang","dojo/_base/array", "dojo/_base/declare", "dojo/on", "dojo/_base/event"], 
+  function(lang, arr, declare, on, evt){
 	return declare("dojox.gfx.Mover", null, {
 		constructor: function(shape, e, host){
 			// summary:
@@ -13,17 +13,24 @@ define("dojox/gfx/Mover", ["dojo/_base/lang","dojo/_base/array", "dojo/_base/dec
 			// host: Object?
 			//		object which implements the functionality of the move,
 			//		 and defines proper events (onMoveStart and onMoveStop)
+			var eOrig = e;
+			e = e.touches ? e.touches[0] : e;
 			this.shape = shape;
 			this.lastX = e.clientX
 			this.lastY = e.clientY;
 			var h = this.host = host, d = document,
-				firstEvent = connect.connect(d, "onmousemove", this, "onFirstMove");
+				firstEvent = on(d, "mousemove", lang.hitch(this, "onFirstMove")),
+				firstTouchEvent = on(d, "touchmove", lang.hitch(this, "onFirstMove"));
 			this.events = [
-				connect.connect(d, "onmousemove", this, "onMouseMove"),
-				connect.connect(d, "onmouseup",   this, "destroy"),
+				on(d, "mousemove", lang.hitch(this, "onMouseMove")),
+				on(d, "mouseup",   lang.hitch(this, "destroy")),
+				//Handle Touch Events.
+				on(d, "touchmove", lang.hitch(this, "onMouseMove")),
+				on(d, "touchend",  lang.hitch(this, "destroy")),
 				// cancel text selection and text dragging
-				connect.connect(d, "ondragstart",   evt, "stop"),
-				connect.connect(d, "onselectstart", evt, "stop"),
+				on(d, "dragstart",   lang.hitch(evt, "stop")),
+				on(d, "selectstart", lang.hitch(evt, "stop")),
+				firstTouchEvent,
 				firstEvent
 			];
 			// notify that the move has started
@@ -37,24 +44,26 @@ define("dojox/gfx/Mover", ["dojo/_base/lang","dojo/_base/array", "dojo/_base/dec
 			//		event processor for onmousemove
 			// e: Event
 			//		mouse event
+			var eOrig = e;
+			e = e.touches ? e.touches[0] : e;
 			var x = e.clientX;
 			var y = e.clientY;
 			this.host.onMove(this, {dx: x - this.lastX, dy: y - this.lastY});
 			this.lastX = x;
 			this.lastY = y;
-			evt.stop(e);
+			evt.stop(eOrig);
 		},
 		// utilities
 		onFirstMove: function(){
 			// summary:
 			//		it is meant to be called only once
 			this.host.onFirstMove(this);
-			connect.disconnect(this.events.pop());
+			this.events.pop().remove();
 		},
 		destroy: function(){
 			// summary:
 			//		stops the move, deletes all references, so the object can be garbage-collected
-			arr.forEach(this.events, connect.disconnect);
+			arr.forEach(this.events, function(h){h.remove();});
 			// undo global settings
 			var h = this.host;
 			if(h && h.onMoveStop){

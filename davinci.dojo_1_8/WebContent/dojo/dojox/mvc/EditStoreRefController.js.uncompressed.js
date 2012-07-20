@@ -22,20 +22,20 @@ define("dojox/mvc/EditStoreRefController", [
 		// |				<script src="/path/to/dojo-toolkit/dojo/dojo.js" type="text/javascript" data-dojo-config="parseOnLoad: 0"></script>
 		// |				<script type="text/javascript">
 		// |					require([
-		// |						"dojo/dom", "dojo/parser", "dojo/store/Observable", "dojo/store/Memory", "dijit/registry",
-		// |						"dijit/form/CheckBox", "dojox/mvc/EditStoreRefController", "dojox/mvc/ListController", "dojo/domReady!"
-		// |					], function(ddom, parser, Observable, Memory, registry){
+		// |						"dojo/dom", "dojo/parser", "dojo/when", "dojo/store/Observable", "dojo/store/Memory", "dijit/registry", "dojo/domReady!"
+		// |					], function(ddom, parser, when, Observable, Memory, registry){
 		// |						store = Observable(new Memory({data: [{id: "Foo", value: false}]}));
-		// |						parser.parse();
-		// |						registry.byId("ctrl").queryStore().observe(function(object, previousIndex, newIndex){
-		// |							alert("ID: " + object.id + ", value: " + object.value);
-		// |						}, true);
-		// |						var count = 0;
-		// |						var h = setInterval(function(){
-		// |							ddom.byId("check").click();
-		// |							registry.byId("ctrl").commit();
-		// |							if(++count >= 2){ clearInterval(h); }
-		// |						}, 2000);
+		// |						when(parser.parse(), function(){
+		// |							registry.byId("ctrl").queryStore().observe(function(object, previousIndex, newIndex){
+		// |								alert("ID: " + object.id + ", value: " + object.value);
+		// |							}, true);
+		// |							var count = 0;
+		// |							var h = setInterval(function(){
+		// |								ddom.byId("check").click();
+		// |								registry.byId("ctrl").commit();
+		// |								if(++count >= 2){ clearInterval(h); }
+		// |							}, 2000);
+		// |						});
 		// |					});
 		// |				</script>
 		// |			</head>

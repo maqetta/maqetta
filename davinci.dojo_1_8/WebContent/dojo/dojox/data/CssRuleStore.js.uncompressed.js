@@ -7,14 +7,16 @@ return declare("dojox.data.CssRuleStore", null, {
 	// description:
 	//		The CssRuleStore allows users to get information about active CSS rules in the page running the CssRuleStore.
 	//		It can also filter out rules from specific stylesheets.  The attributes it exposes on rules are as follows:
-	//			selector:				The selector text.
-	//			classes:				An array of classes present in this selector.
-	//			rule:					The actual DOM Rule object.
-	//			style:					The actual DOM CSSStyleDeclaration object.
-	//			cssText:				The cssText string provided on the rule object.
-	//			styleSheet:				The originating DOM Stylesheet object.
-	//			parentStyleSheet:		The parent stylesheet to the sheet this rule originates from.
-	//			parentStyleSheetHref:	The href of the parent stylesheet.
+	//
+	//		- selector:				The selector text.
+	//		- classes:				An array of classes present in this selector.
+	//		- rule:					The actual DOM Rule object.
+	//		- style:					The actual DOM CSSStyleDeclaration object.
+	//		- cssText:				The cssText string provided on the rule object.
+	//		- styleSheet:				The originating DOM Stylesheet object.
+	//		- parentStyleSheet:		The parent stylesheet to the sheet this rule originates from.
+	//		- parentStyleSheetHref:	The href of the parent stylesheet.
+	//
 	//		AND every style attribute denoted as style.*, such as style.textAlign or style.backgroundColor
 
 	_storeRef: '_S',

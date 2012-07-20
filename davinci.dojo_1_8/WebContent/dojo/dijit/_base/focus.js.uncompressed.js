@@ -10,11 +10,12 @@ define("dijit/_base/focus", [
 
 	// module:
 	//		dijit/_base/focus
-	// summary:
-	//		Deprecated module to monitor currently focused node and stack of currently focused widgets.
-	//		New code should access dijit/focus directly.
 
-	lang.mixin(dijit, {
+	var exports = {
+		// summary:
+		//		Deprecated module to monitor currently focused node and stack of currently focused widgets.
+		//		New code should access dijit/focus directly.
+
 		// _curFocus: DomNode
 		//		Currently focused item on screen
 		_curFocus: null,
@@ -245,7 +246,7 @@ define("dijit/_base/focus", [
 
 			handle && handle.remove();
 		}
-	});
+	};
 
 	// Override focus singleton's focus function so that dijit.focus()
 	// has backwards compatible behavior of restoring selection (although
@@ -315,5 +316,8 @@ define("dijit/_base/focus", [
 		topic.publish("widgetFocus", widget, by);	// publish
 	});
 
-	return dijit;
+	lang.mixin(dijit, exports);
+
+	/*===== return exports; =====*/
+	return dijit;	// for back compat :-(
 });

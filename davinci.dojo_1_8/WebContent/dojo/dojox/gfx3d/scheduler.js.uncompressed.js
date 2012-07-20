@@ -40,13 +40,12 @@ var BST = declare("dojox.gfx3d.scheduler.BinarySearchTree", null, {
 		//		The idea is for any polygon, for example, (a, b, c), the space is divided by
 		//		the plane into two space: plus and minus.
 		//		
-		//		for any arbitary vertex p, if(p - a) dotProduct n = 0, p is inside the plane,
+		//		for any arbitrary vertex p, if(p - a) dotProduct n = 0, p is inside the plane,
 		//		> 0, p is in the plus space, vice versa for minus space.
 		//		n is the normal vector that is perpendicular the plate, defined as:
-		//		           n = ( b - a) crossProduct ( c - a )
+		// |		n = ( b - a) crossProduct ( c - a )
 		//		
 		//		in this implementation, n is declared as normal, ,a is declared as orient.
-		//
 		// obj: dojox.gfx3d.Object
 		this.plus = null;
 		this.minus = null;

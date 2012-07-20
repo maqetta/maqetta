@@ -35,11 +35,12 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 		// textDir: String
 		//		Will be used as default for Text/TextPath/Group objects that created by this surface
 		//		and textDir wasn't directly specified for them, though the bidi support was loaded.
-		//		Can be setted in two ways:
+		//		Can be set in two ways:
+		//
 		//		1. When the surface is created and textDir value passed to it as fourth
 		//		parameter.
 		//		2. Using the setTextDir(String) function, when this function is used the value
-		//		of textDir propogates to all of it's children and the children of children (for Groups) etc.
+		//		of textDir propagates to all of it's children and the children of children (for Groups) etc.
 		textDir: "",
 
 		setTextDir: function(/*String*/newTextDir){
@@ -80,6 +81,7 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 		// textDir: String
 		//		Used for displaying bidi scripts in right layout.
 		//		Defines the base direction of text that displayed, can have 3 values:
+		//
 		//		1. "ltr" - base direction is left to right.
 		//		2. "rtl" - base direction is right to left.
 		//		3. "auto" - base direction is contextual (defined by first strong character).
@@ -93,23 +95,28 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 			// textDir:	
 			//		Text direction.
 			//		Can be:
+			//
 			//		1. "ltr" - for left to right layout.
 			//		2. "rtl" - for right to left layout
 			//		3. "auto" - for contextual layout: the first strong letter decides the direction.
 			// description:
 			//		Finds the right transformation that should be applied on the text, according to renderer.
 			//		Was tested in:
+			//
 			//		Renderers (browser for testing):
-			//			canvas (FF, Chrome, Safari),
-			//			vml (IE),
-			//			svg (FF, Chrome, Safari, Opera),
-			//			silverlight (IE, Chrome, Safari, Opera),
-			//			svgWeb(FF, Chrome, Safari, Opera, IE).
+			//
+			//		- canvas (FF, Chrome, Safari),
+			//		- vml (IE),
+			//		- svg (FF, Chrome, Safari, Opera),
+			//		- silverlight (IE, Chrome, Safari, Opera),
+			//		- svgWeb(FF, Chrome, Safari, Opera, IE).
+			//
 			//		Browsers [browser version that was tested]:
-			//			IE [6,7,8], FF [3.6],
-			//			Chrome (latest for March 2011),
-			//			Safari [5.0.3],
-			//			Opera [11.01].
+			//
+			//		- IE [6,7,8], FF [3.6],
+			//		- Chrome (latest for March 2011),
+			//		- Safari [5.0.3],
+			//		- Opera [11.01].
 
 			if(textDir && text && text.length > 1){
 				var sourceDir = "ltr", targetDir = textDir;
@@ -169,6 +176,7 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 		// textDir: String
 		//		Used for displaying bidi scripts in right layout.
 		//		Defines the base direction of text that displayed, can have 3 values:
+		//
 		//		1. "ltr" - base direction is left to right.
 		//		2. "rtl" - base direction is right to left.
 		//		3. "auto" - base direction is contextual (defined by first strong character).
@@ -182,16 +190,19 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 			// textDir:
 			//		text direction direction.
 			//		Can be:
+			//
 			//		1. "ltr" - for left to right layout.
 			//		2. "rtl" - for right to left layout
 			//		3. "auto" - for contextual layout: the first strong letter decides the direction.
 			// description:
 			//		Finds the right transformation that should be applied on the text, according to renderer.
 			//		Was tested in:
+			//
 			//		Renderers:
-			//			canvas (FF, Chrome, Safari), vml (IE), svg (FF, Chrome, Safari, Opera), silverlight (IE8), svgWeb(FF, Chrome, Safari, Opera, IE).
+			//		canvas (FF, Chrome, Safari), vml (IE), svg (FF, Chrome, Safari, Opera), silverlight (IE8), svgWeb(FF, Chrome, Safari, Opera, IE).
+			//
 			//		Browsers:
-			//			IE [6,7,8], FF [3.6], Chrome (latest for February 2011), Safari [5.0.3], Opera [11.01].
+			//		IE [6,7,8], FF [3.6], Chrome (latest for February 2011), Safari [5.0.3], Opera [11.01].
 
 			if(textDir && text && text.length > 1){
 				var sourceDir = "ltr", targetDir = textDir;
@@ -328,7 +339,7 @@ define("dojox/gfx/_gfxBidiSupport", ["./_base", "dojo/_base/lang","dojo/_base/sn
 	extendMethod(g.Group, "createGroup", null, groupTextDir);
 
 	var textDirPreprocess =  function(text){
-		//  inherit from surface / group  if textDir is defined there
+		// inherit from surface / group  if textDir is defined there
 		if(text){
 			var textDir = text.textDir ? validateTextDir(text.textDir) : this.textDir;
 			if(textDir){

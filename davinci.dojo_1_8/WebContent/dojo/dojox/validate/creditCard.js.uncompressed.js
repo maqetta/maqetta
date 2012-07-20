@@ -90,7 +90,7 @@ validate.isValidCreditCardNumber = function(value, ccType){
 
 validate.isValidCvv = function(/* String|Int */value, /* String */ccType) {
 	// summary:
-	//  	Validate the security code (CCV) for a passed credit-card type.
+	//		Validate the security code (CCV) for a passed credit-card type.
 	
 	if(!lang.isString(value)){
 		value = String(value);

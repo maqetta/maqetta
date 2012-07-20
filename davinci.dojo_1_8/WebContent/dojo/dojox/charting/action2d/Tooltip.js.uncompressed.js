@@ -3,20 +3,17 @@ define("dojox/charting/action2d/Tooltip", ["dojo/_base/kernel", "dijit/Tooltip",
 	function(dojo, Tooltip, lang, declare, domStyle, PlotAction, m, df, dfs, dff){
 	
 	/*=====
-	var __TooltipCtorArgs = function(duration, easing, text){
+	var __TooltipCtorArgs = {
 			// summary:
 			//		Additional arguments for tooltip actions.
 			// duration: Number?
 			//		The amount of time in milliseconds for an animation to last.  Default is 400.
-			this.duration = 400;
 			// easing: dojo/fx/easing/*?
 			//		An easing object (see dojo.fx.easing) for use in an animation.  The
 			//		default is dojo.fx.easing.backOut.
-			this.easing = null;
 			// text: Function?
 			//		The function that produces the text to be shown within a tooltip.  By default this will be
 			//		set by the plot in question, by returning the value of the element.
-			text = null;
 	};
 	=====*/
 
@@ -92,6 +89,13 @@ define("dojox/charting/action2d/Tooltip", ["dojo/_base/kernel", "dijit/Tooltip",
 					aroundRect.y = o.cy - o.cr;
 					aroundRect.w = aroundRect.h = 2 * o.cr;
 					break;
+				case "spider_circle":
+					aroundRect.x = o.cx;
+					aroundRect.y = o.cy ;
+					aroundRect.w = aroundRect.h = 1;
+					break;
+				case "spider_plot":
+					return;
 				case "column":
 					position = ["above-centered", "below-centered"];
 					// intentional fall down

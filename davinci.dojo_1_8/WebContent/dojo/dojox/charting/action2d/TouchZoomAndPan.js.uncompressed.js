@@ -49,25 +49,19 @@ define("dojox/charting/action2d/TouchZoomAndPan", ["dojo/_base/lang", "dojo/_bas
 	});
 
 	/*=====
-	var __TouchZoomAndPanCtorArgs = function(axis, scaleFactor, maxScale, enableScroll, enableZoom){
+	var __TouchZoomAndPanCtorArgs = {
 			// summary:
 			//		Additional arguments for touch zoom and pan actions.
-
 			// axis: String?
 			//		Target axis name for this action.  Default is "x".
-			this.axis = "x";
 			// scaleFactor: Number?
 			//		The scale factor applied on mouse wheel zoom.  Default is 1.2.
-			this.scaleFactor = 1.2;
 			// maxScale: Number?
 			//		The max scale factor accepted by this chart action.  Default is 100.
-			this.maxScale = 100;
 			// enableScroll: Boolean?
 			//		Whether touch drag gesture should scroll the chart.  Default is true.
-			this.enableScroll = true;
 			// enableZoom: Boolean?
 			//		Whether touch pinch and spread gesture should zoom out or in the chart.  Default is true.
-			this.enableZoom = true;
 	};
 	=====*/
 

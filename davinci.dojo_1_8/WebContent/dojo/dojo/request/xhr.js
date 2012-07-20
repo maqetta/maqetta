@@ -5,64 +5,64 @@
 */
 
 //>>built
-define("dojo/request/xhr",["require","../errors/RequestError","./watch","./handlers","./util","../has"],function(_1,_2,_3,_4,_5,_6){
-_6.add("native-xhr",function(){
+define("dojo/request/xhr",["../errors/RequestError","./watch","./handlers","./util","../has"],function(_1,_2,_3,_4,_5){
+_5.add("native-xhr",function(){
 return typeof XMLHttpRequest!=="undefined";
 });
-_6.add("dojo-force-activex-xhr",function(){
-return _6("activex")&&!document.addEventListener&&window.location.protocol==="file:";
+_5.add("dojo-force-activex-xhr",function(){
+return _5("activex")&&!document.addEventListener&&window.location.protocol==="file:";
 });
-_6.add("native-xhr2",function(){
-if(!_6("native-xhr")){
+_5.add("native-xhr2",function(){
+if(!_5("native-xhr")){
 return;
 }
 var x=new XMLHttpRequest();
 return typeof x["addEventListener"]!=="undefined"&&(typeof opera==="undefined"||typeof x["upload"]!=="undefined");
 });
-_6.add("native-formdata",function(){
+_5.add("native-formdata",function(){
 return typeof FormData==="function";
 });
-function _7(_8,_9){
-var _a=_8.xhr;
-_8.status=_8.xhr.status;
-_8.text=_a.responseText;
-if(_8.options.handleAs==="xml"){
-_8.data=_a.responseXML;
+function _6(_7,_8){
+var _9=_7.xhr;
+_7.status=_7.xhr.status;
+_7.text=_9.responseText;
+if(_7.options.handleAs==="xml"){
+_7.data=_9.responseXML;
 }
-if(!_9){
+if(!_8){
 try{
-_4(_8);
+_3(_7);
 }
 catch(e){
-_9=e;
+_8=e;
 }
 }
-if(_9){
-this.reject(_9);
+if(_8){
+this.reject(_8);
 }else{
-if(_5.checkStatus(_a.status)){
-this.resolve(_8);
+if(_4.checkStatus(_9.status)){
+this.resolve(_7);
 }else{
-_9=new _2("Unable to load "+_8.url+" status: "+_a.status,_8);
-this.reject(_9);
+_8=new _1("Unable to load "+_7.url+" status: "+_9.status,_7);
+this.reject(_8);
 }
 }
 };
-var _b,_c,_d,_e;
-if(_6("native-xhr2")){
-_b=function(_f){
+var _a,_b,_c,_d;
+if(_5("native-xhr2")){
+_a=function(_e){
 return !this.isFulfilled();
 };
-_e=function(dfd,_10){
+_d=function(_f,_10){
 _10.xhr.abort();
 };
-_d=function(_11,dfd,_12){
+_c=function(_11,dfd,_12){
 function _13(evt){
 dfd.handleResponse(_12);
 };
 function _14(evt){
 var _15=evt.target;
-var _16=new _2("Unable to load "+_12.url+" status: "+_15.status,_12);
+var _16=new _1("Unable to load "+_12.url+" status: "+_15.status,_12);
 dfd.handleResponse(_12,_16);
 };
 function _17(evt){
@@ -82,13 +82,13 @@ _11.removeEventListener("progress",_17,false);
 };
 };
 }else{
-_b=function(_18){
+_a=function(_18){
 return _18.xhr.readyState;
 };
-_c=function(_19){
+_b=function(_19){
 return 4===_19.xhr.readyState;
 };
-_e=function(dfd,_1a){
+_d=function(dfd,_1a){
 var xhr=_1a.xhr;
 var _1b=typeof xhr.abort;
 if(_1b==="function"||_1b==="object"||_1b==="unknown"){
@@ -98,23 +98,23 @@ xhr.abort();
 }
 var _1c,_1d={data:null,query:null,sync:false,method:"GET",headers:{"Content-Type":"application/x-www-form-urlencoded"}};
 function xhr(url,_1e,_1f){
-var _20=_5.parseArgs(url,_5.deepCreate(_1d,_1e),_6("native-formdata")&&_1e.data&&_1e.data instanceof FormData);
+var _20=_4.parseArgs(url,_4.deepCreate(_1d,_1e),_5("native-formdata")&&_1e.data&&_1e.data instanceof FormData);
 url=_20.url;
 _1e=_20.options;
 var _21,_22=function(){
 _21&&_21();
 };
-var dfd=_5.deferred(_20,_e,_b,_c,_7,_22);
+var dfd=_4.deferred(_20,_d,_a,_b,_6,_22);
 var _23=_20.xhr=xhr._create();
 if(!_23){
-dfd.cancel(new _2("XHR was not created"));
+dfd.cancel(new _1("XHR was not created"));
 return _1f?dfd:dfd.promise;
 }
 _20.getHeader=function(_24){
 return this.xhr.getResponseHeader(_24);
 };
-if(_d){
-_21=_d(_23,dfd,_20);
+if(_c){
+_21=_c(_23,dfd,_20);
 }
 var _25=_1e.data,_26=!_1e.sync,_27=_1e.method;
 try{
@@ -140,30 +140,27 @@ _23.setRequestHeader("Content-Type",_29);
 if(!_28||!("X-Requested-With" in _28)){
 _23.setRequestHeader("X-Requested-With","XMLHttpRequest");
 }
-try{
-var _2a=_1("./notify");
-_2a.send(_20);
-}
-catch(e){
+if(_4.notify){
+_4.notify.emit("send",_20);
 }
 _23.send(_25);
 }
 catch(e){
 dfd.reject(e);
 }
-_3(dfd);
+_2(dfd);
 _23=null;
 return _1f?dfd:dfd.promise;
 };
 xhr._create=function(){
 throw new Error("XMLHTTP not available");
 };
-if(_6("native-xhr")&&!_6("dojo-force-activex-xhr")){
+if(_5("native-xhr")&&!_5("dojo-force-activex-xhr")){
 xhr._create=function(){
 return new XMLHttpRequest();
 };
 }else{
-if(_6("activex")){
+if(_5("activex")){
 try{
 new ActiveXObject("Msxml2.XMLHTTP");
 xhr._create=function(){
@@ -182,6 +179,6 @@ catch(e){
 }
 }
 }
-_5.addCommonMethods(xhr);
+_4.addCommonMethods(xhr);
 return xhr;
 });

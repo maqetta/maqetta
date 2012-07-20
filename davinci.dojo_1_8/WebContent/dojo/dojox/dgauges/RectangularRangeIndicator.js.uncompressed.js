@@ -10,11 +10,11 @@ define("dojox/dgauges/RectangularRangeIndicator", ["dojo/_base/declare", "dojox/
 		//		The start value of the range. Default is 0.
 		start: 0,
 		// startThickness: Number
-		//		The thickness of the shape at the position defined by the start property.
+		//		The thickness in pixels of the shape at the position defined by the start property.
 		//		Default is 10.
 		startThickness: 10,
 		// endThickness: Number
-		//		The thickness of the shape at the position defined by the value property.
+		//		The thickness in pixels of the shape at the position defined by the value property.
 		//		Default is 10.
 		endThickness: 10,
 		// fill: Object

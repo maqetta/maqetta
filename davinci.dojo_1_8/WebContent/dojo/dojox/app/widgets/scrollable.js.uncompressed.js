@@ -894,7 +894,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 	};
 
 	this.resetScrollBar = function(){
-		//	summary:
+		// summary:
 		//		Resets the scroll bar length, position, etc.
 		var f = function(wrapper, bar, d, c, hd, v){
 			if(!bar){ return; }
@@ -915,7 +915,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 	};
 
 	this.createMask = function(){
-		//	summary:
+		// summary:
 		//		Creates a mask for a scroll bar edge.
 		// description:
 		//		This function creates a mask that hides corners of one scroll

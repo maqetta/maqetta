@@ -66,13 +66,10 @@ BODY{
 	z-index:-4;	/* For some reason, need negative z-index when using StackContainer */
 }
 .claro #editors_container .dijitBorderContainer {
-	background-color:#888;
+	padding:4px;
 }
 .claro #editors_container .dijitBorderContainer-dijitContentPane {
-	border:1px #444 solid;
-	-moz-border-radius:2px;
-	-webkit-border-radius:2px;
-	border-radius:2px;
+	border:none;
 	padding:0;
 }
 

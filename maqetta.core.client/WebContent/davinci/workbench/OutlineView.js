@@ -76,9 +76,8 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 			persist: false
 		};
 
-		var iconFunction = this.outlineProvider.getIconClass && dojo.hitch(this.outlineProvider,this.outlineProvider.getIconClass);
-		if (iconFunction) {
-			treeArgs.getIconClass = iconFunction
+		if (this.outlineProvider.getIconClass) {
+			treeArgs.getIconClass = this.outlineProvider.getIconClass;
 		}
 
 		// #2256 - dijit tree cannot have a null dndController

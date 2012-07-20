@@ -380,7 +380,14 @@ CSSParser.parse = function (text, parentElement) {
 								nextToken();
 								selector.pseudoElement = token.content;
 							} else {
+								/* #2794
+								 * .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabe1
+								 * pseudoRule eg. :hover always comes after the selector,
+								 * so we need to set the wsAfterSel flag 
+								 */
 								selector.pseudoRule = token.content;
+								wsAfterSel = true;
+				
 							}
 						} else if (token.content == "[") {
 							nextToken();

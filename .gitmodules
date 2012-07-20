@@ -1,6 +1,6 @@
 [submodule "davinci.gridx/WebContent/gridx"]
 	path = davinci.gridx/WebContent/gridx
-	url = http://github.com/evanhw/gridx.git
+	url = git://github.com/evanhw/gridx.git
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/dojo"]
 	path = maqetta.core.client/WebContent/dojo

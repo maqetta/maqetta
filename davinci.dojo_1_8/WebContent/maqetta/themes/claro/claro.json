@@ -28,6 +28,9 @@
 							"border-color",
 							"background-color"
                         ],
+                        ".claro .dijitCalendar .dijitDropDownButton .dijitButtonNode" : [
+							"border-color",
+                        ],
                         ".claro .dijitTab": [
 							"border-color"
 						],
@@ -62,7 +65,7 @@
 						".claro .dijitBorderContainer": [
 							"border-color"
 						],
-						".claro .dijitBorderContainer-child": [
+						".claro .dijitSplitContainer-child, .claro .dijitBorderContainer-child": [
 							"border-color"
 						],
 						".claro .dijitMenu": [
@@ -222,11 +225,9 @@
 				},
 				"TextBoxNormal": {
 					"selectors": {
-						".claro .dijitTextBox" : [
+						".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode": [ 
+							"border-color",
 							"background-color"
-						],
-						".claro .dijitTextBox .dijitButtonNode": [ 
-							"border-color"
 						]  
 					},
 					"defaults": {
@@ -533,7 +534,7 @@
 							"min-height",
 							"min-width"
 						],
-						".claro .dijitBorderContainer-child": [
+						".claro .dijitSplitContainer-child, .claro .dijitBorderContainer-child": [
 							"border-width",
 							"border-color",
 							"borer-style"
@@ -580,7 +581,7 @@
                     "states": {
                         "Normal": { 
 							"selectors": {
-                        		".claro .dijitBorderContainer-child": [
+                        		".claro .dijitSplitContainer-dijitContentPane, .claro .dijitBorderContainer-dijitContentPane": [
                             		"$std_10" 
                             	] 
 							},
@@ -1492,7 +1493,7 @@
         
         "TextBox": {
             "displayName": "TextBox" ,
-            "rootSelectors":[".claro .dijitTextBox"],
+            "rootSelectors":[".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode"],
             "states": {
                 "Normal": {
                     "selectors": {
@@ -1504,6 +1505,7 @@
 							"padding-left",
 							"padding-bottom"
 						],
+
 						".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode": [
 							"$std_10" 
 						]

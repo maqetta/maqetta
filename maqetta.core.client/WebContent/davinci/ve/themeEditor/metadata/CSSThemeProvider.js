@@ -200,7 +200,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
             if(!n){ // might already be at the top node.
                 n = updateWidget.domNode;
             }
-           // if (state != 'Normal'){ // Normal is the base class do not remove it.
+            try {
                 if(mode == 'add'){
                     if(attribute){
                         n.setAttribute(attribute, attributeValue);
@@ -216,7 +216,10 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
                         dojo.removeClass(n,simulate);
                     }
                 }
-          //  }
+           } 
+           catch(e){
+        	   console.error('CSSThemeProvider._simulateState invalid simulate in metadata for ' + updateWidget.type + " " + q + ": "  + s);
+           }
         }
 	},
 	
@@ -407,6 +410,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	
 	
 	isPropertyVaildForWidgetRule : function(rule, property, widget, subWidget, state){
+
 		var widgetType = this.getWidgetType(widget);
 		var widgetMetaData = this.getMetadata(widgetType);
 		if (subWidget) {

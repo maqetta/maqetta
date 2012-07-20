@@ -40,7 +40,7 @@
 						".claro .globalWidget .dijitTabPaneWrapper": [
 							"border-color"
 						],
-						".claro .dijitButton .dijitButtonNode" : [
+						".claro .dijitButton .dijitButtonNode, .claro .dijitDropDownButton .dijitButtonNode, .claro .dijitComboButton .dijitButtonNode, .claro .dijitToggleButton .dijitButtonNode" : [
 							"background-color",
 							"border-color"
 						],
@@ -109,13 +109,10 @@
                     		"border-color",
 							"background-color"
                     	],
-                    	".claro .dijitSplitterVActive": [
+						".claro .dijitSplitterHActive, .claro .dijitSplitterVActive": [
 							"background-color"
 						],
-						".claro .dijitSplitterHActive": [
-							"background-color"
-						],
-						".claro .dijitButtonActive .dijitButtonNode" : [
+						".claro .dijitButtonActive .dijitButtonNode, .claro .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitComboButtonActive .dijitButtonNode, .claro .dijitToggleButtonActive .dijitButtonNode, .claro .dijitToggleButtonChecked .dijitButtonNode" : [
 							"border-color",
 							"background-color"
 						],
@@ -123,7 +120,7 @@
 							"background-color",
 							"border-color"
 						],
-						".claro .dijitToolbar .dijitButtonActive .dijitButtonNode": [
+						".claro .dijitToolbar .dijitButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode": [
 							"background-color",
 							"border-color"
 						] 
@@ -168,11 +165,11 @@
 							"background-color",
 							"border-color"
 						],
-						".claro .dijitButtonHover .dijitButtonNode" : [
+						".claro .dijitButtonHover .dijitButtonNode, .claro .dijitDropDownButtonHover .dijitButtonNode, .claro .dijitComboButton .dijitButtonNodeHover, .claro .dijitComboButton .dijitDownArrowButtonHover, .claro .dijitToggleButtonHover .dijitButtonNode" : [
 							"background-color",
 							"border-color"
 						],
-						".claro .dijitAccordionInnerContainerHover": [
+						".claro .dijitAccordionInnerContainerHover, .claro .dijitAccordionInnerContainerSelectedActive": [
 						    "border-color",
 							"background-color"
 						],
@@ -184,10 +181,13 @@
                             "background-color",
 							"border-color"
                         ],
-						".claro .dijitToolbar .dijitButtonHover .dijitButtonNode" : [
+						".claro .dijitToolbar .dijitButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitComboButtonHover .dijitButtonNode" : [
                             "background-color",
 							"border-color"
                         ],
+                        ".claro .dijitSplitterHHover, .claro .dijitSplitterVHover": [
+							"background-color"
+						],
 						".claro .dijitSplitterVHover .dijitSplitterThumb": [
 							"background-color"
 						],
@@ -294,7 +294,7 @@
 				},
 				"CalendarHoverDate": {
 					"selectors": {
-						".claro .dijitCalendarHoveredDate .dijitCalendarDateLabel" : [
+						".claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel" : [
 							"background-color",
 							"border-color"
 						]  
@@ -474,7 +474,7 @@
                         },
 						"Hover": {
                             "selectors": {
-                            	".claro .dijitAccordionInnerContainerHover": [
+                            	".claro .dijitAccordionInnerContainerHover, .claro .dijitAccordionInnerContainerSelectedActive": [
                             		"border-color",
 									"border-style",
 									"border-width",
@@ -549,11 +549,15 @@
 				},
 				"Hover":{
 					"selectors": {
-						".claro .dijitSplitterVHover": [
-							"background-color"
+						".claro .dijitSplitterHHover, .claro .dijitSplitterVHover": [
+							"background-color",
+							"font-size",
 						],
 						".claro .dijitSplitterHHover": [
-							"background-color"
+							"background-image"
+						],
+						".claro .dijitSplitterVHover": [
+							"background-image"
 						]
 					},
 					"query": ".dijitSplitterH",
@@ -561,11 +565,10 @@
 				},
 				"Active":{
 					"selectors": {
-						".claro .dijitSplitterVActive": [
-							"background-color"
-						],
-						".claro .dijitSplitterHActive": [
-							"background-color"
+						".claro .dijitSplitterHActive, .claro .dijitSplitterVActive": [
+							"background-color",
+							"font-size",
+							"background-image"
 						]
 					},
 					"query": ".dijitSplitterH",
@@ -644,7 +647,7 @@
                 },
                 "Active": {
                 	"selectors": {
-						".claro .dijitButtonActive .dijitButtonNode" : [
+						".claro .dijitButtonActive .dijitButtonNode, .claro .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitComboButtonActive .dijitButtonNode, .claro .dijitToggleButtonActive .dijitButtonNode, .claro .dijitToggleButtonChecked .dijitButtonNode" : [
 							"border-width",
 							"border-style",
 							"border-color",
@@ -674,7 +677,7 @@
                 },
                 "Hover": {
                 	"selectors": {
-						".claro .dijitButtonHover .dijitButtonNode" : [
+						".claro .dijitButtonHover .dijitButtonNode, .claro .dijitDropDownButtonHover .dijitButtonNode, .claro .dijitComboButton .dijitButtonNodeHover, .claro .dijitComboButton .dijitDownArrowButtonHover, .claro .dijitToggleButtonHover .dijitButtonNode" : [
 							"border-width",
 							"border-style",
 							"border-color",
@@ -958,11 +961,12 @@
                         },
                         "Hover": {
                             "selectors": {
-                                ".claro .dijitCalendarHoveredDate .dijitCalendarDateLabel" : [
+                                ".claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabe1" : [
                                     "$std_10" 
                                 ] 
                             },
-                            "query": ".dijitCalendarCurrentMonth.dijitCalendarDateTemplate" 
+                            "query": ".dijitCalendarCurrentMonth.dijitCalendarDateTemplate",
+                            "simulate": "dijitCalendarHoveredDate"
                         } 
                     } 
                 },
@@ -1854,7 +1858,7 @@
                     "states": {
                        "Normal": {
 							"selectors": {
-								".claro .dijitToolbar .dijitButtonNode": [
+								".claro .dijitToolbar .dijitButton .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButton .dijitButtonNode, .claro .dijitToolbar .dijitComboButton .dijitButtonNode, .claro .dijitToolbar .dijitToggleButton .dijitButtonNode, .claro .dijitToolbar .dijitComboBox .dijitButtonNode": [
 									"$std_10" 
 								] 
 							},
@@ -1862,7 +1866,7 @@
 						},
 						"Active": {
 							"selectors": {
-								".claro .dijitToolbar .dijitButtonActive .dijitButtonNode": [
+								".claro .dijitToolbar .dijitButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode": [
 									"$std_10" 
 								] 
 							},
@@ -1871,7 +1875,7 @@
 						},
 						"Hover": {
 							"selectors": {
-								".claro .dijitToolbar .dijitButtonHover .dijitButtonNode": [
+								".claro .dijitToolbar .dijitButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitComboButtonHover .dijitButtonNode": [
 									"$std_10" 
 								]
 							},

@@ -396,12 +396,12 @@ var Workbench = {
 				}
 				var dojoAction;
 				var dojoActionDeferred = new Deferred();
-				if(action.dropdown && (action.type == 'DropDownButton' || action.type == 'ComboButton')){
+				if(action.menu && (action.type == 'DropDownButton' || action.type == 'ComboButton')){
 					var menu = new dijit.Menu({
 						style: "display: none;"
 					});
-					for(var ddIndex=0; ddIndex<action.dropdown.length; ddIndex++){
-						var menuItemObj = action.dropdown[ddIndex];
+					for(var ddIndex=0; ddIndex<action.menu.length; ddIndex++){
+						var menuItemObj = action.menu[ddIndex];
 						Workbench._loadActionClass(menuItemObj);
 						var menuItemParms = {
 							onClick: dojo.hitch(this, "_runAction", menuItemObj, context)

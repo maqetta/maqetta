@@ -250,15 +250,24 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	_setupKeyboardHandler: function() {
+		var that = this;
+		function pushBinding(o){
+			if (!that.keyBindings) {
+				that.keyBindings = [];
+			}
+			that.keyBindings.push(o);
+		}
 		dojo.forEach(this._getViewActions(), dojo.hitch(this, function(actionSet) {
 			dojo.forEach(actionSet.actions,  dojo.hitch(this, function(action) {
-					
 				if (action.keyBinding) {
-					if (!this.keyBindings) {
-						this.keyBindings = [];
-					}
-
-					this.keyBindings.push({keyBinding: action.keyBinding, action: action});
+					pushBinding({keyBinding: action.keyBinding, action: action});
+				}
+				if(action.menu){
+					dojo.forEach(action.menu, dojo.hitch(this, function(menuItemObj) {
+						if(menuItemObj.keyBinding){
+							pushBinding({keyBinding: menuItemObj.keyBinding, action: menuItemObj});
+						}
+					}));
 				}
 			}));
 		}));

@@ -329,7 +329,7 @@ return {
                     label: "Edit",
                     toolbarPath: "undoredo",
                     type:'DropDownButton',
-                    dropdown:[
+                    menu:[
                         {
                             label: "Cut",
                             iconClass: "editActionIcon editCutIcon",
@@ -359,7 +359,7 @@ return {
                     label: "Save",
                     toolbarPath: "save",
                     type:'ComboButton',
-                    dropdown:[
+                    menu:[
                        {
                             iconClass: 'saveIcon',
                             run: function() {
@@ -454,7 +454,7 @@ return {
                     label: "Flow",	// will be updated by code
                     toolbarPath: "layout",
                     type:'DropDownButton',
-                    dropdown:[
+                    menu:[
                         {
                             label: "Flow",
                             iconClass: "selectLayoutIcon",
@@ -475,19 +475,21 @@ return {
                     method: "switchDisplayModeSourceLatest",
                     toolbarPath: "source",
                     type:'ComboButton',
-                    keyBinding: {accel: true, charOrCode: "2", allowGlobal: true},
-                    dropdown:[
+                    menu:[
                        {
+                            keyBinding: {accel: true, charOrCode: "2", allowGlobal: true},
                             iconClass: 'editActionIcon sourceModeIcon',
                             method: "switchDisplayModeSource",
                             label: "Source only"
                         },
                         {
+                            keyBinding: {accel: true, charOrCode: "3", allowGlobal: true},
                             iconClass: 'editActionIcon splitVerticalIcon',
                             method: "switchDisplayModeSplitVertical",
                             label: "Split Vertically"
                         },
                         {
+                            keyBinding: {accel: true, charOrCode: "4", allowGlobal: true},
                             iconClass: 'editActionIcon splitHorizontalIcon',
                             method: "switchDisplayModeSplitHorizontal",
                             label: "Split Horizontally"

@@ -1232,6 +1232,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	    // of inner frame.  Might be a Dojo bug in _toDom().
 	    this.getGlobal()['require']('dojox/html/_base').set(containerNode, content, {
 	        executeScripts: true,
+	        parseContent: true,
 	        onEnd: function() {
 	            // save any scripts for later execution
 	            scripts = this._code;

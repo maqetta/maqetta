@@ -9,9 +9,8 @@ define([
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
-	"../Runtime",
 	"dojo/i18n!davinci/ve/nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, Runtime, veNls){
+], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
@@ -333,6 +332,21 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	// dummy handler
 	handleKeyEvent: function(e) {
+	},
+	
+	_selectLayout: function(layout){
+		require(["davinci/actions/SelectLayoutAction"], function(ActionClass){
+			var SelectLayoutAction = new ActionClass();
+			SelectLayoutAction._changeLayoutCommand(layout);
+		});
+	},
+	
+	selectLayoutFlow: function(){
+		this._selectLayout('flow');
+	},
+	
+	selectLayoutAbsolute: function(){
+		this._selectLayout('absolute');
 	}
 });
 }); 

@@ -458,12 +458,12 @@ return {
                         {
                             label: "Flow",
                             iconClass: "selectLayoutIcon",
-                            action: "davinci/actions/SelectLayoutAction"
+                            method: "selectLayoutFlow"
                         },
                         {
                             label: "Absolute",
                             iconClass: "selectLayoutIcon",
-                            action: "davinci/actions/SelectLayoutAction"
+                            method: "selectLayoutAbsolute"
                         }
                    ]
                  },

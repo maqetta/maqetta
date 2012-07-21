@@ -135,8 +135,11 @@ define({ root:
 		
 		//ve.plugin.js
 		//Labels for ComboButton for source vs split-h vs split-v
-		"source":"Source",
-		"splitHorizontal":"Split-H",
-		"splitVertical":"Split-V"
+		"SourceComboButton-source":"Source",
+		"SourceComboButton-splitHorizontal":"Split-H",
+		"SourceComboButton-splitVertical":"Split-V",
+		// Labels for DropdownButton for flow vs absolute
+		"LayoutDropDownButton-flow":"Flow",
+		"LayoutDropDownButton-absolute":"Abs"
 }
 });

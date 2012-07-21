@@ -1073,7 +1073,13 @@ new Moveable(floatingPropertiesPalette);
 		Workbench._runAction(button.item,context,button.item.id);
 	},
 
+	//FIXME: "context" is really an editor, isn't it? Like davinci.ve.PageEditor?
 	_runAction: function(item, context, arg) {
+		//FIXME: Not sure this code is correct, but sometimes this routine is passed
+		//a context object that is not associated with the current document
+		if(context && davinci.Runtime.currentEditor){
+			context = davinci.Runtime.currentEditor;
+		}
 		if (item.run) {
 			item.run();
 		} else if (item.action) {

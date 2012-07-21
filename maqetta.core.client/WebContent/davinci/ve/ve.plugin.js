@@ -449,7 +449,7 @@ return {
                 },
                 {
                     id: "layout",
-                    className: "maqLabelButton davinciFloatRight",
+                    className: "maqLabelButton davinciFloatRight maqLayoutDropDownButton",
                     showLabel: true,
                     label: "Flow",	// will be updated by code
                     toolbarPath: "layout",

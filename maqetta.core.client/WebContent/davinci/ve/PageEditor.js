@@ -13,7 +13,10 @@ define([
 ], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
-	   
+
+	_latestSourceMode: "source",
+	_latestLayoutMode: "flow",
+
     constructor: function (element, fileName) {
 
         this._bc = new BorderContainer({}, element);
@@ -59,6 +62,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
+		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -75,8 +79,42 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 //		if(this.currentEditor==this.visualEditor)
 //			this.visualEditor.onContentChange();
 	},
+	
+	_editorSelected: function(event){
+		if(this == event.editor){
+			var context = this.getContext();
+			var flowLayout = context.getFlowLayout();
+			var layout = flowLayout ? 'flow' : 'absolute';
+			this._updateLayoutDropDownButton(layout);
+		}
+	},
+	
+	_updateLayoutDropDownButton: function(newLayout){
+		var layoutDropDownButtonNode = dojo.query('.maqLayoutDropDownButton');
+		if(layoutDropDownButtonNode){
+			var layoutDropDownButton = dijit.byNode(layoutDropDownButtonNode[0]);
+			if(layoutDropDownButton){
+				layoutDropDownButton.set('label', veNls['LayoutDropDownButton-'+newLayout]);
+			}
+		}
 
-	_latestSourceMode: "source",
+	},
+	
+	_selectLayout: function(layout){
+		this._latestLayoutMode = layout;
+		require(["davinci/actions/SelectLayoutAction"], function(ActionClass){
+			var SelectLayoutAction = new ActionClass();
+			SelectLayoutAction._changeLayoutCommand(layout);
+		});
+		this._updateLayoutDropDownButton(layout);
+	},
+	selectLayoutFlow: function(){
+		this._selectLayout('flow');
+	},
+	selectLayoutAbsolute: function(){
+		this._selectLayout('absolute');
+	},
+
 	_switchDisplayModeSource: function (newMode) {
 		this._latestSourceMode = newMode;
 		this.switchDisplayMode(newMode);
@@ -84,7 +122,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if(sourceComboButtonNode){
 			var sourceComboButton = dijit.byNode(sourceComboButtonNode[0]);
 			if(sourceComboButton){
-				sourceComboButton.set('label', veNls[newMode]);
+				sourceComboButton.set('label', veNls['SourceComboButton-'+newMode]);
 			}
 		}
 	},
@@ -332,21 +370,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	// dummy handler
 	handleKeyEvent: function(e) {
-	},
-	
-	_selectLayout: function(layout){
-		require(["davinci/actions/SelectLayoutAction"], function(ActionClass){
-			var SelectLayoutAction = new ActionClass();
-			SelectLayoutAction._changeLayoutCommand(layout);
-		});
-	},
-	
-	selectLayoutFlow: function(){
-		this._selectLayout('flow');
-	},
-	
-	selectLayoutAbsolute: function(){
-		this._selectLayout('absolute');
 	}
 });
 }); 

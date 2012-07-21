@@ -106,13 +106,16 @@ define(["dojo/_base/declare",
 		        	var found = Theme.getTheme(base, true);
 		            if (found){
 		        		found.file.isNew = false; // the file has been saved so don't delete it when closing editor without first save.
-		                Workbench.openEditor({
-		                       fileName: found.file,
-		                       content: found.file.getContentSync()});
+		        		return found.file.getContent().then(function(content) {
+			                Workbench.openEditor({
+			                    fileName: found.file,
+			                    content: content
+			                });		        			
+		        		});
 		            } else {
 		            	throw new Error(langObj.errorCreatingTheme + base);
 		            }
-			    }.bind(this)).otherwise(function(failureInfo){
+			    }).otherwise(function(failureInfo){
 					var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
 					if (failureInfo.fileName) {
 						message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;

@@ -131,6 +131,12 @@ define({ root:
 		"vteWarningTitle": "Theme Version Warning",
 		"vteWarningMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
 		"vteErrorTitle": "Theme Version Error",
-		"vteErrorMessage": "Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta."
+		"vteErrorMessage": "Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta.",
+		
+		//ve.plugin.js
+		//Labels for ComboButton for source vs split-h vs split-v
+		"source":"Source",
+		"splitHorizontal":"Split-H",
+		"splitVertical":"Split-V"
 }
 });

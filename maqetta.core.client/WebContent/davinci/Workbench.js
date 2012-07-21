@@ -406,12 +406,12 @@ var Workbench = {
 						var menuItemParms = {
 							onClick: dojo.hitch(this, "_runAction", menuItemObj, context)
 						};
-						if(menuItemObj.label){
-							menuItemParms.label = menuItemObj.label;
-						}
-						if(menuItemObj.iconClass){
-							menuItemParms.iconClass = menuItemObj.iconClass;
-						}
+						var props = ['label','iconClass'];
+						props.forEach(function(prop){
+							if(menuItemObj[prop]){
+								menuItemParms[prop] = menuItemObj[prop];
+							}
+						});
 						var menuItem = new dijit.MenuItem(menuItemParms);
 						menu.addChild(menuItem);
 					}
@@ -421,6 +421,7 @@ var Workbench = {
 					}else{
 						dojoAction = new ComboButton(parms);
 					}
+					dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
 					dojoActionDeferred.resolve();
 				}else if (action.toggle || action.radioGroup) {
 					dojoAction = new ToggleButton(parms);

@@ -9,8 +9,9 @@ define([
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
-	"../Runtime"
-], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils){
+	"../Runtime",
+	"dojo/i18n!davinci/ve/nls/ve"
+], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, Runtime, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 	   
@@ -76,6 +77,33 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 //			this.visualEditor.onContentChange();
 	},
 
+	_latestSourceMode: "source",
+	_switchDisplayModeSource: function (newMode) {
+		this._latestSourceMode = newMode;
+		this.switchDisplayMode(newMode);
+		var sourceComboButtonNode = dojo.query('.maqSourceComboButton');
+		if(sourceComboButtonNode){
+			var sourceComboButton = dijit.byNode(sourceComboButtonNode[0]);
+			if(sourceComboButton){
+				sourceComboButton.set('label', veNls[newMode]);
+			}
+		}
+	},
+	switchDisplayModeSource: function () {
+		this._switchDisplayModeSource("source");
+	},
+	switchDisplayModeSplitVertical: function () {
+		this._switchDisplayModeSource("splitVertical");
+	},
+	switchDisplayModeSplitHorizontal: function () {
+		this._switchDisplayModeSource("splitHorizontal");
+	},
+	switchDisplayModeSourceLatest: function () {
+		this.switchDisplayMode(this._latestSourceMode);
+	},
+	switchDisplayModeDesign: function () {
+		this.switchDisplayMode("design");
+	},
 	switchDisplayMode: function (newMode) {
 		if (this._displayMode!="design") {
 			this._bc.removeChild(this._srcCP);

@@ -467,96 +467,29 @@ return {
                         }
                    ]
                  },
-/*FIXME: REMOVE
-                 {
-                    id: "layout",
-                    showLabel: true,
-                    //iconClass: 'selectLayoutIcon davinciFloatRight',
-                    className: 'davinciFloatRight',
-                    action: "davinci/actions/SelectLayoutAction",
-                    label: "Layout",
-                    toolbarPath: "layout"
-                },
-*/
-/*FIXME: DELETE THIS
-                {
-                    id: "design",
-                    iconClass: 'designModeIcon editActionIcon',
-                    radioGroup: "displayMode",
-                    method: "switchDisplayMode",
-                    // initialValue : true,
-                    label: "Display Design",
-                    toolbarPath: "displayMode",
-                    keyBinding: {accel: true, charOrCode: "1", allowGlobal: true}
-                },
-*/
-/*FIXME: DELETE THIS
-                {
-                    id: "source",
-                    iconClass: 'sourceModeIcon editActionIcon',
-                    method: "switchDisplayMode",
-                    radioGroup: "displayMode",
-                    label: "Display Source",
-                    toolbarPath: "displayMode",
-                    keyBinding: {accel: true, charOrCode: "2", allowGlobal: true}
-                },
-                {
-                    id: "splitVertical",
-                    iconClass: 'splitVerticalIcon editActionIcon',
-                    method: "switchDisplayMode",
-                    radioGroup: "displayMode",
-                    label: "Split Vertically",
-                    toolbarPath: "displayMode",
-                    keyBinding: {accel: true, charOrCode: "3", allowGlobal: true}
-                },
-                {
-                    id: "splitHorizontal",
-                    iconClass: 'splitHorizontalIcon editActionIcon',
-                    method: "switchDisplayMode",
-                    radioGroup: "displayMode",
-                    label: "Split Horizontally",
-                    toolbarPath: "displayMode",
-                    keyBinding: {accel: true, charOrCode: "4", allowGlobal: true}
-                },
-*/
                 {
                     id: "sourcecombo",
-                    className: "maqLabelButton davinciFloatRight",
+                    className: "maqLabelButton davinciFloatRight maqSourceComboButton",
                     showLabel: true,
                     label: "Source",
+                    method: "switchDisplayModeSourceLatest",
                     toolbarPath: "source",
                     type:'ComboButton',
+                    keyBinding: {accel: true, charOrCode: "2", allowGlobal: true},
                     dropdown:[
                        {
-                            iconClass: 'sourceModeIcon',
-                            run: function() {
-                                //require(['../Workbench'], function(workbench) {
-                                    //workbench.getOpenEditor().save();
-                                //});
-                            },
-                            isEnabled: function(context) {
-                                return require('../Workbench').getOpenEditor();
-                            },
+                            iconClass: 'editActionIcon sourceModeIcon',
+                            method: "switchDisplayModeSource",
                             label: "Source only"
                         },
                         {
-                            iconClass: 'splitVerticalIcon',
-                            run: function() {
-                                //require("../ui/Resource").saveAs('html');
-                            },
-                            isEnabled: function(context) {
-                                return require('../Workbench').getOpenEditor();
-                            },
+                            iconClass: 'editActionIcon splitVerticalIcon',
+                            method: "switchDisplayModeSplitVertical",
                             label: "Split Vertically"
                         },
                         {
-                            iconClass: 'splitHorizontalIcon',
-                            run: function() {
-                                //require("../ui/Resource").saveAs('html');
-                            },
-                            isEnabled: function(context) {
-                                return require('../Workbench').getOpenEditor();
-                            },
+                            iconClass: 'editActionIcon splitHorizontalIcon',
+                            method: "switchDisplayModeSplitHorizontal",
                             label: "Split Horizontally"
                         }
                     ]
@@ -566,8 +499,7 @@ return {
                     //iconClass: 'designModeIcon editActionIcon',
                     showLabel: true,
                     className: 'maqLabelButton davinciFloatRight',
-                    radioGroup: "displayMode",
-                    method: "switchDisplayMode",
+                    method: "switchDisplayModeDesign",
                     // initialValue : true,
                     label: "Design",
                     toolbarPath: "displayMode",

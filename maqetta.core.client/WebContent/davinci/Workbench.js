@@ -593,12 +593,32 @@ var Workbench = {
 				layoutPriority:1,
 			}, "davinci_top_bar");
 			
+			var mainStackContainer = Workbench.mainStackContainer = mainBody.editorsStackContainer =
+				new StackContainer({
+					region:'center',
+					id: "mainStackContainer",
+					controllerWidget: "dijit.layout.StackController"
+				});
+			var welcomePage = Workbench.welcomePage = 
+				new ContentPane({
+					id: "welcomePage",
+					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
+				});
+
+			var mainBorderContainer = Workbench.mainBorderContainer = new BorderContainer({
+				design: "headline",
+				gutters: false,
+				id:'mainBorderContainer',
+				liveSplitters: false
+			});
+			
 			var shadowTabContainer = Workbench.shadowTabs = new TabContainer({
 				id:'davinci_file_tabs',
 				closable: true,
 				region: "top",
-				layoutPriority:2
+				layoutPriority:1
 			});
+			
 			Workbench.shadowTabs.setTitle = function(tab, title) { 
 				tab.attr('title', title);
 				this.tablist.pane2button[tab.id].attr('label', title);
@@ -618,7 +638,7 @@ var Workbench = {
 			var toolbarPane = new ContentPane({
 				id:'davinci_toolbar_pane',
 				region: "top",
-				layoutPriority:3,
+				layoutPriority:1,
 				content:'<div id="davinci_toolbar_container"></div>'
 			});
 //FIXME: shadow fixes - delete this
@@ -631,9 +651,13 @@ var Workbench = {
 */
 		
 			appBorderContainer.addChild(topBarPane);
-			appBorderContainer.addChild(shadowTabContainer);
-			appBorderContainer.addChild(toolbarPane);
-			appBorderContainer.addChild(mainBodyContainer);
+			appBorderContainer.addChild(mainStackContainer);
+			mainStackContainer.addChild(welcomePage);
+			mainStackContainer.addChild(mainBorderContainer);
+			mainStackContainer.selectChild(welcomePage);
+			mainBorderContainer.addChild(shadowTabContainer);
+			mainBorderContainer.addChild(toolbarPane);
+			mainBorderContainer.addChild(mainBodyContainer);
 			appBorderContainer.layout();	
 			appBorderContainer.startup();
 			Workbench._orginalOnResize = window.onresize;
@@ -1325,6 +1349,7 @@ if(view.id == 'davinci.ve.style'){
 			editors_container = dijit.byId('editors_container');
 		if (editorsStackContainer && editors_container) {
 			editorsStackContainer.selectChild(editors_container);
+			Workbench.mainStackContainer.selectChild(Workbench.mainBorderContainer);
 		}
 
 //FIXME: shadow tab (DONE)
@@ -1752,6 +1777,11 @@ if(view.id == 'davinci.ve.style'){
 			var editorsWelcomePage = dijit.byId('editorsWelcomePage');
 			if (editorsStackContainer && editorsWelcomePage){
 				editorsStackContainer.selectChild(editorsWelcomePage);
+			}
+//FIXME: THIS IS NEW
+			var welcomePage = dijit.byId('welcomePage');
+			if (Workbench.mainStackContainer && welcomePage){
+				Workbench.mainStackContainer.selectChild(welcomePage);
 			}
 		}
 	},

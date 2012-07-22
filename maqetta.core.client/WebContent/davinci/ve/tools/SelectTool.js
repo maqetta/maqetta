@@ -799,6 +799,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				beforeAfter:null, 
 				currentParent:currentParent });
  		}
+		var parentIframeBounds = context.getParentIframeOffset();
+		parentListDiv.style.left = (parentIframeBounds.l + event.pageX) + 'px';
+		parentListDiv.style.top = (parentIframeBounds.t + event.pageY) + 'px';
+
+/*FIXME: DELETE THIS
 		var parentIframe = context.getParentIframe();
 		if(parentIframe){
 			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
@@ -813,6 +818,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
 			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
 		}
+*/
 		
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 				Workbench.getProject());

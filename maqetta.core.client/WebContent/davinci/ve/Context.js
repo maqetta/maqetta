@@ -2089,7 +2089,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._focuses.push(focus);
 		}
 
-		var containerNode = this.getContainerNode();
+		//FIXME: DELETE THIS var containerNode = this.getContainerNode();
+		var containerNode = document.body;
 
 		if(state){
 			if(state.box && state.op){
@@ -2119,12 +2120,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._focuses.push(focus); // recycle
 		}
 		if(clear){
+			this.hideFocusAll(index);
+			/*FIXME: DELETE THIS
 			for(var i = index; i < this._focuses.length; i++){
 				focus = this._focuses[i];
 				if(focus.domNode.parentNode == containerNode){
 					focus.hide();
 					containerNode.removeChild(focus.domNode);
 				}
+			}
+			*/
+		}
+	},
+	
+	hideFocusAll: function(startIndex){
+		if(!startIndex){
+			startIndex = 0;
+		}
+		//FIXME: DELETE THIS var containerNode = this.getContainerNode();
+		var containerNode = document.body;
+		for(var i = startIndex; i < this._focuses.length; i++){
+			focus = this._focuses[i];
+			if(focus.domNode.parentNode == containerNode){
+				focus.hide();
+				containerNode.removeChild(focus.domNode);
 			}
 		}
 	},
@@ -3613,7 +3632,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		find(this.rootWidget);
 		return result;
+	},
+	
+	/**
+	 * Returns left/top offsets of the user document iframe relative to outer frame holding the Maqetta app
+	 */
+	getParentIframeOffset: function(){
+		var parentIframe = this.getParentIframe();
+		if(parentIframe){
+			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
+			offsetLeft = 0;
+			offsetTop = 0;
+			offsetNode = parentIframe;
+			while(offsetNode && offsetNode.tagName != 'BODY'){
+				offsetLeft += offsetNode.offsetLeft;
+				offsetTop += offsetNode.offsetTop;
+				offsetNode = offsetNode.offsetParent;
+			}
+			return { l:offsetLeft, t:offsetTop };
+		}
 	}
+
 });
 
 });

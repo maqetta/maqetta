@@ -81,8 +81,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_editorSelected: function(event){
+		var context = this.getContext();
+		if(this == event.oldEditor){
+			context.hideFocusAll();
+		}
 		if(this == event.editor){
-			var context = this.getContext();
 			var flowLayout = context.getFlowLayout();
 			var layout = flowLayout ? 'flow' : 'absolute';
 			this._updateLayoutDropDownButton(layout);

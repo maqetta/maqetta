@@ -350,8 +350,6 @@ console.dir(this._moverStart);
 				{className:'focusDragDiv',
 				style:'left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
 				bodyNode);
-//FIXME: DELETE THIS
-this._moverDragDiv.style.background = '#FAF';
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
 

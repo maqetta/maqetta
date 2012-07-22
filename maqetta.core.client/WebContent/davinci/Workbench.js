@@ -647,7 +647,7 @@ var floatingPropertiesPalette = dojo.create('div',
 			'class':'floatingPropertiesPalette',
 			style:'position:absolute; z-index:100; width:300px; height:500px; left:800px; top:200px;border:1px solid black;background:white;' },
 		document.body);
-new Moveable(floatingPropertiesPalette);
+//new Moveable(floatingPropertiesPalette);
 		
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {

@@ -359,6 +359,14 @@ return {
                     label: "Save",
                     toolbarPath: "save",
                     type:'ComboButton',
+                    run: function() {
+                        require(['../Workbench'], function(workbench) {
+                            workbench.getOpenEditor().save();
+                        });
+                    },
+                    isEnabled: function(context) {
+                        return require('../Workbench').getOpenEditor();
+                    },
                     menu:[
                        {
                             iconClass: 'saveIcon',

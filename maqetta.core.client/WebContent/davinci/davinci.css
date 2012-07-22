@@ -1465,7 +1465,7 @@ davinci_top_bar .dijitButtonNode {
 }
 
 .maqFocus {
-	z-index: 1000000;
+	z-index: 5;
 }
 
 .editFocusActionBar {

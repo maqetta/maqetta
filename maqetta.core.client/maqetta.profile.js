@@ -5,7 +5,7 @@ dependencies = {
 	//But in general for a build, console.warn/error should be the only things to survive anyway.
 //	stripConsole: "normal",
 
-	aliases: [['i18n', 'dojo/i18n']]
+	aliases: [['i18n', 'dojo/i18n']],
 
 	selectorEngine: "acme",
 

@@ -1212,6 +1212,7 @@ var singleton = davinci.states = new States();
 								return results;
 							};
 						});
+						dojo.parser.parse = parser.parse; // for backwards compatibility
 						alreadyHooked = true;
 					}
 				};

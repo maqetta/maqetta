@@ -5,11 +5,11 @@
 
 define([
 	"dojo/_base/declare",
-	"davinci/ve/tools/CreateTool",
-	"davinci/ui/dnd/DragManager",
-	"davinci/Workbench",
-	"davinci/ve/widgets",
-	"davinci/ve/views/DataStoresView"
+	"../tools/CreateTool",
+	"../../ui/dnd/DragManager",
+	"../../Workbench",
+	"../widget",
+	"../views/DataStoresView"
 ], function(declare, CreateTool, dragManager, Workbench, widgetUtils, DataStoresView){
 
 return declare("davinci.ve.palette.DataStoreDragSource", null, {
@@ -32,7 +32,7 @@ return declare("davinci.ve.palette.DataStoreDragSource", null, {
                 var coords = dojo.coords(frameNode);
                 var containerNode = this.context.getContainerNode();
                 dragManager.documentX = coords.x - containerNode.scrollLeft;
-                dragManager.documentY = coords.y - containerNode.scrollTop
+                dragManager.documentY = coords.y - containerNode.scrollTop;
             }
         }
         else 

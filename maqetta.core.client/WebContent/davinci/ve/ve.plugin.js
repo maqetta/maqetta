@@ -424,22 +424,35 @@ return {
                     keyBinding: {accel: true, charOrCode: "0", allowGlobal: true}
                 },
                 {
-                    id: "documentSettingsBrowser",
+                    id: "documentSettings",
                     iconClass: 'documentSettingsIcon',
-                    className: 'davinciFloatRight',
-                    run: function() {
-                        require(['../Workbench'], function(workbench) {
-                            var editor = workbench.getOpenEditor();
-                            if (editor && editor.resourceFile) {
-                                editor.previewInBrowser();
-                            } else {
-                                console.error("ERROR. Cannot launch browser window. No editor info.");
-                            }
-                        });
-                    },
+                    className: 'documentSettings davinciFloatRight',
                     label: "Document settings",
                     toolbarPath: "undoredo",
-                    keyBinding: {accel: true, charOrCode: "0", allowGlobal: true}
+                    type:'DropDownButton',
+                    menu:[
+                       {
+                           id: "theme",
+                           iconClass: 'selectThemeIcon',
+                           className: "davinciFloatRight",
+                           action: "davinci/actions/SelectThemeAction",
+                           label: "Switch theme"
+                        },
+                       {
+                           id: "chooseDevice",
+                           iconClass: 'deviceIcon',
+                           className: "davinciFloatRight",
+                           action: "davinci/ve/actions/ChooseDeviceAction",
+                           label: "Choose device"
+                       },
+                       {
+                           id: "rotateDevice",
+                           iconClass: 'rotateIcon',
+                           className: "davinciFloatRight",
+                           action: "davinci/ve/actions/RotateDeviceAction",
+                           label: "Rotate device"
+                       }
+                    ]
                 },
                 {
                     id: "stickynote",
@@ -447,30 +460,6 @@ return {
                     className: 'davinciFloatRight',
                     action: "davinci/actions/StickyNoteAction",
                     label: "Add note",
-                    toolbarPath: "undoredo"
-                },
-                {
-                    id: "theme",
-                    iconClass: 'selectThemeIcon',
-                    className: "davinciFloatRight",
-                    action: "davinci/actions/SelectThemeAction",
-                    label: "Switch theme",
-                    toolbarPath: "undoredo"
-                },
-                {
-                    id: "chooseDevice",
-                    iconClass: 'deviceIcon',
-                    className: "davinciFloatRight",
-                    action: "davinci/ve/actions/ChooseDeviceAction",
-                    label: "Choose device",
-                    toolbarPath: "undoredo"
-                },
-                {
-                    id: "rotateDevice",
-                    iconClass: 'rotateIcon',
-                    className: "davinciFloatRight",
-                    action: "davinci/ve/actions/RotateDeviceAction",
-                    label: "Rotate device",
                     toolbarPath: "undoredo"
                 },
                 {

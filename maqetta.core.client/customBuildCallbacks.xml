@@ -195,7 +195,7 @@
 				<arg value="${target.folder}/WebContent/dojo/dojo.js"/>
 				<arg value="baseUrl=${target.folder}/WebContent/dojo"/>
 				<arg value="load=build"/>
-				<arg value="profileFile=${target.folder}/davinci.profile.js"/>
+				<arg value="profileFile=${target.folder}/maqetta.profile.js"/>
 				<arg value="action=release"/>
 				<arg value="cssOptimize=comments.keepLines"/>
 				<arg value="layerOptimize=shrinksafe.keepLines"/>

@@ -184,6 +184,14 @@ public class VDirectory implements IVResource {
 
     public void add(IVResource v) {
     	/* ensure that this object is set as the parent */
+    	
+    	for(int i=0;i<this.children.size();i++){
+    		IVResource child = (IVResource)this.children.get(i);
+    		if(child.getName().equals(v.getName())){
+    			this.children.remove(i);
+    		}
+    		
+    	}
     	v.setParent(this);
         this.children.add(v);
 

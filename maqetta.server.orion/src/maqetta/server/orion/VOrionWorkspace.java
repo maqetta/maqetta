@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
+import org.maqetta.server.VDirectory;
 import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -79,10 +80,16 @@ public class VOrionWorkspace extends VWorkspaceRoot{
 		for(int i=0;i<ps.segmentCount();i++){
 			String segment = ps.segment(i);
 			IVResource f= parent.get(segment);
-			if(f==null){
+			if(f==null ){
 				IStorage file = this.store.create(path);
 				f = new VOrionResource(file, parent, segment);
 				
+				
+			}else if(f.isVirtual()){
+				
+				IStorage file = this.store.create(path);
+				f = new VOrionResource(file, parent, segment);
+				parent.add(f);
 				
 			}
 			parent = f;

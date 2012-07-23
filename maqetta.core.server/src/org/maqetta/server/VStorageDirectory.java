@@ -27,6 +27,9 @@ public class VStorageDirectory extends VDirectory {
        rebuild();
     }
 
+    public boolean isVirtual() {
+		return false;
+	}
 	protected LibrarySettings getLibSettings() {
 		
 		return new LibrarySettings(this.resource.newInstance(this.resource, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME));

@@ -1389,6 +1389,7 @@ davinci_top_bar .dijitButtonNode {
 	.dj_webkit #davinci_app .dijitToolbar .dijitDropDownButton .dijitButtonNode, 
 	.dj_webkit #davinci_app .dijitToolbar .dijitComboButton .dijitButtonNode, 
 	.dj_webkit #davinci_app .dijitToolbar .dijitToggleButton .dijitButtonNode, 
-	.dj_webkit #davinci_app .dijitToolbar .dijitComboBox .dijitButtonNode {
+	.dj_webkit #davinci_app .dijitToolbar .dijitComboBox .dijitButtonNode, 
+	.dj_webkit #davinci_app .dijitToolbar .dijitToolbarSeparator {
 	-webkit-transition-duration:0;	/* Prevents jiggling buttons in Chrome */
 }

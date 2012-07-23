@@ -3,11 +3,12 @@ define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
+	"dojo/dnd/Moveable",
 	"./metadata",
 	"davinci/ve/States",
 	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Metadata, States, GeomUtils) {
+function(require, declare, _WidgetBase, Mover, Moveable, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -89,6 +90,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		if(actionBar){
 			this._actionBarContainer.innerHTML = '<div class="editFocusActionBar"></div>';
 			this._attachCreateToolBar(this._actionBarContainer.children[0]);
+			new Moveable(this._actionBarContainer.children[0]);
 		}else{
 			this._actionBarContainer.innerHTML = '';
 		}

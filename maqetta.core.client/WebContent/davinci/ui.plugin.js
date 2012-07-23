@@ -152,7 +152,7 @@ return {
                     label: "HTML File...",
                     // toolbarPath: "davinci.toolbar.main/edit",
                     menubarPath: "davinci.new/new",
-                    keyBinding: {accel: true, charOrCode: "n"}
+                    keyBinding: {accel: true, charOrCode: "e"}
                 },
                 {
                     id: "newCSS",

@@ -1,5 +1,5 @@
-define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "require"], 
-function(connect, domStyle, dom, dhtml, dwindow, require){
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "dojo/_base/array", "require"], 
+function(connect, domStyle, dom, dhtml, dwindow, darray, require){
 
 var States = function(){};
 States.prototype = {
@@ -14,11 +14,7 @@ States.prototype = {
 	 * Returns true if the given node has application states (i.e., node._maqAppStates has a value)
 	 */
 	isStateContainer: function(node){
-		if(node && node._maqAppStates){
-			return true;
-		}else{
-			return false;
-		}
+		return !!(node && node._maqAppStates);
 	},
 	
 	/**
@@ -1086,7 +1082,7 @@ States.prototype = {
 	_parseStyleValues: function(text) {
 		var values = [];
 		if(text){
-			dojo.forEach(text.split(";"), function(s){
+			darray.forEach(text.split(";"), function(s){
 				var i = s.indexOf(":");
 				if(i > 0){
 					var n = s.substring(0, i).trim();
@@ -1184,17 +1180,13 @@ var singleton = davinci.states = new States();
 	
 		// Patch the dojo parse method to preserve states data
 		if (typeof require != "undefined") {
-			require(["dojo/_base/lang", "dojo/query", "dojo/domReady!"], function(lang, query) {
-				var cache = {}; // could be local to hook function?
-				var count = 0;
-				var alreadyHooked = false;
+			require(["dojo/_base/lang", "dojo/query", "dojo/aspect"], function(lang, query, aspect) {
+				var count = 0,
+					alreadyHooked = false;
 
-				// hook main dojo.parser (or dojox.mobile.parser, which also
-				// defines "dojo.parser" object)
-				// Note: Uses global 'dojo' reference, which may not work in the future
+				// hook main dojo/parser (or dojox.mobile.parser, which also defines a parse method)
 				var hook = function(parser) {
 					if(!alreadyHooked){
-						var parse = parser.parse;
 						// Note that Dojo parser can be called multiple times at document load time
 						// where it parses different components of the document -- not all of the
 						// document is parsed with that first call to the parser. As a result,
@@ -1202,21 +1194,25 @@ var singleton = davinci.states = new States();
 						// particular document fragments, and reassigning the "states" property
 						// multiple times, but otherwise Dojo might wipe out the previously installed
 						// "states" property.
-						dojo.parser.parse = function(rootNode, args) {
-							// logic below to compute "root" was copied from dojo's parser.js
-							var root;
-							if(!args && rootNode && rootNode.rootNode){
-								args = rootNode;
-								root = args.rootNode;
-							}else{
-								root = rootNode;
-							}
-							root = root ? dhtml.byId(root) : dwindow.body();
-							_preserveStates(cache);
-							var results = parse.apply(this, arguments);
-							_restoreStates(cache, root);
-							return results;
-						};
+						aspect.around(parser, "parse", function(parse) {
+							var cache = {};
+							return function(rootNode, args) {
+								// logic below to compute "root" was copied from dojo's parser.js
+								var root;
+								if(!args && rootNode && rootNode.rootNode){
+									args = rootNode;
+									root = args.rootNode;
+								}else{
+									root = rootNode;
+								}
+								root = root ? dhtml.byId(root) : dwindow.body();
+								_preserveStates(cache);
+								var results = parse.apply(this, arguments);
+								_restoreStates(cache, root);
+								return results;
+							};
+						});
+						dojo.parser.parse = parser.parse; // for backwards compatibility
 						alreadyHooked = true;
 					}
 				};

@@ -1,7 +1,6 @@
 define(["davinci/Runtime",
         "./FontDataStore",
     	"./FontComboBox",
-    	"./Trblbox",
         "./MultiInputDropDown",
         "dijit/form/ComboBox",
         "./MetaDataStore",
@@ -65,10 +64,6 @@ define(["davinci/Runtime",
 			 */
 
 			switch (metaType){
-				case "trblbox":
-					var text="<div dojoType='davinci.ve.widgets.Trblbox' shorthand='\"" + jsonString.shorthand + "\"'></div>";
-					
-					return text;
 				case "multi":
 					var valuesText = "";
 					if(jsonString.values){

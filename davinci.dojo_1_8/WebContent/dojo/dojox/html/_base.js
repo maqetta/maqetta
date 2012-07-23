@@ -162,9 +162,7 @@ this._onError("Exec","Error eval script in "+this.id+", "+e.message,e);
 var _48=this.getInherited(arguments),_49=arguments,d=new _2();
 _7(_6.hitch(this,function(){
 _48.apply(this,_49);
-this.parseDeferred.then(function(){
-d.resolve();
-});
+dojo.when(this.parseDeferred, function(){ d.resolve(); });
 }));
 return d.promise;
 },tearDown:function(){

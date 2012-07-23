@@ -30,10 +30,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 		dojo.addClass(this.domNode, 'maqFocus');
 		dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
-		this._actionBar = dojo.create("div", {"class": "editFocusActionBar"}, this.domNode);
-		for(var i=0; i<7; i++){
-			dojo.create("span", {"class": "editFocusActionBarButton", innerHTML:i }, this._actionBar);
-		}
+		this._actionBarContainer = dojo.create("div", {"class": "editFocusActionBarContainer"}, this.domNode);
 		this._stdChrome = dojo.create("div", {"class": "editFocusStdChrome"}, this.domNode);
 		
 		this._frames = [];
@@ -88,6 +85,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		if (!widget){
 			// sometimes you get no widget when  DnD in split screen
 			return; 
+		}
+		if(actionBar){
+			this._actionBarContainer.innerHTML = '<div class="editFocusActionBar"></div>';
+			this._attachCreateToolBar(this._actionBarContainer.children[0]);
+		}else{
+			this._actionBarContainer.innerHTML = '';
 		}
 		this._custom.innerHTML = '';
 		var showStandardSelectionChrome = Metadata.queryDescriptor(widget.type, "showStandardSelectionChrome");
@@ -853,7 +856,55 @@ console.dir(this._moverStart);
     			return dojo.style.apply(dojo, arguments);
     		}
     	}
-    }
+    },
+
+	/**
+	 * Gets toolbar widget for ActionBar if one exists already.
+	 * Otherwise, create the toolbar widget.
+	 * In either case, attach the toolbar to the "toolbarDiv"
+	 * @param {Element} toolbarDiv
+	 */
+	_attachCreateToolBar: function(toolbarDiv){
+		if(!davinci.Workbench.actionBarToolBar){
+			this._createToolBar(toolbarDiv);
+		}
+		toolbarDiv.innerHTML = '';
+		toolbarDiv.appendChild(davinci.Workbench.actionBarToolBar.domNode);
+	},
+
+	/**
+	 * Creates a toolbar widget will be become the main part of the Action Bar.
+	 * @param {Element} toolbarDiv
+	 */
+	_createToolBar: function(toolbarDiv){
+		var actions=this._getActions();
+        if (actions && actions.length)
+        {
+    		var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
+        	var toolbar = davinci.Workbench.actionBarToolBar = davinci.Workbench._createToolBar('actionbarPath', tb, actions, this._context);
+    		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
+        }
+	},
+	
+	_getActions: function() {
+		var editorID='davinci.ve.HTMLPageEditor';
+		var editorActions=[];
+		var extensions = davinci.Runtime.getExtensions('davinci.editorActions', function(ext){
+			if (editorID==ext.editorContribution.targetID)
+			{
+				editorActions.push(ext.editorContribution);
+				return true;
+			}
+		});
+		if (editorActions.length == 0) {
+			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
+				editorActions.push(ext.editorContribution);
+				return true;
+			});
+		}
+		return editorActions;
+	}
+	
 });
 
 });

@@ -768,6 +768,30 @@ davinci_top_bar .dijitButtonNode {
 	background-image: url(img/sprite.png);
 	background-position: 0 -648px;
 }
+.editDuplicateIcon {
+	background-image: url(img/sprite.png);
+	background-position: -25px -648px;
+}
+.editValueIcon {
+	background-image: url(img/sprite.png);
+	background-position: 0px -745px;
+}
+.editPropertiesIcon {
+	background-image: url(img/sprite.png);
+	background-position: -25px -745px;
+}
+.arrangeCommandsIcon {
+	background-image: url(img/sprite.png);
+	background-position: -50px -745px;
+}
+.tableCommandsIcon {
+	background-image: url(img/sprite.png);
+	background-position: -75px -745px;
+}
+.otherCommandsIcon {
+	background-image: url(img/sprite.png);
+	background-position: -25px -763px;
+}
 .addStateIcon, .addThemeSetIcon {
 	background-image: url(img/sprite.png);
 	background-position: -82px -466px;

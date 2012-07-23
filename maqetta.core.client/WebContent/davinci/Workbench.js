@@ -82,6 +82,16 @@ var shadowIdToEditorId = function(shadowFileName) {
 	return shadowFileName.replace(/^shadow/, "editor");
 };
 
+/*
+ * FIXME: Totally broken code.
+   FIXME: Same callback for two different events (/davinci/ui/selectionChanged, /davinci/ui/editorSelected), 
+          but it appears those two events pass different payloads.
+   FIXME: dijit.byId("davinci_toolbar_main") always returns undefined. Guess is that a couple of years ago we had a toolbar on banner.
+   FIXME: This is called whenever source editor selection changed, but not when visual editor selection changed. That seems wrong.
+   FIXME: what is definition of "change"? with editorSelected, it's an object with properties "editor" and "oldEditor",
+          and no property "targetObjectId", which is referenced below.
+   FIXME: No one ever passes in toolbarID.
+*/
 var updateMainToolBar = function (change, toolbarID) {
 	var toolbar1 = dijit.byId("davinci_toolbar_main");
 	if (toolbar1) {
@@ -345,7 +355,15 @@ var Workbench = {
 		Workbench._autoSave();
 	},
 
-	_createToolBar: function (targetObjectId,targetDiv,actionSets,context){
+	/**
+	 * Creates a toolbar widget out of the definitions in the plugin file(s)
+	 * @param {string} toolbarProp  The property name from plugin file that corresponds to this particular toolbar
+	 * @param {Element} targetDiv  Container DIV into which this toolbar should be instantiated
+	 * @param actionSets  Action sets from plugin file(s)
+	 * @param context  Document context FIXME: 95% sure that parameter is obsolete
+	 * @returns {Toolbar}  toolbar widget
+	 */
+	_createToolBar: function (toolbarProp, targetDiv, actionSets, context){
 		var _toolbarcache = [];
 		if (!actionSets) {
 		   actionSets = Runtime.getExtensions('davinci.actionSets');
@@ -354,7 +372,7 @@ var Workbench = {
 			var actions = actionSets[i].actions;
 			for (var k = 0, len2 = actions.length; k < len2; k++) {
 				var action = actions[k],
-					toolBarPath = action.toolbarPath;
+					toolBarPath = action[toolbarProp];
 				if (toolBarPath) {
 					if (!_toolbarcache[toolBarPath]) {
 						_toolbarcache[toolBarPath] = [];
@@ -369,10 +387,8 @@ var Workbench = {
 		var firstgroup = true;
 		for (var value in _toolbarcache) {
 			if (!firstgroup) {
-/*FIXME: No separators for time being
 				var separator = new ToolbarSeparator();
 				toolbar1.addChild(separator);
-*/
 			} else {
 				firstgroup = false;
 			}
@@ -456,7 +472,10 @@ var Workbench = {
 				}
 				dojoActionDeferred.then(function(){
 					toolbar1.addChild(dojoAction);
-					if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
+					//FIXME: looks like the parameter to isEnabled is "context",
+					//but maybe that should be the current editor instead. Whatever, 
+					//targetObjectId just has to be wrong.
+					if (action.isEnabled && !action.isEnabled(/*FIXME: targetObjectId*/)) { 
 						dojoAction.isEnabled = action.isEnabled;
 						dojoAction.set('disabled', true);
 					} else {
@@ -1060,6 +1079,9 @@ var floatingPropertiesPalette = dojo.create('div',
 							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext)) {
 								continue;
 							}
+							//FIXME: study this code for bugs.
+							//dojoMenu.actionContext: is that always the current context?
+							//There were other bugs where framework objects pointed to wrong context/doc
 							enabled = item.action.isEnabled(dojoMenu.actionContext);
 							if (item.action.getName) {
 								label = item.action.getName();

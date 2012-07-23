@@ -400,7 +400,6 @@ var Workbench = {
 				// dont add dupes
 		
 				Workbench._loadActionClass(action);
-//FIXME: Have plugin files explicitly define showLabel
 				var parms = {showLabel:false/*, id:(id + "_toolbar")*/};
 				['label','showLabel','iconClass'].forEach(function(prop){
 					if(action.hasOwnProperty(prop)){
@@ -758,11 +757,17 @@ var floatingPropertiesPalette = dojo.create('div',
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
 				var widget =  dijit.byId(menu.id + "-dropdown");
 				if(!widget) {
-					widget = new DropDownButton({
-						label: menu.label,
-						dropDown: dojoMenu,
-						id: menu.id + "-dropdown"
-					});
+					var params = { label: menu.label, dropDown: dojoMenu, id: menu.id + "-dropdown" };
+					if(menu.hasOwnProperty('showLabel')){
+						params.showLabel = menu.showLabel;
+					}
+					if(menu.hasOwnProperty('iconClass')){
+						params.iconClass = menu.iconClass;
+					}
+					if(menu.hasOwnProperty('className')){
+						params['class'] = menu.className;
+					}
+					widget = new DropDownButton(params);
 					menuDiv.appendChild(widget.domNode);
 				}
 			}

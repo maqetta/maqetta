@@ -424,12 +424,22 @@ return {
                     keyBinding: {accel: true, charOrCode: "0", allowGlobal: true}
                 },
                 {
-                    id: "theme",
-                    iconClass: 'selectThemeIcon',
-                    className: "davinciFloatRight",
-                    action: "davinci/actions/SelectThemeAction",
-                    label: "Switch theme",
-                    toolbarPath: "undoredo"
+                    id: "documentSettingsBrowser",
+                    iconClass: 'documentSettingsIcon',
+                    className: 'davinciFloatRight',
+                    run: function() {
+                        require(['../Workbench'], function(workbench) {
+                            var editor = workbench.getOpenEditor();
+                            if (editor && editor.resourceFile) {
+                                editor.previewInBrowser();
+                            } else {
+                                console.error("ERROR. Cannot launch browser window. No editor info.");
+                            }
+                        });
+                    },
+                    label: "Document settings",
+                    toolbarPath: "undoredo",
+                    keyBinding: {accel: true, charOrCode: "0", allowGlobal: true}
                 },
                 {
                     id: "stickynote",
@@ -437,6 +447,14 @@ return {
                     className: 'davinciFloatRight',
                     action: "davinci/actions/StickyNoteAction",
                     label: "Add note",
+                    toolbarPath: "undoredo"
+                },
+                {
+                    id: "theme",
+                    iconClass: 'selectThemeIcon',
+                    className: "davinciFloatRight",
+                    action: "davinci/actions/SelectThemeAction",
+                    label: "Switch theme",
                     toolbarPath: "undoredo"
                 },
                 {

@@ -124,9 +124,23 @@ return {
                     ]
                 },
                 {
+                    label: "UserSettings",
+                    path: "settings",
+                    id: "davinci.usersettings",
+                    className: 'userSettingsMenu',
+                    iconClass: 'userSettingsMenuIcon',
+                    showLabel:false,
+                    separator: [
+                        "settings", true, "additions", false
+                    ]
+                },
+                {
                     label: "Settings",
                     path: "settings",
                     id: "davinci.settings",
+                    className: 'appSettingsMenu',
+                    iconClass: 'appSettingsMenuIcon',
+                    showLabel:false,
                     separator: [
                         "settings", true, "additions", false
                     ]
@@ -135,6 +149,9 @@ return {
                     label: "Help",
                     path: "help",
                     id: "davinci.help",
+                    className: 'helpMenu',
+                    iconClass: 'helpMenuIcon',
+                    showLabel:false,
                     separator: [
                         "help", true, "about", false, "additions", false
                     ]

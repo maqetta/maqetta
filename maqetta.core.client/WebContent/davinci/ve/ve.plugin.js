@@ -574,7 +574,31 @@ return {
                     label: "Arrange commands",
                     //FIXME: Need a menu
                     //action: "davinci/ve/actions/EditPropertiesAction",
-                    actionbarPath: "editvalue"
+                    actionbarPath: "arrange",
+                    type:'DropDownButton',
+                    menu:[
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Move to back",
+                              action: "davinci/ve/actions/MoveToBackAction"
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Move forward",
+                              action: "davinci/ve/actions/MoveForwardAction"
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Move backward",
+                              action: "davinci/ve/actions/MoveBackwardAction"
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Application States...",
+                              action: "davinci/ve/actions/EnableApplicationStates"
+                          }
+                    ]
+
                 },
 				{
                     id: "tableCommands",
@@ -582,7 +606,7 @@ return {
                     label: "Table commands",
                     //FIXME: Need a menu
                     //action: "davinci/ve/actions/EditPropertiesAction",
-                    actionbarPath: "editvalue"
+                    actionbarPath: "arrange"
                 },
 				{
                     id: "otherCommands",

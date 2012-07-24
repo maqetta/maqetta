@@ -37,14 +37,36 @@ dojo.subscribe("/davinci/ui/libraryChanged/start", this, function() {
 /* if resources are deleted, we need to check if they are themes.  if so dummp the theme cache so its resynced */
 dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedResource){
 	
+	var Workbench = require("davinci/Workbench");
+	var base = Workbench.getProject();
 	if(type=='deleted' || type=='renamed'){
-		var Workbench = require("davinci/Workbench");
-		var base = Workbench.getProject();
 		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
 		var projectThemeBase = new Path(base).append(prefs.themeFolder);
 		var resourcePath = new Path(changedResource.getPath());
 		if(resourcePath.startsWith(projectThemeBase)){
 			delete _themesCache[base];
+		}
+	}
+	
+	if (changedResource.elementType == 'File' && changedResource.extension =="theme"){
+		// creates we don't do anything with the file is not baked yet
+		if (type == 'modified'){
+			var d = changedResource.getContent();
+			d.then(function(content) {
+				var t = JSON.parse(content);
+				t.file = changedResource;
+				for (var i=0; i < _themesCache[base].length; i++){
+					if ( _themesCache[base][i].name == t.name) {
+						// found theme so replace it
+						_themesCache[base][i] = t;
+						return;
+					}
+				}
+				// theme not found so add it.
+				_themesCache[base].push(t);
+				
+			}.bind(this));
+			
 		}
 	}
 });
@@ -78,8 +100,8 @@ getThemes: function(base, workspaceOnly, flushCache){
 	}
 
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base),
-		projectThemeBase = new Path(base).append(prefs.themeFolder),
-		allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
+		projectThemeBase = new Path(base).append(prefs.themeFolder);
+	var allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
 	
 		_themesCache[base] = [];
 		for (var i = 0; i < allThemes.length; i++){

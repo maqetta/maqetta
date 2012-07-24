@@ -178,7 +178,13 @@ var Folder = declare(Resource, {
 	// deprecated
 	getChildSync: function(name) {
 //		console.log("Folder.getChildSync is deprecated sync=" + !this._isLoaded);
-		if(!this._isLoaded) {
+		if(!this._isLoaded || (this.children.length < 1)) {
+			/*
+			 * Force a reload of the folder, if we are asking for a child but there are no childeren 
+			 * we may have problem.
+			 * This is an attempt to fix issue #2635 
+			 */
+			this._isLoaded = false;
 			this.getChildrenSync(function(item) { this.children = item; }, true);
 		}
 		return this._getChild(name);

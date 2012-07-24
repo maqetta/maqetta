@@ -101,14 +101,16 @@ define(["dojo/_base/declare",
 				dojo.style(this._loading, 'opacity', '0.5');
 			    var basePath = this.getBase();
 			    // first we clone the theme which creates temp css files
-				Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true).then(function(results){
+				//Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true).then(function(results){
+				var a = Theme.CloneTheme(themeName,  version, selector, newBase, oldTheme, true);
+				a.promise.then(function(results){
 		        	// #23
-		        	var found = Theme.getTheme(base, true);
-		            if (found){
-		        		found.file.isNew = false; // the file has been saved so don't delete it when closing editor without first save.
-		        		return found.file.getContent().then(function(content) {
+					var themeFile = a.themeFile;
+		            if (themeFile){
+		            	themeFile.isNew = false; // the file has been saved so don't delete it when closing editor without first save.
+	        			return themeFile.getContent().then(function(content) {
 			                Workbench.openEditor({
-			                    fileName: found.file,
+			                    fileName: themeFile,
 			                    content: content
 			                });		        			
 		        		});

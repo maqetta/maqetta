@@ -135,9 +135,12 @@ define([
 			});
 			deferreds.push(themeCompatCssFile.setContents(compatImports));
 		}
-		deferreds.push(themeFile.setContents(JSON.stringify(themeJson)));
+		var d = themeFile.setContents(JSON.stringify(themeJson));
+		d.themeFile = themeFile;
+		deferreds.push(d);
 		deferreds.push(themeCssFile.setContents(imports));
-		return all(deferreds);
+		var ret = {promise:all(deferreds),  themeFile: themeFile};
+		return ret; 
 	},
 	
 	getHelper: function(theme){

@@ -1,5 +1,5 @@
-define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "dojo/_base/array", "require"], 
-function(connect, domStyle, dom, dhtml, dwindow, darray, require){
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "dojo/_base/array", "dojo/parser", "require"], 
+function(connect, domStyle, dom, dhtml, dwindow, darray, dparser, require){
 
 var States = function(){};
 States.prototype = {
@@ -1216,12 +1216,16 @@ var singleton = davinci.states = new States();
 						alreadyHooked = true;
 					}
 				};
-				// only include the regular parser if the mobile parser isn't available
-				var parser = lang.getObject("dojox.mobile.parser.parse");
-				if (!parser) {
-					require(["dojo/parser"], hook);
-				} else {
+
+				try {
+					var parser = require("dojox/mobile/parser");
 					hook.apply(parser);
+				} catch(e) {
+					// only include the regular parser if the mobile parser isn't available
+				}
+
+				if(!parser) {
+					hook.call(null, dparser);
 				}
 
 				/**

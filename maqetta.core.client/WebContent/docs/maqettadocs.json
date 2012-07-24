@@ -53,7 +53,8 @@
 				{ id: '5.2.8', name:'Scenes Palette', url: 'peScenesPalette.html' }, 
 				{ id: '5.2.9', name:'Switching Themes', url: 'peSwitchThemes.html' }, 
 				{ id: '5.2.10', name:'Source Editing', url: 'peSourceEditing.html' },
-				{ id: '5.2.11', name:'About the User HTML File', url: 'peUserHTML.html' }
+				{ id: '5.2.11', name:'About the User HTML File', url: 'peUserHTML.html' },
+				{ id: '5.2.12', name:'Keyboard Shortcuts', url: 'peKeyboardShortcuts.html' }
 			] },
 			{ id: '5.3', name:'Application States', url: 'applicationStates.html', children:[
 				{ id: '5.3.1', name:'About Application States', url: 'applicationStatesAbout.html' }

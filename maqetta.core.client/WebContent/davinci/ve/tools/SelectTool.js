@@ -345,6 +345,14 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	onMouseOver: function(event){
 		// FIXME: sometime an exception occurs...
 		try{
+			// The purpose of this monkey business is to remember the last
+			// user document node which received a mouseover event so that we
+			// can restore the "target" (i.e., the editFeedback rectangle)
+			// upon wrapping up various mouse down/up/move event processing.
+			// We ignore any overlay DIVs created by the page editor itself.
+			if(!dojo.hasClass(event.target, 'editFeedback') && !dojo.hasClass(event.target, 'selectToolDragDiv')){
+				this._onMouseOverEventTargetXPath = XPathUtils.getXPath(event.target);
+			}
 			this._setTarget(event.target, event);
 		}catch(e){
 		}
@@ -927,38 +935,15 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		cp.parentListDivDelete();
 		context.selectionShowFocus();
 		
-		// Attempt to restore editFeedback DIV via call to this._setTarget()
-		// Usually, we will find the right node by looking for the widget with given ID
-		// if that fails then try to restore via doing xpath into model
-		// FIXME: What we need to make this fully bulletproof and reliable is some way 
-		// to tag an original widget, have the tag preserved across widget modification,
-		// and then ability to find the widget with that tag.
-		var moverWidget, moverNode;
-		if(oldId){
-			moverNode = context.getDocument().getElementById(oldId);
-			if(moverNode){
-				moverWidget = widgetUtils.getEnclosingWidget(moverNode);
-			}
+		// Attempt to restore the "target" rectangle (i.e., editFeedback)
+		// over current widget to intercept mouse events that the widget
+		// itself might attempt to process.
+		var query = XPathUtils.toCssPath(this._onMouseOverEventTargetXPath);
+		var userDoc = context.getDocument();
+		var targetNode = query ? userDoc.querySelector(query) : null;
+		if(targetNode){
+			this._setTarget(targetNode);
 		}
-		if(!moverWidget && xpath){
-			var elem = context.model.evaluate(xpath);
-			if(elem){
-				var id = elem.getAttribute('id');
-				if(id){
-					moverWidget = widgetUtils.byId(id, context.getDocument());
-				}
-			}
-		}
-		// Ensure that the widget is actually completely in the DOM.
-		// This prevents exceptions in this._setTarget, which assume DOM is fully baked
-		// and sometimes things are happening too fast and the revised widget is not 
-		// completely ready.
-		if(moverWidget && moverWidget.domNode && moverWidget.domNode.parentNode){
-			this._setTarget(moverWidget.domNode);
-		}else{
-			this._setTarget(null);
-		}
-
 	},
 	
 	_areaSelectInit: function(initPageX, initPageY){

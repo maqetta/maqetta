@@ -414,12 +414,15 @@ return declare("davinci.ve.input.SmartInput", null, {
 		this._connection.push(dojo.connect(dojo.byId('davinci.ve.input.SmartInput_cancel'), "onclick", this, "onCancel")); // same effect ad click away..
 	},
 	
-	_findContentPaneAncestor: function(frameNode){
-		var contentPaneAncestor = frameNode.parentNode;
-		while(!dojo.hasClass(contentPaneAncestor,'dijitContentPane')){
-			contentPaneAncestor = contentPaneAncestor.parentNode;
+	_findSmartInputContainer: function(frameNode){
+		/*
+		var smartInputContainer = frameNode.parentNode;
+		while(!dojo.hasClass(smartInputContainer,'dijitContentPane')){
+			smartInputContainer = smartInputContainer.parentNode;
 		}
-		return contentPaneAncestor;
+		return smartInputContainer;
+		*/
+		return document.body;
 	},
 	
 	_loading: function(height, width /*, styleHeight, styleWidth*/){
@@ -427,12 +430,12 @@ return declare("davinci.ve.input.SmartInput", null, {
 		var iframeNode = this._widget._edit_context.frameNode;
 		var doc = iframeNode.ownerDocument;
 		var loading = doc.createElement("div");
-		var contentPaneAncestor = this._findContentPaneAncestor(iframeNode);
-		if(!contentPaneAncestor){
+		var smartInputContainer = this._findSmartInputContainer(iframeNode);
+		if(!smartInputContainer){
 		//loading.innerHTML='<table><tr><td>'+langObj.loading+'</td></tr></table>';
 			return;
 		}
-		contentPaneAncestor.appendChild(loading);
+		smartInputContainer.appendChild(loading);
 		this._loadingDiv = loading;
 		dojo.addClass(loading,'smartInputLoading');
 		var inline= doc.createElement("div");
@@ -442,8 +445,8 @@ return declare("davinci.ve.input.SmartInput", null, {
 		inlinePointer.id = 'iebPointer';
 		//dojo.addClass(inlinePointer,'inlineEditConnectorBelow');
 		this._inline = inline;
-		contentPaneAncestor.appendChild(inline);
-		contentPaneAncestor.appendChild(inlinePointer);
+		smartInputContainer.appendChild(inline);
+		smartInputContainer.appendChild(inlinePointer);
 		var m2 = new dojo.dnd.Moveable("ieb");
 		this._connection.push(dojo.connect(m2, "onMoveStart", this, "onMoveStart")); 
 		this._connection.push(dojo.connect(m2, "onMoveStop", this, "onMoveStop")); 
@@ -454,13 +457,13 @@ return declare("davinci.ve.input.SmartInput", null, {
 		
 		var box = this._widget.getMarginBox();
 		var iframe_box = dojo.position(iframeNode);
-		var contentPane_box = dojo.position(contentPaneAncestor);
+		var contentPane_box = dojo.position(smartInputContainer);
 		// Take into account iframe shifting due to mobile silhouettes
 		// The extra -1 needed to avoid extra pixel shift, probably for a border
-		var silhouette_shift_x = (iframe_box.x - contentPane_box.x) + contentPaneAncestor.scrollLeft - 1;
-		var silhouette_shift_y = (iframe_box.y - contentPane_box.y) + contentPaneAncestor.scrollTop - 1;
-		var clientHeight = contentPaneAncestor.clientHeight;
-		var clientWidth = contentPaneAncestor.clientWidth;
+		var silhouette_shift_x = (iframe_box.x - contentPane_box.x) + smartInputContainer.scrollLeft - 1;
+		var silhouette_shift_y = (iframe_box.y - contentPane_box.y) + smartInputContainer.scrollTop - 1;
+		var clientHeight = smartInputContainer.clientHeight;
+		var clientWidth = smartInputContainer.clientWidth;
         // find the correct placement of box  based on client viewable area
 		var yOffset = 26;
 		var top = yOffset;
@@ -664,13 +667,13 @@ return declare("davinci.ve.input.SmartInput", null, {
 					dojo.disconnect(connection);
 				}
 			}
-			var contentPaneAncestor = this._findContentPaneAncestor(this._widget._edit_context.frameNode);
-			if(!contentPaneAncestor){
+			var smartInputContainer = this._findSmartInputContainer(this._widget._edit_context.frameNode);
+			if(!smartInputContainer){
 				console.log('ERROR. SmartInput.js _loading(). No ancestor ContentPane');
 				return;
 			}
 			if (this._loadingDiv) {
-				contentPaneAncestor.removeChild(this._loadingDiv);
+				smartInputContainer.removeChild(this._loadingDiv);
 			}
 			if(this._inline.style.display != "none" && this._inline.eb){
 				value = this._inline.eb.get('value');
@@ -683,8 +686,8 @@ return declare("davinci.ve.input.SmartInput", null, {
 				}
 				this._inline.destroyRecursive();
 				delete this._inline;  
-                var iebPointer = contentPaneAncestor.ownerDocument.getElementById('iebPointer');
-				contentPaneAncestor.removeChild(iebPointer);
+                var iebPointer = smartInputContainer.ownerDocument.getElementById('iebPointer');
+				smartInputContainer.removeChild(iebPointer);
 				
 				if(value != null && !cancel){
 				if (!this.disableEncode && this._format === 'text' ) // added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr

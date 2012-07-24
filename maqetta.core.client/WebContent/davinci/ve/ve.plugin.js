@@ -140,6 +140,12 @@ return {
                     action: "davinci/ve/actions/DeleteAction",
                     menubarPath: "davinci.edit/cut"
                 },
+				{
+                    iconClass: "editActionIcon editDuplicateIcon",
+                    label: "Duplicate",
+                    action: "davinci/ve/actions/DuplicateAction",
+                    menubarPath: "davinci.edit/cut"
+                },
                 {
                     iconClass: "editActionIcon",
                     label: "Select parent",

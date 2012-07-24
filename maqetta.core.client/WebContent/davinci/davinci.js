@@ -40,6 +40,8 @@ davinci/davinci = {
 	"./ve/actions/DeleteAction",
 	"./ve/actions/PasteAction",
 	"./ve/actions/DuplicateAction",
+	"./ve/actions/EditValueAction",
+	"./ve/actions/EditPropertiesAction",
 	"./ve/actions/ChooseDeviceAction",
 	"./ve/actions/RotateDeviceAction",
 	"./ve/actions/SurroundAction",

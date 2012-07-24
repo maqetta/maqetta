@@ -1,6 +1,7 @@
 define(["dojo/_base/declare",
         "dijit/_Templated",
         "dijit/_Widget",
+        "davinci/Runtime",
         "davinci/workbench/ViewLite",
         "davinci/ve/commands/ModifyCommand",
         "dijit/form/ComboBox",
@@ -10,7 +11,7 @@ define(["dojo/_base/declare",
         "dojo/i18n!dijit/nls/common",
         "davinci/ve/widget",
         "dojo/text!./templates/WidgetToolBar.html",
-],function(declare, _Templated, _Widget, ViewLite, ModifyCommand, ComboBox, TextBox, Memory, veNLS, commonNLS, widgetUtils, templateString){
+],function(declare, _Templated, _Widget, Runtime, ViewLite, ModifyCommand, ComboBox, TextBox, Memory, veNLS, commonNLS, widgetUtils, templateString){
 	return declare("davinci.ve.widgets.WidgetToolBar", [ViewLite, _Widget, _Templated], {
 	
 		templateString: templateString,
@@ -33,8 +34,9 @@ define(["dojo/_base/declare",
 			dojo.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, this._widgetReplaced));
 		},
 		
-		onEditorSelected : function(){
-
+		initialize: function(){
+			this._editor = Runtime.currentEditor;
+			
 			// only show during HTML editing
 			if (this._editor && this._editor.editorID == "davinci.ve.HTMLPageEditor") {		
 				this.domNode.style.display = "block";
@@ -53,6 +55,10 @@ define(["dojo/_base/declare",
 				this._widget = null;
 			}
 			this.onWidgetSelectionChange();
+		},
+		
+		onEditorSelected : function(){
+			this.initialize();
 		},
 		
 		_widgetReplaced : function(newWidget, oldWidget){

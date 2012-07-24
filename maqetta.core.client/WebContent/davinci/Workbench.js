@@ -708,8 +708,13 @@ var floatingPropertiesPalette = dojo.create('div',
 		}
 
 		dojo.forEach(perspective.views, function(view) {
-			Workbench.showView(view.viewID, false);
+			if(view.position != 'dynamic'){
+				Workbench.showView(view.viewID, false);
+			}
 		}, this);
+
+//FIXME: TEMPORARY
+//this.showDynamicView('davinci.ve.style', dojo.byId('floatingPropertiesPalette'));
 
 		// kludge to workaround problem where tabs are sometimes cutoff/shifted to the left in Chrome for Mac
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
@@ -1228,7 +1233,7 @@ var floatingPropertiesPalette = dojo.create('div',
 		if (dojo.some(cp1.getChildren(), function(child){ return child.id == view.id; })) {
 			return;
 		}
-
+/*DELETE THIS
 		var getTab = function(view) {
 			var d = new Deferred(),
 				tab = dijit.byId(view.id);
@@ -1249,23 +1254,65 @@ var floatingPropertiesPalette = dojo.create('div',
 			return d;
 		};
 		getTab(view).then(function(tab) {
+*/
+		this.instantiateView(view).then(function(tab) {
+/*
 //FIXME: Temporary
 if(view.id == 'davinci.ve.style'){
 	var floatingPropertiesPalette = dojo.byId('floatingPropertiesPalette');
 	floatingPropertiesPalette.appendChild(tab.domNode);
 	tab.startup();
 }else{
+*/
 			cp1.addChild(tab);
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}
-}
+//}
 		});
 	  } catch (ex) {
 		  console.error("Error loading view: "+view.id);
 		  console.error(ex);
 	  }
 	},
+	
+	showDynamicView: function(viewId, targetNode){
+		if(!Workbench.dynamicViews){
+			Workbench.dynamicViews = {};
+		}
+		var viewWidget = Workbench.dynamicViews[viewId];
+		if(!viewWidget){
+			var view = Runtime.getExtension("davinci.view", viewId);
+			if(view){
+				this.instantiateView(view).then(function(cp) {
+					Workbench.dynamicViews[viewId] = viewWidget = cp;
+				});
+			}
+		}
+		if(viewWidget){
+			targetNode.appendChild(viewWidget.domNode);
+			viewWidget.startup();
+		}
+	},
+	
+	instantiateView: function(view) {
+		var d = new Deferred(),
+		tab = dijit.byId(view.id);
+		if (tab) {
+			d.resolve(tab);
+		} else {
+			require([view.viewClass], function(viewCtor){
+				d.resolve(new (viewCtor || ViewPart)({
+					title: view.title,
+					id: view.id,
+					closable: false,
+					view: view
+				}));
+			});
+		}
+		return d;
+	},
+
 	
 	hideView: function(viewId){
 		for (var position in mainBody.tabs.perspective) {

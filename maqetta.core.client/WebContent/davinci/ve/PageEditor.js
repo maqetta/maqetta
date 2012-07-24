@@ -373,6 +373,15 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	// dummy handler
 	handleKeyEvent: function(e) {
+	},
+	
+	showPropertiesPalette: function(){
+		davinci.Workbench.showDynamicView('davinci.ve.style', dojo.byId('floatingPropertiesPalette'));
+	},
+	
+	hidePropertiesPalette: function(){
+		var targetNode = dojo.byId('floatingPropertiesPalette');
+		targetNode.innerHTML = '';
 	}
 });
 }); 

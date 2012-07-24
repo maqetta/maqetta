@@ -2,6 +2,7 @@ define([
     	"dojo/_base/declare",
     	"dojo/i18n!davinci/ve/nls/ve",
     	"dojo/i18n!dijit/nls/common",
+    	"davinci/Runtime",
     	"davinci/workbench/WidgetLite",
     	"davinci/ve/widgets/HTMLStringUtil",
     	"davinci/ve/widgets/WidgetToolBar",
@@ -9,7 +10,7 @@ define([
     	"davinci/ve/widgets/CommonProperties",
     	"davinci/ve/widgets/WidgetProperties",
     	"davinci/ve/widgets/EventSelection"
-], function(declare, veNls, commonNls, WidgetLite, HTMLStringUtil,
+], function(declare, veNls, commonNls, Runtime, WidgetLite, HTMLStringUtil,
 		   	WidgetToolBar,  Cascade
 		    ){
 return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
@@ -206,7 +207,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		this.domNode = dojo.doc.createElement("div");
 		dojo.addClass(this.domNode,'propertiesSection');	
 		var template="";
-		template+="<div dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+		template+="<div id='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
 		template+="<table class='propRootDetailsContainer'>";
 		template+="<tr>";
@@ -395,8 +396,14 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	startup : function(){
 	
 		this.domNode.style.height="100%";
+		this._editor = Runtime.currentEditor;
 	
 		this.inherited(arguments);
+		
+		var propertiesToolBar = dijit.byId('propertiesToolBar');
+		if(propertiesToolBar){
+			propertiesToolBar.initialize();
+		}
 
 		// Install any onchange handlers for specific input elements
 		for(var i=0;i<this.pageTemplate.length;i++){

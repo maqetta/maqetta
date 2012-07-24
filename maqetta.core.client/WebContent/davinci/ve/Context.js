@@ -3635,9 +3635,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	/**
-	 * Returns left/top offsets of the user document iframe relative to outer frame holding the Maqetta app
+	 * Returns {l:,t:,w:,h:} of the user document iframe relative to outer frame holding the Maqetta app
 	 */
-	getParentIframeOffset: function(){
+	getParentIframeBounds: function(){
 		var parentIframe = this.getParentIframe();
 		if(parentIframe){
 			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
@@ -3649,7 +3649,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				offsetTop += offsetNode.offsetTop;
 				offsetNode = offsetNode.offsetParent;
 			}
-			return { l:offsetLeft, t:offsetTop };
+			return { l:offsetLeft, t:offsetTop, w:parentIframe.offsetWidth, h:parentIframe.offsetHeight };
 		}
 	}
 

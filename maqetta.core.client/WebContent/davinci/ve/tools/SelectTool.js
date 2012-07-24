@@ -799,7 +799,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				beforeAfter:null, 
 				currentParent:currentParent });
  		}
-		var parentIframeBounds = context.getParentIframeOffset();
+		var parentIframeBounds = context.getParentIframeBounds();
 		parentListDiv.style.left = (parentIframeBounds.l + event.pageX) + 'px';
 		parentListDiv.style.top = (parentIframeBounds.t + event.pageY) + 'px';
 

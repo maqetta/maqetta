@@ -1495,8 +1495,6 @@ davinci_top_bar .dijitButtonNode {
 .editFocusActionBar {
 	height:32px;
 	position:absolute;
-	left:0px;
-	top:-40px;
 	border:1px solid #6A94DC;
 	background:rgba(255,255,255,.9);
 	white-space:nowrap;

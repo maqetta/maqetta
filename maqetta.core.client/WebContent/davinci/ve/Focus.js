@@ -20,6 +20,12 @@ var LEFT = 0,	// nob and frame
 	RIGHT_TOP = 6,
 	RIGHT_BOTTOM = 7;
 
+// Hardcoded values, much exactly match runtime offsets and sizes for ActionBar
+var ActionBarOffsetLeft = 0,
+	ActionBarOffsetTop = -40,
+	ActionBarWidth = 264,
+	ActionBarHeight = 32;
+
 return declare("davinci.ve.Focus", _WidgetBase, {
 
 	// Inside knowledge about CSS classes used to style editFocusNob and editFocusFrame DIVs
@@ -88,8 +94,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			return; 
 		}
 		if(actionBar){
-			this._actionBarContainer.innerHTML = '<div class="editFocusActionBar"></div>';
+			this._actionBarContainer.innerHTML = '<div class="editFocusActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
 			this._attachCreateToolBar(this._actionBarContainer.children[0]);
+			this._adjustActionBarLocation();
 			new Moveable(this._actionBarContainer.children[0]);
 		}else{
 			this._actionBarContainer.innerHTML = '';
@@ -199,7 +206,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameSizeBorderAdjust = 4;
 
 var context = this._context;
-var parentIframeBounds = context.getParentIframeOffset();
+var parentIframeBounds = context.getParentIframeBounds();
 rect.l += parentIframeBounds.l;
 rect.t += parentIframeBounds.t;
 offScreenAdjust = false;
@@ -341,7 +348,7 @@ console.log('this._nobIndex='+this._nobIndex+',this._frameIndex='+this._frameInd
 				l:marginBoxPageCoords.l, t:marginBoxPageCoords.t,
 				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
 		*/
-		var parentIframeOffset = this._context.getParentIframeOffset();
+		var parentIframeOffset = this._context.getParentIframeBounds();
 		this._moverStart = { moverLeft:l, moverTop:t,
 				l:marginBoxPageCoords.l+parentIframeOffset.l, t:marginBoxPageCoords.t+parentIframeOffset.t,
 				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
@@ -463,7 +470,7 @@ console.dir(this._moverStart);
 		}
 
 		var rect = dojo.mixin({}, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
-		var parentIframeOffset = this._context.getParentIframeOffset();
+		var parentIframeOffset = this._context.getParentIframeBounds();
 		rect.l -= parentIframeOffset.l;
 		rect.t -= parentIframeOffset.t;
 		this._updateFocusChrome(
@@ -541,7 +548,7 @@ console.dir(this._moverStart);
 				}
 				var rect = dojo.mixin({}, newBox);
 				if(rect.hasOwnProperty('l')){
-					var parentIframeOffset = this._context.getParentIframeOffset();
+					var parentIframeOffset = this._context.getParentIframeBounds();
 					rect.l -= parentIframeOffset.l;
 					rect.t -= parentIframeOffset.t;
 				}
@@ -905,6 +912,41 @@ console.dir(this._moverStart);
 			});
 		}
 		return editorActions;
+	},
+	
+	/**
+	 * Make sure actionbar will fit inside of the area for the user document's iframe
+	 */
+	_adjustActionBarLocation: function(){
+		if(!this._moverCurrent || !this._actionBarContainer || !this._actionBarContainer.children){
+			return;
+		}
+		var actionBarDiv = this._actionBarContainer.children[0];
+		if(!actionBarDiv){
+			return;
+		}
+		// If we need to put ActionBar at center/top, this is #pixels offset from top
+		var topActionBarOffset = 5;
+		var box = dojo.mixin({}, this._moverCurrent);
+		box.l += ActionBarOffsetLeft;
+		box.t += ActionBarOffsetTop;
+		box.r = box.l + ActionBarWidth;
+		box.b = box.t + ActionBarHeight;
+		var iframeBounds = this._context.getParentIframeBounds();
+		iframeBounds.r = iframeBounds.l + iframeBounds.w;
+		iframeBounds.b = iframeBounds.t + iframeBounds.h;
+		if(box.l < iframeBounds.l || box.r > iframeBounds.r || 
+				box.t < iframeBounds.t || box.b > iframeBounds.b){
+			// If any of ActionBar doesn't fit on canvas, move to top/center
+			var newLeftAbs = iframeBounds.l + (iframeBounds.w/2) - (ActionBarWidth/2);
+			var newTopAbs = iframeBounds.t + topActionBarOffset;
+			var dx = newLeftAbs - box.l;
+			var dy = newTopAbs - box.t;
+			var newLeftRel = ActionBarOffsetLeft + dx;
+			var newTopRel = ActionBarOffsetTop + dy;
+			actionBarDiv.style.left = newLeftRel+'px';
+			actionBarDiv.style.top = newTopRel+'px';
+		}
 	}
 	
 });

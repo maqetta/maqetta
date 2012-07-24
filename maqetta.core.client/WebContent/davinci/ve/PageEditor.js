@@ -3,6 +3,7 @@ define([
 	"../ui/ModelEditor",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
+	"dojo/dnd/Moveable",
 	"../commands/CommandStack",
 	"../html/ui/HTMLEditor",
 	"../model/Path",
@@ -10,7 +11,7 @@ define([
 	"./VisualEditorOutline",
 	"./widget",
 	"dojo/i18n!davinci/ve/nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
+], function(declare, ModelEditor, BorderContainer, ContentPane, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -376,7 +377,22 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	showPropertiesPalette: function(){
-		davinci.Workbench.showDynamicView('davinci.ve.style', dojo.byId('floatingPropertiesPalette'));
+		var floatingPropertiesPaletteContainer = dojo.byId('floatingPropertiesPaletteContainer');
+		var floatingPropertiesPaletteInner = dojo.create('div',
+				{ 'class':'floatingPropertiesPalette',
+				style:'position:absolute; z-index:5; width:300px; height:500px; left:800px; top:200px;border:1px solid black;background:white;'}, 
+				floatingPropertiesPaletteContainer);
+		davinci.Workbench.showDynamicView('davinci.ve.style', floatingPropertiesPaletteInner);
+		dojo.connect(floatingPropertiesPaletteInner, 'mousedown', this, function(event){
+			//FIXME: short-term hack to get moving working at least to some level
+			if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
+				//FIXME: Highly fragile! Just a proof of concept at this point.
+				var moveable = new Moveable(floatingPropertiesPaletteInner);
+				moveable.onMoveStop = function(){
+					moveable.destroy();
+				}
+			}
+		});
 	},
 	
 	hidePropertiesPalette: function(){

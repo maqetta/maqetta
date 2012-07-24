@@ -450,6 +450,9 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		}
 		this.setReadOnly(true);
 		this.onEditorSelected();
+		var context = (this._editor.getContext) ? this._editor.getContext() : null;
+		var selection = (context && context.getSelection) ? context.getSelection() : [];
+		this._updatePaletteValues(selection);
 		dojo.subscribe("/davinci/ui/widgetValuesChanged", dojo.hitch(this, this._widgetValuesChanged));
 		dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 		//Don't need to subscribe here. ViewLite already does it for us.

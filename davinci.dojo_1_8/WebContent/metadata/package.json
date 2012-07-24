@@ -2856,6 +2856,37 @@
 		            "category": "mobile",
 		            "icon": "resources/images/content-pane.png",
 		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII="
+		        },
+		        {
+		            "name": "GridLayout",
+		            "description": "GridLayout",
+		            "type": "dojox.mobile.GridLayout",
+		            "category": "mobile",
+		            "properties": {
+		                "cols": 3,
+		            },
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.Pane",
+		            "inlineEdit": "./dojox/mobile/GridLayoutInput"
 		        }
 		    ]
 		    }

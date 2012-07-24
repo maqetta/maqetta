@@ -48,4 +48,10 @@ define({ root: {
 		"fixedSpliterInputRemaining": "Use up remaining space",
 		"fixedSpliterInputWidth": "Width",
 		"fixedSpliterInputHeight": "Height",
+
+		//mobile/GridLayoutInput
+		"gridLayoutInputTitle": "Grid Layout",
+		"numberOfRows": "Number of rows:",
+		"numberOfCols": "Number of columns:",
+		
 }});

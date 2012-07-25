@@ -73,9 +73,6 @@ public class Download extends Command {
         String root = req.getParameter("root");
         String build = req.getParameter("build");
 
-        System.err.println("Download build="+build);
-        System.out.println("Download build="+build);
-
         if (build != null){
         	//TODO: should put this in a separate Thread
         	this.buildURL = getBuildURL(user, req.getRequestURL().toString());
@@ -164,8 +161,12 @@ public class Download extends Command {
         Map<String,Object> result = null;
         String userID = user.getUserID();
 
+        System.out.println("analyzeWorkspace: number of files: " + files.length);
 		for (int i = 0; i < files.length; i++) {
-        	if (files[i].isVirtual()) continue;
+        	if (files[i].isVirtual()) {
+        		System.out.println("isVirtual name="+files[i].getPath());
+        		continue;
+        	}
 			method = new PostMethod(buildBase + "/api/dependencies");
     		try {
 	            String url = new URL(new URL(requestURL), "/maqetta/user/" + userID + "/ws/workspace/" + files[i].getPath()).toExternalForm();

@@ -13,8 +13,8 @@
  
 /*global define window*/
 
-define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEventTarget) {
-	var isWindows = window.navigator.platform.indexOf("Win") !== -1;
+define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEventTarget) { //$NON-NLS-1$ //$NON-NLS-0$
+	var isWindows = window.navigator.platform.indexOf("Win") !== -1; //$NON-NLS-0$
 
 	/**
 	 * Constructs a new TextModel with the given text and default line delimiter.
@@ -83,7 +83,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 			var regex = options.regex;
 			var pattern = string;
 			if (!regex && string) {
-				pattern = string.replace(/([\\$\^*\/+?\.\(\)|{}\[\]])/g, "\\$&");
+				pattern = string.replace(/([\\$\^*\/+?\.\(\)|{}\[\]])/g, "\\$&"); //$NON-NLS-0$
 			}
 			var current = null, skip;
 			if (pattern) {
@@ -95,12 +95,12 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 				var end = options.end;
 				var isRange = options.end !== undefined;
 				var flags = "";
-				if (flags.indexOf("g") === -1) { flags += "g"; }
+				if (flags.indexOf("g") === -1) { flags += "g"; } //$NON-NLS-1$ //$NON-NLS-0$
 				if (caseInsensitive) {
-					if (flags.indexOf("i") === -1) { flags += "i"; }
+					if (flags.indexOf("i") === -1) { flags += "i"; } //$NON-NLS-1$ //$NON-NLS-0$
 				}
 				if (wholeWord) {
-					pattern = "\\b" + pattern + "\\b";
+					pattern = "\\b" + pattern + "\\b"; //$NON-NLS-1$ //$NON-NLS-0$
 				}
 				var text = this._text[0], result, lastIndex, offset = 0;
 				if (isRange) {
@@ -418,24 +418,37 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		/**
 		 * Sets the line delimiter that is used by the view
 		 * when new lines are inserted in the model due to key
-		 * strokes  and paste operations.
+		 * strokes and paste operations. The line delimiter of
+		 * existing lines are unchanged unless the to <code>all</code>
+		 * argument is <code>true</code>.
 		 * <p>
 		 * If lineDelimiter is "auto", the delimiter is computed to be
-		 * the first delimiter found the in the current text. If lineDelimiter
+		 * the first delimiter found in the current text. If lineDelimiter
 		 * is undefined or if there are no delimiters in the current text, the
 		 * platform delimiter is used.
 		 * </p>
 		 *
 		 * @param {String} lineDelimiter the line delimiter that is used by the view when inserting new lines.
+		 * @param {Boolean} [all=false] whether or not the delimiter of existing lines are changed.
 		 */
-		setLineDelimiter: function(lineDelimiter) {
-			if (lineDelimiter === "auto") {
+		setLineDelimiter: function(lineDelimiter, all) {
+			if (lineDelimiter === "auto") { //$NON-NLS-0$
 				lineDelimiter = undefined;
 				if (this.getLineCount() > 1) {
 					lineDelimiter = this.getText(this.getLineEnd(0), this.getLineEnd(0, true));
 				}
 			}
-			this._lineDelimiter = lineDelimiter ? lineDelimiter : (isWindows ? "\r\n" : "\n"); 
+			this._lineDelimiter = lineDelimiter ? lineDelimiter : (isWindows ? "\r\n" : "\n"); //$NON-NLS-1$ //$NON-NLS-0$
+			if (all) {
+				var lineCount = this.getLineCount();
+				if (lineCount > 1) {
+					var lines = new Array(lineCount);
+					for (var i=0; i<lineCount; i++) {
+						lines[i] = this.getLine(i);
+					}
+					this.setText(lines.join(this._lineDelimiter));
+				}
+			}
 		},
 		/**
 		 * Replaces the text in the given range with the given text.
@@ -472,8 +485,8 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 			var cr = 0, lf = 0, index = 0;
 			var newLineOffsets = [];
 			while (true) {
-				if (cr !== -1 && cr <= index) { cr = text.indexOf("\r", index); }
-				if (lf !== -1 && lf <= index) { lf = text.indexOf("\n", index); }
+				if (cr !== -1 && cr <= index) { cr = text.indexOf("\r", index); } //$NON-NLS-0$
+				if (lf !== -1 && lf <= index) { lf = text.indexOf("\n", index); } //$NON-NLS-0$
 				if (lf === -1 && cr === -1) { break; }
 				if (cr !== -1 && lf !== -1) {
 					if (cr + 1 === lf) {
@@ -491,7 +504,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 			}
 		
 			var modelChangingEvent = {
-				type: "Changing",
+				type: "Changing", //$NON-NLS-0$
 				text: text,
 				start: eventStart,
 				removedCharCount: removedCharCount,
@@ -555,7 +568,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 			if (this._text.length === 0) { this._text = [""]; }
 			
 			var modelChangedEvent = {
-				type: "Changed",
+				type: "Changed", //$NON-NLS-0$
 				start: eventStart,
 				removedCharCount: removedCharCount,
 				addedCharCount: addedCharCount,

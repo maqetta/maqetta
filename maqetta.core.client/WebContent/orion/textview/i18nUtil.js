@@ -8,14 +8,14 @@
  *
  * Contributors: IBM Corporation - initial API and implementation
  *******************************************************************************/
-define([], function() {
-	
+
+/*global define*/
+define(function() {
 	function formatMessage(msg) {
 		var args = arguments;
 		return msg.replace(/\$\{([^\}]+)\}/g, function(str, index) { return args[(index << 0) + 1]; });
 	}
-	
-	//return module exports
+
 	return {
 		formatMessage: formatMessage
 	};

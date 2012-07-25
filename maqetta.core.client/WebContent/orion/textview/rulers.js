@@ -11,7 +11,7 @@
 
 /*global define setTimeout clearTimeout setInterval clearInterval Node */
 
-define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/textview/annotations', 'orion/textview/tooltip', 'orion/textview/util'], function(messages, mAnnotations, mTooltip, mUtil) {
+define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/textview/annotations', 'orion/textview/tooltip', 'orion/textview/i18nUtil'], function(messages, mAnnotations, mTooltip, i18nUtil) { //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 
 	/**
 	 * Constructs a new ruler. 
@@ -49,8 +49,8 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * @borrows orion.textview.AnnotationTypeList#removeAnnotationType as #removeAnnotationType
 	 */
 	function Ruler (annotationModel, rulerLocation, rulerOverview, rulerStyle) {
-		this._location = rulerLocation || "left";
-		this._overview = rulerOverview || "page";
+		this._location = rulerLocation || "left"; //$NON-NLS-0$
+		this._overview = rulerOverview || "page"; //$NON-NLS-0$
 		this._rulerStyle = rulerStyle;
 		this._view = null;
 		var self = this;
@@ -182,11 +182,11 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		 */
 		setAnnotationModel: function (annotationModel) {
 			if (this._annotationModel) {
-				this._annotationModel.removEventListener("Changed", this._listener.onAnnotationModelChanged); 
+				this._annotationModel.removEventListener("Changed", this._listener.onAnnotationModelChanged); //$NON-NLS-0$
 			}
 			this._annotationModel = annotationModel;
 			if (this._annotationModel) {
-				this._annotationModel.addEventListener("Changed", this._listener.onAnnotationModelChanged); 
+				this._annotationModel.addEventListener("Changed", this._listener.onAnnotationModelChanged); //$NON-NLS-0$
 			}
 		},
 		/**
@@ -224,11 +224,11 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		 */
 		setView: function (view) {
 			if (this._onTextModelChanged && this._view) {
-				this._view.removeEventListener("ModelChanged", this._listener.onTextModelChanged); 
+				this._view.removeEventListener("ModelChanged", this._listener.onTextModelChanged); //$NON-NLS-0$
 			}
 			this._view = view;
 			if (this._onTextModelChanged && this._view) {
-				this._view.addEventListener("ModelChanged", this._listener.onTextModelChanged);
+				this._view.addEventListener("ModelChanged", this._listener.onTextModelChanged); //$NON-NLS-0$
 			}
 		},
 		/**
@@ -314,15 +314,15 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 				anchor: this.getLocation()
 			};
 			var rect = view.getClientArea();
-			if (this.getOverview() === "document") {
-				rect.y = view.convert({y: y}, "view", "document").y;
+			if (this.getOverview() === "document") { //$NON-NLS-0$
+				rect.y = view.convert({y: y}, "view", "document").y; //$NON-NLS-1$ //$NON-NLS-0$
 			} else {
 				rect.y = view.getLocationAtOffset(model.getLineStart(lineIndex)).y;
 			}
-			view.convert(rect, "document", "page");
+			view.convert(rect, "document", "page"); //$NON-NLS-1$ //$NON-NLS-0$
 			info.x = rect.x;
 			info.y = rect.y;
-			if (info.anchor === "right") {
+			if (info.anchor === "right") { //$NON-NLS-0$
 				info.x += rect.width;
 			}
 			return info;
@@ -385,7 +385,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 			if (style) {
 				if (!result) { result = {}; }
 				if (result.styleClass && style.styleClass && result.styleClass !== style.styleClass) {
-					result.styleClass += " " + style.styleClass;
+					result.styleClass += " " + style.styleClass; //$NON-NLS-0$
 				} else {
 					result.styleClass = style.styleClass;
 				}
@@ -430,9 +430,9 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * @name orion.textview.LineNumberRuler
 	 */
 	function LineNumberRuler (annotationModel, rulerLocation, rulerStyle, oddStyle, evenStyle) {
-		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle);
-		this._oddStyle = oddStyle || {style: {backgroundColor: "white"}};
-		this._evenStyle = evenStyle || {style: {backgroundColor: "white"}};
+		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle); //$NON-NLS-0$
+		this._oddStyle = oddStyle || {style: {backgroundColor: "white"}}; //$NON-NLS-0$
+		this._evenStyle = evenStyle || {style: {backgroundColor: "white"}}; //$NON-NLS-0$
 		this._numOfDigits = 0;
 	}
 	LineNumberRuler.prototype = new Ruler(); 
@@ -502,7 +502,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * @name orion.textview.AnnotationRuler
 	 */
 	function AnnotationRuler (annotationModel, rulerLocation, rulerStyle) {
-		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle);
+		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle); //$NON-NLS-0$
 	}
 	AnnotationRuler.prototype = new Ruler();
 	
@@ -528,13 +528,13 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * @name orion.textview.OverviewRuler
 	 */
 	function OverviewRuler (annotationModel, rulerLocation, rulerStyle) {
-		Ruler.call(this, annotationModel, rulerLocation, "document", rulerStyle);
+		Ruler.call(this, annotationModel, rulerLocation, "document", rulerStyle); //$NON-NLS-0$
 	}
 	OverviewRuler.prototype = new Ruler();
 	
 	/** @ignore */
 	OverviewRuler.prototype.getRulerStyle = function() {
-		var result = {style: {lineHeight: "1px", fontSize: "1px"}};
+		var result = {style: {lineHeight: "1px", fontSize: "1px"}}; //$NON-NLS-1$ //$NON-NLS-0$
 		result = this._mergeStyle(result, this._rulerStyle);
 		return result;
 	};
@@ -552,7 +552,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 				var lineStart = model.getLineStart(mapLine);
 				mapLine = model.getBaseModel().getLineAtOffset(model.mapOffset(lineStart));
 			}
-			return mUtil.formatMessage(messages.line, mapLine + 1);
+			return i18nUtil.formatMessage(messages.line, mapLine + 1);
 		}
 		return Ruler.prototype._getTooltipContents.call(this, lineIndex, annotations);
 	};
@@ -563,7 +563,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		if (!result) {
 			//TODO annotationLineCount does not work when there are folded lines
 			var height = 3 * annotationLineCount;
-			result = {html: "&nbsp;", style: { style: {height: height + "px"}}};
+			result = {html: "&nbsp;", style: { style: {height: height + "px"}}}; //$NON-NLS-1$ //$NON-NLS-0$
 			result.style = this._mergeStyle(result.style, annotation.overviewStyle);
 		}
 		return result;

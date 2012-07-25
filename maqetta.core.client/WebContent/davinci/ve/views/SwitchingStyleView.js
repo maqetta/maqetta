@@ -2,6 +2,8 @@ define([
     	"dojo/_base/declare",
     	"dojo/i18n!davinci/ve/nls/ve",
     	"dojo/i18n!dijit/nls/common",
+    	"dijit/layout/TabContainer",
+    	"dijit/layout/ContentPane",
     	"davinci/Runtime",
     	"davinci/workbench/WidgetLite",
     	"davinci/ve/widgets/HTMLStringUtil",
@@ -10,7 +12,7 @@ define([
     	"davinci/ve/widgets/CommonProperties",
     	"davinci/ve/widgets/WidgetProperties",
     	"davinci/ve/widgets/EventSelection"
-], function(declare, veNls, commonNls, Runtime, WidgetLite, HTMLStringUtil,
+], function(declare, veNls, commonNls, TabContainer, ContentPane, Runtime, WidgetLite, HTMLStringUtil,
 		   	WidgetToolBar,  Cascade
 		    ){
 return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
@@ -224,6 +226,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				}
 			}
 		}
+/*
 		for(var i=0;i<this.pageTemplate.length;i++){
 			var title=this.pageTemplate[i].title;
 			// Use same styling as Dijit TitlePane
@@ -254,9 +257,29 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		for(var i=0;i<this.pageTemplate.length;i++){
 			template+= HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
 		}
+*/
+template+='<div class="propPaletteTabContainer"></div>';
 		template+="</td></tr></table>";
 		template+="</div>";
 		this.domNode.innerHTML = template;
+var propPaletteTabContainerNode = this.domNode.querySelector('.propPaletteTabContainer');
+if(propPaletteTabContainerNode){
+	this._tabContainer = new TabContainer({style:'width:360px;height:260px', tabPosition:'left-h'}, propPaletteTabContainerNode);
+	for(var i=0;i<this.pageTemplate.length;i++){
+		var title = this.pageTemplate[i].title;
+		var content = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
+		var cp = new ContentPane({title:title, content:content});
+		this._tabContainer.addChild(cp);
+	}
+}
+// Need a setTimeout - without it, browser sometimes hasn't layed out
+// the container widgets into which the TabContainer should go.
+setTimeout(function(){
+	this._tabContainer.layout();	
+	this._tabContainer.startup();
+	//this._tabContainer.resize();
+}.bind(this),50);
+
 
 		// Put click, mouseover, mouseout handlers on the section buttons in root view
 		var sectionButtons=dojo.query(".propSectionButton",this.domNode);

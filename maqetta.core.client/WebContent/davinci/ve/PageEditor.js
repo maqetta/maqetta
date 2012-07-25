@@ -380,7 +380,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		var floatingPropertiesPaletteContainer = dojo.byId('floatingPropertiesPaletteContainer');
 		var floatingPropertiesPaletteInner = dojo.create('div',
 				{ 'class':'floatingPropertiesPalette',
-				style:'position:absolute; z-index:5; width:300px; height:500px; left:800px; top:200px;border:1px solid black;background:white;'}, 
+				style:'position:absolute; z-index:5; width:360px; height:360px; left:800px; top:200px;border:1px solid black;background:white;'}, 
 				floatingPropertiesPaletteContainer);
 		davinci.Workbench.showDynamicView('davinci.ve.style', floatingPropertiesPaletteInner);
 		dojo.connect(floatingPropertiesPaletteInner, 'mousedown', this, function(event){

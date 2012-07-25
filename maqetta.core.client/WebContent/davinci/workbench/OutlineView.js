@@ -108,7 +108,7 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 		Workbench.createPopup({
 			partID: outlineActionsID,
 			domNode: this.outlineTree.domNode,
-		  openCallback: this.outlineTree.getMenuOpenCallback()
+		  openCallback: this.outlineTree.getMenuOpenCallback ? this.outlineTree.getMenuOpenCallback() : null
 		});
 	},
 

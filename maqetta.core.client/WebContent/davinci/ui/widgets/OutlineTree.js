@@ -1,12 +1,14 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
+	"dojo/touch",
+	"dojo/mouse", // mouse.isLeft
 	"dijit/Tree",
 	"davinci/ve/widget",
 	"davinci/ve/States",
 	"davinci/ve/commands/StyleCommand",
-	"davinci/ui/widgets/_ToggleTreeNode"
-], function(declare, connect, Tree, Widget, States, StyleCommand, ToggleTreeNode) {
+	"davinci/ui/widgets/_ToggleTreeNode",
+], function(declare, connect, touch, mouse, Tree, Widget, States, StyleCommand, ToggleTreeNode) {
 
 return declare("davinci.ui.widget.OutlineTree", Tree, {
 	// args
@@ -32,6 +34,7 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		}.bind(this);
 
 		this._connect("widgetChanged", "_widgetChanged");
+		this.connect(this.domNode, touch.press, "_onMouseDown");
 	},
 
 	/* override to allow us to control the nodes*/
@@ -66,19 +69,6 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 			nodes[0]._setToggleAttr(visible);
 		}
 	},
-
-	getMenuOpenCallback: function() {
-		return dojo.hitch(this, this._menuOpenCallback);
-	},
-
-	_menuOpenCallback: function(event) {
-		var w = dijit.getEnclosingWidget(event.target);
-		if (w && w.item) {
-			// select the item the context menu was opened on
-			this.selectNode([w.item]);
-			this._userSelect();
-		}
-	}, 
 
 	_userSelect: function() {
 		// user has made manual selection changes
@@ -129,12 +119,26 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		return path;
 	},
 
+	_onMouseDown: function(e) {
+		// if right click, select the node.  Dojo's tree blocks right click selecting
+		if(!mouse.isLeft(e)) {
+			var w = dijit.getEnclosingWidget(e.target);
+
+			if (w && w.item) {
+				e.preventDefault();
+				this.selectNode([w.item]);
+				this._userSelect();
+			}
+		}
+	},
+
 	_connect: function(contextFunction, thisFunction) {
 		this._handles.push(connect.connect(this.context, contextFunction, this, thisFunction));
 	},
 
 	destroy: function(){
 		this._handles.forEach(connect.disconnect);
+		this.inherited(arguments);
 	}
 });
 

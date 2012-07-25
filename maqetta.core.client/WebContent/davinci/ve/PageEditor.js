@@ -387,6 +387,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			//FIXME: short-term hack to get moving working at least to some level
 			if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
 				//FIXME: Highly fragile! Just a proof of concept at this point.
+				//FIXME: Isn't moveable until the second click
 				var moveable = new Moveable(floatingPropertiesPaletteInner);
 				moveable.onMoveStop = function(){
 					moveable.destroy();

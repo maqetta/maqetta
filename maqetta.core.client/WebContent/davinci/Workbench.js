@@ -1447,6 +1447,18 @@ if(view.id == 'davinci.ve.style'){
 				closable: true,
 				id:shadowId
 			});
+			shadowTab.onClose = function(tc, tab){
+				var shadowId = tab.id;
+				var editorId = shadowIdToEditorId(shadowId);
+				var editorContainer = dijit.byId(editorId);
+				var editorsContainer = dijit.byId("editors_container");
+				if(editorsContainer && editorContainer){
+					var okToClose = editorContainer.onClose.apply(editorContainer, [editorsContainer, editorContainer]);
+					if(okToClose){
+						tc.removeChild(tab);
+					}
+				}
+			}
 		}
 		
 		if (!editorExtension) {

@@ -505,7 +505,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		if(query.length) {
 			fileURL += "?" + query.join("&");
 		}
-		window.open(fileURL, "preview");
+		window.open(fileURL, "preview_" + fileURL); // TODO: any restrictions on characters, length? Use hash value?
 	},
 
 	/**

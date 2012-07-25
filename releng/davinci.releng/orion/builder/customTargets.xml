@@ -59,10 +59,16 @@ lastMapTag=${mapsTagTag}
 	
 	
 	<!-- git submodules update for the maqetta repo -->
-	<target name="updateSubmodules">
+	<target name="cloneMaqetta">
 			<property name='gitRepoFolder' value="${base}/gitClones/https___github_com_maqetta_maqetta_git"/>
-			<echo message="Updating git submodule in ${gitRepoFolder}"/>
-			<exec executable = "git" dir = "${gitRepoFolder}">
+			<echo message="Fetching and Updating git submodule in ${gitRepoFolder}"/>
+		<mkdir dir="${gitRepoFolder}"/>
+		 <exec executable = "git" dir = "${gitRepoFolder}">
+			<arg value = "clone" />
+			<arg value = "https://github.com/maqetta/maqetta.git" />
+		 	<arg value = "${gitRepoFolder}" />
+		 </exec>
+		 <exec executable = "git" dir = "${gitRepoFolder}">
 			     <arg value = "submodule" />
 				 <arg value = "update" />
 				 <arg value = "--init" />
@@ -75,10 +81,11 @@ lastMapTag=${mapsTagTag}
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
 	<target name="preSetup">
-
+		<antcall target="cloneMaqetta"/>
+		
 	    <!-- emf needs to be part of the "runnable" target, since Eclipse wants to "require" EMF, 
 	         not "include" it -->
-	     
+		<echo message="Pre setup target run..."/>
 		<echo message="Mirror from ${emfRepoURL} to ${localRepoLocation}" />
 		<p2.mirror destination="file:${localRepoLocation}" ignoreerrors="true">
 			<source location="${emfRepoURL}" />
@@ -107,10 +114,16 @@ lastMapTag=${mapsTagTag}
 		</p2.repo2runnable>
 		
 	</target>
+	<target name="postSetup">
+	
+		<echo message="Post setup target run.........."/>
+	
+	</target>
 
 	<target name="postFetch">
 		
-		 <antcall target="updateSubmodules"/>     
+		<echo message="Post fetch target run.........."/>
+			      
 		
 		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
 			<replacefilter token="HEAD" value="${buildLabel}" />
@@ -268,10 +281,13 @@ lastMapTag=${mapsTagTag}
 	</target>
 
 	<target name="preGenerate">
+		
+		<echo message="Pre Generate target run.........."/>
 		<replace file="${buildDirectory}/features/org.eclipse.pde.build.container.feature/feature.xml" token="1.0.0" value="0.5.0.qualifier" />
 	</target>
 
 	<target name="postBuild" >
+		
 		<property name="buildResultLocation" value="${buildDirectory}/${buildLabel}" />
 		<property name="dropLocation" value="${buildResultLocation}/drop" />
 		<mkdir dir="${dropLocation}" />

@@ -453,6 +453,8 @@ define(function() {
 
 		/**
 		 * Returns error message to display if CreateTool cannot find valid parent targets.
+		 *
+		 * XXX Poorly named.  Need something better.
 		 * 
 		 * @param {Object} args  object with following properties
 		 * @param {String} args.errorMsg
@@ -469,16 +471,22 @@ define(function() {
 		isAllowedError: function(args) {},
 
 		/**
-		 * Called whenever a widget is created or resized.
-		 * @param  {davinci.commands.CompoundCommand} command compound command onto which any additional commands should be added
-		 * @param  {[type]} w       widget
-		 * @param  {[type]} width   width for this widget
-		 * @param  {[type]} height  height for this widget
+		 * Invoked when a widget is created and sized.  Implement this function if you need to
+		 * add to the Command stack.
+		 * 
+		 * @param  {davinci/commands/CompoundCommand} command
+		 *             command onto which any additional commands can be added
+		 * @param  {davinci/ve/_Widget} widget
+		 * @param  {Number} width   initial width for 'widget'
+		 * @param  {Number} height  initial height for 'widget'
 		 */
-		onCreateResize: function(command, w, width, height) {},
+		onCreateResize: function(command, widget, width, height) {},
 
 		/**
-		 * Called by Context.js when a widget becomes deselected.
+		 * Invoked when 'widget' is deselected in the Visual Editor.
+		 *
+		 * XXX Only used by TooltipHelper.js.  Necessary?
+		 * 
 		 * @param  {davinci/ve/_Widget} widget
 		 */
 		onDeselect: function(widget) {},

@@ -73,6 +73,9 @@ public class Download extends Command {
         String root = req.getParameter("root");
         String build = req.getParameter("build");
 
+        System.err.println("Download build="+build);
+        System.out.println("Download build="+build);
+
         if (build != null){
         	//TODO: should put this in a separate Thread
         	this.buildURL = getBuildURL(user, req.getRequestURL().toString());
@@ -148,6 +151,7 @@ public class Download extends Command {
         	ioe.printStackTrace();
         	// continue download without a build
         } catch (InterruptedException ie) {
+        	System.out.println("build interrupted.");
         	// continue download without a build
         }
         return buildURL;
@@ -159,10 +163,6 @@ public class Download extends Command {
         PostMethod method;
         Map<String,Object> result = null;
         String userID = user.getUserID();
-
-        //FIXME: temporary for testing behind firewall, use Adam's public account.  Will only work if files match what's there (e.g. clean workspace)
-//		requestURL = "http://maqetta.org:55556/";
-//		userID = "apeller@us.ibm.com";
 
 		for (int i = 0; i < files.length; i++) {
         	if (files[i].isVirtual()) continue;

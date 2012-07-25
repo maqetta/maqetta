@@ -365,7 +365,9 @@ return declare("davinci.ve.input.SmartInput", null, {
 		this._connection.push(dojo.connect(this._inline.eb, "onKeyDown", this, "stopEvent"));
 		this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
 		if (this.multiLine == "true"){
-			this._connection.push(dojo.connect(this._inline.eb, "onBlur", this, "onBlur")); 
+/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE */
+			this._connection.push(dojo.connect(this._inline.eb, "onBlur", this, "onBlur"));
+/*ENDFIXME*/
 			this._connectSimDiv();
 
 		}
@@ -399,7 +401,9 @@ return declare("davinci.ve.input.SmartInput", null, {
 		
 		window.setTimeout(function(){
 			this._inline.eb.textbox.focus();
+/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE*/
 			this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); //comment out for debug
+/*ENDFIXME*/
 		}.bind(this), 500);
 		
 		this.resize(null);
@@ -415,14 +419,18 @@ return declare("davinci.ve.input.SmartInput", null, {
 	},
 	
 	_findSmartInputContainer: function(frameNode){
-		/*
+/*FIXME: With new design, put SmartInput onto BODY*/
+		return document.body;
+/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE*/
 		var smartInputContainer = frameNode.parentNode;
 		while(!dojo.hasClass(smartInputContainer,'dijitContentPane')){
 			smartInputContainer = smartInputContainer.parentNode;
 		}
 		return smartInputContainer;
-		*/
-		return document.body;
+/*ENDFIXME*/
+/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO ENABLE
+		return document.querySelector('.primaryPropertiesContainer') || document.body;
+*/
 	},
 	
 	_loading: function(height, width /*, styleHeight, styleWidth*/){
@@ -437,19 +445,25 @@ return declare("davinci.ve.input.SmartInput", null, {
 		}
 		smartInputContainer.appendChild(loading);
 		this._loadingDiv = loading;
+/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE*/
 		dojo.addClass(loading,'smartInputLoading');
+/*ENDFIXME*/
 		var inline= doc.createElement("div");
 		inline.id = 'ieb';
+/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE*/
 		dojo.addClass(inline,'inlineEdit dijitTooltipContainer');
+/*ENDFIXME*/
 		var inlinePointer = doc.createElement("div");
 		inlinePointer.id = 'iebPointer';
 		//dojo.addClass(inlinePointer,'inlineEditConnectorBelow');
 		this._inline = inline;
 		smartInputContainer.appendChild(inline);
 		smartInputContainer.appendChild(inlinePointer);
+/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE*/
 		var m2 = new dojo.dnd.Moveable("ieb");
 		this._connection.push(dojo.connect(m2, "onMoveStart", this, "onMoveStart")); 
 		this._connection.push(dojo.connect(m2, "onMoveStop", this, "onMoveStop")); 
+/*ENDFIXME*/
 
 		var pFloatingPane = new ContentPane({}, inline);
 		

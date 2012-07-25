@@ -684,10 +684,26 @@ var Workbench = {
 		}
 		
 //FIXME: Temporary
-var floatingPropertiesPalette = dojo.create('div', 
+var floatingPropertiesPaletteContainer = dojo.create('div', 
 		{ id:'floatingPropertiesPaletteContainer' },
 		document.body);
-//new Moveable(floatingPropertiesPalette);
+var floatingPropertiesPaletteInner = dojo.create('div',
+		{ 'class':'floatingPropertiesPalette',
+		style:'position:absolute; z-index:5; width:360px; height:360px; left:800px; top:200px;border:1px solid black;background:white;'}, 
+		floatingPropertiesPaletteContainer);
+floatingPropertiesPaletteContainer.style.display = 'none';
+/*
+dojo.connect(floatingPropertiesPaletteInner, 'mousedown', this, function(event){
+	//FIXME: short-term hack to get moving working at least to some level
+	if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
+		//FIXME: Highly fragile! Just a proof of concept at this point.
+		//FIXME: Isn't moveable until the second click
+		var moveable = new Moveable(floatingPropertiesPaletteInner);
+		moveable.onMoveStop = function(){
+			moveable.destroy();
+		}
+	}
+*/
 		
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {
@@ -712,7 +728,7 @@ var floatingPropertiesPalette = dojo.create('div',
 		}, this);
 
 //FIXME: TEMPORARY
-//this.showDynamicView('davinci.ve.style', dojo.byId('floatingPropertiesPalette'));
+this.showDynamicView('davinci.ve.style', floatingPropertiesPaletteInner);
 
 		// kludge to workaround problem where tabs are sometimes cutoff/shifted to the left in Chrome for Mac
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout

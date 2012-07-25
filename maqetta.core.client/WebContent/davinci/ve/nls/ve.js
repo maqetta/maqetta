@@ -1,18 +1,20 @@
 define({ root:
 {
 		//SwitchingStyleView.js
+		"primary":"Primary",
 		"common":"Common",
-		"widgetSpecific":"Widget-specific",
+		"widgetSpecific":"Per-widget",
 		"events":"Events",
 		"layout":"Layout",
 		"showMinMax":"show min/max",
-		"paddingMargins":"Padding/Margins",
+		"padding":"Padding",
+		"margins":"Margins",
 		"showtrbl":"show t/r/b/l",
 		"background":"Background",
 		"border":"Border",
 		"showDetails":"show details",
-		"fontsAndText":"Fonts and Text",
-		"shapesSVG":"Graphics/SVG",
+		"fontsAndText":"Fonts/Text",
+		"shapesSVG":"SVG",
 		
 		//StatesView.js
 		"Scenes":"Scenes",

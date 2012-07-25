@@ -377,28 +377,24 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	showPropertiesPalette: function(){
-		var floatingPropertiesPaletteContainer = dojo.byId('floatingPropertiesPaletteContainer');
-		var floatingPropertiesPaletteInner = dojo.create('div',
-				{ 'class':'floatingPropertiesPalette',
-				style:'position:absolute; z-index:5; width:360px; height:360px; left:800px; top:200px;border:1px solid black;background:white;'}, 
-				floatingPropertiesPaletteContainer);
-		davinci.Workbench.showDynamicView('davinci.ve.style', floatingPropertiesPaletteInner);
-		dojo.connect(floatingPropertiesPaletteInner, 'mousedown', this, function(event){
-			//FIXME: short-term hack to get moving working at least to some level
-			if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
-				//FIXME: Highly fragile! Just a proof of concept at this point.
-				//FIXME: Isn't moveable until the second click
-				var moveable = new Moveable(floatingPropertiesPaletteInner);
-				moveable.onMoveStop = function(){
-					moveable.destroy();
-				}
+		var targetNode = dojo.byId('floatingPropertiesPaletteContainer');
+		targetNode.style.display = 'block';
+		var tcnode = targetNode.querySelector('.propPaletteTabContainer');
+		if(tcnode){
+			var tc = dijit.byNode(tcnode);
+			if(tc){
+				setTimeout(function(){
+					tc.layout();
+					tc.startup();
+					tc.resize();
+				}, 50)
 			}
-		});
+		}
 	},
 	
 	hidePropertiesPalette: function(){
-		var targetNode = dojo.byId('floatingPropertiesPalette');
-		targetNode.innerHTML = '';
+		var targetNode = dojo.byId('floatingPropertiesPaletteContainer');
+		targetNode.style.display = 'none';
 	}
 });
 }); 

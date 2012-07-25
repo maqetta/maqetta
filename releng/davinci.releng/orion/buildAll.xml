@@ -82,12 +82,12 @@
         <condition property="run.external.targets">
             <equals arg1="${deployment-type}" arg2="external"/>
         </condition>
-		<!--
+		
     	<condition property="run.dojo.build">
     		<equals arg1="${dojoBuild}" arg2="true"/>
     	</condition>
     	<echo message="run dojo build:${run.dojo.build}"/>
-    	-->
+    
     </target>
 	<target name="MaqettaOrion" if="run.external.targets">
 	    <echo message="Running orion build...."/>
@@ -108,7 +108,7 @@
 		<property name="allElementsFile" value="${builder}/allElements.xml" />
 		 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 			<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
-		 	<property name="run.dojo.build" value="false"/>
+		 	
 		 	<property name="product" value="${builder}/maqettaOrion.product"/>
 		 	
 		 	<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
@@ -154,7 +154,6 @@
 			<property name="allElementsFile" value="${builder}/allElements.xml" />
 			 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 				<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
-			 	<property name="run.dojo.build" value="false"/>
 			 	<property name="product" value="${builder}/maqettaOrionHosted.product"/>
 			 	<property name="archiveNamePrefix" value="maqetta-orion-hosted-${buildLabel}"/>
 			 	 <property name="dojo.cache.directory" value="${dojo.cache.directory}"/>

@@ -405,12 +405,26 @@ var Runtime = {
 		}
 
 		if (equal && keybinding.charOrCode && e.which) {
-			if (dojo.isString(keybinding.charOrCode)) {
-				// if we have a string, use fromCharCode
-				equal = (keybinding.charOrCode.toLowerCase() === String.fromCharCode(e.which).toLowerCase());
+			if (dojo.isArray(keybinding.charOrCode)) {
+				equal = dojo.some(keybinding.charOrCode, dojo.hitch(this, function(charOrCode) {
+					return this._comparecharOrCode(charOrCode, e);
+				}));
 			} else {
-				equal = (keybinding.charOrCode === e.which);
+				equal = this._comparecharOrCode(keybinding.charOrCode, e);
 			}
+		}
+
+		return equal;
+	},
+
+	_comparecharOrCode: function(charOrCode, e) {
+		var equal;
+
+		if (dojo.isString(charOrCode)) {
+			// if we have a string, use fromCharCode
+			equal = (charOrCode.toLowerCase() === String.fromCharCode(e.which).toLowerCase());
+		} else {
+			equal = (charOrCode === e.which);
 		}
 
 		return equal;

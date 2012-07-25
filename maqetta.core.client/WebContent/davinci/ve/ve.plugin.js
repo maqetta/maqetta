@@ -352,7 +352,7 @@ return {
                     label: "Delete",
                     action: "davinci/ve/actions/DeleteAction",
                     toolbarPath: "delete",
-                    keyBinding: {charOrCode: dojo.keys.DELETE}
+                    keyBinding: {charOrCode: [dojo.keys.DELETE, dojo.keys.BACKSPACE]}
                 },
                 {
                     id: "openBrowser",
@@ -494,8 +494,7 @@ return {
                         require(['../Workbench'], function(workbench) {
                             workbench.closeActiveEditor();
                         });
-                    },
-                    keyBinding: {accel: true, shift: true, charOrCode: "w", allowGlobal: true}
+                    }
                 },
                 {
                     id: "showWidgetsPalette",

@@ -10,7 +10,8 @@ define([
 	"davinci/ve/themeEditor/commands/StateChangeCommand",
 	"dijit/layout/ContentPane",
 	"davinci/commands/CompoundCommand",
-	"davinci/ve/themeEditor/ThemeColor"
+	"davinci/ve/themeEditor/ThemeColor",
+	"davinci/ve/utils/GeomUtils"
 	], function(
 			declare,
 			ModelEditor,
@@ -23,7 +24,8 @@ define([
 			StateChangeCommand,
 			ContentPane,
 			CompoundCommand,
-			ThemeColor
+			ThemeColor,
+			GeomUtils
 	){
 
 return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifier*/], {
@@ -733,22 +735,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		var domNode = widget;
 		if (widget.domNode)
 			domNode = widget.domNode;
-		
-		var realleft =0;
-		var realtop = 0;
-		var obj = domNode;
-		if (obj.offsetParent) {
-			do {
-			    if (obj.className.indexOf('theming-widget') > -1){
-			        // #1024 using ralitve div for postion
-			        realtop = domNode.offsetTop; // 1024
-			        realleft = domNode.offsetLeft ; // 1024
-			        break;
-			    }
-				realleft += obj.offsetLeft;
-				realtop += obj.offsetTop;
-			} while (obj = obj.offsetParent);
-		}
+
 		var frame = this.getContext().getDocument().createElement("div");
 		//dojo.connect(frame, "onclick", this, "editFrame");
 		
@@ -758,14 +745,11 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		frame.className = className;
 		frame.id = id + widget.id;
 		frame.style.position = "absolute";
-		frame.style.width = domNode.offsetWidth + "px";
-		frame.style.height = domNode.offsetHeight + "px";
-		var padding = 2; // put some space between the subwidget and box
-		realtop = realtop - padding;
-		realleft = realleft - padding;
-		frame.style.top = realtop + "px";
-		frame.style.left = realleft + "px";
-		frame.style.padding = padding + 'px';
+		var box = GeomUtils.getMarginBoxPageCoords(domNode);
+		frame.style.top = box.t + "px";
+		frame.style.left = box.l + "px";
+		frame.style.width = box.w + "px";
+		frame.style.height = box.h + "px";
 		frame.style.display = "block";
 		frame._widget = widget;
 		domNode.parentNode.appendChild(frame);

@@ -3,6 +3,7 @@ define([
     "dojo/_base/lang",
     "dojo/_base/xhr",
 	"dojo/query",
+	"dojo/dom-style",
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"dojo/_base/connect",
@@ -42,6 +43,7 @@ define([
 	lang,
 	xhr,
 	query,
+	domStyle,
 	Deferred,
 	all,
 	connect,
@@ -1297,6 +1299,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
 		this.widgetAddedOrDeleted();
+		this.updateScrollListeners();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	    this.editor.setDirty(this.hasDirtyResources());
 	},
@@ -3548,6 +3551,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param {number} type  0 - modified, 1 - added, 2 - removed
 	*/
 	widgetChanged: function(type, widget) {
+		this.updateScrollListeners();
+	},
+	
+	updateScrollListeners: function(){
+		var that = this;
+		function checkNodeRecursive(node){
+			var overflowX = domStyle.get(node, 'overflow-x');
+			var overflowY = domStyle.get(node, 'overflow-y');
+			if(!node._maqOverflow && (overflowX == 'auto' || overflowX == 'scroll' || overflowY == 'auto' || overflowY == 'scroll')){
+				node._maqOverflow = connect.connect(node, 'onscroll', that, function(event) {
+					that.updateFocusAll();
+				});
+			}
+			for(var i=0; i<node.childNodes.length; i++){
+				var ch = node.childNodes[i];
+				if(ch.nodeType == 1){	// 1=ELEMENT
+					checkNodeRecursive(ch);
+				}
+			}
+		}
+		checkNodeRecursive(this.rootNode);
 	},
 	
 	getPageLeftTop: function(node){

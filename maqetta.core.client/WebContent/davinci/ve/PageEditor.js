@@ -27,7 +27,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this._commandStack = new CommandStack(this);
         this.savePoint=0;
 
-        this._designCP = new ContentPane({region:'center'});
+        this._designCP = new ContentPane({'class':'designCP',region:'center'});
         this._bc.addChild(this._designCP);
 
 

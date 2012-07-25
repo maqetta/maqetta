@@ -21,8 +21,8 @@ var LEFT = 0,	// nob and frame
 	RIGHT_BOTTOM = 7;
 
 // Hardcoded values, much exactly match runtime offsets and sizes for ActionBar
-var ActionBarOffsetLeft = 0,
-	ActionBarOffsetTop = -40,
+var ActionBarOffsetLeft = 20,
+	ActionBarOffsetTop = -70,
 	ActionBarWidth = 264,
 	ActionBarHeight = 32;
 
@@ -206,9 +206,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameSizeBorderAdjust = 4;
 
 var context = this._context;
-var parentIframeBounds = context.getParentIframeBounds();
-rect.l += parentIframeBounds.l;
-rect.t += parentIframeBounds.t;
+var parentbounds = context.getParentIframeBounds();
+rect.l += parentbounds.l;
+rect.t += parentbounds.t;
 offScreenAdjust = false;
 
 		this.domNode.style.left = rect.l + 'px';
@@ -932,21 +932,22 @@ console.dir(this._moverStart);
 		box.t += ActionBarOffsetTop;
 		box.r = box.l + ActionBarWidth;
 		box.b = box.t + ActionBarHeight;
-		var iframeBounds = this._context.getParentIframeBounds();
-		iframeBounds.r = iframeBounds.l + iframeBounds.w;
-		iframeBounds.b = iframeBounds.t + iframeBounds.h;
-		if(box.l < iframeBounds.l || box.r > iframeBounds.r || 
-				box.t < iframeBounds.t || box.b > iframeBounds.b){
+		//var bounds = this._context.getParentIframeBounds();
+		var bounds = this._context.getDesignPaneBounds();
+		bounds.r = bounds.l + bounds.w;
+		bounds.b = bounds.t + bounds.h;
+		if(box.l < bounds.l || box.r > bounds.r || 
+				box.t < bounds.t || box.b > bounds.b){
 			// If any of ActionBar doesn't fit on canvas, move to top/center
-			var newLeftAbs = iframeBounds.l + (iframeBounds.w/2) - (ActionBarWidth/2);
-			var newTopAbs = iframeBounds.t + topActionBarOffset;
+			var newLeftAbs = bounds.l + (bounds.w/2) - (ActionBarWidth/2);
+			var newTopAbs = bounds.t + topActionBarOffset;
 			var dx = newLeftAbs - box.l;
 			var dy = newTopAbs - box.t;
 			var newLeftRel = ActionBarOffsetLeft + dx;
 			var newTopRel = ActionBarOffsetTop + dy;
-			actionBarDiv.style.left = newLeftRel+'px';
-			actionBarDiv.style.top = newTopRel+'px';
 		}
+		actionBarDiv.style.left = newLeftRel+'px';
+		actionBarDiv.style.top = newTopRel+'px';
 	}
 	
 });

@@ -3640,6 +3640,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getParentIframeBounds: function(){
 		var parentIframe = this.getParentIframe();
 		if(parentIframe){
+			/*
 			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
 			offsetLeft = 0;
 			offsetTop = 0;
@@ -3650,6 +3651,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				offsetNode = offsetNode.offsetParent;
 			}
 			return { l:offsetLeft, t:offsetTop, w:parentIframe.offsetWidth, h:parentIframe.offsetHeight };
+			*/
+			var box = GeomUtils.getBorderBoxPageCoords(parentIframe);
+			return box;
+		}
+	},
+	
+	/**
+	 * Returns {l:,t:,w:,h:} of the ContentPane holding design view relative to outer frame holding the Maqetta app
+	 */
+	getDesignPaneBounds: function(){
+		var parentIframe = this.getParentIframe();
+		var node = parentIframe;
+		var designCP;
+		while(node && node.tagName != 'BODY'){
+			if(dojo.hasClass(node, 'designCP')){
+				designCP = node;
+			}
+			node = node.parentNode;
+		}
+		if(designCP){
+			var box = GeomUtils.getBorderBoxPageCoords(designCP);
+			return box;
+		}else{
+			console.error('Context.js:getDesignPaneBounds. No designCP');
 		}
 	}
 

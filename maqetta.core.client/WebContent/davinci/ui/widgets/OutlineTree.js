@@ -138,7 +138,6 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 
 	destroy: function(){
 		this._handles.forEach(connect.disconnect);
-		this.inherited(arguments);
 	}
 });
 

@@ -307,12 +307,14 @@ BODY{
 }
 .claro .dijitToolbar.davinciToolbar {
 	padding:8px 0px 4px 10px; 
-	height:44px;
 	font-size:10px;
 	background-color:#e0e6e6;
 	background-image:none;
 	border-bottom:none;
 	width:100%;
+}
+#davinci_toolbar_pane .dijitToolbar.davinciToolbar {
+	height:44px;
 }
 .claro .dijitToolbar.davinciToolbar .dijitButtonContents {
 	padding:0 2px;

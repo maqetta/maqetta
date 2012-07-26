@@ -77,7 +77,7 @@ return {
 	],
 	"davinci.actionSets": [
 		{
-			id: "main",
+			id: "editorActionsReview",
 			visible: true,
 			actions: [
 				{
@@ -145,6 +145,10 @@ return {
 		}
 	],
 	"davinci.actionSetPartAssociations": [
+		{
+			targetID: "davinci.ui.editorActionsReview",
+			parts: ["davinci.ui.editorMenuBar"]
+		  },
 		{
 			targetID: "davinci.review.reviewExplorerActions",
 			parts: ["davinci.review.reviewNavigator"]

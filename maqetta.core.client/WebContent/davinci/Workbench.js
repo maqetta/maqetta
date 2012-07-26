@@ -488,7 +488,15 @@ var Workbench = {
 
 	showPerspective: function(perspectiveID) {
 		Workbench.activePerspective = perspectiveID;
-		Workbench._updateMainMenubar();
+		var menuTree = Workbench._createMenuTree();	// no params means include "everything else"
+		Workbench._updateMainMenubar(dojo.byId('davinci_main_menu'), menuTree);
+		var maq_banner_editor_commands = dojo.byId('maq_banner_editor_commands');
+		var o = this._getActionSets('davinci.ui.editorMenuBar');
+		var clonedActionSets = o.clonedActionSets;
+		if(clonedActionSets.length > 0){
+			var menuTree=Workbench._createMenuTree(clonedActionSets);
+			Workbench._updateMainMenubar(dojo.byId('maq_banner_editor_commands'), menuTree);
+		}
 
 		var mainBody = dojo.byId('mainBody');
 		if (!mainBody.tabs) {
@@ -761,13 +769,10 @@ this.showDynamicView('davinci.ve.style', floatingPropertiesPaletteInner);
 		Workbench._addItemsToMenubar(menuTree, menuTop);
 	},
 	
-	_updateMainMenubar: function() {
-		 var menuDiv=dojo.byId('davinci_main_menu');
-		 if (!menuDiv) {
-			 return;  // no menu
+	_updateMainMenubar: function(menuDiv, menuTree) {
+		 if (!menuDiv || !menuTree) {
+			 return;
 		 }
-		var menuTree = Workbench._createMenuTree();
-
 		for (var i=0; i<menuTree.length; i++) {
 			var menuTreeItem = menuTree[i];
 			for (var j=0;j<menuTreeItem.menus.length;j++) {
@@ -1536,7 +1541,26 @@ if(view.id == 'davinci.ve.style'){
 		var partID = args.partID, domNode=args.domNode, 
 			context=args.context,
 			widgetCallback=args.openCallback;
-//			
+		
+		var o = this._getActionSets(partID);
+		var clonedActionSets = o.clonedActionSets;
+		var actionSets = o.actionSets;
+		if(clonedActionSets.length > 0){
+			var menuTree=Workbench._createMenuTree(clonedActionSets,true);
+			Workbench._initActionsKeys(actionSets, args);
+			var popup=Workbench._createMenu(menuTree,context);
+			if (popup && domNode) {
+				popup.bindDomNode(domNode);
+			}
+			popup._widgetCallback=widgetCallback;
+			return popup;
+		}
+	},
+
+	//FIXME: Need to reconcile _getActionSets() vs getActionSets()
+	//Looks like the main difference is that _getActionSets() allows
+	//extensions from widget libraries
+	_getActionSets: function(partID){
 		var actionSetIDs=[];
 		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
 			function (extension) {
@@ -1548,6 +1572,7 @@ if(view.id == 'davinci.ve.style'){
 			   }
 			});
 		
+		var clonedActionSets = [];
 		if (actionSetIDs.length) {
 		   var actionSets=Runtime.getExtensions("davinci.actionSets",
 				function (extension) {
@@ -1556,7 +1581,6 @@ if(view.id == 'davinci.ve.style'){
 		   if (actionSets.length) {
 			   // Determine if any widget libraries have indicated they want to augment the actions in
 			   // the action set
-			   var clonedActionSets = [];
 			   dojo.forEach(actionSets, function(actionSet) {
 				   var libraryActions = metadata.getLibraryActions(actionSet.id);
 				   if (libraryActions.length) {
@@ -1573,18 +1597,9 @@ if(view.id == 'davinci.ve.style'){
 					   clonedActionSets.push(actionSet);
 				   }
 			   });
-			   
-			   var menuTree=Workbench._createMenuTree(clonedActionSets,true);
-			   Workbench._initActionsKeys(actionSets, args);
-			   var popup=Workbench._createMenu(menuTree,context);
-			   if (popup && domNode) {
-				   popup.bindDomNode(domNode);
-			   }
-			   popup._widgetCallback=widgetCallback;
-			   return popup;
-		   }
-		   
+			}
 		}
+		return {actionSets:actionSets, clonedActionSets:clonedActionSets};
 	},
 
 	getActionSets: function(partID) {

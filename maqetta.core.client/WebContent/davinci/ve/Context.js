@@ -1165,9 +1165,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_setSourceData: function(data) {
-		var widgetsDeferred;
+		var widgetsPromise;
 		connect.connect(this.getGlobal(), 'onload', this, function() {
-			widgetsDeferred.then(this.onload());
+			widgetsPromise.then(this.onload());
 		});
 
 		// cache the theme metadata

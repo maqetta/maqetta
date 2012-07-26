@@ -85,7 +85,7 @@ lastMapTag=${mapsTagTag}
 		
 	    <!-- emf needs to be part of the "runnable" target, since Eclipse wants to "require" EMF, 
 	         not "include" it -->
-		<echo message="Pre setup target run..."/>
+		
 		<echo message="Mirror from ${emfRepoURL} to ${localRepoLocation}" />
 		<p2.mirror destination="file:${localRepoLocation}" ignoreerrors="true">
 			<source location="${emfRepoURL}" />
@@ -114,16 +114,8 @@ lastMapTag=${mapsTagTag}
 		</p2.repo2runnable>
 		
 	</target>
-	<target name="postSetup">
 	
-		<echo message="Post setup target run.........."/>
-	
-	</target>
-
 	<target name="postFetch">
-		
-		<echo message="Post fetch target run.........."/>
-			      
 		
 		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
 			<replacefilter token="HEAD" value="${buildLabel}" />
@@ -281,8 +273,6 @@ lastMapTag=${mapsTagTag}
 	</target>
 
 	<target name="preGenerate">
-		
-		<echo message="Pre Generate target run.........."/>
 		<replace file="${buildDirectory}/features/org.eclipse.pde.build.container.feature/feature.xml" token="1.0.0" value="0.5.0.qualifier" />
 	</target>
 

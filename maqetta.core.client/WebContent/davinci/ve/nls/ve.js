@@ -1,9 +1,9 @@
 define({ root:
 {
 		//SwitchingStyleView.js
-		"primary":"Primary",
+		"basic":"Basic",
 		"common":"Common",
-		"widgetSpecific":"Per-widget",
+		"widgetSpecific":"Per widget",
 		"events":"Events",
 		"layout":"Layout",
 		"showMinMax":"show min/max",

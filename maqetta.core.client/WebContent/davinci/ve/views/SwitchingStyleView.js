@@ -41,7 +41,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	          //Note: the keys here must match the propsect_* values in the supports() functions
 	          //in the various editors, such as PageEditor.js and ThemeEditor.js
 	          
-	          {key: "primary", 
+	          {key: "basic", 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.PrimaryProperties'></div>"}},
 	          {key: "common", 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},

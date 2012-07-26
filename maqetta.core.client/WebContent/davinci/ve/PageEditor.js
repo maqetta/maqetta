@@ -387,6 +387,20 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 					tc.layout();
 					tc.startup();
 					tc.resize();
+					dojo.connect(targetNode, 'mousedown', this, function(event){
+						//FIXME: short-term hack to get moving working at least to some level
+						if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
+							var floatingPropertiesPalette = targetNode.querySelector('.floatingPropertiesPalette');
+							if(floatingPropertiesPalette){
+								//FIXME: Highly fragile! Just a proof of concept at this point.
+								//FIXME: Isn't moveable until the second click
+								var moveable = new Moveable(floatingPropertiesPalette);
+								moveable.onMoveStop = function(){
+									moveable.destroy();
+								}
+							}
+						}
+					});
 				}, 50)
 			}
 		}

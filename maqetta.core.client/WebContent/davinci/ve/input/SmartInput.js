@@ -401,7 +401,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 		
 		window.setTimeout(function(){
 			this._inline.eb.textbox.focus();
-/*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE*/
+/*FIXME: DISABLING FOR NOW */
 			this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); //comment out for debug
 /*ENDFIXME*/
 		}.bind(this), 500);

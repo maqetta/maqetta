@@ -1165,6 +1165,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_setSourceData: function(data) {
+		var widgetsDeferred;
+		connect.connect(this.getGlobal(), 'onload', this, function() {
+			widgetsDeferred.then(this.onload());
+		});
+
 		// cache the theme metadata
 		this.themeChanged();
 		var theme = this.getThemeMeta();
@@ -1280,11 +1285,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
-		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(function(){
-			connect.connect(this.getGlobal(), 'onload', this, function() {
-				this.onload();
-			});
-		}.bind(this));		
+		return (widgetsPromise = this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts));
 	},
 
 	/**

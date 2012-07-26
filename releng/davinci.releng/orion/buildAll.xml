@@ -20,9 +20,8 @@
 		
 		<antcall target="MaqettaOrion"/>
 		<antcall target="scrubFeatures"/>
-		<!--
 		<antcall target="MaqettaOrionHosted"/>
-    	-->
+    	
 	</target>
 
     <target name="init">

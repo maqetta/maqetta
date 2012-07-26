@@ -300,12 +300,14 @@ BODY{
 /* Tweaks to Claro for editor toolbar */
 #davinci_toolbar_pane {
 	overflow:hidden;
+	height:44px;
+	padding:0px;
 }
 .claro .dijitToolbar.davinciToolbar {
-	padding:2px 0px 4px; 
-	line-height:18px;
+	padding:8px 0px 4px 10px; 
+	height:44px;
 	font-size:10px;
-	background-color:transparent;
+	background-color:#e0e6e6;
 	background-image:none;
 	border-bottom:none;
 	width:100%;
@@ -334,6 +336,13 @@ BODY{
 }
 #davinci_app .davinciToolbar  .davinciFloatRight {
 	float:right;
+}
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitButton .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitToggleButton .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox .dijitButtonNode {
+	background:none;
 }
 #davinci_app {
 	height: 100%;
@@ -432,6 +441,10 @@ davinci_top_bar .dijitButtonNode {
 
 #davinci_file_tabs {
 	height:48px;
+	overflow-y:hidden;
+}
+#davinci_app #davinci_file_tabs.dijitTabContainer {
+	background:#f8f8f8;
 }
 #davinci_file_tabs .dijitTab {
 	padding:15px 10px;
@@ -455,10 +468,6 @@ davinci_top_bar .dijitButtonNode {
 	background-position:-35px -321px;
 	margin-left:7px;
 	margin-right:0px;
-}
-#davinci_toolbar_pane {
-	height:32px;
-	padding:0px;
 }
 
 #davinci_app .davinciPalette .dijitTab {

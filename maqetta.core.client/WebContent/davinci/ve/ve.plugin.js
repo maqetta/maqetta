@@ -416,7 +416,7 @@ return {
                 {
                     id: "openBrowser",
                     iconClass: 'openBrowserIcon',
-                    className: 'davinciFloatRight',
+                    className: 'davinciFloatRight openBrowser',
                     run: function() {
                         require(['../Workbench'], function(workbench) {
                             var editor = workbench.getOpenEditor();

@@ -261,6 +261,9 @@
 	width: 16px;
 	height: 16px;
 }
+#davinci_toolbar_container .openBrowser {
+	margin-right:18px;
+}
 .openBrowserIcon {
 	background-image: url(img/sprite.png); /* FIXME: Disabled version? */
 	background-position: -46px -532px;

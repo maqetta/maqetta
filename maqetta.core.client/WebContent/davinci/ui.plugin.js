@@ -111,7 +111,7 @@ return {
                    ]
                },
                {
-                   label: "New",
+                   label: "Create",
                    path: "new",
                    id: "davinci.new",
                    separator: [

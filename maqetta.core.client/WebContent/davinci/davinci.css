@@ -340,15 +340,26 @@ BODY{
 }
 
 #davinci_top_bar {
+	padding:0;
+	margin:0;
+}
+#davinci_top_bar_main {
 	padding:0 8px 0 22px; /* override dijitContentPane */
-	background: #2c2c2c url('img/banner-tile.png') repeat-x;
+	background: -webkit-linear-gradient(#464646, #121212);
 	color: #ccc;
     font: normal bold 12px Arial, sans-serif;
     text-shadow:none;
-    border-top: rgb(45,46,46) 1px;
 	border-bottom: rgb(45,46,46) 1px;
 	overflow: hidden;
-	line-height:38px;
+	height:44px;
+	line-height:44px;
+}
+#davinci_top_bar_divider {
+	height:4px;
+	/*background-image: url(img/bkgrd_bluelip.gif);*/
+	background-image: url(img/sprite.png);
+	background-position: 0 -18px;
+	background-repeat: repeat-x;
 }
 .maq_banner_name_box {
 	display: inline-block;

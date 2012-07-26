@@ -302,6 +302,8 @@ BODY{
 	overflow:hidden;
 	height:44px;
 	padding:0px;
+	border-top: 1px solid #d2d2d2;
+	border-bottom: 1px solid #959595;
 }
 .claro .dijitToolbar.davinciToolbar {
 	padding:8px 0px 4px 10px; 
@@ -440,17 +442,26 @@ davinci_top_bar .dijitButtonNode {
 }
 
 #davinci_file_tabs {
-	height:48px;
+	height:44px;
 	overflow-y:hidden;
 }
-#davinci_app #davinci_file_tabs.dijitTabContainer {
+#davinci_app #davinci_file_tabs.dijitTabContainer,
+	#davinci_app #davinci_file_tabs .dijitTabPaneWrapper {
 	background:#f8f8f8;
 }
+#davinci_file_tabs .dijitTabPaneWrapper,
+	#davinci_file_tabs .dijitTabContainerTop-tabs,
+	#davinci_file_tabs .dijitTabContainerBottom-tabs,
+	#davinci_file_tabs .dijitTabContainerLeft-tabs,
+	#davinci_file_tabs .dijitTabContainerRight-tabs {
+	border-color:transparent;
+}
 #davinci_file_tabs .dijitTab {
-	padding:15px 10px;
+	padding:12px 10px 13px;
 	top:0px;
 	background:#f8f8f8;
 	color:#424242;
+	margin-right:0px;
 }
 #davinci_file_tabs .dijitTab.dijitTabChecked {
 	font-weight:bold;
@@ -470,6 +481,9 @@ davinci_top_bar .dijitButtonNode {
 	margin-right:0px;
 }
 
+#davinci_app .davinciPalette {
+	background:white;
+}
 #davinci_app .davinciPalette .dijitTab {
 	padding:2px;
 }

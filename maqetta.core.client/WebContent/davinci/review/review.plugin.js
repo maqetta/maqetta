@@ -146,7 +146,7 @@ return {
 	],
 	"davinci.actionSetPartAssociations": [
 		{
-			targetID: "davinci.ui.editorActionsReview",
+			targetID: "davinci.review.editorActionsReview",
 			parts: ["davinci.ui.editorMenuBar"]
 		  },
 		{

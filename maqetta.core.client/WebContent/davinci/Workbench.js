@@ -1316,12 +1316,12 @@ if(view.id == 'davinci.ve.style'){
 			d.resolve(tab);
 		} else {
 			require([view.viewClass], function(viewCtor){
-				d.resolve(new (viewCtor || ViewPart)({
-					title: view.title,
-					id: view.id,
-					closable: false,
-					view: view
-				}));
+				var params = { title: view.title,
+						id: view.id, closable: false, view: view };
+				if(view.iconClass){
+					params.iconClass = view.iconClass;
+				}
+				d.resolve(new (viewCtor || ViewPart)(params));
 			});
 		}
 		return d;

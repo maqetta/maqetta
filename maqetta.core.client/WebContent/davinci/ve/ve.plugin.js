@@ -9,12 +9,14 @@ return {
         {
             id: "Palette",
             title: "Widgets",
-            viewClass: "davinci/ve/palette/HtmlWidgets"
+            viewClass: "davinci/ve/palette/HtmlWidgets",
+            iconClass: "paletteIcon paletteIconWidgets"
         },
         {
             id: "states",
             title: "Scenes",
-            viewClass: "davinci/ve/views/StatesView"
+            viewClass: "davinci/ve/views/StatesView",
+            iconClass: "paletteIcon paletteIconStates"
         },
         /*
          * { id:"datastores", title:"DataStores", viewClass: "davinci/ve/views/DataStoresView" },

@@ -14,7 +14,8 @@ return {
         {
             id: "navigator",
             title: "Files",
-            viewClass: "davinci/workbench/Explorer"
+            viewClass: "davinci/workbench/Explorer",
+            iconClass: "paletteIcon paletteIconFiles"
         },
         {
             id: "hierarchy",
@@ -23,12 +24,14 @@ return {
         {
             id: "outline",
             title: "Outline",
-            viewClass: "davinci/workbench/OutlineView"
+            viewClass: "davinci/workbench/OutlineView",
+            iconClass: "paletteIcon paletteIconOutline"
         },
 		{
 			id: "comment",
 			title: "Comments",
-			viewClass: "davinci/review/view/CommentView"
+			viewClass: "davinci/review/view/CommentView",
+            iconClass: "paletteIcon paletteIconComments"
 		},
         {
             id: "scope",

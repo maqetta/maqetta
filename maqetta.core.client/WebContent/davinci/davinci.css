@@ -414,10 +414,31 @@ davinci_top_bar .dijitButtonNode {
 }
 
 #davinci_app .davinciPalette .dijitTab {
-	width:32px;
-	height:32px;
+	padding:2px;
+}
+#davinci_app .davinciPalette .paletteIcon {
+	width:26px;
+	height:26px;
+	background-repeat:no-repeat;
 	background-image: url(img/sprite.png);
-	background-position: 0 -516px;
+}
+#davinci_app .davinciPalette .paletteIconWidgets {
+	background-position: -30px -60px;
+}
+#davinci_app .davinciPalette .paletteIconStates {
+	background-position: -30px -90px;
+}
+#davinci_app .davinciPalette .paletteIconReviews {
+	background-position: -30px -120px;
+}
+#davinci_app .davinciPalette .paletteIconOutline {
+	background-position: -30px -150px;
+}
+#davinci_app .davinciPalette .paletteIconFiles {
+	background-position: -30px -180px;
+}
+#davinci_app .davinciPalette .paletteIconComments {
+	background-position: -30px -210px;
 }
 
 #davinci_app .davinciPalette .dijitTab .tabLabel {

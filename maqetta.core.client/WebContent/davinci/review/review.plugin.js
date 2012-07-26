@@ -8,18 +8,21 @@ return {
 		{
 			id: "comment",
 			title: "Comments",
-			viewClass: "davinci/review/view/CommentView"
+			viewClass: "davinci/review/view/CommentView",
+            iconClass: "paletteIcon paletteIconComments"
 		},
 		{
 			id: "reviewNavigator",
 			title: "Reviews",
-			viewClass: "davinci/review/view/CommentExplorerView"
+			viewClass: "davinci/review/view/CommentExplorerView",
+            iconClass: "paletteIcon paletteIconReviews"
 
 		},
 		{
 			id: "state",
 			title: "States",
-			viewClass: "davinci/ve/views/StatesView"
+			viewClass: "davinci/ve/views/StatesView",
+            iconClass: "paletteIcon paletteIconStates"
 		}
 	],
 	"davinci.perspectiveExtension": [

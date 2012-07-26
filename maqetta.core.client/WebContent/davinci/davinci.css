@@ -344,7 +344,7 @@ BODY{
 	margin:0;
 }
 #davinci_top_bar_main {
-	padding:0 8px 0 22px; /* override dijitContentPane */
+	padding:0px; /* override dijitContentPane */
 	background: -webkit-linear-gradient(#464646, #121212);
 	color: #ccc;
     font: normal bold 12px Arial, sans-serif;
@@ -353,6 +353,7 @@ BODY{
 	overflow: hidden;
 	height:44px;
 	line-height:44px;
+	text-align:center;
 }
 #davinci_top_bar_divider {
 	height:4px;
@@ -362,24 +363,27 @@ BODY{
 	background-repeat: repeat-x;
 }
 .maq_banner_name_box {
+	padding-left:10px;
 	display: inline-block;
 	padding-top: 1px;
+	float:left;
 }
 .dj_gecko .maq_banner_name_box {
 	padding-top: 2px;	/* Different rounding rules between WebKit and Gecko */
 }
+.maq_banner_logo {
+	display:inline-block;
+	width:32px;
+	height:32px;
+	background-image:url(img/sprite.png);
+	background-position:0px -352px;
+	vertical-align: middle;
+}
 .maq_banner_name {
-    font: normal normal 10pt Arial, sans-serif;
+	padding-left:2px;
+    font: normal normal 18px Arial, sans-serif;
 	color:white;
 	text-shadow: #000 1px 1px 1px;
-}
-.maq_banner_component {
-    font: normal normal 10pt Arial, sans-serif;
-    color:#949494;
-}
-.maq_banner_version {
-    font: italic normal 10pt Arial, sans-serif;
-    color:#949494;
 }
 
 #davinci_top_bar .dijitToolbar,
@@ -390,30 +394,10 @@ davinci_top_bar .dijitButtonNode {
 #davinci_user_container {
 	display: inline-block;
 	float: right;
-	padding-right: .5em;
+	padding-right: 10px;
 	white-space: nowrap;
 }
 
-#davinci_user {
-	font: normal bold 12px Arial, sans-serif;
-	color: #CCC;
-	text-shadow: black 1px 1px 1px;
-}
-
-#davinci_user a {
-	color:#EAEAEA;
-}
-
-
-#davinci_logoff {
-	font: normal normal 9pt Arial, sans-serif;
-	color: #CCC;
-	text-shadow: black 1px 1px 1px;
-	text-decoration:none;
-}
-#davinci_logoff:hover {
-	text-decoration:underline;
-}
 
 #davinci_file_tabs {
 	height:32px;
@@ -519,7 +503,7 @@ davinci_top_bar .dijitButtonNode {
 .claro #davinci_app #davinci_user_container .dijitDropDownButton,
 .claro #davinci_app #davinci_user_container .dijitComboButton
 {
-	margin:.2em .45em;	/* Add extra lr padding over what Claro provides */
+	margin:0 0 0 8px;
 }
 .claro #davinci_app #davinci_user_container .dijitDropDownButton .dijitButtonText,
 .claro #davinci_app #davinci_user_container .dijitComboButton .dijitButtonText
@@ -548,18 +532,6 @@ davinci_top_bar .dijitButtonNode {
 .claro #davinci_app #davinci_user_container .dijitDropDownButtonHover .dijitButtonNode
 {
 	color: white; /* Override Claro, which uses black */
-}
-#davinci_user_welcome {
-	font:normal normal 8.75pt Arial, sans-serif;
-	color:#ccc;
-	text-shadow: #000 1px 1px 1px;
-}
-#davinci_user, #davinci_logoff {
-	padding:0 0 2px;	/* Claro puts 2px extra padding-bottom on DropDownMenus */
-}
-#davinci_user, #davinci_logoff {
-	margin-left: 3px;
-	margin-right: 15px;
 }
 #loginpane {
 	margin-top: 2em;

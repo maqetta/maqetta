@@ -431,9 +431,31 @@ davinci_top_bar .dijitButtonNode {
 }
 
 #davinci_file_tabs {
-	height:32px;
+	height:48px;
 }
-
+#davinci_file_tabs .dijitTab {
+	padding:15px 10px;
+	top:0px;
+	background:#f8f8f8;
+	color:#424242;
+}
+#davinci_file_tabs .dijitTab.dijitTabChecked {
+	font-weight:bold;
+	background:white;
+	color:#222222;
+}
+#davinci_file_tabs .dijitTab:hover, #davinci_file_tabs .dijitTab.dijitTabChecked:hover {
+	background:#dfdfdf;
+}
+#davinci_file_tabs .dijitTab.dijitTab .dijitTabCloseButton {
+	margin-right:-2px;
+}
+#davinci_file_tabs .dijitTab.dijitTabChecked .dijitTabCloseButton {
+	background-image:url(img/sprite.png);
+	background-position:-35px -321px;
+	margin-left:7px;
+	margin-right:0px;
+}
 #davinci_toolbar_pane {
 	height:32px;
 	padding:0px;

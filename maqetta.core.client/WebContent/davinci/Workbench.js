@@ -276,7 +276,7 @@ var Workbench = {
 					var shadowId = editorIdToShadowId(editorId);
 					var editorContainer = dijit.byId(editorId);
 					var shadowTab = dijit.byId(shadowId);
-					if (tabeditorContainer && !editorContainer._isClosing) {
+					if (editorContainer && !editorContainer._isClosing) {
 						var editorsContainer = dijit.byId("editors_container");
 						var shadowTabContainer = dijit.byId("davinci_file_tabs");
 //FIXME: shadow tab handling here? (DONE)
@@ -699,7 +699,7 @@ var actionPropertiesPaletteContainer = dojo.create('div',
 		{ id:'actionPropertiesPaletteContainer' },
 		document.body);
 var actionPropertiesPaletteOuter = dojo.create('div',
-		{ 'class':'actionPropertiesPalette',
+		{ id:'actionPropertiesPalette', 'class':'actionPropertiesPalette',
 		style:'width:360px; left:800px; top:200px;'}, 
 		actionPropertiesPaletteContainer);
 var actionBarContainer = dojo.create('div', 
@@ -709,7 +709,7 @@ actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOf
 this._attachCreateActionBar(actionBarContainer.children[0]);
 var propertiesPaletteContainer = dojo.create('div',
 		{ id:'propertiesContentContainer', 
-		style:'width:360px; left:800px; top:200px;'}, 
+		style:'width:360px;'}, 
 		actionPropertiesPaletteOuter);
 
 actionPropertiesPaletteContainer.style.display = 'none';

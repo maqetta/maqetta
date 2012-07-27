@@ -10,8 +10,9 @@ define([
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
+	"davinci/ve/utils/GeomUtils",
 	"dojo/i18n!davinci/ve/nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
+], function(declare, ModelEditor, BorderContainer, ContentPane, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, GeomUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -84,14 +85,18 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	_editorSelected: function(event){
 		var context = this.getContext();
 		if(this == event.oldEditor){
-			this.hideActionPropertiesPalette();
 			context.hideFocusAll();
 		}
 		if(this == event.editor){
 			var flowLayout = context.getFlowLayout();
 			var layout = flowLayout ? 'flow' : 'absolute';
 			this._updateLayoutDropDownButton(layout);
+			this.preserveRestoreActionPropertiesState(event)
+		}
+		if(event.editor && event.editor.declaredClass == 'davinci.ve.PageEditor'){
 			this.showActionPropertiesPalette();
+		}else{
+			this.hideActionPropertiesPalette();
 		}
 	},
 	
@@ -386,7 +391,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		var targetNode = this._getActionPropertiesPaletteContainer();
 		if(targetNode){
 			targetNode.style.display = 'block';
-			
 		}
 	},
 	
@@ -447,6 +451,25 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		var tcnode = this._getPropertiesContainer();
 		if(tcnode){
 			tcnode.style.display = 'none';
+		}
+	},
+	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
+	preserveRestoreActionPropertiesState: function(event){
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(actionPropertiesPaletteNode && this == event.editor){
+			if(event.oldEditor){
+				event.oldEditor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+			}
+			if(this._ActionPropertiesState){
+				actionPropertiesPaletteNode.style.left = this._ActionPropertiesState.l + 'px';
+				actionPropertiesPaletteNode.style.top = this._ActionPropertiesState.t + 'px';
+				actionPropertiesPaletteNode.style.width = this._ActionPropertiesState.w + 'px';
+				actionPropertiesPaletteNode.style.height = this._ActionPropertiesState.h + 'px';
+			}
 		}
 	}
 });

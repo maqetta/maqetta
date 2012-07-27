@@ -9,12 +9,11 @@ define([
     	"davinci/ve/widgets/HTMLStringUtil",
     	"davinci/ve/widgets/WidgetToolBar",
     	"davinci/ve/widgets/Cascade",
-    	"davinci/ve/widgets/PrimaryProperties",
     	"davinci/ve/widgets/CommonProperties",
     	"davinci/ve/widgets/WidgetProperties",
     	"davinci/ve/widgets/EventSelection"
 ], function(declare, veNls, commonNls, TabContainer, ContentPane, Runtime, WidgetLite, HTMLStringUtil,
-		   	WidgetToolBar,  Cascade, PrimaryProperties, CommonProperties, WidgetProperties, EventSelection
+		   	WidgetToolBar,  Cascade, CommonProperties, WidgetProperties, EventSelection
 		    ){
 return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 
@@ -41,8 +40,6 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	          //Note: the keys here must match the propsect_* values in the supports() functions
 	          //in the various editors, such as PageEditor.js and ThemeEditor.js
 	          
-	          {key: "basic", 
-	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.PrimaryProperties'></div>"}},
 	          {key: "common", 
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
 	          {key: "widgetSpecific",

@@ -28,7 +28,6 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"dojo/_base/xhr",
-	"dojo/dnd/Moveable",
 	"davinci/review/model/resource/root",
 	"dojo/i18n!davinci/ve/nls/common"
 ], function(
@@ -61,7 +60,6 @@ define([
 		declare,
 		connect,
 		xhr,
-		Moveable,
 		reviewResource,
 		veNLS
 ) {
@@ -709,26 +707,12 @@ var actionBarContainer = dojo.create('div',
 		actionPropertiesPaletteOuter);
 actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
 this._attachCreateActionBar(actionBarContainer.children[0]);
-new Moveable(actionBarContainer.children[0]);
 var propertiesPaletteContainer = dojo.create('div',
 		{ id:'propertiesContentContainer', 
 		style:'width:360px; left:800px; top:200px;'}, 
 		actionPropertiesPaletteOuter);
 
 actionPropertiesPaletteContainer.style.display = 'none';
-
-/*
-dojo.connect(actionPropertiesPaletteInner, 'mousedown', this, function(event){
-	//FIXME: short-term hack to get moving working at least to some level
-	if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
-		//FIXME: Highly fragile! Just a proof of concept at this point.
-		//FIXME: Isn't moveable until the second click
-		var moveable = new Moveable(actionPropertiesPaletteInner);
-		moveable.onMoveStop = function(){
-			moveable.destroy();
-		}
-	}
-*/
 		
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {

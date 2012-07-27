@@ -1,7 +1,6 @@
 define({ root:
 {
 		//SwitchingStyleView.js
-		"basic":"Basic",
 		"common":"Common",
 		"widgetSpecific":"Per widget",
 		"events":"Events",

@@ -30,7 +30,8 @@ define([
 	"dojo/_base/xhr",
 	"davinci/review/model/resource/root",
 	"dojo/i18n!davinci/ve/nls/common",
-	"dojo/dnd/Mover"
+	"dojo/dnd/Mover",
+	"davinci/ve/utils/GeomUtils"
 ], function(
 		Runtime,
 		Path,
@@ -63,7 +64,8 @@ define([
 		xhr,
 		reviewResource,
 		veNLS,
-		Mover
+		Mover,
+		GeomUtils
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -713,22 +715,28 @@ var actionBarContainer = dojo.create('div',
 actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
 this._attachCreateActionBar(actionBarContainer.children[0]);
 var propertiesPaletteContainer = dojo.create('div',
-		{ id:'propertiesContentContainer', 
-		style:'width:360px;'}, 
+		{ id:'propertiesContentContainer' }, 
 		actionPropertiesPaletteOuter);
 actionPropertiesPaletteContainer.style.display = 'none';
-davinci.Workbench._dragDivOffset = 50;
+davinci.Workbench._dragDivOffset = 100;
 davinci.Workbench._dragDivSize = davinci.Workbench._dragDivOffset * 2;
 dojo.connect(actionPropertiesDragStrip, 'onmousedown', function(event){
+console.log('onmousedown. pageX='+event.pageX+',pageY='+event.pageY);
+	var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
+	if(!actionPropertiesPaletteNode){
+		return;
+	}
+	var box = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
 	var l = event.pageX - davinci.Workbench._dragDivOffset;
 	var t = event.pageY - davinci.Workbench._dragDivOffset;
-	var w = davinci.Workbench._dragDivSize * 2;
+	var w = davinci.Workbench._dragDivSize;
 	var h = w;
 	var dragDiv = davinci.Workbench._PropPaletteDragDiv = dojo.create('div', 
 			{className:'propPaletteDragDiv',
 			style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
 			document.body);
 	davinci.Workbench._PropPaletteMover = new Mover(dragDiv, event, davinci.Workbench);
+	davinci.Workbench._PropPaletteMoverOrigCoords = {pageX:event.pageX, pageY:event.pageY, l:box.l, t:box.t };
 });
 		
 		/* close all of the old views */
@@ -2204,13 +2212,15 @@ if(view.id == 'davinci.ve.style'){
 */
 	// Mover interface
 	onMove: function(mover, box, event){
+console.log('onMove. pageX='+event.pageX+',pageY='+event.pageY+',box.l='+box.l+',box.t='+box.t);
 		var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
 		var dragDiv = davinci.Workbench._PropPaletteDragDiv;
 		if(dragDiv && actionPropertiesPaletteNode){
-			dragDiv.style.left = (box.l - davinci.Workbench._dragDivOffset) + 'px';
-			dragDiv.style.top = (box.t - davinci.Workbench._dragDivOffset) + 'px';
-			actionPropertiesPaletteNode.style.left = box.l + 'px';
-			actionPropertiesPaletteNode.style.top = box.t + 'px';
+			var orig = davinci.Workbench._PropPaletteMoverOrigCoords;
+			dragDiv.style.left = (event.pageX - davinci.Workbench._dragDivOffset) + 'px';
+			dragDiv.style.top = (event.pageY - davinci.Workbench._dragDivOffset) + 'px';
+			actionPropertiesPaletteNode.style.left = (orig.l + (event.pageX - orig.pageX)) + 'px';
+			actionPropertiesPaletteNode.style.top = (orig.t + (event.pageY - orig.pageY)) + 'px';
 		}
 	},
 	onMoveStop: function(mover){

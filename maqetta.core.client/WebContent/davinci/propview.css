@@ -479,4 +479,5 @@ button.showCss::-moz-focus-inner {
 }
 .propPaletteDragDiv {
 	position:absolute;
+	z-index:1000000;
 }

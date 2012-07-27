@@ -211,7 +211,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	
 	buildRendering: function(){
 		this.domNode = dojo.doc.createElement("div");
-		dojo.addClass(this.domNode,'propertiesSection');	
+		dojo.addClass(this.domNode,'propertiesContent');
 		var template="";
 		template+="<div id='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
@@ -268,7 +268,7 @@ template+='<div class="propPaletteTabContainer"></div>';
 		this.domNode.innerHTML = template;
 var propPaletteTabContainerNode = this.domNode.querySelector('.propPaletteTabContainer');
 if(propPaletteTabContainerNode){
-	this._tabContainer = new TabContainer({'class':'propPaletteTabContainer',style:'width:360px;height:300px', tabPosition:'left-h'}, propPaletteTabContainerNode);
+	this._tabContainer = new TabContainer({'class':'propPaletteTabContainer',style:'width:360px;height:300px;', tabPosition:'left-h'}, propPaletteTabContainerNode);
 	var firstTab = null;
 	for(var i=0;i<this.pageTemplate.length;i++){
 		var title = this.pageTemplate[i].title;

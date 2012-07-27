@@ -84,12 +84,14 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	_editorSelected: function(event){
 		var context = this.getContext();
 		if(this == event.oldEditor){
+			this.hideActionPropertiesPalette();
 			context.hideFocusAll();
 		}
 		if(this == event.editor){
 			var flowLayout = context.getFlowLayout();
 			var layout = flowLayout ? 'flow' : 'absolute';
 			this._updateLayoutDropDownButton(layout);
+			this.showActionPropertiesPalette();
 		}
 	},
 	
@@ -376,17 +378,51 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	handleKeyEvent: function(e) {
 	},
 	
-	showPropertiesPalette: function(){
-		var targetNode = dojo.byId('actionPropertiesPaletteContainer');
-		targetNode.style.display = 'block';
-		var tcnode = targetNode.querySelector('.propPaletteTabContainer');
-		if(tcnode){
+	_getActionPropertiesPaletteContainer: function(){
+		return dojo.byId('actionPropertiesPaletteContainer');
+	},
+	
+	showActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			targetNode.style.display = 'block';
+			
+		}
+	},
+	
+	hideActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			targetNode.style.display = 'none';
+		}
+	},
+	
+	_getPropertiesContainer: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			var node = targetNode.querySelector('.propertiesContent');
+			return node;
+		}
+	},
+	
+	_getPropPaletteTabContainer: function(tcnode){
+		return tcnode.querySelector('.propPaletteTabContainer');
+	},
+
+	
+	showProperties: function(){
+		var container = this._getPropertiesContainer();
+		var tcnode = this._getPropPaletteTabContainer(container);
+		if(container && tcnode){
+			container.style.display = 'block';
 			var tc = dijit.byNode(tcnode);
 			if(tc){
 				setTimeout(function(){
+					// Use setTimeout because sometimes initialize is async
 					tc.layout();
 					tc.startup();
 					tc.resize();
+/*FIXME: Restore moveable behavior
 					dojo.connect(targetNode, 'mousedown', this, function(event){
 						//FIXME: short-term hack to get moving working at least to some level
 						if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
@@ -401,14 +437,17 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 							}
 						}
 					});
+*/
 				}, 50)
 			}
 		}
 	},
 	
-	hidePropertiesPalette: function(){
-		var targetNode = dojo.byId('actionPropertiesPaletteContainer');
-		targetNode.style.display = 'none';
+	hideProperties: function(){
+		var tcnode = this._getPropertiesContainer();
+		if(tcnode){
+			tcnode.style.display = 'none';
+		}
 	}
 });
 }); 

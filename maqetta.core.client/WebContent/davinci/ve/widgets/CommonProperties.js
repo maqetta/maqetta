@@ -53,7 +53,6 @@ define(["dojo/_base/declare",
 				this.context = null;
 				this._clearValues();
 			}
-			this._clearValues();
 		},	
 		
 		startup: function(){
@@ -128,7 +127,9 @@ define(["dojo/_base/declare",
 		
 		_clearValues: function(){
 			for(name in this._boxes){
-				dojo.attr(this._boxes[name].domNode,'value',"")
+				if(this._boxes[name].domNode){
+					dojo.attr(this._boxes[name].domNode,'value',"")
+				}
 				this._boxes[name].value = null;
 			}
 		},

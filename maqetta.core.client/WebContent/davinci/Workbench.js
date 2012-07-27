@@ -702,7 +702,7 @@ var actionPropertiesPaletteContainer = dojo.create('div',
 		document.body);
 var actionPropertiesPaletteOuter = dojo.create('div',
 		{ 'class':'actionPropertiesPalette',
-		style:'width:360px; height:400px; left:800px; top:200px;'}, 
+		style:'width:360px; left:800px; top:200px;'}, 
 		actionPropertiesPaletteContainer);
 var actionBarContainer = dojo.create('div', 
 		{ id:'actionBarContainer', 'class':'actionBarContainer' },
@@ -711,7 +711,8 @@ actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOf
 this._attachCreateActionBar(actionBarContainer.children[0]);
 new Moveable(actionBarContainer.children[0]);
 var propertiesPaletteContainer = dojo.create('div',
-		{ style:'width:360px; height:400px; left:800px; top:200px;'}, 
+		{ id:'propertiesContentContainer', 
+		style:'width:360px; left:800px; top:200px;'}, 
 		actionPropertiesPaletteOuter);
 
 actionPropertiesPaletteContainer.style.display = 'none';

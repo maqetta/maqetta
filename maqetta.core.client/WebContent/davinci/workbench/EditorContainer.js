@@ -177,7 +177,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	_close: function(editor, dirtycheck){
-		dojo.publish("/davinci/ui/EditorClosing", [editor]);
+		dojo.publish("/davinci/ui/EditorClosing", [{editor:editor}]);
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
 			//Give editor a chance to give us a more specific message

@@ -7,12 +7,8 @@ return declare("davinci.ve.actions.EditPropertiesAction", [ContextAction], {
 
 	run: function(context){
 		context = this.fixupContext(context);
-		if(context && context.editor && context.editor.showPropertiesPalette){
-			var selection = context.getSelection();
-			if(selection.length !== 1){
-				return;
-			}
-			context.editor.showPropertiesPalette();
+		if(context && context.editor && context.editor.showProperties){
+			context.editor.showProperties();
 		}
 	},
 

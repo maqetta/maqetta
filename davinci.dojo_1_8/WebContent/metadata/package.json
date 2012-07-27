@@ -2887,6 +2887,47 @@
 		            ],
 		            "allowedChild": "dojox.mobile.Pane",
 		            "inlineEdit": "./dojox/mobile/GridLayoutInput"
+		        },
+		        {
+		            "name": "TreeView",
+		            "description": "TreeView",
+		            "type": "dojox.mobile.TreeView",
+		            "category": "untested",
+		            "icon": "resources/images/tree.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOJJREFUeNpi/P//PwMlgImBQsCCzAnvPwB3zspCB0aSDQCB7lgLhtLFJzAMxGUwigH//v5lKF5wjIEBGi5EuQIUiMg4qG3nf3QxfBjDC3/+/MawxL9py39GBpBj/jNsqPNhxBsGf3/+ZvCpWQ/xAyMjSA8YTCvwYMiasINwIP759YthR1cYii2eZav+p3dtYvhPTCz8/YXphe1oBpJsgFPWfHC8gEzZNy2RQBj8/s1glzob4tr/IE3A0AZqWdIexxBbsRjDcEZi8oJl0sz//xghqf7k3FRGkg2gaWai2ACAAAMAVbWDTF4DhaYAAAAASUVORK5CYII=",
+		            "data": [
+		                {
+		                    "type": "dojo.store.Memory",
+		                    "properties": {
+		                        "data": [
+				                		{"id":"treeRoot","label":"Root"},
+					                		{"id":"1","label":"1","parent":"treeRoot"},
+						                		{"id":"1.1","label":"1.1","parent":"1","leaf":"true"},
+						                		{"id":"1.2","label":"1.2","parent":"1","leaf":"true"},
+					                		{"id":"2","label":"2","parent":"treeRoot"},
+						                		{"id":"2.1","label":"2.1","parent":"2","leaf":"true"},
+						                		{"id":"2.2","label":"2.2","parent":"2","leaf":"true"},
+						                		{"id":"2.3","label":"2.3","parent":"2","leaf":"true"}
+				                ]
+		                    }
+		                },
+		                {
+		                    "type": "dijit.tree.ObjectStoreModel",
+		                    "properties": {
+		                    	"labelAttr": "label",
+		                    	"query": {
+		                    		"id": "treeRoot"
+		                    	}
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.TreeView",
+		                    "properties": {
+		                    }
+		                }
+		            ],
+		            "tool": "./dijit/TreeCreateTool",
+		            "helper": "./dijit/TreeHelper"
 		        }
 		    ]
 		    }

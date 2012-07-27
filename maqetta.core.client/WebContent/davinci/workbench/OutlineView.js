@@ -67,7 +67,6 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
  
 		// create tree
 		var treeArgs = {
-			context: this.currentEditor.getContext(),
 			model: this.outlineModel,
 			showRoot: this.outlineModel.showRoot,
 			betweenThreshold: this.outlineModel.betweenThreshold,
@@ -78,6 +77,10 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 
 		if (this.outlineProvider.getIconClass) {
 			treeArgs.getIconClass = this.outlineProvider.getIconClass;
+		}
+
+		if (this.currentEditor.getContext) {
+			treeArgs.context = this.currentEditor.getContext()
 		}
 
 		// #2256 - dijit tree cannot have a null dndController

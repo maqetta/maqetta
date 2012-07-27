@@ -697,7 +697,7 @@ var floatingPropertiesPaletteContainer = dojo.create('div',
 		document.body);
 var floatingPropertiesPaletteInner = dojo.create('div',
 		{ 'class':'floatingPropertiesPalette',
-		style:'position:absolute; z-index:5; width:360px; height:360px; left:800px; top:200px;border:1px solid black;background:white;'}, 
+		style:'width:360px; height:400px; left:800px; top:200px;'}, 
 		floatingPropertiesPaletteContainer);
 floatingPropertiesPaletteContainer.style.display = 'none';
 /*

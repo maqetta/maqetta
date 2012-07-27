@@ -306,15 +306,25 @@ BODY{
 	border-bottom: 1px solid #959595;
 }
 .claro .dijitToolbar.davinciToolbar {
-	padding:8px 0px 4px 10px; 
 	font-size:10px;
-	background-color:#e0e6e6;
 	background-image:none;
 	border-bottom:none;
 	width:100%;
 }
-#davinci_toolbar_pane .dijitToolbar.davinciToolbar {
+#davinci_app #davinci_toolbar_pane .dijitToolbar {
+	padding:8px 0px 4px 10px; 
+	background-color:#e0e6e6;
 	height:44px;
+}
+.editFocusActionBar .dijitToolbar {
+	background-color:transparent;
+}
+.claro .editFocusActionBar .dijitToolbar .dijitButtonNode,
+	.claro .editFocusActionBar .dijitToolbar .dijitButtonNode,
+	.claro .editFocusActionBar .dijitToolbar .dijitButtonNode,
+	.claro .editFocusActionBar .dijitToolbar .dijitButtonNode {
+	background-color:transparent;
+	background-image:none;
 }
 .claro .dijitToolbar.davinciToolbar .dijitButtonContents {
 	padding:0 2px;
@@ -1577,12 +1587,19 @@ davinci_top_bar .dijitButtonNode {
 .editFocusActionBar {
 	height:32px;
 	position:absolute;
-	border:1px solid #6A94DC;
-	background:rgba(255,255,255,.9);
 	white-space:nowrap;
-}
-.editFocusActionBar:hover {
-	background:white;
+	background-image:-webkit-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:-moz-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:-ms-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:-o-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	border:1px solid black;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	-ms-border-radius:3px;
+	-o-border-radius:3px;
+	border-radius:3px;
+	box-shadow:0px 1px 0px #666;
 }
 .editFocusActionBarButton {
 	display:inline-block;

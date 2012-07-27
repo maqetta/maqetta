@@ -316,13 +316,13 @@ BODY{
 	background-color:#e0e6e6;
 	height:44px;
 }
-.editFocusActionBar .dijitToolbar {
+.ActionBar .dijitToolbar {
 	background-color:transparent;
 }
-.claro .editFocusActionBar .dijitToolbar .dijitButtonNode,
-	.claro .editFocusActionBar .dijitToolbar .dijitButtonNode,
-	.claro .editFocusActionBar .dijitToolbar .dijitButtonNode,
-	.claro .editFocusActionBar .dijitToolbar .dijitButtonNode {
+.claro .ActionBar .dijitToolbar .dijitButtonNode,
+	.claro .ActionBar .dijitToolbar .dijitButtonNode,
+	.claro .ActionBar .dijitToolbar .dijitButtonNode,
+	.claro .ActionBar .dijitToolbar .dijitButtonNode {
 	background-color:transparent;
 	background-image:none;
 }
@@ -1584,9 +1584,8 @@ davinci_top_bar .dijitButtonNode {
 	z-index: 5;
 }
 
-.editFocusActionBar {
+.ActionBar {
 	height:32px;
-	position:absolute;
 	white-space:nowrap;
 	background-image:-webkit-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
 	background-image:-moz-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
@@ -1601,7 +1600,7 @@ davinci_top_bar .dijitButtonNode {
 	border-radius:3px;
 	box-shadow:0px 1px 0px #666;
 }
-.editFocusActionBarButton {
+.ActionBarButton {
 	display:inline-block;
 	width:30px;
 	height:30px;

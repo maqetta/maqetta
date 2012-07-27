@@ -377,7 +377,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	showPropertiesPalette: function(){
-		var targetNode = dojo.byId('floatingPropertiesPaletteContainer');
+		var targetNode = dojo.byId('actionPropertiesPaletteContainer');
 		targetNode.style.display = 'block';
 		var tcnode = targetNode.querySelector('.propPaletteTabContainer');
 		if(tcnode){
@@ -390,11 +390,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 					dojo.connect(targetNode, 'mousedown', this, function(event){
 						//FIXME: short-term hack to get moving working at least to some level
 						if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
-							var floatingPropertiesPalette = targetNode.querySelector('.floatingPropertiesPalette');
-							if(floatingPropertiesPalette){
+							var actionPropertiesPalette = targetNode.querySelector('.actionPropertiesPalette');
+							if(actionPropertiesPalette){
 								//FIXME: Highly fragile! Just a proof of concept at this point.
 								//FIXME: Isn't moveable until the second click
-								var moveable = new Moveable(floatingPropertiesPalette);
+								var moveable = new Moveable(actionPropertiesPalette);
 								moveable.onMoveStop = function(){
 									moveable.destroy();
 								}
@@ -407,7 +407,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	hidePropertiesPalette: function(){
-		var targetNode = dojo.byId('floatingPropertiesPaletteContainer');
+		var targetNode = dojo.byId('actionPropertiesPaletteContainer');
 		targetNode.style.display = 'none';
 	}
 });

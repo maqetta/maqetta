@@ -20,12 +20,6 @@ var LEFT = 0,	// nob and frame
 	RIGHT_TOP = 6,
 	RIGHT_BOTTOM = 7;
 
-// Hardcoded values, much exactly match runtime offsets and sizes for ActionBar
-var ActionBarOffsetLeft = 20,
-	ActionBarOffsetTop = -70,
-	ActionBarWidth = 264,
-	ActionBarHeight = 32;
-
 return declare("davinci.ve.Focus", _WidgetBase, {
 
 	// Inside knowledge about CSS classes used to style editFocusNob and editFocusFrame DIVs
@@ -37,7 +31,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 		dojo.addClass(this.domNode, 'maqFocus');
 		dojo.style(this.domNode, {position: "absolute", display: "none"}); // FIXME: use CSS class to change display property
-		this._actionBarContainer = dojo.create("div", {"class": "editFocusActionBarContainer"}, this.domNode);
 		this._stdChrome = dojo.create("div", {"class": "editFocusStdChrome"}, this.domNode);
 		
 		this._frames = [];
@@ -88,18 +81,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 	show: function(widget, params){
 		var inline = params && params.inline;
-		var actionBar = params && params.actionBar;
 		if (!widget){
 			// sometimes you get no widget when  DnD in split screen
 			return; 
-		}
-		if(actionBar){
-			this._actionBarContainer.innerHTML = '<div class="editFocusActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
-			this._attachCreateToolBar(this._actionBarContainer.children[0]);
-			this._adjustActionBarLocation();
-			new Moveable(this._actionBarContainer.children[0]);
-		}else{
-			this._actionBarContainer.innerHTML = '';
 		}
 		this._custom.innerHTML = '';
 		var showStandardSelectionChrome = Metadata.queryDescriptor(widget.type, "showStandardSelectionChrome");
@@ -865,90 +849,7 @@ console.dir(this._moverStart);
     			return dojo.style.apply(dojo, arguments);
     		}
     	}
-    },
-
-	/**
-	 * Gets toolbar widget for ActionBar if one exists already.
-	 * Otherwise, create the toolbar widget.
-	 * In either case, attach the toolbar to the "toolbarDiv"
-	 * @param {Element} toolbarDiv
-	 */
-	_attachCreateToolBar: function(toolbarDiv){
-		if(!davinci.Workbench.actionBarToolBar){
-			this._createToolBar(toolbarDiv);
-		}
-		toolbarDiv.innerHTML = '';
-		toolbarDiv.appendChild(davinci.Workbench.actionBarToolBar.domNode);
-	},
-
-	/**
-	 * Creates a toolbar widget will be become the main part of the Action Bar.
-	 * @param {Element} toolbarDiv
-	 */
-	_createToolBar: function(toolbarDiv){
-		var actions=this._getActions();
-        if (actions && actions.length)
-        {
-    		var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
-        	var toolbar = davinci.Workbench.actionBarToolBar = davinci.Workbench._createToolBar('actionbarPath', tb, actions, this._context);
-    		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
-        }
-	},
-	
-	_getActions: function() {
-		var editorID='davinci.ve.HTMLPageEditor';
-		var editorActions=[];
-		var extensions = davinci.Runtime.getExtensions('davinci.editorActions', function(ext){
-			if (editorID==ext.editorContribution.targetID)
-			{
-				editorActions.push(ext.editorContribution);
-				return true;
-			}
-		});
-		if (editorActions.length == 0) {
-			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
-				editorActions.push(ext.editorContribution);
-				return true;
-			});
-		}
-		return editorActions;
-	},
-	
-	/**
-	 * Make sure actionbar will fit inside of the area for the user document's iframe
-	 */
-	_adjustActionBarLocation: function(){
-		if(!this._moverCurrent || !this._actionBarContainer || !this._actionBarContainer.children){
-			return;
-		}
-		var actionBarDiv = this._actionBarContainer.children[0];
-		if(!actionBarDiv){
-			return;
-		}
-		// If we need to put ActionBar at center/top, this is #pixels offset from top
-		var topActionBarOffset = 5;
-		var box = dojo.mixin({}, this._moverCurrent);
-		box.l += ActionBarOffsetLeft;
-		box.t += ActionBarOffsetTop;
-		box.r = box.l + ActionBarWidth;
-		box.b = box.t + ActionBarHeight;
-		//var bounds = this._context.getParentIframeBounds();
-		var bounds = this._context.getDesignPaneBounds();
-		bounds.r = bounds.l + bounds.w;
-		bounds.b = bounds.t + bounds.h;
-		if(box.l < bounds.l || box.r > bounds.r || 
-				box.t < bounds.t || box.b > bounds.b){
-			// If any of ActionBar doesn't fit on canvas, move to top/center
-			var newLeftAbs = bounds.l + (bounds.w/2) - (ActionBarWidth/2);
-			var newTopAbs = bounds.t + topActionBarOffset;
-			var dx = newLeftAbs - box.l;
-			var dy = newTopAbs - box.t;
-			var newLeftRel = ActionBarOffsetLeft + dx;
-			var newTopRel = ActionBarOffsetTop + dy;
-		}
-		actionBarDiv.style.left = newLeftRel+'px';
-		actionBarDiv.style.top = newTopRel+'px';
-	}
+    }
 	
 });
 

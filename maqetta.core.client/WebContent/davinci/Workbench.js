@@ -692,21 +692,37 @@ var Workbench = {
 		}
 		
 //FIXME: Temporary
-var floatingPropertiesPaletteContainer = dojo.create('div', 
-		{ id:'floatingPropertiesPaletteContainer' },
+// Hardcoded values, much exactly match runtime offsets and sizes for ActionBar
+var ActionBarOffsetLeft = 0,
+	ActionBarOffsetTop = 0,
+	ActionBarWidth = 264,
+	ActionBarHeight = 32;
+var actionPropertiesPaletteContainer = dojo.create('div', 
+		{ id:'actionPropertiesPaletteContainer' },
 		document.body);
-var floatingPropertiesPaletteInner = dojo.create('div',
-		{ 'class':'floatingPropertiesPalette',
+var actionPropertiesPaletteOuter = dojo.create('div',
+		{ 'class':'actionPropertiesPalette',
 		style:'width:360px; height:400px; left:800px; top:200px;'}, 
-		floatingPropertiesPaletteContainer);
-floatingPropertiesPaletteContainer.style.display = 'none';
+		actionPropertiesPaletteContainer);
+var actionBarContainer = dojo.create('div', 
+		{ id:'actionBarContainer', 'class':'actionBarContainer' },
+		actionPropertiesPaletteOuter);
+actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
+this._attachCreateActionBar(actionBarContainer.children[0]);
+new Moveable(actionBarContainer.children[0]);
+var propertiesPaletteContainer = dojo.create('div',
+		{ style:'width:360px; height:400px; left:800px; top:200px;'}, 
+		actionPropertiesPaletteOuter);
+
+actionPropertiesPaletteContainer.style.display = 'none';
+
 /*
-dojo.connect(floatingPropertiesPaletteInner, 'mousedown', this, function(event){
+dojo.connect(actionPropertiesPaletteInner, 'mousedown', this, function(event){
 	//FIXME: short-term hack to get moving working at least to some level
 	if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
 		//FIXME: Highly fragile! Just a proof of concept at this point.
 		//FIXME: Isn't moveable until the second click
-		var moveable = new Moveable(floatingPropertiesPaletteInner);
+		var moveable = new Moveable(actionPropertiesPaletteInner);
 		moveable.onMoveStop = function(){
 			moveable.destroy();
 		}
@@ -736,7 +752,7 @@ dojo.connect(floatingPropertiesPaletteInner, 'mousedown', this, function(event){
 		}, this);
 
 //FIXME: TEMPORARY
-this.showDynamicView('davinci.ve.style', floatingPropertiesPaletteInner);
+this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
 
 		// kludge to workaround problem where tabs are sometimes cutoff/shifted to the left in Chrome for Mac
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
@@ -1278,8 +1294,8 @@ this.showDynamicView('davinci.ve.style', floatingPropertiesPaletteInner);
 /*
 //FIXME: Temporary
 if(view.id == 'davinci.ve.style'){
-	var floatingPropertiesPalette = dojo.byId('floatingPropertiesPalette');
-	floatingPropertiesPalette.appendChild(tab.domNode);
+	var actionPropertiesPalette = dojo.byId('actionPropertiesPalette');
+	actionPropertiesPalette.appendChild(tab.domNode);
 	tab.startup();
 }else{
 */
@@ -2105,6 +2121,83 @@ if(view.id == 'davinci.ve.style'){
 			}
 		}
 	},
+
+	/**
+	 * Gets toolbar widget for ActionBar if one exists already.
+	 * Otherwise, create the toolbar widget.
+	 * In either case, attach the toolbar to the "toolbarDiv"
+	 * @param {Element} toolbarDiv
+	 */
+	_attachCreateActionBar: function(toolbarDiv){
+		if(!davinci.Workbench.actionBarToolBar){
+			var actions=this._getActionBarActions();
+	        if (actions && actions.length)
+	        {
+	    		var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
+	        	var toolbar = davinci.Workbench.actionBarToolBar = davinci.Workbench._createToolBar('actionbarPath', tb, actions, this._context);
+	    		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
+	        }
+		}
+		toolbarDiv.innerHTML = '';
+		toolbarDiv.appendChild(davinci.Workbench.actionBarToolBar.domNode);
+	},
+	
+	_getActionBarActions: function() {
+		var editorID='davinci.ve.HTMLPageEditor';
+		var editorActions=[];
+		var extensions = davinci.Runtime.getExtensions('davinci.editorActions', function(ext){
+			if (editorID==ext.editorContribution.targetID)
+			{
+				editorActions.push(ext.editorContribution);
+				return true;
+			}
+		});
+		if (editorActions.length == 0) {
+			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
+				editorActions.push(ext.editorContribution);
+				return true;
+			});
+		}
+		return editorActions;
+	},
+	
+	/**
+	 * Make sure actionbar will fit inside of the area for the user document's iframe
+	 */
+/*FIXME: DELETE OF REWRITE
+	_adjustActionBarLocation: function(){
+		if(!this._moverCurrent || !this._actionBarContainer || !this._actionBarContainer.children){
+			return;
+		}
+		var actionBarDiv = this._actionBarContainer.children[0];
+		if(!actionBarDiv){
+			return;
+		}
+		// If we need to put ActionBar at center/top, this is #pixels offset from top
+		var topActionBarOffset = 5;
+		var box = dojo.mixin({}, this._moverCurrent);
+		box.l += ActionBarOffsetLeft;
+		box.t += ActionBarOffsetTop;
+		box.r = box.l + ActionBarWidth;
+		box.b = box.t + ActionBarHeight;
+		//var bounds = this._context.getParentIframeBounds();
+		var bounds = this._context.getDesignPaneBounds();
+		bounds.r = bounds.l + bounds.w;
+		bounds.b = bounds.t + bounds.h;
+		if(box.l < bounds.l || box.r > bounds.r || 
+				box.t < bounds.t || box.b > bounds.b){
+			// If any of ActionBar doesn't fit on canvas, move to top/center
+			var newLeftAbs = bounds.l + (bounds.w/2) - (ActionBarWidth/2);
+			var newTopAbs = bounds.t + topActionBarOffset;
+			var dx = newLeftAbs - box.l;
+			var dy = newTopAbs - box.t;
+			var newLeftRel = ActionBarOffsetLeft + dx;
+			var newTopRel = ActionBarOffsetTop + dy;
+		}
+		actionBarDiv.style.left = newLeftRel+'px';
+		actionBarDiv.style.top = newTopRel+'px';
+	},
+*/
 
 	_XX_last_member: true	// dummy with no trailing ','
 };

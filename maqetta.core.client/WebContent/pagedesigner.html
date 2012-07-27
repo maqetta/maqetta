@@ -29,7 +29,7 @@
 				  dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
 				  dojo.byId("maqetta_designer").innerHTML = webContent.designer;
 				  dojo.byId("maqetta_version").innerHTML = version;
-				  dojo.byId("title_id").text = webContent.pageDesignerTitle;
+				  dojo.byId("title_id").text = 'Maqetta';
 			});
 
 			var Workbench = require("davinci/Workbench"),
@@ -143,6 +143,7 @@
 			dojo.addOnUnload(Workbench.unload);
 		});
 	</script>
+	<link rel="shortcut icon" href="app/davinci/img/maqetta.png" />
 	</head>
 
 	<body class="claro">

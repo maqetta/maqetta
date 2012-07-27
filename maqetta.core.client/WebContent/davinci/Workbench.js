@@ -1546,15 +1546,8 @@ var Workbench = {
 	},
 
 	_updateTitle: function(currentEditor) {
-		var newTitle=Workbench._baseTitle;
-		if (currentEditor) {
-			newTitle = newTitle + " - ";
-			if (currentEditor.isDirty) {
-				newTitle=newTitle+"*";
-			}
-			newTitle=newTitle+currentEditor.fileName;
-		}
-		dojo.doc.title=newTitle;
+		// At one time we showed the currently open file as part of title
+		// but now we are just showing "Maqetta"
 	},
 
 	_editorTabClosed: function(page) {

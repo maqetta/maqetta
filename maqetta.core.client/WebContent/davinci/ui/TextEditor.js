@@ -1,6 +1,6 @@
-define(["dojo/_base/declare", "davinci/ui/Editor"], function(declare, Editor) {
+define(["dojo/_base/declare", "./Editor"], function(declare, Editor) {
 
-return declare("davinci.ui.TextEditor", Editor, {
+return declare(Editor, {
 	
 	constructor: function (element, fileName) {
 		this.subscriptions=[];

@@ -32,7 +32,7 @@ while [ "${1+isset}" ]; do
             shift 2
             ;;
         --webBuilder)
-            dwbUrl="-Dmaqetta.dojoWebBuilder=\"$2\""
+            dwbUrl="-Dmaqetta.dojoWebBuilder=$2"
             shift 2
             ;;
         -h|--help)

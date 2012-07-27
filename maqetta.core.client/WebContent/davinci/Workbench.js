@@ -29,7 +29,8 @@ define([
 	"dojo/_base/connect",
 	"dojo/_base/xhr",
 	"davinci/review/model/resource/root",
-	"dojo/i18n!davinci/ve/nls/common"
+	"dojo/i18n!davinci/ve/nls/common",
+	"dojo/dnd/Mover"
 ], function(
 		Runtime,
 		Path,
@@ -61,7 +62,8 @@ define([
 		connect,
 		xhr,
 		reviewResource,
-		veNLS
+		veNLS,
+		Mover
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -702,6 +704,9 @@ var actionPropertiesPaletteOuter = dojo.create('div',
 		{ id:'actionPropertiesPalette', 'class':'actionPropertiesPalette',
 		style:'width:360px; left:800px; top:200px;'}, 
 		actionPropertiesPaletteContainer);
+var actionPropertiesDragStrip = dojo.create('div', 
+		{ id:'actionPropertiesDragStrip', 'class':'actionPropertiesDragStrip' },
+		actionPropertiesPaletteOuter);
 var actionBarContainer = dojo.create('div', 
 		{ id:'actionBarContainer', 'class':'actionBarContainer' },
 		actionPropertiesPaletteOuter);
@@ -711,8 +716,20 @@ var propertiesPaletteContainer = dojo.create('div',
 		{ id:'propertiesContentContainer', 
 		style:'width:360px;'}, 
 		actionPropertiesPaletteOuter);
-
 actionPropertiesPaletteContainer.style.display = 'none';
+davinci.Workbench._dragDivOffset = 50;
+davinci.Workbench._dragDivSize = davinci.Workbench._dragDivOffset * 2;
+dojo.connect(actionPropertiesDragStrip, 'onmousedown', function(event){
+	var l = event.pageX - davinci.Workbench._dragDivOffset;
+	var t = event.pageY - davinci.Workbench._dragDivOffset;
+	var w = davinci.Workbench._dragDivSize * 2;
+	var h = w;
+	var dragDiv = davinci.Workbench._PropPaletteDragDiv = dojo.create('div', 
+			{className:'propPaletteDragDiv',
+			style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+			document.body);
+	davinci.Workbench._PropPaletteMover = new Mover(dragDiv, event, davinci.Workbench);
+});
 		
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {
@@ -2185,6 +2202,22 @@ if(view.id == 'davinci.ve.style'){
 		actionBarDiv.style.top = newTopRel+'px';
 	},
 */
+	// Mover interface
+	onMove: function(mover, box, event){
+		var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
+		var dragDiv = davinci.Workbench._PropPaletteDragDiv;
+		if(dragDiv && actionPropertiesPaletteNode){
+			dragDiv.style.left = (box.l - davinci.Workbench._dragDivOffset) + 'px';
+			dragDiv.style.top = (box.t - davinci.Workbench._dragDivOffset) + 'px';
+			actionPropertiesPaletteNode.style.left = box.l + 'px';
+			actionPropertiesPaletteNode.style.top = box.t + 'px';
+		}
+	},
+	onMoveStop: function(mover){
+		var dragDiv = davinci.Workbench._PropPaletteDragDiv;
+		dragDiv.parentNode.removeChild(dragDiv);
+		davinci.Workbench._PropPaletteDragDiv = null;
+	},
 
 	_XX_last_member: true	// dummy with no trailing ','
 };

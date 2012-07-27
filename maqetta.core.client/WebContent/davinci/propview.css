@@ -455,6 +455,10 @@ button.showCss::-moz-focus-inner {
 	text-align:center;
 	background-color:#E6E6E7;
 }
+.actionPropertiesDragStrip {
+	height:20px;
+	background:black;
+}
 .actionPropertiesPalette {
 	border-radius: 8px;
 	position: absolute;
@@ -472,4 +476,8 @@ button.showCss::-moz-focus-inner {
 .propertiesTitleClassName {
 	color:white;
 	font-size:12px;
+}
+.propPaletteDragDiv {
+	position:absolute;
+	background:pink;
 }

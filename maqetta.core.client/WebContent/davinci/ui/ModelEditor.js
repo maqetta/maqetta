@@ -1,6 +1,6 @@
-define(["dojo/_base/declare", "davinci/ui/TextEditor"], function(declare, TextEditor) {
+define(["dojo/_base/declare", "./TextEditor"], function(declare, TextEditor) {
 
-return declare("davinci.ui.ModelEditor", TextEditor, {
+return declare(TextEditor, {
 
     constructor: function (element, fileName) {
 

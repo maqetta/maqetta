@@ -1493,6 +1493,7 @@ if(view.id == 'davinci.ve.style'){
 					var okToClose = editorContainer.onClose.apply(editorContainer, [editorsContainer, editorContainer]);
 					if(okToClose){
 						tc.removeChild(tab);
+						tab.destroyRecursive();
 					}
 				}
 			}
@@ -1932,6 +1933,7 @@ if(view.id == 'davinci.ve.style'){
 		var editorsContainer = dijit.byId("editors_container");
 		if(editorsContainer && editorContainer){
 			editorsContainer.removeChild(editorContainer);
+			editorContainer.destroyRecursive();
 		}
 	},
 

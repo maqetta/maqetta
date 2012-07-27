@@ -27,7 +27,7 @@ BODY{
 }
 
 #davinci_app .dijitTabContainer, #davinci_app .dijitSplitter {
-	background-color: #cedfe9;
+	background-color: #ced3d3;
 }
 .claro #davinci_app .davinciPaletteContainer .dijitTab.dijitTabChecked .dijitTabInnerDiv {
 	background-color:#B2D4F3;

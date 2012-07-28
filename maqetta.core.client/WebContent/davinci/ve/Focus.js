@@ -169,6 +169,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._nobs[LEFT_BOTTOM].style.display = corner;
 		this._nobs[RIGHT_TOP].style.display = corner;
 		this._nobs[RIGHT_BOTTOM].style.display = corner;
+		this._frames[LEFT].style.cursor = this._frames[RIGHT].style.cursor = op.resizeWidth ? '' : 'default';
+		this._frames[TOP].style.cursor = this._frames[BOTTOM].style.cursor = op.resizeHeight ? '' : 'default';
 	},
 
 	/**

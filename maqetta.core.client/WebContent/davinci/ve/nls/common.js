@@ -5,6 +5,7 @@ search: "Search",
 filter: "Filter",
 "new": "New",
 errorSavingFile: "Error saving file: ${0} details: ${1}",
+"palette":"palette",
 
 /* actions */
 undo: "Undo",

@@ -1327,6 +1327,12 @@ var Workbench = {
 		}
 		this.instantiateView(view).then(function(tab) {
 			cp1.addChild(tab);
+			// Put a tooltip on the tab button. Note that native TabContainer
+			// doesn't offer a tooltip capability for its tabs
+			var controlButton = tab.controlButton;
+			if(controlButton && controlButton.domNode){
+				controlButton.domNode.title = view.title + ' ' +  veNLS.palette;
+			}
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}

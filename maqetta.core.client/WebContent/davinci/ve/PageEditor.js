@@ -413,12 +413,42 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		return tcnode.querySelector('.propPaletteTabContainer');
 	},
 
+	_updateEditPropertiesIcon: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var iconNode = actionPropertiesPaletteContainer.querySelector('.editPropertiesIcon');
+			if(iconNode){
+				if(this._propertiesShowing){
+					dojo.addClass(iconNode, 'editPropertiesIconShowing');
+				}else{
+					dojo.removeClass(iconNode, 'editPropertiesIconShowing');
+				}
+			}
+		}
+	},
+
+	_updateResizeNode: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var resizeNode = actionPropertiesPaletteContainer.querySelector('.dojoxResizeHandle');
+			if(resizeNode){
+				if(this._propertiesShowing){
+					resizeNode.style.display = '';
+				}else{
+					resizeNode.style.display = 'none';
+				}
+			}
+		}
+	},
 	
 	showProperties: function(){
 		var container = this._getPropertiesContainer();
 		var tcnode = this._getPropPaletteTabContainer(container);
 		if(container && tcnode){
 			container.style.display = 'block';
+			this._propertiesShowing = true;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
 			var tc = dijit.byNode(tcnode);
 			if(tc){
 				setTimeout(function(){
@@ -451,6 +481,17 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		var tcnode = this._getPropertiesContainer();
 		if(tcnode){
 			tcnode.style.display = 'none';
+			this._propertiesShowing = false;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+		}
+	},
+	
+	hideShowProperties: function(){
+		if(this._propertiesShowing){
+			this.hideProperties();
+		}else{
+			this.showProperties();
 		}
 	},
 	
@@ -463,12 +504,20 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if(actionPropertiesPaletteNode && this == event.editor){
 			if(event.oldEditor){
 				event.oldEditor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+				event.oldEditor._ActionPropertiesState._propertiesShowing = event.oldEditor._propertiesShowing;
 			}
 			if(this._ActionPropertiesState){
 				actionPropertiesPaletteNode.style.left = this._ActionPropertiesState.l + 'px';
 				actionPropertiesPaletteNode.style.top = this._ActionPropertiesState.t + 'px';
 				actionPropertiesPaletteNode.style.width = this._ActionPropertiesState.w + 'px';
 				actionPropertiesPaletteNode.style.height = this._ActionPropertiesState.h + 'px';
+				this._propertiesShowing = this._ActionPropertiesState._propertiesShowing;
+				this._updateEditPropertiesIcon();
+				this._updateResizeNode();
+				var tcnode = this._getPropertiesContainer();
+				if(tcnode){
+					tcnode.style.display = this._propertiesShowing ? 'block' : 'none';
+				}
 			}
 		}
 	}

@@ -8,7 +8,7 @@ return declare("davinci.ve.actions.EditPropertiesAction", [ContextAction], {
 	run: function(context){
 		context = this.fixupContext(context);
 		if(context && context.editor && context.editor.showProperties){
-			context.editor.showProperties();
+			context.editor.hideShowProperties();
 		}
 	},
 

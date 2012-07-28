@@ -870,7 +870,11 @@ davinci_top_bar .dijitButtonNode {
 }
 .editPropertiesIcon {
 	background-image: url(img/sprite.png);
-	background-position: -25px -745px;
+	/*background-position: -25px -745px;*/
+	background-position: -19px 0px;
+}
+.editPropertiesIcon.editPropertiesIconShowing {
+	background-position: -37px 0px;
 }
 .arrangeCommandsIcon {
 	background-image: url(img/sprite.png);

@@ -387,6 +387,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		return dojo.byId('actionPropertiesPaletteContainer');
 	},
 	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
 	showActionPropertiesPalette: function(){
 		var targetNode = this._getActionPropertiesPaletteContainer();
 		if(targetNode){
@@ -479,11 +483,17 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	hideProperties: function(){
 		var tcnode = this._getPropertiesContainer();
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
 		if(tcnode){
 			tcnode.style.display = 'none';
 			this._propertiesShowing = false;
 			this._updateEditPropertiesIcon();
 			this._updateResizeNode();
+		}
+		if(actionPropertiesPaletteNode){
+			// Dragging resize handle causes explicit height to be attached
+			// to the actionPropertiesPaletteNode. Need to revert to auto-sizing.
+			actionPropertiesPaletteNode.style.height = '';
 		}
 	},
 	

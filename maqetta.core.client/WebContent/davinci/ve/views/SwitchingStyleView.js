@@ -265,7 +265,7 @@ template+='<div class="propPaletteTabContainer"></div>';
 		this.domNode.innerHTML = template;
 var propPaletteTabContainerNode = this.domNode.querySelector('.propPaletteTabContainer');
 if(propPaletteTabContainerNode){
-	this._tabContainer = new TabContainer({'class':'propPaletteTabContainer',style:'height:300px;', tabPosition:'left-h'}, propPaletteTabContainerNode);
+	this._tabContainer = new TabContainer({'class':'propPaletteTabContainer',style:'height:265px;', tabPosition:'left-h'}, propPaletteTabContainerNode);
 	var firstTab = null;
 	for(var i=0;i<this.pageTemplate.length;i++){
 		var title = this.pageTemplate[i].title;

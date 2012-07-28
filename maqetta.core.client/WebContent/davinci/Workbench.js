@@ -734,13 +734,26 @@ var Workbench = {
 			davinci.Workbench._PropPaletteMoverOrigCoords = {pageX:event.pageX, pageY:event.pageY, l:box.l, t:box.t };
 		});
 		var div = dojo.create('div',{style:'position:relative;'}, actionPropertiesPaletteOuter);
-		new ResizeHandle({targetId:'actionPropertiesPalette', actualResize:false, animateDuration:0}, div);
+		var resizeHandle = new ResizeHandle({targetId:'actionPropertiesPalette', actualResize:false, animateDuration:0}, div);
+		resizeHandle.domNode.style.display = 'none';	// Initially, only ActionBar shows, so hide the resize handle.
 		dojo.subscribe("/dojo/resize/stop", function(inst){
 			if(inst.targetId=='actionPropertiesPalette'){
+				var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
 				var propertiesPaletteContainerNode = davinci.Workbench.actionPropertiesPaletteContainer.querySelector('.propPaletteTabContainer');
-				if(propertiesPaletteContainerNode){
+				if(actionPropertiesPaletteNode && propertiesPaletteContainerNode){
 					var propertiesPaletteContainer = dijit.byNode(propertiesPaletteContainerNode);
 					if(propertiesPaletteContainer){
+						// This is a hack to set height on the TabContainer properly before calling resize()
+						// on the TabContainer. Would just fall out if using a BorderContainer instead
+						// of just a bunch of DIVs and tables.
+						var appBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+						var ppcBox = GeomUtils.getBorderBoxPageCoords(propertiesPaletteContainerNode);
+						var height = appBox.h - (ppcBox.t - appBox.t);
+						// Also, a hack because this requires special knowledge about border width
+						// on propertiesPaletteContainerNode (8+8=16), plus special known 
+						// knowledge about size of resizeHandle (4)
+						height -= 21;
+						propertiesPaletteContainerNode.style.height = height + 'px';
 						propertiesPaletteContainer.resize();
 					}
 				}

@@ -8,7 +8,7 @@ define([
     	"../ve/commands/ResizeCommand",
     	"../ve/widget",
     	"../ve/metadata"
-], function(declare, Action, Workbench, CompoundCommand, AddCommand, MoveCommand, ResizeCommand, widgetUtils){
+], function(declare, Action, Workbench, CompoundCommand, AddCommand, MoveCommand, ResizeCommand, widgetUtils, Metadata){
 
 return declare("davinci.actions.StickyNoteAction", Action, {
 
@@ -52,12 +52,14 @@ return declare("davinci.actions.StickyNoteAction", Action, {
 				command.add(new ResizeCommand(widget, w, h));
 			}
 			e.getContext().getCommandStack().execute(command);
-			var inLineEdit = davinci.ve.metadata.queryDescriptor(widget.type, "inlineEdit");
-			if (inLineEdit && inLineEdit.displayOnCreate && inLineEdit.displayOnCreate.toLowerCase() == 'true') {
-				e.getContext().select(widget,null,true); // display inline
-			} else {
-				e.getContext().select(widget); // no inline on create
-			}
+			Metadata.getSmartInput(widget.type).then(function(inlineEdit){			
+				if (inlineEdit && inlineEdit.displayOnCreate) {
+					e.getContext().select(widget, null, true); // display inline
+				} else {
+					e.getContext().select(widget); // no inline on create
+				}
+			}.bind(this));
+
 		}
 
 	},

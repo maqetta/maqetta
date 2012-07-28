@@ -670,7 +670,7 @@ var Workbench = {
 			window.onresize = Workbench.onResize; //alert("All done");}
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
 		}
-		
+
 		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
 		// The *plugin.js file setup generally has a single "view" attached to a single major visual
 		// element in the form of views (aka palettes) that attach themselves around the edges of
@@ -699,7 +699,7 @@ var Workbench = {
 				document.body);
 		var actionPropertiesPaletteOuter = dojo.create('div',
 				{ id:'actionPropertiesPalette', 'class':'actionPropertiesPalette',
-				style:'width:360px; left:800px; top:200px;'}, 
+				style:'width:360px; visibility:hidden;'}, 
 				actionPropertiesPaletteContainer);
 		var actionPropertiesDragStrip = dojo.create('div', 
 				{ id:'actionPropertiesDragStrip', 'class':'actionPropertiesDragStrip' },
@@ -758,6 +758,19 @@ var Workbench = {
 				}
 			}
 		});
+		window.addEventListener('resize', function(event){
+			// Ensure that at least part of the floating properties palette is visible
+			var actionPropertiesPaletteNode = document.getElementById('actionPropertiesPalette');
+			var appBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+			var maxLeft = document.body.offsetWidth - 24;
+			var maxTop = document.body.offsetHeight - 24;
+			if(appBox.l > maxLeft){
+				actionPropertiesPaletteNode.style.left = maxLeft + 'px';
+			}
+			if(appBox.t > maxTop){
+				actionPropertiesPaletteNode.style.top = maxTop + 'px';
+			}
+		}, false);
 
 		// END CODE THAT NEEDS TO BE PULLED OUT INTO A SEPARATE FILE
 
@@ -791,6 +804,19 @@ var Workbench = {
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
 		setTimeout(function() {
 			appBorderContainer.resize();
+			var editors_container = document.getElementById('editors_container');
+			var actionPropertiesPalette = document.getElementById('actionPropertiesPalette');
+			var ecBox = GeomUtils.getBorderBoxPageCoords(editors_container);
+			var floatingBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPalette);
+			var left;
+			if(floatingBox.w < ecBox.w){
+				left = ecBox.l + (ecBox.w - floatingBox.w) / 2;
+			}else{
+				left = ecBox.l + 20;
+			}
+			actionPropertiesPalette.style.left = left + 'px';
+			actionPropertiesPalette.style.top = (ecBox.t + 5) + 'px';
+			actionPropertiesPalette.style.visibility = 'visible';
 		}, 3000);
 	},
 

@@ -459,6 +459,9 @@ button.showCss::-moz-focus-inner {
 	height:12px;
 	background:black;
 }
+.actionPropertiesDragStrip:hover {
+	cursor:move;
+}
 .actionPropertiesPalette {
 	border-radius: 6px;
 	position: absolute;

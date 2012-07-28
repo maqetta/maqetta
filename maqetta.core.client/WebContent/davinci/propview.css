@@ -456,14 +456,14 @@ button.showCss::-moz-focus-inner {
 	background-color:#E6E6E7;
 }
 .actionPropertiesDragStrip {
-	height:20px;
+	height:12px;
 	background:black;
 }
 .actionPropertiesPalette {
-	border-radius: 8px;
+	border-radius: 6px;
 	position: absolute;
 	z-index: 5;
-	border: 8px solid black;
+	border: 1px solid black;
 	background-color: white;
 }
 .actionPropertiesPalette .propertiesWidgetDescription {

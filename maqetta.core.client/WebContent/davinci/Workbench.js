@@ -716,7 +716,6 @@ var Workbench = {
 		davinci.Workbench._dragDivOffset = 100;
 		davinci.Workbench._dragDivSize = davinci.Workbench._dragDivOffset * 2;
 		dojo.connect(actionPropertiesDragStrip, 'onmousedown', function(event){
-		console.log('onmousedown. pageX='+event.pageX+',pageY='+event.pageY);
 			var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
 			if(!actionPropertiesPaletteNode){
 				return;
@@ -751,8 +750,8 @@ var Workbench = {
 						var height = appBox.h - (ppcBox.t - appBox.t);
 						// Also, a hack because this requires special knowledge about border width
 						// on propertiesPaletteContainerNode (8+8=16), plus special known 
-						// knowledge about size of resizeHandle (4)
-						height -= 21;
+						// knowledge about size of resizeHandle (5)
+						height -= 13;
 						propertiesPaletteContainerNode.style.height = height + 'px';
 						propertiesPaletteContainer.resize();
 					}

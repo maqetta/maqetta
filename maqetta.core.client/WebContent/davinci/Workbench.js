@@ -31,7 +31,8 @@ define([
 	"davinci/review/model/resource/root",
 	"dojo/i18n!davinci/ve/nls/common",
 	"dojo/dnd/Mover",
-	"davinci/ve/utils/GeomUtils"
+	"davinci/ve/utils/GeomUtils",
+	"dojox/layout/ResizeHandle"
 ], function(
 		Runtime,
 		Path,
@@ -65,7 +66,8 @@ define([
 		reviewResource,
 		veNLS,
 		Mover,
-		GeomUtils
+		GeomUtils,
+		ResizeHandle
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -699,7 +701,7 @@ var ActionBarOffsetLeft = 0,
 	ActionBarOffsetTop = 0,
 	ActionBarWidth = 264,
 	ActionBarHeight = 32;
-var actionPropertiesPaletteContainer = dojo.create('div', 
+var actionPropertiesPaletteContainer = davinci.Workbench.actionPropertiesPaletteContainer = dojo.create('div', 
 		{ id:'actionPropertiesPaletteContainer' },
 		document.body);
 var actionPropertiesPaletteOuter = dojo.create('div',
@@ -738,7 +740,19 @@ console.log('onmousedown. pageX='+event.pageX+',pageY='+event.pageY);
 	davinci.Workbench._PropPaletteMover = new Mover(dragDiv, event, davinci.Workbench);
 	davinci.Workbench._PropPaletteMoverOrigCoords = {pageX:event.pageX, pageY:event.pageY, l:box.l, t:box.t };
 });
-		
+var div = dojo.create('div',{style:'position:relative;'}, actionPropertiesPaletteOuter);
+new ResizeHandle({targetId:'actionPropertiesPalette', actualResize:false, animateDuration:0}, div);
+dojo.subscribe("/dojo/resize/stop", function(inst){
+	if(inst.targetId=='actionPropertiesPalette'){
+		var propertiesPaletteContainerNode = davinci.Workbench.actionPropertiesPaletteContainer.querySelector('.propPaletteTabContainer');
+		if(propertiesPaletteContainerNode){
+			var propertiesPaletteContainer = dijit.byNode(propertiesPaletteContainerNode);
+			if(propertiesPaletteContainer){
+				propertiesPaletteContainer.resize();
+			}
+		}
+	}
+});
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {
 			var view = mainBody.tabs.perspective[position];

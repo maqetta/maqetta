@@ -285,7 +285,6 @@ var Workbench = {
 					if (editorContainer && !editorContainer._isClosing) {
 						var editorsContainer = dijit.byId("editors_container");
 						var shadowTabContainer = dijit.byId("davinci_file_tabs");
-//FIXME: shadow tab handling here? (DONE)
 						editorsContainer.removeChild(editorContainer);
 						editorContainer.destroyRecursive();
 						shadowTabContainer.removeChild(shadowTab);
@@ -543,7 +542,7 @@ var Workbench = {
 				});
 		}
 		// FIXME: THIS BYPASSES THE PLUGIN SYSTEM.
-		// Hardcoding this for now. Need to work with Phil on how to turn change
+		// Hardcoding this for now. Need to figure out how to turn change
 		// welcome page logic into something that is defined by ve_plugin.js.
 		mainBodyContainer.addChild(mainBody.editorsStackContainer);
 		if (!mainBody.editorsWelcomePage) {
@@ -551,18 +550,6 @@ var Workbench = {
 				new ContentPane({
 					id: "editorsWelcomePage",
 					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
-					/*
-					content: "<div><span id='welcome_page_new_open_container'/></div>\n"+
-						"<div id='welcome_page_content'>\n"+
-						"<h1>Welcome to Maqetta!</h1>\n"+
-						"<p>You can get started by using the menus at the top/right:</p>\n"+
-						"<ul class='welcome_page_bullets'>\n"+
-						"<li>Click on <img src='app/davinci/img/help_menu_image.png'/> for tutorials.</li>\n"+
-						"<li>Click on <img src='app/davinci/img/new_menu_image.png'/> to start authoring a new file.</li>\n"+
-						"<li>Click on <img src='app/davinci/img/open_menu_image.png'/> to open a file or theme editor.</li>\n"+
-						"</ul>\n"+
-						"</div>\n"
-					*/
 				});
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.editorsWelcomePage);
@@ -572,8 +559,6 @@ var Workbench = {
 					id: "editors_container",
 					controllerWidget: (Workbench.hideEditorTabs ? "dijit.layout.StackController" : "dijit.layout.TabController")
 				});
-//FIXME: need to add similar logic for shadow tabs? (DONE - injected further down)
-//Research this.tablist (NOT YET DONE)
 			Workbench.editorTabs.setTitle = function(editorContainer, title) { 
 				editorContainer.attr('title', title);
 				if(!Workbench.hideEditorTabs){
@@ -590,7 +575,6 @@ var Workbench = {
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.tabs.editors);
 		mainBody.editorsStackContainer.selectChild(mainBody.editorsWelcomePage);
-//FIXME: need to connect to shadow tabcontainer instead (DONE - lower down)
 		dojo.connect(dijit.byId("editors_container"), "selectChild", function(child) {
 			if(!Workbench._processingSelectChild){
 				Workbench._processingSelectChild = true;
@@ -671,14 +655,6 @@ var Workbench = {
 				layoutPriority:1,
 				content:'<div id="davinci_toolbar_container"></div>'
 			});
-//FIXME: shadow fixes - delete this
-/*
-			var tempCP = new ContentPane({
-				title:'file1.html',
-				content:'hello there'
-			});
-			shadowTabContainer.addChild(tempCP);
-*/
 		
 			appBorderContainer.addChild(topBarPane);
 			appBorderContainer.addChild(mainStackContainer);
@@ -695,64 +671,84 @@ var Workbench = {
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
 		}
 		
-//FIXME: Temporary
-// Hardcoded values, much exactly match runtime offsets and sizes for ActionBar
-var ActionBarOffsetLeft = 0,
-	ActionBarOffsetTop = 0,
-	ActionBarWidth = 264,
-	ActionBarHeight = 32;
-var actionPropertiesPaletteContainer = davinci.Workbench.actionPropertiesPaletteContainer = dojo.create('div', 
-		{ id:'actionPropertiesPaletteContainer' },
-		document.body);
-var actionPropertiesPaletteOuter = dojo.create('div',
-		{ id:'actionPropertiesPalette', 'class':'actionPropertiesPalette',
-		style:'width:360px; left:800px; top:200px;'}, 
-		actionPropertiesPaletteContainer);
-var actionPropertiesDragStrip = dojo.create('div', 
-		{ id:'actionPropertiesDragStrip', 'class':'actionPropertiesDragStrip' },
-		actionPropertiesPaletteOuter);
-var actionBarContainer = dojo.create('div', 
-		{ id:'actionBarContainer', 'class':'actionBarContainer' },
-		actionPropertiesPaletteOuter);
-actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
-this._attachCreateActionBar(actionBarContainer.children[0]);
-var propertiesPaletteContainer = dojo.create('div',
-		{ id:'propertiesContentContainer' }, 
-		actionPropertiesPaletteOuter);
-actionPropertiesPaletteContainer.style.display = 'none';
-davinci.Workbench._dragDivOffset = 100;
-davinci.Workbench._dragDivSize = davinci.Workbench._dragDivOffset * 2;
-dojo.connect(actionPropertiesDragStrip, 'onmousedown', function(event){
-console.log('onmousedown. pageX='+event.pageX+',pageY='+event.pageY);
-	var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
-	if(!actionPropertiesPaletteNode){
-		return;
-	}
-	var box = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
-	var l = event.pageX - davinci.Workbench._dragDivOffset;
-	var t = event.pageY - davinci.Workbench._dragDivOffset;
-	var w = davinci.Workbench._dragDivSize;
-	var h = w;
-	var dragDiv = davinci.Workbench._PropPaletteDragDiv = dojo.create('div', 
-			{className:'propPaletteDragDiv',
-			style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
-			document.body);
-	davinci.Workbench._PropPaletteMover = new Mover(dragDiv, event, davinci.Workbench);
-	davinci.Workbench._PropPaletteMoverOrigCoords = {pageX:event.pageX, pageY:event.pageY, l:box.l, t:box.t };
-});
-var div = dojo.create('div',{style:'position:relative;'}, actionPropertiesPaletteOuter);
-new ResizeHandle({targetId:'actionPropertiesPalette', actualResize:false, animateDuration:0}, div);
-dojo.subscribe("/dojo/resize/stop", function(inst){
-	if(inst.targetId=='actionPropertiesPalette'){
-		var propertiesPaletteContainerNode = davinci.Workbench.actionPropertiesPaletteContainer.querySelector('.propPaletteTabContainer');
-		if(propertiesPaletteContainerNode){
-			var propertiesPaletteContainer = dijit.byNode(propertiesPaletteContainerNode);
-			if(propertiesPaletteContainer){
-				propertiesPaletteContainer.resize();
+		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
+		// The *plugin.js file setup generally has a single "view" attached to a single major visual
+		// element in the form of views (aka palettes) that attach themselves around the edges of
+		// the editors (which are in the middle of the screen). For the floating properties palette,
+		// things are kludged together and need to be refactored and cleaned up.
+		// The code below does a bunch of logic that is specific to a particular UI control
+		// (ie the floating widget that includes the ActionBar and the properties control)
+		// and that code needs to be moved out of Workbench.js into a separate file.
+		// Also, unlike everything else where there is a one-to-one relationship between
+		// a major visual element (e.g., a palette/view) and a JavaScript class, with the 
+		// code below, the outermost part of the floating palette is set up below and
+		// then SwitchingStyleView.js creates a big chunk (but not all) of the floating palette.
+		// We should probably create a higher-level class (FloatingPalette.js?) and have th
+		// ve.plugin.js file refer to that class instead of SwitchingStyleViews, and then
+		// FloatingPalette.js invoke SwitchingStyleViews.js.
+		
+		// START CODE THAT NEEDS TO BE PULLED OUT INTO A SEPARATE FILE
+		
+		// Hardcoded values, much exactly match runtime offsets and sizes for ActionBar
+		var ActionBarOffsetLeft = 0,
+			ActionBarOffsetTop = 0,
+			ActionBarWidth = 264,
+			ActionBarHeight = 32;
+		var actionPropertiesPaletteContainer = davinci.Workbench.actionPropertiesPaletteContainer = dojo.create('div', 
+				{ id:'actionPropertiesPaletteContainer' },
+				document.body);
+		var actionPropertiesPaletteOuter = dojo.create('div',
+				{ id:'actionPropertiesPalette', 'class':'actionPropertiesPalette',
+				style:'width:360px; left:800px; top:200px;'}, 
+				actionPropertiesPaletteContainer);
+		var actionPropertiesDragStrip = dojo.create('div', 
+				{ id:'actionPropertiesDragStrip', 'class':'actionPropertiesDragStrip' },
+				actionPropertiesPaletteOuter);
+		var actionBarContainer = dojo.create('div', 
+				{ id:'actionBarContainer', 'class':'actionBarContainer' },
+				actionPropertiesPaletteOuter);
+		actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
+		this._attachCreateActionBar(actionBarContainer.children[0]);
+		var propertiesPaletteContainer = dojo.create('div',
+				{ id:'propertiesContentContainer' }, 
+				actionPropertiesPaletteOuter);
+		actionPropertiesPaletteContainer.style.display = 'none';
+		davinci.Workbench._dragDivOffset = 100;
+		davinci.Workbench._dragDivSize = davinci.Workbench._dragDivOffset * 2;
+		dojo.connect(actionPropertiesDragStrip, 'onmousedown', function(event){
+		console.log('onmousedown. pageX='+event.pageX+',pageY='+event.pageY);
+			var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
+			if(!actionPropertiesPaletteNode){
+				return;
 			}
-		}
-	}
-});
+			var box = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+			var l = event.pageX - davinci.Workbench._dragDivOffset;
+			var t = event.pageY - davinci.Workbench._dragDivOffset;
+			var w = davinci.Workbench._dragDivSize;
+			var h = w;
+			var dragDiv = davinci.Workbench._PropPaletteDragDiv = dojo.create('div', 
+					{className:'propPaletteDragDiv',
+					style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+					document.body);
+			davinci.Workbench._PropPaletteMover = new Mover(dragDiv, event, davinci.Workbench);
+			davinci.Workbench._PropPaletteMoverOrigCoords = {pageX:event.pageX, pageY:event.pageY, l:box.l, t:box.t };
+		});
+		var div = dojo.create('div',{style:'position:relative;'}, actionPropertiesPaletteOuter);
+		new ResizeHandle({targetId:'actionPropertiesPalette', actualResize:false, animateDuration:0}, div);
+		dojo.subscribe("/dojo/resize/stop", function(inst){
+			if(inst.targetId=='actionPropertiesPalette'){
+				var propertiesPaletteContainerNode = davinci.Workbench.actionPropertiesPaletteContainer.querySelector('.propPaletteTabContainer');
+				if(propertiesPaletteContainerNode){
+					var propertiesPaletteContainer = dijit.byNode(propertiesPaletteContainerNode);
+					if(propertiesPaletteContainer){
+						propertiesPaletteContainer.resize();
+					}
+				}
+			}
+		});
+
+		// END CODE THAT NEEDS TO BE PULLED OUT INTO A SEPARATE FILE
+
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {
 			var view = mainBody.tabs.perspective[position];
@@ -775,8 +771,9 @@ dojo.subscribe("/dojo/resize/stop", function(inst){
 			}
 		}, this);
 
-//FIXME: TEMPORARY
-this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
+		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
+		//See other comments in this file on the same subject.
+		this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
 
 		// kludge to workaround problem where tabs are sometimes cutoff/shifted to the left in Chrome for Mac
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
@@ -883,7 +880,6 @@ this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
 		var shadowTabContainer = dijit.byId("davinci_file_tabs");
 
 		if (editorsContainer && editorsContainer.selectedChildWidget && editorsContainer.selectedChildWidget.editor) {
-//FIXME: Need to also work with shadow tab container (DONE)
 			var editorId = selectedChildWidget.id;
 			var shadowId = editorIdToShadowId(editorId);
 			editorsContainer.closeChild(editorsContainer.selectedChildWidget);
@@ -899,7 +895,6 @@ this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
 
 		if (editorsContainer) {
 			array.forEach(editorsContainer.getChildren(), function(child){
-//FIXME: Need to also work with shadow tab container
 				editorsContainer.closeChild(child);
 			});
 		}
@@ -1292,42 +1287,11 @@ this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
 		if (dojo.some(cp1.getChildren(), function(child){ return child.id == view.id; })) {
 			return;
 		}
-/*DELETE THIS
-		var getTab = function(view) {
-			var d = new Deferred(),
-				tab = dijit.byId(view.id);
-
-			if (tab) {
-				d.resolve(tab);
-			} else {
-				require([view.viewClass], function(viewCtor){
-					d.resolve(new (viewCtor || ViewPart)({
-						position: positionSplit[1] || positionSplit[0],
-						title: view.title,
-						id: view.id,
-						closable: false,
-						view: view
-					}));
-				});
-			}
-			return d;
-		};
-		getTab(view).then(function(tab) {
-*/
 		this.instantiateView(view).then(function(tab) {
-/*
-//FIXME: Temporary
-if(view.id == 'davinci.ve.style'){
-	var actionPropertiesPalette = dojo.byId('actionPropertiesPalette');
-	actionPropertiesPalette.appendChild(tab.domNode);
-	tab.startup();
-}else{
-*/
 			cp1.addChild(tab);
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}
-//}
 		});
 	  } catch (ex) {
 		  console.error("Error loading view: "+view.id);
@@ -1421,7 +1385,6 @@ if(view.id == 'davinci.ve.style'){
 			if (editorContainer) {
 				// already open
 				editorsContainer.selectChild(editorContainer);
-//FIXME: also need to select shadow tab container
 				var editor=editorContainer.editor;
 				if (keywordArgs.startOffset) {
 					editor.select(keywordArgs);
@@ -1485,7 +1448,6 @@ if(view.id == 'davinci.ve.style'){
 			Workbench.mainStackContainer.selectChild(Workbench.mainBorderContainer);
 		}
 
-//FIXME: shadow tab (DONE)
 		var content = keywordArgs.content,
 			editorContainer = dijit.byId(filename2id(fileName)),
 			editorsContainer = dijit.byId("editors_container"),
@@ -1531,7 +1493,6 @@ if(view.id == 'davinci.ve.style'){
 		}
 
 		if (editorCreated) {
-//FIXME: Add shadow tab here?
 			editorsContainer.addChild(editorContainer);
 			shadowTabContainer.addChild(shadowTab);
 		}
@@ -1793,41 +1754,6 @@ if(view.id == 'davinci.ve.style'){
 		}
 	},
 
-/*FIXME: Probably can delete this code. Doesn't seem to be used. Commenting out for now.
-	toggleFullScreen: function() {
-		var mainBodyContainer = dijit.byId('mainBody');
-		if (mainBodyContainer.origLayout) {
-			mainBodyContainer.layout = mainBodyContainer.origLayout;
-			delete mainBodyContainer.origLayout;
-			//TODO: undo z-index
-		} else {
-			mainBodyContainer.origLayout = mainBodyContainer.layout;
-			mainBodyContainer.layout = function(){
-				var gutter = "0";
-					centerStyle = mainBodyContainer._center.style;
-
-				dojo.mixin(centerStyle, {
-					top: gutter,
-					left: gutter,
-					right: gutter,
-					bottom: gutter,
-					zIndex: "500"
-				});
-			};
-		}
-
-		var toggleAllButCenter = function(widget) {
-			if (widget.region != "center") {
-				dojo.toggleClass(widget.domNode, "dijitHidden");
-			}
-		};
-		dojo.forEach(mainBodyContainer.getChildren(), toggleAllButCenter);
-		dojo.forEach(mainBodyContainer._splitters, toggleAllButCenter);
-		mainBodyContainer.resize();
-		dijit.byNode(mainBodyContainer._center).resize();
-	},
-*/
-
 	_switchEditor: function(newEditor, startup) {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
@@ -1934,7 +1860,6 @@ if(view.id == 'davinci.ve.style'){
 			if (editorsStackContainer && editorsWelcomePage){
 				editorsStackContainer.selectChild(editorsWelcomePage);
 			}
-//FIXME: THIS IS NEW
 			var welcomePage = dijit.byId('welcomePage');
 			if (Workbench.mainStackContainer && welcomePage){
 				Workbench.mainStackContainer.selectChild(welcomePage);
@@ -2187,46 +2112,11 @@ if(view.id == 'davinci.ve.style'){
 		return editorActions;
 	},
 	
-	/**
-	 * Make sure actionbar will fit inside of the area for the user document's iframe
-	 */
-/*FIXME: DELETE OF REWRITE
-	_adjustActionBarLocation: function(){
-		if(!this._moverCurrent || !this._actionBarContainer || !this._actionBarContainer.children){
-			return;
-		}
-		var actionBarDiv = this._actionBarContainer.children[0];
-		if(!actionBarDiv){
-			return;
-		}
-		// If we need to put ActionBar at center/top, this is #pixels offset from top
-		var topActionBarOffset = 5;
-		var box = dojo.mixin({}, this._moverCurrent);
-		box.l += ActionBarOffsetLeft;
-		box.t += ActionBarOffsetTop;
-		box.r = box.l + ActionBarWidth;
-		box.b = box.t + ActionBarHeight;
-		//var bounds = this._context.getParentIframeBounds();
-		var bounds = this._context.getDesignPaneBounds();
-		bounds.r = bounds.l + bounds.w;
-		bounds.b = bounds.t + bounds.h;
-		if(box.l < bounds.l || box.r > bounds.r || 
-				box.t < bounds.t || box.b > bounds.b){
-			// If any of ActionBar doesn't fit on canvas, move to top/center
-			var newLeftAbs = bounds.l + (bounds.w/2) - (ActionBarWidth/2);
-			var newTopAbs = bounds.t + topActionBarOffset;
-			var dx = newLeftAbs - box.l;
-			var dy = newTopAbs - box.t;
-			var newLeftRel = ActionBarOffsetLeft + dx;
-			var newTopRel = ActionBarOffsetTop + dy;
-		}
-		actionBarDiv.style.left = newLeftRel+'px';
-		actionBarDiv.style.top = newTopRel+'px';
-	},
-*/
 	// Mover interface
+	// FIXME: This code is specific to the floating palette and needs to be 
+	// pulled out and placed into a separate file. See comments above about
+	// the refactoring that needs to be done.
 	onMove: function(mover, box, event){
-console.log('onMove. pageX='+event.pageX+',pageY='+event.pageY+',box.l='+box.l+',box.t='+box.t);
 		var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
 		var dragDiv = davinci.Workbench._PropPaletteDragDiv;
 		if(dragDiv && actionPropertiesPaletteNode){

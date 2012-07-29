@@ -669,6 +669,16 @@ var Workbench = {
 			Workbench._orginalOnResize = window.onresize;
 			window.onresize = Workbench.onResize; //alert("All done");}
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
+			
+			var shadowTabMenu = dijit.byId('davinci_file_tabs_tablist_Menu');
+			if(shadowTabMenu){
+				shadowTabMenu.addChild(new dijit.MenuItem({
+					label:veNLS.closeAllEditors,
+					onClick:function(a, b, c){
+						this.closeAllEditors();
+					}.bind(this)
+				}));
+			}
 		}
 
 		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
@@ -932,7 +942,7 @@ var Workbench = {
 		var editorsContainer = dijit.byId("editors_container");
 
 		if (editorsContainer) {
-			array.forEach(editorsContainer.getChildren(), function(child){
+			editorsContainer.getChildren().forEach(function(child){
 				editorsContainer.closeChild(child);
 			});
 		}

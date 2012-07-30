@@ -1,6 +1,6 @@
-define(["dojo/_base/declare", "davinci/ui/TextEditor"], function(declare, TextEditor) {
+define(["dojo/_base/declare", "./TextEditor"], function(declare, TextEditor) {
 
-return declare("davinci.ui.ModelEditor", TextEditor, {
+return declare(TextEditor, {
 
     constructor: function (element, fileName) {
 
@@ -64,9 +64,12 @@ return declare("davinci.ui.ModelEditor", TextEditor, {
 		var childModel = this.model.findChildAtPosition(mappedSelection);
 		selection.model = childModel;
 		if (childModel != this._selectedModel) {
-			this.publishingSelect = true;
-			dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
-			this.publishingSelect = false;
+			try {
+				this.publishingSelect = true;
+				dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
+			} finally {
+				this.publishingSelect = false;
+			}
 		}
 		this._selectedModel = childModel;
 	},

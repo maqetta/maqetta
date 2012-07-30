@@ -390,23 +390,7 @@
 							},
                             "query": ".dijitAccordionContainer-child"
                         },
-                         "Active": {
-                            "selectors": {
-                            	".claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionContainer-child":[
-                            		"background-color",
-									"-webkit-box-shadow:",
-									"-moz-box-shadow" 
-                            	],
-                            	".claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper": [
-									"border-color",
-									"border-style",
-									"border-width",
-                            	]  
-							},
-                            "query": ".dijitAccordionInnerContainer",
-							"simulate": "dijitSelectedActive dijitAccordionInnerContainerSelectedActive"
-                        },						
-                         "Hover": {
+                        "Hover": {
                             "selectors": {
                             	".claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper, .claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper": [
 									"border-color",
@@ -539,11 +523,22 @@
 							"border-color",
 							"borer-style"
 						],
-						".claro .dijitSplitterV": [
-							"width"
+						".claro .dijitSplitterV, .claro .dijitGutterV": [
+							"width",
+							 "background",
+							 "border",
+							 "border-color",
+							 "border-style",
+							 "border-width",
+							 "margin"
 						],
-						".claro .dijitSplitterH": [
-							"height"
+						".claro .dijitSplitterH, .claro .dijitGutterH ": [
+							"height",
+							"background",
+							 "border",
+							 "border-color",
+							 "border-style",
+							 "border-width"
 						]
 					},
 					"query": " "				
@@ -725,15 +720,13 @@
 							"box-shadow:",
 							"-webkit-box-shadow",
 							"-moz-box-shadow",
-							"-webkit-transition-duration"  
-						],
-						".claro .dijitDisabled .dijitButtonText": [
+							"-webkit-transition-duration",
 							"color",
 							"font-family",
 							"font-size",
-							"font-weight"
+							"font-weight" 
 						],
-						".claro .dijitButtonDisabled": [
+						".claro .dijitButtonDisabled, .claro .dijitDropDownButtonDisabled, .claro .dijitComboButtonDisabled, .claro .dijitToggleButtonDisabled": [
 							"background-image",
 							"outline"
 						]
@@ -748,7 +741,7 @@
 				 * consistancey and facilate Global widget style changing
 				 */
 					"selectors": {
-						".claro .dijitButton .dijitButtonNode" : [
+						".claro .dijitButton .dijitButtonNode, .claro .dijitDropDownButton .dijitButtonNode, .claro .dijitComboButton .dijitButtonNode, .claro .dijitToggleButton .dijitButtonNode" : [
 							"border-width",
 							"border-style",
 							"border-color",
@@ -850,7 +843,7 @@
                         },
 						"Active": {
                             "selectors": {
-                               ".claro .dijitCalendarArrowActive .dijitCalendarDecrease": [
+                               ".claro .dijitCalendarArrowActive .dijitCalendarDecrease, .claro .dijitCalendarArrow:active .dijitCalendarDecrease": [
 									"background-position",
 									"width",
 									"height",
@@ -864,7 +857,7 @@
                         },
 						"Hover": {
                             "selectors": {
-                               ".claro .dijitCalendarArrowHover .dijitCalendarDecrease": [
+                               ".claro .dijitCalendarArrowHover .dijitCalendarDecrease, .claro .dijitCalendarArrow:hover .dijitCalendarDecrease": [
 									"background-position",
 									"width",
 									"height",
@@ -895,7 +888,7 @@
                         },
 						"Active": {
                             "selectors": {
-                               ".claro .dijitCalendarArrowActive .dijitCalendarIncrease": [
+                               ".claro .dijitCalendarArrowActive .dijitCalendarIncrease, .claro .dijitCalendarArrow:active .dijitCalendarIncrease": [
 									"background-position",
 									"width",
 									"height",
@@ -909,7 +902,7 @@
                         },
 						"Hover": {
                             "selectors": {
-                               ".claro .dijitCalendarArrowHover .dijitCalendarIncrease": [
+                               ".claro .dijitCalendarArrowHover .dijitCalendarIncrease, .claro .dijitCalendarArrow:hover .dijitCalendarIncrease": [
 									"background-position",
 									"width",
 									"height",
@@ -1021,14 +1014,20 @@
         
         "CheckBox": {
             "displayName": "CheckBox" ,
-            "rootSelectors":[".claro .dijitCheckBox"],
+            "rootSelectors":[".claro .dijitCheckBox, .claro .dijitToggleButton .dijitCheckBoxIcon"],
             "states": {
-                "Normal": {  },
+                "Normal": { 
+                	"selectors": {
+						".claro .dijitCheckBox, .claro .dijitToggleButton .dijitCheckBoxIcon" : [
+							"$std_10" 
+						] 
+					}
+                 },
                 "Disabled": {},
                 "Hover": {},
 				"Selected": {
 					"selectors": {
-						".claro .dijitCheckBoxChecked" : [
+						".claro .dijitCheckBoxChecked, .claro .dijitToggleButtonChecked .dijitCheckBoxIcon" : [
 							"$std_10" 
 						] 
 					},
@@ -1078,14 +1077,6 @@
 							"selectors": {
 										".claro .dijitArrowButtonInner" : [
 											"$std_10" 
-										] 
-							 },
-							 "query": ""
-						},
-						"Hover": {
-							"selectors": {
-										".claro .dijitComboBoxHover .dijitArrowButtonInner" : [
-											"background-position" 
 										] 
 							 },
 							 "query": ""
@@ -1164,22 +1155,6 @@
 								]								
 							},
 							"query": "$auto" 
-						},
-						"Selected": {
-							"selectors": {
-								".claro .dijitMenuActive .dijitMenuItemSelected": [
-									"border",
-									"border-style",
-									"border-width",
-									"border-color",
-									"padding",
-									"background-color",
-									"background-position",
-									"color" 
-								] 
-							},
-							"query": "$auto",
-							"simulate": "dijitMenuItemSelected"
 						},
 						"Disabled": {
 							"selectors": {
@@ -1272,7 +1247,7 @@
 									"height",
 									"margin-top"
 								],
-								" .claro .dijitMenuSeparatorBottom": [
+								".claro .dijitMenuSeparatorBottom": [
 									"height",
 									"margin-bottom"
 								]
@@ -1287,11 +1262,11 @@
         /* This only applies to Tab Container with tab at top of container. */
         "TabContainer": { 
             "displayName": "TabContainer" ,
-            "rootSelectors":[".claro .dijitTabContainer"],
+            "rootSelectors":[".dijitTabContainer"],
             "states": {
                 "Normal": {
                             "selectors": {
-                            	".claro .dijitTabContainer": [
+                            	".dijitTabContainer": [
 									"background-color",
 									"border-width",
 									"border-style",
@@ -1338,7 +1313,7 @@
 									"font-size",
 									"font-weigth"
                                 ],
-								".claro .dijitTabContainerTop-tabs .dijitTabContent": [
+								".claro .dijitTabContainerTop-tabs .dijitTab": [
 									"padding",
 									"padding-top",
 									"padding-right",
@@ -1353,11 +1328,6 @@
 									"text-align",
 									"background-image",
 									"background-position",
-									"background-repeat"
-                                ],
-								".claro .dijitTabContainerTop-tabs .dijitTabInnerDiv": [
-									"background-image",
-									"background-position",
 									"background-repeat",
 									"box-shadow", 
 									"-webkit-box-shadow", 
@@ -1367,10 +1337,11 @@
 									"-webkit-border-top-left-radius",
 									"-webkit-border-top-right-radius"
 								],
-								".claro .dijitTabContainerTop-tabs": [
+								".claro .dijitTabContainerTop-tabs, .claro .dijitTabContainerBottom-tabs, .claro .dijitTabContainerLeft-tabs, .claro .dijitTabContainerRight-tabs": [
 									"border-width",
 									"border-style",
-                                    "border-color"
+                                    "border-color",
+                                    "border"
 								],
 								".claro .dijitTabPaneWrapper, .claro .dijitTabContainerTop-tabs, .claro .dijitTabContainerBottom-tabs, .claro .dijitTabContainerLeft-tabs, .claro .dijitTabContainerRight-tabs": [
 									"border-width",
@@ -1472,7 +1443,7 @@
 									/*"padding",*/
 									/*"margin"*/
 								],
-								".claro .dijitTabContainerTop-dijitContentPane": [
+								".claro .dijitTabContainerTop-dijitContentPane, .claro .dijitTabContainerLeft-dijitContentPane, .claro .dijitTabContainerBottom-dijitContentPane, .claro .dijitTabContainerRight-dijitContentPane, .claro .dijitAccordionContainer-dijitContentPane": [
 									"background-color", 
 									"padding",
 									"font-family",
@@ -1497,7 +1468,7 @@
             "states": {
                 "Normal": {
                     "selectors": {
-						".claro .dijitTextBox .dijitInputInner, .claro .dijitTextBox .dijitValidationContainer": [
+						".claro .dijitSelectLabel, .claro .dijitTextBox .dijitInputInner, .claro .dijitValidationTextBox .dijitValidationContainer": [
 							"text-align",
 							"padding",
 							"padding-right",
@@ -1505,7 +1476,9 @@
 							"padding-left",
 							"padding-bottom"
 						],
-
+						".claro .dijitTextBox, .claro .dijitInputInner": [
+							"color"
+						],
 						".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode": [
 							"$std_10" 
 						]
@@ -1515,7 +1488,12 @@
                 },
                 "Selected": {
                     "selectors": {
-                    	".claro .dijitTextBoxFocused .dijitInputInner, .claro .dijitTextBoxFocused .dijitValidationContainer": [
+						".claro .dijitTextBoxFocused": [
+							"$std_10" 
+						],
+						".claro .dijitTextBoxFocused .dijitInputContainer": [
+							"background",
+							"background-color",
 							"text-align",
 							"padding",
 							"padding-right",
@@ -1523,13 +1501,6 @@
 							"padding-left",
 							"padding-bottom",
 							"color"
-						],
-						".claro .dijitTextBoxFocused": [
-							"$std_10" 
-						],
-						".claro .dijitTextBoxFocused .dijitInputContainer": [
-							"background",
-							"background-color"
 						]
 					},
                     "query": ".dijit.dijitReset.dijitLeft.dijitTextBox",
@@ -1537,15 +1508,6 @@
                 },
                 "Hover": {
                 	 "selectors": {
-						".claro .dijitTextBoxHover .dijitInputInner, .claro .dijitTextBoxHover .dijitValidationContainer": [
-							"text-align",
-							"padding",
-							"padding-right",
-							"padding-top",
-							"padding-left",
-							"padding-bottom",
-							"color"
-						],
 						".claro .dijitTextBoxHover": [
 							"$std_10" 
 						]
@@ -1554,42 +1516,7 @@
                 },
                 "Disabled":{
                 	"selectors": {
-						".claro .dijitTextBoxDisabled .dijitInputInner, .claro .dijitTextBoxDisabled .dijitValidationContainer": [
-							"text-align",
-							"padding",
-							"padding-right",
-							"padding-top",
-							"padding-left",
-							"padding-bottom",
-							"color"
-						],
-						".dj_webkit .claro .dijitTextBoxDisabled input": [
-							"text-align",
-							"padding",
-							"padding-right",
-							"padding-top",
-							"padding-left",
-							"padding-bottom",
-							"color"
-						],
-						".claro .dijitTextBoxDisabled": [
-							"$std_10" 
-						]
-
-					}
-                },
-                "ReadOnly":{
-                	"selectors": {
-						".claro .dijitTextBoxReadOnly .dijitInputInner, .claro .dijitTextBoxReadOnly .dijitValidationContainer": [
-							"text-align",
-							"padding",
-							"padding-right",
-							"padding-top",
-							"padding-left",
-							"padding-bottom",
-							"color"
-						],
-						".claro .dijitTextBoxReadOnly": [
+						".dijitTextBoxReadOnly, .dijitTextBoxDisabled": [
 							"$std_10" 
 						]
 
@@ -1598,90 +1525,7 @@
                 
             } 
         },
-        
-        "ValidationTextBox": {
-            "displayName": "ValidationTextBox" ,
-            "rootSelectors":[".claro .dijitTextBox"],
-            "states": {
-                "Normal": {
-                    "selectors": {
-                    	".claro .dijitTextBox .dijitInputInner, .claro .dijitTextBox .dijitValidationContainer": [
-							"text-align",
-							"padding",
-							"padding-right",
-							"padding-top",
-							"padding-left",
-							"padding-bottom"
-						],
-						".claro .dijitTextBox": [
-							"$std_10" 
-						]
-					},
-                    "query": "$auto" 
-                },
-                "Selected": {
-                    "selectors": {
-						".claro .dijitTextBoxFocused": [
-							"$std_10" 
-						],
-						".claro .dijitTextBoxFocused .dijitInputContainer": [
-							"background",
-							"background-color"
-						]
-					},
-                    "query": ".dijit.dijitReset.dijitLeft.dijitTextBox",
-					"simulate": "dijitTextBoxFocused"
-                },
-                "Hover": {
-                },
-                "Disabled":{},
-                "ReadOnly":{}
-                
-            } 
-        },
-        
-        "NumberTextBox": {
-            "displayName": "NumberTextBox" ,
-            "rootSelectors":[".claro .dijitTextBox"],
-            "states": {
-                "Normal": {
-                    "selectors": {
-                    	".claro .dijitTextBox .dijitInputInner, .claro .dijitTextBox .dijitValidationContainer": [
-							"text-align",
-							"padding",
-							"padding-right",
-							"padding-top",
-							"padding-left",
-							"padding-bottom"
-						],
-						".claro .dijitTextBox": [
-							"$std_10" 
-						]
-					},
-                    "query": "$auto" 
-                },
-                "Selected": {
-                    "selectors": {
-						".claro .dijitTextBoxFocused": [
-							"$std_10" 
-						],
-						".claro .dijitTextBoxFocused .dijitInputContainer": [
-							"background",
-							"background-color"
-						]
-					},
-                    "query": ".dijit.dijitReset.dijitLeft.dijitTextBox",
-					"simulate": "dijitTextBoxFocused"
-                },
-                "Hover": {
-                },
-                "Disabled":{},
-                "ReadOnly":{}
-                
-            } 
-        },
-         
-        "TitlePane": {
+         "TitlePane": {
             "displayName": "TitlePane" ,
             "rootSelectors":[".claro .dijitTitlePane"],
             "states": {

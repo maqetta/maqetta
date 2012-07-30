@@ -41,14 +41,28 @@ return declare("davinci.ve.ThemeModifier", null, {
 	 *  Added for theme Delta #23
 	 */
 	getDeltaRule: function(rule){
-		var retRule=null;
+		var targetRule=null;
 	
 		// if this rule is not from the delta file add a new rule to the delta
-		retRule = this.cssFiles[0].getRule(rule.getSelectorText());
-		if (retRule.parent.url != this.cssFiles[0].url) {
-			 retRule = this.cssFiles[0].addRule(rule.getSelectorText()+" {}");
+		var cssRules = this.cssFiles[0].getRules(rule.getSelectorText());
+		//retRule = this.cssFiles[0].getRule(rule.getSelectorText());
+		var ruleSelectorText = rule.getSelectorText();
+		for (var i = 0; i < cssRules.length; i++){
+			/*
+			 * Run through all the rules looking for the target rule
+			 */
+			var r = cssRules[i];
+			if(r.getSelectorText() == ruleSelectorText) {
+				targetRule = r;
+				if (targetRule.parent.url == this.cssFiles[0].url) { // is it in delta file
+					 return targetRule; // found the deltaRule
+				}
+			}
 		}
-		return retRule;
+		if (targetRule) {
+			targetRule = this.cssFiles[0].addRule(ruleSelectorText+" {}");
+		}
+		return targetRule;
 	},
 
 	_markDirty: function (file,cssModelObject){

@@ -894,7 +894,7 @@ var Workbench = {
 						var enabled = true;
 						if (item.isEnabled) {
 							var resource = getSelectedResource();
-							enabled = item.isEnabled(resource);
+							enabled = resource ? item.isEnabled(resource) : false;
 						}
 
 						var label = item.label;

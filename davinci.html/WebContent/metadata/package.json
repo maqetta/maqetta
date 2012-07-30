@@ -10,8 +10,78 @@
         "metadata": "."
       }
     },
+    
     "maqetta": {
     	"davinci.actionSets": [
+    		{
+				"id": "davinci.editorActions",
+		      	"visible": true,
+	           	"actions": [
+	           		{
+				        id: "tableCommands",
+				        iconClass: "editActionIcon tableCommandsIcon",
+				        label: "Table commands",
+				        actionbarPath: "arrange",
+				        type:'DropDownButton',
+				        menu:[
+				       		{
+				                iconClass: "editActionIcon",
+				                label: "Select table",
+				                action: "./html/table/SelectTableAction",
+				                actionbarPath: "table"
+				            },
+			                {
+			                    iconClass: "editActionIcon",
+			                    label: "Select column",
+			                    action: "./html/table/SelectColumnAction",
+				                actionbarPath: "table"
+			                },
+			                {
+			                    iconClass: "editActionIcon",
+			                    label: "Insert column before",
+			                    action: "./html/table/AddColumnBeforeAction",
+				                actionbarPath: "table"
+			                },
+			           		{
+			                    iconClass: "editActionIcon",
+			                    label: "Insert column after",
+			                    action: "./html/table/AddColumnAction",
+				                actionbarPath: "table"
+			                },
+			                {
+			                    iconClass: "editActionIcon",
+			                    label: "Remove column",
+			                    action: "./html/table/RemoveColumnAction",
+				                actionbarPath: "table"
+			                },
+			                {
+			                    iconClass: "editActionIcon",
+			                    label: "Select row",
+			                    action: "./html/table/SelectRowAction",
+				                actionbarPath: "table"
+			                },
+			                {
+			                    iconClass: "editActionIcon",
+			                    label: "Insert row before",
+			                    action: "./html/table/AddRowBeforeAction",
+				                actionbarPath: "table"
+			                },
+			                {
+			                    iconClass: "editActionIcon",
+			                    label: "Insert row after",
+			                    action: "./html/table/AddRowAction",
+				                actionbarPath: "table"
+			                },
+			                {
+			                    iconClass: "editActionIcon",
+			                    label: "Remove row",
+			                    action: "./html/table/RemoveRowAction",
+				                actionbarPath: "table"
+			                }
+				        ]
+	                }
+	           	]
+    		},
 			{
 				"id": "davinci.ve.cutCopyPaste",
 		      	"visible": true,

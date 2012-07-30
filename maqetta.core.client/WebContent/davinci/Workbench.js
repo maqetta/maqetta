@@ -494,7 +494,7 @@ var Workbench = {
 		var menuTree = Workbench._createMenuTree();	// no params means include "everything else"
 		Workbench._updateMainMenubar(dojo.byId('davinci_main_menu'), menuTree);
 		var maq_banner_editor_commands = dojo.byId('maq_banner_editor_commands');
-		var o = this._getActionSets('davinci.ui.editorMenuBar');
+		var o = this.getActionSets('davinci.ui.editorMenuBar');
 		var clonedActionSets = o.clonedActionSets;
 		if(clonedActionSets.length > 0){
 			var menuTree=Workbench._createMenuTree(clonedActionSets);
@@ -718,7 +718,6 @@ var Workbench = {
 				{ id:'actionBarContainer', 'class':'actionBarContainer' },
 				actionPropertiesPaletteOuter);
 		actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
-		this._attachCreateActionBar(actionBarContainer.children[0]);
 		var propertiesPaletteContainer = dojo.create('div',
 				{ id:'propertiesContentContainer' }, 
 				actionPropertiesPaletteOuter);
@@ -1183,7 +1182,7 @@ var Workbench = {
 						var enabled = true;
 						if (item.isEnabled) {
 							var resource = getSelectedResource();
-							enabled = item.isEnabled(resource);
+							enabled = resource ? item.isEnabled(resource) : false;
 						}
 
 						var label = item.label;
@@ -1598,7 +1597,7 @@ var Workbench = {
 			context=args.context,
 			widgetCallback=args.openCallback;
 		
-		var o = this._getActionSets(partID);
+		var o = this.getActionSets(partID);
 		var clonedActionSets = o.clonedActionSets;
 		var actionSets = o.actionSets;
 		if(clonedActionSets.length > 0){
@@ -1613,10 +1612,7 @@ var Workbench = {
 		}
 	},
 
-	//FIXME: Need to reconcile _getActionSets() vs getActionSets()
-	//Looks like the main difference is that _getActionSets() allows
-	//extensions from widget libraries
-	_getActionSets: function(partID){
+	getActionSets: function(partID){
 		var actionSetIDs=[];
 		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
 			function (extension) {
@@ -1656,28 +1652,6 @@ var Workbench = {
 			}
 		}
 		return {actionSets:actionSets, clonedActionSets:clonedActionSets};
-	},
-
-	getActionSets: function(partID) {
-		var actionSetIDs=[], actionSets =[];
-		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
-			function (extension) {
-			   for (var i=0;i<extension.parts.length;i++) {
-				   if (extension.parts[i]==partID) {
-					   actionSetIDs.push(extension.targetID);              
-					   return true;
-				   }
-			   }
-			});
-		
-		if (actionSetIDs.length) {
-		   var actionSets=Runtime.getExtensions("davinci.actionSets",
-				function (extension) {
-			   		return actionSetIDs.some(function(setID) { return setID == extension.id; });
-				});
-		}
-
-		return actionSets;
 	},
 
 	_initActionsKeys: function(actionSets, args) {
@@ -1840,6 +1814,7 @@ var Workbench = {
 
 				//Bring palettes specified for the editor to the top
 				this._bringPalettesToTop(newEditor);
+				this._attachCreateActionBar(dojo.byId('actionBarContainer').children[0]);
 			}
 		}.bind(this), 1000);
 
@@ -2136,12 +2111,11 @@ var Workbench = {
 	_attachCreateActionBar: function(toolbarDiv){
 		if(!davinci.Workbench.actionBarToolBar){
 			var actions=this._getActionBarActions();
-	        if (actions && actions.length)
-	        {
-	    		var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
-	        	var toolbar = davinci.Workbench.actionBarToolBar = davinci.Workbench._createToolBar('actionbarPath', tb, actions, this._context);
-	    		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
-	        }
+			if (actions && actions.length){
+				var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
+				var toolbar = davinci.Workbench.actionBarToolBar = davinci.Workbench._createToolBar('actionbarPath', tb, actions, this._context);
+				dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
+			}
 		}
 		toolbarDiv.innerHTML = '';
 		toolbarDiv.appendChild(davinci.Workbench.actionBarToolBar.domNode);
@@ -2161,6 +2135,26 @@ var Workbench = {
 			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
 				editorActions.push(ext.editorContribution);
 				return true;
+			});
+		}
+		var libraryActions = metadata.getLibraryActions('davinci.editorActions');
+		if (editorActions.length > 0 && libraryActions.length) {
+			// We want to augment the action list, so let's clone the
+			// action set before pushing new items onto the end of the
+			// array
+			dojo.forEach(libraryActions, function(libraryAction) {
+				if(libraryAction.action){
+					Workbench._loadActionClass(libraryAction);
+				}
+				if(libraryAction.menu){
+					for(var i=0; i<libraryAction.menu.length; i++){
+						var subAction = libraryAction.menu[0];
+						if(subAction.action){
+							Workbench._loadActionClass(subAction);
+						}
+					}
+				}
+				editorActions[0].actions.push(libraryAction);
 			});
 		}
 		return editorActions;

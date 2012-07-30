@@ -580,8 +580,6 @@ return {
                     id: "arrangeCommands",
                     iconClass: "editActionIcon arrangeCommandsIcon",
                     label: "Arrange commands",
-                    //FIXME: Need a menu
-                    //action: "davinci/ve/actions/EditPropertiesAction",
                     actionbarPath: "arrange",
                     type:'DropDownButton',
                     menu:[
@@ -607,14 +605,6 @@ return {
                           }
                     ]
 
-                },
-				{
-                    id: "tableCommands",
-                    iconClass: "editActionIcon tableCommandsIcon",
-                    label: "Table commands",
-                    //FIXME: Need a menu
-                    //action: "davinci/ve/actions/EditPropertiesAction",
-                    actionbarPath: "arrange"
                 },
 				{
                     id: "otherCommands",

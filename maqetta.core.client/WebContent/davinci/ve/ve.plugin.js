@@ -610,9 +610,34 @@ return {
                     id: "otherCommands",
                     iconClass: "editActionIcon otherCommandsIcon",
                     label: "Other commands",
-                    //FIXME: Need a menu
-                    //action: "davinci/ve/actions/EditPropertiesAction",
-                    actionbarPath: "other"
+                    actionbarPath: "other",
+                    type:'DropDownButton',
+                    menu:[
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Surround with &lt;A&gt;",
+                              action: "davinci/ve/actions/SurroundAction",
+                              surroundWithTagName:'a'
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Surround with &lt;DIV&gt;",
+                              action: "davinci/ve/actions/SurroundAction",
+                              surroundWithTagName:'div'
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Surround with &lt;SPAN&gt;",
+                              action: "davinci/ve/actions/SurroundAction",
+                              surroundWithTagName:'span'
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Application States...",
+                              action: "davinci/ve/actions/EnableApplicationStates"
+                          }
+                     ]
+
                 },
                 {
                     id: "closeactiveeditor",

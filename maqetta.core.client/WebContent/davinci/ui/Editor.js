@@ -69,14 +69,17 @@ define([
 	};
 
 	var onSelectionChanged = function(selectionEvent) {
-		if (this._selecting) {
+		if (this._progSelect) {
 			return;
 		}
+
 //		var startPos=this._textModel.getPosition(selectionEvent.newValue.start);
 //		var endPos=this._textModel.getPosition(selectionEvent.newValue.end);
-        this.selectionChange({
+
+		// User-initiated change in the source editor.  Synchronize with the model.
+		this.selectionChange({
         	startOffset: selectionEvent.newValue.start,
-        	endOffset: selectionEvent.newValue.end,
+        	endOffset: selectionEvent.newValue.end
         });
 	};
 
@@ -227,11 +230,14 @@ return declare(null, {
 	select: function (selectionInfo) {
 //		var start=this._textModel.getLineStart(selectionInfo.startLine)+selectionInfo.startCol;
 //		var end=this._textModel.getLineStart(selectionInfo.endLine)+selectionInfo.endCol;
-		this._selecting=true;
 		if (this.editor) {
-			this.editor.setSelection(selectionInfo.startOffset,selectionInfo.endOffset);
+			try {
+				this._progSelect = true;
+				this.editor.setSelection(selectionInfo.startOffset,selectionInfo.endOffset);
+			} finally {
+				delete this._progSelect;				
+			}
 		}
-		this._selecting=false;
 	},
 
 	getText: function() {

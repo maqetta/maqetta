@@ -63,50 +63,60 @@ return declare(DataStoreBasedWidgetInput, {
 	},
 
 	refreshStoreView: function(){
-		var textArea = dijit.byId("davinciIleb");
-		var value ='';
-		
-		var currentWidgetStructure = this._widget.attr("structure");
-		
-		//structure doesn't have to be a 1-to-1 match with new grid wizard, so build 
-		//structure from data source rather than widget attribute (but we'll use
-		//current widget structure for column labels when available)
-		var attributes = null;
 		var store = this._widget.dijitWidget.store;
-		if (store._arrayOfAllItems.length > 0) {
-			attributes = store.getAttributes(store._arrayOfAllItems[0]);
-			if (attributes[0] === "unique_id") {
-				//Get rid of "unique_id"
-				attributes.splice(0, 1);
-			} 
-			value ='';
-			for (var x = 0; x < attributes.length; x++){
-				var attributeLabel = attributes[x].trim();
-				dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
-					if (attributeLabel === currentWidgetStructureElement.field) {
-						attributeLabel = currentWidgetStructureElement.name.trim();
-						return true;
-					}
-				});
-				
-				var pre = (x > 0) ? ',' : '';
-				value += pre + attributeLabel;
+		
+		onComplete = function(items) {
+			var textArea = dijit.byId("davinciIleb");
+			var value ='';
+			
+			var currentWidgetStructure = this._widget.attr("structure");
+			
+			//structure doesn't have to be a 1-to-1 match with new grid wizard, so build 
+			//structure from data source rather than widget attribute (but we'll use
+			//current widget structure for column labels when available)
+			var attributes = null;
+			
+			if (items.length > 0) {
+				attributes = store.getAttributes(items[0]);
+				if (attributes[0] === "unique_id") {
+					//Get rid of "unique_id"
+					attributes.splice(0, 1);
+				} 
+				value ='';
+				for (var x = 0; x < attributes.length; x++){
+					var attributeLabel = attributes[x].trim();
+					dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
+						if (attributeLabel === currentWidgetStructureElement.field) {
+							attributeLabel = currentWidgetStructureElement.name.trim();
+							return true;
+						}
+					});
+					
+					var pre = (x > 0) ? ',' : '';
+					value += pre + attributeLabel;
+				}
 			}
-		}
-
-		//Loop through data store data to build up the string
-		value += '\n';
-		for (var i = 0; i <	store._arrayOfAllItems.length; i++){
-			var item = store._arrayOfAllItems[i];
-			for (var s = 0; s < attributes.length; s++){
-				var pre = (s > 0) ? ',' : '';
-				var itemValue = item[attributes[s]];
-				value += pre + (itemValue ? itemValue[0] : "");
-			}
+	
+			//Loop through data store data to build up the string
 			value += '\n';
-		}
-		this._data = value;
-		textArea.attr('value', String(value));
+			for (var i = 0; i <	items.length; i++){
+				var item = items[i];
+				for (var s = 0; s < attributes.length; s++){
+					var pre = (s > 0) ? ',' : '';
+					var itemValue = item[attributes[s]];
+					value += pre + (itemValue ? itemValue[0] : "");
+				}
+				value += '\n';
+			}
+			this._data = value;
+			textArea.attr('value', String(value));
+		}.bind(this);
+		
+		this._widget.dijitWidget.store.fetch({
+			onComplete: function(items) {
+				onComplete(items);
+			}.bind(this)
+		});
 	},
 	
 	//called by superclass's updateWidget

@@ -1,6 +1,6 @@
 {
 	"name": "gridx",
-	"version": "1.0beta-70-gaeea222",
+	"version": "1.0",
 	"directories": {
 		"lib": "../dojo/gridx"
 	},

@@ -31,6 +31,7 @@
       <plugin id="davinci.html"/>
       <plugin id="davinci.server.gzip"/>
       <plugin id="davinci.w3ibm"/>
+      <plugin id="idx"/>
       <plugin id="javax.servlet"/>
       <plugin id="maqetta.clipart"/>
       <plugin id="maqetta.core.client"/>

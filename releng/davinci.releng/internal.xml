@@ -24,6 +24,7 @@
         <!-- LIST OF MAQETTA Internal PROJECTS GOES HERE -->
         <!-- -->
         <populateDir project="davinci.w3ibm" isInternal="true"/>
+    	<populateDir project="idx" isInternal="true"/>
         <populateDir project="davinci.w3war" isFeature="true" isInternal="true"/>
     </target>
 </project>

@@ -993,18 +993,6 @@ davinci_top_bar .dijitButtonNode {
 	border:none;
 }
 
-#welcome_page_content {
-	margin:-2px 0;
-	border:1px solid #b5bcc7;	
-	border-bottom:none;
-	height:100%;		
-}
-#welcome_page_new_open_container, #editors_container_new_open_container {
-	display:inline-block;
-	white-space:no-wrap;
-	float:right;
-	margin:2px 2px 0 2px;
-}
 .claro #davinci_app .dijitComboButton .dijitButtonNode {
 	/* background-image:none; */
 	background-color:#FFF;
@@ -1291,7 +1279,18 @@ davinci_top_bar .dijitButtonNode {
 .claro #editorsWelcomePage.dijitContentPane {
 	padding:0;
 }
+#welcomePage {
+	text-align:center;
+}
+#welcome_page_content {
+	width:768px;
+	display:inline-block;
+	text-align:left;
+	margin:-2px 0;
+	border:none;
+}
 .welcome_above_content {
+	display:none;
 	height:32px;
 	background:#cedfe9;
 	margin:-1px;
@@ -1306,14 +1305,19 @@ davinci_top_bar .dijitButtonNode {
 	font: bold 1.364em/34px Verdana, sans-serif;
 	border-top:1px solid #b5bcc7;
 	border-bottom:1px solid #b5bcc7;
+	display:none;
 }
 .welcome_under_header {
 	height:22px;
 	background:#f9f9f9;
 	border-bottom:1px solid #e1e4e9;
+	display:none;
 }
 .welcome_section {
 	margin:10px 0 22px;
+}
+.welcome_section_hidden {
+	display:none;
 }
 .welcome_section_active:hover {
 	color:blue;

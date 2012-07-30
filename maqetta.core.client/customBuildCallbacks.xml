@@ -175,7 +175,7 @@
 	</target>
 	
 	
-	<target name="dojo.build" if="${run.dojo.build}" unless="dojo.build.exists">
+	<target name="dojo.build" if="${run.dojo.build}" unless="${dojo.build.exists}">
 		<echo message="Doing dojo build" />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>

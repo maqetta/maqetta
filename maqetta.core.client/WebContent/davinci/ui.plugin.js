@@ -106,8 +106,7 @@ return {
                {
                    __mainMenu: true,
                    separator: [
-                       "new", false, "open", false, "settings", false, "additions", false, "help",
-                       false
+                       "new", false, "open", false
                    ]
                },
                {
@@ -222,19 +221,19 @@ return {
                 {
                     __mainMenu: true,
                     separator: [
-                        "settings", false, "additions", false, "help",
+                        "usersettings", false, "settings", false, "additions", false, "help",
                         false
                     ]
                 },
                 {
                     label: "UserSettings",
-                    path: "settings",
+                    path: "usersettings",
                     id: "davinci.usersettings",
                     className: 'userSettingsMenu',
                     iconClass: 'userSettingsMenuIcon',
                     showLabel:false,
                     separator: [
-                        "settings", true, "additions", false
+                        "usersettings", true, "additions", false
                     ]
                 },
                 {
@@ -298,7 +297,6 @@ return {
                     label: "Tutorials",
                     menubarPath: "davinci.help/help"
                 },
-
                 {
                     id: "about",
                     run: function() {
@@ -308,6 +306,22 @@ return {
                     },
                     label: "About Maqetta",
                     menubarPath: "davinci.help/about"
+                },
+                {
+                    id: "username",
+                    run: function() {
+                    	// do monthing - purely informational
+                    },
+                    label: "{user}",
+                    menubarPath: "davinci.usersettings/usersettings"
+                },
+                {
+                    id: "logout",
+                    run: function() {
+                    	console.log('logout');
+                    },
+                    label: "Logout",
+                    menubarPath: "davinci.usersettings/usersettings"
                 }
             ]
         },

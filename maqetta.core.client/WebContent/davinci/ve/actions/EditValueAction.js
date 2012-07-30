@@ -15,6 +15,7 @@ return declare("davinci.ve.actions.EditValueAction", [ContextAction], {
 			if(selection.length !== 1){
 				return;
 			}
+			context.select(selection[0], false, true);
 		}
 	},
 

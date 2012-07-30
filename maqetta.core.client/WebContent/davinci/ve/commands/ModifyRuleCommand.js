@@ -1,7 +1,7 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/ve/widget",
-    	"davinci/ve/States"
+    	"../widget",
+    	"../States"
 ], function(declare, Widget, States){
 
 
@@ -32,8 +32,8 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(this.context.rootNode);
 		if (this.context._selection) {
-			// force the style palette to update for redo
-			this.context.onSelectionChange(this.context._selection); // force the style palette to update.
+			// force the style palette to update
+			this.context._forceSelectionChange = true;
 		}
 	},
 
@@ -49,10 +49,9 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(this.context.rootNode);
 		if (this.context._selection) {
-			this.context.onSelectionChange(this.context._selection); // force the style palette to update.
+			// force the style palette to update
+			this.context._forceSelectionChange = true;
 		}
-
 	}
-
 });
 });

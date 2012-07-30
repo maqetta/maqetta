@@ -2394,6 +2394,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.select(w, true); // add
 			}
 		}, this);
+
+		// ALP->WBR: do we still need this? move to ThemeEditor's context?
 		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
 			var helper = Theme.getHelper(this.visualEditor.theme);
 			if(helper && helper.onContentChange){
@@ -2401,11 +2403,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			} else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
            	 helper.then(function(result){
         		 if (result.helper && result.helper.onContentChange){
-        			 result.helper.onContentChange(this,  this.visualEditor.theme); 
+        			 result.helper.onContentChange(this, this.visualEditor.theme); 
     			 }
         	 }.bind(this));
           }
 		}
+
+		if (this._forceSelectionChange) {
+			this.onSelectionChange(this.getSelection());
+			delete this._forceSelectionChange;
+		}
+
 		setTimeout(function(){
 			// Invoke autoSave, with "this" set to Workbench
 			Workbench._autoSave.call(Workbench);
@@ -2414,23 +2422,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onSelectionChange: function(selection){
-		// this method can be called from at the end of modifyRuleCommand, 
-		// The publish causes the cascade, and properties in the palette to be updated to the selection
-		// In the case od and undo or redo from the command stack. The reason the timeout is here is
-		// in the case of multiple ModifyRulesCommands in a CompondCommand this gets called for each of
-		// the modifies in the compond command, pounding the cascade and properties causing preoframnce issues
-		// we really only need to sent one publish at the end, so we put the publish in a timeout. If we are indeeded 
-		// getting called from a CompondCommand and the next request to publish comes in in less than the timeout
-		// we replace the delay with a new one. efectivlly replacing a bunch of publishes with one at the end.
-		if (this._delayedPublish) {
-			window.clearTimeout(this._delayedPublish);
-		}
-		this._delayedPublish = window.setTimeout(function(){
-			this._cssCache = {};
-			delete this._delayedPublish;
-			dojo.publish("/davinci/ui/widgetSelected",[selection]);
-		}.bind(this),200); 
-		
+		this._cssCache = {};
+		dojo.publish("/davinci/ui/widgetSelected",[selection]);
 	},
 
 	hotModifyCssRule: function(r){

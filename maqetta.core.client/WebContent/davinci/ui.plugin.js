@@ -233,7 +233,7 @@ return {
                     iconClass: 'userSettingsMenuIcon',
                     showLabel:false,
                     separator: [
-                        "usersettings", true, "additions", false
+                        "username", true, "logout", true, "additions", false
                     ]
                 },
                 {
@@ -309,19 +309,21 @@ return {
                 },
                 {
                     id: "username",
+                    action: "davinci/actions/UserNameAction",
                     run: function() {
                     	// do monthing - purely informational
                     },
                     label: "{user}",
-                    menubarPath: "davinci.usersettings/usersettings"
+                    menubarPath: "davinci.usersettings/username"
                 },
                 {
                     id: "logout",
+                    action: "davinci/actions/LogoutAction",
                     run: function() {
                     	console.log('logout');
                     },
                     label: "Logout",
-                    menubarPath: "davinci.usersettings/usersettings"
+                    menubarPath: "davinci.usersettings/logout"
                 }
             ]
         },

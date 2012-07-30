@@ -34,6 +34,8 @@ davinci/davinci = {
 	"./actions/DownloadAction",
 	"./actions/StickyNoteAction",
 	"./actions/SaveAsWidget",
+	"./actions/UserNameAction",
+	"./actions/LogoutAction",
 
 	"./ve/actions/CopyAction",
 	"./ve/actions/CutAction",

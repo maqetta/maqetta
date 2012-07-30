@@ -1,8 +1,8 @@
 define([
-	"davinci/commands/CommandStack",
+	"../commands/CommandStack",
 	"dojox/timing/doLater",
 	"dojo/_base/declare",
-	"davinci/actions/Action",
+	"../actions/Action",
 	"./TextStyler",
 	"orion/editor/editor",
 	"orion/editor/editorFeatures",
@@ -13,7 +13,7 @@ define([
     "orion/editor/contentAssist",
     "orion/editor/jsContentAssist",
     "orion/editor/cssContentAssist",
-	"davinci/UserActivityMonitor"
+	"../UserActivityMonitor"
 ], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
@@ -74,10 +74,13 @@ define([
 		}
 //		var startPos=this._textModel.getPosition(selectionEvent.newValue.start);
 //		var endPos=this._textModel.getPosition(selectionEvent.newValue.end);
-        this.selectionChange({startOffset:selectionEvent.newValue.start,endOffset:selectionEvent.newValue.end});
+        this.selectionChange({
+        	startOffset: selectionEvent.newValue.start,
+        	endOffset: selectionEvent.newValue.end,
+        });
 	};
 
-return declare("davinci.ui.Editor", null, {
+return declare(null, {
 	
 	constructor: function (element, fileName, existWhenVisible) {
 		this.contentDiv = element;
@@ -222,8 +225,6 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	select: function (selectionInfo) {
-		// This is disabled due to various selection issues for now
-		return;
 //		var start=this._textModel.getLineStart(selectionInfo.startLine)+selectionInfo.startCol;
 //		var end=this._textModel.getLineStart(selectionInfo.endLine)+selectionInfo.endCol;
 		this._selecting=true;

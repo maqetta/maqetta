@@ -547,6 +547,12 @@ return {
 				    actionbarPath: "cutcopypaste",
 				    keyBinding: {accel: true, charOrCode: "c"}
 				},
+                {
+                    label: "Paste",
+                    iconClass: "editActionIcon editPasteIcon",
+                    action: "davinci/ve/actions/PasteAction",
+				    actionbarPath: "cutcopypaste"
+                },
 				{
                     id: "delete",
                     iconClass: "editActionIcon editDeleteIcon",
@@ -600,8 +606,8 @@ return {
                           },
                           {
                               iconClass: "editActionIcon",
-                              label: "Application States...",
-                              action: "davinci/ve/actions/EnableApplicationStates"
+                              label: "Move to front",
+                              action: "davinci/ve/actions/MoveToFrontAction"
                           }
                     ]
 

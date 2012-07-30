@@ -709,7 +709,7 @@ var Workbench = {
 				document.body);
 		var actionPropertiesPaletteOuter = dojo.create('div',
 				{ id:'actionPropertiesPalette', 'class':'actionPropertiesPalette',
-				style:'width:360px; visibility:hidden;'}, 
+				style:'visibility:hidden;'}, 
 				actionPropertiesPaletteContainer);
 		var actionPropertiesDragStrip = dojo.create('div', 
 				{ id:'actionPropertiesDragStrip', 'class':'actionPropertiesDragStrip' },

@@ -233,7 +233,8 @@ return declare(null, {
 		if (this.editor) {
 			try {
 				this._progSelect = true;
-				this.editor.setSelection(selectionInfo.startOffset,selectionInfo.endOffset);
+				// reverse arguments so that insertion caret (and the scroll) happens at the beginning of the selection
+				this.editor.setSelection(selectionInfo.endOffset,selectionInfo.startOffset);
 			} finally {
 				delete this._progSelect;				
 			}

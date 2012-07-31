@@ -86,27 +86,6 @@ var shadowIdToEditorId = function(shadowFileName) {
 	return shadowFileName.replace(/^shadow/, "editor");
 };
 
-/*
- * FIXME: Totally broken code.
-   FIXME: Same callback for two different events (/davinci/ui/selectionChanged, /davinci/ui/editorSelected), 
-          but it appears those two events pass different payloads.
-   FIXME: dijit.byId("davinci_toolbar_main") always returns undefined. Guess is that a couple of years ago we had a toolbar on banner.
-   FIXME: This is called whenever source editor selection changed, but not when visual editor selection changed. That seems wrong.
-   FIXME: what is definition of "change"? with editorSelected, it's an object with properties "editor" and "oldEditor",
-          and no property "targetObjectId", which is referenced below.
-   FIXME: No one ever passes in toolbarID.
-*/
-var updateMainToolBar = function (change, toolbarID) {
-	var toolbar1 = dijit.byId("davinci_toolbar_main");
-	if (toolbar1) {
-		dojo.forEach(toolbar1.getChildren(), function(child) {
-			if (child.isEnabled) {
-				child.set('disabled', !child.isEnabled(change.targetObjectId));
-			}
-		});
-	}
-};
-
 var handleIoError = function (deferred, reason) {
 	/*
 	 *  Called by the subscription to /dojo/io/error , "
@@ -273,8 +252,6 @@ var Workbench = {
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
 
-		Runtime.subscribe("/davinci/ui/selectionChanged", updateMainToolBar);
-		Runtime.subscribe("/davinci/ui/editorSelected", updateMainToolBar);
 		Runtime.subscribe("/davinci/resource/resourceChanged",
 			function (type, changedResource) {
 				if (type == 'deleted') {

@@ -135,7 +135,20 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 			return;
 		}
 		if (newParentItem.id == "myapp") {
-			newParentItem = this._context.rootNode;
+			newParentItem = this._context.rootWidget;
+		}
+
+		if (oldParentItem.id = "myapp") {
+			oldParentItem = this._context.rootWidget;
+		}
+
+		// dndSource fixes up insertIndex, however Reparent will do the same, so we
+		// undo the fixup here.
+		if (oldParentItem == newParentItem && !bCopy) {
+			 var oldIndex = dojo.indexOf(oldParentItem.getChildren(), childItem);
+			 if (oldIndex < insertIndex) {
+			 	 insertIndex++;
+			 }
 		}
 
 		var command = new ReparentCommand(childItem, newParentItem, insertIndex);

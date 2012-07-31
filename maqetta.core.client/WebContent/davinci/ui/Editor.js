@@ -14,7 +14,7 @@ define([
     "orion/editor/jsContentAssist",
     "orion/editor/cssContentAssist",
 	"../UserActivityMonitor"
-], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
+], function(CommandStack, doLater, declare, Action, mTextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -212,7 +212,7 @@ return declare(null, {
 		case "js":
 		case "java":
 		case "css":
-			this._styler = new TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
+			this._styler = new mTextStyler.TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
 			break;
 		case "html":
 			this._styler = new mTextMateStyler.TextMateStyler(view, new mHtmlGrammar.HtmlGrammar());

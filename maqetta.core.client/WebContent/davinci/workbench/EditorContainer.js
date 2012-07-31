@@ -62,6 +62,13 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			if(toolbar){
 				toolbarDiv.appendChild(toolbar.domNode);
 			}
+			this.updateToolbars();
+		}.bind(this));
+		this.subscribe("/davinci/ui/widgetSelected", function(widgets){
+			this.updateToolbars();
+		}.bind(this));
+		this.subscribe("/davinci/workbench/ready", function(widgets){
+			this.updateToolbars();
 		}.bind(this));
 	},
 	
@@ -317,6 +324,54 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
         	this.editor.destroy();
         }
         delete this.editor;
+	},
+	
+	_updateToolbar: function(toolbar){
+		if(toolbar && this.editor){
+			var context = this.editor.getContext ? this.editor.getContext() : null;
+			if(context){
+				var children = toolbar.getChildren();
+				for(var i=0; i<children.length; i++){
+					var child = children[i];
+					var enabled = true;
+					if(child._maqAction && child._maqAction.action &&  child._maqAction.action.isEnabled){
+						enabled = child._maqAction.action.isEnabled();
+					} else if(child._maqAction && child._maqAction.isEnabled){
+						enabled = child._maqAction.isEnabled();
+					}
+					child.set('disabled', !enabled);
+					var menu = child.dropDown;
+					if(menu){
+						var menuItems = menu.getChildren();
+						for(var j=0; j<menuItems.length; j++){
+							var menuItem = menuItems[j];
+							enabled = true;
+							if(menuItem._maqAction && menuItem._maqAction.action &&  menuItem._maqAction.action.isEnabled){
+								enabled = menuItem._maqAction.action.isEnabled();
+							} else if(menuItem._maqAction && menuItem._maqAction.isEnabled){
+								enabled = menuItem._maqAction.isEnabled();
+							}
+							menuItem.set('disabled', !enabled);
+						}
+					}
+				}
+			}
+		}
+		
+	},
+	
+	/**
+	 * Enable/disable various items on the editor toolbar and action bar
+	 */
+	updateToolbars: function(){
+		if(this.editor == Runtime.currentEditor){
+			var editorToolbarNode = dojo.query('#davinci_toolbar_container .dijitToolbar')[0];
+			var editorToolbar = editorToolbarNode ? dijit.byNode(editorToolbarNode) : null;
+			var actionBarNode = dojo.query('#actionBarContainer .dijitToolbar')[0];
+			var actionBar = actionBarNode ? dijit.byNode(actionBarNode) : null;
+			this._updateToolbar(editorToolbar);
+			this._updateToolbar(actionBar);
+		}
 	},
 	
 	/**

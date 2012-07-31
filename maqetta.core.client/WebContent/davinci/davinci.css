@@ -83,7 +83,9 @@ BODY{
 	height: 16px;
 	background-repeat: no-repeat; 
 }
-
+.dijitButtonDisabled .editActionIcon {
+	opacity:.6;
+}
 .StyleNormalViewButton {
 	width:17px;
 }

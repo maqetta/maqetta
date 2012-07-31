@@ -408,6 +408,7 @@ var Workbench = {
 							}
 						});
 						var menuItem = new dijit.MenuItem(menuItemParms);
+						menuItem._maqAction = menuItemObj;
 						menu.addChild(menuItem);
 					}
 					parms.dropDown = menu;
@@ -417,6 +418,7 @@ var Workbench = {
 						dojoAction = new ComboButton(parms);
 					}
 					dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
+					dojoAction._maqAction = action;
 					dojoActionDeferred.resolve();
 				}else if (action.toggle || action.radioGroup) {
 					dojoAction = new ToggleButton(parms);
@@ -432,15 +434,18 @@ var Workbench = {
 					} else {
 						dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
 					}
+					dojoAction._maqAction = action;
 					dojoActionDeferred.resolve();
 				}else if(action.type){
 					require([action.type], function(ReviewToolBarText) {
 						dojoAction = new ReviewToolBarText();
+						dojoAction._maqActiond = action;
 						dojoActionDeferred.resolve();
 					});
 				}else{
 					dojoAction = new Button(parms);
 					dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
+					dojoAction._maqAction = action;
 					dojoActionDeferred.resolve();
 				}
 				if (action.icon) {
@@ -803,6 +808,7 @@ var Workbench = {
 			actionPropertiesPalette.style.left = left + 'px';
 			actionPropertiesPalette.style.top = (ecBox.t + 5) + 'px';
 			actionPropertiesPalette.style.visibility = 'visible';
+			dojo.publish("/davinci/workbench/ready", []);
 		}, 3000);
 	},
 

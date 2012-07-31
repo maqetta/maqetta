@@ -41,6 +41,8 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 
 		// If moving a widget within same parent, adjust newIndex in case the widget is being moved
 		// to a latter point in list of children. If so, the removeChild operation has altered the child list
+		// and we substract 1.  This way the index is the correct one in the original child list rather than the
+		// index after the widgets have been re-arranged.
 		var newIndex = (newParent == oldParent && this._oldIndex < this._newIndex) ? this._newIndex -1 : this._newIndex;
 		newParent.addChild(widget, newIndex);
 

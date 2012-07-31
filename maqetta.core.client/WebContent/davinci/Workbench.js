@@ -806,7 +806,7 @@ var Workbench = {
 				left = ecBox.l + 20;
 			}
 			actionPropertiesPalette.style.left = left + 'px';
-			actionPropertiesPalette.style.top = (ecBox.t + 5) + 'px';
+			actionPropertiesPalette.style.top = (ecBox.t + 3) + 'px';
 			actionPropertiesPalette.style.visibility = 'visible';
 			dojo.publish("/davinci/workbench/ready", []);
 		}, 3000);

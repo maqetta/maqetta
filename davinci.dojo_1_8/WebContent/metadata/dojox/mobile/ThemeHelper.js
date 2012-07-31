@@ -22,21 +22,21 @@ return {
 	    return '';
 	},
 	
-	preThemeConfig: function(context) {
+/*	preThemeConfig: function(context) {
 		
 		if(!has("webkit")) {
-			/*
+			
 			 * Only add the compat CSS files if no webkit
-			 */
+			 
 			var themeRoot = Theme.getThemeLocation();
 			var relFilePath = themeRoot.relativeTo('./'+themeRoot+'/'+context.theme.name+'/'+context.theme.themeEditorHtmls[0], true);
 			var relativePath = '';
 			for (var i = 0; i < relFilePath.segments.length; i++){
 				relativePath = relativePath +relFilePath.segments[i]+'/';
 			}
-			if (context.theme.compatFiles) {
-				for(var i = 0; i < context.theme.compatFiles.length; i++){
-					var compatCss = relativePath+context.theme.name+'/'+context.theme.compatFiles[i]
+			if (context.theme.conditionalFiles) {
+				for(var i = 0; i < context.theme.conditionalFiles.length; i++){
+					var compatCss = relativePath+context.theme.name+'/'+context.theme.conditionalFiles[i]
 					var link = context.getDocument().createElement("link");
 					link.href = compatCss;
 					link.type = "text/css";
@@ -46,7 +46,7 @@ return {
 				}
 			}
 		}
-	},
+	},*/
 	
 	
 	onContentChange: function(context, theme){

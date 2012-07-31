@@ -36,7 +36,6 @@ define([
 	"preview/silhouetteiframe",
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"../model/Factory", // FIXME: needed for document.css M6 hack
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	declare,
@@ -75,8 +74,7 @@ define([
 	Preferences,
 	Silhouette,
 	GeomUtils,
-	newFileTemplate,
-	Factory
+	newFileTemplate
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -840,7 +838,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					true /*skipDomUpdate*/
 			).then(function(){
 					// make sure this file has a valid/good theme
-					this.loadTheme(newHtmlParams);						
+					this.loadTheme(newHtmlParams);	
+					this.widgetAddedOrDeleted();
 			}.bind(this));
 		}
 
@@ -1299,7 +1298,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
 		this._configDojoxMobile();
-		this.widgetAddedOrDeleted();
 		this.updateScrollListeners();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	    this.editor.setDirty(this.hasDirtyResources());
@@ -3434,111 +3432,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onCommandStackExecute: function() {
 	},
 
-//FIXME: this routine probably will be made obsolete by br's changes to incorporate
-//document.css as part of themes
+
 	/**
 	 * Called by any commands that can causes widgets to be added or deleted.
-	 * Looks at current document and decide if we need to update the document
-	 * to include or exclude document.css
 	 */
-	widgetAddedOrDeleted: function(resetEverything){		
-		// Hack for M6 release to include/exclude document.css.
-		// Include only if at least one dijit widget and no dojox.mobile widgets.
-		function checkWidgetTypePrefix(widget, prefix){
-			if(widget.type.indexOf(prefix)===0){
-				return true;
-			}
-			var children = widget.getChildren();
-			for(var j=0; j<children.length; j++){
-				var retval = checkWidgetTypePrefix(children[j], prefix);
-				if(retval){
-					return retval;
-				}
-			}
-			return false;
-		}
-		var anyDojoxMobileWidgets = false;
-		var topWidgets = this.getTopWidgets();
-		for(var i=0; i<topWidgets.length; i++){
-			anyDojoxMobileWidgets = checkWidgetTypePrefix(topWidgets[i], 'dojox.mobile.');
-			if(anyDojoxMobileWidgets){
-				break;
-			}
-		}
-		// If the current document has changed from having zero dojox.mobile widgets to at least one
-		// or vice versa, then either remove or add document.css.
-		var themeCssRootArr = this._themeUrl.split('/');
-		themeCssRootArr.pop();
-		themeCssRootArr.pop();
-		var documentFileName= themeCssRootArr.join('/') + '/' + this.theme.className + '/document.css';
-		if(resetEverything ||this.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
-			var documentCssHeader, documentCssImport, themeCssHeader, themeCssImport;
-			var header = dojo.clone( this.getHeader());
-			for(var ss=0; ss<header.styleSheets.length; ss++){
-				if(header.styleSheets[ss] == documentFileName){
-					documentCssHeader = header.styleSheets[ss];
-				}
-				if(header.styleSheets[ss] == this._themeUrl){
-					themeCssHeader = header.styleSheets[ss];
-				}
-			}
-			var imports = this.model.find({elementType:'CSSImport'});
-			for(var imp=0; imp<imports.length; imp++){
-				if(imports[imp].url == documentFileName){
-					documentCssImport = imports[imp];
-				}
-				if(imports[imp].url == this._themeUrl){
-					themeCssImport = imports[imp];
-				}
-			}
-			// If resetEverything flag is set, then delete all current occurrences
-			// of document.css. If there are no dojoxmobile widgets, the next block
-			// will add it back in.
-			if(resetEverything || anyDojoxMobileWidgets){
-				if(documentCssHeader){
-					var idx = header.styleSheets.indexOf(documentCssHeader);
-					if(idx >= 0){
-						header.styleSheets.splice(idx, 1);
-						this.setHeader(header);
-					}
-				}
-				if(documentCssImport){
-					var parent = documentCssImport.parent;
-					parent.removeChild(documentCssImport);
-					documentCssImport.close(); // removes the instance from the Factory
-				}
-				documentCssHeader = documentCssImport = null;
-			}
-			if(!anyDojoxMobileWidgets){
-				if(!documentCssHeader && themeCssHeader){
-					var themeCssRootArr = themeCssHeader.split('/');
-					themeCssRootArr.pop();
-					themeCssRootArr.pop();
-					var documentCssFileName = themeCssRootArr.join('/') + '/' + this.theme.className + '/document.css';
-					header = dojo.clone(header);
-					header.styleSheets.splice(0, 0, documentCssFileName);
-					this.setHeader(header);
-				}
-				if(!documentCssImport && themeCssImport){
-					var themeCssRootArr = themeCssImport.url.split('/');
-					themeCssRootArr.pop();
-					themeCssRootArr.pop();
-					var documentCssFileName = themeCssRootArr.join('/') + '/' + this.theme.className + '/document.css';
-					var basePath = this.getFullResourcePath().getParentPath();
-					var documentCssPath = basePath.append(documentCssFileName).toString();
-					var documentCssFile = system.resource.findResource(documentCssPath);
-					var parent = themeCssImport.parent;
-					if(parent && documentCssFile){
-						var css = new CSSImport();
-						css.url = documentCssFileName;
-						var args = {url:documentCssPath, includeImports: true};
-						var cssFile = Factory.getModel(args); 
-						css.cssFile = cssFile; 
-						parent.addChild(css,0);
-					}
-				}
-			}
-			this.anyDojoxMobileWidgets = anyDojoxMobileWidgets;
+	widgetAddedOrDeleted: function(resetEverything){
+		var helper = Theme.getHelper(this.getTheme());
+		if(helper && helper.widgetAddedOrDeleted){
+			helper.widgetAddedOrDeleted(this, resetEverything);
+		} else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
+	       	 helper.then(function(result){
+	    		 if (result.helper && result.helper.widgetAddedOrDeleted){
+	    			 result.helper.widgetAddedOrDeleted(this,  resetEverything); 
+				 }
+	    	 }.bind(this));
 		}
 	},
 

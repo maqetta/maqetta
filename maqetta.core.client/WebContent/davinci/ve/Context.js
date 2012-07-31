@@ -997,7 +997,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					body.style.margin = "0";
 
 					body._edit_context = this; // TODO: find a better place to stash the root context
-					this._configDojoxMobile();
 					var requires = this._bootstrapModules.split(",");
 					if (requires.indexOf('dijit/dijit-all') != -1){
 						// this is needed for FF4 to keep dijit.editor.RichText from throwing at line 32 dojo 1.5
@@ -1299,6 +1298,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var newCons = [];
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
+		this._configDojoxMobile();
 		this.widgetAddedOrDeleted();
 		this.updateScrollListeners();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
@@ -3171,11 +3171,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		try {
 			var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
 			var djConfig = this.getDojo().config,  // TODO: use require
-				djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
-				ua = /*device ||*/ djConfig.mblUserAgent || 'none',
-				themeMap,
-				themeFiles;
-
+			djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
+			ua = /*device ||*/ djConfig.mblUserAgent || 'none',
+			themeMap,
+			themeFiles;
+				
 			djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
 			themeMap = djConfigModel.themeMap;
 			themeFiles = djConfigModel.mblThemeFiles;

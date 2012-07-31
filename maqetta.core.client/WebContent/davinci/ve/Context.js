@@ -3551,7 +3551,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 *
 	 * @param {number} type  0 - modified, 1 - added, 2 - removed
 	*/
-	widgetChanged: function(type, widget) {
+	widgetChanged: function(type, widget, args) {
 		this.updateScrollListeners();
 	},
 	

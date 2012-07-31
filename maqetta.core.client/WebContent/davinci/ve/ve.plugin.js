@@ -583,6 +583,32 @@ return {
                     actionbarPath: "editvalue"
                 },
 				{
+                    id: "selectCommands",
+                    iconClass: "editActionIcon selectCommandsIcon",
+                    label: "Select commands",
+                    actionbarPath: "arrange",
+                    type:'ComboButton',
+                    action: "davinci/ve/actions/SelectParentAction",
+                    menu:[
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Select parent",
+                              action: "davinci/ve/actions/SelectParentAction"
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Select ancestor...",
+                              action: "davinci/ve/actions/SelectAncestorAction"
+                          },
+                          {
+                              iconClass: "editActionIcon",
+                              label: "Unselect all",
+                              action: "davinci/ve/actions/UnselectAllAction"
+                          }
+                    ]
+
+                },
+				{
                     id: "arrangeCommands",
                     iconClass: "editActionIcon arrangeCommandsIcon",
                     label: "Arrange commands",

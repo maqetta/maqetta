@@ -130,15 +130,28 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	newItem: function(/* Object? */ args, /*Item?*/ parent) {
 	},
 
-	pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem, /*Boolean*/ copy, newIndex) {
+	pasteItem: function(/*Item*/ childItem, /*Item*/ oldParentItem, /*Item*/ newParentItem, /*Boolean*/ bCopy, /*int?*/ insertIndex, /*Item*/ before) {
 		if (!childItem || !newParentItem || !oldParentItem) {
 			return;
 		}
 		if (newParentItem.id == "myapp") {
-			newParentItem = this._context.rootNode;
+			newParentItem = this._context.rootWidget;
 		}
 
-		var command = new ReparentCommand(childItem, newParentItem, newIndex);
+		if (oldParentItem.id = "myapp") {
+			oldParentItem = this._context.rootWidget;
+		}
+
+		// dndSource fixes up insertIndex, however Reparent will do the same, so we
+		// undo the fixup here.
+		if (oldParentItem == newParentItem && !bCopy) {
+			 var oldIndex = dojo.indexOf(oldParentItem.getChildren(), childItem);
+			 if (oldIndex < insertIndex) {
+			 	 insertIndex++;
+			 }
+		}
+
+		var command = new ReparentCommand(childItem, newParentItem, insertIndex);
 		this._context.getCommandStack().execute(command);
 	},
 
@@ -166,7 +179,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		}
 	},
 
-	_widgetChanged: function(type, widget) {
+	_widgetChanged: function(type, widget, args) {
 		try {
 			if (type === this._context.WIDGET_ADDED) {
 				this.add(widget);
@@ -180,6 +193,13 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 
 				// finally, we tell the widget that its children might have changed
 				this.onChildrenChange(widget, this._getChildren(widget));
+			} else if (type === this._context.WIDGET_REPARENTED) {
+				// args = [oldParent, newParent]
+				this.onChildrenChange(args[0], this._getChildren(args[0]));
+				this.put(widget, {
+						overwrite: true,
+						parent: args[1],
+				});				
 			}
 		} catch (e) {
 			console.error("VisualEditorOutline._widgetChanged: e = " + e);

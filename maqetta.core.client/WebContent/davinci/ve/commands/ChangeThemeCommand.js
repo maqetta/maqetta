@@ -59,6 +59,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             editor = context.editor,
             text = context.getModel().getText();
         editor.setContent(editor.fileName, text);
+        context.widgetAddedOrDeleted(true);
         context._configDojoxMobile();
         var device = context.getMobileDevice() || 'none';
         if (device != 'none'){
@@ -91,6 +92,9 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             }
             
             var files = oldTheme.files;
+            if (oldTheme.conditionalFiles){
+            	files = files.concat(oldTheme.conditionalFiles); // remove conditionals also
+            }
             
             for (var x=0; x<files.length; x++){
                 var filename = files[x];

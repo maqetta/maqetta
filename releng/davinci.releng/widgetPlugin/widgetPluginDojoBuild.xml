@@ -113,18 +113,15 @@
     	<antcall target="backup.davinciPlugin.dojoDir"/>
 
 		<!-- copy in dojo and dojo build utils to working directory in prep for build -->
-		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying base dojo">
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dojo and maqetta dependencies and dojo util tools">
 				<fileset dir="${basedir}/../maqetta.core.client">
-					<include name="WebContent/dojo/"/>
-				</fileset>
-		</copy>
-		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dijit">
-				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/davinci/"/>
 					<include name="WebContent/dijit/"/>
-				</fileset>
-		</copy>
-		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying Dojo tools">
-				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/dojo/"/>
+					<include name="WebContent/dojox/"/>
+					<include name="WebContent/orion/"/>
+					<include name="WebContent/preview/"/>
+					<include name="WebContent/system/"/>
 					<include name="WebContent/util/"/>
 				</fileset>
 		</copy>
@@ -166,9 +163,14 @@
 		<delete dir="${target.folder}/WebContent/release" />
 		
 		<!-- Do additional clean-up -->
-		<delete dir="${target.folder}/WebContent/util"/>
-		<delete dir="${target.folder}/WebContent/dojo"/>
-		<delete dir="${target.folder}/WebContent/dijit"/>
+		<delete dir="${target.folder}/WebContent/davinci/"/>
+		<delete dir="${target.folder}/WebContent/dijit/"/>
+		<delete dir="${target.folder}/WebContent/dojo/"/>
+		<delete dir="${target.folder}/WebContent/dojox/"/>
+		<delete dir="${target.folder}/WebContent/orion/"/>
+		<delete dir="${target.folder}/WebContent/preview/"/>
+		<delete dir="${target.folder}/WebContent/system/"/>
+		<delete dir="${target.folder}/WebContent/util/"/>
 		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
 		
 		<!-- Restore dojo dir if we backed it up earlier -->

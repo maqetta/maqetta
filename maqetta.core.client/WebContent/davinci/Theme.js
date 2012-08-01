@@ -124,16 +124,15 @@ define([
 		if(originalTheme.type){
 	        themeJson.type = originalTheme.type; 
 	    }
-		if (originalTheme.compatFiles){
-			var compatFileName = lastSeg + "-compat.css";
-			themeJson.compatFiles = [compatFileName], 
-			themeCompatCssFile = themeRoot.createResource(compatFileName); // create the delta css file
-			var importCompatFiles = adjustPaths(originalTheme.compatFiles); // adjust the path of the css files
-			var compatImports = ' ';
-			importCompatFiles.forEach(function(fileName){
-				compatImports = compatImports + '@import url("' +fileName+'");'; 
-			});
-			deferreds.push(themeCompatCssFile.setContents(compatImports));
+		if (originalTheme.conditionalFiles){
+			debugger;
+			themeJson.conditionalFiles = originalTheme.conditionalFiles; 
+			var conditionalFiles = adjustPaths(originalTheme.conditionalFiles); // adjust the path of the css files
+			for (var i = 0; i < themeJson.conditionalFiles.length; i++) {
+				conditionalFile = themeRoot.createResource(themeJson.conditionalFiles[i]); // create the delta css file
+				deferreds.push(conditionalFile.setContents('@import url("' +conditionalFiles[i]+'");'));
+			}
+			
 		}
 		var d = themeFile.setContents(JSON.stringify(themeJson));
 		d.themeFile = themeFile;

@@ -6,7 +6,7 @@
       <servlet
             httpcontextId="maqetta.core.server.httpcontext"
             alias="/maqetta"
-            class="maqetta.server.orion.MaqettaOrionPageServlet"
+            class="maqetta.core.server.DavinciPageServlet"
             load-on-startup="true">
       </servlet>
    </extension>

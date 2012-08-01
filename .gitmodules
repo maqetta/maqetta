@@ -2,6 +2,10 @@
 	path = davinci.gridx/WebContent/gridx
 	url = git://github.com/evanhw/gridx.git
 	ignore=dirty
+[submodule "davinci.gridx/WebContent/gridx-src/gridx"]
+	path = davinci.gridx/WebContent/gridx-src/gridx
+	url = git://github.com/evanhw/gridx.git
+	ignore=dirty
 [submodule "maqetta.core.client/WebContent/dojo"]
 	path = maqetta.core.client/WebContent/dojo
 	url = git://github.com/dojo/dojo.git
@@ -37,11 +41,8 @@
 [submodule "zazl/optimizer"]
 	path = zazl/optimizer
 	url = git://github.com/zazl/optimizer-release.git
-        ignore=dirty
+    ignore=dirty
 [submodule "zazl/dependencies"]
 	path = zazl/dependencies
 	url = git://github.com/zazl/optimizer-dependencies.git
-        ignore=dirty
-[submodule "davinci.gridx/WebContent/gridx-src/gridx"]
-	path = davinci.gridx/WebContent/gridx-src/gridx
-	url = git://github.com/evanhw/gridx.git
+    ignore=dirty

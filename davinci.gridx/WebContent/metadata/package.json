@@ -1,6 +1,6 @@
 {
 	"name": "gridx",
-	"version": "1.0",
+	"version": "1.0.0",
 	"directories": {
 		"lib": "../dojo/gridx"
 	},
@@ -15,7 +15,7 @@
 	   }
 	],
 	"dependencies": {
-		"dojo": "1.7"
+		"dojo": "1.8"
 	},
 	"overlays": {
 		"oam": {

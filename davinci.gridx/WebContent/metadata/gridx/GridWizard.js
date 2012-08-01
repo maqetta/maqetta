@@ -1,5 +1,8 @@
 define([
 	"dojo/_base/declare",
+	"dijit/_WidgetBase",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
 	"dijit/layout/StackContainer",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
@@ -10,7 +13,10 @@ define([
 	"davinci/ve/widget",
 	"dojo/i18n!./nls/gridx",
 	"dojo/i18n!dijit/nls/common"
-], function(declare, 
+], function(declare,
+		_WidgetBase,
+		_TemplatedMixin,
+		_WidgetsInTemplateMixin,
 		StackContainer, 
 		BorderContainer, 
 		ContentPane,  
@@ -22,7 +28,8 @@ define([
 		gridxNls, 
 		dijitNls) {
 
-return declare(ContentPane, {
+return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+		templateString: "<div data-dojo-attach-point='containerNode'></div>",
 
 	postCreate: function() {
 		//Remember widget we're dealing with
@@ -38,10 +45,10 @@ return declare(ContentPane, {
 		this._pages.push({pageHandler: new GridWizardPreviewPanel()});
 		
 		//Create the elements making up our wizard
-		var wizardContainer = this._createWizard();
+		this._createWizard();
 
-		//Set our content
-		this.set("content", wizardContainer);
+		// Hack as bordercontainer sometimes won't size correctly in dialog.
+		window.setTimeout(dojo.hitch(this, function(){this.borderContainer.resize()}), 0);
 
 		//Set-up subscriptions
 		this._subs=[
@@ -51,12 +58,13 @@ return declare(ContentPane, {
 	
 	_createWizard: function() {
 		//Set up the outer container for the all wizard elements
-		var borderContainer = new BorderContainer({
+		var borderContainer = this.borderContainer = new BorderContainer({
 			design:'headline',
 			gutters:false, 
 			liveSplitters:false
 		});
 		dojo.addClass(borderContainer.domNode, "gridWizard");
+		this.containerNode.appendChild(borderContainer.domNode);
 		
 		//Create TOP section (containing steps)
 		var topSection = this._createTopSection();
@@ -68,9 +76,8 @@ return declare(ContentPane, {
 		
 		//Create BOTTOM section (for message and buttons)
 		var bottomSection = this._createBottomSection();
-		borderContainer.addChild(bottomSection);
-		
-		return borderContainer;
+		//borderContainer.addChild(bottomSection);
+		this.containerNode.appendChild(bottomSection);
 	},
 
 	_createTopSection: function() {
@@ -162,15 +169,29 @@ return declare(ContentPane, {
 	},
 	
 	_createBottomSection: function() {
-		var buttonsContentPane = new ContentPane({
-			region: "bottom"
-		});
-		dojo.addClass(buttonsContentPane.domNode, "bottomSection");
+		var container = dojo.create("div");
+		dojo.addClass(container, "dijitDialogPaneActionBar");
+		dojo.addClass(container, "dialogButtonContainerOverride");
 		
 		var reviewMsg = this.reviewMsg = dojo.create("div");
 		dojo.addClass(reviewMsg, "reviewMsg");
-		dojo.place(reviewMsg, buttonsContentPane.domNode);
+		dojo.place(reviewMsg, container);
 		
+		var prev = this.prev = dojo.create("button");
+		dojo.addClass(prev, "bottomButton");
+		prev.innerHTML = gridxNls.back;
+		dojo.place(prev, container);
+
+		var next = this.next = dojo.create("button");
+		dojo.addClass(next, "bottomButton");
+		next.innerHTML = gridxNls.next;
+		dojo.place(next, container);
+		
+		var finish = this.finish = dojo.create("button");
+		dojo.addClass(finish, "bottomButton");
+		finish.innerHTML = gridxNls.finish;
+		dojo.place(finish, container);
+
 		var cancelButton = dojo.create("a");
 		dojo.addClass(cancelButton, "cancelButton");
 		cancelButton.href = "javascript:void(0);";
@@ -178,26 +199,11 @@ return declare(ContentPane, {
 		this._connections.push(dojo.connect(cancelButton, "onclick", dojo.hitch(this, function() {
 			this.onCancel();
 		})));
-		dojo.place(cancelButton, buttonsContentPane.domNode); 
-		
-		var finish = this.finish = dojo.create("button");
-		dojo.addClass(finish, "bottomButton");
-		finish.innerHTML = gridxNls.finish;
-		dojo.place(finish, buttonsContentPane.domNode);
-		
-		var next = this.next = dojo.create("button");
-		dojo.addClass(next, "bottomButton");
-		next.innerHTML = gridxNls.next;
-		dojo.place(next, buttonsContentPane.domNode);
-		
-		var prev = this.prev = dojo.create("button");
-		dojo.addClass(prev, "bottomButton");
-		prev.innerHTML = gridxNls.back;
-		dojo.place(prev, buttonsContentPane.domNode);
+		dojo.place(cancelButton, container); 
 		
 		this._initButtons();
 		
-		return buttonsContentPane;
+		return container;
 	},
 	
 	_initButtons: function() {

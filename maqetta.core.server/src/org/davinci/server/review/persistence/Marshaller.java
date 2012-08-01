@@ -33,6 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.Constants;
 import org.davinci.server.user.IDavinciProject;
+import org.maqetta.server.IStorage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -82,7 +83,7 @@ public class Marshaller extends DefaultHandler {
 
 		// Cache the DOM document, since comments may be from different project,
 		// with this cache, XML files need not to be loaded multiple times.
-		Map<String, StringBuffer> xmlFragmentMap = new HashMap<String, StringBuffer>();
+		Map<IStorage, StringBuffer> xmlFragmentMap = new HashMap<IStorage, StringBuffer>();
 		IDavinciProject prj;
 		StringBuffer xmlFragment;
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -100,10 +101,11 @@ public class Marshaller extends DefaultHandler {
 			prj = comm.getProject();
 			if (null == prj)
 				continue;
-			xmlFragment = xmlFragmentMap.get(prj.getCommentFilePath());
+			IStorage commentsFileStorage = prj.getCommentsFileStorage();
+			xmlFragment = xmlFragmentMap.get(commentsFileStorage);
 			if (null == xmlFragment) {
 				xmlFragment = new StringBuffer();
-				xmlFragmentMap.put(prj.getCommentFilePath(), xmlFragment);
+				xmlFragmentMap.put(commentsFileStorage, xmlFragment);
 			}
 
 			try {
@@ -120,8 +122,8 @@ public class Marshaller extends DefaultHandler {
 			}
 		}
 
-		Set<Entry<String, StringBuffer>> entrySet = xmlFragmentMap.entrySet();
-		for (Entry<String, StringBuffer> entry : entrySet) {
+		Set<Entry<IStorage, StringBuffer>> entrySet = xmlFragmentMap.entrySet();
+		for (Entry<IStorage, StringBuffer> entry : entrySet) {
 			persist(entry.getValue().toString(), entry.getKey(), append);
 		}
 	}
@@ -213,18 +215,18 @@ public class Marshaller extends DefaultHandler {
 		return commentElem;
 	}
 
-	protected static void persist(String content, String filePath, boolean append)
+	protected static void persist(String content, IStorage file, boolean append)
 			throws IOException {
 		// Remove string like <?xml version="1.0" encoding="UTF-8"?>
 		// Pattern p = Pattern.compile("(<Comment\\W.*?</Comment>)");
 		// Matcher m = p.matcher(content);
-		File f = new File(filePath);
-		File parent = f.getParentFile();
+		IStorage parent = file.getParentFile();
 		if (!parent.exists())
 			parent.mkdirs();
-		if (!f.exists())
-			f.createNewFile();
+		if (!file.exists())
+			file.createNewFile();
 
+		/* AWE TODO: there's a separate issue for comments.xml never being written out, since broken anyway comment out and come back to this when address the other issue
 		RandomAccessFile raf = null;
 		try {
 			raf = new RandomAccessFile(f, "rw");
@@ -268,6 +270,7 @@ public class Marshaller extends DefaultHandler {
 			if (raf != null)
 				raf.close();
 		}
+		*/
 
 	}
 

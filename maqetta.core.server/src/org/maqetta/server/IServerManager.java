@@ -22,6 +22,6 @@ public interface IServerManager {
 
 	public ILibraryManager getLibraryManager();
 	
-	public boolean sendEmail(String to, String from, String subect, String conetent);
+	public boolean sendEmail(String to, String from, String subject, String content);
 
 }

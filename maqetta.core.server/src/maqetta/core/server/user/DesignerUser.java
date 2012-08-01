@@ -3,28 +3,15 @@ package maqetta.core.server.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import maqetta.core.server.user.ReviewManager.VersionFile;
-
-import org.davinci.ajaxLibrary.ILibInfo;
-import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.user.IUser;
-import org.davinci.server.user.LibrarySettings;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
-import org.maqetta.server.IVResource;
-import org.maqetta.server.ServerManager;
-import org.maqetta.server.VFile;
 
 public class DesignerUser implements IDesignerUser {
 	private final String name;
 	private IStorage commentingDirectory;
-	private IVResource workspace;
-	//private Links links;
 	private final List<Version> versions = new ArrayList<Version>();
 	private Version latestVersion;
 	private IStorage userDirectory;
@@ -34,9 +21,8 @@ public class DesignerUser implements IDesignerUser {
 	public DesignerUser(IUser user) {
 		this.name = user.getUserID();
 		this.rawUser = user;
-		this.getUserDirectory();
 		// userDirectory is set as a side-effect of the getUserDirectory getter method
-		userDirectory.mkdirs(); 
+		this.getUserDirectory();
 	}
 	
 	public IUser getRawUser() {
@@ -156,19 +142,7 @@ public class DesignerUser implements IDesignerUser {
 	 */
 	public IStorage getCommentingDirectory() {
 		if (this.commentingDirectory == null) {
-			IStorage userDir;
-			if (ServerManager.LOCAL_INSTALL) {
-				userDir = ReviewManager.getReviewManager().baseDirectory
-						.newInstance(ReviewManager.getReviewManager().baseDirectory
-								.getAbsolutePath());
-			} else {
-				userDir = ReviewManager.getReviewManager().baseDirectory
-						.newInstance(
-								ReviewManager.getReviewManager().baseDirectory,
-								name);
-			}
-			this.commentingDirectory = this.userDirectory.newInstance(userDir,
-					Constants.REVIEW_DIRECTORY_NAME);
+			this.commentingDirectory = this.userDirectory.newInstance(this.userDirectory, Constants.REVIEW_DIRECTORY_NAME);
 		}
 		return this.commentingDirectory;
 	}
@@ -180,153 +154,8 @@ public class DesignerUser implements IDesignerUser {
 	 */
 	public IStorage getUserDirectory() {
 		if (this.userDirectory == null) {
-			IStorage userDir;
-			if (ServerManager.LOCAL_INSTALL) {
-				userDir = ReviewManager.getReviewManager().baseDirectory
-						.newInstance(ReviewManager.getReviewManager().baseDirectory
-								.getAbsolutePath());
-			} else {
-				userDir = ReviewManager.getReviewManager().baseDirectory
-						.newInstance(
-								ReviewManager.getReviewManager().baseDirectory,
-								name);
-			}
-			this.userDirectory = userDir;
+			this.userDirectory = this.getRawUser().getUserDirectory();
 		}
 		return this.userDirectory;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maqetta.core.server.user.IDesignerUser#getResource(org.eclipse
-	 * .core.runtime.IPath)
-	 */
-	public IVResource getResource(IPath path) {
-		// Path = /.review/snapshot/20100101/project1/folder1/sample1.html
-		IVResource vr = null;
-		if (path.segment(0).equals(Constants.REVIEW_DIRECTORY_NAME)) {
-			vr = getUserFile(path.removeFirstSegments(1).toString());
-		}
-		/*
-		if (vr == null) {
-			vr = getLinkedResource(path.toString());
-		}
-		*/
-		if (vr == null) {
-			vr = getLibFile(path.toString());
-		}
-		return vr;
-	}
-
-	private IVResource getUserFile(String path) {
-		IPath reviewFilePath = new Path(this.getCommentingDirectory()
-				.getAbsolutePath()).append(path);
-
-		if (!this.userDirectory.newInstance(reviewFilePath.toOSString())
-				.exists()) {
-			// The requested file does not exist!
-			return null;
-		}
-
-		String[] segments = reviewFilePath.segments();
-		IPath me = new Path(this.getCommentingDirectory().getAbsolutePath());
-		IVResource parent = this.workspace;
-		for (int i = me.matchingFirstSegments(reviewFilePath); i < segments.length; i++) {
-			int segsToEnd = segments.length - i - 1;
-			String s = reviewFilePath.removeLastSegments(segsToEnd)
-					.toOSString();
-			IStorage f = this.userDirectory.newInstance(s);
-			parent = new VFile(f, parent, segments[i]);
-		}
-
-		if (parent == this.workspace)
-			parent = new VFile(this.getUserDirectory(), this.workspace);
-
-		return parent;
-	}
-
-	private LibrarySettings getLibSettings(IStorage base) {
-
-		IStorage settings = base.newInstance(base,
-				IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		return new LibrarySettings(settings);
-	}
-	/*
-	private IVResource getLinkedResource(String path) {
-		String path1 = path;
-		if (path1.startsWith("./")) {
-			path1 = path.substring(2);
-		}
-		ILink link = this.getLinks().hasLink(path1);
-		if (link != null) {
-			path = ILink.location + "/" + path1.substring(ILink.path.length());
-			path = path.replace('/', IStorage.separatorChar);
-			VFile linkFile = new VFile(this.userDirectory.newInstance(path));
-			return linkFile;
-		}
-		return null;
-
-	}
-	
-	synchronized public ILinks getLinks() {
-		if (this.links == null) {
-			this.links = new Links(this.getWorkbenchSettings());
-		}
-		return this.links;
-	}
-	*/
-	public IStorage getWorkbenchSettings() {
-		return getWorkbenchSettings("");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.davinci.server.user.IUser#getWorkbenchSettings(java.lang.String)
-	 */
-	public IStorage getWorkbenchSettings(String base) {
-
-		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory,
-				base);
-		IStorage settingsDirectory = this.userDirectory.newInstance(baseFile,
-				IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		if (!isValid(settingsDirectory.getAbsolutePath()))
-			return null;
-
-		if (!settingsDirectory.exists())
-			settingsDirectory.mkdirs();
-
-		return settingsDirectory;
-	}
-
-	public boolean isValid(String path) {
-		IPath workspaceRoot = new Path(this.userDirectory.getAbsolutePath());
-		IPath a = new Path(path);
-		if (a.matchingFirstSegments(workspaceRoot) != workspaceRoot
-				.segmentCount()) {
-			return false;
-		}
-		return true;
-	}
-
-	private IVResource getLibFile(String p1) {
-		IPath path = new Path(p1);
-		IVResource root = this.workspace;
-		for (int i = 0; i < path.segmentCount() && root != null; i++) {
-			root = root.get(path.segment(i));
-
-		}
-
-		return root;
-	}
-
-	private Library getLibrary(ILibInfo li) {
-		String id = li.getId();
-		String version = li.getVersion();
-		return ServerManager.getServerManger().getLibraryManager()
-				.getLibrary(id, version);
-
 	}
 }

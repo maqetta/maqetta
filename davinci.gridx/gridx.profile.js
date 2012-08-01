@@ -1,3 +1,9 @@
+require({
+	aliases:[
+	    ["i18n", "dojo/i18n"]
+	]
+});
+
 dependencies = {
 	selectorEngine: "acme",
 

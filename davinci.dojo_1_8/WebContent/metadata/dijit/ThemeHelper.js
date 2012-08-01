@@ -54,7 +54,7 @@ return {
 		// or vice versa, then either remove or add document.css.
 		var themeCssRootArr = context._themeUrl.split('/');
 		themeCssRootArr.pop();
-		var documentFileName= themeCssRootArr.join('/') +  '/document.css';
+		var documentFileName= themeCssRootArr.join('/') + '/' + context.theme.conditionalFiles[0];
 		if(resetEverything ||context.anyDojoxMobileWidgets !== anyDojoxMobileWidgets){
 			var documentCssHeader, documentCssImport, themeCssHeader, themeCssImport;
 			var header = dojo.clone( context.getHeader());
@@ -97,7 +97,7 @@ return {
 				if(!documentCssHeader && themeCssHeader){
 					var themeCssRootArr = themeCssHeader.split('/');
 					themeCssRootArr.pop();
-					var documentCssFileName = themeCssRootArr.join('/') +  '/document.css';
+					var documentCssFileName = themeCssRootArr.join('/') +  '/' + context.theme.conditionalFiles[0];
 					header = dojo.clone(header);
 					header.styleSheets.splice(0, 0, documentCssFileName);
 					context.setHeader(header);
@@ -105,7 +105,7 @@ return {
 				if(!documentCssImport && themeCssImport){
 					var themeCssRootArr = themeCssImport.url.split('/');
 					themeCssRootArr.pop();
-					var documentCssFileName = themeCssRootArr.join('/') +  '/document.css';
+					var documentCssFileName = themeCssRootArr.join('/') +  '/' + context.theme.conditionalFiles[0];
 					var basePath = context.getFullResourcePath().getParentPath();
 					var documentCssPath = basePath.append(documentCssFileName).toString();
 					var documentCssFile = system.resource.findResource(documentCssPath);
@@ -122,7 +122,24 @@ return {
 			}
 			context.anyDojoxMobileWidgets = anyDojoxMobileWidgets;
 		}
-	}
+	}, 
+
+
+					
+	preThemeConfig: function(context) {
+
+		var themeBase = Theme.getThemeLocation(); 
+		var relPath = themeBase.relativeTo(context.visualEditor.basePath, true);
+		var conditionalThemeCssFiles = [];
+		var header = dojo.clone( context.getHeader());
+		context.theme.conditionalFiles.forEach(function(file){
+			var relPathFile = relPath.toString()+'/'+context.theme.name+'/'+file;
+			header.styleSheets.splice(0, 0, relPathFile);
+			conditionalThemeCssFiles.push(relPathFile); 
+		}.bind(this));
+		context.setHeader(header);
+	},
+	
   
 };
 

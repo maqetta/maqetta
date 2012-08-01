@@ -116,17 +116,25 @@ return declare([], {
 					//and mobile themes don't.
 					//We need to drive this from theme metadata somehow.
 					//See issue #2381
-					var workspaceUrl = Runtime.getUserWorkspaceUrl();
-					var documentCssPathRel = this.basePath.getParentPath().append('document.css').toString();
-					var documentCssPathAbs = workspaceUrl + documentCssPathRel;
-					
-					this.context.loadStyleSheet(documentCssPathAbs);
+
+				     var helper;
+				     if (this.theme && this.theme.helper){
+				         helper = Theme.getHelper(this.theme);
+				         if (helper && helper.preThemeConfig){
+				             helper.preThemeConfig(this.context);
+				         } else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
+				        	 helper.then(function(result){
+				        		 if (result.helper && result.helper.preThemeConfig){
+				        			 result.helper.preThemeConfig(this.context); 
+				        			 this.theme.helper = result.helper;
+				    			 }
+				        	 }.bind(this));
+				          }
+				     }
+				     
 
 					this.context.activate();
-//		css files need to be added to doc before body content wdr 4/6/11
-//					for(var i = 0;i < themeCssFiles.length;i++){
-//						this.insertCssFile(themeCssFiles[i]);	
-//					}
+
 					// Because widget sizing css rules were not included in the HEAD at page load,
 					// we must resize all of the widgets manually after the browser has had a chance
 					// to repaint.  To avoid this workaround, we should either move the CSS rules

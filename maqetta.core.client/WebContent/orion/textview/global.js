@@ -28,14 +28,14 @@
 if (!window.define) {
 	window.define = function(name, deps, callback) {
 		var module = this;
-		var split = (name || "").split("/"), i, j;
+		var split = (name || "").split("/"), i, j; //$NON-NLS-0$
 		for (i = 0; i < split.length - 1; i++) {
 			module = module[split[i]] = (module[split[i]] || {});
 		}
 		var depModules = [], depModule;
 		for (j = 0; j < deps.length; j++) {
 			depModule = this;
-			split = deps[j].split("/");
+			split = deps[j].split("/"); //$NON-NLS-0$
 			for (i = 0; i < split.length - 1; i++) {
 				depModule = depModule[split[i]] = (depModule[split[i]] || {});
 			}
@@ -67,11 +67,11 @@ if (!window.define) {
  */
 if (!window.require) {
 	window.require = function(deps, callback) {
-		var depsArr = typeof deps === "string" ? [deps] : deps;
+		var depsArr = typeof deps === "string" ? [deps] : deps; //$NON-NLS-0$
 		var depModules = [], depModule, split, i, j;
 		for (j = 0; j < depsArr.length; j++) {
 			depModule = this;
-			split = depsArr[j].split("/");
+			split = depsArr[j].split("/"); //$NON-NLS-0$
 			for (i = 0; i < split.length - 1; i++) {
 				depModule = depModule[split[i]] = (depModule[split[i]] || {});
 			}
@@ -80,6 +80,6 @@ if (!window.require) {
 		if (callback) {
 			callback.apply(this, depModules);
 		}
-		return typeof deps === "string" ? depModules[0] : undefined;
+		return typeof deps === "string" ? depModules[0] : undefined; //$NON-NLS-0$
 	};
 }

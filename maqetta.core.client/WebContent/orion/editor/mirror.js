@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -10,7 +10,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*global define */
-/*jslint browser:true*/
+/*jslint browser:true forin:true*/
 define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview/eventTarget", "orion/textview/annotations"], function(messages, mEventTarget, mAnnotations) {
 	// TODO this affects indentation, which we don't support. Should be a parameter.
 	var tabSize = 4;
@@ -122,7 +122,8 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 	 */
 	function Mirror(options) {
 		this._modes = {};
-		this._mimes = {};
+		// This internal variable must be named "mimeModes" otherwise CodeMirror's "less" mode will fail.
+		this.mimeModes = {};
 		this.options = {};
 	
 		// Expose Stream as a property named "StringStream". This is required to support CodeMirror's Perl mode,
@@ -170,7 +171,7 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 		 * @see <a href="http://codemirror.net/manual.html#option_mode">http://codemirror.net/manual.html#option_mode</a>
 		 */
 		defineMIME: function(mime, modeSpec) {
-			this._mimes[mime] = modeSpec;
+			this.mimeModes[mime] = modeSpec;
 		},
 		/**
 		 * @param {String|Object} modeSpec 
@@ -179,8 +180,8 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 		 */
 		getMode: function(options, modeSpec) {
 			var config = {}, modeFactory;
-			if (typeof modeSpec === "string" && this._mimes[modeSpec]) {
-				modeSpec = this._mimes[modeSpec];
+			if (typeof modeSpec === "string" && this.mimeModes[modeSpec]) {
+				modeSpec = this.mimeModes[modeSpec];
 			}
 			if (typeof modeSpec === "object") {
 				config = modeSpec;
@@ -204,10 +205,10 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 		 * @returns {String[]} The MIMEs.
 		 */
 		listMIMEs: function() {
-			return keys(this._mimes);
+			return keys(this.mimeModes);
 		},
 		_getModeName: function(mime) {
-			var mname = this._mimes[mime];
+			var mname = this.mimeModes[mime];
 			if (typeof mname === "object") { mname = mname.name; }
 			return mname;
 		}

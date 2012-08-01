@@ -64,9 +64,12 @@ return declare(TextEditor, {
 		var childModel = this.model.findChildAtPosition(mappedSelection);
 		selection.model = childModel;
 		if (childModel != this._selectedModel) {
-			this.publishingSelect = true;
-			dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
-			this.publishingSelect = false;
+			try {
+				this.publishingSelect = true;
+				dojo.publish("/davinci/ui/selectionChanged", [[selection], this]);
+			} finally {
+				this.publishingSelect = false;
+			}
 		}
 		this._selectedModel = childModel;
 	},

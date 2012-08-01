@@ -1,6 +1,7 @@
 package org.davinci.server.user;
 
 import org.davinci.server.review.CommentsDocument;
+import org.maqetta.server.IStorage;
 
 public interface IDavinciProject {
 
@@ -12,7 +13,7 @@ public interface IDavinciProject {
 
     public abstract void setProjectName(String projectName);
 
-    public abstract String getCommentFilePath();
+    public abstract IStorage getCommentsFileStorage();
 
     public abstract CommentsDocument getCommentsDocument();
 

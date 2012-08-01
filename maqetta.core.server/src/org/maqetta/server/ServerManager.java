@@ -276,15 +276,23 @@ public class ServerManager implements IServerManager {
 		try {
 			SmtpPop3Mailer mailer = this.getMailer();
 			
-			if(mailer==null) return false;
+			if(mailer==null) {
+				return false;
+			}
 			
 			mailer.sendMessage(email);
 		} catch (SendFailedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			//Failure, so should return false
+			return false;
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			//Failure, so should return false
+			return false;
 		}
 		return true;
 		

@@ -33,7 +33,6 @@ import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IDavinciProject;
 import org.davinci.server.user.IUser;
-import org.davinci.server.user.LibrarySettings;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
@@ -49,8 +48,6 @@ public class ReviewManager implements IReviewManager {
 	private static ReviewManager theReviewManager;
 	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
 	public IStorage baseDirectory;
-
-
 	
 	public static ReviewManager getReviewManager()
 	{
@@ -63,23 +60,15 @@ public class ReviewManager implements IReviewManager {
 	Map<String, Reviewer> reviewers = Collections.synchronizedMap(new HashMap<String, Reviewer>());
 	
 	public ReviewManager() {
-		String basePath = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-		baseDirectory = ServerManager.getServerManger().getBaseDirectory().newInstance(".");
-		if (basePath != null) {
-			IStorage dir = baseDirectory.newInstance(basePath);
-			if (dir.exists())
-				baseDirectory = dir;
-		}
-		if (ServerManager.DEBUG_IO_TO_CONSOLE)
-			System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
+		baseDirectory = ServerManager.getServerManger().getBaseDirectory();
 	}
 
 	public void saveDraft(IDesignerUser user, Version version) {
 		IStorage commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
-			(baseDirectory.newInstance(commentingDir, "snapshot")).mkdir();
-			(baseDirectory.newInstance(commentingDir, "livedoc")).mkdir();
+			(commentingDir.newInstance(commentingDir, "snapshot")).mkdir();
+			(commentingDir.newInstance(commentingDir, "livedoc")).mkdir();
 		}
 		saveVersionFile(user);
 	}
@@ -88,8 +77,8 @@ public class ReviewManager implements IReviewManager {
 		IStorage commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
-			(baseDirectory.newInstance(commentingDir, "snapshot")).mkdir();
-			(baseDirectory.newInstance(commentingDir, "livedoc")).mkdir();
+			(commentingDir.newInstance(commentingDir, "snapshot")).mkdir();
+			(commentingDir.newInstance(commentingDir, "livedoc")).mkdir();
 		}
 
 		initVersionDir(user, version.getTime());
@@ -139,23 +128,27 @@ public class ReviewManager implements IReviewManager {
 	
 
 	public void saveVersionFile(IDesignerUser user) {
-		IStorage versionFile = baseDirectory.newInstance(user.getCommentingDirectory(), "snapshot/versions.xml");
+		IStorage commentingDir = user.getCommentingDirectory();
+		IStorage versionFile = commentingDir.newInstance(commentingDir, "snapshot/versions.xml");
 		VersionFile file = new VersionFile();
 		file.save(versionFile, user);
 	}
 
 	private void initVersionDir(IDesignerUser user, String timeStamp) {
-		IStorage versionDir = baseDirectory.newInstance(user.getCommentingDirectory(), "snapshot/" + timeStamp);
-		if(versionDir.exists()) return;
+		IStorage commentingDir = user.getCommentingDirectory();
+		IStorage versionDir = commentingDir.newInstance(commentingDir, "snapshot/" + timeStamp);
+		if(versionDir.exists()) {
+			return;
+		}
 		versionDir.mkdir();
-		IStorage userDir = user.getUserDirectory();
 
+		IStorage userDir = user.getUserDirectory();
 		IStorage[] files = userDir.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			String path = files[i].getAbsolutePath();
 			if (files[i].isFile()
 					&& path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) < 0) {
-				IStorage destination = baseDirectory.newInstance(versionDir, files[i].getName());
+				IStorage destination = versionDir.newInstance(files[i].getName());
 				copyFile(files[i], destination);
 			} else if (files[i].isDirectory()
 //					&& path.indexOf(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME) < 0  // Need to copy the settings
@@ -163,7 +156,7 @@ public class ReviewManager implements IReviewManager {
 					&& path.indexOf(Constants.REVIEW_DIRECTORY_NAME) < 0
 					&& path.indexOf(".svn") < 0
 					&& containsPublishedFiles(files[i], user, timeStamp)) {
-				IStorage destination = baseDirectory.newInstance(versionDir, files[i].getName());
+				IStorage destination = versionDir.newInstance(versionDir, files[i].getName());
 				copyDirectory(files[i], destination);
 			}
 		}
@@ -177,11 +170,11 @@ public class ReviewManager implements IReviewManager {
 
 				IStorage sourceFile = file[i];
 
-				IStorage targetFile = baseDirectory.newInstance(destinationDir, file[i].getName());
+				IStorage targetFile = destinationDir.newInstance(destinationDir, file[i].getName());
 				copyFile(sourceFile, targetFile);
 			}
 			if (file[i].isDirectory()) {
-				IStorage destination = baseDirectory.newInstance(destinationDir, file[i].getName());
+				IStorage destination = destinationDir.newInstance(destinationDir, file[i].getName());
 				copyDirectory(file[i], destination);
 			}
 		}
@@ -265,16 +258,13 @@ public class ReviewManager implements IReviewManager {
 	}
 
 	private IDesignerUser loadDesignerUser(IUser user) {
-		IStorage versionFile;
+		//Create the designer user
 		String name = user.getUserID();
-		if (ServerManager.LOCAL_INSTALL || Constants.LOCAL_INSTALL_USER_NAME.equals(name)) {
-			versionFile = this.baseDirectory.newInstance(this.baseDirectory, "/.review/snapshot/versions.xml");
-		} else {
-			versionFile = this.baseDirectory.newInstance(this.baseDirectory, "/" + name
-					+ "/.review/snapshot/versions.xml");
-		}
 		IDesignerUser designerUser = new DesignerUser(user);
 
+		//Initialize the latest version
+		IStorage commentingDir = designerUser.getCommentingDirectory();
+		IStorage versionFile = commentingDir.newInstance(commentingDir, "snapshot/versions.xml");
 		if (versionFile.exists()) {
 			VersionFile file = new VersionFile();
 			List<Version> versions = file.load(versionFile);
@@ -329,7 +319,7 @@ public class ReviewManager implements IReviewManager {
 	class VersionFile {
 		public String latestVersionID;
 
-		public void save(IStorage file, org.davinci.server.review.user.IDesignerUser user) {
+		public void save(IStorage file, IDesignerUser user) {
 			OutputStream out = null;
 			try {
 				if (!file.exists())
@@ -620,99 +610,5 @@ public class ReviewManager implements IReviewManager {
 			}
 			return objects;
 		}
-	}
-
-	public IStorage getBaseDirectory() {
-		return baseDirectory;
-	}
-
-	public ILibInfo[] getSystemLibs(IDavinciProject project){
-		StringBuilder path = new StringBuilder();
-		path.append(baseDirectory.getAbsolutePath());
-		path.append("/");
-		path.append(project.getOwnerId());
-		path.append("/");
-		path.append(project.getProjectName());
-		path.append("/");
-		path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		return new LibrarySettings(this.baseDirectory.newInstance(path.toString())).allLibs();
-	}
-
-	public ILibInfo[] getVersionLib(IDavinciProject project, String version){
-		if(snapshotLibs == null){
-			snapshotLibs = new HashMap<IDavinciProject, HashMap<String, ILibInfo[]>>();
-		}
-		HashMap<String, ILibInfo[]> versions = snapshotLibs.get(project);
-		if(versions == null){
-			versions = new HashMap<String, ILibInfo[]>();
-			snapshotLibs.put(project, versions);
-		}
-		ILibInfo[] libInfos = versions.get(version);
-		if(libInfos == null){
-			StringBuilder path = new StringBuilder();
-			path.append(baseDirectory.getAbsolutePath());
-			path.append("/");
-			path.append(project.getOwnerId());
-			path.append("/");
-			path.append(Constants.REVIEW_DIRECTORY_NAME);
-			path.append("/snapshot/");
-			path.append(version);
-			path.append("/");
-			path.append(project.getProjectName());
-			path.append("/");
-			path.append(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-
-			libInfos = new LibrarySettings(this.baseDirectory.newInstance(path.toString())).allLibs();
-			if(libInfos != null)
-				versions.put(version, libInfos);
-		}
-		return libInfos;
-	}
-	
-	public static IPath adjustPath(IPath path, String ownerId, String version, String projectName){
-		// Map the request lib path stored in the snapshot to the actual system lib path
-		// A path like: project1/./lib/dojo/dojo.js
-		IReviewManager reviewManager = ReviewManager.getReviewManager();
-		IDavinciProject project = new DavinciProject();
-		project.setOwnerId(ownerId);
-		project.setProjectName(projectName);
-		ILibInfo[] sysLibs = reviewManager.getSystemLibs(project);
-		ILibInfo[] versionLibs = reviewManager.getVersionLib(project, version);
-
-		// If the lib path is not specified in the review version,
-		// just return the path
-		if(versionLibs == null) return path;
-		
-		IPath cp = new Path(path.toString());
-		IPath newPath = new Path(cp.segment(0));
-		cp = cp.removeFirstSegments(1);
-		
-		int c = 0;
-		while(cp.segment(0).equals(".") || cp.segment(0).equals("..")){
-			c++;
-		}
-		cp = cp.removeFirstSegments(c);
-		
-		for(ILibInfo info : versionLibs){
-			if (info.getVirtualRoot() == null) {
-				continue;
-			}
-			IPath versionVirtualRoot = new Path(info.getVirtualRoot());
-			if(cp.matchingFirstSegments(versionVirtualRoot) == versionVirtualRoot.segmentCount()){
-				String virtualRoot = null;
-				for(ILibInfo lib : sysLibs){
-					if(lib.getId().equals(info.getId())){
-						virtualRoot = lib.getVirtualRoot();
-						break;
-					}
-				}
-				if(virtualRoot != null){
-					IPath vr = newPath.append(virtualRoot);
-					return vr.append(cp.removeFirstSegments(versionVirtualRoot.segmentCount()));
-				}
-				break;
-			}
-		}
-		return path;
 	}
 }

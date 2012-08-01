@@ -13,7 +13,7 @@
 
 /*global define */
 
-define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion/textview/eventTarget'], function(messages, mEventTarget) {
+define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion/textview/eventTarget'], function(messages, mEventTarget) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 	/**
 	 * @class This object represents a decoration attached to a range of text. Annotations are added to a
 	 * <code>AnnotationModel</code> which is attached to a <code>TextModel</code>.
@@ -54,10 +54,10 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	}
 	
 	FoldingAnnotation.prototype = /** @lends orion.textview.FoldingAnnotation.prototype */ {
-		_expandedHTML: "<div class='annotationHTML expanded'></div>",
-		_expandedStyle: {styleClass: "annotation expanded"}, 
-		_collapsedHTML: "<div class='annotationHTML collapsed'></div>",
-		_collapsedStyle: {styleClass: "annotation collapsed"},
+		_expandedHTML: "<div class='annotationHTML expanded'></div>", //$NON-NLS-0$
+		_expandedStyle: {styleClass: "annotation expanded"}, //$NON-NLS-0$
+		_collapsedHTML: "<div class='annotationHTML collapsed'></div>", //$NON-NLS-0$
+		_collapsedStyle: {styleClass: "annotation collapsed"}, //$NON-NLS-0$
 		/**
 		 * Collapses the annotation.
 		 */
@@ -96,47 +96,47 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	/**
 	 * Error annotation type.
 	 */
-	AnnotationType.ANNOTATION_ERROR = "orion.annotation.error";
+	AnnotationType.ANNOTATION_ERROR = "orion.annotation.error"; //$NON-NLS-0$
 	/**
 	 * Warning annotation type.
 	 */
-	AnnotationType.ANNOTATION_WARNING = "orion.annotation.warning";
+	AnnotationType.ANNOTATION_WARNING = "orion.annotation.warning"; //$NON-NLS-0$
 	/**
 	 * Task annotation type.
 	 */
-	AnnotationType.ANNOTATION_TASK = "orion.annotation.task";
+	AnnotationType.ANNOTATION_TASK = "orion.annotation.task"; //$NON-NLS-0$
 	/**
 	 * Breakpoint annotation type.
 	 */
-	AnnotationType.ANNOTATION_BREAKPOINT = "orion.annotation.breakpoint";
+	AnnotationType.ANNOTATION_BREAKPOINT = "orion.annotation.breakpoint"; //$NON-NLS-0$
 	/**
 	 * Bookmark annotation type.
 	 */
-	AnnotationType.ANNOTATION_BOOKMARK = "orion.annotation.bookmark";
+	AnnotationType.ANNOTATION_BOOKMARK = "orion.annotation.bookmark"; //$NON-NLS-0$
 	/**
 	 * Folding annotation type.
 	 */
-	AnnotationType.ANNOTATION_FOLDING = "orion.annotation.folding";
+	AnnotationType.ANNOTATION_FOLDING = "orion.annotation.folding"; //$NON-NLS-0$
 	/**
 	 * Curent bracket annotation type.
 	 */
-	AnnotationType.ANNOTATION_CURRENT_BRACKET = "orion.annotation.currentBracket";
+	AnnotationType.ANNOTATION_CURRENT_BRACKET = "orion.annotation.currentBracket"; //$NON-NLS-0$
 	/**
 	 * Matching bracket annotation type.
 	 */
-	AnnotationType.ANNOTATION_MATCHING_BRACKET = "orion.annotation.matchingBracket";
+	AnnotationType.ANNOTATION_MATCHING_BRACKET = "orion.annotation.matchingBracket"; //$NON-NLS-0$
 	/**
 	 * Current line annotation type.
 	 */
-	AnnotationType.ANNOTATION_CURRENT_LINE = "orion.annotation.currentLine";
+	AnnotationType.ANNOTATION_CURRENT_LINE = "orion.annotation.currentLine"; //$NON-NLS-0$
 	/**
 	 * Current search annotation type.
 	 */
-	AnnotationType.ANNOTATION_CURRENT_SEARCH = "orion.annotation.currentSearch";
+	AnnotationType.ANNOTATION_CURRENT_SEARCH = "orion.annotation.currentSearch"; //$NON-NLS-0$
 	/**
 	 * Matching search annotation type.
 	 */
-	AnnotationType.ANNOTATION_MATCHING_SEARCH = "orion.annotation.matchingSearch";
+	AnnotationType.ANNOTATION_MATCHING_SEARCH = "orion.annotation.matchingSearch"; //$NON-NLS-0$
 	
 	/** @private */
 	var annotationTypes = {};
@@ -150,7 +150,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 *		properties.	 */
 	AnnotationType.registerType = function(type, properties) {
 		var constructor = properties;
-		if (typeof constructor !== "function") {
+		if (typeof constructor !== "function") { //$NON-NLS-0$
 			constructor = function(start, end, title) {
 				this.start = start;
 				this.end = end;
@@ -191,18 +191,18 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	
 	/** @private */
 	function registerType(type, lineStyling) {
-		var index = type.lastIndexOf('.');
+		var index = type.lastIndexOf('.'); //$NON-NLS-0$
 		var suffix = type.substring(index + 1);
 		var properties = {
 			title: messages[suffix],
-			style: {styleClass: "annotation " + suffix},
-			html: "<div class='annotationHTML " + suffix + "'></div>",
-			overviewStyle: {styleClass: "annotationOverview " + suffix}
+			style: {styleClass: "annotation " + suffix}, //$NON-NLS-0$
+			html: "<div class='annotationHTML " + suffix + "'></div>", //$NON-NLS-1$ //$NON-NLS-0$
+			overviewStyle: {styleClass: "annotationOverview " + suffix} //$NON-NLS-0$
 		};
 		if (lineStyling) {
-			properties.lineStyle = {styleClass: "annotationLine " + suffix};
+			properties.lineStyle = {styleClass: "annotationLine " + suffix}; //$NON-NLS-0$
 		} else {
-			properties.rangeStyle = {styleClass: "annotationRange " + suffix};
+			properties.rangeStyle = {styleClass: "annotationRange " + suffix}; //$NON-NLS-0$
 		}
 		AnnotationType.registerType(type, properties);
 	}
@@ -376,7 +376,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 			var index = this._binarySearch(annotations, annotation.start);
 			annotations.splice(index, 0, annotation);
 			var e = {
-				type: "Changed",
+				type: "Changed", //$NON-NLS-0$
 				added: [annotation],
 				removed: [],
 				changed: []
@@ -452,7 +452,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 			var index = this._getAnnotationIndex(annotation);
 			if (index < 0) { return; }
 			var e = {
-				type: "Changed",
+				type: "Changed", //$NON-NLS-0$
 				added: [],
 				removed: [],
 				changed: [annotation]
@@ -496,7 +496,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 				annotations = [];
 			}
 			var e = {
-				type: "Changed",
+				type: "Changed", //$NON-NLS-0$
 				removed: removed,
 				added: [],
 				changed: []
@@ -516,7 +516,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 			var index = this._getAnnotationIndex(annotation);
 			if (index < 0) { return; }
 			var e = {
-				type: "Changed",
+				type: "Changed", //$NON-NLS-0$
 				removed: this._annotations.splice(index, 1),
 				added: [],
 				changed: []
@@ -551,7 +551,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 				annotations.splice(index, 0, annotation);
 			}
 			var e = {
-				type: "Changed",
+				type: "Changed", //$NON-NLS-0$
 				removed: removed,
 				added: add,
 				changed: []
@@ -569,11 +569,11 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		 */
 		setTextModel: function(textModel) {
 			if (this._model) {
-				this._model.removeEventListener("Changed", this._listener.onChanged);
+				this._model.removeEventListener("Changed", this._listener.onChanged); //$NON-NLS-0$
 			}
 			this._model = textModel;
 			if (this._model) {
-				this._model.addEventListener("Changed", this._listener.onChanged);
+				this._model.addEventListener("Changed", this._listener.onChanged); //$NON-NLS-0$
 			}
 		},
 		/** @ignore */
@@ -611,7 +611,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 			var startIndex = 0;
 			if (!(0 <= startIndex && startIndex < annotations.length)) { return; }
 			var e = {
-				type: "Changed",
+				type: "Changed", //$NON-NLS-0$
 				added: [],
 				removed: [],
 				changed: [],
@@ -671,9 +671,9 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 				self._onAnnotationModelChanged(e);
 			}
 		};
-		view.addEventListener("Destroy", this._listener.onDestroy);
-		view.addEventListener("LineStyle", this._listener.onLineStyle);
-		annotationModel.addEventListener("Changed", this._listener.onChanged);
+		view.addEventListener("Destroy", this._listener.onDestroy); //$NON-NLS-0$
+		view.addEventListener("LineStyle", this._listener.onLineStyle); //$NON-NLS-0$
+		annotationModel.addEventListener("Changed", this._listener.onChanged); //$NON-NLS-0$
 	}
 	AnnotationStyler.prototype = /** @lends orion.textview.AnnotationStyler.prototype */ {
 		/**
@@ -685,13 +685,13 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		destroy: function() {
 			var view = this._view;
 			if (view) {
-				view.removeEventListener("Destroy", this._listener.onDestroy);
-				view.removeEventListener("LineStyle", this._listener.onLineStyle);
+				view.removeEventListener("Destroy", this._listener.onDestroy); //$NON-NLS-0$
+				view.removeEventListener("LineStyle", this._listener.onLineStyle); //$NON-NLS-0$
 				this.view = null;
 			}
 			var annotationModel = this._annotationModel;
 			if (annotationModel) {
-				annotationModel.removeEventListener("Changed", this._listener.onChanged);
+				annotationModel.removeEventListener("Changed", this._listener.onChanged); //$NON-NLS-0$
 				annotationModel = null;
 			}
 		},
@@ -699,7 +699,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 			if (style) {
 				if (!result) { result = {}; }
 				if (result.styleClass && style.styleClass && result.styleClass !== style.styleClass) {
-					result.styleClass += " " + style.styleClass;
+					result.styleClass += " " + style.styleClass; //$NON-NLS-0$
 				} else {
 					result.styleClass = style.styleClass;
 				}

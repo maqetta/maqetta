@@ -762,6 +762,7 @@ var Workbench = {
 				actionPropertiesPaletteNode.style.top = maxTop + 'px';
 			}
 		}, false);
+		this._attachCreateActionBar(dojo.byId('actionBarContainer').children[0]);
 
 		// END CODE THAT NEEDS TO BE PULLED OUT INTO A SEPARATE FILE
 
@@ -1797,7 +1798,6 @@ var Workbench = {
 
 				//Bring palettes specified for the editor to the top
 				this._bringPalettesToTop(newEditor);
-				this._attachCreateActionBar(dojo.byId('actionBarContainer').children[0]);
 			}
 		}.bind(this), 1000);
 

@@ -86,7 +86,10 @@ define({ root:
 		
 		//dialog titles
 		"createNewFile":"Create New File",
-		"createNewHTMLFile":"Create New HTML File",
+		"createMobileApplication":"Create a Mobile Application",
+		"createDesktopApplication":"Create a Desktop Application",
+		"createSketchHiFi":"Create a Sketch (high-fidelity)",
+		"createSketchLoFi":"Create a Sketch (low-fidelity)",
 		"createNewCSSFile":"Create New CSS File",
 		"createNewJSFile":"Create New JavaScript File",
 		//"openFile":"Open File",
@@ -138,16 +141,8 @@ define({ root:
 		"root":"(root)",
 		
 		//NewHTMLFileOptions.html - Composition type strings
-		"nhfoCompositionType":"Composition type:",
-		'nhfoCompositionTypeTooltip':'<div>Composition type establishes the initial editing mode for the New HTML page. Choices:</div>'+
-			'<ul><li><b>Device</b>: "desktop" or one of various mobile devices (e.g., iphone)</li>'+
-			'<li><b>Hi-fi vs lo-fi</b>: high fidelity uses a final-form theme, low fidelity uses a pseudo hand-drawn theme</li>'+
-			'<li><b>Page vs sketch</b>: "page" uses flow layout, "sketch" uses absolute layout</li></ul>'+
-			'<div>For mobile devices, only hi fidelity and flow layout are supported.',
-		"nhfoCTMenu_desktop_hifi_absolute":"Desktop hi-fi sketch",
-		"nhfoCTMenu_desktop_hifi_flow":"Desktop hi-fi page",
-		"nhfoCTMenu_desktop_lofi_absolute":"Desktop lo-fi sketch",
-		"nhfoCTMenu_desktop_lofi_flow":"Desktop lo-fi page",
+		"nhfoDevice":"Device:",
+		'nhfoDeviceTooltip':'Select an initial mobile device',
 		
 		//NewHTMLFileOptions.html - Theme strings
 		"nhfoThemeButtonLabel":"Theme...",

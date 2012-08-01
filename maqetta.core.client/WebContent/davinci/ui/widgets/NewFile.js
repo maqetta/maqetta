@@ -47,8 +47,10 @@ define(["dojo/_base/declare",
 
 			if(this.dialogSpecificClass){
 				require([this.dialogSpecificClass],function(c){
-					t.dialogSpecificWidget = new c({dialogSpecificButtonsSpan:t.dialogSpecificButtonsSpan}, t.dialogSpecificOptionsDiv);
-				});	
+					t.dialogSpecificWidget = new c(
+							{dialogSpecificButtonsSpan:t.dialogSpecificButtonsSpan, dialogSpecificClassOptions:this.dialogSpecificClassOptions}, 
+							t.dialogSpecificOptionsDiv);
+				}.bind(this));	
 			}
 
 			this._whereMenu = new Menu({style: "display: none;"});

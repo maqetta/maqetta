@@ -46,8 +46,16 @@ return {
                     position: "left"
                 },
                 {
+                    viewID: "davinci.ui.outline",
+                    position: "left"
+                },
+                {
                     viewID: "davinci.ui.comment",
                     position: "left"
+                },
+                {
+                    viewID: "davinci.ve.states",
+                    position: "left-bottom"
                 },
                 {
                     viewID: "davinci.ui.navigator",
@@ -58,16 +66,8 @@ return {
                     position: "left-bottom"
                 },
                 {
-                    viewID: "davinci.ui.outline",
-                    position: "left"
-                },
-                {
                     viewID: "davinci.ve.style",
                     position: "dynamic"
-                },
-                {
-                    viewID: "davinci.ve.states",
-                    position: "left-bottom"
                 }
             /*
              * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }
@@ -91,7 +91,7 @@ return {
             editorClass: "davinci/ve/PageEditor",
             palettesToTop: [
                 "davinci.ve.Palette", //Widgets
-                "davinci.ui.navigator", //Files
+                "davinci.ve.states", //Files
             ]
         },
         {

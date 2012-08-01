@@ -114,7 +114,7 @@ return {
                    path: "new",
                    id: "davinci.new",
                    separator: [
-                       "new", true, "new2", true, "additions", true
+                       "newApp", true, "newSketch", true, "new", true, "new2", true, "additions", true
                    ]
                },
                {
@@ -127,20 +127,59 @@ return {
                }
            ],
            actions: [
-               {
-                   id: "newHTML",
-                   // icon: 'davinci/img/add.gif',
-                   run: function() {
-                       require(['./ui/Resource'], function(r) {
-                           r.newHTML();
-                       });
-                   },
-                   label: "HTML File...",
-                   // toolbarPath: "davinci.toolbar.main/edit",
-                   menubarPath: "davinci.new/new",
-                   keyBinding: {accel: true, charOrCode: "n"}
-               },
-               {
+                 {
+                     id: "newHTMLMobile",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLMobile();
+                         });
+                     },
+                     label: "Mobile Application...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newApp",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
+                     id: "newHTMLDesktop",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLDesktop();
+                         });
+                     },
+                     label: "Desktop Application...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newApp",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
+                     id: "newHTMLSketchHiFi",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLSketchHiFi();
+                         });
+                     },
+                     label: "Sketch (high-fidelity)...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newSketch",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
+                     id: "newHTMLSketchLoFi",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLSketchLoFi();
+                         });
+                     },
+                     label: "Sketch (low-fidelity)...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newSketch",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
                    id: "newCSS",
                    run: function() {
                    	require(['./ui/Resource'], function(r) {

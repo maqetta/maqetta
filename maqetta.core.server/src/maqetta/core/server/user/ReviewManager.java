@@ -48,8 +48,6 @@ public class ReviewManager implements IReviewManager {
 	private static ReviewManager theReviewManager;
 	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
 	public IStorage baseDirectory;
-
-
 	
 	public static ReviewManager getReviewManager()
 	{
@@ -612,9 +610,5 @@ public class ReviewManager implements IReviewManager {
 			}
 			return objects;
 		}
-	}
-
-	public IStorage getBaseDirectory() {
-		return baseDirectory;
 	}
 }

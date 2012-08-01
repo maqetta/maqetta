@@ -327,53 +327,46 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	_updateToolbar: function(toolbar){
+		// Call a function on an action class
+		// Only used for 'shouldShow' and 'isEnabled'
+		function runFunc(action, funcName){
+			var retval = true;
+			if(action && action.action &&  action.action[funcName]){
+				retval = action.action[funcName]();
+			} else if(action && action[funcName]){
+				retval = action[funcName]();
+			}
+			return retval;
+		}
+		function hideShowWidget(widget, action){
+			var shouldShow = runFunc(action, 'shouldShow');
+			if(shouldShow){
+				dojo.removeClass(widget.domNode, 'maqHidden');
+			}else{
+				dojo.addClass(widget.domNode, 'maqHidden');
+			}
+			
+		}
+		function enableDisableWidget(widget, action){
+			var enabled = runFunc(action, 'isEnabled');
+			widget.set('disabled', !enabled);
+		}
+		
 		if(toolbar && this.editor){
 			var context = this.editor.getContext ? this.editor.getContext() : null;
 			if(context){
 				var children = toolbar.getChildren();
 				for(var i=0; i<children.length; i++){
 					var child = children[i];
-					var shouldShow = true;
-					if(child._maqAction && child._maqAction.action &&  child._maqAction.action.shouldShow){
-						shouldShow = child._maqAction.action.shouldShow();
-					} else if(child._maqAction && child._maqAction.shouldShow){
-						shouldShow = child._maqAction.shouldShow();
-					}
-					if(shouldShow){
-						dojo.removeClass(child.domNode, 'maqHidden');
-					}else{
-						dojo.addClass(child.domNode, 'maqHidden');
-					}
-					var enabled = true;
-					if(child._maqAction && child._maqAction.action &&  child._maqAction.action.isEnabled){
-						enabled = child._maqAction.action.isEnabled();
-					} else if(child._maqAction && child._maqAction.isEnabled){
-						enabled = child._maqAction.isEnabled();
-					}
-					child.set('disabled', !enabled);
+					hideShowWidget(child, child._maqAction);
+					enableDisableWidget(child, child._maqAction);
 					var menu = child.dropDown;
 					if(menu){
 						var menuItems = menu.getChildren();
 						for(var j=0; j<menuItems.length; j++){
 							var menuItem = menuItems[j];
-							var shouldShow = true;
-							if(menuItem._maqAction && menuItem._maqAction.action &&  menuItem._maqAction.action.shouldShow){
-								shouldShow = menuItem._maqAction.action.shouldShow();
-							} else if(menuItem._maqAction && menuItem._maqAction.shouldShow){
-								shouldShow = menuItem._maqAction.shouldShow();
-							}
-							if(shouldShow){
-								dojo.removeClass(menuItem.domNode, 'maqHidden');
-							}else{
-								dojo.addClass(menuItem.domNode, 'maqHidden');
-							}
-							enabled = true;
-							if(menuItem._maqAction && menuItem._maqAction.action &&  menuItem._maqAction.action.isEnabled){
-								enabled = menuItem._maqAction.action.isEnabled();
-							} else if(menuItem._maqAction && menuItem._maqAction.isEnabled){
-								enabled = menuItem._maqAction.isEnabled();
-							}
-							menuItem.set('disabled', !enabled);
+							hideShowWidget(menuItem, menuItem._maqAction);
+							enableDisableWidget(menuItem, menuItem._maqAction);
 						}
 					}
 				}

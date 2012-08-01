@@ -750,6 +750,30 @@
 		            "children": "<i>Enter Note</i>",
 		            "allowedChild": "ANY",
 		            "inlineEdit": "davinci/ve/input/RichTextInput"
+		        },
+		        {
+		            "name": "<ul>",
+		            "description": "<ul>",
+		            "type": "html.ul",
+		            "category": "html",
+		            "allowedChild": "html.li",
+		            "hidden": "true"
+		        },
+		        {
+		            "name": "<ol>",
+		            "description": "<ol>",
+		            "type": "html.ol",
+		            "category": "html",
+		            "allowedChild": "html.li",
+		            "hidden": "true"
+		        },
+{
+		            "name": "<li>",
+		            "description": "<li>",
+		            "type": "html.li",
+		            "category": "html",
+		            "allowedChild": "ANY",
+		            "hidden": "true"
 		        }
 		    ]
 		}

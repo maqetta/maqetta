@@ -163,9 +163,14 @@
 		<delete dir="${target.folder}/WebContent/release" />
 		
 		<!-- Do additional clean-up -->
-		<delete dir="${target.folder}/WebContent/util"/>
-		<delete dir="${target.folder}/WebContent/dojo"/>
-		<delete dir="${target.folder}/WebContent/dijit"/>
+		<delete dir="${target.folder}/WebContent/davinci/"/>
+		<delete dir="${target.folder}/WebContent/dijit/"/>
+		<delete dir="${target.folder}/WebContent/dojo/"/>
+		<delete dir="${target.folder}/WebContent/dojox/"/>
+		<delete dir="${target.folder}/WebContent/orion/"/>
+		<delete dir="${target.folder}/WebContent/preview/"/>
+		<delete dir="${target.folder}/WebContent/system/"/>
+		<delete dir="${target.folder}/WebContent/util/"/>
 		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
 		
 		<!-- Restore dojo dir if we backed it up earlier -->

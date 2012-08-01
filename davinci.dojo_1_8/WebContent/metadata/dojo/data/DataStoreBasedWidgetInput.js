@@ -18,7 +18,7 @@ define([
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
-	"dijit/Dialog",
+	"davinci/ui/Dialog",
 	"dijit/layout/ContentPane",
 	"dijit/form/Button",
 	"dijit/Tree",
@@ -676,12 +676,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		this.updateSimStyle();
 	},
 	
-	fileSelection: function(e){
-		this._fileSelectionDialog = new Dialog({
-			title : dojoxNls.selectSource,
-			style : "width:275px;height:220px;padding:0px;background-color:white;"
-		});
-
+	fileSelection: function(e){			
 		//Set-up file selection tree
 		var treeParms= {	
 			id: "dataGridInputFileSelectionTree",
@@ -692,8 +687,6 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			};
 		var tree = new Tree(treeParms);
 
-		this._fileSelectionDialog.containerNode.appendChild(tree.domNode);
-		
 		//Set-up button
 		var okClicked = function() {
 			var tree = dijit.byId("dataGridInputFileSelectionTree");
@@ -712,26 +705,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 					this.updateFormats();
 			}
 		};
-		var dijitLangObj = commonNls;
-		var okLabel = dijitLangObj.buttonOk;
-		var okStyle = 'padding:8px;';
-		var okBtn = new Button({
-			label : okLabel,
-			style : okStyle, /* type:"submit", */
-			onClick : dojo.hitch(this, okClicked)
-		});
-		this._fileSelectionDialog.containerNode.appendChild(okBtn.domNode);
-		
-		//Set up cancel handler
-		var onCancelFileSelection = function(e) {
-			this._fileSelectionDialog.destroyRecursive();
-			delete this._fileSelectionDialog;
-		};
-		this._connection.push(dojo.connect(this._fileSelectionDialog, "onCancel", this,
-			onCancelFileSelection));
-		
-		//Show dialog
-		this._fileSelectionDialog.show();
+
+		this._fileSelectionDialog = Dialog.showDialog(dojoxNls.selectSource, tree, {width: 275, height: 220}, dojo.hitch(this, okClicked));
 	},
 	
 	updateFormats: function() {

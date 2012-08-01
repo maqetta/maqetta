@@ -21,6 +21,8 @@ var DialogClass = declare(Dialog, {
 	buildRendering: function() {
 		this.inherited(arguments);
 		dojo.addClass(this.domNode, "resizableDialog");
+
+		dojo.connect(this.domNode, "onkeydown", this, "_onKeyDown");
 	},
 
 	_setContent: function(cont, isFakeContent) {
@@ -90,6 +92,25 @@ var DialogClass = declare(Dialog, {
 		}
 
 		return result;
+	},
+
+	_onKeyDown: function(e) {
+		var hasAccel = ((e.ctrlKey && !dojo.isMac) || (dojo.isMac && e.metaKey))
+
+		if (hasAccel && e.which == dojo.keys.ENTER) {
+			// accel enter submits a dialog.  We do this by looking for a submit input
+			// and faking a mouse click event.
+			var submitButtons = dojo.query("input[type=submit]", this.containerNode);
+
+			if (submitButtons.length > 0) {
+				var b = dijit.getEnclosingWidget(submitButtons[0]);
+
+				var evt = document.createEvent("MouseEvents");
+				evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false,
+						false, 0, null);
+				b._onClick(evt);
+			}
+		}
 	}
 });
 

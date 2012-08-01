@@ -68,21 +68,8 @@ define(["dojo/_base/declare",
 			}));
 			dojo.connect(this.fileDialogFileName, "onkeyup", this, '_checkValid');
 			this.fileTree.watch("selectedItem", dojo.hitch(this, this._updateFields));
-			var connectHandle = dojo.connect(this._fileDialog, "onkeypress", this, function(e){
-				if(e.charOrCode===dojo.keys.ENTER){
-					// XXX HACK This is to circumvent the problem where the Enter key
-					//   isn't handled.  Normally, the Dijit Dialog handles that for
-					//   us, but our dialog classes are messed up right now.  Hence
-					//   this.
-					var evt = document.createEvent("MouseEvents");
-					evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false,
-							false, 0, null);
-					this.__okButton._onClick(evt);
-				}
-			
-			});
-			/* set initial value */
-			
+
+			/* set initial value */			
 			this.fileTree.watch("selectedItem", dojo.hitch(this, this._checkValid));
                                                              
 			this._updateFields();

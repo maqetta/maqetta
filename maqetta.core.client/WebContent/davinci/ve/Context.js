@@ -554,12 +554,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      */
 	setMobileTheme: function(device) {
         var oldDevice = this.getMobileDevice() || 'none';
-        if (oldDevice === device) {
-            return;
+        if (oldDevice != device) {
+        	this.setMobileDevice(device);
         }
         this.close(); //// return any singletons for CSSFiles
-        this.setMobileDevice(device);
-
+        
+        // Need this to be run even if the device is not changed,
+        // when the page is loaded the device matches what is in the doc
+        // but we need to get dojo in sync.
         try {
     		// dojox/mobile specific CSS file handling
     		var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');        	

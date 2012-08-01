@@ -1,7 +1,8 @@
 define(
 [
-	"dojo/_base/declare", 
+	"dojo/_base/declare",
 	"davinci/Runtime",
+	"davinci/Workbench",
 	"./layout/ContainerInput", 
 	"./TreeHelper",
 	"davinci/ve/widget", 
@@ -33,6 +34,7 @@ define(
 ],
 function(declare, 
 		Runtime,
+		Workbench,
 		ContainerInput, 
 		TreeHelper,
 		Widget,
@@ -197,49 +199,34 @@ return declare(ContainerInput, {
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);
 
-		if (!this._inline) {
-			//Set up the dialog
-			this._inline = new dijit.Dialog({
-				title: langObj.treeDialog,
-				"class": "treeInputDialog"
-			});
-			this._inline.onCancel = dojo.hitch(this, "onCancel");
-			this._inline.callBackObj = this;
-			
-			//Get template for dialog contents
-			var s = this._getTemplate();
-		
-			//Set content
-			this._inline.set("content", s);
-			this._inline.show();
+		//Set up the dialog
+		this._inline = Workbench.showModal(this._getTemplate(), langObj.treeDialog, null, function(){}); 
 
-			//Configure inputs
-			this._configureInputControls();
-			
-			//Configure listeners for OK/Cancel buttons
-			var okButton = dijit.byId('treeInputOkButton');
-			this._connection.push(dojo.connect(okButton, 'onClick', function(){
-				if (this._isNodePropertyInputValid()) {
-					this.updateWidget();
-					this.onOk();
-				}
-			}.bind(this)));
-			var cancelButton = dijit.byId('treeInputCancelButton');
-			this._connection.push(dojo.connect(cancelButton, 'onClick', function(){
-				this.onCancel();
-			}.bind(this)));
-			if (this._widget.inLineEdit_displayOnCreate){
-				// hide cancel on widget creation #120
-				delete this._widget.inLineEdit_displayOnCreate;
-				dojo.style(cancelButton.domNode, "display", "none");
+		//Configure inputs
+		this._configureInputControls();
+		
+		//Configure listeners for OK/Cancel buttons
+		var okButton = dijit.byId('treeInputOkButton');
+		this._connection.push(dojo.connect(okButton, 'onClick', function(){
+			if (this._isNodePropertyInputValid()) {
+				this.updateWidget();
 			}
-			
-			//Reset node counter for id generation
-			this._currentId = 0;
-			
-			//Update toolbar button enablement
-			this._updateToolbarButtonEnablement();
+		}.bind(this)));
+		var cancelButton = dijit.byId('treeInputCancelButton');
+		this._connection.push(dojo.connect(cancelButton, 'onClick', function(){
+			this.onCancel();
+		}.bind(this)));
+		if (this._widget.inLineEdit_displayOnCreate){
+			// hide cancel on widget creation #120
+			delete this._widget.inLineEdit_displayOnCreate;
+			dojo.style(cancelButton.domNode, "display", "none");
 		}
+		
+		//Reset node counter for id generation
+		this._currentId = 0;
+		
+		//Update toolbar button enablement
+		this._updateToolbarButtonEnablement();
 	},
 	
 	_configureInputControls: function() {

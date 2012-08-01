@@ -21,6 +21,7 @@
 				        id: "tableCommands",
 				        iconClass: "editActionIcon tableCommandsIcon",
 				        label: "Table commands",
+				        action: "./html/table/TableAction",
 				        actionbarPath: "arrange",
 				        type:'DropDownButton',
 				        menu:[

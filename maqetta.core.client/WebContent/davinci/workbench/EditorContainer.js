@@ -333,6 +333,17 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 				var children = toolbar.getChildren();
 				for(var i=0; i<children.length; i++){
 					var child = children[i];
+					var shouldShow = true;
+					if(child._maqAction && child._maqAction.action &&  child._maqAction.action.shouldShow){
+						shouldShow = child._maqAction.action.shouldShow();
+					} else if(child._maqAction && child._maqAction.shouldShow){
+						shouldShow = child._maqAction.shouldShow();
+					}
+					if(shouldShow){
+						dojo.removeClass(child.domNode, 'maqHidden');
+					}else{
+						dojo.addClass(child.domNode, 'maqHidden');
+					}
 					var enabled = true;
 					if(child._maqAction && child._maqAction.action &&  child._maqAction.action.isEnabled){
 						enabled = child._maqAction.action.isEnabled();
@@ -345,6 +356,17 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 						var menuItems = menu.getChildren();
 						for(var j=0; j<menuItems.length; j++){
 							var menuItem = menuItems[j];
+							var shouldShow = true;
+							if(menuItem._maqAction && menuItem._maqAction.action &&  menuItem._maqAction.action.shouldShow){
+								shouldShow = menuItem._maqAction.action.shouldShow();
+							} else if(menuItem._maqAction && menuItem._maqAction.shouldShow){
+								shouldShow = menuItem._maqAction.shouldShow();
+							}
+							if(shouldShow){
+								dojo.removeClass(menuItem.domNode, 'maqHidden');
+							}else{
+								dojo.addClass(menuItem.domNode, 'maqHidden');
+							}
 							enabled = true;
 							if(menuItem._maqAction && menuItem._maqAction.action &&  menuItem._maqAction.action.isEnabled){
 								enabled = menuItem._maqAction.action.isEnabled();

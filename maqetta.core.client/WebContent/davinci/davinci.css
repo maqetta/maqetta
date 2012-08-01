@@ -1669,3 +1669,6 @@ davinci_top_bar .dijitButtonNode {
 	height:10px;
 	overflow:hidden;
 }
+#maqBody .maqHidden {
+	display:none;
+}

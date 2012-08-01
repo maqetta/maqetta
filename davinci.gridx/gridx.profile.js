@@ -20,7 +20,8 @@ dependencies = {
 		{
 			name: "../metadata/gridx/GridHelper.js",
 			layerDependencies: [
-			    "../dijit/dijit.js"
+			    "../dijit/dijit.js",
+			    "../davinci/davinci.js"
 			],
 			dependencies: [
 				"metadata/gridx/GridHelper",
@@ -31,8 +32,13 @@ dependencies = {
 	],
 
 	prefixes: [
-		[ "gridx", "../gridx" ],
-		[ "metadata", "../metadata" ],
-		[ "dijit", "../dijit" ]
+	   		[ "gridx", "../gridx" ],
+			[ "metadata", "../metadata" ],
+	   		[ "system", "../system" ],
+	   		[ "preview", "../preview" ],
+	   		[ "orion", "../orion" ],
+	   		[ "davinci", "../davinci" ],
+	   		[ "dijit", "../dijit" ],
+	   		[ "dojox", "../dojox" ]
 	]
 }

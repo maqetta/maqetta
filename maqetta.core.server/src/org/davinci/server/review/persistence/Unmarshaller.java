@@ -1,9 +1,5 @@
 package org.davinci.server.review.persistence;
 
-import java.io.File;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -25,12 +21,12 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.davinci.server.user.IDavinciProject;
-
 import org.davinci.server.review.Comment;
 import org.davinci.server.review.CommentFlag;
 import org.davinci.server.review.CommentsDocument;
 import org.davinci.server.review.Constants;
+import org.davinci.server.user.IDavinciProject;
+import org.maqetta.server.IStorage;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -45,13 +41,11 @@ import org.xml.sax.SAXException;
  */
 public class Unmarshaller {
 	public CommentsDocument unmarshall(IDavinciProject project) {
-		String path = project.getCommentFilePath();
+		IStorage file = project.getCommentsFileStorage();
 		CommentsDocument commentsDoc = new CommentsDocument(project);
 
 		try {
-			File f = new File(path);
-
-			Document document = initCommentsFile(f);
+			Document document = initCommentsFile(file);
 			Node node = document.getFirstChild();
 			NodeList children = node.getChildNodes();
 			Comment comm;
@@ -203,12 +197,12 @@ public class Unmarshaller {
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 */
-	public static Document initCommentsFile(File commentFile)
+	public static Document initCommentsFile(IStorage commentFile)
 			throws IOException, TransformerFactoryConfigurationError,
 			TransformerException, ParserConfigurationException, SAXException {
 		if (null == commentFile)
 			return null;
-		File parent = commentFile.getParentFile();
+		IStorage parent = commentFile.getParentFile();
 		DocumentBuilderFactory builderFactory = DocumentBuilderFactory
 				.newInstance();
 		DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -220,7 +214,7 @@ public class Unmarshaller {
 			commentFile.createNewFile();
 		} else {
 			// If exist, parse it.
-			return builder.parse(new FileInputStream(commentFile));
+			return builder.parse(commentFile.getInputStream());
 		}
 
 		OutputStream os = null;
@@ -237,7 +231,7 @@ public class Unmarshaller {
 			Result result = null;
 			Transformer xformer = TransformerFactory.newInstance()
 					.newTransformer();
-			os = new FileOutputStream(commentFile);
+			os = commentFile.getOutputStream();
 			result = new StreamResult(os);
 			xformer.transform(source, result);
 			return document;

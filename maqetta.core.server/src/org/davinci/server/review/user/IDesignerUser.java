@@ -28,8 +28,6 @@ public interface IDesignerUser {
 
     public abstract IStorage getUserDirectory();
 
-    public abstract IVResource getResource(IPath path);
-
     public abstract IUser getRawUser();
     
     public abstract void setRawUser(IUser user);

@@ -13,8 +13,8 @@
 
 /*global window define */
 
-define("orion/textview/keyBinding", [], function() {
-	var isMac = window.navigator.platform.indexOf("Mac") !== -1;
+define("orion/textview/keyBinding", [], function() { //$NON-NLS-0$
+	var isMac = window.navigator.platform.indexOf("Mac") !== -1; //$NON-NLS-0$
 
 	/**
 	 * Constructs a new key binding with the given key code and modifiers.
@@ -37,7 +37,7 @@ define("orion/textview/keyBinding", [], function() {
 	 * @see orion.textview.TextView#setKeyBinding
 	 */
 	function KeyBinding (keyCode, mod1, mod2, mod3, mod4) {
-		if (typeof(keyCode) === "string") {
+		if (typeof(keyCode) === "string") { //$NON-NLS-0$
 			this.keyCode = keyCode.toUpperCase().charCodeAt(0);
 		} else {
 			this.keyCode = keyCode;

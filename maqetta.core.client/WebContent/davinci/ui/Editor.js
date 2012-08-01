@@ -1,8 +1,8 @@
 define([
-	"davinci/commands/CommandStack",
+	"../commands/CommandStack",
 	"dojox/timing/doLater",
 	"dojo/_base/declare",
-	"davinci/actions/Action",
+	"../actions/Action",
 	"./TextStyler",
 	"orion/editor/editor",
 	"orion/editor/editorFeatures",
@@ -13,8 +13,8 @@ define([
     "orion/editor/contentAssist",
     "orion/editor/jsContentAssist",
     "orion/editor/cssContentAssist",
-	"davinci/UserActivityMonitor"
-], function(CommandStack, doLater, declare, Action, TextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
+	"../UserActivityMonitor"
+], function(CommandStack, doLater, declare, Action, mTextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -69,15 +69,21 @@ define([
 	};
 
 	var onSelectionChanged = function(selectionEvent) {
-		if (this._selecting) {
+		if (this._progSelect) {
 			return;
 		}
+
 //		var startPos=this._textModel.getPosition(selectionEvent.newValue.start);
 //		var endPos=this._textModel.getPosition(selectionEvent.newValue.end);
-        this.selectionChange({startOffset:selectionEvent.newValue.start,endOffset:selectionEvent.newValue.end});
+
+		// User-initiated change in the source editor.  Synchronize with the model.
+		this.selectionChange({
+        	startOffset: selectionEvent.newValue.start,
+        	endOffset: selectionEvent.newValue.end
+        });
 	};
 
-return declare("davinci.ui.Editor", null, {
+return declare(null, {
 	
 	constructor: function (element, fileName, existWhenVisible) {
 		this.contentDiv = element;
@@ -206,7 +212,7 @@ return declare("davinci.ui.Editor", null, {
 		case "js":
 		case "java":
 		case "css":
-			this._styler = new TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
+			this._styler = new mTextStyler.TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
 			break;
 		case "html":
 			this._styler = new mTextMateStyler.TextMateStyler(view, new mHtmlGrammar.HtmlGrammar());
@@ -222,15 +228,17 @@ return declare("davinci.ui.Editor", null, {
 	},
 
 	select: function (selectionInfo) {
-		// This is disabled due to various selection issues for now
-		return;
 //		var start=this._textModel.getLineStart(selectionInfo.startLine)+selectionInfo.startCol;
 //		var end=this._textModel.getLineStart(selectionInfo.endLine)+selectionInfo.endCol;
-		this._selecting=true;
 		if (this.editor) {
-			this.editor.setSelection(selectionInfo.startOffset,selectionInfo.endOffset);
+			try {
+				this._progSelect = true;
+				// reverse arguments so that insertion caret (and the scroll) happens at the beginning of the selection
+				this.editor.setSelection(selectionInfo.endOffset,selectionInfo.startOffset);
+			} finally {
+				delete this._progSelect;				
+			}
 		}
-		this._selecting=false;
 	},
 
 	getText: function() {

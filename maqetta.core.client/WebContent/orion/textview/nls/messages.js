@@ -13,21 +13,14 @@
 
 /*global define*/
 
-define("orion/textview/nls/messages", {
-	"root": {
-		"multipleAnnotations": "Multiple annotations:",
-		"line": "Line: ${0}",
-		"breakpoint": "Breakpoint",
-		"bookmark": "Bookmark",
-		"task": "Task",
-		"error": "Error",
-		"warning": "Warning",
-		"matchingSearch": "Matching Search",
-		"currentSearch": "Current Search",
-		"currentLine": "Current Line",
-		"matchingBracket": "Matching Bracket",
-		"currentBracket": "Current Bracket"
-	},
-	"pt-br": true,
-	"fr-fr": true
+define(['orion/textview/i18n!orion/textview/nls/messages'], function(bundle) {
+	var result = {
+		root: true
+	};
+	Object.keys(bundle).forEach(function(key) {
+		if (typeof result[key] === 'undefined') { //$NON-NLS-0$
+			result[key] = bundle[key];
+		}
+	});
+	return result;
 });

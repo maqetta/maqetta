@@ -25,7 +25,6 @@ define("orion/editor/htmlGrammar", [], function() {
 		 * @type Object
 		 */
 		return {
-			"name": "HTML",
 			"scopeName": "source.html",
 			"uuid": "3B5C76FB-EBB5-D930-F40C-047D082CE99B",
 			"patterns": [

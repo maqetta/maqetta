@@ -11,7 +11,7 @@
  ******************************************************************************/
  
 /*global define */
-define("orion/textview/eventTarget", [], function() {
+define("orion/textview/eventTarget", [], function() { //$NON-NLS-0$
 	/** 
 	 * Constructs a new EventTarget object.
 	 * 
@@ -68,9 +68,9 @@ define("orion/textview/eventTarget", [], function() {
 						for (var i=0, len=listeners.length; i < len; i++) {
 							if (listeners[i]) {
 								var l = listeners[i].listener;
-								if (typeof l === "function") {
+								if (typeof l === "function") { //$NON-NLS-0$
 									l.call(this, evt);
-								} else if (l.handleEvent && typeof l.handleEvent === "function") {
+								} else if (l.handleEvent && typeof l.handleEvent === "function") { //$NON-NLS-0$
 									l.handleEvent(evt);
 								}
 							}

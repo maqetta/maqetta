@@ -7,11 +7,12 @@
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
  * Contributors: IBM Corporation - initial API and implementation
+ *               Alex Lakatos - fix for bug#369781
  ******************************************************************************/
 
 /*global document window navigator define */
 
-define(['orion/textview/annotations'], function(mAnnotations) {
+define(/*"examples/textview/textStyler",*/ ['orion/textview/annotations'], function(mAnnotations) {
 
 	var JS_KEYWORDS =
 		["break",
@@ -49,39 +50,60 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 		 "while"];
 
 	var CSS_KEYWORDS =
-		["color", "text-align", "text-indent", "text-decoration", 
-		 "font", "font-style", "font-family", "font-weight", "font-size", "font-variant", "line-height",
-		 "background", "background-color", "background-image", "background-position", "background-repeat", "background-attachment",
-		 "list-style", "list-style-image", "list-style-position", "list-style-type", 
-		 "outline", "outline-color", "outline-style", "outline-width",
-		 "border", "border-left", "border-top", "border-bottom", "border-right", "border-color", "border-width", "border-style",
-		 "border-bottom-color", "border-bottom-style", "border-bottom-width",
-		 "border-left-color", "border-left-style", "border-left-width",
-		 "border-top-color", "border-top-style", "border-top-width",
-		 "border-right-color", "border-right-style", "border-right-width",
-		 "padding", "padding-left", "padding-top", "padding-bottom", "padding-right",
-		 "margin", "margin-left", "margin-top", "margin-bottom", "margin-right",
-		 "width", "height", "left", "top", "right", "bottom",
-		 "min-width", "max-width", "min-height", "max-height",
-		 "display", "visibility",
-		 "clip", "cursor", "overflow", "overflow-x", "overflow-y", "position", "z-index",
-		 "vertical-align", "horizontal-align",
-		 "float", "clear"
+		["alignment-adjust", "alignment-baseline", "animation", "animation-delay", "animation-direction", "animation-duration",
+		 "animation-iteration-count", "animation-name", "animation-play-state", "animation-timing-function", "appearance",
+		 "azimuth", "backface-visibility", "background", "background-attachment", "background-clip", "background-color",
+		 "background-image", "background-origin", "background-position", "background-repeat", "background-size", "baseline-shift",
+		 "binding", "bleed", "bookmark-label", "bookmark-level", "bookmark-state", "bookmark-target", "border", "border-bottom",
+		 "border-bottom-color", "border-bottom-left-radius", "border-bottom-right-radius", "border-bottom-style", "border-bottom-width",
+		 "border-collapse", "border-color", "border-image", "border-image-outset", "border-image-repeat", "border-image-slice",
+		 "border-image-source", "border-image-width", "border-left", "border-left-color", "border-left-style", "border-left-width",
+		 "border-radius", "border-right", "border-right-color", "border-right-style", "border-right-width", "border-spacing", "border-style",
+		 "border-top", "border-top-color", "border-top-left-radius", "border-top-right-radius", "border-top-style", "border-top-width",
+		 "border-width", "bottom", "box-align", "box-decoration-break", "box-direction", "box-flex", "box-flex-group", "box-lines",
+		 "box-ordinal-group", "box-orient", "box-pack", "box-shadow", "box-sizing", "break-after", "break-before", "break-inside",
+		 "caption-side", "clear", "clip", "color", "color-profile", "column-count", "column-fill", "column-gap", "column-rule",
+		 "column-rule-color", "column-rule-style", "column-rule-width", "column-span", "column-width", "columns", "content", "counter-increment",
+		 "counter-reset", "crop", "cue", "cue-after", "cue-before", "cursor", "direction", "display", "dominant-baseline",
+		 "drop-initial-after-adjust", "drop-initial-after-align", "drop-initial-before-adjust", "drop-initial-before-align", "drop-initial-size",
+		 "drop-initial-value", "elevation", "empty-cells", "fit", "fit-position", "flex-align", "flex-flow", "flex-inline-pack", "flex-order",
+		 "flex-pack", "float", "float-offset", "font", "font-family", "font-size", "font-size-adjust", "font-stretch", "font-style",
+		 "font-variant", "font-weight", "grid-columns", "grid-rows", "hanging-punctuation", "height", "hyphenate-after",
+		 "hyphenate-before", "hyphenate-character", "hyphenate-lines", "hyphenate-resource", "hyphens", "icon", "image-orientation",
+		 "image-rendering", "image-resolution", "inline-box-align", "left", "letter-spacing", "line-height", "line-stacking",
+		 "line-stacking-ruby", "line-stacking-shift", "line-stacking-strategy", "list-style", "list-style-image", "list-style-position",
+		 "list-style-type", "margin", "margin-bottom", "margin-left", "margin-right", "margin-top", "mark", "mark-after", "mark-before",
+		 "marker-offset", "marks", "marquee-direction", "marquee-loop", "marquee-play-count", "marquee-speed", "marquee-style", "max-height",
+		 "max-width", "min-height", "min-width", "move-to", "nav-down", "nav-index", "nav-left", "nav-right", "nav-up", "opacity", "orphans",
+		 "outline", "outline-color", "outline-offset", "outline-style", "outline-width", "overflow", "overflow-style", "overflow-x",
+		 "overflow-y", "padding", "padding-bottom", "padding-left", "padding-right", "padding-top", "page", "page-break-after", "page-break-before",
+		 "page-break-inside", "page-policy", "pause", "pause-after", "pause-before", "perspective", "perspective-origin", "phonemes", "pitch",
+		 "pitch-range", "play-during", "position", "presentation-level", "punctuation-trim", "quotes", "rendering-intent", "resize",
+		 "rest", "rest-after", "rest-before", "richness", "right", "rotation", "rotation-point", "ruby-align", "ruby-overhang", "ruby-position",
+		 "ruby-span", "size", "speak", "speak-header", "speak-numeral", "speak-punctuation", "speech-rate", "stress", "string-set", "table-layout",
+		 "target", "target-name", "target-new", "target-position", "text-align", "text-align-last", "text-decoration", "text-emphasis",
+		 "text-height", "text-indent", "text-justify", "text-outline", "text-shadow", "text-transform", "text-wrap", "top", "transform",
+		 "transform-origin", "transform-style", "transition", "transition-delay", "transition-duration", "transition-property",
+		 "transition-timing-function", "unicode-bidi", "vertical-align", "visibility", "voice-balance", "voice-duration", "voice-family",
+		 "voice-pitch", "voice-pitch-range", "voice-rate", "voice-stress", "voice-volume", "volume", "white-space", "white-space-collapse",
+		 "widows", "width", "word-break", "word-spacing", "word-wrap", "z-index"
 		];
 
 	// Scanner constants
 	var UNKOWN = 1;
 	var KEYWORD = 2;
-	var STRING = 3;
-	var SINGLELINE_COMMENT = 4;
-	var MULTILINE_COMMENT = 5;
-	var DOC_COMMENT = 6;
-	var WHITE = 7;
-	var WHITE_TAB = 8;
-	var WHITE_SPACE = 9;
-	var HTML_MARKUP = 10;
-	var DOC_TAG = 11;
-	var TASK_TAG = 12;
+	var NUMBER = 3;
+	var STRING = 4;
+	var MULTILINE_STRING = 5;
+	var SINGLELINE_COMMENT = 6;
+	var MULTILINE_COMMENT = 7;
+	var DOC_COMMENT = 8;
+	var WHITE = 9;
+	var WHITE_TAB = 10;
+	var WHITE_SPACE = 11;
+	var HTML_MARKUP = 12;
+	var DOC_TAG = 13;
+	var TASK_TAG = 14;
 
 	// Styles 
 	var singleCommentStyle = {styleClass: "token_singleline_comment"};
@@ -91,10 +113,19 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 	var tasktagStyle = {styleClass: "token_task_tag"};
 	var doctagStyle = {styleClass: "token_doc_tag"};
 	var stringStyle = {styleClass: "token_string"};
+	var numberStyle = {styleClass: "token_number"};
 	var keywordStyle = {styleClass: "token_keyword"};
 	var spaceStyle = {styleClass: "token_space"};
 	var tabStyle = {styleClass: "token_tab"};
 	var caretLineStyle = {styleClass: "line_caret"};
+	
+	var rulerStyle = {styleClass:"ruler"};
+	var rulerAnnotationsStyle = {styleCLass:"ruler.annotations"};
+	var rulerFoldingStyle = {styleClass:"ruler.lines"};
+	var rulerOverviewStyle = {styleClass:"ruler.overview"};
+	var rulerLinesStyle = {styleCLass:"rulerLines"};
+	var rulerLinesEvenStyle = {styleClass:"rulerLines.even"};
+	var rulerLinesOddStyle = {styleClass:"rulerLines.odd"};
 	
 	function Scanner (keywords, whitespacesVisible) {
 		this.keywords = keywords;
@@ -116,7 +147,6 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 			return this.offset - this.startOffset;
 		},
 		_default: function(c) {
-			var keywords = this.keywords;
 			switch (c) {
 				case 32: // SPACE
 				case 9: // TAB
@@ -140,12 +170,34 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 					return c;
 				default:
 					var isCSS = this.isCSS;
-					if ((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57) || (0x2d === c && isCSS)) { //LETTER OR UNDERSCORE OR NUMBER
-						var off = this.offset - 1;
+					var off = this.offset - 1;
+					if (!isCSS && 48 <= c && c <= 57) {
+						var floating = false, exponential = false, hex = false, firstC = c;
 						do {
 							c = this._read();
-						} while((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57) || (0x2d === c && isCSS));  //LETTER OR UNDERSCORE OR NUMBER
+							if (c === 46 /* dot */ && !floating) {
+								floating = true;
+							} else if (c === 101 /* e */ && !exponential) {
+								floating = exponential = true;
+								c = this._read();
+								if (c !== 45 /* MINUS */) {
+									this._unread(c);
+								}
+							} else if (c === 120 /* x */ && firstC === 48 && (this.offset - off === 2)) {
+								floating = exponential = hex = true;
+							} else if (!(48 <= c && c <= 57 || (hex && ((65 <= c && c <= 70) || (97 <= c && c <= 102))))) { //NUMBER DIGIT or HEX
+								break;
+							}
+						} while(true);
 						this._unread(c);
+						return NUMBER;
+					}
+					if ((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (45 /* DASH */ === c && isCSS)) { //LETTER OR UNDERSCORE OR NUMBER
+						do {
+							c = this._read();
+						} while((97 <= c && c <= 122) || (65 <= c && c <= 90) || c === 95 || (48 <= c && c <= 57) || (45 /* DASH */ === c && isCSS));  //LETTER OR UNDERSCORE OR NUMBER
+						this._unread(c);
+						var keywords = this.keywords;
 						if (keywords.length > 0) {
 							var word = this.text.substring(off, this.offset);
 							//TODO slow
@@ -169,7 +221,7 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 		nextToken: function() {
 			this.startOffset = this.offset;
 			while (true) {
-				var c = this._read();
+				var c = this._read(), result;
 				switch (c) {
 					case -1: return null;
 					case 47:	// SLASH -> comment
@@ -208,35 +260,57 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 						this._unread(c);
 						return UNKOWN;
 					case 39:	// SINGLE QUOTE -> char const
+						result = STRING;
 						while(true) {
 							c = this._read();
 							switch (c) {
 								case 39:
-									return STRING;
+									return result;
 								case 13:
 								case 10:
 								case -1:
 									this._unread(c);
-									return STRING;
+									return result;
 								case 92: // BACKSLASH
 									c = this._read();
+									switch (c) {
+										case 10: result = MULTILINE_STRING; break;
+										case 13:
+											result = MULTILINE_STRING;
+											c = this._read();
+											if (c !== 10) {
+												this._unread(c);
+											}
+											break;
+									}
 									break;
 							}
 						}
 						break;
 					case 34:	// DOUBLE QUOTE -> string
+						result = STRING;
 						while(true) {
 							c = this._read();
 							switch (c) {
 								case 34: // DOUBLE QUOTE
-									return STRING;
+									return result;
 								case 13:
 								case 10:
 								case -1:
 									this._unread(c);
-									return STRING;
+									return result;
 								case 92: // BACKSLASH
 									c = this._read();
+									switch (c) {
+										case 10: result = MULTILINE_STRING; break;
+										case 13:
+											result = MULTILINE_STRING;
+											c = this._read();
+											if (c !== 10) {
+												this._unread(c);
+											}
+											break;
+									}
 									break;
 							}
 						}
@@ -425,6 +499,32 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 	}
 	
 	TextStyler.prototype = {
+		getClassNameForToken: function(token) {
+			switch (token) {
+			
+				case "singleLineComment": return singleCommentStyle.styleClass;
+				case "multiLineComment": return multiCommentStyle.styleClass;
+				case "docComment": return docCommentStyle.styleClass;
+				case "docHtmlComment": return htmlMarkupStyle.styleClass;
+				case "tasktag": return tasktagStyle.styleClass;
+				case "doctag": return doctagStyle.styleClass;
+				case "string": return stringStyle.styleClass;
+				case "number": return numberStyle.styleClass;
+				case "keyword": return keywordStyle.styleClass;
+				case "space": return spaceStyle.styleClass;
+				case "tab": return tabStyle.styleClass;
+				case "caretLine": return caretLineStyle.styleClass;
+				
+				case "rulerStyle": return rulerStyle.styleClass;
+				case "annotationsStyle": return rulerAnnotationsStyle.styleClass;
+				case "rulerFolding": return rulerLinesStyle.styleClass;
+				case "rulerOverview": return rulerOverviewStyle.styleClass;
+				case "rulerLines": return rulerLinesStyle.styleClass;
+				case "rulerLinesEven": return rulerLinesEvenStyle.styleClass;
+				case "rulerLinesOdd": return rulerLinesOddStyle.styleClass;
+			}
+			return null;
+		},
 		destroy: function() {
 			var view = this.view;
 			if (view) {
@@ -486,7 +586,7 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 			if (!viewModel.getBaseModel) { return; }
 			var annotationModel = this.annotationModel;
 			if (!annotationModel) { return; }
-			annotationModel.removeAnnotations("orion.annotation.folding");
+			annotationModel.removeAnnotations(mAnnotations.AnnotationType.ANNOTATION_FOLDING);
 			var add = [];
 			var baseModel = viewModel.getBaseModel();
 			var comments = this.comments;
@@ -505,9 +605,7 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 			if (startLine === endLine) {
 				return null;
 			}
-			return new mAnnotations.FoldingAnnotation(viewModel, "orion.annotation.folding", start, end,
-				"<div class='annotationHTML expanded'></div>", {styleClass: "annotation expanded"}, 
-				"<div class='annotationHTML collapsed'></div>", {styleClass: "annotation collapsed"});
+			return new (mAnnotations.AnnotationType.getType(mAnnotations.AnnotationType.ANNOTATION_FOLDING))(start, end, viewModel);
 		},
 		_computeTasks: function(type, commentStart, commentEnd) {
 			if (!this.detectTasks) { return; }
@@ -518,7 +616,7 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 			if (viewModel.getBaseModel) { baseModel = viewModel.getBaseModel(); }
 			var annotations = annotationModel.getAnnotations(commentStart, commentEnd);
 			var remove = [];
-			var annotationType = "orion.annotation.task";
+			var annotationType = mAnnotations.AnnotationType.ANNOTATION_TASK;
 			while (annotations.hasNext()) {
 				var annotation = annotations.next();
 				if (annotation.type === annotationType) {
@@ -536,16 +634,7 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 					if (type !== SINGLELINE_COMMENT) {
 						end = Math.min(end, commentEnd - this.commentEnd.length);
 					}
-					add.push({
-						start: tokenStart,
-						end: end,
-						type: annotationType,
-						title: baseModel.getText(tokenStart, end),
-						style: {styleClass: "annotation task"},
-						html: "<div class='annotationHTML task'></div>",
-						overviewStyle: {styleClass: "annotationOverview task"},
-						rangeStyle: {styleClass: "annotationRange task"}
-					});
+					add.push(mAnnotations.AnnotationType.createAnnotation(annotationType, tokenStart, end, baseModel.getText(tokenStart, end)));
 				}
 			}
 			annotationModel.replaceAnnotations(remove, add);
@@ -579,13 +668,20 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 				if (offset < commentStart) {
 					this._parse(text.substring(offset - start, commentStart - start), offset, styles);
 				}
-				var style = comments[i].type === DOC_COMMENT ? docCommentStyle : multiCommentStyle;
-				if (this.whitespacesVisible || this.detectHyperlinks) {
-					var s = Math.max(offset, commentStart);
-					var e = Math.min(end, commentEnd);
-					this._parseComment(text.substring(s - start, e - start), s, styles, style, comments[i].type);
+				var type = comments[i].type, style;
+				switch (type) {
+					case DOC_COMMENT: style = docCommentStyle; break;
+					case MULTILINE_COMMENT: style = multiCommentStyle; break;
+					case MULTILINE_STRING: style = stringStyle; break;
+				}
+				var s = Math.max(offset, commentStart);
+				var e = Math.min(end, commentEnd);
+				if ((type === DOC_COMMENT || type === MULTILINE_COMMENT) && (this.whitespacesVisible || this.detectHyperlinks)) {
+					this._parseComment(text.substring(s - start, e - start), s, styles, style, type);
+				} else if (type === MULTILINE_STRING && this.whitespacesVisible) {
+					this._parseString(text.substring(s - start, e - start), s, styles, stringStyle);
 				} else {
-					styles.push({start: commentStart, end: commentEnd, style: style});
+					styles.push({start: s, end: e, style: style});
 				}
 				offset = commentEnd;
 			}
@@ -610,6 +706,8 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 				var style = null;
 				switch (token) {
 					case KEYWORD: style = keywordStyle; break;
+					case NUMBER: style = numberStyle; break;
+					case MULTILINE_STRING:
 					case STRING:
 						if (this.whitespacesVisible) {
 							this._parseString(scanner.getData(), tokenStart, styles, stringStyle);
@@ -757,17 +855,14 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 			scanner.setText(text);
 			var result = [];
 			while ((token = scanner.nextToken())) {
-				if (token === MULTILINE_COMMENT || token === DOC_COMMENT) {
-					var comment = {
+				if (token === MULTILINE_COMMENT || token === DOC_COMMENT || token === MULTILINE_STRING) {
+					result.push({
 						start: scanner.getStartOffset() + offset,
 						end: scanner.getOffset() + offset,
 						type: token
-					};
-					result.push(comment);
-					//TODO can we avoid this work if edition does not overlap comment?
-					this._computeTasks(token, scanner.getStartOffset() + offset, scanner.getOffset() + offset);
+					});
 				}
-				if (token === SINGLELINE_COMMENT) {
+				if (token === SINGLELINE_COMMENT || token === MULTILINE_COMMENT || token === DOC_COMMENT) {
 					//TODO can we avoid this work if edition does not overlap comment?
 					this._computeTasks(token, scanner.getStartOffset() + offset, scanner.getOffset() + offset);
 				}
@@ -923,24 +1018,10 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 				}
 				var bracket = this._findMatchingBracket(model, mapCaret);
 				if (bracket !== -1) {
-					add = [{
-						start: bracket,
-						end: bracket + 1,
-						type: "orion.annotation.matchingBracket",
-						title: "Matching Bracket",
-						html: "<div class='annotationHTML matchingBracket'></div>",
-						overviewStyle: {styleClass: "annotationOverview matchingBracket"},
-						rangeStyle: {styleClass: "annotationRange matchingBracket"}
-					},
-					{
-						start: mapCaret,
-						end: mapCaret + 1,
-						type: "orion.annotation.currentBracket",
-						title: "Current Bracket",
-						html: "<div class='annotationHTML currentBracket'></div>",
-						overviewStyle: {styleClass: "annotationOverview currentBracket"},
-						rangeStyle: {styleClass: "annotationRange currentBracket"}
-					}];
+					add = [
+						mAnnotations.AnnotationType.createAnnotation(mAnnotations.AnnotationType.ANNOTATION_MATCHING_BRACKET, bracket, bracket + 1),
+						mAnnotations.AnnotationType.createAnnotation(mAnnotations.AnnotationType.ANNOTATION_CURRENT_BRACKET, mapCaret, mapCaret + 1)
+					];
 				}
 			}
 			this._bracketAnnotations = add;
@@ -1018,7 +1099,7 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 				var annotation;
 				while (iter.hasNext()) {
 					annotation = iter.next();
-					if (annotation.type === "orion.annotation.folding") {
+					if (annotation.type === mAnnotations.AnnotationType.ANNOTATION_FOLDING) {
 						all.push(annotation);
 						for (i = 0; i < newComments.length; i++) {
 							if (annotation.start === newComments[i].start && annotation.end === newComments[i].end) {
@@ -1072,5 +1153,5 @@ define(['orion/textview/annotations'], function(mAnnotations) {
 		}
 	};
 	
-	return TextStyler;
+	return {TextStyler: TextStyler};
 });

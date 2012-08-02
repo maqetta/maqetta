@@ -371,6 +371,10 @@ BODY{
 #davinci_top_bar_main {
 	padding:0px; /* override dijitContentPane */
 	background: -webkit-linear-gradient(#464646, #121212);
+	background: -moz-linear-gradient(#464646, #121212);
+	background: -ms-linear-gradient(#464646, #121212);
+	background: -o-linear-gradient(#464646, #121212);
+	background: linear-gradient(#464646, #121212);
 	color: #ccc;
     font: normal bold 12px Arial, sans-serif;
     text-shadow:none;

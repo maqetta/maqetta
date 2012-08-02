@@ -1,3 +1,33 @@
+.userSettingsMenuIcon {
+	background-image: url(img/sprite.png);
+	background-position: -82px -692px;
+	background-repeat: no-repeat;
+	width: 27px;
+	height: 27px;
+}
+.userSettingsMenu .dijitArrowButtonInner {
+	display:none;
+}
+.appSettingsMenuIcon {
+	background-image: url(img/sprite.png);
+	background-position: -48px -692px;
+	background-repeat: no-repeat;
+	width: 27px;
+	height: 27px;
+}
+.appSettingsMenu .dijitArrowButtonInner {
+	display:none;
+}
+.helpMenuIcon {
+	background-image: url(img/sprite.png);
+	background-position: -48px -652px;
+	background-repeat: no-repeat;
+	width: 27px;
+	height: 27px;
+}
+.helpMenu .dijitArrowButtonInner {
+	display:none;
+}
 .userLibDialog .columna{
 	
 	text-align:center;
@@ -171,9 +201,9 @@
 }
 .stickynoteIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
-	background-position: 0 -66px;
-	width: 16px;
-	height: 16px;
+	background-position: -46px -612px;
+	width: 27px;
+	height: 27px;
 }
 .rotateIcon {
 	background-image: url(img/sprite.png);
@@ -231,12 +261,25 @@
 	width: 16px;
 	height: 16px;
 }
+#davinci_toolbar_container .openBrowser {
+	margin-right:18px;
+}
 .openBrowserIcon {
 	background-image: url(img/sprite.png); /* FIXME: Disabled version? */
-	background-position: -82px -530px;
+	background-position: -46px -532px;
 	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
+	width: 27px;
+	height: 27px;
+}
+.documentSettingsIcon {
+	background-image: url(img/sprite.png); /* FIXME: Disabled version? */
+	background-position: -46px -572px;
+	background-repeat: no-repeat;
+	width: 27px;
+	height: 27px;
+}
+.documentSettings .dijitArrowButtonInner {
+	display:none;
 }
 
 .propertiesDropDownIcon {
@@ -488,13 +531,13 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	white-space:nowrap;
 }
 
-.nhfo_ct {
+.nhfo_dv {
 	white-space:nowrap;
 }
-.nhfo_ct label {
+.nhfo_dv label {
 	vertical-align:middle;
 }
-.nhfo_ct .dijitSelectLabel {
+.nhfo_dv .dijitSelectLabel {
 	padding-left:.05em;
 	padding-right:.25em;
 }
@@ -516,7 +559,7 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	background: rgba(171,214,255,.1); /* #ABD6FF */
 	border-radius: 4px;
 }
-.nhfo_ct .dijitSelect .dijitButtonContents {
+.nhfo_dv .dijitSelect .dijitButtonContents {
 	width:11em;
 }
 .nhfo_show_details {

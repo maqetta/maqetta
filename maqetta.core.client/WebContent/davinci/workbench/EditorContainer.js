@@ -2,9 +2,10 @@ define(["require",
 	"dojo/_base/declare",
 	"davinci/workbench/_ToolbaredContainer",
 	"davinci/Runtime",
+	"davinci/Workbench",
 	"dojo/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, Workbench, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
@@ -53,6 +54,33 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
       	*/
 	},
 	
+	postCreate: function(){
+		this.subscribe("/davinci/ui/editorSelected", function(){
+			var toolbarDiv = this.getToolbarDiv();
+			toolbarDiv.innerHTML = '';
+			var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
+			if(toolbar){
+				toolbarDiv.appendChild(toolbar.domNode);
+			}
+			this.updateToolbars();
+		}.bind(this));
+		this.subscribe("/davinci/ui/widgetSelected", function(widgets){
+			this.updateToolbars();
+		}.bind(this));
+		this.subscribe("/davinci/workbench/ready", function(widgets){
+			this.updateToolbars();
+		}.bind(this));
+	},
+	
+	layout: function() {
+		// Don't show the title bar or tool bar strips above the editors's main content area
+		// Note that the toolbar shared by all of the editors gets automagically injected
+		// into the Workbench's DIV with id="davinci_toolbar_container".
+		this.titleBarDiv.style.display = 'none';
+		this.toolbarDiv.style.display = 'none';
+		this.inherited(arguments);
+	},
+	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
@@ -69,7 +97,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					}
 					editor.editorID=editorExtension.id;
 					editor.isDirty= !editor.isReadOnly && this.isDirty;
-					this._createToolbar();
+					this._createToolbar(editorExtension.editorClass);
 					if (!content) {
 						content=editor.getDefaultContent();
 						editor.isDirty=!editor.isReadOnly;
@@ -84,8 +112,8 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					// Don't populate the editor until the tab is selected.  Defer processing,
 					// but also avoid problems with display:none on hidden tabs making it impossible
 					// to do geometry measurements in editor initialization
-					var tabContainer = "editors_tabcontainer";
-					if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
+					var editorsContainer = "editors_container";
+					if(dijit.byId(editorsContainer).selectedChildWidget.domNode == this.domNode){
 						// Tab is visible.  Go ahead
 						editor.setContent(fileName, content, newHtmlParams);
 
@@ -94,7 +122,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 						dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 					}else{
 						// When tab is selected, set up the editor
-						var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
+						var handle = dojo.subscribe(editorsContainer + "-selectChild", null, function(args){
 							if(editor==args.editor){
 								dojo.unsubscribe(handle);
 								editor.setContent(fileName,content);
@@ -129,11 +157,15 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	setDirty: function (isDirty) {
-		var title = this._getTitle();
-		if (isDirty){
-			title="*"+title;
-		}
-		davinci.Workbench.editorTabs.setTitle(this,title);
+		//FIXME: davinci.Workbench.hideEditorTabs is always true now
+		//Need to clean up this logic (make less hacky)
+		//if(!davinci.Workbench.hideEditorTabs){
+			var title = this._getTitle();
+			if (isDirty){
+				title="*"+title;
+			}
+			davinci.Workbench.editorTabs.setTitle(this,title);
+		//}
 		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
 	},
@@ -152,7 +184,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	_close: function(editor, dirtycheck){
-		dojo.publish("/davinci/ui/EditorClosing", [editor]);
+		dojo.publish("/davinci/ui/EditorClosing", [{editor:editor}]);
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
 			//Give editor a chance to give us a more specific message
@@ -225,15 +257,24 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	_setupKeyboardHandler: function() {
+		var that = this;
+		function pushBinding(o){
+			if (!that.keyBindings) {
+				that.keyBindings = [];
+			}
+			that.keyBindings.push(o);
+		}
 		dojo.forEach(this._getViewActions(), dojo.hitch(this, function(actionSet) {
 			dojo.forEach(actionSet.actions,  dojo.hitch(this, function(action) {
-					
 				if (action.keyBinding) {
-					if (!this.keyBindings) {
-						this.keyBindings = [];
-					}
-
-					this.keyBindings.push({keyBinding: action.keyBinding, action: action});
+					pushBinding({keyBinding: action.keyBinding, action: action});
+				}
+				if(action.menu){
+					dojo.forEach(action.menu, dojo.hitch(this, function(menuItemObj) {
+						if(menuItemObj.keyBinding){
+							pushBinding({keyBinding: menuItemObj.keyBinding, action: menuItemObj});
+						}
+					}));
 				}
 			}));
 		}));
@@ -283,6 +324,106 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
         	this.editor.destroy();
         }
         delete this.editor;
+	},
+	
+	_updateToolbar: function(toolbar){
+		// Call a function on an action class
+		// Only used for 'shouldShow' and 'isEnabled'
+		function runFunc(action, funcName){
+			var retval = true;
+			if(action && action.action &&  action.action[funcName]){
+				retval = action.action[funcName]();
+			} else if(action && action[funcName]){
+				retval = action[funcName]();
+			}
+			return retval;
+		}
+		function hideShowWidget(widget, action){
+			var shouldShow = runFunc(action, 'shouldShow');
+			if(shouldShow){
+				dojo.removeClass(widget.domNode, 'maqHidden');
+			}else{
+				dojo.addClass(widget.domNode, 'maqHidden');
+			}
+			
+		}
+		function enableDisableWidget(widget, action){
+			var enabled = runFunc(action, 'isEnabled');
+			widget.set('disabled', !enabled);
+		}
+		
+		if(toolbar && this.editor){
+			var context = this.editor.getContext ? this.editor.getContext() : null;
+			if(context){
+				var children = toolbar.getChildren();
+				for(var i=0; i<children.length; i++){
+					var child = children[i];
+					hideShowWidget(child, child._maqAction);
+					enableDisableWidget(child, child._maqAction);
+					var menu = child.dropDown;
+					if(menu){
+						var menuItems = menu.getChildren();
+						for(var j=0; j<menuItems.length; j++){
+							var menuItem = menuItems[j];
+							hideShowWidget(menuItem, menuItem._maqAction);
+							enableDisableWidget(menuItem, menuItem._maqAction);
+						}
+					}
+				}
+			}
+		}
+		
+	},
+	
+	/**
+	 * Enable/disable various items on the editor toolbar and action bar
+	 */
+	updateToolbars: function(){
+		if(this.editor == Runtime.currentEditor){
+			var editorToolbarNode = dojo.query('#davinci_toolbar_container .dijitToolbar')[0];
+			var editorToolbar = editorToolbarNode ? dijit.byNode(editorToolbarNode) : null;
+			var actionBarNode = dojo.query('#actionBarContainer .dijitToolbar')[0];
+			var actionBar = actionBarNode ? dijit.byNode(actionBarNode) : null;
+			this._updateToolbar(editorToolbar);
+			this._updateToolbar(actionBar);
+		}
+	},
+	
+	/**
+	 * Override the _createToolbar function in _ToolbaredContainer.js to redirect
+	 * the toolbar creation logic to target the DIV with id="davinci_toolbar_container"
+	 */
+	_createToolbar: function(editorClass){
+		if(this.toolbarCreated(editorClass)){
+			return;
+		}
+		this.inherited(arguments);
+	},
+	
+	/**
+	 * Returns an {Element} that is the container DIV into which editor toolbar should go
+	 * This function can be overridden by subclasses (e.g., EditorContainer.js)
+	 */
+	getToolbarDiv: function(){
+		return dojo.byId("davinci_toolbar_container");
+	},
+	
+	/**
+	 * Getter/setting for whether toolbar has been created.
+	 * Note that this function overrides the function from _ToolbaredContainer.js
+	 * @param {string} editorClass  Class name for editor, such as 'davinci.ve.PageEditor'
+	 * @param {boolean} [toolbar]  If provided, toolbar widget
+	 * @returns {boolean}  Whether toolbar has been created
+	 */
+	toolbarCreated: function(editorClass, toolbar){
+		if(!davinci.Workbench._editorToolbarCreated){
+			davinci.Workbench._editorToolbarCreated = {};
+		}
+		if(arguments.length > 1){
+			davinci.Workbench._editorToolbarCreated[editorClass] = toolbar;
+		}
+		return davinci.Workbench._editorToolbarCreated[editorClass];
 	}
+
 });
 });

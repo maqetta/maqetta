@@ -2,6 +2,9 @@ define([
     	"dojo/_base/declare",
     	"dojo/i18n!davinci/ve/nls/ve",
     	"dojo/i18n!dijit/nls/common",
+    	"dijit/layout/TabContainer",
+    	"dijit/layout/ContentPane",
+    	"davinci/Runtime",
     	"davinci/workbench/WidgetLite",
     	"davinci/ve/widgets/HTMLStringUtil",
     	"davinci/ve/widgets/WidgetToolBar",
@@ -9,8 +12,8 @@ define([
     	"davinci/ve/widgets/CommonProperties",
     	"davinci/ve/widgets/WidgetProperties",
     	"davinci/ve/widgets/EventSelection"
-], function(declare, veNls, commonNls, WidgetLite, HTMLStringUtil,
-		   	WidgetToolBar,  Cascade
+], function(declare, veNls, commonNls, TabContainer, ContentPane, Runtime, WidgetLite, HTMLStringUtil,
+		   	WidgetToolBar,  Cascade, CommonProperties, WidgetProperties, EventSelection
 		    ){
 return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 
@@ -66,19 +69,20 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	                {display:"overflow", type:"combo", target:["overflow"], values:['','visible','hidden','scroll','auto']},
     	                {display:"z-index", type:"multi", target:["z-index"], values:['','auto','0','1','100','-1','-100']},
     	                {display:"box-sizing", type:"combo", target:['box-sizing','-webkit-box-sizing','-ms-box-sizing','-moz-box-sizing'], values:['','content-box','border-box']}
-	            	                
-	            	                
-	            	                ]},
-	           {key: "paddingMargins", 
+	            	   ]},
+	           {key: "padding", 
+  	           	  pageTemplate:[
+      	                {display:"<b>(padding)</b>", type:"multi", target:["padding"], values:['', '0px', '1em']},
+  		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
+      	                	pageTemplate:[
+      		 			       {display:"padding-top", type:"multi", target:["padding-top"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+      		 			       {display:"padding-right", type:"multi", target:["padding-right"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+      		 			       {display:"padding-bottom", type:"multi", target:["padding-bottom"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
+      		 			       {display:"padding-left", type:"multi", target:["padding-left"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
+      	                	]}
+      	                ]},	
+	           {key: "margins", 	
 	           	  pageTemplate:[
-    	                {display:"<b>(padding)</b>", type:"multi", target:["padding"], values:['', '0px', '1em']},
-		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
-    	                	pageTemplate:[
-    		 			       {display:"padding-top", type:"multi", target:["padding-top"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
-    		 			       {display:"padding-right", type:"multi", target:["padding-right"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
-    		 			       {display:"padding-bottom", type:"multi", target:["padding-bottom"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"},
-    		 			       {display:"padding-left", type:"multi", target:["padding-left"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
-    	                	]},
     	                {display:"<b>(margin)</b>", type:"multi", target:["margin"], values:['', '0px', '1em']},
 		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
     	                	pageTemplate:[
@@ -204,9 +208,9 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	
 	buildRendering: function(){
 		this.domNode = dojo.doc.createElement("div");
-		dojo.addClass(this.domNode,'propertiesSection');	
+		dojo.addClass(this.domNode,'propertiesContent');
 		var template="";
-		template+="<div dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+		template+="<div id='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
 		template+="<table class='propRootDetailsContainer'>";
 		template+="<tr>";
@@ -223,6 +227,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				}
 			}
 		}
+/*
 		for(var i=0;i<this.pageTemplate.length;i++){
 			var title=this.pageTemplate[i].title;
 			// Use same styling as Dijit TitlePane
@@ -253,9 +258,40 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		for(var i=0;i<this.pageTemplate.length;i++){
 			template+= HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
 		}
+*/
+template+='<div class="propPaletteTabContainer"></div>';
 		template+="</td></tr></table>";
 		template+="</div>";
 		this.domNode.innerHTML = template;
+var propPaletteTabContainerNode = this.domNode.querySelector('.propPaletteTabContainer');
+if(propPaletteTabContainerNode){
+	this._tabContainer = new TabContainer({'class':'propPaletteTabContainer',style:'height:265px;', tabPosition:'left-h'}, propPaletteTabContainerNode);
+	var firstTab = null;
+	for(var i=0;i<this.pageTemplate.length;i++){
+		var title = this.pageTemplate[i].title;
+		var content = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
+		var cp = new ContentPane({title:title, content:content});
+		this._tabContainer.addChild(cp);
+		cp._maqPropGroup = this.pageTemplate[i].key;
+		if(!firstTab){
+			firstTab = cp;
+		}
+	}
+	dojo.connect(this._tabContainer, 'selectChild', this, function(tab){
+		this._currentPropSection = tab._maqPropGroup;
+		var context = (this._editor && this._editor.getContext) ? this._editor.getContext() : null;
+		var selection = (context && context.getSelection) ? context.getSelection() : [];
+		this._updatePaletteValues(selection);
+	});
+}
+// Need a setTimeout - without it, browser sometimes hasn't layed out
+// the container widgets into which the TabContainer should go.
+setTimeout(function(){
+	this._tabContainer.layout();	
+	this._tabContainer.startup();
+	this._tabContainer.selectChild(firstTab);
+}.bind(this),50);
+
 
 		// Put click, mouseover, mouseout handlers on the section buttons in root view
 		var sectionButtons=dojo.query(".propSectionButton",this.domNode);
@@ -309,7 +345,10 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	},
 	
 	_widgetValuesChanged : function(event){
+/*FIXME: DELETE THIS
 		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
+*/
+var currentPropSection = this._currentPropSection;
 		if(currentPropSection){
 			var found=false;
 			for(var propSectionIndex = 0;propSectionIndex<this.pageTemplate.length;propSectionIndex++){
@@ -330,7 +369,10 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		if(targetIndex)
 			return this.pageTemplate[targetIndex]['cascade'];
 		var visibleCascade = [];
+/*FIXME: DELETE THIS
 		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
+*/
+var currentPropSection = this._currentPropSection;
 		if(currentPropSection){
 			for(var i = 0;i<this.pageTemplate.length;i++){
 				if(this.pageTemplate[i].key == currentPropSection){
@@ -395,8 +437,14 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	startup : function(){
 	
 		this.domNode.style.height="100%";
+		this._editor = Runtime.currentEditor;
 	
 		this.inherited(arguments);
+		
+		var propertiesToolBar = dijit.byId('propertiesToolBar');
+		if(propertiesToolBar){
+			propertiesToolBar.initialize();
+		}
 
 		// Install any onchange handlers for specific input elements
 		for(var i=0;i<this.pageTemplate.length;i++){
@@ -443,6 +491,11 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		}
 		this.setReadOnly(true);
 		this.onEditorSelected();
+/*FIXME: DELETE THIS
+		var context = (this._editor.getContext) ? this._editor.getContext() : null;
+		var selection = (context && context.getSelection) ? context.getSelection() : [];
+		this._updatePaletteValues(selection);
+*/
 		dojo.subscribe("/davinci/ui/widgetValuesChanged", dojo.hitch(this, this._widgetValuesChanged));
 		dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 		//Don't need to subscribe here. ViewLite already does it for us.
@@ -503,13 +556,20 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		/* add the editors ID to the top of the properties pallete so you can target CSS rules based on editor */
 		if(this._oldClassName)
 			dojo.removeClass(this.domNode,this._oldClassName);
-		
+
+//FIXME: TEMPORARY
+if(!this._editor){
+	return;
+}
 		if( this._editor){
 			this._oldClassName = this._editor.editorID.replace(/\./g, "_");
 			dojo.addClass(this.domNode,this._oldClassName);
 		}
 		// Hide or show the various section buttons on the root pane
+/*FIXME: DELETE THIS
 		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
+*/
+var currentPropSection = this._currentPropSection;
 		var sectionButtons=dojo.query(".propSectionButton",this.domNode);
 		for(var i=0;i<sectionButtons.length;i++){
 			var sectionButton = sectionButtons[i];

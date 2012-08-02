@@ -13,10 +13,13 @@ define([
 	"dijit/PopupMenuBarItem",
 	"dijit/form/Button",
 	"dijit/form/DropDownButton",
+	"dijit/form/ComboButton",
 	"dijit/form/ToggleButton",
 	"dijit/layout/BorderContainer",
+	"dijit/layout/StackController",
 	"dijit/layout/StackContainer",
 	"dijit/layout/ContentPane",
+	"dijit/layout/TabController",
 	"dijit/layout/TabContainer",
 	"system/resource",
 	"dojo/i18n!./nls/webContent",
@@ -26,7 +29,10 @@ define([
 	"dojo/_base/connect",
 	"dojo/_base/xhr",
 	"davinci/review/model/resource/root",
-	"dojo/i18n!davinci/ve/nls/common"
+	"dojo/i18n!davinci/ve/nls/common",
+	"dojo/dnd/Mover",
+	"davinci/ve/utils/GeomUtils",
+	"dojox/layout/ResizeHandle"
 ], function(
 		Runtime,
 		Path,
@@ -42,10 +48,13 @@ define([
 		PopupMenuBarItem,
 		Button,
 		DropDownButton,
+		ComboButton,
 		ToggleButton,
 		BorderContainer,
+		StackController,
 		StackContainer,
 		ContentPane,
+		TabController,
 		TabContainer,
 		sysResource,
 		webContent,
@@ -55,25 +64,26 @@ define([
 		connect,
 		xhr,
 		reviewResource,
-		veNLS
+		veNLS,
+		Mover,
+		GeomUtils,
+		ResizeHandle
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
 Function.prototype.bind = Function.prototype.bind || function(that){ return dojo.hitch(that, this);};
 
+// Convert filename path into an ID string
 var filename2id = function(fileName) {
 	return "editor-" + encodeURIComponent(fileName.replace(/[\/| |\t]/g, "_")).replace(/%/g, ":");
 };
-
-var updateMainToolBar = function (change, toolbarID) {
-	var toolbar1 = dijit.byId("davinci_toolbar_main");
-	if (toolbar1) {
-		dojo.forEach(toolbar1.getChildren(), function(child) {
-			if (child.isEnabled) {
-				child.set('disabled', !child.isEnabled(change.targetObjectId));
-			}
-		});
-	}
+// Convert the result from filename2id into a different ID string that replaces "editor" with "shadow"
+var editorIdToShadowId = function(editorFileName) {
+	return editorFileName.replace(/^editor/, "shadow");
+};
+//Convert the result from filename2id into a different ID string that replaces "editor" with "shadow"
+var shadowIdToEditorId = function(shadowFileName) {
+	return shadowFileName.replace(/^shadow/, "editor");
 };
 
 var handleIoError = function (deferred, reason) {
@@ -235,22 +245,26 @@ var Workbench = {
 	activePerspective: "",
 	actionScope: [],
 	_DEFAULT_PROJECT: "project1",
+	hideEditorTabs: true,
 
 	run: function() {
 		Runtime.run();
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
 
-		Runtime.subscribe("/davinci/ui/selectionChanged", updateMainToolBar);
-		Runtime.subscribe("/davinci/ui/editorSelected", updateMainToolBar);
 		Runtime.subscribe("/davinci/resource/resourceChanged",
 			function (type, changedResource) {
 				if (type == 'deleted') {
-					var tab = dijit.byId(filename2id(changedResource.getPath()));
-					if (tab && !tab._isClosing) {
-						var tabContainer = dijit.byId("editors_tabcontainer");
-						tabContainer.removeChild(tab);
-						tab.destroyRecursive();
+					var editorId = filename2id(changedResource.getPath());
+					var shadowId = editorIdToShadowId(editorId);
+					var editorContainer = dijit.byId(editorId);
+					var shadowTab = dijit.byId(shadowId);
+					if (editorContainer && !editorContainer._isClosing) {
+						var editorsContainer = dijit.byId("editors_container");
+						var shadowTabContainer = dijit.byId("davinci_file_tabs");
+						editorsContainer.removeChild(editorContainer);
+						editorContainer.destroyRecursive();
+						shadowTabContainer.removeChild(shadowTab);
 					}
 				}
 			}
@@ -321,7 +335,15 @@ var Workbench = {
 		Workbench._autoSave();
 	},
 
-	_createToolBar: function (targetObjectId,targetDiv,actionSets,context){
+	/**
+	 * Creates a toolbar widget out of the definitions in the plugin file(s)
+	 * @param {string} toolbarProp  The property name from plugin file that corresponds to this particular toolbar
+	 * @param {Element} targetDiv  Container DIV into which this toolbar should be instantiated
+	 * @param actionSets  Action sets from plugin file(s)
+	 * @param context  Document context FIXME: 95% sure that parameter is obsolete
+	 * @returns {Toolbar}  toolbar widget
+	 */
+	_createToolBar: function (toolbarProp, targetDiv, actionSets, context){
 		var _toolbarcache = [];
 		if (!actionSets) {
 		   actionSets = Runtime.getExtensions('davinci.actionSets');
@@ -330,7 +352,7 @@ var Workbench = {
 			var actions = actionSets[i].actions;
 			for (var k = 0, len2 = actions.length; k < len2; k++) {
 				var action = actions[k],
-					toolBarPath = action.toolbarPath;
+					toolBarPath = action[toolbarProp];
 				if (toolBarPath) {
 					if (!_toolbarcache[toolBarPath]) {
 						_toolbarcache[toolBarPath] = [];
@@ -351,70 +373,115 @@ var Workbench = {
 				firstgroup = false;
 			}
 			var children;
-				var actions = _toolbarcache[value];
-				  for (var p = 0; p<actions.length; p++) {
-					    var action = actions[p];
-			 			var id = action.id;
-			 			// dont add dupes
-			 	
-			 			Workbench._loadActionClass(action);
-						var parms = {showLabel:false/*, id:(id + "_toolbar")*/};
-						if (action.label) {
-							parms.label = action.label;
-						}
-						if (action.iconClass) {
-							parms.iconClass = action.iconClass;
-						}
-						var dojoAction;
-						var dojoActionDeferred = new Deferred();
-						if (action.toggle || action.radioGroup) {
-							dojoAction = new ToggleButton(parms);
-							dojoAction.item = action;
-							dojoAction.set('checked', action.initialValue);
-							if (action.radioGroup) {
-								var group = radioGroups[action.radioGroup];
-								if (!group) {
-									group = radioGroups[action.radioGroup]=[];
-								}
-								group.push(dojoAction);
-								dojoAction.onChange = dojo.hitch(this, "_toggleButton", dojoAction, context, group);
-							} else {
-								dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
-							}
-							dojoActionDeferred.resolve();
-						}else if(action.type){
-							require([action.type], function(ReviewToolBarText) {
-								dojoAction = new ReviewToolBarText();
-								dojoActionDeferred.resolve();
-							});
-						}else{
-							dojoAction = new Button(parms);
-							dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
-							dojoActionDeferred.resolve();
-						}
-						if (action.icon) {
-							var imageNode = document.createElement('img');
-							imageNode.src = action.icon;
-							imageNode.height = imageNode.width = 18;
-							dojoAction.domNode.appendChild(imageNode);
-						}
-						dojoActionDeferred.then(function(){
-							toolbar1.addChild(dojoAction);
-							if (action.isEnabled && !action.isEnabled(targetObjectId)) { 
-								dojoAction.isEnabled = action.isEnabled;
-								dojoAction.set('disabled', true);
-							} else {
-								dojoAction.set('disabled', false);
+			var actions = _toolbarcache[value];
+			for (var p = 0; p<actions.length; p++) {
+				var action = actions[p];
+				var id = action.id;
+				// dont add dupes
+		
+				Workbench._loadActionClass(action);
+				var parms = {showLabel:false/*, id:(id + "_toolbar")*/};
+				['label','showLabel','iconClass'].forEach(function(prop){
+					if(action.hasOwnProperty(prop)){
+						parms[prop] = action[prop];
+					}
+				});
+				if (action.className) {
+					parms['class'] = action.className;
+				}
+				var dojoAction;
+				var dojoActionDeferred = new Deferred();
+				if(action.menu && (action.type == 'DropDownButton' || action.type == 'ComboButton')){
+					var menu = new dijit.Menu({
+						style: "display: none;"
+					});
+					for(var ddIndex=0; ddIndex<action.menu.length; ddIndex++){
+						var menuItemObj = action.menu[ddIndex];
+						Workbench._loadActionClass(menuItemObj);
+						var menuItemParms = {
+							onClick: dojo.hitch(this, "_runAction", menuItemObj, context)
+						};
+						var props = ['label','iconClass'];
+						props.forEach(function(prop){
+							if(menuItemObj[prop]){
+								menuItemParms[prop] = menuItemObj[prop];
 							}
 						});
+						var menuItem = new dijit.MenuItem(menuItemParms);
+						menuItem._maqAction = menuItemObj;
+						menu.addChild(menuItem);
+					}
+					parms.dropDown = menu;
+					if(action.type == 'DropDownButton'){
+						dojoAction = new DropDownButton(parms);
+					}else{
+						dojoAction = new ComboButton(parms);
+					}
+					dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
+					dojoAction._maqAction = action;
+					dojoActionDeferred.resolve();
+				}else if (action.toggle || action.radioGroup) {
+					dojoAction = new ToggleButton(parms);
+					dojoAction.item = action;
+					dojoAction.set('checked', action.initialValue);
+					if (action.radioGroup) {
+						var group = radioGroups[action.radioGroup];
+						if (!group) {
+							group = radioGroups[action.radioGroup]=[];
+						}
+						group.push(dojoAction);
+						dojoAction.onChange = dojo.hitch(this, "_toggleButton", dojoAction, context, group);
+					} else {
+						dojoAction.onChange = dojo.hitch(this,"_runAction", action, context);
+					}
+					dojoAction._maqAction = action;
+					dojoActionDeferred.resolve();
+				}else if(action.type){
+					require([action.type], function(ReviewToolBarText) {
+						dojoAction = new ReviewToolBarText();
+						dojoAction._maqActiond = action;
+						dojoActionDeferred.resolve();
+					});
+				}else{
+					dojoAction = new Button(parms);
+					dojoAction.onClick = dojo.hitch(this, "_runAction", action, context);
+					dojoAction._maqAction = action;
+					dojoActionDeferred.resolve();
 				}
+				if (action.icon) {
+					var imageNode = document.createElement('img');
+					imageNode.src = action.icon;
+					imageNode.height = imageNode.width = 18;
+					dojoAction.domNode.appendChild(imageNode);
+				}
+				dojoActionDeferred.then(function(){
+					toolbar1.addChild(dojoAction);
+					//FIXME: looks like the parameter to isEnabled is "context",
+					//but maybe that should be the current editor instead. Whatever, 
+					//targetObjectId just has to be wrong.
+					if (action.isEnabled && !action.isEnabled(/*FIXME: targetObjectId*/)) { 
+						dojoAction.isEnabled = action.isEnabled;
+						dojoAction.set('disabled', true);
+					} else {
+						dojoAction.set('disabled', false);
+					}
+				});
+			}
 		}
 		return toolbar1;
 	},
 
 	showPerspective: function(perspectiveID) {
 		Workbench.activePerspective = perspectiveID;
-		Workbench._updateMainMenubar();
+		var menuTree = Workbench._createMenuTree();	// no params means include "everything else"
+		Workbench._updateMainMenubar(dojo.byId('davinci_main_menu'), menuTree);
+		var maq_banner_editor_commands = dojo.byId('maq_banner_editor_commands');
+		var o = this.getActionSets('davinci.ui.editorMenuBar');
+		var clonedActionSets = o.clonedActionSets;
+		if(clonedActionSets.length > 0){
+			var menuTree=Workbench._createMenuTree(clonedActionSets);
+			Workbench._updateMainMenubar(dojo.byId('maq_banner_editor_commands'), menuTree);
+		}
 
 		var mainBody = dojo.byId('mainBody');
 		if (!mainBody.tabs) {
@@ -457,7 +524,7 @@ var Workbench = {
 				});
 		}
 		// FIXME: THIS BYPASSES THE PLUGIN SYSTEM.
-		// Hardcoding this for now. Need to work with Phil on how to turn change
+		// Hardcoding this for now. Need to figure out how to turn change
 		// welcome page logic into something that is defined by ve_plugin.js.
 		mainBodyContainer.addChild(mainBody.editorsStackContainer);
 		if (!mainBody.editorsWelcomePage) {
@@ -465,39 +532,45 @@ var Workbench = {
 				new ContentPane({
 					id: "editorsWelcomePage",
 					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
-					/*
-					content: "<div><span id='welcome_page_new_open_container'/></div>\n"+
-						"<div id='welcome_page_content'>\n"+
-						"<h1>Welcome to Maqetta!</h1>\n"+
-						"<p>You can get started by using the menus at the top/right:</p>\n"+
-						"<ul class='welcome_page_bullets'>\n"+
-						"<li>Click on <img src='app/davinci/img/help_menu_image.png'/> for tutorials.</li>\n"+
-						"<li>Click on <img src='app/davinci/img/new_menu_image.png'/> to start authoring a new file.</li>\n"+
-						"<li>Click on <img src='app/davinci/img/open_menu_image.png'/> to open a file or theme editor.</li>\n"+
-						"</ul>\n"+
-						"</div>\n"
-					*/
 				});
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.editorsWelcomePage);
 		if (!mainBody.tabs.editors) {
 			Workbench.editorTabs = mainBody.tabs.editors =
 				new (Workbench.hideEditorTabs ? StackContainer : TabContainer)({
-					id: "editors_tabcontainer",
-					controllerWidget: "dijit.layout.TabController"
+					id: "editors_container",
+					controllerWidget: (Workbench.hideEditorTabs ? "dijit.layout.StackController" : "dijit.layout.TabController")
 				});
-			Workbench.editorTabs.setTitle = function(tab, title) { 
-				tab.attr('title', title);
-				this.tablist.pane2button[tab.id].attr('label', title);
+			Workbench.editorTabs.setTitle = function(editorContainer, title) { 
+				editorContainer.attr('title', title);
+				if(!Workbench.hideEditorTabs){
+					this.tablist.pane2button[editorContainer.id].attr('label', title);
+				}else{
+					var editorId = editorContainer.id;
+					var shadowId = editorIdToShadowId(editorId);
+					var shadowTabContainer = dijit.byId("davinci_file_tabs");
+					shadowTabContainer.tablist.pane2button[shadowId].attr('label', title);
+				}
 			};
 			
 			dojo.connect(mainBody.tabs.editors, "removeChild", this, Workbench._editorTabClosed);
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.tabs.editors);
 		mainBody.editorsStackContainer.selectChild(mainBody.editorsWelcomePage);
-		dojo.connect(dijit.byId("editors_tabcontainer"), "selectChild", function(child) {
-			if (child.editor) {
-				Workbench._switchEditor(child.editor);
+		dojo.connect(dijit.byId("editors_container"), "selectChild", function(child) {
+			if(!Workbench._processingSelectChild){
+				Workbench._processingSelectChild = true;
+				var editorId = child.id;
+				var shadowId = editorIdToShadowId(editorId);
+				var shadowTab = dijit.byId(shadowId);
+				var shadowTabContainer = dijit.byId("davinci_file_tabs");
+				if(shadowTab && shadowTabContainer){
+					shadowTabContainer.selectChild(shadowTab);
+				}
+				if (child.editor) {
+					Workbench._switchEditor(child.editor);
+				}
+				Workbench._processingSelectChild = false;
 			}
 		});
 		mainBodyContainer.startup();
@@ -505,25 +578,194 @@ var Workbench = {
 		// Put the toolbar and the main window in a border container
 		var appBorderContainer = dijit.byId('davinci_app');
 		if (!appBorderContainer) {
-			appBorderContainer = new BorderContainer({       
+			appBorderContainer = new BorderContainer({
 				design: "headline",
 				gutters: false,
 				liveSplitters: false
 			}, "davinci_app");
 			
 			var topBarPane = new ContentPane({
-					region: "top"                    
+				region: "top",
+				layoutPriority:1,
 			}, "davinci_top_bar");
 			
+			var mainStackContainer = Workbench.mainStackContainer = mainBody.editorsStackContainer =
+				new StackContainer({
+					region:'center',
+					id: "mainStackContainer",
+					controllerWidget: "dijit.layout.StackController"
+				});
+			var welcomePage = Workbench.welcomePage = 
+				new ContentPane({
+					id: "welcomePage",
+					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
+				});
+
+			var mainBorderContainer = Workbench.mainBorderContainer = new BorderContainer({
+				design: "headline",
+				gutters: false,
+				id:'mainBorderContainer',
+				liveSplitters: false
+			});
+			
+			var shadowTabContainer = Workbench.shadowTabs = new TabContainer({
+				id:'davinci_file_tabs',
+				closable: true,
+				region: "top",
+				layoutPriority:1
+			});
+			
+			Workbench.shadowTabs.setTitle = function(tab, title) { 
+				tab.attr('title', title);
+				this.tablist.pane2button[tab.id].attr('label', title);
+			};
+			dojo.connect(shadowTabContainer, "selectChild", function(child) {
+				var shadowId = child.id;
+				var editorId = shadowIdToEditorId(shadowId);
+				var editorContainer = dijit.byId(editorId);
+				var editorsContainer = dijit.byId("editors_container");
+				if (editorsContainer && editorContainer && editorContainer.editor) {
+					// This is trigger (indirectly) the selectChild callback function on 
+					// the editors_container widget, which will trigger Workbench._switchEditor
+					editorsContainer.selectChild(editorContainer);
+				}
+			});
+			dojo.connect(shadowTabContainer, "removeChild", this, Workbench._shadowTabClosed);
+			var toolbarPane = new ContentPane({
+				id:'davinci_toolbar_pane',
+				region: "top",
+				layoutPriority:1,
+				content:'<div id="davinci_toolbar_container"></div>'
+			});
+		
 			appBorderContainer.addChild(topBarPane);
-			appBorderContainer.addChild(mainBodyContainer);
+			appBorderContainer.addChild(mainStackContainer);
+			mainStackContainer.addChild(welcomePage);
+			mainStackContainer.addChild(mainBorderContainer);
+			mainStackContainer.selectChild(welcomePage);
+			mainBorderContainer.addChild(shadowTabContainer);
+			mainBorderContainer.addChild(toolbarPane);
+			mainBorderContainer.addChild(mainBodyContainer);
 			appBorderContainer.layout();	
 			appBorderContainer.startup();
 			Workbench._orginalOnResize = window.onresize;
 			window.onresize = Workbench.onResize; //alert("All done");}
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
+			
+			var shadowTabMenu = dijit.byId('davinci_file_tabs_tablist_Menu');
+			if(shadowTabMenu){
+				shadowTabMenu.addChild(new dijit.MenuItem({
+					label:veNLS.closeAllEditors,
+					onClick:function(a, b, c){
+						this.closeAllEditors();
+					}.bind(this)
+				}));
+			}
 		}
+
+		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
+		// The *plugin.js file setup generally has a single "view" attached to a single major visual
+		// element in the form of views (aka palettes) that attach themselves around the edges of
+		// the editors (which are in the middle of the screen). For the floating properties palette,
+		// things are kludged together and need to be refactored and cleaned up.
+		// The code below does a bunch of logic that is specific to a particular UI control
+		// (ie the floating widget that includes the ActionBar and the properties control)
+		// and that code needs to be moved out of Workbench.js into a separate file.
+		// Also, unlike everything else where there is a one-to-one relationship between
+		// a major visual element (e.g., a palette/view) and a JavaScript class, with the 
+		// code below, the outermost part of the floating palette is set up below and
+		// then SwitchingStyleView.js creates a big chunk (but not all) of the floating palette.
+		// We should probably create a higher-level class (FloatingPalette.js?) and have th
+		// ve.plugin.js file refer to that class instead of SwitchingStyleViews, and then
+		// FloatingPalette.js invoke SwitchingStyleViews.js.
 		
+		// START CODE THAT NEEDS TO BE PULLED OUT INTO A SEPARATE FILE
+		
+		// Hardcoded values, much exactly match runtime offsets and sizes for ActionBar
+		var ActionBarOffsetLeft = 0,
+			ActionBarOffsetTop = 0,
+			ActionBarWidth = 264,
+			ActionBarHeight = 32;
+		var actionPropertiesPaletteContainer = davinci.Workbench.actionPropertiesPaletteContainer = dojo.create('div', 
+				{ id:'actionPropertiesPaletteContainer' },
+				document.body);
+		var actionPropertiesPaletteOuter = dojo.create('div',
+				{ id:'actionPropertiesPalette', 'class':'actionPropertiesPalette',
+				style:'visibility:hidden;'}, 
+				actionPropertiesPaletteContainer);
+		var actionPropertiesDragStrip = dojo.create('div', 
+				{ id:'actionPropertiesDragStrip', 'class':'actionPropertiesDragStrip' },
+				actionPropertiesPaletteOuter);
+		var actionBarContainer = dojo.create('div', 
+				{ id:'actionBarContainer', 'class':'actionBarContainer' },
+				actionPropertiesPaletteOuter);
+		actionBarContainer.innerHTML = '<div class="ActionBar" style="left:'+ActionBarOffsetLeft+'px;top:'+ActionBarOffsetTop+'px;"></div>';
+		var propertiesPaletteContainer = dojo.create('div',
+				{ id:'propertiesContentContainer' }, 
+				actionPropertiesPaletteOuter);
+		actionPropertiesPaletteContainer.style.display = 'none';
+		davinci.Workbench._dragDivOffset = 100;
+		davinci.Workbench._dragDivSize = davinci.Workbench._dragDivOffset * 2;
+		dojo.connect(actionPropertiesDragStrip, 'onmousedown', function(event){
+			var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
+			if(!actionPropertiesPaletteNode){
+				return;
+			}
+			var box = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+			var l = event.pageX - davinci.Workbench._dragDivOffset;
+			var t = event.pageY - davinci.Workbench._dragDivOffset;
+			var w = davinci.Workbench._dragDivSize;
+			var h = w;
+			var dragDiv = davinci.Workbench._PropPaletteDragDiv = dojo.create('div', 
+					{className:'propPaletteDragDiv',
+					style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+					document.body);
+			davinci.Workbench._PropPaletteMover = new Mover(dragDiv, event, davinci.Workbench);
+			davinci.Workbench._PropPaletteMoverOrigCoords = {pageX:event.pageX, pageY:event.pageY, l:box.l, t:box.t };
+		});
+		var div = dojo.create('div',{style:'position:relative;'}, actionPropertiesPaletteOuter);
+		var resizeHandle = new ResizeHandle({targetId:'actionPropertiesPalette', actualResize:false, animateDuration:0}, div);
+		resizeHandle.domNode.style.display = 'none';	// Initially, only ActionBar shows, so hide the resize handle.
+		dojo.subscribe("/dojo/resize/stop", function(inst){
+			if(inst.targetId=='actionPropertiesPalette'){
+				var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
+				var propertiesPaletteContainerNode = davinci.Workbench.actionPropertiesPaletteContainer.querySelector('.propPaletteTabContainer');
+				if(actionPropertiesPaletteNode && propertiesPaletteContainerNode){
+					var propertiesPaletteContainer = dijit.byNode(propertiesPaletteContainerNode);
+					if(propertiesPaletteContainer){
+						// This is a hack to set height on the TabContainer properly before calling resize()
+						// on the TabContainer. Would just fall out if using a BorderContainer instead
+						// of just a bunch of DIVs and tables.
+						var appBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+						var ppcBox = GeomUtils.getBorderBoxPageCoords(propertiesPaletteContainerNode);
+						var height = appBox.h - (ppcBox.t - appBox.t);
+						// Also, a hack because this requires special knowledge about border width
+						// on propertiesPaletteContainerNode (8+8=16), plus special known 
+						// knowledge about size of resizeHandle (5)
+						height -= 13;
+						propertiesPaletteContainerNode.style.height = height + 'px';
+						propertiesPaletteContainer.resize();
+					}
+				}
+			}
+		});
+		window.addEventListener('resize', function(event){
+			// Ensure that at least part of the floating properties palette is visible
+			var actionPropertiesPaletteNode = document.getElementById('actionPropertiesPalette');
+			var appBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+			var maxLeft = document.body.offsetWidth - 24;
+			var maxTop = document.body.offsetHeight - 24;
+			if(appBox.l > maxLeft){
+				actionPropertiesPaletteNode.style.left = maxLeft + 'px';
+			}
+			if(appBox.t > maxTop){
+				actionPropertiesPaletteNode.style.top = maxTop + 'px';
+			}
+		}, false);
+		this._attachCreateActionBar(dojo.byId('actionBarContainer').children[0]);
+
+		// END CODE THAT NEEDS TO BE PULLED OUT INTO A SEPARATE FILE
+
 		/* close all of the old views */
 		for (var position in mainBody.tabs.perspective) {
 			var view = mainBody.tabs.perspective[position];
@@ -541,13 +783,33 @@ var Workbench = {
 		}
 
 		dojo.forEach(perspective.views, function(view) {
-			Workbench.showView(view.viewID, false);
+			if(view.position != 'dynamic'){
+				Workbench.showView(view.viewID, false);
+			}
 		}, this);
+
+		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
+		//See other comments in this file on the same subject.
+		this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
 
 		// kludge to workaround problem where tabs are sometimes cutoff/shifted to the left in Chrome for Mac
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
 		setTimeout(function() {
 			appBorderContainer.resize();
+			var editors_container = document.getElementById('editors_container');
+			var actionPropertiesPalette = document.getElementById('actionPropertiesPalette');
+			var ecBox = GeomUtils.getBorderBoxPageCoords(editors_container);
+			var floatingBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPalette);
+			var left;
+			if(floatingBox.w < ecBox.w){
+				left = ecBox.l + (ecBox.w - floatingBox.w) / 2;
+			}else{
+				left = ecBox.l + 20;
+			}
+			actionPropertiesPalette.style.left = left + 'px';
+			actionPropertiesPalette.style.top = (ecBox.t + 3) + 'px';
+			actionPropertiesPalette.style.visibility = 'visible';
+			dojo.publish("/davinci/workbench/ready", []);
 		}, 3000);
 	},
 
@@ -575,13 +837,10 @@ var Workbench = {
 		Workbench._addItemsToMenubar(menuTree, menuTop);
 	},
 	
-	_updateMainMenubar: function() {
-		 var menuDiv=dojo.byId('davinci_main_menu');
-		 if (!menuDiv) {
-			 return;  // no menu
+	_updateMainMenubar: function(menuDiv, menuTree) {
+		 if (!menuDiv || !menuTree) {
+			 return;
 		 }
-		var menuTree = Workbench._createMenuTree();
-
 		for (var i=0; i<menuTree.length; i++) {
 			var menuTreeItem = menuTree[i];
 			for (var j=0;j<menuTreeItem.menus.length;j++) {
@@ -590,11 +849,17 @@ var Workbench = {
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
 				var widget =  dijit.byId(menu.id + "-dropdown");
 				if(!widget) {
-					widget = new DropDownButton({
-						label: menu.label,
-						dropDown: dojoMenu,
-						id: menu.id + "-dropdown"
-					});
+					var params = { label: menu.label, dropDown: dojoMenu, id: menu.id + "-dropdown" };
+					if(menu.hasOwnProperty('showLabel')){
+						params.showLabel = menu.showLabel;
+					}
+					if(menu.hasOwnProperty('iconClass')){
+						params.iconClass = menu.iconClass;
+					}
+					if(menu.hasOwnProperty('className')){
+						params['class'] = menu.className;
+					}
+					widget = new DropDownButton(params);
 					menuDiv.appendChild(widget.domNode);
 				}
 			}
@@ -634,27 +899,34 @@ var Workbench = {
 		}
 		
 		
-		var tabContainer = dijit.byId("editors_tabcontainer");
-		if (tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor) {
-			return tabContainer.selectedChildWidget.editor;
+		var editorsContainer = dijit.byId("editors_container");
+		if (editorsContainer && editorsContainer.selectedChildWidget && editorsContainer.selectedChildWidget.editor) {
+			return editorsContainer.selectedChildWidget.editor;
 		}
 		return null;
 	},
 
 	closeActiveEditor: function() {
-		var tabContainer = dijit.byId("editors_tabcontainer");
+		var editorsContainer = dijit.byId("editors_container");
+		var shadowTabContainer = dijit.byId("davinci_file_tabs");
 
-		if (tabContainer && tabContainer.selectedChildWidget && tabContainer.selectedChildWidget.editor) {
-			tabContainer.closeChild(tabContainer.selectedChildWidget);
+		if (editorsContainer && editorsContainer.selectedChildWidget && editorsContainer.selectedChildWidget.editor) {
+			var editorId = selectedChildWidget.id;
+			var shadowId = editorIdToShadowId(editorId);
+			editorsContainer.closeChild(editorsContainer.selectedChildWidget);
+			var shadowTab = dijit.byId(shadowId);
+			if(shadowTab){
+				shadowTabContainer.closeChild(shadowTab);
+			}
 		}
 	},
 
 	closeAllEditors: function() {
-		var tabContainer = dijit.byId("editors_tabcontainer");
+		var editorsContainer = dijit.byId("editors_container");
 
-		if (tabContainer) {
-			array.forEach(tabContainer.getChildren(), function(child){
-				tabContainer.closeChild(child);
+		if (editorsContainer) {
+			editorsContainer.getChildren().forEach(function(child){
+				editorsContainer.closeChild(child);
 			});
 		}
 	},
@@ -902,6 +1174,9 @@ var Workbench = {
 							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext)) {
 								continue;
 							}
+							//FIXME: study this code for bugs.
+							//dojoMenu.actionContext: is that always the current context?
+							//There were other bugs where framework objects pointed to wrong context/doc
 							enabled = item.action.isEnabled(dojoMenu.actionContext);
 							if (item.action.getName) {
 								label = item.action.getName();
@@ -939,7 +1214,13 @@ var Workbench = {
 		Workbench._runAction(button.item,context,button.item.id);
 	},
 
+	//FIXME: "context" is really an editor, isn't it? Like davinci.ve.PageEditor?
 	_runAction: function(item, context, arg) {
+		//FIXME: Not sure this code is correct, but sometimes this routine is passed
+		//a context object that is not associated with the current document
+		if(context && davinci.Runtime.currentEditor){
+			context = davinci.Runtime.currentEditor;
+		}
 		if (item.run) {
 			item.run();
 		} else if (item.action) {
@@ -984,7 +1265,7 @@ var Workbench = {
 		if (position == 'left' && !mainBody.tabs.perspective.left) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 230px;', id:"left_mainBody", 
+					style: 'width: 300px;', id:"left_mainBody", 
 					region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
 		}
@@ -999,30 +1280,37 @@ var Workbench = {
 
 			var region = positionSplit[0],
 				parent = mainBodyContainer,
-				clazz = '',
+				clazz = 'davinciPalette ',
 				style = '';
 			if (positionSplit[1] && (region == 'left' || region == 'right')) {
 				parent = mainBody.tabs.perspective[region];
 				region = positionSplit[1];
 				if (positionSplit[1] == "top") {
 					region = "center";
-					clazz = "davinciTopPalette";
+					clazz += "davinciTopPalette";
 				} else {
-					style = 'height:25%;';
-					clazz = "davinciBottomPalette";
+					style = 'height:50%;';
+					clazz += "davinciBottomPalette";
 				}
 			} else if(region == 'bottom') {
 				style = 'height:80px;';
-				clazz = "davinciBottomPalette";
+				clazz += "davinciBottomPalette";
 			}
 			cp1 = mainBody.tabs.perspective[position] = new TabContainer({
 				region: region,
+				tabPosition:positionSplit[0]+'-h',
+				tabStrip:false,
 				'class': clazz,
 				style: style,
 				splitter: region != "center",
 				controllerWidget: "dijit.layout.TabController"
 			});
 			parent.addChild(cp1);
+			dojo.connect(cp1, 'selectChild', this, function(tab){
+				if(tab && tab.domNode){
+					this.expandPaletteContainer(tab.domNode);
+				}
+			});
 		} else {
 			cp1 = mainBody.tabs.perspective[position];
 		}
@@ -1030,29 +1318,14 @@ var Workbench = {
 		if (dojo.some(cp1.getChildren(), function(child){ return child.id == view.id; })) {
 			return;
 		}
-
-		var getTab = function(view) {
-			var d = new Deferred(),
-				tab = dijit.byId(view.id);
-
-			if (tab) {
-				d.resolve(tab);
-			} else {
-				require([view.viewClass], function(viewCtor){
-					d.resolve(new (viewCtor || ViewPart)({
-						position: positionSplit[1] || positionSplit[0],
-						title: view.title,
-						id: view.id,
-						closable: false,
-						view: view
-					}));
-				});
-			}
-			return d;
-		};
-
-		getTab(view).then(function(tab) {
+		this.instantiateView(view).then(function(tab) {
 			cp1.addChild(tab);
+			// Put a tooltip on the tab button. Note that native TabContainer
+			// doesn't offer a tooltip capability for its tabs
+			var controlButton = tab.controlButton;
+			if(controlButton && controlButton.domNode){
+				controlButton.domNode.title = view.title + ' ' +  veNLS.palette;
+			}
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}
@@ -1062,6 +1335,44 @@ var Workbench = {
 		  console.error(ex);
 	  }
 	},
+	
+	showDynamicView: function(viewId, targetNode){
+		if(!Workbench.dynamicViews){
+			Workbench.dynamicViews = {};
+		}
+		var viewWidget = Workbench.dynamicViews[viewId];
+		if(!viewWidget){
+			var view = Runtime.getExtension("davinci.view", viewId);
+			if(view){
+				this.instantiateView(view).then(function(cp) {
+					Workbench.dynamicViews[viewId] = viewWidget = cp;
+				});
+			}
+		}
+		if(viewWidget){
+			targetNode.appendChild(viewWidget.domNode);
+			viewWidget.startup();
+		}
+	},
+	
+	instantiateView: function(view) {
+		var d = new Deferred(),
+		tab = dijit.byId(view.id);
+		if (tab) {
+			d.resolve(tab);
+		} else {
+			require([view.viewClass], function(viewCtor){
+				var params = { title: view.title,
+						id: view.id, closable: false, view: view };
+				if(view.iconClass){
+					params.iconClass = view.iconClass;
+				}
+				d.resolve(new (viewCtor || ViewPart)(params));
+			});
+		}
+		return d;
+	},
+
 	
 	hideView: function(viewId){
 		for (var position in mainBody.tabs.perspective) {
@@ -1105,13 +1416,13 @@ var Workbench = {
 				fileName=fileName.getPath();
 			}
 	
-			var tab = dijit.byId(filename2id(fileName)),
-				tabContainer = dijit.byId("editors_tabcontainer");
+			var editorContainer = dijit.byId(filename2id(fileName)),
+				editorsContainer = dijit.byId("editors_container");
 	
-			if (tab) {
+			if (editorContainer) {
 				// already open
-				tabContainer.selectChild(tab);
-				var editor=tab.editor;
+				editorsContainer.selectChild(editorContainer);
+				var editor=editorContainer.editor;
 				if (keywordArgs.startOffset) {
 					editor.select(keywordArgs);
 				}
@@ -1168,25 +1479,47 @@ var Workbench = {
 		}
 
 		var editorsStackContainer = dijit.byId('editorsStackContainer'),
-			editors_tabcontainer = dijit.byId('editors_tabcontainer');
-		if (editorsStackContainer && editors_tabcontainer) {
-			editorsStackContainer.selectChild(editors_tabcontainer);
+			editors_container = dijit.byId('editors_container');
+		if (editorsStackContainer && editors_container) {
+			editorsStackContainer.selectChild(editors_container);
+			Workbench.mainStackContainer.selectChild(Workbench.mainBorderContainer);
 		}
 
 		var content = keywordArgs.content,
-			tab = dijit.byId(filename2id(fileName)),
-			tabContainer = dijit.byId("editors_tabcontainer"),
-			tabCreated = false;
-		if (!tab) {
-			tabCreated = true;
+			editorContainer = dijit.byId(filename2id(fileName)),
+			editorsContainer = dijit.byId("editors_container"),
+			shadowTabContainer = dijit.byId("davinci_file_tabs"),
+			editorCreated = false,
+			shadowTab = null;
+		if (!editorContainer) {
+			editorCreated = true;
 
-			tab = new EditorContainer({
+			var editorId = filename2id(fileName);
+			var shadowId = editorIdToShadowId(editorId);
+			editorContainer = new EditorContainer({
 				title: nodeName,
-				id: filename2id(fileName), 
+				id: editorId, 
 				'class': "EditorContainer",
-				closable: true,
 				isDirty: keywordArgs.isDirty
 			});
+			shadowTab = new ContentPane({
+				title:nodeName,
+				closable: true,
+				id:shadowId
+			});
+			shadowTab.onClose = function(tc, tab){
+				var shadowId = tab.id;
+				var editorId = shadowIdToEditorId(shadowId);
+				var editorContainer = dijit.byId(editorId);
+				var editorsContainer = dijit.byId("editors_container");
+				if(editorsContainer && editorContainer){
+					var okToClose = editorContainer.onClose.apply(editorContainer, [editorsContainer, editorContainer]);
+					if(okToClose){
+						tc.removeChild(tab);
+						tab.destroyRecursive();
+					}
+				}
+			}
 		}
 		
 		if (!editorExtension) {
@@ -1196,40 +1529,47 @@ var Workbench = {
 			};
 		}
 
-		if (tabCreated) {
-			tabContainer.addChild(tab);
+		if (editorCreated) {
+			editorsContainer.addChild(editorContainer);
+			shadowTabContainer.addChild(shadowTab);
 		}
 
 		// add loading spinner
-		var loadIcon = dojo.query('.dijitTabButtonIcon',tab.controlButton.domNode);
-		dojo.addClass(loadIcon[0],'tabButtonLoadingIcon');
-		dojo.removeClass(loadIcon[0],'dijitNoIcon');
+		if(!Workbench.hideEditorTabs){
+			var loadIcon = dojo.query('.dijitTabButtonIcon',editorContainer.controlButton.domNode);
+			dojo.addClass(loadIcon[0],'tabButtonLoadingIcon');
+			dojo.removeClass(loadIcon[0],'dijitNoIcon');
+		}
 		
 		if (!keywordArgs.noSelect) {
-			tabContainer.selectChild(tab);
+			editorsContainer.selectChild(editorContainer);
 		}
-		tab.setEditor(editorExtension, fileName, content, keywordArgs.fileName, tab.domNode, newHtmlParams).then(function(editor) {
+		editorContainer.setEditor(editorExtension, fileName, content, keywordArgs.fileName, editorContainer.domNode, newHtmlParams).then(function(editor) {
 			if (keywordArgs.startLine) {
-				tab.editor.select(keywordArgs);
+				editorContainer.editor.select(keywordArgs);
 			}
 			
 			if (!keywordArgs.noSelect) {
 	            if (Workbench._state.editors.indexOf(fileName) === -1) {
 	            	Workbench._state.editors.push(fileName);
 	            }
-				Workbench._switchEditor(tab.editor, keywordArgs.startup);
+				Workbench._switchEditor(editorContainer.editor, keywordArgs.startup);
 			}
 
-			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
-			dojo.addClass(loadIcon[0],'dijitNoIcon');
+			if(!Workbench.hideEditorTabs){
+				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
+				dojo.addClass(loadIcon[0],'dijitNoIcon');
+			}
 
 			setTimeout(function() {
-				tab.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
+				editorContainer.resize(); //kludge, forces editor to correct size, delayed to force contents to redraw
 			}, 100);
-			d.resolve(tab.editor);
+			d.resolve(editorContainer.editor);
 		}, function(error) {
-			dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
-			dojo.addClass(loadIcon[0],'tabButtonErrorIcon');
+			if(!Workbench.hideEditorTabs){
+				dojo.removeClass(loadIcon[0],'tabButtonLoadingIcon');
+				dojo.addClass(loadIcon[0],'tabButtonErrorIcon');
+			}
 
 			d.reject(error);
 		});
@@ -1240,7 +1580,23 @@ var Workbench = {
 		var partID = args.partID, domNode=args.domNode, 
 			context=args.context,
 			widgetCallback=args.openCallback;
-//			
+		
+		var o = this.getActionSets(partID);
+		var clonedActionSets = o.clonedActionSets;
+		var actionSets = o.actionSets;
+		if(clonedActionSets.length > 0){
+			var menuTree=Workbench._createMenuTree(clonedActionSets,true);
+			Workbench._initActionsKeys(actionSets, args);
+			var popup=Workbench._createMenu(menuTree,context);
+			if (popup && domNode) {
+				popup.bindDomNode(domNode);
+			}
+			popup._widgetCallback=widgetCallback;
+			return popup;
+		}
+	},
+
+	getActionSets: function(partID){
 		var actionSetIDs=[];
 		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
 			function (extension) {
@@ -1252,6 +1608,7 @@ var Workbench = {
 			   }
 			});
 		
+		var clonedActionSets = [];
 		if (actionSetIDs.length) {
 		   var actionSets=Runtime.getExtensions("davinci.actionSets",
 				function (extension) {
@@ -1260,7 +1617,6 @@ var Workbench = {
 		   if (actionSets.length) {
 			   // Determine if any widget libraries have indicated they want to augment the actions in
 			   // the action set
-			   var clonedActionSets = [];
 			   dojo.forEach(actionSets, function(actionSet) {
 				   var libraryActions = metadata.getLibraryActions(actionSet.id);
 				   if (libraryActions.length) {
@@ -1277,40 +1633,9 @@ var Workbench = {
 					   clonedActionSets.push(actionSet);
 				   }
 			   });
-			   
-			   var menuTree=Workbench._createMenuTree(clonedActionSets,true);
-			   Workbench._initActionsKeys(actionSets, args);
-			   var popup=Workbench._createMenu(menuTree,context);
-			   if (popup && domNode) {
-				   popup.bindDomNode(domNode);
-			   }
-			   popup._widgetCallback=widgetCallback;
-			   return popup;
-		   }
-		   
+			}
 		}
-	},
-
-	getActionSets: function(partID) {
-		var actionSetIDs=[], actionSets =[];
-		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
-			function (extension) {
-			   for (var i=0;i<extension.parts.length;i++) {
-				   if (extension.parts[i]==partID) {
-					   actionSetIDs.push(extension.targetID);              
-					   return true;
-				   }
-			   }
-			});
-		
-		if (actionSetIDs.length) {
-		   var actionSets=Runtime.getExtensions("davinci.actionSets",
-				function (extension) {
-			   		return actionSetIDs.some(function(setID) { return setID == extension.id; });
-				});
-		}
-
-		return actionSets;
+		return {actionSets:actionSets, clonedActionSets:clonedActionSets};
 	},
 
 	_initActionsKeys: function(actionSets, args) {
@@ -1441,41 +1766,6 @@ var Workbench = {
 		}
 	},
 
-/*FIXME: Probably can delete this code. Doesn't seem to be used. Commenting out for now.
-	toggleFullScreen: function() {
-		var mainBodyContainer = dijit.byId('mainBody');
-		if (mainBodyContainer.origLayout) {
-			mainBodyContainer.layout = mainBodyContainer.origLayout;
-			delete mainBodyContainer.origLayout;
-			//TODO: undo z-index
-		} else {
-			mainBodyContainer.origLayout = mainBodyContainer.layout;
-			mainBodyContainer.layout = function(){
-				var gutter = "0";
-					centerStyle = mainBodyContainer._center.style;
-
-				dojo.mixin(centerStyle, {
-					top: gutter,
-					left: gutter,
-					right: gutter,
-					bottom: gutter,
-					zIndex: "500"
-				});
-			};
-		}
-
-		var toggleAllButCenter = function(widget) {
-			if (widget.region != "center") {
-				dojo.toggleClass(widget.domNode, "dijitHidden");
-			}
-		};
-		dojo.forEach(mainBodyContainer.getChildren(), toggleAllButCenter);
-		dojo.forEach(mainBodyContainer._splitters, toggleAllButCenter);
-		mainBodyContainer.resize();
-		dijit.byNode(mainBodyContainer._center).resize();
-	},
-*/
-
 	_switchEditor: function(newEditor, startup) {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
@@ -1546,10 +1836,26 @@ var Workbench = {
 	},
 
 	_updateTitle: function(currentEditor) {
-		// At one time we showed the currently open file as part of title
-		// but now we are just showing "Maqetta"
+		var newTitle=Workbench._baseTitle;
+		if (currentEditor) {
+			newTitle = newTitle + " - ";
+			if (currentEditor.isDirty) {
+				newTitle=newTitle+"*";
+			}
+			newTitle=newTitle+currentEditor.fileName;
+		}
+		dojo.doc.title=newTitle;
 	},
 
+	/**
+	 * With standard TabContainer setup, this callback is invoked 
+	 * whenever an editor tab is closed via user action.
+	 * But if we are using the "shadow" approach where there is a shadow
+	 * TabContainer that shows tabs for the open files, and a StackContainer
+	 * to hold the actual editors, then this callback is invoked indirectly
+	 * via a removeChild() call in routine _shadowTabClosed() below.
+	 * @param page  The child widget that is being closed.
+	 */
 	_editorTabClosed: function(page) {
 		if (page && page.editor && page.editor.fileName) {
             var i = Workbench._state.editors.indexOf(page.editor.fileName);
@@ -1558,7 +1864,7 @@ var Workbench = {
             }
 			Workbench._updateWorkbenchState();
 		}
-		var editors=dijit.byId("editors_tabcontainer").getChildren();
+		var editors=dijit.byId("editors_container").getChildren();
 		if (!editors.length) {
 			Workbench._switchEditor(null);
 			var editorsStackContainer = dijit.byId('editorsStackContainer');
@@ -1566,6 +1872,29 @@ var Workbench = {
 			if (editorsStackContainer && editorsWelcomePage){
 				editorsStackContainer.selectChild(editorsWelcomePage);
 			}
+			var welcomePage = dijit.byId('welcomePage');
+			if (Workbench.mainStackContainer && welcomePage){
+				Workbench.mainStackContainer.selectChild(welcomePage);
+			}
+		}
+	},
+
+	/**
+	 * When using the "shadow" approach where there is a shadow
+	 * TabContainer that shows tabs for the open files, and a StackContainer
+	 * to hold the actual editors, then this callback is invoked when a user clicks
+	 * on the tab of the shadow TabContainer. This routine then calls
+	 * removeChild() on the StackContainer to remove to corresponding editor.
+	 * @param page  The child widget that is being closed.
+	 */
+	_shadowTabClosed: function(page) {
+		var shadowId = page.id;
+		var editorId = shadowIdToEditorId(shadowId);
+		var editorContainer = dijit.byId(editorId);
+		var editorsContainer = dijit.byId("editors_container");
+		if(editorsContainer && editorContainer){
+			editorsContainer.removeChild(editorContainer);
+			editorContainer.destroyRecursive();
 		}
 	},
 
@@ -1686,6 +2015,153 @@ var Workbench = {
 				});
 			}
 		});
+	},
+	
+	/**
+	 * Look for an ancestor "palette container node", identified by its
+	 * having class 'davinciPaletteContainer'
+	 * @param {Element} node  a descendant of the palette container node
+	 * @returns {Element|undefined}  the palette container node, if found
+	 */
+	findPaletteContainerNode: function(node){
+		var paletteContainerNode;
+		var pn = node.parentNode;
+		while(pn && pn.tagName != 'BODY'){
+			if(dojo.hasClass(pn, 'davinciPaletteContainer')){
+				paletteContainerNode = pn;
+				break;
+			}
+			pn = pn.parentNode;
+		}
+		return paletteContainerNode;
+	},
+	
+	/**
+	 * In response to clicking on palette's collapse button,
+	 * collapse all palettes within the given palette container node to just show tabs.
+	 * @param {Element} node  A descendant node of the palette container node.
+	 * 		In practice, the node for the collapse icon (that the user has clicked).
+	 */
+	collapsePaletteContainer: function(node){
+		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
+		if(paletteContainerNode){
+			var paletteContainerNodeWidth = dojo.style(paletteContainerNode, 'width');
+			var paletteContainerWidget = dijit.byNode(paletteContainerNode);
+			var tablistNodes = dojo.query('[role=tablist]', paletteContainerNode);
+			if(paletteContainerWidget && !paletteContainerWidget._isCollapsed && tablistNodes.length > 0){
+				var tablistNode = tablistNodes[0];
+				var tablistNodeSize = dojo.marginBox(tablistNode);
+				var parentWidget = paletteContainerWidget.getParent();
+				if(parentWidget && parentWidget.resize && tablistNodeSize && tablistNodeSize.w){
+					paletteContainerNode.style.width = tablistNodeSize.w + 'px';
+					parentWidget.resize();
+					paletteContainerWidget._isCollapsed = true;
+					paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
+				}
+			}
+		}
+	},
+	
+	/**
+	 * In response to user clicking on one of the palette tabs,
+	 * see if the parent palette container node is collapsed.
+	 * If so, expand it.
+	 * @param {Element} node  A descendant node of the palette container node.
+	 * 		In practice, the node for the collapse icon (that the user has clicked).
+	 */
+	expandPaletteContainer: function(node){
+		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
+		if(paletteContainerNode){
+			var paletteContainerWidget = dijit.byNode(paletteContainerNode);
+			if(paletteContainerWidget && paletteContainerWidget._isCollapsed && paletteContainerWidget._expandedWidth){
+				var parentWidget = paletteContainerWidget.getParent();
+				if(parentWidget && parentWidget.resize){
+					paletteContainerNode.style.width = paletteContainerWidget._expandedWidth + 'px';
+					parentWidget.resize();
+					delete paletteContainerWidget._isCollapsed;
+					delete paletteContainerWidget._expandedWidth;
+				}
+			}
+		}
+	},
+
+	/**
+	 * Gets toolbar widget for ActionBar if one exists already.
+	 * Otherwise, create the toolbar widget.
+	 * In either case, attach the toolbar to the "toolbarDiv"
+	 * @param {Element} toolbarDiv
+	 */
+	_attachCreateActionBar: function(toolbarDiv){
+		if(!davinci.Workbench.actionBarToolBar){
+			var actions=this._getActionBarActions();
+			if (actions && actions.length){
+				var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
+				var toolbar = davinci.Workbench.actionBarToolBar = davinci.Workbench._createToolBar('actionbarPath', tb, actions, this._context);
+				dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
+			}
+		}
+		toolbarDiv.innerHTML = '';
+		toolbarDiv.appendChild(davinci.Workbench.actionBarToolBar.domNode);
+	},
+	
+	_getActionBarActions: function() {
+		var editorID='davinci.ve.HTMLPageEditor';
+		var editorActions=[];
+		var extensions = davinci.Runtime.getExtensions('davinci.editorActions', function(ext){
+			if (editorID==ext.editorContribution.targetID)
+			{
+				editorActions.push(ext.editorContribution);
+				return true;
+			}
+		});
+		if (editorActions.length == 0) {
+			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
+				editorActions.push(ext.editorContribution);
+				return true;
+			});
+		}
+		var libraryActions = metadata.getLibraryActions('davinci.editorActions');
+		if (editorActions.length > 0 && libraryActions.length) {
+			// We want to augment the action list, so let's clone the
+			// action set before pushing new items onto the end of the
+			// array
+			dojo.forEach(libraryActions, function(libraryAction) {
+				if(libraryAction.action){
+					Workbench._loadActionClass(libraryAction);
+				}
+				if(libraryAction.menu){
+					for(var i=0; i<libraryAction.menu.length; i++){
+						var subAction = libraryAction.menu[0];
+						if(subAction.action){
+							Workbench._loadActionClass(subAction);
+						}
+					}
+				}
+				editorActions[0].actions.push(libraryAction);
+			});
+		}
+		return editorActions;
+	},
+	
+	// Mover interface
+	// FIXME: This code is specific to the floating palette and needs to be 
+	// pulled out and placed into a separate file. See comments above about
+	// the refactoring that needs to be done.
+	onMove: function(mover, box, event){
+		var actionPropertiesPaletteNode = dojo.byId('actionPropertiesPalette');
+		var dragDiv = davinci.Workbench._PropPaletteDragDiv;
+		if(dragDiv && actionPropertiesPaletteNode){
+			var orig = davinci.Workbench._PropPaletteMoverOrigCoords;
+			dragDiv.style.left = (event.pageX - davinci.Workbench._dragDivOffset) + 'px';
+			dragDiv.style.top = (event.pageY - davinci.Workbench._dragDivOffset) + 'px';
+			actionPropertiesPaletteNode.style.left = (orig.l + (event.pageX - orig.pageX)) + 'px';
+			actionPropertiesPaletteNode.style.top = (orig.t + (event.pageY - orig.pageY)) + 'px';
+		}
+	},
+	onMoveStop: function(mover){
+		var dragDiv = davinci.Workbench._PropPaletteDragDiv;
+		dragDiv.parentNode.removeChild(dragDiv);
+		davinci.Workbench._PropPaletteDragDiv = null;
 	},
 
 	_XX_last_member: true	// dummy with no trailing ','

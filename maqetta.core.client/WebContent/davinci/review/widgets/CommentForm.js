@@ -56,7 +56,7 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 
 		var viewActions=this._getActions();
 		var tb=dojo.create("span", {style: {display: "inline-block"}},this.toolbarNode);
-		var toolbar = davinci.Workbench._createToolBar("xx", tb, viewActions,this);
+		var toolbar = davinci.Workbench._createToolBar('toolbarPath', tb, viewActions, this);
 		dojo.style(toolbar.domNode,{"display":"inline-block"});
 	},
 

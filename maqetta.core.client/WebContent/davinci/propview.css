@@ -48,7 +48,7 @@
 	display:none;
 }
 
-.claro .propertiesSection .propSectionButton.dijitTitlePane .dijitArrowNode {
+.claro .propertiesContent .propSectionButton.dijitTitlePane .dijitArrowNode {
 	display:inline-block;
 	float:right;
 	background:none;
@@ -136,8 +136,10 @@
 
 
 
-
-.propertiesSection .dijitTitlePaneTextNode{
+.propertiesContent {
+	display:none;
+}
+.propertiesContent .dijitTitlePaneTextNode{
 	
     font: 8pt Verdana;
     letter-spacing: -0.02em;
@@ -174,7 +176,7 @@
   	width:90%;
 	position:absolute;
 }
-.propertiesSection .propInputWithIncrDecrButtons {
+.propertiesContent .propInputWithIncrDecrButtons {
 	margin-right:38px;
 	padding:1.5px 0;
 }
@@ -190,34 +192,34 @@
 	display:none;
 	
 }
-.propertiesSection .propertyButton {
+.propertiesContent .propertyButton {
 	width:16px;
 	height:16px;
 	border:1px solid #B5BCC7;	/* Same border color as Claro ComboBox */
 	margin-top:2px; /* Magically makes buttons line up vertically */
 }
-.propertiesSection .propertyButton.incrementButton {
+.propertiesContent .propertyButton.incrementButton {
 	background: url('img/sprite.png') no-repeat;
 	background-position: -1px -1515px;
 	width: 16px;
 	height: 16px;
 }
-.propertiesSection .propertyButton.decrementButton {
+.propertiesContent .propertyButton.decrementButton {
 	background: url('img/sprite.png') no-repeat;
 	background-position: -1px -583px;
 	width: 16px;
 	height: 16px;
 	margin-left:-1px;	/* So that border coincides with increment button border */
 }
-.propertiesSection .propertyButton.showCss{
+.propertiesContent .propertyButton.showCss{
 	background:none;
 	border:none;
 	margin-top:-4px;
 }
-.dj_webkit .propertiesSection .propertyButton.showCss{
+.dj_webkit .propertiesContent .propertyButton.showCss{
 	margin-top:-4px; /* Webkit layout is 2px different than Mozilla */
 }
-.propertiesSection .propertyButton.showCss.showCssVisible{
+.propertiesContent .propertyButton.showCss.showCssVisible{
 	background: url('img/sprite.png') no-repeat;
 	background-position: -83px -1192px;
 	width: 16px;
@@ -234,7 +236,7 @@ button.showCss::-moz-focus-inner {
 	font-weight:bold;
 	
 }
-.claro .propertiesSection .dijitTitlePaneTitle {
+.claro .propertiesContent .dijitTitlePaneTitle {
 	margin-bottom: 0px;
 	padding-bottom: 2px;
 	padding-top: 1px;
@@ -243,7 +245,7 @@ button.showCss::-moz-focus-inner {
 .claro .dijitTitlePaneTitleFocus {
 	padding-bottom:0;
 }
-.claro .propertiesSection .dijitTitlePaneTitleHover {
+.claro .propertiesContent .dijitTitlePaneTitleHover {
 	/*background-color:#ABD6FF;*/
 	background-color:#c0d0f0;
 }
@@ -254,20 +256,21 @@ button.showCss::-moz-focus-inner {
 	 padding-top:2px;
 	 padding-bottom:4px;
 }
-.claro propertiesSection .dijitTitlePaneTitle {
+.claro propertiesContent .dijitTitlePaneTitle {
 	background-color:#F3F3F3;
 	height:3.8em;	/* FIXME: code uses absolute layout. Shouldn't */
 }
 
 .propertiesWidgetDescription {
-	line-height:16px;
-	font-size: 10px;
+	line-height:22px;
+	font-size: 18px;
 	padding-left:5px;
-	background: #FCFCFC;
+	color:white;
 }
 
 .propertiesWidgetDescriptionFor {
 	font-style:italic;
+	display:none;
 }
 
 .propertiesTitleBar .property_table_stretchable {
@@ -394,7 +397,7 @@ button.showCss::-moz-focus-inner {
 	
 */	
 }
-.claro .propertiesSection .dijitTitlePaneContentInner {
+.claro .propertiesContent .dijitTitlePaneContentInner {
 	padding:2px;
 }
 .cssOverRidden .cascadText, .cssShorthandOverRidden .cascadText{
@@ -446,11 +449,38 @@ button.showCss::-moz-focus-inner {
 .propertiesTitleBar p {
 	
 	 font-family:Verdana; 
-	 font-size:1em;
 	 margin: auto;
 }
-.propertiesSection .show_all_rules_cell {
+.propertiesContent .show_all_rules_cell {
 	text-align:center;
 	background-color:#E6E6E7;
 }
-
+.actionPropertiesDragStrip {
+	height:12px;
+	background:black;
+}
+.actionPropertiesDragStrip:hover {
+	cursor:move;
+}
+.actionPropertiesPalette {
+	border-radius: 6px;
+	position: absolute;
+	z-index: 5;
+	border: 1px solid black;
+	background-color: white;
+}
+.actionPropertiesPalette .propertiesWidgetDescription {
+	background-image:-webkit-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:-moz-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:-ms-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:-o-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+	background-image:linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
+}
+.propertiesTitleClassName {
+	color:white;
+	font-size:12px;
+}
+.propPaletteDragDiv {
+	position:absolute;
+	z-index:1000000;
+}

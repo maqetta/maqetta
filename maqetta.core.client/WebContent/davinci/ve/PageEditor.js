@@ -3,17 +3,22 @@ define([
 	"../ui/ModelEditor",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
+	"dojo/dnd/Moveable",
 	"../commands/CommandStack",
 	"../html/ui/HTMLEditor",
 	"../model/Path",
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
-	"../Runtime"
-], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils){
+	"davinci/ve/utils/GeomUtils",
+	"dojo/i18n!davinci/ve/nls/ve"
+], function(declare, ModelEditor, BorderContainer, ContentPane, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, GeomUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
-	   
+
+	_latestSourceMode: "source",
+	_latestLayoutMode: "flow",
+
     constructor: function (element, fileName) {
 
         this._bc = new BorderContainer({}, element);
@@ -23,7 +28,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this._commandStack = new CommandStack(this);
         this.savePoint=0;
 
-        this._designCP = new ContentPane({region:'center'});
+        this._designCP = new ContentPane({'class':'designCP',region:'center'});
         this._bc.addChild(this._designCP);
 
 
@@ -59,6 +64,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
+		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -75,7 +81,77 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 //		if(this.currentEditor==this.visualEditor)
 //			this.visualEditor.onContentChange();
 	},
+	
+	_editorSelected: function(event){
+		var context = this.getContext();
+		if(this == event.oldEditor){
+			context.hideFocusAll();
+		}
+		if(this == event.editor){
+			var flowLayout = context.getFlowLayout();
+			var layout = flowLayout ? 'flow' : 'absolute';
+			this._updateLayoutDropDownButton(layout);
+			this.preserveRestoreActionPropertiesState(event)
+		}
+		if(event.editor && event.editor.declaredClass == 'davinci.ve.PageEditor'){
+			this.showActionPropertiesPalette();
+		}else{
+			this.hideActionPropertiesPalette();
+		}
+	},
+	
+	_updateLayoutDropDownButton: function(newLayout){
+		var layoutDropDownButtonNode = dojo.query('.maqLayoutDropDownButton');
+		if(layoutDropDownButtonNode){
+			var layoutDropDownButton = dijit.byNode(layoutDropDownButtonNode[0]);
+			if(layoutDropDownButton){
+				layoutDropDownButton.set('label', veNls['LayoutDropDownButton-'+newLayout]);
+			}
+		}
 
+	},
+	
+	_selectLayout: function(layout){
+		this._latestLayoutMode = layout;
+		require(["davinci/actions/SelectLayoutAction"], function(ActionClass){
+			var SelectLayoutAction = new ActionClass();
+			SelectLayoutAction._changeLayoutCommand(layout);
+		});
+		this._updateLayoutDropDownButton(layout);
+	},
+	selectLayoutFlow: function(){
+		this._selectLayout('flow');
+	},
+	selectLayoutAbsolute: function(){
+		this._selectLayout('absolute');
+	},
+
+	_switchDisplayModeSource: function (newMode) {
+		this._latestSourceMode = newMode;
+		this.switchDisplayMode(newMode);
+		var sourceComboButtonNode = dojo.query('.maqSourceComboButton');
+		if(sourceComboButtonNode){
+			var sourceComboButton = dijit.byNode(sourceComboButtonNode[0]);
+			if(sourceComboButton){
+				sourceComboButton.set('label', veNls['SourceComboButton-'+newMode]);
+			}
+		}
+	},
+	switchDisplayModeSource: function () {
+		this._switchDisplayModeSource("source");
+	},
+	switchDisplayModeSplitVertical: function () {
+		this._switchDisplayModeSource("splitVertical");
+	},
+	switchDisplayModeSplitHorizontal: function () {
+		this._switchDisplayModeSource("splitHorizontal");
+	},
+	switchDisplayModeSourceLatest: function () {
+		this.switchDisplayMode(this._latestSourceMode);
+	},
+	switchDisplayModeDesign: function () {
+		this.switchDisplayMode("design");
+	},
 	switchDisplayMode: function (newMode) {
 		if (this._displayMode!="design") {
 			this._bc.removeChild(this._srcCP);
@@ -305,6 +381,155 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	// dummy handler
 	handleKeyEvent: function(e) {
+	},
+	
+	_getActionPropertiesPaletteContainer: function(){
+		return dojo.byId('actionPropertiesPaletteContainer');
+	},
+	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
+	showActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			targetNode.style.display = 'block';
+		}
+	},
+	
+	hideActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			targetNode.style.display = 'none';
+		}
+	},
+	
+	_getPropertiesContainer: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			var node = targetNode.querySelector('.propertiesContent');
+			return node;
+		}
+	},
+	
+	_getPropPaletteTabContainer: function(tcnode){
+		return tcnode.querySelector('.propPaletteTabContainer');
+	},
+
+	_updateEditPropertiesIcon: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var iconNode = actionPropertiesPaletteContainer.querySelector('.editPropertiesIcon');
+			if(iconNode){
+				if(this._propertiesShowing){
+					dojo.addClass(iconNode, 'editPropertiesIconShowing');
+				}else{
+					dojo.removeClass(iconNode, 'editPropertiesIconShowing');
+				}
+			}
+		}
+	},
+
+	_updateResizeNode: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var resizeNode = actionPropertiesPaletteContainer.querySelector('.dojoxResizeHandle');
+			if(resizeNode){
+				if(this._propertiesShowing){
+					resizeNode.style.display = '';
+				}else{
+					resizeNode.style.display = 'none';
+				}
+			}
+		}
+	},
+	
+	showProperties: function(){
+		var container = this._getPropertiesContainer();
+		var tcnode = this._getPropPaletteTabContainer(container);
+		if(container && tcnode){
+			container.style.display = 'block';
+			this._propertiesShowing = true;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+			var tc = dijit.byNode(tcnode);
+			if(tc){
+				setTimeout(function(){
+					// Use setTimeout because sometimes initialize is async
+					tc.layout();
+					tc.startup();
+					tc.resize();
+/*FIXME: Restore moveable behavior
+					dojo.connect(targetNode, 'mousedown', this, function(event){
+						//FIXME: short-term hack to get moving working at least to some level
+						if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
+							var actionPropertiesPalette = targetNode.querySelector('.actionPropertiesPalette');
+							if(actionPropertiesPalette){
+								//FIXME: Highly fragile! Just a proof of concept at this point.
+								//FIXME: Isn't moveable until the second click
+								var moveable = new Moveable(actionPropertiesPalette);
+								moveable.onMoveStop = function(){
+									moveable.destroy();
+								}
+							}
+						}
+					});
+*/
+				}, 50)
+			}
+		}
+	},
+	
+	hideProperties: function(){
+		var tcnode = this._getPropertiesContainer();
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(tcnode){
+			tcnode.style.display = 'none';
+			this._propertiesShowing = false;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+		}
+		if(actionPropertiesPaletteNode){
+			// Dragging resize handle causes explicit height to be attached
+			// to the actionPropertiesPaletteNode. Need to revert to auto-sizing.
+			actionPropertiesPaletteNode.style.height = '';
+		}
+	},
+	
+	hideShowProperties: function(){
+		if(this._propertiesShowing){
+			this.hideProperties();
+		}else{
+			this.showProperties();
+		}
+	},
+	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
+	preserveRestoreActionPropertiesState: function(event){
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(actionPropertiesPaletteNode && this == event.editor){
+			if(event.oldEditor){
+				event.oldEditor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+				event.oldEditor._ActionPropertiesState._propertiesShowing = event.oldEditor._propertiesShowing;
+			}
+			if(this._ActionPropertiesState){
+				actionPropertiesPaletteNode.style.left = this._ActionPropertiesState.l + 'px';
+				actionPropertiesPaletteNode.style.top = this._ActionPropertiesState.t + 'px';
+				actionPropertiesPaletteNode.style.width = this._ActionPropertiesState.w + 'px';
+				actionPropertiesPaletteNode.style.height = this._ActionPropertiesState.h + 'px';
+				this._propertiesShowing = this._ActionPropertiesState._propertiesShowing;
+				this._updateEditPropertiesIcon();
+				this._updateResizeNode();
+				var tcnode = this._getPropertiesContainer();
+				if(tcnode){
+					tcnode.style.display = this._propertiesShowing ? 'block' : 'none';
+				}
+			}
+		}
 	}
 });
 }); 

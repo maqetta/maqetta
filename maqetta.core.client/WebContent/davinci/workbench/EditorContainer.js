@@ -423,7 +423,157 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			davinci.Workbench._editorToolbarCreated[editorClass] = toolbar;
 		}
 		return davinci.Workbench._editorToolbarCreated[editorClass];
+	},
+	
+	_getActionPropertiesPaletteContainer: function(){
+		return dojo.byId('actionPropertiesPaletteContainer');
+	},
+	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
+	showActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			targetNode.style.display = 'block';
+		}
+	},
+	
+	hideActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			targetNode.style.display = 'none';
+		}
+	},
+	
+	_getPropertiesContainer: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			var node = targetNode.querySelector('.propertiesContent');
+			return node;
+		}
+	},
+	
+	_getPropPaletteTabContainer: function(tcnode){
+		return tcnode.querySelector('.propPaletteTabContainer');
+	},
+
+	_updateEditPropertiesIcon: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var iconNode = actionPropertiesPaletteContainer.querySelector('.editPropertiesIcon');
+			if(iconNode){
+				if(this._propertiesShowing){
+					dojo.addClass(iconNode, 'editPropertiesIconShowing');
+				}else{
+					dojo.removeClass(iconNode, 'editPropertiesIconShowing');
+				}
+			}
+		}
+	},
+
+	_updateResizeNode: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var resizeNode = actionPropertiesPaletteContainer.querySelector('.dojoxResizeHandle');
+			if(resizeNode){
+				if(this._propertiesShowing){
+					resizeNode.style.display = '';
+				}else{
+					resizeNode.style.display = 'none';
+				}
+			}
+		}
+	},
+	
+	showProperties: function(){
+		var container = this._getPropertiesContainer();
+		var tcnode = this._getPropPaletteTabContainer(container);
+		if(container && tcnode){
+			container.style.display = 'block';
+			this._propertiesShowing = true;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+			var tc = dijit.byNode(tcnode);
+			if(tc){
+				setTimeout(function(){
+					// Use setTimeout because sometimes initialize is async
+					tc.layout();
+					tc.startup();
+					tc.resize();
+/*FIXME: Restore moveable behavior
+					dojo.connect(targetNode, 'mousedown', this, function(event){
+						//FIXME: short-term hack to get moving working at least to some level
+						if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
+							var actionPropertiesPalette = targetNode.querySelector('.actionPropertiesPalette');
+							if(actionPropertiesPalette){
+								//FIXME: Highly fragile! Just a proof of concept at this point.
+								//FIXME: Isn't moveable until the second click
+								var moveable = new Moveable(actionPropertiesPalette);
+								moveable.onMoveStop = function(){
+									moveable.destroy();
+								}
+							}
+						}
+					});
+*/
+				}, 50)
+			}
+		}
+	},
+	
+	hideProperties: function(){
+		var tcnode = this._getPropertiesContainer();
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(tcnode){
+			tcnode.style.display = 'none';
+			this._propertiesShowing = false;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+		}
+		if(actionPropertiesPaletteNode){
+			// Dragging resize handle causes explicit height to be attached
+			// to the actionPropertiesPaletteNode. Need to revert to auto-sizing.
+			actionPropertiesPaletteNode.style.height = '';
+		}
+	},
+	
+	hideShowProperties: function(){
+		if(this._propertiesShowing){
+			this.hideProperties();
+		}else{
+			this.showProperties();
+		}
+	},
+	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
+	preserveRestoreActionPropertiesState: function(event){
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(actionPropertiesPaletteNode && this == event.editor){
+			if(event.oldEditor){
+				event.oldEditor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+				event.oldEditor._ActionPropertiesState._propertiesShowing = event.oldEditor._propertiesShowing;
+			}
+			if(this._ActionPropertiesState){
+				actionPropertiesPaletteNode.style.left = this._ActionPropertiesState.l + 'px';
+				actionPropertiesPaletteNode.style.top = this._ActionPropertiesState.t + 'px';
+				actionPropertiesPaletteNode.style.width = this._ActionPropertiesState.w + 'px';
+				actionPropertiesPaletteNode.style.height = this._ActionPropertiesState.h + 'px';
+				this._propertiesShowing = this._ActionPropertiesState._propertiesShowing;
+				this._updateEditPropertiesIcon();
+				this._updateResizeNode();
+				var tcnode = this._getPropertiesContainer();
+				if(tcnode){
+					tcnode.style.display = this._propertiesShowing ? 'block' : 'none';
+				}
+			}
+		}
 	}
+
 
 });
 });

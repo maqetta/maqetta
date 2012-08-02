@@ -49,6 +49,22 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		this.domNode = this._cp.domNode;
 		this.domNode.className = "ThemeEditor fullPane";
 		this._loadedCSSConnects = [];
+		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+	},
+	
+	_editorSelected: function(event){
+		if(this == event.editor){
+			if(this.editorContainer && this.editorContainer.preserveRestoreActionPropertiesState){
+				this.editorContainer.preserveRestoreActionPropertiesState(event)
+			}
+		}
+		if(event.editor && event.editor.editorContainer && 
+				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
+				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
+			event.editor.editorContainer.showActionPropertiesPalette();
+		}else{
+			event.editor.editorContainer.hideActionPropertiesPalette();
+		}
 	},
 	
 	onResize: function(){

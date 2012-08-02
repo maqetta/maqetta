@@ -1154,7 +1154,7 @@ var Workbench = {
 					menuAdded=true;
 					var item = menus[i].menus[menuN];
 					var label = item.label;
-					if (item.action.getName) {
+					if (item.action && item.action.getName) {
 						label = item.action.getName();
 					}
 					if (item.separator) {

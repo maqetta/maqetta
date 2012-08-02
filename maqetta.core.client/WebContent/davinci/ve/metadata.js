@@ -509,8 +509,18 @@ define([
 								dojo.forEach(clonedActions, function(action) {
 									// May need to transform the action class string to 
 									// account for the library's name space
-									var newActionModuleId = getModuleId(lib, action.action);
-									action.action = newActionModuleId;
+									if(action.action){
+										var newActionModuleId = getModuleId(lib, action.action);
+										action.action = newActionModuleId;
+									}
+									if(action.menu){
+										action.menu.forEach(function(item){
+											if(item.action){
+												var newActionModuleId = getModuleId(lib, item.action);
+												item.action = newActionModuleId;
+											}
+										});
+									}
 									actions.push(action);
 								});
  							}

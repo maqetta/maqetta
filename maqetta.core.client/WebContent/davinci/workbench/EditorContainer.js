@@ -2,9 +2,11 @@ define(["require",
 	"dojo/_base/declare",
 	"davinci/workbench/_ToolbaredContainer",
 	"davinci/Runtime",
+	"davinci/Workbench",
+	"davinci/ve/utils/GeomUtils",
 	"dojo/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, Workbench, GeomUtils, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
@@ -53,6 +55,33 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
       	*/
 	},
 	
+	postCreate: function(){
+		this.subscribe("/davinci/ui/editorSelected", function(){
+			var toolbarDiv = this.getToolbarDiv();
+			toolbarDiv.innerHTML = '';
+			var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
+			if(toolbar){
+				toolbarDiv.appendChild(toolbar.domNode);
+			}
+			this.updateToolbars();
+		}.bind(this));
+		this.subscribe("/davinci/ui/widgetSelected", function(widgets){
+			this.updateToolbars();
+		}.bind(this));
+		this.subscribe("/davinci/workbench/ready", function(widgets){
+			this.updateToolbars();
+		}.bind(this));
+	},
+	
+	layout: function() {
+		// Don't show the title bar or tool bar strips above the editors's main content area
+		// Note that the toolbar shared by all of the editors gets automagically injected
+		// into the Workbench's DIV with id="davinci_toolbar_container".
+		this.titleBarDiv.style.display = 'none';
+		this.toolbarDiv.style.display = 'none';
+		this.inherited(arguments);
+	},
+	
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
 		var d = new Deferred();
 		this.editorExtension = editorExtension;
@@ -69,7 +98,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					}
 					editor.editorID=editorExtension.id;
 					editor.isDirty= !editor.isReadOnly && this.isDirty;
-					this._createToolbar();
+					this._createToolbar(editorExtension.editorClass);
 					if (!content) {
 						content=editor.getDefaultContent();
 						editor.isDirty=!editor.isReadOnly;
@@ -84,8 +113,8 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					// Don't populate the editor until the tab is selected.  Defer processing,
 					// but also avoid problems with display:none on hidden tabs making it impossible
 					// to do geometry measurements in editor initialization
-					var tabContainer = "editors_tabcontainer";
-					if(dijit.byId(tabContainer).selectedChildWidget.domNode == this.domNode){
+					var editorsContainer = "editors_container";
+					if(dijit.byId(editorsContainer).selectedChildWidget.domNode == this.domNode){
 						// Tab is visible.  Go ahead
 						editor.setContent(fileName, content, newHtmlParams);
 
@@ -94,7 +123,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 						dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 					}else{
 						// When tab is selected, set up the editor
-						var handle = dojo.subscribe(tabContainer + "-selectChild", null, function(args){
+						var handle = dojo.subscribe(editorsContainer + "-selectChild", null, function(args){
 							if(editor==args.editor){
 								dojo.unsubscribe(handle);
 								editor.setContent(fileName,content);
@@ -129,11 +158,15 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	setDirty: function (isDirty) {
-		var title = this._getTitle();
-		if (isDirty){
-			title="*"+title;
-		}
-		davinci.Workbench.editorTabs.setTitle(this,title);
+		//FIXME: davinci.Workbench.hideEditorTabs is always true now
+		//Need to clean up this logic (make less hacky)
+		//if(!davinci.Workbench.hideEditorTabs){
+			var title = this._getTitle();
+			if (isDirty){
+				title="*"+title;
+			}
+			davinci.Workbench.editorTabs.setTitle(this,title);
+		//}
 		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
 	},
@@ -152,7 +185,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	_close: function(editor, dirtycheck){
-		dojo.publish("/davinci/ui/EditorClosing", [editor]);
+		dojo.publish("/davinci/ui/EditorClosing", [{editor:editor}]);
 		var okToClose = true;
 		if (dirtycheck && editor && editor.isDirty){
 			//Give editor a chance to give us a more specific message
@@ -225,15 +258,24 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 
 	_setupKeyboardHandler: function() {
+		var that = this;
+		function pushBinding(o){
+			if (!that.keyBindings) {
+				that.keyBindings = [];
+			}
+			that.keyBindings.push(o);
+		}
 		dojo.forEach(this._getViewActions(), dojo.hitch(this, function(actionSet) {
 			dojo.forEach(actionSet.actions,  dojo.hitch(this, function(action) {
-					
 				if (action.keyBinding) {
-					if (!this.keyBindings) {
-						this.keyBindings = [];
-					}
-
-					this.keyBindings.push({keyBinding: action.keyBinding, action: action});
+					pushBinding({keyBinding: action.keyBinding, action: action});
+				}
+				if(action.menu){
+					dojo.forEach(action.menu, dojo.hitch(this, function(menuItemObj) {
+						if(menuItemObj.keyBinding){
+							pushBinding({keyBinding: menuItemObj.keyBinding, action: menuItemObj});
+						}
+					}));
 				}
 			}));
 		}));
@@ -283,6 +325,275 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
         	this.editor.destroy();
         }
         delete this.editor;
+	},
+	
+	_updateToolbar: function(toolbar){
+		// Call a function on an action class
+		// Only used for 'shouldShow' and 'isEnabled'
+		function runFunc(action, funcName){
+			var retval = true;
+			if(action && action.action &&  action.action[funcName]){
+				retval = action.action[funcName]();
+			} else if(action && action[funcName]){
+				retval = action[funcName]();
+			}
+			return retval;
+		}
+		function hideShowWidget(widget, action){
+			var shouldShow = runFunc(action, 'shouldShow');
+			if(shouldShow){
+				dojo.removeClass(widget.domNode, 'maqHidden');
+			}else{
+				dojo.addClass(widget.domNode, 'maqHidden');
+			}
+			
+		}
+		function enableDisableWidget(widget, action){
+			var enabled = runFunc(action, 'isEnabled');
+			widget.set('disabled', !enabled);
+		}
+		
+		if(toolbar && this.editor){
+			var context = this.editor.getContext ? this.editor.getContext() : null;
+			if(context){
+				var children = toolbar.getChildren();
+				for(var i=0; i<children.length; i++){
+					var child = children[i];
+					hideShowWidget(child, child._maqAction);
+					enableDisableWidget(child, child._maqAction);
+					var menu = child.dropDown;
+					if(menu){
+						var menuItems = menu.getChildren();
+						for(var j=0; j<menuItems.length; j++){
+							var menuItem = menuItems[j];
+							hideShowWidget(menuItem, menuItem._maqAction);
+							enableDisableWidget(menuItem, menuItem._maqAction);
+						}
+					}
+				}
+			}
+		}
+		
+	},
+	
+	/**
+	 * Enable/disable various items on the editor toolbar and action bar
+	 */
+	updateToolbars: function(){
+		if(this.editor == Runtime.currentEditor){
+			var editorToolbarNode = dojo.query('#davinci_toolbar_container .dijitToolbar')[0];
+			var editorToolbar = editorToolbarNode ? dijit.byNode(editorToolbarNode) : null;
+			var actionBarNode = dojo.query('#actionBarContainer .dijitToolbar')[0];
+			var actionBar = actionBarNode ? dijit.byNode(actionBarNode) : null;
+			this._updateToolbar(editorToolbar);
+			this._updateToolbar(actionBar);
+		}
+	},
+	
+	/**
+	 * Override the _createToolbar function in _ToolbaredContainer.js to redirect
+	 * the toolbar creation logic to target the DIV with id="davinci_toolbar_container"
+	 */
+	_createToolbar: function(editorClass){
+		if(this.toolbarCreated(editorClass)){
+			return;
+		}
+		this.inherited(arguments);
+	},
+	
+	/**
+	 * Returns an {Element} that is the container DIV into which editor toolbar should go
+	 * This function can be overridden by subclasses (e.g., EditorContainer.js)
+	 */
+	getToolbarDiv: function(){
+		return dojo.byId("davinci_toolbar_container");
+	},
+	
+	/**
+	 * Getter/setting for whether toolbar has been created.
+	 * Note that this function overrides the function from _ToolbaredContainer.js
+	 * @param {string} editorClass  Class name for editor, such as 'davinci.ve.PageEditor'
+	 * @param {boolean} [toolbar]  If provided, toolbar widget
+	 * @returns {boolean}  Whether toolbar has been created
+	 */
+	toolbarCreated: function(editorClass, toolbar){
+		if(!davinci.Workbench._editorToolbarCreated){
+			davinci.Workbench._editorToolbarCreated = {};
+		}
+		if(arguments.length > 1){
+			davinci.Workbench._editorToolbarCreated[editorClass] = toolbar;
+		}
+		return davinci.Workbench._editorToolbarCreated[editorClass];
+	},
+	
+	_getActionPropertiesPaletteContainer: function(){
+		return dojo.byId('actionPropertiesPaletteContainer');
+	},
+	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
+	showActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(targetNode && actionPropertiesPaletteNode){
+			targetNode.style.display = 'block';
+			actionPropertiesPaletteNode.style.visibility = 'visible';
+		}
+	},
+	
+	hideActionPropertiesPalette: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			targetNode.style.display = 'none';
+		}
+	},
+	
+	_getPropertiesContainer: function(){
+		var targetNode = this._getActionPropertiesPaletteContainer();
+		if(targetNode){
+			var node = targetNode.querySelector('.propertiesContent');
+			return node;
+		}
+	},
+	
+	_getPropPaletteTabContainer: function(tcnode){
+		return tcnode.querySelector('.propPaletteTabContainer');
+	},
+
+	_updateEditPropertiesIcon: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var iconNode = actionPropertiesPaletteContainer.querySelector('.editPropertiesIcon');
+			if(iconNode){
+				if(this._propertiesShowing){
+					dojo.addClass(iconNode, 'editPropertiesIconShowing');
+				}else{
+					dojo.removeClass(iconNode, 'editPropertiesIconShowing');
+				}
+			}
+		}
+	},
+
+	_updateResizeNode: function(){
+		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
+		if(actionPropertiesPaletteContainer){
+			var resizeNode = actionPropertiesPaletteContainer.querySelector('.dojoxResizeHandle');
+			if(resizeNode){
+				if(this._propertiesShowing){
+					resizeNode.style.display = '';
+				}else{
+					resizeNode.style.display = 'none';
+				}
+			}
+		}
+	},
+	
+	showProperties: function(){
+		var container = this._getPropertiesContainer();
+		var tcnode = this._getPropPaletteTabContainer(container);
+		if(container && tcnode){
+			container.style.display = 'block';
+			this._propertiesShowing = true;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+			var tc = dijit.byNode(tcnode);
+			if(tc){
+				setTimeout(function(){
+					// Use setTimeout because sometimes initialize is async
+					tc.layout();
+					tc.startup();
+					tc.resize();
+/*FIXME: Restore moveable behavior
+					dojo.connect(targetNode, 'mousedown', this, function(event){
+						//FIXME: short-term hack to get moving working at least to some level
+						if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
+							var actionPropertiesPalette = targetNode.querySelector('.actionPropertiesPalette');
+							if(actionPropertiesPalette){
+								//FIXME: Highly fragile! Just a proof of concept at this point.
+								//FIXME: Isn't moveable until the second click
+								var moveable = new Moveable(actionPropertiesPalette);
+								moveable.onMoveStop = function(){
+									moveable.destroy();
+								}
+							}
+						}
+					});
+*/
+				}, 50)
+			}
+			dojo.publish('/maqetta/ui/actionPropertiesPalette/showProps', []);
+		}
+	},
+	
+	hideProperties: function(){
+		var tcnode = this._getPropertiesContainer();
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(tcnode){
+			tcnode.style.display = 'none';
+			this._propertiesShowing = false;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+		}
+		if(actionPropertiesPaletteNode){
+			// Dragging resize handle causes explicit height to be attached
+			// to the actionPropertiesPaletteNode. Need to revert to auto-sizing.
+			actionPropertiesPaletteNode.style.height = '';
+		}
+		dojo.publish('/maqetta/ui/actionPropertiesPalette/hideProps', []);
+	},
+	
+	hideShowProperties: function(){
+		if(this._propertiesShowing){
+			this.hideProperties();
+		}else{
+			this.showProperties();
+		}
+	},
+	
+	_getActionPropertiesPaletteNode: function(){
+		return dojo.byId('actionPropertiesPalette');
+	},
+	
+	preserveActionPropertiesState: function(editor){
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(actionPropertiesPaletteNode){
+			editor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+			editor._ActionPropertiesState._propertiesShowing = editor._propertiesShowing;
+		}
+	},
+	
+	restoreActionPropertiesState: function(editor){
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(actionPropertiesPaletteNode){
+			if(editor._ActionPropertiesState){
+				actionPropertiesPaletteNode.style.left = editor._ActionPropertiesState.l + 'px';
+				actionPropertiesPaletteNode.style.top = editor._ActionPropertiesState.t + 'px';
+				actionPropertiesPaletteNode.style.width = editor._ActionPropertiesState.w + 'px';
+				actionPropertiesPaletteNode.style.height = editor._ActionPropertiesState.h + 'px';
+				editor._propertiesShowing = editor._ActionPropertiesState._propertiesShowing;
+				this._updateEditPropertiesIcon();
+				this._updateResizeNode();
+				var tcnode = this._getPropertiesContainer();
+				if(tcnode){
+					tcnode.style.display = editor._propertiesShowing ? 'block' : 'none';
+				}
+			}else{
+				var editors_container = document.getElementById('editors_container');
+				var ecBox = GeomUtils.getBorderBoxPageCoords(editors_container);
+				var floatingBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+				var left;
+				if(floatingBox.w < ecBox.w){
+					left = ecBox.l + (ecBox.w - floatingBox.w) / 2;
+				}else{
+					left = ecBox.l + 20;
+				}
+				actionPropertiesPaletteNode.style.left = left + 'px';
+				actionPropertiesPaletteNode.style.top = (ecBox.t + 3) + 'px';
+			}
+		}
 	}
+
 });
 });

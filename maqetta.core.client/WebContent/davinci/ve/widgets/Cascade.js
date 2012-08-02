@@ -146,7 +146,9 @@ define(["dojo/_base/declare",
 				return;
 			}
 			if(this._getFieldValue()=="(overrides)"){
-				this._setFieldValue("(overrides)", null);
+				if(this._setFieldValue){
+					this._setFieldValue("(overrides)", null);					
+				}
 				return;
 			}
 	
@@ -577,7 +579,9 @@ define(["dojo/_base/declare",
 		
 		_updateCascadeList : function(){
 			if(!this._widget || !this._widget.domNode){
-				this._setFieldValue("",null);
+				if(this._setFieldValue){
+					this._setFieldValue("",null);
+				}
 				dojo.addClass(this.container,"dijitHidden");
 				return;
 			}
@@ -1142,7 +1146,9 @@ define(["dojo/_base/declare",
 			}else{
 				this.context = null;
 				this._widget = null;
-				this._setFieldValue("",null);
+				if(this._setFieldValue){
+					this._setFieldValue("",null);
+				}
 			}
 			this._updateCascadeList();
 		},

@@ -49,6 +49,35 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		this.domNode = this._cp.domNode;
 		this.domNode.className = "ThemeEditor fullPane";
 		this._loadedCSSConnects = [];
+		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/moved", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/resized", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/showProps", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/hideProps", this._actionPropertiesPaletteChanged.bind(this));
+	},
+	
+	_editorSelected: function(event){
+		if(this == event.editor){
+			if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
+				this.editorContainer.restoreActionPropertiesState(this)
+			}
+		}
+		if(event.editor && event.editor.editorContainer && 
+				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
+				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
+			event.editor.editorContainer.showActionPropertiesPalette();
+		}else{
+			var editor = event.editor ? event.editor : event.oldEditor;
+			if(editor){
+				editor.editorContainer.hideActionPropertiesPalette();
+			}
+		}
+	},
+
+	_actionPropertiesPaletteChanged: function(){
+		if(this == davinci.Runtime.currentEditor && this.editorContainer){
+			this.editorContainer.preserveActionPropertiesState(this);
+		}
 	},
 	
 	onResize: function(){

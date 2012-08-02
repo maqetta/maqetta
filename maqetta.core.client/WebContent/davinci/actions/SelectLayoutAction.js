@@ -49,7 +49,7 @@ return declare("davinci.actions.SelectLayoutAction", Action, {
 		var e = Workbench.getOpenEditor();
 		if (e && e.getContext){
 			var flowLayout = true;
-			if (newLayout === 'Absolute positioning'){
+			if (newLayout === 'absolute' || newLayout === 'Absolute positioning'){
 				flowLayout = false;
 			} 
 			var c = e.getContext();

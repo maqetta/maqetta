@@ -3,11 +3,12 @@ define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
+	"dojo/dnd/Moveable",
 	"./metadata",
 	"davinci/ve/States",
 	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Metadata, States, GeomUtils) {
+function(require, declare, _WidgetBase, Mover, Moveable, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -78,7 +79,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		return this._moverCurrent;
 	},
 
-	show: function(widget, inline){
+	show: function(widget, params){
+		var inline = params && params.inline;
 		if (!widget){
 			// sometimes you get no widget when  DnD in split screen
 			return; 
@@ -169,8 +171,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._nobs[LEFT_BOTTOM].style.display = corner;
 		this._nobs[RIGHT_TOP].style.display = corner;
 		this._nobs[RIGHT_BOTTOM].style.display = corner;
-		this._frames[LEFT].style.cursor = this._frames[RIGHT].style.cursor = op.resizeWidth ? '' : 'default';
-		this._frames[TOP].style.cursor = this._frames[BOTTOM].style.cursor = op.resizeHeight ? '' : 'default';
 	},
 
 	/**
@@ -188,7 +188,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var normalNobTop = -11;
 		var frameSizeWidthAdjust = 4;
 		var frameSizeBorderAdjust = 4;
-		
+
+var context = this._context;
+var parentbounds = context.getParentIframeBounds();
+rect.l += parentbounds.l;
+rect.t += parentbounds.t;
+offScreenAdjust = false;
+
 		this.domNode.style.left = rect.l + 'px';
 		this.domNode.style.top = rect.t + 'px';
 		
@@ -307,7 +313,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 		this._nobIndex = dojo.indexOf(this._nobs, event.target);
 		this._frameIndex = dojo.indexOf(this._frames, event.target);
-
 		var moverDragDivSize = 100;
 		var moverDragDivHalf = 50;
 		var l = event.pageX - moverDragDivHalf;
@@ -320,19 +325,27 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var node = this._selectedWidget.domNode;
 			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
 		}
+		/*FIXME: DELETE THIS
 		this._moverStart = { moverLeft:l, moverTop:t,
 				l:marginBoxPageCoords.l, t:marginBoxPageCoords.t,
 				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
+		*/
+		var parentIframeOffset = this._context.getParentIframeBounds();
+		this._moverStart = { moverLeft:l, moverTop:t,
+				l:marginBoxPageCoords.l+parentIframeOffset.l, t:marginBoxPageCoords.t+parentIframeOffset.t,
+				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
 
+		var bodyNode = document.body;
 		this._moverCurrent = dojo.mixin({}, this._moverStart);
 		this._moverDragDiv = dojo.create('div', 
 				{className:'focusDragDiv',
 				style:'left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
-				this._context.rootNode);
+				bodyNode);
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
 
-		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+		//FIXME: DELETE THIS this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX+parentIframeOffset.l, pageY:event.pageY+parentIframeOffset.t, dateValue:(new Date()).valueOf() };
 		this._moverMouseUpEvent = null;
 		this._moverMouseUpHandler = dojo.connect(this._moverDragDiv, "onmouseup", dojo.hitch(this, function(e){
 			this.onMouseUp(e);
@@ -431,10 +444,20 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			this._moverCurrentConstrained.l -= (this._moverCurrentConstrained.w - this._moverCurrent.w)/2;
 		}
 
+		var rect = dojo.mixin({}, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
+		var parentIframeOffset = this._context.getParentIframeBounds();
+		rect.l -= parentIframeOffset.l;
+		rect.t -= parentIframeOffset.t;
+		this._updateFocusChrome(
+				rect, 
+				false //offScreenAdjust
+		);
+/*FIXME: DELETE THIS
 		this._updateFocusChrome(
 				this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
-				false /*offScreenAdjust*/
+				false //offScreenAdjust
 		);
+*/
 
 	},
 	
@@ -498,7 +521,13 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 					delete newBox.l;
 					delete newBox.t;
 				}
-				this.onExtentChange(this, this._moverStart, newBox, applyToWhichStates);
+				var rect = dojo.mixin({}, newBox);
+				if(rect.hasOwnProperty('l')){
+					var parentIframeOffset = this._context.getParentIframeBounds();
+					rect.l -= parentIframeOffset.l;
+					rect.t -= parentIframeOffset.t;
+				}
+				this.onExtentChange(this, this._moverStart, rect, applyToWhichStates);
 			} 
 		}
 		this._moverDoneCleanup();
@@ -812,6 +841,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     		}
     	}
     }
+	
 });
 
 });

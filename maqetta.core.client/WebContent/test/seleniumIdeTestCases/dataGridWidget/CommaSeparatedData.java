@@ -44,7 +44,7 @@ public class CommaSeparatedData {
 		// wait for editor to load
 		for (int second = 0;; second++) {
 			if (second >= 10) fail("timeout");
-			try { if (isElementPresent(By.xpath("//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdTestCase.html']"))) break; } catch (Exception e) {}
+			try { if (isElementPresent(By.xpath("//div[@id='editors_container_tablist_editor-._project1_dataGridCsdTestCase.html']"))) break; } catch (Exception e) {}
 			Thread.sleep(1000);
 		}
 		// wait for the widget palette
@@ -78,11 +78,11 @@ public class CommaSeparatedData {
 		driver.switchTo().defaultContent();
 		//  Save file and reopen 
 		driver.findElement(By.xpath("//span[@class='dijitReset dijitInline dijitIcon saveIcon']")).click();
-		driver.findElement(By.xpath("//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdTestCase.html']/span[2]")).click();
+		driver.findElement(By.xpath("//div[@id='editors_container_tablist_editor-._project1_dataGridCsdTestCase.html']/span[2]")).click();
 		doubleClick(driver.findElement(By.xpath("//span[@class='dijitTreeContent']/span[. ='dataGridCsdTestCase.html']/../..")));
 		
 		try {
-			assertTrue(isElementPresent(By.xpath("//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdTestCase.html']/span[2]")));
+			assertTrue(isElementPresent(By.xpath("//div[@id='editors_container_tablist_editor-._project1_dataGridCsdTestCase.html']/span[2]")));
 		} catch (Error e) {
 			verificationErrors.append(e.toString());
 		}
@@ -123,7 +123,7 @@ public class CommaSeparatedData {
 		}
 		driver.close();  // the popup
 		driver.switchTo().window(parentWindowHandle); // switch back to the main
-		driver.findElement(By.xpath("//div[@id='editors_tabcontainer_tablist_editor-._project1_dataGridCsdTestCase.html']/span[2]")).click();
+		driver.findElement(By.xpath("//div[@id='editors_container_tablist_editor-._project1_dataGridCsdTestCase.html']/span[2]")).click();
 	}
 
 	@After

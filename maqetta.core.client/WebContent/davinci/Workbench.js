@@ -1153,10 +1153,14 @@ var Workbench = {
 					}
 					menuAdded=true;
 					var item = menus[i].menus[menuN];
+					var label = item.label;
+					if (item.action.getName) {
+						label = item.action.getName();
+					}
 					if (item.separator) {
 						var subMenu = Workbench._createMenu(item);
 						var popupParent = new MenuItem({
-							label: item.label,
+							label: label,
 							popup: subMenu,
 							id: subMenu.id + "item"
 						});
@@ -1169,7 +1173,6 @@ var Workbench = {
 							enabled = resource ? item.isEnabled(resource) : false;
 						}
 
-						var label = item.label;
 						if (item.action) {
 							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext)) {
 								continue;
@@ -1178,9 +1181,6 @@ var Workbench = {
 							//dojoMenu.actionContext: is that always the current context?
 							//There were other bugs where framework objects pointed to wrong context/doc
 							enabled = item.action.isEnabled(dojoMenu.actionContext);
-							if (item.action.getName) {
-								label = item.action.getName();
-							}
 						}
 						var menuArgs = {
 								label: label,

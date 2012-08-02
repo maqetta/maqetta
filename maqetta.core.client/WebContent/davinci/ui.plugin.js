@@ -352,7 +352,7 @@ return {
                     run: function() {
                     	// do monthing - purely informational
                     },
-                    label: "{user}",
+                    label: "{user}",	// Filled in programmatically by UserNameAction class
                     menubarPath: "davinci.usersettings/username"
                 },
                 {

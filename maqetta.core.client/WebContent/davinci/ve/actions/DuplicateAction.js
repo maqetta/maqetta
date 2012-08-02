@@ -70,6 +70,12 @@ return declare("davinci.ve.actions.DuplicateAction", [ContextAction], {
 			return false;
 		}
 		return true;
+	},
+
+	shouldShow: function(context){
+		context = this.fixupContext(context);
+		var editor = context.editor;
+		return (editor && editor.declaredClass == 'davinci.ve.PageEditor');
 	},	
 	
 	/**

@@ -52,11 +52,13 @@ davinci/davinci = {
 	"./ve/actions/SelectAncestorAction",
 	"./ve/actions/UnselectAllAction",
 	
+	"./ve/actions/ArrangeAction",
 	"./ve/actions/MoveToFrontAction",
 	"./ve/actions/MoveToBackAction",
 	"./ve/actions/MoveForwardAction",
 	"./ve/actions/MoveBackwardAction",
 
+	"./ve/actions/OtherAction",
 	"./ve/actions/EnableApplicationStates",
 
 	"./ve/actions/AddState",

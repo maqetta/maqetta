@@ -612,6 +612,7 @@ return {
                     id: "arrangeCommands",
                     iconClass: "editActionIcon arrangeCommandsIcon",
                     label: "Arrange commands",
+                    action: "davinci/ve/actions/ArrangeAction",
                     actionbarPath: "arrange",
                     type:'DropDownButton',
                     menu:[
@@ -642,6 +643,7 @@ return {
                     id: "otherCommands",
                     iconClass: "editActionIcon otherCommandsIcon",
                     label: "Other commands",
+                    action: "davinci/ve/actions/OtherAction",
                     actionbarPath: "other",
                     type:'DropDownButton',
                     menu:[

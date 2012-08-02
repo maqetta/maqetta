@@ -19,15 +19,19 @@ return declare("davinci.ve.actions.EditValueAction", [ContextAction], {
 		}
 	},
 
-
 	/**
 	 * Enable this command if this command would actually make a change to the document.
 	 * Otherwise, disable.
 	 */
 	isEnabled: function(context){
 		context = this.fixupContext(context);
-		return true;
-	}
+		return (context && context.getSelection().length > 0);
+	},
 
+	shouldShow: function(context){
+		context = this.fixupContext(context);
+		var editor = context.editor;
+		return (editor && editor.declaredClass == 'davinci.ve.PageEditor');
+	}
 });
 });

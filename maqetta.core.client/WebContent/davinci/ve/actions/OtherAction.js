@@ -8,11 +8,6 @@ define([
 
 return declare("davinci.ve.actions.OtherAction", [_ReorderAction], {
 	
-	/**
-	 * This is the routine that performs the actions for the MoveToFront command.
-	 * @param {Object} context  context object for current visual editor
-	 */
-	// FIXME: Need to preserve order for siblings that are being moved at once
 	run: function(context){
 		// This is a dropdown button. Actions are only available on dropdown menu
 	},

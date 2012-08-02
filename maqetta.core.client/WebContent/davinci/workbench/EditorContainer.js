@@ -436,8 +436,10 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	
 	showActionPropertiesPalette: function(){
 		var targetNode = this._getActionPropertiesPaletteContainer();
-		if(targetNode){
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(targetNode && actionPropertiesPaletteNode){
 			targetNode.style.display = 'block';
+			actionPropertiesPaletteNode.style.visibility = 'visible';
 		}
 	},
 	
@@ -564,17 +566,31 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	
 	restoreActionPropertiesState: function(editor){
 		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
-		if(actionPropertiesPaletteNode && editor._ActionPropertiesState){
-			actionPropertiesPaletteNode.style.left = editor._ActionPropertiesState.l + 'px';
-			actionPropertiesPaletteNode.style.top = editor._ActionPropertiesState.t + 'px';
-			actionPropertiesPaletteNode.style.width = editor._ActionPropertiesState.w + 'px';
-			actionPropertiesPaletteNode.style.height = editor._ActionPropertiesState.h + 'px';
-			editor._propertiesShowing = editor._ActionPropertiesState._propertiesShowing;
-			this._updateEditPropertiesIcon();
-			this._updateResizeNode();
-			var tcnode = this._getPropertiesContainer();
-			if(tcnode){
-				tcnode.style.display = editor._propertiesShowing ? 'block' : 'none';
+		if(actionPropertiesPaletteNode){
+			if(editor._ActionPropertiesState){
+				actionPropertiesPaletteNode.style.left = editor._ActionPropertiesState.l + 'px';
+				actionPropertiesPaletteNode.style.top = editor._ActionPropertiesState.t + 'px';
+				actionPropertiesPaletteNode.style.width = editor._ActionPropertiesState.w + 'px';
+				actionPropertiesPaletteNode.style.height = editor._ActionPropertiesState.h + 'px';
+				editor._propertiesShowing = editor._ActionPropertiesState._propertiesShowing;
+				this._updateEditPropertiesIcon();
+				this._updateResizeNode();
+				var tcnode = this._getPropertiesContainer();
+				if(tcnode){
+					tcnode.style.display = editor._propertiesShowing ? 'block' : 'none';
+				}
+			}else{
+				var editors_container = document.getElementById('editors_container');
+				var ecBox = GeomUtils.getBorderBoxPageCoords(editors_container);
+				var floatingBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+				var left;
+				if(floatingBox.w < ecBox.w){
+					left = ecBox.l + (ecBox.w - floatingBox.w) / 2;
+				}else{
+					left = ecBox.l + 20;
+				}
+				actionPropertiesPaletteNode.style.left = left + 'px';
+				actionPropertiesPaletteNode.style.top = (ecBox.t + 3) + 'px';
 			}
 		}
 	}

@@ -797,19 +797,6 @@ var Workbench = {
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
 		setTimeout(function() {
 			appBorderContainer.resize();
-			var editors_container = document.getElementById('editors_container');
-			var actionPropertiesPalette = document.getElementById('actionPropertiesPalette');
-			var ecBox = GeomUtils.getBorderBoxPageCoords(editors_container);
-			var floatingBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPalette);
-			var left;
-			if(floatingBox.w < ecBox.w){
-				left = ecBox.l + (ecBox.w - floatingBox.w) / 2;
-			}else{
-				left = ecBox.l + 20;
-			}
-			actionPropertiesPalette.style.left = left + 'px';
-			actionPropertiesPalette.style.top = (ecBox.t + 3) + 'px';
-			actionPropertiesPalette.style.visibility = 'visible';
 			dojo.publish("/davinci/workbench/ready", []);
 		}, 3000);
 	},

@@ -104,7 +104,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
 			event.editor.editorContainer.showActionPropertiesPalette();
 		}else{
-			event.editor.editorContainer.hideActionPropertiesPalette();
+			var editor = event.editor ? event.editor : event.oldEditor;
+			if(editor){
+				editor.editorContainer.hideActionPropertiesPalette();
+			}
 		}
 	},
 

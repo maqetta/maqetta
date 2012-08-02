@@ -3,9 +3,10 @@ define(["require",
 	"davinci/workbench/_ToolbaredContainer",
 	"davinci/Runtime",
 	"davinci/Workbench",
+	"davinci/ve/utils/GeomUtils",
 	"dojo/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, Workbench, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, Workbench, GeomUtils, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
@@ -520,6 +521,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 */
 				}, 50)
 			}
+			dojo.publish('/maqetta/ui/actionPropertiesPalette/showProps', []);
 		}
 	},
 	
@@ -537,6 +539,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			// to the actionPropertiesPaletteNode. Need to revert to auto-sizing.
 			actionPropertiesPaletteNode.style.height = '';
 		}
+		dojo.publish('/maqetta/ui/actionPropertiesPalette/hideProps', []);
 	},
 	
 	hideShowProperties: function(){
@@ -551,29 +554,30 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		return dojo.byId('actionPropertiesPalette');
 	},
 	
-	preserveRestoreActionPropertiesState: function(event){
+	preserveActionPropertiesState: function(editor){
 		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
-		if(actionPropertiesPaletteNode && this == event.editor){
-			if(event.oldEditor){
-				event.oldEditor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
-				event.oldEditor._ActionPropertiesState._propertiesShowing = event.oldEditor._propertiesShowing;
-			}
-			if(this._ActionPropertiesState){
-				actionPropertiesPaletteNode.style.left = this._ActionPropertiesState.l + 'px';
-				actionPropertiesPaletteNode.style.top = this._ActionPropertiesState.t + 'px';
-				actionPropertiesPaletteNode.style.width = this._ActionPropertiesState.w + 'px';
-				actionPropertiesPaletteNode.style.height = this._ActionPropertiesState.h + 'px';
-				this._propertiesShowing = this._ActionPropertiesState._propertiesShowing;
-				this._updateEditPropertiesIcon();
-				this._updateResizeNode();
-				var tcnode = this._getPropertiesContainer();
-				if(tcnode){
-					tcnode.style.display = this._propertiesShowing ? 'block' : 'none';
-				}
+		if(actionPropertiesPaletteNode){
+			editor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+			editor._ActionPropertiesState._propertiesShowing = editor._propertiesShowing;
+		}
+	},
+	
+	restoreActionPropertiesState: function(editor){
+		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		if(actionPropertiesPaletteNode && editor._ActionPropertiesState){
+			actionPropertiesPaletteNode.style.left = editor._ActionPropertiesState.l + 'px';
+			actionPropertiesPaletteNode.style.top = editor._ActionPropertiesState.t + 'px';
+			actionPropertiesPaletteNode.style.width = editor._ActionPropertiesState.w + 'px';
+			actionPropertiesPaletteNode.style.height = editor._ActionPropertiesState.h + 'px';
+			editor._propertiesShowing = editor._ActionPropertiesState._propertiesShowing;
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+			var tcnode = this._getPropertiesContainer();
+			if(tcnode){
+				tcnode.style.display = editor._propertiesShowing ? 'block' : 'none';
 			}
 		}
 	}
-
 
 });
 });

@@ -4,15 +4,15 @@ define([
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"dojo/dnd/Moveable",
+	"davinci/Runtime",
 	"../commands/CommandStack",
 	"../html/ui/HTMLEditor",
 	"../model/Path",
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
-	"davinci/ve/utils/GeomUtils",
 	"dojo/i18n!davinci/ve/nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, GeomUtils, veNls){
+], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, 	Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -65,6 +65,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/moved", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/resized", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/showProps", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/hideProps", this._actionPropertiesPaletteChanged.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -91,8 +95,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			var flowLayout = context.getFlowLayout();
 			var layout = flowLayout ? 'flow' : 'absolute';
 			this._updateLayoutDropDownButton(layout);
-			if(this.editorContainer && this.editorContainer.preserveRestoreActionPropertiesState){
-				this.editorContainer.preserveRestoreActionPropertiesState(event)
+			if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
+				this.editorContainer.restoreActionPropertiesState(this)
 			}
 		}
 		if(event.editor && event.editor.editorContainer && 
@@ -101,6 +105,12 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			event.editor.editorContainer.showActionPropertiesPalette();
 		}else{
 			event.editor.editorContainer.hideActionPropertiesPalette();
+		}
+	},
+
+	_actionPropertiesPaletteChanged: function(){
+		if(this == davinci.Runtime.currentEditor && this.editorContainer){
+			this.editorContainer.preserveActionPropertiesState(this);
 		}
 	},
 	

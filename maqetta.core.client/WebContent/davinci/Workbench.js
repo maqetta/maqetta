@@ -745,6 +745,7 @@ var Workbench = {
 						height -= 13;
 						propertiesPaletteContainerNode.style.height = height + 'px';
 						propertiesPaletteContainer.resize();
+						dojo.publish('/maqetta/ui/actionPropertiesPalette/resized', []);
 					}
 				}
 			}
@@ -2162,6 +2163,7 @@ var Workbench = {
 		var dragDiv = davinci.Workbench._PropPaletteDragDiv;
 		dragDiv.parentNode.removeChild(dragDiv);
 		davinci.Workbench._PropPaletteDragDiv = null;
+		dojo.publish('/maqetta/ui/actionPropertiesPalette/moved', []);
 	},
 
 	_XX_last_member: true	// dummy with no trailing ','

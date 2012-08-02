@@ -1289,7 +1289,7 @@ var Workbench = {
 					region = "center";
 					clazz += "davinciTopPalette";
 				} else {
-					style = 'height:50%;';
+					style = 'height:30%;';
 					clazz += "davinciBottomPalette";
 				}
 			} else if(region == 'bottom') {

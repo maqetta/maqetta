@@ -261,7 +261,7 @@ button.showCss::-moz-focus-inner {
 	height:3.8em;	/* FIXME: code uses absolute layout. Shouldn't */
 }
 
-.propertiesWidgetDescription {
+#propertiesContentContainer .propertiesWidgetDescription {
 	line-height:22px;
 	font-size: 18px;
 	padding-left:5px;
@@ -476,7 +476,7 @@ button.showCss::-moz-focus-inner {
 	background-image:-o-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
 	background-image:linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
 }
-.propertiesTitleClassName {
+#propertiesContentContainer  .propertiesTitleClassName {
 	color:white;
 	font-size:12px;
 }

@@ -70,9 +70,11 @@ ViewHelper.prototype = {
 				if(node==domNode){
 					display = "";
 					node._dvWidget.dijitWidget.set('selected',true);
+					command.add(new ModifyAttributeCommand(node._dvWidget, {selected: "true"}));
 				}else{
 					display = "none";
 					node._dvWidget.dijitWidget.set('selected',false);
+					command.add(new ModifyAttributeCommand(node._dvWidget, {selected: "false"}));
 				}
 				command.add(new StyleCommand(node._dvWidget, [{display: display}]));
 			}

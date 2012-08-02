@@ -303,14 +303,19 @@ define(["davinci/Runtime",
 		
 		showSection: function(sectionKey, sectionTitle){
 			var Util = this;
+/*
 			Util._crumbLevel1(sectionKey, sectionTitle);
+*/
 			Util._initSection(sectionKey);
+/*
 			Util._hideRootShowSection();
 			var detailsTD = Util._getDetailsTD();
 			dojo.addClass(detailsTD,"propSectionShowing");
+*/
 			return false;
 		},
-		
+
+/*
 		transitionRootToSection: function(sectionKey, sectionTitle, onEndCallback){
 		
 			function transEnd(event){
@@ -342,7 +347,7 @@ define(["davinci/Runtime",
 			var rootDetailsContainer = Util._getRootDetailsContainer();
 			var rootTD = Util._getRootTD();
 			var detailsTD = Util._getDetailsTD();
-		
+
 			Util._crumbLevel1(sectionKey, sectionTitle);
 			Util._initSection(sectionKey);
 		
@@ -388,7 +393,8 @@ define(["davinci/Runtime",
 		
 			return false;
 		},
-		
+*/
+
 		showProperty: function(propertyRowId){
 			
 			var hideAllButThisRow = function (){
@@ -432,6 +438,8 @@ define(["davinci/Runtime",
 				fadeInCascade();
 			}
 			
+			var crumbsTitlePaneDiv = this._getCrumbsTitlePaneDiv();
+			dojo.removeClass(crumbsTitlePaneDiv, 'dijitHidden');
 			
 			var Util = this;
 			var allTRAnimClasses = this.showPropAnimClasses;
@@ -454,9 +462,11 @@ define(["davinci/Runtime",
 			var SwitchingStyleView = dojo.getObject("davinci.ve.views.SwitchingStyleView");
 			var sectionTitle = SwitchingStyleView.prototype.sectionTitleFromKey(sectionKey);
 			Util._crumbLevel2(sectionKey, sectionTitle, propName);
+/*
 			var detailsTD = Util._getDetailsTD();
 			dojo.removeClass(detailsTD,"propSectionShowing");
 			dojo.addClass(detailsTD,"propDetailsShowing");
+*/
 		
 			if(Runtime.supportsCSS3Transitions){
 				
@@ -501,7 +511,8 @@ define(["davinci/Runtime",
 				fadeInCascade();
 			}	
 		},
-		
+
+/*
 		_crumbLevel1: function(sectionKey, sectionTitle){
 			var Util = this;
 			var crumbsDIV = Util._getCrumbsDIV();
@@ -513,13 +524,16 @@ define(["davinci/Runtime",
 			s += '</span>';
 			crumbsDIV.innerHTML = s;
 		},
-			
+*/
+		
 		_crumbLevel2: function(sectionKey, sectionTitle, propname){
 			var Util = this;
 			var crumbsDIV = Util._getCrumbsDIV();
 			var s = '';
+/*
 			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showRoot()">All</span>';
 			s += '<span class="breadcrumbDescend">&gt;</span>';
+*/
 			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showSection(\''+sectionKey+'\',\''+sectionTitle+'\')">';
 			s += sectionTitle+'</span>';
 			s += '<span class="breadcrumbDescend">&gt;</span>';
@@ -532,8 +546,13 @@ define(["davinci/Runtime",
 		_initSection: function(sectionKey){
 			var Util = this;
 			var allTRAnimClasses = Util.showPropAnimClasses;
+/*
 			var detailsTD = Util._getDetailsTD();
 			var propGroups = dojo.query(".propGroup",detailsTD);
+*/
+var rootTD = Util._getRootTD();
+var propGroups = dojo.query(".propGroup",rootTD);
+
 			var propGroupDIV;
 			for(var i=0; i<propGroups.length; i++){
 				var propGroup = propGroups[i];
@@ -553,18 +572,27 @@ define(["davinci/Runtime",
 			for(var i=0; i<cSects.length; i++){
 				dojo.addClass(cSects[i],"cascadeRowHidden");
 			}
+/*
 			dojo.removeClass(detailsTD,"propDetailsShowing");
+*/
 			Util._currentPropSection = sectionKey;
+			var crumbsTitlePaneDiv = this._getCrumbsTitlePaneDiv();
+			dojo.addClass(crumbsTitlePaneDiv, 'dijitHidden');
 		},
 		
 		_hideSectionShowRoot: function(){
 			var Util = this;
 			var rootTD = Util._getRootTD();
+/*
 			var detailsTD = Util._getDetailsTD();
+*/
 			dojo.removeClass(rootTD,"dijitHidden");
+/*
 			dojo.addClass(detailsTD,"dijitHidden");
+*/
 		},
 		
+/*
 		_hideRootShowSection: function(){
 			var Util = this;
 			var rootTD = Util._getRootTD();
@@ -572,6 +600,7 @@ define(["davinci/Runtime",
 			dojo.addClass(rootTD,"dijitHidden");
 			dojo.removeClass(detailsTD,"dijitHidden");
 		},
+*/
 		
 		// Search animSS (property palette's animation stylesheet) to find the style rule
 		// with given the selectorText. Returns index for the rule.
@@ -673,7 +702,7 @@ define(["davinci/Runtime",
 			return Util._rootTD;
 		},
 		
-		
+/*
 		_getDetailsTD: function(){
 			var Util = this;
 			var rootDetailsContainer = Util._getRootDetailsContainer();
@@ -683,15 +712,37 @@ define(["davinci/Runtime",
 			}
 			return Util._detailsTD;
 		},
+*/
 		
 		_getCrumbsDIV: function(){
 			var Util = this;
+/*
 			var detailsTD = Util._getDetailsTD();
+*/
+var rootTD = Util._getRootTD();
+
 			if(!Util._crumbsDIV){
 				//FIXME: Make .cssBreadcrumbSection into a var
+/*
 				Util._crumbsDIV=dojo.query(".cssBreadcrumbSection", detailsTD)[0];
+*/
+				Util._crumbsDIV=dojo.query(".cssBreadcrumbSection", rootTD)[0];
 			}
 			return Util._crumbsDIV;
+		},
+		
+		_getCrumbsTitlePaneDiv: function(){
+			var crumbsDIV = this._getCrumbsDIV();
+			var titlePaneDiv = null;
+			var node = crumbsDIV;
+			while(node && node.tagName != 'BODY'){
+				if(dojo.hasClass(node, 'dijitTitlePaneTitle')){
+					titlePaneDiv = node;
+					break;
+				}
+				node = node.parentNode;
+			}
+			return titlePaneDiv;
 		}
 	});
 	return HTMLStringUtil;

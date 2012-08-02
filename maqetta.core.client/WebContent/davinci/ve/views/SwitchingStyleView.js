@@ -246,6 +246,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		}		
 		template+="</td>";
 		template+="<td class='propPaletteDetails dijitHidden'>";
+*/
 		// Use same styling as Dijit TitlePane for breadcrumb row
 		template+='<div class="dijitTitlePane cssBreadcrumbContainer">';
 		template+='<div class="dijitTitlePaneTitle">';
@@ -255,6 +256,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		template+='</div>';
 		template+='</div>';
 		template+='</div>';		
+/*
 		for(var i=0;i<this.pageTemplate.length;i++){
 			template+= HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
 		}
@@ -282,6 +284,8 @@ if(propPaletteTabContainerNode){
 		var context = (this._editor && this._editor.getContext) ? this._editor.getContext() : null;
 		var selection = (context && context.getSelection) ? context.getSelection() : [];
 		this._updatePaletteValues(selection);
+		HTMLStringUtil._initSection(this._currentPropSection);
+
 	});
 }
 // Need a setTimeout - without it, browser sometimes hasn't layed out
@@ -290,9 +294,10 @@ setTimeout(function(){
 	this._tabContainer.layout();	
 	this._tabContainer.startup();
 	this._tabContainer.selectChild(firstTab);
+	HTMLStringUtil._initSection(this._currentPropSection);
 }.bind(this),50);
 
-
+/*
 		// Put click, mouseover, mouseout handlers on the section buttons in root view
 		var sectionButtons=dojo.query(".propSectionButton",this.domNode);
 		for(var i=0;i<sectionButtons.length;i++){
@@ -340,6 +345,7 @@ setTimeout(function(){
 					}
 			);
 		}
+*/
 		this.inherited(arguments);
 			
 	},

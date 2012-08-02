@@ -25,14 +25,15 @@
 							<div class="welcome_section_footer"></div>
 						</div>
 					</td>
-					<td class="welcome_section_cell welcome_section_hidden" rowspan="2">
-						<div class="welcome_section">
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLMobile(); });">
 							<div class="welcome_section_header">
-								Recent files
+								New Mobile Application
 							</div>
 							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_newhtml"></span>
 								<span class="welcome_section_content">
-									(This feature will be available soon.)
+									Author a new HTML mobile application using the visual page editor.
 								</span>
 							</div>
 							<div class="welcome_section_footer"></div>
@@ -41,14 +42,28 @@
 				</tr>
 				<tr>
 					<td class="welcome_section_cell">
-						<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTML(); });">
+						<div class="welcome_section welcome_section_active" onclick="window.open('http://www.youtube.com/user/Maqetta/')">
 							<div class="welcome_section_header">
-								New HTML Page
+								Videos
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_tutorials"></span>
+								<span class="welcome_section_content">
+									Learn the basics about Maqetta viewing videos found on the Maqetta YouTube channel.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLDesktop(); });">
+							<div class="welcome_section_header">
+								New Desktop Application
 							</div>
 							<div class="welcome_section_container">
 								<span class="welcome_icon welcome_icon_newhtml"></span>
 								<span class="welcome_section_content">
-									Author a new HTML page using the visual page editor.
+									Author a new HTML desktop application using the visual page editor.
 								</span>
 							</div>
 							<div class="welcome_section_footer"></div>
@@ -56,6 +71,52 @@
 					</td>
 				</tr>
 				<tr>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="alert('not yet implemented')">
+							<div class="welcome_section_header">
+								Cheat sheets
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_newhtml"></span>
+								<span class="welcome_section_content">
+									View the Maqetta cheat sheets, which provide quick reference guides
+									to various parts of the Maqetta user interface.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLSketchHiFi(); });">
+							<div class="welcome_section_header">
+								New Sketch
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_newhtml"></span>
+								<span class="welcome_section_content">
+									Author a new HTML "sketch" where Maqetta's page editor
+									starts up in quick sketching mode.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td class="welcome_section_cell">
+						<div class="welcome_section welcome_section_active" onclick="window.open('https://www.ibm.com/search/csass/search/?sn=dw&en=utf&hpp=20&dws=dw&q=maqetta&Search=Search')">
+							<div class="welcome_section_header">
+								How-to articles
+							</div>
+							<div class="welcome_section_container">
+								<span class="welcome_icon welcome_icon_tutorials"></span>
+								<span class="welcome_section_content">
+									Learn more advanced techniques from online how-to articles.
+								</span>
+							</div>
+							<div class="welcome_section_footer"></div>
+						</div>
+					</td>
 					<td class="welcome_section_cell">
 						<div class="welcome_section welcome_section_active" onclick="require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme) { Workbench.showModal(new NewTheme(), 'New Theme', 'height:135px;width: 300px'); });">
 							<div class="welcome_section_header">
@@ -72,40 +133,23 @@
 							<div class="welcome_section_footer"></div>
 						</div>
 					</td>
+				</tr>
+				<tr>
 					<td class="welcome_section_cell">
-						<div class="welcome_section welcome_section_hidden">
+						<div class="welcome_section">
 							<div class="welcome_section_header">
-								Common Actions and Tasks
+								About Maqetta
 							</div>
 							<div class="welcome_section_container">
-								<span class="welcome_section_content">
-									<table>
-										<tr>
-											<td class="welcome_action_cell" onclick="require(['davinci/ui/Resource'], function(Resource) { Resource.addFiles(); });">
-												<span class="welcome_action_icon welcome_upload_icon"></span>
-												<span class="welcome_action">Upload a file</span>
-											</td>
-											<td class="welcome_action_cell" onclick="require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog) { Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'height:100px;width: 200px'); });">
-												<span class="welcome_action_icon welcome_themeeditor_icon"></span>
-												<span class="welcome_action">Open theme editor</span>
-											</td>
-										</tr>
-										<tr>
-											<td class="welcome_action_cell" onclick="alert('This feature is scheduled to be available soon.')">
-												<span class="welcome_action_icon welcome_importwidget_icon"></span>
-												<span class="welcome_action">Import a widget</span>
-											</td>
-											<td class="welcome_action_cell">
-											</td>
-										</tr>
-									</table>
-								</span>
+								<div class="welcome_section_content">
+									Maqetta is an open source initiative that provides visual drag&amp;drop 
+									creation of HTML5 user interfaces (desktop and mobile). 
+								</div>
+								<div class="welcome_learn_more" onclick="window.open('app/docs/index.html#overview')">Learn more...</div>
 							</div>
 							<div class="welcome_section_footer"></div>
 						</div>
 					</td>
-				</tr>
-				<tr>
 					<td class="welcome_section_cell">
 						<div class="welcome_section welcome_section_active" onclick="require(['davinci/review/actions/PublishAction'], function(PublishAction) { new PublishAction().run(); });">
 							<div class="welcome_section_header">
@@ -118,21 +162,6 @@
 									Choose files to review and then invite
 									reviewers via email.
 								</span>
-							</div>
-							<div class="welcome_section_footer"></div>
-						</div>
-					</td>
-					<td class="welcome_section_cell">
-						<div class="welcome_section">
-							<div class="welcome_section_header">
-								About Maqetta
-							</div>
-							<div class="welcome_section_container">
-								<div class="welcome_section_content">
-									Maqetta is an open source initiative that provides visual drag&amp;drop 
-									creation of HTML5 user interfaces (desktop and mobile). 
-								</div>
-								<div class="welcome_learn_more" onclick="window.open('app/docs/index.html#overview')">Learn more...</div>
 							</div>
 							<div class="welcome_section_footer"></div>
 						</div>

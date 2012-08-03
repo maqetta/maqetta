@@ -1,6 +1,10 @@
-dependencies = {
-	selectorEngine: "acme",
+require({
+	aliases:[
+	    ["i18n", "dojo/i18n"]
+	]
+});
 
+dependencies = {
 	layers: [
 		{
 			name: "../clipart/_clipart.js",
@@ -25,6 +29,12 @@ dependencies = {
 	prefixes: [
 		[ "clipart", "../clipart" ],
 		[ "metadata", "../metadata" ],
-		[ "dijit", "../dijit" ]
+		[ "maq-metadata-dojo", "../maq-metadata-dojo" ],
+	   	[ "system", "../system" ],
+	   	[ "preview", "../preview" ],
+	   	[ "orion", "../orion" ],
+	   	[ "davinci", "../davinci" ],
+	   	[ "dijit", "../dijit" ],
+	   	[ "dojox", "../dojox" ]
 	]
 }

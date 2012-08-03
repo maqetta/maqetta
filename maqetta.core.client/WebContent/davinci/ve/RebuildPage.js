@@ -35,11 +35,13 @@ return declare("davinci.ve.RebuildPage", Context, {
 	},
 	
 	
-	rebuildSource: function(source, resource, theme){
+	rebuildSource: function(source, resource, theme, themeSet){
 		if ( !( resource && resource.extension && resource.extension == "html")) {
-			return source;
+			 var deferred = new Deferred();
+        	 deferred.resolve(source);
+	        return deferred;
 		}
-		
+				
 		this.model = this._srcDocument = Factory.getNewFromResource(resource); //getModel({url: resource.getPath()}); // 2453 getNewFromResource(resource);
 		
 		this._resourcePath = new Path(resource ? resource.getPath() : "");
@@ -48,8 +50,6 @@ return declare("davinci.ve.RebuildPage", Context, {
 		/* big cheat here.  removing 1 layer of .. for prefix of project, could figure this out with logic and have infinite project depth */
 		
 		this._srcDocument.setText(source, true);
-
-		//var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
         var elements = this._srcDocument.find({elementType: "HTMLElement"}),
         	promises = [];
@@ -63,15 +63,16 @@ return declare("davinci.ve.RebuildPage", Context, {
             	promises.push(this.loadRequires(type, true, true, true));
             }
         }
-
-        if (theme /*themeMetaobject*/) {
+        ;
+        if (theme) {
             this.changeThemeBase(theme, this._resourcePath);
         }
-        var themeSet = Theme.getThemeSet(this);
-        if (themeSet.mobileTheme ){
+        
+        if (themeSet && themeSet.mobileTheme ){
         	var c = new ChangeThemeCommand(themeSet, this);
         	c._dojoxMobileAddTheme(this, themeSet.mobileTheme);
         }
+       
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();
 
@@ -88,7 +89,6 @@ return declare("davinci.ve.RebuildPage", Context, {
             var jsFileString = jsFilePath.relativeTo(resourceParentPath).toString();
             this.addJavaScript(jsFileString, null, null, null, jsChanges[i]);
         }
-
         var deferred = new Deferred();
         all(promises).then(function(){
         	deferred.resolve(this._srcDocument.getText());
@@ -160,7 +160,6 @@ return declare("davinci.ve.RebuildPage", Context, {
 
     changeThemeBase: function(theme, resourcePath){
     	
-    	debugger;
 		var parentPath = new Path(theme.file.parent.getPath());
 		theme.files.forEach(function(file) {
 			var filename = parentPath.append(file);

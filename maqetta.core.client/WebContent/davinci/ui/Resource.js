@@ -18,10 +18,12 @@ define(['dojo/_base/declare',
        './Dialog',
        'dojo/i18n!./nls/ui',
        'dojo/i18n!dijit/nls/common',
+       'davinci/Theme',
+       "davinci/ve/commands/ChangeThemeCommand",       
        'dijit/form/Button',
-       'dojox/form/uploader/plugins/HTML5'
+       'dojox/form/uploader/plugins/HTML5',      
        
-],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, AddFiles, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){
+],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, AddFiles, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS, Theme, ChangeThemeCommand){
 
 var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, dialogSpecificClassOptions, fileName, existingResource) {
 	var resource=existingResource || getSelectedResource();
@@ -247,13 +249,21 @@ var uiResource = {
 				var resourcePath = newDialog.get('value');
 				var oldResource = Resource.findResource(oldFileName);
 				var oldContent;
+				var themeSet;
+				var theme;
+				
 				if (oldEditor.editorID == "davinci.html.CSSEditor") {
 					// this does some css formatting
 					oldContent = oldEditor.getText();
 				} else {
 					oldContent = (oldEditor.model && oldEditor.model.getText) ? oldEditor.model.getText() : oldEditor.getText();
 				}
-				var theme = oldEditor.visualEditor.context.theme;
+				if (oldEditor.editorID == "davinci.ve.HTMLPageEditor") {
+					themeSet = Theme.getThemeSet(oldEditor.visualEditor.context);
+					theme = oldEditor.visualEditor.context.theme;
+				}
+				
+				
 				var existing=Resource.findResource(resourcePath);
 				
 				oldEditor.editorContainer.forceClose(oldEditor);
@@ -266,7 +276,7 @@ var uiResource = {
 				oldEditor.isDirty = false;
 				// Create a new editor for the new filename
 				var file = Resource.createResource(resourcePath);
-				new RebuildPage().rebuildSource(oldContent, file, theme).then(function(newText) {
+				new RebuildPage().rebuildSource(oldContent, file, theme, themeSet).then(function(newText) {
 					file.setContents(newText);
 					Workbench.openEditor({fileName: file, content: newText});					
 				});

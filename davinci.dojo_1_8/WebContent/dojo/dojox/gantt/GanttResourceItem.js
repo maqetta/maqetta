@@ -241,7 +241,7 @@ _9.set(t,"top",_9.set(t,"top")-_5a.taskCount*23+"px");
 }else{
 if(_5c==_58.id){
 _5b=true;
-_2.forEach(_5d.tasks,function(_62,i){
+_2.forEach(_5d.tasks,function(_62){
 _2.forEach(_62,function(_63){
 this.styleOwnerItem(_63,_5d[_5c][0],"none",0);
 },this);

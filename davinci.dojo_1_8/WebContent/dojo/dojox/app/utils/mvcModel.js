@@ -24,40 +24,38 @@ _d={"data":_9.data,query:{}};
 }
 }
 }
-var _f;
-var _10=null;
-var _11=null;
-var _12=_8[_a].type?_8[_a].type:"dojox/mvc/EditStoreRefListController";
+var _f=null;
+var _10=_8[_a].type?_8[_a].type:"dojox/mvc/EditStoreRefListController";
 var def=new _2();
-require([_12],function(_13){
-def.resolve(_13);
+require([_10],function(_11){
+def.resolve(_11);
 });
-_3(def,function(_14){
-_11=new _14(_d);
-var _15;
+_3(def,function(_12){
+_f=new _12(_d);
+var _13;
 try{
-if(_11.queryStore){
-_15=_11.queryStore(_d.query);
+if(_f.queryStore){
+_13=_f.queryStore(_d.query);
 }else{
-var _16=_11._refSourceModelProp||_11._refModelProp||"model";
-_11.set(_16,_6(_d.data));
-_15=_11;
+var _14=_f._refSourceModelProp||_f._refModelProp||"model";
+_f.set(_14,_6(_d.data));
+_13=_f;
 }
 }
 catch(ex){
 _c.reject("load mvc model error.");
 return _c.promise;
 }
-if(_15.then){
-_3(_15,_1.hitch(this,function(){
-_b=_11;
+if(_13.then){
+_3(_13,_1.hitch(this,function(){
+_b=_f;
 _c.resolve(_b);
 return _b;
 }),function(){
 loadModelLoaderDeferred.reject("load model error.");
 });
 }else{
-_b=_11;
+_b=_f;
 _c.resolve(_b);
 return _b;
 }

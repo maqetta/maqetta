@@ -300,7 +300,7 @@ _2d.parentPane.focus(true);
 }
 },_moveToPopup:function(evt){
 if(this.focusedChild&&!this.focusedChild.disabled){
-this.focusedChild._onClick(evt);
+this.onItemClick(this.focusedChild,evt);
 }
 }},this.menuNode);
 this.connect(_2e,"onItemClick",function(_30,evt){

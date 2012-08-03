@@ -39,7 +39,6 @@ return false;
 }
 if(!_7.url){
 throw new Error("An url is required for loading media");
-return false;
 }else{
 _7.url=this._normalizeUrl(_7.url);
 }

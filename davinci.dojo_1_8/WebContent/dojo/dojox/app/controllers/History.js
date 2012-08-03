@@ -48,7 +48,6 @@ var _12=_e.url||null;
 if(_d._sim){
 history.replaceState(_e,_11,_12);
 }
-var _13=history.state;
 this.app.trigger("transition",{"viewId":_f,"opts":_1.mixin({reverse:false},_d.detail,{"params":_10})});
 }});
 });

@@ -77,7 +77,7 @@ _2a=true;
 _2b=_2b.parentNode;
 }
 }
-var x=_29.x,y=_29.y,_2f="w" in _29?_29.w:(_29.w=_29.width),_30="h" in _29?_29.h:(_4.deprecated("place.around: dijit.place.__Rectangle: { x:"+x+", y:"+y+", height:"+_29.height+", width:"+_2f+" } has been deprecated.  Please use { x:"+x+", y:"+y+", h:"+_29.height+", w:"+_2f+" }","","2.0"),_29.h=_29.height);
+var x=_29.x,y=_29.y,_2f="w" in _29?_29.w:(_29.w=_29.width),_30="h" in _29?_29.h:(_4.deprecated("place.around: dijit/place.__Rectangle: { x:"+x+", y:"+y+", height:"+_29.height+", width:"+_2f+" } has been deprecated.  Please use { x:"+x+", y:"+y+", h:"+_29.height+", w:"+_2f+" }","","2.0"),_29.h=_29.height);
 var _31=[];
 function _32(_33,_34){
 _31.push({aroundCorner:_33,corner:_34,pos:{x:{"L":x,"R":x+_2f,"M":x+(_2f>>1)}[_33.charAt(1)],y:{"T":y,"B":y+_30,"M":y+(_30>>1)}[_33.charAt(0)]}});

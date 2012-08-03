@@ -1,5 +1,5 @@
 //>>built
-define("dojox/gantt/GanttProjectItem",["dojox/gantt/GanttTaskItem","dojo/_base/declare","dojox/gantt/GanttProjectControl","dojo/domReady!"],function(_1,_2){
+define("dojox/gantt/GanttProjectItem",["./GanttTaskItem","dojo/_base/declare","./GanttProjectControl","dojo/domReady!"],function(_1,_2){
 return _2("dojox.gantt.GanttProjectItem",[_1],{constructor:function(_3){
 this.id=_3.id;
 this.name=_3.name||this.id;

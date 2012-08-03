@@ -86,19 +86,20 @@ _1c.reject(_1e);
 }});
 return _1c.promise;
 },query:function(_1f,_20){
-var _21,_22=new _2(function(){
-if(_21.abort){
-_21.abort();
+var _21=new _2(function(){
+if(_22.abort){
+_22.abort();
 }
 });
-_21=this.fetch(_9.mixin({query:_1f,onBegin:function(_23){
-_22.total=_23;
+_21.total=new _2();
+var _22=this.fetch(_9.mixin({query:_1f,onBegin:function(_23){
+_21.total.resolve(_23);
 },onComplete:function(_24){
-_22.resolve(_24);
+_21.resolve(_24);
 },onError:function(_25){
-_22.reject(_25);
+_21.reject(_25);
 }},_20));
-return new _c(_22);
+return new _c(_21);
 }});
 if(_18.getFeatures()["dojo.data.api.Notification"]){
 this._notifyConnections=[_3.after(_18,"onNew",_9.hitch(this,"_onNewItem"),true),_3.after(_18,"onDelete",_9.hitch(this,"_onDeleteItem"),true),_3.after(_18,"onSet",_9.hitch(this,"_onSetItem"),true)];

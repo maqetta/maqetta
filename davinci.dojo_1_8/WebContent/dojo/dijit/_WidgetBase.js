@@ -262,7 +262,7 @@ _48.detail={};
 _48.detail.widget=this;
 var ret,_4a=this["on"+_47];
 if(_4a){
-ret=_4a.apply(this,_49?_49:_48);
+ret=_4a.apply(this,_49?_49:[_48]);
 }
 if(this._started&&!this._beingDestroyed){
 on.emit(this.domNode,_47.toLowerCase(),_48);

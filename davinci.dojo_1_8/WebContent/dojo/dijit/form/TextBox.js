@@ -43,7 +43,7 @@ this._attachPoints.push("_phspan");
 this._phspan=_2.create("span",{className:"dijitPlaceHolder dijitInputField"},this.textbox,"after");
 }
 this._phspan.innerHTML="";
-this._phspan.appendChild(document.createTextNode(v));
+this._phspan.appendChild(this._phspan.ownerDocument.createTextNode(v));
 this._updatePlaceHolder();
 },_updatePlaceHolder:function(){
 if(this._phspan){

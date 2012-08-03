@@ -57,15 +57,15 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	
 	_editorSelected: function(event){
-		if(this == event.editor){
-			if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
-				this.editorContainer.restoreActionPropertiesState(this)
-			}
-		}
 		if(event.editor && event.editor.editorContainer && 
 				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
 				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
 			event.editor.editorContainer.showActionPropertiesPalette();
+			if(this == event.editor){
+				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
+					this.editorContainer.restoreActionPropertiesState(this)
+				}
+			}
 		}else{
 			var editor = event.editor ? event.editor : event.oldEditor;
 			if(editor){

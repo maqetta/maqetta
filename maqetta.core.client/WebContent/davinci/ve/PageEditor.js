@@ -91,18 +91,18 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if(this == event.oldEditor){
 			context.hideFocusAll();
 		}
-		if(this == event.editor){
-			var flowLayout = context.getFlowLayout();
-			var layout = flowLayout ? 'flow' : 'absolute';
-			this._updateLayoutDropDownButton(layout);
-			if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
-				this.editorContainer.restoreActionPropertiesState(this)
-			}
-		}
 		if(event.editor && event.editor.editorContainer && 
 				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
 				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
 			event.editor.editorContainer.showActionPropertiesPalette();
+			if(this == event.editor){
+				var flowLayout = context.getFlowLayout();
+				var layout = flowLayout ? 'flow' : 'absolute';
+				this._updateLayoutDropDownButton(layout);
+				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
+					this.editorContainer.restoreActionPropertiesState(this)
+				}
+			}
 		}else{
 			var editor = event.editor ? event.editor : event.oldEditor;
 			if(editor){

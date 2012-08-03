@@ -48,6 +48,10 @@
 	display:none;
 }
 
+.propPaletteRoot .dijitTitlePaneTitleFocus {
+	text-align:center;
+}
+
 .claro .propertiesContent .propSectionButton.dijitTitlePane .dijitArrowNode {
 	display:inline-block;
 	float:right;

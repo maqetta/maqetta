@@ -208,6 +208,7 @@ var uiResource = {
 				} else {
 					oldContent = (oldEditor.model && oldEditor.model.getText) ? oldEditor.model.getText() : oldEditor.getText();
 				}
+				var theme = oldEditor.visualEditor.context.theme;
 				var existing=Resource.findResource(resourcePath);
 				
 				oldEditor.editorContainer.forceClose(oldEditor);
@@ -220,7 +221,7 @@ var uiResource = {
 				oldEditor.isDirty = false;
 				// Create a new editor for the new filename
 				var file = Resource.createResource(resourcePath);
-				new RebuildPage().rebuildSource(oldContent, file).then(function(newText) {
+				new RebuildPage().rebuildSource(oldContent, file, theme).then(function(newText) {
 					file.setContents(newText);
 					Workbench.openEditor({fileName: file, content: newText});					
 				});

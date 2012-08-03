@@ -1,31 +1,21 @@
-dependencies = {
-	selectorEngine: "acme",
+require({
+	aliases:[
+	    ["i18n", "dojo/i18n"]
+	]
+});
 
+dependencies = {
 	layers: [
-		{
-			name: "../metadata/dojo/data/DataStoreBasedWidgetInput.js",
-			layerDependencies: [
-			    "../dijit/dijit.js"
-			],
-			dependencies: [
-				"metadata/dojo/data/DataStoreBasedWidgetInput",
-				"metadata/dojo/data/ItemFileReadStoreHelper"
-			]
-		},
-		{
-			name: "../metadata/dojox/grid/DataGridInput.js",
-			layerDependencies: [
-			    "../dijit/dijit.js"
-			],
-			dependencies: [
-				"metadata/dojox/grid/DataGridInput",
-				"metadata/dojox/grid/DataGridCreateTool"
-			]
-		}
+		//No need to specify any layers for now. Mostly interested in minificiation and inlining of metadata (e.g., helper) files.
 	],
 
 	prefixes: [
 		[ "metadata", "../metadata" ],
-		[ "dijit", "../dijit" ]
+		[ "dijit", "../dijit" ],
+		[ "davinci", "../davinci" ],
+		[ "dojox", "../dojox" ],
+		[ "system", "../system" ],
+		[ "preview", "../preview" ],
+		[ "orion", "../orion" ]
 	]
 }

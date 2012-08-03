@@ -5,8 +5,6 @@ require({
 });
 
 dependencies = {
-	selectorEngine: "acme",
-
 	layers: [
 		{
 			name: "../gridx/Grid.js",
@@ -22,24 +20,13 @@ dependencies = {
     			"gridx/modules/dnd/Column",
     			"gridx/modules/ColumnResizer",
 			]
-		},
-		{
-			name: "../metadata/gridx/GridHelper.js",
-			layerDependencies: [
-			    "../dijit/dijit.js",
-			    "../davinci/davinci.js"
-			],
-			dependencies: [
-				"metadata/gridx/GridHelper",
-				"metadata/gridx/GridCreateTool",
-				"metadata/gridx/GridWizardInput"
-			]
 		}
 	],
 
 	prefixes: [
 	   		[ "gridx", "../gridx" ],
 			[ "metadata", "../metadata" ],
+			[ "maq-metadata-dojo", "../maq-metadata-dojo" ],
 	   		[ "system", "../system" ],
 	   		[ "preview", "../preview" ],
 	   		[ "orion", "../orion" ],

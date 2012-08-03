@@ -199,23 +199,23 @@ return declare(ContainerInput, {
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);
 
+		function _onSubmit() {
+			if (this._isNodePropertyInputValid()) {
+				this.updateWidget();
+			}
+		}
 		//Set up the dialog
-		this._inline = Workbench.showModal(this._getTemplate(), langObj.treeDialog, null, function(){}); 
+		this._inline = Workbench.showModal(this._getTemplate(), langObj.treeDialog, null, dojo.hitch(this, _onSubmit)); 
 
 		//Configure inputs
 		this._configureInputControls();
 		
-		//Configure listeners for OK/Cancel buttons
-		var okButton = dijit.byId('treeInputOkButton');
-		this._connection.push(dojo.connect(okButton, 'onClick', function(){
-			if (this._isNodePropertyInputValid()) {
-				this.updateWidget();
-			}
-		}.bind(this)));
+		//Configure listeners for Cancel buttons
 		var cancelButton = dijit.byId('treeInputCancelButton');
 		this._connection.push(dojo.connect(cancelButton, 'onClick', function(){
 			this.onCancel();
 		}.bind(this)));
+
 		if (this._widget.inLineEdit_displayOnCreate){
 			// hide cancel on widget creation #120
 			delete this._widget.inLineEdit_displayOnCreate;

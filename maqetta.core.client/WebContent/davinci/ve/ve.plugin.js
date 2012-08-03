@@ -537,6 +537,14 @@ return {
                     keyBinding: {accel: true, charOrCode: "1", allowGlobal: true}
                 },
 				{
+                    id: "editproperties",
+                    iconClass: "editActionIcon editPropertiesIcon",
+                    className: "editProperties",
+                    label: "Edit properties",
+                    action: "davinci/ve/actions/EditPropertiesAction",
+                    actionbarPath: "editvalue"
+                },
+				{
 				    id: "cut",
 				    label: "Cut",
 				    iconClass: "editActionIcon editCutIcon",
@@ -579,13 +587,6 @@ return {
                     iconClass: "editActionIcon editValueIcon",
                     label: "Edit value",
                     action: "davinci/ve/actions/EditValueAction",
-                    actionbarPath: "editvalue"
-                },
-				{
-                    id: "editproperties",
-                    iconClass: "editActionIcon editPropertiesIcon",
-                    label: "Edit properties",
-                    action: "davinci/ve/actions/EditPropertiesAction",
                     actionbarPath: "editvalue"
                 },
 				{

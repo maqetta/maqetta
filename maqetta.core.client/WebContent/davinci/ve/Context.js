@@ -499,7 +499,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var base = this.getBase();
 		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		if(!prefs.widgetFolder){
-			prefs.widgetFolder = "WebContent/widgets";
+			prefs.widgetFolder = "WebContent/lib/custom";
 			Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 	

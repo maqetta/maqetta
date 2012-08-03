@@ -125,11 +125,10 @@ define([
 	        themeJson.type = originalTheme.type; 
 	    }
 		if (originalTheme.conditionalFiles){
-			debugger;
 			themeJson.conditionalFiles = originalTheme.conditionalFiles; 
 			var conditionalFiles = adjustPaths(originalTheme.conditionalFiles); // adjust the path of the css files
 			for (var i = 0; i < themeJson.conditionalFiles.length; i++) {
-				conditionalFile = themeRoot.createResource(themeJson.conditionalFiles[i]); // create the delta css file
+				var conditionalFile = themeRoot.createResource(themeJson.conditionalFiles[i]); // create the delta css file
 				deferreds.push(conditionalFile.setContents('@import url("' +conditionalFiles[i]+'");'));
 			}
 			

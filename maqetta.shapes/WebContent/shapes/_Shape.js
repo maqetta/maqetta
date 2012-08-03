@@ -92,7 +92,7 @@ define([
 				strokewidth = 1;
 			}
 			this._xoffset = this._yoffset = strokewidth;
-			var double = strokewidth*2;
+			var doubleStrokeWidth = strokewidth*2;
 			
 			/* Have to put a little padding around the SVG because
 			 * no browsers take stroke-width into account when computing box sizes
@@ -100,9 +100,9 @@ define([
 			 * horizontal lines.
 			 */
 			x -= this._xoffset;
-			w += double;
+			w += doubleStrokeWidth;
 			y -= this._yoffset;
-			h += double;
+			h += doubleStrokeWidth;
 			this._svgroot.setAttribute('viewBox',x+' '+y+' '+w+' '+h);
 			this._svgroot.style.width = w+'px';
 			this._svgroot.style.height = h+'px';

@@ -137,7 +137,7 @@ var Resource = {
 	},
 
 	getIdentity: function(/* item */ item){
-		return item.getPath();
+		return item.getName();
 	},
 	
 	destroy: function(){

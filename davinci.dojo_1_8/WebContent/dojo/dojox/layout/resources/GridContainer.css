@@ -30,7 +30,7 @@
 	_margin:10px;
 }
 .dndCover{
-	background-image:url(icons/pixel.gif);
+	background-image:url("icons/pixel.gif");;
 	position:absolute;
 	left:0;
 	top:0;

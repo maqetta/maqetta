@@ -169,13 +169,13 @@
   padding: 3px 10px 1px 3px;
 }
 .dijitEditorRtl .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsEnabled_rtl.png); 
+	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");; 
 }
 .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsDisabled_rtl.png); 
+	background-image: url("../../icons/images/editorIconsDisabled_rtl.png");; 
 }
 .dijitToolbarRtl .dijitToolbarSeparator {
-	background-image: url(../../icons/images/editorIconsEnabled_rtl.png);
+	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");;
 }
 .dijitRtl .dijitIconSave,
 .dijitRtl .dijitIconPrint,
@@ -212,7 +212,7 @@
 .dijitRtl .dijitFolderOpened,
 .dijitRtl .dijitIconFolderOpen,
 .dijitRtl .dijitIconError { 
-	background-image: url(../../icons/images/commonIconsObjActEnabled_rtl.png); 
+	background-image: url("../../icons/images/commonIconsObjActEnabled_rtl.png");; 
 	width: 16px;
 	height: 16px;
 }
@@ -251,7 +251,7 @@
 .dj_ie6 .dijitRtl .dijitFolderOpened,
 .dj_ie6 .dijitRtl .dijitIconFolderOpen,
 .dj_ie6 .dijitRtl .dijitIconError {
-	background-image: url(../../icons/images/commonIconsObjActEnabled8bit_rtl.png);
+	background-image: url("../../icons/images/commonIconsObjActEnabled8bit_rtl.png");;
 }
 .dijitRtl .dijitDisabled .dijitIconSave,
 .dijitRtl .dijitDisabled .dijitIconPrint,
@@ -288,7 +288,7 @@
 .dijitRtl .dijitDisabled .dijitFolderOpened,
 .dijitRtl .dijitDisabled .dijitIconFolderOpen,
 .dijitRtl .dijitDisabled .dijitIconError {
-	background-image: url(../../icons/images/commonIconsObjActDisabled_rtl.png); 
+	background-image: url("../../icons/images/commonIconsObjActDisabled_rtl.png");; 
 }
 .claro .dijitTitlePaneRtl .dijitClosed .dijitArrowNode {
   background-position: -7px 0;

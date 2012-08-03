@@ -23,7 +23,7 @@ define(['dojo/_base/declare',
        
 ],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, AddFiles, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS){
 
-var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, fileName, existingResource) {
+var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, dialogSpecificClassOptions, fileName, existingResource) {
 	var resource=existingResource || getSelectedResource();
 	var folder;
 	if (resource) {
@@ -52,7 +52,8 @@ var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificC
 						finishButtonLabel:createLabel,
 						value: folder,
 						checkFileName: checkFileName,
-						dialogSpecificClass:dialogSpecificClass};
+						dialogSpecificClass:dialogSpecificClass,
+						dialogSpecificClassOptions:dialogSpecificClassOptions };
 	return new NewFile(dialogOptions);
 };
 
@@ -71,35 +72,79 @@ var getSelectedResource = function(){
 };
 
 var uiResource = {
-		newHTML: function(){
-				var dialogSpecificClass = "davinci/ui/widgets/NewHTMLFileOptions";
-				var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "html", dialogSpecificClass);
+		newHTMLDialogSpecificClass: "davinci/ui/widgets/NewHTMLFileOptions",
+		
+		newHTMLMobile: function(){
+			this.newHTML({ 
+				title:uiNLS.createMobileApplication,
+				dialogSpecificClassOptions:{ showDevices:true, showThemeSetsButton:true }
+			});
+		},
+		newHTMLDesktop: function(){
+			this.newHTML({ 
+				title:uiNLS.createDesktopApplication,
+				dialogSpecificClassOptions:{ showDevices:false, showThemeSetsButton:true },
+				device:'desktop'
+			});
+		},
+		newHTMLSketchHiFi: function(){
+			this.newHTML({
+				title:uiNLS.createSketchHiFi,
+				dialogSpecificClassOptions:{ showDevices:false, showThemeSetsButton:true },
+				layout:'absolute', 
+				theme:'claro'
+			});
+		},
+		newHTMLSketchLoFi: function(){
+			this.newHTML({ 
+				title:uiNLS.createSketchLoFi,
+				dialogSpecificClassOptions:{ showDevices:false, showThemeSetsButton:false },
+				layout:'absolute', 
+				theme:'Sketch' 
+			});
+		},
 
-				var executor = function(){
-					var optionsWidget = newDialog.dialogSpecificWidget;
-					var options = optionsWidget.getOptions();
-					var resourcePath = newDialog.get('value');
-					var resource = Resource.createResource(resourcePath);
-					resource.isNew = true;
-					resource.dirtyResource = true;
-					var text = Resource.createText("HTML", {resource:resource});
-					if(text){
-						resource.setText(text);
-					}
-					var device = options.device;
-					if(device === 'desktop'){
-						device = 'none';
-					}
-					var newHtmlParams = {
-						device:device,
-						flowlayout:(options.layout=='flow')+'',	// value need to be strings 'true' or 'false'
-						theme: options.theme,
-						themeSet:newDialog.dialogSpecificWidget._selectedThemeSet
-					};
-					uiResource.openResource(resource, newHtmlParams);
-					Workbench.workbenchStateCustomPropSet('nhfo',options);
+		newHTML: function(params){
+			var dialogSpecificClass = this.newHTMLDialogSpecificClass;
+			var dialogSpecificClassOptions = params ? params.dialogSpecificClassOptions : null;
+			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.create, "html", dialogSpecificClass, dialogSpecificClassOptions);
+
+			var executor = function(){
+				var optionsWidget, options;
+				if(newDialog.dialogSpecificWidget){
+					optionsWidget = newDialog.dialogSpecificWidget;
+					options = optionsWidget.getOptions();
+				}
+				var resourcePath = newDialog.get('value');
+				var resource = Resource.createResource(resourcePath);
+				resource.isNew = true;
+				resource.dirtyResource = true;
+				var text = Resource.createText("HTML", {resource:resource});
+				if(text){
+					resource.setText(text);
+				}
+				var device = 'none';
+				if(params  && params.dialogSpecificClassOptions && params.dialogSpecificClassOptions.showDevices){
+					device = options ? options.device : 'none';
+				}
+				var flowLayout = (params && params.layout) ? params.layout : true;
+				flowLayout = flowLayout+'';	// value need to be strings 'true' or 'false'
+				var theme = (params && params.theme) ? params.theme : null;
+				var themeSet = null;
+				if(params  && params.dialogSpecificClassOptions && params.dialogSpecificClassOptions.showThemeSetsButton){
+					theme = options ? options.theme : null;
+					themeSet = newDialog.dialogSpecificWidget ? newDialog.dialogSpecificWidget._selectedThemeSet : null;
+				}
+				var newHtmlParams = {
+					device:device,
+					flowlayout:flowLayout,
+					theme: theme,
+					themeSet:themeSet
 				};
-				Workbench.showModal(newDialog, uiNLS.createNewHTMLFile, '', executor);
+				uiResource.openResource(resource, newHtmlParams);
+				Workbench.workbenchStateCustomPropSet('nhfo',options);
+			};
+			Workbench.showModal(newDialog, params.title, '', executor);
 		},
 	
 		newCSS: function(){
@@ -197,7 +242,7 @@ var uiResource = {
 			var newFileName = new Path(oldFileName).lastSegment();
 			var oldResource = Resource.findResource(oldFileName);
 			
-			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.save, extension, null, newFileName, oldResource);
+			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.save, extension, null, null, newFileName, oldResource);
 			var executor = function(){
 				var resourcePath = newDialog.get('value');
 				var oldResource = Resource.findResource(oldFileName);
@@ -208,6 +253,7 @@ var uiResource = {
 				} else {
 					oldContent = (oldEditor.model && oldEditor.model.getText) ? oldEditor.model.getText() : oldEditor.getText();
 				}
+				var theme = oldEditor.visualEditor.context.theme;
 				var existing=Resource.findResource(resourcePath);
 				
 				oldEditor.editorContainer.forceClose(oldEditor);
@@ -220,7 +266,7 @@ var uiResource = {
 				oldEditor.isDirty = false;
 				// Create a new editor for the new filename
 				var file = Resource.createResource(resourcePath);
-				new RebuildPage().rebuildSource(oldContent, file).then(function(newText) {
+				new RebuildPage().rebuildSource(oldContent, file, theme).then(function(newText) {
 					file.setContents(newText);
 					Workbench.openEditor({fileName: file, content: newText});					
 				});

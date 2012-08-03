@@ -82,7 +82,7 @@
   border-top: 1px solid #b5bcc7;
   border-right: 1px solid #b5bcc7;
   background-color: #efefef;
-  background-image: url(images/titlebar.png);
+  background-image: url("images/titlebar.png");;
   background-repeat: repeat-x;
   color: #000000;
 }
@@ -107,7 +107,7 @@
   vertical-align: middle;
   text-align: center;
   background-color: #efefef;
-  background-image: url(images/titlebar.png);
+  background-image: url("images/titlebar.png");;
   background-repeat: repeat-x;
   border-right: 1px solid #cccccc;
   border-top: 1px solid #b5bcc7;
@@ -474,7 +474,7 @@
   border-bottom: 1px solid #b5bcc7;
   color: #000000;
   background-color: #efefef;
-  background-image: url(images/titlebar.png);
+  background-image: url("images/titlebar.png");;
   background-repeat: repeat-x;
 }
 .claro .dojoxCalendarColumnView .dojoxCalendarColumnHeader {
@@ -500,7 +500,7 @@
   vertical-align: middle;
   text-align: center;
   background-color: #efefef;
-  background-image: url(images/titlebar.png);
+  background-image: url("images/titlebar.png");;
   background-repeat: repeat-x;
   border-right: 1px solid #cccccc;
   border-top: 1px solid #b5bcc7;
@@ -526,7 +526,7 @@
 }
 .claro .dojoxCalendarColumnView .dojoxCalendarColumnHeaderTable td.Hover {
   cursor: pointer;
-  background-image: url(images/titlebar.png);
+  background-image: url("images/titlebar.png");;
   background-repeat: repeat-x;
   background-color: #abd6ff;
   border-color: #769dc0;

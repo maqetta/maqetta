@@ -82,7 +82,7 @@
   border-top: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
   background: #F8F8F8;
-  background: #f8f8f8 url(images/titleBar.png) repeat-x bottom left;
+  background: #f8f8f8 url("images/titleBar.png"); repeat-x bottom left;
   padding: 3px 4px;
   color: #293a4b;
 }
@@ -107,7 +107,7 @@
   vertical-align: middle;
   text-align: center;
   background: #F8F8F8;
-  background: #f8f8f8 url(images/titleBar.png) repeat-x bottom left;
+  background: #f8f8f8 url("images/titleBar.png"); repeat-x bottom left;
   padding: 3px 4px;
   border-right: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
@@ -474,7 +474,7 @@
   border-bottom: 1px solid #cccccc;
   color: #293a4b;
   background: #F8F8F8;
-  background: #f8f8f8 url(images/titleBar.png) repeat-x bottom left;
+  background: #f8f8f8 url("images/titleBar.png"); repeat-x bottom left;
   padding: 3px 4px;
 }
 .tundra .dojoxCalendarColumnView .dojoxCalendarColumnHeader {
@@ -500,7 +500,7 @@
   vertical-align: middle;
   text-align: center;
   background: #F8F8F8;
-  background: #f8f8f8 url(images/titleBar.png) repeat-x bottom left;
+  background: #f8f8f8 url("images/titleBar.png"); repeat-x bottom left;
   padding: 3px 4px;
   border-right: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
@@ -526,7 +526,7 @@
 }
 .tundra .dojoxCalendarColumnView .dojoxCalendarColumnHeaderTable td.Hover {
   cursor: pointer;
-  background: #f8fafd url(images/accordionItemHover.gif) bottom repeat-x;
+  background: #f8fafd url("images/accordionItemHover.gif"); bottom repeat-x;
 }
 .tundra .dojoxCalendarColumnView .dojoxCalendarColumnHeaderTable td.Active {
   cursor: pointer;

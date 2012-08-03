@@ -28,7 +28,7 @@
 	text-align: right;
 }
 .dojoxGridRtl .dojoxGridFBarDefFilterBtnIcon {
-	background: url(images/sprite_icons.png) no-repeat;
+	background: url("images/sprite_icons.png"); no-repeat;
 	background-position: -180px -18px;
 }
 .dojoxGridRtl .dojoxGridFBarStatus {

@@ -24,12 +24,8 @@
 	<script type="text/javascript">
 		require(["dijit/dijit", "davinci/davinci" ], function () {
 			require(["dojo/i18n!davinci/nls/webContent", "davinci/version", "dojo/domReady!"], function (webContent, version) {
-				  dojo.byId("davinci_user_welcome").innerHTML = webContent.welcome;
 				  dojo.byId("load_screen").innerHTML = webContent.loadingMaqetta;
-				  dojo.byId("davinci_logoff").innerHTML = webContent.logOff;
-				  dojo.byId("maqetta_designer").innerHTML = webContent.designer;
-				  dojo.byId("maqetta_version").innerHTML = version;
-				  dojo.byId("title_id").text = 'Maqetta';
+				  dojo.byId("title_id").text = webContent.pageDesignerTitle;
 			});
 
 			var Workbench = require("davinci/Workbench"),
@@ -55,31 +51,12 @@
 					var result = Runtime.getUser();
 					
                     if (result) {
-                        dojo.byId('davinci_user').innerHTML=result.email;
                         Runtime.userName=result.userId;
 					} else {
-						//FIXME: temporary fix for running via file: URLs
-					   dojo.byId('davinci_user').innerHTML=webContent.maqettaUser;
+						//do nothing
 					}
 					if (!result || result.userId=='maqettaUser') {
-						dojo.byId('davinci_user').innerHTML=webContent.localhostUser;
-						dojo.byId('davinci_logoff').href="";
 						Runtime.isLocalInstall=true;
-					}
-					var isRunningJoomla  = dojo.cookie("DAVINCI.JOOMLA");
-					if (isRunningJoomla) {
-						dojo.byId('davinci_logoff').href = "http://" + window.location.hostname + 
-							"/index.php?option=com_user&task=logout&return=Lw";
-				 	}
-				 	// Hide logoff if single-user mode
-					var singleUser = Runtime.singleUserMode();
-					if(singleUser){
-						var logoff = dojo.byId('davinci_logoff');
-						var main_menu = dojo.byId('davinci_main_menu');
-						if (logoff && main_menu) {
-							logoff.style.display = 'none';
-							main_menu.style.marginRight = '3em';
-						}
 					}
 					
 					// set up for review and commenting...
@@ -146,26 +123,21 @@
 	<link rel="shortcut icon" href="app/davinci/img/maqetta.png" />
 	</head>
 
-	<body class="claro">
+	<body id='maqBody' class="claro">
 		<div class="loading"><table><tr><td id="load_screen"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;</td></tr></table></div>
 		<div id="davinci_app">
 			<div id="davinci_top_bar">
+				<div id="davinci_top_bar_main">
 					<div id="davinci_user_container">
-						<span id="davinci_user_welcome"></span>
-						<span id="davinci_user"></span>
 						<span id="davinci_main_menu"> </span>
-						<a id="davinci_logoff" href='javascript:davinci.Runtime.logoff()'> </a>
 					</div>
 					<span class="maq_banner_name_box">
+						<span class="maq_banner_logo"></span>
 						<span class="maq_banner_name">Maqetta</span>
-						<span id="maqetta_designer" class="maq_banner_component"></span>
-						<span id="maqetta_version" class="maq_banner_version"></span>
 					</span>
-<!-- no toolbar for now, uncomment and put in desired location, and toolbar will be generated based on actions
-					<div id="toolbar_container">
-						<span id="davinci_toolbar_main"></span>
-					</div>
--->
+					<span id="maq_banner_editor_commands"></span>
+				</div>
+				<div id="davinci_top_bar_divider"></div>
 			</div>
 			<div id="mainBody"></div>
 		</div>

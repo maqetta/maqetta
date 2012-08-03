@@ -3,17 +3,22 @@ define([
 	"../ui/ModelEditor",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
+	"dojo/dnd/Moveable",
+	"davinci/Runtime",
 	"../commands/CommandStack",
 	"../html/ui/HTMLEditor",
 	"../model/Path",
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
-	"../Runtime"
-], function(declare, ModelEditor, BorderContainer, ContentPane, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils){
+	"dojo/i18n!davinci/ve/nls/ve"
+], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, 	Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
-	   
+
+	_latestSourceMode: "source",
+	_latestLayoutMode: "flow",
+
     constructor: function (element, fileName) {
 
         this._bc = new BorderContainer({}, element);
@@ -23,7 +28,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this._commandStack = new CommandStack(this);
         this.savePoint=0;
 
-        this._designCP = new ContentPane({region:'center'});
+        this._designCP = new ContentPane({'class':'designCP',region:'center'});
         this._bc.addChild(this._designCP);
 
 
@@ -59,6 +64,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
+		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/moved", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/resized", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/showProps", this._actionPropertiesPaletteChanged.bind(this));
+		this.subscribe("/maqetta/ui/actionPropertiesPalette/hideProps", this._actionPropertiesPaletteChanged.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -75,8 +85,92 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 //		if(this.currentEditor==this.visualEditor)
 //			this.visualEditor.onContentChange();
 	},
+	
+	_editorSelected: function(event){
+		var context = this.getContext();
+		if(this == event.oldEditor){
+			context.hideFocusAll();
+		}
+		if(event.editor && event.editor.editorContainer && 
+				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
+				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
+			event.editor.editorContainer.showActionPropertiesPalette();
+			if(this == event.editor){
+				var flowLayout = context.getFlowLayout();
+				var layout = flowLayout ? 'flow' : 'absolute';
+				this._updateLayoutDropDownButton(layout);
+				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
+					this.editorContainer.restoreActionPropertiesState(this)
+				}
+			}
+		}else{
+			var editor = event.editor ? event.editor : event.oldEditor;
+			if(editor){
+				editor.editorContainer.hideActionPropertiesPalette();
+			}
+		}
+	},
 
+	_actionPropertiesPaletteChanged: function(){
+		if(this == davinci.Runtime.currentEditor && this.editorContainer){
+			this.editorContainer.preserveActionPropertiesState(this);
+		}
+	},
+	
+	_updateLayoutDropDownButton: function(newLayout){
+		var layoutDropDownButtonNode = dojo.query('.maqLayoutDropDownButton');
+		if(layoutDropDownButtonNode){
+			var layoutDropDownButton = dijit.byNode(layoutDropDownButtonNode[0]);
+			if(layoutDropDownButton){
+				layoutDropDownButton.set('label', veNls['LayoutDropDownButton-'+newLayout]);
+			}
+		}
+
+	},
+	
+	_selectLayout: function(layout){
+		this._latestLayoutMode = layout;
+		require(["davinci/actions/SelectLayoutAction"], function(ActionClass){
+			var SelectLayoutAction = new ActionClass();
+			SelectLayoutAction._changeLayoutCommand(layout);
+		});
+		this._updateLayoutDropDownButton(layout);
+	},
+	selectLayoutFlow: function(){
+		this._selectLayout('flow');
+	},
+	selectLayoutAbsolute: function(){
+		this._selectLayout('absolute');
+	},
+
+	_switchDisplayModeSource: function (newMode) {
+		this._latestSourceMode = newMode;
+		this.switchDisplayMode(newMode);
+		var sourceComboButtonNode = dojo.query('.maqSourceComboButton');
+		if(sourceComboButtonNode){
+			var sourceComboButton = dijit.byNode(sourceComboButtonNode[0]);
+			if(sourceComboButton){
+				sourceComboButton.set('label', veNls['SourceComboButton-'+newMode]);
+			}
+		}
+	},
+	switchDisplayModeSource: function () {
+		this._switchDisplayModeSource("source");
+	},
+	switchDisplayModeSplitVertical: function () {
+		this._switchDisplayModeSource("splitVertical");
+	},
+	switchDisplayModeSplitHorizontal: function () {
+		this._switchDisplayModeSource("splitHorizontal");
+	},
+	switchDisplayModeSourceLatest: function () {
+		this.switchDisplayMode(this._latestSourceMode);
+	},
+	switchDisplayModeDesign: function () {
+		this.switchDisplayMode("design");
+	},
 	switchDisplayMode: function (newMode) {
+		var context = this.getContext();
 		if (this._displayMode!="design") {
 			this._bc.removeChild(this._srcCP);
 			this.htmlEditor.setVisible(false);
@@ -124,6 +218,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 		if (newMode!="design") {
 			this.htmlEditor.editor.getTextView().resize();
+		}
+		if (newMode == "source") {
+			context.hideFocusAll();			
+		}else{
+			context.updateFocusAll();
 		}
 	},
 
@@ -305,6 +404,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	// dummy handler
 	handleKeyEvent: function(e) {
+	},
+	
+	getDisplayMode: function(){
+		return this._displayMode;
 	}
 });
 }); 

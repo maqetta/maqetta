@@ -935,7 +935,7 @@ if(_2.isString(_ff)){
 if(_ff=="slow"){
 _ff=700;
 }else{
-if(_ff="fast"){
+if(_ff=="fast"){
 _ff=300;
 }else{
 _ff=500;

@@ -34,11 +34,16 @@ davinci/davinci = {
 	"./actions/DownloadAction",
 	"./actions/StickyNoteAction",
 	"./actions/SaveAsWidget",
+	"./actions/UserNameAction",
+	"./actions/LogoutAction",
 
 	"./ve/actions/CopyAction",
 	"./ve/actions/CutAction",
 	"./ve/actions/DeleteAction",
 	"./ve/actions/PasteAction",
+	"./ve/actions/DuplicateAction",
+	"./ve/actions/EditValueAction",
+	"./ve/actions/EditPropertiesAction",
 	"./ve/actions/ChooseDeviceAction",
 	"./ve/actions/RotateDeviceAction",
 	"./ve/actions/SurroundAction",
@@ -47,11 +52,13 @@ davinci/davinci = {
 	"./ve/actions/SelectAncestorAction",
 	"./ve/actions/UnselectAllAction",
 	
+	"./ve/actions/ArrangeAction",
 	"./ve/actions/MoveToFrontAction",
 	"./ve/actions/MoveToBackAction",
 	"./ve/actions/MoveForwardAction",
 	"./ve/actions/MoveBackwardAction",
 
+	"./ve/actions/OtherAction",
 	"./ve/actions/EnableApplicationStates",
 
 	"./ve/actions/AddState",

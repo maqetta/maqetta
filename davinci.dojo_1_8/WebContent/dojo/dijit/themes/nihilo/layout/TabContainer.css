@@ -36,11 +36,11 @@
 .nihilo .dijitMenuExpand {
 	width:15px;
 	height:15px;
-	background-image: url(../images/spriteRoundedIconsSmall.png);
+	background-image: url("../images/spriteRoundedIconsSmall.png");;
 	background-position: -30px top;
 }
 .dj_ie6 .nihilo .dijitMenuExpand {
-	background-image:url(../images/spriteRoundedIconsSmall.gif);
+	background-image:url("../images/spriteRoundedIconsSmall.gif");;
 }
 .nihilo .dijitMenuSeparator {
 	height: 1px;
@@ -55,7 +55,7 @@
 	display: none;
 }
 .nihilo .dijitCheckedMenuItemIcon {
-	background-image: url(../images/spriteCheckbox.gif);
+	background-image: url("../images/spriteCheckbox.gif");;
 	background-position: -80px;
 }
 .nihilo .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {

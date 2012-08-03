@@ -5,28 +5,30 @@ define([
 ], function(declare, LayoutWidget, Templated){
 
 return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated], {
-	templateString: "<div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
+	templateString: "<div><div dojoAttachPoint='titleBarDiv' class='toolbaredContainer_titleBarDiv'></div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
 
 	gutters: false,
+	_toolbarCreated:{},
 
 	layout: function() {
 		// Configure the main pane to take up all the space except for where the toolbar is
 
 		// position and size the toolbar and the container node
 		var children = [
+			{ domNode: this.titleBarDiv, layoutAlign: "top" },
 			{ domNode: this.toolbarDiv, layoutAlign: "top" },
 			{ domNode: this.containerNode, layoutAlign: "client" }
 		];
 
 		dijit.layout.layoutChildren(this.domNode, this._contentBox, children);
 		// Compute size to make each of my children.
-		// children[1] is the margin-box size of this.containerNode, set by layoutChildren() call above
-		this._containerContentBox = dijit.layout.marginBox2contentBox(this.containerNode, children[1]);
+		// children[2] is the margin-box size of this.containerNode, set by layoutChildren() call above
+		this._containerContentBox = dijit.layout.marginBox2contentBox(this.containerNode, children[2]);
 		var widget = dijit.byNode(this.containerNode);
 		if (widget && widget.resize) {
 			widget.resize(this._containerContentBox);
 		}
-		dojo.marginBox(this.containerNode, children[1]);//KLUDGE: top doesn't get set without this.
+		dojo.marginBox(this.containerNode, children[2]);//KLUDGE: top doesn't get set without this.
 	},
 
 	setContent: function(/*Widget*/data){
@@ -38,8 +40,16 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		this.containerNode = domNode;
 
 		//TODO: move this to part of the widget life cycle
-		if (!this._toolbarCreated) {
-			this._createToolbar();
+		if (!this.toolbarCreated(this.declaredClass)) {
+			this._createToolbar(this.declaredClass);
+		}
+		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span>'+this.title+'</span>';
+		var closeBoxNodes = dojo.query('.paletteCloseBox', this.titleBarDiv);
+		if(closeBoxNodes.length > 0){
+			var closeBox = closeBoxNodes[0];
+			dojo.connect(closeBox, 'click', this, function(event){
+				davinci.Workbench.collapsePaletteContainer(event.currentTarget);
+			});
 		}
 		if(this._started) this.layout();
 	},
@@ -59,12 +69,19 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 
 	getTopAdditions: function(){},
 
-	_createToolbar: function(){
+	/**
+	 * Creates toolbar for this view or editor using data from appropriate *.plugin.js directives
+	 * for this particular view or editor.
+	 * Note that this routine can be overridden by a subclass (e.g., EditorContainer.js)
+	 * @param {string} editorClass  Class name for editor, such as 'davinci.ve.PageEditor'
+	 */
+	_createToolbar: function(containerClass){
 		var Workbench = require('davinci/Workbench');
+		var toolbarDiv = this.getToolbarDiv();
 		
 		var topAddition=this.getTopAdditions();
 		if (topAddition) {
-			this.toolbarDiv.appendChild(topAddition);
+			toolbarDiv.appendChild(topAddition);
 		}
 		
 		// If descendant class provides a value for toolbarMenuActionSets,
@@ -73,7 +90,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
     		// Note: menu routines in Dojo and Workbench require unique names
     		var unique="m" + Date.now();
     		var menuContainerId=unique+"_menucontainer";
-        	var menuContainerElem = dojo.create("span", {'id':menuContainerId, 'class':"paletteDropdown"}, this.toolbarDiv);
+        	var menuContainerElem = dojo.create("span", {'id':menuContainerId, 'class':"paletteDropdown"}, toolbarDiv);
     		var menuId=unique+"_menu";
         	var menuElem = dojo.create("span", {id:menuId}, menuContainerElem);
         	Workbench.updateMenubar(menuElem, this.toolbarMenuActionSets);
@@ -82,17 +99,39 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		var viewActions=this._getViewActions();
         if (viewActions && viewActions.length)
         {
-    		var tb=dojo.create("span", {style: {display: "inline-block"}},this.toolbarDiv);
+    		var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
     		
-        	var toolbar = Workbench._createToolBar("xx", tb, viewActions,this._getViewContext());
+        	var toolbar = Workbench._createToolBar('toolbarPath', tb, viewActions,this._getViewContext());
     		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});
+            this.toolbarCreated(containerClass, toolbar);
         }
-		this._toolbarCreated=true;
 	},
 	
 	_getViewContext: function()
 	{
 		return this;
+	},
+	
+	/**
+	 * Returns an {Element} that is the container DIV into which editor toolbar should go
+	 * This function can be overridden by subclasses (e.g., EditorContainer.js)
+	 */
+	getToolbarDiv: function(){
+		return this.toolbarDiv;
+	},
+	
+	/**
+	 * Getter/setting for whether toolbar has been created.
+	 * Note that this function can be overridden by a subclass (e.g., EditorContainer)
+	 * @param {string} containerClass  Class name for view or editor, such as 'davinci.ve.PageEditor'
+	 * @param {boolean} [toolbar]  If provided, toolbar widget
+	 * @returns {boolean}  Whether toolbar has been created
+	 */
+	toolbarCreated: function(containerClass, toolbar){
+		if(arguments.length > 1){
+			this._toolbarCreated[containerClass] = toolbar;
+		}
+		return this._toolbarCreated[containerClass];
 	}
 
 //TODO: implement destroy/getChildren to destroy toolbarDiv and containerNode?

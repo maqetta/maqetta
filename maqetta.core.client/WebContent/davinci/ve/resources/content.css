@@ -31,51 +31,6 @@
 	z-index:1000000;
 }
 
-.editFocusFrame {
-	position:absolute;
-	overflow:hidden;
-	border:none;
-	background:#d3e1ee;
-	border:2px solid #6a94dc;
-}
-.editFocusFrameLEFT {
-	width:4px;
-	border-right:none;
-	cursor:w-resize;
-}
-.editFocusFrameRIGHT {
-	width:4px;
-	border-left:none;
-	cursor:e-resize;
-}
-.editFocusFrameTOP {
-	height:4px;
-	border-bottom:none;
-	cursor:n-resize;
-}
-.editFocusFrameBOTTOM {
-	height:4px;
-	border-top:none;
-	cursor:s-resize;
-}
-.editFocusNob {
-	
-	background-color:#246ce4;
-	background-image:-webkit-linear-gradient(#2b7bfc,#246ce4,#042378);
-	background-image:-moz-linear-gradient(#2b7bfc,#246ce4,#042378);
-	background-image:-ms-linear-gradient(#2b7bfc,#246ce4,#042378);
-	background-image:-linear-gradient(#2b7bfc,#246ce4,#042378);
-	-webkit-border-radius:10px;
-	-moz-border-radius:10px;
-	-ms-border-radius:10px;
-	border-radius:10px;
-	border:1px solid white; 
-	box-shadow:0px 2px 2px #888;
-	position:absolute;
-	width:10px;
-	height:10px;
-	overflow:hidden;
-}
 .focusDragDiv, .selectToolDragDiv {
 	position:absolute;
 	z-index:2000000;

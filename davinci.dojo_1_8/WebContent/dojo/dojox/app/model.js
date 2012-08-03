@@ -1,77 +1,74 @@
 //>>built
-define("dojox/app/model",["dojo/_base/lang","dojo/Deferred","dojo/when","dojo/_base/config"],function(_1,_2,_3,_4){
-return function(_5,_6,_7){
-this.app=_7||_6;
+define("dojox/app/model",["dojo/_base/lang","dojo/Deferred","dojo/when"],function(_1,_2,_3){
+return function(_4,_5,_6){
+this.app=_6||_5;
 this.defCount=0;
-var _8={};
-var _9=new _2();
-if(_6.loadedModels){
-_1.mixin(_8,_6.loadedModels);
+var _7={};
+var _8=new _2();
+if(_5.loadedModels){
+_1.mixin(_7,_5.loadedModels);
 }
-if(_5){
-var _a=_8;
-for(var _b in _5){
-if(_b.charAt(0)!=="_"){
+if(_4){
+for(var _9 in _4){
+if(_9.charAt(0)!=="_"){
 this.defCount++;
 }
 }
 if(this.defCount==0){
+return _7;
+}
+for(var _a in _4){
+if(_a.charAt(0)!=="_"){
+_b(_4,_a,_5,_8,_7);
+}
+}
 return _8;
-}
-for(var _c in _5){
-if(_c.charAt(0)!=="_"){
-_d(_5,_c,_6,_9,_8);
-}
-}
-return _9;
 }else{
-return _8;
+return _7;
 }
-return _9;
 };
-function _d(_e,_f,_10,_11,_12){
-var _13=_e[_f].params?_e[_f].params:{};
+function _b(_c,_d,_e,_f,_10){
+var _11=_c[_d].params?_c[_d].params:{};
 var def=new _2();
-var _14=_e[_f].modelLoader?_e[_f].modelLoader:"dojox/app/utils/simpleModel";
-require([_14],function(_15){
-def.resolve(_15);
+var _12=_c[_d].modelLoader?_c[_d].modelLoader:"dojox/app/utils/simpleModel";
+require([_12],function(_13){
+def.resolve(_13);
 });
-var _16=new _2();
-return _3(def,_1.hitch(this,function(_17){
-var _18;
+var _14=new _2();
+return _3(def,_1.hitch(this,function(_15){
+var _16;
 try{
-_18=_17(_e,_13,_f);
+_16=_15(_c,_11,_d);
 }
 catch(ex){
 console.warn("load model error in model.",ex);
-_16.reject("load model error in model.",ex);
-return _16.promise;
+_14.reject("load model error in model.",ex);
+return _14.promise;
 }
-if(_18.then){
-_3(_18,_1.hitch(this,function(_19){
-_12[_f]=_19;
-this.app.log("in app/model, for item=[",_f,"] loadedModels =",_12);
+if(_16.then){
+_3(_16,_1.hitch(this,function(_17){
+_10[_d]=_17;
+this.app.log("in app/model, for item=[",_d,"] loadedModels =",_10);
 this.defCount--;
 if(this.defCount==0){
-_11.resolve(_12);
+_f.resolve(_10);
 }
-_16.resolve(_12);
-return _12;
+_14.resolve(_10);
+return _10;
 }),function(){
-_16.reject("load model error in models.");
+_14.reject("load model error in models.");
 });
-return _16;
+return _14;
 }else{
-_12[_f]=_18;
-this.app.log("in app/model else path, for item=[",_f,"] loadedModels=",_12);
+_10[_d]=_16;
+this.app.log("in app/model else path, for item=[",_d,"] loadedModels=",_10);
 this.defCount--;
 if(this.defCount==0){
-_11.resolve(_12);
+_f.resolve(_10);
 }
-_16.resolve(_12);
-return _12;
+_14.resolve(_10);
+return _10;
 }
 }));
-return _16;
 };
 });

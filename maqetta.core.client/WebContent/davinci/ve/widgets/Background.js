@@ -281,10 +281,11 @@ define(["dojo/_base/declare",
 				}
 				var context = (this._cascade && this._cascade._widget && this._cascade._widget.getContext)
 						? this._cascade._widget.getContext() : null;
-				if(!context){
+				if(context){
 					delete context.cascadeBatch;
 				}
 			}));
+			this._maqStartupComplete = true;
 		},
 		/*
 		 * This is the base location for the file in question.  Used to caluclate relativity for url(...)
@@ -350,6 +351,10 @@ define(["dojo/_base/declare",
 		},
 		
 		_setReadOnlyAttr: function(isReadOnly){
+//FIXME: TEMPORARY
+if(!this._maqStartupComplete){
+	return;
+}
 			this._isReadOnly = isReadOnly;
 			this._comboBox.set("disabled", isReadOnly);
 			this._button.disabled = isReadOnly;

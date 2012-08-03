@@ -3,7 +3,6 @@ define([
     "dojo/_base/lang",
     "dojo/_base/xhr",
 	"dojo/query",
-	"dojo/dom-style",
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"dojo/_base/connect",
@@ -42,7 +41,6 @@ define([
 	lang,
 	xhr,
 	query,
-	domStyle,
 	Deferred,
 	all,
 	connect,
@@ -641,6 +639,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                 this._themeUrl = theme.themeUrl;
                 this._themeMetaCache = theme.themeMetaCache;
                 this.theme = theme.theme;
+                this.theme.helper = Theme.getHelper(this.theme);
+                if (this.theme.helper && this.theme.helper.then){ // it might not be loaded yet so check for a deferred
+                	this.theme.helper.then(function(result){
+        	       		 if (result.helper) {
+        	       			 this.theme.helper = result.helper;
+        	       		 }
+        	    	 }.bind(this));
+        		}
             }
         }
         return this.theme;
@@ -841,7 +847,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			).then(function(){
 					// make sure this file has a valid/good theme
 					this.loadTheme(newHtmlParams);	
-					this.widgetAddedOrDeleted();
 			}.bind(this));
 		}
 
@@ -884,6 +889,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
+			this.widgetAddedOrDeleted();
 		} else {
 			// initialize frame
 			var dojoUrl;
@@ -1017,8 +1023,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					lang.mixin(callbackData, e);
 				}
-
 				this._continueLoading(data, callback, callbackData, scope);
+				this.widgetAddedOrDeleted();
 			}.bind(this);
 
 			doc.open();
@@ -1165,11 +1171,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_setSourceData: function(data) {
-		var widgetsPromise;
-		connect.connect(this.getGlobal(), 'onload', this, function() {
-			widgetsPromise.then(this.onload());
-		});
-
 		// cache the theme metadata
 		this.themeChanged();
 		var theme = this.getThemeMeta();
@@ -1285,7 +1286,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
-		return (widgetsPromise = this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts));
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(function(){
+			connect.connect(this.getGlobal(), 'onload', this, function() {
+				this.onload();
+			});
+		}.bind(this));		
 	},
 
 	/**
@@ -1300,7 +1305,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		newCons = newCons.concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 		this._connections = newCons;
 		this._configDojoxMobile();
-		this.updateScrollListeners();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	    this.editor.setDirty(this.hasDirtyResources());
 	},
@@ -1862,6 +1866,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocus: function(widget, index, inline){
+		if(this.editor.getDisplayMode() == 'source'){
+			return;
+		}
 		Widget.requireWidgetHelper(widget.type).then(function(helper) { 
 			if(!this.editor.isActiveEditor()){
 				return;
@@ -1910,6 +1917,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocusAll: function(){
+		if(this.editor.getDisplayMode() == 'source'){
+			return;
+		}
 		var selection = this._selection;
 		if(selection){
 			for(var i=0; i<selection.length; i++){
@@ -2070,7 +2080,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	selectionShowFocus: function(){
 		var selection = this.getSelection();
 		for(var i=0; i<selection.length; i++){
-			this._focuses[i].show(selection[i]);
+			this._focuses[i].show(selection[i], {});
 		}
 	},
 	
@@ -2093,7 +2103,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._focuses.push(focus);
 		}
 
-		var containerNode = this.getContainerNode();
+		//FIXME: DELETE THIS var containerNode = this.getContainerNode();
+		var containerNode = document.body;
 
 		if(state){
 			if(state.box && state.op){
@@ -2109,7 +2120,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(focus.domNode.parentNode != containerNode){
 					containerNode.appendChild(focus.domNode);
 				}
-				focus.show(w[windex],inline);
+				focus.show(w[windex], { inline:inline });
 			}else{ // hide
 				focus.hide();
 			}
@@ -2123,7 +2134,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._focuses.push(focus); // recycle
 		}
 		if(clear){
+			this.hideFocusAll(index);
+			/*FIXME: DELETE THIS
 			for(var i = index; i < this._focuses.length; i++){
+				focus = this._focuses[i];
+				if(focus.domNode.parentNode == containerNode){
+					focus.hide();
+					containerNode.removeChild(focus.domNode);
+				}
+			}
+			*/
+		}
+	},
+	
+	hideFocusAll: function(startIndex){
+		if(!startIndex){
+			startIndex = 0;
+		}
+		//FIXME: DELETE THIS var containerNode = this.getContainerNode();
+		var containerNode = document.body;
+		if(this._focuses){
+			for(var i = startIndex; i < this._focuses.length; i++){
 				focus = this._focuses[i];
 				if(focus.domNode.parentNode == containerNode){
 					focus.hide();
@@ -2398,8 +2429,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.select(w, true); // add
 			}
 		}, this);
-
-		// ALP->WBR: do we still need this? move to ThemeEditor's context?
 		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
 			var helper = Theme.getHelper(this.visualEditor.theme);
 			if(helper && helper.onContentChange){
@@ -2407,17 +2436,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			} else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
            	 helper.then(function(result){
         		 if (result.helper && result.helper.onContentChange){
-        			 result.helper.onContentChange(this, this.visualEditor.theme); 
+        			 result.helper.onContentChange(this,  this.visualEditor.theme); 
     			 }
         	 }.bind(this));
           }
 		}
-
-		if (this._forceSelectionChange) {
-			this.onSelectionChange(this.getSelection());
-			delete this._forceSelectionChange;
-		}
-
 		setTimeout(function(){
 			// Invoke autoSave, with "this" set to Workbench
 			Workbench._autoSave.call(Workbench);
@@ -2426,8 +2449,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onSelectionChange: function(selection){
-		this._cssCache = {};
-		dojo.publish("/davinci/ui/widgetSelected",[selection]);
+		// this method can be called from at the end of modifyRuleCommand, 
+		// The publish causes the cascade, and properties in the palette to be updated to the selection
+		// In the case od and undo or redo from the command stack. The reason the timeout is here is
+		// in the case of multiple ModifyRulesCommands in a CompondCommand this gets called for each of
+		// the modifies in the compond command, pounding the cascade and properties causing preoframnce issues
+		// we really only need to sent one publish at the end, so we put the publish in a timeout. If we are indeeded 
+		// getting called from a CompondCommand and the next request to publish comes in in less than the timeout
+		// we replace the delay with a new one. efectivlly replacing a bunch of publishes with one at the end.
+		if (this._delayedPublish) {
+			window.clearTimeout(this._delayedPublish);
+		}
+		this._delayedPublish = window.setTimeout(function(){
+			this._cssCache = {};
+			delete this._delayedPublish;
+			dojo.publish("/davinci/ui/widgetSelected",[selection]);
+		}.bind(this),200); 
+		
 	},
 
 	hotModifyCssRule: function(r){
@@ -3164,11 +3202,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		try {
 			var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
 			var djConfig = this.getDojo().config,  // TODO: use require
-			djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
-			ua = /*device ||*/ djConfig.mblUserAgent || 'none',
-			themeMap,
-			themeFiles;
-				
+				djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
+				ua = /*device ||*/ djConfig.mblUserAgent || 'none',
+				themeMap,
+				themeFiles;
+
 			djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
 			themeMap = djConfigModel.themeMap;
 			themeFiles = djConfigModel.mblThemeFiles;
@@ -3425,8 +3463,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onCommandStackExecute: function() {
+		if(this.editor && this.editor.editorContainer && this.editor.editorContainer.updateToolbars){
+			this.editor.editorContainer.updateToolbars();
+		}
 	},
-
 
 	/**
 	 * Called by any commands that can causes widgets to be added or deleted.
@@ -3437,9 +3477,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			helper.widgetAddedOrDeleted(this, resetEverything);
 		} else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
 	       	 helper.then(function(result){
-	    		 if (result.helper && result.helper.widgetAddedOrDeleted){
-	    			 result.helper.widgetAddedOrDeleted(this,  resetEverything); 
-				 }
+	       		 if (result.helper) {
+	       			 this.theme.helper = result.helper;
+	       			if (result.helper.widgetAddedOrDeleted){
+		    			 result.helper.widgetAddedOrDeleted(this,  resetEverything); 
+					 }
+	       		 }
 	    	 }.bind(this));
 		}
 	},
@@ -3453,28 +3496,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 *
 	 * @param {number} type  0 - modified, 1 - added, 2 - removed
 	*/
-	widgetChanged: function(type, widget, args) {
-		this.updateScrollListeners();
-	},
-	
-	updateScrollListeners: function(){
-		var that = this;
-		function checkNodeRecursive(node){
-			var overflowX = domStyle.get(node, 'overflow-x');
-			var overflowY = domStyle.get(node, 'overflow-y');
-			if(!node._maqOverflow && (overflowX == 'auto' || overflowX == 'scroll' || overflowY == 'auto' || overflowY == 'scroll')){
-				node._maqOverflow = connect.connect(node, 'onscroll', that, function(event) {
-					that.updateFocusAll();
-				});
-			}
-			for(var i=0; i<node.childNodes.length; i++){
-				var ch = node.childNodes[i];
-				if(ch.nodeType == 1){	// 1=ELEMENT
-					checkNodeRecursive(ch);
-				}
-			}
-		}
-		checkNodeRecursive(this.rootNode);
+	widgetChanged: function(type, widget) {
 	},
 	
 	getPageLeftTop: function(node){
@@ -3540,7 +3562,52 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		find(this.rootWidget);
 		return result;
+	},
+	
+	/**
+	 * Returns {l:,t:,w:,h:} of the user document iframe relative to outer frame holding the Maqetta app
+	 */
+	getParentIframeBounds: function(){
+		var parentIframe = this.getParentIframe();
+		if(parentIframe){
+			/*
+			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
+			offsetLeft = 0;
+			offsetTop = 0;
+			offsetNode = parentIframe;
+			while(offsetNode && offsetNode.tagName != 'BODY'){
+				offsetLeft += offsetNode.offsetLeft;
+				offsetTop += offsetNode.offsetTop;
+				offsetNode = offsetNode.offsetParent;
+			}
+			return { l:offsetLeft, t:offsetTop, w:parentIframe.offsetWidth, h:parentIframe.offsetHeight };
+			*/
+			var box = GeomUtils.getBorderBoxPageCoords(parentIframe);
+			return box;
+		}
+	},
+	
+	/**
+	 * Returns {l:,t:,w:,h:} of the ContentPane holding design view relative to outer frame holding the Maqetta app
+	 */
+	getDesignPaneBounds: function(){
+		var parentIframe = this.getParentIframe();
+		var node = parentIframe;
+		var designCP;
+		while(node && node.tagName != 'BODY'){
+			if(dojo.hasClass(node, 'designCP')){
+				designCP = node;
+			}
+			node = node.parentNode;
+		}
+		if(designCP){
+			var box = GeomUtils.getBorderBoxPageCoords(designCP);
+			return box;
+		}else{
+			console.error('Context.js:getDesignPaneBounds. No designCP');
+		}
 	}
+
 });
 
 });

@@ -40,7 +40,12 @@ return declare("davinci.ve.actions.CopyAction", [ContextAction], {
 	isEnabled: function(context){
 		context = this.fixupContext(context);
 		return (context && context.getSelection().length > 0);
-	}
+	},
 
+	shouldShow: function(context){
+		context = this.fixupContext(context);
+		var editor = context.editor;
+		return (editor && editor.declaredClass == 'davinci.ve.PageEditor');
+	}
 });
 });

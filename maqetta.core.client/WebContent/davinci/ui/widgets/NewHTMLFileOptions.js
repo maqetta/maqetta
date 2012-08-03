@@ -27,15 +27,10 @@ define(["dojo/_base/declare",
 	return declare("davinci.ui.widgets.NewHTMLFileOptions",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
-		compositionType: null,
+		device: null,
 		themeSet: null,
-		standardCompTypes:[
-			           	{value:'desktop_hifi_flow', device:'desktop', layout:'flow', theme:'claro' },
-		           	    {value:'desktop_hifi_absolute', device:'desktop', layout:'absolute', theme:'claro' },
-		           	    {type:'separator'},
-		           	    {value:'desktop_lofi_flow', device:'desktop', layout:'flow', theme:'Sketch' },
-		           	    {value:'desktop_lofi_absolute', device:'desktop', layout:'absolute', theme:'Sketch' },
-		           	    {type:'separator'},
+		dialogSpecificClassOptions: null,
+		standardDevices:[
 		           	    //FIXME: device list should be dynamic
 		           	    {type:'mobile', value:'android_340x480', device:'android_340x480', layout:'flow' },
 		           	    {type:'mobile', value:'android_480x800', device:'android_480x800', layout:'flow' },
@@ -47,9 +42,15 @@ define(["dojo/_base/declare",
 			
 		postCreate : function(){
 			this.inherited(arguments);
+			var dialogSpecificClassOptions = this.dialogSpecificClassOptions;
+			var showDevices = dialogSpecificClassOptions ? dialogSpecificClassOptions.showDevices : false;
+			var showThemeSetsButton = dialogSpecificClassOptions ? dialogSpecificClassOptions.showThemeSetsButton : false;
 			var langObj = this.langObj = uiNLS;
-			this.compositionTypeLabel.innerHTML = langObj.nhfoCompositionType;
+			this.deviceLabel.innerHTML = langObj.nhfoDevice;
 			
+			if(!showDevices){
+				this.nhfo_outer2.style.display = 'none';
+			}
 			var lastDialogValues = Workbench.workbenchStateCustomPropGet('nhfo');
 			this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : undefined;
 			if (this._selectedThemeSet && this._selectedThemeSet.name != Theme.none_themeset_name) {
@@ -68,7 +69,7 @@ define(["dojo/_base/declare",
 			    }
 			    
 			}
-			_updateWithLastDialogValue = function(widget, opts, lastDialogValue){
+			_updateWithLastDialogValue = function(widget, opts, lastDialogValue, defaultValue){
 				// If there was a persisted value from last time dialog was shown
 				// and persisted value is a valid choice, then update the given widget
 				// to the supplied value.
@@ -79,12 +80,13 @@ define(["dojo/_base/declare",
 						return true;
 					}
 				}
+				widget.attr('value', defaultValue);
 				return false;
 			};
 	
 			var optsCT = [];
-			for(var i=0; i<this.standardCompTypes.length; i++){
-				var o = this.standardCompTypes[i];
+			for(var i=0; i<this.standardDevices.length; i++){
+				var o = this.standardDevices[i];
 				if(o.type == 'separator'){
 					optsCT.push({type:o.type});
 				}else if(o.type == 'mobile'){
@@ -93,11 +95,11 @@ define(["dojo/_base/declare",
 					optsCT.push({value:value, label:label});
 				}else{
 					var value = o.value;
-					var label = langObj['nhfoCTMenu_'+value];
+					var label = langObj['nhfoDVMenu_'+value];
 					optsCT.push({value:value, label:label});
 				}
 			}
-			this.compositionTypeSelect.addOption(optsCT);
+			this.deviceSelect.addOption(optsCT);
 			var _this = this;
 			function closeTooltip(){
 				// Dijit doesn't support 'title' attribute or tooltip natively on options,
@@ -107,52 +109,52 @@ define(["dojo/_base/declare",
 					_this.ctTooltip.close();
 				}
 			}
-			this.connect(this.compositionTypeSelect, 'onFocus', dojo.hitch(this, function(){
+			this.connect(this.deviceSelect, 'onFocus', dojo.hitch(this, function(){
 				closeTooltip();
 			}));
-			this.connect(this.compositionTypeSelect.dropDown, 'onOpen', dojo.hitch(this, function(){
+			this.connect(this.deviceSelect.dropDown, 'onOpen', dojo.hitch(this, function(){
 				closeTooltip();
 			}));
-			this.connect(this.compositionTypeSelect.dropDown, 'onClose', dojo.hitch(this, function(){
+			this.connect(this.deviceSelect.dropDown, 'onClose', dojo.hitch(this, function(){
 				closeTooltip();
 			}));	
 	
-			if(lastDialogValues){
-				_updateWithLastDialogValue(this.compositionTypeSelect, optsCT, lastDialogValues.compositionType);
-			}
-			//this._updateThemesAndThemeSets();
-			this.connect(this.compositionTypeSelect, 'onChange', dojo.hitch(this,function(){
+			var lastDevice = lastDialogValues ? lastDialogValues.device : undefined;
+			_updateWithLastDialogValue(this.deviceSelect, optsCT, lastDevice, 'iphone');
+
+			this.connect(this.deviceSelect, 'onChange', dojo.hitch(this,function(){
 				this._update_comp_type();
 			}));
 			this._update_comp_type();
 	
 			//FIXME: Add logic for 'for' attributes point to correct id
-
-			var input = document.createElement("input");
-			this.dialogSpecificButtonsSpan.appendChild(input);
-			this.themeButton = new Button({label:this.langObj.nhfoThemeButtonLabel, title:this.langObj.nhfoThemeButtonTitle}, input);
-			this.connect(this.themeButton, 'onClick', dojo.hitch(this,function(e){
-				this._themeSelectionDialog = new ThemeSelection({newFile: true});
-				this._themeSelectionDialog.buildRendering();
-				this.connect(this._themeSelectionDialog, 'onOk', dojo.hitch(this, function(e){
-				    this._selectedThemeSet = this._themeSelectionDialog._selectedThemeSet;
-				    this._updateThemesAndThemeSets();
+			if(showThemeSetsButton){
+				var input = document.createElement("input");
+				this.dialogSpecificButtonsSpan.appendChild(input);
+				this.themeButton = new Button({label:this.langObj.nhfoThemeButtonLabel, title:this.langObj.nhfoThemeButtonTitle}, input);
+				this.connect(this.themeButton, 'onClick', dojo.hitch(this,function(e){
+					this._themeSelectionDialog = new ThemeSelection({newFile: true});
+					this._themeSelectionDialog.buildRendering();
+					this.connect(this._themeSelectionDialog, 'onOk', dojo.hitch(this, function(e){
+					    this._selectedThemeSet = this._themeSelectionDialog._selectedThemeSet;
+					    this._updateThemesAndThemeSets();
+					}));
 				}));
-			}));
+			}
 		},
 	
 		startup: function(){
-			var label = this.compositionTypeLabel;
-			var select = this.compositionTypeSelect;
+			var label = this.deviceLabel;
+			var select = this.deviceSelect;
 			var idNum = 0, labelId;
 			do{
 				idNum++;
-				labelId = 'compType'+idNum;
+				labelId = 'device'+idNum;
 			}while(dojo.byId(labelId));
 			label.id = labelId;
 			this.ctTooltip = new ToolTip({connectId:[labelId, select.id], 
 					position:['below', 'below'], 
-					label:this.langObj.nhfoCompositionTypeTooltip});
+					label:this.langObj.nhfoDeviceTooltip});
 		},
 	
 		/**
@@ -160,7 +162,7 @@ define(["dojo/_base/declare",
 		 * @param {boolean} collapsed  New value for this.collapsed
 		 */
 		_update_comp_type: function(){
-			var o = this._currentCompTypeObject('_update_comp_type');
+			var o = this._currentDeviceObject('_update_comp_type');
 			if(o.device == 'desktop'){
 				// Whenever user chooses one of the desktop composition type options,
 				// wipe out any theme choices done earlier in dialog because
@@ -171,9 +173,9 @@ define(["dojo/_base/declare",
 		},
 	
 		getOptions: function(){
-			var o = this._currentCompTypeObject('getOptions');
+			var o = this._currentDeviceObject('getOptions');
 			return{
-				compositionType: o.value,
+				device: o.value,
 				device: o.device,
 				layout: o.layout,
 				theme: this._selectedTheme ? this._selectedTheme : o.theme,
@@ -184,7 +186,7 @@ define(["dojo/_base/declare",
 		_updateThemesAndThemeSets: function(e){
 			var themeName = this._selectedThemeSet.name;
 			if (themeName == Theme.none_themeset_name){
-				var o = this._currentCompTypeObject('_updateThemesAndThemeSets');
+				var o = this._currentDeviceObject('_updateThemesAndThemeSets');
 			    var deviceSelect = o.device;
 			    if (deviceSelect == 'desktop') {
 			        themeName = this._selectedThemeSet.desktopTheme;
@@ -200,19 +202,19 @@ define(["dojo/_base/declare",
 			this._selectedTheme = themeName;
 		},
 	
-		_currentCompTypeObject: function(callingFunc){
-			var compType = this.compositionTypeSelect.attr('value');
+		_currentDeviceObject: function(callingFunc){
+			var device = this.deviceSelect.attr('value');
 			var found = false;
-			for(var i=0; i<this.standardCompTypes.length; i++){
-				var o = this.standardCompTypes[i];
-				if(o.value == compType){
+			for(var i=0; i<this.standardDevices.length; i++){
+				var o = this.standardDevices[i];
+				if(o.value == device){
 					found = true;
 					break;
 				}
 			}
 			if(!found){
-				console.error('NewHTMLFileOptions. '+callingFunc+': invalid compType='+compType);
-				o = this.standardCompTypes[0];
+				console.error('NewHTMLFileOptions. '+callingFunc+': invalid device='+device);
+				o = this.standardDevices[0];
 			}
 			return o;
 		}

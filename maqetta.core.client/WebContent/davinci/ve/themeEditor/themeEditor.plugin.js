@@ -60,30 +60,37 @@ return {
 			targetID: "davinci.ve.ThemeEditor",
 			actions: [
 				{
-					id: "undo",
-					iconClass: 'undoIcon',
-					action: "davinci/actions/UndoAction",
-					label: "Undo",
-					toolbarPath: "undoredo"
-				},
-				{
-					id: "redo",
-					iconClass: 'redoIcon',
-					action: "davinci/actions/RedoAction",
-					label: "Redo",
-					toolbarPath: "undoredo"
-				},
-				{
-					id: "save",
-					iconClass: 'saveIcon',
+                	id: "undo",
+                    //iconClass: 'undoIcon',
+                    action: "davinci/actions/UndoAction",
+                    label: "Undo",
+                    className: "maqLabelButton",
+                    showLabel: true,
+                    toolbarPath: "undoredo",
+                    keyBinding: {accel: true, charOrCode: "z"}
+                },
+                {
+                    id: "redo",
+                    //iconClass: 'redoIcon',
+                    action: "davinci/actions/RedoAction",
+                    className: "maqLabelButton",
+                    showLabel: true,
+                    label: "Redo",
+                    toolbarPath: "undoredo",
+                    keyBinding: {accel: true, shift: true, charOrCode: "z"}
+                },
+                {
+                    id: "save",
+                    className: "maqLabelButton",
+                    showLabel: true,
+                    label: "Save",
+                    toolbarPath: "save",
 					run: function() {
 						require('../../Workbench').getOpenEditor().save();
 					},
 					isEnabled: function(context) {
 						return require('../../Workbench').getOpenEditor();
-					},
-					label: "Save",
-					toolbarPath: "save"
+					}
 				}
 	/*,
 					{

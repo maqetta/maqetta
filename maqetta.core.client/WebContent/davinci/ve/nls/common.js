@@ -5,6 +5,10 @@ search: "Search",
 filter: "Filter",
 "new": "New",
 errorSavingFile: "Error saving file: ${0} details: ${1}",
+"palette":"palette",
+
+/* Menu items on file tabs */
+"closeAllEditors":"Close all tabs",
 
 /* actions */
 undo: "Undo",

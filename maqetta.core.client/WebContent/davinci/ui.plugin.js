@@ -14,7 +14,8 @@ return {
         {
             id: "navigator",
             title: "Files",
-            viewClass: "davinci/workbench/Explorer"
+            viewClass: "davinci/workbench/Explorer",
+            iconClass: "paletteIcon paletteIconFiles"
         },
         {
             id: "hierarchy",
@@ -23,12 +24,14 @@ return {
         {
             id: "outline",
             title: "Outline",
-            viewClass: "davinci/workbench/OutlineView"
+            viewClass: "davinci/workbench/OutlineView",
+            iconClass: "paletteIcon paletteIconOutline"
         },
 		{
 			id: "comment",
 			title: "Comments",
-			viewClass: "davinci/review/view/CommentView"
+			viewClass: "davinci/review/view/CommentView",
+            iconClass: "paletteIcon paletteIconComments"
 		},
         {
             id: "scope",
@@ -96,6 +99,160 @@ return {
         ]
     },
     "davinci.actionSets": [
+       {
+           id: "editorActions",
+           visible: true,
+           menu: [
+               {
+                   __mainMenu: true,
+                   separator: [
+                       "new", false, "open", false
+                   ]
+               },
+               {
+                   label: "Create",
+                   path: "new",
+                   id: "davinci.new",
+                   separator: [
+                       "newApp", true, "newSketch", true, "new", true, "new2", true, "additions", true
+                   ]
+               },
+               {
+                   label: "Open",
+                   path: "open",
+                   id: "davinci.open",
+                   separator: [
+                       "open", true, "open2", true, "additions", false
+                   ]
+               }
+           ],
+           actions: [
+                 {
+                     id: "newHTMLMobile",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLMobile();
+                         });
+                     },
+                     label: "Mobile Application...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newApp",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
+                     id: "newHTMLDesktop",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLDesktop();
+                         });
+                     },
+                     label: "Desktop Application...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newApp",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
+                     id: "newHTMLSketchHiFi",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLSketchHiFi();
+                         });
+                     },
+                     label: "Sketch (high-fidelity)...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newSketch",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
+                     id: "newHTMLSketchLoFi",
+                     // icon: 'davinci/img/add.gif',
+                     run: function() {
+                         require(['./ui/Resource'], function(r) {
+                             r.newHTMLSketchLoFi();
+                         });
+                     },
+                     label: "Sketch (low-fidelity)...",
+                     // toolbarPath: "davinci.toolbar.main/edit",
+                     menubarPath: "davinci.new/newSketch",
+                     keyBinding: {accel: true, charOrCode: "n"}
+                 },
+                 {
+                   id: "newCSS",
+                   run: function() {
+                   	require(['./ui/Resource'], function(r) {
+                   		r.newCSS();
+                   	});
+                   },
+                   label: "CSS File...",
+                   menubarPath: "davinci.new/new"
+               },
+               {
+                   id: "newJS",
+                   run: function() {
+                   	require(['./ui/Resource'], function(r) {
+                   		r.newJS();
+                   	});
+                   },
+                   label: "JavaScript File...",
+                   menubarPath: "davinci.new/new"
+               },
+               {
+                   id: "newProject",
+                   run: function() {
+                   	require(['./ui/Resource'], function(r) {
+                   		r.newProject();
+                   	});
+                   },
+                   label: "Project...",
+                   menubarPath: "davinci.new/new"
+               },
+               {
+                   id: "newFolder",
+                   run: function() {
+                   	require(['./ui/Resource'], function(r) {
+                   		r.newFolder();
+                   	});
+                   },
+                   label: "Folder...",
+                   menubarPath: "davinci.new/new2"
+               },
+               {
+                   id: "openFile",
+                   run: function() {
+                   	require(['./ui/Resource'], function(r) {
+                   		r.openFile();
+                   	});
+                   },
+                   label: "File...",
+                   toolbarPath: "davinci.toolbar.main/edit",
+                   menubarPath: "davinci.open/open",
+                   keyBinding: {accel: true, charOrCode: "o"}
+               },
+               {
+                   id: "openThemeEditor",
+                   run: function() {
+                   	require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog){
+                   		Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');
+                   	});
+                   },
+                   label: "Theme Editor...",
+                   menubarPath: "davinci.open/open2"
+               },
+               {
+                   id: "newTheme",
+                   run: function() {
+                   	require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){
+                   		Workbench.showModal(new NewTheme(), 'New Theme', 'width: 300px');
+                   	});
+                   },
+                   label: "Theme...",
+                   menubarPath: "davinci.new/new"
+               }
+           ]
+        },
         {
             id: "main",
             visible: true,
@@ -103,30 +260,28 @@ return {
                 {
                     __mainMenu: true,
                     separator: [
-                        "new", false, "open", false, "settings", false, "additions", false, "help",
+                        "usersettings", false, "settings", false, "additions", false, "help",
                         false
                     ]
                 },
                 {
-                    label: "New",
-                    path: "new",
-                    id: "davinci.new",
+                    label: "UserSettings",
+                    path: "usersettings",
+                    id: "davinci.usersettings",
+                    className: 'userSettingsMenu',
+                    iconClass: 'userSettingsMenuIcon',
+                    showLabel:false,
                     separator: [
-                        "new", true, "new2", true, "additions", true
-                    ]
-                },
-                {
-                    label: "Open",
-                    path: "open",
-                    id: "davinci.open",
-                    separator: [
-                        "open", true, "open2", true, "additions", false
+                        "username", true, "logout", true, "additions", false
                     ]
                 },
                 {
                     label: "Settings",
                     path: "settings",
                     id: "davinci.settings",
+                    className: 'appSettingsMenu',
+                    iconClass: 'appSettingsMenuIcon',
+                    showLabel:false,
                     separator: [
                         "settings", true, "additions", false
                     ]
@@ -135,87 +290,15 @@ return {
                     label: "Help",
                     path: "help",
                     id: "davinci.help",
+                    className: 'helpMenu',
+                    iconClass: 'helpMenuIcon',
+                    showLabel:false,
                     separator: [
                         "help", true, "about", false, "additions", false
                     ]
                 }
             ],
             actions: [
-                {
-                    id: "newHTML",
-                    // icon: 'davinci/img/add.gif',
-                    run: function() {
-                        require(['./ui/Resource'], function(r) {
-                            r.newHTML();
-                        });
-                    },
-                    label: "HTML File...",
-                    // toolbarPath: "davinci.toolbar.main/edit",
-                    menubarPath: "davinci.new/new",
-                    keyBinding: {accel: true, charOrCode: "e"}
-                },
-                {
-                    id: "newCSS",
-                    run: function() {
-                    	require(['./ui/Resource'], function(r) {
-                    		r.newCSS();
-                    	});
-                    },
-                    label: "CSS File...",
-                    menubarPath: "davinci.new/new"
-                },
-                {
-                    id: "newJS",
-                    run: function() {
-                    	require(['./ui/Resource'], function(r) {
-                    		r.newJS();
-                    	});
-                    },
-                    label: "JavaScript File...",
-                    menubarPath: "davinci.new/new"
-                },
-                {
-                    id: "newProject",
-                    run: function() {
-                    	require(['./ui/Resource'], function(r) {
-                    		r.newProject();
-                    	});
-                    },
-                    label: "Project...",
-                    menubarPath: "davinci.new/new"
-                },
-                {
-                    id: "newFolder",
-                    run: function() {
-                    	require(['./ui/Resource'], function(r) {
-                    		r.newFolder();
-                    	});
-                    },
-                    label: "Folder...",
-                    menubarPath: "davinci.new/new2"
-                },
-                {
-                    id: "openFile",
-                    run: function() {
-                    	require(['./ui/Resource'], function(r) {
-                    		r.openFile();
-                    	});
-                    },
-                    label: "File...",
-                    toolbarPath: "davinci.toolbar.main/edit",
-                    menubarPath: "davinci.open/open",
-                    keyBinding: {accel: true, charOrCode: "o"}
-                },
-                {
-                    id: "openThemeEditor",
-                    run: function() {
-                    	require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog){
-                    		Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');
-                    	});
-                    },
-                    label: "Theme Editor...",
-                    menubarPath: "davinci.open/open2"
-                },
                 {
                     id: "editPreferences",
                     run: function() {
@@ -237,16 +320,6 @@ return {
                     menubarPath: "davinci.settings/settings"
                 },
                 {
-                    id: "newTheme",
-                    run: function() {
-                    	require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){
-                    		Workbench.showModal(new NewTheme(), 'New Theme', 'width: 300px');
-                    	});
-                    },
-                    label: "Theme...",
-                    menubarPath: "davinci.new/new"
-                },
-                {
                     id: "showHelp",
                     run: function() {
                     	window.open('app/docs/index.html', 'MaqettaDocumentation');
@@ -263,7 +336,6 @@ return {
                     label: "Tutorials",
                     menubarPath: "davinci.help/help"
                 },
-
                 {
                     id: "about",
                     run: function() {
@@ -273,6 +345,24 @@ return {
                     },
                     label: "About Maqetta",
                     menubarPath: "davinci.help/about"
+                },
+                {
+                    id: "username",
+                    action: "davinci/actions/UserNameAction",
+                    run: function() {
+                    	// do monthing - purely informational
+                    },
+                    label: "{user}",	// Filled in programmatically by UserNameAction class
+                    menubarPath: "davinci.usersettings/username"
+                },
+                {
+                    id: "logout",
+                    action: "davinci/actions/LogoutAction",
+                    run: function() {
+                    	console.log('logout');
+                    },
+                    label: "Logout",
+                    menubarPath: "davinci.usersettings/logout"
                 }
             ]
         },
@@ -351,6 +441,12 @@ return {
         }
     ],
     "davinci.actionSetPartAssociations": [
+        {
+            targetID: "davinci.ui.editorActions",
+            parts: [
+                "davinci.ui.editorMenuBar"
+            ]
+        },
         {
             targetID: "davinci.ui.explorerActions",
             parts: [

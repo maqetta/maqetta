@@ -11,16 +11,16 @@
 .dj_ie.dj_tablet .mblToolBarButtonHasRightArrow .mblToolBarButtonRightArrow {
 	background-image: url(compat/ipad-arrow-button-right-head.png);
 }
-.dj_ie.dj_tablet .mblToolBarButton .mblToolBarButtonCell .mblToolBarButtonBody {
+.dj_ie.dj_tablet .mblToolBarButtonBody {
 	background-image: url(compat/ipad-arrow-button-bg.png);
 }
-.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonCell .mblToolBarButtonLeftArrow {
+.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonLeftArrow {
 	background-image: url(compat/ipad-arrow-button-head-sel.png);
 }
-.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonCell .mblToolBarButtonRightArrow {
+.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonRightArrow {
 	background-image: url(compat/ipad-arrow-button-right-head-sel.png);
 }
-.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonCell .mblToolBarButtonBody {
+.dj_ie.dj_tablet .mblToolBarButtonSelected .mblToolBarButtonBody {
 	background-image: url(compat/ipad-arrow-button-sel-bg.png);
 }
 .dj_tablet .mblTabBarSegmentedControl,
@@ -55,9 +55,15 @@
 .dj_gecko.dj_tablet .mblColorDefault {
 	background-image: -moz-linear-gradient(top, #b1b5bb 0%, #6a727d 100%);
 }
+.dj_gecko.dj_tablet .mblColorDefault45 {
+	background-image: -moz-linear-gradient(top left, #b1b5bb 0%, #6a727d 100%);
+}
 .dj_tablet .mblColorDefaultSel {
 	background-color: #515761;
 }
 .dj_gecko.dj_tablet .mblColorDefaultSel {
 	background-image: -moz-linear-gradient(top, #7a7e85 0%, #303845 100%);
+}
+.dj_gecko.dj_tablet .mblColorDefaultSel45 {
+	background-image: -moz-linear-gradient(top left, #7a7e85 0%, #303845 100%);
 }

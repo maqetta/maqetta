@@ -64,6 +64,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 			liveSplitters:false
 		});
 		dojo.addClass(borderContainer.domNode, "gridWizard");
+		dojo.addClass(borderContainer.domNode, "dijitDialogPaneContentArea");
 		this.containerNode.appendChild(borderContainer.domNode);
 		
 		//Create TOP section (containing steps)
@@ -609,6 +610,10 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		var context = this._widget.getContext();
 		context.getCommandStack().execute(compoundCommand);	
 		context.select(tableCommand.newWidget);
+	},
+
+	resize: function() {
+		this.borderContainer.resize();
 	},
 
 	onCancel: function() {

@@ -93,7 +93,8 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		 	}.bind(this)
 		});
 
-		var actions = Workbench.getActionSets("davinci.review.reviewNavigator");
+		var o = Workbench.getActionSets("davinci.review.reviewNavigator");
+		var actions = o.clonedActionSets;
 		if (actions && actions.length == 1) {
 			dojo.forEach(actions[0].actions, dojo.hitch(this, function(action) {
 					if (action.keyBinding) {

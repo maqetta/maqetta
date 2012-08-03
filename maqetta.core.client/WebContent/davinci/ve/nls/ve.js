@@ -2,17 +2,18 @@ define({ root:
 {
 		//SwitchingStyleView.js
 		"common":"Common",
-		"widgetSpecific":"Widget-specific",
+		"widgetSpecific":"Per widget",
 		"events":"Events",
 		"layout":"Layout",
 		"showMinMax":"show min/max",
-		"paddingMargins":"Padding/Margins",
+		"padding":"Padding",
+		"margins":"Margins",
 		"showtrbl":"show t/r/b/l",
 		"background":"Background",
 		"border":"Border",
 		"showDetails":"show details",
-		"fontsAndText":"Fonts and Text",
-		"shapesSVG":"Graphics/SVG",
+		"fontsAndText":"Fonts/Text",
+		"shapesSVG":"SVG",
 		
 		//StatesView.js
 		"Scenes":"Scenes",
@@ -131,6 +132,15 @@ define({ root:
 		"vteWarningTitle": "Theme Version Warning",
 		"vteWarningMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
 		"vteErrorTitle": "Theme Version Error",
-		"vteErrorMessage": "Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta."
+		"vteErrorMessage": "Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta.",
+		
+		//ve.plugin.js
+		//Labels for ComboButton for source vs split-h vs split-v
+		"SourceComboButton-source":"Source",
+		"SourceComboButton-splitHorizontal":"Split-H",
+		"SourceComboButton-splitVertical":"Split-V",
+		// Labels for DropdownButton for flow vs absolute
+		"LayoutDropDownButton-flow":"Flow",
+		"LayoutDropDownButton-absolute":"Abs&hellip;"
 }
 });

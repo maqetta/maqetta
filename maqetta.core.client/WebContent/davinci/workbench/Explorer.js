@@ -130,7 +130,8 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 			}
 		});
 		
-		var actions = Workbench.getActionSets("davinci.ui.navigator");
+		var o = Workbench.getActionSets("davinci.ui.navigator");
+		var actions = o.clonedActionSets;
 		if (actions) {
 			dojo.forEach(actions[0].actions, dojo.hitch(this, function(action) {
 					if (action.keyBinding) {

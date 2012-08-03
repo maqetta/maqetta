@@ -81,6 +81,12 @@
 .dj_tablet .mblColorDefault {
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#b1b5bb), to(#6a727d));
 }
+.dj_tablet .mblColorDefault45 {
+	background-image: -webkit-gradient(linear, left top, right bottom, from(#b1b5bb), to(#6a727d));
+}
 .dj_tablet .mblColorDefaultSel {
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#7a7e85), to(#303845));
+}
+.dj_tablet .mblColorDefaultSel45 {
+	background-image: -webkit-gradient(linear, left top, right bottom, from(#7a7e85), to(#303845));
 }

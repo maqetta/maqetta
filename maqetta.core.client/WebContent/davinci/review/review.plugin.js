@@ -8,18 +8,21 @@ return {
 		{
 			id: "comment",
 			title: "Comments",
-			viewClass: "davinci/review/view/CommentView"
+			viewClass: "davinci/review/view/CommentView",
+            iconClass: "paletteIcon paletteIconComments"
 		},
 		{
 			id: "reviewNavigator",
 			title: "Reviews",
-			viewClass: "davinci/review/view/CommentExplorerView"
+			viewClass: "davinci/review/view/CommentExplorerView",
+            iconClass: "paletteIcon paletteIconReviews"
 
 		},
 		{
 			id: "state",
 			title: "States",
-			viewClass: "davinci/ve/views/StatesView"
+			viewClass: "davinci/ve/views/StatesView",
+            iconClass: "paletteIcon paletteIconStates"
 		}
 	],
 	"davinci.perspectiveExtension": [
@@ -60,7 +63,6 @@ return {
 			editorClass: "davinci/review/editor/ReviewEditor",
 			editorClassName: "ReviewEditor",
             palettesToTop: [
-                "davinci.review.reviewNavigator", //Reviews
                 "davinci.ui.comment", //Comments
                 "davinci.ve.states" //States(Scenes)
             ]
@@ -75,7 +77,7 @@ return {
 	],
 	"davinci.actionSets": [
 		{
-			id: "main",
+			id: "editorActionsReview",
 			visible: true,
 			actions: [
 				{
@@ -143,6 +145,10 @@ return {
 		}
 	],
 	"davinci.actionSetPartAssociations": [
+		{
+			targetID: "davinci.review.editorActionsReview",
+			parts: ["davinci.ui.editorMenuBar"]
+		  },
 		{
 			targetID: "davinci.review.reviewExplorerActions",
 			parts: ["davinci.review.reviewNavigator"]

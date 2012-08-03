@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"davinci/ve/input/SmartInput",
-	"dojo/i18n!../nls/dijit"
+	"dojo/i18n!./nls/dijit"
 ], function(
 	declare,
 	SmartInput,

@@ -170,6 +170,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		this.switchDisplayMode("design");
 	},
 	switchDisplayMode: function (newMode) {
+		var context = this.getContext();
 		if (this._displayMode!="design") {
 			this._bc.removeChild(this._srcCP);
 			this.htmlEditor.setVisible(false);
@@ -217,6 +218,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 		if (newMode!="design") {
 			this.htmlEditor.editor.getTextView().resize();
+		}
+		if (newMode == "source") {
+			context.hideFocusAll();			
+		}else{
+			context.updateFocusAll();
 		}
 	},
 
@@ -398,5 +404,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	// dummy handler
 	handleKeyEvent: function(e) {
-	}});
+	},
+	
+	getDisplayMode: function(){
+		return this._displayMode;
+	}
+});
 }); 

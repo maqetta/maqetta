@@ -13,6 +13,7 @@ define(["dojo/_base/declare",
 		templateString: templateString,
 		_okButton: null,
 		_dijitName : null,
+		_widgetGroup: null,
 		
 		postMixInProperties : function() {
 			this.inherited(arguments);
@@ -33,7 +34,8 @@ define(["dojo/_base/declare",
 		},
 		
 		okButton : function(){
-			this.value = dojo.attr(this._dijitName, "value");
+			this.value = {'name': dojo.attr(this._dijitName, "value"), 
+					     'group':dojo.attr(this._widgetGroup, "value")};
 		},	
 		
 		_getValueAttr : function(){

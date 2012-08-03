@@ -31,6 +31,7 @@ import org.davinci.server.review.Version;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
+import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.user.IDavinciProject;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;
@@ -51,8 +52,15 @@ public class ReviewManager implements IReviewManager {
 	
 	public static ReviewManager getReviewManager()
 	{
-		if (theReviewManager==null)
+		if (theReviewManager==null) {
 			theReviewManager=new ReviewManager();
+			
+			// Start the ReviewCacheManager thread. This has previously been started in the service
+			// function of DavinciReviewServlet.
+			if ( !ReviewCacheManager.$.isAlive() ) {
+				ReviewCacheManager.$.start();
+			}
+		}
 		return theReviewManager;
 	}
 
@@ -68,7 +76,6 @@ public class ReviewManager implements IReviewManager {
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
 			(commentingDir.newInstance(commentingDir, "snapshot")).mkdir();
-			(commentingDir.newInstance(commentingDir, "livedoc")).mkdir();
 		}
 		saveVersionFile(user);
 	}
@@ -78,7 +85,6 @@ public class ReviewManager implements IReviewManager {
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
 			(commentingDir.newInstance(commentingDir, "snapshot")).mkdir();
-			(commentingDir.newInstance(commentingDir, "livedoc")).mkdir();
 		}
 
 		initVersionDir(user, version.getTime());

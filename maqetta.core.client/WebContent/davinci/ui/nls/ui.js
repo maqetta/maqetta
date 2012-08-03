@@ -158,6 +158,9 @@ define({ root:
 		"newProjectEclipseSupport": "Eclipse support",
 
 		//UserLibraries
-		"modify": "Modify"
+		"modify": "Modify",
+		
+		//UserName.js
+		"User": "User"
 }
 });

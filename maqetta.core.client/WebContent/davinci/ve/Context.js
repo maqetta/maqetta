@@ -499,7 +499,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var base = this.getBase();
 		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		if(!prefs.widgetFolder){
-			prefs.widgetFolder = "WebContent/widgets";
+			prefs.widgetFolder = "WebContent/lib/custom";
 			Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 	
@@ -1866,6 +1866,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocus: function(widget, index, inline){
+		if(this.editor.getDisplayMode() == 'source'){
+			return;
+		}
 		Widget.requireWidgetHelper(widget.type).then(function(helper) { 
 			if(!this.editor.isActiveEditor()){
 				return;
@@ -1914,6 +1917,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocusAll: function(){
+		if(this.editor.getDisplayMode() == 'source'){
+			return;
+		}
 		var selection = this._selection;
 		if(selection){
 			for(var i=0; i<selection.length; i++){

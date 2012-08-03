@@ -86,6 +86,7 @@ var DialogClass = declare(Dialog, {
 			}
 
 			// reposition after changing sizes
+			this._size();
 			this._position();
 
 //			this.layout();  //TODO: method disappeared in 1.8.0b1

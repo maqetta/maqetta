@@ -246,6 +246,8 @@ var Workbench = {
 	actionScope: [],
 	_DEFAULT_PROJECT: "project1",
 	hideEditorTabs: true,
+	_editorTabClosing: {},
+	_shadowTabClosing: {},
 
 	run: function() {
 		Runtime.run();
@@ -265,6 +267,7 @@ var Workbench = {
 						editorsContainer.removeChild(editorContainer);
 						editorContainer.destroyRecursive();
 						shadowTabContainer.removeChild(shadowTab);
+						shadowTab.destroyRecursive();
 					}
 				}
 			}
@@ -1845,25 +1848,37 @@ var Workbench = {
 	 * @param page  The child widget that is being closed.
 	 */
 	_editorTabClosed: function(page) {
-		if (page && page.editor && page.editor.fileName) {
-            var i = Workbench._state.editors.indexOf(page.editor.fileName);
-            if (i != -1) {
-            	Workbench._state.editors.splice(i, 1);
-            }
-			Workbench._updateWorkbenchState();
-		}
-		var editors=dijit.byId("editors_container").getChildren();
-		if (!editors.length) {
-			Workbench._switchEditor(null);
-			var editorsStackContainer = dijit.byId('editorsStackContainer');
-			var editorsWelcomePage = dijit.byId('editorsWelcomePage');
-			if (editorsStackContainer && editorsWelcomePage){
-				editorsStackContainer.selectChild(editorsWelcomePage);
+		if(!davinci.Workbench._editorTabClosing[page.id]){
+			davinci.Workbench._editorTabClosing[page.id] = true;
+			if (page && page.editor && page.editor.fileName) {
+				var editorId = page.id;
+				var shadowId = editorIdToShadowId(editorId);
+				var shadowTabContainer = dijit.byId("davinci_file_tabs");
+				var shadowTab = dijit.byId(shadowId);
+				var i = Workbench._state.editors.indexOf(page.editor.fileName);
+	            if (i != -1) {
+	            	Workbench._state.editors.splice(i, 1);
+	            }
+				Workbench._updateWorkbenchState();
+				if(!davinci.Workbench._shadowTabClosing[shadowId]){
+					shadowTabContainer.removeChild(shadowTab);
+					shadowTab.destroyRecursive();
+				}
 			}
-			var welcomePage = dijit.byId('welcomePage');
-			if (Workbench.mainStackContainer && welcomePage){
-				Workbench.mainStackContainer.selectChild(welcomePage);
+			var editors=dijit.byId("editors_container").getChildren();
+			if (!editors.length) {
+				Workbench._switchEditor(null);
+				var editorsStackContainer = dijit.byId('editorsStackContainer');
+				var editorsWelcomePage = dijit.byId('editorsWelcomePage');
+				if (editorsStackContainer && editorsWelcomePage){
+					editorsStackContainer.selectChild(editorsWelcomePage);
+				}
+				var welcomePage = dijit.byId('welcomePage');
+				if (Workbench.mainStackContainer && welcomePage){
+					Workbench.mainStackContainer.selectChild(welcomePage);
+				}
 			}
+			delete davinci.Workbench._editorTabClosing[page.id];
 		}
 	},
 
@@ -1876,13 +1891,19 @@ var Workbench = {
 	 * @param page  The child widget that is being closed.
 	 */
 	_shadowTabClosed: function(page) {
-		var shadowId = page.id;
-		var editorId = shadowIdToEditorId(shadowId);
-		var editorContainer = dijit.byId(editorId);
-		var editorsContainer = dijit.byId("editors_container");
-		if(editorsContainer && editorContainer){
-			editorsContainer.removeChild(editorContainer);
-			editorContainer.destroyRecursive();
+		if(!davinci.Workbench._shadowTabClosing[page.id]){
+			davinci.Workbench._shadowTabClosing[page.id] = true;
+			var shadowId = page.id;
+			var editorId = shadowIdToEditorId(shadowId);
+			if(!davinci.Workbench._editorTabClosing[editorId]){
+				var editorContainer = dijit.byId(editorId);
+				var editorsContainer = dijit.byId("editors_container");
+				if(editorsContainer && editorContainer){
+					editorsContainer.removeChild(editorContainer);
+					editorContainer.destroyRecursive();
+				}
+				delete davinci.Workbench._shadowTabClosing[page.id];
+			}
 		}
 	},
 

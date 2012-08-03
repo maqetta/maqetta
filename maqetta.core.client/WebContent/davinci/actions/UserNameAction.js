@@ -17,7 +17,7 @@ return declare("davinci.actions.UserNameAction", Action, {
         if (result) {
             name = result.email;
         }       
-		return '<i>'+name+'</i>';
+		return uiNls.User+': '+'<i>'+name+'</i>';
 	}
 });
 });

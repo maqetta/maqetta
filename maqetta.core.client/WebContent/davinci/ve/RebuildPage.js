@@ -3,11 +3,13 @@ define([
 	"../Workbench",
 	"../workbench/Preferences",
 	"./Context",
+	"../Theme",
 	"../model/Path",
 	"davinci/model/Factory",
 	"dojo/Deferred",
-	"dojo/promise/all"
-], function(declare, Workbench, Preferences, Context, Path, Factory, Deferred, all) {
+	"dojo/promise/all",
+	"davinci/ve/commands/ChangeThemeCommand"
+], function(declare, Workbench, Preferences, Context, Theme, Path, Factory, Deferred, all, ChangeThemeCommand) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -33,7 +35,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 	},
 	
 	
-	rebuildSource: function(source, resource){
+	rebuildSource: function(source, resource, theme){
 		if ( !( resource && resource.extension && resource.extension == "html")) {
 			return source;
 		}
@@ -47,7 +49,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 		
 		this._srcDocument.setText(source, true);
 
-		var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
+		//var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 
         var elements = this._srcDocument.find({elementType: "HTMLElement"}),
         	promises = [];
@@ -62,10 +64,14 @@ return declare("davinci.ve.RebuildPage", Context, {
             }
         }
 
-        if (themeMetaobject) {
-            this.changeThemeBase(themeMetaobject.theme, this._resourcePath);
+        if (theme /*themeMetaobject*/) {
+            this.changeThemeBase(theme, this._resourcePath);
         }
-		
+        var themeSet = Theme.getThemeSet(this);
+        if (themeSet.mobileTheme ){
+        	var c = new ChangeThemeCommand(themeSet, this);
+        	c._dojoxMobileAddTheme(this, themeSet.mobileTheme);
+        }
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();
 
@@ -154,10 +160,14 @@ return declare("davinci.ve.RebuildPage", Context, {
 
     changeThemeBase: function(theme, resourcePath){
     	
-    	// find the old theme file name
-		/* fixme CHEATING, should determine this programatically */
+    	debugger;
 		var parentPath = new Path(theme.file.parent.getPath());
 		theme.files.forEach(function(file) {
+			var filename = parentPath.append(file);
+			var relativePath = filename.relativeTo(resourcePath, true);
+			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
+		}, this);
+		theme.conditionalFiles.forEach(function(file) {
 			var filename = parentPath.append(file);
 			var relativePath = filename.relativeTo(resourcePath, true);
 			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);

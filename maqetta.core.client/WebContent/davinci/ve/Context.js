@@ -639,6 +639,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
                 this._themeUrl = theme.themeUrl;
                 this._themeMetaCache = theme.themeMetaCache;
                 this.theme = theme.theme;
+                this.theme.helper = Theme.getHelper(this.theme);
+                if (this.theme.helper && this.theme.helper.then){ // it might not be loaded yet so check for a deferred
+                	this.theme.helper.then(function(result){
+        	       		 if (result.helper) {
+        	       			 this.theme.helper = result.helper;
+        	       		 }
+        	    	 }.bind(this));
+        		}
             }
         }
         return this.theme;
@@ -1015,8 +1023,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					callbackData = new Error(e.message, e.fileName, e.lineNumber);
 					lang.mixin(callbackData, e);
 				}
-
 				this._continueLoading(data, callback, callbackData, scope);
+				this.widgetAddedOrDeleted();
 			}.bind(this);
 
 			doc.open();

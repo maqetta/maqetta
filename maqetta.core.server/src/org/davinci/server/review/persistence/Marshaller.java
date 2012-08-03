@@ -1,27 +1,16 @@
 package org.davinci.server.review.persistence;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.SimpleTimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -31,6 +20,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.davinci.server.review.Comment;
+import org.davinci.server.review.CommentsDocument;
 import org.davinci.server.review.Constants;
 import org.davinci.server.user.IDavinciProject;
 import org.maqetta.server.IStorage;
@@ -70,65 +60,83 @@ public class Marshaller extends DefaultHandler {
 	public Document marshall(boolean append) throws ParserConfigurationException, IOException,
 			TransformerConfigurationException, TransformerFactoryConfigurationError {
 
-		Marshaller.addComments(project.getCommentsDocument().getCommentList(), append);
+		persistComments(project.getCommentsDocument(), project.getCommentsFileStorage());
 
 		return null;
 	}
 
-	public static void addComments(List<Comment> commentList, boolean append)
+	public void persistComments(CommentsDocument commentsDocument, IStorage commentsStorage)
 			throws ParserConfigurationException, IOException, TransformerConfigurationException,
 			TransformerFactoryConfigurationError {
-		if (null == commentList || commentList.isEmpty())
+		List<Comment> commentList = commentsDocument.getCommentList();
+		if (null == commentList || commentList.isEmpty()) {
 			return;
-
-		// Cache the DOM document, since comments may be from different project,
-		// with this cache, XML files need not to be loaded multiple times.
-		Map<IStorage, StringBuffer> xmlFragmentMap = new HashMap<IStorage, StringBuffer>();
-		IDavinciProject prj;
-		StringBuffer xmlFragment;
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = builderFactory.newDocumentBuilder();
-		Document doc = builder.newDocument();
-		Source source = null;
-		OutputStream os = null;
-		Result result = null;
-		Transformer xformer = TransformerFactory.newInstance().newTransformer();
-		xformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
-		xformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
-		xformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-
-		for (Comment comm : commentList) {
-			prj = comm.getProject();
-			if (null == prj)
-				continue;
-			IStorage commentsFileStorage = prj.getCommentsFileStorage();
-			xmlFragment = xmlFragmentMap.get(commentsFileStorage);
-			if (null == xmlFragment) {
-				xmlFragment = new StringBuffer();
-				xmlFragmentMap.put(commentsFileStorage, xmlFragment);
-			}
+		}
+		
+		OutputStream out = null;
+		try {
+			if (!commentsStorage.exists())
+				try {
+					commentsStorage.createNewFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
 
 			try {
-				source = new DOMSource(createCommentElem(comm, doc));
-				os = new ByteArrayOutputStream();
-				result = new StreamResult(os);
-				xformer.transform(source, result);
-				xmlFragment.append(os.toString());
-			} catch (TransformerException e) {
+				out = commentsStorage.getOutputStream();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} finally {
-				if (os != null)
-					os.close();
+				return;
 			}
-		}
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.newDocument();
 
-		Set<Entry<IStorage, StringBuffer>> entrySet = xmlFragmentMap.entrySet();
-		for (Entry<IStorage, StringBuffer> entry : entrySet) {
-			persist(entry.getValue().toString(), entry.getKey(), append);
+			Element rootElement = document.createElement("CommentsDocument");
+			document.appendChild(rootElement);
+		
+			for (Comment comm : commentList) {
+				Element commentElement = createCommentElem(comm, document);
+				rootElement.appendChild(commentElement);
+			}
+
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml"); //$NON-NLS-1$
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8"); //$NON-NLS-1$
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+			DOMSource source = new DOMSource(document);
+			StreamResult result = new StreamResult(out);
+
+			transformer.transform(source, result);
+		
+		} catch (TransformerFactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				if (out != null) {
+					out.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
-	protected static Element createCommentElem(Comment comm, Document doc) {
+	private Element createCommentElem(Comment comm, Document doc) {
 		Element commentElem;
 		Element elem;
 		
@@ -215,66 +223,7 @@ public class Marshaller extends DefaultHandler {
 		return commentElem;
 	}
 
-	protected static void persist(String content, IStorage file, boolean append)
-			throws IOException {
-		// Remove string like <?xml version="1.0" encoding="UTF-8"?>
-		// Pattern p = Pattern.compile("(<Comment\\W.*?</Comment>)");
-		// Matcher m = p.matcher(content);
-		IStorage parent = file.getParentFile();
-		if (!parent.exists())
-			parent.mkdirs();
-		if (!file.exists())
-			file.createNewFile();
-
-		/* AWE TODO: there's a separate issue for comments.xml never being written out, since broken anyway comment out and come back to this when address the other issue
-		RandomAccessFile raf = null;
-		try {
-			raf = new RandomAccessFile(f, "rw");
-			if (!append)
-				raf.setLength(0);
-			byte[] buffer = new byte[1024];
-			raf.read(buffer);
-			String leadingString = new String(buffer).trim();
-			Pattern p = Pattern.compile("(<\\?xml\\W.*?\\?>)");
-			Matcher m = p.matcher(leadingString);
-			String xmlMeta = ""; // Store the xml version meta data, used to insert to the xml file
-									// if needed.
-			if (m.find()) {
-				xmlMeta = m.group();
-			}
-			leadingString = m.replaceAll("");
-			leadingString = leadingString.substring(0,
-					Math.min(leadingString.length(), "<CommentsDocument />".length())).replaceAll(
-					"\\s", "");
-
-			StringBuilder sb = new StringBuilder();
-			content = content.replaceAll(p.pattern(), "");
-			if (leadingString.startsWith("<CommentsDocument/>") || "".equals(leadingString)) {
-				// There is no comments yet.
-				raf.setLength(0);
-				sb.append(xmlMeta);
-				sb.append("<CommentsDocument>");
-				sb.append(content);
-				sb.append("</CommentsDocument>");
-				raf.write(sb.toString().getBytes());
-			} else if (leadingString.startsWith("<CommentsDocument>")) {
-				// There are some comments and append new comments.
-				long fileLen = raf.length() - "</CommentsDocument>".getBytes().length;
-				raf.setLength(fileLen);
-				raf.seek(raf.length());
-				sb.append(content);
-				sb.append("</CommentsDocument>");
-				raf.write(sb.toString().getBytes());
-			}
-		} finally {
-			if (raf != null)
-				raf.close();
-		}
-		*/
-
-	}
-
-	protected static void setValue(Node node, Document doc, String value) {
+	private void setValue(Node node, Document doc, String value) {
 		if (null == node || node.getNodeType() != Node.ELEMENT_NODE)
 			return;
 		else {

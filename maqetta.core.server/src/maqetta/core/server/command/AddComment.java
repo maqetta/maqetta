@@ -95,8 +95,8 @@ public class AddComment extends Command {
 				if(mailer != null){
 					mailer.sendMessage(email);
 				}else{
-					this.responseString = "Failed to send mail to users. "+"Mail server is not configured. Mail notificatioin is cancelled.";
-					System.out.println("Mail server is not configured. Mail notificatioin is cancelled.");
+					this.responseString = "Failed to send mail to users. "+"Mail server is not configured. Mail notification is cancelled.";
+					System.out.println("Mail server is not configured. Mail notification is cancelled.");
 				}
 			} catch (Exception e) {
 				this.responseString = "Failed to send mail to users. "+e.getMessage();

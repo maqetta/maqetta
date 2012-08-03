@@ -341,22 +341,26 @@ return {
                         {
                             label: "Cut",
                             iconClass: "editActionIcon editCutIcon",
-                            action: "davinci/ve/actions/CutAction"
+                            action: "davinci/ve/actions/CutAction",
+                    		keyBinding: {accel: true, charOrCode: "x"}
                         },
                         {
                             label: "Copy",
                             iconClass: "editActionIcon editCopyIcon",
-                            action: "davinci/ve/actions/CopyAction"
+                            action: "davinci/ve/actions/CopyAction",
+                   			keyBinding: {accel: true, charOrCode: "c"}
                         },
                         {
                             iconClass: "editActionIcon editPasteIcon",
                             label: "Paste",
-                            action: "davinci/ve/actions/PasteAction"
+                            action: "davinci/ve/actions/PasteAction",
+                    		keyBinding: {accel: true, charOrCode: "v"}
                         },
                         {
                             iconClass: "editActionIcon editDeleteIcon",
                             label: "Delete",
-                            action: "davinci/ve/actions/DeleteAction"
+                            action: "davinci/ve/actions/DeleteAction",
+                    		keyBinding: {charOrCode: [dojo.keys.DELETE, dojo.keys.BACKSPACE]}
                         }
                     ]
                 },
@@ -386,7 +390,8 @@ return {
                             isEnabled: function(context) {
                                 return require('../Workbench').getOpenEditor();
                             },
-                            label: "Save"
+                            label: "Save",
+                    		keyBinding: {accel: true, charOrCode: "s", allowGlobal: true}
                         },
                         {
                             iconClass: 'saveAsIcon',
@@ -396,7 +401,8 @@ return {
                             isEnabled: function(context) {
                                 return require('../Workbench').getOpenEditor();
                             },
-                            label: "Save As"
+                            label: "Save As",
+                    		keyBinding: {accel: true, shift: true, charOrCode: "s", allowGlobal: true}
                         },
                         {
                             id: "saveasdijit",

@@ -1,5 +1,7 @@
-<div dojoType="dijit.layout.BorderContainer" design="headline" gutters="false" 
-	style="width:{width}; height:{height}" liveSplitters="false" id="borderContainer">
+<div class="tableInputDialog">
+
+	<div dojoType="dijit.layout.BorderContainer" class="dijitDialogPaneContentArea" design="headline" gutters="false" 
+		style="width:{width}; height:{height}" liveSplitters="false" id="tableInputBorderContainer">
 	
 		<!--Center region -->
 		<div dojoType="dijit.layout.ContentPane" region="center" class="propertiesRegion">
@@ -83,20 +85,14 @@
 				<!--  child rows for rules and rule labels added dynamically -->
 				<tr>
 					<td>
-						<div dojoType="dijit.layout.ContentPane" id="tableInputPreviewArea" class="previewArea"> 
+						<div dojoType="dijit.layout.ContentPane" id="tableInputPreviewArea" class="previewArea"/> 
 					</td>
 				</tr>
 			</table>
-      	</div>
-        
-        <!--OK/Cancel button area on bottom -->
-		<div data-dojo-type="dijit.layout.LayoutContainer" style="height: 4em;padding:0px" region="bottom" >
-		<div data-dojo-type="dijit.layout.ContentPane" layoutAlign="left" style="width: 40%;padding:0px;margin:0px;"></div>
-		<div data-dojo-type="dijit.layout.ContentPane" layoutAlign="client" style="width:100px;margin:0px;">
-			<button data-dojo-type="dijit.form.Button" type="button" id="tableInputOkButton" >{buttonOk}</button>
-			<button data-dojo-type="dijit.form.Button" type="button" id="tableInputCancelButton">{buttonCancel}</button>
-		<div data-dojo-type="dijit.layout.ContentPane" layoutAlign="right" style="width: 40%;padding:0px;margin:0px;"></div>
-		</div>
+    </div>
+  </div>
+  <div class="dijitDialogPaneActionBar">
+		<button data-dojo-type="dijit.form.Button" id="tableInputOkButton" type="submit">{buttonOk}</button>
+		<button data-dojo-type="dijit.form.Button" id="tableInputCancelButton">{buttonCancel}</button>
 	</div>
-
 </div>

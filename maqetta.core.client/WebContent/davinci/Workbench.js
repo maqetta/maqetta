@@ -546,6 +546,11 @@ var Workbench = {
 				});
 			Workbench.editorTabs.setTitle = function(editorContainer, title) { 
 				editorContainer.attr('title', title);
+				// After letting Dijit put the title onto the ContentPane,
+				// force title to null string on the domNode so that the
+				// browser doesn't show an annoying tooltip while hovering
+				// over an editor.
+				editorContainer.domNode.title = '';
 				if(!Workbench.hideEditorTabs){
 					this.tablist.pane2button[editorContainer.id].attr('label', title);
 				}else{

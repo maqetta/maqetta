@@ -193,11 +193,9 @@ build() {
 				-DgitUser=$user \
 				-Ddeployment-type=${MAQETTA_DEPLOYMENT} \
 				-DdojoBuild=${MAQETTA_DOJO_BUILD} \
-				$tagMaps $compareMaps $fetchTag $publish 
-
-
-#				-DJ2SE-1.5=$j2se150 \
-#				-DJavaSE-1.6=$javase160"
+				$tagMaps $compareMaps $fetchTag $publish \
+				-DJ2SE-1.5=$j2se150 \
+				-DJavaSE-1.6=$javase160"
 	$cmd
 }
 

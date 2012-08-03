@@ -205,7 +205,7 @@ return declare(ContainerInput, {
 			}
 		}
 		//Set up the dialog
-		this._inline = Workbench.showModal(this._getTemplate(), langObj.treeDialog, null, dojo.hitch(this, _onSubmit)); 
+		this._inline = Workbench.showModal(this._getTemplate(), langObj.treeDialog, {width:800,	height:475}, dojo.hitch(this, _onSubmit)); 
 
 		//Configure inputs
 		this._configureInputControls();
@@ -1121,6 +1121,10 @@ return declare(ContainerInput, {
 		}};
 		
 		return data;
+	},
+
+	resize: function() {
+		dijit.byId("treeInputBorderContainer").resize();
 	}
 });
 });

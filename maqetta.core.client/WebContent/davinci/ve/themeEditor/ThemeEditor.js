@@ -57,6 +57,10 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	
 	_editorSelected: function(event){
+		var context = this.getContext();
+		if(this == event.oldEditor){
+			context.hideFocusAll();
+		}
 		if(event.editor && event.editor.editorContainer && 
 				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
 				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){

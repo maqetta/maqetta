@@ -75,7 +75,6 @@ throw new Error("dojo.data.HtmlStore: a function was passed an item argument tha
 },_assertIsAttribute:function(_f){
 if(typeof _f!=="string"){
 throw new Error("dojo.data.HtmlStore: a function was passed an attribute argument that was not an attribute name string");
-return -1;
 }
 return _2.indexOf(this._headings,_f);
 },getValue:function(_10,_11,_12){

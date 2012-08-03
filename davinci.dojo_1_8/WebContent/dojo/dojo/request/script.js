@@ -87,7 +87,7 @@ dfd.handleResponse(_2b);
 };
 }
 if(_3.notify){
-_3.notify.emit("send",_2b);
+_3.notify.emit("send",_2b,dfd.promise.cancel);
 }
 if(!_29.canAttach||_29.canAttach(dfd)){
 var _2e=_1d._attach(dfd.id,url,_29.frameDoc);

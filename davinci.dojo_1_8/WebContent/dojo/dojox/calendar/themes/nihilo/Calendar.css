@@ -82,7 +82,7 @@
   border-top: 1px solid #cccccc;
   border-right: 1px solid #cccccc;
   background: #cccccc;
-  background: #ffffff url(images/titleBar.png) repeat-x top left;
+  background: #ffffff url("images/titleBar.png"); repeat-x top left;
   padding: 3px 4px;
   font-size: 0.9em;
   font-weight: bold;
@@ -110,7 +110,7 @@
   vertical-align: middle;
   text-align: center;
   background: #cccccc;
-  background: #ffffff url(images/titleBar.png) repeat-x top left;
+  background: #ffffff url("images/titleBar.png"); repeat-x top left;
   padding: 3px 4px;
   font-size: 0.9em;
   font-weight: bold;
@@ -480,7 +480,7 @@
   border-bottom: 1px solid #cccccc;
   color: #293a4b;
   background: #cccccc;
-  background: #ffffff url(images/titleBar.png) repeat-x top left;
+  background: #ffffff url("images/titleBar.png"); repeat-x top left;
   padding: 3px 4px;
   font-size: 0.9em;
   font-weight: bold;
@@ -509,7 +509,7 @@
   vertical-align: middle;
   text-align: center;
   background: #cccccc;
-  background: #ffffff url(images/titleBar.png) repeat-x top left;
+  background: #ffffff url("images/titleBar.png"); repeat-x top left;
   padding: 3px 4px;
   font-size: 0.9em;
   font-weight: bold;
@@ -538,7 +538,7 @@
 }
 .nihilo .dojoxCalendarColumnView .dojoxCalendarColumnHeaderTable td.Hover {
   cursor: pointer;
-  background: #f9f9f9 url(images/accordionItemActive.png) top repeat-x;
+  background: #f9f9f9 url("images/accordionItemActive.png"); top repeat-x;
 }
 .nihilo .dojoxCalendarColumnView .dojoxCalendarColumnHeaderTable td.Active {
   cursor: pointer;

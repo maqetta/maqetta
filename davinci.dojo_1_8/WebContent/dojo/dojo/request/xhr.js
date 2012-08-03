@@ -98,7 +98,7 @@ xhr.abort();
 }
 var _1c,_1d={data:null,query:null,sync:false,method:"GET",headers:{"Content-Type":"application/x-www-form-urlencoded"}};
 function xhr(url,_1e,_1f){
-var _20=_4.parseArgs(url,_4.deepCreate(_1d,_1e),_5("native-formdata")&&_1e.data&&_1e.data instanceof FormData);
+var _20=_4.parseArgs(url,_4.deepCreate(_1d,_1e),_5("native-formdata")&&_1e&&_1e.data&&_1e.data instanceof FormData);
 url=_20.url;
 _1e=_20.options;
 var _21,_22=function(){
@@ -141,7 +141,7 @@ if(!_28||!("X-Requested-With" in _28)){
 _23.setRequestHeader("X-Requested-With","XMLHttpRequest");
 }
 if(_4.notify){
-_4.notify.emit("send",_20);
+_4.notify.emit("send",_20,dfd.promise.cancel);
 }
 _23.send(_25);
 }

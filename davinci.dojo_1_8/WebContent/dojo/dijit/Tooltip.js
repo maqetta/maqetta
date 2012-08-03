@@ -15,7 +15,9 @@ this._onDeck=arguments;
 return;
 }
 this.containerNode.innerHTML=_12;
+if(_15){
 this.set("textDir",_15);
+}
 this.containerNode.align=rtl?"right":"left";
 var pos=_b.around(this.domNode,_13,_14&&_14.length?_14:_16.defaultPosition,!rtl,_7.hitch(this,"orient"));
 var _17=pos.aroundNodePos;
@@ -90,7 +92,7 @@ _1.forEach(_24.children,function(_25){
 this._setAutoTextDir(_25);
 },this);
 },_setTextDirAttr:function(_26){
-this._set("textDir",typeof _26!="undefined"?_26:"");
+this._set("textDir",_26);
 if(_26=="auto"){
 this._setAutoTextDir(this.containerNode);
 }else{

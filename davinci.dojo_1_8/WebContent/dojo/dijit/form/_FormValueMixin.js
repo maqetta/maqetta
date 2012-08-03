@@ -24,13 +24,12 @@ this._hasBeenBlurred=false;
 this._setValueAttr(this._resetValue,true);
 },_onKeyDown:function(e){
 if(e.keyCode==_3.ESCAPE&&!(e.ctrlKey||e.altKey||e.metaKey)){
-var te;
 if(_4("ie")<9||(_4("ie")&&_4("quirks"))){
 e.preventDefault();
-te=document.createEventObject();
+var _b=e.srcElement,te=_b.ownerDocument.createEventObject();
 te.keyCode=_3.ESCAPE;
 te.shiftKey=e.shiftKey;
-e.srcElement.fireEvent("onkeypress",te);
+_b.fireEvent("onkeypress",te);
 }
 }
 }});

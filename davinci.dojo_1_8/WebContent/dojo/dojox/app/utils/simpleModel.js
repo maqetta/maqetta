@@ -9,7 +9,7 @@ if((_7.store.params.data||_7.store.params.store)){
 _b={"store":_7.store.store,"query":_7.store.query?_7.store.query:{}};
 }else{
 if(_7.store.params.url){
-_b={"store":new dataStore({store:_7.store.store}),"query":_7.store.query?_7.store.query:{}};
+_b={"store":new _5({store:_7.store.store}),"query":_7.store.query?_7.store.query:{}};
 }
 }
 }else{
@@ -21,30 +21,27 @@ _b={"data":_7.data,query:{}};
 }
 }
 var _c;
-var _d=null;
-var _e=null;
-var _f;
 try{
 if(_b.store){
-_f=_b.store.query();
+_c=_b.store.query();
 }else{
-_f=_b.data;
+_c=_b.data;
 }
 }
 catch(ex){
 _a.reject("load mvc model error.");
 return _a.promise;
 }
-if(_f.then){
-_3(_f,_1.hitch(this,function(_10){
-_9=_10;
+if(_c.then){
+_3(_c,_1.hitch(this,function(_d){
+_9=_d;
 _a.resolve(_9);
 return _9;
 }),function(){
 loadModelLoaderDeferred.reject("load model error.");
 });
 }else{
-_9=_f;
+_9=_c;
 _a.resolve(_9);
 return _9;
 }

@@ -21,8 +21,9 @@ return _c.promise;
 var _11=new _2(function(){
 _12.abort&&_12.abort();
 });
+_11.total=new _2();
 var _12=this.fetch(_4.mixin({query:_f,onBegin:function(_13){
-_11.total=_13;
+_11.total.resolve(_13);
 },onComplete:function(_14){
 _11.resolve(_14);
 },onError:function(_15){

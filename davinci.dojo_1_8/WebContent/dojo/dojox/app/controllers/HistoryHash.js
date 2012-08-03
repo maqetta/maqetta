@@ -8,7 +8,6 @@ this._onHashChange(_6);
 }));
 this._historyStack=[];
 this._historyLen=0;
-this._histroyDiff=0;
 this._current=null;
 this._next=null;
 this._previous=null;

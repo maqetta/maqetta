@@ -740,10 +740,10 @@ if(_bc){
 _9.setMarginBox(this.domNode,_bc);
 }
 this._nodePixelIndent=_9.position(this.tree.indentDetector).w||this._nodePixelIndent;
-if(this.tree.rootNode){
-this.tree.rootNode.set("indent",this.showRoot?0:-1);
-}
+this.expandChildrenDeferred.then(_10.hitch(this,function(){
+this.rootNode.set("indent",this.showRoot?0:-1);
 this._adjustWidths();
+}));
 },_outstandingPaintOperations:0,_startPaint:function(p){
 this._outstandingPaintOperations++;
 if(this._adjustWidthsTimer){

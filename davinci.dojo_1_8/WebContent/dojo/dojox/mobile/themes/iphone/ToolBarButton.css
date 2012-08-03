@@ -35,7 +35,7 @@
   width: 20px;
   height: 19px;
   border-radius: 1px;
-  -webkit-transform: scale(0.7, 1) rotate(45deg);
+  -webkit-transform: scale(0.75, 1) rotate(45deg);
   border: 1px solid #9cacc0;
 }
 .mblToolBarButtonHasLeftArrow .mblToolBarButtonArrow {

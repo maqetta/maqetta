@@ -11,7 +11,7 @@ var _7=_3.forEach;
 var _8=function(){
 return _5.doc;
 };
-var _9=((_2("webkit")||_2("mozilla"))&&((_8().compatMode)=="BackCompat"));
+var _9=(_8().compatMode)=="BackCompat";
 var _a=">~+";
 var _b=false;
 var _c=function(){

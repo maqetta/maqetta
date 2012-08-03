@@ -36,7 +36,7 @@ if(!this.showLabel&&!this.params.title){
 this.iconNode.alt=_6.trim(this.containerNode.innerText||this.containerNode.textContent||"");
 }
 }});
-var _12=_1("dijit.layout.TabController",_7,{baseClass:"dijitTabController",templateString:"<div role='tablist' data-dojo-attach-event='onkeypress:onkeypress'></div>",tabPosition:"top",buttonWidget:_c,buttonWidgetClass:"dijitTab",buttonWidgetCloseClass:"dijitTabCloseButton",postCreate:function(){
+var _12=_1("dijit.layout.TabController",_7,{baseClass:"dijitTabController",templateString:"<div role='tablist' data-dojo-attach-event='onkeypress:onkeypress'></div>",tabPosition:"top",buttonWidget:_c,buttonWidgetCloseClass:"dijitTabCloseButton",postCreate:function(){
 this.inherited(arguments);
 var _13=new _9({id:this.id+"_Menu",ownerDocument:this.ownerDocument,dir:this.dir,lang:this.lang,textDir:this.textDir,targetNodeIds:[this.domNode],selector:function(_14){
 return _4.contains(_14,"dijitClosable")&&!_4.contains(_14,"dijitTabDisabled");
@@ -45,7 +45,7 @@ this.own(_13);
 var _15=_5.getLocalization("dijit","common"),_16=this;
 _13.addChild(new _a({label:_15.itemClose,ownerDocument:this.ownerDocument,dir:this.dir,lang:this.lang,textDir:this.textDir,onClick:function(evt){
 var _17=_8.byNode(this.getParent().currentTarget);
-_16.onCloseButtonClick(_17);
+_16.onCloseButtonClick(_17.page);
 }}));
 }});
 _12.TabButton=_c;

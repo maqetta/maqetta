@@ -289,8 +289,6 @@ f(_30);
 }
 }});
 _1.extend(_a.Surface,_a._eventsProcessing);
-_2("dojox.gfx.Point",null,{});
-_2("dojox.gfx.Rectangle",null,{});
 _a.Rect=_2("dojox.gfx.shape.Rect",_a.Shape,{constructor:function(_31){
 this.shape=g.getDefault("Rect");
 this.rawNode=_31;

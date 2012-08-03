@@ -1,14 +1,23 @@
 .dj_gecko .mblColorBlue {
   background-image: -moz-linear-gradient(top, #7a9de9 0%, #366edf 50%, #215fdc 50%, #2362dd 100%);
 }
+.dj_gecko .mblColorBlue45 {
+  background-image: -moz-linear-gradient(top left, #7a9de9 0%, #366edf 50%, #215fdc 50%, #2362dd 100%);
+}
 .dj_gecko .mblColorDefault {
   background-image: -moz-linear-gradient(top, #dfdfdf 0%, #a6a6a6 100%);
+}
+.dj_gecko .mblColorDefault45 {
+  background-image: -moz-linear-gradient(top left, #dfdfdf 0%, #a6a6a6 100%);
 }
 .dj_gecko .mblColorDefaultSel {
   background-image: -moz-linear-gradient(top, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
 }
+.dj_gecko .mblColorDefaultSel45 {
+  background-image: -moz-linear-gradient(top left, #306ea1 0%, #4090d3 6%, #306ea1 50%, #266093 100%);
+}
 .mblHeading {
-  background-image: url(compat/heading-bg.png);
+  background-image: url("compat/heading-bg.png");;
 }
 .mblHeadingSpanTitle {
   white-space: normal;
@@ -40,10 +49,10 @@
   height: 31px;
   border-style: none;
   border-radius: 0;
-  background-image: url(compat/arrow-button-head.png);
+  background-image: url("compat/arrow-button-head.png");;
 }
 .dj_ie .mblToolBarButtonSelected .mblToolBarButtonLeftArrow {
-  background-image: url(compat/arrow-button-head-sel.png);
+  background-image: url("compat/arrow-button-head-sel.png");;
 }
 .dj_ie .mblToolBarButtonRightArrow {
   top: 0;
@@ -52,17 +61,17 @@
   height: 31px;
   border-style: none;
   border-radius: 0;
-  background-image: url(compat/arrow-button-right-head.png);
+  background-image: url("compat/arrow-button-right-head.png");;
 }
 .dj_ie .mblToolBarButtonSelected .mblToolBarButtonRightArrow {
-  background-image: url(compat/arrow-button-right-head-sel.png);
+  background-image: url("compat/arrow-button-right-head-sel.png");;
 }
 .dj_ie .mblToolBarButtonBody {
-  background-image: url(compat/arrow-button-bg.png);
+  background-image: url("compat/arrow-button-bg.png");;
   background-position: left bottom;
 }
 .dj_ie .mblToolBarButtonBodySelected {
-  background-image: url(compat/arrow-button-bg-sel.png);
+  background-image: url("compat/arrow-button-bg-sel.png");;
 }
 .dj_ie .mblToolBarButtonBody table {
   margin: 0;
@@ -226,14 +235,14 @@
   margin: 0 5px;
 }
 .mblDomButtonGrayArrow, .mblDomButtonArrow {
-	background-image: url(../common/domButtons/compat/mblDomButtonGrayArrow.png);
+	background-image: url("../common/domButtons/compat/mblDomButtonGrayArrow.png");;;
 	background-repeat: no-repeat;
 }
 .mblDomButtonGrayArrow div, .mblDomButtonArrow div {
 	display: none;
 }
 .mblDomButtonDarkBlueCheck, .mblDomButtonCheck {
-	background-image: url(../common/domButtons/compat/mblDomButtonDarkBlueCheck.png);
+	background-image: url("../common/domButtons/compat/mblDomButtonDarkBlueCheck.png");;;
 	background-repeat: no-repeat;
 }
 .mblDomButtonDarkBlueCheck div, .mblDomButtonCheck div {
@@ -282,79 +291,79 @@
   -moz-border-radius: 2px;
 }
 .mblSwSquareShape .mblSwitchBgLeft {
-  background-image: url(compat/switch-square-l.gif);
+  background-image: url("compat/switch-square-l.gif");;
 }
 .mblSwSquareShape .mblSwitchBgRight {
-  background-image: url(compat/switch-square-r.gif);
+  background-image: url("compat/switch-square-r.gif");;
 }
 .mblSwSquareShape .mblSwitchKnob {
   -moz-border-radius: 2px;
-  background-image: url(compat/switch-square-k.gif);
+  background-image: url("compat/switch-square-k.gif");;
 }
 .mblSwRoundShape1 .mblSwitchBg {
   -moz-border-radius: 14px;
 }
 .mblSwRoundShape1 .mblSwitchBgLeft {
-  background-image: url(compat/switch-round1-l.gif);
+  background-image: url("compat/switch-round1-l.gif");;
 }
 .mblSwRoundShape1 .mblSwitchBgRight {
-  background-image: url(compat/switch-round1-r.gif);
+  background-image: url("compat/switch-round1-r.gif");;
 }
 .mblSwRoundShape1 .mblSwitchKnob {
   -moz-border-radius: 13px;
-  background-image: url(compat/switch-round1-k.gif);
+  background-image: url("compat/switch-round1-k.gif");;
 }
 .mblSwRoundShape2 .mblSwitchBg {
   -moz-border-radius: 14px;
 }
 .mblSwRoundShape2 .mblSwitchBgLeft {
-  background-image: url(compat/switch-round2-l.gif);
+  background-image: url("compat/switch-round2-l.gif");;
 }
 .mblSwRoundShape2 .mblSwitchBgRight {
-  background-image: url(compat/switch-round2-r.gif);
+  background-image: url("compat/switch-round2-r.gif");;
 }
 .mblSwRoundShape2 .mblSwitchKnob {
   -moz-border-radius: 13px;
-  background-image: url(compat/switch-round2-k.gif);
+  background-image: url("compat/switch-round2-k.gif");;
 }
 .mblSwArcShape1 .mblSwitchBg {
   -moz-border-radius: 5px/14px;
 }
 .mblSwArcShape1 .mblSwitchBgLeft {
-  background-image: url(compat/switch-arc1-l.gif);
+  background-image: url("compat/switch-arc1-l.gif");;
 }
 .mblSwArcShape1 .mblSwitchBgRight {
-  background-image: url(compat/switch-arc1-r.gif);
+  background-image: url("compat/switch-arc1-r.gif");;
 }
 .mblSwArcShape1 .mblSwitchKnob {
   -moz-border-radius: 5px/13px;
-  background-image: url(compat/switch-arc1-k.gif);
+  background-image: url("compat/switch-arc1-k.gif");;
 }
 .mblSwArcShape2 .mblSwitchBg {
   -moz-border-radius: 5px/14px;
 }
 .mblSwArcShape2 .mblSwitchBgLeft {
-  background-image: url(compat/switch-arc2-l.gif);
+  background-image: url("compat/switch-arc2-l.gif");;
 }
 .mblSwArcShape2 .mblSwitchBgRight {
-  background-image: url(compat/switch-arc2-r.gif);
+  background-image: url("compat/switch-arc2-r.gif");;
 }
 .mblSwArcShape2 .mblSwitchKnob {
   -moz-border-radius: 5px/13px;
-  background-image: url(compat/switch-arc2-k.gif);
+  background-image: url("compat/switch-arc2-k.gif");;
 }
 .mblSwDefaultShape .mblSwitchBg {
   -moz-border-radius: 2px;
 }
 .mblSwDefaultShape .mblSwitchBgLeft {
-  background-image: url(compat/switch-square-l.gif);
+  background-image: url("compat/switch-square-l.gif");;
 }
 .mblSwDefaultShape .mblSwitchBgRight {
-  background-image: url(compat/switch-square-r.gif);
+  background-image: url("compat/switch-square-r.gif");;
 }
 .mblSwDefaultShape .mblSwitchKnob {
   -moz-border-radius: 2px;
-  background-image: url(compat/switch-square-k.gif);
+  background-image: url("compat/switch-square-k.gif");;
 }
 .dj_ie .mblProg {
   width: 4px;

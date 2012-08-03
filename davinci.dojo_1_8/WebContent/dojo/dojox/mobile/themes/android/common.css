@@ -16,15 +16,24 @@ html.mobile, .mobile body {
   background-color: #366edf;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc));
 }
+.mblColorBlue45 {
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc));
+}
 .mblColorDefault {
   color: black;
   background-color: #c6c6c6;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#dfdfdf), to(#a6a6a6));
 }
+.mblColorDefault45 {
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#dfdfdf), to(#a6a6a6));
+}
 .mblColorDefaultSel {
   color: white;
   background-color: #3578b1;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#306ea1), to(#266093), color-stop(0.06, #4090d3), color-stop(0.5, #306ea1));
+}
+.mblColorDefaultSel45 {
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#306ea1), to(#266093), color-stop(0.06, #4090d3), color-stop(0.5, #306ea1));
 }
 .mblSpriteIcon {
   position: absolute;

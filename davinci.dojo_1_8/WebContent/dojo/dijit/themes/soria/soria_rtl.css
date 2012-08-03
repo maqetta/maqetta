@@ -176,12 +176,12 @@
 	border-right-width: 0;
 }
 .dijitRtl .soria .dijitSliderIncrementIconH {
-	background:url(images/spriteRoundedIconsSmall.png) no-repeat left top;
-	#background:url(images/spriteRoundedIconsSmall.gif) no-repeat left top;
+	background:url("images/spriteRoundedIconsSmall.png"); no-repeat left top;
+	#background:url("images/spriteRoundedIconsSmall.gif"); no-repeat left top;
 }
 .dijitRtl .soria .dijitSliderDecrementIconH {
-	background:url(images/spriteRoundedIconsSmall.png) no-repeat -30px top;
-	#background:url(images/spriteRoundedIconsSmall.gif) no-repeat -30px top;
+	background:url("images/spriteRoundedIconsSmall.png"); no-repeat -30px top;
+	#background:url("images/spriteRoundedIconsSmall.gif"); no-repeat -30px top;
 }
 .soria .dijitComboBoxRtl .dijitButtonNode {
 	border-width: 0 0 0 1px;
@@ -197,11 +197,11 @@
 }
 .dijitRtl .soria .dijitTreeExpandoOpened {
 	
-	background: url(images/spriteTree_rtl.gif) no-repeat -18px top;
+	background: url("images/spriteTree_rtl.gif"); no-repeat -18px top;
 }
 .dijitRtl .soria .dijitTreeExpandoClosed {
 	
-	background-image: url(images/spriteTree_rtl.gif);
+	background-image: url("images/spriteTree_rtl.gif");;
 }
 .dijitRtl .soria .dijitTitlePane .dijitClosed .dijitArrowNode {
 	background-position: 0 top;
@@ -231,18 +231,18 @@
 	background-position: left top;
 }
 .dijitRtl .soria .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsEnabled_rtl.png); 
+	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");; 
 }
 .dijitRtl .soria .dijitDisabled .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsDisabled_rtl.png); 
+	background-image: url("../../icons/images/editorIconsDisabled_rtl.png");; 
 }
 .dijitEditorRtl .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsEnabled_rtl.png); 
+	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");; 
 }
 .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url(../../icons/images/editorIconsDisabled_rtl.png); 
+	background-image: url("../../icons/images/editorIconsDisabled_rtl.png");; 
 }
 .dijitToolbarRtl .dijitToolbarSeparator {
-	background-image: url(../../icons/images/editorIconsEnabled_rtl.png);
+	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");;
 }
  

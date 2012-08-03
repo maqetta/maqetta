@@ -114,9 +114,11 @@ _24[_26]=_27;
 }
 return _24;
 },setupControllers:function(){
+if(!this.noAutoLoadControllers){
 this.controllers.push(new _e(this));
 this.controllers.push(new _f(this));
 this.controllers.push(new _10(this));
+}
 var _28=window.location.hash;
 this._startView=(((_28&&_28.charAt(0)=="#")?_28.substr(1):_28)||this.defaultView).split("&")[0];
 this._startParams=this.getParamsFromHash(_28)||this.defaultParams||{};
@@ -172,7 +174,7 @@ var ext={templateString:arguments[arguments.length-1]};
 }
 App=_4(_33,ext);
 _9(function(){
-var app=App(_2d,_2e||_a.body());
+var app=new App(_2d,_2e||_a.body());
 if(_7("app-log-api")){
 app.log=function(){
 var msg="";

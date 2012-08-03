@@ -886,6 +886,10 @@ davinci_top_bar .dijitButtonNode {
 .editPropertiesIcon.editPropertiesIconShowing {
 	background-position: -37px 0px;
 }
+#actionBarContainer .editProperties {
+	float:right;
+	margin-right:11px;
+}
 .arrangeCommandsIcon {
 	background-image: url(img/sprite.png);
 	background-position: -50px -745px;

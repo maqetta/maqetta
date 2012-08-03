@@ -3449,6 +3449,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onCommandStackExecute: function() {
+		if(this.editor && this.editor.editorContainer && this.editor.editorContainer.updateToolbars){
+			this.editor.editorContainer.updateToolbars();
+		}
 	},
 
 //FIXME: this routine probably will be made obsolete by br's changes to incorporate

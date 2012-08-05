@@ -50,7 +50,16 @@ return declare("davinci.ve.RebuildPage", Context, {
 		/* big cheat here.  removing 1 layer of .. for prefix of project, could figure this out with logic and have infinite project depth */
 		
 		this._srcDocument.setText(source, true);
-
+		
+		/* make sure this isn't an HTML fragment */
+		var headless = this._srcDocument.find({elementType: "HTMLElement", 'tag':'html'}, true);
+		if(headless==null){
+			
+			var deferred = new Deferred();
+	        return deferred.resolve(source);
+	        
+		}
+		 
         var elements = this._srcDocument.find({elementType: "HTMLElement"}),
         	promises = [];
 

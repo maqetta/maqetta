@@ -27,7 +27,7 @@ public class ReviewCacheManager extends Thread {
 
 	static final private long DESTROY_TIME = 600000; // 10 mins
 
-	static final private long SLEEP_TIME = 120000; // 2 mins
+	static final private long SLEEP_TIME = 30000; // 30 seconds
 
 	// Map<FileLocation, Hashtable<CommentId, Comment>>
 	private Hashtable<IDavinciProject, Hashtable<String, Comment>> reviewFilePool = new Hashtable<IDavinciProject, Hashtable<String, Comment>>();

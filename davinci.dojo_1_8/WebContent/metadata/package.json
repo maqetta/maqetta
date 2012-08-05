@@ -1264,7 +1264,6 @@
 	            	},
 		            "resizable": "width"
 		        },
-/* Commenting out - crashes as currently defined because there is no dijit.layout.StackController widget
 		        {
 		            "name": "StackContainer",
 		            "description": "Stack Container",
@@ -1297,10 +1296,20 @@
 		                }
 		            ],
 		            "initialSize": "auto",
+		            "allowedChild": "dijit.layout.ContentPane",
+		            "inlineEdit": "./dijit/layout/StackContainerInput",
+		            "helper": "./dijit/layout/LayoutContainerHelper",
 		            "tool": "./dijit/layout/StackContainerCreateTool",
-		            "allowedChild": "ANY"
 		        },
-*/
+		        {
+		            "name": "StackController",
+		            "description": "StackController",
+		            "type": "dijit.layout.StackController",
+		            "category": "untested",
+		            "resizable": "none",
+		            "hidden": "true",
+		            "invisible": false
+		        },
 		        {
 		            "name": "Range",
 		            "description": "Range",

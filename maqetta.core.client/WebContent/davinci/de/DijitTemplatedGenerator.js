@@ -7,28 +7,26 @@ define(["dojo/_base/declare",
 	
 	return declare("davinci.de.DijitTemplatedGenerator", null, {
 	
-		value : {js:"", metadata:"", amd:['dojo/_base/declare', 'dijit/_Widget','dijit/_Templated']},
-		metadata : {},
-		dijitName : null,
-		
-		
 		constructor: function(args){
 			dojo.mixin(this, args);
 		},
 		
-		buildSource: function(model, dijitName, inlineHtml){
+		buildSource: function(model, dijitName, simpleName, inlineHtml, context, selection){
+			this.value = {js:"", metadata:"", amd:['dojo/_base/declare', 'dijit/_Widget','dijit/_Templated']};
 			this.metadata = {id:dijitName, name: dijitName, spec:"1.0", version: "1.0", require:[],library:{dojo:{src:"../../../../dojo/dojo.js"}}};
 			this.model = this._srcDocument =  model;
 			/* no need to bother with the theme */
 			//var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
-			var htmlPath = "./" + dijitName + ".html";
+			var topElement = selection[0]._srcElement;
+			var htmlPath = "./" + simpleName + ".html";
 			
 			if(!inlineHtml){
 	        	this.value.amd.push("dojo/text!" + htmlPath.toString() );
 	    		this.value.htmlPath = htmlPath;
 	    	}
 			
-			var elements = this._srcDocument.find({'elementType' : "HTMLElement"});
+			var elements = topElement.find({'elementType' : "HTMLElement"});
+			elements.push(topElement);
 		    	
 			/* build the dojo.requires(...) top bits */
 	        this.loadRequires("html.body", true, true,true);
@@ -45,13 +43,11 @@ define(["dojo/_base/declare",
 			this.metadata.require.push({$library:"dojo",format:"amd", src:"widgets/" + dijitName.replace(/\./g,"/"), type:"javascript-module"});
 	        /* build the templated class */
 	    	
-	    	var html =  this._srcDocument.find({'elementType' : "HTMLElement", 'tag':'body'}, true);
-	    	var bodyChildren = html.children;
-	    	this.value.html = "\t\t<div>";
-	    	for(var i=0;i<bodyChildren.length;i++){
-	    		this.value.html += bodyChildren[i].getText();
-	    	}
-	    	this.value.html +="</div>";
+	    	//var html =  this._srcDocument.find({'elementType' : "HTMLElement", 'tag':'body'}, true);
+	    	this.value.html = "";
+	    	this.value.html += topElement.getText();
+	    	
+	    	this.value.html +="";
 	    	
 	    	
 	    	var systemModCount = 3;
@@ -89,7 +85,7 @@ define(["dojo/_base/declare",
 						
 			
 			this.value.js+="){\n\n";
-			this.value.js+=" return declare('widgets."+ dijitName + "',[ _Widget, _Templated"
+			this.value.js+=" return declare('" + dijitName + "',[ _Widget, _Templated"
 						
 			this.value.js+="], {\n"
 			this.value.js+="       widgetsInTemplate:true,\n"

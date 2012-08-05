@@ -22,20 +22,21 @@ return declare(CreateTool, {
 		this._resizable = "both";
 	},
 	
-	_create: function(args){
-        
-        var command = this._getCreateCommand(args);
-        this._context.getCommandStack().execute(command);
-        this._select(this._container);
-    },
+	_create: function(args){		
+		var command = this._getCreateCommand(args);
+		this._context.getCommandStack().execute(command);
+		this._select(this._container);
+	},
 
-    _getCreateCommand: function(args){
-		if(this._data.length !== 2){
+  _getCreateCommand: function(args){
+		if (this._data.length !== 2) {
 			return;
 		}
+
 		var controllerData = this._data[0];
 		var containerData = this._data[1];
-		if (!this._loadType(controllerData) || !this._loadType(containerData)) {
+		
+		if (!this._context.loadRequires(controllerData.type) || !this._context.loadRequires(containerData.type) || !this._context.loadRequires("dijit.layout.ContentPane")) {
 			return;
 		}
 
@@ -53,12 +54,14 @@ return declare(CreateTool, {
 		containerData.context = this._context;
 		controllerData.context = this._context;
 
-		var controller,
-			container;
-		dojo.withDoc(this._context.getDocument(), function(){
-			container = Widget.createWidget(containerData);
+		var controller, container;
+
+		dojo.withDoc(this._context.getDocument(), function() {
+			// setup the controller
 			controller = Widget.createWidget(controllerData);
+			container = Widget.createWidget(containerData);
 		});
+
 		if(!controller || !container){
 			return;
 		}
@@ -76,18 +79,19 @@ return declare(CreateTool, {
 			command.add(new ResizeCommand(container, args.size.w, args.size.h));
 		}
 		this._container = container;
-        return command;
+
+		return command;
 	},
     
-    addPasteCreateCommand: function(command, args){
-        this._context = this._data.context;
-        var data = [];
-        data[0] = {type: 'dijit.layout.StackController'};
-        data[1] = this._data;
-        this._data = data;
-        command.add( this._getCreateCommand(args));
-        return this._container;
-    }
+	addPasteCreateCommand: function(command, args){
+		this._context = this._data.context;
+		var data = [];
+		data[0] = {type: 'dijit.layout.StackController'};
+		data[1] = this._data;
+		this._data = data;
+		command.add( this._getCreateCommand(args));
+		return this._container;
+	}
 });
 
 });

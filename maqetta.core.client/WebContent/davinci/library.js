@@ -159,7 +159,7 @@ addCustomWidgets: function(base, customWidgetJson) {
 	
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
 	if(!prefs.widgetFolder){
-		prefs.widgetFolder = "./widgets";
+		prefs.widgetFolder = "./lib/custom";
 		Preferences.savePreferences('davinci.ui.ProjectPrefs', base, prefs);
 	}
 	
@@ -188,7 +188,7 @@ getCustomWidgets: function(base) {
 			
 		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 		if(!prefs.widgetFolder){
-			prefs.widgetFolder = "./widgets";
+			prefs.widgetFolder = "./lib/custom";
 			Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 		}
 		

@@ -4,10 +4,11 @@ define(["davinci/de/widgets/NewDijit",
         "system/resource",
         "davinci/Runtime",
         "davinci/de/DijitTemplatedGenerator",
-        "davinci/library"
+        "davinci/library",
+        "davinci/ui/Dialog"
         
        
-],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary){
+],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary, Dialog){
 	var dt= {
 		/* base packages.json metadata */
 		WIDGETS_JSON : {"name":"custom", 
@@ -22,15 +23,34 @@ define(["davinci/de/widgets/NewDijit",
 			var oldFileName = oldEditor.fileName;
 			var oldResource = Resource.findResource(oldFileName);
 			var model = oldEditor.model;
-	     
-	    Workbench.showModal(projectDialog, "Dijit Widget...", {height:160, width: 250}, function(){
-	    	if (!projectDialog.cancel) {
-	    		var widgetName = projectDialog.attr('value');
-	    		dt.createDijit(widgetName, model, oldResource);
-	    	}
+			
+			var openEditor = Workbench.getOpenEditor();
+    		var context = openEditor.getContext();
+    		var selection = context.getSelection();
+    		if(!dt.validWidget(selection)){
+    			Dialog.showModal("Invalid Selection.  Please select a single container widget to create a new Widget", "Error creating Widget...")
+    			return;
+    		}
+    		
+			Workbench.showModal(projectDialog, "Dijit Widget...", {height:160, width: 250}, function(){
+		    	if (!projectDialog.cancel) {
+		    		var widgetData = projectDialog.attr('value');
+		    		dt.createDijit(widgetData, model, oldResource, context, selection);
+		    	}
 				return true;
 			});
 			
+		},
+		
+		/* 
+		 * returns true if the selection is valid for creating a new widget. only 
+		 * support creating widgets from selected container widgets 
+		 * 
+		 * */
+		validWidget : function(selection){
+			if (selection==null || selection.length!=1) return false;
+			var widget = selection[0];
+			return (widget.acceptsHTMLChildren);
 		},
 		
 		_createNameSpace : function(name, parent){
@@ -74,31 +94,30 @@ define(["davinci/de/widgets/NewDijit",
 			return parent;
 		},
 		
-		createDijit : function(name, model, resource){
+		createDijit : function(widgetData, model, resource, context,selection){
 			
-			var qualifiedWidget = "widgets." + name;
+			var qualifiedWidget = widgetData.group + "." + widgetData.name;
 			
 			
 			var base = Workbench.getProject();
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
 			if(!prefs['widgetFolder']){
-				prefs.widgetFolder = "./WebContent/widgets";
+				prefs.widgetFolder = "./WebContent/custom";
 				Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 			}
 			
-			var namesplit = name.split(".");
-			var widgetSingleName = name;
 			
 			var parent = dt._createFolder(prefs['widgetFolder']);
 			
-			var widgetNamespace = dt._createNameSpace(name, parent);
+			var widgetNamespace = dt._createNameSpace(qualifiedWidget, parent);
+			/*
 			if(namesplit.length>1){
 				widgetSingleName = namesplit[namesplit.length-1];
 			}
-			
-			var customWidgets = parent.getChildSync(name + "_widgets.json");
+			*/
+			var customWidgets = widgetNamespace.getChildSync(widgetData.name + "_widgets.json");
 			if(customWidgets==null){
-				customWidgets = parent.createResource(name +"_widgets.json");
+				customWidgets = widgetNamespace.createResource(widgetData.name +"_widgets.json");
 				
 			}
 			
@@ -106,8 +125,8 @@ define(["davinci/de/widgets/NewDijit",
 			var customWidgetsJson = dojo.clone(dt.WIDGETS_JSON);
 			
 			
-			customWidgetsJson.widgets.push({name:name, 
-											description: "Custom user widget " + name, 
+			customWidgetsJson.widgets.push({name:widgetData.name, 
+											description: "Custom user widget " + widgetData.name, 
 											type:qualifiedWidget/*.replace(/\./g,"/")*/, category:"custom", 
 											iconLocal:true, icon:"app/davinci/img/maqetta.png" 
 										   })
@@ -117,7 +136,7 @@ define(["davinci/de/widgets/NewDijit",
 			var widgetFolder = parent;
 			
 			var generator = new DijitTemplatedGenerator({});
-			var content = generator.buildSource(model,name,false);
+			var content = generator.buildSource(model,qualifiedWidget,widgetData.name, false, context, selection);
 			
 			for(var type in content){
 				
@@ -125,17 +144,15 @@ define(["davinci/de/widgets/NewDijit",
 					case 'amd':
 						break;
 					case 'html':
-						var html = widgetNamespace.createResource(widgetSingleName + ".html");
+						var html = widgetNamespace.createResource(widgetData.name + ".html");
 						html.setContents(content.html);
 						break;
 					case 'js':
-						var widgetResource = widgetNamespace.createResource(widgetSingleName + ".js");
+						var widgetResource = widgetNamespace.createResource(widgetData.name + ".js");
 						widgetResource.setContents(content.js);
 						break;
 					case 'metadata':
-						var resource = dt._createNameSpace(qualifiedWidget, widgetFolder);
-						
-						var metaResource = resource.createResource(widgetSingleName + "_oam.json");
+						var metaResource = widgetNamespace.createResource(widgetData.name + "_oam.json");
 						metaResource.setContents(content.metadata);
 						dLibrary.addCustomWidgets(base, customWidgetsJson);
 						break;

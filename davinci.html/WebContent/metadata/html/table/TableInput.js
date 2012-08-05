@@ -2,7 +2,8 @@ define(
 [
 	"dojo/_base/declare", 
 	"maq-metadata-dojo/dijit/layout/ContainerInput", 
-	"davinci/ve/widget", 
+	"davinci/ve/widget",
+	"davinci/ui/Dialog",
 	"./TableMatrix",
 	"dojo/text!./templates/tableInput.html",
 	"davinci/css!./templates/tableInput.css",
@@ -17,6 +18,7 @@ define(
 function(declare, 
 		ContainerInput, 
 		Widget,
+		Dialog,
 		TableMatrix,
 		mainTemplateString,
 		cssForTemplate,
@@ -29,51 +31,33 @@ return declare(ContainerInput, {
 	
 	show: function(widgetId) {
 		this._widget = davinci.ve.widget.byId(widgetId);
-		if (!this._inline) {
-			//Set up the dialog
-			var width = 650;
-			var height = 300;
-			this._inline = new dijit.Dialog({
-				title: langObj.tableDialog,
-				style: "width: " + width + "px; height: + " + height + "px",
-				"class": "tableInputDialog"
-			});
-			this._inline.onCancel = dojo.hitch(this, "onCancel");
-			this._inline.callBackObj = this;
-			
-			//Get template for dialog contents
-			var s = this._getTemplate(width, height);
-		
-			//Set content
-			this._inline.set("content", s);
-			this._inline.show();
 
-			//Configure inputs
-			this._configureInputControls();
-			
-			//Set-up preview area
-			this._setupPreviewArea();
-
-			//Configure listeners for OK/Cancel buttons
-			var okButton = dijit.byId('tableInputOkButton');
-			this._connection.push(dojo.connect(okButton, 'onClick', dojo.hitch(this,function(){
-				if (this._isUserInputValid()) {
-					this.updateWidget();
-					this.onOk();
-				}
-			})));
-			var cancelButton = dijit.byId('tableInputCancelButton');
-			this._connection.push(dojo.connect(cancelButton, 'onClick', dojo.hitch(this,function(){
-				this.onCancel();
-			})));
-			if (this._widget.inLineEdit_displayOnCreate){
-				// hide cancel on widget creation #120
-				delete this._widget.inLineEdit_displayOnCreate;
-				dojo.style(cancelButton.domNode, "display", "none");
+		function _onSubmit() {
+			if (this._isUserInputValid()) {
+				this.updateWidget();
 			}
-			
-			this._updatePreview();
 		}
+
+		this._inline = Dialog.showModal(this._getTemplate(), langObj.tableDialog, {width:700,	height:300}, dojo.hitch(this, _onSubmit)); 
+			
+		//Configure inputs
+		this._configureInputControls();
+		
+		//Set-up preview area
+		this._setupPreviewArea();
+
+		//Configure listeners for Cancel button
+		var cancelButton = dijit.byId('tableInputCancelButton');
+		this._connection.push(dojo.connect(cancelButton, 'onClick', dojo.hitch(this,function(){
+			this.onCancel();
+		})));
+		if (this._widget.inLineEdit_displayOnCreate){
+			// hide cancel on widget creation #120
+			delete this._widget.inLineEdit_displayOnCreate;
+			dojo.style(cancelButton.domNode, "display", "none");
+		}
+		
+		this._updatePreview();
 	},
 	
 	_configureInputControls: function() {
@@ -494,8 +478,6 @@ return declare(ContainerInput, {
 		if (!this._substitutedMainTemplate) {
 			this._substitutedMainTemplate = 
 				dojo.replace(mainTemplateString, {
-					width: width + "px",
-					height: (height - 20) + "px",
 					propertiesHeader: langObj.propertiesHeader,
 					numRows: langObj.numRows,
 					numCols: langObj.numCols,
@@ -514,6 +496,10 @@ return declare(ContainerInput, {
 		}
 			
 		return this._substitutedMainTemplate;
+	},
+
+	resize: function() {
+		dijit.byId("tableInputBorderContainer").resize();
 	}
 });
 });

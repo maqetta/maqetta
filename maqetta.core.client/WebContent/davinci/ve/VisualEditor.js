@@ -46,10 +46,11 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 	deviceName: 'none',
 	_orientation: 'portrait',
+	_subscriptions: [],
 	
 	constructor: function(element, pageEditor)	{
 		this._pageEditor = pageEditor;
-		this.contentPane = dijit.getEnclosingWidget(element);
+		var contentPane = this.contentPane = dijit.getEnclosingWidget(element);
 
 		this.loadingDiv = dojo.create("div", {
 			className: "loading",
@@ -67,42 +68,13 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			rootNode: silhouette_div_container,
 			margin: 20
 		});
-		
-		/* The following code provides a fix for #864: Drag/drop from widget palette
-		 * not working if page canvas is scrolled. Possibly because of the funky stuff we do
-		 * with width/height being 100% on HTML and BODY, both Mozilla and WebKit set
-		 * the BODY height to the size of the IFRAME, and if scrolled, but (invisible)
-		 * top of the BODY is shifted up off of the screen and the height of the BODY
-		 * is equal to height of IFRAME, which causes an empty area at bottom of canvas
-		 * where the browser will not send mouse events. To workaround this problem,
-		 * extend the width/height of the BODY to be the size of the surrounding ContentPane
-		 * adjusted by the amount the BODY is scrolled.
-		 * 
-		 * FIXME: This patch probably won't be necessary if we get rid of the "infinite canvas"
-		 * and instead force user to pick a fixed-size canvas, in which case things will
-		 * work like the mobile silhouettes, which don't have the problem.
-		 */
-		function resizeBody(bodyElem, size){
-			var scrollLeft = GeomUtils.getScrollLeft(bodyElem);
-			var scrollTop = GeomUtils.getScrollTop(bodyElem);
-			if(scrollLeft > 0){
-				bodyElem.style.width= (size.w + scrollLeft) + "px";
-			}else{
-				bodyElem.style.width = "100%";
-			}
-			if(scrollTop > 0){
-				bodyElem.style.height=(size.h + scrollTop) + "px";
-			}else{
-				bodyElem.style.height = "100%";
-			}
-		}
 		var visualEditor = this;
 		this.contentPane.connect(this.contentPane, 'resize', function(newPos){
 			// "this" is the ContentPane dijit
 			var iframe = dojo.query('iframe', this.domNode)[0];
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
-				resizeBody(bodyElem, newPos);
+				visualEditor._resizeBody(bodyElem, newPos);
 				// Wrapped in setTimeout because sometimes browsers are quirky about
 				// instantly updating the size/position values for elements
 				// and things usually work if you wait for current processing thread
@@ -110,21 +82,12 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 				setTimeout(function() {
 					visualEditor.getContext().updateFocusAll(); 
 				}, 100); 
-				if(!visualEditor._scrollHandler){
-					visualEditor._scrollHandler = connect.connect(iframe.contentDocument, 'onscroll', this, function(e){
-						resizeBody(bodyElem, {
-							w: dojo.style(this.domNode, 'width'),
-							h: dojo.style(this.domNode, 'height')
-						});
-						// (See setTimeout comment a few lines earlier)
-						setTimeout(function() {
-							visualEditor.getContext().updateFocusAll(); 
-						}, 100); 
-					});
-				}
+				visualEditor._registerScrollHandler();
 			}
 		});
 		this._pageEditor.deferreds = all(Metadata.getDeferreds());
+		this._subscriptions.push(dojo.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this)));
+		this._subscriptions.push(dojo.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this)));
 	},
 	
 	getDevice: function() {
@@ -274,6 +237,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	    	dojo.disconnect(this._scrollHandler);
 	    	this._scrollHandler = null;
 	    }
+	    for(var i=0; i<this._subscriptions.length; i++){
+	    	dojo.unsubscribe(this._subscriptions[i]);
+	    }
+	    this._subscriptions = [];
 	},
 	
 	setContent: function (fileName, content, newHtmlParams){
@@ -526,6 +493,66 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			// Instead, just use a setTimeout.
 			context.select(widget);
 		},0);
+	},
+	
+	_contextLoaded: function(context){
+		if(context == this.getContext()){
+			this._registerScrollHandler();
+		}
+	},
+	
+	_editorSelected: function(event){
+		if(event.editor == this._pageEditor){
+			this._registerScrollHandler();
+		}
+	},
+	
+	/* The following code provides a fix for #864: Drag/drop from widget palette
+	 * not working if page canvas is scrolled. Possibly because of the funky stuff we do
+	 * with width/height being 100% on HTML and BODY, both Mozilla and WebKit set
+	 * the BODY height to the size of the IFRAME, and if scrolled, but (invisible)
+	 * top of the BODY is shifted up off of the screen and the height of the BODY
+	 * is equal to height of IFRAME, which causes an empty area at bottom of canvas
+	 * where the browser will not send mouse events. To workaround this problem,
+	 * extend the width/height of the BODY to be the size of the surrounding ContentPane
+	 * adjusted by the amount the BODY is scrolled.
+	 * 
+	 * FIXME: This patch probably won't be necessary if we get rid of the "infinite canvas"
+	 * and instead force user to pick a fixed-size canvas, in which case things will
+	 * work like the mobile silhouettes, which don't have the problem.
+	 */
+	_resizeBody: function(bodyElem, size){
+		var scrollLeft = GeomUtils.getScrollLeft(bodyElem);
+		var scrollTop = GeomUtils.getScrollTop(bodyElem);
+		if(scrollLeft > 0){
+			bodyElem.style.width= (size.w + scrollLeft) + "px";
+		}else{
+			bodyElem.style.width = "100%";
+		}
+		if(scrollTop > 0){
+			bodyElem.style.height=(size.h + scrollTop) + "px";
+		}else{
+			bodyElem.style.height = "100%";
+		}
+	},
+
+	_registerScrollHandler: function(){
+		if(!this._scrollHandler){
+			var iframe = dojo.query('iframe', this.domNode)[0];
+			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
+				var bodyElem = iframe.contentDocument.body;
+				this._scrollHandler = dojo.connect(this.contentPane.domNode, 'onscroll', this, function(e){
+					this._resizeBody(bodyElem, {
+						w: dojo.style(this.contentPane.domNode, 'width'),
+						h: dojo.style(this.contentPane.domNode, 'height')
+					});
+					// (See setTimeout comment up in the constructor)
+					setTimeout(function() {
+						this.getContext().updateFocusAll(); 
+					}.bind(this), 100); 
+				});
+			}
+		}
 	}
 
 });

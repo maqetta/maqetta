@@ -193,6 +193,13 @@ var context = this._context;
 var parentbounds = context.getParentIframeBounds();
 rect.l += parentbounds.l;
 rect.t += parentbounds.t;
+// Theme editor puts scrollbar on iframe's html element
+//FIXME: Need to package this up as a callback somehow
+var parentIframe = context.getParentIframe();
+var bodyElement = parentIframe.contentDocument.body;
+rect.l -= bodyElement.scrollLeft;
+rect.t -= bodyElement.scrollTop;
+// FIXME: Disable the offscreen adjust in all cases - should just delete that code
 offScreenAdjust = false;
 
 		this.domNode.style.left = rect.l + 'px';

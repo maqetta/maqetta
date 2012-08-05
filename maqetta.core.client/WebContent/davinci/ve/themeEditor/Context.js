@@ -64,6 +64,7 @@ return declare([Context], {
 		});
 		dojo.connect(this.getGlobal(), 'onload', this, function() {
             this.onload();
+    	    dojo.publish('/davinci/ui/context/loaded', [this]);
         });
 		this.setHeader({
 			title: data.title,

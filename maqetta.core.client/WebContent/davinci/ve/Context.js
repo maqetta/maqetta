@@ -1866,7 +1866,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocus: function(widget, index, inline){
-		if(this.editor.getDisplayMode() == 'source'){
+		if(this.editor.getDisplayMode && this.editor.getDisplayMode() == 'source'){
 			return;
 		}
 		Widget.requireWidgetHelper(widget.type).then(function(helper) { 
@@ -1917,7 +1917,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocusAll: function(){
-		if(this.editor.getDisplayMode() == 'source'){
+		if(this.editor.getDisplayMode && this.editor.getDisplayMode() == 'source'){
 			return;
 		}
 		var selection = this._selection;
@@ -3570,18 +3570,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getParentIframeBounds: function(){
 		var parentIframe = this.getParentIframe();
 		if(parentIframe){
-			/*
-			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
-			offsetLeft = 0;
-			offsetTop = 0;
-			offsetNode = parentIframe;
-			while(offsetNode && offsetNode.tagName != 'BODY'){
-				offsetLeft += offsetNode.offsetLeft;
-				offsetTop += offsetNode.offsetTop;
-				offsetNode = offsetNode.offsetParent;
-			}
-			return { l:offsetLeft, t:offsetTop, w:parentIframe.offsetWidth, h:parentIframe.offsetHeight };
-			*/
 			var box = GeomUtils.getBorderBoxPageCoords(parentIframe);
 			return box;
 		}

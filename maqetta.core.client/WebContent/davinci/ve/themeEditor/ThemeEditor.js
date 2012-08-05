@@ -1,5 +1,6 @@
 define([
     "dojo/_base/declare",
+	"dojo/_base/connect",
 	"davinci/ui/ModelEditor",
 	"davinci/ve/ThemeModifier",
 	"davinci/ve/themeEditor/VisualThemeEditor",
@@ -14,6 +15,7 @@ define([
 	"davinci/ve/utils/GeomUtils"
 	], function(
 			declare,
+			connect,
 			ModelEditor,
 			ThemeModifier,
 			VisualThemeEditor,
@@ -45,15 +47,34 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	constructor: function (element) {
 		
 		this.inherited(arguments);
+		var themeEditor = this;
+		this.editorContainer = dijit.getEnclosingWidget(element);
 		this._cp = new ContentPane({}, element);
 		this.domNode = this._cp.domNode;
 		this.domNode.className = "ThemeEditor fullPane";
 		this._loadedCSSConnects = [];
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
 		this.subscribe("/maqetta/ui/actionPropertiesPalette/moved", this._actionPropertiesPaletteChanged.bind(this));
 		this.subscribe("/maqetta/ui/actionPropertiesPalette/resized", this._actionPropertiesPaletteChanged.bind(this));
 		this.subscribe("/maqetta/ui/actionPropertiesPalette/showProps", this._actionPropertiesPaletteChanged.bind(this));
 		this.subscribe("/maqetta/ui/actionPropertiesPalette/hideProps", this._actionPropertiesPaletteChanged.bind(this));
+		this.editorContainer.connect(this.editorContainer, 'resize', function(newPos){
+			// "this" is the EditorContainer/ContentPane dijit
+			var iframe = dojo.query('iframe', this.domNode)[0];
+			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
+				var bodyElem = iframe.contentDocument.body;
+				var context = this.editor.getContext();
+				// Wrapped in setTimeout because sometimes browsers are quirky about
+				// instantly updating the size/position values for elements
+				// and things usually work if you wait for current processing thread
+				// to complete. Also, updateFocusAll() can be safely called within setTimeout.
+				setTimeout(function() {
+					context.updateFocusAll(); 
+				}, 100); 
+				themeEditor._registerScrollHandler();
+			}
+		});
 	},
 	
 	_editorSelected: function(event){
@@ -69,6 +90,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
 					this.editorContainer.restoreActionPropertiesState(this)
 				}
+				this._registerScrollHandler();
 			}
 		}else{
 			var editor = event.editor ? event.editor : event.oldEditor;
@@ -569,7 +591,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	
 	getContext : function (){
-    	return this.visualEditor.context;
+    	return this.visualEditor ? this.visualEditor.context : null;
     },
 	
 	getOutline : function (){
@@ -731,6 +753,10 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 
 	destroy : function ()	{
+	    if(this._scrollHandler){
+	    	dojo.disconnect(this._scrollHandler);
+	    	this._scrollHandler = null;
+	    }
 		this.inherited(arguments);
 		if(this.visualEditor) { this.visualEditor.destroy(); }
 		this.getContext().destroy();
@@ -868,7 +894,31 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			}
 		}
 		return rules;
+	},
+	
+	_contextLoaded: function(context){
+		if(context == this.getContext()){
+			this._registerScrollHandler();
+		}
+	},
+
+	_registerScrollHandler: function(){
+		var context = this.getContext();
+		if(!this._scrollHandler){
+			var editorContainer = this.editorContainer;
+			var iframe = dojo.query('iframe', editorContainer.domNode)[0];
+			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
+				var bodyElem = iframe.contentDocument.body;
+				this._scrollHandler = dojo.connect(iframe.contentDocument, 'onscroll', this, function(e){
+					// (See setTimeout comment a few lines earlier)
+					setTimeout(function() {
+						context.updateFocusAll(); 
+					}, 100); 
+				});
+			}
+		}
 	}
+
 
 });
 });

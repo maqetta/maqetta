@@ -801,6 +801,10 @@ var Workbench = {
 		//See other comments in this file on the same subject.
 		this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
 
+		//FIXME: This is also ugly - creating a special DIV for visual editor's selection chrome
+		//Note sure how best to factor this out, though.
+		davinci.Workbench.focusContainer = dojo.create('div', {'class':'focusContainer', id:'focusContainer'}, document.body);
+
 		// kludge to workaround problem where tabs are sometimes cutoff/shifted to the left in Chrome for Mac
 		// would be nice if we had a workbench onload event that we could attach this to instead of relying on a timeout
 		setTimeout(function() {

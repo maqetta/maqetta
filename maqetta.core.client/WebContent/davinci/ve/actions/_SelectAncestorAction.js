@@ -21,7 +21,7 @@ return declare("davinci.ve.actions._SelectAncestorAction", [ContextAction], {
 	 * @param {Object} selection  currently list of selected widgets
 	 */
 	selectionSameParentNotBody: function(selection){
-		if(selection.length === 0){
+		if(!selection || selection.length === 0){
 			return false;
 		}
 		var firstParent = selection[0].getParent();

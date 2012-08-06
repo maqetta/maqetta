@@ -358,9 +358,6 @@ return {
                 {
                     id: "logout",
                     action: "davinci/actions/LogoutAction",
-                    run: function() {
-                    	console.log('logout');
-                    },
                     label: "Logout",
                     menubarPath: "davinci.usersettings/logout"
                 }

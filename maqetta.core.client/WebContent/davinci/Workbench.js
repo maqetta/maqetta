@@ -146,7 +146,7 @@ var initializeWorkbenchState = function(){
 		return resPath.indexOf(".review") > -1;
 	};
 
-	var getReviewProject = function (resPath) {
+	var getReviewProject = function (resPath) { //AWE TODO: Doesn't appear to be used?
 		return new Path(resPath).segment(3);
 	};
 
@@ -183,44 +183,49 @@ var initializeWorkbenchState = function(){
 					}
 				}
 				
-				var resource;
+				var handleResource = function(resource) {
+					// check if activeEditor is part of the current project or not
+					var isActiveEditorInProject = true;
+		
+					if (singleProject) {
+						var path = new Path(state.activeEditor);
+						if (!path.startsWith(project)) {
+							isActiveEditorInProject = false;
+						}
+					}
+					
+					var noSelect = editor != state.activeEditor;
+		
+					if (noSelect && !isActiveEditorInProject) {
+						// if the active editor is not in our project, force selection
+						noSelect = false;
+						state.activeEditor = editor; // this is now the active editor
+					}
+		
+					if (resource) {
+//						resource.getContent().then(function(content){						
+							Workbench.openEditor({
+								fileName: resource,
+								content: resource.getContentSync(),
+								noSelect: noSelect,
+								isDirty: resource.isDirty(),
+								startup: false
+							});
+//						});
+					}
+				};
+				
 				if(isReviewRes){
 					var version = getReviewVersion(editor);
 					var resPath = getReviewResource(editor).toString();
-					resource = reviewResource.findFile(version, resPath);
+					 reviewResource.findFile(version, resPath).then(function(resource) {
+						 handleResource(resource);
+					 });
 				}else{
-					resource = sysResource.findResource(editor);
+					handleResource(sysResource.findResource(editor));
 				}
 				
-				// check if activeEditor is part of the current project or not
-				var isActiveEditorInProject = true;
-	
-				if (singleProject) {
-					var path = new Path(state.activeEditor);
-					if (!path.startsWith(project)) {
-						isActiveEditorInProject = false;
-					}
-				}
 				
-				var noSelect = editor != state.activeEditor;
-	
-				if (noSelect && !isActiveEditorInProject) {
-					// if the active editor is not in our project, force selection
-					noSelect = false;
-					state.activeEditor = editor; // this is now the active editor
-				}
-	
-				if (resource) {
-//					resource.getContent().then(function(content){						
-						Workbench.openEditor({
-							fileName: resource,
-							content: resource.getContentSync(),
-							noSelect: noSelect,
-							isDirty: resource.isDirty(),
-							startup: false
-						});
-//					});
-				}
 			});
 		} else {
 			state.editors = [];

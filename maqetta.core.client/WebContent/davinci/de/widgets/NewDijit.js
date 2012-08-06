@@ -14,6 +14,7 @@ define(["dojo/_base/declare",
 		_okButton: null,
 		_dijitName : null,
 		_widgetGroup: null,
+		_replaceSelection : null,
 		
 		postMixInProperties : function() {
 			this.inherited(arguments);
@@ -22,6 +23,7 @@ define(["dojo/_base/declare",
 		postCreate : function(){
 			this.inherited(arguments);
 			dojo.connect(this._dijitName, "onkeyup", this, '_checkValid');
+			
 			
 		},
 		
@@ -35,7 +37,8 @@ define(["dojo/_base/declare",
 		
 		okButton : function(){
 			this.value = {'name': dojo.attr(this._dijitName, "value"), 
-					     'group':dojo.attr(this._widgetGroup, "value")};
+					     'group':dojo.attr(this._widgetGroup, "value"),
+					     'replaceSelection':dojo.attr(this._replaceSelection, "value")};
 		},	
 		
 		_getValueAttr : function(){

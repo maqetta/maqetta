@@ -5,10 +5,11 @@ define(["davinci/de/widgets/NewDijit",
         "davinci/Runtime",
         "davinci/de/DijitTemplatedGenerator",
         "davinci/library",
-        "davinci/ui/Dialog"
+        "davinci/ui/Dialog",
+        "davinci/ve/actions/ReplaceAction"
         
        
-],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary, Dialog){
+],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction){
 	var dt= {
 		/* base packages.json metadata */
 		WIDGETS_JSON : {"name":"custom", 
@@ -36,6 +37,10 @@ define(["davinci/de/widgets/NewDijit",
 		    	if (!projectDialog.cancel) {
 		    		var widgetData = projectDialog.attr('value');
 		    		dt.createDijit(widgetData, model, oldResource, context, selection);
+		    		if(widgetData.replaceSelection){
+		    			var ra = new ReplaceAction();
+		    			ra.run(context, widgetData.group + "." + widgetData.name);
+		    		}
 		    	}
 				return true;
 			});
@@ -48,6 +53,11 @@ define(["davinci/de/widgets/NewDijit",
 		 * 
 		 * */
 		validWidget : function(selection){
+			/*
+			 * 
+			 * Need to check for dojo containers somehow..?
+			 * 
+			 */
 			if (selection==null || selection.length!=1) return false;
 			var widget = selection[0];
 			return (widget.acceptsHTMLChildren);

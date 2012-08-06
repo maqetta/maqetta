@@ -246,6 +246,52 @@
 		            "inlineEdit": "./dijit/MenuBarInput"
 		        },
 		        {
+		            "name": "StackContainer",
+		            "description": "Stack Container",
+		            "type": "dijit.layout.StackContainer",
+		            "category": "containers",
+		            "icon": "resources/images/stackcontainer.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADteljtelfP2+zpfljpflTtfljtflT1jmUBnnUBonUJtokZyp0Zypkl4q0x+sUx9sFCCtbjQ6E+DtVSLvVKHuVKIuVWMvabG47DM5rHM5laOv6XH5KXG46XH43+z2n+z2YC02ou53Yu63ZjA4Hiw2H+02v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACYALAAAAAAQABAAAAaEQJNmSCxqTEikRcBsNidJJEVgrCYlgqXTCUU+BNOq0dQQYLVbJnQh+E4j8HhEUDEpBGUsJoPZ8wUQJgkCbF8cGxwdHRccAg4mBwJ3ZSOVliN4JgMEg2wiIiEhoCECDEmRdyAfHiAlICCSSZuDJLW2JAIIUZBpTQe7mwXCwgQGAQC7ybtBADs=",
+		            "data": [
+		                {
+		                    "type": "dijit.layout.StackController"
+		                },
+		                {
+		                    "type": "dijit.layout.StackContainer",
+		                    "children": [
+		                        {
+		                            "type": "dijit.layout.ContentPane",
+		                            "properties": {
+		                                "title": "Page 1",
+		                                "doLayout": false
+		                            }
+		                        },
+		                        {
+		                            "type": "dijit.layout.ContentPane",
+		                            "properties": {
+		                                "title": "Page 2",
+		                                "doLayout": false
+		                            }
+		                        }
+		                    ]
+		                }
+		            ],
+		            "initialSize": "auto",
+		            "allowedChild": "dijit.layout.ContentPane",
+		            "inlineEdit": "./dijit/layout/StackContainerInput",
+		            "helper": "./dijit/layout/LayoutContainerHelper",
+		            "tool": "./dijit/layout/StackContainerCreateTool",
+		        },
+		        {
+		            "name": "StackController",
+		            "description": "StackController",
+		            "type": "dijit.layout.StackController",
+		            "category": "containers",
+		            "resizable": "none",
+		            "hidden": "true",
+		            "invisible": false
+		        },
+		        {
 		            "name": "TabContainer",
 		            "description": "Tab Container",
 		            "type": "dijit.layout.TabContainer",
@@ -1263,52 +1309,6 @@
 	            		"height": "auto"
 	            	},
 		            "resizable": "width"
-		        },
-		        {
-		            "name": "StackContainer",
-		            "description": "Stack Container",
-		            "type": "dijit.layout.StackContainer",
-		            "category": "untested",
-		            "icon": "resources/images/stackcontainer.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADteljtelfP2+zpfljpflTtfljtflT1jmUBnnUBonUJtokZyp0Zypkl4q0x+sUx9sFCCtbjQ6E+DtVSLvVKHuVKIuVWMvabG47DM5rHM5laOv6XH5KXG46XH43+z2n+z2YC02ou53Yu63ZjA4Hiw2H+02v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACYALAAAAAAQABAAAAaEQJNmSCxqTEikRcBsNidJJEVgrCYlgqXTCUU+BNOq0dQQYLVbJnQh+E4j8HhEUDEpBGUsJoPZ8wUQJgkCbF8cGxwdHRccAg4mBwJ3ZSOVliN4JgMEg2wiIiEhoCECDEmRdyAfHiAlICCSSZuDJLW2JAIIUZBpTQe7mwXCwgQGAQC7ybtBADs=",
-		            "data": [
-		                {
-		                    "type": "dijit.layout.StackController"
-		                },
-		                {
-		                    "type": "dijit.layout.StackContainer",
-		                    "children": [
-		                        {
-		                            "type": "dijit.layout.ContentPane",
-		                            "properties": {
-		                                "title": "Page 1",
-		                                "doLayout": false
-		                            }
-		                        },
-		                        {
-		                            "type": "dijit.layout.ContentPane",
-		                            "properties": {
-		                                "title": "Page 2",
-		                                "doLayout": false
-		                            }
-		                        }
-		                    ]
-		                }
-		            ],
-		            "initialSize": "auto",
-		            "allowedChild": "dijit.layout.ContentPane",
-		            "inlineEdit": "./dijit/layout/StackContainerInput",
-		            "helper": "./dijit/layout/LayoutContainerHelper",
-		            "tool": "./dijit/layout/StackContainerCreateTool",
-		        },
-		        {
-		            "name": "StackController",
-		            "description": "StackController",
-		            "type": "dijit.layout.StackController",
-		            "category": "untested",
-		            "resizable": "none",
-		            "hidden": "true",
-		            "invisible": false
 		        },
 		        {
 		            "name": "Range",

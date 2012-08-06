@@ -2104,7 +2104,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 
 		//FIXME: DELETE THIS var containerNode = this.getContainerNode();
-		var containerNode = document.body;
+		var containerNode = this.getFocusContainer();
 
 		if(state){
 			if(state.box && state.op){
@@ -2151,8 +2151,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(!startIndex){
 			startIndex = 0;
 		}
-		//FIXME: DELETE THIS var containerNode = this.getContainerNode();
-		var containerNode = document.body;
+		var containerNode = this.getFocusContainer();
 		if(this._focuses){
 			for(var i = startIndex; i < this._focuses.length; i++){
 				focus = this._focuses[i];
@@ -3594,6 +3593,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}else{
 			console.error('Context.js:getDesignPaneBounds. No designCP');
 		}
+	},
+	
+	/**
+	 * Returns the container node for all of the focus chrome DIVs
+	 */
+	getFocusContainer: function(){
+		return document.getElementById('focusContainer');
 	}
 
 });

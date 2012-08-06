@@ -231,6 +231,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		if(!this._handles){
 			return;
 		}
+		this._focusPopup.destroyRecursive();
+		this._focusPopup = null;
 		this.context.destroy();
 	    this._handles.forEach(dojo.disconnect);
 	    if(this._scrollHandler){
@@ -330,6 +332,13 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	
 				return coords;
 			};
+			
+			this._focusPopup = Workbench.createPopup({
+				partID: 'davinci.ve.visualEditor',
+				domNode: context.getFocusContainer(), 
+				keysDomNode: context.getDocument(),
+				context: context
+			});
 	
 			// resize kludge to make Dijit visualEditor contents resize
 			// seems necessary due to combination of 100%x100% layouts and extraneous width/height measurements serialized in markup
@@ -502,8 +511,18 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	},
 	
 	_editorSelected: function(event){
+		var context = this.getContext();
+		var focusContainer = context ? context.getFocusContainer() : null;
+		if(event.oldEditor == this._pageEditor){
+			if(focusContainer && this._focusPopup){
+				this._focusPopup.unBindDomNode(focusContainer);
+			}
+		}
 		if(event.editor == this._pageEditor){
 			this._registerScrollHandler();
+			if(focusContainer && this._focusPopup){
+				this._focusPopup.bindDomNode(focusContainer);
+			}
 		}
 	},
 	

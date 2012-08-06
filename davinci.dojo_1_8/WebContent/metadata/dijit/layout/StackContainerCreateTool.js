@@ -36,7 +36,7 @@ return declare(CreateTool, {
 		var controllerData = this._data[0];
 		var containerData = this._data[1];
 		
-		if (!this._context.loadRequires(controllerData.type) || !this._context.loadRequires(containerData.type) || !this._context.loadRequires("dijit.layout.ContentPane")) {
+		if (!this._context.loadRequires(controllerData.type, true) || !this._context.loadRequires(containerData.type, true) || !this._context.loadRequires("dijit.layout.ContentPane", true)) {
 			return;
 		}
 

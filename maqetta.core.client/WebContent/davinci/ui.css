@@ -542,10 +542,7 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	padding-right:.25em;
 }
 .nhfo_outer2 {
-/*
-	margin: .8em 0 0;
-*/
-	margin: 8px 2px 0;
+	margin: 14px 2px 6px;
 	border: 1px solid #759DC0;
 	border-radius: 4px;
 }
@@ -613,6 +610,12 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 }
 
 /* resizabled dialog*/
+.claro .resizableDialog .dijitDialogTitleBar {
+	padding-left: 10px;
+}
+.claro .resizableDialog .dijitDialogPaneContentArea {
+	padding: 14px 11px;
+}
 .resizableDialog .dijitDialogPaneContentArea {
 	overflow: auto;
 }
@@ -636,4 +639,6 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	padding-left: 0;
 	padding-top: 0;
 }
-
+.claro .resizableDialog .dijitDialogPaneActionBar {
+	padding-left:10px;
+}

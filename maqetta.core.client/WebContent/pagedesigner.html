@@ -62,8 +62,8 @@
 					// set up for review and commenting...
 					var designerName  = dojo.cookie("davinci_designer");
 					var reviewVersion = dojo.cookie("davinci_version");
-					dojo.cookie("davinci_designer", null, {expires: -1});
-					dojo.cookie("davinci_version", null, {expires: -1});
+					dojo.cookie("davinci_designer", null, {expires: -1, path:"/"});
+					dojo.cookie("davinci_version", null, {expires: -1, path:"/"});
 					
 					/* This code loads the first file from a given review.  The review comes in as a URL parameter from an invetation.
 					   

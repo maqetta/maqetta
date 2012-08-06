@@ -1,0 +1,13 @@
+
+
+.maqetta-logo{
+	background: url('/maqetta/app/davinci/img/maqetta-large-log.png');
+	background-position: 0 -160px; 
+	float:left;
+	height:156px;
+	width:277px;
+}
+
+.maqetta-nav-bar{
+	padding-right: 5px;
+}

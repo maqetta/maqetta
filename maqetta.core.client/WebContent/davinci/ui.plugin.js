@@ -525,7 +525,8 @@ return {
                         
                         iconClass: "orionIcon",
                         run: function() {
-                        	location.href = "/navigate/table.html#";
+                        	window.open("/navigate/table.html#", '_blank');
+                        	window.focus();
                         },
                         radioGroup: "displayMode",
                         label: "Resource Control w/Orion",

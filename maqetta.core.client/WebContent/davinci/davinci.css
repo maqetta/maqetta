@@ -66,7 +66,7 @@ BODY{
 	z-index:-4;	/* For some reason, need negative z-index when using StackContainer */
 }
 .claro #editors_container .dijitBorderContainer {
-	padding:4px;
+	padding:8px;
 }
 .claro #editors_container .dijitBorderContainer-dijitContentPane {
 	border:none;

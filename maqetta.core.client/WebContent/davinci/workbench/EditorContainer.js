@@ -56,14 +56,16 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	postCreate: function(){
-		this.subscribe("/davinci/ui/editorSelected", function(){
-			var toolbarDiv = this.getToolbarDiv();
-			toolbarDiv.innerHTML = '';
-			var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
-			if(toolbar){
-				toolbarDiv.appendChild(toolbar.domNode);
+		this.subscribe("/davinci/ui/editorSelected", function(event){
+			if(event.editor == this.editor){
+				var toolbarDiv = this.getToolbarDiv();
+				toolbarDiv.innerHTML = '';
+				var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
+				if(toolbar){
+					toolbarDiv.appendChild(toolbar.domNode);
+				}
+				this.updateToolbars();
 			}
-			this.updateToolbars();
 		}.bind(this));
 		this.subscribe("/davinci/ui/widgetSelected", function(widgets){
 			this.updateToolbars();

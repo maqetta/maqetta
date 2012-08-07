@@ -126,6 +126,16 @@ DialogClass.showModal = function(content, title, style, callback) {
 		contentStyle: style
 	});
 
+	function _destroy() {
+		handles.forEach(connect.disconnect);
+
+		var hndl = connect.connect(myDialog, "onHide", function() {
+			myDialog.destroyRecursive();
+			connect.disconnect(hndl);
+		});
+		myDialog.hide();
+	}
+
 	handles.push(connect.connect(myDialog, "onExecute", content, function() {
 		var cancel = false;
 		if (callback) {
@@ -136,16 +146,8 @@ DialogClass.showModal = function(content, title, style, callback) {
 			return;
 		}
 
-		handles.forEach(connect.disconnect);
-
-		myDialog.destroyRecursive();
+		_destroy()
 	}));
-
-	function _destroy() {
-		handles.forEach(connect.disconnect);
-
-		myDialog.destroyRecursive();
-	}
 
 	handles.push(connect.connect(content, "onClose", function() {
 		_destroy();
@@ -173,7 +175,13 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 
 	function _onCancel() {
 		handles.forEach(connect.disconnect);
-		myDialog.destroyRecursive();
+
+		var hndl = connect.connect(myDialog, "onHide", function() {
+			myDialog.destroyRecursive();
+			connect.disconnect(hndl);
+		});
+
+		myDialog.hide();
 	}
 
 	// construct the new contents

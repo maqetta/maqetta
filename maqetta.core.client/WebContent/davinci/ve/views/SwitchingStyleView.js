@@ -573,12 +573,16 @@ var currentPropSection = this._currentPropSection;
 			if (this._editor.declaredClass == 'davinci.ve.PageEditor') {
 				pageEditorOnlySections.forEach(function(section){
 					var contentPane = dijit.byNode(section);
-					contentPane.controlButton.domNode.style.display = '';
+					if(contentPane && contentPane.controlButton && contentPane.controlButton.domNode){
+						contentPane.controlButton.domNode.style.display = '';
+					}
 				});
 			}else{
 				pageEditorOnlySections.forEach(function(section){
 					var contentPane = dijit.byNode(section);
-					contentPane.controlButton.domNode.style.display = 'none';
+					if(contentPane && contentPane.controlButton && contentPane.controlButton.domNode){
+						contentPane.controlButton.domNode.style.display = 'none';
+					}
 					if(contentPane == selectedChild){
 						updatedSelectedChild = true;
 					}

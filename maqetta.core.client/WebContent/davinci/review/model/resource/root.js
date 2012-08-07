@@ -2,8 +2,9 @@ define([
 	"dojo/_base/declare",
 	"davinci/model/resource/Resource",
 	"davinci/review/model/resource/Folder",
-	"davinci/Runtime"
-], function(declare, Resource, reviewFolder, Runtime) {
+	"davinci/Runtime",
+	"dojo/Deferred"
+], function(declare, Resource, reviewFolder, Runtime, Deferred) {
 
 var root = declare(Resource, {
 
@@ -14,24 +15,28 @@ var root = declare(Resource, {
 	},
 
 	findFile: function(version, fileName) {
-		var children;
-		var result = null;
-		this.getChildren(function(c) { children= c; }, true);
-		var node;
-		dojo.forEach(children, function(item) {
-			if (item.timeStamp == version) {
-				node = item;
-			}
-		});
-		if (node != null) {
-			node.getChildren(function(c) { children= c; }, true);
+		var promise = new Deferred();
+		this.getChildren(function(children) {
+			var node = null;
 			dojo.forEach(children, function(item) {
-				if (item.name == fileName) { 
-					result = item;
+				if (item.timeStamp == version) {
+					node = item;
 				}
 			});
-		}
-		return result;
+	
+			var result = null;
+			if (node != null) {
+				node.getChildren(function(children) {
+					dojo.forEach(children, function(item) {
+						if (item.name == fileName) { 
+							result = item;
+						}
+					});
+					promise.resolve(result);
+				});
+			}
+		});
+		return promise;
 	},
 
 	findVersion: function(designerId, version) {

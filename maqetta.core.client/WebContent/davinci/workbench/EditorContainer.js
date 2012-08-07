@@ -560,11 +560,23 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					var tcnode = editorContainer._getPropPaletteTabContainer(container);
 					var tc = dijit.byNode(tcnode);
 					if(tc){
+						// This is a hack to set height on the TabContainer properly before calling resize()
+						// on the TabContainer. Would just fall out if using a BorderContainer instead
+						// of just a bunch of DIVs and tables.
+						var appBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+						var ppcBox = GeomUtils.getBorderBoxPageCoords(tcnode);
+						var height = appBox.h - (ppcBox.t - appBox.t);
+						// Also, a hack because this requires special knowledge about border width
+						// on propertiesPaletteContainerNode (8+8=16), plus special known 
+						// knowledge about size of resizeHandle (5)
+						height -= 13;
+						tcnode.style.height = height + 'px';
 						setTimeout(function(){
 							// Use setTimeout because sometimes initialize is async
 							tc.layout();
 							tc.startup();
 							tc.resize();
+							dojo.publish('/maqetta/ui/actionPropertiesPalette/resized', []);
 						}, 50)
 					}
 				}else{

@@ -358,9 +358,6 @@ return {
                 {
                     id: "logout",
                     action: "davinci/actions/LogoutAction",
-                    run: function() {
-                    	console.log('logout');
-                    },
                     label: "Logout",
                     menubarPath: "davinci.usersettings/logout"
                 }
@@ -528,7 +525,8 @@ return {
                         
                         iconClass: "orionIcon",
                         run: function() {
-                        	location.href = "/navigate/table.html#";
+                        	window.open("/navigate/table.html#", '_blank');
+                        	window.focus();
                         },
                         radioGroup: "displayMode",
                         label: "Resource Control w/Orion",

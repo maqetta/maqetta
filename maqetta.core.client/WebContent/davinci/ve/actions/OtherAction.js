@@ -22,7 +22,7 @@ return declare("davinci.ve.actions.OtherAction", [_ReorderAction], {
 
 	shouldShow: function(context){
 		context = this.fixupContext(context);
-		var editor = context.editor;
+		var editor = context ? context.editor : null;
 		return (editor && editor.declaredClass == 'davinci.ve.PageEditor');
 	}
 });

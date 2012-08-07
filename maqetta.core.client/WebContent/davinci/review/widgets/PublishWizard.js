@@ -26,6 +26,7 @@ define([
 	"davinci/model/resource/Folder",
 	"davinci/model/resource/File",
 	"davinci/review/model/resource/Empty",
+	"davinci/review/model/resource/root",
 	"dijit/tree/TreeStoreModel",
 	"davinci/review/model/store/GeneralReviewReadStore",
 	"dojo/i18n!./nls/widgets",
@@ -34,7 +35,7 @@ define([
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
 		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Tree, 
-		Runtime, Workbench, Folder, File, Empty, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
+		Runtime, Workbench, Folder, File, Empty, ReviewRoot, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 
 //WARNING: extends private dijit API
@@ -717,7 +718,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		dojo.xhrPost({
 			url: location + "maqetta/cmd/publish" + "?" + urlParmsQueryStr,
 			sync:false,
-			handleAs:"text",
+			handleAs:"json",
 			error: function(response) {
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
@@ -732,19 +733,47 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				});
 				hasToaster = true;
 			}
-			if (result=="OK") {
-				var key = value ? "draftSaved" : "inviteSuccessful";
-				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create", this.node]);
-			} else {
 
-				var dialogContent = dojostring.substitute(warningString, {
-						htmlContent: result, 
-						inviteNotSent: widgetsNls.inviteNotSent, 
-						mailFailureMsg: widgetsNls.mailFailureMsg,
-				});
-				dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
-
-				Workbench.showMessage(widgetsNls.warning, dialogContent);
+			if (result.length > 0) {
+				var resultEntry = result[0];
+				if (resultEntry.result=="OK") {
+					var key = value ? "draftSaved" : "inviteSuccessful";
+					if (resultEntry.emailResult) {
+						if (resultEntry.emailResult == "OK") {
+							dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create", this.node]);
+						} else {
+							var dialogContent = dojostring.substitute(warningString, {
+									htmlContent: resultEntry.emailResult, 
+									inviteNotSent: widgetsNls.inviteNotSent, 
+									mailFailureMsg: widgetsNls.mailFailureMsg,
+							});
+							dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
+			
+							Workbench.showMessage(widgetsNls.warning, dialogContent);
+						}
+						
+						//Open the new review
+						var version = resultEntry.version;
+						var designer = resultEntry.designer;
+						if (version && designer) {
+							var node = ReviewRoot.findVersion(designer, version);
+							if (node) {
+								node.getChildren(function(childs){
+									if(childs.length > 1) {
+										return;
+									}
+									dojo.forEach(childs, function(child){
+										davinci.Workbench.openEditor({
+											fileName: child,
+											content: node.getText()
+										});
+									});
+								}, false);
+							}
+						}
+					}
+					
+				}
 			}
 		}.bind(this));
 		this.onClose();

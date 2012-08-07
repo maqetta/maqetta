@@ -146,10 +146,6 @@ var initializeWorkbenchState = function(){
 		return resPath.indexOf(".review") > -1;
 	};
 
-	var getReviewProject = function (resPath) { //AWE TODO: Doesn't appear to be used?
-		return new Path(resPath).segment(3);
-	};
-
 	var getReviewVersion = function (resPath) {
 		return new Path(resPath).segment(2);
 	};

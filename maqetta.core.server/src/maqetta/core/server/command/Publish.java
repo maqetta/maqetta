@@ -24,6 +24,7 @@ import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
+import org.davinci.server.util.JSONWriter;
 import org.maqetta.server.Command;
 import org.maqetta.server.ServerManager;
 
@@ -132,38 +133,47 @@ public class Publish extends Command {
 			project.setOwnerId(du.getName());
 			ReviewCacheManager.$.republish(project,vTime, version);
 		}
+		
+		JSONWriter writer = new JSONWriter(true);
+		writer.startObject();
+		writer.addField("result", "OK");
+		writer.addField("version", version.getTime());
+		writer.addField("designer", du.getName());
 		if (savingDraft) {
 			ReviewManager.getReviewManager().saveDraft(du, version);
-			this.responseString = "OK";
-			return;
-		}
-
-		ReviewManager.getReviewManager().publish(du, version);
-
-		String requestUrl = req.getRequestURL().toString();
-		// set is used to filter duplicate email. Only send mail to one email
-		// one time.
-		Set<String> set = new HashSet<String>();
-		for (Reviewer reviewer : reviewers) {
-			String mail = reviewer.getEmail();
-			if (mail != null && !mail.equals("") && set.add(mail)) {
-				String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl);
-				String htmlContent = getHtmlContent(user, message, url);
-				notifyRelatedPersons(Utils.getCommonNotificationId(), mail,
-						Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
+		} else {
+			ReviewManager.getReviewManager().publish(du, version);
+	
+			String requestUrl = req.getRequestURL().toString();
+			// set is used to filter duplicate email. Only send mail to one email
+			// one time.
+			Set<String> set = new HashSet<String>();
+			String emailResult = null;
+			for (Reviewer reviewer : reviewers) {
+				String mail = reviewer.getEmail();
+				if (mail != null && !mail.equals("") && set.add(mail)) {
+					String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl);
+					String htmlContent = getHtmlContent(user, message, url);
+					emailResult = notifyRelatedPersons(Utils.getCommonNotificationId(), mail,
+							Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
+					
+				}
+			}
+			if (emailResult != null && !emailResult.equals("OK")) {
+				writer.addField("emailResult", emailResult);
 			}
 		}
-		if ( this.responseString == null )
-			this.responseString = "OK";
+		writer.endObject();
+		this.responseString = writer.getJSON();
 	}
 
-	private void notifyRelatedPersons(String from, String to, String subject,
+	private String notifyRelatedPersons(String from, String to, String subject,
 			String htmlContent) {
 		
 		if( ServerManager.getServerManger().sendEmail(from, to, subject, htmlContent) ){
-			this.responseString = "OK";
+			return "OK";
 		}else{
-			this.responseString = htmlContent;
+			return htmlContent;
 		}
 	
 	}

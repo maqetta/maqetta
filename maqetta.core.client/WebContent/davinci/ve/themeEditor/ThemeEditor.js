@@ -12,7 +12,9 @@ define([
 	"dijit/layout/ContentPane",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/themeEditor/ThemeColor",
-	"davinci/ve/utils/GeomUtils"
+	"davinci/ve/utils/GeomUtils",
+	"system/resource",
+	"davinci/model/Path",
 	], function(
 			declare,
 			connect,
@@ -27,7 +29,9 @@ define([
 			ContentPane,
 			CompoundCommand,
 			ThemeColor,
-			GeomUtils
+			GeomUtils,
+			systemResource,
+			Path
 	){
 
 return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifier*/], {
@@ -455,9 +459,35 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			}
 		}
 		for (var dRule in deltaRules){
-			value.appliesTo.rule = null; // the old rule does not matter, so null to keep clone from throwing stack
+			var oldRule = value.appliesTo.rule; // save to put back 
+			value.appliesTo.rule = null; //null to keep clone from throwing stack
 			cValue = dojo.clone(value); // clone becouse the rule will change
 			cValue.appliesTo.rule = deltaRules[dRule]; // create delta if needed #23
+			value.appliesTo.rule = oldRule;
+			// adjust the path of any url
+			cValue.values.forEach(function(value){
+				if(value[property] && value[property].indexOf("url('") == 0){
+					/*
+					 * The old rule may be in a differnt file than the delta rule
+					 * So e need to update the realivie path to the file in realtion to 
+					 * the CSS file the delta rule is in.
+					 */
+					// starts with url
+					//find the resource
+					var strArray = value[property].split("'"); // Becouse this comes from the property palette the format is always url('....')
+					var url = strArray[1];
+					if (url.indexOf('http://') > -1){
+						// no need to adjust path.
+						return;
+					}
+					var imageFilePath = oldRule.parent.url.substring(0, oldRule.parent.url.lastIndexOf("/")) + '/' + url;
+					var file = systemResource.findResource(imageFilePath);
+					var filePath = new Path(file.getPath());
+					var relFilePath = filePath.relativeTo(cValue.appliesTo.rule.parent.url, true);
+					value[property] = "url('"+relFilePath+"')";
+				}
+			}.bind(this));
+			
 			command.add(this.getContext().getCommandForStyleChange(cValue));
 		}
 		return command;

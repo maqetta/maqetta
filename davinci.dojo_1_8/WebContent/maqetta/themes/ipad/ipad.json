@@ -217,7 +217,7 @@
 							"font-weight",
 							"color",
 							"text-align"
-                        ]	,
+                        ],
 						".dj_tablet .mblTabButton" : [
 							"background-color",
 							"background-image",
@@ -253,23 +253,6 @@
 							"text-align"
                         ],
 						".dj_tablet .mblArrowButtonBody" : [
-							"background-color",
-							"background-image",
-							"background-position",
-							"background-position-x",
-							"background-position-y",
-							"background-repeat",
-							"background-origin",
-							"background-size",
-							"background-clip",
-							"font-family",
-							"font-size",
-							"font-style",
-							"font-weight",
-							"color",
-							"text-align"
-                        ],
-						".mblButton" : [
 							"background-color",
 							"background-image",
 							"background-position",
@@ -358,7 +341,24 @@
                         ],
 						".mblSwitchBgRight" : [
 							"background-color"
-	                    ]
+	                    ],
+	                    ".mblButton" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ]
 					},
 					"query": ".mblHeading",
 					/*"simulate": "dijitChecked dijitTabChecked",*/

@@ -216,23 +216,6 @@
                             "color",
                             "text-align"
                         ],
-                        ".mblButton": [
-                            "background-color",
-                            "background-image",
-                            "background-position",
-                            "background-position-x",
-                            "background-position-y",
-                            "background-repeat",
-                            "background-origin",
-                            "background-size",
-                            "background-clip",
-                            "font-family",
-                            "font-size",
-                            "font-style",
-                            "font-weight",
-                            "color",
-                            "text-align"
-                        ],
                         ".mblToggleButton": [
                             "background-color",
                             "background-image",
@@ -305,7 +288,24 @@
                         ],
                         ".mblSwitchBgRight": [
                             "background-color"
-                        ]
+                        ],
+                        ".mblButton": [
+                            "background-color",
+                            "background-image",
+                            "background-position",
+                            "background-position-x",
+                            "background-position-y",
+                            "background-repeat",
+                            "background-origin",
+                            "background-size",
+                            "background-clip",
+                            "font-family",
+                            "font-size",
+                            "font-style",
+                            "font-weight",
+                            "color",
+                            "text-align"
+                        ],
                     },
                     "query": ".mblHeading",
                     "defaults": {

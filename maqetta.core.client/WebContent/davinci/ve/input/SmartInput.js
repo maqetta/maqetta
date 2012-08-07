@@ -523,7 +523,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 	    {
     	    case 13: // enter
     	        var multiLine = this.multiLine;
-                if (!multiLine || multiLine == "false" || this._lastKeyCode == 13 || event.ctrlKey){ // back to back CR or CTRL+ENTER
+                if (event.which == dojo.keys.ENTER && event.ctrlKey){ // back to back CR or CTRL+ENTER
                     this.onOk();
                 }
                 break;

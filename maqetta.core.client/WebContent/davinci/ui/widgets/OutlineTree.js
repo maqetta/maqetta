@@ -30,6 +30,12 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 			if ((" "+(e.srcElement || e.target).className+" ").indexOf(" dojoDndContainerOver ") != -1) {
 				return;
 			}
+
+			// if toggle node, don't do anything.
+			if (dojo.hasClass(e.target, "dvOutlineToggleNode")) {
+				return
+			}
+
 			return mouseDown.call(this.dndController, e);
 		}.bind(this);
 

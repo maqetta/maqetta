@@ -2692,7 +2692,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getMetaTargets: function(widget, target){
 		var name = this.getSelector(widget, target),
 			model = this.getModel();
-		return model.getRule(name);
+		var rules = model.getRule(name); 
+		/*
+		 * getRule returns all rules that match the selector, this can be to many in the case of combined rules
+		 * so weed them out so we have an exact match to the metaData
+		 */
+		var retRules = [];
+		rules.forEach(function(rule){
+			if (rule.getSelectorText() === name) {
+				retRules.push(rule);
+			}
+		}.bind(this));
+		
+		return retRules; // model.getRule(name);
 	},
 	
 	/* returns the top/target dom node for a widget for a specific property */

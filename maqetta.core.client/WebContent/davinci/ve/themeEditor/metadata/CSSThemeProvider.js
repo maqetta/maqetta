@@ -53,25 +53,29 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	
 	},
 	
-	getRelativeStyleSelectorsText: function(widgetType, state, subwidget,property){
+	getRelativeStyleSelectorsText: function(widgetType, state, subwidget,properties){
 		var selectors = this.getStyleSelectors(widgetType, state,subwidget);
 		var relativeSelectors = new Array();
 		for (s in selectors){
-			var foundProp = false;
-			for(var p=0;!foundProp && p<selectors[s].length;p++){
-				if(selectors[s][p]==property)
-					foundProp=true;
-				
-			}
-			if(foundProp){
-				var text = "" + s;
-				var classes = text.split(" ");
-				text = "";
-				for (var x = 1; x < classes.length; x++ ){
-					text += " " + classes[x];
+			properties.forEach(function(property){
+				var foundProp = false;
+				for(var p=0;!foundProp && p<selectors[s].length;p++){
+					if(selectors[s][p]==property)
+						foundProp=true;
+					
 				}
-				relativeSelectors.push(text.replace(/^\s*/, "").replace(/\s*$/, "")); // trim leading trailing white space
-			}
+				if(foundProp){
+					var text = "" + s;
+					var classes = text.split(" ");
+					text = "";
+					for (var x = 1; x < classes.length; x++ ){
+						text += " " + classes[x];
+					}
+					relativeSelectors.push(text.replace(/^\s*/, "").replace(/\s*$/, "")); // trim leading trailing white space
+					return;
+				}
+			}.bind(this));
+			
 		}
 		return relativeSelectors;
 		

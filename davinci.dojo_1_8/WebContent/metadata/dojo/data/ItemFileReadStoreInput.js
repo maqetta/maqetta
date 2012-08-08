@@ -7,7 +7,8 @@ define([
 	"davinci/ve/widget",
 	"system/resource",
 	"dojo/i18n!dijit/nls/common",
-	"dojo/i18n!../nls/dojo"
+	"dojo/i18n!../nls/dojo",
+	"davinci/ve/utils/URLRewrite"
 ], function(
 	declare,
 	ItemFileReadStore,
@@ -17,7 +18,8 @@ define([
 	Widget,
 	Resource,
 	commonNls,
-	dojoNls
+	dojoNls,
+	URLRewrite
 ) {
 
 return declare(SmartInput, {
@@ -135,7 +137,7 @@ return declare(SmartInput, {
 			if (url[0]===".") {
 				url = url.substring(1);
 			}
-			urlInput.setValue(Resource.root.getURL()+url);
+			urlInput.setValue(URLRewrite.encodeURI(Resource.root.getURL()+url));
 		}
 		var scriptInput = dijit.byId("scriptInput");
 		var script = this._widget._srcElement.getAttribute("data");

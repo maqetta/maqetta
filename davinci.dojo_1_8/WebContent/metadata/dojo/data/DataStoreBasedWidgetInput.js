@@ -27,6 +27,7 @@ define([
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../../dojox/nls/dojox",
 	"dojo/text!./templates/dojoStoreBasedWidgetInput.html",
+	"davinci/ve/utils/URLRewrite",
 	"dojox/form/DropDownSelect",	// used in template
 	"davinci/css!./templates/dojoStoreBasedWidgetInput.css",
 ], function(
@@ -53,7 +54,8 @@ define([
 	domAttr,
 	commonNls,
 	dojoxNls,
-	mainTemplateString
+	mainTemplateString,
+	URLRewrite
 	/*DropDownSelect*/
 ) {
 
@@ -453,7 +455,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			fullUrl = file.getURL();
 		}
 
-		return fullUrl;
+		return URLRewrite.encodeURI(fullUrl);
 	},
 
 	_urlDataStoreLoaded: function(items, updateCommandCallback) {

@@ -1,6 +1,7 @@
 define([
-	"dojo/_base/declare"
-], function(declare){
+	"dojo/_base/declare",
+	"davinci/ve/utils/URLRewrite"
+], function(declare, URLRewrite){
 	
 return declare("davinci.html.ui.ImageViewer", null, {
 
@@ -23,7 +24,7 @@ return declare("davinci.html.ui.ImageViewer", null, {
 	setContent : function (fileName,content) {
 		this.fileName = fileName;
 		this.element.innerHTML = "<div style='overflow:auto'>"
-			+ "<img src='"+this.resourceFile.getURL()+"'/>"
+			+ "<img src='"+ URLRewrite.encodeURI(this.resourceFile.getURL())+"'/>"
 			+ "</div>";
 		this.dirty = false;
 	},

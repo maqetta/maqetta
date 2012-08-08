@@ -1,4 +1,4 @@
-define(["dojo/_base/declare"], function(declare) {
+define(["dojo/_base/declare","davinci/ve/utils/URLRewrite"], function(declare,URLRewrite) {
 
 return declare("davinci.ve.themeEditor.metadata.query", null, {
 	
@@ -33,7 +33,7 @@ return declare("davinci.ve.themeEditor.metadata.query", null, {
 		var currentFile = this.files[++this.lastLoaded];
 		var _URL = null;
 		if(currentFile.getURL){
-			_URL = currentFile.getURL();
+			_URL = URLRewrite.encodeURI(currentFile.getURL());
 		}else{
 			_URL = this.modulePrefix + currentFile;
 			

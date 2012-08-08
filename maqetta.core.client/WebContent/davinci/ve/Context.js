@@ -35,6 +35,7 @@ define([
 	"preview/silhouetteiframe",
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
+	"davinci/ve/utils/URLRewrite",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	declare,
@@ -72,7 +73,8 @@ define([
 	Preferences,
 	Silhouette,
 	GeomUtils,
-	newFileTemplate
+	newFileTemplate,
+	URLRewrite
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -2470,7 +2472,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
-			var fileName = rule.parent.getResource().getURL();
+			var fileName = URLRewrite.encodeURI(rule.parent.getResource().getURL());
 			var selectorText = rule.getSelectorText();
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space

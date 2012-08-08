@@ -51,7 +51,7 @@ return declare("davinci.model.resource.Resource", Model, {
 		var userWorkspaceUrl = Runtime.getUserWorkspaceUrl();
 		
 		/* need a special flavor or URI Rewrite to encode files with # */
-		return  URLRewrite.encodeURI(userWorkspaceUrl + path);
+		return  userWorkspaceUrl + path;
 	},
 
 	rename: function(newName) {

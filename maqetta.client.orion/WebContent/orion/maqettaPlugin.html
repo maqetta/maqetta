@@ -37,18 +37,19 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			}
 			return "./" + path;
 		}
-		
-		/* register a link to the orion landing page */
-		provider.registerServiceProvider("orion.help.task",serviceImpl,	{
-							image : "/maqetta/app/davinci/img/maqetta-large-log.png",
-							name : "Launch Maqetta",
-							id : "launch.maqetta",
-							description : "Integrated Tooling for Web Designers",
-							steps : [{href : "/maqetta/",
-									  linkName : "Maqetta",
-									  description : "Clicking this link will launch the Maqetta Designer where you can create/edit web pages and save them to your Orion workspace."
-							}]
+		provider.registerService("orion.navigate.command", {}, {
+			nameKey: "Open in Maqetta",
+			id: "eclipse.maqetta.open",
+			tooltipKey: "Open in Maqetta",
+			nls: "git/nls/gitmessages",
+			validationProperties: [{
+				
+				{source: "Directory", match: true}
+			}],
+			uriTemplate: "{OrionHome}/git/git-log.html#{GitRemoteLocation}?page=1",
+			forceSingleItem: true
 		});
+		/*
 		provider.registerServiceProvider("orion.navigate.command", {
 			run : function(item) {
 				return "/maqetta/?project=" + fullPath(item);
@@ -59,7 +60,6 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			id: "open.maqetta.project",
 			forceSingleItem: true,
 			href: true,
-			validationProperties: {"maqettaProject":'true'},
 			tooltip: "Open this project in Maqetta Designer"
 		});	
 		
@@ -73,11 +73,10 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			id: "setup.maqetta.project",
 			forceSingleItem: true,
 			href: true,
-			validationProperties: {"maqettaProject":'false'},
 			tooltip: "Open this project in Maqetta Designer"
 		});	
 		
-		
+		*/
 		
 		provider.connect();
 

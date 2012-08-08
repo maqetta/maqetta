@@ -10,7 +10,8 @@ define([
 	"dojo/text!./templates/IconContainerInputRow.html",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../../dojox/nls/dojox",
-	"dojo/i18n!dijit/nls/common"
+	"dojo/i18n!dijit/nls/common",
+	"davinci/ve/utils/URLRewrite"
 ], function(
 	declare,
 	lang,
@@ -23,7 +24,8 @@ define([
 	templateString,
 	dijitLangObj,
 	dojoxNls,
-	commonNls
+	commonNls,
+	URLRewrite
 ) {
 
 return declare([_Widget, _Templated], {
@@ -157,7 +159,7 @@ return declare([_Widget, _Templated], {
 			fullUrl = file.getURL();
 		}
 
-		return fullUrl;
+		return URLRewrite.encodeURI(fullUrl);
 	},
 
 	uninitialize: function() {

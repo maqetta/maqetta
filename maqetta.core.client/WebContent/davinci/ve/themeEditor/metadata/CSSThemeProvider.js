@@ -1,4 +1,4 @@
-define(["dojo/_base/declare"], function(declare) {
+define(["dojo/_base/declare", "davinci/ve/utils/URLRewrite"], function(declare, URLRewrite) {
 
 //TODO: Create custom HTML metadata provider similar to CSS
 
@@ -9,7 +9,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	
 	constructor: function(resources, theme){
 		this._theme = theme;
-		this.url = resources[0].getURL();
+		this.url = URLRewrite.encodeURI(resources[0].getURL());
 		this.getWidgets();
 		
 	},

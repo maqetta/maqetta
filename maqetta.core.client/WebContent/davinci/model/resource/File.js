@@ -8,8 +8,9 @@
 	"dojo/_base/xhr",
 	"davinci/Runtime",
 	"davinci/model/resource/Resource",
-	"davinci/model/resource/Marker"
-], function(declare, xhr, Runtime, Resource, Marker) {
+	"davinci/model/resource/Marker",
+	"davinci/ve/utils/URLRewrite"
+], function(declare, xhr, Runtime, Resource, Marker,URLRewrite) {
 
 return declare("davinci.model.resource.File", Resource, {
 
@@ -83,7 +84,7 @@ return declare("davinci.model.resource.File", Resource, {
 
 	getContentSync: function(){
 		return Runtime.serverJSONRequest({
-			url: this.getURL(),
+			url: URLRewrite.encodeURI(this.getURL()),
 			handleAs: "text",
 			sync: true
 		});
@@ -91,7 +92,7 @@ return declare("davinci.model.resource.File", Resource, {
 
 	getContent: function() {
 		return xhr.get({
-			url: this.getURL(),
+			url: URLRewrite.encodeURI(this.getURL()),
 			handleAs: "text"
 		});
 	},

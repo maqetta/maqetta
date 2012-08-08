@@ -8,9 +8,10 @@ define([
     	"davinci/model/Factory",
     	"davinci/html/HTMLFile",
     	"davinci/Theme",
-    	"dojo/i18n!davinci/ve/nls/ve"
+    	"dojo/i18n!davinci/ve/nls/ve",
+    	"davinci/ve/utils/URLRewrite"
 
-], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, veNls) {
+], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, veNls,URLRewrite) {
 
 return declare([], {
 
@@ -43,7 +44,7 @@ return declare([], {
 			editor: this._themeEditor,
 			visualEditor: this,
 			containerNode: this.domNode,
-			baseURL: resource.getURL(),
+			baseURL: URLRewrite.encodeURI(resource.getURL()),
 			theme: theme
 		});
 
@@ -56,7 +57,7 @@ return declare([], {
 		// have the server insert the dojo URL dynamically 
 		
 		dojo.xhrGet({
-				url: resource.getURL(),
+				url: URLRewrite.encodeURI(resource.getURL()),
 				handleAs: "text",
 				sync: false,
 				content:{} 

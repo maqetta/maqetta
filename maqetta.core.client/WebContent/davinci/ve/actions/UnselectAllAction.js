@@ -16,7 +16,7 @@ return declare("davinci.ve.actions.SelectParentAction", [ContextAction], {
 	isEnabled: function(context){
 		context = this.fixupContext(context);
 		var selection = (context && context.getSelection());
-		return (selection.length > 0);
+		return (selection && selection.length > 0);
 	}
 
 });

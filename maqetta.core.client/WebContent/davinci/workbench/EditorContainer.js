@@ -56,14 +56,16 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	postCreate: function(){
-		this.subscribe("/davinci/ui/editorSelected", function(){
-			var toolbarDiv = this.getToolbarDiv();
-			toolbarDiv.innerHTML = '';
-			var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
-			if(toolbar){
-				toolbarDiv.appendChild(toolbar.domNode);
+		this.subscribe("/davinci/ui/editorSelected", function(event){
+			if(event.editor == this.editor){
+				var toolbarDiv = this.getToolbarDiv();
+				toolbarDiv.innerHTML = '';
+				var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
+				if(toolbar){
+					toolbarDiv.appendChild(toolbar.domNode);
+				}
+				this.updateToolbars();
 			}
-			this.updateToolbars();
 		}.bind(this));
 		this.subscribe("/davinci/ui/widgetSelected", function(widgets){
 			this.updateToolbars();
@@ -467,7 +469,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		if(actionPropertiesPaletteContainer){
 			var iconNode = actionPropertiesPaletteContainer.querySelector('.editPropertiesIcon');
 			if(iconNode){
-				if(this._propertiesShowing){
+				if(this.editor._propertiesShowing){
 					dojo.addClass(iconNode, 'editPropertiesIconShowing');
 				}else{
 					dojo.removeClass(iconNode, 'editPropertiesIconShowing');
@@ -481,7 +483,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		if(actionPropertiesPaletteContainer){
 			var resizeNode = actionPropertiesPaletteContainer.querySelector('.dojoxResizeHandle');
 			if(resizeNode){
-				if(this._propertiesShowing){
+				if(this.editor._propertiesShowing){
 					resizeNode.style.display = '';
 				}else{
 					resizeNode.style.display = 'none';
@@ -495,7 +497,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		var tcnode = this._getPropPaletteTabContainer(container);
 		if(container && tcnode){
 			container.style.display = 'block';
-			this._propertiesShowing = true;
+			this.editor._propertiesShowing = true;
 			this._updateEditPropertiesIcon();
 			this._updateResizeNode();
 			var tc = dijit.byNode(tcnode);
@@ -505,22 +507,6 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					tc.layout();
 					tc.startup();
 					tc.resize();
-/*FIXME: Restore moveable behavior
-					dojo.connect(targetNode, 'mousedown', this, function(event){
-						//FIXME: short-term hack to get moving working at least to some level
-						if(event.target.id == 'davinci.ve.style' || event.target.className == 'propertiesWidgetDescription'){
-							var actionPropertiesPalette = targetNode.querySelector('.actionPropertiesPalette');
-							if(actionPropertiesPalette){
-								//FIXME: Highly fragile! Just a proof of concept at this point.
-								//FIXME: Isn't moveable until the second click
-								var moveable = new Moveable(actionPropertiesPalette);
-								moveable.onMoveStop = function(){
-									moveable.destroy();
-								}
-							}
-						}
-					});
-*/
 				}, 50)
 			}
 			dojo.publish('/maqetta/ui/actionPropertiesPalette/showProps', []);
@@ -528,11 +514,11 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	hideProperties: function(){
-		var tcnode = this._getPropertiesContainer();
+		var container = this._getPropertiesContainer();
 		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
-		if(tcnode){
-			tcnode.style.display = 'none';
-			this._propertiesShowing = false;
+		if(container){
+			container.style.display = 'none';
+			this.editor._propertiesShowing = false;
 			this._updateEditPropertiesIcon();
 			this._updateResizeNode();
 		}
@@ -545,7 +531,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	hideShowProperties: function(){
-		if(this._propertiesShowing){
+		if(this.editor._propertiesShowing){
 			this.hideProperties();
 		}else{
 			this.showProperties();
@@ -565,7 +551,43 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	restoreActionPropertiesState: function(editor){
+		var editorContainer = this;
 		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
+		function updatePropContainer(){
+			var propContainer = editorContainer._getPropertiesContainer();
+			if(propContainer){
+				propContainer.style.display = editor._propertiesShowing ? 'block' : 'none';
+				if(editor._propertiesShowing){
+					var container = editorContainer._getPropertiesContainer();
+					var tcnode = editorContainer._getPropPaletteTabContainer(container);
+					var tc = dijit.byNode(tcnode);
+					if(tc){
+						// This is a hack to set height on the TabContainer properly before calling resize()
+						// on the TabContainer. Would just fall out if using a BorderContainer instead
+						// of just a bunch of DIVs and tables.
+						var appBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
+						var ppcBox = GeomUtils.getBorderBoxPageCoords(tcnode);
+						var height = appBox.h - (ppcBox.t - appBox.t);
+						// Also, a hack because this requires special knowledge about border width
+						// on propertiesPaletteContainerNode (8+8=16), plus special known 
+						// knowledge about size of resizeHandle (5)
+						height -= 13;
+						tcnode.style.height = height + 'px';
+						setTimeout(function(){
+							// Use setTimeout because sometimes initialize is async
+							tc.layout();
+							tc.startup();
+							tc.resize();
+							dojo.publish('/maqetta/ui/actionPropertiesPalette/resized', []);
+						}, 50)
+					}
+				}else{
+					// Revert to auto-sizing because prop palette is no longer visible
+					// and just want floating palette to be as big as Action Bar.
+					actionPropertiesPaletteNode.style.height = '';
+				}
+			}
+		}
 		if(actionPropertiesPaletteNode){
 			if(editor._ActionPropertiesState){
 				actionPropertiesPaletteNode.style.left = editor._ActionPropertiesState.l + 'px';
@@ -573,12 +595,6 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 				actionPropertiesPaletteNode.style.width = editor._ActionPropertiesState.w + 'px';
 				actionPropertiesPaletteNode.style.height = editor._ActionPropertiesState.h + 'px';
 				editor._propertiesShowing = editor._ActionPropertiesState._propertiesShowing;
-				this._updateEditPropertiesIcon();
-				this._updateResizeNode();
-				var tcnode = this._getPropertiesContainer();
-				if(tcnode){
-					tcnode.style.display = editor._propertiesShowing ? 'block' : 'none';
-				}
 			}else{
 				var editors_container = document.getElementById('editors_container');
 				var ecBox = GeomUtils.getBorderBoxPageCoords(editors_container);
@@ -592,6 +608,9 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 				actionPropertiesPaletteNode.style.left = left + 'px';
 				actionPropertiesPaletteNode.style.top = (ecBox.t + 3) + 'px';
 			}
+			this._updateEditPropertiesIcon();
+			this._updateResizeNode();
+			updatePropContainer();
 		}
 	}
 

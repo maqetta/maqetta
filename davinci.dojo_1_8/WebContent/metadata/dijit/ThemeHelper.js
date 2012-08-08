@@ -127,19 +127,38 @@ return {
 
 					
 	preThemeConfig: function(context) {
+		
+		function addStyleSheet(url){
+			var doc = context.getDocument();
+			var headElem = doc.getElementsByTagName('head')[0]
+			dojo.withDoc(doc, function() {
+		        var link = dojo.create('link', {
+		            rel: 'stylesheet',
+		            type: 'text/css',
+		            href: url
+		        });
+		        headElem.appendChild(link);
+			});
+		}
 
 		var themeBase = Theme.getThemeLocation(); 
 		var relPath = themeBase.relativeTo(context.visualEditor.basePath, true);
-		var conditionalThemeCssFiles = [];
-		var header = dojo.clone( context.getHeader());
+		var conditionalCssFiles = [];
 		context.theme.conditionalFiles.forEach(function(file){
 			var relPathFile = relPath.toString()+'/'+context.theme.name+'/'+file;
-			header.styleSheets.splice(0, 0, relPathFile);
-			conditionalThemeCssFiles.push(relPathFile); 
+			addStyleSheet(relPathFile);
+			var cssFile = Factory.getModel({
+				url: themeBase.toString() + '/'+context.theme.name+'/'+file,
+			    includeImports: true,
+			});
+			conditionalCssFiles.push(cssFile);
+			context.editor._loadedCSSConnects.push(dojo.connect(cssFile, 'onChange', context,'_themeChange'));
+			
 		}.bind(this));
-		context.setHeader(header);
+		context.cssFiles = context.cssFiles.concat(conditionalCssFiles);
+		
 	},
-	
+
   
 };
 

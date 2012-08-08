@@ -19,13 +19,75 @@ define([
 ], function(declare, Runtime, ReviewTreeModel, Workbench, ViewPart, Tree, locale, CloseVersionAction,
 		EditVersionAction, OpenVersionAction, Toolbar, ToolbarSeparator, Button, TextBox, viewNls, widgetsNls) {
 
-return declare("davinci.review.view.CommentExplorerView", ViewPart, {
+var getIconClass = function(item, opened) {
+	// summary:
+	//		Return the icon class of the tree nodes
+	if (item.elementType == "ReviewVersion") {
+		if (item.isDraft) { 
+			return "draft-open";
+		}
+		if (item.closed) {
+			return opened ? "reviewFolder-open-disabled":"reviewFolder-closed-disabled";
+		}
+		if (!item.closed) {
+			return opened ? "reviewFolder-open":"reviewFolder-closed";
+		}
+	}
+
+	if (item.elementType=="ReviewFile") {
+		if (item.parent.closed) {
+			return "disabledReviewFileIcon";
+		}
+		var icon;
+		var fileType = item.getExtension();
+		var extension = Runtime.getExtension("davinci.fileType", function (extension) {
+			return extension.extension == fileType;
+		});
+		if (extension) {
+			icon=extension.iconClass;
+		}
+		return icon ||	"dijitLeaf";
+	}
+	return "dijitLeaf";
+};
+	
+getLabelClass = function(item, opened) {
+	// summary:
+	//		Return the label class of the tree nodes
+	
+	var labelClass = "dijitTreeLabel";
+	if (item.elementType == "ReviewVersion") {
+		if (item.designerId == Runtime.userName) {
+			labelClass = "reviewOwnedByUserLabel";
+		} else {
+			labelClass = "reviewOwnedByOtherLabel";
+		}
+	}
+	
+	return labelClass;
+};
+
+var getSortTransforms = function() {
+	return [
+	    function(items) {
+	    	return items.sort(function (file1,file2) {
+	    		return file1.timeStamp > file2.timeStamp ? -1 : file1.timeStamp < file2.timeStamp ? 1 : 0;
+	    	});
+	    }
+	];
+};
+	
+var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", ViewPart, {
 
 	postCreate: function() {
 		this.inherited(arguments);
 
 		var model= new ReviewTreeModel();
 		this.model = model;
+		var transforms = getSortTransforms();
+		transforms.push(function(items) {
+			return items.filter(this.commentingFilter.filterItem, this);
+		}.bind(this));
 		this.tree = new Tree({
 			id: "reviewCommentExplorerViewTree",
 			persist: false,
@@ -35,16 +97,7 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 			childrenAttrs: "children",
 			getIconClass: dojo.hitch(this, this._getIconClass),
 			getLabelClass: dojo.hitch(this, this._getLabelClass),
-			transforms: [
-			    function(items) {
-			    	return items.sort(function (file1,file2) {
-			    		return file1.timeStamp > file2.timeStamp ? -1 : file1.timeStamp < file2.timeStamp ? 1 : 0;
-			    	});
-			    },
-			    function(items) {
-			    	return items.filter(this.commentingFilter.filterItem, this);
-			    }.bind(this)
-			],
+			transforms: transforms,
 			isMultiSelect: true
 		});
 
@@ -377,51 +430,11 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 	},
 
 	_getIconClass: function(item, opened) {
-		// summary:
-		//		Return the icon class of the tree nodes
-		if (item.elementType == "ReviewVersion") {
-			if (item.isDraft) { 
-				return "draft-open";
-			}
-			if (item.closed) {
-				return opened ? "reviewFolder-open-disabled":"reviewFolder-closed-disabled";
-			}
-			if (!item.closed) {
-				return opened ? "reviewFolder-open":"reviewFolder-closed";
-			}
-		}
-
-		if (item.elementType=="ReviewFile") {
-			if (item.parent.closed) {
-				return "disabledReviewFileIcon";
-			}
-			var icon;
-			var fileType = item.getExtension();
-			var extension = Runtime.getExtension("davinci.fileType", function (extension) {
-				return extension.extension == fileType;
-			});
-			if (extension) {
-				icon=extension.iconClass;
-			}
-			return icon ||	"dijitLeaf";
-		}
-		return "dijitLeaf";
+		return getIconClass(item, opened);
 	},
 	
 	_getLabelClass: function(item, opened) {
-		// summary:
-		//		Return the label class of the tree nodes
-		
-		var labelClass = "dijitTreeLabel";
-		if (item.elementType == "ReviewVersion") {
-			if (item.designerId == Runtime.userName) {
-				labelClass = "reviewOwnedByUserLabel";
-			} else {
-				labelClass = "reviewOwnedByOtherLabel";
-			}
-		}
-		
-		return labelClass;
+		return getLabelClass(item, opened);
 	},
 
 	_onKeyPress: function(e) {
@@ -439,4 +452,12 @@ return declare("davinci.review.view.CommentExplorerView", ViewPart, {
 		return stopEvent;
 	}
 });
+
+//Make get setPropInDataDojoProps publicly available as a "static" function
+CommentExplorerView.getIconClass = getIconClass;
+CommentExplorerView.getLabelClass = getLabelClass;
+CommentExplorerView.getSortTransforms = getSortTransforms;
+
+return CommentExplorerView;
+
 });

@@ -242,6 +242,22 @@ return {
                    menubarPath: "davinci.open/open2"
                },
                {
+                   id: "openReview",
+                   run: function() {
+                	   
+                   	require(['./ui/Resource'], function(r) {
+                   		r.openFile();
+                   	});
+                   },
+                   run: function() {
+                      	require(['davinci/Workbench', 'davinci/review/widgets/OpenReviewDialog'], function(Workbench, OpenReviewDialog){
+                      		Workbench.showModal(new OpenReviewDialog(), 'Open Review', {width: 350, height: 250});
+                      	});
+                   },
+                   label: "Review...",
+                   menubarPath: "davinci.open/open2"
+               },
+               {
                    id: "newTheme",
                    run: function() {
                    	require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){

@@ -42,25 +42,24 @@ return declare("davinci.ve.ThemeModifier", null, {
 	 */
 	getDeltaRule: function(rule){
 		var targetRule=null;
-	
-		// if this rule is not from the delta file add a new rule to the delta
-		var cssRules = this.cssFiles[0].getRules(rule.getSelectorText());
-		//retRule = this.cssFiles[0].getRule(rule.getSelectorText());
+		var targetCssFile=null;
 		var ruleSelectorText = rule.getSelectorText();
-		for (var i = 0; i < cssRules.length; i++){
-			/*
-			 * Run through all the rules looking for the target rule
-			 */
-			var r = cssRules[i];
-			if(r.getSelectorText() == ruleSelectorText) {
-				targetRule = r;
-				if (targetRule.parent.url == this.cssFiles[0].url) { // is it in delta file
-					 return targetRule; // found the deltaRule
-				}
+		this.cssFiles.forEach(function(file){
+			// if this rule is not from the delta file add a new rule to the delta
+			var cssRules = file.getRules(ruleSelectorText);
+			if (cssRules) {
+				// found CSS rules so reset target
+				targetRule=null; 
 			}
-		}
-		if (targetRule) {
-			targetRule = this.cssFiles[0].addRule(ruleSelectorText+" {}");
+			cssRules.forEach(function(r){
+				targetCssFile = file;
+				if (r.parent.url == targetCssFile.url) { // is it in delta file
+					targetRule = r; // found the deltaRule
+				}
+			}.bind(this));
+		}.bind(this));
+		if (!targetRule && targetCssFile) {
+			targetRule = targetCssFile.addRule(ruleSelectorText+" {}");
 		}
 		return targetRule;
 	},

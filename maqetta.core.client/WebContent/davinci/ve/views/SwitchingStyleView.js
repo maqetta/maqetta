@@ -40,11 +40,14 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	          //Note: the keys here must match the propsect_* values in the supports() functions
 	          //in the various editors, such as PageEditor.js and ThemeEditor.js
 	          
-	          {key: "common", 
+	          {key: "common",
+	        	  className:'page_editor_only',
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
 	          {key: "widgetSpecific",
+	        	  className:'page_editor_only',
 	        	  html: "<div dojoType='davinci.ve.widgets.WidgetProperties'></div>"},  
-	          {key: "events", 
+	          {key: "events",
+	        	  className:'page_editor_only',
 		          pageTemplate:{html: "<div dojoType='davinci.ve.widgets.EventSelection'></div>"}},
 	          {key: "layout",
 		       	  /* startsNewGroup:true, // This flag causes a few extra pixels between this and previous button */
@@ -271,8 +274,12 @@ if(propPaletteTabContainerNode){
 	var firstTab = null;
 	for(var i=0;i<this.pageTemplate.length;i++){
 		var title = this.pageTemplate[i].title;
+		var className = this.pageTemplate[i].className;
+		if(!className){
+			className = '';
+		}
 		var content = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
-		var cp = new ContentPane({title:title, content:content});
+		var cp = new ContentPane({title:title, content:content, 'class':className });
 		this._tabContainer.addChild(cp);
 		cp._maqPropGroup = this.pageTemplate[i].key;
 		if(!firstTab){
@@ -552,11 +559,45 @@ var currentPropSection = this._currentPropSection;
 		//we should clear selected widget from the old editor
 		this._widget = null;
 		this._subWidget = null;
-		
+
 		if (this._editor && this._editor.supports("style")) {
 			dojo.removeClass('davinci_style_prop_top', "dijitHidden");
 		}else{
 			dojo.addClass('davinci_style_prop_top','dijitHidden');	
+		}
+		
+		var selectedChild = this._tabContainer.selectedChildWidget;
+		var pageEditorOnlySections = dojo.query('.page_editor_only', this.domNode);
+		var updatedSelectedChild = false;
+		if(this._editor){
+			if (this._editor.declaredClass == 'davinci.ve.PageEditor') {
+				pageEditorOnlySections.forEach(function(section){
+					var contentPane = dijit.byNode(section);
+					if(contentPane && contentPane.controlButton && contentPane.controlButton.domNode){
+						contentPane.controlButton.domNode.style.display = '';
+					}
+				});
+			}else{
+				pageEditorOnlySections.forEach(function(section){
+					var contentPane = dijit.byNode(section);
+					if(contentPane && contentPane.controlButton && contentPane.controlButton.domNode){
+						contentPane.controlButton.domNode.style.display = 'none';
+					}
+					if(contentPane == selectedChild){
+						updatedSelectedChild = true;
+					}
+				});
+			}
+		}
+		if(updatedSelectedChild){
+			var children = this._tabContainer.getChildren();
+			for(var i=0; i<children.length; i++){
+				var cp = children[i];
+				if(cp.controlButton.domNode.style.display != 'none'){
+					this._tabContainer.selectChild(cp);
+					break;
+				}
+			}
 		}
 		
 		/* add the editors ID to the top of the properties pallete so you can target CSS rules based on editor */

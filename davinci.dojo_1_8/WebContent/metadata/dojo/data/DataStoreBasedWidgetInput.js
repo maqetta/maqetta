@@ -836,10 +836,10 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	}
 });
 
-//Make get setPropInDataDojoProps publically available as a "static" function
+//Make get setPropInDataDojoProps publicly available as a "static" function
 DataStoreBasedWidgetInput.setPropInDataDojoProps = setPropInDataDojoProps;
 
-//Make get getStoreId publically available as a "static" function
+//Make get getStoreId publicly available as a "static" function
 DataStoreBasedWidgetInput.getStoreId = getStoreId;
 
 return DataStoreBasedWidgetInput;

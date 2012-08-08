@@ -138,7 +138,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 			newParentItem = this._context.rootWidget;
 		}
 
-		if (oldParentItem.id = "myapp") {
+		if (oldParentItem.id == "myapp") {
 			oldParentItem = this._context.rootWidget;
 		}
 

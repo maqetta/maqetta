@@ -137,8 +137,7 @@ return {
                      },
                      label: "Mobile Application...",
                      // toolbarPath: "davinci.toolbar.main/edit",
-                     menubarPath: "davinci.new/newApp",
-                     keyBinding: {accel: true, charOrCode: "n"}
+                     menubarPath: "davinci.new/newApp"
                  },
                  {
                      id: "newHTMLDesktop",
@@ -150,8 +149,7 @@ return {
                      },
                      label: "Desktop Application...",
                      // toolbarPath: "davinci.toolbar.main/edit",
-                     menubarPath: "davinci.new/newApp",
-                     keyBinding: {accel: true, charOrCode: "n"}
+                     menubarPath: "davinci.new/newApp"
                  },
                  {
                      id: "newHTMLSketchHiFi",
@@ -163,8 +161,7 @@ return {
                      },
                      label: "Sketch (high-fidelity)...",
                      // toolbarPath: "davinci.toolbar.main/edit",
-                     menubarPath: "davinci.new/newSketch",
-                     keyBinding: {accel: true, charOrCode: "n"}
+                     menubarPath: "davinci.new/newSketch"
                  },
                  {
                      id: "newHTMLSketchLoFi",
@@ -176,8 +173,7 @@ return {
                      },
                      label: "Sketch (low-fidelity)...",
                      // toolbarPath: "davinci.toolbar.main/edit",
-                     menubarPath: "davinci.new/newSketch",
-                     keyBinding: {accel: true, charOrCode: "n"}
+                     menubarPath: "davinci.new/newSketch"
                  },
                  {
                    id: "newCSS",

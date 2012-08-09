@@ -116,7 +116,12 @@ define([
 			useBodyFontBackgroundClass: originalTheme.useBodyFontBackgroundClass
 		};
 		if(originalTheme.helper){
-		    themeJson.helper = originalTheme.helper; 
+			if (originalTheme.helper.declaredClass) {
+				themeJson.helper = originalTheme.helper.declaredClass;
+			} else {
+				// still string
+				themeJson.helper = originalTheme.helper;
+			}			
 		}
 		if(originalTheme.base){
 	        themeJson.base = originalTheme.base; 
@@ -150,6 +155,7 @@ define([
 	    if (helper) {
 	    	var deferred = new dojo.Deferred();
 			require([helper], function(module) {
+				module.declaredClass = helper; // save the class string for use by clone theme
 				helper = module;
 				deferred.resolve({helper: helper});
 			});

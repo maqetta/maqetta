@@ -35,21 +35,19 @@ var DialogClass = declare(Dialog, {
 	},
 
 	resize: function(coords) {
-		var titleBarHeight = domGeometry.getMarginBox(this.titleBar).h;
-
 		if (coords) {
 			// compute paddings
 			var computedStyle = style.getComputedStyle(this.containerNode);
 			var output = domGeometry.getPadExtents(this.containerNode, computedStyle);
 
 			var c = {w: coords.w-output.w, h: coords.h-output.h}
-			c.h -= dojo.marginBox(this.titleBar).h;
+			c.h -= domGeometry.getMarginBox(this.titleBar).h;
 
 			var contentArea = dojo.query(".dijitDialogPaneContentArea", this.containerNode)[0];
 			var actionArea = dojo.query(".dijitDialogPaneActionBar", this.containerNode)[0];
 
 			// subtract actionbar area
-			c.h -= dojo.marginBox(actionArea).h;
+			c.h -= domGeometry.getMarginBox(actionArea).h;
 
 			if (c.w) {
 				dojo.style(contentArea, "width", c.w+"px");
@@ -116,6 +114,21 @@ var DialogClass = declare(Dialog, {
 });
 
 // static helper methods
+DialogClass._timedDestroy = function(dialog, handles) {
+	if (handles) {
+		handles.forEach(connect.disconnect);
+	}
+
+	// Timing situation here where we destroy the dialog before its fadeout animation
+	// completes which will throw an exception.  So we listen to onHide to know
+	// the dialog has finished hiding itself before we destroy it.
+	var hndl = connect.connect(dialog, "onHide", function() {
+		dialog.destroyRecursive();
+		connect.disconnect(hndl);
+	});
+
+	dialog.hide();
+}
 
 DialogClass.showModal = function(content, title, style, callback) {
 	var handles = [];
@@ -126,17 +139,7 @@ DialogClass.showModal = function(content, title, style, callback) {
 		contentStyle: style
 	});
 
-	function _destroy() {
-		handles.forEach(connect.disconnect);
-
-		var hndl = connect.connect(myDialog, "onHide", function() {
-			myDialog.destroyRecursive();
-			connect.disconnect(hndl);
-		});
-		myDialog.hide();
-	}
-
-	handles.push(connect.connect(myDialog, "onExecute", content, function() {
+	handles.push(connect.connect(myDialog, "onExecute", content, dojo.hitch(this, function() {
 		var cancel = false;
 		if (callback) {
 			cancel = callback();
@@ -146,17 +149,17 @@ DialogClass.showModal = function(content, title, style, callback) {
 			return;
 		}
 
-		_destroy()
-	}));
+		this._timedDestroy(myDialog, handles);
+	})));
 
-	handles.push(connect.connect(content, "onClose", function() {
-		_destroy();
-	}));
+	handles.push(connect.connect(content, "onClose", dojo.hitch(this, function() {
+		this._timedDestroy(myDialog, handles);
+	})));
 
 	// handle the close button
-	handles.push(connect.connect(myDialog, "onCancel", function() {
-		_destroy();
-	}));
+	handles.push(connect.connect(myDialog, "onCancel", dojo.hitch(this, function() {
+		this._timedDestroy(myDialog, handles);
+	})));
 
 	myDialog.show();
 
@@ -172,17 +175,6 @@ DialogClass.showMessage = function(title, message, style, callback) {
 DialogClass.showDialog = function(title, content, style, callback, okLabel, hideCancel) {
 	var myDialog;
 	var handles = [];
-
-	function _onCancel() {
-		handles.forEach(connect.disconnect);
-
-		var hndl = connect.connect(myDialog, "onHide", function() {
-			myDialog.destroyRecursive();
-			connect.disconnect(hndl);
-		});
-
-		myDialog.hide();
-	}
 
 	// construct the new contents
 	var newContent = document.createElement("div");
@@ -212,17 +204,17 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 		contentStyle: style
 	});
 
-	handles.push(connect.connect(myDialog, "onExecute", function() {
+	handles.push(connect.connect(myDialog, "onExecute", dojo.hitch(this, function() {
 		if (callback) {
 			callback();
 		}
 
-		_onCancel();
-	}));
+		this._timedDestroy(myDialog, handles);
+	})));
 
-	handles.push(connect.connect(myDialog, "onCancel", function() {
-		_onCancel();
-	}));
+	handles.push(connect.connect(myDialog, "onCancel", dojo.hitch(this, function() {
+		this._timedDestroy(myDialog, handles);
+	})));
 
 	myDialog.show();
 

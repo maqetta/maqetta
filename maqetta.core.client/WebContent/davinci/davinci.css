@@ -554,6 +554,7 @@ davinci_top_bar .dijitButtonNode {
 	background:white;
 	z-index: 1;
 	border-right: 1px solid white;
+	font-weight:bold;
 }
 #davinci_app .davinciPalette .dijitTab .tabLabel {
 }

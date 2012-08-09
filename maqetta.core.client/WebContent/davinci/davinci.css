@@ -313,11 +313,6 @@ BODY{
 }
 .claro .dijitToolbar.davinciToolbar {
 	font-size:10px;
-	background-image:-webkit-linear-gradient(white 75%, #999 100%);
-	background-image:-moz-linear-gradient(white 75%, #999 100%);
-	background-image:-ms-linear-gradient(white 75%, #999 100%);
-	background-image:-o-linear-gradient(white 75%, #999 100%);
-	background-image:linear-gradient(white 75%, #999 100%);
 	border-bottom:none;
 	width:100%;
 }
@@ -326,6 +321,11 @@ BODY{
 	background-color:white;
 	height:44px;
 	border-top: 1px solid gray;
+	background-image:-webkit-linear-gradient(white 75%, #999 100%);
+	background-image:-moz-linear-gradient(white 75%, #999 100%);
+	background-image:-ms-linear-gradient(white 75%, #999 100%);
+	background-image:-o-linear-gradient(white 75%, #999 100%);
+	background-image:linear-gradient(white 75%, #999 100%);
 }
 .ActionBar .dijitToolbar {
 	background-color:transparent;
@@ -538,7 +538,7 @@ davinci_top_bar .dijitButtonNode {
 #davinci_app .davinciPalette .dijitTab {
 	padding: 2px;
 	text-align: center;
-	font-size: 13px;
+	font-size: 12px;
 	width:64px;
 	background-image: -webkit-linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
 	background-image: -moz-linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
@@ -551,7 +551,8 @@ davinci_top_bar .dijitButtonNode {
 	outline:none;
 }
 #davinci_app .davinciPalette .dijitTab.dijitTabChecked {
-	background:white;
+	background-color:white;
+	background-image:none;
 	z-index: 1;
 	border-right: 1px solid white;
 	font-weight:bold;

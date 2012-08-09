@@ -59,7 +59,7 @@ return {
                 },
                 {
                     viewID: "davinci.ve.states",
-                    position: "right-bottom"
+                    position: "right"
                 },
                 {
                     viewID: "davinci.ui.navigator",

@@ -811,7 +811,7 @@ var Workbench = {
 		setTimeout(function() {
 			appBorderContainer.resize();
 			dojo.publish("/davinci/workbench/ready", []);
-		}, 3000);
+		}.bind(this), 3000);
 	},
 
 	onResize: function(e){
@@ -1311,14 +1311,19 @@ var Workbench = {
 			dojo.connect(cp1, 'selectChild', this, function(tab){
 				if(tab && tab.domNode){
 					var tc = tab.getParent();
-					if(tc._maqLastSelectedChild == tab){
-						this._expandCollapsePaletteContainer(tab);						
-					}else{
-						this.expandPaletteContainer(tab.domNode);						
+					// Don't mess with which tab is selected or do any collapse/expand
+					// if selectChild is called in response to adding the first child
+					// of a TabContainer, which causes an implicit selectFirst().
+					if(!this._showViewAddChildInProcess){
+						if(tc._maqLastSelectedChild == tab){
+							this._expandCollapsePaletteContainer(tab);						
+						}else{
+							this.expandPaletteContainer(tab.domNode);						
+						}
 					}
 					tc._maqLastSelectedChild = tab;
 				}
-			});
+			}.bind(this));
 		} else {
 			cp1 = mainBody.tabs.perspective[position];
 		}
@@ -1327,7 +1332,9 @@ var Workbench = {
 			return;
 		}
 		this.instantiateView(view).then(function(tab) {
+			this._showViewAddChildInProcess = true;
 			cp1.addChild(tab);
+			this._showViewAddChildInProcess = false;
 			// Put a tooltip on the tab button. Note that native TabContainer
 			// doesn't offer a tooltip capability for its tabs
 			var controlButton = tab.controlButton;
@@ -1337,7 +1344,7 @@ var Workbench = {
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}
-		});
+		}.bind(this));
 	  } catch (ex) {
 		  console.error("Error loading view: "+view.id);
 		  console.error(ex);
@@ -1796,7 +1803,7 @@ var Workbench = {
 			}
 			
 			// Code below was previously outside of the existing setTimeout kludge. But, needs to be inside because on loading of Maqetta, all 
-			// of the palettes might not be created in time (for example, _bringPalettes might not bring Comments tab to front 
+			// of the palettes might not be created in time (for example, _bringPalettesToTop might not bring Comments tab to front 
 			// because it's not created yet). So, we need to take advantage of the delay. It certainly would be better is there were a 
 			// Workbench loaded event or something to leverage.
 			if(newEditor) {
@@ -1805,7 +1812,7 @@ var Workbench = {
 				}
 
 				//Bring palettes specified for the editor to the top
-				this._bringPalettes(newEditor);
+				this._bringPalettesToTop(newEditor);
 				
 				//Collapse/expand the left and right-side palettes
 				//depending on "expandPalettes" properties
@@ -1818,18 +1825,18 @@ var Workbench = {
 		}
 	},
 	
-	_bringPalettes: function(newEditor) {
+	_bringPalettesToTop: function(newEditor) {
 		// First, we will get the metadata for the extension and get its list of 
 		// palettes to bring to the top
 		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
 			return extension.id === newEditor.editorID;
 		});
 		if (editorExtensions && editorExtensions.length > 0) {
-			var editorPalettes = editorExtensions[0].palettes;
-			if (editorPalettes) {
+			var editorPalettesToTop = editorExtensions[0].palettesToTop;
+			if (editorPalettesToTop) {
 				// Loop through palette ids and select appropriate palettes
-				for (var i = 0; i < editorPalettes.length; i++) { 
-					var paletteId = editorPalettes[i];
+				for (var i = 0; i < editorPalettesToTop.length; i++) { 
+					var paletteId = editorPalettesToTop[i];
 					
 					// Look up the tab for the palette and get its 
 					// parent to find the right TabContainer

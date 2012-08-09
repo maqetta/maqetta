@@ -1,8 +1,7 @@
 define(["dojo/_base/declare",
         "dijit/Tree",
-        "davinci/Workbench",
         "dojo/text!./templates/TreeNode.html"
-],function(declare, Tree, Workbench, treeNodeTemplate){
+],function(declare, Tree, treeNodeTemplate){
 
 	return declare("davinci.ui.widgets._ToggleTreeNode", dijit._TreeNode, {
 		_setLabelAttr: {node: "labelNode", type: "innerHTML"},
@@ -66,14 +65,6 @@ define(["dojo/_base/declare",
 			// summary:
 			//		Return items related to toggled nodes.
 			return this.toggle; // Boolean
-		},
-
-		_onDblClick: function(e) {
-			// double click means open inline editor
-			var c = Workbench.getOpenEditor().getContext();
-			if (c) {
-				c.select(this.item,null,true); // display inline
-			}
 		}
 	});
 });

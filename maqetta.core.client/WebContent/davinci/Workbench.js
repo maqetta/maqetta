@@ -2136,6 +2136,7 @@ var Workbench = {
 					paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
 				}
 			}
+			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = false;
 		}
 	},
@@ -2160,6 +2161,7 @@ var Workbench = {
 					delete paletteContainerWidget._expandedWidth;
 				}
 			}
+			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = true;
 		}
 	},

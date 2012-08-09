@@ -185,6 +185,10 @@
                             "background-color",
                             "background-image"
                         ],
+                        ".mblColorDefault45": [
+                            "background-color",
+                            "background-image"
+                        ],
                         ".mblToolBarButton": [
                             "background-position",
                             "background-position-x",
@@ -413,7 +417,11 @@
                             "background-origin",
                             "background-size",
                             "background-clip"
-                        ]
+                        ],
+                        ".mblColorDefaultSel45": [
+                            "background-color",
+                            "background-image"
+                         ]
                     },
                     "defaults": {
                         "cssPropery": {

@@ -45,7 +45,7 @@
 }
 
 .propPaletteDetailsRoot .propRowHidden {
-	display:none;
+	/*display:none;*/
 }
 
 .propPaletteRoot .dijitTitlePaneTitleFocus {
@@ -141,7 +141,7 @@
 
 
 .propertiesContent {
-	display:none;
+	/*display:none;*/
 }
 .propertiesContent .dijitTitlePaneTextNode{
 	

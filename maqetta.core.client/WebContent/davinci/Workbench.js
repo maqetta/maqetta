@@ -1258,7 +1258,7 @@ var Workbench = {
 		if (position == 'right' && !mainBody.tabs.perspective.right) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 400px;', id:"right_mainBody", 
+					style: 'width: 340px;', id:"right_mainBody", 
 					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
 		}

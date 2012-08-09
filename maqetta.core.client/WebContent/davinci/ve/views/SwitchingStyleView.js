@@ -33,6 +33,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged));
 		dojo.subscribe("/maqetta/appstates/state/changed", dojo.hitch(this, this._stateChanged));
+		dojo.subscribe("/davinci/workbench/ready", dojo.hitch(this, this._workbenchReady));
 	},
 
 	pageTemplate : [
@@ -673,6 +674,19 @@ var currentPropSection = this._currentPropSection;
 				return this.pageTemplate[i].title;
 			}
 		}
+	},
+	
+	_workbenchReady: function(){
+		var parentTabContainer = this.getParent();
+		var tabs = this._tabContainer.getChildren();
+		for(var i=0; i<tabs.length; i++){
+			var tab = tabs[i];
+			this._tabContainer.removeChild(tab);
+			parentTabContainer.addChild(tab);
+		}
+		parentTabContainer.removeChild(this);
+		dojo.addClass(parentTabContainer.domNode, 'propRootDetailsContainer');
+		dojo.addClass(parentTabContainer.domNode, 'propertiesContent');
 	}
 
 });

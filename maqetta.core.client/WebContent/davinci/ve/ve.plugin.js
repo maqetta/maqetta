@@ -56,7 +56,7 @@ return {
                 },
                 {
                     viewID: "davinci.ui.comment",
-                    position: "right"
+                    position: "right-bottom"
                 },
                 {
                     viewID: "davinci.ve.states",

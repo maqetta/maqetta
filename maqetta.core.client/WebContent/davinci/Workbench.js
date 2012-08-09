@@ -797,11 +797,11 @@ var Workbench = {
 				Workbench.showView(view.viewID, false);
 			}
 		}, this);
-
+/*
 		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
 		//See other comments in this file on the same subject.
 		this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
-
+*/
 		//FIXME: This is also ugly - creating a special DIV for visual editor's selection chrome
 		//Note sure how best to factor this out, though.
 		davinci.Workbench.focusContainer = dojo.create('div', {'class':'focusContainer', id:'focusContainer'}, document.body);
@@ -1258,7 +1258,7 @@ var Workbench = {
 		if (position == 'right' && !mainBody.tabs.perspective.right) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 275px;', id:"right_mainBody", 
+					style: 'width: 400px;', id:"right_mainBody", 
 					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
 		}

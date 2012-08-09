@@ -354,6 +354,11 @@ setTimeout(function(){
 		}
 */
 		this.inherited(arguments);
+		dojo.connect(this, 'resize', this, function(a, b, c){
+			if(this._tabContainer && this._tabContainer.domNode && this._tabContainer.resize){
+				this._tabContainer.resize();
+			}
+		});
 			
 	},
 	

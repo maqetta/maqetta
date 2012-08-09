@@ -32,7 +32,8 @@ return {
         {
             id: "style",
             title: "Properties",
-            viewClass: "davinci/ve/views/SwitchingStyleView"
+            viewClass: "davinci/ve/views/SwitchingStyleView",
+            iconClass: "paletteIcon paletteIconProperties"
         }
     ],
 
@@ -51,7 +52,7 @@ return {
                 },
                 {
                     viewID: "davinci.ve.style",
-                    position: "dynamic"
+                    position: "right"
                 },
                 {
                     viewID: "davinci.ui.comment",
@@ -59,7 +60,7 @@ return {
                 },
                 {
                     viewID: "davinci.ve.states",
-                    position: "right"
+                    position: "right-bottom"
                 },
                 {
                     viewID: "davinci.ui.navigator",

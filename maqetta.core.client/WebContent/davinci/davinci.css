@@ -532,10 +532,10 @@ davinci_top_bar .dijitButtonNode {
 #davinci_app .davinciPalette .dijitTabContainerTop-tabs, #davinci_app .davinciPalette .dijitTabContainerBottom-tabs, #davinci_app .davinciPalette .dijitTabContainerLeft-tabs, #davinci_app .davinciPalette .dijitTabContainerRight-tabs {
 	background: #F4F4F4;
 }
-#davinci_app .davinciPalette .dijitTabPaneWrapper {
+#davinci_app .davinciPalette > .dijitTabPaneWrapper {
 	background: white;
 }
-#davinci_app .davinciPalette .dijitTab {
+#davinci_app .davinciPalette > div > .dijitTab {
 	padding: 2px;
 	text-align: center;
 	font-size: 12px;
@@ -547,28 +547,28 @@ davinci_top_bar .dijitButtonNode {
 	background-image: linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
 	margin-bottom:-1px;
 }
-#davinci_app .davinciPalette .dijitTab:focus {
+#davinci_app .davinciPalette > div > .dijitTab:focus {
 	outline:none;
 }
-#davinci_app .davinciPalette .dijitTab.dijitTabChecked {
+#davinci_app .davinciPalette > div > .dijitTab.dijitTabChecked {
 	background-color:white;
 	background-image:none;
 	z-index: 1;
 	border-right: 1px solid white;
 	font-weight:bold;
 }
-#left_mainBody.maqPaletteExpanded .davinciPalette .dijitTab.dijitTabChecked {
+#left_mainBody.maqPaletteExpanded .davinciPalette > div > .dijitTab.dijitTabChecked {
 	background-image:url(img/sprite.png);
 	background-position:-82px -1935px;
 }
-#right_mainBody.maqPaletteExpanded .davinciPalette .dijitTab.dijitTabChecked {
+#right_mainBody.maqPaletteExpanded .davinciPalette > div > .dijitTab.dijitTabChecked {
 	background-image:url(img/sprite.png);
 	background-position:-29px -2034px;
 }
 }
-#davinci_app .davinciPalette .dijitTab .tabLabel {
+#davinci_app .davinciPalette > div > .dijitTab .tabLabel {
 }
-#davinci_app .davinciPalette .dijitTab .tabLabel:focus {
+#davinci_app .davinciPalette > div > .dijitTab .tabLabel:focus {
 	outline:none;
 }
 #davinci_app .davinciPalette .paletteIcon {
@@ -581,6 +581,9 @@ davinci_top_bar .dijitButtonNode {
 }
 #davinci_app .davinciPalette .paletteIconWidgets {
 	background-position: -30px -60px;
+}
+#davinci_app .davinciPalette .paletteIconProperties {
+	background-position: -30px -90px;
 }
 #davinci_app .davinciPalette .paletteIconStates {
 	background-position: -30px -90px;

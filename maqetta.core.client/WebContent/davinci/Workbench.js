@@ -2026,7 +2026,7 @@ var Workbench = {
 		var actionSets = Runtime.getExtensions('davinci.actionSets');
 
 		dojo.forEach(actionSets, function(actionSet) {
-			if (actionSet.id == "davinci.ui.main") {
+			if (actionSet.id == "davinci.ui.main" || actionSet.id == "davinci.ui.editorActions") {
 				dojo.forEach(actionSet.actions, function(action) {
 					if (action.keyBinding) {
 						Runtime.registerKeyBinding(action.keyBinding, action);

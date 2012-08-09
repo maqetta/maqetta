@@ -380,7 +380,15 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			console.log(e, 'w=' + w, 'n=' + n);
 			return null;
 		}
-		var nodes = dojo.query(query,node);
+		var q;
+		if (query instanceof Array){ 
+			// Array so just use the first element for domNode query
+			q = query[0];
+		} else {
+			q = query;
+		}
+		
+		var nodes = dojo.query(q,node);
 		var n = nodes[0];
 		if(!n){ // might already be at the top node.
 			n = node;

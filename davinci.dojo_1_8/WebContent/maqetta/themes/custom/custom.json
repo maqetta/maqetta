@@ -667,6 +667,33 @@
                     },
                     "query": ""
                 }
+            },
+            "subwidgets": {
+                "ArrowButtonHead": {
+                    "displayName": "ArrowButtonHead",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblColorDefault45": [
+                                    "background-color",
+                                    "background-image"
+                                ]
+                            },
+                            "query": [".mblToolBarButtonArrow", ".mblToolBarButtonBody"],
+                            "simulate":["mblColorDefault45", "mblColorDefaul"]
+                        },
+                        "Selected": {
+                            "selectors": {
+                                ".mblColorDefaultSel45": [
+                                    "background-color",
+                                    "background-image"
+                                ]
+                            },
+                            "query": [".mblToolBarButtonArrow", ".mblToolBarButtonBody"],
+                            "simulate":["mblColorDefaultSel45", "mblColorDefaultSel"]
+                        }
+                    }
+                }
             }
         },
         "ToolBarButton": {
@@ -781,7 +808,8 @@
                             "background-clip"
                         ]
                     },
-                    "query": ".mblToolBarButton"
+                    "query": ".mblToolBarButton",
+                    "simulate": "mblColorDefault"
                 }, 
                 "Selected": {
                     "selectors": {

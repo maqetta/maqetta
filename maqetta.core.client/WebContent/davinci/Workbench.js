@@ -1299,6 +1299,7 @@ var Workbench = {
 			}
 			cp1 = mainBody.tabs.perspective[position] = new TabContainer({
 				region: region,
+				id:'palette-tabcontainer-'+position,
 				tabPosition:positionSplit[0]+'-h',
 				tabStrip:false,
 				'class': clazz,
@@ -1309,7 +1310,7 @@ var Workbench = {
 			parent.addChild(cp1);
 			dojo.connect(cp1, 'selectChild', this, function(tab){
 				if(tab && tab.domNode){
-					this.expandPaletteContainer(tab.domNode);
+					this._expandCollapsePaletteContainer(tab);
 				}
 			});
 		} else {
@@ -1789,7 +1790,7 @@ var Workbench = {
 			}
 			
 			// Code below was previously outside of the existing setTimeout kludge. But, needs to be inside because on loading of Maqetta, all 
-			// of the palettes might not be created in time (for example, _bringPalettesToTop might not bring Comments tab to front 
+			// of the palettes might not be created in time (for example, _bringPalettes might not bring Comments tab to front 
 			// because it's not created yet). So, we need to take advantage of the delay. It certainly would be better is there were a 
 			// Workbench loaded event or something to leverage.
 			if(newEditor) {
@@ -1798,7 +1799,11 @@ var Workbench = {
 				}
 
 				//Bring palettes specified for the editor to the top
-				this._bringPalettesToTop(newEditor);
+				this._bringPalettes(newEditor);
+				
+				//Collapse/expand the left and right-side palettes
+				//depending on "expandPalettes" properties
+				this._expandCollapsePaletteContainers(newEditor);
 			}
 		}.bind(this), 1000);
 
@@ -1807,18 +1812,18 @@ var Workbench = {
 		}
 	},
 	
-	_bringPalettesToTop: function(newEditor) {
+	_bringPalettes: function(newEditor) {
 		// First, we will get the metadata for the extension and get its list of 
 		// palettes to bring to the top
 		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
 			return extension.id === newEditor.editorID;
 		});
 		if (editorExtensions && editorExtensions.length > 0) {
-			var editorPalettesToTop = editorExtensions[0].palettesToTop;
-			if (editorPalettesToTop) {
+			var editorPalettes = editorExtensions[0].palettes;
+			if (editorPalettes) {
 				// Loop through palette ids and select appropriate palettes
-				for (var i = 0; i < editorPalettesToTop.length; i++) { 
-					var paletteId = editorPalettesToTop[i];
+				for (var i = 0; i < editorPalettes.length; i++) { 
+					var paletteId = editorPalettes[i];
 					
 					// Look up the tab for the palette and get its 
 					// parent to find the right TabContainer
@@ -1831,6 +1836,45 @@ var Workbench = {
 							tabContainer.selectChild(tab);
 						}
 					}
+				}
+			}
+		}
+	},
+
+	_expandCollapsePaletteContainer: function(tab) {
+		if(!tab || !tab.domNode){
+			return;
+		}
+		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(tab.domNode);
+		if(paletteContainerNode._maqExpanded){
+			this.collapsePaletteContainer(paletteContainerNode);
+		}else{
+			this.expandPaletteContainer(paletteContainerNode);
+		}
+	},
+
+	_expandCollapsePaletteContainers: function(newEditor) {
+		// First, we will get the metadata for the extension and get its list of 
+		// palettes to bring to the top
+		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
+			return extension.id === newEditor.editorID;
+		});
+		if (editorExtensions && editorExtensions.length > 0) {
+			var expandPalettes = editorExtensions[0].expandPalettes;
+			var leftBC = dijit.byId('left_mainBody');
+			if(leftBC){
+				if(expandPalettes && expandPalettes.indexOf('left')>=0){
+					this.expandPaletteContainer(leftBC.domNode);
+				}else{
+					this.collapsePaletteContainer(leftBC.domNode);
+				}
+			}
+			var rightBC = dijit.byId('right_mainBody');
+			if(rightBC){
+				if(expandPalettes && expandPalettes.indexOf('right')>=0){
+					this.expandPaletteContainer(rightBC.domNode);
+				}else{
+					this.collapsePaletteContainer(rightBC.domNode);
 				}
 			}
 		}
@@ -2037,20 +2081,21 @@ var Workbench = {
 	},
 	
 	/**
-	 * Look for an ancestor "palette container node", identified by its
+	 * Look for the "palette container node" from node or one of its descendants,
+	 * where the palette container node id identified by its
 	 * having class 'davinciPaletteContainer'
-	 * @param {Element} node  a descendant of the palette container node
+	 * @param {Element} node  reference node
 	 * @returns {Element|undefined}  the palette container node, if found
 	 */
 	findPaletteContainerNode: function(node){
 		var paletteContainerNode;
-		var pn = node.parentNode;
-		while(pn && pn.tagName != 'BODY'){
-			if(dojo.hasClass(pn, 'davinciPaletteContainer')){
-				paletteContainerNode = pn;
+		var n = node;
+		while(n && n.tagName != 'BODY'){
+			if(dojo.hasClass(n, 'davinciPaletteContainer')){
+				paletteContainerNode = n;
 				break;
 			}
-			pn = pn.parentNode;
+			n = n.parentNode;
 		}
 		return paletteContainerNode;
 	},
@@ -2078,6 +2123,7 @@ var Workbench = {
 					paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
 				}
 			}
+			paletteContainerNode._maqExpanded = false;
 		}
 	},
 	
@@ -2101,6 +2147,7 @@ var Workbench = {
 					delete paletteContainerWidget._expandedWidth;
 				}
 			}
+			paletteContainerNode._maqExpanded = true;
 		}
 	},
 

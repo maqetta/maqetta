@@ -534,6 +534,25 @@ davinci_top_bar .dijitButtonNode {
 	text-align: center;
 	font-size: 13px;
 	width:64px;
+	background-image: -webkit-linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
+	background-image: -moz-linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
+	background-image: -ms-linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
+	background-image: -o-linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
+	background-image: linear-gradient(0deg, #F8F8F8 90%, #E9E9E9 100%);
+	margin-bottom:-1px;
+}
+#davinci_app .davinciPalette .dijitTab:focus {
+	outline:none;
+}
+#davinci_app .davinciPalette .dijitTab.dijitTabChecked {
+	background:none;
+	z-index: 1;
+	border-right: 1px solid white;
+}
+#davinci_app .davinciPalette .dijitTab .tabLabel {
+}
+#davinci_app .davinciPalette .dijitTab .tabLabel:focus {
+	outline:none;
 }
 #davinci_app .davinciPalette .paletteIcon {
 	display: inline-block;
@@ -577,13 +596,15 @@ davinci_top_bar .dijitButtonNode {
 }
 
 .toolbaredContainer_titleBarDiv {
-	height:24px;
+	height:0px;
 	line-height:24px;
 	font-size:16px;
 	padding-left:30px;
 	text-transform:uppercase;
 	color:#444;
-	background:#d3d3d3;
+	background:none;
+	overflow: visible;
+	z-index: 1;
 }
 .toolbaredContainer_titleBarDiv .paletteCloseBox {
 	float:right;
@@ -596,6 +617,9 @@ davinci_top_bar .dijitButtonNode {
 	text-align: center;
 	margin-top: 4px;
 	margin-right: 4px;
+}
+.toolbaredContainer_titleBarDiv .titleBarDivTitle {
+	display:none;
 }
 
 .EditorContainer .toolbaredContainer_toolbarDiv {
@@ -791,6 +815,7 @@ davinci_top_bar .dijitButtonNode {
     background-color: white !important;
     height: 100%;
     overflow-x: hidden;
+    margin: 2px 3px 3px 4px;
 }
 .dojoyPaletteCommon a {
 	text-decoration: none;

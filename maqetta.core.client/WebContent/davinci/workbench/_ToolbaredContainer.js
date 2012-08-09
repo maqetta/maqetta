@@ -43,7 +43,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		if (!this.toolbarCreated(this.declaredClass)) {
 			this._createToolbar(this.declaredClass);
 		}
-		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span>'+this.title+'</span>';
+		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span class="titleBarDivTitle">'+this.title+'</span>';
 		var closeBoxNodes = dojo.query('.paletteCloseBox', this.titleBarDiv);
 		if(closeBoxNodes.length > 0){
 			var closeBox = closeBoxNodes[0];

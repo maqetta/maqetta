@@ -437,12 +437,14 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	},
 	
 	showActionPropertiesPalette: function(){
+		/*
 		var targetNode = this._getActionPropertiesPaletteContainer();
 		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
 		if(targetNode && actionPropertiesPaletteNode){
 			targetNode.style.display = 'block';
 			actionPropertiesPaletteNode.style.visibility = 'visible';
 		}
+		*/
 	},
 	
 	hideActionPropertiesPalette: function(){

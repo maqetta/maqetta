@@ -529,6 +529,12 @@ davinci_top_bar .dijitButtonNode {
 #davinci_app .davinciPalette {
 	background:white;
 }
+#davinci_app .davinciPalette .dijitTabContainerTop-tabs, #davinci_app .davinciPalette .dijitTabContainerBottom-tabs, #davinci_app .davinciPalette .dijitTabContainerLeft-tabs, #davinci_app .davinciPalette .dijitTabContainerRight-tabs {
+	background: #F4F4F4;
+}
+#davinci_app .davinciPalette .dijitTabPaneWrapper {
+	background: white;
+}
 #davinci_app .davinciPalette .dijitTab {
 	padding: 2px;
 	text-align: center;
@@ -545,7 +551,7 @@ davinci_top_bar .dijitButtonNode {
 	outline:none;
 }
 #davinci_app .davinciPalette .dijitTab.dijitTabChecked {
-	background:none;
+	background:white;
 	z-index: 1;
 	border-right: 1px solid white;
 }

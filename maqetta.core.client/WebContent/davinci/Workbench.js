@@ -1310,7 +1310,13 @@ var Workbench = {
 			parent.addChild(cp1);
 			dojo.connect(cp1, 'selectChild', this, function(tab){
 				if(tab && tab.domNode){
-					this._expandCollapsePaletteContainer(tab);
+					var tc = tab.getParent();
+					if(tc._maqLastSelectedChild == tab){
+						this._expandCollapsePaletteContainer(tab);						
+					}else{
+						this.expandPaletteContainer(tab.domNode);						
+					}
+					tc._maqLastSelectedChild = tab;
 				}
 			});
 		} else {

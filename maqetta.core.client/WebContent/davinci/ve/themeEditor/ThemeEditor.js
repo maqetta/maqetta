@@ -164,22 +164,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		if (!widget || !subwidget || subwidget == 'WidgetOuterContainer') { return; }
 		var widgetType = this._theme.getWidgetType(widget);
 		var domNode = this._theme.getDomNode(widget.domNode, widgetType, subwidget);
-		
-		var realleft =0;
-		var realtop = 0;
-		var obj = domNode;
-		if (obj.offsetParent) {
-			do {
-			    if (obj.className.indexOf('theming-widget') > -1){
-                    // #1024 using ralitve div for postion
-                    realtop = domNode.offsetTop; // 1024
-                    realleft = domNode.offsetLeft ; // 1024
-                    break;
-                }
-				realleft += obj.offsetLeft;
-				realtop += obj.offsetTop;
-			} while (obj = obj.offsetParent);
-		}
+		var box = this.getRelativeBox(domNode);
 		var frame = this.getContext().getDocument().createElement("div");
 		frame.className = "editSubwidgetFocusFrame";
 		frame.id = "editSubwidgetFocusFrame";
@@ -187,10 +172,8 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		var padding = 2; // put some space between the subwidget and box
 		frame.style.width = domNode.offsetWidth + (padding * 2) + "px";
 		frame.style.height = domNode.offsetHeight + (padding * 2) + "px";
-		realtop = realtop - padding;
-		realleft = realleft - padding;
-		frame.style.top = realtop + "px";
-		frame.style.left = realleft + "px"; 
+		frame.style.top =  (box.t - padding) + "px";
+		frame.style.left = (box.l - padding) + "px"; 
 		frame.style.padding = padding + 'px';
 		frame.style.display = "block";
 		this._selectedWidget.domNode.parentNode.appendChild(frame);
@@ -822,15 +805,13 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			domNode = widget.domNode;
 
 		var frame = this.getContext().getDocument().createElement("div");
-		//dojo.connect(frame, "onclick", this, "editFrame");
-		
 		dojo.connect(frame, "onmousedown", this, "editFrameOnMouseDown");
 		var containerNode = this.getContext().getContainerNode(); // click in white space
 		dojo.connect(containerNode, "onmousedown", this, "canvasOnMouseDown");// click in white space
 		frame.className = className;
 		frame.id = id + widget.id;
 		frame.style.position = "absolute";
-		var box = GeomUtils.getMarginBoxPageCoords(domNode);
+		var box = this.getRelativeBox(domNode);
 		frame.style.top = box.t + "px";
 		frame.style.left = box.l + "px";
 		frame.style.width = box.w + "px";
@@ -838,6 +819,26 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		frame.style.display = "block";
 		frame._widget = widget;
 		domNode.parentNode.appendChild(frame);
+	},
+	
+	getRelativeBox: function(domNode){
+
+		var realleft =0;
+		var realtop = 0;
+		var obj = domNode;
+		if (obj.offsetParent) {
+			do {
+			    if (obj.className.indexOf('theming-widget') > -1){
+                    // using ralitve div for postion
+                    realtop = domNode.offsetTop; 
+                    realleft = domNode.offsetLeft;
+                    break;
+                }
+				realleft += obj.offsetLeft;
+				realtop += obj.offsetTop;
+			} while (obj = obj.offsetParent);
+		}
+		return {t:realtop, l:realleft, w:domNode.offsetWidth, h:domNode.offsetHeight};
 	},
 	
 	canvasOnMouseDown: function(event){

@@ -453,7 +453,7 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 	}
 });
 
-//Make get setPropInDataDojoProps publicly available as a "static" function
+//Make get getIconClass, etc. publicly available as a "static" function
 CommentExplorerView.getIconClass = getIconClass;
 CommentExplorerView.getLabelClass = getLabelClass;
 CommentExplorerView.getSortTransforms = getSortTransforms;

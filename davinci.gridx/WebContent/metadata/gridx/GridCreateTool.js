@@ -12,12 +12,14 @@ return declare(DataGridCreateTool, {
 		this._useDataDojoProps = true;
 	},
 
-	_augmentWidgetCreationProperties: function(properties) {
-		var dj = this._context.getDojo();
-		dojo.withDoc(this._context.getDocument(), function(){
-			var cacheClass = dj.require("gridx/core/model/cache/Async");
-			properties.cacheClass = cacheClass;
-		});
+	_augmentWidgetCreationProperties: function(properties, dojoFromContext) {
+		//Parse data-dojo-props and get cacheClass
+		var dataDojoProps = properties["data-dojo-props"];
+		var dataDojoPropsEval = dojoFromContext.eval("({" + dataDojoProps + "})");
+
+		//put resolved cacheClass into properties
+		var cacheClass = dojoFromContext.require(dataDojoPropsEval.cacheClass);
+		properties.cacheClass = cacheClass;
 		
 		//Call superclass
 		this.inherited(arguments);

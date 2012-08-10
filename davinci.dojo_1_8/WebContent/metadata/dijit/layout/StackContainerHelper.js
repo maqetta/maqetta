@@ -47,7 +47,7 @@ return declare(LayoutContainerHelper, {
 	 * 
 	 * This widget has a data store and a model widget that are associated with it and must be reparented also.
 	 */
-	reparent: function(widget, useDataDojoProps){ 
+	reparent: function(widget){ 
 		try {
 			var widgetId = widget.getId();
 

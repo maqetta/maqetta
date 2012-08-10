@@ -56,8 +56,6 @@ return declare(DataStoreBasedWidgetInput, {
 
 	helpText: "",
 	
-	useTableElementsForStructure: false,
-	
 	constructor : function() {
 		this.helpText = dojoxNls.dataGridInputHelp;
 	},
@@ -122,96 +120,22 @@ return declare(DataStoreBasedWidgetInput, {
 	//called by superclass's updateWidget
 	_getPropsForDummyDataUpdateWidgetCommand: function(widget) {
 		structure = this._structure;
-		var props = {
-			structure: structure
-		};
+		var props = {};
+		if (structure) {
+			if (this._useDataDojoProps) {
+				var widgetData = widget.getData();
+				var currentDataDojoProps = widgetData.properties["data-dojo-props"];
+				props["data-dojo-props"] =  
+					DataStoreBasedWidgetInput.setPropInDataDojoProps(currentDataDojoProps, "structure", structure); 
+			} 
+			props.structure = structure;
+		}
 		if (this.supportsEscapeHTMLInData) {
 			var escapeHTML = (this.getFormat() === 'text');
 			props.escapeHTMLInData = escapeHTML;
 		}
 
 		return props;
-	},
-	
-	//called by superclass's updateWidget
-	_getChildrenForDummyDataUpdateWidgetCommand: function(widget) {
-		structure = this._structure;
-		
-		//Deal with table column headers
-		var widgetChildren = this._buildTableChildrenForStructure(structure, widget);
-
-		return widgetChildren;
-	},
-	
-	_buildTableChildrenForStructure: function(structure, tableWidget) {
-		var tableChildren = null;
-		if (structure.length > 0) {
-			if (this.useTableElementsForStructure) {
-				var data = tableWidget.getData();
-				tableChildren = data.children;
-				
-				//Find/create THEAD
-				var tHead = null;
-				dojo.some(tableChildren, function(tableChild) {
-					if (tableChild.type === "html.thead") {
-						tHead = tableChild;
-						return true;
-					}
-				});
-				if (!tHead) {
-					tHead = this._createTableHead();
-					tableChildren.push(tHead);
-				}
-				
-				//Find/create TR
-				var tRow = null;
-				tHeadChildren = tHead.children;
-				dojo.some(tHeadChildren, function(tHeadChild) {
-					if (tHeadChild.type === "html.tr") {
-						tRow = tHeadChild;
-						return true;
-					}
-				});
-				if (!tRow) {
-					tRow = this._createTableRow();
-					tHeadChildren.push(tRow);
-				}
-				
-				// Create TH's as children of TR based on structure (clearing out 
-				// all existing table column headers)
-				tRow.children = []; 
-				dojo.forEach(structure, function(colDef) {
-					tRow.children.push(this._createTableColumnHeader(colDef));
-				}.bind(this));
-			}
-		}
-		return tableChildren;
-	},
-	
-	_createTableHead: function() {
-		return {
-			type: "html.thead",
-			children: []
-		};
-	},
-	
-	_createTableRow: function() {
-		return {
-			type: "html.tr",
-			children: []
-		};
-	},
-	
-	_createTableColumnHeader: function(colDef) {
-		//Maybe do some kind of a mixin??
-		return {
-			type: "html.th",
-			properties: {
-				field: colDef.field,
-				width: colDef.width
-			},
-			children: colDef.name
-		};
 	},
 		
 	buildData: function() {
@@ -293,25 +217,29 @@ return declare(DataStoreBasedWidgetInput, {
 			structure.push(tmpStructure);
 		}
 
-		var props = {
-			structure: structure
-		};
+		var props = {};
+		if (structure) {
+			if (this._useDataDojoProps) {
+				var widgetData = widget.getData();
+				var currentDataDojoProps = widgetData.properties["data-dojo-props"];
+				props["data-dojo-props"] =  
+					DataStoreBasedWidgetInput.setPropInDataDojoProps(currentDataDojoProps, "structure", structure); 
+			} 
+			props.structure = structure;
+		}
+		
 		if (this.supportsEscapeHTMLInData) {
 			var escapeHTML = (this._format === 'text');
 			props.escapeHTMLInData = escapeHTML;
 		};
 		
-		//Deal with table column headers
-		var widgetChildren = this._buildTableChildrenForStructure(structure, widget);
-
-		props = dojo.mixin(props, this._getPropsForNewStore(widget, datastore));
+		props = this._getPropsForNewStore(widget, datastore, props);
 
 		var command = new ModifyCommand(widget,
 			props,
-			widgetChildren, 
+			null, 
 			context
 		);
-		command.useDataDojoProps = this.useDataDojoProps;
 
 		return command;
 	}

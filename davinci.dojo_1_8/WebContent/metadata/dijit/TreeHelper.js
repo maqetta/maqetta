@@ -40,10 +40,10 @@ TreeHelper.prototype = {
 	 * 
 	 * This widget has a data store and a model widget that are associated with it and must be created before the Tree.
 	 */
-	create: function(widget, srcElement, useDataDojoProps){ 
+	create: function(widget, srcElement){ 
 
 		try{
-			this.reparent(widget, useDataDojoProps);
+			this.reparent(widget);
 		} 
 		catch (e) {
 			console.error('TreeHelper.Create error processing tree.');
@@ -56,7 +56,7 @@ TreeHelper.prototype = {
 	 * 
 	 * This widget has a data store and a model widget that are associated with it and must be reparented also.
 	 */
-	reparent: function(widget, useDataDojoProps){ 
+	reparent: function(widget){ 
 
 		try{
 			var modelId = "";
@@ -110,7 +110,7 @@ TreeHelper.prototype = {
 		command.execute();
 	}, /*,
 	
-	updateStore: function(widget, storeWidget, w, useDataDojoProps){
+	updateStore: function(widget, storeWidget, w){
 		var store = widget.dijitWidget.store;
 		var data = storeWidget._srcElement.getAttribute('data'); 
 		var url = storeWidget._srcElement.getAttribute('url');
@@ -160,7 +160,7 @@ TreeHelper.prototype = {
 	//The actual model object sometimes finds it's way into the source 
 	//element, and we really need the id to be written out to the HTML source
 	//instead of the string "[Object]"
-	cleanSrcElement: function(srcElement, useDataDojoProps) {
+	cleanSrcElement: function(srcElement) {
 		var model = srcElement.getAttribute("model");
 		if (model && model.id) {
 			srcElement.setAttribute("model", model.id);

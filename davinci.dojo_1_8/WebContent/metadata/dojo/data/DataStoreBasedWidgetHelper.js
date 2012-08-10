@@ -13,6 +13,7 @@ define([
 ) {
 
 return declare(null, {
+	_useDataDojoProps: false,
 
 	getData : function(/* Widget */widget, /* Object */options) {
 		if (!widget) {
@@ -52,9 +53,9 @@ return declare(null, {
 	 * This widget has a data store widget that is associated with it and
 	 * must be deleted also.
 	 */
-	getRemoveCommand : function(widget, useDataDojoProps) {
+	getRemoveCommand : function(widget) {
 		var command = new CompoundCommand();
-		var storeId = DataStoreBasedWidgetInput.getStoreId(widget, useDataDojoProps);
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget);
 		var storeWidget = Widget.byId(storeId);
 		// order is important for undo...
 		command.add(new RemoveCommand(widget));
@@ -68,9 +69,10 @@ return declare(null, {
 	 * to be written out into the final HTML. So, here, we clean out those
 	 * attributes.
 	*/
-	cleanSrcElement: function(srcElement, useDataDojoProps) {
-		if (useDataDojoProps) {
+	cleanSrcElement: function(srcElement) {
+		if (this._useDataDojoProps) {
 			srcElement.removeAttribute("store");
+			srcElement.removeAttribute("structure");
 		} else {
 			//The actual store object sometimes finds it's way into the source 
 			//element, and we really need the id to be written out to the HTML source

@@ -95,11 +95,19 @@ return declare(CreateTool, {
 			store = Widget.createWidget(storeData);
 			dataGridData.properties.store = dj.getObject(storeId);
 			if (this._useDataDojoProps) { 
-				dataGridData.properties["data-dojo-props"] =
+				var dataDojoProps = dataGridData.properties["data-dojo-props"];
+				dataDojoProps =
 						DataStoreBasedWidgetInput.setPropInDataDojoProps(
-								dataGridData.properties["data-dojo-props"], "store", storeId); 
+								dataDojoProps, "store", storeId); 
+				
+				//Put updated data-dojo-props back into the widget's properties
+				dataGridData.properties["data-dojo-props"] = dataDojoProps;
+				
+				//Parse data-dojo-props, get the structure, and put it into widget's properties
+				var dataDojoPropsEval = dj.eval("({" + dataDojoProps + "})");
+				dataGridData.properties.structure = dataDojoPropsEval.structure;				
 			}
-			this._augmentWidgetCreationProperties(dataGridData.properties);
+			this._augmentWidgetCreationProperties(dataGridData.properties, dj); 
 			dataGrid = Widget.createWidget(dataGridData);
 		}.bind(this));
 		

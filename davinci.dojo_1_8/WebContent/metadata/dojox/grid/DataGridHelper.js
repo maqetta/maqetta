@@ -28,7 +28,7 @@ define([
 
 return declare([DataStoreBasedWidgetHelper], {
 
-	getData: function(/*Widget*/ widget, /*Object*/ options, useDataDojoProps){
+	getData: function(/*Widget*/ widget, /*Object*/ options){
 		// summary:
 		//		Serialize the passed DataGrid.
 		//		Writes a dojo/method script tag as a child to the DataGrid to set the structure, if one doesn't already exist.
@@ -64,7 +64,7 @@ return declare([DataStoreBasedWidgetHelper], {
 			// add the data old store if it has one.
 			var store = data.properties.store = widget.dijitWidget.store; 
 
-			if (useDataDojoProps) {
+			if (this._useDataDojoProps) {
 				var currentDataDojoProps =
 						widget.properties ? widget.properties["data-dojo-props"]
 								: widget._srcElement.getAttribute("data-dojo-props");
@@ -146,8 +146,8 @@ return declare([DataStoreBasedWidgetHelper], {
 		return "{cells: [" + s + "]}";
 	},
 	
-	create: function(widget, srcElement, useDataDojoProps){ 
-		var storeId = DataStoreBasedWidgetInput.getStoreId(widget, useDataDojoProps);
+	create: function(widget, srcElement){ 
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget);
 		if(storeId){
 			// we may have the store as an object
 			dojo.withDoc(widget.getContext().getDocument(), function(){
@@ -160,8 +160,8 @@ return declare([DataStoreBasedWidgetHelper], {
 		}
 	},
 	
-	reparent: function(widget, useDataDojoProps){ 
-		var storeId = DataStoreBasedWidgetInput.getStoreId(widget, useDataDojoProps);
+	reparent: function(widget){ 
+		var storeId = DataStoreBasedWidgetInput.getStoreId(widget);
 		if(storeId){
 			dojo.withDoc(widget.getContext().getDocument(), function(){
 				var storeWidget = Widget.byId(storeId);
@@ -187,7 +187,7 @@ return declare([DataStoreBasedWidgetHelper], {
 		command.execute();
 	},
 	
-	updateStore: function(widget, storeWidget, w, useDataDojoProps){
+	updateStore: function(widget, storeWidget, w){
 		var store = widget.dijitWidget.store;
 		var data = storeWidget._srcElement.getAttribute('data'); 
 		var url = storeWidget._srcElement.getAttribute('url');

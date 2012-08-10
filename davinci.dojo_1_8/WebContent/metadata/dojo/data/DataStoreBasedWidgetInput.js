@@ -60,18 +60,56 @@ define([
 ) {
 
 /* 
- * Returns a new string appropriate for data-dojo-props with the property updated (or added if not present before).
- * For reference, a value for data-dojo-props will be in on the form of:
+ * Returns a new string appropriate for data-dojo-props with the property updated (or added if not 
+ * present). This is a helper function that will be made available for "static" use.
+ * 
+ * NOTE: This function is NOT a general handler for data-dojo-props and is really tailored to our DataStoreBasedWidget's (in
+ * particular GridX). The reasons for this follow...
+ * 
+ * In the simplest case, a value for data-dojo-props will be in on the form of:
  * 
  *  	"[propId1]:[propValue1],[propId2]:[propValue2],[propId3]:[propValue3],..."
  *  
- *  This is a helper function that will be made available for "static" use.
+ *  However, it is NOT sufficient to split the value into its component parts by doing value.split(","). We
+ *  were getting away with that until recently when we added handling of "structure" to the data-dojo-props. 
  *  
+ *  The "structure" attribute is represented as an array:
+ *  
+ *      data-dojo-props="cacheClass: 'gridx/core/model/cache/Async',store:ItemFileReadStore_1,structure:[{field: 'id', name: 'ID', width: '50px'}, {field: 'id', name: 'Label', width: '150px'}]"
+		
+ *  We also can't do JSON.parse (fails with parse errors) as the value of data-dojo-props is really intended to a JavaScript expression to be eval'ed by the 
+ *  Dojo parser in the context of the page. Something roughly like:
+ *  
+ *      var dataDojoPropsEval = dojoFromPageContext.eval("({" + dataDojoPropsValue + "})");
+ *   
+ *  But, there are some reasons we can't really do that here either:
+ *  
+ *      - the eval only works if the value of store (e.g., ItemFileReadStore_1) is set in the page context. Given we're trying to edit 
+ *        the data-dojo-props string with new store ids, structures, etc. we certainly can't assume an appropriate store has already been created.
+ *      - we can't just do a JSON.stringify on the result of the eval and put it back in the declarative HTML for reasons such as:
+ *          - when the eval is successful, we end up with an actual ItemFileReadStore in the eval result
+ * 
+ *  So, in the end, we're going to take a simple approach and do some special casing related to "structure". When we handle data-dojo-props across the 
+ *  board in all widgets, we'll need a more robust solution (that might likely involve parsing/modeling using classes in the davinci/js package).
  */  
-setPropInDataDojoProps = function(dojoDataPropsValue, propId, propValue) {
+setPropInDataDojoProps = function(dataDojoPropsValue, propId, propValue) {
 	var newDataDojoProps = "";
-	if (dojoDataPropsValue) {
-		var keyValuePairs = dojoDataPropsValue.split(",");
+	if (dataDojoPropsValue) {
+		// As a convenience to the caller, if we're going to be setting "structure" then convert
+		// propValue to an appropriate format for data-dojo-props
+		if (propId === "structure") {
+			propValue = getStructureForDataDojoProps(propValue);
+		}
+		
+		// First look for pattern with a starting "[" and "]" bracket which we'll assume is a properly formed 
+		// array for "structure". We'll temporarily replace the bracketed expression so we can split the string
+		var matchedArrays = dataDojoPropsValue.match(/\[.*\]/g);
+		if (matchedArrays && matchedArrays.length == 1) {
+			dataDojoPropsValue = dataDojoPropsValue.replace(matchedArrays[0], "${" + 0 + "}");
+		}
+		
+		//Split the string
+		var keyValuePairs = dataDojoPropsValue.split(",");
 		
 		//Loop on the pairs to see if property of interest is already set
 		var propFound = false;
@@ -93,26 +131,45 @@ setPropInDataDojoProps = function(dojoDataPropsValue, propId, propValue) {
 		
 		//Join all of the pairs back into one comma-delimited string
 		newDataDojoProps = keyValuePairs.join(",");
+		
+		//Put the bracketed expression back in (if substitution string wasn't replaced by propValue)
+		if (matchedArrays && matchedArrays.length == 1) {
+			newDataDojoProps = newDataDojoProps.replace("${" + 0 + "}", matchedArrays[0]);
+		}
 	} else {
-		// We had no value for dojoDataPropsValue, so this new property will 
+		// We had no value for dataDojoPropsValue, so this new property will 
 		// be the first and only entry for now
 		newDataDojoProps = propId + ":" + propValue;
 	}
 	
 	return newDataDojoProps;
 };
+
+var getStructureForDataDojoProps = function(structure) {
+	// Build up string representing array for structure... can NOT do JSON.stringify
+	// as that doesn't work within data-dojo-props
+	var convertedStructureElements = [];
+	dojo.forEach(structure, function(structureElement) {
+		var convertedStructureElementEntries = [];
+		for (name in structureElement) {
+			if (structureElement.hasOwnProperty(name)) {
+				if (name != "cellType") {
+					convertedStructureElementEntries.push(name + ":'" + structureElement[name].trim() + "'");
+				}
+			}
+		}
+		convertedStructureElements.push("{" + convertedStructureElementEntries.join(",") + "}");
+	});
+	var structureString = "[" + convertedStructureElements.join(",") + "]";
+	return structureString;
+};
 	
 /* 
- * Returns the id of the data store for this element. If useDataDojoProps is
- * true, it will split apart the "data-dojo-props" property for the element
- * and find the store's id. Otherwise, it will look at the element's "store"
- * property.
- *
- *  This is a helper function that will be made available for "static" use.
+ * Returns the id of the data store for this element. This is a helper function that will be made 
+ * available for "static" use.
  *  
  */ 
-// Helper function that will be made available for "static" use
-getStoreId = function(widget, useDataDojoProps) {
+getStoreId = function(widget) {
 	var storeId = "";
 	if (widget.dijitWidget && widget.dijitWidget.store) {
 		var store = widget.dijitWidget.store;
@@ -138,7 +195,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	_substitutedMainTemplate: null,
 	_dataType: null,
 	
-	useDataDojoProps: false,
+	_useDataDojoProps: false,
 	
 	supportsEscapeHTMLInData: true,
 	
@@ -290,11 +347,11 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			var newStore = new ItemFileReadStore({data: data.properties.data});
 			// hack: pass id around for now, as we are passing an object but string may be expected
 			newStore.id = newStoreId;
-			var props = this._getPropsForNewStore(widget, newStore);
-			props = dojo.mixin(props, this._getPropsForDummyDataUpdateWidgetCommand(widget));
+			var props = this._getPropsForDummyDataUpdateWidgetCommand(widget);
+			props = this._getPropsForNewStore(widget, newStore, props);
 			var command = new ModifyCommand(widget,
 				props,
-				this._getChildrenForDummyDataUpdateWidgetCommand(widget),
+				null,
 				context
 			);
 			compoundCommand.add(command);
@@ -309,18 +366,22 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		return {};
 	},
 	
-	//Subclass can override
-	_getChildrenForDummyDataUpdateWidgetCommand: function() {
-		return null;
-	},
-	
-	_getPropsForNewStore: function(widget, store) {
+	_getPropsForNewStore: function(widget, store, modifiedProps) {
 		var props = {};
+		if (modifiedProps) {
+			props = dojo.mixin(props, modifiedProps);
+		}
 		
 		if (store) {
-			if (this.useDataDojoProps) {
-				var widgetData = widget.getData();
-				var currentDataDojoProps = widgetData.properties["data-dojo-props"];
+			if (this._useDataDojoProps) {
+				var currentDataDojoProps = null;
+				if (modifiedProps) {
+					currentDataDojoProps = props["data-dojo-props"];
+				}
+				if (!currentDataDojoProps) {
+					var widgetData = widget.getData();
+					currentDataDojoProps = widgetData.properties["data-dojo-props"];
+				}
 				props["data-dojo-props"] =  
 					DataStoreBasedWidgetInput.setPropInDataDojoProps(currentDataDojoProps, "store", store.id); 
 			} 
@@ -831,15 +892,13 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		return this._substitutedMainTemplate;
 	},
 	
-	_getStoreId: function(srcElement) {
-		return getStoreId(srcElement, this.useDataDojoProps); 
+	_getStoreId: function(widget) {
+		return getStoreId(widget); 
 	}
 });
 
-//Make get setPropInDataDojoProps publicly available as a "static" function
+//Make publicly available as a "static" functions
 DataStoreBasedWidgetInput.setPropInDataDojoProps = setPropInDataDojoProps;
-
-//Make get getStoreId publicly available as a "static" function
 DataStoreBasedWidgetInput.getStoreId = getStoreId;
 
 return DataStoreBasedWidgetInput;

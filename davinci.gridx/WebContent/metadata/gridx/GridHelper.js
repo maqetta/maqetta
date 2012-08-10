@@ -11,11 +11,12 @@ define([
 ) {
 
 return declare([LayoutContainerHelper, DataGridHelper], {
-
-	 _useDataDojoProps: true,
+	constructor : function() {
+		this._useDataDojoProps = true;
+	},
 
 	getData: function(/*Widget*/ widget, /*Object*/ options) {
-		var data = this.inherited(arguments, [widget, options, this._useDataDojoProps]);
+		var data = this.inherited(arguments);
 		
 		//Need to worry about cacheClass for GridX. The data store is handled in DataGridHelper
 		if (widget.dijitWidget.cacheClass){
@@ -34,22 +35,6 @@ return declare([LayoutContainerHelper, DataGridHelper], {
 		return this._htmlSubElementHelper.getChildrenData(widget, options);
 	},
 	
-	create: function(widget, srcElement) {
-		this.inherited(arguments, [widget, srcElement, this._useDataDojoProps]);
-	},
-	
-	reparent: function(widget) {
-		this.inherited(arguments, [widget, this._useDataDojoProps]);
-	},
-	
-	updateStore: function(widget, storeWidget, w) {
-		this.inherited(arguments, [widget, storeWidget, w, this._useDataDojoProps]);
-	},
-	
-	getRemoveCommand: function(widget) {
-		return this.inherited(arguments, [widget, this._useDataDojoProps]);
-	},
-	
 	/*
 	 * In same cases we are handling certain attributes within data-dojo-props 
 	 * or via child HTML elements, and we do not want to allow those attributes 
@@ -58,10 +43,9 @@ return declare([LayoutContainerHelper, DataGridHelper], {
 	*/
 	cleanSrcElement: function(srcElement) {
 		srcElement.removeAttribute("cacheClass");
-		srcElement.removeAttribute("structure");
 		
 		//Defer to data grid helper for "store"
-		this.inherited(arguments, [srcElement, this._useDataDojoProps]);
+		this.inherited(arguments);
 	},
 	
 	/*

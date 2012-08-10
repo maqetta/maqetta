@@ -11,6 +11,7 @@ define([
 	"./GridWizardSelectColumnsPanel",
 	"./GridWizardPreviewPanel",
 	"davinci/ve/widget",
+	"maq-metadata-dojo/dojo/data/DataStoreBasedWidgetInput",
 	"dojo/i18n!./nls/gridx",
 	"dojo/i18n!dijit/nls/common"
 ], function(declare,
@@ -25,6 +26,7 @@ define([
 		GridWizardSelectColumnsPanel, 
 		GridWizardPreviewPanel, 
 		Widget, 
+		DataStoreBasedWidgetInput,
 		gridxNls, 
 		dijitNls) {
 
@@ -502,108 +504,72 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		// retrieved before onFinish was called.
 		
 		// We need to deal with case if Finish was pressed before getting to the 2nd and/or 3rd panels
-		var modifiedHeaderElements = null;
+		var modifiedStructureElements = null;
 		var selectedColumnIds = null;
 		if (this._pages[2].pageHandler.isPopulated()) {
 			//Assuming _gridPreviewPanel can only be populated if _gridSelectColumnsPanel has been populated
-			modifiedHeaderElements = this._pages[2].pageHandler.getUpdatedColumnStructure();
+			modifiedStructureElements = this._pages[2].pageHandler.getUpdatedColumnStructure();
 		} else if (this._pages[1].pageHandler.isPopulated()) {
 			selectedColumnIds = this._pages[1].pageHandler.getTargetColumnIds();
 		}
 		
 		//Making assumption the last command is the one for upgrading the grid itself
 		var tableCommand = null;
+		var tableCommandProperties = null;
 		dojo.some(compoundCommand._commands, function(command) {
 			if (command._properties && command._properties.structure) {
 				tableCommand = command;
+				tableCommandProperties = tableCommand._properties;
 				return true;
 			}
 		});
 		
-		if (modifiedHeaderElements || selectedColumnIds) {
+		if (modifiedStructureElements || selectedColumnIds) {
 			//We're going to need to update the structure in the command before
 			//executing it...
 			
-			//Find THEAD
-			var tHead = null;
-			dojo.some(tableCommand._children, function(child) {
-				if (child.type === "html.thead") {
-					tHead = child;
-					return true;
-				}
-			});
-			
-			//Find TR
-			var tRow = null;
-			tHeadChildren = tHead.children;
-			dojo.some(tHeadChildren, function(tHeadChild) {
-				if (tHeadChild.type === "html.tr") {
-					tRow = tHeadChild;
-					return true;
-				}
-			});
-			
-			var currentHeaderElements = tRow.children;
-			var currentStructure = tableCommand._properties.structure;
-			
-			var newHeaderElements = null;
-			var newStructure = null;
-			if (modifiedHeaderElements) {
-				// We've got data from Panel 3, so go through the structure and header elements of
-				// the command and update based on that data. Assuming 1-to-1 match with structure
-				// elements and headers.
-				newHeaderElements = [];
-				newStructure = [];
-				dojo.forEach(modifiedHeaderElements, function(modifiedHeaderElement) {
-					var count = 0;
-					dojo.some(currentHeaderElements, function(currentHeaderElement) {
-						if (modifiedHeaderElement.field === currentHeaderElement.properties.field) {
-							var currentStructureElement = currentStructure[count];
-			
-							//create new header element
-							var newHeaderElement = dojo.clone(currentHeaderElement);
-							newHeaderElement.properties.width = modifiedHeaderElement.width;
-							newHeaderElement.properties.name = modifiedHeaderElement.name;
-							
+			var currentStructure = tableCommandProperties.structure;
+			var newStructure = [];
+			if (modifiedStructureElements) {
+				// We've got data from Panel 3, so go through the structure elements of
+				// the command and update based on that data
+				dojo.forEach(modifiedStructureElements, function(modifiedStructureElement) {
+					dojo.some(currentStructure, function(currentStructureElement) {
+						if (modifiedStructureElement.field === currentStructureElement.field) {
 							//create new structure element
 							var newStructureElement = dojo.clone(currentStructureElement);
-							newStructureElement.width = modifiedHeaderElement.width; 
-							newStructureElement.name = modifiedHeaderElement.name; 
+							newStructureElement.width = modifiedStructureElement.width; 
+							newStructureElement.name = modifiedStructureElement.name; 
 							
-							//Add new elements to new arrays
-							newHeaderElements.push(newHeaderElement);
+							//Add new elements to new array
 							newStructure.push(newStructureElement);
+							
+							return true;
 						}
-						//Update counter
-						count++;
 					});
 				});
 			} else if (selectedColumnIds) {
-				// We've got data from Panel 2, so go through just pick out headers and structure
-				// elements that the selected ids.
-				newHeaderElements = [];
-				newStructure = [];
+				// We've got data from Panel 2, so go through and just pick structure
+				// elements that match the selected ids and add them to newStructure
+				// in the correct order
 				dojo.forEach(selectedColumnIds, function(selectedColumnId) {
-					var count = 0;
-					dojo.some(currentHeaderElements, function(currentHeaderElement) {
-						if (selectedColumnId === currentHeaderElement.properties.field) {
-							var currentStructureElement = currentStructure[count];
-			
-							//Add elements to new arrays
-							newHeaderElements.push(currentHeaderElement);
+					dojo.some(currentStructure, function(currentStructureElement) {
+						if (selectedColumnId === currentStructureElement.field) {
 							newStructure.push(currentStructureElement);
+							return true;
 						}
-						//Update counter
-						count++;
 					});
 				});
 			}
 			
-			//Transfer new into old data structure
-			if (newHeaderElements && newStructure) {
-				tRow.children = newHeaderElements;
-				tableCommand._properties.structure = newStructure;
-			}
+			//Transfer new structure info into command's properties
+			tableCommandProperties.structure = newStructure;
+				
+			//also, update the command's data-dojo-props with new structure
+			var dataDojoProps = tableCommandProperties["data-dojo-props"];
+			dataDojoProps =  
+				DataStoreBasedWidgetInput.setPropInDataDojoProps(dataDojoProps, "structure", newStructure); 
+			tableCommandProperties["data-dojo-props"] = dataDojoProps;
 		}
 		
 		//Execute command

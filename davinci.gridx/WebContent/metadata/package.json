@@ -66,36 +66,8 @@
 			                },
 			                {
 			                    "type": "gridx.Grid",
-			                    "children": [
-					                {
-					                    "type": "html.thead",
-					                    "children": [
-							                {
-							                    "type": "html.tr",
-							                    "children": [
-									                {
-									                    "type": "html.th",
-									                    "properties": {
-									                        "field": "id",
-									                        "width": "auto"
-									                    },
-									                    "children": "ID"
-									                },
-									                {
-									                    "type": "html.th",
-									                    "properties": {
-									                        "field": "label",
-									                        "width": "auto"
-									                    },
-									                    "children": "Label"
-									                }
-									            ]
-							                }
-							            ]
-					                }
-					            ],
 			                    "properties": {
-			                        "data-dojo-props": "cacheClass: 'gridx/core/model/cache/Async'",
+			                        "data-dojo-props": "cacheClass: 'gridx/core/model/cache/Async',structure:[{field: 'id', name: 'ID', width: 'auto'}, {field: 'label', name: 'Label', width: 'auto'}]",
 			                        "style": "min-width:1em; min-height:1em;"
 			                    }
 			                }
@@ -103,7 +75,6 @@
 			            "tool": "./gridx/GridCreateTool",
 		            	"helper": "./gridx/GridHelper",
 		            	"inlineEdit": "./gridx/GridWizardInput",
-		            	"allowedChild": "html.tbody, html.thead, html.tfoot, html.tr",
 		            	"isControl": true,
 	                    "initialSize": "auto"
 			        }

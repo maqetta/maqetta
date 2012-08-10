@@ -103,7 +103,7 @@ return declare([ContentPane, GridWizardPanel], {
 			//Create data store...
 			this._gridStore = new ItemFileReadStore(dataStoreProps);
 		}
-		
+
 		//Get table command
 		var tableCommand = null;
 		dojo.some(compoundCommand._commands, function(command) {

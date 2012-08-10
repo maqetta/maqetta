@@ -63,9 +63,8 @@ define(function() {
 		 *     many diff. widget types.  Can at least check 'widget.type' or other info.
 		 * 
 		 * @param  {davinci/html/HTMLElement} srcElement
-		 * @param  {boolean} useDataDojoProps  XXX TODO
 		 */
-		cleanSrcElement: function(srcElement, useDataDojoProps) {},
+		cleanSrcElement: function(srcElement) {},
 
 		/**
 		 * Invoked when adding a new widget to the page; when changing properties on a widget (and

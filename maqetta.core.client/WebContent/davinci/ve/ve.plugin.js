@@ -690,7 +690,7 @@ return {
                     id: "design",
                     //iconClass: 'designModeIcon editActionIcon',
                     showLabel: true,
-                    className: 'maqLabelButton davinciFloatRight',
+                    className: 'maqLabelButton davinciFloatRight maqDesignButton',
                     method: "switchDisplayModeDesign",
                     // initialValue : true,
                     label: "Design",

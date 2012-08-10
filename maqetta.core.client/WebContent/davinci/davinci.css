@@ -371,6 +371,36 @@ BODY{
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox.maqLabelButton .dijitButtonNode {
 	background: #EEE;
 	background-image: -webkit-linear-gradient(#f4f4f4, #dddddd);
+	background-image: -moz-linear-gradient(#f4f4f4, #dddddd);
+	background-image: -ms-linear-gradient(#f4f4f4, #dddddd);
+	background-image: -o-linear-gradient(#f4f4f4, #dddddd);
+	background-image: linear-gradient(#f4f4f4, #dddddd);
+}
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitToggleButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox.maqLabelButton.maqLabelButtonSelected .dijitButtonNode {
+	background: #AAA;
+	background-image: -webkit-linear-gradient(#b4b4b4, #999999);
+	background-image: -moz-linear-gradient(#b4b4b4, #999999);
+	background-image: -ms-linear-gradient(#b4b4b4, #999999);
+	background-image: -o-linear-gradient(#b4b4b4, #999999);
+	background-image: linear-gradient(#b4b4b4, #999999);
+}
+#davinci_app .davinciToolbar .maqLabelButton.maqDesignButton {
+	margin-right:0px;
+}
+#davinci_app .davinciToolbar .maqLabelButton.maqDesignButton .dijitButtonNode {
+	border-top-right-radius:0px;
+	border-bottom-right-radius:0px;
+}
+#davinci_app .davinciToolbar .maqLabelButton.maqSourceComboButton {
+	margin-left:-1px;
+	margin-right:10px;
+}
+#davinci_app .davinciToolbar .dijitComboButton.maqLabelButton.maqSourceComboButton .dijitButtonNode.dijitStretch {
+	border-radius:0px;
 }
 #davinci_app {
 	height: 100%;

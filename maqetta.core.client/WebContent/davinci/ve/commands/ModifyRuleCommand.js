@@ -13,7 +13,6 @@ return declare("davinci.ve.commands.ModifyRuleCommand", null, {
 		this.cssRule = cssRule;
 		this.values = values;
 		this.context = context;
-		
 	},
 
 	execute: function(context){

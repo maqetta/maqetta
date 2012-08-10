@@ -315,7 +315,7 @@ return {
             actions: [
 				{
                 	id: "undo",
-                    iconClass: 'undoIcon',
+                    iconClass: 'editActionIcon undoIcon',
                     action: "davinci/actions/UndoAction",
                     label: "Undo",
                     className: "maqLabelButton",
@@ -325,7 +325,7 @@ return {
                 },
                 {
                     id: "redo",
-                    iconClass: 'redoIcon',
+                    iconClass: 'editActionIcon redoIcon',
                     action: "davinci/actions/RedoAction",
                     className: "maqLabelButton",
                     //showLabel: true,

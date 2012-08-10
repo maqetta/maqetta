@@ -341,6 +341,9 @@ BODY{
 	padding:0 2px;
 	line-height:16px;
 }
+#davinci_app .davinciToolbar .maqLabelButton .dijitButtonContents:focus {
+	outline:none;
+}
 #davinci_app .davinciToolbar .maqLabelButton .dijitButtonNode {
 	padding: 4px;
 	border-radius: 4px;

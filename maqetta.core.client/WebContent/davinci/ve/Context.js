@@ -1150,10 +1150,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
 		// give precedence to our 'config' options, over that in file; make sure
 		// to turn off parseOnLoad
-		// XXX Also need to set the `async` flag to false.  Otherwise, we try to
-		//     instantiate objects before the modules have loaded.
 		lang.mixin(djConfig, config, {
-			async: false,
+			async: false, // should be able to switch to true soon
 			parseOnLoad: false
 		});
 		subs.dojoConfig = JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'");
@@ -2718,7 +2716,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				return target;
 			}
 			for(var i = 0;i<target.children.length;i++){
-				return findTarget(target.children[i], rule);
+				return findTarget(target.children[i], rule); //FIXME: return stops for-loop at i=0
 			}
 		}
 		if(selector){
@@ -3512,6 +3510,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	widgetChanged: function(type, widget) {
 	},
 	
+	// move to SelectTool.js?
 	getPageLeftTop: function(node){
 		var leftAdjust = node.offsetLeft;
 		var topAdjust = node.offsetTop;

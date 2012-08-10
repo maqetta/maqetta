@@ -797,11 +797,11 @@ var Workbench = {
 				Workbench.showView(view.viewID, false);
 			}
 		}, this);
-
+/*
 		//FIXME: The whole Action Bar and Properties palette setup needs to be reorganized and refactored.
 		//See other comments in this file on the same subject.
 		this.showDynamicView('davinci.ve.style', propertiesPaletteContainer);
-
+*/
 		//FIXME: This is also ugly - creating a special DIV for visual editor's selection chrome
 		//Note sure how best to factor this out, though.
 		davinci.Workbench.focusContainer = dojo.create('div', {'class':'focusContainer', id:'focusContainer'}, document.body);
@@ -811,7 +811,7 @@ var Workbench = {
 		setTimeout(function() {
 			appBorderContainer.resize();
 			dojo.publish("/davinci/workbench/ready", []);
-		}, 3000);
+		}.bind(this), 3000);
 	},
 
 	onResize: function(e){
@@ -1258,7 +1258,7 @@ var Workbench = {
 		if (position == 'right' && !mainBody.tabs.perspective.right) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 275px;', id:"right_mainBody", 
+					style: 'width: 340px;', id:"right_mainBody", 
 					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
 		}
@@ -1299,6 +1299,7 @@ var Workbench = {
 			}
 			cp1 = mainBody.tabs.perspective[position] = new TabContainer({
 				region: region,
+				id:'palette-tabcontainer-'+position,
 				tabPosition:positionSplit[0]+'-h',
 				tabStrip:false,
 				'class': clazz,
@@ -1309,9 +1310,20 @@ var Workbench = {
 			parent.addChild(cp1);
 			dojo.connect(cp1, 'selectChild', this, function(tab){
 				if(tab && tab.domNode){
-					this.expandPaletteContainer(tab.domNode);
+					var tc = tab.getParent();
+					// Don't mess with which tab is selected or do any collapse/expand
+					// if selectChild is called in response to adding the first child
+					// of a TabContainer, which causes an implicit selectFirst().
+					if(!this._showViewAddChildInProcess){
+						if(tc._maqLastSelectedChild == tab){
+							this._expandCollapsePaletteContainer(tab);						
+						}else{
+							this.expandPaletteContainer(tab.domNode);						
+						}
+					}
+					tc._maqLastSelectedChild = tab;
 				}
-			});
+			}.bind(this));
 		} else {
 			cp1 = mainBody.tabs.perspective[position];
 		}
@@ -1320,7 +1332,9 @@ var Workbench = {
 			return;
 		}
 		this.instantiateView(view).then(function(tab) {
+			this._showViewAddChildInProcess = true;
 			cp1.addChild(tab);
+			this._showViewAddChildInProcess = false;
 			// Put a tooltip on the tab button. Note that native TabContainer
 			// doesn't offer a tooltip capability for its tabs
 			var controlButton = tab.controlButton;
@@ -1330,7 +1344,7 @@ var Workbench = {
 			if(shouldFocus) {
 				cp1.selectChild(tab);
 			}
-		});
+		}.bind(this));
 	  } catch (ex) {
 		  console.error("Error loading view: "+view.id);
 		  console.error(ex);
@@ -1799,6 +1813,10 @@ var Workbench = {
 
 				//Bring palettes specified for the editor to the top
 				this._bringPalettesToTop(newEditor);
+				
+				//Collapse/expand the left and right-side palettes
+				//depending on "expandPalettes" properties
+				this._expandCollapsePaletteContainers(newEditor);
 			}
 		}.bind(this), 1000);
 
@@ -1831,6 +1849,45 @@ var Workbench = {
 							tabContainer.selectChild(tab);
 						}
 					}
+				}
+			}
+		}
+	},
+
+	_expandCollapsePaletteContainer: function(tab) {
+		if(!tab || !tab.domNode){
+			return;
+		}
+		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(tab.domNode);
+		if(paletteContainerNode._maqExpanded){
+			this.collapsePaletteContainer(paletteContainerNode);
+		}else{
+			this.expandPaletteContainer(paletteContainerNode);
+		}
+	},
+
+	_expandCollapsePaletteContainers: function(newEditor) {
+		// First, we will get the metadata for the extension and get its list of 
+		// palettes to bring to the top
+		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
+			return extension.id === newEditor.editorID;
+		});
+		if (editorExtensions && editorExtensions.length > 0) {
+			var expandPalettes = editorExtensions[0].expandPalettes;
+			var leftBC = dijit.byId('left_mainBody');
+			if(leftBC){
+				if(expandPalettes && expandPalettes.indexOf('left')>=0){
+					this.expandPaletteContainer(leftBC.domNode);
+				}else{
+					this.collapsePaletteContainer(leftBC.domNode);
+				}
+			}
+			var rightBC = dijit.byId('right_mainBody');
+			if(rightBC){
+				if(expandPalettes && expandPalettes.indexOf('right')>=0){
+					this.expandPaletteContainer(rightBC.domNode);
+				}else{
+					this.collapsePaletteContainer(rightBC.domNode);
 				}
 			}
 		}
@@ -2037,20 +2094,21 @@ var Workbench = {
 	},
 	
 	/**
-	 * Look for an ancestor "palette container node", identified by its
+	 * Look for the "palette container node" from node or one of its descendants,
+	 * where the palette container node id identified by its
 	 * having class 'davinciPaletteContainer'
-	 * @param {Element} node  a descendant of the palette container node
+	 * @param {Element} node  reference node
 	 * @returns {Element|undefined}  the palette container node, if found
 	 */
 	findPaletteContainerNode: function(node){
 		var paletteContainerNode;
-		var pn = node.parentNode;
-		while(pn && pn.tagName != 'BODY'){
-			if(dojo.hasClass(pn, 'davinciPaletteContainer')){
-				paletteContainerNode = pn;
+		var n = node;
+		while(n && n.tagName != 'BODY'){
+			if(dojo.hasClass(n, 'davinciPaletteContainer')){
+				paletteContainerNode = n;
 				break;
 			}
-			pn = pn.parentNode;
+			n = n.parentNode;
 		}
 		return paletteContainerNode;
 	},
@@ -2078,6 +2136,8 @@ var Workbench = {
 					paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
 				}
 			}
+			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
+			paletteContainerNode._maqExpanded = false;
 		}
 	},
 	
@@ -2101,6 +2161,8 @@ var Workbench = {
 					delete paletteContainerWidget._expandedWidth;
 				}
 			}
+			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
+			paletteContainerNode._maqExpanded = true;
 		}
 	},
 

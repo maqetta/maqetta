@@ -231,7 +231,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		if(!this._handles){
 			return;
 		}
-		this._focusPopup.destroyRecursive();
+		if(this._focusPopup){
+			this._focusPopup.destroyRecursive();			
+		}
 		this._focusPopup = null;
 		this.context.destroy();
 	    this._handles.forEach(dojo.disconnect);

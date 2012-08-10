@@ -99,6 +99,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				var flowLayout = context.getFlowLayout();
 				var layout = flowLayout ? 'flow' : 'absolute';
 				this._updateLayoutDropDownButton(layout);
+				this._updateDisplayModeToolbarIcons();
 				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
 					this.editorContainer.restoreActionPropertiesState(this)
 				}
@@ -212,6 +213,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 
 		this._displayMode=newMode;
+		this._updateDisplayModeToolbarIcons();
 
 		// now lets relayout the bordercontainer
 		this._bc.layout();
@@ -223,6 +225,18 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			context.hideFocusAll();			
 		}else{
 			context.updateFocusAll();
+		}
+	},
+	
+	_updateDisplayModeToolbarIcons: function(){
+		var designButtonNode = dojo.query('.maqDesignButton')[0];
+		var sourceComboButtonNode = dojo.query('.maqSourceComboButton')[0];
+		if (this._displayMode=="design") {
+			dojo.addClass(designButtonNode, 'maqLabelButtonSelected');
+			dojo.removeClass(sourceComboButtonNode, 'maqLabelButtonSelected');
+		}else{
+			dojo.removeClass(designButtonNode, 'maqLabelButtonSelected');
+			dojo.addClass(sourceComboButtonNode, 'maqLabelButtonSelected');
 		}
 	},
 

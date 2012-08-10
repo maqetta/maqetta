@@ -160,11 +160,11 @@ define(["davinci/Runtime",
 			
 			var tableHtml = "<table class='property_table_stretchable' border='0' width='100%' align='center' cellspacing='0' cellpadding='0'>";
 			tableHtml += "<colgroup>"; 
-			tableHtml += "<col style='width:15px;' />"
+			tableHtml += "<col style='width:0px;' />"
 			tableHtml +="<col class='gap02' />";
 			tableHtml +="<col class='gap03' />";
 			tableHtml +="<col style='width:20px;' />";
-			tableHtml += "<col style='width:6px;' />"
+			tableHtml += "<col style='width:0px;' />"
 			tableHtml +="</colgroup>";
 		//	tableHtml +="<tr class='property_table_rowgap property_table_rowgap_group_separator'><td colspan='7'/></tr>";
 			if(!rowsOnly)

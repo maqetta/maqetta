@@ -20,6 +20,7 @@ this[_9]=_8[_9];
 }
 }
 this.message=_7;
+this.stack=_8.stack;
 }else{
 _4.apply(this,arguments);
 }

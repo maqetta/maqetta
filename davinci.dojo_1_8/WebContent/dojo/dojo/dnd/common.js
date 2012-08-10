@@ -7,7 +7,6 @@
 //>>built
 define("dojo/dnd/common",["../_base/connect","../_base/kernel","../_base/lang","../dom"],function(_1,_2,_3,_4){
 var _5={};
-_3.setObject("dojo.dnd.common",_5);
 _5.getCopyKeyState=_1.isCopyKey;
 _5._uniqueId=0;
 _5.getUniqueId=function(){
@@ -25,5 +24,6 @@ t=t.parentNode;
 }
 return " button textarea input select option ".indexOf(" "+t.tagName.toLowerCase()+" ")>=0;
 };
+_3.mixin(_3.getObject("dojo.dnd",true),_5);
 return _5;
 });

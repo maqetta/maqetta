@@ -1,10 +1,9 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/ve/widget",
-    	"davinci/ve/utils/ImageUtils",
-    	"davinci/ve/States"
+    	"../widget",
+    	"../utils/ImageUtils",
+    	"../States"
 ], function(declare, Widget, ImageUtils, States){
-
 
 return declare("davinci.ve.commands.ModifyCommand", null, {
 	name: "modify",
@@ -13,17 +12,15 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 	//     'context'. DataStoresView.js passes in 'children' and 'context'.
 	//     No one passes in 'scripts'.
 	constructor: function(widget, properties, children, context, scripts){
-
 		this._oldId = (widget ? widget.id : undefined);
 		this._properties = properties = (properties || {});
 		this._children = (children || typeof children == 'string') ? children : properties._children;
-		this._context = context || widget.getContext();;
+		this._context = context || widget.getContext();
 		this._scripts = scripts;
 		delete this._properties._children;
-		
 	},
 
-	setContext : function(context){
+	setContext: function(context){
 		this._context = context;
 	},
 

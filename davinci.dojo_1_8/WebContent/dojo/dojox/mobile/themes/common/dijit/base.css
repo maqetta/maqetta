@@ -1791,7 +1791,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitFolderOpened,
 .dijitIconFolderOpen,
 .dijitIconError {
-	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled.png");; 
+	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled.png"); 
 	width: 16px;
 	height: 16px;
 }
@@ -1830,7 +1830,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dj_ie6 .dijitFolderOpened,
 .dj_ie6 .dijitIconFolderOpen,
 .dj_ie6 .dijitIconError {
-	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled8bit.png");;
+	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled8bit.png");
 }
 .dijitDisabled .dijitIconSave,
 .dijitDisabled .dijitIconPrint,
@@ -1867,7 +1867,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitDisabled .dijitFolderOpened,
 .dijitDisabled .dijitIconFolderOpen,
 .dijitDisabled .dijitIconError {
-	background-image: url("../../../../../dijit/icons/images/commonIconsObjActDisabled.png");; 
+	background-image: url("../../../../../dijit/icons/images/commonIconsObjActDisabled.png"); 
 }
 .dijitIconSave { background-position: 0; }
 .dijitIconPrint { background-position: -16px; }
@@ -1902,7 +1902,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitIconFolderClosed, .dijitFolderClosed { background-position: -464px; }
 .dijitIconFolderOpen, .dijitFolderOpened { background-position: -480px; }
 .dijitIconLoading {
-	background:url("../../../../../dijit/icons/images/loadingAnimation_rtl.gif"); no-repeat;
+	background:url("../../../../../dijit/icons/images/loadingAnimation_rtl.gif") no-repeat;
 	height: 20px;
 	width: 20px;
 }
@@ -1935,7 +1935,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dojoDndItemOver {
   background-color: #abd6ff;
-  background-image: url("../../../../../dijit/themes/claro/images/standardGradient.png");;
+  background-image: url("../../../../../dijit/themes/claro/images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -1948,7 +1948,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dojoDndItemAnchor, .claro .dojoDndItemSelected {
   background-color: #cfe5fa;
-  background-image: url("../../../../../dijit/themes/claro/images/standardGradient.png");;
+  background-image: url("../../../../../dijit/themes/claro/images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -1975,7 +1975,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding-left: 21px;
 }
 .claro.dojoDndMove .dojoDndAvatarHeader, .claro.dojoDndCopy .dojoDndAvatarHeader {
-  background-image: url("../../../../../dijit/themes/claro/images/dnd.png");;
+  background-image: url("../../../../../dijit/themes/claro/images/dnd.png");
   background-repeat: no-repeat;
   background-position: 2px -122px;
 }
@@ -2168,13 +2168,13 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding: 3px 10px 1px 3px;
 }
 .dijitEditorRtl .dijitEditorIcon {
-	background-image: url("../../../../../dijit/icons/images/editorIconsEnabled_rtl.png");;; 
+	background-image: url("../../../../../dijit/icons/images/editorIconsEnabled_rtl.png"); 
 }
 .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url("../../../../../dijit/icons/images/editorIconsDisabled_rtl.png");;; 
+	background-image: url("../../../../../dijit/icons/images/editorIconsDisabled_rtl.png"); 
 }
 .dijitToolbarRtl .dijitToolbarSeparator {
-	background-image: url("../../../../../dijit/icons/images/editorIconsEnabled_rtl.png");;;
+	background-image: url("../../../../../dijit/icons/images/editorIconsEnabled_rtl.png");
 }
 .dijitRtl .dijitIconSave,
 .dijitRtl .dijitIconPrint,
@@ -2211,7 +2211,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitRtl .dijitFolderOpened,
 .dijitRtl .dijitIconFolderOpen,
 .dijitRtl .dijitIconError { 
-	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled_rtl.png");;; 
+	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled_rtl.png"); 
 	width: 16px;
 	height: 16px;
 }
@@ -2250,7 +2250,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dj_ie6 .dijitRtl .dijitFolderOpened,
 .dj_ie6 .dijitRtl .dijitIconFolderOpen,
 .dj_ie6 .dijitRtl .dijitIconError {
-	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled8bit_rtl.png");;;
+	background-image: url("../../../../../dijit/icons/images/commonIconsObjActEnabled8bit_rtl.png");
 }
 .dijitRtl .dijitDisabled .dijitIconSave,
 .dijitRtl .dijitDisabled .dijitIconPrint,
@@ -2287,7 +2287,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitRtl .dijitDisabled .dijitFolderOpened,
 .dijitRtl .dijitDisabled .dijitIconFolderOpen,
 .dijitRtl .dijitDisabled .dijitIconError {
-	background-image: url("../../../../../dijit/icons/images/commonIconsObjActDisabled_rtl.png");;; 
+	background-image: url("../../../../../dijit/icons/images/commonIconsObjActDisabled_rtl.png"); 
 }
 .claro .dijitTitlePaneRtl .dijitClosed .dijitArrowNode {
   background-position: -7px 0;

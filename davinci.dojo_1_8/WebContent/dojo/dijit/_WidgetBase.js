@@ -137,7 +137,9 @@ w.destroy(_2c);
 };
 _2.forEach(this._connects,_f.hitch(this,"disconnect"));
 _2.forEach(this._supportingWidgets,_2d);
+if(this.domNode){
 _2.forEach(_14.findWidgets(this.domNode,this.containerNode),_2d);
+}
 this.destroyRendering(_2c);
 _14.remove(this.id);
 this._destroyed=true;

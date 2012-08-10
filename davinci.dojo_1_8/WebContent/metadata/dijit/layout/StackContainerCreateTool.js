@@ -22,13 +22,13 @@ return declare(CreateTool, {
 		this._resizable = "both";
 	},
 	
-	_create: function(args){		
+	_create: function(args){
 		var command = this._getCreateCommand(args);
 		this._context.getCommandStack().execute(command);
 		this._select(this._container);
 	},
 
-  _getCreateCommand: function(args){
+	_getCreateCommand: function(args){
 		if (this._data.length !== 2) {
 			return;
 		}
@@ -83,15 +83,12 @@ return declare(CreateTool, {
 		return command;
 	},
     
-	addPasteCreateCommand: function(command, args){
-		this._context = this._data.context;
-		var data = [];
-		data[0] = {type: 'dijit.layout.StackController'};
-		data[1] = this._data;
-		this._data = data;
-		command.add( this._getCreateCommand(args));
-		return this._container;
-	}
+    addPasteCreateCommand: function(command, args){
+        this._context = this._data.context;
+        this._data = [{type: 'dijit.layout.StackController'}, this._data];
+        command.add(this._getCreateCommand(args));
+        return this._container;
+    }
 });
 
 });

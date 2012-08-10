@@ -6,9 +6,10 @@ define([
 	"dijit/Tree",
 	"davinci/ve/widget",
 	"davinci/ve/States",
+	"davinci/Workbench",
 	"davinci/ve/commands/StyleCommand",
 	"davinci/ui/widgets/_ToggleTreeNode",
-], function(declare, connect, touch, mouse, Tree, Widget, States, StyleCommand, ToggleTreeNode) {
+], function(declare, connect, touch, mouse, Tree, Widget, States, Workbench, StyleCommand, ToggleTreeNode) {
 
 return declare("davinci.ui.widget.OutlineTree", Tree, {
 	// args
@@ -135,6 +136,19 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 				this.selectNode([w.item]);
 				this._userSelect();
 			}
+		}
+	},
+
+	_onDblClick: function(/*TreeNode*/ nodeWidget, /*Event*/ e) {
+		// Double click means open inline editor.  We have to do this here because
+		// onDblClick() is called before the treeNode is focused.  So we run into
+		// a timing isssue where the dialog is shown and then hidden when the treeNode
+		// gets focus.
+		this.inherited(arguments);
+
+		var c = Workbench.getOpenEditor().getContext();
+		if (c) {
+			c.select(nodeWidget.item, null, true); // display inline
 		}
 	},
 

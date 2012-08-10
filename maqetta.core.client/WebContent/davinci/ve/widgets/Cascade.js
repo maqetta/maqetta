@@ -372,7 +372,7 @@ define(["dojo/_base/declare",
 				var defaultSelection=this._getDefaultSelection();
 				
 				if(this._editor.supports("inline-style") && 
-				  (this._topWidgetDom==this._widget.domNode || defaultSelection=="element.style")){
+				  (/*this._topWidgetDom==this._widget.domNode ||*/ defaultSelection=="element.style")){ //#2409 just use default selector result 
 					var vArray = this._getAttribStyleValue();
 					var value = null;
 					for(var vIndex=0; vIndex<vArray.length; vIndex++){

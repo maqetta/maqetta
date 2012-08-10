@@ -357,7 +357,9 @@
 							"max-height",
 							"max-width",
 							"min-height",
-							"min-width"
+							"min-width",
+							"height",
+							"width"
 							
 						]								
 					},
@@ -516,7 +518,9 @@
 							"max-height",
 							"max-width",
 							"min-height",
-							"min-width"
+							"min-width",
+							"height",
+							"width"
 						],
 						".claro .dijitSplitContainer-child, .claro .dijitBorderContainer-child": [
 							"border-width",
@@ -1282,7 +1286,9 @@
 									"max-height",
 									"max-width",
 									"min-height",
-									"min-width"
+									"min-width",
+									"height",
+									"width"
 									
                                 ]								
                             },
@@ -1467,7 +1473,22 @@
             "rootSelectors":[".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode"],
             "states": {
                 "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+							"background-color",
+							"background-image",
+							"border", 
+							"width",
+							"height" 
+                 		]
+                    },
                     "selectors": {
+                   	 ".claro .dijitTextBox, .claro .dijitInputInner": [
+							"color",
+							"font-style",
+							"font-wiegth",
+							"font"
+						],
 						".claro .dijitSelectLabel, .claro .dijitTextBox .dijitInputInner, .claro .dijitValidationTextBox .dijitValidationContainer": [
 							"text-align",
 							"padding",
@@ -1475,12 +1496,15 @@
 							"padding-top",
 							"padding-left",
 							"padding-bottom"
-						],
-						".claro .dijitTextBox, .claro .dijitInputInner": [
-							"color"
-						],
+						],						
 						".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode": [
-							"$std_10" 
+							"border-color",
+  							"-webkit-transition-property",
+  							"-moz-transition-property",
+  							"transition-property",
+  							"-webkit-transition-duration",
+  							"-moz-transition-duration",
+  							"transition-duration"
 						]
 
 					},
@@ -1530,6 +1554,12 @@
             "rootSelectors":[".claro .dijitTitlePane"],
             "states": {
                 "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+							"height",
+							"width" 
+                 		]
+                    },
 					"selectors": {
 						".dijitTitlePane": [
 							"background-color",
@@ -1547,7 +1577,9 @@
 							"max-height",
 							"max-width",
 							"min-height",
-							"min-width"
+							"min-width",
+							"height",
+							"width"
 							
 						]								
 					},

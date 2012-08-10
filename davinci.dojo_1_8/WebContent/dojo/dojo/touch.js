@@ -18,11 +18,11 @@ on.emit(_d,"dojotouchout",{target:_d,relatedTarget:_b,bubbles:true});
 on.emit(_b,"dojotouchover",{target:_b,relatedTarget:_d,bubbles:true});
 },true);
 on(_8.doc,"touchmove",function(_e){
-var _f=_b;
-_b=_8.doc.elementFromPoint(_e.pageX-_8.body().parentNode.scrollLeft,_e.pageY-_8.body().parentNode.scrollTop);
-if(_f!==_b){
-on.emit(_f,"dojotouchout",{target:_f,relatedTarget:_b,bubbles:true});
-on.emit(_b,"dojotouchover",{target:_b,relatedTarget:_f,bubbles:true});
+var _f=_8.doc.elementFromPoint(_e.pageX-_8.global.pageXOffset,_e.pageY-_8.global.pageYOffset);
+if(_f&&_b!==_f){
+on.emit(_b,"dojotouchout",{target:_b,relatedTarget:_f,bubbles:true});
+on.emit(_f,"dojotouchover",{target:_f,relatedTarget:_b,bubbles:true});
+_b=_f;
 }
 });
 });

@@ -1,2 +1,0 @@
-//>>built
-define("dijit/robotx",["dojo/_base/kernel","./main","dojo/robotx"],function(_1,_2,_3){_1.experimental("dijit.robotx");var _4=_3._updateDocument;_3._updateDocument=function(){_4();var _5=_1.global;if(_5.dijit){window.dijit=_5.dijit;}};return _2;});

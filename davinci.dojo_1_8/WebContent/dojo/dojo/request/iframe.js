@@ -189,73 +189,80 @@ _26&&_26.emit("send",_23,dfd.promise.cancel);
 _10._notifyStart(_23);
 _25.submit();
 }else{
-var _30=_23.url+(_23.url.indexOf("?")>-1?"&":"?")+_7.objectToQuery(_23.options.data);
+var _30="";
+if(_23.options.data){
+_30=_23.options.data;
+if(typeof _30!=="string"){
+_30=_7.objectToQuery(_30);
+}
+}
+var _31=_23.url+(_23.url.indexOf("?")>-1?"&":"?")+_30;
 _26&&_26.emit("send",_23,dfd.promise.cancel);
 _10._notifyStart(_23);
-_10.setSrc(_10._frame,_30,true);
+_10.setSrc(_10._frame,_31,true);
 }
 }
 catch(e){
 dfd.reject(e);
 }
 };
-function _31(_32){
+function _32(_33){
 return !this.isFulfilled();
 };
-function _33(_34){
+function _34(_35){
 return !!this._finished;
 };
-function _35(_36,_37){
-if(!_37){
+function _36(_37,_38){
+if(!_38){
 try{
-var _38=_36.options,doc=_10.doc(_10._frame),_39=_38.handleAs;
-if(_39!=="html"){
-if(_39==="xml"){
+var _39=_37.options,doc=_10.doc(_10._frame),_3a=_39.handleAs;
+if(_3a!=="html"){
+if(_3a==="xml"){
 if(doc.documentElement.tagName.toLowerCase()==="html"){
 _8("a",doc.documentElement).orphan();
-var _3a=doc.documentElement.innerText;
-_3a=_3a.replace(/>\s+</g,"><");
-_36.text=_6.trim(_3a);
+var _3b=doc.documentElement.innerText;
+_3b=_3b.replace(/>\s+</g,"><");
+_37.text=_6.trim(_3b);
 }else{
-_36.data=doc;
+_37.data=doc;
 }
 }else{
-_36.text=doc.getElementsByTagName("textarea")[0].value;
+_37.text=doc.getElementsByTagName("textarea")[0].value;
 }
-_5(_36);
+_5(_37);
 }else{
-_36.data=doc;
+_37.data=doc;
 }
 }
 catch(e){
-_37=e;
+_38=e;
 }
 }
-if(_37){
-this.reject(_37);
+if(_38){
+this.reject(_38);
 }else{
 if(this._finished){
-this.resolve(_36);
+this.resolve(_37);
 }else{
 this.reject(new Error("Invalid dojo/request/iframe request state"));
 }
 }
 };
-function _3b(_3c){
+function _3c(_3d){
 this._callNext();
 };
-var _3d={method:"POST"};
-function _10(url,_3e,_3f){
-var _40=_4.parseArgs(url,_4.deepCreate(_3d,_3e),true);
-url=_40.url;
-_3e=_40.options;
-if(_3e.method!=="GET"&&_3e.method!=="POST"){
-throw new Error(_3e.method+" not supported by dojo/request/iframe");
+var _3e={method:"POST"};
+function _10(url,_3f,_40){
+var _41=_4.parseArgs(url,_4.deepCreate(_3e,_3f),true);
+url=_41.url;
+_3f=_41.options;
+if(_3f.method!=="GET"&&_3f.method!=="POST"){
+throw new Error(_3f.method+" not supported by dojo/request/iframe");
 }
 if(!_10._frame){
 _10._frame=_10.create(_10._iframeName,_e+"();");
 }
-var dfd=_4.deferred(_40,null,_31,_33,_35,_3b);
+var dfd=_4.deferred(_41,null,_32,_34,_36,_3c);
 dfd._callNext=function(){
 if(!this._calledNext){
 this._calledNext=true;
@@ -263,11 +270,11 @@ _10._currentDfd=null;
 _10._fireNextRequest();
 }
 };
-dfd._legacy=_3f;
+dfd._legacy=_40;
 _10._dfdQueue.push(dfd);
 _10._fireNextRequest();
 _3(dfd);
-return _3f?dfd:dfd.promise;
+return _40?dfd:dfd.promise;
 };
 _10.create=_16;
 _10.doc=doc;

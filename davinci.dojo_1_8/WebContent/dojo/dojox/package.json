@@ -1,13 +1,13 @@
 {
 	"name": "dojox",
-	"version":"1.8.0rc2",
+	"version":"1.8.0",
 	"directories": {
 		"lib": "."
 	},
 	"main": "main",
 	"dependencies": {
-		"dojo":"1.8.0rc2",
-		"dijit":"1.8.0rc2"
+		"dojo":"1.8.0",
+		"dijit":"1.8.0"
 	},
 	"description": "Dojo eXtensions, a rollup of many useful sub-projects and varying states of maturity – from very stable and robust, to alpha and experimental. See individual projects contain README files for details.",
 	"licenses": [

@@ -44,7 +44,7 @@
 .dojoxGridHeader .dojoxGridCell { 
 	border: 1px solid;
 	border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
-	background: url("images/grid_dx_gradient.gif"); #E8E1CF top repeat-x;
+	background: url("images/grid_dx_gradient.gif") #E8E1CF top repeat-x;
 	padding-bottom: 2px;
 }
 .dojoxGridHeader .dojoxGridCellOver {
@@ -105,7 +105,7 @@
 	border: 1px solid;
 	border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
 	border-top: none;
-	background: url("images/grid_dx_gradient.gif"); #E8E1CF top repeat-x;
+	background: url("images/grid_dx_gradient.gif") #E8E1CF top repeat-x;
 }
 .dojoxGridRowbarInner {
 	border-top: 1px solid #F6F4EB;
@@ -248,7 +248,7 @@
 .dojoxGridDndAvatarItem	td {
 	border: 1px solid;
 	border-color: #F6F4EB #ACA899 #ACA899 #F6F4EB;
-	background: url("images/grid_dx_gradient.gif"); #E8E1CF top repeat-x;
+	background: url("images/grid_dx_gradient.gif") #E8E1CF top repeat-x;
 	padding: 0pt;
 	margin: 0pt;
 }
@@ -261,30 +261,30 @@
 	margin: 0;
 }
 .dojoDndMove .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url("../../../dojo/resources/images/dndNoMove.png");;
+	background-image: url("../../../dojo/resources/images/dndNoMove.png");
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url("../../../dojo/resources/images/dndNoCopy.png");;
+	background-image: url("../../../dojo/resources/images/dndNoCopy.png");
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndMove .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url("../../../dojo/resources/images/dndMove.png");;
+	background-image: url("../../../dojo/resources/images/dndMove.png");
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoDndCopy .dojoDndAvatarCanDrop .dojoxGridDndAvatarItem .dojoxGridDndAvatarItemImage {
-	background-image: url("../../../dojo/resources/images/dndCopy.png");;
+	background-image: url("../../../dojo/resources/images/dndCopy.png");
 	background-repeat: no-repeat;
 	background-position: center center;
 }
 .dojoxGridColPlaceBottom {
-	background: transparent url("images/grid_sort_up.gif"); no-repeat scroll left top;
+	background: transparent url("images/grid_sort_up.gif") no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop {
-	background: transparent url("images/grid_sort_down.gif"); no-repeat scroll left top;
+	background: transparent url("images/grid_sort_down.gif") no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop, .dojoxGridColPlaceBottom {
 	font-size:1px;
@@ -315,10 +315,10 @@
 	cursor: col-resize !important;
 }
 .dojoxGridColPlaceBottom {
-	background: transparent url("images/grid_sort_up.gif"); no-repeat scroll left top;
+	background: transparent url("images/grid_sort_up.gif") no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop {
-	background: transparent url("images/grid_sort_down.gif"); no-repeat scroll left top;
+	background: transparent url("images/grid_sort_down.gif") no-repeat scroll left top;
 }
 .dojoxGridColPlaceTop, .dojoxGridColPlaceBottom {
 	font-size:1px;

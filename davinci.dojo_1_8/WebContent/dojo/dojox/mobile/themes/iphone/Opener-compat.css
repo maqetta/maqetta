@@ -18,11 +18,11 @@
   background-image: none;
 }
 .mblTooltip .mblHeading {
-  background-image: url("compat/tooltip-heading-bg.png");;
+  background-image: url("compat/tooltip-heading-bg.png");
 }
 .mblTooltip .mblHeading .mblToolBarButton {
   background-color: #000924;
-  background-image: url("compat/tooltip-button-bg.png");;
+  background-image: url("compat/tooltip-button-bg.png");
 }
 .dj_ff3 .mblTooltip {
   -moz-border-radius: 8px;

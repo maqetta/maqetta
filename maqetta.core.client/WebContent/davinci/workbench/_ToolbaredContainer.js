@@ -5,7 +5,7 @@ define([
 ], function(declare, LayoutWidget, Templated){
 
 return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated], {
-	templateString: "<div><div dojoAttachPoint='titleBarDiv' class='toolbaredContainer_titleBarDiv'></div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
+	templateString: "<div><div dojoAttachPoint='titleBarDiv' class='palette_titleBarDiv'></div><div dojoAttachPoint='toolbarDiv' class='toolbaredContainer_toolbarDiv'></div><div dojoAttachPoint='containerNode'></div></div>",
 
 	gutters: false,
 	_toolbarCreated:{},
@@ -43,7 +43,7 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		if (!this.toolbarCreated(this.declaredClass)) {
 			this._createToolbar(this.declaredClass);
 		}
-		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox">&#x2199;</span><span class="titleBarDivTitle">'+this.title+'</span>';
+		this.titleBarDiv.innerHTML = '<span class="paletteCloseBox"></span><span class="titleBarDivTitle">'+this.title+'</span>';
 		var closeBoxNodes = dojo.query('.paletteCloseBox', this.titleBarDiv);
 		if(closeBoxNodes.length > 0){
 			var closeBox = closeBoxNodes[0];

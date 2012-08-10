@@ -42,15 +42,16 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	          //in the various editors, such as PageEditor.js and ThemeEditor.js
 	          
 	          {key: "common",
-	        	  className:'page_editor_only',
+	        	  className:'maqPropertySection page_editor_only',
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
 	          {key: "widgetSpecific",
-	        	  className:'page_editor_only',
+	        	  className:'maqPropertySection page_editor_only',
 	        	  html: "<div dojoType='davinci.ve.widgets.WidgetProperties'></div>"},  
 	          {key: "events",
-	        	  className:'page_editor_only',
+	        	  className:'maqPropertySection page_editor_only',
 		          pageTemplate:{html: "<div dojoType='davinci.ve.widgets.EventSelection'></div>"}},
 	          {key: "layout",
+		          className:'maqPropertySection',
 		       	  /* startsNewGroup:true, // This flag causes a few extra pixels between this and previous button */
 	           	  pageTemplate:[{display:"width", type:"multi", target:["width"], values:['', 'auto','100%','200px','10em']},
 	            	                
@@ -75,6 +76,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	                {display:"box-sizing", type:"combo", target:['box-sizing','-webkit-box-sizing','-ms-box-sizing','-moz-box-sizing'], values:['','content-box','border-box']}
 	            	   ]},
 	           {key: "padding", 
+	     		  className:'maqPropertySection',
   	           	  pageTemplate:[
       	                {display:"<b>(padding)</b>", type:"multi", target:["padding"], values:['', '0px', '1em']},
   		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
@@ -85,7 +87,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
       		 			       {display:"padding-left", type:"multi", target:["padding-left"], values:['', '0px', '1em'], rowClass:"propertiesSectionHidden"}
       	                	]}
       	                ]},	
-	           {key: "margins", 	
+	           {key: "margins", 
+      			  className:'maqPropertySection',	
 	           	  pageTemplate:[
     	                {display:"<b>(margin)</b>", type:"multi", target:["margin"], values:['', '0px', '1em']},
 		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
@@ -97,6 +100,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	                	]}
     	                ]},
 	           {key: "background", 
+    	  		  className:'maqPropertySection',
 	       		  pageTemplate : [
 	      	       		{display:"background-color", type:"background", target:['background-color'], colorswatch:true},
 	    	       		{display:"background-image", type:"background", target:['background-image'], values:['', 'none']},
@@ -107,6 +111,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     		       	    {display:"background-clip", type:"background", target:['background-clip'], values:['','border-box','padding-box','content-box']}
     		       	   ]},
 	           {key:"border", 
+    				className:'maqPropertySection',
 		       		pageTemplate : [
    		                {display:"<b>(border)</b>", type:"multi", target:['border'], values:['','none','1px solid black']}, 
    		                {display:"show", type:"combo", values:['none','sides','props','all'],
@@ -180,6 +185,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	    	                ]}
 		            	  ]},
 	           {key: "fontsAndText",
+		    		  className:'maqPropertySection',
 	                  pageTemplate:[{display:"font", type:"text", target:["font"]},
                         {display:"font-family", type:"font", target:["font-family"]},
     	                {display:"size", type:"multi", target:["font-size"], values:['','100%','1em','10px','10pt']},
@@ -194,6 +200,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	                {display:"line-height", type:"multi", target:["line-height"], values:['','normal','1.2','120%']}
     	                ]},
  	           {key: "shapesSVG",
+    	  		      className:'maqPropertySection',
 	                  pageTemplate:[{display:"stroke", type:"color", target:["stroke"]},
     	                {display:"stroke-width", type:"multi", target:["stroke-width"], values:['','1', '2', '3', '4', '5', '10']},
     	                {display:"fill", type:"color", target:["fill"]}
@@ -280,12 +287,22 @@ if(propPaletteTabContainerNode){
 			className = '';
 		}
 		var content = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
+//FIXME: temp hack
+var content = "<div class='palette_titleBarDiv'><span class='paletteCloseBox'></span><span class='titleBarDivTitle'></span></div>" + content;
 		var cp = new ContentPane({title:title, content:content, 'class':className });
 		this._tabContainer.addChild(cp);
 		cp._maqPropGroup = this.pageTemplate[i].key;
 		if(!firstTab){
 			firstTab = cp;
 		}
+//FIXME: temp hack
+var closeBoxNodes = dojo.query('.paletteCloseBox', cp.domNode);
+if(closeBoxNodes.length > 0){
+	var closeBox = closeBoxNodes[0];
+	dojo.connect(closeBox, 'click', this, function(event){
+		davinci.Workbench.collapsePaletteContainer(event.currentTarget);
+	});
+}
 	}
 	dojo.connect(this._tabContainer, 'selectChild', this, function(tab){
 		this._currentPropSection = tab._maqPropGroup;

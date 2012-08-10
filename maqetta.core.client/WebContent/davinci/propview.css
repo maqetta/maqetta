@@ -489,3 +489,6 @@ button.showCss::-moz-focus-inner {
 	position:absolute;
 	z-index:1000000;
 }
+#davinci_app .dijitContentPane.maqPropertySection {
+	padding:0;
+}

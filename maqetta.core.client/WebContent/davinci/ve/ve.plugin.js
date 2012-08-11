@@ -31,9 +31,8 @@ return {
 
         {
             id: "style",
-            title: "Properties",
-            viewClass: "davinci/ve/views/SwitchingStyleView",
-            iconClass: "paletteIcon paletteIconProperties"
+            title: "",	// Tab titles for property tabs are generated programmatically
+            viewClass: "davinci/ve/views/SwitchingStyleView"
         }
     ],
 

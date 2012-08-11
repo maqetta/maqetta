@@ -610,9 +610,6 @@ davinci_top_bar .dijitButtonNode {
 #davinci_app .davinciPalette .paletteIconWidgets {
 	background-position: -30px -60px;
 }
-#davinci_app .davinciPalette .paletteIconProperties {
-	background-position: -30px -90px;
-}
 #davinci_app .davinciPalette .paletteIconStates {
 	background-position: -30px -90px;
 }

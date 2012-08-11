@@ -40,7 +40,6 @@ define(["dojo/_base/declare",
 		
 		buildRendering: function(){
 			this.domNode =   dojo.doc.createElement("div");
-			this.domNode
 			this.container =   dojo.doc.createElement("div");
 			dojo.addClass(this.container,"showCascade");
 			this.domNode.appendChild(this.container);
@@ -466,7 +465,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_buildCssRuleset : function(){
-			//if(this._isTarget("left")) debugger;
+			//if(this._isTarget("background-color")) debugger;
 			var allRules = this._getAllRules();
 			this._values = [];
 			//Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user

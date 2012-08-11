@@ -1785,6 +1785,10 @@ var Workbench = {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
 		try {
+			dojo.publish("/davinci/ui/beforeEditorSelected", [{
+				editor: newEditor,
+				oldEditor: oldEditor
+			}]);
 			dojo.publish("/davinci/ui/editorSelected", [{
 				editor: newEditor,
 				oldEditor: oldEditor

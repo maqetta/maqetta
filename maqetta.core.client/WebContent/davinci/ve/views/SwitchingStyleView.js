@@ -33,7 +33,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged));
 		dojo.subscribe("/maqetta/appstates/state/changed", dojo.hitch(this, this._stateChanged));
-		dojo.subscribe("/davinci/workbench/ready", dojo.hitch(this, this._workbenchReady));
+    	dojo.subscribe("/davinci/ui/beforeEditorSelected", dojo.hitch(this, this._beforeEditorSelected));
 	},
 
 	pageTemplate : [
@@ -288,6 +288,9 @@ template+='<div class="propPaletteTabContainer"></div>';
 		template+="</td></tr></table>";
 		template+="</div>";
 		this.domNode.innerHTML = template;
+		
+		
+/*
 var propPaletteTabContainerNode = this.domNode.querySelector('.propPaletteTabContainer');
 if(propPaletteTabContainerNode){
 	this._tabContainer = new TabContainer({'class':'propPaletteTabContainer',style:'height:265px;', tabPosition:'left-h'}, propPaletteTabContainerNode);
@@ -338,6 +341,7 @@ setTimeout(function(){
 	this._tabContainer.selectChild(firstTab);
 	HTMLStringUtil._initSection(this._currentPropSection);
 }.bind(this),50);
+*/
 
 /*
 		// Put click, mouseover, mouseout handlers on the section buttons in root view
@@ -389,11 +393,13 @@ setTimeout(function(){
 		}
 */
 		this.inherited(arguments);
+/*
 		dojo.connect(this, 'resize', this, function(a, b, c){
 			if(this._tabContainer && this._tabContainer.domNode && this._tabContainer.resize){
 				this._tabContainer.resize();
 			}
 		});
+*/
 			
 	},
 	
@@ -493,7 +499,18 @@ var currentPropSection = this._currentPropSection;
 		this._editor = Runtime.currentEditor;
 	
 		this.inherited(arguments);
-		
+
+/*
+// Need a setTimeout - without it, browser sometimes hasn't layed out
+// the container widgets into which the TabContainer should go.
+setTimeout(function(){
+	this._tabContainer.layout();	
+	this._tabContainer.startup();
+	this._tabContainer.selectChild(firstTab);
+	HTMLStringUtil._initSection(this._currentPropSection);
+}.bind(this),50);
+*/
+
 //FIXME: Need to deal with this given how it is duplicated on each section
 /*
 		var propertiesToolBar = dijit.byId('propertiesToolBar');
@@ -608,7 +625,8 @@ var currentPropSection = this._currentPropSection;
 		}else{
 			dojo.addClass('davinci_style_prop_top','dijitHidden');	
 		}
-		
+
+/*FIXME: need to restore some of this
 		var selectedChild = this._tabContainer.selectedChildWidget;
 		var pageEditorOnlySections = dojo.query('.page_editor_only', this.domNode);
 		var updatedSelectedChild = false;
@@ -642,6 +660,7 @@ var currentPropSection = this._currentPropSection;
 				}
 			}
 		}
+*/
 		
 		/* add the editors ID to the top of the properties pallete so you can target CSS rules based on editor */
 		if(this._oldClassName)
@@ -713,7 +732,8 @@ var currentPropSection = this._currentPropSection;
 		}
 	},
 	
-	_workbenchReady: function(){
+	_beforeEditorSelected: function(){
+/*
 		var parentTabContainer = this.getParent();
 		var tabs = this._tabContainer.getChildren();
 		for(var i=0; i<tabs.length; i++){
@@ -724,6 +744,56 @@ var currentPropSection = this._currentPropSection;
 		parentTabContainer.removeChild(this);
 		dojo.addClass(parentTabContainer.domNode, 'propRootDetailsContainer');
 		dojo.addClass(parentTabContainer.domNode, 'propertiesContent');
+*/
+		if(!this._alreadySplitIntoMultipleTabs){
+			var parentTabContainer = this.getParent();
+			dojo.addClass(parentTabContainer.domNode, 'propRootDetailsContainer');
+			dojo.addClass(parentTabContainer.domNode, 'propertiesContent');
+			for(var i=0;i<this.pageTemplate.length;i++){
+				var title = this.pageTemplate[i].title;
+				var className = this.pageTemplate[i].className;
+				if(!className){
+					className = '';
+				}
+				//FIXME: temp hack
+				var topContent = "<div class='palette_titleBarDiv'><span class='paletteCloseBox'></span><span class='titleBarDivTitle'></span></div>";
+				//if(this.pageTemplate[i].addCommonPropertiesAtTop){
+					topContent += "<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+				//}
+				var paneContent = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
+				var content = topContent + paneContent;
+				if(i==0){
+					cp = this;
+					cp.set('title', title);
+					cp.set('content', content);
+					dojo.addClass(cp.domNode, className);
+				}else{
+					var cp = new ContentPane({title:title, content:content, 'class':className });
+					parentTabContainer.addChild(cp);		
+				}
+				cp._maqPropGroup = this.pageTemplate[i].key;
+				
+				//FIXME: temp hack
+				var closeBoxNodes = dojo.query('.paletteCloseBox', cp.domNode);
+				if(closeBoxNodes.length > 0){
+					var closeBox = closeBoxNodes[0];
+					dojo.connect(closeBox, 'click', this, function(event){
+						davinci.Workbench.collapsePaletteContainer(event.currentTarget);
+					});
+				}
+			}
+			dojo.connect(parentTabContainer, 'selectChild', this, function(tab){
+				if(tab._maqPropGroup){
+					this._currentPropSection = tab._maqPropGroup;
+					var context = (this._editor && this._editor.getContext) ? this._editor.getContext() : null;
+					var selection = (context && context.getSelection) ? context.getSelection() : [];
+					this._updatePaletteValues(selection);
+					HTMLStringUtil._initSection(this._currentPropSection);
+				}
+			});
+			this._alreadySplitIntoMultipleTabs = true;
+		}
+
 	}
 
 });

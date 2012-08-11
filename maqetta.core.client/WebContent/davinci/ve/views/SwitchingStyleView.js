@@ -47,10 +47,13 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	        	  addCommonPropertiesAtTop:false,
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
 */
+	          // NOTE: the first section (widgetSpecific) is injected within buildRendering()
 	          {key: "widgetSpecific",
 	        	  className:'maqPropertySection page_editor_only',
 	        	  addCommonPropertiesAtTop:false,
 	        	  html: "<div dojoType='davinci.ve.widgets.WidgetProperties'></div>"},  
+	        	  
+	          // NOTE: other sections are added dynamically via first call to _beforeEditorSelected
 	          {key: "events",
 	        	  className:'maqPropertySection page_editor_only',
 	        	  addCommonPropertiesAtTop:false,
@@ -234,6 +237,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		dojo.addClass(this.domNode,'propertiesContent');
 		var template="";
 		template+="<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+		template+="<div dojoType='davinci.ve.widgets.WidgetProperties'></div>";
 		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
 		template+="<table class='propRootDetailsContainer'>";
 		template+="<tr>";
@@ -765,8 +769,12 @@ var currentPropSection = this._currentPropSection;
 				if(i==0){
 					cp = this;
 					cp.set('title', title);
-					cp.set('content', content);
+					//cp.set('content', content);
 					dojo.addClass(cp.domNode, className);
+					// Need to directly call the startup() method on ContentPane
+					// to trigger the dojo parser. Don't want to call the SwitchingStyleView
+					// class's startup() method because we've already done that.
+					//dijit.layout.ContentPane.prototype.startup.call(cp);
 				}else{
 					var cp = new ContentPane({title:title, content:content, 'class':className });
 					parentTabContainer.addChild(cp);		

@@ -188,12 +188,12 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 	dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
 	dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit"}).domNode);
 
-	function _onCancel() {
+	var _onCancel = dojo.hitch(this, function() {
 		this._timedDestroy(myDialog, handles);
-	}
+	});
 
 	if (!hideCancel) {
-		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: dojo.hitch(this, _onCancel)}).domNode);
+		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel}).domNode);
 	}
 
 	newContent.appendChild(dialogActions);
@@ -216,7 +216,7 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 			callback();
 		}
 
-		this._timedDestroy(myDialog, handles);
+		_onCancel();
 	})));
 
 	handles.push(connect.connect(myDialog, "onCancel", dojo.hitch(this, function() {

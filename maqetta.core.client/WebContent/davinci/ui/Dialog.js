@@ -181,11 +181,7 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 
 	var dialogContents = document.createElement("div");
 	dojo.addClass(dialogContents, "dijitDialogPaneContentArea");
-	if (dojo.isString(content)) {
-		dialogContents.innerHTML = content;
-	} else {
-		dialogContents.appendChild(content.domNode);
-	}
+
 	newContent.appendChild(dialogContents);
 
 	var dialogActions = document.createElement("div");
@@ -207,6 +203,13 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 		content: newContent,
 		contentStyle: style
 	});
+
+	// Add the content here to avoid building the widgets twice
+	if (dojo.isString(content)) {
+		dialogContents.innerHTML = content;
+	} else {
+		dialogContents.appendChild(content.domNode);
+	}
 
 	handles.push(connect.connect(myDialog, "onExecute", dojo.hitch(this, function() {
 		if (callback) {

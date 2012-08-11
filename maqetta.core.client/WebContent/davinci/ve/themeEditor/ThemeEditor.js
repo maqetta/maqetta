@@ -59,10 +59,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		this._loadedCSSConnects = [];
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
 		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/moved", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/resized", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/showProps", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/hideProps", this._actionPropertiesPaletteChanged.bind(this));
 		this.editorContainer.connect(this.editorContainer, 'resize', function(newPos){
 			// "this" is the EditorContainer/ContentPane dijit
 			var iframe = dojo.query('iframe', this.domNode)[0];
@@ -89,24 +85,9 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		if(event.editor && event.editor.editorContainer && 
 				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
 				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
-			event.editor.editorContainer.showActionPropertiesPalette();
 			if(this == event.editor){
-				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
-					this.editorContainer.restoreActionPropertiesState(this)
-				}
 				this._registerScrollHandler();
 			}
-		}else{
-			var editor = event.editor ? event.editor : event.oldEditor;
-			if(editor){
-				editor.editorContainer.hideActionPropertiesPalette();
-			}
-		}
-	},
-
-	_actionPropertiesPaletteChanged: function(){
-		if(this == davinci.Runtime.currentEditor && this.editorContainer){
-			this.editorContainer.preserveActionPropertiesState(this);
 		}
 	},
 	

@@ -65,10 +65,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/moved", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/resized", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/showProps", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/hideProps", this._actionPropertiesPaletteChanged.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -94,27 +90,12 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if(event.editor && event.editor.editorContainer && 
 				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
 				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
-			event.editor.editorContainer.showActionPropertiesPalette();
 			if(this == event.editor){
 				var flowLayout = context.getFlowLayout();
 				var layout = flowLayout ? 'flow' : 'absolute';
 				this._updateLayoutDropDownButton(layout);
 				this._updateDisplayModeToolbarIcons();
-				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
-					this.editorContainer.restoreActionPropertiesState(this)
-				}
 			}
-		}else{
-			var editor = event.editor ? event.editor : event.oldEditor;
-			if(editor){
-				editor.editorContainer.hideActionPropertiesPalette();
-			}
-		}
-	},
-
-	_actionPropertiesPaletteChanged: function(){
-		if(this == davinci.Runtime.currentEditor && this.editorContainer){
-			this.editorContainer.preserveActionPropertiesState(this);
 		}
 	},
 	

@@ -327,16 +327,6 @@ BODY{
 	background-image:-o-linear-gradient(white 75%, #999 100%);
 	background-image:linear-gradient(white 75%, #999 100%);
 }
-.ActionBar .dijitToolbar {
-	background-color:transparent;
-}
-.claro .ActionBar .dijitToolbar .dijitButtonNode,
-	.claro .ActionBar .dijitToolbar .dijitButtonNode,
-	.claro .ActionBar .dijitToolbar .dijitButtonNode,
-	.claro .ActionBar .dijitToolbar .dijitButtonNode {
-	background-color:transparent;
-	background-image:none;
-}
 .claro .dijitToolbar.davinciToolbar .dijitButtonContents {
 	padding:0 2px;
 	line-height:16px;
@@ -989,41 +979,9 @@ davinci_top_bar .dijitButtonNode {
 	background-image: url(img/sprite.png);
 	background-position: 0 -648px;
 }
-.editDuplicateIcon {
-	background-image: url(img/sprite.png);
-	background-position: -25px -648px;
-}
-.selectCommandsIcon {
-	background-image: url(img/sprite.png);
-	background-position: -57px -24px;
-}
-.editValueIcon {
-	background-image: url(img/sprite.png);
-	background-position: 0px -745px;
-}
-.editPropertiesIcon {
-	background-image: url(img/sprite.png);
-	/*background-position: -25px -745px;*/
-	background-position: -19px 0px;
-}
-.editPropertiesIcon.editPropertiesIconShowing {
-	background-position: -37px 0px;
-}
-#actionBarContainer .editProperties {
-	float:right;
-	margin-right:11px;
-}
-.arrangeCommandsIcon {
-	background-image: url(img/sprite.png);
-	background-position: -50px -745px;
-}
 .tableCommandsIcon {
 	background-image: url(img/sprite.png);
 	background-position: -75px -745px;
-}
-.otherCommandsIcon {
-	background-image: url(img/sprite.png);
-	background-position: -25px -763px;
 }
 .addStateIcon, .addThemeSetIcon {
 	background-image: url(img/sprite.png);
@@ -1737,32 +1695,6 @@ davinci_top_bar .dijitButtonNode {
 	z-index: 5;
 }
 
-.ActionBar {
-	height:32px;
-	white-space:nowrap;
-	background-image:-webkit-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:-moz-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:-ms-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:-o-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	border:1px solid black;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
-	-ms-border-radius:3px;
-	-o-border-radius:3px;
-	border-radius:3px;
-	box-shadow:0px 1px 0px #666;
-}
-.ActionBarButton {
-	display:inline-block;
-	width:30px;
-	height:30px;
-	border:1px solid #6A94DC;
-	color: #6A94DC;
-	line-height:30px;
-	font-size:18px;
-	text-align:center;
-}
 .editFocusFrame {
 	position:absolute;
 	overflow:hidden;

@@ -474,28 +474,6 @@ button.showCss::-moz-focus-inner {
 	text-align:center;
 	background-color:#E6E6E7;
 }
-.actionPropertiesDragStrip {
-	height:12px;
-	background:black;
-}
-.actionPropertiesDragStrip:hover {
-	cursor:move;
-}
-.actionPropertiesPalette {
-	border-radius: 6px;
-	position: absolute;
-	z-index: 6;
-	border: 1px solid black;
-	background-color: white;
-	min-width: 365px;
-}
-.actionPropertiesPalette .propertiesWidgetDescription {
-	background-image:-webkit-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:-moz-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:-ms-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:-o-linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-	background-image:linear-gradient(#707070 0%,#303030 50%,#010101 51%,#000000 100%);
-}
 #propertiesContentContainer  .propertiesTitleClassName {
 	color:white;
 	font-size:12px;

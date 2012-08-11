@@ -526,6 +526,7 @@ setTimeout(function(){
 		}
 */
 
+//FIXME: Do we need this?
 		// Install any onchange handlers for specific input elements
 		for(var i=0;i<this.pageTemplate.length;i++){
 			var section=this.pageTemplate[i];
@@ -540,7 +541,11 @@ setTimeout(function(){
 				}
 			}
 		}
-
+//FIXME: Do we need this?
+for(var v=0;v<this.pageTemplate.length;v++){
+	this.pageTemplate[v]['cascade'] = [];
+}
+/*
 		for(var v=0;v<this.pageTemplate.length;v++){
 			this.pageTemplate[v]['cascade'] = [];
 			var page = this.pageTemplate[v]['pageTemplate'];
@@ -556,10 +561,7 @@ setTimeout(function(){
 					if(widget)
 						page[i]['domNode'] = widget;
 				}
-				/* find all cascade subsections */
-				
 			}
-			/* find all cascade elements belong to each section and store them in an array */
 			var sectionId = this.pageTemplate[v].id;
 			var nodeList = dojo.query("#" + sectionId + " .CascadeTop");
 			
@@ -569,6 +571,7 @@ setTimeout(function(){
 			};}(this.pageTemplate[v]));
 			
 		}
+*/
 		this.setReadOnly(true);
 		this.onEditorSelected();
 /*FIXME: DELETE THIS
@@ -793,6 +796,31 @@ var currentPropSection = this._currentPropSection;
 					});
 				}
 			}
+			
+			for(var v=0;v<this.pageTemplate.length;v++){
+				this.pageTemplate[v]['cascade'] = [];
+				var page = this.pageTemplate[v]['pageTemplate'];
+				if(!page)
+					continue;
+				for(var i = 0;i<page.length;i++){
+					var  id = page[i]['id'];
+					var widget = dijit.byId(id);
+					if(widget){
+						page[i]['widget'] = widget;	
+					}else{
+						widget = dojo.byId(id);
+						if(widget)
+							page[i]['domNode'] = widget;
+					}
+				}
+				var sectionId = this.pageTemplate[v].id;
+				var nodeList = dojo.query("#" + sectionId + " .CascadeTop");
+				nodeList.forEach(function(target){ return function(p){
+					var cascade = dijit.byId(p.id);
+					target['cascade'].push(cascade);
+				};}(this.pageTemplate[v]));
+			}
+
 			dojo.connect(parentTabContainer, 'selectChild', this, function(tab){
 				if(tab._maqPropGroup){
 					this._currentPropSection = tab._maqPropGroup;

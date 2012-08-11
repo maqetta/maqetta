@@ -35,7 +35,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged));
 		dojo.subscribe("/maqetta/appstates/state/changed", dojo.hitch(this, this._stateChanged));
-    	dojo.subscribe("/davinci/ui/beforeEditorSelected", dojo.hitch(this, this._beforeEditorSelected));
+    	dojo.subscribe("/davinci/ui/initialPerspectiveReady", dojo.hitch(this, this._initialPerspectiveReady));
 	},
 
 	pageTemplate : [
@@ -742,7 +742,7 @@ var currentPropSection = this._currentPropSection;
 		}
 	},
 	
-	_beforeEditorSelected: function(){
+	_initialPerspectiveReady: function(){
 /*
 		var parentTabContainer = this.getParent();
 		var tabs = this._tabContainer.getChildren();

@@ -240,6 +240,11 @@ var initializeWorkbenchState = function(){
 		init(Workbench._state);
 		Workbench.setupGlobalKeyboardHandler();
 	}
+
+	// The following event triggers palettes such as SwitchingStyleViews.js to know
+	// that workbench has completed initialization of the initial perspective
+	// and associated views. Put after the xhr.get to allow execution parallelism.
+	dojo.publish("/davinci/ui/initialPerspectiveReady", []);
 };
 
 var Workbench = {
@@ -1785,10 +1790,6 @@ var Workbench = {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
 		try {
-			dojo.publish("/davinci/ui/beforeEditorSelected", [{
-				editor: newEditor,
-				oldEditor: oldEditor
-			}]);
 			dojo.publish("/davinci/ui/editorSelected", [{
 				editor: newEditor,
 				oldEditor: oldEditor

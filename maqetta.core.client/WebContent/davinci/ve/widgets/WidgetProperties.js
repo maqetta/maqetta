@@ -41,6 +41,12 @@ define([
 				return;
 			}
 			
+			// NOTE: In logic below, we use metadata.$ownproperty instead of metadata.property
+			// $ownproperty contains only those properties that were explicitly defined in oam.json file
+			// property also contains hidden properties 'class', 'style', 'title', etc.
+			// Need to use $ownproperty in order to add HTML 'title' attribute at top of list
+			// for any widgets that don't explicitly define their own title property
+			
 			var metadata = davinci.ve.metadata.query(this._widget);
 			/* check to see if this widget is a child of a widget */
 			var parentWidget = this._widget.getParent();
@@ -48,22 +54,32 @@ define([
 				var parentMetadata = Metadata.query(parentWidget);
 				/* check the parent widget for extra props to add if it is a child of that widget */
 				if (parentMetadata && parentMetadata.childProperties){
-					if (!metadata.property) {
-						metadata.property = parentMetadata.childProperties;
+					if (!metadata.$ownproperty) {
+						metadata.$ownproperty = parentMetadata.childProperties;
 					} else {
 						for (var prop in parentMetadata.childProperties) {
-							metadata.property[prop] = parentMetadata.childProperties[prop];
+							metadata.$ownproperty[prop] = parentMetadata.childProperties[prop];
 						}
 					}
 				}
 			}
-			if(!metadata || !metadata.property) {
+			if(!metadata || !metadata.$ownproperty) {
 				return;
 			}
 			this._disconnectAll();
 			this._destroyProperties();
 	
-			var rows = this.propDom.innerHTML = this._createWidgetRows(metadata.property);
+			// put the HTML 'title' attribute at the top of the list of widget-specific properties
+			// if the widget doesn't already have a title property
+			var props = {};
+			if(!metadata.$ownproperty.title){
+				props.title = {datatype:'string'};
+			}
+			for(var prop in metadata.$ownproperty){
+				props[prop] = metadata.$ownproperty[prop];
+			}
+			
+			var rows = this.propDom.innerHTML = this._createWidgetRows(props);
 			if (rows.indexOf('data-dojo-type') !== -1 || rows.indexOf('dojoType') !== -1) {
 				dojo.parser.parse(this.propDom);
 			}

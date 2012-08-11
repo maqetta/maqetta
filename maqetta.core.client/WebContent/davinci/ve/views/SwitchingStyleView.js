@@ -27,6 +27,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	_editor : null,	// selected editor
 	_widget : null,	// selected widget
 	_subWidget : null,	// selected sub widget
+	_titleBarDiv: "<div class='palette_titleBarDiv'><span class='paletteCloseBox'></span><span class='titleBarDivTitle'></span></div>",
+
 
 	constructor: function(params, srcNodeRef){
     	dojo.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, this._editorSelected));
@@ -236,6 +238,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		this.domNode = dojo.doc.createElement("div");
 		dojo.addClass(this.domNode,'propertiesContent');
 		var template="";
+		template+=this._titleBarDiv;
 		template+="<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 		template+="<div dojoType='davinci.ve.widgets.WidgetProperties'></div>";
 		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
@@ -760,7 +763,7 @@ var currentPropSection = this._currentPropSection;
 					className = '';
 				}
 				//FIXME: temp hack
-				var topContent = "<div class='palette_titleBarDiv'><span class='paletteCloseBox'></span><span class='titleBarDivTitle'></span></div>";
+				var topContent = this._titleBarDiv;
 				//if(this.pageTemplate[i].addCommonPropertiesAtTop){
 					topContent += "<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 				//}

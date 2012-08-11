@@ -254,11 +254,27 @@ button.showCss::-moz-focus-inner {
 	background-color:#c0d0f0;
 }
 .propertiesTitleBar {
-	 background:#fefefe; 
-	 text-align:left;
-	 white-space: nowrap;
-	 padding-top:2px;
-	 padding-bottom:4px;
+	margin: 0px;
+	margin-top:3px;
+	padding: 0px;
+	text-align:left;
+	white-space: nowrap;
+}
+.propertiesWidgetDescription {
+	margin:0 2px;
+	padding:4px 6px;
+	border:1px solid gray;
+	border-radius:2px;
+}
+.propertiesTitleBarPropertiesContainer {
+	margin:0 2px;
+}
+.propertiesTitleBarProperties {
+	background: #F8F8F8;
+	border: 1px solid darkGray;
+	border-radius: 4px;
+	text-align:left;
+	white-space: nowrap;
 }
 .claro propertiesContent .dijitTitlePaneTitle {
 	background-color:#F3F3F3;
@@ -274,12 +290,11 @@ button.showCss::-moz-focus-inner {
 
 .propertiesWidgetDescriptionFor {
 	font-style:italic;
-	display:none;
+	padding-right:5px;
 }
 
 .propertiesTitleBar .property_table_stretchable {
-	visibility: hidden;
-	margin-top:2px;
+	margin:2px 0px 6px;
 }
 
 .propertiesSelection.propertiesTitleBar .property_table_stretchable{

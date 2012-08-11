@@ -8,7 +8,7 @@ return {
     "davinci.view": [
         {
             id: "Palette",
-            title: "Widgets",
+            title: "Palette",
             viewClass: "davinci/ve/palette/HtmlWidgets",
             iconClass: "paletteIcon paletteIconWidgets"
         },

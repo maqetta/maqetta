@@ -2,7 +2,7 @@ define({ root:
 {
 		//SwitchingStyleView.js
 		"common":"Common",
-		"widgetSpecific":"Per widget",
+		"widgetSpecific":"Widget",
 		"events":"Events",
 		"layout":"Layout",
 		"showMinMax":"show min/max",

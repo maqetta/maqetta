@@ -40,18 +40,24 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	                
 	          //Note: the keys here must match the propsect_* values in the supports() functions
 	          //in the various editors, such as PageEditor.js and ThemeEditor.js
-	          
+
+/*
 	          {key: "common",
 	        	  className:'maqPropertySection page_editor_only',
+	        	  addCommonPropertiesAtTop:false,
 	        	  pageTemplate:{html: "<div dojoType='davinci.ve.widgets.CommonProperties'></div>"}},
+*/
 	          {key: "widgetSpecific",
 	        	  className:'maqPropertySection page_editor_only',
+	        	  addCommonPropertiesAtTop:false,
 	        	  html: "<div dojoType='davinci.ve.widgets.WidgetProperties'></div>"},  
 	          {key: "events",
 	        	  className:'maqPropertySection page_editor_only',
+	        	  addCommonPropertiesAtTop:false,
 		          pageTemplate:{html: "<div dojoType='davinci.ve.widgets.EventSelection'></div>"}},
 	          {key: "layout",
 		          className:'maqPropertySection',
+	        	  addCommonPropertiesAtTop:true,
 		       	  /* startsNewGroup:true, // This flag causes a few extra pixels between this and previous button */
 	           	  pageTemplate:[{display:"width", type:"multi", target:["width"], values:['', 'auto','100%','200px','10em']},
 	            	                
@@ -77,6 +83,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	            	   ]},
 	           {key: "padding", 
 	     		  className:'maqPropertySection',
+	        	  addCommonPropertiesAtTop:true,
   	           	  pageTemplate:[
       	                {display:"<b>(padding)</b>", type:"multi", target:["padding"], values:['', '0px', '1em']},
   		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
@@ -89,6 +96,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
       	                ]},	
 	           {key: "margins", 
       			  className:'maqPropertySection',	
+	        	  addCommonPropertiesAtTop:true,
 	           	  pageTemplate:[
     	                {display:"<b>(margin)</b>", type:"multi", target:["margin"], values:['', '0px', '1em']},
 		                 {key: "showtrbl", display:"&nbsp;&nbsp;&nbsp;", type:"toggleSection",
@@ -101,6 +109,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	                ]},
 	           {key: "background", 
     	  		  className:'maqPropertySection',
+	        	  addCommonPropertiesAtTop:true,
 	       		  pageTemplate : [
 	      	       		{display:"background-color", type:"background", target:['background-color'], colorswatch:true},
 	    	       		{display:"background-image", type:"background", target:['background-image'], values:['', 'none']},
@@ -111,10 +120,11 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     		       	    {display:"background-clip", type:"background", target:['background-clip'], values:['','border-box','padding-box','content-box']}
     		       	   ]},
 	           {key:"border", 
-    				className:'maqPropertySection',
+    		    	className:'maqPropertySection',
+    			    addCommonPropertiesAtTop:true,
 		       		pageTemplate : [
    		                {display:"<b>(border)</b>", type:"multi", target:['border'], values:['','none','1px solid black']}, 
-   		                {display:"show", type:"combo", values:['none','sides','props','all'],
+   		                {display:"show", type:"combo", values:['none','props','sides','all'],
 		       				onchange:function(propIndex){
    		                		if(typeof propIndex != "number"){
    		                			return;
@@ -185,7 +195,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 	    	                ]}
 		            	  ]},
 	           {key: "fontsAndText",
-		    		  className:'maqPropertySection',
+		        	className:'maqPropertySection',
+		      	    addCommonPropertiesAtTop:true,
 	                  pageTemplate:[{display:"font", type:"text", target:["font"]},
                         {display:"font-family", type:"font", target:["font-family"]},
     	                {display:"size", type:"multi", target:["font-size"], values:['','100%','1em','10px','10pt']},
@@ -200,7 +211,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	                {display:"line-height", type:"multi", target:["line-height"], values:['','normal','1.2','120%']}
     	                ]},
  	           {key: "shapesSVG",
-    	  		      className:'maqPropertySection',
+		        	className:'maqPropertySection',
+		      	    addCommonPropertiesAtTop:true,
 	                  pageTemplate:[{display:"stroke", type:"color", target:["stroke"]},
     	                {display:"stroke-width", type:"multi", target:["stroke-width"], values:['','1', '2', '3', '4', '5', '10']},
     	                {display:"fill", type:"color", target:["fill"]}
@@ -221,7 +233,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		this.domNode = dojo.doc.createElement("div");
 		dojo.addClass(this.domNode,'propertiesContent');
 		var template="";
-		template+="<div id='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+		template+="<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
 		template+="<table class='propRootDetailsContainer'>";
 		template+="<tr>";
@@ -286,9 +298,14 @@ if(propPaletteTabContainerNode){
 		if(!className){
 			className = '';
 		}
-		var content = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
 //FIXME: temp hack
-var content = "<div class='palette_titleBarDiv'><span class='paletteCloseBox'></span><span class='titleBarDivTitle'></span></div>" + content;
+var topContent = "<div class='palette_titleBarDiv'><span class='paletteCloseBox'></span><span class='titleBarDivTitle'></span></div>";
+//if(this.pageTemplate[i].addCommonPropertiesAtTop){
+	topContent += "<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+//}
+var paneContent = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
+var content = topContent + paneContent;
+
 		var cp = new ContentPane({title:title, content:content, 'class':className });
 		this._tabContainer.addChild(cp);
 		cp._maqPropGroup = this.pageTemplate[i].key;
@@ -477,10 +494,13 @@ var currentPropSection = this._currentPropSection;
 	
 		this.inherited(arguments);
 		
+//FIXME: Need to deal with this given how it is duplicated on each section
+/*
 		var propertiesToolBar = dijit.byId('propertiesToolBar');
 		if(propertiesToolBar){
 			propertiesToolBar.initialize();
 		}
+*/
 
 		// Install any onchange handlers for specific input elements
 		for(var i=0;i<this.pageTemplate.length;i++){

@@ -151,7 +151,10 @@ define(["davinci/Runtime",
 		     htmlText+="</div>";
 		     return htmlText;
 		},
-		generateTable: function(page,rowsOnly){
+		generateTable: function(page,params){
+			var rowsOnly = params ? params.rowsOnly : false;
+			var zeroSpaceForIncrDecr = params ? params.zeroSpaceForIncrDecr : false;
+			var incrDecrSize = zeroSpaceForIncrDecr ? '0px' : '20px';
 			var htmlText = "";
 			if(page.html){
 				page.id=this.getId();
@@ -160,11 +163,11 @@ define(["davinci/Runtime",
 			
 			var tableHtml = "<table class='property_table_stretchable' border='0' width='100%' align='center' cellspacing='0' cellpadding='0'>";
 			tableHtml += "<colgroup>"; 
-			tableHtml += "<col style='width:0px;' />"
+			tableHtml += "<col style='width:6px;' />"
 			tableHtml +="<col class='gap02' />";
 			tableHtml +="<col class='gap03' />";
-			tableHtml +="<col style='width:20px;' />";
-			tableHtml += "<col style='width:0px;' />"
+			tableHtml +="<col style='width:"+incrDecrSize+";' />";
+			tableHtml += "<col style='width:6px;' />"
 			tableHtml +="</colgroup>";
 		//	tableHtml +="<tr class='property_table_rowgap property_table_rowgap_group_separator'><td colspan='7'/></tr>";
 			if(!rowsOnly)
@@ -206,7 +209,7 @@ define(["davinci/Runtime",
 						htmlText+= "<tr id='" + page[i].id + "'  class='cssPropertySection'><td colspan='5'>";
 					
 						var onclick = "";
-						var moreTable = this.generateTable(page[i].pageTemplate, true);
+						var moreTable = this.generateTable(page[i].pageTemplate, {rowsOnly:true});
 						for(var j=0;j<page[i].pageTemplate.length;j++){
 							if(page[i].pageTemplate[j].rowId){
 								onclick+= "dojo.toggleClass('" + page[i].pageTemplate[j].rowId + "','propertiesSectionHidden');";

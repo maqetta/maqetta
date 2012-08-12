@@ -101,7 +101,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	_updateLayoutDropDownButton: function(newLayout){
 		var layoutDropDownButtonNode = dojo.query('.maqLayoutDropDownButton');
-		if(layoutDropDownButtonNode){
+		if(layoutDropDownButtonNode && layoutDropDownButtonNode[0]){
 			var layoutDropDownButton = dijit.byNode(layoutDropDownButtonNode[0]);
 			if(layoutDropDownButton){
 				layoutDropDownButton.set('label', veNls['LayoutDropDownButton-'+newLayout]);
@@ -212,12 +212,14 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	_updateDisplayModeToolbarIcons: function(){
 		var designButtonNode = dojo.query('.maqDesignButton')[0];
 		var sourceComboButtonNode = dojo.query('.maqSourceComboButton')[0];
-		if (this._displayMode=="design") {
-			dojo.addClass(designButtonNode, 'maqLabelButtonSelected');
-			dojo.removeClass(sourceComboButtonNode, 'maqLabelButtonSelected');
-		}else{
-			dojo.removeClass(designButtonNode, 'maqLabelButtonSelected');
-			dojo.addClass(sourceComboButtonNode, 'maqLabelButtonSelected');
+		if(designButtonNode && sourceComboButtonNode){
+			if (this._displayMode=="design") {
+				dojo.addClass(designButtonNode, 'maqLabelButtonSelected');
+				dojo.removeClass(sourceComboButtonNode, 'maqLabelButtonSelected');
+			}else{
+				dojo.removeClass(designButtonNode, 'maqLabelButtonSelected');
+				dojo.addClass(sourceComboButtonNode, 'maqLabelButtonSelected');
+			}
 		}
 	},
 

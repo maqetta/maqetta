@@ -485,3 +485,12 @@ button.showCss::-moz-focus-inner {
 #davinci_app .dijitContentPane.maqPropertySection {
 	padding:0;
 }
+.cascadeBackButtonDiv {
+	display:none;
+}
+.showingCascade .cascadeBackButtonDiv {
+	display:block;
+}
+.showingCascade .propertyExtra {
+	display:none;
+}

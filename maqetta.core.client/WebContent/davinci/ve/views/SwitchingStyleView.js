@@ -760,16 +760,15 @@ var currentPropSection = this._currentPropSection;
 			dojo.addClass(parentTabContainer.domNode, 'propRootDetailsContainer');
 			dojo.addClass(parentTabContainer.domNode, 'propertiesContent');
 			for(var i=0;i<this.pageTemplate.length;i++){
+				var key = this.pageTemplate[i].key;
 				var title = this.pageTemplate[i].title;
 				var className = this.pageTemplate[i].className;
 				if(!className){
 					className = '';
 				}
-				//FIXME: temp hack
 				var topContent = this._titleBarDiv;
-				//if(this.pageTemplate[i].addCommonPropertiesAtTop){
-					topContent += "<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
-				//}
+				topContent += "<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
+				topContent += "<div class='cascadeBackButtonDiv'><button onclick='davinci.ve.widgets.HTMLStringUtil.showSection(\""+key+"\",\""+title+"\")'>"+title+" "+veNls.properties+"</button></div>";
 				var paneContent = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
 				var content = topContent + paneContent;
 				if(i==0){

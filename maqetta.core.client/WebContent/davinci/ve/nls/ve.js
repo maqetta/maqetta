@@ -14,6 +14,7 @@ define({ root:
 		"showDetails":"show details",
 		"fontsAndText":"Fonts/Text",
 		"shapesSVG":"SVG",
+		"properties":"properties",
 		
 		//StatesView.js
 		"Scenes":"Scenes",

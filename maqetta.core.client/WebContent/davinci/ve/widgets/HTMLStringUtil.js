@@ -306,97 +306,9 @@ define(["davinci/Runtime",
 		
 		showSection: function(sectionKey, sectionTitle){
 			var Util = this;
-/*
-			Util._crumbLevel1(sectionKey, sectionTitle);
-*/
 			Util._initSection(sectionKey);
-/*
-			Util._hideRootShowSection();
-			var detailsTD = Util._getDetailsTD();
-			dojo.addClass(detailsTD,"propSectionShowing");
-*/
 			return false;
 		},
-
-/*
-		transitionRootToSection: function(sectionKey, sectionTitle, onEndCallback){
-		
-			function transEnd(event){
-				dojo.disconnect(webkitConnection);
-				dojo.disconnect(connection);
-				Util._hideRootShowSection();			
-				var returnObj = Util._findRule(Util.animShowSectionClassSelector);
-				if(!returnObj){
-					console.error('HTMLStringUtil transEnd: rule not found');
-					return;
-				}else{
-					var ss = returnObj.ss;
-					var ruleIndex = returnObj.ruleIndex;
-				}
-				ss.deleteRule(ruleIndex);
-				ss.insertRule(Util.animShowSectionClassSelector + " { margin-left:0px; }",ruleIndex);
-				dojo.removeClass(rootTD, "propDetailsTransparent");
-				rootDetailsContainer.style.width = "";
-				rootTD.style.width = "";
-				detailsTD.style.width = "";
-				if(onEndCallback){
-					onEndCallback();
-				}
-			}
-			
-			
-			var Util = this;
-			
-			var rootDetailsContainer = Util._getRootDetailsContainer();
-			var rootTD = Util._getRootTD();
-			var detailsTD = Util._getDetailsTD();
-
-			Util._crumbLevel1(sectionKey, sectionTitle);
-			Util._initSection(sectionKey);
-		
-			if(Runtime.supportsCSS3Transitions){
-				// Get current width of rootTD, then force that width onto both rootTD and detailsTD
-				// so that when both table cells are visible they will be as wide as
-				// rootTD was before the transition starts
-				var rootTDMetrics = dojo.contentBox(rootTD);
-				var w = (rootTDMetrics.w)+"px";
-				rootDetailsContainer.style.width = "200%";
-				rootTD.style.width = w;
-				detailsTD.style.width = w;
-				
-				// Make detailsTD visible so we can compute metrics
-				dojo.removeClass(detailsTD, "dijitHidden");
-				dojo.addClass(rootTD, "propDetailsTransparent");
-				
-				// Compute top coordinate diff between firstPropertyRowTR and thisPropertyRowTR
-				var firstMetrics = dojo.marginBox(rootTD);
-				var thisMetrics = dojo.marginBox(detailsTD);
-				var leftDiff = thisMetrics.l - firstMetrics.l;
-				var returnObj = Util._findRule(Util.animShowSectionClassSelector);		
-				if(!returnObj){
-					console.error('HTMLStringUtil transitionRootToSection: rule not found');
-					return;
-				}else{
-					var ss = returnObj.ss;
-					var ruleIndex = returnObj.ruleIndex;
-				}
-				var webkitConnection = dojo.connect(rootDetailsContainer,'webkitTransitionEnd', transEnd);
-				var connection = dojo.connect(rootDetailsContainer,'transitionend', transEnd);
-				ss.deleteRule(ruleIndex);
-				// opacity:.99 to force animation to occur even if topDiff is zero.
-				ss.insertRule(Util.animShowSectionClassSelector + " { margin-left:-"+leftDiff+"px; opacity:.99; -webkit-transition: all .6s ease; -moz-transition: all .6s ease; }",ruleIndex);
-					
-			// Else if browser does not support transitions (e.g., FF3.x)
-			}else{
-				Util._hideRootShowSection();
-				if(onEndCallback){
-					onEndCallback();
-				}
-			}	
-		
-			return false;
-		},
-*/
 
 		showProperty: function(propertyRowId){
 			
@@ -441,8 +353,7 @@ define(["davinci/Runtime",
 				fadeInCascade();
 			}
 			
-			var crumbsTitlePaneDiv = this._getCrumbsTitlePaneDiv();
-			dojo.removeClass(crumbsTitlePaneDiv, 'dijitHidden');
+			dojo.addClass(dojo.byId('davinci_app'),"showingCascade");
 			
 			var Util = this;
 			var allTRAnimClasses = this.showPropAnimClasses;
@@ -464,12 +375,6 @@ define(["davinci/Runtime",
 			//FIXME: There must be a better way to call a class function on a singleton class
 			var SwitchingStyleView = dojo.getObject("davinci.ve.views.SwitchingStyleView");
 			var sectionTitle = SwitchingStyleView.prototype.sectionTitleFromKey(sectionKey);
-			Util._crumbLevel2(sectionKey, sectionTitle, propName);
-/*
-			var detailsTD = Util._getDetailsTD();
-			dojo.removeClass(detailsTD,"propSectionShowing");
-			dojo.addClass(detailsTD,"propDetailsShowing");
-*/
 		
 			if(Runtime.supportsCSS3Transitions){
 				
@@ -514,47 +419,12 @@ define(["davinci/Runtime",
 				fadeInCascade();
 			}	
 		},
-
-/*
-		_crumbLevel1: function(sectionKey, sectionTitle){
-			var Util = this;
-			var crumbsDIV = Util._getCrumbsDIV();
-			var s = '';
-			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showRoot()">All</span>';
-			s += '<span class="breadcrumbDescend">&gt;</span>';
-			s += '<span class="breadcrumbText breadcrumbTextCurrent">';
-			s += sectionTitle;
-			s += '</span>';
-			crumbsDIV.innerHTML = s;
-		},
-*/
-		
-		_crumbLevel2: function(sectionKey, sectionTitle, propname){
-			var Util = this;
-			var crumbsDIV = Util._getCrumbsDIV();
-			var s = '';
-/*
-			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showRoot()">All</span>';
-			s += '<span class="breadcrumbDescend">&gt;</span>';
-*/
-			s += '<span class="breadcrumbText breadcrumbTextBackLink" onclick="return davinci.ve.widgets.HTMLStringUtil.showSection(\''+sectionKey+'\',\''+sectionTitle+'\')">';
-			s += sectionTitle+'</span>';
-			s += '<span class="breadcrumbDescend">&gt;</span>';
-			s += '<span class="breadcrumbText breadcrumbTextCurrent">';
-			s += '\''+propname+'\'';
-			s += '</span>';
-			crumbsDIV.innerHTML = s;
-		},	
 		
 		_initSection: function(sectionKey){
 			var Util = this;
 			var allTRAnimClasses = Util.showPropAnimClasses;
-/*
-			var detailsTD = Util._getDetailsTD();
-			var propGroups = dojo.query(".propGroup",detailsTD);
-*/
-var rootTD = Util._getRootTD();
-var propGroups = dojo.query(".propGroup",rootTD);
+			var rootTD = Util._getRootTD();
+			var propGroups = dojo.query(".propGroup",rootTD);
 
 			var propGroupDIV;
 			for(var i=0; i<propGroups.length; i++){
@@ -575,35 +445,15 @@ var propGroups = dojo.query(".propGroup",rootTD);
 			for(var i=0; i<cSects.length; i++){
 				dojo.addClass(cSects[i],"cascadeRowHidden");
 			}
-/*
-			dojo.removeClass(detailsTD,"propDetailsShowing");
-*/
 			Util._currentPropSection = sectionKey;
-			var crumbsTitlePaneDiv = this._getCrumbsTitlePaneDiv();
-			dojo.addClass(crumbsTitlePaneDiv, 'dijitHidden');
+			dojo.removeClass(dojo.byId('davinci_app'),"showingCascade");
 		},
 		
 		_hideSectionShowRoot: function(){
 			var Util = this;
 			var rootTD = Util._getRootTD();
-/*
-			var detailsTD = Util._getDetailsTD();
-*/
 			dojo.removeClass(rootTD,"dijitHidden");
-/*
-			dojo.addClass(detailsTD,"dijitHidden");
-*/
 		},
-		
-/*
-		_hideRootShowSection: function(){
-			var Util = this;
-			var rootTD = Util._getRootTD();
-			var detailsTD = Util._getDetailsTD();
-			dojo.addClass(rootTD,"dijitHidden");
-			dojo.removeClass(detailsTD,"dijitHidden");
-		},
-*/
 		
 		// Search animSS (property palette's animation stylesheet) to find the style rule
 		// with given the selectorText. Returns index for the rule.
@@ -703,49 +553,6 @@ var propGroups = dojo.query(".propGroup",rootTD);
 				Util._rootTD=dojo.query(".propPaletteRoot", rootDetailsContainer)[0];
 			}
 			return Util._rootTD;
-		},
-		
-/*
-		_getDetailsTD: function(){
-			var Util = this;
-			var rootDetailsContainer = Util._getRootDetailsContainer();
-			if(!Util._detailsTD){
-				//FIXME: Make .propPaletteDetails into a var
-				Util._detailsTD=dojo.query(".propPaletteDetails", rootDetailsContainer)[0];
-			}
-			return Util._detailsTD;
-		},
-*/
-		
-		_getCrumbsDIV: function(){
-			var Util = this;
-/*
-			var detailsTD = Util._getDetailsTD();
-*/
-var rootTD = Util._getRootTD();
-
-			if(!Util._crumbsDIV){
-				//FIXME: Make .cssBreadcrumbSection into a var
-/*
-				Util._crumbsDIV=dojo.query(".cssBreadcrumbSection", detailsTD)[0];
-*/
-				Util._crumbsDIV=dojo.query(".cssBreadcrumbSection", rootTD)[0];
-			}
-			return Util._crumbsDIV;
-		},
-		
-		_getCrumbsTitlePaneDiv: function(){
-			var crumbsDIV = this._getCrumbsDIV();
-			var titlePaneDiv = null;
-			var node = crumbsDIV;
-			while(node && node.tagName != 'BODY'){
-				if(dojo.hasClass(node, 'dijitTitlePaneTitle')){
-					titlePaneDiv = node;
-					break;
-				}
-				node = node.parentNode;
-			}
-			return titlePaneDiv;
 		}
 	});
 	return HTMLStringUtil;

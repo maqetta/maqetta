@@ -119,31 +119,22 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		}
 	},
 	
+	getOrientation: function(orientation) {
+		return this._orientation;
+	},
+	
 	setOrientation: function(orientation) {
 		if (this.deviceName!='none') {
 			// set orientation
 			this._orientation = orientation;
 
-			//FIXME: Would be better to publish an event about orientation changing
-			//and then have the toolbar widget subscribe to it and update the icon
-			//But easier said than done because of the way the Workbench works.
-			//Current Workbench doesn't support icons that can toggle based on
-			//product state.
-			var editorRootElement,
-				ve = this.context && this.context.visualEditor;
-			if (ve && ve._pageEditor) {
-				editorRootElement = ve._pageEditor._rootElement;
-			}
-			var rotateIconNode = dojo.query('.rotateIcon',editorRootElement)[0];
-			var ccwClass = 'rotateIconCCW';
-			if(this._orientation == 'landscape'){
-				dojo.addClass(rotateIconNode,ccwClass);
-			}else{
-				dojo.removeClass(rotateIconNode,ccwClass);
+			var editor = davinci.Workbench.getOpenEditor();
+			if(editor.editorContainer && editor.editorContainer.updateToolbars){
+				editor.editorContainer.updateToolbars();
 			}
 			this.getContext().setMobileOrientation(this._orientation);
 			this.silhouetteiframe.setOrientation(this._orientation);
-			davinci.Workbench.getOpenEditor()._visualChanged();
+			editor._visualChanged();
 			// Wrapped in setTimeout because sometimes browsers are quirky about
 			// instantly updating the size/position values for elements
 			// and things usually work if you wait for current processing thread

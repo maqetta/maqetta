@@ -212,7 +212,7 @@
 	width: 16px;
 	height: 16px;
 }
-.rotateIconCCW {
+.orientationLandscape .rotateIcon {
 	background-position: -82px -878px;
 }
 .deviceIcon {

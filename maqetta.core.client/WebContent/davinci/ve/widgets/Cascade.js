@@ -40,14 +40,15 @@ define(["dojo/_base/declare",
 		
 		buildRendering: function(){
 			this.domNode =   dojo.doc.createElement("div");
-			this.domNode
 			this.container =   dojo.doc.createElement("div");
 			dojo.addClass(this.container,"showCascade");
 			this.domNode.appendChild(this.container);
-			this.topDiv = dojo.doc.createElement("div");
-	
-			
-			this.container.appendChild(this.topDiv);
+			this.topDiv = dojo.create('div', 
+					{'class':'cascadeTopDiv'},
+					this.container);
+			this.cascadeTableDiv = dojo.create('div', 
+					{'class':'cascadeTableDiv'},
+					this.container);
 			dojo.removeClass(this.container, "showAllValues");
 	
 			if(!dojo.isArray(this.target)){
@@ -466,7 +467,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_buildCssRuleset : function(){
-			//if(this._isTarget("left")) debugger;
+			//if(this._isTarget("background-color")) debugger;
 			var allRules = this._getAllRules();
 			this._values = [];
 			//Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
@@ -730,7 +731,7 @@ define(["dojo/_base/declare",
 			}
 */
 			
-			this.topDiv.appendChild(table);
+			this.cascadeTableDiv.appendChild(table);
 			this._updateFieldValue();
 		},
 			
@@ -1158,15 +1159,13 @@ define(["dojo/_base/declare",
 				this.context.blockChange(true);
 		},
 		_destroy: function(){
-			var containerNode = (this.topDiv);
+			var containerNode = (this.cascadeTableDiv);
 			dojo.forEach(dojo.query("[widgetId]", containerNode).map(dijit.byNode), function(w){
 				w.destroy();
 			});
 			while(containerNode.firstChild){
 				dojo._destroyElement(containerNode.firstChild);
 			}
-			this.topDiv = dojo.doc.createElement("div");
-			this.container.appendChild(this.topDiv);
 			dojo.forEach(this._handles,dojo.disconnect);
 			this._handles = [];
 		},

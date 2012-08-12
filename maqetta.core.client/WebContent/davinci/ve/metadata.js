@@ -336,6 +336,7 @@ define([
             return null;
         }
         
+        metadata.$ownproperty = dojo.mixin({}, metadata.property);
         metadata.property = dojo.mixin({}, defaultProperties, metadata.property);
         // store location of this metadata file, since some resources are relative to it
         metadata.$src = metadataUrl;

@@ -62,7 +62,7 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 
 		buildRendering : function(){
 			this.domNode =  dojo.doc.createElement("div");
-			this.domNode.innerHTML = HTMLStringUtil.generateTable(this.pageTemplate);
+			this.domNode.innerHTML = HTMLStringUtil.generateTable(this.pageTemplate, {zeroSpaceForIncrDecr:true});
 			this.inherited(arguments);
 		},
 		setReadOnly : function(isReadOnly){

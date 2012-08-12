@@ -3,56 +3,15 @@ define(["require",
 	"davinci/workbench/_ToolbaredContainer",
 	"davinci/Runtime",
 	"davinci/Workbench",
+	"davinci/ve/metadata",
 	"davinci/ve/utils/GeomUtils",
 	"dojo/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, Workbench, GeomUtils, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, Workbench, Metadata, GeomUtils, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
 	constructor: function(args){
-		/*
-		// Menu routines in Dojo and Workbench require unique names
-		var unique= "m" + Date.now();
-		this.toolbarMenuActionSets = [
-      		{
-      			 id: unique+"-DropdownMenuActionSet",
-      			 visible:true,
-      			 menu: [
-      				{ 
-      					__mainMenu: true,
-      					separator:
-      					[
-      					 	"dropdown",false
-      					]
-      				},
-      				{ 
-      					label: "",
-      					path: "dropdown",
-      					id: unique+"-DropdownMenu",
-      					separator:
-      					[
-      						unique+"-DropdownMenu.action1",true,
-      						unique+"-DropdownMenu.action2",true
-      					]
-      				 }, 
-      				 { 
-      					 label : "Do Something",
-      					 path : unique+"-DropdownMenu/"+unique+"-DropdownMenu.action1",
-      					 id : unique+"-DropdownMenu.action1",
-      					 run: "alert('something works')"
-      				 }, 
-      				 { 
-      					 label : "Do Something Else",
-      					 path : unique+"-DropdownMenu/"+unique+"-DropdownMenu.action2",
-      					 id : unique+"-DropdownMenu.action2",
-      					 run: "alert('something else works')"
-      				 }
-      			],
-      			actions: []
-      		}
-      	];
-      	*/
 	},
 	
 	postCreate: function(){
@@ -244,11 +203,32 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 				return true;
 			}
 		});
-
 		if (editorActions.length == 0) {
 			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
 				editorActions.push(ext.editorContribution);
 				return true;
+			});
+		}
+		var libraryActions = Metadata.getLibraryActions('davinci.editorActions');
+		// Clone editorActions, otherwise, library actions repeatedly get appended to original plugin object
+		editorActions = dojo.clone(editorActions);
+		if (editorActions.length > 0 && libraryActions.length) {
+			// We want to augment the action list, so let's clone the
+			// action set before pushing new items onto the end of the
+			// array
+			dojo.forEach(libraryActions, function(libraryAction) {
+				if(libraryAction.action){
+					davinci.Workbench._loadActionClass(libraryAction);
+				}
+				if(libraryAction.menu){
+					for(var i=0; i<libraryAction.menu.length; i++){
+						var subAction = libraryAction.menu[0];
+						if(subAction.action){
+							davinci.Workbench._loadActionClass(subAction);
+						}
+					}
+				}
+				editorActions[0].actions.push(libraryAction);
 			});
 		}
 
@@ -354,6 +334,9 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			var enabled = runFunc(action, 'isEnabled');
 			widget.set('disabled', !enabled);
 		}
+		function updateIcon(widget, action){
+			runFunc(action, 'updateIcon');
+		}
 		
 		if(toolbar && this.editor){
 			var context = this.editor.getContext ? this.editor.getContext() : null;
@@ -363,6 +346,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					var child = children[i];
 					hideShowWidget(child, child._maqAction);
 					enableDisableWidget(child, child._maqAction);
+					updateIcon(child, child._maqAction);
 					var menu = child.dropDown;
 					if(menu){
 						var menuItems = menu.getChildren();
@@ -370,6 +354,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 							var menuItem = menuItems[j];
 							hideShowWidget(menuItem, menuItem._maqAction);
 							enableDisableWidget(menuItem, menuItem._maqAction);
+							updateIcon(menuItem, menuItem._maqAction);
 						}
 					}
 				}
@@ -385,10 +370,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		if(this.editor == Runtime.currentEditor){
 			var editorToolbarNode = dojo.query('#davinci_toolbar_container .dijitToolbar')[0];
 			var editorToolbar = editorToolbarNode ? dijit.byNode(editorToolbarNode) : null;
-			var actionBarNode = dojo.query('#actionBarContainer .dijitToolbar')[0];
-			var actionBar = actionBarNode ? dijit.byNode(actionBarNode) : null;
 			this._updateToolbar(editorToolbar);
-			this._updateToolbar(actionBar);
 		}
 	},
 	
@@ -397,10 +379,19 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	 * the toolbar creation logic to target the DIV with id="davinci_toolbar_container"
 	 */
 	_createToolbar: function(editorClass){
-		if(this.toolbarCreated(editorClass)){
+		if(!davinci.Workbench._editorToolbarCreationStarted){
+			davinci.Workbench._editorToolbarCreationStarted = {};
+		}
+		if(this.toolbarCreated(editorClass) || davinci.Workbench._editorToolbarCreationStarted[editorClass]){
 			return;
 		}
-		this.inherited(arguments);
+		davinci.Workbench._editorToolbarCreationStarted[editorClass] = true;
+		// Don't create toolbar until all of the library metadata has been loaded
+		// because widget libraries might add items to toolbar
+		var args = arguments;
+		Metadata.init().then(function(){
+			this.inherited(args);
+		}.bind(this));
 	},
 	
 	/**
@@ -426,192 +417,6 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			davinci.Workbench._editorToolbarCreated[editorClass] = toolbar;
 		}
 		return davinci.Workbench._editorToolbarCreated[editorClass];
-	},
-	
-	_getActionPropertiesPaletteContainer: function(){
-		return dojo.byId('actionPropertiesPaletteContainer');
-	},
-	
-	_getActionPropertiesPaletteNode: function(){
-		return dojo.byId('actionPropertiesPalette');
-	},
-	
-	showActionPropertiesPalette: function(){
-		var targetNode = this._getActionPropertiesPaletteContainer();
-		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
-		if(targetNode && actionPropertiesPaletteNode){
-			targetNode.style.display = 'block';
-			actionPropertiesPaletteNode.style.visibility = 'visible';
-		}
-	},
-	
-	hideActionPropertiesPalette: function(){
-		var targetNode = this._getActionPropertiesPaletteContainer();
-		if(targetNode){
-			targetNode.style.display = 'none';
-		}
-	},
-	
-	_getPropertiesContainer: function(){
-		var targetNode = this._getActionPropertiesPaletteContainer();
-		if(targetNode){
-			var node = targetNode.querySelector('.propertiesContent');
-			return node;
-		}
-	},
-	
-	_getPropPaletteTabContainer: function(tcnode){
-		return tcnode.querySelector('.propPaletteTabContainer');
-	},
-
-	_updateEditPropertiesIcon: function(){
-		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
-		if(actionPropertiesPaletteContainer){
-			var iconNode = actionPropertiesPaletteContainer.querySelector('.editPropertiesIcon');
-			if(iconNode){
-				if(this.editor._propertiesShowing){
-					dojo.addClass(iconNode, 'editPropertiesIconShowing');
-				}else{
-					dojo.removeClass(iconNode, 'editPropertiesIconShowing');
-				}
-			}
-		}
-	},
-
-	_updateResizeNode: function(){
-		var actionPropertiesPaletteContainer = this._getActionPropertiesPaletteContainer();
-		if(actionPropertiesPaletteContainer){
-			var resizeNode = actionPropertiesPaletteContainer.querySelector('.dojoxResizeHandle');
-			if(resizeNode){
-				if(this.editor._propertiesShowing){
-					resizeNode.style.display = '';
-				}else{
-					resizeNode.style.display = 'none';
-				}
-			}
-		}
-	},
-	
-	showProperties: function(){
-		var container = this._getPropertiesContainer();
-		var tcnode = this._getPropPaletteTabContainer(container);
-		if(container && tcnode){
-			container.style.display = 'block';
-			this.editor._propertiesShowing = true;
-			this._updateEditPropertiesIcon();
-			this._updateResizeNode();
-			var tc = dijit.byNode(tcnode);
-			if(tc){
-				setTimeout(function(){
-					// Use setTimeout because sometimes initialize is async
-					tc.layout();
-					tc.startup();
-					tc.resize();
-				}, 50)
-			}
-			dojo.publish('/maqetta/ui/actionPropertiesPalette/showProps', []);
-		}
-	},
-	
-	hideProperties: function(){
-		var container = this._getPropertiesContainer();
-		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
-		if(container){
-			container.style.display = 'none';
-			this.editor._propertiesShowing = false;
-			this._updateEditPropertiesIcon();
-			this._updateResizeNode();
-		}
-		if(actionPropertiesPaletteNode){
-			// Dragging resize handle causes explicit height to be attached
-			// to the actionPropertiesPaletteNode. Need to revert to auto-sizing.
-			actionPropertiesPaletteNode.style.height = '';
-		}
-		dojo.publish('/maqetta/ui/actionPropertiesPalette/hideProps', []);
-	},
-	
-	hideShowProperties: function(){
-		if(this.editor._propertiesShowing){
-			this.hideProperties();
-		}else{
-			this.showProperties();
-		}
-	},
-	
-	_getActionPropertiesPaletteNode: function(){
-		return dojo.byId('actionPropertiesPalette');
-	},
-	
-	preserveActionPropertiesState: function(editor){
-		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
-		if(actionPropertiesPaletteNode){
-			editor._ActionPropertiesState = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
-			editor._ActionPropertiesState._propertiesShowing = editor._propertiesShowing;
-		}
-	},
-	
-	restoreActionPropertiesState: function(editor){
-		var editorContainer = this;
-		var actionPropertiesPaletteNode = this._getActionPropertiesPaletteNode();
-		function updatePropContainer(){
-			var propContainer = editorContainer._getPropertiesContainer();
-			if(propContainer){
-				propContainer.style.display = editor._propertiesShowing ? 'block' : 'none';
-				if(editor._propertiesShowing){
-					var container = editorContainer._getPropertiesContainer();
-					var tcnode = editorContainer._getPropPaletteTabContainer(container);
-					var tc = dijit.byNode(tcnode);
-					if(tc){
-						// This is a hack to set height on the TabContainer properly before calling resize()
-						// on the TabContainer. Would just fall out if using a BorderContainer instead
-						// of just a bunch of DIVs and tables.
-						var appBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
-						var ppcBox = GeomUtils.getBorderBoxPageCoords(tcnode);
-						var height = appBox.h - (ppcBox.t - appBox.t);
-						// Also, a hack because this requires special knowledge about border width
-						// on propertiesPaletteContainerNode (8+8=16), plus special known 
-						// knowledge about size of resizeHandle (5)
-						height -= 13;
-						tcnode.style.height = height + 'px';
-						setTimeout(function(){
-							// Use setTimeout because sometimes initialize is async
-							tc.layout();
-							tc.startup();
-							tc.resize();
-							dojo.publish('/maqetta/ui/actionPropertiesPalette/resized', []);
-						}, 50)
-					}
-				}else{
-					// Revert to auto-sizing because prop palette is no longer visible
-					// and just want floating palette to be as big as Action Bar.
-					actionPropertiesPaletteNode.style.height = '';
-				}
-			}
-		}
-		if(actionPropertiesPaletteNode){
-			if(editor._ActionPropertiesState){
-				actionPropertiesPaletteNode.style.left = editor._ActionPropertiesState.l + 'px';
-				actionPropertiesPaletteNode.style.top = editor._ActionPropertiesState.t + 'px';
-				actionPropertiesPaletteNode.style.width = editor._ActionPropertiesState.w + 'px';
-				actionPropertiesPaletteNode.style.height = editor._ActionPropertiesState.h + 'px';
-				editor._propertiesShowing = editor._ActionPropertiesState._propertiesShowing;
-			}else{
-				var editors_container = document.getElementById('editors_container');
-				var ecBox = GeomUtils.getBorderBoxPageCoords(editors_container);
-				var floatingBox = GeomUtils.getBorderBoxPageCoords(actionPropertiesPaletteNode);
-				var left;
-				if(floatingBox.w < ecBox.w){
-					left = ecBox.l + (ecBox.w - floatingBox.w) / 2;
-				}else{
-					left = ecBox.l + 20;
-				}
-				actionPropertiesPaletteNode.style.left = left + 'px';
-				actionPropertiesPaletteNode.style.top = (ecBox.t + 3) + 'px';
-			}
-			this._updateEditPropertiesIcon();
-			this._updateResizeNode();
-			updatePropContainer();
-		}
 	}
 
 });

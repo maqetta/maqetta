@@ -27,8 +27,10 @@ return declare(ContextAction, {
 	
 	shouldShow: function(context){
 		context = this.fixupContext(context);
-		return !!(context && this._getCell(context));
-	},
+		//return !!(context && this._getCell(context));
+		var editor = context ? context.editor : null;
+		return (editor && editor.declaredClass == 'davinci.ve.PageEditor');
+	},	
 	
 	_getCell: function(context){
 		context = this.fixupContext(context);

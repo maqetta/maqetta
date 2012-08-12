@@ -8,12 +8,17 @@ define([
 return declare(_TableAction, {
 
 	name: "TableAction",
-
-	// Uses base class for isEnabled and shouldShow
 	
 	run: function(context){
 		// does nothing
+	},
+
+	//subclass can override
+	isEnabled: function(cell) {
+		return true;
 	}
+
+	// Uses base class for shouldShow
 
 });
 });

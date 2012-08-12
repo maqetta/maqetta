@@ -65,10 +65,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/moved", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/resized", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/showProps", this._actionPropertiesPaletteChanged.bind(this));
-		this.subscribe("/maqetta/ui/actionPropertiesPalette/hideProps", this._actionPropertiesPaletteChanged.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -94,32 +90,18 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if(event.editor && event.editor.editorContainer && 
 				(event.editor.declaredClass == 'davinci.ve.PageEditor' ||
 				event.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor')){
-			event.editor.editorContainer.showActionPropertiesPalette();
 			if(this == event.editor){
 				var flowLayout = context.getFlowLayout();
 				var layout = flowLayout ? 'flow' : 'absolute';
 				this._updateLayoutDropDownButton(layout);
-				if(this.editorContainer && this.editorContainer.restoreActionPropertiesState){
-					this.editorContainer.restoreActionPropertiesState(this)
-				}
+				this._updateDisplayModeToolbarIcons();
 			}
-		}else{
-			var editor = event.editor ? event.editor : event.oldEditor;
-			if(editor){
-				editor.editorContainer.hideActionPropertiesPalette();
-			}
-		}
-	},
-
-	_actionPropertiesPaletteChanged: function(){
-		if(this == davinci.Runtime.currentEditor && this.editorContainer){
-			this.editorContainer.preserveActionPropertiesState(this);
 		}
 	},
 	
 	_updateLayoutDropDownButton: function(newLayout){
 		var layoutDropDownButtonNode = dojo.query('.maqLayoutDropDownButton');
-		if(layoutDropDownButtonNode){
+		if(layoutDropDownButtonNode && layoutDropDownButtonNode[0]){
 			var layoutDropDownButton = dijit.byNode(layoutDropDownButtonNode[0]);
 			if(layoutDropDownButton){
 				layoutDropDownButton.set('label', veNls['LayoutDropDownButton-'+newLayout]);
@@ -212,6 +194,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 
 		this._displayMode=newMode;
+		this._updateDisplayModeToolbarIcons();
 
 		// now lets relayout the bordercontainer
 		this._bc.layout();
@@ -223,6 +206,20 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			context.hideFocusAll();			
 		}else{
 			context.updateFocusAll();
+		}
+	},
+	
+	_updateDisplayModeToolbarIcons: function(){
+		var designButtonNode = dojo.query('.maqDesignButton')[0];
+		var sourceComboButtonNode = dojo.query('.maqSourceComboButton')[0];
+		if(designButtonNode && sourceComboButtonNode){
+			if (this._displayMode=="design") {
+				dojo.addClass(designButtonNode, 'maqLabelButtonSelected');
+				dojo.removeClass(sourceComboButtonNode, 'maqLabelButtonSelected');
+			}else{
+				dojo.removeClass(designButtonNode, 'maqLabelButtonSelected');
+				dojo.addClass(sourceComboButtonNode, 'maqLabelButtonSelected');
+			}
 		}
 	},
 

@@ -1,7 +1,8 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/Workbench",
     	"davinci/actions/Action"
-], function(declare, Action){
+], function(declare, Workbench, Action){
 
 
 return declare("davinci.ve.actions.RotateDeviceAction", [Action], {
@@ -14,11 +15,35 @@ return declare("davinci.ve.actions.RotateDeviceAction", [Action], {
 	
 	isEnabled: function(selection){
 		var e = davinci.Workbench.getOpenEditor();
-		if (e && e.getContext)
-	//	if (e.declaredClass == 'davinci.themeEditor.ThemeEditor') // this is a hack to only support undo for theme editor for 0.5
-			return (e.getContext().getCommandStack().canRedo());
-		else return false;
-		//	return davinci.Runtime.commandStack.canRedo();
+		if (e && e.getContext){
+			var context = e.getContext();
+			if(context.getMobileDevice){
+				var device = context.getMobileDevice();
+				return (device && device != '' && device != 'none' && device != 'desktop');
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	},
+	
+	updateIcon: function(){
+		var landscape = false;
+		var editor = davinci.Workbench.getOpenEditor();
+		if(editor){
+			var visualEditor = editor.visualEditor;
+			if(visualEditor && visualEditor.getOrientation){
+				var orientation = visualEditor.getOrientation();
+				landscape = (orientation == 'landscape');
+			}
+		}
+		var landscapeClass = 'orientationLandscape';
+		if(landscape){
+			dojo.addClass(document.body, landscapeClass);
+		}else{
+			dojo.removeClass(document.body, landscapeClass);
+		}
 	}
 });
 });

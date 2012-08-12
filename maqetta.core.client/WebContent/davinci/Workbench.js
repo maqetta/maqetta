@@ -595,7 +595,7 @@ var Workbench = {
 			
 			var topBarPane = new ContentPane({
 				region: "top",
-				layoutPriority:1,
+				layoutPriority:1
 			}, "davinci_top_bar");
 			
 			var mainStackContainer = Workbench.mainStackContainer = mainBody.editorsStackContainer =

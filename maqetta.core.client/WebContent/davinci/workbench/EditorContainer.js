@@ -3,10 +3,11 @@ define(["require",
 	"davinci/workbench/_ToolbaredContainer",
 	"davinci/Runtime",
 	"davinci/Workbench",
+	"davinci/ve/metadata",
 	"davinci/ve/utils/GeomUtils",
 	"dojo/Deferred",
 	"dojo/i18n!davinci/workbench/nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, Workbench, GeomUtils, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, Workbench, Metadata, GeomUtils, Deferred, workbenchStrings) {
 
 return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 
@@ -202,11 +203,32 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 				return true;
 			}
 		});
-
 		if (editorActions.length == 0) {
 			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
 				editorActions.push(ext.editorContribution);
 				return true;
+			});
+		}
+		var libraryActions = Metadata.getLibraryActions('davinci.editorActions');
+		// Clone editorActions, otherwise, library actions repeatedly get appended to original plugin object
+		editorActions = dojo.clone(editorActions);
+		if (editorActions.length > 0 && libraryActions.length) {
+			// We want to augment the action list, so let's clone the
+			// action set before pushing new items onto the end of the
+			// array
+			dojo.forEach(libraryActions, function(libraryAction) {
+				if(libraryAction.action){
+					davinci.Workbench._loadActionClass(libraryAction);
+				}
+				if(libraryAction.menu){
+					for(var i=0; i<libraryAction.menu.length; i++){
+						var subAction = libraryAction.menu[0];
+						if(subAction.action){
+							davinci.Workbench._loadActionClass(subAction);
+						}
+					}
+				}
+				editorActions[0].actions.push(libraryAction);
 			});
 		}
 
@@ -357,10 +379,19 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	 * the toolbar creation logic to target the DIV with id="davinci_toolbar_container"
 	 */
 	_createToolbar: function(editorClass){
-		if(this.toolbarCreated(editorClass)){
+		if(!davinci.Workbench._editorToolbarCreationStarted){
+			davinci.Workbench._editorToolbarCreationStarted = {};
+		}
+		if(this.toolbarCreated(editorClass) || davinci.Workbench._editorToolbarCreationStarted[editorClass]){
 			return;
 		}
-		this.inherited(arguments);
+		davinci.Workbench._editorToolbarCreationStarted[editorClass] = true;
+		// Don't create toolbar until all of the library metadata has been loaded
+		// because widget libraries might add items to toolbar
+		var args = arguments;
+		Metadata.init().then(function(){
+			this.inherited(args);
+		}.bind(this));
 	},
 	
 	/**

@@ -20,9 +20,10 @@
 	           		{
 				        id: "tableCommands",
 				        iconClass: "editActionIcon tableCommandsIcon",
+                    	className: 'tableCommands',
 				        label: "Table commands",
 				        action: "./html/table/TableAction",
-				        actionbarPath: "arrange",
+				        toolbarPath: "arrange",
 				        type:'DropDownButton',
 				        menu:[
 				       		{

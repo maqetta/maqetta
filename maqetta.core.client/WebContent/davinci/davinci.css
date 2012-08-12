@@ -983,6 +983,9 @@ davinci_top_bar .dijitButtonNode {
 	background-image: url(img/sprite.png);
 	background-position: -75px -745px;
 }
+.tableCommands .dijitArrowButtonInner {
+	display:none;
+}
 .addStateIcon, .addThemeSetIcon {
 	background-image: url(img/sprite.png);
 	background-position: -82px -466px;

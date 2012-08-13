@@ -1,17 +1,20 @@
 define([
-	"davinci/Runtime",
+    "davinci/Runtime",
+    "davinci/Workbench",
 	"dojo/_base/connect",
 	"davinci/ve/tools/CreateTool",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/widget"
-], function(Runtime, connect, CreateTool, CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
+], function(Runtime, Workbench, connect, CreateTool, CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
 
 var _ShapeHelper = function() {};
 _ShapeHelper.prototype = {
 		
-	_connects: [],
+	_connects: [],			// mousedown event is put on this array
+	_connectsDrag: [],		// dragging events like mousemove, mouseup events are put on this array
+	_dragDivOffset:100, 	// #pixels extra space on left/right/top/bottom for transparent drag div
 	
 	/*
 	 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
@@ -42,6 +45,9 @@ _ShapeHelper.prototype = {
 
 		var draggables = this.getDraggables();
 		var points = draggables.points;
+		// onShowSelection can get called multiple times for the same selection action.
+		// Remove previous nobs and connections if still present
+		this._removeNobs();
 		if(points){
 			this._dragNobs = [];
 			var handle;
@@ -70,10 +76,8 @@ _ShapeHelper.prototype = {
 	 * FIXME: Better if helper had a class inheritance setup
 	 */
 	onHideSelection: function(obj){
-		for(var i=0; i<this._connects.length; i++){
-			connect.disconnect(this._connects[i]);
-		}
-		this._connects = [];
+		this._removeNobs();
+		this._removeDragConnects();
 	},
 
 	onMouseDown: function(e){
@@ -101,15 +105,26 @@ _ShapeHelper.prototype = {
 		this._origTop = domNode.style.top;
 		this._origWidth = domNode.style.width;
 		this._origHeight = domNode.style.height;
-		var doc = domNode.ownerDocument;
-		var body = doc.body;
 		
-		this._connects.push(connect.connect(doc, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connects.push(connect.connect(doc, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connects.push(connect.connect(doc, 'mouseup', dojo.hitch(this,this.onMouseUp)));
+		// width/height adjustment factors, using inside knowledge of CSS classes
+		var offset = 100;
+		var l = e.pageX - this._dragDivOffset;
+		var t = e.pageY - this._dragDivOffset;
+		var w = this._dragDivOffset + this._dragDivOffset;
+		var h = w;
+		if(davinci.Workbench._shapesDragDiv){
+			davinci.Workbench._shapesDragDiv.parentNode.removeChild(davinci.Workbench._shapesDragDiv);
+		}
+		davinci.Workbench._shapesDragDiv = dojo.create('div', {className:'shapesDragDiv', 
+				style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px;'},
+				document.body);
+		this._connectsDrag.push(connect.connect(document, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connectsDrag.push(connect.connect(document, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connectsDrag.push(connect.connect(document, 'mouseup', dojo.hitch(this,this.onMouseUp)));
 		if(this.onMouseDown_Widget){
 			this.onMouseDown_Widget({handle:handle, e:e});
 		}
+
 	},
 	
 	onMouseMoveOut: function(e){
@@ -120,6 +135,8 @@ _ShapeHelper.prototype = {
 			var dx = x - this._dragx;
 			var dy = y - this._dragy;
 			if(dx!=0||dy!=0){
+				davinci.Workbench._shapesDragDiv.style.left = (e.pageX - this._dragDivOffset) + 'px';
+				davinci.Workbench._shapesDragDiv.style.top = (e.pageY - this._dragDivOffset) + 'px';
 				this._dragx = x;
 				this._dragy = y;
 				var handle = this._dragging;
@@ -136,6 +153,13 @@ _ShapeHelper.prototype = {
 	
 	onMouseUp: function(e){
 		e.stopPropagation();
+		
+		if(davinci.Workbench._shapesDragDiv){
+			davinci.Workbench._shapesDragDiv.parentNode.removeChild(davinci.Workbench._shapesDragDiv);
+			delete davinci.Workbench._shapesDragDiv;
+		}
+		this._removeDragConnects();
+		
 		if(!this._dragging){
 			return;
 		}
@@ -218,7 +242,37 @@ _ShapeHelper.prototype = {
 	getDraggables: function() {
 		// default impl is to return no points
 		return {points:[]};
+	},
+	
+	/**
+	 * Remove any _dragNobs and _connects
+	 */
+	_removeNobs: function(){
+		if(this._dragNobs){
+			for(var i=0; i<this._dragNobs.length; i++){
+				var dragNob = this._dragNobs[i];
+				if(dragNob.parentNode){
+					dragNob.parentNode.removeChild(dragNob);
+				}
+			}
+			this._dragNobs = null;
+		}
+		for(var i=0; i<this._connects.length; i++){
+			connect.disconnect(this._connects[i]);
+		}
+		this._connects = [];
+	},
+	
+	/**
+	 * Remove any _dragNobs and _connects
+	 */
+	_removeDragConnects: function(){
+		for(var i=0; i<this._connectsDrag.length; i++){
+			connect.disconnect(this._connectsDrag[i]);
+		}
+		this._connectsDrag = [];
 	}
+
 
 };
 

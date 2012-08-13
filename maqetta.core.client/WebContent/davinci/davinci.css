@@ -1746,3 +1746,7 @@ davinci_top_bar .dijitButtonNode {
 #maqBody .maqHidden {
 	display:none;
 }
+.shapesDragDiv {
+	z-index:1000000;
+	position:absolute;
+}

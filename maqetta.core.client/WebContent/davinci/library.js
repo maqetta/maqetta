@@ -146,7 +146,7 @@ getThemeMetadata: function(theme) {
 		return system.resource.findResource(absoluteLocation.toString());
 	});
 
-	var metadata = new CSSThemeProvider(metaResources, theme.className);
+	var metadata = new CSSThemeProvider(metaResources, theme);
 	_themesMetaCache[theme.name] = {
 		loader: new Query(metaResources),
 		css: themeCssFiles,

@@ -900,24 +900,35 @@ define(["dojo/_base/declare",
 			}
 			
 			/* no metadata for where this value goes in DOM, search for default target rule */
-			if(meta && meta.states[state] && meta.states[state].selectors){
-				var md = meta.states[state].selectors;
-				for(var name in md){
-					for(var c=0;c<md[name].length;c++){
-						if(this._isTarget(md[name][c])){
-							if (meta.rootSelectors) {
-								for (var i = 0; i < meta.rootSelectors.length; i++){
-									if (name == meta.rootSelectors[i]){
-										// if the selector is in the rootSelectors array then apply this
-										// prop to the node element by default
-										return "element.style";
+			if(meta && meta.states[state] ){
+				var theme = this.context.getThemeMeta();
+				if (theme) {
+					var widgetType = theme.loader.getType(this._widget);
+					/*
+					 * Some default selectors are not created until the first access,
+					 * So use the getter to insure they are created.
+					 */
+					var md = theme.metadata.getStyleSelectors(widgetType, state, null); 
+					if(md){
+						for(var name in md){
+							for(var c=0;c<md[name].length;c++){
+								if(this._isTarget(md[name][c])){
+									if (meta.rootSelectors) {
+										for (var i = 0; i < meta.rootSelectors.length; i++){
+											if (name == meta.rootSelectors[i]){
+												// if the selector is in the rootSelectors array then apply this
+												// prop to the node element by default
+												return "element.style";
+											}
+										}
 									}
+									return name;
 								}
 							}
-							return name;
 						}
 					}
 				}
+				
 			}
 			
 			return null;

@@ -226,9 +226,11 @@
 				"TextBoxNormal": {
 					"selectors": {
 						".claro .dijitSelect, .claro .dijitSelect .dijitButtonContents, .claro .dijitTextBox, .claro .dijitTextBox .dijitButtonNode": [ 
-							"border-color",
-							"background-color"
-						]  
+							"border-color"
+						],  
+						".claro .dijitSelect, .claro .dijitTextBox": [
+						  	"background-color" 
+						] 
 					},
 					"defaults": {
 						"cssPropery": {
@@ -1504,8 +1506,11 @@
   							"transition-property",
   							"-webkit-transition-duration",
   							"-moz-transition-duration",
-  							"transition-duration"
-						]
+  							"transition-duration"			
+						],
+						".claro .dijitSelect, .claro .dijitTextBox": [
+						  	"background-color" 
+						] 
 
 					},
                     "query": "$auto" 

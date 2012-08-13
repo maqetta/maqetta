@@ -1791,7 +1791,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitFolderOpened,
 .dijitIconFolderOpen,
 .dijitIconError {
-	background-image: url("../../icons/images/commonIconsObjActEnabled.png");; 
+	background-image: url("../../icons/images/commonIconsObjActEnabled.png"); 
 	width: 16px;
 	height: 16px;
 }
@@ -1830,7 +1830,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dj_ie6 .dijitFolderOpened,
 .dj_ie6 .dijitIconFolderOpen,
 .dj_ie6 .dijitIconError {
-	background-image: url("../../icons/images/commonIconsObjActEnabled8bit.png");;
+	background-image: url("../../icons/images/commonIconsObjActEnabled8bit.png");
 }
 .dijitDisabled .dijitIconSave,
 .dijitDisabled .dijitIconPrint,
@@ -1867,7 +1867,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitDisabled .dijitFolderOpened,
 .dijitDisabled .dijitIconFolderOpen,
 .dijitDisabled .dijitIconError {
-	background-image: url("../../icons/images/commonIconsObjActDisabled.png");; 
+	background-image: url("../../icons/images/commonIconsObjActDisabled.png"); 
 }
 .dijitIconSave { background-position: 0; }
 .dijitIconPrint { background-position: -16px; }
@@ -1902,7 +1902,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitIconFolderClosed, .dijitFolderClosed { background-position: -464px; }
 .dijitIconFolderOpen, .dijitFolderOpened { background-position: -480px; }
 .dijitIconLoading {
-	background:url("../../icons/images/loadingAnimation_rtl.gif"); no-repeat;
+	background:url("../../icons/images/loadingAnimation_rtl.gif") no-repeat;
 	height: 20px;
 	width: 20px;
 }
@@ -1935,7 +1935,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dojoDndItemOver {
   background-color: #abd6ff;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -1948,7 +1948,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dojoDndItemAnchor, .claro .dojoDndItemSelected {
   background-color: #cfe5fa;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -1975,7 +1975,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding-left: 21px;
 }
 .claro.dojoDndMove .dojoDndAvatarHeader, .claro.dojoDndCopy .dojoDndAvatarHeader {
-  background-image: url("images/dnd.png");;
+  background-image: url("images/dnd.png");
   background-repeat: no-repeat;
   background-position: 2px -122px;
 }
@@ -2003,7 +2003,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitValidationTextBoxError .dijitValidationContainer {
   background-color: #d46464;
-  background-image: url("form/images/error.png");;
+  background-image: url("form/images/error.png");
   background-position: top center;
   border: solid #d46464 0;
   width: 9px;
@@ -2110,7 +2110,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   color: #1b1b1b;
 }
 .claro .dijitSelect .dijitArrowButtonInner, .claro .dijitComboBox .dijitArrowButtonInner {
-  background-image: url("form/images/commonFormArrows.png");;
+  background-image: url("form/images/commonFormArrows.png");
   background-position: -35px 53%;
   background-repeat: no-repeat;
   margin: 0;
@@ -2130,7 +2130,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitComboBox .dijitButtonNode {
   background-color: #efefef;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -2146,7 +2146,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitComboBox .dijitHasDropDownOpen {
   background-color: #7dbdfa;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -2201,7 +2201,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   background-color: #bcd8f4;
-  background-image: url("form/images/buttonEnabled.png");;
+  background-image: url("form/images/buttonEnabled.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
   background-image: -webkit-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
@@ -2218,7 +2218,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   width: 15px;
   height: 15px;
   margin: 0 auto;
-  background-image: url("form/images/buttonArrows.png");;
+  background-image: url("form/images/buttonArrows.png");
   background-repeat: no-repeat;
   background-position: -51px 53%;
 }
@@ -2288,7 +2288,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   -moz-box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  background-image: url("form/images/buttonDisabled.png");;
+  background-image: url("form/images/buttonDisabled.png");
   background-image: -moz-linear-gradient(#ffffff 0%, rgba(255, 255, 255, 0) 40%);
   background-image: -webkit-linear-gradient(#ffffff 0%, rgba(255, 255, 255, 0) 40%);
   background-image: -o-linear-gradient(#ffffff 0%, rgba(255, 255, 255, 0) 40%);
@@ -2311,13 +2311,13 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border-radius: 0 4px 4px 0;
 }
 .claro .dijitToggleButton .dijitCheckBoxIcon {
-  background-image: url("images/checkmarkNoBorder.png");;
+  background-image: url("images/checkmarkNoBorder.png");
 }
 .dj_ie6 .claro .dijitToggleButton .dijitCheckBoxIcon {
-  background-image: url("images/checkmarkNoBorder.gif");;
+  background-image: url("images/checkmarkNoBorder.gif");
 }
 .claro .dijitCheckBox, .claro .dijitCheckBoxIcon {
-  background-image: url("form/images/checkboxRadioButtonStates.png");;
+  background-image: url("form/images/checkboxRadioButtonStates.png");
   
   background-repeat: no-repeat;
   width: 15px;
@@ -2326,7 +2326,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding: 0;
 }
 .dj_ie6 .claro .dijitCheckBox, .dj_ie6 .claro .dijitCheckBoxIcon {
-  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");;
+  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");
   
 }
 .claro .dijitCheckBox, .claro .dijitToggleButton .dijitCheckBoxIcon {
@@ -2354,14 +2354,14 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   background-position: -30px;
 }
 .claro .dijitToggleButton .dijitRadio, .claro .dijitToggleButton .dijitRadioIcon {
-  background-image: url("form/images/checkboxRadioButtonStates.png");;
+  background-image: url("form/images/checkboxRadioButtonStates.png");
 }
 .dj_ie6 .claro .dijitToggleButton .dijitRadio, .dj_ie6 .claro .dijitToggleButton .dijitRadioIcon {
-  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");;
+  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");
 }
 .claro .dijitRadio, .claro .dijitRadioIcon {
   
-  background-image: url("form/images/checkboxRadioButtonStates.png");;
+  background-image: url("form/images/checkboxRadioButtonStates.png");
   
   background-repeat: no-repeat;
   width: 15px;
@@ -2371,7 +2371,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .dj_ie6 .claro .dijitRadio, .dj_ie6 .claro .dijitRadioIcon {
   
-  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");;
+  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");
   
 }
 .claro .dijitRadio {
@@ -2409,7 +2409,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitSelect .dijitArrowButton {
   padding: 0;
   background-color: #efefef;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -2439,7 +2439,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitSelectFocused .dijitArrowButton {
   background-color: #7dbefa;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -2486,7 +2486,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border-color: #b5bcc7;
 }
 .claro .dijitTabCloseButton {
-  background: url("layout/images/tabClose.png"); no-repeat;
+  background: url("layout/images/tabClose.png") no-repeat;
   width: 14px;
   height: 14px;
   margin-left: 5px;
@@ -2550,7 +2550,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border-bottom-width: 0;
   min-width: 60px;
   text-align: center;
-  background-image: url("layout/images/tabTopUnselected.png");;
+  background-image: url("layout/images/tabTopUnselected.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0.1) 2px, rgba(255, 255, 255, 0.6) 7px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0.1) 2px, rgba(255, 255, 255, 0.6) 7px, rgba(255, 255, 255, 0) 100%);
@@ -2564,7 +2564,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   
   padding-bottom: 4px;
   padding-top: 9px;
-  background-image: url("layout/images/tabTopSelected.png");;
+  background-image: url("layout/images/tabTopSelected.png");
   background-image: -moz-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px, #ffffff 7px);
   background-image: -webkit-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px, #ffffff 7px);
   background-image: -o-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px, #ffffff 7px);
@@ -2582,7 +2582,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border-top-width: 0;
   min-width: 60px;
   text-align: center;
-  background-image: url("layout/images/tabBottomUnselected.png");;
+  background-image: url("layout/images/tabBottomUnselected.png");
   background-repeat: repeat-x;
   background-position: bottom;
   background-image: -moz-linear-gradient(bottom, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0.1) 2px, rgba(255, 255, 255, 0.6) 7px, rgba(255, 255, 255, 0) 100%);
@@ -2596,7 +2596,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTabContainerBottom-tabs .dijitTabChecked {
   padding-bottom: 9px;
   padding-top: 4px;
-  background-image: url("layout/images/tabBottomSelected.png");;
+  background-image: url("layout/images/tabBottomSelected.png");
   background-image: -moz-linear-gradient(bottom, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px, #ffffff 7px);
   background-image: -webkit-linear-gradient(bottom, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px, #ffffff 7px);
   background-image: -o-linear-gradient(bottom, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px, #ffffff 7px);
@@ -2611,7 +2611,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   
   margin-bottom: 1px;
   padding: 3px 8px 4px 4px;
-  background-image: url("layout/images/tabLeftUnselected.png");;
+  background-image: url("layout/images/tabLeftUnselected.png");
   background-repeat: repeat-y;
   background-image: -moz-linear-gradient(left, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0.1) 2px, rgba(255, 255, 255, 0.6) 7px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(left, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0.1) 2px, rgba(255, 255, 255, 0.6) 7px, rgba(255, 255, 255, 0) 100%);
@@ -2621,7 +2621,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTabContainerLeft-tabs .dijitTabChecked {
   border-right-width: 0;
   padding-right: 9px;
-  background-image: url("layout/images/tabLeftSelected.png");;
+  background-image: url("layout/images/tabLeftSelected.png");
   background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0.5) 0px, #ffffff 30px);
   background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.5) 0px, #ffffff 30px);
   background-image: -o-linear-gradient(left, rgba(255, 255, 255, 0.5) 0px, #ffffff 30px);
@@ -2636,7 +2636,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   
   margin-bottom: 1px;
   padding: 3px 8px 4px 4px;
-  background-image: url("layout/images/tabRightUnselected.png");;
+  background-image: url("layout/images/tabRightUnselected.png");
   background-repeat: repeat-y;
   background-position: right;
   background-image: -moz-linear-gradient(right, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0.1) 2px, rgba(255, 255, 255, 0.6) 7px, rgba(255, 255, 255, 0) 100%);
@@ -2648,7 +2648,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   
   padding-left: 5px;
   border-left-width: 0;
-  background-image: url("layout/images/tabRightSelected.png");;
+  background-image: url("layout/images/tabRightSelected.png");
   background-image: -moz-linear-gradient(right, rgba(255, 255, 255, 0.5) 0px, #ffffff 30px);
   background-image: -webkit-linear-gradient(right, rgba(255, 255, 255, 0.5) 0px, #ffffff 30px);
   background-image: -o-linear-gradient(right, rgba(255, 255, 255, 0.5) 0px, #ffffff 30px);
@@ -2703,7 +2703,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   height: 15px;
   width: 15px;
   margin: 0 auto;
-  background: url("form/images/buttonArrows.png"); no-repeat -75px 50%;
+  background: url("form/images/buttonArrows.png") no-repeat -75px 50%;
   background-color: transparent;
 }
 .claro .dijitTabStripSlideRightIcon {
@@ -2770,7 +2770,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTabContainerTabListNested .dijitTabActive {
   border: solid 1px #759dc0;
   padding: 3px;
-  background: #abd6ff url("layout/images/tabNested.png"); repeat-x;
+  background: #abd6ff url("layout/images/tabNested.png") repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.61) 0%, rgba(255, 255, 255, 0) 17%, rgba(255, 255, 255, 0) 83%, rgba(255, 255, 255, 0.61) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.61) 0%, rgba(255, 255, 255, 0) 17%, rgba(255, 255, 255, 0) 83%, rgba(255, 255, 255, 0.61) 100%);
   background-image: -o-linear-gradient(rgba(255, 255, 255, 0.61) 0%, rgba(255, 255, 255, 0) 17%, rgba(255, 255, 255, 0) 83%, rgba(255, 255, 255, 0.61) 100%);
@@ -2837,7 +2837,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border: 1px solid #ffffff;
   border-top: none;
   background-color: #abd6ff;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -2854,7 +2854,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitDialogCloseIcon {
   
-  background: url("images/dialogCloseIcon.png");;
+  background: url("images/dialogCloseIcon.png");
   background-repeat: no-repeat;
   position: absolute;
   right: 5px;
@@ -2862,7 +2862,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   width: 21px;
 }
 .dj_ie6 .claro .dijitDialogCloseIcon {
-  background-image: url("images/dialogCloseIcon8bit.png");;
+  background-image: url("images/dialogCloseIcon8bit.png");
 }
 .claro .dijitDialogCloseIconHover {
   background-position: -21px;
@@ -2909,13 +2909,13 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   
   border: 0;
   z-index: 2;
-  background-image: url("images/tooltip.png");;
+  background-image: url("images/tooltip.png");
   background-repeat: no-repeat;
   width: 16px;
   height: 14px;
 }
 .dj_ie6 .claro .dijitTooltipConnector {
-  background-image: url("images/tooltip8bit.png");;
+  background-image: url("images/tooltip8bit.png");
 }
 .claro .dijitTooltipABRight .dijitTooltipConnector {
   
@@ -2985,7 +2985,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitAccordionTitle {
   background-color: transparent;
   
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3014,7 +3014,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   transition-duration: 0.1s;
 }
 .claro .dijitAccordionInnerContainerActive .dijitAccordionTitle {
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -3029,7 +3029,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitAccordionInnerContainerSelected .dijitAccordionTitle {
   color: #000000;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3078,7 +3078,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   -moz-border-radius: 4px;
   border-radius: 4px;
   background-color: #cfe5fa;
-  background-image: url("images/calendar.png");;
+  background-image: url("images/calendar.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.4) 2px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.4) 2px, rgba(255, 255, 255, 0) 100%);
@@ -3111,11 +3111,11 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitCalendarIncrementControl {
   width: 18px;
   height: 16px;
-  background-image: url("images/calendarArrows.png");;
+  background-image: url("images/calendarArrows.png");
   background-repeat: no-repeat;
 }
 .dj_ie6 .claro .dijitCalendarIncrementControl {
-  background-image: url("images/calendarArrows8bit.png");;
+  background-image: url("images/calendarArrows8bit.png");
 }
 .claro .dijitCalendarIncrease {
   background-position: -18px 0;
@@ -3306,7 +3306,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   margin: 0;
   padding: 0;
   background-color: #efefef;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3348,7 +3348,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitMenuItemHover,
 .claro .dijitMenuItemSelected {
   background-color: #abd6ff;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3357,7 +3357,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   _background-image: none;
 }
 .claro .dijitMenuItemActive {
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -3384,7 +3384,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitMenuExpand {
   width: 7px;
   height: 7px;
-  background-image: url("images/spriteArrows.png");;
+  background-image: url("images/spriteArrows.png");
   background-position: -14px 0;
   margin-right: 3px;
 }
@@ -3405,14 +3405,14 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   display: none;
 }
 .claro .dijitCheckedMenuItemIcon {
-  background-image: url("form/images/checkboxRadioButtonStates.png");;
+  background-image: url("form/images/checkboxRadioButtonStates.png");
   background-repeat: no-repeat;
   background-position: -15px 50%;
   width: 15px;
   height: 16px;
 }
 .dj_ie6 .claro .dijitCheckedMenuItemIcon {
-  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");;
+  background-image: url("form/images/checkboxAndRadioButtons_IE6.png");
 }
 .claro .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {
   background-position: 0 50%;
@@ -3566,7 +3566,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border: 0;
   width: 18px;
   height: 16px;
-  background-image: url("form/images/sliderThumbs.png");;
+  background-image: url("form/images/sliderThumbs.png");
   background-repeat: no-repeat;
   background-position: 0 0;
 }
@@ -3589,7 +3589,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border: 0;
   width: 18px;
   height: 16px;
-  background-image: url("form/images/sliderThumbs.png");;
+  background-image: url("form/images/sliderThumbs.png");
   background-repeat: no-repeat;
   background-position: -289px 0;
 }
@@ -3618,7 +3618,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitSliderIncrementIconH,
 .claro .dijitSliderDecrementIconV,
 .claro .dijitSliderIncrementIconV {
-  background-image: url("form/images/commonFormArrows.png");;
+  background-image: url("form/images/commonFormArrows.png");
   background-repeat: no-repeat;
   background-color: #efefef;
   -moz-border-radius: 2px;
@@ -3746,7 +3746,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitProgressBarTile {
   
   background-color: #abd6ff;
-  background-image: url("images/progressBarFull.png");;
+  background-image: url("images/progressBarFull.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.93) 0px, rgba(255, 255, 255, 0.41) 1px, rgba(255, 255, 255, 0.7) 2px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.93) 0px, rgba(255, 255, 255, 0.41) 1px, rgba(255, 255, 255, 0.7) 2px, rgba(255, 255, 255, 0) 100%);
@@ -3772,7 +3772,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitProgressBarIndeterminate .dijitProgressBarTile {
   
-  background: #efefef url("images/progressBarAnim.gif"); repeat-x top;
+  background: #efefef url("images/progressBarAnim.gif") repeat-x top;
 }
 .claro .dijitTimePicker .dijitButtonNode {
   padding: 0 0;
@@ -3788,7 +3788,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitTimePickerItem {
   
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3850,7 +3850,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border-right: none;
   border-color: #b5bcc7;
   background-color: #efefef;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3861,7 +3861,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTimePicker .dijitArrowButtonInner {
   height: 100%;
   
-  background-image: url("form/images/commonFormArrows.png");;
+  background-image: url("form/images/commonFormArrows.png");
   background-repeat: no-repeat;
   background-position: -140px 45%;
 }
@@ -3975,7 +3975,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitTreeRowSelected {
   background-color: #cfe5fa;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3989,7 +3989,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitTreeRowHover {
   background-color: #abd6ff;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -4006,7 +4006,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitTreeRowActive {
   background-color: #7dbdfa;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -4022,14 +4022,14 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   background-repeat: repeat;
 }
 .claro .dijitTreeExpando {
-  background-image: url("images/treeExpandImages.png");;
+  background-image: url("images/treeExpandImages.png");
   width: 16px;
   height: 16px;
   background-position: -35px 0;
   
 }
 .dj_ie6 .claro .dijitTreeExpando {
-  background-image: url("images/treeExpandImages8bit.png");;
+  background-image: url("images/treeExpandImages8bit.png");
 }
 .claro .dijitTreeRowHover .dijitTreeExpandoOpened {
   background-position: -53px 0;
@@ -4044,7 +4044,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   background-image: none;
 }
 .claro .dijitTreeExpandoLoading {
-  background-image: url("images/loadingAnimation.gif");;
+  background-image: url("images/loadingAnimation.gif");
 }
 .claro .dijitTreeNode .dojoDndItemBefore .dijitTreeContent {
   border-top: 2px solid #759dc0;
@@ -4056,7 +4056,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitToolbar {
   border-bottom: 1px solid #b5bcc7;
   background-color: #efefef;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -4088,7 +4088,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   -webkit-transition-duration: 0.3s;
   -moz-transition-duration: 0.3s;
   transition-duration: 0.3s;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -4150,7 +4150,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitToolbar .dijitButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode {
   border-width: 1px;
   background-color: #7dbdfa;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -4172,7 +4172,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitToolbar .dijitComboButtonActive .dijitButtonNodeActive {
   background-color: #7dbdfa;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -4182,7 +4182,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitToolbar .dijitComboButtonActive .dijitDownArrowButtonActive {
   background-color: #7dbdfa;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -4209,7 +4209,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitToolbarSeparator {
   
-  background: url("../../icons/images/editorIconsEnabled.png");;
+  background: url("../../icons/images/editorIconsEnabled.png");
 }
 .claro .dijitDisabled .dijitToolbar {
   background: none;
@@ -4253,14 +4253,14 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   background-image: none;
 }
 .dijitEditorIcon {
-	background-image: url("../../icons/images/editorIconsEnabled.png");; 
+	background-image: url("../../icons/images/editorIconsEnabled.png"); 
 	background-repeat: no-repeat;
 	width: 18px;
 	height: 18px;
 	text-align: center;
 }
 .dijitDisabled .dijitEditorIcon {
-	background-image: url("../../icons/images/editorIconsDisabled.png");; 
+	background-image: url("../../icons/images/editorIconsDisabled.png"); 
 }
 .dijitEditorIconSep { background-position: 0; }
 .dijitEditorIconSave { background-position: -18px; }
@@ -4311,7 +4311,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
  
 .claro .dijitTitlePaneTitle {
   background-color: #efefef;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -4329,7 +4329,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitTitlePaneTitleActive {
   background-color: #7dbdfa;
   border-color: #759dc0;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -4342,7 +4342,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding-bottom: 2px;
 }
 .claro .dijitTitlePane .dijitArrowNode {
-  background-image: url("images/spriteArrows.png");;
+  background-image: url("images/spriteArrows.png");
   background-repeat: no-repeat;
   height: 8px;
   width: 7px;
@@ -4383,7 +4383,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitSpinner .dijitArrowButton {
   width: auto;
   background-color: #efefef;
-  background-image: url("images/standardGradient.png");;
+  background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
@@ -4403,7 +4403,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   border: solid 1px #ffffff;
   border-bottom-width: 0;
   
-  background-image: url("form/images/commonFormArrows.png");;
+  background-image: url("form/images/commonFormArrows.png");
   background-repeat: no-repeat;
   height: 100%;
   width: 15px;
@@ -4450,7 +4450,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 }
 .claro .dijitSpinner .dijitDownArrowButtonActive, .claro .dijitSpinner .dijitUpArrowButtonActive {
   background-color: #7dbefa;
-  background-image: url("images/activeGradient.png");;
+  background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
   background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
   background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
@@ -4653,13 +4653,13 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
   padding: 3px 10px 1px 3px;
 }
 .dijitEditorRtl .dijitEditorIcon {
-	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");;; 
+	background-image: url("../../icons/images/editorIconsEnabled_rtl.png"); 
 }
 .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url("../../icons/images/editorIconsDisabled_rtl.png");;; 
+	background-image: url("../../icons/images/editorIconsDisabled_rtl.png"); 
 }
 .dijitToolbarRtl .dijitToolbarSeparator {
-	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");;;
+	background-image: url("../../icons/images/editorIconsEnabled_rtl.png");
 }
 .dijitRtl .dijitIconSave,
 .dijitRtl .dijitIconPrint,
@@ -4696,7 +4696,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitRtl .dijitFolderOpened,
 .dijitRtl .dijitIconFolderOpen,
 .dijitRtl .dijitIconError { 
-	background-image: url("../../icons/images/commonIconsObjActEnabled_rtl.png");;; 
+	background-image: url("../../icons/images/commonIconsObjActEnabled_rtl.png"); 
 	width: 16px;
 	height: 16px;
 }
@@ -4735,7 +4735,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dj_ie6 .dijitRtl .dijitFolderOpened,
 .dj_ie6 .dijitRtl .dijitIconFolderOpen,
 .dj_ie6 .dijitRtl .dijitIconError {
-	background-image: url("../../icons/images/commonIconsObjActEnabled8bit_rtl.png");;;
+	background-image: url("../../icons/images/commonIconsObjActEnabled8bit_rtl.png");
 }
 .dijitRtl .dijitDisabled .dijitIconSave,
 .dijitRtl .dijitDisabled .dijitIconPrint,
@@ -4772,7 +4772,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .dijitRtl .dijitDisabled .dijitFolderOpened,
 .dijitRtl .dijitDisabled .dijitIconFolderOpen,
 .dijitRtl .dijitDisabled .dijitIconError {
-	background-image: url("../../icons/images/commonIconsObjActDisabled_rtl.png");;; 
+	background-image: url("../../icons/images/commonIconsObjActDisabled_rtl.png"); 
 }
 .claro .dijitTitlePaneRtl .dijitClosed .dijitArrowNode {
   background-position: -7px 0;

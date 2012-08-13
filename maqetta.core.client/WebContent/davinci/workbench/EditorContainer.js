@@ -42,7 +42,15 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		this.toolbarDiv.style.display = 'none';
 		this.inherited(arguments);
 	},
-	
+
+	resize: function() {
+		this.inherited(arguments);
+		// can we combine this with the source editor resize in PageEditor?
+		if (this.editor && this.editor.editor && this.editor.editor.getTextView) {
+			this.editor.editor.getTextView().resize();
+		}
+	},
+
 	setEditor: function(editorExtension, fileName, content, file, rootElement, newHtmlParams){
 		var d = new Deferred();
 		this.editorExtension = editorExtension;

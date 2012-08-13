@@ -40,13 +40,15 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
         // hack to get the source content page to resize itself
         var oldResize = this._srcCP.resize;
-        this._srcCP.resize = function(changeSize, resultSize)
-        {
+        this._srcCP.resize = function(changeSize, resultSize) {
             dojo.marginBox(this.domNode, resultSize);
             oldResize.apply(this, arguments);
+			if(htmlEditor.editor && htmlEditor.editor.getTextView()) {
+				htmlEditor.editor.getTextView().resize();
+			}
         };
 
-        this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
+        var htmlEditor = this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
         this.htmlEditor.setVisible(false);
         this.model = this.htmlEditor.model;
 
@@ -199,9 +201,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		// now lets relayout the bordercontainer
 		this._bc.layout();
 
-		if (newMode!="design") {
-			this.htmlEditor.editor.getTextView().resize();
-		}
 		if (newMode == "source") {
 			context.hideFocusAll();			
 		}else{

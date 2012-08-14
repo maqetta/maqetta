@@ -662,7 +662,7 @@ var Workbench = {
 			mainBorderContainer.addChild(mainBodyContainer);
 			appBorderContainer.layout();	
 			appBorderContainer.startup();
-			Workbench._orginalOnResize = window.onresize;
+			Workbench._originalOnResize = window.onresize;
 			window.onresize = Workbench.onResize; //alert("All done");}
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
 			
@@ -717,9 +717,10 @@ var Workbench = {
 				Runtime.currentEditor.onResize();
 			}
 		}
-		if (Workbench._orginalOnResize) {
-			Workbench._orginalOnResize();
+		if (Workbench._originalOnResize) {
+			Workbench._originalOnResize();
 		}
+		Workbench._repositionFocusContainer();
 	},
 
 	updateMenubar: function(node, actionSets) {
@@ -1692,6 +1693,7 @@ var Workbench = {
 				//depending on "expandPalettes" properties
 				this._expandCollapsePaletteContainers(newEditor);
 			}
+			this._repositionFocusContainer();
 		}.bind(this), 1000);
 
 		if(!startup) {
@@ -2041,11 +2043,28 @@ var Workbench = {
 	},
 
 	/**
-	 * Gets toolbar widget for ActionBar if one exists already.
-	 * Otherwise, create the toolbar widget.
-	 * In either case, attach the toolbar to the "toolbarDiv"
-	 * @param {Element} toolbarDiv
+	 * Reposition the focusContainer node to align exactly with the position of editors_container node
 	 */
+	_repositionFocusContainer: function(){
+		var editors_container = dojo.byId('editors_container');
+		var focusContainer = dojo.byId('focusContainer');
+		if(editors_container && focusContainer){
+			var box = GeomUtils.getBorderBoxPageCoords(editors_container);
+			if(box){
+				focusContainer.style.left = box.l + 'px';
+				focusContainer.style.top = box.t + 'px';
+				focusContainer.style.width = box.w + 'px';
+				focusContainer.style.height = box.h + 'px';
+				var currentEditor = davinci.Runtime.currentEditor;
+				if(currentEditor && currentEditor.getContext){
+					var context = currentEditor.getContext();
+					if(context && context.updateFocusAll){
+						context.updateFocusAll();
+					}
+				}
+			}
+		}
+	},
 
 	_XX_last_member: true	// dummy with no trailing ','
 };

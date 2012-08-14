@@ -51,7 +51,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	constructor: function(element, pageEditor)	{
 		this._pageEditor = pageEditor;
 		var contentPane = this.contentPane = dijit.getEnclosingWidget(element);
-
 		this.loadingDiv = dojo.create("div", {
 			className: "loading",
 			innerHTML: dojo.replace(
@@ -71,7 +70,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		var visualEditor = this;
 		this.contentPane.connect(this.contentPane, 'resize', function(newPos){
 			// "this" is the ContentPane dijit
-			var iframe = dojo.query('iframe', this.domNode)[0];
+			var iframe = dojo.query('.designCP iframe', this._pageEditor.domNode)[0];
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
 				visualEditor._resizeBody(bodyElem, newPos);
@@ -81,10 +80,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 				// to complete. Also, updateFocusAll() can be safely called within setTimeout.
 				setTimeout(function() {
 					visualEditor.getContext().updateFocusAll(); 
+					visualEditor._registerScrollHandler();
 				}, 100); 
-				visualEditor._registerScrollHandler();
 			}
-		});
+		}.bind(this));
 		this._pageEditor.deferreds = all(Metadata.getDeferreds());
 		this._subscriptions.push(dojo.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this)));
 		this._subscriptions.push(dojo.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this)));
@@ -550,10 +549,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 	_registerScrollHandler: function(){
 		if(!this._scrollHandler){
-			var iframe = dojo.query('iframe', this.domNode)[0];
+			var iframe = dojo.query('.designCP iframe', this._pageEditor.domNode)[0];
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
-				this._scrollHandler = dojo.connect(this.contentPane.domNode, 'onscroll', this, function(e){
+				this._scrollHandler = dojo.connect(bodyElem.ownerDocument, 'onscroll', this, function(e){
 					this._resizeBody(bodyElem, {
 						w: dojo.style(this.contentPane.domNode, 'width'),
 						h: dojo.style(this.contentPane.domNode, 'height')

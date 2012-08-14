@@ -1694,8 +1694,16 @@ davinci_top_bar .dijitButtonNode {
 	-webkit-transition-duration:0;	/* Prevents jiggling buttons in Chrome */
 }
 
+#focusContainer {
+	pointer-events:none;
+	position:absolute;
+	overflow:hidden;
+}
 .maqFocus {
 	z-index: 5;
+	pointer-events:auto;
+}
+.focusDragDiv {
 }
 
 .editFocusFrame {

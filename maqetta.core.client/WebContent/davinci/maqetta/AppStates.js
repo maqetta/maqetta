@@ -903,8 +903,6 @@ States.prototype = {
 					});
 					// Replace double quotes with single quotes
 					str = str.replace(/"/g, "'");
-				}else{
-					str = '{}';
 				}
 			}
 			return str;

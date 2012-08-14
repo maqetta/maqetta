@@ -130,6 +130,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		       		pageTemplate : [
    		                {display:"<b>(border)</b>", type:"multi", target:['border'], values:['','none','1px solid black']}, 
    		                {display:"show", type:"combo", values:['none','props','sides','all'],
+   		                	id:'properties_show_select',
 		       				onchange:function(propIndex){
    		                		if(typeof propIndex != "number"){
    		                			return;

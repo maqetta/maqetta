@@ -24,3 +24,25 @@ plugin@maqetta.server.orion.standard=GIT,repo=https://github.com/maqetta/maqetta
 #maqetta features
 feature@maqetta.orion.feature=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.orion.feature
 feature@maqetta.orion.hosted.feature=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.orion.hosted.feature
+
+
+#zazl feature
+feature@maqetta.zazl.feature=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/maqetta.zazl.feature
+
+
+#zazl plugins
+plugins@maqetta.zazl=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/maqetta.zazl
+plugins@org.dojotoolkit.optimizer.amd.fragment=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
+plugins@org.cyberneko.html=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.cyberneko.html
+plugins@org.dojotoolkit.shrinksafe=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.dojotoolkit.shrinksafe
+plugins@org.json=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.json
+plugins@org.mozilla.javascript=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.mozilla.javascript
+plugins@org.dojotoolkit.compressor=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor
+plugins@org.dojotoolkit.compressor.shrinksafe=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor.shrinksafe
+plugins@org.dojotoolkit.json=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.json
+plugins@org.dojotoolkit.optimizer=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer
+plugins@org.dojotoolkit.amd=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.amd
+plugins@org.dojotoolkit.amd.rhinoast=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.amd.rhinoast
+plugins@org.dojotoolkit.servlet=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.servlet
+plugins@org.dojotoolkit.server.util=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util
+plugins@org.dojotoolkit.server.util.js=GIT,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util.js

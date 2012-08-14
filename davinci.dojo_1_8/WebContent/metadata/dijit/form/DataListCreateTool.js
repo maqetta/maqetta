@@ -23,34 +23,29 @@ define([
 			
 			var dataList = this._data;
 			
-			if(!this._context.loadRequires(dataList.type,true)){
-				return;
-			}
-		
-			var dataListId = Widget.getUniqueObjectId(dataList.type, this._context.getDocument());
-			if(!dataList.properties){
-				dataList.properties = {};
-			}
-			dataList.properties.id = dataListId;
-			dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';
-			dataList.context = this._context;
+			this._context.loadRequires(dataList.type, true).then(function(){
+				var dataListId = Widget.getUniqueObjectId(dataList.type, this._context.getDocument());
+				if(!dataList.properties){
+					dataList.properties = {};
+				}
+				dataList.properties.id = dataListId;
+				dataList.properties['data-dojo-props'] = 'id:"'+dataListId+'"';
+				dataList.context = this._context;
+				
+				var dataListWidget;
+				dojo.withDoc(this._context.getDocument(), function(){
+					dataListWidget = Widget.createWidget(dataList);
+				});
+				
+				if(!dataListWidget){
+					throw new Error(this.declaredClass + 'Error creating widgets');
+				}
+				dataListWidget.domNode.style.display = 'none';
 			
-			var dataListWidget,
-				dj = this._context.getDojo();
-			dojo.withDoc(this._context.getDocument(), function(){
-				dataListWidget = Widget.createWidget(dataList);
-			});
+				var command = new AddCommand(dataListWidget, args.parent, args.index);
 			
-			if(!dataListWidget){
-				console.error(this.declaredClass + 'Error creating widgets');
-				return;
-			}
-			dataListWidget.domNode.style.display = 'none';
-		
-			var index = args.index,
-				command = new AddCommand( dataListWidget, args.parent, index);
-		
-			this._context.getCommandStack().execute(command);
+				this._context.getCommandStack().execute(command);
+			}.bind(this));
 		}
 	};
 });

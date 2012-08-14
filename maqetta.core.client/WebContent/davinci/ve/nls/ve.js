@@ -25,7 +25,7 @@ define({ root:
 		
 		//DeviceActions.js
 		"chooseDeviceSilhouette":"Choose a device silhouette: ",
-		"filesHasUnsavedChanges":"The file '${0}' has unsaved changes. Are you sure you want to switch device silhouette WITHOUT saving, your changes may be lost?",
+		"filesHasUnsavedChanges":"The file '${0}' has unsaved changes, save changes and continue with switch device silhouette.",
 		
 		//SelectAncestorAction.js
 		"selectAncestorTitle":"Select ancestor",

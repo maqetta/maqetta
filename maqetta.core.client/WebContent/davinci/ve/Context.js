@@ -1778,7 +1778,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.rootNode._maqAppStates = {};
 			var bodyModelNode = this.rootWidget._srcElement;
 			var o = States.serialize(this.rootNode);
-			bodyModelNode.setAttribute(States.APPSTATES_ATTRIBUTE, o.maqAppStates);
+			if(o.maqAppStates){
+				bodyModelNode.setAttribute(States.APPSTATES_ATTRIBUTE, o.maqAppStates);
+			}else{
+				bodyModelNode.removeAttribute(States.APPSTATES_ATTRIBUTE);
+			}
 			this.editor._visualChanged();
 		}
 		var statesFocus = States.getFocus(this.rootNode);

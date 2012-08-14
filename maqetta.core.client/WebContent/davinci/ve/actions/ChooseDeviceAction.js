@@ -54,6 +54,9 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 		    okToSwitch=confirm(message);
 		}                                                     
 		if (okToSwitch){
+			if (e.isDirty) {
+				e.save();
+			}
 			this.showDevices(); 
 		}
 	},
@@ -79,7 +82,7 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 			e._visualChanged();
 		}
 
-		Workbench.showDialog(veNls.chooseDeviceSilhouette, ui, null, dojo.hitch(this, _callback), actionNLS.select);
+		Workbench.showDialog(veNls.chooseDeviceSilhouette, ui, {width: 300}, dojo.hitch(this, _callback), actionNLS.select);
 	}
 });
 

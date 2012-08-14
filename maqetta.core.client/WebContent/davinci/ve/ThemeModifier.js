@@ -42,18 +42,17 @@ return declare("davinci.ve.ThemeModifier", null, {
 	 */
 	getDeltaRule: function(rule){
 		var targetRule=null;
-		var targetCssFile=null;
+		var targetCssFile=this.cssFiles[0]; // by default use first file null;
 		var ruleSelectorText = rule.getSelectorText();
 		this.cssFiles.forEach(function(file){
 			// if this rule is not from the delta file add a new rule to the delta
 			var cssRules = file.getRules(ruleSelectorText);
-			if (cssRules) {
-				// found CSS rules so reset target
-				targetRule=null; 
+			if (cssRules.length > 0) {
+				// found CSS rules so set the target file
+				targetCssFile = file;
 			}
 			cssRules.forEach(function(r){
-				targetCssFile = file;
-				if (r.parent.url == targetCssFile.url) { // is it in delta file
+				if (r.parent.url == file.url) { // is it in delta file
 					targetRule = r; // found the deltaRule
 				}
 			}.bind(this));

@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/window",
+    "dojo/promise/all",
     "davinci/ve/tools/CreateTool",
     "davinci/ve/widget",
     "davinci/commands/CompoundCommand",
@@ -11,6 +12,7 @@ define([
 ], function (
     declare,
     Window,
+    all,
     CreateTool,
     Widget,
     CompoundCommand,
@@ -43,54 +45,50 @@ return declare(CreateTool, {
         delete iconContainerData.children;
 
         // load required resources for IconContainer and children
-        var succeeded = childrenData.concat(iconContainerData).every(function(obj) {
+        all(childrenData.concat(iconContainerData).map(function(obj) {
             return context.loadRequires(obj.type, true);
-        }, this);
-        if (! succeeded) {
-            return;
-        }
-
-        iconContainerData.context = context;
-        var iconContainer,
-            children = [];
-        Window.withDoc(context.getDocument(), function() {
-            iconContainer = Widget.createWidget(iconContainerData);
-            childrenData.forEach(function(child) {
-                child.context = context;
-                children.push(Widget.createWidget(child));
-            });
-        });
-        if (! iconContainer) {
-            return;
-        }
-
-        var command = new CompoundCommand();
-
-        // first add parent IconContainer...
-        command.add(new AddCommand(iconContainer,
-                args.parent, args.index));
-        // ... followed by its children
-        children.forEach(function(child, idx) {
-            command.add(new AddCommand(child, iconContainer,
-                    idx));
-        });
-
-        if (args.position) {
-			var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
-			command.add(new StyleCommand(iconContainer, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
-            command.add(new MoveCommand(iconContainer,
-                    args.position.x, args.position.y));
-        }
-        if (args.size) {
-            var w = args.size && args.size.w,
-                h = args.size && args.size.h;
-            command.add(new ResizeCommand(iconContainer, w, h));
-        }
-        context.getCommandStack().execute(command);
-        this._select(iconContainer);
-        return iconContainer;
+        }, this)).then(function() {
+	        iconContainerData.context = context;
+	        var iconContainer,
+	            children = [];
+	        Window.withDoc(context.getDocument(), function() {
+	            iconContainer = Widget.createWidget(iconContainerData);
+	            childrenData.forEach(function(child) {
+	                child.context = context;
+	                children.push(Widget.createWidget(child));
+	            });
+	        });
+	        if (! iconContainer) {
+	            return;
+	        }
+	
+	        var command = new CompoundCommand();
+	
+	        // first add parent IconContainer...
+	        command.add(new AddCommand(iconContainer,
+	                args.parent, args.index));
+	        // ... followed by its children
+	        children.forEach(function(child, idx) {
+	            command.add(new AddCommand(child, iconContainer,
+	                    idx));
+	        });
+	
+	        if (args.position) {
+				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');
+				command.add(new StyleCommand(iconContainer, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
+	            command.add(new MoveCommand(iconContainer,
+	                    args.position.x, args.position.y));
+	        }
+	        if (args.size) {
+	            var w = args.size && args.size.w,
+	                h = args.size && args.size.h;
+	            command.add(new ResizeCommand(iconContainer, w, h));
+	        }
+	        context.getCommandStack().execute(command);
+	        this._select(iconContainer);
+	        return iconContainer; //TODO: is return value used?
+        }.bind(this));
     }
-
 });
 
 });

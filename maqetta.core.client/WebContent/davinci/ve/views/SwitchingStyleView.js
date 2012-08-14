@@ -674,7 +674,7 @@ for(var v=0;v<this.pageTemplate.length;v++){
 		
 		/* add the editors ID to the top of the properties pallete so you can target CSS rules based on editor */
 		if(this._oldClassName)
-			dojo.removeClass(this.domNode,this._oldClassName);
+			dojo.removeClass(this.domNode.parentNode.parentNode,this._oldClassName); //remove the class from the  tab container
 
 //FIXME: TEMPORARY
 if(!this._editor){
@@ -682,7 +682,7 @@ if(!this._editor){
 }
 		if( this._editor){
 			this._oldClassName = this._editor.editorID.replace(/\./g, "_");
-			dojo.addClass(this.domNode,this._oldClassName);
+			dojo.addClass(this.domNode.parentNode.parentNode,this._oldClassName); //put the class on the  tab container
 		}
 		// Hide or show the various section buttons on the root pane
 /*FIXME: DELETE THIS

@@ -85,20 +85,6 @@ shows the default workspace:
 				demos, test files and documentation.
 			</div>
 		</li>
-		<li>At <a href="http://maqetta.org">Maqetta.org</a>, you will also see
-			<code>jQuery/</code> and <code>YUI</code> subfolders within the <code>libs/</code> folder.
-			These subfolders are present because the version of the application
-			posted at <a href="http://maqetta.org">Maqetta.org</a> 
-			includes some
-			widgets from the <code>jQuery</code> and <code>YUI</code> libraries.
-			<div class="note">
-				<div>Maqetta has a general architecture that allows arbitrary JavaScript toolkits
-					and arbitrary widget libraries to plug in. With the current release,
-					not all library extensibility points are completed, so at this time adding
-					additional libraries requires some source code changes to the
-					Maqetta open source.</div>
-			</div>
-		</li>
 		<li>The <code>themes/</code> folder (Dojo themes) contains the CSS style themes used by your
 			applications. If you application uses any Dojo widgets, your application
 			probably requires the <code>themes/</code> folder in order to work properly
@@ -211,7 +197,7 @@ the HTML files that Maqetta creates:
 [03] &lt;head>
 [04] &lt;meta charset="utf-8"/>
 [05] &lt;title>Untitled&lt;/title>
-[06] &lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'shapes','location':'../../shapes'},{'name':'yui','location':'../../yui'},{'name':'clipart','location':'../../clipart'},{'name':'gridx','location':'../gridx'},{'name':'jquery-ui','location':'../../jquery-ui'},{'name':'maqetta','location':'../../maqetta'}]">&lt;/script>
+[06] &lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'shapes','location':'../../shapes'},{'name':'clipart','location':'../../clipart'},{'name':'gridx','location':'../gridx'},{'name':'maqetta','location':'../../maqetta'}]">&lt;/script>
 [07] &lt;script type="text/javascript">
 [08] require([
 [09]   "dijit/dijit",

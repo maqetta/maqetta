@@ -75,8 +75,8 @@ define([
 		var directoryPath = new Path(themeRoot.getPath());
 		var lastSeg = directoryPath.lastSegment();
 		/* create the .theme file */
-		themeFile = themeRoot.createResource(lastSeg + ".theme");
-		themeCssFile = themeRoot.createResource(lastSeg + ".css"); // create the delta css file
+		var themeFile = themeRoot.createResource(lastSeg + ".theme");
+		var themeCssFile = themeRoot.createResource(lastSeg + ".css"); // create the delta css file
 		var themePath = this.getThemeLocation();
 		var orgPath = originalTheme.file.parent.getPath();
 		

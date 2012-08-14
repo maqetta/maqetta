@@ -20,6 +20,9 @@ return declare("davinci.actions.SelectThemeAction", Action, {
 		    okToSwitch=confirm(message);
 		}
 		if (okToSwitch){
+			if (e.isDirty) {
+				e.save();
+			}
 			var theme = e.getContext().getTheme();
 			var ldojoVersion = e.getContext().getDojo().version.major +'.'+ e.getContext().getDojo().version.minor;
 			

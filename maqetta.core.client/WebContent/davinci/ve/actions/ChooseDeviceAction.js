@@ -54,6 +54,9 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 		    okToSwitch=confirm(message);
 		}                                                     
 		if (okToSwitch){
+			if (e.isDirty) {
+				e.save();
+			}
 			this.showDevices(); 
 		}
 	},

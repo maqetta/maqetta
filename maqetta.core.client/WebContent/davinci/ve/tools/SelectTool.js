@@ -612,7 +612,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 	
 	onKeyDown: function(event){
-		if(event && this._moverWidget){
+		if(event){
 			dojo.stopEvent(event);
 			switch(event.keyCode){
 			case dojo.keys.SHIFT:
@@ -927,9 +927,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 			this._moverDragDiv = null;
 		}
-		this._mover = null;
-		this._moverBox = null;
-		this._moverLastEventTarget = null;
+		this._mover = this._moverBox = this._moverWidget = this._moverWidgets = this._moverLastEventTarget = null;
 		this._updateMoveCursor();
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();

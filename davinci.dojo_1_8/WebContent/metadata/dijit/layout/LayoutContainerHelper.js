@@ -43,7 +43,7 @@ return declare(null, {
 						parentWidgetType == 'html.form' ||
 						parentWidgetType == 'html.fieldset') {
 					//Being added to another well known container type
-					if (!parentChildren.length){
+					if (!parentChildren || !parentChildren.length){
 						//Widget is first child, so fill container
 						returnVal = {
 							w: '100%',

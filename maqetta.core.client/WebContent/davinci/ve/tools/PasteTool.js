@@ -84,40 +84,53 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 							selection = [];
 	
 						if (ToolCtor) {
-					    	myTool = new ToolCtor(d);
-				        }
-				        if (myTool && myTool.addPasteCreateCommand) {
-				        	var myArgs = {
-				        		parent: args.parent || this._context.getContainerNode(),
-				        		position: position,
-				        		index: index
-				        	};
-				        	w = myTool.addPasteCreateCommand(command,myArgs);
-				        	if (!w) {
+							myTool = new ToolCtor(d);
+						}
+
+						if (myTool && myTool.addPasteCreateCommand) {
+							var myArgs = {
+								parent: args.parent || this._context.getContainerNode(),
+				        position: position,
+				        index: index
+				      };
+
+				      // returns a deferred
+				      myTool.addPasteCreateCommand(command, myArgs).then(function(w) {
+								if (!w) {
+									return;
+								}
+
+				      	_continue(w);
+				      })
+						} else {
+							w = widget.createWidget(d);
+				      if (!w) {
 								return;
 							}
-				        } else {
-				        	w = widget.createWidget(d);
-				        	if (!w) {
-								return;
-							}
-				        	command.add(new AddCommand(w, args.parent || this._context.getContainerNode(), index));
-				        }
+
+							command.add(new AddCommand(w, args.parent || this._context.getContainerNode(), index));
+							_continue(w);
+						}
 	
-				        if (index !== undefined && index >= 0) {
-							index++;
-						}
-				        newWidgets.push(w);
-						if (position) {
-							var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
-							command.add(new StyleCommand(w, [{position: 'absolute'},{'z-index': absoluteWidgetsZindex}]));
-							var moveCommand = new MoveCommand(w, position.x, position.y, first_c, null, null, first_c /* disable snapping*/);
-							if(!first_c){
-								first_c = moveCommand;
+						// gets called whenever all nessesary commands have been added to command
+						function _continue(newidget) {
+							if (index !== undefined && index >= 0) {
+								index++;
 							}
-							command.add(moveCommand);
-						}
-	/*
+	
+							newWidgets.push(newidget);
+	
+							if (position) {
+								var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+								command.add(new StyleCommand(newidget, [{position: 'absolute'},{'z-index': absoluteWidgetsZindex}]));
+								var moveCommand = new MoveCommand(newidget, position.x, position.y, first_c, null, null, first_c /* disable snapping*/);
+								if(!first_c){
+									first_c = moveCommand;
+								}
+								command.add(moveCommand);
+							}
+
+		/*
 						selection.push(w);
 	
 						if(!command.isEmpty()){
@@ -127,6 +140,7 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 							}, this);
 						}
 	*/
+						}
 					}.bind(this));
 				}, this);
 			}.bind(this));

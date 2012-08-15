@@ -316,7 +316,6 @@ return {
 				    id: "cut",
 				    label: "Cut",
 				    iconClass: "editActionIcon editCutIcon",
-                    className: "maqLabelButton",
 				    action: "davinci/ve/actions/CutAction",
 				    toolbarPath: "cutcopypaste",
 				    keyBinding: {accel: true, charOrCode: "x"}
@@ -326,7 +325,6 @@ return {
 				    id: "copy",
 				    label: "Copy",
 				    iconClass: "editActionIcon editCopyIcon",
-                    className: "maqLabelButton",
 				    action: "davinci/ve/actions/CopyAction",
 				    toolbarPath: "cutcopypaste",
 				    keyBinding: {accel: true, charOrCode: "c"}
@@ -334,7 +332,6 @@ return {
                 {
                     label: "Paste",
                     iconClass: "editActionIcon editPasteIcon",
-                    className: "maqLabelButton",
                     action: "davinci/ve/actions/PasteAction",
                     toolbarPath: "cutcopypaste"
                 },
@@ -343,7 +340,6 @@ return {
                     iconClass: 'editActionIcon undoIcon',
                     action: "davinci/actions/UndoAction",
                     label: "Undo",
-                    className: "maqLabelButton",
                     //showLabel: true,
                     toolbarPath: "undoredo",
                     keyBinding: {accel: true, charOrCode: "z"}
@@ -352,7 +348,6 @@ return {
                     id: "redo",
                     iconClass: 'editActionIcon redoIcon',
                     action: "davinci/actions/RedoAction",
-                    className: "maqLabelButton",
                     //showLabel: true,
                     label: "Redo",
                     toolbarPath: "undoredo",
@@ -361,7 +356,6 @@ return {
 				{
                     id: "delete",
                     iconClass: "editActionIcon editDeleteIcon",
-                    className: "maqLabelButton",
                     label: "Delete",
                     action: "davinci/ve/actions/DeleteAction",
                     toolbarPath: "delete",

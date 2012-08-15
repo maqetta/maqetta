@@ -37,6 +37,8 @@ return declare(CreateTool, {
 				var command = this._getCreateCommand(args);
 				this._context.getCommandStack().execute(command);
 				this._select(this._mobileWidget);
+			} else {
+				console.log("EdgeToEdgeDataListCreateTool:_loadRequires failed to load all requires");
 			}
 		}));
 	},
@@ -152,6 +154,8 @@ return declare(CreateTool, {
 				
 				// pass back the container
 				deferred.resolve(this._mobileWidget);
+			} else {
+				console.log("EdgeToEdgeDataListCreateTool:_loadRequires failed to load all requires");
 			}
 		}));
 
@@ -164,7 +168,7 @@ return declare(CreateTool, {
 		promises.push(this._context.loadRequires(this._data[0].type, true));
 		promises.push(this._context.loadRequires(this._data[1].type, true));
 
-		return new all(promises);
+		return all(promises);
 	}
 });
 

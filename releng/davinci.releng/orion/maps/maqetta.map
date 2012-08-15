@@ -33,10 +33,10 @@ feature@maqetta.zazl.feature=GIT,tag=zazl-build,repo=https://github.com/maqetta/
 #zazl plugins
 plugin@maqetta.zazl=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/maqetta.zazl
 plugin@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
-plugin@org.cyberneko.html=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.cyberneko.html
-plugin@org.dojotoolkit.shrinksafe=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.dojotoolkit.shrinksafe
-plugin@org.json=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.json
-plugin@org.mozilla.javascript=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependancies/org.mozilla.javascript
+plugin@org.cyberneko.html=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.cyberneko.html
+plugin@org.dojotoolkit.shrinksafe=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.dojotoolkit.shrinksafe
+plugin@org.json=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json
+plugin@org.mozilla.javascript=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.mozilla.javascript
 plugin@org.dojotoolkit.compressor=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor
 plugin@org.dojotoolkit.compressor.shrinksafe=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor.shrinksafe
 plugin@org.dojotoolkit.json=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.json

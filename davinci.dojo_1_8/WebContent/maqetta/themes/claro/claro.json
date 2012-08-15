@@ -4,6 +4,11 @@
             "displayName": "Global" ,
             "states": {
                 "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".claro": [
                             "$std_10" 

@@ -31,7 +31,6 @@ define(["dojo/_base/declare",
 	        this._themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
 	        this._themeCount = this._themeData.length;
 	        for (var i = 0; i < this._themeData.length; i++){
-	            if(this._hasValue(this._themeData[i].name)) continue;
 	            var op = dojo.doc.createElement("option");
 	            op.value =this._themeData[i].name;
 	            op.text = this._themeData[i].name;

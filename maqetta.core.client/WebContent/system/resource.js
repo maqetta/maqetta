@@ -245,7 +245,12 @@ var Resource = {
 		var resource = system.resource.getWorkspace();
 		if (inFolder) {
 		    if (typeof inFolder == 'string') {
+		    	var tInFolder = inFolder;
 		        inFolder = system.resource.findResource(inFolder, ignoreCase);
+		        if (!inFolder) {
+		        	console.error('resource.findResoure: Folder '+ tInFolder +' not found');
+		        	return null; 
+		        }
 		    }
 		    resource = inFolder;
 		}

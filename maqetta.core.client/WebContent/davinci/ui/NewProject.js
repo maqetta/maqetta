@@ -63,7 +63,7 @@ define(["dojo/_base/declare",
 							newProjectName,
 							{
 								webContentFolder:"WebContent",
-								themeFolder: "WebContent/lib/themes",
+								themeFolder: "WebContent/themes",
 								widgetFolder: "WebContent/lib/custom"
 							}
 					);

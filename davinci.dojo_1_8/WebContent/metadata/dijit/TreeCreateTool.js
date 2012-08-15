@@ -39,6 +39,8 @@ return declare(CreateTool, {
 				var command = this._getCreateCommand(args);
 				this._context.getCommandStack().execute(command);
 				this._select(this._tree);	
+			} else {
+				console.log("TreeCreateTool:_loadRequires failed to load all requires");
 			}
 		}));
 	},
@@ -146,6 +148,8 @@ return declare(CreateTool, {
 				
 				// pass back the tree
 				deferred.resolve(this._tree);
+			} else {
+				console.log("TreeCreateTool:_loadRequires failed to load all requires");
 			}
 		}));
 
@@ -159,7 +163,7 @@ return declare(CreateTool, {
 		promises.push(this._context.loadRequires(this._data[1].type, true));
 		promises.push(this._context.loadRequires(this._data[2].type, true));
 
-		return new all(promises);
+		return all(promises);
 	}
 });
 

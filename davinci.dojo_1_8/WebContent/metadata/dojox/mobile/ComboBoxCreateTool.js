@@ -1,5 +1,7 @@
 define([
 	"dojo/_base/declare",
+	"dojo/Deferred",
+	"dojo/promise/all",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
@@ -10,6 +12,8 @@ define([
 	"./ComboBoxHelper"
 ], function (
 	declare,
+	Deferred,
+	all,
 	CreateTool,
 	Widget,
 	CompoundCommand,
@@ -26,11 +30,16 @@ return declare(CreateTool, {
 		this._resizable = "both";
 	},
 
-    _create: function(args) {
-        var command = this._getCreateCommand(args);
-        this._context.getCommandStack().execute(command);
-        this._select(this._mobileWidget);
-    },
+	_create: function(args) {
+		this._loadRequires().then(dojo.hitch(this, function(results) {
+			if (!dojo.some(results, function(arg){return !arg})) {
+				// all args are valid
+				var command = this._getCreateCommand(args);
+				this._context.getCommandStack().execute(command);
+				this._select(this._mobileWidget);
+			}
+		}));
+	},
 	
 	_getCreateCommand: function(args) {
 		if(this._data.length !== 2){
@@ -39,11 +48,6 @@ return declare(CreateTool, {
 
 		var dataList = this._data[0];
 		var comboBox = this._data[1];
-		
-		if(!this._context.loadRequires(dataList.type,true) ||
-			!this._context.loadRequires(comboBox.type,true)){
-			return;
-		}
 	
 		var dataListId = Widget.getUniqueObjectId(dataList.type, this._context.getDocument());
 		if(!dataList.properties){
@@ -108,8 +112,29 @@ return declare(CreateTool, {
 		data[0] = storeData;
 		data[1] = this._data;
 		this._data = data;
-		command.add( this._getCreateCommand(args));
-		return this._mobileWidget;
+
+		var deferred = new Deferred();
+
+		this._loadRequires().then(dojo.hitch(this, function(results) {
+			if (!dojo.some(results, function(arg){return !arg})) {
+				// all args are valid
+				command.add( this._getCreateCommand(args));
+				
+				// pass back the container
+				deferred.resolve(this._mobileWidget);
+			}
+		}));
+
+		return deferred.promise;
+	},
+
+	_loadRequires: function() {
+		var promises = [];
+
+		promises.push(this._context.loadRequires(this._data[0].type, true));
+		promises.push(this._context.loadRequires(this._data[1].type, true));
+
+		return new all(promises);
 	}
 
 });

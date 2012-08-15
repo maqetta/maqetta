@@ -1,5 +1,7 @@
 define([
 	"dojo/_base/declare",
+	"dojo/Deferred",
+	"dojo/promise/all",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
@@ -10,6 +12,8 @@ define([
 	"./TreeHelper"
 ], function(
 	declare,
+	Deferred,
+	all,
 	CreateTool,
 	Widget,
 	CompoundCommand,
@@ -29,9 +33,14 @@ return declare(CreateTool, {
 	},
 	
 	_create: function(args){
-		var command = this._getCreateCommand(args);
-		this._context.getCommandStack().execute(command);
-		this._select(this._tree);
+		this._loadRequires().then(dojo.hitch(this, function(results) {
+			if (!dojo.some(results, function(arg){return !arg})) {
+				// all args are valid
+				var command = this._getCreateCommand(args);
+				this._context.getCommandStack().execute(command);
+				this._select(this._tree);	
+			}
+		}));
 	},
 
 	_getCreateCommand: function(args){
@@ -42,13 +51,6 @@ return declare(CreateTool, {
 		var storeData = this._data[0];
 		var modelData = this._data[1];
 		var treeData = this._data[2];
-		
-		if(!this._context.loadRequires(storeData.type,true) || 
-			!this._context.loadRequires(modelData.type,true) ||
-			!this._context.loadRequires(treeData.type,true) || 
-			!this._context.loadRequires("html.script",true)) { //We're using html.script in our declarative HTML
-			return;
-		}
 
 		var storeId = Widget.getUniqueObjectId(storeData.type, this._context.getDocument());
 		if(!storeData.properties){
@@ -134,8 +136,30 @@ return declare(CreateTool, {
 		data[1] = modelData;
 		data[2] = this._data;
 		this._data = data;
-		command.add( this._getCreateCommand(args));
-		return this._tree;
+
+		var deferred = new Deferred();
+
+		this._loadRequires().then(dojo.hitch(this, function(results) {
+			if (!dojo.some(results, function(arg){return !arg})) {
+				// all args are valid
+				command.add(this._getCreateCommand(args));
+				
+				// pass back the tree
+				deferred.resolve(this._tree);
+			}
+		}));
+
+		return deferred.promise;
+	},
+
+	_loadRequires: function() {
+		var promises = [];
+
+		promises.push(this._context.loadRequires(this._data[0].type, true));
+		promises.push(this._context.loadRequires(this._data[1].type, true));
+		promises.push(this._context.loadRequires(this._data[2].type, true));
+
+		return new all(promises);
 	}
 });
 

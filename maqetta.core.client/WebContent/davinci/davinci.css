@@ -79,10 +79,11 @@ BODY{
 }
 
 .viewActionIcon, .editActionIcon {
-	width: 16px;
-	height: 16px;
+	width:27px;
+	height:27px;
 	background-repeat: no-repeat; 
 }
+
 .dijitButtonDisabled .editActionIcon {
 	opacity:.6;
 }
@@ -965,23 +966,23 @@ davinci_top_bar .dijitButtonNode {
 
 .editCutIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -516px;
+	background-position: -19px -512px;
 }
 .editCopyIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -450px;
+	background-position: -22px -450px;
 }
 .editPasteIcon {
 	background-image: url(img/sprite.png);
-	background-position: -82px -400px;
+	background-position: -12px -551px;
 }
 .editDeleteIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -648px;
+	background-position: -18px -669px;
 }
 .tableCommandsIcon {
 	background-image: url(img/sprite.png);
-	background-position: -75px -745px;
+	background-position: 0px -1406px;
 }
 .tableCommands .dijitArrowButtonInner {
 	display:none;

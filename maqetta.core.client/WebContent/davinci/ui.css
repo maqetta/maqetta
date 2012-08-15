@@ -224,17 +224,13 @@
 }
 .undoIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
-	background-position: -82px -1389px;
+	background-position: -41px -407px;
 	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
 }
 .redoIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
-	background-position: -82px -728px;
+	background-position: -7px -407px;
 	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
 }
 
 .renameIcon {

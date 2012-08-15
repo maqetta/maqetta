@@ -1151,7 +1151,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// give precedence to our 'config' options, over that in file; make sure
 		// to turn off parseOnLoad
 		lang.mixin(djConfig, config, {
-			async: false, // should be able to switch to true soon
+			async: true,
 			parseOnLoad: false
 		});
 		subs.dojoConfig = JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'");

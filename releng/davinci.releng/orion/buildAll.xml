@@ -150,6 +150,7 @@
 			 <ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 				<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
 			 	<property name="product" value="${builder}/maqettaOrionHosted.product"/>
+			 	<property name="run.dojo.build" value="${run.dojo.build}"/>
 			 	<property name="archiveNamePrefix" value="maqetta-orion-hosted-${buildLabel}"/>
 			 	 <property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
 			 	 <property name="basedir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />

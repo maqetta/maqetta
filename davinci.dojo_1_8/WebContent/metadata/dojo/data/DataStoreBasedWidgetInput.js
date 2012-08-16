@@ -19,9 +19,9 @@ define([
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/model/Path",
 	"davinci/ui/Dialog",
+	"davinci/ui/widgets/OpenFile",
 	"dijit/layout/ContentPane",
 	"dijit/form/Button",
-	"dijit/Tree",
 	"system/resource",
 	"dojo/dom-attr",
 	"dojo/i18n!dijit/nls/common",
@@ -47,9 +47,9 @@ define([
 	OrderedCompoundCommand,
 	Path,
 	Dialog,
+	OpenFile,
 	ContentPane,
 	Button,
-	Tree,
 	resource,
 	domAttr,
 	commonNls,
@@ -740,19 +740,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 	
 	fileSelection: function(e){			
-		//Set-up file selection tree
-		var treeParms= {	
-			id: "dataGridInputFileSelectionTree",
-			persist: false,
-			style: "height:10em;margin-top:10px;overflow:auto",
-			model: system.resource,
-			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
-			};
-		var tree = new Tree(treeParms);
-
-		//Set-up button
 		var okClicked = function() {
-			var tree = dijit.byId("dataGridInputFileSelectionTree");
+			var tree = openDialog.fileTree;
 			if (tree.selectedItem) {
 				var selectedItemPathStr = tree.selectedItem.getPath();
 				var path = new Path(selectedItemPathStr),
@@ -763,13 +752,12 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 					textArea.setValue(value); 
 					textArea.focus();
 					this._url = tree.selectedItem;
-					this._fileSelectionDialog.destroyRecursive();
-					delete this._fileSelectionDialog;
 					this.updateFormats();
 			}
 		};
 
-		this._fileSelectionDialog = Dialog.showDialog(dojoxNls.selectSource, tree, {width: 275, height: 220}, dojo.hitch(this, okClicked));
+		var openDialog = new OpenFile({finishButtonLabel: dojoxNls.selectLabel});
+		this._fileSelectionDialog = Dialog.showModal(openDialog, dojoxNls.selectSource, {width: 350, height: 250}, dojo.hitch(this, okClicked));
 	},
 	
 	updateFormats: function() {

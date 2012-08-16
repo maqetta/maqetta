@@ -4,8 +4,8 @@ define([
 	"dijit/_Widget",
 	"dijit/_Templated",
 	"dijit/form/Button",
-	"dijit/Dialog",
-	"dijit/Tree",
+	"davinci/ui/Dialog",
+	"davinci/ui/widgets/OpenFile",
 	"davinci/model/Path",
 	"dojo/text!./templates/IconContainerInputRow.html",
 	"dojo/i18n!dijit/nls/common",
@@ -19,7 +19,7 @@ define([
 	_Templated,
 	Button,
 	Dialog,
-	Tree,
+	OpenFile,
 	Path,
 	templateString,
 	dijitLangObj,
@@ -79,26 +79,10 @@ return declare([_Widget, _Templated], {
 	},
 
 	fileSelection: function(e){
-		this._fileSelectionDialog = new Dialog({
-			title : dojoxNls.selectSource,
-			style : "width:275px;height:220px;padding:0px;background-color:white;"
-		});
-
-		//Set-up file selection tree
-		var treeParms= {	
-			id: "dataGridInputFileSelectionTree",
-			persist: false,
-			style: "height:10em;margin-top:10px;overflow:auto",
-			model: system.resource,
-			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
-			};
-		var tree = new Tree(treeParms);
-
-		this._fileSelectionDialog.containerNode.appendChild(tree.domNode);
-		
+	
 		//Set-up button
 		var okClicked = function() {
-			var tree = dijit.byId("dataGridInputFileSelectionTree");
+			var tree = openDialog.fileTree;
 			if (tree.selectedItem) {
 				this.selectedFile = tree.selectedItem.getPath();
 				var selectedItemPathStr = tree.selectedItem.getPath();
@@ -107,30 +91,12 @@ return declare([_Widget, _Templated], {
 				// ignore the filename to get the correct path to the image
 				var value = path.relativeTo(srcDocPath, true).toString();
 				this.icon = value;
-				this._fileSelectionDialog.destroyRecursive();
-				delete this._fileSelectionDialog;
 				this._fileSelected();
 			}
 		};
-		var okLabel = commonNls.buttonOk;
-		var okStyle = 'padding:8px;';
-		var okBtn = new Button({
-			label : okLabel,
-			style : okStyle, /* type:"submit", */
-			onClick : dojo.hitch(this, okClicked)
-		});
-		this._fileSelectionDialog.containerNode.appendChild(okBtn.domNode);
-		
-		//Set up cancel handler
-		var onCancelFileSelection = function(e) {
-			this._fileSelectionDialog.destroyRecursive();
-			delete this._fileSelectionDialog;
-		};
 
-		dojo.connect(this._fileSelectionDialog, "onCancel", this, onCancelFileSelection);
-		
-		//Show dialog
-		this._fileSelectionDialog.show();
+		var openDialog = new OpenFile({finishButtonLabel: dojoxNls.selectLabel});
+		this._fileSelectionDialog = Dialog.showModal(openDialog, dojoxNls.selectSource, {width: 350, height: 250}, dojo.hitch(this, okClicked));
 	},
 
 	_fileSelected: function() {

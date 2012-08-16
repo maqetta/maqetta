@@ -47,7 +47,7 @@ plugin@org.dojotoolkit.shrinksafe=GIT,tag=zazl-build,repo=https://github.com/maq
 #plugin@org.json=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json
 
 plugin@org.mozilla.javascript=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.mozilla.javascript
-plugin@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
+fragment@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
 
 #
 # zazl feature

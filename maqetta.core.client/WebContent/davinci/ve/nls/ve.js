@@ -142,6 +142,6 @@ define({ root:
 		"SourceComboButton-splitVertical":"Split-V",
 		// Labels for DropdownButton for flow vs absolute
 		"LayoutDropDownButton-flow":"Flow",
-		"LayoutDropDownButton-absolute":"Abs&hellip;"
+		"LayoutDropDownButton-absolute":"Absolute"
 }
 });

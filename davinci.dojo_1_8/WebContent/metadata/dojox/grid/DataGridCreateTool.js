@@ -1,5 +1,7 @@
 define([
 	"dojo/_base/declare",
+	"dojo/Deferred",
+	"dojo/promise/all",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
@@ -10,6 +12,8 @@ define([
 	"../../dojo/data/DataStoreBasedWidgetInput"
 ], function(
 	declare,
+	Deferred,
+	all,
 	CreateTool,
 	Widget,
 	CompoundCommand,
@@ -28,9 +32,16 @@ return declare(CreateTool, {
 	},
 	
 	_create: function(args) {
-		var command = this._getCreateCommand(args);
-		this._context.getCommandStack().execute(command);
-		this._select(this._dataGrid);
+		this._loadRequires().then(dojo.hitch(this, function(results) {
+			if (!dojo.some(results, function(arg){return !arg})) {
+				// all args are valid
+				var command = this._getCreateCommand(args);
+				this._context.getCommandStack().execute(command);
+				this._select(this._dataGrid);
+			} else {
+				console.log("DataGridCreateTool:_loadRequires failed to load all requires");
+			}
+		}));
 	},
 	
 	_getCreateCommand: function(args) {
@@ -149,14 +160,33 @@ return declare(CreateTool, {
 		var storeId = store.id ? store.id : store._edit_object_id;
 		var storeWidget = Widget.byId(storeId);
 		var storeData = storeWidget.getData();
-		var data = [];
-		data[0] = storeData;
-		data[1] = this._data;
-		this._data = data;
-		command.add( this._getCreateCommand(args));
-		return this._dataGrid;
-	}
+		var data = this._data = [storeData, this._data];
 
+		var deferred = new Deferred();
+
+		this._loadRequires().then(dojo.hitch(this, function(results) {
+//			if (!dojo.some(results, function(arg){return !arg;})) {
+				// all args are valid
+				command.add(this._getCreateCommand(args));
+				
+				// pass back the container
+				deferred.resolve(this._dataGrid);
+//			} else {
+				//TODO: should reject
+//				console.log("DataGridCreateTool:_loadRequires failed to load all requires");
+//			}
+		}));
+
+		return deferred.promise;
+	},
+
+	_loadRequires: function() {
+		return all(
+		    this._data.map(function(d){
+		    	return this._context.loadRequires(d.type, true);
+		    }.bind(this))
+		);
+	}
 });
 
 });

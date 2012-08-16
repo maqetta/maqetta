@@ -165,16 +165,16 @@ return declare(CreateTool, {
 		var deferred = new Deferred();
 
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-//			if (!dojo.some(results, function(arg){return !arg;})) {
+			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
 				command.add(this._getCreateCommand(args));
 				
 				// pass back the container
 				deferred.resolve(this._dataGrid);
-//			} else {
+			} else {
 				//TODO: should reject
-//				console.log("DataGridCreateTool:_loadRequires failed to load all requires");
-//			}
+				console.log("DataGridCreateTool:_loadRequires failed to load all requires");
+			}
 		}));
 
 		return deferred.promise;

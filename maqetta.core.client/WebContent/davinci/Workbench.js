@@ -2029,6 +2029,7 @@ var Workbench = {
 			}
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = false;
+			davinci.Workbench._repositionFocusContainer();
 		}
 	},
 	
@@ -2054,6 +2055,7 @@ var Workbench = {
 			}
 			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = true;
+			davinci.Workbench._repositionFocusContainer();
 		}
 	},
 

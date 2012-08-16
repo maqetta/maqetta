@@ -16,9 +16,8 @@ var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [A
 			return;
 		}
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 		dojo.xhrGet({
-			url: location + "maqetta/cmd/managerVersion",
+			url: "cmd/managerVersion",
 			sync:false,
 			handleAs:"text",
 			content:{

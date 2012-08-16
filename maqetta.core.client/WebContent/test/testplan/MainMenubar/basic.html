@@ -17,14 +17,13 @@
 	<hr />
 	<h1 class="test_title">Main menubar basic tests</h1>
 
-	<h2 class="test_section">New menu: New HTML File - default filename, default options, no save</h2>
+	<h2 class="test_section">Create menu: create desktop application - default filename, default options, no save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
 				Login if necessary. 
 				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
-		<li>From the New menu on the banner, choose "HTML File..."</li>
-		<li>Make sure the Composition type is set to "Desktop hi-fi page"</li>
+		<li>From the Create menu on the banner, choose "Desktop Application..."</li>
 		<li>Click Create to accept the default file name (file1.html)</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Close the editor by clicking "x" on editor's tab</li>
@@ -39,11 +38,10 @@
 		<li>After closing, the file name should be removed from the Files palette.</li>
 	</ol>
 
-	<h2 class="test_section">New menu: New HTML File - default filename, with save</h2>
+	<h2 class="test_section">Create menu: create desktop application - default filename, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "HTML File..."</li>
-        <li>Make sure the Composition type is set to "Desktop hi-fi page"</li>
+		<li>From the Create menu on the banner, choose "Desktop Application..."</li>
 		<li>Click Create to accept the default file name (file1.html)</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -60,10 +58,10 @@
 		<li>After reopening, the visual page editor should show the widget you added to the page.</li>
 	</ol>
 
-	<h2 class="test_section">New menu: New HTML File - different filename in root directory, with save</h2>
+	<h2 class="test_section">Create menu: create desktop application - different filename in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "HTML File..."</li>
+		<li>From the Create menu on the banner, choose "Desktop Application..."</li>
 		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
 		<li>Drag/drop any widget onto canvas</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -76,13 +74,13 @@
 		<li>Same as above, except with a different filename.</li>
 	</ol>
 
-	<h2 class="test_section">New menu: New HTML File - nested directory, with save</h2>
+	<h2 class="test_section">Create menu: create desktop application - nested directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "Folder..."</li>
+		<li>From the Create menu on the banner, choose "Folder..."</li>
 		<li>Type a name for the new folder or accept the default name. Keep the current parent folder as ".".</li>
 		<li>Highlight the new folder name in the Files palette.</li>
-		<li>From the New menu on the banner, choose New HTML File...</li>
+		<li>From the Create menu on the banner, choose "Desktop Application...:</li>
 		<li>You should see your folder name listed as "parent folder". Enter a filename and click OK.</li>
 		<li>Drag a button widget onto the canvas.</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -97,10 +95,10 @@
 		<li>The button should be properly styled using the default theme (which in most cases is Claro, which results in bluish styling)</li>
 	</ol>
 
-	<h2 class="test_section">New menu: New CSS File - different filename in root directory, with save</h2>
+	<h2 class="test_section">Create menu: Create CSS File - different filename in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "CSS File..."</li>
+		<li>From the Create menu on the banner, choose "CSS File..."</li>
 		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
 		<li>Add some text to the file, such as ".foo { color:red; }"</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -113,10 +111,10 @@
 		<li>The new CSS file should be visible in the Files palette and upon reopening show the content you entered.</li>
 	</ol>
 
-	<h2 class="test_section">New menu: New JavaScript File - different filename in root directory, with save</h2>
+	<h2 class="test_section">Create menu: Create JavaScript File - different filename in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "JavaScript File..."</li>
+		<li>From the Create menu on the banner, choose "JavaScript File..."</li>
 		<li>Don't accept the default filename. Instead, type a new file name, but within the default directory.</li>
 		<li>Add some text to the file, such as "// a comment"</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -129,11 +127,11 @@
 		<li>The new JavaScript file should be visible in the Files palette and upon reopening show the content you entered.</li>
 	</ol>
 
-<!-- FIXME: Maybe restore this if we get Save/SaveAs buttons in toolbar for generic New File source editing. See #43
-	<h2 class="test_section">New menu: New File - in root directory, with save</h2>
+<!-- FIXME: Maybe restore this if we get Save/SaveAs buttons in toolbar for generic Create File source editing. See #43
+	<h2 class="test_section">Create menu: Create File - in root directory, with save</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "File..."</li>
+		<li>From the Create menu on the banner, choose "File..."</li>
 		<li>Type a new file name, such as "a.txt", within the default directory.</li>
 		<li>Add some text to the file, such as "some text"</li>
 		<li>Click the "Save" button on editor toolbar</li>
@@ -147,10 +145,10 @@
 	</ol>
 -->
 
-	<h2 class="test_section">New menu: New theme </h2>
+	<h2 class="test_section">Create menu: Create theme </h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "Theme..."</li>
+		<li>From the Create menu on the banner, choose "Theme..."</li>
 		<li>Select "claro" and enter a new theme name, such as "mytheme1", and click OK</li>
 		<li>Look under <code>themes/</code> folder in Files palette and look for a folder with the name you have provided.</li>
 	</ol>
@@ -160,7 +158,7 @@
 		<li>There should be a new folder <code>themes/mytheme1/</code>, inside of which should be many CSS files and files mytheme1.json and mytheme1.theme.</li>
 	</ol>
 
-	<h2 class="test_section">New menu: New review </h2>
+	<h2 class="test_section">Create menu: Create review </h2>
 	<p>(Review and commenting testing is provided elsewhere)</p>
 
 	<h2 class="test_section">Open menu: File...</h2>

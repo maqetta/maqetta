@@ -54,7 +54,8 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		var paths = [];
 
 		dojo.forEach(items, dojo.hitch(this, function(item) {
-			paths.push(this._createPath(item));
+			var widget = this.model._getWidget(item);
+			paths.push(this._createPath(widget));
 		}));
 
 		// we use the paths attr here
@@ -63,7 +64,9 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 
 	deselectAll: function() {
 		dojo.forEach(this.selectedItems, dojo.hitch(this, function(item) {
-			var treeNodes = this.getNodesByItem(item);
+			var widget = this.model._getWidget(item);
+
+			var treeNodes = this.getNodesByItem(widget);
 			if (treeNodes.length > 0) {
 				treeNodes[0].setSelected(false);
 			}
@@ -71,7 +74,9 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 	},
 
 	toggleNode: function(item, visible) {
-		var nodes = this.getNodesByItem(item);
+		var widget = this.model._getWidget(item);
+
+		var nodes = this.getNodesByItem(widget);
 		if (nodes && nodes.length > 0 && nodes[0]) {
 			nodes[0]._setToggleAttr(visible);
 		}
@@ -79,24 +84,31 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 
 	_userSelect: function() {
 		// user has made manual selection changes
-		var newSelection = this.selectedItems;
+
+		// these are are model items, so we need to change them to widgets
+		var newSelection = [];
+		dojo.forEach(this.selectedItems, dojo.hitch(this, function(item) {
+				newSelection.push(this.model._getWidget(item));
+		}));
+
+		// these are real widgets
 		var oldSelection = this.context.getSelection();
 
 		// deselect any olds not in new
 		dojo.forEach(oldSelection, dojo.hitch(this, function(item) {
-				if (newSelection.indexOf(item) == -1) {
-					this.context.deselect(item);
-				}
+			if (newSelection.indexOf(item) == -1) {
+				this.context.deselect(item);
+			}
 		}));
 
 		// now select news not in old
 		dojo.forEach(newSelection, dojo.hitch(this, function(item) {
-				if (oldSelection.indexOf(item) == -1) {
-					// don't select root
-					if (item.id != "myapp") {
-						this.context.select(item, true);
-					}
+			if (oldSelection.indexOf(item) == -1) {
+				// don't select root
+				if (item.id != "myapp") {
+					this.context.select(item, true);
 				}
+			}
 		}));
 	},
 

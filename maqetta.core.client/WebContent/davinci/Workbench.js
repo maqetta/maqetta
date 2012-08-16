@@ -1120,6 +1120,9 @@ var Workbench = {
 		if (item.run) {
 			item.run();
 		} else if (item.action) {
+			if (dojo.isString(item.action)) {
+				this._loadActionClass(item);
+			}
 			item.action.run(context);
 		} else if (item.method && context && context[item.method] instanceof Function) {
 			context[item.method](arg);

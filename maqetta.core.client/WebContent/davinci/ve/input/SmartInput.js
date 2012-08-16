@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/dom-geometry",
 	"davinci/ve/commands/ModifyRichTextCommand",
 	"dijit/layout/ContentPane",
 	"dijit/form/SimpleTextarea",
@@ -9,7 +10,7 @@ define([
 	"dojox/layout/ResizeHandle",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojo/i18n!dijit/nls/common"
-], function(declare, ModifyRichTextCommand, ContentPane, SimpleTextarea, TextBox, entities, ellipsis, ResizeHandle, veNls, commonNls){
+], function(declare, domGeometry, ModifyRichTextCommand, ContentPane, SimpleTextarea, TextBox, entities, ellipsis, ResizeHandle, veNls, commonNls){
 
 	// temporary workaround for nls.  the i18n dependencies aren't loading properly
 //	veNls = dojo.i18n.getLocalization("davinci.ve","ve");
@@ -468,7 +469,16 @@ return declare("davinci.ve.input.SmartInput", null, {
 		var pFloatingPane = new ContentPane({}, inline);
 		
 		this._inline = pFloatingPane;
-		
+
+		// lets position the coverup
+		var veContentArea = dijit.byId("editorsStackContainer").domNode; 
+		var p = domGeometry.position(veContentArea);
+		this._loadingDiv.style.position = "absolute";
+		this._loadingDiv.style.left = p.x+"px";
+		this._loadingDiv.style.top = p.y+"px";
+		this._loadingDiv.style.width = p.w+"px";
+		this._loadingDiv.style.height = p.h+"px";
+
 		var box = this._widget.getMarginBox();
 		var iframe_box = dojo.position(iframeNode);
 		var contentPane_box = dojo.position(smartInputContainer);
@@ -506,6 +516,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 		} 
 		left += silhouette_shift_x;
 		top += silhouette_shift_y;
+		
 		this._inline._setStyleAttr({display: "block", /*backgroundColor: "red",*/ top: top + 'px', left: left + 'px',  padding:"1px", overflow: "hidden", backgroundImage: "none"}); // padding needed to keep scroll bars off
 		this._startTop = top;
 		this._startLeft = left;

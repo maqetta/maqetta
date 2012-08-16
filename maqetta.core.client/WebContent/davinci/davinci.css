@@ -322,11 +322,11 @@ BODY{
 	background-color:white;
 	height:44px;
 	border-top: 1px solid gray;
-	background-image:-webkit-linear-gradient(white 75%, #999 100%);
-	background-image:-moz-linear-gradient(white 75%, #999 100%);
-	background-image:-ms-linear-gradient(white 75%, #999 100%);
-	background-image:-o-linear-gradient(white 75%, #999 100%);
-	background-image:linear-gradient(white 75%, #999 100%);
+	background-image:-webkit-linear-gradient(white 75%, #949 100%);
+	background-image:-moz-linear-gradient(white 75%, #949 100%);
+	background-image:-ms-linear-gradient(white 75%, #949 100%);
+	background-image:-o-linear-gradient(white 75%, #949 100%);
+	background-image:linear-gradient(white 75%, #949 100%);
 }
 .claro .dijitToolbar.davinciToolbar .dijitButtonContents {
 	padding:0 2px;
@@ -376,11 +376,11 @@ BODY{
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitToggleButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox.maqLabelButton.maqLabelButtonSelected .dijitButtonNode {
 	background: #AAA;
-	background-image: -webkit-linear-gradient(#b4b4b4, #999999);
-	background-image: -moz-linear-gradient(#b4b4b4, #999999);
-	background-image: -ms-linear-gradient(#b4b4b4, #999999);
-	background-image: -o-linear-gradient(#b4b4b4, #999999);
-	background-image: linear-gradient(#b4b4b4, #999999);
+	background-image: -webkit-linear-gradient(#b4b4b4, #949949);
+	background-image: -moz-linear-gradient(#b4b4b4, #949949);
+	background-image: -ms-linear-gradient(#b4b4b4, #949949);
+	background-image: -o-linear-gradient(#b4b4b4, #949949);
+	background-image: linear-gradient(#b4b4b4, #949949);
 }
 #davinci_app .davinciToolbar .maqLabelButton.maqDesignButton {
 	margin-right:0px;
@@ -1134,7 +1134,7 @@ davinci_top_bar .dijitButtonNode {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 998;
+	z-index: 948;
 	display: block;
 	opacity: 0.5;
 	background-image: url('../dojox/image/resources/images/loading.gif');
@@ -1150,7 +1150,7 @@ davinci_top_bar .dijitButtonNode {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: 998;
+	z-index: 948;
 	display: block;
 	opacity: 1.0;
 	/*background-image: url('../dojox/image/resources/images/loading.gif');
@@ -1187,7 +1187,7 @@ davinci_top_bar .dijitButtonNode {
 	position: absolute;
 	/*width: 750px;*/
 	/*height: 380px;*/
-	z-index: 999;
+	z-index: 949;
 	display: none;
 }
 
@@ -1200,7 +1200,7 @@ davinci_top_bar .dijitButtonNode {
     left: 35px;
     top: 19px;
     width: 16px;
-    z-index: 999;
+    z-index: 949;
     position: absolute;
 }
 

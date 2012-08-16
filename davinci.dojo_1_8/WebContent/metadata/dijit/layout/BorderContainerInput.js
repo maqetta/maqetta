@@ -172,7 +172,6 @@ return declare(ContainerInput, {
         region.bottom = obj.checked ? true : false;
         obj = this._input.centerCheckBox;
         region.center = obj.checked ? true : false;
-        this.cancel();
         var data = this._widget.getData(); 
         data.properties.design = type;
         var newChildren = [];
@@ -214,12 +213,6 @@ return declare(ContainerInput, {
 		this._widget._edit_context._focuses[0]._selectedWidget = this._widget; // get the focus on the current node
 		var context=this._widget.getContext();
 		context.select(this._widget, null, false); // redraw the box around the widget
-	},
-	
-	cancel: function(){
-		this._inline.destroyDescendants();
-		this._inline.destroy();
-        delete this._inline;
 	},
 	
 	updateDialog: function(){

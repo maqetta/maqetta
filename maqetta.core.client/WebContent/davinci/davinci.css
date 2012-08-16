@@ -383,6 +383,18 @@ BODY{
 	background-image: -o-linear-gradient(#fefefe, #cccccc);
 	background-image: linear-gradient(#fefefe, #cccccc);
 }
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitToggleButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox.maqLabelButton.dijitActive .dijitButtonNode {
+	background: #ccc;
+	background-image: -webkit-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: -moz-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: -ms-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: -o-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: linear-gradient(#d0d0d0, #e4e4e4);
+}
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
@@ -410,6 +422,27 @@ BODY{
 #davinci_app .davinciToolbar .dijitComboButton.maqLabelButton.maqSourceComboButton .dijitButtonNode.dijitStretch {
 	border-radius:0px;
 }
+
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton .dijitArrowButtonInner,
+ #davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton .dijitArrowButtonInner {
+	width: 8px;
+	height: 8px;
+	background-image: url(img/sprite.png);
+	background-position: -22px -44px;
+}
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton .dijitArrowButtonInner {
+	width: 8px;
+	height: 8px;
+	background-image: url(img/sprite.png);
+	background-position: -22px -44px;
+	margin-left:2px;
+	margin-right:1px;
+}
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton .dijitArrowButtonInner {
+	margin-left:5px;
+	margin-right:-2px;
+}
+
 #davinci_app {
 	height: 100%;
 }
@@ -506,7 +539,11 @@ davinci_top_bar .dijitButtonNode {
 }
 #davinci_top_bar  #maq_banner_editor_commands .dijitArrowButtonInner {
 	background-image:url(img/sprite.png);
-	background-position:5px -41px;
+	background-position:-1px -45px;
+	width:8px;
+	height:8px;
+	margin-left:6px;
+	margin-right:-4px;
 }
 
 #davinci_file_tabs {
@@ -1091,6 +1128,10 @@ davinci_top_bar .dijitButtonNode {
 	margin:12px 0 16px 8px;
 }
 
+.sourceMenuIcon {
+	width:16px;
+	height:16px;
+}
 .designModeIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0 -1842px;
@@ -1804,4 +1845,58 @@ davinci_top_bar .dijitButtonNode {
 .shapesDragDiv {
 	z-index:1000000;
 	position:absolute;
+}
+
+#visualEditorBorder {
+	pointer-events:none;
+}
+#visualEditorBorderTopLeft {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:7px;
+	height:7px;
+	border-top: 1px solid white;
+	border-left: 1px solid white;
+	background:-webkit-linear-gradient(-45deg,#e0e0e0,#fcfcfc);
+}
+#visualEditorBorderTopRight {
+	position:absolute;
+	right:0px;
+	top:0px;
+	width:7px;
+	height:7px;
+	border-top: 1px solid white;
+	border-right: 1px solid white;
+	background:-webkit-linear-gradient(225deg,#e0e0e0,#fcfcfc);
+	}
+#visualEditorBorderTop {
+	position:absolute;
+	left:8px;
+	right:8px;
+	top:0px;
+	border-top:1px solid white;
+	border-bottom:1px solid white;
+	height:6px;
+	background:-webkit-linear-gradient(#e0e0e0,#fcfcfc);
+}
+#visualEditorBorderRight {
+	position:absolute;
+	right:0px;
+	top:8px;
+	bottom:0px;
+	width:6px;
+	border-left:1px solid white;
+	border-right:1px solid white;
+	background:-webkit-linear-gradient(180deg,#e0e0e0,#fcfcfc);
+}
+#visualEditorBorderLeft {
+	position:absolute;
+	left:0px;
+	top:8px;
+	bottom:0px;
+	width:6px;
+	border-left:1px solid white;
+	border-right:1px solid white;
+	background:-webkit-linear-gradient(0deg,#e0e0e0,#fcfcfc);
 }

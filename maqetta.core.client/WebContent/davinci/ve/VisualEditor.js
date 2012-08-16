@@ -87,6 +87,18 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		this._pageEditor.deferreds = all(Metadata.getDeferreds());
 		this._subscriptions.push(dojo.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this)));
 		this._subscriptions.push(dojo.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this)));
+		
+		var visualEditorBorder = document.getElementById('visualEditorBorder');
+		if(!visualEditorBorder){
+			var focusContainer = davinci.Workbench.focusContainer;
+			visualEditorBorder = dojo.create('div', {id:'visualEditorBorder'}, focusContainer);
+			dojo.create('div', {id:'visualEditorBorderTopLeft'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderTopRight'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderTop'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderRight'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderLeft'}, visualEditorBorder);
+		}
+		
 	},
 	
 	getDevice: function() {

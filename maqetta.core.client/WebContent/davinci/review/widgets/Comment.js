@@ -60,10 +60,9 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 
 	postCreate: function() {
 		if (!this.existed) {
-			// Ensure that the comment is created on the server when it is "newed".
-			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
+			// Ensure that the comment is created on the server when it is "needed".
 			dojo.xhrGet({
-				url: location + "maqetta/cmd/addComment",
+				url: "cmd/addComment",
 				handleAs: "json",
 				content: {
 					id: this.commentId,
@@ -206,9 +205,8 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		}
 		// Indicate that this is a change of the comment status (open/close)
 		var updateStatus = arg && arg.statusChanged;
-		var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 		dojo.xhrGet({
-			url: location + "maqetta/cmd/updateComment",
+			url: "cmd/updateComment",
 			handleAs: "json",
 			content: {
 				id: this.commentId,

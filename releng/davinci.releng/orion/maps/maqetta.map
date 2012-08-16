@@ -42,7 +42,10 @@ plugin@org.dojotoolkit.optimizer.servlet=GIT,tag=zazl-build,repo=https://github.
 plugin@org.dojotoolkit.server.util=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util
 plugin@org.dojotoolkit.server.util.js=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util.js
 plugin@org.dojotoolkit.shrinksafe=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.dojotoolkit.shrinksafe
-plugin@org.json=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json
+
+# org.json plugin provided in the orion dependencies.
+#plugin@org.json=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json
+
 plugin@org.mozilla.javascript=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.mozilla.javascript
 plugin@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=zazl-build,repo=https://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
 

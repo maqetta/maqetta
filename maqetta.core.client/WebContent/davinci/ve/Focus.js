@@ -299,6 +299,17 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._nobs[RIGHT_TOP].style.left = nobRightsideAdjustedLeft + "px";
 		this._nobs[RIGHT_BOTTOM].style.left = nobRightsideAdjustedLeft + "px";
 		this._nobs[RIGHT_BOTTOM].style.top = nobBottomsideAdjustedTop + "px";
+		
+		// Hack to get around Chrome bug/quirk that is triggered by certain widgets.
+		// See issue https://github.com/maqetta/maqetta/issues/2967
+		// For some reason, even though the left/top coordinates of the focus box
+		// are correctly updated, Chrome doesn't actually redraw the focus box until
+		// some other "redraw trigger" happens within its code.
+		// To force such an redraw trigger, fiddle with opacity property.
+		this.domNode.style.opacity = .95;
+		setTimeout(function(){
+			this.domNode.style.opacity = 1;
+		}.bind(this),1)
 	},
 
 	onMouseDown: function(event){

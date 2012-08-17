@@ -1,23 +1,23 @@
 define(["dojo/_base/declare",
 		"dojo/dom-geometry",
-		"davinci/Workbench",
-		"davinci/workbench/Preferences",
-		"davinci/ve/tools/_Tool",
-		"davinci/ve/widget",
-		"davinci/ve/metadata",
+		"../../Workbench",
+		"../../workbench/Preferences",
+		"./_Tool",
+		"../widget",
+		"../metadata",
 		"dojo/dnd/Mover",
-		"davinci/XPathUtils",
-		"davinci/html/HtmlFileXPathAdapter",
-		"davinci/ve/Snap",
-		"davinci/commands/CompoundCommand",
-		"davinci/ve/commands/AddCommand",
-		"davinci/ve/commands/RemoveCommand",
-		"davinci/ve/commands/ReparentCommand",
-		"davinci/ve/commands/MoveCommand",
-		"davinci/ve/commands/ResizeCommand",
-		"davinci/ve/commands/ModifyCommand",
-		"davinci/ve/States",
-		"davinci/ve/utils/GeomUtils"
+		"../../XPathUtils",
+		"../../html/HtmlFileXPathAdapter",
+		"../Snap",
+		"../../commands/CompoundCommand",
+		"../commands/AddCommand",
+		"../commands/RemoveCommand",
+		"../commands/ReparentCommand",
+		"../commands/MoveCommand",
+		"../commands/ResizeCommand",
+		"../commands/ModifyCommand",
+		"../States",
+		"../utils/GeomUtils"
 ], function(
 		declare,
 		domGeom,
@@ -123,7 +123,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				context.deselect(widget);
 			}else{
 				moverWidget = widget;
-				this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+				this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:Date.now() };
 			}
 		}else{
 			if(ctrlKey){
@@ -135,7 +135,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}else{
 				if(selectedAncestor){
 					moverWidget = selectedAncestor;
-					this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+					this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:Date.now() };
 				}else{
 					if(widget == context.rootWidget){
 						// Simple mousedown over body => deselect all (for now)
@@ -148,7 +148,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						context.select(widget, ctrlKey);
 						moverWidget = widget;
 					}else{
-						this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
+						this._mouseDownInfo = { widget:widget, eventTargetWidget:eventTargetWidget, pageX:event.pageX, pageY:event.pageY, dateValue:Date.now() };
 						this._areaSelectInit(event.pageX, event.pageY);
 					}
 				}
@@ -157,7 +157,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(moverWidget){
 			var position_prop;
 			var userdoc = context.getDocument();	// inner document = user's document
-			var userDojo = (userdoc.defaultView && userdoc.defaultView.dojo);
+			var userDojo = userdoc.defaultView && userdoc.defaultView.dojo;
 			if(userDojo){
 				position_prop = userDojo.style(moverWidget.domNode, 'position');
 				this._moverAbsolute = (position_prop == 'absolute');
@@ -255,7 +255,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var clickInteral = 750;	// .75seconds: allow for leisurely click action
 		var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 		var clickDistance = 10;	// within 10px: inexact for tablets
-		var dateValue = (new Date()).valueOf();
+		var dateValue = Date.now();
 
 		// Because we create a mover with mousedown, we need to include our own click
 		// logic in case there was no actual move and user simple just clicked

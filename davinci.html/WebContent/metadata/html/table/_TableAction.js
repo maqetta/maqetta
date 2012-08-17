@@ -25,11 +25,23 @@ return declare(ContextAction, {
 		return true;
 	},
 	
-	shouldShow: function(context){
+	shouldShow: function(context, params){
+		// For context menus on the page editor canvas and in Outline palette,
+		// don't show table commands unless a table cell is selected.
+		// For main toolbar's table commands icon, show table commands always
+		// (although unless a cell is selected, the toolbar commands will be disabled)
 		context = this.fixupContext(context);
-		//return !!(context && this._getCell(context));
 		var editor = context ? context.editor : null;
-		return (editor && editor.declaredClass == 'davinci.ve.PageEditor');
+		var retval = (editor && editor.declaredClass == 'davinci.ve.PageEditor');
+		if(params && params.menu && params.menu._partID){
+			var partID = params.menu._partID;
+			if(partID == "davinci.ve.visualEditor" || partID == "davinci.ve.VisualEditorOutline"){
+				retval = this._getCell(context);
+			}else{
+				retval = false;
+			}
+		}
+		return retval;
 	},	
 	
 	_getCell: function(context){

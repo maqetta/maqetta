@@ -299,6 +299,17 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._nobs[RIGHT_TOP].style.left = nobRightsideAdjustedLeft + "px";
 		this._nobs[RIGHT_BOTTOM].style.left = nobRightsideAdjustedLeft + "px";
 		this._nobs[RIGHT_BOTTOM].style.top = nobBottomsideAdjustedTop + "px";
+		
+		// Hack to get around Chrome bug/quirk that is triggered by certain widgets.
+		// See issue https://github.com/maqetta/maqetta/issues/2967
+		// For some reason, even though the left/top coordinates of the focus box
+		// are correctly updated, Chrome doesn't actually redraw the focus box until
+		// some other "redraw trigger" happens within its code.
+		// To force such an redraw trigger, fiddle with opacity property.
+		this.domNode.style.opacity = .95;
+		setTimeout(function(){
+			this.domNode.style.opacity = 1;
+		}.bind(this),1)
 	},
 
 	onMouseDown: function(event){
@@ -360,7 +371,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			this.onMouseUp(e);
 		}));
 		var userdoc = this._context.getDocument();	// inner document = user's document
+
+		// Chrome doesn't blur active focus node when switching frames, so focus on something else focusable first to cause the blur
+		document.getElementById("davinci-help-dropdown").focus();
 		userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+
 		this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
 			this.onKeyDown(e);
 		}));

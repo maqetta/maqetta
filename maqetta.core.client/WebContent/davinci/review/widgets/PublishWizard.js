@@ -204,10 +204,9 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	_initPage3: function() {
 		var formatPic = function(result) {
 			if (!this.photoRepositoryUrl) {
-				var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 				this.photoRepositoryUrl = "";
 //				this.photoRepositoryUrl = Runtime.serverJSONRequest({
-//					url: location + "maqetta/cmd/getBluePageInfo",
+//					url: "cmd/getBluePageInfo",
 //					handleAs: "text",
 //					content:{'type': "photo"},
 //					sync: true
@@ -280,9 +279,8 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			label: "<div style='width:75px;height:10px;margin:-6px 0 0 0'>" + widgetsNls.add + "</div>"
 		},this.addReviewerButton);
 
-		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 		var stateStore = new QueryReadStore({
-			url: location + "maqetta/cmd/getBluePageInfo",
+			url: "cmd/getBluePageInfo",
 			fetch: function(request) {
 //				var searchQuery = request.query.displayName;
 				var searchQuery = "";
@@ -599,9 +597,8 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		this.node = node;
 		this.isRestart = isRestart;
 		if (!node) {
-			var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 			var latestVersionId = Runtime.serverJSONRequest({
-				url: location + "maqetta/cmd/getLatestVersionId",
+				url: "cmd/getLatestVersionId",
 				sync: true
 			});
 			this.versionTitle.set("value", "version " + latestVersionId);
@@ -712,11 +709,10 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			receiveEmail:receiveEmail
 		};
 		var urlParmsQueryStr = dojo.objectToQuery(urlParms);
-		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
-		
+
 		//Do the POST
 		dojo.xhrPost({
-			url: location + "maqetta/cmd/publish" + "?" + urlParmsQueryStr,
+			url: "cmd/publish" + "?" + urlParmsQueryStr,
 			sync:false,
 			handleAs:"json",
 			error: function(response) {

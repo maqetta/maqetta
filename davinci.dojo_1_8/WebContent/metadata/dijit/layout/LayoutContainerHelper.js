@@ -31,7 +31,7 @@ return declare(null, {
 			if (parentWidget.type) {
 				if (parentWidgetType == 'html.body') {
 					//Being added to BODY
-					if (!parentChildren.length){
+					if (!parentChildren || parentChildren.length){
 						//Widget is first child, so fill body if fillBodyAsOnlyChild flag tells us to
 						returnVal = {
 							w: '100%',

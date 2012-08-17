@@ -75,7 +75,18 @@ define(["dojo/_base/declare",
 		_okButton: function(){
 			var resources = this.fileTree.get('selectedItems');
 			this.value = resources[0];
-			this.cancel = false;
+		},
+
+		_onDblClick: function(item) {
+			this._okButton();
+			this.onExecute();
+		},
+
+		_onKeyPress: function(e) {
+			if (e.which == dojo.keys.ENTER) {
+				this._okButton();
+				this.onExecute();
+			}
 		},
 		
 		_getValueAttr: function(){
@@ -89,6 +100,8 @@ define(["dojo/_base/declare",
 		resize: function(coords) {
 			this.contentpane.resize(coords);
 		},
+
+		onExecute: function(){},
 		
 		onClose: function(){}
 	});

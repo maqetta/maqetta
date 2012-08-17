@@ -139,7 +139,7 @@ DialogClass.showModal = function(content, title, style, callback) {
 		contentStyle: style
 	});
 
-	handles.push(connect.connect(myDialog, "onExecute", content, dojo.hitch(this, function() {
+	var _onExecute = dojo.hitch(this, function() {
 		var cancel = false;
 		if (callback) {
 			cancel = callback();
@@ -150,7 +150,13 @@ DialogClass.showModal = function(content, title, style, callback) {
 		}
 
 		this._timedDestroy(myDialog, handles);
-	})));
+	});
+
+	handles.push(connect.connect(myDialog, "onExecute", content, _onExecute));
+
+	if (content.onExecute) {
+		handles.push(connect.connect(content, "onExecute", content, _onExecute));
+	}
 
 	handles.push(connect.connect(content, "onClose", dojo.hitch(this, function() {
 		this._timedDestroy(myDialog, handles);

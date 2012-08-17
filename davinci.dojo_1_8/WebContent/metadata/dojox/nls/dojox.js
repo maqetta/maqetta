@@ -11,6 +11,7 @@ define({ root: {
 		"dataFromWorkspace":"Data file from workspace",
 		"dataFromJsonpURL": "Data from URL (JSONP)",
 		"callbackParameter": "Callback ",
+		"selectLabel": "Select",
 
 		//grid/DataGridHelper.js
 		'properyNotSupported':'Property "${0}" is not supported in desinger, use Preview to view.',

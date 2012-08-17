@@ -87,6 +87,18 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		this._pageEditor.deferreds = all(Metadata.getDeferreds());
 		this._subscriptions.push(dojo.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this)));
 		this._subscriptions.push(dojo.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this)));
+		
+		var visualEditorBorder = document.getElementById('visualEditorBorder');
+		if(!visualEditorBorder){
+			var editorsStackContainer = document.getElementById('editorsStackContainer');
+			visualEditorBorder = dojo.create('div', {id:'visualEditorBorder'}, editorsStackContainer);
+			dojo.create('div', {id:'visualEditorBorderTopLeft'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderTopRight'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderTop'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderRight'}, visualEditorBorder);
+			dojo.create('div', {id:'visualEditorBorderLeft'}, visualEditorBorder);
+		}
+		
 	},
 	
 	getDevice: function() {
@@ -517,6 +529,14 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			this._registerScrollHandler();
 			if(focusContainer && this._focusPopup){
 				this._focusPopup.bindDomNode(focusContainer);
+			}
+		}
+		var visualEditorBorder = document.getElementById('visualEditorBorder');
+		if(visualEditorBorder){
+			if(!event.editor || event.editor.declaredClass != "davinci.ve.PageEditor"){
+				visualEditorBorder.style.display = 'none';
+			}else{
+				visualEditorBorder.style.display = 'block';
 			}
 		}
 	},

@@ -141,6 +141,7 @@ var getSelectedResource = function() {
 };
 
 var initializeWorkbenchState = function(){
+	davinci.Workbench._expandCollapsePaletteContainers(null);
 
 	var isReview = function (resPath) {
 		return resPath.indexOf(".review") > -1;
@@ -626,7 +627,8 @@ var Workbench = {
 				id:'davinci_file_tabs',
 				closable: true,
 				region: "top",
-				layoutPriority:1
+				layoutPriority:1,
+				style:'display:none'
 			});
 			
 			Workbench.shadowTabs.setTitle = function(tab, title) { 
@@ -649,14 +651,15 @@ var Workbench = {
 				id:'davinci_toolbar_pane',
 				region: "top",
 				layoutPriority:1,
-				content:'<div id="davinci_toolbar_container"></div>'
+				content:'<div id="davinci_toolbar_container"></div>',
+				style:'display:none'
 			});
 		
 			appBorderContainer.addChild(topBarPane);
 			appBorderContainer.addChild(mainStackContainer);
-			mainStackContainer.addChild(welcomePage);
 			mainStackContainer.addChild(mainBorderContainer);
-			mainStackContainer.selectChild(welcomePage);
+			mainStackContainer.selectChild(mainBorderContainer);
+
 			mainBorderContainer.addChild(shadowTabContainer);
 			mainBorderContainer.addChild(toolbarPane);
 			mainBorderContainer.addChild(mainBodyContainer);
@@ -1070,7 +1073,7 @@ var Workbench = {
 						}
 
 						if (item.action) {
-							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext)) {
+							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext, {menu:dojoMenu})) {
 								continue;
 							}
 							//FIXME: study this code for bugs.
@@ -1120,6 +1123,9 @@ var Workbench = {
 		if (item.run) {
 			item.run();
 		} else if (item.action) {
+			if (dojo.isString(item.action)) {
+				this._loadActionClass(item);
+			}
 			item.action.run(context);
 		} else if (item.method && context && context[item.method] instanceof Function) {
 			context[item.method](arg);
@@ -1482,6 +1488,7 @@ var Workbench = {
 				popup.bindDomNode(domNode);
 			}
 			popup._widgetCallback=widgetCallback;
+			popup._partID = partID;
 			return popup;
 		}
 	},
@@ -1659,6 +1666,7 @@ var Workbench = {
 	_switchEditor: function(newEditor, startup) {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
+		this._showEditorTopPanes();
 		try {
 			dojo.publish("/davinci/ui/editorSelected", [{
 				editor: newEditor,
@@ -1743,29 +1751,39 @@ var Workbench = {
 	},
 
 	_expandCollapsePaletteContainers: function(newEditor) {
-		// First, we will get the metadata for the extension and get its list of 
-		// palettes to bring to the top
-		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
-			return extension.id === newEditor.editorID;
-		});
-		if (editorExtensions && editorExtensions.length > 0) {
-			var expandPalettes = editorExtensions[0].expandPalettes;
-			var leftBC = dijit.byId('left_mainBody');
+		var leftBC = dijit.byId('left_mainBody');
+		var rightBC = dijit.byId('right_mainBody');
+		if(!newEditor){
 			if(leftBC){
-				if(expandPalettes && expandPalettes.indexOf('left')>=0){
-					this.expandPaletteContainer(leftBC.domNode);
-				}else{
-					this.collapsePaletteContainer(leftBC.domNode);
-				}
+				this.collapsePaletteContainer(leftBC.domNode);
 			}
-			var rightBC = dijit.byId('right_mainBody');
 			if(rightBC){
-				if(expandPalettes && expandPalettes.indexOf('right')>=0){
-					this.expandPaletteContainer(rightBC.domNode);
-				}else{
-					this.collapsePaletteContainer(rightBC.domNode);
+				this.collapsePaletteContainer(rightBC.domNode);
+			}			
+		}else{
+			// First, we will get the metadata for the extension and get its list of 
+			// palettes to bring to the top
+			var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
+				return extension.id === newEditor.editorID;
+			});
+			if (editorExtensions && editorExtensions.length > 0) {
+				var expandPalettes = editorExtensions[0].expandPalettes;
+				if(leftBC){
+					if(expandPalettes && expandPalettes.indexOf('left')>=0){
+						this.expandPaletteContainer(leftBC.domNode);
+					}else{
+						this.collapsePaletteContainer(leftBC.domNode);
+					}
+				}
+				if(rightBC){
+					if(expandPalettes && expandPalettes.indexOf('right')>=0){
+						this.expandPaletteContainer(rightBC.domNode);
+					}else{
+						this.collapsePaletteContainer(rightBC.domNode);
+					}
 				}
 			}
+			
 		}
 	},
 
@@ -1811,15 +1829,13 @@ var Workbench = {
 			var editors=dijit.byId("editors_container").getChildren();
 			if (!editors.length) {
 				Workbench._switchEditor(null);
+				this._expandCollapsePaletteContainers(null);
 				var editorsStackContainer = dijit.byId('editorsStackContainer');
 				var editorsWelcomePage = dijit.byId('editorsWelcomePage');
 				if (editorsStackContainer && editorsWelcomePage){
 					editorsStackContainer.selectChild(editorsWelcomePage);
 				}
-				var welcomePage = dijit.byId('welcomePage');
-				if (Workbench.mainStackContainer && welcomePage){
-					Workbench.mainStackContainer.selectChild(welcomePage);
-				}
+				this._hideEditorTopPanes();
 			}
 			delete davinci.Workbench._editorTabClosing[page.id];
 		}
@@ -2014,6 +2030,7 @@ var Workbench = {
 			}
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = false;
+			davinci.Workbench._repositionFocusContainer();
 		}
 	},
 	
@@ -2039,6 +2056,7 @@ var Workbench = {
 			}
 			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = true;
+			davinci.Workbench._repositionFocusContainer();
 		}
 	},
 
@@ -2064,6 +2082,21 @@ var Workbench = {
 				}
 			}
 		}
+	},
+	
+	_hideShowEditorTopPanes: function(displayPropValue){
+		var davinci_app = dijit.byId('davinci_app');
+		var davinci_file_tabs = dijit.byId('davinci_file_tabs');
+		var davinci_toolbar_pane = dijit.byId('davinci_toolbar_pane');
+		davinci_file_tabs.domNode.style.display = displayPropValue;
+		davinci_toolbar_pane.domNode.style.display = displayPropValue;
+		davinci_app.resize();
+	},
+	_hideEditorTopPanes: function(){
+		this._hideShowEditorTopPanes('none');
+	},
+	_showEditorTopPanes: function(){
+		this._hideShowEditorTopPanes('block');
 	},
 
 	_XX_last_member: true	// dummy with no trailing ','

@@ -41,12 +41,14 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 			return this._context.model.fileName;
 		}
 
-		if (item.isWidget) {
-			label = Widget.getLabel(item);
+		var widget = this._getWidget(item);
+
+		if (widget.isWidget) {
+			label = Widget.getLabel(widget);
 			return label;
 		}
 
-		var type = item.type;
+		var type = widget.type;
 
 		if (!type) {
 			return;
@@ -62,10 +64,10 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		} else if (type.indexOf(".") > 0 ) {
 			label = type.substring(type.lastIndexOf(".")+1);
 		} else {
-			label = item.label || type;
+			label = widget.label || type;
 		}
 
-		var widget = Widget.byId(item.id, this._context.getDocument());
+		var widget = Widget.byId(widget.id, this._context.getDocument());
 		if (widget) {
 			var id = widget.getId();
 			if (id ) {
@@ -85,21 +87,31 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		if (item.id == "myapp" || item === this._context.rootNode) {
 			widgets = this._context.getTopWidgets();
 		} else {
-			widgets = item.getChildren();
+			widgets = this._getWidget(item).getChildren();
 		}
 
-		return widgets.filter(function(widget) {
+		var filtered = widgets.filter(function(widget) {
 			// managed widget only
 			return widget && widget.getContext && widget.getContext() && !widget.internal;
 		});
+
+		var results = [];
+
+		dojo.forEach(filtered, dojo.hitch(this, function(w) {
+			results.push(this._buildItem(w));
+		}));
+
+		return results;
 	},
 	
 	mayHaveChildren: function(item) {
-		if (item && item.type && item.type.indexOf("OpenAjax.") === 0) {
+		var widget = this._getWidget(item);
+
+		if (widget && widget.type && widget.type.indexOf("OpenAjax.") === 0) {
 			return false;
 		}
 
-		return this._getChildren(item).length > 0;
+		return this._getChildren(widget).length > 0;
 	},
 
 	getIdentity: function(item){
@@ -111,11 +123,13 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	put: function(item, options) {
-		var parent = item.getParent();
+		var widget = this._getWidget(item);
+
+		var parent = widget.getParent();
 
 		this.onChildrenChange(parent, this._getChildren(parent));
 
-		return this.getIdentity(item);
+		return this.getIdentity(widget);
 	},
 
 	add: function(item, options) {
@@ -134,13 +148,20 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		if (!childItem || !newParentItem || !oldParentItem) {
 			return;
 		}
+
 		if (newParentItem.id == "myapp") {
 			newParentItem = this._context.rootWidget;
+		} else {
+			newParentItem = this._getWidget(newParentItem);
 		}
 
 		if (oldParentItem.id == "myapp") {
 			oldParentItem = this._context.rootWidget;
+		} else {
+			oldParentItem = this._getWidget(oldParentItem);
 		}
+
+		childItem = this._getWidget(childItem);
 
 		// dndSource fixes up insertIndex, however Reparent will do the same, so we
 		// undo the fixup here.
@@ -175,7 +196,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		var node = this._context.rootNode;
 
 		if (node) {	// shouldn't be necessary, but sometime is null
-			this.onChildrenChange(node, this._getChildren(node));
+			this.onChildrenChange(this._buildItem(node), this._getChildren(node));
 		}
 	},
 
@@ -187,9 +208,6 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 				this.remove(widget);
 			} else if (type === this._context.WIDGET_MODIFIED) {
 				this.onChange(widget);
-
-				// since it changed, we need to update the widget item stores in the model
-				this.put(widget, {overwrite: true});
 
 				// finally, we tell the widget that its children might have changed
 				this.onChildrenChange(widget, this._getChildren(widget));
@@ -207,7 +225,9 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	// toggle code
-	toggle: function(widget, on, node) {
+	toggle: function(item, on, node) {
+		var widget = this._getWidget(item);
+
 		var helper = widget.getHelper();
 		var continueProcessing = true;
 		if(helper && helper.onToggleVisibility){
@@ -258,9 +278,21 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 	},
 
 	isToggleOn: function(item) {
-		return (item.domNode.style.display === 'none');
+		var widget = this._getWidget(item);
+
+		return (widget.domNode.style.display === 'none');
 	},
 	// end toggle code
+
+	_getWidget: function(item) {
+		return Widget.byId(item.id);
+	},
+
+	_buildItem: function(widget) {
+		if (widget) {
+			return {id: widget.id, type: widget.type}
+		}
+	},
 
 	_connect: function(contextFunction, thisFunction) {
 		this._handles.push(connect.connect(this._context, contextFunction, this, thisFunction));

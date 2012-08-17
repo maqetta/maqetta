@@ -336,9 +336,8 @@ public class DavinciPageServlet extends HttpServlet {
 			return;
 		}
 		String path = resourceURL.getPath();
-		boolean noCache = resourceURL.getPath().toLowerCase().endsWith(".html");
-		/* dont cache css files either */
-		noCache = noCache || resourceURL.getPath().toLowerCase().endsWith(".css");
+		boolean noCache = resourceURL.getPath().toLowerCase().endsWith(".html") || resourceURL.getPath().toLowerCase().endsWith(".css") || resourceURL.getPath().toLowerCase().endsWith(".js");
+		cacheExpires = noCache;
 		
 		URLConnection connection = resourceURL.openConnection();
 		long lastModified = connection.getLastModified();
@@ -353,7 +352,7 @@ public class DavinciPageServlet extends HttpServlet {
 		// We should prefer ETag validation as the guarantees are stronger and
 		// all HTTP 1.1 clients should be using it
 		String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
-		if ( ifNoneMatch != null && etag != null && ifNoneMatch.indexOf(etag) != -1 && !noCache ) {
+		if ( ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0 && !noCache ) {
 			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
 		}

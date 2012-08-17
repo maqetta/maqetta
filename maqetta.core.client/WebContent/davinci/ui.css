@@ -222,20 +222,6 @@
 	width: 16px;
 	height: 16px;
 }
-.undoIcon {
-	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
-	background-position: -82px -1389px;
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
-}
-.redoIcon {
-	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
-	background-position: -82px -728px;
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
-}
 
 .renameIcon {
 	/* same as redo icon for now */

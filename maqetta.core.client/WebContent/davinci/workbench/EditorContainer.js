@@ -17,12 +17,6 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	postCreate: function(){
 		this.subscribe("/davinci/ui/editorSelected", function(event){
 			if(event.editor == this.editor){
-				var toolbarDiv = this.getToolbarDiv();
-				toolbarDiv.innerHTML = '';
-				var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
-				if(toolbar){
-					toolbarDiv.appendChild(toolbar.domNode);
-				}
 				this.updateToolbars();
 			}
 		}.bind(this));
@@ -376,6 +370,12 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	 */
 	updateToolbars: function(){
 		if(this.editor == Runtime.currentEditor){
+			var toolbarDiv = this.getToolbarDiv();
+			toolbarDiv.innerHTML = '';
+			var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
+			if(toolbar){
+				toolbarDiv.appendChild(toolbar.domNode);
+			}
 			var editorToolbarNode = dojo.query('#davinci_toolbar_container .dijitToolbar')[0];
 			var editorToolbar = editorToolbarNode ? dijit.byNode(editorToolbarNode) : null;
 			this._updateToolbar(editorToolbar);

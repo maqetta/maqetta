@@ -1747,16 +1747,6 @@
 		            "helper": "./dijit/layout/ContentPaneHelper"
 		        },
 		        {
-		            "name": "ScrollablePane",
-		            "description": "Scroll Pane",
-		            "type": "dojox.mobile.ScrollablePane",
-		            "category": "mobile",
-		            "icon": "resources/images/scrollpane.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPn6/jFOiDFOh+zx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DZYkDhbkzdYkDlbk97o+ODp+N/o9z5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm/X4/ENupENuo0Ruo+fv+fL2+0l3rEl4rEh2qkl2qk6BtE+BtFCFt1CEtlOIu1OJulaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaTwFdrSCwaXymXUlVpNpPLl8kVSJSczWm19Nq4LiINtuIFa16PQ6OBWLvTa8Rr5Ro7WQuFhDWv2yt4enwnLhaGh4YnExMRKC8kLiGSk5IjixEkj5GUk5aMmR4uA6OkoyAeHh8fLxkuDK+wrxxKLhQvDi4duru6EFQJEC8GLgDFxsXDGAQFLwHOAs7R0s4v1dbX2C9BADs=",
-		            "initialSize": "auto",
-		            "allowedChild": "ANY"
-		        },
-		        {
 		            "name": "RadioGroup",
 		            "description": "Radio Group",
 		            "type": "dojox.layout.RadioGroup",
@@ -2016,20 +2006,45 @@
 		            }
 		        },
 		        {
-		            "name": "Container",
-		            "description": "Container",
-		            "type": "dojox.mobile.Container",
-		            "category": "mobile",
-		            "icon": "resources/images/content-pane.png",
-		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII="
-		        },
-		        {
-		            "name": "Pane",
-		            "description": "Pane",
-		            "type": "dojox.mobile.Pane",
-		            "category": "mobile",
-		            "icon": "resources/images/content-pane.png",
-		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII="
+		            "name": "TreeView",
+		            "description": "TreeView",
+		            "type": "dojox.mobile.TreeView",
+		            "category": "untested",
+		            "icon": "resources/images/tree.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOJJREFUeNpi/P//PwMlgImBQsCCzAnvPwB3zspCB0aSDQCB7lgLhtLFJzAMxGUwigH//v5lKF5wjIEBGi5EuQIUiMg4qG3nf3QxfBjDC3/+/MawxL9py39GBpBj/jNsqPNhxBsGf3/+ZvCpWQ/xAyMjSA8YTCvwYMiasINwIP759YthR1cYii2eZav+p3dtYvhPTCz8/YXphe1oBpJsgFPWfHC8gEzZNy2RQBj8/s1glzob4tr/IE3A0AZqWdIexxBbsRjDcEZi8oJl0sz//xghqf7k3FRGkg2gaWai2ACAAAMAVbWDTF4DhaYAAAAASUVORK5CYII=",
+		            "data": [
+		                {
+		                    "type": "dojo.store.Memory",
+		                    "properties": {
+		                        "data": [
+				                		{"id":"treeRoot","label":"Root"},
+					                		{"id":"1","label":"1","parent":"treeRoot"},
+						                		{"id":"1.1","label":"1.1","parent":"1","leaf":"true"},
+						                		{"id":"1.2","label":"1.2","parent":"1","leaf":"true"},
+					                		{"id":"2","label":"2","parent":"treeRoot"},
+						                		{"id":"2.1","label":"2.1","parent":"2","leaf":"true"},
+						                		{"id":"2.2","label":"2.2","parent":"2","leaf":"true"},
+						                		{"id":"2.3","label":"2.3","parent":"2","leaf":"true"}
+				                ]
+		                    }
+		                },
+		                {
+		                    "type": "dijit.tree.ObjectStoreModel",
+		                    "properties": {
+		                    	"labelAttr": "label",
+		                    	"query": {
+		                    		"id": "treeRoot"
+		                    	}
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.TreeView",
+		                    "properties": {
+		                    }
+		                }
+		            ],
+		            "tool": "./dijit/TreeCreateTool",
+		            "helper": "./dijit/TreeHelper"
 		        },
 		        {
 		            "name": "Heading",
@@ -2080,15 +2095,6 @@
 		                    }
 		                }
 		            }
-		        },
-		        {
-		            "name": "RoundRect",
-		            "type": "dojox.mobile.RoundRect",
-		            "category": "mobile",
-		            "icon": "resources/images/dx-mbl-roundrect.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAOXj5+Pi5Ofl6vXz+ePi5eHg4/f2+/Hw9e3s8eno7ff2/Ozr8fT0+vDw9ebm6uTk55qcnv///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVHoCSOZGmeJ6SuLERCRSzPhStBQRDtPB8QLgigR9w9goIi0RFMKHuJIOLJWwQb1N0hOMhGGEGFgiq2QQzitFphE7XeqLj8FAIAOw==",
-		            "allowedChild": "ANY",
-		            "helper":"./dojox/mobile/InitialSizeHelper"
 		        },
 		        {
 		            "name": "RoundRectCategory",
@@ -2289,6 +2295,13 @@
 		            "helper": "./dojox/mobile/SwitchHelper"
 		        },
 		        {
+		            "name": "Slider",
+		            "type": "dojox.mobile.Slider",
+		            "category": "mobile",
+		            "icon": "resources/images/dx-mbl-horizontalslider.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///87W5DdYkDtelTpelYOcwUBonj9mnEBonURto0Ruo0dzqOTt+EZzp9Xk9Nvo9kx+sU1+sZ/E6K3M68re8tDh81KHuZC95ZG95Z/F6KzM663N68ne8tDi81aOv5G+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAZWQJJwSCwaj8ikcsk8fp7Q5KfxqD4an6Lo47h4KBsOxXNxfERCScjAgIAymAyEYbBEhInRaFHR+CcdCnoHQgIDAwhfYWMIhwJFBFRWDQVJh5cDTZqbS0EAOw=="
+		        },
+		        {
 		            "name": "CheckBox",
 		            "type": "dojox.mobile.CheckBox",
 		            "category": "mobile",
@@ -2390,108 +2403,59 @@
 		            }
 		        },
 		        {
-		            "name": "ValuePickerDatePicker",
-		            "type": "dojox.mobile.ValuePickerDatePicker",
+		            "name": "SearchBox",
+		            "description": "SearchBox",
+		            "type": "dojox.mobile.SearchBox",
 		            "category": "mobile"
 		        },
 		        {
-		            "name": "ValuePickerTimePicker",
-		            "type": "dojox.mobile.ValuePickerTimePicker",
-		            "category": "mobile"
-		        },
-		        {
-		            "name": "DatePicker",
-		            "type": "dojox.mobile.DatePicker",
-		            "category": "mobile"
-		        },
-		        {
-		            "name": "TimePicker",
-		            "type": "dojox.mobile.TimePicker",
-		            "category": "mobile"
-		        },
-		        {
-		            "name": "ValuePicker",
-		            "description": "ValuePicker",
-		            "type": "dojox.mobile.ValuePicker",
+		            "name": "IconContainer",
+		            "type": "dojox.mobile.IconContainer",
 		            "category": "mobile",
-		            "children": [
+		            "icon": "resources/images/dx-mbl-icon-container.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACVLiiVLiDlck/P2+zxhlzpppj9mnDh3xUJtokdzp3ak21ON0FCDvEp6rU6As1SKvFaOv////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVoYBRBZGmWIjSsbMtC0TMo9FzTyvBEzrD8PuBvMXBEGoODMrlUHgaNSMJFXSUiiAGgwNByvV1ExFClGiIEWw6nHhAigiBxKB8I4MynM2/Hl1t3cQFfg12FfXF/LHdwAo6PkI4ik5SVkyEAOw==",
+		            "data": [
 		                {
-		                    "type": "dojox.mobile.ValuePickerSlot",
+		                    "type": "dojox.mobile.IconContainer",
 		                    "properties": {
-		                        "labelFrom": 0,
-		                        "labelTo": 9,
-		                    }
-		                },
-		                {
-		                    "type": "dojox.mobile.ValuePickerSlot",
-		                    "properties": {
-		                    		"labels": ["miles", "kilometers"]
-		                    }
+		                        "iconBase": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFkaO4nazAucXThpmyt8PRsr7O3+Tr2N7mw83ZdIqmmqq+g5evq7jJ4ufsy9PegZWuztbgpLLEq7nJiZy0d4yomKi94ebsfpOsfJGrlqe8jp+3wsvYobHD6OzwboWiiJuzfZKsrrvMprTGzdXfx9DbydLdxc7au8bUb4ajxs/bc4mlk6S6197lwcvX2d/neY6pv8nW5enuo7LE4OXrn67Bmam+1dzkz9bgyNDbqLbHcYekjqC2lKW62+Hoipy0////GCC5wQAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAFASURBVHjafNPZcoIwFIDhExAULKAYBJfixq4stRZKEHn/tyoI6Y1Nv4tM5p85k8nFgaZJ5vB4BfOkaaDx5Un9/qqeyH4DY0P5+JtiJGB4nywTGfi8Zsl50HI2DcyCzQTrm82CNKM24tLNMrWe/ZYU8IhyFUXkYkVZcrRgkA6UI4qiX7SHQIsEUYWOHf0otJ8QiroujgMUAZGwtjjL8cW9ZhcV+Ze8ROUNyeeFhgkEpIPd04xbG+f7fbtaOTPOwl0NwO4JnrexbaIFtn14Xp+GWTKNQ4GgTZitiReGhz4G7bs9XKW601kJDrfvG4Eopebuk/PgaYlA2g8qdcDRspcATwf6ieJpwpDuBrJ3ioVy5KlvtOxSsCo2C8w7mwnaF5sGPLqxIB4MdGVBMoyhZKmSdhdgW+qvyi20u/DvHv0IMAAbv4T3o6uF6wAAAABJRU5ErkJggg%3D%3D"
+		                    },
+		                    "children": [
+		                        {
+		                            "type": "dojox.mobile.IconItem",
+		                            "properties": {
+		                                "label": "Item 1"
+		                            }
+		                        },
+		                        {
+		                            "type": "dojox.mobile.IconItem",
+		                            "properties": {
+		                                "label": "Item 2"
+		                            }
+		                        }
+		                    ]
 		                }
 		            ],
-		            "allowedChild": "dojox.mobile.ValuePickerSlot"
+		            "tool": "./dojox/mobile/IconContainerCreateTool",
+		            "allowedChild": "dojox.mobile.IconItem",
+		            "inlineEdit": "./dojox/mobile/IconContainerInput"
 		        },
 		        {
-		            "name": "ValuePickerSlot",
-		            "description": "ValuePickerSlot",
-		            "type": "dojox.mobile.ValuePickerSlot",
+		            "name": "IconItem",
+		            "type": "dojox.mobile.IconItem",
 		            "category": "mobile",
-		            "allowedParent": "dojox.mobile.ValuePicker"
-		        },
-		        {
-		            "name": "Slider",
-		            "type": "dojox.mobile.Slider",
-		            "category": "mobile",
-		            "icon": "resources/images/dx-mbl-horizontalslider.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAAAAP///87W5DdYkDtelTpelYOcwUBonj9mnEBonURto0Ruo0dzqOTt+EZzp9Xk9Nvo9kx+sU1+sZ/E6K3M68re8tDh81KHuZC95ZG95Z/F6KzM663N68ne8tDi81aOv5G+5aDJ6tXj76nR7v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAZWQJJwSCwaj8ikcsk8fp7Q5KfxqD4an6Lo47h4KBsOxXNxfERCScjAgIAymAyEYbBEhInRaFHR+CcdCnoHQgIDAwhfYWMIhwJFBFRWDQVJh5cDTZqbS0EAOw=="
-		        },
-		        {
-		            "name": "SpinWheel",
-		            "type": "dojox.mobile.SpinWheel",
-		            "category": "mobile",
-		            "icon": "resources/images/SpinWheel.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7",
-		            "allowedChild": "dojox.mobile.SpinWheelSlot",
-		            "children": [
-		                {
-		                    "type": "dojox.mobile.SpinWheelSlot",
-		                    "properties": {
-		                        "labels": ['A','B','C','D','E']
-		                    }
-		                },
-		                {
-		                    "type": "dojox.mobile.SpinWheelSlot",
-		                    "properties": {
-		                        "labels": ['A','B','C','D','E']
+		            "icon": "resources/images/dx-mbl--icon-item.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
+		            "helper": "./dojox/mobile/IconItemHelper",
+		            "allowedParent": "dojox.mobile.IconContainer",
+		            "metadata": {
+		                "property": {
+		                    "moveTo": {
+		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
+		                    	"dropdownQueryAttribute": "id"
 		                    }
 		                }
-		            ]
-		        },
-		        {
-		            "name": "SpinWheelSlot",
-		            "type": "dojox.mobile.SpinWheelSlot",
-		            "category": "mobile",
-		            "icon": "resources/images/SpinWheelSlot.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck/P2+zxhlz9mnPH1+qXG49Pn+O30+f///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARKMMlJqzQ4650M+iAAgkY3HkA6IqW3vmwyzHRtJwKh77weCAlAoEAsGgsBQHB4PCaXgah0GlWmrtis0gUbtVbX1Rf8am3OGYt6EgEAOw==",
-		            "allowedParent": "dojox.mobile.SpinWheel",
-		            "properties": {
-		                "labels": ['A','B','C','D','E']
-		            },
-		            "inlineEdit": "./dojox/mobile/SpinWheelSlotInput"
-		        },
-		        {
-		            "name": "SpinWheelDatePicker",
-		            "type": "dojox.mobile.SpinWheelDatePicker",
-		            "category": "mobile",
-		            "icon": "resources/images/SpinWheelDatePicker.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEBAWDhAYPj5+0hooFBwqDlck/P2+zxhl7vH2ShQiDBYkDhgmD9mnL3K3DhgkEBomEhwoPH1+iBQiChYkKXG49Pn+N/q8+30+UhQUOj4+PD4+FhYSHBoOGhgOP///////yH5BAEAAB8ALAAAAAAQABAAAAVz4CeOZGmKVaqqZ2UYXvEa1ZdMirM8A3EVwAvNhtM9IITZrMbROJ+cBmNK/TQTmgSWI4h4I4bDp5N1YjsWippiKHw2GSxWs0mv2x9MPC7JYARKeABPGYUACECJbgGMjYyBQyYuP0GRJS4vMi81kisrJ6AfIQA7"
-		        },
-		        {
-		            "name": "SpinWheelTimePicker",
-		            "type": "dojox.mobile.SpinWheelTimePicker",
-		            "category": "mobile",
-		            "icon": "resources/images/SpinWheelTimePicker.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPj5+zlck/P2+zxhlz9mnPH1+rjI2NDg8OXq76XG49Pn+N/q8xBQgHCYuIiowDhwmMjY4Njo8MDY4Njw+LDQ2OD4+PD4+P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABgALAAAAAAQABAAAAV2ICaOZGmKSqqqp3K9gSArLRwELy0azdMYr2BO5HhQLJSHA0FoOjGGR8TCsEQehoK2IBhgGpRKhSGmNBaJtCCAeUgkEMZb8kCr2eCDnnEwA2QybFERhIQPCDeJbBhFFBNJDkJDOz0/NjgXOiUuMEGaJCuhJ6MYIQA7"
+		            }
 		        },
 		        {
 		            "name": "TabBar",
@@ -2563,6 +2527,15 @@
 		            }
 		        },
 		        {
+		            "name": "RoundRect",
+		            "type": "dojox.mobile.RoundRect",
+		            "category": "mobile",
+		            "icon": "resources/images/dx-mbl-roundrect.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAOXj5+Pi5Ofl6vXz+ePi5eHg4/f2+/Hw9e3s8eno7ff2/Ozr8fT0+vDw9ebm6uTk55qcnv///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABIALAAAAAAQABAAAAVHoCSOZGmeJ6SuLERCRSzPhStBQRDtPB8QLgigR9w9goIi0RFMKHuJIOLJWwQb1N0hOMhGGEGFgiq2QQzitFphE7XeqLj8FAIAOw==",
+		            "allowedChild": "ANY",
+		            "helper":"./dojox/mobile/InitialSizeHelper"
+		        },
+		        {
 		            "name": "ContentPane",
 		            "type": "dojox.mobile.ContentPane",
 		            "category": "mobile",
@@ -2572,53 +2545,115 @@
 		            "helper":"./dojox/mobile/ContentPaneHelper"
 		        },
 		        {
-		            "name": "IconContainer",
-		            "type": "dojox.mobile.IconContainer",
+		            "name": "Container",
+		            "description": "Container",
+		            "type": "dojox.mobile.Container",
 		            "category": "mobile",
-		            "icon": "resources/images/dx-mbl-icon-container.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACVLiiVLiDlck/P2+zxhlzpppj9mnDh3xUJtokdzp3ak21ON0FCDvEp6rU6As1SKvFaOv////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVoYBRBZGmWIjSsbMtC0TMo9FzTyvBEzrD8PuBvMXBEGoODMrlUHgaNSMJFXSUiiAGgwNByvV1ExFClGiIEWw6nHhAigiBxKB8I4MynM2/Hl1t3cQFfg12FfXF/LHdwAo6PkI4ik5SVkyEAOw==",
-		            "data": [
-		                {
-		                    "type": "dojox.mobile.IconContainer",
-		                    "properties": {
-		                        "iconBase": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFkaO4nazAucXThpmyt8PRsr7O3+Tr2N7mw83ZdIqmmqq+g5evq7jJ4ufsy9PegZWuztbgpLLEq7nJiZy0d4yomKi94ebsfpOsfJGrlqe8jp+3wsvYobHD6OzwboWiiJuzfZKsrrvMprTGzdXfx9DbydLdxc7au8bUb4ajxs/bc4mlk6S6197lwcvX2d/neY6pv8nW5enuo7LE4OXrn67Bmam+1dzkz9bgyNDbqLbHcYekjqC2lKW62+Hoipy0////GCC5wQAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAFASURBVHjafNPZcoIwFIDhExAULKAYBJfixq4stRZKEHn/tyoI6Y1Nv4tM5p85k8nFgaZJ5vB4BfOkaaDx5Un9/qqeyH4DY0P5+JtiJGB4nywTGfi8Zsl50HI2DcyCzQTrm82CNKM24tLNMrWe/ZYU8IhyFUXkYkVZcrRgkA6UI4qiX7SHQIsEUYWOHf0otJ8QiroujgMUAZGwtjjL8cW9ZhcV+Ze8ROUNyeeFhgkEpIPd04xbG+f7fbtaOTPOwl0NwO4JnrexbaIFtn14Xp+GWTKNQ4GgTZitiReGhz4G7bs9XKW601kJDrfvG4Eopebuk/PgaYlA2g8qdcDRspcATwf6ieJpwpDuBrJ3ioVy5KlvtOxSsCo2C8w7mwnaF5sGPLqxIB4MdGVBMoyhZKmSdhdgW+qvyi20u/DvHv0IMAAbv4T3o6uF6wAAAABJRU5ErkJggg%3D%3D"
-		                    },
-		                    "children": [
-		                        {
-		                            "type": "dojox.mobile.IconItem",
-		                            "properties": {
-		                                "label": "Item 1"
-		                            }
-		                        },
-		                        {
-		                            "type": "dojox.mobile.IconItem",
-		                            "properties": {
-		                                "label": "Item 2"
-		                            }
-		                        }
-		                    ]
-		                }
-		            ],
-		            "tool": "./dojox/mobile/IconContainerCreateTool",
-		            "allowedChild": "dojox.mobile.IconItem",
-		            "inlineEdit": "./dojox/mobile/IconContainerInput"
+		            "icon": "resources/images/content-pane.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII="
 		        },
 		        {
-		            "name": "IconItem",
-		            "type": "dojox.mobile.IconItem",
+		            "name": "Pane",
+		            "description": "Pane",
+		            "type": "dojox.mobile.Pane",
 		            "category": "mobile",
-		            "icon": "resources/images/dx-mbl--icon-item.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
-		            "helper": "./dojox/mobile/IconItemHelper",
-		            "allowedParent": "dojox.mobile.IconContainer",
-		            "metadata": {
-		                "property": {
-		                    "moveTo": {
-		                    	"dropdownQueryValues": ["[data-dojo-type='dojox.mobile.View']", "[data-dojo-type='dojox.mobile.SwapView']", "[data-dojo-type='dojox.mobile.ScrollableView']"],
-		                    	"dropdownQueryAttribute": "id"
+		            "icon": "resources/images/content-pane.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAT9JREFUeNqkk69LBEEUx7+76h9gtAhmQeEMBqNBuAsWNRgNIlbhglxUo5jEarGYDIoGEavggsFgtZjvPG5vZmfm+d7M/cLg3uAX3r6dZb/f+bxhNyEiTNfvIZp9z2hzfRXXN4/4nK8kGEPJaEA/ZFyzaFIuZ7U5usu+cLS9hI2dDC8HK9S4ei01VyszgBBsnT6Rc+S1UD32XRs3KMXV5coLRx3tqM31rSyJzxOQtUh+QU9N/D1FSxP7HFJZdJpt/3CxdgI5ROll0hbIm61wBkZp//Dt9tD3xu5yaYAFsc8EAlsUKCwhRkwPo3UvQBeIswOODYY3TsMIHBCZYNkgG/uALptjCWTinMdIR5FiA0SDgHgCGn7KqVJMQGgq8iSuRyQv9bvsGO6HazIm/EyXzx90fvGAWO3vrYWA/+hHgAEA+vDT4Ym/81QAAAAASUVORK5CYII="
+		        },
+		        {
+		            "name": "ScrollablePane",
+		            "description": "Scroll Pane",
+		            "type": "dojox.mobile.ScrollablePane",
+		            "category": "mobile",
+		            "icon": "resources/images/scrollpane.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPn6/jFOiDFOh+zx+/j6/jRTjTRUjTdXkTdXkLrH3+Hp+OHp9/H1/DZYkDhbkzdYkDlbk97o+ODp+N/o9z5km+Hq+OTs+PL2/Pj6/T1kmz5mnD9mnT5lm/X4/ENupENuo0Ruo+fv+fL2+0l3rEl4rEh2qkl2qk6BtE+BtFCFt1CEtlOIu1OJulaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaTwFdrSCwaXymXUlVpNpPLl8kVSJSczWm19Nq4LiINtuIFa16PQ6OBWLvTa8Rr5Ro7WQuFhDWv2yt4enwnLhaGh4YnExMRKC8kLiGSk5IjixEkj5GUk5aMmR4uA6OkoyAeHh8fLxkuDK+wrxxKLhQvDi4duru6EFQJEC8GLgDFxsXDGAQFLwHOAs7R0s4v1dbX2C9BADs=",
+		            "initialSize": "auto",
+		            "allowedChild": "ANY"
+		        },
+		        {
+		            "name": "FixedSplitter",
+		            "type": "dojox.mobile.FixedSplitter",
+		            "category": "mobile",
+		            "icon": "resources/images/FixedSplitter.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
+		            "allowedChild": "dojox.mobile.Pane, dojox.mobile.Container, dojox.mobile.ContentPane",
+		            "properties": {
+		                "orientation": "H"
+		            },
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.Pane",
+		                    "properties": {
+		                        "style": "width: 200px;"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                }
+		            ],
+		            "inlineEdit": "./dojox/mobile/FixedSplitterInput",
+		        },
+		        {
+		            "name": "Accordion",
+		            "description": "Accordion",
+		            "type": "dojox.mobile.Accordion",
+		            "category": "mobile",
+		            "icon": "resources/images/accordion.png",
+		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
+		            "initialSize": "auto",
+		            "properties": {
+		                "fixedHeight": "true",
+		                "roundRect": "true"
+		            },
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.ContentPane",
+		                    "properties": {
+		                        "label": "Pane 1",
+		                        "selected": "true"
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.ContentPane",
+		                    "properties": {
+		                        "label": "Pane 2"
 		                    }
 		                }
-		            }
+		            ],
+		            "allowedChild": "dojox.mobile.ContentPane, dojox.mobile.ScrollableView",
+		            "inlineEdit": "./dojox/mobile/AccordionInput",
+		            "helper": "./dijit/layout/LayoutContainerHelper"
+		        },
+		        {
+		            "name": "GridLayout",
+		            "description": "GridLayout",
+		            "type": "dojox.mobile.GridLayout",
+		            "category": "mobile",
+		            "properties": {
+		                "cols": 3,
+		            },
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                },
+		                {
+		                    "type": "dojox.mobile.Pane"
+		                }
+		            ],
+		            "allowedChild": "dojox.mobile.Pane",
+		            "inlineEdit": "./dojox/mobile/GridLayoutInput"
 		        },
 		        {
 		            "name": "IconMenu",
@@ -2685,6 +2720,17 @@
 		            "icon": "resources/images/menuitem.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
 		            "allowedParent": "dojox.mobile.IconMenu"
+		        },
+		        {
+		            "name": "ScreenSizeAware",
+		            "type": "dojox.mobile.ScreenSizeAware",
+		            "category": "untested"
+		        },
+		        {
+		            "name": "ProgressIndicator",
+		            "description": "ProgressIndicator",
+		            "type": "dojox.mobile.ProgressIndicator",
+		            "category": "mobile"
 		        },
 		        {
 		            "name": "Carousel",
@@ -2790,27 +2836,101 @@
 		            "helper": "./dojox/mobile/DataCarouselHelper"
 		        },
 		        {
-		            "name": "FixedSplitter",
-		            "type": "dojox.mobile.FixedSplitter",
+		            "name": "SpinWheel",
+		            "type": "dojox.mobile.SpinWheel",
 		            "category": "mobile",
-		            "icon": "resources/images/FixedSplitter.gif",
-		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
-		            "allowedChild": "dojox.mobile.Pane, dojox.mobile.Container, dojox.mobile.ContentPane",
-		            "properties": {
-		                "orientation": "H"
-		            },
+		            "icon": "resources/images/SpinWheel.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7",
+		            "allowedChild": "dojox.mobile.SpinWheelSlot",
 		            "children": [
 		                {
-		                    "type": "dojox.mobile.Pane",
+		                    "type": "dojox.mobile.SpinWheelSlot",
 		                    "properties": {
-		                        "style": "width: 200px;"
+		                        "labels": ['A','B','C','D','E']
 		                    }
 		                },
 		                {
-		                    "type": "dojox.mobile.Pane"
+		                    "type": "dojox.mobile.SpinWheelSlot",
+		                    "properties": {
+		                        "labels": ['A','B','C','D','E']
+		                    }
+		                }
+		            ]
+		        },
+		        {
+		            "name": "SpinWheelSlot",
+		            "type": "dojox.mobile.SpinWheelSlot",
+		            "category": "mobile",
+		            "icon": "resources/images/SpinWheelSlot.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck/P2+zxhlz9mnPH1+qXG49Pn+O30+f///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARKMMlJqzQ4650M+iAAgkY3HkA6IqW3vmwyzHRtJwKh77weCAlAoEAsGgsBQHB4PCaXgah0GlWmrtis0gUbtVbX1Rf8am3OGYt6EgEAOw==",
+		            "allowedParent": "dojox.mobile.SpinWheel",
+		            "properties": {
+		                "labels": ['A','B','C','D','E']
+		            },
+		            "inlineEdit": "./dojox/mobile/SpinWheelSlotInput"
+		        },
+		        {
+		            "name": "SpinWheelDatePicker",
+		            "type": "dojox.mobile.SpinWheelDatePicker",
+		            "category": "mobile",
+		            "icon": "resources/images/SpinWheelDatePicker.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEBAWDhAYPj5+0hooFBwqDlck/P2+zxhl7vH2ShQiDBYkDhgmD9mnL3K3DhgkEBomEhwoPH1+iBQiChYkKXG49Pn+N/q8+30+UhQUOj4+PD4+FhYSHBoOGhgOP///////yH5BAEAAB8ALAAAAAAQABAAAAVz4CeOZGmKVaqqZ2UYXvEa1ZdMirM8A3EVwAvNhtM9IITZrMbROJ+cBmNK/TQTmgSWI4h4I4bDp5N1YjsWippiKHw2GSxWs0mv2x9MPC7JYARKeABPGYUACECJbgGMjYyBQyYuP0GRJS4vMi81kisrJ6AfIQA7"
+		        },
+		        {
+		            "name": "SpinWheelTimePicker",
+		            "type": "dojox.mobile.SpinWheelTimePicker",
+		            "category": "mobile",
+		            "icon": "resources/images/SpinWheelTimePicker.gif",
+		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPj5+zlck/P2+zxhlz9mnPH1+rjI2NDg8OXq76XG49Pn+N/q8xBQgHCYuIiowDhwmMjY4Njo8MDY4Njw+LDQ2OD4+PD4+P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABgALAAAAAAQABAAAAV2ICaOZGmKSqqqp3K9gSArLRwELy0azdMYr2BO5HhQLJSHA0FoOjGGR8TCsEQehoK2IBhgGpRKhSGmNBaJtCCAeUgkEMZb8kCr2eCDnnEwA2QybFERhIQPCDeJbBhFFBNJDkJDOz0/NjgXOiUuMEGaJCuhJ6MYIQA7"
+		        },
+		        {
+		            "name": "ValuePicker",
+		            "description": "ValuePicker",
+		            "type": "dojox.mobile.ValuePicker",
+		            "category": "mobile",
+		            "children": [
+		                {
+		                    "type": "dojox.mobile.ValuePickerSlot",
+		                    "properties": {
+		                        "labelFrom": 0,
+		                        "labelTo": 9,
+		                    }
+		                },
+		                {
+		                    "type": "dojox.mobile.ValuePickerSlot",
+		                    "properties": {
+		                    		"labels": ["miles", "kilometers"]
+		                    }
 		                }
 		            ],
-		            "inlineEdit": "./dojox/mobile/FixedSplitterInput",
+		            "allowedChild": "dojox.mobile.ValuePickerSlot"
+		        },
+		        {
+		            "name": "ValuePickerSlot",
+		            "description": "ValuePickerSlot",
+		            "type": "dojox.mobile.ValuePickerSlot",
+		            "category": "mobile",
+		            "allowedParent": "dojox.mobile.ValuePicker"
+		        },
+		        {
+		            "name": "ValuePickerDatePicker",
+		            "type": "dojox.mobile.ValuePickerDatePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "ValuePickerTimePicker",
+		            "type": "dojox.mobile.ValuePickerTimePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "DatePicker",
+		            "type": "dojox.mobile.DatePicker",
+		            "category": "mobile"
+		        },
+		        {
+		            "name": "TimePicker",
+		            "type": "dojox.mobile.TimePicker",
+		            "category": "mobile"
 		        },
 		        {
 		            "name": "Overlay",
@@ -2818,126 +2938,6 @@
 		            "category": "untested",
 		            "icon": "resources/images/Overlay.gif",
 		            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAPr6//z8//39//z8/vn6//T2/fH0/PT2/O7y+/P2/eju+vT3/ff5/fv8/ubt+urw++3y+/H1/OXt+uTs+efu+ujv+uvx+/T3/Orx+/P3/fn7/jdimzlknb3L3u3z+/D1/O/0+zllnTtooDtonz1roz5rokBvpvP3/ERzqUd4rkd4rUp9skt+skp9sU2BtU2BtEt8r42szPb5/FGIulCFuFCFt1KJu1KIulOJu1WMvQBAeFSMvVaOv+/1+gBVlvz9/f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEAALAAAAAAQABAAAAekgECCg4SFgjyIiYqLQDwCj5CRkDxAOZKXjztANgMCMJ+goAIBOEA0BJiRADVALgwNnzEdPh0xnw0ML0AtCxq+Gj46Pr8aCy1AKQYMssE6wrUMESpAKBAXCxkFCwcFJwkLBR4oQCYYEYuKHw8mQCQKCDwNP/P0PBAUJUAiDhg3Mv8AZcywIGEEEA4TKqwA0aOhQxYKJoQAsmFDh4oYM17cYKjjoEAAOw=="
-		        },
-		        {
-		            "name": "Accordion",
-		            "description": "Accordion",
-		            "type": "dojox.mobile.Accordion",
-		            "category": "mobile",
-		            "icon": "resources/images/accordion.png",
-		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
-		            "initialSize": "auto",
-		            "properties": {
-		                "fixedHeight": "true",
-		                "roundRect": "true"
-		            },
-		            "children": [
-		                {
-		                    "type": "dojox.mobile.ContentPane",
-		                    "properties": {
-		                        "label": "Pane 1",
-		                        "selected": "true"
-		                    }
-		                },
-		                {
-		                    "type": "dojox.mobile.ContentPane",
-		                    "properties": {
-		                        "label": "Pane 2"
-		                    }
-		                }
-		            ],
-		            "allowedChild": "dojox.mobile.ContentPane, dojox.mobile.ScrollableView",
-		            "inlineEdit": "./dojox/mobile/AccordionInput",
-		            "helper": "./dijit/layout/LayoutContainerHelper"
-		        },
-		        {
-		            "name": "SearchBox",
-		            "description": "SearchBox",
-		            "type": "dojox.mobile.SearchBox",
-		            "category": "mobile"
-		        },
-		        {
-		            "name": "ProgressIndicator",
-		            "description": "ProgressIndicator",
-		            "type": "dojox.mobile.ProgressIndicator",
-		            "category": "mobile"
-		        },
-		        {
-		            "name": "ScreenSizeAware",
-		            "type": "dojox.mobile.ScreenSizeAware",
-		            "category": "untested"
-		        },
-		        {
-		            "name": "GridLayout",
-		            "description": "GridLayout",
-		            "type": "dojox.mobile.GridLayout",
-		            "category": "mobile",
-		            "properties": {
-		                "cols": 3,
-		            },
-		            "children": [
-		                {
-		                    "type": "dojox.mobile.Pane"
-		                },
-		                {
-		                    "type": "dojox.mobile.Pane"
-		                },
-		                {
-		                    "type": "dojox.mobile.Pane"
-		                },
-		                {
-		                    "type": "dojox.mobile.Pane"
-		                },
-		                {
-		                    "type": "dojox.mobile.Pane"
-		                },
-		                {
-		                    "type": "dojox.mobile.Pane"
-		                }
-		            ],
-		            "allowedChild": "dojox.mobile.Pane",
-		            "inlineEdit": "./dojox/mobile/GridLayoutInput"
-		        },
-		        {
-		            "name": "TreeView",
-		            "description": "TreeView",
-		            "type": "dojox.mobile.TreeView",
-		            "category": "untested",
-		            "icon": "resources/images/tree.png",
-		            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOJJREFUeNpi/P//PwMlgImBQsCCzAnvPwB3zspCB0aSDQCB7lgLhtLFJzAMxGUwigH//v5lKF5wjIEBGi5EuQIUiMg4qG3nf3QxfBjDC3/+/MawxL9py39GBpBj/jNsqPNhxBsGf3/+ZvCpWQ/xAyMjSA8YTCvwYMiasINwIP759YthR1cYii2eZav+p3dtYvhPTCz8/YXphe1oBpJsgFPWfHC8gEzZNy2RQBj8/s1glzob4tr/IE3A0AZqWdIexxBbsRjDcEZi8oJl0sz//xghqf7k3FRGkg2gaWai2ACAAAMAVbWDTF4DhaYAAAAASUVORK5CYII=",
-		            "data": [
-		                {
-		                    "type": "dojo.store.Memory",
-		                    "properties": {
-		                        "data": [
-				                		{"id":"treeRoot","label":"Root"},
-					                		{"id":"1","label":"1","parent":"treeRoot"},
-						                		{"id":"1.1","label":"1.1","parent":"1","leaf":"true"},
-						                		{"id":"1.2","label":"1.2","parent":"1","leaf":"true"},
-					                		{"id":"2","label":"2","parent":"treeRoot"},
-						                		{"id":"2.1","label":"2.1","parent":"2","leaf":"true"},
-						                		{"id":"2.2","label":"2.2","parent":"2","leaf":"true"},
-						                		{"id":"2.3","label":"2.3","parent":"2","leaf":"true"}
-				                ]
-		                    }
-		                },
-		                {
-		                    "type": "dijit.tree.ObjectStoreModel",
-		                    "properties": {
-		                    	"labelAttr": "label",
-		                    	"query": {
-		                    		"id": "treeRoot"
-		                    	}
-		                    }
-		                },
-		                {
-		                    "type": "dojox.mobile.TreeView",
-		                    "properties": {
-		                    }
-		                }
-		            ],
-		            "tool": "./dijit/TreeCreateTool",
-		            "helper": "./dijit/TreeHelper"
 		        }
 		    ]
 		    }

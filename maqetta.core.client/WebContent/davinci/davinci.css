@@ -2003,6 +2003,14 @@ background-position: -75px -745px;
   background-color: #e9e9e9;
   border-color:#d2d2d2;
 }
+#maqBody .dijitButtonActive .dijitButtonNode,
+#maqBody .dijitDropDownButtonActive .dijitButtonNode,
+#maqBody .dijitComboButton .dijitButtonNodeActive,
+#maqBody .dijitComboButton .dijitDownArrowButtonActive,
+#maqBody .dijitToggleButtonActive .dijitButtonNode {
+  background-color: #d9d9d9;
+  border-color:#c2c2c2;
+}
 #maqBody .dijitButton .dijitButtonNode,
 #maqBody .dijitDropDownButton .dijitButtonNode,
 #maqBody .dijitComboButton .dijitButtonNode,

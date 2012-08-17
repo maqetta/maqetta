@@ -351,10 +351,9 @@ define(["dojo/_base/declare",
 		},
 		
 		_setReadOnlyAttr: function(isReadOnly){
-//FIXME: TEMPORARY
-if(!this._maqStartupComplete){
-	return;
-}
+			if(!this._maqStartupComplete){
+				return;
+			}
 			this._isReadOnly = isReadOnly;
 			this._comboBox.set("disabled", isReadOnly);
 			this._button.disabled = isReadOnly;

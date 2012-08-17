@@ -2141,15 +2141,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		if(clear){
 			this.hideFocusAll(index);
-			/*FIXME: DELETE THIS
-			for(var i = index; i < this._focuses.length; i++){
-				focus = this._focuses[i];
-				if(focus.domNode.parentNode == containerNode){
-					focus.hide();
-					containerNode.removeChild(focus.domNode);
-				}
-			}
-			*/
 		}
 	},
 	

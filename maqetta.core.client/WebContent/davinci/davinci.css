@@ -92,7 +92,7 @@ BODY{
 	height:16px;
 	background-repeat: no-repeat; 
 }
-#davinci_toolbar_container .viewActionIcon, .editActionIcon {
+#davinci_toolbar_container .viewActionIcon, #davinci_toolbar_container .editActionIcon {
 	width:27px;
 	height:27px;
 }
@@ -1069,12 +1069,21 @@ davinci_top_bar .dijitButtonNode {
 	background-position: -19px -415px;
 }
 
+.tableCommandsIcon {
+background-image: url(img/sprite.png);
+background-position: -75px -745px;
+}
+
 .editCutIcon {
 	background-image: url(img/sprite.png);
 	background-position: -19px -512px;
 }
 .dijitButtonDisabled .editCutIcon {
 	background-position: -19px -483px;
+}
+.editCutIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: 0 -516px;
 }
 .editCopyIcon {
 	background-image: url(img/sprite.png);
@@ -1083,6 +1092,10 @@ davinci_top_bar .dijitButtonNode {
 .dijitButtonDisabled .editCopyIcon {
 	background-position: -85px -430px;
 }
+.editCopyIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: 0 -450px;
+}
 .editPasteIcon {
 	background-image: url(img/sprite.png);
 	background-position: -12px -551px;
@@ -1090,12 +1103,20 @@ davinci_top_bar .dijitButtonNode {
 .dijitButtonDisabled .editPasteIcon {
 	background-position: -88px -551px;
 }
+.editPasteIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -82px -400px;
+}
 .editDeleteIcon {
 	background-image: url(img/sprite.png);
 	background-position: -18px -669px;
 }
 .dijitButtonDisabled .editDeleteIcon {
 	background-position: -18px -700px;
+}
+.editDeleteIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: 0 -648px;
 }
 .tableCommandsIcon {
 	background-image: url(img/sprite.png);

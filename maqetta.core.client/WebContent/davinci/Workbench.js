@@ -1073,7 +1073,7 @@ var Workbench = {
 						}
 
 						if (item.action) {
-							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext)) {
+							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext, {menu:dojoMenu})) {
 								continue;
 							}
 							//FIXME: study this code for bugs.
@@ -1488,6 +1488,7 @@ var Workbench = {
 				popup.bindDomNode(domNode);
 			}
 			popup._widgetCallback=widgetCallback;
+			popup._partID = partID;
 			return popup;
 		}
 	},

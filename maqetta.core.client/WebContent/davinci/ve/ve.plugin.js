@@ -119,35 +119,29 @@ return {
                 {
                     label: "Cut",
                     keySequence: "M1+X",
-                    iconClass: "editActionIcon editCutIcon",
+                    iconClass: "editActionIcon editCutIconSmall",
                     action: "davinci/ve/actions/CutAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     label: "Copy",
                     keySequence: "M1+C",
-                    iconClass: "editActionIcon editCopyIcon",
+                    iconClass: "editActionIcon editCopyIconSmall",
                     action: "davinci/ve/actions/CopyAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     keySequence: "M1+V",
-                    iconClass: "editActionIcon editPasteIcon",
+                    iconClass: "editActionIcon editPasteIconSmall",
                     label: "Paste",
                     action: "davinci/ve/actions/PasteAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
                     keySequence: "DEL",
-                    iconClass: "editActionIcon editDeleteIcon",
+                    iconClass: "editActionIcon editDeleteIconSmall",
                     label: "Delete",
                     action: "davinci/ve/actions/DeleteAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-				{
-                    iconClass: "editActionIcon editDuplicateIcon",
-                    label: "Duplicate",
-                    action: "davinci/ve/actions/DuplicateAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {

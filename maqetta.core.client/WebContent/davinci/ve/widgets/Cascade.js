@@ -701,36 +701,7 @@ define(["dojo/_base/declare",
 					table.appendChild(row);
 					break;
 				}
-			}
-/*FIXME: OLD LOGIC
-			// Checkbox to allow user to control whether the current style settings
-			// should apply to the "Normal" style or the current interactive state.
-			// FIXME: This feature just has to have bugs. For example, I don't see
-			// logic for displaying the current property value when the state != "Normal"
-			// FIXME: Ultimately, we will want to allow the user to select any number
-			// of interactive states, not just "Normal" or the current state
-			// FIXME: The default value of this checkbox should be true if there
-			// is a custom value for the property for the current state, else false.
-			var langObj = veNLS;
-			var state=States.getState();
-			var isNormalState = States.isNormalState(state);
-			if(!isNormalState){
-				row = dojo.doc.createElement("tr");
-				row.className = "propWhichStateRow";
-				column = dojo.doc.createElement("td");
-				column.colSpan = '3';
-				var whichStateInputElement = dojo.create("input", {type:'checkbox',checked:false,className:'propWhichStateInput'});
-				this._whichStateInputElement = whichStateInputElement;
-				column.appendChild(whichStateInputElement);
-				var whichStateLabelElement = dojo.create("label", {className:'propWhichStateLabel'});
-				whichStateLabelElement.innerHTML = dojo.string.substitute(langObj.onlyApplyToState,[state]);
-				column.appendChild(whichStateLabelElement);
-				column.className = "propWhichStateCell";
-				row.appendChild(column);
-				table.appendChild(row);
-			}
-*/
-			
+			}			
 			this.cascadeTableDiv.appendChild(table);
 			this._updateFieldValue();
 		},

@@ -13,6 +13,7 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 		this.subscribe("/davinci/ui/editorSelected", this.editorChanged);
 		//this.subscribe("/davinci/ui/selectionChanged", this.selectionChanged);
 		//this.subscribe("/davinci/ui/modelChanged", this.modelChanged);
+		this.subscribe("/davinci/ui/context/pagerebuilt", this._pageRebuilt);
 	},
 	
 	editorChanged: function(changeEvent){
@@ -64,7 +65,6 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 			this.outlineModel = this.outlineProvider.getModel(this.currentEditor);
 		}
 
- 
 		// create tree
 		var treeArgs = {
 			model: this.outlineModel,
@@ -124,6 +124,12 @@ return declare("davinci.workbench.OutlineView", ViewPart, {
 				selection.length && selection[0].model && this.outlineTree) {
 			this.outlineTree.selectNode([selection[0].model]);
 		}
+	},
+
+	_pageRebuilt: function() {
+		var paths = this.outlineTree.get("paths");
+		this.createTree();
+		this.outlineTree.set("paths", paths);
 	},
 	
 	modelChanged: function(modelChanges) {

@@ -345,11 +345,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var node = this._selectedWidget.domNode;
 			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
 		}
-		/*FIXME: DELETE THIS
-		this._moverStart = { moverLeft:l, moverTop:t,
-				l:marginBoxPageCoords.l, t:marginBoxPageCoords.t,
-				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
-		*/
 		var parentIframeOffset = this._context.getParentIframeBounds();
 		this._moverStart = { moverLeft:l, moverTop:t,
 				l:marginBoxPageCoords.l+parentIframeOffset.l, t:marginBoxPageCoords.t+parentIframeOffset.t,
@@ -364,7 +359,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
 
-		//FIXME: DELETE THIS this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX, pageY:event.pageY, dateValue:(new Date()).valueOf() };
 		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX+parentIframeOffset.l, pageY:event.pageY+parentIframeOffset.t, dateValue:(new Date()).valueOf() };
 		this._moverMouseUpEvent = null;
 		this._moverMouseUpHandler = dojo.connect(this._moverDragDiv, "onmouseup", dojo.hitch(this, function(e){
@@ -476,13 +470,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				rect, 
 				false //offScreenAdjust
 		);
-/*FIXME: DELETE THIS
-		this._updateFocusChrome(
-				this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent, 
-				false //offScreenAdjust
-		);
-*/
-
 	},
 	
 	//Part of Mover interface

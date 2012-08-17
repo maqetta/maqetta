@@ -221,6 +221,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         // remove theme map from Dojo config attribute in model
         context._updateDojoConfig({
             themeMap: null,
+            mblLoadCompatPattern: null,
             mblThemeFiles: null
         });
     },
@@ -233,8 +234,16 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         }
 
         // set theme map in Dojo config attribute in model
+        /*
+		 * This is nasty, but djConfig.mblLoadCompatPattern is a regexp and if you attempt to 
+		 * JSON.stringfy a regexp you get "{}" not very useful
+		 * So we need to use a string 
+		 */
+        var themePath = Theme.getThemeLocation().toString().replace(/\//g,'\\/');
+		var re = '/\\/'+themePath+'\\/.*\\.css$/';
         context._updateDojoConfig({
             themeMap: Theme.getDojoxMobileThemeMap(context, theme),
+            mblLoadCompatPattern: re,
             mblThemeFiles: []
         });
     }

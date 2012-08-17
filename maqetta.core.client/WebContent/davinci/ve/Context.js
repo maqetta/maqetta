@@ -563,9 +563,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         // when the page is loaded the device matches what is in the doc
         // but we need to get dojo in sync.
         try {
+        	var ua = Silhouette.getMobileTheme(device + '.svg');
+      		ua = ua || "other";
     		// dojox/mobile specific CSS file handling
-    		var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');        	
-        	deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(device + '.svg'));
+    		var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
+        	deviceTheme.loadDeviceTheme(ua);
         } catch(e) {
         	// dojox/mobile/deviceTheme not loaded
         }
@@ -2139,15 +2141,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		if(clear){
 			this.hideFocusAll(index);
-			/*FIXME: DELETE THIS
-			for(var i = index; i < this._focuses.length; i++){
-				focus = this._focuses[i];
-				if(focus.domNode.parentNode == containerNode){
-					focus.hide();
-					containerNode.removeChild(focus.domNode);
-				}
-			}
-			*/
 		}
 	},
 	
@@ -3162,19 +3155,40 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
-
+		var regEx ='';
+		/*
+		 * This is nasty, but djConfig.mblLoadCompatPattern is a regexp and if you attempt to 
+		 * JSON.stringfy a regexp you get "{}" not very useful
+		 * So we need to use toString to get the string value of the regexp so 
+		 * we can put it back later
+		 */
+		if (djConfig.mblLoadCompatPattern){
+			regEx = ", mblLoadCompatPattern: " + djConfig.mblLoadCompatPattern.toString();
+			delete djConfig.mblLoadCompatPattern;
+		}
 		// If `prop` has a value, copy it into djConfig, overwriting existing
 		// value.  If `prop` is `null`, then delete from djConfig.
+		
 		for (var prop in data) {
 			if (data[prop] === null) {
 				delete djConfig[prop];
+			}  if (prop == 'mblLoadCompatPattern'){
+				/*
+				 * Note above about stringify regexp
+				 */
+				regEx = ", 'mblLoadCompatPattern': "+ data[prop];
+				
 			} else {
 				djConfig[prop] = data[prop];
 			}
 		}
-
-		dojoScript.setAttribute('data-dojo-config',
-				JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'"));
+		var str = JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'");
+		/*
+		 * This is where we add the regexp string to the stringified object.
+		 * Read the not above about why this is need.
+		 */
+		str = str + regEx,
+		dojoScript.setAttribute('data-dojo-config', str);
 	},
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3207,17 +3221,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// monitoring of which stylesheets get loaded for a given theme
 
 		try {
+			var dm = this.getGlobal()['require']('dojox/mobile');
 			var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
 			var djConfig = this.getDojo().config,  // TODO: use require
 				djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
-				ua = /*device ||*/ djConfig.mblUserAgent || 'none',
+				ua = djConfig.mblUserAgent || 'none',
 				themeMap,
-				themeFiles;
+				themeFiles,
+				mblLoadCompatPattern;
 
 			djConfigModel = djConfigModel ? require.eval("({ " + djConfigModel + " })", "data-dojo-config") : {};
 			themeMap = djConfigModel.themeMap;
 			themeFiles = djConfigModel.mblThemeFiles;
-
+			mblLoadCompatPattern = djConfigModel.mblLoadCompatPattern;
+			
 			// clear dynamic CSS
 			delete this.themeCssFiles;
 			delete this.cssFiles;
@@ -3227,6 +3244,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// load defaults if not defined in file
 				themeMap = Theme.getDojoxMobileThemeMap(this, dojo.clone(Theme.dojoMobileDefault));
 				themeFiles = [];
+				// Add the theme path so dojo can locate the *-compat.css files, if any
+				//mblLoadCompatPattern=/\/themes\/.*\.css$/;
+				var themePath = Theme.getThemeLocation().toString().replace(/\//g,'\\/');
+				var re = new RegExp('\/'+themePath+'\/.*\.css$');
+				mblLoadCompatPattern=re;
 			}
 			this._addCssForDevice(ua, themeMap, this);
 
@@ -3236,13 +3258,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			} else {
 				delete djConfig.mblThemeFiles;
 			}
+			if (mblLoadCompatPattern) {
+				djConfig.mblLoadCompatPattern = mblLoadCompatPattern;
+				dm.loadCompatPattern = mblLoadCompatPattern;
+			} else {
+				delete djConfig.mblLoadCompatPattern;
+				// put the dojo defalut back
+				dm.loadCompatPattern = /\/mobile\/themes\/.*\.css$/;
+			}
 
 			if (this._selection) {
 				// forces style palette to update cascade rules
 				this.onSelectionChange(this._selection);
 			}
 
-			deviceTheme.loadDeviceTheme(ua/*device*/);
+			deviceTheme.loadDeviceTheme(ua);
 		} catch(e) {
 			// dojox/mobile wasn't loaded
 		}

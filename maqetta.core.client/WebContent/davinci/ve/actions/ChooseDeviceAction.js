@@ -43,7 +43,6 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 	run: function(selection){
 		if (!this.isEnabled(null)){ return; }
 		var e = davinci.Workbench.getOpenEditor();
-		var okToSwitch = true;
 		if (e && e.isDirty){
 			//Give editor a chance to give us a more specific message
 			var message = e.getOnUnloadWarningMessage();
@@ -51,14 +50,18 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 				//No editor-specific message, so use our canned one
 				message = dojo.string.substitute(veNls.filesHasUnsavedChanges, [e.fileName]);
 			}
-		    okToSwitch=confirm(message);
+			Workbench.showDialog(veNls.chooseDeviceSilhouette, message, {width: 300}, dojo.hitch(this,this._okToSwitch), 'Save',null);
+		} else {
+			this._okToSwitch();
 		}                                                     
-		if (okToSwitch){
-			if (e.isDirty) {
-				e.save();
-			}
-			this.showDevices(); 
+	},
+	
+	_okToSwitch: function(){
+		var e = davinci.Workbench.getOpenEditor();
+		if (e.isDirty) {
+			e.save();
 		}
+		this.showDevices(); 
 	},
 
 	isEnabled: function(selection){

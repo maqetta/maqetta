@@ -258,26 +258,6 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				}
 			}
 		}
-/*
-		for(var i=0;i<this.pageTemplate.length;i++){
-			var title=this.pageTemplate[i].title;
-			// Use same styling as Dijit TitlePane
-			template+='<div role="group" class="propSectionButton dijitTitlePane';
-			if(this.pageTemplate[i].startsNewGroup){
-				template+=' propSectionButtonStartGroup';
-			}
-			template+='">';
-			template+='<div class="dijitTitlePaneTitle">';
-			template+='<div class="dijitTitlePaneTitleFocus" role="button">';
-			template+='<span class="dijitArrowNode" wairole="presentation" role="presentation">&gt;</span>';
-			template+='<span class="dijitTitlePaneTextNode" style="-webkit-user-select: none; ">'+title+'</span>';
-			template+='</div>';
-			template+='</div>';
-			template+='</div>';
-		}		
-		template+="</td>";
-		template+="<td class='propPaletteDetails dijitHidden'>";
-*/
 		// Use same styling as Dijit TitlePane for breadcrumb row
 		template+='<div class="dijitTitlePane cssBreadcrumbContainer">';
 		template+='<div class="dijitTitlePaneTitle">';
@@ -287,135 +267,16 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		template+='</div>';
 		template+='</div>';
 		template+='</div>';		
-/*
-		for(var i=0;i<this.pageTemplate.length;i++){
-			template+= HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
-		}
-*/
-template+='<div class="propPaletteTabContainer"></div>';
+		template+='<div class="propPaletteTabContainer"></div>';
 		template+="</td></tr></table>";
 		template+="</div>";
 		this.domNode.innerHTML = template;
 		
-		
-/*
-var propPaletteTabContainerNode = this.domNode.querySelector('.propPaletteTabContainer');
-if(propPaletteTabContainerNode){
-	this._tabContainer = new TabContainer({'class':'propPaletteTabContainer',style:'height:265px;', tabPosition:'left-h'}, propPaletteTabContainerNode);
-	var firstTab = null;
-	for(var i=0;i<this.pageTemplate.length;i++){
-		var title = this.pageTemplate[i].title;
-		var className = this.pageTemplate[i].className;
-		if(!className){
-			className = '';
-		}
-//FIXME: temp hack
-var topContent = "<div class='palette_titleBarDiv'><span class='paletteCloseBox'></span><span class='titleBarDivTitle'></span></div>";
-//if(this.pageTemplate[i].addCommonPropertiesAtTop){
-	topContent += "<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
-//}
-var paneContent = HTMLStringUtil.generateTemplate(this.pageTemplate[i] );
-var content = topContent + paneContent;
-
-		var cp = new ContentPane({title:title, content:content, 'class':className });
-		this._tabContainer.addChild(cp);
-		cp._maqPropGroup = this.pageTemplate[i].key;
-		if(!firstTab){
-			firstTab = cp;
-		}
-//FIXME: temp hack
-var closeBoxNodes = dojo.query('.paletteCloseBox', cp.domNode);
-if(closeBoxNodes.length > 0){
-	var closeBox = closeBoxNodes[0];
-	dojo.connect(closeBox, 'click', this, function(event){
-		davinci.Workbench.collapsePaletteContainer(event.currentTarget);
-	});
-}
-	}
-	dojo.connect(this._tabContainer, 'selectChild', this, function(tab){
-		this._currentPropSection = tab._maqPropGroup;
-		var context = (this._editor && this._editor.getContext) ? this._editor.getContext() : null;
-		var selection = (context && context.getSelection) ? context.getSelection() : [];
-		this._updatePaletteValues(selection);
-		HTMLStringUtil._initSection(this._currentPropSection);
-
-	});
-}
-// Need a setTimeout - without it, browser sometimes hasn't layed out
-// the container widgets into which the TabContainer should go.
-setTimeout(function(){
-	this._tabContainer.layout();	
-	this._tabContainer.startup();
-	this._tabContainer.selectChild(firstTab);
-	HTMLStringUtil._initSection(this._currentPropSection);
-}.bind(this),50);
-*/
-
-/*
-		// Put click, mouseover, mouseout handlers on the section buttons in root view
-		var sectionButtons=dojo.query(".propSectionButton",this.domNode);
-		for(var i=0;i<sectionButtons.length;i++){
-			var sectionButton = sectionButtons[i];
-			var titleNode = dojo.query(".dijitTitlePaneTitle",sectionButton);
-			if(titleNode.length>0){
-				dojo.removeClass(titleNode[0],"dijitTitlePaneTitleHover");
-			}
-			dojo.connect(sectionButton,"onclick",
-				// Second parameter is callback to execute after
-				// slide-in animation has completed. If we call
-				// the cascade immediately after starting the animation,
-				// the animation will be jerky as both the animation
-				// and CSS model calls are happening at same time.
-				// dojo.hitch to make sure there are different function
-				// instances for each button with correct title/index values
-				dojo.hitch(this, 
-					function(key, title, index){
-						HTMLStringUtil.transitionRootToSection(key,title,
-							// dojo.hitch necessary to provide "this" object
-							dojo.hitch(this,function(){
-								var visibleCascade = this._getVisibleCascade(index);
-								for(var j =0;j<visibleCascade.length;j++){
-									visibleCascade[j]._editorSelected({'editor':this._editor});
-								}
-							})
-						);
-					},
-					this.pageTemplate[i].key,this.pageTemplate[i].title,i)
-			);
-			dojo.connect(sectionButton,"onmouseover",
-					function(event){
-						var titleNode = dojo.query(".dijitTitlePaneTitle",event.currentTarget);
-						if(titleNode.length>0){
-							dojo.addClass(titleNode[0],"dijitTitlePaneTitleHover");
-						}
-					}
-			);
-			dojo.connect(sectionButton,"onmouseout",
-					function(event){
-						var titleNode = dojo.query(".dijitTitlePaneTitle",event.currentTarget);
-						if(titleNode.length>0){
-							dojo.removeClass(titleNode[0],"dijitTitlePaneTitleHover");
-						}
-					}
-			);
-		}
-*/
 		this.inherited(arguments);
-/*
-		dojo.connect(this, 'resize', this, function(a, b, c){
-			if(this._tabContainer && this._tabContainer.domNode && this._tabContainer.resize){
-				this._tabContainer.resize();
-			}
-		});
-*/
-			
 	},
 	
 	_widgetValuesChanged : function(event){
-/*FIXME: DELETE THIS
-		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
-*/
-var currentPropSection = this._currentPropSection;
+		var currentPropSection = this._currentPropSection;
 		if(currentPropSection){
 			var found=false;
 			for(var propSectionIndex = 0;propSectionIndex<this.pageTemplate.length;propSectionIndex++){
@@ -436,10 +297,7 @@ var currentPropSection = this._currentPropSection;
 		if(targetIndex)
 			return this.pageTemplate[targetIndex]['cascade'];
 		var visibleCascade = [];
-/*FIXME: DELETE THIS
-		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
-*/
-var currentPropSection = this._currentPropSection;
+		var currentPropSection = this._currentPropSection;
 		if(currentPropSection){
 			for(var i = 0;i<this.pageTemplate.length;i++){
 				if(this.pageTemplate[i].key == currentPropSection){
@@ -508,26 +366,7 @@ var currentPropSection = this._currentPropSection;
 	
 		this.inherited(arguments);
 
-/*
-// Need a setTimeout - without it, browser sometimes hasn't layed out
-// the container widgets into which the TabContainer should go.
-setTimeout(function(){
-	this._tabContainer.layout();	
-	this._tabContainer.startup();
-	this._tabContainer.selectChild(firstTab);
-	HTMLStringUtil._initSection(this._currentPropSection);
-}.bind(this),50);
-*/
-
-//FIXME: Need to deal with this given how it is duplicated on each section
-/*
-		var propertiesToolBar = dijit.byId('propertiesToolBar');
-		if(propertiesToolBar){
-			propertiesToolBar.initialize();
-		}
-*/
-
-//FIXME: Do we need this?
+		//FIXME: Do we need this?
 		// Install any onchange handlers for specific input elements
 		for(var i=0;i<this.pageTemplate.length;i++){
 			var section=this.pageTemplate[i];
@@ -542,50 +381,17 @@ setTimeout(function(){
 				}
 			}
 		}
-//FIXME: Do we need this?
-for(var v=0;v<this.pageTemplate.length;v++){
-	this.pageTemplate[v]['cascade'] = [];
-}
-/*
+		//FIXME: Do we need this?
 		for(var v=0;v<this.pageTemplate.length;v++){
 			this.pageTemplate[v]['cascade'] = [];
-			var page = this.pageTemplate[v]['pageTemplate'];
-			if(!page)
-				continue;
-			for(var i = 0;i<page.length;i++){
-				var  id = page[i]['id'];
-				var widget = dijit.byId(id);
-				if(widget){
-					page[i]['widget'] = widget;	
-				}else{
-					widget = dojo.byId(id);
-					if(widget)
-						page[i]['domNode'] = widget;
-				}
-			}
-			var sectionId = this.pageTemplate[v].id;
-			var nodeList = dojo.query("#" + sectionId + " .CascadeTop");
-			
-			nodeList.forEach(function(target){ return function(p){
-				var cascade = dijit.byId(p.id);
-				target['cascade'].push(cascade);
-			};}(this.pageTemplate[v]));
-			
 		}
-*/
 		this.setReadOnly(true);
 		this.onEditorSelected();
-/*FIXME: DELETE THIS
-		var context = (this._editor.getContext) ? this._editor.getContext() : null;
-		var selection = (context && context.getSelection) ? context.getSelection() : [];
-		this._updatePaletteValues(selection);
-*/
 		dojo.subscribe("/davinci/ui/widgetValuesChanged", dojo.hitch(this, this._widgetValuesChanged));
 		dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 		//Don't need to subscribe here. ViewLite already does it for us.
 		//dojo.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 	},
-	
 	
 	setReadOnly : function(isReadOnly){
 		for(var v=0;v<this.pageTemplate.length;v++){
@@ -636,60 +442,19 @@ for(var v=0;v<this.pageTemplate.length;v++){
 		}else{
 			dojo.addClass('davinci_style_prop_top','dijitHidden');	
 		}
-
-/*FIXME: need to restore some of this
-		var selectedChild = this._tabContainer.selectedChildWidget;
-		var pageEditorOnlySections = dojo.query('.page_editor_only', this.domNode);
-		var updatedSelectedChild = false;
-		if(this._editor){
-			if (this._editor.declaredClass == 'davinci.ve.PageEditor') {
-				pageEditorOnlySections.forEach(function(section){
-					var contentPane = dijit.byNode(section);
-					if(contentPane && contentPane.controlButton && contentPane.controlButton.domNode){
-						contentPane.controlButton.domNode.style.display = '';
-					}
-				});
-			}else{
-				pageEditorOnlySections.forEach(function(section){
-					var contentPane = dijit.byNode(section);
-					if(contentPane && contentPane.controlButton && contentPane.controlButton.domNode){
-						contentPane.controlButton.domNode.style.display = 'none';
-					}
-					if(contentPane == selectedChild){
-						updatedSelectedChild = true;
-					}
-				});
-			}
-		}
-		if(updatedSelectedChild){
-			var children = this._tabContainer.getChildren();
-			for(var i=0; i<children.length; i++){
-				var cp = children[i];
-				if(cp.controlButton.domNode.style.display != 'none'){
-					this._tabContainer.selectChild(cp);
-					break;
-				}
-			}
-		}
-*/
-		
 		/* add the editors ID to the top of the properties pallete so you can target CSS rules based on editor */
 		if(this._oldClassName)
 			dojo.removeClass(this.domNode.parentNode.parentNode,this._oldClassName); //remove the class from the  tab container
 
-//FIXME: TEMPORARY
-if(!this._editor){
-	return;
-}
+		if(!this._editor){
+			return;
+		}
 		if( this._editor){
 			this._oldClassName = this._editor.editorID.replace(/\./g, "_");
 			dojo.addClass(this.domNode.parentNode.parentNode,this._oldClassName); //put the class on the  tab container
 		}
 		// Hide or show the various section buttons on the root pane
-/*FIXME: DELETE THIS
-		var currentPropSection = HTMLStringUtil.getCurrentPropSection();
-*/
-var currentPropSection = this._currentPropSection;
+		var currentPropSection = this._currentPropSection;
 		var sectionButtons=dojo.query(".propSectionButton",this.domNode);
 		for(var i=0;i<sectionButtons.length;i++){
 			var sectionButton = sectionButtons[i];

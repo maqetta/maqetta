@@ -360,7 +360,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			this.onMouseUp(e);
 		}));
 		var userdoc = this._context.getDocument();	// inner document = user's document
+
+		// Chrome doesn't blur active focus node when switching frames, so focus on something else focusable first to cause the blur
+		document.getElementById("davinci-help-dropdown").focus();
 		userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+
 		this._keyDownHandler = dojo.connect(userdoc, "onkeydown", dojo.hitch(this, function(e){
 			this.onKeyDown(e);
 		}));

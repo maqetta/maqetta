@@ -239,6 +239,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					}
 					this._altKey = event.altKey;
 					this._updateMoveCursor();
+
+					// Chrome doesn't blur active focus node when switching frames, so focus on something else focusable first to cause the blur
+					document.getElementById("davinci-help-dropdown").focus();
 					userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
 				}
 			}

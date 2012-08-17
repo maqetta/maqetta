@@ -530,7 +530,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		}
 		var visualEditorBorder = document.getElementById('visualEditorBorder');
 		if(visualEditorBorder){
-			if(event.editor.declaredClass != "davinci.ve.PageEditor"){
+			if(!event.editor || event.editor.declaredClass != "davinci.ve.PageEditor"){
 				visualEditorBorder.style.display = 'none';
 			}else{
 				visualEditorBorder.style.display = 'block';

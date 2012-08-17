@@ -16,9 +16,8 @@ var SubmitDraftAction = declare("davinci.review.actions.SubmitDraftAction", [Act
 		item.getChildren(function(c) {children=c;}, true);
 
 		if (children&&children.length>0) {
-			var location = davinci.Workbench.location().match(/http:\/\/.*:\d+\//);
 			dojo.xhrGet({
-				url: location + "maqetta/cmd/managerVersion",
+				url: "cmd/managerVersion",
 				sync:false,
 				handleAs:"text",
 				content:{

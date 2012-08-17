@@ -153,8 +153,10 @@ DialogClass.showModal = function(content, title, style, callback) {
 	});
 
 	handles.push(connect.connect(myDialog, "onExecute", content, _onExecute));
-	
-	handles.push(connect.connect(content, "onExecute", content, _onExecute));
+
+	if (content.onExecute) {
+		handles.push(connect.connect(content, "onExecute", content, _onExecute));
+	}
 
 	handles.push(connect.connect(content, "onClose", dojo.hitch(this, function() {
 		this._timedDestroy(myDialog, handles);

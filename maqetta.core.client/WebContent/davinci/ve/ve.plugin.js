@@ -562,19 +562,19 @@ return {
                     menu:[
                        {
                             keyBinding: {accel: true, charOrCode: "2", allowGlobal: true},
-                            iconClass: 'editActionIcon sourceModeIcon',
+                            iconClass: 'editActionIcon sourceModeIcon sourceMenuIcon',
                             method: "switchDisplayModeSource",
                             label: "Source only"
                         },
                         {
                             keyBinding: {accel: true, charOrCode: "3", allowGlobal: true},
-                            iconClass: 'editActionIcon splitVerticalIcon',
+                            iconClass: 'editActionIcon splitVerticalIcon sourceMenuIcon',
                             method: "switchDisplayModeSplitVertical",
                             label: "Split Vertically"
                         },
                         {
                             keyBinding: {accel: true, charOrCode: "4", allowGlobal: true},
-                            iconClass: 'editActionIcon splitHorizontalIcon',
+                            iconClass: 'editActionIcon splitHorizontalIcon sourceMenuIcon',
                             method: "switchDisplayModeSplitHorizontal",
                             label: "Split Horizontally"
                         }

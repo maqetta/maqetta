@@ -545,9 +545,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// summary:
 		//		Load the comments attached to the opened page
 		//		and sort them by time order
-		var location = Workbench.location().match(/http:\/\/.*:\d+\//);
 		this._cached[pageName] = Runtime.serverJSONRequest({
-			url: location + "maqetta/cmd/getComments",
+			url: "cmd/getComments",
 			sync: true,
 			content:{
 				ownerId: ownerId,

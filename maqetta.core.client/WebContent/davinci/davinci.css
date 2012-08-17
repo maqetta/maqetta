@@ -303,10 +303,10 @@ BODY{
 /* Tweaks to Claro for editor toolbar */
 #davinci_toolbar_pane {
 	overflow:hidden;
-	height:47px;
+	height:43px;
 	padding:0px;
 	border-top: none;
-	border-bottom: none;
+	border-bottom: 4px solid #f4f4f4;
 	margin-top: -3px;
 }
 .claro .dijitToolbar.davinciToolbar {
@@ -319,18 +319,21 @@ BODY{
 	background-color:white;
 	height:44px;
 	border-top: 1px solid gray;
-	background-image:-webkit-linear-gradient(white 75%, #949 100%);
-	background-image:-moz-linear-gradient(white 75%, #949 100%);
-	background-image:-ms-linear-gradient(white 75%, #949 100%);
-	background-image:-o-linear-gradient(white 75%, #949 100%);
-	background-image:linear-gradient(white 75%, #949 100%);
+	background-image:-webkit-linear-gradient(white 75%, #999 100%);
+	background-image:-moz-linear-gradient(white 75%, #999 100%);
+	background-image:-ms-linear-gradient(white 75%, #999 100%);
+	background-image:-o-linear-gradient(white 75%, #999 100%);
+	background-image:linear-gradient(white 75%, #999 100%);
 }
 .claro .dijitToolbar.davinciToolbar .dijitButtonContents {
 	padding:0 2px;
 	line-height:16px;
 }
-#davinci_app .davinciToolbar .maqLabelButton .dijitButtonContents:focus {
-	outline:none;
+#davinci_app .davinciToolbar .maqLabelButton .dijitButtonContents:focus,
+ #davinci_app .davinciToolbar .dijitButton .dijitButtonContents:focus,
+ #davinci_app .davinciToolbar .dijitDropDownButton .dijitButtonContents:focus,
+ #davinci_app .davinciToolbar .dijitComboButton .dijitArrowButton:focus {
+	outline:1px dotted black;
 }
 #davinci_app .davinciToolbar .maqLabelButton .dijitButtonNode {
 	padding: 4px;
@@ -368,18 +371,43 @@ BODY{
 	background-image: -o-linear-gradient(#f4f4f4, #dbdbdb);
 	background-image: linear-gradient(#f4f4f4, #dbdbdb);
 }
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitButton.maqLabelButton.dijitHover .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton.maqLabelButton.dijitHover .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton.maqLabelButton.dijitHover .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitToggleButton.maqLabelButton.dijitHover .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox.maqLabelButton.dijitHover .dijitButtonNode {
+	background: #AAA;
+	background-image: -webkit-linear-gradient(#fefefe, #cccccc);
+	background-image: -moz-linear-gradient(#fefefe, #cccccc);
+	background-image: -ms-linear-gradient(#fefefe, #cccccc);
+	background-image: -o-linear-gradient(#fefefe, #cccccc);
+	background-image: linear-gradient(#fefefe, #cccccc);
+}
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitToggleButton.maqLabelButton.dijitActive .dijitButtonNode,
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox.maqLabelButton.dijitActive .dijitButtonNode {
+	background: #ccc;
+	background-image: -webkit-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: -moz-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: -ms-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: -o-linear-gradient(#d0d0d0, #e4e4e4);
+	background-image: linear-gradient(#d0d0d0, #e4e4e4);
+}
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitToggleButton.maqLabelButton.maqLabelButtonSelected .dijitButtonNode,
 #davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboBox.maqLabelButton.maqLabelButtonSelected .dijitButtonNode {
-	background: #AAA;
-	background-image: -webkit-linear-gradient(#b4b4b4, #949949);
-	background-image: -moz-linear-gradient(#b4b4b4, #949949);
-	background-image: -ms-linear-gradient(#b4b4b4, #949949);
-	background-image: -o-linear-gradient(#b4b4b4, #949949);
-	background-image: linear-gradient(#b4b4b4, #949949);
+	background: #eee;
+	background-image: -webkit-linear-gradient(#dbdbdb, #f4f4f4);
+	background-image: -moz-linear-gradient(#dbdbdb, #f4f4f4);
+	background-image: -ms-linear-gradient(#dbdbdb, #f4f4f4);
+	background-image: -o-linear-gradient(#dbdbdb, #f4f4f4);
+	background-image: linear-gradient(#dbdbdb, #f4f4f4);
 }
+
 #davinci_app .davinciToolbar .maqLabelButton.maqDesignButton {
 	margin-right:0px;
 }
@@ -394,6 +422,27 @@ BODY{
 #davinci_app .davinciToolbar .dijitComboButton.maqLabelButton.maqSourceComboButton .dijitButtonNode.dijitStretch {
 	border-radius:0px;
 }
+
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton .dijitArrowButtonInner,
+ #davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton .dijitArrowButtonInner {
+	width: 8px;
+	height: 8px;
+	background-image: url(img/sprite.png);
+	background-position: -22px -44px;
+}
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitComboButton .dijitArrowButtonInner {
+	width: 8px;
+	height: 8px;
+	background-image: url(img/sprite.png);
+	background-position: -22px -44px;
+	margin-left:2px;
+	margin-right:1px;
+}
+#davinci_app #davinci_toolbar_container .dijitToolbar .dijitDropDownButton .dijitArrowButtonInner {
+	margin-left:5px;
+	margin-right:-2px;
+}
+
 #davinci_app {
 	height: 100%;
 }
@@ -490,7 +539,11 @@ davinci_top_bar .dijitButtonNode {
 }
 #davinci_top_bar  #maq_banner_editor_commands .dijitArrowButtonInner {
 	background-image:url(img/sprite.png);
-	background-position:5px -41px;
+	background-position:-1px -45px;
+	width:8px;
+	height:8px;
+	margin-left:6px;
+	margin-right:-4px;
 }
 
 #davinci_file_tabs {
@@ -572,12 +625,27 @@ davinci_top_bar .dijitButtonNode {
 #davinci_app .davinciPalette > div > .dijitTab:focus {
 	outline:none;
 }
-#davinci_app .davinciPalette > div > .dijitTab.dijitTabChecked {
+#davinci_app .maqPaletteExpanded .davinciPalette > div > .dijitTab.dijitTabChecked {
 	background-color:white;
 	background-image:none;
 	z-index: 1;
 	border-right: 1px solid white;
 	font-weight:bold;
+}
+#davinci_app  .dijitTabContainerRight-tabs .dijitTabChecked {
+	border-left-width:1px;
+}
+#davinci_app  .maqPaletteExpanded .dijitTabContainerRight-tabs .dijitTabChecked {
+	border-left-width:0px;
+}
+#davinci_app  .dijitTabContainerLeft-tabs .dijitTabChecked {
+	border-right-width:1px;
+}
+#davinci_app  .maqPaletteExpanded .dijitTabContainerLeft-tabs .dijitTabChecked {
+	border-right-width:0px;
+}
+#left_mainBody, #right_mainBody {
+	padding-top:1px;
 }
 #left_mainBody.maqPaletteExpanded .davinciPalette > div > .dijitTab.dijitTabChecked {
 }
@@ -1075,6 +1143,10 @@ davinci_top_bar .dijitButtonNode {
 	margin:12px 0 16px 8px;
 }
 
+.sourceMenuIcon {
+	width:16px;
+	height:16px;
+}
 .designModeIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0 -1842px;
@@ -1788,4 +1860,89 @@ davinci_top_bar .dijitButtonNode {
 .shapesDragDiv {
 	z-index:1000000;
 	position:absolute;
+}
+
+#visualEditorBorder {
+	pointer-events:none;
+}
+#visualEditorBorderTopLeft {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:7px;
+	height:7px;
+	border-top: 1px solid white;
+	border-left: 1px solid white;
+	background:-webkit-linear-gradient(-45deg,#e0e0e0,#fcfcfc);
+}
+#visualEditorBorderTopRight {
+	position:absolute;
+	right:0px;
+	top:0px;
+	width:7px;
+	height:7px;
+	border-top: 1px solid white;
+	border-right: 1px solid white;
+	background:-webkit-linear-gradient(225deg,#e0e0e0,#fcfcfc);
+	}
+#visualEditorBorderTop {
+	position:absolute;
+	left:8px;
+	right:8px;
+	top:0px;
+	border-top:1px solid white;
+	border-bottom:1px solid white;
+	height:6px;
+	background:-webkit-linear-gradient(#e0e0e0,#fcfcfc);
+}
+#visualEditorBorderRight {
+	position:absolute;
+	right:0px;
+	top:8px;
+	bottom:0px;
+	width:6px;
+	border-left:1px solid white;
+	border-right:1px solid white;
+	background:-webkit-linear-gradient(180deg,#e0e0e0,#fcfcfc);
+}
+#visualEditorBorderLeft {
+	position:absolute;
+	left:0px;
+	top:8px;
+	bottom:0px;
+	width:6px;
+	border-left:1px solid white;
+	border-right:1px solid white;
+	background:-webkit-linear-gradient(0deg,#e0e0e0,#fcfcfc);
+}
+
+#mainBody > .dijitSplitterV.dijitAlignLeft {
+	border-right: 1px solid #848A8C;
+	border-left: 1px solid #A9AFB4;
+	margin-top:1px;
+	background: #C5CCCF;
+	width: 2px;
+}
+#mainBody > .dijitSplitterV.dijitAlignRight {
+	border-left: 1px solid #848A8C;
+	border-right: 1px solid #A9AFB4;
+	margin-top:1px;
+	background: #C5CCCF;
+	width: 2px;
+}
+#mainBody > .dijitSplitterV .dijitSplitterThumb {
+	left:0px;
+	width:2px;
+	background:white;
+}
+#left_mainBody .dijitSplitterH, #right_mainBody .dijitSplitterH {
+	border-top: 1px solid #A9AFB4;
+	border-bottom: 1px solid #A9AFB4;
+	background: #C5CCCF;
+	height: 2px;
+}
+#left_mainBody > .dijitSplitterH .dijitSplitterThumb, #right_mainBody > .dijitSplitterH .dijitSplitterThumb {
+	top:0px;
+	height:2px;
+	background:white;
 }

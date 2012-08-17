@@ -3,6 +3,7 @@ package maqetta.zazl;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,12 +19,12 @@ import org.osgi.framework.BundleContext;
 public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 	private static Logger logger = Logger.getLogger("maqetta.zazl");
 	private IUserManager userManager = null;
-	private Library dojoLib = null;
+	private List<Library> srcLibs = null;
 	
-	public MaqettaOSGiResourceLoader(BundleContext bundleContext, String[] bundleIds, IUserManager userManager, Library dojoLib) {
+	public MaqettaOSGiResourceLoader(BundleContext bundleContext, String[] bundleIds, IUserManager userManager, List<Library> srcLibs) {
 		super(bundleContext, bundleIds);
 		this.userManager = userManager;
-		this.dojoLib = dojoLib;
+		this.srcLibs = srcLibs;
 	}
 	
 	protected URL _getResource(String path) {
@@ -45,16 +46,9 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 			} else {
 				user = userManager.getSingleUser();
 			}
-			IPath dojoPath = ipath.removeFirstSegments(1);
-			if (dojoPath.toString().startsWith(dojoLib.getDefaultRoot().substring(1))) {
-				dojoPath = dojoPath.removeFirstSegments(2);
-				url = dojoLib.getURL(dojoPath.toString());
-				if (url != null) {
-					if (logger.isLoggable(Level.FINEST)) {
-						logger.logp(Level.FINEST, getClass().getName(), "_getResource", "resource ["+path +"] loaded from dojolib");
-					}
-					return url;
-				}
+			url = scanSrcLibs(ipath);
+			if (url != null) {
+				return url;
 			}
 		}
 		IVResource resource = user.getResource(ipath.toString());
@@ -68,6 +62,23 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 				e.printStackTrace();
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	private URL scanSrcLibs(IPath ipath) {
+		IPath srcPath = ipath.removeFirstSegments(1);
+		for (Library srcLib: srcLibs) {
+			if (srcPath.toString().startsWith(srcLib.getDefaultRoot().substring(1))) {
+				srcPath = srcPath.removeFirstSegments(2);
+				URL url = srcLib.getURL(srcPath.toString());
+				if (url != null) {
+					if (logger.isLoggable(Level.FINEST)) {
+						logger.logp(Level.FINEST, getClass().getName(), "_getResource", "resource ["+srcPath.toString() +"] loaded from srclib ["+srcLib.getID()+"]");
+					}
+					return url;
+				}
 			}
 		}
 		return null;

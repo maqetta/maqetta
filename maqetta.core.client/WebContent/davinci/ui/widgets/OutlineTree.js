@@ -160,7 +160,7 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 
 		var c = Workbench.getOpenEditor().getContext();
 		if (c) {
-			c.select(nodeWidget.item, null, true); // display inline
+			c.select(this.model._getWidget(nodeWidget.item), null, true); // display inline
 		}
 	},
 

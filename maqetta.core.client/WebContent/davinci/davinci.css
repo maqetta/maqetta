@@ -303,10 +303,10 @@ BODY{
 /* Tweaks to Claro for editor toolbar */
 #davinci_toolbar_pane {
 	overflow:hidden;
-	height:47px;
+	height:43px;
 	padding:0px;
 	border-top: none;
-	border-bottom: none;
+	border-bottom: 4px solid #f4f4f4;
 	margin-top: -3px;
 }
 .claro .dijitToolbar.davinciToolbar {
@@ -631,6 +631,9 @@ davinci_top_bar .dijitButtonNode {
 	z-index: 1;
 	border-right: 1px solid white;
 	font-weight:bold;
+}
+#left_mainBody, #right_mainBody {
+	padding-top:1px;
 }
 #left_mainBody.maqPaletteExpanded .davinciPalette > div > .dijitTab.dijitTabChecked {
 }
@@ -1899,4 +1902,35 @@ davinci_top_bar .dijitButtonNode {
 	border-left:1px solid white;
 	border-right:1px solid white;
 	background:-webkit-linear-gradient(0deg,#e0e0e0,#fcfcfc);
+}
+
+#mainBody > .dijitSplitterV.dijitAlignLeft {
+	border-right: 1px solid #848A8C;
+	border-left: 1px solid #A9AFB4;
+	margin-top:1px;
+	background: #C5CCCF;
+	width: 2px;
+}
+#mainBody > .dijitSplitterV.dijitAlignRight {
+	border-left: 1px solid #848A8C;
+	border-right: 1px solid #A9AFB4;
+	margin-top:1px;
+	background: #C5CCCF;
+	width: 2px;
+}
+#mainBody > .dijitSplitterV .dijitSplitterThumb {
+	left:0px;
+	width:2px;
+	background:white;
+}
+#left_mainBody .dijitSplitterH, #right_mainBody .dijitSplitterH {
+	border-top: 1px solid #A9AFB4;
+	border-bottom: 1px solid #A9AFB4;
+	background: #C5CCCF;
+	height: 2px;
+}
+#left_mainBody > .dijitSplitterH .dijitSplitterThumb, #right_mainBody > .dijitSplitterH .dijitSplitterThumb {
+	top:0px;
+	height:2px;
+	background:white;
 }

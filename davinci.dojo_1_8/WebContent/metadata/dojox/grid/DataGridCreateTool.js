@@ -31,13 +31,14 @@ return declare(CreateTool, {
 		this._resizable = "both";
 	},
 	
-	_create: function(args) {
+	_create: function(args) {	
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-			if (!dojo.some(results, function(arg){return !arg})) {
+			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
-				var command = this._getCreateCommand(args);
-				this._context.getCommandStack().execute(command);
-				this._select(this._dataGrid);
+				this._getCreateCommand(args).then(function(command) {
+					this._context.getCommandStack().execute(command);
+					this._select(this._dataGrid);
+				}.bind(this));
 			} else {
 				console.log("DataGridCreateTool:_loadRequires failed to load all requires");
 			}
@@ -45,18 +46,15 @@ return declare(CreateTool, {
 	},
 	
 	_getCreateCommand: function(args) {
+		var deferred = new Deferred();
+		
 		if(this._data.length !== 2){
 			return;
 		}
 		
-		var storeData = this._data[0],
-			dataGridData = this._data[1];
+		var storeData = this._data[0];
+		var dataGridData = this._data[1];
 		
-		if(!this._context.loadRequires(storeData.type,true) /*|| !this._context.loadRequires(modelData.type,true)*/ ||
-			!this._context.loadRequires(dataGridData.type,true)){
-			return;
-		}
-	
 		var storeId = Widget.getUniqueObjectId(storeData.type, this._context.getDocument());
 		if(!storeData.properties){
 			storeData.properties = {};
@@ -64,7 +62,7 @@ return declare(CreateTool, {
 		storeData.properties.jsId = storeId;
 		storeData.properties.id = storeId;
 		storeData.context = this._context;
-		
+
 		if (storeData.properties.data) { // might be url
 			var data = storeData.properties.data;
 			var items = data.items;
@@ -87,8 +85,7 @@ return declare(CreateTool, {
 			});
 			data.items = copyUsingFrameObject(items);
 		}
-		
-		var dataGridId = Widget.getUniqueObjectId(dataGridData.type, this._context.getDocument());
+
 		if(!dataGridData.properties){
 			dataGridData.properties = { };
 		}
@@ -98,56 +95,62 @@ return declare(CreateTool, {
 		dataGridData.context = this._context;
 		// </hack>
 	
-		var store,
-			dataGrid;
+		var store = undefined;
+		var dataGrid = undefined;
+
+		finish = function(store, dataGrid) {
+			if(!store || !dataGrid){
+				deferred.reject("DataGridCreateTool:_getCreateCommand failed to create either store and/or grid.");
+				return;
+			}
+			
+			var command = new CompoundCommand();
+			var index = args.index;
+			command.add(new AddCommand(store, args.parent, index));
+			index = (index !== undefined && index >= 0 ? index + 1 : undefined);
+			command.add(new AddCommand(dataGrid, args.parent, index));
+			
+			if(args.position){
+				var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+				command.add(new StyleCommand(dataGrid, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
+				command.add(new MoveCommand(dataGrid, args.position.x, args.position.y));
+			}
+			args.size = this._getInitialSize(dataGrid, args);
+			if(args.size){
+				command.add(new ResizeCommand(dataGrid, args.size.w, args.size.h));
+			}
+			this._dataGrid = dataGrid;
+			
+			deferred.resolve(command);
+		}.bind(this);
 		
 		var dj = this._context.getDojo();
 		dojo.withDoc(this._context.getDocument(), function(){
 			store = Widget.createWidget(storeData);
-			dataGridData.properties.store = dj.getObject(storeId);
-			if (this._useDataDojoProps) { 
-				var dataDojoProps = dataGridData.properties["data-dojo-props"];
-				dataDojoProps =
-						DataStoreBasedWidgetInput.setPropInDataDojoProps(
-								dataDojoProps, "store", storeId); 
-				
-				//Put updated data-dojo-props back into the widget's properties
-				dataGridData.properties["data-dojo-props"] = dataDojoProps;
-				
-				//Parse data-dojo-props, get the structure, and put it into widget's properties
-				var dataDojoPropsEval = dj.eval("({" + dataDojoProps + "})");
-				dataGridData.properties.structure = dataDojoPropsEval.structure;				
-			}
-			this._augmentWidgetCreationProperties(dataGridData.properties, dj); 
-			dataGrid = Widget.createWidget(dataGridData);
+		});
+		dataGridData.properties.store = dj.getObject(storeId);
+		if (this._useDataDojoProps) { 
+			var dataDojoProps = dataGridData.properties["data-dojo-props"];
+			dataDojoProps =
+					DataStoreBasedWidgetInput.setPropInDataDojoProps(
+							dataDojoProps, "store", storeId); 
+			
+			//Put updated data-dojo-props back into the widget's properties
+			dataGridData.properties["data-dojo-props"] = dataDojoProps;
+			
+			//Parse data-dojo-props, get the structure, and put it into widget's properties
+			var dataDojoPropsEval = dj.eval("({" + dataDojoProps + "})");
+			dataGridData.properties.structure = dataDojoPropsEval.structure;				
+		}
+			
+		this._augmentWidgetCreationProperties(dataGridData.properties).then(function() {
+			dojo.withDoc(this._context.getDocument(), function(){
+				dataGrid = Widget.createWidget(dataGridData);
+			});
+			finish(store, dataGrid);
 		}.bind(this));
-		
-		if(!store || !dataGrid){
-			return;
-		}
 	
-		var command = new CompoundCommand();
-		var index = args.index;
-		// always put store as first element under body, to ensure they are constructed by dojo before they are used
-        var bodyWidget = Widget.getWidget(this._context.rootNode);
-		//command.add(new davinci.ve.commands.AddCommand(store, bodyWidget, 0));
-		command.add(new AddCommand(store, args.parent, index));
-		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
-		command.add(new AddCommand(dataGrid, args.parent, index));
-		
-		if(args.position){
-			var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
-			command.add(new StyleCommand(dataGrid, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));
-			command.add(new MoveCommand(dataGrid, args.position.x, args.position.y));
-		}
-		args.size = this._getInitialSize(dataGrid, args);
-		if(args.size){
-			command.add(new ResizeCommand(dataGrid, args.size.w, args.size.h));
-		}
-		this._dataGrid = dataGrid;
-		/*this._context.getCommandStack().execute(command);
-		this._select(dataGrid);*/
-		return command;
+		return deferred.promise;
 	},
 	
 	_augmentWidgetCreationProperties: function(properties) {
@@ -160,20 +163,21 @@ return declare(CreateTool, {
 		var storeId = store.id ? store.id : store._edit_object_id;
 		var storeWidget = Widget.byId(storeId);
 		var storeData = storeWidget.getData();
-		var data = this._data = [storeData, this._data];
+		this._data = [storeData, this._data];
 
 		var deferred = new Deferred();
 
 		this._loadRequires().then(dojo.hitch(this, function(results) {
 			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
-				command.add(this._getCreateCommand(args));
-				
-				// pass back the container
-				deferred.resolve(this._dataGrid);
+				this._getCreateCommand(args).then(function(createCommand) {
+					command.add(createCommand);
+					
+					// pass back the container
+					deferred.resolve(this._dataGrid);
+				}.bind(this));
 			} else {
-				//TODO: should reject
-				console.log("DataGridCreateTool:_loadRequires failed to load all requires");
+				deferred.reject("DataGridCreateTool:_loadRequires failed to load all requires");
 			}
 		}));
 
@@ -181,11 +185,17 @@ return declare(CreateTool, {
 	},
 
 	_loadRequires: function() {
-		return all(
-		    this._data.map(function(d){
-		    	return this._context.loadRequires(d.type, true);
-		    }.bind(this))
-		);
+		var promises = [];
+
+		if (this._data.length == 2) {
+			var storeData = this._data[0];
+			promises.push(this._context.loadRequires(storeData.type, true));
+			
+			var dataGridData = this._data[1];
+			promises.push(this._context.loadRequires(dataGridData.type, true));
+		}
+
+		return all(promises);
 	}
 });
 

@@ -1,9 +1,11 @@
 define([
 	"dojo/_base/declare",
-	"maq-metadata-dojo/dojox/grid/DataGridCreateTool"
+	"maq-metadata-dojo/dojox/grid/DataGridCreateTool",
+	"dojo/Deferred"
 ], function(
 	declare,
-	DataGridCreateTool
+	DataGridCreateTool,
+	Deferred
 ) {
 
 return declare(DataGridCreateTool, {
@@ -12,17 +14,21 @@ return declare(DataGridCreateTool, {
 		this._useDataDojoProps = true;
 	},
 
-	_augmentWidgetCreationProperties: function(properties, dojoFromContext) {
+	_augmentWidgetCreationProperties: function(properties) {
+		var deferred = new Deferred();
+		
 		//Parse data-dojo-props and get cacheClass
 		var dataDojoProps = properties["data-dojo-props"];
-		var dataDojoPropsEval = dojoFromContext.eval("({" + dataDojoProps + "})");
+		var dj = this._context.getDojo();
+		var dataDojoPropsEval = dj.eval("({" + dataDojoProps + "})");
 
 		//put resolved cacheClass into properties
-		var cacheClass = dojoFromContext.require(dataDojoPropsEval.cacheClass);
-		properties.cacheClass = cacheClass;
-		
-		//Call superclass
-		this.inherited(arguments);
+		require([dataDojoPropsEval.cacheClass], function(cacheClass) {
+			properties.cacheClass = cacheClass;
+			deferred.resolve();
+		});
+
+		return deferred.promise;
 	}
 });
 

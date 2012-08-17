@@ -98,7 +98,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		var results = [];
 
 		dojo.forEach(filtered, dojo.hitch(this, function(w) {
-			results.push({id: w.id, type: w.type});
+			results.push(this._buildItem(w));
 		}));
 
 		return results;
@@ -196,7 +196,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 		var node = this._context.rootNode;
 
 		if (node) {	// shouldn't be necessary, but sometime is null
-			this.onChildrenChange(node, this._getChildren(node));
+			this.onChildrenChange(this._buildItem(node), this._getChildren(node));
 		}
 	},
 
@@ -286,6 +286,12 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 
 	_getWidget: function(item) {
 		return Widget.byId(item.id);
+	},
+
+	_buildItem: function(widget) {
+		if (widget) {
+			return {id: widget.id, type: widget.type}
+		}
 	},
 
 	_connect: function(contextFunction, thisFunction) {

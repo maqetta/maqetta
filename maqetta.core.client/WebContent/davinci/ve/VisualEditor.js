@@ -90,8 +90,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		
 		var visualEditorBorder = document.getElementById('visualEditorBorder');
 		if(!visualEditorBorder){
-			var focusContainer = davinci.Workbench.focusContainer;
-			visualEditorBorder = dojo.create('div', {id:'visualEditorBorder'}, focusContainer);
+			var editorsStackContainer = document.getElementById('editorsStackContainer');
+			visualEditorBorder = dojo.create('div', {id:'visualEditorBorder'}, editorsStackContainer);
 			dojo.create('div', {id:'visualEditorBorderTopLeft'}, visualEditorBorder);
 			dojo.create('div', {id:'visualEditorBorderTopRight'}, visualEditorBorder);
 			dojo.create('div', {id:'visualEditorBorderTop'}, visualEditorBorder);
@@ -526,6 +526,14 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			this._registerScrollHandler();
 			if(focusContainer && this._focusPopup){
 				this._focusPopup.bindDomNode(focusContainer);
+			}
+		}
+		var visualEditorBorder = document.getElementById('visualEditorBorder');
+		if(visualEditorBorder){
+			if(event.editor.declaredClass != "davinci.ve.PageEditor"){
+				visualEditorBorder.style.display = 'none';
+			}else{
+				visualEditorBorder.style.display = 'block';
 			}
 		}
 	},

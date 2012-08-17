@@ -625,12 +625,24 @@ davinci_top_bar .dijitButtonNode {
 #davinci_app .davinciPalette > div > .dijitTab:focus {
 	outline:none;
 }
-#davinci_app .davinciPalette > div > .dijitTab.dijitTabChecked {
+#davinci_app .maqPaletteExpanded .davinciPalette > div > .dijitTab.dijitTabChecked {
 	background-color:white;
 	background-image:none;
 	z-index: 1;
 	border-right: 1px solid white;
 	font-weight:bold;
+}
+#davinci_app  .dijitTabContainerRight-tabs .dijitTabChecked {
+	border-left-width:1px;
+}
+#davinci_app  .maqPaletteExpanded .dijitTabContainerRight-tabs .dijitTabChecked {
+	border-left-width:0px;
+}
+#davinci_app  .dijitTabContainerLeft-tabs .dijitTabChecked {
+	border-right-width:1px;
+}
+#davinci_app  .maqPaletteExpanded .dijitTabContainerLeft-tabs .dijitTabChecked {
+	border-right-width:0px;
 }
 #left_mainBody, #right_mainBody {
 	padding-top:1px;

@@ -3,12 +3,12 @@ define([
     	"./Action",
     	"../ui/widgets/ThemeSetSelection",
     	"../ve/commands/ChangeThemeCommand",
-    	"dojo/i18n!davinci/actions/nls/actions"
-], function(declare, Action, ThemeSetSelection, ChangeThemeCommand, actionStrings){
+    	"dojo/i18n!davinci/actions/nls/actions",
+    	"davinci/Workbench"
+], function(declare, Action, ThemeSetSelection, ChangeThemeCommand, actionStrings, Workbench){
 
 return declare("davinci.actions.SelectThemeAction", Action, {
 	run: function(selection){
-		var okToSwitch = true;
 		var e = davinci.Workbench.getOpenEditor();
 		if (e && e.isDirty){
 			//Give editor a chance to give us a more specific message
@@ -17,22 +17,30 @@ return declare("davinci.actions.SelectThemeAction", Action, {
 				//No editor-specific message, so use our canned one
 				message = dojo.string.substitute(actionStrings.filesHasUnsavedChanges, [e.fileName]);
 			}
-		    okToSwitch=confirm(message);
-		}
-		if (okToSwitch){
-			if (e.isDirty) {
-				e.save();
-			}
-			var theme = e.getContext().getTheme();
-			var ldojoVersion = e.getContext().getDojo().version.major +'.'+ e.getContext().getDojo().version.minor;
 			
-			this._themeChooser = new ThemeSetSelection({value:theme, workspaceOnly: false, dojoVersion: ldojoVersion});
-			this._themeChooser.buildRendering();
-
+			Workbench.showDialog(actionStrings.switchingThemes, message, {width: 300}, dojo.hitch(this,this._okToSwitch), 'Save',null);
+				   
+		} else {
+			this._okToSwitch();
 		}
 		
+		
 	},
+	
+	_okToSwitch: function(){
+		var e = davinci.Workbench.getOpenEditor();
+		if (e.isDirty) {
+			e.save();
+		}
+		var theme = e.getContext().getTheme();
+		var ldojoVersion = e.getContext().getDojo().version.major +'.'+ e.getContext().getDojo().version.minor;
+		
+		this._themeChooser = new ThemeSetSelection({value:theme, workspaceOnly: false, dojoVersion: ldojoVersion});
+		this._themeChooser.buildRendering();
 
+	},
+	
+	
 	_changeTheme : function(){
 		var newTheme = this._themeChooser.attr('value');
 		this._themeChooser.onClose();

@@ -13,7 +13,7 @@
     
          </ajaxLibrary>
          <ajaxLibrary name="gridx-src" id="gridx-src" version="1.0.0">
-            <libraryPath location="WebContent/gridx-src" name="/lib/dojo/gridx"></libraryPath>
+            <libraryPath location="WebContent/gridx-src/gridx" name="/lib/dojo/gridx"></libraryPath>
             <metadata location="app/metadata/gridx/1.0.0" />
          </ajaxLibrary>
       </extension>

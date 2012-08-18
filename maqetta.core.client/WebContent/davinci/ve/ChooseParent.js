@@ -252,24 +252,24 @@ return declare("davinci.ve.ChooseParent", null, {
 					if(refAfter){
 						if(refChildNode.nextSibling && refChildNode.nextSibling._dvWidget){
 							var nextSibling = refChildNode.nextSibling;
-							borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(nextSibling);
+							borderBoxPageCoords = GeomUtils.getBorderBoxPageCoordsCached(nextSibling);
 							cursL = borderBoxPageCoords.l;
 							cursT = borderBoxPageCoords.t;
 							cursH = borderBoxPageCoords.h;
 						}else{
-							borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(refChildNode);
+							borderBoxPageCoords = GeomUtils.getBorderBoxPageCoordsCached(refChildNode);
 							cursL = borderBoxPageCoords.l + borderBoxPageCoords.w;
 							cursT = borderBoxPageCoords.t;
 							cursH = borderBoxPageCoords.h;
 						}
 					}else{
-						borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(refChildNode);
+						borderBoxPageCoords = GeomUtils.getBorderBoxPageCoordsCached(refChildNode);
 						cursL = borderBoxPageCoords.l;
 						cursT = borderBoxPageCoords.t;
 						cursH = borderBoxPageCoords.h;
 					}
 				}else{
-					borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(parentNode);
+					borderBoxPageCoords = GeomUtils.getBorderBoxPageCoordsCached(parentNode);
 					cursL = borderBoxPageCoords.l;
 					cursT = borderBoxPageCoords.t;
 					cursH = 16;
@@ -453,7 +453,7 @@ return declare("davinci.ve.ChooseParent", null, {
 			marginBoxPageCoords = helper.getMarginBoxPageCoords(wdgt);
 		} else {
 			var domNode = wdgt.domNode;
-			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(domNode);
+			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoordsCached(domNode);
 		}
 		var l = marginBoxPageCoords.l;
 		var t = marginBoxPageCoords.t;
@@ -477,7 +477,7 @@ return declare("davinci.ve.ChooseParent", null, {
 					for(i=0; i<children.length; i++){
 						child = children[i];
 						var node = child.domNode;
-						var childBorderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(node);
+						var childBorderBoxPageCoords = GeomUtils.getBorderBoxPageCoordsCached(node);
 						w = node.offsetWidth;
 						h = node.offsetHeight;
 						l = childBorderBoxPageCoords.l;

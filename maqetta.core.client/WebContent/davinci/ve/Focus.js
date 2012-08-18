@@ -333,8 +333,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 
 		this._nobIndex = dojo.indexOf(this._nobs, event.target);
 		this._frameIndex = dojo.indexOf(this._frames, event.target);
-		var moverDragDivSize = 100;
-		var moverDragDivHalf = 50;
+		var moverDragDivSize = 800;
+		var moverDragDivHalf = 400;
 		var l = event.pageX - moverDragDivHalf;
 		var t = event.pageY - moverDragDivHalf;
 		var marginBoxPageCoords = null;

@@ -324,6 +324,7 @@ var veStates = declare(maqettaStates, {
 				// Trigger update of the selection box in case the selected widget changed size or moved
 				var context = this.getContext();
 				if (context) {
+					context.clearCachedWidgetBounds();
 					context.updateFocusAll();
 				}
 			}));

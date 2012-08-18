@@ -3500,6 +3500,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onCommandStackExecute: function() {
+		this.clearCachedWidgetBounds();
 		if(this.editor && this.editor.editorContainer && this.editor.editorContainer.updateToolbars){
 			this.editor.editorContainer.updateToolbars();
 		}
@@ -3598,7 +3599,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				find(child);
 			});
 		}
-		find(this.rootWidget);
+		if(this.rootWidget){
+			find(this.rootWidget);
+		}
 		return result;
 	},
 	
@@ -3639,6 +3642,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getFocusContainer: function(){
 		return document.getElementById('focusContainer');
+	},
+	
+	/**
+	 * Clear any cached widget bounds
+	 */
+	clearCachedWidgetBounds: function(){
+		var allWidgets = this.getAllWidgets();
+		for(var i=0; i<allWidgets.length; i++){
+			var domNode = allWidgets[i].domNode;
+			if(domNode){
+				GeomUtils.clearGeomCache(domNode);
+			}
+		}
 	}
 
 });

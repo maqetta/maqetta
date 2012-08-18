@@ -255,8 +255,9 @@ var XMLParser  = (function() {
 
 		function endtag(startOfLine) {
 			return function(style, content) {
-				if (content == "/>" || (content == ">" && UseKludges.autoSelfClosers.hasOwnProperty(currentTag))) cont();
-				else if (content == ">") {pushContext(currentTag, startOfLine); cont();}
+				if (content == "/>" || (content == ">" && UseKludges.autoSelfClosers.hasOwnProperty(currentTag))){
+					cont();
+				}else if (content == ">") {pushContext(currentTag, startOfLine); cont();}
 				else {markErr(); cont(arguments.callee);}
 			};
 		}
@@ -278,6 +279,8 @@ var XMLParser  = (function() {
 		}
 
 		return {
+			Kludges:Kludges,
+			NoKludges:NoKludges,
 			indentation: function() {return indented;},
 
 			next: function(){
@@ -409,6 +412,9 @@ var parse = function(text, parentElement) {
 					var model = new HTMLElement();
 					model.wasParsed = true;
 					model.startOffset = token.offset;
+					if(parser.Kludges.autoSelfClosers.hasOwnProperty(stack[stack.length-1].tag)){
+						stack.pop();
+					}
 					stack[stack.length-1].addChild(model, undefined, true);
 					nextToken(true);
 					if (token.style == "xml-tagname")

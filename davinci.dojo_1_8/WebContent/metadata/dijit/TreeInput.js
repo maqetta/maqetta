@@ -266,7 +266,7 @@ return declare(ContainerInput, {
 		//Create model for preview
 		var previewModel = this._previewModel = new CustomObjectStoreModel({
 			labelAttr: modelWidgetData.properties.labelAttr ? modelWidgetData.properties.labelAttr : "label",
-			query: JSON.parse(modelWidgetData.properties.query ? modelWidgetData.properties.query : '{"id":"treeRoot"}'),
+			query: modelWidgetData.properties.query,
 			store: observablePreviewStore
 		});
 		this._treeHelper._addModelFunctions(previewModel);
@@ -884,7 +884,7 @@ return declare(ContainerInput, {
 			var newModel = null;
 			if (modelWidgetData.type == "dijit.tree.ObjectStoreModel") {
 				newModel = new ObjectStoreModelPage({
-					query: JSON.parse(modelWidgetData.properties.query),
+					query: modelWidgetData.properties.query,
 					labelAttr: modelWidgetData.properties.labelAttr,
 					store: newStore
 				});

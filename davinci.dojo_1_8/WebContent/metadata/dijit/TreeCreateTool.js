@@ -151,7 +151,7 @@ return declare(CreateTool, {
 			} else {
 				console.log("TreeCreateTool:_loadRequires failed to load all requires");
 			}
-		}));
+		}.bind(this)));
 
 		return deferred.promise;
 	},

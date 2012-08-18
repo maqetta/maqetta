@@ -21,6 +21,11 @@ TreeModelHelper.prototype = {
 			if (storeId) {
 				data.properties.store = dj.getObject(storeId);
 			}
+			
+			var query = widget._srcElement.getAttribute("query");
+			if (query) {
+				data.properties.query = JSON.parse(query);
+			}
 		});
 		
 		return data;

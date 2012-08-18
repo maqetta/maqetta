@@ -1,11 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"maq-metadata-dojo/dojox/grid/DataGridCreateTool",
-	"dojo/Deferred"
+	"dojo/Deferred",
+	"require"
 ], function(
 	declare,
 	DataGridCreateTool,
-	Deferred
+	Deferred,
+	require
 ) {
 
 return declare(DataGridCreateTool, {

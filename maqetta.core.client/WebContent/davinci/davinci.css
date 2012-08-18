@@ -1585,9 +1585,6 @@ background-position: -75px -745px;
 	margin:10px 0 22px;
 	text-align:center;
 }
-.welcome_section_hidden {
-	display:none;
-}
 .welcome_section .welcome_section_footer {
 	clear:both;
 }
@@ -1706,24 +1703,6 @@ td.welcome_section_cell {
 	border:1px solid #eaeaea;
 	cursor:pointer;
 }
-.welcome_content td.welcome_action_cell {
-	vertical-align:middle;
-	line-height:25px;
-}
-.welcome_action_cell:hover {
-	color:blue;
-	cursor:pointer;
-}
-.welcome_action_icon {
-	width:16px;
-	height:16px;
-	display:inline-block;
-	margin-right:4px;
-	vertical-align:middle;
-}
-.welcome_content .welcome_action {
-	vertical-align:0px;
-}
 .welcome_section_header_about {
 	margin-top:48px;
 	margin-bottom: 14px;
@@ -1744,15 +1723,6 @@ td.welcome_section_cell {
 .welcome_about_content_cell {
 	padding-top:8px;
 	padding-left:6px;
-}
-.welcome_upload_icon {
-	background-image:url(ve/resources/images/upload_file.gif);
-}
-.welcome_themeeditor_icon {
-	background-image:url(ve/resources/images/open_theme_edit.gif);
-}
-.welcome_importwidget_icon {
-	background-image:url(ve/resources/images/import_widget.gif);
 }
 .welcome_learn_more {
 	color:blue;

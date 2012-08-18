@@ -413,6 +413,7 @@ var parse = function(text, parentElement) {
 					model.wasParsed = true;
 					model.startOffset = token.offset;
 					if(parser.Kludges.autoSelfClosers.hasOwnProperty(stack[stack.length-1].tag)){
+						stack[stack.length-1].noEndTag = true;
 						stack.pop();
 					}
 					stack[stack.length-1].addChild(model, undefined, true);
@@ -480,6 +481,10 @@ var parse = function(text, parentElement) {
 			case "xml-text" :
 			case "whitespace" :
 			case "xml-entity" : {
+				if(parser.Kludges.autoSelfClosers.hasOwnProperty(stack[stack.length-1].tag)){
+					stack[stack.length-1].noEndTag = true;
+					stack.pop();
+				}
 				if (inComment) {
 					inComment.value += token.value;
 				} else if ( inPhpBlock ) {

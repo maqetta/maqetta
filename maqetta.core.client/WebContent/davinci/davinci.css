@@ -1534,9 +1534,10 @@ background-position: -75px -745px;
 #welcomePage {
 	text-align:center;
 }
+.welcome_outer_table {
+	width:100%;
+}
 #welcome_page_content {
-	width:768px;
-	display:inline-block;
 	text-align:left;
 	margin:-2px 0;
 	border:none;
@@ -1548,99 +1549,162 @@ background-position: -75px -745px;
 	margin:-1px;
 }
 .welcome_content {
+	font-family: Verdana, sans-serif, Arial;
 }
 .welcome_header {
-	height:34px;
-	line-height:34px;
-	background:#ededed;
-	text-align:center;
-	font: bold 1.364em/34px Verdana, sans-serif;
-	border-top:1px solid #b5bcc7;
-	border-bottom:1px solid #b5bcc7;
-	display:none;
+	background-image:url(img/sprite.png);
+	background-position:-9px -2170px;
+	background-repeat: no-repeat;
+	height:26px;
+	margin:30px 0px 10px 12px;
+	font-size: 27px;
+	color:transparent;
 }
 .welcome_under_header {
-	height:22px;
-	background:#f9f9f9;
-	border-bottom:1px solid #e1e4e9;
-	display:none;
+	color:#444;
+	font-size:15px;
+	margin-left:13px;
+	margin-bottom: 18px;
+	margin-top: 18px;
+}
+.welcome_actions {
+	height:175px;
+	background-image:-webkit-linear-gradient(#f1f1f1, white 38%);
+	background-image:-moz-linear-gradient(#f1f1f1, white 38%);
+	background-image:-ms-linear-gradient(#f1f1f1, white 38%);
+	background-image:-o-linear-gradient(#f1f1f1, white 38%);
+	background-image:linear-gradient(#f1f1f1, white 38%);
+	padding-top: 40px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+.welcome_actions_table {
+	width:900px;
 }
 .welcome_section {
 	margin:10px 0 22px;
+	text-align:center;
 }
 .welcome_section_hidden {
 	display:none;
 }
-.welcome_section_active:hover {
-	color:blue;
-	cursor:pointer;
-}
 .welcome_section .welcome_section_footer {
 	clear:both;
 }
+.welcome_section_label {
+	font-size: 13px;
+	color: #00649B;
+	white-space:nowrap;
+	padding-bottom:10px;
+}
 .welcome_section_header {
-	font: 1.364em/34px Verdana, sans-serif;
-	margin-bottom:10px;
+	padding-left: 12px;
+	font-weight: normal;
+	font-size: 18px;
 }
 .welcome_section_container {
-	padding-top:4px;
-	padding-left:1px;
+	height: 81px;
 }
 .welcome_icon {
-	float:left;
 	display:inline-block;
-	width:58px;
-	height:60px;
-	background-image:url(ve/resources/images/welcome_icons.png);
-	margin-right:12px;
-	margin-top:-4px;
+	background-image: url(img/sprite.png);
+	width:44px;
+	height:44px;
+	margin-top:6px;
 }
 .welcome_section_content {
 	font-family: Verdana, sans-serif;
 }
+.welcome_learn_container_outer {
+	border: 1px solid #BBB;
+	margin: 10px;
+	border-radius: 2px;
+}
+.welcome_learn_container_inner {
+	padding:0 12px;
+	border-top: 2px solid #F4F4F4;
+	border-bottom: 2px solid #F4F4F4;
+	border-left: 4px solid #F4F4F4;
+	border-right: 4px solid #F4F4F4;
+	border-radius: 2px;
+	background:#fbfbfb;
+}
+.welcome_learn_table {
+	height:160px;
+	font-size:12px;
+}
+.welcome_learn_content_title {
+	font-weight:bold;
+	padding-top:10px;
+}
+.welcome_learn_content_description {
+	margin-top:4px;
+}
+.welcome_learn_content_action {
+	margin-top:20px;
+	color: #00649B;
+	padding-bottom:10px;
+}
+.welcome_icon_learn {
+	width:50px;
+	height:44px;
+	background-image:url(img/sprite.png);
+}
+.welcome_learn_table_inner {
+	width:236px;
+}
+.welcome_learn_table_inner td {
+	vertical-align:top;
+}
+.welcome_learn_content {
+	text-align:left;
+	padding-left: 3px;
+}
 .welcome_icon_tutorials {
-	background-position: -331px -5px;
+	background-position: -64px -2205px;
 }
-.welcome_section_active:hover .welcome_icon_tutorials {
-	background-position: -331px -72px;
+.welcome_icon_videos {
+	background-position: -4px -2200px;
 }
-.welcome_section_active:active .welcome_icon_tutorials {
-	background-position: -331px -139px;
+.welcome_icon_cheatsheets {
+	margin-top: 15px;
+	background-position: -12px -2425px;
 }
-.welcome_icon_newhtml {
-	background-position: -6px -5px;
+.welcome_icon_howto {
+	background-position: -63px -2365px;
 }
-.welcome_section_active:hover .welcome_icon_newhtml {
-	background-position: -6px -72px;
+.welcome_icon_new_mobile {
+	background-position: -7px -2306px;
 }
-.welcome_section_active:active .welcome_icon_newhtml {
-	background-position: -6px -139px;
+.welcome_icon_new_desktop {
+	background-position: -65px -2306px;
+}
+.welcome_icon_new_sketch {
+	background-position: -7px -2250px;
 }
 .welcome_icon_newtheme {
-	background-position: -266px -5px;
-}
-.welcome_section_active:hover .welcome_icon_newtheme {
-	background-position: -266px -72px;
-}
-.welcome_section_active:active .welcome_icon_newtheme {
-	background-position: -266px -139px;
+	background-position: -7px -2365px;
 }
 .welcome_icon_newreview {
-	background-position: -201px -5px;
-}
-.welcome_section:hover .welcome_icon_newreview {
-	background-position: -201px -72px;
-}
-.welcome_section_active:active .welcome_icon_newreview {
-	background-position: -201px -139px;
+	background-position: -65px -2250px;
 }
 .welcome_content table {
-	width:100%;
 	border-collapse:collapse; /* cellspacing equiv */
+}
+td.welcome_section_cell {
+	width:180px;
 }
 .welcome_content td.welcome_section_cell {
 	padding:0 10px 0 20px; /* cellpadding equiv */
 	vertical-align:top;
+}
+.welcome_section_active {
+	border:1px solid transparent;
+}
+.welcome_section_active:hover {
+	background-color:#f4f4f4;
+	border:1px solid #eaeaea;
+	cursor:pointer;
 }
 .welcome_content td.welcome_action_cell {
 	vertical-align:middle;
@@ -1660,6 +1724,27 @@ background-position: -75px -745px;
 .welcome_content .welcome_action {
 	vertical-align:0px;
 }
+.welcome_section_header_about {
+	margin-top:48px;
+	margin-bottom: 14px;
+}
+.welcome_about_maqetta_footer {
+	text-align:left;
+	padding-left: 12px;
+}
+.welcome_about_icon {
+	width:50px;
+	height:50px;
+	background-image:url(img/sprite.png);
+	background-position:-65px -2420px;
+}
+.welcome_about_maqetta_table td {
+	vertical-align:top;
+}
+.welcome_about_content_cell {
+	padding-top:8px;
+	padding-left:6px;
+}
 .welcome_upload_icon {
 	background-image:url(ve/resources/images/upload_file.gif);
 }
@@ -1670,10 +1755,10 @@ background-position: -75px -745px;
 	background-image:url(ve/resources/images/import_widget.gif);
 }
 .welcome_learn_more {
-	margin-top:1em;
+	color:blue;
+	margin-top:3px;
 }
 .welcome_learn_more:hover {
-	color:blue;
 	cursor:pointer;
 }
 

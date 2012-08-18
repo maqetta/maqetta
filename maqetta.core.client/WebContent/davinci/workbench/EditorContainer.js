@@ -150,6 +150,11 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	_close: function(editor, dirtycheck){
 		dojo.publish("/davinci/ui/EditorClosing", [{editor:editor}]);
 		var okToClose = true;
+		/*
+		 * the dirty check and message is being done at the workbench close table level
+		 * So this message and should be dead code, but I leaving it in just on the 
+		 * off change we get here by some other path than an editor tab close.
+		 */
 		if (dirtycheck && editor && editor.isDirty){
 			//Give editor a chance to give us a more specific message
 			var message = editor.getOnUnloadWarningMessage();
@@ -161,9 +166,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 		}
 		if (okToClose){
 	    	this._isClosing = true;
-	    	
-			//this.editor.resourceFile.removeWorkingCopy();
-	    	if(editor.removeWorkingCopy){ // wdr
+	    	if(editor.removeWorkingCopy){ 
 	    		editor.removeWorkingCopy();
 	    	} else if(editor.getFileEditors){
 				editor.getFileEditors().forEach(function(editor) {
@@ -182,7 +185,8 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	 * editor tab, usually in response to user clicking on "x" close icon.
 	 */
 	onClose: function(){
-		return this._close(this.editor, true);
+		var dirtyCheck = this._skipDirtyCheck ? false : true;
+		return this._close(this.editor, dirtyCheck);
 	},
 	/* forceClose is where daVinci actively removes a child editor.
 	 * (eg, saveas might close old editor before creating new editor)

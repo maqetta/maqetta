@@ -32,7 +32,8 @@ define([
 	"dojo/i18n!davinci/ve/nls/common",
 	"dojo/dnd/Mover",
 	"davinci/ve/utils/GeomUtils",
-	"dojox/layout/ResizeHandle"
+	"dojox/layout/ResizeHandle",
+	"dojo/i18n!davinci/workbench/nls/workbench"
 ], function(
 		Runtime,
 		Path,
@@ -67,7 +68,8 @@ define([
 		veNLS,
 		Mover,
 		GeomUtils,
-		ResizeHandle
+		ResizeHandle,
+		workbenchStrings
 ) {
 
 // Cheap polyfill to approximate bind(), make Safari happy
@@ -1404,15 +1406,28 @@ var Workbench = {
 				id:shadowId
 			});
 			shadowTab.onClose = function(tc, tab){
+				
 				var shadowId = tab.id;
 				var editorId = shadowIdToEditorId(shadowId);
 				var editorContainer = dijit.byId(editorId);
 				var editorsContainer = dijit.byId("editors_container");
+				function okToClose(){
+					editorContainer._skipDirtyCheck = true;
+					editorContainer.onClose.apply(editorContainer, [editorsContainer, editorContainer]);
+					tc.removeChild(tab);
+					tab.destroyRecursive();
+				}
 				if(editorsContainer && editorContainer){
-					var okToClose = editorContainer.onClose.apply(editorContainer, [editorsContainer, editorContainer]);
-					if(okToClose){
-						tc.removeChild(tab);
-						tab.destroyRecursive();
+					if (editorContainer.editor.isDirty){
+						//Give editor a chance to give us a more specific message
+						var message = editorContainer.editor.getOnUnloadWarningMessage();
+						if (!message) {
+							//No editor-specific message, so use our canned one
+							message = dojo.string.substitute(workbenchStrings.fileHasUnsavedChanges, [editorContainer._getTitle()]);
+						}
+						Workbench.showDialog(editorContainer._getTitle(), message, {width: 300}, dojo.hitch(this,okToClose));
+					} else {
+						okToClose();
 					}
 				}
 			}

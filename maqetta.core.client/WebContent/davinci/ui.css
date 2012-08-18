@@ -628,3 +628,41 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .claro .resizableDialog .dijitDialogPaneActionBar {
 	padding-left:10px;
 }
+.newOpenMenuItem {
+	background-image:url(img/sprite.png);
+	width:20px;
+	height:16px;
+}
+.newMobileAppMenuItem {
+	background-position:-39px -924px;
+}
+.newDesktopAppMenuItem {
+	background-position:-39px -1059px;
+}
+.newSketchHiFiMenuItem {
+	background-position:-39px -987px;
+}
+.newSketchLoFiMenuItem {
+	background-position:-39px -1010px;
+}
+.newCSSMenuItem {
+	background-position:-39px -884px;
+}
+.newJSMenuItem {
+	background-position:-39px -902px;
+}
+.newThemeMenuItem, .openThemeMenuItem {
+	background-position:-39px -1034px;
+}
+.newProjectMenuItem, .openProjectMenuItem {
+	background-position:-39px -945px;
+}
+.newReviewMenuItem, .openReviewMenuItem {
+	background-position:-39px -964px;
+}
+.newFolderMenuItem {
+	background-position:-39px -1087px;
+}
+.openFileMenuItem {
+	background-position:-39px -1109px;
+}

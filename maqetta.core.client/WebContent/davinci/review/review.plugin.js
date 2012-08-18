@@ -83,6 +83,7 @@ return {
 				{
 					id: "newReview",
 					action: "davinci/review/actions/PublishAction",
+	                iconClass: "newOpenMenuItem newReviewMenuItem",
 					label: "Review...",
 					menubarPath: "davinci.new/additions"
 				}

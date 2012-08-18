@@ -196,7 +196,7 @@ var veStates = declare(maqettaStates, {
 			var newDeltasAttr = widget._srcElement.getAttribute(davinci.states.DELTAS_ATTRIBUTE);
 			if(existingDefsAttr !== newDefsAttr || existingDeltasAttr !== newDeltasAttr){
 				var editor = this.getEditor();
-				if(editor){
+				if(editor && editor._visualChanged){
 					editor._visualChanged();	// Tell app that source view needs updating
 				}			
 			}

@@ -375,9 +375,11 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 	updateToolbars: function(){
 		if(this.editor == Runtime.currentEditor){
 			var toolbarDiv = this.getToolbarDiv();
-			toolbarDiv.innerHTML = '';
+			if(toolbarDiv){
+				toolbarDiv.innerHTML = '';
+			}
 			var toolbar = this.toolbarCreated(this.editorExtension.editorClass);
-			if(toolbar){
+			if(toolbarDiv && toolbar && toolbar.domNode){
 				toolbarDiv.appendChild(toolbar.domNode);
 			}
 			var editorToolbarNode = dojo.query('#davinci_toolbar_container .dijitToolbar')[0];

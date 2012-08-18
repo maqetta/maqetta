@@ -17,54 +17,54 @@
 							<table class='welcome_actions_table'>
 								<tr>
 									<td class="welcome_section_cell">
-										<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLMobile(); });">
+										<a class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLMobile(); });">
 											<div class="welcome_section_container">
 												<span class="welcome_icon welcome_icon_new_mobile"></span>
 											</div>
 											<div class="welcome_section_label">
 												Create a New<br/>Mobile Application
 											</div>
-										</div>
+										</a>
 									</td>
 									<td class="welcome_section_cell">
-										<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLDesktop(); });">
+										<a class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLDesktop(); });">
 											<div class="welcome_section_container">
 												<span class="welcome_icon welcome_icon_new_desktop"></span>
 											</div>
 											<div class="welcome_section_label">
 												Create a New<br/>Desktop Application
 											</div>
-										</div>
+										</a>
 									</td>
 									<td class="welcome_section_cell">
-										<div class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLSketchHiFi(); });">
+										<a class="welcome_section welcome_section_active" onclick="require(['davinci/ui/Resource'], function(resource) { resource.newHTMLSketchHiFi(); });">
 											<div class="welcome_section_container">
 												<span class="welcome_icon welcome_icon_new_sketch"></span>
 											</div>
 											<div class="welcome_section_label">
 												Create a New<br/>Sketch
 											</div>
-										</div>
+										</a>
 									</td>
 									<td class="welcome_section_cell">
-										<div class="welcome_section welcome_section_active" onclick="require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme) { Workbench.showModal(new NewTheme(), 'New Theme', 'height:135px;width: 300px'); });">
+										<a class="welcome_section welcome_section_active" onclick="require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme) { Workbench.showModal(new NewTheme(), 'New Theme', 'height:135px;width: 300px'); });">
 											<div class="welcome_section_container">
 												<span class="welcome_icon welcome_icon_newtheme"></span>
 											</div>
 											<div class="welcome_section_label">
 												Create a New<br/>CSS Theme
 											</div>
-										</div>
+										</a>
 									</td>
 									<td class="welcome_section_cell">
-										<div class="welcome_section welcome_section_active" onclick="require(['davinci/review/actions/PublishAction'], function(PublishAction) { new PublishAction().run(); });">
+										<a class="welcome_section welcome_section_active" onclick="require(['davinci/review/actions/PublishAction'], function(PublishAction) { new PublishAction().run(); });">
 											<div class="welcome_section_container">
 												<span class="welcome_icon welcome_icon_newreview"></span>
 											</div>
 											<div class="welcome_section_label">
 												Create a New<br/>Review
 											</div>
-										</div>
+										</a>
 									</td>
 								</tr>	
 							</table>
@@ -75,7 +75,7 @@
 								<table class="welcome_learn_table">
 									<tr>
 										<td class='welcome_learn_cell'>
-											<div class="welcome_section welcome_section_active" onclick="window.open('app/docs/index.html#tutorials/tutorials')">
+											<a class="welcome_section welcome_section_active" href="app/docs/index.html#tutorials/tutorials" target="_blank">
 												<table class='welcome_learn_table_inner'>
 													<tr>
 														<td class='welcome_learn_icon_cell'>
@@ -95,10 +95,10 @@
 														</td>
 													</tr>
 												</table>
-											</div>
+											</a>
 										</td>		
 										<td class='welcome_learn_cell'>
-											<div class="welcome_section welcome_section_active" onclick="window.open('http://www.youtube.com/user/Maqetta/')">
+											<a class="welcome_section welcome_section_active" href="http://www.youtube.com/user/Maqetta/" target="_blank">
 												<table class='welcome_learn_table_inner'>
 													<tr>
 														<td class='welcome_learn_icon_cell'>
@@ -117,10 +117,10 @@
 														</td>
 													</tr>
 												</table>
-											</div>
+											</a>
 										</td>		
 										<td class='welcome_learn_cell'>
-											<div class="welcome_section welcome_section_active" onclick="alert('not yet implemented')">
+											<a class="welcome_section welcome_section_active" onclick="alert('not yet implemented')">
 												<table class='welcome_learn_table_inner'>
 													<tr>
 														<td class='welcome_learn_icon_cell'>
@@ -140,10 +140,10 @@
 														</td>
 													</tr>
 												</table>
-											</div>
+											</a>
 										</td>		
 										<td class='welcome_learn_cell'>
-											<div class="welcome_section welcome_section_active" onclick="window.open('https://www.ibm.com/search/csass/search/?sn=dw&en=utf&hpp=20&dws=dw&q=maqetta&Search=Search')">
+											<a class="welcome_section welcome_section_active" href="https://www.ibm.com/search/csass/search/?sn=dw&en=utf&hpp=20&dws=dw&q=maqetta&Search=Search" target="_blank">
 												<table class='welcome_learn_table_inner'>
 													<tr>
 														<td class='welcome_learn_icon_cell'>
@@ -162,7 +162,7 @@
 														</td>
 													</tr>
 												</table>
-											</div>
+											</a>
 										</td>		
 									</tr>	
 								</table>
@@ -173,7 +173,7 @@
 							<table class='welcome_about_maqetta_table'>
 								<tr>
 									<td class='welcome_about_icon_cell'>
-										<div class='welcome_about_icon welcome_section_active' onclick="window.open('app/docs/index.html#overview')"></div>
+										<a class='welcome_about_icon welcome_section_active' href="app/docs/index.html#overview" target="_blank"></a>
 									</td>
 									<td class='welcome_about_content_cell'>
 										<div class="welcome_section_container">
@@ -181,7 +181,7 @@
 												Maqetta is an open source initiative that provides visual drag&amp;drop 
 												creation of HTML5 user interfaces (desktop and mobile). 
 											</div>
-											<div class="welcome_learn_more welcome_section_active" onclick="window.open('app/docs/index.html#overview')">Learn more...</div>
+											<a class="welcome_learn_more welcome_section_active" href="app/docs/index.html#overview" target="_blank">Learn more...</a>
 										</div>
 										<div class="welcome_section_footer"></div>
 									</td>

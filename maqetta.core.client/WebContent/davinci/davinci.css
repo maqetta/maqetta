@@ -1697,10 +1697,18 @@ td.welcome_section_cell {
 }
 .welcome_section_active {
 	border:1px solid transparent;
+	display:block;
+	color:black;
+	text-decoration:none;
 }
 .welcome_section_active:hover {
 	background-color:#f4f4f4;
 	border:1px solid #eaeaea;
+	cursor:pointer;
+}
+.welcome_section_active:active {
+	background-color:#e8e8e8;
+	border:1px solid #e0e0e0;
 	cursor:pointer;
 }
 .welcome_section_header_about {

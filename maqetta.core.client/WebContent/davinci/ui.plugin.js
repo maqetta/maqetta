@@ -135,6 +135,7 @@ return {
                              r.newHTMLMobile();
                          });
                      },
+                     iconClass: "newOpenMenuItem newMobileAppMenuItem",
                      label: "Mobile Application...",
                      // toolbarPath: "davinci.toolbar.main/edit",
                      menubarPath: "davinci.new/newApp"
@@ -147,6 +148,7 @@ return {
                              r.newHTMLDesktop();
                          });
                      },
+                     iconClass: "newOpenMenuItem newDesktopAppMenuItem",
                      label: "Desktop Application...",
                      // toolbarPath: "davinci.toolbar.main/edit",
                      menubarPath: "davinci.new/newApp"
@@ -159,6 +161,7 @@ return {
                              r.newHTMLSketchHiFi();
                          });
                      },
+                     iconClass: "newOpenMenuItem newSketchHiFiMenuItem",
                      label: "Sketch (high-fidelity)...",
                      // toolbarPath: "davinci.toolbar.main/edit",
                      menubarPath: "davinci.new/newSketch"
@@ -171,6 +174,7 @@ return {
                              r.newHTMLSketchLoFi();
                          });
                      },
+                     iconClass: "newOpenMenuItem newSketchLoFiMenuItem",
                      label: "Sketch (low-fidelity)...",
                      // toolbarPath: "davinci.toolbar.main/edit",
                      menubarPath: "davinci.new/newSketch"
@@ -182,6 +186,7 @@ return {
                    		r.newCSS();
                    	});
                    },
+                   iconClass: "newOpenMenuItem newCSSMenuItem",
                    label: "CSS File...",
                    menubarPath: "davinci.new/new"
                },
@@ -192,6 +197,7 @@ return {
                    		r.newJS();
                    	});
                    },
+                   iconClass: "newOpenMenuItem newJSMenuItem",
                    label: "JavaScript File...",
                    menubarPath: "davinci.new/new"
                },
@@ -202,6 +208,7 @@ return {
                    		r.newProject();
                    	});
                    },
+                   iconClass: "newOpenMenuItem newProjectMenuItem",
                    label: "Project...",
                    menubarPath: "davinci.new/new"
                },
@@ -212,6 +219,7 @@ return {
                    		r.newFolder();
                    	});
                    },
+                   iconClass: "newOpenMenuItem newFolderMenuItem",
                    label: "Folder...",
                    menubarPath: "davinci.new/new2"
                },
@@ -222,6 +230,7 @@ return {
                    		r.openFile();
                    	});
                    },
+                   iconClass: "newOpenMenuItem openFileMenuItem",
                    label: "File...",
                    toolbarPath: "davinci.toolbar.main/edit",
                    menubarPath: "davinci.open/open",
@@ -234,6 +243,7 @@ return {
                    		Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');
                    	});
                    },
+                   iconClass: "newOpenMenuItem openThemeMenuItem",
                    label: "Theme Editor...",
                    menubarPath: "davinci.open/open2"
                },
@@ -250,6 +260,7 @@ return {
                       		Workbench.showModal(new OpenReviewDialog(), 'Open Review', {width: 350, height: 250});
                       	});
                    },
+                   iconClass: "newOpenMenuItem openReviewMenuItem",
                    label: "Review...",
                    menubarPath: "davinci.open/open2"
                },
@@ -260,6 +271,7 @@ return {
                    		Workbench.showModal(new NewTheme(), 'New Theme', 'width: 300px');
                    	});
                    },
+                   iconClass: "newOpenMenuItem newThemeMenuItem",
                    label: "Theme...",
                    menubarPath: "davinci.new/new"
                }

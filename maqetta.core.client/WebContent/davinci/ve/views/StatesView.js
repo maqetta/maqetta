@@ -861,6 +861,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					}
 					States.setState(newState, stateContainerNode, { focus:true, updateWhenCurrent:true });
 					context.deselectInvisible();
+					context.clearCachedWidgetBounds();
 					context.updateFocusAll();
 				}
 				if(item.sceneId){

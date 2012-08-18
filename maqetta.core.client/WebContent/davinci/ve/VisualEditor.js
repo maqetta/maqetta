@@ -79,7 +79,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 				// and things usually work if you wait for current processing thread
 				// to complete. Also, updateFocusAll() can be safely called within setTimeout.
 				setTimeout(function() {
-					visualEditor.getContext().updateFocusAll(); 
+					var context = visualEditor.getContext();
+					context.clearCachedWidgetBounds();
+					context.updateFocusAll(); 
 					visualEditor._registerScrollHandler();
 				}, 100); 
 			}
@@ -107,8 +109,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	
 	setDevice: function(deviceName) {
 	    this.deviceName = deviceName;
-	    this.getContext().setMobileMeta(deviceName);
-	    this.getContext().setMobileTheme(deviceName);
+	    var context = this.getContext();
+	    context.setMobileMeta(deviceName);
+	    context.setMobileTheme(deviceName);
 	    
 		//FIXME: Path shouldn't be hard-coded
 	    var svgfilename = deviceName == 'none' ? null : "app/preview/images/" + deviceName + ".svg";
@@ -118,6 +121,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		// #683 - When using mobile silhouette, add mobile <meta> tags to
 		// document.
 		
+		context.clearCachedWidgetBounds();
 		dojo.publish("/davinci/ui/deviceChanged", [deviceName]);
 	},
 	
@@ -131,6 +135,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 			this.setOrientation(this._orientation);
 		}
+		this.getContext().clearCachedWidgetBounds();
 	},
 	
 	getOrientation: function(orientation) {
@@ -146,7 +151,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			if(editor.editorContainer && editor.editorContainer.updateToolbars){
 				editor.editorContainer.updateToolbars();
 			}
-			this.getContext().setMobileOrientation(this._orientation);
+			var context = this.getContext();
+			context.setMobileOrientation(this._orientation);
 			this.silhouetteiframe.setOrientation(this._orientation);
 			editor._visualChanged();
 			// Wrapped in setTimeout because sometimes browsers are quirky about
@@ -154,7 +160,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			// and things usually work if you wait for current processing thread
 			// to complete. Also, updateFocusAll() can be safely called within setTimeout.
 			setTimeout(function() {
-				this.getContext().updateFocusAll(); 
+				context.clearCachedWidgetBounds();
+				context.updateFocusAll(); 
 			}.bind(this), 100); 
 		}
 	},
@@ -582,7 +589,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 					});
 					// (See setTimeout comment up in the constructor)
 					setTimeout(function() {
-						this.getContext().updateFocusAll(); 
+						var context = this.getContext();
+						context.clearCachedWidgetBounds();
+						context.updateFocusAll(); 
 					}.bind(this), 100); 
 				});
 			}

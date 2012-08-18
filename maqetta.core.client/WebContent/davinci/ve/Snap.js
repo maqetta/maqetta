@@ -56,7 +56,7 @@ define([
 			if(helper && helper.getMarginBoxPageCoords){
 				dj_coords = helper.getMarginBoxPageCoords(widget);
 			} else {
-				dj_coords = GeomUtils.getMarginBoxPageCoords(node);
+				dj_coords = GeomUtils.getMarginBoxPageCoordsCached(node);
 			}
 			dj_coords.x = dj_coords.l;
 			dj_coords.y = dj_coords.t;
@@ -202,7 +202,7 @@ define([
 				if(helper && helper.getMarginBoxPageCoords){
 					box = helper.getMarginBoxPageCoords(widget);
 				} else {
-					box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+					box = GeomUtils.getMarginBoxPageCoordsCached(widget.domNode);
 				}
 				box.x = box.l;
 				box.y = box.t;

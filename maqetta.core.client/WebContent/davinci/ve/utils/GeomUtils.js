@@ -33,6 +33,20 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 		}.bind(this));
 		return MarginBoxPageCoords;
 	},
+
+	/**
+	 * Same as getMarginBoxPageCoords, except it will use the cached version
+	 * in node._maqMarginBoxPageCoords if present.
+	 * If no cached version, then set the cached version to current marginbox values.
+	 * @param {object} node  A dom node
+	 * @returns {object}  margin box coordinates for given node
+	 */
+	getMarginBoxPageCoordsCached: function(node){
+		if(!node._maqMarginBoxPageCoords){
+			node._maqMarginBoxPageCoords = this.getMarginBoxPageCoords(node);
+		}
+		return node._maqMarginBoxPageCoords;
+	},
 	
 	/* Rewrite of Dojo's dom-geometry.position() to not use getBoundingClientRect()
 	 * which messes up Maqetta in presence of CSS3 transforms. Maqetta's calculations
@@ -62,6 +76,20 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 			o = {l: l, t: t, w: node.offsetWidth, h: node.offsetHeight};
 		}.bind(this));
 		return o;
+	},
+
+	/**
+	 * Same as getBorderBoxPageCoords, except it will use the cached version
+	 * in node._maqBorderBoxPageCoords if present.
+	 * If no cached version, then set the cached version to current borderbox values.
+	 * @param {object} node  A dom node
+	 * @returns {object}  border box coordinates for given node
+	 */
+	getBorderBoxPageCoordsCached: function(node){
+		if(!node._maqBorderBoxPageCoords){
+			node._maqBorderBoxPageCoords = this.getBorderBoxPageCoords(node);
+		}
+		return node._maqBorderBoxPageCoords;
 	},
 	
 	/**
@@ -114,6 +142,15 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 			l = t = r = b = 0;
 		}
 		return {l: l, t: t, r: r, b: b, w: l + r, h: t + b};
+	},
+	
+	/**
+	 * Clear any cached geometry values for the given DOM node
+	 * @param node  A DOM node
+	 */
+	clearGeomCache: function(node){
+		delete node._maqBorderBoxPageCoords;
+		delete node._maqMarginBoxPageCoords;		
 	}
 
 

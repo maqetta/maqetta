@@ -97,6 +97,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				var layout = flowLayout ? 'flow' : 'absolute';
 				this._updateLayoutDropDownButton(layout);
 				this._updateDisplayModeToolbarIcons();
+				context.clearCachedWidgetBounds();
 			}
 		}
 	},
@@ -204,6 +205,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if (newMode == "source") {
 			context.hideFocusAll();			
 		}else{
+			context.clearCachedWidgetBounds();
 			context.updateFocusAll();
 		}
 	},

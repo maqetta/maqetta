@@ -131,7 +131,7 @@ return declare("davinci.ve.tools._Tool", null, {
 				// deal with the post-transform location of a particular node.
 				// So, to deal with this issue, increase the bounding box to include pageX/pageY.
 				var diff;
-				var borderBoxPageCoords = GeomUtils.getBorderBoxPageCoords(domNode);
+				var borderBoxPageCoords = GeomUtils.getBorderBoxPageCoordsCached(domNode);
 				if(event.pageX < borderBoxPageCoords.l){
 					diff = borderBoxPageCoords.l - event.pageX;
 					left -= diff;

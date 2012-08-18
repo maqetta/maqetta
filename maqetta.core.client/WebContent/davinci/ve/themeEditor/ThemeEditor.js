@@ -64,17 +64,18 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			var iframe = dojo.query('iframe', this.domNode)[0];
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
-				var context = this.editor.getContext();
 				// Wrapped in setTimeout because sometimes browsers are quirky about
 				// instantly updating the size/position values for elements
 				// and things usually work if you wait for current processing thread
 				// to complete. Also, updateFocusAll() can be safely called within setTimeout.
 				setTimeout(function() {
+					var context = this.getContext();
+					context.clearCachedWidgetBounds();
 					context.updateFocusAll(); 
-				}, 100); 
+				}.bind(this), 100); 
 				themeEditor._registerScrollHandler();
 			}
-		});
+		}.bind(this));
 	},
 	
 	_editorSelected: function(event){
@@ -920,6 +921,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 				this._scrollHandler = dojo.connect(iframe.contentDocument, 'onscroll', this, function(e){
 					// (See setTimeout comment a few lines earlier)
 					setTimeout(function() {
+						context.clearCachedWidgetBounds();
 						context.updateFocusAll(); 
 					}, 100); 
 				});

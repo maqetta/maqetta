@@ -182,13 +182,13 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						if(selectionHelper && selectionHelper.getMarginBoxPageCoords){
 							marginBoxPageCoords = selectionHelper.getMarginBoxPageCoords(selection[i]);
 						} else {
-							marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(selection[i].domNode);
+							marginBoxPageCoords = GeomUtils.getMarginBoxPageCoordsCached(selection[i].domNode);
 						}
 						this._moverStartLocations.push(marginBoxPageCoords);
 						var relativeLeft, relativeTop;
 						var offsetParent = selection[i].domNode.offsetParent;
 						if(offsetParent && offsetParent.tagName != 'BODY'){
-							var parentBorderBoxPageCoordinates = GeomUtils.getBorderBoxPageCoords(offsetParent);
+							var parentBorderBoxPageCoordinates = GeomUtils.getBorderBoxPageCoordsCached(offsetParent);
 							var parentBorderExtents = domGeom.getBorderExtents(offsetParent);
 							relativeLeft = marginBoxPageCoords.l - (parentBorderBoxPageCoordinates.l + parentBorderExtents.l);
 							relativeTop = marginBoxPageCoords.t - (parentBorderBoxPageCoordinates.t + parentBorderExtents.t);
@@ -207,7 +207,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						offsetWidth = moverWidgetMarginBoxPageCoords.w;
 						offsetHeight = moverWidgetMarginBoxPageCoords.h;
 					} else {
-						moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(n);
+						moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoordsCached(n);
 					}
 					var l = moverWidgetMarginBoxPageCoords.l;
 					var t = moverWidgetMarginBoxPageCoords.t;

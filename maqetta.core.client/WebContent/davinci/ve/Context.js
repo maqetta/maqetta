@@ -2759,9 +2759,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
 		var vArray = widget ? widget.getStyleValues() : [];
-
-//FIXME: isNormalState needs node?
-		var isNormalState = davinci.ve.states.isNormalState();
+		var stateContainers = States.getStateContainersForNode(widget.domNode);
+		var isNormalState = true;
+		for(var sc=0; sc<stateContainers.length; sc++){
+			var stateContainer = stateContainers[sc];
+			var state = States.getState(stateContainer);
+			if(state && state != States.NORMAL){
+				isNormalState = false;
+				break;
+			}
+		}
 		if (!isNormalState) {
 			var currentStatesList = davinci.ve.states.getStatesListCurrent(widget.domNode);
 			var stateStyleValuesArray = davinci.ve.states.getStyle(widget.domNode, currentStatesList);

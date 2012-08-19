@@ -293,6 +293,40 @@ var veStates = declare(maqettaStates, {
 		}
 		return this._getStateIndex(state);
 	},
+	
+	/**
+	 * Checks to see if any of the properties listed in proplist are defined
+	 * in any of the currently active states for the given node
+	 * @param {Element} node
+	 * @param {Array[string]} proplist
+	 * @returns {undefined|string}  Return either nothing if search is empty, or name of first state encountered
+	 */
+	propertyDefinedForAnyCurrentState: function(node, proplist){
+		var whichState;
+		var maqDeltas = node._maqDeltas;
+		if(maqDeltas){
+			var stateContainers = this.getStateContainersForNode(node);
+			outer_loop:
+			for(var i=stateContainers.length-1; i>=0; i--){
+				var stateContainer = stateContainers[i];
+				var currentState = this.getState(stateContainer);
+				var stateIndex = (!currentState || currentState == this.NORMAL) ? 'undefined' : currentState;
+				var stateStyles = maqDeltas[stateIndex] && maqDeltas[stateIndex].style;
+				if(stateStyles){
+					for(var s=0; s<stateStyles.length; s++){
+						var o = stateStyles[s];
+						for(var j=0; j<proplist.length; j++){
+							if(o.hasOwnProperty(proplist[j])){
+								whichState = currentState;
+								break outer_loop;
+							}
+						}
+					}
+				}
+			}
+		}
+		return whichState;
+	},
 
 	initialize: function() {
 	

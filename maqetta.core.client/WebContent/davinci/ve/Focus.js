@@ -504,13 +504,20 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 					this._moverCurrent.w != this._moverStart.w || this._moverCurrent.h != this._moverStart.h){
 				// If 's' key is held down, then CSS parts of MoveCommand only applies to current state
 				var applyToWhichStates = undefined;
-				if(this._sKey && this._selectedWidget && this._selectedWidget.domNode){
-					var currentStatesList = States.getStatesListCurrent(this._selectedWidget.domNode);
-					for(var i=0; i<currentStatesList.length; i++){
-						if(currentStatesList[i]){
-							applyToWhichStates = currentStatesList[i];
-							break;
+				if(this._selectedWidget && this._selectedWidget.domNode){
+					if(this._sKey){
+						var currentStatesList = States.getStatesListCurrent(this._selectedWidget.domNode);
+						for(var i=0; i<currentStatesList.length; i++){
+							if(currentStatesList[i]){
+								applyToWhichStates = currentStatesList[i];
+								break;
+							}
 						}
+					}else{
+						// See if any of width/height have been set in any of the currently active states
+						// (i.e., one of the states whose results are currently showing on the screen).
+						// If so, then apply the move to that state.
+						applyToWhichStates = States.propertyDefinedForAnyCurrentState(this._selectedWidget.domNode, ['width','height']) ;						
 					}
 				}
 				var newBox = this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent;

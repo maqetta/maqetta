@@ -1600,13 +1600,13 @@ background-position: -75px -745px;
 	font-size: 18px;
 }
 .welcome_section_container {
-	height: 81px;
+	height: 80px;
 }
 .welcome_icon {
 	display:inline-block;
 	background-image: url(img/sprite.png);
-	width:44px;
-	height:44px;
+	width: 50px;
+	height: 65px;
 	margin-top:6px;
 }
 .welcome_section_content {
@@ -1614,7 +1614,7 @@ background-position: -75px -745px;
 }
 .welcome_learn_container_outer {
 	border: 1px solid #BBB;
-	margin: 10px;
+	margin: 11px 10px 10px;
 	border-radius: 2px;
 }
 .welcome_learn_container_inner {
@@ -1630,6 +1630,9 @@ background-position: -75px -745px;
 	height:160px;
 	font-size:12px;
 }
+.welcome_learn_cell {
+	vertical-align:top;
+}
 .welcome_learn_content_title {
 	font-weight:bold;
 	padding-top:10px;
@@ -1643,9 +1646,10 @@ background-position: -75px -745px;
 	padding-bottom:10px;
 }
 .welcome_icon_learn {
-	width:50px;
-	height:44px;
+	width: 50px;
+	height: 65px;
 	background-image:url(img/sprite.png);
+	margin-top: 12px;
 }
 .welcome_learn_table_inner {
 	width:236px;
@@ -1655,35 +1659,35 @@ background-position: -75px -745px;
 }
 .welcome_learn_content {
 	text-align:left;
-	padding-left: 3px;
+	padding-left: 4px;
 }
 .welcome_icon_tutorials {
-	background-position: -64px -2205px;
+	background-position: -60px -2457px;
 }
 .welcome_icon_videos {
-	background-position: -4px -2200px;
+	background-position: -62px -2525px;
 }
 .welcome_icon_cheatsheets {
 	margin-top: 15px;
-	background-position: -12px -2425px;
+	background-position: -6px -2250px;
 }
 .welcome_icon_howto {
-	background-position: -63px -2365px;
+	background-position: -62px -2315px;
 }
 .welcome_icon_new_mobile {
-	background-position: -7px -2306px;
+	background-position: -3px -2460px;
 }
 .welcome_icon_new_desktop {
-	background-position: -65px -2306px;
+	background-position: -60px -2390px;
 }
 .welcome_icon_new_sketch {
-	background-position: -7px -2250px;
+	background-position: -60px -2250px;
 }
 .welcome_icon_newtheme {
-	background-position: -7px -2365px;
+	background-position: -3px -2320px;
 }
 .welcome_icon_newreview {
-	background-position: -65px -2250px;
+	background-position: -3px -2390px;
 }
 .welcome_content table {
 	border-collapse:collapse; /* cellspacing equiv */
@@ -1720,10 +1724,10 @@ td.welcome_section_cell {
 	padding-left: 12px;
 }
 .welcome_about_icon {
-	width:50px;
-	height:50px;
+	width: 50px;
+	height: 65px;
 	background-image:url(img/sprite.png);
-	background-position:-65px -2420px;
+	background-position:-3px -2530px;
 }
 .welcome_about_maqetta_table td {
 	vertical-align:top;

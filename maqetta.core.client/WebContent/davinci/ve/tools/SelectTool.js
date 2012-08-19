@@ -901,6 +901,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						break;
 					}
 				}
+			}else{
+				// See if any of left/top/right/bottom have been set in any of the currently active states
+				// (i.e., one of the states whose results are currently showing on the screen).
+				// If so, then apply the move to that state.
+				applyToWhichStates = States.propertyDefinedForAnyCurrentState(this._moverWidget.domNode, ['left','top','right','bottom']) ;
 			}
 			var offsetParentLeftTop = this._context.getPageLeftTop(this._moverWidget.domNode.offsetParent);
 			var newLeft =  (moverBox.l - offsetParentLeftTop.l);

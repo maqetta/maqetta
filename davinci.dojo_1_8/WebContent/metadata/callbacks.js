@@ -130,8 +130,8 @@
 							sceneSelected = sceneId;
 						}
 					}
+					this.context.select(widget);
 				}
-				var dj = this.context.select(widget);
 			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
 				if(domNode){
 					var _dijit = dj.dijit;

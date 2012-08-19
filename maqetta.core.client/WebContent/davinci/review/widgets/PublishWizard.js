@@ -204,19 +204,18 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	_initPage3: function() {
 		var formatPic = function(result) {
 			if (!this.photoRepositoryUrl) {
-				this.photoRepositoryUrl = "";
-//				this.photoRepositoryUrl = Runtime.serverJSONRequest({
-//					url: "cmd/getBluePageInfo",
-//					handleAs: "text",
-//					content:{'type': "photo"},
-//					sync: true
-//				});
+				this.photoRepositoryUrl = Runtime.serverJSONRequest({
+					url: "cmd/getBluePageInfo",
+					handleAs: "text",
+					content:{'type': "photo"},
+					sync: true,
+				});
 			}
 			if (this.photoRepositoryUrl === "" || this.photoRepositoryUrl == "not-implemented") {
 				this.photoRepositoryUrl =  "app/davinci/review/resources/img/profileNoPhoto.gif?";
 			}
 			return '<img src="' + this.photoRepositoryUrl + result + '" width="35px" height="35px" alt="User Photo"></img>';
-		};
+		}.bind(this);
 
 		var formatHref = function(result) {
 			return '<a href="javascript:dojo.publish(\'/davinci/review/deleteReviewer\',[])"><img class="delImg" src="app/davinci/review/resources/img/del.gif"/></a>';
@@ -282,16 +281,9 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var stateStore = new QueryReadStore({
 			url: "cmd/getBluePageInfo",
 			fetch: function(request) {
-//				var searchQuery = request.query.displayName;
-				var searchQuery = "";
-				if (searchQuery === "") {
-					return;
-				}
+				var searchQuery = request.query.displayName;
 				searchQuery = searchQuery.substring(0, searchQuery.length - 1);
 				request.serverQuery = {searchname: searchQuery};
-//				if (searchQuery === "") {
-//					return;
-//				}
 				return this.inherited("fetch", arguments);
 			}
 		});
@@ -308,7 +300,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			onChange: dojo.hitch(this, this._reviewerComboxValueChanged),
 			onKeyUp: dojo.hitch(this, this._updateAddButton),
 			pageSize: 10,
-			searchDelay: 60000,
+			searchDelay: 500,
 			placeHolder: widgetsNls.enterNameOrEmail
 		}, this.addReviewerCombox);
 	},

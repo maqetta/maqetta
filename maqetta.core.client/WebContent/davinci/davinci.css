@@ -586,6 +586,9 @@ davinci_top_bar .dijitButtonNode {
 	background:#f8f8f8;
 	color:#424242;
 	margin-right:-1px;
+}
+#davinci_file_tabs .dijitTab,
+#davinci_file_tabs .dijitTabContainerTop-tabs {
 	background-image: -webkit-linear-gradient(#F8F8F8 0%, #F8F8F8 90%, #EDEDED 91%, #E0E0E0 100%);
 	background-image: -maz-linear-gradient(#F8F8F8 0%, #F8F8F8 90%, #EDEDED 91%, #E0E0E0 100%);
 	background-image: -ms-linear-gradient(#F8F8F8 0%, #F8F8F8 90%, #EDEDED 91%, #E0E0E0 100%);

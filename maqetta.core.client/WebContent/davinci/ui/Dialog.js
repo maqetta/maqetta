@@ -57,6 +57,8 @@ var DialogClass = declare(Dialog, {
 				dojo.style(contentArea, "height", c.h+"px");
 			}
 
+			this._size();
+
 			// resize children
 			dojo.forEach(this.getChildren(), dojo.hitch(this, function(child) {
 					if (child.resize) {
@@ -80,11 +82,18 @@ var DialogClass = declare(Dialog, {
 				if (this.contentStyle.height) {
 					r.h = parseInt(this.contentStyle.height);
 				}
+
+				// if the dialog is smaller than the dimensions, it means we need to
+				// shrink the contents
+				var dialogDimensions = domGeometry.getContentBox(this.domNode);
+				if (r.h > dialogDimensions.h) {
+					r.h = dialogDimensions.h-1;
+				}
+
 				this.resize(r);
 			}
 
 			// reposition after changing sizes
-			this._size();
 			this._position();
 
 //			this.layout();  //TODO: method disappeared in 1.8.0b1

@@ -98,7 +98,7 @@ define([
         }
 		delete pkg.overlays;
 
-		if (dojo.exists("scripts.widget_metadata", pkg)) {
+		if (lang.exists("scripts.widget_metadata", pkg)) {
 			if (typeof pkg.scripts.widget_metadata == "string") {
 				var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
 				dojo.xhrGet({
@@ -115,6 +115,16 @@ define([
 				parseLibraryDescriptor(pkg.name, pkg.scripts.widget_metadata, path);				
 			}
 	    }
+    
+        if (lang.exists("scripts.callbacks", pkg)) {
+            var d = dojo.xhrGet({
+                url: path.append(pkg.scripts.callbacks).toString() + "?" + info.revision,
+                handleAs: 'javascript'
+            }).then(function(data) {
+                pkg.$callbacks = data;
+            });
+            deferredGets.push(d);
+        }
     }
 
 	function parseLibraryDescriptor(libName, descriptor, path) {
@@ -188,16 +198,6 @@ define([
 		}
 
 		var wm = pkg.$wm;
-    
-        if (descriptor.callbacks) {
-            var d = dojo.xhrGet({
-                url: path.append(descriptor.callbacks).toString() + "?" + info.revision,
-				handleAs: 'javascript'
-			}).then(function(data) {
-                pkg.$callbacks = data; // FIXME: no callback to tell when this is ready
-            });
-            deferredGets.push(d);
-        }
         
 		wm.$providedTypes = wm.$providedTypes || {};
 
@@ -498,38 +498,43 @@ define([
         },
         
         getLibraryActions: function(actionSetId) {
-        	var actions = [];
- 		   	for (var name in libraries) {
- 		   		if ( libraries.hasOwnProperty(name)) {
- 		   			var lib = libraries[name];
- 					var libActionSets = lib["davinci.actionSets"];
- 					if (libActionSets) {
- 						dojo.forEach(libActionSets, function(libActionSet) {
- 							if (libActionSet.id == actionSetId) {
-								var clonedActions = dojo.clone(libActionSet.actions);
-								dojo.forEach(clonedActions, function(action) {
-									// May need to transform the action class string to 
-									// account for the library's name space
-									if(action.action){
-										var newActionModuleId = getModuleId(lib, action.action);
-										action.action = newActionModuleId;
-									}
-									if(action.menu){
-										action.menu.forEach(function(item){
-											if(item.action){
-												var newActionModuleId = getModuleId(lib, item.action);
-												item.action = newActionModuleId;
-											}
-										});
-									}
-									actions.push(action);
-								});
- 							}
- 						});
- 					}
- 			   	};
- 		   	}
- 		   	return actions;
+            var actions = [];
+            for (var name in libraries) {
+                if (libraries.hasOwnProperty(name)) {
+                    var lib = libraries[name];
+                    var wm = lib.$wm;
+                    if (!wm) {
+                        continue;
+                    }
+                    var libActionSets = lib.$wm["davinci.actionSets"];
+                    if (!libActionSets) {
+                        continue;
+                    }
+                    dojo.forEach(libActionSets, function(libActionSet) {
+                        if (libActionSet.id == actionSetId) {
+                           var clonedActions = dojo.clone(libActionSet.actions);
+                           dojo.forEach(clonedActions, function(action) {
+                               // May need to transform the action class string to 
+                               // account for the library's name space
+                               if(action.action){
+                                   var newActionModuleId = getModuleId(lib, action.action);
+                                   action.action = newActionModuleId;
+                               }
+                               if(action.menu){
+                                   action.menu.forEach(function(item){
+                                       if(item.action){
+                                           var newActionModuleId = getModuleId(lib, item.action);
+                                           item.action = newActionModuleId;
+                                       }
+                                   });
+                               }
+                               actions.push(action);
+                           });
+                        }
+                    });
+                }
+            }
+            return actions;
         },
         
     	loadThemeMeta: function(model) {

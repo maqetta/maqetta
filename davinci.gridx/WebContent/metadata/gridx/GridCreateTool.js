@@ -19,7 +19,7 @@ return declare(DataGridCreateTool, {
 	_augmentWidgetCreationProperties: function(properties) {
 		var deferred = new Deferred();
 		
-		//Parse data-dojo-props and get cacheClass
+		//Parse data-dojo-props and get cacheClass. parsing fails if don't use dj.eval (e.g., data store is not found)
 		var dataDojoProps = properties["data-dojo-props"];
 		var dj = this._context.getDojo();
 		var dataDojoPropsEval = dj.eval("({" + dataDojoProps + "})");

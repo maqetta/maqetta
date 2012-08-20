@@ -400,7 +400,8 @@ return {
                     label: "Paste",
                     iconClass: "editActionIcon editPasteIcon",
                     action: "davinci/ve/actions/PasteAction",
-                    toolbarPath: "cutcopypaste"
+                    toolbarPath: "cutcopypaste",
+                    keyBinding: {accel: true, charOrCode: "v"}
                 },
 				{
                     id: "delete",
@@ -408,7 +409,7 @@ return {
                     label: "Delete",
                     action: "davinci/ve/actions/DeleteAction",
                     toolbarPath: "delete",
-                    keyBinding: {charOrCode: dojo.keys.DELETE}
+                    keyBinding: {charOrCode: [dojo.keys.DELETE, dojo.keys.BACKSPACE]}
                 },
                 {
                     id: "openBrowser",

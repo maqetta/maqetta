@@ -34,11 +34,14 @@ return declare(CreateTool, {
 	
 	_create: function(args){
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-			if (!dojo.some(results, function(arg){return !arg})) {
+			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
 				var command = this._getCreateCommand(args);
 				this._context.getCommandStack().execute(command);
 				this._select(this._tree);	
+				
+				// take steps to make sure the selection chrome gets reset as tree loads
+				this._treeHelper._updateTreeSelectionChrome(this._context, this._tree);
 			} else {
 				console.log("TreeCreateTool:_loadRequires failed to load all requires");
 			}
@@ -122,6 +125,7 @@ return declare(CreateTool, {
 		}
 		
 		this._tree = tree;
+
 		return command;
 	},
 	

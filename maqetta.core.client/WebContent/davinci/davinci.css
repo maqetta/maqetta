@@ -2064,26 +2064,26 @@ td.welcome_section_cell {
   background-color: #e9e9e9;
   background-image: none;
 }
-#maqBody .dijitButtonHover .dijitButtonNode,
-#maqBody .dijitDropDownButtonHover .dijitButtonNode,
-#maqBody .dijitComboButton .dijitButtonNodeHover,
-#maqBody .dijitComboButton .dijitDownArrowButtonHover,
-#maqBody .dijitToggleButtonHover .dijitButtonNode {
+#davinci_toolbar_pane .dijitButtonHover .dijitButtonNode,
+#davinci_toolbar_pane .dijitDropDownButtonHover .dijitButtonNode,
+#davinci_toolbar_pane .dijitComboButton .dijitButtonNodeHover,
+#davinci_toolbar_pane .dijitComboButton .dijitDownArrowButtonHover,
+#davinci_toolbar_pane .dijitToggleButtonHover .dijitButtonNode {
   background-color: #e9e9e9;
   border-color:#d2d2d2;
 }
-#maqBody .dijitButtonActive .dijitButtonNode,
-#maqBody .dijitDropDownButtonActive .dijitButtonNode,
-#maqBody .dijitComboButton .dijitButtonNodeActive,
-#maqBody .dijitComboButton .dijitDownArrowButtonActive,
-#maqBody .dijitToggleButtonActive .dijitButtonNode {
+#davinci_toolbar_pane .dijitButtonActive .dijitButtonNode,
+#davinci_toolbar_pane .dijitDropDownButtonActive .dijitButtonNode,
+#davinci_toolbar_pane .dijitComboButton .dijitButtonNodeActive,
+#davinci_toolbar_pane .dijitComboButton .dijitDownArrowButtonActive,
+#davinci_toolbar_pane .dijitToggleButtonActive .dijitButtonNode {
   background-color: #d9d9d9;
   border-color:#c2c2c2;
 }
-#maqBody .dijitButton .dijitButtonNode,
-#maqBody .dijitDropDownButton .dijitButtonNode,
-#maqBody .dijitComboButton .dijitButtonNode,
-#maqBody .dijitToggleButton .dijitButtonNode {
+#davinci_toolbar_pane .dijitButton .dijitButtonNode,
+#davinci_toolbar_pane .dijitDropDownButton .dijitButtonNode,
+#davinci_toolbar_pane .dijitComboButton .dijitButtonNode,
+#davinci_toolbar_pane .dijitToggleButton .dijitButtonNode {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;

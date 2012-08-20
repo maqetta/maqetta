@@ -551,26 +551,26 @@ return {
                     className: "maqLabelButton davinciFloatRight maqSourceComboButton",
                     showLabel: true,
                     label: "Source",
-                    method: "switchDisplayModeSourceLatest",
+                    action: "davinci/ve/actions/ViewSourceAction",
                     toolbarPath: "undoredo",
                     type:'ComboButton',
                     menu:[
                        {
                             keyBinding: {accel: true, charOrCode: "2", allowGlobal: true},
                             iconClass: 'editActionIcon sourceModeIcon sourceMenuIcon',
-                            method: "switchDisplayModeSource",
+                            action: "davinci/ve/actions/ViewSourceMenuAction",
                             label: "Source only"
                         },
                         {
                             keyBinding: {accel: true, charOrCode: "3", allowGlobal: true},
                             iconClass: 'editActionIcon splitVerticalIcon sourceMenuIcon',
-                            method: "switchDisplayModeSplitVertical",
+                            action: "davinci/ve/actions/ViewSplitVMenuAction",
                             label: "Split Vertically"
                         },
                         {
                             keyBinding: {accel: true, charOrCode: "4", allowGlobal: true},
                             iconClass: 'editActionIcon splitHorizontalIcon sourceMenuIcon',
-                            method: "switchDisplayModeSplitHorizontal",
+                            action: "davinci/ve/actions/ViewSplitHMenuAction",
                             label: "Split Horizontally"
                         }
                     ]
@@ -580,8 +580,7 @@ return {
                     //iconClass: 'designModeIcon editActionIcon',
                     showLabel: true,
                     className: 'maqLabelButton davinciFloatRight maqDesignButton',
-                    method: "switchDisplayModeDesign",
-                    // initialValue : true,
+                    action: "davinci/ve/actions/ViewDesignAction",
                     label: "Design",
                     toolbarPath: "undoredo",
                     keyBinding: {accel: true, charOrCode: "1", allowGlobal: true}

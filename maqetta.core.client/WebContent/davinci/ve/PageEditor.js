@@ -67,6 +67,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -96,9 +97,17 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				var flowLayout = context.getFlowLayout();
 				var layout = flowLayout ? 'flow' : 'absolute';
 				this._updateLayoutDropDownButton(layout);
-				this._updateDisplayModeToolbarIcons();
 				context.clearCachedWidgetBounds();
+				if (this.editorContainer){
+					this.editorContainer.updateToolbars();
+				}
 			}
+		}
+	},
+	
+	_contextLoaded: function(){
+		if(davinci.Runtime.currentEditor == this && this.editorContainer){
+			this.editorContainer.updateToolbars();
 		}
 	},
 	
@@ -128,16 +137,15 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		this._selectLayout('absolute');
 	},
 
+	getDisplayMode: function(){
+		return this._displayMode;
+	},
+	getSourceDisplayMode: function(){
+		return this._latestSourceMode;
+	},
 	_switchDisplayModeSource: function (newMode) {
 		this._latestSourceMode = newMode;
 		this.switchDisplayMode(newMode);
-		var sourceComboButtonNode = dojo.query('.maqSourceComboButton');
-		if(sourceComboButtonNode){
-			var sourceComboButton = dijit.byNode(sourceComboButtonNode[0]);
-			if(sourceComboButton){
-				sourceComboButton.set('label', veNls['SourceComboButton-'+newMode]);
-			}
-		}
 	},
 	switchDisplayModeSource: function () {
 		this._switchDisplayModeSource("source");
@@ -197,30 +205,19 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 
 		this._displayMode=newMode;
-		this._updateDisplayModeToolbarIcons();
 
 		// now lets relayout the bordercontainer
 		this._bc.layout();
+
+		if (this.editorContainer){
+			this.editorContainer.updateToolbars();
+		}
 
 		if (newMode == "source") {
 			context.hideFocusAll();			
 		}else{
 			context.clearCachedWidgetBounds();
 			context.updateFocusAll();
-		}
-	},
-	
-	_updateDisplayModeToolbarIcons: function(){
-		var designButtonNode = dojo.query('.maqDesignButton')[0];
-		var sourceComboButtonNode = dojo.query('.maqSourceComboButton')[0];
-		if(designButtonNode && sourceComboButtonNode){
-			if (this._displayMode=="design") {
-				dojo.addClass(designButtonNode, 'maqLabelButtonSelected');
-				dojo.removeClass(sourceComboButtonNode, 'maqLabelButtonSelected');
-			}else{
-				dojo.removeClass(designButtonNode, 'maqLabelButtonSelected');
-				dojo.addClass(sourceComboButtonNode, 'maqLabelButtonSelected');
-			}
 		}
 	},
 

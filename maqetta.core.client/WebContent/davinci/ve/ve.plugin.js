@@ -327,7 +327,8 @@ return {
                     label: "Paste",
                     iconClass: "editActionIcon editPasteIcon",
                     action: "davinci/ve/actions/PasteAction",
-                    toolbarPath: "cutcopypaste"
+                    toolbarPath: "cutcopypaste",
+                    keyBinding: {accel: true, charOrCode: "v"}
                 },
 				{
                 	id: "undo",

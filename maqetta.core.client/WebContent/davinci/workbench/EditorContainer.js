@@ -400,12 +400,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			return;
 		}
 		davinci.Workbench._editorToolbarCreationStarted[editorClass] = true;
-		// Don't create toolbar until all of the library metadata has been loaded
-		// because widget libraries might add items to toolbar
-		var args = arguments;
-		Metadata.init().then(function(){
-			this.inherited(args);
-		}.bind(this));
+		this.inherited(arguments);
 	},
 	
 	/**

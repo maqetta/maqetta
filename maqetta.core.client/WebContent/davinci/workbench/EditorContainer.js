@@ -340,8 +340,8 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			var enabled = runFunc(action, 'isEnabled');
 			widget.set('disabled', !enabled);
 		}
-		function updateIcon(widget, action){
-			runFunc(action, 'updateIcon');
+		function updateStyling(widget, action){
+			runFunc(action, 'updateStyling');
 		}
 		
 		if(toolbar && this.editor){
@@ -352,7 +352,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					var child = children[i];
 					hideShowWidget(child, child._maqAction);
 					enableDisableWidget(child, child._maqAction);
-					updateIcon(child, child._maqAction);
+					updateStyling(child, child._maqAction);
 					var menu = child.dropDown;
 					if(menu){
 						var menuItems = menu.getChildren();
@@ -360,7 +360,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 							var menuItem = menuItems[j];
 							hideShowWidget(menuItem, menuItem._maqAction);
 							enableDisableWidget(menuItem, menuItem._maqAction);
-							updateIcon(menuItem, menuItem._maqAction);
+							updateStyling(menuItem, menuItem._maqAction);
 						}
 					}
 				}

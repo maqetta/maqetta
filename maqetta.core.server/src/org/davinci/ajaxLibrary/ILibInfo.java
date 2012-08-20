@@ -9,5 +9,7 @@ public interface ILibInfo {
 	public String getVirtualRoot();
 
 	public String getName();
+	
+	public String getRequired();
 
 }

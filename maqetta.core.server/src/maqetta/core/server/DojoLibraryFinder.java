@@ -110,7 +110,7 @@ public class DojoLibraryFinder implements ILibraryFinder{
 			}
 		}
 		ILibInfo[] result = new ILibInfo[1];
-		result[0]= new LibInfo("dojo","dojo", version, simplePath);
+		result[0]= new LibInfo("dojo","dojo", version, simplePath, null);
 		return result;
 	}
 	

@@ -353,7 +353,7 @@ return {
                     label: "Delete",
                     action: "davinci/ve/actions/DeleteAction",
                     toolbarPath: "delete",
-                    keyBinding: {charOrCode: dojo.keys.DELETE}
+                    keyBinding: {charOrCode: [dojo.keys.DELETE, dojo.keys.BACKSPACE]}
                 },
                 {
                     id: "savecombo",

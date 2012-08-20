@@ -287,8 +287,11 @@ lastMapTag=${mapsTagTag}
 
 		<mkdir dir="${buildDirectory}/formatRepo" />
 		<copy file="${builder}/html/artifacts.xml" todir="${buildDirectory}/formatRepo" />
+		<!--
 		<replace file="${buildDirectory}/formatRepo/artifacts.xml" token="@REPO@" value="0.3-${buildType}-builds/${buildLabel}" />
-
+		-->
+		<replace file="${buildDirectory}/formatRepo/artifacts.xml" token="@REPO@" value="integration/${buildLabel}" />
+		
 		<p2.mirror source="file:${p2.metadata.repo}" log="${buildDirectory}/${buildLabel}/mirrorLog.txt" ignoreErrors="true" >
 			<slicingOptions latestVersionOnly="true"/>
 			<destination compressed="true" name="Orion ${buildLabel} metadata" location="file:${updateSite}/${buildLabel}" append="true" format="file:${p2.repo}" kind="metadata" />

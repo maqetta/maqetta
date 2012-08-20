@@ -623,9 +623,11 @@ return declare(ContainerInput, {
 			// After path is set, let's do a focusNode to make
 			// sure new item is scrolled into view (if
 			// necessary)
-			function(items) {
-				var item = items[0][items[0].length - 1];
-				previewTree.focusNode(item);
+			function() {
+				var items = previewTree.get("path");
+				var item = items[items.length - 1];
+				var nodes = previewTree.getNodesByItem(item);
+				previewTree.focusNode(nodes[0]);
 			});
 	},
 	
@@ -970,10 +972,16 @@ return declare(ContainerInput, {
 		//Find and select the new table widget
 		dojo.some(compoundCommand._commands, function(command) {
 			if (command.newWidget && command.newWidget.type === "dijit.Tree") {
-				context.select(command.newWidget);
+				var tree = command.newWidget;
+				context.select(tree);
+
+				// take steps to make sure the selection chrome gets reset as tree loads
+				this._treeHelper._updateTreeSelectionChrome(context, tree);
+				
+				// break out
 				return true;
 			}
-		});
+		}.bind(this));
 	},
 	
 	_isNodePropertyInputValid: function() {

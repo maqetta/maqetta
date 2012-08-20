@@ -630,14 +630,16 @@ davinci_top_bar .dijitButtonNode {
 	width:64px;
 	margin-bottom:-1px;
 }
-#left_mainBody .davinciPalette > div > .dijitTab {
+#left_mainBody .davinciPalette > div > .dijitTab, 
+#left_mainBody .davinciPalette .dijitTabContainerLeft-tabs {
 	background-image: -webkit-linear-gradient(0deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);
 	background-image: -moz-linear-gradient(0deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);
 	background-image: -ms-linear-gradient(0deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);
 	background-image: -o-linear-gradient(0deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);
 	background-image: linear-gradient(0deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);
 }
-#right_mainBody .davinciPalette > div > .dijitTab {
+#right_mainBody .davinciPalette > div > .dijitTab, 
+#right_mainBody .davinciPalette .dijitTabContainerRight-tabs {
 	background-image: -webkit-linear-gradient(180deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);
 	background-image: -moz-linear-gradient(180deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);
 	background-image: -ms-linear-gradient(180deg, #F8F8F8 0%, #F8F8F8 92%, #F1F1F1 93%, #D7D7D7 100%);

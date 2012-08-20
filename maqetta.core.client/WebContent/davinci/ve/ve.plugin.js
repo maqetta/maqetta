@@ -191,12 +191,6 @@ return {
                 },
                 {
                     iconClass: "editActionIcon",
-                    label: "Move to back",
-                    action: "davinci/ve/actions/MoveToBackAction",
-                    menubarPath: "davinci.edit/cut"
-                },
-                {
-                    iconClass: "editActionIcon",
                     label: "Move forward",
                     action: "davinci/ve/actions/MoveForwardAction",
                     menubarPath: "davinci.edit/cut"
@@ -205,6 +199,12 @@ return {
                     iconClass: "editActionIcon",
                     label: "Move backward",
                     action: "davinci/ve/actions/MoveBackwardAction",
+                    menubarPath: "davinci.edit/cut"
+                },
+                {
+                    iconClass: "editActionIcon",
+                    label: "Move to back",
+                    action: "davinci/ve/actions/MoveToBackAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
@@ -475,8 +475,8 @@ return {
                        },
                        {
                            iconClass: "editActionIcon",
-                           label: "Move to back",
-                           action: "davinci/ve/actions/MoveToBackAction"
+                           label: "Move to front",
+                           action: "davinci/ve/actions/MoveToFrontAction"
                        },
                        {
                            iconClass: "editActionIcon",
@@ -490,8 +490,8 @@ return {
                        },
                        {
                            iconClass: "editActionIcon",
-                           label: "Move to front",
-                           action: "davinci/ve/actions/MoveToFrontAction"
+                           label: "Move to back",
+                           action: "davinci/ve/actions/MoveToBackAction"
                        },
                        {
                            iconClass: "editActionIcon",

@@ -75,18 +75,17 @@
 						if (reviewVersion && designerName) {
 							var node = revResource.findVersion(designerName, reviewVersion);
 							if (node) {
-								/* if we found a node, then the user clicked a review link to get here, 
-								 * TODO: bring the R&C view forward
-								 */
-								node.getChildren(function(childs){
-									if(childs.length > 1) {
-										return;
-									}
-									dojo.forEach(childs, function(child){
-										davinci.Workbench.openEditor({
-											fileName: child,
-											content: node.getText()
-										});
+								// if we found a node, then the user clicked a review link to get here, so
+								// let's open review files (up to a cap)
+								var cap = 1; 
+								node.getChildren(function(children){
+									dojo.forEach(children, function(child, index){
+										if (index < cap) {
+											davinci.Workbench.openEditor({
+												fileName: child,
+												content: node.getText()
+											});
+										}
 									})
 									
 								}, false);

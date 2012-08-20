@@ -8,11 +8,20 @@ public abstract class Library {
     String version;
     String defaultRoot;
     String metadatapath;
+    String required;
 
     public String getID() {
         return this.ID;
     }
 
+    public String getRequired(){
+    	return this.required;
+    }
+    
+    public void setRequired(String required){
+    	this.required = required;
+    }
+    
     public void setMetadataPath(String path) {
         this.metadatapath = path;
     }

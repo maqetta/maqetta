@@ -38,6 +38,7 @@ define(["dojo/_base/declare",
 		templateString: templateString,
 		
 		buildRendering: function(){
+			
 			this.inherited(arguments);
 			this._handles = [];
 			this._allLibs = Library.getInstalledLibs();
@@ -57,9 +58,15 @@ define(["dojo/_base/declare",
 				if(this._getUserLib(lib.id, lib.version)){
 					lib.checked = true;
 				}
-				var checkedString = lib.checked ? "checked" : "";
-				uiArray.push("<tr>");
+				var rowCss = "";
+				var checkedString = lib.checked || lib.required ? "checked" : "";
+				if(lib.required){
+					uiArray.push("<tr style='display:none'>");
+				}else{
+					uiArray.push("<tr>");
+				}
 				uiArray.push("<td class='columna'><input type='checkbox' libItemCheck='"+ i +"'"+ checkedString +"></input></td>");
+				
 				uiArray.push("<td class='columnb'>" + name + "</td>");
 				uiArray.push("<td class='columnc'>" + lib.version + "</td>");
 				

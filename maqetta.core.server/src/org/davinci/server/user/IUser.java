@@ -30,10 +30,10 @@ public interface IUser {
 	public IStorage getUserDirectory();
 
 	public void modifyLibrary(String id, String version, String base,
-			boolean installed);
+			boolean installed, boolean required);
 
 	public void modifyLibrary(String id, String version, String virtualRoot,
-			String base);
+			String base, boolean required);
 
 	public IVResource[] listFiles(String path);
 

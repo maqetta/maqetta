@@ -36,6 +36,9 @@ public class GetUserLibs extends Command {
             jsonWriter.startObject().addField("id", id);
             jsonWriter.addField("version", version);
             jsonWriter.addField("metaRoot", lib.getMetadataPath());
+            String required = installedLibs[i].getRequired();
+            jsonWriter.addField("required", required!=null && (Boolean.parseBoolean(required)?true:false));
+            
             if( installedLibs[i].getVirtualRoot()!=null)
             	jsonWriter.addField("root", installedLibs[i].getVirtualRoot());
             jsonWriter.endObject();

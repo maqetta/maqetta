@@ -134,8 +134,9 @@ public class User implements IUser {
         	if(root!=null){
         		String id= lib.getID();
             	String version = lib.getVersion();
+            	String required = lib.getRequired();
             	String libPath = "./WebContent" + root;
-        		this.modifyLibrary(id, version,  libPath, project.getPath());
+        		this.modifyLibrary(id, version,  libPath, project.getPath(), required==null?false:Boolean.parseBoolean(required));
         	}
         }
         
@@ -245,7 +246,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#modifyLibrary(java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
-	public void modifyLibrary(String id, String version, String base, boolean installed) {
+	public void modifyLibrary(String id, String version, String base, boolean installed, boolean required) {
 		LibrarySettings libs = this.getLibSettings(base);
 
 		if (!installed) {
@@ -253,7 +254,7 @@ public class User implements IUser {
 
 		} else {
 			String defaultRoot = ServerManager.getServerManger().getLibraryManager().getDefaultRoot(id, version);
-			libs.addLibrary(id, version, id, defaultRoot);
+			libs.addLibrary(id, version, id, defaultRoot, required?"true":"false");
 		}
 		
 		ILibraryFinder[] finders = this.getFinders(base);
@@ -267,10 +268,10 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#modifyLibrary(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void modifyLibrary(String id, String version, String virtualRoot, String base) {
+	public void modifyLibrary(String id, String version, String virtualRoot, String base, boolean required) {
 		LibrarySettings libs = this.getLibSettings(base);
 
-		libs.modifyLibrary(id, version, virtualRoot, base);
+		libs.modifyLibrary(id, version, virtualRoot, base, required?"true":"false");
 		ILibraryFinder[] finders = this.getFinders(base);
 		for(int i=0;i<finders.length;i++){
 			finders[i].librarySettingsChanged(libs.allLibs());

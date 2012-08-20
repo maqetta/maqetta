@@ -83,7 +83,7 @@ define([
         return dest;
     }
 
-	function parsePackage(pkg, path, deferreds) {
+	function parsePackage(pkg, path) {
 		libraries[pkg.name] = pkg;
 		path = new Path(path);
 
@@ -98,20 +98,21 @@ define([
         }
 		delete pkg.overlays;
 
+        var deferred; // dojo/Deferred or value
 		if (lang.exists("scripts.widget_metadata", pkg)) {
 			if (typeof pkg.scripts.widget_metadata == "string") {
 				var widgetsJsonPath = path.append(pkg.scripts.widget_metadata);
-				deferreds.push(dojo.xhrGet({
+				deferred = dojo.xhrGet({
 					url : widgetsJsonPath.toString() + "?" + info.revision,
 					handleAs : "json"
 				}).then(function(data) {
 					if (data) {
-						parseLibraryDescriptor(pkg.name, data,
+						return parseLibraryDescriptor(pkg.name, data,
 								widgetsJsonPath.getParentPath()); // lop off "*.json"
 		            }
-		        }));
+		        });
 			} else {
-				parseLibraryDescriptor(pkg.name, pkg.scripts.widget_metadata, path);				
+				deferred = parseLibraryDescriptor(pkg.name, pkg.scripts.widget_metadata, path);
 			}
 	    }
     
@@ -124,6 +125,8 @@ define([
             });
             deferredGets.push(d);
         }
+
+        return deferred;
     }
 
 	function parseLibraryDescriptor(libName, descriptor, path) {
@@ -465,7 +468,8 @@ define([
 						url : path + "/package.json" + "?" + info.revision,
 						handleAs : "json"
 					}).then(function(data) {
-						parsePackage(data, path, deferreds);
+                        // return deferred
+						return parsePackage(data, path);
 					}));
 				}
 			});

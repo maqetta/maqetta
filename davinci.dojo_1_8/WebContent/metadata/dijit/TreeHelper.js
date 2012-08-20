@@ -170,6 +170,23 @@ TreeHelper.prototype = {
 	//**************************************************************************************/
 	// Some "private helpers reserved for use only by other tree-related meta data classes 
 	//*************************************************************************************/
+	_updateTreeSelectionChrome: function(context, tree) {
+		// If autoExpand is on and height is auto, then the tree's height will change during 
+		// initialization which messes up the selection chrome. So, let's take steps to make
+		// sure the selection chrome gets reset.
+		tree.dijitWidget.onLoadDeferred.then(function(){
+		    setTimeout(function() {
+				var selection = context.getSelection();
+				dojo.some(selection, function(selectedItem, index) {
+					if(selectedItem == tree){
+						context.updateFocus(tree, index);
+						return true;
+					}
+				}.bind(this));
+			}.bind(this), 0);
+		}.bind(this));
+	},
+
 	_createScriptBlockData: function(methodType, dojoEvent, argNames, jsString) {
 		var data = {
 			type: "html.script",

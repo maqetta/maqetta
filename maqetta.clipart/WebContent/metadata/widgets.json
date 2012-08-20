@@ -1,0 +1,337 @@
+{
+  "categories": {
+      "clipart": {
+        "name": "Clip Art",
+        "widgetClass": "dijit"
+      }
+  },
+  "widgets": [
+    {
+        "name": "ArrowDown",
+        "type": "clipart.ArrowDown",
+        "category": "clipart",
+        "icon": "resources/images/arrowDown.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAN7e4oyMjtXV1sDAwf///+Dg4MvLyzMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAAQ9EMmJzqGYnlJuxgcBeN8UjqUmkunJlm5ruXN2CESuCy8SBLjd73Mw6AiGniQZ5BlSP4FgmKoMBkpbtoqJAAA7"
+    },
+    {
+        "name": "ArrowLeft",
+        "type": "clipart.ArrowLeft",
+        "category": "clipart",
+        "icon": "resources/images/arrowLeft.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAN7e4oyMjtXV1sDAwf///+Dg4MvLyzMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAAQ3EMlJq70453CORsYRCN52GAJRXmJKqF1cHoP73nfh0TYB/ECdpHWTxSgclOoTGq00nOdnSq0iIgA7"
+    },
+    {
+        "name": "ArrowRight",
+        "type": "clipart.ArrowRight",
+        "category": "clipart",
+        "icon": "resources/images/arrowRight.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAN7e4oyMjtXV1sDAwf///+Dg4MvLyzMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAAQ3EMlJq704a3RO2NIhBIexHYRgeFTndkQ8HmER33g60EcB/ECcYBd6wWSkDErFUs5Mms4HRK1SIwA7"
+    },
+    {
+        "name": "ArrowUp",
+        "type": "clipart.ArrowUp",
+        "category": "clipart",
+        "icon": "resources/images/arrowUp.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAN7e4oyMjtXV1sDAwf///+Dg4MvLyzMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAAQ+EMmJzqGYnjFupkEgCOEnGYdAEMJhmO66ol+oymSQpTLuaZYDARD87YZGGNKkWTIlQuIT6nweCoUkTDvNRAAAOw=="
+    },
+    {
+        "name": "Browser",
+        "type": "clipart.Browser",
+        "category": "clipart",
+        "icon": "resources/images/browser.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1v///0BAQDMzM////wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM9SLrcKzDKqIa9OAwtCP5fJwBBaZ4BIJLbhqZrW8qbSoxAru+5CP4rntA2eqGIJKMJqVwGh7vObUKVOq6KBAA7"
+    },
+    {
+        "name": "Camera",
+        "type": "clipart.Camera",
+        "category": "clipart",
+        "icon": "resources/images/camera.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v////z8/Pr6+vn5+fj4+Ojo6MrKyre3t6urq4iIiHV1dUdHR0BAQDMzM////yH5BAEAAA8ALAAAAAAQABAAAARZ8MlJq6Ut36c5+E3VOGAGBEAWeif6DULghk0rB8jCLAhK2zjFoXBQIFKeW2BxSDQShwWypmQUGoZGgTEFMp1Q6U+JEBKN3RsBp+P5WJ+4HCRR2e+rjX5PiQAAOw=="
+    },
+    {
+        "name": "Chat",
+        "type": "clipart.Chat",
+        "category": "clipart",
+        "icon": "resources/images/chat.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1v///0BAQP///yH5BAEAAAMALAAAAAAQABAAAAI13ISpaQIPIxQHhItzANTpz1WfFnojVlrnla5sp65pLE2Nxy2I0TwUDwQ6fsHirogkIpfMQQEAOw=="
+    },
+    {
+        "name": "Close",
+        "type": "clipart.Close",
+        "category": "clipart",
+        "icon": "resources/images/close.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEZGSD4+QFBQUllZW6qqrHl5etXV1ra2t6urrJ6en5CQkf////Hx8eLi4tTU1EBAQP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVxIAQ9ZGmS4ngYbOsez4gYzFIveG4gpLEMAIAD5wAECgtDbxFYEIRFQqOpfPgAyCeAsCgIksuiwslNCMFW4hb3HKJ9iyj7/I4DxoTyueoTZINcBQB1AQ1tclRLBQF0RQADaDM5kzo8Ki6YBjApJ50xECEAOw=="
+    },
+    {
+        "name": "Facebook",
+        "type": "clipart.Facebook",
+        "category": "clipart",
+        "icon": "resources/images/facebook.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAANXV1v///9HR0cXFxbm5uaKiooyMjHR0dGlpaVJSUkZGRkREREJCQkFBQT09PTo6OjMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVdIJEoZGmSiTgAbOuywwgEdAAY5WyTul0gAYFCB+DRWJCAqFArDo+QRcDRgBCNu1rgueMWG4FHw4u1Maa9bg8AdqSd6/a7zEZr4U35vRw4KA5aOwkrL4UxIieJCikhADs="
+    },
+    {
+        "name": "FormattingToolbox",
+        "type": "clipart.FormattingToolbox",
+        "category": "clipart",
+        "icon": "resources/images/formattingToolbox.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXV1v////7+/v39/fz8/Pv7+/n5+fj4+Pb29vT09PPz8/Ly8u/v7+vr6+fn5+Li4tbW1tHR0czMzMTExMPDw7i4uK2traurq6qqqpaWlpWVlYCAgH5+fnp6em9vb2lpaWdnZ2RkZGNjY2FhYV1dXVxcXFJSUkxMTEdHR0ZGRkFBQUBAQDs7Ozo6OjMzMzAwMCwsLCYmJiIiIiEhIR8fHxsbG////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADYALAAAAAAQABAAAAZyQJtwSCwaj0SXcslsKgHQqFT6DFivWCvgKevKPpNAoePdugAEVenxAhkOBowMYgYMUCFJLGNtaFgLdQEnLCIwF2IRGxwBgikhAiQzDAQVKxQIgi0mCiM0CQwZNQ6NXF4yFgEeXplVWa91U7JQTrVMSEhBADs="
+    },
+    {
+        "name": "Help",
+        "type": "clipart.Help",
+        "category": "clipart",
+        "icon": "resources/images/help.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXT1vj4+eLi49/f4Nra29nZ2tbW19XV1tTU1dDQ0c3NzpCQkf////7+/vX19fLy8vDw8O/v7+zs7OTk5OPj49nZ2dHR0c/Pz87Ozs3NzczMzKWlpaOjo6KioqGhoZ6enp2dnZycnJubm5mZmY+Pj4aGhoWFhYGBgX5+fnR0dHNzc2lpaWZmZllZWVdXV1VVVVNTU1FRUU5OTk1NTUxMTEJCQkBAQDY2NjMzMzIyMi8vLyoqKiYmJiMjI////wAAACH5BAEAAD4ALAAAAAAQABAAAAa8QJ/Qd0HRdD0dDXUZDj8ykqJgKGBIso/zs9IIIoFGICLQrLREWUZSmeHetookI2ueFgIGC6fSqHAzDAILJz4yFhF6LA8MD28MEQkyPjkEAQyYjS04LAwBBDk+PAYNmQ+bLYwNBjw+OJaZGzipmA4EOD4xB4mYIzgjmREHMT4mIhSZyZgUIiZELwgSvb+YEggvTT4eKQgDEB01HRATCCkcThwuIAcEAAQHIS/nTj4WJTA3OzcwJRb0/wB9BAEAOw=="
+    },
+    {
+        "name": "Home",
+        "type": "clipart.Home",
+        "category": "clipart",
+        "icon": "resources/images/home.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1v///0BAQP///yH5BAEAAAMALAAAAAAQABAAAAI5nI8jm7csgGgKWBlniqEHKW2A51mawZHlmaprZbklBspf9owyprVq6NC5gCjh7wS7KImKh9NJiR4KADs="
+    },
+    {
+        "name": "HScrollBar",
+        "type": "clipart.HScrollBar",
+        "category": "clipart",
+        "icon": "resources/images/hscrollbar.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAP///+vr6+rq6unp6ejo6L+/v7Ozs0RERDMzM////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAAQzMMlJq70464y6/2AHjABClqdoHCUxDIF5FKXMIkKg2zWwlrkdYNYjmYypkNKzaTqfUGgEADs="
+    },
+    {
+        "name": "HSplit",
+        "type": "clipart.HSplit",
+        "category": "clipart",
+        "icon": "resources/images/hsplit.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1v///zMzM////yH5BAEAAAMALAAAAAAQABAAAAImnI+py+0uopx0CICzzsKCAIZiAHRXSIWlJ27gem0yTNXSg+f6vhcAOw=="
+    },
+    {
+        "name": "Image",
+        "type": "clipart.Image",
+        "category": "clipart",
+        "icon": "resources/images/image.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAP////v7+/r6+vn5+fj4+Pf39/b29vPz8/Ly8vDw8O/v7+7u7uzs7Ovr6+fn59/f39jY2NfX19DQ0M/Pz83NzcrKysnJycfHx8bGxsXFxcTExMPDw8LCwsHBwb29vby8vLu7u7q6ura2tqWlpaSkpKOjo6CgoJycnJubm5qampmZmZiYmJeXl5WVlZKSkpCQkI6Ojo2NjYyMjISEhIODg4GBgX9/f35+fn19fXx8fHt7e3l5eXFxcXBwcG9vb25ubm1tbWtra2RkZGNjY2BgYF5eXl1dXVhYWEdHR0NDQ0BAQCcnJ////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEwALAAAAAAQABAAAAeigEyCg4SFgkqIiYqKhwSOBAMDAgEBAgMESocFLSwqKilAPz4/QQCZTEoGDAkmMx47Ojk3OaaHBgBHSDUODxwrLTK1qAUARUtCKDAmMTYnwkoELyVGPSEdMjQnFs/RJC4wGQAQGRMO3CIbNUNEAAALEBHcIw0fODwSABQ5Rtw5FxoVvik4YATHM2IIOGjAAAMEAAlJDrabSLHdqUUYExnaSCgQADs="
+    },
+    {
+        "name": "Lock",
+        "type": "clipart.Lock",
+        "category": "clipart",
+        "icon": "resources/images/lock.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAGJiZFhYWoyMjtXV1peXmP///+Dg4EBAQP///wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAAROEMlJqw0nn2DnGWB4dMFgYJsxcNUHUOXYDrL01Yim75k9FMCgkOYTEghD2ScoyAiCxNwP2Dw8gdFlMBBIFoGEDBKrnBZ00HJovVby3ogIADs="
+    },
+    {
+        "name": "Mail",
+        "type": "clipart.Mail",
+        "category": "clipart",
+        "icon": "resources/images/mail.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1v///7KyskBAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM/SLrc/m7ISaeSIOsNJBnCEIwkCQ4fEJam0KXBWoLBOwCjHNA1epMhiYBkwwEFQ6LPyCoVOdDXp0JFQa7YLDYBADs="
+    },
+    {
+        "name": "Map",
+        "type": "clipart.Map",
+        "category": "clipart",
+        "icon": "resources/images/map.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v////39/fv7+/r6+vj4+Pb29vT09PLy8svLy6GhoXx8fDMzM////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAARjsLFJq5UghLR6T5rCYJvHJUKajEzCmWm8Sl49DMLAsW6d3LoOC0B4JQhIgmdIKHAKUOhrGD0ZqouhYWuwcrOYg/hgHM8YADFC/FEfhoh4fJFYH9ZDgH7P17MsgBQNg4SFhg0RADs="
+    },
+    {
+        "name": "Microphone",
+        "type": "clipart.Microphone",
+        "category": "clipart",
+        "icon": "resources/images/microphone.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///7+/v7KysqWlpY2NjYCAgEBAQDMzM////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAAQ8MMmZxBE0T3PAKVrWBV5IjaUpoYe6AmQbHi2bIPKZ2LnOz7sBgFALcXa0ncF0lCBAKg5t6VpVV7Tk1RQBADs="
+    },
+    {
+        "name": "Minus",
+        "type": "clipart.Minus",
+        "category": "clipart",
+        "icon": "resources/images/minus.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1v///7+/v0BAQDMzM////wAAAAAAACH5BAEAAAUALAAAAAAQABAAAAMmWLrc/jDKSRm5OGM1BPhgCAhDMQBBqq4BUHZiTCpafVV4ru88kwAAOw=="
+    },
+    {
+        "name": "Next",
+        "type": "clipart.Next",
+        "category": "clipart",
+        "icon": "resources/images/next.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAIyMjtXV1sDAwf////X19eDg4MvLyzMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAAQ3EMlJq704a3QO2NJBAAd4DIPhUV3bocNYcgVs20J5FEHv24FcyPVCBUiZU2+VPM40nQ9oSp1GAAA7"
+    },
+    {
+        "name": "Person",
+        "type": "clipart.Person",
+        "category": "clipart",
+        "icon": "resources/images/person.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAFhYWtXV1v///0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAMuSLo0w5CNIF6EM9grN2+Z82WCEGjcVJbopa5tlJ2nh4W2XH9LyCu+X/AHAPyOCQA7"
+    },
+    {
+        "name": "PlayControl",
+        "type": "clipart.PlayControl",
+        "category": "clipart",
+        "icon": "resources/images/playbackControl.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1v///9nZ2bKysoCAgEBAQP///wAAACH5BAEAAAYALAAAAAAQABAAAAM5aLrcruXFViardFgodhmAJ4TLF5DcOZlq2hZEIJNsa7BoIcyWid673w0kEg43QORNiXEob4+oNJoAADs="
+    },
+    {
+        "name": "Plus",
+        "type": "clipart.Plus",
+        "category": "clipart",
+        "icon": "resources/images/plus.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1v///0BAQP///yH5BAEAAAMALAAAAAAQABAAAAIvnI+pJrIqAnDvxFmtpPny1IRbyEXBiaYBJQCue75uSZ7kh5j4omeM7Rv0go2grwAAOw=="
+    },
+    {
+        "name": "Previous",
+        "type": "clipart.Previous",
+        "category": "clipart",
+        "icon": "resources/images/previous.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAIyMjtXV1sDAwf////X19eDg4MvLyzMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAAQ3EMlJq704Z3COlgdAeNthDAN5hQSadjB5CG5dF94c1EHvBzLADhWDUTi91AcRAi4RHNVzStVEAAA7"
+    },
+    {
+        "name": "Print",
+        "type": "clipart.Print",
+        "category": "clipart",
+        "icon": "resources/images/print.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1v///0lJSUBAQDMzM////wAAAAAAACH5BAEAAAUALAAAAAAQABAAAANGWFrTvnANQAEZEc4Q7M3K1hEklokVYEYi161hA7ic2oTzlFLDy+SOYE/16+x2mBbtNUnOljWZ83h0Cq7YrICoo6ZMwvAtAQA7"
+    },
+    {
+        "name": "ProfilePicture",
+        "type": "clipart.ProfilePicture",
+        "category": "clipart",
+        "icon": "resources/images/profilePicture.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAANXV1v////Ly8tnZ2czMzL+/v7Ozs6amppmZmYyMjICAgHNzc2ZmZllZWUBAQDMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABAALAAAAAAQABAAAAVq4COOZCkCaEoQaXoGsOEwjTPAAfAGwnMHhwZO9wDACEKYbrgbPHCEh0C5IzimgSiWaIQ1DrlFglnEFRg5KbmbReuw6bLA0EDkGIwCtYhwNAxDdA4KRAkNLDhDAAsLI2yJSkQnLZQoJpclIQA7"
+    },
+    {
+        "name": "Rss",
+        "type": "clipart.Rss",
+        "category": "clipart",
+        "icon": "resources/images/rss.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXV1v////39/fn5+ejo6OXl5dfX19XV1c3NzcXFxcPDw8HBwcDAwL29vby8vLu7u7m5ubW1ta2traOjo56enpycnJmZmZaWlpSUlI+Pj4WFhX19fXZ2dnV1dXJycnFxcW9vb2lpaWVlZV1dXVtbW1JSUlFRUUpKSkZGRjMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACoALAAAAAAQABAAAAamQFUihCoaj6GEsARoOp8ASCkxgoiKosxiEOh2ISMUINVFTD6ehjcAKAJEpxOIYmB0LN62WEAgKDAkFQEieGxuIogWBwUXJgEdanpjXRYjEgEXFQweA5IiHBwRARqXJAYfC5JdDht4IwcYFBMZkg8pKQ8bERYWCiAIIpIpCAEpDhyDAScBYm5kCGTIIsrMbVW2uIMpIgIi22AJJRBQUFJKQ0fpKEkqQQA7"
+    },
+    {
+        "name": "Search",
+        "type": "clipart.Search",
+        "category": "clipart",
+        "icon": "resources/images/search.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAGdmaGdnaPDw8enp6tLS05aWl4uLjP////7+/vb29tnZ2b+/v7y8vLS0tLKyso2NjYaGhnl5eVtbW01NTUBAQDY2NjMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAV24CU20VRNUSOuKxQUDMEUAcSKkKEMCZIMCoNt1QgoBIdkUqAIqESRwkBJHRQiqwkjQVUmGJNVhYDoJhGESnZrPnzDUGnbih0ZkVQm4InT8XxABhIONy4wMgUAEhQWhCwkJigNDhaVjjc3lJULmJiaD52YCw8KIQA7"
+    },
+    {
+        "name": "ShoppingCart",
+        "type": "clipart.ShoppingCart",
+        "category": "clipart",
+        "icon": "resources/images/shoppingCart.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAEdGR////7GxsZeXl5SUlI2NjYyMjHp6enl5eXZ2dnV1dXR0dGdnZ2VlZVtbW1paWldXV1JSUk1NTUZGRv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABQALAAAAAAQABAAAAVJ4HRQZGmaxHSupqOy7CTPNF1OAc4EDR/sgFtt+KJIBLhEYLEMHIoUA9FmkgUe1yyUNJWdvLBvF1xVuCiTAiQSCwxUOMRWSA+HQwA7"
+    },
+    {
+        "name": "SpinInput",
+        "type": "clipart.SpinInput",
+        "category": "clipart",
+        "icon": "resources/images/spinInput.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAFhYWtXV1qurrKGhooKCg/////X19TMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAARSEElwqrUyHxG678KRIVthDoNZhGNZBFVgsppQGId5GKtYF5dKr8X5eGiSoNKXJAie0CeBSbKprsgqMDj84XS8rAt2kHWT1gJKJS4aA1nSspKJAAA7"
+    },
+    {
+        "name": "StreetMap",
+        "type": "clipart.StreetMap",
+        "category": "clipart",
+        "icon": "resources/images/streetMap.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAL69u5mVlf///zMzM////wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM+OLrcKjBK+YK92Iq6OwRQsA2CSJIfAJik6QlgOcqnqoazi8J49TgDlmwiEQZ+DmNnF1OeIs1cZjojWoFYRQIAOw=="
+    },
+    {
+        "name": "Trash",
+        "type": "clipart.Trash",
+        "category": "clipart",
+        "icon": "resources/images/trash.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAGk5adXV1v///9HR0cXFxa6uroyMjICAgHR0dEZGRv///wAAAAAAAAAAAAAAAAAAACH5BAEAAAoALAAAAAAQABAAAARVUMmZapoYpzJGuZpVDYIwiBZZrmx5ojCqbF5HEB33SQnZC4eDKTHk+UgIxLA4OwqSy5NR8IOemL+q8iptUpFbYjcLjoLIAoOQex4E3vB4AASIoQCKCAA7"
+    },
+    {
+        "name": "Twitter",
+        "type": "clipart.Twitter",
+        "category": "clipart",
+        "icon": "resources/images/twitter.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///8XFxZeXl4CAgHR0dFJSUkZGRjMzM////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARRMJlDq6VGCsC758IEBAKCCEGqBgA1Iim8pu3xxjPtBrLpDzobL8dD1W65E2snK/iUS2GPeBwGCE9U9KVdKaulbsy4Iz1N2pZh82mHJJf4IRMBADs="
+    },
+    {
+        "name": "VideoCamera",
+        "type": "clipart.VideoCamera",
+        "category": "clipart",
+        "icon": "resources/images/videoCamera.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1v///9nZ2b+/v2ZmZjMzM////wAAACH5BAEAAAYALAAAAAAQABAAAAM7aLrc/jC+QqstrIDNwSgDgI1AYJ5FoFEiUZ7mF7LolQaixt2ombcimMo3MqxsxIWu0xFglDaLZEqtLhIAOw=="
+    },
+    {
+        "name": "VideoPlayer",
+        "type": "clipart.VideoPlayer",
+        "category": "clipart",
+        "icon": "resources/images/videoPlayer.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXT1vj4+eLi49ra29nZ2tbW19XV1tTU1dDQ0c3NzpCQkf////7+/vf39/X19e/v7+zs7OXl5ePj49fX19XV1dHR0c/Pz87Ozs3NzczMzLq6uqOjo6GhoZ6enp2dnZycnJubm4+Pj4aGhoWFhYSEhIGBgX5+fnl5eXR0dGlpaVdXV1VVVVNTU1FRUVBQUE5OTk1NTUxMTDk5OTY2NjMzMzIyMi8vLyoqKiYmJiMjI////wAAAAAAAAAAAAAAAAAAACH5BAEAADoALAAAAAAQABAAAAayQJ1QZzHFbDlbzGQZDjuvUIJQIFxCr46zk8oIHgFG4CHIpLTEFwZSg00W8AUE82qWFIJFTe9qxAUKJTovFQ96cCc1JHAPCC86NQMBh3ARMjUUAQM1OjgFDJRxGjUMBTg6NJKhlpgOAzQ6LQaGewuJiwsPBi06IyAShzUucQsSICNEKwdsbsQQBytNOhwoBxJgYg8SBygbThsqHgYDAAMGHyveTjoVIiwzNzMsIhXr9vc6QQA7"
+    },
+    {
+        "name": "VScrollBar",
+        "type": "clipart.VScrollBar",
+        "category": "clipart",
+        "icon": "resources/images/vscrollbar.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAP///+vr6+rq6unp6ejo6L+/v7Ozs0RERDMzM////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAAQ/MEmJqkUzU8A51hMCFEcBfGAiHuyZbp37XtarAkEup+Kgo6DezyYiCAS7IA2oEcWYmVULGgIYDoZkM6aNLjMRADs="
+    },
+    {
+        "name": "VSplit",
+        "type": "clipart.VSplit",
+        "category": "clipart",
+        "icon": "resources/images/vsplit.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1v///zMzM////yH5BAEAAAMALAAAAAAQABAAAAIxnI+pwi16BJjzwSGDBhbm3S3Axl3YKJVXloYJW5mw6qEBLWq3i3y7PAIBKbiXg4EoAAA7"
+    },
+    {
+        "name": "X",
+        "type": "clipart.X",
+        "category": "clipart",
+        "icon": "resources/images/X.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAAHx8fDMzM////wAAACH5BAEAAAIALAAAAAAQABAAAAImlI9pAYoQDGxuHpvwZY8rrH1MWAWes53oRHZUK4Rkq8Gxp4roXgAAOw=="
+    },
+                {
+        "name": "Android_340x480",
+        "type": "clipart.Android_340x480",
+        "category": "clipart",
+        "allowedChild": "ANY",
+        "helper": "./clipart/Android_340x480Helper",
+        "icon": "resources/images/android.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM/SBrT3kFJ9mqUI4DNN5PEAAhkSQIDKJomqo7smWJw7NKx/ObCraw5X6jGEmY6nQ+mwgRRmBAQIUCtWqXYLCEBADs="
+    },
+    {
+        "name": "Android_480x800",
+        "type": "clipart.Android_480x800",
+        "category": "clipart",
+        "allowedChild": "ANY",
+        "helper": "./clipart/Android_480x800Helper",
+        "icon": "resources/images/android.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM/SBrT3kFJ9mqUI4DNN5PEAAhkSQIDKJomqo7smWJw7NKx/ObCraw5X6jGEmY6nQ+mwgRRmBAQIUCtWqXYLCEBADs="
+    },
+    {
+        "name": "AndroidTablet",
+        "type": "clipart.AndroidTablet",
+        "category": "clipart",
+        "allowedChild": "ANY",
+        "helper": "./clipart/AndroidTabletHelper",
+        "icon": "resources/images/android.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM/SBrT3kFJ9mqUI4DNN5PEAAhkSQIDKJomqo7smWJw7NKx/ObCraw5X6jGEmY6nQ+mwgRRmBAQIUCtWqXYLCEBADs="
+    },
+    {
+        "name": "Blackberry",
+        "type": "clipart.Blackberry",
+        "category": "clipart",
+        "allowedChild": "ANY",
+        "helper": "./clipart/BlackberryHelper",
+        "icon": "resources/images/blackberry.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAANXV1mVjY////0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM8SKox7mFJ0t6Lk9iddQAg2HQDIJwnMJAmKqis+65ZKcN1i+KT7fIS347W+4QAo9rm0alsMJmAdArtWBUJADs="
+    },
+    {
+        "name": "iPad",
+        "type": "clipart.iPad",
+        "category": "clipart",
+        "allowedChild": "ANY",
+        "helper": "./clipart/iPadHelper",
+        "icon": "resources/images/ipad.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1v///0BAQP///yH5BAEAAAMALAAAAAAQABAAAAI0nIWpxgIPo2DDhYsvmA3kvFHWp3GHRwZhl6pmhZLr2c5w/Y5yHvW2AkyIFA8gpRIUHpfMAgA7"
+    },
+    {
+        "name": "iPhone",
+        "type": "clipart.iPhone",
+        "category": "clipart",
+        "allowedChild": "ANY",
+        "helper": "./clipart/iPhoneHelper",
+        "icon": "resources/images/iphone.gif",
+        "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAGZmaNXV1v///0BAQP///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAM6SErT3iu+EF5UL4/LqPfbNQRCaVbcaJ6hRK4CKr6r7MJxu6iwvX8fHUbjSDUAFEBR5AAol0wNZzpNAAA7"
+    }
+  ]
+}

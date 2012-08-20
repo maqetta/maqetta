@@ -1,4 +1,5 @@
 define([
+    "dojo/_base/lang",
 	"./Runtime",
 	"./model/Path",
 	"./workbench/ViewPart",
@@ -35,6 +36,7 @@ define([
 	"dojox/layout/ResizeHandle",
 	"dojo/i18n!davinci/workbench/nls/workbench"
 ], function(
+		lang,
 		Runtime,
 		Path,
 		ViewPart,
@@ -1520,11 +1522,12 @@ var Workbench = {
 			   }
 			});
 		
+		var actionSets;
 		var clonedActionSets = [];
 		if (actionSetIDs.length) {
-		   var actionSets=Runtime.getExtensions("davinci.actionSets",
+		   actionSets = Runtime.getExtensions("davinci.actionSets",
 				function (extension) {
-			   		return actionSetIDs.some(function(setID) { return setID == extension.id; });
+					return actionSetIDs.some(function(setID) { return setID == extension.id; });
 				});
 		   if (actionSets.length) {
 			   // Determine if any widget libraries have indicated they want to augment the actions in
@@ -1532,14 +1535,15 @@ var Workbench = {
 			   dojo.forEach(actionSets, function(actionSet) {
 				   var libraryActions = metadata.getLibraryActions(actionSet.id);
 				   if (libraryActions.length) {
-					   // We want to augment the action list, so let's clone the
+					   // We want to augment the action list, so let's copy the
 					   // action set before pushing new items onto the end of the
-					   // array
-					   clonedActionSet = dojo.clone(actionSet);
+					   // array.
+					   var actionSetCopy = lang.mixin({}, actionSet);			// shallow obj copy
+					   actionSetCopy.actions = [].concat(actionSet.actions);	// copy array
 					   dojo.forEach(libraryActions, function(libraryAction) {
-						   clonedActionSet.actions.push(libraryAction);
+						   actionSetCopy.actions.push(libraryAction);
 					   });
-					   clonedActionSets.push(clonedActionSet);
+					   clonedActionSets.push(actionSetCopy);
 				   } else {
 					   // No modifications to the actionSet, so just push as is
 					   clonedActionSets.push(actionSet);
@@ -1547,7 +1551,7 @@ var Workbench = {
 			   });
 			}
 		}
-		return {actionSets:actionSets, clonedActionSets:clonedActionSets};
+		return { actionSets: actionSets, clonedActionSets: clonedActionSets};
 	},
 
 	_initActionsKeys: function(actionSets, args) {
@@ -1687,7 +1691,9 @@ var Workbench = {
 				editor: newEditor,
 				oldEditor: oldEditor
 			}]);
-		} catch (ex) {console.error(ex);}
+		} catch (ex) {
+			console.error(ex);
+		}
 		Workbench._updateTitle(newEditor);
 	
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;

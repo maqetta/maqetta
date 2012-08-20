@@ -49,15 +49,20 @@ define(["dojo/_base/declare",
 			this.libraries = {};
 			/* build UI table */
 			for(var i =0;i<this._userLibs.length;i++){
-				
 				this._userLibs[i].initRoot = this._getLibRoot(this._userLibs[i].id,this._userLibs[i].version);
 				var name = this._userLibs[i].id; // may want to use a better name here eventually
 				
 				if(this._userLibs[i].initRoot==null) {
 					continue;
 				}
-
-				uiArray.push("<tr>");
+				
+				if(this._userLibs[i].required){
+					uiArray.push("<tr style='display:none'>");
+					
+				}else{
+					uiArray.push("<tr>");
+				}
+				
 				uiArray.push("<td class='columna'>" + name + "</td>");
 				uiArray.push("<td class='columnb'>" + this._userLibs[i].version + "</td>");
 				uiArray.push("<td class='columnc'><input type='checkbox' libItemCheck='"+ i +"' checked></input></td>");

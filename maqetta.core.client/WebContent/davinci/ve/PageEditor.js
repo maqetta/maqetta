@@ -4,14 +4,14 @@ define([
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"dojo/dnd/Moveable",
-	"davinci/Runtime",
+	"../Runtime",
 	"../commands/CommandStack",
 	"../html/ui/HTMLEditor",
 	"../model/Path",
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
-	"dojo/i18n!davinci/ve/nls/ve"
+	"dojo/i18n!./nls/ve"
 ], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, 	Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {

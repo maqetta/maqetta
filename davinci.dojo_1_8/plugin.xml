@@ -12,11 +12,11 @@
             <metadata location="app/metadata/dojo/1.8" />
    	
          </ajaxLibrary>
-         <ajaxLibrary name="dojo-src" id="dojo-src" version="1.8">
+         <ajaxLibrary name="dojo-src" id="dojo-src" version="1.8" required="true">
             <libraryPath location="WebContent/dojo-src" name="/lib/dojo"></libraryPath>
             <metadata location="app/metadata/dojo/1.8" />
          </ajaxLibrary>
-        <ajaxLibrary name="dojo based themes" id="DojoThemes" version="1.8">
+        <ajaxLibrary name="dojo based themes" id="DojoThemes" version="1.8" required="true">
 	         <libraryPath location="WebContent/maqetta/themes" name="/themes"></libraryPath>
 	    </ajaxLibrary>
       </extension>

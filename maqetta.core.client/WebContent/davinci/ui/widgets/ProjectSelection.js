@@ -1,27 +1,29 @@
 define(["dojo/_base/declare",
         "dijit/_WidgetBase",
         "system/resource",
-		"davinci/ui/widgets/ProjectDataStore",
-		"dijit/form/ComboBox",
+		"dijit/form/Select",
 		"davinci/Workbench"
-  ],function(declare, _WidgetBase, Resource, ProjectDataStore, ComboBox, Workbench){
+  ],function(declare, _WidgetBase, Resource, Select, Workbench){
 
 	return declare("davinci.ui.widgets.ProjectSelection", _WidgetBase, {
 
 		postCreate: function(){
-			this._store = new ProjectDataStore({});
-
 			Resource.listProjects(dojo.hitch(this, function(projects){
-				this._store.setValues(projects);
 				this.value = Workbench.getProject();
 				this._allProjects = projects.map(function(project){ return project.name; });
+			//	this.combo.startup();
+				this.domNode.removeAttribute("dojoType");
+				var items = [];
+				dojo.forEach(projects, dojo.hitch(this,function(v){
+					items.push({label: v.name, value: v.name});
+				}));
+				
+				this.combo = new Select({ style: "width:100%", options:items});
+				this.domNode.appendChild(this.combo.domNode);
+				this.combo.set('value', this.value);
+				dojo.connect(this.combo, "onChange", this, "_onChange");
+					
 			}));
-
-			this.domNode.removeAttribute("dojoType");
-			this.combo = new ComboBox({store: this._store, required: false, style: "width:100%"});
-			this.domNode.appendChild(this.combo.domNode);
-			this.combo.set('value', this.value);
-			dojo.connect(this.combo, "onChange", this, "_onChange");
 		},
 		
 		onChange: function(){

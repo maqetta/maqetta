@@ -227,7 +227,10 @@ public class LibraryManager implements ILibraryManager {
 				libInfo = new BundleLibraryInfo(id, version);
 				this.installedLibraries[count] = libInfo;
 			}
-
+			String required = libraryElement
+					.getAttribute(IDavinciServerConstants.EP_ATTR_REQUIRED);
+			((BundleLibraryInfo) libInfo).setRequired(required);
+			
 			IConfigurationElement[] libraryPathElements = libraryElement
 					.getChildren(IDavinciServerConstants.EP_TAG_LIBRARYPATH);
 
@@ -238,17 +241,18 @@ public class LibraryManager implements ILibraryManager {
 						.getAttribute(IDavinciServerConstants.EP_ATTR_LIBRARYPATH_LOCATION);
 				((BundleLibraryInfo) libInfo).setBasePath(bundlePath,
 						virtualPath);
+				
 			}
 			if (libInfo instanceof BundleLibraryInfo) {
 				((BundleLibraryInfo) libInfo).bundleBase = getLibraryBundle(libraryElement);
 			}
 
-			IConfigurationElement[] meta = libraryElement
-					.getChildren("metadata");
+			IConfigurationElement[] meta = libraryElement.getChildren("metadata");
 			for (int i = 0; i < meta.length; i++) {
 				libInfo.setMetadataPath(meta[i].getAttribute("location"));
 			}
-
+			
+			
 			// libInfo.setMetadata( new MetaData(libraryElement));
 		}
 

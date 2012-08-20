@@ -7,9 +7,8 @@
       </extension>
       <extension
             point="maqetta.core.server.ajaxLibrary" >
-          <ajaxLibrary name="html" id="html" version="0.8">
+          <ajaxLibrary name="html" id="html" version="0.8" required="true">
             <libraryPath
-            
                 location="WebContent/html">
             </libraryPath>
            <metadata location="app/metadata/html/0.8" />

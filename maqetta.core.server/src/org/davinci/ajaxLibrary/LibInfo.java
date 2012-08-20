@@ -2,11 +2,12 @@ package org.davinci.ajaxLibrary;
 
 public class LibInfo implements ILibInfo {
     
-	public LibInfo(String id, String name, String version, String virtualRoot) {
+	public LibInfo(String id, String name, String version, String virtualRoot, String required) {
         this.setName(name);
         this.setVersion(version);
         this.setId(id);
         this.setVirtualRoot(virtualRoot);
+        this.setRequired(required);
        
 
     }
@@ -75,6 +76,19 @@ public class LibInfo implements ILibInfo {
     private String version;
     private String id;
     private String virtualRoot;
+    private String isRequired;
+	public String isRequired() {
+		return this.isRequired;
+	}
+	public void setRequired(String required) {
+		this.isRequired = required;
+	}
+
+
+	public String getRequired() {
+		
+		return this.isRequired;
+	}
 
 
 }

@@ -164,11 +164,17 @@ return declare(CreateTool, {
 	
 	addPasteCreateCommand: function(command, args) {
 		this._context = this._data.context;
-		var store = this._data.properties.store;
-		var storeId = store.id ? store.id : store._edit_object_id;
-		var storeWidget = Widget.byId(storeId);
-		var storeData = storeWidget.getData();
-		this._data = [storeData, this._data];
+		
+		// Look for cut/copied store data to associate with the base widget, and build up
+		// an array of data items
+		if (this._data.associatedCopiedWidgetData) {
+			var data = [];
+			dojo.forEach(this._data.associatedCopiedWidgetData, function(associatedDataItem) {
+				data.push(associatedDataItem);
+			});
+			data.push(this._data);
+			this._data = data;
+		}
 
 		var deferred = new Deferred();
 

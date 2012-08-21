@@ -655,11 +655,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		}
 		promises.push(this._context.loadRequires(data.type, true));
 		if(data.children && !dojo.isString(data.children)){
-			if(!dojo.every(data.children, function(c){
-				return this._loadType(c, promises);
-			})){
-				return false;
-			}
+			dojo.forEach(data.children, function(c){
+				this._loadType(c, promises);
+			}.bind(this));
 		}
 		return true;
 	},

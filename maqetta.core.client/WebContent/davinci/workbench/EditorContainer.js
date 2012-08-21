@@ -3,12 +3,14 @@ define([
 	"dojo/_base/declare",
 	"./_ToolbaredContainer",
 	"../Runtime",
-	"../Workbench",
+//	"../Workbench",
 	"../ve/metadata",
 	"../ve/utils/GeomUtils",
 	"dojo/Deferred",
 	"dojo/i18n!./nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, Workbench, Metadata, GeomUtils, Deferred, workbenchStrings) {
+], function(require, declare, ToolbaredContainer, Runtime, /*Workbench, */Metadata, GeomUtils, Deferred, workbenchStrings) {
+
+var _editorToolbarCreationStarted = {}, _editorToolbarCreated = {};
 
 return declare(ToolbaredContainer, {
 
@@ -20,13 +22,9 @@ return declare(ToolbaredContainer, {
 			if(event.editor == this.editor){
 				this.updateToolbars();
 			}
-		}.bind(this));
-		this.subscribe("/davinci/ui/widgetSelected", function(widgets){
-			this.updateToolbars();
-		}.bind(this));
-		this.subscribe("/davinci/workbench/ready", function(widgets){
-			this.updateToolbars();
-		}.bind(this));
+		});
+		this.subscribe("/davinci/ui/widgetSelected", this.updateToolbars);
+		this.subscribe("/davinci/workbench/ready", this.updateToolbars);
 	},
 	
 	layout: function() {
@@ -65,7 +63,12 @@ return declare(ToolbaredContainer, {
 					this._createToolbar(editorExtension.editorClass);
 					if (!content) {
 						content=editor.getDefaultContent();
-						editor.isDirty=!editor.isReadOnly;
+						if (editor.isReadOnly || !file.isNew) {
+							// if readonly or not a new file, not dirty if we have no content
+							editor.isDirty = false;
+						} else {
+							editor.isDirty = true;
+						}
 						editor.lastModifiedTime=Date.now();
 					}
 					if (!content) {
@@ -87,16 +90,16 @@ return declare(ToolbaredContainer, {
 						dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 					}else{
 						// When tab is selected, set up the editor
-						var handle = dojo.subscribe(editorsContainer + "-selectChild", null, function(args){
+						var handle = dojo.subscribe(editorsContainer + "-selectChild", this, function(args){
 							if(editor==args.editor){
 								dojo.unsubscribe(handle);
-								editor.setContent(fileName,content);
+								editor.setContent(fileName, content);
 
 								// keyboard bindings
 								this._setupKeyboardHandler();
 								dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 							}
-						}.bind(this));
+						});
 					}
 					editor.editorContainer=this;
 					this.setDirty(editor.isDirty);
@@ -109,7 +112,9 @@ return declare(ToolbaredContainer, {
 						} catch (e2) {
 							d.reject(e2);
 						}
-					}.bind(this));
+					}, function(e){
+						d.reject(e);
+					});
 				}else{
 					//setupEditor.bind(this);
 					setupEditor();
@@ -129,7 +134,8 @@ return declare(ToolbaredContainer, {
 			if (isDirty){
 				title="*"+title;
 			}
-			davinci.Workbench.editorTabs.setTitle(this,title);
+			var Workbench = require("../Workbench");
+			Workbench.editorTabs.setTitle(this,title);
 		//}
 		this.lastModifiedTime=Date.now();
 		this.isDirty = isDirty;
@@ -186,7 +192,7 @@ return declare(ToolbaredContainer, {
 	 * editor tab, usually in response to user clicking on "x" close icon.
 	 */
 	onClose: function(){
-		var dirtyCheck = this._skipDirtyCheck ? false : true;
+		var dirtyCheck = !this._skipDirtyCheck;
 		return this._close(this.editor, dirtyCheck);
 	},
 	/* forceClose is where daVinci actively removes a child editor.
@@ -203,7 +209,7 @@ return declare(ToolbaredContainer, {
 	_getViewActions: function() {
 		var editorID=this.editorExtension.id;
 		var editorActions=[];
-		var extensions = davinci.Runtime.getExtensions('davinci.editorActions', function(ext){
+		var extensions = Runtime.getExtensions('davinci.editorActions', function(ext){
 			if (editorID==ext.editorContribution.targetID)
 			{
 				editorActions.push(ext.editorContribution);
@@ -211,7 +217,7 @@ return declare(ToolbaredContainer, {
 			}
 		});
 		if (editorActions.length == 0) {
-			var extensions = davinci.Runtime.getExtension('davinci.defaultEditorActions', function(ext){
+			var extensions = Runtime.getExtension('davinci.defaultEditorActions', function(ext){
 				editorActions.push(ext.editorContribution);
 				return true;
 			});
@@ -224,14 +230,15 @@ return declare(ToolbaredContainer, {
 			// action set before pushing new items onto the end of the
 			// array
 			dojo.forEach(libraryActions, function(libraryAction) {
+				var Workbench = require("../Workbench");
 				if(libraryAction.action){
-					davinci.Workbench._loadActionClass(libraryAction);
+					Workbench._loadActionClass(libraryAction);
 				}
 				if(libraryAction.menu){
 					for(var i=0; i<libraryAction.menu.length; i++){
 						var subAction = libraryAction.menu[0];
 						if(subAction.action){
-							davinci.Workbench._loadActionClass(subAction);
+							Workbench._loadActionClass(subAction);
 						}
 					}
 				}
@@ -247,27 +254,27 @@ return declare(ToolbaredContainer, {
 	},
 
 	_setupKeyboardHandler: function() {
-		var that = this;
-		function pushBinding(o){
-			if (!that.keyBindings) {
-				that.keyBindings = [];
+		var pushBinding = function(o){
+			if (!this.keyBindings) {
+				this.keyBindings = [];
 			}
-			that.keyBindings.push(o);
-		}
-		dojo.forEach(this._getViewActions(), dojo.hitch(this, function(actionSet) {
-			dojo.forEach(actionSet.actions,  dojo.hitch(this, function(action) {
+			this.keyBindings.push(o);
+		}.bind(this);
+
+		this._getViewActions().forEach(function(actionSet) {
+			actionSet.actions.forEach(function(action) {
 				if (action.keyBinding) {
 					pushBinding({keyBinding: action.keyBinding, action: action});
 				}
-				if(action.menu){
-					dojo.forEach(action.menu, dojo.hitch(this, function(menuItemObj) {
-						if(menuItemObj.keyBinding){
+				if (action.menu) {
+					action.menu.forEach(function(menuItemObj) {
+						if (menuItemObj.keyBinding) {
 							pushBinding({keyBinding: menuItemObj.keyBinding, action: menuItemObj});
 						}
-					}));
+					}, this);
 				}
-			}));
-		}));
+			}, this);
+		}, this);
 	},
 
 	_handleKeyDown: function(e, isGlobal) {
@@ -281,24 +288,21 @@ return declare(ToolbaredContainer, {
 	},
 
 	_handleKey: function(e, isGlobal) {
-		var stopEvent = false;
-
 		if (!this.keyBindings) {
 			return false;
 		}
 
-		var context = this.editor ? (this.editor.getContext ? this.editor.getContext() : null) : null;
-
-		stopEvent = dojo.some(this.keyBindings, dojo.hitch(this, function(globalBinding) {
+		var stopEvent = this.keyBindings.some(function(globalBinding) {
 			if (isGlobal && !globalBinding.keyBinding.allowGlobal) {
 				return;
 			}
 
 			if (Runtime.isKeyEqualToEvent(globalBinding.keyBinding, e)) {
-				davinci.Workbench._runAction(globalBinding.action, this.editor, globalBinding.action.id);
+				var Workbench = require("../Workbench");
+				Workbench._runAction(globalBinding.action, this.editor, globalBinding.action.id);
 				return true;
 			}
-		}));
+		}, this);
 
 		if (stopEvent) {
 			dojo.stopEvent(e);
@@ -394,13 +398,10 @@ return declare(ToolbaredContainer, {
 	 * the toolbar creation logic to target the DIV with id="davinci_toolbar_container"
 	 */
 	_createToolbar: function(editorClass){
-		if(!davinci.Workbench._editorToolbarCreationStarted){
-			davinci.Workbench._editorToolbarCreationStarted = {};
-		}
-		if(this.toolbarCreated(editorClass) || davinci.Workbench._editorToolbarCreationStarted[editorClass]){
+		if(this.toolbarCreated(editorClass) || _editorToolbarCreationStarted[editorClass]){
 			return;
 		}
-		davinci.Workbench._editorToolbarCreationStarted[editorClass] = true;
+		_editorToolbarCreationStarted[editorClass] = true;
 		this.inherited(arguments);
 	},
 	
@@ -420,14 +421,10 @@ return declare(ToolbaredContainer, {
 	 * @returns {boolean}  Whether toolbar has been created
 	 */
 	toolbarCreated: function(editorClass, toolbar){
-		if(!davinci.Workbench._editorToolbarCreated){
-			davinci.Workbench._editorToolbarCreated = {};
-		}
 		if(arguments.length > 1){
-			davinci.Workbench._editorToolbarCreated[editorClass] = toolbar;
+			_editorToolbarCreated[editorClass] = toolbar;
 		}
-		return davinci.Workbench._editorToolbarCreated[editorClass];
+		return _editorToolbarCreated[editorClass];
 	}
-
 });
 });

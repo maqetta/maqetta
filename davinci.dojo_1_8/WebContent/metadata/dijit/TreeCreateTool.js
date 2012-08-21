@@ -135,6 +135,7 @@ return declare(CreateTool, {
 		// Look for cut/copied store data to associate with the base widget, and build up
 		// an array of data items
 		if (this._data.associatedCopiedWidgetData) {
+			//FIXME: use concat instead of forEach/push
 			var data = [];
 			dojo.forEach(this._data.associatedCopiedWidgetData, function(associatedDataItem) {
 				data.push(associatedDataItem);
@@ -145,7 +146,7 @@ return declare(CreateTool, {
 
 		var deferred = new Deferred();
 
-		this._loadRequires().then(dojo.hitch(this, function(results) {
+		this._loadRequires().then(function(results) {
 			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
 				command.add(this._getCreateCommand(args));
@@ -155,19 +156,15 @@ return declare(CreateTool, {
 			} else {
 				console.log("TreeCreateTool:_loadRequires failed to load all requires");
 			}
-		}.bind(this)));
+		}.bind(this));
 
 		return deferred.promise;
 	},
 
 	_loadRequires: function() {
-		var promises = new Array();
-
-		dojo.forEach(this._data, function(item) {
-			promises.push(this._context.loadRequires(item.type, true));
-		}.bind(this));
-
-		return all(promises);
+		return all(this._data.map(function(item) {
+			return this._context.loadRequires(item.type, true);
+		}, this));
 	}
 });
 

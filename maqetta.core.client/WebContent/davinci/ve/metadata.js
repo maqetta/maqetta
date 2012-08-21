@@ -26,6 +26,8 @@ define([
     // Ensures page editors don't start processing until all callback.js files are ready
     	deferredGets = [],
 
+        libExtends = {},
+
     	defaultProperties = {
 	        id: {datatype: "string", hidden: true},
 	        lang: {datatype: "string", hidden: true},
@@ -247,7 +249,62 @@ define([
         require = require({
             packages: packages
         });
+
+        // handle "extend"
+        if (wm.extend) {
+            for (var lib_name in wm.extend) {
+                if (wm.extend.hasOwnProperty(lib_name)) {
+                    if (libraries[lib_name] && libraries[lib_name].$wm) {
+                        handleLibExtends(libraries[lib_name].$wm, [wm.extend[lib_name]]);
+                    } else {
+                        var ext = libExtends[lib_name] || [];
+                        ext.push(wm.extend[lib_name]);
+                        libExtends[lib_name] = ext;
+                    }
+                }
+            }
+        }
+        // is another library extending this library?
+        if (libExtends[libName]) {
+            handleLibExtends(wm, libExtends[libName]);
+        }
+
         return pkg;
+    }
+
+    // Extend a "base" library metadata by doing mixin/concat of values specified
+    // by descendant library.
+    function handleLibExtends(wm, lib_extends) {
+        function concat(val1, val2) {
+            if (typeof val1 === 'string') {
+                return val1 + ',' + val2;
+            }
+            if (val1 instanceof Array) {
+                return val1.concat(val2);
+            }
+            console.error('Unhandled type for "concat()"');
+        }
+
+        var widgetTypes = wm.$providedTypes;
+        lib_extends.forEach(function(ext) {
+            for (var type in ext) if (ext.hasOwnProperty(type)) {
+                var e = ext[type];
+                var w = widgetTypes[type];
+                if (e.mixin) {
+                    lang.mixin(w, e.mixin);
+                }
+                if (e.concat) {
+                    for (var prop in e.concat) if (e.concat.hasOwnProperty(prop)) {
+                        var val = e.concat[prop];
+                        if (w[prop]) {
+                            w[prop] = concat(w[prop], val);
+                        } else {
+                            w[prop] = val;
+                        }
+                    }
+                }
+            }
+        });
     }
     
     // XXX Changed to return package, rather than widgets.json object

@@ -64,14 +64,14 @@
 			as how it was.</li>
 	</ol>
 
-	<h2 class="test_section">Cut/copy/paste/delete</h2>
+	<h2 class="test_section">Cut/Copy/Paste/Delete: Simple</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
 				Login if necessary. 
 				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
 		<li>On main menubar, choose "New HTML File" to create a new file</li>
-		<li>Drag a few widgets onto the canvas (e.g., Button, TextBox, Calendar).</li>
+		<li>Drag a few "primitive" Dojo widgets onto the canvas (e.g., Button, TextBox, Calendar).</li>
 		<li>Select one of the widgets. Click on Cut. Then click on Paste.
 			The cursor should change to a crosshair cursor. Click somewhere on canvas and the
 			widget that was cut from the document should now be pasted back in.</li>
@@ -88,6 +88,29 @@
 		<li>The Cut command should have removed the widget, and Paste added it back in.</li>
 		<li>The Copy command should not remove the widget. Paste should add a second copy.</li>
 		<li>The Delete command should have removed the widget, and Paste should not have added it back in.</li>
+	</ol>
+	
+	<h2 class="test_section">Cut/Copy/Paste/Delete: Advanced</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to a virgin user environment by creating a whole new user login.</li>
+		<li>On main menubar, choose "New HTML File" to create a new file.</li>
+		<li>On main menubar, choose "New HTML File" to create a second file.</li>
+		<li>Switch back to the first file, and drag a few "primitive" Dojo widgets onto the canvas (e.g., Button, TextBox, Calendar).</li>
+		<li>Drag at least one DataStore-based widget onto the canvas of the first file (e.g., GridX or Tree) and click OK/Finish
+			on the  smart input dialog that comes up.</li>
+		<li>Select at least one of the primitive widgets and at least one of the DataStore-based widgets.</li>
+		<li>Click on Cut and the selected widgets should be removed from the page.</li>
+		<li>Switch to the second page and click on Paste. The cursor should change to a crosshair cursor. 
+			Click somewhere on canvas and the widgets that were cut should be pasted into the 2nd document.</li>
+		<li>Save and preview the 2nd page to ensure markup for the pasted widgets is correct (especially for the DataStore-based
+			widget).</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>The Cut command should have removed the widgets from the first page, and Paste added them to the 2nd panel.</li>
 	</ol>
 
 	<h2 class="test_section">Undo/Redo</h2>

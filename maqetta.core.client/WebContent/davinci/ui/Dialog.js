@@ -1,8 +1,6 @@
 define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
-	"dijit/_TemplatedMixin",
-	"dijit/_WidgetsInTemplateMixin",
 	"dijit/_Container",
 	"dijit/form/Button",
 	"dijit/Dialog",
@@ -10,11 +8,10 @@ define([
 	"dojo/dom-style",
 	"dojo/_base/connect",
 	"dojo/window",
-	"dojo/text!./templates/Dialog.html",
 	"dojo/i18n!davinci/ve/nls/common",
 	"dojox/layout/ResizeHandle",
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, connect, winUtils,
-		dialogTemplateString, veNLS, ResizeHandle) {
+], function(declare, _WidgetBase, _Container, Button, Dialog, domGeometry, style, connect, winUtils,
+		veNLS, ResizeHandle) {
 
 var DialogClass = declare(Dialog, {
 	contentStyle: null,
@@ -208,14 +205,14 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 
 	var dialogActions = document.createElement("div");
 	dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
-	dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit"}).domNode);
+	dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit", "class": "maqPrimaryButton"}).domNode);
 
 	var _onCancel = dojo.hitch(this, function() {
 		this._timedDestroy(myDialog, handles);
 	});
 
 	if (!hideCancel) {
-		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel}).domNode);
+		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel, "class": "maqSecondaryButton"}).domNode);
 	}
 
 	newContent.appendChild(dialogActions);

@@ -489,11 +489,11 @@ var Workbench = {
 		Workbench.activePerspective = perspectiveID;
 		var menuTree = Workbench._createMenuTree();	// no params means include "everything else"
 		Workbench._updateMainMenubar(dojo.byId('davinci_main_menu'), menuTree);
-		var maq_banner_editor_commands = dojo.byId('maq_banner_editor_commands');
+
 		var o = this.getActionSets('davinci.ui.editorMenuBar');
 		var clonedActionSets = o.clonedActionSets;
-		if(clonedActionSets.length > 0){
-			var menuTree=Workbench._createMenuTree(clonedActionSets);
+		if(clonedActionSets.length){
+			menuTree = Workbench._createMenuTree(clonedActionSets);
 			Workbench._updateMainMenubar(dojo.byId('maq_banner_editor_commands'), menuTree);
 		}
 
@@ -741,16 +741,13 @@ var Workbench = {
 	},
 	
 	_updateMainMenubar: function(menuDiv, menuTree) {
-		 if (!menuDiv || !menuTree) {
-			 return;
-		 }
 		for (var i=0; i<menuTree.length; i++) {
 			var menuTreeItem = menuTree[i];
 			for (var j=0;j<menuTreeItem.menus.length;j++) {
 				var menu = menuTreeItem.menus[j];
 				var dojoMenu = Workbench._createMenu(menu);
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-				var widget =  dijit.byId(menu.id + "-dropdown");
+				var widget = dijit.byId(menu.id + "-dropdown");
 				if(!widget) {
 					var params = { label: menu.label, dropDown: dojoMenu, id: menu.id + "-dropdown" };
 					if(menu.hasOwnProperty('showLabel')){
@@ -855,11 +852,9 @@ var Workbench = {
 		if (!actionSets) {  // only get action sets not associated with part
 			actionSets =  Runtime.getExtensions("davinci.actionSets", function (actionSet) {
 				var associations = Runtime.getExtensions("davinci.actionSetPartAssociations", function(actionSetPartAssociation) {
-					if (actionSetPartAssociation.targetID == actionSet.id) {
-						return true;
-					}
+					return actionSetPartAssociation.targetID == actionSet.id;
 				});	
-				return associations.length === 0;
+				return associations.length == 0;
 			});
 		}
 		var menuTree = [];
@@ -992,8 +987,13 @@ var Workbench = {
 
 		dojoMenu.domNode.style.display = "none";
 		dojoMenu.actionContext = context;
+		this._buildMenu(dojoMenu, menus);
 		dojo.connect(dojoMenu, connectFunction, this, function(evt) {
-		   this._openMenu(dojoMenu, menus, evt).focus(); // call focus again, now that we messed with the widget contents
+			//what is this callback for?
+			if (dojoMenu._widgetCallback) {
+			  dojoMenu._widgetCallback(evt);
+			}
+//		   this._buildMenu(dojoMenu, menus, evt).focus(); // call focus again, now that we messed with the widget contents
 		});
 		return dojoMenu;
 	},
@@ -1032,17 +1032,14 @@ var Workbench = {
 		return dojo.queryToObject(searchString);
 	},
 	
-	_openMenu: function (dojoMenu,menus,evt) {
-
-		if (dojoMenu._widgetCallback) {
-		  dojoMenu._widgetCallback(evt);
-		}
+	_buildMenu: function (dojoMenu, menus) {
+		/*
 		dojo.forEach(dojoMenu.getChildren(), function(child){
 			dojoMenu.removeChild(child);
 			child.destroy();
 		});
 		dojoMenu.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
-
+		*/
 		var addSeparator,menuAdded;
 		for (var i = 0, len = menus.length; i < len; i++) {
 			if (menus[i].menus.length > 0) {
@@ -1101,7 +1098,6 @@ var Workbench = {
 			}
 		}
 
-		dojoMenu.startup();
 		return dojoMenu;
 	},
 	

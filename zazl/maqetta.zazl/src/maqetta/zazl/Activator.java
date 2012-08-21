@@ -64,7 +64,7 @@ public class Activator implements BundleActivator {
 			}
 			*/
 			String[] bundleIds = {
-				"org.json", 
+				"org.json.js", 
 				"org.dojotoolkit.server.util.js",
 				"org.dojotoolkit.optimizer.amd",
 				"org.dojotoolkit.optimizer.servlet"

@@ -9,10 +9,11 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-style",
 	"dojo/_base/connect",
+	"dojo/window",
 	"dojo/text!./templates/Dialog.html",
 	"dojo/i18n!davinci/ve/nls/common",
-	"dojox/layout/ResizeHandle"
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, connect,
+	"dojox/layout/ResizeHandle",
+], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, connect, winUtils,
 		dialogTemplateString, veNLS, ResizeHandle) {
 
 var DialogClass = declare(Dialog, {
@@ -56,9 +57,6 @@ var DialogClass = declare(Dialog, {
 			if (c.h) {
 				dojo.style(contentArea, "height", c.h+"px");
 			}
-
-			this._size();
-
 			// resize children
 			dojo.forEach(this.getChildren(), dojo.hitch(this, function(child) {
 					if (child.resize) {
@@ -83,18 +81,27 @@ var DialogClass = declare(Dialog, {
 					r.h = parseInt(this.contentStyle.height);
 				}
 
-				// if the dialog is smaller than the dimensions, it means we need to
-				// shrink the contents
-				var dialogDimensions = domGeometry.getContentBox(this.domNode);
-				if (r.h > dialogDimensions.h) {
-					r.h = dialogDimensions.h-1;
+				var viewport = winUtils.getBox(this.ownerDocument);
+				viewport.w *= this.maxRatio;
+				viewport.h *= this.maxRatio;
+
+				if (r.h > viewport.h) {
+					var containerSize = domGeometry.position(this.containerNode),
+						w = Math.min(r.w, viewport.w) - (r.w - containerSize.w),
+						h = Math.min(r.h, viewport.h) - (r.h - containerSize.h);
+						r.h = viewport.h;
 				}
 
 				this.resize(r);
 			}
 
 			// reposition after changing sizes
+			this._size();
 			this._position();
+
+			// clear any containerNode specific dimensions ot make resize work
+			dojo.style(this.containerNode, "width", "auto");
+			dojo.style(this.containerNode, "height", "auto");
 
 //			this.layout();  //TODO: method disappeared in 1.8.0b1
 		}

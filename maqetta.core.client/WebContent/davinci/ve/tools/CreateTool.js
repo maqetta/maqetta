@@ -583,25 +583,11 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	_create: function(args){
 		var context = this._context,
 			promises = [],
-			d = new Deferred();
-		var loadType = function(data){
-			if(!data || !data.type){
-				return false;
-			}
-			promises.push(context.loadRequires(data.type, true));
-			if(data.children && !dojo.isString(data.children)){
-				if(!dojo.every(data.children, function(c){
-					return loadType(c);
-				})){
-					return false;
-				}
-			}
-			return true;
-		};
+			deferred = new Deferred();
 
-		if(!loadType(this._data)){
-			d.reject();
-			return d;
+		if(!this._loadType(this._data, promises)){
+			deferred.reject();
+			return deferred;
 		}
 
 		all(promises).then(function(){
@@ -614,7 +600,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				w = this._widget;
 			}
 			if(!w){
-				d.reject(new Error("Failed to create widget"));
+				deferred.reject(new Error("Failed to create widget"));
 			}
 	
 			var command = new davinci.commands.CompoundCommand();
@@ -658,9 +644,24 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			var w = Widget.byId(w_id);
 			this._select(w);
 			this._widget = w;
-			d.resolve(w);
+			deferred.resolve(w);
 		}.bind(this));
-		return d;
+		return deferred;
+	},
+	
+	_loadType: function(data, promises){
+		if(!data || !data.type){
+			return false;
+		}
+		promises.push(this._context.loadRequires(data.type, true));
+		if(data.children && !dojo.isString(data.children)){
+			if(!dojo.every(data.children, function(c){
+				return this._loadType(c, promises);
+			})){
+				return false;
+			}
+		}
+		return true;
 	},
 	
 	/* 

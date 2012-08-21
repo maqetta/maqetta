@@ -35,27 +35,23 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 	
 	_create: function(args){
 		var index = args.index,
-			baseline,
 			delta,
 			position,
 			command = new CompoundCommand(),
 			first_c,
-			newWidgets = [];
+			newWidgets = [],
+			mainDeferred = new Deferred(),
+			mainPromises;
 
-		var promise = all(this._data.map(function(d){
-			// see loadType in CreateTool.  find common approach?
-			var loadRequiresForTree = dojo.hitch(this, function(d){
-				if (d.type) { // structure has plain 'string' nodes which don't have type or children
-					if(d.children && d.children instanceof Array){ // sometimes children is just a string also
-						return all(d.children.map(loadRequiresForTree, this));
-					}
-					return this._context.loadRequires(d.type, true, true);
-				} else {
-					return new Deferred().resolve(); // no-op
-				}
-			});
-			
-			return loadRequiresForTree(d).then(function(){
+		var mainPromises = this._data.map(function(d){
+			var dDeferred = new Deferred();
+			var	dLoadTypePromises = [];
+			if(!this._loadType(d, dLoadTypePromises)){
+				dDeferred.reject();
+				return dDeferred;
+			}
+
+			all(dLoadTypePromises).then(function(){
 				var styleArray = widget.parseStyleValues(d.properties && d.properties.style);
 				if(this._position_prop == "absolute"){
 					var left = parseInt(widget.retrieveStyleProperty(styleArray, 'left', '0px'));
@@ -77,6 +73,27 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 				}
 
 				dojo.withDoc(this._context.getDocument(), function(){
+					// gets called whenever all nessesary commands have been added to command
+					var _continue = function(newidget) {
+						if (index !== undefined && index >= 0) {
+							index++;
+						}
+
+						newWidgets.push(newidget);
+
+						if (position) {
+							var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
+							command.add(new StyleCommand(newidget, [{position: 'absolute'},{'z-index': absoluteWidgetsZindex}]));
+							var moveCommand = new MoveCommand(newidget, position.x, position.y, first_c, null, null, first_c /* disable snapping*/);
+							if(!first_c){
+								first_c = moveCommand;
+							}
+							command.add(moveCommand);
+						}
+						
+						dDeferred.resolve();
+					};
+					
 					d.context = this._context;
 					metadata.getHelper(d.type, "tool").then(function(ToolCtor) {
 						var w,
@@ -90,68 +107,51 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 						if (myTool && myTool.addPasteCreateCommand) {
 							var myArgs = {
 								parent: args.parent || this._context.getContainerNode(),
-				        position: position,
-				        index: index
-				      };
+								position: position,
+								index: index
+							};
 
-				      // returns a deferred
-				      myTool.addPasteCreateCommand(command, myArgs).then(function(w) {
+							// returns a deferred
+							myTool.addPasteCreateCommand(command, myArgs).then(function(w) {
 								if (!w) {
-									return;
+									dDeferred.reject();
+									return dDeferred;
 								}
 
-				      	_continue(w);
-				      })
+								_continue(w);
+							});
 						} else {
 							w = widget.createWidget(d);
-				      if (!w) {
-								return;
+							if (!w) {
+								dDeferred.reject();
+								return dDeferred;
 							}
 
 							command.add(new AddCommand(w, args.parent || this._context.getContainerNode(), index));
 							_continue(w);
 						}
-	
-						// gets called whenever all nessesary commands have been added to command
-						function _continue(newidget) {
-							if (index !== undefined && index >= 0) {
-								index++;
-							}
-	
-							newWidgets.push(newidget);
-	
-							if (position) {
-								var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
-								command.add(new StyleCommand(newidget, [{position: 'absolute'},{'z-index': absoluteWidgetsZindex}]));
-								var moveCommand = new MoveCommand(newidget, position.x, position.y, first_c, null, null, first_c /* disable snapping*/);
-								if(!first_c){
-									first_c = moveCommand;
-								}
-								command.add(moveCommand);
-							}
-
-		/*
-						selection.push(w);
-	
-						if(!command.isEmpty()){
-							this._context.getCommandStack().execute(command);
-							dojo.forEach(selection, function(w, i){
-								this._context.select(w, i > 0);
-							}, this);
-						}
-	*/
-						}
 					}.bind(this));
-				}, this);
+				}.bind(this));
 			}.bind(this));
-		}, this)).then(function(){
+			
+			return dDeferred;
+			
+		}.bind(this));
+			
+			
+		all(mainPromises).then(function(){
 			if(!command.isEmpty()){
 				this._context.getCommandStack().execute(command);
-				newWidgets.forEach(function(w, i){
-					this._context.select(w, i > 0);
-				}, this);
-			}			
+				setTimeout(function() { 
+					newWidgets.forEach(function(w, i){
+						this._context.select(w, i > 0);
+					}.bind(this));
+				}.bind(this), 0);
+			}	
+			mainDeferred.resolve();
 		}.bind(this));
+
+		return mainDeferred;
 	},
 
 	/**

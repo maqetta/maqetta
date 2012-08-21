@@ -146,7 +146,7 @@ return declare(CreateTool, {
 		var deferred = new Deferred();
 
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-			if (!dojo.some(results, function(arg){return !arg})) {
+			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
 				command.add(this._getCreateCommand(args));
 				
@@ -161,11 +161,11 @@ return declare(CreateTool, {
 	},
 
 	_loadRequires: function() {
-		var promises = [];
+		var promises = new Array();
 
-		promises.push(this._context.loadRequires(this._data[0].type, true));
-		promises.push(this._context.loadRequires(this._data[1].type, true));
-		promises.push(this._context.loadRequires(this._data[2].type, true));
+		dojo.forEach(this._data, function(item) {
+			promises.push(this._context.loadRequires(item.type, true));
+		}.bind(this));
 
 		return all(promises);
 	}

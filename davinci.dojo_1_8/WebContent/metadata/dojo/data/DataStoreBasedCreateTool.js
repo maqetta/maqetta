@@ -50,6 +50,7 @@ return declare(CreateTool, {
 		}));
 	},
 	
+	//We're making _getCreateCommand async here to support _augmentWidgetCreationProperties (for GridX)
 	_getCreateCommand: function(args) {
 		var deferred = new Deferred();
 
@@ -162,8 +163,6 @@ return declare(CreateTool, {
 	},
 	
 	addPasteCreateCommand: function(command, args) {
-		
-		
 		this._context = this._data.context;
 		var store = this._data.properties.store;
 		var storeId = store.id ? store.id : store._edit_object_id;

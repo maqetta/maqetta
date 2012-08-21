@@ -579,10 +579,15 @@ define(["dojo/_base/declare",
 	
 		
 		_updateCascadeList : function(){
+			
+			if(this._setFieldValue){
+				/*
+				 * Clear the old value in case we have no new value to set.
+				 * This happends often in theme editor
+				 */
+				this._setFieldValue("",null);
+			}
 			if(!this._widget || !this._widget.domNode){
-				if(this._setFieldValue){
-					this._setFieldValue("",null);
-				}
 				dojo.addClass(this.container,"dijitHidden");
 				return;
 			}

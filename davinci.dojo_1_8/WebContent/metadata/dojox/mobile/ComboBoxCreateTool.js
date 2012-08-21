@@ -111,9 +111,16 @@ return declare(CreateTool, {
 		var storeWidget = Widget.byId(values.storeId);
 		var storeData = storeWidget.getData();
 		var data = [];
-		data[0] = storeData;
-		data[1] = this._data;
-		this._data = data;
+
+		if (this._data.associatedCopiedWidgetData) {
+			//FIXME: use concat instead of forEach/push
+			var data = [];
+			dojo.forEach(this._data.associatedCopiedWidgetData, function(associatedDataItem) {
+				data.push(associatedDataItem);
+			});
+			data.push(this._data);
+			this._data = data;
+		}
 
 		var deferred = new Deferred();
 
@@ -133,12 +140,9 @@ return declare(CreateTool, {
 	},
 
 	_loadRequires: function() {
-		var promises = [];
-
-		promises.push(this._context.loadRequires(this._data[0].type, true));
-		promises.push(this._context.loadRequires(this._data[1].type, true));
-
-		return all(promises);
+		return all(this._data.map(function(item) {
+			return this._context.loadRequires(item.type, true);
+		}, this));
 	}
 
 });

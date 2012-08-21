@@ -131,22 +131,23 @@ return declare(CreateTool, {
 	
 	addPasteCreateCommand: function(command, args){
 		this._context = this._data.context;
-		var model = this._data.properties.model;
-		var modelWidget = Widget.byId(model.id);
-		var modelData = modelWidget.getData();
-		var storeId = model.store.id ? model.store.id : model.store._edit_object_id;
-		var storeWidget = Widget.byId(storeId);
-		var storeData = storeWidget.getData();
-		var data = [];
-		data[0] = storeData;
-		data[1] = modelData;
-		data[2] = this._data;
-		this._data = data;
+		
+		// Look for cut/copied store data to associate with the base widget, and build up
+		// an array of data items
+		if (this._data.associatedCopiedWidgetData) {
+			//FIXME: use concat instead of forEach/push
+			var data = [];
+			dojo.forEach(this._data.associatedCopiedWidgetData, function(associatedDataItem) {
+				data.push(associatedDataItem);
+			});
+			data.push(this._data);
+			this._data = data;
+		}
 
 		var deferred = new Deferred();
 
-		this._loadRequires().then(dojo.hitch(this, function(results) {
-			if (!dojo.some(results, function(arg){return !arg})) {
+		this._loadRequires().then(function(results) {
+			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
 				command.add(this._getCreateCommand(args));
 				
@@ -155,19 +156,15 @@ return declare(CreateTool, {
 			} else {
 				console.log("TreeCreateTool:_loadRequires failed to load all requires");
 			}
-		}.bind(this)));
+		}.bind(this));
 
 		return deferred.promise;
 	},
 
 	_loadRequires: function() {
-		var promises = [];
-
-		promises.push(this._context.loadRequires(this._data[0].type, true));
-		promises.push(this._context.loadRequires(this._data[1].type, true));
-		promises.push(this._context.loadRequires(this._data[2].type, true));
-
-		return all(promises);
+		return all(this._data.map(function(item) {
+			return this._context.loadRequires(item.type, true);
+		}, this));
 	}
 });
 

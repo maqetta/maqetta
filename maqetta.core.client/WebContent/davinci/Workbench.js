@@ -1,5 +1,6 @@
 define([
     "dojo/_base/lang",
+    "require",
 	"./Runtime",
 	"./model/Path",
 	"./workbench/ViewPart",
@@ -29,14 +30,14 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"dojo/_base/xhr",
-	"davinci/review/model/resource/root",
-	"dojo/i18n!davinci/ve/nls/common",
+	"./review/model/resource/root",
+	"dojo/i18n!./ve/nls/common",
 	"dojo/dnd/Mover",
-	"davinci/ve/utils/GeomUtils",
-	"dojox/layout/ResizeHandle",
-	"dojo/i18n!davinci/workbench/nls/workbench"
+	"./ve/utils/GeomUtils",
+	"dojo/i18n!./workbench/nls/workbench"
 ], function(
 		lang,
+		require,
 		Runtime,
 		Path,
 		ViewPart,
@@ -70,7 +71,6 @@ define([
 		veNLS,
 		Mover,
 		GeomUtils,
-		ResizeHandle,
 		workbenchStrings
 ) {
 
@@ -406,7 +406,7 @@ var Workbench = {
 				var dojoAction;
 				var dojoActionDeferred = new Deferred();
 				if(action.menu && (action.type == 'DropDownButton' || action.type == 'ComboButton')){
-					var menu = new dijit.Menu({
+					var menu = new Menu({
 						style: "display: none;"
 					});
 					for(var ddIndex=0; ddIndex<action.menu.length; ddIndex++){
@@ -421,7 +421,7 @@ var Workbench = {
 								menuItemParms[prop] = menuItemObj[prop];
 							}
 						});
-						var menuItem = new dijit.MenuItem(menuItemParms);
+						var menuItem = new MenuItem(menuItemParms);
 						menuItem._maqAction = menuItemObj;
 						menu.addChild(menuItem);
 					}
@@ -489,11 +489,11 @@ var Workbench = {
 		Workbench.activePerspective = perspectiveID;
 		var menuTree = Workbench._createMenuTree();	// no params means include "everything else"
 		Workbench._updateMainMenubar(dojo.byId('davinci_main_menu'), menuTree);
-		var maq_banner_editor_commands = dojo.byId('maq_banner_editor_commands');
+
 		var o = this.getActionSets('davinci.ui.editorMenuBar');
 		var clonedActionSets = o.clonedActionSets;
-		if(clonedActionSets.length > 0){
-			var menuTree=Workbench._createMenuTree(clonedActionSets);
+		if(clonedActionSets.length){
+			menuTree = Workbench._createMenuTree(clonedActionSets);
 			Workbench._updateMainMenubar(dojo.byId('maq_banner_editor_commands'), menuTree);
 		}
 
@@ -507,10 +507,10 @@ var Workbench = {
 
 		if (!mainBodyContainer) {
 			mainBodyContainer = new BorderContainer({
-					gutters: false,
-					region: "center",
-					design: 'sidebar'
-				}, mainBody);
+				gutters: false,
+				region: "center",
+				design: 'sidebar'
+			}, mainBody);
 		}
 		var perspective = Runtime.getExtension("davinci.perspective",perspectiveID);
 
@@ -525,7 +525,7 @@ var Workbench = {
 					return extension.targetID === perspectiveID;
 				});
 		dojo.forEach(extensions, function (extension) {
-			// TODO: should check if view is already in perspective
+			// TODO: should check if view is already in perspective. filter + concat instead of foreach + push?
 			dojo.forEach(extension.views, function (view){ perspective.views.push(view); });
 		});
 
@@ -741,18 +741,15 @@ var Workbench = {
 	},
 	
 	_updateMainMenubar: function(menuDiv, menuTree) {
-		 if (!menuDiv || !menuTree) {
-			 return;
-		 }
 		for (var i=0; i<menuTree.length; i++) {
 			var menuTreeItem = menuTree[i];
 			for (var j=0;j<menuTreeItem.menus.length;j++) {
 				var menu = menuTreeItem.menus[j];
-				var dojoMenu = Workbench._createMenu(menu);
+				var menuWidget = Workbench._createMenu(menu);
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-				var widget =  dijit.byId(menu.id + "-dropdown");
+				var widget = dijit.byId(menu.id + "-dropdown");
 				if(!widget) {
-					var params = { label: menu.label, dropDown: dojoMenu, id: menu.id + "-dropdown" };
+					var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
 					if(menu.hasOwnProperty('showLabel')){
 						params.showLabel = menu.showLabel;
 					}
@@ -776,12 +773,12 @@ var Workbench = {
 			if (menuLen) {
 				dojo.forEach (menus, function(menu) {
 					menu.id = menu.id.replace(/\./g, "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-					var dojoMenu = Workbench._createMenu(menu),
+					var menuWidget = Workbench._createMenu(menu),
 						widget =  dijit.byId(menu.id + "-dropdown");
 					if (!widget) {
 						widget = new PopupMenuBarItem({
 							label: menu.label,
-							popup: dojoMenu,
+							popup: menuWidget,
 							id: menu.id + "-dropdown"
 						});
 					}
@@ -855,11 +852,9 @@ var Workbench = {
 		if (!actionSets) {  // only get action sets not associated with part
 			actionSets =  Runtime.getExtensions("davinci.actionSets", function (actionSet) {
 				var associations = Runtime.getExtensions("davinci.actionSetPartAssociations", function(actionSetPartAssociation) {
-					if (actionSetPartAssociation.targetID == actionSet.id) {
-						return true;
-					}
+					return actionSetPartAssociation.targetID == actionSet.id;
 				});	
-				return associations.length === 0;
+				return associations.length == 0;
 			});
 		}
 		var menuTree = [];
@@ -979,23 +974,27 @@ var Workbench = {
 	},
 
 	_createMenu: function(menu, context) {
-		var dojoMenu,menus,connectFunction;
+		var menuWidget,menus,connectFunction;
 		if (menu.menus) {  // creating dropdown
-		  dojoMenu = new Menu({parentMenu: menu });
+		  menuWidget = new Menu({parentMenu: menu });
 		  menus = menu.menus;
 		  connectFunction = "onOpen";
 		} else {	// creating popup
-			dojoMenu = new PopupMenu({});
+			menuWidget = new PopupMenu({});
 			menus = menu;
 			connectFunction="menuOpened";
 		}
 
-		dojoMenu.domNode.style.display = "none";
-		dojoMenu.actionContext = context;
-		dojo.connect(dojoMenu, connectFunction, this, function(evt) {
-		   this._openMenu(dojoMenu, menus, evt).focus(); // call focus again, now that we messed with the widget contents
+		menuWidget.domNode.style.display = "none";
+		menuWidget.actionContext = context;
+		this._rebuildMenu(menuWidget, menus);
+		dojo.connect(menuWidget, connectFunction, this, function(evt) {
+			if (menuWidget._widgetCallback) { // create popup
+				  menuWidget._widgetCallback(evt);
+			}
+			this._rebuildMenu(menuWidget, menus).focus(); // call focus again, now that we messed with the widget contents
 		});
-		return dojoMenu;
+		return menuWidget;
 	},
 	/*
 	 * running in single project mode or multi project mode
@@ -1032,30 +1031,25 @@ var Workbench = {
 		return dojo.queryToObject(searchString);
 	},
 	
-	_openMenu: function (dojoMenu,menus,evt) {
-
-		if (dojoMenu._widgetCallback) {
-		  dojoMenu._widgetCallback(evt);
-		}
-		dojo.forEach(dojoMenu.getChildren(), function(child){
-			dojoMenu.removeChild(child);
+	_rebuildMenu: function (menuWidget, menus) {
+		dojo.forEach(menuWidget.getChildren(), function(child){
+			menuWidget.removeChild(child);
 			child.destroy();
 		});
-		dojoMenu.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
+		menuWidget.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
 
-		var addSeparator,menuAdded;
-		for (var i = 0, len = menus.length; i < len; i++) {
-			if (menus[i].menus.length > 0) {
-				if (menus[i].isSeparator && i>0) {
+		var addSeparator, menuAdded;
+		menus.forEach(function(menu, i){
+			if (menu.menus.length) {
+				if (menu.isSeparator && i>0) {
 					addSeparator=true;
 				}
-				for ( var menuN = 0, menuLen = menus[i].menus.length; menuN < menuLen; menuN++) {
+				menu.menus.forEach(function(item){
 					if (addSeparator && menuAdded) {
-						dojoMenu.addChild(new MenuSeparator({}));
+						menuWidget.addChild(new MenuSeparator({}));
 						addSeparator=false;
 					}
-					menuAdded=true;
-					var item = menus[i].menus[menuN];
+					menuAdded = true;
 					var label = item.label;
 					if (item.action && item.action.getName) {
 						label = item.action.getName();
@@ -1067,8 +1061,8 @@ var Workbench = {
 							popup: subMenu,
 							id: subMenu.id + "item"
 						});
-						popupParent.actionContext = dojoMenu.actionContext;
-						dojoMenu.addChild(popupParent);
+						popupParent.actionContext = menuWidget.actionContext;
+						menuWidget.addChild(popupParent);
 					} else {
 						var enabled = true;
 						if (item.isEnabled) {
@@ -1077,32 +1071,32 @@ var Workbench = {
 						}
 
 						if (item.action) {
-							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext, {menu:dojoMenu})) {
-								continue;
+							if (item.action.shouldShow && !item.action.shouldShow(menuWidget.actionContext, {menu: menuWidget})) {
+								return;
 							}
 							//FIXME: study this code for bugs.
-							//dojoMenu.actionContext: is that always the current context?
+							//menuWidget.actionContext: is that always the current context?
 							//There were other bugs where framework objects pointed to wrong context/doc
-							enabled = item.action.isEnabled(dojoMenu.actionContext);
+							enabled = item.action.isEnabled && item.action.isEnabled(menuWidget.actionContext);
 						}
+
 						var menuArgs = {
 								label: label,
 								id: item.id,
 								disabled: !enabled,
-								onClick: dojo.hitch(this,"_runAction",item,dojoMenu.actionContext)
+								onClick: dojo.hitch(this, "_runAction", item, menuWidget.actionContext)
 						};
 						if (item.iconClass) {
 							menuArgs.iconClass = item.iconClass;
 						}
-						var menuItem1 = new MenuItem(menuArgs);
-						dojoMenu.addChild(menuItem1);
-					}
-				}
-			}
-		}
 
-		dojoMenu.startup();
-		return dojoMenu;
+						menuWidget.addChild(new MenuItem(menuArgs));
+					}
+				}, this);
+			}
+		}, this);
+
+		return menuWidget;
 	},
 	
 	_toggleButton: function(button, context, group, arg) {
@@ -1511,43 +1505,36 @@ var Workbench = {
 	},
 
 	getActionSets: function(partID){
-		var actionSetIDs=[];
+		var actionSetIDs = [];
 		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
 			function (extension) {
-			   for (var i=0;i<extension.parts.length;i++) {
-				   if (extension.parts[i]==partID) {
-					   actionSetIDs.push(extension.targetID);
-					   return true;
-				   }
-			   }
+				return extension.parts.some(function(part) {
+					if (part == partID) {
+						actionSetIDs.push(extension.targetID);
+						return true;
+					}
+				});
 			});
 		
 		var actionSets;
 		var clonedActionSets = [];
 		if (actionSetIDs.length) {
-		   actionSets = Runtime.getExtensions("davinci.actionSets",
-				function (extension) {
-					return actionSetIDs.some(function(setID) { return setID == extension.id; });
-				});
+		   actionSets = Runtime.getExtensions("davinci.actionSets", function (extension) {
+				return actionSetIDs.some(function(setID) { return setID == extension.id; });
+			});
 		   if (actionSets.length) {
 			   // Determine if any widget libraries have indicated they want to augment the actions in
 			   // the action set
-			   dojo.forEach(actionSets, function(actionSet) {
+			   actionSets.forEach(function(actionSet) {
 				   var libraryActions = metadata.getLibraryActions(actionSet.id);
 				   if (libraryActions.length) {
 					   // We want to augment the action list, so let's copy the
 					   // action set before pushing new items onto the end of the
 					   // array.
-					   var actionSetCopy = lang.mixin({}, actionSet);			// shallow obj copy
-					   actionSetCopy.actions = [].concat(actionSet.actions);	// copy array
-					   dojo.forEach(libraryActions, function(libraryAction) {
-						   actionSetCopy.actions.push(libraryAction);
-					   });
-					   clonedActionSets.push(actionSetCopy);
-				   } else {
-					   // No modifications to the actionSet, so just push as is
-					   clonedActionSets.push(actionSet);
+					   actionSet = lang.mixin({}, actionSet); // shallow obj copy
+					   actionSet.actions = actionSet.actions.concat(libraryActions); // copy array, add libraryActions
 				   }
+				   clonedActionSets.push(actionSet);
 			   });
 			}
 		}

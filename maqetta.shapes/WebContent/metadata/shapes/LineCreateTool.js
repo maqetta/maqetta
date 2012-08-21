@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"davinci/ve/metadata",
+	"davinci/ve/utils/GeomUtils",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/MoveCommand",
@@ -15,6 +16,7 @@ define([
 	declare,
 	connect,
 	Metadata,
+	GeomUtils,
 	CreateTool,
 	ModifyCommand,
 	MoveCommand,
@@ -366,16 +368,8 @@ return declare(CreateTool, {
 		if(!widget || !widget.domNode || !widget.domNode.offsetParent || !widget.dijitWidget || !widget.dijitWidget._points){
 			return;
 		}
-		var node = widget.domNode;
-		var offsetLeft = node.offsetLeft;
-		var offsetTop = node.offsetTop;
-		var pn = node.offsetParent;
-		while(pn && pn.tagName != 'BODY'){
-			offsetLeft += pn.offsetLeft;
-			offsetTop += pn.offsetTop;
-			pn = pn.offsetParent;
-		}
-		return {offsetLeft:offsetLeft, offsetTop:offsetTop};
+		var box = GeomUtils.getBorderBoxPageCoordsCached(widget.domNode);
+		return {offsetLeft:box.l, offsetTop:box.t};
 	},
 	
 	_removeDragLine: function(){

@@ -804,23 +804,8 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	
 	getRelativeBox: function(domNode){
-
-		var realleft =0;
-		var realtop = 0;
-		var obj = domNode;
-		if (obj.offsetParent) {
-			do {
-			    if (obj.className.indexOf('theming-widget') > -1){
-                    // using ralitve div for postion
-                    realtop = domNode.offsetTop; 
-                    realleft = domNode.offsetLeft;
-                    break;
-                }
-				realleft += obj.offsetLeft;
-				realtop += obj.offsetTop;
-			} while (obj = obj.offsetParent);
-		}
-		return {t:realtop, l:realleft, w:domNode.offsetWidth, h:domNode.offsetHeight};
+		var box = GeomUtils.getBorderBoxPageCoordsCached(domNode);
+		return box;
 	},
 	
 	canvasOnMouseDown: function(event){

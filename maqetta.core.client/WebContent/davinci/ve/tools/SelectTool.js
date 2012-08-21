@@ -810,21 +810,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				beforeAfter:null, 
 				currentParent:currentParent });
  		}
-		var parentIframe = context.getParentIframe();
-		if(parentIframe){
-			// Ascend iframe's ancestors to calculate page-relative x,y for iframe
-			offsetLeft = 0;
-			offsetTop = 0;
-			offsetNode = parentIframe;
-			while(offsetNode && offsetNode.tagName != 'BODY'){
-				offsetLeft += offsetNode.offsetLeft;
-				offsetTop += offsetNode.offsetTop;
-				offsetNode = offsetNode.offsetParent;
-			}
-			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
-			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
-		}
-		
+		var parentIframeBounds = context.getParentIframeBounds();
+		parentListDiv.style.left = (parentIframeBounds.l + event.pageX) + 'px';
+		parentListDiv.style.top = (parentIframeBounds.t + event.pageY) + 'px';
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 				Workbench.getProject());
 		var doSnapLinesX = (!this._shiftKey && editorPrefs.snap && this._moverAbsolute);
@@ -907,7 +895,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				// If so, then apply the move to that state.
 				applyToWhichStates = States.propertyDefinedForAnyCurrentState(this._moverWidget.domNode, ['left','top','right','bottom']) ;
 			}
-			var offsetParentLeftTop = this._context.getPageLeftTop(this._moverWidget.domNode.offsetParent);
+			var offsetParentLeftTop = GeomUtils.getBorderBoxPageCoordsCached(this._moverWidget.domNode.offsetParent);
 			var newLeft =  (moverBox.l - offsetParentLeftTop.l);
 			var newTop = (moverBox.t - offsetParentLeftTop.t);
 			var dx = newLeft - this._moverStartLocations[index].l;

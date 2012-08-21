@@ -1,19 +1,17 @@
 define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
-	"dijit/_TemplatedMixin",
-	"dijit/_WidgetsInTemplateMixin",
 	"dijit/_Container",
 	"dijit/form/Button",
 	"dijit/Dialog",
 	"dojo/dom-geometry",
 	"dojo/dom-style",
 	"dojo/_base/connect",
-	"dojo/text!./templates/Dialog.html",
+	"dojo/window",
 	"dojo/i18n!davinci/ve/nls/common",
-	"dojox/layout/ResizeHandle"
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Container, Button, Dialog, domGeometry, style, connect,
-		dialogTemplateString, veNLS, ResizeHandle) {
+	"dojox/layout/ResizeHandle",
+], function(declare, _WidgetBase, _Container, Button, Dialog, domGeometry, style, connect, winUtils,
+		veNLS, ResizeHandle) {
 
 var DialogClass = declare(Dialog, {
 	contentStyle: null,
@@ -56,9 +54,6 @@ var DialogClass = declare(Dialog, {
 			if (c.h) {
 				dojo.style(contentArea, "height", c.h+"px");
 			}
-
-			this._size();
-
 			// resize children
 			dojo.forEach(this.getChildren(), dojo.hitch(this, function(child) {
 					if (child.resize) {
@@ -83,18 +78,27 @@ var DialogClass = declare(Dialog, {
 					r.h = parseInt(this.contentStyle.height);
 				}
 
-				// if the dialog is smaller than the dimensions, it means we need to
-				// shrink the contents
-				var dialogDimensions = domGeometry.getContentBox(this.domNode);
-				if (r.h > dialogDimensions.h) {
-					r.h = dialogDimensions.h-1;
+				var viewport = winUtils.getBox(this.ownerDocument);
+				viewport.w *= this.maxRatio;
+				viewport.h *= this.maxRatio;
+
+				if (r.h > viewport.h) {
+					var containerSize = domGeometry.position(this.containerNode),
+						w = Math.min(r.w, viewport.w) - (r.w - containerSize.w),
+						h = Math.min(r.h, viewport.h) - (r.h - containerSize.h);
+						r.h = viewport.h;
 				}
 
 				this.resize(r);
 			}
 
 			// reposition after changing sizes
+			this._size();
 			this._position();
+
+			// clear any containerNode specific dimensions ot make resize work
+			dojo.style(this.containerNode, "width", "auto");
+			dojo.style(this.containerNode, "height", "auto");
 
 //			this.layout();  //TODO: method disappeared in 1.8.0b1
 		}
@@ -201,14 +205,14 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 
 	var dialogActions = document.createElement("div");
 	dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
-	dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit"}).domNode);
+	dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit", "class": "maqPrimaryButton"}).domNode);
 
 	var _onCancel = dojo.hitch(this, function() {
 		this._timedDestroy(myDialog, handles);
 	});
 
 	if (!hideCancel) {
-		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel}).domNode);
+		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel, "class": "maqSecondaryButton"}).domNode);
 	}
 
 	newContent.appendChild(dialogActions);

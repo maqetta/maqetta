@@ -354,12 +354,17 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._moverCurrent = dojo.mixin({}, this._moverStart);
 		this._moverDragDiv = dojo.create('div', 
 				{className:'focusDragDiv',
-				style:'left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
+				style:'position:absolute;left:'+l+'px;top:'+t+'px;width:'+moverDragDivSize+'px;height:'+moverDragDivSize+'px'},
 				bodyNode);
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
 
 		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX+parentIframeOffset.l, pageY:event.pageY+parentIframeOffset.t, dateValue:(new Date()).valueOf() };
+		
+		// Temporarily stash the mousedown event so that the upcoming
+		// onMoveStop handler can process that event.
+		this._moverMouseDownEvent = event;
+		
 		this._moverMouseUpEvent = null;
 		this._moverMouseUpHandler = dojo.connect(this._moverDragDiv, "onmouseup", dojo.hitch(this, function(e){
 			this.onMouseUp(e);
@@ -550,7 +555,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 		this._moverDoneCleanup();
 		
-		var event = this._moverMouseUpEvent;
+		// If this._moverMouseUpEvent doesn't exist, then no move happened, which means
+		// mouse down and mouse up were at same location.
+		var event = (this._moverMouseUpEvent || this._moverMouseDownEvent);
+		this._moverMouseDownEvent = null;
 		this._moverMouseUpEvent = null;
 		
 		if(event && event.target){

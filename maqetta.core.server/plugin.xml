@@ -29,7 +29,7 @@
       </servlet>
    </extension>
 
-   <extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources">
+   <extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources"  >
 	
 	        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->
 	        
@@ -40,7 +40,7 @@
 	 </extension>
 	 <!-- maqetta samples library -->
 	 <extension point="maqetta.core.server.ajaxLibrary">
-		 <ajaxLibrary name="samples" id="maqettaSamples" version="1.0">
+		 <ajaxLibrary name="samples" id="maqettaSamples" version="1.0" required="true">
 		      <libraryPath location="WebContent/project/samples" name="/samples"></libraryPath>
 		      <metadata location="app/metadata/maqetta/core/0.3" />
 		 </ajaxLibrary>
@@ -49,7 +49,7 @@
 	 <!-- maqetta main library (app.js and app.css)-->
 	 
 	 <extension point="maqetta.core.server.ajaxLibrary">
-		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3">
+		 <ajaxLibrary name="maqetta" id="maqetta" version="0.3" required="true">
 		      <libraryPath location="WebContent/project/maqetta" name="/lib/maqetta"></libraryPath>
 		      <metadata location="app/metadata/maqetta/core/0.3" />
 		 </ajaxLibrary>

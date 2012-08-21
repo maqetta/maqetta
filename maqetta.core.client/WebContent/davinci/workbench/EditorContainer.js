@@ -1,15 +1,16 @@
-define(["require",
+define([
+    "require",
 	"dojo/_base/declare",
-	"davinci/workbench/_ToolbaredContainer",
-	"davinci/Runtime",
-	"davinci/Workbench",
-	"davinci/ve/metadata",
-	"davinci/ve/utils/GeomUtils",
+	"./_ToolbaredContainer",
+	"../Runtime",
+	"../Workbench",
+	"../ve/metadata",
+	"../ve/utils/GeomUtils",
 	"dojo/Deferred",
-	"dojo/i18n!davinci/workbench/nls/workbench"  
+	"dojo/i18n!./nls/workbench"  
 ], function(require, declare, ToolbaredContainer, Runtime, Workbench, Metadata, GeomUtils, Deferred, workbenchStrings) {
 
-return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
+return declare(ToolbaredContainer, {
 
 	constructor: function(args){
 	},
@@ -340,8 +341,8 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			var enabled = runFunc(action, 'isEnabled');
 			widget.set('disabled', !enabled);
 		}
-		function updateIcon(widget, action){
-			runFunc(action, 'updateIcon');
+		function updateStyling(widget, action){
+			runFunc(action, 'updateStyling');
 		}
 		
 		if(toolbar && this.editor){
@@ -352,7 +353,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 					var child = children[i];
 					hideShowWidget(child, child._maqAction);
 					enableDisableWidget(child, child._maqAction);
-					updateIcon(child, child._maqAction);
+					updateStyling(child, child._maqAction);
 					var menu = child.dropDown;
 					if(menu){
 						var menuItems = menu.getChildren();
@@ -360,7 +361,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 							var menuItem = menuItems[j];
 							hideShowWidget(menuItem, menuItem._maqAction);
 							enableDisableWidget(menuItem, menuItem._maqAction);
-							updateIcon(menuItem, menuItem._maqAction);
+							updateStyling(menuItem, menuItem._maqAction);
 						}
 					}
 				}
@@ -400,12 +401,7 @@ return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
 			return;
 		}
 		davinci.Workbench._editorToolbarCreationStarted[editorClass] = true;
-		// Don't create toolbar until all of the library metadata has been loaded
-		// because widget libraries might add items to toolbar
-		var args = arguments;
-		Metadata.init().then(function(){
-			this.inherited(args);
-		}.bind(this));
+		this.inherited(arguments);
 	},
 	
 	/**

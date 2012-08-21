@@ -41,7 +41,6 @@
    <features>
       <feature id="maqetta.orion.feature"/>
       <feature id="org.eclipse.orion"/>
-      <feature id="maqetta.zazl.feature"/>
    </features>
 
    <configurations>

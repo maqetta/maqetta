@@ -43,31 +43,23 @@ require({
 require(["LoginWindow.js"]);
 </script>
 <title>Login Page</title>
+<link rel="shortcut icon" href="../maqetta/app/davinci/img/maqetta.png" />
 </head>
 <body style="margin: 0; padding: 0; min-height:400px;">
-	<div class="orion-banner">
-		<div class="maqetta-nav-bar">
-			<div class="maqetta-logo"></div>
-			
-			<a class="orion-twitter-link" href="http://twitter.com/maqetta" target="_blank"></a>
+	<div id="davinci_top_bar">
+		<div id="davinci_top_bar_main">
+			<span class="maq_banner_name_box">
+				<span class="maq_banner_logo"></span>
+				<span class="maq_banner_name">Maqetta</span>
+			</span>
 		</div>
+		<div id="davinci_top_bar_divider"></div>
+		<div id="maqetta_slogan">Visual authoring of HTML5 user interfaces - in the browser!</div>
 	</div>
 	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
-		<div class="orion-landing-area">
+		<div id="landingArea" class="orion-landing-area">
 			<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
 					<div id="errorMessage">&nbsp;</div>
-			</div>
-
-			<div class="orion-welcome-area">
-				<div class="orion-slogan">
-					<div class="orion-slogan-highlight">Visual Design for the web</div>
-					<div class="orion-slogan-lowlight">on the web</div>
-				</div>
-				<!-- div class="orion-welcome-area-text">
-					<h1>Welcome to Orion</h1>
-					<div class="orion-welcome-area-text-content">Orion is a web based developer platform supporting editing, testing and deploying web applictions. Orion has built in Git support. So create an
-						account, clone a repository to OrionHub and start editing</div>
-				</div -->
 			</div>
 			<div class="orion-login" id="orionLogin">
 				<div class="orion-login-header">Login</div>

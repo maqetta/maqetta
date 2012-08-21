@@ -1,13 +1,83 @@
-
-
-.maqetta-logo{
-	background: url('/maqetta/app/davinci/img/maqetta-large-log.png');
-	background-position: 0 -160px; 
-	float:left;
-	height:156px;
-	width:277px;
+#davinci_top_bar {
+	padding:0;
+	margin:0;
 }
-
-.maqetta-nav-bar{
-	padding-right: 5px;
+#davinci_top_bar_main {
+	padding:0px; /* override dijitContentPane */
+	background: -webkit-linear-gradient(#464646, #121212);
+	background: -moz-linear-gradient(#464646, #121212);
+	background: -ms-linear-gradient(#464646, #121212);
+	background: -o-linear-gradient(#464646, #121212);
+	background: linear-gradient(#464646, #121212);
+	color: #ccc;
+    font: normal bold 12px Arial, sans-serif;
+    text-shadow:none;
+	overflow: hidden;
+	height:44px;
+	line-height:44px;
+	text-align:center;
+}
+#davinci_top_bar_divider {
+	height:4px;
+	background-image: url(../maqetta/app/davinci/img/sprite.png);
+	background-position: 0 -18px;
+	background-repeat: repeat-x;
+}
+.maq_banner_name_box {
+	padding-left:10px;
+	display: inline-block;
+	padding-top: 1px;
+	float:left;
+}
+.dj_gecko .maq_banner_name_box {
+	padding-top: 2px;	/* Different rounding rules between WebKit and Gecko */
+}
+.maq_banner_logo {
+	display:inline-block;
+	width:32px;
+	height:32px;
+	background-image:url(../maqetta/app/davinci/img/sprite.png);
+	background-position:0px -342px;
+	vertical-align: middle;
+}
+.maq_banner_name {
+	padding-left:2px;
+    font: normal normal 18px Arial, sans-serif;
+	color:white;
+	text-shadow: #000 1px 1px 1px;
+}
+#maqetta_slogan {
+	text-align:center;
+	color:#444;
+	font-size:15px;
+	margin-left:13px;
+	margin-bottom: 18px;
+	margin-top: 18px;
+}
+#login-window {
+	text-align:center;
+}
+#landingArea {
+	display:inline-block;
+	position:relative;
+	width:320px;
+	left: auto;
+	top: auto;
+	margin: 20px 0 0;
+}
+#orionLogin {
+	left:0px;
+}
+#orionRegister {
+	left:0px;
+}
+#newUserHeaderShown {
+	left:0px;
+}
+#orionReset {
+	left:0px;
+}
+#errorWin {
+	width:300px;
+	top:260px;
 }

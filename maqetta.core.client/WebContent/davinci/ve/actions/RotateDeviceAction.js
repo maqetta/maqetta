@@ -28,7 +28,7 @@ return declare("davinci.ve.actions.RotateDeviceAction", [Action], {
 		}
 	},
 	
-	updateIcon: function(){
+	updateStyling: function(){
 		var landscape = false;
 		var editor = davinci.Workbench.getOpenEditor();
 		if(editor){

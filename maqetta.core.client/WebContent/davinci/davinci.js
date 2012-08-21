@@ -47,7 +47,7 @@ davinci/davinci = {
 	"./ve/actions/ChooseDeviceAction",
 	"./ve/actions/RotateDeviceAction",
 	"./ve/actions/SurroundAction",
-	
+
 	"./ve/actions/SelectParentAction",
 	"./ve/actions/SelectAncestorAction",
 	"./ve/actions/UnselectAllAction",
@@ -60,6 +60,12 @@ davinci/davinci = {
 
 	"./ve/actions/OtherAction",
 	"./ve/actions/EnableApplicationStates",
+
+	"./ve/actions/ViewDesignAction",
+	"./ve/actions/ViewSourceAction",
+	"./ve/actions/ViewSourceMenuAction",
+	"./ve/actions/ViewSplitHMenuAction",
+	"./ve/actions/ViewSplitVMenuAction",
 
 	"./ve/actions/AddState",
 	"./ve/actions/RemoveState",

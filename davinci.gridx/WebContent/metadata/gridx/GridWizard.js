@@ -181,22 +181,23 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		dojo.place(reviewMsg, container);
 		
 		var prev = this.prev = dojo.create("button");
-		dojo.addClass(prev, "bottomButton");
+		dojo.addClass(prev, "maqSecondaryButton");
 		prev.innerHTML = gridxNls.back;
 		dojo.place(prev, container);
 
 		var next = this.next = dojo.create("button");
-		dojo.addClass(next, "bottomButton");
+		dojo.addClass(next, "maqSecondaryButton");
 		next.innerHTML = gridxNls.next;
 		dojo.place(next, container);
 		
 		var finish = this.finish = dojo.create("button");
-		dojo.addClass(finish, "bottomButton");
+		dojo.addClass(finish, "maqPrimaryButton");
 		finish.innerHTML = gridxNls.finish;
 		dojo.place(finish, container);
 
 		var cancelButton = dojo.create("a");
 		dojo.addClass(cancelButton, "cancelButton");
+		dojo.addClass(cancelButton, "maqSecondaryButton");
 		cancelButton.href = "javascript:void(0);";
 		cancelButton.innerHTML = dijitNls.buttonCancel;
 		this._connections.push(dojo.connect(cancelButton, "onclick", dojo.hitch(this, function() {

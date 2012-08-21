@@ -1,26 +1,21 @@
 define([
-	"require",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/connect",
 	"dojo/promise/all",
-	"dojo/text!davinci/ve/template.html",
+	"dojo/text!./template.html",
 	"../Runtime",
 	"../Workbench",
 	"../model/Path",
 	"./metadata",
 	"./Context",
-	"./commands/ModifyRuleCommand",
 	"preview/silhouetteiframe",
-	"./utils/URLRewrite",
-	"davinci/workbench/Preferences",
+	"../workbench/Preferences",
 	"./widget",
-	"system/resource",
-	"davinci/XPathUtils",
+	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
-	"davinci/ve/utils/GeomUtils"
+	"./utils/GeomUtils"
 ], function(
-	require,
 	declare,
 	lang,
 	connect,
@@ -31,12 +26,9 @@ define([
 	Path,
 	Metadata,
 	Context,
-	ModifyRuleCommand,
 	SilhouetteIframe,
-	URLRewrite,
 	Preferences,
 	widgetUtils,
-	systemResource,
 	XPathUtils,
 	HtmlFileXPathAdapter,
 	GeomUtils
@@ -50,7 +42,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	
 	constructor: function(element, pageEditor)	{
 		this._pageEditor = pageEditor;
-		var contentPane = this.contentPane = dijit.getEnclosingWidget(element);
+		this.contentPane = dijit.getEnclosingWidget(element);
 		this.loadingDiv = dojo.create("div", {
 			className: "loading",
 			innerHTML: dojo.replace(
@@ -147,7 +139,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			// set orientation
 			this._orientation = orientation;
 
-			var editor = davinci.Workbench.getOpenEditor();
+			var editor = Workbench.getOpenEditor();
 			if(editor.editorContainer && editor.editorContainer.updateToolbars){
 				editor.editorContainer.updateToolbars();
 			}

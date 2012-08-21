@@ -52,6 +52,7 @@ public interface IDavinciServerConstants {
 	public static final String EP_ATTR_AJAXLIBRARY_NAME = "name";
 	public static final String EP_TAG_LIBRARYPATH = "libraryPath";
 	public static final String EP_ATTR_LIBRARYPATH_LOCATION = "location";
+	public static final String EP_ATTR_REQUIRED = "required";
 	public static final String EP_ATTR_LIBRARYPATH_NAME = "name";
 
 	public static final String EP_TAG_METADATA = "metadata";

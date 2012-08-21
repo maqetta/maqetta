@@ -63,7 +63,12 @@ return declare(ToolbaredContainer, {
 					this._createToolbar(editorExtension.editorClass);
 					if (!content) {
 						content=editor.getDefaultContent();
-						editor.isDirty=!editor.isReadOnly;
+						if (editor.isReadOnly || !file.isNew) {
+							// if readonly or not a new file, not dirty if we have no content
+							editor.isDirty = false;
+						} else {
+							editor.isDirty = true;
+						}
 						editor.lastModifiedTime=Date.now();
 					}
 					if (!content) {

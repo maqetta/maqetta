@@ -135,6 +135,7 @@ return declare(CreateTool, {
 		// Look for cut/copied store data to associate with the base widget, and build up
 		// an array of data items
 		if (this._data.associatedCopiedWidgetData) {
+			//FIXME: use concat instead of forEach/push
 			var data = [];
 			dojo.forEach(this._data.associatedCopiedWidgetData, function(associatedDataItem) {
 				data.push(associatedDataItem);
@@ -161,13 +162,9 @@ return declare(CreateTool, {
 	},
 
 	_loadRequires: function() {
-		var promises = new Array();
-
-		dojo.forEach(this._data, function(item) {
-			promises.push(this._context.loadRequires(item.type, true));
-		}.bind(this));
-
-		return all(promises);
+		return all(this._data.map(function(item) {
+			return this._context.loadRequires(item.type, true);
+		}, this));
 	}
 });
 

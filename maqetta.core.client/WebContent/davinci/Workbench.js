@@ -1038,19 +1038,18 @@ var Workbench = {
 		});
 		dojoMenu.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
 
-		var addSeparator,menuAdded;
-		for (var i = 0, len = menus.length; i < len; i++) {
-			if (menus[i].menus.length > 0) {
-				if (menus[i].isSeparator && i>0) {
+		var addSeparator, menuAdded;
+		menus.forEach(function(menu, i){
+			if (menu.menus.length) {
+				if (menu.isSeparator && i>0) {
 					addSeparator=true;
 				}
-				for ( var menuN = 0, menuLen = menus[i].menus.length; menuN < menuLen; menuN++) {
+				menu.menus.forEach(function(item){
 					if (addSeparator && menuAdded) {
 						dojoMenu.addChild(new MenuSeparator({}));
 						addSeparator=false;
 					}
-					menuAdded=true;
-					var item = menus[i].menus[menuN];
+					menuAdded = true;
 					var label = item.label;
 					if (item.action && item.action.getName) {
 						label = item.action.getName();
@@ -1072,29 +1071,30 @@ var Workbench = {
 						}
 
 						if (item.action) {
-							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext, {menu:dojoMenu})) {
-								continue;
+							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext, {menu: dojoMenu})) {
+								return;
 							}
 							//FIXME: study this code for bugs.
 							//dojoMenu.actionContext: is that always the current context?
 							//There were other bugs where framework objects pointed to wrong context/doc
 							enabled = item.action.isEnabled && item.action.isEnabled(dojoMenu.actionContext);
 						}
+
 						var menuArgs = {
 								label: label,
 								id: item.id,
 								disabled: !enabled,
-								onClick: dojo.hitch(this,"_runAction",item,dojoMenu.actionContext)
+								onClick: dojo.hitch(this, "_runAction", item, dojoMenu.actionContext)
 						};
 						if (item.iconClass) {
 							menuArgs.iconClass = item.iconClass;
 						}
-						var menuItem1 = new MenuItem(menuArgs);
-						dojoMenu.addChild(menuItem1);
+
+						dojoMenu.addChild(new MenuItem(menuArgs));
 					}
-				}
+				}, this);
 			}
-		}
+		}, this);
 
 		return dojoMenu;
 	},

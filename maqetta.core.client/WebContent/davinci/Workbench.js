@@ -987,13 +987,12 @@ var Workbench = {
 
 		dojoMenu.domNode.style.display = "none";
 		dojoMenu.actionContext = context;
-		this._buildMenu(dojoMenu, menus);
+		this._rebuildMenu(dojoMenu, menus);
 		dojo.connect(dojoMenu, connectFunction, this, function(evt) {
-			//what is this callback for?
-			if (dojoMenu._widgetCallback) {
-			  dojoMenu._widgetCallback(evt);
+			if (dojoMenu._widgetCallback) { // create popup
+				  dojoMenu._widgetCallback(evt);
 			}
-//		   this._buildMenu(dojoMenu, menus, evt).focus(); // call focus again, now that we messed with the widget contents
+			this._rebuildMenu(dojoMenu, menus).focus(); // call focus again, now that we messed with the widget contents
 		});
 		return dojoMenu;
 	},
@@ -1032,14 +1031,13 @@ var Workbench = {
 		return dojo.queryToObject(searchString);
 	},
 	
-	_buildMenu: function (dojoMenu, menus) {
-		/*
+	_rebuildMenu: function (dojoMenu, menus) {
 		dojo.forEach(dojoMenu.getChildren(), function(child){
 			dojoMenu.removeChild(child);
 			child.destroy();
 		});
 		dojoMenu.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
-		*/
+
 		var addSeparator,menuAdded;
 		for (var i = 0, len = menus.length; i < len; i++) {
 			if (menus[i].menus.length > 0) {

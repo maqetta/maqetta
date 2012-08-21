@@ -1,15 +1,16 @@
-define(["require",
+define([
+    "require",
 	"dojo/_base/declare",
-	"davinci/workbench/_ToolbaredContainer",
-	"davinci/Runtime",
-	"davinci/Workbench",
-	"davinci/ve/metadata",
-	"davinci/ve/utils/GeomUtils",
+	"./_ToolbaredContainer",
+	"../Runtime",
+	"../Workbench",
+	"../ve/metadata",
+	"../ve/utils/GeomUtils",
 	"dojo/Deferred",
-	"dojo/i18n!davinci/workbench/nls/workbench"  
+	"dojo/i18n!./nls/workbench"  
 ], function(require, declare, ToolbaredContainer, Runtime, Workbench, Metadata, GeomUtils, Deferred, workbenchStrings) {
 
-return declare("davinci.workbench.EditorContainer", ToolbaredContainer, {
+return declare(ToolbaredContainer, {
 
 	constructor: function(args){
 	},

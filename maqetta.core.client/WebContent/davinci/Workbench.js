@@ -745,11 +745,11 @@ var Workbench = {
 			var menuTreeItem = menuTree[i];
 			for (var j=0;j<menuTreeItem.menus.length;j++) {
 				var menu = menuTreeItem.menus[j];
-				var dojoMenu = Workbench._createMenu(menu);
+				var menuWidget = Workbench._createMenu(menu);
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
 				var widget = dijit.byId(menu.id + "-dropdown");
 				if(!widget) {
-					var params = { label: menu.label, dropDown: dojoMenu, id: menu.id + "-dropdown" };
+					var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
 					if(menu.hasOwnProperty('showLabel')){
 						params.showLabel = menu.showLabel;
 					}
@@ -773,12 +773,12 @@ var Workbench = {
 			if (menuLen) {
 				dojo.forEach (menus, function(menu) {
 					menu.id = menu.id.replace(/\./g, "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-					var dojoMenu = Workbench._createMenu(menu),
+					var menuWidget = Workbench._createMenu(menu),
 						widget =  dijit.byId(menu.id + "-dropdown");
 					if (!widget) {
 						widget = new PopupMenuBarItem({
 							label: menu.label,
-							popup: dojoMenu,
+							popup: menuWidget,
 							id: menu.id + "-dropdown"
 						});
 					}
@@ -974,27 +974,27 @@ var Workbench = {
 	},
 
 	_createMenu: function(menu, context) {
-		var dojoMenu,menus,connectFunction;
+		var menuWidget,menus,connectFunction;
 		if (menu.menus) {  // creating dropdown
-		  dojoMenu = new Menu({parentMenu: menu });
+		  menuWidget = new Menu({parentMenu: menu });
 		  menus = menu.menus;
 		  connectFunction = "onOpen";
 		} else {	// creating popup
-			dojoMenu = new PopupMenu({});
+			menuWidget = new PopupMenu({});
 			menus = menu;
 			connectFunction="menuOpened";
 		}
 
-		dojoMenu.domNode.style.display = "none";
-		dojoMenu.actionContext = context;
-		this._rebuildMenu(dojoMenu, menus);
-		dojo.connect(dojoMenu, connectFunction, this, function(evt) {
-			if (dojoMenu._widgetCallback) { // create popup
-				  dojoMenu._widgetCallback(evt);
+		menuWidget.domNode.style.display = "none";
+		menuWidget.actionContext = context;
+		this._rebuildMenu(menuWidget, menus);
+		dojo.connect(menuWidget, connectFunction, this, function(evt) {
+			if (menuWidget._widgetCallback) { // create popup
+				  menuWidget._widgetCallback(evt);
 			}
-			this._rebuildMenu(dojoMenu, menus).focus(); // call focus again, now that we messed with the widget contents
+			this._rebuildMenu(menuWidget, menus).focus(); // call focus again, now that we messed with the widget contents
 		});
-		return dojoMenu;
+		return menuWidget;
 	},
 	/*
 	 * running in single project mode or multi project mode
@@ -1031,12 +1031,12 @@ var Workbench = {
 		return dojo.queryToObject(searchString);
 	},
 	
-	_rebuildMenu: function (dojoMenu, menus) {
-		dojo.forEach(dojoMenu.getChildren(), function(child){
-			dojoMenu.removeChild(child);
+	_rebuildMenu: function (menuWidget, menus) {
+		dojo.forEach(menuWidget.getChildren(), function(child){
+			menuWidget.removeChild(child);
 			child.destroy();
 		});
-		dojoMenu.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
+		menuWidget.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
 
 		var addSeparator, menuAdded;
 		menus.forEach(function(menu, i){
@@ -1046,7 +1046,7 @@ var Workbench = {
 				}
 				menu.menus.forEach(function(item){
 					if (addSeparator && menuAdded) {
-						dojoMenu.addChild(new MenuSeparator({}));
+						menuWidget.addChild(new MenuSeparator({}));
 						addSeparator=false;
 					}
 					menuAdded = true;
@@ -1061,8 +1061,8 @@ var Workbench = {
 							popup: subMenu,
 							id: subMenu.id + "item"
 						});
-						popupParent.actionContext = dojoMenu.actionContext;
-						dojoMenu.addChild(popupParent);
+						popupParent.actionContext = menuWidget.actionContext;
+						menuWidget.addChild(popupParent);
 					} else {
 						var enabled = true;
 						if (item.isEnabled) {
@@ -1071,32 +1071,32 @@ var Workbench = {
 						}
 
 						if (item.action) {
-							if (item.action.shouldShow && !item.action.shouldShow(dojoMenu.actionContext, {menu: dojoMenu})) {
+							if (item.action.shouldShow && !item.action.shouldShow(menuWidget.actionContext, {menu: menuWidget})) {
 								return;
 							}
 							//FIXME: study this code for bugs.
-							//dojoMenu.actionContext: is that always the current context?
+							//menuWidget.actionContext: is that always the current context?
 							//There were other bugs where framework objects pointed to wrong context/doc
-							enabled = item.action.isEnabled && item.action.isEnabled(dojoMenu.actionContext);
+							enabled = item.action.isEnabled && item.action.isEnabled(menuWidget.actionContext);
 						}
 
 						var menuArgs = {
 								label: label,
 								id: item.id,
 								disabled: !enabled,
-								onClick: dojo.hitch(this, "_runAction", item, dojoMenu.actionContext)
+								onClick: dojo.hitch(this, "_runAction", item, menuWidget.actionContext)
 						};
 						if (item.iconClass) {
 							menuArgs.iconClass = item.iconClass;
 						}
 
-						dojoMenu.addChild(new MenuItem(menuArgs));
+						menuWidget.addChild(new MenuItem(menuArgs));
 					}
 				}, this);
 			}
 		}, this);
 
-		return dojoMenu;
+		return menuWidget;
 	},
 	
 	_toggleButton: function(button, context, group, arg) {

@@ -1,5 +1,6 @@
 define([
     "dojo/_base/lang",
+    "require",
 	"./Runtime",
 	"./model/Path",
 	"./workbench/ViewPart",
@@ -29,14 +30,14 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"dojo/_base/xhr",
-	"davinci/review/model/resource/root",
-	"dojo/i18n!davinci/ve/nls/common",
+	"./review/model/resource/root",
+	"dojo/i18n!./ve/nls/common",
 	"dojo/dnd/Mover",
-	"davinci/ve/utils/GeomUtils",
-	"dojox/layout/ResizeHandle",
-	"dojo/i18n!davinci/workbench/nls/workbench"
+	"./ve/utils/GeomUtils",
+	"dojo/i18n!./workbench/nls/workbench"
 ], function(
 		lang,
+		require,
 		Runtime,
 		Path,
 		ViewPart,
@@ -70,7 +71,6 @@ define([
 		veNLS,
 		Mover,
 		GeomUtils,
-		ResizeHandle,
 		workbenchStrings
 ) {
 
@@ -406,7 +406,7 @@ var Workbench = {
 				var dojoAction;
 				var dojoActionDeferred = new Deferred();
 				if(action.menu && (action.type == 'DropDownButton' || action.type == 'ComboButton')){
-					var menu = new dijit.Menu({
+					var menu = new Menu({
 						style: "display: none;"
 					});
 					for(var ddIndex=0; ddIndex<action.menu.length; ddIndex++){
@@ -421,7 +421,7 @@ var Workbench = {
 								menuItemParms[prop] = menuItemObj[prop];
 							}
 						});
-						var menuItem = new dijit.MenuItem(menuItemParms);
+						var menuItem = new MenuItem(menuItemParms);
 						menuItem._maqAction = menuItemObj;
 						menu.addChild(menuItem);
 					}
@@ -507,10 +507,10 @@ var Workbench = {
 
 		if (!mainBodyContainer) {
 			mainBodyContainer = new BorderContainer({
-					gutters: false,
-					region: "center",
-					design: 'sidebar'
-				}, mainBody);
+				gutters: false,
+				region: "center",
+				design: 'sidebar'
+			}, mainBody);
 		}
 		var perspective = Runtime.getExtension("davinci.perspective",perspectiveID);
 
@@ -525,7 +525,7 @@ var Workbench = {
 					return extension.targetID === perspectiveID;
 				});
 		dojo.forEach(extensions, function (extension) {
-			// TODO: should check if view is already in perspective
+			// TODO: should check if view is already in perspective. filter + concat instead of foreach + push?
 			dojo.forEach(extension.views, function (view){ perspective.views.push(view); });
 		});
 
@@ -1511,43 +1511,36 @@ var Workbench = {
 	},
 
 	getActionSets: function(partID){
-		var actionSetIDs=[];
+		var actionSetIDs = [];
 		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
 			function (extension) {
-			   for (var i=0;i<extension.parts.length;i++) {
-				   if (extension.parts[i]==partID) {
-					   actionSetIDs.push(extension.targetID);
-					   return true;
-				   }
-			   }
+				return extension.parts.some(function(part) {
+					if (part == partID) {
+						actionSetIDs.push(extension.targetID);
+						return true;
+					}
+				});
 			});
 		
 		var actionSets;
 		var clonedActionSets = [];
 		if (actionSetIDs.length) {
-		   actionSets = Runtime.getExtensions("davinci.actionSets",
-				function (extension) {
-					return actionSetIDs.some(function(setID) { return setID == extension.id; });
-				});
+		   actionSets = Runtime.getExtensions("davinci.actionSets", function (extension) {
+				return actionSetIDs.some(function(setID) { return setID == extension.id; });
+			});
 		   if (actionSets.length) {
 			   // Determine if any widget libraries have indicated they want to augment the actions in
 			   // the action set
-			   dojo.forEach(actionSets, function(actionSet) {
+			   actionSets.forEach(function(actionSet) {
 				   var libraryActions = metadata.getLibraryActions(actionSet.id);
 				   if (libraryActions.length) {
 					   // We want to augment the action list, so let's copy the
 					   // action set before pushing new items onto the end of the
 					   // array.
-					   var actionSetCopy = lang.mixin({}, actionSet);			// shallow obj copy
-					   actionSetCopy.actions = [].concat(actionSet.actions);	// copy array
-					   dojo.forEach(libraryActions, function(libraryAction) {
-						   actionSetCopy.actions.push(libraryAction);
-					   });
-					   clonedActionSets.push(actionSetCopy);
-				   } else {
-					   // No modifications to the actionSet, so just push as is
-					   clonedActionSets.push(actionSet);
+					   actionSet = lang.mixin({}, actionSet); // shallow obj copy
+					   actionSet.actions = actionSet.actions.concat(libraryActions); // copy array, add libraryActions
 				   }
+				   clonedActionSets.push(actionSet);
 			   });
 			}
 		}

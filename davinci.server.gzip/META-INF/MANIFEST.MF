@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: davinci.server.gzip
+Bundle-SymbolicName: davinci.server.gzip;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.mortbay.jetty.server;bundle-version="6.1.23"
+Import-Package: org.mortbay.servlet;version="6.1.23"

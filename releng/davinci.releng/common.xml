@@ -55,7 +55,7 @@
         <populateDir project="org.dojotoolkit.optimizer.servlet" extPath="/zazl/optimizer"/>
         <populateDir project="org.dojotoolkit.server.util" extPath="/zazl/optimizer"/>
         <populateDir project="org.dojotoolkit.server.util.js" extPath="/zazl/optimizer"/>
-	    <populateDir project="org.json" extPath="/zazl/dependencies"/>
+	    <populateDir project="org.json.js" extPath="/zazl/dependencies"/>
 	    <populateDir project="org.mozilla.javascript" extPath="/zazl/dependencies"/>
 	    <populateDir project="org.dojotoolkit.shrinksafe" extPath="/zazl/dependencies"/>
 	    <populateDir project="org.dojotoolkit.optimizer.amd.fragment" extPath="/zazl/"/>

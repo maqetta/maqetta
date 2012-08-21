@@ -146,7 +146,7 @@ return declare(CreateTool, {
 
 		var deferred = new Deferred();
 
-		this._loadRequires().then(dojo.hitch(this, function(results) {
+		this._loadRequires().then(function(results) {
 			if (!dojo.some(results, function(arg){return !arg;})) {
 				// all args are valid
 				command.add(this._getCreateCommand(args));
@@ -156,7 +156,7 @@ return declare(CreateTool, {
 			} else {
 				console.log("TreeCreateTool:_loadRequires failed to load all requires");
 			}
-		}.bind(this)));
+		}.bind(this));
 
 		return deferred.promise;
 	},

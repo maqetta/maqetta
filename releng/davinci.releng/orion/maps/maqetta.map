@@ -13,6 +13,7 @@ plugin@maqetta.shapes=GIT,tag=origin/master,repo=https://github.com/maqetta/maqe
 #  plugin@davinci.joomla=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/davinci.joomla
 plugin@maqetta.client.orion=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.client.orion
 #  plugin@maqetta.core.server.standalone=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.core.server.standalone
+plugin@org.apache.commons.fileupload=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/org.apache.commons.fileupload
 #  plugin@davinci.product=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/releng/davinci.product
 plugin@maqetta.server.orion.hosted=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.hosted
 plugin@davinci.gridx=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/davinci.gridx

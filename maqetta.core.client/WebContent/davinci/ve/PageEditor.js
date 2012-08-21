@@ -360,6 +360,14 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	save: function (isAutoSave) {
 	//	this.inherited(arguments);
+
+		if (isAutoSave) {
+			if (system.resource.findResource(this.fileName).readOnly()) {
+				// disable autosaving for readonly files
+				return;
+			}
+		}
+
 		this.savePoint=this._commandStack.getUndoCount();
 		this.visualEditor.save(isAutoSave);
 		

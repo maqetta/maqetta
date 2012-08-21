@@ -2089,6 +2089,16 @@ td.welcome_section_cell {
   box-shadow: none;
 }
 
+/* Resizable dialog */
 .dijitDialogPaneActionBar .maqPrimaryButton {
+	font-weight: bold;
+}
+
+.dijitDialogPaneActionBar .maqPrimaryButton {
+	font-weight: bold;
+}
+
+.dijitDialogPaneContentArea .maqDialogMessage {
+	margin-bottom: 10px;
 	font-weight: bold;
 }

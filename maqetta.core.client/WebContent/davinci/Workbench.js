@@ -1078,7 +1078,7 @@ var Workbench = {
 							//FIXME: study this code for bugs.
 							//dojoMenu.actionContext: is that always the current context?
 							//There were other bugs where framework objects pointed to wrong context/doc
-							enabled = item.action.isEnabled(dojoMenu.actionContext);
+							enabled = item.action.isEnabled && item.action.isEnabled(dojoMenu.actionContext);
 						}
 						var menuArgs = {
 								label: label,

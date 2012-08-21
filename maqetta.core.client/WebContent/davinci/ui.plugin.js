@@ -247,6 +247,19 @@ return {
                    label: "Theme Editor...",
                    menubarPath: "davinci.open/open2"
                },
+               
+               {
+                   id: "orionNavigator",
+                   run: function() {
+                   	window.open("/navigate/table.html#", '_blank');
+                	window.focus();
+                   },
+                   iconClass: "newOpenMenuItem orionIcon",
+                   label: "Orion Navigator...",
+                   menubarPath: "davinci.open/open2"
+               },
+               
+               
                {
                    id: "openReview",
                    run: function() {
@@ -540,22 +553,11 @@ return {
                         radioGroup: "displayMode",
                         label: "Modify Libraries",
                         toolbarPath: "download"
-                    },
-                    
-                    
-                    
-                    {
-                        id: "davinci.ui.orion",
-                        
-                        iconClass: "orionIcon",
-                        run: function() {
-                        	window.open("/navigate/table.html#", '_blank');
-                        	window.focus();
-                        },
-                        radioGroup: "displayMode",
-                        label: "Resource Control w/Orion",
-                        toolbarPath: "download"
                     }
+                    
+                    
+                    
+                    
                 ]
             }
         }

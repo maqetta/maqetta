@@ -58,6 +58,7 @@
       <plugin id="org.eclipse.orion.server.user.securestorage" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.orion.server.useradmin.xml" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+      <plugin id="maqetta.zazl" autoStart="true" startLevel="0" />
       <property name="eclipse.buildId" value="I20120425-1416" />
       <property name="org.eclipse.update.reconcile" value="false" />
    </configurations>

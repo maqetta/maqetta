@@ -4,17 +4,11 @@ define([
 	"dojo/touch",
 	"dojo/mouse", // mouse.isLeft
 	"dijit/Tree",
-	"davinci/ve/widget",
-	"davinci/ve/States",
-	"davinci/Workbench",
-	"davinci/ve/commands/StyleCommand",
-	"davinci/ui/widgets/_ToggleTreeNode",
-], function(declare, connect, touch, mouse, Tree, Widget, States, Workbench, StyleCommand, ToggleTreeNode) {
+	"../../Workbench",
+	"./_ToggleTreeNode",
+], function(declare, connect, touch, mouse, Tree, Workbench, ToggleTreeNode) {
 
-return declare("davinci.ui.widget.OutlineTree", Tree, {
-	// args
-	context: null,
-
+return declare(Tree, {
 	postCreate: function() {
 		this._handles = [];
 		this.toggledItems = {};
@@ -51,12 +45,9 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 
 	/* sets selection to the passed nodes*/
 	selectNode: function(items) {
-		var paths = [];
-
-		dojo.forEach(items, dojo.hitch(this, function(item) {
-			var widget = this.model._getWidget(item);
-			paths.push(this._createPath(widget));
-		}));
+		var paths = items.map(function(item) {
+			return this._createPath(this.model._getWidget(item));		
+		}, this);
 
 		// we use the paths attr here
 		this.set("paths", paths);
@@ -86,10 +77,7 @@ return declare("davinci.ui.widget.OutlineTree", Tree, {
 		// user has made manual selection changes
 
 		// these are are model items, so we need to change them to widgets
-		var newSelection = [];
-		dojo.forEach(this.selectedItems, dojo.hitch(this, function(item) {
-				newSelection.push(this.model._getWidget(item));
-		}));
+		var newSelection = this.selectedItems.map(this.model._getWidget);
 
 		// these are real widgets
 		var oldSelection = this.context.getSelection();

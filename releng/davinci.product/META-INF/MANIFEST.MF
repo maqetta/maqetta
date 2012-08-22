@@ -21,6 +21,6 @@ Require-Bundle: maqetta.core.server;bundle-version="1.0.0",
  org.dojotoolkit.server.util.js;bundle-version="0.3.1",
  org.dojotoolkit.shrinksafe;bundle-version="1.0.1",
  org.mozilla.javascript;bundle-version="1.7.3",
- org.json;bundle-version="1.0.0",
+ org.json.js;bundle-version="1.0.0",
  org.cyberneko.html;bundle-version="1.9.15",
  maqetta.zazl;bundle-version="1.0.0"

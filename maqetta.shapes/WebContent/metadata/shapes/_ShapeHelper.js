@@ -81,13 +81,22 @@ _ShapeHelper.prototype = {
 	},
 
 	onMouseDown: function(e){
+		this._connectsDrag.push(connect.connect(document, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connectsDrag.push(connect.connect(document, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
+		this._connectsDrag.push(connect.connect(document, 'mouseup', dojo.hitch(this,this.onMouseUp)));
+
 		// Don't process this event if current tool is CreateTool because
 		// that means that mouse operations are adding points.
 		var currentEditor = Runtime.currentEditor;
 		var context = (currentEditor.getContext && currentEditor.getContext());
 		if(context){
 			var tool = (context.getActiveTool && context.getActiveTool());
-			if(!tool || tool.isInstanceOf(davinci.ve.tools.CreateTool)){
+			if(!tool){
+				return;
+			}
+			if(tool.isInstanceOf(davinci.ve.tools.CreateTool)){
+				var fakeEvent = this._makeFakeEvent(e);
+				tool.onMouseDown(fakeEvent);
 				return;
 			}
 		}
@@ -118,9 +127,6 @@ _ShapeHelper.prototype = {
 		davinci.Workbench._shapesDragDiv = dojo.create('div', {className:'shapesDragDiv', 
 				style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px;'},
 				document.body);
-		this._connectsDrag.push(connect.connect(document, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connectsDrag.push(connect.connect(document, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connectsDrag.push(connect.connect(document, 'mouseup', dojo.hitch(this,this.onMouseUp)));
 		if(this.onMouseDown_Widget){
 			this.onMouseDown_Widget({handle:handle, e:e});
 		}
@@ -152,6 +158,21 @@ _ShapeHelper.prototype = {
 	},
 	
 	onMouseUp: function(e){
+		// Don't process this event if current tool is CreateTool because
+		// that means that mouse operations are adding points.
+		var currentEditor = Runtime.currentEditor;
+		var context = (currentEditor.getContext && currentEditor.getContext());
+		if(context){
+			var tool = (context.getActiveTool && context.getActiveTool());
+			if(!tool){
+				return;
+			}
+			if(tool.isInstanceOf(davinci.ve.tools.CreateTool)){
+				var fakeEvent = this._makeFakeEvent(e);
+				tool.onMouseUp(fakeEvent);
+				return;
+			}
+		}
 		e.stopPropagation();
 		
 		if(davinci.Workbench._shapesDragDiv){
@@ -271,6 +292,25 @@ _ShapeHelper.prototype = {
 			connect.disconnect(this._connectsDrag[i]);
 		}
 		this._connectsDrag = [];
+	},
+	
+	/**
+	 * Clone a real event into a fake event, changing
+	 * event.target into a target within user iframe
+	 * and adjusting pageX/pageY to reflect user iframe coordinates
+	 */
+	_makeFakeEvent: function(e){
+		var currentEditor = Runtime.currentEditor;
+		var context = (currentEditor.getContext && currentEditor.getContext());
+		var fakeEvent = {};
+		for(var prop in e){
+			fakeEvent[prop] = e[prop];
+		}
+		fakeEvent.target = context.rootNode;
+		var parentIframeBounds = context.getParentIframeBounds();
+		fakeEvent.pageX -= parentIframeBounds.l;
+		fakeEvent.pageY -= parentIframeBounds.t;
+		return fakeEvent;
 	}
 
 

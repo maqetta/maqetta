@@ -276,8 +276,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 	},
 	
-	_visualChanged: function() {
-		this._setDirty();
+	_visualChanged: function(skipDirty) {
+		if (!skipDirty) {
+			this._setDirty();
+		}
 		this.htmlEditor.setValue(this.model.getText(),true);
 	},
 	
@@ -360,6 +362,14 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	save: function (isAutoSave) {
 	//	this.inherited(arguments);
+
+		if (isAutoSave) {
+			if (system.resource.findResource(this.fileName).readOnly()) {
+				// disable autosaving for readonly files
+				return;
+			}
+		}
+
 		this.savePoint=this._commandStack.getUndoCount();
 		this.visualEditor.save(isAutoSave);
 		

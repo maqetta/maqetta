@@ -618,6 +618,13 @@
   width: 20px;
   height: 20px;
 }
+.davinciAnnotationIconDelete{
+  background-image: url("../../img/sprite.png");
+  background-position: -23px -674px
+}
+.dijitButtonDisabled .davinciAnnotationIconDelete{
+  background-position: -23px -706px;
+}
 
 .davinciComment{
 	border-top: 1px solid black;

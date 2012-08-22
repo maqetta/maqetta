@@ -332,8 +332,9 @@ States.prototype = {
 			connect.publish("/maqetta/appstates/state/changed", 
 					[{node:node, newState:newState, oldState:oldState, stateContainerNode:node}]);
 		}
-		this._updateSrcState (node);
-		
+
+		// if no new state we can skip setting the dirty flag
+		this._updateSrcState (node, !newState);		
 	},
 
 	/**

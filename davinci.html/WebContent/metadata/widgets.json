@@ -704,6 +704,7 @@
         {
             "id": "davinci.editorActions",
             "visible": true,
+            "targetID": "davinci.ve.HTMLPageEditor",
             "actions": [
                 {
                     id: "tableCommands",

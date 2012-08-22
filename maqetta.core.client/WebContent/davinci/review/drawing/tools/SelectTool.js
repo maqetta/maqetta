@@ -42,14 +42,16 @@ return declare("davinci.review.drawing.tools.SelectTool", _ToolCommon, {
 		if (this.scaffold) { 
 			this.scaffold.destroy();
 		}
-		dojo.publish("/davinci/review/drawing/deselectshape", [this.shape, this.surface]);
+		var shape = this.shape;
 		this.scaffold = this.shape = null;
+		dojo.publish("/davinci/review/drawing/deselectshape", [shape, this.surface]);
 	},
 
 	removeShape: function() {
 		if (this.scaffold) {
 			this.scaffold.removeShape();
 		}
+		this.deselectShape(); //we want to fire a selection changed event
 	},
 
 	activate: function() {

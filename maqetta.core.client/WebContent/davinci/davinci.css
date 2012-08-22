@@ -1823,6 +1823,10 @@ td.welcome_section_cell {
 .dj_gecko .StatesViewTree .dijitTreeRow, .dj_gecko .StatesViewTree .dijitTreeContent {
 	white-space:normal;
 }
+
+.ReviewToolBarTextContainer {
+	display: inline;
+}
 .ReviewToolBarText {
 	background-color: ##ffffe0;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8e8), to(#ffffcc)); 
@@ -1833,7 +1837,8 @@ td.welcome_section_cell {
 	background-image: linear-gradient(#f8f8e8, #ffffcc);
 	padding: 8px 1em 5px;
 	font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
-	margin: 0px -4px -4px;	/* Undo the standard padding on toolbars */
+	/*margin: 0px -4px -4px;*/	/* Undo the standard padding on toolbars */
+	display: inline;
 }
 .EditorContainer.ReviewEditor .toolbaredContainer_toolbarDiv {
 	height:auto;
@@ -2089,6 +2094,16 @@ td.welcome_section_cell {
   box-shadow: none;
 }
 
+/* Resizable dialog */
 .dijitDialogPaneActionBar .maqPrimaryButton {
+	font-weight: bold;
+}
+
+.dijitDialogPaneActionBar .maqPrimaryButton {
+	font-weight: bold;
+}
+
+.dijitDialogPaneContentArea .maqDialogMessage {
+	margin-bottom: 10px;
 	font-weight: bold;
 }

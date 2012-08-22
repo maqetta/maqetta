@@ -27,7 +27,7 @@ define(["dojo/_base/declare",
 		fileTree : null,
 		__okButton : null,
 		dialogSpecificClass : null,
-		_fileDialog : null, 
+		_fileDialog : null,
 		
 		postMixInProperties : function() {
 			var langObj = this.langObj = uiNLS;
@@ -90,6 +90,12 @@ define(["dojo/_base/declare",
 			this._updateFields();
 
 			this.__okButton.onClick = dojo.hitch(this, this._okButton);
+
+			// optionalMessage
+			if (this.optionalMessage) {
+				this.additionalMessage.innerHTML = this.optionalMessage;
+				this.additionalMessage.style.display = "block";
+			}
 		},
 		
 		startup: function(){

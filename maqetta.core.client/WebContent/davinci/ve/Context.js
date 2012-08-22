@@ -1785,7 +1785,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}else{
 				bodyModelNode.removeAttribute(States.APPSTATES_ATTRIBUTE);
 			}
-			this.editor._visualChanged();
+			// no src changes to pass in true
+			this.editor._visualChanged(true);
 		}
 		var statesFocus = States.getFocus(this.rootNode);
 		if(!statesFocus){
@@ -1923,7 +1924,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocusAll: function(){
-		if(this.editor.getDisplayMode && this.editor.getDisplayMode() == 'source'){
+		if(this.editor && this.editor.getDisplayMode && this.editor.getDisplayMode() == 'source'){
 			return;
 		}
 		var selection = this._selection;

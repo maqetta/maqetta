@@ -315,7 +315,7 @@ return {
                   type:'ComboButton',
                   run: function() {
                       require(['../Workbench'], function(workbench) {
-                          workbench.getOpenEditor().save();
+                      		require("../ui/Resource").save();
                       });
                   },
                   isEnabled: function(context) {
@@ -325,9 +325,7 @@ return {
                      {
                           iconClass: 'saveIcon',
                           run: function() {
-                              require(['../Workbench'], function(workbench) {
-                                  workbench.getOpenEditor().save();
-                              });
+                          		require("../ui/Resource").save();
                           },
                           isEnabled: function(context) {
                               return require('../Workbench').getOpenEditor();

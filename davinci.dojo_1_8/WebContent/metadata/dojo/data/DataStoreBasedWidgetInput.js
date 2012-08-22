@@ -753,6 +753,9 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 					textArea.focus();
 					this._url = tree.selectedItem;
 					this.updateFormats();
+
+					// clear the reference
+					this._fileSelectionDialog = null;
 			}
 		};
 

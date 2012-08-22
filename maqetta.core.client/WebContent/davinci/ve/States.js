@@ -167,7 +167,7 @@ var veStates = declare(maqettaStates, {
 		}
 	},
 	
-	_updateSrcState: function (node){
+	_updateSrcState: function (node, noSrcChanges){
 		var widget = (node && node._dvWidget);
 		if(!widget){
 			return;
@@ -197,7 +197,7 @@ var veStates = declare(maqettaStates, {
 			if(existingDefsAttr !== newDefsAttr || existingDeltasAttr !== newDeltasAttr){
 				var editor = this.getEditor();
 				if(editor && editor._visualChanged){
-					editor._visualChanged();	// Tell app that source view needs updating
+					editor._visualChanged(noSrcChanges);	// Tell app that source view needs updating
 				}			
 			}
 		}

@@ -49,6 +49,8 @@ define([
 	var onTextChanged = function(textChangeEvent) {
 		// 'this' === Editor._textModel
 		if (this._dontNotifyChange) {
+			// clear out the notify skipping
+			this._dontNotifyChange = false;
 			return;
 		}
 		this.lastChangeStamp = Date.now();
@@ -115,6 +117,7 @@ return declare(null, {
 //console.log("setVisible="+visible + " "+s)
 		if (visible!=this._isVisible && this._existWhenVisible) {
 			if (visible && this._existWhenVisible) {
+				this._dontNotifyChange = true;
 				this._createEditor();
 				this._updateStyler();
 			} else {
@@ -135,7 +138,6 @@ return declare(null, {
 		} else {
 			this._textModel.setText(content);
 		}
-		this._dontNotifyChange=false;
 	},
 
 	_createEditor: function () {

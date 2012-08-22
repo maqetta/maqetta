@@ -1,13 +1,13 @@
 define([
 	"dojo/_base/declare",
-	"davinci/workbench/ViewPart",
-	"davinci/Workbench",
-	"davinci/ui/widgets/OutlineTree",
+	"./ViewPart",
+	"../Workbench",
+	"../ui/widgets/OutlineTree",
 	"dijit/layout/ContentPane",
-	"dojo/i18n!davinci/workbench/nls/workbench"
+	"dojo/i18n!./nls/workbench"
 ], function(declare, ViewPart, Workbench, OutlineTree, ContentPane, workbenchStrings){
 
-return declare("davinci.workbench.OutlineView", ViewPart, {
+return declare(ViewPart, {
 
 	constructor: function(params, srcNodeRef){
 		this.subscribe("/davinci/ui/editorSelected", this.editorChanged);

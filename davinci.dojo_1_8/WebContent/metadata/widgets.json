@@ -212,7 +212,7 @@
                 }
             ],
             "isLayered": true,
-            "allowedChild": "dijit.PopupMenuBarItem",
+            "allowedChild": "dijit.PopupMenuBarItem, dijit.MenuBarItem",
             "helper": "./dijit/MenuHelper",
             "inlineEdit": "./dijit/MenuBarInput"
         },
@@ -1187,6 +1187,20 @@
                     ]
                 }
             ],
+            "resizable": "none",
+            "allowedParent": "dijit.MenuBar"
+        },
+        {
+            "name": "MenuBarItem",
+            "description": "Menu Bar Item",
+            "type": "dijit.MenuBarItem",
+            "category": "untested",
+            "class": "DijitMenuBarItems",
+            "icon": "resources/images/menuitem.gif",
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
+            "properties": {
+                "label": "Menu Bar Item"
+            },
             "resizable": "none",
             "allowedParent": "dijit.MenuBar"
         },

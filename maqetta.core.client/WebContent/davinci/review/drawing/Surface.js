@@ -61,6 +61,9 @@ return declare("davinci.review.drawing.Surface", null, {
 	},
 
 	removeShape: function(shape) {
+		if (this.selectTool) {
+			this.selectTool.deselectShape();
+		}
 		for (var i = 0; i < this.shapes.length; i++) {
 			if (this.shapes[i] === shape) {
 				shape.destroy();

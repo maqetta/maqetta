@@ -216,7 +216,7 @@ return declare(ToolbaredContainer, {
 				return true;
 			});
 		}
-		var libraryActions = Metadata.getLibraryActions('davinci.editorActions');
+		var libraryActions = Metadata.getLibraryActions('davinci.editorActions', editorID);
 		// Clone editorActions, otherwise, library actions repeatedly get appended to original plugin object
 		editorActions = dojo.clone(editorActions);
 		if (editorActions.length > 0 && libraryActions.length) {

@@ -500,7 +500,7 @@ define([
         	return name ? libraries[name] : libraries;
         },
         
-        getLibraryActions: function(actionSetId) {
+        getLibraryActions: function(actionSetId, targetID) {
             var actions = [];
             for (var name in libraries) {
                 if (libraries.hasOwnProperty(name)) {
@@ -515,24 +515,26 @@ define([
                     }
                     dojo.forEach(libActionSets, function(libActionSet) {
                         if (libActionSet.id == actionSetId) {
-                           var clonedActions = dojo.clone(libActionSet.actions);
-                           dojo.forEach(clonedActions, function(action) {
-                               // May need to transform the action class string to 
-                               // account for the library's name space
-                               if(action.action){
-                                   var newActionModuleId = getModuleId(lib, action.action);
-                                   action.action = newActionModuleId;
-                               }
-                               if(action.menu){
-                                   action.menu.forEach(function(item){
-                                       if(item.action){
-                                           var newActionModuleId = getModuleId(lib, item.action);
-                                           item.action = newActionModuleId;
-                                       }
-                                   });
-                               }
-                               actions.push(action);
-                           });
+                        	if (!targetID || (libActionSet.targetID === targetID)) {
+	                           var clonedActions = dojo.clone(libActionSet.actions);
+	                           dojo.forEach(clonedActions, function(action) {
+	                               // May need to transform the action class string to 
+	                               // account for the library's name space
+	                               if(action.action){
+	                                   var newActionModuleId = getModuleId(lib, action.action);
+	                                   action.action = newActionModuleId;
+	                               }
+	                               if(action.menu){
+	                                   action.menu.forEach(function(item){
+	                                       if(item.action){
+	                                           var newActionModuleId = getModuleId(lib, item.action);
+	                                           item.action = newActionModuleId;
+	                                       }
+	                                   });
+	                               }
+	                               actions.push(action);
+	                           });
+                        	}
                         }
                     });
                 }

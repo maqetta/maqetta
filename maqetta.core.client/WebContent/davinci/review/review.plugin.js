@@ -133,7 +133,7 @@ return {
 					action: "davinci/review/actions/DeleteVersionAction",
 					//iconClass: "viewActionIcon deleteVersionIcon",
 					menubarPath: "newfile",
-					keyBinding: {charOrCode: dojo.keys.DELETE}
+					keyBinding: {charOrCode: [dojo.keys.DELETE, dojo.keys.BACKSPACE]}
 				},
 				{
 					id: "davinci.review.restart",
@@ -185,6 +185,14 @@ return {
 					iconClass: "davinciAnnotationIcon davinciAnnotationIconText",
 					action: "davinci/review/actions/TextAction",
 					toolbarPath: "annotationtools"
+				},
+				{
+				    id: "deleteAnnotation",
+				    iconClass: "davinciAnnotationIcon davinciAnnotationIconDelete",
+				    label: "Delete Annotation",
+				    action: "davinci/review/actions/DeleteAnnotationAction",
+				    toolbarPath: "annotationtools_delete",
+				    keyBinding: {charOrCode: [dojo.keys.DELETE, dojo.keys.BACKSPACE]}
 				}
 			]
 		}

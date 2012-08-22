@@ -56,8 +56,28 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 
 		var viewActions=this._getActions();
 		var tb=dojo.create("span", {style: {display: "inline-block"}},this.toolbarNode);
-		var toolbar = davinci.Workbench._createToolBar('toolbarPath', tb, viewActions, this);
+		var toolbar = this._toolbar = davinci.Workbench._createToolBar('toolbarPath', tb, viewActions, this);
 		dojo.style(toolbar.domNode,{"display":"inline-block"});
+		
+		//Subscribe to changes to the selection state of shapes in the review editor
+		dojo.subscribe("/davinci/review/drawing/selectshape", this, function(selectedShape, surface) {
+			this._updateToolbarEnablement();
+		}.bind(this));
+		
+		dojo.subscribe("/davinci/review/drawing/deselectshape", this, function(selectedShape, surface) {
+			this._updateToolbarEnablement();
+		}.bind(this));
+	},
+	
+	_updateToolbarEnablement: function() {
+		var toolbarChildren = this._toolbar.getChildren();
+		dojo.forEach(toolbarChildren, function(child) {
+			var childAction = child._maqAction;
+			if (childAction && childAction.action && childAction.action.isEnabled) {
+				var enabled = childAction.action.isEnabled();
+				child.set("disabled", !enabled);
+			}
+		});
 	},
 
 	_getActions: function() {
@@ -87,6 +107,9 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 		dojo.style(this.domNode, "display", "block");
 		dojo.window.scrollIntoView(this.domNode);
 		dojo.publish("/davinci/review/view/openComment", []);
+		
+		//Initialize toolbar enablement
+		this._updateToolbarEnablement();
 	},
 
 	onShow: function() {

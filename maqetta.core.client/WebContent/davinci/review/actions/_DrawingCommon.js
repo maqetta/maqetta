@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"davinci/actions/Action",
+	"davinci/actions/Action"
 ], function(declare, Action) {
 	
 return declare("davinci.review.actions._DrawingCommon", [Action], {

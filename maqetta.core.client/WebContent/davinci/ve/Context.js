@@ -1923,7 +1923,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	updateFocusAll: function(){
-		if(this.editor.getDisplayMode && this.editor.getDisplayMode() == 'source'){
+		if(this.editor && this.editor.getDisplayMode && this.editor.getDisplayMode() == 'source'){
 			return;
 		}
 		var selection = this._selection;

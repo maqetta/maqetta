@@ -40,10 +40,7 @@ plugin@org.dojotoolkit.optimizer.servlet=GIT,tag=origin/master,repo=https://gith
 plugin@org.dojotoolkit.server.util=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util
 plugin@org.dojotoolkit.server.util.js=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util.js
 plugin@org.dojotoolkit.shrinksafe=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.dojotoolkit.shrinksafe
-
-# org.json plugin provided in the orion dependencies.
-#plugin@org.json=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json
-
+plugin@org.json.js=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json.js
 plugin@org.mozilla.javascript=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.mozilla.javascript
 fragment@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=origin/master,repo=https://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
 

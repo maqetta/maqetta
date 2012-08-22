@@ -25,7 +25,7 @@ define(['dojo/_base/declare',
        
 ],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, AddFiles, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS, Theme, ChangeThemeCommand){
 
-var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, dialogSpecificClassOptions, fileName, existingResource) {
+var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, dialogSpecificClassOptions, fileName, existingResource, optionalMessage) {
 	var resource=existingResource || getSelectedResource();
 	var folder;
 	if (resource) {
@@ -55,7 +55,9 @@ var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificC
 						value: folder,
 						checkFileName: checkFileName,
 						dialogSpecificClass:dialogSpecificClass,
-						dialogSpecificClassOptions:dialogSpecificClassOptions };
+						dialogSpecificClassOptions:dialogSpecificClassOptions,
+	optionalMessage: optionalMessage
+	};
 	return new NewFile(dialogOptions);
 };
 
@@ -236,15 +238,30 @@ var uiResource = {
 			/* return true if we closed an open editor */
 			return oldEditor != null;
 		},
-		
-		saveAs: function(extension){
+		save: function() {
+			var editor = Workbench.getOpenEditor();
+			if (editor) {
+				// check if read only
+				system.resource.findResourceAsync(editor.fileName).then(
+					dojo.hitch(this, function(resource) {
+						if (resource.readOnly()) {
+							this.saveAs(resource.getExtension(), uiNLS.savingReadonlyFile);
+						} else {
+							editor.save();
+						}
+					})
+				);
+			}
+		},
+
+		saveAs: function(extension, optionalMessage){
 			var oldEditor = Workbench.getOpenEditor();
 			var oldFileName = oldEditor.fileName;
 			
 			var newFileName = new Path(oldFileName).lastSegment();
 			var oldResource = Resource.findResource(oldFileName);
 			
-			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.save, extension, null, null, newFileName, oldResource);
+			var newDialog = createNewDialog(uiNLS.fileName, uiNLS.save, extension, null, null, newFileName, oldResource, optionalMessage);
 			var executor = function(){
 				var resourcePath = newDialog.get('value');
 				var oldResource = Resource.findResource(oldFileName);

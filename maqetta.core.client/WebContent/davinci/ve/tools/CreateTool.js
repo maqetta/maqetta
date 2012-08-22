@@ -645,6 +645,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			this._select(w);
 			this._widget = w;
 			deferred.resolve(w);
+			this.mouseUpProcessingCompleted();
 		}.bind(this));
 		return deferred;
 	},
@@ -872,6 +873,18 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	// in which case the widget-specific CreateTool subclass will override this function.
 	exitCreateToolOnMouseUp: function(){
 		return true;
+	},
+	
+	// Because CreateTool.js uses deferreds (async processing) to perform certain
+	// tasks within create() and _create(), any widget-specific custom createtools
+	// cannot just assume that at the end of onMouseUp, the widget has been created.
+	// Instead, for first time addition of a particular widget, the deferreds might
+	// cause the widget creation to happen asynchronously. 
+	// To deal with this, custom createtools can override the function below
+	// to get an explicity callback for when all associated mouseup processing
+	// really has been completed.
+	// Currently used by LineCreateTool.js in the shapes library.
+	mouseUpProcessingCompleted: function(){
 	}
 
 });

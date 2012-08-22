@@ -68,6 +68,7 @@ define({ root:
 		"workspaceLocation":"Workspace Location",
 		
 		//Resource.js
+		"savingReadonlyFile": "This file is a read-only file. Please save it to a writeable location.",
 		
 		//doItLabels
 		"create":"Create",

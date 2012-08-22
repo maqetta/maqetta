@@ -136,8 +136,8 @@ DialogClass._timedDestroy = function(dialog, handles) {
 	// completes which will throw an exception.  So we listen to onHide to know
 	// the dialog has finished hiding itself before we destroy it.
 	var hndl = connect.connect(dialog, "onHide", function() {
-		dialog.destroyRecursive();
 		connect.disconnect(hndl);
+		dialog.destroyRecursive();
 	});
 
 	dialog.hide();

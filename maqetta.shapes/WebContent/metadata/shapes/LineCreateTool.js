@@ -179,11 +179,16 @@ return declare(CreateTool, {
 		
 		this.inherited(arguments);
 		
-		// Put after this.inherited because this.inherited calls createNewWidget() indirectly
-		this._mouseUpCounter++;
-		
 		this._md_x = this._md_y = null;
 		this._removeDragLine();
+	},
+	
+	mouseUpProcessingCompleted: function(){
+		// Need a special function in createtool helper to say that mouseup/createwidget actions
+		// have been completed because there are a couple of nested deferred/async blocks of
+		// code in CreateTool. Can't just put it at end of LineCreateTool.js:onMouseUp()
+		// because before helpers are loaded function createNewWidget() above might be called too soon
+		this._mouseUpCounter++;
 	},
 	
 	addToCommandStack: function(command, params){

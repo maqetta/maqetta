@@ -18,12 +18,12 @@ public class ConfigProject extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	
         String projectName = req.getParameter("project");
-        String redirectTo = req.getParameter("redirect");
+        
     	user.createProject(projectName);
 
     	this.responseString = "OK";
     	resp.sendRedirect("/maqetta/?project=" + projectName);
-
+    	
     }
 
 }

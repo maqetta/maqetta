@@ -16,14 +16,12 @@ define([
 	dndSource
 ){
 
-var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null, {
+var DesignOutlineTreeModel = declare(null, {
 	toggleMode: true,
 	betweenThreshold: 4,
 	showRoot: true,
 	
 	dndController: "dijit.tree.dndSource",
-
-	_context: null,
 
 	constructor: function(context) {
 		this._context = context;
@@ -90,18 +88,10 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 			widgets = this._getWidget(item).getChildren();
 		}
 
-		var filtered = widgets.filter(function(widget) {
+		return widgets.filter(function(widget) {
 			// managed widget only
 			return widget && widget.getContext && widget.getContext() && !widget.internal;
-		});
-
-		var results = [];
-
-		dojo.forEach(filtered, dojo.hitch(this, function(w) {
-			results.push(this._buildItem(w));
-		}));
-
-		return results;
+		}).map(this._buildItem);
 	},
 	
 	mayHaveChildren: function(item) {
@@ -216,7 +206,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 				this.onChildrenChange(args[0], this._getChildren(args[0]));
 				this.put(widget, {
 						overwrite: true,
-						parent: args[1],
+						parent: args[1]
 				});				
 			}
 		} catch (e) {
@@ -264,7 +254,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 
 	shouldShowElement: function(elementId, item) {
 		if (elementId == "toggleNode") {
-			return (item.type != "states" && item.id != "myapp");
+			return item.type != "states" && item.id != "myapp";
 		}
 		return true;
 	},
@@ -290,7 +280,7 @@ var DesignOutlineTreeModel = declare("davinci.ui.widget.OutlineTreeModel", null,
 
 	_buildItem: function(widget) {
 		if (widget) {
-			return {id: widget.id, type: widget.type}
+			return {id: widget.id, type: widget.type};
 		}
 	},
 

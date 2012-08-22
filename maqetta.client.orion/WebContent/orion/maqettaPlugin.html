@@ -17,7 +17,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 <script>
 	window.onload = function() {
 		var provider = new eclipse.PluginProvider();
-		var serviceImpl = { /* All data is in properties */};
+		
 
 		function qualifyURL(url) {
 			var a = document.createElement('a');
@@ -27,7 +27,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		
 		function fullPath(item){
 			var path = "";
-			var parent = item;
+			var parent = item[0];
 			var first = true;
 			
 			while(parent!=null && !parent.hasOwnProperty("Projects")){
@@ -35,48 +35,24 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 				first = false;
 				parent = parent.parent;
 			}
-			return "./" + path;
+			return path;
 		}
-		provider.registerService("orion.navigate.command", {}, {
-			nameKey: "Open in Maqetta",
-			id: "eclipse.maqetta.open",
-			tooltipKey: "Open in Maqetta",
-			nls: "git/nls/gitmessages",
-			validationProperties: [{
-				
-				{source: "Directory", match: true}
-			}],
-			uriTemplate: "{OrionHome}/git/git-log.html#{GitRemoteLocation}?page=1",
+		
+		provider.registerService('orion.navigate.command', {
+			run : function(item) {
+			   	window.open("/maqetta/cmd/configProject?project=" + fullPath(item), '_blank');
+            	window.focus();
+            }
+			}, {
+			id: 'orion.maqetta.launch',
+			name: 'Open in Maqetta',
+			tooltip: 'Open this folder in Maqetta',
+			validationProperties: [{source: "Directory", match: true}],
 			forceSingleItem: true
+		
+			
 		});
-		/*
-		provider.registerServiceProvider("orion.navigate.command", {
-			run : function(item) {
-				return "/maqetta/?project=" + fullPath(item);
-			}
-		}, {
-			image: "/maqetta/app/davinci/img/maqetta.png",
-			name: "Open in Maqetta",
-			id: "open.maqetta.project",
-			forceSingleItem: true,
-			href: true,
-			tooltip: "Open this project in Maqetta Designer"
-		});	
-		
-		provider.registerServiceProvider("orion.navigate.command", {
-			run : function(item) {
-				return "/maqetta/cmd/configProject?launch=true&project=" + fullPath(item);
-			}
-		}, {
-			image: "/maqetta/app/davinci/img/maqetta.png",
-			name: "Add Maqetta Settings & Open",
-			id: "setup.maqetta.project",
-			forceSingleItem: true,
-			href: true,
-			tooltip: "Open this project in Maqetta Designer"
-		});	
-		
-		*/
+				
 		
 		provider.connect();
 

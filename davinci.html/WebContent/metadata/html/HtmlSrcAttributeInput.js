@@ -4,11 +4,13 @@ define([
 	"davinci/model/Path",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
-	"dijit/Dialog",
+	"davinci/ui/Dialog",
 	"dijit/form/Button",
-    "dijit/Tree",
-    "dojo/text!./templates/srcAttributeInputFields.html",
-    "dojo/i18n!dijit/nls/common",
+	"dijit/Tree",
+	"dijit/layout/BorderContainer",
+	"dijit/layout/ContentPane",
+	"dojo/text!./templates/srcAttributeInputFields.html",
+  "dojo/i18n!dijit/nls/common",
 	"dojo/i18n!./nls/html"
 ], function(
 	declare,
@@ -19,6 +21,8 @@ define([
 	Dialog,
 	Button,
 	Tree,
+	BorderContainer,
+	ContentPane,
 	templateString,
 	commonNls,
 	htmlNls
@@ -31,109 +35,74 @@ return declare(SmartInput, {
 
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);
-		if (!this._inline) {
-			this._inline = new Dialog({
-				title : htmlNls.selectSource,
-				style : "width:275px;height:270px;background-color:white;"
-			});
-	
-			//Set-up file selection tree
-			var treeParms= {  
-				id: "htmlSrcAttributeInputSelectionTree",
-				style: "height:10em;margin-bottom:12px;;overflow:auto;",
-				model: system.resource,
-				filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
-		    };
-			var tree = new Tree(treeParms);
-			this._inline.containerNode.appendChild(tree.domNode);
-			
-			var onTreeClick = function(selection) {
-				var inputPath = new Path(selection.getPath());
-				var filePath = new Path(this._widget._edit_context._srcDocument.fileName);
-				// ignore the filename to get the correct path to the image
-				var relativePath = inputPath.relativeTo(filePath, true).toString();
-				
-				//Put path in text box
-				var srcTextBox = dijit.byId("srcAttributeInputSrcTextBox");
-				srcTextBox.set("value", relativePath);
-			};
-			this._connection.push(dojo.connect(tree, "onClick", this, onTreeClick));
 
-			//Set up input field area
-			var textInputDiv = dojo.create('div');
-			this._inline.containerNode.appendChild(textInputDiv);
-			textInputDiv.innerHTML = templateString;
-			dojo.parser.parse(textInputDiv);
-
-			//Set-up src text box
-			var srcLabel = dojo.byId("srcAttributeInputSrcLabel");
-			srcLabel.innerHTML = htmlNls.typeFileUrl;
+		var okClicked = function() {
 			var srcTextBox = dijit.byId("srcAttributeInputSrcTextBox");
-			srcTextBox.set("value", this._widget._srcElement.getAttribute('src') || '');
-			
-			//Set up alt text text box
-			var altLabel = dojo.byId("srcAttributeInputAltLabel");
-			altLabel.innerHTML = htmlNls.typeAltText;
 			var altTextBox = dijit.byId("srcAttributeInputAltTextBox");
-			if (this.supportsAltText) {
-				altTextBox.set("value", this._widget._srcElement.getAttribute('alt') || '');
-			} else {
-				//Hide both label and text box
-				dojo.setStyle(altLabel, {
-				    display:"none"
-				  });
-				altTextBox.set("style", "display: none;");
-			}
-			
-			//Set-up button
-			var okClicked = function() {
-				var srcTextBox = dijit.byId("srcAttributeInputSrcTextBox");
-				var altTextBox = dijit.byId("srcAttributeInputAltTextBox");
-				var srcText = srcTextBox.get("value");
-				var altText = altTextBox.get("value");
-				
-				//Clean -up
-		    	this._inline.destroyRecursive();
-		    	delete this._inline;
-			    	
-		    	//Update the underlying widget
-		    	this.updateWidget(srcText, altText);
-			};
-			var dijitLangObj = commonNls;
-			var okLabel = dijitLangObj.buttonOk;
-			var okStyle = 'padding:8px;';
-			var okBtn = new Button({
-				label : okLabel,
-				style : okStyle, /* type:"submit", */
-				onClick : dojo.hitch(this, okClicked)
-			});
-			this._inline.containerNode.appendChild(okBtn.domNode);
-			
-			//Set up cancel handler
-			var onCancelFileSelection = function(e) {
-				this._inline.destroyRecursive();
-				delete this._inline;
-			};
-			this._connection.push(dojo.connect(this._inline, "onCancel", this,
-				onCancelFileSelection));
-			
-			//Show dialog
-			this._inline.show();
-		}
-	},
+			var srcText = srcTextBox.get("value");
+			var altText = altTextBox.get("value");
 
-	hide: function(cancel) {
-		if (this._inline) {
-			//Clean up connections
-			while (connection = this._connection.pop()){
-				dojo.disconnect(connection);
-			}
+			//Update the underlying widget
+			this.updateWidget(srcText, altText);
+		};
+
+		var container = new BorderContainer({});
+		this._inline = Dialog.showDialog(htmlNls.selectSource, container, {width: 350, height:420}, dojo.hitch(this, okClicked));
+
+		var cp1 = new ContentPane({region: "center"});
+		container.addChild(cp1);
+
+		//Set-up file selection tree
+		var treeParms= {  
+			id: "htmlSrcAttributeInputSelectionTree",
+			style: "height:10em;margin-bottom:12px;;overflow:auto;",
+			model: system.resource,
+			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
+			};
+		var tree = new Tree(treeParms);
+		cp1.addChild(tree);
+		
+		var onTreeClick = function(selection) {
+			var inputPath = new Path(selection.getPath());
+			var filePath = new Path(this._widget._edit_context._srcDocument.fileName);
+			// ignore the filename to get the correct path to the image
+			var relativePath = inputPath.relativeTo(filePath, true).toString();
 			
-			//Destroy dialog and widgets
-			this._inline.destroyRecursive();
-			delete this._inline;
+			//Put path in text box
+			var srcTextBox = dijit.byId("srcAttributeInputSrcTextBox");
+			srcTextBox.set("value", relativePath);
+		};
+
+		this._connection.push(dojo.connect(tree, "onClick", this, onTreeClick));
+
+		var cp2 = new ContentPane({region: "bottom", style: "height: 50px"});
+		container.addChild(cp2);
+
+		//Set up input field area
+		var textInputDiv = dojo.create('div');
+		textInputDiv.innerHTML = templateString;
+		dojo.parser.parse(textInputDiv);
+		cp2.domNode.appendChild(textInputDiv);
+
+		//Set-up src text box
+		var srcLabel = dojo.byId("srcAttributeInputSrcLabel");
+		srcLabel.innerHTML = htmlNls.typeFileUrl;
+		var srcTextBox = dijit.byId("srcAttributeInputSrcTextBox");
+		srcTextBox.set("value", this._widget._srcElement.getAttribute('src') || '');
+		
+		//Set up alt text text box
+		var altLabel = dojo.byId("srcAttributeInputAltLabel");
+		altLabel.innerHTML = htmlNls.typeAltText;
+		var altTextBox = dijit.byId("srcAttributeInputAltTextBox");
+		if (this.supportsAltText) {
+			altTextBox.set("value", this._widget._srcElement.getAttribute('alt') || '');
+		} else {
+			//Hide both label and text box
+			dojo.setStyle(altLabel, {
+					display:"none"
+				});
+			altTextBox.set("style", "display: none;");
 		}
-		this.inherited(arguments);
 	},
 
 	updateWidget: function(srcText, altText) {

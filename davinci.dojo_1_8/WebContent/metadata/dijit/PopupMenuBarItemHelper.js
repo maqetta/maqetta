@@ -45,26 +45,22 @@ PopupMenuBarItemHelper.prototype = {
 		if (!widget) {
 			return;
 		}
+
 		var data = {type: widget.declaredClass, properties: {}},
-			pChildNodes = widget.containerNode.childNodes,
+			pChildNodes = widget.getChildren(), 
 			pData,
 			popupData = [];
 		// search for child widgets
 		array.forEach(pChildNodes, function(n) {
-				// only interested in menus or menu items
-				if (! (typeof n == "object" && n.nodeType != 1 /*ELEMENT*/) &&
-						typeof n !== 'string' && ! n.length) {
-					// get the widget from the node
-					var pWidget = context.getDijit().byNode(n);
-					pData = {type: pWidget.declaredClass, properties: pWidget.label ? {label: pWidget.label} : {}};
-					if (pData) {
-						if (!popupData) {
-							popupData = pData;
-						} else {
-							popupData.push(pData);
-						}
-					}
+		// only interested in menus or menu items
+			pData = {type: n.declaredClass, properties: n.label ? {label: n.label} : {}};
+			if (pData) {
+				if (!popupData) {
+					popupData = pData;
+				} else {
+					popupData.push(pData);
 				}
+			}
 		});
 		if (popupData) {
 			data.children = popupData;

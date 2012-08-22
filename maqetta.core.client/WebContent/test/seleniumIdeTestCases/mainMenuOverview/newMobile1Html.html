@@ -17,13 +17,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//span[@id='davinci_main_menu']/span/span/span</td>
+	<td>click</td>
+	<td>xpath=(//input[@value=''])[4]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=newHTML</td>
+	<td>id=newHTMLMobile_text</td>
 	<td></td>
 </tr>
 <tr>
@@ -32,60 +32,29 @@
 	<td>mobile1TestCase.html</td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[starts-with(@id, 'davinci_ui_widgets_NewHTMLFileOptions')]/div/div/table/tbody/tr/td/table/tbody</td>
-	<td></td>
-</tr>
-<!--need a better way to get to com type box-->
-<tr>
-	<td>clickAt</td>
-	<td>/divid=dijit_form_Select_1_dropdown</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>//tr/td[(contains(@class, 'dijitMenuItemLabel') and (text()='iphone'))]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>//table[contains(@class, 'dijitMenuTable')]/tbody/tr/td[text()='iphone']</td>
-	<td></td>
-</tr>
-<tr>
 	<td>click</td>
-	<td>css=input.dijitOffScreen</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//span[@class='fileDialogStdButtons']/span/span/span</td>
-	<td>2000</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//span[@class='fileDialogStdButtons']/span[2]/span/span</td>
+	<td>//span[@class='fileDialogStdButtons']/span/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementNotPresent</td>
-	<td>//span[@class='fileDialogStdButtons']</td>
+	<td>//div[@class='loading']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_htmlWidgetTestCase.html']</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_mobile1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=HTML</td>
+	<td>link=Dojox Mobile</td>
 	<td></td>
 </tr>
-<!--Drag and Drop dataDrig start-->
+<!--Drag and Drop Start-->
 <tr>
 	<td>mouseDownAt</td>
-	<td>link=&lt;label&gt;HTML</td>
+	<td>link=HeadingDojox Mobile</td>
 	<td></td>
 </tr>
 <tr>
@@ -103,7 +72,12 @@
 	<td>//body[@id='myapp']</td>
 	<td></td>
 </tr>
-<!--Drag and Drop dataGrid Stop-->
+<!--Drag and Drop Stop-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
 <tr>
 	<td>click</td>
 	<td>id=davinciIleb</td>
@@ -141,50 +115,60 @@
 	<td></td>
 </tr>
 <tr>
+	<td>click</td>
+	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
+	<td></td>
+</tr>
+<tr>
 	<td>type</td>
-	<td>//div[@id='davinci_ve_widgets_WidgetToolBar_0']/table/tbody/tr[2]/td[3]/div/div/input</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[3]/div/div/input</td>
 	<td>label_testcase1</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='davinci_ve_widgets_WidgetToolBar_0']/table/tbody/tr[2]/td[1]</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
 	<td>label_testcase1</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//label[@id='label_testcase1']</td>
+	<td>//h1[@id='label_testcase1']/div</td>
 	<td>label&lt;b&gt;bold&lt;/b&gt;test</td>
 </tr>
 <!-- Save file and reopen -->
 <tr>
 	<td>clickAt</td>
-	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
+	<td>//div[@id=&quot;davinci_toolbar_container&quot;]/div/table/tbody/tr/td</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_htmlWidgetTestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_mobile1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='palette-tabcontainer-left-bottom_tablist']/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>doubleClick</td>
-	<td>//span[@class='dijitTreeContent']/span[. ='htmlWidgetTestCase.html']</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='mobile1TestCase.html']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_htmlWidgetTestCase.html']/span[2]</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_mobile1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <!-- Save file and reopen -->
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//label[@id='label_testcase1']</td>
+	<td>//h1[@id='label_testcase1']/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//label[@id='label_testcase1']</td>
+	<td>//h1[@id='label_testcase1']/div</td>
 	<td>label&lt;b&gt;bold&lt;/b&gt;test</td>
 </tr>
 <!--Open Preview-->
@@ -200,12 +184,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//label[@id='label_testcase1']</td>
+	<td>//h1[@id='label_testcase1']/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//label[@id='label_testcase1']</td>
+	<td>//h1[@id='label_testcase1']/div</td>
 	<td>label&lt;b&gt;bold&lt;/b&gt;test</td>
 </tr>
 <tr>
@@ -221,7 +205,7 @@
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_htmlWidgetTestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_mobile1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -275,39 +259,44 @@
 <!--verify the html bold is correct-->
 <tr>
 	<td>verifyText</td>
-	<td>//label[@id='label_testcase1']/b</td>
+	<td>//h1[@id='label_testcase1']/div/b</td>
 	<td>bold</td>
 </tr>
 <!-- Save file and reopen -->
 <tr>
 	<td>clickAt</td>
-	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
+	<td>//div[@id=&quot;davinci_toolbar_container&quot;]/div/table/tbody/tr/td</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_htmlWidgetTestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_mobile1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='palette-tabcontainer-left-bottom_tablist']/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>doubleClick</td>
-	<td>//span[@class='dijitTreeContent']/span[. ='htmlWidgetTestCase.html']</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='mobile1TestCase.html']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_htmlWidgetTestCase.html']/span[2]</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_mobile1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <!-- Save file and reopen -->
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//label[@id='label_testcase1']</td>
+	<td>//h1[@id='label_testcase1']/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//label[@id='label_testcase1']/b</td>
+	<td>//h1[@id='label_testcase1']/div/b</td>
 	<td>bold</td>
 </tr>
 <!--Open Preview-->
@@ -323,12 +312,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//label[@id='label_testcase1']</td>
+	<td>//h1[@id='label_testcase1']/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//label[@id='label_testcase1']/b</td>
+	<td>//h1[@id='label_testcase1']/div/b</td>
 	<td>bold</td>
 </tr>
 <tr>
@@ -343,7 +332,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_htmlWidgetTestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_mobile1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 </tbody></table>

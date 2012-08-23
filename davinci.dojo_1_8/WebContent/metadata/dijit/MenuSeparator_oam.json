@@ -7,7 +7,7 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dijit/Menu",
+            "src": "dijit/MenuSeparator",
             "$library": "dojo"
         }
     ],

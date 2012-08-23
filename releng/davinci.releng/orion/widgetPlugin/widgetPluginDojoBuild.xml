@@ -99,35 +99,35 @@
 	<target name="pre.gather.bin.parts">
 	</target>
 	
-	<target name="davinciPlugin.build" if="${run.dojo.build}" unless="davinciPlugin.build.exists">
-		<echo message="Doing ${davinciPlugin.id} build" />
+	<target name="davinciPlugin.build" if="run.dojo.build" unless="davinciPlugin.build.exists">
+		<echo message="Prepping for Dojo build of '${davinciPlugin.id}' plugin..." />
 		<property name="logExtension" value=".log"/>
 		<property name="logFile" value="${build.result.folder}/@dot${logExtension}"/>
 
     	<!-- Figure out if we already have a "dojo" directory. At the risk of building in a 
     	     small amount of plug-in specific knowledge, we don't want to overwrite the 
-    	     library dir for the dojo_1_7 plug-in.-->
+    	     library dir for the dojo_1_8 plug-in.-->
     	<condition property="davinciPlugin.dojoDir.exists">
     		<available file="${target.folder}/WebContent/dojo" type="dir"/>
     	</condition>
     	<antcall target="backup.davinciPlugin.dojoDir"/>
 
 		<!-- copy in dojo and dojo build utils to working directory in prep for build -->
-		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying base dojo">
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dojo and maqetta dependencies and dojo util tools">
 				<fileset dir="${basedir}/../maqetta.core.client">
-					<include name="WebContent/dojo/"/>
-				</fileset>
-		</copy>
-		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dijit">
-				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/davinci/"/>
 					<include name="WebContent/dijit/"/>
-				</fileset>
-		</copy>
-		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying Dojo tools">
-				<fileset dir="${basedir}/../maqetta.core.client">
+					<include name="WebContent/dojo/"/>
+					<include name="WebContent/dojox/"/>
+					<include name="WebContent/orion/"/>
+					<include name="WebContent/preview/"/>
+					<include name="WebContent/system/"/>
 					<include name="WebContent/util/"/>
 				</fileset>
 		</copy>
+		
+		<!-- copy in helpers from dojo_1_8 plugin -->
+		<antcall target="copy.dojo18.metadata"/>
 		
 		<!-- need to move/copy metadata to directory with same name as runtime module id before building -->
 		<copy todir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}" failonerror="true" overwrite="true" description="copying metadata files">
@@ -135,29 +135,44 @@
 					<include name="*/**"/>
 				</fileset>
 		</copy>
-
-		<!-- Replace "metadata" in dojo profile  with the module id Maqetta 
-			 will use for the plugin's metadata at runtime -->
-		<replace file="${target.folder}/${davinciPlugin.dojo.profile}" token="metadata" value="${davinciPlugin.metadata.moduleId}"/>
+		<delete dir="${target.folder}/WebContent/metadata/"/>
 		
+		<!-- Replace '"metadata' in dojo profile  with the module id Maqetta will use for the plugin's metadata at runtime...
+			Using '"metadata' as the token so we change things like:
+			
+				[ "metadata", "../metadata" ] 
+			
+			but leave alone things like:
+			
+				[ "maq-metadata-dojo", "../maq-metadata-dojo" ],
+		 -->
+		<replace file="${target.folder}/${davinciPlugin.dojo.profile}" token='"metadata' value='"${davinciPlugin.metadata.moduleId}'/>
+		<!-- Also, need to deal with "../metadata" -->
+		<replace file="${target.folder}/${davinciPlugin.dojo.profile}" token="../metadata" value="../${davinciPlugin.metadata.moduleId}"/>
+
 		<!-- run dojo build tooling -->
-		<java fork="true" resultproperty="returnCode" failonerror="false" output="${logFile}" append="true" dir="${basedir}/../maqetta.core.client/WebContent/util/buildscripts"
+		<echo message="Running Dojo build on '${davinciPlugin.id}' plugin ..." />
+		<java fork="true" resultproperty="returnCode" failonerror="true" output="${logFile}" append="true" dir="${target.folder}/WebContent/util/buildscripts"
 			    maxmemory="1024m"
-				classpath="${basedir}/../maqetta.core.client/WebContent/util/shrinksafe/js.jar"
+				classpath="${target.folder}/WebContent/util/shrinksafe/js.jar;${target.folder}/WebContent/util/shrinksafe/shrinksafe.jar"
 				classname="org.mozilla.javascript.tools.shell.Main"
 				description="Run Dojo build script"
 				>
 				<arg value="${target.folder}/WebContent/dojo/dojo.js"/>
 				<arg value="baseUrl=${target.folder}/WebContent/dojo"/>
 				<arg value="load=build"/>
-				<arg value="profileFile=${target.folder}/${davinciPlugin.dojo.profile}"/>
+				<arg value="profile=${target.folder}/${davinciPlugin.dojo.profile}"/>
 				<arg value="action=release"/>
-				<arg value="cssOptimize=comments.keepLines"/>
-				<arg value="layerOptimize=shrinksafe.keepLines"/>
+				<arg value="selectorEngine=acme"/>
+				<arg value="optimize=shrinksafe.keepLines"/>
+        		<arg value="layerOptimize=shrinksafe.keepLines"/>
+        		<arg value="cssOptimize=comments"/>
+        		<arg value="mini=true"/>
 		</java>
 
+		<echo message="Cleaning up after Dojo build on '${davinciPlugin.id}' plugin ..." />
+
 		<!-- Cache our build results -->
-		<echo message="caching ${davinciPlugin.id} build..."/>
 		<mkdir dir="${davinciPlugin.dojo.cache.directory}"/>
 		<antcall target="cache.davinciPlugin.library"/>
 		<antcall target="cache.davinciPlugin.metadata"/>
@@ -166,16 +181,40 @@
 		<delete dir="${target.folder}/WebContent/release" />
 		
 		<!-- Do additional clean-up -->
-		<delete dir="${target.folder}/WebContent/util"/>
-		<delete dir="${target.folder}/WebContent/dojo"/>
-		<delete dir="${target.folder}/WebContent/dijit"/>
+		<delete dir="${target.folder}/WebContent/davinci/"/>
+		<delete dir="${target.folder}/WebContent/dijit/"/>
+		<delete dir="${target.folder}/WebContent/dojo/"/>
+		<delete dir="${target.folder}/WebContent/dojox/"/>
+		<delete dir="${target.folder}/WebContent/orion/"/>
+		<delete dir="${target.folder}/WebContent/preview/"/>
+		<delete dir="${target.folder}/WebContent/system/"/>
+		<delete dir="${target.folder}/WebContent/util/"/>
 		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
+		<!-- delete helpers we had copied from dojo_1_8 plugin -->
+		<antcall target="delete.dojo18.metadata"/>
 		
 		<!-- Restore dojo dir if we backed it up earlier -->
 		<condition property="davinciPlugin.dojoBackupDir.exists">
     		<available file="${target.folder}/WebContent/dojo_BACKUP" type="dir"/>
     	</condition>
 		<antcall target="restore.davinciPlugin.dojoDir"/>
+	</target>
+	
+	<!-- copy in helpers from dojo_1_8 plugin... if we didn't have a "dojo" directory when we started (representing 
+		 the plugin's library), we can assume we're not currently building the the dojo_1_8 plugin, and we'll need 
+		 its helpers. -->
+	<target name="copy.dojo18.metadata" unless="davinciPlugin.dojoDir.exists">
+		<copy todir="${target.folder}/WebContent/maq-metadata-dojo" failonerror="true" overwrite="true" description="copy in helpers from dojo_1_8 plugin">
+				<fileset dir="${basedir}/../davinci.dojo_1_8/WebContent/metadata">
+					<include name="*/**"/>
+				</fileset>
+		</copy>
+	</target>
+	
+	<!-- delete helpers we copied in from dojo_1_8 plugin (if we're not currently building
+		the dojo_1_8 plugin). -->
+	<target name="delete.dojo18.metadata" unless="davinciPlugin.dojoDir.exists">
+		<delete dir="${target.folder}/WebContent/maq-metadata-dojo/"/>
 	</target>
 	
 	<!-- if we had a "dojo" directory when we started (representing the plugin's library), we 
@@ -198,7 +237,7 @@
 	</target>
 	
 	<!-- copy from the build cache back into the plug-ins working directory-->
-	<target name="copy.davinciPlugin" if="${run.dojo.build}">
+	<target name="copy.davinciPlugin" if="run.dojo.build">
 		<antcall target="copy.davinciPlugin.library"/>
 		<antcall target="copy.davinciPlugin.metadata"/>
 	</target>
@@ -266,7 +305,7 @@
 		<property name="davinciPlugin.id" value="${plugin.extension.ajaxLibrary.id}"/>
 		<echo>Post gather for &quot;${davinciPlugin.id}&quot;, version=&quot;${davinciPlugin.normalizedVersion}&quot; ...</echo>
 
-		<property name="davinciPlugin.dojo.cache.directory" value="${dojo.cache.directory}/${davinciPlugin.id}-${davinciPlugin.normalizedVersion}"/>
+		<property name="davinciPlugin.dojo.cache.directory" value="${dojo.cache.directory}/${davinciPlugin.id}_${davinciPlugin.normalizedVersion}"/>
 <!-- disable version		<property name="davinciPlugin.metadata.moduleId" value="maq-metadata-${davinciPlugin.id}-${davinciPlugin.normalizedVersion}"/> -->
 		<property name="davinciPlugin.metadata.moduleId" value="maq-metadata-${davinciPlugin.id}"/>
 		<property name="davinciPlugin.dojo.profile" value="${davinciPlugin.id}.profile.js"/>

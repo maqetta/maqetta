@@ -50,7 +50,6 @@ public class LibraryManager implements ILibraryManager {
 			this.ID = ID;
 			this.version = version;
 			this.basePath = basePath;
-
 		}
 
 		BundleLibraryInfo(String id, String version) {
@@ -58,9 +57,10 @@ public class LibraryManager implements ILibraryManager {
 			this.version = version;
 		}
 
-		public void setBasePath(String basePath, String defaultRoot) {
+		public void setBasePath(String basePath, String defaultRoot, String source) {
 			this.basePath = basePath;
 			this.defaultRoot = defaultRoot;
+			this.sourcePath = source;
 		}
 
 		public URL[] find(String path, boolean recurse) {
@@ -111,10 +111,10 @@ public class LibraryManager implements ILibraryManager {
 		}
 
 		public String getMetadata() {
-			if (this.metadatapath == null) {
+			if (this.metadataPath == null) {
 				return "";
 			}
-			URL metadata = this.bundleBase.getEntry(this.metadatapath
+			URL metadata = this.bundleBase.getEntry(this.metadataPath
 					+ "/widgets.json");
 			InputStream stream = null;
 			try {
@@ -239,10 +239,11 @@ public class LibraryManager implements ILibraryManager {
 						.getAttribute(IDavinciServerConstants.EP_ATTR_LIBRARYPATH_NAME);
 				String bundlePath = libraryPathElements[i]
 						.getAttribute(IDavinciServerConstants.EP_ATTR_LIBRARYPATH_LOCATION);
-				((BundleLibraryInfo) libInfo).setBasePath(bundlePath,
-						virtualPath);
-				
+				String source = libraryPathElements[i]
+				        .getAttribute(IDavinciServerConstants.EP_ATTR_LIBRARYPATH_SOURCE);
+				((BundleLibraryInfo) libInfo).setBasePath(bundlePath, virtualPath, source);
 			}
+
 			if (libInfo instanceof BundleLibraryInfo) {
 				((BundleLibraryInfo) libInfo).bundleBase = getLibraryBundle(libraryElement);
 			}

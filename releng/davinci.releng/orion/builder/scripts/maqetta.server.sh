@@ -7,6 +7,7 @@ print_help() {
     echo " -p, --port <port>           server listens on port # <port>; defaults to 50000"
     echo " -m, --smtpServer <hostname> provide the hostname of an SMTP server; defaults to localhost"
     echo " -c, --consolePort <port>    enable console, listening on port number <port>"
+    echo " --webBuilder <URL>          enable Dojo Web Builder, using given URL"
     echo " -h, --help                  show this message"
 }
 
@@ -28,6 +29,10 @@ while [ "${1+isset}" ]; do
             ;;
         -c|--consolePort)
             consolePort="-console $2"
+            shift 2
+            ;;
+        --webBuilder)
+            dwbUrl="-Dmaqetta.dojoWebBuilder=$2"
             shift 2
             ;;
         -h|--help)
@@ -82,4 +87,5 @@ echo Using directory: "$absusersdir"
 
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
-java -Dorion.core.configFile=${scriptdir}//maqetta.conf "-Dmaqetta.baseDirectory=$absusersdir" -Dorg.eclipse.equinox.http.jetty.http.port=$port -jar "$jarFilePath" $consolePort -noExit
+# XXX Issue 2941 - Need to specify "-clean" flag due to possible Eclipse bug.
+java -Dorion.core.configFile=${scriptdir}/maqetta.conf "-Dmaqetta.baseDirectory=$absusersdir" -Dorg.eclipse.equinox.http.jetty.http.port=$port $dwbUrl -jar "$jarFilePath" $consolePort -noExit -clean

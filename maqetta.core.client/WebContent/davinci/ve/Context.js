@@ -85,6 +85,8 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
 	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout';
 
+var contextCount = 0;
+
 return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// comma-separated list of modules to load in the iframe
@@ -109,10 +111,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			args ={};
 		}
 		this._contentStyleSheet = Workbench.location() + require.toUrl("davinci/ve/resources/content.css");
-		if(typeof davinci.Workbench._contextCount != 'number'){
-			davinci.Workbench._contextCount = 0;
-		}
-		this._id = "_edit_context_" + davinci.Workbench._contextCount++;
+		this._id = "_edit_context_" + contextCount++;
 		this.widgetHash = {};
 		
 		lang.mixin(this, args);

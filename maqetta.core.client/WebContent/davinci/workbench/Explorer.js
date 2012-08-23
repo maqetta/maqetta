@@ -62,7 +62,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		});
 		var tree = this.tree = new imageDragTree({
 			showRoot: false,
-			persist: true,
+			persist: false,
 			cookieName: 'maqExplorer',
 			model: model,
 			id:'resourceTree',

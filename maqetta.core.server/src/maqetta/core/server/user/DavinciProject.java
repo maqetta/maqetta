@@ -23,7 +23,6 @@ public class DavinciProject implements Serializable, IDavinciProject {
 	private String projectName = "Project";
 
 	private CommentsDocument commentsDocument;
-	private IStorage commentsFileStorage;
 
 	public String getOwnerId() {
 		return ownerId;
@@ -42,11 +41,9 @@ public class DavinciProject implements Serializable, IDavinciProject {
 	}
 
 	public IStorage getCommentsFileStorage() {
-		if (commentsFileStorage == null) {
-			IDesignerUser ru = ReviewManager.getReviewManager().getDesignerUser(ownerId);
-			IStorage commentingDir = ru.getCommentingDirectory();
-			commentsFileStorage = commentingDir.newInstance(commentingDir, "snapshot/comments.xml");
-		}
+		IDesignerUser ru = ReviewManager.getReviewManager().getDesignerUser(ownerId);
+		IStorage commentingDir = ru.getCommentingDirectory();
+		IStorage commentsFileStorage = commentingDir.newInstance(commentingDir, "snapshot/comments.xml");
 		return commentsFileStorage;
 	}
 

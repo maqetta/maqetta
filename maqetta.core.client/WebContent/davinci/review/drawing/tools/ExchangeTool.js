@@ -47,44 +47,48 @@ return declare("davinci.review.drawing.tools.ExchangeTool", _ToolCommon, {
 	},
 
 	importShapes: function(/*String*/ data, /*Boolean*/clear, /*Function*/ a2c) {
-		var shapes = eval(data),clazz, shape;
-		if (clear) { 
-			this.surface.clear();
+		try {
+			var shapes = eval(data),clazz, shape;
+			if (clear) { 
+				this.surface.clear();
+			}
+			dojo.forEach(shapes, function(s) {
+				var type = s.type;
+				if (type == "Arrow") {
+					clazz = davinci.review.drawing.shapes.Arrow;
+				} else if(type == "Rectangle") {
+					clazz = davinci.review.drawing.shapes.Rectangle;
+				} else if(type == "Ellipse") {
+					clazz = davinci.review.drawing.shapes.Ellipse;
+				} else if(type == "Text") {
+					clazz = davinci.review.drawing.shapes.Text;
+				} else {
+					return;
+				}
+				var x1 = s.x1, x2 = s.x2, y1 = s.y1, y2 = s.y2, text = s.text;
+				delete s.type;
+				delete s.x1;
+				delete s.x2;
+				delete s.y1;
+				delete s.y2;
+				s.a2c = a2c;
+				if(s.stateList){
+					s.stateList = dojo.fromJson(s.stateList);
+				}
+				if(s.sceneList){
+					s.sceneList = dojo.fromJson(s.sceneList);
+				}
+				shape = new clazz(this.surface, x1, y1, x2, y2, s);
+				shape.filterAttributes = this.filterAttributes;
+				shape.render();
+				if (type == "Text") {
+					shape.setText(unescape(text));
+				}
+				this.surface.shapes.push(shape);
+			}, this);
+		}catch(exp){
+			console.log("Failed to create the shape with the definition: " + data);
 		}
-		dojo.forEach(shapes, function(s) {
-			var type = s.type;
-			if (type == "Arrow") {
-				clazz = davinci.review.drawing.shapes.Arrow;
-			} else if(type == "Rectangle") {
-				clazz = davinci.review.drawing.shapes.Rectangle;
-			} else if(type == "Ellipse") {
-				clazz = davinci.review.drawing.shapes.Ellipse;
-			} else if(type == "Text") {
-				clazz = davinci.review.drawing.shapes.Text;
-			} else {
-				return;
-			}
-			var x1 = s.x1, x2 = s.x2, y1 = s.y1, y2 = s.y2, text = s.text;
-			delete s.type;
-			delete s.x1;
-			delete s.x2;
-			delete s.y1;
-			delete s.y2;
-			s.a2c = a2c;
-			if(s.stateList){
-				s.stateList = dojo.fromJson(s.stateList);
-			}
-			if(s.sceneList){
-				s.sceneList = dojo.fromJson(s.sceneList);
-			}
-			shape = new clazz(this.surface, x1, y1, x2, y2, s);
-			shape.filterAttributes = this.filterAttributes;
-			shape.render();
-			if (type == "Text") {
-				shape.setText(unescape(text));
-			}
-			this.surface.shapes.push(shape);
-		}, this);
 	}
 
 });

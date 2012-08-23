@@ -25,7 +25,7 @@ return declare("davinci.review.drawing.shapes.Text", _ShapeCommon, {
 	},
 
 	getText: function() {
-		return this.shapeNode.innerHTML;
+		return this.shapeNode.innerHTML.replace(/"/g, "'");
 	},
 
 	getEditMode: function() {

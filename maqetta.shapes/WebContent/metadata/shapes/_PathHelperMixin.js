@@ -1,6 +1,8 @@
 define([
+	"davinci/Workbench",
+    "davinci/workbench/Preferences",
 	"davinci/ve/commands/ModifyCommand"
-], function(ModifyCommand) {
+], function(Workbench, Preferences, ModifyCommand) {
 
 var _PathHelperMixin = function() {};
 _PathHelperMixin.prototype = {
@@ -141,8 +143,10 @@ _PathHelperMixin.prototype = {
             var position_prop = dojo.style(this._widget.domNode,"position");
         }
         var absolute = (position_prop=="absolute");
-        var doSnapLinesX = absolute;
-        var doSnapLinesY = absolute;
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
+				Workbench.getProject());
+		var doSnapLinesX = editorPrefs.snap && absolute;
+		var doSnapLinesY = doSnapLinesX;
         if((doSnapLinesX || doSnapLinesY) && event && this._widget && context){
             var data = {type:this._widget.type};
             var position = { x:pageX, y:pageY};

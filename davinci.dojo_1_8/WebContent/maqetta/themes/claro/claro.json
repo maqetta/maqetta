@@ -717,7 +717,7 @@
                 },
                 "Disabled": {
 					"selectors": {
-						".claro .dijitButtonDisabled .dijitButtonNode" : [
+						".claro .dijitButtonDisabled .dijitButtonNode, .claro .dijitDropDownButtonDisabled .dijitButtonNode, .claro .dijitComboButtonDisabled .dijitButtonNode, .claro .dijitToggleButtonDisabled .dijitButtonNode":[
 							"border-width",
 							"border-style",
 							"border-color",
@@ -738,9 +738,7 @@
 							"color",
 							"font-family",
 							"font-size",
-							"font-weight" 
-						],
-						".claro .dijitButtonDisabled, .claro .dijitDropDownButtonDisabled, .claro .dijitComboButtonDisabled, .claro .dijitToggleButtonDisabled": [
+							"font-weight",
 							"background-image",
 							"outline"
 						]

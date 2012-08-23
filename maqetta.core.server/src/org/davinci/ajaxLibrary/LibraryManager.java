@@ -148,6 +148,9 @@ public class LibraryManager implements ILibraryManager {
 			return this.listUri(this.basePath, path);
 		}
 
+	    public URL getSourceURL(String path) {
+			return this.getUri(this.sourcePath, path);
+	    }
 	}
 
 	Library findLibrary(String id, String version) {

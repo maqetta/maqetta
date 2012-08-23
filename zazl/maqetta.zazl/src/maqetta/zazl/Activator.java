@@ -73,17 +73,16 @@ public class Activator implements BundleActivator {
 			List<Library> srcLibraryList = new ArrayList<Library>();
 			Library[] libraries = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
 			for (Library library : libraries) {
+				if (library.getSourcePath() != null) {
+					srcLibraryList.add(library);
+				}
 				String libraryId = library.getID();
 				if (libraryId.equals("zazl") || libraryId.equals("dojo")) {
 					continue;
 				}
-				if (libraryId.endsWith("-src")) {
-					srcLibraryList.add(library);
-				} else {
-					libraryList.add(library);
-				}
+				libraryList.add(library);
 			}
-			Library dojoLib = ServerManager.getServerManger().getLibraryManager().getLibrary("dojo-src", "1.8");
+			Library dojoLib = ServerManager.getServerManger().getLibraryManager().getLibrary("dojo", "1.8");
 			ResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManger().getUserManager(), srcLibraryList);
 			RhinoClassLoader rhinoClassLoader = new RhinoClassLoader(resourceLoader);
 			JSCompressorFactory jsCompressorFactory = null;

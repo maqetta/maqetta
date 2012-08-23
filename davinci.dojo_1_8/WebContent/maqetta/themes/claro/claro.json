@@ -366,7 +366,8 @@
 							"min-height",
 							"min-width",
 							"height",
-							"width"
+							"width",
+							"position"
 							
 						]								
 					},
@@ -510,6 +511,7 @@
                 "Normal": {
 					"selectors": {
 						".claro .dijitBorderContainer": [
+							"position",
 							"border-width",
 							"border-color",
 							"borer-style",
@@ -605,7 +607,8 @@
                 	"elements":{ 
                      	"$root": [ 
 							"font-size",
-							"font-weight" 
+							"font-weight",
+							"position", 
                  		]
                     },
 					"selectors": {
@@ -714,7 +717,7 @@
                 },
                 "Disabled": {
 					"selectors": {
-						".claro .dijitButtonDisabled .dijitButtonNode" : [
+						".claro .dijitButtonDisabled .dijitButtonNode, .claro .dijitDropDownButtonDisabled .dijitButtonNode, .claro .dijitComboButtonDisabled .dijitButtonNode, .claro .dijitToggleButtonDisabled .dijitButtonNode":[
 							"border-width",
 							"border-style",
 							"border-color",
@@ -735,9 +738,7 @@
 							"color",
 							"font-family",
 							"font-size",
-							"font-weight" 
-						],
-						".claro .dijitButtonDisabled, .claro .dijitDropDownButtonDisabled, .claro .dijitComboButtonDisabled, .claro .dijitToggleButtonDisabled": [
+							"font-weight",
 							"background-image",
 							"outline"
 						]
@@ -798,7 +799,8 @@
                 	"elements":{ 
                      	"$root": [ 
                      		"height",
-							"width"							
+							"width",
+							"position"							
                  		]
                     },
                 	"selectors": {
@@ -1123,7 +1125,8 @@
 							"border-color",
 							"border-style",
 							"border-width",
-							"margin"
+							"margin",
+							"position"
 						]
 					},
 					"query": "$auto"
@@ -1295,7 +1298,8 @@
 									"min-height",
 									"min-width",
 									"height",
-									"width"
+									"width",
+									"position"
 									
                                 ]								
                             },
@@ -1482,6 +1486,7 @@
                 "Normal": {
                 	"elements":{ 
                      	"$root": [ 
+                     		"position",
 							"background-color",
 							"background-image",
 							"border", 
@@ -1492,9 +1497,17 @@
                     "selectors": {
                    	 ".claro .dijitTextBox, .claro .dijitInputInner": [
 							"color",
+							"font-family",
+							"font-size",
 							"font-style",
-							"font-wiegth",
-							"font"
+							"font-weight",
+							"font",
+							"text-decoration",
+							"text-align",
+							"vertical-align",
+							"white-space",
+							"text-indent",
+							"line-height"
 						],
 						".claro .dijitSelectLabel, .claro .dijitTextBox .dijitInputInner, .claro .dijitValidationTextBox .dijitValidationContainer": [
 							"text-align",
@@ -1567,7 +1580,8 @@
                 	"elements":{ 
                      	"$root": [ 
 							"height",
-							"width" 
+							"width",
+							"position" 
                  		]
                     },
 					"selectors": {

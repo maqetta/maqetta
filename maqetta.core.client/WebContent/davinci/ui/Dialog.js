@@ -227,7 +227,11 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 	if (dojo.isString(content)) {
 		dialogContents.innerHTML = content;
 	} else {
-		dialogContents.appendChild(content.domNode);
+		if (content.domNode) {
+			dialogContents.appendChild(content.domNode);
+		} else {
+			dialogContents.appendChild(content);
+		}
 	}
 
 	handles.push(connect.connect(myDialog, "onExecute", dojo.hitch(this, function() {

@@ -276,8 +276,10 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 	},
 	
-	_visualChanged: function() {
-		this._setDirty();
+	_visualChanged: function(skipDirty) {
+		if (!skipDirty) {
+			this._setDirty();
+		}
 		this.htmlEditor.setValue(this.model.getText(),true);
 	},
 	

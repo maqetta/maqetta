@@ -1,8 +1,9 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/Workbench",
     	"davinci/ve/actions/ContextAction",
     	"davinci/ve/tools/PasteTool"
-], function(declare, ContextAction, PasteTool){
+], function(declare, Workbench, ContextAction, PasteTool){
 
 
 return declare("davinci.ve.actions.PasteAction", [ContextAction], {
@@ -26,7 +27,17 @@ return declare("davinci.ve.actions.PasteAction", [ContextAction], {
 
 	isEnabled: function(context){
 		context = this.fixupContext(context);
-		return !!(context && davinci.Runtime.clipboard);
+		var e = Workbench.getOpenEditor();
+		if (e && context) {
+			if(e.declaredClass == 'davinci.ve.PageEditor'){
+				var displayMode = e.getDisplayMode();
+				return davinci.Runtime.clipboard && displayMode != 'source';
+			}else{
+				return davinci.Runtime.clipboard;
+			}
+		}else{
+			return false;
+		}
 	},
 
 	shouldShow: function(context){

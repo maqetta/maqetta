@@ -96,6 +96,32 @@
 }
 
 /* HTML widgets */
+.stickyNote DIV.HtmlWidget,
+.stickyNote FORM.HtmlWidget, 
+.stickyNote SPAN.HtmlWidget, 
+.stickyNote A.HtmlWidget, 
+.stickyNote TABLE.HtmlWidget, 
+.stickyNote TD.HtmlWidget,
+.stickyNote TH.HtmlWidget, 
+.stickyNote AUDIO.HtmlWidget,
+.stickyNote EMBED.HtmlWidget, 
+.stickyNote VIDEO.HtmlWidget,
+.stickyNote IMG.HtmlWidget, 
+.richText DIV.HtmlWidget,
+.richText FORM.HtmlWidget, 
+.richText SPAN.HtmlWidget, 
+.richText A.HtmlWidget, 
+.richText TABLE.HtmlWidget, 
+.richText TD.HtmlWidget,
+.richText TH.HtmlWidget, 
+.richText AUDIO.HtmlWidget,
+.richText EMBED.HtmlWidget, 
+.richText VIDEO.HtmlWidget,
+.richText IMG.HtmlWidget
+{
+	outline:none;
+}
+
 
 DIV.HtmlWidget {
 	min-width:1em;

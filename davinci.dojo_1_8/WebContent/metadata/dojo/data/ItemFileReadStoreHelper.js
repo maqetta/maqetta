@@ -1,11 +1,13 @@
 define([
 	"dojo/_base/array",
 	"davinci/html/HTMLElement",
-	"davinci/html/HTMLText"
+	"davinci/html/HTMLText",
+	"dojo/promise/all",
 ], function(
 	array,
 	HTMLElement,
-	HTMLText
+	HTMLText,
+	all
 ) {
 
 var ItemFileReadStoreHelper = function() {};
@@ -57,10 +59,12 @@ ItemFileReadStoreHelper.prototype = {
         var xhrParams = this.getXhrScriptPluginParameters(url, context);
         if (xhrParams){
            var dj = context.getDojo();
-           try{
-        	   dj.require('dojo/data/ItemFileReadStore'); // needed for first loading of html file
-        	   dj.require('dojox/io/xhrScriptPlugin');	  // needed for first loading of html file
-               dj.dojox.io.xhrScriptPlugin(xhrParams.url,xhrParams.callback);
+           try {
+           	 var req = context.getGlobal()["require"];
+           	 function _callback(args) {
+           	 	 dj.dojox.io.xhrScriptPlugin(xhrParams.url,xhrParams.callback);
+           	 }
+           	 var c = req(["dojo/data/ItemFileReadStore", "dojox/io/xhrScriptPlugin"], _callback);               
            }catch(e){
                console.warn("FAILED: failure for loading dojox.io.xhrScriptPlugin("+xhrParams.url+","+xhrParams.callback+");");
            }

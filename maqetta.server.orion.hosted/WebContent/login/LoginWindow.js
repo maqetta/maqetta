@@ -453,7 +453,7 @@ define(['domReady'], function(domReady) {
 
 		document.getElementById("signupUserButton").onclick = submitRegister;
 		
-		document.getElementById("hideRegisterButton").onclick = hideRegistration;
+		//document.getElementById("hideRegisterButton").onclick = hideRegistration;
 		document.getElementById("hideRegisterButtonSignup").onclick = hideRegistration;
 		
 		

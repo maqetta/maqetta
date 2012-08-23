@@ -2,7 +2,7 @@
 	"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<title>Main menubar: New HTML File tests</title>
+	<title>Main menubar: Create HTML File tests</title>
 
 	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
 	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
@@ -15,15 +15,15 @@
 		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
 	</div>
 	<hr />
-	<h1 class="test_title">Main menubar: New HTML File tests</h1>
+	<h1 class="test_title">Main menubar: Create HTML File tests</h1>
 
-	<h2 class="test_section">New HTML File: Folder ("Where") controls</h2>
+	<h2 class="test_section">Create HTML File: Folder ("Where") controls</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
 				Login if necessary. 
 				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
-		<li>From the New menu on the banner, choose "HTML File..." and make sure the Composition type is set to "Desktop hi-fi page".
+		<li>From the Create menu on the banner, choose "Desktop application...".
 		  <div class='expectedResults_subsection'>First time usage, there should be a "Where" drop-down button that says "(root)". 
 		  Clicking on the drop-down button should show a menu with the single value of "(root)".</div>
 		</li>
@@ -46,46 +46,42 @@
         <li>The Button should look correct (verifying the logic that manages relative references to JS and CSS files within the new HTML file).</li>
 	</ol>
 
-	<h2 class="test_section">Desktop composition types</h2>
+	<h2 class="test_section">Create menu composition types</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
-		<li>From the New menu on the banner, choose "HTML File..."</li>
-        <li>Create an HTML file with each possible desktop composition type ("Desktop hi-fi page", "Desktop hi-fi sketch", ...),
-            and drag/drop a Button into the middle of each of each of these pages.</li>
+		<li>Open up the Create menu on the banner and look at the first four entries.</li>
+		<li>Issue a command for each of the four entries, and for each, simply click Create to accept the default options, then drag/drop a dijit Button onto page</li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-        <li>The composition type should be sticky - if your previous page was "Desktop hi-fi sketch" 
-            then the subsequent New HTML File dialog should show that as current choice.</li>
-        <li>Desktop hi-fi page should open with Claro theme and flow layout (i.e., Button gets shoved to top/left of page).</li>
-        <li>Desktop hi-fi sketch should open with Claro theme and absolute layout (i.e., Button gets be placed at drop location).</li>
-        <li>Desktop lo-fi page should open with Sketch theme and flow layout (i.e., Button gets shoved to top/left of page).</li>
-        <li>Desktop lo-fi page should open with Sketch theme and absolute layout (i.e., Button gets be placed at drop location).</li>
+        <li>"Create mobile application" should show an iPhone silhouette. The Flow/Absolute control on the toolbar should say "Flow". The Button should snap to top/left of canvas. The Button should be styled with claro blue.</li>
+        <li>"Create Desktop Application"" should open with no silhouette.  The Flow/Absolute control on the toolbar should say "Flow". The Button should snap to top/left of canvas. The Button should be styled with claro blue.</li>
+        <li>"Create Sketch (high-fidelity)" should open with no silhouette.  The Flow/Absolute control on the toolbar should say "Absolute". The Button should be located at drop point on canvas. The Button should be styled with claro blue.</li>
+        <li>"Create Sketch (low-fidelity)" should open with no silhouette.  The Flow/Absolute control on the toolbar should say "Absolute". The Button should be located at drop point on canvas. The Button should be styled with the sketch theme.</li>
 	</ol>
 
-    <h2 class="test_section">Mobile composition types</h2>
+    <h2 class="test_section">Mobile compositions</h2>
     <h3 class="steps_subsection">Steps</h3>
     <ol class="steps">
-        <li>From the New menu on the banner, choose "HTML File..."</li>
+        <li>From the Create menu on the banner, choose "Mobile Application..." and on the dialog that appears, accept the default (which should be "iphone")</li>
+        <li>For each possible other device type, from the Create menu on the banner, choose "Mobile Application..." again, and choose a different device type</li>
         <li>Create an HTML file with each possible mobile device,
             and from dojox.mobile widget set, drag/drop a View and Heading into the middle of each of each of these pages.</li>
     </ol>
     <h3 class="expectedResults_subsection">Expected results</h3>
     <ol class="expectedResults">
-        <li>The composition type should be sticky - if your previous page was "blackberry" 
-            then the subsequent New HTML File dialog should show that as current choice.</li>
         <li>The correct mobile device silhouette and correct mobile theme should be used for each device.</li>
     </ol>
 
     <h2 class="test_section">Theme button - custom desktop theme</h2>
     <h3 class="steps_subsection">Steps</h3>
     <ol class="steps">
-        <li>Create a new desktop theme (e.g., claro2) using the New Theme command.</li>
+        <li>Create a new desktop theme (e.g., claro2) using the Create Theme command.</li>
         <li>Change global background color to something else (e.g., pink).</li>
         <li>Click on Save button.</li>
-        <li>New HTML File..., choose composition type of "Desktop hi-fi page".</li>
+        <li>Create Desktop Application.</li>
         <li>Click on "Theme..." button. In dialog that comes up, set desktop theme to "claro2" (or whatever the new theme's name is).</li>
-        <li>Back in New HTML File dialog, click Create.</li>
+        <li>Back in Create HTML File dialog, click Create.</li>
         <li>Add a Calendar and Button.</li>
     </ol>
     <h3 class="expectedResults_subsection">Expected results</h3>
@@ -96,12 +92,12 @@
     <h2 class="test_section">Theme button - custom mobile theme</h2>
     <h3 class="steps_subsection">Steps</h3>
     <ol class="steps">
-        <li>Create a new mobile theme (e.g., custom2) using the New Theme command and cloning the "custom" theme.</li>
+        <li>Create a new mobile theme (e.g., custom2) using the Create Theme command and cloning the "custom" theme.</li>
         <li>Change global background color to something else (e.g., pink).</li>
         <li>Click on Save button.</li>
-        <li>New HTML File..., choose composition type of "iphone".</li>
+        <li>Create Mobile Application..., choose device type of "iphone".</li>
         <li>Click on "Theme..." button. In dialog that comes up, change mobile theme from "(device specific)" to "custom2" (or whatever the new theme's name is).</li>
-        <li>Back in New HTML File dialog, click Create.</li>
+        <li>Back in Create HTML File dialog, click Create.</li>
         <li>Add a View and a Heading.</li>
     </ol>
     <h3 class="expectedResults_subsection">Expected results</h3>

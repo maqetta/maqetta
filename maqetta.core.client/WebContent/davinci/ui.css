@@ -138,7 +138,20 @@
 .templateInput {
 	width:100%;
 }
-
+.newFolderIcon {
+	background-image: url(img/sprite.png);
+	background-position: -21px -22px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.uploadIcon {
+	background-image: url(img/sprite.png);
+	background-position: 0 -450px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
 .downloadAllIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: 0 -1060px;
@@ -226,7 +239,7 @@
 .renameIcon {
 	/* same as redo icon for now */
 	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
-	background-position: -82px -728px;
+	background-position: 0px -745px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -235,7 +248,7 @@
 
 .deleteIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
-	background-position: 0 -648px;
+	background-position: -2px -648px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;

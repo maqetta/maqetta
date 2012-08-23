@@ -1,9 +1,10 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/Workbench",
     	"davinci/ve/actions/ContextAction",
     	"davinci/commands/CompoundCommand",
     	"davinci/ve/commands/RemoveCommand"
-], function(declare, ContextAction, CompoundCommand, RemoveCommand){
+], function(declare, Workbench, ContextAction, CompoundCommand, RemoveCommand){
 
 
 return declare("davinci.ve.actions.DeleteAction", [ContextAction], {
@@ -45,7 +46,18 @@ return declare("davinci.ve.actions.DeleteAction", [ContextAction], {
 
 	isEnabled: function(context){
 		context = this.fixupContext(context);
-		return (context && context.getSelection().length > 0);
+		var e = Workbench.getOpenEditor();
+		if (e && context) {
+			var anySelection = (context.getSelection().length > 0);
+			if(e.declaredClass == 'davinci.ve.PageEditor'){
+				var displayMode = e.getDisplayMode();
+				return anySelection && displayMode != 'source';
+			}else{
+				return anySelection;
+			}
+		}else{
+			return false;
+		}
 	},
 
 	shouldShow: function(context){

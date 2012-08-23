@@ -92,7 +92,7 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 						}
 						
 						dDeferred.resolve();
-					};
+					}.bind(this);
 					
 					d.context = this._context;
 					metadata.getHelper(d.type, "tool").then(function(ToolCtor) {

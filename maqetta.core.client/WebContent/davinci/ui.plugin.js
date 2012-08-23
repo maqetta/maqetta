@@ -407,6 +407,7 @@ return {
                 {
                     id: "davinci.ui.newfile",
                     label: "New folder...",
+                    iconClass:"newFolderIcon",
                     run: function() {
                     	require(['./ui/Resource'], function(r) {
                     		r.newFolder();
@@ -420,6 +421,7 @@ return {
                 {
                     id: "davinci.ui.addFiles",
                     label: "Upload files...",
+                    iconClass:"uploadIcon",
                     run: function() {
                     	require(['./ui/Resource'], function(r) {
                     		r.addFiles();
@@ -447,7 +449,7 @@ return {
                 {
                     id: "davinci.ui.delete",
                     label: "Delete",
-                    iconClass: "editActionIcon editDeleteIcon",
+                    iconClass: "deleteIcon",
                     isEnabled: function(item) {
                         return require('./ui/Resource').canModify(item);
                     },

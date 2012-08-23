@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/landing.css" />
+<link rel="stylesheet" type="text/css" href="./LoginWindow.css" />
 <script src="../requirejs/require.js"></script>
 <script type="text/javascript">
 /*global require*/
@@ -42,37 +43,29 @@ require({
 require(["LoginWindow.js"]);
 </script>
 <title>Login Page</title>
+<link rel="shortcut icon" href="../maqetta/app/davinci/img/maqetta.png" />
 </head>
 <body style="margin: 0; padding: 0; min-height:400px;">
-	<div class="orion-banner">
-		<div class="orion-nav-bar">
-			<div class="orion-logo"></div>
-			<a class="orion-rss-link" href="http://planetorion.org/news/" target="_blank"></a>
-			<a class="orion-twitter-link" href="http://twitter.com/orionhub" target="_blank"></a>
+	<div id="davinci_top_bar">
+		<div id="davinci_top_bar_main">
+			<span class="maq_banner_name_box">
+				<span class="maq_banner_logo"></span>
+				<span class="maq_banner_name">Maqetta</span>
+			</span>
 		</div>
+		<div id="davinci_top_bar_divider"></div>
+		<div id="maqetta_slogan">Visual authoring of HTML5 user interfaces - in the browser!</div>
 	</div>
 	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
-		<div class="orion-landing-area">
+		<div id="landingArea" class="orion-landing-area">
 			<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
 					<div id="errorMessage">&nbsp;</div>
 			</div>
-
-			<div class="orion-welcome-area">
-				<div class="orion-slogan">
-					<div class="orion-slogan-highlight">Tools for the web</div>
-					<div class="orion-slogan-lowlight">on the web</div>
-				</div>
-				<!-- div class="orion-welcome-area-text">
-					<h1>Welcome to Orion</h1>
-					<div class="orion-welcome-area-text-content">Orion is a web based developer platform supporting editing, testing and deploying web applictions. Orion has built in Git support. So create an
-						account, clone a repository to OrionHub and start editing</div>
-				</div -->
-			</div>
 			<div class="orion-login" id="orionLogin">
-				<div class="orion-login-header">Log in</div>
+				<div class="orion-login-header">Login</div>
 				<form>
 					<div class="orion-input-holder">
-						<input type="text" class="orion-text-input" name="login" id="login" placeholder="user@domain.com" title="Email" autocomplete="on" autofocus="true" spellcheck="false">
+						<input type="text" class="orion-text-input" name="login" id="login" placeholder="user@domain" title="Email" autocomplete="on" autofocus="true" spellcheck="false">
 					</div>
 					<div class="orion-input-holder">
 						<input name="password" type="password" id="password" class="orion-text-input" placeholder="password" title="Password">
@@ -87,7 +80,7 @@ require(["LoginWindow.js"]);
 			</div>
 
 			<div class="orion-register" id="orionRegister">
-				<div class="orion-register-header">New to Orion?</div>
+				<div class="orion-register-header">New to Maqetta?</div>
 				<form>
 					<div class="orion-login-button-holder">
 						<input id="registerButton" type="button" class="orion-register-button" value="Register" tabindex="0">
@@ -95,11 +88,11 @@ require(["LoginWindow.js"]);
 				</form>
 			</div>
 
-			<div class="orion-signup" id="newUserHeaderShown" style="visibility: hidden;">
-				<div class="orion-login-header">Verify an account</div>
+			<div class="orion-signup" id="newUserHeaderShown" style="visibility: hidden; left:0px;">
+				<div class="orion-login-header">Create an account</div>
 				<form>
 					<div class="orion-register-input-holder">
-						<input type="text" class="orion-text-input" placeholder="username" title="Email" readonly id="create_login" spellcheck="false">
+						<input type="text" class="orion-text-input" placeholder="user@domain" title="Email" autocomplete="on" autofocus="autofocus" readonly id="create_login" spellcheck="false">
 						<input type="hidden" id='loginTolken'/>
 					</div>
 					<div class="orion-register-input-holder">
@@ -113,14 +106,14 @@ require(["LoginWindow.js"]);
 					</div>
 					<div style="padding-right: 5px;"></div>
 					<div class="orion-login-button-holder">
-						<input id="hideRegisterButton" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
+						<!-- 						<input id="hideRegisterButton" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
+						-->
 					</div>
 
 				</form>
 			</div>
-			
-			<div class="orion-signup" id="newUserSignup" style="visibility: hidden;">
-				<div class="orion-login-header">Create an account</div>
+			<div class="orion-signup" id="newUserSignup" style="visibility: hidden; left:0px;">
+				<div class="orion-login-header">Request an account</div>
 				<form>
 					<div class="orion-register-input-holder">
 						<input type="text" class="orion-text-input" placeholder="user@domain.com" title="Email" autocomplete="on" autofocus="autofocus" id="signupEmail" spellcheck="false">
@@ -130,12 +123,13 @@ require(["LoginWindow.js"]);
 					</div>
 					<div style="padding-right: 5px;"></div>
 					<div class="orion-login-button-holder">
+						 
 						<input id="hideRegisterButtonSignup" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
+						
 					</div>
 
 				</form>
 			</div>
-			
 			<div class="orion-reset" id="orionReset" style="visibility: hidden;">
 				<div class="orion-reset-header">Reset Orion account</div>
 				<div class="orion-reset-note">Provide your username or email to reset your password.</div>
@@ -154,23 +148,9 @@ require(["LoginWindow.js"]);
 					</div>
 				</form>
 			</div>
-			<!--  
-			<div class="orion-open" id="orionOpen">
-				<!-- div class="orion-or-div">or</div><input type="submit" class="orion-google-button" value="Sign in with Google"><input type="submit" class="orion-openid-button" value="Sign in with OpenId" -->
-				<div id="openIDLogin" class="orion-open-header">Log in with:</div>
-				<div class="orion-open-images">
-					<a id="googleLoginLink" class="loginWindow googleIcon" aria-labelledby="openIDLogin googleLogin"> 
-						<div id="googleLogin" class="googleIcon" alt="Google" title="Google"></div>
-					</a> 
-					<a id="yahooLoginLink" class="loginWindow" aria-labelledby="openIDLogin yahooLogin"> 
-						<div id="yahooLogin" class="yahooIcon" alt="Yahoo!" title="Yahoo!"></div> 
-					</a> 
-					<a id="myopenidLoginLink" class="loginWindow" aria-labelledby="openIDLogin myopenidLogin"> 
-						<div id="myopenidLogin" class="openIdIcon" alt="myOpenID" title="myOpenID"></div> 
-					</a>
-				</div>
-			</div>
-			-->
+
+			
+			
 		</div>
 	</div>
 </body>

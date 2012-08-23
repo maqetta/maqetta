@@ -15,9 +15,15 @@ return declare("davinci.actions.UndoAction", Action, {
 	
 	isEnabled: function(selection){
 		var e = Workbench.getOpenEditor();
-		if (e && e.getContext) {
-	//	if (e.declaredClass == 'davinci.themeEditor.ThemeEditor') // this is a hack to only support undo for theme editor for 0.5
-			return e.getContext().getCommandStack().canUndo();
+		var context = e && e.getContext && e.getContext();
+		if (e && context) {
+			var canUndo = context.getCommandStack().canUndo();
+			if(e.declaredClass == 'davinci.ve.PageEditor'){
+				var displayMode = e.getDisplayMode();
+				return canUndo && displayMode != 'source';
+			}else{
+				return canUndo;
+			}
 		} else {
 			return false;
 		}

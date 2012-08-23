@@ -85,12 +85,13 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
 	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout';
 
+var contextCount = 0;
+
 return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
 	_configProps: {}, //FIXME: shouldn't be shared on prototype if we're going to use this for dynamic properties
-	_contextCount: 0,
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -110,7 +111,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			args ={};
 		}
 		this._contentStyleSheet = Workbench.location() + require.toUrl("davinci/ve/resources/content.css");
-		this._id = "_edit_context_" + this._contextCount++;
+		this._id = "_edit_context_" + contextCount++;
 		this.widgetHash = {};
 		
 		lang.mixin(this, args);
@@ -1232,6 +1233,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         this.getDijit().registry.forEach(function(w) {
               w.destroy();           
         });
+        
+        //FIXME: Temporary fix for #3030. Strip out any </br> elements
+        //before stuffing the content into the document.
+        var brRE = /<\s*\/\s*br\s*>/gi;
+        var content = content.replace(brRE, "");
 
         // Set content
 		//  Content may contain inline scripts. We use dojox.html.set() to pull
@@ -1785,7 +1791,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}else{
 				bodyModelNode.removeAttribute(States.APPSTATES_ATTRIBUTE);
 			}
-			this.editor._visualChanged();
+			// no src changes to pass in true
+			this.editor._visualChanged(true);
 		}
 		var statesFocus = States.getFocus(this.rootNode);
 		if(!statesFocus){

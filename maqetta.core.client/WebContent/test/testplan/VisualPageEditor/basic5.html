@@ -23,7 +23,7 @@
 		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
 				Login if necessary. 
 				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
-		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi sketch". Choose any filename.</li>
+		<li>Issue a "Create sketch (high-fidelity)" command from Create menu. Choose any filename.</li>
 		<li>For each of the following widgets, click on the widget in the Widgets palette, and subsequently
 				drag out a rectangle on the canvas to define the initial size of the widget, making sure
 				no widgets overlap:
@@ -70,6 +70,41 @@
 						any of its descendants.</li>
 				</ul>
 			</div></li>
+	</ol>
+
+	<h2 class="test_section">Arrow key movement for absolute widgets</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
+				Login if necessary. 
+				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
+		<li>Issue a "Create sketch (high-fidelity)" command from Create menu. Choose any filename.</li>
+		<li>Drag/drop at least one of each of the following onto the canvas:
+			<ul>
+				<li>TabContainer</li>
+				<li>HTML DIV (for the DIV, make it big enough to hold other widgets)</li>
+				<li>HTML BUTTON</li>
+				<li>A couple of clipart widgets (e.g., Home and Map)</li>
+				<li>A couple of shape widgets (e.g., Rectangle and Line)</li>
+			</ul>
+		</li>
+		<li>Drag/drop a Dojo Button into middle of the TabContainer.</li>
+		<li>Drag/drop a Dojo Checkbox into middle of the DIV</li>
+		<li>Click-select each of the widgets, then try out the four arrow keys to move the widget in the given direction.
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>Because each widget is absolutely positioned, the arrow keys should successfully
+						move the given widget one pixel in the given direction</li>
+				</ul>
+			</div></li>
+		<li>Click-select each of the widgets again, then with the shift key down, try out the four arrow keys to move the widget in the given direction.
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>The arrow keys should successfully
+						move the given widget 10 pixels in the given direction</li>
+				</ul>
+			</div></li>
+		<li><b><i>NOTE: keyboard focus has to be in the user iframe for arrow keys to work</i></b></li>
 	</ol>
 
 </body>

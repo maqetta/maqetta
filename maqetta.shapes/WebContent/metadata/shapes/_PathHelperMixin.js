@@ -1,6 +1,8 @@
 define([
+	"davinci/Workbench",
+    "davinci/workbench/Preferences",
 	"davinci/ve/commands/ModifyCommand"
-], function(ModifyCommand) {
+], function(Workbench, Preferences, ModifyCommand) {
 
 var _PathHelperMixin = function() {};
 _PathHelperMixin.prototype = {
@@ -89,6 +91,13 @@ _PathHelperMixin.prototype = {
 			return;
 		}
 		
+        var context = this._widget ? this._widget.getContext() : undefined;
+        if(context){
+            var parentIframeBounds = context.getParentIframeBounds();
+            pageX -= parentIframeBounds.l;
+            pageY -= parentIframeBounds.t;
+        }
+		
 		// Update unconstrained values (i.e., values if shift key not held)
 		this.un_p.x = this.un_p.x + dx;
 		this.un_p.y = this.un_p.y + dy;
@@ -129,17 +138,18 @@ _PathHelperMixin.prototype = {
 		dijitWidget.adjustBBox_Widget(newBbox);
 		dijitWidget._svgroot.style.marginLeft = (newBbox.x - dijitWidget._bboxStartup.x) + 'px';
 		dijitWidget._svgroot.style.marginTop = (newBbox.y - dijitWidget._bboxStartup.y) + 'px';
-        var context = this._widget ? this._widget.getContext() : undefined;
         var position_prop;
         if(this._widget){
             var position_prop = dojo.style(this._widget.domNode,"position");
         }
         var absolute = (position_prop=="absolute");
-        var doSnapLinesX = absolute;
-        var doSnapLinesY = absolute;
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
+				Workbench.getProject());
+		var doSnapLinesX = editorPrefs.snap && absolute;
+		var doSnapLinesY = doSnapLinesX;
         if((doSnapLinesX || doSnapLinesY) && event && this._widget && context){
             var data = {type:this._widget.type};
-            var position = { x:event.pageX, y:event.pageY};
+            var position = { x:pageX, y:pageY};
             var snapBox = {l:pageX,t:pageY,w:0,h:0};
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location

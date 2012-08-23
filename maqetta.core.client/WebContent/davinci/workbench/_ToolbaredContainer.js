@@ -99,7 +99,8 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 		var viewActions=this._getViewActions();
         if (viewActions && viewActions.length)
         {
-    		var tb=dojo.create("span", {style: {display: "inline-block"}},toolbarDiv);
+        	var tempDiv = dojo.create('div',{'class':'toolbaredContainer_toolbarDiv'});
+    		var tb=dojo.create("span", {style: {display: "inline-block"}},tempDiv);
     		
         	var toolbar = Workbench._createToolBar('toolbarPath', tb, viewActions,this._getViewContext());
     		dojo.style(toolbar.domNode,{"display":"inline-block", "float":"left"});

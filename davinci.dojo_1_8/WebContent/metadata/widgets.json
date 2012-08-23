@@ -252,6 +252,7 @@
             "inlineEdit": "./dijit/layout/StackContainerInput",
             "helper": "./dijit/layout/StackContainerHelper",
             "tool": "./dijit/layout/StackContainerCreateTool",
+            "hidden": "true"
         },
         {
             "name": "StackController",
@@ -261,7 +262,7 @@
             "resizable": "none",
             "hidden": "true",
             "invisible": false,
-            "helper": "./dijit/layout/StackControllerHelper",
+            "helper": "./dijit/layout/StackControllerHelper"
         },
         {
             "name": "TabContainer",

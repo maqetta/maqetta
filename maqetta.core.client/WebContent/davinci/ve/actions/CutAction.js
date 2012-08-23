@@ -1,10 +1,11 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/Workbench",
     	"davinci/ve/actions/ContextAction",
     	"davinci/commands/CompoundCommand",
     	"davinci/ve/commands/RemoveCommand",
     	"davinci/ve/widget"
-], function(declare, ContextAction, CompoundCommand, RemoveCommand, Widget){
+], function(declare, Workbench,ContextAction, CompoundCommand, RemoveCommand, Widget){
 
 
 return declare("davinci.ve.actions.CutAction", [ContextAction], {
@@ -67,7 +68,18 @@ return declare("davinci.ve.actions.CutAction", [ContextAction], {
 
 	isEnabled: function(context){
 		context = this.fixupContext(context);
-		return (context && context.getSelection().length > 0);
+		var e = Workbench.getOpenEditor();
+		if (e && context) {
+			var anySelection = (context.getSelection().length > 0);
+			if(e.declaredClass == 'davinci.ve.PageEditor'){
+				var displayMode = e.getDisplayMode();
+				return anySelection && displayMode != 'source';
+			}else{
+				return anySelection;
+			}
+		}else{
+			return false;
+		}
 	},
 
 	shouldShow: function(context){

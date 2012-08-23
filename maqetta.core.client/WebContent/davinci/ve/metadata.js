@@ -14,28 +14,35 @@ define([
 		Workbench,
     
     // Array of library descriptors.
-    	libraries = {},
+        libraries = {},
     // Widget metadata cache
     // XXX Should there be a limit on metadata objects in memory?
-    	mdCache = {},
+        mdCache = {},
     // Cache for instantiated helper objects.  See getHelper().
-    	helperCache = {},
+        helperCache = {},
     // Localization strings
-    	l10n = null,
+        l10n = null,
     // Each callbacks.js file gets its own deferred.
     // Ensures page editors don't start processing until all callback.js files are ready
-    	deferredGets = [],
+        deferredGets = [],
 
         libExtends = {},
 
-    	defaultProperties = {
-	        id: {datatype: "string", hidden: true},
-	        lang: {datatype: "string", hidden: true},
-	        dir: {datatype: "string", hidden: true},
-	        "class": {datatype: "string", hidden: true},
-	        style: {datatype: "string", hidden: true},
-	        title: {datatype: "string", hidden: true}
-    	};
+        defaultProperties = {
+            id: {datatype: "string", hidden: true},
+            lang: {datatype: "string", hidden: true},
+            dir: {datatype: "string", hidden: true},
+            "class": {datatype: "string", hidden: true},
+            style: {datatype: "string", hidden: true},
+            title: {datatype: "string", hidden: true}
+        },
+
+    // Used for registering AMD packages for the metadata and code files from the widget libs.
+        PKG_METADATA_PREFIX = 'maq-metadata-',
+        PKG_LIB_PREFIX = 'maq-lib-',
+        REG_PKG_TIMEOUT = 100,
+        regPkgTimer,
+        packages = [];
 
     dojo.subscribe("/davinci/ui/libraryChanged/start", function() {
         // XXX We should be smart about this and only reload data for libraries whose path has
@@ -45,8 +52,10 @@ define([
         mdCache = {};
         helperCache = {};
         l10n = null;
+        packages = [];
+        clearTimeout(regPkgTimer);
         Metadata.init().then(function() {
-        	dojo.publish("/davinci/ui/libraryChanged");
+            dojo.publish("/davinci/ui/libraryChanged");
         });
     });
 
@@ -223,32 +232,6 @@ define([
              */
             _maqGetString: getDescriptorString
         });
-        
-        // Register a module identifier for the metadata and library code paths;
-        // used by helper and creation tool classes.
-        // Replace periods with underscores for module id's in case we want to do custom builds 
-        // for thos modules later
-        pkg.__metadataModuleId = 'maq-metadata-' + pkg.name /* + '-' + pkg.version.replace(/\./g, "_")*/;
-		var packages = [ {
-			name : pkg.__metadataModuleId,
-			location : new Path(location.href).append(path).toString()
-		} ];
-        if (pkg.name != "dojo") {
-        	// Don't register another "dojo" lib to compete with core.client. Also, note
-        	// no longer adding pkg.version to module id because not compatible when
-        	// we go to custom build the library.
-        	pkg.__libraryModuleId = pkg.name;
-        	var libPath = 'app/static/lib/' + pkg.name + '/' + pkg.version;
-        	
-        	packages.push({
-                name: pkg.__libraryModuleId,
-                location: new Path(location.href).append(libPath).toString()
-            });
-        }
-        
-        require = require({
-            packages: packages
-        });
 
         // handle "extend"
         if (wm.extend) {
@@ -268,6 +251,10 @@ define([
         if (libExtends[libName]) {
             handleLibExtends(wm, libExtends[libName]);
         }
+
+        // Register a module identifier for the metadata and library code paths;
+        // used by helper and creation tool classes.
+        registerPackages(pkg, path);
 
         return pkg;
     }
@@ -305,6 +292,72 @@ define([
                 }
             }
         });
+    }
+
+    function _regpkgs() {
+        var pkgs = [],
+            map = {},
+            basePath = new Path(location.href);
+
+        packages.forEach(function(elem) {
+            var pkg = elem.pkg,
+                path = elem.path,
+                name = pkg.name,
+                version = pkg.version,
+                libPath = 'app/static/lib/' + name + '/' + version,
+                libMid = PKG_LIB_PREFIX + name /*+ '-' + version*/;
+
+            // generate the `packageMap` obj, for all widget libraries currently loaded
+            map[name] = libMid;
+
+            pkg.__metadataModuleId = PKG_METADATA_PREFIX + name /*+ '-' + version.replace(/\./g, "_")*/;
+            pkgs.push({
+                name: pkg.__metadataModuleId,
+                location: basePath.append(path).toString()
+            });
+            if (name !== 'dojo') {
+                pkgs.push({
+                    name: libMid,
+                    location: basePath.append(libPath).toString(),
+                    packageMap: map
+                });
+            } else {
+                // XXX Need to special case the 'dojo' library, since it really contains
+                //     3 different libraries: dojo, dijit and dojox
+                pkgs.push({
+                    name: libMid,
+                    location: basePath.append(libPath).append('dojo').toString(),
+                    packageMap: map
+                });
+
+                var _mid = PKG_LIB_PREFIX + 'dijit';
+                map.dijit = _mid;
+                pkgs.push({
+                    name: _mid,
+                    location: basePath.append(libPath).append('dijit').toString(),
+                    packageMap: map
+                });
+
+                _mid = PKG_LIB_PREFIX + 'dojox';
+                map.dojox = _mid;
+                pkgs.push({
+                    name: _mid,
+                    location: basePath.append(libPath).append('dojox').toString(),
+                    packageMap: map
+                });
+            }
+        });
+
+        require({ packages: pkgs });
+    }
+
+    function registerPackages(pkg, path) {
+        packages.push({
+            pkg: pkg,
+            path: path
+        });
+        clearTimeout(regPkgTimer);
+        regPkgTimer = setTimeout(_regpkgs, REG_PKG_TIMEOUT);
     }
     
     // XXX Changed to return package, rather than widgets.json object

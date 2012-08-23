@@ -366,7 +366,8 @@
 							"min-height",
 							"min-width",
 							"height",
-							"width"
+							"width",
+							"position"
 							
 						]								
 					},
@@ -510,6 +511,7 @@
                 "Normal": {
 					"selectors": {
 						".claro .dijitBorderContainer": [
+							"position",
 							"border-width",
 							"border-color",
 							"borer-style",
@@ -605,7 +607,8 @@
                 	"elements":{ 
                      	"$root": [ 
 							"font-size",
-							"font-weight" 
+							"font-weight",
+							"position", 
                  		]
                     },
 					"selectors": {
@@ -798,7 +801,8 @@
                 	"elements":{ 
                      	"$root": [ 
                      		"height",
-							"width"							
+							"width",
+							"position"							
                  		]
                     },
                 	"selectors": {
@@ -1123,7 +1127,8 @@
 							"border-color",
 							"border-style",
 							"border-width",
-							"margin"
+							"margin",
+							"position"
 						]
 					},
 					"query": "$auto"
@@ -1295,7 +1300,8 @@
 									"min-height",
 									"min-width",
 									"height",
-									"width"
+									"width",
+									"position"
 									
                                 ]								
                             },
@@ -1482,6 +1488,7 @@
                 "Normal": {
                 	"elements":{ 
                      	"$root": [ 
+                     		"position",
 							"background-color",
 							"background-image",
 							"border", 
@@ -1575,7 +1582,8 @@
                 	"elements":{ 
                      	"$root": [ 
 							"height",
-							"width" 
+							"width",
+							"position" 
                  		]
                     },
 					"selectors": {

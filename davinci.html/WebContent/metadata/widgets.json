@@ -656,6 +656,9 @@
             "category": "html-generic",
             "icon": "resources/images/rich-text-widget.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUZJREFUeNpi/P//PwMlgAVEhPcf+E+RAf///WPoTLMHC/wFGvUP6ioQ+9c/IA1k//73H0z/g1oFkpu6+DDUgL//wIJHLz8HK4QrAhr8A6jyDwiDDPgPoiFydiZyDP+A8oygMAho2UaWFxiBEOKCP38ZGvM8STagbvJ2iAG/f/wECxgIsWBVeFLbh8H86hYM8T/ffzAwMVAIsBogIvIHjFtnnkJxBQhfXbgRMxp///iBIvjmDQvUICOG6nSIGMwLIEP+xvqB2b+//4S44N/vv3DNIFthLiAE/gEDH2zA378IA/qrjcAugLkCrwF//yCiEQYKW8+BnQ5jMzCYMfCUpYKdDgIgNgz8BaUqUEKyTJz5//zb3/+JBX/+/gNj66QZ/8Ep0ThlDjglMgOT5j8mJgbkZAkSYwTFOVCcBcgG0ShylGZngAADAE8V2Le+qEpCAAAAAElFTkSuQmCC",
+            "properties": {
+             	"class": "richText"
+            },
             "children": "Enter Text",
             "resizable": "none",
             "allowedChild": "ANY",
@@ -669,7 +672,8 @@
             "icon": "resources/images/HTML-sticky-note.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAAYeZAkkbQ0seA0sdxY7iCtZojZmrDZlqzdnrThorTlprjpqrzxssEBws0R0tkt8u1WGwVeIwlaHwVqKxFyMxF6OxmGRx2KSyGWUymaVymuYzHWh0Xmk04y02+71+9zr97na8MPf8szk9M3k9NDl9NXo9dfp9trr99/u+ODu+OTw+Ov0+onC5pfJ6qTQ7KjS7afS7K/W77DX77fZ77vc8Nbp9ePw+Ojz+enz+f///wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAaQwJxwSCwaj4SC5mgcNByajHQq5XQ6hIazkLF5vzbPY/B4NAIETGrNTq0Ghca4k7t8TqeP/oNrAAoANxs5FjWGNSUlKioCfg84FjkVIyKVIiMmAiibKSYVORQhoqMkJ6MzLRQ5EyCtrjSuDAoGBzkRMrgxMbi4LgsItTkSMC/EL8fELAkGQxDOz9AQzEzU1UxBADs=",
             "properties": {
-                "style": "position:absolute; height:100px; width:100px; background-color:#F9FFC2; border-color:black; border-width:2px; border-style:solid; z-index:925; -webkit-border-radius: 5px 5px 0 0; -moz-border-radius: 5px 5px 0 0; border-radius: 5px 5px 0 0;"
+                "style": "position:absolute; height:100px; width:100px; background-color:#F9FFC2; border-color:black; border-width:2px; border-style:solid; z-index:925; -webkit-border-radius: 5px 5px 0 0; -moz-border-radius: 5px 5px 0 0; border-radius: 5px 5px 0 0;",
+            	"class": "stickyNote"
             },
             "children": "<i>Enter Note</i>",
             "allowedChild": "ANY",

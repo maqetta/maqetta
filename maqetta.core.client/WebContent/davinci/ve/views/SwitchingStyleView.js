@@ -258,18 +258,6 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				}
 			}
 		}
-		// Use same styling as Dijit TitlePane for breadcrumb row
-		template+='<div class="dijitTitlePane cssBreadcrumbContainer">';
-		template+='<div class="dijitTitlePaneTitle">';
-		template+='<div class="dijitTitlePaneTitleFocus" role="button">';
-		template+='<span class="dijitArrowNode" wairole="presentation" role="presentation"></span>';
-		template+='<span class="dijitTitlePaneTextNode cssBreadcrumbSection" style="-webkit-user-select: none; "></span>';
-		template+='</div>';
-		template+='</div>';
-		template+='</div>';		
-		template+='<div class="propPaletteTabContainer"></div>';
-		template+="</td></tr></table>";
-		template+="</div>";
 		this.domNode.innerHTML = template;
 		
 		this.inherited(arguments);

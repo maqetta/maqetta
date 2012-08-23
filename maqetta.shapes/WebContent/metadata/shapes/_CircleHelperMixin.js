@@ -80,6 +80,12 @@ _CircleHelperMixin.prototype = {
 			console.error('_RectShapeHelperMixin dragEndPointDelta(): index='+index);
 			return;
 		}
+        var context = this._widget ? this._widget.getContext() : undefined;
+        if(context){
+            var parentIframeBounds = context.getParentIframeBounds();
+            pageX -= parentIframeBounds.l;
+            pageY -= parentIframeBounds.t;
+        }
 		this.hideAllDraggablesExcept(index);
 		var s = this.dragPointsStrings[index];
 		
@@ -134,7 +140,6 @@ _CircleHelperMixin.prototype = {
 		dijitWidget.resize();
 		dijitWidget._svgroot.style.marginLeft = (newBbox.x - dijitWidget._bboxStartup.x) + 'px';
 		dijitWidget._svgroot.style.marginTop = (newBbox.y - dijitWidget._bboxStartup.y) + 'px';
-        var context = this._widget ? this._widget.getContext() : undefined;
         var position_prop;
         if(this._widget){
             var position_prop = dojo.style(this._widget.domNode,"position");
@@ -144,7 +149,7 @@ _CircleHelperMixin.prototype = {
         var doSnapLinesY = absolute;
         if((doSnapLinesX || doSnapLinesY) && event && this._widget && context){
             var data = {type:this._widget.type};
-            var position = { x:event.pageX, y:event.pageY};
+            var position = { x:pageX, y:pageY};
             var snapBox = {l:pageX,t:pageY,w:0,h:0};
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location

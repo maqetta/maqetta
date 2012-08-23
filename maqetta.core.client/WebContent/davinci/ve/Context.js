@@ -90,7 +90,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
 	_configProps: {}, //FIXME: shouldn't be shared on prototype if we're going to use this for dynamic properties
-	_contextCount: 0,
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -110,7 +109,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			args ={};
 		}
 		this._contentStyleSheet = Workbench.location() + require.toUrl("davinci/ve/resources/content.css");
-		this._id = "_edit_context_" + this._contextCount++;
+		if(typeof davinci.Workbench._contextCount != 'number'){
+			davinci.Workbench._contextCount = 0;
+		}
+		this._id = "_edit_context_" + davinci.Workbench._contextCount++;
 		this.widgetHash = {};
 		
 		lang.mixin(this, args);

@@ -1,13 +1,11 @@
 define([
 	"dojo/_base/declare",
 	"maq-metadata-dojo/dojox/grid/DataGridCreateTool",
-	"dojo/Deferred",
-	"require"
+	"dojo/Deferred"
 ], function(
 	declare,
 	DataGridCreateTool,
-	Deferred,
-	require
+	Deferred
 ) {
 
 return declare(DataGridCreateTool, {
@@ -24,8 +22,9 @@ return declare(DataGridCreateTool, {
 		var dj = this._context.getDojo();
 		var dataDojoPropsEval = dj.eval("({" + dataDojoProps + "})");
 
-		//put resolved cacheClass into properties
-		require([dataDojoPropsEval.cacheClass], function(cacheClass) {
+		// Put resolved cacheClass into properties.
+		// Note: This is in the context of the Visual Editor, so we must use its `require()`.
+		dj.global.require([dataDojoPropsEval.cacheClass], function(cacheClass) {
 			properties.cacheClass = cacheClass;
 			deferred.resolve();
 		});

@@ -1233,6 +1233,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         this.getDijit().registry.forEach(function(w) {
               w.destroy();           
         });
+        
+        //FIXME: Temporary fix for #3030. Strip out any </br> elements
+        //before stuffing the content into the document.
+        var brRE = /<\s*\/\s*br\s*>/gi;
+        var content = content.replace(brRE, "");
 
         // Set content
 		//  Content may contain inline scripts. We use dojox.html.set() to pull

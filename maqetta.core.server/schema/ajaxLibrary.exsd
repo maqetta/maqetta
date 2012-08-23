@@ -93,6 +93,13 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="source" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

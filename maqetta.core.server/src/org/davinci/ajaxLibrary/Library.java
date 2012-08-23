@@ -7,8 +7,9 @@ public abstract class Library {
     String ID;
     String version;
     String defaultRoot;
-    String metadatapath;
+    String metadataPath;
     String required;
+	String sourcePath;
 
     public String getID() {
         return this.ID;
@@ -23,11 +24,19 @@ public abstract class Library {
     }
     
     public void setMetadataPath(String path) {
-        this.metadatapath = path;
+        this.metadataPath = path;
     }
 
     public String getMetadataPath() {
-        return this.metadatapath;
+        return this.metadataPath;
+    }
+
+    public void setSourcePath(String path) {
+        this.sourcePath = path;
+    }
+
+    public String getSourcePath() {
+        return this.sourcePath;
     }
 
     public String getName() {

@@ -665,17 +665,20 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	background-position:-39px -902px;
 }
 .newThemeMenuItem, .openThemeMenuItem {
-	background-position:-39px -1034px;
+	background-position:-39px -1033px;
 }
 .newProjectMenuItem, .openProjectMenuItem {
-	background-position:-39px -945px;
+	background-position:-39px -943px;
 }
 .newReviewMenuItem, .openReviewMenuItem {
 	background-position:-39px -964px;
 }
 .newFolderMenuItem {
-	background-position:-39px -1087px;
+	background-position:-39px -1085px;
 }
 .openFileMenuItem {
 	background-position:-39px -1109px;
+}
+.orionIcon {
+	background-position:-85px -24px;
 }

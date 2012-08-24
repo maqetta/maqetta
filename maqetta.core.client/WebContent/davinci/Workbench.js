@@ -1229,8 +1229,10 @@ var Workbench = {
 					var tc = tab.getParent();
 					// Don't mess with which tab is selected or do any collapse/expand
 					// if selectChild is called in response to adding the first child
-					// of a TabContainer, which causes an implicit selectFirst().
-					if(!this._showViewAddChildInProcess){
+					// of a TabContainer, which causes an implicit selectFirst(),
+					// or other programmatic selectChild() event (in particular, 
+					// SwitchingStyleView.js puts _maqDontExpandCollapse on tabcontainer)
+					if(!this._showViewAddChildInProcess && !tc._maqDontExpandCollapse){
 						if(tc._maqLastSelectedChild == tab){
 							this._expandCollapsePaletteContainer(tab);						
 						}else{
@@ -1718,16 +1720,24 @@ var Workbench = {
 				if (newEditor.focus) { 
 					newEditor.focus(); 
 				}
-
+/*
 				//Bring palettes specified for the editor to the top
 				this._bringPalettesToTop(newEditor);
 				
 				//Collapse/expand the left and right-side palettes
 				//depending on "expandPalettes" properties
 				this._expandCollapsePaletteContainers(newEditor);
+*/
 			}
 			this._repositionFocusContainer();
 		}.bind(this), 1000);
+
+		//Bring palettes specified for the editor to the top
+		this._bringPalettesToTop(newEditor);
+		
+		//Collapse/expand the left and right-side palettes
+		//depending on "expandPalettes" properties
+		this._expandCollapsePaletteContainers(newEditor);
 
 		if(!startup) {
 			Workbench._updateWorkbenchState();
@@ -1755,7 +1765,11 @@ var Workbench = {
 	
 						// Select tab
 						if (tabContainer) {
+							// This flag prevents Workbench.js logic from triggering expand/collapse
+							// logic based on selectChild() event
+							tabContainer._maqDontExpandCollapse = true;
 							tabContainer.selectChild(tab);
+							delete tabContainer._maqDontExpandCollapse;
 						}
 					}
 				}
@@ -1793,15 +1807,26 @@ var Workbench = {
 			});
 			if (editorExtensions && editorExtensions.length > 0) {
 				var expandPalettes = editorExtensions[0].expandPalettes;
+				var expand;
 				if(leftBC){
-					if(expandPalettes && expandPalettes.indexOf('left')>=0){
+					if(newEditor && newEditor.hasOwnProperty("_leftPaletteExpanded")){
+						expand = newEditor._leftPaletteExpanded;
+					}else{
+						expand = (expandPalettes && expandPalettes.indexOf('left')>=0);
+					}
+					if(expand){
 						this.expandPaletteContainer(leftBC.domNode, params);
 					}else{
 						this.collapsePaletteContainer(leftBC.domNode, params);
 					}
 				}
 				if(rightBC){
-					if(expandPalettes && expandPalettes.indexOf('right')>=0){
+					if(newEditor && newEditor.hasOwnProperty("_rightPaletteExpanded")){
+						expand = newEditor._rightPaletteExpanded;
+					}else{
+						expand = (expandPalettes && expandPalettes.indexOf('right')>=0);
+					}
+					if(expand){
 						this.expandPaletteContainer(rightBC.domNode, params);
 					}else{
 						this.collapsePaletteContainer(rightBC.domNode, params);
@@ -2061,6 +2086,14 @@ var Workbench = {
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = false;
 			davinci.Workbench._repositionFocusContainer();
+			var currentEditor = davinci.Runtime.currentEditor;
+			if(currentEditor){
+				if(paletteContainerNode.id == 'left_mainBody'){
+					currentEditor._leftPaletteExpanded = false;
+				}else if(paletteContainerNode.id == 'right_mainBody'){
+					currentEditor._rightPaletteExpanded = false;
+				}
+			}
 		}
 	},
 	
@@ -2087,6 +2120,14 @@ var Workbench = {
 			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = true;
 			davinci.Workbench._repositionFocusContainer();
+			var currentEditor = davinci.Runtime.currentEditor;
+			if(currentEditor){
+				if(paletteContainerNode.id == 'left_mainBody'){
+					currentEditor._leftPaletteExpanded = true;
+				}else if(paletteContainerNode.id == 'right_mainBody'){
+					currentEditor._rightPaletteExpanded = true;
+				}
+			}
 		}
 	},
 

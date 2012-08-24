@@ -646,7 +646,11 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		for(var i=0; i<children.length; i++){
 			var cp = children[i];
 			if(cp.controlButton.domNode.style.display != 'none'){
+				// This flag prevents Workbench.js logic from triggering expand/collapse
+				// logic based on selectChild() event
+				parentTabContainer._maqDontExpandCollapse = true;
 				parentTabContainer.selectChild(cp);
+				delete parentTabContainer._maqDontExpandCollapse;
 				break;
 			}
 		}

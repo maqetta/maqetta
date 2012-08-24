@@ -133,6 +133,18 @@ return declare("davinci.workbench._ToolbaredContainer", [LayoutWidget, Templated
 			this._toolbarCreated[containerClass] = toolbar;
 		}
 		return this._toolbarCreated[containerClass];
+	},
+	
+	/**
+	 * Attach this class's toolbar to its toolbarDiv
+	 */
+	attachToolbar: function(){
+		var toolbar = this.toolbarCreated(this.declaredClass);
+		var toolbarDiv = this.getToolbarDiv();
+		if(toolbar && toolbar.domNode && toolbarDiv){
+			toolbarDiv.innerHTML = '';
+			toolbarDiv.appendChild(toolbar.domNode);
+		}
 	}
 
 //TODO: implement destroy/getChildren to destroy toolbarDiv and containerNode?

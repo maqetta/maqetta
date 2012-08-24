@@ -72,6 +72,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		dojo.subscribe("/davinci/ui/widgetPropertiesChanged", dojo.hitch(this, this._widgetPropertiesChanged));
 		this.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, this._widgetSelectionChanged));
 		
+		this.attachToolbar();
 		dojo.style(this.toolbarDiv, "display", "none");
 	},
 	
@@ -154,7 +155,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(selection.length == 1){
 			var node = selection[0].domNode;
 			// If currently selected widget's DOM node is a state container, then
-			// select the TreenNode that corresponds to that widget and DOM node.
+			// select the TreeNode that corresponds to that widget and DOM node.
 			if(node && node._maqAppStates){
 				this._sceneStore.fetch({query: {node:node}, queryOptions:{deep:true}, 
 					onComplete: dojo.hitch(this, function(items, request){

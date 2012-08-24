@@ -98,6 +98,7 @@ return declare(ViewPart, {
 		this.subcontainer.appendChild(this.outlineTree.domNode);
 		this.container.domNode.appendChild(this.subcontainer);
 		this.setContent(this.container);
+		this.attachToolbar();
 		// END HACK: Original code commented out below:
 
 		this.outlineTree.startup();

@@ -105,6 +105,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 
 		topDiv.appendChild(tree.domNode);
 		this.setContent(topDiv);
+		this.attachToolbar();
 		
 		tree.startup();
 

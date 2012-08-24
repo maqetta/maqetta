@@ -61,14 +61,7 @@ var Preferences = {
  	    	
  	    }
 
-		this.dialog = new Dialog({
-			title: workbenchStrings.preferences,
-			content: new PreferencesWidget({}),
-			contentStyle: {width: 700, height: 500},
-			onCancel:function(){
-				this.destroyRecursive(false);
-			}
-		});	
+		this.dialog = Dialog.showModal(new PreferencesWidget({}), workbenchStrings.preferences, {width: 700, height: 500});
 
 		var itemStore = new ItemFileReadStore({data: prefJson, jsId: "prefTreeDataStore"});	
 		var forestModel = new ForestStoreModel({jsId: "fileModel", labelAttr: "name", store: itemStore});
@@ -89,8 +82,6 @@ var Preferences = {
 		dojoTree.onClick = function(node) { Preferences.setPaneContent(node); };
 		dojo.byId("pref.TreePane").appendChild(dojoTree.domNode);
 		dojoTree.startup();
-
-		this.dialog.show();
 	},
 	getPrefJson: function(){
 		//build the proper json structure before returning it.  this is to save a lot of time over riding model methods for the tree.

@@ -206,13 +206,13 @@ return {
                     label: "Move to back",
                     action: "davinci/ve/actions/MoveToBackAction",
                     menubarPath: "davinci.edit/cut"
-                },
+                }/*,
                 {
                     iconClass: "editActionIcon",
                     label: "Application States...",
                     action: "davinci/ve/actions/EnableApplicationStates",
                     menubarPath: "davinci.edit/cut"
-                }
+                }*/
             ]
         },
         {
@@ -508,12 +508,12 @@ return {
                            label: "Surround with &lt;SPAN&gt;",
                            action: "davinci/ve/actions/SurroundAction",
                            surroundWithTagName:'span'
-                       },
+                       }/*,
                        {
                            iconClass: "editActionIcon",
                            label: "Application States...",
                            action: "davinci/ve/actions/EnableApplicationStates"
-                       }
+                       }*/
                     ]
                 },
                 {

@@ -3,14 +3,14 @@ define(["dojo/_base/declare",
 				"dijit/_TemplatedMixin",
 				"dijit/_WidgetsInTemplateMixin",
         "davinci/Workbench",
-        "dijit/Tree",
+        "davinci/ui/widgets/OpenFile",
         "dijit/form/Button",
         "davinci/model/Path",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/FileFieldDialog.html",
         "dijit/form/TextBox",
-   ],function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Workbench, Tree, Button, Path,  uiNLS, commonNLS, templateString){
+   ],function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Workbench, OpenFile, Button, Path,  uiNLS, commonNLS, templateString){
 	
 var idPrefix = "davinci_ui_widgets_filefielddialog_generated";
 var	__id=0;
@@ -25,18 +25,10 @@ return declare("davinci.ui.widgets.FileFieldDialog", [_WidgetBase, _TemplatedMix
 
 	_fileSelectionDialog: null,
 
-	_showFileSelectionDialog: function() {
-		//Set-up file selection tree
-		var treeParms= {  
-			persist: false,
-			style: "height:100%;overflow:auto;",
-			model: system.resource,
-			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
-	    };
-		var tree = new Tree(treeParms);
-		
+	_showFileSelectionDialog: function() {	
 		//Set-up button
 		var okClicked = function() {
+			var tree = openDialog.fileTree
 			if (tree.selectedItem) {
 				var selectedItemPathStr = tree.selectedItem.getPath();
 				/* only relativize the path if the user used the file chooser */
@@ -47,7 +39,8 @@ return declare("davinci.ui.widgets.FileFieldDialog", [_WidgetBase, _TemplatedMix
 			}
 		};
 
-		Workbench.showDialog(uiNLS.selectFile, tree, {width: 275, height: 220}, dojo.hitch(this, okClicked));
+		var openDialog = new OpenFile({finishButtonLabel: uiNLS.select});
+		Workbench.showModal(openDialog, uiNLS.selectFile, {width: 275, height: 220}, dojo.hitch(this, okClicked), true);
 	},
 	
 	_setBaseLocationAttr: function(baseLocation){

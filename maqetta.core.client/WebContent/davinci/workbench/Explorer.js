@@ -5,6 +5,7 @@ define([
 	"davinci/Runtime",
 	
 	"dijit/Tree",
+	"dojo/mouse",
 	"davinci/ui/dnd/DragSource",
 	"davinci/ui/Resource",
 	"davinci/ui/widgets/TransformTreeMixin",
@@ -15,7 +16,7 @@ define([
 	"davinci/ui/Download",
 	"davinci/ui/DownloadSelected",
 	"davinci/ui/UserLibraries",
-], function(declare, ViewPart, Workbench, Runtime, Tree, DragSource) {
+], function(declare, ViewPart, Workbench, Runtime, Tree, mouse, DragSource) {
 	
 return declare("davinci.workbench.Explorer", ViewPart, {
 	
@@ -81,6 +82,12 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		// Circumvent dojo.stopEvent temporarily.
 		var down = tree.dndController.onMouseDown,
 			handler = function(oldHandler, event){
+				// right clicking does not select in dojo tree, so lets do it ourselves
+				if (mouse.isRight(event)) {
+					var w = dijit.getEnclosingWidget(event.target);
+					this.tree.set("selectedItems", [w.item]);
+				}
+
 				var stop = dojo.stopEvent;
 				dojo.stopEvent = function(){};
 				try{

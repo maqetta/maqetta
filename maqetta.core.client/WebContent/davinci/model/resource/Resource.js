@@ -3,11 +3,12 @@ define([
 	"dojo/_base/xhr",
 	"dojo/_base/connect",
 	"dojo/Deferred",
+	"dijit/registry",
 	"davinci/Runtime",
 	"davinci/model/Model",
 	"davinci/model/Path",
 	"davinci/ve/utils/URLRewrite"
-], function(declare, xhr, connect, Deferred, Runtime, Model, Path, URLRewrite) {
+], function(declare, xhr, connect, Deferred, registry, Runtime, Model, Path, URLRewrite) {
 
 return declare("davinci.model.resource.Resource", Model, {
 
@@ -20,6 +21,7 @@ return declare("davinci.model.resource.Resource", Model, {
 		this.elementType = "Resource";
 		this.name = "";
 		this.parent = null;
+		this._id = dijit.getUniqueId("maqFileResource");
 	},
 
 	getName: function() {
@@ -121,6 +123,10 @@ return declare("davinci.model.resource.Resource", Model, {
 			);
 		}
 		return promise;
+	},
+
+	getId: function() {
+		return this._id;
 	}
 });
 });

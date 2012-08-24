@@ -140,7 +140,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 		}
 
 		var styleValuesAllStates = this._oldStyleValuesAllStates;
-		var currentStateIndex = States.getCurrentStateIndex();
+		var currentStateIndex = this._applyToStateIndex;
 		widget.setStyleValuesAllStates(styleValuesAllStates);
 		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
 		widget.setStyleValuesCanvas(styleValuesCanvas);

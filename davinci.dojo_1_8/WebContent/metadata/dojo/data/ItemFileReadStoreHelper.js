@@ -58,16 +58,10 @@ ItemFileReadStoreHelper.prototype = {
         url = url.trim();
         var xhrParams = this.getXhrScriptPluginParameters(url, context);
         if (xhrParams){
-           var dj = context.getDojo();
-           try {
-           	 var req = context.getGlobal()["require"];
-           	 function _callback(args) {
-           	 	 dj.dojox.io.xhrScriptPlugin(xhrParams.url,xhrParams.callback);
-           	 }
-           	 var c = req(["dojo/data/ItemFileReadStore", "dojox/io/xhrScriptPlugin"], _callback);               
-           }catch(e){
-               console.warn("FAILED: failure for loading dojox.io.xhrScriptPlugin("+xhrParams.url+","+xhrParams.callback+");");
-           }
+	      	var req = context.getGlobal()["require"];
+	       	req(["dojo/data/ItemFileReadStore", "dojox/io/xhrScriptPlugin"], function(ItemFileReadStore, xhrScriptPlugin) {
+	      	 	xhrScriptPlugin(xhrParams.url, xhrParams.callback);
+	        });               
         }
     },
 

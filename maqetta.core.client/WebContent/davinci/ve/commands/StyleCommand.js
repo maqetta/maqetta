@@ -84,7 +84,7 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 
 		var veStates = require("davinci/ve/States");
 		var styleValuesAllStates = this._oldStyleValuesAllStates;
-		var currentStateIndex = veStates.getCurrentStateIndex();
+		var currentStateIndex = this._applyToStateIndex;
 		widget.setStyleValuesAllStates(styleValuesAllStates);
 		var styleValuesCanvas = StyleArray.mergeStyleArrays(styleValuesAllStates['undefined'], styleValuesAllStates[currentStateIndex]);
 		widget.setStyleValuesCanvas(styleValuesCanvas);

@@ -1870,8 +1870,8 @@ var Workbench = {
 					editorsContainer.removeChild(editorContainer);
 					editorContainer.destroyRecursive();
 				}
-				delete davinci.Workbench._shadowTabClosing[page.id];
 			}
+			delete davinci.Workbench._shadowTabClosing[page.id];
 		}
 	},
 

@@ -1,22 +1,19 @@
 define([
     	"dojo/_base/declare",
-	"dojo/Deferred",
-    	"davinci/commands/CommandStack",
-    	"davinci/ve/widget",
-    	"davinci/ve/themeEditor/SelectTool",
-    	"davinci/ve/Context",
-    	"davinci/library",
-    	"davinci/ve/metadata",
-    	"davinci/Theme"
-], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, Library, Metadata, Theme){
+    	"dojo/Deferred",
+    	"../../commands/CommandStack",
+    	"../widget",
+    	"./SelectTool",
+    	"../Context",
+    	"../../library",
+    	"../metadata"
+], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, Library, Metadata){
 
 
 return declare([Context], {
 	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.
-	//_bootstrapModules: "dijit/dijit",
-	_configProps: {async:true},
 
 	constructor: function(args){
 		this._id = "_edit_context_" + this._contextCount++;

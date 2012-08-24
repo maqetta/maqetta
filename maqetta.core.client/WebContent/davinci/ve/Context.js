@@ -93,7 +93,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
-	_configProps: {}, //FIXME: shouldn't be shared on prototype if we're going to use this for dynamic properties
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -961,7 +960,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var config = {
 					packages: this._getLoaderPackages() // XXX need to add dynamically
 				};
-				lang.mixin(config, this._configProps);
 				this._getDojoScriptValues(config, subs);
 
 				if (this._bootstrapModules) {
@@ -2877,7 +2875,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (isDojoJS) {
 					// special case for dojo.js to provide config attribute
 					// XXX TODO: Need to generalize in the metadata somehow.
-					lang.mixin(config, this._configProps);
 					this.addHeaderScript(url, {
 						"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
 					});

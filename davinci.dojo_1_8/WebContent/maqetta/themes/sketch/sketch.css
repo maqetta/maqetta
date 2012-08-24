@@ -242,7 +242,9 @@
     background-color : white;
 }
 .claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper, .claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper {
-    border-color : black;
+    border-color : black !important;
+    border-width : 3px !important;
+    border-style : solid !important;
 }
 .claro .dijitTabActive .dijitTabContent {
     border-color : black;

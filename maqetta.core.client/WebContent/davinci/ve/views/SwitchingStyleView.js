@@ -78,6 +78,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
     	                {display:"position", type:"combo", target:["position"], values:['', 'absolute','fixed','relative','static']},
     	                {display:"left", type:"multi", target:["left"], values:['', '0px', '1em']},
     	                {display:"top", type:"multi", target:["top"], values:['', '0px', '1em']},
+    	                {display:"right", type:"multi", target:["right"], values:['', '0px', '1em']},
+    	                {display:"bottom", type:"multi", target:["bottom"], values:['', '0px', '1em']},
     	                {display:"display", type:"combo", target:["display"], values:['','none','block','inline','inline-block']},
     	                {display:"opacity", type:"multi", target:["opacity"], values:['0','0.5','1.0']},
     	                {display:"box-shadow", type:"text", target:["box-shadow"], value:['','none','1px 1px rgba(0,0,0,.5)']},

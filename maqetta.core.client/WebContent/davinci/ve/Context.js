@@ -24,7 +24,7 @@ define([
 	"./ChooseParent",
 	"./Snap",
 	"./States",
-	"davinci/XPathUtils",
+	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
 	"../html/CSSModel", // shorthands
@@ -36,7 +36,7 @@ define([
 	"preview/silhouetteiframe",
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"davinci/ve/utils/URLRewrite",
+	"./utils/URLRewrite",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	require,
@@ -968,7 +968,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					var mods = '';
 					this._bootstrapModules.split(',').forEach(function(mod) {
 						mods += ',\'' + mod + '\'';
-					})
+					});
 					subs.additionalModules = mods;
 				}
 			}
@@ -1312,9 +1312,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onload: function() {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
-		
-		var newCons = [].concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
-		this._connections = newCons;
+		this._connects = this._connects.concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
+
 		this._configDojoxMobile();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	    this.editor.setDirty(this.hasDirtyResources());

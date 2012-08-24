@@ -1088,8 +1088,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				throw callbackData;
 			}
 
-			promise = this._setSourceData(data).then(function() {
-			}, function(error) {
+			promise = this._setSourceData(data).then(this.onload.bind(this), function(error) {
 				failureInfo.errorMessage = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
 				console.error(error.stack || error.message);
 			});
@@ -1298,7 +1297,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
-		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(this.onload.bind(this));		
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);		
 	},
 
 	/**

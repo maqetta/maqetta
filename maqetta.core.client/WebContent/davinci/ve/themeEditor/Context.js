@@ -95,7 +95,6 @@ return declare([Context], {
 			try {
 				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
 				promise.resolve();
-				this.onload();
 			} catch(e) {
 				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 				// the dojo parser will throw an exception trying to compute style on hidden containers

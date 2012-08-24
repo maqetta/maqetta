@@ -855,7 +855,12 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	 * @return {boolean}
 	 */ 
 	createWithFlowLayout: function(){
-		return this._context.getFlowLayout();
+		var forceAbsolute = Metadata.queryDescriptor(this._data.type, "forceAbsolute");
+		if(forceAbsolute){
+			return false;
+		}else{
+			return this._context.getFlowLayout();
+		}
 	},
 	
 	/**

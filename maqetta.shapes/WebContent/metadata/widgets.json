@@ -20,6 +20,7 @@
               "style": "font-size:14px"
           },
           "resizable": "none",
+          "forceAbsolute": true,
           "helper": "./shapes/TextHelper"
       },
       {
@@ -30,6 +31,7 @@
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
           "enablePointerEvents": true,
           "resizable": "none",
+          "forceAbsolute": true,
           "showStandardSelectionChrome":false,
           "properties": {
               "points": "0,0,100,0"
@@ -45,6 +47,7 @@
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAL+/v5aWlmNjYzMzMxwcHBYWFv///wAAACH5BAEAAAYALAAAAAAQABAAAAMgaLrc/jBKFsBcg9g7iuaFZwlhaZrD1Ikqq35Xdc10PScAOw==",
           "enablePointerEvents": true,
           "resizable": "none",
+          "forceAbsolute": true,
           "showStandardSelectionChrome":false,
           "properties": {
               "points": "0,0,100,0",
@@ -61,6 +64,7 @@
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQgsMlJq704a6269xcgjmK3TYR5NqmysurZvvOaviyu7xEAOw==",
           "enablePointerEvents": true,
           "resizable": "none",
+          "forceAbsolute": true,
           "showStandardSelectionChrome":false,
           "multiSegment":true,	// tells LineCreateTool to allow user to repeatedly click for more points
           "properties": {
@@ -77,6 +81,7 @@
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQosMlJq704U8U7x0QoEp82kYp5liraEIlJwrHM1RmdpFri76qgcKiJAAA7",
           "enablePointerEvents": true,
           "resizable": "none",
+          "forceAbsolute": true,
           "showStandardSelectionChrome":false,
           "multiSegment":true,	// tells LineCreateTool to allow user to repeatedly click for more points
           "properties": {
@@ -95,6 +100,7 @@
           "enablePointerEvents": true,
           "resizable": "none",
           "resizableOnCreate": "both",
+          "forceAbsolute": true,
           "showStandardSelectionChrome":false,
           "helper": "./shapes/CircleHelper"
       },
@@ -107,6 +113,7 @@
           "enablePointerEvents": true,
           "resizable": "none",
           "resizableOnCreate": "both",
+          "forceAbsolute": true,
           "showStandardSelectionChrome":false,
           "helper": "./shapes/RectangleHelper"
       },
@@ -119,6 +126,7 @@
           "enablePointerEvents": true,
           "resizable": "none",
           "resizableOnCreate": "both",
+          "forceAbsolute": true,
           "showStandardSelectionChrome":false,
           "properties": {
               "cornerRadius": "10"

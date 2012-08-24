@@ -145,7 +145,13 @@ var getSelectedResource = function() {
 };
 
 var initializeWorkbenchState = function(){
-	davinci.Workbench._expandCollapsePaletteContainers(null);
+	// The _expandCollapsePaletteContainers() call  below collapses the 
+	// left-side and right-side palettes before
+	// we open any of the editors (and then subsequently potentially expand
+	// the left-side and/or right-side palettes as required by that editor).
+	// The dontPreserveWidth parameter bubbles down to collapsePaletteContainer()
+	// and tells it to *not* cache the current palette width (which it normally does)
+	davinci.Workbench._expandCollapsePaletteContainers(null, {dontPreserveWidth:true});
 
 	var isReview = function (resPath) {
 		return resPath.indexOf(".review") > -1;
@@ -1155,20 +1161,30 @@ var Workbench = {
 		mainBody.tabs = mainBody.tabs || {};				
 		mainBody.tabs.perspective = mainBody.tabs.perspective || {};
 
+		// NOTE: Left-side and right-side palettes start up with 71px width
+		// which happens to be the exact pixel size of the palette tabs.
+		// This 71px setting prevents the user from seeing an initial flash
+		// of temporarily opened left-side and right-side palettes.
 		if (position == 'right' && !mainBody.tabs.perspective.right) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 340px;', id:"right_mainBody", 
+					style: 'width: 71px;', id:"right_mainBody", 
 					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
+			// _expandedWidth is what expandPaletteContainer() uses as the
+			// width of the palette when it is in expanded state.
+			mainBody.tabs.perspective.right._expandedWidth = 340;
 		}
 
 		if (position == 'left' && !mainBody.tabs.perspective.left) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 300px;', id:"left_mainBody", 
+					style: 'width: 71px;', id:"left_mainBody", 
 					region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
+			// _expandedWidth is what expandPaletteContainer() uses as the
+			// width of the palette when it is in expanded state.
+			mainBody.tabs.perspective.left._expandedWidth = 300;
 		}
 
 		if (position === 'left' || position === 'right') {
@@ -1759,15 +1775,15 @@ var Workbench = {
 		}
 	},
 
-	_expandCollapsePaletteContainers: function(newEditor) {
+	_expandCollapsePaletteContainers: function(newEditor, params) {
 		var leftBC = dijit.byId('left_mainBody');
 		var rightBC = dijit.byId('right_mainBody');
 		if(!newEditor){
 			if(leftBC){
-				this.collapsePaletteContainer(leftBC.domNode);
+				this.collapsePaletteContainer(leftBC.domNode, params);
 			}
 			if(rightBC){
-				this.collapsePaletteContainer(rightBC.domNode);
+				this.collapsePaletteContainer(rightBC.domNode, params);
 			}			
 		}else{
 			// First, we will get the metadata for the extension and get its list of 
@@ -1779,16 +1795,16 @@ var Workbench = {
 				var expandPalettes = editorExtensions[0].expandPalettes;
 				if(leftBC){
 					if(expandPalettes && expandPalettes.indexOf('left')>=0){
-						this.expandPaletteContainer(leftBC.domNode);
+						this.expandPaletteContainer(leftBC.domNode, params);
 					}else{
-						this.collapsePaletteContainer(leftBC.domNode);
+						this.collapsePaletteContainer(leftBC.domNode, params);
 					}
 				}
 				if(rightBC){
 					if(expandPalettes && expandPalettes.indexOf('right')>=0){
-						this.expandPaletteContainer(rightBC.domNode);
+						this.expandPaletteContainer(rightBC.domNode, params);
 					}else{
-						this.collapsePaletteContainer(rightBC.domNode);
+						this.collapsePaletteContainer(rightBC.domNode, params);
 					}
 				}
 			}
@@ -2020,8 +2036,10 @@ var Workbench = {
 	 * collapse all palettes within the given palette container node to just show tabs.
 	 * @param {Element} node  A descendant node of the palette container node.
 	 * 		In practice, the node for the collapse icon (that the user has clicked).
+	 * @params {object} params
+	 *      params.dontPreserveWidth says to not cache current palette width
 	 */
-	collapsePaletteContainer: function(node){
+	collapsePaletteContainer: function(node, params){
 		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
 		if(paletteContainerNode){
 			var paletteContainerNodeWidth = dojo.style(paletteContainerNode, 'width');
@@ -2035,7 +2053,9 @@ var Workbench = {
 					paletteContainerNode.style.width = tablistNodeSize.w + 'px';
 					parentWidget.resize();
 					paletteContainerWidget._isCollapsed = true;
-					paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
+					if(!params || !params.dontPreserveWidth){
+						paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
+					}
 				}
 			}
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');

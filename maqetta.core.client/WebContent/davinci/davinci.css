@@ -1538,6 +1538,7 @@ background-position: -75px -745px;
 }
 .welcome_outer_table {
 	width:100%;
+	border-collapse: collapse;
 }
 #welcome_page_content {
 	text-align:left;

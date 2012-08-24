@@ -772,7 +772,7 @@ return declare(ContainerInput, {
 				//Really just care about file name now, but trying to position ourselves to handle other
 				//style attributes storing as a JSON object
 				var jsonStyle = {};
-				jsonStyle["background-image"] = backgroundImageURL ;
+				jsonStyle["backgroundImage"] = backgroundImageURL ;
 	
 				value = jsonStyle;
 			} else if (this._getWidgetTypeFromFieldId(fieldId) === "event") {
@@ -801,7 +801,7 @@ return declare(ContainerInput, {
 		var value = item[fieldId];
 		if (value) {
 			if (this._getWidgetTypeFromFieldId(fieldId) === "icon") {
-				var backgroundImage = value["background-image"];
+				var backgroundImage = value["backgroundImage"];
 				if (backgroundImage) {
 					var bgdData = CssUtils.parseBackgroundImage(backgroundImage);
 					value = (bgdData && bgdData.url) ? bgdData.url : "";

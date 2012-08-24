@@ -1298,9 +1298,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
-		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(function(){
-			connect.connect(this.getGlobal(), 'onload', this, this.onload);
-		}.bind(this));		
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(this.onload.bind(this));		
 	},
 
 	/**
@@ -1310,7 +1308,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onload: function() {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
-		this._connects = this._connects.concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
+		this._connects = (this._connects || []).concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 
 		this._configDojoxMobile();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);

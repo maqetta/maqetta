@@ -59,10 +59,6 @@ return declare([Context], {
 		this.getDojo().declare("dijit.davinci.themeEditor.Tooltip", mixins, {
 			templateString: dojo.cache("dijit", "templates/Tooltip.html")
 		});
-		dojo.connect(this.getGlobal(), 'onload', this, function() {
-            this.onload();
-    	    dojo.publish('/davinci/ui/context/loaded', [this]);
-        });
 		this.setHeader({
 			title: data.title,
 			metas: data.metas,
@@ -73,7 +69,7 @@ return declare([Context], {
 			bodyClasses: data.bodyClasses,
 			style: data.style
 		});
-		content = (data.content || "");
+		content = data.content || "";
 		var containerNode = this.getContainerNode();
 		var active = this.isActive();
 		if(active){
@@ -99,6 +95,7 @@ return declare([Context], {
 			try {
 				this.getGlobal()["require"]("dojo/parser").parse(containerNode);
 				promise.resolve();
+				this.onload();
 			} catch(e) {
 				// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 				// the dojo parser will throw an exception trying to compute style on hidden containers

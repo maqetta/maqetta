@@ -8,7 +8,8 @@
          point="maqetta.core.server.ajaxLibrary">
       <ajaxLibrary
             id="zazl"
-            version="0.3.0">
+            version="0.3.0"
+            required="true">
             <libraryPath location="/loader/amd" name="/lib/zazl"></libraryPath>
             <metadata location="app/metadata/maqetta/core/0.3" />
       </ajaxLibrary>

@@ -60,6 +60,10 @@ return declare(ViewPart, {
 		if (this.outlineTree) {
 			this.removeContent();
 		}
+
+		if (this.popup) {
+			this.popup.destroyRecursive();
+		}
                        
 		if (this.outlineProvider && this.outlineProvider.getModel) {
 			this.outlineModel = this.outlineProvider.getModel(this.currentEditor);
@@ -109,7 +113,7 @@ return declare(ViewPart, {
 
 		var outlineActionsID = (this.outlineProvider.getActionsID && this.outlineProvider.getActionsID()) || 'davinci.ui.outline';
 
-		Workbench.createPopup({
+		this.popup = Workbench.createPopup({
 			partID: outlineActionsID,
 			domNode: this.outlineTree.domNode,
 		  openCallback: this.outlineTree.getMenuOpenCallback ? this.outlineTree.getMenuOpenCallback() : null

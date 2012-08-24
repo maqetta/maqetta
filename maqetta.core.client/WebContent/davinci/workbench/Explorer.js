@@ -85,7 +85,11 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 				// right clicking does not select in dojo tree, so lets do it ourselves
 				if (mouse.isRight(event)) {
 					var w = dijit.getEnclosingWidget(event.target);
-					this.tree.set("selectedItems", [w.item]);
+
+					// if not in select select the node
+					if (this.tree.get("selectedItems").indexOf(w.item) === -1) {
+						this.tree.set("selectedItems", [w.item]);
+					}
 				}
 
 				var stop = dojo.stopEvent;

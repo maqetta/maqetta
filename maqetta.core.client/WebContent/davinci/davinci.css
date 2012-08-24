@@ -1569,6 +1569,15 @@ background-position: -75px -745px;
 	margin-bottom: 18px;
 	margin-top: 18px;
 }
+.welcome_actions_border_cell {
+	height:175px;
+	padding-top: 40px;
+	background-image:-webkit-linear-gradient(#f1f1f1, white 38%);
+	background-image:-moz-linear-gradient(#f1f1f1, white 38%);
+	background-image:-ms-linear-gradient(#f1f1f1, white 38%);
+	background-image:-o-linear-gradient(#f1f1f1, white 38%);
+	background-image:linear-gradient(#f1f1f1, white 38%);
+}
 .welcome_actions {
 	height:175px;
 	background-image:-webkit-linear-gradient(#f1f1f1, white 38%);

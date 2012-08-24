@@ -1185,6 +1185,7 @@
 							"selectors": {
 								".claro .dijitSelectMenu .dijitMenuItemHover td, .claro .dijitSelectMenu .dijitMenuItemSelected td, .claro .dijitMenuItemHover, .claro .dijitMenuItemSelected": [
 									"background-color",
+									"background-image",
 									"background-position",
 									"border",
 									"border-style",

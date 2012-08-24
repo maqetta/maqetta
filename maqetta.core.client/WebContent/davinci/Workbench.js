@@ -834,18 +834,18 @@ var Workbench = {
 	getAllOpenEditorIds: function() {
 	},
 
-	showModal: function(content, title, style, callback) {
-		return Dialog.showModal(content, title, style, callback);
+	showModal: function(content, title, style, callback, submitOnEnter) {
+		return Dialog.showModal(content, title, style, callback, submitOnEnter);
 	},
 
 	// simple dialog with an automatic OK button that closes it.
-	showMessage: function(title, message, style, callback) {
-		return Dialog.showMessage(title, message, style, callback);
+	showMessage: function(title, message, style, callback, submitOnEnter) {
+		return Dialog.showMessage(title, message, style, callback, submitOnEnter);
 	},
 
 	// OK/Cancel dialog with a settable okLabel
-	showDialog: function(title, content, style, callback, okLabel, hideCancel) {
-		return Dialog.showDialog(title, content, style, callback, okLabel, hideCancel);
+	showDialog: function(title, content, style, callback, okLabel, hideCancel, submitOnEnter) {
+		return Dialog.showDialog(title, content, style, callback, okLabel, hideCancel, submitOnEnter);
 	},
 
 	_createMenuTree: function(actionSets, pathsOptional) {

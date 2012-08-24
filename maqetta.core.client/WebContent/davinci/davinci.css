@@ -2104,11 +2104,7 @@ td.welcome_section_cell {
 }
 
 /* Resizable dialog */
-.dijitDialogPaneActionBar .maqPrimaryButton {
-	font-weight: bold;
-}
-
-.dijitDialogPaneActionBar .maqPrimaryButton {
+.resizableDialog.submitOnEnter .dijitDialogPaneActionBar .maqPrimaryButton {
 	font-weight: bold;
 }
 

@@ -37,7 +37,9 @@ return declare(CreateTool, {
 			return;
 		}
 		
+		console.log("DataStoreBasedCreateTool::_create BEFORE this._loadRequires()"); //AWE TODO: REMOVE... Added to debug timing issue
 		this._loadRequires().then(dojo.hitch(this, function(results) {
+			console.log("******** DataStoreBasedCreateTool::_create ALL promises fulfilled!"); //AWE TODO: REMOVE... Added to debug timing issue
 			if (results.every(function(arg){return arg;})) {
 				// all args are valid
 				this._getCreateCommand(args).then(function(command) {
@@ -196,8 +198,21 @@ return declare(CreateTool, {
 	},
 
 	_loadRequires: function() {
+		/* AWE TODO: Commenting out compact form temporarily for debugging
 		return all(this._data.map(function(item) {
 			return this._context.loadRequires(item.type, true);
+		}, this));
+		*/
+		
+		return all(this._data.map(function(item) {
+			console.log("\tDataStoreBasedCreateTool::_loadRequires asking for requires for " + item.type); //AWE TODO: REMOVE... Added to debug timing issue
+			var promise = this._context.loadRequires(item.type, true);
+			promise.then(function() {
+				console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " fulfilled!"); //AWE TODO: REMOVE... Added to debug timing issue
+			}, function(err) { //AWE TODO
+				console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " ERROR!!!!!"); //AWE TODO: REMOVE... Added to debug timing issue
+			});
+			return promise;
 		}, this));
 	}
 });

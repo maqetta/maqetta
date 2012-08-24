@@ -1,4 +1,5 @@
 define([
+    "require",
     "dojo/_base/declare",
     "dojo/_base/lang",
     "dojo/_base/xhr",
@@ -38,6 +39,7 @@ define([
 	"davinci/ve/utils/URLRewrite",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
+	require,
 	declare,
 	lang,
 	xhr,

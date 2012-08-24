@@ -24,7 +24,7 @@ define([
 	"./ChooseParent",
 	"./Snap",
 	"./States",
-	"davinci/XPathUtils",
+	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
 	"../html/CSSModel", // shorthands
@@ -36,7 +36,7 @@ define([
 	"preview/silhouetteiframe",
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"davinci/ve/utils/URLRewrite",
+	"./utils/URLRewrite",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	require,
@@ -93,7 +93,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
-	_configProps: {}, //FIXME: shouldn't be shared on prototype if we're going to use this for dynamic properties
 
 /*=====
 	// keeps track of widgets-per-library loaded in context
@@ -961,14 +960,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var config = {
 					packages: this._getLoaderPackages() // XXX need to add dynamically
 				};
-				lang.mixin(config, this._configProps);
 				this._getDojoScriptValues(config, subs);
 
 				if (this._bootstrapModules) {
 					var mods = '';
 					this._bootstrapModules.split(',').forEach(function(mod) {
 						mods += ',\'' + mod + '\'';
-					})
+					});
 					subs.additionalModules = mods;
 				}
 			}
@@ -1090,8 +1088,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				throw callbackData;
 			}
 
-			promise = this._setSourceData(data).then(function() {
-			}, function(error) {
+			promise = this._setSourceData(data).then(this.onload.bind(this), function(error) {
 				failureInfo.errorMessage = "Unable to parse HTML source.  See console for error.  Please switch to \"Display Source\" mode and correct the error."; // FIXME: i18n
 				console.error(error.stack || error.message);
 			});
@@ -1300,9 +1297,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		collapse(containerNode);
 		this._loadFileStatesCache = states;
-		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts).then(function(){
-			connect.connect(this.getGlobal(), 'onload', this, this.onload);
-		}.bind(this));		
+		return this._processWidgets(containerNode, active, this._loadFileStatesCache, scripts);		
 	},
 
 	/**
@@ -1312,9 +1307,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	onload: function() {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
-		
-		var newCons = [].concat(this._connects, UserActivityMonitor.addInActivityMonitor(this.getDocument()));
-		this._connections = newCons;
+		this._connects = (this._connects || []).concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
+
 		this._configDojoxMobile();
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	    this.editor.setDirty(this.hasDirtyResources());
@@ -2878,7 +2872,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (isDojoJS) {
 					// special case for dojo.js to provide config attribute
 					// XXX TODO: Need to generalize in the metadata somehow.
-					lang.mixin(config, this._configProps);
 					this.addHeaderScript(url, {
 						"data-dojo-config": JSON.stringify(config).slice(1, -1).replace(/"/g, "'")
 					});

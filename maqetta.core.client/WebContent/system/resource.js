@@ -46,6 +46,10 @@ var Resource = {
 			     */
 				parent.reload();
 			}
+
+			if (type == "renamed") {
+				system.resource.onChange(changedResource);
+			}
 			
 			/* force the resource parent to update its children */
 			parent.getChildrenSync(function(children){system.resource.onChildrenChange(parent, children);}, function(e){console.error(e);}); // TODO: error handler	
@@ -137,7 +141,7 @@ var Resource = {
 	},
 
 	getIdentity: function(/* item */ item){
-		return item.getName();
+		return item.getId();
 	},
 	
 	destroy: function(){

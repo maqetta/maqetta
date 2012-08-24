@@ -32,14 +32,19 @@ public class OrionUserManager extends UserManagerImpl {
     public OrionUserManager() {
     	ServerManager serverManger = ServerManager.getServerManger();
     	this.personManager = ServerManager.getServerManger().getPersonManager();
-        authenticationService = ConfiguratorActivator.getDefault().getAuthService();
+        
 
         String maxUsersStr = serverManger.getDavinciProperty(IDavinciServerConstants.MAX_USERS);
         if (maxUsersStr != null && maxUsersStr.length() > 0) {
             this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
         }
     }
-
+    private IAuthenticationService getAuthenticationService(){
+    	if(authenticationService==null){
+    		authenticationService = ConfiguratorActivator.getDefault().getAuthService();
+    	}
+    	return authenticationService;
+    }
    protected void initWorkspace(){
 	   // noop for orion
    }
@@ -117,7 +122,7 @@ public class OrionUserManager extends UserManagerImpl {
 	public IUser getUser(HttpServletRequest req) {
 		String user = null;
 		try {
-			user = authenticationService.getAuthenticatedUser(req, null, authProperties);
+			user = getAuthenticationService().getAuthenticatedUser(req, null, authProperties);
 			if(user!=null){
 				return newUser(this.personManager.addPerson(user, null, null), null);
 			

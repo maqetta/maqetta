@@ -122,7 +122,7 @@ return {
                    path: "open",
                    id: "davinci.open",
                    separator: [
-                       "open", true, "open2", true, "additions", false
+                       "open", true, "open2", true, "open3", true, "additions", false
                    ]
                }
            ],
@@ -247,19 +247,6 @@ return {
                    label: "Theme Editor...",
                    menubarPath: "davinci.open/open2"
                },
-               
-               {
-                   id: "orionNavigator",
-                   run: function() {
-                   	window.open("/navigate/table.html#", '_blank');
-                	window.focus();
-                   },
-                   iconClass: "newOpenMenuItem orionIcon",
-                   label: "Orion Navigator...",
-                   menubarPath: "davinci.open/open2"
-               },
-               
-               
                {
                    id: "openReview",
                    run: function() {
@@ -276,6 +263,16 @@ return {
                    iconClass: "newOpenMenuItem openReviewMenuItem",
                    label: "Review...",
                    menubarPath: "davinci.open/open2"
+               },
+               {
+                   id: "orionNavigator",
+                   run: function() {
+                     window.open("/navigate/table.html#", '_blank');
+                     window.focus();
+                   },
+                   iconClass: "newOpenMenuItem orionIcon",
+                   label: "Orion Navigator",
+                   menubarPath: "davinci.open/open3"
                },
                {
                    id: "newTheme",

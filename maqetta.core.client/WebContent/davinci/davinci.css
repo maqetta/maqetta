@@ -1825,7 +1825,7 @@ td.welcome_section_cell {
 }
 
 .ReviewToolBarTextContainer {
-	display: inline;
+	display: inline-block;
 }
 .ReviewToolBarText {
 	background-color: ##ffffe0;
@@ -1835,10 +1835,10 @@ td.welcome_section_cell {
 	background-image: -moz-linear-gradient(#f8f8e8, #ffffcc); 
 	background-image: -webkit-linear-gradient(#f8f8e8, #ffffcc); 
 	background-image: linear-gradient(#f8f8e8, #ffffcc);
-	padding: 8px 1em 5px;
+	padding: 5px 1em 5px;
 	font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
-	/*margin: 0px -4px -4px;*/	/* Undo the standard padding on toolbars */
-	display: inline;
+	margin-right: 12px;
+	display: inline-block;
 }
 .EditorContainer.ReviewEditor .toolbaredContainer_toolbarDiv {
 	height:auto;

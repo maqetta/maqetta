@@ -34,7 +34,7 @@ return declare(CreateTool, {
 	
 	_create: function(args){
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-			if (!dojo.some(results, function(arg){return !arg;})) {
+			if (results.every(function(arg){return arg;})) {
 				// all args are valid
 				var command = this._getCreateCommand(args);
 				this._context.getCommandStack().execute(command);
@@ -147,14 +147,14 @@ return declare(CreateTool, {
 		var deferred = new Deferred();
 
 		this._loadRequires().then(function(results) {
-			if (!dojo.some(results, function(arg){return !arg;})) {
+			if (results.every(function(arg){return arg;})) {
 				// all args are valid
 				command.add(this._getCreateCommand(args));
 				
 				// pass back the tree
 				deferred.resolve(this._tree);
 			} else {
-				console.log("TreeCreateTool:_loadRequires failed to load all requires");
+				deferred.reject(new Error("TreeCreateTool:_loadRequires failed to load all requires"));
 			}
 		}.bind(this));
 

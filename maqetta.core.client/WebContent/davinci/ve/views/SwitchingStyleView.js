@@ -36,6 +36,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		dojo.subscribe("/davinci/states/state/changed", dojo.hitch(this, this._stateChanged));
 		dojo.subscribe("/maqetta/appstates/state/changed", dojo.hitch(this, this._stateChanged));
     	dojo.subscribe("/davinci/ui/initialPerspectiveReady", dojo.hitch(this, this._initialPerspectiveReady));
+    	dojo.subscribe("/davinci/workbench/ready", dojo.hitch(this, this._workbenchReady));
 	},
 
 	pageTemplate : [
@@ -242,7 +243,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		template+=this._titleBarDiv;
 		template+="<div class='propertiesToolBar' dojoType='davinci.ve.widgets.WidgetToolBar'></div>";
 		template+="<div dojoType='davinci.ve.widgets.WidgetProperties'></div>";
-		template+="<div id='davinci_style_prop_top' class='propScrollableArea'>";
+		template+="<div class='propScrollableArea'>";
 		template+="<table class='propRootDetailsContainer'>";
 		template+="<tr>";
 		template+="<td class='propPaletteRoot'>";
@@ -258,18 +259,6 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				}
 			}
 		}
-		// Use same styling as Dijit TitlePane for breadcrumb row
-		template+='<div class="dijitTitlePane cssBreadcrumbContainer">';
-		template+='<div class="dijitTitlePaneTitle">';
-		template+='<div class="dijitTitlePaneTitleFocus" role="button">';
-		template+='<span class="dijitArrowNode" wairole="presentation" role="presentation"></span>';
-		template+='<span class="dijitTitlePaneTextNode cssBreadcrumbSection" style="-webkit-user-select: none; "></span>';
-		template+='</div>';
-		template+='</div>';
-		template+='</div>';		
-		template+='<div class="propPaletteTabContainer"></div>';
-		template+="</td></tr></table>";
-		template+="</div>";
 		this.domNode.innerHTML = template;
 		
 		this.inherited(arguments);
@@ -437,11 +426,8 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		this._widget = null;
 		this._subWidget = null;
 
-		if (this._editor && this._editor.supports("style")) {
-			dojo.removeClass('davinci_style_prop_top', "dijitHidden");
-		}else{
-			dojo.addClass('davinci_style_prop_top','dijitHidden');	
-		}
+		this._updateToolBars();
+
 		/* add the editors ID to the top of the properties pallete so you can target CSS rules based on editor */
 		if(this._oldClassName)
 			dojo.removeClass(this.domNode.parentNode.parentNode,this._oldClassName); //remove the class from the  tab container
@@ -598,6 +584,22 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 			this._alreadySplitIntoMultipleTabs = true;
 		}
 
+	},
+	
+	_workbenchReady: function(){
+		this._updateToolBars();
+	},
+
+	_updateToolBars: function(){
+		var propertyToolbarContainers = dojo.query('.propertiesToolBar');
+		propertyToolbarContainers.forEach(function(container){
+			if (this._editor && this._editor.declaredClass == 'davinci.ve.PageEditor') {
+				dojo.removeClass(container, "dijitHidden");
+				container.style.display = '';
+			}else{
+				dojo.addClass(container,'dijitHidden');	
+			}
+		}.bind(this));
 	}
 
 });

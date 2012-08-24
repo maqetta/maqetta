@@ -102,6 +102,7 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 		});
 
 		this.setContent(this.tree); 
+		this.attachToolbar();
 		this.tree.startup();
 		dojo.connect(this.tree, 'onDblClick',  
 				dojo.hitch(this, this._dblClick));

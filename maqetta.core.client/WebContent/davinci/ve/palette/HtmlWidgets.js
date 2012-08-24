@@ -28,6 +28,7 @@ return declare("davinci.ve.palette.HtmlWidgets", ViewPart, {
 		this.palette = new Palette();
 		this.palette.descriptors = "dijit,dojox,html,OpenAjax"; // FIXME: parameterize this in plugin data?
 		this.setContent(this.palette);
+		this.attachToolbar();
 		
 		this.palette._loadPalette();
 		dojo.addClass(this.palette.domNode, "dijitHidden");

@@ -58,6 +58,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		this.commentReplies = this.container.domNode;
 		dojo.attr(this.commentReplies, "tabindex", "0");
 		this.setContent(this.container);
+		this.attachToolbar();
 		this._initCommentForm();
 
 		this.connect(this.commentReplies, "keydown", function(evt) {

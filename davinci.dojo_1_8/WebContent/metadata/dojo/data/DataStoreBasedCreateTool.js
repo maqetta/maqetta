@@ -38,7 +38,7 @@ return declare(CreateTool, {
 		}
 		
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-			if (!dojo.some(results, function(arg){return !arg;})) {
+			if (results.every(function(arg){return arg;})) {
 				// all args are valid
 				this._getCreateCommand(args).then(function(command) {
 					this._context.getCommandStack().execute(command);
@@ -168,7 +168,7 @@ return declare(CreateTool, {
 		// Look for cut/copied store data to associate with the base widget, and build up
 		// an array of data items
 		if (this._data.associatedCopiedWidgetData) {
-			var data = [];
+			var data = []; // use concat
 			dojo.forEach(this._data.associatedCopiedWidgetData, function(associatedDataItem) {
 				data.push(associatedDataItem);
 			});
@@ -179,7 +179,7 @@ return declare(CreateTool, {
 		var deferred = new Deferred();
 
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-			if (!dojo.some(results, function(arg){return !arg;})) {
+			if (results.every(function(arg){return arg;})) {
 				// all args are valid
 				this._getCreateCommand(args).then(function(createCommand) {
 					command.add(createCommand);
@@ -188,7 +188,7 @@ return declare(CreateTool, {
 					deferred.resolve(this._widget);
 				}.bind(this));
 			} else {
-				deferred.reject("DataStoreBasedCreateTool:_loadRequires failed to load all requires");
+				deferred.reject(new Error("DataStoreBasedCreateTool:_loadRequires failed to load all requires"));
 			}
 		}));
 
@@ -196,13 +196,9 @@ return declare(CreateTool, {
 	},
 
 	_loadRequires: function() {
-		var promises = new Array();
-
-		dojo.forEach(this._data, function(item) {
-			promises.push(this._context.loadRequires(item.type, true));
-		}.bind(this));
-
-		return all(promises);
+		return all(this._data.map(function(item) {
+			return this._context.loadRequires(item.type, true);
+		}, this));
 	}
 });
 

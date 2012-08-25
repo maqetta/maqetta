@@ -408,8 +408,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	_onErrorCreateNewComment: function(comment) {
 		var _comments = this._cached[this._currentPage];
 		var index;
-		var i;
-		for (i=0; i<_comments.length; i++) {
+		for (var i=0; i<_comments.length; i++) {
 			if (_comments[i] && _comments[i].id == comment.commentId) {
 				index = i;
 			}
@@ -765,8 +764,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 	_onCommentBlur: function(widget) {
 		var focusedComments = this._cached[this._currentPage].focusedComments;
-		var i;
-		for (i = 0; i < focusedComments.length; i++) {
+		for (var i = 0; i < focusedComments.length; i++) {
 			if (focusedComments[i] == widget.commentId) {
 				if (i == focusedComments.length - 1) {
 					focusedComments.pop();
@@ -828,8 +826,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					});
 			});
 			var children = this.reviewerList.getChildren();
-			var i;
-			for (i = 2 ; i < children.length; i++) {
+			for (var i = 2 ; i < children.length; i++) {
 				children[i].destroy();
 			}
 
@@ -934,8 +931,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 	_reviewFilterChanged: function() {
 		var reviewers = [];
 		var children = this.reviewerList.getChildren();
-		var i;
-		for (i = 2; i<children.length; i++){
+		for (var i = 2; i<children.length; i++){
 			if (children[i].checked) {
 				reviewers.push(children[i].reviewer.name);
 			}

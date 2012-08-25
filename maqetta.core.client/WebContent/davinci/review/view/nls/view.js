@@ -1,9 +1,9 @@
 define({ root:
 {
 		//CommentExplorerView.js
-		"closeVersion":"Close Version",
-		"openVersion":"Open Version",
-		"editVersion":"Edit Version",
+		"closeVersion":"Stop Review...",
+		"openVersion":"Start Review",
+		"editVersion":"Edit Review...",
 		"filter":"Type to filter...",
 		"designer": "Designer",
 		"reviewer": "Reviewer",

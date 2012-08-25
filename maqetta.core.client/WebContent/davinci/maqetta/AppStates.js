@@ -710,6 +710,7 @@ States.prototype = {
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
 	_update: function(node, statesArray) {
+		var reImportant = /^(.*)(!important)(.*)/;
 		if (!node || !node._maqDeltas){
 			return;
 		}
@@ -725,7 +726,17 @@ States.prototype = {
 				var style = styleArray[i];
 				for (var name in style) {	// should be only one prop in style
 					var convertedName = this._convertStyleName(name);
-					node.style[convertedName] = style[name];
+					var value = style[name];
+					var matches = value.match(reImportant);
+					if(matches){	// if value includes !important
+						if(style.setProperty){
+							style.setProperty(name, matches[1]+matches[3], 'important');
+						}else{
+							node.style[convertedName] = matches[1]+matches[3];
+						}
+					}else{
+						node.style[convertedName] = value;
+					}
 				}
 			}
 		}

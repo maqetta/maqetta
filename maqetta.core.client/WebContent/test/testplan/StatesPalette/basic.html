@@ -29,8 +29,9 @@
 		<li>Standard setup things: Clear the browser cache. Launch the Maqetta server. 
 				Login if necessary. 
 				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
-		<li>Issue a "New HTML File" command.</li>
-		<li>Drag an HTML label, Calendar, TextBox, a Map (from ClipArt), a circle (from Shapes), and at least one shape from other widget sections.</li>
+		<li>Issue a "New Desktop Application" command.</li>
+		<li>Drag an HTML label, Calendar, TextBox, a Map (from ClipArt), and a circle (from Shapes).
+			<em style="color:red">Note that the circle will be absolutely positioned - with M7 the drawing tools are always added with absolute positioning.</em></li>
 		<li>Add a DIV, and three buttons inside of DIV onto the canvas.</li>
 		<li>In the States palette, click on the + icon to define two states "aaa" and "bbb"</li>
 		<li>In the States palette, select the "bbb" state and click on the - icon to delete that state</li>
@@ -41,9 +42,6 @@
 				(These widgets should become invisible on the canvas).</li>
 		<li>In the States palette, select the "ddd" state. Go to Outline palette and 
 				click on the eyeball icon for the Calendar and circle to make them invisible for the "ddd" state.
-				(These widgets should become invisible on the canvas).</li>
-		<li>Still in the "ddd" state. Go to Outline palette and 
-				click on the eyeball icon for the other widgets to make them invisible for the "ddd" state.
 				(These widgets should become invisible on the canvas).</li>
 		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
 		<li>Click on the "X" close button for the editor tab for this file</li>
@@ -90,12 +88,6 @@
 				(the eyeball should open and the Calendar should become visible on the canvas),
 				then click on the open eyeball icon for the TextBox to make it invisible
 				(the eyeball should close and the TextBox should become invisible on the canvas).</li>
-		<li>(Note: For some of these cases below, the Properties palette will
-			default to targeting the CSS style rule within a CSS style sheet.
-			Instead, bring up CSS cascade and set the target to element.style.
-			This might be something we fix in the future.
-			We should know that you can set fonts on the root node for button
-			and can set width on the root for calendar.)</li>
 		<li>On the States palette, go into the Normal state. 
 				Select the first button widget. On the Styling palette, set the font size to 20.
 				Select the calendar widget. On the Properties palette, set the width to 200px.</li>

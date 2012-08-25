@@ -84,7 +84,7 @@ define(["dojo/_base/declare",
 			this._okButton.set( 'disabled', true);
 			var langObj = uiNLS;
 			var oldTheme = this._themeSelection.get('value');
-			var selector = dojo.attr(this._selector, 'value');
+			var selector = this._selector.get('value');
 			var themeName = selector;
 			var version = null;
 			var base = selector;
@@ -147,7 +147,7 @@ define(["dojo/_base/declare",
 		
 		_getThemeLocation : function(){
 			
-			var selector = dojo.attr(this._selector, 'value');
+			var selector = this._selector.get('value');
 			
 			//var resource = Resource.findResource("./themes");
 
@@ -166,7 +166,7 @@ define(["dojo/_base/declare",
 			
 			var isOk = true;
 			var oldTheme = this._themeSelection.get('value');
-			var selector = dojo.attr(this._selector, 'value');
+			var selector = this._selector.get('value');
 			
 			if( oldTheme==null || oldTheme =="" || selector==null || selector =="") { isOk = false;}
 

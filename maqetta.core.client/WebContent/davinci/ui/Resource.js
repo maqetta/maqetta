@@ -148,7 +148,7 @@ var uiResource = {
 				uiResource.openResource(resource, newHtmlParams);
 				Workbench.workbenchStateCustomPropSet('nhfo',options);
 			};
-			Workbench.showModal(newDialog, params.title, '', executor);
+			Workbench.showModal(newDialog, params.title, '', executor, true);
 		},
 	
 		newCSS: function(){
@@ -162,7 +162,7 @@ var uiResource = {
 					resource.setText(text);
 				uiResource.openResource(resource);
 			};
-			Workbench.showModal(newDialog, uiNLS.createNewCSSFile, '', executor);
+			Workbench.showModal(newDialog, uiNLS.createNewCSSFile, '', executor, true);
 		},
 	
 		/* method to select a given resource in the explorer tree */
@@ -225,7 +225,7 @@ var uiResource = {
 					uiResource.selectResource(newFolder);
 			};
 			
-			Workbench.showModal(newFolderDialog, uiNLS.createNewFolder, '', executor);
+			Workbench.showModal(newFolderDialog, uiNLS.createNewFolder, '', executor, true);
 		},
 	
 		/* close an editor editting given resource */
@@ -335,7 +335,7 @@ var uiResource = {
 			var executor = function(){
 				uiResource.openResource(openDialog.get('value'));
 			};
-			Workbench.showModal(openDialog, uiNLS.openFile, {width: 350, height: 250}, executor);
+			Workbench.showModal(openDialog, uiNLS.openFile, {width: 350, height: 250}, executor, true);
 		},
 	
 	
@@ -399,7 +399,7 @@ var uiResource = {
 		  				});
 					}
 		  			return true;
-		  		});	
+		  		}, true);	
 		    }, true);
 		},
 	

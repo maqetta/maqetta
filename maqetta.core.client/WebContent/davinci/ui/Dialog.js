@@ -20,7 +20,9 @@ var DialogClass = declare(Dialog, {
 		this.inherited(arguments);
 		dojo.addClass(this.domNode, "resizableDialog");
 
-		dojo.connect(this.domNode, "onkeydown", this, "_onKeyDown");
+		if (this.submitOnEnter) {
+			dojo.addClass(this.domNode, "submitOnEnter");
+		}
 	},
 
 	_setContent: function(cont, isFakeContent) {
@@ -30,6 +32,14 @@ var DialogClass = declare(Dialog, {
 		this.containerNode.appendChild(div);
 
 		new ResizeHandle({targetId: this.id}, div);
+
+		// we want to listen in the content are if it exists
+		var contentNode = dojo.query(".dijitDialogPaneContentArea", this.containerNode)[0];
+		if (contentNode) {
+			dojo.connect(contentNode, "onkeydown", this, "_onKeyDown");
+		} else {
+			dojo.connect(this.domNode, "onkeydown", this, "_onKeyDown");
+		}
 	},
 
 	resize: function(coords) {
@@ -109,9 +119,9 @@ var DialogClass = declare(Dialog, {
 	_onKeyDown: function(e) {
 		var hasAccel = ((e.ctrlKey && !dojo.isMac) || (dojo.isMac && e.metaKey))
 
-		if (hasAccel && e.which == dojo.keys.ENTER) {
-			// accel enter submits a dialog.  We do this by looking for a submit input
-			// and faking a mouse click event.
+		if (e.which == dojo.keys.ENTER && (hasAccel || this.submitOnEnter)) {
+			// Accel enter submits a dialog, or just enter if submitOnEnter is true. 
+			// We do this by looking for a submit input // and faking a mouse click event.
 			var submitButtons = dojo.query("input[type=submit]", this.containerNode);
 
 			if (submitButtons.length > 0) {
@@ -143,13 +153,14 @@ DialogClass._timedDestroy = function(dialog, handles) {
 	dialog.hide();
 }
 
-DialogClass.showModal = function(content, title, style, callback) {
+DialogClass.showModal = function(content, title, style, callback, submitOnEnter) {
 	var handles = [];
 
 	var myDialog = new DialogClass({
 		title: title,
 		content: content,
-		contentStyle: style
+		contentStyle: style,
+		submitOnEnter: submitOnEnter
 	});
 
 	var _onExecute = dojo.hitch(this, function() {
@@ -186,12 +197,12 @@ DialogClass.showModal = function(content, title, style, callback) {
 },
 
 // simple dialog with an automatic OK button that closes it.
-DialogClass.showMessage = function(title, message, style, callback) {
+DialogClass.showMessage = function(title, message, style, callback, submitOnEnter) {
 	return this.showDialog(title, message, style, callback, null, true);
 },
 
 // OK/Cancel dialog with a settable okLabel
-DialogClass.showDialog = function(title, content, style, callback, okLabel, hideCancel) {
+DialogClass.showDialog = function(title, content, style, callback, okLabel, hideCancel, submitOnEnter) {
 	var myDialog;
 	var handles = [];
 
@@ -220,7 +231,8 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 	myDialog = new DialogClass({
 		title: title,
 		content: newContent,
-		contentStyle: style
+		contentStyle: style,
+		submitOnEnter: submitOnEnter
 	});
 
 	// Add the content here to avoid building the widgets twice

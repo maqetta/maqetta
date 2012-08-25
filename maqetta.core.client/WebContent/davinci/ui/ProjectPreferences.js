@@ -16,7 +16,7 @@ define([
 
 return declare("davinci.ui.ProjectPreferences", [ContentPane, TemplatedMixin], {
 
-	templateString: "<div style='display:none'><table style='margin: 4px;' cellspacing='4'><tbody>" +
+	templateString: "<div><table style='margin: 4px;' cellspacing='4'><tbody>" +
 	"<tr><td>Web Content:</td><td><div dojoAttachPoint='webContentNode'></div></td></tr>" +
 	"<tr><td>Theme Folder:</td><td><div dojoAttachPoint='themeFolderNode'></div></td></tr>" +
 	"<tr><td>Widget Folder:</td><td><div dojoAttachPoint='widgetFolderNode'></div></td></tr>" +

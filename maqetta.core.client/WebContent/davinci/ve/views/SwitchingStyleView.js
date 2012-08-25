@@ -420,6 +420,30 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 		
 		this._editor = editorChange.editor;
 		this.onEditorSelected(this._editor);
+
+		var parentTabContainer = this.getParent();
+		var selectedChild = parentTabContainer.selectedChildWidget;
+		var pageEditorOnlySections = dojo.query('.page_editor_only', parentTabContainer.domNode);
+		var updatedSelectedChild = false;
+		if(this._editor){
+			if (this._editor.declaredClass == 'davinci.ve.PageEditor') {
+				pageEditorOnlySections.forEach(function(section){
+					var contentPane = dijit.byNode(section);
+					contentPane.controlButton.domNode.style.display = '';
+				});
+			}else{
+				pageEditorOnlySections.forEach(function(section){
+					var contentPane = dijit.byNode(section);
+					contentPane.controlButton.domNode.style.display = 'none';
+					if(contentPane == selectedChild){
+						updatedSelectedChild = true;
+					}
+				});
+			}
+		}
+		if(updatedSelectedChild){
+			this._selectFirstVisibleTab();
+		}
 	 },	
 
 	
@@ -441,6 +465,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 			this._oldClassName = this._editor.editorID.replace(/\./g, "_");
 			dojo.addClass(this.domNode.parentNode.parentNode,this._oldClassName); //put the class on the  tab container
 		}
+//FIXME: I'm pretty sure at least some of the code below is no longer necessary
 		// Hide or show the various section buttons on the root pane
 		var currentPropSection = this._currentPropSection;
 		var sectionButtons=dojo.query(".propSectionButton",this.domNode);
@@ -457,6 +482,7 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				}
 			}
 		}
+//ENDOF FIXME COMMENT
 		var visibleCascade = [];
 		for(var i = 0;i<this.pageTemplate.length;i++){
 			var cascade = this.pageTemplate[i]['cascade'];
@@ -575,6 +601,16 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 			}
 
 			dojo.connect(parentTabContainer, 'selectChild', this, function(tab){
+				// If the currently selected tab is invisible, then switch to the first
+				// visible tab, which will trigger yet another call to this same callback
+				if(tab.controlButton.domNode.style.display == 'none'){
+					if(!this._recursiveSelectChildInProcess){
+						this._recursiveSelectChildInProcess = true;
+						this._selectFirstVisibleTab();
+						delete this._recursiveSelectChildInProcess;
+						return;
+					}
+				}
 				if(tab._maqPropGroup){
 					this._currentPropSection = tab._maqPropGroup;
 					var context = (this._editor && this._editor.getContext) ? this._editor.getContext() : null;
@@ -602,6 +638,23 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 				dojo.addClass(container,'dijitHidden');	
 			}
 		}.bind(this));
+	},
+	
+	_selectFirstVisibleTab: function(){
+		var parentTabContainer = this.getParent();
+		var children = parentTabContainer.getChildren();
+		for(var i=0; i<children.length; i++){
+			var cp = children[i];
+			if(cp.controlButton.domNode.style.display != 'none'){
+				// This flag prevents Workbench.js logic from triggering expand/collapse
+				// logic based on selectChild() event
+				parentTabContainer._maqDontExpandCollapse = true;
+				parentTabContainer.selectChild(cp);
+				delete parentTabContainer._maqDontExpandCollapse;
+				break;
+			}
+		}
+		
 	}
 
 });

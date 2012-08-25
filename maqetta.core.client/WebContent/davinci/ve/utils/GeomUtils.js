@@ -5,7 +5,9 @@ define([
 	"dojo/has", 
 	"dojo/_base/sniff"
 ], function(win, domGeom, domStyle, has, sniff) {
-	
+
+var tableElems = ['TABLE', 'TBODY', 'TR', 'TD', 'TH'];
+
 return /** @scope davinci.ve.utils.GeomUtils */ {
 
 	/*
@@ -56,24 +58,29 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 	getBorderBoxPageCoords: function(/*DomNode*/node){
 		var o;
 		win.withDoc(node.ownerDocument, function(){
-			var l = node.offsetLeft;
-			var t = node.offsetTop;
-			var pn = node.parentNode;
-			var opn = node.offsetParent;
-			while(pn && pn.tagName != 'BODY'){
-				if(typeof pn.scrollLeft == 'number' && typeof pn.scrollTop == 'number' ){
-					l -= pn.scrollLeft;
-					t -= pn.scrollTop;
+			if(tableElems.indexOf(node.tagName)){
+				var bcr = node.getBoundingClientRect();
+				o = {l: bcr.left, t: bcr.top, w: bcr.width, h: bcr.height};
+			}else{
+				var l = node.offsetLeft;
+				var t = node.offsetTop;
+				var pn = node.parentNode;
+				var opn = node.offsetParent;
+				while(pn && pn.tagName != 'BODY'){
+					if(typeof pn.scrollLeft == 'number' && typeof pn.scrollTop == 'number' ){
+						l -= pn.scrollLeft;
+						t -= pn.scrollTop;
+					}
+					if(pn == opn){
+						var BorderExtents = domGeom.getBorderExtents(opn);
+						l += opn.offsetLeft + BorderExtents.l;
+						t += opn.offsetTop + BorderExtents.t;
+						opn = opn.offsetParent;
+					}
+					pn = pn.parentNode;
 				}
-				if(pn == opn){
-					var BorderExtents = domGeom.getBorderExtents(opn);
-					l += opn.offsetLeft + BorderExtents.l;
-					t += opn.offsetTop + BorderExtents.t;
-					opn = opn.offsetParent;
-				}
-				pn = pn.parentNode;
+				o = {l: l, t: t, w: node.offsetWidth, h: node.offsetHeight};
 			}
-			o = {l: l, t: t, w: node.offsetWidth, h: node.offsetHeight};
 		}.bind(this));
 		return o;
 	},

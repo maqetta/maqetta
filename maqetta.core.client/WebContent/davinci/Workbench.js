@@ -145,7 +145,13 @@ var getSelectedResource = function() {
 };
 
 var initializeWorkbenchState = function(){
-	davinci.Workbench._expandCollapsePaletteContainers(null);
+	// The _expandCollapsePaletteContainers() call  below collapses the 
+	// left-side and right-side palettes before
+	// we open any of the editors (and then subsequently potentially expand
+	// the left-side and/or right-side palettes as required by that editor).
+	// The dontPreserveWidth parameter bubbles down to collapsePaletteContainer()
+	// and tells it to *not* cache the current palette width (which it normally does)
+	davinci.Workbench._expandCollapsePaletteContainers(null, {dontPreserveWidth:true});
 
 	var isReview = function (resPath) {
 		return resPath.indexOf(".review") > -1;
@@ -834,18 +840,18 @@ var Workbench = {
 	getAllOpenEditorIds: function() {
 	},
 
-	showModal: function(content, title, style, callback) {
-		return Dialog.showModal(content, title, style, callback);
+	showModal: function(content, title, style, callback, submitOnEnter) {
+		return Dialog.showModal(content, title, style, callback, submitOnEnter);
 	},
 
 	// simple dialog with an automatic OK button that closes it.
-	showMessage: function(title, message, style, callback) {
-		return Dialog.showMessage(title, message, style, callback);
+	showMessage: function(title, message, style, callback, submitOnEnter) {
+		return Dialog.showMessage(title, message, style, callback, submitOnEnter);
 	},
 
 	// OK/Cancel dialog with a settable okLabel
-	showDialog: function(title, content, style, callback, okLabel, hideCancel) {
-		return Dialog.showDialog(title, content, style, callback, okLabel, hideCancel);
+	showDialog: function(title, content, style, callback, okLabel, hideCancel, submitOnEnter) {
+		return Dialog.showDialog(title, content, style, callback, okLabel, hideCancel, submitOnEnter);
 	},
 
 	_createMenuTree: function(actionSets, pathsOptional) {
@@ -1155,20 +1161,32 @@ var Workbench = {
 		mainBody.tabs = mainBody.tabs || {};				
 		mainBody.tabs.perspective = mainBody.tabs.perspective || {};
 
+		// NOTE: Left-side and right-side palettes start up with 71px width
+		// which happens to be the exact pixel size of the palette tabs.
+		// This 71px setting prevents the user from seeing an initial flash
+		// of temporarily opened left-side and right-side palettes.
 		if (position == 'right' && !mainBody.tabs.perspective.right) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 340px;', id:"right_mainBody", 
+					style: 'width: 71px;', id:"right_mainBody", 
+					minSize:71,	// prevent user from dragging splitter too far towards edge
 					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
+			// _expandedWidth is what expandPaletteContainer() uses as the
+			// width of the palette when it is in expanded state.
+			mainBody.tabs.perspective.right._expandedWidth = 340;
 		}
 
 		if (position == 'left' && !mainBody.tabs.perspective.left) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 300px;', id:"left_mainBody", 
+					style: 'width: 71px;', id:"left_mainBody", 
+					minSize:71,	// prevent user from dragging splitter too far towards edge
 					region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
+			// _expandedWidth is what expandPaletteContainer() uses as the
+			// width of the palette when it is in expanded state.
+			mainBody.tabs.perspective.left._expandedWidth = 300;
 		}
 
 		if (position === 'left' || position === 'right') {
@@ -1213,8 +1231,10 @@ var Workbench = {
 					var tc = tab.getParent();
 					// Don't mess with which tab is selected or do any collapse/expand
 					// if selectChild is called in response to adding the first child
-					// of a TabContainer, which causes an implicit selectFirst().
-					if(!this._showViewAddChildInProcess){
+					// of a TabContainer, which causes an implicit selectFirst(),
+					// or other programmatic selectChild() event (in particular, 
+					// SwitchingStyleView.js puts _maqDontExpandCollapse on tabcontainer)
+					if(!this._showViewAddChildInProcess && !tc._maqDontExpandCollapse){
 						if(tc._maqLastSelectedChild == tab){
 							this._expandCollapsePaletteContainer(tab);						
 						}else{
@@ -1702,16 +1722,24 @@ var Workbench = {
 				if (newEditor.focus) { 
 					newEditor.focus(); 
 				}
-
+/*
 				//Bring palettes specified for the editor to the top
 				this._bringPalettesToTop(newEditor);
 				
 				//Collapse/expand the left and right-side palettes
 				//depending on "expandPalettes" properties
 				this._expandCollapsePaletteContainers(newEditor);
+*/
 			}
 			this._repositionFocusContainer();
 		}.bind(this), 1000);
+
+		//Bring palettes specified for the editor to the top
+		this._bringPalettesToTop(newEditor);
+		
+		//Collapse/expand the left and right-side palettes
+		//depending on "expandPalettes" properties
+		this._expandCollapsePaletteContainers(newEditor);
 
 		if(!startup) {
 			Workbench._updateWorkbenchState();
@@ -1739,7 +1767,11 @@ var Workbench = {
 	
 						// Select tab
 						if (tabContainer) {
+							// This flag prevents Workbench.js logic from triggering expand/collapse
+							// logic based on selectChild() event
+							tabContainer._maqDontExpandCollapse = true;
 							tabContainer.selectChild(tab);
+							delete tabContainer._maqDontExpandCollapse;
 						}
 					}
 				}
@@ -1759,15 +1791,15 @@ var Workbench = {
 		}
 	},
 
-	_expandCollapsePaletteContainers: function(newEditor) {
+	_expandCollapsePaletteContainers: function(newEditor, params) {
 		var leftBC = dijit.byId('left_mainBody');
 		var rightBC = dijit.byId('right_mainBody');
 		if(!newEditor){
 			if(leftBC){
-				this.collapsePaletteContainer(leftBC.domNode);
+				this.collapsePaletteContainer(leftBC.domNode, params);
 			}
 			if(rightBC){
-				this.collapsePaletteContainer(rightBC.domNode);
+				this.collapsePaletteContainer(rightBC.domNode, params);
 			}			
 		}else{
 			// First, we will get the metadata for the extension and get its list of 
@@ -1777,18 +1809,29 @@ var Workbench = {
 			});
 			if (editorExtensions && editorExtensions.length > 0) {
 				var expandPalettes = editorExtensions[0].expandPalettes;
+				var expand;
 				if(leftBC){
-					if(expandPalettes && expandPalettes.indexOf('left')>=0){
-						this.expandPaletteContainer(leftBC.domNode);
+					if(newEditor && newEditor.hasOwnProperty("_leftPaletteExpanded")){
+						expand = newEditor._leftPaletteExpanded;
 					}else{
-						this.collapsePaletteContainer(leftBC.domNode);
+						expand = (expandPalettes && expandPalettes.indexOf('left')>=0);
+					}
+					if(expand){
+						this.expandPaletteContainer(leftBC.domNode, params);
+					}else{
+						this.collapsePaletteContainer(leftBC.domNode, params);
 					}
 				}
 				if(rightBC){
-					if(expandPalettes && expandPalettes.indexOf('right')>=0){
-						this.expandPaletteContainer(rightBC.domNode);
+					if(newEditor && newEditor.hasOwnProperty("_rightPaletteExpanded")){
+						expand = newEditor._rightPaletteExpanded;
 					}else{
-						this.collapsePaletteContainer(rightBC.domNode);
+						expand = (expandPalettes && expandPalettes.indexOf('right')>=0);
+					}
+					if(expand){
+						this.expandPaletteContainer(rightBC.domNode, params);
+					}else{
+						this.collapsePaletteContainer(rightBC.domNode, params);
 					}
 				}
 			}
@@ -1870,8 +1913,8 @@ var Workbench = {
 					editorsContainer.removeChild(editorContainer);
 					editorContainer.destroyRecursive();
 				}
-				delete davinci.Workbench._shadowTabClosing[page.id];
 			}
+			delete davinci.Workbench._shadowTabClosing[page.id];
 		}
 	},
 
@@ -2020,8 +2063,10 @@ var Workbench = {
 	 * collapse all palettes within the given palette container node to just show tabs.
 	 * @param {Element} node  A descendant node of the palette container node.
 	 * 		In practice, the node for the collapse icon (that the user has clicked).
+	 * @params {object} params
+	 *      params.dontPreserveWidth says to not cache current palette width
 	 */
-	collapsePaletteContainer: function(node){
+	collapsePaletteContainer: function(node, params){
 		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
 		if(paletteContainerNode){
 			var paletteContainerNodeWidth = dojo.style(paletteContainerNode, 'width');
@@ -2035,12 +2080,22 @@ var Workbench = {
 					paletteContainerNode.style.width = tablistNodeSize.w + 'px';
 					parentWidget.resize();
 					paletteContainerWidget._isCollapsed = true;
-					paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
+					if(!params || !params.dontPreserveWidth){
+						paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
+					}
 				}
 			}
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = false;
 			davinci.Workbench._repositionFocusContainer();
+			var currentEditor = davinci.Runtime.currentEditor;
+			if(currentEditor){
+				if(paletteContainerNode.id == 'left_mainBody'){
+					currentEditor._leftPaletteExpanded = false;
+				}else if(paletteContainerNode.id == 'right_mainBody'){
+					currentEditor._rightPaletteExpanded = false;
+				}
+			}
 		}
 	},
 	
@@ -2067,6 +2122,14 @@ var Workbench = {
 			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = true;
 			davinci.Workbench._repositionFocusContainer();
+			var currentEditor = davinci.Runtime.currentEditor;
+			if(currentEditor){
+				if(paletteContainerNode.id == 'left_mainBody'){
+					currentEditor._leftPaletteExpanded = true;
+				}else if(paletteContainerNode.id == 'right_mainBody'){
+					currentEditor._rightPaletteExpanded = true;
+				}
+			}
 		}
 	},
 

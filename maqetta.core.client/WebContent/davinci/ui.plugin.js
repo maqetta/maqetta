@@ -240,7 +240,7 @@ return {
                    id: "openThemeEditor",
                    run: function() {
                    	require(['davinci/Workbench', 'davinci/ui/OpenThemeDialog'], function(Workbench, OpenThemeDialog){
-                   		Workbench.showModal(new OpenThemeDialog(), 'Open Theme', 'width: 200px');
+                   			Workbench.showModal(new OpenThemeDialog(), 'Open Theme', {width: 200}, null, true);
                    	});
                    },
                    iconClass: "newOpenMenuItem openThemeMenuItem",
@@ -275,10 +275,10 @@ return {
                    menubarPath: "davinci.open/open3"
                },
                {
-                   id: "newTheme",
+                   id: "newTheme",                                     
                    run: function() {
                    	require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){
-                   		Workbench.showModal(new NewTheme(), 'New Theme', 'width: 300px');
+                   			Workbench.showModal(new NewTheme(), 'New Theme', {width: 300}, null, true);
                    	});
                    },
                    iconClass: "newOpenMenuItem newThemeMenuItem",

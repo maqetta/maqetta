@@ -12,6 +12,12 @@
 				<td>
 					<div class="welcome_header">Maqetta</div>
 					<div class="welcome_under_header">Visual authoring of HTML5 user interfaces - in the browser!</div>
+				</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class='welcome_actions_border_cell'>&nbsp;</td>
+				<td>
 					<div class="welcome_content">
 						<div class="welcome_actions">
 							<table class='welcome_actions_table'>
@@ -47,7 +53,7 @@
 										</a>
 									</td>
 									<td class="welcome_section_cell">
-										<a class="welcome_section welcome_section_active" onclick="require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme) { Workbench.showModal(new NewTheme(), 'New Theme', 'height:135px;width: 300px'); });">
+										<a class="welcome_section welcome_section_active" onclick="require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme) { Workbench.showModal(new NewTheme(), 'New Theme', {height:135,width:300}, null, true); });">
 											<div class="welcome_section_container">
 												<span class="welcome_icon welcome_icon_newtheme"></span>
 											</div>
@@ -69,6 +75,14 @@
 								</tr>	
 							</table>
 						</div>
+					</div>
+				</td>
+				<td class='welcome_actions_border_cell'>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<div class="welcome_content">
 						<div class="welcome_section_header">Learn about Maqetta</div>
 						<div class='welcome_learn_container_outer'>
 							<div class='welcome_learn_container_inner'>

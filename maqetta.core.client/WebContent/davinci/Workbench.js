@@ -1755,7 +1755,7 @@ var Workbench = {
 		// First, we will get the metadata for the extension and get its list of 
 		// palettes to bring to the top
 		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
-			return extension.id === newEditor.editorID;
+			return (newEditor ? (extension.id === newEditor.editorID) : false);
 		});
 		if (editorExtensions && editorExtensions.length > 0) {
 			var editorPalettesToTop = editorExtensions[0].palettesToTop;

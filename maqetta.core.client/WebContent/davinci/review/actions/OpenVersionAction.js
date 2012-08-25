@@ -1,15 +1,15 @@
 define([
 	"dojo/_base/declare",
-	"davinci/actions/Action",
+	"./_ReviewNavigatorCommon",
 	"davinci/Runtime",
 	"dojox/widget/Toaster",
 	"dojo/i18n!./nls/actions"
-], function(declare, Action, Runtime, Toaster, nls) {
+], function(declare, _ReviewNavigatorCommon, Runtime, Toaster, nls) {
 
-var OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", [Action], {
+var OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", [_ReviewNavigatorCommon], {
 
 	run: function(context) {
-		var selection = context.getSelection ? context.getSelection() : null;
+		var selection = this._getSelection(context);
 		if (!selection || !selection.length)  { 
 			return;
 		}
@@ -36,12 +36,8 @@ var OpenVersionAction = declare("davinci.review.actions.OpenVersionAction", [Act
 		});
 	},
 
-	shouldShow: function(context) {
-		return true;
-	},
-
 	isEnabled: function(context) {
-		var selection = context.getSelection ? context.getSelection() : null;
+		var selection = this._getSelection(context);
 		if (!selection || selection.length == 0) { 
 			return false;
 		}

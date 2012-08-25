@@ -1,15 +1,15 @@
 define([
 	"dojo/_base/declare",
-	"davinci/actions/Action",
+	"./_ReviewNavigatorCommon",
 	"davinci/Runtime",
 	"dojox/widget/Toaster",
 	"dojo/i18n!./nls/actions"
-], function(declare, Action, Runtime, Toaster, nls) {
+], function(declare, _ReviewNavigatorCommon, Runtime, Toaster, nls) {
 
-var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [Action], {
+var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [_ReviewNavigatorCommon], {
 
 	run: function(context) {
-		var selection = context.getSelection ? context.getSelection() : null;
+		var selection = this._getSelection(context);
 		if (!selection || !selection.length) { return; }
 		okToClose=confirm(nls.areYouSureClose);
 		if (!okToClose) { 
@@ -39,12 +39,8 @@ var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [A
 		});
 	},
 
-	shouldShow: function(context) {
-		return true;
-	},
-
 	isEnabled: function(context) {
-		var selection = context.getSelection ? context.getSelection() : null;
+		var selection = this._getSelection(context);
 		if (!selection || selection.length == 0) { 
 			return false;
 		}

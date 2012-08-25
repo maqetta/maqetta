@@ -107,12 +107,6 @@ return {
 					//iconClass: "viewActionIcon editVersionIcon",
 					menubarPath: "newfile"
 				},
-		/*{
-								    id: "davinci.review.submitDraft",
-								    label: "Submit the draft",
-									action: "davinci/review/actions/SubmitDraftAction",
-									menubarPath: "newfile"
-								},*/
 				{
 					id: "davinci.review.close",
 					label: "Terminate",

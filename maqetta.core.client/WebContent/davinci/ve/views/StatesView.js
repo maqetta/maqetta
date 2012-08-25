@@ -314,7 +314,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			return;
 		}
 		var context = this._editor.getContext();
-		if(!context || !context._statesLoaded){
+		if(!context || !context.rootNode || !context._statesLoaded){
 			return;
 		}
 		

@@ -9,6 +9,7 @@ States.prototype = {
 	DELTAS_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
 	APPSTATES_ATTRIBUTE: "data-maq-appstates",
 	APPSTATES_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
+	reImportant: /^(.*)(!important)(.*)/,
 
 	/**
 	 * Returns true if the given node has application states (i.e., node._maqAppStates has a value)
@@ -688,7 +689,18 @@ States.prototype = {
 					var nItem = normalStyleArray[k];
 					for(var nProp in nItem){	// Should only be one prop
 						var convertedName = this._convertStyleName(nProp);
-						node.style[convertedName] = this._getFormattedValue(nProp, nItem[nProp]);
+						var style = node.style;
+						var value = this._getFormattedValue(nProp, nItem[nProp])+'';
+						var matches = value ? value.match(this.reImportant) : null;
+						if(matches){	// if value includes !important
+							if(style.setProperty){
+								style.setProperty(nProp, matches[1]+matches[3], 'important');
+							}else{
+								node.style[convertedName] = matches[1]+matches[3];
+							}
+						}else{
+							node.style[convertedName] = value;
+						}
 					}
 				}
 			}
@@ -710,7 +722,6 @@ States.prototype = {
 	 *      statesArray[i].newState - the new appstate for this state container node
 	 */
 	_update: function(node, statesArray) {
-		var reImportant = /^(.*)(!important)(.*)/;
 		if (!node || !node._maqDeltas){
 			return;
 		}
@@ -726,8 +737,8 @@ States.prototype = {
 				var style = styleArray[i];
 				for (var name in style) {	// should be only one prop in style
 					var convertedName = this._convertStyleName(name);
-					var value = style[name];
-					var matches = value.match(reImportant);
+					var value = style[name]+'';
+					var matches = value ? value.match(this.reImportant) : null;
 					if(matches){	// if value includes !important
 						if(style.setProperty){
 							style.setProperty(name, matches[1]+matches[3], 'important');

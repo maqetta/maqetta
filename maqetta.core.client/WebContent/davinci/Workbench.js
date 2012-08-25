@@ -1169,6 +1169,7 @@ var Workbench = {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
 					style: 'width: 71px;', id:"right_mainBody", 
+					minSize:71,	// prevent user from dragging splitter too far towards edge
 					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
 			// _expandedWidth is what expandPaletteContainer() uses as the
@@ -1180,6 +1181,7 @@ var Workbench = {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
 					style: 'width: 71px;', id:"left_mainBody", 
+					minSize:71,	// prevent user from dragging splitter too far towards edge
 					region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
 			// _expandedWidth is what expandPaletteContainer() uses as the

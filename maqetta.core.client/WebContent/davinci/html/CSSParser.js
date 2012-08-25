@@ -44,7 +44,7 @@ var CSSParser = (function() {
 					setState(inString(ch));
 					return null;
 				} else if (ch == "#") {
-					source.nextWhileMatches(/\w/);
+					source.nextWhileMatches(/[\w-]/);
 					return "css-hash";
 				} else if (ch == "!") {
 					source.nextWhileMatches(/[ \t]/);

@@ -45,12 +45,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		dojo.addClass(this._frames[BOTTOM], "editFocusFrameBOTTOM");
 		
 		this._nobs = [];
-		var cursors = ["w-resize","e-resize","n-resize","s-resize","nw-resize", "sw-resize", "ne-resize", "se-resize"];
 		var border = (dojo.isIE ? 0 : 2);
 		for(var i = 0; i < 8; i++){
-			var nob = dojo.create("div", {"class": "editFocusNob", style: {
-				cursor: cursors[i]
-			}}, this._stdChrome);
+			var nob = dojo.create("div", {"class": "editFocusNob"}, this._stdChrome);
 			this._nobs.push(nob);
 			this.connect(nob, "onmousedown", "onMouseDown");
 		}
@@ -171,6 +168,31 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._nobs[LEFT_BOTTOM].style.display = corner;
 		this._nobs[RIGHT_TOP].style.display = corner;
 		this._nobs[RIGHT_BOTTOM].style.display = corner;
+		if(op.resizeWidth){
+			this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = "w-resize";
+			this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = "e-resize";
+		}else{
+			this._nobs[LEFT].style.cursor = this._nobs[RIGHT].style.cursor =
+				this._frames[LEFT].style.cursor = this._frames[RIGHT].style.cursor = "auto";
+		}
+		if(op.resizeHeight){
+			this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = "n-resize";
+			this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = "s-resize";
+		}else{
+			this._nobs[TOP].style.cursor = this._nobs[BOTTOM].style.cursor =
+				this._frames[TOP].style.cursor = this._frames[BOTTOM].style.cursor = "auto";
+		}
+		if(op.resizeWidth && op.resizeHeight){
+			this._nobs[LEFT_TOP].style.cursor = "nw-resize";
+			this._nobs[LEFT_BOTTOM].style.cursor = "sw-resize";
+			this._nobs[RIGHT_TOP].style.cursor = "ne-resize";
+			this._nobs[RIGHT_BOTTOM].style.cursor = "se-resize";
+		}else{
+			this._nobs[LEFT_TOP].style.cursor = 
+			this._nobs[LEFT_BOTTOM].style.cursor = 
+			this._nobs[RIGHT_TOP].style.cursor =
+			this._nobs[RIGHT_BOTTOM].style.cursor = "auto";
+		}
 	},
 
 	/**

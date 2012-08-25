@@ -483,15 +483,14 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 
 	containReviewFile: function(index) {
 		var reviewFiles = this.reviewFiles || [];
-		var i;
 		if (!isNaN(index)) {
-			for (i=0; i<reviewFiles.length; i++) {
+			for (var i=0; i<reviewFiles.length; i++) {
 				if (reviewFiles[i].index == index) {
 					return true;
 				}
 			}
 		} else {
-			for (i=0; i<reviewFiles.length; i++) {
+			for (var i=0; i<reviewFiles.length; i++) {
 				if (reviewFiles[i] == index) {
 					return true;
 				}
@@ -598,7 +597,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				url: "cmd/getLatestVersionId",
 				sync: true
 			});
-			this.versionTitle.set("value", "version " + latestVersionId);
+			this.versionTitle.set("value", dojo.string.substitute(widgetsNls.defaultReviewTitle, [latestVersionId]));
 		}
 		if (node) {
 			var vName = !isRestart ? node.name : node.name + " (R)";
@@ -647,10 +646,9 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		return mainPromise;
 	},
 
-	publish : function(value) {
+	publish: function(isDraft) {
 		var emails = "";
-		var i;
-		for (i=0;i<this.userData.length;i++) {
+		for (var i=0;i<this.userData.length;i++) {
 			emails = emails+ this.userData[i].email+",";
 		}
 		var messageTextarea = this.descriptions;
@@ -676,7 +674,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			resources :resources,
 			desireWidth:desireWidth,
 			desireHeight:desireHeight,
-			savingDraft:value,
+			savingDraft:isDraft,
 			dueDate:dueDateString,
 			receiveEmail:receiveEmail
 		};
@@ -701,47 +699,49 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				});
 				hasToaster = true;
 			}
-
+			
 			if (result.length > 0) {
 				var resultEntry = result[0];
 				if (resultEntry.result=="OK") {
-					var key = value ? "draftSaved" : "inviteSuccessful";
-					if (resultEntry.emailResult) {
-						if (resultEntry.emailResult == "OK") {
-							dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls[key], type:"message"}, "create", this.node]);
-						} else {
-							var dialogContent = dojostring.substitute(warningString, {
-									htmlContent: resultEntry.emailResult, 
-									inviteNotSent: widgetsNls.inviteNotSent, 
-									mailFailureMsg: widgetsNls.mailFailureMsg,
-							});
-							dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
-			
-							Workbench.showMessage(widgetsNls.warning, dialogContent);
-						}
-						
-						//Open the new review
-						var version = resultEntry.version;
-						var designer = resultEntry.designer;
-						if (version && designer) {
-							ReviewRoot.findVersion(designer, version).then(function(node) {
-								if (node) {
-									node.getChildren(function(childs) {
-										if(childs.length > 1) {
-											return;
-										}
-										dojo.forEach(childs, function(child){
-											davinci.Workbench.openEditor({
-												fileName: child,
-												content: node.getText()
+					if (isDraft) {
+						dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.draftSaved, type:"message"}, "draft", this.node]);
+					} else {
+						if (resultEntry.emailResult) {
+							if (resultEntry.emailResult == "OK") {
+								dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteSuccessful, type:"message"}, "create", this.node]);
+							} else {
+								var dialogContent = dojostring.substitute(warningString, {
+										htmlContent: resultEntry.emailResult, 
+										inviteNotSent: widgetsNls.inviteNotSent, 
+										mailFailureMsg: widgetsNls.mailFailureMsg,
+								});
+								dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
+				
+								Workbench.showMessage(widgetsNls.warning, dialogContent);
+							}
+							
+							//Open the new review
+							var version = resultEntry.version;
+							var designer = resultEntry.designer;
+							if (version && designer) {
+								ReviewRoot.findVersion(designer, version).then(function(node) {
+									if (node) {
+										node.getChildren(function(childs) {
+											if(childs.length > 1) {
+												return;
+											}
+											dojo.forEach(childs, function(child){
+												davinci.Workbench.openEditor({
+													fileName: child,
+													content: node.getText()
+												});
 											});
-										});
-									}.bind(this));
-								}
-							}.bind(this));
+										}.bind(this));
+									}
+								}.bind(this));
+							}
 						}
 					}
-					
 				}
 			}
 		}.bind(this));

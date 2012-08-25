@@ -56,6 +56,7 @@ define({ root:
 		"action":"Action",
 		"add":"Add",
 		"errorPublish":"Error to publish review session , response=${0}, reason=${1}",
+		"defaultReviewTitle": "review ${0}",
 		
 		//PublisherWizard.html
 		"generalInfo":" General Information",

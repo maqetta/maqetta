@@ -95,7 +95,7 @@ return {
 			actions: [
 				{
 					id: "davinci.review.view",
-					label: "View Page",
+					label: "Open",
 					action: "davinci/review/actions/ViewFileAction",
 					//iconClass: "viewActionIcon reviewFileIcon",
 					menubarPath: "newfile"
@@ -108,13 +108,6 @@ return {
 					menubarPath: "newfile"
 				},
 				{
-					id: "davinci.review.close",
-					label: "Terminate",
-					action: "davinci/review/actions/CloseVersionAction",
-					//iconClass: "viewActionIcon closeVersionIcon",
-					menubarPath: "newfile"
-				},
-				{
 					id: "davinci.review.open",
 					label: "Start",
 					action: "davinci/review/actions/OpenVersionAction",
@@ -122,8 +115,15 @@ return {
 					menubarPath: "newfile"
 				},
 				{
+					id: "davinci.review.close",
+					label: "Stop...",
+					action: "davinci/review/actions/CloseVersionAction",
+					//iconClass: "viewActionIcon closeVersionIcon",
+					menubarPath: "newfile"
+				},
+				{
 					id: "davinci.review.delete",
-					label: "Delete",
+					label: "Delete...",
 					action: "davinci/review/actions/DeleteVersionAction",
 					//iconClass: "viewActionIcon deleteVersionIcon",
 					menubarPath: "newfile",
@@ -131,7 +131,7 @@ return {
 				},
 				{
 					id: "davinci.review.restart",
-					label: "Renew",
+					label: "Republish...",
 					action: "davinci/review/actions/RestartVersionAction",
 					menubarPath: "newfile"
 				}

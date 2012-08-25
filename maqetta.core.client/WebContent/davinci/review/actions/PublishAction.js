@@ -22,7 +22,7 @@ var PublishAction = declare("davinci.review.actions.PublishAction", [Action], {
 		var publishWizard = this.publishWizard = new PublishWizard();
 		this.dialog = new Dialog({
 			contentStyle: {width:650,height:350},
-			title : actionsNls.newReview,
+			title: this.node ? actionsNls.editReview : actionsNls.newReview,
 			onCancel: dojo.hitch(this, this.close),
 			onHide: dojo.hitch(this, this.hide)
 		});

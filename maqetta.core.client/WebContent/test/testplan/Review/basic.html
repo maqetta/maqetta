@@ -116,6 +116,26 @@
 	<ol class="expectedResults">
 		<li>See notes above.</li>
 	</ol>
+	
+	<h2 class="test_section">Editing review comments and annotations</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>For one of the comments you've entered, click the <i>Edit</i> link to edit the comment.<div class='expectedResults_subsection'>A small comment entry form should appear just under the toolbar.</div>
+			Change the text for the subject and the text for the description. Click Submit.
+			<div class='expectedResults_subsection'>The comment should be updated.</div>
+		</li>
+		<li>For one of the comments you've entered with an annotation, click the <i>Edit</i> link to edit the comment.
+			<div class='expectedResults_subsection'>A small comment entry form should appear just under the toolbar.</div>
+			Select an annotation and click the <i>Delete</i> icon in the comments toolbar.
+			<div class='expectedResults_subsection'>The annotation should disappear.</div>
+			Add a new annotation. Click Submit.
+			<div class='expectedResults_subsection'>The comment should be updated.</div>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>See notes above.</li>
+	</ol>
 
 	<h2 class="test_section">Replying to comments from others</h2>
 	<h3 class="steps_subsection">Steps</h3>
@@ -191,6 +211,126 @@
 		 </li>
 		<li>EXTRA CREDIT: Repeat all of the tests above, but now have user C create the review and invite user A and user B.
 		</li>
+	</ol>
+	
+	<h2 class="test_section">Editing Reviews</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>In the reviews palette, select the folder for one of the reviews you created earlier. 
+			<div class='expectedResults_subsection'>Look at the review palette toolbar, and 
+				you should see options for <i>Stop Review...</i>, <i>Start Review...</i> (disabled), and <i>Edit Review...</i>.</div>
+		</li>
+		<li>Click the <i>Edit Review...</i> button and the Edit Review Wizard should be invoked. 
+			<div class='expectedResults_subsection'>This wizard is the same as the New Review Wizard, but pre-populated with the 
+			settings from when you first created the review.</div>
+		</li>
+		<li>On the first panel of the wizard, ensure the data matches what you entered earlier. Change the title of the 
+			review (e.g., to "My Changed Review"). Click Next.</li>
+		<li>On the second panel of the wizard, ensure the list of files matches what you entered earlier. Add an 
+			additional file (e.g., "Sample3-Mobile.html"). Click Next.</li>
+		<li>On the third panel of the wizard, ensure the list of reviewers matches what you entered earlier. Add an 
+			additional e-mail address. Click Publish.</li>
+		<li>The same sorts of things that happen when you create a review should happen (e.g., e-mail gets sent out, etc.). 
+			<div class='expectedResults_subsection'>Confirm that the tree in the Review Palette is updated with your new review 
+			title. In addition, ensure that the new file is listed inside of the review folder.</div>
+		</li>
+		<li>Right click on the review you just edited.
+			<div class='expectedResults_subsection'>You should see the following menu items: <i>Open</i> (disabled), <i>Edit...</i>, 
+			<i>Start</i> (disabled), <i>Stop...</i>, <i>Delete...</i>, and <i>Republish...</i> (disabled)</div>
+		</li>
+		<li>Click the <i>Edit...</i> menu option and the Edit Review Wizard should be relaunched. Click cancel.</li>
+		<li>Select the folder for a review created by another user.
+			<div class='expectedResults_subsection'>Look at the review palette toolbar, and all of the buttons should be disabled.</div>
+		</li>
+		<li>Right-click the folder for a review created by another user.
+			<div class='expectedResults_subsection'>All of the menu items should be disabled.</div>
+		</li>
+	</ol>
+	
+	<h2 class="test_section">Starting and Stopping Reviews</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>In the reviews palette, select the folder for one of the reviews you created earlier. 
+			<div class='expectedResults_subsection'>Look at the review palette toolbar, and 
+				you should see options for <i>Stop Review...</i>, <i>Start Review...</i> (disabled), and <i>Edit Review...</i>.</div>
+		</li>
+		<li>Click the <i>Stop Review...</i> button and click OK.. 
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>An alert should show asking if you are sure you want to stop the review.</li>
+					<li>After you click OK, you should see a message that the review was successfully stopped.</li>
+					<li>The icon on the review in the tree should change to a stopped icon.</li>
+				</ul>
+			</div>
+		</li>
+		<li>Open the review you closed, and right-click on one of the files.
+			<div class='expectedResults_subsection'>You should see the following menu items: <i>Open</i>, <i>Edit...</i>, 
+			<i>Start</i>, <i>Stop...</i> (disabled), <i>Delete...</i>, and <i>Republish...</i> (disabled)</div>
+		</li>
+		<li>Select the <i>Open</i> menu item and the review should open.</li>
+		<li>Go to the Comments Palette.
+			<div class='expectedResults_subsection'>You should see all previously entered comments, but because the review is stopped
+				you should not be able to add any new comments.</div>
+		</li>
+		<li>Back in the review palette, select the review and hit the Start button in the toolbar.
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>You should see a message that the review was successfully started.</li>
+					<li>The icon on the review in the tree should change to a started icon.</li>
+				</ul>
+			</div>
+		</li>
+		<li>Go to the Comments Palette.
+			<div class='expectedResults_subsection'>Because the review is started, the Add Comment button should be renabled. And, you 
+			should again be able to add a new comment.</div>
+		</li>
+	</ol>
+	
+	<h2 class="test_section">Deleting Reviews</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>In the reviews palette, select the folder for one of the reviews you created earlier. </li>
+		<li>Right click and choose the <i>Delete...</i> menu option and click OK.. 
+			<div class='expectedResults_subsection'>
+				<ul>
+					<li>An alert should show asking if you are sure you want to delete the review.</li>
+					<li>After you click OK, you should see a message that the review was successfully deleted.</li>
+					<li>The review folder and its contents should be removed from the tree in the review palette.</li>
+				</ul>
+			</div>
+		</li>
+	</ol>
+	
+	<h2 class="test_section">Saving a Review As a Draft</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Repeat the steps to create a review from the <i>Create a new review</i> section, but instead of hitting
+			the <b>Publish</b> button, click the <b>Save as draft</b> button.
+			<div class='expectedResults_subsection'>
+		  		<ul>
+		  			<li>You should see a message that the review was succesfully saved as a draft.</li>
+		  			<li>A node with a draft icon should be added to the tree in the review palette, and it should tagged with the word 
+		  				"(Draft)".</li>
+		  			<li>No e-mail notifications should be received.</li>
+		  		</ul>
+		  	</div>
+		 </li>
+		 <li>With the draft review selected, click the Edit... button in the toolbar of the review palette.
+			<div class='expectedResults_subsection'>
+		  		<ul>
+		  			<li>You should see Edit Review Wizard appear and populated with all of the data from when you saved as a draft.</li>
+		  		</ul>
+		  	</div>
+		 </li>
+		 <li>Click the Publish button in the wizard.
+			<div class='expectedResults_subsection'>
+		  		<ul>
+		  			<li>The review should be published with e-mail notifications sent.</li>
+		  			<li>The review entry in the tree should change from appearing as a draft to appearing as a normal review (e.g.,
+		  				the icon should change and the "(Draft)" string should disappear.</li>
+		  		</ul>
+		  	</div>
+		 </li>
 	</ol>
 </body>
 </html>

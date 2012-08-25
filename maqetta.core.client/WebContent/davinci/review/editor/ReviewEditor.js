@@ -37,9 +37,9 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 			}
 			var version = this.resourceFile.parent;
 			if (version.timeStamp == arg3.timeStamp) {
-				var node = davinci.review.model.resource.root.findFile(version.timeStamp,
-						this.resourceFile.name);
-				this.resourceFile = node;
+				davinci.review.model.resource.root.findFile(version.timeStamp, this.resourceFile.name).then(function(node) {
+					this.resourceFile = node;
+				}.bind(this));
 			}
 
 		});

@@ -19,11 +19,6 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 		this.dueDate = this.dueDate == "infinite" ? this.dueDate : stamp.fromISOString(this.dueDate);
 	},
 
-	//deprecated
-	getChildrenSync: function(onComplete, sync) {
-		this.getChildren(onComplete);
-	},
-
 	getChildren: function(onComplete, onError) {
 		if (this._isLoaded) {
 			onComplete.call(null, this.children);
@@ -53,7 +48,7 @@ return declare("davinci.review.model.resource.Folder", Resource, {
 			}
 		}
 	},
-
+	
 	getPath: function() {
 		if (this.parent) {
 			return this.parent.getPath() + "/" + this.timeStamp;

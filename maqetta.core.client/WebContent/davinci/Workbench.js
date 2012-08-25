@@ -156,7 +156,7 @@ var initializeWorkbenchState = function(){
 	};
 	
 	var getReviewResource = function (resPath) {
-		return new Path(resPath).removeFirstSegments(3);
+		return (new Path("./")).append(new Path(resPath).removeFirstSegments(3));
 	};
 
 	var init = function (state) {

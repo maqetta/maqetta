@@ -48,12 +48,11 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 		
 		// Reload the children. 
 		var parent = this.root;
-		var newChildren;
 		parent._isLoaded = false;
-		parent.getChildren(function(children) { newChildren = children; }, true);
-		
-		//Add new children
-		this.onChildrenChange(parent, newChildren);
+		parent.getChildren(function(children) { 
+			//Add new children
+			this.onChildrenChange(parent, children);
+		}.bind(this));
 	},
 
 	getLabel: function(/*dojo.data.Item*/ item) {

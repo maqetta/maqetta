@@ -1,28 +1,24 @@
 define([
 	"dojo/_base/declare",
-	"../../actions/Action",
+	"./_ReviewNavigatorCommon",
 	"./PublishAction",
 	"../../Runtime",
 	"dojox/widget/Toaster",
 	"dojo/i18n!./nls/actions"
-], function(declare, Action, PublishAction, Runtime, Toaster, nls) {
+], function(declare, _ReviewNavigatorCommon, PublishAction, Runtime, Toaster, nls) {
 
-return declare("davinci.review.actions.EditVersionAction", [Action], {
+return declare("davinci.review.actions.EditVersionAction", [_ReviewNavigatorCommon], {
 
 	run: function(context) {
-		var selection = context.getSelection ? context.getSelection() : null;
+		var selection = this._getSelection(context);
 		if(!selection || !selection.length) return;
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
 		var action = new PublishAction(item);
 		action.run();
 	},
 
-	shouldShow: function(context) {
-		return true;
-	},
-
 	isEnabled: function(context) {
-		var selection = context.getSelection ? context.getSelection() : null;
+		var selection = this._getSelection(context);
 		if (selection && selection.length > 0) {
 			var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
 			if (item.designerId == davinci.Runtime.userName) { 

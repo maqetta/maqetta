@@ -116,20 +116,21 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 		this.subscribe("/davinci/review/selectionChanged", "_updateActionBar");
 		this.subscribe("/davinci/review/resourceChanged", function(result, type, changedResource) {
 			if (changedResource && changedResource.timeStamp) {
-				var node = davinci.review.model.resource.root.findVersion(changedResource.timeStamp);
-				if (node) { 
-					this.tree.set("selectedItem", node);
-				} else {
-					this.tree.set("selectedItems", []);
-				}
-				this._publishSelectionChanges();
-				
-				// NOTE: This feels like a hack, but if all children of the root are deleted (making the
-				// root empty), then the tree will collapse the root node. And, then when we add a node back in,
-				// that node is invisible because the tree thinks the root node is collapsed.  So, 
-				// we'll circumvent that by telling it the root node to expand. If already expanded, this 
-				// has no effect.
-				this.tree.rootNode.expand();
+				davinci.review.model.resource.root.findVersion(changedResource.timeStamp).then(function(node){
+					if (node) { 
+						this.tree.set("selectedItem", node);
+					} else {
+						this.tree.set("selectedItems", []);
+					}
+					this._publishSelectionChanges();
+					
+					// NOTE: This feels like a hack, but if all children of the root are deleted (making the
+					// root empty), then the tree will collapse the root node. And, then when we add a node back in,
+					// that node is invisible because the tree thinks the root node is collapsed.  So, 
+					// we'll circumvent that by telling it the root node to expand. If already expanded, this 
+					// has no effect.
+					this.tree.rootNode.expand();
+				}.bind(this));
 			}
 		});
 
@@ -298,9 +299,9 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 		var text = dijit.byId("reviewExplorerFilter").get("value");
 		this.commentingFilter.filterString=text;
 		dojo.forEach(this.model.root.children,dojo.hitch(this, function(item) {
-			var newChildren;
-			item.getChildrenSync(function(children) { newChildren=children; }, true);
-			this.model.onChildrenChange(item, newChildren);
+			item.getChildren(function(children) { 
+				this.model.onChildrenChange(item, children);
+			}.bind(this));
 		}));
 	},
 
@@ -384,30 +385,31 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 			template.detail_creator = item.designerId
 				+ (item.designerEmail ? "&nbsp;&lt" + item.designerEmail + "&gt": "");
 			template.detail_files = "";
-			item.getChildrenSync(function(children) { c = children; }, true);
-			dojo.forEach(c, function(i) {
-				var label = i.getLabel();
-				template.detail_files += "<div><span>"
-					+ label.substr(0, label.length - 4)
-					+ "</span><span class='dijitTreeIcon reviewFileIcon detail_file'></span></div>";
-			});
-			template.detail_reviewers = "";
-			dojo.forEach(item.reviewers, function(i) {
-				if (i.email != item.designerEmail) {
-					template.detail_reviewers += "<div>" + i.email + "</div>";
-				}
-			});
-			item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";
-
-			this._showTimer = setTimeout(dojo.hitch(this, function() {
-				if(this._delTimer){
-					clearTimeout(this._delTimer);
-					delete this._delTimer;
-				}
-				dijit.showTooltip(dojo.string.substitute(this.infoCardContent, template), node.rowNode);
-				this._lastAnchorNode = node;
-				delete this._showTimer;
-			}), 1000);
+			item.getChildren(function(children) {
+				dojo.forEach(children, function(i) {
+					var label = i.getLabel();
+					template.detail_files += "<div><span>"
+						+ label.substr(0, label.length - 4)
+						+ "</span><span class='dijitTreeIcon reviewFileIcon detail_file'></span></div>";
+				});
+				template.detail_reviewers = "";
+				dojo.forEach(item.reviewers, function(i) {
+					if (i.email != item.designerEmail) {
+						template.detail_reviewers += "<div>" + i.email + "</div>";
+					}
+				});
+				item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";
+	
+				this._showTimer = setTimeout(dojo.hitch(this, function() {
+					if(this._delTimer){
+						clearTimeout(this._delTimer);
+						delete this._delTimer;
+					}
+					dijit.showTooltip(dojo.string.substitute(this.infoCardContent, template), node.rowNode);
+					this._lastAnchorNode = node;
+					delete this._showTimer;
+				}), 1000);
+			}.bind(this));
 		}
 
 	},

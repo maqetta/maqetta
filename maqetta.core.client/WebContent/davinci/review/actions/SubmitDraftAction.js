@@ -12,41 +12,40 @@ var SubmitDraftAction = declare("davinci.review.actions.SubmitDraftAction", [Act
 		if (!selection || !selection.length) { return; }
 		var firstSelection = selection[0].resource;
 		var item = firstSelection.elementType=="ReviewFile"?firstSelection.parent:firstSelection;
-		var children;
-		item.getChildren(function(c) {children=c;}, true);
+		item.getChildren(function(children) {
 
-		if (children&&children.length>0) {
-			dojo.xhrGet({
-				url: "cmd/managerVersion",
-				sync:false,
-				handleAs:"text",
-				content:{
-					'type' :'publish',
-					'vTime':item.timeStamp}
-			}).then(function (result) {
-				if (result=="OK") {
-					if (typeof hasToaster == "undefined") {
-						new dojox.widget.Toaster({
-							position: "br-left",
-							duration: 4000,
-							messageTopic: "/davinci/review/resourceChanged"
-						});
-						hasToaster = true;
+			if (children&&children.length>0) {
+				dojo.xhrGet({
+					url: "cmd/managerVersion",
+					sync:false,
+					handleAs:"text",
+					content:{
+						'type' :'publish',
+						'vTime':item.timeStamp}
+				}).then(function (result) {
+					if (result=="OK") {
+						if (typeof hasToaster == "undefined") {
+							new dojox.widget.Toaster({
+								position: "br-left",
+								duration: 4000,
+								messageTopic: "/davinci/review/resourceChanged"
+							});
+							hasToaster = true;
+						}
+						dojo.publish("/davinci/review/resourceChanged", [{message:"Submit the Draft successfully!", type:"message"}]);
 					}
-					dojo.publish("/davinci/review/resourceChanged", [{message:"Submit the Draft successfully!", type:"message"}]);
-				}
-			});
-			return;
-		}
-
-		var option = confirm("There is no file in this draft, edit it?");
-		if(option){
-			var action = new PublishAction(item);
-			action.run();
-		} else {
-			return;
-		}
-
+				});
+				return;
+			}
+	
+			var option = confirm("There is no file in this draft, edit it?");
+			if(option){
+				var action = new PublishAction(item);
+				action.run();
+			} else {
+				return;
+			}
+		}.bind(this));
 	},
 
 	shouldShow: function() {

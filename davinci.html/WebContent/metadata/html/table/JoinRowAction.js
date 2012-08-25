@@ -1,5 +1,4 @@
-// AWE TODO: Moved from core.client, but currently appears to be unused. Leaving for time being as it's unclear if we'll 
-// need it by time HTML table editing is finished.
+// FIXME: Moved from core.client, but currently unused. There's an open ticket to potentially resurrect some of this function.
 define([
     	"dojo/_base/declare",
     	"./_TableAction",

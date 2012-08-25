@@ -21,6 +21,9 @@ define([
 	"dojo/fx",
 	"dojo/date/stamp",
 	"dijit/Tree",
+	"dojo/Deferred",
+	"dojo/promise/all",
+	"system/resource",
 	"davinci/Runtime",
 	"davinci/Workbench",
 	"davinci/model/resource/Folder",
@@ -34,8 +37,8 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Tree, 
-		Runtime, Workbench, Folder, File, Empty, ReviewRoot, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Tree, Deferred, all,
+		systemResource, Runtime, Workbench, Folder, File, Empty, ReviewRoot, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 
 //WARNING: extends private dijit API
@@ -586,6 +589,8 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	initData: function(node, isRestart) {
+		var mainPromise = new Deferred();
+		
 		this.node = node;
 		this.isRestart = isRestart;
 		if (!node) {
@@ -609,62 +614,37 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			this.receiveEmail.set('value', node.receiveEmail);
 			
 			 // init review files
-			var children;
-			node.getChildren(function(c) {
-				children = c;
-			}, true);
-			dojo.forEach(children, dojo.hitch(this, function(item) {
-				var path = new davinci.model.Path(item.name);
-				var segments = path.getSegments();
-				item = this.sourceTreeModel.root;
-				var i;
-				var search = function(item, name) {
-					var newChildren;
-					if (item.getChildren) {
-						item.getChildren(function(children) {
-							newChildren = children;
-						}, true);
-						for ( var i = 0; i < newChildren.length; i++) {
-							if (newChildren[i].name == name) {
-								return newChildren[i];
-							}
+			node.getChildren(function(children) {
+				dojo.forEach(children, function(item) {
+					var file = systemResource.findResource(item.name);
+					if (file != null) {
+						this.addFiles([
+							file
+						]);
+					}
+				}.bind(this));
+				
+				//init reviewers
+				for (var i = 0; i < node.reviewers.length; i++) {
+					if (node.reviewers[i].email != node.designerEmail) {
+						var displayName = node.reviewers[i].email;
+						if (node.reviewers[i].name) {
+							displayName = node.reviewers[i].name + ' (' + displayName + ')';
 						}
-					}
-					return null;
-				};
-				/*
-				 * start at segment 1 to skip over root item segment. see issue #2006
-				 */
-				for (i = 1; i < segments.length; i++) {
-					item = search(item, segments[i]);
-					if (item === null) {
-						break;
+						this.jsonStore.newItem({
+							name: node.reviewers[i].name,
+							email: node.reviewers[i].email,
+							displayName: displayName
+						});
 					}
 				}
-				if (item !== null) {
-					this.addFiles([
-						item
-					]);
-				}
-			}));
-
-			// init reviewers
-			var i;
-			for (i = 0; i < node.reviewers.length; i++) {
-				if (node.reviewers[i].email != node.designerEmail) {
-					var displayName = node.reviewers[i].email;
-					if (node.reviewers[i].name) {
-						displayName = node.reviewers[i].name + ' (' + displayName + ')';
-					}
-					this.jsonStore.newItem({
-						name: node.reviewers[i].name,
-						email: node.reviewers[i].email,
-						displayName: displayName
-					});
-				}
-			}
-
+				mainPromise.resolve();
+			}.bind(this));
+		} else {
+			mainPromise.resolve();
 		}
+		
+		return mainPromise;
 	},
 
 	publish : function(value) {
@@ -744,20 +724,21 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 						var version = resultEntry.version;
 						var designer = resultEntry.designer;
 						if (version && designer) {
-							var node = ReviewRoot.findVersion(designer, version);
-							if (node) {
-								node.getChildren(function(childs){
-									if(childs.length > 1) {
-										return;
-									}
-									dojo.forEach(childs, function(child){
-										davinci.Workbench.openEditor({
-											fileName: child,
-											content: node.getText()
+							ReviewRoot.findVersion(designer, version).then(function(node) {
+								if (node) {
+									node.getChildren(function(childs) {
+										if(childs.length > 1) {
+											return;
+										}
+										dojo.forEach(childs, function(child){
+											davinci.Workbench.openEditor({
+												fileName: child,
+												content: node.getText()
+											});
 										});
-									});
-								}, false);
-							}
+									}.bind(this));
+								}
+							}.bind(this));
 						}
 					}
 					

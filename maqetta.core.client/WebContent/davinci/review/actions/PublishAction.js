@@ -29,10 +29,10 @@ var PublishAction = declare("davinci.review.actions.PublishAction", [Action], {
 		this.dialog.setContent(publishWizard);
 		this.dialog.show();
 		dojo.connect(publishWizard, "onClose", this, this.close);
-		publishWizard.initData(this.node, this.isRestart);
-		publishWizard.updateSubmit();
-		publishWizard.reviewerStackContainer.resize();
-
+		publishWizard.initData(this.node, this.isRestart).then(function() {
+			publishWizard.updateSubmit();
+			publishWizard.reviewerStackContainer.resize();
+		});
 	},
 
 	hide: function() {

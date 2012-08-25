@@ -26,6 +26,10 @@ define([
 
 return declare(CreateTool, {
 	_useDataDojoProps: false,
+	
+	// AWE TODO: temporary with intent to help debug difficult to reproduce timing issue on test server when
+	// GridX is first created with empty cache.
+	_debug: true,
 
 	constructor: function(data) {
 		this._resizable = "both";
@@ -37,9 +41,13 @@ return declare(CreateTool, {
 			return;
 		}
 		
-		console.log("DataStoreBasedCreateTool::_create BEFORE this._loadRequires()"); //AWE TODO: REMOVE... Added to debug timing issue
+		if (this._debug) {
+			console.log("DataStoreBasedCreateTool::_create BEFORE this._loadRequires()");
+		}
 		this._loadRequires().then(dojo.hitch(this, function(results) {
-			console.log("******** DataStoreBasedCreateTool::_create ALL promises fulfilled!"); //AWE TODO: REMOVE... Added to debug timing issue
+			if (this._debug) {
+				console.log("******** DataStoreBasedCreateTool::_create ALL promises fulfilled!");
+			}
 			if (results.every(function(arg){return arg;})) {
 				// all args are valid
 				this._getCreateCommand(args).then(function(command) {
@@ -198,20 +206,24 @@ return declare(CreateTool, {
 	},
 
 	_loadRequires: function() {
-		/* AWE TODO: Commenting out compact form temporarily for debugging
+		/* FIXME: Commenting out compact form temporarily for debugging
 		return all(this._data.map(function(item) {
 			return this._context.loadRequires(item.type, true);
 		}, this));
 		*/
 		
 		return all(this._data.map(function(item) {
-			console.log("\tDataStoreBasedCreateTool::_loadRequires asking for requires for " + item.type); //AWE TODO: REMOVE... Added to debug timing issue
+			if (this._debug) {
+				console.log("\tDataStoreBasedCreateTool::_loadRequires asking for requires for " + item.type); 
+			}
 			var promise = this._context.loadRequires(item.type, true);
-			promise.then(function() {
-				console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " fulfilled!"); //AWE TODO: REMOVE... Added to debug timing issue
-			}, function(err) { //AWE TODO
-				console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " ERROR!!!!!"); //AWE TODO: REMOVE... Added to debug timing issue
-			});
+			if (this._debug) {
+				promise.then(function() {
+					console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " fulfilled!");
+				}, function(err) {
+					console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " ERROR!!!!!");
+				});
+			}
 			return promise;
 		}, this));
 	}

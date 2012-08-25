@@ -115,6 +115,8 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		
 		context.clearCachedWidgetBounds();
 		dojo.publish("/davinci/ui/deviceChanged", [deviceName]);
+		dojo.publish('/davinci/ui/repositionFocusContainer', []);
+
 	},
 	
 	toggleOrientation: function() {

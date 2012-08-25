@@ -69,6 +69,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 //      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
 		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
 		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
+		this.subscribe("/davinci/ui/deviceChanged", this._deviceChanged.bind(this));
     },
 	
 	setRootElement: function(rootElement){
@@ -112,6 +113,23 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 	},
 	
+	_deviceChanged: function(){
+		if(davinci.Runtime.currentEditor == this && this.editorContainer){
+			var context = this.getContext();
+			if(context && context.updateFocusAll){
+				// setTimeout is fine to use for updateFocusAll
+				// Need to insert a delay because new geometry
+				// isn't ready right away.
+				// FIXME: Should figure out how to use deferreds or whatever
+				// to know for sure that everything is all set and we
+				// can successfully redraw focus chrome
+				setTimeout(function(){
+					context.updateFocusAll();					
+				},1000);
+			}
+		}
+	},
+
 	_updateLayoutDropDownButton: function(newLayout){
 		var layoutDropDownButtonNode = dojo.query('.maqLayoutDropDownButton');
 		if(layoutDropDownButtonNode && layoutDropDownButtonNode[0]){
@@ -428,12 +446,30 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}else{
 			var clipTo = this._designCP.domNode;
 			var box = GeomUtils.getBorderBoxPageCoords(clipTo);
+/*FIXME: See #2951. This isn't working in all cases yet, so commenting out.
+  When a silhouette is active, need to check for an active scroll bar on this._designCP.domNode
+  but when no silhouette, need to check the HTML node on the user's document within iframe.
+  Code below only deals with this._designCP.domNode.
+			// Back off selection chrome in case this._designCP has scrollbar(s)
+			if(clipTo.scrollWidth > clipTo.clientWidth && (clipTo.clientWidth - scrollbarWidth) < box.w){
+				box.w = clipTo.clientWidth - scrollbarWidth;
+			}
+			if(clipTo.scrollHeight > clipTo.clientHeight && (clipTo.clientHeight - scrollbarWidth) < box.h){
+				box.h = clipTo.clientHeight - scrollbarWidth;
+			}
+*/
 			// Make the clip area 8px bigger in all directions to make room
 			// for selection chrome, which is placed just outside bounds of widget
 			box.l -= 8;
 			box.t -= 8;
-			box.w += 16;
-			box.h += (this._displayMode == 'splitHorizontal' ? 8 : 16);
+			var device = (this.visualEditor && this.visualEditor.getDevice) ? this.visualEditor.getDevice() : 'none';
+			if(device == 'none'){
+				box.w += (this._displayMode == 'splitVertical' ? 8 : 16);
+				box.h += (this._displayMode == 'splitHorizontal' ? 8 : 16);
+			}else{
+				box.w += 8;
+				box.h += 8;
+			}
 			return box;
 		}
 	}

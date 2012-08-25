@@ -335,6 +335,11 @@ var Workbench = {
 			}
 		});
 
+		// bind overlay widgets to corresponding davinci states. singleton; no need to unsubscribe
+		connect.subscribe("/davinci/ui/repositionFocusContainer", function(args) {
+			Workbench._repositionFocusContainer();
+		});
+
 		var d = metadata.init().then(function(){
 			var perspective = Runtime.initialPerspective || "davinci.ui.main";
 			Workbench.showPerspective(perspective);
@@ -2140,13 +2145,18 @@ var Workbench = {
 		var editors_container = dojo.byId('editors_container');
 		var focusContainer = dojo.byId('focusContainer');
 		if(editors_container && focusContainer){
-			var box = GeomUtils.getBorderBoxPageCoords(editors_container);
+			var currentEditor = davinci.Runtime.currentEditor;
+			var box;
+			if(currentEditor && currentEditor.getFocusContainerBounds){
+				box = currentEditor.getFocusContainerBounds();
+			}else{
+				box = GeomUtils.getBorderBoxPageCoords(editors_container);
+			}
 			if(box){
 				focusContainer.style.left = box.l + 'px';
 				focusContainer.style.top = box.t + 'px';
 				focusContainer.style.width = box.w + 'px';
 				focusContainer.style.height = box.h + 'px';
-				var currentEditor = davinci.Runtime.currentEditor;
 				if(currentEditor && currentEditor.getContext){
 					var context = currentEditor.getContext();
 					if(context && context.updateFocusAll){

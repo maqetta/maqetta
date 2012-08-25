@@ -11,8 +11,9 @@ define([
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
+	"./utils/GeomUtils",
 	"dojo/i18n!./nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, 	Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, veNls){
+], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, GeomUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -212,6 +213,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if (this.editorContainer){
 			this.editorContainer.updateToolbars();
 		}
+
+		dojo.publish('/davinci/ui/repositionFocusContainer', []);
 
 		if (newMode == "source") {
 			context.hideFocusAll();			
@@ -413,6 +416,26 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	
 	getDisplayMode: function(){
 		return this._displayMode;
+	},
+	
+	/**
+	 * Return clipping bounds for focusContainer node, whose main purpose is to
+	 * clip the selection chrome so it doesn't impinge on other parts of the UI
+	 */
+	getFocusContainerBounds: function(){
+		if(this._displayMode == 'source'){
+			return {l:0, t:0, w:0, h:0};
+		}else{
+			var clipTo = this._designCP.domNode;
+			var box = GeomUtils.getBorderBoxPageCoords(clipTo);
+			// Make the clip area 8px bigger in all directions to make room
+			// for selection chrome, which is placed just outside bounds of widget
+			box.l -= 8;
+			box.t -= 8;
+			box.w += 16;
+			box.h += (this._displayMode == 'splitHorizontal' ? 8 : 16);
+			return box;
+		}
 	}
 });
 }); 

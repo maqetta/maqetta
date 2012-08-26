@@ -333,8 +333,9 @@ States.prototype = {
 			connect.publish("/maqetta/appstates/state/changed", 
 					[{node:node, newState:newState, oldState:oldState, stateContainerNode:node}]);
 		}
-		this._updateSrcState (node);
-		
+
+		// if no new state we can skip setting the dirty flag
+		this._updateSrcState (node, !newState);		
 	},
 
 	/**
@@ -754,7 +755,8 @@ States.prototype = {
 		//FIXME: This is Dojo-specific. Other libraries are likely to need a similar hook.
 		var dijitWidget, parent;
 		if(node.id && node.ownerDocument){
-			var byId = node.ownerDocument.defaultView.require("dijit/registry").byId;
+			// TODO: referencing the global 'require' is not valid.  What's the right way to access this module?
+			var byId = node.ownerDocument.defaultView./*require("dijit/registry")*/dijit.byId;
 			if(byId){
 				dijitWidget = byId && byId(node.id);				
 			}
@@ -1375,7 +1377,7 @@ if (!davinci.Workbench && typeof dijit != "undefined"){
 	connect.subscribe("/maqetta/appstates/state/changed", function(args) {
 		var w;
 		var byId = (args && args.node && args.node.ownerDocument && args.node.ownerDocument.defaultView &&
-					args.node.ownerDocument.defaultView.require("dijit/registry").byId);
+					args.node.ownerDocument.defaultView./*require("dijit/registry")*/dijit.byId);
 		if(byId){
 			if (args.newState && !args.newState.indexOf("_show:")) {
 				w = byId(args.newState.substring(6));

@@ -74,6 +74,10 @@ define([
 		workbenchStrings
 ) {
 
+var paletteTabWidth = 71;	// Width of tabs for left- and right-side palettes
+var paletteTabDelta = 20;	// #pixels - if this many or fewer pixels of tab are showing, treat as collapsed
+var paletteCache = {};
+
 // Cheap polyfill to approximate bind(), make Safari happy
 Function.prototype.bind = Function.prototype.bind || function(that){ return dojo.hitch(that, this);};
 
@@ -1173,25 +1177,31 @@ var Workbench = {
 		if (position == 'right' && !mainBody.tabs.perspective.right) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 71px;', id:"right_mainBody", 
-					minSize:71,	// prevent user from dragging splitter too far towards edge
+					style: 'width: '+paletteTabWidth+'px;', id:"right_mainBody", 
+					minSize:paletteTabWidth,	// prevent user from dragging splitter too far towards edge
 					region:'right', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.right.startup();
-			// _expandedWidth is what expandPaletteContainer() uses as the
+			// expandToSize is what expandPaletteContainer() uses as the
 			// width of the palette when it is in expanded state.
-			mainBody.tabs.perspective.right._expandedWidth = 340;
+			paletteCache["right_mainBody"] = {
+				expandToSize:340,
+				initialExpandToSize:340
+			};
 		}
 
 		if (position == 'left' && !mainBody.tabs.perspective.left) {
 			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
 				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: 71px;', id:"left_mainBody", 
-					minSize:71,	// prevent user from dragging splitter too far towards edge
+					style: 'width: '+paletteTabWidth+'px;', id:"left_mainBody", 
+					minSize:paletteTabWidth,	// prevent user from dragging splitter too far towards edge
 					region:'left', gutters: false, splitter:true}));
 			mainBody.tabs.perspective.left.startup();
-			// _expandedWidth is what expandPaletteContainer() uses as the
+			// expandToSize is what expandPaletteContainer() uses as the
 			// width of the palette when it is in expanded state.
-			mainBody.tabs.perspective.left._expandedWidth = 300;
+			paletteCache["left_mainBody"] = {
+				expandToSize:300,
+				initialExpandToSize:300
+			};
 		}
 
 		if (position === 'left' || position === 'right') {
@@ -1783,16 +1793,36 @@ var Workbench = {
 			}
 		}
 	},
+	
+	_nearlyCollapsed: function(paletteContainerNode){
+		// Check actual width of palette area. If actual width is smaller than the
+		// size of the tabs plus a small delta, then treat as if the palettes are collapsed
+		var width = dojo.style(paletteContainerNode, 'width');
+		if(typeof width == 'string'){
+			width = parseInt(width);
+		}
+		return width < (paletteTabWidth + paletteTabDelta);
+	},
 
 	_expandCollapsePaletteContainer: function(tab) {
 		if(!tab || !tab.domNode){
 			return;
 		}
 		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(tab.domNode);
-		if(paletteContainerNode._maqExpanded){
+		if(!paletteContainerNode.id){
+			return;
+		}
+		var expanded = paletteContainerNode._maqExpanded;
+		var expandToSize; 
+		if(this._nearlyCollapsed(paletteContainerNode)){
+			expanded = false;
+			expandToSize = (paletteCache[paletteContainerNode.id].expandToSize >= (paletteTabWidth + paletteTabDelta)) ?
+					paletteCache[paletteContainerNode.id].expandToSize : paletteCache[paletteContainerNode.id].initialExpandToSize;
+		}
+		if(expanded){
 			this.collapsePaletteContainer(paletteContainerNode);
 		}else{
-			this.expandPaletteContainer(paletteContainerNode);
+			this.expandPaletteContainer(paletteContainerNode, {expandToSize:expandToSize});
 		}
 	},
 
@@ -2073,21 +2103,22 @@ var Workbench = {
 	 */
 	collapsePaletteContainer: function(node, params){
 		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
-		if(paletteContainerNode){
+		if(paletteContainerNode && paletteContainerNode.id){
+			var id = paletteContainerNode.id;
 			var paletteContainerNodeWidth = dojo.style(paletteContainerNode, 'width');
 			var paletteContainerWidget = dijit.byNode(paletteContainerNode);
 			var tablistNodes = dojo.query('[role=tablist]', paletteContainerNode);
-			if(paletteContainerWidget && !paletteContainerWidget._isCollapsed && tablistNodes.length > 0){
+			if(paletteContainerWidget && tablistNodes.length > 0){
 				var tablistNode = tablistNodes[0];
 				var tablistNodeSize = dojo.marginBox(tablistNode);
 				var parentWidget = paletteContainerWidget.getParent();
 				if(parentWidget && parentWidget.resize && tablistNodeSize && tablistNodeSize.w){
+					if(!this._nearlyCollapsed(paletteContainerNode) && (!params || !params.dontPreserveWidth)){
+						paletteCache[id].expandToSize = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
+					}
 					paletteContainerNode.style.width = tablistNodeSize.w + 'px';
 					parentWidget.resize();
 					paletteContainerWidget._isCollapsed = true;
-					if(!params || !params.dontPreserveWidth){
-						paletteContainerWidget._expandedWidth = paletteContainerNodeWidth; // Note: just a number, no 'px' at end
-					}
 				}
 			}
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
@@ -2110,18 +2141,24 @@ var Workbench = {
 	 * If so, expand it.
 	 * @param {Element} node  A descendant node of the palette container node.
 	 * 		In practice, the node for the collapse icon (that the user has clicked).
+	 * @param {object} params  A descendant node of the palette container node.
+	 * 		params.expandToSize {number}  Desired width upon expansion
 	 */
-	expandPaletteContainer: function(node){
+	expandPaletteContainer: function(node, params){
+		var expandToSize = params && params.expandToSize;
 		var paletteContainerNode = davinci.Workbench.findPaletteContainerNode(node);
-		if(paletteContainerNode){
+		if(paletteContainerNode && paletteContainerNode.id){
+			var id = paletteContainerNode.id;
 			var paletteContainerWidget = dijit.byNode(paletteContainerNode);
-			if(paletteContainerWidget && paletteContainerWidget._isCollapsed && paletteContainerWidget._expandedWidth){
+			if(expandToSize){
+				paletteCache[id].expandToSize = expandToSize;
+			}
+			if(paletteContainerWidget && paletteCache[id].expandToSize){
 				var parentWidget = paletteContainerWidget.getParent();
 				if(parentWidget && parentWidget.resize){
-					paletteContainerNode.style.width = paletteContainerWidget._expandedWidth + 'px';
+					paletteContainerNode.style.width = paletteCache[id].expandToSize + 'px';
 					parentWidget.resize();
 					delete paletteContainerWidget._isCollapsed;
-					delete paletteContainerWidget._expandedWidth;
 				}
 			}
 			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');

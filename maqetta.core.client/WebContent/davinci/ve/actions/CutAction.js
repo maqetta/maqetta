@@ -22,7 +22,8 @@ return declare("davinci.ve.actions.CutAction", [ContextAction], {
 			if(selection.length > 0){
 				var command = new CompoundCommand();
 				var data = [];
-				dojo.forEach(selection, function(w){
+				var reorderedSelection = context.reorderPreserveSiblingOrder(selection);
+				dojo.forEach(reorderedSelection, function(w){
 					var d = w.getData( {identify: false});
 					if(d){
 						data.push(d);

@@ -448,7 +448,8 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					var lastIdx = null;
 					
 					//get the data	
-					dojo.forEach(selection, function(w){
+					var reorderedSelection = context.reorderPreserveSiblingOrder(selection);
+					dojo.forEach(reorderedSelection, function(w){
 						IDs.push(w.getId());
 						var newwidget,
 							d = w.getData( {identify:false});
@@ -515,8 +516,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				var dx = left - oldBoxes[0].l;
 				var dy = top - oldBoxes[0].t;
 				if(copy){
-					//get the data	
-					dojo.forEach(selection, function(w){
+					//get the data
+					var reorderedSelection = context.reorderPreserveSiblingOrder(selection);
+					dojo.forEach(reorderedSelection, function(w){
 						IDs.push(w.getId());
 						var parentWidget = w.getParent();
 						if (!parentWidget) {

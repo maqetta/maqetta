@@ -12,6 +12,7 @@ define({ root:
 		"openSuccessful":"Started the review successfully!",
 		
 		//PublishAction.js
-		"newReview":"New Review"
+		"newReview":"New Review",
+		"editReview":"Edit Review"
 }
 });

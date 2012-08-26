@@ -198,6 +198,11 @@
     		<available file="${target.folder}/WebContent/dojo_BACKUP" type="dir"/>
     	</condition>
 		<antcall target="restore.davinciPlugin.dojoDir"/>
+
+		<!-- remove tests in the src directory, if present, to reduce the size of the image -->
+		<delete quiet="true">
+			<fileset src="${target.folder}/WebContent/${davinciPlugin.id}-src/test" includes="**/tests" />
+		</delete>
 	</target>
 	
 	<!-- copy in helpers from dojo_1_8 plugin... if we didn't have a "dojo" directory when we started (representing 

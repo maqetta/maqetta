@@ -208,6 +208,11 @@ var DesignOutlineTreeModel = declare(null, {
 						overwrite: true,
 						parent: args[1]
 				});				
+			} else if (type === this._context.WIDGET_ID_CHANGED) {
+				// widget id changed - args is the old id
+				// We remove the old one and add the new widget
+				this.remove({id: args});
+				this.add(widget);
 			}
 		} catch (e) {
 			console.error("VisualEditorOutline._widgetChanged: e = " + e);

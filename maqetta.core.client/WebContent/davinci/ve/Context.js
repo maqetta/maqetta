@@ -3539,6 +3539,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	WIDGET_ADDED: 1,
 	WIDGET_REMOVED: 2,
 	WIDGET_REPARENTED: 3,
+	WIDGET_ID_CHANGED: 4,
 	/**
 	 * Called by any command that can causes widgets to be added/deleted/moved/changed
 	 *

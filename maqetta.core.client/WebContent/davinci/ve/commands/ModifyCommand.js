@@ -125,6 +125,11 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			newWidget.startup();
 			newWidget.renderWidget();
 			context.widgetAddedOrDeleted();
+
+			if (this._oldId != this._newId) {
+				context.widgetChanged(context.WIDGET_ID_CHANGED, newWidget, this._oldId);
+			}
+
 			context.widgetChanged(context.WIDGET_MODIFIED, newWidget);
 		}
 		this.newWidget=newWidget;

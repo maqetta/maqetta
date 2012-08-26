@@ -3665,6 +3665,48 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				GeomUtils.clearGeomCache(domNode);
 			}
 		}
+	},
+	
+	/**
+	 * Reorder a list of widgets to preserve sibling order for widgets in the list
+	 */
+	reorderPreserveSiblingOrder: function(origArray){
+		var newArray = [];
+		for(var i=0; i<origArray.length; i++){
+			newArray[i] = origArray[i];
+		}
+		var j=0;
+		while(j < (newArray.length - 1)){
+			var refWidget = newArray[j];
+			var refParent = refWidget.getParent();
+			var k = j + 1;
+			var adjacentSiblings = false;
+			while(k < newArray.length){
+				var parent = newArray[k].getParent();
+				if(parent == refParent){
+					adjacentSiblings = true;
+					k++;
+				}else{
+					break;
+				}
+			}
+			if(adjacentSiblings){
+				var children = refParent.getChildren();
+				for(var m = (k-2); m >= j; m--){
+					for(var n = j; n <= m; n++){
+						var index1 = children.indexOf(newArray[n]);
+						var index2 = children.indexOf(newArray[n+1]);
+						if(index1 > index2){
+							var temp = newArray[n+1];
+							newArray[n+1] = newArray[n];
+							newArray[n] = temp;
+						}
+					}
+				}
+			}
+			j = k;
+		}
+		return newArray;
 	}
 
 });

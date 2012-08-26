@@ -123,12 +123,6 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		if (davinci.Runtime.userName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}
-		/* AWE TODO
-		if (this.status == "Close") {
-			dojo.style(this.editButton,"display","none");
-			dojo.style(this.replyButton,"display","none");
-		}
-		*/
 	},
 
 	refresh: function() {
@@ -344,11 +338,6 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	},
 
 	enable: function() {
-		/* AWE TODO
-		if (this.commentStatus.set) {
-			this.commentStatus.set("disabled", false);
-		}
-		*/
 		dojo.removeClass(this.domNode, "disabled");
 		dojo.removeClass(this.mainBody, "commentBodyDisabled");
 		dojo.style(this.subjectNode, "color", this.color);
@@ -357,11 +346,6 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	},
 
 	disable: function() {
-		/*AWE TODO
-		if (this.commentStatus.set) {
-			this.commentStatus.set("disabled", true);
-		}
-		*/
 		dojo.addClass(this.domNode, "disabled");
 		dojo.removeAttr(this.mainBody, "style");
 		dojo.addClass(this.mainBody, "commentBodyDisabled");

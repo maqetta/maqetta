@@ -27,6 +27,7 @@ define({ root:
 		"yourRole":"Your Role",
 		"dueBy":"Due by",
 		"createdBy":"Created by",
+		"creationDate":"Creation date",
 		"artifactsInRev":"Artifacts In Review",
 		"reviewers":"Reviewers",
 		

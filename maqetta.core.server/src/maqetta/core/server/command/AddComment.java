@@ -63,7 +63,7 @@ public class AddComment extends Command {
 			}
 			List<Comment> commentList = new ArrayList<Comment>(1);
 			commentList.add(comment);
-			ReviewCacheManager.$.updateComments(commentList, false);
+			ReviewCacheManager.$.updateComments(commentList);
 
 			if (version != null && version.isReceiveEmail()) // Send the notification only the designer want receive it.
 				notifyRelatedPersons(user, designer, comment, req.getRequestURL().toString());
@@ -153,9 +153,6 @@ public class AddComment extends Command {
 		props.put("pagename", pageName);
 		props.put("url", ReviewManager.getReviewManager().getReviewUrl(comment.getDesignerId(), comment.getPageVersion(),  requestUrl)); 
 		props.put("title", commentTitle);
-		props.put("type", comment.getType());
-		props.put("severity", comment.getSeverity());
-		props.put("status", comment.getStatus());
 		props.put("content", comment.getContent());
 		props.put("pagestate", comment.getPageState());
 		props.put("pagestatelist", comment.getPageStateList());
@@ -217,15 +214,6 @@ public class AddComment extends Command {
 
 		paramValue = req.getParameter(Comment.DRAWING_JSON);
 		comment.setDrawingJson(paramValue);
-
-		paramValue = req.getParameter(Comment.SEVERITY);
-		comment.setSeverity(paramValue);
-
-		paramValue = req.getParameter(Comment.TYPE);
-		comment.setType(paramValue);
-
-		paramValue = req.getParameter(Comment.STATUS);
-		comment.setStatus(paramValue);
 
 		comment.setCreated(new Date());
 

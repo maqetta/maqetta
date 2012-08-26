@@ -100,13 +100,6 @@ public class Unmarshaller {
 				else if (Comment.DRAWING_JSON.equalsIgnoreCase(node
 						.getNodeName())) {
 					comment.setDrawingJson(getValue(node));
-				} else if (Comment.SEVERITY
-						.equalsIgnoreCase(node.getNodeName())) {
-					comment.setSeverity(getValue(node));
-				} else if (Comment.TYPE.equalsIgnoreCase(node.getNodeName())) {
-					comment.setType(getValue(node));
-				} else if (Comment.STATUS.equalsIgnoreCase(node.getNodeName())) {
-					comment.setStatus(getValue(node));
 				} else if (Comment.CREATED.equalsIgnoreCase(node.getNodeName()))
 					comment.setCreated(sdf.parse(getValue(node)));
 				else if (Comment.ID.equalsIgnoreCase(node.getNodeName()))

@@ -68,28 +68,6 @@ public class Comment implements Serializable {
 
 	public static final String REOPEN_VERSION = "reopenVersion";
 
-	public static final String SEVERITY = "severity";
-
-	public static final String TYPE = "type";
-
-	public static final String STATUS = "status";
-
-	public static final String SEVERITY_HIGH = "high";
-
-	public static final String SEVERITY_MEDIUM = "medium";
-
-	public static final String SEVERITY_LOW = "low";
-
-	public static final String TYPE_REQUIREMENT = "requirement";
-
-	public static final String TYPE_DEFECT = "defect";
-
-	public static final String TYPE_FIX = "fix";
-
-	public static final String STATUS_OPEN = "open";
-
-	public static final String STATUS_CLOSED = "Close";
-
 	// Indicates which fields should be included when transforming object to
 	// Json format.
 	private static Map<String, Boolean> fieldInclusionMap = new HashMap<String, Boolean>();
@@ -129,12 +107,6 @@ public class Comment implements Serializable {
 
 	private String email;
 
-	private String severity;
-
-	private String type;
-
-	private String status;
-
 	// Which project the comment belongs to
 	private IDavinciProject project;
 
@@ -161,9 +133,6 @@ public class Comment implements Serializable {
 //		fieldInclusionMap.put(Comment.ORDER, Boolean.TRUE);
 //		fieldInclusionMap.put(Comment.DEPTH, Boolean.TRUE);
 		fieldInclusionMap.put(Comment.DRAWING_JSON, Boolean.TRUE);
-		fieldInclusionMap.put(Comment.SEVERITY, Boolean.TRUE);
-		fieldInclusionMap.put(Comment.STATUS, Boolean.TRUE);
-		fieldInclusionMap.put(Comment.TYPE, Boolean.TRUE);
 
 	}
 
@@ -318,30 +287,6 @@ public class Comment implements Serializable {
 
 	public void setReopenVersion(String reopenVersion) {
 		this.reopenVersion = reopenVersion;
-	}
-
-	public String getSeverity() {
-		return severity;
-	}
-
-	public void setSeverity(String severity) {
-		this.severity = severity;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	/**

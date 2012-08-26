@@ -78,10 +78,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					designerId: this.designerId,
 					pageName: this.pageName,
 					replyTo: this.replyTo || 0,
-					drawingJson: this.drawingJson,
-					status: this.status,
-					type: this.type,
-					severity: this.severity
+					drawingJson: this.drawingJson
 				},
 				error: dojo.hitch(this, function(response) {
 					dojo.publish("/davinci/review/commentAddedError", [this]);
@@ -107,20 +104,10 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		dojo.style(this.ownerName, "color", color);
 		this.contentNode.innerHTML = this.content;
 		this._ajustLengthOfCommentContent(true);
-		this.commentType.innerHTML = this.type;
-		dojo.addClass(this.commentSeverity, "severity" + this.severity);
 
-		// Rendering that has something to do with a reply comment
-		if (!this.isReply()) {
-			if (this.isPageOwner()) {
-				this._constructStatus(this.status);
-			} else {
-				this.commentStatus.innerHTML = this.status;
-			}
-		} else {
+		if (this.isReply()) {
+			//Let's not show subject line on replies
 			dojo.addClass(this.subjectNode, "displayNone");
-			dojo.style(this.domNode, "borderTop", "1px solid #CCCCCC");
-			dojo.addClass(this.commentStatusLabel,"displayNone");
 		}
 
 		this.connect(this.imgNode, "click", "_toggleReplies");
@@ -136,10 +123,12 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		if (davinci.Runtime.userName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}
+		/* AWE TODO
 		if (this.status == "Close") {
 			dojo.style(this.editButton,"display","none");
 			dojo.style(this.replyButton,"display","none");
 		}
+		*/
 	},
 
 	refresh: function() {
@@ -152,10 +141,6 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		if (davinci.Runtime.userName != this.ownerId) {
 			dojo.style(this.editButton, "display", "none");
 		}
-		if (this.status == "Close") {
-			dojo.style(this.editButton, "display", "none");
-			dojo.style(this.replyButton, "display", "none");
-		}
 	},
 
 	_populate: function(result) {
@@ -165,75 +150,30 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		this.createTime.innerHTML = toRelativeTime(this.created, new Date(), 604800);
 	},
 
-	_constructStatus : function(defaultLabel) {
-		var statusList = new Menu();
-		this.commentStatus = new DropDownButton( {
-			label: defaultLabel,
-			iconClass: "dijitEditorIcon emptyIcon",
-			dropDown: statusList
-		}, this.commentStatus);
-
-		statusList.addChild(new MenuItem({
-			label: widgetsNls.open,
-			onClick: dojo.hitch(this, "_setStatusBtnLabel", "Open")
-		}));
-
-		statusList.addChild(new MenuItem({
-			label: widgetsNls.close,
-			onClick: dojo.hitch(this, "_setStatusBtnLabel", "Close")
-		}));
-		if(!dojo.hasClass(this.commentStatus.domNode.parentNode, "commentTheme")){
-			dojo.addClass(this.commentStatus.domNode.parentNode, "commentTheme");
-		}
-	},
-
-	_setStatusBtnLabel: function(label) {
-		this.commentStatus.set("label", label);
-		this.status = label;
-		this.update({statusChanged:true});
-	},
-
 	update : function(arg) {
 		this.subjectNode.innerHTML = this.subject;
 		this.contentNode.innerHTML = this.content;
-		this.commentType.innerHTML = this.type;
 		this._ajustLengthOfCommentContent(true);
-		dojo.removeClass(this.commentSeverity, "severityUnassigned severityLow severityMedium severityHigh" );
-		dojo.addClass(this.commentSeverity, "severity" + this.severity);
-		if (this.commentStatus.set) {
-			this.commentStatus.set("label", this.status);
-		}
-		// Indicate that this is a change of the comment status (open/close)
-		var updateStatus = arg && arg.statusChanged;
 		dojo.xhrGet({
 			url: "cmd/updateComment",
 			handleAs: "json",
 			content: {
 				id: this.commentId,
 				designerId: this.designerId,
-				status: this.status,
 				subject:  this.subject,
 				content:  this.content,
 				pageState: this.pageState,
 				pageStateList: this.pageStateList ? dojo.toJson(this.pageStateList) : '',
 				viewScene: this.viewScene,
 				viewSceneList: this.viewSceneList ? dojo.toJson(this.viewSceneList) : '',
-				drawingJson: this.drawingJson,
-				type: this.type,
-				severity: this.severity,
-				isUpdateStatus: updateStatus
+				drawingJson: this.drawingJson
 			},
 			error: function(response) {
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
 				davinci.Runtime.handleError(dojo.string.substitute(widgetsNls.errorUpdateCom, [response, msg]));
 			}
-		}).then(dojo.hitch(this,function() {
-			if (updateStatus) {
-				// Only status (close/open) change needs to be addressed
-				dojo.publish("/davinci/review/commentStatusChanged", [this, this.status]);
-			}
-		}));
+		});
 	},
 
 	_editComment: function() {
@@ -404,9 +344,11 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	},
 
 	enable: function() {
+		/* AWE TODO
 		if (this.commentStatus.set) {
 			this.commentStatus.set("disabled", false);
 		}
+		*/
 		dojo.removeClass(this.domNode, "disabled");
 		dojo.removeClass(this.mainBody, "commentBodyDisabled");
 		dojo.style(this.subjectNode, "color", this.color);
@@ -415,9 +357,11 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	},
 
 	disable: function() {
+		/*AWE TODO
 		if (this.commentStatus.set) {
 			this.commentStatus.set("disabled", true);
 		}
+		*/
 		dojo.addClass(this.domNode, "disabled");
 		dojo.removeAttr(this.mainBody, "style");
 		dojo.addClass(this.mainBody, "commentBodyDisabled");

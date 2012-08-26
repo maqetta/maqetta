@@ -20,8 +20,6 @@ import org.davinci.server.user.IUser;
 import org.maqetta.server.Command;
 
 public class UpdateComment extends Command {
-	boolean isUpdateStatus;
-	
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user)
 			throws IOException {
@@ -36,9 +34,8 @@ public class UpdateComment extends Command {
 		comment.setProject(project);
 		Comment existingComm = ReviewCacheManager.$.getComment(project, comment.getId());
 		Version version = du.getVersion(existingComm.getPageVersion());
-		isUpdateStatus = Boolean.parseBoolean(req.getParameter("isUpdateStatus"));
 		try {
-			if (version != null && version.isClosed() && !isUpdateStatus){
+			if (version != null && version.isClosed()){
 				throw new Exception("The version is closed by others during your editting. Please reload the review data.");
 			}
 
@@ -83,15 +80,6 @@ public class UpdateComment extends Command {
 		paramValue = req.getParameter(Comment.DRAWING_JSON);
 		comment.setDrawingJson(paramValue);
 
-		paramValue = req.getParameter(Comment.SEVERITY);
-		comment.setSeverity(paramValue);
-
-		paramValue = req.getParameter(Comment.TYPE);
-		comment.setType(paramValue);
-
-		paramValue = req.getParameter(Comment.STATUS);
-		comment.setStatus(paramValue);
-
 		comment.setCreated(new Date());
 
 		return comment;
@@ -122,19 +110,11 @@ public class UpdateComment extends Command {
 					existingComment.setSubject(comment.getSubject());
 				if (comment.getDrawingJson() != null)
 					existingComment.setDrawingJson(comment.getDrawingJson());
-				if (comment.getSeverity() != null)
-					existingComment.setSeverity(comment.getSeverity());
-				if (comment.getType() != null)
-					existingComment.setType(comment.getType());
-				if (comment.getStatus() != null	&& !existingComment.getStatus().equals(comment.getStatus())) {
-					existingComment.setStatus(comment.getStatus());
-					subCommentList = getThread(existingComment, ReviewCacheManager.$.getCommentsByPageName(comment.getProject(), comment.getPageName()));
-				}
 				if(null == subCommentList){
 					subCommentList = new ArrayList<Comment>();
 				}
 				subCommentList.add(existingComment);
-				ReviewCacheManager.$.updateComments(subCommentList, isUpdateStatus);
+				ReviewCacheManager.$.updateComments(subCommentList);
 			}
 		}
 
@@ -142,12 +122,10 @@ public class UpdateComment extends Command {
 	}
 
 	private List<Comment> getThread(Comment comment, List<Comment> commentList) {
-		// Update all the children status
 		List<Comment> subCommentList = new ArrayList<Comment>();
 		for (Comment c : commentList) {
 			if(!c.getId().equals(comment.getId()) && getTopParent(c).getId().equals(comment.getId())) {
 				c = (Comment)Utils.deepClone(c); // Another copy
-				c.setStatus(comment.getStatus());
 				getThread(c, commentList);
 				subCommentList.add(c);
 			}

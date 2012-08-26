@@ -4,17 +4,6 @@
 	<div dojoAttachPoint="contentNode" class="contentNode">
 	<span dojoAttachPoint="placeHolder" style="padding:3px 0 0 2px;" class="dijitPlaceHolder dijitInputField">${comment}</span>
 	</div>
-	<table class="commentFooter">
-		<tr>
-			<td width="40%">
-				<span>${typeLabel}:&nbsp;</span><span dojoAttachPoint="commentType"><span dojoAttachPoint="commentTypeList"></span></span>
-			</td>
-			<td>&nbsp;|&nbsp;</td>
-			<td>
-				<span>${severityLevel}:&nbsp;</span><span dojoAttachPoint="commentSeverity" class="valignImage"></span>
-			</td>
-		</tr>
-	</table>
 	<div class="submitCancelDiv">
 		<div dojoAttachPoint="submitNode"></div>
 		<a dojoAttachPoint="cancelNode" class="commentLinkButton" class="cancelLink">${buttonCancel}</a>

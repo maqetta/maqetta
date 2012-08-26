@@ -12,26 +12,16 @@ define({ root:
 		"by":"by",
 		"edit":"Edit",
 		"reply":"Reply",
-		"typeLabel":"Type",
-		"severityLevel":"Severity",
-		"statusLabel":"Status",
 		
 		//CommentForm.js
 		"subjectPlaceHolder":"Subject",
 		"submit":"Submit",
-		"unassigned":"Unassigned",
-		"requirement":"Requirement",
-		"task":"Task",
-		"defect":"Defect",
-		"low":"Low",
-		"medium":"Medium",
-		"high":"High",
 		"comment":"Comment",
 		"commentReply":"Comment reply",
 		"buttonCancel":"Cancel",
 		
 		//CommentForm.html
-		//Comment, Type, Severity defined above
+		//Comment defined above
 		
 		//InfoCard.html
 		"yourRole":"Your Role",

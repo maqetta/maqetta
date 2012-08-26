@@ -1642,6 +1642,15 @@ background-position: -75px -745px;
 	height:160px;
 	font-size:12px;
 }
+.welcome_learn_row1 {
+	height:92px;
+}
+.dj_webkit .welcome_learn_row1 {
+	height:88px;
+}
+.welcome_learn_row2 {
+	text-align:left;
+}
 .welcome_learn_cell {
 	vertical-align:top;
 }

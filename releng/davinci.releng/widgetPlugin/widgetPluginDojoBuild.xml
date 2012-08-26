@@ -201,7 +201,7 @@
 
 		<!-- remove tests in the src directory, if present, to reduce the size of the image -->
 		<delete quiet="true">
-			<fileset src="${target.folder}/WebContent/${davinciPlugin.id}-src/test" includes="**/tests" />
+			<fileset dir="${target.folder}/WebContent/${davinciPlugin.id}-src/test" includes="**/tests" />
 		</delete>
 	</target>
 	

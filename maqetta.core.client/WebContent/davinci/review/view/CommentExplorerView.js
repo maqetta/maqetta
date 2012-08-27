@@ -5,6 +5,7 @@ define([
 	"davinci/Workbench",
 	"davinci/workbench/ViewPart",
 	"dijit/Tree",
+	"dojo/date/stamp",
 	"dojo/date/locale",
 	"davinci/review/actions/CloseVersionAction",
 	"davinci/review/actions/EditVersionAction",
@@ -16,7 +17,7 @@ define([
     "dojo/i18n!./nls/view",
     "dojo/i18n!../widgets/nls/widgets",
     "davinci/ui/widgets/TransformTreeMixin"
-], function(declare, Runtime, ReviewTreeModel, Workbench, ViewPart, Tree, locale, CloseVersionAction,
+], function(declare, Runtime, ReviewTreeModel, Workbench, ViewPart, Tree, stamp, locale, CloseVersionAction,
 		EditVersionAction, OpenVersionAction, Toolbar, ToolbarSeparator, Button, TextBox, viewNls, widgetsNls) {
 
 var getIconClass = function(item, opened) {
@@ -77,7 +78,7 @@ var getSortTransforms = function() {
 	];
 };
 	
-var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", ViewPart, {
+var CommentExplorerView = declare(ViewPart, {
 
 	postCreate: function() {
 		this.inherited(arguments);
@@ -387,10 +388,9 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 				+ (item.designerEmail ? "&nbsp;&lt" + item.designerEmail + "&gt": "");
 			
 			//Creation date
-			var timeStampDate = locale.parse(item.timeStamp, {datePattern: "yyyyMMddTHHmmss", selector: "date"});
+			var timeStampDate = stamp.fromISOString(item.timeStamp);
 			template.detail_creationDate = locale.format(timeStampDate, {
-				selector:'date',
-				formatLength:'long'
+				formatLength:'medium'
 			});
 			
 			template.detail_files = "";

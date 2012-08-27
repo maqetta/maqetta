@@ -173,7 +173,8 @@ var DesignOutlineTreeModel = declare(null, {
 				return true;
 			default: // if not dropping before or after an item, make sure the target item has a container node
 				var item = dijit.getEnclosingWidget(target).item;
-				return (item.getContainerNode && item.getContainerNode()) || item.id == "myapp";
+				var widget = this.tree.model._getWidget(item);
+				return (widget.getContainerNode && widget.getContainerNode()) || widget.id == "myapp";
 		}
 	}, 
 

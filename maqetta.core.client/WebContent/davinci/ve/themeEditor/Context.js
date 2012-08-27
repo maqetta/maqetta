@@ -198,6 +198,7 @@ return declare([Context], {
 	},
 	
 	onSelectionChange: function(selection){
+		this.visualEditor._themeEditor._selectedSubWidget = null;
 		this.inherited(arguments);
 	},
 	

@@ -22,7 +22,7 @@ return declare([], {
 
 
 	constructor: function (themeEditor, element,filename,themeCssFiles, themeEditorHtmls,theme) {
-		this.THEME_EDITOR_SPEC = 0.81;
+		this.THEME_EDITOR_SPEC = 1.0;
 		this._themeEditor = themeEditor;
 		this.domNode = element;
 		this.theme = theme;
@@ -84,6 +84,11 @@ return declare([], {
 
 	setContent: function(fileName, content, themeCssFiles){
 		
+		if (this.theme.specVersion < 0.8){
+			this.themeVersionError(); 
+		} else if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
+			this.themeVersionWarn(); //just warn for now
+		}
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
@@ -163,12 +168,8 @@ return declare([], {
 						var warnCookie = dojo.cookie(cookieName);
 						if (!warnCookie){
 							dojo.cookie(cookieName, "true");
-							this.themeVersionWarn();
+							this.themeVersionWarn(true);
 						}
-					}
-					if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
-						this.themeVersionWarn(); //just warn for now
-						//this.themeVersionError(); 
 					}
 
 					if (failureInfo.errorMessage) {
@@ -194,8 +195,13 @@ return declare([], {
 		}
 	},
 	
-	themeVersionWarn: function(){
-		Workbench.showMessage(veNls.vteWarningTitle, veNls.vteWarningMessage, {width: 250});
+	themeVersionWarn: function(toolkit){
+		var msg = veNls.vteWarningMessage;
+		if (toolkit) {
+			msg = veNls.vteWarninToolkitgMessage
+		} 
+		Workbench.showMessage(veNls.vteWarningTitle, msg, {width: 250});
+		
 	},
 	
 	themeVersionError: function(){

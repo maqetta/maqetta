@@ -131,9 +131,10 @@ define({ root:
 
 		//VisualThemeEditor.js
 		"vteWarningTitle": "Theme Version Warning",
-		"vteWarningMessage": "Theme version does not match workspace version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"vteWarningMessage": "Theme version does not match Maqetta version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"vteWarninToolkitgMessage": "Theme version does not match workspace library version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
 		"vteErrorTitle": "Theme Version Error",
-		"vteErrorMessage": "Theme version does not match workspace version. You must clone the custom theme using the current version of Maqetta.",
+		"vteErrorMessage": "Theme version is not supported by this version of Maqetta. You must recreating custom theme using the current version of Maqetta and deleting the existing theme..",
 		
 		//ve.plugin.js
 		//Labels for ComboButton for source vs split-h vs split-v

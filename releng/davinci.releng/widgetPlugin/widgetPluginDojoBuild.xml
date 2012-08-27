@@ -200,8 +200,8 @@
 		<antcall target="restore.davinciPlugin.dojoDir"/>
 
 		<!-- remove tests in the src directory, if present, to reduce the size of the image -->
-		<delete quiet="true">
-			<fileset dir="${target.folder}/WebContent/${davinciPlugin.id}-src" includes="**/tests" />
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${target.folder}/WebContent/${davinciPlugin.id}-src" includes="**/tests/**" />
 		</delete>
 	</target>
 	

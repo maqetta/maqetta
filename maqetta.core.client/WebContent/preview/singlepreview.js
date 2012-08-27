@@ -1,16 +1,20 @@
 define([
         'dojo/_base/declare',
         'dijit/_WidgetBase',
-        'preview/silhouetteiframe',
+        './silhouetteiframe',
         'dijit/form/Button',
         'dijit/form/HorizontalSlider',
         'dijit/form/HorizontalRuleLabels',
         'dijit/form/Select',
         'dojo/_base/lang',
+        'dojo/dom-construct',
+        'dojo/query',
+        'dojo/dom-class',
+        'dojo/_base/connect', // deprecated
         'dojo/i18n!preview/nls/preview'],
-	function(declare, _WidgetBase, Silhouette, Button, HorizontalSlider, HorizontalRuleLabels, Select, lang, langObj){
+	function(declare, _WidgetBase, Silhouette, Button, HorizontalSlider, HorizontalRuleLabels, Select, lang, construct, query, domClass, connect, langObj){
 
-return declare("preview.singlepreview", [_WidgetBase], {
+return declare([_WidgetBase], {
 
 	currentDevice:0,
 	currentZoom:1,
@@ -51,8 +55,8 @@ return declare("preview.singlepreview", [_WidgetBase], {
 					'<div class="silhouette_container" style="display:inline-block"></div>'+
 					'</td></tr></table>', langObj);
 			if(!this.showZoom){
-				dojo.query('.controlbar_label_zoom',this.domNode)[0].style.display='none';
-				dojo.query('.controlbar_container_zoom',this.domNode)[0].style.display='none';
+				query('.controlbar_label_zoom',this.domNode)[0].style.display='none';
+				query('.controlbar_container_zoom',this.domNode)[0].style.display='none';
 			}
 			this.initControls();
 		}else{
@@ -62,14 +66,14 @@ return declare("preview.singlepreview", [_WidgetBase], {
 
 	addStyleDeclarations: function(){
 		// Only add style declarations if not already there
-		var style_elems = dojo.query('style.singlepreview_styles');
+		var style_elems = query('style.singlepreview_styles');
 		if(!style_elems.length){
 			var head_elem = document.querySelectorAll('head')[0];
 			if(!head_elem){
 				console.error('silhouetteiframe.js addStyleDeclarations(): no HEAD element');
 				return;
 			}
-			dojo.create('style',{
+			construct.create('style',{
 				type:'text/css',
 				'class':'singlepreview_styles',
 				innerHTML: 
@@ -88,18 +92,18 @@ return declare("preview.singlepreview", [_WidgetBase], {
 	},
 
 	initControls: function(){
-		var select_device_node = dojo.query('.controlbar_device',this.domNode)[0];
+		var select_device_node = query('.controlbar_device',this.domNode)[0];
 		var device_select = this.device_select = new Select({},select_device_node);
 		device_select.addOption(this.devicelist);
 		// Timeout to prevent initial widget loading from trigger onChange handler
-		setTimeout(dojo.hitch(this, function(){
+		setTimeout(lang.hitch(this, function(){
 			this.connect(device_select, 'onChange', function(newvalue){
 				if(newvalue != this.currentDevice){
 					this.currentDevice = newvalue;
 					var theme = Silhouette.getMobileTheme(this.devicelist[this.currentDevice].file);
 					var iframefilename_with_params = this.iframefilename+'?theme='+theme+this._randomUrlParam;
 					if (this.iframeSearch) {
-						iframefilename_with_params += "&" + iframeSearch;
+						iframefilename_with_params += "&" + this.iframeSearch;
 					}
 					this.update_silhouette_container(iframefilename_with_params);
 				}
@@ -107,8 +111,8 @@ return declare("preview.singlepreview", [_WidgetBase], {
 		}), 1);
 
 		if(this.showZoom){
-			var zoom_node = dojo.query('.controlbar_zoom',this.domNode)[0],
-				zoom_labels_node = dojo.query('.controlbar_zoom_labels',this.domNode)[0],
+			var zoom_node = query('.controlbar_zoom',this.domNode)[0],
+				zoom_labels_node = query('.controlbar_zoom_labels',this.domNode)[0],
 				sliderLabels = this.sliderLabels = new HorizontalRuleLabels({
 					container: "topDecoration",
 					count: 14,
@@ -124,7 +128,7 @@ return declare("preview.singlepreview", [_WidgetBase], {
 					style: "width:75px;"
 				},
 				zoom_node);
-			this.connect(zoom_select, 'onChange', dojo.hitch(this, function(){
+			this.connect(zoom_select, 'onChange', lang.hitch(this, function(){
 				if(zoom_select.value != this.currentZoom){
 					this.currentZoom = zoom_select.value;
 					this.silhouetteiframe.setScaleFactor(this.currentZoom);
@@ -132,46 +136,49 @@ return declare("preview.singlepreview", [_WidgetBase], {
 			}));
 		}
 
-		var angle_node = dojo.query('.controlbar_angle',this.domNode)[0];
+		var angle_node = query('.controlbar_angle',this.domNode)[0];
 		var cw_ccw_class = (this.orientation == 'landscape') ? 'control_angle_ccw' : 'control_angle_cw';
 		var angle_select = this.angle_select = new Button({ 
 				iconClass:"control_angle "+cw_ccw_class,
 				showLabel:false
 //				style:"width:16px; height:16px;"
 			}, angle_node);
-		this.connect(angle_select, 'onClick', dojo.hitch(this, function(){
-			var iconnode = dojo.query('.control_angle',this.domNode)[0];
+		this.connect(angle_select, 'onClick', lang.hitch(this, function(){
+			var iconnode = query('.control_angle',this.domNode)[0];
 			if(this.orientation == 'landscape'){
 				this.orientation = 'portrait';
-				dojo.removeClass(iconnode, 'control_angle_ccw');
-				dojo.addClass(iconnode, 'control_angle_cw');
+				domClass.remove(iconnode, 'control_angle_ccw');
+				domClass.add(iconnode, 'control_angle_cw');
 			}else{
 				this.orientation = 'landscape';
-				dojo.removeClass(iconnode, 'control_angle_cw');
-				dojo.addClass(iconnode, 'control_angle_ccw');
+				domClass.remove(iconnode, 'control_angle_cw');
+				domClass.add(iconnode, 'control_angle_ccw');
 			}
 			this.silhouetteiframe.setOrientation(this.orientation);	
 		}));
 		var theme = Silhouette.getMobileTheme(this.devicelist[this.currentDevice].file);
 		var iframefilename_with_params = this.iframefilename+'?theme='+theme+this._randomUrlParam;
+		if (this.iframeSearch) {
+			iframefilename_with_params += "&" + this.iframeSearch;
+		}
 		this.update_silhouette_container(iframefilename_with_params);
 	},
 
 	update_silhouette_container: function(iframefilename_with_params){
 		if(this.silhouetteiframe_connect_onload){
-			dojo.disconnect(this.silhouetteiframe_connect_onload);
+			connect.disconnect(this.silhouetteiframe_connect_onload);
 			delete this.silhouetteiframe_connect_onload;
 		}
-		var silhouette_container = dojo.query(".silhouette_container",this.domNode)[0];
+		var silhouette_container = query(".silhouette_container",this.domNode)[0];
 		silhouette_container.innerHTML = '<div class="silhouette_div_container">'+
 			'<span class="silhouetteiframe_object_container"></span>'+
 			'<iframe src="'+iframefilename_with_params+'" class="silhouetteiframe_iframe"></iframe>'+
 			'</div>';
-		var silhouette_div_container=dojo.query('.silhouette_div_container',silhouette_container)[0];
+		var silhouette_div_container=query('.silhouette_div_container',silhouette_container)[0];
 		
 		// Don't start rendering silhouette until iframe is loaded
-		var silhouetteiframe_iframe=dojo.query('.silhouetteiframe_iframe',silhouette_container)[0];
-		this.silhouetteiframe_connect_onload = dojo.connect(silhouetteiframe_iframe, 'onload', dojo.hitch(this, function(){
+		var silhouetteiframe_iframe=query('.silhouetteiframe_iframe',silhouette_container)[0];
+		this.silhouetteiframe_connect_onload = connect.connect(silhouetteiframe_iframe, 'onload', lang.hitch(this, function(){
 			this.silhouetteiframe = new Silhouette({
 				rootNode:silhouette_div_container,
 				svgfilename:this.devicelist[this.currentDevice].file,
@@ -184,7 +191,7 @@ return declare("preview.singlepreview", [_WidgetBase], {
 	
 	destroy: function(preserveDom){
 		if(this.silhouetteiframe_connect_onload){
-			dojo.disconnect(this.silhouetteiframe_connect_onload);
+			connect.disconnect(this.silhouetteiframe_connect_onload);
 			delete this.silhouetteiframe_connect_onload;
 		}
 		this.device_select.destroy();

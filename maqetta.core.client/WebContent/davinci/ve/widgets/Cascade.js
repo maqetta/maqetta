@@ -1105,6 +1105,7 @@ define(["dojo/_base/declare",
 			
 			if(this._widget){
 				this.context = widget.getContext(); // #3046 at start up we can end up with no context or editor set
+				this.targetFile = this.context.getAppCssRelativeFile();		// path to app.css
 				this._editor = this.context.editor; // due to async editor selection getting published before the cascade is built
 				                                    // so best to set this here on widget selection
 				this._topWidgetDom = this.context.getWidgetTopDom(this._widget, this.target) || this._widget.domNode || this._widget;

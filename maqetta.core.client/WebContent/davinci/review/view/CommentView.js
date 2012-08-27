@@ -232,8 +232,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 							replyTo: this._commentForm.replyTo,
 							subject: this._commentForm.subject.get("value"),
 							content: this._commentForm.content.get("value").replace(/\n/g, "<br/>"),
-							severity: this._commentForm.severity.containerNode.innerHTML,
-							type: dojo.byId(this._commentForm.type.id + "_label" ).innerHTML,
 							editFrom: this._commentForm.editFrom
 					};
 					this._setPendingEditComment(args.oldEditor, editingComment);
@@ -266,8 +264,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					form.subject.set("value", editComment.subject);
 					form.content.set("value", editComment.content.replace(/<br\/>/g,"\n"));
 					if(editComment.content) form.hidePlaceHolder();
-					form.setTypeButtonLabel(editComment.type);
-					form.setSeverityButtonLabel(editComment.severity);
 					var comment;
 					if (editComment.replyTo !== 0) {
 						form.setReplyMode();
@@ -322,23 +318,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			} else if(comment) {
 				comment.blurComment();
 			}
-		});
-
-		dojo.subscribe("/davinci/review/commentStatusChanged", this, function(comment, status) {
-			var focusedComments = this._cached[this._currentPage].focusedComments;
-			var designerId = this._getDesignerId();
-			this._loadCommentData(designerId, this._currentPage);
-			var loopBody = function(comment){
-				comment.status = status;
-				var replies = comment.getReplies();
-				comment.refresh();
-				if(replies&&replies.length > 0){
-					dojo.forEach(replies, loopBody);
-				}
-			};
-			loopBody(comment);
-			// Recover the value with the old array
-			this._cached[this._currentPage].focusedComments = focusedComments;
 		});
 
 		dojo.subscribe("/davinci/review/commentAddedError",this,this._onErrorCreateNewComment);
@@ -451,11 +430,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			ownerId: Runtime.userName,
 			//email: Runtime.getDesignerEmail(),
 			replyTo: form.replyTo,
-			drawingJson: this.drawingJson,
-			type: args.type,
-			severity: args.severity,
-			status: "Open", // By default, the status of a new comment is open.
-			closed: this._versionClosed
+			drawingJson: this.drawingJson
 		});
 		this._commentConns.push(
 				dojo.connect(comment, "onNewReply", this, "_onNewReply"),
@@ -490,10 +465,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				email: comment.email,
 				depth: comment.depth,
 				replyTo: comment.replyTo,
-				drawingJson: comment.drawingJson,
-				type: comment.type,
-				severity: comment.severity,
-				status: comment.status
+				drawingJson: comment.drawingJson
 		};
 		_comments.push(_comment);
 		this._cached.indices[_comment.id] = _comment;
@@ -515,8 +487,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		comment.subject = args.subject;
 		comment.content = args.content;
-		comment.type = args.type;
-		comment.severity = args.severity;
 		comment.pageState = this._cached[this._currentPage].pageState;
 		comment.pageStateList = this._cached[this._currentPage].pageStateList;
 		comment.viewScene = this._cached[this._currentPage].viewScene  || this._getCurrentScene().s;
@@ -531,14 +501,11 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var _comment = this._cached.indices[comment.commentId];
 		_comment.subject = comment.subject;
 		_comment.content = comment.content; 
-		_comment.type = comment.type;
-		_comment.severity = comment.severity;
 		_comment.pageState = comment.pageState;
 		_comment.pageStateList = comment.pageStateList;
 		_comment.viewScene = comment.viewScene;
 		_comment.viewSceneList = comment.viewSceneList;
 		_comment.drawingJson = comment.drawingJson;
-		_comment.status = comment.status;
 	},
 
 	_loadCommentData: function(/*String*/ ownerId, /*String*/ pageName) {
@@ -603,11 +570,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				parent: this,
 				existed: true,
 				replyTo: _comment.replyTo,
-				drawingJson: _comment.drawingJson,
-				type: _comment.type,
-				status: _comment.status,
-				severity: _comment.severity,
-				closed: this._versionClosed
+				drawingJson: _comment.drawingJson
 			});
 			// Build comment data indices, we need this when update the comments
 			this._cached.indices[_comment.id] = _comment;
@@ -657,8 +620,6 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		form.subject.set("value", comment.subject);
 		form.content.set("value", comment.content.replace(/<br\/>/g,"\n"));
 		if(comment.content) form.hidePlaceHolder();
-		form.setTypeButtonLabel(comment.type);
-		form.setSeverityButtonLabel(comment.severity);
 		form.setEditMode();
 		if(comment.isReply()){
 			form.setReplyMode();

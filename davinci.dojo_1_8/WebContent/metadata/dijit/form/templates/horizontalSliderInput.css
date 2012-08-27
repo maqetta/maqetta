@@ -1,6 +1,7 @@
 .sliderDialog .dijitDialogPaneContent {
 	padding:0px;
 }
+
 .sliderInputChildRow {
 	margin:0.3em 0em 1em 1em;
 }
@@ -46,7 +47,7 @@ div.sliderInputDiv, .sliderInputDiv td, .sliderInputDiv.sliderInputUrlSectionLab
 	text-align:left;
 }
 		
-/*Make a style to facilite putting a transparent div over the preview to prevent user input */
+/*Make a style to facilitate putting a transparent div over the preview to prevent user input */
 .sliderPreviewDisablingDiv {
 	/* Do not display it on entry */
 	display: block;

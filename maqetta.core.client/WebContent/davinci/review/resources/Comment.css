@@ -181,12 +181,6 @@
 .davinciReview .created {
 }
 
-.davinciReview .severity {
-	width: 16px;	/* Width of the severity icon */
-	height: 16px;	/* Height of the severity icon */
-	float: left;
-}
-
 .davinciReviewDialog {
 	/*border-bottom: #ccc solid 1px;*/
 }
@@ -223,9 +217,6 @@
 .isReply {
 	padding-left: 10px;
 }
-.isReply .status {
-	display: none;
-}
 .davinciReply {
 	border:none;
 }
@@ -259,11 +250,6 @@
 	color: #A0A0A0;
 	font: x-small arial;
 }
-
-/*
-.davinciReview .severityMedium .severityLow .severityHigh {
-}
-*/
 
 .emptyIcon {
 	background: no-repeat url("../../../dojo/resources/blank.gif");
@@ -547,6 +533,11 @@
 	margin: 0 0 0 10px;
 }
 
+.detail_creationDate {
+	color: #4b7c9c;
+	margin: 0 0 0 10px;
+}
+
 .detail_div {
 	margin: 10px 0 10px 0;
 }
@@ -708,50 +699,6 @@
 
 .davinciComment .cancelLink {
 	vertical-align: middle;
-}
-
-.severityLow {
-  background-image: url("img/sprite.png");
-  background-repeat: no-repeat;
-  background-position: -85px -264px; 
-  width: 16px;
-  height: 16px;
-}
-.severityMedium {
-  background-image: url("img/sprite.png");
-  background-repeat: no-repeat;
-  background-position: -85px -396px; 
-  width: 16px;
-  height: 16px;
-}
-.severityHigh {
-  background-image: url("img/sprite.png");
-  background-repeat: no-repeat;
-  background-position: -85px -132px;
-  width: 16px;
-  height: 16px;
-}
-
-.severityUnassigned {
-  background-image: url("img/sprite.png");
-  background-repeat: no-repeat;
-  background-position: -85px -528px;
-  width: 16px;
-  height: 16px;
-}
-
-.disabled .commentFooter .severityLow {
-  background-position: -85px -330px; 
-}
-.disabled .commentFooter .severityMedium {
-  background-position: -85px -462px;
-}
-.disabled .commentFooter .severityHigh {
-  background-position: -85px -594px;
-}
-
-.disabled .commentFooter .severityUnassigned {
-  background-position: -85px -594px;
 }
 
 .davinciComment .commentTheme .dijitButtonText {

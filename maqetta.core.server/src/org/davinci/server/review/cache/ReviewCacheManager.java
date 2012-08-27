@@ -38,10 +38,9 @@ public class ReviewCacheManager extends Thread {
 		stop = false;
 	}
 
-	public boolean updateComments(List<Comment> comments, boolean force) throws Exception {
+	public boolean updateComments(List<Comment> comments) throws Exception {
 		IDavinciProject project;
 		Hashtable<String, Comment> reviewHash;
-		Comment fatherComment;
 		for (Comment comment : comments) {
 			project = comment.getProject();
 			synchronized(project){
@@ -53,17 +52,6 @@ public class ReviewCacheManager extends Thread {
 					continue;
 				}
 
-				boolean isFatherClosed = false;
-				if (!Utils.isBlank(comment.getReplyTo()) && !"0".equals(comment.getReplyTo())){
-					fatherComment = getTopParent(comment);
-					if(null != fatherComment && Comment.STATUS_CLOSED.equals(fatherComment.getStatus())){
-						isFatherClosed = true;
-					}
-				}
-				if(isFatherClosed && !force){
-					throw new Exception("The review with subject " + comment.getSubject()
-									+ " can't be added because this review thread is closed by others, please reload the review data.");
-				}
 				reviewHash.put(comment.getId(), comment);
 
 				// Update the last access time
@@ -309,7 +297,7 @@ public class ReviewCacheManager extends Thread {
 					continue;
 
 				oldOne = entry.getValue();
-				if (!Comment.STATUS_CLOSED.equalsIgnoreCase(oldOne.getStatus())&&parentVersion.equals(oldOne.getPageVersion())) {
+				if (parentVersion.equals(oldOne.getPageVersion())) {
 					newOne = (Comment) Utils.deepClone(oldOne);
 
 					// Re-calculate the comment id

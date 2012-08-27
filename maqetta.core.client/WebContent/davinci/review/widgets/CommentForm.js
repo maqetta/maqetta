@@ -23,8 +23,6 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 		 * lang object into properties on this object. hope they don't collide.
 		 */
 		this.comment = widgetsNls.comment;
-		this.typeLabel = widgetsNls.typeLabel;
-		this.severityLevel = widgetsNls.severityLevel;
 		this.buttonCancel = widgetsNls.buttonCancel;
 	},
 
@@ -38,8 +36,6 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 			style: "width: 100%; margin: 2px 0px 2px 0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:100%;"
 		}, dojo.create("div"));
 		this.contentNode.appendChild(this.content.domNode);
-		this._constructCommentTypes();
-		this._constructSeverities();
 		var submitButton = new Button({
 			label: widgetsNls.submit, 
 			onClick: dojo.hitch(this, "_submit")
@@ -119,15 +115,11 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 	_submit: function() {
 		var subject = this.subject.get("value"),
 		content = this.content.get("value").replace(/\n/g, "<br/>"),
-		type = dojo.byId(this.type.id + "_label" ).innerHTML,
-		severity = this.severity.get("label"),
 		func = this._update ? "onUpdate" : "onSubmit";
 
 		this[func]({
 			subject: subject,
-			content: content,
-			type: type,
-			severity: severity
+			content: content
 		});
 
 	},
@@ -138,93 +130,6 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 
 	onUpdate: function(args) {
 		// Placeholder to be connected
-	},
-
-	/**
-	 * Generate a drop down button for comment types.
-	 */
-	_constructCommentTypes : function() {
-		var typeList = new Menu();
-		this.type = new DropDownButton({
-			label: widgetsNls.unassigned,
-			iconClass: "dijitEditorIcon emptyIcon",	//Here use an empty icon, the generated DropDownButton will align automatically.
-			dropDown : typeList
-		}, this.commentType);
-
-		typeList.addChild(new MenuItem({ 
-			label : widgetsNls.unassigned,
-			onClick: dojo.hitch( this, "setTypeButtonLabel", "Unassigned" )
-		}));
-
-		typeList.addChild(new MenuItem({ 
-			label : widgetsNls.requirement,
-			onClick: dojo.hitch( this, "setTypeButtonLabel", "Requirement" )
-		}));
-		typeList.addChild(new MenuItem({ 
-			label : widgetsNls.task,
-			onClick: dojo.hitch( this, "setTypeButtonLabel", "Task" )
-		}));
-		typeList.addChild( new MenuItem({ 
-			label : widgetsNls.defect,
-			onClick: dojo.hitch( this, "setTypeButtonLabel", "Defect" )
-		}));
-
-
-		if(!dojo.hasClass(this.type.domNode.parentNode, "commentTheme")){
-			dojo.addClass(this.type.domNode.parentNode, "commentTheme");
-		}
-	},
-
-	/**
-	 * Generate a drop down button for comment severity(High, Low, Medium).
-	 */
-	_constructSeverities : function() {
-		var severityList = new Menu();
-
-		this.severity = new DropDownButton({
-			label: widgetsNls.unassigned,
-			iconClass: "dijitEditorIcon severityUnassigned",
-			dropDown : severityList
-		}, this.commentSeverity);
-
-		severityList.addChild(new MenuItem({
-			label: widgetsNls.unassigned,
-			iconClass: "dijitEditorIcon severityUnassigned",
-			onClick: dojo.hitch( this, "setSeverityButtonLabel", "Unassigned" )
-		}));
-
-		severityList.addChild(new MenuItem({
-			label: widgetsNls.low,
-			iconClass: "dijitEditorIcon severityLow",
-			onClick: dojo.hitch( this, "setSeverityButtonLabel", "Low" )
-		}));
-
-		severityList.addChild(new MenuItem({
-			label: widgetsNls.medium,
-			iconClass: "dijitEditorIcon severityMedium",
-			onClick: dojo.hitch( this, "setSeverityButtonLabel", "Medium" )
-		}));
-
-		severityList.addChild(new MenuItem({
-			label: widgetsNls.high,
-			iconClass: "dijitEditorIcon severityHigh",
-			onClick: dojo.hitch( this, "setSeverityButtonLabel", "High" )
-		}));
-
-		// Add this class to override the Claro theme.
-		if (!dojo.hasClass( this.severity.domNode.parentNode, "commentTheme" )) {
-			dojo.addClass( this.severity.domNode.parentNode, "commentTheme" );
-		}
-	},
-
-	setSeverityButtonLabel: function(severity) {
-		this.severity.set("label", severity);
-		dojo.removeClass(this.severity.iconNode, "severityUnassigned severityLow severityMedium severityHigh emptyIcon" );
-		dojo.addClass(this.severity.iconNode, "severity" + severity);
-	},
-
-	setTypeButtonLabel: function(type) {
-		this.type.set("label", type);
 	},
 
 	reset: function() {

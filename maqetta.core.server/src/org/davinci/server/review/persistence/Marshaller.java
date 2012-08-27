@@ -208,18 +208,6 @@ public class Marshaller extends DefaultHandler {
 		setValue(elem, doc, comm.getDrawingJson());
 		commentElem.appendChild(elem);
 
-		elem = doc.createElement(Comment.SEVERITY);
-		setValue(elem, doc, comm.getSeverity());
-		commentElem.appendChild(elem);
-
-		elem = doc.createElement(Comment.TYPE);
-		setValue(elem, doc, comm.getType());
-		commentElem.appendChild(elem);
-
-		elem = doc.createElement(Comment.STATUS);
-		setValue(elem, doc, comm.getStatus());
-		commentElem.appendChild(elem);
-
 		return commentElem;
 	}
 

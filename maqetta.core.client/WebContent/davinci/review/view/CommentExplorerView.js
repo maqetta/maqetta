@@ -374,6 +374,7 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 			template.your_role = widgetsNls.yourRole;
 			template.due_by = widgetsNls.dueBy;
 			template.created_by = widgetsNls.createdBy;
+			template.creation_date = widgetsNls.creationDate;
 			template.artifacts_in_rev = widgetsNls.artifactsInRev;
 			template.reviewers = widgetsNls.reviewers;
 
@@ -384,6 +385,14 @@ var CommentExplorerView = declare("davingetSortTransformsommentExplorerView", Vi
 			});
 			template.detail_creator = item.designerId
 				+ (item.designerEmail ? "&nbsp;&lt" + item.designerEmail + "&gt": "");
+			
+			//Creation date
+			var timeStampDate = locale.parse(item.timeStamp, {datePattern: "yyyyMMddTHHmmss", selector: "date"});
+			template.detail_creationDate = locale.format(timeStampDate, {
+				selector:'date',
+				formatLength:'long'
+			});
+			
 			template.detail_files = "";
 			item.getChildren(function(children) {
 				dojo.forEach(children, function(i) {

@@ -68,7 +68,7 @@ public abstract class Library {
 
     public abstract URL getURL(String path);
 
-    public abstract URL getSourceURL(String path);
+    public abstract URL getURL(String path, boolean useSource);
 
     public abstract URL[] find(String searchFor, boolean recurse);
     

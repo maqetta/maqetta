@@ -33,6 +33,7 @@ define(["dojo/_base/declare",
 		__rewriteDojoURL : null,
 		__fileName : null,
 		__optimize: null, //TODO: make sticky
+		__fullSource:null,
 		_selectionDiv : null,
 		_okButton : null,
 		_tableDiv : null,
@@ -173,7 +174,10 @@ define(["dojo/_base/declare",
 					if (this.__optimize.getValue()) {
 						options.build = "1";
 					}
-
+					if (this.__fullSource.getValue()) {
+						options.fullsource = "1";
+					}
+					
 					setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs, options), 300);					
 				}.bind(this));
 			}

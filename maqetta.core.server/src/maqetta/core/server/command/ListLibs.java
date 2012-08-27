@@ -27,6 +27,7 @@ public class ListLibs extends Command {
             jsonWriter.addField("root", libs[i].getDefaultRoot());
             String required = libs[i].getRequired();
             jsonWriter.addField("required", required!=null || (Boolean.parseBoolean(required)?true:false));
+            jsonWriter.addField("hasSource", libs[i].getSourcePath()!=null);
             jsonWriter.endObject();
         }
         jsonWriter.endArray().endObject();

@@ -72,7 +72,9 @@ public class Download extends Command {
         String libs = req.getParameter("libs");
         String root = req.getParameter("root");
         String build = req.getParameter("build");
-
+        String fullsource = req.getParameter("fullsource");
+        
+        
         if (build != null){
         	//TODO: should put this in a separate Thread
         	this.buildURL = getBuildURL(user, req.getRequestURL().toString());

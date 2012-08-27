@@ -141,12 +141,30 @@ public class LibraryManager implements ILibraryManager {
 
 		public URL getURL(String path) {
 			// TODO Auto-generated method stub
-			return this.getUri(this.basePath, path);
+			return getURL(path, false);
 		}
 
+		public URL getURL(String path, boolean useSource) {
+			// TODO Auto-generated method stub
+			if(useSource){
+				return this.getUri(this.sourcePath, path);
+			}
+			return this.getUri(this.basePath, path);
+		}
+		
 		public URL[] listURL(String path) {
+			return this.listURL(path, false);
+		}
+		
+		public URL[] listURL(String path, boolean useSource) {
+			
+			if(useSource){
+				return this.listUri(this.sourcePath, path);
+			}
+			
 			return this.listUri(this.basePath, path);
 		}
+
 
 	    public URL getSourceURL(String path) {
 			return this.getUri(this.sourcePath, path);

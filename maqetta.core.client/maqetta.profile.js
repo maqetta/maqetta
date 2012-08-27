@@ -82,6 +82,12 @@ dependencies = {
 			dependencies: [
 				"davinci.review.view.CommentExplorerView"
 			]
+		},
+		{
+			name: "../preview/singlepreview.js",
+			dependencies: [
+			    "preview.singlepreview"
+			]
 		}
 	],
 

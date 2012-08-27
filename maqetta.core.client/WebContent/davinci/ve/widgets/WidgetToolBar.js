@@ -79,10 +79,16 @@ define(["dojo/_base/declare",
 			if(this._widget){
 				displayName = widgetUtils.getLabel(this._widget); 
 				this.context = this._widget.getContext();
+				this.classComboBox.set("disabled", false);
+				this.idTextBox.attr("disabled", false); 
 			}else{
 				this.descNode.innerHTML = veNLS.noSelection;
 				dojo.removeClass(this.domNode, "propertiesSelection");
 				this.context = null;
+				this.classComboBox.set("value", '');
+				this.classComboBox.set("disabled", true);
+				this.idTextBox.attr("value", ''); 
+				this.idTextBox.attr("disabled", true); 
 				return;
 			}
 

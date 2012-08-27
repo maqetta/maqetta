@@ -1,7 +1,7 @@
 define([
         'dojo/_base/declare',
         'dijit/_WidgetBase',
-        'preview/silhouetteiframe',
+        './silhouetteiframe',
         'dijit/form/Button',
         'dijit/form/HorizontalSlider',
         'dijit/form/HorizontalRuleLabels',
@@ -10,7 +10,7 @@ define([
         'dojo/i18n!preview/nls/preview'],
 	function(declare, _WidgetBase, Silhouette, Button, HorizontalSlider, HorizontalRuleLabels, Select, lang, langObj){
 
-return declare("preview.singlepreview", [_WidgetBase], {
+return declare([_WidgetBase], {
 
 	currentDevice:0,
 	currentZoom:1,
@@ -99,7 +99,7 @@ return declare("preview.singlepreview", [_WidgetBase], {
 					var theme = Silhouette.getMobileTheme(this.devicelist[this.currentDevice].file);
 					var iframefilename_with_params = this.iframefilename+'?theme='+theme+this._randomUrlParam;
 					if (this.iframeSearch) {
-						iframefilename_with_params += "&" + iframeSearch;
+						iframefilename_with_params += "&" + this.iframeSearch;
 					}
 					this.update_silhouette_container(iframefilename_with_params);
 				}
@@ -154,6 +154,9 @@ return declare("preview.singlepreview", [_WidgetBase], {
 		}));
 		var theme = Silhouette.getMobileTheme(this.devicelist[this.currentDevice].file);
 		var iframefilename_with_params = this.iframefilename+'?theme='+theme+this._randomUrlParam;
+		if (this.iframeSearch) {
+			iframefilename_with_params += "&" + this.iframeSearch;
+		}
 		this.update_silhouette_container(iframefilename_with_params);
 	},
 

@@ -42,11 +42,11 @@ return declare(CreateTool, {
 		}
 		
 		if (this._debug) {
-			console.log("DataStoreBasedCreateTool::_create BEFORE this._loadRequires()");
+			console.error("!!!!!!!!!DataStoreBasedCreateTool::_create BEFORE this._loadRequires()");
 		}
 		this._loadRequires().then(dojo.hitch(this, function(results) {
 			if (this._debug) {
-				console.log("******** DataStoreBasedCreateTool::_create ALL promises fulfilled!");
+				console.error("******** DataStoreBasedCreateTool::_create ALL promises fulfilled!");
 			}
 			if (results.every(function(arg){return arg;})) {
 				// all args are valid
@@ -55,7 +55,7 @@ return declare(CreateTool, {
 					this._select(this._widget);
 				}.bind(this));
 			} else {
-				console.log("DataStoreBasedCreateTool:_loadRequires failed to load all requires");
+				console.error("DataStoreBasedCreateTool:_loadRequires failed to load all requires");
 			}
 		}));
 	},
@@ -214,14 +214,14 @@ return declare(CreateTool, {
 		
 		return all(this._data.map(function(item) {
 			if (this._debug) {
-				console.log("\tDataStoreBasedCreateTool::_loadRequires asking for requires for " + item.type); 
+				console.error("\tDataStoreBasedCreateTool::_loadRequires asking for requires for " + item.type); 
 			}
 			var promise = this._context.loadRequires(item.type, true);
 			if (this._debug) {
 				promise.then(function() {
-					console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " fulfilled!");
+					console.error("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " fulfilled!");
 				}, function(err) {
-					console.log("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " ERROR!!!!!");
+					console.error("\t\t!!!!!!!!!!!DataStoreBasedCreateTool::_loadRequires requires for " + item.type + " ERROR!!!!!");
 				});
 			}
 			return promise;

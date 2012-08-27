@@ -25,7 +25,7 @@
 				In some cases, you'll want to setup a virgin user environment by creating a whole new user login.</li>
 		<li>Go to preferences and look at "Snap to nearest widget" setting. 
             <div class='expectedResults_subsection'>It should be on by default.</div></li>
-		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi page". Choose any filename.</li>
+		<li>Issue a Create Desktop Application from the Create menu. Choose any filename.</li>
 		<li>Drag a few primitive widgets onto the canvas (e.g., Button, TextBox, Calendar, ColorPalette).
             <div class='expectedResults_subsection'>The widgets should be laid out with flow layout.</div></li>
 		<li>Drag one of the widgets (e.g., Button) around on the canvas such that various edges (left, center, right, top, middle, bottom)
@@ -38,7 +38,7 @@
             as the horizontal and vertical edges align with other widgets, and the widget(s) to which the dragged widget
             will snap should have a magenta overlay.</div></li>
 		<li>Click on the "X" close button for the editor tab for this file</li>
-		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi sketch". Choose any filename.</li>
+		<li>Issue a Create Sketch (high-fidelity) from the Create menu. Choose any filename.</li>
 		<li>Drag a Calendar onto the canvas.
             <div class='expectedResults_subsection'>The widgets should be laid out with absolute layout.</div></li>
 		<li>Drag a Button onto the canvas. While dragging, position the mouse such that it aligns with various
@@ -113,7 +113,7 @@
 		<li>Go to preferences and look at "When dragging, show possible parents" setting. 
             <div class='expectedResults_subsection'>It should be off by default.</div>
             Turn this preference on and click OK and close the Preferences dialog.</li>
-		<li>Click on the "New file" icon on the main toolbar. Set composition type to "Desktop hi-fi page". Choose any filename.</li>
+		<li>Issue a Create Desktop Application from the Create menu. Choose any filename.</li>
 		<li>Drag BorderContainer onto the canvas, accepting default options. 
 			Drag a TabContainer into the middle pane of BorderContainer, accepting defaults.
 			Drag 3 DIVs into the TabContainer (siblings DIVs, not DIVs within DIVs).
@@ -153,14 +153,17 @@
 			so that the Calendar widget will be a child of the "Tab 1" ContentPane but absolutely positioned.
 			After dropping the Calendar, drag it just a bit to the right and look at the arrow in the choose parent overlay.
             <div class='expectedResults_subsection'>Arrow should be pointing to <code>Content Pane "Tab 1"</code>.</div>
-            Drag the Calendar such that the mouse pointer is over the 3rd DIV.
+            Put the mouse over the very top part of the Calendar, 
+            and then drag the Calendar such that the mouse pointer is over the 3rd DIV.
             <div class='expectedResults_subsection'>The arrow icon should still be pointing to <code>Content Pane "Tab 1"</code>
             because the default behavior for absolute positioning is that current parent doesn't change during dragging.</div>
             Click on the number key that corresponds to the DIV (probably "1").
             <div class='expectedResults_subsection'>The arrow icon should now point to <code>&lt;div&gt;</code>.</div>
             Mouse up.
             <div class='expectedResults_subsection'>Study the Outline palette and verify that the Calendar 
-            is now a child of the DIV.</div>
+            is now a child of the DIV.</div> 
+            <em>Note: right now, the drop point for the Calendar is based on the mouse pointer position,
+            not the top/left corner of the Calendar.</em>
         </li>
 	</ol>
 

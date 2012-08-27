@@ -98,6 +98,9 @@ return declare("preview.singlepreview", [_WidgetBase], {
 					this.currentDevice = newvalue;
 					var theme = Silhouette.getMobileTheme(this.devicelist[this.currentDevice].file);
 					var iframefilename_with_params = this.iframefilename+'?theme='+theme+this._randomUrlParam;
+					if (this.iframeSearch) {
+						iframefilename_with_params += "&" + iframeSearch;
+					}
 					this.update_silhouette_container(iframefilename_with_params);
 				}
 			});

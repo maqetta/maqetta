@@ -55,6 +55,7 @@
 					],
 					currentDevice = "0",
 					iframefilename = '',
+					iframeSearch = '',
 					orientation = 'portrait',
 					scalefactor = 1,
 					showZoom = true;
@@ -96,11 +97,15 @@
 					if(urlparams.showZoom){
 						showZoom = urlparams.showZoom;
 					}
+					if(urlparams.zazl){
+						iframeSearch += "zazl=" + urlparams.zazl;
+					}
 					var singlepreview_container = document.querySelectorAll(".singlepreview_container")[0];
 					window.singlepreview = new SinglePreview({
 						devicelist: devicelist,
 						currentDevice: currentDevice,
 						iframefilename: iframefilename,
+						iframeSearch: iframeSearch,
 						orientation: orientation,
 						scalefactor: scalefactor,
 						showZoom: showZoom,

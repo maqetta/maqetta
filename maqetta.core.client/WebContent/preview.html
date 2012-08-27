@@ -38,7 +38,7 @@
 			}
 		</style>
 
-		<script src="app/dojo/dojo.js" data-dojo-config="modulePaths:{'preview':'../preview'}"></script>
+		<script src="app/dojo/dojo.js" data-dojo-config="async:true,packages:[{name:'preview', location:'../preview'}]"></script>
 		<link rel="stylesheet" type="text/css" href="app/dijit/themes/claro/claro.css"/>
 		<script>
 			require(['preview/singlepreview', 'dojo/i18n!davinci/nls/webContent', 'dojo/domReady!'], function(SinglePreview, localizations) {

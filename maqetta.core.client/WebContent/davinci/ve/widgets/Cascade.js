@@ -1,19 +1,13 @@
 define(["dojo/_base/declare",
-        "davinci/workbench/WidgetLite",
-        "davinci/workbench/Preferences",
-        "davinci/Workbench",
-        "davinci/Runtime",
-        "davinci/html/CSSModel",
-        "davinci/ui/widgets/DocileDialog",
-        "davinci/ve/States",
-        "dojo/i18n!davinci/ve/nls/ve",
-        "dojo/i18n!dijit/nls/common",
+        "../../workbench/WidgetLite",
+        "../../workbench/Preferences",
+        "../../Workbench",
+        "../../html/CSSModel",
+        "../../ui/widgets/DocileDialog",
+        "../States",
+        "dojo/i18n!../nls/ve",
         "system/resource"
-        
-        
-       
-],function(declare,WidgetLite,Preferences,Workbench, Runtime, CSSModel, DocileDialog, States, 
-		veNLS,commonNLS, systemResource){
+],function(declare,WidgetLite,Preferences,Workbench, CSSModel, DocileDialog, States, veNLS, systemResource){
 	var cascade =  declare("davinci.ve.widgets.Cascade",  [WidgetLite], {
 	
 		target : null,

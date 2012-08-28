@@ -1467,7 +1467,7 @@ var Workbench = {
 							//No editor-specific message, so use our canned one
 							message = dojo.string.substitute(workbenchStrings.fileHasUnsavedChanges, [editorContainer._getTitle()]);
 						}
-						Workbench.showDialog(editorContainer._getTitle(), message, {width: 300}, dojo.hitch(this,okToClose));
+						Workbench.showDialog(editorContainer._getTitle(), message, {width: 300}, dojo.hitch(this,okToClose), null, null, true);
 					} else {
 						okToClose();
 					}

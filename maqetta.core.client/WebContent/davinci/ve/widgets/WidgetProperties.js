@@ -1,13 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
-    "davinci/workbench/ViewLite",
-    "davinci/ve/metadata",
-    "davinci/commands/CompoundCommand",
-    "davinci/ve/commands/ModifyCommand",
-    "dojo/i18n!davinci/ve/nls/ve",
-    "dojo/i18n!dijit/nls/common",
-    "davinci/ve/widgets/HTMLStringUtil"
+	"davinci/workbench/ViewLite",
+	"davinci/ve/metadata",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/ModifyCommand",
+	"dojo/i18n!davinci/ve/nls/ve",
+	"dojo/i18n!dijit/nls/common",
+	"./HTMLStringUtil"
 ], function(
 	declare,
 	connect,

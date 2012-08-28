@@ -50,7 +50,7 @@ define(["dojo/_base/declare",
 			}
 			
 			this._store = new ColorStore({values:displayValues, noncolors:this._statics});
-			this._dropDown = new ComboBox({store:this._store, required: false, labelType:'html', labelAttr:'label', style:'width:100%'});
+			this._dropDown = new ComboBox({store:this._store, required: false, autoComplete:false, labelType:'html', labelAttr:'label', style:'width:100%'});
 			dojo.connect(this._dropDown, "onChange", this, "_onChange");
 			var top = dojo.doc.createElement("div");
 			dojo.addClass(top, 'colorPicker');

@@ -1,12 +1,12 @@
-define(["davinci/Runtime",
-        "./FontDataStore",
-    	"./FontComboBox",
-        "./MultiInputDropDown",
-        "dijit/form/ComboBox",
-        "./MetaDataStore",
-    	"./ColorPicker",
-		"./Background"
-
+define([
+	"davinci/Runtime",
+	"./FontDataStore",
+	"./FontComboBox",
+	"./MultiInputDropDown",
+	"dijit/form/ComboBox",
+	"./MetaDataStore",
+	"./ColorPicker",
+	"./Background"
 ],function(Runtime, FontDataStore){
 	
 	var HTMLStringUtil = dojo.getObject("davinci.ve.widgets.HTMLStringUtil", true);
@@ -80,7 +80,7 @@ define(["davinci/Runtime",
 			        
 				case "comboEdit":
 					var values = jsonString.values;
-					var text = "<select  dojoType='dijit.form.ComboBox' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
+					var text = "<select dojoType='dijit.form.ComboBox' autoComplete='false' style='display:inline-block; width:100%;' id='"+ id + "'"+disabled+">";
 					for(var i = 0;i<values.length;i++) {
 						var obj = getValueAndTitle(values[i]);
 						text+="<option value='" + obj.value + "'>" + obj.title + "</option>";

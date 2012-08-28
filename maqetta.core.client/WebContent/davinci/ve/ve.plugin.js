@@ -43,7 +43,8 @@ return {
             views: [
                 {
                     viewID: "davinci.ve.Palette",
-                    position: "left"
+                    position: "left",
+                    selected: true
                 },
                 {
                     viewID: "davinci.ui.outline",
@@ -55,29 +56,24 @@ return {
                 },
                 {
                     viewID: "davinci.ui.comment",
-                    position: "right-bottom"
+                    position: "right",
+                    hidden: true
                 },
                 {
                     viewID: "davinci.ve.states",
-                    position: "right-bottom"
+                    position: "right-bottom",
+                    selected: true
                 },
                 {
                     viewID: "davinci.ui.navigator",
-                    position: "left-bottom"
+                    position: "left-bottom",
+                    selected: true
                 },
                 {
                     viewID: "davinci.review.reviewNavigator",
                     position: "left-bottom"
                 }
-            /*
-             * { viewID: "davinci.ve.datastores", position: "right" }, { viewID: "davinci.ui.problems", position: "right-bottom" }
-             */
             ]
-        },
-        {
-            id: "test",
-            title: "test Page Design",
-            views: []
         }
     ],
 
@@ -89,26 +85,8 @@ return {
             isDefault: true,
             // TODO implement icon : "",
             editorClass: "davinci/ve/PageEditor",
-            palettesToTop: [
-                "davinci.ve.Palette", //Widgets
-                "davinci.ve.states", //Files
-            ],
+            palettePerspective: "davinci.ve.pageDesign",
             expandPalettes: ["left"]
-        },
-        {
-            id: "ThemeEditor",
-            name: "Theme Editor",
-            // extensions : ["css", "theme"],
-            extensions: "theme",
-            defaultContent: "./defaultContent.css",
-            isDefault: true,
-            // TODO implement icon : "",
-            editorClass: "davinci/ve/themeEditor/ThemeEditor",
-            palettesToTop: [
-                "davinci.ve.style", //Properties
-                "davinci.ve.states" //States(Scenes)
-            ],
-            expandPalettes: ["right"]
         }
     ],
     "davinci.actionSets": [

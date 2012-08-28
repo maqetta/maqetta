@@ -15,7 +15,8 @@ return {
 		palettesToTop: [
 			"davinci.ve.style", //Properties
             "davinci.ui.navigator", //Files
-        ]
+        ],
+        expandPalettes: ["left"]
 	},
 	"davinci.actionSets": [
 /*		{

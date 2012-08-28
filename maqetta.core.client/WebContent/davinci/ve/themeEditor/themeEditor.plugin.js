@@ -10,34 +10,38 @@ return {
 		title:"Theme Editor",
 		views: [
 			{
-				viewID: "davinci.ui.navigator",
-				position: "left"
-			},
-			{
-				viewID: "davinci.ui.outline",
-				position: "right"
-			},
-			{
-				viewID: "davinci.ui.problems",
-				position: "bottom"
-			},
-			{
-				viewID: "davinci.ve.Palette",
-				position: "left-bottom"
-			},	
-			{
-				viewID: "davinci.ve.properties",
-				position: "right-bottom"
-			},
-			{
-				viewID: "davinci.ve.style",
-				position: "right-bottom"
-			}/*
-			,
-			{
-				viewID: "davinci.ve.TopProps",
-				position: "right-bottom"
-			}*/
+                viewID: "davinci.ve.Palette",
+                position: "left",
+                hidden: true
+            },
+            {
+                viewID: "davinci.ui.outline",
+                position: "left",
+                hidden: true
+            },
+            {
+                viewID: "davinci.ve.style",
+                position: "right"
+            },
+            {
+                viewID: "davinci.ui.comment",
+                position: "right",
+                hidden: true
+            },
+            {
+                viewID: "davinci.ve.states",
+                position: "right-bottom",
+                selected: true
+            },
+            {
+                viewID: "davinci.ui.navigator",
+                position: "left",
+                selected: true
+            },
+            {
+                viewID: "davinci.review.reviewNavigator",
+                position: "left"
+            }
 		]
 	},
 	"davinci.editor": {
@@ -49,11 +53,8 @@ return {
 		isDefault : true,
 		//TODO implement		 icon : "",
 		editorClass: "davinci/ve/themeEditor/ThemeEditor",
-        palettesToTop: [
-            "davinci.ve.style", //Properties,
-            "davinci.ui.navigator", //Files
-            "davinci.ve.states" //States(Scenes)
-        ]
+		palettePerspective: "davinci.themeEdit.themeEdit",
+        expandPalettes: ["right"]
 	},
 	"davinci.editorActions": {
 		editorContribution: {

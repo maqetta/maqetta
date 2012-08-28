@@ -25,33 +25,42 @@ return {
             iconClass: "paletteIcon paletteIconStates"
 		}
 	],
-	"davinci.perspectiveExtension": [
-		{
-			targetID: "davinci.ve.pageDesign",
-			views: [
-				{
-					viewID: "davinci.review.reviewNavigator",
-					position: "left"
-				}
-			]
-		}
-	],
 	"davinci.perspective": {
-		id: "comment",
-		title: "Comment",
+		id: "review",
+		title: "Review",
 		views: [
-			{
-				viewID: "davinci.review.reviewNavigator",
-				position: "left"
-			},
-			{
-				viewID: "davinci.review.comment",
-				position: "left"
-			},
-			{
-				viewID: "davinci.review.state",
-				position: "right"
-			}
+            {
+                viewID: "davinci.ve.Palette",
+                position: "left",
+                hidden: true
+            },
+            {
+                viewID: "davinci.ui.outline",
+                position: "left",
+                hidden: true
+            },
+            {
+                viewID: "davinci.ve.style",
+                position: "right"
+            },
+            {
+                viewID: "davinci.ui.comment",
+                position: "right",
+                selected: true
+            },
+            {
+                viewID: "davinci.ve.states",
+                position: "right-bottom"
+            },
+            {
+                viewID: "davinci.ui.navigator",
+                position: "left"
+            },
+            {
+                viewID: "davinci.review.reviewNavigator",
+                position: "left",
+                selected: true
+            }
 		]
 	},
 	"davinci.editor": [
@@ -62,10 +71,8 @@ return {
 			isDefault: true,
 			editorClass: "davinci/review/editor/ReviewEditor",
 			editorClassName: "ReviewEditor",
-            palettesToTop: [
-                "davinci.ui.comment", //Comments
-                "davinci.ve.states" //States(Scenes)
-            ]
+			palettePerspective: "davinci.review.review",
+	        expandPalettes: ["right"]
 		}
 	],
 	"davinci.fileType": [

@@ -27,6 +27,7 @@ define([
 	"dojo/i18n!./nls/webContent",
 	"./ve/metadata",
 	"dojo/Deferred",
+	"dojo/promise/all",
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"dojo/_base/xhr",
@@ -64,6 +65,7 @@ define([
 		webContent,
 		metadata,
 		Deferred,
+		all,
 		declare,
 		connect,
 		xhr,
@@ -148,7 +150,7 @@ var getSelectedResource = function() {
 	}
 };
 
-var initializeWorkbenchState = function(){
+var initializeWorkbenchState = function(){	
 	// The _expandCollapsePaletteContainers() call  below collapses the 
 	// left-side and right-side palettes before
 	// we open any of the editors (and then subsequently potentially expand
@@ -714,8 +716,8 @@ var Workbench = {
 			delete mainBody.tabs.perspective[position];
 		}
 
-		dojo.forEach(perspective.views, function(view) {
-			Workbench.showView(view.viewID, false);
+		this._showViewPromises = dojo.map(perspective.views, function(view) {
+			return Workbench.showView(view.viewID, view.selected, view.hidden);
 		}, this);
 
 		//FIXME: This is also ugly - creating a special DIV for visual editor's selection chrome
@@ -1148,142 +1150,150 @@ var Workbench = {
 		}
 	},
 
-	showView: function(viewId, shouldFocus){
-	  try {
-		var mainBodyContainer = dijit.byId('mainBody'),
-			view = Runtime.getExtension("davinci.view", viewId),
-			mainBody = dojo.byId('mainBody'),
-			perspectiveId = Workbench.activePerspective,
-			perspective = Runtime.getExtension("davinci.perspective", perspectiveId),
-			position = 'left',
-			cp1 = null,
-			created = false,
-			pxHeight = dijit.byId('mainBody')._borderBox.h - 5;
+	showView: function(viewId, shouldFocus, hidden){
+		var d = new Deferred();
 		
-		dojo.some(perspective.views, function(view){
-			if(view.viewID ==  viewId){
-				position = view.position;
-				return true;
-			}	
-		});
-		
-		mainBody.tabs = mainBody.tabs || {};				
-		mainBody.tabs.perspective = mainBody.tabs.perspective || {};
-
-		// NOTE: Left-side and right-side palettes start up with 71px width
-		// which happens to be the exact pixel size of the palette tabs.
-		// This 71px setting prevents the user from seeing an initial flash
-		// of temporarily opened left-side and right-side palettes.
-		if (position == 'right' && !mainBody.tabs.perspective.right) {
-			mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
-				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: '+paletteTabWidth+'px;', id:"right_mainBody", 
-					minSize:paletteTabWidth,	// prevent user from dragging splitter too far towards edge
-					region:'right', gutters: false, splitter:true}));
-			mainBody.tabs.perspective.right.startup();
-			// expandToSize is what expandPaletteContainer() uses as the
-			// width of the palette when it is in expanded state.
-			paletteCache["right_mainBody"] = {
-				expandToSize:340,
-				initialExpandToSize:340
-			};
-		}
-
-		if (position == 'left' && !mainBody.tabs.perspective.left) {
-			mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
-				new BorderContainer({'class':'davinciPaletteContainer', 
-					style: 'width: '+paletteTabWidth+'px;', id:"left_mainBody", 
-					minSize:paletteTabWidth,	// prevent user from dragging splitter too far towards edge
-					region:'left', gutters: false, splitter:true}));
-			mainBody.tabs.perspective.left.startup();
-			// expandToSize is what expandPaletteContainer() uses as the
-			// width of the palette when it is in expanded state.
-			paletteCache["left_mainBody"] = {
-				expandToSize:300,
-				initialExpandToSize:300
-			};
-		}
-
-		if (position === 'left' || position === 'right') {
-			position += "-top";
-		}
-		var positionSplit = position;
-
-		if (!mainBody.tabs.perspective[position]) {
-			positionSplit = position.split('-');
-
-			var region = positionSplit[0],
-				parent = mainBodyContainer,
-				clazz = 'davinciPalette ',
-				style = '';
-			if (positionSplit[1] && (region == 'left' || region == 'right')) {
-				parent = mainBody.tabs.perspective[region];
-				region = positionSplit[1];
-				if (positionSplit[1] == "top") {
-					region = "center";
-					clazz += "davinciTopPalette";
-				} else {
-					style = 'height:30%;';
+		try {
+			var mainBodyContainer = dijit.byId('mainBody'),
+				view = Runtime.getExtension("davinci.view", viewId),
+				mainBody = dojo.byId('mainBody'),
+				perspectiveId = Workbench.activePerspective,
+				perspective = Runtime.getExtension("davinci.perspective", perspectiveId),
+				position = 'left',
+				cp1 = null,
+				created = false,
+				pxHeight = dijit.byId('mainBody')._borderBox.h - 5;
+			
+			dojo.some(perspective.views, function(view){
+				if(view.viewID ==  viewId){
+					position = view.position;
+					return true;
+				}	
+			});
+			
+			mainBody.tabs = mainBody.tabs || {};				
+			mainBody.tabs.perspective = mainBody.tabs.perspective || {};
+	
+			// NOTE: Left-side and right-side palettes start up with 71px width
+			// which happens to be the exact pixel size of the palette tabs.
+			// This 71px setting prevents the user from seeing an initial flash
+			// of temporarily opened left-side and right-side palettes.
+			if (position == 'right' && !mainBody.tabs.perspective.right) {
+				mainBodyContainer.addChild(mainBody.tabs.perspective.right = 
+					new BorderContainer({'class':'davinciPaletteContainer', 
+						style: 'width: '+paletteTabWidth+'px;', id:"right_mainBody", 
+						minSize:paletteTabWidth,	// prevent user from dragging splitter too far towards edge
+						region:'right', gutters: false, splitter:true}));
+				mainBody.tabs.perspective.right.startup();
+				// expandToSize is what expandPaletteContainer() uses as the
+				// width of the palette when it is in expanded state.
+				paletteCache["right_mainBody"] = {
+					expandToSize:340,
+					initialExpandToSize:340
+				};
+			}
+	
+			if (position == 'left' && !mainBody.tabs.perspective.left) {
+				mainBodyContainer.addChild(mainBody.tabs.perspective.left = 
+					new BorderContainer({'class':'davinciPaletteContainer', 
+						style: 'width: '+paletteTabWidth+'px;', id:"left_mainBody", 
+						minSize:paletteTabWidth,	// prevent user from dragging splitter too far towards edge
+						region:'left', gutters: false, splitter:true}));
+				mainBody.tabs.perspective.left.startup();
+				// expandToSize is what expandPaletteContainer() uses as the
+				// width of the palette when it is in expanded state.
+				paletteCache["left_mainBody"] = {
+					expandToSize:300,
+					initialExpandToSize:300
+				};
+			}
+	
+			if (position === 'left' || position === 'right') {
+				position += "-top";
+			}
+			var positionSplit = position;
+	
+			if (!mainBody.tabs.perspective[position]) {
+				positionSplit = position.split('-');
+	
+				var region = positionSplit[0],
+					parent = mainBodyContainer,
+					clazz = 'davinciPalette ',
+					style = '';
+				if (positionSplit[1] && (region == 'left' || region == 'right')) {
+					parent = mainBody.tabs.perspective[region];
+					region = positionSplit[1];
+					if (positionSplit[1] == "top") {
+						region = "center";
+						clazz += "davinciTopPalette";
+					} else {
+						style = 'height:30%;';
+						clazz += "davinciBottomPalette";
+					}
+				} else if(region == 'bottom') {
+					style = 'height:80px;';
 					clazz += "davinciBottomPalette";
 				}
-			} else if(region == 'bottom') {
-				style = 'height:80px;';
-				clazz += "davinciBottomPalette";
-			}
-			cp1 = mainBody.tabs.perspective[position] = new TabContainer({
-				region: region,
-				id:'palette-tabcontainer-'+position,
-				tabPosition:positionSplit[0]+'-h',
-				tabStrip:false,
-				'class': clazz,
-				style: style,
-				splitter: region != "center",
-				controllerWidget: "dijit.layout.TabController"
-			});
-			parent.addChild(cp1);
-			dojo.connect(cp1, 'selectChild', this, function(tab){
-				if(tab && tab.domNode){
-					var tc = tab.getParent();
-					// Don't mess with which tab is selected or do any collapse/expand
-					// if selectChild is called in response to adding the first child
-					// of a TabContainer, which causes an implicit selectFirst(),
-					// or other programmatic selectChild() event (in particular, 
-					// SwitchingStyleView.js puts _maqDontExpandCollapse on tabcontainer)
-					if(!this._showViewAddChildInProcess && !tc._maqDontExpandCollapse){
-						if(tc._maqLastSelectedChild == tab){
-							this._expandCollapsePaletteContainer(tab);						
-						}else{
-							this.expandPaletteContainer(tab.domNode);						
+				cp1 = mainBody.tabs.perspective[position] = new TabContainer({
+					region: region,
+					id:'palette-tabcontainer-'+position,
+					tabPosition:positionSplit[0]+'-h',
+					tabStrip:false,
+					'class': clazz,
+					style: style,
+					splitter: region != "center",
+					controllerWidget: "dijit.layout.TabController"
+				});
+				parent.addChild(cp1);
+				dojo.connect(cp1, 'selectChild', this, function(tab){
+					if(tab && tab.domNode){
+						var tc = tab.getParent();
+						// Don't mess with which tab is selected or do any collapse/expand
+						// if selectChild is called in response to adding the first child
+						// of a TabContainer, which causes an implicit selectFirst(),
+						// or other programmatic selectChild() event (in particular, 
+						// SwitchingStyleView.js puts _maqDontExpandCollapse on tabcontainer)
+						if(!this._showViewAddChildInProcess && !tc._maqDontExpandCollapse){
+							if(tc._maqLastSelectedChild == tab){
+								this._expandCollapsePaletteContainer(tab);						
+							}else{
+								this.expandPaletteContainer(tab.domNode);						
+							}
 						}
+						tc._maqLastSelectedChild = tab;
 					}
-					tc._maqLastSelectedChild = tab;
+				}.bind(this));
+			} else {
+				cp1 = mainBody.tabs.perspective[position];
+			}
+	
+			if (dojo.some(cp1.getChildren(), function(child){ return child.id == view.id; })) {
+				return;
+			}
+			this.instantiateView(view).then(function(tab) {
+				this._showViewAddChildInProcess = true;
+				if (!hidden) {
+					cp1.addChild(tab);
 				}
+				this._showViewAddChildInProcess = false;
+				// Put a tooltip on the tab button. Note that native TabContainer
+				// doesn't offer a tooltip capability for its tabs
+				var controlButton = tab.controlButton;
+				if(controlButton && controlButton.domNode){
+					controlButton.domNode.title = view.title + ' ' +  veNLS.palette;
+				}
+				if(shouldFocus) {
+					cp1.selectChild(tab);
+				}
+				
+				d.resolve(tab);
 			}.bind(this));
-		} else {
-			cp1 = mainBody.tabs.perspective[position];
-		}
-
-		if (dojo.some(cp1.getChildren(), function(child){ return child.id == view.id; })) {
-			return;
-		}
-		this.instantiateView(view).then(function(tab) {
-			this._showViewAddChildInProcess = true;
-			cp1.addChild(tab);
-			this._showViewAddChildInProcess = false;
-			// Put a tooltip on the tab button. Note that native TabContainer
-			// doesn't offer a tooltip capability for its tabs
-			var controlButton = tab.controlButton;
-			if(controlButton && controlButton.domNode){
-				controlButton.domNode.title = view.title + ' ' +  veNLS.palette;
-			}
-			if(shouldFocus) {
-				cp1.selectChild(tab);
-			}
-		}.bind(this));
-	  } catch (ex) {
-		  console.error("Error loading view: "+view.id);
-		  console.error(ex);
-	  }
+		  } catch (ex) {
+			  console.error("Error loading view: "+view.id);
+			  console.error(ex);
+		  }
+		  
+		  return d;
 	},
 
 	instantiateView: function(view) {
@@ -1729,67 +1739,111 @@ var Workbench = {
 				newEditor.visualEditor.context.getTopWidgets().forEach(function (widget) { if (widget.resize) { widget.resize(); } });
 			}
 			
-			// Code below was previously outside of the existing setTimeout kludge. But, needs to be inside because on loading of Maqetta, all 
-			// of the palettes might not be created in time (for example, _bringPalettesToTop might not bring Comments tab to front 
-			// because it's not created yet). So, we need to take advantage of the delay. It certainly would be better is there were a 
-			// Workbench loaded event or something to leverage.
-			if(newEditor) {
-				if (newEditor.focus) { 
-					newEditor.focus(); 
-				}
-/*
-				//Bring palettes specified for the editor to the top
-				this._bringPalettesToTop(newEditor);
-				
-				//Collapse/expand the left and right-side palettes
-				//depending on "expandPalettes" properties
-				this._expandCollapsePaletteContainers(newEditor);
-*/
-			}
 			this._repositionFocusContainer();
 		}.bind(this), 1000);
-
-		//Bring palettes specified for the editor to the top
-		this._bringPalettesToTop(newEditor);
 		
-		//Collapse/expand the left and right-side palettes
-		//depending on "expandPalettes" properties
-		this._expandCollapsePaletteContainers(newEditor);
+		all(this._showViewPromises).then(function() {
+			if(newEditor && newEditor.focus) { 
+				newEditor.focus(); 
+			}
+
+			//Rearrange palettes based on new editor
+			this._rearrangePalettes(newEditor);
+			
+			//Collapse/expand the left and right-side palettes
+			//depending on "expandPalettes" properties
+			this._expandCollapsePaletteContainers(newEditor);
+		}.bind(this));
 
 		if(!startup) {
 			Workbench._updateWorkbenchState();
 		}
 	},
-	
-	_bringPalettesToTop: function(newEditor) {
-		// First, we will get the metadata for the extension and get its list of 
-		// palettes to bring to the top
-		var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
-			return (newEditor ? (extension.id === newEditor.editorID) : false);
-		});
-		if (editorExtensions && editorExtensions.length > 0) {
-			var editorPalettesToTop = editorExtensions[0].palettesToTop;
-			if (editorPalettesToTop) {
-				// Loop through palette ids and select appropriate palettes
-				for (var i = 0; i < editorPalettesToTop.length; i++) { 
-					var paletteId = editorPalettesToTop[i];
+
+	_rearrangePalettes: function(newEditor) {
+		var palettePerspectiveId,
+			newEditorRightPaletteExpanded,
+			newEditorLeftPaletteExpanded;
+		
+		//Determine what perspective to get palette info out of based on whether we have an editor or not
+		if (newEditor) {
+			// First, we will get the metadata for the extension and get its list of 
+			// palettes to bring to the top
+			var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
+				return (newEditor ? (extension.id === newEditor.editorID) : false);
+			});
+			if (editorExtensions && editorExtensions.length > 0) {
+				var editorExtension = editorExtensions[0];
+				palettePerspectiveId = editorExtension.palettePerspective;
+			}
+			
+			//Remember if palettes had been expanded because as we add/remove/select tabs these values will be 
+			//altered and we'll want to restore them
+			newEditorRightPaletteExpanded = newEditor._rightPaletteExpanded;
+			newEditorLeftPaletteExpanded= newEditor._leftPaletteExpanded;
+		} else {
+			//No editor, so use the initital perspective
+			palettePerspectiveId = Runtime.initialPerspective || "davinci.ui.main";
+		}
+			
+		if (palettePerspectiveId) {
+			var palettePerspective = Runtime.getExtension("davinci.perspective", palettePerspectiveId);
+			if (!palettePerspective) {
+				Runtime.handleError(dojo.string.substitute(webContent.perspectiveNotFound,[editorExtension.palettePerspective]));
+			}
+			var paletteDefs = palettePerspective.views;
+
+			// Loop through palette ids and select appropriate palettes
+			dojo.forEach(paletteDefs, function(paletteDef) {
+				// Look up the tab for the palette and get its 
+				// parent to find the right TabContainer
+				var paletteId = paletteDef.viewID;
+				var position = paletteDef.position;
+				if (position.indexOf("bottom") < 0) {
+					position += "-top";
+				}
+				var tab = dijit.byId(paletteId);
+				if (tab) {
+					var tabContainer = tab.getParent();
+					var desiredTabContainer = mainBody.tabs.perspective[position];
 					
-					// Look up the tab for the palette and get its 
-					// parent to find the right TabContainer
-					var tab = dijit.byId(paletteId);
-					if (tab) {
-						var tabContainer = tab.getParent();
-	
-						// Select tab
+					//Move tab
+					if (tabContainer != desiredTabContainer) {
 						if (tabContainer) {
-							// This flag prevents Workbench.js logic from triggering expand/collapse
-							// logic based on selectChild() event
-							tabContainer._maqDontExpandCollapse = true;
-							tabContainer.selectChild(tab);
-							delete tabContainer._maqDontExpandCollapse;
+							//Need to remove from the old tabbed container
+							tabContainer.removeChild(tab);
+						}
+						if (!paletteDef.hidden) {
+							desiredTabContainer.addChild(tab);
+							tabContainer = desiredTabContainer;
+						}
+					}
+
+					// Select/hide tab
+					if (tabContainer) {
+						if (paletteDef.hidden) {
+							tabContainer.removeChild(tab);
+						} else {
+							if (paletteDef.selected) {
+								// This flag prevents Workbench.js logic from triggering expand/collapse
+								// logic based on selectChild() event
+								tabContainer._maqDontExpandCollapse = true;
+								tabContainer.selectChild(tab);
+								delete tabContainer._maqDontExpandCollapse;
+							}
 						}
 					}
 				}
+			});
+		}
+		
+		//Restore left/right palette expanded states that were saved earlier
+		if (newEditor) {
+			if (newEditor.hasOwnProperty("_rightPaletteExpanded")) {
+				newEditor._rightPaletteExpanded = newEditorRightPaletteExpanded;
+			}
+			if (newEditor.hasOwnProperty("_leftPaletteExpanded")) {
+				newEditor._leftPaletteExpanded = newEditorLeftPaletteExpanded;
 			}
 		}
 	},

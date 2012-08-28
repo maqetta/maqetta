@@ -423,29 +423,49 @@ return declare("davinci.ve.views.SwitchingStyleView", [WidgetLite], {
 
 		var parentTabContainer = this.getParent();
 		var selectedChild = parentTabContainer.selectedChildWidget;
-		var pageEditorOnlySections = dojo.query('.page_editor_only', parentTabContainer.domNode);
 		var updatedSelectedChild = false;
+		var allSections = dojo.query('.maqPropertySection', parentTabContainer.domNode);
 		if(this._editor){
-			if (this._editor.declaredClass == 'davinci.ve.PageEditor') {
-				pageEditorOnlySections.forEach(function(section){
-					var contentPane = dijit.byNode(section);
-					contentPane.controlButton.domNode.style.display = '';
-				});
-			}else{
-				pageEditorOnlySections.forEach(function(section){
+			if (this._editor.declaredClass != 'davinci.ve.PageEditor' && 
+				this._editor.declaredClass != 'davinci.ve.themeEditor.ThemeEditor') {
+				//Hide all sections
+				allSections.forEach(function(section){
 					var contentPane = dijit.byNode(section);
 					contentPane.controlButton.domNode.style.display = 'none';
 					if(contentPane == selectedChild){
 						updatedSelectedChild = true;
 					}
 				});
+			} else {
+				//Show all sections
+				allSections.forEach(function(section){
+					var contentPane = dijit.byNode(section);
+					contentPane.controlButton.domNode.style.display = '';
+				});
+				if (this._editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor') {
+					//Hide sections intended only for page editor
+					var pageEditorOnlySections = dojo.query('.page_editor_only', parentTabContainer.domNode);
+					pageEditorOnlySections.forEach(function(section){
+						var contentPane = dijit.byNode(section);
+						contentPane.controlButton.domNode.style.display = 'none';
+						if(contentPane == selectedChild){
+							updatedSelectedChild = true;
+						}
+					});
+				}
 			}
+		} else {
+			//No editor, so bring back to default state by showing all sections
+			allSections.forEach(function(section){
+				var contentPane = dijit.byNode(section);
+				contentPane.controlButton.domNode.style.display = '';
+			});
+			updatedSelectedChild = true;
 		}
 		if(updatedSelectedChild){
 			this._selectFirstVisibleTab();
 		}
 	 },	
-
 	
 	onEditorSelected : function(){
 		//we should clear selected widget from the old editor

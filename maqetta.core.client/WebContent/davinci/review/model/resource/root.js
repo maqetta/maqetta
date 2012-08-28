@@ -28,15 +28,26 @@ var root = declare(Resource, {
 			if (node != null) {
 				node.getChildren(function(children) {
 					dojo.forEach(children, function(item) {
-						if (item.name == fileName) { 
+						if (this._fileNamesEqual(item.name, fileName)) { 
 							result = item;
 						}
-					});
+					}.bind(this));
 					promise.resolve(result);
-				});
+				}.bind(this));
 			}
-		});
+		}.bind(this));
 		return promise;
+	},
+	
+	_fileNamesEqual: function(file1, file2) {
+		if (file1.indexOf("./") != 0) {
+			file1 = "./" + file1;
+		}
+		if (file2.indexOf("./") != 0) {
+			file2 = "./" + file2;
+		}
+		
+		return file1 === file2;
 	},
 
 	findVersion: function(designerId, version) {

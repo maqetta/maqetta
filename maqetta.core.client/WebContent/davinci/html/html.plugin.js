@@ -13,10 +13,8 @@ return {
 			isDefault: false,
 			//TODO implement		 icon: "",
 			editorClass: "davinci/html/ui/HTMLEditor",
-			palettesToTop: [
-			    "davinci.ve.style", //Properties
-                "davinci.ui.navigator", //Files
-            ]
+			palettePerspective: "davinci.html.htmlEditor",
+            expandPalettes: ["left"]
 		},
 		{
 			id: "CSSEditor",
@@ -25,10 +23,8 @@ return {
 			isDefault: true,
 			//TODO implement		 icon: "",
 			editorClass: "davinci/html/ui/CSSEditor",
-			palettesToTop: [
-				"davinci.ve.style", //Properties
-                "davinci.ui.navigator", //Files
-            ]
+			palettePerspective: "davinci.html.htmlEditor",
+            expandPalettes: ["left"]
 		},
 		{
 			id: "ImageViewer",
@@ -37,10 +33,8 @@ return {
 			isDefault: true,
 			//TODO implement		 icon: "",
 			editorClass: "davinci/html/ui/ImageViewer",
-			palettesToTop: [
-			    "davinci.ve.style", //Properties
-                "davinci.ui.navigator", //Files
-            ]
+			palettePerspective: "davinci.html.htmlEditor",
+            expandPalettes: ["left"]
 		}
 	],
 	"davinci.editorActions": {
@@ -116,7 +110,49 @@ return {
 			iconClass: "imageFileIcon",
 			type: "image"
 		}
-	]
+	],
+	
+	"davinci.perspective": [
+        {
+            id: "htmlEditor",
+            title: "HTML Editor",
+            views: [
+                {
+                    viewID: "davinci.ve.Palette",
+                    position: "left",
+                    hidden: true
+                },
+                {
+                    viewID: "davinci.ui.outline",
+                    position: "left",
+                    hidden: true
+                },
+                {
+                    viewID: "davinci.ve.style",
+                    position: "right"
+                },
+                {
+                    viewID: "davinci.ui.comment",
+                    position: "right",
+                    hidden: true
+                },
+                {
+                    viewID: "davinci.ve.states",
+                    position: "right-bottom",
+                    hidden: true
+                },
+                {
+                    viewID: "davinci.ui.navigator",
+                    position: "left",
+                    selected: true
+                },
+                {
+                    viewID: "davinci.review.reviewNavigator",
+                    position: "left"
+                }
+            ]
+        }
+    ]
 };
 
 });

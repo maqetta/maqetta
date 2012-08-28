@@ -2011,11 +2011,11 @@ td.welcome_section_cell {
 	height:7px;
 	border-top: 1px solid white;
 	border-left: 1px solid white;
-	background:-webkit-linear-gradient(-45deg,#e0e0e0,#fcfcfc);
-	background:-moz-linear-gradient(-45deg,#e0e0e0,#fcfcfc);
-	background:-ms-linear-gradient(-45deg,#e0e0e0,#fcfcfc);
-	background:-o-linear-gradient(-45deg,#e0e0e0,#fcfcfc);
-	background:linear-gradient(-45deg,#e0e0e0,#fcfcfc);
+	background:-webkit-linear-gradient(-45deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-moz-linear-gradient(-45deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-ms-linear-gradient(-45deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-o-linear-gradient(-45deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:linear-gradient(-45deg,#e0e0e0,#fcfcfc) no-repeat;
 }
 #visualEditorBorderTopRight {
 	position:absolute;
@@ -2025,11 +2025,11 @@ td.welcome_section_cell {
 	height:7px;
 	border-top: 1px solid white;
 	border-right: 1px solid white;
-	background:-webkit-linear-gradient(225deg,#e0e0e0,#fcfcfc);
-	background:-moz-linear-gradient(225deg,#e0e0e0,#fcfcfc);
-	background:-ms-linear-gradient(225deg,#e0e0e0,#fcfcfc);
-	background:-o-linear-gradient(225deg,#e0e0e0,#fcfcfc);
-	background:linear-gradient(225deg,#e0e0e0,#fcfcfc);
+	background:-webkit-linear-gradient(225deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-moz-linear-gradient(225deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-ms-linear-gradient(225deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-o-linear-gradient(225deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:linear-gradient(225deg,#e0e0e0,#fcfcfc) no-repeat;
 }
 #visualEditorBorderTop {
 	position:absolute;
@@ -2039,11 +2039,11 @@ td.welcome_section_cell {
 	border-top:1px solid white;
 	border-bottom:1px solid transparent;
 	height:6px;
-	background:-webkit-linear-gradient(#e0e0e0,#fcfcfc);
-	background:-moz-linear-gradient(#e0e0e0,#fcfcfc);
-	background:-ms-linear-gradient(#e0e0e0,#fcfcfc);
-	background:-o-linear-gradient(#e0e0e0,#fcfcfc);
-	background:linear-gradient(#e0e0e0,#fcfcfc);
+	background:-webkit-linear-gradient(#e0e0e0,#fcfcfc) no-repeat;
+	background:-moz-linear-gradient(#e0e0e0,#fcfcfc) no-repeat;
+	background:-ms-linear-gradient(#e0e0e0,#fcfcfc) no-repeat;
+	background:-o-linear-gradient(#e0e0e0,#fcfcfc) no-repeat;
+	background:linear-gradient(#e0e0e0,#fcfcfc) no-repeat;
 }
 #visualEditorBorderRight {
 	position:absolute;
@@ -2053,11 +2053,11 @@ td.welcome_section_cell {
 	width:6px;
 	border-left:1px solid transparent;
 	border-right:1px solid white;
-	background:-webkit-linear-gradient(180deg,#e0e0e0,#fcfcfc);
-	background:-moz-linear-gradient(180deg,#e0e0e0,#fcfcfc);
-	background:-ms-linear-gradient(180deg,#e0e0e0,#fcfcfc);
-	background:-o-linear-gradient(180deg,#e0e0e0,#fcfcfc);
-	background:linear-gradient(180deg,#e0e0e0,#fcfcfc);
+	background:-webkit-linear-gradient(180deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-moz-linear-gradient(180deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-ms-linear-gradient(180deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-o-linear-gradient(180deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:linear-gradient(180deg,#e0e0e0,#fcfcfc) no-repeat;
 }
 #visualEditorBorderLeft {
 	position:absolute;
@@ -2067,11 +2067,11 @@ td.welcome_section_cell {
 	width:6px;
 	border-left:1px solid white;
 	border-right:1px solid transparent;
-	background:-webkit-linear-gradient(0deg,#e0e0e0,#fcfcfc);
-	background:-moz-linear-gradient(0deg,#e0e0e0,#fcfcfc);
-	background:-ms-linear-gradient(0deg,#e0e0e0,#fcfcfc);
-	background:-o-linear-gradient(0deg,#e0e0e0,#fcfcfc);
-	background:linear-gradient(0deg,#e0e0e0,#fcfcfc);
+	background:-webkit-linear-gradient(0deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-moz-linear-gradient(0deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-ms-linear-gradient(0deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:-o-linear-gradient(0deg,#e0e0e0,#fcfcfc) no-repeat;
+	background:linear-gradient(0deg,#e0e0e0,#fcfcfc) no-repeat;
 }
 
 #mainBody > .dijitSplitterV.dijitAlignLeft {

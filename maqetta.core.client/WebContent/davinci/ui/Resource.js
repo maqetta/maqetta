@@ -371,7 +371,7 @@ var uiResource = {
 	
 		newProject: function(){
 			var projectDialog = new NewProject({});
-		    Workbench.showModal(projectDialog, uiNLS.newProject, '');
+			Workbench.showModal(projectDialog, uiNLS.newProject, '', null, true);
 		},
 	
 		renameAction: function(){

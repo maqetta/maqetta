@@ -157,6 +157,7 @@ define({ root:
 		//NewProject
 		"newProjectName": "Name:",
 		"newProjectEclipseSupport": "Eclipse support",
+		"newProjectNameExists": "A project with this name already exists",
 
 		//UserLibraries
 		"modify": "Modify",

@@ -8,10 +8,11 @@ define([
 	"dojo/dom-style",
 	"dojo/_base/connect",
 	"dojo/window",
+	"dojo/parser",
 	"dojo/i18n!davinci/ve/nls/common",
 	"dojox/layout/ResizeHandle",
 ], function(declare, _WidgetBase, _Container, Button, Dialog, domGeometry, style, connect, winUtils,
-		veNLS, ResizeHandle) {
+		parser, veNLS, ResizeHandle) {
 
 var DialogClass = declare(Dialog, {
 	contentStyle: null,
@@ -238,6 +239,7 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 	// Add the content here to avoid building the widgets twice
 	if (dojo.isString(content)) {
 		dialogContents.innerHTML = content;
+		parser.parse(dialogContents);
 	} else {
 		if (content.domNode) {
 			dialogContents.appendChild(content.domNode);

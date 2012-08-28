@@ -221,8 +221,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		//FIXME: Need to package this up as a callback somehow
 		var parentIframe = context.getParentIframe();
 		var bodyElement = parentIframe.contentDocument.body;
-		rect.l -= bodyElement.scrollLeft;
-		rect.t -= bodyElement.scrollTop;
+		rect.l -= GeomUtils.getScrollLeft(bodyElement);
+		rect.t -= GeomUtils.getScrollTop(bodyElement);
 		// FIXME: Disable the offscreen adjust in all cases - should just delete that code
 		offScreenAdjust = false;
 

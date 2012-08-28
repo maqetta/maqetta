@@ -68,11 +68,12 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 	}
 
 	private URL scanSrcLibs(IPath ipath) {
-		IPath srcPath = ipath.removeFirstSegments(1);
 		for (Library srcLib: srcLibs) {
+			IPath srcPath = ipath.removeFirstSegments(1);
+			IPath srcLibPath = new Path(srcLib.getDefaultRoot());
+			IPath srcRelPath = srcPath.removeFirstSegments(srcLibPath.segmentCount());
 			if (srcPath.toString().startsWith(srcLib.getDefaultRoot().substring(1))) {
-				srcPath = srcPath.removeFirstSegments(2);
-				URL url = srcLib.getURL(srcPath.toString(), true);
+				URL url = srcLib.getURL(srcRelPath.toString(), true);
 				if (url != null) {
 					if (logger.isLoggable(Level.FINEST)) {
 						logger.logp(Level.FINEST, getClass().getName(), "_getResource", "resource ["+srcPath.toString() +"] loaded from srclib ["+srcLib.getID()+"]");

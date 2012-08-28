@@ -11,7 +11,7 @@ define(["dojo/_base/declare",
         "dojo/text!./templates/NewProject.html",
         "dijit/form/Button",
         "dijit/form/RadioButton",
-        "dijit/form/TextBox"
+        "dijit/form/ValidationTextBox"
         
 ],function(declare, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
 	return dojo.declare("davinci.ui.NewProject",   [_Widget,_Templated], {
@@ -29,26 +29,43 @@ define(["dojo/_base/declare",
 			Resource.listProjects(dojo.hitch(this,this.setProjects));
 			this.inherited(arguments);
 		},
+
 		setProjects: function(projects){
-			this._projects = projects;
+			this._projects = {};
+
+			projects.forEach(dojo.hitch(this, function(project) {
+					if (project) {
+						this._projects[project.name] = true;
+					}
+			}));
 		},
+
 		postCreate: function(){
 			this.inherited(arguments);
-			dojo.connect(this._projectName, "onkeyup", this, '_checkValid');
-			
+			dojo.connect(this._projectName, "onKeyUp", this, '_checkValid');
+
+			this._projectName.validator = dojo.hitch(this, function(value, constraints) {
+					var isValid = true;
+					
+					if (!this._projects || !value) {
+						isValid = false;
+					} else if (this._projects[value]) {
+						isValid = false;
+						this._projectName.invalidMessage = uiNLS.newProjectNameExists;
+					} else {
+						this._projectName.invalidMessage = null;
+					}
+					
+					return isValid;
+			});
 		},
 		
-		
 		_checkValid: function(){
-			
 			// make sure the project name is OK.
 			if(!this._projects) return false; // project data hasn't loaded
-			var name = dojo.attr(this._projectName, "value");
-			var valid = true;
-			for(var i=0;i<this._projects.length && valid;i++){
-				if(this._projects[i]==name) 
-					valid = false;
-			}
+
+			var valid = this._projectName.isValid();
+
 			this._okButton.set( 'disabled', !valid);
 		},
 		

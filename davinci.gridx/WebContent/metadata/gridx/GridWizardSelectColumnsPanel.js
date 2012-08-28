@@ -42,33 +42,52 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 	},
 
 	populate: function(widget, compoundCommand, ignoreCurrentWidgetStructure) {
+		var currentWidgetData = widget.getData();
 		var currentWidgetStructure = null;
 		if (!ignoreCurrentWidgetStructure) {
+			// Get structure directly from the widget rather than parse our of data-dojo-props found in
+			// currentWidgetData
 			currentWidgetStructure = widget.attr("structure");
 		}
 		
-		//Clean out source and target lists
+		// Clean out source and target lists
 		this._removeAllOptions(this.sourceColumnSelect);
 		this._removeAllOptions(this.targetColumnSelect);
 		
-		//Get structure from the proposed command
+		// Find the respective commands for creating the table and the store
 		var tableCommand = null;
+		var storeCommand = null;
 		dojo.some(compoundCommand._commands, function(command) {
 			if (command._properties && command._properties.structure) {
 				tableCommand = command;
-				return true;
+			} else if (command._data && command._data.type) {
+				if (command._data.type === "dojo.data.ItemFileReadStore" || (command._data.type === "dojox.data.CsvStore")){
+					storeCommand = command;
+				}
 			}
 		});
+		
+		// If the existing data store is of a different type (e.g., ItemFileReadStore vs. CsvStore) than
+		// the command store OR the existing data store's URL is different than the command's data store (e.g., 
+		// pointing at a different JSON source), then we can assume we've shifted for a fundamentally different 
+		// data store
+		var dataStoreShift = false;
+		if (currentWidgetData.properties.store.declaredClass != storeCommand._data.type ||
+				currentWidgetData.properties.store.url != storeCommand._data.properties.url) {
+			dataStoreShift = true;
+		}
+			// Will be using fundamentally the same data store, so create options in target list 
+			// based on the current structure in place
+			
 		var props = tableCommand._properties;
 		var commandStructure = props.structure;
 		
-		//Create options in target list
 		dojo.forEach(commandStructure, function(commandStructureElement) {
 			var option = this._createOption(commandStructureElement);
 			
 			//See if the structure entry built for the command (built from proposed data store
 			//modifications) matches anything in the currently set widget structure
-			if (currentWidgetStructure) {
+			if (currentWidgetStructure && !dataStoreShift) {
 				var match = dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
 					if (currentWidgetStructureElement.field === commandStructureElement.field) {
 						return true;
@@ -85,23 +104,25 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 			}
 		}.bind(this));
 		
-		if (currentWidgetStructure) {
-			dojo.forEach(currentWidgetStructure, function(currentWidgetStructureElement) {
-				//See if the structure entry built for the command (built from proposed data store
-				//modifications) matches anything in the currently set widget structure
-				var match = dojo.some(commandStructure, function(commandStructureElement) {
-					if (currentWidgetStructureElement.field === commandStructureElement.field) {
-						return true;
+		if (!dataStoreShift) {
+			if (currentWidgetStructure) {
+				dojo.forEach(currentWidgetStructure, function(currentWidgetStructureElement) {
+					//See if the structure entry built for the command (built from proposed data store
+					//modifications) matches anything in the currently set widget structure
+					var match = dojo.some(commandStructure, function(commandStructureElement) {
+						if (currentWidgetStructureElement.field === commandStructureElement.field) {
+							return true;
+						}
+					});
+					
+					//If match between command structure and current widget structure we should indicate column
+					//is selected by putting in target side
+					if (match) {
+						var option = this._createOption(currentWidgetStructureElement);
+						dojo.place(option, this.targetColumnSelect.containerNode);
 					}
-				});
-				
-				//If match between command structure and current widget structure we should indicate column
-				//is selected by putting in target side
-				if (match) {
-					var option = this._createOption(currentWidgetStructureElement);
-					dojo.place(option, this.targetColumnSelect.containerNode);
-				}
-			}.bind(this));
+				}.bind(this));
+			}
 		}
 		
 		//if nothing added to target side, let's assume brand new data source and select all by default

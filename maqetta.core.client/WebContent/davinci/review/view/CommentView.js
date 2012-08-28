@@ -798,7 +798,12 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					var check = new CheckedMenuItem({
 						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
 						Review.getColor(reviewer.name) +";'></div><span>"+reviewer.name+"</span>",
-							onChange: dojo.hitch(this,this._reviewFilterChanged),
+							onChange: dojo.hitch(this, function() {
+								this._reviewFilterChanged();
+								
+								// We want to keep the menu open after user changes checkbox state
+								this._reviewersBtn.openDropDown();
+							}),
 							checked: true,
 							reviewer:reviewer,
 							title: reviewer.email
@@ -840,21 +845,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			onClick: dojo.hitch(this,"_showCommentForm")
 		});
 
-		var reviewerList = new Menu({onItemClick: function(/*dijit._Widget*/ item, /*Event*/ evt) {
-
-			if (typeof this.isShowingNow == 'undefined') { 
-				this._markActive();
-			}
-			this.focusChild(item);
-			if (item.disabled) { 
-				return false;
-			}
-			if (item.popup) {
-				this._openPopup();
-			} else {
-				item.onClick(evt);
-			}
-		}});
+		var reviewerList = new Menu({});
 		reviewerList.addChild(new CheckedMenuItem({
 			label:viewNls.allReviewers,
 			checked: true,
@@ -864,12 +855,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					children[i].set("checked", check);
 				}
 				this._reviewFilterChanged();
-
+				
+				// We want to keep the menu open after user changes checkbox state
+				this._reviewersBtn.openDropDown();
 			})
 		}));
 		reviewerList.addChild(new MenuSeparator());
 
-		var reviewersBtn = new DropDownButton({
+		var reviewersBtn = this._reviewersBtn = new DropDownButton({
 			id: toolbar.get("id") + ".Reviewers",
 			showLabel: false,
 			disabled: true,

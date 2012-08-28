@@ -58,13 +58,11 @@
             "isData": true
         },
         "fetchProperties": {
-            "datatype": "object",
-            "isData": true,
+            "datatype": "json",
             "hidden": true
         },
         "query": {
-            "datatype": "object",
-            "isData": true,
+            "datatype": "json",
             "hidden": true
         },
         "searchDelay": {

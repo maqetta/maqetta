@@ -2586,7 +2586,6 @@
             "category": "mobile",
             "icon": "resources/images/accordion.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPJJREFUeNpi/P//P8PCgzf/bzv3nIFU4GUkycACYoA01wYZkGxA87oLEAP+//vHsPvWa5IN+P/vP8QAbxNphi0nHzL8R5UGYkY4jxEqgizvay4HMWDj0QcMs4qcgUKMqKqg+hmBYv8ZkYyDmp3WvwdiwL+/f8HiohzMRDv/zY+/DP9+/2VgAhvw5y8DOQBkMdQF/xh+Ac14/u0P3AfIfmaEOvs/VJAR6lOQAYywdLBq5zWSXRDmroVIB53pjuSng98/fpKVDkD6wAb4WykAXfGUZANA+qiTlKnihVU7r4DjC2f0IaVIWFSGumlBopESABBgAGY0fipQlZCHAAAAAElFTkSuQmCC",
-            "initialSize": "auto",
             "properties": {
                 "fixedHeight": "true",
                 "roundRect": "true"
@@ -2608,7 +2607,7 @@
             ],
             "allowedChild": "dojox.mobile.ContentPane, dojox.mobile.ScrollableView",
             "inlineEdit": "./dojox/mobile/AccordionInput",
-            "helper": "./dijit/layout/LayoutContainerHelper"
+            "helper":"./dojox/mobile/InitialSizeHelper"
         },
         {
             "name": "GridLayout",

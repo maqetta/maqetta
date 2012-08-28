@@ -521,7 +521,6 @@ return {
                                 }
                             );
                         },
-                        radioGroup: "displayMode",
                         label: "Download Entire Workspace",
                         toolbarPath: "download"
                     },
@@ -535,7 +534,6 @@ return {
                                 }
                             );
                         },
-                        radioGroup: "displayMode",
                         label: "Download Selected Files",
                         toolbarPath: "download"
                     },
@@ -549,7 +547,6 @@ return {
                                 }
                             );
                         },
-                        radioGroup: "displayMode",
                         label: "Modify Libraries",
                         toolbarPath: "download"
                     }

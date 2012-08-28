@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
+	"dojo/_base/array",
 	"dojo/touch",
 	"dojo/mouse", // mouse.isLeft
 	"dijit/Tree",
 	"../../Workbench",
 	"./_ToggleTreeNode",
-], function(declare, connect, touch, mouse, Tree, Workbench, ToggleTreeNode) {
+], function(declare, connect, array, touch, mouse, Tree, Workbench, ToggleTreeNode) {
 
 return declare(Tree, {
 	postCreate: function() {
@@ -124,6 +125,31 @@ return declare(Tree, {
 		path.splice(0, 0, "myapp");
 
 		return path;
+	},
+
+	_onItemDelete: function(item) {
+		var model = this.model,
+			identity = model.getIdentity(item),
+			nodes = this._itemNodesMap[identity];
+
+		// Dojo Tree bug - if we remove a item while children of the item are selected
+		// in the tree, bad things happen.  So lets unselect them before removing it.
+		var selected = this.dndController.getSelectedTreeNodes();
+
+		var newSelected = [];
+
+		array.forEach(nodes, function(node) {
+			array.forEach(selected, function(snode) {
+					if (snode.getTreePath().indexOf(node) == -1) {
+						// not an decendant
+						newSelected.push(node.item)
+					}
+			}, this);
+		}, this);
+
+		this.set("selectedItems", newSelected);
+				
+		this.inherited(arguments);
 	},
 
 	_onMouseDown: function(e) {

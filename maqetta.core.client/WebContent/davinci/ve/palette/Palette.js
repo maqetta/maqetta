@@ -151,8 +151,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	_loadPalette: function(){
 		if (this._loaded) { return; }
-		
-		
+
 		var allLibraries = Metadata.getLibrary();
 		var userLibs = Library.getUserLibs(Workbench.getProject());
 		var libraries = {};
@@ -187,24 +186,30 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		// Merge descriptors that have the same category
 		// XXX Need a better solution for enumerating through descriptor items and creating
 		//    category groups.
-        var descriptorObject = {};
+		var descriptorObject = {};
 		for (var name in libraries) {
 			if (libraries.hasOwnProperty(name)) {
-			    var lib = libraries[name].$wm;
-			    if (! lib) {
-			        continue;
-			    }
+				var lib = libraries[name].$wm;
+			  if (! lib) {
+			  	continue;
+			  }
 
-			    dojo.forEach(lib.widgets, function(item) {
-	                var category = lib.categories[item.category];
-	                if (!descriptorObject[category.name]) {
-	                    descriptorObject[category.name] = dojo.clone(category);
-	                    descriptorObject[category.name].items = [];
-	                }
-	                var newItem = dojo.clone(item);
-	                newItem.$library = lib;
-	                descriptorObject[category.name].items.push(newItem);
-			    });
+			  dojo.forEach(lib.widgets, function(item) {
+			  	// skip untested widgets 
+			  	if (item.category == "untested") {
+						return;
+					}
+					
+					var category = lib.categories[item.category];
+
+					if (!descriptorObject[category.name]) {
+							descriptorObject[category.name] = dojo.clone(category);
+							descriptorObject[category.name].items = [];
+					}
+					var newItem = dojo.clone(item);
+					newItem.$library = lib;
+					descriptorObject[category.name].items.push(newItem);
+			  });
 			}
 		}
 		

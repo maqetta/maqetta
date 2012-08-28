@@ -607,6 +607,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADdYkDlck/P2+ztglzxhl/L2/D9mnEJtokJsoUZzqEdzp+Tt+Obu+Ep6rkp6rU6As/n7/VGGuFSKvFSLvFKGuFaOv8/t+////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABcALAAAAAAQABAAAAVc4CWOZClWaKqqp+W+sFuJkgVUwKLvDDOJEQsEABEYj4ICRfQQEpHHwkPkMAKg0YZIIbhdsYWE6GDBIgsIkaFsNhYMIgK7XRiIAnNzIXDPg/kXAIKDhIQmh4iJIyEAOw==",
             "inlineEdit": {
                 "property": "textContent",
+                "supportsHTML": "false",
                 "displayOnCreate": false
             }
         },

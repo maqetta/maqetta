@@ -20,6 +20,9 @@ return declare(SmartInput, {
 	
 	format: "rows",
 	
+	// FIXME: This should be true, but doing so has side effect that data is missing from smart input box 
+	// when bring dialog back up after entering some HTML and hitting OK. Need to fix serialize code once
+	// we turn on this flag.
 	supportsHTML: "false",
 	
 	helpText: "",

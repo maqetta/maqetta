@@ -2649,7 +2649,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzpeljpfljpflTtfljtflT1jmT9mnT9nnT9onUJtokVyp0Zyp0Zypkl3rEp4q0x9sU1+sU19sE+DtVSLvVKHuVKIuVWLvVaOv////////wAAAAAAAAAAACH5BAEAABwALAAAAAAQABAAAAVQICeOZGmepqaurEpmWyzPFoltABAISTNdmwupMituKiQKTsfzASUkiHEWIT2Wu95v4yAxpjIGSYFtbhckBDiGIA0KhwPBIB8QCgaUfs/vhwAAOw==",
             "properties": {
             		"cols": 3,
-                "style": "width:400px; height:200px"
+                "style": "height:200px"
             },
             "children": [
                 {

@@ -39,7 +39,7 @@
             "datatype": "[[]]"
         },*/
         "labels": {
-            "datatype": "json"
+            "datatype": "array"
         },
         "labelFrom": {
             "datatype": "number"

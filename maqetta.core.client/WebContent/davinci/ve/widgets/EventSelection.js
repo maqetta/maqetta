@@ -31,7 +31,7 @@ var getEventScriptFromValue = function(value) {
 	value.replace(/"/,'\\"');
 	
 	if (value && value.match(/.*:State$/)) {
-		value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "',arguments[0])";
+		value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
 	}
 	
 	return value;

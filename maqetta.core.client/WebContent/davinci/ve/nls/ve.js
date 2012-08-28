@@ -122,6 +122,7 @@ define({ root:
 		"noSelection":"(no selection)",
 		"toolBarClass":"class:",
 		"toolBarId":"ID:",
+		"idAlreadyUsed": "This id is already used by another widget",
 		
 		//tools/CreateTool.js
 		"noValidParents":"No valid parents at this position",

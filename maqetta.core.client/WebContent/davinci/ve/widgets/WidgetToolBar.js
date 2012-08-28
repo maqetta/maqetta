@@ -5,13 +5,14 @@ define(["dojo/_base/declare",
         "davinci/workbench/ViewLite",
         "davinci/ve/commands/ModifyCommand",
         "dijit/form/ComboBox",
+        "dijit/form/ValidationTextBox",
         "dijit/form/TextBox",
         "dojo/store/Memory",
         "dojo/i18n!davinci/ve/nls/ve",
         "dojo/i18n!dijit/nls/common",
         "davinci/ve/widget",
         "dojo/text!./templates/WidgetToolBar.html",
-],function(declare, _Templated, _Widget, Runtime, ViewLite, ModifyCommand, ComboBox, TextBox, Memory, veNLS, commonNLS, widgetUtils, templateString){
+],function(declare, _Templated, _Widget, Runtime, ViewLite, ModifyCommand, ComboBox, ValidationTextBox, TextBox, Memory, veNLS, commonNLS, widgetUtils, templateString){
 	return declare("davinci.ve.widgets.WidgetToolBar", [ViewLite, _Widget, _Templated], {
 	
 		templateString: templateString,
@@ -31,6 +32,23 @@ define(["dojo/_base/declare",
 		veNLS: veNLS,
 	
 		postCreate: function() {
+			// id validation
+			this.idTextBox.validator = dojo.hitch(this, function(value, constraints) {
+				this.invalidMessage = null;
+
+				if (!value || !this._widget || this.changing) {
+					return true;
+				}
+
+				var w = widgetUtils.byId(value);
+				if (w && w !== this._widget) {
+					this.invalidMessage = veNLS.idAlreadyUsed;
+					return false
+				}
+
+				return true;
+			})
+
 			dojo.subscribe("/davinci/ui/widget/replaced", dojo.hitch(this, this._widgetReplaced));
 		},
 		
@@ -47,6 +65,7 @@ define(["dojo/_base/declare",
 			}else{
 				this._widget = null;
 			}
+				
 			this.onWidgetSelectionChange();
 		},
 		
@@ -163,7 +182,8 @@ define(["dojo/_base/declare",
 				return;
 			}
 			var inputElement = this.idTextBox;
-			if(!inputElement){
+			// make sure id is valid
+			if(!inputElement || !inputElement.isValid()){
 				return;
 			}
 			if(this.context)

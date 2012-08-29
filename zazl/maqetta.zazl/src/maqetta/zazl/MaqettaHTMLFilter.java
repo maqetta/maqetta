@@ -49,6 +49,7 @@ public class MaqettaHTMLFilter implements Filter {
 		configScriptTag.append("var dojoConfig = { parseOnLoad: true };\n");
 		configScriptTag.append("var zazlConfig = {\n");
 		configScriptTag.append("	directInject: true,\n");
+		//configScriptTag.append("	debug: true,\n");
 		configScriptTag.append("	injectUrl: '/_javascript',\n");
 		configScriptTag.append("	packages:[\n");
 		configScriptTag.append("		{'name':'dojo','location':'__URLPREFIX__"+dojoDefaultRoot+"/dojo'},\n");
@@ -87,7 +88,12 @@ public class MaqettaHTMLFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String pathInfo = ((HttpServletRequest)request).getPathInfo();
-		if (request.getParameter("zazl") != null && pathInfo.endsWith(".html") && pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {
+		boolean isZazlRequest = false;
+		String strIsZazlRequest = request.getParameter("zazl");
+		if (strIsZazlRequest != null && strIsZazlRequest.equals("true")) {
+			isZazlRequest = true;
+		}
+		if (isZazlRequest && pathInfo.endsWith(".html") && pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {
 			PrintWriter out = response.getWriter();
 			String requestURI = ((HttpServletRequest)request).getRequestURI();
 			RequestWrapper requestWrapper = new RequestWrapper((HttpServletRequest)request);

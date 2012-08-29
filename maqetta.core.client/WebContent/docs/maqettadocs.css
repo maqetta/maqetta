@@ -249,3 +249,14 @@ div.right-col {
 #TOCTree .dijitTreeRow, #TOCTree .dijitTreeNode .dojoDndItemBefore, #TOCTree .dijitTreeNode .dojoDndItemAfter {
 	padding: 6px 0 4px 0;
 }
+.cheatsheet_iframe_container {
+	 position:absolute; 
+	 margin-top:-26px; 
+	 left:20px; 
+	 top:60px; 
+	 right:20px; 
+	 bottom:40px;
+}
+.cheatsheet_slider {
+	margin-top:10px;
+}

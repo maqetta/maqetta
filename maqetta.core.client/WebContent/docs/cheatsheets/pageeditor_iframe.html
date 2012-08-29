@@ -12,7 +12,8 @@
 	], function(ready, HorizontalSlider, dom){
 	    ready(function(){
 	        var slider = new HorizontalSlider({
-	            name: "slider",
+	            name: "cheatsheet_slider",
+	            "class": "cheatsheet_slider",
 	            value: 1,
 	            minimum: 0,
 	            maximum: 10,
@@ -25,12 +26,13 @@
 	                style.webkitTransform = 'scale('+value+')';
 	                style.transform = 'scale('+value+')';
 	            }
-	        }, "slider");
+	        }, "cheatsheet_slider");
 	    });
 	});</script>
+	<link rel="stylesheet" href="../maqettadocs.css">
 </head>
 <body class="claro">
-    <div id="slider"></div>
+    <div id="cheatsheet_slider"></div>
 	<div id='cheatsheetcontent'>
 		<img src='img/WelcomePage.png' style='border:none;width:100%;'></iframe>
 	</div>

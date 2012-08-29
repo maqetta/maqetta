@@ -37,6 +37,7 @@
 		var newDragPanX = origDragPanX + deltaX;
 		var newDragPanY = origDragPanY + deltaY;
     	var style = document.getElementById("cheatsheetcontent").style;
+        style.MozTransform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
         style.webkitTransform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
         style.transform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
 
@@ -56,6 +57,7 @@
 		cheatSheetPanX = origDragPanX + deltaX;
 		cheatSheetPanY = origDragPanY + deltaY;
     	var style = document.getElementById("cheatsheetcontent").style;
+        style.MozTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
         style.webkitTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
         style.transform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
 	};
@@ -84,6 +86,7 @@
 	                style.transformOrigin = '0px 0px';
 	                cheatSheetScale = 2-value;	// global var
 	                console.log('value='+value+',cheatSheetScale='+cheatSheetScale);
+	                style.MozTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
 	                style.webkitTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
 	                style.transform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
 	            }
@@ -117,20 +120,12 @@
 	});</script>
 	<link rel="stylesheet" href="../maqettadocs.css">
 </head>
-<body class="claro">
-	<table class='cheatsheet_table' border='0' cellspacing='0' cellpadding='0'>
-		<colgroup>
-			<col style='width:40px'/>
-			<col style='width:*'/>
-		</colgroup>
-		<tr>
-		    <td><div id="cheatsheet_slider"></div></td>
-			<td class='cheatsheetcontent_td'>
-				<div id='cheatsheetcontent'>
-					<img src='img/WelcomePage.png' style='border:none;width:100%;'></img>
-				</div>
-			</td>
-		</tr>
-	</table>
+<body class="claro cheatsheet_body">
+	<div id="cheatsheet_slider"></div>
+	<div id='cheatsheet_content_container'>
+		<div id='cheatsheetcontent'>
+			<img id='cheatsheetcontent_img' src='img/WelcomePage.png'></img>
+		</div>
+	</div>
 </body>
 </html>

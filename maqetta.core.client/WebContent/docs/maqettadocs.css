@@ -256,6 +256,9 @@ div.right-col {
 	 right:20px; 
 	 bottom:20px;
 }
+.cheatsheet_body {
+	overflow:hidden;
+}
 .cheatsheet_table {
 	width:100%;
 }
@@ -266,11 +269,27 @@ div.right-col {
 	overflow:hidden;
 }
 .cheatsheet_slider {
-	margin:18px 15px;
-	float:left;
+	position:fixed;
+	left: 15px;
+	top: 10px;
+}
+#cheatsheet_content_container {
+	position:fixed;
+	overflow:hidden;
+	left:40px;
+	top:0px;
+	bottom:10px;
+	right:10px;
 }
 #cheatsheetcontent {
 	cursor:pointer;
+	position:absolute;
+	width: 100%;
+}
+#cheatsheetcontent_img {
+	 border:none;
+	 width:100%;
+	 background-repeat:no-repeat;
 }
 .cheatsheetDragDiv {
 	cursor:pointer;

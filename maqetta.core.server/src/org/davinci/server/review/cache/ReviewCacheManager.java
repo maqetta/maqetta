@@ -62,7 +62,7 @@ public class ReviewCacheManager extends Thread {
 	}
 
 	private Comment getTopParent(Comment comment){
-		while(!Utils.isBlank(comment.getReplyTo())&&!"0".equals(comment.getReplyTo())){
+		while(!Utils.isBlank(comment.getReplyTo())&&!"root".equals(comment.getReplyTo())){
 			comment = getComment(comment.getProject(), comment.getReplyTo());
 		}
 		return comment;

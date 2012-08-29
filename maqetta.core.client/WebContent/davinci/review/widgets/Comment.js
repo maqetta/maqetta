@@ -79,7 +79,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					viewSceneList: this.viewSceneList ? dojo.toJson(this.viewSceneList) : '',
 					designerId: this.designerId,
 					pageName: this.pageName,
-					replyTo: this.replyTo || 0,
+					replyTo: this.replyTo || "root",
 					drawingJson: this.drawingJson
 				},
 				error: dojo.hitch(this, function(response) {
@@ -227,7 +227,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		// summary: 
 		//		Indicate if this is a reply
 //		return this.depth > 0;
-		return this.replyTo != "0";
+		return this.replyTo != "root";
 	},
 
 	isPageOwner: function() {

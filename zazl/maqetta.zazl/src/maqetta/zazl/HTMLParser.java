@@ -97,5 +97,26 @@ public class HTMLParser extends DefaultFilter {
         		}
             }
         }
+
+        protected void printAttributeValue(String text) {
+            int length = text.length();
+            for (int j = 0; j < length; j++) {
+                char c = text.charAt(j);
+                switch (c) {
+                	case '"':
+                		fPrinter.print("&quot;");
+                		break;
+                	case '<':
+                		fPrinter.print("&lt;");
+                		break;
+                	case '>':
+                		fPrinter.print("&gt;");
+                		break;
+                	default:
+                		fPrinter.print(c);
+                }
+            }
+            fPrinter.flush();
+        }
     }
 }

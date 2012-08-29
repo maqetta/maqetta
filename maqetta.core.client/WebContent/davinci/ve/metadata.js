@@ -100,6 +100,31 @@ define([
         }
 		delete pkg.overlays;
 
+        // Register a module identifier for the metadata and library code paths;
+        // used by helper and creation tool classes.
+        pkg.__metadataModuleId = 'maq-metadata-' + pkg.name;
+        var locPath = new Path(location.href);
+        var packages = [ {
+            name : pkg.__metadataModuleId,
+            location : locPath.append(path).append(pkg.directories.metadata).toString()
+        } ];
+        if (pkg.name != "dojo") {
+            // Don't register another "dojo" lib to compete with core.client. Also, note
+            // no longer adding pkg.version to module id because not compatible when
+            // we go to custom build the library.
+            pkg.__libraryModuleId = pkg.name;
+            var libPath = 'app/static/lib/' + pkg.name + '/' + pkg.version;
+
+            packages.push({
+                name: pkg.__libraryModuleId,
+                location: locPath.append(libPath).toString()
+            });
+        }
+        require = require({
+            packages: packages
+        });
+
+        // read in Maqetta-specific "scripts"
         var deferred; // dojo/Deferred or value
 		if (lang.exists("scripts.widget_metadata", pkg)) {
 			if (typeof pkg.scripts.widget_metadata == "string") {
@@ -114,16 +139,16 @@ define([
 		            }
 		        });
 			} else {
+                // the "widgets.json" data is presented inline in package.json
 				deferred = parseLibraryDescriptor(pkg.name, pkg.scripts.widget_metadata, path);
 			}
 	    }
     
         if (lang.exists("scripts.callbacks", pkg)) {
-            var d = dojo.xhrGet({
-                url: path.append(pkg.scripts.callbacks).toString() + "?" + info.revision,
-                handleAs: 'javascript'
-            }).then(function(data) {
-                pkg.$callbacks = data;
+            var d = new Deferred();
+            require([pkg.scripts.callbacks], function(cb) {
+                pkg.$callbacks = cb;
+                d.resolve();
             });
             deferredGets.push(d);
         }
@@ -222,32 +247,6 @@ define([
              * @returns {String}
              */
             _maqGetString: getDescriptorString
-        });
-        
-        // Register a module identifier for the metadata and library code paths;
-        // used by helper and creation tool classes.
-        // Replace periods with underscores for module id's in case we want to do custom builds 
-        // for thos modules later
-        pkg.__metadataModuleId = 'maq-metadata-' + pkg.name /* + '-' + pkg.version.replace(/\./g, "_")*/;
-		var packages = [ {
-			name : pkg.__metadataModuleId,
-			location : new Path(location.href).append(path).toString()
-		} ];
-        if (pkg.name != "dojo") {
-        	// Don't register another "dojo" lib to compete with core.client. Also, note
-        	// no longer adding pkg.version to module id because not compatible when
-        	// we go to custom build the library.
-        	pkg.__libraryModuleId = pkg.name;
-        	var libPath = 'app/static/lib/' + pkg.name + '/' + pkg.version;
-        	
-        	packages.push({
-                name: pkg.__libraryModuleId,
-                location: new Path(location.href).append(libPath).toString()
-            });
-        }
-        
-        require = require({
-            packages: packages
         });
 
         // handle "extend"

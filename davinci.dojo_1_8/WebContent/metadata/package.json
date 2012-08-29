@@ -27,7 +27,7 @@
     "maqetta": {
       "scripts": {
         "widget_metadata": "./widgets.json",
-        "callbacks": "callbacks.js"
+        "callbacks": "maq-metadata-dojo/callbacks"
       }
     }
   }

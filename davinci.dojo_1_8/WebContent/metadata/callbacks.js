@@ -1,4 +1,4 @@
-(function() {
+define(function() {
 	/**
 	 * API for SceneManager plugins to Maqetta plug
 	 * 
@@ -351,4 +351,4 @@
         }
     };
 
-})();
+});

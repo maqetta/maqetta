@@ -44,7 +44,16 @@ public class VFile implements IVResource {
 
         this.parent = parent;
     }
-
+    public boolean hasSource(){
+    	return false;
+    }
+    public boolean isSource(){
+    	return parent!=null && this.parent.isSource();
+    }
+    
+    public IVResource getSource(){
+    	return this;
+    }
     public VFile(IStorage file, IVResource parent) {
         this(file, parent, "");
         /*

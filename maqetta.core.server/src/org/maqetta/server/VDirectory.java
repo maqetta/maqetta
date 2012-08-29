@@ -36,6 +36,18 @@ public class VDirectory implements IVResource {
         this.readOnly = readOnly;
     }
     
+    public boolean hasSource(){
+    	return false;
+    }
+    
+    public boolean isSource(){
+    	return parent!=null && this.parent.isSource();
+    }
+    
+    public IVResource getSource(){
+    	return this;
+    }
+    
     protected VDirectory() {
         // TODO Auto-generated constructor stub
         this.children = new Vector();

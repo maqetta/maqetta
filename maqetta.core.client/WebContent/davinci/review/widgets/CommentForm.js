@@ -41,7 +41,7 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 			onClick: dojo.hitch(this, "_submit")
 		}, this.submitNode);
 
-		this.replyTo = 0;
+		this.replyTo = "root";
 		this.connect(this.cancelNode, "click", "hide");
 		this.connect(this.content, "onFocus", "hidePlaceHolder");
 		this.connect(this.content, "onBlur", "showPlaceHolder");
@@ -138,7 +138,7 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 		this.showPlaceHolder();
 		this.subject.set("value", "");
 		this.content.set("value", "");
-		this.replyTo = 0;
+		this.replyTo = "root";
 		this.placeAt(this.parentNode, "first");
 		this._update = false;
 		this.isShowing = false;

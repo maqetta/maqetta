@@ -404,9 +404,18 @@ var uiResource = {
 		},
 	
 		getResourceIcon: function(item, opened){
+			var isReadOnly = item.readOnly();
+
 			if (item.elementType == "Folder"){
-				return opened ? "dijitFolderOpened" : "dijitFolderClosed";
+				if (isReadOnly) {
+					return opened ? "dijitFolderOpened maqettaReadonlyFolderOpened" : "dijitFolderClosed maqettaReadonlyFolderClosed";
+				} else {
+					return opened ? "dijitFolderOpened" : "dijitFolderClosed";
+				}
+			} else if (isReadOnly) {
+				return "dijitLeaf maqettaReadonlyFile";
 			}
+
 			if (item.elementType=="File"){
 				var icon;
 					fileType=item.getExtension();

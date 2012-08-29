@@ -50,7 +50,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Current comment widgets on this view
 		this.comments = [];
 		this.commentIndices = {
-				"0": this
+			"root": this
 		};
 		this._commentConns = [];
 
@@ -265,7 +265,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					form.content.set("value", editComment.content.replace(/<br\/>/g,"\n"));
 					if(editComment.content) form.hidePlaceHolder();
 					var comment;
-					if (editComment.replyTo !== 0) {
+					if (editComment.replyTo !== "root") {
 						form.setReplyMode();
 						form.replyTo = editComment.replyTo;
 						comment = this.commentIndices[editComment.replyTo];
@@ -432,6 +432,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson
 		});
+
 		this._commentConns.push(
 				dojo.connect(comment, "onNewReply", this, "_onNewReply"),
 				dojo.connect(comment, "onEditComment", this, "_onEditComment"),
@@ -469,6 +470,11 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		};
 		_comments.push(_comment);
 		this._cached.indices[_comment.id] = _comment;
+		
+		// Update the created time stamp when available
+		comment.getCreated().then(function(created) {
+			_comment.created = created;
+		});
 	},
 
 	_onUpdateComment: function(args) {
@@ -963,7 +969,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 			if (shouldShow) {
 				dojo.addClass(comment,"davinciReviewShow");
-				while (widget.replyTo !== 0) {
+				while (widget.replyTo !== "root") {
 					widget = this.commentIndices[widget.replyTo];
 					dojo.addClass(widget.domNode,"davinciReviewShow");
 					dojo.removeClass(widget.domNode,"davinciReviewHide");

@@ -10,9 +10,10 @@ define([
 	"dijit/form/DropDownButton",
 	"dojo/date/locale",
 	"dojo/date/stamp",
+	"dojo/Deferred",
 	"dojo/i18n!./nls/widgets",
 	"dojo/text!./templates/Comment.html"
-], function(declare, XPathUtils, AppStates, Review, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, widgetsNls, commentTemplate) {
+], function(declare, XPathUtils, AppStates, Review, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, Deferred, widgetsNls, commentTemplate) {
 
 // AppStates functions are only available on the prototype object
 var States = AppStates.prototype;
@@ -59,6 +60,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	VISIBLE_PART_LENGTH: 80, // By default, how many leading characters of the comment will be shown.
 
 	postCreate: function() {
+		this._createdPromise = new Deferred();
 		if (!this.existed) {
 			// Ensure that the comment is created on the server when it is "needed".
 			dojo.xhrGet({
@@ -77,7 +79,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					viewSceneList: this.viewSceneList ? dojo.toJson(this.viewSceneList) : '',
 					designerId: this.designerId,
 					pageName: this.pageName,
-					replyTo: this.replyTo || 0,
+					replyTo: this.replyTo || "root",
 					drawingJson: this.drawingJson
 				},
 				error: dojo.hitch(this, function(response) {
@@ -86,9 +88,21 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
 					davinci.Runtime.handleError(dojo.string.substitute(widgetsNls.errorAddingCom, [response, msg]));
 				})
-			}).then(dojo.hitch(this, "_populate"));
+			}).then(dojo.hitch(this, function(result) {
+				// We want to grab hold of the creation time from the server
+				this.created = result.created;
+				
+				// Populate the screen with the new comment
+				this._populate(this);
+				
+				// Resolve the promise that the created time stamp is available
+				this._createdPromise.resolve(this.created);
+			}.bind(this)));
 		} else {
 			this._populate(this);
+			
+			// Resolve the promise that the created time stamp is available
+			this._createdPromise.resolve(this.created);
 		}
 
 		this.comments = []; // Hold the replies to this comment
@@ -124,6 +138,18 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton,"display","none");
 		}
 	},
+	
+	// Provide a means for someone to get the created time stamp (which is 
+	// created by a server call in postCreate
+	getCreated: function() {
+		var promise = new Deferred();
+		
+		this._createdPromise.then(function(created) {
+			promise.resolve(created);
+		});
+
+		return promise;
+	},
 
 	refresh: function() {
 		dojo.style(this.editButton, "display", "inline");
@@ -140,8 +166,8 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	_populate: function(result) {
 		// summary:
 		//		Fill the time, comment order. These info need to be retrieved from the server
-		this.created = stamp.fromISOString(result.created);
-		this.createTime.innerHTML = toRelativeTime(this.created, new Date(), 604800);
+		this.createdFormatted = stamp.fromISOString(result.created);
+		this.createTime.innerHTML = toRelativeTime(this.createdFormatted, new Date(), 604800);
 	},
 
 	update : function(arg) {
@@ -201,7 +227,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		// summary: 
 		//		Indicate if this is a reply
 //		return this.depth > 0;
-		return this.replyTo != "0";
+		return this.replyTo != "root";
 	},
 
 	isPageOwner: function() {

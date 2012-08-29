@@ -198,7 +198,7 @@ define(["dojo/_base/declare",
 				// New logic: prompt user only if theme CSS files are going to change
 				var content = null;		
 				var langObj = veNLS;
-				if(this._values[this._targetValueIndex].readOnly && this._editor.editorID != 'davinci.ve.ThemeEditor'){ // #23 theme editor only writes out deltas
+				if(this._values[this._targetValueIndex].readOnly && this._editor.editorID != 'davinci.themeEdit.ThemeEditor'){ // #23 theme editor only writes out deltas
 					//FIXME: the commented out message in next line provides a more informative error message
 		            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
 					var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
@@ -362,7 +362,7 @@ define(["dojo/_base/declare",
 			}
 			
 			var values =  [];
-			if (this._editor.editorID != 'davinci.ve.ThemeEditor'){
+			if (this._editor.editorID != 'davinci.themeEdit.ThemeEditor'){
 				/* element rules */
 				var defaultSelection=this._getDefaultSelection();
 				
@@ -427,7 +427,7 @@ define(["dojo/_base/declare",
 				}
 			}
 			/* theme/meta rules */
-			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+			if (this._editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 				v = this._editor._getCssRules(this._widget, this._editor._selectedSubWidget, this._editor._currentState);
 				// #23
 				if (v){
@@ -806,7 +806,7 @@ define(["dojo/_base/declare",
 				//if(this._values[i].readOnly) continue;
 				
 				var isPageEditor = (this._editor.editorID == 'davinci.ve.HTMLPageEditor');
-				var isThemeEditor = (this._editor.editorID == 'davinci.ve.ThemeEditor');
+				var isThemeEditor = (this._editor.editorID == 'davinci.themeEdit.ThemeEditor');
 				if((this._values[i].value && !foundValue && isThemeEditor) ||	// for theme editor, choose first CSS rule with a value
 						(this._values[i].value && !foundValue && isPageEditor && !this._values[i].readOnly) ||	// for page editor, skip readonly values
 						(!foundValue && !defaultValue && 
@@ -844,7 +844,7 @@ define(["dojo/_base/declare",
 			// For theme editor, we need to use whatever state is selected in States palette
 			// For page editor, always use "Normal"
 			var state = "Normal";
-			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+			if (this._editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 				state = state || States.getState();
 			}
 	
@@ -915,7 +915,7 @@ define(["dojo/_base/declare",
 				var file = systemResource.findResource(dynamicThemeUrl);
 				dynamicThemeReadOnly = file._readOnly;
 			}
-			if (this._editor.editorID == 'davinci.ve.ThemeEditor'){
+			if (this._editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 				state = state || States.getState();
 			}
 			var meta = this.context.getThemeMetaDataByWidget(widget);

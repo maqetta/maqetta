@@ -186,18 +186,15 @@
             }
 
             function recursiveHunt(lookfor, model, buildme, item){
-                console.log(">> recursiveHunt, item ", item, " looking for ", lookfor);
                 var id = model.getIdentity(item);
                 buildme.push(id);
                 if(id == lookfor){
                     // Return the buildme array, indicating a match was found
-                    console.log("++ FOUND item ", item, " buildme now = ", buildme);
                     return buildme;
                 }
                 for(var idx in item.children){
                     // start a new branch of buildme, starting with what we have so far
                     var buildmebranch = buildme.slice(0);
-                    console.log("Branching into ", model.store.getValue(item.children[idx], 'name'), ", buildmebranch=", buildmebranch);
                     var r = recursiveHunt(lookfor, model, buildmebranch, item.children[idx]);
                     // If a match was found in that recurse, return it.
                     //  This unwinds the recursion on completion.

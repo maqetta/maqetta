@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+	    "dojo/ready",
+	    "dijit/form/HorizontalSlider",
+	    "dojo/dom", // for inserting value in TextBox example
+	    "dijit/form/TextBox", // this we only include to make an example with TextBox
+	    "dojo/parser" // parser because of TextBox decoration
+	], function(ready, HorizontalSlider, dom){
+	    ready(function(){
+	        var slider = new HorizontalSlider({
+	            name: "slider",
+	            value: 1,
+	            minimum: 0,
+	            maximum: 10,
+	            intermediateChanges: true,
+	            style: "width:300px;",
+	            onChange: function(value){
+	            	var style = dom.byId("cheatsheetcontent").style;
+	                style.webkitTransformOrigin = '0px 0px';
+	                style.transformOrigin = '0px 0px';
+	                style.webkitTransform = 'scale('+value+')';
+	                style.transform = 'scale('+value+')';
+	            }
+	        }, "slider");
+	    });
+	});</script>
+</head>
+<body class="claro">
+    <div id="slider"></div>
+	<div id='cheatsheetcontent'>
+		<img src='img/WelcomePage.png' style='border:none;width:100%;'></iframe>
+	</div>
+</body>
+</html>

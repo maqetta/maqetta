@@ -251,12 +251,18 @@ div.right-col {
 }
 .cheatsheet_iframe_container {
 	 position:absolute; 
-	 margin-top:-26px; 
-	 left:20px; 
-	 top:60px; 
+	 left:0px; 
+	 top:34px; 
 	 right:20px; 
-	 bottom:40px;
+	 bottom:20px;
+}
+.cheatsheet_table {
+	width:100%;
+}
+.cheatsheet_table td {
+	vertical-align:top;
 }
 .cheatsheet_slider {
-	margin-top:10px;
+	margin:3px 15px;
+	float:left;
 }

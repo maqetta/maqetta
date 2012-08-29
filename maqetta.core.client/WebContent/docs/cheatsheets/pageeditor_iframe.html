@@ -5,26 +5,27 @@
     <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
 	<script>require([
 	    "dojo/ready",
-	    "dijit/form/HorizontalSlider",
-	    "dojo/dom", // for inserting value in TextBox example
-	    "dijit/form/TextBox", // this we only include to make an example with TextBox
-	    "dojo/parser" // parser because of TextBox decoration
-	], function(ready, HorizontalSlider, dom){
+	    "dijit/form/VerticalSlider",
+	    "dojo/dom", 
+	    "dojo/parser" 
+	], function(ready, VerticalSlider, dom){
 	    ready(function(){
-	        var slider = new HorizontalSlider({
+	        var slider = new VerticalSlider({
 	            name: "cheatsheet_slider",
 	            "class": "cheatsheet_slider",
 	            value: 1,
 	            minimum: 0,
-	            maximum: 10,
+	            maximum: 1.5,
 	            intermediateChanges: true,
-	            style: "width:300px;",
+	            style: "height:300px;",
 	            onChange: function(value){
 	            	var style = dom.byId("cheatsheetcontent").style;
 	                style.webkitTransformOrigin = '0px 0px';
 	                style.transformOrigin = '0px 0px';
-	                style.webkitTransform = 'scale('+value+')';
-	                style.transform = 'scale('+value+')';
+	                var transformedValue = 2-value;
+	                console.log('value='+value+',transformedValue='+transformedValue);
+	                style.webkitTransform = 'scale('+transformedValue+')';
+	                style.transform = 'scale('+transformedValue+')';
 	            }
 	        }, "cheatsheet_slider");
 	    });
@@ -32,9 +33,17 @@
 	<link rel="stylesheet" href="../maqettadocs.css">
 </head>
 <body class="claro">
-    <div id="cheatsheet_slider"></div>
-	<div id='cheatsheetcontent'>
-		<img src='img/WelcomePage.png' style='border:none;width:100%;'></iframe>
-	</div>
+	<table class='cheatsheet_table' border='0' cellspacing='0' cellpadding='0'>
+		<colgroup>
+			<col style='width:40px'/>
+			<col style='width:*'/>
+		</colgroup>
+		<tr>
+		    <td><div id="cheatsheet_slider"></div></td>
+			<td id='cheatsheetcontent'>
+				<img src='img/WelcomePage.png' style='border:none;width:100%;'></img>
+			</td>
+		</tr>
+	</table>
 </body>
 </html>

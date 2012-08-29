@@ -381,11 +381,6 @@ var Runtime = {
 				// pass in true to tell it its a global event
 				this.currentEditor.handleKeyEvent(e, true);
 			}
-
-			// cancel global backspaces
-			if (e.which == dojo.keys.BACKSPACE) {
-				dojo.stopEvent(e);
-			}
 		}
 	},
 

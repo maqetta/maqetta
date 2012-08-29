@@ -3,12 +3,72 @@
 <head>
 	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
     <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-	<script>require([
+	<script>
+	var cheatSheetScale = 1;
+	var cheatSheetPanX = 0;
+	var cheatSheetPanY = 0;
+	var cheatSheetConnects = [];
+	var cheatSheetConnects, cheatSheetDragDiv, cheatSheetMover;
+	var origDragX, origDragY, origDragDivLeft, origDragDivTop, origDragPanX, origDragPanY;
+	var lastDragX, lastDragY;
+	
+	//Part of Mover interface
+	var onFirstMove = function(mover){
+	};
+
+	//Part of Mover interface
+	var onMoveStart = function(mover){
+	};
+
+	/**
+	 * Callback routine from dojo.dnd.Mover with every mouse move.
+	 * What that means here is dragging currently selected widgets around.
+	 * @param {object} mover - return object from dojo.dnd.Mover constructor
+	 * @param {object} box - {l:,t:} top/left corner of where drag DIV should go
+	 * @param {object} event - the mousemove event
+	 */
+	var onMove = function(mover, box, event){
+		var deltaX = event.pageX - origDragX;
+		var deltaY = event.pageY - origDragY;
+		var dragDivNewLeft = origDragDivLeft + deltaX;
+		var dragDivNewTop = origDragDivTop + deltaY;
+		cheatSheetDragDiv.style.left = dragDivNewLeft + 'px';
+		cheatSheetDragDiv.style.top = dragDivNewTop + 'px';
+		var newDragPanX = origDragPanX + deltaX;
+		var newDragPanY = origDragPanY + deltaY;
+    	var style = document.getElementById("cheatsheetcontent").style;
+        style.webkitTransform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
+        style.transform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
+
+		// global vars
+		lastDragX = event.pageX;
+		lastDragY = event.pageY;
+	};
+	 
+
+	//Part of Mover interface
+	var onMoveStop = function(mover){
+		cheatSheetDragDiv.parentNode.removeChild(cheatSheetDragDiv);
+		cheatSheetDragDiv = null;
+		var deltaX = lastDragX - origDragX;
+		var deltaY = lastDragY - origDragY;
+		// global vars
+		cheatSheetPanX = origDragPanX + deltaX;
+		cheatSheetPanY = origDragPanY + deltaY;
+    	var style = document.getElementById("cheatsheetcontent").style;
+        style.webkitTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+        style.transform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+	};
+
+	require([
 	    "dojo/ready",
+		"dojo/_base/connect",
 	    "dijit/form/VerticalSlider",
 	    "dojo/dom", 
+		"dojo/dnd/Mover",
 	    "dojo/parser" 
-	], function(ready, VerticalSlider, dom){
+	], function(ready, connect, VerticalSlider, dom, Mover){
+
 	    ready(function(){
 	        var slider = new VerticalSlider({
 	            name: "cheatsheet_slider",
@@ -22,12 +82,37 @@
 	            	var style = dom.byId("cheatsheetcontent").style;
 	                style.webkitTransformOrigin = '0px 0px';
 	                style.transformOrigin = '0px 0px';
-	                var transformedValue = 2-value;
-	                console.log('value='+value+',transformedValue='+transformedValue);
-	                style.webkitTransform = 'scale('+transformedValue+')';
-	                style.transform = 'scale('+transformedValue+')';
+	                cheatSheetScale = 2-value;	// global var
+	                console.log('value='+value+',cheatSheetScale='+cheatSheetScale);
+	                style.webkitTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+	                style.transform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
 	            }
 	        }, "cheatsheet_slider");
+	        var cheatsheetcontent = dom.byId('cheatsheetcontent');
+	        cheatSheetConnects.push(connect.connect(cheatsheetcontent, 'onmousedown', function(event){
+	        	var delta = 400;
+	        	var l = event.pageX - delta;
+	        	var t = event.pageY - delta;
+	        	var w = delta + delta;
+	        	var h = w;
+	        	// The following are global variables
+	        	origDragX = event.pageX;
+	        	origDragY = event.pageY;
+	        	origDragDivLeft = l;
+	        	origDragDivTop = t;
+	        	origDragPanX = cheatSheetPanX;
+	        	origDragPanY = cheatSheetPanY;
+				cheatSheetDragDiv = dojo.create('div', 
+						{style:'position:z-index:1000;absolute;cursor:pointer;left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+						document.body);
+				cheatSheetMover = new Mover(cheatSheetDragDiv, event, window);
+	        }));
+	        cheatSheetConnects.push(connect.connect(window, 'onunload', function(){
+	        	for(var i=0; i<cheatSheetConnects.length; i++){
+	        		connect.disconnect(cheatSheetConnects[i]);
+	        		cheatSheetConnects = [];
+	        	}
+	        }));
 	    });
 	});</script>
 	<link rel="stylesheet" href="../maqettadocs.css">
@@ -40,8 +125,10 @@
 		</colgroup>
 		<tr>
 		    <td><div id="cheatsheet_slider"></div></td>
-			<td id='cheatsheetcontent'>
-				<img src='img/WelcomePage.png' style='border:none;width:100%;'></img>
+			<td class='cheatsheetcontent_td'>
+				<div id='cheatsheetcontent'>
+					<img src='img/WelcomePage.png' style='border:none;width:100%;'></img>
+				</div>
 			</td>
 		</tr>
 	</table>

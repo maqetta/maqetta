@@ -252,7 +252,7 @@ div.right-col {
 .cheatsheet_iframe_container {
 	 position:absolute; 
 	 left:0px; 
-	 top:34px; 
+	 top:54px; 
 	 right:20px; 
 	 bottom:20px;
 }
@@ -262,7 +262,18 @@ div.right-col {
 .cheatsheet_table td {
 	vertical-align:top;
 }
+.cheatsheetcontent_td {
+	overflow:hidden;
+}
 .cheatsheet_slider {
-	margin:3px 15px;
+	margin:18px 15px;
 	float:left;
+}
+#cheatsheetcontent {
+	cursor:pointer;
+}
+.cheatsheetDragDiv {
+	cursor:pointer;
+	position:absolute;
+	z-index:1000;
 }

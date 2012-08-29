@@ -347,11 +347,23 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 
 /* Explorer */
   	
-.readOnlyResource {
-	  	
- opacity:0.5;
-	  	
+.readOnlyResource .dijitTreeLabel {
+  color: #5b5b5b;
 }
+
+.maqettaReadonlyFolderOpened {
+	background-position: 0px center;
+}
+
+.maqettaReadonlyFolderClosed {
+	background-position: 16px center;
+}
+
+.maqettaReadonlyFile {
+	background-position: 64px center;
+}
+
+
 .jsFileIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0 -1580px;

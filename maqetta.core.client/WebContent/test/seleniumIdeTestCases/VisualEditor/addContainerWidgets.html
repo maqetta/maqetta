@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>addContainerWidgets</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">addContainerWidgets</td></tr>
+</thead><tbody>
+<!--open desktop1Testcase.html and add some conatiner widgets-->
+<!--Verify each change in preview and designer-->
+<!--Add Dojo button plain text and then HTML using smart input-->
+<!--Add Dojo Calander-->
+<!--Add Dojo TextBox-->
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='desktop1TestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Dojo Containers</td>
+	<td></td>
+</tr>
+<!--Drag and Drop content pane Start-->
+<tr>
+	<td>mouseDownAt</td>
+	<td>link=ContentPaneDojo Containers</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop Stop-->
+<!--Set the widget id-->
+<tr>
+	<td>click</td>
+	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[3]/div/div/input</td>
+	<td>contentpane_testcase1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
+	<td>contentpane_testcase1</td>
+</tr>
+<!--Drag and Drop tab container Start-->
+<tr>
+	<td>mouseDownAt</td>
+	<td>link=TabContainerDojo Containers</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop Stop-->
+<!--SmartInput-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=davinciIleb</td>
+	<td>Tab 1, Tab 2, Tab &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>keyDown</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>keyUp</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<!--Set the widget id-->
+<tr>
+	<td>click</td>
+	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[3]/div/div/input</td>
+	<td>tabcontainer_testcase1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
+	<td>tabcontainer_testcase1</td>
+</tr>
+<!--Drag accordion and Drop in tab container Start-->
+<tr>
+	<td>mouseDownAt</td>
+	<td>link=AccordionContainerDojo Containers</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div[1]</td>
+	<td></td>
+</tr>
+<!--Drag and Drop Stop-->
+<!--SmartInput-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=davinciIleb</td>
+	<td>Pane 1, Pane 2, Pane &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>keyDown</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>keyUp</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<!--Set the widget id-->
+<tr>
+	<td>click</td>
+	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[3]/div/div/input</td>
+	<td>accordioncontainer_testcase1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
+	<td>accordioncontainer_testcase1</td>
+</tr>
+<!--Drag button into Accordion container Start-->
+<tr>
+	<td>mouseDown</td>
+	<td>link=ButtonDojo Controls</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUp</td>
+	<td>link=ButtonDojo Controls</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUp</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div</td>
+	<td></td>
+</tr>
+<!--SmartInput-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=davinciIleb</td>
+	<td>Button &lt;b&gt; in&lt;/b&gt; container</td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>keyDown</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>keyUp</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<!--Set the widget id-->
+<tr>
+	<td>click</td>
+	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[3]/div/div/input</td>
+	<td>button2_testcase1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
+	<td>button2_testcase1</td>
+</tr>
+<!--Verify widgets-->
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='contentpane_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div/div[3]/span</td>
+	<td>Tab &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div/span[@id='accordioncontainer_testcase1']/div[3]/div/div/span[4]</td>
+	<td>Pane &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div/span/span/span/span[3]</td>
+	<td>Button &lt;b&gt; in&lt;/b&gt; container</td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id=&quot;davinci_toolbar_container&quot;]/div/table/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='palette-tabcontainer-left-bottom_tablist']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='desktop1TestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='contentpane_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div/div[3]/span</td>
+	<td>Tab &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div/span[@id='accordioncontainer_testcase1']/div[3]/div/div/span[4]</td>
+	<td>Pane &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div/span/span/span/span[3]</td>
+	<td>Button &lt;b&gt; in&lt;/b&gt; container</td>
+</tr>
+<!--Open Preview-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon openBrowserIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectPopUp</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='contentpane_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div/div[3]/span</td>
+	<td>Tab &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div/span[@id='accordioncontainer_testcase1']/div[3]/div/div/span[4]</td>
+	<td>Pane &lt;b&gt;3&lt;/b&gt;</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div/span/span/span/span[3]</td>
+	<td>Button &lt;b&gt; in&lt;/b&gt; container</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td></td>
+	<td></td>
+</tr>
+<!-- now make HTML-->
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<!-- now make HTML-->
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='tabcontainer_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='tabcontainer_testcase1']</td>
+	<td></td>
+</tr>
+<!--doubleClick does not work with smartInput-->
+<!--So speedup and click twice-->
+<tr>
+	<td>setSpeed</td>
+	<td>1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='tabcontainer_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='tabcontainer_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_radio_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<!-- now make HTML-->
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//span[@id='accordioncontainer_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@id='accordioncontainer_testcase1']</td>
+	<td></td>
+</tr>
+<!--doubleClick does not work with smartInput-->
+<!--So speedup and click twice-->
+<tr>
+	<td>setSpeed</td>
+	<td>1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@id='accordioncontainer_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@id='accordioncontainer_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_radio_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<!--verify the html bold is correct-->
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div/div[3]/span/b</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div/span[@id='accordioncontainer_testcase1']/div[3]/div/div/span[4]/b</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div/span/span/span/span[3]</td>
+	<td>Button &lt;b&gt; in&lt;/b&gt; container</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id=&quot;davinci_toolbar_container&quot;]/div/table/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='palette-tabcontainer-left-bottom_tablist']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='desktop1TestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div/div[3]/span/b</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div/span[@id='accordioncontainer_testcase1']/div[3]/div/div/span[4]/b</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div/span/span/span/span[3]</td>
+	<td>Button &lt;b&gt; in&lt;/b&gt; container</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<!--Open Preview-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon openBrowserIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectPopUp</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div/div[3]/span/b</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//div[@id='tabcontainer_testcase1']/div[3]/div/span[@id='accordioncontainer_testcase1']/div[3]/div/div/span[4]/b</td>
+	<td>3</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='accordioncontainer_testcase1']/div/div[2]/div/span/span/span/span[3]</td>
+	<td>Button &lt;b&gt; in&lt;/b&gt; container</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

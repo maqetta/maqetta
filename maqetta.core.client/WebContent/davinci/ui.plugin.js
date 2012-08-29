@@ -265,6 +265,17 @@ return {
                    menubarPath: "davinci.open/open2"
                },
                {
+                   id: "openProject",
+                   run: function() {
+                   	require(['davinci/Workbench', 'davinci/ui/SelectProjectDialog'], function(Workbench, SelectProjectDialog){
+                   			Workbench.showModal(new SelectProjectDialog(), 'Open Project', {width: 300}, null, true);
+                   	});
+                   },
+                   iconClass: "newOpenMenuItem newProjectMenuItem",
+                   label: "Project...",
+                   menubarPath: "davinci.open/open2"
+               },
+               {
                    id: "orionNavigator",
                    run: function() {
                      window.open("/navigate/table.html#", '_blank');

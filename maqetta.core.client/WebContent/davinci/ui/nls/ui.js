@@ -163,6 +163,10 @@ define({ root:
 		"modify": "Modify",
 		
 		//UserName.js
-		"User": "User"
+		"User": "User",
+
+		//SelectProjectDialog.js
+		"currentProject": "Current Project:",
+		"selectProject": "Select a Project:"
 }
 });

@@ -1,0 +1,11 @@
+<div>
+	<div class="dijitDialogPaneContentArea">
+		<div>${uiNLS.currentProject} <span data-dojo-attach-point="currentProjectName" style="font-weight: bold"></span></div>
+		<div style="margin-top: 10px;">${uiNLS.selectProject}</div>
+		<div data-dojo-type="davinci.ui.widgets.ProjectSelection" data-dojo-attach-point="projectSelection" data-dojo-attach-event="onChange:_onChange"></div>
+	</div>	
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${uiNLS.open}' class="maqPrimaryButton" disabled="true" type="submit"></button>
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${uiNLS.cancelButtonLabel}' class="maqSecondaryButton"></button>
+	</div>
+</div>

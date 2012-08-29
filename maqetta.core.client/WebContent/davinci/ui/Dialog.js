@@ -1,7 +1,5 @@
 define([
 	"dojo/_base/declare",
-	"dijit/_WidgetBase",
-	"dijit/_Container",
 	"dijit/form/Button",
 	"dijit/Dialog",
 	"dojo/dom-geometry",
@@ -11,7 +9,7 @@ define([
 	"dojo/parser",
 	"dojo/i18n!davinci/ve/nls/common",
 	"dojox/layout/ResizeHandle",
-], function(declare, _WidgetBase, _Container, Button, Dialog, domGeometry, style, connect, winUtils,
+], function(declare, Button, Dialog, domGeometry, style, connect, winUtils,
 		parser, veNLS, ResizeHandle) {
 
 var DialogClass = declare(Dialog, {

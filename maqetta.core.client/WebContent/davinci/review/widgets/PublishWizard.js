@@ -511,13 +511,13 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				targetTreeModel.root.children.push(file);
 			}
 		}else if (item.elementType == "Folder") {
-			var children;
-			item.getChildren(function(c) { children = c; }, true);
-			dojo.forEach(children, dojo.hitch(this, function(item) {
-				if (item.elementType == "File") {
-					this.getChildrenFiles(item);
-				}
-			}));
+			item.getChildren(function(children) {
+				dojo.forEach(children, dojo.hitch(this, function(item) {
+					if (item.elementType == "File") {
+						this.getChildrenFiles(item);
+					}
+				}.bind(this)));
+			}.bind(this));
 		}
 	},
 
@@ -659,7 +659,12 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var desireWidth = this.desireWidth.value || 0;
 		var desireHeight = this.desireHeight.value || 0;
 		var	resources = dojo.map(this.reviewFiles, function(item) {
-			return item.getPath();
+			//Remove leading "./"
+			var path = item.getPath();
+			if (path.length > 2 && path.indexOf("./") == 0) {
+				path = path.substring(2);
+			}
+			return path;
 		});
 		var receiveEmail = this.receiveEmail.get("value") == "on" ? "true" : "false";
 

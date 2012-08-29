@@ -24,7 +24,16 @@ public class VEmptyFile implements IVResource {
         // TODO Auto-generated method stub
 
     }
-
+    public boolean hasSource(){
+    	return false;
+    }
+    public boolean isSource(){
+    	return false;
+    }
+    
+    public IVResource getSource(){
+    	return this;
+    }
     public boolean delete() {
         // TODO Auto-generated method stub
         return false;

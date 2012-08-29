@@ -66,14 +66,12 @@ public abstract class Library {
 
     public abstract String getMetadata();
 
-    public abstract URL getURL(String path);
-
     public abstract URL getURL(String path, boolean useSource);
 
-    public abstract URL[] find(String searchFor, boolean recurse);
+    public abstract URL[] find(String searchFor, boolean recurse, boolean useSource);
     
  
-    public abstract URL[] listURL(String path);
+    public abstract URL[] listURL(String path, boolean useSource);
 
     public int compareTo(Object item) {
         Library i = (Library) item;

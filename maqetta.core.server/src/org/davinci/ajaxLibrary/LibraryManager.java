@@ -63,8 +63,14 @@ public class LibraryManager implements ILibraryManager {
 			this.sourcePath = source;
 		}
 
-		public URL[] find(String path, boolean recurse) {
-			IPath p1 = new Path(this.basePath).append(path);
+		public URL[] find(String path, boolean recurse, boolean useSource) {
+			IPath p1 = null;
+			
+			if(useSource)
+				p1 = new Path(this.sourcePath).append(path);
+			else
+				p1 = new Path(this.basePath).append(path);
+			
 			String name = p1.lastSegment();
 			IPath newBase = p1.removeLastSegments(1);
 
@@ -139,21 +145,12 @@ public class LibraryManager implements ILibraryManager {
 			return out.toString();
 		}
 
-		public URL getURL(String path) {
-			// TODO Auto-generated method stub
-			return getURL(path, false);
-		}
-
 		public URL getURL(String path, boolean useSource) {
 			// TODO Auto-generated method stub
 			if(useSource){
 				return this.getUri(this.sourcePath, path);
 			}
 			return this.getUri(this.basePath, path);
-		}
-		
-		public URL[] listURL(String path) {
-			return this.listURL(path, false);
 		}
 		
 		public URL[] listURL(String path, boolean useSource) {

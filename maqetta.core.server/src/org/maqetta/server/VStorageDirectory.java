@@ -80,7 +80,7 @@ public class VStorageDirectory extends VDirectory {
 			if (b == null) {
 				continue;
 			}
-			URL file = b.getURL("");
+			URL file = b.getURL("", false);
 			// TODO temp fix to avoid adding virtual library entries that don't
 			// exist to the workspace.
 			if (file == null) {

@@ -29,7 +29,17 @@ public class VURL implements IVResource {
         this.file = file;
         this.virtualPath = virtualPath;
     }
-
+    public boolean hasSource(){
+    	return false;
+    }
+    public boolean isSource(){
+    	return false;
+    }
+    
+    public IVResource getSource(){
+    	return this;
+    }
+    
     public boolean exists() {
         return true;
     }

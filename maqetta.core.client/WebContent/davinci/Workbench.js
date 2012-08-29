@@ -116,7 +116,15 @@ var handleIoError = function (deferred, reason) {
 		//     http://<host>/maqetta/cmd/getComments
 		var reCmdXhr = new RegExp('(^|\\.\\/|' + document.baseURI + '\\/)cmd\\/');
 		var url = deferred.ioArgs.url;
-		if (!reCmdXhr.test(url)) {
+		if (reCmdXhr.test(url)) {
+			// Make exception for "getBluePageInfo" because it regularly gets cancelled
+			// by the type ahead searching done from the combo box on the 3rd panel of
+			// the R&C wizard. The cancellation is not really an error.
+			if (url.indexOf("getBluePageInfo") >= 0) {
+				return;
+			}
+		} else {
+			// Must not be a Maqetta URL (like for JSONP on GridX), so skip
 			return;
 		}
 

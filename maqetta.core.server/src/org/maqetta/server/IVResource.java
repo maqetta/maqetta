@@ -62,6 +62,12 @@ public interface IVResource {
 
     public IVResource getParent();
 
+    public boolean hasSource();
+    
+    public boolean isSource();
+	
+    public IVResource getSource();
+    
     IVResource get(String childName);
 
     /* search for children, supports wild card */

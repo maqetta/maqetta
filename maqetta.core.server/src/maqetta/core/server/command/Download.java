@@ -72,8 +72,8 @@ public class Download extends Command {
         String libs = req.getParameter("libs");
         String root = req.getParameter("root");
         String build = req.getParameter("build");
-        String fullsource = req.getParameter("fullsource");
-        
+        boolean useFullSource = "1".equals(req.getParameter("fullsource"));
+       
         
         if (build != null){
         	//TODO: should put this in a separate Thread
@@ -101,7 +101,7 @@ public class Download extends Command {
             ZipOutputStream zos = new ZipOutputStream(resp.getOutputStream());
             IPath rootPath = new Path(root);
             zipFiles(files, rootPath, zos, includeLibs);
-            if(lib!=null) zipLibs(lib, rootPath, zos);
+            if(lib!=null) zipLibs(lib, rootPath, zos, useFullSource);
             zos.close();
             // responseString="OK";
 
@@ -294,14 +294,17 @@ public class Download extends Command {
     	return true;
     }
     
-    private  void zipLibs(List libs, IPath root, ZipOutputStream zos) throws IOException{
+    private  void zipLibs(List libs, IPath root, ZipOutputStream zos, boolean useSource) throws IOException{
         for (int i = 0; i < libs.size(); i++) {
             Map libEntry = (Map) libs.get(i);
             String id = (String) libEntry.get("id");
             String version = (String) libEntry.get("version");
             String path = (String) libEntry.get("root");
             Library lib = ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
-            IVResource libResource = new VLibraryResource(lib, lib.getURL(""),path, "");
+            
+            boolean sourceLibrary = (lib.getSourcePath()!=null && useSource);
+            
+            IVResource libResource = new VLibraryResource(lib, lib.getURL("", sourceLibrary),path, "",sourceLibrary);
             zipDir(libResource,root, zos, true);
         }
     }

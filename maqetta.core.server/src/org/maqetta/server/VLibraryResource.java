@@ -28,6 +28,7 @@ public class VLibraryResource implements IVResource {
     private String bundleRoot;
 	private IVResource[] _parents;
 	private IVResource[] _files;
+	private boolean sourceElement;
 
     public VLibraryResource(Library b, URL file, String name, String bundleRoot) {
         this.resourcePointer = file;
@@ -36,8 +37,15 @@ public class VLibraryResource implements IVResource {
         this.library = b;
         this.name = (name==null?"":name);
         this.bundleRoot = bundleRoot;
+        this.sourceElement = false;
     }
 
+    public VLibraryResource(Library b, URL file, String name, String bundleRoot, boolean sourceElement) {
+    	this(b,file,name,bundleRoot);
+    	this.sourceElement = sourceElement;
+    }
+
+    
     public boolean exists() {
         return true;
     }
@@ -125,7 +133,7 @@ public class VLibraryResource implements IVResource {
     
 	    	IPath p1 = new Path(this.bundleRoot);
 	        String path = p1.append(name).toString();
-	        URL[] files = this.library.find(path, recurse);
+	        URL[] files = this.library.find(path, recurse, this.sourceElement);
 	        ArrayList found = new ArrayList();
 	        for (int i = 0; i < files.length; i++) {
 	            if (files[i] == null) {
@@ -148,7 +156,7 @@ public class VLibraryResource implements IVResource {
 	            }
 	            	
 	            String itemName = pathSplit[pathSplit.length-1];
-	            item = new VLibraryResource(this.library, files[i],  itemName, new Path(this.bundleRoot).append(itemName).toString());
+	            item = new VLibraryResource(this.library, files[i],  itemName, new Path(this.bundleRoot).append(itemName).toString(), this.sourceElement);
 	            item.setParent(parent);
 	            found.add(item);
 	
@@ -222,7 +230,7 @@ public class VLibraryResource implements IVResource {
         IPath p1 = new Path(this.bundleRoot);
         // p1 = p1.removeFirstSegments(new
         // Path(virtualRoot).matchingFirstSegments(p1));
-        URL[] files = this.library.find(p1.append(childName).toString(), false);
+        URL[] files = this.library.find(p1.append(childName).toString(), false, this.sourceElement);
         for (int i = 0; i < files.length; i++) {
             IPath myPath = new Path(this.resourcePointer.getPath());
             IPath itemPath = new Path(files[i].getPath());
@@ -257,39 +265,16 @@ public class VLibraryResource implements IVResource {
 
     public IVResource[] findChildren(String childName) {
         IVResource[] children = this.listFiles(childName, true);
-
         return children;
-        
-        /*
-        Path path = new Path(childName);
-        IOFileFilter filter;
-        if (path.segment(0).equals("*")) {
-            filter = new NameFileFilter(path.lastSegment());
-        } else {
-            String lastSegment = path.lastSegment();
-            if (lastSegment.startsWith("*")) {
-                filter = new SuffixFileFilter(lastSegment.substring(1));
-            } else {
-                filter = null;
-            }
-        }
-        Vector results = new Vector();
-
-        for (int i = 0; i < children.length; i++) {
-            IVResource r1 = children[i];
-            File f1 = new File(r1.getName());
-            if (filter.accept(f1)) {
-                results.add(r1);
-            }
-
-            if (r1.isDirectory()) {
-                IVResource[] more = r1.findChildren(childName);
-                results.addAll(Arrays.asList(more));
-            }
-
-        }
-
-        return (IVResource[]) results.toArray(new IVResource[results.size()]);
-		*/
     }
+
+	public boolean hasSource() {
+		return this.library.getSourcePath()!=null;
+	}
+	public boolean isSource() {
+		return this.sourceElement || (this.parent!=null && this.parent.isSource());
+	}
+	public IVResource getSource() {
+		return new VLibraryResource(this.library,this.resourcePointer,this.name,this.bundleRoot,true);
+	}
 }

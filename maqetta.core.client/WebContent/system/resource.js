@@ -104,8 +104,11 @@ var Resource = {
 		 *  projects are the first folder children of the workspace.
 		 *  may turn this into its own command.   
 		 */
+		var parent =  system.resource.getRoot();
+		if(parent.parent)
+			parent = parent.parent;
 		
-		system.resource.getWorkspace().getChildren(onComplete, onError);
+		parent.getChildren(onComplete, onError);
 	},
 	
 	createProject: function(projectName, initContent, eclipseSupport){

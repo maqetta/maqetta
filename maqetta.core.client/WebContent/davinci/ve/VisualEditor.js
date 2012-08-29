@@ -462,11 +462,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			fileURL = editor.resourceFile.getURL(),
 			query = [];
 
-		// FIXME. Phil, is there a URL to the working copy of the current file that we can use
-		// Right now I am doing an auto-save which is not right.
-		// Either we should prompt user "You must save before you can preview in browser. OK to save?"
-		// or we should preview the working copy instead of the permanent file.
-		editor.save();
 		if(deviceName && deviceName.length && deviceName != 'none'){
 			query = [
 			    'preview=1',

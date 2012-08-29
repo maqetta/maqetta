@@ -59,6 +59,7 @@ return declare("davinci.model.resource.File", Resource, {
 
 	setContents: function(content, isWorkingCopy){
 		var workingCopy = isWorkingCopy ? "true" : "false";
+		var dirty = isWorkingCopy  ? true : false;
 		if (this.isNew && !isWorkingCopy) {
 			this.isNew = false;
 		}
@@ -70,6 +71,7 @@ return declare("davinci.model.resource.File", Resource, {
 			handleAs: "text",
 			contentType: "text/html"
 		}).then(function(res){
+			this.dirtyResource = dirty;
 			dojo.publish("/davinci/resource/resourceChanged", ["modified", this]);
 		}.bind(this), function(err){ 
 			// This shouldn't occur, but it's defined just in case

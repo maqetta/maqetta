@@ -2431,7 +2431,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
 
 		// ALP->WBR: do we still need this? move to ThemeEditor's context?
-		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
+		if (this.editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 			var helper = Theme.getHelper(this.visualEditor.theme);
 			if(helper && helper.onContentChange){
 				helper.onContentChange(this, this.visualEditor.theme);
@@ -2657,7 +2657,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// For page editor, always use "Normal"
 		var state = "Normal";
 /*FIXME: OLD LOGIC
-		if (this.editor.editorID == 'davinci.ve.ThemeEditor'){
+		if (this.editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 //FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
 //getState(node)
 			state = davinci.ve.states.getState();

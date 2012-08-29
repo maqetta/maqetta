@@ -239,3 +239,13 @@ div.right-col {
 	padding-left:2em;
 	padding-right:2em;
 }
+#TOCContentPane {
+	width:225px;
+	padding:0px;
+}
+#TOCTree {
+	padding:22px 12px 6px;
+}
+#TOCTree .dijitTreeRow, #TOCTree .dijitTreeNode .dojoDndItemBefore, #TOCTree .dijitTreeNode .dojoDndItemAfter {
+	padding: 6px 0 4px 0;
+}

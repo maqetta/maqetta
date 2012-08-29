@@ -61,7 +61,11 @@
                     	// (Tree resize needs to be called after Tree is added to DOM)
                     	setTimeout(function(){
                         	bc2.resize();
-                    	}, 2000);
+            				topicsStore.fetch({query: {id:'4'}, queryOptions:{deep:true}, 
+            					onComplete: dojo.hitch(this, function(items, request){
+            					})
+            				});
+                    	}, 1);
                     },
                     error: function(error) {
                         console.log("unable to load maqettadocs.json");
@@ -202,19 +206,17 @@
             	<!-- Title Pane -->
             </div>
             <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar" region="center" id="mainSplit">
-                <div dojoType="dojox.layout.ContentPane"  region="leading" splitter="true" style="width:250px;padding:0;" renderStyles="true">
+                <div dojoType="dojox.layout.ContentPane" id="TOCContentPane" region="leading" splitter="true" renderStyles="true" style="width:260px;">
                     <!-- Left Navigation Pane -->
-                    <div dojoType="dojo.data.ItemFileReadStore" jsId="continentStore" url="maqettadocs.json">
+                    <div dojoType="dojo.data.ItemFileReadStore" id="topicsStore" jsId="topicsStore" url="maqettadocs.json">
 			        </div>
-			        <div dojoType="dijit.tree.ForestStoreModel" jsId="continentModel" store="continentStore" rootId="continentRoot" rootLabel="Maqetta Documentation"
+			        <div dojoType="dijit.tree.ForestStoreModel" jsId="topicsForestStoreModel" store="topicsStore" rootId="continentRoot" rootLabel="Maqetta Documentation"
 			        childrenAttrs="children">
 			        </div>
-			        <div dojoType="dijit.Tree" id="mytree" model="continentModel" showRoot="false">
+			        <div dojoType="dijit.Tree" id="TOCTree" model="topicsForestStoreModel" showRoot="false" persist="false">
 			            <script type="dojo/method" event="onClick" args="item">
 							if (item.url) {
-goToPage(item.url);
-//								content.setHref(item.url);
-//								print_content.setHref(item.url);
+								goToPage(item.url);
 							}
 			            </script>
 			        </div>

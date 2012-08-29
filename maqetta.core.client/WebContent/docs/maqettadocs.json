@@ -3,27 +3,18 @@
 	label: 'name',
 	url: 'url',
 	items: [
-		{ id: '0', name:'Home', url: 'home.html' },
 		{ id: '1', name:'About Maqetta', url: 'overview.html' },
-		{ id: '2', name:'Release Notes', url: 'releasenotes/releasenotes.html', children:[
-			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' },
-			{ id: '2.2', name:'Preview 2', url: 'releasenotes/preview2.html' },
-			{ id: '2.3', name:'Preview 3', url: 'releasenotes/preview3.html' },
-			{ id: '2.4', name:'Preview 4', url: 'releasenotes/preview4.html' },
-			{ id: '2.5', name:'Preview 5', url: 'releasenotes/preview5.html' },
-			{ id: '2.6', name:'Preview 6', url: 'releasenotes/preview6.html' }
-		] },
-		{ id: '3', name:'Accessing / Installing Maqetta', url: 'install.html' },
+		{ id: '3', name:'Getting Started', url: 'install.html' },
 		{ id: '4', name:'Tutorials', url: 'tutorials/tutorials.html', children:[
-			{ id: '4.1', name:'Introducing the Page Editor', url: 'tutorials/Introducing_the_Page_Editor.html' }, 
+			{ id: '4.1', name:'Page Editor Intro', url: 'tutorials/Introducing_the_Page_Editor.html' }, 
+			{ id: '4.6', name:'Mobile Applications', url: 'tutorials/Mobile_User_Interfaces.html' },
+			{ id: '4.3', name:'Desktop Apps and States (1)', url: 'tutorials/App_States_Part_1.html' }, 
+			{ id: '4.4', name:'Desktop Apps and States (2)', url: 'tutorials/App_States_Part_2.html' },
 			{ id: '4.2', name:'Quick UI Sketching', url: 'tutorials/Sketching.html' }, 
-			{ id: '4.3', name:'Build a Task Manager (Scene Graph)', url: 'tutorials/App_States_Part_1.html' }, 
-			{ id: '4.4', name:'Build a Task Manager (Application States)', url: 'tutorials/App_States_Part_2.html' },
-			{ id: '4.5', name:'Desktop Theme Editor Tutorial', url: 'tutorials/Desktop_Theme_Editor.html' },
-			{ id: '4.6', name:'Mobile User Interface Tutorial', url: 'tutorials/Mobile_User_Interfaces.html' },
-			{ id: '4.7', name:'Mobile Sketching Tutorial', url: 'tutorials/Mobile_Sketching.html' },
-			{ id: '4.8', name:'Mobile Theme Editor Tutorial', url: 'tutorials/Mobile_Theme_Editor.html' },
-			{ id: '4.9', name:'Exporting to Developer Tools Tutorial', url: 'tutorials/Export_to_Developer_Tools.html' },
+			{ id: '4.7', name:'Mobile Sketching', url: 'tutorials/Mobile_Sketching.html' },
+			{ id: '4.8', name:'Mobile Theme Editor', url: 'tutorials/Mobile_Theme_Editor.html' },
+			{ id: '4.5', name:'Desktop Theme Editor', url: 'tutorials/Desktop_Theme_Editor.html' },
+/*			{ id: '4.9', name:'Exporting to Developer Tools Tutorial', url: 'tutorials/Export_to_Developer_Tools.html' },
 			{ id: '4.10', name:'BorderContainer Tutorials', url: 'tutorials/BCtutorials.html', children:[
 				{ id: '4.10.1', name:'BorderContainer Example', url: 'tutorials/BCExample.html' },
 				{ id: '4.10.2', name:'BorderContainer Basics', url: 'tutorials/BCBasics.html' },
@@ -33,9 +24,9 @@
 				{ id: '4.10.6', name:'Background Color or Image', url: 'tutorials/BCBackground.html' },
 				{ id: '4.10.7', name:'Nested BorderContainers', url: 'tutorials/BCNestedBC.html' },
 				{ id: '4.10.8', name:'Single Borders on BorderContainer', url: 'tutorials/BCSingleBorders.html' }
-			] },
+			] },*/
 		] },
-	    { id: '5', name:'Using Maqetta', url: 'userguide.html', children:[
+/*	    { id: '5', name:'Using Maqetta', url: 'userguide.html', children:[
 			{ id: '5.1', name:'Maqetta Workspace', url: 'workspace.html', children:[
 				{ id: '5.1.1', name:'Signing in', url: 'wsLogin.html' }, 
 				{ id: '5.1.2', name:'Maqetta Menu Bar', url: 'wsMenubar.html' }, 
@@ -62,9 +53,18 @@
 			{ id: '5.4', name:'Review and Commenting', url: 'reviewCommenting.html', children:[
 				{ id: '5.4.1', name:'About Review and Commenting', url: 'reviewCommentingAbout.html' }
 			] }
+		] },*/
+		{ id: '9', name:'Cheat sheets', url: 'cheatsheets/cheatsheets.html', children:[
+			{ id: '9.1', name:'Page editor', url: 'cheatsheets/PageEditor.html' }
 		] },
-		{ id: '6', name:'Learning Resources', url: 'resources.html' },
-			
+		{ id: '2', name:'Release Notes', url: 'releasenotes/releasenotes.html', children:[
+			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' },
+			{ id: '2.2', name:'Preview 2', url: 'releasenotes/preview2.html' },
+			{ id: '2.3', name:'Preview 3', url: 'releasenotes/preview3.html' },
+			{ id: '2.4', name:'Preview 4', url: 'releasenotes/preview4.html' },
+			{ id: '2.5', name:'Preview 5', url: 'releasenotes/preview5.html' },
+			{ id: '2.6', name:'Preview 6', url: 'releasenotes/preview6.html' }
+		] },
 	    { id: '7', name:'Programming Maqetta', url: 'techdocs/techguide.html', children:[
 			{ id: '7.1', name:'States API', url: 'techdocs/states.html' },		
 			{ id: '7.2', name:'Theme Editor', url: 'techdocs/themeEditor.html' }	

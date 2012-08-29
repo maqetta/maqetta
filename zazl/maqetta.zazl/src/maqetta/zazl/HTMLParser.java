@@ -112,6 +112,9 @@ public class HTMLParser extends DefaultFilter {
                 	case '>':
                 		fPrinter.print("&gt;");
                 		break;
+                	case '&':
+                		fPrinter.print("&amp;");
+                		break;
                 	default:
                 		fPrinter.print(c);
                 }

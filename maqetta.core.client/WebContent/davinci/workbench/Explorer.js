@@ -40,7 +40,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		// Patch Tree to allow for image drag-and-drop
 		// TODO: Would be better and more efficient to make use of the dijit.Tree drag-and-drop with dojo.dnd,
 		// but it does not seem to perform well over an IFRAME and would require some reworking of the drag source and target.
-		var imageDragTree = declare("", Tree, { //FIXME: why won't null work as first arg to dojo.declare?
+		var imageDragTree = declare(Tree, {
 			_createTreeNode: function(args){
 				var treeNode = this.inherited(arguments);
 		 		if (dragSources && args.item){

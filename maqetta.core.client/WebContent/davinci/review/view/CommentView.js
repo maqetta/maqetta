@@ -432,6 +432,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson
 		});
+
 		this._commentConns.push(
 				dojo.connect(comment, "onNewReply", this, "_onNewReply"),
 				dojo.connect(comment, "onEditComment", this, "_onEditComment"),
@@ -469,6 +470,11 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		};
 		_comments.push(_comment);
 		this._cached.indices[_comment.id] = _comment;
+		
+		// Update the created time stamp when available
+		comment.getCreated().then(function(created) {
+			_comment.created = created;
+		});
 	},
 
 	_onUpdateComment: function(args) {

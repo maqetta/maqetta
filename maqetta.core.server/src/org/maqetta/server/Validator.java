@@ -3,6 +3,7 @@ package org.maqetta.server;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.AddressException;
 import java.util.regex.Pattern;
+import org.davinci.server.review.Version;
 
 public class Validator {
 
@@ -16,6 +17,10 @@ public class Validator {
 			return false;
 		}
 		return true;
+	}
+	
+	public static boolean isValidISOTimeStamp(String timeStamp) {
+		return Version.isValidISOTimeStamp(timeStamp);
 	}
 	
 	public static boolean isUserName(String name) {

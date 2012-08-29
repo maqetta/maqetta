@@ -252,6 +252,15 @@ public class Version{
 		this.hasRestarted = hasRestarted;
 	}
 
-
+	public static boolean isValidISOTimeStamp(String timeStamp) {
+		boolean result = false;
+		try {
+			formatter.parse(timeStamp);
+			result = true;
+		} catch (ParseException e) {
+			// We have a bad time stamp
+		}
+		return result;
+	}
 
 }

@@ -32,6 +32,7 @@ import org.maqetta.server.IServerManager;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 import org.maqetta.server.VURL;
+import org.maqetta.server.Validator;
 import org.osgi.framework.Bundle;
 
 public class DavinciPageServlet extends HttpServlet {
@@ -174,19 +175,15 @@ public class DavinciPageServlet extends HttpServlet {
 		if (returnVal) {
 			boolean validDesigner = ServerManager.getServerManger().getUserManager().isValidUser(designerName);
 			if (validDesigner) {
-				//We're not going to look up the reviewVersion, but we're at least going to make sure it
-				//only contains letters and numbers
-				Pattern p = Pattern.compile("[^a-zA-z0-9]");
-				Matcher m = p.matcher(reviewVersion);
-				returnVal = !m.find();
+				returnVal = Validator.isValidISOTimeStamp(reviewVersion);
 				if (!returnVal) {
 					if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-						System.out.println("validateReviewParms: Poorly formatted reviewVersion = " + reviewVersion);
+						System.err.println("validateReviewParms: Poorly formatted reviewVersion = " + reviewVersion);
 					}
 				}
 			} else {
 				if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-					System.out.println("validateReviewParms: Invalid review designer name = " + designerName);
+					System.err.println("validateReviewParms: Invalid review designer name = " + designerName);
 				}
 				returnVal = false;
 			}

@@ -46,7 +46,8 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 			} else {
 				user = userManager.getSingleUser();
 			}
-			url = scanSrcLibs(ipath);
+			int removecount = user.getResource(ipath.segment(0)+"/.project") == null ? 1 : 2;
+			url = scanSrcLibs(ipath, removecount);
 			if (url != null) {
 				return url;
 			}
@@ -67,9 +68,9 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 		return null;
 	}
 
-	private URL scanSrcLibs(IPath ipath) {
+	private URL scanSrcLibs(IPath ipath, int removecount) {
 		for (Library srcLib: srcLibs) {
-			IPath srcPath = ipath.removeFirstSegments(1);
+			IPath srcPath = ipath.removeFirstSegments(removecount);
 			IPath srcLibPath = new Path(srcLib.getDefaultRoot());
 			IPath srcRelPath = srcPath.removeFirstSegments(srcLibPath.segmentCount());
 			if (srcPath.toString().startsWith(srcLib.getDefaultRoot().substring(1))) {

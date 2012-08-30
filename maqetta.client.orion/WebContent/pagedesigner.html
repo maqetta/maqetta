@@ -67,10 +67,10 @@
 					// set up for review and commenting...
 					var designerName  = dojo.cookie("davinci_designer");
 					var reviewVersion = dojo.cookie("davinci_version");
-					dojo.cookie("davinci_designer", null, {expires: -1});
-					dojo.cookie("davinci_version", null, {expires: -1});
+					dojo.cookie("davinci_designer", null, {expires: -1, path:"/"});
+					dojo.cookie("davinci_version", null, {expires: -1, path:"/"});
 					
-					/* This code loads the first file from a given review.  The review comes in as a URL parameter from an invetation.
+					/* This code loads the first file from a given review.  The review comes in as a URL parameter from an invitation.
 					   
 					This could be refactored, but I'm not sure where to put it. If we need this functionality somewhere else, then we can decide where to move it.
 					Leaving here for now.
@@ -78,24 +78,23 @@
 					*/
 					var loadReviews = function(){
 						if (reviewVersion && designerName) {
-							var node = revResource.findVersion(designerName, reviewVersion);
-							if (node) {
-								/* if we found a node, then the user clicked a review link to get here, 
-								 * TODO: bring the R&C view forward
-								 */
-								node.getChildren(function(childs){
-									if(childs.length > 1) {
-										return;
-									}
-									dojo.forEach(childs, function(child){
-										davinci.Workbench.openEditor({
-											fileName: child,
-											content: node.getText()
-										});
-									})
-									
-								}, false);
-							}
+							revResource.findVersion(designerName, reviewVersion).then(function(node) {
+								if (node) {
+									// if we found a node, then the user clicked a review link to get here, so
+									// let's open review files (up to a cap)
+									var cap = 1; 
+									node.getChildren(function(children){
+										dojo.forEach(children, function(child, index){
+											if (index < cap) {
+												davinci.Workbench.openEditor({
+													fileName: child,
+													content: node.getText()
+												});
+											}
+										})
+									});
+								}
+							});
 						}
 					}
 					

@@ -29,7 +29,7 @@ return declare(CreateTool, {
 	
 	// AWE TODO: temporary with intent to help debug difficult to reproduce timing issue on test server when
 	// GridX is first created with empty cache.
-	_debug: true,
+	_debug: false,
 
 	constructor: function(data) {
 		this._resizable = "both";

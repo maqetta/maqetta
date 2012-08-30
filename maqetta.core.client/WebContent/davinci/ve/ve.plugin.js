@@ -123,19 +123,19 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon selectParentIconSmall",
                     label: "Select parent",
                     action: "davinci/ve/actions/SelectParentAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon selectAncestorIconSmall",
                     label: "Select ancestor...",
                     action: "davinci/ve/actions/SelectAncestorAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon unselectAllIconSmall",
                     label: "Unselect all",
                     action: "davinci/ve/actions/UnselectAllAction",
                     menubarPath: "davinci.edit/cut"
@@ -162,25 +162,25 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveToFrontIconSmall",
                     label: "Move to front",
                     action: "davinci/ve/actions/MoveToFrontAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveForwardIconSmall",
                     label: "Move forward",
                     action: "davinci/ve/actions/MoveForwardAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveBackwardIconSmall",
                     label: "Move backward",
                     action: "davinci/ve/actions/MoveBackwardAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveToBackIconSmall",
                     label: "Move to back",
                     action: "davinci/ve/actions/MoveToBackAction",
                     menubarPath: "davinci.edit/cut"

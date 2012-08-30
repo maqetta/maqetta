@@ -721,55 +721,55 @@
                     type:'DropDownButton',
                     menu:[
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableSelectTableIconSmall",
                             label: "Select table",
                             action: "./html/table/SelectTableAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableSelectColumnIconSmall",
                             label: "Select column",
                             action: "./html/table/SelectColumnAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
-                            label: "Insert column before",
+                            iconClass: "editActionIcon tableInsertColumnBeforeIconSmall",
+                            label: "Insert column before ",
                             action: "./html/table/AddColumnBeforeAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableInsertColumnAfterIconSmall",
                             label: "Insert column after",
                             action: "./html/table/AddColumnAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableDeleteColumnIconSmall",
                             label: "Remove column",
                             action: "./html/table/RemoveColumnAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableSelectRowIconSmall",
                             label: "Select row",
                             action: "./html/table/SelectRowAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableInsertRowBeforeIconSmall",
                             label: "Insert row before",
                             action: "./html/table/AddRowBeforeAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableInsertRowAfterIconSmall",
                             label: "Insert row after",
                             action: "./html/table/AddRowAction",
                             actionbarPath: "table"
                         },
                         {
-                            iconClass: "editActionIcon",
+                            iconClass: "editActionIcon tableDeleteRowIconSmall",
                             label: "Remove row",
                             action: "./html/table/RemoveRowAction",
                             actionbarPath: "table"
@@ -783,55 +783,55 @@
             "visible": true,
             "actions": [
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableSelectTableIconSmall",
                     label: "Select table",
                     action: "./html/table/SelectTableAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableSelectColumnIconSmall",
                     label: "Select column",
                     action: "./html/table/SelectColumnAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableInsertColumnBeforeIconSmall",
                     label: "Insert column before",
                     action: "./html/table/AddColumnBeforeAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableInsertColumnAfterIconSmall",
                     label: "Insert column after",
                     action: "./html/table/AddColumnAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableDeleteColumnIconSmall",
                     label: "Remove column",
                     action: "./html/table/RemoveColumnAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableSelectRowIconSmall",
                     label: "Select row",
                     action: "./html/table/SelectRowAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableInsertRowBeforeIconSmall",
                     label: "Insert row before",
                     action: "./html/table/AddRowBeforeAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableInsertRowAfterIconSmall",
                     label: "Insert row after",
                     action: "./html/table/AddRowAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon tableDeleteRowIconSmall",
                     label: "Remove row",
                     action: "./html/table/RemoveRowAction",
                     menubarPath: "davinci.edit/cut"

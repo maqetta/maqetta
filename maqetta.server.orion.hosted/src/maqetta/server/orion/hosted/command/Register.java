@@ -21,12 +21,14 @@ public class Register  extends Command {
 	class EmailRunnable implements Runnable {
 		String emailAdd = null;
 		String message = null;
-		EmailRunnable(String emailAdd, String message){
+		String from = null;
+		EmailRunnable(String emailAdd, String message, String from){
 			this.emailAdd = emailAdd;
 			this.message = message;
+			this.from = from;
 		}
 	    public void run() {
-	    	ServerManager.getServerManger().sendEmail("admin@maqetta.org", emailAdd, "Maqetta.org user activation", message);
+	    	ServerManager.getServerManger().sendEmail(this.from, emailAdd, "Maqetta.org user activation", message);
 	    	System.out.println("---------------\nSending email:\n"+message );
 	    }
 	}
@@ -40,6 +42,10 @@ public class Register  extends Command {
     	String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
     	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/static/migrate.html";
     	
+    	String domain = host.substring( "http://".length());
+    	
+    	if(domain.indexOf(":") > -1)
+    		domain = domain.substring(0,domain.indexOf(":"));
     	
     	IEclipsePreferences signupTokens = new OrionScope().getNode("signup"); //$NON-NLS-1$
     	
@@ -48,13 +54,13 @@ public class Register  extends Command {
     	/* store the email address with the token */
 		result.put(Register.EMAIL_FIELD, emailAdd);
 		
-		sendEmail(emailAdd, EMAIL_TEMPLATE + authLink);
+		sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, "admin@" + domain);
 	
         
     	this.responseString = "OK";
       }
     
-    private void sendEmail(String emailAdd, String htmlContent){
-    	(new Thread(new EmailRunnable(emailAdd, htmlContent))).start();
+    private void sendEmail(String emailAdd, String htmlContent, String from){
+    	(new Thread(new EmailRunnable(emailAdd, htmlContent, from))).start();
     }
 }

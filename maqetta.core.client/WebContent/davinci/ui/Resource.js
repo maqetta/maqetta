@@ -412,8 +412,6 @@ var uiResource = {
 				} else {
 					return opened ? "dijitFolderOpened" : "dijitFolderClosed";
 				}
-			} else if (isReadOnly) {
-				return "dijitLeaf maqettaReadonlyFile";
 			}
 
 			if (item.elementType=="File"){
@@ -424,8 +422,20 @@ var uiResource = {
 					});
 				if (extension){
 					icon=extension.iconClass;
+
+					if (isReadOnly) {
+						icon += "ReadOnly"
+					}
 				}
-				return icon || "dijitLeaf";
+
+				if (!icon) {
+					icon = "dijitLeaf";
+
+					if (isReadOnly) {
+						icon += " maqettaReadonlyFile";
+					}
+				}
+				return icon;
 			}
 			return this.prototype.getIconClass(item, opened);
 		},

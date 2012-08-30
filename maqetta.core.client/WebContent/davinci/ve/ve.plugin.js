@@ -627,29 +627,17 @@ return {
 				actions: [
 					{
 						id: "save",
-						iconClass: 'saveIcon',
 						run: function() {
 							require('../Workbench').getOpenEditor().save();
 						},
 						isEnabled: function(context) {
 							return true;
 						},
+		                className: "maqLabelButton",
+		                showLabel: true,
 						label: "Save",
 						toolbarPath: "save",
 						keyBinding: {accel: true, charOrCode: "s"}
-					},
-					{
-						id: "saveas",
-						iconClass: 'saveAsIcon',
-						run: function() {
-							require("../ui/Resource").saveAs('*');
-						},
-						isEnabled: function(context) {
-							return require('../Workbench').getOpenEditor();
-						},
-						label: "Save As",
-						toolbarPath: "save",
-						keyBinding: {accel: true, shift: true, charOrCode: "s"}
 					}
 				]
 			}

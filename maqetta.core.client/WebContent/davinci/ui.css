@@ -325,15 +325,33 @@
 	width: 16px;
 	height: 16px;
 }
+.htmlFileIconReadOnly{
+	background-image: url(img/sprite.png);
+	background-position: -99px -1323px;
+	width: 16px;
+	height: 16px;
+}
 .themeFileIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0 -1382px;
 	width: 16px;
 	height: 16px;
 }
+.themeFileIconReadOnly {
+	background-image: url(img/sprite.png);
+	background-position: -21px -1382px;
+	width: 16px;
+	height: 16px;
+}
 .cssFileIcon {
 	background-image: url(img/sprite.png);
 	background-position: -82px -1257px;
+	width: 16px;
+	height: 16px;
+}
+.cssFileIconReadOnly {
+	background-image: url(img/sprite.png);
+	background-position: -82px -1279px;
 	width: 16px;
 	height: 16px;
 }
@@ -344,6 +362,8 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	width: 6px;
 	height: 6px;
 }
+
+
 
 /* Explorer */
   	
@@ -374,12 +394,25 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	width: 16px;
 	height: 16px;
 }
-.imageFileIcon {
+.jsFileIconReadOnly {
 	background-image: url(img/sprite.png);
-	background-position: 0 -1448px;
+	background-position: 0 -1605px;
 	width: 16px;
 	height: 16px;
 }
+.imageFileIcon {
+	background-image: url(img/sprite.png);
+	background-position: -2px -1448px;
+	width: 16px;
+	height: 16px;
+}
+.imageFileIconReadOnly {
+	background-image: url(img/sprite.png);
+	background-position: -2px -1466px;
+	width: 16px;
+	height: 16px;
+}
+
 
 .fileFolderTable {
 	/* Believe it or not, margin-left/right set to auto causes a table to be centered */

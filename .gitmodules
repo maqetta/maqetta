@@ -1,10 +1,10 @@
 [submodule "davinci.gridx/WebContent/gridx"]
 	path = davinci.gridx/WebContent/gridx
-	url = git://github.com/evanhw/gridx.git
+	url = git://github.com/oria/gridx.git
 	ignore=dirty
 [submodule "davinci.gridx/WebContent/gridx-src/gridx"]
 	path = davinci.gridx/WebContent/gridx-src/gridx
-	url = git://github.com/evanhw/gridx.git
+	url = git://github.com/oria/gridx.git
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/dojo"]
 	path = maqetta.core.client/WebContent/dojo

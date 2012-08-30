@@ -16,7 +16,6 @@ plugin@maqetta.client.orion=GIT,repo=https://github.com/maqetta/maqetta.git,path
 plugin@org.apache.commons.fileupload=GIT,repo=https://github.com/maqetta/maqetta.git,path=/org.apache.commons.fileupload
 #  plugin@davinci.product=GIT,repo=https://github.com/maqetta/maqetta.git,path=/releng/davinci.product
 plugin@maqetta.server.orion.hosted=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.hosted
-plugin@davinci.gridx=GIT,repo=https://github.com/maqetta/maqetta.git,path=/davinci.gridx
 plugin@maqetta.server.orion.standard=GIT,repo=https://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.standard
 
 #

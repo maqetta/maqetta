@@ -12,11 +12,7 @@ return declare("davinci.actions.UserNameAction", Action, {
 	},
 	
 	getName: function(){
-		var name = '';
-		var result = Runtime.getUser();
-        if (result) {
-            name = result.email;
-        }       
+		var name = Runtime.getUserDisplayName();    
 		return uiNls.User+': '+'<i>'+name+'</i>';
 	}
 });

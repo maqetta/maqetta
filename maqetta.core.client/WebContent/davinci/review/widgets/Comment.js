@@ -3,6 +3,7 @@ define([
 	"davinci/XPathUtils",
 	"davinci/maqetta/AppStates",
 	"davinci/review/Review",
+	"davinci/Runtime",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/Menu",
@@ -13,7 +14,7 @@ define([
 	"dojo/Deferred",
 	"dojo/i18n!./nls/widgets",
 	"dojo/text!./templates/Comment.html"
-], function(declare, XPathUtils, AppStates, Review, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, Deferred, widgetsNls, commentTemplate) {
+], function(declare, XPathUtils, AppStates, Review, Runtime, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, Deferred, widgetsNls, commentTemplate) {
 
 // AppStates functions are only available on the prototype object
 var States = AppStates.prototype;
@@ -71,6 +72,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					subject: this.subject,
 					content: this.content,
 					ownerId: this.ownerId,
+					email: this.email,
 					previous: this.previous,
 					next: this.next,
 					pageState: this.pageState,
@@ -114,7 +116,11 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		var color = this.color = Review.getColor(this.ownerId);
 		this.subjectNode.innerHTML = this.subject;
 		dojo.style(this.subjectNode, "color", color);
-		this.ownerName.innerHTML = this.ownerId;
+		var ownerDisplayName = Runtime.getUserDisplayName({
+			email: this.email, 
+			userId: this.ownerId
+		});
+		this.ownerName.innerHTML = ownerDisplayName;
 		dojo.style(this.ownerName, "color", color);
 		this.contentNode.innerHTML = this.content;
 		this._ajustLengthOfCommentContent(true);

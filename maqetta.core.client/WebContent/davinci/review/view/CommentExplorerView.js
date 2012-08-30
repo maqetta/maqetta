@@ -379,13 +379,20 @@ var CommentExplorerView = declare(ViewPart, {
 			template.artifacts_in_rev = widgetsNls.artifactsInRev;
 			template.reviewers = widgetsNls.reviewers;
 
+			
 			template.detail_role = (item.designerId == davinci.Runtime.userName) ? viewNls.designer : viewNls.reviewer;
 			template.detail_dueDate = item.dueDate == "infinite" ? viewNls.infinite : locale.format(item.dueDate, {
 				selector:'date',
 				formatLength:'long'
 			});
-			template.detail_creator = item.designerId
-				+ (item.designerEmail ? "&nbsp;&lt" + item.designerEmail + "&gt": "");
+			
+			var creatorString = Runtime.getUserDisplayNamePlusEmail({
+				email: item.designerEmail,
+				userFirstName: item.designerFirstName,
+				userId: item.designerId,
+				userLastName: item.designerLastName
+			});
+			template.detail_creator = creatorString;
 			
 			//Creation date
 			var timeStampDate = stamp.fromISOString(item.timeStamp);

@@ -73,6 +73,68 @@ var Runtime = {
 		return this._userInfo;
 	},
 	
+	/*
+	 * Based on the information available, provides an appropriate string to
+	 * display that identifies the user. 
+	 * 
+	 * userInfo should be of the form:
+	 * 
+	 * 		{
+	 * 			email: "person@place.com",
+	 *			isLocalInstall: "false",
+	 * 			userFirstName: "",
+	 *			userId: "A",
+	 *			userLastName: "";
+	 * 		}
+	 * 
+	 * Because of the current user sign-up we have with Orion, we're not making 
+	 * any attempt to honor userId. In the future, it would be nice if the server
+	 * could signal us if userId is appropriate.
+	 * 
+	 * If userInfo is undefined, then the function will look up the info for the
+	 * current user.
+	 * 
+	 */
+	getUserDisplayName: function(userInfo) {
+		if (!userInfo) {
+			userInfo = this.getUser();
+		}
+
+		// Can't reliably use userId anymore (because of Orion), so first try first name and then
+		// drop back to e-mail
+		var displayName = userInfo.userFirstName;
+		if (!userInfo.userFirstName) {
+			displayName = userInfo.email;
+		}
+		return displayName;		
+	},
+	
+	/*
+	 * The goal is to return a string of the form:
+	 * 
+	 * 		displayName <email>
+	 * 
+	 * such as
+	 * 
+	 * 		Joe <joesmith@place.com>
+	 * 
+	 * but if displayName = email, then email will be returned.
+	 * 
+	 */
+	getUserDisplayNamePlusEmail: function(userInfo) {
+		if (!userInfo) {
+			userInfo = this.getUser();
+		}
+		
+		var result = this.getUserDisplayName(userInfo);
+		
+		if (result != userInfo.email) {
+			result += " &lt;" + userInfo.email + "&gt;";
+		}
+
+		return result;
+	},
+	
 	loadPlugins: function() {
 		plugins.forEach(function(plugin) {
 			var pluginID = plugin.id;

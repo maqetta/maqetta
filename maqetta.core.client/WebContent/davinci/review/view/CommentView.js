@@ -428,7 +428,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			viewScene: this._cached[this._currentPage].viewScene || this._getCurrentScene().s,
 			viewSceneList: this._cached[this._currentPage].viewSceneList || this._context.getCurrentScenes(),
 			ownerId: Runtime.userName,
-			//email: Runtime.getDesignerEmail(),
+			email: Runtime.userEmail,
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson
 		});
@@ -801,9 +801,13 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			dojo.forEach(reviewers, dojo.hitch(this, function(reviewer, index) { 
 				//If no name, probably not a Maqetta user and no way they could have comments yet (so color irrelevant)
 				if (reviewer.name) { 
+					var reviewerDisplayName = Runtime.getUserDisplayName({
+						email: reviewer.email,
+						userId: reviewer.name
+					});
 					var check = new CheckedMenuItem({
 						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
-						Review.getColor(reviewer.name) +";'></div><span>"+reviewer.name+"</span>",
+						Review.getColor(reviewer.name) +";'></div><span>"+reviewerDisplayName+"</span>",
 							onChange: dojo.hitch(this, function() {
 								this._reviewFilterChanged();
 								

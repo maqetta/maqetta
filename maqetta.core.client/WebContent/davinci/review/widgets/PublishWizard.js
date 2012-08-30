@@ -626,10 +626,10 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				//init reviewers
 				for (var i = 0; i < node.reviewers.length; i++) {
 					if (node.reviewers[i].email != node.designerEmail) {
-						var displayName = node.reviewers[i].email;
-						if (node.reviewers[i].name) {
-							displayName = node.reviewers[i].name + ' (' + displayName + ')';
-						}
+						var displayName = Runtime.getUserDisplayNamePlusEmail({
+							email: node.reviewers[i].email,
+							userId: node.reviewers[i].name
+						});
 						this.jsonStore.newItem({
 							name: node.reviewers[i].name,
 							email: node.reviewers[i].email,

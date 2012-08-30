@@ -194,7 +194,6 @@ define(["dojo/_base/declare",
 				innerResolveFunc();
 		
 			}else{		// askUserResponse is undefined
-				var askUser = false;
 				// New logic: prompt user only if theme CSS files are going to change
 				var content = null;		
 				var langObj = veNLS;
@@ -211,50 +210,44 @@ define(["dojo/_base/declare",
 						cascadeBatch.askUserResponse = false;
 					}
 					this._setFieldValue(this._value,this._loc);
-					return;
 				}else if((this._values[this._targetValueIndex].type=="theme" || this._values[this._targetValueIndex].proposalTarget =='theme')&&
 						   editorPrefs.cssOverrideWarn &&
 							this._editor.supports("MultiPropTarget")){
-					askUser = true;
-					var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
-		            content = langObj.changeWillModify+"<br><br>"+dojo.string.substitute(langObj.insteadOfChanging,[helpLink])+"<br><br>"+langObj.okToProceed;
-		        }
-				// Old prompt if changing app.css or other non-theme CSS file:
-				// content = "This change will modify a CSS rule within a CSS file and therefore may globally effect other widgets. OK to proceed with this change?";
-		
-				if(askUser){
-					var overRide = new DocileDialog({content:content,
-																		callBack:dojo.hitch(this, function(result){
-																		
-																			if(result.value=="OK"){
-																				if(cascadeBatch){
-																					cascadeBatch.askUserResponse = true;
-																				}
-																				innerChangeValueFunc(this);
-																				innerResolveFunc();
-																			}else{
-																				if(cascadeBatch){
-																					cascadeBatch.askUserResponse = false;
-																				}
-																				// set back to original value
-																				this._setFieldValue(this._value,this._loc);
-																				innerResolveFunc();
-																			}
-																			
-																			if(!result.alwaysShow){
-																				editorPrefs.cssOverrideWarn = false;
-																				Preferences.savePreferences('davinci.ve.editorPrefs',null, editorPrefs);
-																			}
-																			
-																		})});
-																			
-					
-				}else{
-					innerChangeValueFunc(this);
-					innerResolveFunc();
-				}
+					require(['davinci/ve/widgets/ChangeWillModify'], dojo.hitch(this, function(ChangeWillModify) {
+							function _submit() {
+								if(cascadeBatch){
+									cascadeBatch.askUserResponse = true;
+								}
+								innerChangeValueFunc(this);
+								innerResolveFunc();
+
+								if (cwm.checkbox.get("checked")) {
+									editorPrefs.cssOverrideWarn = false;
+									Preferences.savePreferences('davinci.ve.editorPrefs',null, editorPrefs);
+								}
+							}
+
+							var cwm = new ChangeWillModify();
+							var dialog = davinci.Workbench.showDialog("", cwm, {width: 350}, dojo.hitch(this, _submit), null, null, true);
+
+							dojo.connect(dialog, "onCancel", dojo.hitch(this, function() {
+									if (cascadeBatch){
+										cascadeBatch.askUserResponse = false;
+									}
+
+									// set back to original value
+									this._setFieldValue(this._value,this._loc);
+									innerResolveFunc();
+
+									if (cwm.checkbox.get("checked")) {
+										editorPrefs.cssOverrideWarn = false;
+										Preferences.savePreferences('davinci.ve.editorPrefs',null, editorPrefs);
+									}
+							}));
+
+					}));
+		    }
 			}
-			
 		},
 		
 		_changeValue : function(targetIndex,value){

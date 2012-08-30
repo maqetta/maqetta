@@ -869,7 +869,7 @@ var Workbench = {
 	},
 
 	// OK/Cancel dialog with a settable okLabel
-	showDialog: function(title, content, style, callback, okLabel, hideCancel, submitOnEnter) {
+	showDialog: function(title, content, style, callback, okLabel, hideCancel, submitOnEnter, focusSubmit) {
 		return Dialog.showDialog(title, content, style, callback, okLabel, hideCancel, submitOnEnter);
 	},
 

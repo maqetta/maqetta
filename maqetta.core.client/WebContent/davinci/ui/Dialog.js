@@ -215,14 +215,20 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 
 	var dialogActions = document.createElement("div");
 	dojo.addClass(dialogActions, "dijitDialogPaneActionBar");
-	dialogActions.appendChild(new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit", "class": "maqPrimaryButton"}).domNode);
+
+	var submitButton = new Button({label: okLabel ? okLabel : veNLS.ok, type: "submit", "class": "maqPrimaryButton"})
+	dialogActions.appendChild(submitButton.domNode);
 
 	var _onCancel = dojo.hitch(this, function() {
 		this._timedDestroy(myDialog, handles);
 	});
 
 	if (!hideCancel) {
-		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancel, "class": "maqSecondaryButton"}).domNode);
+		function _onCancelClick() {
+			myDialog.onCancel();
+		}
+
+		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancelClick, "class": "maqSecondaryButton"}).domNode);
 	}
 
 	newContent.appendChild(dialogActions);

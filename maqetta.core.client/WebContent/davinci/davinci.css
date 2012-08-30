@@ -1085,7 +1085,7 @@ background-position: -75px -745px;
 }
 .editCutIconSmall {
 	background-image: url(img/sprite.png);
-	background-position: 0 -516px;
+	background-position: 0 -515px;
 }
 .editCopyIcon {
 	background-image: url(img/sprite.png);
@@ -1107,7 +1107,7 @@ background-position: -75px -745px;
 }
 .editPasteIconSmall {
 	background-image: url(img/sprite.png);
-	background-position: -82px -400px;
+	background-position: -82px -399px;
 }
 .editDeleteIcon {
 	background-image: url(img/sprite.png);
@@ -1118,11 +1118,79 @@ background-position: -75px -745px;
 }
 .editDeleteIconSmall {
 	background-image: url(img/sprite.png);
-	background-position: 0 -648px;
+	background-position: 0 -647px;
+}
+.selectParentIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -23px -1685px;
+}
+.selectAncestorIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -47px -1685px;
+}
+.unselectAllIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -70px -1685px;
+}
+.moveToFrontIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -25px -1663px;
+}
+.moveForwardIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -49px -1663px;
+}
+.moveBackwardIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -71px -1663px;
+}
+.moveToBackIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -92px -1663px;
 }
 .tableCommandsIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0px -1406px;
+}
+.tableInsertIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -26px -1574px;
+}
+.tableSelectTableIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -51px -1573px;
+}
+.tableSelectColumnIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -72px -1574px;
+}
+.tableSelectRowIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -94px -1574px;
+}
+.tableInsertColumnBeforeIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -27px -1595px;
+}
+.tableInsertColumnAfterIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -47px -1595px;
+}
+.tableInsertRowBeforeIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -27px -1617px;
+}
+.tableInsertRowAfterIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -47px -1617px;
+}
+.tableDeleteColumnIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -49px -1641px;
+}
+.tableDeleteRowIconSmall {
+	background-image: url(img/sprite.png);
+	background-position: -25px -1641px;
 }
 .dijitButtonDisabled .tableCommandsIcon {
 	background-position: -40px -1406px;

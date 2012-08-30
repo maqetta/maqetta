@@ -1,22 +1,21 @@
 <div class='downloadDialog'>	 
 	<div class="dijitDialogPaneContentArea">
-		<!--  remove tables and fillers, use CSS instead -->		
-		<table class='templateTable' cellSpacing=0 cellPadding=0 align='center'>
-		<tr>
-		<td class='templateFiller1'>&nbsp;</td>
-		<td class='templateFiller2'>${fileName}:</td><td> <input dojoType='dijit.form.ValidationTextBox' type="text" maxLength='${_fileNameMaxLength}' dojoAttachPoint="__fileName" value='workspace1.zip' data-dojo-props="regExp:'${_fileNameValidationRegExp}', required:true, invalidMessage:'${invalidDownloadFileName}'"></input></td>
-		<td class='templateFiller1'>&nbsp;</td>
-		</tr>
-		</table>
-
-		<br></br>
-		<span style='padding-right: 10px;'>${optimizeOption}:</span><input dojoType='dijit.form.CheckBox' type="text" dojoAttachPoint="__optimize" data-dojo-props=""></input>
-		<br>
-		<span style='padding-right: 10px;'>Download Full Source:</span><input dojoType='dijit.form.CheckBox' type="text" dojoAttachPoint="__fullSource" data-dojo-props=""></input
-		<br></br>
+		<div style="margin-bottom: 20px">
+		  ${fileName}: <input dojoType='dijit.form.ValidationTextBox' type="text" maxLength='${_fileNameMaxLength}' dojoAttachPoint="__fileName" value='workspace1.zip' data-dojo-props="regExp:'${_fileNameValidationRegExp}', required:true, invalidMessage:'${invalidDownloadFileName}'"></input>
+		</div>
 		
 		<div dojoAttachPoint="_selectionDiv"></div>
 		<div dojoAttachPoint="_tableDiv"></div>
+
+		<div style="margin-top: 8px">
+		  Select: <a href="javascript:;" data-dojo-attach-event="onclick: _selectAll">${selectAll}</a> / <a href="javascript:;" data-dojo-attach-event="onclick: _selectNone">${selectNone}</a>
+		</div>
+
+		<div style="margin-top: 20px">
+			<input dojoType='dijit.form.CheckBox' type="text" dojoAttachPoint="__optimize" data-dojo-props=""></input><span style='padding-left: 3px;'>${optimizeOption}</span>
+			<br>
+			<input dojoType='dijit.form.CheckBox' type="text" dojoAttachPoint="__fullSource" data-dojo-props=""></input><span style='padding-left: 3px;'>${downloadFullSource}</span>
+		</div>
   </div>
 	<div class="dijitDialogPaneActionBar">
 		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${downloadButtonLabel}' class="maqPrimaryButton" type="submit"></button>

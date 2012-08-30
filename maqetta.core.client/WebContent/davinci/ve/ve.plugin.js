@@ -123,19 +123,19 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon selectParentIconSmall",
                     label: "Select parent",
                     action: "davinci/ve/actions/SelectParentAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon selectAncestorIconSmall",
                     label: "Select ancestor...",
                     action: "davinci/ve/actions/SelectAncestorAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon unselectAllIconSmall",
                     label: "Unselect all",
                     action: "davinci/ve/actions/UnselectAllAction",
                     menubarPath: "davinci.edit/cut"
@@ -162,25 +162,25 @@ return {
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveToFrontIconSmall",
                     label: "Move to front",
                     action: "davinci/ve/actions/MoveToFrontAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveForwardIconSmall",
                     label: "Move forward",
                     action: "davinci/ve/actions/MoveForwardAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveBackwardIconSmall",
                     label: "Move backward",
                     action: "davinci/ve/actions/MoveBackwardAction",
                     menubarPath: "davinci.edit/cut"
                 },
                 {
-                    iconClass: "editActionIcon",
+                    iconClass: "editActionIcon moveToBackIconSmall",
                     label: "Move to back",
                     action: "davinci/ve/actions/MoveToBackAction",
                     menubarPath: "davinci.edit/cut"
@@ -627,29 +627,35 @@ return {
 				actions: [
 					{
 						id: "save",
-						iconClass: 'saveIcon',
 						run: function() {
 							require('../Workbench').getOpenEditor().save();
 						},
 						isEnabled: function(context) {
 							return true;
 						},
+		                className: "maqLabelButton",
+		                showLabel: true,
 						label: "Save",
 						toolbarPath: "save",
 						keyBinding: {accel: true, charOrCode: "s"}
 					},
 					{
-						id: "saveas",
-						iconClass: 'saveAsIcon',
-						run: function() {
-							require("../ui/Resource").saveAs('*');
-						},
-						isEnabled: function(context) {
-							return require('../Workbench').getOpenEditor();
-						},
-						label: "Save As",
-						toolbarPath: "save",
-						keyBinding: {accel: true, shift: true, charOrCode: "s"}
+						id: "undo",
+					    iconClass: 'editActionIcon undoIcon',
+					    action: "davinci/actions/UndoAction",
+					    label: "Undo",
+					    //showLabel: true,
+					    toolbarPath: "undoredo",
+					    keyBinding: {accel: true, charOrCode: "z"}
+					},
+					{
+					    id: "redo",
+					    iconClass: 'editActionIcon redoIcon',
+					    action: "davinci/actions/RedoAction",
+					    //showLabel: true,
+					    label: "Redo",
+					    toolbarPath: "undoredo",
+					    keyBinding: {accel: true, shift: true, charOrCode: "z"}
 					}
 				]
 			}

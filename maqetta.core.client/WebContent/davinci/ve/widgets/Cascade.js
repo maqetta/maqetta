@@ -195,6 +195,7 @@ define(["dojo/_base/declare",
 		
 			}else{		// askUserResponse is undefined
 				// New logic: prompt user only if theme CSS files are going to change
+				var askUser = false;
 				var content = null;		
 				var langObj = veNLS;
 				if(this._values[this._targetValueIndex].readOnly && this._editor.editorID != 'davinci.themeEdit.ThemeEditor'){ // #23 theme editor only writes out deltas
@@ -246,7 +247,10 @@ define(["dojo/_base/declare",
 							}));
 
 					}));
-		    }
+				}else {
+					innerChangeValueFunc(this);
+					innerResolveFunc();
+				}
 			}
 		},
 		

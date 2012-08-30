@@ -91,32 +91,46 @@ return {
 		editorContribution: {
 			targetID: "davinci.js.JSEditor",
 			actions: [
-				{
-					id: "save",
-					iconClass: 'saveIcon',
-					run: function() {
-						require('../Workbench').getOpenEditor().save();
-					},
-					isEnabled: function(context) {
-						return true;
-					},
-					label: "Save",
-					toolbarPath: "save",
-					keyBinding: {accel: true, charOrCode: "s", allowGlobal: true}
-				},
-				{
-					id: "saveas",
-					iconClass: 'saveAsIcon',
-					run: function() {
-						require("../ui/Resource").saveAs('js');
-					},
-					isEnabled: function(context) {
-						return require('../Workbench').getOpenEditor();
-					},
-					label: "Save As",
-					toolbarPath: "save",
-					keyBinding: {accel: true, shift: true, charOrCode: "s", allowGlobal: true}
-				}
+		              {
+		                  id: "savecombo",
+		                  className: "maqLabelButton",
+		                  showLabel: true,
+		                  label: "Save",
+		                  toolbarPath: "save",
+		                  type:'ComboButton',
+		                  run: function() {
+		                      require(['../Workbench'], function(workbench) {
+		                      		require("../ui/Resource").save();
+		                      });
+		                  },
+		                  isEnabled: function(context) {
+		                      return require('../Workbench').getOpenEditor();
+		                  },
+		                  menu:[
+		                     {
+		                          iconClass: 'saveIcon',
+		                          run: function() {
+		                          		require("../ui/Resource").save();
+		                          },
+		                          isEnabled: function(context) {
+		                              return require('../Workbench').getOpenEditor();
+		                          },
+		                          label: "Save",
+		                  		keyBinding: {accel: true, charOrCode: "s", allowGlobal: true}
+		                      },
+		                      {
+		                          iconClass: 'saveAsIcon',
+		                          run: function() {
+		                              require("../ui/Resource").saveAs('html');
+		                          },
+		                          isEnabled: function(context) {
+		                              return require('../Workbench').getOpenEditor();
+		                          },
+		                          label: "Save As",
+		                  		keyBinding: {accel: true, shift: true, charOrCode: "s", allowGlobal: true}
+		                      }
+		                  ]
+		              }
 /* XXX not working
 				{
 					id: "format",

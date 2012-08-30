@@ -2843,7 +2843,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// by a `dojo.withGlobal`.  However, `dojo.eval` regressed in Dojo 1.7,
 			// such that it no longer evals using `dojo.global` -- instead evaling
 			// into the global context. To work around that, we do our own `eval` call.
-			push(xhr.get({
+			promises.push(xhr.get({
 				url: absoluteUrl,
 				sync: true    // XXX -> async, Defer rest of method
 			}).then(function(data) {

@@ -638,6 +638,24 @@ return {
 						label: "Save",
 						toolbarPath: "save",
 						keyBinding: {accel: true, charOrCode: "s"}
+					},
+					{
+						id: "undo",
+					    iconClass: 'editActionIcon undoIcon',
+					    action: "davinci/actions/UndoAction",
+					    label: "Undo",
+					    //showLabel: true,
+					    toolbarPath: "undoredo",
+					    keyBinding: {accel: true, charOrCode: "z"}
+					},
+					{
+					    id: "redo",
+					    iconClass: 'editActionIcon redoIcon',
+					    action: "davinci/actions/RedoAction",
+					    //showLabel: true,
+					    label: "Redo",
+					    toolbarPath: "undoredo",
+					    keyBinding: {accel: true, shift: true, charOrCode: "z"}
 					}
 				]
 			}

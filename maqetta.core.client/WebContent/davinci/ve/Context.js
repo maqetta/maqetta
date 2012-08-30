@@ -3180,14 +3180,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// value.  If `prop` is `null`, then delete from djConfig.
 		
 		for (var prop in data) {
-			if (data[prop] === null) {
-				delete djConfig[prop];
-			}  if (prop == 'mblLoadCompatPattern'){
+			 if (prop == 'mblLoadCompatPattern'){
+				if (data[prop] === null){
+					// we already deleted from djConfig above 
+					// just clear the regex we are going to put back
+					regEx = "";
+				} else {
 				/*
 				 * Note above about stringify regexp
 				 */
-				regEx = ", 'mblLoadCompatPattern': "+ data[prop];
-				
+					regEx = ", 'mblLoadCompatPattern': "+ data[prop];
+				}
+					
+			} else if (data[prop] === null) {
+				delete djConfig[prop];
 			} else {
 				djConfig[prop] = data[prop];
 			}

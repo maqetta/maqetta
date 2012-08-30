@@ -528,7 +528,7 @@ return {
                         run: function() {
                             require(['./Workbench', './ui/Download'],
                                 function(workbench, Download) {
-                                    workbench.showModal(new Download(), "Download", "width: 400px");
+                                	workbench.showModal(new Download(), "Download", {width: 400});
                                 }
                             );
                         },
@@ -541,7 +541,7 @@ return {
                         run: function() {
                             require(['./Workbench', './ui/DownloadSelected'],
                                 function(workbench, DownloadSelected) {
-                                    workbench.showModal(new DownloadSelected(), "Download", "width: 400px");
+                                	workbench.showModal(new DownloadSelected(), "Download", {width: 400});
                                 }
                             );
                         },

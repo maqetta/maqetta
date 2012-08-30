@@ -5,6 +5,7 @@ define(["dojo/_base/declare",
         "davinci/library",
         "system/resource",
         "dojo/promise/all",
+        "dojo/parser",
         "davinci/Workbench",
         "davinci/ve/RebaseDownload",
         "dojo/i18n!./nls/ui",
@@ -12,9 +13,9 @@ define(["dojo/_base/declare",
         "dojo/text!./templates/download.html",
         "davinci/Theme",
         "dijit/form/Button",
-        "dijit/form/ValidationTextBox"
-
-],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Library, Resource, all, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
+        "dijit/form/ValidationTextBox",
+        "dijit/form/TextBox"
+],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Library, Resource, all, parser, Workbench, RebaseDownload, uiNLS, commonNLS, templateString, Theme){
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
 		
@@ -58,17 +59,17 @@ define(["dojo/_base/declare",
 				}
 				
 				if(this._userLibs[i].required){
-					uiArray.push("<tr style='display:none'>");
+					uiArray.push("<tr libPath='"+i+"' style='display:none'>");
 					
 				}else{
-					uiArray.push("<tr>");
+					uiArray.push("<tr libPath='"+i+"'>");
 				}
 				
 				uiArray.push("<td class='columna'>" + name + "</td>");
 				uiArray.push("<td class='columnb'>" + this._userLibs[i].version + "</td>");
-				uiArray.push("<td class='columnc'><input type='checkbox' libItemCheck='"+ i +"' checked></input></td>");
+				uiArray.push("<td class='columnc'><input type='checkbox' dojoType='dijit.form.CheckBox' checked></input></td>");
 
-				uiArray.push("<td class='columnd'><input type='text' value='" + this._userLibs[i].initRoot + "' libItemPath='"+i+ "'></input></td>");
+				uiArray.push("<td class='columnd'><input type='text' dojoType='dijit.form.TextBox' value='" + this._userLibs[i].initRoot + "'></input></td>");
 				
 				uiArray.push("</tr>");
 				
@@ -76,6 +77,9 @@ define(["dojo/_base/declare",
 			uiArray.push("</table>");
 			var html =  uiArray.join("");
 			dojo.place(html, this._tableDiv);
+
+			// parse dijits
+			dojo.parser.parse(this._tableDiv);
 		},
 	
 		_getLibRoot: function(id,version){
@@ -87,18 +91,21 @@ define(["dojo/_base/declare",
 		},
 		
 		_getLibs: function(){
-			var nodeValues = dojo.query("[libItemPath]", this.domNode);
-			var nodeList = dojo.query("[libItemCheck]", this.domNode);
+			var rows = dojo.query("tr[libPath]", this.domNode);
+
 			var userLibs = [];
-			for(var i =0;i<nodeList.length;i++){
-				var element = parseInt(dojo.attr(nodeList[i], "libItemCheck"));
-				var value = dojo.attr(nodeList[i], "checked");
-				var libLocation = dojo.attr(nodeValues[i], "value") || this._userLibs[element].root
+
+			for(var i =0;i<rows.length;i++){
+				var textBox = dijit.byNode(dojo.query(".dijitTextBox", rows[i])[0]);
+				var checkBox = dijit.byNode(dojo.query(".dijitCheckBox", rows[i])[0]);
+
+				var element = parseInt(dojo.attr(rows[i], "libPath"));
+				var value = checkBox.get("checked");
+				var libLocation = textBox.get("value") || this._userLibs[element].root;
 				userLibs.push({id: this._userLibs[element].id,
 							   version: this._userLibs[element].version,
 							   root: libLocation,
 							   includeSrc: value});
-				
 			}
 			
 			return userLibs;
@@ -140,6 +147,27 @@ define(["dojo/_base/declare",
 				});
 			}
 			return all(promises);
+		},
+
+		_select: function(value) {
+			var rows = dojo.query("tr[libPath]", this.domNode);
+
+			dojo.forEach(rows, function(row) {
+				var checkBox = dijit.byNode(dojo.query(".dijitCheckBox", row)[0]);
+				if (checkBox) {
+					checkBox.set("checked", value);
+				}
+			});
+
+			return false;
+		},
+
+		_selectAll: function() {
+			this._select(true);
+		},
+
+		_selectNone: function() {
+			this._select(false);
 		},
 		
 		okButton: function(){

@@ -114,7 +114,7 @@ return {
                    path: "new",
                    id: "davinci.new",
                    separator: [
-                       "newApp", true, "newSketch", true, "new", true, "new2", true, "additions", true
+                       "newApp", true, "newSketch", true, "newFolder", true, "newTheme", true, "newProject", true, "additions", true
                    ]
                },
                {
@@ -122,7 +122,7 @@ return {
                    path: "open",
                    id: "davinci.open",
                    separator: [
-                       "open", true, "open2", true, "open3", true, "additions", false
+                       "openFile", true, "openTheme", true, "openProject", true, "openOrion", true, "additions", false
                    ]
                }
            ],
@@ -180,6 +180,17 @@ return {
                      menubarPath: "davinci.new/newSketch"
                  },
                  {
+                     id: "newFolder",
+                     run: function() {
+                     	require(['./ui/Resource'], function(r) {
+                     		r.newFolder();
+                     	});
+                     },
+                     iconClass: "newOpenMenuItem newFolderMenuItem",
+                     label: "Folder...",
+                     menubarPath: "davinci.new/newFolder"
+                 },
+                {
                    id: "newCSS",
                    run: function() {
                    	require(['./ui/Resource'], function(r) {
@@ -188,7 +199,7 @@ return {
                    },
                    iconClass: "newOpenMenuItem newCSSMenuItem",
                    label: "CSS File...",
-                   menubarPath: "davinci.new/new"
+                   menubarPath: "davinci.new/newFolder"
                },
                {
                    id: "newJS",
@@ -199,7 +210,18 @@ return {
                    },
                    iconClass: "newOpenMenuItem newJSMenuItem",
                    label: "JavaScript File...",
-                   menubarPath: "davinci.new/new"
+                   menubarPath: "davinci.new/newFolder"
+               },
+               {
+                   id: "newTheme",                                     
+                   run: function() {
+                   	require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){
+                   			Workbench.showModal(new NewTheme(), 'New Theme', {width: 300}, null, true);
+                   	});
+                   },
+                   iconClass: "newOpenMenuItem newThemeMenuItem",
+                   label: "Theme...",
+                   menubarPath: "davinci.new/newTheme"
                },
                {
                    id: "newProject",
@@ -210,18 +232,7 @@ return {
                    },
                    iconClass: "newOpenMenuItem newProjectMenuItem",
                    label: "Project...",
-                   menubarPath: "davinci.new/new"
-               },
-               {
-                   id: "newFolder",
-                   run: function() {
-                   	require(['./ui/Resource'], function(r) {
-                   		r.newFolder();
-                   	});
-                   },
-                   iconClass: "newOpenMenuItem newFolderMenuItem",
-                   label: "Folder...",
-                   menubarPath: "davinci.new/new2"
+                   menubarPath: "davinci.new/newProject"
                },
                {
                    id: "openFile",
@@ -233,7 +244,7 @@ return {
                    iconClass: "newOpenMenuItem openFileMenuItem",
                    label: "File...",
                    toolbarPath: "davinci.toolbar.main/edit",
-                   menubarPath: "davinci.open/open",
+                   menubarPath: "davinci.open/openFile",
                    keyBinding: {accel: true, charOrCode: "o"}
                },
                {
@@ -245,7 +256,7 @@ return {
                    },
                    iconClass: "newOpenMenuItem openThemeMenuItem",
                    label: "Theme Editor...",
-                   menubarPath: "davinci.open/open2"
+                   menubarPath: "davinci.open/openTheme"
                },
                {
                    id: "openReview",
@@ -262,7 +273,7 @@ return {
                    },
                    iconClass: "newOpenMenuItem openReviewMenuItem",
                    label: "Review...",
-                   menubarPath: "davinci.open/open2"
+                   menubarPath: "davinci.open/openTheme"
                },
                {
                    id: "openProject",
@@ -273,7 +284,7 @@ return {
                    },
                    iconClass: "newOpenMenuItem newProjectMenuItem",
                    label: "Project...",
-                   menubarPath: "davinci.open/open2"
+                   menubarPath: "davinci.open/openProject"
                },
                {
                    id: "orionNavigator",
@@ -283,18 +294,7 @@ return {
                    },
                    iconClass: "newOpenMenuItem orionIcon",
                    label: "Orion Navigator",
-                   menubarPath: "davinci.open/open3"
-               },
-               {
-                   id: "newTheme",                                     
-                   run: function() {
-                   	require(['davinci/Workbench', 'davinci/ui/NewTheme'], function(Workbench, NewTheme){
-                   			Workbench.showModal(new NewTheme(), 'New Theme', {width: 300}, null, true);
-                   	});
-                   },
-                   iconClass: "newOpenMenuItem newThemeMenuItem",
-                   label: "Theme...",
-                   menubarPath: "davinci.new/new"
+                   menubarPath: "davinci.open/openOrion"
                }
            ]
         },

@@ -354,7 +354,7 @@
                 }
             ],
             "resizable": "none",
-            "allowedChild": "dijit.form.Button",
+            "allowedChild": "dijit.form.Button, dijit.form.ComboButton, dijit.form.DropDownButton, dijit.form.ToggleButton, dijit.ToolbarSeparator",
             "inlineEdit": "./dijit/ToolbarInput"
         },
         {

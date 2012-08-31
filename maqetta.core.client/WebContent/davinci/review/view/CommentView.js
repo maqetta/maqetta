@@ -124,7 +124,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			if (this._currentPage.split("/")[2] == arg3.timeStamp) {
 				this._versionClosed = arg2=="closed";
 			}
-			dijit.byId("davinciReviewToolbar.Add").set("disabled", this._versionClosed);
+			dijit.byId("davinciReviewToolbar.Add").set("disabled", this._versionClosed); 
 			dijit.byId("davinciReviewToolbar.Reviewers").set("disabled", false);
 			dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", ["[]", true]);
 			this._destroyCommentWidgets();
@@ -576,7 +576,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				parent: this,
 				existed: true,
 				replyTo: _comment.replyTo,
-				drawingJson: _comment.drawingJson
+				drawingJson: _comment.drawingJson,
+				closed: this._versionClosed 
 			});
 			// Build comment data indices, we need this when update the comments
 			this._cached.indices[_comment.id] = _comment;

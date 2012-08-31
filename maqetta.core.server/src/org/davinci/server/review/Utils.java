@@ -27,6 +27,21 @@ public class Utils {
 		}
 	}
 
+	public static String getCommonNotificationId() {
+		String notificationId = null;
+
+		notificationId = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
+		if(notificationId == null || "".equals(notificationId)){
+			IConfigurationElement mailConfig = ServerManager.getServerManger().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
+			if(mailConfig != null){
+				notificationId = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
+			}
+		}
+		if(notificationId == null){
+			notificationId = "noreply@website.org";
+		}
+		return notificationId;
+	}
 
 	/**
 	 *

@@ -42,7 +42,7 @@ createTableCellData = function(context) {
 	var data = {
 		type: "html.td", 
 		context: context,
-		children: "&#8288;"
+		children: "&nbsp;"
 	};
 	return data;
 };
@@ -51,7 +51,7 @@ createTableHeaderData = function(context) {
 	var data = {
 		type: "html.th", 
 		context: context,
-		children: "&#8288;"
+		children: "&nbsp;"
 	};
 	return data;
 };

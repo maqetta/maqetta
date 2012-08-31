@@ -16,7 +16,7 @@ return declare(SmartInput, {
 	
 	serialize: function(widget, updateEditBoxValue, value) {
 		var result = value;
-		if (value.trim() == "&#8288;") {
+		if (value.trim() == "&nbsp;") {
 			result = "";
 		}
 		updateEditBoxValue(result); 
@@ -25,7 +25,7 @@ return declare(SmartInput, {
 	parse: function(input) {
 		var value = input;
 		if (input.trim() == "") {
-			value = "&#8288;";
+			value = "&nbsp;";
 		}
 		return value;
 	}

@@ -34,23 +34,20 @@
 
 <p>The Maqetta 7 release includes the following updates:</p>
 
-<h2 style='color:red; font-style:italic;'>SO FAR, THIS IS JUST A COPY OF M6 RELEASE NOTES</h2>
+<h2 style='color:red; font-style:italic;'>UNDER CONSTRUCTION</h2>
 
 <ul style="margin-top: 0pt;" type="disc">
 	<li><p><span class='majortopic'>User Interface Makeover</span> - 
-		The Maqetta user interface has had a major makeover with Release 7:</p>
+		The Maqetta user interface has had a major makeover with Release 7, with countless UI tweaks. Some highlights:</p>
 		<ul>
-			<li><span class='minortopic'>New login and registration screens</span> - 
-				Release 7 has tossed out Maqetta's old back-end (server) code for workspace management
-				and user management, and replaced it with code from the Eclipse Orion project.
-				(Look below for more information about integrating Orion into Maqetta.)
-				The login and registration screens (and back-end logic) now come from Orion, although
-				Maqetta restyles the these screens (e.g., Maqetta shows a Maqetta banner).
+			<li><span class='minortopic'>Graphics redesign</span> - 
+				With Release, 7, nearly all of the major user interface components have new visual styling.
+				There is new visual styling on the topmost banner (and its icons and menus), the file tabs,
+				to toolbar, and the various palettes on the left- and right-side of the application.
 			</li>
-			<li><span class='minortopic'>New welcome page</span> - 
-				Release 7 includes a newly designed welcome page, with buttons at the top
-				for common "New" actions (e.g., New Mobile Application), and buttons at the bottom
-				for getting started information (e.g., tutorials and videos).
+			<li><span class='minortopic'>Redesigned, collapsable palettes on left and right side of user interface</span> - 
+				Release 7 provides redesigned palettes on the left and right side of the application.
+				The palettes can be collapsed easily to maximize the size of the editing canvas.
 			</li>
 			<li><span class='minortopic'>Streamlined user interface for creating HTML files</span> - 
 				Previously, to create a new HTML file, we presented a dialog where you had to pick
@@ -59,18 +56,47 @@
 				common user operations (Mobile Application, Desktop Application, Sketch, etc.), 
 				and users will get to start editing new documents faster.
 			</li>
-			<li><span class='minortopic'>Redesigned, collapsable palettes on left and right side of user interface</span> - 
-				Release 7 provides redesigned palettes on the left and right side of the application.
-				The palettes can be collapsed easily to maximize the size of the editing canvas.
-			</li>
 			<li><span class='minortopic'>Redesigned and streamlined toolbar</span> - 
 				The toolbar has been redesigned so that common operations can be discovered
 				and used more quickly. Whereas in previous releases, some commands were only
 				available on the page editor's context menu, with Release 7 all page editor
 				commands are available from the toolbar.
 			</li>
+			<li><span class='minortopic'>New welcome page</span> - 
+				Release 7 includes a newly designed welcome page, with buttons at the top
+				for common "New" actions (e.g., New Mobile Application), and buttons at the bottom
+				for getting started information (e.g., tutorials and videos).
+			</li>
+			<li><span class='minortopic'>New login and registration screens</span> - 
+				Release 7 has tossed out Maqetta's old back-end (server) code for workspace management
+				and user management, and replaced it with code from the Eclipse Orion project.
+				(Look below for more information about integrating Orion into Maqetta.)
+				The login and registration screens (and back-end logic) now come from Orion, although
+				Maqetta restyles the these screens (e.g., Maqetta shows a Maqetta banner).
+			</li>
 		</ul>
 	</li>
+	<li><p><span class='majortopic'>Performance improvements</span> - 
+		Release 7 includes performance improvements in several areas. In particular:</p>
+		<ul>
+			<li><span class='minortopic'>Preview-in-browser speedups due to ZAZL</span> - 
+				Release 7 integrates 
+				<a href='http://dojofoundation.org/projects/zazl' alt='ZAZL project page'>ZAZL</a> 
+				open source technology into Maqetta's preview-in-browser feature. With Release 7, when a Maqetta user clicks
+				on the preview-in-browser button, Maqetta runs ZAZL on the server to optimize
+				(build and minify) the user's HTML page to minimize network requests and download sizes 
+				when viewing that page directly in the web browser.
+			</li>
+			<li><span class='minortopic'>Page editor speedups</span> - 
+				Release 7 includes several performance improvements, particularly around increased snappiness
+				when users add new widgets to the page. Under the hood, among the key changes
+				was changing synchronous web requests to asynchronous and using built/optimized versions
+				of widget JavaScript files.
+			</li>
+		</ul>
+	</li>
+
+	<h3 style='color:red; font-style:italic;'>EVERYTHING UNDER HERE IS JUST A COPY OF PREVIEW6 RELEASE NOTES</h3>
 
 	<li><p><span class='majortopic'>Visual editor enhancements and improvements</span> - 
 		Preview 6 contains many improvements to the visual page editor:</p>
@@ -130,27 +156,6 @@
 				and amount to changing the position of the currently selected child widget within its parent's list of children.
 				For example, "Move to front" makes the currently selected widget the last child, which in most cases causes
 				that widget to be drawn on top of its sibling widgets.
-			</li>
-		</ul>
-	</li>
-	<li><p><span class='majortopic'>Properties palette improvements</span> - 
-		Preview 6 contains various improvements to the Properties palette:</p>
-		<ul>
-			<li><span class='minortopic'>'moveTo' properties provide drop-downs of current mobile views</span> - 
-				(Mobile UIs only) Various mobile widgets have a 'moveTo' property which indicates
-				the mobile view to which the application should jump if the user presses on the current widget.
-				With Preview 6, we have included a drop-down for the 'moveTo' property that shows the IDs
-				of all of the Views in the current document.
-			</li>
-			<li><span class='minortopic'>'class' attribute provides drop-down list of currently used classes</span> - 
-				The 'class' attribute field in the Properties palette now provides a drop-down list
-				of currently used classes. This is convenient if the author needs to apply the same class
-				to multiple widgets.
-			</li>
-			<li><span class='minortopic'>'class' and 'id' 'fields on separate lines, and are stretchable</span> - 
-				The 'class' and 'id' fields are now on separate lines in Properties palette,
-				and the fields stretch in size as the Properties palette's widget is changed (typically
-				by pulling on the splitter between the Properties palette and the visual page editor canvas).
 			</li>
 		</ul>
 	</li>

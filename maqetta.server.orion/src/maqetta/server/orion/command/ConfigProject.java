@@ -18,12 +18,16 @@ public class ConfigProject extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	
         String projectName = req.getParameter("project");
-        
+        boolean configOnly = "true".equals(req.getParameter("configOnly"));
     	user.createProject(projectName);
 
     	this.responseString = "OK";
-    	resp.sendRedirect("/maqetta/?project=" + projectName);
-    	
+    	if(configOnly){
+    		resp.sendRedirect("/maqetta/");
+        	
+    	}else{
+    		resp.sendRedirect("/maqetta/?project=" + projectName);
+    	}
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.davinci.server.review.Utils;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.core.users.OrionScope;
@@ -39,13 +40,21 @@ public class Register  extends Command {
     	String randomToken = System.currentTimeMillis() + "_" + generator.nextInt();
     	
     	String requestUrl = req.getRequestURL().toString();
-    	String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
+    	
+    	int offset = (requestUrl.indexOf("https://") > -1 ? "https://".length():"http://".length() );
+    	
+    	String host = requestUrl.substring(0, requestUrl.indexOf('/', offset));
     	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/static/migrate.html";
     	
-    	String domain = host.substring( "http://".length());
-    	
+    	String domain = host.substring( offset);
+    	String emailAddy = Utils.getCommonNotificationId();
     	if(domain.indexOf(":") > -1)
     		domain = domain.substring(0,domain.indexOf(":"));
+    	
+    	if(emailAddy ==null)
+    		emailAddy = "admin@" + domain;
+    	
+    	
     	
     	IEclipsePreferences signupTokens = new OrionScope().getNode("signup"); //$NON-NLS-1$
     	
@@ -54,7 +63,7 @@ public class Register  extends Command {
     	/* store the email address with the token */
 		result.put(Register.EMAIL_FIELD, emailAdd);
 		
-		sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, "admin@" + domain);
+		sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, emailAddy);
 	
         
     	this.responseString = "OK";

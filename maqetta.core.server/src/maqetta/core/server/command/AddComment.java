@@ -87,12 +87,17 @@ public class AddComment extends Command {
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment, requestUrl);
 			
-			String domain = requestUrl.substring("http://".length(), requestUrl.indexOf('/', "http://".length()));
-	    	if(domain.indexOf(":") > -1)
-	    		domain = domain.substring(0,domain.indexOf(":"));
+			String emailAdd = Utils.getCommonNotificationId();
+			if(emailAdd==null){
+				int offset = (requestUrl.indexOf("https://") > -1 ? "https://".length():"http://".length() );
+				String domain = requestUrl.substring(offset, requestUrl.indexOf('/', offset));
+		    	if(domain.indexOf(":") > -1)
+		    		domain = domain.substring(0,domain.indexOf(":"));
+		    	emailAdd = "admin@" + domain;	
+			}
 			
 			
-			SimpleMessage email = new SimpleMessage("admin@" + domain,
+			SimpleMessage email = new SimpleMessage(emailAdd,
 					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
 //			SmtpPop3Mailer.send(email);

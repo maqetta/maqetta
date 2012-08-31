@@ -12,10 +12,7 @@ return {
 		isDefault: true,
 		//TODO implement		 icon : "",
 		editorClass: "davinci/js/ui/JavaScriptEditor",
-		palettesToTop: [
-			"davinci.ve.style", //Properties
-            "davinci.ui.navigator", //Files
-        ],
+		palettePerspective: "davinci.html.htmlEditor",
         expandPalettes: ["left"]
 	},
 	"davinci.actionSets": [

@@ -146,11 +146,7 @@ return declare(ContainerInput, {
 			var connection;
 			while (connection = this._connection.pop()){
 				dojo.disconnect(connection);
-			}
-			
-			//Destroy dialog and widgets
-			this._inline.destroyRecursive();
-			delete this._inline;
+			}			
 		}
 		this.inherited(arguments);
 	},

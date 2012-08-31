@@ -60,12 +60,12 @@ lastMapTag=${mapsTagTag}
 	
 	<!-- git submodules update for the maqetta repo -->
 	<target name="cloneMaqetta">
-			<property name='gitRepoFolder' value="${base}/gitClones/https___github_com_maqetta_maqetta_git"/>
+			<property name='gitRepoFolder' value="${base}/gitClones/git___github_com_maqetta_maqetta_git"/>
 			<echo message="Fetching and Updating git submodule in ${gitRepoFolder}"/>
 		<mkdir dir="${gitRepoFolder}"/>
 		 <exec executable = "git" dir = "${gitRepoFolder}">
 			<arg value = "clone" />
-			<arg value = "https://github.com/maqetta/maqetta.git" />
+			<arg value = "git://github.com/maqetta/maqetta.git" />
 		 	<arg value = "${gitRepoFolder}" />
 		 </exec>
 		 <exec executable = "git" dir = "${gitRepoFolder}">

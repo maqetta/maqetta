@@ -172,7 +172,7 @@ public class Publish extends Command {
 					
 				}
 			}
-			if (emailResult != null && !emailResult.equals("OK")) {
+			if (emailResult != null) {
 				writer.addField("emailResult", emailResult);
 			}
 		}

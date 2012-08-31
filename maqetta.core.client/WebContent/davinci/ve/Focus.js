@@ -219,10 +219,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		rect.t += parentbounds.t;
 		// Theme editor puts scrollbar on iframe's html element
 		//FIXME: Need to package this up as a callback somehow
-		var parentIframe = context.getParentIframe();
-		var bodyElement = parentIframe.contentDocument.body;
-		rect.l -= GeomUtils.getScrollLeft(bodyElement);
-		rect.t -= GeomUtils.getScrollTop(bodyElement);
+		if(this._context.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor'){
+			var parentIframe = context.getParentIframe();
+			var bodyElement = parentIframe.contentDocument.body;
+			rect.l -= GeomUtils.getScrollLeft(bodyElement);
+			rect.t -= GeomUtils.getScrollTop(bodyElement);
+		}
 		// FIXME: Disable the offscreen adjust in all cases - should just delete that code
 		offScreenAdjust = false;
 

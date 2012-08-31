@@ -907,7 +907,7 @@ define(["dojo/_base/declare",
 			var lastElementStyle = -1;
 			var deltas = [];
 			var cssFiles = this.context._getCssFiles();
-			var dynamicThemeUrl = cssFiles ? cssFiles[0].url: null;
+			var dynamicThemeUrl = (cssFiles &&  cssFiles.length > 0)? cssFiles[0].url: null;
 			var dynamicThemeReadOnly = false;
 			if (dynamicThemeUrl){
 				var file = systemResource.findResource(dynamicThemeUrl);
@@ -996,7 +996,7 @@ define(["dojo/_base/declare",
 				var cssFile = model.find({elementType:'CSSFile', relativeURL: this._values[event.target].targetFile}, true);
 				var contextCssFile =  this.context._getCssFiles();
 				//#23
-				if (cssFile) {
+				if (cssFile && cssFile.length > 0) {
 					loc=cssFile.getResource();
 				} else if (contextCssFile[0].url == this._values[event.target].targetFile){ // FIXME should run the array
 					// maybe it's a dynamic theme (mobile)

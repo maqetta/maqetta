@@ -320,11 +320,6 @@ return declare(ContainerInput, {
 					//clone the cell
 					var clonedChild = dojo.clone(child);
 					
-					//clean up non-breaking white space
-					if (clonedChild.children === String.fromCharCode(8288)) {
-						clonedChild.children = "&#8288;";
-					}
-					
 					//handle header row
 					if (isFirstRow) {
 						if (userInput.firstRowHeader) {
@@ -463,7 +458,7 @@ return declare(ContainerInput, {
 					cell.innerHTML = "TH"; 
 				} else {
 					cell = dojo.doc.createElement("td");
-					cell.innerHTML  = "&#8288;";
+					cell.innerHTML  = "&nbsp;";
 				}
 				dojo.addClass(cell, "tableElementPreview");
 				row.appendChild(cell);

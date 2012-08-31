@@ -89,13 +89,15 @@ return declare("davinci.ve.HTMLWidget", _Widget, {
 			if (name === 'style') { // needed for position absolute
 				dojo.style(node, properties[name]);
 			} else {
-				if(!properties[name]) {
-					node.removeAttribute(name);
-				} else {
-				    if (!modelOnly) {
-				    	node.setAttribute(name, properties[name]);
-				    }
-				}
+			    if (!modelOnly) {
+					var property = properties[name];
+					// The following check on "property" will result in false value for empty strings
+					if(property || typeof property == "boolean" || typeof property == "number") {
+					    node.setAttribute(name, property);
+					} else {
+						node.removeAttribute(name);
+					}
+			    }
 			}
 		}
 		this.inherited(arguments);

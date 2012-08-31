@@ -157,7 +157,13 @@ public class Publish extends Command {
 				if (mail != null && !mail.equals("") && set.add(mail)) {
 					String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl);
 					String htmlContent = getHtmlContent(user, message, url);
-					emailResult = notifyRelatedPersons(Utils.getCommonNotificationId(), mail,
+					
+					String domain = requestUrl.substring("http://".length(), requestUrl.indexOf('/', "http://".length()));
+			    	if(domain.indexOf(":") > -1)
+			    		domain = domain.substring(0,domain.indexOf(":"));
+			    	
+					
+					emailResult = notifyRelatedPersons("admin@" + domain, mail,
 							Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
 					
 				}

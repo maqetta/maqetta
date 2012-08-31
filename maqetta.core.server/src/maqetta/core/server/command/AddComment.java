@@ -86,7 +86,13 @@ public class AddComment extends Command {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment, requestUrl);
-			SimpleMessage email = new SimpleMessage(Utils.getCommonNotificationId(),
+			
+			String domain = requestUrl.substring("http://".length(), requestUrl.indexOf('/', "http://".length()));
+	    	if(domain.indexOf(":") > -1)
+	    		domain = domain.substring(0,domain.indexOf(":"));
+			
+			
+			SimpleMessage email = new SimpleMessage("admin@" + domain,
 					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
 //			SmtpPop3Mailer.send(email);

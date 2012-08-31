@@ -1727,7 +1727,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 			if(visualChanged){
-				this.editor._visualChanged();
+				// we are resoring, don't mark dirty
+				this.editor._visualChanged(true);
 			}
 			if(maqAppStates){
 				if(maqAppStates.initial){

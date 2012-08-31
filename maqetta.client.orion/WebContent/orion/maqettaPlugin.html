@@ -18,7 +18,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 	window.onload = function() {
 		var provider = new eclipse.PluginProvider();
 		
-
+	   ///this.registerService = this.registerServiceProvider; // forward compadability
 		function qualifyURL(url) {
 			var a = document.createElement('a');
 			a.href = url; // set string url
@@ -37,8 +37,8 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 			}
 			return path;
 		}
-		
-		provider.registerService('orion.navigate.command', {
+		/* this needs to change to registerService with newer versions of orion */
+		provider.registerServiceProvider('orion.navigate.command', {
 			run : function(item) {
 			   	window.open("/maqetta/cmd/configProject?project=" + fullPath(item), '_blank');
             	window.focus();

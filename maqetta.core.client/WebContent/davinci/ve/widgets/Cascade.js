@@ -906,7 +906,8 @@ define(["dojo/_base/declare",
 			var state = "Normal";
 			var lastElementStyle = -1;
 			var deltas = [];
-			var dynamicThemeUrl = this.context.cssFiles ? this.context.cssFiles[0].url: null;
+			var cssFiles = this.context._getCssFiles();
+			var dynamicThemeUrl = cssFiles ? cssFiles[0].url: null;
 			var dynamicThemeReadOnly = false;
 			if (dynamicThemeUrl){
 				var file = systemResource.findResource(dynamicThemeUrl);
@@ -993,12 +994,13 @@ define(["dojo/_base/declare",
 			}else if(this._values[event.target].type=="proposal"){
 				var model = this.context.getModel();
 				var cssFile = model.find({elementType:'CSSFile', relativeURL: this._values[event.target].targetFile}, true);
+				var contextCssFile =  this.context._getCssFiles();
 				//#23
 				if (cssFile) {
 					loc=cssFile.getResource();
-				} else if (this.context.cssFiles[0].url == this._values[event.target].targetFile){ // FIXME should run the array
+				} else if (contextCssFile[0].url == this._values[event.target].targetFile){ // FIXME should run the array
 					// maybe it's a dynamic theme (mobile)
-					loc = this.context.cssFiles[0];
+					loc = contextCssFile.cssFiles[0];
 				}
 				//#23
 			}else{

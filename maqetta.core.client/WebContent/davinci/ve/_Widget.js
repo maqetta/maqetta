@@ -741,7 +741,7 @@ return declare("davinci.ve._Widget", null, {
 		for(var name in properties) {
 			var property = properties[name];
 			// The following check on "property" will result in false value for empty strings
-			if(property || typeof property == "boolean") {
+			if(property || typeof property == "boolean" || typeof property == "number") {
 				var value=this._stringValue(name, property);
 				if (!modelOnly) {
 				    this.properties[name] = value;

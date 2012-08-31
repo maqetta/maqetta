@@ -1,6 +1,7 @@
 define({ root:
 {
 		"select": "Select",
+		"save": "Save",
 
 		//AddLinkAction.js
 		"selectDirectory":"Select Directory to link to",

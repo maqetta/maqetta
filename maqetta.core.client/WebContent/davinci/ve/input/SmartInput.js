@@ -365,7 +365,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 		this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
 		this._connection.push(dojo.connect(this._inline.eb, "onKeyDown", this, "stopEvent"));
 		this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
-		if (this.multiLine == "true"){
+		if (this.multiLine == "true"){                                  
 /*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE */
 			this._connection.push(dojo.connect(this._inline.eb, "onBlur", this, "onBlur"));
 /*ENDFIXME*/
@@ -415,8 +415,8 @@ return declare("davinci.ve.input.SmartInput", null, {
 	_connectHelpDiv: function(){
 		var help = dojo.byId('davinci.ve.input.SmartInput_img_help');
 		this._connection.push(dojo.connect(help, "onclick", this, "toggleHelp"));
-		this._connection.push(dojo.connect(dojo.byId('davinci.ve.input.SmartInput_ok'), "onclick", this, "onOk")); // same effect ad click away..
-		this._connection.push(dojo.connect(dojo.byId('davinci.ve.input.SmartInput_cancel'), "onclick", this, "onCancel")); // same effect ad click away..
+		this._connection.push(dojo.connect(dijit.byId('davinci.ve.input.SmartInput_ok'), "onClick", this, "onOk")); // same effect ad click away..
+		this._connection.push(dojo.connect(dijit.byId('davinci.ve.input.SmartInput_cancel'), "onClick", this, "onCancel")); // same effect ad click away..
 	},
 	
 	_findSmartInputContainer: function(frameNode){

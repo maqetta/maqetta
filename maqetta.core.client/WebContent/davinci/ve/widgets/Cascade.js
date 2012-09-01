@@ -907,7 +907,7 @@ define(["dojo/_base/declare",
 			var lastElementStyle = -1;
 			var deltas = [];
 			var cssFiles = this.context._getCssFiles();
-			var dynamicThemeUrl = cssFiles ? cssFiles[0].url: null;
+			var dynamicThemeUrl = (cssFiles && cssFiles.length>0) ? cssFiles[0].url: null;
 			var dynamicThemeReadOnly = false;
 			if (dynamicThemeUrl){
 				var file = systemResource.findResource(dynamicThemeUrl);

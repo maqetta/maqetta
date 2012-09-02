@@ -2855,6 +2855,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var head = this.getDocumentElement().getChildElement('head'),
 				config = {
 					parseOnLoad: true,
+					async: true,
 					packages: this._getLoaderPackages()
 				},
 				found = head.getChildElements('script').some(function(element) {

@@ -280,19 +280,29 @@ div.right-col {
 	top:0px;
 	bottom:10px;
 	right:10px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	border-radius: 3px;
+	border: 3px solid rgba(0, 0, 0, .05);
 }
 #cheatsheetcontent {
 	cursor:pointer;
 	position:absolute;
 	width: 100%;
+	height:100%;
 }
-#cheatsheetcontent_img {
-	 border:none;
-	 width:100%;
-	 background-repeat:no-repeat;
+#cheatsheetcontent_iframe {
+	border:none;
+	width:100%;
+	height:100%;
 }
 .cheatsheetDragDiv {
 	cursor:pointer;
 	position:absolute;
 	z-index:1000;
+}
+.cheatsheet_iframe_body {
+	margin:0;
+	body:0;
 }

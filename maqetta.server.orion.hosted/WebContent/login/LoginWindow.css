@@ -132,7 +132,20 @@
 	padding-right:0px;
 	color:black;
 }
-#orionBody #cancleResetButton {
+#orionLogin #loginButton:hover, 
+#login-window #registerButton:hover, 
+#orionBody #sendResetButton:hover, 
+#orionBody #cancleResetButton:hover, 
+#orionBody #createButton:hover, 
+#orionBody #hideRegisterButton:hover {
+	background: #DDD;
+	background-image: -webkit-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: -moz-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: -ms-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: -o-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: linear-gradient(#E4E4E4, #D0D0D0);
+}
+#orionBody #cancleResetButton, #orionBody #registerButton, #orionBody #hideRegisterButton {
 	font-weight:normal;
 }
 #orionLogin #loginButton {

@@ -214,7 +214,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
 		];
 		this.widgetAddedOrDeleted();
-		this.visualEditor._pageEditor._visualChanged();
+		if(this.visualEditor && this.visualEditor._pageEditor && this.visualEditor._pageEditor._visualChanged){
+			this.visualEditor._pageEditor._visualChanged();
+		}
 		this.setActiveTool();
 	},
 

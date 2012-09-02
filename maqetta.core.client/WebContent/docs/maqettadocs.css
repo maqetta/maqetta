@@ -239,3 +239,60 @@ div.right-col {
 	padding-left:2em;
 	padding-right:2em;
 }
+#TOCContentPane {
+	width:225px;
+	padding:0px;
+}
+#TOCTree {
+	padding:22px 12px 6px;
+}
+#TOCTree .dijitTreeRow, #TOCTree .dijitTreeNode .dojoDndItemBefore, #TOCTree .dijitTreeNode .dojoDndItemAfter {
+	padding: 6px 0 4px 0;
+}
+.cheatsheet_iframe_container {
+	 position:absolute; 
+	 left:0px; 
+	 top:54px; 
+	 right:20px; 
+	 bottom:20px;
+}
+.cheatsheet_body {
+	overflow:hidden;
+}
+.cheatsheet_table {
+	width:100%;
+}
+.cheatsheet_table td {
+	vertical-align:top;
+}
+.cheatsheetcontent_td {
+	overflow:hidden;
+}
+.cheatsheet_slider {
+	position:fixed;
+	left: 15px;
+	top: 10px;
+}
+#cheatsheet_content_container {
+	position:fixed;
+	overflow:hidden;
+	left:40px;
+	top:0px;
+	bottom:10px;
+	right:10px;
+}
+#cheatsheetcontent {
+	cursor:pointer;
+	position:absolute;
+	width: 100%;
+}
+#cheatsheetcontent_img {
+	 border:none;
+	 width:100%;
+	 background-repeat:no-repeat;
+}
+.cheatsheetDragDiv {
+	cursor:pointer;
+	position:absolute;
+	z-index:1000;
+}

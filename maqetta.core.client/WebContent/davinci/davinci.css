@@ -1198,6 +1198,63 @@ background-position: -75px -745px;
 .tableCommands .dijitArrowButtonInner {
 	display:none;
 }
+.treeAddChildIcon {
+	background-image: url(img/sprite.png);
+	background-position: 0px -1406px;
+}
+.dijitButtonDisabled .treeAddChildIcon{
+  opacity: 0.5;
+}
+.treeInputInsertBeforeIcon {
+	background-image: url(img/sprite.png);
+	background-position: -27px -1595px;
+}
+.dijitButtonDisabled .treeInputInsertBeforeIcon{
+  opacity: 0.5;
+}
+.treeInputInsertAfterIcon {
+	background-image: url(img/sprite.png);
+	background-position: -47px -1595px;
+}
+.dijitButtonDisabled .treeInputInsertAfterIcon{
+  opacity: 0.5;
+}
+.treeInputDeleteIcon {
+	background-image: url(img/sprite.png);
+	background-position: -49px -1641px;
+}
+.dijitButtonDisabled .treeInputDeleteIcon{
+  opacity: 0.5;
+}
+.treeInputMoveUpIcon {
+	background-image: url(img/sprite.png);
+	background-position: -49px -1663px;
+}
+.dijitButtonDisabled .treeInputMoveUpIcon{
+  opacity: 0.5;
+}
+.treeInputMoveDownIcon {
+	background-image: url(img/sprite.png);
+	background-position: -71px -1663px;
+}
+.dijitButtonDisabled .treeInputMoveDownIcon{
+  opacity: 0.5;
+}
+.treeInputShiftLeftIcon {
+	background-image: url(img/sprite.png);
+	background-position: -23px -1685px;
+}
+.dijitButtonDisabled .treeInputShiftLeftIcon{
+  opacity: 0.5;
+}
+.treeInputShiftRightIcon {
+	background-image: url(img/sprite.png);
+	background-position: -19px -512px;
+}
+.dijitButtonDisabled .treeInputShiftRightIcon{
+  opacity: 0.5;
+}
+
 .addStateIcon, .addThemeSetIcon {
 	background-image: url(img/sprite.png);
 	background-position: -82px -466px;

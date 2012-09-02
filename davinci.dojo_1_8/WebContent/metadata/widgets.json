@@ -2424,7 +2424,7 @@
             ],
             "tool": "./dojox/mobile/IconContainerCreateTool",
             "allowedChild": "dojox.mobile.IconItem",
-            "inlineEdit": "./dojox/mobile/IconContainerInput"
+            "inlineEdit": "./dojox/mobile/IconContainerInput",
         },
         {
             "name": "IconItem",
@@ -2459,6 +2459,7 @@
             },
             "helper": "./dojox/mobile/TabBarHelper",
             "inlineEdit": "./dojox/mobile/TabBarInput",
+            "tool": "./dojox/mobile/TabBarCreateTool",
             "allowedChild": "dojox.mobile.TabBarButton",
             "children": [
                 {
@@ -2696,7 +2697,8 @@
                 }
             ],
             "allowedChild": "dojox.mobile.IconMenuItem",
-            "inlineEdit": "./dojox/mobile/IconMenuInput"
+            "inlineEdit": "./dojox/mobile/IconMenuInput",
+            "tool": "./dojox/mobile/IconMenuCreateTool"
         },
         {
             "name": "IconMenuItem",
@@ -2798,7 +2800,7 @@
                     "type": "dojo.data.ItemFileReadStore",
                     "properties": {
                         "data": {
-                            "items": [
+                            "items": [                       
                                 {"value":"one", "headerText":"one", "src":"./samples/sample_data/images/i-icon-1.png"},
                                 {"value":"two", "headerText":"two", "src":"./samples/sample_data/images/i-icon-2.png"},
                                 {"value":"three", "headerText":"three", "src":"./samples/sample_data/images/i-icon-3.png"}

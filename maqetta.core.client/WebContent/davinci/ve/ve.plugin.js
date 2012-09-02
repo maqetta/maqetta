@@ -497,10 +497,9 @@ return {
                 {
                     id: "stickynote",
                     iconClass: 'stickynoteIcon',
-                    className: 'davinciFloatRight',
                     action: "davinci/actions/StickyNoteAction",
                     label: "Add note",
-                    toolbarPath: "undoredo"
+                    toolbarPath: "stickynote"
                 },
                 {
                     id: "layout",

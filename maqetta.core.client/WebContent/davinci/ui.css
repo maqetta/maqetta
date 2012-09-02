@@ -214,7 +214,7 @@
 }
 .stickynoteIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
-	background-position: -46px -612px;
+	background-position: -46px -610px;
 	width: 27px;
 	height: 27px;
 }

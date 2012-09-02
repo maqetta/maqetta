@@ -1036,7 +1036,9 @@ var Workbench = {
 	loadProject: function(projectName) {
 		
 		return Workbench.setActiveProject(projectName).then(function(){
-			location.href=".";	
+			//location.href=".";
+			/* make sure the server has maqetta setup for the project */
+			location.href="/maqetta/cmd/configProject?configOnly=true&project=" + projectName;
 		});
 		
 		// if the project was set via URL parameter, clear it off.  

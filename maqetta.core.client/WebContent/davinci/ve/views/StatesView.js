@@ -244,7 +244,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 */
 
 	_updateView: function() {
-		if(!this._editor || !this._editor.getContext){
+		if(!this._editor || !this._editor.getContext || this.isThemeEditor()){
 			return;
 		}
 		var context = this._editor.getContext();

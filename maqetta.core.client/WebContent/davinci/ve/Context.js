@@ -213,6 +213,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.connect(containerNode, "onmouseover", this, "onMouseOver"),
 			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
 		];
+		this.widgetAddedOrDeleted();
+		this.visualEditor._pageEditor._visualChanged();
 		this.setActiveTool();
 	},
 
@@ -899,7 +901,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 			// frame has already been initialized, changing content (such as changes from the source editor)
 			this._continueLoading(data, callback, this, scope);
-			this.widgetAddedOrDeleted();
 		} else {
 			// initialize frame
 			var dojoUrl;
@@ -1727,7 +1728,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 			}
 			if(visualChanged){
-				this.editor._visualChanged();
+				// we are resoring, don't mark dirty
+				this.editor._visualChanged(true);
 			}
 			if(maqAppStates){
 				if(maqAppStates.initial){

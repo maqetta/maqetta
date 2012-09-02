@@ -121,7 +121,7 @@ define({ root:
 		/*Templates*/
 		//download.html -- see above for file name
 		"optimizeOption": "Use Dojo Web Builder (experimental)",
-		"downloadFullSource": "Download Full Source",
+		"downloadFullSource": "Download uncompressed source for selected libraries (if available)",
 		"selectAll": "All",
 		"selectNone": "None",
 		

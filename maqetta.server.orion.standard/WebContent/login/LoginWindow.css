@@ -1,3 +1,6 @@
+#orionBody {
+	background:white;
+}
 #davinci_top_bar {
 	padding:0;
 	margin:0;
@@ -47,37 +50,180 @@
 	text-shadow: #000 1px 1px 1px;
 }
 #maqetta_slogan {
-	text-align:center;
-	color:#444;
-	font-size:15px;
-	margin-left:13px;
-	margin-bottom: 18px;
-	margin-top: 18px;
+	text-align:left;
+	color:#222;
+	font-size:16px;
+	padding-left:12px;
+	padding-bottom: 16px;
+	padding-top: 16px;
+	background:white;
 }
 #login-window {
 	text-align:center;
+	background-image:-webkit-linear-gradient(#f4f4f4 0px,#e9e9e9 410px, #f0f0f0 410px, #fff 480px);
+	background-image:-moz-linear-gradient(#f4f4f4 0px,#e9e9e9 410px, #f0f0f0 410px, #fff 480px);
+	background-image:-ms-linear-gradient(#f4f4f4 0px,#e9e9e9 410px, #f0f0f0 410px, #fff 480px);
+	background-image:-o-linear-gradient(#f4f4f4 0px,#e9e9e9 410px, #f0f0f0 410px, #fff 480px);
+	background-image:linear-gradient(#f4f4f4 0px,#e9e9e9 410px, #f0f0f0 410px, #fff 480px);
+	background-repeat:no-repeat;
+	height:470px;
 }
 #landingArea {
 	display:inline-block;
 	position:relative;
-	width:320px;
+	width:590px;
 	left: auto;
 	top: auto;
-	margin: 20px 0 0;
+	margin: 55px 0 0;
 }
-#orionLogin {
+#orionBody .orion-login-header, #orionBody.orion-reset-header {
+	border-bottom:none;
+}
+#orionLogin, #orionReset, #newUserHeaderShown {
 	left:0px;
+	padding: 50px;
+	width:478px;
+	height:191px;
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, .25), -1px -1px 1px rgba(0, 0, 0, .25);
+	border-radius: 3px;
+	border: 3px solid #999;
+}
+#orionBody .orion-input-holder, #orionBody .orion-reset-input-holder, #orionBody .orion-register-input-holder {
+	border:1px solid #aaaaaa;
+	height:24px;
+	margin-bottom: 20px;
+	display: inline;
+	float: left;
+}
+#orionBody .orion-text-input {
+	height: 20px;
+	padding-left: 6px;
+	margin: 0;
+	margin-right: 2px;
+	width: 285px;
+}
+#orionBody .orion-login-button-holder {
+	margin-top:10px;
+	margin-bottom:30px;
+}
+#orionBody .orion-reset-button-holder {
+	margin-top:5px;
+	margin-bottom:30px;
+}
+#orionBody .orion-reset-button-holder, #orionBody .orion-register-button-holder {
+	float:left;
+}
+#orionLogin #loginButton, 
+#login-window #registerButton, 
+#orionBody #sendResetButton, 
+#orionBody #cancleResetButton, 
+#orionBody #createButton, 
+#orionBody #hideRegisterButton {
+	background: #EEE;
+	background-image: -webkit-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -moz-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -ms-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -o-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: linear-gradient(#F4F4F4, #DBDBDB);
+	border:1px solid #888;
+	margin-left:0px;
+	margin-right:5px;
+	padding-left:0px;
+	padding-right:0px;
+	color:black;
+}
+#orionLogin #loginButton:hover, 
+#login-window #registerButton:hover, 
+#orionBody #sendResetButton:hover, 
+#orionBody #cancleResetButton:hover, 
+#orionBody #createButton:hover, 
+#orionBody #hideRegisterButton:hover {
+	background: #DDD;
+	background-image: -webkit-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: -moz-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: -ms-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: -o-linear-gradient(#E4E4E4, #D0D0D0);
+	background-image: linear-gradient(#E4E4E4, #D0D0D0);
+}
+#orionBody #cancleResetButton, #orionBody #registerButton, #orionBody #hideRegisterButton {
+	font-weight:normal;
+}
+#orionLogin #loginButton {
+	font-weight:bold;
+}
+#orionLogin .orion-login-forgot-holder {
+	display:block !important;
+	padding:0;
+	margin-top:0px;
+	float: left;
+	clear: both;
+	text-align:left;
+}
+#orionLogin .orion-forgot-password {
+	margin-top:0px;
 }
 #orionRegister {
 	left:0px;
+	top:377px;
+	padding:0;
+	text-align:left;
+	border:none;
+	background: transparent;
+}
+#orionRegister .orion-register-header {
+	font-size:16px;
+	color:#222;
+	float:none;
+	margin-top:0px;
+	margin-bottom:10px;
+	padding-bottom:0px;
+	display:block;
+}
+#orionRegister .orion-login-button-holder {
+	float:none;
 }
 #newUserHeaderShown {
 	left:0px;
 }
 #orionReset {
 	left:0px;
+	text-align:left;
+}
+#orionReset .orion-reset-header {
+	display:none;
+}
+#orionReset .orion-reset-input-holder-username {
+	display:none;
+}
+#orionReset .orion-reset-note {
+	padding-bottom:20px;
 }
 #errorWin {
 	width:300px;
 	top:260px;
+}
+#loginLogo, #signupLogo, #resetLogo {
+	width:120px;
+	height:140px;
+	float:right;
+	background-image: url(../maqetta/app/davinci/img/sprite.png);
+	background-position:0px -2650px;
+}
+#loginContainer, #signupContainer, #resetContainer {
+	width:300px;
+}
+#orionLogin .orion-login-header {
+	display:none;
+}
+#orionLogin .orion-login-button-holder {
+	text-align:left;
+	float:left;
+}
+#loginDivider {
+	width:100%;
+	height:1px;
+	border:none;
+	border-top:1px #c4c4c4 dotted;
+	position:absolute;
+	top:504px;
 }

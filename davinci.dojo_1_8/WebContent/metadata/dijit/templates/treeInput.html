@@ -9,16 +9,16 @@
 				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'center'" class="previewPanelPreviewPaneCenter" id="treeInputPreviewPanelPreviewPaneCenter">
 					<div data-dojo-type="dijit.layout.LayoutContainer">
 					<div data-dojo-type="dijit.Toolbar" layoutAlign="top">
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputAddChildButton">{addChild}</button> 
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputInsertBeforeButton" >{insertBefore}</button> 
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputInsertAfterButton">{insertAfter}</button> 
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputAddChildButton" data-dojo-props="iconClass:'editActionIcon treeAddChildIcon', showLabel:false">{addChild}</button> 
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputInsertBeforeButton" data-dojo-props="iconClass:'editActionIcon treeInputInsertBeforeIcon', showLabel:false" >{insertBefore}</button> 
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputInsertAfterButton" data-dojo-props="iconClass:'editActionIcon treeInputInsertAfterIcon', showLabel:false">{insertAfter}</button> 
 						<span data-dojo-type="dijit.ToolbarSeparator"></span>
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputDeleteButton">{remove}</button> 
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputDeleteButton" data-dojo-props="iconClass:'editActionIcon treeInputDeleteIcon', showLabel:false">{remove}</button> 
 						<span data-dojo-type="dijit.ToolbarSeparator"></span>
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputMoveUpButton">{moveUp}</button> 
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputMoveDownButton">{moveDown}</button> 
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputShiftLeftButton">{shiftLeft}</button>
-						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputShiftRightButton">{shiftRight}</button>
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputMoveUpButton" data-dojo-props="iconClass:'editActionIcon treeInputMoveUpIcon', showLabel:false">{moveUp}</button> 
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputMoveDownButton" data-dojo-props="iconClass:'editActionIcon treeInputMoveDownIcon', showLabel:false">{moveDown}</button> 
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputShiftLeftButton" data-dojo-props="iconClass:'editActionIcon treeInputShiftLeftIcon', showLabel:false">{shiftLeft}</button>
+						<button data-dojo-type="dijit.form.Button" type="button" id="treeInputShiftRightButton" data-dojo-props="iconClass:'editActionIcon treeInputShiftRightIcon', showLabel:false">{shiftRight}</button>
 					</div>
 						<div id="previewPanelGridContentPane" data-dojo-type="dijit.layout.ContentPane" layoutAlign="client" class="previewPanelGridContentPane">
 					</div>

@@ -321,3 +321,30 @@ div.right-col {
 	background-color:#BCF4D8;
 	border-color:#759DF0;
 }
+.cheatsheet_table {
+	border-collapse:collapse;
+	border:none;
+}
+.cheatsheet_table td, .cheatsheet_table th {
+	border:none;
+}
+.cheatsheet_table_desc_td {
+	font-size:12px;
+	padding-left:16px;
+}
+.cheatsheet_table_desc_small {
+	width:200px;
+}
+.cheatsheet_table_desc_medium {
+	width:350px;
+}
+.cheatsheet_table_desc_large {
+	width:500px;
+}
+.cheatsheet_desc_list {
+	margin-top:0;
+	margin-bottom:0;
+	padding-top:3px;
+	padding-bottom:0;
+	padding-left:15px;
+}

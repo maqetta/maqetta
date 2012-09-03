@@ -376,9 +376,33 @@ return {
                 {
                     id: "showTutotials",
                     run: function() {
-                    	window.open('app/docs/index.html#tutorials/tutorials', 'MaqettaTutotials');
+                    	window.open('app/docs/index.html#tutorials/tutorials', 'MaqettaTutorials');
                     },
                     label: "Tutorials",
+                    menubarPath: "davinci.help/help"
+                },
+                {
+                    id: "showVideos",
+                    run: function() {
+                    	window.open('http://www.youtube.com/user/Maqetta/', 'MaqettaVideos');
+                    },
+                    label: "Videos",
+                    menubarPath: "davinci.help/help"
+                },
+                {
+                    id: "showCheatSheets",
+                    run: function() {
+                    	window.open('app/docs/index.html#cheatsheets/cheatsheets', 'MaqettaCheatSheets');
+                    },
+                    label: "Cheat sheets",
+                    menubarPath: "davinci.help/help"
+                },
+                {
+                    id: "showHowTo",
+                    run: function() {
+                    	window.open('https://www.ibm.com/search/csass/search/?sn=dw&en=utf&hpp=20&dws=dw&q=maqetta&Search=Search', 'MaqettaHowTo');
+                    },
+                    label: "How-to articles",
                     menubarPath: "davinci.help/help"
                 },
                 {

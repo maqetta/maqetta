@@ -55,7 +55,17 @@
 			] }
 		] },*/
 		{ id: '9', name:'Cheat sheets', url: 'cheatsheets/cheatsheets.html', children:[
-			{ id: '9.1', name:'Page editor', url: 'cheatsheets/PageEditor.html' }
+			{ id: '9.1', name:'Welcome Page', url: 'cheatsheets/welcomepage.html' },
+			{ id: '9.2', name:'Page Editor', url: 'cheatsheets/pageeditor.html' },
+			{ id: '9.3', name:'Mobile Applications', url: 'cheatsheets/mobileapps.html' },
+			{ id: '9.4', name:'Desktop Applications', url: 'cheatsheets/desktopapps.html' },
+			{ id: '9.5', name:'Sketching', url: 'cheatsheets/sketching.html' },
+			{ id: '9.6', name:'Source Editing', url: 'cheatsheets/sourceediting.html' },
+			{ id: '9.7', name:'Mobile Theme Editor', url: 'cheatsheets/mobilethemeeditor.html' },
+			{ id: '9.8', name:'Desktop Theme Editor', url: 'cheatsheets/desktopthemeeditor.html' },
+			{ id: '9.9', name:'Review/Commenting', url: 'cheatsheets/reviewcommenting.html' },
+			{ id: '9.10', name:'Application States', url: 'cheatsheets/appstates.html' },
+			{ id: '9.11', name:'Download and Deploy', url: 'cheatsheets/downloaddeploy.html' }
 		] },
 		{ id: '2', name:'Release Notes', url: 'releasenotes/releasenotes.html', children:[
 			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' },

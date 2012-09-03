@@ -284,7 +284,7 @@ div.right-col {
 	-moz-border-radius: 3px;
 	-ms-border-radius: 3px;
 	border-radius: 3px;
-	border: 3px solid rgba(0, 0, 0, .05);
+	border: 3px solid rgba(0, 0, 0, .4);
 }
 #cheatsheetcontent {
 	cursor:pointer;
@@ -307,7 +307,7 @@ div.right-col {
 	body:0;
 }
 .claro.maqettadocs.cheatsheet_iframe_body .dijitDropDownButton {
-	opacity:.5;
+	opacity:.75;
 }
 .claro.maqettadocs.cheatsheet_iframe_body .dijitDropDownButton:hover {
 	opacity:1;
@@ -318,8 +318,10 @@ div.right-col {
 .claro.maqettadocs.cheatsheet_iframe_body .dijitToggleButton .dijitButtonNode {
 	padding:0;
 	/*background-color:#BCD8F4;*/
-	background-color:#BCF4D8;
-	border-color:#759DF0;
+	/*background-color:#BCF4D8;*/
+	/*border-color:#759DF0;*/
+	background-color:#F4BCD8;
+	border-color:#F080A0;
 }
 .cheatsheet_table {
 	border-collapse:collapse;
@@ -330,6 +332,11 @@ div.right-col {
 }
 .cheatsheet_table_desc_td {
 	font-size:12px;
+}
+.cheatsheet_table_desc_td_left {
+	padding-right:16px;
+}
+.cheatsheet_table_desc_td_right {
 	padding-left:16px;
 }
 .cheatsheet_table_desc_small {

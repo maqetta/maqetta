@@ -84,6 +84,7 @@
 	], function(ready, connect, VerticalSlider, dom, Mover){
 
 	    ready(function(){
+			var outer_window = window;
 	        var slider = new VerticalSlider({
 	            name: "cheatsheet_slider",
 	            "class": "cheatsheet_slider",
@@ -118,6 +119,9 @@
 					var cheatsheetcontent = contentDocument.getElementById('cheatsheetcontent');
 					if(cheatsheetcontent){
 				        cheatSheetConnects.push(connect.connect(cheatsheetcontent, 'onmousedown', function(event){
+				        	if(outer_window.popupOpen){
+				        		return;
+				        	}
 				        	var delta = 400;
 				        	var l = event.pageX - delta;
 				        	var t = event.pageY - delta;
@@ -141,6 +145,26 @@
 				        		cheatSheetConnects = [];
 				        	}
 				        }));
+						var innerDojo = contentDocument.defaultView && contentDocument.defaultView.dojo;
+						if(innerDojo){
+							innerDojo.ready(function(){
+								var popups = contentDocument.querySelectorAll('.cheatsheetPopup');
+								for(var i=0; i<popups.length; i++){
+									var widget = innerDojo.dijit.byNode(popups[i]);
+									if(widget){
+										widget.connect(widget, 'onOpen', function(){
+											outer_window.popupOpen = true;
+										});
+										widget.connect(widget, 'onClose', function(){
+											setTimeout(function(){
+												outer_window.popupOpen = false;
+											},10);
+										});
+									}
+								}
+								
+							});
+						}
     	        	}
 		        });
 	        	var checkstring = 'content=';

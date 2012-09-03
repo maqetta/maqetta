@@ -306,3 +306,18 @@ div.right-col {
 	margin:0;
 	body:0;
 }
+.claro.maqettadocs.cheatsheet_iframe_body .dijitDropDownButton {
+	opacity:.5;
+}
+.claro.maqettadocs.cheatsheet_iframe_body .dijitDropDownButton:hover {
+	opacity:1;
+}
+.claro.maqettadocs.cheatsheet_iframe_body .dijitButton .dijitButtonNode,
+.claro.maqettadocs.cheatsheet_iframe_body .dijitDropDownButton .dijitButtonNode,
+.claro.maqettadocs.cheatsheet_iframe_body .dijitComboButton .dijitButtonNode,
+.claro.maqettadocs.cheatsheet_iframe_body .dijitToggleButton .dijitButtonNode {
+	padding:0;
+	/*background-color:#BCD8F4;*/
+	background-color:#BCF4D8;
+	border-color:#759DF0;
+}

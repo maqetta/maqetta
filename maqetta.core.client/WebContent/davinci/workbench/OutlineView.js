@@ -132,9 +132,11 @@ return declare(ViewPart, {
 	},
 
 	_pageRebuilt: function() {
-		var paths = this.outlineTree.get("paths");
-		this.createTree();
-		this.outlineTree.set("paths", paths);
+		if (this.outlineTree) {
+			var paths = this.outlineTree.get("paths");
+			this.createTree();
+			this.outlineTree.set("paths", paths);
+		}
 	},
 	
 	modelChanged: function(modelChanges) {

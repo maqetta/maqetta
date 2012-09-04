@@ -215,7 +215,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		];
 		this.widgetAddedOrDeleted();
 		if(this.visualEditor && this.visualEditor._pageEditor && this.visualEditor._pageEditor._visualChanged){
-			this.visualEditor._pageEditor._visualChanged();
+			this.visualEditor._pageEditor._visualChanged(true);
 		}
 		this.setActiveTool();
 	},

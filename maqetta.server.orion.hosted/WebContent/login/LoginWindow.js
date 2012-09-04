@@ -198,7 +198,10 @@ define(['domReady'], function(domReady) {
 		var mypostrequest = new XMLHttpRequest();
 		mypostrequest.onreadystatechange = function() {
 			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status !== 200 && window.location.href.indexOf("http") !== -1) {
+				if (mypostrequest.status == 401) {
+					document.getElementById("errorMessage").innerHTML = "Invalid username or password."
+					document.getElementById("errorWin").style.visibility = '';
+				}else if (mypostrequest.status !== 200 && window.location.href.indexOf("http") !== -1) {
 					var responseObject = JSON.parse(mypostrequest.responseText);
 					document.getElementById("errorMessage").innerHTML = responseObject.error;
 					document.getElementById("errorWin").style.visibility = '';

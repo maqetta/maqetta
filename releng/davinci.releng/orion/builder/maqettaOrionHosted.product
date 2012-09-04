@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog -console -data ${workspace_loc}/../foo -clean -product org.eclipse.orion.product</programArgs>
+      <programArgs>-consoleLog -console -clean -product org.eclipse.orion.product</programArgs>
       <vmArgs>-Dorg.eclipse.equinox.http.jetty.http.port=8081
 -Dorg.eclipse.equinox.http.jetty.autostart=false
 -DloginUrl=&quot;/maqetta/welcome&quot;  
@@ -47,6 +47,7 @@
    </features>
 
    <configurations>
+      <plugin id="maqetta.zazl" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.app" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
@@ -58,7 +59,6 @@
       <plugin id="org.eclipse.orion.server.user.securestorage" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.orion.server.useradmin.xml" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
-      <plugin id="maqetta.zazl" autoStart="true" startLevel="0" />
       <property name="eclipse.buildId" value="I20120425-1416" />
       <property name="org.eclipse.update.reconcile" value="false" />
    </configurations>

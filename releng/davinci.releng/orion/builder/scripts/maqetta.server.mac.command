@@ -88,4 +88,4 @@ echo Using directory: "$absusersdir"
 echo Start your browser at: http://localhost:$port/maqetta
 mkdir -p "$absusersdir"
 # XXX Issue 2941 - Need to specify "-clean" flag due to possible Eclipse bug.
-java -Dorion.core.configFile=${scriptdir}/maqetta.conf "-Dmaqetta.baseDirectory=$absusersdir" -Dorg.eclipse.equinox.http.jetty.http.port=$port $dwbUrl -jar "$jarFilePath" $consolePort -noExit -clean
+java -Dorion.core.configFile=${scriptdir}/maqetta.conf "-Dmaqetta.baseDirectory=$absusersdir" -Dorg.eclipse.equinox.http.jetty.http.port=$port $dwbUrl -jar "$jarFilePath" $consolePort -noExit -clean -data $absusersdir

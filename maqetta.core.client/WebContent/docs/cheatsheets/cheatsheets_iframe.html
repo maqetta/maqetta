@@ -85,6 +85,7 @@
 
 	    ready(function(){
 			var outer_window = window;
+/* Disabling zoom/pan features, might restore later
 	        var slider = new VerticalSlider({
 	            name: "cheatsheet_slider",
 	            "class": "cheatsheet_slider",
@@ -110,6 +111,7 @@
 	    	        }
 	            }
 	        }, "cheatsheet_slider");
+*/
 	        var content = '';
 	        var cheatsheetcontent_iframe = document.getElementById('cheatsheetcontent_iframe');
 	        var arr1 = document.location.search.split('?');
@@ -118,6 +120,7 @@
 					var contentDocument = cheatsheetcontent_iframe.contentDocument;
 					var cheatsheetcontent = contentDocument.getElementById('cheatsheetcontent');
 					if(cheatsheetcontent){
+/* Disabling zoom/pan features, might restore later
 				        cheatSheetConnects.push(connect.connect(cheatsheetcontent, 'onmousedown', function(event){
 				        	if(outer_window.popupOpen){
 				        		return;
@@ -139,6 +142,7 @@
 									contentDocument.body);
 							cheatSheetMover = new Mover(cheatSheetDragDiv, event, window);
 				        }));
+*/
 				        cheatSheetConnects.push(connect.connect(window, 'onunload', function(){
 				        	for(var i=0; i<cheatSheetConnects.length; i++){
 				        		connect.disconnect(cheatSheetConnects[i]);
@@ -183,7 +187,9 @@
 	<link rel="stylesheet" href="../maqettadocs.css">
 </head>
 <body class="claro cheatsheet_body">
+<!-- disabling zoom/pan features - might restore later
 	<div id="cheatsheet_slider"></div>
+-->
 	<div id='cheatsheet_content_container'>
 		<iframe id='cheatsheetcontent_iframe' src=''></iframe>
 	</div>
